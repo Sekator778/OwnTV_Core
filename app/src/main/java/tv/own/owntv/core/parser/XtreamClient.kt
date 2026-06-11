@@ -1,0 +1,258 @@
+package tv.own.owntv.core.parser
+
+import android.util.Base64
+import android.util.JsonReader
+import android.util.JsonToken
+import tv.own.owntv.core.database.entity.SourceEntity
+import tv.own.owntv.core.network.HttpClient
+import java.io.InputStream
+import java.net.URLEncoder
+
+// --- Parsed Xtream models ---
+data class XtCategory(val id: String, val name: String)
+data class XtLiveStream(
+    val streamId: String, val name: String, val icon: String?, val epgChannelId: String?,
+    val categoryId: String?, val num: Int?,
+)
+data class XtVod(
+    val streamId: String, val name: String, val icon: String?, val rating: Double?,
+    val categoryId: String?, val containerExt: String?, val added: Long?,
+)
+data class XtSeries(
+    val seriesId: String, val name: String, val cover: String?, val plot: String?,
+    val rating: Double?, val categoryId: String?, val year: Int?,
+)
+data class XtEpisode(
+    val id: String, val seasonNumber: Int, val episodeNumber: Int, val title: String, val containerExt: String?,
+)
+data class XtSeriesInfo(val episodes: List<XtEpisode>)
+data class XtEpgEntry(val title: String, val description: String?, val startMs: Long, val stopMs: Long)
+
+/**
+ * Xtream Codes `player_api.php` client. Category lists are small and collected to a list; the large
+ * stream lists are streamed object-by-object with [android.util.JsonReader] and pushed to a callback,
+ * so a 340k-channel response never sits fully in memory.
+ */
+class XtreamClient(private val http: HttpClient) {
+
+    // --- Categories ---
+    fun liveCategories(s: SourceEntity) = categories(s, "get_live_categories")
+    fun vodCategories(s: SourceEntity) = categories(s, "get_vod_categories")
+    fun seriesCategories(s: SourceEntity) = categories(s, "get_series_categories")
+
+    private fun categories(s: SourceEntity, action: String): List<XtCategory> {
+        val out = ArrayList<XtCategory>()
+        http.get(api(s, action), s.userAgent) { input ->
+            streamObjects(input) { m ->
+                val id = m["category_id"] ?: return@streamObjects
+                out.add(XtCategory(id, m["category_name"] ?: id))
+            }
+        }
+        return out
+    }
+
+    // --- Streams (callback-streamed) ---
+    fun streamLive(s: SourceEntity, onItem: (XtLiveStream) -> Unit) {
+        http.get(api(s, "get_live_streams"), s.userAgent) { input ->
+            streamObjects(input) { m ->
+                val id = m["stream_id"] ?: return@streamObjects
+                onItem(
+                    XtLiveStream(
+                        streamId = id, name = m["name"].orEmpty(), icon = m["stream_icon"],
+                        epgChannelId = m["epg_channel_id"]?.takeIf { it.isNotBlank() },
+                        categoryId = m["category_id"], num = m["num"]?.toIntOrNull(),
+                    ),
+                )
+            }
+        }
+    }
+
+    fun streamVod(s: SourceEntity, onItem: (XtVod) -> Unit) {
+        http.get(api(s, "get_vod_streams"), s.userAgent) { input ->
+            streamObjects(input) { m ->
+                val id = m["stream_id"] ?: return@streamObjects
+                onItem(
+                    XtVod(
+                        streamId = id, name = m["name"].orEmpty(), icon = m["stream_icon"],
+                        rating = m["rating"]?.toDoubleOrNull(), categoryId = m["category_id"],
+                        containerExt = m["container_extension"], added = m["added"]?.toLongOrNull(),
+                    ),
+                )
+            }
+        }
+    }
+
+    fun streamSeries(s: SourceEntity, onItem: (XtSeries) -> Unit) {
+        http.get(api(s, "get_series"), s.userAgent) { input ->
+            streamObjects(input) { m ->
+                val id = m["series_id"] ?: return@streamObjects
+                onItem(
+                    XtSeries(
+                        seriesId = id, name = m["name"].orEmpty(), cover = m["cover"],
+                        plot = m["plot"], rating = m["rating"]?.toDoubleOrNull(),
+                        categoryId = m["category_id"], year = m["year"]?.toIntOrNull(),
+                    ),
+                )
+            }
+        }
+    }
+
+    /**
+     * Fetches seasons/episodes for a series (lazy, on open). The response is an object whose
+     * `episodes` field maps season-number → array of episode objects.
+     */
+    fun getSeriesInfo(s: SourceEntity, seriesId: String): XtSeriesInfo {
+        val episodes = ArrayList<XtEpisode>()
+        http.get(api(s, "get_series_info", "&series_id=$seriesId"), s.userAgent) { input ->
+            JsonReader(input.reader(Charsets.UTF_8)).use { reader ->
+                reader.isLenient = true
+                if (reader.peek() != JsonToken.BEGIN_OBJECT) { reader.skipValue(); return@use }
+                reader.beginObject()
+                while (reader.hasNext()) {
+                    if (reader.nextName() == "episodes" && reader.peek() == JsonToken.BEGIN_OBJECT) {
+                        readEpisodesObject(reader, episodes)
+                    } else {
+                        reader.skipValue()
+                    }
+                }
+                reader.endObject()
+            }
+        }
+        return XtSeriesInfo(episodes)
+    }
+
+    private fun readEpisodesObject(reader: JsonReader, out: MutableList<XtEpisode>) {
+        reader.beginObject()
+        while (reader.hasNext()) {
+            val season = reader.nextName().toIntOrNull() ?: 0
+            if (reader.peek() != JsonToken.BEGIN_ARRAY) { reader.skipValue(); continue }
+            reader.beginArray()
+            while (reader.hasNext()) {
+                var id: String? = null
+                var epNum = 0
+                var title = ""
+                var ext: String? = null
+                reader.beginObject()
+                while (reader.hasNext()) {
+                    when (reader.nextName()) {
+                        "id" -> id = reader.nextString()
+                        "episode_num" -> epNum = reader.nextString().toIntOrNull() ?: 0
+                        "title" -> title = reader.nextString()
+                        "container_extension" -> ext = reader.nextString()
+                        else -> reader.skipValue()
+                    }
+                }
+                reader.endObject()
+                id?.let { out.add(XtEpisode(it, season, epNum, title.ifBlank { "Episode $epNum" }, ext)) }
+            }
+            reader.endArray()
+        }
+        reader.endObject()
+    }
+
+    /**
+     * Short EPG (now + a few upcoming programmes) for a single live channel via `get_short_epg`.
+     * Titles/descriptions are base64-encoded; timestamps are unix seconds. Returns entries sorted by
+     * start time (empty if the panel has no guide for this channel).
+     */
+    fun getShortEpg(s: SourceEntity, streamId: String, limit: Int = 6): List<XtEpgEntry> {
+        val out = ArrayList<XtEpgEntry>()
+        http.get(api(s, "get_short_epg", "&stream_id=$streamId&limit=$limit"), s.userAgent) { input ->
+            JsonReader(input.reader(Charsets.UTF_8)).use { reader ->
+                reader.isLenient = true
+                if (reader.peek() != JsonToken.BEGIN_OBJECT) { reader.skipValue(); return@use }
+                reader.beginObject()
+                while (reader.hasNext()) {
+                    if (reader.nextName() == "epg_listings" && reader.peek() == JsonToken.BEGIN_ARRAY) {
+                        readEpgListings(reader, out)
+                    } else {
+                        reader.skipValue()
+                    }
+                }
+                reader.endObject()
+            }
+        }
+        return out.sortedBy { it.startMs }
+    }
+
+    private fun readEpgListings(reader: JsonReader, out: MutableList<XtEpgEntry>) {
+        reader.beginArray()
+        while (reader.hasNext()) {
+            var title = ""
+            var desc: String? = null
+            var startTs = 0L
+            var stopTs = 0L
+            reader.beginObject()
+            while (reader.hasNext()) {
+                val name = reader.nextName()
+                if (reader.peek() == JsonToken.NULL) { reader.nextNull(); continue }
+                when (name) {
+                    "title" -> title = decodeBase64(reader.nextString())
+                    "description" -> desc = decodeBase64(reader.nextString()).takeIf { it.isNotBlank() }
+                    "start_timestamp" -> startTs = reader.nextString().toLongOrNull() ?: 0
+                    "stop_timestamp" -> stopTs = reader.nextString().toLongOrNull() ?: 0
+                    else -> reader.skipValue()
+                }
+            }
+            reader.endObject()
+            if (startTs > 0 && stopTs > startTs) {
+                out.add(XtEpgEntry(title.ifBlank { "—" }, desc, startTs * 1000, stopTs * 1000))
+            }
+        }
+        reader.endArray()
+    }
+
+    private fun decodeBase64(s: String): String =
+        runCatching { String(Base64.decode(s, Base64.DEFAULT), Charsets.UTF_8).trim() }.getOrDefault(s)
+
+    // --- Stream URL builders ---
+    fun liveUrl(s: SourceEntity, streamId: String) = "${base(s)}/live/${s.username}/${s.password}/$streamId.m3u8"
+    fun movieUrl(s: SourceEntity, streamId: String, ext: String?) =
+        "${base(s)}/movie/${s.username}/${s.password}/$streamId.${ext ?: "mp4"}"
+    fun seriesEpisodeUrl(s: SourceEntity, episodeId: String, ext: String?) =
+        "${base(s)}/series/${s.username}/${s.password}/$episodeId.${ext ?: "mp4"}"
+
+    /** Full XMLTV guide for the whole account (all channels) — the bulk EPG used by the guide grid. */
+    fun xmltvUrl(s: SourceEntity): String {
+        val u = URLEncoder.encode(s.username.orEmpty(), "UTF-8")
+        val p = URLEncoder.encode(s.password.orEmpty(), "UTF-8")
+        return "${base(s)}/xmltv.php?username=$u&password=$p"
+    }
+
+    // --- helpers ---
+    private fun base(s: SourceEntity) = s.url.trimEnd('/')
+
+    private fun api(s: SourceEntity, action: String, extra: String = ""): String {
+        val u = URLEncoder.encode(s.username.orEmpty(), "UTF-8")
+        val p = URLEncoder.encode(s.password.orEmpty(), "UTF-8")
+        return "${base(s)}/player_api.php?username=$u&password=$p&action=$action$extra"
+    }
+
+    /** Streams a top-level JSON array of objects, reading each object's scalar fields into a map. */
+    private fun streamObjects(input: InputStream, onObject: (Map<String, String?>) -> Unit) {
+        JsonReader(input.reader(Charsets.UTF_8)).use { reader ->
+            reader.isLenient = true
+            if (reader.peek() != JsonToken.BEGIN_ARRAY) {
+                // Some servers return {} or an error object instead of an array.
+                reader.skipValue()
+                return
+            }
+            reader.beginArray()
+            while (reader.hasNext()) {
+                val map = HashMap<String, String?>()
+                reader.beginObject()
+                while (reader.hasNext()) {
+                    val name = reader.nextName()
+                    when (reader.peek()) {
+                        JsonToken.NULL -> { reader.nextNull(); map[name] = null }
+                        JsonToken.BEGIN_ARRAY, JsonToken.BEGIN_OBJECT -> reader.skipValue()
+                        else -> map[name] = reader.nextString()
+                    }
+                }
+                reader.endObject()
+                onObject(map)
+            }
+            reader.endArray()
+        }
+    }
+}

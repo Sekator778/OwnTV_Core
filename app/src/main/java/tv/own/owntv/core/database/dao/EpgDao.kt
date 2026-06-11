@@ -1,0 +1,42 @@
+package tv.own.owntv.core.database.dao
+
+import androidx.room.Dao
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
+import androidx.room.Query
+import kotlinx.coroutines.flow.Flow
+import tv.own.owntv.core.database.entity.EpgChannelEntity
+import tv.own.owntv.core.database.entity.EpgProgrammeEntity
+
+/** EPG storage + now/next lookups. Programmes are kept to a rolling window and pruned. */
+@Dao
+interface EpgDao {
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun upsertChannels(channels: List<EpgChannelEntity>)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun upsertProgrammes(programmes: List<EpgProgrammeEntity>)
+
+    @Query("DELETE FROM epg_programmes WHERE sourceId = :sourceId")
+    suspend fun clearSource(sourceId: Long)
+
+    /** Drop programmes that have already finished, to bound storage. */
+    @Query("DELETE FROM epg_programmes WHERE stopMs < :before")
+    suspend fun prune(before: Long)
+
+    /** The programme airing at [now] on a given EPG channel. */
+    @Query("SELECT * FROM epg_programmes WHERE epgChannelId = :epgChannelId AND startMs <= :now AND stopMs > :now ORDER BY startMs DESC LIMIT 1")
+    suspend fun nowPlaying(epgChannelId: String, now: Long): EpgProgrammeEntity?
+
+    /** Now + upcoming programmes for a channel (now/next and a short guide). */
+    @Query("SELECT * FROM epg_programmes WHERE epgChannelId = :epgChannelId AND stopMs > :now ORDER BY startMs ASC LIMIT :limit")
+    fun upcoming(epgChannelId: String, now: Long, limit: Int): Flow<List<EpgProgrammeEntity>>
+
+    /** All programmes overlapping a time window for the given sources — drives the full guide grid. */
+    @Query("SELECT * FROM epg_programmes WHERE sourceId IN (:sourceIds) AND stopMs > :from AND startMs < :to ORDER BY epgChannelId ASC, startMs ASC")
+    suspend fun programmesInWindow(sourceIds: List<Long>, from: Long, to: Long): List<EpgProgrammeEntity>
+
+    /** How many programmes are stored for these sources (to tell "no guide yet" from "empty window"). */
+    @Query("SELECT COUNT(*) FROM epg_programmes WHERE sourceId IN (:sourceIds)")
+    suspend fun countForSources(sourceIds: List<Long>): Int
+}

@@ -1,0 +1,203 @@
+package tv.own.owntv.core.sync
+
+import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.currentCoroutineContext
+import kotlinx.coroutines.ensureActive
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withContext
+import tv.own.owntv.core.database.dao.CategoryDao
+import tv.own.owntv.core.database.dao.ChannelDao
+import tv.own.owntv.core.database.dao.MovieDao
+import tv.own.owntv.core.database.dao.SeriesDao
+import tv.own.owntv.core.database.dao.SourceDao
+import tv.own.owntv.core.database.entity.CategoryEntity
+import tv.own.owntv.core.database.entity.ChannelEntity
+import tv.own.owntv.core.database.entity.MovieEntity
+import tv.own.owntv.core.database.entity.SeriesEntity
+import tv.own.owntv.core.database.entity.SourceEntity
+import tv.own.owntv.core.model.MediaType
+import tv.own.owntv.core.model.SourceType
+import tv.own.owntv.core.network.HttpClient
+import tv.own.owntv.core.parser.M3uParser
+import tv.own.owntv.core.parser.XtreamClient
+import kotlin.coroutines.CoroutineContext
+
+/**
+ * Imports a source into the database. Uses a clear-then-insert refresh per source/type (avoids the
+ * @Insert REPLACE cascade pitfall), batches inserts in chunks of [CHUNK], and reports progress via a
+ * non-suspend [onProgress] callback (callers push it into a StateFlow for the UI).
+ *
+ * Series episodes are intentionally fetched lazily later (Phase 9), not during sync.
+ */
+class SyncManager(
+    private val sourceDao: SourceDao,
+    private val categoryDao: CategoryDao,
+    private val channelDao: ChannelDao,
+    private val movieDao: MovieDao,
+    private val seriesDao: SeriesDao,
+    private val xtream: XtreamClient,
+    private val m3u: M3uParser,
+    private val http: HttpClient,
+) {
+    suspend fun sync(source: SourceEntity, onProgress: (ImportStage) -> Unit): SyncResult =
+        withContext(Dispatchers.IO) {
+            try {
+                when (source.type) {
+                    SourceType.XTREAM -> syncXtream(source, onProgress)
+                    SourceType.M3U -> syncM3u(source, onProgress)
+                    SourceType.LOCAL_BACKUP -> Unit
+                }
+                sourceDao.markSynced(source.id, System.currentTimeMillis())
+                SyncResult.Success
+            } catch (c: CancellationException) {
+                throw c
+            } catch (e: Exception) {
+                SyncResult.Failed(e.message ?: "Sync failed")
+            }
+        }
+
+    // ---------------- Xtream ----------------
+    private suspend fun syncXtream(s: SourceEntity, onProgress: (ImportStage) -> Unit) {
+        val ctx = currentCoroutineContext()
+
+        // LIVE
+        val liveMap = refreshCategories(s, MediaType.LIVE, xtream.liveCategories(s))
+        channelDao.clearSource(s.id)
+        chunked<ChannelEntity>(ctx, "Channels", onProgress, { channelDao.upsertAll(it) }) { add ->
+            xtream.streamLive(s) { item ->
+                add(
+                    ChannelEntity(
+                        sourceId = s.id, categoryId = liveMap[item.categoryId], name = item.name,
+                        logoUrl = item.icon, streamUrl = xtream.liveUrl(s, item.streamId),
+                        epgChannelId = item.epgChannelId, number = item.num, remoteId = item.streamId,
+                    ),
+                )
+            }
+        }
+
+        // MOVIES
+        val vodMap = refreshCategories(s, MediaType.MOVIE, xtream.vodCategories(s))
+        movieDao.clearSource(s.id)
+        chunked<MovieEntity>(ctx, "Movies", onProgress, { movieDao.upsertAll(it) }) { add ->
+            xtream.streamVod(s) { item ->
+                add(
+                    MovieEntity(
+                        sourceId = s.id, categoryId = vodMap[item.categoryId], name = item.name,
+                        posterUrl = item.icon, rating = item.rating,
+                        streamUrl = xtream.movieUrl(s, item.streamId, item.containerExt),
+                        containerExt = item.containerExt, remoteId = item.streamId, addedAt = item.added,
+                    ),
+                )
+            }
+        }
+
+        // SERIES (shows only; seasons/episodes fetched lazily later)
+        val seriesMap = refreshCategories(s, MediaType.SERIES, xtream.seriesCategories(s))
+        seriesDao.clearSource(s.id)
+        chunked<SeriesEntity>(ctx, "Series", onProgress, { seriesDao.upsertSeries(it) }) { add ->
+            xtream.streamSeries(s) { item ->
+                add(
+                    SeriesEntity(
+                        sourceId = s.id, categoryId = seriesMap[item.categoryId], name = item.name,
+                        posterUrl = item.cover, plot = item.plot, rating = item.rating,
+                        year = item.year, remoteId = item.seriesId,
+                    ),
+                )
+            }
+        }
+    }
+
+    private suspend fun refreshCategories(
+        s: SourceEntity,
+        type: MediaType,
+        parsed: List<tv.own.owntv.core.parser.XtCategory>,
+    ): Map<String, Long> {
+        categoryDao.clear(s.id, type)
+        val entities = parsed.map { CategoryEntity(sourceId = s.id, mediaType = type, name = it.name, remoteId = it.id) }
+        val ids = categoryDao.upsertAll(entities)
+        return parsed.mapIndexedNotNull { i, c -> ids.getOrNull(i)?.let { c.id to it } }.toMap()
+    }
+
+    // ---------------- M3U ----------------
+    private suspend fun syncM3u(s: SourceEntity, onProgress: (ImportStage) -> Unit) {
+        val ctx = currentCoroutineContext()
+        categoryDao.clear(s.id, MediaType.LIVE)
+        channelDao.clearSource(s.id)
+
+        val groupToCategoryId = HashMap<String, Long>()
+        val buffer = ArrayList<ChannelEntity>(CHUNK)
+        var processed = 0
+
+        val header = http.get(s.url, s.userAgent) { input ->
+            m3u.parse(input) { e ->
+                val categoryId = e.groupTitle?.let { group ->
+                    groupToCategoryId.getOrPut(group) {
+                        runBlocking {
+                            categoryDao.upsertAll(
+                                listOf(CategoryEntity(sourceId = s.id, mediaType = MediaType.LIVE, name = group, remoteId = group)),
+                            ).first()
+                        }
+                    }
+                }
+                buffer.add(
+                    ChannelEntity(
+                        sourceId = s.id, categoryId = categoryId, name = e.name, logoUrl = e.logo,
+                        streamUrl = e.streamUrl, epgChannelId = e.tvgId, number = e.tvgChno,
+                        remoteId = null, // M3U has no stable id; rely on clear-then-insert
+                    ),
+                )
+                if (buffer.size >= CHUNK) {
+                    ctx.ensureActive()
+                    runBlocking { channelDao.upsertAll(buffer.toList()) }
+                    processed += buffer.size
+                    buffer.clear()
+                    onProgress(ImportStage("Channels", processed, null))
+                }
+            }
+        }
+        if (buffer.isNotEmpty()) {
+            runBlocking { channelDao.upsertAll(buffer.toList()) }
+            processed += buffer.size
+            onProgress(ImportStage("Channels", processed, null))
+        }
+
+        // Persist the playlist's EPG url (url-tvg) for the EPG engine if the source didn't have one.
+        if (!header.urlTvg.isNullOrBlank() && s.epgUrl.isNullOrBlank()) {
+            sourceDao.update(s.copy(epgUrl = header.urlTvg))
+        }
+    }
+
+    /**
+     * Drives a push-stream [producer] that feeds items into [add]; flushes to the DB via [insert] in
+     * chunks of [CHUNK], reporting progress. Inserts run blocking on the IO thread (we want
+     * sequential back-pressure), and cancellation is checked each chunk.
+     */
+    private fun <T> chunked(
+        ctx: CoroutineContext,
+        label: String,
+        onProgress: (ImportStage) -> Unit,
+        insert: suspend (List<T>) -> Unit,
+        producer: (add: (T) -> Unit) -> Unit,
+    ) {
+        val buffer = ArrayList<T>(CHUNK)
+        var processed = 0
+        fun flush() {
+            if (buffer.isEmpty()) return
+            ctx.ensureActive()
+            runBlocking { insert(buffer.toList()) }
+            processed += buffer.size
+            buffer.clear()
+            onProgress(ImportStage(label, processed, null))
+        }
+        producer { item ->
+            buffer.add(item)
+            if (buffer.size >= CHUNK) flush()
+        }
+        flush()
+    }
+
+    companion object {
+        const val CHUNK = 500
+    }
+}
