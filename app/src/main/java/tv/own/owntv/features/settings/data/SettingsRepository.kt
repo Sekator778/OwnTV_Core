@@ -29,6 +29,7 @@ class SettingsRepository(private val context: Context) {
         val THEME_MODE = stringPreferencesKey("theme_mode")
         val UI_ZOOM_PCT = intPreferencesKey("ui_zoom_percent")
         val ACCENT = stringPreferencesKey("accent_color")
+        val ACCENT_CUSTOM = stringPreferencesKey("accent_custom")
         val AVATAR_ID = intPreferencesKey("avatar_id")
         val ACTIVE_PROFILE = longPreferencesKey("active_profile_id")
         val DEFAULT_SOURCE = longPreferencesKey("default_source_id")
@@ -44,7 +45,75 @@ class SettingsRepository(private val context: Context) {
         val AUDIO_DELAY_MS = intPreferencesKey("audio_delay_ms")
         val PREF_AUDIO_LANG = stringPreferencesKey("pref_audio_lang")
         val PREF_SUB_LANG = stringPreferencesKey("pref_sub_lang")
+        // Per-section list sorting ("PLAYLIST" or "ALPHA")
+        val SORT_LIVE = stringPreferencesKey("sort_live")
+        val SORT_MOVIES = stringPreferencesKey("sort_movies")
+        val SORT_SERIES = stringPreferencesKey("sort_series")
+        val RESUME_MODE = stringPreferencesKey("resume_mode")
+        val UPDATE_CHECK_ON_START = booleanPreferencesKey("update_check_on_start")
+        val RENDER_MODE = stringPreferencesKey("render_mode")
     }
+
+    /**
+     * Video renderer. AUTO picks the best path per device: TV-class hardware gets zero-copy
+     * direct-to-surface rendering (smooth, native HDR; text subtitles drawn by the app);
+     * QUALITY forces mpv's GL renderer everywhere (full ASS/PGS subtitles + zoom, heavy on weak TVs).
+     */
+    enum class RenderMode(val label: String) { AUTO("Auto (recommended)"), QUALITY("Quality (mpv)") }
+
+    val renderMode: Flow<RenderMode> = context.dataStore.data.map { prefs ->
+        prefs[Keys.RENDER_MODE]?.let { runCatching { RenderMode.valueOf(it) }.getOrNull() } ?: RenderMode.AUTO
+    }
+
+    suspend fun setRenderMode(mode: RenderMode) {
+        context.dataStore.edit { it[Keys.RENDER_MODE] = mode.name }
+    }
+
+    /** Automatically check GitHub Releases for a newer version shortly after launch. */
+    val updateCheckOnStart: Flow<Boolean> = context.dataStore.data.map { it[Keys.UPDATE_CHECK_ON_START] ?: true }
+
+    suspend fun setUpdateCheckOnStart(enabled: Boolean) {
+        context.dataStore.edit { it[Keys.UPDATE_CHECK_ON_START] = enabled }
+    }
+
+    // --- Resume behavior for movies/episodes with a saved position ---
+
+    enum class ResumeMode(val label: String) {
+        AUTO("Always resume"), ASK("Ask to resume"), NEVER("Never resume")
+    }
+
+    val resumeMode: Flow<ResumeMode> = context.dataStore.data.map { prefs ->
+        prefs[Keys.RESUME_MODE]?.let { runCatching { ResumeMode.valueOf(it) }.getOrNull() } ?: ResumeMode.ASK
+    }
+
+    suspend fun setResumeMode(mode: ResumeMode) {
+        context.dataStore.edit { it[Keys.RESUME_MODE] = mode.name }
+    }
+
+    // --- List sorting (per browse section) ---
+
+    /** How a browse section's lists are ordered. */
+    enum class SortMode { PLAYLIST, ALPHA }
+
+    /** Live TV defaults to the playlist's own order; Movies/Series default to A–Z. */
+    val sortLive: Flow<SortMode> = context.dataStore.data.map { parseSort(it[Keys.SORT_LIVE], SortMode.PLAYLIST) }
+    val sortMovies: Flow<SortMode> = context.dataStore.data.map { parseSort(it[Keys.SORT_MOVIES], SortMode.ALPHA) }
+    val sortSeries: Flow<SortMode> = context.dataStore.data.map { parseSort(it[Keys.SORT_SERIES], SortMode.ALPHA) }
+
+    suspend fun setSortLive(mode: SortMode) {
+        context.dataStore.edit { it[Keys.SORT_LIVE] = mode.name }
+    }
+
+    suspend fun setSortMovies(mode: SortMode) {
+        context.dataStore.edit { it[Keys.SORT_MOVIES] = mode.name }
+    }
+
+    suspend fun setSortSeries(mode: SortMode) {
+        context.dataStore.edit { it[Keys.SORT_SERIES] = mode.name }
+    }
+
+    private fun parseSort(raw: String?, default: SortMode): SortMode =
+        raw?.let { runCatching { SortMode.valueOf(it) }.getOrNull() } ?: default
 
     // --- Video Player Settings ---
 
@@ -160,8 +229,19 @@ class SettingsRepository(private val context: Context) {
             ?: AccentColor.TEAL
     }
 
+    /** Picking a preset clears any custom accent so the preset takes effect. */
     suspend fun setAccent(accent: AccentColor) {
-        context.dataStore.edit { it[Keys.ACCENT] = accent.name }
+        context.dataStore.edit {
+            it[Keys.ACCENT] = accent.name
+            it[Keys.ACCENT_CUSTOM] = ""
+        }
+    }
+
+    /** Custom accent as a hex string ("#52DBC8"); blank = use the [accent] preset. */
+    val customAccent: Flow<String> = context.dataStore.data.map { it[Keys.ACCENT_CUSTOM] ?: "" }
+
+    suspend fun setCustomAccent(hex: String) {
+        context.dataStore.edit { it[Keys.ACCENT_CUSTOM] = hex.trim() }
     }
 
     /** Avatar for the current (placeholder) profile until real profiles arrive in the wizard. */

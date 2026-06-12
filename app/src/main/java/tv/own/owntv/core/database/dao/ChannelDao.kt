@@ -25,6 +25,13 @@ interface ChannelDao {
     @Query("SELECT * FROM channels WHERE id = :id")
     suspend fun getById(id: Long): ChannelEntity?
 
+    // --- Stable-key lookups (Backup & Restore resolution: content ids change on re-sync) ---
+    @Query("SELECT * FROM channels WHERE sourceId = :sourceId AND remoteId = :remoteId LIMIT 1")
+    suspend fun findByRemote(sourceId: Long, remoteId: String): ChannelEntity?
+
+    @Query("SELECT * FROM channels WHERE sourceId = :sourceId AND name = :name LIMIT 1")
+    suspend fun findByName(sourceId: Long, name: String): ChannelEntity?
+
     /** Channels that carry an EPG id (so the guide grid only lists channels that can have a schedule). */
     @Query(
         "SELECT * FROM channels WHERE sourceId IN (:sourceIds) AND epgChannelId IS NOT NULL AND epgChannelId != '' " +
@@ -32,12 +39,33 @@ interface ChannelDao {
     )
     suspend fun channelsForGuide(sourceIds: List<Long>, limit: Int): List<ChannelEntity>
 
-    // --- Browsing ---
+    /**
+     * Channels that actually HAVE programmes in the window — so the guide never wastes its row limit
+     * on channels without data. The id match is case/whitespace-insensitive: XMLTV channel ids often
+     * differ from the panel's epg_channel_id in case.
+     */
+    @Query(
+        "SELECT * FROM channels WHERE sourceId IN (:sourceIds) AND epgChannelId IS NOT NULL AND epgChannelId != '' " +
+            "AND (:query = '' OR name LIKE '%' || :query || '%') " +
+            "AND LOWER(TRIM(epgChannelId)) IN (" +
+            "  SELECT DISTINCT LOWER(TRIM(epgChannelId)) FROM epg_programmes " +
+            "  WHERE sourceId IN (:sourceIds) AND stopMs > :from AND startMs < :to" +
+            ") ORDER BY number ASC, name ASC LIMIT :limit",
+    )
+    suspend fun channelsWithGuide(sourceIds: List<Long>, from: Long, to: Long, query: String, limit: Int): List<ChannelEntity>
+
+    // --- Browsing (each list has a playlist-order and an A–Z variant; the sort chip picks one) ---
     @Query("SELECT * FROM channels WHERE categoryId = :categoryId ORDER BY sortOrder ASC, name ASC")
     fun pagingByCategory(categoryId: Long): PagingSource<Int, ChannelEntity>
 
+    @Query("SELECT * FROM channels WHERE categoryId = :categoryId ORDER BY name ASC")
+    fun pagingByCategoryAlpha(categoryId: Long): PagingSource<Int, ChannelEntity>
+
     @Query("SELECT * FROM channels WHERE sourceId IN (:sourceIds) ORDER BY name ASC")
     fun pagingAll(sourceIds: List<Long>): PagingSource<Int, ChannelEntity>
+
+    @Query("SELECT * FROM channels WHERE sourceId IN (:sourceIds) ORDER BY sourceId ASC, sortOrder ASC, name ASC")
+    fun pagingAllOriginal(sourceIds: List<Long>): PagingSource<Int, ChannelEntity>
 
     // --- Counts ---
     @Query("SELECT COUNT(*) FROM channels WHERE categoryId = :categoryId")

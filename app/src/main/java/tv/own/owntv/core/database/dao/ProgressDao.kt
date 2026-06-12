@@ -23,4 +23,8 @@ interface ProgressDao {
 
     @Query("DELETE FROM playback_progress WHERE profileId = :profileId AND mediaType = :type AND itemId = :itemId")
     suspend fun clear(profileId: Long, type: MediaType, itemId: Long)
+
+    /** Everything, for Backup & Restore. */
+    @Query("SELECT * FROM playback_progress")
+    suspend fun getAllOnce(): List<PlaybackProgressEntity>
 }

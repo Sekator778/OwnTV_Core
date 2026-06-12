@@ -19,11 +19,24 @@ interface MovieDao {
     @Query("SELECT * FROM movies WHERE id = :id")
     suspend fun getById(id: Long): MovieEntity?
 
+    // --- Stable-key lookups (Backup & Restore resolution: content ids change on re-sync) ---
+    @Query("SELECT * FROM movies WHERE sourceId = :sourceId AND remoteId = :remoteId LIMIT 1")
+    suspend fun findByRemote(sourceId: Long, remoteId: String): MovieEntity?
+
+    @Query("SELECT * FROM movies WHERE sourceId = :sourceId AND name = :name LIMIT 1")
+    suspend fun findByName(sourceId: Long, name: String): MovieEntity?
+
     @Query("SELECT * FROM movies WHERE categoryId = :categoryId ORDER BY sortOrder ASC, name ASC")
     fun pagingByCategory(categoryId: Long): PagingSource<Int, MovieEntity>
 
+    @Query("SELECT * FROM movies WHERE categoryId = :categoryId ORDER BY name ASC")
+    fun pagingByCategoryAlpha(categoryId: Long): PagingSource<Int, MovieEntity>
+
     @Query("SELECT * FROM movies WHERE sourceId IN (:sourceIds) ORDER BY name ASC")
     fun pagingAll(sourceIds: List<Long>): PagingSource<Int, MovieEntity>
+
+    @Query("SELECT * FROM movies WHERE sourceId IN (:sourceIds) ORDER BY sourceId ASC, sortOrder ASC, name ASC")
+    fun pagingAllOriginal(sourceIds: List<Long>): PagingSource<Int, MovieEntity>
 
     @Query("SELECT COUNT(*) FROM movies WHERE categoryId = :categoryId")
     fun countByCategory(categoryId: Long): Flow<Int>

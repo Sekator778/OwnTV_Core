@@ -4,6 +4,8 @@ import okhttp3.OkHttpClient
 import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
 import tv.own.owntv.core.backup.BackupManager
+import tv.own.owntv.core.backup.UserDataResolver
+import tv.own.owntv.core.customize.CustomizationStore
 import tv.own.owntv.core.download.DownloadManager
 import tv.own.owntv.core.network.ConnectivityObserver
 import tv.own.owntv.core.network.HttpClient
@@ -12,6 +14,7 @@ import tv.own.owntv.core.parser.XtreamClient
 import tv.own.owntv.core.repository.EpgRepository
 import tv.own.owntv.core.repository.SeriesRepository
 import tv.own.owntv.core.repository.SourceRepository
+import tv.own.owntv.core.update.UpdateManager
 import tv.own.owntv.core.sync.SyncManager
 import java.util.concurrent.TimeUnit
 
@@ -38,16 +41,22 @@ val dataModule = module {
     }
     single { HttpClient(get()) }
     single { ConnectivityObserver(androidContext()) }
+    single { CustomizationStore(androidContext()) }
     single { M3uParser() }
     single { XtreamClient(get()) }
     single { SyncManager(get(), get(), get(), get(), get(), get(), get(), get()) }
-    single { SourceRepository(get(), get()) }
+    // context, channelDao, movieDao, seriesDao, favoriteDao, historyDao, progressDao
+    single { UserDataResolver(androidContext(), get(), get(), get(), get(), get(), get()) }
+    // sourceDao, syncManager, userDataResolver
+    single { SourceRepository(get(), get(), get()) }
     // epgDao, httpClient, xtreamClient
     single { EpgRepository(get(), get(), get()) }
-    // seriesDao, sourceDao, xtreamClient
-    single { SeriesRepository(get(), get(), get()) }
+    // seriesDao, sourceDao, xtreamClient, userDataResolver
+    single { SeriesRepository(get(), get(), get(), get()) }
     // context, downloadDao, okHttpClient, settings
     single { DownloadManager(androidContext(), get(), get(), get()) }
-    // profileDao, sourceDao, settings
-    single { BackupManager(get(), get(), get()) }
+    // profileDao, sourceDao, settings, customizationStore, userDataResolver
+    single { BackupManager(get(), get(), get(), get(), get()) }
+    // context, okHttpClient — in-app updates from GitHub Releases
+    single { UpdateManager(androidContext(), get()) }
 }

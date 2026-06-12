@@ -16,6 +16,7 @@ import tv.own.owntv.core.sync.SyncResult
 class SourceRepository(
     private val sourceDao: SourceDao,
     private val syncManager: SyncManager,
+    private val userData: tv.own.owntv.core.backup.UserDataResolver,
 ) {
     fun observeSources(profileId: Long): Flow<List<SourceEntity>> = sourceDao.observeForProfile(profileId)
 
@@ -23,10 +24,10 @@ class SourceRepository(
 
     suspend fun addXtreamSource(
         profileId: Long, name: String, serverUrl: String, username: String, password: String,
-        userAgent: String? = null,
+        userAgent: String? = null, epgUrl: String? = null,
     ): SourceEntity = addAndLink(
         profileId,
-        SourceEntity(name = name, type = SourceType.XTREAM, url = serverUrl, username = username, password = password, userAgent = userAgent),
+        SourceEntity(name = name, type = SourceType.XTREAM, url = serverUrl, username = username, password = password, userAgent = userAgent, epgUrl = epgUrl),
     )
 
     suspend fun addM3uSource(
@@ -46,6 +47,12 @@ class SourceRepository(
 
     suspend fun updateSource(source: SourceEntity) = sourceDao.update(source)
 
-    suspend fun sync(source: SourceEntity, onProgress: (ImportStage) -> Unit): SyncResult =
-        syncManager.sync(source, onProgress)
+    suspend fun sync(source: SourceEntity, onProgress: (ImportStage) -> Unit): SyncResult {
+        val result = syncManager.sync(source, onProgress)
+        if (result == SyncResult.Success) {
+            // Content rows just regenerated — attach any restored favorites/history/progress to them.
+            runCatching { userData.resolvePending() }
+        }
+        return result
+    }
 }

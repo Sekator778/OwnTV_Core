@@ -15,6 +15,7 @@ class SeriesRepository(
     private val seriesDao: SeriesDao,
     private val sourceDao: SourceDao,
     private val xtream: XtreamClient,
+    private val userData: tv.own.owntv.core.backup.UserDataResolver,
 ) {
     /** Returns true if episodes are available (cached or freshly fetched). Xtream-only. */
     suspend fun loadEpisodes(series: SeriesEntity): Boolean = withContext(Dispatchers.IO) {
@@ -38,6 +39,8 @@ class SeriesRepository(
                 )
             }
             episodes.chunked(500).forEach { seriesDao.upsertEpisodes(it) }
+            // Episode rows just appeared — restored episode history/resume can attach now.
+            if (episodes.isNotEmpty()) runCatching { userData.resolvePending() }
             episodes.isNotEmpty()
         } catch (e: Exception) {
             false

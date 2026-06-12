@@ -23,9 +23,9 @@ class EpgRepository(
     private val http: HttpClient,
     private val xtream: XtreamClient,
 ) {
-    /** The guide URL for a source, or null if it has no EPG feed. */
+    /** The guide URL for a source, or null if it has no EPG feed. A manual EPG URL always wins. */
     fun guideUrl(source: SourceEntity): String? = when (source.type) {
-        SourceType.XTREAM -> xtream.xmltvUrl(source)
+        SourceType.XTREAM -> source.epgUrl?.takeIf { it.isNotBlank() } ?: xtream.xmltvUrl(source)
         SourceType.M3U -> source.epgUrl?.takeIf { it.isNotBlank() }
         SourceType.LOCAL_BACKUP -> null
     }
@@ -52,13 +52,17 @@ class EpgRepository(
             XmltvParser.parse(
                 input,
                 onChannel = { id, name ->
-                    channels.getOrPut(id) { EpgChannelEntity(sourceId = source.id, epgChannelId = id, displayName = name) }
+                    // Ids are stored normalized (trim+lowercase) so guide lookups can use the
+                    // (epgChannelId, startMs) index directly — XMLTV ids often differ from the
+                    // panel's epg_channel_id only in case.
+                    val key = id.trim().lowercase()
+                    channels.getOrPut(key) { EpgChannelEntity(sourceId = source.id, epgChannelId = key, displayName = name) }
                 },
                 onProgramme = { channelId, startMs, stopMs, title, desc ->
                     if (stopMs > from && startMs < to) {
                         buffer.add(
                             EpgProgrammeEntity(
-                                sourceId = source.id, epgChannelId = channelId,
+                                sourceId = source.id, epgChannelId = channelId.trim().lowercase(),
                                 startMs = startMs, stopMs = stopMs, title = title, description = desc,
                             ),
                         )

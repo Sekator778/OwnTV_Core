@@ -52,6 +52,8 @@ class OwnTVPlayer(
     private val settings: SettingsRepository,
 ) : MPVLib.EventObserver {
 
+    private companion object { const val TAG = "OwnTVPlayer" }
+
     private var mpv: MPVLib? = null
     private var initialized = false
     private var pendingSeekMs = 0L
@@ -64,6 +66,38 @@ class OwnTVPlayer(
     private var surfaceAttached = false
     private var pendingUrl: String? = null
     private var hdrHint = true
+    private var playerBudget: PlayerBudget? = null
+
+    // Decode watchdog state: if a >1080p video ends up on the software decoder, playback is aborted
+    // with a friendly error — CPU-decoding 4K/8K on a TV chip stutters, overheats, and OOM-kills the
+    // app (observed on a TCL G10). Both values arrive on mpv's event thread per loaded file.
+    @Volatile private var currentHwdec: String? = null
+    @Volatile private var currentHeightPx = 0
+    @Volatile private var currentWidthPx = 0
+    @Volatile private var decodeGuardTripped = false
+
+    // --- Render path -------------------------------------------------------------------------
+    // TV-class devices use mpv's direct decoder-to-surface output (vo=mediacodec_embed +
+    // hwdec=mediacodec): zero CPU copies, no GL shader work, the panel's own silicon renders HDR —
+    // the same pipeline YouTube/Netflix use, and the only one weak TV SoCs play 4K smoothly on.
+    // mpv's GL renderer (vo=gpu, copy-mode hwdec) remains for: strong devices, the QUALITY setting,
+    // software decoding (direct output can't display software frames), and as automatic fallback.
+    private var rendererAuto = true          // Settings → Video Player → Renderer (AUTO/QUALITY)
+    @Volatile private var directBroken = false // direct output failed on this device → stop trying
+    private val _directRender = MutableStateFlow(false)
+    /** True while the direct (decoder-to-surface) output is in use — HUD hides zoom, app draws subs. */
+    val directRender: StateFlow<Boolean> = _directRender.asStateFlow()
+
+    private fun useDirect(): Boolean =
+        playerBudget?.lowSpec == true && hwDecoding && rendererAuto && !directBroken
+
+    /** Apply vo/hwdec for the current render path (also safe live — mpv reinits decoder/output). */
+    private fun MPVLib.applyRenderConfig() {
+        val direct = useDirect()
+        setPropertyString("hwdec", if (!hwDecoding) "no" else if (direct) "mediacodec" else "mediacodec,mediacodec-copy")
+        if (surfaceAttached) setPropertyString("vo", if (direct) "mediacodec_embed" else "gpu")
+        _directRender.value = direct
+    }
 
     // Video Player Settings — cached so ensureInit can apply them as mpv options, and the observers
     // below apply changes live to a running player.
@@ -76,38 +110,76 @@ class OwnTVPlayer(
 
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
 
+    /**
+     * All mpv commands/property writes run on this single worker thread, never on the UI thread.
+     * libmpv calls are synchronous and can block for seconds while the core is stuck in a stalling
+     * network read (flaky live streams) — issuing them from the main thread caused ANRs ("Input
+     * dispatching timed out"). A single thread keeps the original call order.
+     */
+    private val mpvExecutor = java.util.concurrent.Executors.newSingleThreadExecutor { r ->
+        Thread(r, "mpv-cmd").apply { isDaemon = true }
+    }
+
+    private fun mpvAsync(block: MPVLib.() -> Unit) {
+        val m = mpv ?: return
+        mpvExecutor.execute { runCatching { m.block() } }
+    }
+
     init {
         // Track the HDR setting; apply it live and re-apply on each load via ensureInit.
         settings.hdrEnabled.onEach { enabled ->
             hdrHint = enabled
-            if (initialized) mpv?.setPropertyString("target-colorspace-hint", if (enabled) "yes" else "no")
+            if (initialized) mpvAsync { setPropertyString("target-colorspace-hint", if (enabled) "yes" else "no") }
         }.launchIn(scope)
         settings.hwDecoding.onEach { on ->
             hwDecoding = on
-            if (initialized) mpv?.setPropertyString("hwdec", if (on) "auto-safe" else "no")
+            if (initialized) mpvAsync { applyRenderConfig() }
+        }.launchIn(scope)
+        settings.renderMode.onEach { mode ->
+            rendererAuto = mode == SettingsRepository.RenderMode.AUTO
+            if (initialized) mpvAsync { applyRenderConfig() }
         }.launchIn(scope)
         settings.subtitleScale.onEach { s ->
             subScale = s.toDouble()
-            if (initialized) mpv?.setPropertyDouble("sub-scale", subScale)
+            if (initialized) mpvAsync { setPropertyDouble("sub-scale", subScale) }
         }.launchIn(scope)
         settings.audioDelayMs.onEach { ms ->
             audioDelaySec = ms / 1000.0
-            if (initialized) mpv?.setPropertyDouble("audio-delay", audioDelaySec)
+            if (initialized) mpvAsync { setPropertyDouble("audio-delay", audioDelaySec) }
         }.launchIn(scope)
         settings.preferredAudioLang.onEach { lang ->
             prefAudioLang = lang
-            if (initialized && lang.isNotBlank()) mpv?.setPropertyString("alang", lang)
+            if (initialized && lang.isNotBlank()) mpvAsync { setPropertyString("alang", lang) }
         }.launchIn(scope)
         settings.preferredSubLang.onEach { lang ->
             prefSubLang = lang
-            if (initialized && lang.isNotBlank()) mpv?.setPropertyString("slang", lang)
+            if (initialized && lang.isNotBlank()) mpvAsync { setPropertyString("slang", lang) }
         }.launchIn(scope)
         settings.defaultZoom.onEach { name ->
             defaultZoom = runCatching { ZoomMode.valueOf(name) }.getOrDefault(ZoomMode.FIT)
         }.launchIn(scope)
+
+        // Subtitle overlay feed: in direct mode mpv still decodes the selected subtitle track but
+        // can't draw it (no GL OSD) — poll the active line and let the Compose overlay render it.
+        scope.launch {
+            while (true) {
+                delay(250)
+                if (initialized && _directRender.value && currentUrl != null) {
+                    mpvAsync {
+                        val line = getPropertyString("sub-text")?.trim()?.takeIf { it.isNotEmpty() }
+                        if (_subText.value != line) _subText.value = line
+                    }
+                } else if (_subText.value != null) {
+                    _subText.value = null
+                }
+            }
+        }
     }
-    // Bumped on every load so a stale end-of-file error check can tell it's been superseded.
-    private var loadGeneration = 0
+    // Bumped on every load/stop so stale work can tell it's been superseded: the end-of-file error
+    // check, and queued loadfile commands (fast preview scrolling queues a burst — only the newest
+    // may run, or a slow provider makes the worker grind through dead loads). Volatile: written on
+    // the main thread, read on the mpv-cmd worker.
+    @Volatile private var loadGeneration = 0
     private var errorCheckJob: Job? = null
 
     private val _nav = MutableStateFlow(NavState(false, false))
@@ -140,6 +212,14 @@ class OwnTVPlayer(
     val volume: StateFlow<Int> = _volume.asStateFlow()
     private val _videoRes = MutableStateFlow<String?>(null)
     val videoRes: StateFlow<String?> = _videoRes.asStateFlow()
+
+    /** Video aspect ratio (w/h) — the surface view letterboxes itself with this in direct mode. */
+    private val _videoAspect = MutableStateFlow<Float?>(null)
+    val videoAspect: StateFlow<Float?> = _videoAspect.asStateFlow()
+
+    /** Current subtitle line(s) for the Compose overlay (direct mode only; null = nothing showing). */
+    private val _subText = MutableStateFlow<String?>(null)
+    val subText: StateFlow<String?> = _subText.asStateFlow()
     private val _audioCount = MutableStateFlow(0)
     val audioCount: StateFlow<Int> = _audioCount.asStateFlow()
     private val _subCount = MutableStateFlow(0)
@@ -153,22 +233,39 @@ class OwnTVPlayer(
 
     private fun ensureInit() {
         if (initialized) return
+        val budget = PlayerBudget.of(context)
+        playerBudget = budget
+        android.util.Log.i(TAG, "PlayerBudget: $budget")
         mpv = MPVLib.create(context)?.apply {
-            setOptionString("vo", "gpu")
+            setOptionString("vo", if (useDirect()) "mediacodec_embed" else "gpu")
             setOptionString("gpu-context", "android")
-            setOptionString("hwdec", if (hwDecoding) "auto-safe" else "no")
+            setOptionString("hwdec", if (!hwDecoding) "no" else if (useDirect()) "mediacodec" else "mediacodec,mediacodec-copy")
             setOptionString("ao", "audiotrack")
             setOptionString("force-window", "no")
             setOptionString("idle", "yes")
             setOptionString("ytdl", "no") // IPTV URLs are direct; skip the youtube-dl hook
-            setOptionString("msg-level", "all=warn") // quieter logcat: drop mpv's verbose per-frame logs
-            // Large demuxer cache so 4K/8K IPTV streams read ahead and don't stutter.
+            // Quiet logcat in release; debug builds keep decoder/video-out logs for diagnosing
+            // hwdec behavior on real TVs (which decoder engaged, why fallbacks happened).
+            setOptionString("msg-level", if (tv.own.owntv.BuildConfig.DEBUG) "all=warn,vd=v,vo=v" else "all=warn")
+            // Demuxer cache sized to the device (a fixed 256MiB OOM-killed real TVs — see PlayerBudget).
             setOptionString("cache", "yes")
-            setOptionString("demuxer-max-bytes", "256MiB")
-            setOptionString("demuxer-max-back-bytes", "64MiB")
-            setOptionString("demuxer-readahead-secs", "60")
-            setOptionString("cache-secs", "120")
+            setOptionString("demuxer-max-bytes", budget.demuxerMaxBytes)
+            setOptionString("demuxer-max-back-bytes", budget.demuxerBackBytes)
+            setOptionString("demuxer-readahead-secs", budget.readaheadSecs)
+            setOptionString("cache-secs", budget.cacheSecs)
+            if (budget.lowSpec) {
+                // GL diet for TV-class GPUs (e.g. PowerVR BXE on budget 4K panels): mpv's default
+                // render path tone-maps 4K HDR in rgba16f with quality scalers — that alone drops
+                // a TCL G10 to half-speed video. "fast" = bilinear scalers, no dither/deband.
+                setOptionString("profile", "fast")
+                setOptionString("fbo-format", "rgba8") // 4K rgba16f intermediates are ~64MB each
+                setOptionString("tone-mapping", "clip") // cheapest HDR→SDR
+            }
             setOptionString("network-timeout", "60")
+            // Strict IPTV panels briefly answer 5xx (e.g. 509 connection-limit right after a channel
+            // switch, while the old session still counts). Let FFmpeg retry those itself instead of
+            // EOF-ing the stream — the demuxer cache rides over the gap with no visible interruption.
+            setOptionString("stream-lavf-o", "reconnect=1,reconnect_streamed=1,reconnect_delay_max=8,reconnect_on_http_error=5xx")
             setOptionString("user-agent", HttpClient.DEFAULT_USER_AGENT)
             setOptionString("sub-scale-with-window", "yes")
             setOptionString("sub-scale", subScale.toString())
@@ -178,12 +275,23 @@ class OwnTVPlayer(
             // HDR passthrough: signal the source colorspace (incl. HDR10/HLG) to the display surface.
             setOptionString("target-colorspace-hint", if (hdrHint) "yes" else "no")
             init()
+            // Read back what mpv actually accepted — setOptionString failures are silent, and this
+            // line also identifies the running build in logcat captures.
+            _directRender.value = useDirect()
+            android.util.Log.i(
+                TAG,
+                "mpv ready: lowSpec=${budget.lowSpec} direct=${useDirect()} hwdec=${getPropertyString("hwdec")} " +
+                    "fbo=${getPropertyString("fbo-format")} cache=${getPropertyString("demuxer-max-bytes")}",
+            )
             observeProperty("time-pos", MPVLib.MpvFormat.MPV_FORMAT_INT64)
+            observeProperty("width", MPVLib.MpvFormat.MPV_FORMAT_INT64)
             observeProperty("duration", MPVLib.MpvFormat.MPV_FORMAT_INT64)
             observeProperty("pause", MPVLib.MpvFormat.MPV_FORMAT_FLAG)
             observeProperty("paused-for-cache", MPVLib.MpvFormat.MPV_FORMAT_FLAG)
             observeProperty("height", MPVLib.MpvFormat.MPV_FORMAT_INT64)
             observeProperty("speed", MPVLib.MpvFormat.MPV_FORMAT_DOUBLE)
+            // Decode watchdog input: which decoder is actually active ("mediacodec[-copy]" or "no").
+            observeProperty("hwdec-current", MPVLib.MpvFormat.MPV_FORMAT_STRING)
             addObserver(this@OwnTVPlayer)
         }
         initialized = mpv != null
@@ -255,9 +363,16 @@ class OwnTVPlayer(
         _videoRes.value = null
         expectingPlayback = true
         pendingSeekMs = startPositionMs
+        // Reset the decode watchdog + per-file video state.
+        currentHwdec = null
+        currentHeightPx = 0
+        currentWidthPx = 0
+        decodeGuardTripped = false
+        _videoAspect.value = null
+        _subText.value = null
         // Mute is a global mpv property, so set it now (applies whenever the file actually loads). The
         // live preview mutes; everything else plays with sound.
-        mpv?.setPropertyBoolean("mute", muted)
+        mpvAsync { setPropertyBoolean("mute", muted) }
         // Defer the actual loadfile until a surface exists, otherwise mpv inits video output with no
         // surface and falls back to audio-only. attachSurface() flushes the pending load.
         if (surfaceAttached) startLoad(url) else pendingUrl = url
@@ -265,30 +380,41 @@ class OwnTVPlayer(
 
     private fun startLoad(url: String) {
         pendingUrl = null
-        mpv?.command(arrayOf("loadfile", url))
-        mpv?.setPropertyBoolean("pause", false)
+        val gen = loadGeneration
+        mpvAsync {
+            // Superseded by a newer load or a stop while waiting in the queue? Skip the dead load —
+            // this keeps fast preview-scrolling from grinding through every channel it passed.
+            if (gen != loadGeneration) return@mpvAsync
+            command(arrayOf("loadfile", url))
+            setPropertyBoolean("pause", false)
+        }
         // mpv only fires the "pause" observer on a *change*; at startup pause is already false, so seed
         // the playing state here, otherwise the HUD shows PLAY while the stream is actually running.
         _isPlaying.value = true
     }
 
+    /** Mute/unmute without reloading — lets preview → fullscreen reuse the same stream connection. */
+    fun setMuted(muted: Boolean) {
+        if (initialized) mpvAsync { setPropertyBoolean("mute", muted) }
+    }
+
     fun togglePlayPause() {
-        if (initialized) mpv?.command(arrayOf("cycle", "pause"))
+        if (initialized) mpvAsync { command(arrayOf("cycle", "pause")) }
     }
 
     fun seekBy(deltaMs: Long) {
-        if (initialized) mpv?.command(arrayOf("seek", (deltaMs / 1000).toString(), "relative"))
+        if (initialized) mpvAsync { command(arrayOf("seek", (deltaMs / 1000).toString(), "relative")) }
     }
 
     fun setSpeed(speed: Double) {
-        if (initialized) mpv?.setPropertyDouble("speed", speed)
+        if (initialized) mpvAsync { setPropertyDouble("speed", speed) }
         _speed.value = speed
     }
 
     // --- Volume (mpv software volume, independent of the system/hardware volume) ---
     fun setVolume(percent: Int) {
         val v = percent.coerceIn(0, 150)
-        if (initialized) mpv?.setPropertyDouble("volume", v.toDouble())
+        if (initialized) mpvAsync { setPropertyDouble("volume", v.toDouble()) }
         _volume.value = v
         if (v > 0) preMuteVolume = v
     }
@@ -302,17 +428,21 @@ class OwnTVPlayer(
     // --- Zoom / aspect ---
     fun setZoomMode(mode: ZoomMode) {
         _zoomMode.value = mode
-        val m = mpv ?: return
-        // Reset, then apply the chosen mode's overrides.
-        m.setPropertyString("video-unscaled", "no")
-        m.setPropertyDouble("panscan", 0.0)
-        when (mode) {
-            ZoomMode.FIT -> { m.setPropertyString("keepaspect", "yes"); m.setPropertyString("video-aspect-override", "no") }
-            ZoomMode.FILL -> { m.setPropertyString("keepaspect", "yes"); m.setPropertyString("video-aspect-override", "no"); m.setPropertyDouble("panscan", 1.0) }
-            ZoomMode.STRETCH -> { m.setPropertyString("keepaspect", "no"); m.setPropertyString("video-aspect-override", "no") }
-            ZoomMode.ORIGINAL -> { m.setPropertyString("keepaspect", "yes"); m.setPropertyString("video-aspect-override", "no"); m.setPropertyString("video-unscaled", "yes") }
-            ZoomMode.FORCE_16_9 -> { m.setPropertyString("keepaspect", "yes"); m.setPropertyString("video-aspect-override", "16:9") }
-            ZoomMode.FORCE_4_3 -> { m.setPropertyString("keepaspect", "yes"); m.setPropertyString("video-aspect-override", "4:3") }
+        // Direct mode: the decoder owns the surface, GL scaling properties don't apply — the view
+        // itself letterboxes to the video aspect (see MpvVideoSurface), so FIT is always correct.
+        if (_directRender.value) return
+        mpvAsync {
+            // Reset, then apply the chosen mode's overrides.
+            setPropertyString("video-unscaled", "no")
+            setPropertyDouble("panscan", 0.0)
+            when (mode) {
+                ZoomMode.FIT -> { setPropertyString("keepaspect", "yes"); setPropertyString("video-aspect-override", "no") }
+                ZoomMode.FILL -> { setPropertyString("keepaspect", "yes"); setPropertyString("video-aspect-override", "no"); setPropertyDouble("panscan", 1.0) }
+                ZoomMode.STRETCH -> { setPropertyString("keepaspect", "no"); setPropertyString("video-aspect-override", "no") }
+                ZoomMode.ORIGINAL -> { setPropertyString("keepaspect", "yes"); setPropertyString("video-aspect-override", "no"); setPropertyString("video-unscaled", "yes") }
+                ZoomMode.FORCE_16_9 -> { setPropertyString("keepaspect", "yes"); setPropertyString("video-aspect-override", "16:9") }
+                ZoomMode.FORCE_4_3 -> { setPropertyString("keepaspect", "yes"); setPropertyString("video-aspect-override", "4:3") }
+            }
         }
     }
 
@@ -322,21 +452,51 @@ class OwnTVPlayer(
     }
 
     fun stop() {
-        if (initialized) mpv?.command(arrayOf("stop"))
+        loadGeneration++ // cancels any queued-but-not-yet-executed load
+        if (initialized) mpvAsync { command(arrayOf("stop")) }
         currentUrl = null
         pendingUrl = null
         _isPlaying.value = false
+        _buffering.value = false
+    }
+
+    /**
+     * The app moved to the background (Home / another app). An IPTV player has no background
+     * playback — stop the stream so the demuxer cache and decoder buffers are freed immediately.
+     * Holding them got the process LMK-killed at 490–620 MB PSS while invisible ("empty" state).
+     */
+    fun onAppBackgrounded() {
+        if (currentUrl != null || pendingUrl != null) stop()
+    }
+
+    /**
+     * The OS signaled serious memory pressure while we're alive: yield before the kernel takes.
+     * Shrinks the demuxer cache live (it prunes already-buffered data too).
+     */
+    fun onTrimMemory() {
+        if (!initialized) return
+        mpvAsync {
+            setPropertyString("demuxer-max-bytes", PlayerBudget.TRIM_DEMUXER_BYTES)
+            setPropertyString("demuxer-max-back-bytes", "8MiB")
+        }
     }
 
     fun release() {
         errorCheckJob?.cancel()
         scope.cancel()
         if (initialized) {
-            mpv?.removeObserver(this)
-            mpv?.destroy()
+            val m = mpv
             mpv = null
             initialized = false
+            // Destroy on the command thread so queued commands drain first (and never block the UI).
+            mpvExecutor.execute {
+                runCatching {
+                    m?.removeObserver(this)
+                    m?.destroy()
+                }
+            }
         }
+        mpvExecutor.shutdown()
     }
 
     // --- Surface (driven by the MpvVideoSurface view) ---
@@ -344,14 +504,14 @@ class OwnTVPlayer(
         ensureInit()
         mpv?.attachSurface(surface)
         mpv?.setOptionString("force-window", "yes")
-        mpv?.setOptionString("vo", "gpu")
+        mpv?.setOptionString("vo", if (useDirect()) "mediacodec_embed" else "gpu")
         surfaceAttached = true
         // Flush a load that was waiting for the surface (so video output inits correctly the first time).
         pendingUrl?.let { startLoad(it) }
     }
 
     fun setSurfaceSize(width: Int, height: Int) {
-        if (initialized) mpv?.setPropertyString("android-surface-size", "${width}x$height")
+        if (initialized) mpvAsync { setPropertyString("android-surface-size", "${width}x$height") }
     }
 
     fun detachSurface() {
@@ -363,10 +523,16 @@ class OwnTVPlayer(
     }
 
     // --- Tracks ---
-    fun audioTracks(): List<TrackOption> = tracks("audio")
-    fun textTracks(): List<TrackOption> = tracks("sub")
+    // Track lists are queried once per loaded file (on mpv's event thread) and cached, so the HUD
+    // never issues synchronous mpv reads from the UI thread (those block during network stalls → ANR).
+    private val _audioTrackList = MutableStateFlow<List<TrackOption>>(emptyList())
+    private val _subTrackList = MutableStateFlow<List<TrackOption>>(emptyList())
 
-    private fun tracks(type: String): List<TrackOption> {
+    fun audioTracks(): List<TrackOption> = _audioTrackList.value
+    fun textTracks(): List<TrackOption> = _subTrackList.value
+
+    /** Synchronous mpv read — only call off the main thread (mpv event thread / mpv-cmd worker). */
+    private fun queryTracks(type: String): List<TrackOption> {
         if (!initialized) return emptyList()
         val m = mpv ?: return emptyList()
         val count = m.getPropertyInt("track-list/count") ?: 0
@@ -383,15 +549,18 @@ class OwnTVPlayer(
     }
 
     fun selectAudio(mpvId: Int) {
-        if (initialized) mpv?.setPropertyInt("aid", mpvId)
+        if (initialized) mpvAsync { setPropertyInt("aid", mpvId) }
+        _audioTrackList.value = _audioTrackList.value.map { it.copy(selected = it.mpvId == mpvId) }
     }
 
     fun selectSubtitle(mpvId: Int) {
-        if (initialized) mpv?.setPropertyInt("sid", mpvId)
+        if (initialized) mpvAsync { setPropertyInt("sid", mpvId) }
+        _subTrackList.value = _subTrackList.value.map { it.copy(selected = it.mpvId == mpvId) }
     }
 
     fun disableSubtitles() {
-        if (initialized) mpv?.setPropertyString("sid", "no")
+        if (initialized) mpvAsync { setPropertyString("sid", "no") }
+        _subTrackList.value = _subTrackList.value.map { it.copy(selected = false) }
     }
 
     private fun label(title: String?, lang: String?, id: Int): String {
@@ -410,7 +579,57 @@ class OwnTVPlayer(
                 if (value > 0) expectingPlayback = false // playback actually started
             }
             "duration" -> _duration.value = value * 1000
-            "height" -> _videoRes.value = resolutionLabel(value.toInt())
+            "width" -> {
+                currentWidthPx = value.toInt()
+                updateAspect()
+            }
+            "height" -> {
+                _videoRes.value = resolutionLabel(value.toInt())
+                currentHeightPx = value.toInt()
+                updateAspect()
+                enforceDecodeGuard()
+            }
+        }
+    }
+
+    private fun updateAspect() {
+        val w = currentWidthPx
+        val h = currentHeightPx
+        _videoAspect.value = if (w > 0 && h > 0) w.toFloat() / h.toFloat() else null
+    }
+
+    /**
+     * Abort playback when a >1080p video lands on the SOFTWARE decoder (hwdec-current == "no"):
+     * TV CPUs can't sustain it — it stutters for a few seconds, then the memory/thermal pressure
+     * gets the whole app killed. ≤1080p software decoding stays allowed (viable, and the rescue
+     * path for streams the hardware decoder mangles).
+     */
+    private fun enforceDecodeGuard() {
+        if (decodeGuardTripped) return
+        val hw = currentHwdec ?: return
+        val h = currentHeightPx
+        if (h <= 1080 || (hw != "no" && hw.isNotEmpty())) return
+        android.util.Log.w(TAG, "Decode guard TRIPPED: ${h}px on software decoder")
+        decodeGuardTripped = true
+        val res = resolutionLabel(h) ?: "${h}p"
+        val msg = if (hwDecoding) {
+            "This TV's hardware decoder doesn't support this $res video, and software decoding " +
+                "above 1080p would overload the TV."
+        } else {
+            "Hardware decoding is turned off — software decoding can't handle $res video. " +
+                "Enable it in Settings → Video Player."
+        }
+        // Halt decoding but KEEP currentUrl so the HUD's Retry works (e.g. after the user flips the
+        // hardware-decoding setting, which applies live).
+        loadGeneration++
+        expectingPlayback = false
+        errorCheckJob?.cancel()
+        pendingUrl = null
+        mpvAsync { command(arrayOf("stop")) }
+        scope.launch {
+            _isPlaying.value = false
+            _buffering.value = false
+            _error.value = msg
         }
     }
 
@@ -431,7 +650,13 @@ class OwnTVPlayer(
         }
     }
 
-    override fun eventProperty(property: String, value: String) {}
+    override fun eventProperty(property: String, value: String) {
+        if (property == "hwdec-current") {
+            android.util.Log.i(TAG, "hwdec-current='$value' (height=${currentHeightPx}px, setting=${if (hwDecoding) "on" else "off"})")
+            currentHwdec = value
+            enforceDecodeGuard()
+        }
+    }
     override fun eventProperty(property: String, value: Double) {
         if (property == "speed") _speed.value = value
     }
@@ -440,17 +665,54 @@ class OwnTVPlayer(
         when (eventId) {
             MPVLib.MpvEvent.MPV_EVENT_FILE_LOADED -> {
                 // The new file opened successfully — cancel any pending error and clear a stale one.
+                // This callback runs on mpv's event thread (not main), so sync reads are safe here.
                 expectingPlayback = false
                 errorCheckJob?.cancel()
                 _error.value = null
-                _audioCount.value = audioTracks().size
-                _subCount.value = textTracks().size
+                _buffering.value = false // a reconnect's spinner ends when the new file loads
+                _audioTrackList.value = queryTracks("audio")
+                _subTrackList.value = queryTracks("sub")
+                _audioCount.value = _audioTrackList.value.size
+                _subCount.value = _subTrackList.value.size
                 mpv?.getPropertyBoolean("pause")?.let { _isPlaying.value = !it }
                 mpv?.getPropertyInt("height")?.let { _videoRes.value = resolutionLabel(it) }
                 setZoomMode(_zoomMode.value) // re-apply zoom on the new track
                 if (pendingSeekMs > 0) {
-                    mpv?.command(arrayOf("seek", (pendingSeekMs / 1000).toString(), "absolute"))
+                    val seekMs = pendingSeekMs
                     pendingSeekMs = 0
+                    mpvAsync { command(arrayOf("seek", (seekMs / 1000).toString(), "absolute")) }
+                }
+                // Decode watchdog, polled: the decoder is chosen a few seconds AFTER the file loads,
+                // and the hwdec-current STRING property event proved unreliable — so read it directly
+                // once the decoder has settled.
+                val gen = loadGeneration
+                scope.launch {
+                    delay(4_000)
+                    if (gen != loadGeneration) return@launch
+                    mpvAsync {
+                        val hw = getPropertyString("hwdec-current") ?: ""
+                        val h = getPropertyInt("height") ?: 0
+                        android.util.Log.i(TAG, "decode check: hwdec-current='$hw' height=${h}px direct=${_directRender.value}")
+                        // Direct output can only display hardware frames — if the direct decoder
+                        // didn't engage on this device, fall back to the GL renderer and reload.
+                        if (_directRender.value && (hw.isEmpty() || hw == "no")) {
+                            android.util.Log.w(TAG, "direct render failed — falling back to the GL renderer")
+                            directBroken = true
+                            applyRenderConfig()
+                            val url = currentUrl
+                            val pos = _position.value
+                            if (url != null) scope.launch {
+                                loadUrl(
+                                    url, MediaMeta(currentTitle, currentSubtitle, currentYear, currentLogoUrl),
+                                    isLiveContent, if (isLiveContent) 0 else pos,
+                                )
+                            }
+                            return@mpvAsync
+                        }
+                        currentHwdec = hw.ifEmpty { null }
+                        if (h > 0) currentHeightPx = h
+                        enforceDecodeGuard()
+                    }
                 }
             }
             // A file ended. This also fires for the *previous* item when we load a new one (next/prev),
@@ -462,8 +724,21 @@ class OwnTVPlayer(
                     errorCheckJob = scope.launch {
                         delay(1500)
                         if (expectingPlayback && gen == loadGeneration) {
+                            _buffering.value = false
                             _error.value = "Couldn't play this stream. The source may be offline or use an unsupported format."
                         }
+                    }
+                } else if (isLiveContent && currentUrl != null) {
+                    // A live stream died mid-play (provider hiccup / connection limit → HTTP 509):
+                    // mpv goes idle and the screen would just stay blank. Show the buffering spinner
+                    // and reconnect after a short pause; if that load also fails, the expectingPlayback
+                    // path above shows the error UI with its Retry button. A user stop()/new load bumps
+                    // loadGeneration and cancels.
+                    _buffering.value = true
+                    val gen = loadGeneration
+                    scope.launch {
+                        delay(1200)
+                        if (gen == loadGeneration && currentUrl != null) retry() else _buffering.value = false
                     }
                 }
             }

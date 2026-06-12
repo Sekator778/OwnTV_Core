@@ -36,7 +36,23 @@ interface EpgDao {
     @Query("SELECT * FROM epg_programmes WHERE sourceId IN (:sourceIds) AND stopMs > :from AND startMs < :to ORDER BY epgChannelId ASC, startMs ASC")
     suspend fun programmesInWindow(sourceIds: List<Long>, from: Long, to: Long): List<EpgProgrammeEntity>
 
+    /**
+     * One guide row's programmes, loaded lazily when the row scrolls into view. [epgKey] must be the
+     * normalized (trim+lowercase) id — programmes are stored normalized, so this hits the
+     * (epgChannelId, startMs) index and stays instant even with 100k+ stored programmes.
+     */
+    @Query("SELECT * FROM epg_programmes WHERE epgChannelId = :epgKey AND sourceId IN (:sourceIds) AND stopMs > :from AND startMs < :to ORDER BY startMs ASC")
+    suspend fun programmesForChannel(sourceIds: List<Long>, epgKey: String, from: Long, to: Long): List<EpgProgrammeEntity>
+
     /** How many programmes are stored for these sources (to tell "no guide yet" from "empty window"). */
     @Query("SELECT COUNT(*) FROM epg_programmes WHERE sourceId IN (:sourceIds)")
     suspend fun countForSources(sourceIds: List<Long>): Int
+
+    /** Live programme count for one source — drives the EPG status shown on the source row. */
+    @Query("SELECT COUNT(*) FROM epg_programmes WHERE sourceId = :sourceId")
+    fun countForSource(sourceId: Long): Flow<Int>
+
+    /** How many distinct channels actually have guide data (for the Guide's status line). */
+    @Query("SELECT COUNT(DISTINCT epgChannelId) FROM epg_programmes WHERE sourceId IN (:sourceIds)")
+    suspend fun countGuideChannels(sourceIds: List<Long>): Int
 }

@@ -26,4 +26,8 @@ interface FavoriteDao {
     /** Favorite item ids for a type, so lists can mark rows without a per-row query. */
     @Query("SELECT itemId FROM favorites WHERE profileId = :profileId AND mediaType = :type")
     fun observeFavoriteIds(profileId: Long, type: MediaType): Flow<List<Long>>
+
+    /** Everything, for Backup & Restore. */
+    @Query("SELECT * FROM favorites")
+    suspend fun getAllOnce(): List<FavoriteEntity>
 }

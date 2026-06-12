@@ -23,11 +23,30 @@ interface SeriesDao {
     @Query("SELECT * FROM series WHERE id = :id")
     suspend fun getSeriesById(id: Long): SeriesEntity?
 
+    // --- Stable-key lookups (Backup & Restore resolution: content ids change on re-sync) ---
+    @Query("SELECT * FROM series WHERE sourceId = :sourceId AND remoteId = :remoteId LIMIT 1")
+    suspend fun findSeriesByRemote(sourceId: Long, remoteId: String): SeriesEntity?
+
+    @Query("SELECT * FROM series WHERE sourceId = :sourceId AND name = :name LIMIT 1")
+    suspend fun findSeriesByName(sourceId: Long, name: String): SeriesEntity?
+
+    @Query("SELECT * FROM episodes WHERE seriesId = :seriesId AND remoteId = :remoteId LIMIT 1")
+    suspend fun findEpisodeByRemote(seriesId: Long, remoteId: String): EpisodeEntity?
+
+    @Query("SELECT * FROM episodes WHERE seriesId = :seriesId AND seasonNumber = :season AND episodeNumber = :episode LIMIT 1")
+    suspend fun findEpisodeByNumber(seriesId: Long, season: Int, episode: Int): EpisodeEntity?
+
     @Query("SELECT * FROM series WHERE categoryId = :categoryId ORDER BY sortOrder ASC, name ASC")
     fun pagingByCategory(categoryId: Long): PagingSource<Int, SeriesEntity>
 
+    @Query("SELECT * FROM series WHERE categoryId = :categoryId ORDER BY name ASC")
+    fun pagingByCategoryAlpha(categoryId: Long): PagingSource<Int, SeriesEntity>
+
     @Query("SELECT * FROM series WHERE sourceId IN (:sourceIds) ORDER BY name ASC")
     fun pagingAll(sourceIds: List<Long>): PagingSource<Int, SeriesEntity>
+
+    @Query("SELECT * FROM series WHERE sourceId IN (:sourceIds) ORDER BY sourceId ASC, sortOrder ASC, name ASC")
+    fun pagingAllOriginal(sourceIds: List<Long>): PagingSource<Int, SeriesEntity>
 
     @Query("SELECT COUNT(*) FROM series WHERE categoryId = :categoryId")
     fun countByCategory(categoryId: Long): Flow<Int>

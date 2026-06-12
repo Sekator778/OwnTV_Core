@@ -61,9 +61,10 @@ class SyncManager(
     private suspend fun syncXtream(s: SourceEntity, onProgress: (ImportStage) -> Unit) {
         val ctx = currentCoroutineContext()
 
-        // LIVE
+        // LIVE — sortOrder records the provider's order so "Playlist order" sorting can replay it.
         val liveMap = refreshCategories(s, MediaType.LIVE, xtream.liveCategories(s))
         channelDao.clearSource(s.id)
+        var liveOrder = 0
         chunked<ChannelEntity>(ctx, "Channels", onProgress, { channelDao.upsertAll(it) }) { add ->
             xtream.streamLive(s) { item ->
                 add(
@@ -71,6 +72,7 @@ class SyncManager(
                         sourceId = s.id, categoryId = liveMap[item.categoryId], name = item.name,
                         logoUrl = item.icon, streamUrl = xtream.liveUrl(s, item.streamId),
                         epgChannelId = item.epgChannelId, number = item.num, remoteId = item.streamId,
+                        sortOrder = liveOrder++,
                     ),
                 )
             }
@@ -79,6 +81,7 @@ class SyncManager(
         // MOVIES
         val vodMap = refreshCategories(s, MediaType.MOVIE, xtream.vodCategories(s))
         movieDao.clearSource(s.id)
+        var vodOrder = 0
         chunked<MovieEntity>(ctx, "Movies", onProgress, { movieDao.upsertAll(it) }) { add ->
             xtream.streamVod(s) { item ->
                 add(
@@ -87,6 +90,7 @@ class SyncManager(
                         posterUrl = item.icon, rating = item.rating,
                         streamUrl = xtream.movieUrl(s, item.streamId, item.containerExt),
                         containerExt = item.containerExt, remoteId = item.streamId, addedAt = item.added,
+                        sortOrder = vodOrder++,
                     ),
                 )
             }
@@ -95,6 +99,7 @@ class SyncManager(
         // SERIES (shows only; seasons/episodes fetched lazily later)
         val seriesMap = refreshCategories(s, MediaType.SERIES, xtream.seriesCategories(s))
         seriesDao.clearSource(s.id)
+        var seriesOrder = 0
         chunked<SeriesEntity>(ctx, "Series", onProgress, { seriesDao.upsertSeries(it) }) { add ->
             xtream.streamSeries(s) { item ->
                 add(
@@ -102,6 +107,7 @@ class SyncManager(
                         sourceId = s.id, categoryId = seriesMap[item.categoryId], name = item.name,
                         posterUrl = item.cover, plot = item.plot, rating = item.rating,
                         year = item.year, remoteId = item.seriesId,
+                        sortOrder = seriesOrder++,
                     ),
                 )
             }
@@ -114,7 +120,8 @@ class SyncManager(
         parsed: List<tv.own.owntv.core.parser.XtCategory>,
     ): Map<String, Long> {
         categoryDao.clear(s.id, type)
-        val entities = parsed.map { CategoryEntity(sourceId = s.id, mediaType = type, name = it.name, remoteId = it.id) }
+        // sortOrder = provider index, so the rail follows the provider's category order.
+        val entities = parsed.mapIndexed { i, c -> CategoryEntity(sourceId = s.id, mediaType = type, name = c.name, remoteId = c.id, sortOrder = i) }
         val ids = categoryDao.upsertAll(entities)
         return parsed.mapIndexedNotNull { i, c -> ids.getOrNull(i)?.let { c.id to it } }.toMap()
     }
@@ -128,6 +135,7 @@ class SyncManager(
         val groupToCategoryId = HashMap<String, Long>()
         val buffer = ArrayList<ChannelEntity>(CHUNK)
         var processed = 0
+        var order = 0 // playlist position — lets "Playlist order" sorting replay the file's order
 
         val header = http.get(s.url, s.userAgent) { input ->
             m3u.parse(input) { e ->
@@ -135,7 +143,8 @@ class SyncManager(
                     groupToCategoryId.getOrPut(group) {
                         runBlocking {
                             categoryDao.upsertAll(
-                                listOf(CategoryEntity(sourceId = s.id, mediaType = MediaType.LIVE, name = group, remoteId = group)),
+                                // sortOrder = first-seen position of the group in the playlist
+                                listOf(CategoryEntity(sourceId = s.id, mediaType = MediaType.LIVE, name = group, remoteId = group, sortOrder = groupToCategoryId.size)),
                             ).first()
                         }
                     }
@@ -145,6 +154,7 @@ class SyncManager(
                         sourceId = s.id, categoryId = categoryId, name = e.name, logoUrl = e.logo,
                         streamUrl = e.streamUrl, epgChannelId = e.tvgId, number = e.tvgChno,
                         remoteId = null, // M3U has no stable id; rely on clear-then-insert
+                        sortOrder = order++,
                     ),
                 )
                 if (buffer.size >= CHUNK) {
