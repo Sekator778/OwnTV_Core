@@ -52,7 +52,10 @@ class OwnTVPlayer(
     private val settings: SettingsRepository,
 ) : MPVLib.EventObserver {
 
-    private companion object { const val TAG = "OwnTVPlayer" }
+    private companion object {
+        const val TAG = "OwnTVPlayer"
+        const val MAX_AUTO_RETRIES = 3 // silent retries (backoff) before showing the error UI
+    }
 
     private var mpv: MPVLib? = null
     private var initialized = false
@@ -82,14 +85,32 @@ class OwnTVPlayer(
     // the same pipeline YouTube/Netflix use, and the only one weak TV SoCs play 4K smoothly on.
     // mpv's GL renderer (vo=gpu, copy-mode hwdec) remains for: strong devices, the QUALITY setting,
     // software decoding (direct output can't display software frames), and as automatic fallback.
-    private var rendererAuto = true          // Settings → Video Player → Renderer (AUTO/QUALITY)
-    @Volatile private var directBroken = false // direct output failed on this device → stop trying
+    private var renderMode = SettingsRepository.RenderMode.SMOOTH
+    // Direct failed on the LAST load → try GL for this one. Unlike before this is NOT sticky for the
+    // whole session: it's cleared on each new load so a transient cold-boot decoder-busy (which our
+    // auto-retry usually heals first) can't permanently demote the user to the heavy renderer.
+    @Volatile private var directFailedLastLoad = false
+    // Silent auto-retry budget for a load that fails to start (transient: cold-boot decoder-busy,
+    // a provider 5xx, the surface-timing race). Reset per genuinely-new item; counts up across
+    // retries with backoff, then the error UI + manual Retry takes over.
+    @Volatile private var autoRetries = 0
     private val _directRender = MutableStateFlow(false)
     /** True while the direct (decoder-to-surface) output is in use — HUD hides zoom, app draws subs. */
     val directRender: StateFlow<Boolean> = _directRender.asStateFlow()
 
-    private fun useDirect(): Boolean =
-        playerBudget?.lowSpec == true && hwDecoding && rendererAuto && !directBroken
+    /**
+     * Pick the render path. SMOOTH = always direct (any device, never demote); AUTO = direct on
+     * TV-class hardware, GL elsewhere, GL fallback after a failure; QUALITY = always GL.
+     * Software decoding (hwDecoding off) always uses GL — the direct surface can't show SW frames.
+     */
+    private fun useDirect(): Boolean {
+        if (!hwDecoding) return false
+        return when (renderMode) {
+            SettingsRepository.RenderMode.QUALITY -> false
+            SettingsRepository.RenderMode.SMOOTH -> true
+            SettingsRepository.RenderMode.AUTO -> playerBudget?.lowSpec == true && !directFailedLastLoad
+        }
+    }
 
     /** Apply vo/hwdec for the current render path (also safe live — mpv reinits decoder/output). */
     private fun MPVLib.applyRenderConfig() {
@@ -136,7 +157,7 @@ class OwnTVPlayer(
             if (initialized) mpvAsync { applyRenderConfig() }
         }.launchIn(scope)
         settings.renderMode.onEach { mode ->
-            rendererAuto = mode == SettingsRepository.RenderMode.AUTO
+            renderMode = mode
             if (initialized) mpvAsync { applyRenderConfig() }
         }.launchIn(scope)
         settings.subtitleScale.onEach { s ->
@@ -158,22 +179,9 @@ class OwnTVPlayer(
         settings.defaultZoom.onEach { name ->
             defaultZoom = runCatching { ZoomMode.valueOf(name) }.getOrDefault(ZoomMode.FIT)
         }.launchIn(scope)
-
-        // Subtitle overlay feed: in direct mode mpv still decodes the selected subtitle track but
-        // can't draw it (no GL OSD) — poll the active line and let the Compose overlay render it.
-        scope.launch {
-            while (true) {
-                delay(250)
-                if (initialized && _directRender.value && currentUrl != null) {
-                    mpvAsync {
-                        val line = getPropertyString("sub-text")?.trim()?.takeIf { it.isNotEmpty() }
-                        if (_subText.value != line) _subText.value = line
-                    }
-                } else if (_subText.value != null) {
-                    _subText.value = null
-                }
-            }
-        }
+        // Subtitle overlay is fed by OBSERVING "sub-text" (see eventProperty) — not polling. The old
+        // 250 ms getPropertyString poll logged a "property unavailable" error 4×/sec whenever no line
+        // was on screen, flooding logcat and burning a cross-thread call the whole time.
     }
     // Bumped on every load/stop so stale work can tell it's been superseded: the end-of-file error
     // check, and queued loadfile commands (fast preview scrolling queues a burst — only the newest
@@ -292,6 +300,8 @@ class OwnTVPlayer(
             observeProperty("speed", MPVLib.MpvFormat.MPV_FORMAT_DOUBLE)
             // Decode watchdog input: which decoder is actually active ("mediacodec[-copy]" or "no").
             observeProperty("hwdec-current", MPVLib.MpvFormat.MPV_FORMAT_STRING)
+            // Current subtitle line for the app-drawn overlay (direct mode); fires only on change.
+            observeProperty("sub-text", MPVLib.MpvFormat.MPV_FORMAT_STRING)
             addObserver(this@OwnTVPlayer)
         }
         initialized = mpv != null
@@ -349,7 +359,14 @@ class OwnTVPlayer(
         _nav.value = NavState(playlistIndex > 0, playlistIndex < playlist.size - 1)
     }
 
-    private fun loadUrl(url: String, meta: MediaMeta, isLive: Boolean, startPositionMs: Long, muted: Boolean = false) {
+    private fun loadUrl(
+        url: String,
+        meta: MediaMeta,
+        isLive: Boolean,
+        startPositionMs: Long,
+        muted: Boolean = false,
+        resetRetries: Boolean = true,
+    ) {
         ensureInit()
         currentTitle = meta.title
         currentSubtitle = meta.subtitle
@@ -363,6 +380,12 @@ class OwnTVPlayer(
         _videoRes.value = null
         expectingPlayback = true
         pendingSeekMs = startPositionMs
+        // A genuinely new item resets the failure budget and re-arms the direct path; an auto-retry
+        // / GL-demote reload of the SAME item passes resetRetries=false to keep that state.
+        if (resetRetries) {
+            autoRetries = 0
+            directFailedLastLoad = false
+        }
         // Reset the decode watchdog + per-file video state.
         currentHwdec = null
         currentHeightPx = 0
@@ -570,7 +593,10 @@ class OwnTVPlayer(
     }
 
     // --- mpv event callbacks (called off the main thread) ---
-    override fun eventProperty(property: String) {}
+    override fun eventProperty(property: String) {
+        // A string property went unavailable/null. For sub-text that means "no line on screen now".
+        if (property == "sub-text") _subText.value = null
+    }
 
     override fun eventProperty(property: String, value: Long) {
         when (property) {
@@ -651,10 +677,17 @@ class OwnTVPlayer(
     }
 
     override fun eventProperty(property: String, value: String) {
-        if (property == "hwdec-current") {
-            android.util.Log.i(TAG, "hwdec-current='$value' (height=${currentHeightPx}px, setting=${if (hwDecoding) "on" else "off"})")
-            currentHwdec = value
-            enforceDecodeGuard()
+        when (property) {
+            "hwdec-current" -> {
+                android.util.Log.i(TAG, "hwdec-current='$value' (height=${currentHeightPx}px, setting=${if (hwDecoding) "on" else "off"})")
+                currentHwdec = value
+                enforceDecodeGuard()
+            }
+            // Active subtitle line for the app-drawn overlay (direct mode only; GL mode draws its own).
+            "sub-text" -> {
+                val line = value.trim().takeIf { it.isNotEmpty() }
+                _subText.value = if (_directRender.value) line else null
+            }
         }
     }
     override fun eventProperty(property: String, value: Double) {
@@ -683,8 +716,7 @@ class OwnTVPlayer(
                     mpvAsync { command(arrayOf("seek", (seekMs / 1000).toString(), "absolute")) }
                 }
                 // Decode watchdog, polled: the decoder is chosen a few seconds AFTER the file loads,
-                // and the hwdec-current STRING property event proved unreliable — so read it directly
-                // once the decoder has settled.
+                // so read it directly once it has settled (the observed event also runs enforceDecodeGuard).
                 val gen = loadGeneration
                 scope.launch {
                     delay(4_000)
@@ -692,20 +724,31 @@ class OwnTVPlayer(
                     mpvAsync {
                         val hw = getPropertyString("hwdec-current") ?: ""
                         val h = getPropertyInt("height") ?: 0
-                        android.util.Log.i(TAG, "decode check: hwdec-current='$hw' height=${h}px direct=${_directRender.value}")
-                        // Direct output can only display hardware frames — if the direct decoder
-                        // didn't engage on this device, fall back to the GL renderer and reload.
+                        android.util.Log.i(TAG, "decode check: hwdec-current='$hw' height=${h}px direct=${_directRender.value} mode=$renderMode")
+                        // Direct output can only display hardware frames. If the direct decoder didn't
+                        // engage (cold-boot decoder-busy, etc.), recover per render mode:
+                        //  - AUTO: demote THIS reload to the GL renderer (non-sticky — the next item
+                        //    re-arms direct), so the user keeps watching even if slower.
+                        //  - SMOOTH: never demote to the heavy path — retry direct (the decoder usually
+                        //    frees within seconds); fall through to the error UI only if it never does.
                         if (_directRender.value && (hw.isEmpty() || hw == "no")) {
-                            android.util.Log.w(TAG, "direct render failed — falling back to the GL renderer")
-                            directBroken = true
-                            applyRenderConfig()
-                            val url = currentUrl
-                            val pos = _position.value
-                            if (url != null) scope.launch {
-                                loadUrl(
-                                    url, MediaMeta(currentTitle, currentSubtitle, currentYear, currentLogoUrl),
-                                    isLiveContent, if (isLiveContent) 0 else pos,
-                                )
+                            val pos = if (isLiveContent) 0L else _position.value
+                            if (renderMode == SettingsRepository.RenderMode.AUTO) {
+                                android.util.Log.w(TAG, "direct failed — AUTO falling back to GL for this item")
+                                directFailedLastLoad = true
+                                applyRenderConfig()
+                                scope.launch { loadUrl(currentUrl ?: return@launch, MediaMeta(currentTitle, currentSubtitle, currentYear, currentLogoUrl), isLiveContent, pos, resetRetries = false) }
+                            } else if (autoRetries < MAX_AUTO_RETRIES) {
+                                autoRetries++
+                                android.util.Log.w(TAG, "direct failed — SMOOTH retry $autoRetries/$MAX_AUTO_RETRIES")
+                                _buffering.value = true
+                                scope.launch {
+                                    delay(800L * autoRetries)
+                                    if (gen == loadGeneration) loadUrl(currentUrl ?: return@launch, MediaMeta(currentTitle, currentSubtitle, currentYear, currentLogoUrl), isLiveContent, pos, resetRetries = false)
+                                }
+                            } else {
+                                android.util.Log.w(TAG, "direct failed — retries exhausted, showing error")
+                                scope.launch { _buffering.value = false; _error.value = "This TV's video decoder is busy. Try again in a moment." }
                             }
                             return@mpvAsync
                         }
@@ -723,7 +766,22 @@ class OwnTVPlayer(
                     errorCheckJob?.cancel()
                     errorCheckJob = scope.launch {
                         delay(1500)
-                        if (expectingPlayback && gen == loadGeneration) {
+                        if (!expectingPlayback || gen != loadGeneration) return@launch
+                        // The stream didn't start. Silently retry a few times with backoff before
+                        // surfacing the error — handles transient failures (cold-boot decoder-busy,
+                        // a provider 5xx, the first-play surface race) so the user rarely sees an error.
+                        if (autoRetries < MAX_AUTO_RETRIES && currentUrl != null) {
+                            autoRetries++
+                            android.util.Log.w(TAG, "playback didn't start — auto-retry $autoRetries/$MAX_AUTO_RETRIES")
+                            _buffering.value = true
+                            delay(700L * autoRetries)
+                            if (gen == loadGeneration && currentUrl != null) {
+                                loadUrl(
+                                    currentUrl!!, MediaMeta(currentTitle, currentSubtitle, currentYear, currentLogoUrl),
+                                    isLiveContent, if (isLiveContent) 0L else _position.value, resetRetries = false,
+                                )
+                            }
+                        } else {
                             _buffering.value = false
                             _error.value = "Couldn't play this stream. The source may be offline or use an unsupported format."
                         }

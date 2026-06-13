@@ -55,14 +55,21 @@ class SettingsRepository(private val context: Context) {
     }
 
     /**
-     * Video renderer. AUTO picks the best path per device: TV-class hardware gets zero-copy
-     * direct-to-surface rendering (smooth, native HDR; text subtitles drawn by the app);
-     * QUALITY forces mpv's GL renderer everywhere (full ASS/PGS subtitles + zoom, heavy on weak TVs).
+     * Video renderer:
+     *  - SMOOTH  — zero-copy direct decoder-to-surface everywhere it can run (the smooth path that
+     *    budget 4K TVs need); never silently demotes to the heavy renderer. App-drawn text subtitles.
+     *  - AUTO    — direct on TV-class hardware, mpv's GL renderer on capable devices; falls back to
+     *    GL if direct can't run.
+     *  - QUALITY — always mpv's GL renderer: full ASS/PGS subtitle styling + zoom, heavy on weak TVs.
      */
-    enum class RenderMode(val label: String) { AUTO("Auto (recommended)"), QUALITY("Quality (mpv)") }
+    enum class RenderMode(val label: String, val hint: String) {
+        SMOOTH("Smooth", "Best for TVs — fastest, native HDR"),
+        AUTO("Auto", "Picks per device"),
+        QUALITY("Quality", "Full mpv GL renderer — heavier"),
+    }
 
     val renderMode: Flow<RenderMode> = context.dataStore.data.map { prefs ->
-        prefs[Keys.RENDER_MODE]?.let { runCatching { RenderMode.valueOf(it) }.getOrNull() } ?: RenderMode.AUTO
+        prefs[Keys.RENDER_MODE]?.let { runCatching { RenderMode.valueOf(it) }.getOrNull() } ?: RenderMode.SMOOTH
     }
 
     suspend fun setRenderMode(mode: RenderMode) {
