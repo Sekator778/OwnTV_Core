@@ -50,6 +50,7 @@ enum class ZoomMode(val label: String) {
 class OwnTVPlayer(
     private val context: Context,
     private val settings: SettingsRepository,
+    private val connectivity: tv.own.owntv.core.network.ConnectivityObserver,
 ) : MPVLib.EventObserver {
 
     private companion object {
@@ -113,6 +114,10 @@ class OwnTVPlayer(
     // per item, before the error shows — so the user no longer has to flip the global hardware-decoding
     // setting off. Per-item only; never changes the user's setting. Reset on each genuinely-new item.
     @Volatile private var forceSoftwareThisLoad = false
+    // A live Xtream stream that won't start on the default `.ts` (MPEG-TS) endpoint is retried once on
+    // the provider's `.m3u8` (HLS) variant before erroring — covers the rare panel that only serves HLS.
+    // Per-item; reset on each genuinely-new item.
+    @Volatile private var triedAltFormat = false
     private val _directRender = MutableStateFlow(false)
     /** True while the direct (decoder-to-surface) output is in use — HUD hides zoom, app draws subs. */
     val directRender: StateFlow<Boolean> = _directRender.asStateFlow()
@@ -120,6 +125,14 @@ class OwnTVPlayer(
     /** Hardware decoding effectively in use right now — the global setting, minus a per-item override
      *  forced on after the hardware decoder failed to start a stream. */
     private fun hwDecodingActive(): Boolean = hwDecoding && !forceSoftwareThisLoad
+
+    /** Silent-retry budget per content type: Live TV is worth retrying (cold-boot decoder lag, server
+     *  hiccups); VOD failures are usually bad links, so fail faster with a single attempt. */
+    private fun maxRetries(): Int = if (isLiveContent) MAX_AUTO_RETRIES else 1
+
+    /** Exponential backoff between silent retries: 1s, 2s, 4s for attempts 1..3 — gives the cold-boot
+     *  decoder a bit more breathing room each time. */
+    private fun backoffMs(attempt: Int): Long = 1000L * (1L shl (attempt - 1).coerceIn(0, 5))
 
     /** Direct decoder-to-surface output. The only non-direct case is software decoding (hwdec off or
      *  the per-item rescue), which the direct surface can't display, so it uses the GL renderer. */
@@ -398,6 +411,7 @@ class OwnTVPlayer(
         // the SAME item passes resetRetries=false to keep that state.
         if (resetRetries) {
             autoRetries = 0
+            triedAltFormat = false
             // A new item re-arms hardware decoding (the software override is per-item) — restore the
             // direct render path so one bad stream doesn't keep the rest in software.
             if (forceSoftwareThisLoad) {
@@ -752,12 +766,12 @@ class OwnTVPlayer(
                         // usually frees within seconds), then fall back to software decode, then error.
                         if (_directRender.value && (hw.isEmpty() || hw == "no")) {
                             val pos = if (isLiveContent) 0L else _position.value
-                            if (autoRetries < MAX_AUTO_RETRIES) {
+                            if (autoRetries < maxRetries()) {
                                 autoRetries++
-                                android.util.Log.w(TAG, "direct failed — retry $autoRetries/$MAX_AUTO_RETRIES")
+                                android.util.Log.w(TAG, "direct failed — retry $autoRetries/${maxRetries()}")
                                 _buffering.value = true
                                 scope.launch {
-                                    delay(800L * autoRetries)
+                                    delay(backoffMs(autoRetries))
                                     if (gen == loadGeneration) loadUrl(currentUrl ?: return@launch, MediaMeta(currentTitle, currentSubtitle, currentYear, currentLogoUrl), isLiveContent, pos, resetRetries = false)
                                 }
                             } else if (hwDecodingActive() && !glUnsupported) {
@@ -789,14 +803,37 @@ class OwnTVPlayer(
                     errorCheckJob = scope.launch {
                         delay(1500)
                         if (!expectingPlayback || gen != loadGeneration) return@launch
-                        // The stream didn't start. Silently retry a few times with backoff before
-                        // surfacing the error — handles transient failures (cold-boot decoder-busy,
-                        // a provider 5xx, the first-play surface race) so the user rarely sees an error.
-                        if (autoRetries < MAX_AUTO_RETRIES && currentUrl != null) {
-                            autoRetries++
-                            android.util.Log.w(TAG, "playback didn't start — auto-retry $autoRetries/$MAX_AUTO_RETRIES")
+                        // No internet → don't burn the retry budget on a dead connection; surface the
+                        // offline error straight away.
+                        if (!connectivity.isOnlineNow()) {
+                            android.util.Log.w(TAG, "playback didn't start — offline, skipping retries")
+                            _buffering.value = false
+                            _error.value = "No internet connection. Check your network and try again."
+                            return@launch
+                        }
+                        // A live `.ts` stream that retried once and still won't start may be on a panel
+                        // that only serves HLS — try the `.m3u8` variant of the same channel before erroring
+                        // (we default to `.ts` since it's more widely supported, with this as the safety net).
+                        val tsUrl = currentUrl
+                        if (isLiveContent && !triedAltFormat && autoRetries >= 1 && tsUrl != null && tsUrl.endsWith(".ts", ignoreCase = true)) {
+                            triedAltFormat = true
+                            autoRetries = 0
+                            val alt = tsUrl.dropLast(3) + ".m3u8"
+                            android.util.Log.w(TAG, "live .ts didn't start — trying .m3u8 fallback")
                             _buffering.value = true
-                            delay(700L * autoRetries)
+                            delay(300)
+                            if (gen == loadGeneration) {
+                                loadUrl(alt, MediaMeta(currentTitle, currentSubtitle, currentYear, currentLogoUrl), isLiveContent, 0L, resetRetries = false)
+                            }
+                        }
+                        // The stream didn't start. Silently retry a few times with exponential backoff
+                        // before surfacing the error — handles transient failures (cold-boot decoder-busy,
+                        // a provider 5xx, the first-play surface race) so the user rarely sees an error.
+                        else if (autoRetries < maxRetries() && currentUrl != null) {
+                            autoRetries++
+                            android.util.Log.w(TAG, "playback didn't start — auto-retry $autoRetries/${maxRetries()}")
+                            _buffering.value = true
+                            delay(backoffMs(autoRetries))
                             if (gen == loadGeneration && currentUrl != null) {
                                 loadUrl(
                                     currentUrl!!, MediaMeta(currentTitle, currentSubtitle, currentYear, currentLogoUrl),
@@ -828,12 +865,17 @@ class OwnTVPlayer(
                     // mpv goes idle and the screen would just stay blank. Show the buffering spinner
                     // and reconnect after a short pause; if that load also fails, the expectingPlayback
                     // path above shows the error UI with its Retry button. A user stop()/new load bumps
-                    // loadGeneration and cancels.
-                    _buffering.value = true
-                    val gen = loadGeneration
-                    scope.launch {
-                        delay(1200)
-                        if (gen == loadGeneration && currentUrl != null) retry() else _buffering.value = false
+                    // loadGeneration and cancels. If the network is fully down, don't bother reconnecting.
+                    if (!connectivity.isOnlineNow()) {
+                        _buffering.value = false
+                        _error.value = "No internet connection. Check your network and try again."
+                    } else {
+                        _buffering.value = true
+                        val gen = loadGeneration
+                        scope.launch {
+                            delay(1200)
+                            if (gen == loadGeneration && currentUrl != null) retry() else _buffering.value = false
+                        }
                     }
                 }
             }

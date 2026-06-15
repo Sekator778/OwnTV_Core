@@ -206,7 +206,10 @@ class XtreamClient(private val http: HttpClient) {
         runCatching { String(Base64.decode(s, Base64.DEFAULT), Charsets.UTF_8).trim() }.getOrDefault(s)
 
     // --- Stream URL builders ---
-    fun liveUrl(s: SourceEntity, streamId: String) = "${base(s)}/live/${s.username}/${s.password}/$streamId.m3u8"
+    // Live uses the raw MPEG-TS endpoint (.ts) — the universal Xtream live format. The .m3u8/HLS
+    // wrapper isn't served by every panel (mpegts-only providers 404 on it, so channels won't load),
+    // whereas every panel serves .ts and mpv plays it natively.
+    fun liveUrl(s: SourceEntity, streamId: String) = "${base(s)}/live/${s.username}/${s.password}/$streamId.ts"
     fun movieUrl(s: SourceEntity, streamId: String, ext: String?) =
         "${base(s)}/movie/${s.username}/${s.password}/$streamId.${ext ?: "mp4"}"
     fun seriesEpisodeUrl(s: SourceEntity, episodeId: String, ext: String?) =
