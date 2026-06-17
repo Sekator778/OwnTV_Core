@@ -79,10 +79,11 @@ class SyncManager(
                 catchup = item.archive, catchupDays = item.archiveDays,
             )
         }
-        val liveDone = chunked<ChannelEntity, Boolean>(ctx, "Channels", onProgress, { channelDao.upsertAll(it) }) { add ->
+        val liveTotal = intArrayOf(0)
+        val liveDone = chunked<ChannelEntity, Boolean>(ctx, "Channels", onProgress, { channelDao.upsertAll(it) }, liveTotal) { add ->
             xtream.streamLive(s) { add(toChannel(it)) }
         }
-        if (!liveDone) sliceByCategory(ctx, "Channels", onProgress, liveCats, { channelDao.upsertAll(it) }) { cat, add ->
+        if (!liveDone) sliceByCategory(ctx, "Channels", onProgress, liveCats, { channelDao.upsertAll(it) }, liveTotal, liveTotal[0]) { cat, add ->
             xtream.streamLive(s, cat.id) { add(toChannel(it)) }
         }
 
@@ -100,10 +101,11 @@ class SyncManager(
                 sortOrder = vodOrder++,
             )
         }
-        val vodDone = chunked<MovieEntity, Boolean>(ctx, "Movies", onProgress, { movieDao.upsertAll(it) }) { add ->
+        val vodTotal = intArrayOf(0)
+        val vodDone = chunked<MovieEntity, Boolean>(ctx, "Movies", onProgress, { movieDao.upsertAll(it) }, vodTotal) { add ->
             xtream.streamVod(s) { add(toMovie(it)) }
         }
-        if (!vodDone) sliceByCategory(ctx, "Movies", onProgress, vodCats, { movieDao.upsertAll(it) }) { cat, add ->
+        if (!vodDone) sliceByCategory(ctx, "Movies", onProgress, vodCats, { movieDao.upsertAll(it) }, vodTotal, vodTotal[0]) { cat, add ->
             xtream.streamVod(s, cat.id) { add(toMovie(it)) }
         }
 
@@ -120,10 +122,11 @@ class SyncManager(
                 sortOrder = seriesOrder++,
             )
         }
-        val seriesDone = chunked<SeriesEntity, Boolean>(ctx, "Series", onProgress, { seriesDao.upsertSeries(it) }) { add ->
+        val seriesTotal = intArrayOf(0)
+        val seriesDone = chunked<SeriesEntity, Boolean>(ctx, "Series", onProgress, { seriesDao.upsertSeries(it) }, seriesTotal) { add ->
             xtream.streamSeries(s) { add(toSeries(it)) }
         }
-        if (!seriesDone) sliceByCategory(ctx, "Series", onProgress, seriesCats, { seriesDao.upsertSeries(it) }) { cat, add ->
+        if (!seriesDone) sliceByCategory(ctx, "Series", onProgress, seriesCats, { seriesDao.upsertSeries(it) }, seriesTotal, seriesTotal[0]) { cat, add ->
             xtream.streamSeries(s, cat.id) { add(toSeries(it)) }
         }
     }
@@ -132,7 +135,12 @@ class SyncManager(
      * Fallback for when a provider truncates the single bulk list (issue #15): re-fetch one category at
      * a time (`&category_id=X`, tiny payloads) and upsert progressively. The table is NOT cleared first,
      * so any items the partial bulk already inserted (incl. uncategorized ones missing from the category
-     * list) survive — the unique `(sourceId, remoteId)` index dedupes the overlap.
+     * list) survive — the unique `(sourceId, remoteId)` index dedupes the overlap. [total] is shared with
+     * the bulk pass so progress keeps climbing instead of resetting per category.
+     *
+     * Some panels IGNORE `category_id` and return the whole (truncating) list for every category — that
+     * would loop forever re-fetching the same data. If a single category returns ~the bulk's whole count
+     * and still truncates (or several categories can't be served), we stop and keep what we have.
      */
     private fun <T> sliceByCategory(
         ctx: CoroutineContext,
@@ -140,11 +148,26 @@ class SyncManager(
         onProgress: (ImportStage) -> Unit,
         categories: List<XtCategory>,
         insert: suspend (List<T>) -> Unit,
-        stream: (cat: XtCategory, add: (T) -> Unit) -> Unit,
+        total: IntArray,
+        bulkPartial: Int,
+        stream: (cat: XtCategory, add: (T) -> Unit) -> Boolean,
     ) {
+        var truncations = 0
         for (cat in categories) {
             ctx.ensureActive()
-            chunked<T, Unit>(ctx, label, onProgress, insert) { add -> stream(cat) { add(it) } }
+            val before = total[0]
+            val complete = chunked<T, Boolean>(ctx, label, onProgress, insert, total) { add -> stream(cat) { add(it) } }
+            if (!complete) {
+                truncations++
+                val delta = total[0] - before
+                if ((bulkPartial > 0 && delta >= bulkPartial) || truncations >= 3) {
+                    android.util.Log.w(
+                        "SyncManager",
+                        "$label: per-category fetch still truncating (panel likely ignores category_id) — stopping fallback after ${total[0]} items",
+                    )
+                    break
+                }
+            }
         }
     }
 
@@ -223,17 +246,17 @@ class SyncManager(
         label: String,
         onProgress: (ImportStage) -> Unit,
         insert: suspend (List<T>) -> Unit,
+        total: IntArray, // shared [0] running count for the whole media type, so progress never resets
         producer: (add: (T) -> Unit) -> R,
     ): R {
         val buffer = ArrayList<T>(CHUNK)
-        var processed = 0
         fun flush() {
             if (buffer.isEmpty()) return
             ctx.ensureActive()
             runBlocking { insert(buffer.toList()) }
-            processed += buffer.size
+            total[0] += buffer.size
             buffer.clear()
-            onProgress(ImportStage(label, processed, null))
+            onProgress(ImportStage(label, total[0], null))
         }
         val result = producer { item ->
             buffer.add(item)
