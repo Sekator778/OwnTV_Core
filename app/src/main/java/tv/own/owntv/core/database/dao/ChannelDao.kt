@@ -39,6 +39,20 @@ interface ChannelDao {
     )
     suspend fun channelsForGuide(sourceIds: List<Long>, limit: Int): List<ChannelEntity>
 
+    /** Every channel for these sources (incl. those with no/blank epg id) — drives bulk EPG auto-matching. */
+    @Query("SELECT * FROM channels WHERE sourceId IN (:sourceIds) ORDER BY sourceId ASC, sortOrder ASC, name ASC LIMIT :limit")
+    suspend fun allForSources(sourceIds: List<Long>, limit: Int): List<ChannelEntity>
+
+    /** Largest archive window (days) across these sources' catch-up channels — 0 if none have catch-up.
+     *  Drives how far back the Guide extends so archived programmes are visible. */
+    @Query("SELECT COALESCE(MAX(catchupDays), 0) FROM channels WHERE sourceId IN (:sourceIds) AND catchup = 1")
+    suspend fun maxCatchupDays(sourceIds: List<Long>): Int
+
+    /** How many channels advertise catch-up/archive — surfaced in the Guide so the user knows their
+     *  provider supports it. */
+    @Query("SELECT COUNT(*) FROM channels WHERE sourceId IN (:sourceIds) AND catchup = 1")
+    suspend fun countCatchup(sourceIds: List<Long>): Int
+
     /**
      * Channels that actually HAVE programmes in the window — so the guide never wastes its row limit
      * on channels without data. The id match is case/whitespace-insensitive: XMLTV channel ids often

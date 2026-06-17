@@ -61,7 +61,7 @@ import tv.own.owntv.core.database.entity.WatchHistoryEntity
         SeriesFtsEntity::class,
         EpisodeFtsEntity::class,
     ],
-    version = 2, // v2 (v2.2.0): EPG tables lost their sources FK so standalone EPG sources can insert
+    version = 3, // v3 (v3.0.0): channels gained catch-up/archive columns
     exportSchema = false,
 )
 @TypeConverters(Converters::class)
@@ -97,6 +97,18 @@ abstract class OwnTVDatabase : RoomDatabase() {
                 db.execSQL("CREATE INDEX IF NOT EXISTS `index_epg_programmes_epgChannelId_startMs` ON `epg_programmes` (`epgChannelId`, `startMs`)")
                 db.execSQL("CREATE INDEX IF NOT EXISTS `index_epg_programmes_sourceId` ON `epg_programmes` (`sourceId`)")
                 db.execSQL("CREATE INDEX IF NOT EXISTS `index_epg_programmes_stopMs` ON `epg_programmes` (`stopMs`)")
+            }
+        }
+
+        /**
+         * v2 → v3: add catch-up/archive columns to `channels`. Pure additive ALTERs (with defaults),
+         * so all existing data — profiles, sources, channels, favorites, history — is preserved.
+         */
+        val MIGRATION_2_3 = object : androidx.room.migration.Migration(2, 3) {
+            override fun migrate(db: androidx.sqlite.db.SupportSQLiteDatabase) {
+                db.execSQL("ALTER TABLE `channels` ADD COLUMN `catchup` INTEGER NOT NULL DEFAULT 0")
+                db.execSQL("ALTER TABLE `channels` ADD COLUMN `catchupDays` INTEGER NOT NULL DEFAULT 0")
+                db.execSQL("ALTER TABLE `channels` ADD COLUMN `catchupSource` TEXT")
             }
         }
     }

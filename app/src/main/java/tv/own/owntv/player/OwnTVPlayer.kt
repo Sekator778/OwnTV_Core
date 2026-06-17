@@ -270,6 +270,10 @@ class OwnTVPlayer(
     private val pendingStopEndFiles = AtomicInteger(0)
     private val mpvHasActiveFile = AtomicBoolean(false)
     private var errorCheckJob: Job? = null
+    private var videoCheckJob: Job? = null
+    // Catch-up/VOD streams that start mid-GOP (no H.264 SPS/PPS yet) can play audio with a blank video.
+    // We try a software-decode reload once before surfacing an error, tracked per item.
+    @Volatile private var triedSoftwareForVideo = false
 
     private val _nav = MutableStateFlow(NavState(false, false))
     val nav: StateFlow<NavState> = _nav.asStateFlow()
@@ -284,6 +288,12 @@ class OwnTVPlayer(
         private set
     var isLiveContent: Boolean = false
         private set
+
+    // Reactive copy of the current item's metadata so Compose recomposes the HUD's title / channel
+    // card the instant a new stream loads — channel zapping changes the plain vars above, but a plain
+    // var isn't observed, so the "now watching" card showed the previous channel's name.
+    private val _currentMeta = MutableStateFlow(MediaMeta())
+    val currentMeta: StateFlow<MediaMeta> = _currentMeta.asStateFlow()
 
     private var preMuteVolume = 100
 
@@ -402,12 +412,13 @@ class OwnTVPlayer(
         isLive: Boolean = false,
         startPositionMs: Long = 0,
         muted: Boolean = false,
+        preferSoftware: Boolean = false,
     ) {
         playlist = emptyList()
         playlistIndex = 0
         updateNav()
         _zoomMode.value = defaultZoom // start new content at the user's default zoom
-        loadUrl(url, MediaMeta(title, subtitle, year, logoUrl), isLive, startPositionMs, muted)
+        loadUrl(url, MediaMeta(title, subtitle, year, logoUrl), isLive, startPositionMs, muted, preferSoftware = preferSoftware)
     }
 
     /** Play a queue (a season's episodes) starting at [startIndex] — enables prev/next. */
@@ -451,16 +462,19 @@ class OwnTVPlayer(
         startPositionMs: Long,
         muted: Boolean = false,
         resetRetries: Boolean = true,
+        preferSoftware: Boolean = false,
     ) {
         ensureInit()
         currentTitle = meta.title
         currentSubtitle = meta.subtitle
         currentYear = meta.year
         currentLogoUrl = meta.logoUrl
+        _currentMeta.value = meta // reactive — refreshes the HUD title / "now watching" card on every load
         isLiveContent = isLive
         currentUrl = url
         loadGeneration++
         errorCheckJob?.cancel()
+        videoCheckJob?.cancel()
         _error.value = null
         _videoRes.value = null
         expectingPlayback = true
@@ -470,10 +484,15 @@ class OwnTVPlayer(
         if (resetRetries) {
             autoRetries = 0
             triedAltFormat = false
-            // A new item re-arms hardware decoding (the software override is per-item) — restore the
-            // direct render path so one bad stream doesn't keep the rest in software.
-            if (forceSoftwareThisLoad) {
-                forceSoftwareThisLoad = false
+            triedSoftwareForVideo = false
+            // Pick this item's decode path. Catch-up forces SOFTWARE: archive (timeshift) segments often
+            // start mid-GOP, which the hardware MediaCodec decoder can't recover from (blank video, and
+            // it can wedge/crash) — software decodes cleanly from the next keyframe. Everything else uses
+            // the user's hardware-decoding setting. (Software renders via GL, which is broken on the
+            // emulator, so skip the override there.)
+            val wantSoftware = preferSoftware && !glUnsupported
+            if (forceSoftwareThisLoad != wantSoftware) {
+                forceSoftwareThisLoad = wantSoftware
                 mpvAsync { applyRenderConfig() }
             }
         }
@@ -491,6 +510,34 @@ class OwnTVPlayer(
         // Defer the actual loadfile until a surface exists, otherwise mpv inits video output with no
         // surface and falls back to audio-only. attachSurface() flushes the pending load.
         if (surfaceAttached) startLoad(url) else pendingUrl = url
+
+        // Catch-up/VOD video watchdog: some archive (timeshift) segments start mid-GOP — audio plays
+        // but no H.264 frame ever decodes ("non-existing PPS" → blank, no error). If we're clearly
+        // playing (time advancing) yet have no video after a grace window, retry once in software
+        // (which recovers at the next keyframe) and only then surface a clear error. Live is excluded:
+        // it recovers on its own, and audio-only radio channels are legitimate.
+        if (!isLive) {
+            val gen = loadGeneration
+            videoCheckJob = scope.launch {
+                delay(7000)
+                if (gen != loadGeneration || isLiveContent || currentHeightPx > 0 || _position.value <= 0L) return@launch
+                if (!triedSoftwareForVideo && hwDecodingActive() && !glUnsupported) {
+                    triedSoftwareForVideo = true
+                    forceSoftwareThisLoad = true
+                    android.util.Log.w(TAG, "no video frames (mid-GOP archive?) — retrying in software decode")
+                    _buffering.value = true
+                    mpvAsync { applyRenderConfig() }
+                    delay(200)
+                    if (gen == loadGeneration && currentUrl != null) {
+                        loadUrl(currentUrl!!, MediaMeta(currentTitle, currentSubtitle, currentYear, currentLogoUrl), isLiveContent, _position.value, resetRetries = false)
+                    }
+                } else {
+                    android.util.Log.w(TAG, "no video frames decoded — surfacing error")
+                    _buffering.value = false
+                    _error.value = "Couldn't play this recording. The archived segment may be incomplete or start mid-stream."
+                }
+            }
+        }
     }
 
     private fun startLoad(url: String) {
@@ -571,6 +618,7 @@ class OwnTVPlayer(
         loadGeneration++ // cancels any queued-but-not-yet-executed load
         expectingPlayback = false
         errorCheckJob?.cancel()
+        videoCheckJob?.cancel()
         if (initialized) mpvAsync { stopWithStopClassification("stop") }
         currentUrl = null
         pendingUrl = null
@@ -707,6 +755,7 @@ class OwnTVPlayer(
             "height" -> {
                 _videoRes.value = resolutionLabel(value.toInt())
                 currentHeightPx = value.toInt()
+                if (value > 0) videoCheckJob?.cancel() // video is decoding → watchdog not needed
                 updateAspect()
                 enforceDecodeGuard()
             }
@@ -890,7 +939,19 @@ class OwnTVPlayer(
                         // that only serves HLS — try the `.m3u8` variant of the same channel before erroring
                         // (we default to `.ts` since it's more widely supported, with this as the safety net).
                         val tsUrl = currentUrl
-                        if (isLiveContent && !triedAltFormat && autoRetries >= 1 && tsUrl != null && tsUrl.endsWith(".ts", ignoreCase = true)) {
+                        val catchupAlt = if (!isLiveContent && !triedAltFormat) tv.own.owntv.core.epg.CatchupUrl.timeshiftPhpAlternate(tsUrl) else null
+                        if (catchupAlt != null) {
+                            // Some Xtream panels reject the path-style catch-up URL (they return an HTML
+                            // error page → "unrecognized format") but accept the PHP query form. Try it.
+                            triedAltFormat = true
+                            autoRetries = 0
+                            android.util.Log.w(TAG, "catch-up path URL rejected — trying timeshift.php fallback")
+                            _buffering.value = true
+                            delay(300)
+                            if (gen == loadGeneration) {
+                                loadUrl(catchupAlt, MediaMeta(currentTitle, currentSubtitle, currentYear, currentLogoUrl), isLiveContent, 0L, resetRetries = false)
+                            }
+                        } else if (isLiveContent && !triedAltFormat && autoRetries >= 1 && tsUrl != null && tsUrl.endsWith(".ts", ignoreCase = true)) {
                             triedAltFormat = true
                             autoRetries = 0
                             val alt = tsUrl.dropLast(3) + ".m3u8"

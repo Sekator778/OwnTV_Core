@@ -48,10 +48,37 @@ class SettingsRepository(private val context: Context) {
         val PREF_SUB_LANG = stringPreferencesKey("pref_sub_lang")
         // Per-section list sorting ("PLAYLIST" or "ALPHA")
         val SORT_LIVE = stringPreferencesKey("sort_live")
+        val SORT_GUIDE = stringPreferencesKey("sort_guide")
         val SORT_MOVIES = stringPreferencesKey("sort_movies")
         val SORT_SERIES = stringPreferencesKey("sort_series")
         val RESUME_MODE = stringPreferencesKey("resume_mode")
         val UPDATE_CHECK_ON_START = booleanPreferencesKey("update_check_on_start")
+        val CATCHUP_TZ = stringPreferencesKey("catchup_timezone")
+        val CATCHUP_OFFSET_MIN = intPreferencesKey("catchup_offset_minutes")
+    }
+
+    // --- Catch-up (archive) playback ---
+
+    /** Which timezone to format Xtream timeshift URLs in. Some panels expect the server's local time,
+     *  so the user picks either the device's timezone or a manual UTC offset (default UTC, i.e. +0). */
+    enum class CatchupTimezone { DEVICE, MANUAL }
+
+    /** Manual UTC offset bounds (whole hours), in minutes. */
+    val catchupOffsetRangeMinutes: IntRange = -12 * 60..14 * 60
+
+    val catchupTimezone: Flow<CatchupTimezone> = context.dataStore.data.map { prefs ->
+        prefs[Keys.CATCHUP_TZ]?.let { runCatching { CatchupTimezone.valueOf(it) }.getOrNull() } ?: CatchupTimezone.MANUAL
+    }
+
+    /** Manual mode's offset from UTC, in minutes (0 = UTC, the previous default). */
+    val catchupOffsetMinutes: Flow<Int> = context.dataStore.data.map { it[Keys.CATCHUP_OFFSET_MIN] ?: 0 }
+
+    suspend fun setCatchupTimezone(mode: CatchupTimezone) {
+        context.dataStore.edit { it[Keys.CATCHUP_TZ] = mode.name }
+    }
+
+    suspend fun setCatchupOffsetMinutes(minutes: Int) {
+        context.dataStore.edit { it[Keys.CATCHUP_OFFSET_MIN] = minutes.coerceIn(catchupOffsetRangeMinutes) }
     }
 
     /** Automatically check GitHub Releases for a newer version shortly after launch. */
@@ -99,6 +126,17 @@ class SettingsRepository(private val context: Context) {
 
     private fun parseSort(raw: String?, default: SortMode): SortMode =
         raw?.let { runCatching { SortMode.valueOf(it) }.getOrNull() } ?: default
+
+    /** The TV Guide's own ordering. LIVE_TV mirrors the Live TV sort; CATCHUP floats archive channels up. */
+    enum class GuideSort(val label: String) { ALPHA("A–Z"), PROVIDER("Provider"), LIVE_TV("Live TV"), CATCHUP("Catch-up") }
+
+    val sortGuide: Flow<GuideSort> = context.dataStore.data.map { prefs ->
+        prefs[Keys.SORT_GUIDE]?.let { runCatching { GuideSort.valueOf(it) }.getOrNull() } ?: GuideSort.LIVE_TV
+    }
+
+    suspend fun setSortGuide(mode: GuideSort) {
+        context.dataStore.edit { it[Keys.SORT_GUIDE] = mode.name }
+    }
 
     // --- Video Player Settings ---
 

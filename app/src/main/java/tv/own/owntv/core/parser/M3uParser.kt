@@ -11,6 +11,12 @@ data class M3uEntry(
     val groupTitle: String?,
     val tvgId: String?,
     val tvgChno: Int?,
+    /** `catchup` type (e.g. "default"/"append"/"shift") — its presence marks the channel as having archive. */
+    val catchup: String?,
+    /** `catchup-source` URL template (placeholders like `${start}`/`{utc}` filled at playback). */
+    val catchupSource: String?,
+    /** `catchup-days` — how many days back the archive goes. */
+    val catchupDays: Int?,
 )
 
 /** Header info from the `#EXTM3U` line (notably the `url-tvg` EPG URL). */
@@ -46,6 +52,9 @@ class M3uParser {
                         groupTitle = attr(line, "group-title"),
                         tvgId = attr(line, "tvg-id"),
                         tvgChno = attr(line, "tvg-chno")?.toIntOrNull(),
+                        catchup = attr(line, "catchup") ?: attr(line, "catchup-type"),
+                        catchupSource = attr(line, "catchup-source"),
+                        catchupDays = attr(line, "catchup-days")?.toIntOrNull(),
                     )
                 }
 
@@ -63,6 +72,9 @@ class M3uParser {
                                 groupTitle = p.groupTitle,
                                 tvgId = p.tvgId,
                                 tvgChno = p.tvgChno,
+                                catchup = p.catchup,
+                                catchupSource = p.catchupSource,
+                                catchupDays = p.catchupDays,
                             ),
                         )
                     }
@@ -79,6 +91,9 @@ class M3uParser {
         val groupTitle: String?,
         val tvgId: String?,
         val tvgChno: Int?,
+        val catchup: String?,
+        val catchupSource: String?,
+        val catchupDays: Int?,
     )
 
     /** Extracts a `key="value"` attribute from an EXTINF/EXTM3U line. */

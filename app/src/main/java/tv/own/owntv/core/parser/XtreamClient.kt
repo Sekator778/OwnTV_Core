@@ -13,6 +13,8 @@ data class XtCategory(val id: String, val name: String)
 data class XtLiveStream(
     val streamId: String, val name: String, val icon: String?, val epgChannelId: String?,
     val categoryId: String?, val num: Int?,
+    /** `tv_archive` = 1 → catch-up available; `tv_archive_duration` = days of archive kept. */
+    val archive: Boolean = false, val archiveDays: Int = 0,
 )
 data class XtVod(
     val streamId: String, val name: String, val icon: String?, val rating: Double?,
@@ -52,8 +54,11 @@ class XtreamClient(private val http: HttpClient) {
     }
 
     // --- Streams (callback-streamed) ---
-    fun streamLive(s: SourceEntity, onItem: (XtLiveStream) -> Unit) {
-        http.get(api(s, "get_live_streams"), s.userAgent) { input ->
+    // Each returns true if the full list parsed cleanly, false if the server truncated it mid-stream
+    // (issue #15) — the sync uses that to fall back to per-category fetching. [categoryId] filters the
+    // request server-side (`&category_id=X`), keeping payloads small enough to dodge the truncation.
+    fun streamLive(s: SourceEntity, categoryId: String? = null, onItem: (XtLiveStream) -> Unit): Boolean {
+        return http.get(api(s, "get_live_streams", categoryParam(categoryId)), s.userAgent) { input ->
             streamObjects(input) { m ->
                 val id = m["stream_id"] ?: return@streamObjects
                 onItem(
@@ -61,14 +66,16 @@ class XtreamClient(private val http: HttpClient) {
                         streamId = id, name = m["name"].orEmpty(), icon = m["stream_icon"],
                         epgChannelId = m["epg_channel_id"]?.takeIf { it.isNotBlank() },
                         categoryId = m["category_id"], num = m["num"]?.toIntOrNull(),
+                        archive = (m["tv_archive"]?.toIntOrNull() ?: 0) > 0,
+                        archiveDays = m["tv_archive_duration"]?.toIntOrNull() ?: 0,
                     ),
                 )
             }
         }
     }
 
-    fun streamVod(s: SourceEntity, onItem: (XtVod) -> Unit) {
-        http.get(api(s, "get_vod_streams"), s.userAgent) { input ->
+    fun streamVod(s: SourceEntity, categoryId: String? = null, onItem: (XtVod) -> Unit): Boolean {
+        return http.get(api(s, "get_vod_streams", categoryParam(categoryId)), s.userAgent) { input ->
             streamObjects(input) { m ->
                 val id = m["stream_id"] ?: return@streamObjects
                 onItem(
@@ -82,8 +89,8 @@ class XtreamClient(private val http: HttpClient) {
         }
     }
 
-    fun streamSeries(s: SourceEntity, onItem: (XtSeries) -> Unit) {
-        http.get(api(s, "get_series"), s.userAgent) { input ->
+    fun streamSeries(s: SourceEntity, categoryId: String? = null, onItem: (XtSeries) -> Unit): Boolean {
+        return http.get(api(s, "get_series", categoryParam(categoryId)), s.userAgent) { input ->
             streamObjects(input) { m ->
                 val id = m["series_id"] ?: return@streamObjects
                 onItem(
@@ -210,6 +217,16 @@ class XtreamClient(private val http: HttpClient) {
     // wrapper isn't served by every panel (mpegts-only providers 404 on it, so channels won't load),
     // whereas every panel serves .ts and mpv plays it natively.
     fun liveUrl(s: SourceEntity, streamId: String) = "${base(s)}/live/${s.username}/${s.password}/$streamId.ts"
+
+    /**
+     * Catch-up (timeshift) URL for a past programme:
+     * `…/timeshift/user/pass/{durationMinutes}/{yyyy-MM-dd:HH-mm}/{streamId}.ts`. The start is formatted
+     * in [tz] (UTC by default — EPG timestamps are UTC; some panels expect server-local, hence the knob).
+     */
+    fun timeshiftUrl(s: SourceEntity, streamId: String, startMs: Long, durationMinutes: Int, tz: java.util.TimeZone = java.util.TimeZone.getTimeZone("UTC")): String {
+        val fmt = java.text.SimpleDateFormat("yyyy-MM-dd:HH-mm", java.util.Locale.US).apply { timeZone = tz }
+        return "${base(s)}/timeshift/${s.username}/${s.password}/$durationMinutes/${fmt.format(java.util.Date(startMs))}/$streamId.ts"
+    }
     fun movieUrl(s: SourceEntity, streamId: String, ext: String?) =
         "${base(s)}/movie/${s.username}/${s.password}/$streamId.${ext ?: "mp4"}"
     fun seriesEpisodeUrl(s: SourceEntity, episodeId: String, ext: String?) =
@@ -231,31 +248,53 @@ class XtreamClient(private val http: HttpClient) {
         return "${base(s)}/player_api.php?username=$u&password=$p&action=$action$extra"
     }
 
-    /** Streams a top-level JSON array of objects, reading each object's scalar fields into a map. */
-    private fun streamObjects(input: InputStream, onObject: (Map<String, String?>) -> Unit) {
-        JsonReader(input.reader(Charsets.UTF_8)).use { reader ->
-            reader.isLenient = true
-            if (reader.peek() != JsonToken.BEGIN_ARRAY) {
-                // Some servers return {} or an error object instead of an array.
-                reader.skipValue()
-                return
-            }
-            reader.beginArray()
-            while (reader.hasNext()) {
-                val map = HashMap<String, String?>()
-                reader.beginObject()
-                while (reader.hasNext()) {
-                    val name = reader.nextName()
-                    when (reader.peek()) {
-                        JsonToken.NULL -> { reader.nextNull(); map[name] = null }
-                        JsonToken.BEGIN_ARRAY, JsonToken.BEGIN_OBJECT -> reader.skipValue()
-                        else -> map[name] = reader.nextString()
-                    }
+    /** `&category_id=X` query suffix (server-side filter), or "" when fetching everything. */
+    private fun categoryParam(categoryId: String?): String =
+        categoryId?.takeIf { it.isNotBlank() }?.let { "&category_id=$it" } ?: ""
+
+    /**
+     * Streams a top-level JSON array of objects, reading each object's scalar fields into a map.
+     * Returns true if the array parsed to its end, false if the server truncated it mid-stream (issue
+     * #15) — callers keep the partial data and can fall back to per-category fetching. A failure before
+     * any item is read is fatal (genuine auth/network error) and rethrown.
+     */
+    private fun streamObjects(input: InputStream, onObject: (Map<String, String?>) -> Unit): Boolean {
+        var count = 0
+        try {
+            JsonReader(input.reader(Charsets.UTF_8)).use { reader ->
+                reader.isLenient = true
+                if (reader.peek() != JsonToken.BEGIN_ARRAY) {
+                    // Some servers return {} or an error object instead of an array.
+                    reader.skipValue()
+                    return true
                 }
-                reader.endObject()
-                onObject(map)
+                reader.beginArray()
+                while (reader.hasNext()) {
+                    val map = HashMap<String, String?>()
+                    reader.beginObject()
+                    while (reader.hasNext()) {
+                        val name = reader.nextName()
+                        when (reader.peek()) {
+                            JsonToken.NULL -> { reader.nextNull(); map[name] = null }
+                            JsonToken.BEGIN_ARRAY, JsonToken.BEGIN_OBJECT -> reader.skipValue()
+                            else -> map[name] = reader.nextString()
+                        }
+                    }
+                    reader.endObject()
+                    onObject(map)
+                    count++
+                }
+                reader.endArray()
             }
-            reader.endArray()
+            return true
+        } catch (c: kotlin.coroutines.cancellation.CancellationException) {
+            throw c
+        } catch (e: Exception) {
+            // Truncated mid-stream (JsonReader reports "Unterminated string …"). Keep everything parsed
+            // so far; only a failure before ANY item is read is fatal.
+            if (count == 0) throw e
+            android.util.Log.w("XtreamClient", "Stream truncated after $count items — partial list kept", e)
+            return false
         }
     }
 }

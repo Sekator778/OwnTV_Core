@@ -20,6 +20,10 @@ import tv.own.owntv.core.model.MediaType
 import tv.own.owntv.core.model.SourceType
 import tv.own.owntv.core.network.HttpClient
 import tv.own.owntv.core.parser.M3uParser
+import tv.own.owntv.core.parser.XtCategory
+import tv.own.owntv.core.parser.XtLiveStream
+import tv.own.owntv.core.parser.XtSeries
+import tv.own.owntv.core.parser.XtVod
 import tv.own.owntv.core.parser.XtreamClient
 import kotlin.coroutines.CoroutineContext
 
@@ -62,55 +66,85 @@ class SyncManager(
         val ctx = currentCoroutineContext()
 
         // LIVE — sortOrder records the provider's order so "Playlist order" sorting can replay it.
-        val liveMap = refreshCategories(s, MediaType.LIVE, xtream.liveCategories(s))
+        val liveCats = xtream.liveCategories(s)
+        val liveMap = refreshCategories(s, MediaType.LIVE, liveCats)
         channelDao.clearSource(s.id)
         var liveOrder = 0
-        chunked<ChannelEntity>(ctx, "Channels", onProgress, { channelDao.upsertAll(it) }) { add ->
-            xtream.streamLive(s) { item ->
-                add(
-                    ChannelEntity(
-                        sourceId = s.id, categoryId = liveMap[item.categoryId], name = item.name,
-                        logoUrl = item.icon, streamUrl = xtream.liveUrl(s, item.streamId),
-                        epgChannelId = item.epgChannelId, number = item.num, remoteId = item.streamId,
-                        sortOrder = liveOrder++,
-                    ),
-                )
-            }
+        val toChannel = { item: XtLiveStream ->
+            ChannelEntity(
+                sourceId = s.id, categoryId = liveMap[item.categoryId], name = item.name,
+                logoUrl = item.icon, streamUrl = xtream.liveUrl(s, item.streamId),
+                epgChannelId = item.epgChannelId, number = item.num, remoteId = item.streamId,
+                sortOrder = liveOrder++,
+                catchup = item.archive, catchupDays = item.archiveDays,
+            )
+        }
+        val liveDone = chunked<ChannelEntity, Boolean>(ctx, "Channels", onProgress, { channelDao.upsertAll(it) }) { add ->
+            xtream.streamLive(s) { add(toChannel(it)) }
+        }
+        if (!liveDone) sliceByCategory(ctx, "Channels", onProgress, liveCats, { channelDao.upsertAll(it) }) { cat, add ->
+            xtream.streamLive(s, cat.id) { add(toChannel(it)) }
         }
 
         // MOVIES
-        val vodMap = refreshCategories(s, MediaType.MOVIE, xtream.vodCategories(s))
+        val vodCats = xtream.vodCategories(s)
+        val vodMap = refreshCategories(s, MediaType.MOVIE, vodCats)
         movieDao.clearSource(s.id)
         var vodOrder = 0
-        chunked<MovieEntity>(ctx, "Movies", onProgress, { movieDao.upsertAll(it) }) { add ->
-            xtream.streamVod(s) { item ->
-                add(
-                    MovieEntity(
-                        sourceId = s.id, categoryId = vodMap[item.categoryId], name = item.name,
-                        posterUrl = item.icon, rating = item.rating,
-                        streamUrl = xtream.movieUrl(s, item.streamId, item.containerExt),
-                        containerExt = item.containerExt, remoteId = item.streamId, addedAt = item.added,
-                        sortOrder = vodOrder++,
-                    ),
-                )
-            }
+        val toMovie = { item: XtVod ->
+            MovieEntity(
+                sourceId = s.id, categoryId = vodMap[item.categoryId], name = item.name,
+                posterUrl = item.icon, rating = item.rating,
+                streamUrl = xtream.movieUrl(s, item.streamId, item.containerExt),
+                containerExt = item.containerExt, remoteId = item.streamId, addedAt = item.added,
+                sortOrder = vodOrder++,
+            )
+        }
+        val vodDone = chunked<MovieEntity, Boolean>(ctx, "Movies", onProgress, { movieDao.upsertAll(it) }) { add ->
+            xtream.streamVod(s) { add(toMovie(it)) }
+        }
+        if (!vodDone) sliceByCategory(ctx, "Movies", onProgress, vodCats, { movieDao.upsertAll(it) }) { cat, add ->
+            xtream.streamVod(s, cat.id) { add(toMovie(it)) }
         }
 
         // SERIES (shows only; seasons/episodes fetched lazily later)
-        val seriesMap = refreshCategories(s, MediaType.SERIES, xtream.seriesCategories(s))
+        val seriesCats = xtream.seriesCategories(s)
+        val seriesMap = refreshCategories(s, MediaType.SERIES, seriesCats)
         seriesDao.clearSource(s.id)
         var seriesOrder = 0
-        chunked<SeriesEntity>(ctx, "Series", onProgress, { seriesDao.upsertSeries(it) }) { add ->
-            xtream.streamSeries(s) { item ->
-                add(
-                    SeriesEntity(
-                        sourceId = s.id, categoryId = seriesMap[item.categoryId], name = item.name,
-                        posterUrl = item.cover, plot = item.plot, rating = item.rating,
-                        year = item.year, remoteId = item.seriesId,
-                        sortOrder = seriesOrder++,
-                    ),
-                )
-            }
+        val toSeries = { item: XtSeries ->
+            SeriesEntity(
+                sourceId = s.id, categoryId = seriesMap[item.categoryId], name = item.name,
+                posterUrl = item.cover, plot = item.plot, rating = item.rating,
+                year = item.year, remoteId = item.seriesId,
+                sortOrder = seriesOrder++,
+            )
+        }
+        val seriesDone = chunked<SeriesEntity, Boolean>(ctx, "Series", onProgress, { seriesDao.upsertSeries(it) }) { add ->
+            xtream.streamSeries(s) { add(toSeries(it)) }
+        }
+        if (!seriesDone) sliceByCategory(ctx, "Series", onProgress, seriesCats, { seriesDao.upsertSeries(it) }) { cat, add ->
+            xtream.streamSeries(s, cat.id) { add(toSeries(it)) }
+        }
+    }
+
+    /**
+     * Fallback for when a provider truncates the single bulk list (issue #15): re-fetch one category at
+     * a time (`&category_id=X`, tiny payloads) and upsert progressively. The table is NOT cleared first,
+     * so any items the partial bulk already inserted (incl. uncategorized ones missing from the category
+     * list) survive — the unique `(sourceId, remoteId)` index dedupes the overlap.
+     */
+    private fun <T> sliceByCategory(
+        ctx: CoroutineContext,
+        label: String,
+        onProgress: (ImportStage) -> Unit,
+        categories: List<XtCategory>,
+        insert: suspend (List<T>) -> Unit,
+        stream: (cat: XtCategory, add: (T) -> Unit) -> Unit,
+    ) {
+        for (cat in categories) {
+            ctx.ensureActive()
+            chunked<T, Unit>(ctx, label, onProgress, insert) { add -> stream(cat) { add(it) } }
         }
     }
 
@@ -155,6 +189,7 @@ class SyncManager(
                         streamUrl = e.streamUrl, epgChannelId = e.tvgId, number = e.tvgChno,
                         remoteId = null, // M3U has no stable id; rely on clear-then-insert
                         sortOrder = order++,
+                        catchup = e.catchup != null, catchupDays = e.catchupDays ?: 0, catchupSource = e.catchupSource,
                     ),
                 )
                 if (buffer.size >= CHUNK) {
@@ -183,13 +218,13 @@ class SyncManager(
      * chunks of [CHUNK], reporting progress. Inserts run blocking on the IO thread (we want
      * sequential back-pressure), and cancellation is checked each chunk.
      */
-    private fun <T> chunked(
+    private fun <T, R> chunked(
         ctx: CoroutineContext,
         label: String,
         onProgress: (ImportStage) -> Unit,
         insert: suspend (List<T>) -> Unit,
-        producer: (add: (T) -> Unit) -> Unit,
-    ) {
+        producer: (add: (T) -> Unit) -> R,
+    ): R {
         val buffer = ArrayList<T>(CHUNK)
         var processed = 0
         fun flush() {
@@ -200,11 +235,12 @@ class SyncManager(
             buffer.clear()
             onProgress(ImportStage(label, processed, null))
         }
-        producer { item ->
+        val result = producer { item ->
             buffer.add(item)
             if (buffer.size >= CHUNK) flush()
         }
         flush()
+        return result
     }
 
     companion object {

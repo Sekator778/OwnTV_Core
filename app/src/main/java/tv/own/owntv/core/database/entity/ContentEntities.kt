@@ -59,6 +59,13 @@ data class ChannelEntity(
     val number: Int? = null,
     val remoteId: String? = null,
     val sortOrder: Int = 0,
+    /** Catch-up/archive available for this channel (Xtream `tv_archive` / M3U `catchup`). */
+    val catchup: Boolean = false,
+    /** How many days back the archive goes (Xtream `tv_archive_duration` / M3U `catchup-days`). */
+    val catchupDays: Int = 0,
+    /** M3U `catchup-source` URL template (with `${start}`/`${timestamp}`/… placeholders). Null for
+     *  Xtream, whose timeshift URL is built from the source credentials instead. */
+    val catchupSource: String? = null,
 )
 
 @Entity(

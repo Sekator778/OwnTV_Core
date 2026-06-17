@@ -92,7 +92,9 @@ class EpgRepository(
     suspend fun clear(storeId: Long) = withContext(Dispatchers.IO) { epgDao.clearSource(storeId) }
 
     companion object {
-        private const val WINDOW_BACK_MS = 2L * 60 * 60 * 1000 // keep 2h of just-aired
+        // Keep ~2 days of just-aired programmes so the Guide can browse the catch-up archive (bounded,
+        // and ultimately limited by how much past data the EPG feed actually provides).
+        private const val WINDOW_BACK_MS = 50L * 60 * 60 * 1000
         private const val WINDOW_AHEAD_MS = 48L * 60 * 60 * 1000 // and 48h ahead
         private const val CHUNK = 500
     }
