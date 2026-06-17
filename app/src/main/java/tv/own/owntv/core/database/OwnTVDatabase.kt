@@ -13,6 +13,7 @@ import tv.own.owntv.core.database.dao.MovieDao
 import tv.own.owntv.core.database.dao.ProfileDao
 import tv.own.owntv.core.database.dao.ProgressDao
 import tv.own.owntv.core.database.dao.SeriesDao
+import tv.own.owntv.core.database.dao.TvProviderProgramDao
 import tv.own.owntv.core.database.dao.SourceDao
 import tv.own.owntv.core.database.entity.CategoryEntity
 import tv.own.owntv.core.database.entity.ChannelEntity
@@ -33,6 +34,7 @@ import tv.own.owntv.core.database.entity.SeriesEntity
 import tv.own.owntv.core.database.entity.SeriesFtsEntity
 import tv.own.owntv.core.database.entity.SourceEntity
 import tv.own.owntv.core.database.entity.WatchHistoryEntity
+import tv.own.owntv.core.database.entity.TvProviderProgramEntity
 
 @Database(
     entities = [
@@ -52,6 +54,8 @@ import tv.own.owntv.core.database.entity.WatchHistoryEntity
         WatchHistoryEntity::class,
         PlaybackProgressEntity::class,
         DownloadEntity::class,
+        // Android TV home-screen bookkeeping
+        TvProviderProgramEntity::class,
         // EPG
         EpgChannelEntity::class,
         EpgProgrammeEntity::class,
@@ -61,8 +65,8 @@ import tv.own.owntv.core.database.entity.WatchHistoryEntity
         SeriesFtsEntity::class,
         EpisodeFtsEntity::class,
     ],
-    version = 3, // v3 (v3.0.0): channels gained catch-up/archive columns
-    exportSchema = false,
+    version = 4, // v4: unify split v3 schemas (catch-up + Android TV home bookkeeping)
+    exportSchema = true,
 )
 @TypeConverters(Converters::class)
 abstract class OwnTVDatabase : RoomDatabase() {
@@ -75,6 +79,7 @@ abstract class OwnTVDatabase : RoomDatabase() {
     abstract fun favoriteDao(): FavoriteDao
     abstract fun historyDao(): HistoryDao
     abstract fun progressDao(): ProgressDao
+    abstract fun tvProviderProgramDao(): TvProviderProgramDao
     abstract fun downloadDao(): DownloadDao
     abstract fun epgDao(): EpgDao
 
@@ -101,14 +106,84 @@ abstract class OwnTVDatabase : RoomDatabase() {
         }
 
         /**
-         * v2 → v3: add catch-up/archive columns to `channels`. Pure additive ALTERs (with defaults),
-         * so all existing data — profiles, sources, channels, favorites, history — is preserved.
+         * v2 → v3:
+         * - add catch-up/archive columns to `channels` (pure additive ALTERs with defaults)
+         * - add Android TV provider bookkeeping for Watch Next / Continue Watching rows
          */
         val MIGRATION_2_3 = object : androidx.room.migration.Migration(2, 3) {
             override fun migrate(db: androidx.sqlite.db.SupportSQLiteDatabase) {
                 db.execSQL("ALTER TABLE `channels` ADD COLUMN `catchup` INTEGER NOT NULL DEFAULT 0")
                 db.execSQL("ALTER TABLE `channels` ADD COLUMN `catchupDays` INTEGER NOT NULL DEFAULT 0")
                 db.execSQL("ALTER TABLE `channels` ADD COLUMN `catchupSource` TEXT")
+                db.execSQL(
+                    "CREATE TABLE IF NOT EXISTS `tv_provider_programs` (" +
+                        "`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " +
+                        "`profileId` INTEGER NOT NULL, " +
+                        "`surface` TEXT NOT NULL, " +
+                        "`mediaType` TEXT NOT NULL, " +
+                        "`groupId` INTEGER NOT NULL, " +
+                        "`targetItemId` INTEGER NOT NULL, " +
+                        "`providerProgramId` INTEGER, " +
+                        "`lastPositionMs` INTEGER NOT NULL, " +
+                        "`durationMs` INTEGER NOT NULL, " +
+                        "`lastEngagementAt` INTEGER NOT NULL, " +
+                        "`lastPublishedAt` INTEGER NOT NULL, " +
+                        "FOREIGN KEY(`profileId`) REFERENCES `profiles`(`id`) ON DELETE CASCADE" +
+                        ")",
+                )
+                db.execSQL("CREATE INDEX IF NOT EXISTS `index_tv_provider_programs_profileId` ON `tv_provider_programs` (`profileId`)")
+                db.execSQL("CREATE UNIQUE INDEX IF NOT EXISTS `index_tv_provider_programs_profileId_surface_mediaType_groupId` ON `tv_provider_programs` (`profileId`, `surface`, `mediaType`, `groupId`)")
+            }
+        }
+
+        /**
+         * v3 → v4: v3 existed in the wild in two incompatible variants (catch-up vs Android TV home
+         * bookkeeping). v4 unifies them by ensuring BOTH the catch-up columns and the provider table
+         * exist, regardless of which v3 a user has.
+         */
+        val MIGRATION_3_4 = object : androidx.room.migration.Migration(3, 4) {
+            override fun migrate(db: androidx.sqlite.db.SupportSQLiteDatabase) {
+                // Channels catch-up columns (skip if already present).
+                if (!hasColumn(db, "channels", "catchup")) {
+                    db.execSQL("ALTER TABLE `channels` ADD COLUMN `catchup` INTEGER NOT NULL DEFAULT 0")
+                }
+                if (!hasColumn(db, "channels", "catchupDays")) {
+                    db.execSQL("ALTER TABLE `channels` ADD COLUMN `catchupDays` INTEGER NOT NULL DEFAULT 0")
+                }
+                if (!hasColumn(db, "channels", "catchupSource")) {
+                    db.execSQL("ALTER TABLE `channels` ADD COLUMN `catchupSource` TEXT")
+                }
+
+                // Android TV provider bookkeeping table (safe to run repeatedly).
+                db.execSQL(
+                    "CREATE TABLE IF NOT EXISTS `tv_provider_programs` (" +
+                        "`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " +
+                        "`profileId` INTEGER NOT NULL, " +
+                        "`surface` TEXT NOT NULL, " +
+                        "`mediaType` TEXT NOT NULL, " +
+                        "`groupId` INTEGER NOT NULL, " +
+                        "`targetItemId` INTEGER NOT NULL, " +
+                        "`providerProgramId` INTEGER, " +
+                        "`lastPositionMs` INTEGER NOT NULL, " +
+                        "`durationMs` INTEGER NOT NULL, " +
+                        "`lastEngagementAt` INTEGER NOT NULL, " +
+                        "`lastPublishedAt` INTEGER NOT NULL, " +
+                        "FOREIGN KEY(`profileId`) REFERENCES `profiles`(`id`) ON DELETE CASCADE" +
+                        ")",
+                )
+                db.execSQL("CREATE INDEX IF NOT EXISTS `index_tv_provider_programs_profileId` ON `tv_provider_programs` (`profileId`)")
+                db.execSQL("CREATE UNIQUE INDEX IF NOT EXISTS `index_tv_provider_programs_profileId_surface_mediaType_groupId` ON `tv_provider_programs` (`profileId`, `surface`, `mediaType`, `groupId`)")
+            }
+        }
+
+        private fun hasColumn(db: androidx.sqlite.db.SupportSQLiteDatabase, table: String, column: String): Boolean {
+            db.query("PRAGMA table_info(`$table`)").use { cursor ->
+                val nameIndex = cursor.getColumnIndex("name")
+                if (nameIndex < 0) return false
+                while (cursor.moveToNext()) {
+                    if (cursor.getString(nameIndex) == column) return true
+                }
+                return false
             }
         }
     }

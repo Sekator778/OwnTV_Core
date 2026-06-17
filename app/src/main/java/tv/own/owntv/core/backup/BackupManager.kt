@@ -12,6 +12,7 @@ import tv.own.owntv.core.database.entity.ProfileEntity
 import tv.own.owntv.core.database.entity.ProfileSourceCrossRef
 import tv.own.owntv.core.database.entity.SourceEntity
 import tv.own.owntv.core.model.SourceType
+import tv.own.owntv.core.tv.TvHomeRepository
 import tv.own.owntv.features.settings.data.SettingsRepository
 
 /**
@@ -30,6 +31,7 @@ class BackupManager(
     private val customize: CustomizationStore,
     private val userData: UserDataResolver,
     private val epgSources: tv.own.owntv.core.epg.EpgSourceStore,
+    private val tvHomeRepository: TvHomeRepository,
 ) {
     /** What a backup can contain; the user multi-selects these for export and restore. */
     enum class Section(val label: String, val desc: String) {
@@ -101,6 +103,7 @@ class BackupManager(
                 val sources = root.optJSONArray("sources") ?: JSONArray()
                 val links = root.optJSONArray("links") ?: JSONArray()
 
+                profileDao.getAllOnce().forEach { profile -> runCatching { tvHomeRepository.clearProfile(profile.id) } }
                 profileDao.deleteAll()       // cascades favorites/history/progress/profile_source
                 sourceDao.deleteAllSources() // cascades content + profile_source
 

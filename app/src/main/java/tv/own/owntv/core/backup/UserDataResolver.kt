@@ -14,7 +14,9 @@ import tv.own.owntv.core.database.dao.FavoriteDao
 import tv.own.owntv.core.database.dao.HistoryDao
 import tv.own.owntv.core.database.dao.MovieDao
 import tv.own.owntv.core.database.dao.ProgressDao
+import tv.own.owntv.core.database.dao.ProfileDao
 import tv.own.owntv.core.database.dao.SeriesDao
+import tv.own.owntv.core.database.dao.resolveExistingProfileId
 import tv.own.owntv.core.database.entity.FavoriteEntity
 import tv.own.owntv.core.database.entity.PlaybackProgressEntity
 import tv.own.owntv.core.database.entity.WatchHistoryEntity
@@ -36,6 +38,7 @@ class UserDataResolver(
     private val channelDao: ChannelDao,
     private val movieDao: MovieDao,
     private val seriesDao: SeriesDao,
+    private val profileDao: ProfileDao,
     private val favoriteDao: FavoriteDao,
     private val historyDao: HistoryDao,
     private val progressDao: ProgressDao,
@@ -164,19 +167,21 @@ class UserDataResolver(
             }
         } ?: return false
 
-        val pid = e.getLong("p")
+        val pid = profileDao.resolveExistingProfileId(e.getLong("p")) ?: return false
         val at = e.optLong("at", System.currentTimeMillis())
-        when (e.getString("kind")) {
-            "fav" -> favoriteDao.add(FavoriteEntity(profileId = pid, mediaType = type, itemId = itemId, addedAt = at))
-            "his" -> historyDao.record(WatchHistoryEntity(profileId = pid, mediaType = type, itemId = itemId, watchedAt = at))
-            "prog" -> progressDao.save(
-                PlaybackProgressEntity(
-                    profileId = pid, mediaType = type, itemId = itemId,
-                    positionMs = e.optLong("pos", 0), durationMs = e.optLong("dur", 0), updatedAt = at,
-                ),
-            )
-        }
-        return true
+        return runCatching {
+            when (e.getString("kind")) {
+                "fav" -> favoriteDao.add(FavoriteEntity(profileId = pid, mediaType = type, itemId = itemId, addedAt = at))
+                "his" -> historyDao.record(WatchHistoryEntity(profileId = pid, mediaType = type, itemId = itemId, watchedAt = at))
+                "prog" -> progressDao.save(
+                    PlaybackProgressEntity(
+                        profileId = pid, mediaType = type, itemId = itemId,
+                        positionMs = e.optLong("pos", 0), durationMs = e.optLong("dur", 0), updatedAt = at,
+                    ),
+                )
+            }
+            true
+        }.getOrDefault(false)
     }
 
     private fun JSONObject.optStringOrNull(key: String): String? =
