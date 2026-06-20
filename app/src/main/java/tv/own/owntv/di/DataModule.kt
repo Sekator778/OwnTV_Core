@@ -1,6 +1,7 @@
 package tv.own.owntv.di
 
 import okhttp3.OkHttpClient
+import okhttp3.Protocol
 import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
 import tv.own.owntv.core.backup.BackupManager
@@ -26,6 +27,11 @@ val dataModule = module {
             .readTimeout(60, TimeUnit.SECONDS)
             .writeTimeout(30, TimeUnit.SECONDS)
             .retryOnConnectionFailure(true)
+            // Force HTTP/1.1. Several IPTV panels / EPG hosts (and their CDNs) have flaky HTTP/2 stacks
+            // that send RST_STREAM(PROTOCOL_ERROR) on large/slow responses — e.g. big EPG XML downloads
+            // (#17) — which OkHttp surfaces as "stream was reset: PROTOCOL_ERROR". HTTP/1.1 sidesteps it
+            // with no real downside for our mostly-single-stream downloads.
+            .protocols(listOf(Protocol.HTTP_1_1))
             // Default a player-style UA for any request that didn't set one (e.g. Coil image loads),
             // since some IPTV panels reject the stock OkHttp UA. Per-source UAs still override this.
             .addInterceptor { chain ->

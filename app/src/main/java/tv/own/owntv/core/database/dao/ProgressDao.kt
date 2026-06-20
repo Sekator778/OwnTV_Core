@@ -28,6 +28,16 @@ interface ProgressDao {
     @Query("SELECT * FROM playback_progress")
     suspend fun getAllOnce(): List<PlaybackProgressEntity>
 
+    /** The episode most recently watched in [seriesId] (by this profile), or null — so opening a show can
+     *  jump straight to where you left off instead of episode 1. */
+    @Query(
+        "SELECT itemId FROM playback_progress " +
+            "WHERE profileId = :profileId AND mediaType = 'EPISODE' " +
+            "AND itemId IN (SELECT id FROM episodes WHERE seriesId = :seriesId) " +
+            "ORDER BY updatedAt DESC LIMIT 1",
+    )
+    suspend fun lastWatchedEpisodeId(profileId: Long, seriesId: Long): Long?
+
     /**
      * Drops resume positions orphaned by a re-sync (see FavoriteDao.purgeOrphans). Episodes are
      * excluded — they load lazily, so episode progress is kept and re-attached when the show opens.

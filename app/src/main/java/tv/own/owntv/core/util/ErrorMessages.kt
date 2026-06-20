@@ -13,6 +13,8 @@ fun friendlySyncError(raw: String?, online: Boolean): String = when {
         "Couldn't reach the server. Check the address and your connection."
     raw.containsAny("Failed to connect", "ECONNREFUSED", "Connection refused", "Connection reset") ->
         "Couldn't connect to the server. It may be down, or the address may be wrong."
+    raw.containsAny("stream was reset", "PROTOCOL_ERROR", "StreamReset") ->
+        "The server interrupted the download. Please try again."
     raw.containsAny("HTTP 401", "HTTP 403") ->
         "The server rejected your login. Check your username and password."
     raw.contains("HTTP 404") -> "Not found on the server. Check the URL."

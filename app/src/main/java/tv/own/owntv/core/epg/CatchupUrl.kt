@@ -1,5 +1,10 @@
 package tv.own.owntv.core.epg
 
+import tv.own.owntv.core.database.entity.ChannelEntity
+import tv.own.owntv.core.database.entity.EpgProgrammeEntity
+import tv.own.owntv.core.database.entity.SourceEntity
+import tv.own.owntv.core.model.SourceType
+import tv.own.owntv.core.parser.XtreamClient
 import java.util.TimeZone
 
 /**
@@ -60,6 +65,28 @@ object CatchupUrl {
                 raw == "S" -> dateParts["s"]!!
                 else -> match.value // unknown placeholder: leave as-is
             }
+        }
+    }
+
+    /**
+     * Build the catch-up URL for a [programme] on [channel] given its resolved [source] and the [tz] the
+     * provider expects timeshift timestamps in. Shared by the Guide and Live TV catch-up entry points.
+     */
+    fun forSource(
+        channel: ChannelEntity,
+        programme: EpgProgrammeEntity,
+        source: SourceEntity,
+        tz: TimeZone,
+        xtream: XtreamClient,
+    ): String? {
+        if (!channel.catchup) return null
+        return when (source.type) {
+            SourceType.XTREAM -> channel.remoteId?.let { streamId ->
+                val durationMin = (((programme.stopMs - programme.startMs) / 60_000L).toInt()).coerceAtLeast(1)
+                xtream.timeshiftUrl(source, streamId, programme.startMs, durationMin, tz)
+            }
+            SourceType.M3U -> forM3u(channel.streamUrl, null, channel.catchupSource, programme.startMs, programme.stopMs)
+            else -> null
         }
     }
 

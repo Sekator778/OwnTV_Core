@@ -41,6 +41,8 @@ class SettingsRepository(private val context: Context) {
         val HDR_ENABLED = booleanPreferencesKey("hdr_enabled")
         // Video Player Settings
         val HW_DECODING = booleanPreferencesKey("hw_decoding")
+        val AUDIO_PASSTHROUGH = booleanPreferencesKey("audio_passthrough")
+        val AUTO_PLAY_NEXT = booleanPreferencesKey("auto_play_next")
         val DEFAULT_ZOOM = stringPreferencesKey("default_zoom")
         val SUB_SCALE = floatPreferencesKey("sub_scale")
         val AUDIO_DELAY_MS = intPreferencesKey("audio_delay_ms")
@@ -79,6 +81,12 @@ class SettingsRepository(private val context: Context) {
 
     suspend fun setCatchupOffsetMinutes(minutes: Int) {
         context.dataStore.edit { it[Keys.CATCHUP_OFFSET_MIN] = minutes.coerceIn(catchupOffsetRangeMinutes) }
+    }
+
+    /** The timezone catch-up/timeshift URLs are formatted in — device tz, or a manual UTC offset. */
+    suspend fun resolveCatchupTimeZone(): java.util.TimeZone = when (catchupTimezone.first()) {
+        CatchupTimezone.DEVICE -> java.util.TimeZone.getDefault()
+        CatchupTimezone.MANUAL -> java.util.SimpleTimeZone(catchupOffsetMinutes.first() * 60_000, "catchup")
     }
 
     /** Automatically check GitHub Releases for a newer version shortly after launch. */
@@ -145,6 +153,21 @@ class SettingsRepository(private val context: Context) {
 
     suspend fun setHwDecoding(enabled: Boolean) {
         context.dataStore.edit { it[Keys.HW_DECODING] = enabled }
+    }
+
+    /** Pass compressed audio (Dolby/DTS) straight to the TV/receiver for surround, instead of decoding
+     *  to stereo. Off by default — only useful with a sink that supports it, and silent if misconfigured. */
+    val audioPassthrough: Flow<Boolean> = context.dataStore.data.map { it[Keys.AUDIO_PASSTHROUGH] ?: false }
+
+    suspend fun setAudioPassthrough(enabled: Boolean) {
+        context.dataStore.edit { it[Keys.AUDIO_PASSTHROUGH] = enabled }
+    }
+
+    /** Auto-play the next episode (and roll into the next season) when one finishes. On by default. */
+    val autoPlayNext: Flow<Boolean> = context.dataStore.data.map { it[Keys.AUTO_PLAY_NEXT] ?: true }
+
+    suspend fun setAutoPlayNext(enabled: Boolean) {
+        context.dataStore.edit { it[Keys.AUTO_PLAY_NEXT] = enabled }
     }
 
     /** Default zoom/aspect mode applied when playback starts (a [tv.own.owntv.player.ZoomMode] name). */
