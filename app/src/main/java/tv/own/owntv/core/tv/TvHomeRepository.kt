@@ -29,12 +29,14 @@ import tv.own.owntv.core.database.dao.SourceDao
 import tv.own.owntv.core.database.dao.TvProviderProgramDao
 import tv.own.owntv.core.database.entity.EpisodeEntity
 import tv.own.owntv.core.database.entity.MovieEntity
-import tv.own.owntv.core.database.entity.PlaybackProgressEntity
 import tv.own.owntv.core.database.entity.SeriesEntity
 import tv.own.owntv.core.database.entity.TvProviderProgramEntity
+import tv.own.owntv.core.launcher.LauncherContinuationItem
+import tv.own.owntv.core.launcher.LauncherContinuationKind
+import tv.own.owntv.core.launcher.LauncherDeepLink
+import tv.own.owntv.core.launcher.LauncherRecommendationPlanner
 import tv.own.owntv.core.model.MediaType
 import tv.own.owntv.features.settings.data.SettingsRepository
-import java.nio.ByteBuffer
 import java.security.MessageDigest
 
 /** Mirrors the app's continue-watching state into Android TV provider rows. */
@@ -48,6 +50,7 @@ class TvHomeRepository(
     private val tvProviderProgramDao: TvProviderProgramDao,
     private val customize: CustomizationStore,
     private val settings: SettingsRepository,
+    private val launcherPlanner: LauncherRecommendationPlanner,
 ) {
     private val resolver: ContentResolver get() = context.contentResolver
     private val channelHelper = PreviewChannelHelper(context)
@@ -55,8 +58,6 @@ class TvHomeRepository(
 
     companion object {
         private const val TAG = "OwnTVHome"
-        private const val WATCH_NEXT_MIN_POSITION_MS = 10_000L
-        private const val WATCH_NEXT_COMPLETE_FRACTION = 0.95f
         private const val WATCH_NEXT_PUBLISH_INTERVAL_MS = 60_000L
         private const val RECENT_LIVE_MAX_ITEMS = 10
         private const val RECENT_LIVE_REFRESH_INTERVAL_MS = 5_000L
@@ -134,8 +135,8 @@ class TvHomeRepository(
     }
 
     private suspend fun refreshWatchNextLocked(profileId: Long) {
-        val desired = buildDesiredRows(profileId)
-        val desiredKeys = desired.map { it.key }.toSet()
+        val desired = launcherPlanner.buildContinuationItems(profileId)
+        val desiredKeys = desired.map { it.stableKey }.toSet()
         val existing = tvProviderProgramDao.getAllForProfile(profileId)
         logD("refreshWatchNext profile=$profileId desired=${desired.size} existing=${existing.size}")
         for (row in existing) {
@@ -146,11 +147,19 @@ class TvHomeRepository(
                 tvProviderProgramDao.delete(profileId, row.surface, row.mediaType, row.groupId)
             }
         }
-        for (row in desired) {
-            when (row) {
-                is DesiredRow.Movie -> syncMovie(profileId, row.movieId, row.positionMs, row.durationMs, force = true)
-                is DesiredRow.Episode -> syncEpisode(profileId, row.episodeId, row.positionMs, row.durationMs, force = true)
+        for (item in desired) {
+            syncContinuationItem(profileId, item)
+        }
+    }
+
+    private suspend fun syncContinuationItem(profileId: Long, item: LauncherContinuationItem, force: Boolean = true) {
+        when (item.kind) {
+            LauncherContinuationKind.MOVIE -> syncMovie(profileId, item.sourceItemId, item.positionMs, item.durationMs, force)
+            LauncherContinuationKind.EPISODE -> {
+                val progress = progressDao.get(profileId, MediaType.EPISODE, item.sourceItemId) ?: return
+                syncEpisode(profileId, item.sourceItemId, progress.positionMs, progress.durationMs, force)
             }
+            LauncherContinuationKind.LIVE -> Unit
         }
     }
 
@@ -174,7 +183,7 @@ class TvHomeRepository(
                 "sourceCount=${sourceIds.size} existing=${existingRows.size}",
         )
 
-        val desiredKeys = recentChannels.map { liveStableKey(it) }.toSet()
+        val desiredKeys = recentChannels.map { launcherPlanner.liveStableKey(it) }.toSet()
 
         for (row in existingRows) {
             if (row.groupId !in desiredKeys) {
@@ -184,7 +193,7 @@ class TvHomeRepository(
         }
 
         recentChannels.forEachIndexed { index, channel ->
-            val stableKey = liveStableKey(channel)
+            val stableKey = launcherPlanner.liveStableKey(channel)
             val row = tvProviderProgramDao.find(profileId, TvProviderSurface.RECENT_LIVE, MediaType.LIVE, stableKey)
                 ?: TvProviderProgramEntity(
                     profileId = profileId,
@@ -200,87 +209,16 @@ class TvHomeRepository(
         logD("refreshRecentLive profile=$profileId updated channel bookkeeping")
     }
 
-    suspend fun resolveLaunch(profileId: Long, deepLink: TvHomeDeepLink): TvHomeLaunch? = withContext(Dispatchers.IO) {
-        val sourceIds = sourceDao.sourceIdsForProfile(profileId).toSet()
-        if (sourceIds.isEmpty()) return@withContext null
-        logD("resolveLaunch profile=$profileId type=${deepLink::class.simpleName} sourceCount=${sourceIds.size}")
-
-        when (deepLink) {
-            is TvHomeDeepLink.Movie -> {
-                val movie = resolveMovie(deepLink) ?: return@withContext null
-                if (movie.sourceId !in sourceIds) return@withContext null
-                logD("resolveLaunch movie profile=$profileId movieId=${movie.id} sourceId=${movie.sourceId}")
-                TvHomeLaunch.Movie(movie, progressDao.get(profileId, MediaType.MOVIE, movie.id)?.positionMs ?: 0L)
-            }
-            is TvHomeDeepLink.Live -> {
-                val channel = resolveLiveChannel(deepLink) ?: return@withContext null
-                if (channel.sourceId !in sourceIds) return@withContext null
-                logD("resolveLaunch live profile=$profileId channelId=${channel.id} sourceId=${channel.sourceId}")
-                TvHomeLaunch.Live(channel)
-            }
-            TvHomeDeepLink.OpenLiveSection -> null
-            is TvHomeDeepLink.Episode -> {
-                val show = resolveSeries(deepLink) ?: return@withContext null
-                if (show.sourceId !in sourceIds) return@withContext null
-                val episodes = orderedEpisodes(show.id)
-                if (episodes.isEmpty()) return@withContext TvHomeLaunch.Series(show)
-
-                val target = resolveEpisodeTarget(profileId, show.id, deepLink, episodes)
-                    ?: return@withContext TvHomeLaunch.Series(show)
-                val queue = episodes.filter { it.seasonNumber == target.seasonNumber }.sortedBy { it.episodeNumber }
-                val startPosition = progressDao.get(profileId, MediaType.EPISODE, target.id)?.positionMs ?: 0L
-                logD("resolveLaunch episode profile=$profileId showId=${show.id} episodeId=${target.id} queue=${queue.size} startPosition=$startPosition")
-                TvHomeLaunch.Episode(show, target, queue.ifEmpty { listOf(target) }, startPosition)
-            }
-        }
-    }
-
-    private suspend fun buildDesiredRows(profileId: Long): List<DesiredRow> {
-        val out = mutableListOf<DesiredRow>()
-        val allProgress = progressDao.getAllOnce().filter { it.profileId == profileId }
-
-        for (progress in allProgress) {
-            if (progress.mediaType != MediaType.MOVIE) continue
-            val movie = movieDao.getById(progress.itemId) ?: continue
-            if (!isVisibleToProfile(profileId, movie.sourceId)) continue
-            if (!eligibleForWatchNext(progress.positionMs, progress.durationMs)) continue
-            out += DesiredRow.Movie(movieStableKeyHash(movie), movie.id, progress.positionMs, progress.durationMs)
-        }
-
-        val latestBySeries = LinkedHashMap<Long, PlaybackProgressEntity>()
-        for (progress in allProgress) {
-            if (progress.mediaType != MediaType.EPISODE) continue
-            val episode = seriesDao.getEpisodeById(progress.itemId) ?: continue
-            val current = latestBySeries[episode.seriesId]
-            if (current == null || progress.updatedAt >= current.updatedAt) {
-                latestBySeries[episode.seriesId] = progress
-            }
-        }
-        for (progress in latestBySeries.values) {
-            val episode = seriesDao.getEpisodeById(progress.itemId) ?: continue
-            val show = seriesDao.getSeriesById(episode.seriesId) ?: continue
-            if (!isVisibleToProfile(profileId, show.sourceId)) continue
-            val episodes = orderedEpisodes(show.id)
-            val currentIndex = episodes.indexOfFirst { it.id == episode.id }
-            val isComplete = isCompleted(progress)
-            if (!isComplete && !eligibleForWatchNext(progress.positionMs, progress.durationMs)) continue
-            if (isComplete && currentIndex == episodes.lastIndex) continue
-            out += DesiredRow.Episode(episodeStableKeyHash(show, episode), show.id, episode.id, progress.positionMs, progress.durationMs)
-        }
-
-        return out
-    }
-
     private suspend fun syncMovie(profileId: Long, movieId: Long, positionMs: Long, durationMs: Long, force: Boolean = false) {
         val movie = movieDao.getById(movieId) ?: return
-        if (!isVisibleToProfile(profileId, movie.sourceId)) {
+        if (!launcherPlanner.isVisibleToProfile(profileId, movie.sourceId)) {
             logD("syncMovie skip hidden profile=$profileId movieId=$movieId sourceId=${movie.sourceId}")
             return
         }
 
-        val groupId = movieStableKeyHash(movie)
+        val groupId = launcherPlanner.movieStableKeyHash(movie)
         val existing = tvProviderProgramDao.find(profileId, TvProviderSurface.WATCH_NEXT, MediaType.MOVIE, groupId)
-        val eligible = eligibleForWatchNext(positionMs, durationMs)
+        val eligible = launcherPlanner.eligibleForWatchNext(positionMs, durationMs)
         logD(
             "syncMovie profile=$profileId movieId=$movieId groupId=$groupId existing=${existing?.providerProgramId ?: -1} " +
                 "eligible=$eligible force=$force",
@@ -308,17 +246,17 @@ class TvHomeRepository(
     private suspend fun syncEpisode(profileId: Long, episodeId: Long, positionMs: Long, durationMs: Long, force: Boolean = false) {
         val episode = seriesDao.getEpisodeById(episodeId) ?: return
         val show = seriesDao.getSeriesById(episode.seriesId) ?: return
-        if (!isVisibleToProfile(profileId, show.sourceId)) {
+        if (!launcherPlanner.isVisibleToProfile(profileId, show.sourceId)) {
             logD("syncEpisode skip hidden profile=$profileId episodeId=$episodeId showId=${show.id} sourceId=${show.sourceId}")
             return
         }
 
-        val episodes = orderedEpisodes(show.id)
+        val episodes = launcherPlanner.orderedEpisodes(show.id)
         val currentIndex = episodes.indexOfFirst { it.id == episode.id }
-        val isComplete = isCompleted(positionMs, durationMs)
-        val currentGroupId = episodeStableKeyHash(show, episode)
+        val isComplete = launcherPlanner.isCompleted(positionMs, durationMs)
+        val currentGroupId = launcherPlanner.episodeStableKeyHash(show, episode)
         val existingCurrent = tvProviderProgramDao.find(profileId, TvProviderSurface.WATCH_NEXT, MediaType.EPISODE, currentGroupId)
-        val eligible = eligibleForWatchNext(positionMs, durationMs)
+        val eligible = launcherPlanner.eligibleForWatchNext(positionMs, durationMs)
         logD(
             "syncEpisode profile=$profileId episodeId=$episodeId showId=${show.id} groupId=$currentGroupId existing=${existingCurrent?.providerProgramId ?: -1} " +
                 "eligible=$eligible complete=$isComplete currentIndex=$currentIndex force=$force",
@@ -362,11 +300,11 @@ class TvHomeRepository(
             "syncEpisode publish profile=$profileId episodeId=$episodeId targetId=${target.id} watchNextType=$watchNextType " +
                 "row=${row.describe()}",
         )
-        upsertWatchNext(show, target, row, watchNextType, episodeStableKey(show, episode))
+        upsertWatchNext(show, target, row, watchNextType, launcherPlanner.episodeStableKey(show, episode))
     }
 
     private suspend fun upsertWatchNext(movie: MovieEntity, row: TvProviderProgramEntity) {
-        val stableKey = movieStableKey(movie)
+        val stableKey = launcherPlanner.movieStableKey(movie)
         val program = WatchNextProgram.Builder()
             .setWatchNextType(TvContractCompat.WatchNextPrograms.WATCH_NEXT_TYPE_CONTINUE)
             .setType(TvContractCompat.PreviewProgramColumns.TYPE_MOVIE)
@@ -377,7 +315,7 @@ class TvHomeRepository(
             .setLastPlaybackPositionMillis(safeMillisToInt(row.lastPositionMs))
             .setDurationMillis(safeMillisToInt(row.durationMs))
             .setInternalProviderId(platformInternalId(TvProviderSurface.WATCH_NEXT, row.profileId, MediaType.MOVIE, stableKey))
-            .setIntent(Intent(Intent.ACTION_VIEW, TvHomeDeepLink.Movie(movie.sourceId, movie.remoteId, movie.name).toUri()))
+            .setIntent(Intent(Intent.ACTION_VIEW, LauncherDeepLink.Movie(movie.sourceId, movie.remoteId, movie.name).toUri()))
             .setLastEngagementTimeUtcMillis(System.currentTimeMillis())
             .build()
         logD("persistWatchNext movie profile=${row.profileId} stableKey=$stableKey row=${row.describe()}")
@@ -408,7 +346,7 @@ class TvHomeRepository(
             .setIntent(
                 Intent(
                     Intent.ACTION_VIEW,
-                    TvHomeDeepLink.Episode(
+                    LauncherDeepLink.Episode(
                         seriesSourceId = show.sourceId,
                         seriesRemoteId = show.remoteId,
                         seriesName = show.name,
@@ -567,15 +505,15 @@ class TvHomeRepository(
     ) {
         val label = customizations.itemNames[CustomizeKeys.channel(channel)] ?: channel.name
         val art = safeLiveArtUri(channel.logoUrl)
-        val stableKey = liveStableKey(channel)
-        val stableKeyString = liveStableKeyString(channel)
+        val stableKey = launcherPlanner.liveStableKey(channel)
+        val stableKeyString = launcherPlanner.liveStableKeyString(channel)
         val program = PreviewProgram.Builder()
             .setChannelId(channelId)
             .setType(TvContractCompat.PreviewProgramColumns.TYPE_CHANNEL)
             .setTitle(label)
             .setDescription(channelDaoName(channel))
             .setInternalProviderId(platformInternalId(TvProviderSurface.RECENT_LIVE, profileId, MediaType.LIVE, stableKeyString))
-            .setIntent(Intent(Intent.ACTION_VIEW, TvHomeDeepLink.Live(channel.sourceId, channel.remoteId, channel.name).toUri()))
+            .setIntent(Intent(Intent.ACTION_VIEW, LauncherDeepLink.Live(channel.sourceId, channel.remoteId, channel.name).toUri()))
             .setWeight(RECENT_LIVE_MAX_ITEMS - index)
             .apply { if (art != null) setPosterArtUri(art) }
             .apply { if (art != null) setPosterArtAspectRatio(TvContractCompat.PreviewProgramColumns.ASPECT_RATIO_16_9) }
@@ -625,41 +563,15 @@ class TvHomeRepository(
         )
     }
 
-    private suspend fun isVisibleToProfile(profileId: Long, sourceId: Long): Boolean =
-        sourceDao.sourceIdsForProfile(profileId).contains(sourceId)
-
-    private suspend fun orderedEpisodes(seriesId: Long): List<EpisodeEntity> =
-        seriesDao.episodesBySeries(seriesId).first()
-            .sortedWith(compareBy<EpisodeEntity> { it.seasonNumber }.thenBy { it.episodeNumber })
-
     private fun buildRecentLiveChannel(profileId: Long): PreviewChannel {
         return PreviewChannel.Builder()
             .setDisplayName(RECENT_LIVE_CHANNEL_NAME)
             .setDescription("Recently watched live channels")
-            .setAppLinkIntentUri(TvHomeDeepLink.OpenLiveSection.toUri())
+            .setAppLinkIntentUri(LauncherDeepLink.OpenLiveSection.toUri())
             .setInternalProviderId(platformInternalId(TvProviderSurface.RECENT_LIVE, profileId, MediaType.LIVE, RECENT_LIVE_CHANNEL_STABLE_KEY))
             .setLogo(resourceUri(R.drawable.tv_banner))
             .build()
     }
-
-    private fun movieStableKey(movie: MovieEntity): String =
-        // Best-effort identity: remoteId is preferred, name is a fallback for providers that do not
-        // expose stable IDs. A rename can still force a new key until the next refresh.
-        "movie:${movie.sourceId}:${movie.remoteId ?: movie.name}"
-
-    private fun episodeStableKey(show: SeriesEntity, episode: EpisodeEntity): String =
-        // Best-effort identity for series/episodes: remote IDs win; name fallback is only for feeds
-        // that do not expose stable IDs.
-        "episode:${show.sourceId}:${show.remoteId ?: show.name}:${episode.remoteId ?: "${episode.seasonNumber}-${episode.episodeNumber}"}"
-
-    private fun liveStableKeyString(channel: tv.own.owntv.core.database.entity.ChannelEntity): String =
-        // Best-effort identity for live channels; remote IDs are preferred when the provider has them.
-        "live:${channel.sourceId}:${channel.remoteId ?: channel.name}"
-
-    private fun movieStableKeyHash(movie: MovieEntity): Long = stableHash64(movieStableKey(movie))
-
-    private fun episodeStableKeyHash(show: SeriesEntity, episode: EpisodeEntity): Long =
-        stableHash64(episodeStableKey(show, episode))
 
     private fun safeMillisToInt(value: Long): Int = value.coerceIn(0L, Int.MAX_VALUE.toLong()).toInt()
 
@@ -676,112 +588,17 @@ class TvHomeRepository(
     private fun resourceUri(resId: Int): Uri =
         Uri.parse("android.resource://${context.packageName}/$resId")
 
-    private fun liveStableKey(channel: tv.own.owntv.core.database.entity.ChannelEntity): Long =
-        stableHash64(liveStableKeyString(channel))
-
     private fun isHidden(customizations: SectionCustomizations, channel: tv.own.owntv.core.database.entity.ChannelEntity): Boolean =
         CustomizeKeys.channel(channel) in customizations.hiddenItems
 
     private fun channelDaoName(channel: tv.own.owntv.core.database.entity.ChannelEntity): String = channel.name
-
-    private suspend fun resolveMovie(deepLink: TvHomeDeepLink.Movie): MovieEntity? {
-        val sourceId = deepLink.sourceId
-        val remoteId = deepLink.remoteId
-        val name = deepLink.name
-        val movie = when {
-            sourceId != null && !remoteId.isNullOrBlank() -> movieDao.findByRemote(sourceId, remoteId)
-            sourceId != null && !name.isNullOrBlank() -> movieDao.findByName(sourceId, name)
-            deepLink.itemId != null -> movieDao.getById(deepLink.itemId)
-            else -> null
-        } ?: return null
-        if (sourceId != null && movie.sourceId != sourceId) return null
-        return movie
-    }
-
-    private suspend fun resolveLiveChannel(deepLink: TvHomeDeepLink.Live): tv.own.owntv.core.database.entity.ChannelEntity? {
-        val sourceId = deepLink.sourceId
-        val remoteId = deepLink.remoteId
-        val name = deepLink.name
-        val channel = when {
-            sourceId != null && !remoteId.isNullOrBlank() -> channelDao.findByRemote(sourceId, remoteId)
-            sourceId != null && !name.isNullOrBlank() -> channelDao.findByName(sourceId, name)
-            deepLink.itemId != null -> channelDao.getById(deepLink.itemId)
-            else -> null
-        } ?: return null
-        if (sourceId != null && channel.sourceId != sourceId) return null
-        return channel
-    }
-
-    private suspend fun resolveSeries(deepLink: TvHomeDeepLink.Episode): SeriesEntity? {
-        val sourceId = deepLink.seriesSourceId
-        val remoteId = deepLink.seriesRemoteId
-        val name = deepLink.seriesName
-        val show = when {
-            sourceId != null && !remoteId.isNullOrBlank() -> seriesDao.findSeriesByRemote(sourceId, remoteId)
-            sourceId != null && !name.isNullOrBlank() -> seriesDao.findSeriesByName(sourceId, name)
-            deepLink.seriesItemId != null -> seriesDao.getSeriesById(deepLink.seriesItemId)
-            else -> null
-        } ?: return null
-        if (sourceId != null && show.sourceId != sourceId) return null
-        return show
-    }
-
-    private suspend fun resolveEpisodeTarget(
-        profileId: Long,
-        seriesId: Long,
-        deepLink: TvHomeDeepLink.Episode,
-        episodes: List<EpisodeEntity>,
-    ): EpisodeEntity? {
-        val season = deepLink.season
-        val episodeNo = deepLink.episode
-        val exact = when {
-            !deepLink.episodeRemoteId.isNullOrBlank() -> seriesDao.findEpisodeByRemote(seriesId, deepLink.episodeRemoteId)
-            season != null && episodeNo != null -> seriesDao.findEpisodeByNumber(seriesId, season, episodeNo)
-            deepLink.episodeItemId != null -> seriesDao.getEpisodeById(deepLink.episodeItemId)
-            else -> null
-        }
-        if (exact != null) return exact
-
-        val fallbackStartIndex = when {
-            season != null && episodeNo != null ->
-                episodes.indexOfFirst { candidate ->
-                    candidate.seasonNumber > season ||
-                        (candidate.seasonNumber == season && candidate.episodeNumber > episodeNo)
-                }.takeIf { it >= 0 } ?: 0
-            else -> 0
-        }
-
-        if (fallbackStartIndex == 0) {
-            logD("resolveEpisodeTarget fallback from start profile=$profileId seriesId=$seriesId episodeCount=${episodes.size}")
-        }
-
-        val candidates = if (fallbackStartIndex == 0) episodes else episodes.drop(fallbackStartIndex)
-        return candidates.firstOrNull { episode ->
-            val progress = progressDao.get(profileId, MediaType.EPISODE, episode.id)
-            progress == null || !isCompleted(progress)
-        } ?: if (fallbackStartIndex == 0) null else episodes.firstOrNull { episode ->
-            val progress = progressDao.get(profileId, MediaType.EPISODE, episode.id)
-            progress == null || !isCompleted(progress)
-        }
-    }
-
     private fun platformInternalId(surface: TvProviderSurface, profileId: Long, mediaType: MediaType, stableKey: String): String =
         "owntv:${surface.name.lowercase()}:${sha256Hex("$profileId|${mediaType.name}|$stableKey")}"
-
-    private fun stableHash64(value: String): Long = ByteBuffer.wrap(sha256Bytes(value)).long
 
     private fun sha256Hex(value: String): String = sha256Bytes(value).joinToString("") { "%02x".format(it) }
 
     private fun sha256Bytes(value: String): ByteArray =
         MessageDigest.getInstance("SHA-256").digest(value.toByteArray(Charsets.UTF_8))
-
-    private fun eligibleForWatchNext(positionMs: Long, durationMs: Long): Boolean =
-        positionMs >= WATCH_NEXT_MIN_POSITION_MS && durationMs > 0 && !isCompleted(positionMs, durationMs)
-
-    private fun isCompleted(positionMs: Long, durationMs: Long): Boolean =
-        durationMs > 0 && positionMs >= (durationMs * WATCH_NEXT_COMPLETE_FRACTION).toLong()
-
-    private fun isCompleted(progress: PlaybackProgressEntity): Boolean = isCompleted(progress.positionMs, progress.durationMs)
 
     private fun shouldPublish(
         existing: TvProviderProgramEntity?,
@@ -792,7 +609,7 @@ class TvHomeRepository(
         val now = System.currentTimeMillis()
         if (existing == null || existing.providerProgramId == null) return true
         if (existing.targetItemId != targetItemId) return true
-        if (isCompleted(positionMs, durationMs)) return true
+        if (launcherPlanner.isCompleted(positionMs, durationMs)) return true
         return now - existing.lastPublishedAt >= WATCH_NEXT_PUBLISH_INTERVAL_MS
     }
 
@@ -823,16 +640,4 @@ class TvHomeRepository(
     )
 
     private fun TvProviderProgramEntity.key(): String = "${surface.name}:${mediaType.name}:$groupId"
-
-    private sealed interface DesiredRow {
-        val key: String
-
-        data class Movie(val groupId: Long, val movieId: Long, val positionMs: Long, val durationMs: Long) : DesiredRow {
-            override val key: String = "${TvProviderSurface.WATCH_NEXT.name}:${MediaType.MOVIE.name}:$groupId"
-        }
-
-        data class Episode(val groupId: Long, val showId: Long, val episodeId: Long, val positionMs: Long, val durationMs: Long) : DesiredRow {
-            override val key: String = "${TvProviderSurface.WATCH_NEXT.name}:${MediaType.EPISODE.name}:$groupId"
-        }
-    }
 }
