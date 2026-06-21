@@ -51,11 +51,11 @@ val dataModule = module {
     single { tv.own.owntv.core.epg.EpgSourceStore(androidContext()) }
     // store, sourceDao, epgRepository
     single { tv.own.owntv.core.epg.EpgMigration(get(), get(), get()) }
-    // channelDao, movieDao, seriesDao, epgSourceStore, epgRepository
-    single { tv.own.owntv.core.sync.ImportFinalizer(get(), get(), get(), get(), get()) }
+    // channelDao, movieDao, seriesDao
+    single { tv.own.owntv.core.sync.ImportFinalizer(get(), get(), get()) }
     single { M3uParser() }
     single { XtreamClient(get()) }
-    single { SyncManager(get(), get(), get(), get(), get(), get(), get(), get()) }
+    single { SyncManager(androidContext(), get(), get(), get(), get(), get(), get(), get(), get()) }
     // context, channelDao, movieDao, seriesDao, favoriteDao, historyDao, progressDao
     single { UserDataResolver(androidContext(), get(), get(), get(), get(), get(), get()) }
     // sourceDao, syncManager, userDataResolver

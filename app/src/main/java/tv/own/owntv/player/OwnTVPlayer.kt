@@ -192,8 +192,9 @@ class OwnTVPlayer(
         _directRender.value = targetVo() == "mediacodec_embed"
     }
 
-    /** mpv `audio-spdif` list — the compressed formats the sink supports, or "" (decode to PCM). */
-    private fun spdifValue(): String = if (audioPassthrough) AudioCapabilities.spdifCodecs(context) else ""
+    /** mpv `audio-channels`: surround on → decode to multichannel LPCM (sink picks 5.1/7.1, or stereo on a
+     *  2.0 TV); surround off → force a stereo downmix. Always decoded PCM, so the audio clock stays alive. */
+    private fun audioChannelsValue(): String = if (surroundSound) "auto" else "stereo"
 
     /**
      * Trim FFmpeg's stream probe for **live** sources so channels start faster (the default ~5 MB / 5 s
@@ -202,27 +203,37 @@ class OwnTVPlayer(
      */
     private fun MPVLib.applyProbeProfile(url: String) {
         val lower = url.lowercase()
-        val hls = lower.contains(".m3u8")
-        // Live = HLS, MPEG-TS (.ts), or catch-up timeshift — these zap often and start mid-stream.
-        val live = hls || lower.contains(".ts") || lower.contains("/timeshift/") || isLiveContent
-        // True live channels: make FFmpeg RECONNECT when the server closes the HTTP connection (EOF)
-        // rather than ending the stream. Some live servers drop the socket every few seconds; without
-        // this mpv hits EOF → the app reconnects → a black/decoder-churn loop every few seconds. NOT for
+        // Raw continuous MPEG-TS (Xtream live `…/id.ts`, catch-up timeshift `.ts`). These probe fast and
+        // start mid-stream, so they're the streams fast-zap trimming was built for — and the proven-safe
+        // case (Xtream live works). HLS (.m3u8) and other/extensionless live URLs are NOT trimmed: they need
+        // the full probe (playlist + a segment) to open cleanly, and a trimmed probe handed mpv incomplete
+        // info → the stream opened but the playloop wedged (regression: M3U HLS live hung after the decoder
+        // inited, while v2.2.4 — which always full-probed — played). So trim ONLY raw TS, full-probe the rest.
+        val rawTs = lower.contains(".ts") || lower.contains("/timeshift/")
+        // Make FFmpeg RECONNECT when a live server closes the HTTP connection (some drop the socket every
+        // few seconds; without this mpv hits EOF → the app reconnects → a black/decoder-churn loop). NOT for
         // VOD/catch-up (isLiveContent=false) — those have a real end and must be allowed to finish.
         val reconnect = "reconnect=1,reconnect_streamed=1,reconnect_delay_max=8,reconnect_on_http_error=5xx"
-        setPropertyString("stream-lavf-o", if (isLiveContent) "$reconnect,reconnect_at_eof=1" else reconnect)
-        val trim = live && !forceFullProbe
+        // `reconnect_at_eof` keeps a CONTINUOUS stream going across mid-stream EOFs — but it also reconnects
+        // on the EOF that ends a *finite* HTTP response (an HLS .m3u8 playlist, a redirect, …), looping
+        // forever during OPEN so the stream never starts. So enable it only for raw MPEG-TS live.
+        val eofReconnect = if (isLiveContent && lower.contains(".ts")) ",reconnect_at_eof=1" else ""
+        setPropertyString("stream-lavf-o", "$reconnect$eofReconnect")
+        val trim = rawTs && !forceFullProbe
         usedTrimmedProbe = trim
         if (!trim) {
-            // Full probe (mpv default 0 → FFmpeg's 5 MB / 5 s) — needed for HDR & complete track lists.
+            // Full probe (mpv default 0 → FFmpeg's 5 MB / 5 s) — needed for HDR, complete track lists, and
+            // to open HLS/other live cleanly. Capping the analyze time (even to 2.5 s) wedges mpv's HLS open
+            // on this hardware — it never reaches the decoder — so the full probe is required. This is the
+            // ~3–5 s full-screen startup floor for HLS (vs the instant ExoPlayer preview).
             setPropertyString("demuxer-lavf-probesize", "0")
             setPropertyString("demuxer-lavf-analyzeduration", "0")
             setPropertyString("demuxer-lavf-o", "")
             return
         }
-        setPropertyString("demuxer-lavf-probesize", if (hls) "1500000" else "1000000")
+        setPropertyString("demuxer-lavf-probesize", "1000000")
         setPropertyString("demuxer-lavf-analyzeduration", "1.0") // ~1s keeps HDR/colorspace detection safe
-        setPropertyString("demuxer-lavf-o", if (hls) "fflags=+nobuffer" else "fflags=+nobuffer+genpts")
+        setPropertyString("demuxer-lavf-o", "fflags=+nobuffer+genpts")
     }
 
     /** Reload the current item at its position (used when a setting change needs the chain re-inited). */
@@ -238,7 +249,7 @@ class OwnTVPlayer(
     // Video Player Settings — cached so ensureInit can apply them as mpv options, and the observers
     // below apply changes live to a running player.
     private var hwDecoding = true
-    private var audioPassthrough = false
+    private var surroundSound = true
     private var autoPlayNext = true
     private var subScale = 1.0
     private var audioDelaySec = 0.0
@@ -325,12 +336,11 @@ class OwnTVPlayer(
             hwDecoding = on
             if (initialized) mpvAsync { applyRenderConfig() }
         }.launchIn(scope)
-        settings.audioPassthrough.onEach { on ->
-            audioPassthrough = on
-            // Re-detect what the sink supports and re-apply; a reload makes it take effect on the
-            // playing stream (the audio chain re-inits with/without bitstream passthrough).
+        settings.surroundSound.onEach { on ->
+            surroundSound = on
+            // A reload re-inits the audio chain so the new channel layout takes effect on the playing stream.
             if (initialized) {
-                mpvAsync { setPropertyString("audio-spdif", spdifValue()) }
+                mpvAsync { setPropertyString("audio-channels", audioChannelsValue()) }
                 reloadCurrentInPlace()
             }
         }.launchIn(scope)
@@ -662,7 +672,13 @@ class OwnTVPlayer(
             setOptionString("gpu-context", "android")
             setOptionString("hwdec", if (useDirect()) "mediacodec" else "no")
             setOptionString("ao", "audiotrack")
-            setOptionString("audio-spdif", spdifValue()) // surround passthrough when enabled + supported
+            // Surround sound (default on): decode Dolby/DTS to MULTICHANNEL LPCM (5.1/7.1) over HDMI. The
+            // AudioTrack stays a normal PCM track, so getTimestamp() keeps mpv's audio clock alive and the
+            // zero-copy mediacodec_embed 4K-HDR video path renders smoothly. The sink picks the layout
+            // (auto → stereo on a 2.0 TV, 5.1/7.1 on a capable receiver). Off → a plain stereo downmix.
+            // (We never bitstream/spdif: on Realtek the passthrough AudioTrack reports no clock, which
+            // stalls the direct VO into a ~2fps slideshow on Dolby/DTS content.)
+            setOptionString("audio-channels", audioChannelsValue())
             setOptionString("force-window", "no")
             setOptionString("idle", "yes")
             setOptionString("ytdl", "no") // IPTV URLs are direct; skip the youtube-dl hook
@@ -831,11 +847,13 @@ class OwnTVPlayer(
         mpvAsync { setPropertyBoolean("mute", muted) }
         // Defer the actual loadfile until a surface exists, otherwise mpv inits video output with no
         // surface and falls back to audio-only. attachSurface() flushes the pending load.
-        // A back-to-back >1080p (4K-class) VOD load on the SAME reused Surface throws Realtek 0x80001000
-        // (the VPU buffer queue stays dirty after a heavy session) — so recreate the SurfaceView first and
-        // let the fresh surface's attachSurface() flush this load. Only when the PREVIOUS item was >1080p,
-        // so normal/live playback and the first 4K load are untouched.
-        if (!isLive && lastVideoHeightPx > 1080 && surfaceAttached) {
+        // A back-to-back >1080p (4K-class) load on the SAME reused Surface throws Realtek 0x80001000 / a
+        // frame-drop "slideshow" (the VPU buffer queue stays dirty after a heavy session) — so recreate the
+        // SurfaceView first and let the fresh surface's attachSurface() flush this load. Covers BOTH VOD
+        // auto-play AND live channel zapping (4K→next 4K via D-pad/CH±, which otherwise hangs until you back
+        // out and re-enter — a manual surface recreate). Only when the PREVIOUS item was >1080p, so normal
+        // playback and the first 4K load are untouched.
+        if (lastVideoHeightPx > 1080 && surfaceAttached) {
             pendingUrl = url
             _surfaceResetToken.value++
         } else if (surfaceAttached) {

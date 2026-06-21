@@ -35,6 +35,7 @@ import kotlin.coroutines.CoroutineContext
  * Series episodes are intentionally fetched lazily later (Phase 9), not during sync.
  */
 class SyncManager(
+    private val context: android.content.Context,
     private val sourceDao: SourceDao,
     private val categoryDao: CategoryDao,
     private val channelDao: ChannelDao,
@@ -194,35 +195,47 @@ class SyncManager(
         var processed = 0
         var order = 0 // playlist position — lets "Playlist order" sorting replay the file's order
 
-        val header = http.get(s.url, s.userAgent) { input ->
-            m3u.parse(input) { e ->
-                val categoryId = e.groupTitle?.let { group ->
-                    groupToCategoryId.getOrPut(group) {
-                        runBlocking {
-                            categoryDao.upsertAll(
-                                // sortOrder = first-seen position of the group in the playlist
-                                listOf(CategoryEntity(sourceId = s.id, mediaType = MediaType.LIVE, name = group, remoteId = group, sortOrder = groupToCategoryId.size)),
-                            ).first()
-                        }
+        val onEntry: (tv.own.owntv.core.parser.M3uEntry) -> Unit = { e ->
+            val categoryId = e.groupTitle?.let { group ->
+                groupToCategoryId.getOrPut(group) {
+                    runBlocking {
+                        categoryDao.upsertAll(
+                            // sortOrder = first-seen position of the group in the playlist
+                            listOf(CategoryEntity(sourceId = s.id, mediaType = MediaType.LIVE, name = group, remoteId = group, sortOrder = groupToCategoryId.size)),
+                        ).first()
                     }
                 }
-                buffer.add(
-                    ChannelEntity(
-                        sourceId = s.id, categoryId = categoryId, name = e.name, logoUrl = e.logo,
-                        streamUrl = e.streamUrl, epgChannelId = e.tvgId, number = e.tvgChno,
-                        remoteId = null, // M3U has no stable id; rely on clear-then-insert
-                        sortOrder = order++,
-                        catchup = e.catchup != null, catchupDays = e.catchupDays ?: 0, catchupSource = e.catchupSource,
-                    ),
-                )
-                if (buffer.size >= CHUNK) {
-                    ctx.ensureActive()
-                    runBlocking { channelDao.upsertAll(buffer.toList()) }
-                    processed += buffer.size
-                    buffer.clear()
-                    onProgress(ImportStage("Channels", processed, null))
-                }
             }
+            buffer.add(
+                ChannelEntity(
+                    sourceId = s.id, categoryId = categoryId, name = e.name, logoUrl = e.logo,
+                    streamUrl = e.streamUrl, epgChannelId = e.tvgId, number = e.tvgChno,
+                    remoteId = null, // M3U has no stable id; rely on clear-then-insert
+                    sortOrder = order++,
+                    catchup = e.catchup != null, catchupDays = e.catchupDays ?: 0, catchupSource = e.catchupSource,
+                ),
+            )
+            if (buffer.size >= CHUNK) {
+                ctx.ensureActive()
+                runBlocking { channelDao.upsertAll(buffer.toList()) }
+                processed += buffer.size
+                buffer.clear()
+                onProgress(ImportStage("Channels", processed, null))
+            }
+        }
+        // A locally-picked playlist file (in-app StorageBrowser gives an absolute path; also tolerate
+        // file://content:// URIs) is read straight from the device; a normal URL is downloaded. Same parser.
+        val isLocal = s.url.startsWith("/") || s.url.startsWith("file://") || s.url.startsWith("content://")
+        val header = if (isLocal) {
+            val input = if (s.url.startsWith("/")) {
+                java.io.File(s.url).inputStream()
+            } else {
+                context.contentResolver.openInputStream(android.net.Uri.parse(s.url))
+                    ?: throw java.io.IOException("Couldn't open the playlist file. Re-pick it (it may have moved).")
+            }
+            input.use { m3u.parse(it, onEntry) }
+        } else {
+            http.get(s.url, s.userAgent) { input -> m3u.parse(input, onEntry) }
         }
         if (buffer.isNotEmpty()) {
             runBlocking { channelDao.upsertAll(buffer.toList()) }

@@ -41,7 +41,7 @@ class SettingsRepository(private val context: Context) {
         val HDR_ENABLED = booleanPreferencesKey("hdr_enabled")
         // Video Player Settings
         val HW_DECODING = booleanPreferencesKey("hw_decoding")
-        val AUDIO_PASSTHROUGH = booleanPreferencesKey("audio_passthrough")
+        val SURROUND_SOUND = booleanPreferencesKey("surround_sound")
         val AUTO_PLAY_NEXT = booleanPreferencesKey("auto_play_next")
         val DEFAULT_ZOOM = stringPreferencesKey("default_zoom")
         val SUB_SCALE = floatPreferencesKey("sub_scale")
@@ -155,12 +155,15 @@ class SettingsRepository(private val context: Context) {
         context.dataStore.edit { it[Keys.HW_DECODING] = enabled }
     }
 
-    /** Pass compressed audio (Dolby/DTS) straight to the TV/receiver for surround, instead of decoding
-     *  to stereo. Off by default — only useful with a sink that supports it, and silent if misconfigured. */
-    val audioPassthrough: Flow<Boolean> = context.dataStore.data.map { it[Keys.AUDIO_PASSTHROUGH] ?: false }
+    /** Surround sound (on by default). On: mpv decodes Dolby/DTS to **multichannel LPCM** (5.1/7.1 over
+     *  HDMI; the sink picks the layout, falling back to stereo on a 2.0 TV) — a receiver gets surround while
+     *  the audio clock stays alive so the zero-copy 4K-HDR video path renders smoothly. Off: stereo downmix.
+     *  (We never bitstream/passthrough: on some TVs the passthrough AudioTrack reports no clock and stutters
+     *  video into a slideshow on Dolby/DTS content.) */
+    val surroundSound: Flow<Boolean> = context.dataStore.data.map { it[Keys.SURROUND_SOUND] ?: true }
 
-    suspend fun setAudioPassthrough(enabled: Boolean) {
-        context.dataStore.edit { it[Keys.AUDIO_PASSTHROUGH] = enabled }
+    suspend fun setSurroundSound(enabled: Boolean) {
+        context.dataStore.edit { it[Keys.SURROUND_SOUND] = enabled }
     }
 
     /** Auto-play the next episode (and roll into the next season) when one finishes. On by default. */

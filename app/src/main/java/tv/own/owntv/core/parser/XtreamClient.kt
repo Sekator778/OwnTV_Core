@@ -105,8 +105,10 @@ class XtreamClient(private val http: HttpClient) {
     }
 
     /**
-     * Fetches seasons/episodes for a series (lazy, on open). The response is an object whose
-     * `episodes` field maps season-number → array of episode objects.
+     * Fetches seasons/episodes for a series (lazy, on open). Panels vary in how they shape the `episodes`
+     * field — usually an OBJECT mapping season-number → array of episode objects, but some return a flat
+     * ARRAY of episodes (season taken from each episode's own `season` field). Both are handled, so series
+     * that showed no episodes on stricter panels now populate.
      */
     fun getSeriesInfo(s: SourceEntity, seriesId: String): XtSeriesInfo {
         val episodes = ArrayList<XtEpisode>()
@@ -116,8 +118,12 @@ class XtreamClient(private val http: HttpClient) {
                 if (reader.peek() != JsonToken.BEGIN_OBJECT) { reader.skipValue(); return@use }
                 reader.beginObject()
                 while (reader.hasNext()) {
-                    if (reader.nextName() == "episodes" && reader.peek() == JsonToken.BEGIN_OBJECT) {
-                        readEpisodesObject(reader, episodes)
+                    if (reader.nextName() == "episodes") {
+                        when (reader.peek()) {
+                            JsonToken.BEGIN_OBJECT -> readEpisodesObject(reader, episodes) // { "1": [ep,…], … }
+                            JsonToken.BEGIN_ARRAY -> readEpisodesArray(reader, episodes)    // [ ep, ep, … ]
+                            else -> reader.skipValue()
+                        }
                     } else {
                         reader.skipValue()
                     }
@@ -128,33 +134,59 @@ class XtreamClient(private val http: HttpClient) {
         return XtSeriesInfo(episodes)
     }
 
+    /** `episodes` as `{ season → [episodes] }`. */
     private fun readEpisodesObject(reader: JsonReader, out: MutableList<XtEpisode>) {
         reader.beginObject()
         while (reader.hasNext()) {
             val season = reader.nextName().toIntOrNull() ?: 0
             if (reader.peek() != JsonToken.BEGIN_ARRAY) { reader.skipValue(); continue }
             reader.beginArray()
-            while (reader.hasNext()) {
-                var id: String? = null
-                var epNum = 0
-                var title = ""
-                var ext: String? = null
-                reader.beginObject()
-                while (reader.hasNext()) {
-                    when (reader.nextName()) {
-                        "id" -> id = reader.nextString()
-                        "episode_num" -> epNum = reader.nextString().toIntOrNull() ?: 0
-                        "title" -> title = reader.nextString()
-                        "container_extension" -> ext = reader.nextString()
-                        else -> reader.skipValue()
-                    }
-                }
-                reader.endObject()
-                id?.let { out.add(XtEpisode(it, season, epNum, title.ifBlank { "Episode $epNum" }, ext)) }
-            }
+            while (reader.hasNext()) readEpisode(reader, out, season)
             reader.endArray()
         }
         reader.endObject()
+    }
+
+    /** `episodes` as a flat `[episodes]` — season comes from each episode's own field. */
+    private fun readEpisodesArray(reader: JsonReader, out: MutableList<XtEpisode>) {
+        reader.beginArray()
+        while (reader.hasNext()) readEpisode(reader, out, 0)
+        reader.endArray()
+    }
+
+    /** One episode object — tolerant of string/number/null fields and an in-object `season`. */
+    private fun readEpisode(reader: JsonReader, out: MutableList<XtEpisode>, seasonFallback: Int) {
+        if (reader.peek() != JsonToken.BEGIN_OBJECT) { reader.skipValue(); return }
+        var id: String? = null
+        var epNum = 0
+        var title = ""
+        var ext: String? = null
+        var season = seasonFallback
+        reader.beginObject()
+        while (reader.hasNext()) {
+            when (reader.nextName()) {
+                "id" -> id = reader.nextStringOrNull()
+                "episode_num" -> epNum = reader.nextIntOrNull() ?: epNum
+                "title" -> title = reader.nextStringOrNull() ?: title
+                "container_extension" -> ext = reader.nextStringOrNull()
+                "season" -> reader.nextIntOrNull()?.let { if (it > 0) season = it }
+                else -> reader.skipValue()
+            }
+        }
+        reader.endObject()
+        id?.let { out.add(XtEpisode(it, season, epNum, title.ifBlank { "Episode $epNum" }, ext)) }
+    }
+
+    /** Reads a string, coercing numbers and tolerating JSON null. */
+    private fun JsonReader.nextStringOrNull(): String? =
+        if (peek() == JsonToken.NULL) { nextNull(); null } else nextString()
+
+    /** Reads an int from a number or a numeric string, tolerating null/other. */
+    private fun JsonReader.nextIntOrNull(): Int? = when (peek()) {
+        JsonToken.NUMBER -> nextInt()
+        JsonToken.STRING -> nextString().trim().toIntOrNull()
+        JsonToken.NULL -> { nextNull(); null }
+        else -> { skipValue(); null }
     }
 
     /**
