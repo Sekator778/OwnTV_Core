@@ -192,9 +192,14 @@ class OwnTVPlayer(
         _directRender.value = targetVo() == "mediacodec_embed"
     }
 
-    /** mpv `audio-channels`: surround on → decode to multichannel LPCM (sink picks 5.1/7.1, or stereo on a
-     *  2.0 TV); surround off → force a stereo downmix. Always decoded PCM, so the audio clock stays alive. */
-    private fun audioChannelsValue(): String = if (surroundSound) "auto" else "stereo"
+    /** mpv `audio-channels`: surround on → multichannel LPCM where the sink **unambiguously** supports it
+     *  (`auto-safe`), else a safe stereo downmix; surround off → force stereo. `auto-safe` (not `auto`)
+     *  because some sinks falsely claim 5.1/7.1. If a sink claims support but actually mis-plays multichannel
+     *  PCM (the "2× speed, no sound", #25), [surroundOutputBroken] is latched by the runaway detector and we
+     *  force stereo for the rest of the session. Always decoded PCM, so the audio clock stays alive. */
+    private fun audioChannelsValue(): String = if (surroundSound && !surroundOutputBroken) "auto-safe" else "stereo"
+    // Latched when surround output is detected broken on this device (audio drains ~2× → runaway video).
+    @Volatile private var surroundOutputBroken = false
 
     /**
      * Trim FFmpeg's stream probe for **live** sources so channels start faster (the default ~5 MB / 5 s
@@ -249,7 +254,7 @@ class OwnTVPlayer(
     // Video Player Settings — cached so ensureInit can apply them as mpv options, and the observers
     // below apply changes live to a running player.
     private var hwDecoding = true
-    private var surroundSound = true
+    private var surroundSound = false // off by default (opt-in); see SettingsRepository.surroundSound (#25)
     private var autoPlayNext = true
     private var subScale = 1.0
     private var audioDelaySec = 0.0
@@ -338,9 +343,15 @@ class OwnTVPlayer(
         }.launchIn(scope)
         settings.surroundSound.onEach { on ->
             surroundSound = on
+            if (on) surroundOutputBroken = false // re-enabling surround = a fresh attempt at multichannel
             // A reload re-inits the audio chain so the new channel layout takes effect on the playing stream.
             if (initialized) {
-                mpvAsync { setPropertyString("audio-channels", audioChannelsValue()) }
+                mpvAsync {
+                    val sur = surroundSound && !surroundOutputBroken
+                    setPropertyString("audio-channels", audioChannelsValue())
+                    setPropertyString("audio-format", if (sur) "s16" else "")
+                    setPropertyString("audio-samplerate", if (sur) "48000" else "0")
+                }
                 reloadCurrentInPlace()
             }
         }.launchIn(scope)
@@ -672,13 +683,18 @@ class OwnTVPlayer(
             setOptionString("gpu-context", "android")
             setOptionString("hwdec", if (useDirect()) "mediacodec" else "no")
             setOptionString("ao", "audiotrack")
-            // Surround sound (default on): decode Dolby/DTS to MULTICHANNEL LPCM (5.1/7.1) over HDMI. The
+            // Surround sound (opt-in, default off): decode Dolby/DTS to MULTICHANNEL LPCM (5.1/7.1) over HDMI. The
             // AudioTrack stays a normal PCM track, so getTimestamp() keeps mpv's audio clock alive and the
             // zero-copy mediacodec_embed 4K-HDR video path renders smoothly. The sink picks the layout
             // (auto → stereo on a 2.0 TV, 5.1/7.1 on a capable receiver). Off → a plain stereo downmix.
             // (We never bitstream/spdif: on Realtek the passthrough AudioTrack reports no clock, which
             // stalls the direct VO into a ~2fps slideshow on Dolby/DTS content.)
             setOptionString("audio-channels", audioChannelsValue())
+            // Compatibility for multichannel: some HALs choke on Float / 44.1 kHz 5.1 PCM (mis-sized buffer
+            // → 2× drain, #25). Pin the universally-safe 16-bit/48 kHz output when surround is on.
+            val sur = surroundSound && !surroundOutputBroken
+            setOptionString("audio-format", if (sur) "s16" else "")
+            setOptionString("audio-samplerate", if (sur) "48000" else "0")
             setOptionString("force-window", "no")
             setOptionString("idle", "yes")
             setOptionString("ytdl", "no") // IPTV URLs are direct; skip the youtube-dl hook
@@ -1283,6 +1299,36 @@ class OwnTVPlayer(
                     val seekMs = pendingSeekMs
                     pendingSeekMs = 0
                     mpvAsync { command(arrayOf("seek", (seekMs / 1000).toString(), "absolute")) }
+                }
+                // Surround-output failsafe (#25): some sinks claim multichannel PCM support but mis-play it —
+                // the audio drains ~2× fast, so mpv's audio-master clock (and the video) runs ~2× and the
+                // sound is silent. mpv sees the output as fine (audio-params == audio-out-params, avsync ≈ 0),
+                // so the only tell is the video running away: estimated-vf-fps ≈ 2× the file's container-fps.
+                // Checked in the 5–15 s window (past the start-up burst, before long drift) and skipped while
+                // seeking (a seek bursts frames to catch up and would false-trip). On a hit, latch surround off
+                // for the session and reload this item in stereo.
+                if (!isLiveContent) {
+                    val sgen = loadGeneration
+                    scope.launch {
+                        delay(7_000)
+                        if (sgen != loadGeneration || surroundOutputBroken || !surroundSound) return@launch
+                        mpvAsync {
+                            if (getPropertyString("seeking") == "yes") return@mpvAsync // catching up — not a real runaway
+                            val cfps = getPropertyString("container-fps")?.toDoubleOrNull() ?: 0.0
+                            val vfps = getPropertyString("estimated-vf-fps")?.toDoubleOrNull() ?: 0.0
+                            if (cfps > 1.0 && vfps > cfps * 1.5) {
+                                android.util.Log.w(TAG, "surround runaway: est-vf-fps=$vfps vs container-fps=$cfps — falling back to stereo")
+                                surroundOutputBroken = true
+                                setPropertyString("audio-channels", "stereo")
+                                setPropertyString("audio-format", "")
+                                setPropertyString("audio-samplerate", "0")
+                                toast("This audio output can't do surround — switched to stereo.")
+                                if (sgen == loadGeneration && currentUrl != null) {
+                                    loadUrl(currentUrl!!, MediaMeta(currentTitle, currentSubtitle, currentYear, currentLogoUrl), isLiveContent, _position.value, resetRetries = false)
+                                }
+                            }
+                        }
+                    }
                 }
                 // Decode watchdog, polled: the decoder is chosen a few seconds AFTER the file loads,
                 // so read it directly once it has settled (the observed event also runs enforceDecodeGuard).

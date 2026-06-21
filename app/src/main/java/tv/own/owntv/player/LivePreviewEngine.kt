@@ -69,12 +69,28 @@ class LivePreviewEngine(
     var currentUrl: String? = null
         private set
 
+    // Live auto-reconnect: a channel that DID play and then errors/stalls (provider hiccup / Wi-Fi blip)
+    // re-fetches from the live edge instead of dead-ending. A channel that NEVER opened keeps the old
+    // ERROR (so the VM falls back to mpv). retryCount resets whenever playback goes healthy again.
+    private val mainHandler = android.os.Handler(android.os.Looper.getMainLooper())
+    private var hasPlayed = false
+    private var retryCount = 0
+    private val stallWatchdog = Runnable { reconnect("buffering stalled") }
+
     private val listener = object : Player.Listener {
         override fun onPlaybackStateChanged(playbackState: Int) {
             when (playbackState) {
-                Player.STATE_BUFFERING -> { _state.value = State.LOADING; _buffering.value = true }
-                Player.STATE_READY -> { _state.value = State.PLAYING; _buffering.value = false }
-                else -> _buffering.value = false // IDLE/ENDED handled by stop()/error
+                Player.STATE_BUFFERING -> {
+                    _state.value = State.LOADING; _buffering.value = true
+                    // After it has played, a long buffer == a dropped feed → reconnect (live streams don't
+                    // resume on their own here). Before first play, leave initial load alone.
+                    if (hasPlayed) { mainHandler.removeCallbacks(stallWatchdog); mainHandler.postDelayed(stallWatchdog, STALL_MS) }
+                }
+                Player.STATE_READY -> {
+                    _state.value = State.PLAYING; _buffering.value = false
+                    hasPlayed = true; retryCount = 0; mainHandler.removeCallbacks(stallWatchdog)
+                }
+                else -> { _buffering.value = false; mainHandler.removeCallbacks(stallWatchdog) }
             }
         }
 
@@ -88,9 +104,9 @@ class LivePreviewEngine(
         }
 
         override fun onPlayerError(error: PlaybackException) {
-            // A preview that ExoPlayer can't open just shows the channel logo; the full player (mpv) can
-            // still play it. Not all IPTV streams (raw MPEG-TS, odd containers) are ExoPlayer-friendly.
-            android.util.Log.w(TAG, "preview ExoPlayer error: ${error.errorCodeName}", error)
+            android.util.Log.w(TAG, "ExoPlayer error: ${error.errorCodeName}", error)
+            if (hasPlayed) { reconnect("error ${error.errorCodeName}"); return } // mid-stream drop → reconnect
+            // Never opened → a stream ExoPlayer can't handle; the VM falls back to mpv on this ERROR.
             _state.value = State.ERROR
             _isPlaying.value = false
             _buffering.value = false
@@ -110,6 +126,7 @@ class LivePreviewEngine(
     fun play(url: String, muted: Boolean, meta: MediaMeta = MediaMeta()) {
         this.muted = muted
         currentUrl = url
+        hasPlayed = false; retryCount = 0; mainHandler.removeCallbacks(stallWatchdog)
         _videoHeight.value = null
         _videoRes.value = null
         _error.value = null
@@ -141,17 +158,44 @@ class LivePreviewEngine(
      *  ExoPlayer instance alive for the next preview. */
     fun stop() {
         currentUrl = null
+        hasPlayed = false; retryCount = 0; mainHandler.removeCallbacks(stallWatchdog)
         _videoHeight.value = null
         _state.value = State.IDLE
         player?.run { stop(); clearMediaItems() }
     }
 
     fun release() {
+        mainHandler.removeCallbacks(stallWatchdog)
         player?.run { removeListener(listener); release() }
         player = null
         surface = null
         currentUrl = null
         _state.value = State.IDLE
+    }
+
+    /** Live auto-reconnect: re-fetch [currentUrl] from the live edge after a mid-stream error/stall. Backs
+     *  off and gives up after [MAX_RECONNECTS] consecutive failures (then the HUD's Retry button takes over).
+     *  retryCount is reset to 0 as soon as playback goes healthy again (STATE_READY). */
+    private fun reconnect(reason: String) {
+        mainHandler.removeCallbacks(stallWatchdog)
+        val p = player
+        val url = currentUrl
+        if (p == null || url == null || retryCount >= MAX_RECONNECTS) {
+            _state.value = State.ERROR; _isPlaying.value = false; _buffering.value = false
+            _error.value = "Lost connection to this channel."
+            return
+        }
+        retryCount++
+        _error.value = null; _state.value = State.LOADING; _buffering.value = true
+        android.util.Log.w(TAG, "live reconnect ($reason) — attempt $retryCount/$MAX_RECONNECTS")
+        mainHandler.postDelayed({
+            if (currentUrl != url) return@postDelayed // superseded (zapped / stopped)
+            runCatching {
+                p.setMediaItem(MediaItem.fromUri(url)) // fresh fetch (live edge)
+                p.prepare()
+                p.playWhenReady = true
+            }.onFailure { _state.value = State.ERROR; _error.value = "Lost connection to this channel." }
+        }, (1500L * retryCount).coerceAtMost(4000L))
     }
 
     // --- PlaybackEngine controls (full-screen HUD) ---
@@ -191,5 +235,9 @@ class LivePreviewEngine(
             .apply { addListener(listener) }
     }
 
-    companion object { private const val TAG = "LivePreviewEngine" }
+    companion object {
+        private const val TAG = "LivePreviewEngine"
+        private const val MAX_RECONNECTS = 6        // ~consecutive failures before giving up (HUD Retry then)
+        private const val STALL_MS = 12_000L        // buffering this long after playing == a dropped feed
+    }
 }

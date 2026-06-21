@@ -155,12 +155,13 @@ class SettingsRepository(private val context: Context) {
         context.dataStore.edit { it[Keys.HW_DECODING] = enabled }
     }
 
-    /** Surround sound (on by default). On: mpv decodes Dolby/DTS to **multichannel LPCM** (5.1/7.1 over
-     *  HDMI; the sink picks the layout, falling back to stereo on a 2.0 TV) — a receiver gets surround while
-     *  the audio clock stays alive so the zero-copy 4K-HDR video path renders smoothly. Off: stereo downmix.
-     *  (We never bitstream/passthrough: on some TVs the passthrough AudioTrack reports no clock and stutters
-     *  video into a slideshow on Dolby/DTS content.) */
-    val surroundSound: Flow<Boolean> = context.dataStore.data.map { it[Keys.SURROUND_SOUND] ?: true }
+    /** Surround sound (**off by default — opt-in**). Most users are on TV speakers / 2.0 soundbars, and
+     *  forcing a multichannel-LPCM path exposes flaky vendor audio HALs / lying HDMI-ARC chips that claim
+     *  5.1 then mis-play it (drained 2× → "fast video, no sound", #25). So default stereo for stability;
+     *  users with a real 5.1/7.1 receiver turn this on. On: mpv decodes Dolby/DTS to multichannel LPCM (the
+     *  sink picks the layout), with a runaway-detector that auto-falls-back to stereo on a broken output. We
+     *  never bitstream/passthrough (its AudioTrack reports no clock and stutters video to a slideshow). */
+    val surroundSound: Flow<Boolean> = context.dataStore.data.map { it[Keys.SURROUND_SOUND] ?: false }
 
     suspend fun setSurroundSound(enabled: Boolean) {
         context.dataStore.edit { it[Keys.SURROUND_SOUND] = enabled }
