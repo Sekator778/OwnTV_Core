@@ -13,6 +13,9 @@ interface PlaybackEngine {
     val isPlaying: StateFlow<Boolean>
     val buffering: StateFlow<Boolean>
     val error: StateFlow<String?>
+    /** The structured underlying failure (plain reason • media spec • raw engine text), shown under the
+     *  friendly message so users can report the real cause without adb/logcat. Null when none. */
+    val errorInfo: StateFlow<ErrorInfo?> get() = NULL_ERROR
     val videoRes: StateFlow<String?>
     val volume: StateFlow<Int>
     val zoomMode: StateFlow<ZoomMode>
@@ -46,6 +49,7 @@ interface PlaybackEngine {
         private val ZERO_LONG: StateFlow<Long> = MutableStateFlow(0L)
         private val ONE_DOUBLE: StateFlow<Double> = MutableStateFlow(1.0)
         private val NO_NAV: StateFlow<NavState> = MutableStateFlow(NavState(hasPrev = false, hasNext = false))
+        private val NULL_ERROR: StateFlow<ErrorInfo?> = MutableStateFlow(null)
     }
 }
 
@@ -54,6 +58,7 @@ class MpvPlaybackEngine(private val p: OwnTVPlayer) : PlaybackEngine {
     override val isPlaying get() = p.isPlaying
     override val buffering get() = p.buffering
     override val error get() = p.error
+    override val errorInfo get() = p.errorInfo
     override val videoRes get() = p.videoRes
     override val volume get() = p.volume
     override val zoomMode get() = p.zoomMode

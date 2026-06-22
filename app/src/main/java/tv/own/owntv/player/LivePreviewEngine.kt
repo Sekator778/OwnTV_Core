@@ -34,6 +34,7 @@ import tv.own.owntv.core.network.HttpClient
 class LivePreviewEngine(
     private val context: Context,
     private val okHttpClient: OkHttpClient,
+    private val diagnostics: PlayerDiagnostics,
 ) : PlaybackEngine {
     enum class State { IDLE, LOADING, PLAYING, ERROR }
 
@@ -53,14 +54,72 @@ class LivePreviewEngine(
     override val buffering: StateFlow<Boolean> = _buffering.asStateFlow()
     private val _error = MutableStateFlow<String?>(null)
     override val error: StateFlow<String?> = _error.asStateFlow()
+    private val _errorInfo = MutableStateFlow<ErrorInfo?>(null)
+    override val errorInfo: StateFlow<ErrorInfo?> = _errorInfo.asStateFlow()
     private val _videoRes = MutableStateFlow<String?>(null)
     override val videoRes: StateFlow<String?> = _videoRes.asStateFlow()
     private val _volume = MutableStateFlow(100)
     override val volume: StateFlow<Int> = _volume.asStateFlow()
     private val _zoomMode = MutableStateFlow(ZoomMode.FIT)
     override val zoomMode: StateFlow<ZoomMode> = _zoomMode.asStateFlow()
-    override val audioCount: StateFlow<Int> = MutableStateFlow(0)
-    override val subCount: StateFlow<Int> = MutableStateFlow(0)
+    private val _audioCount = MutableStateFlow(0)
+    override val audioCount: StateFlow<Int> = _audioCount.asStateFlow()
+    private val _subCount = MutableStateFlow(0)
+    override val subCount: StateFlow<Int> = _subCount.asStateFlow()
+    // Audio/text tracks enumerated from the active stream (multi-language live, or a VOD file added via M3U).
+    private var audioTrackList: List<TrackOption> = emptyList()
+    private var audioSelections: List<AudioSel> = emptyList()
+    private var textTrackList: List<TrackOption> = emptyList()
+    private var textSelections: List<TextSel> = emptyList()
+    private data class AudioSel(val id: Int, val group: androidx.media3.common.TrackGroup, val trackIndex: Int)
+    private data class TextSel(val id: Int, val group: androidx.media3.common.TrackGroup, val trackIndex: Int)
+    // Subtitle cues + an "on" flag. The Compose surface mounts a SubtitleView ONLY while [subtitleOn] (else
+    // any overlaid view knocks the SurfaceView off the hardware-overlay path and stutters 4K — same as VOD).
+    private val _cues = MutableStateFlow<List<androidx.media3.common.text.Cue>>(emptyList())
+    val cues: StateFlow<List<androidx.media3.common.text.Cue>> = _cues.asStateFlow()
+    private val _subtitleOn = MutableStateFlow(false)
+    val subtitleOn: StateFlow<Boolean> = _subtitleOn.asStateFlow()
+    // True when the stream HAS audio but ExoPlayer can decode NONE of it (e.g. AC3/E-AC3/DTS on a device
+    // without that decoder) — the VM hands such a stream to mpv (FFmpeg decodes everything) so it isn't silent.
+    private val _audioUnsupported = MutableStateFlow(false)
+    val audioUnsupported: StateFlow<Boolean> = _audioUnsupported.asStateFlow()
+
+    // Programmatic codec/audio errors (Reviewer: more reliable than logcat for ExoPlayer, and survives the
+    // Android 14+ own-logcat lockdown). MediaCodec.CodecException.diagnosticInfo carries the exact code
+    // (e.g. 0x80001000); AudioSink errors name the audio failure. Reset per load, preferred when present.
+    @Volatile private var lastCodecError: String? = null
+    @Volatile private var lastVideoDecoder: String? = null // e.g. "OMX.realtek.video.decoder", for the spec line
+    private val analytics = object : androidx.media3.exoplayer.analytics.AnalyticsListener {
+        override fun onVideoCodecError(eventTime: androidx.media3.exoplayer.analytics.AnalyticsListener.EventTime, videoCodecError: Exception) {
+            lastCodecError = codecDetail("video", videoCodecError)
+        }
+        override fun onAudioCodecError(eventTime: androidx.media3.exoplayer.analytics.AnalyticsListener.EventTime, audioCodecError: Exception) {
+            lastCodecError = codecDetail("audio", audioCodecError)
+        }
+        override fun onAudioSinkError(eventTime: androidx.media3.exoplayer.analytics.AnalyticsListener.EventTime, audioSinkError: Exception) {
+            lastCodecError = "audio: ${audioSinkError.message ?: audioSinkError.javaClass.simpleName}"
+        }
+        override fun onVideoDecoderInitialized(eventTime: androidx.media3.exoplayer.analytics.AnalyticsListener.EventTime, decoderName: String, initializedTimestampMs: Long, initializationDurationMs: Long) {
+            lastVideoDecoder = decoderName
+        }
+    }
+
+    /** "HEVC 1920x1080 • OMX.realtek.video.decoder" from the active stream, for the error screen's spec line. */
+    private fun exoSpec(): String? {
+        val f = player?.videoFormat
+        val codec = f?.sampleMimeType?.substringAfterLast('/')?.let { mimeName(it) }
+        val res = if (f != null && f.width > 0 && f.height > 0) "${f.width}x${f.height}" else null
+        val head = listOfNotNull(codec, res).joinToString(" ").ifBlank { null }
+        return listOfNotNull(head, lastVideoDecoder).joinToString(" • ").ifBlank { null }
+    }
+    private fun mimeName(m: String) = when (m.lowercase()) {
+        "hevc" -> "HEVC"; "avc" -> "H.264"; "av01" -> "AV1"; "x-vnd.on2.vp9", "vp9" -> "VP9"
+        "mp4v-es" -> "MPEG-4"; "mpeg2" -> "MPEG-2"; else -> m.uppercase()
+    }
+    private fun codecDetail(kind: String, e: Exception): String {
+        (e as? android.media.MediaCodec.CodecException)?.let { return "$kind codec: ${it.diagnosticInfo}" }
+        return "$kind codec: ${e.message ?: e.javaClass.simpleName}"
+    }
     private val _currentMeta = MutableStateFlow(MediaMeta())
     override val currentMeta: StateFlow<MediaMeta> = _currentMeta.asStateFlow()
     override val isLiveContent: Boolean = true
@@ -103,6 +162,9 @@ class LivePreviewEngine(
             }
         }
 
+        override fun onTracksChanged(tracks: androidx.media3.common.Tracks) = rebuildTracks(tracks)
+        override fun onCues(cueGroup: androidx.media3.common.text.CueGroup) { _cues.value = cueGroup.cues }
+
         override fun onPlayerError(error: PlaybackException) {
             android.util.Log.w(TAG, "ExoPlayer error: ${error.errorCodeName}", error)
             if (hasPlayed) { reconnect("error ${error.errorCodeName}"); return } // mid-stream drop → reconnect
@@ -111,6 +173,9 @@ class LivePreviewEngine(
             _isPlaying.value = false
             _buffering.value = false
             _error.value = "Couldn't play this channel."
+            val raw = lastCodecError ?: diagnostics.recentError()
+                ?: error.errorCodeName + ((error.cause?.message ?: error.message)?.let { ": $it" } ?: "")
+            _errorInfo.value = ErrorInfo(PlayerErrors.reasonFor(raw), exoSpec(), raw)
         }
     }
 
@@ -124,12 +189,18 @@ class LivePreviewEngine(
      *  up just falls back to the channel logo (the full mpv player can still play it). [meta] populates the
      *  full-screen HUD title when this preview is promoted. */
     fun play(url: String, muted: Boolean, meta: MediaMeta = MediaMeta()) {
+        diagnostics.start(); diagnostics.markLoad()
+        lastCodecError = null; lastVideoDecoder = null
         this.muted = muted
         currentUrl = url
         hasPlayed = false; retryCount = 0; mainHandler.removeCallbacks(stallWatchdog)
+        audioTrackList = emptyList(); audioSelections = emptyList(); _audioCount.value = 0
+        textTrackList = emptyList(); textSelections = emptyList(); _subCount.value = 0
+        _subtitleOn.value = false; _cues.value = emptyList(); _audioUnsupported.value = false
         _videoHeight.value = null
         _videoRes.value = null
         _error.value = null
+        _errorInfo.value = null
         _currentMeta.value = meta
         _volume.value = if (muted) 0 else 100
         _state.value = State.LOADING
@@ -145,6 +216,8 @@ class LivePreviewEngine(
             android.util.Log.w(TAG, "preview play() failed for $url", it)
             _state.value = State.ERROR
             _error.value = "Couldn't play this channel."
+            val raw = lastCodecError ?: diagnostics.recentError() ?: it.message
+            _errorInfo.value = raw?.let { r -> ErrorInfo(PlayerErrors.reasonFor(r), exoSpec(), r) }
         }
     }
 
@@ -159,6 +232,9 @@ class LivePreviewEngine(
     fun stop() {
         currentUrl = null
         hasPlayed = false; retryCount = 0; mainHandler.removeCallbacks(stallWatchdog)
+        audioTrackList = emptyList(); audioSelections = emptyList(); _audioCount.value = 0
+        textTrackList = emptyList(); textSelections = emptyList(); _subCount.value = 0
+        _subtitleOn.value = false; _cues.value = emptyList(); _audioUnsupported.value = false
         _videoHeight.value = null
         _state.value = State.IDLE
         player?.run { stop(); clearMediaItems() }
@@ -183,10 +259,12 @@ class LivePreviewEngine(
         if (p == null || url == null || retryCount >= MAX_RECONNECTS) {
             _state.value = State.ERROR; _isPlaying.value = false; _buffering.value = false
             _error.value = "Lost connection to this channel."
+            val raw = lastCodecError ?: diagnostics.recentError() ?: reason
+            _errorInfo.value = ErrorInfo(PlayerErrors.reasonFor(raw), exoSpec(), raw)
             return
         }
         retryCount++
-        _error.value = null; _state.value = State.LOADING; _buffering.value = true
+        _error.value = null; _errorInfo.value = null; _state.value = State.LOADING; _buffering.value = true
         android.util.Log.w(TAG, "live reconnect ($reason) — attempt $retryCount/$MAX_RECONNECTS")
         mainHandler.postDelayed({
             if (currentUrl != url) return@postDelayed // superseded (zapped / stopped)
@@ -215,11 +293,68 @@ class LivePreviewEngine(
 
     override fun toggleMute() = setMuted(!muted)
     override fun retry() { currentUrl?.let { play(it, muted, _currentMeta.value) } }
-    override fun selectAudio(id: Int) {}
-    override fun selectSubtitle(id: Int) {}
-    override fun disableSubtitles() {}
-    override fun audioTracks(): List<TrackOption> = emptyList()
-    override fun textTracks(): List<TrackOption> = emptyList()
+    override fun selectAudio(id: Int) {
+        val p = player ?: return
+        val sel = audioSelections.firstOrNull { it.id == id } ?: return
+        p.trackSelectionParameters = p.trackSelectionParameters.buildUpon()
+            .setOverrideForType(androidx.media3.common.TrackSelectionOverride(sel.group, listOf(sel.trackIndex)))
+            .build()
+        audioTrackList = audioTrackList.map { it.copy(selected = it.mpvId == id) }
+    }
+
+    override fun selectSubtitle(id: Int) {
+        val p = player ?: return
+        val sel = textSelections.firstOrNull { it.id == id } ?: return
+        p.trackSelectionParameters = p.trackSelectionParameters.buildUpon()
+            .setOverrideForType(androidx.media3.common.TrackSelectionOverride(sel.group, listOf(sel.trackIndex)))
+            .setTrackTypeDisabled(androidx.media3.common.C.TRACK_TYPE_TEXT, false)
+            .build()
+        _subtitleOn.value = true // mount the SubtitleView overlay
+        textTrackList = textTrackList.map { it.copy(selected = it.mpvId == id) }
+    }
+
+    override fun disableSubtitles() {
+        player?.let {
+            it.trackSelectionParameters = it.trackSelectionParameters.buildUpon()
+                .setTrackTypeDisabled(androidx.media3.common.C.TRACK_TYPE_TEXT, true).build()
+        }
+        _subtitleOn.value = false
+        _cues.value = emptyList()
+        textTrackList = textTrackList.map { it.copy(selected = false) }
+    }
+
+    override fun audioTracks(): List<TrackOption> = audioTrackList
+    override fun textTracks(): List<TrackOption> = textTrackList
+
+    /** Build the audio + subtitle track lists from the active stream so the HUD menus can switch language /
+     *  subtitles (multi-track live channels, or a VOD file imported via M3U). Mirrors [ExoSubtitleEngine]. */
+    private fun rebuildTracks(tracks: androidx.media3.common.Tracks) {
+        val audio = ArrayList<TrackOption>(); val aSel = ArrayList<AudioSel>(); var aId = 0
+        val text = ArrayList<TrackOption>(); val tSel = ArrayList<TextSel>(); var tId = 0
+        for (group in tracks.groups) {
+            when (group.type) {
+                androidx.media3.common.C.TRACK_TYPE_AUDIO -> for (i in 0 until group.length) {
+                    val f = group.getTrackFormat(i)
+                    val lang = f.language?.takeIf { it.isNotBlank() && it != "und" }
+                    audio.add(TrackOption(f.label ?: lang?.uppercase() ?: "Audio ${aId + 1}", aId, group.isTrackSelected(i), lang = lang))
+                    aSel.add(AudioSel(aId, group.mediaTrackGroup, i)); aId++
+                }
+                androidx.media3.common.C.TRACK_TYPE_TEXT -> for (i in 0 until group.length) {
+                    val f = group.getTrackFormat(i)
+                    val lang = f.language?.takeIf { it.isNotBlank() && it != "und" }
+                    text.add(TrackOption(f.label ?: lang?.uppercase() ?: "Subtitle ${tId + 1}", tId, _subtitleOn.value && group.isTrackSelected(i), lang = lang))
+                    tSel.add(TextSel(tId, group.mediaTrackGroup, i)); tId++
+                }
+            }
+        }
+        audioTrackList = audio; audioSelections = aSel; _audioCount.value = audio.size
+        textTrackList = text; textSelections = tSel; _subCount.value = text.size
+        // Audio exists but ExoPlayer can decode none of it → the VM will route this stream to mpv.
+        val anySupportedAudio = tracks.groups.any { g ->
+            g.type == androidx.media3.common.C.TRACK_TYPE_AUDIO && (0 until g.length).any { g.isTrackSupported(it) }
+        }
+        _audioUnsupported.value = audio.isNotEmpty() && !anySupportedAudio
+    }
 
     private fun build(): ExoPlayer {
         val dataSource = OkHttpDataSource.Factory(okHttpClient).setUserAgent(HttpClient.DEFAULT_USER_AGENT)
@@ -232,7 +367,7 @@ class LivePreviewEngine(
             .setMediaSourceFactory(DefaultMediaSourceFactory(dataSource))
             .setLoadControl(loadControl)
             .build()
-            .apply { addListener(listener) }
+            .apply { addListener(listener); addAnalyticsListener(analytics) }
     }
 
     companion object {

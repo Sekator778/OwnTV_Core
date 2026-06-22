@@ -85,11 +85,23 @@ class OwnTVPlayer(
     private val settings: SettingsRepository,
     private val connectivity: tv.own.owntv.core.network.ConnectivityObserver,
     private val okHttpClient: okhttp3.OkHttpClient,
+    private val diagnostics: PlayerDiagnostics,
 ) : MPVLib.EventObserver {
 
     private companion object {
         const val TAG = "OwnTVPlayer"
         const val MAX_AUTO_RETRIES = 3 // silent retries (backoff) before showing the error UI
+        // Warn-level mpv lines worth keeping as the failure reason (HTTP codes, open/decode failures, …).
+        val FAILURE_RX = Regex(
+            "http|error|fail|refus|timed out|unrecogn|cannot|no such|invalid|denied|forbidden|not found|" +
+                "unsupported|connection|reset|4\\d\\d|5\\d\\d",
+            RegexOption.IGNORE_CASE,
+        )
+        // Generic "consequence" lines that shouldn't overwrite a more specific captured cause.
+        val GENERIC_FAIL_RX = Regex(
+            "failed to open|opening failed|could not open|loading failed|was aborted|finished playback",
+            RegexOption.IGNORE_CASE,
+        )
     }
 
     // The app renders with mpv's direct decoder-to-surface output (vo=mediacodec_embed) — the same
@@ -436,6 +448,38 @@ class OwnTVPlayer(
     val buffering: StateFlow<Boolean> = _buffering.asStateFlow()
     private val _error = MutableStateFlow<String?>(null)
     val error: StateFlow<String?> = _error.asStateFlow()
+    private val _errorInfo = MutableStateFlow<ErrorInfo?>(null)
+    val errorInfo: StateFlow<ErrorInfo?> = _errorInfo.asStateFlow()
+    @Volatile private var currentVideoCodec: String? = null // for the error screen's media spec line
+    // Last warn/error-level mpv log line (e.g. "ffmpeg: http: HTTP error 400", "stream: Failed to open").
+    // Snapshotted into [_errorInfo] when an error surfaces, so the HUD can show the real cause. Reset per load.
+    @Volatile private var lastMpvError: String? = null
+
+    // Captures mpv's own error output (msg-level=warn, set even in release) so the real failure reason is
+    // available to show the user. Keeps error/fatal lines, plus warn lines that look like an actual failure
+    // (HTTP codes, "failed", "unrecognized", etc.) — ignoring benign per-frame warnings.
+    private val logObserver = object : MPVLib.LogObserver {
+        override fun logMessage(prefix: String, level: Int, text: String) {
+            val t = text.trim()
+            if (t.isEmpty()) return
+            val keep = level <= 20 /* error/fatal */ || (level <= 30 /* warn */ && FAILURE_RX.containsMatchIn(t))
+            if (!keep) return
+            // "Failed to open / loading failed" is the CONSEQUENCE — don't let it overwrite a more specific
+            // cause already captured for this load (e.g. "HTTP error 400", an SSL error, a codec message).
+            if (lastMpvError != null && GENERIC_FAIL_RX.containsMatchIn(t)) return
+            lastMpvError = "${prefix.trim().trimEnd(':')}: $t"
+        }
+    }
+
+    /** "HEVC 3840x1920 • hardware decoder" from the current stream, for the error screen's spec line. Null
+     *  if nothing decoded yet (e.g. a stream that failed to open — then there's no codec/size to show). */
+    private fun mediaSpec(): String? {
+        val codec = currentVideoCodec?.uppercase()
+        val res = if (currentWidthPx > 0 && currentHeightPx > 0) "${currentWidthPx}x$currentHeightPx" else null
+        val decoder = currentHwdec?.let { if (it.contains("mediacodec")) "hardware decoder" else if (it == "no") "software decoder" else it }
+        val head = listOfNotNull(codec, res).joinToString(" ").ifBlank { null }
+        return listOfNotNull(head, decoder).joinToString(" • ").ifBlank { null }
+    }
     private val _volume = MutableStateFlow(100)
     val volume: StateFlow<Int> = _volume.asStateFlow()
     private val _videoRes = MutableStateFlow<String?>(null)
@@ -747,9 +791,22 @@ class OwnTVPlayer(
             observeProperty("container-fps", MPVLib.MpvFormat.MPV_FORMAT_DOUBLE)
             // Decode watchdog input: which decoder is actually active ("mediacodec[-copy]" or "no").
             observeProperty("hwdec-current", MPVLib.MpvFormat.MPV_FORMAT_STRING)
+            observeProperty("video-codec", MPVLib.MpvFormat.MPV_FORMAT_STRING) // for the error screen spec line
             // Current subtitle line for the app-drawn overlay (direct mode); fires only on change.
             observeProperty("sub-text", MPVLib.MpvFormat.MPV_FORMAT_STRING)
             addObserver(this@OwnTVPlayer)
+            addLogObserver(logObserver) // capture mpv's error output for the on-screen "err: …" detail line
+        }
+        diagnostics.start() // tail logcat for MediaCodec/AudioTrack errors mpv can't surface
+        // When a friendly error is surfaced, expose the real reason beneath it — prefer a system codec/audio
+        // error (e.g. MediaCodec 0x80001000) from this stream, else mpv's own last log line.
+        scope.launch {
+            _error.collect {
+                _errorInfo.value = if (it != null) {
+                    val raw = diagnostics.recentError() ?: lastMpvError
+                    ErrorInfo(reason = raw?.let(PlayerErrors::reasonFor), spec = mediaSpec(), raw = raw)
+                } else null
+            }
         }
         initialized = mpv != null
     }
@@ -829,6 +886,8 @@ class OwnTVPlayer(
         errorCheckJob?.cancel()
         videoCheckJob?.cancel()
         _error.value = null
+        lastMpvError = null // fresh item → drop the previous stream's captured error
+        diagnostics.markLoad() // scope captured codec/audio errors to this stream
         _videoRes.value = null
         _videoFps.value = null
         expectingPlayback = true
@@ -852,6 +911,7 @@ class OwnTVPlayer(
         }
         // Reset the decode watchdog + per-file video state.
         currentHwdec = null
+        currentVideoCodec = null
         currentHeightPx = 0
         currentWidthPx = 0
         decodeGuardTripped = false
@@ -909,7 +969,11 @@ class OwnTVPlayer(
                 } else {
                     android.util.Log.w(TAG, "no video frames decoded — surfacing error")
                     _buffering.value = false
-                    _error.value = "Couldn't play this recording. The archived segment may be incomplete or start mid-stream."
+                    // Catch-up (preferSoftware) gets the archive wording; a movie/episode gets generic copy.
+                    _error.value = if (preferSoftware)
+                        "Couldn't play this recording. The archived segment may be incomplete or start mid-stream."
+                    else
+                        "Couldn't play this video — it may be unavailable or in a format this device can't decode."
                 }
             }
         }
@@ -1242,6 +1306,7 @@ class OwnTVPlayer(
                 currentHwdec = value
                 enforceDecodeGuard()
             }
+            "video-codec" -> currentVideoCodec = value.takeIf { it.isNotBlank() }
             // Active subtitle line for the app-drawn overlay (direct mode only; GL mode draws its own).
             "sub-text" -> {
                 val line = value.trim().takeIf { it.isNotEmpty() }

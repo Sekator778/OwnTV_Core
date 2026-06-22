@@ -92,9 +92,10 @@ class EpgRepository(
     suspend fun clear(storeId: Long) = withContext(Dispatchers.IO) { epgDao.clearSource(storeId) }
 
     companion object {
-        // Keep ~2 days of just-aired programmes so the Guide can browse the catch-up archive (bounded,
-        // and ultimately limited by how much past data the EPG feed actually provides).
-        private const val WINDOW_BACK_MS = 50L * 60 * 60 * 1000
+        // Keep up to ~7 days of just-aired programmes so the Guide can browse a long catch-up archive
+        // (still bounded, and ultimately limited by how much past data the EPG feed actually provides —
+        // many xmltv.php feeds only return 1–2 days of past programmes, so storage rarely reaches 7 days).
+        private const val WINDOW_BACK_MS = 7L * 24 * 60 * 60 * 1000
         private const val WINDOW_AHEAD_MS = 48L * 60 * 60 * 1000 // and 48h ahead
         private const val CHUNK = 500
     }

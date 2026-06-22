@@ -61,15 +61,15 @@ class SettingsRepository(private val context: Context) {
 
     // --- Catch-up (archive) playback ---
 
-    /** Which timezone to format Xtream timeshift URLs in. Some panels expect the server's local time,
-     *  so the user picks either the device's timezone or a manual UTC offset (default UTC, i.e. +0). */
+    /** Which timezone to format Xtream timeshift URLs in. Most panels run on the server's local time, which
+     *  usually matches the user's region — so **Device** is the default; a manual UTC offset is the fallback. */
     enum class CatchupTimezone { DEVICE, MANUAL }
 
     /** Manual UTC offset bounds (whole hours), in minutes. */
     val catchupOffsetRangeMinutes: IntRange = -12 * 60..14 * 60
 
     val catchupTimezone: Flow<CatchupTimezone> = context.dataStore.data.map { prefs ->
-        prefs[Keys.CATCHUP_TZ]?.let { runCatching { CatchupTimezone.valueOf(it) }.getOrNull() } ?: CatchupTimezone.MANUAL
+        prefs[Keys.CATCHUP_TZ]?.let { runCatching { CatchupTimezone.valueOf(it) }.getOrNull() } ?: CatchupTimezone.DEVICE
     }
 
     /** Manual mode's offset from UTC, in minutes (0 = UTC, the previous default). */
