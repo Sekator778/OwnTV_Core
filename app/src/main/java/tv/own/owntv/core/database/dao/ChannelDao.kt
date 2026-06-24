@@ -1,12 +1,18 @@
 package tv.own.owntv.core.database.dao
 
 import androidx.paging.PagingSource
+import androidx.room.Embedded
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import kotlinx.coroutines.flow.Flow
 import tv.own.owntv.core.database.entity.ChannelEntity
+
+data class ChannelWithWatchedAt(
+    @Embedded val channel: ChannelEntity,
+    val watchedAt: Long,
+)
 
 /**
  * Live TV channels. Big lists are exposed as [PagingSource]; totals come from indexed COUNT queries
@@ -158,4 +164,11 @@ interface ChannelDao {
             "WHERE h.profileId = :profileId ORDER BY h.watchedAt DESC LIMIT :limit",
     )
     fun recentlyWatched(profileId: Long, limit: Int): Flow<List<ChannelEntity>>
+
+    @Query(
+        "SELECT c.*, h.watchedAt FROM channels c " +
+            "INNER JOIN watch_history h ON h.itemId = c.id AND h.mediaType = 'LIVE' " +
+            "WHERE h.profileId = :profileId ORDER BY h.watchedAt DESC LIMIT :limit",
+    )
+    fun recentlyWatchedWithTimestamp(profileId: Long, limit: Int): Flow<List<ChannelWithWatchedAt>>
 }
