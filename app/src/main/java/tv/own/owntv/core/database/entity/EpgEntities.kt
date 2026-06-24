@@ -35,6 +35,9 @@ data class EpgChannelEntity(
         Index(value = ["epgChannelId", "startMs"]),
         Index("sourceId"),
         Index("stopMs"),
+        // Guide read-index (v4.0.0 EPG-perf): also created at runtime by EpgRepository.ensureEpgIndexes()
+        // and in MIGRATION_3_4 — declared here so Room's schema validation expects it.
+        Index(value = ["sourceId", "epgChannelId"]),
     ],
 )
 data class EpgProgrammeEntity(

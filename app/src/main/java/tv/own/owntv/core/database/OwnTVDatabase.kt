@@ -173,6 +173,10 @@ abstract class OwnTVDatabase : RoomDatabase() {
                 )
                 db.execSQL("CREATE INDEX IF NOT EXISTS `index_tv_provider_programs_profileId` ON `tv_provider_programs` (`profileId`)")
                 db.execSQL("CREATE UNIQUE INDEX IF NOT EXISTS `index_tv_provider_programs_profileId_surface_mediaType_groupId` ON `tv_provider_programs` (`profileId`, `surface`, `mediaType`, `groupId`)")
+
+                // EPG-perf Guide read-index (v4.0.0). Declared on EpgProgrammeEntity, so v4 expects it; older
+                // DBs (and the runtime ensureEpgIndexes) create it too — make sure the migrated DB has it.
+                db.execSQL("CREATE INDEX IF NOT EXISTS `index_epg_programmes_sourceId_epgChannelId` ON `epg_programmes` (`sourceId`, `epgChannelId`)")
             }
         }
 

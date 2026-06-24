@@ -51,6 +51,9 @@ class LivePreviewEngine(
     val state: StateFlow<State> = _state.asStateFlow()
     private val _videoHeight = MutableStateFlow<Int?>(null)
     val videoHeight: StateFlow<Int?> = _videoHeight.asStateFlow()
+    // Up-to-4 mini stream chips for the preview pane: aspect · resolution · fps · audio.
+    private val _streamChips = MutableStateFlow<List<String>>(emptyList())
+    val streamChips: StateFlow<List<String>> = _streamChips.asStateFlow()
 
     // --- PlaybackEngine: lets the full-screen HUD drive a promoted preview (play/pause, state, volume) ---
     private val _isPlaying = MutableStateFlow(false)
@@ -155,6 +158,41 @@ class LivePreviewEngine(
         currentUrl?.let { out += "Source" to HttpClient.redactUrl(it) }
         return out
     }
+    /** Recompute the preview's mini chips (aspect · resolution · fps · audio) from the active formats. */
+    private fun updateStreamChips() {
+        val p = player ?: run { _streamChips.value = emptyList(); return }
+        val chips = ArrayList<String>(4)
+        p.videoFormat?.let { f ->
+            if (f.width > 0 && f.height > 0) aspectLabel(f.width, f.height)?.let { chips += it }
+            qualityLabel(f.height)?.let { chips += it }
+            if (f.frameRate > 0) chips += "${Math.round(f.frameRate)} FPS"
+        }
+        p.audioFormat?.let { f ->
+            (when (f.channelCount) { 1 -> "MONO"; 2 -> "STEREO"; 6 -> "5.1"; 8 -> "7.1"; else -> null })?.let { chips += it }
+        }
+        _streamChips.value = chips
+    }
+    private fun aspectLabel(w: Int, h: Int): String? {
+        if (w <= 0 || h <= 0) return null
+        val r = w.toFloat() / h
+        return when {
+            r in 1.72f..1.82f -> "16:9"
+            r in 1.28f..1.40f -> "4:3"
+            r >= 2.15f -> "21:9"
+            r in 1.55f..1.66f -> "16:10"
+            else -> "%.2f:1".format(r)
+        }
+    }
+    private fun qualityLabel(h: Int): String? = when {
+        h <= 0 -> null
+        h >= 2160 -> "4K"
+        h >= 1440 -> "1440p"
+        h >= 1080 -> "1080p"
+        h >= 720 -> "720p"
+        h >= 480 -> "480p"
+        else -> "${h}p"
+    }
+
     private val _currentMeta = MutableStateFlow(MediaMeta())
     override val currentMeta: StateFlow<MediaMeta> = _currentMeta.asStateFlow()
     override val isLiveContent: Boolean = true
@@ -221,9 +259,10 @@ class LivePreviewEngine(
                 _videoHeight.value = videoSize.height
                 _videoRes.value = "${videoSize.height}p"
             }
+            updateStreamChips()
         }
 
-        override fun onTracksChanged(tracks: androidx.media3.common.Tracks) = rebuildTracks(tracks)
+        override fun onTracksChanged(tracks: androidx.media3.common.Tracks) { rebuildTracks(tracks); updateStreamChips() }
         override fun onCues(cueGroup: androidx.media3.common.text.CueGroup) { _cues.value = cueGroup.cues }
 
         override fun onPlayerError(error: PlaybackException) {
@@ -258,7 +297,7 @@ class LivePreviewEngine(
         audioTrackList = emptyList(); audioSelections = emptyList(); _audioCount.value = 0
         textTrackList = emptyList(); textSelections = emptyList(); _subCount.value = 0
         _subtitleOn.value = false; _cues.value = emptyList(); _audioUnsupported.value = false
-        _videoHeight.value = null
+        _videoHeight.value = null; _streamChips.value = emptyList()
         _videoRes.value = null
         _error.value = null
         _errorInfo.value = null
@@ -320,7 +359,7 @@ class LivePreviewEngine(
         audioTrackList = emptyList(); audioSelections = emptyList(); _audioCount.value = 0
         textTrackList = emptyList(); textSelections = emptyList(); _subCount.value = 0
         _subtitleOn.value = false; _cues.value = emptyList(); _audioUnsupported.value = false
-        _videoHeight.value = null
+        _videoHeight.value = null; _streamChips.value = emptyList()
         _state.value = State.IDLE
         player?.run { stop(); clearMediaItems() }
     }

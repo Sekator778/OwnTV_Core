@@ -219,7 +219,10 @@ class SettingsRepository(private val context: Context) {
      *  5.1 then mis-play it (drained 2× → "fast video, no sound", #25). So default stereo for stability;
      *  users with a real 5.1/7.1 receiver turn this on. On: mpv decodes Dolby/DTS to multichannel LPCM (the
      *  sink picks the layout), with a runaway-detector that auto-falls-back to stereo on a broken output. We
-     *  never bitstream/passthrough (its AudioTrack reports no clock and stutters video to a slideshow). */
+     *  never bitstream/passthrough (its AudioTrack reports no clock and stutters video to a slideshow).
+     *  Second, subtler failure mode (confirmed in the field): even when multichannel LPCM plays correctly,
+     *  the wider HDMI/ARC buffer adds latency the TV/soundbar doesn't report back, so audio lags video
+     *  (lip-sync drift) on VODs. Stereo's small, well-reported buffer stays locked. Hence: default OFF. */
     val surroundSound: Flow<Boolean> = context.dataStore.data.map { it[Keys.SURROUND_SOUND] ?: false }
 
     suspend fun setSurroundSound(enabled: Boolean) {

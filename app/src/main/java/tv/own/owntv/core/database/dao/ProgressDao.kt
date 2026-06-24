@@ -24,6 +24,14 @@ interface ProgressDao {
     @Query("DELETE FROM playback_progress WHERE profileId = :profileId AND mediaType = :type AND itemId = :itemId")
     suspend fun clear(profileId: Long, type: MediaType, itemId: Long)
 
+    /** Wipe all resume positions for a profile — drives "Clear watch history" (so Home's continue-watching empties). */
+    @Query("DELETE FROM playback_progress WHERE profileId = :profileId")
+    suspend fun clearProfile(profileId: Long)
+
+    /** Wipe resume positions for one media type (MOVIE / EPISODE) for a profile. */
+    @Query("DELETE FROM playback_progress WHERE profileId = :profileId AND mediaType = :type")
+    suspend fun clearProfileType(profileId: Long, type: MediaType)
+
     /** Everything, for Backup & Restore. */
     @Query("SELECT * FROM playback_progress")
     suspend fun getAllOnce(): List<PlaybackProgressEntity>
