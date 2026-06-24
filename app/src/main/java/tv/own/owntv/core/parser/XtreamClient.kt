@@ -17,7 +17,7 @@ data class XtLiveStream(
     val archive: Boolean = false, val archiveDays: Int = 0,
 )
 data class XtVod(
-    val streamId: String, val name: String, val icon: String?, val rating: Double?,
+    val streamId: String, val name: String, val icon: String?, val rating: Double?, val plot: String?,
     val categoryId: String?, val containerExt: String?, val added: Long?,
 )
 data class XtSeries(
@@ -81,7 +81,9 @@ class XtreamClient(private val http: HttpClient) {
                 onItem(
                     XtVod(
                         streamId = id, name = m["name"].orEmpty(), icon = m["stream_icon"],
-                        rating = m["rating"]?.toDoubleOrNull(), categoryId = m["category_id"],
+                        rating = m["rating"]?.toDoubleOrNull(),
+                        plot = m["plot"]?.takeIf { it.isNotBlank() } ?: m["description"]?.takeIf { it.isNotBlank() },
+                        categoryId = m["category_id"],
                         containerExt = m["container_extension"], added = m["added"]?.toLongOrNull(),
                     ),
                 )
