@@ -35,17 +35,25 @@ interface PlaybackEngine {
     fun audioTracks(): List<TrackOption>
     fun textTracks(): List<TrackOption>
 
+    /** Live technical readout (label → value) for the stream-info overlay — codec, resolution, fps, HDR,
+     *  bitrate, decoder, audio, buffer, source. A snapshot; the overlay re-reads it periodically. */
+    fun streamInfo(): List<Pair<String, String>> = emptyList()
+
     // VOD-only — sensible no-op / empty defaults for a live engine.
     val position: StateFlow<Long> get() = ZERO_LONG
     val duration: StateFlow<Long> get() = ZERO_LONG
     val speed: StateFlow<Double> get() = ONE_DOUBLE
     val nav: StateFlow<NavState> get() = NO_NAV
+    /** In-player A/V-sync nudge (ms) — VOD/mpv only; a live engine leaves it at 0. */
+    val audioDelayMs: StateFlow<Int> get() = ZERO_INT
     fun setSpeed(speed: Double) {}
+    fun adjustAudioDelay(deltaMs: Int) {}
     fun previous() {}
     fun next() {}
     fun seekBy(deltaMs: Long) {}
 
     companion object {
+        private val ZERO_INT: StateFlow<Int> = MutableStateFlow(0)
         private val ZERO_LONG: StateFlow<Long> = MutableStateFlow(0L)
         private val ONE_DOUBLE: StateFlow<Double> = MutableStateFlow(1.0)
         private val NO_NAV: StateFlow<NavState> = MutableStateFlow(NavState(hasPrev = false, hasNext = false))
@@ -70,6 +78,7 @@ class MpvPlaybackEngine(private val p: OwnTVPlayer) : PlaybackEngine {
     override val duration get() = p.duration
     override val speed get() = p.speed
     override val nav get() = p.nav
+    override val audioDelayMs get() = p.audioDelayMs
     override fun togglePlayPause() = p.togglePlayPause()
     override fun setZoomMode(mode: ZoomMode) = p.setZoomMode(mode)
     override fun adjustVolume(delta: Int) = p.adjustVolume(delta)
@@ -80,7 +89,9 @@ class MpvPlaybackEngine(private val p: OwnTVPlayer) : PlaybackEngine {
     override fun disableSubtitles() = p.disableSubtitles()
     override fun audioTracks() = p.audioTracks()
     override fun textTracks() = p.textTracks()
+    override fun streamInfo() = p.streamInfo()
     override fun setSpeed(speed: Double) = p.setSpeed(speed)
+    override fun adjustAudioDelay(deltaMs: Int) = p.adjustAudioDelay(deltaMs)
     override fun previous() = p.previous()
     override fun next() = p.next()
     override fun seekBy(deltaMs: Long) = p.seekBy(deltaMs)

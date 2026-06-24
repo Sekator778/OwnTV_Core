@@ -18,6 +18,12 @@ import tv.own.owntv.ui.theme.AccentColor
 import tv.own.owntv.ui.theme.ThemeMode
 import tv.own.owntv.ui.theme.UiZoom
 
+/** Per-profile startup landing (Phase 3 / v4.0.0). LAST_CHANNEL also covers "auto-play my channel" since
+ *  it's always the one you last watched. */
+enum class StartupMode(val label: String) {
+    HOME("Home"), LAST_CHANNEL("Last channel"), FAVORITES("Live · Favorites")
+}
+
 private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "owntv_settings")
 
 /**
@@ -57,6 +63,49 @@ class SettingsRepository(private val context: Context) {
         val UPDATE_CHECK_ON_START = booleanPreferencesKey("update_check_on_start")
         val CATCHUP_TZ = stringPreferencesKey("catchup_timezone")
         val CATCHUP_OFFSET_MIN = intPreferencesKey("catchup_offset_minutes")
+        val ANIMATION_LEVEL = stringPreferencesKey("animation_level")
+        val RESUME_LAST_CHANNEL = booleanPreferencesKey("resume_last_channel")
+        val LAST_LIVE_CATEGORY = stringPreferencesKey("last_live_category")
+        val LAST_LIVE_CHANNEL = androidx.datastore.preferences.core.longPreferencesKey("last_live_channel")
+        val VOD_VIEW_MODE = stringPreferencesKey("vod_view_mode")
+    }
+
+    // --- Live TV: remember the last focused channel so reopening lands focus back on it ---
+    val lastLiveChannelId: Flow<Long> = context.dataStore.data.map { it[Keys.LAST_LIVE_CHANNEL] ?: -1L }
+    suspend fun setLastLiveChannelId(id: Long) {
+        context.dataStore.edit { it[Keys.LAST_LIVE_CHANNEL] = id }
+    }
+
+    // --- Startup: per-profile landing (v4.0.0). Falls back to the legacy global resume toggle for existing
+    //     users (so "Resume last channel = On" keeps working until they pick a per-profile mode). ---
+    fun startupMode(profileId: Long): Flow<StartupMode> = context.dataStore.data.map { prefs ->
+        prefs[stringPreferencesKey("startup_mode_$profileId")]?.let { runCatching { StartupMode.valueOf(it) }.getOrNull() }
+            ?: if (prefs[Keys.RESUME_LAST_CHANNEL] == true) StartupMode.LAST_CHANNEL else StartupMode.HOME
+    }
+    suspend fun setStartupMode(profileId: Long, mode: StartupMode) {
+        context.dataStore.edit { it[stringPreferencesKey("startup_mode_$profileId")] = mode.name }
+    }
+
+    // --- Startup: auto-open the last-watched live channel (default OFF) — legacy, now migrated to startupMode ---
+    val resumeLastChannel: Flow<Boolean> = context.dataStore.data.map { it[Keys.RESUME_LAST_CHANNEL] ?: false }
+    suspend fun setResumeLastChannel(enabled: Boolean) {
+        context.dataStore.edit { it[Keys.RESUME_LAST_CHANNEL] = enabled }
+    }
+
+    // --- Live TV: remember the last selected category so reopening lands where you left off ---
+    val lastLiveCategory: Flow<String> = context.dataStore.data.map { it[Keys.LAST_LIVE_CATEGORY] ?: "" }
+    suspend fun setLastLiveCategory(key: String) {
+        context.dataStore.edit { it[Keys.LAST_LIVE_CATEGORY] = key }
+    }
+
+    // --- Appearance: animation level (perf control for low-end boxes) ---
+    val animationLevel: Flow<tv.own.owntv.ui.theme.AnimationLevel> = context.dataStore.data.map { prefs ->
+        prefs[Keys.ANIMATION_LEVEL]?.let { runCatching { tv.own.owntv.ui.theme.AnimationLevel.valueOf(it) }.getOrNull() }
+            ?: tv.own.owntv.ui.theme.AnimationLevel.FULL
+    }
+
+    suspend fun setAnimationLevel(level: tv.own.owntv.ui.theme.AnimationLevel) {
+        context.dataStore.edit { it[Keys.ANIMATION_LEVEL] = level.name }
     }
 
     // --- Catch-up (archive) playback ---
@@ -136,7 +185,16 @@ class SettingsRepository(private val context: Context) {
         raw?.let { runCatching { SortMode.valueOf(it) }.getOrNull() } ?: default
 
     /** The TV Guide's own ordering. LIVE_TV mirrors the Live TV sort; CATCHUP floats archive channels up. */
-    enum class GuideSort(val label: String) { ALPHA("A–Z"), PROVIDER("Provider"), LIVE_TV("Live TV"), CATCHUP("Catch-up") }
+    enum class GuideSort(val label: String) { ALPHA("A–Z"), PROVIDER("Provider"), LIVE_TV("Live TV"), CATCHUP("Catch-up"), FAVORITES("Favorites") }
+
+    /** How Movies & Series browse: the poster wall, or a compact list (more titles at once). */
+    enum class VodViewMode(val label: String) { GRID("Grid"), LIST("List") }
+    val vodViewMode: Flow<VodViewMode> = context.dataStore.data.map { prefs ->
+        prefs[Keys.VOD_VIEW_MODE]?.let { runCatching { VodViewMode.valueOf(it) }.getOrNull() } ?: VodViewMode.GRID
+    }
+    suspend fun setVodViewMode(mode: VodViewMode) {
+        context.dataStore.edit { it[Keys.VOD_VIEW_MODE] = mode.name }
+    }
 
     val sortGuide: Flow<GuideSort> = context.dataStore.data.map { prefs ->
         prefs[Keys.SORT_GUIDE]?.let { runCatching { GuideSort.valueOf(it) }.getOrNull() } ?: GuideSort.LIVE_TV

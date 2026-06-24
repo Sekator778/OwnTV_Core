@@ -22,6 +22,8 @@ fun friendlySyncError(raw: String?, online: Boolean): String = when {
         "The server had a problem. Please try again later."
     raw.containsAny("CertPath", "SSLHandshake", "trust anchor", "CertificateException") ->
         "Secure connection failed — the server's certificate may be invalid."
+    raw.containsAny("END_TAG", "START_TAG", "XmlPull", "PullParser", "ParserException") ->
+        "The guide data from the server was malformed. Some of it may still have loaded — please try again, or check the EPG URL."
     else -> raw
 }
 

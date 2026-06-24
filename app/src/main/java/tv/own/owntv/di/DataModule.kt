@@ -49,6 +49,7 @@ val dataModule = module {
     single { ConnectivityObserver(androidContext()) }
     single { CustomizationStore(androidContext()) }
     single { tv.own.owntv.core.epg.EpgSourceStore(androidContext()) }
+    single { tv.own.owntv.core.player.ForceMpvStore(androidContext()) }
     // store, sourceDao, epgRepository
     single { tv.own.owntv.core.epg.EpgMigration(get(), get(), get()) }
     // channelDao, movieDao, seriesDao
@@ -60,8 +61,8 @@ val dataModule = module {
     single { UserDataResolver(androidContext(), get(), get(), get(), get(), get(), get()) }
     // sourceDao, syncManager, userDataResolver
     single { SourceRepository(get(), get(), get()) }
-    // epgDao, httpClient, xtreamClient
-    single { EpgRepository(get(), get(), get()) }
+    // epgDao, httpClient, xtreamClient, channelDao, customize, settings, context, db
+    single { EpgRepository(get(), get(), get(), get(), get(), get(), androidContext(), get()) }
     // seriesDao, sourceDao, xtreamClient, userDataResolver
     single { SeriesRepository(get(), get(), get(), get()) }
     // context, downloadDao, okHttpClient, settings

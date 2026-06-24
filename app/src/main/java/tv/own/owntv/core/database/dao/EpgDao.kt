@@ -24,6 +24,10 @@ interface EpgDao {
     @Query("DELETE FROM epg_programmes WHERE stopMs < :before")
     suspend fun prune(before: Long)
 
+    /** Drop all programmes for one EPG channel id (used to re-fill it from cache after a smart-match). */
+    @Query("DELETE FROM epg_programmes WHERE epgChannelId = :epgChannelId")
+    suspend fun clearChannel(epgChannelId: String)
+
     /** The programme airing at [now] on a given EPG channel. */
     @Query("SELECT * FROM epg_programmes WHERE epgChannelId = :epgChannelId AND startMs <= :now AND stopMs > :now ORDER BY startMs DESC LIMIT 1")
     suspend fun nowPlaying(epgChannelId: String, now: Long): EpgProgrammeEntity?

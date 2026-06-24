@@ -2,16 +2,21 @@ package tv.own.owntv.player
 
 import android.content.Context
 import android.view.Surface
+import androidx.media3.common.C
 import androidx.media3.common.MediaItem
 import androidx.media3.common.PlaybackException
 import androidx.media3.common.Player
 import androidx.media3.common.VideoSize
 import androidx.media3.common.util.UnstableApi
+import androidx.media3.common.util.Util
 import androidx.media3.datasource.okhttp.OkHttpDataSource
 import androidx.media3.exoplayer.DefaultLoadControl
 import androidx.media3.exoplayer.DefaultRenderersFactory
 import androidx.media3.exoplayer.ExoPlayer
+import androidx.media3.exoplayer.hls.DefaultHlsExtractorFactory
+import androidx.media3.exoplayer.hls.HlsMediaSource
 import androidx.media3.exoplayer.source.DefaultMediaSourceFactory
+import androidx.media3.exoplayer.source.MediaSource
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -120,6 +125,36 @@ class LivePreviewEngine(
         (e as? android.media.MediaCodec.CodecException)?.let { return "$kind codec: ${it.diagnosticInfo}" }
         return "$kind codec: ${e.message ?: e.javaClass.simpleName}"
     }
+
+    /** Technical readout for the stream-info overlay, from the active ExoPlayer formats. */
+    override fun streamInfo(): List<Pair<String, String>> {
+        val p = player ?: return emptyList()
+        val out = ArrayList<Pair<String, String>>()
+        p.videoFormat?.let { f ->
+            val line = listOfNotNull(
+                f.sampleMimeType?.substringAfterLast('/')?.let { mimeName(it) },
+                if (f.width > 0 && f.height > 0) "${f.width}×${f.height}" else null,
+                if (f.frameRate > 0) "%.2f fps".format(f.frameRate) else null,
+            ).joinToString(" · ")
+            if (line.isNotBlank()) out += "Video" to line
+            when (f.colorInfo?.colorTransfer) {
+                C.COLOR_TRANSFER_ST2084 -> "HDR10 (PQ)"; C.COLOR_TRANSFER_HLG -> "HLG"; else -> null
+            }?.let { out += "HDR" to it }
+            if (f.bitrate > 0) out += "Bitrate" to "%.1f Mbps".format(f.bitrate / 1_000_000.0)
+        }
+        out += "Decoder" to "ExoPlayer (hardware)"
+        p.audioFormat?.let { f ->
+            val line = listOfNotNull(
+                f.sampleMimeType?.substringAfterLast('/')?.uppercase(),
+                when (f.channelCount) { 1 -> "mono"; 2 -> "stereo"; 6 -> "5.1"; 8 -> "7.1"; else -> null },
+                if (f.sampleRate > 0) "%.0f kHz".format(f.sampleRate / 1000.0) else null,
+            ).joinToString(" · ")
+            if (line.isNotBlank()) out += "Audio" to line
+        }
+        if (p.totalBufferedDuration > 0) out += "Buffer" to "%.1f s".format(p.totalBufferedDuration / 1000.0)
+        currentUrl?.let { out += "Source" to HttpClient.redactUrl(it) }
+        return out
+    }
     private val _currentMeta = MutableStateFlow(MediaMeta())
     override val currentMeta: StateFlow<MediaMeta> = _currentMeta.asStateFlow()
     override val isLiveContent: Boolean = true
@@ -136,6 +171,29 @@ class LivePreviewEngine(
     private var retryCount = 0
     private val stallWatchdog = Runnable { reconnect("buffering stalled") }
 
+    // Silent-freeze watchdog: some live streams stop advancing while ExoPlayer stays in STATE_READY with no
+    // buffering event and no error — so neither the stall watchdog nor onPlayerError fires and the channel
+    // hangs forever with no retry. We also poll the playback position: if it's frozen while we're supposed to
+    // be playing, treat it as a dropped feed and reconnect.
+    private var lastProgressPos = -1L
+    private var frozenChecks = 0
+    private val progressWatchdog = object : Runnable {
+        override fun run() {
+            val p = player
+            if (p != null && hasPlayed && p.playWhenReady && p.playbackState == Player.STATE_READY) {
+                val pos = p.currentPosition
+                if (pos > 0 && pos == lastProgressPos) {
+                    if (++frozenChecks >= FROZEN_LIMIT) { frozenChecks = 0; lastProgressPos = -1L; reconnect("stream frozen"); return }
+                } else {
+                    frozenChecks = 0; lastProgressPos = pos
+                }
+            } else {
+                frozenChecks = 0; lastProgressPos = -1L
+            }
+            mainHandler.postDelayed(this, PROGRESS_CHECK_MS)
+        }
+    }
+
     private val listener = object : Player.Listener {
         override fun onPlaybackStateChanged(playbackState: Int) {
             when (playbackState) {
@@ -148,6 +206,9 @@ class LivePreviewEngine(
                 Player.STATE_READY -> {
                     _state.value = State.PLAYING; _buffering.value = false
                     hasPlayed = true; retryCount = 0; mainHandler.removeCallbacks(stallWatchdog)
+                    // (re)start the silent-freeze poll now that we're actually playing
+                    lastProgressPos = -1L; frozenChecks = 0
+                    mainHandler.removeCallbacks(progressWatchdog); mainHandler.postDelayed(progressWatchdog, PROGRESS_CHECK_MS)
                 }
                 else -> { _buffering.value = false; mainHandler.removeCallbacks(stallWatchdog) }
             }
@@ -193,7 +254,7 @@ class LivePreviewEngine(
         lastCodecError = null; lastVideoDecoder = null
         this.muted = muted
         currentUrl = url
-        hasPlayed = false; retryCount = 0; mainHandler.removeCallbacks(stallWatchdog)
+        hasPlayed = false; retryCount = 0; mainHandler.removeCallbacks(stallWatchdog); mainHandler.removeCallbacks(progressWatchdog)
         audioTrackList = emptyList(); audioSelections = emptyList(); _audioCount.value = 0
         textTrackList = emptyList(); textSelections = emptyList(); _subCount.value = 0
         _subtitleOn.value = false; _cues.value = emptyList(); _audioUnsupported.value = false
@@ -209,7 +270,7 @@ class LivePreviewEngine(
             val p = player ?: build().also { player = it }
             surface?.let { p.setVideoSurface(it) }
             p.volume = if (muted) 0f else 1f
-            p.setMediaItem(MediaItem.fromUri(url))
+            p.setMediaSource(mediaSourceFor(url))
             p.prepare()
             p.playWhenReady = true
         }.onFailure {
@@ -227,11 +288,35 @@ class LivePreviewEngine(
         _volume.value = if (m) 0 else 100
     }
 
+    // Snapshot of the live channel taken when the app backgrounds (screensaver / Home), so it can be restored
+    // on return — otherwise onStop frees the stream and a paused live channel never resumes (even on Play).
+    private data class LiveRestore(val url: String, val muted: Boolean, val meta: MediaMeta)
+    @Volatile private var backgroundRestore: LiveRestore? = null
+
+    /** Backgrounded (screensaver / Home): remember what's playing, then free the stream. Paired with
+     *  [onAppForegrounded]. */
+    fun onAppBackgrounded() {
+        currentUrl?.let { backgroundRestore = LiveRestore(it, muted, _currentMeta.value) }
+        stop()
+    }
+
+    /** Foregrounded: re-tune the live channel that was freed while backgrounded (at the live edge), so it
+     *  resumes instead of sitting on a dead/empty stream. No-op if something is already playing. */
+    fun onAppForegrounded() {
+        val r = backgroundRestore ?: return
+        backgroundRestore = null
+        if (currentUrl != null) return
+        play(r.url, muted = r.muted, meta = r.meta)
+    }
+
+    /** Drop any pending restore (e.g. on profile switch — don't bring back the previous user's channel). */
+    fun discardBackgroundRestore() { backgroundRestore = null }
+
     /** Stop playback and free the decoder/connection (e.g. before mpv takes over for fullscreen). Keeps the
      *  ExoPlayer instance alive for the next preview. */
     fun stop() {
         currentUrl = null
-        hasPlayed = false; retryCount = 0; mainHandler.removeCallbacks(stallWatchdog)
+        hasPlayed = false; retryCount = 0; mainHandler.removeCallbacks(stallWatchdog); mainHandler.removeCallbacks(progressWatchdog)
         audioTrackList = emptyList(); audioSelections = emptyList(); _audioCount.value = 0
         textTrackList = emptyList(); textSelections = emptyList(); _subCount.value = 0
         _subtitleOn.value = false; _cues.value = emptyList(); _audioUnsupported.value = false
@@ -253,7 +338,7 @@ class LivePreviewEngine(
      *  off and gives up after [MAX_RECONNECTS] consecutive failures (then the HUD's Retry button takes over).
      *  retryCount is reset to 0 as soon as playback goes healthy again (STATE_READY). */
     private fun reconnect(reason: String) {
-        mainHandler.removeCallbacks(stallWatchdog)
+        mainHandler.removeCallbacks(stallWatchdog); mainHandler.removeCallbacks(progressWatchdog)
         val p = player
         val url = currentUrl
         if (p == null || url == null || retryCount >= MAX_RECONNECTS) {
@@ -285,6 +370,8 @@ class LivePreviewEngine(
     override fun setZoomMode(mode: ZoomMode) { _zoomMode.value = mode } // surface scaling is Phase 3; renders FIT
 
     override fun adjustVolume(delta: Int) {
+        // Live engine (ExoPlayer) caps at 100% — boost above 100 is mpv-only (Exo can't amplify past unity
+        // and a gain audio-processor broke the audio sink). VOD/series/compat-live play on mpv and do boost.
         val v = (_volume.value + delta).coerceIn(0, 100)
         _volume.value = v
         muted = v == 0
@@ -356,15 +443,38 @@ class LivePreviewEngine(
         _audioUnsupported.value = audio.isNotEmpty() && !anySupportedAudio
     }
 
+    private val httpDataSource by lazy {
+        OkHttpDataSource.Factory(okHttpClient).setUserAgent(HttpClient.DEFAULT_USER_AGENT)
+    }
+    private val defaultSourceFactory by lazy { DefaultMediaSourceFactory(httpDataSource) }
+    // HLS factory that exposes embedded CEA-608 closed captions even when the playlist doesn't *declare*
+    // them — US premium channels (HBO/Showtime/Cinemax) carry CC inside the video stream, not as a subtitle
+    // track, so ExoPlayer otherwise shows nothing. The forced 608 track then appears in the subtitle HUD.
+    private val hlsCcSourceFactory by lazy {
+        HlsMediaSource.Factory(httpDataSource).setExtractorFactory(DefaultHlsExtractorFactory(0, true))
+    }
+
+    /** HLS → caption-aware factory; everything else (raw MPEG-TS, etc.) → default. */
+    private fun mediaSourceFor(url: String): MediaSource {
+        val item = MediaItem.fromUri(url)
+        val uri = item.localConfiguration?.uri ?: return defaultSourceFactory.createMediaSource(item)
+        return if (Util.inferContentType(uri) == C.CONTENT_TYPE_HLS) hlsCcSourceFactory.createMediaSource(item)
+        else defaultSourceFactory.createMediaSource(item)
+    }
+
     private fun build(): ExoPlayer {
-        val dataSource = OkHttpDataSource.Factory(okHttpClient).setUserAgent(HttpClient.DEFAULT_USER_AGENT)
         // Shallow buffers — a preview only needs to start quickly, not buffer deep.
         val loadControl = DefaultLoadControl.Builder()
             .setBufferDurationsMs(2_000, 8_000, 1_000, 2_000)
             .build()
+        // forceDisableMediaCodecAsynchronousQueueing(): Media3 runs MediaCodec asynchronously by default on
+        // API 31+, which corrupts (macroblocks) some UHD-HEVC streams on Realtek/Amlogic VPUs — the
+        // synchronous path is what players like TiviMate use to avoid it. Channels it still can't decode
+        // cleanly are handed to mpv via the per-channel "force mpv" routing.
+        val renderers = DefaultRenderersFactory(context).forceDisableMediaCodecAsynchronousQueueing()
         return ExoPlayer.Builder(context)
-            .setRenderersFactory(DefaultRenderersFactory(context))
-            .setMediaSourceFactory(DefaultMediaSourceFactory(dataSource))
+            .setRenderersFactory(renderers)
+            .setMediaSourceFactory(defaultSourceFactory)
             .setLoadControl(loadControl)
             .build()
             .apply { addListener(listener); addAnalyticsListener(analytics) }
@@ -374,5 +484,7 @@ class LivePreviewEngine(
         private const val TAG = "LivePreviewEngine"
         private const val MAX_RECONNECTS = 6        // ~consecutive failures before giving up (HUD Retry then)
         private const val STALL_MS = 12_000L        // buffering this long after playing == a dropped feed
+        private const val PROGRESS_CHECK_MS = 2_500L // poll interval for the silent-freeze watchdog
+        private const val FROZEN_LIMIT = 3          // position frozen this many polls (~7.5s) == a dropped feed
     }
 }

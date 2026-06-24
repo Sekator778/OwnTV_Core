@@ -21,6 +21,10 @@ interface HistoryDao {
     @Query("DELETE FROM watch_history WHERE profileId = :profileId")
     suspend fun clear(profileId: Long)
 
+    /** Clear just one media type (Live / Movie / Series) for a profile. */
+    @Query("DELETE FROM watch_history WHERE profileId = :profileId AND mediaType = :type")
+    suspend fun clearType(profileId: Long, type: MediaType)
+
     @Query("SELECT COUNT(*) FROM watch_history WHERE profileId = :profileId AND mediaType = :type")
     fun count(profileId: Long, type: MediaType): Flow<Int>
 

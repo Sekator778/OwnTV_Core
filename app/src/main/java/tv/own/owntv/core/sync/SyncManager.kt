@@ -81,56 +81,97 @@ class SyncManager(
             )
         }
         val liveTotal = intArrayOf(0)
-        val liveDone = chunked<ChannelEntity, Boolean>(ctx, "Channels", onProgress, { channelDao.upsertAll(it) }, liveTotal) { add ->
-            xtream.streamLive(s) { add(toChannel(it)) }
+        val liveDone = bulkOrFallback("Channels") {
+            chunked<ChannelEntity, Boolean>(ctx, "Channels", onProgress, { channelDao.upsertAll(it) }, liveTotal) { add ->
+                xtream.streamLive(s) { add(toChannel(it)) }
+            }
         }
         if (!liveDone) sliceByCategory(ctx, "Channels", onProgress, liveCats, { channelDao.upsertAll(it) }, liveTotal, liveTotal[0]) { cat, add ->
             xtream.streamLive(s, cat.id) { add(toChannel(it)) }
         }
 
-        // MOVIES
-        val vodCats = xtream.vodCategories(s)
-        val vodMap = refreshCategories(s, MediaType.MOVIE, vodCats)
-        movieDao.clearSource(s.id)
-        var vodOrder = 0
-        val toMovie = { item: XtVod ->
-            MovieEntity(
-                sourceId = s.id, categoryId = vodMap[item.categoryId], name = item.name,
-                posterUrl = item.icon, rating = item.rating,
-                streamUrl = xtream.movieUrl(s, item.streamId, item.containerExt),
-                containerExt = item.containerExt, remoteId = item.streamId, addedAt = item.added,
-                sortOrder = vodOrder++,
-            )
-        }
-        val vodTotal = intArrayOf(0)
-        val vodDone = chunked<MovieEntity, Boolean>(ctx, "Movies", onProgress, { movieDao.upsertAll(it) }, vodTotal) { add ->
-            xtream.streamVod(s) { add(toMovie(it)) }
-        }
-        if (!vodDone) sliceByCategory(ctx, "Movies", onProgress, vodCats, { movieDao.upsertAll(it) }, vodTotal, vodTotal[0]) { cat, add ->
-            xtream.streamVod(s, cat.id) { add(toMovie(it)) }
+        // MOVIES — non-fatal: a flaky VOD endpoint shouldn't abort the whole import (keep the channels).
+        guardStep("Movies") {
+            val vodCats = xtream.vodCategories(s)
+            val vodMap = refreshCategories(s, MediaType.MOVIE, vodCats)
+            movieDao.clearSource(s.id)
+            var vodOrder = 0
+            val toMovie = { item: XtVod ->
+                MovieEntity(
+                    sourceId = s.id, categoryId = vodMap[item.categoryId], name = item.name,
+                    posterUrl = item.icon, rating = item.rating,
+                    streamUrl = xtream.movieUrl(s, item.streamId, item.containerExt),
+                    containerExt = item.containerExt, remoteId = item.streamId, addedAt = item.added,
+                    sortOrder = vodOrder++,
+                )
+            }
+            val vodTotal = intArrayOf(0)
+            val vodDone = bulkOrFallback("Movies") {
+                chunked<MovieEntity, Boolean>(ctx, "Movies", onProgress, { movieDao.upsertAll(it) }, vodTotal) { add ->
+                    xtream.streamVod(s) { add(toMovie(it)) }
+                }
+            }
+            if (!vodDone) sliceByCategory(ctx, "Movies", onProgress, vodCats, { movieDao.upsertAll(it) }, vodTotal, vodTotal[0]) { cat, add ->
+                xtream.streamVod(s, cat.id) { add(toMovie(it)) }
+            }
         }
 
-        // SERIES (shows only; seasons/episodes fetched lazily later)
-        val seriesCats = xtream.seriesCategories(s)
-        val seriesMap = refreshCategories(s, MediaType.SERIES, seriesCats)
-        seriesDao.clearSource(s.id)
-        var seriesOrder = 0
-        val toSeries = { item: XtSeries ->
-            SeriesEntity(
-                sourceId = s.id, categoryId = seriesMap[item.categoryId], name = item.name,
-                posterUrl = item.cover, plot = item.plot, rating = item.rating,
-                year = item.year, remoteId = item.seriesId,
-                sortOrder = seriesOrder++,
-            )
-        }
-        val seriesTotal = intArrayOf(0)
-        val seriesDone = chunked<SeriesEntity, Boolean>(ctx, "Series", onProgress, { seriesDao.upsertSeries(it) }, seriesTotal) { add ->
-            xtream.streamSeries(s) { add(toSeries(it)) }
-        }
-        if (!seriesDone) sliceByCategory(ctx, "Series", onProgress, seriesCats, { seriesDao.upsertSeries(it) }, seriesTotal, seriesTotal[0]) { cat, add ->
-            xtream.streamSeries(s, cat.id) { add(toSeries(it)) }
+        // SERIES (shows only; seasons/episodes fetched lazily later) — non-fatal too. Some providers
+        // (e.g. peoplestv) return a non-standard HTTP 512 here that used to abort the entire import; now we
+        // keep the channels + movies and just skip series rather than failing the whole sync.
+        guardStep("Series") {
+            val seriesCats = xtream.seriesCategories(s)
+            val seriesMap = refreshCategories(s, MediaType.SERIES, seriesCats)
+            seriesDao.clearSource(s.id)
+            var seriesOrder = 0
+            val toSeries = { item: XtSeries ->
+                SeriesEntity(
+                    sourceId = s.id, categoryId = seriesMap[item.categoryId], name = item.name,
+                    posterUrl = item.cover, plot = item.plot, rating = item.rating,
+                    year = item.year, remoteId = item.seriesId,
+                    sortOrder = seriesOrder++,
+                )
+            }
+            val seriesTotal = intArrayOf(0)
+            val seriesDone = bulkOrFallback("Series") {
+                chunked<SeriesEntity, Boolean>(ctx, "Series", onProgress, { seriesDao.upsertSeries(it) }, seriesTotal) { add ->
+                    xtream.streamSeries(s) { add(toSeries(it)) }
+                }
+            }
+            if (!seriesDone) sliceByCategory(ctx, "Series", onProgress, seriesCats, { seriesDao.upsertSeries(it) }, seriesTotal, seriesTotal[0]) { cat, add ->
+                xtream.streamSeries(s, cat.id) { add(toSeries(it)) }
+            }
         }
     }
+
+    /** Run a content step (Movies / Series) without letting a provider-side failure abort the whole import —
+     *  the channels (and any earlier step) are already saved, so a broken VOD/Series endpoint just means that
+     *  section is missing, not a total failure. Cancellation still propagates. */
+    private suspend inline fun guardStep(label: String, block: () -> Unit) {
+        try {
+            block()
+        } catch (c: CancellationException) {
+            throw c
+        } catch (e: Exception) {
+            android.util.Log.w("SyncManager", "$label import failed — keeping the rest of the import", e)
+        }
+    }
+
+    /**
+     * Run a bulk list fetch; if it ERRORS (not just truncates), return false so the caller drops to the
+     * smaller per-category requests. Some panels (e.g. peoplestv) return a non-standard HTTP 512 on the giant
+     * full `get_series` / `get_vod_streams` response but serve the per-category (`&category_id=X`) requests
+     * fine — without this, the bulk error skipped straight past the per-category fallback.
+     */
+    private inline fun bulkOrFallback(label: String, bulk: () -> Boolean): Boolean =
+        try {
+            bulk()
+        } catch (c: CancellationException) {
+            throw c
+        } catch (e: Exception) {
+            android.util.Log.w("SyncManager", "$label bulk fetch failed (${e.message}) — falling back to per-category requests", e)
+            false
+        }
 
     /**
      * Fallback for when a provider truncates the single bulk list (issue #15): re-fetch one category at
@@ -154,10 +195,22 @@ class SyncManager(
         stream: (cat: XtCategory, add: (T) -> Unit) -> Boolean,
     ) {
         var truncations = 0
-        for (cat in categories) {
+        categories.forEachIndexed { index, cat ->
             ctx.ensureActive()
+            // Gentle pacing between the many small requests so we don't trip a rate-limiter (HTTP 429)
+            // while looping through every category.
+            if (index > 0) try { Thread.sleep(CATEGORY_REQUEST_DELAY_MS) } catch (_: InterruptedException) {}
             val before = total[0]
-            val complete = chunked<T, Boolean>(ctx, label, onProgress, insert, total) { add -> stream(cat) { add(it) } }
+            // A single failing category (e.g. it 512s/429s) is skipped — keep importing the other categories
+            // rather than losing the whole section.
+            val complete = try {
+                chunked<T, Boolean>(ctx, label, onProgress, insert, total) { add -> stream(cat) { add(it) } }
+            } catch (c: CancellationException) {
+                throw c
+            } catch (e: Exception) {
+                android.util.Log.w("SyncManager", "$label: category ${cat.id} failed (${e.message}) — skipping it", e)
+                return@forEachIndexed
+            }
             if (!complete) {
                 truncations++
                 val delta = total[0] - before
@@ -166,7 +219,7 @@ class SyncManager(
                         "SyncManager",
                         "$label: per-category fetch still truncating (panel likely ignores category_id) — stopping fallback after ${total[0]} items",
                     )
-                    break
+                    return // stop the fallback entirely
                 }
             }
         }
@@ -281,5 +334,6 @@ class SyncManager(
 
     companion object {
         const val CHUNK = 500
+        private const val CATEGORY_REQUEST_DELAY_MS = 150L // pace per-category fallback requests (avoid HTTP 429)
     }
 }

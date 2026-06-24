@@ -2,11 +2,18 @@ package tv.own.owntv.core.database.dao
 
 import androidx.paging.PagingSource
 import androidx.room.Dao
+import androidx.room.Embedded
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import kotlinx.coroutines.flow.Flow
 import tv.own.owntv.core.database.entity.ChannelEntity
+
+/** A channel plus its category name, for richer global-search results ("category · #number"). */
+data class ChannelSearchResult(
+    @Embedded val channel: ChannelEntity,
+    val categoryName: String?,
+)
 
 /**
  * Live TV channels. Big lists are exposed as [PagingSource]; totals come from indexed COUNT queries
@@ -43,6 +50,11 @@ interface ChannelDao {
     @Query("SELECT * FROM channels WHERE sourceId IN (:sourceIds) ORDER BY sourceId ASC, sortOrder ASC, name ASC LIMIT :limit")
     suspend fun allForSources(sourceIds: List<Long>, limit: Int): List<ChannelEntity>
 
+    /** Distinct normalised (lower+trim) tvg-ids across ALL channels — the set of EPG ids the user's
+     *  channels actually reference, used to filter the bulk EPG sync down from the whole feed. */
+    @Query("SELECT DISTINCT LOWER(TRIM(epgChannelId)) FROM channels WHERE epgChannelId IS NOT NULL AND epgChannelId != ''")
+    suspend fun allEpgChannelIds(): List<String>
+
     /** Largest archive window (days) across these sources' catch-up channels — 0 if none have catch-up.
      *  Drives how far back the Guide extends so archived programmes are visible. */
     @Query("SELECT COALESCE(MAX(catchupDays), 0) FROM channels WHERE sourceId IN (:sourceIds) AND catchup = 1")
@@ -61,12 +73,21 @@ interface ChannelDao {
     @Query(
         "SELECT * FROM channels WHERE sourceId IN (:sourceIds) AND epgChannelId IS NOT NULL AND epgChannelId != '' " +
             "AND (:query = '' OR name LIKE '%' || :query || '%') " +
+            // "channels that have guide data": distinct epgChannelIds present in epg_programmes. The programme
+            // table is already pruned to the retained window, so we don't time-filter here — that lets the
+            // DISTINCT use the (epgChannelId, startMs) index as a fast skip-scan instead of scanning every
+            // windowed row and running LOWER(TRIM) per row (was multi-second on big guides). epg_programmes
+            // ids are stored normalized, so no LOWER(TRIM) on that side either.
             "AND LOWER(TRIM(epgChannelId)) IN (" +
-            "  SELECT DISTINCT LOWER(TRIM(epgChannelId)) FROM epg_programmes " +
-            "  WHERE sourceId IN (:sourceIds) AND stopMs > :from AND startMs < :to" +
+            "  SELECT DISTINCT epgChannelId FROM epg_programmes WHERE sourceId IN (:sourceIds)" +
             ") ORDER BY number ASC, name ASC LIMIT :limit",
     )
-    suspend fun channelsWithGuide(sourceIds: List<Long>, from: Long, to: Long, query: String, limit: Int): List<ChannelEntity>
+    suspend fun channelsWithGuide(sourceIds: List<Long>, query: String, limit: Int): List<ChannelEntity>
+
+    /** Channels matching these remoteIds (Xtream stream ids) — to resolve smart-matched channels in bulk
+     *  without loading the whole channel table. */
+    @Query("SELECT * FROM channels WHERE sourceId IN (:sourceIds) AND remoteId IN (:remoteIds)")
+    suspend fun findByRemoteIds(sourceIds: List<Long>, remoteIds: List<String>): List<ChannelEntity>
 
     // --- Browsing (each list has a playlist-order and an A–Z variant; the sort chip picks one) ---
     @Query("SELECT * FROM channels WHERE categoryId = :categoryId ORDER BY sortOrder ASC, name ASC")
@@ -115,6 +136,16 @@ interface ChannelDao {
     /** Bounded list for global search (across all of a profile's sources). */
     @Query("SELECT * FROM channels WHERE sourceId IN (:sourceIds) AND name LIKE '%' || :query || '%' ORDER BY name ASC LIMIT :limit")
     suspend fun searchList(query: String, sourceIds: List<Long>, limit: Int): List<ChannelEntity>
+
+    /** Global search with the channel's category name joined in — lets results show "category · #number"
+     *  so near-identical feeds (e.g. several "ABC") are distinguishable. */
+    @Query(
+        "SELECT c.*, cat.name AS categoryName FROM channels c " +
+            "LEFT JOIN categories cat ON c.categoryId = cat.id " +
+            "WHERE c.sourceId IN (:sourceIds) AND c.name LIKE '%' || :query || '%' " +
+            "ORDER BY c.name ASC LIMIT :limit",
+    )
+    suspend fun searchListDetailed(query: String, sourceIds: List<Long>, limit: Int): List<ChannelSearchResult>
 
     @Query(
         "SELECT c.* FROM channels c INNER JOIN favorites f ON f.itemId = c.id AND f.mediaType = 'LIVE' " +

@@ -127,8 +127,13 @@ class OwnTVPlayer(
     private var mpv: MPVLib? = null
     private var initialized = false
     private var pendingSeekMs = 0L
+    @Volatile private var pendingStartPaused = false // load this item paused (restore a backgrounded VOD)
     private var currentUrl: String? = null
     private var expectingPlayback = false
+    // Snapshot of a non-live item taken when the app backgrounds (screensaver / Home), so it can be restored
+    // paused at its position on return — otherwise the stream is freed and Play does nothing until a reload.
+    private data class BackgroundRestore(val url: String, val meta: MediaMeta, val positionMs: Long, val wasPlaying: Boolean)
+    @Volatile private var backgroundRestore: BackgroundRestore? = null
     private var playlist: List<PlaylistItem> = emptyList()
     private var playlistIndex = 0
     // mpv's android video output needs a surface at loadfile time, or it deselects video (audio-only).
@@ -270,6 +275,10 @@ class OwnTVPlayer(
     private var autoPlayNext = true
     private var subScale = 1.0
     private var audioDelaySec = 0.0
+    private var baseAudioDelayMs = 0 // the Settings audio-delay; each new file resets the in-player nudge to it
+    private val _audioDelayMs = MutableStateFlow(0)
+    /** Effective audio delay in ms (Settings default + the in-player A/V-sync nudge). */
+    val audioDelayMs: StateFlow<Int> = _audioDelayMs.asStateFlow()
     private var prefAudioLang = ""
     private var prefSubLang = ""
     private var defaultZoom = ZoomMode.FIT
@@ -373,8 +382,8 @@ class OwnTVPlayer(
             if (initialized) mpvAsync { setPropertyDouble("sub-scale", subScale) }
         }.launchIn(scope)
         settings.audioDelayMs.onEach { ms ->
-            audioDelaySec = ms / 1000.0
-            if (initialized) mpvAsync { setPropertyDouble("audio-delay", audioDelaySec) }
+            baseAudioDelayMs = ms // the Settings default each new file resets to
+            applyAudioDelay(ms)
         }.launchIn(scope)
         settings.preferredAudioLang.onEach { lang ->
             prefAudioLang = lang
@@ -742,6 +751,20 @@ class OwnTVPlayer(
             setOptionString("force-window", "no")
             setOptionString("idle", "yes")
             setOptionString("ytdl", "no") // IPTV URLs are direct; skip the youtube-dl hook
+            // Closed captions (CEA-608/708): US premium channels (HBO/Showtime/Cinemax) and many movies carry
+            // captions embedded in the video stream rather than as a subtitle track. mpv (FFmpeg) decodes them
+            // into a selectable subtitle track — ExoPlayer doesn't surface undeclared CC, so this is the path
+            // that actually shows them. Harmless when there are none (no track is created).
+            setOptionString("sub-create-cc-track", "yes")
+            // Allow volume boost above 100% (Kodi-style amplification) for quiet streams; mpv soft-limits.
+            setOptionString("volume-max", "150")
+            // A/V sync on hardware decode: a few movies (high bitrate / 50–60 fps) decode just behind
+            // real time, so the picture drifts slightly behind the audio. mpv's default framedrop is "vo",
+            // which is a no-op with the direct mediacodec surface (the decoder presents its own frames) — so
+            // nothing drops the late frames. "decoder+vo" lets mpv skip decoding late frames at the
+            // MediaCodec stage to catch the picture back up to the audio clock. It only drops when actually
+            // behind, so content that decodes in time is untouched.
+            setOptionString("framedrop", "decoder+vo")
             // Quiet logcat in release; debug builds keep decoder/video-out logs for diagnosing
             // hwdec behavior on real TVs (which decoder engaged, why fallbacks happened).
             setOptionString("msg-level", if (tv.own.owntv.BuildConfig.DEBUG) "all=warn,vd=v,vo=v" else "all=warn")
@@ -822,12 +845,13 @@ class OwnTVPlayer(
         startPositionMs: Long = 0,
         muted: Boolean = false,
         preferSoftware: Boolean = false,
+        startPaused: Boolean = false,
     ) {
         playlist = emptyList()
         playlistIndex = 0
         updateNav()
         _zoomMode.value = defaultZoom // start new content at the user's default zoom
-        loadUrl(url, MediaMeta(title, subtitle, year, logoUrl), isLive, startPositionMs, muted, preferSoftware = preferSoftware)
+        loadUrl(url, MediaMeta(title, subtitle, year, logoUrl), isLive, startPositionMs, muted, preferSoftware = preferSoftware, startPaused = startPaused)
     }
 
     /** Play a queue (a season's episodes) starting at [startIndex] — enables prev/next. */
@@ -872,8 +896,10 @@ class OwnTVPlayer(
         muted: Boolean = false,
         resetRetries: Boolean = true,
         preferSoftware: Boolean = false,
+        startPaused: Boolean = false,
     ) {
         ensureInit()
+        pendingStartPaused = startPaused
         if (resetRetries) deactivateExo() // a brand-new item always plays on mpv (drops any Exo handoff)
         currentTitle = meta.title
         currentSubtitle = meta.subtitle
@@ -892,6 +918,7 @@ class OwnTVPlayer(
         _videoFps.value = null
         expectingPlayback = true
         pendingSeekMs = startPositionMs
+        applyAudioDelay(baseAudioDelayMs) // new item starts at the Settings default — drop any per-file nudge
         // A genuinely new item resets the failure budget; an auto-retry / software-fallback reload of
         // the SAME item passes resetRetries=false to keep that state.
         if (resetRetries) {
@@ -1015,6 +1042,18 @@ class OwnTVPlayer(
         _speed.value = speed
     }
 
+    private fun applyAudioDelay(ms: Int) {
+        _audioDelayMs.value = ms
+        audioDelaySec = ms / 1000.0
+        if (initialized) mpvAsync { setPropertyDouble("audio-delay", audioDelaySec) }
+    }
+
+    /** In-player A/V-sync nudge for a badly-muxed file (positive = delay audio). Per-file: resets to the
+     *  Settings default on the next item, so it never carries a wrong offset onto a good file. */
+    fun adjustAudioDelay(deltaMs: Int) {
+        applyAudioDelay((_audioDelayMs.value + deltaMs).coerceIn(-5_000, 5_000))
+    }
+
     // --- Volume (mpv software volume, independent of the system/hardware volume) ---
     fun setVolume(percent: Int) {
         val v = percent.coerceIn(0, 150)
@@ -1075,8 +1114,29 @@ class OwnTVPlayer(
      * Holding them got the process LMK-killed at 490–620 MB PSS while invisible ("empty" state).
      */
     fun onAppBackgrounded() {
-        if (currentUrl != null || pendingUrl != null) stop()
+        val url = currentUrl ?: pendingUrl
+        if (url != null) {
+            // Remember a non-live item so the screensaver/Home → return can restore it paused at its
+            // position. (Live just re-tunes; the archive/VOD stream is freed for memory while invisible.)
+            backgroundRestore = if (!isLiveContent) {
+                BackgroundRestore(url, MediaMeta(currentTitle, currentSubtitle, currentYear, currentLogoUrl), _position.value, _isPlaying.value)
+            } else null
+            stop()
+        }
     }
+
+    /** Paired with [onAppBackgrounded]: restore a VOD that was freed while the app was in the background
+     *  (e.g. the TV screensaver), so pressing Play just works instead of doing nothing on a freed stream. */
+    fun onAppForegrounded() {
+        val r = backgroundRestore ?: return
+        backgroundRestore = null
+        if (currentUrl != null) return // already playing something else
+        play(r.url, subtitle = r.meta.subtitle, year = r.meta.year, logoUrl = r.meta.logoUrl,
+            title = r.meta.title, isLive = false, startPositionMs = r.positionMs, startPaused = !r.wasPlaying)
+    }
+
+    /** Drop any pending restore (e.g. on profile switch — don't bring back the previous user's item). */
+    fun discardBackgroundRestore() { backgroundRestore = null }
 
     /**
      * The OS signaled serious memory pressure while we're alive: yield before the kernel takes.
@@ -1150,6 +1210,55 @@ class OwnTVPlayer(
 
     fun audioTracks(): List<TrackOption> = _audioTrackList.value
     fun textTracks(): List<TrackOption> = _subTrackList.value
+
+    /** Technical readout for the stream-info overlay, read live from mpv (libmpv get_property is thread-safe). */
+    fun streamInfo(): List<Pair<String, String>> {
+        val m = mpv ?: return emptyList()
+        fun str(p: String) = m.getPropertyString(p)?.takeIf { it.isNotBlank() }
+        val out = ArrayList<Pair<String, String>>()
+        // Video
+        val vw = m.getPropertyInt("video-params/w") ?: m.getPropertyInt("width")
+        val vh = m.getPropertyInt("video-params/h") ?: m.getPropertyInt("height")
+        val pix = str("video-params/pixelformat").orEmpty()
+        val depth = when { "10" in pix -> "10-bit"; "12" in pix -> "12-bit"; pix.isNotEmpty() -> "8-bit"; else -> null }
+        val videoLine = listOfNotNull(
+            currentVideoCodec ?: str("video-codec"),
+            if (vw != null && vh != null && vw > 0) "${vw}×${vh}" else null,
+            str("container-fps")?.toDoubleOrNull()?.let { "%.2f fps".format(it) },
+            depth,
+        ).joinToString(" · ")
+        if (videoLine.isNotBlank()) out += "Video" to videoLine
+        // HDR (transfer curve)
+        when (str("video-params/gamma")?.lowercase()) {
+            "pq" -> "HDR10 (PQ)"; "hlg" -> "HLG"; null -> null; else -> "SDR"
+        }?.let { out += "HDR" to it }
+        // Bitrate
+        str("video-bitrate")?.toLongOrNull()?.let { if (it > 0) out += "Bitrate" to "%.1f Mbps".format(it / 1_000_000.0) }
+        // Decoder
+        val hw = str("hwdec-current")
+        out += "Decoder" to when {
+            hw != null && hw != "no" -> "$hw (hardware)" + if (_directRender.value) " · direct" else ""
+            else -> "software" + if (!_directRender.value) " (gpu)" else ""
+        }
+        // Audio
+        val audioLine = listOfNotNull(
+            str("audio-codec-name")?.uppercase(),
+            when (m.getPropertyInt("audio-params/channel-count")) {
+                1 -> "mono"; 2 -> "stereo"; 6 -> "5.1"; 8 -> "7.1"; null -> null; else -> "ch"
+            },
+            m.getPropertyInt("audio-params/samplerate")?.let { "%.0f kHz".format(it / 1000.0) },
+            str("audio-bitrate")?.toLongOrNull()?.let { if (it > 0) "%.0f kbps".format(it / 1000.0) else null },
+        ).joinToString(" · ")
+        if (audioLine.isNotBlank()) out += "Audio" to audioLine
+        // Buffer
+        val bufLine = listOfNotNull(
+            str("demuxer-cache-duration")?.toDoubleOrNull()?.let { "%.1f s".format(it) },
+            str("frame-drop-count")?.let { "drops $it" },
+        ).joinToString(" · ")
+        if (bufLine.isNotBlank()) out += "Buffer" to bufLine
+        currentUrl?.let { out += "Source" to HttpClient.redactUrl(it) }
+        return out
+    }
 
     /** Synchronous mpv read — only call off the main thread (mpv event thread / mpv-cmd worker). */
     private fun queryTracks(type: String): List<TrackOption> {
@@ -1311,6 +1420,10 @@ class OwnTVPlayer(
             "sub-text" -> {
                 val line = value.trim().takeIf { it.isNotEmpty() }
                 _subText.value = if (_directRender.value) line else null
+                // Diagnostic: confirms caption/subtitle text is actually flowing (e.g. CEA-608 CC). DEBUG only.
+                if (tv.own.owntv.BuildConfig.DEBUG && line != null) {
+                    android.util.Log.i(TAG, "sub-text (direct=${_directRender.value}): $line")
+                }
             }
         }
     }
@@ -1364,6 +1477,11 @@ class OwnTVPlayer(
                     val seekMs = pendingSeekMs
                     pendingSeekMs = 0
                     mpvAsync { command(arrayOf("seek", (seekMs / 1000).toString(), "absolute")) }
+                }
+                if (pendingStartPaused) { // restored a backgrounded VOD — hold it paused at the resume point
+                    pendingStartPaused = false
+                    mpvAsync { setPropertyBoolean("pause", true) }
+                    _isPlaying.value = false
                 }
                 // Surround-output failsafe (#25): some sinks claim multichannel PCM support but mis-play it —
                 // the audio drains ~2× fast, so mpv's audio-master clock (and the video) runs ~2× and the

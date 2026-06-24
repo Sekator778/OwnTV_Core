@@ -23,11 +23,15 @@ class HttpClient(private val client: OkHttpClient) {
             .build()
 
         client.newCall(request).execute().use { response ->
-            if (!response.isSuccessful) throw IOException("HTTP ${response.code} for $url")
-            val body = response.body ?: throw IOException("Empty response body for $url")
+            if (!response.isSuccessful) throw IOException("HTTP ${response.code} for ${redact(url)}")
+            val body = response.body ?: throw IOException("Empty response body for ${redact(url)}")
             return block(body.byteStream())
         }
     }
+
+    /** Mask credentials in a URL before it appears in an error/log — Xtream embeds user/pass in the query. */
+    private fun redact(url: String): String =
+        url.replace(Regex("(?i)(username|password|user|pass|token)=[^&]*"), "$1=***")
 
     /** Convenience for small responses (e.g. Xtream category lists). */
     fun getText(url: String, userAgent: String? = null): String =
@@ -36,6 +40,12 @@ class HttpClient(private val client: OkHttpClient) {
     companion object {
         /** Player-style UA that IPTV panels broadly accept. Overridable per-source in Phase 12. */
         const val DEFAULT_USER_AGENT = "VLC/3.0.20 LibVLC/3.0.20"
+
+        /** Mask credentials for display (info overlay / logs): query params AND Xtream `/type/user/pass/`
+         *  path segments, which is where live URLs embed them. */
+        fun redactUrl(url: String): String = url
+            .replace(Regex("(?i)(username|password|user|pass|token)=[^&]*"), "$1=***")
+            .replace(Regex("(?i)(://[^/]+/(?:live|movie|series|vod)/)([^/]+)/([^/]+)/"), "$1•••/•••/")
     }
 }
 

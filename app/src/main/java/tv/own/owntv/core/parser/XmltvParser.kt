@@ -28,18 +28,43 @@ object XmltvParser {
         val stream = maybeGunzip(input)
         val parser = Xml.newPullParser()
         parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false)
+        // Relaxed mode: real-world XMLTV feeds are frequently malformed (mismatched/unclosed tags, stray or
+        // unescaped &/< characters). KXmlParser's relaxed mode tolerates these instead of throwing
+        // "END_TAG expected …" and aborting the whole sync over a single bad tag.
+        runCatching { parser.setFeature("http://xmlpull.org/v1/doc/features.html#relaxed", true) }
         parser.setInput(stream, null)
 
         var event = parser.eventType
         while (event != XmlPullParser.END_DOCUMENT) {
             if (event == XmlPullParser.START_TAG) {
+                // A single bad <channel>/<programme> is skipped, not fatal — keep parsing the rest.
                 when (parser.name) {
-                    "channel" -> readChannel(parser, onChannel)
-                    "programme" -> readProgramme(parser, onProgramme)
+                    "channel" -> runCatching { readChannel(parser, onChannel) }
+                    "programme" -> runCatching { readProgramme(parser, onProgramme) }
                 }
             }
-            event = parser.next()
+            event = try { parser.next() } catch (e: Exception) { break } // unrecoverable position → stop, keep what we have
         }
+    }
+
+    /**
+     * Read the text content of the element the parser is currently positioned on (a START_TAG), tolerating
+     * child elements (their markup is skipped) until the matching END_TAG. Replaces [XmlPullParser.nextText],
+     * which throws "END_TAG expected" the moment an element contains anything other than plain text.
+     */
+    private fun readText(parser: XmlPullParser): String {
+        val sb = StringBuilder()
+        var depth = 1 // we're inside the element whose START_TAG we're on
+        while (depth > 0) {
+            val ev = try { parser.next() } catch (e: Exception) { break }
+            when (ev) {
+                XmlPullParser.TEXT -> if (depth == 1) parser.text?.let { sb.append(it) }
+                XmlPullParser.START_TAG -> depth++
+                XmlPullParser.END_TAG -> depth-- // hitting 0 consumes this element's own END_TAG
+                XmlPullParser.END_DOCUMENT -> break
+            }
+        }
+        return sb.toString()
     }
 
     private fun readChannel(parser: XmlPullParser, onChannel: (String, String?) -> Unit) {
@@ -47,7 +72,7 @@ object XmltvParser {
         var displayName: String? = null
         while (!(parser.next() == XmlPullParser.END_TAG && parser.name == "channel")) {
             if (parser.eventType == XmlPullParser.START_TAG && parser.name == "display-name" && displayName == null) {
-                displayName = parser.nextText().trim().takeIf { it.isNotBlank() }
+                displayName = readText(parser).trim().takeIf { it.isNotBlank() }
             }
             if (parser.eventType == XmlPullParser.END_DOCUMENT) break
         }
@@ -63,8 +88,8 @@ object XmltvParser {
         while (!(parser.next() == XmlPullParser.END_TAG && parser.name == "programme")) {
             if (parser.eventType == XmlPullParser.START_TAG) {
                 when (parser.name) {
-                    "title" -> if (title.isBlank()) title = parser.nextText().trim()
-                    "desc" -> if (desc == null) desc = parser.nextText().trim().takeIf { it.isNotBlank() }
+                    "title" -> if (title.isBlank()) title = readText(parser).trim()
+                    "desc" -> if (desc == null) desc = readText(parser).trim().takeIf { it.isNotBlank() }
                 }
             }
             if (parser.eventType == XmlPullParser.END_DOCUMENT) break
