@@ -45,6 +45,7 @@ class SettingsRepository(private val context: Context) {
         val LIVE_PREVIEW = booleanPreferencesKey("live_preview")
         val LIVE_PREVIEW_AUDIO = booleanPreferencesKey("live_preview_audio")
         val HDR_ENABLED = booleanPreferencesKey("hdr_enabled")
+        val ANDROID_TV_HOME = booleanPreferencesKey("android_tv_home")
         // Video Player Settings
         val HW_DECODING = booleanPreferencesKey("hw_decoding")
         val SURROUND_SOUND = booleanPreferencesKey("surround_sound")
@@ -301,6 +302,13 @@ class SettingsRepository(private val context: Context) {
         context.dataStore.edit { it[Keys.HDR_ENABLED] = enabled }
     }
 
+    /** Mirror continue-watching rows into Android TV home surfaces. */
+    val androidTvHomeEnabled: Flow<Boolean> = context.dataStore.data.map { it[Keys.ANDROID_TV_HOME] ?: true }
+
+    suspend fun setAndroidTvHomeEnabled(enabled: Boolean) {
+        context.dataStore.edit { it[Keys.ANDROID_TV_HOME] = enabled }
+    }
+
     /** The source shown as "active" in the sidebar; -1 = none chosen (fall back to the first source). */
     val defaultSourceId: Flow<Long> = context.dataStore.data.map { it[Keys.DEFAULT_SOURCE] ?: -1L }
 
@@ -376,7 +384,7 @@ class SettingsRepository(private val context: Context) {
         Keys.SORT_SERIES, Keys.RESUME_MODE,
     )
     private val backupIntKeys = listOf(Keys.UI_ZOOM_PCT, Keys.AUDIO_DELAY_MS)
-    private val backupBoolKeys = listOf(Keys.LIVE_PREVIEW, Keys.LIVE_PREVIEW_AUDIO, Keys.HDR_ENABLED, Keys.HW_DECODING, Keys.UPDATE_CHECK_ON_START)
+    private val backupBoolKeys = listOf(Keys.LIVE_PREVIEW, Keys.LIVE_PREVIEW_AUDIO, Keys.HDR_ENABLED, Keys.ANDROID_TV_HOME, Keys.HW_DECODING, Keys.UPDATE_CHECK_ON_START)
     private val backupFloatKeys = listOf(Keys.SUB_SCALE)
 
     suspend fun exportSettings(): org.json.JSONObject {

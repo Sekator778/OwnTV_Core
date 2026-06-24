@@ -99,7 +99,7 @@ class SyncManager(
             val toMovie = { item: XtVod ->
                 MovieEntity(
                     sourceId = s.id, categoryId = vodMap[item.categoryId], name = item.name,
-                    posterUrl = item.icon, rating = item.rating,
+                    posterUrl = item.icon, rating = item.rating, plot = item.plot,
                     streamUrl = xtream.movieUrl(s, item.streamId, item.containerExt),
                     containerExt = item.containerExt, remoteId = item.streamId, addedAt = item.added,
                     sortOrder = vodOrder++,

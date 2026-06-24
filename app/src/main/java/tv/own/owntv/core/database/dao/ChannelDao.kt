@@ -15,6 +15,12 @@ data class ChannelSearchResult(
     val categoryName: String?,
 )
 
+/** A channel plus when it was last watched — for the Home screen's recent/continue rows. */
+data class ChannelWithWatchedAt(
+    @Embedded val channel: ChannelEntity,
+    val watchedAt: Long,
+)
+
 /**
  * Live TV channels. Big lists are exposed as [PagingSource]; totals come from indexed COUNT queries
  * (per the plan's count requirements). FTS search joins via `channels_fts.rowid = channels.id`.
@@ -167,6 +173,13 @@ interface ChannelDao {
     )
     fun pagingFavorites(profileId: Long): PagingSource<Int, ChannelEntity>
 
+    @Query(
+        "SELECT c.* FROM channels c " +
+            "INNER JOIN favorites f ON f.itemId = c.id AND f.mediaType = 'LIVE' " +
+            "WHERE f.profileId = :profileId ORDER BY LOWER(c.name) ASC, c.id ASC LIMIT :limit",
+    )
+    fun favoritesListAlpha(profileId: Long, limit: Int): Flow<List<ChannelEntity>>
+
     // Counts via the same join the list uses, so the badge can't show favorites whose channel id went
     // stale on a re-sync (the old "(2) but the folder is empty" bug) before the relink purges them.
     @Query(
@@ -189,4 +202,11 @@ interface ChannelDao {
             "WHERE h.profileId = :profileId ORDER BY h.watchedAt DESC LIMIT :limit",
     )
     fun recentlyWatched(profileId: Long, limit: Int): Flow<List<ChannelEntity>>
+
+    @Query(
+        "SELECT c.*, h.watchedAt FROM channels c " +
+            "INNER JOIN watch_history h ON h.itemId = c.id AND h.mediaType = 'LIVE' " +
+            "WHERE h.profileId = :profileId ORDER BY h.watchedAt DESC LIMIT :limit",
+    )
+    fun recentlyWatchedWithTimestamp(profileId: Long, limit: Int): Flow<List<ChannelWithWatchedAt>>
 }

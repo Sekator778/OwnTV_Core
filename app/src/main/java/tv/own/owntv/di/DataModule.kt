@@ -12,9 +12,13 @@ import tv.own.owntv.core.network.ConnectivityObserver
 import tv.own.owntv.core.network.HttpClient
 import tv.own.owntv.core.parser.M3uParser
 import tv.own.owntv.core.parser.XtreamClient
+import tv.own.owntv.core.launcher.LauncherIntegrationRepository
+import tv.own.owntv.core.launcher.LauncherLaunchResolver
+import tv.own.owntv.core.launcher.LauncherRecommendationPlanner
 import tv.own.owntv.core.repository.EpgRepository
 import tv.own.owntv.core.repository.SeriesRepository
 import tv.own.owntv.core.repository.SourceRepository
+import tv.own.owntv.core.tv.TvHomeRepository
 import tv.own.owntv.core.update.UpdateManager
 import tv.own.owntv.core.sync.SyncManager
 import java.util.concurrent.TimeUnit
@@ -57,18 +61,26 @@ val dataModule = module {
     single { M3uParser() }
     single { XtreamClient(get()) }
     single { SyncManager(androidContext(), get(), get(), get(), get(), get(), get(), get(), get()) }
-    // context, channelDao, movieDao, seriesDao, favoriteDao, historyDao, progressDao
-    single { UserDataResolver(androidContext(), get(), get(), get(), get(), get(), get()) }
+    // context, channelDao, movieDao, seriesDao, profileDao, favoriteDao, historyDao, progressDao
+    single { UserDataResolver(androidContext(), get(), get(), get(), get(), get(), get(), get()) }
     // sourceDao, syncManager, userDataResolver
     single { SourceRepository(get(), get(), get()) }
     // epgDao, httpClient, xtreamClient, channelDao, customize, settings, context, db
     single { EpgRepository(get(), get(), get(), get(), get(), get(), androidContext(), get()) }
     // seriesDao, sourceDao, xtreamClient, userDataResolver
     single { SeriesRepository(get(), get(), get(), get()) }
+    // sourceDao, movieDao, seriesDao, progressDao
+    single { LauncherRecommendationPlanner(get(), get(), get(), get()) }
+    // sourceDao, channelDao, movieDao, seriesDao, progressDao
+    single { LauncherLaunchResolver(get(), get(), get(), get(), get()) }
+    // context, sourceDao, channelDao, movieDao, seriesDao, progressDao, tvProviderProgramDao, customize, settings
+    single { TvHomeRepository(androidContext(), get(), get(), get(), get(), get(), get(), get(), get(), get()) }
+    // planner, resolver, tvHomeRepository
+    single { LauncherIntegrationRepository(get(), get(), get()) }
     // context, downloadDao, okHttpClient, settings
     single { DownloadManager(androidContext(), get(), get(), get()) }
-    // profileDao, sourceDao, settings, customizationStore, userDataResolver, epgSourceStore
-    single { BackupManager(get(), get(), get(), get(), get(), get()) }
+    // profileDao, sourceDao, settings, customizationStore, userDataResolver, epgSourceStore, tvHomeRepository
+    single { BackupManager(get(), get(), get(), get(), get(), get(), get()) }
     // context, okHttpClient — in-app updates from GitHub Releases
     single { UpdateManager(androidContext(), get()) }
 }
