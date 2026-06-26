@@ -7,7 +7,6 @@ import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.ensureActive
-import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.sync.Semaphore
 import kotlinx.coroutines.sync.withPermit
 import kotlinx.coroutines.withContext
@@ -232,7 +231,7 @@ class SyncManager(
         insert: suspend (List<T>) -> Unit,
         total: IntArray,
         bulkPartial: Int,
-        stream: suspend (cat: XtCategory, add: (T) -> Unit) -> Boolean,
+        stream: suspend (cat: XtCategory, add: suspend (T) -> Unit) -> Boolean,
     ) {
         var truncations = 0
         categories.forEachIndexed { index, cat ->
@@ -289,15 +288,18 @@ class SyncManager(
         var processed = 0
         var order = 0 // playlist position — lets "Playlist order" sorting replay the file's order
 
-        val onEntry: (tv.own.owntv.core.parser.M3uEntry) -> Unit = { e ->
+        val onEntry: suspend (tv.own.owntv.core.parser.M3uEntry) -> Unit = { e ->
             val categoryId = e.groupTitle?.let { group ->
-                groupToCategoryId.getOrPut(group) {
-                    runBlocking {
-                        categoryDao.upsertAll(
-                            // sortOrder = first-seen position of the group in the playlist
-                            listOf(CategoryEntity(sourceId = s.id, mediaType = MediaType.LIVE, name = group, remoteId = group, sortOrder = groupToCategoryId.size)),
-                        ).first()
-                    }
+                val existing = groupToCategoryId[group]
+                if (existing != null) {
+                    existing
+                } else {
+                    val inserted = categoryDao.upsertAll(
+                        // sortOrder = first-seen position of the group in the playlist
+                        listOf(CategoryEntity(sourceId = s.id, mediaType = MediaType.LIVE, name = group, remoteId = group, sortOrder = groupToCategoryId.size)),
+                    ).first()
+                    groupToCategoryId[group] = inserted
+                    inserted
                 }
             }
             buffer.add(
@@ -311,7 +313,7 @@ class SyncManager(
             )
             if (buffer.size >= CHUNK) {
                 ctx.ensureActive()
-                runBlocking { channelDao.upsertAll(buffer.toList()) }
+                channelDao.upsertAll(buffer.toList())
                 processed += buffer.size
                 buffer.clear()
                 onProgress(ImportStage("Channels", processed, null))
@@ -332,7 +334,7 @@ class SyncManager(
             http.get(s.url, s.userAgent) { input -> m3u.parse(input, onEntry) }
         }
         if (buffer.isNotEmpty()) {
-            runBlocking { channelDao.upsertAll(buffer.toList()) }
+            channelDao.upsertAll(buffer.toList())
             processed += buffer.size
             onProgress(ImportStage("Channels", processed, null))
         }
@@ -347,8 +349,8 @@ class SyncManager(
 
     /**
      * Drives a push-stream [producer] that feeds items into [add]; flushes to the DB via [insert] in
-     * chunks of [CHUNK], reporting progress. Inserts run blocking on the IO thread (we want
-     * sequential back-pressure), and cancellation is checked each chunk.
+     * chunks of [CHUNK], reporting progress. Inserts are awaited to provide sequential back-pressure,
+     * and cancellation is checked each chunk.
      */
     private suspend fun <T, R> chunked(
         ctx: CoroutineContext,
@@ -356,13 +358,13 @@ class SyncManager(
         onProgress: (ImportStage) -> Unit,
         insert: suspend (List<T>) -> Unit,
         total: IntArray, // shared [0] running count for the whole media type, so progress never resets
-        producer: suspend (add: (T) -> Unit) -> R,
+        producer: suspend (add: suspend (T) -> Unit) -> R,
     ): R {
         val buffer = ArrayList<T>(CHUNK)
-        fun flush() {
+        suspend fun flush() {
             if (buffer.isEmpty()) return
             ctx.ensureActive()
-            runBlocking { insert(buffer.toList()) }
+            insert(buffer.toList())
             total[0] += buffer.size
             buffer.clear()
             onProgress(ImportStage(label, total[0], null))

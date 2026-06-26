@@ -1,8 +1,9 @@
 package tv.own.owntv.core.repository
 
+import android.util.Log
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import tv.own.owntv.core.customize.CustomizationStore
 import tv.own.owntv.core.database.dao.ChannelDao
@@ -46,10 +47,14 @@ class EpgRepository(
      * who already have EPG) and after each EPG sync (for brand-new EPG).
      */
     suspend fun ensureEpgIndexes() = withContext(Dispatchers.IO) {
-        runCatching {
+        try {
             db.openHelper.writableDatabase.execSQL(
                 "CREATE INDEX IF NOT EXISTS index_epg_programmes_sourceId_epgChannelId ON epg_programmes(sourceId, epgChannelId)",
             )
+        } catch (c: CancellationException) {
+            throw c
+        } catch (e: Exception) {
+            Log.w("EpgRepository", "Unable to create EPG guide index", e)
         }
     }
 
@@ -62,11 +67,23 @@ class EpgRepository(
      */
     private suspend fun neededEpgIds(): Set<String>? {
         val ids = HashSet<String>()
-        runCatching { channelDao.allEpgChannelIds().forEach { ids.add(it) } } // already lower+trim from SQL
-        runCatching {
+        try {
+            channelDao.allEpgChannelIds().forEach { ids.add(it) } // already lower+trim from SQL
+        } catch (c: CancellationException) {
+            throw c
+        } catch (e: Exception) {
+            Log.w("EpgRepository", "Unable to read channel EPG ids — using unfiltered guide sync", e)
+        }
+        try {
             val pid = settings.activeProfileId.first()
-            if (pid >= 0) customize.observe(pid, MediaType.LIVE).first().epgMatches.values
-                .forEach { ids.add(it.trim().lowercase()) }
+            if (pid >= 0) {
+                customize.observe(pid, MediaType.LIVE).first().epgMatches.values
+                    .forEach { ids.add(it.trim().lowercase()) }
+            }
+        } catch (c: CancellationException) {
+            throw c
+        } catch (e: Exception) {
+            Log.w("EpgRepository", "Unable to read custom EPG matches — using unfiltered guide sync", e)
         }
         return ids.ifEmpty { null }
     }
@@ -113,42 +130,46 @@ class EpgRepository(
         // programmes without another network round-trip — without slowing the live sync.
         val file = cacheFile(storeId)
         try {
-        file.outputStream().use { out ->
-        http.get(url, userAgent) { input ->
-            XmltvParser.parse(
-                TeeInputStream(input, out),
-                onChannel = { id, name ->
-                    // Ids are stored normalized (trim+lowercase) so guide lookups can use the
-                    // (epgChannelId, startMs) index directly — XMLTV ids often differ from the
-                    // panel's epg_channel_id only in case.
-                    val key = id.trim().lowercase()
-                    channels.getOrPut(key) { EpgChannelEntity(sourceId = storeId, epgChannelId = key, displayName = name) }
-                },
-                onProgramme = { channelId, startMs, stopMs, title, desc ->
-                    val key = channelId.trim().lowercase()
-                    if (stopMs > from && startMs < to && (needed == null || key in needed)) {
-                        buffer.add(
-                            EpgProgrammeEntity(
-                                sourceId = storeId, epgChannelId = key,
-                                startMs = startMs, stopMs = stopMs, title = title, description = desc,
-                            ),
-                        )
-                        if (buffer.size >= CHUNK) {
-                            runBlocking { epgDao.upsertProgrammes(buffer.toList()) }
-                            stored += buffer.size
-                            buffer.clear()
-                            onProgress(stored)
+            file.outputStream().use { out ->
+                http.get(url, userAgent) { input ->
+                    XmltvParser.parse(
+                        TeeInputStream(input, out),
+                        onChannel = { id, name ->
+                            // Ids are stored normalized (trim+lowercase) so guide lookups can use the
+                            // (epgChannelId, startMs) index directly — XMLTV ids often differ from the
+                            // panel's epg_channel_id only in case.
+                            val key = id.trim().lowercase()
+                            channels.getOrPut(key) {
+                                EpgChannelEntity(sourceId = storeId, epgChannelId = key, displayName = name)
+                            }
+                        },
+                        onProgramme = { channelId, startMs, stopMs, title, desc ->
+                            val key = channelId.trim().lowercase()
+                            if (stopMs > from && startMs < to && (needed == null || key in needed)) {
+                                buffer.add(
+                                    EpgProgrammeEntity(
+                                        sourceId = storeId, epgChannelId = key,
+                                        startMs = startMs, stopMs = stopMs, title = title, description = desc,
+                                    ),
+                                )
+                                if (buffer.size >= CHUNK) {
+                                    epgDao.upsertProgrammes(buffer.toList())
+                                    stored += buffer.size
+                                    buffer.clear()
+                                    onProgress(stored)
+                                }
+                            }
                         }
-                    }
-                },
-            )
-        }
-        }
+                    )
+                }
+            }
+        } catch (c: CancellationException) {
+            throw c
         } catch (e: Exception) {
             // Network drop or an unrecoverable parse position. Keep whatever we already pulled — a partial
             // guide beats none — and only fail outright if we got nothing at all.
             if (stored == 0 && buffer.isEmpty() && channels.isEmpty()) throw e
-            android.util.Log.w("EpgRepository", "EPG sync incomplete — keeping partial ($stored programmes)", e)
+            Log.w("EpgRepository", "EPG sync incomplete — keeping partial ($stored programmes)", e)
         }
         if (buffer.isNotEmpty()) { epgDao.upsertProgrammes(buffer.toList()); stored += buffer.size }
         if (channels.isNotEmpty()) epgDao.upsertChannels(channels.values.toList())
@@ -178,7 +199,7 @@ class EpgRepository(
         for (file in files) {
             val storeId = file.name.removePrefix("epg_").removeSuffix(".xmltv").toLongOrNull() ?: continue
             val buffer = ArrayList<EpgProgrammeEntity>(512)
-            runCatching {
+            try {
                 file.inputStream().use { input ->
                     XmltvParser.parse(
                         input,
@@ -187,11 +208,18 @@ class EpgRepository(
                             val key = channelId.trim().lowercase()
                             if (key in keys && stopMs > from && startMs < to) {
                                 buffer.add(EpgProgrammeEntity(sourceId = storeId, epgChannelId = key, startMs = startMs, stopMs = stopMs, title = title, description = desc))
-                                if (buffer.size >= CHUNK) { runBlocking { epgDao.upsertProgrammes(buffer.toList()) }; buffer.clear() }
+                                if (buffer.size >= CHUNK) {
+                                    epgDao.upsertProgrammes(buffer.toList())
+                                    buffer.clear()
+                                }
                             }
                         },
                     )
                 }
+            } catch (c: CancellationException) {
+                throw c
+            } catch (e: Exception) {
+                Log.w("EpgRepository", "Cached EPG top-up failed for $storeId — keeping partial rows", e)
             }
             if (buffer.isNotEmpty()) epgDao.upsertProgrammes(buffer)
         }

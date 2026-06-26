@@ -1,5 +1,7 @@
 package tv.own.owntv.core.parser
 
+import kotlinx.coroutines.currentCoroutineContext
+import kotlinx.coroutines.ensureActive
 import java.io.BufferedReader
 import java.io.InputStream
 
@@ -32,7 +34,7 @@ data class M3uHeader(val urlTvg: String?)
  */
 class M3uParser {
 
-    fun parse(input: InputStream, onEntry: (M3uEntry) -> Unit): M3uHeader {
+    suspend fun parse(input: InputStream, onEntry: suspend (M3uEntry) -> Unit): M3uHeader {
         var header = M3uHeader(urlTvg = null)
         var pending: PendingExtInf? = null
 
@@ -108,12 +110,16 @@ class M3uParser {
     }
 }
 
-private inline fun BufferedReader.forEachLineSafe(action: (String) -> Unit) {
-    use { reader ->
-        var line = reader.readLine()
+private suspend inline fun BufferedReader.forEachLineSafe(action: suspend (String) -> Unit) {
+    val ctx = currentCoroutineContext()
+    try {
+        var line = readLine()
         while (line != null) {
+            ctx.ensureActive()
             action(line)
-            line = reader.readLine()
+            line = readLine()
         }
+    } finally {
+        close()
     }
 }

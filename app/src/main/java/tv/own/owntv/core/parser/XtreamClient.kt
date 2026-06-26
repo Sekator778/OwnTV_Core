@@ -59,7 +59,7 @@ class XtreamClient(private val http: HttpClient) {
     // Each returns true if the full list parsed cleanly, false if the server truncated it mid-stream
     // (issue #15) — the sync uses that to fall back to per-category fetching. [categoryId] filters the
     // request server-side (`&category_id=X`), keeping payloads small enough to dodge the truncation.
-    suspend fun streamLive(s: SourceEntity, categoryId: String? = null, onItem: (XtLiveStream) -> Unit): Boolean {
+    suspend fun streamLive(s: SourceEntity, categoryId: String? = null, onItem: suspend (XtLiveStream) -> Unit): Boolean {
         return http.get(api(s, "get_live_streams", categoryParam(categoryId)), s.userAgent) { input ->
             streamObjects(input) { m ->
                 val id = m["stream_id"] ?: return@streamObjects
@@ -76,7 +76,7 @@ class XtreamClient(private val http: HttpClient) {
         }
     }
 
-    suspend fun streamVod(s: SourceEntity, categoryId: String? = null, onItem: (XtVod) -> Unit): Boolean {
+    suspend fun streamVod(s: SourceEntity, categoryId: String? = null, onItem: suspend (XtVod) -> Unit): Boolean {
         return http.get(api(s, "get_vod_streams", categoryParam(categoryId)), s.userAgent) { input ->
             streamObjects(input) { m ->
                 val id = m["stream_id"] ?: return@streamObjects
@@ -93,7 +93,7 @@ class XtreamClient(private val http: HttpClient) {
         }
     }
 
-    suspend fun streamSeries(s: SourceEntity, categoryId: String? = null, onItem: (XtSeries) -> Unit): Boolean {
+    suspend fun streamSeries(s: SourceEntity, categoryId: String? = null, onItem: suspend (XtSeries) -> Unit): Boolean {
         return http.get(api(s, "get_series", categoryParam(categoryId)), s.userAgent) { input ->
             streamObjects(input) { m ->
                 val id = m["series_id"] ?: return@streamObjects
@@ -294,7 +294,7 @@ class XtreamClient(private val http: HttpClient) {
      * #15) — callers keep the partial data and can fall back to per-category fetching. A failure before
      * any item is read is fatal (genuine auth/network error) and rethrown.
      */
-    private suspend fun streamObjects(input: InputStream, onObject: (Map<String, String?>) -> Unit): Boolean {
+    private suspend fun streamObjects(input: InputStream, onObject: suspend (Map<String, String?>) -> Unit): Boolean {
         val ctx = currentCoroutineContext()
         var count = 0
         try {
@@ -308,17 +308,7 @@ class XtreamClient(private val http: HttpClient) {
                 reader.beginArray()
                 while (reader.hasNext()) {
                     ctx.ensureActive()
-                    val map = HashMap<String, String?>()
-                    reader.beginObject()
-                    while (reader.hasNext()) {
-                        val name = reader.nextName()
-                        when (reader.peek()) {
-                            JsonToken.NULL -> { reader.nextNull(); map[name] = null }
-                            JsonToken.BEGIN_ARRAY, JsonToken.BEGIN_OBJECT -> reader.skipValue()
-                            else -> map[name] = reader.nextString()
-                        }
-                    }
-                    reader.endObject()
+                    val map = readObject(reader)
                     onObject(map)
                     count++
                 }
@@ -334,5 +324,23 @@ class XtreamClient(private val http: HttpClient) {
             android.util.Log.w("XtreamClient", "Stream truncated after $count items — partial list kept", e)
             return false
         }
+    }
+
+    private fun readObject(reader: JsonReader): Map<String, String?> {
+        val map = HashMap<String, String?>()
+        reader.beginObject()
+        while (reader.hasNext()) {
+            val name = reader.nextName()
+            when (reader.peek()) {
+                JsonToken.NULL -> {
+                    reader.nextNull()
+                    map[name] = null
+                }
+                JsonToken.BEGIN_ARRAY, JsonToken.BEGIN_OBJECT -> reader.skipValue()
+                else -> map[name] = reader.nextString()
+            }
+        }
+        reader.endObject()
+        return map
     }
 }

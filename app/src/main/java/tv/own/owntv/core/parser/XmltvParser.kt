@@ -1,6 +1,9 @@
 package tv.own.owntv.core.parser
 
+import android.util.Log
 import android.util.Xml
+import kotlinx.coroutines.currentCoroutineContext
+import kotlinx.coroutines.ensureActive
 import org.xmlpull.v1.XmlPullParser
 import java.io.InputStream
 import java.io.PushbackInputStream
@@ -15,16 +18,18 @@ import java.util.zip.GZIPInputStream
  * tree — the caller stores them in chunks and filters to a time window.
  */
 object XmltvParser {
+    private const val TAG = "XmltvParser"
 
     /**
      * Parse an XMLTV stream. [onChannel] gets (id, displayName); [onProgramme] gets
      * (channelId, startMs, stopMs, title, description). Gzip is detected from the magic bytes.
      */
-    fun parse(
+    suspend fun parse(
         input: InputStream,
-        onChannel: (id: String, displayName: String?) -> Unit,
-        onProgramme: (channelId: String, startMs: Long, stopMs: Long, title: String, description: String?) -> Unit,
+        onChannel: suspend (id: String, displayName: String?) -> Unit,
+        onProgramme: suspend (channelId: String, startMs: Long, stopMs: Long, title: String, description: String?) -> Unit,
     ) {
+        val ctx = currentCoroutineContext()
         val stream = maybeGunzip(input)
         val parser = Xml.newPullParser()
         parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false)
@@ -36,13 +41,15 @@ object XmltvParser {
 
         var event = parser.eventType
         while (event != XmlPullParser.END_DOCUMENT) {
+            ctx.ensureActive()
             if (event == XmlPullParser.START_TAG) {
-                // A single bad <channel>/<programme> is skipped, not fatal — keep parsing the rest.
                 when (parser.name) {
-                    "channel" -> runCatching { readChannel(parser, onChannel) }
-                    "programme" -> runCatching { readProgramme(parser, onProgramme) }
+                    // A single bad <channel>/<programme> is skipped, not fatal — keep parsing the rest.
+                    "channel" -> readChannel(parser, onChannel)
+                    "programme" -> readProgramme(parser, onProgramme)
                 }
             }
+            ctx.ensureActive()
             event = try { parser.next() } catch (e: Exception) { break } // unrecoverable position → stop, keep what we have
         }
     }
@@ -52,11 +59,13 @@ object XmltvParser {
      * child elements (their markup is skipped) until the matching END_TAG. Replaces [XmlPullParser.nextText],
      * which throws "END_TAG expected" the moment an element contains anything other than plain text.
      */
-    private fun readText(parser: XmlPullParser): String {
+    private suspend fun readText(parser: XmlPullParser): String {
+        val ctx = currentCoroutineContext()
         val sb = StringBuilder()
         var depth = 1 // we're inside the element whose START_TAG we're on
         while (depth > 0) {
-            val ev = try { parser.next() } catch (e: Exception) { break }
+            ctx.ensureActive()
+            val ev = parser.next()
             when (ev) {
                 XmlPullParser.TEXT -> if (depth == 1) parser.text?.let { sb.append(it) }
                 XmlPullParser.START_TAG -> depth++
@@ -67,35 +76,84 @@ object XmltvParser {
         return sb.toString()
     }
 
-    private fun readChannel(parser: XmlPullParser, onChannel: (String, String?) -> Unit) {
+    private suspend fun readChannel(parser: XmlPullParser, onChannel: suspend (String, String?) -> Unit) {
+        val ctx = currentCoroutineContext()
+        val startDepth = parser.depth
         val id = parser.getAttributeValue(null, "id").orEmpty()
         var displayName: String? = null
-        while (!(parser.next() == XmlPullParser.END_TAG && parser.name == "channel")) {
-            if (parser.eventType == XmlPullParser.START_TAG && parser.name == "display-name" && displayName == null) {
-                displayName = readText(parser).trim().takeIf { it.isNotBlank() }
+        try {
+            while (true) {
+                ctx.ensureActive()
+                when (parser.next()) {
+                    XmlPullParser.START_TAG -> {
+                        if (parser.name == "display-name" && displayName == null) {
+                            displayName = readText(parser).trim().takeIf { it.isNotBlank() }
+                        }
+                    }
+                    XmlPullParser.END_TAG -> if (parser.name == "channel") break
+                    XmlPullParser.END_DOCUMENT -> break
+                }
             }
-            if (parser.eventType == XmlPullParser.END_DOCUMENT) break
+        } catch (c: kotlin.coroutines.cancellation.CancellationException) {
+            throw c
+        } catch (e: Exception) {
+            recoverElement(parser, startDepth)
+            Log.w(TAG, "Skipping malformed <channel> element", e)
+            return
         }
         if (id.isNotBlank()) onChannel(id, displayName)
     }
 
-    private fun readProgramme(parser: XmlPullParser, onProgramme: (String, Long, Long, String, String?) -> Unit) {
+    private suspend fun readProgramme(parser: XmlPullParser, onProgramme: suspend (String, Long, Long, String, String?) -> Unit) {
+        val ctx = currentCoroutineContext()
+        val startDepth = parser.depth
         val channelId = parser.getAttributeValue(null, "channel").orEmpty()
         val startMs = parseTime(parser.getAttributeValue(null, "start"))
         val stopMs = parseTime(parser.getAttributeValue(null, "stop"))
         var title = ""
         var desc: String? = null
-        while (!(parser.next() == XmlPullParser.END_TAG && parser.name == "programme")) {
-            if (parser.eventType == XmlPullParser.START_TAG) {
-                when (parser.name) {
-                    "title" -> if (title.isBlank()) title = readText(parser).trim()
-                    "desc" -> if (desc == null) desc = readText(parser).trim().takeIf { it.isNotBlank() }
+        try {
+            while (true) {
+                ctx.ensureActive()
+                when (parser.next()) {
+                    XmlPullParser.START_TAG -> when (parser.name) {
+                        "title" -> if (title.isBlank()) title = readText(parser).trim()
+                        "desc" -> if (desc == null) desc = readText(parser).trim().takeIf { it.isNotBlank() }
+                    }
+                    XmlPullParser.END_TAG -> if (parser.name == "programme") break
+                    XmlPullParser.END_DOCUMENT -> break
                 }
             }
-            if (parser.eventType == XmlPullParser.END_DOCUMENT) break
+        } catch (c: kotlin.coroutines.cancellation.CancellationException) {
+            throw c
+        } catch (e: Exception) {
+            recoverElement(parser, startDepth)
+            Log.w(TAG, "Skipping malformed <programme> element", e)
+            return
         }
         if (channelId.isNotBlank() && startMs > 0 && stopMs > startMs) {
             onProgramme(channelId, startMs, stopMs, title.ifBlank { "—" }, desc)
+        }
+    }
+
+    private suspend fun recoverElement(parser: XmlPullParser, startDepth: Int) {
+        val ctx = currentCoroutineContext()
+        var depth = parser.depth
+        while (depth >= startDepth) {
+            ctx.ensureActive()
+            val event = try {
+                parser.next()
+            } catch (_: Exception) {
+                return
+            }
+            when (event) {
+                XmlPullParser.START_TAG -> depth++
+                XmlPullParser.END_TAG -> {
+                    depth--
+                    if (depth < startDepth) return
+                }
+                XmlPullParser.END_DOCUMENT -> return
+            }
         }
     }
 
