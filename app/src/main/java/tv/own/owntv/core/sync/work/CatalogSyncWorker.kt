@@ -38,6 +38,13 @@ class CatalogSyncWorker(
         }
 
         Log.i(TAG, "Starting sync for source ${source.id} (${source.name}) reason=$reason contentTypes=$contentTypes")
+        setProgressAsync(workDataOf(
+            KEY_PROGRESS_LABEL to "Starting",
+            KEY_PROGRESS_PROCESSED to 0,
+            KEY_PROGRESS_TOTAL to -1,
+            KEY_PROGRESS_OVERALL to 0,
+            KEY_PROGRESS_BREAKDOWN to "",
+        ))
 
         val result = sourceRepository.sync(source, onProgress = { stage ->
             setProgressAsync(workDataOf(

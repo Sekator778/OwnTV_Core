@@ -51,7 +51,7 @@ class SourceRepository(
     suspend fun sync(source: SourceEntity, onProgress: (ImportStage) -> Unit, contentTypes: SyncContentTypes = SyncContentTypes()): SyncResult {
         // Snapshot favorites/history/resume with stable keys BEFORE the sync clears content (their ids
         // change on every refresh, so they'd otherwise orphan — count badge set, list empty).
-        val snapshot = runCatching { userData.exportAll() }.getOrNull()
+        val snapshot = runCatching { userData.exportForSource(source.id) }.getOrNull()
         val (result, _) = syncManager.sync(source, onProgress, contentTypes)
         if (result is SyncResult.Success) {
             // Content rows just regenerated — re-attach the snapshot (and any restored backup data) to

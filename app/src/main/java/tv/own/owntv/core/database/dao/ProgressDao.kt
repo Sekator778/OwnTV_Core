@@ -36,6 +36,18 @@ interface ProgressDao {
     @Query("SELECT * FROM playback_progress")
     suspend fun getAllOnce(): List<PlaybackProgressEntity>
 
+    /** User-data rows tied to one source, for fast re-sync snapshots. */
+    @Query(
+        "SELECT p.* FROM playback_progress p " +
+            "LEFT JOIN channels c ON p.mediaType = 'LIVE' AND p.itemId = c.id " +
+            "LEFT JOIN movies m ON p.mediaType = 'MOVIE' AND p.itemId = m.id " +
+            "LEFT JOIN series s ON p.mediaType = 'SERIES' AND p.itemId = s.id " +
+            "LEFT JOIN episodes e ON p.mediaType = 'EPISODE' AND p.itemId = e.id " +
+            "LEFT JOIN series episodeSeries ON e.seriesId = episodeSeries.id " +
+            "WHERE c.sourceId = :sourceId OR m.sourceId = :sourceId OR s.sourceId = :sourceId OR episodeSeries.sourceId = :sourceId",
+    )
+    suspend fun getAllForSourceOnce(sourceId: Long): List<PlaybackProgressEntity>
+
     /** The episode most recently watched in [seriesId] (by this profile), or null — so opening a show can
      *  jump straight to where you left off instead of episode 1. */
     @Query(

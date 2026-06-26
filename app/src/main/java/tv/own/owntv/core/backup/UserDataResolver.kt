@@ -61,6 +61,23 @@ class UserDataResolver(
         return out
     }
 
+    /** Exports only the rows attached to [sourceId], so a single-source re-sync starts promptly. */
+    suspend fun exportForSource(sourceId: Long, kinds: Set<String> = setOf("fav", "his", "prog")): JSONArray {
+        val out = JSONArray()
+        if ("fav" in kinds) favoriteDao.getAllForSourceOnce(sourceId).forEach { f ->
+            describe(f.mediaType, f.itemId)?.let { out.put(it.put("p", f.profileId).put("kind", "fav").put("at", f.addedAt)) }
+        }
+        if ("his" in kinds) historyDao.getAllForSourceOnce(sourceId).forEach { h ->
+            describe(h.mediaType, h.itemId)?.let { out.put(it.put("p", h.profileId).put("kind", "his").put("at", h.watchedAt)) }
+        }
+        if ("prog" in kinds) progressDao.getAllForSourceOnce(sourceId).forEach { pr ->
+            describe(pr.mediaType, pr.itemId)?.let {
+                out.put(it.put("p", pr.profileId).put("kind", "prog").put("at", pr.updatedAt).put("pos", pr.positionMs).put("dur", pr.durationMs))
+            }
+        }
+        return out
+    }
+
     /**
      * Heals favorites/history/resume across a source re-sync. Content rows are clear-then-insert, so
      * their ids change every refresh and the user-data rows (keyed on the old ids) orphan — the count

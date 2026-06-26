@@ -31,6 +31,18 @@ interface FavoriteDao {
     @Query("SELECT * FROM favorites")
     suspend fun getAllOnce(): List<FavoriteEntity>
 
+    /** User-data rows tied to one source, for fast re-sync snapshots. */
+    @Query(
+        "SELECT f.* FROM favorites f " +
+            "LEFT JOIN channels c ON f.mediaType = 'LIVE' AND f.itemId = c.id " +
+            "LEFT JOIN movies m ON f.mediaType = 'MOVIE' AND f.itemId = m.id " +
+            "LEFT JOIN series s ON f.mediaType = 'SERIES' AND f.itemId = s.id " +
+            "LEFT JOIN episodes e ON f.mediaType = 'EPISODE' AND f.itemId = e.id " +
+            "LEFT JOIN series episodeSeries ON e.seriesId = episodeSeries.id " +
+            "WHERE c.sourceId = :sourceId OR m.sourceId = :sourceId OR s.sourceId = :sourceId OR episodeSeries.sourceId = :sourceId",
+    )
+    suspend fun getAllForSourceOnce(sourceId: Long): List<FavoriteEntity>
+
     /**
      * Drops favorites whose content row no longer exists — content is clear-then-insert on every sync,
      * so a favorite's itemId goes stale and the join (pagingFavorites) returns nothing while the raw
