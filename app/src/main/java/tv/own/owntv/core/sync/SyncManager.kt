@@ -5,6 +5,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.currentCoroutineContext
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.sync.Semaphore
@@ -65,7 +66,7 @@ class SyncManager(
                 if (source.type != SourceType.XTREAM || contentTypes == SyncContentTypes()) {
                     sourceDao.markSynced(source.id, System.currentTimeMillis())
                 }
-                SyncResult.Success
+                SyncResult.Success(stats.warnings())
             } catch (c: CancellationException) {
                 throw c
             } catch (e: Exception) {
@@ -182,7 +183,7 @@ class SyncManager(
         }
     }
 
-    private suspend inline fun guardStep(phase: String, stats: SyncStatsCollector, block: () -> Unit) {
+    private suspend inline fun guardStep(phase: String, stats: SyncStatsCollector, block: suspend () -> Unit) {
         val start = System.currentTimeMillis()
         try {
             block()
@@ -202,7 +203,7 @@ class SyncManager(
      * full `get_series` / `get_vod_streams` response but serve the per-category (`&category_id=X`) requests
      * fine — without this, the bulk error skipped straight past the per-category fallback.
      */
-    private inline fun bulkOrFallback(label: String, bulk: () -> Boolean): Boolean =
+    private suspend inline fun bulkOrFallback(label: String, bulk: suspend () -> Boolean): Boolean =
         try {
             bulk()
         } catch (c: CancellationException) {
@@ -223,7 +224,7 @@ class SyncManager(
      * would loop forever re-fetching the same data. If a single category returns ~the bulk's whole count
      * and still truncates (or several categories can't be served), we stop and keep what we have.
      */
-    private fun <T> sliceByCategory(
+    private suspend fun <T> sliceByCategory(
         ctx: CoroutineContext,
         label: String,
         onProgress: (ImportStage) -> Unit,
@@ -231,14 +232,14 @@ class SyncManager(
         insert: suspend (List<T>) -> Unit,
         total: IntArray,
         bulkPartial: Int,
-        stream: (cat: XtCategory, add: (T) -> Unit) -> Boolean,
+        stream: suspend (cat: XtCategory, add: (T) -> Unit) -> Boolean,
     ) {
         var truncations = 0
         categories.forEachIndexed { index, cat ->
             ctx.ensureActive()
             // Gentle pacing between the many small requests so we don't trip a rate-limiter (HTTP 429)
             // while looping through every category.
-            if (index > 0) try { Thread.sleep(CATEGORY_REQUEST_DELAY_MS) } catch (_: InterruptedException) {}
+            if (index > 0) delay(CATEGORY_REQUEST_DELAY_MS)
             val before = total[0]
             // A single failing category (e.g. it 512s/429s) is skipped — keep importing the other categories
             // rather than losing the whole section.
@@ -349,13 +350,13 @@ class SyncManager(
      * chunks of [CHUNK], reporting progress. Inserts run blocking on the IO thread (we want
      * sequential back-pressure), and cancellation is checked each chunk.
      */
-    private fun <T, R> chunked(
+    private suspend fun <T, R> chunked(
         ctx: CoroutineContext,
         label: String,
         onProgress: (ImportStage) -> Unit,
         insert: suspend (List<T>) -> Unit,
         total: IntArray, // shared [0] running count for the whole media type, so progress never resets
-        producer: (add: (T) -> Unit) -> R,
+        producer: suspend (add: (T) -> Unit) -> R,
     ): R {
         val buffer = ArrayList<T>(CHUNK)
         fun flush() {
@@ -378,7 +379,9 @@ class SyncManager(
         val tag = "SyncManager"
         val duration = stats.finishedAt - stats.startedAt
         val result = when (stats.result) {
-            SyncResult.Success -> "Success"
+            is SyncResult.Success -> {
+                if (stats.result.warnings.isEmpty()) "Success" else "Success with ${stats.result.warnings.size} warning(s)"
+            }
             SyncResult.Cancelled -> "Cancelled"
             is SyncResult.Failed -> "Failed: ${stats.result.message}"
         }
@@ -401,6 +404,8 @@ class SyncManager(
         val processedCounts = java.util.concurrent.ConcurrentHashMap<String, Int>()
         val phaseErrors = java.util.concurrent.ConcurrentHashMap<String, String>()
         @Volatile var usedFallback = false
+
+        fun warnings() = phaseErrors.map { (phase, message) -> SyncWarning(phase, message) }
 
         fun build(result: SyncResult) = SyncRunStats(
             sourceId = sourceId,

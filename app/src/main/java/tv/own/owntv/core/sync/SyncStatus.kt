@@ -8,9 +8,21 @@ data class ImportStage(val label: String, val processed: Int, val total: Int?) {
 
 /** Terminal result of a sync run. */
 sealed interface SyncResult {
-    data object Success : SyncResult
+    data class Success(val warnings: List<SyncWarning> = emptyList()) : SyncResult {
+        fun warningSummary(): String? =
+            warnings.takeIf { it.isNotEmpty() }?.joinToString(
+                prefix = "Imported with warnings: ",
+                separator = " · ",
+            ) { "${it.label} failed" }
+    }
+
     data object Cancelled : SyncResult
     data class Failed(val message: String) : SyncResult
+}
+
+data class SyncWarning(val phase: String, val message: String) {
+    val label: String
+        get() = phase.replaceFirstChar { it.uppercase() }
 }
 
 data class SyncContentTypes(

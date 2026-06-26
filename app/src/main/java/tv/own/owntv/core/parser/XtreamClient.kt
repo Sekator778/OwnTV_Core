@@ -3,6 +3,8 @@ package tv.own.owntv.core.parser
 import android.util.Base64
 import android.util.JsonReader
 import android.util.JsonToken
+import kotlinx.coroutines.currentCoroutineContext
+import kotlinx.coroutines.ensureActive
 import tv.own.owntv.core.database.entity.SourceEntity
 import tv.own.owntv.core.network.HttpClient
 import java.io.InputStream
@@ -38,11 +40,11 @@ data class XtEpgEntry(val title: String, val description: String?, val startMs: 
 class XtreamClient(private val http: HttpClient) {
 
     // --- Categories ---
-    fun liveCategories(s: SourceEntity) = categories(s, "get_live_categories")
-    fun vodCategories(s: SourceEntity) = categories(s, "get_vod_categories")
-    fun seriesCategories(s: SourceEntity) = categories(s, "get_series_categories")
+    suspend fun liveCategories(s: SourceEntity) = categories(s, "get_live_categories")
+    suspend fun vodCategories(s: SourceEntity) = categories(s, "get_vod_categories")
+    suspend fun seriesCategories(s: SourceEntity) = categories(s, "get_series_categories")
 
-    private fun categories(s: SourceEntity, action: String): List<XtCategory> {
+    private suspend fun categories(s: SourceEntity, action: String): List<XtCategory> {
         val out = ArrayList<XtCategory>()
         http.get(api(s, action), s.userAgent) { input ->
             streamObjects(input) { m ->
@@ -57,7 +59,7 @@ class XtreamClient(private val http: HttpClient) {
     // Each returns true if the full list parsed cleanly, false if the server truncated it mid-stream
     // (issue #15) — the sync uses that to fall back to per-category fetching. [categoryId] filters the
     // request server-side (`&category_id=X`), keeping payloads small enough to dodge the truncation.
-    fun streamLive(s: SourceEntity, categoryId: String? = null, onItem: (XtLiveStream) -> Unit): Boolean {
+    suspend fun streamLive(s: SourceEntity, categoryId: String? = null, onItem: (XtLiveStream) -> Unit): Boolean {
         return http.get(api(s, "get_live_streams", categoryParam(categoryId)), s.userAgent) { input ->
             streamObjects(input) { m ->
                 val id = m["stream_id"] ?: return@streamObjects
@@ -74,7 +76,7 @@ class XtreamClient(private val http: HttpClient) {
         }
     }
 
-    fun streamVod(s: SourceEntity, categoryId: String? = null, onItem: (XtVod) -> Unit): Boolean {
+    suspend fun streamVod(s: SourceEntity, categoryId: String? = null, onItem: (XtVod) -> Unit): Boolean {
         return http.get(api(s, "get_vod_streams", categoryParam(categoryId)), s.userAgent) { input ->
             streamObjects(input) { m ->
                 val id = m["stream_id"] ?: return@streamObjects
@@ -91,7 +93,7 @@ class XtreamClient(private val http: HttpClient) {
         }
     }
 
-    fun streamSeries(s: SourceEntity, categoryId: String? = null, onItem: (XtSeries) -> Unit): Boolean {
+    suspend fun streamSeries(s: SourceEntity, categoryId: String? = null, onItem: (XtSeries) -> Unit): Boolean {
         return http.get(api(s, "get_series", categoryParam(categoryId)), s.userAgent) { input ->
             streamObjects(input) { m ->
                 val id = m["series_id"] ?: return@streamObjects
@@ -112,7 +114,7 @@ class XtreamClient(private val http: HttpClient) {
      * ARRAY of episodes (season taken from each episode's own `season` field). Both are handled, so series
      * that showed no episodes on stricter panels now populate.
      */
-    fun getSeriesInfo(s: SourceEntity, seriesId: String): XtSeriesInfo {
+    suspend fun getSeriesInfo(s: SourceEntity, seriesId: String): XtSeriesInfo {
         val episodes = ArrayList<XtEpisode>()
         http.get(api(s, "get_series_info", "&series_id=$seriesId"), s.userAgent) { input ->
             JsonReader(input.reader(Charsets.UTF_8)).use { reader ->
@@ -196,7 +198,7 @@ class XtreamClient(private val http: HttpClient) {
      * Titles/descriptions are base64-encoded; timestamps are unix seconds. Returns entries sorted by
      * start time (empty if the panel has no guide for this channel).
      */
-    fun getShortEpg(s: SourceEntity, streamId: String, limit: Int = 6): List<XtEpgEntry> {
+    suspend fun getShortEpg(s: SourceEntity, streamId: String, limit: Int = 6): List<XtEpgEntry> {
         val out = ArrayList<XtEpgEntry>()
         http.get(api(s, "get_short_epg", "&stream_id=$streamId&limit=$limit"), s.userAgent) { input ->
             JsonReader(input.reader(Charsets.UTF_8)).use { reader ->
@@ -292,7 +294,8 @@ class XtreamClient(private val http: HttpClient) {
      * #15) — callers keep the partial data and can fall back to per-category fetching. A failure before
      * any item is read is fatal (genuine auth/network error) and rethrown.
      */
-    private fun streamObjects(input: InputStream, onObject: (Map<String, String?>) -> Unit): Boolean {
+    private suspend fun streamObjects(input: InputStream, onObject: (Map<String, String?>) -> Unit): Boolean {
+        val ctx = currentCoroutineContext()
         var count = 0
         try {
             JsonReader(input.reader(Charsets.UTF_8)).use { reader ->
@@ -304,6 +307,7 @@ class XtreamClient(private val http: HttpClient) {
                 }
                 reader.beginArray()
                 while (reader.hasNext()) {
+                    ctx.ensureActive()
                     val map = HashMap<String, String?>()
                     reader.beginObject()
                     while (reader.hasNext()) {

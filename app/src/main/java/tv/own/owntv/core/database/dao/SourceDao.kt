@@ -48,6 +48,9 @@ interface SourceDao {
     @Query("SELECT sourceId FROM profile_source WHERE profileId = :profileId")
     suspend fun sourceIdsForProfile(profileId: Long): List<Long>
 
+    @Query("SELECT profileId FROM profile_source WHERE sourceId = :sourceId")
+    suspend fun profileIdsForSource(sourceId: Long): List<Long>
+
     @Query("SELECT id FROM sources")
     suspend fun allSourceIds(): List<Long>
 

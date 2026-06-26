@@ -53,7 +53,7 @@ class SourceRepository(
         // change on every refresh, so they'd otherwise orphan — count badge set, list empty).
         val snapshot = runCatching { userData.exportAll() }.getOrNull()
         val (result, _) = syncManager.sync(source, onProgress, contentTypes)
-        if (result == SyncResult.Success) {
+        if (result is SyncResult.Success) {
             // Content rows just regenerated — re-attach the snapshot (and any restored backup data) to
             // the new ids, and drop rows the provider removed.
             runCatching { userData.relinkAfterSync(snapshot ?: org.json.JSONArray()) }

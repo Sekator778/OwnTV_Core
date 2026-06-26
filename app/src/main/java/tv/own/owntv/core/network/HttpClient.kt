@@ -1,5 +1,11 @@
 package tv.own.owntv.core.network
 
+import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.currentCoroutineContext
+import kotlinx.coroutines.ensureActive
+import kotlinx.coroutines.withContext
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import java.io.IOException
@@ -12,7 +18,7 @@ import java.io.InputStream
  */
 class HttpClient(private val client: OkHttpClient) {
 
-    fun <T> get(url: String, userAgent: String? = null, block: (InputStream) -> T): T {
+    suspend fun <T> get(url: String, userAgent: String? = null, block: suspend (InputStream) -> T): T = withContext(Dispatchers.IO) {
         // Many IPTV panels reject requests that don't look like a media player (or that use the
         // default OkHttp UA), so we send a player-style default unless the source overrides it
         // (custom User-Agent is a Phase 12 power feature).
@@ -22,10 +28,23 @@ class HttpClient(private val client: OkHttpClient) {
             .header("User-Agent", ua)
             .build()
 
-        client.newCall(request).execute().use { response ->
-            if (!response.isSuccessful) throw IOException("HTTP ${response.code} for ${redact(url)}")
-            val body = response.body ?: throw IOException("Empty response body for ${redact(url)}")
-            return block(body.byteStream())
+        val call = client.newCall(request)
+        val coroutineContext = currentCoroutineContext()
+        val cancellationHook = coroutineContext[Job]?.invokeOnCompletion { cause ->
+            if (cause is CancellationException) call.cancel()
+        }
+        try {
+            coroutineContext.ensureActive()
+            call.execute().use { response ->
+                if (!response.isSuccessful) throw IOException("HTTP ${response.code} for ${redact(url)}")
+                val body = response.body ?: throw IOException("Empty response body for ${redact(url)}")
+                block(body.byteStream())
+            }
+        } catch (e: IOException) {
+            coroutineContext.ensureActive()
+            throw e
+        } finally {
+            cancellationHook?.dispose()
         }
     }
 
@@ -34,7 +53,7 @@ class HttpClient(private val client: OkHttpClient) {
         url.replace(Regex("(?i)(username|password|user|pass|token)=[^&]*"), "$1=***")
 
     /** Convenience for small responses (e.g. Xtream category lists). */
-    fun getText(url: String, userAgent: String? = null): String =
+    suspend fun getText(url: String, userAgent: String? = null): String =
         get(url, userAgent) { it.readBytes().decodeToString() }
 
     companion object {
@@ -48,4 +67,3 @@ class HttpClient(private val client: OkHttpClient) {
             .replace(Regex("(?i)(://[^/]+/(?:live|movie|series|vod)/)([^/]+)/([^/]+)/"), "$1•••/•••/")
     }
 }
-

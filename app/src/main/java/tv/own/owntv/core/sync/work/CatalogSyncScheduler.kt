@@ -7,6 +7,9 @@ import androidx.work.NetworkType
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.workDataOf
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.map
 import tv.own.owntv.core.sync.SyncContentTypes
 
 class CatalogSyncScheduler(private val context: Context) {
@@ -41,8 +44,32 @@ class CatalogSyncScheduler(private val context: Context) {
         WorkManager.getInstance(context).cancelUniqueWork(workName(sourceId))
     }
 
+    fun observeSync(sourceId: Long): Flow<CatalogSyncState> =
+        WorkManager.getInstance(context)
+            .getWorkInfosForUniqueWorkFlow(workName(sourceId))
+            .map { infos ->
+                val active = infos.firstOrNull { !it.state.isFinished }
+                if (active == null) {
+                    CatalogSyncState.Idle
+                } else {
+                    CatalogSyncState.Syncing(
+                        label = active.progress.getString(CatalogSyncWorker.KEY_PROGRESS_LABEL),
+                        processed = active.progress.getInt(CatalogSyncWorker.KEY_PROGRESS_PROCESSED, 0),
+                    )
+                }
+            }
+            .distinctUntilChanged()
+
     companion object {
         const val TAG_CATALOG_SYNC = "catalog-sync"
         fun workName(sourceId: Long) = "catalog-sync-source-$sourceId"
     }
+}
+
+sealed interface CatalogSyncState {
+    data object Idle : CatalogSyncState
+    data class Syncing(val label: String?, val processed: Int) : CatalogSyncState
+
+    val isActive: Boolean
+        get() = this is Syncing
 }

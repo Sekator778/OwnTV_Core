@@ -5,7 +5,10 @@ import android.util.Log
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
+import tv.own.owntv.core.database.dao.SourceDao
+import tv.own.owntv.core.launcher.LauncherIntegrationRepository
 import tv.own.owntv.core.repository.SourceRepository
+import tv.own.owntv.core.sync.ImportFinalizer
 import tv.own.owntv.core.sync.SyncContentTypes
 import tv.own.owntv.core.sync.SyncResult
 
@@ -13,6 +16,9 @@ class CatalogSyncWorker(
     context: Context,
     params: WorkerParameters,
     private val sourceRepository: SourceRepository,
+    private val sourceDao: SourceDao,
+    private val importFinalizer: ImportFinalizer,
+    private val launcherIntegrationRepository: LauncherIntegrationRepository,
 ) : CoroutineWorker(context, params) {
 
     override suspend fun doWork(): Result {
@@ -35,14 +41,19 @@ class CatalogSyncWorker(
 
         val result = sourceRepository.sync(source, onProgress = { stage ->
             setProgressAsync(workDataOf(
-                "label" to stage.label,
-                "processed" to stage.processed,
+                KEY_PROGRESS_LABEL to stage.label,
+                KEY_PROGRESS_PROCESSED to stage.processed,
             ))
         }, contentTypes = contentTypes)
 
         return when (result) {
-            SyncResult.Success -> {
-                Log.i(TAG, "Sync succeeded for source ${source.id} (${source.name})")
+            is SyncResult.Success -> {
+                val warningText = result.warnings.takeIf { it.isNotEmpty() }?.joinToString { it.label }
+                Log.i(TAG, "Sync succeeded for source ${source.id} (${source.name}) warnings=$warningText")
+                runCatching { importFinalizer.finalize(source) }
+                sourceDao.profileIdsForSource(source.id).forEach { profileId ->
+                    runCatching { launcherIntegrationRepository.refreshProfile(profileId) }
+                }
                 Result.success()
             }
             is SyncResult.Failed -> {
@@ -60,5 +71,7 @@ class CatalogSyncWorker(
         const val KEY_LIVE = "live"
         const val KEY_MOVIES = "movies"
         const val KEY_SERIES = "series"
+        const val KEY_PROGRESS_LABEL = "label"
+        const val KEY_PROGRESS_PROCESSED = "processed"
     }
 }

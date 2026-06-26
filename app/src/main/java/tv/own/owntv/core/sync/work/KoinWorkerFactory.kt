@@ -11,12 +11,18 @@ class KoinWorkerFactory : WorkerFactory() {
         appContext: Context,
         workerClassName: String,
         workerParameters: WorkerParameters,
-    ): ListenableWorker? = when (workerClassName) {
-        CatalogSyncWorker::class.java.name -> CatalogSyncWorker(
-            appContext,
-            workerParameters,
-            GlobalContext.get().get(),
-        )
-        else -> null
+    ): ListenableWorker? {
+        val koin = GlobalContext.get()
+        return when (workerClassName) {
+            CatalogSyncWorker::class.java.name -> CatalogSyncWorker(
+                appContext,
+                workerParameters,
+                koin.get(),
+                koin.get(),
+                koin.get(),
+                koin.get(),
+            )
+            else -> null
+        }
     }
 }
