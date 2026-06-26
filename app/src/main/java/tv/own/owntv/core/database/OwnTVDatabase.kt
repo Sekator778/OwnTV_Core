@@ -65,7 +65,7 @@ import tv.own.owntv.core.database.entity.TvProviderProgramEntity
         SeriesFtsEntity::class,
         EpisodeFtsEntity::class,
     ],
-    version = 4, // v4: unify split v3 schemas (catch-up + Android TV home bookkeeping)
+    version = 5, // v5: promote the EPG guide read-index from same-version v4 drift to a real migration
     exportSchema = true,
 )
 @TypeConverters(Converters::class)
@@ -176,6 +176,17 @@ abstract class OwnTVDatabase : RoomDatabase() {
 
                 // EPG-perf Guide read-index (v4.0.0). Declared on EpgProgrammeEntity, so v4 expects it; older
                 // DBs (and the runtime ensureEpgIndexes) create it too — make sure the migrated DB has it.
+                db.execSQL("CREATE INDEX IF NOT EXISTS `index_epg_programmes_sourceId_epgChannelId` ON `epg_programmes` (`sourceId`, `epgChannelId`)")
+            }
+        }
+
+        /**
+         * v4 → v5: earlier v4 builds shipped without the EPG guide read-index, then the index was
+         * added while the database version stayed at 4. Devices on that older v4 fail Room's identity
+         * check on startup, so v5 makes the index addition an explicit migration.
+         */
+        val MIGRATION_4_5 = object : androidx.room.migration.Migration(4, 5) {
+            override fun migrate(db: androidx.sqlite.db.SupportSQLiteDatabase) {
                 db.execSQL("CREATE INDEX IF NOT EXISTS `index_epg_programmes_sourceId_epgChannelId` ON `epg_programmes` (`sourceId`, `epgChannelId`)")
             }
         }

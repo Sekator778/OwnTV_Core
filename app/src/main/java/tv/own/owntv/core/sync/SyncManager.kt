@@ -62,7 +62,9 @@ class SyncManager(
                     SourceType.M3U -> syncM3u(source, onProgress, stats)
                     SourceType.LOCAL_BACKUP -> Unit
                 }
-                sourceDao.markSynced(source.id, System.currentTimeMillis())
+                if (source.type != SourceType.XTREAM || contentTypes == SyncContentTypes()) {
+                    sourceDao.markSynced(source.id, System.currentTimeMillis())
+                }
                 SyncResult.Success
             } catch (c: CancellationException) {
                 throw c

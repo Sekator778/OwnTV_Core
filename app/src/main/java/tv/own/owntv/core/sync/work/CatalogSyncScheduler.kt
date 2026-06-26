@@ -7,14 +7,22 @@ import androidx.work.NetworkType
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.workDataOf
+import tv.own.owntv.core.sync.SyncContentTypes
 
 class CatalogSyncScheduler(private val context: Context) {
 
-    fun enqueueSync(sourceId: Long, reason: String = "manual") {
+    fun enqueueSync(
+        sourceId: Long,
+        reason: String = "manual",
+        contentTypes: SyncContentTypes = SyncContentTypes(),
+    ) {
         val request = OneTimeWorkRequestBuilder<CatalogSyncWorker>()
             .setInputData(workDataOf(
                 CatalogSyncWorker.KEY_SOURCE_ID to sourceId,
                 CatalogSyncWorker.KEY_REASON to reason,
+                CatalogSyncWorker.KEY_LIVE to contentTypes.live,
+                CatalogSyncWorker.KEY_MOVIES to contentTypes.movies,
+                CatalogSyncWorker.KEY_SERIES to contentTypes.series,
             ))
             .setConstraints(
                 Constraints.Builder()

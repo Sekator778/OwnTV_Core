@@ -17,7 +17,12 @@ val databaseModule = module {
     single {
         Room.databaseBuilder(androidContext(), OwnTVDatabase::class.java, OwnTVDatabase.NAME)
             .setJournalMode(RoomDatabase.JournalMode.WRITE_AHEAD_LOGGING)
-            .addMigrations(OwnTVDatabase.MIGRATION_1_2, OwnTVDatabase.MIGRATION_2_3, OwnTVDatabase.MIGRATION_3_4)
+            .addMigrations(
+                OwnTVDatabase.MIGRATION_1_2,
+                OwnTVDatabase.MIGRATION_2_3,
+                OwnTVDatabase.MIGRATION_3_4,
+                OwnTVDatabase.MIGRATION_4_5,
+            )
             .fallbackToDestructiveMigration(dropAllTables = true) // safety net for unforeseen jumps
             .build()
     }

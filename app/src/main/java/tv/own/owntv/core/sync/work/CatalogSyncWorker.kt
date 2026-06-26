@@ -6,6 +6,7 @@ import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import tv.own.owntv.core.repository.SourceRepository
+import tv.own.owntv.core.sync.SyncContentTypes
 import tv.own.owntv.core.sync.SyncResult
 
 class CatalogSyncWorker(
@@ -19,19 +20,25 @@ class CatalogSyncWorker(
         val reason = inputData.getString(KEY_REASON) ?: "unknown"
         if (sourceId < 0) return Result.failure()
 
+        val contentTypes = SyncContentTypes(
+            live = inputData.getBoolean(KEY_LIVE, true),
+            movies = inputData.getBoolean(KEY_MOVIES, true),
+            series = inputData.getBoolean(KEY_SERIES, true),
+        )
+
         val source = sourceRepository.getById(sourceId) ?: run {
             Log.w(TAG, "Source $sourceId not found — skipping ($reason)")
             return Result.failure()
         }
 
-        Log.i(TAG, "Starting sync for source ${source.id} (${source.name}) reason=$reason")
+        Log.i(TAG, "Starting sync for source ${source.id} (${source.name}) reason=$reason contentTypes=$contentTypes")
 
         val result = sourceRepository.sync(source, onProgress = { stage ->
             setProgressAsync(workDataOf(
                 "label" to stage.label,
                 "processed" to stage.processed,
             ))
-        })
+        }, contentTypes = contentTypes)
 
         return when (result) {
             SyncResult.Success -> {
@@ -50,5 +57,8 @@ class CatalogSyncWorker(
         const val TAG = "CatalogSyncWorker"
         const val KEY_SOURCE_ID = "sourceId"
         const val KEY_REASON = "reason"
+        const val KEY_LIVE = "live"
+        const val KEY_MOVIES = "movies"
+        const val KEY_SERIES = "series"
     }
 }

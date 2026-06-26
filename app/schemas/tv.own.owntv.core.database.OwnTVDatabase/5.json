@@ -1,8 +1,8 @@
 {
   "formatVersion": 1,
   "database": {
-    "version": 4,
-    "identityHash": "08bb6589701af6b3248026e46c4d34e1",
+    "version": 5,
+    "identityHash": "f54a1be003050daa637b599145064ec1",
     "entities": [
       {
         "tableName": "profiles",
@@ -1566,6 +1566,16 @@
             ],
             "orders": [],
             "createSql": "CREATE INDEX IF NOT EXISTS `index_epg_programmes_stopMs` ON `${TABLE_NAME}` (`stopMs`)"
+          },
+          {
+            "name": "index_epg_programmes_sourceId_epgChannelId",
+            "unique": false,
+            "columnNames": [
+              "sourceId",
+              "epgChannelId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_epg_programmes_sourceId_epgChannelId` ON `${TABLE_NAME}` (`sourceId`, `epgChannelId`)"
           }
         ]
       },
@@ -1704,7 +1714,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '08bb6589701af6b3248026e46c4d34e1')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'f54a1be003050daa637b599145064ec1')"
     ]
   }
 }
