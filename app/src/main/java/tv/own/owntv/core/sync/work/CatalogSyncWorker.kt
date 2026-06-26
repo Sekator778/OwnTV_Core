@@ -78,6 +78,9 @@ class CatalogSyncWorker(
         private var emittedLiveCount = false
         private var emittedMoviesCount = false
         private var emittedSeriesCount = false
+        private var lastLiveProcessed = 0
+        private var lastMoviesProcessed = 0
+        private var lastSeriesProcessed = 0
         private var pending: ImportStage? = null
 
         fun publishStarting() {
@@ -110,13 +113,17 @@ class CatalogSyncWorker(
         }
 
         fun flush() {
-            pending?.let { emit(it, SystemClock.elapsedRealtime()) }
+            pending?.takeUnless { it.matchesLastEmit() }?.let { emit(it, SystemClock.elapsedRealtime()) }
+            pending = null
         }
 
         private fun emit(stage: ImportStage, now: Long) {
             setProgress(stage.toWorkData())
             lastEmitAtMs = now
             lastOverall = stage.overallPercent
+            lastLiveProcessed = stage.liveProcessed
+            lastMoviesProcessed = stage.moviesProcessed
+            lastSeriesProcessed = stage.seriesProcessed
             if (stage.liveProcessed > 0) emittedLiveCount = true
             if (stage.moviesProcessed > 0) emittedMoviesCount = true
             if (stage.seriesProcessed > 0) emittedSeriesCount = true
@@ -128,7 +135,18 @@ class CatalogSyncWorker(
                 (stage.moviesProcessed > 0 && !emittedMoviesCount) ||
                 (stage.seriesProcessed > 0 && !emittedSeriesCount) ||
                 stage.overallPercent != lastOverall ||
-                now - lastEmitAtMs >= PROGRESS_MIN_INTERVAL_MS
+                (now - lastEmitAtMs >= PROGRESS_MIN_INTERVAL_MS && stage.hasMeaningfulCountDelta())
+
+        private fun ImportStage.hasMeaningfulCountDelta(): Boolean =
+            liveProcessed - lastLiveProcessed >= PROGRESS_ITEM_STEP ||
+                moviesProcessed - lastMoviesProcessed >= PROGRESS_ITEM_STEP ||
+                seriesProcessed - lastSeriesProcessed >= PROGRESS_ITEM_STEP
+
+        private fun ImportStage.matchesLastEmit(): Boolean =
+            overallPercent == lastOverall &&
+                liveProcessed == lastLiveProcessed &&
+                moviesProcessed == lastMoviesProcessed &&
+                seriesProcessed == lastSeriesProcessed
 
         private fun setProgress(data: Data) {
             setProgressAsync(data)
@@ -138,6 +156,7 @@ class CatalogSyncWorker(
     companion object {
         const val TAG = "CatalogSyncWorker"
         private const val PROGRESS_MIN_INTERVAL_MS = 750L
+        private const val PROGRESS_ITEM_STEP = 1_000
         const val KEY_SOURCE_ID = "sourceId"
         const val KEY_REASON = "reason"
         const val KEY_LIVE = "live"
