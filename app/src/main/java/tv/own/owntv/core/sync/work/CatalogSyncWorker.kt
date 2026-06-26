@@ -1,14 +1,17 @@
 package tv.own.owntv.core.sync.work
 
 import android.content.Context
+import android.os.SystemClock
 import android.util.Log
 import androidx.work.CoroutineWorker
+import androidx.work.Data
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import tv.own.owntv.core.database.dao.SourceDao
 import tv.own.owntv.core.launcher.LauncherIntegrationRepository
 import tv.own.owntv.core.repository.SourceRepository
 import tv.own.owntv.core.sync.ImportFinalizer
+import tv.own.owntv.core.sync.ImportStage
 import tv.own.owntv.core.sync.SyncContentTypes
 import tv.own.owntv.core.sync.SyncResult
 
@@ -38,23 +41,13 @@ class CatalogSyncWorker(
         }
 
         Log.i(TAG, "Starting sync for source ${source.id} (${source.name}) reason=$reason contentTypes=$contentTypes")
-        setProgressAsync(workDataOf(
-            KEY_PROGRESS_LABEL to "Starting",
-            KEY_PROGRESS_PROCESSED to 0,
-            KEY_PROGRESS_TOTAL to -1,
-            KEY_PROGRESS_OVERALL to 0,
-            KEY_PROGRESS_BREAKDOWN to "",
-        ))
+        val progressPublisher = ProgressPublisher()
+        progressPublisher.publishStarting()
 
         val result = sourceRepository.sync(source, onProgress = { stage ->
-            setProgressAsync(workDataOf(
-                KEY_PROGRESS_LABEL to stage.label,
-                KEY_PROGRESS_PROCESSED to stage.processed,
-                KEY_PROGRESS_TOTAL to (stage.total ?: -1),
-                KEY_PROGRESS_OVERALL to stage.overallPercent,
-                KEY_PROGRESS_BREAKDOWN to stage.breakdown,
-            ))
+            progressPublisher.publish(stage)
         }, contentTypes = contentTypes)
+        progressPublisher.flush()
 
         return when (result) {
             is SyncResult.Success -> {
@@ -74,8 +67,58 @@ class CatalogSyncWorker(
         }
     }
 
+    private inner class ProgressPublisher {
+        private var lastEmitAtMs = 0L
+        private var lastLabel: String? = null
+        private var lastOverall = -1
+        private var pending: ImportStage? = null
+
+        fun publishStarting() {
+            setProgress(
+                workDataOf(
+                    KEY_PROGRESS_LABEL to "Starting",
+                    KEY_PROGRESS_PROCESSED to 0,
+                    KEY_PROGRESS_TOTAL to -1,
+                    KEY_PROGRESS_OVERALL to 0,
+                    KEY_PROGRESS_BREAKDOWN to "",
+                ),
+            )
+            lastLabel = "Starting"
+            lastOverall = 0
+        }
+
+        fun publish(stage: ImportStage) {
+            pending = stage
+            val now = SystemClock.elapsedRealtime()
+            if (
+                stage.label != lastLabel ||
+                stage.overallPercent != lastOverall ||
+                now - lastEmitAtMs >= PROGRESS_MIN_INTERVAL_MS
+            ) {
+                emit(stage, now)
+            }
+        }
+
+        fun flush() {
+            pending?.let { emit(it, SystemClock.elapsedRealtime()) }
+        }
+
+        private fun emit(stage: ImportStage, now: Long) {
+            setProgress(stage.toWorkData())
+            lastEmitAtMs = now
+            lastLabel = stage.label
+            lastOverall = stage.overallPercent
+            pending = null
+        }
+
+        private fun setProgress(data: Data) {
+            setProgressAsync(data)
+        }
+    }
+
     companion object {
         const val TAG = "CatalogSyncWorker"
+        private const val PROGRESS_MIN_INTERVAL_MS = 500L
         const val KEY_SOURCE_ID = "sourceId"
         const val KEY_REASON = "reason"
         const val KEY_LIVE = "live"
@@ -88,3 +131,12 @@ class CatalogSyncWorker(
         const val KEY_PROGRESS_BREAKDOWN = "breakdown"
     }
 }
+
+private fun ImportStage.toWorkData(): Data =
+    workDataOf(
+        CatalogSyncWorker.KEY_PROGRESS_LABEL to label,
+        CatalogSyncWorker.KEY_PROGRESS_PROCESSED to processed,
+        CatalogSyncWorker.KEY_PROGRESS_TOTAL to (total ?: -1),
+        CatalogSyncWorker.KEY_PROGRESS_OVERALL to overallPercent,
+        CatalogSyncWorker.KEY_PROGRESS_BREAKDOWN to breakdown,
+    )
