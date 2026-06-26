@@ -36,9 +36,16 @@ interface ProgressDao {
     @Query("SELECT * FROM playback_progress")
     suspend fun getAllOnce(): List<PlaybackProgressEntity>
 
-    /** User-data rows tied to one source, for fast re-sync snapshots. */
+    /** User-data rows tied to one source, already joined to stable content keys for fast re-sync snapshots. */
     @Query(
-        "SELECT p.* FROM playback_progress p " +
+        "SELECT p.profileId AS profileId, p.mediaType AS mediaType, " +
+            "COALESCE(c.sourceId, m.sourceId, s.sourceId, episodeSeries.sourceId) AS sourceId, " +
+            "COALESCE(c.remoteId, m.remoteId, s.remoteId, e.remoteId) AS remoteId, " +
+            "COALESCE(c.name, m.name, s.name) AS name, " +
+            "episodeSeries.remoteId AS seriesRemoteId, episodeSeries.name AS seriesName, " +
+            "e.seasonNumber AS seasonNumber, e.episodeNumber AS episodeNumber, " +
+            "p.updatedAt AS at, p.positionMs AS positionMs, p.durationMs AS durationMs " +
+            "FROM playback_progress p " +
             "LEFT JOIN channels c ON p.mediaType = 'LIVE' AND p.itemId = c.id " +
             "LEFT JOIN movies m ON p.mediaType = 'MOVIE' AND p.itemId = m.id " +
             "LEFT JOIN series s ON p.mediaType = 'SERIES' AND p.itemId = s.id " +
@@ -46,7 +53,7 @@ interface ProgressDao {
             "LEFT JOIN series episodeSeries ON e.seriesId = episodeSeries.id " +
             "WHERE c.sourceId = :sourceId OR m.sourceId = :sourceId OR s.sourceId = :sourceId OR episodeSeries.sourceId = :sourceId",
     )
-    suspend fun getAllForSourceOnce(sourceId: Long): List<PlaybackProgressEntity>
+    suspend fun exportRowsForSource(sourceId: Long): List<UserDataExportRow>
 
     /** The episode most recently watched in [seriesId] (by this profile), or null — so opening a show can
      *  jump straight to where you left off instead of episode 1. */

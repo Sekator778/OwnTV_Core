@@ -32,9 +32,16 @@ interface HistoryDao {
     @Query("SELECT * FROM watch_history")
     suspend fun getAllOnce(): List<WatchHistoryEntity>
 
-    /** User-data rows tied to one source, for fast re-sync snapshots. */
+    /** User-data rows tied to one source, already joined to stable content keys for fast re-sync snapshots. */
     @Query(
-        "SELECT h.* FROM watch_history h " +
+        "SELECT h.profileId AS profileId, h.mediaType AS mediaType, " +
+            "COALESCE(c.sourceId, m.sourceId, s.sourceId, episodeSeries.sourceId) AS sourceId, " +
+            "COALESCE(c.remoteId, m.remoteId, s.remoteId, e.remoteId) AS remoteId, " +
+            "COALESCE(c.name, m.name, s.name) AS name, " +
+            "episodeSeries.remoteId AS seriesRemoteId, episodeSeries.name AS seriesName, " +
+            "e.seasonNumber AS seasonNumber, e.episodeNumber AS episodeNumber, " +
+            "h.watchedAt AS at, 0 AS positionMs, 0 AS durationMs " +
+            "FROM watch_history h " +
             "LEFT JOIN channels c ON h.mediaType = 'LIVE' AND h.itemId = c.id " +
             "LEFT JOIN movies m ON h.mediaType = 'MOVIE' AND h.itemId = m.id " +
             "LEFT JOIN series s ON h.mediaType = 'SERIES' AND h.itemId = s.id " +
@@ -42,7 +49,7 @@ interface HistoryDao {
             "LEFT JOIN series episodeSeries ON e.seriesId = episodeSeries.id " +
             "WHERE c.sourceId = :sourceId OR m.sourceId = :sourceId OR s.sourceId = :sourceId OR episodeSeries.sourceId = :sourceId",
     )
-    suspend fun getAllForSourceOnce(sourceId: Long): List<WatchHistoryEntity>
+    suspend fun exportRowsForSource(sourceId: Long): List<UserDataExportRow>
 
     /** Drops history rows orphaned by a re-sync (see FavoriteDao.purgeOrphans); episodes excluded. */
     @Query(

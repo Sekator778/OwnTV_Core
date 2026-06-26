@@ -16,6 +16,7 @@ import tv.own.owntv.core.database.dao.MovieDao
 import tv.own.owntv.core.database.dao.ProgressDao
 import tv.own.owntv.core.database.dao.ProfileDao
 import tv.own.owntv.core.database.dao.SeriesDao
+import tv.own.owntv.core.database.dao.UserDataExportRow
 import tv.own.owntv.core.database.dao.resolveExistingProfileId
 import tv.own.owntv.core.database.entity.FavoriteEntity
 import tv.own.owntv.core.database.entity.PlaybackProgressEntity
@@ -64,18 +65,28 @@ class UserDataResolver(
     /** Exports only the rows attached to [sourceId], so a single-source re-sync starts promptly. */
     suspend fun exportForSource(sourceId: Long, kinds: Set<String> = setOf("fav", "his", "prog")): JSONArray {
         val out = JSONArray()
-        if ("fav" in kinds) favoriteDao.getAllForSourceOnce(sourceId).forEach { f ->
-            describe(f.mediaType, f.itemId)?.let { out.put(it.put("p", f.profileId).put("kind", "fav").put("at", f.addedAt)) }
-        }
-        if ("his" in kinds) historyDao.getAllForSourceOnce(sourceId).forEach { h ->
-            describe(h.mediaType, h.itemId)?.let { out.put(it.put("p", h.profileId).put("kind", "his").put("at", h.watchedAt)) }
-        }
-        if ("prog" in kinds) progressDao.getAllForSourceOnce(sourceId).forEach { pr ->
-            describe(pr.mediaType, pr.itemId)?.let {
-                out.put(it.put("p", pr.profileId).put("kind", "prog").put("at", pr.updatedAt).put("pos", pr.positionMs).put("dur", pr.durationMs))
+        if ("fav" in kinds) favoriteDao.exportRowsForSource(sourceId).forEach { row -> row.toJson("fav")?.let { out.put(it) } }
+        if ("his" in kinds) historyDao.exportRowsForSource(sourceId).forEach { row -> row.toJson("his")?.let { out.put(it) } }
+        if ("prog" in kinds) progressDao.exportRowsForSource(sourceId).forEach { row -> row.toJson("prog")?.let { out.put(it) } }
+        return out
+    }
+
+    private fun UserDataExportRow.toJson(kind: String): JSONObject? {
+        val json = when (mediaType) {
+            MediaType.LIVE, MediaType.MOVIE, MediaType.SERIES -> {
+                val itemName = name ?: return null
+                JSONObject().put("t", mediaType.name).put("src", sourceId).putOpt("rid", remoteId).put("name", itemName)
+            }
+            MediaType.EPISODE -> {
+                val showName = seriesName ?: return null
+                JSONObject().put("t", mediaType.name).put("src", sourceId)
+                    .putOpt("srid", seriesRemoteId).put("sname", showName)
+                    .putOpt("rid", remoteId).put("season", seasonNumber ?: 0).put("ep", episodeNumber ?: 0)
             }
         }
-        return out
+        json.put("p", profileId).put("kind", kind).put("at", at)
+        if (kind == "prog") json.put("pos", positionMs).put("dur", durationMs)
+        return json
     }
 
     /**
