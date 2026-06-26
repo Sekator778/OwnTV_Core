@@ -1,5 +1,6 @@
 package tv.own.owntv.core.sync
 
+import android.net.Uri
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
@@ -10,6 +11,8 @@ import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.sync.Semaphore
 import kotlinx.coroutines.sync.withPermit
 import kotlinx.coroutines.withContext
+import java.io.File
+import java.io.InputStream
 import tv.own.owntv.core.database.dao.CategoryDao
 import tv.own.owntv.core.database.dao.ChannelDao
 import tv.own.owntv.core.database.dao.MovieDao
@@ -29,6 +32,7 @@ import tv.own.owntv.core.parser.XtLiveStream
 import tv.own.owntv.core.parser.XtSeries
 import tv.own.owntv.core.parser.XtVod
 import tv.own.owntv.core.parser.XtreamClient
+import tv.own.owntv.core.network.withProgress
 import kotlin.coroutines.CoroutineContext
 
 /**
@@ -56,15 +60,21 @@ class SyncManager(
     suspend fun sync(source: SourceEntity, onProgress: (ImportStage) -> Unit, contentTypes: SyncContentTypes = SyncContentTypes()): Pair<SyncResult, SyncRunStats> =
         withContext(Dispatchers.IO) {
             val stats = SyncStatsCollector(source.id)
+            val trackedContentTypes = when (source.type) {
+                SourceType.XTREAM -> contentTypes
+                SourceType.M3U, SourceType.LOCAL_BACKUP -> SyncContentTypes(live = true, movies = false, series = false)
+            }
+            val progress = SyncProgressTracker(trackedContentTypes, onProgress)
             val result = try {
                 when (source.type) {
-                    SourceType.XTREAM -> syncXtream(source, onProgress, stats, contentTypes)
-                    SourceType.M3U -> syncM3u(source, onProgress, stats)
+                    SourceType.XTREAM -> syncXtream(source, progress, stats, contentTypes)
+                    SourceType.M3U -> syncM3u(source, progress, stats)
                     SourceType.LOCAL_BACKUP -> Unit
                 }
                 if (source.type != SourceType.XTREAM || contentTypes == SyncContentTypes()) {
                     sourceDao.markSynced(source.id, System.currentTimeMillis())
                 }
+                progress.completeAll()
                 SyncResult.Success(stats.warnings())
             } catch (c: CancellationException) {
                 throw c
@@ -78,19 +88,21 @@ class SyncManager(
         }
 
     // ---------------- Xtream ----------------
-    private suspend fun syncXtream(s: SourceEntity, onProgress: (ImportStage) -> Unit, stats: SyncStatsCollector, contentTypes: SyncContentTypes) {
+    private suspend fun syncXtream(s: SourceEntity, progress: SyncProgressTracker, stats: SyncStatsCollector, contentTypes: SyncContentTypes) {
         val semaphore = Semaphore(2)
         coroutineScope {
-            if (contentTypes.live) async { semaphore.withPermit { syncLive(s, onProgress, stats) } }
-            if (contentTypes.movies) async { semaphore.withPermit { syncMovies(s, onProgress, stats) } }
-            if (contentTypes.series) async { semaphore.withPermit { syncSeries(s, onProgress, stats) } }
+            if (contentTypes.live) async { semaphore.withPermit { syncLive(s, progress, stats) } }
+            if (contentTypes.movies) async { semaphore.withPermit { syncMovies(s, progress, stats) } }
+            if (contentTypes.series) async { semaphore.withPermit { syncSeries(s, progress, stats) } }
         }
     }
 
-    private suspend fun syncLive(s: SourceEntity, onProgress: (ImportStage) -> Unit, stats: SyncStatsCollector) {
+    private suspend fun syncLive(s: SourceEntity, progress: SyncProgressTracker, stats: SyncStatsCollector) {
         val ctx = currentCoroutineContext()
         val liveStart = System.currentTimeMillis()
-        val liveCats = xtream.liveCategories(s)
+        val reportBytes = progress.bytesReporter(SyncPhase.LIVE)
+        progress.start(SyncPhase.LIVE, SyncPhase.LIVE.label)
+        val liveCats = xtream.liveCategories(s, reportBytes)
         val liveMap = refreshCategories(s, MediaType.LIVE, liveCats)
         channelDao.clearSource(s.id)
         var liveOrder = 0
@@ -104,25 +116,28 @@ class SyncManager(
             )
         }
         val liveTotal = intArrayOf(0)
-        val liveDone = bulkOrFallback("Channels") {
-            chunked<ChannelEntity, Boolean>(ctx, "Channels", onProgress, { channelDao.upsertAll(it) }, liveTotal) { add ->
-                xtream.streamLive(s) { add(toChannel(it)) }
+        val liveDone = bulkOrFallback(SyncPhase.LIVE.label) {
+            chunked<ChannelEntity, Boolean>(ctx, SyncPhase.LIVE, SyncPhase.LIVE.label, progress, { channelDao.upsertAll(it) }, liveTotal) { add ->
+                xtream.streamLive(s, onItem = { add(toChannel(it)) }, onProgress = reportBytes)
             }
         }
         if (!liveDone) {
             stats.usedFallback = true
-            sliceByCategory(ctx, "Channels", onProgress, liveCats, { channelDao.upsertAll(it) }, liveTotal, liveTotal[0]) { cat, add ->
-                xtream.streamLive(s, cat.id) { add(toChannel(it)) }
+            sliceByCategory(ctx, SyncPhase.LIVE, SyncPhase.LIVE.label, progress, liveCats, { channelDao.upsertAll(it) }, liveTotal, liveTotal[0]) { cat, add ->
+                xtream.streamLive(s, cat.id, onItem = { add(toChannel(it)) }, onProgress = reportBytes)
             }
         }
+        progress.finish(SyncPhase.LIVE, SyncPhase.LIVE.label, liveTotal[0])
         stats.phaseTiming["live"] = System.currentTimeMillis() - liveStart
         stats.processedCounts["channels"] = liveTotal[0]
     }
 
-    private suspend fun syncMovies(s: SourceEntity, onProgress: (ImportStage) -> Unit, stats: SyncStatsCollector) {
+    private suspend fun syncMovies(s: SourceEntity, progress: SyncProgressTracker, stats: SyncStatsCollector) {
         val ctx = currentCoroutineContext()
         guardStep("movies", stats) {
-            val vodCats = xtream.vodCategories(s)
+            val reportBytes = progress.bytesReporter(SyncPhase.MOVIES)
+            progress.start(SyncPhase.MOVIES, SyncPhase.MOVIES.label)
+            val vodCats = xtream.vodCategories(s, reportBytes)
             val vodMap = refreshCategories(s, MediaType.MOVIE, vodCats)
             movieDao.clearSource(s.id)
             var vodOrder = 0
@@ -137,24 +152,27 @@ class SyncManager(
             }
             val vodTotal = intArrayOf(0)
             val vodDone = bulkOrFallback("Movies") {
-                chunked<MovieEntity, Boolean>(ctx, "Movies", onProgress, { movieDao.upsertAll(it) }, vodTotal) { add ->
-                    xtream.streamVod(s) { add(toMovie(it)) }
+                chunked<MovieEntity, Boolean>(ctx, SyncPhase.MOVIES, SyncPhase.MOVIES.label, progress, { movieDao.upsertAll(it) }, vodTotal) { add ->
+                    xtream.streamVod(s, onItem = { add(toMovie(it)) }, onProgress = reportBytes)
                 }
             }
             if (!vodDone) {
                 stats.usedFallback = true
-                sliceByCategory(ctx, "Movies", onProgress, vodCats, { movieDao.upsertAll(it) }, vodTotal, vodTotal[0]) { cat, add ->
-                    xtream.streamVod(s, cat.id) { add(toMovie(it)) }
+                sliceByCategory(ctx, SyncPhase.MOVIES, SyncPhase.MOVIES.label, progress, vodCats, { movieDao.upsertAll(it) }, vodTotal, vodTotal[0]) { cat, add ->
+                    xtream.streamVod(s, cat.id, onItem = { add(toMovie(it)) }, onProgress = reportBytes)
                 }
             }
+            progress.finish(SyncPhase.MOVIES, SyncPhase.MOVIES.label, vodTotal[0])
             stats.processedCounts["movies"] = vodTotal[0]
         }
     }
 
-    private suspend fun syncSeries(s: SourceEntity, onProgress: (ImportStage) -> Unit, stats: SyncStatsCollector) {
+    private suspend fun syncSeries(s: SourceEntity, progress: SyncProgressTracker, stats: SyncStatsCollector) {
         val ctx = currentCoroutineContext()
         guardStep("series", stats) {
-            val seriesCats = xtream.seriesCategories(s)
+            val reportBytes = progress.bytesReporter(SyncPhase.SERIES)
+            progress.start(SyncPhase.SERIES, SyncPhase.SERIES.label)
+            val seriesCats = xtream.seriesCategories(s, reportBytes)
             val seriesMap = refreshCategories(s, MediaType.SERIES, seriesCats)
             seriesDao.clearSource(s.id)
             var seriesOrder = 0
@@ -168,16 +186,17 @@ class SyncManager(
             }
             val seriesTotal = intArrayOf(0)
             val seriesDone = bulkOrFallback("Series") {
-                chunked<SeriesEntity, Boolean>(ctx, "Series", onProgress, { seriesDao.upsertSeries(it) }, seriesTotal) { add ->
-                    xtream.streamSeries(s) { add(toSeries(it)) }
+                chunked<SeriesEntity, Boolean>(ctx, SyncPhase.SERIES, SyncPhase.SERIES.label, progress, { seriesDao.upsertSeries(it) }, seriesTotal) { add ->
+                    xtream.streamSeries(s, onItem = { add(toSeries(it)) }, onProgress = reportBytes)
                 }
             }
             if (!seriesDone) {
                 stats.usedFallback = true
-                sliceByCategory(ctx, "Series", onProgress, seriesCats, { seriesDao.upsertSeries(it) }, seriesTotal, seriesTotal[0]) { cat, add ->
-                    xtream.streamSeries(s, cat.id) { add(toSeries(it)) }
+                sliceByCategory(ctx, SyncPhase.SERIES, SyncPhase.SERIES.label, progress, seriesCats, { seriesDao.upsertSeries(it) }, seriesTotal, seriesTotal[0]) { cat, add ->
+                    xtream.streamSeries(s, cat.id, onItem = { add(toSeries(it)) }, onProgress = reportBytes)
                 }
             }
+            progress.finish(SyncPhase.SERIES, SyncPhase.SERIES.label, seriesTotal[0])
             stats.processedCounts["series"] = seriesTotal[0]
         }
     }
@@ -225,8 +244,9 @@ class SyncManager(
      */
     private suspend fun <T> sliceByCategory(
         ctx: CoroutineContext,
+        phase: SyncPhase,
         label: String,
-        onProgress: (ImportStage) -> Unit,
+        progress: SyncProgressTracker,
         categories: List<XtCategory>,
         insert: suspend (List<T>) -> Unit,
         total: IntArray,
@@ -243,7 +263,7 @@ class SyncManager(
             // A single failing category (e.g. it 512s/429s) is skipped — keep importing the other categories
             // rather than losing the whole section.
             val complete = try {
-                chunked<T, Boolean>(ctx, label, onProgress, insert, total) { add -> stream(cat) { add(it) } }
+                chunked<T, Boolean>(ctx, phase, label, progress, insert, total) { add -> stream(cat) { add(it) } }
             } catch (c: CancellationException) {
                 throw c
             } catch (e: Exception) {
@@ -277,7 +297,7 @@ class SyncManager(
     }
 
     // ---------------- M3U ----------------
-    private suspend fun syncM3u(s: SourceEntity, onProgress: (ImportStage) -> Unit, stats: SyncStatsCollector) {
+    private suspend fun syncM3u(s: SourceEntity, progress: SyncProgressTracker, stats: SyncStatsCollector) {
         val channelsStart = System.currentTimeMillis()
         val ctx = currentCoroutineContext()
         categoryDao.clear(s.id, MediaType.LIVE)
@@ -287,6 +307,7 @@ class SyncManager(
         val buffer = ArrayList<ChannelEntity>(CHUNK)
         var processed = 0
         var order = 0 // playlist position — lets "Playlist order" sorting replay the file's order
+        val reportBytes = progress.bytesReporter(SyncPhase.LIVE)
 
         val onEntry: suspend (tv.own.owntv.core.parser.M3uEntry) -> Unit = { e ->
             val categoryId = e.groupTitle?.let { group ->
@@ -316,33 +337,32 @@ class SyncManager(
                 channelDao.upsertAll(buffer.toList())
                 processed += buffer.size
                 buffer.clear()
-                onProgress(ImportStage("Channels", processed, null))
+                progress.update(SyncPhase.LIVE, SyncPhase.LIVE.label, processed)
             }
         }
         // A locally-picked playlist file (in-app StorageBrowser gives an absolute path; also tolerate
         // file://content:// URIs) is read straight from the device; a normal URL is downloaded. Same parser.
         val isLocal = s.url.startsWith("/") || s.url.startsWith("file://") || s.url.startsWith("content://")
+        val localPlaylist = if (isLocal) openLocalPlaylist(s.url) else null
+        progress.start(SyncPhase.LIVE, SyncPhase.LIVE.label, bytesTotal = localPlaylist?.second)
         val header = if (isLocal) {
-            val input = if (s.url.startsWith("/")) {
-                java.io.File(s.url).inputStream()
-            } else {
-                context.contentResolver.openInputStream(android.net.Uri.parse(s.url))
-                    ?: throw java.io.IOException("Couldn't open the playlist file. Re-pick it (it may have moved).")
+            localPlaylist!!.useProgress(reportBytes) { input ->
+                m3u.parse(input, onEntry)
             }
-            input.use { m3u.parse(it, onEntry) }
         } else {
-            http.get(s.url, s.userAgent) { input -> m3u.parse(input, onEntry) }
+            http.get(s.url, s.userAgent, reportBytes) { input -> m3u.parse(input, onEntry) }
         }
         if (buffer.isNotEmpty()) {
             channelDao.upsertAll(buffer.toList())
             processed += buffer.size
-            onProgress(ImportStage("Channels", processed, null))
+            progress.update(SyncPhase.LIVE, SyncPhase.LIVE.label, processed)
         }
 
         // Persist the playlist's EPG url (url-tvg) for the EPG engine if the source didn't have one.
         if (!header.urlTvg.isNullOrBlank() && s.epgUrl.isNullOrBlank()) {
             sourceDao.update(s.copy(epgUrl = header.urlTvg))
         }
+        progress.finish(SyncPhase.LIVE, SyncPhase.LIVE.label, processed)
         stats.phaseTiming["channels"] = System.currentTimeMillis() - channelsStart
         stats.processedCounts["channels"] = processed
     }
@@ -354,8 +374,9 @@ class SyncManager(
      */
     private suspend fun <T, R> chunked(
         ctx: CoroutineContext,
+        phase: SyncPhase,
         label: String,
-        onProgress: (ImportStage) -> Unit,
+        progress: SyncProgressTracker,
         insert: suspend (List<T>) -> Unit,
         total: IntArray, // shared [0] running count for the whole media type, so progress never resets
         producer: suspend (add: suspend (T) -> Unit) -> R,
@@ -367,7 +388,7 @@ class SyncManager(
             insert(buffer.toList())
             total[0] += buffer.size
             buffer.clear()
-            onProgress(ImportStage(label, total[0], null))
+            progress.update(phase, label, total[0])
         }
         val result = producer { item ->
             buffer.add(item)
@@ -375,6 +396,47 @@ class SyncManager(
         }
         flush()
         return result
+    }
+
+    private fun SyncProgressTracker.bytesReporter(phase: SyncPhase): (Long, Long?) -> Unit =
+        { bytesRead, bytesTotal -> updateBytes(phase, phase.label, bytesRead, bytesTotal) }
+
+    private suspend fun <T> Pair<InputStream, Long?>.useProgress(
+        reportBytes: (Long, Long?) -> Unit,
+        block: suspend (InputStream) -> T,
+    ): T {
+        val (input, totalBytes) = this
+        reportBytes(0, totalBytes)
+        val progressInput = input.withProgress(totalBytes, reportBytes)
+        return try {
+            block(progressInput)
+        } finally {
+            progressInput.close()
+        }
+    }
+
+    private fun openLocalPlaylist(url: String): Pair<InputStream, Long?> = when {
+        url.startsWith("/") -> {
+            val file = File(url)
+            file.inputStream() to file.length().takeIf { it >= 0 }
+        }
+        url.startsWith("file://") -> {
+            val uri = Uri.parse(url)
+            val file = File(uri.path ?: throw java.io.IOException("Couldn't open the playlist file. Re-pick it (it may have moved.)"))
+            file.inputStream() to file.length().takeIf { it >= 0 }
+        }
+        url.startsWith("content://") -> {
+            val uri = Uri.parse(url)
+            val totalBytes = runCatching {
+                context.contentResolver.openAssetFileDescriptor(uri, "r")?.use { afd ->
+                    afd.length.takeIf { it >= 0 }
+                }
+            }.getOrNull()
+            val input = context.contentResolver.openInputStream(uri)
+                ?: throw java.io.IOException("Couldn't open the playlist file. Re-pick it (it may have moved.)")
+            input to totalBytes
+        }
+        else -> throw java.io.IOException("Unsupported local playlist path")
     }
 
     private fun logStats(stats: SyncRunStats) {

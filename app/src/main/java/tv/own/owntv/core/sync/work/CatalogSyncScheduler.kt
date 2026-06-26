@@ -55,6 +55,8 @@ class CatalogSyncScheduler(private val context: Context) {
                     CatalogSyncState.Syncing(
                         label = active.progress.getString(CatalogSyncWorker.KEY_PROGRESS_LABEL),
                         processed = active.progress.getInt(CatalogSyncWorker.KEY_PROGRESS_PROCESSED, 0),
+                        overallPercent = active.progress.getInt(CatalogSyncWorker.KEY_PROGRESS_OVERALL, 0),
+                        breakdown = active.progress.getString(CatalogSyncWorker.KEY_PROGRESS_BREAKDOWN) ?: "",
                     )
                 }
             }
@@ -68,7 +70,12 @@ class CatalogSyncScheduler(private val context: Context) {
 
 sealed interface CatalogSyncState {
     data object Idle : CatalogSyncState
-    data class Syncing(val label: String?, val processed: Int) : CatalogSyncState
+    data class Syncing(
+        val label: String?,
+        val processed: Int,
+        val overallPercent: Int,
+        val breakdown: String,
+    ) : CatalogSyncState
 
     val isActive: Boolean
         get() = this is Syncing

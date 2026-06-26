@@ -8,6 +8,7 @@ import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.withContext
 import okhttp3.OkHttpClient
 import okhttp3.Request
+import java.io.FilterInputStream
 import java.io.IOException
 import java.io.InputStream
 
@@ -18,7 +19,12 @@ import java.io.InputStream
  */
 class HttpClient(private val client: OkHttpClient) {
 
-    suspend fun <T> get(url: String, userAgent: String? = null, block: suspend (InputStream) -> T): T = withContext(Dispatchers.IO) {
+    suspend fun <T> get(
+        url: String,
+        userAgent: String? = null,
+        onProgress: ((Long, Long?) -> Unit)? = null,
+        block: suspend (InputStream) -> T,
+    ): T = withContext(Dispatchers.IO) {
         // Many IPTV panels reject requests that don't look like a media player (or that use the
         // default OkHttp UA), so we send a player-style default unless the source overrides it
         // (custom User-Agent is a Phase 12 power feature).
@@ -38,7 +44,11 @@ class HttpClient(private val client: OkHttpClient) {
             call.execute().use { response ->
                 if (!response.isSuccessful) throw IOException("HTTP ${response.code} for ${redact(url)}")
                 val body = response.body ?: throw IOException("Empty response body for ${redact(url)}")
-                block(body.byteStream())
+                val totalBytes = body.contentLength().takeIf { it >= 0 }
+                onProgress?.invoke(0, totalBytes)
+                body.byteStream().withProgress(totalBytes, onProgress).use { input ->
+                    block(input)
+                }
             }
         } catch (e: IOException) {
             coroutineContext.ensureActive()
@@ -65,5 +75,61 @@ class HttpClient(private val client: OkHttpClient) {
         fun redactUrl(url: String): String = url
             .replace(Regex("(?i)(username|password|user|pass|token)=[^&]*"), "$1=***")
             .replace(Regex("(?i)(://[^/]+/(?:live|movie|series|vod)/)([^/]+)/([^/]+)/"), "$1•••/•••/")
+    }
+}
+
+internal fun InputStream.withProgress(
+    totalBytes: Long?,
+    onProgress: ((Long, Long?) -> Unit)?,
+): InputStream = if (onProgress == null) this else ProgressInputStream(this, totalBytes, onProgress)
+
+private class ProgressInputStream(
+    input: InputStream,
+    private val totalBytes: Long?,
+    private val onProgress: (Long, Long?) -> Unit,
+) : FilterInputStream(input) {
+    private var bytesRead = 0L
+    private var lastNotifiedBytes = 0L
+    private var lastNotifiedAt = 0L
+
+    override fun read(): Int {
+        val value = super.read()
+        if (value >= 0) advance(1)
+        return value
+    }
+
+    override fun read(b: ByteArray, off: Int, len: Int): Int {
+        val read = super.read(b, off, len)
+        if (read > 0) advance(read.toLong())
+        return read
+    }
+
+    override fun close() {
+        try {
+            super.close()
+        } finally {
+            notifyProgress(force = true)
+        }
+    }
+
+    private fun advance(delta: Long) {
+        bytesRead += delta
+        notifyProgress()
+    }
+
+    private fun notifyProgress(force: Boolean = false) {
+        val now = System.currentTimeMillis()
+        val bytesDelta = bytesRead - lastNotifiedBytes
+        val timeDelta = now - lastNotifiedAt
+        val complete = totalBytes?.let { bytesRead >= it } == true
+        if (!force && bytesDelta < PROGRESS_BYTES_STEP && timeDelta < PROGRESS_MIN_INTERVAL_MS && !complete) return
+        lastNotifiedBytes = bytesRead
+        lastNotifiedAt = now
+        onProgress(bytesRead, totalBytes)
+    }
+
+    private companion object {
+        const val PROGRESS_BYTES_STEP = 256L * 1024L
+        const val PROGRESS_MIN_INTERVAL_MS = 150L
     }
 }

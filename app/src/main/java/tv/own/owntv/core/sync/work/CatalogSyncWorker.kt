@@ -43,6 +43,9 @@ class CatalogSyncWorker(
             setProgressAsync(workDataOf(
                 KEY_PROGRESS_LABEL to stage.label,
                 KEY_PROGRESS_PROCESSED to stage.processed,
+                KEY_PROGRESS_TOTAL to (stage.total ?: -1),
+                KEY_PROGRESS_OVERALL to stage.overallPercent,
+                KEY_PROGRESS_BREAKDOWN to stage.breakdown,
             ))
         }, contentTypes = contentTypes)
 
@@ -73,5 +76,8 @@ class CatalogSyncWorker(
         const val KEY_SERIES = "series"
         const val KEY_PROGRESS_LABEL = "label"
         const val KEY_PROGRESS_PROCESSED = "processed"
+        const val KEY_PROGRESS_TOTAL = "total"
+        const val KEY_PROGRESS_OVERALL = "overall"
+        const val KEY_PROGRESS_BREAKDOWN = "breakdown"
     }
 }

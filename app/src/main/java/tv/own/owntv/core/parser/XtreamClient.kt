@@ -40,13 +40,13 @@ data class XtEpgEntry(val title: String, val description: String?, val startMs: 
 class XtreamClient(private val http: HttpClient) {
 
     // --- Categories ---
-    suspend fun liveCategories(s: SourceEntity) = categories(s, "get_live_categories")
-    suspend fun vodCategories(s: SourceEntity) = categories(s, "get_vod_categories")
-    suspend fun seriesCategories(s: SourceEntity) = categories(s, "get_series_categories")
+    suspend fun liveCategories(s: SourceEntity, onProgress: ((Long, Long?) -> Unit)? = null) = categories(s, "get_live_categories", onProgress)
+    suspend fun vodCategories(s: SourceEntity, onProgress: ((Long, Long?) -> Unit)? = null) = categories(s, "get_vod_categories", onProgress)
+    suspend fun seriesCategories(s: SourceEntity, onProgress: ((Long, Long?) -> Unit)? = null) = categories(s, "get_series_categories", onProgress)
 
-    private suspend fun categories(s: SourceEntity, action: String): List<XtCategory> {
+    private suspend fun categories(s: SourceEntity, action: String, onProgress: ((Long, Long?) -> Unit)? = null): List<XtCategory> {
         val out = ArrayList<XtCategory>()
-        http.get(api(s, action), s.userAgent) { input ->
+        http.get(api(s, action), s.userAgent, onProgress) { input ->
             streamObjects(input) { m ->
                 val id = m["category_id"] ?: return@streamObjects
                 out.add(XtCategory(id, m["category_name"] ?: id))
@@ -59,8 +59,13 @@ class XtreamClient(private val http: HttpClient) {
     // Each returns true if the full list parsed cleanly, false if the server truncated it mid-stream
     // (issue #15) — the sync uses that to fall back to per-category fetching. [categoryId] filters the
     // request server-side (`&category_id=X`), keeping payloads small enough to dodge the truncation.
-    suspend fun streamLive(s: SourceEntity, categoryId: String? = null, onItem: suspend (XtLiveStream) -> Unit): Boolean {
-        return http.get(api(s, "get_live_streams", categoryParam(categoryId)), s.userAgent) { input ->
+    suspend fun streamLive(
+        s: SourceEntity,
+        categoryId: String? = null,
+        onItem: suspend (XtLiveStream) -> Unit,
+        onProgress: ((Long, Long?) -> Unit)? = null,
+    ): Boolean {
+        return http.get(api(s, "get_live_streams", categoryParam(categoryId)), s.userAgent, onProgress) { input ->
             streamObjects(input) { m ->
                 val id = m["stream_id"] ?: return@streamObjects
                 onItem(
@@ -76,8 +81,13 @@ class XtreamClient(private val http: HttpClient) {
         }
     }
 
-    suspend fun streamVod(s: SourceEntity, categoryId: String? = null, onItem: suspend (XtVod) -> Unit): Boolean {
-        return http.get(api(s, "get_vod_streams", categoryParam(categoryId)), s.userAgent) { input ->
+    suspend fun streamVod(
+        s: SourceEntity,
+        categoryId: String? = null,
+        onItem: suspend (XtVod) -> Unit,
+        onProgress: ((Long, Long?) -> Unit)? = null,
+    ): Boolean {
+        return http.get(api(s, "get_vod_streams", categoryParam(categoryId)), s.userAgent, onProgress) { input ->
             streamObjects(input) { m ->
                 val id = m["stream_id"] ?: return@streamObjects
                 onItem(
@@ -93,8 +103,13 @@ class XtreamClient(private val http: HttpClient) {
         }
     }
 
-    suspend fun streamSeries(s: SourceEntity, categoryId: String? = null, onItem: suspend (XtSeries) -> Unit): Boolean {
-        return http.get(api(s, "get_series", categoryParam(categoryId)), s.userAgent) { input ->
+    suspend fun streamSeries(
+        s: SourceEntity,
+        categoryId: String? = null,
+        onItem: suspend (XtSeries) -> Unit,
+        onProgress: ((Long, Long?) -> Unit)? = null,
+    ): Boolean {
+        return http.get(api(s, "get_series", categoryParam(categoryId)), s.userAgent, onProgress) { input ->
             streamObjects(input) { m ->
                 val id = m["series_id"] ?: return@streamObjects
                 onItem(
