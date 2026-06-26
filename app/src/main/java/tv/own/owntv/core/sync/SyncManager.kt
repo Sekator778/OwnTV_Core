@@ -116,14 +116,15 @@ class SyncManager(
             )
         }
         val liveTotal = intArrayOf(0)
+        val liveRemoteIds = HashSet<String>()
         val liveDone = bulkOrFallback(SyncPhase.LIVE.label) {
-            chunked<ChannelEntity, Boolean>(ctx, SyncPhase.LIVE, SyncPhase.LIVE.label, progress, { channelDao.upsertAll(it) }, liveTotal) { add ->
+            chunked<ChannelEntity, Boolean>(ctx, SyncPhase.LIVE, SyncPhase.LIVE.label, progress, { channelDao.upsertAll(it) }, liveTotal, liveRemoteIds, { it.remoteId }) { add ->
                 xtream.streamLive(s, onItem = { add(toChannel(it)) }, onProgress = reportBytes)
             }
         }
         if (!liveDone) {
             stats.usedFallback = true
-            sliceByCategory(ctx, SyncPhase.LIVE, SyncPhase.LIVE.label, progress, liveCats, { channelDao.upsertAll(it) }, liveTotal, liveTotal[0]) { cat, add ->
+            sliceByCategory(ctx, SyncPhase.LIVE, SyncPhase.LIVE.label, progress, liveCats, { channelDao.upsertAll(it) }, liveTotal, liveTotal[0], liveRemoteIds, { it.remoteId }) { cat, add ->
                 xtream.streamLive(s, cat.id, onItem = { add(toChannel(it)) }, onProgress = reportBytes)
             }
         }
@@ -151,14 +152,15 @@ class SyncManager(
                 )
             }
             val vodTotal = intArrayOf(0)
+            val vodRemoteIds = HashSet<String>()
             val vodDone = bulkOrFallback("Movies") {
-                chunked<MovieEntity, Boolean>(ctx, SyncPhase.MOVIES, SyncPhase.MOVIES.label, progress, { movieDao.upsertAll(it) }, vodTotal) { add ->
+                chunked<MovieEntity, Boolean>(ctx, SyncPhase.MOVIES, SyncPhase.MOVIES.label, progress, { movieDao.upsertAll(it) }, vodTotal, vodRemoteIds, { it.remoteId }) { add ->
                     xtream.streamVod(s, onItem = { add(toMovie(it)) }, onProgress = reportBytes)
                 }
             }
             if (!vodDone) {
                 stats.usedFallback = true
-                sliceByCategory(ctx, SyncPhase.MOVIES, SyncPhase.MOVIES.label, progress, vodCats, { movieDao.upsertAll(it) }, vodTotal, vodTotal[0]) { cat, add ->
+                sliceByCategory(ctx, SyncPhase.MOVIES, SyncPhase.MOVIES.label, progress, vodCats, { movieDao.upsertAll(it) }, vodTotal, vodTotal[0], vodRemoteIds, { it.remoteId }) { cat, add ->
                     xtream.streamVod(s, cat.id, onItem = { add(toMovie(it)) }, onProgress = reportBytes)
                 }
             }
@@ -185,14 +187,15 @@ class SyncManager(
                 )
             }
             val seriesTotal = intArrayOf(0)
+            val seriesRemoteIds = HashSet<String>()
             val seriesDone = bulkOrFallback("Series") {
-                chunked<SeriesEntity, Boolean>(ctx, SyncPhase.SERIES, SyncPhase.SERIES.label, progress, { seriesDao.upsertSeries(it) }, seriesTotal) { add ->
+                chunked<SeriesEntity, Boolean>(ctx, SyncPhase.SERIES, SyncPhase.SERIES.label, progress, { seriesDao.upsertSeries(it) }, seriesTotal, seriesRemoteIds, { it.remoteId }) { add ->
                     xtream.streamSeries(s, onItem = { add(toSeries(it)) }, onProgress = reportBytes)
                 }
             }
             if (!seriesDone) {
                 stats.usedFallback = true
-                sliceByCategory(ctx, SyncPhase.SERIES, SyncPhase.SERIES.label, progress, seriesCats, { seriesDao.upsertSeries(it) }, seriesTotal, seriesTotal[0]) { cat, add ->
+                sliceByCategory(ctx, SyncPhase.SERIES, SyncPhase.SERIES.label, progress, seriesCats, { seriesDao.upsertSeries(it) }, seriesTotal, seriesTotal[0], seriesRemoteIds, { it.remoteId }) { cat, add ->
                     xtream.streamSeries(s, cat.id, onItem = { add(toSeries(it)) }, onProgress = reportBytes)
                 }
             }
@@ -251,6 +254,8 @@ class SyncManager(
         insert: suspend (List<T>) -> Unit,
         total: IntArray,
         bulkPartial: Int,
+        seenKeys: MutableSet<String>? = null,
+        uniqueKey: ((T) -> String?)? = null,
         stream: suspend (cat: XtCategory, add: suspend (T) -> Unit) -> Boolean,
     ) {
         var truncations = 0
@@ -263,7 +268,7 @@ class SyncManager(
             // A single failing category (e.g. it 512s/429s) is skipped — keep importing the other categories
             // rather than losing the whole section.
             val complete = try {
-                chunked<T, Boolean>(ctx, phase, label, progress, insert, total) { add -> stream(cat) { add(it) } }
+                chunked<T, Boolean>(ctx, phase, label, progress, insert, total, seenKeys, uniqueKey) { add -> stream(cat) { add(it) } }
             } catch (c: CancellationException) {
                 throw c
             } catch (e: Exception) {
@@ -414,16 +419,22 @@ class SyncManager(
         label: String,
         progress: SyncProgressTracker,
         insert: suspend (List<T>) -> Unit,
-        total: IntArray, // shared [0] running count for the whole media type, so progress never resets
+        total: IntArray, // shared [0] running unique count for the whole media type, so progress never resets
+        seenKeys: MutableSet<String>? = null,
+        uniqueKey: ((T) -> String?)? = null,
         producer: suspend (add: suspend (T) -> Unit) -> R,
     ): R {
         val buffer = ArrayList<T>(CHUNK)
         suspend fun flush() {
             if (buffer.isEmpty()) return
             ctx.ensureActive()
-            insert(buffer.toList())
-            total[0] += buffer.size
+            val pendingKeys = ArrayList<String>()
+            val rows = buffer.toList().filterNewItems(seenKeys, uniqueKey, pendingKeys)
             buffer.clear()
+            if (rows.isEmpty()) return
+            insert(rows)
+            seenKeys?.addAll(pendingKeys)
+            total[0] += rows.size
             progress.update(phase, label, total[0])
         }
         val result = producer { item ->
@@ -432,6 +443,26 @@ class SyncManager(
         }
         flush()
         return result
+    }
+
+    private fun <T> List<T>.filterNewItems(
+        seenKeys: MutableSet<String>?,
+        uniqueKey: ((T) -> String?)?,
+        pendingKeys: MutableList<String>,
+    ): List<T> {
+        if (seenKeys == null || uniqueKey == null) return this
+        val rows = ArrayList<T>(size)
+        val batchKeys = HashSet<String>()
+        forEach { item ->
+            val key = uniqueKey(item)
+            if (key == null) {
+                rows.add(item)
+            } else if (!seenKeys.contains(key) && batchKeys.add(key)) {
+                pendingKeys.add(key)
+                rows.add(item)
+            }
+        }
+        return rows
     }
 
     private fun SyncProgressTracker.bytesReporter(phase: SyncPhase): (Long, Long?) -> Unit =
