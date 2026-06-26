@@ -304,40 +304,72 @@ class SyncManager(
         channelDao.clearSource(s.id)
 
         val groupToCategoryId = HashMap<String, Long>()
-        val buffer = ArrayList<ChannelEntity>(CHUNK)
+        val pendingCategoryGroups = LinkedHashSet<String>()
+        val pendingCategories = ArrayList<CategoryEntity>(CHUNK)
+        val buffer = ArrayList<PendingM3uChannel>(CHUNK)
         var processed = 0
         var order = 0 // playlist position — lets "Playlist order" sorting replay the file's order
+        var categoryOrder = 0
         val reportBytes = progress.bytesReporter(SyncPhase.LIVE)
 
-        val onEntry: suspend (tv.own.owntv.core.parser.M3uEntry) -> Unit = { e ->
-            val categoryId = e.groupTitle?.let { group ->
-                val existing = groupToCategoryId[group]
-                if (existing != null) {
-                    existing
-                } else {
-                    val inserted = categoryDao.upsertAll(
-                        // sortOrder = first-seen position of the group in the playlist
-                        listOf(CategoryEntity(sourceId = s.id, mediaType = MediaType.LIVE, name = group, remoteId = group, sortOrder = groupToCategoryId.size)),
-                    ).first()
-                    groupToCategoryId[group] = inserted
-                    inserted
-                }
-            }
-            buffer.add(
-                ChannelEntity(
-                    sourceId = s.id, categoryId = categoryId, name = e.name, logoUrl = e.logo,
-                    streamUrl = e.streamUrl, epgChannelId = e.tvgId, number = e.tvgChno,
-                    remoteId = null, // M3U has no stable id; rely on clear-then-insert
-                    sortOrder = order++,
-                    catchup = e.catchup != null, catchupDays = e.catchupDays ?: 0, catchupSource = e.catchupSource,
+        fun queueCategory(group: String) {
+            if (groupToCategoryId.containsKey(group) || !pendingCategoryGroups.add(group)) return
+            pendingCategories.add(
+                CategoryEntity(
+                    sourceId = s.id,
+                    mediaType = MediaType.LIVE,
+                    name = group,
+                    remoteId = group,
+                    sortOrder = categoryOrder++,
                 ),
             )
+        }
+
+        suspend fun flushCategories() {
+            if (pendingCategories.isEmpty()) return
+            ctx.ensureActive()
+            val groups = pendingCategoryGroups.toList()
+            val categories = pendingCategories.toList()
+            val ids = categoryDao.upsertAll(categories)
+            groups.forEachIndexed { index, group ->
+                ids.getOrNull(index)?.let { groupToCategoryId[group] = it }
+            }
+            pendingCategoryGroups.clear()
+            pendingCategories.clear()
+        }
+
+        suspend fun flushChannels() {
+            if (buffer.isEmpty()) return
+            flushCategories()
+            ctx.ensureActive()
+            val channels = buffer.map { item ->
+                val entry = item.entry
+                ChannelEntity(
+                    sourceId = s.id,
+                    categoryId = entry.groupTitle?.let { groupToCategoryId[it] },
+                    name = entry.name,
+                    logoUrl = entry.logo,
+                    streamUrl = entry.streamUrl,
+                    epgChannelId = entry.tvgId,
+                    number = entry.tvgChno,
+                    remoteId = null, // M3U has no stable id; rely on clear-then-insert
+                    sortOrder = item.order,
+                    catchup = entry.catchup != null,
+                    catchupDays = entry.catchupDays ?: 0,
+                    catchupSource = entry.catchupSource,
+                )
+            }
+            channelDao.upsertAll(channels)
+            processed += channels.size
+            buffer.clear()
+            progress.update(SyncPhase.LIVE, SyncPhase.LIVE.label, processed)
+        }
+
+        val onEntry: suspend (tv.own.owntv.core.parser.M3uEntry) -> Unit = { e ->
+            e.groupTitle?.let(::queueCategory)
+            buffer.add(PendingM3uChannel(order = order++, entry = e))
             if (buffer.size >= CHUNK) {
-                ctx.ensureActive()
-                channelDao.upsertAll(buffer.toList())
-                processed += buffer.size
-                buffer.clear()
-                progress.update(SyncPhase.LIVE, SyncPhase.LIVE.label, processed)
+                flushChannels()
             }
         }
         // A locally-picked playlist file (in-app StorageBrowser gives an absolute path; also tolerate
@@ -353,9 +385,7 @@ class SyncManager(
             http.get(s.url, s.userAgent, reportBytes) { input -> m3u.parse(input, onEntry) }
         }
         if (buffer.isNotEmpty()) {
-            channelDao.upsertAll(buffer.toList())
-            processed += buffer.size
-            progress.update(SyncPhase.LIVE, SyncPhase.LIVE.label, processed)
+            flushChannels()
         }
 
         // Persist the playlist's EPG url (url-tvg) for the EPG engine if the source didn't have one.
@@ -366,6 +396,11 @@ class SyncManager(
         stats.phaseTiming["channels"] = System.currentTimeMillis() - channelsStart
         stats.processedCounts["channels"] = processed
     }
+
+    private data class PendingM3uChannel(
+        val order: Int,
+        val entry: tv.own.owntv.core.parser.M3uEntry,
+    )
 
     /**
      * Drives a push-stream [producer] that feeds items into [add]; flushes to the DB via [insert] in
