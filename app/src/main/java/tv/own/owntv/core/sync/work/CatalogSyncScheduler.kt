@@ -60,6 +60,9 @@ class CatalogSyncScheduler(private val context: Context) {
                         liveProcessed = active.progress.getInt(CatalogSyncWorker.KEY_PROGRESS_LIVE_PROCESSED, 0),
                         moviesProcessed = active.progress.getInt(CatalogSyncWorker.KEY_PROGRESS_MOVIES_PROCESSED, 0),
                         seriesProcessed = active.progress.getInt(CatalogSyncWorker.KEY_PROGRESS_SERIES_PROCESSED, 0),
+                        liveActive = active.progress.getBoolean(CatalogSyncWorker.KEY_PROGRESS_LIVE_ACTIVE, false),
+                        moviesActive = active.progress.getBoolean(CatalogSyncWorker.KEY_PROGRESS_MOVIES_ACTIVE, false),
+                        seriesActive = active.progress.getBoolean(CatalogSyncWorker.KEY_PROGRESS_SERIES_ACTIVE, false),
                     )
                 }
             }
@@ -81,6 +84,9 @@ sealed interface CatalogSyncState {
         val liveProcessed: Int,
         val moviesProcessed: Int,
         val seriesProcessed: Int,
+        val liveActive: Boolean,
+        val moviesActive: Boolean,
+        val seriesActive: Boolean,
     ) : CatalogSyncState
 
     val isActive: Boolean

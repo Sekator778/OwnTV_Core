@@ -9,6 +9,7 @@ import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import tv.own.owntv.core.database.dao.SourceDao
 import tv.own.owntv.core.launcher.LauncherIntegrationRepository
+import tv.own.owntv.core.model.SourceType
 import tv.own.owntv.core.repository.SourceRepository
 import tv.own.owntv.core.sync.ImportFinalizer
 import tv.own.owntv.core.sync.ImportStage
@@ -41,7 +42,11 @@ class CatalogSyncWorker(
         }
 
         Log.i(TAG, "Starting sync for source ${source.id} (${source.name}) reason=$reason contentTypes=$contentTypes")
-        val progressPublisher = ProgressPublisher()
+        val trackedContentTypes = when (source.type) {
+            SourceType.XTREAM -> contentTypes
+            SourceType.M3U, SourceType.LOCAL_BACKUP -> SyncContentTypes(live = true, movies = false, series = false)
+        }
+        val progressPublisher = ProgressPublisher(trackedContentTypes)
         progressPublisher.publishStarting()
 
         val result = sourceRepository.sync(source, onProgress = { stage ->
@@ -67,13 +72,16 @@ class CatalogSyncWorker(
         }
     }
 
-    private inner class ProgressPublisher {
+    private inner class ProgressPublisher(private val contentTypes: SyncContentTypes) {
         private var lastEmitAtMs = 0L
-        private var lastLabel: String? = null
         private var lastOverall = -1
+        private var emittedLiveCount = false
+        private var emittedMoviesCount = false
+        private var emittedSeriesCount = false
         private var pending: ImportStage? = null
 
         fun publishStarting() {
+            val now = SystemClock.elapsedRealtime()
             setProgress(
                 workDataOf(
                     KEY_PROGRESS_LABEL to "Starting",
@@ -84,20 +92,19 @@ class CatalogSyncWorker(
                     KEY_PROGRESS_LIVE_PROCESSED to 0,
                     KEY_PROGRESS_MOVIES_PROCESSED to 0,
                     KEY_PROGRESS_SERIES_PROCESSED to 0,
+                    KEY_PROGRESS_LIVE_ACTIVE to contentTypes.live,
+                    KEY_PROGRESS_MOVIES_ACTIVE to contentTypes.movies,
+                    KEY_PROGRESS_SERIES_ACTIVE to contentTypes.series,
                 ),
             )
-            lastLabel = "Starting"
+            lastEmitAtMs = now
             lastOverall = 0
         }
 
         fun publish(stage: ImportStage) {
             pending = stage
             val now = SystemClock.elapsedRealtime()
-            if (
-                stage.label != lastLabel ||
-                stage.overallPercent != lastOverall ||
-                now - lastEmitAtMs >= PROGRESS_MIN_INTERVAL_MS
-            ) {
+            if (shouldEmit(stage, now)) {
                 emit(stage, now)
             }
         }
@@ -109,10 +116,19 @@ class CatalogSyncWorker(
         private fun emit(stage: ImportStage, now: Long) {
             setProgress(stage.toWorkData())
             lastEmitAtMs = now
-            lastLabel = stage.label
             lastOverall = stage.overallPercent
+            if (stage.liveProcessed > 0) emittedLiveCount = true
+            if (stage.moviesProcessed > 0) emittedMoviesCount = true
+            if (stage.seriesProcessed > 0) emittedSeriesCount = true
             pending = null
         }
+
+        private fun shouldEmit(stage: ImportStage, now: Long): Boolean =
+            (stage.liveProcessed > 0 && !emittedLiveCount) ||
+                (stage.moviesProcessed > 0 && !emittedMoviesCount) ||
+                (stage.seriesProcessed > 0 && !emittedSeriesCount) ||
+                stage.overallPercent != lastOverall ||
+                now - lastEmitAtMs >= PROGRESS_MIN_INTERVAL_MS
 
         private fun setProgress(data: Data) {
             setProgressAsync(data)
@@ -121,7 +137,7 @@ class CatalogSyncWorker(
 
     companion object {
         const val TAG = "CatalogSyncWorker"
-        private const val PROGRESS_MIN_INTERVAL_MS = 500L
+        private const val PROGRESS_MIN_INTERVAL_MS = 750L
         const val KEY_SOURCE_ID = "sourceId"
         const val KEY_REASON = "reason"
         const val KEY_LIVE = "live"
@@ -135,6 +151,9 @@ class CatalogSyncWorker(
         const val KEY_PROGRESS_LIVE_PROCESSED = "liveProcessed"
         const val KEY_PROGRESS_MOVIES_PROCESSED = "moviesProcessed"
         const val KEY_PROGRESS_SERIES_PROCESSED = "seriesProcessed"
+        const val KEY_PROGRESS_LIVE_ACTIVE = "liveActive"
+        const val KEY_PROGRESS_MOVIES_ACTIVE = "moviesActive"
+        const val KEY_PROGRESS_SERIES_ACTIVE = "seriesActive"
     }
 }
 
@@ -148,4 +167,7 @@ private fun ImportStage.toWorkData(): Data =
         CatalogSyncWorker.KEY_PROGRESS_LIVE_PROCESSED to liveProcessed,
         CatalogSyncWorker.KEY_PROGRESS_MOVIES_PROCESSED to moviesProcessed,
         CatalogSyncWorker.KEY_PROGRESS_SERIES_PROCESSED to seriesProcessed,
+        CatalogSyncWorker.KEY_PROGRESS_LIVE_ACTIVE to liveActive,
+        CatalogSyncWorker.KEY_PROGRESS_MOVIES_ACTIVE to moviesActive,
+        CatalogSyncWorker.KEY_PROGRESS_SERIES_ACTIVE to seriesActive,
     )

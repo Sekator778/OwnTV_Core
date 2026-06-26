@@ -12,6 +12,9 @@ data class ImportStage(
     val liveProcessed: Int = 0,
     val moviesProcessed: Int = 0,
     val seriesProcessed: Int = 0,
+    val liveActive: Boolean = false,
+    val moviesActive: Boolean = false,
+    val seriesActive: Boolean = false,
 ) {
     val fraction: Float?
         get() = total?.takeIf { it > 0 }?.let { processed.toFloat() / it }
@@ -225,6 +228,9 @@ internal class SyncProgressTracker(
             liveProcessed = phaseStates[SyncPhase.LIVE]?.processed ?: 0,
             moviesProcessed = phaseStates[SyncPhase.MOVIES]?.processed ?: 0,
             seriesProcessed = phaseStates[SyncPhase.SERIES]?.processed ?: 0,
+            liveActive = phaseStates.containsKey(SyncPhase.LIVE),
+            moviesActive = phaseStates.containsKey(SyncPhase.MOVIES),
+            seriesActive = phaseStates.containsKey(SyncPhase.SERIES),
         )
     }
 
