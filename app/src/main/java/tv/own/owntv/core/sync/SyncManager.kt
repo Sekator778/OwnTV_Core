@@ -2,9 +2,13 @@ package tv.own.owntv.core.sync
 
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.sync.Semaphore
+import kotlinx.coroutines.sync.withPermit
 import kotlinx.coroutines.withContext
 import tv.own.owntv.core.database.dao.CategoryDao
 import tv.own.owntv.core.database.dao.ChannelDao
@@ -45,12 +49,17 @@ class SyncManager(
     private val m3u: M3uParser,
     private val http: HttpClient,
 ) {
-    suspend fun sync(source: SourceEntity, onProgress: (ImportStage) -> Unit): SyncResult =
+    private val lastSyncStats = java.util.concurrent.ConcurrentHashMap<Long, SyncRunStats>()
+
+    fun getLastSyncStats(sourceId: Long): SyncRunStats? = lastSyncStats[sourceId]
+
+    suspend fun sync(source: SourceEntity, onProgress: (ImportStage) -> Unit, contentTypes: SyncContentTypes = SyncContentTypes()): Pair<SyncResult, SyncRunStats> =
         withContext(Dispatchers.IO) {
-            try {
+            val stats = SyncStatsCollector(source.id)
+            val result = try {
                 when (source.type) {
-                    SourceType.XTREAM -> syncXtream(source, onProgress)
-                    SourceType.M3U -> syncM3u(source, onProgress)
+                    SourceType.XTREAM -> syncXtream(source, onProgress, stats, contentTypes)
+                    SourceType.M3U -> syncM3u(source, onProgress, stats)
                     SourceType.LOCAL_BACKUP -> Unit
                 }
                 sourceDao.markSynced(source.id, System.currentTimeMillis())
@@ -60,13 +69,25 @@ class SyncManager(
             } catch (e: Exception) {
                 SyncResult.Failed(e.message ?: "Sync failed")
             }
+            val runStats = stats.build(result)
+            lastSyncStats[source.id] = runStats
+            logStats(runStats)
+            result to runStats
         }
 
     // ---------------- Xtream ----------------
-    private suspend fun syncXtream(s: SourceEntity, onProgress: (ImportStage) -> Unit) {
-        val ctx = currentCoroutineContext()
+    private suspend fun syncXtream(s: SourceEntity, onProgress: (ImportStage) -> Unit, stats: SyncStatsCollector, contentTypes: SyncContentTypes) {
+        val semaphore = Semaphore(2)
+        coroutineScope {
+            if (contentTypes.live) async { semaphore.withPermit { syncLive(s, onProgress, stats) } }
+            if (contentTypes.movies) async { semaphore.withPermit { syncMovies(s, onProgress, stats) } }
+            if (contentTypes.series) async { semaphore.withPermit { syncSeries(s, onProgress, stats) } }
+        }
+    }
 
-        // LIVE — sortOrder records the provider's order so "Playlist order" sorting can replay it.
+    private suspend fun syncLive(s: SourceEntity, onProgress: (ImportStage) -> Unit, stats: SyncStatsCollector) {
+        val ctx = currentCoroutineContext()
+        val liveStart = System.currentTimeMillis()
         val liveCats = xtream.liveCategories(s)
         val liveMap = refreshCategories(s, MediaType.LIVE, liveCats)
         channelDao.clearSource(s.id)
@@ -86,12 +107,19 @@ class SyncManager(
                 xtream.streamLive(s) { add(toChannel(it)) }
             }
         }
-        if (!liveDone) sliceByCategory(ctx, "Channels", onProgress, liveCats, { channelDao.upsertAll(it) }, liveTotal, liveTotal[0]) { cat, add ->
-            xtream.streamLive(s, cat.id) { add(toChannel(it)) }
+        if (!liveDone) {
+            stats.usedFallback = true
+            sliceByCategory(ctx, "Channels", onProgress, liveCats, { channelDao.upsertAll(it) }, liveTotal, liveTotal[0]) { cat, add ->
+                xtream.streamLive(s, cat.id) { add(toChannel(it)) }
+            }
         }
+        stats.phaseTiming["live"] = System.currentTimeMillis() - liveStart
+        stats.processedCounts["channels"] = liveTotal[0]
+    }
 
-        // MOVIES — non-fatal: a flaky VOD endpoint shouldn't abort the whole import (keep the channels).
-        guardStep("Movies") {
+    private suspend fun syncMovies(s: SourceEntity, onProgress: (ImportStage) -> Unit, stats: SyncStatsCollector) {
+        val ctx = currentCoroutineContext()
+        guardStep("movies", stats) {
             val vodCats = xtream.vodCategories(s)
             val vodMap = refreshCategories(s, MediaType.MOVIE, vodCats)
             movieDao.clearSource(s.id)
@@ -111,15 +139,19 @@ class SyncManager(
                     xtream.streamVod(s) { add(toMovie(it)) }
                 }
             }
-            if (!vodDone) sliceByCategory(ctx, "Movies", onProgress, vodCats, { movieDao.upsertAll(it) }, vodTotal, vodTotal[0]) { cat, add ->
-                xtream.streamVod(s, cat.id) { add(toMovie(it)) }
+            if (!vodDone) {
+                stats.usedFallback = true
+                sliceByCategory(ctx, "Movies", onProgress, vodCats, { movieDao.upsertAll(it) }, vodTotal, vodTotal[0]) { cat, add ->
+                    xtream.streamVod(s, cat.id) { add(toMovie(it)) }
+                }
             }
+            stats.processedCounts["movies"] = vodTotal[0]
         }
+    }
 
-        // SERIES (shows only; seasons/episodes fetched lazily later) — non-fatal too. Some providers
-        // (e.g. peoplestv) return a non-standard HTTP 512 here that used to abort the entire import; now we
-        // keep the channels + movies and just skip series rather than failing the whole sync.
-        guardStep("Series") {
+    private suspend fun syncSeries(s: SourceEntity, onProgress: (ImportStage) -> Unit, stats: SyncStatsCollector) {
+        val ctx = currentCoroutineContext()
+        guardStep("series", stats) {
             val seriesCats = xtream.seriesCategories(s)
             val seriesMap = refreshCategories(s, MediaType.SERIES, seriesCats)
             seriesDao.clearSource(s.id)
@@ -138,22 +170,27 @@ class SyncManager(
                     xtream.streamSeries(s) { add(toSeries(it)) }
                 }
             }
-            if (!seriesDone) sliceByCategory(ctx, "Series", onProgress, seriesCats, { seriesDao.upsertSeries(it) }, seriesTotal, seriesTotal[0]) { cat, add ->
-                xtream.streamSeries(s, cat.id) { add(toSeries(it)) }
+            if (!seriesDone) {
+                stats.usedFallback = true
+                sliceByCategory(ctx, "Series", onProgress, seriesCats, { seriesDao.upsertSeries(it) }, seriesTotal, seriesTotal[0]) { cat, add ->
+                    xtream.streamSeries(s, cat.id) { add(toSeries(it)) }
+                }
             }
+            stats.processedCounts["series"] = seriesTotal[0]
         }
     }
 
-    /** Run a content step (Movies / Series) without letting a provider-side failure abort the whole import —
-     *  the channels (and any earlier step) are already saved, so a broken VOD/Series endpoint just means that
-     *  section is missing, not a total failure. Cancellation still propagates. */
-    private suspend inline fun guardStep(label: String, block: () -> Unit) {
+    private suspend inline fun guardStep(phase: String, stats: SyncStatsCollector, block: () -> Unit) {
+        val start = System.currentTimeMillis()
         try {
             block()
         } catch (c: CancellationException) {
             throw c
         } catch (e: Exception) {
-            android.util.Log.w("SyncManager", "$label import failed — keeping the rest of the import", e)
+            android.util.Log.w("SyncManager", "$phase import failed — keeping the rest of the import", e)
+            stats.phaseErrors[phase] = e.message ?: "unknown"
+        } finally {
+            stats.phaseTiming[phase] = System.currentTimeMillis() - start
         }
     }
 
@@ -238,7 +275,8 @@ class SyncManager(
     }
 
     // ---------------- M3U ----------------
-    private suspend fun syncM3u(s: SourceEntity, onProgress: (ImportStage) -> Unit) {
+    private suspend fun syncM3u(s: SourceEntity, onProgress: (ImportStage) -> Unit, stats: SyncStatsCollector) {
+        val channelsStart = System.currentTimeMillis()
         val ctx = currentCoroutineContext()
         categoryDao.clear(s.id, MediaType.LIVE)
         channelDao.clearSource(s.id)
@@ -300,6 +338,8 @@ class SyncManager(
         if (!header.urlTvg.isNullOrBlank() && s.epgUrl.isNullOrBlank()) {
             sourceDao.update(s.copy(epgUrl = header.urlTvg))
         }
+        stats.phaseTiming["channels"] = System.currentTimeMillis() - channelsStart
+        stats.processedCounts["channels"] = processed
     }
 
     /**
@@ -330,6 +370,46 @@ class SyncManager(
         }
         flush()
         return result
+    }
+
+    private fun logStats(stats: SyncRunStats) {
+        val tag = "SyncManager"
+        val duration = stats.finishedAt - stats.startedAt
+        val result = when (stats.result) {
+            SyncResult.Success -> "Success"
+            SyncResult.Cancelled -> "Cancelled"
+            is SyncResult.Failed -> "Failed: ${stats.result.message}"
+        }
+        android.util.Log.i(tag, "── Sync stats for source ${stats.sourceId} ──")
+        android.util.Log.i(tag, "Result: $result | Duration: ${duration}ms | Fallback: ${stats.usedFallback}")
+        if (stats.phaseTiming.isNotEmpty()) {
+            android.util.Log.i(tag, "Phases: ${stats.phaseTiming.entries.joinToString { "${it.key}=${it.value}ms" }}")
+        }
+        if (stats.processedCounts.isNotEmpty()) {
+            android.util.Log.i(tag, "Counts: ${stats.processedCounts.entries.joinToString { "${it.key}=${it.value}" }}")
+        }
+        if (stats.phaseErrors.isNotEmpty()) {
+            android.util.Log.w(tag, "Phase errors: ${stats.phaseErrors.entries.joinToString { "${it.key}=${it.value}" }}")
+        }
+    }
+
+    internal class SyncStatsCollector(val sourceId: Long) {
+        val startedAt = System.currentTimeMillis()
+        val phaseTiming = java.util.concurrent.ConcurrentHashMap<String, Long>()
+        val processedCounts = java.util.concurrent.ConcurrentHashMap<String, Int>()
+        val phaseErrors = java.util.concurrent.ConcurrentHashMap<String, String>()
+        @Volatile var usedFallback = false
+
+        fun build(result: SyncResult) = SyncRunStats(
+            sourceId = sourceId,
+            startedAt = startedAt,
+            finishedAt = System.currentTimeMillis(),
+            result = result,
+            phaseTiming = phaseTiming.toMap(),
+            processedCounts = processedCounts.toMap(),
+            phaseErrors = phaseErrors.toMap(),
+            usedFallback = usedFallback,
+        )
     }
 
     companion object {

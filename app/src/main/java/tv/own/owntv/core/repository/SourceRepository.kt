@@ -6,6 +6,7 @@ import tv.own.owntv.core.database.entity.ProfileSourceCrossRef
 import tv.own.owntv.core.database.entity.SourceEntity
 import tv.own.owntv.core.model.SourceType
 import tv.own.owntv.core.sync.ImportStage
+import tv.own.owntv.core.sync.SyncContentTypes
 import tv.own.owntv.core.sync.SyncManager
 import tv.own.owntv.core.sync.SyncResult
 
@@ -47,11 +48,11 @@ class SourceRepository(
 
     suspend fun updateSource(source: SourceEntity) = sourceDao.update(source)
 
-    suspend fun sync(source: SourceEntity, onProgress: (ImportStage) -> Unit): SyncResult {
+    suspend fun sync(source: SourceEntity, onProgress: (ImportStage) -> Unit, contentTypes: SyncContentTypes = SyncContentTypes()): SyncResult {
         // Snapshot favorites/history/resume with stable keys BEFORE the sync clears content (their ids
         // change on every refresh, so they'd otherwise orphan — count badge set, list empty).
         val snapshot = runCatching { userData.exportAll() }.getOrNull()
-        val result = syncManager.sync(source, onProgress)
+        val (result, _) = syncManager.sync(source, onProgress, contentTypes)
         if (result == SyncResult.Success) {
             // Content rows just regenerated — re-attach the snapshot (and any restored backup data) to
             // the new ids, and drop rows the provider removed.

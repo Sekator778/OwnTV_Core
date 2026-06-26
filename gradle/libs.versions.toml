@@ -14,6 +14,7 @@ tvProvider = "1.1.0"
 lifecycle = "2.10.0"
 navigationCompose = "2.9.8"
 datastore = "1.2.1"
+work = "2.10.0"
 
 # --- Build tooling ---
 # KSP2 (decoupled versioning) targeting Kotlin 2.3.x. Used by Room. Verified 2026-06-09.
@@ -67,6 +68,9 @@ androidx-navigation-compose = { group = "androidx.navigation", name = "navigatio
 
 # DataStore (theme / prefs persistence)
 androidx-datastore-preferences = { group = "androidx.datastore", name = "datastore-preferences", version.ref = "datastore" }
+
+# WorkManager (durable background sync)
+androidx-work-runtime = { group = "androidx.work", name = "work-runtime-ktx", version.ref = "work" }
 
 # Room (database) + Paging
 androidx-room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room" }

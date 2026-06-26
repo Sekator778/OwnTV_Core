@@ -21,6 +21,7 @@ import tv.own.owntv.core.repository.SourceRepository
 import tv.own.owntv.core.tv.TvHomeRepository
 import tv.own.owntv.core.update.UpdateManager
 import tv.own.owntv.core.sync.SyncManager
+import tv.own.owntv.core.sync.work.CatalogSyncScheduler
 import java.util.concurrent.TimeUnit
 
 /** Networking, parsers, sync engine, and repositories (Phase 5). */
@@ -83,4 +84,5 @@ val dataModule = module {
     single { BackupManager(get(), get(), get(), get(), get(), get(), get()) }
     // context, okHttpClient — in-app updates from GitHub Releases
     single { UpdateManager(androidContext(), get()) }
+    single { CatalogSyncScheduler(androidContext()) }
 }
