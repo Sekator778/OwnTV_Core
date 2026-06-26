@@ -9,6 +9,9 @@ data class ImportStage(
     val total: Int?,
     val overallPercent: Int = 0,
     val breakdown: String = "",
+    val liveProcessed: Int = 0,
+    val moviesProcessed: Int = 0,
+    val seriesProcessed: Int = 0,
 ) {
     val fraction: Float?
         get() = total?.takeIf { it > 0 }?.let { processed.toFloat() / it }
@@ -219,6 +222,9 @@ internal class SyncProgressTracker(
             total = activePhase?.let { phaseStates[it]?.total },
             overallPercent = (overallFraction * 100f).roundToInt(),
             breakdown = phases.joinToString(" • ") { "${it.phase.label} ${it.percent}%" },
+            liveProcessed = phaseStates[SyncPhase.LIVE]?.processed ?: 0,
+            moviesProcessed = phaseStates[SyncPhase.MOVIES]?.processed ?: 0,
+            seriesProcessed = phaseStates[SyncPhase.SERIES]?.processed ?: 0,
         )
     }
 

@@ -81,6 +81,9 @@ class CatalogSyncWorker(
                     KEY_PROGRESS_TOTAL to -1,
                     KEY_PROGRESS_OVERALL to 0,
                     KEY_PROGRESS_BREAKDOWN to "",
+                    KEY_PROGRESS_LIVE_PROCESSED to 0,
+                    KEY_PROGRESS_MOVIES_PROCESSED to 0,
+                    KEY_PROGRESS_SERIES_PROCESSED to 0,
                 ),
             )
             lastLabel = "Starting"
@@ -129,6 +132,9 @@ class CatalogSyncWorker(
         const val KEY_PROGRESS_TOTAL = "total"
         const val KEY_PROGRESS_OVERALL = "overall"
         const val KEY_PROGRESS_BREAKDOWN = "breakdown"
+        const val KEY_PROGRESS_LIVE_PROCESSED = "liveProcessed"
+        const val KEY_PROGRESS_MOVIES_PROCESSED = "moviesProcessed"
+        const val KEY_PROGRESS_SERIES_PROCESSED = "seriesProcessed"
     }
 }
 
@@ -139,4 +145,7 @@ private fun ImportStage.toWorkData(): Data =
         CatalogSyncWorker.KEY_PROGRESS_TOTAL to (total ?: -1),
         CatalogSyncWorker.KEY_PROGRESS_OVERALL to overallPercent,
         CatalogSyncWorker.KEY_PROGRESS_BREAKDOWN to breakdown,
+        CatalogSyncWorker.KEY_PROGRESS_LIVE_PROCESSED to liveProcessed,
+        CatalogSyncWorker.KEY_PROGRESS_MOVIES_PROCESSED to moviesProcessed,
+        CatalogSyncWorker.KEY_PROGRESS_SERIES_PROCESSED to seriesProcessed,
     )
