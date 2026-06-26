@@ -33,7 +33,7 @@ interface FavoriteDao {
 
     /** User-data rows tied to one source, already joined to stable content keys for fast re-sync snapshots. */
     @Query(
-        "SELECT f.profileId AS profileId, f.mediaType AS mediaType, " +
+        "SELECT f.profileId AS profileId, f.mediaType AS mediaType, f.itemId AS itemId, " +
             "COALESCE(c.sourceId, m.sourceId, s.sourceId, episodeSeries.sourceId) AS sourceId, " +
             "COALESCE(c.remoteId, m.remoteId, s.remoteId, e.remoteId) AS remoteId, " +
             "COALESCE(c.name, m.name, s.name) AS name, " +
@@ -49,6 +49,15 @@ interface FavoriteDao {
             "WHERE c.sourceId = :sourceId OR m.sourceId = :sourceId OR s.sourceId = :sourceId OR episodeSeries.sourceId = :sourceId",
     )
     suspend fun exportRowsForSource(sourceId: Long): List<UserDataExportRow>
+
+    @Query(
+        "DELETE FROM favorites WHERE profileId = :profileId AND mediaType = :type AND itemId = :itemId AND (" +
+            "(:type = 'LIVE'   AND itemId NOT IN (SELECT id FROM channels)) OR " +
+            "(:type = 'MOVIE'  AND itemId NOT IN (SELECT id FROM movies))   OR " +
+            "(:type = 'SERIES' AND itemId NOT IN (SELECT id FROM series))" +
+            ")",
+    )
+    suspend fun purgeSnapshotOrphan(profileId: Long, type: MediaType, itemId: Long)
 
     /**
      * Drops favorites whose content row no longer exists — content is clear-then-insert on every sync,

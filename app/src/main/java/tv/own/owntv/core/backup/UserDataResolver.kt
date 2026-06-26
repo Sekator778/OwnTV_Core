@@ -84,7 +84,7 @@ class UserDataResolver(
                     .putOpt("rid", remoteId).put("season", seasonNumber ?: 0).put("ep", episodeNumber ?: 0)
             }
         }
-        json.put("p", profileId).put("kind", kind).put("at", at)
+        json.put("p", profileId).put("kind", kind).put("at", at).put("oid", itemId)
         if (kind == "prog") json.put("pos", positionMs).put("dur", durationMs)
         return json
     }
@@ -104,11 +104,32 @@ class UserDataResolver(
             val ok = runCatching { resolveAndInsert(e) }.getOrDefault(false)
             if (!ok) unresolved.put(e)
         }
-        favoriteDao.purgeOrphans()
-        historyDao.purgeOrphans()
-        progressDao.purgeOrphans()
+        if (snapshot.hasSourceSnapshotIds()) {
+            purgeSnapshotOrphans(snapshot)
+        } else {
+            favoriteDao.purgeOrphans()
+            historyDao.purgeOrphans()
+            progressDao.purgeOrphans()
+        }
         if (unresolved.length() > 0) addPending(unresolved)
         resolvePending() // also retries any in-flight backup restore
+    }
+
+    private fun JSONArray.hasSourceSnapshotIds(): Boolean =
+        length() > 0 && (0 until length()).all { getJSONObject(it).has("oid") }
+
+    private suspend fun purgeSnapshotOrphans(snapshot: JSONArray) {
+        for (i in 0 until snapshot.length()) {
+            val e = snapshot.getJSONObject(i)
+            val type = runCatching { MediaType.valueOf(e.getString("t")) }.getOrNull() ?: continue
+            val profileId = e.getLong("p")
+            val itemId = e.getLong("oid")
+            when (e.optString("kind")) {
+                "fav" -> favoriteDao.purgeSnapshotOrphan(profileId, type, itemId)
+                "his" -> historyDao.purgeSnapshotOrphan(profileId, type, itemId)
+                "prog" -> progressDao.purgeSnapshotOrphan(profileId, type, itemId)
+            }
+        }
     }
 
     /** Appends records to the pending set (de-duplicated by content), so they heal on a later resolve. */
