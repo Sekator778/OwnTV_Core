@@ -300,6 +300,13 @@ class SyncManager(
     private suspend fun syncM3u(s: SourceEntity, progress: SyncProgressTracker, stats: SyncStatsCollector) {
         val channelsStart = System.currentTimeMillis()
         val ctx = currentCoroutineContext()
+        val reportBytes = progress.bytesReporter(SyncPhase.LIVE)
+        // A locally-picked playlist file (in-app StorageBrowser gives an absolute path; also tolerate
+        // file://content:// URIs) is read straight from the device; a normal URL is downloaded. Same parser.
+        val isLocal = s.url.startsWith("/") || s.url.startsWith("file://") || s.url.startsWith("content://")
+        val localPlaylist = if (isLocal) openLocalPlaylist(s.url) else null
+        progress.start(SyncPhase.LIVE, SyncPhase.LIVE.label, bytesTotal = localPlaylist?.second)
+
         categoryDao.clear(s.id, MediaType.LIVE)
         channelDao.clearSource(s.id)
 
@@ -310,11 +317,6 @@ class SyncManager(
         var processed = 0
         var order = 0 // playlist position — lets "Playlist order" sorting replay the file's order
         var categoryOrder = 0
-        val reportBytes = progress.bytesReporter(SyncPhase.LIVE)
-        // A locally-picked playlist file (in-app StorageBrowser gives an absolute path; also tolerate
-        // file://content:// URIs) is read straight from the device; a normal URL is downloaded. Same parser.
-        val isLocal = s.url.startsWith("/") || s.url.startsWith("file://") || s.url.startsWith("content://")
-        val localEntryTotal = if (isLocal) countLocalM3uEntries(s.url) else null
 
         fun queueCategory(group: String) {
             if (groupToCategoryId.containsKey(group) || !pendingCategoryGroups.add(group)) return
@@ -366,7 +368,7 @@ class SyncManager(
             channelDao.upsertAll(channels)
             processed += channels.size
             buffer.clear()
-            progress.update(SyncPhase.LIVE, SyncPhase.LIVE.label, processed, total = localEntryTotal)
+            progress.update(SyncPhase.LIVE, SyncPhase.LIVE.label, processed)
         }
 
         val onEntry: suspend (tv.own.owntv.core.parser.M3uEntry) -> Unit = { e ->
@@ -376,8 +378,6 @@ class SyncManager(
                 flushChannels()
             }
         }
-        val localPlaylist = if (isLocal) openLocalPlaylist(s.url) else null
-        progress.start(SyncPhase.LIVE, SyncPhase.LIVE.label, total = localEntryTotal, bytesTotal = localPlaylist?.second)
         val header = if (isLocal) {
             localPlaylist!!.useProgress(reportBytes) { input ->
                 m3u.parse(input, onEntry)
@@ -393,7 +393,7 @@ class SyncManager(
         if (!header.urlTvg.isNullOrBlank() && s.epgUrl.isNullOrBlank()) {
             sourceDao.update(s.copy(epgUrl = header.urlTvg))
         }
-        progress.finish(SyncPhase.LIVE, SyncPhase.LIVE.label, processed, total = localEntryTotal)
+        progress.finish(SyncPhase.LIVE, SyncPhase.LIVE.label, processed)
         stats.phaseTiming["channels"] = System.currentTimeMillis() - channelsStart
         stats.processedCounts["channels"] = processed
     }
@@ -473,22 +473,6 @@ class SyncManager(
             input to totalBytes
         }
         else -> throw java.io.IOException("Unsupported local playlist path")
-    }
-
-    private suspend fun countLocalM3uEntries(url: String): Int? {
-        val ctx = currentCoroutineContext()
-        return runCatching {
-            openLocalPlaylist(url).first.bufferedReader().use { reader ->
-                var count = 0
-                var line = reader.readLine()
-                while (line != null) {
-                    ctx.ensureActive()
-                    if (line.trimStart().startsWith("#EXTINF")) count++
-                    line = reader.readLine()
-                }
-                count.takeIf { it > 0 }
-            }
-        }.getOrNull()
     }
 
     private fun logStats(stats: SyncRunStats) {
