@@ -90,6 +90,9 @@ fun syncProgressRowText(overallPercent: Int, counts: SyncProgressCounts): String
         "Preparing catalog"
     }
 
+fun syncProgressCountsLabel(counts: SyncProgressCounts): String? =
+    counts.takeIf { it.hasItems }?.label()?.ifBlank { null }
+
 private fun syncCount(count: Int): String = when {
     count >= 1_000_000 -> scaledCount(count / 1_000_000.0, "M")
     count >= 1_000 -> scaledCount(count / 1_000.0, "K")
