@@ -65,7 +65,7 @@ import tv.own.owntv.core.database.entity.TvProviderProgramEntity
         SeriesFtsEntity::class,
         EpisodeFtsEntity::class,
     ],
-    version = 4, // v4: unify split v3 schemas (catch-up + Android TV home bookkeeping)
+    version = 6, // v4: unified v3. v5: A–Z composites. v6: playlist/provider composites
     exportSchema = true,
 )
 @TypeConverters(Converters::class)

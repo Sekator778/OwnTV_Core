@@ -13,9 +13,6 @@ import java.io.InputStream
 class HttpClient(private val client: OkHttpClient) {
 
     fun <T> get(url: String, userAgent: String? = null, block: (InputStream) -> T): T {
-        // Many IPTV panels reject requests that don't look like a media player (or that use the
-        // default OkHttp UA), so we send a player-style default unless the source overrides it
-        // (custom User-Agent is a Phase 12 power feature).
         val ua = userAgent?.takeIf { it.isNotBlank() } ?: DEFAULT_USER_AGENT
         val request = Request.Builder()
             .url(url)

@@ -69,7 +69,7 @@ class SyncManager(
         // LIVE — sortOrder records the provider's order so "Playlist order" sorting can replay it.
         val liveCats = xtream.liveCategories(s)
         val liveMap = refreshCategories(s, MediaType.LIVE, liveCats)
-        channelDao.clearSource(s.id)
+        var liveCleared = false
         var liveOrder = 0
         val toChannel = { item: XtLiveStream ->
             ChannelEntity(
@@ -82,11 +82,11 @@ class SyncManager(
         }
         val liveTotal = intArrayOf(0)
         val liveDone = bulkOrFallback("Channels") {
-            chunked<ChannelEntity, Boolean>(ctx, "Channels", onProgress, { channelDao.upsertAll(it) }, liveTotal) { add ->
+            chunked<ChannelEntity, Boolean>(ctx, "Channels", onProgress, { if (!liveCleared) { runBlocking { channelDao.clearSource(s.id) }; liveCleared = true }; channelDao.upsertAll(it) }, liveTotal) { add ->
                 xtream.streamLive(s) { add(toChannel(it)) }
             }
         }
-        if (!liveDone) sliceByCategory(ctx, "Channels", onProgress, liveCats, { channelDao.upsertAll(it) }, liveTotal, liveTotal[0]) { cat, add ->
+        if (!liveDone) sliceByCategory(ctx, "Channels", onProgress, liveCats, { if (!liveCleared) { runBlocking { channelDao.clearSource(s.id) }; liveCleared = true }; channelDao.upsertAll(it) }, liveTotal, liveTotal[0]) { cat, add ->
             xtream.streamLive(s, cat.id) { add(toChannel(it)) }
         }
 
@@ -94,7 +94,7 @@ class SyncManager(
         guardStep("Movies") {
             val vodCats = xtream.vodCategories(s)
             val vodMap = refreshCategories(s, MediaType.MOVIE, vodCats)
-            movieDao.clearSource(s.id)
+            var vodCleared = false
             var vodOrder = 0
             val toMovie = { item: XtVod ->
                 MovieEntity(
@@ -107,11 +107,11 @@ class SyncManager(
             }
             val vodTotal = intArrayOf(0)
             val vodDone = bulkOrFallback("Movies") {
-                chunked<MovieEntity, Boolean>(ctx, "Movies", onProgress, { movieDao.upsertAll(it) }, vodTotal) { add ->
+                chunked<MovieEntity, Boolean>(ctx, "Movies", onProgress, { if (!vodCleared) { runBlocking { movieDao.clearSource(s.id) }; vodCleared = true }; movieDao.upsertAll(it) }, vodTotal) { add ->
                     xtream.streamVod(s) { add(toMovie(it)) }
                 }
             }
-            if (!vodDone) sliceByCategory(ctx, "Movies", onProgress, vodCats, { movieDao.upsertAll(it) }, vodTotal, vodTotal[0]) { cat, add ->
+            if (!vodDone) sliceByCategory(ctx, "Movies", onProgress, vodCats, { if (!vodCleared) { runBlocking { movieDao.clearSource(s.id) }; vodCleared = true }; movieDao.upsertAll(it) }, vodTotal, vodTotal[0]) { cat, add ->
                 xtream.streamVod(s, cat.id) { add(toMovie(it)) }
             }
         }
@@ -122,7 +122,7 @@ class SyncManager(
         guardStep("Series") {
             val seriesCats = xtream.seriesCategories(s)
             val seriesMap = refreshCategories(s, MediaType.SERIES, seriesCats)
-            seriesDao.clearSource(s.id)
+            var seriesCleared = false
             var seriesOrder = 0
             val toSeries = { item: XtSeries ->
                 SeriesEntity(
@@ -134,11 +134,11 @@ class SyncManager(
             }
             val seriesTotal = intArrayOf(0)
             val seriesDone = bulkOrFallback("Series") {
-                chunked<SeriesEntity, Boolean>(ctx, "Series", onProgress, { seriesDao.upsertSeries(it) }, seriesTotal) { add ->
+                chunked<SeriesEntity, Boolean>(ctx, "Series", onProgress, { if (!seriesCleared) { runBlocking { seriesDao.clearSource(s.id) }; seriesCleared = true }; seriesDao.upsertSeries(it) }, seriesTotal) { add ->
                     xtream.streamSeries(s) { add(toSeries(it)) }
                 }
             }
-            if (!seriesDone) sliceByCategory(ctx, "Series", onProgress, seriesCats, { seriesDao.upsertSeries(it) }, seriesTotal, seriesTotal[0]) { cat, add ->
+            if (!seriesDone) sliceByCategory(ctx, "Series", onProgress, seriesCats, { if (!seriesCleared) { runBlocking { seriesDao.clearSource(s.id) }; seriesCleared = true }; seriesDao.upsertSeries(it) }, seriesTotal, seriesTotal[0]) { cat, add ->
                 xtream.streamSeries(s, cat.id) { add(toSeries(it)) }
             }
         }
@@ -208,8 +208,14 @@ class SyncManager(
             } catch (c: CancellationException) {
                 throw c
             } catch (e: Exception) {
-                android.util.Log.w("SyncManager", "$label: category ${cat.id} failed (${e.message}) — skipping it", e)
-                return@forEachIndexed
+                // HTTP errors (like 512 "response too large") are specific to one category — skip it and
+                // try the next. Network errors (timeout, DNS, connection refused) mean the server is
+                // unreachable — abort the entire fallback so we don't spin for minutes retrying every
+                // category against a dead server.
+                val isServerError = e.message?.startsWith("HTTP") == true
+                android.util.Log.w("SyncManager", "$label: category ${cat.id} failed (${e.message}) — ${if (isServerError) "skipping category" else "ABORTING fallback"}", e)
+                if (isServerError) return@forEachIndexed
+                else return
             }
             if (!complete) {
                 truncations++
@@ -240,40 +246,79 @@ class SyncManager(
     // ---------------- M3U ----------------
     private suspend fun syncM3u(s: SourceEntity, onProgress: (ImportStage) -> Unit) {
         val ctx = currentCoroutineContext()
-        categoryDao.clear(s.id, MediaType.LIVE)
-        channelDao.clearSource(s.id)
+
+        // Clear only when we have real data, not before parsing — a network error during
+        // fetch shouldn't wipe the old working sync.
+        var channelsCleared = false
+        var moviesCleared = false
+        var liveCatsCleared = false
+        var movieCatsCleared = false
 
         val groupToCategoryId = HashMap<String, Long>()
         val buffer = ArrayList<ChannelEntity>(CHUNK)
+        val movieBuffer = ArrayList<MovieEntity>(CHUNK)
         var processed = 0
         var order = 0 // playlist position — lets "Playlist order" sorting replay the file's order
 
         val onEntry: (tv.own.owntv.core.parser.M3uEntry) -> Unit = { e ->
+            val isVod = e.isVod
+            val mediaType = if (isVod) MediaType.MOVIE else MediaType.LIVE
+            // Deferred clear — only wipe the old data once we're about to write the first real row.
+            if (isVod) {
+                if (!moviesCleared) { runBlocking { movieDao.clearSource(s.id) }; moviesCleared = true }
+                if (!movieCatsCleared) { runBlocking { categoryDao.clear(s.id, MediaType.MOVIE) }; movieCatsCleared = true }
+            } else {
+                if (!channelsCleared) { runBlocking { channelDao.clearSource(s.id) }; channelsCleared = true }
+                if (!liveCatsCleared) { runBlocking { categoryDao.clear(s.id, MediaType.LIVE) }; liveCatsCleared = true }
+            }
             val categoryId = e.groupTitle?.let { group ->
                 groupToCategoryId.getOrPut(group) {
                     runBlocking {
                         categoryDao.upsertAll(
                             // sortOrder = first-seen position of the group in the playlist
-                            listOf(CategoryEntity(sourceId = s.id, mediaType = MediaType.LIVE, name = group, remoteId = group, sortOrder = groupToCategoryId.size)),
+                            listOf(CategoryEntity(sourceId = s.id, mediaType = mediaType, name = group, remoteId = group, sortOrder = groupToCategoryId.size)),
                         ).first()
                     }
                 }
             }
-            buffer.add(
-                ChannelEntity(
-                    sourceId = s.id, categoryId = categoryId, name = e.name, logoUrl = e.logo,
-                    streamUrl = e.streamUrl, epgChannelId = e.tvgId, number = e.tvgChno,
-                    remoteId = null, // M3U has no stable id; rely on clear-then-insert
-                    sortOrder = order++,
-                    catchup = e.catchup != null, catchupDays = e.catchupDays ?: 0, catchupSource = e.catchupSource,
-                ),
-            )
+            if (isVod) {
+                // VOD entries become movies in the movie grid, not live channels.
+                movieBuffer.add(
+                    MovieEntity(
+                        sourceId = s.id, categoryId = categoryId, name = e.name,
+                        posterUrl = e.logo, streamUrl = e.streamUrl,
+                        remoteId = null, sortOrder = order++,
+                    ),
+                )
+                if (movieBuffer.size >= CHUNK) {
+                    ctx.ensureActive()
+                    runBlocking { movieDao.upsertAll(movieBuffer.toList()) }
+                    processed += movieBuffer.size
+                    movieBuffer.clear()
+                    onProgress(ImportStage("Movies", processed, null))
+                }
+            } else {
+                buffer.add(
+                    ChannelEntity(
+                        sourceId = s.id, categoryId = categoryId, name = e.name, logoUrl = e.logo,
+                        streamUrl = e.streamUrl, epgChannelId = e.tvgId, number = e.tvgChno,
+                        remoteId = null, // M3U has no stable id; rely on clear-then-insert
+                        sortOrder = order++,
+                        catchup = e.catchup != null, catchupDays = e.catchupDays ?: 0, catchupSource = e.catchupSource,
+                    ),
+                )
+            }
             if (buffer.size >= CHUNK) {
                 ctx.ensureActive()
                 runBlocking { channelDao.upsertAll(buffer.toList()) }
                 processed += buffer.size
                 buffer.clear()
                 onProgress(ImportStage("Channels", processed, null))
+            }
+            if (movieBuffer.size >= CHUNK) {
+                ctx.ensureActive()
+                runBlocking { movieDao.upsertAll(movieBuffer.toList()) }
+                movieBuffer.clear()
             }
         }
         // A locally-picked playlist file (in-app StorageBrowser gives an absolute path; also tolerate
@@ -294,6 +339,10 @@ class SyncManager(
             runBlocking { channelDao.upsertAll(buffer.toList()) }
             processed += buffer.size
             onProgress(ImportStage("Channels", processed, null))
+        }
+        if (movieBuffer.isNotEmpty()) {
+            runBlocking { movieDao.upsertAll(movieBuffer.toList()) }
+            onProgress(ImportStage("Movies", movieBuffer.size, null))
         }
 
         // Persist the playlist's EPG url (url-tvg) for the EPG engine if the source didn't have one.

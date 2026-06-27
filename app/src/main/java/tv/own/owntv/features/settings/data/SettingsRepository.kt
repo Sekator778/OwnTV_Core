@@ -165,10 +165,11 @@ class SettingsRepository(private val context: Context) {
     /** How a browse section's lists are ordered. */
     enum class SortMode { PLAYLIST, ALPHA }
 
-    /** Live TV defaults to the playlist's own order; Movies/Series default to A–Z. */
+    /** All three browse sections (Live/Movies/Series) default to the playlist/provider's own order — the
+     *  natural grouping a user expects right after a sync. A–Z is one tap away (toggleSort). */
     val sortLive: Flow<SortMode> = context.dataStore.data.map { parseSort(it[Keys.SORT_LIVE], SortMode.PLAYLIST) }
-    val sortMovies: Flow<SortMode> = context.dataStore.data.map { parseSort(it[Keys.SORT_MOVIES], SortMode.ALPHA) }
-    val sortSeries: Flow<SortMode> = context.dataStore.data.map { parseSort(it[Keys.SORT_SERIES], SortMode.ALPHA) }
+    val sortMovies: Flow<SortMode> = context.dataStore.data.map { parseSort(it[Keys.SORT_MOVIES], SortMode.PLAYLIST) }
+    val sortSeries: Flow<SortMode> = context.dataStore.data.map { parseSort(it[Keys.SORT_SERIES], SortMode.PLAYLIST) }
 
     suspend fun setSortLive(mode: SortMode) {
         context.dataStore.edit { it[Keys.SORT_LIVE] = mode.name }
@@ -328,7 +329,7 @@ class SettingsRepository(private val context: Context) {
 
     val themeMode: Flow<ThemeMode> = context.dataStore.data.map { prefs ->
         prefs[Keys.THEME_MODE]?.let { runCatching { ThemeMode.valueOf(it) }.getOrNull() }
-            ?: ThemeMode.AMOLED_DARK
+            ?: ThemeMode.DARK
     }
 
     suspend fun setThemeMode(mode: ThemeMode) {
