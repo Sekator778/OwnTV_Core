@@ -5,6 +5,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Update
 import kotlinx.coroutines.flow.Flow
 import tv.own.owntv.core.database.entity.EpisodeEntity
 import tv.own.owntv.core.database.entity.SeasonEntity
@@ -17,6 +18,12 @@ interface SeriesDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun upsertSeries(series: List<SeriesEntity>)
 
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    suspend fun insertSeries(series: List<SeriesEntity>)
+
+    @Update
+    suspend fun updateSeries(series: List<SeriesEntity>)
+
     @Query("DELETE FROM series WHERE sourceId = :sourceId")
     suspend fun clearSource(sourceId: Long)
 
@@ -26,6 +33,15 @@ interface SeriesDao {
     // --- Stable-key lookups (Backup & Restore resolution: content ids change on re-sync) ---
     @Query("SELECT * FROM series WHERE sourceId = :sourceId AND remoteId = :remoteId LIMIT 1")
     suspend fun findSeriesByRemote(sourceId: Long, remoteId: String): SeriesEntity?
+
+    @Query("SELECT * FROM series WHERE sourceId = :sourceId AND remoteId IN (:remoteIds)")
+    suspend fun findSeriesByRemoteIds(sourceId: Long, remoteIds: List<String>): List<SeriesEntity>
+
+    @Query("SELECT remoteId FROM series WHERE sourceId = :sourceId AND remoteId IS NOT NULL")
+    suspend fun remoteIdsForSource(sourceId: Long): List<String>
+
+    @Query("DELETE FROM series WHERE sourceId = :sourceId AND remoteId IN (:remoteIds)")
+    suspend fun deleteByRemoteIds(sourceId: Long, remoteIds: List<String>)
 
     @Query("SELECT * FROM series WHERE sourceId = :sourceId AND name = :name LIMIT 1")
     suspend fun findSeriesByName(sourceId: Long, name: String): SeriesEntity?
