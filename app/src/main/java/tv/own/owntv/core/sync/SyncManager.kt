@@ -447,7 +447,7 @@ class SyncManager(
             val current = row.remoteId?.let(existingByRemoteId::get)
             when {
                 current == null -> inserts.add(row)
-                row.copy(id = current.id) != current -> updates.add(row.copy(id = current.id))
+                row.copy(id = current.id, sortOrder = current.sortOrder) != current -> updates.add(row.copy(id = current.id))
                 else -> skipped++
             }
         }
@@ -483,7 +483,7 @@ class SyncManager(
             val current = row.remoteId?.let(existingByRemoteId::get)
             when {
                 current == null -> inserts.add(row)
-                row.copy(id = current.id) != current -> updates.add(row.copy(id = current.id))
+                row.copy(id = current.id, sortOrder = current.sortOrder) != current -> updates.add(row.copy(id = current.id))
                 else -> skipped++
             }
         }
