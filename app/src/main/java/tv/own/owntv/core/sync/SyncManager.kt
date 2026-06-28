@@ -324,7 +324,7 @@ class SyncManager(
         label: String,
         progress: SyncProgressTracker,
         categories: List<XtCategory>,
-        insert: suspend (List<T>) -> Unit,
+        insert: suspend (List<T>) -> UpsertStats,
         total: IntArray,
         bulkPartial: Int,
         seenKeys: MutableSet<String>? = null,
@@ -392,8 +392,13 @@ class SyncManager(
             )
         }
         val upsertStart = SystemClock.elapsedRealtime()
-        upsertCategoriesStable(entities, existing)
-        Log.d(TAG, "refreshCategories upsert sourceId=${s.id} type=$type rows=${entities.size} ms=${SystemClock.elapsedRealtime() - upsertStart}")
+        val upsertStats = upsertCategoriesStable(entities, existing)
+        Log.d(
+            TAG,
+            "refreshCategories upsert sourceId=${s.id} type=$type rows=${entities.size} " +
+                "dbInserted=${upsertStats.inserted} dbUpdated=${upsertStats.updated} " +
+                "dbSkipped=${upsertStats.skippedUnchanged} ms=${SystemClock.elapsedRealtime() - upsertStart}",
+        )
         val idsByRemoteId = existingCategoriesByRemoteId(s.id, type, uniqueCategories.map { it.id }).mapValues { it.value.id }
         return CategoryRefresh(idsByRemoteId = idsByRemoteId, seenRemoteIds = uniqueCategories.mapTo(HashSet()) { it.id }).also {
             Log.d(TAG, "refreshCategories end sourceId=${s.id} type=$type mapped=${it.idsByRemoteId.size} totalMs=${SystemClock.elapsedRealtime() - start}")
@@ -405,68 +410,86 @@ class SyncManager(
         val seenRemoteIds: Set<String>,
     )
 
+    private data class UpsertStats(
+        val inserted: Int = 0,
+        val updated: Int = 0,
+        val skippedUnchanged: Int = 0,
+    )
+
     private suspend fun existingCategoriesByRemoteId(sourceId: Long, type: MediaType, remoteIds: List<String>): Map<String, CategoryEntity> =
         remoteIds.distinct().chunked(QUERY_CHUNK).flatMap { categoryDao.findByRemoteIds(sourceId, type, it) }
             .mapNotNull { category -> category.remoteId?.let { it to category } }
             .toMap()
 
-    private suspend fun upsertCategoriesStable(rows: List<CategoryEntity>, existingByRemoteId: Map<String, CategoryEntity>) {
+    private suspend fun upsertCategoriesStable(rows: List<CategoryEntity>, existingByRemoteId: Map<String, CategoryEntity>): UpsertStats {
         val inserts = ArrayList<CategoryEntity>()
         val updates = ArrayList<CategoryEntity>()
+        var skipped = 0
         rows.forEach { row ->
             val current = row.remoteId?.let(existingByRemoteId::get)
             when {
                 current == null -> inserts.add(row)
                 row != current -> updates.add(row)
+                else -> skipped++
             }
         }
         if (updates.isNotEmpty()) categoryDao.updateAll(updates)
         if (inserts.isNotEmpty()) categoryDao.insertAll(inserts)
+        return UpsertStats(inserted = inserts.size, updated = updates.size, skippedUnchanged = skipped)
     }
 
-    private suspend fun upsertChannelsStable(sourceId: Long, rows: List<ChannelEntity>) {
+    private suspend fun upsertChannelsStable(sourceId: Long, rows: List<ChannelEntity>): UpsertStats {
         val existingByRemoteId = existingByRemoteId(rows, ChannelEntity::remoteId) { channelDao.findByRemoteIds(sourceId, it) }
         val inserts = ArrayList<ChannelEntity>()
         val updates = ArrayList<ChannelEntity>()
+        var skipped = 0
         rows.forEach { row ->
             val current = row.remoteId?.let(existingByRemoteId::get)
             when {
                 current == null -> inserts.add(row)
                 row.copy(id = current.id) != current -> updates.add(row.copy(id = current.id))
+                else -> skipped++
             }
         }
         if (updates.isNotEmpty()) channelDao.updateAll(updates)
         if (inserts.isNotEmpty()) channelDao.insertAll(inserts)
+        return UpsertStats(inserted = inserts.size, updated = updates.size, skippedUnchanged = skipped)
     }
 
-    private suspend fun upsertMoviesStable(sourceId: Long, rows: List<MovieEntity>) {
+    private suspend fun upsertMoviesStable(sourceId: Long, rows: List<MovieEntity>): UpsertStats {
         val existingByRemoteId = existingByRemoteId(rows, MovieEntity::remoteId) { movieDao.findByRemoteIds(sourceId, it) }
         val inserts = ArrayList<MovieEntity>()
         val updates = ArrayList<MovieEntity>()
+        var skipped = 0
         rows.forEach { row ->
             val current = row.remoteId?.let(existingByRemoteId::get)
             when {
                 current == null -> inserts.add(row)
                 row.copy(id = current.id) != current -> updates.add(row.copy(id = current.id))
+                else -> skipped++
             }
         }
         if (updates.isNotEmpty()) movieDao.updateAll(updates)
         if (inserts.isNotEmpty()) movieDao.insertAll(inserts)
+        return UpsertStats(inserted = inserts.size, updated = updates.size, skippedUnchanged = skipped)
     }
 
-    private suspend fun upsertSeriesStable(sourceId: Long, rows: List<SeriesEntity>) {
+    private suspend fun upsertSeriesStable(sourceId: Long, rows: List<SeriesEntity>): UpsertStats {
         val existingByRemoteId = existingByRemoteId(rows, SeriesEntity::remoteId) { seriesDao.findSeriesByRemoteIds(sourceId, it) }
         val inserts = ArrayList<SeriesEntity>()
         val updates = ArrayList<SeriesEntity>()
+        var skipped = 0
         rows.forEach { row ->
             val current = row.remoteId?.let(existingByRemoteId::get)
             when {
                 current == null -> inserts.add(row)
                 row.copy(id = current.id) != current -> updates.add(row.copy(id = current.id))
+                else -> skipped++
             }
         }
         if (updates.isNotEmpty()) seriesDao.updateSeries(updates)
         if (inserts.isNotEmpty()) seriesDao.insertSeries(inserts)
+        return UpsertStats(inserted = inserts.size, updated = updates.size, skippedUnchanged = skipped)
     }
 
     private suspend fun <T> existingByRemoteId(
@@ -635,7 +658,7 @@ class SyncManager(
         phase: SyncPhase,
         label: String,
         progress: SyncProgressTracker,
-        insert: suspend (List<T>) -> Unit,
+        insert: suspend (List<T>) -> UpsertStats,
         total: IntArray, // shared [0] running unique count for the whole media type, so progress never resets
         seenKeys: MutableSet<String>? = null,
         uniqueKey: ((T) -> String?)? = null,
@@ -666,16 +689,17 @@ class SyncManager(
                 return
             }
             val insertStart = SystemClock.elapsedRealtime()
-            insert(rows)
+            val upsertStats = insert(rows)
             val insertMs = SystemClock.elapsedRealtime() - insertStart
             seenKeys?.addAll(pendingKeys)
             total[0] += rows.size
             if (shouldLogChunk(chunkIndex, insertMs, skipped)) {
                 Log.d(
                     TAG,
-                    "$label chunk inserted phase=${phase.label} chunk=$chunkIndex raw=$rawCount inserted=${rows.size} " +
-                        "skipped=$skipped totalSkipped=$skippedDuplicates totalUnique=${total[0]} " +
-                        "filterMs=$filterMs insertMs=$insertMs elapsedMs=${SystemClock.elapsedRealtime() - chunkRunStart}",
+                    "$label chunk applied phase=${phase.label} chunk=$chunkIndex raw=$rawCount accepted=${rows.size} " +
+                        "dbInserted=${upsertStats.inserted} dbUpdated=${upsertStats.updated} dbSkipped=${upsertStats.skippedUnchanged} " +
+                        "dedupeSkipped=$skipped totalDedupeSkipped=$skippedDuplicates totalUnique=${total[0]} " +
+                        "filterMs=$filterMs applyMs=$insertMs elapsedMs=${SystemClock.elapsedRealtime() - chunkRunStart}",
                 )
             }
             progress.update(phase, label, total[0])
