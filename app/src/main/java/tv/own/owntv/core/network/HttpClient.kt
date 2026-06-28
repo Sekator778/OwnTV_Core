@@ -1,5 +1,7 @@
 package tv.own.owntv.core.network
 
+import android.os.SystemClock
+import android.util.Log
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -39,19 +41,31 @@ class HttpClient(private val client: OkHttpClient) {
         val cancellationHook = coroutineContext[Job]?.invokeOnCompletion { cause ->
             if (cause is CancellationException) call.cancel()
         }
+        val startedAt = SystemClock.elapsedRealtime()
+        val safeUrl = redact(url)
+        Log.d(TAG, "GET start url=$safeUrl ua=${ua.take(48)}")
         try {
             coroutineContext.ensureActive()
             call.execute().use { response ->
+                val headersAt = SystemClock.elapsedRealtime()
                 if (!response.isSuccessful) throw IOException("HTTP ${response.code} for ${redact(url)}")
                 val body = response.body ?: throw IOException("Empty response body for ${redact(url)}")
                 val totalBytes = body.contentLength().takeIf { it >= 0 }
+                Log.d(
+                    TAG,
+                    "GET headers url=$safeUrl code=${response.code} contentLength=${totalBytes ?: -1} " +
+                        "contentEncoding=${response.header("Content-Encoding").orEmpty()} headersMs=${headersAt - startedAt}",
+                )
                 onProgress?.invoke(0, totalBytes)
                 body.byteStream().withProgress(totalBytes, onProgress).use { input ->
-                    block(input)
+                    block(input).also {
+                        Log.d(TAG, "GET body done url=$safeUrl totalMs=${SystemClock.elapsedRealtime() - startedAt}")
+                    }
                 }
             }
         } catch (e: IOException) {
             coroutineContext.ensureActive()
+            Log.w(TAG, "GET failed url=$safeUrl totalMs=${SystemClock.elapsedRealtime() - startedAt} message=${e.message}", e)
             throw e
         } finally {
             cancellationHook?.dispose()
@@ -67,6 +81,8 @@ class HttpClient(private val client: OkHttpClient) {
         get(url, userAgent) { it.readBytes().decodeToString() }
 
     companion object {
+        private const val TAG = "HttpClient"
+
         /** Player-style UA that IPTV panels broadly accept. Overridable per-source in Phase 12. */
         const val DEFAULT_USER_AGENT = "VLC/3.0.20 LibVLC/3.0.20"
 

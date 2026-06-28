@@ -1,5 +1,7 @@
 package tv.own.owntv.core.repository
 
+import android.os.SystemClock
+import android.util.Log
 import kotlinx.coroutines.flow.Flow
 import tv.own.owntv.core.database.dao.SourceDao
 import tv.own.owntv.core.database.entity.ProfileSourceCrossRef
@@ -49,15 +51,37 @@ class SourceRepository(
     suspend fun updateSource(source: SourceEntity) = sourceDao.update(source)
 
     suspend fun sync(source: SourceEntity, onProgress: (ImportStage) -> Unit, contentTypes: SyncContentTypes = SyncContentTypes()): SyncResult {
+        val startedAt = SystemClock.elapsedRealtime()
+        Log.i(TAG, "sync wrapper start sourceId=${source.id} type=${source.type} contentTypes=$contentTypes")
         // Snapshot favorites/history/resume with stable keys BEFORE the sync clears content (their ids
         // change on every refresh, so they'd otherwise orphan — count badge set, list empty).
-        val snapshot = runCatching { userData.exportForSource(source.id) }.getOrNull()
+        val snapshotStartedAt = SystemClock.elapsedRealtime()
+        val snapshot = runCatching { userData.exportForSource(source.id) }
+            .onSuccess { Log.i(TAG, "userData export sourceId=${source.id} rows=${it.length()} ms=${SystemClock.elapsedRealtime() - snapshotStartedAt}") }
+            .onFailure { Log.w(TAG, "userData export failed sourceId=${source.id} ms=${SystemClock.elapsedRealtime() - snapshotStartedAt}", it) }
+            .getOrNull()
+        val coreStartedAt = SystemClock.elapsedRealtime()
         val (result, _) = syncManager.sync(source, onProgress, contentTypes)
+        Log.i(TAG, "core sync sourceId=${source.id} result=${result.name()} ms=${SystemClock.elapsedRealtime() - coreStartedAt}")
         if (result is SyncResult.Success) {
             // Content rows just regenerated — re-attach the snapshot (and any restored backup data) to
             // the new ids, and drop rows the provider removed.
+            val relinkStartedAt = SystemClock.elapsedRealtime()
             runCatching { userData.relinkAfterSync(snapshot ?: org.json.JSONArray()) }
+                .onSuccess { Log.i(TAG, "userData relink sourceId=${source.id} rows=${snapshot?.length() ?: 0} ms=${SystemClock.elapsedRealtime() - relinkStartedAt}") }
+                .onFailure { Log.w(TAG, "userData relink failed sourceId=${source.id} ms=${SystemClock.elapsedRealtime() - relinkStartedAt}", it) }
         }
+        Log.i(TAG, "sync wrapper end sourceId=${source.id} result=${result.name()} totalMs=${SystemClock.elapsedRealtime() - startedAt}")
         return result
     }
+
+    private companion object {
+        const val TAG = "SourceRepository"
+    }
+}
+
+private fun SyncResult.name(): String = when (this) {
+    is SyncResult.Success -> "Success"
+    is SyncResult.Failed -> "Failed"
+    SyncResult.Cancelled -> "Cancelled"
 }

@@ -3,6 +3,7 @@ package tv.own.owntv.core.parser
 import android.util.Base64
 import android.util.JsonReader
 import android.util.JsonToken
+import android.util.Log
 import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.ensureActive
 import tv.own.owntv.core.database.entity.SourceEntity
@@ -289,13 +290,17 @@ class XtreamClient(private val http: HttpClient) {
      */
     private suspend fun streamArray(input: InputStream, readItem: suspend (JsonReader) -> Unit): Boolean {
         val ctx = currentCoroutineContext()
+        val startedAt = android.os.SystemClock.elapsedRealtime()
+        var lastLogAt = startedAt
         var count = 0
+        Log.d(TAG, "streamArray start")
         try {
             JsonReader(input.reader(Charsets.UTF_8)).use { reader ->
                 reader.isLenient = true
                 if (reader.peek() != JsonToken.BEGIN_ARRAY) {
                     // Some servers return {} or an error object instead of an array.
                     reader.skipValue()
+                    Log.d(TAG, "streamArray non-array totalMs=${android.os.SystemClock.elapsedRealtime() - startedAt}")
                     return true
                 }
                 reader.beginArray()
@@ -303,9 +308,15 @@ class XtreamClient(private val http: HttpClient) {
                     ctx.ensureActive()
                     readItem(reader)
                     count++
+                    if (count % STREAM_LOG_ITEM_STEP == 0) {
+                        val now = android.os.SystemClock.elapsedRealtime()
+                        Log.d(TAG, "streamArray parsed count=$count deltaMs=${now - lastLogAt} totalMs=${now - startedAt}")
+                        lastLogAt = now
+                    }
                 }
                 reader.endArray()
             }
+            Log.d(TAG, "streamArray end count=$count totalMs=${android.os.SystemClock.elapsedRealtime() - startedAt}")
             return true
         } catch (c: kotlin.coroutines.cancellation.CancellationException) {
             throw c
@@ -313,9 +324,14 @@ class XtreamClient(private val http: HttpClient) {
             // Truncated mid-stream (JsonReader reports "Unterminated string …"). Keep everything parsed
             // so far; only a failure before ANY item is read is fatal.
             if (count == 0) throw e
-            android.util.Log.w("XtreamClient", "Stream truncated after $count items — partial list kept", e)
+            Log.w(TAG, "Stream truncated after $count items — partial list kept totalMs=${android.os.SystemClock.elapsedRealtime() - startedAt}", e)
             return false
         }
+    }
+
+    private companion object {
+        const val TAG = "XtreamClient"
+        const val STREAM_LOG_ITEM_STEP = 10_000
     }
 
     private fun readLiveStream(reader: JsonReader): XtLiveStream? {

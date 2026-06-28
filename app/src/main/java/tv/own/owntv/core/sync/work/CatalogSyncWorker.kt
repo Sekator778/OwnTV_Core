@@ -49,18 +49,26 @@ class CatalogSyncWorker(
         val progressPublisher = ProgressPublisher(trackedContentTypes)
         progressPublisher.publishStarting()
 
+        val syncStartedAt = SystemClock.elapsedRealtime()
         val result = sourceRepository.sync(source, onProgress = { stage ->
             progressPublisher.publish(stage)
         }, contentTypes = contentTypes)
         progressPublisher.flush()
+        Log.i(TAG, "SourceRepository.sync finished sourceId=${source.id} result=${result.name()} ms=${SystemClock.elapsedRealtime() - syncStartedAt}")
 
         return when (result) {
             is SyncResult.Success -> {
                 val warningText = result.warnings.takeIf { it.isNotEmpty() }?.joinToString { it.label }
                 Log.i(TAG, "Sync succeeded for source ${source.id} (${source.name}) warnings=$warningText")
+                val finalizeStartedAt = SystemClock.elapsedRealtime()
                 runCatching { importFinalizer.finalize(source) }
+                    .onSuccess { Log.i(TAG, "Import finalizer sourceId=${source.id} counts=$it ms=${SystemClock.elapsedRealtime() - finalizeStartedAt}") }
+                    .onFailure { Log.w(TAG, "Import finalizer failed sourceId=${source.id} ms=${SystemClock.elapsedRealtime() - finalizeStartedAt}", it) }
                 sourceDao.profileIdsForSource(source.id).forEach { profileId ->
+                    val launcherStartedAt = SystemClock.elapsedRealtime()
                     runCatching { launcherIntegrationRepository.refreshProfile(profileId) }
+                        .onSuccess { Log.i(TAG, "Launcher refresh profileId=$profileId sourceId=${source.id} ms=${SystemClock.elapsedRealtime() - launcherStartedAt}") }
+                        .onFailure { Log.w(TAG, "Launcher refresh failed profileId=$profileId sourceId=${source.id} ms=${SystemClock.elapsedRealtime() - launcherStartedAt}", it) }
                 }
                 Result.success()
             }
@@ -118,6 +126,12 @@ class CatalogSyncWorker(
         }
 
         private fun emit(stage: ImportStage, now: Long) {
+            Log.d(
+                TAG,
+                "Progress emit label=${stage.label} overall=${stage.overallPercent} processed=${stage.processed} " +
+                    "live=${stage.liveProcessed} movies=${stage.moviesProcessed} series=${stage.seriesProcessed} " +
+                    "sinceLastMs=${now - lastEmitAtMs}",
+            )
             setProgress(stage.toWorkData())
             lastEmitAtMs = now
             lastOverall = stage.overallPercent
@@ -174,6 +188,12 @@ class CatalogSyncWorker(
         const val KEY_PROGRESS_MOVIES_ACTIVE = "moviesActive"
         const val KEY_PROGRESS_SERIES_ACTIVE = "seriesActive"
     }
+}
+
+private fun SyncResult.name(): String = when (this) {
+    is SyncResult.Success -> "Success"
+    is SyncResult.Failed -> "Failed"
+    SyncResult.Cancelled -> "Cancelled"
 }
 
 private fun ImportStage.toWorkData(): Data =
