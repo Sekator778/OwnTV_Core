@@ -827,7 +827,7 @@ class SyncManager(
 
     companion object {
         private const val TAG = "SyncManager"
-        const val CHUNK = 500
+        const val CHUNK = 5000
         private const val QUERY_CHUNK = 500
         private const val CATEGORY_REQUEST_DELAY_MS = 150L // pace per-category fallback requests (avoid HTTP 429)
         private const val SLOW_INSERT_LOG_MS = 250L
