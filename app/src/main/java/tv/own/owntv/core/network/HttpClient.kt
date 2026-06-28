@@ -57,7 +57,7 @@ class HttpClient(private val client: OkHttpClient) {
                         "contentEncoding=${response.header("Content-Encoding").orEmpty()} headersMs=${headersAt - startedAt}",
                 )
                 onProgress?.invoke(0, totalBytes)
-                body.byteStream().withProgress(totalBytes, onProgress).use { input ->
+                body.byteStream().withProgress(totalBytes, onProgress, safeUrl).use { input ->
                     block(input).also {
                         Log.d(TAG, "GET body done url=$safeUrl totalMs=${SystemClock.elapsedRealtime() - startedAt}")
                     }
@@ -97,25 +97,41 @@ class HttpClient(private val client: OkHttpClient) {
 internal fun InputStream.withProgress(
     totalBytes: Long?,
     onProgress: ((Long, Long?) -> Unit)?,
-): InputStream = if (onProgress == null) this else ProgressInputStream(this, totalBytes, onProgress)
+    diagnosticLabel: String? = null,
+): InputStream = if (onProgress == null && diagnosticLabel == null) {
+    this
+} else {
+    ProgressInputStream(this, totalBytes, onProgress, diagnosticLabel)
+}
 
 private class ProgressInputStream(
     input: InputStream,
     private val totalBytes: Long?,
-    private val onProgress: (Long, Long?) -> Unit,
+    private val onProgress: ((Long, Long?) -> Unit)?,
+    private val diagnosticLabel: String?,
 ) : FilterInputStream(input) {
+    private val startedAt = SystemClock.elapsedRealtime()
     private var bytesRead = 0L
     private var lastNotifiedBytes = 0L
     private var lastNotifiedAt = 0L
+    private var lastDiagnosticBytes = 0L
+    private var lastDiagnosticAt = startedAt
+    private var readCalls = 0L
+    private var readBlockedMs = 0L
+    private var maxReadMs = 0L
 
     override fun read(): Int {
+        val started = SystemClock.elapsedRealtime()
         val value = super.read()
+        recordRead(SystemClock.elapsedRealtime() - started)
         if (value >= 0) advance(1)
         return value
     }
 
     override fun read(b: ByteArray, off: Int, len: Int): Int {
+        val started = SystemClock.elapsedRealtime()
         val read = super.read(b, off, len)
+        recordRead(SystemClock.elapsedRealtime() - started)
         if (read > 0) advance(read.toLong())
         return read
     }
@@ -126,6 +142,12 @@ private class ProgressInputStream(
         } finally {
             notifyProgress(force = true)
         }
+    }
+
+    private fun recordRead(durationMs: Long) {
+        readCalls++
+        readBlockedMs += durationMs
+        if (durationMs > maxReadMs) maxReadMs = durationMs
     }
 
     private fun advance(delta: Long) {
@@ -141,11 +163,32 @@ private class ProgressInputStream(
         if (!force && bytesDelta < PROGRESS_BYTES_STEP && timeDelta < PROGRESS_MIN_INTERVAL_MS && !complete) return
         lastNotifiedBytes = bytesRead
         lastNotifiedAt = now
-        onProgress(bytesRead, totalBytes)
+        onProgress?.invoke(bytesRead, totalBytes)
+        notifyDiagnostics(force)
+    }
+
+    private fun notifyDiagnostics(force: Boolean = false) {
+        val label = diagnosticLabel ?: return
+        val now = SystemClock.elapsedRealtime()
+        val bytesDelta = bytesRead - lastDiagnosticBytes
+        val timeDelta = now - lastDiagnosticAt
+        if (!force && bytesDelta < DIAGNOSTIC_BYTES_STEP && timeDelta < DIAGNOSTIC_MIN_INTERVAL_MS) return
+        val kbps = if (timeDelta > 0) bytesDelta * 1000 / timeDelta / 1024 else 0
+        Log.d(
+            "HttpClient",
+            "GET body progress url=$label bytes=$bytesRead total=${totalBytes ?: -1} " +
+                "deltaBytes=$bytesDelta deltaMs=$timeDelta kbps=$kbps " +
+                "readCalls=$readCalls readBlockedMs=$readBlockedMs maxReadMs=$maxReadMs " +
+                "elapsedMs=${now - startedAt}",
+        )
+        lastDiagnosticBytes = bytesRead
+        lastDiagnosticAt = now
     }
 
     private companion object {
         const val PROGRESS_BYTES_STEP = 256L * 1024L
         const val PROGRESS_MIN_INTERVAL_MS = 150L
+        const val DIAGNOSTIC_BYTES_STEP = 2L * 1024L * 1024L
+        const val DIAGNOSTIC_MIN_INTERVAL_MS = 5_000L
     }
 }

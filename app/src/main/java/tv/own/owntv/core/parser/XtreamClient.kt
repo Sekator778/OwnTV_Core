@@ -1,5 +1,6 @@
 package tv.own.owntv.core.parser
 
+import android.os.SystemClock
 import android.util.Base64
 import android.util.JsonReader
 import android.util.JsonToken
@@ -67,9 +68,7 @@ class XtreamClient(private val http: HttpClient) {
         onProgress: ((Long, Long?) -> Unit)? = null,
     ): Boolean {
         return http.get(api(s, "get_live_streams", categoryParam(categoryId)), s.userAgent, onProgress) { input ->
-            streamArray(input) { reader ->
-                readLiveStream(reader)?.let { onItem(it) }
-            }
+            streamItems("get_live_streams", input, ::readLiveStream, onItem)
         }
     }
 
@@ -80,9 +79,7 @@ class XtreamClient(private val http: HttpClient) {
         onProgress: ((Long, Long?) -> Unit)? = null,
     ): Boolean {
         return http.get(api(s, "get_vod_streams", categoryParam(categoryId)), s.userAgent, onProgress) { input ->
-            streamArray(input) { reader ->
-                readVod(reader)?.let { onItem(it) }
-            }
+            streamItems("get_vod_streams", input, ::readVod, onItem)
         }
     }
 
@@ -93,9 +90,7 @@ class XtreamClient(private val http: HttpClient) {
         onProgress: ((Long, Long?) -> Unit)? = null,
     ): Boolean {
         return http.get(api(s, "get_series", categoryParam(categoryId)), s.userAgent, onProgress) { input ->
-            streamArray(input) { reader ->
-                readSeries(reader)?.let { onItem(it) }
-            }
+            streamItems("get_series", input, ::readSeries, onItem)
         }
     }
 
@@ -280,43 +275,76 @@ class XtreamClient(private val http: HttpClient) {
         categoryId?.takeIf { it.isNotBlank() }?.let { "&category_id=$it" } ?: ""
 
     /** Category lists are small, so keeping the map reader here keeps that path simple. */
-    private suspend fun streamObjects(input: InputStream, onObject: suspend (Map<String, String?>) -> Unit): Boolean {
-        return streamArray(input) { reader -> onObject(readObject(reader)) }
-    }
+    private suspend fun streamObjects(input: InputStream, onObject: suspend (Map<String, String?>) -> Unit): Boolean =
+        streamItems("objects", input, ::readObject, onObject)
+
+    private suspend fun <T> streamItems(
+        label: String,
+        input: InputStream,
+        readItem: (JsonReader) -> T?,
+        onItem: suspend (T) -> Unit,
+    ): Boolean =
+        streamArray(label, input) { reader, metrics ->
+            val parseStart = SystemClock.elapsedRealtime()
+            val item = readItem(reader)
+            metrics.parseOrReadMs += SystemClock.elapsedRealtime() - parseStart
+            if (item != null) {
+                val callbackStart = SystemClock.elapsedRealtime()
+                onItem(item)
+                metrics.callbackMs += SystemClock.elapsedRealtime() - callbackStart
+            }
+        }
 
     /**
      * Streams a top-level JSON array. Returns true if the array parsed to its end, false if the server
      * truncated it mid-stream (issue #15). A failure before any item is read is fatal and rethrown.
      */
-    private suspend fun streamArray(input: InputStream, readItem: suspend (JsonReader) -> Unit): Boolean {
+    private suspend fun streamArray(label: String, input: InputStream, readItem: suspend (JsonReader, StreamMetrics) -> Unit): Boolean {
         val ctx = currentCoroutineContext()
-        val startedAt = android.os.SystemClock.elapsedRealtime()
+        val startedAt = SystemClock.elapsedRealtime()
         var lastLogAt = startedAt
+        var lastParseOrReadMs = 0L
+        var lastCallbackMs = 0L
         var count = 0
-        Log.d(TAG, "streamArray start")
+        val metrics = StreamMetrics()
+        Log.d(TAG, "streamArray start label=$label")
         try {
             JsonReader(input.reader(Charsets.UTF_8)).use { reader ->
                 reader.isLenient = true
                 if (reader.peek() != JsonToken.BEGIN_ARRAY) {
                     // Some servers return {} or an error object instead of an array.
                     reader.skipValue()
-                    Log.d(TAG, "streamArray non-array totalMs=${android.os.SystemClock.elapsedRealtime() - startedAt}")
+                    Log.d(TAG, "streamArray non-array label=$label totalMs=${SystemClock.elapsedRealtime() - startedAt}")
                     return true
                 }
                 reader.beginArray()
                 while (reader.hasNext()) {
                     ctx.ensureActive()
-                    readItem(reader)
+                    readItem(reader, metrics)
                     count++
                     if (count % STREAM_LOG_ITEM_STEP == 0) {
-                        val now = android.os.SystemClock.elapsedRealtime()
-                        Log.d(TAG, "streamArray parsed count=$count deltaMs=${now - lastLogAt} totalMs=${now - startedAt}")
+                        val now = SystemClock.elapsedRealtime()
+                        val parseOrReadDelta = metrics.parseOrReadMs - lastParseOrReadMs
+                        val callbackDelta = metrics.callbackMs - lastCallbackMs
+                        Log.d(
+                            TAG,
+                            "streamArray parsed count=$count label=$label deltaMs=${now - lastLogAt} " +
+                                "parseOrReadMs=$parseOrReadDelta callbackMs=$callbackDelta " +
+                                "totalParseOrReadMs=${metrics.parseOrReadMs} totalCallbackMs=${metrics.callbackMs} " +
+                                "totalMs=${now - startedAt}",
+                        )
                         lastLogAt = now
+                        lastParseOrReadMs = metrics.parseOrReadMs
+                        lastCallbackMs = metrics.callbackMs
                     }
                 }
                 reader.endArray()
             }
-            Log.d(TAG, "streamArray end count=$count totalMs=${android.os.SystemClock.elapsedRealtime() - startedAt}")
+            Log.d(
+                TAG,
+                "streamArray end count=$count label=$label parseOrReadMs=${metrics.parseOrReadMs} " +
+                    "callbackMs=${metrics.callbackMs} totalMs=${SystemClock.elapsedRealtime() - startedAt}",
+            )
             return true
         } catch (c: kotlin.coroutines.cancellation.CancellationException) {
             throw c
@@ -324,9 +352,20 @@ class XtreamClient(private val http: HttpClient) {
             // Truncated mid-stream (JsonReader reports "Unterminated string …"). Keep everything parsed
             // so far; only a failure before ANY item is read is fatal.
             if (count == 0) throw e
-            Log.w(TAG, "Stream truncated after $count items — partial list kept totalMs=${android.os.SystemClock.elapsedRealtime() - startedAt}", e)
+            Log.w(
+                TAG,
+                "Stream truncated after $count items label=$label — partial list kept " +
+                    "parseOrReadMs=${metrics.parseOrReadMs} callbackMs=${metrics.callbackMs} " +
+                    "totalMs=${SystemClock.elapsedRealtime() - startedAt}",
+                e,
+            )
             return false
         }
+    }
+
+    private class StreamMetrics {
+        var parseOrReadMs = 0L
+        var callbackMs = 0L
     }
 
     private companion object {
