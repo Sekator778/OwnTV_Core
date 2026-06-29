@@ -79,13 +79,18 @@ class HeroPreviewEngine(
         if (s != null) player?.setVideoSurface(s) else player?.clearVideoSurface()
     }
 
-    fun play(url: String, seekToMs: Long = 0L) {
+    private var builtForUa: String = HttpClient.DEFAULT_USER_AGENT
+
+    fun play(url: String, seekToMs: Long = 0L, userAgent: String? = null) {
+        val effectiveUa = userAgent?.takeIf { it.isNotBlank() } ?: HttpClient.DEFAULT_USER_AGENT
         currentUrl = url
         val startPositionMs = seekToMs.coerceAtLeast(0L)
         hasStarted = false
         _state.value = State.LOADING
         runCatching {
-            val p = player ?: build().also { player = it }
+            // Rebuild if UA changed (different source with different User-Agent).
+            if (effectiveUa != builtForUa) { player?.release(); player = null }
+            val p = player ?: build(effectiveUa).also { player = it; builtForUa = effectiveUa }
             surface?.let { p.setVideoSurface(it) }
             p.volume = 0f
             p.repeatMode = Player.REPEAT_MODE_ONE
@@ -126,8 +131,8 @@ class HeroPreviewEngine(
         _state.value = State.IDLE
     }
 
-    private fun build(): ExoPlayer {
-        val dataSource = OkHttpDataSource.Factory(okHttpClient).setUserAgent(HttpClient.DEFAULT_USER_AGENT)
+    private fun build(ua: String = HttpClient.DEFAULT_USER_AGENT): ExoPlayer {
+        val dataSource = OkHttpDataSource.Factory(okHttpClient).setUserAgent(ua)
         val loadControl = DefaultLoadControl.Builder()
             .setBufferDurationsMs(2_000, 8_000, 1_000, 2_000)
             .build()

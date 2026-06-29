@@ -179,6 +179,15 @@ class OwnTVPlayer(
     // the provider's `.m3u8` (HLS) variant before erroring — covers the rare panel that only serves HLS.
     // Per-item; reset on each genuinely-new item.
     @Volatile private var triedAltFormat = false
+    // If the source has no custom User-Agent and playback fails with a demuxer/access error, we retry
+    // once with the short "vlc" UA — some panels block the full "VLC/3.0.20 LibVLC/3.0.20" string but
+    // accept the short form. Per-item; reset on each genuinely-new item. Never runs when the user
+    // already set a custom UA (currentUserAgent != null).
+    @Volatile private var triedVlcUaFallback = false
+    // The raw custom User-Agent from the source settings, or null if the user left it blank.
+    // null = use DEFAULT_USER_AGENT on first attempt, "vlc" fallback on suspicious failure.
+    // non-null = always use the given UA, no automatic fallback.
+    private var currentUserAgent: String? = null
     private val _directRender = MutableStateFlow(false)
     /** True while the direct (decoder-to-surface) output is in use — HUD hides zoom, app draws subs. */
     val directRender: StateFlow<Boolean> = _directRender.asStateFlow()
@@ -873,7 +882,8 @@ class OwnTVPlayer(
         initialized = mpv != null
     }
 
-    /** Play a single item (movie / live channel) — clears any queue. [muted] is used by the live preview. */
+    /** Play a single item (movie / live channel) — clears any queue. [muted] is used by the live preview.
+     *  [userAgent] is the per-source custom UA from source settings; null means use the default. */
     fun play(
         url: String,
         title: String? = null,
@@ -885,7 +895,9 @@ class OwnTVPlayer(
         muted: Boolean = false,
         preferSoftware: Boolean = false,
         startPaused: Boolean = false,
+        userAgent: String? = null,
     ) {
+        currentUserAgent = userAgent?.takeIf { it.isNotBlank() }
         playlist = emptyList()
         playlistIndex = 0
         updateNav()
@@ -893,8 +905,10 @@ class OwnTVPlayer(
         loadUrl(url, MediaMeta(title, subtitle, year, logoUrl), isLive, startPositionMs, muted, preferSoftware = preferSoftware, startPaused = startPaused)
     }
 
-    /** Play a queue (a season's episodes) starting at [startIndex] — enables prev/next. */
-    fun playEpisodes(items: List<PlaylistItem>, startIndex: Int, startPositionMs: Long = 0) {
+    /** Play a queue (a season's episodes) starting at [startIndex] — enables prev/next.
+     *  [userAgent] is the per-source custom UA from source settings; null means use the default. */
+    fun playEpisodes(items: List<PlaylistItem>, startIndex: Int, startPositionMs: Long = 0, userAgent: String? = null) {
+        currentUserAgent = userAgent?.takeIf { it.isNotBlank() }
         playlist = items
         playlistIndex = startIndex.coerceIn(0, (items.size - 1).coerceAtLeast(0))
         val item = items.getOrNull(playlistIndex) ?: return
@@ -966,6 +980,7 @@ class OwnTVPlayer(
             autoRetries = 0
             triedAltFormat = false
             triedSoftwareForVideo = false
+            triedVlcUaFallback = false
             forceFullProbe = false // a genuinely new item starts with the trimmed (fast-zap) probe again
             // Pick this item's decode path. Catch-up forces SOFTWARE: archive (timeshift) segments often
             // start mid-GOP, which the hardware MediaCodec decoder can't recover from (blank video, and
@@ -1071,6 +1086,9 @@ class OwnTVPlayer(
                 _directRender.value = useDirect()
             }
             applyProbeProfile(url) // trim the demuxer probe for live (faster zap); full probe for VOD
+            // Apply the effective User-Agent for this stream. Per-load so a vlc-fallback retry or a
+            // newly-configured source UA takes effect without restarting the player.
+            setPropertyString("user-agent", currentUserAgent ?: HttpClient.DEFAULT_USER_AGENT)
             loadfileWithStopClassification(url, "replacement loadfile")
             setPropertyBoolean("pause", false)
         }
@@ -1776,9 +1794,28 @@ class OwnTVPlayer(
                                     isLiveContent, if (isLiveContent) 0L else _position.value, resetRetries = false,
                                 )
                             }
+                        } else if (currentUserAgent == null && !triedVlcUaFallback && currentUrl != null) {
+                            // All standard retries exhausted. If the user left the source User-Agent blank,
+                            // retry once with the short "vlc" UA — some providers block the full
+                            // "VLC/3.0.20 LibVLC/3.0.20" header but accept the short form.
+                            triedVlcUaFallback = true
+                            currentUserAgent = "vlc"
+                            forceFullProbe = true
+                            android.util.Log.w(TAG, "playback failed — retrying once with short vlc User-Agent")
+                            _buffering.value = true
+                            delay(300)
+                            if (gen == loadGeneration && currentUrl != null) {
+                                loadUrl(
+                                    currentUrl!!, MediaMeta(currentTitle, currentSubtitle, currentYear, currentLogoUrl),
+                                    isLiveContent, if (isLiveContent) 0L else _position.value, resetRetries = false,
+                                )
+                            }
                         } else {
                             _buffering.value = false
-                            _error.value = "Couldn't play this stream. The source may be offline or use an unsupported format."
+                            val hint = if (triedVlcUaFallback)
+                                " This provider may require a custom User-Agent in source settings."
+                            else ""
+                            _error.value = "Couldn't play this stream. The source may be offline or use an unsupported format.$hint"
                         }
                     }
                 } else if (isLiveContent && currentUrl != null) {

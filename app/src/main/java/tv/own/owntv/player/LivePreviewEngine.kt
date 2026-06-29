@@ -319,8 +319,9 @@ class LivePreviewEngine(
 
     /** Start (or switch to) [url] as a muted/unmuted preview. Never throws — a stream ExoPlayer can't set
      *  up just falls back to the channel logo (the full mpv player can still play it). [meta] populates the
-     *  full-screen HUD title when this preview is promoted. */
-    fun play(url: String, muted: Boolean, meta: MediaMeta = MediaMeta()) {
+     *  full-screen HUD title when this preview is promoted. [userAgent] is the per-source custom UA. */
+    fun play(url: String, muted: Boolean, meta: MediaMeta = MediaMeta(), userAgent: String? = null) {
+        currentUa = userAgent?.takeIf { it.isNotBlank() } ?: HttpClient.DEFAULT_USER_AGENT
         diagnostics.start(); diagnostics.markLoad()
         lastCodecError = null; lastVideoDecoder = null
         this.muted = muted
@@ -518,23 +519,31 @@ class LivePreviewEngine(
         _audioUnsupported.value = audio.isNotEmpty() && !anySupportedAudio
     }
 
-    private val httpDataSource by lazy {
-        OkHttpDataSource.Factory(okHttpClient).setUserAgent(HttpClient.DEFAULT_USER_AGENT)
-    }
-    private val defaultSourceFactory by lazy { DefaultMediaSourceFactory(httpDataSource) }
-    // HLS factory that exposes embedded CEA-608 closed captions even when the playlist doesn't *declare*
-    // them — US premium channels (HBO/Showtime/Cinemax) carry CC inside the video stream, not as a subtitle
-    // track, so ExoPlayer otherwise shows nothing. The forced 608 track then appears in the subtitle HUD.
-    private val hlsCcSourceFactory by lazy {
-        HlsMediaSource.Factory(httpDataSource).setExtractorFactory(DefaultHlsExtractorFactory(0, true))
+    // Effective User-Agent for the current stream; updated per play() call.
+    // null = no source UA configured, use DEFAULT_USER_AGENT.
+    private var currentUa: String = HttpClient.DEFAULT_USER_AGENT
+    private var dataSourceForUa: String = ""
+    private var cachedHttpDataSource: OkHttpDataSource.Factory? = null
+    private var cachedDefaultFactory: DefaultMediaSourceFactory? = null
+    private var cachedHlsCcFactory: HlsMediaSource.Factory? = null
+
+    private fun httpDataSourceFor(ua: String): OkHttpDataSource.Factory {
+        if (ua != dataSourceForUa || cachedHttpDataSource == null) {
+            cachedHttpDataSource = OkHttpDataSource.Factory(okHttpClient).setUserAgent(ua)
+            cachedDefaultFactory = DefaultMediaSourceFactory(cachedHttpDataSource!!)
+            cachedHlsCcFactory = HlsMediaSource.Factory(cachedHttpDataSource!!).setExtractorFactory(DefaultHlsExtractorFactory(0, true))
+            dataSourceForUa = ua
+        }
+        return cachedHttpDataSource!!
     }
 
     /** HLS → caption-aware factory; everything else (raw MPEG-TS, etc.) → default. */
     private fun mediaSourceFor(url: String): MediaSource {
+        httpDataSourceFor(currentUa) // ensure factories match current UA
         val item = MediaItem.fromUri(url)
-        val uri = item.localConfiguration?.uri ?: return defaultSourceFactory.createMediaSource(item)
-        return if (Util.inferContentType(uri) == C.CONTENT_TYPE_HLS) hlsCcSourceFactory.createMediaSource(item)
-        else defaultSourceFactory.createMediaSource(item)
+        val uri = item.localConfiguration?.uri ?: return cachedDefaultFactory!!.createMediaSource(item)
+        return if (Util.inferContentType(uri) == C.CONTENT_TYPE_HLS) cachedHlsCcFactory!!.createMediaSource(item)
+        else cachedDefaultFactory!!.createMediaSource(item)
     }
 
     private fun build(): ExoPlayer {
@@ -549,7 +558,7 @@ class LivePreviewEngine(
         val renderers = DefaultRenderersFactory(context).forceDisableMediaCodecAsynchronousQueueing()
         return ExoPlayer.Builder(context)
             .setRenderersFactory(renderers)
-            .setMediaSourceFactory(defaultSourceFactory)
+            .setMediaSourceFactory(DefaultMediaSourceFactory(httpDataSourceFor(currentUa)))
             .setLoadControl(loadControl)
             .build()
             .apply {
