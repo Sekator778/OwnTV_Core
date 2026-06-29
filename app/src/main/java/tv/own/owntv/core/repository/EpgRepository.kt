@@ -174,10 +174,23 @@ class EpgRepository(
             ?: emptyList<java.io.File>()
         if (files.isEmpty()) return@withContext false // no fresh cache → caller falls back to a network re-sync
 
-        keys.forEach { epgDao.clearChannel(it) } // avoid duplicates if matched more than once
-        for (file in files) {
-            val storeId = file.name.removePrefix("epg_").removeSuffix(".xmltv").toLongOrNull() ?: continue
-            val buffer = ArrayList<EpgProgrammeEntity>(512)
+        // Pair each fresh cache file with its source id up front, so the pre-delete can be scoped to ONLY
+        // those sources. Clearing globally (across every source) would wipe a channel's programmes that
+        // live under a source whose cache isn't fresh here and can't be repopulated below — leaving the
+        // channel with no guide data, so it silently drops out of the guide list.
+        val storeFiles = files.mapNotNull { f ->
+            f.name.removePrefix("epg_").removeSuffix(".xmltv").toLongOrNull()?.let { it to f }
+        }
+        val storeIds = storeFiles.map { it.first }
+        // Parse-then-apply (never delete-then-refill): we only keep programmes for the matched keys, which is
+        // a tiny set (usually one channel ≈ a few dozen rows), so collecting them all in memory first is cheap.
+        // Only AFTER we have the replacement rows do we clear+insert — and only for keys we actually found data
+        // for. A key with no fresh data is left exactly as-is. This guarantees a match can never delete a
+        // channel's existing programmes without putting them back (the old code stranded a channel when the
+        // parse loop aborted on a large/bad cache file before reaching the source that held its programmes).
+        val collected = HashMap<String, MutableList<EpgProgrammeEntity>>()
+        for ((storeId, file) in storeFiles) {
+            var foundHere = 0
             runCatching {
                 file.inputStream().use { input ->
                     XmltvParser.parse(
@@ -186,14 +199,23 @@ class EpgRepository(
                         onProgramme = { channelId, startMs, stopMs, title, desc ->
                             val key = channelId.trim().lowercase()
                             if (key in keys && stopMs > from && startMs < to) {
-                                buffer.add(EpgProgrammeEntity(sourceId = storeId, epgChannelId = key, startMs = startMs, stopMs = stopMs, title = title, description = desc))
-                                if (buffer.size >= CHUNK) { runBlocking { epgDao.upsertProgrammes(buffer.toList()) }; buffer.clear() }
+                                collected.getOrPut(key) { ArrayList() }
+                                    .add(EpgProgrammeEntity(sourceId = storeId, epgChannelId = key, startMs = startMs, stopMs = stopMs, title = title, description = desc))
+                                foundHere++
                             }
                         },
                     )
                 }
-            }
-            if (buffer.isNotEmpty()) epgDao.upsertProgrammes(buffer)
+            }.onFailure { android.util.Log.w("EpgRepository", "cacheFill parse failed storeId=$storeId (other sources unaffected)", it) }
+        }
+
+        // Apply per key: replace only keys we have fresh rows for; leave the rest untouched.
+        var insertedTotal = 0
+        for ((key, rows) in collected) {
+            if (rows.isEmpty()) continue
+            epgDao.clearChannelForSources(key, storeIds)
+            rows.chunked(CHUNK).forEach { epgDao.upsertProgrammes(it) }
+            insertedTotal += rows.size
         }
         true // had fresh cache and processed it (true even if an id wasn't present — re-syncing wouldn't help)
     }
