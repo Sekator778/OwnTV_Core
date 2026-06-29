@@ -1,5 +1,6 @@
 package tv.own.owntv.core.database.entity
 
+import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
@@ -46,6 +47,13 @@ data class CategoryEntity(
         Index("name"),
         Index("epgChannelId"),
         Index(value = ["sourceId", "remoteId"], unique = true),
+        // Composite grid read-indices (v6): A–Z order (ORDER BY name) and playlist/provider order
+        // (ORDER BY sortOrder, name), for both the whole-source list and per-category. Mirrors movies/series
+        // so all three browse grids (Live/Movies/Series) are index-served in either sort.
+        Index(value = ["sourceId", "name"]),
+        Index(value = ["categoryId", "name"]),
+        Index(value = ["sourceId", "sortOrder", "name"]),
+        Index(value = ["categoryId", "sortOrder", "name"]),
     ],
 )
 data class ChannelEntity(
@@ -67,7 +75,7 @@ data class ChannelEntity(
     /** M3U `catchup-source` URL template (with `${start}`/`${timestamp}`/… placeholders). Null for
      *  Xtream, whose timeshift URL is built from the source credentials instead. */
     val catchupSource: String? = null,
-    val contentHash: Int = 0,
+    @ColumnInfo(defaultValue = "0") val contentHash: Int = 0,
 )
 
 @Entity(
@@ -80,6 +88,14 @@ data class ChannelEntity(
         Index("sourceId"),
         Index("categoryId"),
         Index("name"),
+        // Composite (filter + order) indices so the grid's "WHERE sourceId/categoryId ORDER BY name" never
+        // falls back to a full temp-B-tree sort of the whole table (100k+ rows → 2–3s) — it seeks + scans.
+        // A–Z order (ORDER BY name) uses the first pair; playlist/provider order (ORDER BY sortOrder, name)
+        // — the v6 default for Movies/Series/Live — uses the second pair. Both sort paths are index-served.
+        Index(value = ["sourceId", "name"]),
+        Index(value = ["categoryId", "name"]),
+        Index(value = ["sourceId", "sortOrder", "name"]),
+        Index(value = ["categoryId", "sortOrder", "name"]),
         Index(value = ["sourceId", "remoteId"], unique = true),
     ],
 )
@@ -99,7 +115,7 @@ data class MovieEntity(
     val remoteId: String? = null,
     val addedAt: Long? = null,
     val sortOrder: Int = 0,
-    val contentHash: Int = 0,
+    @ColumnInfo(defaultValue = "0") val contentHash: Int = 0,
 )
 
 @Entity(
@@ -112,6 +128,12 @@ data class MovieEntity(
         Index("sourceId"),
         Index("categoryId"),
         Index("name"),
+        // Composite (filter + order) indices — see MovieEntity: avoids a full table sort on the Series grid.
+        // A–Z (ORDER BY name) → first pair; playlist/provider (ORDER BY sortOrder, name) → second pair.
+        Index(value = ["sourceId", "name"]),
+        Index(value = ["categoryId", "name"]),
+        Index(value = ["sourceId", "sortOrder", "name"]),
+        Index(value = ["categoryId", "sortOrder", "name"]),
         Index(value = ["sourceId", "remoteId"], unique = true),
     ],
 )
@@ -127,7 +149,7 @@ data class SeriesEntity(
     val plot: String? = null,
     val remoteId: String? = null,
     val sortOrder: Int = 0,
-    val contentHash: Int = 0,
+    @ColumnInfo(defaultValue = "0") val contentHash: Int = 0,
 )
 
 @Entity(

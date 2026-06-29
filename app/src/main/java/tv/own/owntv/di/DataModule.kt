@@ -22,16 +22,17 @@ import tv.own.owntv.core.tv.TvHomeRepository
 import tv.own.owntv.core.update.UpdateManager
 import tv.own.owntv.core.sync.SyncManager
 import tv.own.owntv.core.sync.work.CatalogSyncScheduler
+import tv.own.owntv.core.weather.WeatherRepository
 import java.util.concurrent.TimeUnit
 
 /** Networking, parsers, sync engine, and repositories (Phase 5). */
 val dataModule = module {
     single {
         OkHttpClient.Builder()
-            .connectTimeout(30, TimeUnit.SECONDS)
-            .readTimeout(60, TimeUnit.SECONDS)
-            .writeTimeout(30, TimeUnit.SECONDS)
-            .retryOnConnectionFailure(true)
+            .connectTimeout(15, TimeUnit.SECONDS)  // fast fail on dead host
+            .readTimeout(20, TimeUnit.SECONDS)    // detect mid-sync disconnect quickly
+            .writeTimeout(20, TimeUnit.SECONDS)
+            .retryOnConnectionFailure(false)       // let SyncManager handle retries, not OkHttp
             // Force HTTP/1.1. Several IPTV panels / EPG hosts (and their CDNs) have flaky HTTP/2 stacks
             // that send RST_STREAM(PROTOCOL_ERROR) on large/slow responses — e.g. big EPG XML downloads
             // (#17) — which OkHttp surfaces as "stream was reset: PROTOCOL_ERROR". HTTP/1.1 sidesteps it
@@ -57,10 +58,11 @@ val dataModule = module {
     single { tv.own.owntv.core.player.ForceMpvStore(androidContext()) }
     // store, sourceDao, epgRepository
     single { tv.own.owntv.core.epg.EpgMigration(get(), get(), get()) }
-    // channelDao, movieDao, seriesDao
-    single { tv.own.owntv.core.sync.ImportFinalizer(get(), get(), get()) }
+    // channelDao, movieDao, seriesDao, db
+    single { tv.own.owntv.core.sync.ImportFinalizer(get(), get(), get(), get()) }
     single { M3uParser() }
     single { XtreamClient(get()) }
+    single { WeatherRepository(get(), get()) }
     single { SyncManager(androidContext(), get(), get(), get(), get(), get(), get(), get(), get(), get()) }
     // context, channelDao, movieDao, seriesDao, profileDao, favoriteDao, historyDao, progressDao
     single { UserDataResolver(androidContext(), get(), get(), get(), get(), get(), get(), get()) }

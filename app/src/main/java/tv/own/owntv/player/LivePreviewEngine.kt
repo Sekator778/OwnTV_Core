@@ -13,10 +13,13 @@ import androidx.media3.datasource.okhttp.OkHttpDataSource
 import androidx.media3.exoplayer.DefaultLoadControl
 import androidx.media3.exoplayer.DefaultRenderersFactory
 import androidx.media3.exoplayer.ExoPlayer
+import androidx.media3.exoplayer.Renderer
 import androidx.media3.exoplayer.hls.DefaultHlsExtractorFactory
 import androidx.media3.exoplayer.hls.HlsMediaSource
 import androidx.media3.exoplayer.source.DefaultMediaSourceFactory
 import androidx.media3.exoplayer.source.MediaSource
+import androidx.media3.exoplayer.video.MediaCodecVideoRenderer
+import androidx.media3.exoplayer.video.VideoFrameMetadataListener
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -51,9 +54,9 @@ class LivePreviewEngine(
     val state: StateFlow<State> = _state.asStateFlow()
     private val _videoHeight = MutableStateFlow<Int?>(null)
     val videoHeight: StateFlow<Int?> = _videoHeight.asStateFlow()
-    // Up-to-4 mini stream chips for the preview pane: aspect · resolution · fps · audio.
+    // Up-to-4 mini stream chips for the preview pane / player top bar: aspect · resolution · fps · audio.
     private val _streamChips = MutableStateFlow<List<String>>(emptyList())
-    val streamChips: StateFlow<List<String>> = _streamChips.asStateFlow()
+    override val streamChips: StateFlow<List<String>> = _streamChips.asStateFlow()
 
     // --- PlaybackEngine: lets the full-screen HUD drive a promoted preview (play/pause, state, volume) ---
     private val _isPlaying = MutableStateFlow(false)
@@ -209,22 +212,49 @@ class LivePreviewEngine(
     private var retryCount = 0
     private val stallWatchdog = Runnable { reconnect("buffering stalled") }
 
-    // Silent-freeze watchdog: some live streams stop advancing while ExoPlayer stays in STATE_READY with no
-    // buffering event and no error — so neither the stall watchdog nor onPlayerError fires and the channel
-    // hangs forever with no retry. We also poll the playback position: if it's frozen while we're supposed to
-    // be playing, treat it as a dropped feed and reconnect.
+    // Silent-freeze watchdog. A live HLS feed can keep ExoPlayer in STATE_READY with the playback CLOCK
+    // still advancing — no buffering event, no onPlayerError — while the video renderer has stopped
+    // producing frames (a provider encoder/codec hiccup, a stale/empty segment, a mid-stream codec change).
+    // That looks exactly like a frozen channel with "nothing happening", and a position-only watchdog misses
+    // it because currentPosition keeps marching with the timeline. So we also tick a counter on every frame
+    // actually rendered to the surface (VideoFrameMetadataListener, wired in build()); if frames stop while
+    // ExoPlayer insists it's playing, the feed is dead → reconnect. Position-stall (a fully dead feed where
+    // even the clock stopped) is kept as a second trigger; audio-only channels have no video frames, so they
+    // rely on that position trigger alone.
+    private val frameCounter = java.util.concurrent.atomic.AtomicInteger(0)
+    private var lastFrameCount = 0
+    // Latched true once we've seen ANY rendered frame this load. Frame-based freeze detection only fires
+    // AFTER this — so if the per-frame hook silently failed to register (or a stream renders no video at
+    // all), we never false-trigger a reconnect on healthy playback; we fall back to the position check.
+    private var everRendered = false
+    private var videoRenderer: Renderer? = null
+    private val frameListener = VideoFrameMetadataListener { _, _, _, _ -> frameCounter.incrementAndGet() }
     private var lastProgressPos = -1L
     private var frozenChecks = 0
     private val progressWatchdog = object : Runnable {
         override fun run() {
             val p = player
-            if (p != null && hasPlayed && p.playWhenReady && p.playbackState == Player.STATE_READY) {
-                val pos = p.currentPosition
-                if (pos > 0 && pos == lastProgressPos) {
-                    if (++frozenChecks >= FROZEN_LIMIT) { frozenChecks = 0; lastProgressPos = -1L; reconnect("stream frozen"); return }
+            // isPlaying == actively progressing (playWhenReady && STATE_READY && no suppression) — the only
+            // state where a freeze is meaningful; during buffering/error this resets and the other watchdogs run.
+            if (p != null && hasPlayed && p.isPlaying && p.playbackState == Player.STATE_READY) {
+                val frames = frameCounter.get()
+                val hasVideo = p.videoFormat != null
+                if (frames > 0) everRendered = true
+                // Picture frozen = we WERE rendering but the frame count stopped (the live manifest clock may
+                // still advance, hiding this from a position-only check). Guarded by everRendered so a
+                // non-functional frame hook can't false-trigger on healthy playback.
+                val framesStuck = everRendered && hasVideo && frames == lastFrameCount
+                val posStuck = p.currentPosition > 0 && p.currentPosition == lastProgressPos // fully dead feed
+                if (framesStuck || posStuck) {
+                    if (++frozenChecks >= FROZEN_LIMIT) {
+                        frozenChecks = 0; lastFrameCount = frames; lastProgressPos = p.currentPosition
+                        reconnect("stream frozen"); return
+                    }
                 } else {
-                    frozenChecks = 0; lastProgressPos = pos
+                    frozenChecks = 0
                 }
+                lastFrameCount = frames
+                if (p.currentPosition > 0) lastProgressPos = p.currentPosition
             } else {
                 frozenChecks = 0; lastProgressPos = -1L
             }
@@ -244,8 +274,10 @@ class LivePreviewEngine(
                 Player.STATE_READY -> {
                     _state.value = State.PLAYING; _buffering.value = false
                     hasPlayed = true; retryCount = 0; mainHandler.removeCallbacks(stallWatchdog)
-                    // (re)start the silent-freeze poll now that we're actually playing
-                    lastProgressPos = -1L; frozenChecks = 0
+                    // (re)start the silent-freeze poll now that we're actually playing. Reset the frame
+                    // baseline so the freeze window is measured from this READY (a healthy stream renders its
+                    // first frame well within the grace window; one that never does trips the watchdog).
+                    frameCounter.set(0); lastFrameCount = 0; everRendered = false; lastProgressPos = -1L; frozenChecks = 0
                     mainHandler.removeCallbacks(progressWatchdog); mainHandler.postDelayed(progressWatchdog, PROGRESS_CHECK_MS)
                 }
                 else -> { _buffering.value = false; mainHandler.removeCallbacks(stallWatchdog) }
@@ -301,6 +333,7 @@ class LivePreviewEngine(
         _videoRes.value = null
         _error.value = null
         _errorInfo.value = null
+        frameCounter.set(0); lastFrameCount = 0; everRendered = false; lastProgressPos = -1L; frozenChecks = 0
         _currentMeta.value = meta
         _volume.value = if (muted) 0 else 100
         _state.value = State.LOADING
@@ -356,6 +389,7 @@ class LivePreviewEngine(
     fun stop() {
         currentUrl = null
         hasPlayed = false; retryCount = 0; mainHandler.removeCallbacks(stallWatchdog); mainHandler.removeCallbacks(progressWatchdog)
+        frameCounter.set(0); lastFrameCount = 0; everRendered = false; lastProgressPos = -1L; frozenChecks = 0
         audioTrackList = emptyList(); audioSelections = emptyList(); _audioCount.value = 0
         textTrackList = emptyList(); textSelections = emptyList(); _subCount.value = 0
         _subtitleOn.value = false; _cues.value = emptyList(); _audioUnsupported.value = false
@@ -366,8 +400,10 @@ class LivePreviewEngine(
 
     fun release() {
         mainHandler.removeCallbacks(stallWatchdog)
+        mainHandler.removeCallbacks(progressWatchdog)
         player?.run { removeListener(listener); release() }
         player = null
+        videoRenderer = null
         surface = null
         currentUrl = null
         _state.value = State.IDLE
@@ -516,7 +552,23 @@ class LivePreviewEngine(
             .setMediaSourceFactory(defaultSourceFactory)
             .setLoadControl(loadControl)
             .build()
-            .apply { addListener(listener); addAnalyticsListener(analytics) }
+            .apply {
+                addListener(listener); addAnalyticsListener(analytics)
+                // Wire the per-frame tick to the video renderer so the health watchdog can tell a frozen
+                // PICTURE (clock still running — invisible to a position-only check) from real playback.
+                // Best-effort: if the renderer isn't found / doesn't accept the message, the position and
+                // error/stall watchdogs still cover total freezes, so this can't make things worse.
+                videoRenderer = (0 until rendererCount).map { getRenderer(it) }
+                    .firstOrNull { it.trackType == C.TRACK_TYPE_VIDEO }
+                videoRenderer?.let { r ->
+                    runCatching {
+                        createMessage(r)
+                            .setType(MediaCodecVideoRenderer.MSG_SET_VIDEO_FRAME_METADATA_LISTENER)
+                            .setPayload(frameListener)
+                            .send()
+                    }
+                }
+            }
     }
 
     companion object {

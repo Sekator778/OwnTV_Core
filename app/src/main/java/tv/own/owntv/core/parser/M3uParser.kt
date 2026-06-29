@@ -5,7 +5,7 @@ import kotlinx.coroutines.ensureActive
 import java.io.BufferedReader
 import java.io.InputStream
 
-/** A single channel parsed from an M3U playlist. */
+/** A single entry parsed from an M3U playlist — can be a live channel or a VOD movie/series. */
 data class M3uEntry(
     val name: String,
     val streamUrl: String,
@@ -13,13 +13,20 @@ data class M3uEntry(
     val groupTitle: String?,
     val tvgId: String?,
     val tvgChno: Int?,
+    /** `type` attribute — "vod" / "series" / "movie" — tells us whether this is VOD content. */
+    val type: String?,
+    /** `tvg-type` attribute — alternative VOD type marker used by some playlists. */
+    val tvgType: String?,
     /** `catchup` type (e.g. "default"/"append"/"shift") — its presence marks the channel as having archive. */
     val catchup: String?,
     /** `catchup-source` URL template (placeholders like `${start}`/`{utc}` filled at playback). */
     val catchupSource: String?,
     /** `catchup-days` — how many days back the archive goes. */
     val catchupDays: Int?,
-)
+) {
+    /** True when the entry is explicitly tagged as VOD (movie or series), not a live channel. */
+    val isVod: Boolean get() = type == "vod" || tvgType == "movie" || tvgType == "series" || type == "movie"
+}
 
 /** Header info from the `#EXTM3U` line (notably the `url-tvg` EPG URL). */
 data class M3uHeader(val urlTvg: String?)
@@ -54,6 +61,8 @@ class M3uParser {
                         groupTitle = attr(line, "group-title"),
                         tvgId = attr(line, "tvg-id"),
                         tvgChno = attr(line, "tvg-chno")?.toIntOrNull(),
+                        type = attr(line, "type"),
+                        tvgType = attr(line, "tvg-type"),
                         catchup = attr(line, "catchup") ?: attr(line, "catchup-type"),
                         catchupSource = attr(line, "catchup-source"),
                         catchupDays = attr(line, "catchup-days")?.toIntOrNull(),
@@ -74,6 +83,8 @@ class M3uParser {
                                 groupTitle = p.groupTitle,
                                 tvgId = p.tvgId,
                                 tvgChno = p.tvgChno,
+                                type = p.type,
+                                tvgType = p.tvgType,
                                 catchup = p.catchup,
                                 catchupSource = p.catchupSource,
                                 catchupDays = p.catchupDays,
@@ -93,6 +104,8 @@ class M3uParser {
         val groupTitle: String?,
         val tvgId: String?,
         val tvgChno: Int?,
+        val type: String?,
+        val tvgType: String?,
         val catchup: String?,
         val catchupSource: String?,
         val catchupDays: Int?,

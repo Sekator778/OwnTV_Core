@@ -27,9 +27,6 @@ class HttpClient(private val client: OkHttpClient) {
         onProgress: ((Long, Long?) -> Unit)? = null,
         block: suspend (InputStream) -> T,
     ): T = withContext(Dispatchers.IO) {
-        // Many IPTV panels reject requests that don't look like a media player (or that use the
-        // default OkHttp UA), so we send a player-style default unless the source overrides it
-        // (custom User-Agent is a Phase 12 power feature).
         val ua = userAgent?.takeIf { it.isNotBlank() } ?: DEFAULT_USER_AGENT
         val request = Request.Builder()
             .url(url)

@@ -393,8 +393,14 @@ class SyncManager(
             } catch (c: CancellationException) {
                 throw c
             } catch (e: Exception) {
-                android.util.Log.w("SyncManager", "$label: category ${cat.id} failed (${e.message}) — skipping it", e)
-                return@forEachIndexed
+                // HTTP errors (like 512 "response too large") are specific to one category — skip it and
+                // try the next. Network errors (timeout, DNS, connection refused) mean the server is
+                // unreachable — abort the entire fallback so we don't spin for minutes retrying every
+                // category against a dead server.
+                val isServerError = e.message?.startsWith("HTTP") == true
+                android.util.Log.w("SyncManager", "$label: category ${cat.id} failed (${e.message}) — ${if (isServerError) "skipping category" else "ABORTING fallback"}", e)
+                if (isServerError) return@forEachIndexed
+                else return
             }
             val delta = total[0] - before
             Log.d(
@@ -706,7 +712,6 @@ class SyncManager(
         if (buffer.isNotEmpty()) {
             flushChannels()
         }
-
         // Persist the playlist's EPG url (url-tvg) for the EPG engine if the source didn't have one.
         if (!header.urlTvg.isNullOrBlank() && s.epgUrl.isNullOrBlank()) {
             sourceDao.update(s.copy(epgUrl = header.urlTvg))
