@@ -63,8 +63,8 @@ val dataModule = module {
     single { XtreamClient(get()) }
     single { WeatherRepository(get(), get()) } // Phase 7 — weather chip
     single { SyncManager(androidContext(), get(), get(), get(), get(), get(), get(), get(), get()) }
-    // context, channelDao, movieDao, seriesDao, profileDao, favoriteDao, historyDao, progressDao
-    single { UserDataResolver(androidContext(), get(), get(), get(), get(), get(), get(), get()) }
+    // context, channelDao, movieDao, seriesDao, profileDao, favoriteDao, historyDao, progressDao, contentOrderDao
+    single { UserDataResolver(androidContext(), get(), get(), get(), get(), get(), get(), get(), get()) }
     // sourceDao, syncManager, userDataResolver
     single { SourceRepository(get(), get(), get()) }
     // epgDao, httpClient, xtreamClient, channelDao, customize, settings, context, db

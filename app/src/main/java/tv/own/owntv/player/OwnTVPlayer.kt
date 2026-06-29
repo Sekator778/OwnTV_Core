@@ -1036,7 +1036,7 @@ class OwnTVPlayer(
                     // is at end of file + server doesn't support Range requests). This will never fix
                     // itself by retrying.
                     val bitrateKnown = mpv?.getPropertyString("video-bitrate")?.toLongOrNull()?.let { it > 0 } ?: false
-                    if (fileLoaded && currentHeightPx == 0 && !bitrateKnown && elapsed > 4_000) {
+                    if (fileLoaded && currentHeightPx == 0 && !bitrateKnown && elapsed > 6_000) {
                         android.util.Log.w(TAG, "watchdog MOOV-AT-END — FILE_LOADED but no bitrate/height after ${elapsed}ms, aborting (server lacks Range support)")
                         _error.value = "This video isn't formatted for streaming. Ask the provider to re-encode with fast-start, or download it first."
                         expectingPlayback = false; _buffering.value = false
@@ -1447,6 +1447,10 @@ class OwnTVPlayer(
                 if (value > 0) {
                     lastVideoHeightPx = value.toInt() // remember for recovery decisions on a later failed load
                     videoCheckJob?.cancel() // video is decoding → watchdog not needed
+                    // A real frame decoded → playback genuinely works. Dismiss any error the watchdog raised
+                    // prematurely while a slow hardware decoder (e.g. Realtek setPortMode negotiation) was
+                    // still producing its first frame — otherwise the popup stays stuck over playing video.
+                    if (_error.value != null) _error.value = null
                 }
                 updateAspect()
                 enforceDecodeGuard()

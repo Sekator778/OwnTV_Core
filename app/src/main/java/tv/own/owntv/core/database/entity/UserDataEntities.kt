@@ -70,6 +70,41 @@ data class PlaybackProgressEntity(
     val updatedAt: Long = System.currentTimeMillis(),
 )
 
+/**
+ * Per-profile manual ordering for individual items ("Move up/down"). Each row pins one content item
+ * (channel/movie/series) to a [position] within a [contextKey] — a category's stable key for a folder,
+ * or [FAV_CONTEXT] for the Favorites list. The browsing queries LEFT JOIN this table and order by
+ * [position] first, falling back to the natural order for items without a row. `itemId` is volatile
+ * (content is clear-then-insert on every sync), so these rows are snapshotted with stable keys and
+ * re-attached after a sync by UserDataResolver, just like favorites/history.
+ */
+@Entity(
+    tableName = "content_order",
+    foreignKeys = [
+        ForeignKey(entity = ProfileEntity::class, parentColumns = ["id"], childColumns = ["profileId"], onDelete = ForeignKey.CASCADE),
+    ],
+    indices = [
+        Index("profileId"),
+        Index(value = ["profileId", "mediaType", "contextKey"]),
+        Index(value = ["profileId", "mediaType", "contextKey", "itemId"], unique = true),
+    ],
+)
+data class ContentOrderEntity(
+    @PrimaryKey(autoGenerate = true) val id: Long = 0,
+    val profileId: Long,
+    /** LIVE / MOVIE / SERIES — never EPISODE (episodes aren't reorderable). */
+    val mediaType: MediaType,
+    /** A category stable key (CustomizeKeys.category) for a folder, or [FAV_CONTEXT] for Favorites. */
+    val contextKey: String,
+    val itemId: Long,
+    val position: Int,
+) {
+    companion object {
+        /** Sentinel [contextKey] for the per-section Favorites list. */
+        const val FAV_CONTEXT = "__fav__"
+    }
+}
+
 @Entity(
     tableName = "downloads",
     foreignKeys = [

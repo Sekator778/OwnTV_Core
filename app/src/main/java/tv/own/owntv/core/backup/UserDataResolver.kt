@@ -10,6 +10,7 @@ import kotlinx.coroutines.flow.first
 import org.json.JSONArray
 import org.json.JSONObject
 import tv.own.owntv.core.database.dao.ChannelDao
+import tv.own.owntv.core.database.dao.ContentOrderDao
 import tv.own.owntv.core.database.dao.FavoriteDao
 import tv.own.owntv.core.database.dao.HistoryDao
 import tv.own.owntv.core.database.dao.MovieDao
@@ -17,6 +18,7 @@ import tv.own.owntv.core.database.dao.ProgressDao
 import tv.own.owntv.core.database.dao.ProfileDao
 import tv.own.owntv.core.database.dao.SeriesDao
 import tv.own.owntv.core.database.dao.resolveExistingProfileId
+import tv.own.owntv.core.database.entity.ContentOrderEntity
 import tv.own.owntv.core.database.entity.FavoriteEntity
 import tv.own.owntv.core.database.entity.PlaybackProgressEntity
 import tv.own.owntv.core.database.entity.WatchHistoryEntity
@@ -42,10 +44,11 @@ class UserDataResolver(
     private val favoriteDao: FavoriteDao,
     private val historyDao: HistoryDao,
     private val progressDao: ProgressDao,
+    private val contentOrderDao: ContentOrderDao,
 ) {
 
-    /** Exports the chosen kinds ("fav" / "his" / "prog") as stable-key records for the backup file. */
-    suspend fun exportAll(kinds: Set<String> = setOf("fav", "his", "prog")): JSONArray {
+    /** Exports the chosen kinds ("fav" / "his" / "prog" / "order") as stable-key records for the backup file. */
+    suspend fun exportAll(kinds: Set<String> = setOf("fav", "his", "prog", "order")): JSONArray {
         val out = JSONArray()
         if ("fav" in kinds) favoriteDao.getAllOnce().forEach { f ->
             describe(f.mediaType, f.itemId)?.let { out.put(it.put("p", f.profileId).put("kind", "fav").put("at", f.addedAt)) }
@@ -56,6 +59,11 @@ class UserDataResolver(
         if ("prog" in kinds) progressDao.getAllOnce().forEach { pr ->
             describe(pr.mediaType, pr.itemId)?.let {
                 out.put(it.put("p", pr.profileId).put("kind", "prog").put("at", pr.updatedAt).put("pos", pr.positionMs).put("dur", pr.durationMs))
+            }
+        }
+        if ("order" in kinds) contentOrderDao.getAllOnce().forEach { o ->
+            describe(o.mediaType, o.itemId)?.let {
+                out.put(it.put("p", o.profileId).put("kind", "order").put("ctx", o.contextKey).put("pos", o.position))
             }
         }
         return out
@@ -79,6 +87,7 @@ class UserDataResolver(
         favoriteDao.purgeOrphans()
         historyDao.purgeOrphans()
         progressDao.purgeOrphans()
+        contentOrderDao.purgeOrphans()
         if (unresolved.length() > 0) addPending(unresolved)
         resolvePending() // also retries any in-flight backup restore
     }
@@ -178,6 +187,9 @@ class UserDataResolver(
                         profileId = pid, mediaType = type, itemId = itemId,
                         positionMs = e.optLong("pos", 0), durationMs = e.optLong("dur", 0), updatedAt = at,
                     ),
+                )
+                "order" -> contentOrderDao.insertAll(
+                    listOf(ContentOrderEntity(profileId = pid, mediaType = type, contextKey = e.getString("ctx"), itemId = itemId, position = e.getInt("pos"))),
                 )
             }
             true

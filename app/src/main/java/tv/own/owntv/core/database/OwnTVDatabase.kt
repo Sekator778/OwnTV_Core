@@ -5,6 +5,7 @@ import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import tv.own.owntv.core.database.dao.CategoryDao
 import tv.own.owntv.core.database.dao.ChannelDao
+import tv.own.owntv.core.database.dao.ContentOrderDao
 import tv.own.owntv.core.database.dao.DownloadDao
 import tv.own.owntv.core.database.dao.EpgDao
 import tv.own.owntv.core.database.dao.FavoriteDao
@@ -18,6 +19,7 @@ import tv.own.owntv.core.database.dao.SourceDao
 import tv.own.owntv.core.database.entity.CategoryEntity
 import tv.own.owntv.core.database.entity.ChannelEntity
 import tv.own.owntv.core.database.entity.ChannelFtsEntity
+import tv.own.owntv.core.database.entity.ContentOrderEntity
 import tv.own.owntv.core.database.entity.DownloadEntity
 import tv.own.owntv.core.database.entity.EpgChannelEntity
 import tv.own.owntv.core.database.entity.EpgProgrammeEntity
@@ -53,6 +55,7 @@ import tv.own.owntv.core.database.entity.TvProviderProgramEntity
         FavoriteEntity::class,
         WatchHistoryEntity::class,
         PlaybackProgressEntity::class,
+        ContentOrderEntity::class,
         DownloadEntity::class,
         // Android TV home-screen bookkeeping
         TvProviderProgramEntity::class,
@@ -65,7 +68,7 @@ import tv.own.owntv.core.database.entity.TvProviderProgramEntity
         SeriesFtsEntity::class,
         EpisodeFtsEntity::class,
     ],
-    version = 6, // v4: unified v3. v5: A–Z composites. v6: playlist/provider composites
+    version = 7, // v4: unified v3. v5: A–Z composites. v6: playlist/provider composites. v7: content_order (Move)
     exportSchema = true,
 )
 @TypeConverters(Converters::class)
@@ -79,6 +82,7 @@ abstract class OwnTVDatabase : RoomDatabase() {
     abstract fun favoriteDao(): FavoriteDao
     abstract fun historyDao(): HistoryDao
     abstract fun progressDao(): ProgressDao
+    abstract fun contentOrderDao(): ContentOrderDao
     abstract fun tvProviderProgramDao(): TvProviderProgramDao
     abstract fun downloadDao(): DownloadDao
     abstract fun epgDao(): EpgDao
@@ -177,6 +181,29 @@ abstract class OwnTVDatabase : RoomDatabase() {
                 // EPG-perf Guide read-index (v4.0.0). Declared on EpgProgrammeEntity, so v4 expects it; older
                 // DBs (and the runtime ensureEpgIndexes) create it too — make sure the migrated DB has it.
                 db.execSQL("CREATE INDEX IF NOT EXISTS `index_epg_programmes_sourceId_epgChannelId` ON `epg_programmes` (`sourceId`, `epgChannelId`)")
+            }
+        }
+
+        /**
+         * v6 → v7: per-profile manual item order ("Move up/down"). Additive — creates the
+         * `content_order` table; existing favorites/history/resume are untouched.
+         */
+        val MIGRATION_6_7 = object : androidx.room.migration.Migration(6, 7) {
+            override fun migrate(db: androidx.sqlite.db.SupportSQLiteDatabase) {
+                db.execSQL(
+                    "CREATE TABLE IF NOT EXISTS `content_order` (" +
+                        "`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " +
+                        "`profileId` INTEGER NOT NULL, " +
+                        "`mediaType` TEXT NOT NULL, " +
+                        "`contextKey` TEXT NOT NULL, " +
+                        "`itemId` INTEGER NOT NULL, " +
+                        "`position` INTEGER NOT NULL, " +
+                        "FOREIGN KEY(`profileId`) REFERENCES `profiles`(`id`) ON DELETE CASCADE" +
+                        ")",
+                )
+                db.execSQL("CREATE INDEX IF NOT EXISTS `index_content_order_profileId` ON `content_order` (`profileId`)")
+                db.execSQL("CREATE INDEX IF NOT EXISTS `index_content_order_profileId_mediaType_contextKey` ON `content_order` (`profileId`, `mediaType`, `contextKey`)")
+                db.execSQL("CREATE UNIQUE INDEX IF NOT EXISTS `index_content_order_profileId_mediaType_contextKey_itemId` ON `content_order` (`profileId`, `mediaType`, `contextKey`, `itemId`)")
             }
         }
 
