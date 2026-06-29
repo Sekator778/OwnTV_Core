@@ -44,6 +44,16 @@ class CatalogSyncScheduler(private val context: Context) {
         WorkManager.getInstance(context).cancelUniqueWork(workName(sourceId))
     }
 
+    fun enqueueContentIndexBuild(reason: String = "fresh_sync") {
+        val request = OneTimeWorkRequestBuilder<ContentIndexWorker>()
+            .setInputData(workDataOf(ContentIndexWorker.KEY_REASON to reason))
+            .addTag(ContentIndexWorker.TAG)
+            .build()
+
+        WorkManager.getInstance(context)
+            .enqueueUniqueWork(ContentIndexWorker.workName(), ExistingWorkPolicy.KEEP, request)
+    }
+
     fun observeSync(sourceId: Long): Flow<CatalogSyncState> =
         WorkManager.getInstance(context)
             .getWorkInfosForUniqueWorkFlow(workName(sourceId))

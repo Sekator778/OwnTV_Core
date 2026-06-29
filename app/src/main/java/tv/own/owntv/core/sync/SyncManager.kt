@@ -175,7 +175,7 @@ class SyncManager(
                 Log.i(TAG, "Live prune skipped sourceId=${s.id} reason=incomplete_bulk")
             }
         } finally {
-            if (bulkIndexState != null) restoreIndexes(bulkIndexState)
+            if (bulkIndexState != null) restoreIndexes(bulkIndexState, ftsOnly = freshSource)
         }
         progress.finish(SyncPhase.LIVE, SyncPhase.LIVE.label, liveTotal[0])
         stats.phaseTiming["live"] = System.currentTimeMillis() - liveStart
@@ -244,7 +244,7 @@ class SyncManager(
                         Log.i(TAG, "Movies prune skipped sourceId=${s.id} reason=incomplete_bulk")
                     }
                 } finally {
-                    if (bulkIndexState != null) restoreIndexes(bulkIndexState)
+                    if (bulkIndexState != null) restoreIndexes(bulkIndexState, ftsOnly = freshSource)
                 }
                 progress.finish(SyncPhase.MOVIES, SyncPhase.MOVIES.label, vodTotal[0])
                 stats.processedCounts["movies"] = vodTotal[0]
@@ -313,7 +313,7 @@ class SyncManager(
                         Log.i(TAG, "Series prune skipped sourceId=${s.id} reason=incomplete_bulk")
                     }
                 } finally {
-                    if (bulkIndexState != null) restoreIndexes(bulkIndexState)
+                    if (bulkIndexState != null) restoreIndexes(bulkIndexState, ftsOnly = freshSource)
                 }
                 progress.finish(SyncPhase.SERIES, SyncPhase.SERIES.label, seriesTotal[0])
                 stats.processedCounts["series"] = seriesTotal[0]
@@ -940,13 +940,16 @@ class SyncManager(
         return BulkIndexState(table, ftsTable, indexSqls, triggerSql)
     }
 
-    private fun restoreIndexes(state: BulkIndexState) {
+    private fun restoreIndexes(state: BulkIndexState, ftsOnly: Boolean = false) {
         val sdb = db.openHelper.writableDatabase
         val start = SystemClock.elapsedRealtime()
-        state.indexCreateSqls.forEach { sdb.execSQL(it) }
+        val restoredIndexCount = if (ftsOnly) 0 else state.indexCreateSqls.size
+        if (!ftsOnly) {
+            state.indexCreateSqls.forEach { sdb.execSQL(it) }
+        }
         sdb.execSQL("INSERT INTO `${state.ftsTable}`(`${state.ftsTable}`) VALUES('rebuild')")
         if (state.triggerSql != null) sdb.execSQL(state.triggerSql)
-        Log.i(TAG, "Restored ${state.indexCreateSqls.size} indexes + FTS on ${state.table} ms=${SystemClock.elapsedRealtime() - start}")
+        Log.i(TAG, "Restored $restoredIndexCount indexes + FTS on ${state.table} ms=${SystemClock.elapsedRealtime() - start}")
     }
 
     private data class BulkIndexState(

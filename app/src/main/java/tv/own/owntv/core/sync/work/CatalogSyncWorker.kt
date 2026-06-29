@@ -22,6 +22,7 @@ class CatalogSyncWorker(
     private val sourceRepository: SourceRepository,
     private val sourceDao: SourceDao,
     private val importFinalizer: ImportFinalizer,
+    private val catalogSyncScheduler: CatalogSyncScheduler,
     private val launcherIntegrationRepository: LauncherIntegrationRepository,
 ) : CoroutineWorker(context, params) {
 
@@ -61,9 +62,13 @@ class CatalogSyncWorker(
                 val warningText = result.warnings.takeIf { it.isNotEmpty() }?.joinToString { it.label }
                 Log.i(TAG, "Sync succeeded for source ${source.id} (${source.name}) warnings=$warningText")
                 val finalizeStartedAt = SystemClock.elapsedRealtime()
-                runCatching { importFinalizer.finalize(source) }
+                val deferIndexes = source.lastSyncAt == null
+                runCatching { importFinalizer.finalize(source, deferIndexes = deferIndexes) }
                     .onSuccess { Log.i(TAG, "Import finalizer sourceId=${source.id} counts=$it ms=${SystemClock.elapsedRealtime() - finalizeStartedAt}") }
                     .onFailure { Log.w(TAG, "Import finalizer failed sourceId=${source.id} ms=${SystemClock.elapsedRealtime() - finalizeStartedAt}", it) }
+                if (deferIndexes) {
+                    catalogSyncScheduler.enqueueContentIndexBuild(reason = "fresh_sync")
+                }
                 sourceDao.profileIdsForSource(source.id).forEach { profileId ->
                     val launcherStartedAt = SystemClock.elapsedRealtime()
                     runCatching { launcherIntegrationRepository.refreshProfile(profileId) }
