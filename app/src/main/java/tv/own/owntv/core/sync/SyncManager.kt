@@ -34,9 +34,6 @@ import tv.own.owntv.core.model.SourceType
 import tv.own.owntv.core.network.HttpClient
 import tv.own.owntv.core.parser.M3uParser
 import tv.own.owntv.core.parser.XtCategory
-import tv.own.owntv.core.parser.XtLiveStream
-import tv.own.owntv.core.parser.XtSeries
-import tv.own.owntv.core.parser.XtVod
 import tv.own.owntv.core.parser.XtreamClient
 import tv.own.owntv.core.network.withProgress
 import kotlin.coroutines.CoroutineContext
@@ -132,13 +129,21 @@ class SyncManager(
         val liveMap = liveCategories.idsByRemoteId
         Log.d(TAG, "Live categories refreshed sourceId=${s.id} mapped=${liveMap.size} ms=${SystemClock.elapsedRealtime() - refreshStart}")
         var liveOrder = 0
-        val toChannel = { item: XtLiveStream ->
+        val toChannel = {
+            streamId: String,
+            name: String,
+            icon: String?,
+            epgChannelId: String?,
+            categoryId: String?,
+            num: Int?,
+            archive: Boolean,
+            archiveDays: Int ->
             ChannelEntity(
-                sourceId = s.id, categoryId = liveMap[item.categoryId], name = item.name,
-                logoUrl = item.icon, streamUrl = xtream.liveUrl(s, item.streamId),
-                epgChannelId = item.epgChannelId, number = item.num, remoteId = item.streamId,
+                sourceId = s.id, categoryId = liveMap[categoryId], name = name,
+                logoUrl = icon, streamUrl = xtream.liveUrl(s, streamId),
+                epgChannelId = epgChannelId, number = num, remoteId = streamId,
                 sortOrder = liveOrder++,
-                catchup = item.archive, catchupDays = item.archiveDays,
+                catchup = archive, catchupDays = archiveDays,
             )
         }
         val insertFn: suspend (List<ChannelEntity>) -> UpsertStats = if (freshSource) {
@@ -155,7 +160,7 @@ class SyncManager(
         try {
             val liveDone = bulkOrFallback(SyncPhase.LIVE.label) {
                 chunked<ChannelEntity, Boolean>(ctx, SyncPhase.LIVE, SyncPhase.LIVE.label, progress, insertFn, liveTotal, liveRemoteIds, { it.remoteId }, chunkSize) { add ->
-                    xtream.streamLive(s, onItem = { add(toChannel(it)) }, onProgress = reportBytes)
+                    xtream.streamLive(s, transform = toChannel, onItem = add, onProgress = reportBytes)
                 }
             }
             Log.i(TAG, "Live bulk end sourceId=${s.id} complete=$liveDone unique=${liveTotal[0]} ms=${SystemClock.elapsedRealtime() - bulkStart}")
@@ -164,7 +169,7 @@ class SyncManager(
                 val fallbackStart = SystemClock.elapsedRealtime()
                 Log.i(TAG, "Live fallback start sourceId=${s.id} categories=${liveCats.size} bulkPartial=${liveTotal[0]}")
                 sliceByCategory(ctx, SyncPhase.LIVE, SyncPhase.LIVE.label, progress, liveCats, insertFn, liveTotal, liveTotal[0], liveRemoteIds, { it.remoteId }) { cat, add ->
-                    xtream.streamLive(s, cat.id, onItem = { add(toChannel(it)) }, onProgress = reportBytes)
+                    xtream.streamLive(s, cat.id, transform = toChannel, onItem = add, onProgress = reportBytes)
                 }
                 Log.i(TAG, "Live fallback end sourceId=${s.id} unique=${liveTotal[0]} ms=${SystemClock.elapsedRealtime() - fallbackStart}")
             }
@@ -201,12 +206,20 @@ class SyncManager(
                 val vodMap = vodCategories.idsByRemoteId
                 Log.d(TAG, "Movies categories refreshed sourceId=${s.id} mapped=${vodMap.size} ms=${SystemClock.elapsedRealtime() - refreshStart}")
                 var vodOrder = 0
-                val toMovie = { item: XtVod ->
+                val toMovie = {
+                    streamId: String,
+                    name: String,
+                    icon: String?,
+                    rating: Double?,
+                    plot: String?,
+                    categoryId: String?,
+                    containerExt: String?,
+                    added: Long? ->
                     MovieEntity(
-                        sourceId = s.id, categoryId = vodMap[item.categoryId], name = item.name,
-                        posterUrl = item.icon, rating = item.rating, plot = item.plot,
-                        streamUrl = xtream.movieUrl(s, item.streamId, item.containerExt),
-                        containerExt = item.containerExt, remoteId = item.streamId, addedAt = item.added,
+                        sourceId = s.id, categoryId = vodMap[categoryId], name = name,
+                        posterUrl = icon, rating = rating, plot = plot,
+                        streamUrl = xtream.movieUrl(s, streamId, containerExt),
+                        containerExt = containerExt, remoteId = streamId, addedAt = added,
                         sortOrder = vodOrder++,
                     )
                 }
@@ -224,7 +237,7 @@ class SyncManager(
                 try {
                     val vodDone = bulkOrFallback("Movies") {
                         chunked<MovieEntity, Boolean>(ctx, SyncPhase.MOVIES, SyncPhase.MOVIES.label, progress, insertFn, vodTotal, vodRemoteIds, { it.remoteId }, chunkSize) { add ->
-                            xtream.streamVod(s, onItem = { add(toMovie(it)) }, onProgress = reportBytes)
+                            xtream.streamVod(s, transform = toMovie, onItem = add, onProgress = reportBytes)
                         }
                     }
                     Log.i(TAG, "Movies bulk end sourceId=${s.id} complete=$vodDone unique=${vodTotal[0]} ms=${SystemClock.elapsedRealtime() - bulkStart}")
@@ -233,7 +246,7 @@ class SyncManager(
                         val fallbackStart = SystemClock.elapsedRealtime()
                         Log.i(TAG, "Movies fallback start sourceId=${s.id} categories=${vodCats.size} bulkPartial=${vodTotal[0]}")
                         sliceByCategory(ctx, SyncPhase.MOVIES, SyncPhase.MOVIES.label, progress, vodCats, insertFn, vodTotal, vodTotal[0], vodRemoteIds, { it.remoteId }) { cat, add ->
-                            xtream.streamVod(s, cat.id, onItem = { add(toMovie(it)) }, onProgress = reportBytes)
+                            xtream.streamVod(s, cat.id, transform = toMovie, onItem = add, onProgress = reportBytes)
                         }
                         Log.i(TAG, "Movies fallback end sourceId=${s.id} unique=${vodTotal[0]} ms=${SystemClock.elapsedRealtime() - fallbackStart}")
                     }
@@ -271,11 +284,18 @@ class SyncManager(
                 val seriesMap = seriesCategories.idsByRemoteId
                 Log.d(TAG, "Series categories refreshed sourceId=${s.id} mapped=${seriesMap.size} ms=${SystemClock.elapsedRealtime() - refreshStart}")
                 var seriesOrder = 0
-                val toSeries = { item: XtSeries ->
+                val toSeries = {
+                    seriesId: String,
+                    name: String,
+                    cover: String?,
+                    plot: String?,
+                    rating: Double?,
+                    categoryId: String?,
+                    year: Int? ->
                     SeriesEntity(
-                        sourceId = s.id, categoryId = seriesMap[item.categoryId], name = item.name,
-                        posterUrl = item.cover, plot = item.plot, rating = item.rating,
-                        year = item.year, remoteId = item.seriesId,
+                        sourceId = s.id, categoryId = seriesMap[categoryId], name = name,
+                        posterUrl = cover, plot = plot, rating = rating,
+                        year = year, remoteId = seriesId,
                         sortOrder = seriesOrder++,
                     )
                 }
@@ -293,7 +313,7 @@ class SyncManager(
                 try {
                     val seriesDone = bulkOrFallback("Series") {
                         chunked<SeriesEntity, Boolean>(ctx, SyncPhase.SERIES, SyncPhase.SERIES.label, progress, insertFn, seriesTotal, seriesRemoteIds, { it.remoteId }, chunkSize) { add ->
-                            xtream.streamSeries(s, onItem = { add(toSeries(it)) }, onProgress = reportBytes)
+                            xtream.streamSeries(s, transform = toSeries, onItem = add, onProgress = reportBytes)
                         }
                     }
                     Log.i(TAG, "Series bulk end sourceId=${s.id} complete=$seriesDone unique=${seriesTotal[0]} ms=${SystemClock.elapsedRealtime() - bulkStart}")
@@ -302,7 +322,7 @@ class SyncManager(
                         val fallbackStart = SystemClock.elapsedRealtime()
                         Log.i(TAG, "Series fallback start sourceId=${s.id} categories=${seriesCats.size} bulkPartial=${seriesTotal[0]}")
                         sliceByCategory(ctx, SyncPhase.SERIES, SyncPhase.SERIES.label, progress, seriesCats, insertFn, seriesTotal, seriesTotal[0], seriesRemoteIds, { it.remoteId }) { cat, add ->
-                            xtream.streamSeries(s, cat.id, onItem = { add(toSeries(it)) }, onProgress = reportBytes)
+                            xtream.streamSeries(s, cat.id, transform = toSeries, onItem = add, onProgress = reportBytes)
                         }
                         Log.i(TAG, "Series fallback end sourceId=${s.id} unique=${seriesTotal[0]} ms=${SystemClock.elapsedRealtime() - fallbackStart}")
                     }

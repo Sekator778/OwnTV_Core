@@ -66,9 +66,35 @@ class XtreamClient(private val http: HttpClient) {
         categoryId: String? = null,
         onItem: suspend (XtLiveStream) -> Unit,
         onProgress: ((Long, Long?) -> Unit)? = null,
+    ): Boolean =
+        streamLive(
+            s = s,
+            categoryId = categoryId,
+            transform = { streamId, name, icon, epgChannelId, itemCategoryId, num, archive, archiveDays ->
+                XtLiveStream(streamId, name, icon, epgChannelId, itemCategoryId, num, archive, archiveDays)
+            },
+            onItem = onItem,
+            onProgress = onProgress,
+        )
+
+    suspend fun <T : Any> streamLive(
+        s: SourceEntity,
+        categoryId: String? = null,
+        transform: (
+            streamId: String,
+            name: String,
+            icon: String?,
+            epgChannelId: String?,
+            categoryId: String?,
+            num: Int?,
+            archive: Boolean,
+            archiveDays: Int,
+        ) -> T?,
+        onItem: suspend (T) -> Unit,
+        onProgress: ((Long, Long?) -> Unit)? = null,
     ): Boolean {
         return http.get(api(s, "get_live_streams", categoryParam(categoryId)), s.userAgent, onProgress) { input ->
-            streamItems("get_live_streams", input, ::readLiveStream, onItem)
+            streamItems("get_live_streams", input, { reader -> readLiveStreamAs(reader, transform) }, onItem)
         }
     }
 
@@ -77,9 +103,35 @@ class XtreamClient(private val http: HttpClient) {
         categoryId: String? = null,
         onItem: suspend (XtVod) -> Unit,
         onProgress: ((Long, Long?) -> Unit)? = null,
+    ): Boolean =
+        streamVod(
+            s = s,
+            categoryId = categoryId,
+            transform = { streamId, name, icon, rating, plot, itemCategoryId, containerExt, added ->
+                XtVod(streamId, name, icon, rating, plot, itemCategoryId, containerExt, added)
+            },
+            onItem = onItem,
+            onProgress = onProgress,
+        )
+
+    suspend fun <T : Any> streamVod(
+        s: SourceEntity,
+        categoryId: String? = null,
+        transform: (
+            streamId: String,
+            name: String,
+            icon: String?,
+            rating: Double?,
+            plot: String?,
+            categoryId: String?,
+            containerExt: String?,
+            added: Long?,
+        ) -> T?,
+        onItem: suspend (T) -> Unit,
+        onProgress: ((Long, Long?) -> Unit)? = null,
     ): Boolean {
         return http.get(api(s, "get_vod_streams", categoryParam(categoryId)), s.userAgent, onProgress) { input ->
-            streamItems("get_vod_streams", input, ::readVod, onItem)
+            streamItems("get_vod_streams", input, { reader -> readVodAs(reader, transform) }, onItem)
         }
     }
 
@@ -88,9 +140,34 @@ class XtreamClient(private val http: HttpClient) {
         categoryId: String? = null,
         onItem: suspend (XtSeries) -> Unit,
         onProgress: ((Long, Long?) -> Unit)? = null,
+    ): Boolean =
+        streamSeries(
+            s = s,
+            categoryId = categoryId,
+            transform = { seriesId, name, cover, plot, rating, itemCategoryId, year ->
+                XtSeries(seriesId, name, cover, plot, rating, itemCategoryId, year)
+            },
+            onItem = onItem,
+            onProgress = onProgress,
+        )
+
+    suspend fun <T : Any> streamSeries(
+        s: SourceEntity,
+        categoryId: String? = null,
+        transform: (
+            seriesId: String,
+            name: String,
+            cover: String?,
+            plot: String?,
+            rating: Double?,
+            categoryId: String?,
+            year: Int?,
+        ) -> T?,
+        onItem: suspend (T) -> Unit,
+        onProgress: ((Long, Long?) -> Unit)? = null,
     ): Boolean {
         return http.get(api(s, "get_series", categoryParam(categoryId)), s.userAgent, onProgress) { input ->
-            streamItems("get_series", input, ::readSeries, onItem)
+            streamItems("get_series", input, { reader -> readSeriesAs(reader, transform) }, onItem)
         }
     }
 
@@ -175,6 +252,22 @@ class XtreamClient(private val http: HttpClient) {
     private fun JsonReader.nextIntOrNull(): Int? = when (peek()) {
         JsonToken.NUMBER -> nextInt()
         JsonToken.STRING -> nextString().trim().toIntOrNull()
+        JsonToken.NULL -> { nextNull(); null }
+        else -> { skipValue(); null }
+    }
+
+    /** Reads a long from a number or a numeric string, tolerating null/other. */
+    private fun JsonReader.nextLongOrNull(): Long? = when (peek()) {
+        JsonToken.NUMBER -> nextLong()
+        JsonToken.STRING -> nextString().trim().toLongOrNull()
+        JsonToken.NULL -> { nextNull(); null }
+        else -> { skipValue(); null }
+    }
+
+    /** Reads a double from a number or a numeric string, tolerating null/other. */
+    private fun JsonReader.nextDoubleOrNull(): Double? = when (peek()) {
+        JsonToken.NUMBER -> nextDouble()
+        JsonToken.STRING -> nextString().trim().toDoubleOrNull()
         JsonToken.NULL -> { nextNull(); null }
         else -> { skipValue(); null }
     }
@@ -373,7 +466,19 @@ class XtreamClient(private val http: HttpClient) {
         const val STREAM_LOG_ITEM_STEP = 10_000
     }
 
-    private fun readLiveStream(reader: JsonReader): XtLiveStream? {
+    private fun <T : Any> readLiveStreamAs(
+        reader: JsonReader,
+        transform: (
+            streamId: String,
+            name: String,
+            icon: String?,
+            epgChannelId: String?,
+            categoryId: String?,
+            num: Int?,
+            archive: Boolean,
+            archiveDays: Int,
+        ) -> T?,
+    ): T? {
         if (reader.peek() != JsonToken.BEGIN_OBJECT) {
             reader.skipValue()
             return null
@@ -395,17 +500,29 @@ class XtreamClient(private val http: HttpClient) {
                 "stream_icon" -> icon = reader.nextScalarStringOrNull()
                 "epg_channel_id" -> epgChannelId = reader.nextScalarStringOrNull()?.takeIf { it.isNotBlank() }
                 "category_id" -> categoryId = reader.nextScalarStringOrNull()
-                "num" -> num = reader.nextScalarStringOrNull()?.toIntOrNull()
-                "tv_archive" -> archive = (reader.nextScalarStringOrNull()?.toIntOrNull() ?: 0) > 0
-                "tv_archive_duration" -> archiveDays = reader.nextScalarStringOrNull()?.toIntOrNull() ?: 0
+                "num" -> num = reader.nextIntOrNull()
+                "tv_archive" -> archive = (reader.nextIntOrNull() ?: 0) > 0
+                "tv_archive_duration" -> archiveDays = reader.nextIntOrNull() ?: 0
                 else -> reader.skipValue()
             }
         }
         reader.endObject()
-        return streamId?.let { XtLiveStream(it, name, icon, epgChannelId, categoryId, num, archive, archiveDays) }
+        return streamId?.let { transform(it, name, icon, epgChannelId, categoryId, num, archive, archiveDays) }
     }
 
-    private fun readVod(reader: JsonReader): XtVod? {
+    private fun <T : Any> readVodAs(
+        reader: JsonReader,
+        transform: (
+            streamId: String,
+            name: String,
+            icon: String?,
+            rating: Double?,
+            plot: String?,
+            categoryId: String?,
+            containerExt: String?,
+            added: Long?,
+        ) -> T?,
+    ): T? {
         if (reader.peek() != JsonToken.BEGIN_OBJECT) {
             reader.skipValue()
             return null
@@ -426,21 +543,32 @@ class XtreamClient(private val http: HttpClient) {
                 "stream_id" -> streamId = reader.nextScalarStringOrNull()
                 "name" -> name = reader.nextScalarStringOrNull().orEmpty()
                 "stream_icon" -> icon = reader.nextScalarStringOrNull()
-                "rating" -> rating = reader.nextScalarStringOrNull()?.toDoubleOrNull()
+                "rating" -> rating = reader.nextDoubleOrNull()
                 "plot" -> plot = reader.nextScalarStringOrNull()
                 "description" -> description = reader.nextScalarStringOrNull()
                 "category_id" -> categoryId = reader.nextScalarStringOrNull()
                 "container_extension" -> containerExt = reader.nextScalarStringOrNull()
-                "added" -> added = reader.nextScalarStringOrNull()?.toLongOrNull()
+                "added" -> added = reader.nextLongOrNull()
                 else -> reader.skipValue()
             }
         }
         reader.endObject()
         val cleanPlot = plot?.takeIf { it.isNotBlank() } ?: description?.takeIf { it.isNotBlank() }
-        return streamId?.let { XtVod(it, name, icon, rating, cleanPlot, categoryId, containerExt, added) }
+        return streamId?.let { transform(it, name, icon, rating, cleanPlot, categoryId, containerExt, added) }
     }
 
-    private fun readSeries(reader: JsonReader): XtSeries? {
+    private fun <T : Any> readSeriesAs(
+        reader: JsonReader,
+        transform: (
+            seriesId: String,
+            name: String,
+            cover: String?,
+            plot: String?,
+            rating: Double?,
+            categoryId: String?,
+            year: Int?,
+        ) -> T?,
+    ): T? {
         if (reader.peek() != JsonToken.BEGIN_OBJECT) {
             reader.skipValue()
             return null
@@ -460,14 +588,14 @@ class XtreamClient(private val http: HttpClient) {
                 "name" -> name = reader.nextScalarStringOrNull().orEmpty()
                 "cover" -> cover = reader.nextScalarStringOrNull()
                 "plot" -> plot = reader.nextScalarStringOrNull()
-                "rating" -> rating = reader.nextScalarStringOrNull()?.toDoubleOrNull()
+                "rating" -> rating = reader.nextDoubleOrNull()
                 "category_id" -> categoryId = reader.nextScalarStringOrNull()
-                "year" -> year = reader.nextScalarStringOrNull()?.toIntOrNull()
+                "year" -> year = reader.nextIntOrNull()
                 else -> reader.skipValue()
             }
         }
         reader.endObject()
-        return seriesId?.let { XtSeries(it, name, cover, plot, rating, categoryId, year) }
+        return seriesId?.let { transform(it, name, cover, plot, rating, categoryId, year) }
     }
 
     private fun readObject(reader: JsonReader): Map<String, String?> {
