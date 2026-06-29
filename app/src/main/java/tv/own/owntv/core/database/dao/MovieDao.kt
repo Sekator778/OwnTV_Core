@@ -7,6 +7,7 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
 import kotlinx.coroutines.flow.Flow
+import tv.own.owntv.core.database.entity.ContentHashProjection
 import tv.own.owntv.core.database.entity.MovieEntity
 
 @Dao
@@ -35,6 +36,9 @@ interface MovieDao {
 
     @Query("SELECT remoteId FROM movies WHERE sourceId = :sourceId AND remoteId IS NOT NULL")
     suspend fun remoteIdsForSource(sourceId: Long): List<String>
+
+    @Query("SELECT remoteId, id, contentHash FROM movies WHERE sourceId = :sourceId AND remoteId IS NOT NULL")
+    suspend fun contentHashesForSource(sourceId: Long): List<ContentHashProjection>
 
     @Query("DELETE FROM movies WHERE sourceId = :sourceId AND remoteId IN (:remoteIds)")
     suspend fun deleteByRemoteIds(sourceId: Long, remoteIds: List<String>)

@@ -61,7 +61,7 @@ val dataModule = module {
     single { tv.own.owntv.core.sync.ImportFinalizer(get(), get(), get()) }
     single { M3uParser() }
     single { XtreamClient(get()) }
-    single { SyncManager(androidContext(), get(), get(), get(), get(), get(), get(), get(), get()) }
+    single { SyncManager(androidContext(), get(), get(), get(), get(), get(), get(), get(), get(), get()) }
     // context, channelDao, movieDao, seriesDao, profileDao, favoriteDao, historyDao, progressDao
     single { UserDataResolver(androidContext(), get(), get(), get(), get(), get(), get(), get()) }
     // sourceDao, syncManager, userDataResolver

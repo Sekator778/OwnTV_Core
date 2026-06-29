@@ -22,6 +22,7 @@ val databaseModule = module {
                 OwnTVDatabase.MIGRATION_2_3,
                 OwnTVDatabase.MIGRATION_3_4,
                 OwnTVDatabase.MIGRATION_4_5,
+                OwnTVDatabase.MIGRATION_5_6,
             )
             .fallbackToDestructiveMigration(dropAllTables = true) // safety net for unforeseen jumps
             .build()

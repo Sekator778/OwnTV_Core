@@ -9,6 +9,7 @@ import androidx.room.Query
 import androidx.room.Update
 import kotlinx.coroutines.flow.Flow
 import tv.own.owntv.core.database.entity.ChannelEntity
+import tv.own.owntv.core.database.entity.ContentHashProjection
 
 /** A channel plus its category name, for richer global-search results ("category · #number"). */
 data class ChannelSearchResult(
@@ -107,6 +108,9 @@ interface ChannelDao {
 
     @Query("SELECT remoteId FROM channels WHERE sourceId = :sourceId AND remoteId IS NOT NULL")
     suspend fun remoteIdsForSource(sourceId: Long): List<String>
+
+    @Query("SELECT remoteId, id, contentHash FROM channels WHERE sourceId = :sourceId AND remoteId IS NOT NULL")
+    suspend fun contentHashesForSource(sourceId: Long): List<ContentHashProjection>
 
     @Query("DELETE FROM channels WHERE sourceId = :sourceId AND remoteId IN (:remoteIds)")
     suspend fun deleteByRemoteIds(sourceId: Long, remoteIds: List<String>)

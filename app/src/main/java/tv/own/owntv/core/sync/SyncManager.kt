@@ -3,8 +3,10 @@ package tv.own.owntv.core.sync
 import android.net.Uri
 import android.os.SystemClock
 import android.util.Log
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.currentCoroutineContext
@@ -22,8 +24,10 @@ import tv.own.owntv.core.database.dao.SeriesDao
 import tv.own.owntv.core.database.dao.SourceDao
 import tv.own.owntv.core.database.entity.CategoryEntity
 import tv.own.owntv.core.database.entity.ChannelEntity
+import tv.own.owntv.core.database.entity.ContentHashProjection
 import tv.own.owntv.core.database.entity.MovieEntity
 import tv.own.owntv.core.database.entity.SeriesEntity
+import tv.own.owntv.core.database.entity.computeContentHash
 import tv.own.owntv.core.database.entity.SourceEntity
 import tv.own.owntv.core.model.MediaType
 import tv.own.owntv.core.model.SourceType
@@ -55,6 +59,7 @@ class SyncManager(
     private val xtream: XtreamClient,
     private val m3u: M3uParser,
     private val http: HttpClient,
+    private val db: tv.own.owntv.core.database.OwnTVDatabase,
 ) {
     private val lastSyncStats = java.util.concurrent.ConcurrentHashMap<Long, SyncRunStats>()
 
@@ -110,13 +115,15 @@ class SyncManager(
         }
     }
 
-    private suspend fun syncLive(s: SourceEntity, progress: SyncProgressTracker, stats: SyncStatsCollector) {
+    private suspend fun syncLive(s: SourceEntity, progress: SyncProgressTracker, stats: SyncStatsCollector) = coroutineScope {
         val ctx = currentCoroutineContext()
+        val freshSource = s.lastSyncAt == null
         val liveStart = System.currentTimeMillis()
         val elapsedStart = SystemClock.elapsedRealtime()
         val reportBytes = progress.bytesReporter(SyncPhase.LIVE)
-        Log.i(TAG, "Live phase start sourceId=${s.id}")
+        Log.i(TAG, "Live phase start sourceId=${s.id} fresh=$freshSource")
         progress.start(SyncPhase.LIVE, SyncPhase.LIVE.label)
+        val hashDeferred = if (!freshSource) asyncHashLoad("Live", s.id) { channelDao.contentHashesForSource(s.id) } else null
         val categoriesStart = SystemClock.elapsedRealtime()
         val liveCats = xtream.liveCategories(s, reportBytes)
         Log.d(TAG, "Live categories fetched sourceId=${s.id} count=${liveCats.size} ms=${SystemClock.elapsedRealtime() - categoriesStart}")
@@ -124,7 +131,6 @@ class SyncManager(
         val liveCategories = refreshCategories(s, MediaType.LIVE, liveCats)
         val liveMap = liveCategories.idsByRemoteId
         Log.d(TAG, "Live categories refreshed sourceId=${s.id} mapped=${liveMap.size} ms=${SystemClock.elapsedRealtime() - refreshStart}")
-        Log.d(TAG, "Live preserving existing rows sourceId=${s.id}")
         var liveOrder = 0
         val toChannel = { item: XtLiveStream ->
             ChannelEntity(
@@ -135,30 +141,41 @@ class SyncManager(
                 catchup = item.archive, catchupDays = item.archiveDays,
             )
         }
+        val insertFn: suspend (List<ChannelEntity>) -> UpsertStats = if (freshSource) {
+            { rows -> insertChannelsFresh(s.id, rows) }
+        } else {
+            { rows -> upsertChannelsStable(s.id, rows, hashDeferred!!) }
+        }
         val liveTotal = intArrayOf(0)
-        val liveRemoteIds = HashSet<String>()
+        val liveRemoteIds = if (freshSource) null else HashSet<String>()
+        val bulkIndexState = if (freshSource && tableIsEmpty("channels")) dropIndexesForBulkInsert("channels", "channels_fts") else null
         val bulkStart = SystemClock.elapsedRealtime()
         Log.i(TAG, "Live bulk start sourceId=${s.id}")
-        val liveDone = bulkOrFallback(SyncPhase.LIVE.label) {
-            chunked<ChannelEntity, Boolean>(ctx, SyncPhase.LIVE, SyncPhase.LIVE.label, progress, { upsertChannelsStable(s.id, it) }, liveTotal, liveRemoteIds, { it.remoteId }) { add ->
-                xtream.streamLive(s, onItem = { add(toChannel(it)) }, onProgress = reportBytes)
+        val chunkSize = if (freshSource) CHUNK_FRESH else CHUNK
+        try {
+            val liveDone = bulkOrFallback(SyncPhase.LIVE.label) {
+                chunked<ChannelEntity, Boolean>(ctx, SyncPhase.LIVE, SyncPhase.LIVE.label, progress, insertFn, liveTotal, liveRemoteIds, { it.remoteId }, chunkSize) { add ->
+                    xtream.streamLive(s, onItem = { add(toChannel(it)) }, onProgress = reportBytes)
+                }
             }
-        }
-        Log.i(TAG, "Live bulk end sourceId=${s.id} complete=$liveDone unique=${liveTotal[0]} ms=${SystemClock.elapsedRealtime() - bulkStart}")
-        if (!liveDone) {
-            stats.usedFallback = true
-            val fallbackStart = SystemClock.elapsedRealtime()
-            Log.i(TAG, "Live fallback start sourceId=${s.id} categories=${liveCats.size} bulkPartial=${liveTotal[0]}")
-            sliceByCategory(ctx, SyncPhase.LIVE, SyncPhase.LIVE.label, progress, liveCats, { upsertChannelsStable(s.id, it) }, liveTotal, liveTotal[0], liveRemoteIds, { it.remoteId }) { cat, add ->
-                xtream.streamLive(s, cat.id, onItem = { add(toChannel(it)) }, onProgress = reportBytes)
+            Log.i(TAG, "Live bulk end sourceId=${s.id} complete=$liveDone unique=${liveTotal[0]} ms=${SystemClock.elapsedRealtime() - bulkStart}")
+            if (!liveDone) {
+                stats.usedFallback = true
+                val fallbackStart = SystemClock.elapsedRealtime()
+                Log.i(TAG, "Live fallback start sourceId=${s.id} categories=${liveCats.size} bulkPartial=${liveTotal[0]}")
+                sliceByCategory(ctx, SyncPhase.LIVE, SyncPhase.LIVE.label, progress, liveCats, insertFn, liveTotal, liveTotal[0], liveRemoteIds, { it.remoteId }) { cat, add ->
+                    xtream.streamLive(s, cat.id, onItem = { add(toChannel(it)) }, onProgress = reportBytes)
+                }
+                Log.i(TAG, "Live fallback end sourceId=${s.id} unique=${liveTotal[0]} ms=${SystemClock.elapsedRealtime() - fallbackStart}")
             }
-            Log.i(TAG, "Live fallback end sourceId=${s.id} unique=${liveTotal[0]} ms=${SystemClock.elapsedRealtime() - fallbackStart}")
-        }
-        if (liveDone) {
-            pruneChannels(s.id, liveRemoteIds)
-            pruneCategories(s.id, MediaType.LIVE, liveCategories.seenRemoteIds, SyncPhase.LIVE.label)
-        } else {
-            Log.i(TAG, "Live prune skipped sourceId=${s.id} reason=incomplete_bulk")
+            if (!freshSource && liveDone) {
+                pruneChannels(s.id, liveRemoteIds!!)
+                pruneCategories(s.id, MediaType.LIVE, liveCategories.seenRemoteIds, SyncPhase.LIVE.label)
+            } else if (!freshSource) {
+                Log.i(TAG, "Live prune skipped sourceId=${s.id} reason=incomplete_bulk")
+            }
+        } finally {
+            if (bulkIndexState != null) restoreIndexes(bulkIndexState)
         }
         progress.finish(SyncPhase.LIVE, SyncPhase.LIVE.label, liveTotal[0])
         stats.phaseTiming["live"] = System.currentTimeMillis() - liveStart
@@ -168,112 +185,140 @@ class SyncManager(
 
     private suspend fun syncMovies(s: SourceEntity, progress: SyncProgressTracker, stats: SyncStatsCollector) {
         val ctx = currentCoroutineContext()
+        val freshSource = s.lastSyncAt == null
         guardStep("movies", stats) {
-            val elapsedStart = SystemClock.elapsedRealtime()
-            Log.i(TAG, "Movies phase start sourceId=${s.id}")
-            val reportBytes = progress.bytesReporter(SyncPhase.MOVIES)
-            progress.start(SyncPhase.MOVIES, SyncPhase.MOVIES.label)
-            val categoriesStart = SystemClock.elapsedRealtime()
-            val vodCats = xtream.vodCategories(s, reportBytes)
-            Log.d(TAG, "Movies categories fetched sourceId=${s.id} count=${vodCats.size} ms=${SystemClock.elapsedRealtime() - categoriesStart}")
-            val refreshStart = SystemClock.elapsedRealtime()
-            val vodCategories = refreshCategories(s, MediaType.MOVIE, vodCats)
-            val vodMap = vodCategories.idsByRemoteId
-            Log.d(TAG, "Movies categories refreshed sourceId=${s.id} mapped=${vodMap.size} ms=${SystemClock.elapsedRealtime() - refreshStart}")
-            Log.d(TAG, "Movies preserving existing rows sourceId=${s.id}")
-            var vodOrder = 0
-            val toMovie = { item: XtVod ->
-                MovieEntity(
-                    sourceId = s.id, categoryId = vodMap[item.categoryId], name = item.name,
-                    posterUrl = item.icon, rating = item.rating, plot = item.plot,
-                    streamUrl = xtream.movieUrl(s, item.streamId, item.containerExt),
-                    containerExt = item.containerExt, remoteId = item.streamId, addedAt = item.added,
-                    sortOrder = vodOrder++,
-                )
-            }
-            val vodTotal = intArrayOf(0)
-            val vodRemoteIds = HashSet<String>()
-            val bulkStart = SystemClock.elapsedRealtime()
-            Log.i(TAG, "Movies bulk start sourceId=${s.id}")
-            val vodDone = bulkOrFallback("Movies") {
-                chunked<MovieEntity, Boolean>(ctx, SyncPhase.MOVIES, SyncPhase.MOVIES.label, progress, { upsertMoviesStable(s.id, it) }, vodTotal, vodRemoteIds, { it.remoteId }) { add ->
-                    xtream.streamVod(s, onItem = { add(toMovie(it)) }, onProgress = reportBytes)
+            coroutineScope {
+                val elapsedStart = SystemClock.elapsedRealtime()
+                Log.i(TAG, "Movies phase start sourceId=${s.id} fresh=$freshSource")
+                val reportBytes = progress.bytesReporter(SyncPhase.MOVIES)
+                progress.start(SyncPhase.MOVIES, SyncPhase.MOVIES.label)
+                val hashDeferred = if (!freshSource) asyncHashLoad("Movies", s.id) { movieDao.contentHashesForSource(s.id) } else null
+                val categoriesStart = SystemClock.elapsedRealtime()
+                val vodCats = xtream.vodCategories(s, reportBytes)
+                Log.d(TAG, "Movies categories fetched sourceId=${s.id} count=${vodCats.size} ms=${SystemClock.elapsedRealtime() - categoriesStart}")
+                val refreshStart = SystemClock.elapsedRealtime()
+                val vodCategories = refreshCategories(s, MediaType.MOVIE, vodCats)
+                val vodMap = vodCategories.idsByRemoteId
+                Log.d(TAG, "Movies categories refreshed sourceId=${s.id} mapped=${vodMap.size} ms=${SystemClock.elapsedRealtime() - refreshStart}")
+                var vodOrder = 0
+                val toMovie = { item: XtVod ->
+                    MovieEntity(
+                        sourceId = s.id, categoryId = vodMap[item.categoryId], name = item.name,
+                        posterUrl = item.icon, rating = item.rating, plot = item.plot,
+                        streamUrl = xtream.movieUrl(s, item.streamId, item.containerExt),
+                        containerExt = item.containerExt, remoteId = item.streamId, addedAt = item.added,
+                        sortOrder = vodOrder++,
+                    )
                 }
-            }
-            Log.i(TAG, "Movies bulk end sourceId=${s.id} complete=$vodDone unique=${vodTotal[0]} ms=${SystemClock.elapsedRealtime() - bulkStart}")
-            if (!vodDone) {
-                stats.usedFallback = true
-                val fallbackStart = SystemClock.elapsedRealtime()
-                Log.i(TAG, "Movies fallback start sourceId=${s.id} categories=${vodCats.size} bulkPartial=${vodTotal[0]}")
-                sliceByCategory(ctx, SyncPhase.MOVIES, SyncPhase.MOVIES.label, progress, vodCats, { upsertMoviesStable(s.id, it) }, vodTotal, vodTotal[0], vodRemoteIds, { it.remoteId }) { cat, add ->
-                    xtream.streamVod(s, cat.id, onItem = { add(toMovie(it)) }, onProgress = reportBytes)
+                val insertFn: suspend (List<MovieEntity>) -> UpsertStats = if (freshSource) {
+                    { rows -> insertMoviesFresh(s.id, rows) }
+                } else {
+                    { rows -> upsertMoviesStable(s.id, rows, hashDeferred!!) }
                 }
-                Log.i(TAG, "Movies fallback end sourceId=${s.id} unique=${vodTotal[0]} ms=${SystemClock.elapsedRealtime() - fallbackStart}")
+                val vodTotal = intArrayOf(0)
+                val vodRemoteIds = if (freshSource) null else HashSet<String>()
+                val bulkIndexState = if (freshSource && tableIsEmpty("movies")) dropIndexesForBulkInsert("movies", "movies_fts") else null
+                val bulkStart = SystemClock.elapsedRealtime()
+                Log.i(TAG, "Movies bulk start sourceId=${s.id}")
+                val chunkSize = if (freshSource) CHUNK_FRESH else CHUNK
+                try {
+                    val vodDone = bulkOrFallback("Movies") {
+                        chunked<MovieEntity, Boolean>(ctx, SyncPhase.MOVIES, SyncPhase.MOVIES.label, progress, insertFn, vodTotal, vodRemoteIds, { it.remoteId }, chunkSize) { add ->
+                            xtream.streamVod(s, onItem = { add(toMovie(it)) }, onProgress = reportBytes)
+                        }
+                    }
+                    Log.i(TAG, "Movies bulk end sourceId=${s.id} complete=$vodDone unique=${vodTotal[0]} ms=${SystemClock.elapsedRealtime() - bulkStart}")
+                    if (!vodDone) {
+                        stats.usedFallback = true
+                        val fallbackStart = SystemClock.elapsedRealtime()
+                        Log.i(TAG, "Movies fallback start sourceId=${s.id} categories=${vodCats.size} bulkPartial=${vodTotal[0]}")
+                        sliceByCategory(ctx, SyncPhase.MOVIES, SyncPhase.MOVIES.label, progress, vodCats, insertFn, vodTotal, vodTotal[0], vodRemoteIds, { it.remoteId }) { cat, add ->
+                            xtream.streamVod(s, cat.id, onItem = { add(toMovie(it)) }, onProgress = reportBytes)
+                        }
+                        Log.i(TAG, "Movies fallback end sourceId=${s.id} unique=${vodTotal[0]} ms=${SystemClock.elapsedRealtime() - fallbackStart}")
+                    }
+                    if (!freshSource && vodDone) {
+                        pruneMovies(s.id, vodRemoteIds!!)
+                        pruneCategories(s.id, MediaType.MOVIE, vodCategories.seenRemoteIds, SyncPhase.MOVIES.label)
+                    } else if (!freshSource) {
+                        Log.i(TAG, "Movies prune skipped sourceId=${s.id} reason=incomplete_bulk")
+                    }
+                } finally {
+                    if (bulkIndexState != null) restoreIndexes(bulkIndexState)
+                }
+                progress.finish(SyncPhase.MOVIES, SyncPhase.MOVIES.label, vodTotal[0])
+                stats.processedCounts["movies"] = vodTotal[0]
+                Log.i(TAG, "Movies phase end sourceId=${s.id} unique=${vodTotal[0]} ms=${SystemClock.elapsedRealtime() - elapsedStart}")
             }
-            if (vodDone) {
-                pruneMovies(s.id, vodRemoteIds)
-                pruneCategories(s.id, MediaType.MOVIE, vodCategories.seenRemoteIds, SyncPhase.MOVIES.label)
-            } else {
-                Log.i(TAG, "Movies prune skipped sourceId=${s.id} reason=incomplete_bulk")
-            }
-            progress.finish(SyncPhase.MOVIES, SyncPhase.MOVIES.label, vodTotal[0])
-            stats.processedCounts["movies"] = vodTotal[0]
-            Log.i(TAG, "Movies phase end sourceId=${s.id} unique=${vodTotal[0]} ms=${SystemClock.elapsedRealtime() - elapsedStart}")
         }
     }
 
     private suspend fun syncSeries(s: SourceEntity, progress: SyncProgressTracker, stats: SyncStatsCollector) {
         val ctx = currentCoroutineContext()
+        val freshSource = s.lastSyncAt == null
         guardStep("series", stats) {
-            val elapsedStart = SystemClock.elapsedRealtime()
-            Log.i(TAG, "Series phase start sourceId=${s.id}")
-            val reportBytes = progress.bytesReporter(SyncPhase.SERIES)
-            progress.start(SyncPhase.SERIES, SyncPhase.SERIES.label)
-            val categoriesStart = SystemClock.elapsedRealtime()
-            val seriesCats = xtream.seriesCategories(s, reportBytes)
-            Log.d(TAG, "Series categories fetched sourceId=${s.id} count=${seriesCats.size} ms=${SystemClock.elapsedRealtime() - categoriesStart}")
-            val refreshStart = SystemClock.elapsedRealtime()
-            val seriesCategories = refreshCategories(s, MediaType.SERIES, seriesCats)
-            val seriesMap = seriesCategories.idsByRemoteId
-            Log.d(TAG, "Series categories refreshed sourceId=${s.id} mapped=${seriesMap.size} ms=${SystemClock.elapsedRealtime() - refreshStart}")
-            Log.d(TAG, "Series preserving existing rows sourceId=${s.id}")
-            var seriesOrder = 0
-            val toSeries = { item: XtSeries ->
-                SeriesEntity(
-                    sourceId = s.id, categoryId = seriesMap[item.categoryId], name = item.name,
-                    posterUrl = item.cover, plot = item.plot, rating = item.rating,
-                    year = item.year, remoteId = item.seriesId,
-                    sortOrder = seriesOrder++,
-                )
-            }
-            val seriesTotal = intArrayOf(0)
-            val seriesRemoteIds = HashSet<String>()
-            val bulkStart = SystemClock.elapsedRealtime()
-            Log.i(TAG, "Series bulk start sourceId=${s.id}")
-            val seriesDone = bulkOrFallback("Series") {
-                chunked<SeriesEntity, Boolean>(ctx, SyncPhase.SERIES, SyncPhase.SERIES.label, progress, { upsertSeriesStable(s.id, it) }, seriesTotal, seriesRemoteIds, { it.remoteId }) { add ->
-                    xtream.streamSeries(s, onItem = { add(toSeries(it)) }, onProgress = reportBytes)
+            coroutineScope {
+                val elapsedStart = SystemClock.elapsedRealtime()
+                Log.i(TAG, "Series phase start sourceId=${s.id} fresh=$freshSource")
+                val reportBytes = progress.bytesReporter(SyncPhase.SERIES)
+                progress.start(SyncPhase.SERIES, SyncPhase.SERIES.label)
+                val hashDeferred = if (!freshSource) asyncHashLoad("Series", s.id) { seriesDao.contentHashesForSource(s.id) } else null
+                val categoriesStart = SystemClock.elapsedRealtime()
+                val seriesCats = xtream.seriesCategories(s, reportBytes)
+                Log.d(TAG, "Series categories fetched sourceId=${s.id} count=${seriesCats.size} ms=${SystemClock.elapsedRealtime() - categoriesStart}")
+                val refreshStart = SystemClock.elapsedRealtime()
+                val seriesCategories = refreshCategories(s, MediaType.SERIES, seriesCats)
+                val seriesMap = seriesCategories.idsByRemoteId
+                Log.d(TAG, "Series categories refreshed sourceId=${s.id} mapped=${seriesMap.size} ms=${SystemClock.elapsedRealtime() - refreshStart}")
+                var seriesOrder = 0
+                val toSeries = { item: XtSeries ->
+                    SeriesEntity(
+                        sourceId = s.id, categoryId = seriesMap[item.categoryId], name = item.name,
+                        posterUrl = item.cover, plot = item.plot, rating = item.rating,
+                        year = item.year, remoteId = item.seriesId,
+                        sortOrder = seriesOrder++,
+                    )
                 }
-            }
-            Log.i(TAG, "Series bulk end sourceId=${s.id} complete=$seriesDone unique=${seriesTotal[0]} ms=${SystemClock.elapsedRealtime() - bulkStart}")
-            if (!seriesDone) {
-                stats.usedFallback = true
-                val fallbackStart = SystemClock.elapsedRealtime()
-                Log.i(TAG, "Series fallback start sourceId=${s.id} categories=${seriesCats.size} bulkPartial=${seriesTotal[0]}")
-                sliceByCategory(ctx, SyncPhase.SERIES, SyncPhase.SERIES.label, progress, seriesCats, { upsertSeriesStable(s.id, it) }, seriesTotal, seriesTotal[0], seriesRemoteIds, { it.remoteId }) { cat, add ->
-                    xtream.streamSeries(s, cat.id, onItem = { add(toSeries(it)) }, onProgress = reportBytes)
+                val insertFn: suspend (List<SeriesEntity>) -> UpsertStats = if (freshSource) {
+                    { rows -> insertSeriesFresh(s.id, rows) }
+                } else {
+                    { rows -> upsertSeriesStable(s.id, rows, hashDeferred!!) }
                 }
-                Log.i(TAG, "Series fallback end sourceId=${s.id} unique=${seriesTotal[0]} ms=${SystemClock.elapsedRealtime() - fallbackStart}")
+                val seriesTotal = intArrayOf(0)
+                val seriesRemoteIds = if (freshSource) null else HashSet<String>()
+                val bulkIndexState = if (freshSource && tableIsEmpty("series")) dropIndexesForBulkInsert("series", "series_fts") else null
+                val bulkStart = SystemClock.elapsedRealtime()
+                Log.i(TAG, "Series bulk start sourceId=${s.id}")
+                val chunkSize = if (freshSource) CHUNK_FRESH else CHUNK
+                try {
+                    val seriesDone = bulkOrFallback("Series") {
+                        chunked<SeriesEntity, Boolean>(ctx, SyncPhase.SERIES, SyncPhase.SERIES.label, progress, insertFn, seriesTotal, seriesRemoteIds, { it.remoteId }, chunkSize) { add ->
+                            xtream.streamSeries(s, onItem = { add(toSeries(it)) }, onProgress = reportBytes)
+                        }
+                    }
+                    Log.i(TAG, "Series bulk end sourceId=${s.id} complete=$seriesDone unique=${seriesTotal[0]} ms=${SystemClock.elapsedRealtime() - bulkStart}")
+                    if (!seriesDone) {
+                        stats.usedFallback = true
+                        val fallbackStart = SystemClock.elapsedRealtime()
+                        Log.i(TAG, "Series fallback start sourceId=${s.id} categories=${seriesCats.size} bulkPartial=${seriesTotal[0]}")
+                        sliceByCategory(ctx, SyncPhase.SERIES, SyncPhase.SERIES.label, progress, seriesCats, insertFn, seriesTotal, seriesTotal[0], seriesRemoteIds, { it.remoteId }) { cat, add ->
+                            xtream.streamSeries(s, cat.id, onItem = { add(toSeries(it)) }, onProgress = reportBytes)
+                        }
+                        Log.i(TAG, "Series fallback end sourceId=${s.id} unique=${seriesTotal[0]} ms=${SystemClock.elapsedRealtime() - fallbackStart}")
+                    }
+                    if (!freshSource && seriesDone) {
+                        pruneSeries(s.id, seriesRemoteIds!!)
+                        pruneCategories(s.id, MediaType.SERIES, seriesCategories.seenRemoteIds, SyncPhase.SERIES.label)
+                    } else if (!freshSource) {
+                        Log.i(TAG, "Series prune skipped sourceId=${s.id} reason=incomplete_bulk")
+                    }
+                } finally {
+                    if (bulkIndexState != null) restoreIndexes(bulkIndexState)
+                }
+                progress.finish(SyncPhase.SERIES, SyncPhase.SERIES.label, seriesTotal[0])
+                stats.processedCounts["series"] = seriesTotal[0]
+                Log.i(TAG, "Series phase end sourceId=${s.id} unique=${seriesTotal[0]} ms=${SystemClock.elapsedRealtime() - elapsedStart}")
             }
-            if (seriesDone) {
-                pruneSeries(s.id, seriesRemoteIds)
-                pruneCategories(s.id, MediaType.SERIES, seriesCategories.seenRemoteIds, SyncPhase.SERIES.label)
-            } else {
-                Log.i(TAG, "Series prune skipped sourceId=${s.id} reason=incomplete_bulk")
-            }
-            progress.finish(SyncPhase.SERIES, SyncPhase.SERIES.label, seriesTotal[0])
-            stats.processedCounts["series"] = seriesTotal[0]
-            Log.i(TAG, "Series phase end sourceId=${s.id} unique=${seriesTotal[0]} ms=${SystemClock.elapsedRealtime() - elapsedStart}")
         }
     }
 
@@ -438,16 +483,18 @@ class SyncManager(
         return UpsertStats(inserted = inserts.size, updated = updates.size, skippedUnchanged = skipped)
     }
 
-    private suspend fun upsertChannelsStable(sourceId: Long, rows: List<ChannelEntity>): UpsertStats {
-        val existingByRemoteId = existingByRemoteId(rows, ChannelEntity::remoteId) { channelDao.findByRemoteIds(sourceId, it) }
+    private suspend fun upsertChannelsStable(sourceId: Long, rows: List<ChannelEntity>, hashDeferred: Deferred<Map<String, Pair<Long, Int>>>): UpsertStats {
+        val hashMap = hashDeferred.await()
         val inserts = ArrayList<ChannelEntity>()
         val updates = ArrayList<ChannelEntity>()
         var skipped = 0
         rows.forEach { row ->
-            val current = row.remoteId?.let(existingByRemoteId::get)
+            val remoteId = row.remoteId
+            val existing = remoteId?.let { hashMap[it] }
+            val hash = row.computeContentHash()
             when {
-                current == null -> inserts.add(row)
-                row.copy(id = current.id, sortOrder = current.sortOrder) != current -> updates.add(row.copy(id = current.id))
+                existing == null -> inserts.add(row.copy(contentHash = hash))
+                hash != existing.second -> updates.add(row.copy(id = existing.first, contentHash = hash))
                 else -> skipped++
             }
         }
@@ -456,16 +503,24 @@ class SyncManager(
         return UpsertStats(inserted = inserts.size, updated = updates.size, skippedUnchanged = skipped)
     }
 
-    private suspend fun upsertMoviesStable(sourceId: Long, rows: List<MovieEntity>): UpsertStats {
-        val existingByRemoteId = existingByRemoteId(rows, MovieEntity::remoteId) { movieDao.findByRemoteIds(sourceId, it) }
+    private suspend fun insertChannelsFresh(sourceId: Long, rows: List<ChannelEntity>): UpsertStats {
+        val hashed = rows.map { it.copy(contentHash = it.computeContentHash()) }
+        channelDao.insertAll(hashed)
+        return UpsertStats(inserted = hashed.size)
+    }
+
+    private suspend fun upsertMoviesStable(sourceId: Long, rows: List<MovieEntity>, hashDeferred: Deferred<Map<String, Pair<Long, Int>>>): UpsertStats {
+        val hashMap = hashDeferred.await()
         val inserts = ArrayList<MovieEntity>()
         val updates = ArrayList<MovieEntity>()
         var skipped = 0
         rows.forEach { row ->
-            val current = row.remoteId?.let(existingByRemoteId::get)
+            val remoteId = row.remoteId
+            val existing = remoteId?.let { hashMap[it] }
+            val hash = row.computeContentHash()
             when {
-                current == null -> inserts.add(row)
-                row.copy(id = current.id, sortOrder = current.sortOrder) != current -> updates.add(row.copy(id = current.id))
+                existing == null -> inserts.add(row.copy(contentHash = hash))
+                hash != existing.second -> updates.add(row.copy(id = existing.first, contentHash = hash))
                 else -> skipped++
             }
         }
@@ -474,16 +529,24 @@ class SyncManager(
         return UpsertStats(inserted = inserts.size, updated = updates.size, skippedUnchanged = skipped)
     }
 
-    private suspend fun upsertSeriesStable(sourceId: Long, rows: List<SeriesEntity>): UpsertStats {
-        val existingByRemoteId = existingByRemoteId(rows, SeriesEntity::remoteId) { seriesDao.findSeriesByRemoteIds(sourceId, it) }
+    private suspend fun insertMoviesFresh(sourceId: Long, rows: List<MovieEntity>): UpsertStats {
+        val hashed = rows.map { it.copy(contentHash = it.computeContentHash()) }
+        movieDao.insertAll(hashed)
+        return UpsertStats(inserted = hashed.size)
+    }
+
+    private suspend fun upsertSeriesStable(sourceId: Long, rows: List<SeriesEntity>, hashDeferred: Deferred<Map<String, Pair<Long, Int>>>): UpsertStats {
+        val hashMap = hashDeferred.await()
         val inserts = ArrayList<SeriesEntity>()
         val updates = ArrayList<SeriesEntity>()
         var skipped = 0
         rows.forEach { row ->
-            val current = row.remoteId?.let(existingByRemoteId::get)
+            val remoteId = row.remoteId
+            val existing = remoteId?.let { hashMap[it] }
+            val hash = row.computeContentHash()
             when {
-                current == null -> inserts.add(row)
-                row.copy(id = current.id, sortOrder = current.sortOrder) != current -> updates.add(row.copy(id = current.id))
+                existing == null -> inserts.add(row.copy(contentHash = hash))
+                hash != existing.second -> updates.add(row.copy(id = existing.first, contentHash = hash))
                 else -> skipped++
             }
         }
@@ -492,14 +555,25 @@ class SyncManager(
         return UpsertStats(inserted = inserts.size, updated = updates.size, skippedUnchanged = skipped)
     }
 
-    private suspend fun <T> existingByRemoteId(
-        rows: List<T>,
-        remoteId: (T) -> String?,
-        load: suspend (List<String>) -> List<T>,
-    ): Map<String, T> =
-        rows.mapNotNull(remoteId).distinct().chunked(QUERY_CHUNK).flatMap { load(it) }
-            .mapNotNull { row -> remoteId(row)?.let { it to row } }
-            .toMap()
+    private suspend fun insertSeriesFresh(sourceId: Long, rows: List<SeriesEntity>): UpsertStats {
+        val hashed = rows.map { it.copy(contentHash = it.computeContentHash()) }
+        seriesDao.insertSeries(hashed)
+        return UpsertStats(inserted = hashed.size)
+    }
+
+    private fun List<ContentHashProjection>.toHashLookup(): Map<String, Pair<Long, Int>> =
+        associateBy({ it.remoteId }, { it.id to it.contentHash })
+
+    private fun CoroutineScope.asyncHashLoad(
+        label: String,
+        sourceId: Long,
+        load: suspend () -> List<ContentHashProjection>,
+    ): Deferred<Map<String, Pair<Long, Int>>> = async {
+        val start = SystemClock.elapsedRealtime()
+        load().toHashLookup().also {
+            Log.d(TAG, "$label hash map loaded sourceId=$sourceId size=${it.size} ms=${SystemClock.elapsedRealtime() - start}")
+        }
+    }
 
     private suspend fun pruneChannels(sourceId: Long, seenRemoteIds: Set<String>) =
         pruneRemoteIds(SyncPhase.LIVE.label, sourceId, seenRemoteIds, channelDao::remoteIdsForSource, channelDao::deleteByRemoteIds)
@@ -662,9 +736,10 @@ class SyncManager(
         total: IntArray, // shared [0] running unique count for the whole media type, so progress never resets
         seenKeys: MutableSet<String>? = null,
         uniqueKey: ((T) -> String?)? = null,
+        chunkSize: Int = CHUNK,
         producer: suspend (add: suspend (T) -> Unit) -> R,
     ): R {
-        val buffer = ArrayList<T>(CHUNK)
+        val buffer = ArrayList<T>(chunkSize)
         var chunkIndex = 0
         var skippedDuplicates = 0
         val chunkRunStart = SystemClock.elapsedRealtime()
@@ -706,7 +781,7 @@ class SyncManager(
         }
         val result = producer { item ->
             buffer.add(item)
-            if (buffer.size >= CHUNK) flush()
+            if (buffer.size >= chunkSize) flush()
         }
         flush()
         Log.i(
@@ -825,9 +900,61 @@ class SyncManager(
         )
     }
 
+    // ---------------- Fresh-source index optimization ----------------
+
+    private fun tableIsEmpty(table: String): Boolean {
+        val cursor = db.openHelper.writableDatabase.query("SELECT COUNT(*) FROM `$table`")
+        return cursor.use { it.moveToFirst() && it.getLong(0) == 0L }
+    }
+
+    /**
+     * Drops non-unique indexes on [table] and the FTS AFTER INSERT trigger. Returns a [BulkIndexState]
+     * that must be passed to [restoreIndexes] once the bulk insert completes. Only call when the table
+     * is empty (first source ever) to avoid degrading concurrent queries on existing data.
+     */
+    private fun dropIndexesForBulkInsert(table: String, ftsTable: String): BulkIndexState {
+        val sdb = db.openHelper.writableDatabase
+        val indexSqls = mutableListOf<String>()
+        sdb.query("SELECT name, sql FROM sqlite_master WHERE type='index' AND tbl_name='$table' AND sql IS NOT NULL").use { cursor ->
+            while (cursor.moveToNext()) {
+                val name = cursor.getString(0)
+                val sql = cursor.getString(1)
+                if (sql != null && !sql.contains("UNIQUE", ignoreCase = true)) {
+                    indexSqls.add(sql)
+                    sdb.execSQL("DROP INDEX IF EXISTS `$name`")
+                }
+            }
+        }
+        val triggerName = "room_fts_content_sync_${ftsTable}_AFTER_INSERT"
+        var triggerSql: String? = null
+        sdb.query("SELECT sql FROM sqlite_master WHERE type='trigger' AND name='$triggerName'").use { cursor ->
+            if (cursor.moveToFirst()) triggerSql = cursor.getString(0)
+        }
+        if (triggerSql != null) sdb.execSQL("DROP TRIGGER IF EXISTS `$triggerName`")
+        Log.i(TAG, "Dropped ${indexSqls.size} indexes + FTS trigger on $table for bulk insert")
+        return BulkIndexState(table, ftsTable, indexSqls, triggerSql)
+    }
+
+    private fun restoreIndexes(state: BulkIndexState) {
+        val sdb = db.openHelper.writableDatabase
+        val start = SystemClock.elapsedRealtime()
+        state.indexCreateSqls.forEach { sdb.execSQL(it) }
+        sdb.execSQL("INSERT INTO `${state.ftsTable}`(`${state.ftsTable}`) VALUES('rebuild')")
+        if (state.triggerSql != null) sdb.execSQL(state.triggerSql)
+        Log.i(TAG, "Restored ${state.indexCreateSqls.size} indexes + FTS on ${state.table} ms=${SystemClock.elapsedRealtime() - start}")
+    }
+
+    private data class BulkIndexState(
+        val table: String,
+        val ftsTable: String,
+        val indexCreateSqls: List<String>,
+        val triggerSql: String?,
+    )
+
     companion object {
         private const val TAG = "SyncManager"
         const val CHUNK = 5000
+        const val CHUNK_FRESH = 10000
         private const val QUERY_CHUNK = 500
         private const val CATEGORY_REQUEST_DELAY_MS = 150L // pace per-category fallback requests (avoid HTTP 429)
         private const val SLOW_INSERT_LOG_MS = 250L

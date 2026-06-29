@@ -7,6 +7,7 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
 import kotlinx.coroutines.flow.Flow
+import tv.own.owntv.core.database.entity.ContentHashProjection
 import tv.own.owntv.core.database.entity.EpisodeEntity
 import tv.own.owntv.core.database.entity.SeasonEntity
 import tv.own.owntv.core.database.entity.SeriesEntity
@@ -39,6 +40,9 @@ interface SeriesDao {
 
     @Query("SELECT remoteId FROM series WHERE sourceId = :sourceId AND remoteId IS NOT NULL")
     suspend fun remoteIdsForSource(sourceId: Long): List<String>
+
+    @Query("SELECT remoteId, id, contentHash FROM series WHERE sourceId = :sourceId AND remoteId IS NOT NULL")
+    suspend fun contentHashesForSource(sourceId: Long): List<ContentHashProjection>
 
     @Query("DELETE FROM series WHERE sourceId = :sourceId AND remoteId IN (:remoteIds)")
     suspend fun deleteByRemoteIds(sourceId: Long, remoteIds: List<String>)

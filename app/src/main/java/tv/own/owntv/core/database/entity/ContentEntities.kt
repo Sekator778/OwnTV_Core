@@ -4,6 +4,7 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
+import java.util.Objects
 import tv.own.owntv.core.model.MediaType
 
 /**
@@ -66,6 +67,7 @@ data class ChannelEntity(
     /** M3U `catchup-source` URL template (with `${start}`/`${timestamp}`/… placeholders). Null for
      *  Xtream, whose timeshift URL is built from the source credentials instead. */
     val catchupSource: String? = null,
+    val contentHash: Int = 0,
 )
 
 @Entity(
@@ -97,6 +99,7 @@ data class MovieEntity(
     val remoteId: String? = null,
     val addedAt: Long? = null,
     val sortOrder: Int = 0,
+    val contentHash: Int = 0,
 )
 
 @Entity(
@@ -124,6 +127,7 @@ data class SeriesEntity(
     val plot: String? = null,
     val remoteId: String? = null,
     val sortOrder: Int = 0,
+    val contentHash: Int = 0,
 )
 
 @Entity(
@@ -166,4 +170,25 @@ data class EpisodeEntity(
     val durationSecs: Int? = null,
     val containerExt: String? = null,
     val remoteId: String? = null,
+)
+
+data class ContentHashProjection(
+    val remoteId: String,
+    val id: Long,
+    val contentHash: Int,
+)
+
+fun ChannelEntity.computeContentHash(): Int = Objects.hash(
+    sourceId, categoryId, name, logoUrl, streamUrl,
+    epgChannelId, number, remoteId, catchup, catchupDays, catchupSource,
+)
+
+fun MovieEntity.computeContentHash(): Int = Objects.hash(
+    sourceId, categoryId, name, posterUrl, backdropUrl,
+    year, rating, durationSecs, plot, streamUrl, containerExt, remoteId, addedAt,
+)
+
+fun SeriesEntity.computeContentHash(): Int = Objects.hash(
+    sourceId, categoryId, name, posterUrl, backdropUrl,
+    year, rating, plot, remoteId,
 )
