@@ -91,6 +91,13 @@ class OwnTVPlayer(
     private companion object {
         const val TAG = "OwnTVPlayer"
         const val MAX_AUTO_RETRIES = 3 // silent retries (backoff) before showing the error UI
+        // --- Live silent-freeze watchdog (mpv) -----------------------------------------------------
+        // A live feed can wedge with the socket still open: mpv keeps pause=false / paused-for-cache=false
+        // and emits no END_FILE, but time-pos stops advancing — a frozen channel with "nothing happening".
+        // Poll time-pos; sustained no-progress while "playing" == a dropped feed → spinner + reconnect.
+        const val LIVE_STALL_POLL_MS = 2_500L   // poll interval for the live no-progress watchdog
+        const val LIVE_STALL_LIMIT = 4           // polls of no progress (~10s) before treating it as a stall
+        const val MAX_LIVE_RECONNECTS = 6        // consecutive stall-reconnects before the error UI takes over
         // Warn-level mpv lines worth keeping as the failure reason (HTTP codes, open/decode failures, …).
         val FAILURE_RX = Regex(
             "http|error|fail|refus|timed out|unrecogn|cannot|no such|invalid|denied|forbidden|not found|" +
@@ -430,6 +437,11 @@ class OwnTVPlayer(
     private val mpvHasActiveFile = AtomicBoolean(false)
     private var errorCheckJob: Job? = null
     private var videoCheckJob: Job? = null
+    // Live silent-freeze watchdog (see companion constants): polls time-pos while a live stream is playing
+    // and reconnects when it stops advancing. liveStallReconnects is the consecutive-failure budget; it
+    // resets to 0 once playback is healthy again (or on a genuinely new item).
+    private var liveStallJob: Job? = null
+    private var liveStallReconnects = 0
     // Catch-up/VOD streams that start mid-GOP (no H.264 SPS/PPS yet) can play audio with a blank video.
     // We try a software-decode reload once before surfacing an error, tracked per item.
     @Volatile private var triedSoftwareForVideo = false
@@ -966,6 +978,7 @@ class OwnTVPlayer(
         loadGeneration++
         errorCheckJob?.cancel()
         videoCheckJob?.cancel()
+        liveStallJob?.cancel()
         _error.value = null
         lastMpvError = null // fresh item → drop the previous stream's captured error
         diagnostics.markLoad() // scope captured codec/audio errors to this stream
@@ -978,6 +991,7 @@ class OwnTVPlayer(
         // the SAME item passes resetRetries=false to keep that state.
         if (resetRetries) {
             autoRetries = 0
+            liveStallReconnects = 0 // genuinely new item → fresh live-reconnect budget
             triedAltFormat = false
             triedSoftwareForVideo = false
             triedVlcUaFallback = false
@@ -1063,6 +1077,65 @@ class OwnTVPlayer(
                         android.util.Log.w(TAG, "watchdog T_DECODE — FILE_LOADED but no frame after ${elapsed}ms, HARD-RESETTING mpv")
                         triggerHardReset()
                         return@launch
+                    }
+                }
+            }
+        } else {
+            // Live silent-freeze watchdog. A live feed can wedge with the socket still open: mpv keeps
+            // pause=false / paused-for-cache=false and emits no END_FILE, but time-pos stops advancing — a
+            // frozen channel with no spinner, no retry, no error. paused-for-cache (the buffering spinner) and
+            // END_FILE (the reconnect path) only cover the cases mpv actually signals; this covers the silent
+            // one. Mirrors the ExoPlayer live engine's progress watchdog so both backends behave the same.
+            val gen = loadGeneration
+            liveStallJob = scope.launch {
+                var lastPos = -1L
+                var stalls = 0
+                while (gen == loadGeneration) {
+                    delay(LIVE_STALL_POLL_MS)
+                    if (gen != loadGeneration || !isLiveContent) return@launch
+                    // Only a genuinely-playing mpv live stream can "freeze". Skip while still opening
+                    // (expectingPlayback), while an error is shown, while paused/handed-off to ExoPlayer, or
+                    // while mpv itself is buffering (paused-for-cache already drives the spinner there).
+                    if (exoActive || expectingPlayback || _error.value != null || !_isPlaying.value) {
+                        stalls = 0; lastPos = -1L
+                        continue
+                    }
+                    val pos = _position.value
+                    if (pos > 0 && pos == lastPos) {
+                        // No progress since the last poll.
+                        if (++stalls < LIVE_STALL_LIMIT) continue
+                        val frozenMs = LIVE_STALL_LIMIT * LIVE_STALL_POLL_MS
+                        if (!connectivity.isOnlineNow()) {
+                            // Offline: keep the spinner up and wait for the network rather than burning the
+                            // reconnect budget on a dead connection (it resumes once connectivity returns).
+                            android.util.Log.w(TAG, "live stall (mpv, Live) — frozen ~${frozenMs}ms but offline; showing spinner, waiting for network")
+                            _buffering.value = true
+                            stalls = 0
+                            continue
+                        }
+                        if (liveStallReconnects < MAX_LIVE_RECONNECTS) {
+                            liveStallReconnects++
+                            android.util.Log.w(TAG, "live stall (mpv, Live) — no progress for ~${frozenMs}ms, reconnect attempt $liveStallReconnects/$MAX_LIVE_RECONNECTS")
+                            _buffering.value = true // spinner while we re-fetch the live edge
+                            // Re-fetch in place, preserving the decoder retry budget; loadUrl bumps the
+                            // generation, ending this loop, and starts a fresh watchdog for the new load.
+                            loadUrl(currentUrl ?: return@launch, MediaMeta(currentTitle, currentSubtitle, currentYear, currentLogoUrl), isLive = true, startPositionMs = 0L, resetRetries = false)
+                            return@launch
+                        } else {
+                            android.util.Log.w(TAG, "live stall (mpv, Live) — reconnect budget exhausted after $MAX_LIVE_RECONNECTS attempts, surfacing error")
+                            _buffering.value = false
+                            _error.value = "Lost connection to this channel."
+                            return@launch
+                        }
+                    } else {
+                        // Progress (or not yet started) → healthy. Clear any stall state and, if we'd been
+                        // reconnecting, log the recovery and reset the budget.
+                        if (stalls > 0 || liveStallReconnects > 0) {
+                            android.util.Log.i(TAG, "live playback resumed (mpv, Live) after stall/reconnect")
+                        }
+                        stalls = 0
+                        liveStallReconnects = 0
+                        lastPos = pos
                     }
                 }
             }
@@ -1176,6 +1249,7 @@ class OwnTVPlayer(
         expectingPlayback = false
         errorCheckJob?.cancel()
         videoCheckJob?.cancel()
+        liveStallJob?.cancel()
         if (initialized) mpvAsync { stopWithStopClassification("stop") }
         currentUrl = null
         pendingUrl = null

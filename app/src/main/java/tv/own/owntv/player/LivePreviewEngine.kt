@@ -230,33 +230,48 @@ class LivePreviewEngine(
     private var videoRenderer: Renderer? = null
     private val frameListener = VideoFrameMetadataListener { _, _, _, _ -> frameCounter.incrementAndGet() }
     private var lastProgressPos = -1L
+    private var lastProgressWallMs = 0L // SystemClock.elapsedRealtime() of the last forward position move
     private var frozenChecks = 0
     private val progressWatchdog = object : Runnable {
         override fun run() {
             val p = player
-            // isPlaying == actively progressing (playWhenReady && STATE_READY && no suppression) — the only
-            // state where a freeze is meaningful; during buffering/error this resets and the other watchdogs run.
-            if (p != null && hasPlayed && p.isPlaying && p.playbackState == Player.STATE_READY) {
+            // Gate on INTENT to play (playWhenReady && STATE_READY), NOT isPlaying. isPlaying drops to false
+            // during transient playback suppression and brief internal stalls WITHOUT entering STATE_BUFFERING
+            // or STATE_ERROR — and the old gate then reset the freeze counter every poll, so a real frozen-
+            // but-"ready" channel was never caught (no spinner / reconnect / error). playWhenReady stays true
+            // through those flickers, which is exactly the "should be advancing but isn't" condition we want.
+            if (p != null && hasPlayed && p.playWhenReady && p.playbackState == Player.STATE_READY) {
+                val now = android.os.SystemClock.elapsedRealtime()
                 val frames = frameCounter.get()
                 val hasVideo = p.videoFormat != null
                 if (frames > 0) everRendered = true
-                // Picture frozen = we WERE rendering but the frame count stopped (the live manifest clock may
-                // still advance, hiding this from a position-only check). Guarded by everRendered so a
-                // non-functional frame hook can't false-trigger on healthy playback.
+                val pos = p.currentPosition
+                val posAdvanced = pos > 0 && pos != lastProgressPos
+                if (posAdvanced) { lastProgressPos = pos; lastProgressWallMs = now }
+                else if (lastProgressWallMs == 0L) lastProgressWallMs = now // seed on the first ready poll
+                // Backstop: zero forward progress for the whole window while we intend to play == a dead feed.
+                // Wall-clock based, so it CAN'T be missed by isPlaying flicker or a non-functional frame hook.
+                val noProgressMs = now - lastProgressWallMs
+                if (noProgressMs >= FREEZE_TIMEOUT_MS) {
+                    android.util.Log.w(TAG, "live freeze (ExoPlayer, Live) — no progress for ${noProgressMs}ms (pos=$pos, state=READY, frameHook=$everRendered)")
+                    frozenChecks = 0
+                    reconnect("stream frozen — no progress ${noProgressMs}ms"); return
+                }
+                // Picture frozen but the live clock still advances (position moving) — only the rendered-frame
+                // count can see this. Guarded by everRendered so a non-functional frame hook can't false-fire.
                 val framesStuck = everRendered && hasVideo && frames == lastFrameCount
-                val posStuck = p.currentPosition > 0 && p.currentPosition == lastProgressPos // fully dead feed
-                if (framesStuck || posStuck) {
+                lastFrameCount = frames
+                if (framesStuck) {
                     if (++frozenChecks >= FROZEN_LIMIT) {
-                        frozenChecks = 0; lastFrameCount = frames; lastProgressPos = p.currentPosition
-                        reconnect("stream frozen"); return
+                        android.util.Log.w(TAG, "live freeze (ExoPlayer, Live) — picture frozen, frames stuck at $frames for $frozenChecks polls (pos still advancing)")
+                        frozenChecks = 0
+                        reconnect("picture frozen"); return
                     }
                 } else {
                     frozenChecks = 0
                 }
-                lastFrameCount = frames
-                if (p.currentPosition > 0) lastProgressPos = p.currentPosition
             } else {
-                frozenChecks = 0; lastProgressPos = -1L
+                frozenChecks = 0; lastProgressPos = -1L; lastProgressWallMs = 0L
             }
             mainHandler.postDelayed(this, PROGRESS_CHECK_MS)
         }
@@ -269,15 +284,20 @@ class LivePreviewEngine(
                     _state.value = State.LOADING; _buffering.value = true
                     // After it has played, a long buffer == a dropped feed → reconnect (live streams don't
                     // resume on their own here). Before first play, leave initial load alone.
-                    if (hasPlayed) { mainHandler.removeCallbacks(stallWatchdog); mainHandler.postDelayed(stallWatchdog, STALL_MS) }
+                    if (hasPlayed) {
+                        android.util.Log.i(TAG, "buffering (ExoPlayer, Live) — spinner shown, arming stall watchdog (${STALL_MS}ms)")
+                        mainHandler.removeCallbacks(stallWatchdog); mainHandler.postDelayed(stallWatchdog, STALL_MS)
+                    }
                 }
                 Player.STATE_READY -> {
+                    val resumed = hasPlayed // a READY after first play == recovered from a buffer/stall
                     _state.value = State.PLAYING; _buffering.value = false
                     hasPlayed = true; retryCount = 0; mainHandler.removeCallbacks(stallWatchdog)
+                    if (resumed) android.util.Log.i(TAG, "playing (ExoPlayer, Live) — READY, spinner cleared")
                     // (re)start the silent-freeze poll now that we're actually playing. Reset the frame
                     // baseline so the freeze window is measured from this READY (a healthy stream renders its
                     // first frame well within the grace window; one that never does trips the watchdog).
-                    frameCounter.set(0); lastFrameCount = 0; everRendered = false; lastProgressPos = -1L; frozenChecks = 0
+                    frameCounter.set(0); lastFrameCount = 0; everRendered = false; lastProgressPos = -1L; lastProgressWallMs = 0L; frozenChecks = 0
                     mainHandler.removeCallbacks(progressWatchdog); mainHandler.postDelayed(progressWatchdog, PROGRESS_CHECK_MS)
                 }
                 else -> { _buffering.value = false; mainHandler.removeCallbacks(stallWatchdog) }
@@ -334,7 +354,7 @@ class LivePreviewEngine(
         _videoRes.value = null
         _error.value = null
         _errorInfo.value = null
-        frameCounter.set(0); lastFrameCount = 0; everRendered = false; lastProgressPos = -1L; frozenChecks = 0
+        frameCounter.set(0); lastFrameCount = 0; everRendered = false; lastProgressPos = -1L; lastProgressWallMs = 0L; frozenChecks = 0
         _currentMeta.value = meta
         _volume.value = if (muted) 0 else 100
         _state.value = State.LOADING
@@ -569,12 +589,17 @@ class LivePreviewEngine(
                 // error/stall watchdogs still cover total freezes, so this can't make things worse.
                 videoRenderer = (0 until rendererCount).map { getRenderer(it) }
                     .firstOrNull { it.trackType == C.TRACK_TYPE_VIDEO }
+                if (videoRenderer == null) {
+                    android.util.Log.w(TAG, "frame hook NOT wired — no video renderer found; picture-freeze detection falls back to the no-progress backstop")
+                }
                 videoRenderer?.let { r ->
                     runCatching {
                         createMessage(r)
                             .setType(MediaCodecVideoRenderer.MSG_SET_VIDEO_FRAME_METADATA_LISTENER)
                             .setPayload(frameListener)
                             .send()
+                    }.onFailure {
+                        android.util.Log.w(TAG, "frame hook send FAILED (${it.message}) — picture-freeze detection falls back to the no-progress backstop")
                     }
                 }
             }
@@ -585,6 +610,7 @@ class LivePreviewEngine(
         private const val MAX_RECONNECTS = 6        // ~consecutive failures before giving up (HUD Retry then)
         private const val STALL_MS = 12_000L        // buffering this long after playing == a dropped feed
         private const val PROGRESS_CHECK_MS = 2_500L // poll interval for the silent-freeze watchdog
-        private const val FROZEN_LIMIT = 3          // position frozen this many polls (~7.5s) == a dropped feed
+        private const val FROZEN_LIMIT = 3          // picture frozen this many polls (~7.5s) == a dropped feed
+        private const val FREEZE_TIMEOUT_MS = 8_000L // zero forward progress this long while READY == dead feed
     }
 }
