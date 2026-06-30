@@ -86,6 +86,7 @@ class OwnTVPlayer(
     private val connectivity: tv.own.owntv.core.network.ConnectivityObserver,
     private val okHttpClient: okhttp3.OkHttpClient,
     private val diagnostics: PlayerDiagnostics,
+    private val proxyHolder: tv.own.owntv.core.network.ProxyConfigHolder,
 ) : MPVLib.EventObserver {
 
     private companion object {
@@ -1162,6 +1163,10 @@ class OwnTVPlayer(
             // Apply the effective User-Agent for this stream. Per-load so a vlc-fallback retry or a
             // newly-configured source UA takes effect without restarting the player.
             setPropertyString("user-agent", currentUserAgent ?: HttpClient.DEFAULT_USER_AGENT)
+            // Global proxy (Approach 1): route mpv's own FFmpeg networking through the configured HTTP
+            // proxy, or clear it when disabled. Applied per-load so toggling the setting takes effect on
+            // the next stream. The URL may embed proxy credentials — it is NEVER logged here.
+            setPropertyString("http-proxy", proxyHolder.mpvProxyUrl() ?: "")
             loadfileWithStopClassification(url, "replacement loadfile")
             setPropertyBoolean("pause", false)
         }

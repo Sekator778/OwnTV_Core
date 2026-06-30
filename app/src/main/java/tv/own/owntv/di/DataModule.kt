@@ -26,12 +26,21 @@ import java.util.concurrent.TimeUnit
 
 /** Networking, parsers, sync engine, and repositories (Phase 5). */
 val dataModule = module {
+    // Live snapshot of the global proxy. Backs OkHttp's ProxySelector/Authenticator AND mpv's http-proxy,
+    // so the proxy can be toggled at runtime without rebuilding the singleton OkHttpClient below.
+    single { tv.own.owntv.core.network.ProxyConfigHolder(get<tv.own.owntv.features.settings.data.SettingsRepository>().proxyConfig) }
     single {
+        val proxyHolder = get<tv.own.owntv.core.network.ProxyConfigHolder>()
         OkHttpClient.Builder()
             .connectTimeout(15, TimeUnit.SECONDS)  // fast fail on dead host
             .readTimeout(20, TimeUnit.SECONDS)    // detect mid-sync disconnect quickly
             .writeTimeout(20, TimeUnit.SECONDS)
             .retryOnConnectionFailure(false)       // let SyncManager handle retries, not OkHttp
+            // Global proxy (Approach 1): a ProxySelector/Authenticator that read the live snapshot, so
+            // enabling/disabling the proxy takes effect immediately. Proxy off = DIRECT = exact prior
+            // behavior. Credentials are never logged.
+            .proxySelector(proxyHolder.proxySelector)
+            .proxyAuthenticator(proxyHolder.proxyAuthenticator)
             // Force HTTP/1.1. Several IPTV panels / EPG hosts (and their CDNs) have flaky HTTP/2 stacks
             // that send RST_STREAM(PROTOCOL_ERROR) on large/slow responses — e.g. big EPG XML downloads
             // (#17) — which OkHttp surfaces as "stream was reset: PROTOCOL_ERROR". HTTP/1.1 sidesteps it

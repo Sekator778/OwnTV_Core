@@ -43,6 +43,9 @@ class HttpClient(private val client: OkHttpClient) {
         fun redactUrl(url: String): String = url
             .replace(Regex("(?i)(username|password|user|pass|token)=[^&]*"), "$1=***")
             .replace(Regex("(?i)(://[^/]+/(?:live|movie|series|vod)/)([^/]+)/([^/]+)/"), "$1•••/•••/")
+            // Strip userinfo credentials from a `scheme://user:pass@host` URL (e.g. a proxy URL handed
+            // to mpv, or any source URL with embedded creds) so they never reach a log line.
+            .replace(Regex("(?i)(://)([^/@:]+)(:[^/@]*)?@"), "$1***@")
     }
 }
 
