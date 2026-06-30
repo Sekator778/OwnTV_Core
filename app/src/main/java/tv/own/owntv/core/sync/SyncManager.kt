@@ -29,6 +29,7 @@ import tv.own.owntv.core.database.entity.MovieEntity
 import tv.own.owntv.core.database.entity.SeriesEntity
 import tv.own.owntv.core.database.entity.computeContentHash
 import tv.own.owntv.core.database.entity.SourceEntity
+import tv.own.owntv.core.database.BulkInsertHelper
 import tv.own.owntv.core.model.MediaType
 import tv.own.owntv.core.model.SourceType
 import tv.own.owntv.core.network.HttpClient
@@ -56,7 +57,7 @@ class SyncManager(
     private val xtream: XtreamClient,
     private val m3u: M3uParser,
     private val http: HttpClient,
-    private val db: tv.own.owntv.core.database.OwnTVDatabase,
+    private val bulkInsertHelper: BulkInsertHelper,
 ) {
     private val lastSyncStats = java.util.concurrent.ConcurrentHashMap<Long, SyncRunStats>()
 
@@ -153,11 +154,15 @@ class SyncManager(
         }
         val liveTotal = intArrayOf(0)
         val liveRemoteIds = if (freshSource) null else HashSet<String>()
-        val bulkIndexState = if (freshSource && tableIsEmpty("channels")) dropIndexesForBulkInsert("channels", "channels_fts") else null
-        val bulkStart = SystemClock.elapsedRealtime()
-        Log.i(TAG, "Live bulk start sourceId=${s.id}")
-        val chunkSize = if (freshSource) CHUNK_FRESH else CHUNK
-        try {
+        bulkInsertHelper.withOptimizedBulkInsert(
+            "channels",
+            "channels_fts",
+            eligible = freshSource,
+            ftsOnly = true,
+        ) {
+            val bulkStart = SystemClock.elapsedRealtime()
+            Log.i(TAG, "Live bulk start sourceId=${s.id}")
+            val chunkSize = if (freshSource) BulkInsertHelper.CHUNK_FRESH else BulkInsertHelper.CHUNK
             val liveDone = bulkOrFallback(SyncPhase.LIVE.label) {
                 chunked<ChannelEntity, Boolean>(ctx, SyncPhase.LIVE, SyncPhase.LIVE.label, progress, insertFn, liveTotal, liveRemoteIds, { it.remoteId }, chunkSize) { add ->
                     xtream.streamLive(s, transform = toChannel, onItem = add, onProgress = reportBytes)
@@ -179,8 +184,6 @@ class SyncManager(
             } else if (!freshSource) {
                 Log.i(TAG, "Live prune skipped sourceId=${s.id} reason=incomplete_bulk")
             }
-        } finally {
-            if (bulkIndexState != null) restoreIndexes(bulkIndexState, ftsOnly = freshSource)
         }
         progress.finish(SyncPhase.LIVE, SyncPhase.LIVE.label, liveTotal[0])
         stats.phaseTiming["live"] = System.currentTimeMillis() - liveStart
@@ -230,11 +233,15 @@ class SyncManager(
                 }
                 val vodTotal = intArrayOf(0)
                 val vodRemoteIds = if (freshSource) null else HashSet<String>()
-                val bulkIndexState = if (freshSource && tableIsEmpty("movies")) dropIndexesForBulkInsert("movies", "movies_fts") else null
                 val bulkStart = SystemClock.elapsedRealtime()
-                Log.i(TAG, "Movies bulk start sourceId=${s.id}")
-                val chunkSize = if (freshSource) CHUNK_FRESH else CHUNK
-                try {
+                bulkInsertHelper.withOptimizedBulkInsert(
+                    "movies",
+                    "movies_fts",
+                    eligible = freshSource,
+                    ftsOnly = true,
+                ) {
+                    Log.i(TAG, "Movies bulk start sourceId=${s.id}")
+                    val chunkSize = if (freshSource) BulkInsertHelper.CHUNK_FRESH else BulkInsertHelper.CHUNK
                     val vodDone = bulkOrFallback("Movies") {
                         chunked<MovieEntity, Boolean>(ctx, SyncPhase.MOVIES, SyncPhase.MOVIES.label, progress, insertFn, vodTotal, vodRemoteIds, { it.remoteId }, chunkSize) { add ->
                             xtream.streamVod(s, transform = toMovie, onItem = add, onProgress = reportBytes)
@@ -256,8 +263,6 @@ class SyncManager(
                     } else if (!freshSource) {
                         Log.i(TAG, "Movies prune skipped sourceId=${s.id} reason=incomplete_bulk")
                     }
-                } finally {
-                    if (bulkIndexState != null) restoreIndexes(bulkIndexState, ftsOnly = freshSource)
                 }
                 progress.finish(SyncPhase.MOVIES, SyncPhase.MOVIES.label, vodTotal[0])
                 stats.processedCounts["movies"] = vodTotal[0]
@@ -306,11 +311,15 @@ class SyncManager(
                 }
                 val seriesTotal = intArrayOf(0)
                 val seriesRemoteIds = if (freshSource) null else HashSet<String>()
-                val bulkIndexState = if (freshSource && tableIsEmpty("series")) dropIndexesForBulkInsert("series", "series_fts") else null
                 val bulkStart = SystemClock.elapsedRealtime()
-                Log.i(TAG, "Series bulk start sourceId=${s.id}")
-                val chunkSize = if (freshSource) CHUNK_FRESH else CHUNK
-                try {
+                bulkInsertHelper.withOptimizedBulkInsert(
+                    "series",
+                    "series_fts",
+                    eligible = freshSource,
+                    ftsOnly = true,
+                ) {
+                    Log.i(TAG, "Series bulk start sourceId=${s.id}")
+                    val chunkSize = if (freshSource) BulkInsertHelper.CHUNK_FRESH else BulkInsertHelper.CHUNK
                     val seriesDone = bulkOrFallback("Series") {
                         chunked<SeriesEntity, Boolean>(ctx, SyncPhase.SERIES, SyncPhase.SERIES.label, progress, insertFn, seriesTotal, seriesRemoteIds, { it.remoteId }, chunkSize) { add ->
                             xtream.streamSeries(s, transform = toSeries, onItem = add, onProgress = reportBytes)
@@ -332,8 +341,6 @@ class SyncManager(
                     } else if (!freshSource) {
                         Log.i(TAG, "Series prune skipped sourceId=${s.id} reason=incomplete_bulk")
                     }
-                } finally {
-                    if (bulkIndexState != null) restoreIndexes(bulkIndexState, ftsOnly = freshSource)
                 }
                 progress.finish(SyncPhase.SERIES, SyncPhase.SERIES.label, seriesTotal[0])
                 stats.processedCounts["series"] = seriesTotal[0]
@@ -635,6 +642,8 @@ class SyncManager(
         val channelsStart = System.currentTimeMillis()
         val elapsedStart = SystemClock.elapsedRealtime()
         val ctx = currentCoroutineContext()
+        val freshSource = s.lastSyncAt == null
+        val chunkSize = if (freshSource) BulkInsertHelper.CHUNK_FRESH else BulkInsertHelper.CHUNK
         val reportBytes = progress.bytesReporter(SyncPhase.LIVE)
         // A locally-picked playlist file (in-app StorageBrowser gives an absolute path; also tolerate
         // file://content:// URIs) is read straight from the device; a normal URL is downloaded. Same parser.
@@ -643,94 +652,102 @@ class SyncManager(
         Log.i(TAG, "M3U phase start sourceId=${s.id} local=$isLocal bytesTotal=${localPlaylist?.second ?: -1}")
         progress.start(SyncPhase.LIVE, SyncPhase.LIVE.label, bytesTotal = localPlaylist?.second)
 
-        val clearChannelsStart = SystemClock.elapsedRealtime()
-        channelDao.clearSource(s.id)
-        Log.d(TAG, "M3U clear channels sourceId=${s.id} ms=${SystemClock.elapsedRealtime() - clearChannelsStart}")
-        val clearCategoriesStart = SystemClock.elapsedRealtime()
-        categoryDao.clear(s.id, MediaType.LIVE)
-        Log.d(TAG, "M3U clear categories sourceId=${s.id} ms=${SystemClock.elapsedRealtime() - clearCategoriesStart}")
-
-        val groupToCategoryId = HashMap<String, Long>()
-        val pendingCategoryGroups = LinkedHashSet<String>()
-        val pendingCategories = ArrayList<CategoryEntity>(CHUNK)
-        val buffer = ArrayList<PendingM3uChannel>(CHUNK)
         var processed = 0
-        var order = 0 // playlist position — lets "Playlist order" sorting replay the file's order
-        var categoryOrder = 0
+        val header = bulkInsertHelper.withOptimizedBulkInsert(
+            "channels",
+            "channels_fts",
+            eligible = freshSource,
+            ftsOnly = true,
+        ) {
+            val clearChannelsStart = SystemClock.elapsedRealtime()
+            channelDao.clearSource(s.id)
+            Log.d(TAG, "M3U clear channels sourceId=${s.id} ms=${SystemClock.elapsedRealtime() - clearChannelsStart}")
+            val clearCategoriesStart = SystemClock.elapsedRealtime()
+            categoryDao.clear(s.id, MediaType.LIVE)
+            Log.d(TAG, "M3U clear categories sourceId=${s.id} ms=${SystemClock.elapsedRealtime() - clearCategoriesStart}")
 
-        fun queueCategory(group: String) {
-            if (groupToCategoryId.containsKey(group) || !pendingCategoryGroups.add(group)) return
-            pendingCategories.add(
-                CategoryEntity(
-                    sourceId = s.id,
-                    mediaType = MediaType.LIVE,
-                    name = group,
-                    remoteId = group,
-                    sortOrder = categoryOrder++,
-                ),
-            )
-        }
+            val groupToCategoryId = HashMap<String, Long>()
+            val pendingCategoryGroups = LinkedHashSet<String>()
+            val pendingCategories = ArrayList<CategoryEntity>(chunkSize)
+            val buffer = ArrayList<PendingM3uChannel>(chunkSize)
+            var order = 0 // playlist position — lets "Playlist order" sorting replay the file's order
+            var categoryOrder = 0
 
-        suspend fun flushCategories() {
-            if (pendingCategories.isEmpty()) return
-            ctx.ensureActive()
-            val groups = pendingCategoryGroups.toList()
-            val categories = pendingCategories.toList()
-            val start = SystemClock.elapsedRealtime()
-            val ids = categoryDao.upsertAll(categories)
-            groups.forEachIndexed { index, group ->
-                ids.getOrNull(index)?.let { groupToCategoryId[group] = it }
-            }
-            Log.d(TAG, "M3U categories flush sourceId=${s.id} rows=${categories.size} mapped=${groups.size} ms=${SystemClock.elapsedRealtime() - start}")
-            pendingCategoryGroups.clear()
-            pendingCategories.clear()
-        }
-
-        suspend fun flushChannels() {
-            if (buffer.isEmpty()) return
-            flushCategories()
-            ctx.ensureActive()
-            val channels = buffer.map { item ->
-                val entry = item.entry
-                ChannelEntity(
-                    sourceId = s.id,
-                    categoryId = entry.groupTitle?.let { groupToCategoryId[it] },
-                    name = entry.name,
-                    logoUrl = entry.logo,
-                    streamUrl = entry.streamUrl,
-                    epgChannelId = entry.tvgId,
-                    number = entry.tvgChno,
-                    remoteId = null, // M3U has no stable id; rely on clear-then-insert
-                    sortOrder = item.order,
-                    catchup = entry.catchup != null,
-                    catchupDays = entry.catchupDays ?: 0,
-                    catchupSource = entry.catchupSource,
+            fun queueCategory(group: String) {
+                if (groupToCategoryId.containsKey(group) || !pendingCategoryGroups.add(group)) return
+                pendingCategories.add(
+                    CategoryEntity(
+                        sourceId = s.id,
+                        mediaType = MediaType.LIVE,
+                        name = group,
+                        remoteId = group,
+                        sortOrder = categoryOrder++,
+                    ),
                 )
             }
-            val start = SystemClock.elapsedRealtime()
-            channelDao.upsertAll(channels)
-            processed += channels.size
-            Log.d(TAG, "M3U channel flush sourceId=${s.id} rows=${channels.size} processed=$processed ms=${SystemClock.elapsedRealtime() - start}")
-            buffer.clear()
-            progress.update(SyncPhase.LIVE, SyncPhase.LIVE.label, processed)
-        }
 
-        val onEntry: suspend (tv.own.owntv.core.parser.M3uEntry) -> Unit = { e ->
-            e.groupTitle?.let(::queueCategory)
-            buffer.add(PendingM3uChannel(order = order++, entry = e))
-            if (buffer.size >= CHUNK) {
+            suspend fun flushCategories() {
+                if (pendingCategories.isEmpty()) return
+                ctx.ensureActive()
+                val groups = pendingCategoryGroups.toList()
+                val categories = pendingCategories.toList()
+                val start = SystemClock.elapsedRealtime()
+                val ids = categoryDao.upsertAll(categories)
+                groups.forEachIndexed { index, group ->
+                    ids.getOrNull(index)?.let { groupToCategoryId[group] = it }
+                }
+                Log.d(TAG, "M3U categories flush sourceId=${s.id} rows=${categories.size} mapped=${groups.size} ms=${SystemClock.elapsedRealtime() - start}")
+                pendingCategoryGroups.clear()
+                pendingCategories.clear()
+            }
+
+            suspend fun flushChannels() {
+                if (buffer.isEmpty()) return
+                flushCategories()
+                ctx.ensureActive()
+                val channels = buffer.map { item ->
+                    val entry = item.entry
+                    ChannelEntity(
+                        sourceId = s.id,
+                        categoryId = entry.groupTitle?.let { groupToCategoryId[it] },
+                        name = entry.name,
+                        logoUrl = entry.logo,
+                        streamUrl = entry.streamUrl,
+                        epgChannelId = entry.tvgId,
+                        number = entry.tvgChno,
+                        remoteId = null, // M3U has no stable id; rely on clear-then-insert
+                        sortOrder = item.order,
+                        catchup = entry.catchup != null,
+                        catchupDays = entry.catchupDays ?: 0,
+                        catchupSource = entry.catchupSource,
+                    )
+                }
+                val start = SystemClock.elapsedRealtime()
+                channelDao.upsertAll(channels)
+                processed += channels.size
+                Log.d(TAG, "M3U channel flush sourceId=${s.id} rows=${channels.size} processed=$processed ms=${SystemClock.elapsedRealtime() - start}")
+                buffer.clear()
+                progress.update(SyncPhase.LIVE, SyncPhase.LIVE.label, processed)
+            }
+
+            val onEntry: suspend (tv.own.owntv.core.parser.M3uEntry) -> Unit = { e ->
+                e.groupTitle?.let(::queueCategory)
+                buffer.add(PendingM3uChannel(order = order++, entry = e))
+                if (buffer.size >= chunkSize) {
+                    flushChannels()
+                }
+            }
+            val header = if (isLocal) {
+                localPlaylist!!.useProgress(reportBytes) { input ->
+                    m3u.parse(input, onEntry)
+                }
+            } else {
+                http.get(s.url, s.userAgent, reportBytes) { input -> m3u.parse(input, onEntry) }
+            }
+            if (buffer.isNotEmpty()) {
                 flushChannels()
             }
-        }
-        val header = if (isLocal) {
-            localPlaylist!!.useProgress(reportBytes) { input ->
-                m3u.parse(input, onEntry)
-            }
-        } else {
-            http.get(s.url, s.userAgent, reportBytes) { input -> m3u.parse(input, onEntry) }
-        }
-        if (buffer.isNotEmpty()) {
-            flushChannels()
+            header
         }
         // Persist the playlist's EPG url (url-tvg) for the EPG engine if the source didn't have one.
         if (!header.urlTvg.isNullOrBlank() && s.epgUrl.isNullOrBlank()) {
@@ -749,7 +766,7 @@ class SyncManager(
 
     /**
      * Drives a push-stream [producer] that feeds items into [add]; flushes to the DB via [insert] in
-     * chunks of [CHUNK], reporting progress. Inserts are awaited to provide sequential back-pressure,
+     * chunks of [BulkInsertHelper.CHUNK], reporting progress. Inserts are awaited to provide sequential back-pressure,
      * and cancellation is checked each chunk.
      */
     private suspend fun <T, R> chunked(
@@ -761,7 +778,7 @@ class SyncManager(
         total: IntArray, // shared [0] running unique count for the whole media type, so progress never resets
         seenKeys: MutableSet<String>? = null,
         uniqueKey: ((T) -> String?)? = null,
-        chunkSize: Int = CHUNK,
+        chunkSize: Int = BulkInsertHelper.CHUNK,
         producer: suspend (add: suspend (T) -> Unit) -> R,
     ): R {
         val buffer = ArrayList<T>(chunkSize)
@@ -925,64 +942,8 @@ class SyncManager(
         )
     }
 
-    // ---------------- Fresh-source index optimization ----------------
-
-    private fun tableIsEmpty(table: String): Boolean {
-        val cursor = db.openHelper.writableDatabase.query("SELECT COUNT(*) FROM `$table`")
-        return cursor.use { it.moveToFirst() && it.getLong(0) == 0L }
-    }
-
-    /**
-     * Drops non-unique indexes on [table] and the FTS AFTER INSERT trigger. Returns a [BulkIndexState]
-     * that must be passed to [restoreIndexes] once the bulk insert completes. Only call when the table
-     * is empty (first source ever) to avoid degrading concurrent queries on existing data.
-     */
-    private fun dropIndexesForBulkInsert(table: String, ftsTable: String): BulkIndexState {
-        val sdb = db.openHelper.writableDatabase
-        val indexSqls = mutableListOf<String>()
-        sdb.query("SELECT name, sql FROM sqlite_master WHERE type='index' AND tbl_name='$table' AND sql IS NOT NULL").use { cursor ->
-            while (cursor.moveToNext()) {
-                val name = cursor.getString(0)
-                val sql = cursor.getString(1)
-                if (sql != null && !sql.contains("UNIQUE", ignoreCase = true)) {
-                    indexSqls.add(sql)
-                    sdb.execSQL("DROP INDEX IF EXISTS `$name`")
-                }
-            }
-        }
-        val triggerName = "room_fts_content_sync_${ftsTable}_AFTER_INSERT"
-        var triggerSql: String? = null
-        sdb.query("SELECT sql FROM sqlite_master WHERE type='trigger' AND name='$triggerName'").use { cursor ->
-            if (cursor.moveToFirst()) triggerSql = cursor.getString(0)
-        }
-        if (triggerSql != null) sdb.execSQL("DROP TRIGGER IF EXISTS `$triggerName`")
-        Log.i(TAG, "Dropped ${indexSqls.size} indexes + FTS trigger on $table for bulk insert")
-        return BulkIndexState(table, ftsTable, indexSqls, triggerSql)
-    }
-
-    private fun restoreIndexes(state: BulkIndexState, ftsOnly: Boolean = false) {
-        val sdb = db.openHelper.writableDatabase
-        val start = SystemClock.elapsedRealtime()
-        val restoredIndexCount = if (ftsOnly) 0 else state.indexCreateSqls.size
-        if (!ftsOnly) {
-            state.indexCreateSqls.forEach { sdb.execSQL(it) }
-        }
-        sdb.execSQL("INSERT INTO `${state.ftsTable}`(`${state.ftsTable}`) VALUES('rebuild')")
-        if (state.triggerSql != null) sdb.execSQL(state.triggerSql)
-        Log.i(TAG, "Restored $restoredIndexCount indexes + FTS on ${state.table} ms=${SystemClock.elapsedRealtime() - start}")
-    }
-
-    private data class BulkIndexState(
-        val table: String,
-        val ftsTable: String,
-        val indexCreateSqls: List<String>,
-        val triggerSql: String?,
-    )
-
     companion object {
         private const val TAG = "SyncManager"
-        const val CHUNK = 5000
-        const val CHUNK_FRESH = 10000
         private const val QUERY_CHUNK = 500
         private const val CATEGORY_REQUEST_DELAY_MS = 150L // pace per-category fallback requests (avoid HTTP 429)
         private const val SLOW_INSERT_LOG_MS = 250L

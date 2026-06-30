@@ -65,7 +65,7 @@ import tv.own.owntv.core.database.entity.TvProviderProgramEntity
         SeriesFtsEntity::class,
         EpisodeFtsEntity::class,
     ],
-    version = 7,
+    version = 8,
     exportSchema = true,
 )
 @TypeConverters(Converters::class)
@@ -224,6 +224,23 @@ abstract class OwnTVDatabase : RoomDatabase() {
                 db.execSQL("CREATE INDEX IF NOT EXISTS `index_series_sourceId_sortOrder_name` ON `series` (`sourceId`, `sortOrder`, `name`)")
                 db.execSQL("CREATE INDEX IF NOT EXISTS `index_series_categoryId_sortOrder_name` ON `series` (`categoryId`, `sortOrder`, `name`)")
                 db.execSQL("CREATE UNIQUE INDEX IF NOT EXISTS `index_series_sourceId_remoteId` ON `series` (`sourceId`, `remoteId`)")
+            }
+        }
+
+        val MIGRATION_7_8 = object : androidx.room.migration.Migration(7, 8) {
+            override fun migrate(db: androidx.sqlite.db.SupportSQLiteDatabase) {
+                if (!hasColumn(db, "epg_programmes", "contentHash")) {
+                    db.execSQL("ALTER TABLE `epg_programmes` ADD COLUMN `contentHash` INTEGER NOT NULL DEFAULT 0")
+                }
+                db.execSQL(
+                    "DELETE FROM `epg_programmes` WHERE `id` NOT IN (" +
+                        "SELECT MIN(`id`) FROM `epg_programmes` GROUP BY `sourceId`, `epgChannelId`, `startMs`" +
+                        ")",
+                )
+                db.execSQL(
+                    "CREATE UNIQUE INDEX IF NOT EXISTS `index_epg_programmes_natural_key` " +
+                        "ON `epg_programmes` (`sourceId`, `epgChannelId`, `startMs`)",
+                )
             }
         }
 

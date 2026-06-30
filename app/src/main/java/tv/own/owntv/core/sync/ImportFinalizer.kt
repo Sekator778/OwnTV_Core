@@ -4,6 +4,7 @@ import android.os.SystemClock
 import android.util.Log
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import tv.own.owntv.core.database.BulkInsertHelper
 import tv.own.owntv.core.database.OwnTVDatabase
 import tv.own.owntv.core.database.dao.ChannelDao
 import tv.own.owntv.core.database.dao.MovieDao
@@ -49,6 +50,7 @@ class ImportFinalizer(
     private val movieDao: MovieDao,
     private val seriesDao: SeriesDao,
     private val db: OwnTVDatabase,
+    private val bulkInsertHelper: BulkInsertHelper,
 ) {
     suspend fun finalize(source: SourceEntity, deferIndexes: Boolean = false): SyncCounts {
         val counts = contentCounts(source.id)
@@ -84,6 +86,7 @@ class ImportFinalizer(
         Log.i(TAG, "ensureContentIndexes start")
         runCatching {
             val w = db.openHelper.writableDatabase
+            val indexesStartedAt = SystemClock.elapsedRealtime()
             // Idempotent (IF NOT EXISTS): no-op once the indices exist. Covers DBs that somehow lack them.
             // Channels — single-column read paths + A–Z + playlist/provider composites.
             w.execSQL("CREATE INDEX IF NOT EXISTS `index_channels_sourceId` ON `channels` (`sourceId`)")
@@ -112,13 +115,13 @@ class ImportFinalizer(
             w.execSQL("CREATE INDEX IF NOT EXISTS `index_series_categoryId_name` ON `series` (`categoryId`, `name`)")
             w.execSQL("CREATE INDEX IF NOT EXISTS `index_series_sourceId_sortOrder_name` ON `series` (`sourceId`, `sortOrder`, `name`)")
             w.execSQL("CREATE INDEX IF NOT EXISTS `index_series_categoryId_sortOrder_name` ON `series` (`categoryId`, `sortOrder`, `name`)")
+            Log.d(TAG, "ensureContentIndexes create indexes ms=${SystemClock.elapsedRealtime() - indexesStartedAt}")
 
             // Refresh planner stats so the indices above are chosen for the grids' "WHERE … ORDER BY …" —
             // without this, stale stats from a bulk REPLACE make SQLite ignore them and full-sort.
-            w.execSQL("ANALYZE `movies`")
-            w.execSQL("ANALYZE `series`")
-            w.execSQL("ANALYZE `channels`")
-            w.execSQL("ANALYZE `categories`")
+            val analyzeStartedAt = SystemClock.elapsedRealtime()
+            bulkInsertHelper.analyzeTables("movies", "series", "channels", "categories")
+            Log.d(TAG, "ensureContentIndexes analyze ms=${SystemClock.elapsedRealtime() - analyzeStartedAt}")
         }.onSuccess {
             Log.i(TAG, "ensureContentIndexes end ms=${SystemClock.elapsedRealtime() - startedAt}")
         }.onFailure {

@@ -60,12 +60,44 @@ class OwnTVDatabaseMigrationTest {
         }
     }
 
+    @Test
+    fun migrateVersion7To8_addsEpgProgrammeHashingAndDedupesNaturalKeys() {
+        context.deleteDatabase(DB_NAME)
+        bootstrapVersion7Database()
+
+        val db = Room.databaseBuilder(context, OwnTVDatabase::class.java, DB_NAME)
+            .addMigrations(OwnTVDatabase.MIGRATION_7_8)
+            .allowMainThreadQueries()
+            .build()
+
+        try {
+            val sqlite = db.openHelper.readableDatabase
+            assertColumnExists(sqlite, "epg_programmes", "contentHash")
+            assertIndexExists(sqlite, "index_epg_programmes_natural_key")
+            assertCount(sqlite, "epg_programmes", 2)
+            assertCount(sqlite, "epg_channels", 2)
+        } finally {
+            db.close()
+        }
+    }
+
     private fun bootstrapVersion2Database() {
         val db = context.openOrCreateDatabase(DB_NAME, Context.MODE_PRIVATE, null)
         try {
             executeSchemaQueries(db, "tv.own.owntv.core.database.OwnTVDatabase/2.json")
             seedVersion2Data(db)
             db.version = 2
+        } finally {
+            db.close()
+        }
+    }
+
+    private fun bootstrapVersion7Database() {
+        val db = context.openOrCreateDatabase(DB_NAME, Context.MODE_PRIVATE, null)
+        try {
+            executeSchemaQueries(db, "tv.own.owntv.core.database.OwnTVDatabase/7.json")
+            seedVersion7Data(db)
+            db.version = 7
         } finally {
             db.close()
         }
@@ -113,6 +145,14 @@ class OwnTVDatabaseMigrationTest {
         db.execSQL("INSERT INTO playback_progress (id, profileId, mediaType, itemId, positionMs, durationMs, updatedAt) VALUES (91, 1, '${MediaType.EPISODE.name}', 70, 150000, 3600000, 201)")
     }
 
+    private fun seedVersion7Data(db: SQLiteDatabase) {
+        db.execSQL("INSERT INTO epg_channels (id, sourceId, epgChannelId, displayName) VALUES (1, -1, 'news', 'News')")
+        db.execSQL("INSERT INTO epg_channels (id, sourceId, epgChannelId, displayName) VALUES (2, -1, 'sports', 'Sports')")
+        db.execSQL("INSERT INTO epg_programmes (id, sourceId, epgChannelId, startMs, stopMs, title, description) VALUES (10, -1, 'news', 1000, 2000, 'News One', 'A')")
+        db.execSQL("INSERT INTO epg_programmes (id, sourceId, epgChannelId, startMs, stopMs, title, description) VALUES (11, -1, 'news', 1000, 2000, 'News Duplicate', 'B')")
+        db.execSQL("INSERT INTO epg_programmes (id, sourceId, epgChannelId, startMs, stopMs, title, description) VALUES (12, -1, 'sports', 3000, 4000, 'Sports One', 'C')")
+    }
+
     private fun assertTableExists(db: SupportSQLiteDatabase, table: String) {
         assertEquals(1L, countRows(db, "SELECT COUNT(*) FROM sqlite_master WHERE type = 'table' AND name = ?", arrayOf<Any?>(table)))
     }
@@ -126,8 +166,8 @@ class OwnTVDatabaseMigrationTest {
             1L,
             countRows(
                 db,
-                "SELECT COUNT(*) FROM pragma_table_info(?) WHERE name = ?",
-                arrayOf<Any?>(table, column),
+                "SELECT COUNT(*) FROM pragma_table_info('$table') WHERE name = ?",
+                arrayOf<Any?>(column),
             ),
         )
     }

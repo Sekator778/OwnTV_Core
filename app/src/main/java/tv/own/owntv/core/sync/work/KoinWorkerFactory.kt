@@ -14,6 +14,13 @@ class KoinWorkerFactory : WorkerFactory() {
     ): ListenableWorker? {
         val koin = GlobalContext.get()
         return when (workerClassName) {
+            EpgSyncWorker::class.java.name -> EpgSyncWorker(
+                appContext,
+                workerParameters,
+                koin.get(),
+                koin.get(),
+                koin.get(),
+            )
             CatalogSyncWorker::class.java.name -> CatalogSyncWorker(
                 appContext,
                 workerParameters,
