@@ -43,17 +43,36 @@ class BackupManager(
         SETTINGS("App settings", "Theme, accent, player & layout preferences"),
     }
 
-    /** Writes the chosen [sections] into [folder] as owntv-backup.json; returns the file path. */
-    suspend fun export(folder: File, sections: Set<Section> = Section.entries.toSet()): Result<String> = withContext(Dispatchers.IO) {
+    /**
+     * Writes the chosen [sections] into [folder] as owntv-backup.json; returns the file path.
+     *
+     * Secret fields (source passwords, proxy password) are NEVER written as plaintext. When
+     * [backupPassword] is a non-blank passphrase, they are encrypted field-by-field (AES-GCM) and a
+     * root `crypto` block records the KDF params. When it is null/blank, secrets are simply omitted —
+     * the caller is expected to have warned the user that passwords must be re-entered after restore.
+     */
+    suspend fun export(
+        folder: File,
+        sections: Set<Section> = Section.entries.toSet(),
+        backupPassword: String? = null,
+    ): Result<String> = withContext(Dispatchers.IO) {
         runCatching {
+            // Set up field encryption only if a passphrase was provided.
+            val pass = backupPassword?.takeIf { it.isNotBlank() }
+            val salt = if (pass != null) BackupCrypto.newSalt() else null
+            val key = if (pass != null && salt != null) BackupCrypto.deriveKey(pass.toCharArray(), salt, BackupCrypto.ITERATIONS) else null
+            val seal: ((String) -> JSONObject)? = key?.let { k -> { plain -> BackupCrypto.encrypt(k, plain) } }
+
             val root = JSONObject().apply {
-                put("version", 5)
+                put("version", 6)
                 put("sections", JSONArray().apply { sections.forEach { put(it.name) } })
+                if (salt != null) put("crypto", BackupCrypto.cryptoBlock(salt))
                 if (Section.SOURCES in sections) {
                     put("profiles", JSONArray().apply { profileDao.getAllOnce().forEach { put(profileJson(it)) } })
-                    put("sources", JSONArray().apply { sourceDao.getAllOnce().forEach { put(sourceJson(it)) } })
+                    put("sources", JSONArray().apply { sourceDao.getAllOnce().forEach { put(sourceJson(it, seal)) } })
                     put("links", JSONArray().apply { sourceDao.allLinks().forEach { put(JSONObject().put("profileId", it.profileId).put("sourceId", it.sourceId)) } })
                     put("epgSources", epgSources.exportJson()) // standalone EPG feeds ride with sources
+                    put("startupModes", settings.exportStartupModes()) // per-profile landing, keyed by profile id
                 }
                 if (Section.CUSTOMIZE in sections) {
                     put("customizations", JSONObject().apply { customize.exportAll().forEach { (k, v) -> put(k, v) } })
@@ -61,7 +80,14 @@ class BackupManager(
                 // Favorites / history / resume positions, exported with stable keys (see UserDataResolver).
                 val kinds = kindsFor(sections)
                 if (kinds.isNotEmpty()) put("userData", userData.exportAll(kinds))
-                if (Section.SETTINGS in sections) put("settings", settings.exportSettings())
+                if (Section.SETTINGS in sections) {
+                    val s = settings.exportSettings() // non-secret keys, incl. proxy host/port/user/enabled
+                    // Proxy password rides here as an encrypted object (key not in the settings whitelist,
+                    // so importSettings ignores it); omitted entirely when there is no passphrase.
+                    val proxyPass = settings.currentProxyPassword()
+                    if (seal != null && proxyPass.isNotEmpty()) s.put("proxy_pass_enc", seal(proxyPass))
+                    put("settings", s)
+                }
             }
             if (!folder.exists()) folder.mkdirs()
             val out = File(folder, "owntv-backup.json")
@@ -70,8 +96,14 @@ class BackupManager(
         }
     }
 
-    /** Which sections a backup file actually contains (older files have no "sections" field). */
-    suspend fun sectionsIn(file: File): Result<Set<Section>> = withContext(Dispatchers.IO) {
+    /** Result of inspecting a backup file: which sections it holds, and whether secrets are encrypted. */
+    data class Inspection(val sections: Set<Section>, val encrypted: Boolean)
+
+    /** Thrown when a backup is encrypted and the supplied passphrase is wrong (or missing where required). */
+    class WrongPasswordException : Exception("Wrong backup password")
+
+    /** What a backup file contains + whether it carries encrypted secrets (older files have no "sections"). */
+    suspend fun sectionsIn(file: File): Result<Inspection> = withContext(Dispatchers.IO) {
         runCatching {
             val root = JSONObject(file.readText())
             val out = mutableSetOf<Section>()
@@ -88,14 +120,43 @@ class BackupManager(
                 }
             }
             if (out.isEmpty()) error("Not an OwnTV backup file")
-            out
+            Inspection(out, encrypted = root.has("crypto"))
         }
     }
 
-    /** Applies the chosen [sections] of the file (only those it actually contains). */
-    suspend fun import(file: File, sections: Set<Section> = Section.entries.toSet()): Result<Int> = withContext(Dispatchers.IO) {
+    /**
+     * Applies the chosen [sections] of the file (only those it actually contains).
+     *
+     * For encrypted backups: if [backupPassword] is provided it is validated BEFORE the destructive
+     * source wipe — a wrong passphrase fails fast with [WrongPasswordException] and changes nothing. If
+     * the passphrase is null/blank on an encrypted backup, non-secret data still restores and secret
+     * fields are left blank (the caller tells the user to re-enter passwords). Legacy v5 backups with
+     * plaintext passwords import exactly as before (no `crypto` block ⇒ strings treated as plaintext).
+     */
+    suspend fun import(
+        file: File,
+        sections: Set<Section> = Section.entries.toSet(),
+        backupPassword: String? = null,
+    ): Result<Int> = withContext(Dispatchers.IO) {
         runCatching {
             val root = JSONObject(file.readText())
+            val crypto = root.optJSONObject("crypto")
+            val pass = backupPassword?.takeIf { it.isNotBlank() }
+
+            // Derive + validate the key up front, before any destructive write.
+            val key = if (crypto != null && pass != null) {
+                BackupCrypto.deriveKey(pass, crypto) ?: throw WrongPasswordException()
+            } else null
+            if (key != null && !validatePassphrase(root, key)) throw WrongPasswordException()
+            // unseal: decrypt an encrypted secret object; null key (skip) or legacy plaintext returns as-is.
+            val unseal: (Any?) -> String? = { v ->
+                when {
+                    BackupCrypto.isEncrypted(v) -> if (key != null) runCatching { BackupCrypto.decrypt(key, v as JSONObject) }.getOrNull() else null
+                    v is String -> v.takeIf { it.isNotEmpty() }
+                    else -> null
+                }
+            }
+
             var count = 0
 
             if (Section.SOURCES in sections && (root.has("profiles") || root.has("sources"))) {
@@ -108,13 +169,15 @@ class BackupManager(
                 sourceDao.deleteAllSources() // cascades content + profile_source
 
                 for (i in 0 until profiles.length()) profileDao.insert(profileFrom(profiles.getJSONObject(i)))
-                for (i in 0 until sources.length()) sourceDao.insert(sourceFrom(sources.getJSONObject(i)))
+                for (i in 0 until sources.length()) sourceDao.insert(sourceFrom(sources.getJSONObject(i), unseal))
                 for (i in 0 until links.length()) {
                     val l = links.getJSONObject(i)
                     sourceDao.link(ProfileSourceCrossRef(profileId = l.getLong("profileId"), sourceId = l.getLong("sourceId")))
                 }
                 epgSources.importJson(root.optString("epgSources").takeIf { it.isNotBlank() })
-                profileDao.getAllOnce().firstOrNull()?.let { settings.setActiveProfile(it.id) }
+                val profileIds = profileDao.getAllOnce().map { it.id }.toSet()
+                profileIds.firstOrNull()?.let { settings.setActiveProfile(it) }
+                root.optJSONObject("startupModes")?.let { settings.importStartupModes(it, profileIds) }
                 count += profiles.length() + sources.length()
             }
 
@@ -143,10 +206,37 @@ class BackupManager(
             }
 
             if (Section.SETTINGS in sections) {
-                root.optJSONObject("settings")?.let { settings.importSettings(it); count += it.length() }
+                root.optJSONObject("settings")?.let { s ->
+                    settings.importSettings(s) // non-secret keys (incl. proxy host/port/user/enabled)
+                    // Proxy password: decrypt if we have a key; if encrypted but no key, leave blank.
+                    if (s.has("proxy_pass_enc")) {
+                        unseal(s.opt("proxy_pass_enc"))?.let { settings.setProxyPassword(it) }
+                    }
+                    count += s.length()
+                }
             }
             count
         }
+    }
+
+    /** Confirms the derived key opens at least one encrypted secret in the file (GCM tag check). */
+    private fun validatePassphrase(root: JSONObject, key: javax.crypto.SecretKey): Boolean {
+        firstEncryptedSecret(root)?.let { sealed ->
+            return runCatching { BackupCrypto.decrypt(key, sealed); true }.getOrDefault(false)
+        }
+        return true // crypto block but no actual encrypted field — nothing to validate against
+    }
+
+    /** Finds the first encrypted secret object in the file (a source password or the proxy password). */
+    private fun firstEncryptedSecret(root: JSONObject): JSONObject? {
+        root.optJSONArray("sources")?.let { arr ->
+            for (i in 0 until arr.length()) {
+                val pw = arr.getJSONObject(i).opt("password")
+                if (BackupCrypto.isEncrypted(pw)) return pw as JSONObject
+            }
+        }
+        root.optJSONObject("settings")?.opt("proxy_pass_enc")?.let { if (BackupCrypto.isEncrypted(it)) return it as JSONObject }
+        return null
     }
 
     private fun kindsFor(sections: Set<Section>): Set<String> = buildSet {
@@ -167,17 +257,21 @@ class BackupManager(
         pinHash = o.optStringOrNull("pinHash"), createdAt = o.optLong("createdAt", System.currentTimeMillis()),
     )
 
-    private fun sourceJson(s: SourceEntity) = JSONObject().apply {
+    private fun sourceJson(s: SourceEntity, seal: ((String) -> JSONObject)?) = JSONObject().apply {
         put("id", s.id); put("name", s.name); put("type", s.type.name); put("url", s.url)
-        put("username", s.username ?: JSONObject.NULL); put("password", s.password ?: JSONObject.NULL)
+        put("username", s.username ?: JSONObject.NULL)
+        // Password: encrypted object when a passphrase was given, otherwise omitted (never plaintext).
+        val pw = s.password?.takeIf { it.isNotEmpty() }
+        put("password", if (pw != null && seal != null) seal(pw) else JSONObject.NULL)
         put("userAgent", s.userAgent ?: JSONObject.NULL); put("epgUrl", s.epgUrl ?: JSONObject.NULL)
         put("createdAt", s.createdAt); put("lastSyncAt", s.lastSyncAt ?: JSONObject.NULL)
     }
 
-    private fun sourceFrom(o: JSONObject) = SourceEntity(
+    private fun sourceFrom(o: JSONObject, unseal: (Any?) -> String?) = SourceEntity(
         id = o.getLong("id"), name = o.getString("name"),
         type = runCatching { SourceType.valueOf(o.getString("type")) }.getOrDefault(SourceType.M3U),
-        url = o.getString("url"), username = o.optStringOrNull("username"), password = o.optStringOrNull("password"),
+        url = o.getString("url"), username = o.optStringOrNull("username"),
+        password = if (o.isNull("password")) null else unseal(o.opt("password")),
         userAgent = o.optStringOrNull("userAgent"), epgUrl = o.optStringOrNull("epgUrl"),
         createdAt = o.optLong("createdAt", System.currentTimeMillis()),
         lastSyncAt = if (o.isNull("lastSyncAt")) null else o.optLong("lastSyncAt"),
