@@ -178,7 +178,7 @@ class EpgRepository(
                 ftsOnly = false,
             ) {
                 file.outputStream().use { out ->
-                    http.get(url, userAgent) { input ->
+                    http.get(url, userAgent, maxAttempts = EPG_DOWNLOAD_ATTEMPTS) { input ->
                         XmltvParser.parse(
                             TeeInputStream(input, out),
                             onChannel = { id, name ->
@@ -424,5 +424,6 @@ class EpgRepository(
         private const val QUERY_CHUNK = 500
         private const val CACHE_TTL_MS = 24L * 60 * 60 * 1000 // reuse a cached XMLTV for incremental matches up to 24h
         private const val PROGRESS_PROGRAMME_STEP = 500
+        private const val EPG_DOWNLOAD_ATTEMPTS = 3
     }
 }

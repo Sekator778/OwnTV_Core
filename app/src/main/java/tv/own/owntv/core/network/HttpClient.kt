@@ -6,6 +6,7 @@ import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.currentCoroutineContext
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.withContext
 import okhttp3.OkHttpClient
@@ -25,6 +26,7 @@ class HttpClient(private val client: OkHttpClient) {
         url: String,
         userAgent: String? = null,
         onProgress: ((Long, Long?) -> Unit)? = null,
+        maxAttempts: Int = 1,
         block: suspend (InputStream) -> T,
     ): T = withContext(Dispatchers.IO) {
         val ua = userAgent?.takeIf { it.isNotBlank() } ?: DEFAULT_USER_AGENT
@@ -33,40 +35,55 @@ class HttpClient(private val client: OkHttpClient) {
             .header("User-Agent", ua)
             .build()
 
-        val call = client.newCall(request)
         val coroutineContext = currentCoroutineContext()
-        val cancellationHook = coroutineContext[Job]?.invokeOnCompletion { cause ->
-            if (cause is CancellationException) call.cancel()
-        }
         val startedAt = SystemClock.elapsedRealtime()
         val safeUrl = redact(url)
-        Log.d(TAG, "GET start url=$safeUrl ua=${ua.take(48)}")
-        try {
+        val attempts = maxAttempts.coerceAtLeast(1)
+        var attempt = 1
+        while (attempt <= attempts) {
             coroutineContext.ensureActive()
-            call.execute().use { response ->
-                val headersAt = SystemClock.elapsedRealtime()
-                if (!response.isSuccessful) throw IOException("HTTP ${response.code} for ${redact(url)}")
-                val body = response.body ?: throw IOException("Empty response body for ${redact(url)}")
-                val totalBytes = body.contentLength().takeIf { it >= 0 }
-                Log.d(
-                    TAG,
-                    "GET headers url=$safeUrl code=${response.code} contentLength=${totalBytes ?: -1} " +
-                        "contentEncoding=${response.header("Content-Encoding").orEmpty()} headersMs=${headersAt - startedAt}",
-                )
-                onProgress?.invoke(0, totalBytes)
-                body.byteStream().withProgress(totalBytes, onProgress, safeUrl).use { input ->
-                    block(input).also {
-                        Log.d(TAG, "GET body done url=$safeUrl totalMs=${SystemClock.elapsedRealtime() - startedAt}")
+            val call = client.newCall(request)
+            val cancellationHook = coroutineContext[Job]?.invokeOnCompletion { cause ->
+                if (cause is CancellationException) call.cancel()
+            }
+            var responseReceived = false
+            Log.d(TAG, "GET start url=$safeUrl ua=${ua.take(48)} attempt=$attempt/$attempts")
+            try {
+                call.execute().use { response ->
+                    responseReceived = true
+                    val headersAt = SystemClock.elapsedRealtime()
+                    if (!response.isSuccessful) throw IOException("HTTP ${response.code} for ${redact(url)}")
+                    val body = response.body ?: throw IOException("Empty response body for ${redact(url)}")
+                    val totalBytes = body.contentLength().takeIf { it >= 0 }
+                    Log.d(
+                        TAG,
+                        "GET headers url=$safeUrl code=${response.code} contentLength=${totalBytes ?: -1} " +
+                            "contentEncoding=${response.header("Content-Encoding").orEmpty()} headersMs=${headersAt - startedAt}",
+                    )
+                    onProgress?.invoke(0, totalBytes)
+                    body.byteStream().withProgress(totalBytes, onProgress, safeUrl).use { input ->
+                        return@withContext block(input).also {
+                            Log.d(TAG, "GET body done url=$safeUrl totalMs=${SystemClock.elapsedRealtime() - startedAt}")
+                        }
                     }
                 }
+            } catch (e: IOException) {
+                coroutineContext.ensureActive()
+                val retrying = !responseReceived && attempt < attempts
+                Log.w(
+                    TAG,
+                    "GET failed url=$safeUrl attempt=$attempt/$attempts totalMs=${SystemClock.elapsedRealtime() - startedAt} " +
+                        "message=${e.message}${if (retrying) " retrying" else ""}",
+                    e,
+                )
+                if (!retrying) throw e
+            } finally {
+                cancellationHook?.dispose()
             }
-        } catch (e: IOException) {
-            coroutineContext.ensureActive()
-            Log.w(TAG, "GET failed url=$safeUrl totalMs=${SystemClock.elapsedRealtime() - startedAt} message=${e.message}", e)
-            throw e
-        } finally {
-            cancellationHook?.dispose()
+            delay((RETRY_DELAY_MS * attempt).coerceAtMost(MAX_RETRY_DELAY_MS))
+            attempt++
         }
+        throw IOException("GET failed for $safeUrl")
     }
 
     /** Mask credentials in a URL before it appears in an error/log — Xtream embeds user/pass in the query. */
@@ -82,6 +99,8 @@ class HttpClient(private val client: OkHttpClient) {
 
         /** Player-style UA that IPTV panels broadly accept. Overridable per-source in Phase 12. */
         const val DEFAULT_USER_AGENT = "VLC/3.0.20 LibVLC/3.0.20"
+        private const val RETRY_DELAY_MS = 750L
+        private const val MAX_RETRY_DELAY_MS = 3_000L
 
         /** Mask credentials for display (info overlay / logs): query params AND Xtream `/type/user/pass/`
          *  path segments, which is where live URLs embed them. */

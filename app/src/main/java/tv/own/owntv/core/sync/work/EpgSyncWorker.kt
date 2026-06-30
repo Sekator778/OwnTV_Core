@@ -30,7 +30,7 @@ class EpgSyncWorker(
             return Result.success()
         }
 
-        val baseProgrammes = epgRepository.countProgrammes(source.id)
+        val baseProgrammes = inputData.getInt(KEY_BASE_PROGRAMMES, 0)
         val progress = ProgressPublisher(baseProgrammes)
         val startedAt = SystemClock.elapsedRealtime()
         Log.i(TAG, "Starting EPG sync sourceId=${source.id} reason=$reason")

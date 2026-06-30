@@ -13,12 +13,13 @@ import kotlinx.coroutines.flow.map
 
 class EpgSyncScheduler(private val context: Context) {
 
-    fun enqueueSync(sourceId: Long, reason: String) {
+    fun enqueueSync(sourceId: Long, reason: String, baseProgrammes: Int = 0) {
         val request = OneTimeWorkRequestBuilder<EpgSyncWorker>()
             .setInputData(
                 workDataOf(
                     EpgSyncWorker.KEY_SOURCE_ID to sourceId,
                     EpgSyncWorker.KEY_REASON to reason,
+                    EpgSyncWorker.KEY_BASE_PROGRAMMES to baseProgrammes,
                 ),
             )
             .setConstraints(
