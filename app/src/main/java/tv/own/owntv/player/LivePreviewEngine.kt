@@ -224,6 +224,14 @@ class LivePreviewEngine(
     // Set just before our own stop()/release() touches the player, so the STATE_IDLE that follows is
     // recognized as a clean, self-caused cancellation rather than an unexpected mid-live drop.
     private var stoppingIntentionally = false
+    // A single failed prepare() fires both onPlayerError AND the STATE_IDLE that follows it — without this
+    // guard each one called reconnect() independently and burned two retryCount slots for one real failure.
+    // Set true while a reconnect's delayed re-prepare is scheduled/running; cleared right before that
+    // prepare() call so the NEXT genuine failure (from that prepare) is free to trigger its own reconnect.
+    private var reconnectPending = false
+    // Set true once retryCount is exhausted and we've surfaced the terminal error; stops the stallWatchdog
+    // from re-arming and stops error/IDLE from calling reconnect() again until a fresh play()/retry().
+    private var gaveUp = false
     private val stallWatchdog = Runnable { reconnect("buffering stalled") }
 
     // Silent-freeze watchdog. A live HLS feed can keep ExoPlayer in STATE_READY with the playback CLOCK
@@ -321,7 +329,7 @@ class LivePreviewEngine(
                     _state.value = State.LOADING; _buffering.value = true
                     // After it has played, a long buffer == a dropped feed → reconnect (live streams don't
                     // resume on their own here). Before first play, leave initial load alone.
-                    if (hasPlayed) {
+                    if (hasPlayed && !gaveUp) {
                         LiveDiagnosticsLog.event("stallWatchdog armed (${STALL_MS}ms)")
                         mainHandler.removeCallbacks(stallWatchdog); mainHandler.postDelayed(stallWatchdog, STALL_MS)
                     }
@@ -345,13 +353,17 @@ class LivePreviewEngine(
                     // alone (mirrors the pre-fix behavior so a channel that never opens still falls through
                     // to onPlayerError / the VM's mpv fallback instead of looping reconnects forever).
                     mainHandler.removeCallbacks(stallWatchdog)
-                    if (hasPlayed) {
-                        LiveDiagnosticsLog.event("STATE_ENDED mid-live — treating as stall, reconnecting")
-                        _buffering.value = true
-                        reconnect("ended mid-live")
-                    } else {
-                        LiveDiagnosticsLog.event("STATE_ENDED before first play — no action")
-                        _buffering.value = false
+                    when {
+                        !hasPlayed -> {
+                            LiveDiagnosticsLog.event("STATE_ENDED before first play — no action")
+                            _buffering.value = false
+                        }
+                        reconnectPending || gaveUp -> _buffering.value = true
+                        else -> {
+                            LiveDiagnosticsLog.event("STATE_ENDED mid-live — treating as stall, reconnecting")
+                            _buffering.value = true
+                            reconnect("ended mid-live")
+                        }
                     }
                 }
                 Player.STATE_IDLE -> {
@@ -362,6 +374,7 @@ class LivePreviewEngine(
                             stoppingIntentionally = false
                             _buffering.value = false
                         }
+                        reconnectPending || gaveUp -> _buffering.value = true
                         hasPlayed -> {
                             // Unexpected IDLE while we still intend to be on a live channel — same
                             // dead-end this fix targets, just via STATE_IDLE instead of STATE_ENDED.
@@ -395,7 +408,11 @@ class LivePreviewEngine(
         override fun onPlayerError(error: PlaybackException) {
             android.util.Log.w(LiveDiagnosticsLog.TAG, "ExoPlayer error: ${error.errorCodeName}", error)
             LiveDiagnosticsLog.event("player_error code=${error.errorCodeName} hasPlayed=$hasPlayed")
-            if (hasPlayed) { reconnect("error ${error.errorCodeName}"); return } // mid-stream drop → reconnect
+            // mid-stream drop → reconnect, unless a reconnect from the SAME failed prepare is already
+            // in flight (ExoPlayer often fires this alongside a STATE_IDLE for one physical failure) or
+            // we've already exhausted retries and are waiting on the user/a fresh play().
+            if (hasPlayed && !reconnectPending && !gaveUp) { reconnect("error ${error.errorCodeName}"); return }
+            if (hasPlayed) return
             // Never opened → a stream ExoPlayer can't handle; the VM falls back to mpv on this ERROR.
             _state.value = State.ERROR
             _isPlaying.value = false
@@ -424,7 +441,8 @@ class LivePreviewEngine(
         lastCodecError = null; lastVideoDecoder = null
         this.muted = muted
         currentUrl = url
-        hasPlayed = false; retryCount = 0; mainHandler.removeCallbacks(stallWatchdog); mainHandler.removeCallbacks(progressWatchdog)
+        hasPlayed = false; retryCount = 0; reconnectPending = false; gaveUp = false
+        mainHandler.removeCallbacks(stallWatchdog); mainHandler.removeCallbacks(progressWatchdog)
         audioTrackList = emptyList(); audioSelections = emptyList(); _audioCount.value = 0
         textTrackList = emptyList(); textSelections = emptyList(); _subCount.value = 0
         _subtitleOn.value = false; _cues.value = emptyList(); _audioUnsupported.value = false
@@ -491,7 +509,8 @@ class LivePreviewEngine(
         LiveDiagnosticsLog.event("stop() — intentional")
         stoppingIntentionally = true
         currentUrl = null
-        hasPlayed = false; retryCount = 0; mainHandler.removeCallbacks(stallWatchdog); mainHandler.removeCallbacks(progressWatchdog)
+        hasPlayed = false; retryCount = 0; reconnectPending = false; gaveUp = false
+        mainHandler.removeCallbacks(stallWatchdog); mainHandler.removeCallbacks(progressWatchdog)
         frameCounter.set(0); lastFrameCount = 0; everRendered = false; lastProgressPos = -1L; frozenChecks = 0
         audioTrackList = emptyList(); audioSelections = emptyList(); _audioCount.value = 0
         textTrackList = emptyList(); textSelections = emptyList(); _subCount.value = 0
@@ -524,6 +543,7 @@ class LivePreviewEngine(
         val url = currentUrl
         if (p == null || url == null || retryCount >= MAX_RECONNECTS) {
             LiveDiagnosticsLog.event("reconnect exhausted ($reason) at $retryCount/$MAX_RECONNECTS — giving up")
+            gaveUp = true
             _state.value = State.ERROR; _isPlaying.value = false; _buffering.value = false
             _error.value = "Lost connection to this channel."
             val raw = lastCodecError ?: diagnostics.recentError() ?: reason
@@ -531,10 +551,12 @@ class LivePreviewEngine(
             return
         }
         retryCount++
+        reconnectPending = true
         _error.value = null; _errorInfo.value = null; _state.value = State.LOADING; _buffering.value = true
         LiveDiagnosticsLog.event("reconnect attempt $retryCount/$MAX_RECONNECTS reason=$reason")
         mainHandler.postDelayed({
-            if (currentUrl != url) return@postDelayed // superseded (zapped / stopped)
+            if (currentUrl != url) { reconnectPending = false; return@postDelayed } // superseded (zapped / stopped)
+            reconnectPending = false
             runCatching {
                 p.setMediaItem(MediaItem.fromUri(url)) // fresh fetch (live edge)
                 p.prepare()
@@ -692,7 +714,7 @@ class LivePreviewEngine(
     }
 
     companion object {
-        private const val MAX_RECONNECTS = 6        // ~consecutive failures before giving up (HUD Retry then)
+        private const val MAX_RECONNECTS = 8        // ~consecutive failures before giving up (HUD Retry then)
         private const val STALL_MS = 12_000L        // buffering this long after playing == a dropped feed
         private const val PROGRESS_CHECK_MS = 2_500L // poll interval for the silent-freeze watchdog
         private const val FROZEN_LIMIT = 3          // picture frozen this many polls (~7.5s) == a dropped feed
