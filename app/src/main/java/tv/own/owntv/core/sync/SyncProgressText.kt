@@ -14,15 +14,15 @@ data class SyncProgressCounts(
         get() = live > 0 || movies > 0 || series > 0
 
     fun label(): String = buildList {
-        if (liveActive) add("${syncCount(live)} channels")
-        if (moviesActive) add("${syncCount(movies)} movies")
-        if (seriesActive) add("${syncCount(series)} series")
+        if (liveActive && live > 0) add("${syncCount(live)} channels")
+        if (moviesActive && movies > 0) add("${syncCount(movies)} movies")
+        if (seriesActive && series > 0) add("${syncCount(series)} series")
     }.joinToString(" · ")
 }
 
 data class SyncProgressDisplay(
     val title: String,
-    val percent: String,
+    val primaryText: String,
     val detail: String,
 )
 
@@ -36,7 +36,7 @@ fun ImportStage.progressCounts(): SyncProgressCounts = SyncProgressCounts(
 )
 
 fun ImportStage.importProgressDisplay(): SyncProgressDisplay =
-    syncProgressDisplay(overallPercent, progressCounts())
+    importProgressDisplay(progressCounts())
 
 fun syncProgressCountsForSource(
     sourceType: SourceType,
@@ -76,19 +76,29 @@ fun syncProgressCountsForSource(
     )
 }
 
-fun syncProgressDisplay(overallPercent: Int?, counts: SyncProgressCounts?): SyncProgressDisplay =
+fun importProgressDisplay(counts: SyncProgressCounts?): SyncProgressDisplay {
+    val label = counts?.label().orEmpty()
+    val primaryText = label.ifBlank { "Preparing catalog" }
+    return SyncProgressDisplay(
+        title = "Importing catalog…",
+        primaryText = primaryText,
+        detail = if (counts?.hasItems == true) "Syncing catalog" else "Preparing catalog",
+    )
+}
+
+fun resyncBadgeText(baseItemCount: Int, totalProcessed: Int): String =
+    if (baseItemCount > 0 && totalProcessed > 0) {
+        "Syncing ${((totalProcessed * 100L) / baseItemCount).coerceIn(1, 99)}%"
+    } else {
+        "Syncing"
+    }
+
+fun syncProgressDisplay(counts: SyncProgressCounts?): SyncProgressDisplay =
     SyncProgressDisplay(
         title = "Importing catalog…",
-        percent = overallPercent?.let { "${it.coerceIn(0, 100)}%" } ?: "Connecting…",
-        detail = counts?.takeIf { it.hasItems }?.label()?.ifBlank { null } ?: "Preparing catalog",
+        primaryText = counts?.label()?.ifBlank { null } ?: "Preparing catalog",
+        detail = if (counts?.hasItems == true) "Syncing catalog" else "Preparing catalog",
     )
-
-fun syncProgressRowText(overallPercent: Int, counts: SyncProgressCounts): String =
-    if (counts.hasItems) {
-        "Syncing ${overallPercent.coerceIn(0, 100)}% • ${counts.label()}"
-    } else {
-        "Preparing catalog"
-    }
 
 fun syncProgressCountsLabel(counts: SyncProgressCounts): String? =
     counts.takeIf { it.hasItems }?.label()?.ifBlank { null }

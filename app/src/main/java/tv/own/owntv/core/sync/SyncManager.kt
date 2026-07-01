@@ -36,7 +36,6 @@ import tv.own.owntv.core.network.HttpClient
 import tv.own.owntv.core.parser.M3uParser
 import tv.own.owntv.core.parser.XtCategory
 import tv.own.owntv.core.parser.XtreamClient
-import tv.own.owntv.core.network.withProgress
 import kotlin.coroutines.CoroutineContext
 
 /**
@@ -76,7 +75,7 @@ class SyncManager(
                 "sync start sourceId=${source.id} name=${source.name} type=${source.type} " +
                     "requestedContentTypes=$contentTypes trackedContentTypes=$trackedContentTypes",
             )
-            val progress = SyncProgressTracker(trackedContentTypes, onProgress)
+            val progress = SyncCounters(trackedContentTypes, onProgress)
             val result = try {
                 when (source.type) {
                     SourceType.XTREAM -> syncXtream(source, progress, stats, contentTypes)
@@ -103,7 +102,7 @@ class SyncManager(
         }
 
     // ---------------- Xtream ----------------
-    private suspend fun syncXtream(s: SourceEntity, progress: SyncProgressTracker, stats: SyncStatsCollector, contentTypes: SyncContentTypes) {
+    private suspend fun syncXtream(s: SourceEntity, progress: SyncCounters, stats: SyncStatsCollector, contentTypes: SyncContentTypes) {
         val semaphore = Semaphore(2)
         Log.i(TAG, "Xtream sync scheduling sourceId=${s.id} contentTypes=$contentTypes concurrency=2")
         coroutineScope {
@@ -113,14 +112,14 @@ class SyncManager(
         }
     }
 
-    private suspend fun syncLive(s: SourceEntity, progress: SyncProgressTracker, stats: SyncStatsCollector) = coroutineScope {
+    private suspend fun syncLive(s: SourceEntity, progress: SyncCounters, stats: SyncStatsCollector) = coroutineScope {
         val ctx = currentCoroutineContext()
         val freshSource = s.lastSyncAt == null
         val liveStart = System.currentTimeMillis()
         val elapsedStart = SystemClock.elapsedRealtime()
-        val reportBytes = progress.bytesReporter(SyncPhase.LIVE)
+        val reportBytes = IgnoreByteProgress
         Log.i(TAG, "Live phase start sourceId=${s.id} fresh=$freshSource")
-        progress.start(SyncPhase.LIVE, SyncPhase.LIVE.label)
+        progress.update(SyncPhase.LIVE, 0)
         val hashDeferred = if (!freshSource) asyncHashLoad("Live", s.id) { channelDao.contentHashesForSource(s.id) } else null
         val categoriesStart = SystemClock.elapsedRealtime()
         val liveCats = xtream.liveCategories(s, reportBytes)
@@ -185,21 +184,21 @@ class SyncManager(
                 Log.i(TAG, "Live prune skipped sourceId=${s.id} reason=incomplete_bulk")
             }
         }
-        progress.finish(SyncPhase.LIVE, SyncPhase.LIVE.label, liveTotal[0])
+        progress.update(SyncPhase.LIVE, liveTotal[0])
         stats.phaseTiming["live"] = System.currentTimeMillis() - liveStart
         stats.processedCounts["channels"] = liveTotal[0]
         Log.i(TAG, "Live phase end sourceId=${s.id} unique=${liveTotal[0]} ms=${SystemClock.elapsedRealtime() - elapsedStart}")
     }
 
-    private suspend fun syncMovies(s: SourceEntity, progress: SyncProgressTracker, stats: SyncStatsCollector) {
+    private suspend fun syncMovies(s: SourceEntity, progress: SyncCounters, stats: SyncStatsCollector) {
         val ctx = currentCoroutineContext()
         val freshSource = s.lastSyncAt == null
         guardStep("movies", stats) {
             coroutineScope {
                 val elapsedStart = SystemClock.elapsedRealtime()
                 Log.i(TAG, "Movies phase start sourceId=${s.id} fresh=$freshSource")
-                val reportBytes = progress.bytesReporter(SyncPhase.MOVIES)
-                progress.start(SyncPhase.MOVIES, SyncPhase.MOVIES.label)
+                val reportBytes = IgnoreByteProgress
+                progress.update(SyncPhase.MOVIES, 0)
                 val hashDeferred = if (!freshSource) asyncHashLoad("Movies", s.id) { movieDao.contentHashesForSource(s.id) } else null
                 val categoriesStart = SystemClock.elapsedRealtime()
                 val vodCats = xtream.vodCategories(s, reportBytes)
@@ -264,22 +263,22 @@ class SyncManager(
                         Log.i(TAG, "Movies prune skipped sourceId=${s.id} reason=incomplete_bulk")
                     }
                 }
-                progress.finish(SyncPhase.MOVIES, SyncPhase.MOVIES.label, vodTotal[0])
+                progress.update(SyncPhase.MOVIES, vodTotal[0])
                 stats.processedCounts["movies"] = vodTotal[0]
                 Log.i(TAG, "Movies phase end sourceId=${s.id} unique=${vodTotal[0]} ms=${SystemClock.elapsedRealtime() - elapsedStart}")
             }
         }
     }
 
-    private suspend fun syncSeries(s: SourceEntity, progress: SyncProgressTracker, stats: SyncStatsCollector) {
+    private suspend fun syncSeries(s: SourceEntity, progress: SyncCounters, stats: SyncStatsCollector) {
         val ctx = currentCoroutineContext()
         val freshSource = s.lastSyncAt == null
         guardStep("series", stats) {
             coroutineScope {
                 val elapsedStart = SystemClock.elapsedRealtime()
                 Log.i(TAG, "Series phase start sourceId=${s.id} fresh=$freshSource")
-                val reportBytes = progress.bytesReporter(SyncPhase.SERIES)
-                progress.start(SyncPhase.SERIES, SyncPhase.SERIES.label)
+                val reportBytes = IgnoreByteProgress
+                progress.update(SyncPhase.SERIES, 0)
                 val hashDeferred = if (!freshSource) asyncHashLoad("Series", s.id) { seriesDao.contentHashesForSource(s.id) } else null
                 val categoriesStart = SystemClock.elapsedRealtime()
                 val seriesCats = xtream.seriesCategories(s, reportBytes)
@@ -342,7 +341,7 @@ class SyncManager(
                         Log.i(TAG, "Series prune skipped sourceId=${s.id} reason=incomplete_bulk")
                     }
                 }
-                progress.finish(SyncPhase.SERIES, SyncPhase.SERIES.label, seriesTotal[0])
+                progress.update(SyncPhase.SERIES, seriesTotal[0])
                 stats.processedCounts["series"] = seriesTotal[0]
                 Log.i(TAG, "Series phase end sourceId=${s.id} unique=${seriesTotal[0]} ms=${SystemClock.elapsedRealtime() - elapsedStart}")
             }
@@ -394,7 +393,7 @@ class SyncManager(
         ctx: CoroutineContext,
         phase: SyncPhase,
         label: String,
-        progress: SyncProgressTracker,
+        progress: SyncCounters,
         categories: List<XtCategory>,
         insert: suspend (List<T>) -> UpsertStats,
         total: IntArray,
@@ -638,19 +637,19 @@ class SyncManager(
     }
 
     // ---------------- M3U ----------------
-    private suspend fun syncM3u(s: SourceEntity, progress: SyncProgressTracker, stats: SyncStatsCollector) {
+    private suspend fun syncM3u(s: SourceEntity, progress: SyncCounters, stats: SyncStatsCollector) {
         val channelsStart = System.currentTimeMillis()
         val elapsedStart = SystemClock.elapsedRealtime()
         val ctx = currentCoroutineContext()
         val freshSource = s.lastSyncAt == null
         val chunkSize = if (freshSource) BulkInsertHelper.CHUNK_FRESH else BulkInsertHelper.CHUNK
-        val reportBytes = progress.bytesReporter(SyncPhase.LIVE)
+        val reportBytes = IgnoreByteProgress
         // A locally-picked playlist file (in-app StorageBrowser gives an absolute path; also tolerate
         // file://content:// URIs) is read straight from the device; a normal URL is downloaded. Same parser.
         val isLocal = s.url.startsWith("/") || s.url.startsWith("file://") || s.url.startsWith("content://")
         val localPlaylist = if (isLocal) openLocalPlaylist(s.url) else null
         Log.i(TAG, "M3U phase start sourceId=${s.id} local=$isLocal bytesTotal=${localPlaylist?.second ?: -1}")
-        progress.start(SyncPhase.LIVE, SyncPhase.LIVE.label, bytesTotal = localPlaylist?.second)
+        progress.update(SyncPhase.LIVE, 0)
 
         var processed = 0
         val header = bulkInsertHelper.withOptimizedBulkInsert(
@@ -727,7 +726,7 @@ class SyncManager(
                 processed += channels.size
                 Log.d(TAG, "M3U channel flush sourceId=${s.id} rows=${channels.size} processed=$processed ms=${SystemClock.elapsedRealtime() - start}")
                 buffer.clear()
-                progress.update(SyncPhase.LIVE, SyncPhase.LIVE.label, processed)
+                progress.update(SyncPhase.LIVE, processed)
             }
 
             val onEntry: suspend (tv.own.owntv.core.parser.M3uEntry) -> Unit = { e ->
@@ -738,9 +737,7 @@ class SyncManager(
                 }
             }
             val header = if (isLocal) {
-                localPlaylist!!.useProgress(reportBytes) { input ->
-                    m3u.parse(input, onEntry)
-                }
+                localPlaylist!!.first.use { input -> m3u.parse(input, onEntry) }
             } else {
                 http.get(s.url, s.userAgent, reportBytes) { input -> m3u.parse(input, onEntry) }
             }
@@ -753,7 +750,7 @@ class SyncManager(
         if (!header.urlTvg.isNullOrBlank() && s.epgUrl.isNullOrBlank()) {
             sourceDao.update(s.copy(epgUrl = header.urlTvg))
         }
-        progress.finish(SyncPhase.LIVE, SyncPhase.LIVE.label, processed)
+        progress.update(SyncPhase.LIVE, processed)
         stats.phaseTiming["channels"] = System.currentTimeMillis() - channelsStart
         stats.processedCounts["channels"] = processed
         Log.i(TAG, "M3U phase end sourceId=${s.id} processed=$processed ms=${SystemClock.elapsedRealtime() - elapsedStart}")
@@ -773,7 +770,7 @@ class SyncManager(
         ctx: CoroutineContext,
         phase: SyncPhase,
         label: String,
-        progress: SyncProgressTracker,
+        progress: SyncCounters,
         insert: suspend (List<T>) -> UpsertStats,
         total: IntArray, // shared [0] running unique count for the whole media type, so progress never resets
         seenKeys: MutableSet<String>? = null,
@@ -819,7 +816,7 @@ class SyncManager(
                         "filterMs=$filterMs applyMs=$insertMs elapsedMs=${SystemClock.elapsedRealtime() - chunkRunStart}",
                 )
             }
-            progress.update(phase, label, total[0])
+            progress.update(phase, total[0])
         }
         val result = producer { item ->
             buffer.add(item)
@@ -855,23 +852,6 @@ class SyncManager(
             }
         }
         return rows
-    }
-
-    private fun SyncProgressTracker.bytesReporter(phase: SyncPhase): (Long, Long?) -> Unit =
-        { bytesRead, bytesTotal -> updateBytes(phase, phase.label, bytesRead, bytesTotal) }
-
-    private suspend fun <T> Pair<InputStream, Long?>.useProgress(
-        reportBytes: (Long, Long?) -> Unit,
-        block: suspend (InputStream) -> T,
-    ): T {
-        val (input, totalBytes) = this
-        reportBytes(0, totalBytes)
-        val progressInput = input.withProgress(totalBytes, reportBytes)
-        return try {
-            block(progressInput)
-        } finally {
-            progressInput.close()
-        }
     }
 
     private fun openLocalPlaylist(url: String): Pair<InputStream, Long?> = when {
@@ -921,6 +901,47 @@ class SyncManager(
         }
     }
 
+    private class SyncCounters(
+        contentTypes: SyncContentTypes,
+        private val onProgress: (ImportStage) -> Unit,
+    ) {
+        private val lock = Any()
+        private val liveActive = contentTypes.live
+        private val moviesActive = contentTypes.movies
+        private val seriesActive = contentTypes.series
+        private var liveProcessed = 0
+        private var moviesProcessed = 0
+        private var seriesProcessed = 0
+
+        fun update(phase: SyncPhase, count: Int): ImportStage {
+            val snapshot = synchronized(lock) {
+                when (phase) {
+                    SyncPhase.LIVE -> liveProcessed = count
+                    SyncPhase.MOVIES -> moviesProcessed = count
+                    SyncPhase.SERIES -> seriesProcessed = count
+                }
+                snapshotLocked()
+            }
+            onProgress(snapshot)
+            return snapshot
+        }
+
+        fun completeAll(): ImportStage {
+            val snapshot = synchronized(lock) { snapshotLocked() }
+            onProgress(snapshot)
+            return snapshot
+        }
+
+        private fun snapshotLocked() = ImportStage(
+            liveProcessed = liveProcessed,
+            moviesProcessed = moviesProcessed,
+            seriesProcessed = seriesProcessed,
+            liveActive = liveActive,
+            moviesActive = moviesActive,
+            seriesActive = seriesActive,
+        )
+    }
+
     internal class SyncStatsCollector(val sourceId: Long) {
         val startedAt = System.currentTimeMillis()
         val phaseTiming = java.util.concurrent.ConcurrentHashMap<String, Long>()
@@ -947,5 +968,6 @@ class SyncManager(
         private const val QUERY_CHUNK = 500
         private const val CATEGORY_REQUEST_DELAY_MS = 150L // pace per-category fallback requests (avoid HTTP 429)
         private const val SLOW_INSERT_LOG_MS = 250L
+        private val IgnoreByteProgress: (Long, Long?) -> Unit = { _, _ -> }
     }
 }

@@ -18,11 +18,13 @@ class CatalogSyncScheduler(private val context: Context) {
         sourceId: Long,
         reason: String = "manual",
         contentTypes: SyncContentTypes = SyncContentTypes(),
+        baseItemCount: Int = 0,
     ) {
         val request = OneTimeWorkRequestBuilder<CatalogSyncWorker>()
             .setInputData(workDataOf(
                 CatalogSyncWorker.KEY_SOURCE_ID to sourceId,
                 CatalogSyncWorker.KEY_REASON to reason,
+                CatalogSyncWorker.KEY_BASE_ITEM_COUNT to baseItemCount,
                 CatalogSyncWorker.KEY_LIVE to contentTypes.live,
                 CatalogSyncWorker.KEY_MOVIES to contentTypes.movies,
                 CatalogSyncWorker.KEY_SERIES to contentTypes.series,
@@ -63,10 +65,7 @@ class CatalogSyncScheduler(private val context: Context) {
                     CatalogSyncState.Idle
                 } else {
                     CatalogSyncState.Syncing(
-                        label = active.progress.getString(CatalogSyncWorker.KEY_PROGRESS_LABEL),
-                        processed = active.progress.getInt(CatalogSyncWorker.KEY_PROGRESS_PROCESSED, 0),
-                        overallPercent = active.progress.getInt(CatalogSyncWorker.KEY_PROGRESS_OVERALL, 0),
-                        breakdown = active.progress.getString(CatalogSyncWorker.KEY_PROGRESS_BREAKDOWN) ?: "",
+                        baseItemCount = active.progress.getInt(CatalogSyncWorker.KEY_BASE_ITEM_COUNT, 0),
                         liveProcessed = active.progress.getInt(CatalogSyncWorker.KEY_PROGRESS_LIVE_PROCESSED, 0),
                         moviesProcessed = active.progress.getInt(CatalogSyncWorker.KEY_PROGRESS_MOVIES_PROCESSED, 0),
                         seriesProcessed = active.progress.getInt(CatalogSyncWorker.KEY_PROGRESS_SERIES_PROCESSED, 0),
@@ -87,17 +86,17 @@ class CatalogSyncScheduler(private val context: Context) {
 sealed interface CatalogSyncState {
     data object Idle : CatalogSyncState
     data class Syncing(
-        val label: String?,
-        val processed: Int,
-        val overallPercent: Int,
-        val breakdown: String,
+        val baseItemCount: Int,
         val liveProcessed: Int,
         val moviesProcessed: Int,
         val seriesProcessed: Int,
         val liveActive: Boolean,
         val moviesActive: Boolean,
         val seriesActive: Boolean,
-    ) : CatalogSyncState
+    ) : CatalogSyncState {
+        val totalProcessed: Int
+            get() = liveProcessed + moviesProcessed + seriesProcessed
+    }
 
     val isActive: Boolean
         get() = this is Syncing

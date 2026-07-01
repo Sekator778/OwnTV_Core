@@ -29,6 +29,7 @@ class CatalogSyncWorker(
     override suspend fun doWork(): Result {
         val sourceId = inputData.getLong(KEY_SOURCE_ID, -1L)
         val reason = inputData.getString(KEY_REASON) ?: "unknown"
+        val baseItemCount = inputData.getInt(KEY_BASE_ITEM_COUNT, 0)
         if (sourceId < 0) return Result.failure()
 
         val contentTypes = SyncContentTypes(
@@ -42,12 +43,12 @@ class CatalogSyncWorker(
             return Result.failure()
         }
 
-        Log.i(TAG, "Starting sync for source ${source.id} (${source.name}) reason=$reason contentTypes=$contentTypes")
+        Log.i(TAG, "Starting sync for source ${source.id} (${source.name}) reason=$reason contentTypes=$contentTypes baseItemCount=$baseItemCount")
         val trackedContentTypes = when (source.type) {
             SourceType.XTREAM -> contentTypes
             SourceType.M3U, SourceType.LOCAL_BACKUP -> SyncContentTypes(live = true, movies = false, series = false)
         }
-        val progressPublisher = ProgressPublisher(trackedContentTypes)
+        val progressPublisher = ProgressPublisher(trackedContentTypes, baseItemCount)
         progressPublisher.publishStarting()
 
         val syncStartedAt = SystemClock.elapsedRealtime()
@@ -85,26 +86,25 @@ class CatalogSyncWorker(
         }
     }
 
-    private inner class ProgressPublisher(private val contentTypes: SyncContentTypes) {
+    private inner class ProgressPublisher(
+        private val contentTypes: SyncContentTypes,
+        private val baseItemCount: Int,
+    ) {
         private var lastEmitAtMs = 0L
-        private var lastOverall = -1
         private var emittedLiveCount = false
         private var emittedMoviesCount = false
         private var emittedSeriesCount = false
         private var lastLiveProcessed = 0
         private var lastMoviesProcessed = 0
         private var lastSeriesProcessed = 0
+        private var lastTotalProcessed = 0
         private var pending: ImportStage? = null
 
         fun publishStarting() {
             val now = SystemClock.elapsedRealtime()
             setProgress(
                 workDataOf(
-                    KEY_PROGRESS_LABEL to "Starting",
-                    KEY_PROGRESS_PROCESSED to 0,
-                    KEY_PROGRESS_TOTAL to -1,
-                    KEY_PROGRESS_OVERALL to 0,
-                    KEY_PROGRESS_BREAKDOWN to "",
+                    KEY_BASE_ITEM_COUNT to baseItemCount,
                     KEY_PROGRESS_LIVE_PROCESSED to 0,
                     KEY_PROGRESS_MOVIES_PROCESSED to 0,
                     KEY_PROGRESS_SERIES_PROCESSED to 0,
@@ -114,7 +114,7 @@ class CatalogSyncWorker(
                 ),
             )
             lastEmitAtMs = now
-            lastOverall = 0
+            lastTotalProcessed = 0
         }
 
         fun publish(stage: ImportStage) {
@@ -133,16 +133,16 @@ class CatalogSyncWorker(
         private fun emit(stage: ImportStage, now: Long) {
             Log.d(
                 TAG,
-                "Progress emit label=${stage.label} overall=${stage.overallPercent} processed=${stage.processed} " +
-                    "live=${stage.liveProcessed} movies=${stage.moviesProcessed} series=${stage.seriesProcessed} " +
+                "Progress emit total=${stage.totalProcessed} live=${stage.liveProcessed} " +
+                    "movies=${stage.moviesProcessed} series=${stage.seriesProcessed} " +
                     "sinceLastMs=${now - lastEmitAtMs}",
             )
-            setProgress(stage.toWorkData())
+            setProgress(stage.toWorkData(baseItemCount))
             lastEmitAtMs = now
-            lastOverall = stage.overallPercent
             lastLiveProcessed = stage.liveProcessed
             lastMoviesProcessed = stage.moviesProcessed
             lastSeriesProcessed = stage.seriesProcessed
+            lastTotalProcessed = stage.totalProcessed
             if (stage.liveProcessed > 0) emittedLiveCount = true
             if (stage.moviesProcessed > 0) emittedMoviesCount = true
             if (stage.seriesProcessed > 0) emittedSeriesCount = true
@@ -153,17 +153,13 @@ class CatalogSyncWorker(
             (stage.liveProcessed > 0 && !emittedLiveCount) ||
                 (stage.moviesProcessed > 0 && !emittedMoviesCount) ||
                 (stage.seriesProcessed > 0 && !emittedSeriesCount) ||
-                stage.overallPercent != lastOverall ||
                 (now - lastEmitAtMs >= PROGRESS_MIN_INTERVAL_MS && stage.hasMeaningfulCountDelta())
 
         private fun ImportStage.hasMeaningfulCountDelta(): Boolean =
-            liveProcessed - lastLiveProcessed >= PROGRESS_ITEM_STEP ||
-                moviesProcessed - lastMoviesProcessed >= PROGRESS_ITEM_STEP ||
-                seriesProcessed - lastSeriesProcessed >= PROGRESS_ITEM_STEP
+            totalProcessed - lastTotalProcessed >= PROGRESS_ITEM_STEP
 
         private fun ImportStage.matchesLastEmit(): Boolean =
-            overallPercent == lastOverall &&
-                liveProcessed == lastLiveProcessed &&
+            liveProcessed == lastLiveProcessed &&
                 moviesProcessed == lastMoviesProcessed &&
                 seriesProcessed == lastSeriesProcessed
 
@@ -178,14 +174,10 @@ class CatalogSyncWorker(
         private const val PROGRESS_ITEM_STEP = 1_000
         const val KEY_SOURCE_ID = "sourceId"
         const val KEY_REASON = "reason"
+        const val KEY_BASE_ITEM_COUNT = "baseItemCount"
         const val KEY_LIVE = "live"
         const val KEY_MOVIES = "movies"
         const val KEY_SERIES = "series"
-        const val KEY_PROGRESS_LABEL = "label"
-        const val KEY_PROGRESS_PROCESSED = "processed"
-        const val KEY_PROGRESS_TOTAL = "total"
-        const val KEY_PROGRESS_OVERALL = "overall"
-        const val KEY_PROGRESS_BREAKDOWN = "breakdown"
         const val KEY_PROGRESS_LIVE_PROCESSED = "liveProcessed"
         const val KEY_PROGRESS_MOVIES_PROCESSED = "moviesProcessed"
         const val KEY_PROGRESS_SERIES_PROCESSED = "seriesProcessed"
@@ -201,13 +193,9 @@ private fun SyncResult.name(): String = when (this) {
     SyncResult.Cancelled -> "Cancelled"
 }
 
-private fun ImportStage.toWorkData(): Data =
+private fun ImportStage.toWorkData(baseItemCount: Int): Data =
     workDataOf(
-        CatalogSyncWorker.KEY_PROGRESS_LABEL to label,
-        CatalogSyncWorker.KEY_PROGRESS_PROCESSED to processed,
-        CatalogSyncWorker.KEY_PROGRESS_TOTAL to (total ?: -1),
-        CatalogSyncWorker.KEY_PROGRESS_OVERALL to overallPercent,
-        CatalogSyncWorker.KEY_PROGRESS_BREAKDOWN to breakdown,
+        CatalogSyncWorker.KEY_BASE_ITEM_COUNT to baseItemCount,
         CatalogSyncWorker.KEY_PROGRESS_LIVE_PROCESSED to liveProcessed,
         CatalogSyncWorker.KEY_PROGRESS_MOVIES_PROCESSED to moviesProcessed,
         CatalogSyncWorker.KEY_PROGRESS_SERIES_PROCESSED to seriesProcessed,

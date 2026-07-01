@@ -83,6 +83,8 @@ class EpgRepository(
             channelDao.allEpgChannelIds().forEach { ids.add(it) } // already lower+trim from SQL
         } catch (c: CancellationException) {
             throw c
+        } catch (e: NoProgrammesInWindowException) {
+            throw e
         } catch (e: Exception) {
             Log.w("EpgRepository", "Unable to read channel EPG ids — using unfiltered guide sync", e)
         }
@@ -254,8 +256,13 @@ class EpgRepository(
                 }
                 parseCompleted = true
             }
+            if (parseCompleted && channels.isNotEmpty() && processedCount == 0) {
+                throw NoProgrammesInWindowException()
+            }
         } catch (c: CancellationException) {
             throw c
+        } catch (e: NoProgrammesInWindowException) {
+            throw e
         } catch (e: Exception) {
             // Network drop or an unrecoverable parse position. Keep whatever we already pulled — a partial
             // guide beats none — and only fail outright if we got nothing at all.
@@ -298,6 +305,10 @@ class EpgRepository(
         )
         writtenCount
     }
+
+    class NoProgrammesInWindowException : java.io.IOException(
+        "Guide downloaded, but no programmes matched the current guide window. Check the device date/time or try another EPG feed.",
+    )
 
     private suspend fun loadProgrammeHashes(storeId: Long): Map<EpgProgrammeKey, Pair<Long, Int>> {
         val startedAt = SystemClock.elapsedRealtime()
