@@ -5,6 +5,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import kotlinx.coroutines.flow.Flow
+import tv.own.owntv.core.database.entity.EpgHashProjection
 import tv.own.owntv.core.database.entity.EpgChannelEntity
 import tv.own.owntv.core.database.entity.EpgProgrammeEntity
 
@@ -19,6 +20,16 @@ interface EpgDao {
 
     @Query("DELETE FROM epg_programmes WHERE sourceId = :sourceId")
     suspend fun clearSource(sourceId: Long)
+
+    /** Hash snapshot for one channel — an indexed prefix query on the natural key, loaded lazily per channel. */
+    @Query("SELECT id, epgChannelId, startMs, contentHash FROM epg_programmes WHERE sourceId = :sourceId AND epgChannelId = :epgChannelId")
+    suspend fun epgHashesForChannel(sourceId: Long, epgChannelId: String): List<EpgHashProjection>
+
+    @Query("DELETE FROM epg_programmes WHERE id IN (:ids)")
+    suspend fun deleteProgrammesByIds(ids: List<Long>)
+
+    @Query("DELETE FROM epg_programmes WHERE sourceId = :sourceId AND epgChannelId IN (:epgChannelIds)")
+    suspend fun deleteProgrammesForChannels(sourceId: Long, epgChannelIds: List<String>)
 
     /** Drop programmes that have already finished, to bound storage. */
     @Query("DELETE FROM epg_programmes WHERE stopMs < :before")
@@ -48,6 +59,14 @@ interface EpgDao {
     @Query("SELECT * FROM epg_programmes WHERE sourceId IN (:sourceIds) AND stopMs > :from AND startMs < :to ORDER BY epgChannelId ASC, startMs ASC")
     suspend fun programmesInWindow(sourceIds: List<Long>, from: Long, to: Long): List<EpgProgrammeEntity>
 
+    /** Lightweight guide rows: the grid needs titles/times, not potentially huge XMLTV descriptions. */
+    @Query(
+        "SELECT id, sourceId, epgChannelId, startMs, stopMs, title, NULL AS description, 0 AS contentHash " +
+            "FROM epg_programmes WHERE sourceId IN (:sourceIds) AND stopMs > :from AND startMs < :to " +
+            "ORDER BY epgChannelId ASC, startMs ASC",
+    )
+    suspend fun programmeSummariesInWindow(sourceIds: List<Long>, from: Long, to: Long): List<EpgProgrammeEntity>
+
     /**
      * One page of the guide window, WITHOUT the heavy `description` column. Two reasons this is paged
      * (keyset on `id`, the primary key) instead of one query:
@@ -58,7 +77,7 @@ interface EpgDao {
      * Caller loops with `afterId = lastId` until a short page, then groups by channel. description is
      * fetched lazily via [programmeDescription] when a programme's detail dialog opens.
      */
-    @Query("SELECT id, sourceId, epgChannelId, startMs, stopMs, title, NULL AS description FROM epg_programmes WHERE sourceId IN (:sourceIds) AND stopMs > :from AND startMs < :to AND id > :afterId ORDER BY id ASC LIMIT :limit")
+    @Query("SELECT id, sourceId, epgChannelId, startMs, stopMs, title, NULL AS description, contentHash FROM epg_programmes WHERE sourceId IN (:sourceIds) AND stopMs > :from AND startMs < :to AND id > :afterId ORDER BY id ASC LIMIT :limit")
     suspend fun programmesInWindowPage(sourceIds: List<Long>, from: Long, to: Long, afterId: Long, limit: Int): List<EpgProgrammeEntity>
 
     /** One programme's synopsis, loaded on demand for the detail dialog (the grid load drops it). */
@@ -72,6 +91,14 @@ interface EpgDao {
      */
     @Query("SELECT * FROM epg_programmes WHERE epgChannelId = :epgKey AND sourceId IN (:sourceIds) AND stopMs > :from AND startMs < :to ORDER BY startMs ASC")
     suspend fun programmesForChannel(sourceIds: List<Long>, epgKey: String, from: Long, to: Long): List<EpgProgrammeEntity>
+
+    /** Lightweight version for Guide row rendering; avoids CursorWindow pressure from descriptions. */
+    @Query(
+        "SELECT id, sourceId, epgChannelId, startMs, stopMs, title, NULL AS description, 0 AS contentHash " +
+            "FROM epg_programmes WHERE epgChannelId = :epgKey AND sourceId IN (:sourceIds) " +
+            "AND stopMs > :from AND startMs < :to ORDER BY startMs ASC",
+    )
+    suspend fun programmeSummariesForChannel(sourceIds: List<Long>, epgKey: String, from: Long, to: Long): List<EpgProgrammeEntity>
 
     /** How many programmes are stored for these sources (to tell "no guide yet" from "empty window"). */
     @Query("SELECT COUNT(*) FROM epg_programmes WHERE sourceId IN (:sourceIds)")
@@ -93,4 +120,13 @@ interface EpgDao {
             "GROUP BY epgChannelId ORDER BY displayName ASC LIMIT :limit",
     )
     suspend fun listEpgChannels(sourceIds: List<Long>, query: String, limit: Int): List<EpgChannelEntity>
+
+    @Query("SELECT epgChannelId FROM epg_channels WHERE sourceId = :sourceId")
+    suspend fun epgChannelIdsForSource(sourceId: Long): List<String>
+
+    @Query("DELETE FROM epg_channels WHERE sourceId = :sourceId AND epgChannelId IN (:epgChannelIds)")
+    suspend fun deleteChannelsByEpgIds(sourceId: Long, epgChannelIds: List<String>)
+
+    @Query("DELETE FROM epg_channels WHERE sourceId = :sourceId")
+    suspend fun clearChannelsForSource(sourceId: Long)
 }

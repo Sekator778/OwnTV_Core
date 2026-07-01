@@ -60,6 +60,80 @@ class OwnTVDatabaseMigrationTest {
         }
     }
 
+    /** Dev devices on unreleased main builds (DB v7 with content_order, no contentHash). */
+    @Test
+    fun migrateVersion7To9_addsContentHashesAndEpgNaturalKey() {
+        context.deleteDatabase(DB_NAME)
+        bootstrapVersion7Database()
+
+        val db = Room.databaseBuilder(context, OwnTVDatabase::class.java, DB_NAME)
+            .addMigrations(OwnTVDatabase.MIGRATION_7_8, OwnTVDatabase.MIGRATION_8_9)
+            .allowMainThreadQueries()
+            .build()
+
+        try {
+            val sqlite = db.openHelper.readableDatabase
+            assertColumnExists(sqlite, "channels", "contentHash")
+            assertColumnExists(sqlite, "movies", "contentHash")
+            assertColumnExists(sqlite, "series", "contentHash")
+            assertColumnExists(sqlite, "epg_programmes", "contentHash")
+            assertIndexExists(sqlite, "index_epg_programmes_natural_key")
+            assertTableExists(sqlite, "content_order")
+            assertIndexExists(sqlite, "index_content_order_profileId_mediaType_contextKey_itemId")
+            // The natural-key dedupe must have removed the duplicate programme row.
+            assertCount(sqlite, "epg_programmes", 2)
+            assertCount(sqlite, "epg_channels", 2)
+        } finally {
+            db.close()
+        }
+    }
+
+    /** The public upgrade path: a real v3.2.0 database (DB v3) all the way to the current version. */
+    @Test
+    fun migrateVersion3To9_publicUpgradePath_preservesUserData() {
+        context.deleteDatabase(DB_NAME)
+        bootstrapVersion3Database()
+
+        val db = Room.databaseBuilder(context, OwnTVDatabase::class.java, DB_NAME)
+            .addMigrations(
+                OwnTVDatabase.MIGRATION_3_4,
+                OwnTVDatabase.MIGRATION_4_6,
+                OwnTVDatabase.MIGRATION_6_7,
+                OwnTVDatabase.MIGRATION_7_8,
+                OwnTVDatabase.MIGRATION_8_9,
+            )
+            .allowMainThreadQueries()
+            .build()
+
+        try {
+            val sqlite = db.openHelper.readableDatabase
+            // Structure added along the way.
+            assertTableExists(sqlite, "content_order")
+            assertIndexExists(sqlite, "index_content_order_profileId_mediaType_contextKey_itemId")
+            assertColumnExists(sqlite, "channels", "contentHash")
+            assertColumnExists(sqlite, "movies", "contentHash")
+            assertColumnExists(sqlite, "series", "contentHash")
+            assertColumnExists(sqlite, "epg_programmes", "contentHash")
+            assertIndexExists(sqlite, "index_channels_sourceId_sortOrder_name")
+            assertIndexExists(sqlite, "index_movies_sourceId_remoteId")
+            assertIndexExists(sqlite, "index_series_sourceId_remoteId")
+            assertIndexExists(sqlite, "index_epg_programmes_natural_key")
+            assertIndexExists(sqlite, "index_epg_programmes_sourceId_epgChannelId")
+            // User data survives.
+            assertCount(sqlite, "profiles", 1)
+            assertCount(sqlite, "sources", 1)
+            assertCount(sqlite, "profile_source", 1)
+            assertCount(sqlite, "categories", 3)
+            assertCount(sqlite, "channels", 1)
+            assertCount(sqlite, "movies", 1)
+            assertCount(sqlite, "series", 1)
+            assertCount(sqlite, "favorites", 3)
+            assertCount(sqlite, "playback_progress", 2)
+        } finally {
+            db.close()
+        }
+    }
+
     private fun bootstrapVersion2Database() {
         val db = context.openOrCreateDatabase(DB_NAME, Context.MODE_PRIVATE, null)
         try {
@@ -69,6 +143,64 @@ class OwnTVDatabaseMigrationTest {
         } finally {
             db.close()
         }
+    }
+
+    private fun bootstrapVersion7Database() {
+        val db = context.openOrCreateDatabase(DB_NAME, Context.MODE_PRIVATE, null)
+        try {
+            executeSchemaQueries(db, "tv.own.owntv.core.database.OwnTVDatabase/7.json")
+            seedVersion7Data(db)
+            db.version = 7
+        } finally {
+            db.close()
+        }
+    }
+
+    private fun bootstrapVersion3Database() {
+        val db = context.openOrCreateDatabase(DB_NAME, Context.MODE_PRIVATE, null)
+        try {
+            executeSchemaQueries(db, "tv.own.owntv.core.database.OwnTVDatabase/3.json")
+            seedVersion3Data(db)
+            db.version = 3
+        } finally {
+            db.close()
+        }
+    }
+
+    /** Representative v3.2.0 user data (column lists match 3.json exactly). */
+    private fun seedVersion3Data(db: SQLiteDatabase) {
+        db.execSQL("INSERT INTO profiles (id, name, avatarColor, avatarId, isKids, pinHash, createdAt) VALUES (1, 'Primary', 1122867, 7, 0, NULL, 1)")
+        db.execSQL("INSERT INTO sources (id, name, type, url, username, password, userAgent, epgUrl, createdAt, lastSyncAt) VALUES (10, 'Playlist', '${SourceType.XTREAM.name}', 'https://example.test', 'user', 'pass', NULL, NULL, 2, 3)")
+        db.execSQL("INSERT INTO profile_source (profileId, sourceId) VALUES (1, 10)")
+        db.execSQL("INSERT INTO categories (id, sourceId, mediaType, name, remoteId, sortOrder) VALUES (20, 10, '${MediaType.LIVE.name}', 'Live', 'cat-live', 0)")
+        db.execSQL("INSERT INTO categories (id, sourceId, mediaType, name, remoteId, sortOrder) VALUES (21, 10, '${MediaType.MOVIE.name}', 'Movies', 'cat-movies', 1)")
+        db.execSQL("INSERT INTO categories (id, sourceId, mediaType, name, remoteId, sortOrder) VALUES (22, 10, '${MediaType.SERIES.name}', 'Series', 'cat-series', 2)")
+        db.execSQL(
+            "INSERT INTO channels (id, sourceId, categoryId, name, logoUrl, streamUrl, epgChannelId, number, remoteId, sortOrder, catchup, catchupDays, catchupSource) " +
+                "VALUES (30, 10, 20, 'News', 'https://example.test/logo.png', 'https://example.test/live.m3u8', 'news-epg', 1, 'ch-30', 0, 1, 7, 'default')",
+        )
+        db.execSQL(
+            "INSERT INTO movies (id, sourceId, categoryId, name, posterUrl, backdropUrl, year, rating, durationSecs, plot, streamUrl, containerExt, remoteId, addedAt, sortOrder) " +
+                "VALUES (40, 10, 21, 'Movie One', 'https://example.test/movie.jpg', NULL, 2026, 8.1, 7200, 'Plot', 'https://example.test/movie.mp4', 'mp4', 'movie-40', 4, 0)",
+        )
+        db.execSQL(
+            "INSERT INTO series (id, sourceId, categoryId, name, posterUrl, backdropUrl, year, rating, plot, remoteId, sortOrder) " +
+                "VALUES (50, 10, 22, 'Show One', 'https://example.test/show.jpg', NULL, 2026, 8.4, 'Plot', 'series-50', 0)",
+        )
+        db.execSQL("INSERT INTO seasons (id, seriesId, seasonNumber, name, remoteId) VALUES (60, 50, 1, 'Season 1', 'season-1')")
+        db.execSQL(
+            "INSERT INTO episodes (id, seriesId, seasonId, seasonNumber, episodeNumber, name, plot, streamUrl, durationSecs, containerExt, remoteId) " +
+                "VALUES (70, 50, 60, 1, 1, 'Episode 1', NULL, 'https://example.test/episode1.mp4', 3600, 'mp4', 'episode-70')",
+        )
+        db.execSQL("INSERT INTO favorites (id, profileId, mediaType, itemId, addedAt) VALUES (80, 1, '${MediaType.LIVE.name}', 30, 100)")
+        db.execSQL("INSERT INTO favorites (id, profileId, mediaType, itemId, addedAt) VALUES (81, 1, '${MediaType.MOVIE.name}', 40, 101)")
+        db.execSQL("INSERT INTO favorites (id, profileId, mediaType, itemId, addedAt) VALUES (82, 1, '${MediaType.SERIES.name}', 50, 102)")
+        db.execSQL("INSERT INTO watch_history (id, profileId, mediaType, itemId, watchedAt) VALUES (85, 1, '${MediaType.MOVIE.name}', 40, 110)")
+        db.execSQL("INSERT INTO playback_progress (id, profileId, mediaType, itemId, positionMs, durationMs, updatedAt) VALUES (90, 1, '${MediaType.MOVIE.name}', 40, 120000, 7200000, 200)")
+        db.execSQL("INSERT INTO playback_progress (id, profileId, mediaType, itemId, positionMs, durationMs, updatedAt) VALUES (91, 1, '${MediaType.EPISODE.name}', 70, 150000, 3600000, 201)")
+        db.execSQL("INSERT INTO epg_channels (id, sourceId, epgChannelId, displayName) VALUES (1, -1, 'news', 'News')")
+        db.execSQL("INSERT INTO epg_programmes (id, sourceId, epgChannelId, startMs, stopMs, title, description) VALUES (10, -1, 'news', 1000, 2000, 'News One', 'A')")
+        db.execSQL("INSERT INTO epg_programmes (id, sourceId, epgChannelId, startMs, stopMs, title, description) VALUES (11, -1, 'news', 1000, 2000, 'News Duplicate', 'B')")
     }
 
     private fun executeSchemaQueries(db: SQLiteDatabase, assetPath: String) {
@@ -113,6 +245,14 @@ class OwnTVDatabaseMigrationTest {
         db.execSQL("INSERT INTO playback_progress (id, profileId, mediaType, itemId, positionMs, durationMs, updatedAt) VALUES (91, 1, '${MediaType.EPISODE.name}', 70, 150000, 3600000, 201)")
     }
 
+    private fun seedVersion7Data(db: SQLiteDatabase) {
+        db.execSQL("INSERT INTO epg_channels (id, sourceId, epgChannelId, displayName) VALUES (1, -1, 'news', 'News')")
+        db.execSQL("INSERT INTO epg_channels (id, sourceId, epgChannelId, displayName) VALUES (2, -1, 'sports', 'Sports')")
+        db.execSQL("INSERT INTO epg_programmes (id, sourceId, epgChannelId, startMs, stopMs, title, description) VALUES (10, -1, 'news', 1000, 2000, 'News One', 'A')")
+        db.execSQL("INSERT INTO epg_programmes (id, sourceId, epgChannelId, startMs, stopMs, title, description) VALUES (11, -1, 'news', 1000, 2000, 'News Duplicate', 'B')")
+        db.execSQL("INSERT INTO epg_programmes (id, sourceId, epgChannelId, startMs, stopMs, title, description) VALUES (12, -1, 'sports', 3000, 4000, 'Sports One', 'C')")
+    }
+
     private fun assertTableExists(db: SupportSQLiteDatabase, table: String) {
         assertEquals(1L, countRows(db, "SELECT COUNT(*) FROM sqlite_master WHERE type = 'table' AND name = ?", arrayOf<Any?>(table)))
     }
@@ -126,8 +266,8 @@ class OwnTVDatabaseMigrationTest {
             1L,
             countRows(
                 db,
-                "SELECT COUNT(*) FROM pragma_table_info(?) WHERE name = ?",
-                arrayOf<Any?>(table, column),
+                "SELECT COUNT(*) FROM pragma_table_info('$table') WHERE name = ?",
+                arrayOf<Any?>(column),
             ),
         )
     }

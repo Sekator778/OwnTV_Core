@@ -1,11 +1,22 @@
 package tv.own.owntv.core.sync
 
+import android.net.Uri
+import android.os.SystemClock
+import android.util.Log
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.currentCoroutineContext
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.ensureActive
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.sync.Semaphore
+import kotlinx.coroutines.sync.withPermit
 import kotlinx.coroutines.withContext
+import java.io.File
+import java.io.InputStream
 import tv.own.owntv.core.database.dao.CategoryDao
 import tv.own.owntv.core.database.dao.ChannelDao
 import tv.own.owntv.core.database.dao.MovieDao
@@ -13,24 +24,25 @@ import tv.own.owntv.core.database.dao.SeriesDao
 import tv.own.owntv.core.database.dao.SourceDao
 import tv.own.owntv.core.database.entity.CategoryEntity
 import tv.own.owntv.core.database.entity.ChannelEntity
+import tv.own.owntv.core.database.entity.ContentHashProjection
 import tv.own.owntv.core.database.entity.MovieEntity
 import tv.own.owntv.core.database.entity.SeriesEntity
+import tv.own.owntv.core.database.entity.computeContentHash
 import tv.own.owntv.core.database.entity.SourceEntity
+import tv.own.owntv.core.database.BulkInsertHelper
 import tv.own.owntv.core.model.MediaType
 import tv.own.owntv.core.model.SourceType
 import tv.own.owntv.core.network.HttpClient
 import tv.own.owntv.core.parser.M3uParser
 import tv.own.owntv.core.parser.XtCategory
-import tv.own.owntv.core.parser.XtLiveStream
-import tv.own.owntv.core.parser.XtSeries
-import tv.own.owntv.core.parser.XtVod
 import tv.own.owntv.core.parser.XtreamClient
 import kotlin.coroutines.CoroutineContext
 
 /**
- * Imports a source into the database. Uses a clear-then-insert refresh per source/type (avoids the
- * @Insert REPLACE cascade pitfall), batches inserts in chunks of [CHUNK], and reports progress via a
- * non-suspend [onProgress] callback (callers push it into a StateFlow for the UI).
+ * Imports a source into the database. Xtream re-syncs preserve existing rows until a phase succeeds:
+ * rows are matched by provider remote id, unchanged rows are skipped, changed rows keep their local id,
+ * and stale rows are pruned only after the full phase completes. M3U still uses clear-then-insert
+ * because playlists do not provide stable item ids.
  *
  * Series episodes are intentionally fetched lazily later (Phase 9), not during sync.
  */
@@ -44,116 +56,309 @@ class SyncManager(
     private val xtream: XtreamClient,
     private val m3u: M3uParser,
     private val http: HttpClient,
+    private val bulkInsertHelper: BulkInsertHelper,
 ) {
-    suspend fun sync(source: SourceEntity, onProgress: (ImportStage) -> Unit): SyncResult =
+    private val lastSyncStats = java.util.concurrent.ConcurrentHashMap<Long, SyncRunStats>()
+
+    fun getLastSyncStats(sourceId: Long): SyncRunStats? = lastSyncStats[sourceId]
+
+    suspend fun sync(source: SourceEntity, onProgress: (ImportStage) -> Unit, contentTypes: SyncContentTypes = SyncContentTypes()): Pair<SyncResult, SyncRunStats> =
         withContext(Dispatchers.IO) {
-            try {
+            val syncStartedAt = SystemClock.elapsedRealtime()
+            val stats = SyncStatsCollector(source.id)
+            val trackedContentTypes = when (source.type) {
+                SourceType.XTREAM -> contentTypes
+                SourceType.M3U, SourceType.LOCAL_BACKUP -> SyncContentTypes(live = true, movies = false, series = false)
+            }
+            Log.i(
+                TAG,
+                "sync start sourceId=${source.id} name=${source.name} type=${source.type} " +
+                    "requestedContentTypes=$contentTypes trackedContentTypes=$trackedContentTypes",
+            )
+            val progress = SyncCounters(trackedContentTypes, onProgress)
+            val result = try {
                 when (source.type) {
-                    SourceType.XTREAM -> syncXtream(source, onProgress)
-                    SourceType.M3U -> syncM3u(source, onProgress)
+                    SourceType.XTREAM -> syncXtream(source, progress, stats, contentTypes)
+                    SourceType.M3U -> syncM3u(source, progress, stats)
                     SourceType.LOCAL_BACKUP -> Unit
                 }
-                sourceDao.markSynced(source.id, System.currentTimeMillis())
-                SyncResult.Success
+                if (source.type != SourceType.XTREAM || contentTypes == SyncContentTypes()) {
+                    val markStartedAt = SystemClock.elapsedRealtime()
+                    sourceDao.markSynced(source.id, System.currentTimeMillis())
+                    Log.d(TAG, "markSynced sourceId=${source.id} ms=${SystemClock.elapsedRealtime() - markStartedAt}")
+                }
+                progress.completeAll()
+                SyncResult.Success(stats.warnings())
             } catch (c: CancellationException) {
                 throw c
             } catch (e: Exception) {
                 SyncResult.Failed(e.message ?: "Sync failed")
             }
+            val runStats = stats.build(result)
+            lastSyncStats[source.id] = runStats
+            Log.i(TAG, "sync end sourceId=${source.id} totalElapsedMs=${SystemClock.elapsedRealtime() - syncStartedAt}")
+            logStats(runStats)
+            result to runStats
         }
 
     // ---------------- Xtream ----------------
-    private suspend fun syncXtream(s: SourceEntity, onProgress: (ImportStage) -> Unit) {
-        val ctx = currentCoroutineContext()
+    private suspend fun syncXtream(s: SourceEntity, progress: SyncCounters, stats: SyncStatsCollector, contentTypes: SyncContentTypes) {
+        val semaphore = Semaphore(2)
+        Log.i(TAG, "Xtream sync scheduling sourceId=${s.id} contentTypes=$contentTypes concurrency=2")
+        coroutineScope {
+            if (contentTypes.live) async { semaphore.withPermit { syncLive(s, progress, stats) } }
+            if (contentTypes.movies) async { semaphore.withPermit { syncMovies(s, progress, stats) } }
+            if (contentTypes.series) async { semaphore.withPermit { syncSeries(s, progress, stats) } }
+        }
+    }
 
-        // LIVE — sortOrder records the provider's order so "Playlist order" sorting can replay it.
-        val liveCats = xtream.liveCategories(s)
-        val liveMap = refreshCategories(s, MediaType.LIVE, liveCats)
-        var liveCleared = false
+    private suspend fun syncLive(s: SourceEntity, progress: SyncCounters, stats: SyncStatsCollector) = coroutineScope {
+        val ctx = currentCoroutineContext()
+        val freshSource = s.lastSyncAt == null
+        val liveStart = System.currentTimeMillis()
+        val elapsedStart = SystemClock.elapsedRealtime()
+        val reportBytes = IgnoreByteProgress
+        Log.i(TAG, "Live phase start sourceId=${s.id} fresh=$freshSource")
+        progress.update(SyncPhase.LIVE, 0)
+        val hashDeferred = if (!freshSource) asyncHashLoad("Live", s.id) { channelDao.contentHashesForSource(s.id) } else null
+        val categoriesStart = SystemClock.elapsedRealtime()
+        val liveCats = xtream.liveCategories(s, reportBytes)
+        Log.d(TAG, "Live categories fetched sourceId=${s.id} count=${liveCats.size} ms=${SystemClock.elapsedRealtime() - categoriesStart}")
+        val refreshStart = SystemClock.elapsedRealtime()
+        val liveCategories = refreshCategories(s, MediaType.LIVE, liveCats)
+        val liveMap = liveCategories.idsByRemoteId
+        Log.d(TAG, "Live categories refreshed sourceId=${s.id} mapped=${liveMap.size} ms=${SystemClock.elapsedRealtime() - refreshStart}")
         var liveOrder = 0
-        val toChannel = { item: XtLiveStream ->
+        val toChannel = {
+            streamId: String,
+            name: String,
+            icon: String?,
+            epgChannelId: String?,
+            categoryId: String?,
+            num: Int?,
+            archive: Boolean,
+            archiveDays: Int ->
             ChannelEntity(
-                sourceId = s.id, categoryId = liveMap[item.categoryId], name = item.name,
-                logoUrl = item.icon, streamUrl = xtream.liveUrl(s, item.streamId),
-                epgChannelId = item.epgChannelId, number = item.num, remoteId = item.streamId,
+                sourceId = s.id, categoryId = liveMap[categoryId], name = name,
+                logoUrl = icon, streamUrl = xtream.liveUrl(s, streamId),
+                epgChannelId = epgChannelId, number = num, remoteId = streamId,
                 sortOrder = liveOrder++,
-                catchup = item.archive, catchupDays = item.archiveDays,
+                catchup = archive, catchupDays = archiveDays,
             )
         }
+        val insertFn: suspend (List<ChannelEntity>) -> UpsertStats = if (freshSource) {
+            { rows -> insertChannelsFresh(s.id, rows) }
+        } else {
+            { rows -> upsertChannelsStable(s.id, rows, hashDeferred!!) }
+        }
         val liveTotal = intArrayOf(0)
-        val liveDone = bulkOrFallback("Channels") {
-            chunked<ChannelEntity, Boolean>(ctx, "Channels", onProgress, { if (!liveCleared) { runBlocking { channelDao.clearSource(s.id) }; liveCleared = true }; channelDao.upsertAll(it) }, liveTotal) { add ->
-                xtream.streamLive(s) { add(toChannel(it)) }
-            }
-        }
-        if (!liveDone) sliceByCategory(ctx, "Channels", onProgress, liveCats, { if (!liveCleared) { runBlocking { channelDao.clearSource(s.id) }; liveCleared = true }; channelDao.upsertAll(it) }, liveTotal, liveTotal[0]) { cat, add ->
-            xtream.streamLive(s, cat.id) { add(toChannel(it)) }
-        }
-
-        // MOVIES — non-fatal: a flaky VOD endpoint shouldn't abort the whole import (keep the channels).
-        guardStep("Movies") {
-            val vodCats = xtream.vodCategories(s)
-            val vodMap = refreshCategories(s, MediaType.MOVIE, vodCats)
-            var vodCleared = false
-            var vodOrder = 0
-            val toMovie = { item: XtVod ->
-                MovieEntity(
-                    sourceId = s.id, categoryId = vodMap[item.categoryId], name = item.name,
-                    posterUrl = item.icon, rating = item.rating, plot = item.plot,
-                    streamUrl = xtream.movieUrl(s, item.streamId, item.containerExt),
-                    containerExt = item.containerExt, remoteId = item.streamId, addedAt = item.added,
-                    sortOrder = vodOrder++,
-                )
-            }
-            val vodTotal = intArrayOf(0)
-            val vodDone = bulkOrFallback("Movies") {
-                chunked<MovieEntity, Boolean>(ctx, "Movies", onProgress, { if (!vodCleared) { runBlocking { movieDao.clearSource(s.id) }; vodCleared = true }; movieDao.upsertAll(it) }, vodTotal) { add ->
-                    xtream.streamVod(s) { add(toMovie(it)) }
+        val liveRemoteIds = if (freshSource) null else HashSet<String>()
+        bulkInsertHelper.withOptimizedBulkInsert(
+            "channels",
+            "channels_fts",
+            eligible = freshSource,
+            ftsOnly = true,
+        ) {
+            val bulkStart = SystemClock.elapsedRealtime()
+            Log.i(TAG, "Live bulk start sourceId=${s.id}")
+            val chunkSize = if (freshSource) BulkInsertHelper.CHUNK_FRESH else BulkInsertHelper.CHUNK
+            val liveDone = bulkOrFallback(SyncPhase.LIVE.label) {
+                chunked<ChannelEntity, Boolean>(ctx, SyncPhase.LIVE, SyncPhase.LIVE.label, progress, insertFn, liveTotal, liveRemoteIds, { it.remoteId }, chunkSize) { add ->
+                    xtream.streamLive(s, transform = toChannel, onItem = add, onProgress = reportBytes)
                 }
             }
-            if (!vodDone) sliceByCategory(ctx, "Movies", onProgress, vodCats, { if (!vodCleared) { runBlocking { movieDao.clearSource(s.id) }; vodCleared = true }; movieDao.upsertAll(it) }, vodTotal, vodTotal[0]) { cat, add ->
-                xtream.streamVod(s, cat.id) { add(toMovie(it)) }
+            Log.i(TAG, "Live bulk end sourceId=${s.id} complete=$liveDone unique=${liveTotal[0]} ms=${SystemClock.elapsedRealtime() - bulkStart}")
+            if (!liveDone) {
+                stats.usedFallback = true
+                val fallbackStart = SystemClock.elapsedRealtime()
+                Log.i(TAG, "Live fallback start sourceId=${s.id} categories=${liveCats.size} bulkPartial=${liveTotal[0]}")
+                sliceByCategory(ctx, SyncPhase.LIVE, SyncPhase.LIVE.label, progress, liveCats, insertFn, liveTotal, liveTotal[0], liveRemoteIds, { it.remoteId }) { cat, add ->
+                    xtream.streamLive(s, cat.id, transform = toChannel, onItem = add, onProgress = reportBytes)
+                }
+                Log.i(TAG, "Live fallback end sourceId=${s.id} unique=${liveTotal[0]} ms=${SystemClock.elapsedRealtime() - fallbackStart}")
+            }
+            if (!freshSource && liveDone) {
+                pruneChannels(s.id, liveRemoteIds!!)
+                pruneCategories(s.id, MediaType.LIVE, liveCategories.seenRemoteIds, SyncPhase.LIVE.label)
+            } else if (!freshSource) {
+                Log.i(TAG, "Live prune skipped sourceId=${s.id} reason=incomplete_bulk")
             }
         }
+        progress.update(SyncPhase.LIVE, liveTotal[0])
+        stats.phaseTiming["live"] = System.currentTimeMillis() - liveStart
+        stats.processedCounts["channels"] = liveTotal[0]
+        Log.i(TAG, "Live phase end sourceId=${s.id} unique=${liveTotal[0]} ms=${SystemClock.elapsedRealtime() - elapsedStart}")
+    }
 
-        // SERIES (shows only; seasons/episodes fetched lazily later) — non-fatal too. Some providers
-        // (e.g. peoplestv) return a non-standard HTTP 512 here that used to abort the entire import; now we
-        // keep the channels + movies and just skip series rather than failing the whole sync.
-        guardStep("Series") {
-            val seriesCats = xtream.seriesCategories(s)
-            val seriesMap = refreshCategories(s, MediaType.SERIES, seriesCats)
-            var seriesCleared = false
-            var seriesOrder = 0
-            val toSeries = { item: XtSeries ->
-                SeriesEntity(
-                    sourceId = s.id, categoryId = seriesMap[item.categoryId], name = item.name,
-                    posterUrl = item.cover, plot = item.plot, rating = item.rating,
-                    year = item.year, remoteId = item.seriesId,
-                    sortOrder = seriesOrder++,
-                )
-            }
-            val seriesTotal = intArrayOf(0)
-            val seriesDone = bulkOrFallback("Series") {
-                chunked<SeriesEntity, Boolean>(ctx, "Series", onProgress, { if (!seriesCleared) { runBlocking { seriesDao.clearSource(s.id) }; seriesCleared = true }; seriesDao.upsertSeries(it) }, seriesTotal) { add ->
-                    xtream.streamSeries(s) { add(toSeries(it)) }
+    private suspend fun syncMovies(s: SourceEntity, progress: SyncCounters, stats: SyncStatsCollector) {
+        val ctx = currentCoroutineContext()
+        val freshSource = s.lastSyncAt == null
+        guardStep("movies", stats) {
+            coroutineScope {
+                val elapsedStart = SystemClock.elapsedRealtime()
+                Log.i(TAG, "Movies phase start sourceId=${s.id} fresh=$freshSource")
+                val reportBytes = IgnoreByteProgress
+                progress.update(SyncPhase.MOVIES, 0)
+                val hashDeferred = if (!freshSource) asyncHashLoad("Movies", s.id) { movieDao.contentHashesForSource(s.id) } else null
+                val categoriesStart = SystemClock.elapsedRealtime()
+                val vodCats = xtream.vodCategories(s, reportBytes)
+                Log.d(TAG, "Movies categories fetched sourceId=${s.id} count=${vodCats.size} ms=${SystemClock.elapsedRealtime() - categoriesStart}")
+                val refreshStart = SystemClock.elapsedRealtime()
+                val vodCategories = refreshCategories(s, MediaType.MOVIE, vodCats)
+                val vodMap = vodCategories.idsByRemoteId
+                Log.d(TAG, "Movies categories refreshed sourceId=${s.id} mapped=${vodMap.size} ms=${SystemClock.elapsedRealtime() - refreshStart}")
+                var vodOrder = 0
+                val toMovie = {
+                    streamId: String,
+                    name: String,
+                    icon: String?,
+                    rating: Double?,
+                    plot: String?,
+                    categoryId: String?,
+                    containerExt: String?,
+                    added: Long? ->
+                    MovieEntity(
+                        sourceId = s.id, categoryId = vodMap[categoryId], name = name,
+                        posterUrl = icon, rating = rating, plot = plot,
+                        streamUrl = xtream.movieUrl(s, streamId, containerExt),
+                        containerExt = containerExt, remoteId = streamId, addedAt = added,
+                        sortOrder = vodOrder++,
+                    )
                 }
-            }
-            if (!seriesDone) sliceByCategory(ctx, "Series", onProgress, seriesCats, { if (!seriesCleared) { runBlocking { seriesDao.clearSource(s.id) }; seriesCleared = true }; seriesDao.upsertSeries(it) }, seriesTotal, seriesTotal[0]) { cat, add ->
-                xtream.streamSeries(s, cat.id) { add(toSeries(it)) }
+                val insertFn: suspend (List<MovieEntity>) -> UpsertStats = if (freshSource) {
+                    { rows -> insertMoviesFresh(s.id, rows) }
+                } else {
+                    { rows -> upsertMoviesStable(s.id, rows, hashDeferred!!) }
+                }
+                val vodTotal = intArrayOf(0)
+                val vodRemoteIds = if (freshSource) null else HashSet<String>()
+                val bulkStart = SystemClock.elapsedRealtime()
+                bulkInsertHelper.withOptimizedBulkInsert(
+                    "movies",
+                    "movies_fts",
+                    eligible = freshSource,
+                    ftsOnly = true,
+                ) {
+                    Log.i(TAG, "Movies bulk start sourceId=${s.id}")
+                    val chunkSize = if (freshSource) BulkInsertHelper.CHUNK_FRESH else BulkInsertHelper.CHUNK
+                    val vodDone = bulkOrFallback("Movies") {
+                        chunked<MovieEntity, Boolean>(ctx, SyncPhase.MOVIES, SyncPhase.MOVIES.label, progress, insertFn, vodTotal, vodRemoteIds, { it.remoteId }, chunkSize) { add ->
+                            xtream.streamVod(s, transform = toMovie, onItem = add, onProgress = reportBytes)
+                        }
+                    }
+                    Log.i(TAG, "Movies bulk end sourceId=${s.id} complete=$vodDone unique=${vodTotal[0]} ms=${SystemClock.elapsedRealtime() - bulkStart}")
+                    if (!vodDone) {
+                        stats.usedFallback = true
+                        val fallbackStart = SystemClock.elapsedRealtime()
+                        Log.i(TAG, "Movies fallback start sourceId=${s.id} categories=${vodCats.size} bulkPartial=${vodTotal[0]}")
+                        sliceByCategory(ctx, SyncPhase.MOVIES, SyncPhase.MOVIES.label, progress, vodCats, insertFn, vodTotal, vodTotal[0], vodRemoteIds, { it.remoteId }) { cat, add ->
+                            xtream.streamVod(s, cat.id, transform = toMovie, onItem = add, onProgress = reportBytes)
+                        }
+                        Log.i(TAG, "Movies fallback end sourceId=${s.id} unique=${vodTotal[0]} ms=${SystemClock.elapsedRealtime() - fallbackStart}")
+                    }
+                    if (!freshSource && vodDone) {
+                        pruneMovies(s.id, vodRemoteIds!!)
+                        pruneCategories(s.id, MediaType.MOVIE, vodCategories.seenRemoteIds, SyncPhase.MOVIES.label)
+                    } else if (!freshSource) {
+                        Log.i(TAG, "Movies prune skipped sourceId=${s.id} reason=incomplete_bulk")
+                    }
+                }
+                progress.update(SyncPhase.MOVIES, vodTotal[0])
+                stats.processedCounts["movies"] = vodTotal[0]
+                Log.i(TAG, "Movies phase end sourceId=${s.id} unique=${vodTotal[0]} ms=${SystemClock.elapsedRealtime() - elapsedStart}")
             }
         }
     }
 
-    /** Run a content step (Movies / Series) without letting a provider-side failure abort the whole import —
-     *  the channels (and any earlier step) are already saved, so a broken VOD/Series endpoint just means that
-     *  section is missing, not a total failure. Cancellation still propagates. */
-    private suspend inline fun guardStep(label: String, block: () -> Unit) {
+    private suspend fun syncSeries(s: SourceEntity, progress: SyncCounters, stats: SyncStatsCollector) {
+        val ctx = currentCoroutineContext()
+        val freshSource = s.lastSyncAt == null
+        guardStep("series", stats) {
+            coroutineScope {
+                val elapsedStart = SystemClock.elapsedRealtime()
+                Log.i(TAG, "Series phase start sourceId=${s.id} fresh=$freshSource")
+                val reportBytes = IgnoreByteProgress
+                progress.update(SyncPhase.SERIES, 0)
+                val hashDeferred = if (!freshSource) asyncHashLoad("Series", s.id) { seriesDao.contentHashesForSource(s.id) } else null
+                val categoriesStart = SystemClock.elapsedRealtime()
+                val seriesCats = xtream.seriesCategories(s, reportBytes)
+                Log.d(TAG, "Series categories fetched sourceId=${s.id} count=${seriesCats.size} ms=${SystemClock.elapsedRealtime() - categoriesStart}")
+                val refreshStart = SystemClock.elapsedRealtime()
+                val seriesCategories = refreshCategories(s, MediaType.SERIES, seriesCats)
+                val seriesMap = seriesCategories.idsByRemoteId
+                Log.d(TAG, "Series categories refreshed sourceId=${s.id} mapped=${seriesMap.size} ms=${SystemClock.elapsedRealtime() - refreshStart}")
+                var seriesOrder = 0
+                val toSeries = {
+                    seriesId: String,
+                    name: String,
+                    cover: String?,
+                    plot: String?,
+                    rating: Double?,
+                    categoryId: String?,
+                    year: Int? ->
+                    SeriesEntity(
+                        sourceId = s.id, categoryId = seriesMap[categoryId], name = name,
+                        posterUrl = cover, plot = plot, rating = rating,
+                        year = year, remoteId = seriesId,
+                        sortOrder = seriesOrder++,
+                    )
+                }
+                val insertFn: suspend (List<SeriesEntity>) -> UpsertStats = if (freshSource) {
+                    { rows -> insertSeriesFresh(s.id, rows) }
+                } else {
+                    { rows -> upsertSeriesStable(s.id, rows, hashDeferred!!) }
+                }
+                val seriesTotal = intArrayOf(0)
+                val seriesRemoteIds = if (freshSource) null else HashSet<String>()
+                val bulkStart = SystemClock.elapsedRealtime()
+                bulkInsertHelper.withOptimizedBulkInsert(
+                    "series",
+                    "series_fts",
+                    eligible = freshSource,
+                    ftsOnly = true,
+                ) {
+                    Log.i(TAG, "Series bulk start sourceId=${s.id}")
+                    val chunkSize = if (freshSource) BulkInsertHelper.CHUNK_FRESH else BulkInsertHelper.CHUNK
+                    val seriesDone = bulkOrFallback("Series") {
+                        chunked<SeriesEntity, Boolean>(ctx, SyncPhase.SERIES, SyncPhase.SERIES.label, progress, insertFn, seriesTotal, seriesRemoteIds, { it.remoteId }, chunkSize) { add ->
+                            xtream.streamSeries(s, transform = toSeries, onItem = add, onProgress = reportBytes)
+                        }
+                    }
+                    Log.i(TAG, "Series bulk end sourceId=${s.id} complete=$seriesDone unique=${seriesTotal[0]} ms=${SystemClock.elapsedRealtime() - bulkStart}")
+                    if (!seriesDone) {
+                        stats.usedFallback = true
+                        val fallbackStart = SystemClock.elapsedRealtime()
+                        Log.i(TAG, "Series fallback start sourceId=${s.id} categories=${seriesCats.size} bulkPartial=${seriesTotal[0]}")
+                        sliceByCategory(ctx, SyncPhase.SERIES, SyncPhase.SERIES.label, progress, seriesCats, insertFn, seriesTotal, seriesTotal[0], seriesRemoteIds, { it.remoteId }) { cat, add ->
+                            xtream.streamSeries(s, cat.id, transform = toSeries, onItem = add, onProgress = reportBytes)
+                        }
+                        Log.i(TAG, "Series fallback end sourceId=${s.id} unique=${seriesTotal[0]} ms=${SystemClock.elapsedRealtime() - fallbackStart}")
+                    }
+                    if (!freshSource && seriesDone) {
+                        pruneSeries(s.id, seriesRemoteIds!!)
+                        pruneCategories(s.id, MediaType.SERIES, seriesCategories.seenRemoteIds, SyncPhase.SERIES.label)
+                    } else if (!freshSource) {
+                        Log.i(TAG, "Series prune skipped sourceId=${s.id} reason=incomplete_bulk")
+                    }
+                }
+                progress.update(SyncPhase.SERIES, seriesTotal[0])
+                stats.processedCounts["series"] = seriesTotal[0]
+                Log.i(TAG, "Series phase end sourceId=${s.id} unique=${seriesTotal[0]} ms=${SystemClock.elapsedRealtime() - elapsedStart}")
+            }
+        }
+    }
+
+    private suspend inline fun guardStep(phase: String, stats: SyncStatsCollector, block: suspend () -> Unit) {
+        val start = System.currentTimeMillis()
         try {
             block()
         } catch (c: CancellationException) {
             throw c
         } catch (e: Exception) {
-            android.util.Log.w("SyncManager", "$label import failed — keeping the rest of the import", e)
+            android.util.Log.w("SyncManager", "$phase import failed — keeping the rest of the import", e)
+            stats.phaseErrors[phase] = e.message ?: "unknown"
+        } finally {
+            stats.phaseTiming[phase] = System.currentTimeMillis() - start
         }
     }
 
@@ -163,7 +368,7 @@ class SyncManager(
      * full `get_series` / `get_vod_streams` response but serve the per-category (`&category_id=X`) requests
      * fine — without this, the bulk error skipped straight past the per-category fallback.
      */
-    private inline fun bulkOrFallback(label: String, bulk: () -> Boolean): Boolean =
+    private suspend inline fun bulkOrFallback(label: String, bulk: suspend () -> Boolean): Boolean =
         try {
             bulk()
         } catch (c: CancellationException) {
@@ -184,27 +389,33 @@ class SyncManager(
      * would loop forever re-fetching the same data. If a single category returns ~the bulk's whole count
      * and still truncates (or several categories can't be served), we stop and keep what we have.
      */
-    private fun <T> sliceByCategory(
+    private suspend fun <T> sliceByCategory(
         ctx: CoroutineContext,
+        phase: SyncPhase,
         label: String,
-        onProgress: (ImportStage) -> Unit,
+        progress: SyncCounters,
         categories: List<XtCategory>,
-        insert: suspend (List<T>) -> Unit,
+        insert: suspend (List<T>) -> UpsertStats,
         total: IntArray,
         bulkPartial: Int,
-        stream: (cat: XtCategory, add: (T) -> Unit) -> Boolean,
+        seenKeys: MutableSet<String>? = null,
+        uniqueKey: ((T) -> String?)? = null,
+        stream: suspend (cat: XtCategory, add: suspend (T) -> Unit) -> Boolean,
     ) {
         var truncations = 0
+        Log.i(TAG, "$label fallback categories begin count=${categories.size} bulkPartial=$bulkPartial currentUnique=${total[0]}")
         categories.forEachIndexed { index, cat ->
             ctx.ensureActive()
             // Gentle pacing between the many small requests so we don't trip a rate-limiter (HTTP 429)
             // while looping through every category.
-            if (index > 0) try { Thread.sleep(CATEGORY_REQUEST_DELAY_MS) } catch (_: InterruptedException) {}
+            if (index > 0) delay(CATEGORY_REQUEST_DELAY_MS)
+            val categoryStart = SystemClock.elapsedRealtime()
             val before = total[0]
+            Log.d(TAG, "$label fallback category start index=${index + 1}/${categories.size} id=${cat.id} name=${cat.name} beforeUnique=$before")
             // A single failing category (e.g. it 512s/429s) is skipped — keep importing the other categories
             // rather than losing the whole section.
             val complete = try {
-                chunked<T, Boolean>(ctx, label, onProgress, insert, total) { add -> stream(cat) { add(it) } }
+                chunked<T, Boolean>(ctx, phase, label, progress, insert, total, seenKeys, uniqueKey) { add -> stream(cat) { add(it) } }
             } catch (c: CancellationException) {
                 throw c
             } catch (e: Exception) {
@@ -217,9 +428,14 @@ class SyncManager(
                 if (isServerError) return@forEachIndexed
                 else return
             }
+            val delta = total[0] - before
+            Log.d(
+                TAG,
+                "$label fallback category end index=${index + 1}/${categories.size} id=${cat.id} " +
+                    "complete=$complete newUnique=$delta totalUnique=${total[0]} ms=${SystemClock.elapsedRealtime() - categoryStart}",
+            )
             if (!complete) {
                 truncations++
-                val delta = total[0] - before
                 if ((bulkPartial > 0 && delta >= bulkPartial) || truncations >= 3) {
                     android.util.Log.w(
                         "SyncManager",
@@ -229,160 +445,529 @@ class SyncManager(
                 }
             }
         }
+        Log.i(TAG, "$label fallback categories end totalUnique=${total[0]} truncations=$truncations")
     }
 
     private suspend fun refreshCategories(
         s: SourceEntity,
         type: MediaType,
         parsed: List<tv.own.owntv.core.parser.XtCategory>,
-    ): Map<String, Long> {
-        categoryDao.clear(s.id, type)
+    ): CategoryRefresh {
+        val start = SystemClock.elapsedRealtime()
+        Log.d(TAG, "refreshCategories start sourceId=${s.id} type=$type count=${parsed.size}")
+        val uniqueCategories = parsed.distinctBy { it.id }
+        val existing = existingCategoriesByRemoteId(s.id, type, uniqueCategories.map { it.id })
         // sortOrder = provider index, so the rail follows the provider's category order.
-        val entities = parsed.mapIndexed { i, c -> CategoryEntity(sourceId = s.id, mediaType = type, name = c.name, remoteId = c.id, sortOrder = i) }
-        val ids = categoryDao.upsertAll(entities)
-        return parsed.mapIndexedNotNull { i, c -> ids.getOrNull(i)?.let { c.id to it } }.toMap()
+        val entities = uniqueCategories.mapIndexed { i, c ->
+            CategoryEntity(
+                id = existing[c.id]?.id ?: 0,
+                sourceId = s.id,
+                mediaType = type,
+                name = c.name,
+                remoteId = c.id,
+                sortOrder = i,
+            )
+        }
+        val upsertStart = SystemClock.elapsedRealtime()
+        val upsertStats = upsertCategoriesStable(entities, existing)
+        Log.d(
+            TAG,
+            "refreshCategories upsert sourceId=${s.id} type=$type rows=${entities.size} " +
+                "dbInserted=${upsertStats.inserted} dbUpdated=${upsertStats.updated} " +
+                "dbSkipped=${upsertStats.skippedUnchanged} ms=${SystemClock.elapsedRealtime() - upsertStart}",
+        )
+        val idsByRemoteId = existingCategoriesByRemoteId(s.id, type, uniqueCategories.map { it.id }).mapValues { it.value.id }
+        return CategoryRefresh(idsByRemoteId = idsByRemoteId, seenRemoteIds = uniqueCategories.mapTo(HashSet()) { it.id }).also {
+            Log.d(TAG, "refreshCategories end sourceId=${s.id} type=$type mapped=${it.idsByRemoteId.size} totalMs=${SystemClock.elapsedRealtime() - start}")
+        }
+    }
+
+    private data class CategoryRefresh(
+        val idsByRemoteId: Map<String, Long>,
+        val seenRemoteIds: Set<String>,
+    )
+
+    private data class UpsertStats(
+        val inserted: Int = 0,
+        val updated: Int = 0,
+        val skippedUnchanged: Int = 0,
+    )
+
+    private suspend fun existingCategoriesByRemoteId(sourceId: Long, type: MediaType, remoteIds: List<String>): Map<String, CategoryEntity> =
+        remoteIds.distinct().chunked(QUERY_CHUNK).flatMap { categoryDao.findByRemoteIds(sourceId, type, it) }
+            .mapNotNull { category -> category.remoteId?.let { it to category } }
+            .toMap()
+
+    private suspend fun upsertCategoriesStable(rows: List<CategoryEntity>, existingByRemoteId: Map<String, CategoryEntity>): UpsertStats {
+        val inserts = ArrayList<CategoryEntity>()
+        val updates = ArrayList<CategoryEntity>()
+        var skipped = 0
+        rows.forEach { row ->
+            val current = row.remoteId?.let(existingByRemoteId::get)
+            when {
+                current == null -> inserts.add(row)
+                row != current -> updates.add(row)
+                else -> skipped++
+            }
+        }
+        if (updates.isNotEmpty()) categoryDao.updateAll(updates)
+        if (inserts.isNotEmpty()) categoryDao.insertAll(inserts)
+        return UpsertStats(inserted = inserts.size, updated = updates.size, skippedUnchanged = skipped)
+    }
+
+    private suspend fun upsertChannelsStable(sourceId: Long, rows: List<ChannelEntity>, hashDeferred: Deferred<Map<String, Pair<Long, Int>>>): UpsertStats {
+        val hashMap = hashDeferred.await()
+        val inserts = ArrayList<ChannelEntity>()
+        val updates = ArrayList<ChannelEntity>()
+        var skipped = 0
+        rows.forEach { row ->
+            val remoteId = row.remoteId
+            val existing = remoteId?.let { hashMap[it] }
+            val hash = row.computeContentHash()
+            when {
+                existing == null -> inserts.add(row.copy(contentHash = hash))
+                hash != existing.second -> updates.add(row.copy(id = existing.first, contentHash = hash))
+                else -> skipped++
+            }
+        }
+        if (updates.isNotEmpty()) channelDao.updateAll(updates)
+        if (inserts.isNotEmpty()) channelDao.insertAll(inserts)
+        return UpsertStats(inserted = inserts.size, updated = updates.size, skippedUnchanged = skipped)
+    }
+
+    private suspend fun insertChannelsFresh(sourceId: Long, rows: List<ChannelEntity>): UpsertStats {
+        val hashed = rows.map { it.copy(contentHash = it.computeContentHash()) }
+        channelDao.insertAll(hashed)
+        return UpsertStats(inserted = hashed.size)
+    }
+
+    private suspend fun upsertMoviesStable(sourceId: Long, rows: List<MovieEntity>, hashDeferred: Deferred<Map<String, Pair<Long, Int>>>): UpsertStats {
+        val hashMap = hashDeferred.await()
+        val inserts = ArrayList<MovieEntity>()
+        val updates = ArrayList<MovieEntity>()
+        var skipped = 0
+        rows.forEach { row ->
+            val remoteId = row.remoteId
+            val existing = remoteId?.let { hashMap[it] }
+            val hash = row.computeContentHash()
+            when {
+                existing == null -> inserts.add(row.copy(contentHash = hash))
+                hash != existing.second -> updates.add(row.copy(id = existing.first, contentHash = hash))
+                else -> skipped++
+            }
+        }
+        if (updates.isNotEmpty()) movieDao.updateAll(updates)
+        if (inserts.isNotEmpty()) movieDao.insertAll(inserts)
+        return UpsertStats(inserted = inserts.size, updated = updates.size, skippedUnchanged = skipped)
+    }
+
+    private suspend fun insertMoviesFresh(sourceId: Long, rows: List<MovieEntity>): UpsertStats {
+        val hashed = rows.map { it.copy(contentHash = it.computeContentHash()) }
+        movieDao.insertAll(hashed)
+        return UpsertStats(inserted = hashed.size)
+    }
+
+    private suspend fun upsertSeriesStable(sourceId: Long, rows: List<SeriesEntity>, hashDeferred: Deferred<Map<String, Pair<Long, Int>>>): UpsertStats {
+        val hashMap = hashDeferred.await()
+        val inserts = ArrayList<SeriesEntity>()
+        val updates = ArrayList<SeriesEntity>()
+        var skipped = 0
+        rows.forEach { row ->
+            val remoteId = row.remoteId
+            val existing = remoteId?.let { hashMap[it] }
+            val hash = row.computeContentHash()
+            when {
+                existing == null -> inserts.add(row.copy(contentHash = hash))
+                hash != existing.second -> updates.add(row.copy(id = existing.first, contentHash = hash))
+                else -> skipped++
+            }
+        }
+        if (updates.isNotEmpty()) seriesDao.updateSeries(updates)
+        if (inserts.isNotEmpty()) seriesDao.insertSeries(inserts)
+        return UpsertStats(inserted = inserts.size, updated = updates.size, skippedUnchanged = skipped)
+    }
+
+    private suspend fun insertSeriesFresh(sourceId: Long, rows: List<SeriesEntity>): UpsertStats {
+        val hashed = rows.map { it.copy(contentHash = it.computeContentHash()) }
+        seriesDao.insertSeries(hashed)
+        return UpsertStats(inserted = hashed.size)
+    }
+
+    private fun List<ContentHashProjection>.toHashLookup(): Map<String, Pair<Long, Int>> =
+        associateBy({ it.remoteId }, { it.id to it.contentHash })
+
+    private fun CoroutineScope.asyncHashLoad(
+        label: String,
+        sourceId: Long,
+        load: suspend () -> List<ContentHashProjection>,
+    ): Deferred<Map<String, Pair<Long, Int>>> = async {
+        val start = SystemClock.elapsedRealtime()
+        load().toHashLookup().also {
+            Log.d(TAG, "$label hash map loaded sourceId=$sourceId size=${it.size} ms=${SystemClock.elapsedRealtime() - start}")
+        }
+    }
+
+    private suspend fun pruneChannels(sourceId: Long, seenRemoteIds: Set<String>) =
+        pruneRemoteIds(SyncPhase.LIVE.label, sourceId, seenRemoteIds, channelDao::remoteIdsForSource, channelDao::deleteByRemoteIds)
+
+    private suspend fun pruneMovies(sourceId: Long, seenRemoteIds: Set<String>) =
+        pruneRemoteIds(SyncPhase.MOVIES.label, sourceId, seenRemoteIds, movieDao::remoteIdsForSource, movieDao::deleteByRemoteIds)
+
+    private suspend fun pruneSeries(sourceId: Long, seenRemoteIds: Set<String>) =
+        pruneRemoteIds(SyncPhase.SERIES.label, sourceId, seenRemoteIds, seriesDao::remoteIdsForSource, seriesDao::deleteByRemoteIds)
+
+    private suspend fun pruneCategories(sourceId: Long, type: MediaType, seenRemoteIds: Set<String>, label: String) {
+        val start = SystemClock.elapsedRealtime()
+        val stale = categoryDao.remoteIdsForSource(sourceId, type).filterNot(seenRemoteIds::contains)
+        stale.chunked(QUERY_CHUNK).forEach { categoryDao.deleteByRemoteIds(sourceId, type, it) }
+        Log.i(TAG, "$label category prune sourceId=$sourceId type=$type stale=${stale.size} ms=${SystemClock.elapsedRealtime() - start}")
+    }
+
+    private suspend fun pruneRemoteIds(
+        label: String,
+        sourceId: Long,
+        seenRemoteIds: Set<String>,
+        loadExisting: suspend (Long) -> List<String>,
+        deleteRemoteIds: suspend (Long, List<String>) -> Unit,
+    ) {
+        val start = SystemClock.elapsedRealtime()
+        val stale = loadExisting(sourceId).filterNot(seenRemoteIds::contains)
+        stale.chunked(QUERY_CHUNK).forEach { deleteRemoteIds(sourceId, it) }
+        Log.i(TAG, "$label content prune sourceId=$sourceId stale=${stale.size} ms=${SystemClock.elapsedRealtime() - start}")
     }
 
     // ---------------- M3U ----------------
-    private suspend fun syncM3u(s: SourceEntity, onProgress: (ImportStage) -> Unit) {
+    private suspend fun syncM3u(s: SourceEntity, progress: SyncCounters, stats: SyncStatsCollector) {
+        val channelsStart = System.currentTimeMillis()
+        val elapsedStart = SystemClock.elapsedRealtime()
         val ctx = currentCoroutineContext()
-
-        // Clear only when we have real data, not before parsing — a network error during
-        // fetch shouldn't wipe the old working sync.
-        var channelsCleared = false
-        var moviesCleared = false
-        var liveCatsCleared = false
-        var movieCatsCleared = false
-
-        val groupToCategoryId = HashMap<String, Long>()
-        val buffer = ArrayList<ChannelEntity>(CHUNK)
-        val movieBuffer = ArrayList<MovieEntity>(CHUNK)
-        var processed = 0
-        var order = 0 // playlist position — lets "Playlist order" sorting replay the file's order
-
-        val onEntry: (tv.own.owntv.core.parser.M3uEntry) -> Unit = { e ->
-            val isVod = e.isVod
-            val mediaType = if (isVod) MediaType.MOVIE else MediaType.LIVE
-            // Deferred clear — only wipe the old data once we're about to write the first real row.
-            if (isVod) {
-                if (!moviesCleared) { runBlocking { movieDao.clearSource(s.id) }; moviesCleared = true }
-                if (!movieCatsCleared) { runBlocking { categoryDao.clear(s.id, MediaType.MOVIE) }; movieCatsCleared = true }
-            } else {
-                if (!channelsCleared) { runBlocking { channelDao.clearSource(s.id) }; channelsCleared = true }
-                if (!liveCatsCleared) { runBlocking { categoryDao.clear(s.id, MediaType.LIVE) }; liveCatsCleared = true }
-            }
-            val categoryId = e.groupTitle?.let { group ->
-                groupToCategoryId.getOrPut(group) {
-                    runBlocking {
-                        categoryDao.upsertAll(
-                            // sortOrder = first-seen position of the group in the playlist
-                            listOf(CategoryEntity(sourceId = s.id, mediaType = mediaType, name = group, remoteId = group, sortOrder = groupToCategoryId.size)),
-                        ).first()
-                    }
-                }
-            }
-            if (isVod) {
-                // VOD entries become movies in the movie grid, not live channels.
-                movieBuffer.add(
-                    MovieEntity(
-                        sourceId = s.id, categoryId = categoryId, name = e.name,
-                        posterUrl = e.logo, streamUrl = e.streamUrl,
-                        remoteId = null, sortOrder = order++,
-                    ),
-                )
-                if (movieBuffer.size >= CHUNK) {
-                    ctx.ensureActive()
-                    runBlocking { movieDao.upsertAll(movieBuffer.toList()) }
-                    processed += movieBuffer.size
-                    movieBuffer.clear()
-                    onProgress(ImportStage("Movies", processed, null))
-                }
-            } else {
-                buffer.add(
-                    ChannelEntity(
-                        sourceId = s.id, categoryId = categoryId, name = e.name, logoUrl = e.logo,
-                        streamUrl = e.streamUrl, epgChannelId = e.tvgId, number = e.tvgChno,
-                        remoteId = null, // M3U has no stable id; rely on clear-then-insert
-                        sortOrder = order++,
-                        catchup = e.catchup != null, catchupDays = e.catchupDays ?: 0, catchupSource = e.catchupSource,
-                    ),
-                )
-            }
-            if (buffer.size >= CHUNK) {
-                ctx.ensureActive()
-                runBlocking { channelDao.upsertAll(buffer.toList()) }
-                processed += buffer.size
-                buffer.clear()
-                onProgress(ImportStage("Channels", processed, null))
-            }
-            if (movieBuffer.size >= CHUNK) {
-                ctx.ensureActive()
-                runBlocking { movieDao.upsertAll(movieBuffer.toList()) }
-                movieBuffer.clear()
-            }
-        }
+        val freshSource = s.lastSyncAt == null
+        val chunkSize = if (freshSource) BulkInsertHelper.CHUNK_FRESH else BulkInsertHelper.CHUNK
+        val reportBytes = IgnoreByteProgress
         // A locally-picked playlist file (in-app StorageBrowser gives an absolute path; also tolerate
         // file://content:// URIs) is read straight from the device; a normal URL is downloaded. Same parser.
         val isLocal = s.url.startsWith("/") || s.url.startsWith("file://") || s.url.startsWith("content://")
-        val header = if (isLocal) {
-            val input = if (s.url.startsWith("/")) {
-                java.io.File(s.url).inputStream()
-            } else {
-                context.contentResolver.openInputStream(android.net.Uri.parse(s.url))
-                    ?: throw java.io.IOException("Couldn't open the playlist file. Re-pick it (it may have moved).")
-            }
-            input.use { m3u.parse(it, onEntry) }
-        } else {
-            http.get(s.url, s.userAgent) { input -> m3u.parse(input, onEntry) }
-        }
-        if (buffer.isNotEmpty()) {
-            runBlocking { channelDao.upsertAll(buffer.toList()) }
-            processed += buffer.size
-            onProgress(ImportStage("Channels", processed, null))
-        }
-        if (movieBuffer.isNotEmpty()) {
-            runBlocking { movieDao.upsertAll(movieBuffer.toList()) }
-            onProgress(ImportStage("Movies", movieBuffer.size, null))
-        }
+        val localPlaylist = if (isLocal) openLocalPlaylist(s.url) else null
+        Log.i(TAG, "M3U phase start sourceId=${s.id} local=$isLocal bytesTotal=${localPlaylist?.second ?: -1}")
+        progress.update(SyncPhase.LIVE, 0)
 
+        var processed = 0
+        val header = bulkInsertHelper.withOptimizedBulkInsert(
+            "channels",
+            "channels_fts",
+            eligible = freshSource,
+            ftsOnly = true,
+        ) {
+            val clearChannelsStart = SystemClock.elapsedRealtime()
+            channelDao.clearSource(s.id)
+            Log.d(TAG, "M3U clear channels sourceId=${s.id} ms=${SystemClock.elapsedRealtime() - clearChannelsStart}")
+            val clearCategoriesStart = SystemClock.elapsedRealtime()
+            categoryDao.clear(s.id, MediaType.LIVE)
+            Log.d(TAG, "M3U clear categories sourceId=${s.id} ms=${SystemClock.elapsedRealtime() - clearCategoriesStart}")
+
+            val groupToCategoryId = HashMap<String, Long>()
+            val pendingCategoryGroups = LinkedHashSet<String>()
+            val pendingCategories = ArrayList<CategoryEntity>(chunkSize)
+            val buffer = ArrayList<PendingM3uChannel>(chunkSize)
+            var order = 0 // playlist position — lets "Playlist order" sorting replay the file's order
+            var categoryOrder = 0
+
+            fun queueCategory(group: String) {
+                if (groupToCategoryId.containsKey(group) || !pendingCategoryGroups.add(group)) return
+                pendingCategories.add(
+                    CategoryEntity(
+                        sourceId = s.id,
+                        mediaType = MediaType.LIVE,
+                        name = group,
+                        remoteId = group,
+                        sortOrder = categoryOrder++,
+                    ),
+                )
+            }
+
+            suspend fun flushCategories() {
+                if (pendingCategories.isEmpty()) return
+                ctx.ensureActive()
+                val groups = pendingCategoryGroups.toList()
+                val categories = pendingCategories.toList()
+                val start = SystemClock.elapsedRealtime()
+                val ids = categoryDao.upsertAll(categories)
+                groups.forEachIndexed { index, group ->
+                    ids.getOrNull(index)?.let { groupToCategoryId[group] = it }
+                }
+                Log.d(TAG, "M3U categories flush sourceId=${s.id} rows=${categories.size} mapped=${groups.size} ms=${SystemClock.elapsedRealtime() - start}")
+                pendingCategoryGroups.clear()
+                pendingCategories.clear()
+            }
+
+            suspend fun flushChannels() {
+                if (buffer.isEmpty()) return
+                flushCategories()
+                ctx.ensureActive()
+                val channels = buffer.map { item ->
+                    val entry = item.entry
+                    ChannelEntity(
+                        sourceId = s.id,
+                        categoryId = entry.groupTitle?.let { groupToCategoryId[it] },
+                        name = entry.name,
+                        logoUrl = entry.logo,
+                        streamUrl = entry.streamUrl,
+                        epgChannelId = entry.tvgId,
+                        number = entry.tvgChno,
+                        remoteId = null, // M3U has no stable id; rely on clear-then-insert
+                        sortOrder = item.order,
+                        catchup = entry.catchup != null,
+                        catchupDays = entry.catchupDays ?: 0,
+                        catchupSource = entry.catchupSource,
+                    )
+                }
+                val start = SystemClock.elapsedRealtime()
+                channelDao.upsertAll(channels)
+                processed += channels.size
+                Log.d(TAG, "M3U channel flush sourceId=${s.id} rows=${channels.size} processed=$processed ms=${SystemClock.elapsedRealtime() - start}")
+                buffer.clear()
+                progress.update(SyncPhase.LIVE, processed)
+            }
+
+            val onEntry: suspend (tv.own.owntv.core.parser.M3uEntry) -> Unit = { e ->
+                e.groupTitle?.let(::queueCategory)
+                buffer.add(PendingM3uChannel(order = order++, entry = e))
+                if (buffer.size >= chunkSize) {
+                    flushChannels()
+                }
+            }
+            val header = if (isLocal) {
+                localPlaylist!!.first.use { input -> m3u.parse(input, onEntry) }
+            } else {
+                http.get(s.url, s.userAgent, reportBytes) { input -> m3u.parse(input, onEntry) }
+            }
+            if (buffer.isNotEmpty()) {
+                flushChannels()
+            }
+            header
+        }
         // Persist the playlist's EPG url (url-tvg) for the EPG engine if the source didn't have one.
         if (!header.urlTvg.isNullOrBlank() && s.epgUrl.isNullOrBlank()) {
             sourceDao.update(s.copy(epgUrl = header.urlTvg))
         }
+        progress.update(SyncPhase.LIVE, processed)
+        stats.phaseTiming["channels"] = System.currentTimeMillis() - channelsStart
+        stats.processedCounts["channels"] = processed
+        Log.i(TAG, "M3U phase end sourceId=${s.id} processed=$processed ms=${SystemClock.elapsedRealtime() - elapsedStart}")
     }
+
+    private data class PendingM3uChannel(
+        val order: Int,
+        val entry: tv.own.owntv.core.parser.M3uEntry,
+    )
 
     /**
      * Drives a push-stream [producer] that feeds items into [add]; flushes to the DB via [insert] in
-     * chunks of [CHUNK], reporting progress. Inserts run blocking on the IO thread (we want
-     * sequential back-pressure), and cancellation is checked each chunk.
+     * chunks of [BulkInsertHelper.CHUNK], reporting progress. Inserts are awaited to provide sequential back-pressure,
+     * and cancellation is checked each chunk.
      */
-    private fun <T, R> chunked(
+    private suspend fun <T, R> chunked(
         ctx: CoroutineContext,
+        phase: SyncPhase,
         label: String,
-        onProgress: (ImportStage) -> Unit,
-        insert: suspend (List<T>) -> Unit,
-        total: IntArray, // shared [0] running count for the whole media type, so progress never resets
-        producer: (add: (T) -> Unit) -> R,
+        progress: SyncCounters,
+        insert: suspend (List<T>) -> UpsertStats,
+        total: IntArray, // shared [0] running unique count for the whole media type, so progress never resets
+        seenKeys: MutableSet<String>? = null,
+        uniqueKey: ((T) -> String?)? = null,
+        chunkSize: Int = BulkInsertHelper.CHUNK,
+        producer: suspend (add: suspend (T) -> Unit) -> R,
     ): R {
-        val buffer = ArrayList<T>(CHUNK)
-        fun flush() {
+        val buffer = ArrayList<T>(chunkSize)
+        var chunkIndex = 0
+        var skippedDuplicates = 0
+        val chunkRunStart = SystemClock.elapsedRealtime()
+        suspend fun flush() {
             if (buffer.isEmpty()) return
             ctx.ensureActive()
-            runBlocking { insert(buffer.toList()) }
-            total[0] += buffer.size
+            chunkIndex++
+            val rawCount = buffer.size
+            val flushStart = SystemClock.elapsedRealtime()
+            val pendingKeys = ArrayList<String>()
+            val rows = buffer.toList().filterNewItems(seenKeys, uniqueKey, pendingKeys)
+            val filterMs = SystemClock.elapsedRealtime() - flushStart
             buffer.clear()
-            onProgress(ImportStage(label, total[0], null))
+            val skipped = rawCount - rows.size
+            skippedDuplicates += skipped
+            if (rows.isEmpty()) {
+                Log.d(
+                    TAG,
+                    "$label chunk skipped phase=${phase.label} chunk=$chunkIndex raw=$rawCount skipped=$skipped " +
+                        "totalSkipped=$skippedDuplicates totalUnique=${total[0]} filterMs=$filterMs elapsedMs=${SystemClock.elapsedRealtime() - chunkRunStart}",
+                )
+                return
+            }
+            val insertStart = SystemClock.elapsedRealtime()
+            val upsertStats = insert(rows)
+            val insertMs = SystemClock.elapsedRealtime() - insertStart
+            seenKeys?.addAll(pendingKeys)
+            total[0] += rows.size
+            if (shouldLogChunk(chunkIndex, insertMs, skipped)) {
+                Log.d(
+                    TAG,
+                    "$label chunk applied phase=${phase.label} chunk=$chunkIndex raw=$rawCount accepted=${rows.size} " +
+                        "dbInserted=${upsertStats.inserted} dbUpdated=${upsertStats.updated} dbSkipped=${upsertStats.skippedUnchanged} " +
+                        "dedupeSkipped=$skipped totalDedupeSkipped=$skippedDuplicates totalUnique=${total[0]} " +
+                        "filterMs=$filterMs applyMs=$insertMs elapsedMs=${SystemClock.elapsedRealtime() - chunkRunStart}",
+                )
+            }
+            progress.update(phase, total[0])
         }
         val result = producer { item ->
             buffer.add(item)
-            if (buffer.size >= CHUNK) flush()
+            if (buffer.size >= chunkSize) flush()
         }
         flush()
+        Log.i(
+            TAG,
+            "$label stream done phase=${phase.label} chunks=$chunkIndex totalUnique=${total[0]} " +
+                "skippedDuplicates=$skippedDuplicates elapsedMs=${SystemClock.elapsedRealtime() - chunkRunStart}",
+        )
         return result
     }
 
+    private fun shouldLogChunk(chunkIndex: Int, insertMs: Long, skipped: Int): Boolean =
+        chunkIndex <= 3 || chunkIndex % 20 == 0 || insertMs >= SLOW_INSERT_LOG_MS || skipped > 0
+
+    private fun <T> List<T>.filterNewItems(
+        seenKeys: MutableSet<String>?,
+        uniqueKey: ((T) -> String?)?,
+        pendingKeys: MutableList<String>,
+    ): List<T> {
+        if (seenKeys == null || uniqueKey == null) return this
+        val rows = ArrayList<T>(size)
+        val batchKeys = HashSet<String>()
+        forEach { item ->
+            val key = uniqueKey(item)
+            if (key == null) {
+                rows.add(item)
+            } else if (!seenKeys.contains(key) && batchKeys.add(key)) {
+                pendingKeys.add(key)
+                rows.add(item)
+            }
+        }
+        return rows
+    }
+
+    private fun openLocalPlaylist(url: String): Pair<InputStream, Long?> = when {
+        url.startsWith("/") -> {
+            val file = File(url)
+            file.inputStream() to file.length().takeIf { it >= 0 }
+        }
+        url.startsWith("file://") -> {
+            val uri = Uri.parse(url)
+            val file = File(uri.path ?: throw java.io.IOException("Couldn't open the playlist file. Re-pick it (it may have moved.)"))
+            file.inputStream() to file.length().takeIf { it >= 0 }
+        }
+        url.startsWith("content://") -> {
+            val uri = Uri.parse(url)
+            val totalBytes = runCatching {
+                context.contentResolver.openAssetFileDescriptor(uri, "r")?.use { afd ->
+                    afd.length.takeIf { it >= 0 }
+                }
+            }.getOrNull()
+            val input = context.contentResolver.openInputStream(uri)
+                ?: throw java.io.IOException("Couldn't open the playlist file. Re-pick it (it may have moved.)")
+            input to totalBytes
+        }
+        else -> throw java.io.IOException("Unsupported local playlist path")
+    }
+
+    private fun logStats(stats: SyncRunStats) {
+        val tag = "SyncManager"
+        val duration = stats.finishedAt - stats.startedAt
+        val result = when (stats.result) {
+            is SyncResult.Success -> {
+                if (stats.result.warnings.isEmpty()) "Success" else "Success with ${stats.result.warnings.size} warning(s)"
+            }
+            SyncResult.Cancelled -> "Cancelled"
+            is SyncResult.Failed -> "Failed: ${stats.result.message}"
+        }
+        android.util.Log.i(tag, "── Sync stats for source ${stats.sourceId} ──")
+        android.util.Log.i(tag, "Result: $result | Duration: ${duration}ms | Fallback: ${stats.usedFallback}")
+        if (stats.phaseTiming.isNotEmpty()) {
+            android.util.Log.i(tag, "Phases: ${stats.phaseTiming.entries.joinToString { "${it.key}=${it.value}ms" }}")
+        }
+        if (stats.processedCounts.isNotEmpty()) {
+            android.util.Log.i(tag, "Counts: ${stats.processedCounts.entries.joinToString { "${it.key}=${it.value}" }}")
+        }
+        if (stats.phaseErrors.isNotEmpty()) {
+            android.util.Log.w(tag, "Phase errors: ${stats.phaseErrors.entries.joinToString { "${it.key}=${it.value}" }}")
+        }
+    }
+
+    private class SyncCounters(
+        contentTypes: SyncContentTypes,
+        private val onProgress: (ImportStage) -> Unit,
+    ) {
+        private val lock = Any()
+        private val liveActive = contentTypes.live
+        private val moviesActive = contentTypes.movies
+        private val seriesActive = contentTypes.series
+        private var liveProcessed = 0
+        private var moviesProcessed = 0
+        private var seriesProcessed = 0
+
+        fun update(phase: SyncPhase, count: Int): ImportStage {
+            val snapshot = synchronized(lock) {
+                when (phase) {
+                    SyncPhase.LIVE -> liveProcessed = count
+                    SyncPhase.MOVIES -> moviesProcessed = count
+                    SyncPhase.SERIES -> seriesProcessed = count
+                }
+                snapshotLocked()
+            }
+            onProgress(snapshot)
+            return snapshot
+        }
+
+        fun completeAll(): ImportStage {
+            val snapshot = synchronized(lock) { snapshotLocked() }
+            onProgress(snapshot)
+            return snapshot
+        }
+
+        private fun snapshotLocked() = ImportStage(
+            liveProcessed = liveProcessed,
+            moviesProcessed = moviesProcessed,
+            seriesProcessed = seriesProcessed,
+            liveActive = liveActive,
+            moviesActive = moviesActive,
+            seriesActive = seriesActive,
+        )
+    }
+
+    internal class SyncStatsCollector(val sourceId: Long) {
+        val startedAt = System.currentTimeMillis()
+        val phaseTiming = java.util.concurrent.ConcurrentHashMap<String, Long>()
+        val processedCounts = java.util.concurrent.ConcurrentHashMap<String, Int>()
+        val phaseErrors = java.util.concurrent.ConcurrentHashMap<String, String>()
+        @Volatile var usedFallback = false
+
+        fun warnings() = phaseErrors.map { (phase, message) -> SyncWarning(phase, message) }
+
+        fun build(result: SyncResult) = SyncRunStats(
+            sourceId = sourceId,
+            startedAt = startedAt,
+            finishedAt = System.currentTimeMillis(),
+            result = result,
+            phaseTiming = phaseTiming.toMap(),
+            processedCounts = processedCounts.toMap(),
+            phaseErrors = phaseErrors.toMap(),
+            usedFallback = usedFallback,
+        )
+    }
+
     companion object {
-        const val CHUNK = 500
+        private const val TAG = "SyncManager"
+        private const val QUERY_CHUNK = 500
         private const val CATEGORY_REQUEST_DELAY_MS = 150L // pace per-category fallback requests (avoid HTTP 429)
+        private const val SLOW_INSERT_LOG_MS = 250L
+        private val IgnoreByteProgress: (Long, Long?) -> Unit = { _, _ -> }
     }
 }

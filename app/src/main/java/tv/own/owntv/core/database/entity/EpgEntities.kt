@@ -1,8 +1,10 @@
 package tv.own.owntv.core.database.entity
 
+import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.Index
 import androidx.room.PrimaryKey
+import java.util.Objects
 
 /**
  * EPG channel descriptor (XMLTV `<channel>` or an Xtream epg id). Channels link to it via their
@@ -38,6 +40,7 @@ data class EpgChannelEntity(
         // Guide read-index (v4.0.0 EPG-perf): also created at runtime by EpgRepository.ensureEpgIndexes()
         // and in MIGRATION_3_4 — declared here so Room's schema validation expects it.
         Index(value = ["sourceId", "epgChannelId"]),
+        Index(value = ["sourceId", "epgChannelId", "startMs"], unique = true, name = "index_epg_programmes_natural_key"),
     ],
 )
 data class EpgProgrammeEntity(
@@ -48,4 +51,19 @@ data class EpgProgrammeEntity(
     val stopMs: Long,
     val title: String,
     val description: String? = null,
+    @ColumnInfo(defaultValue = "0") val contentHash: Int = 0,
 )
+
+data class EpgHashProjection(
+    val id: Long,
+    val epgChannelId: String,
+    val startMs: Long,
+    val contentHash: Int,
+)
+
+data class EpgProgrammeKey(
+    val epgChannelId: String,
+    val startMs: Long,
+)
+
+fun EpgProgrammeEntity.computeContentHash(): Int = Objects.hash(title, description, stopMs)

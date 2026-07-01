@@ -1,11 +1,14 @@
 package tv.own.owntv.core.repository
 
+import android.os.SystemClock
+import android.util.Log
 import kotlinx.coroutines.flow.Flow
 import tv.own.owntv.core.database.dao.SourceDao
 import tv.own.owntv.core.database.entity.ProfileSourceCrossRef
 import tv.own.owntv.core.database.entity.SourceEntity
 import tv.own.owntv.core.model.SourceType
 import tv.own.owntv.core.sync.ImportStage
+import tv.own.owntv.core.sync.SyncContentTypes
 import tv.own.owntv.core.sync.SyncManager
 import tv.own.owntv.core.sync.SyncResult
 
@@ -47,16 +50,40 @@ class SourceRepository(
 
     suspend fun updateSource(source: SourceEntity) = sourceDao.update(source)
 
-    suspend fun sync(source: SourceEntity, onProgress: (ImportStage) -> Unit): SyncResult {
+    suspend fun sync(source: SourceEntity, onProgress: (ImportStage) -> Unit, contentTypes: SyncContentTypes = SyncContentTypes()): SyncResult {
+        val startedAt = SystemClock.elapsedRealtime()
+        Log.i(TAG, "sync wrapper start sourceId=${source.id} type=${source.type} contentTypes=$contentTypes")
         // Snapshot favorites/history/resume with stable keys BEFORE the sync clears content (their ids
         // change on every refresh, so they'd otherwise orphan — count badge set, list empty).
-        val snapshot = runCatching { userData.exportAll() }.getOrNull()
-        val result = syncManager.sync(source, onProgress)
-        // Re-attach the snapshot (and any restored backup data) to the new ids even when the sync
-        // failed partway (its clear-then-insert is deferred per chunk, so a partial import can still
-        // have wiped some old content) — otherwise those favorites stay invisible until a later sync.
-        // Only a full success is allowed to purge rows that are genuinely gone (provider removed them).
-        runCatching { userData.relinkAfterSync(snapshot ?: org.json.JSONArray(), purge = result == SyncResult.Success) }
+        val snapshotStartedAt = SystemClock.elapsedRealtime()
+        val snapshot = runCatching { userData.exportForSource(source.id) }
+            .onSuccess { Log.i(TAG, "userData export sourceId=${source.id} rows=${it.length()} ms=${SystemClock.elapsedRealtime() - snapshotStartedAt}") }
+            .onFailure { Log.w(TAG, "userData export failed sourceId=${source.id} ms=${SystemClock.elapsedRealtime() - snapshotStartedAt}", it) }
+            .getOrNull()
+        val coreStartedAt = SystemClock.elapsedRealtime()
+        val (result, _) = syncManager.sync(source, onProgress, contentTypes)
+        Log.i(TAG, "core sync sourceId=${source.id} result=${result.name()} ms=${SystemClock.elapsedRealtime() - coreStartedAt}")
+        // Always re-attach the snapshot to the new ids — a failed/cancelled sync can still have
+        // rewritten some rows (M3U is clear-then-insert; Xtream REPLACE-upserts renumber ids), and
+        // without a relink those favorites/history/resume entries turn invisible until a later
+        // successful sync. Purging genuinely-gone rows is only allowed after a FULL success:
+        // a partial content-type sync never touched the other types, and a failure proves nothing.
+        val purge = result is SyncResult.Success && contentTypes == SyncContentTypes()
+        val relinkStartedAt = SystemClock.elapsedRealtime()
+        runCatching { userData.relinkAfterSync(snapshot ?: org.json.JSONArray(), purge = purge) }
+            .onSuccess { Log.i(TAG, "userData relink sourceId=${source.id} rows=${snapshot?.length() ?: 0} purge=$purge ms=${SystemClock.elapsedRealtime() - relinkStartedAt}") }
+            .onFailure { Log.w(TAG, "userData relink failed sourceId=${source.id} ms=${SystemClock.elapsedRealtime() - relinkStartedAt}", it) }
+        Log.i(TAG, "sync wrapper end sourceId=${source.id} result=${result.name()} totalMs=${SystemClock.elapsedRealtime() - startedAt}")
         return result
     }
+
+    private companion object {
+        const val TAG = "SourceRepository"
+    }
+}
+
+private fun SyncResult.name(): String = when (this) {
+    is SyncResult.Success -> "Success"
+    is SyncResult.Failed -> "Failed"
+    SyncResult.Cancelled -> "Cancelled"
 }

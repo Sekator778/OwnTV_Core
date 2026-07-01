@@ -1,9 +1,13 @@
 package tv.own.owntv.core.repository
 
+import android.os.SystemClock
+import android.util.Log
+import androidx.room.withTransaction
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
+import tv.own.owntv.core.database.BulkInsertHelper
 import tv.own.owntv.core.customize.CustomizationStore
 import tv.own.owntv.core.database.dao.ChannelDao
 import tv.own.owntv.core.database.dao.EpgDao
@@ -12,6 +16,7 @@ import tv.own.owntv.features.settings.data.SettingsRepository
 import tv.own.owntv.core.database.entity.EpgChannelEntity
 import tv.own.owntv.core.database.entity.EpgProgrammeEntity
 import tv.own.owntv.core.database.entity.SourceEntity
+import tv.own.owntv.core.database.entity.computeContentHash
 import tv.own.owntv.core.model.SourceType
 import tv.own.owntv.core.network.HttpClient
 import tv.own.owntv.core.parser.XmltvParser
@@ -32,6 +37,7 @@ class EpgRepository(
     private val settings: SettingsRepository,
     private val context: android.content.Context,
     private val db: tv.own.owntv.core.database.OwnTVDatabase,
+    private val bulkInsertHelper: BulkInsertHelper,
 ) {
 
     /** Where a source's downloaded XMLTV is cached, so a later smart-match can top up programmes from it
@@ -46,11 +52,21 @@ class EpgRepository(
      * who already have EPG) and after each EPG sync (for brand-new EPG).
      */
     suspend fun ensureEpgIndexes() = withContext(Dispatchers.IO) {
-        runCatching {
+        try {
+            val startedAt = SystemClock.elapsedRealtime()
             db.openHelper.writableDatabase.execSQL(
                 "CREATE INDEX IF NOT EXISTS index_epg_programmes_sourceId_epgChannelId ON epg_programmes(sourceId, epgChannelId)",
             )
+            Log.d("EpgRepository", "ensureEpgIndexes ms=${SystemClock.elapsedRealtime() - startedAt}")
+        } catch (c: CancellationException) {
+            throw c
+        } catch (e: Exception) {
+            Log.w("EpgRepository", "Unable to create EPG guide index", e)
         }
+    }
+
+    suspend fun countProgrammes(storeId: Long): Int = withContext(Dispatchers.IO) {
+        epgDao.countForSources(listOf(storeId))
     }
 
     /**
@@ -62,11 +78,25 @@ class EpgRepository(
      */
     private suspend fun neededEpgIds(): Set<String>? {
         val ids = HashSet<String>()
-        runCatching { channelDao.allEpgChannelIds().forEach { ids.add(it) } } // already lower+trim from SQL
-        runCatching {
+        try {
+            channelDao.allEpgChannelIds().forEach { ids.add(it) } // already lower+trim from SQL
+        } catch (c: CancellationException) {
+            throw c
+        } catch (e: NoProgrammesInWindowException) {
+            throw e
+        } catch (e: Exception) {
+            Log.w("EpgRepository", "Unable to read channel EPG ids — using unfiltered guide sync", e)
+        }
+        try {
             val pid = settings.activeProfileId.first()
-            if (pid >= 0) customize.observe(pid, MediaType.LIVE).first().epgMatches.values
-                .forEach { ids.add(it.trim().lowercase()) }
+            if (pid >= 0) {
+                customize.observe(pid, MediaType.LIVE).first().epgMatches.values
+                    .forEach { ids.add(it.trim().lowercase()) }
+            }
+        } catch (c: CancellationException) {
+            throw c
+        } catch (e: Exception) {
+            Log.w("EpgRepository", "Unable to read custom EPG matches — using unfiltered guide sync", e)
         }
         return ids.ifEmpty { null }
     }
@@ -79,10 +109,8 @@ class EpgRepository(
 
     fun hasGuide(source: SourceEntity): Boolean = guideUrl(source) != null
 
-    /**
-     * Refresh one playlist source's guide (used by the one-time migration). Returns programmes stored.
-     */
-    suspend fun refresh(source: SourceEntity, onProgress: (Int) -> Unit = {}): Int {
+    /** Refresh one playlist source's guide (used by the one-time migration). Returns programmes written. */
+    suspend fun refresh(source: SourceEntity, onProgress: (channels: Int, programmes: Int) -> Unit = { _, _ -> }): Int {
         val url = guideUrl(source) ?: return 0
         return refreshUrl(source.id, url, source.userAgent, onProgress)
     }
@@ -91,71 +119,225 @@ class EpgRepository(
      * Download [url] (XMLTV, gzip-aware) into the guide tables keyed by [storeId], keeping only the
      * rolling window. Used for standalone EPG sources (negative ids). Throws on network/parse failure.
      */
-    suspend fun refreshUrl(storeId: Long, url: String, userAgent: String?, onProgress: (Int) -> Unit = {}): Int = withContext(Dispatchers.IO) {
+    suspend fun refreshUrl(
+        storeId: Long,
+        url: String,
+        userAgent: String?,
+        onProgress: (channels: Int, programmes: Int) -> Unit = { _, _ -> },
+    ): Int = withContext(Dispatchers.IO) {
         val now = System.currentTimeMillis()
+        val startedAt = SystemClock.elapsedRealtime()
         val from = now - WINDOW_BACK_MS
         val to = now + WINDOW_AHEAD_MS
-
-        epgDao.clearSource(storeId) // clear-then-insert (no unique key on programmes to REPLACE on)
+        val globallyEmpty = bulkInsertHelper.tableIsEmpty("epg_programmes")
+        val sourceEmpty = epgDao.countForSources(listOf(storeId)) == 0
+        val freshSource = sourceEmpty
 
         // Filter programmes to the channels the user actually has (tvg-ids + persisted matches). Public
         // feeds carry far more channels than the user owns, so this is the single biggest sync speedup —
         // ~10–20× fewer rows. We still store ALL <channel> entries (cheap, needed as smart-match candidates).
         // Null = couldn't determine any ids → don't filter (never reduce the guide to empty).
         val needed = neededEpgIds()
-
+        Log.d("EpgRepository", "EPG channel filter sourceId=$storeId ids=${needed?.size ?: 0} active=${needed != null}")
+        val chunkSize = if (freshSource) BulkInsertHelper.CHUNK_FRESH else BulkInsertHelper.CHUNK
         val channels = LinkedHashMap<String, EpgChannelEntity>()
-        val buffer = ArrayList<EpgProgrammeEntity>(CHUNK)
-        var stored = 0
+        val channelsWithProgrammes = HashSet<String>()
+        val buffer = ArrayList<EpgProgrammeEntity>(chunkSize)
+        // Per-channel, lazily-loaded and capped hash tracker: huge guides (millions of programme rows)
+        // must never be mirrored into one giant in-memory map on a low-RAM TV box. Channels beyond the
+        // cap degrade to write-through (REPLACE on the natural-key unique index keeps that correct).
+        val hashTracker = ProgrammeHashTracker(epgDao, storeId, freshSource, MAX_TRACKED_PROGRAMMES)
+        var processedCount = 0
+        var writtenCount = 0
+        var inserted = 0
+        var updated = 0
+        var skipped = 0
+        var parseCompleted = false
+        var removedProgrammes = 0
+        var removedChannels = 0
 
         // Stream the feed: parse it as it downloads (no waiting for the whole file) while ALSO teeing the raw
         // bytes into a local cache file. The retained file lets a later smart-match top up just that channel's
-        // programmes without another network round-trip — without slowing the live sync.
+        // programmes without another network round-trip — without slowing the live sync. The first
+        // replacement batch is committed atomically so readers keep seeing the old guide until the new rows
+        // are ready.
         val file = cacheFile(storeId)
-        try {
-        file.outputStream().use { out ->
-        http.get(url, userAgent) { input ->
-            XmltvParser.parse(
-                TeeInputStream(input, out),
-                onChannel = { id, name ->
-                    // Ids are stored normalized (trim+lowercase) so guide lookups can use the
-                    // (epgChannelId, startMs) index directly — XMLTV ids often differ from the
-                    // panel's epg_channel_id only in case.
-                    val key = id.trim().lowercase()
-                    channels.getOrPut(key) { EpgChannelEntity(sourceId = storeId, epgChannelId = key, displayName = name) }
-                },
-                onProgramme = { channelId, startMs, stopMs, title, desc ->
-                    val key = channelId.trim().lowercase()
-                    if (stopMs > from && startMs < to && (needed == null || key in needed)) {
-                        buffer.add(
-                            EpgProgrammeEntity(
-                                sourceId = storeId, epgChannelId = key,
-                                startMs = startMs, stopMs = stopMs, title = title, description = desc,
-                            ),
-                        )
-                        if (buffer.size >= CHUNK) {
-                            runBlocking { epgDao.upsertProgrammes(buffer.toList()) }
-                            stored += buffer.size
-                            buffer.clear()
-                            onProgress(stored)
-                        }
-                    }
-                },
+        suspend fun storeProgrammes(batch: List<EpgProgrammeEntity>) {
+            if (batch.isEmpty()) return
+            val startedAt = SystemClock.elapsedRealtime()
+            db.withTransaction {
+                epgDao.upsertProgrammes(batch)
+            }
+            Log.d(
+                "EpgRepository",
+                "EPG batch store sourceId=$storeId rows=${batch.size} writeMs=${SystemClock.elapsedRealtime() - startedAt}",
             )
         }
-        }
+        try {
+            bulkInsertHelper.withOptimizedBulkInsert(
+                "epg_programmes",
+                ftsTable = null,
+                eligible = globallyEmpty,
+                ftsOnly = false,
+            ) {
+                file.outputStream().use { out ->
+                    http.get(url, userAgent, maxAttempts = EPG_DOWNLOAD_ATTEMPTS) { input ->
+                        XmltvParser.parse(
+                            TeeInputStream(input, out),
+                            onChannel = { id, name ->
+                                // Ids are stored normalized (trim+lowercase) so guide lookups can use the
+                                // (epgChannelId, startMs) index directly — XMLTV ids often differ from the
+                                // panel's epg_channel_id only in case.
+                                val key = id.trim().lowercase()
+                                channels.getOrPut(key) {
+                                    EpgChannelEntity(sourceId = storeId, epgChannelId = key, displayName = name)
+                                }
+                            },
+                            onProgramme = { channelId, startMs, stopMs, title, desc ->
+                                val key = channelId.trim().lowercase()
+                                if (stopMs > from && startMs < to && (needed == null || key in needed)) {
+                                    channelsWithProgrammes.add(key)
+                                    val programme = EpgProgrammeEntity(
+                                        sourceId = storeId,
+                                        epgChannelId = key,
+                                        startMs = startMs,
+                                        stopMs = stopMs,
+                                        title = title,
+                                        description = desc,
+                                    )
+                                    val hash = programme.computeContentHash()
+                                    when (val decision = hashTracker.observe(key, startMs, hash)) {
+                                        is ProgrammeDecision.New -> {
+                                            buffer.add(programme.copy(contentHash = hash))
+                                            inserted++
+                                        }
+                                        is ProgrammeDecision.Changed -> {
+                                            buffer.add(programme.copy(id = decision.id, contentHash = hash))
+                                            updated++
+                                        }
+                                        ProgrammeDecision.Unchanged -> skipped++
+                                        // Over the memory cap (or duplicate-in-feed fallback): write through —
+                                        // the unique (sourceId, epgChannelId, startMs) index + REPLACE dedupe.
+                                        ProgrammeDecision.WriteThrough -> {
+                                            buffer.add(programme.copy(contentHash = hash))
+                                            inserted++
+                                        }
+                                    }
+                                    processedCount++
+                                    if (buffer.size >= chunkSize) {
+                                        val batchSize = buffer.size
+                                        storeProgrammes(buffer.toList())
+                                        writtenCount += batchSize
+                                        buffer.clear()
+                                        onProgress(channelsWithProgrammes.size, processedCount)
+                                    } else if (processedCount == 1 || processedCount % PROGRESS_PROGRAMME_STEP == 0) {
+                                        onProgress(channelsWithProgrammes.size, processedCount)
+                                    }
+                                }
+                            },
+                            channelFilter = needed,
+                        )
+                    }
+                }
+                if (buffer.isNotEmpty()) {
+                    val batchSize = buffer.size
+                    storeProgrammes(buffer.toList())
+                    writtenCount += batchSize
+                    buffer.clear()
+                }
+                if (channels.isNotEmpty()) {
+                    val channelsStartedAt = SystemClock.elapsedRealtime()
+                    epgDao.upsertChannels(channels.values.toList())
+                    Log.d(
+                        "EpgRepository",
+                        "EPG channels store sourceId=$storeId rows=${channels.size} ms=${SystemClock.elapsedRealtime() - channelsStartedAt}",
+                    )
+                }
+                parseCompleted = true
+            }
+            if (parseCompleted && channels.isNotEmpty() && processedCount == 0) {
+                throw NoProgrammesInWindowException()
+            }
+        } catch (c: CancellationException) {
+            throw c
+        } catch (e: NoProgrammesInWindowException) {
+            throw e
         } catch (e: Exception) {
             // Network drop or an unrecoverable parse position. Keep whatever we already pulled — a partial
             // guide beats none — and only fail outright if we got nothing at all.
-            if (stored == 0 && buffer.isEmpty() && channels.isEmpty()) throw e
-            android.util.Log.w("EpgRepository", "EPG sync incomplete — keeping partial ($stored programmes)", e)
+            if (writtenCount == 0 && buffer.isEmpty() && channels.isEmpty()) throw e
+            if (buffer.isNotEmpty()) {
+                val batchSize = buffer.size
+                storeProgrammes(buffer.toList())
+                writtenCount += batchSize
+                buffer.clear()
+            }
+            if (channels.isNotEmpty()) {
+                val channelsStartedAt = SystemClock.elapsedRealtime()
+                epgDao.upsertChannels(channels.values.toList())
+                Log.d(
+                    "EpgRepository",
+                    "EPG channels store sourceId=$storeId rows=${channels.size} ms=${SystemClock.elapsedRealtime() - channelsStartedAt}",
+                )
+            }
+            Log.w("EpgRepository", "EPG sync incomplete — keeping partial (written=$writtenCount accepted=$processedCount inserted=$inserted updated=$updated skipped=$skipped)", e)
         }
-        if (buffer.isNotEmpty()) { epgDao.upsertProgrammes(buffer.toList()); stored += buffer.size }
-        if (channels.isNotEmpty()) epgDao.upsertChannels(channels.values.toList())
+        if (parseCompleted) {
+            removedProgrammes = pruneRemovedProgrammes(storeId, hashTracker)
+            removedChannels = pruneRemovedChannels(storeId, channels.keys)
+        }
+        val pruneStartedAt = SystemClock.elapsedRealtime()
         epgDao.prune(now - WINDOW_BACK_MS)
+        Log.d("EpgRepository", "EPG prune sourceId=$storeId ms=${SystemClock.elapsedRealtime() - pruneStartedAt}")
         ensureEpgIndexes() // new/refreshed EPG → make sure the Guide read-index exists (no-op if already there)
-        onProgress(stored)
-        stored
+        val analyzeStartedAt = SystemClock.elapsedRealtime()
+        runCatching { bulkInsertHelper.analyzeTables("epg_programmes", "epg_channels") }
+            .onSuccess {
+                Log.d("EpgRepository", "EPG analyze sourceId=$storeId ms=${SystemClock.elapsedRealtime() - analyzeStartedAt}")
+            }
+            .onFailure { Log.w("EpgRepository", "Unable to analyze EPG tables", it) }
+        onProgress(channelsWithProgrammes.size, processedCount)
+        Log.i(
+            "EpgRepository",
+            "EPG incremental sync sourceId=$storeId inserted=$inserted updated=$updated skipped=$skipped removedProgrammes=$removedProgrammes removedChannels=$removedChannels " +
+                "accepted=$processedCount written=$writtenCount ms=${SystemClock.elapsedRealtime() - startedAt}",
+        )
+        writtenCount
+    }
+
+    class NoProgrammesInWindowException : java.io.IOException(
+        "Guide downloaded, but no programmes matched the current guide window. Check the device date/time or try another EPG feed.",
+    )
+
+    private suspend fun pruneRemovedProgrammes(sourceId: Long, tracker: ProgrammeHashTracker): Int {
+        val startedAt = SystemClock.elapsedRealtime()
+        val staleIds = tracker.staleTrackedIds()
+        staleIds.chunked(QUERY_CHUNK).forEach { epgDao.deleteProgrammesByIds(it) }
+        Log.d("EpgRepository", "EPG programme prune sourceId=$sourceId stale=${staleIds.size} overflowed=${tracker.overflowed} ms=${SystemClock.elapsedRealtime() - startedAt}")
+        return staleIds.size
+    }
+
+    private suspend fun pruneRemovedChannels(sourceId: Long, seenChannelIds: Set<String>): Int {
+        val startedAt = SystemClock.elapsedRealtime()
+        val existingChannelIds = epgDao.epgChannelIdsForSource(sourceId)
+        val staleIds = if (seenChannelIds.isEmpty()) {
+            if (existingChannelIds.isNotEmpty()) {
+                epgDao.clearChannelsForSource(sourceId)
+                epgDao.clearSource(sourceId)
+            }
+            existingChannelIds
+        } else {
+            existingChannelIds.filterNot(seenChannelIds::contains).also { stale ->
+                stale.chunked(QUERY_CHUNK).forEach {
+                    epgDao.deleteChannelsByEpgIds(sourceId, it)
+                    // The per-channel hash tracker never loads channels absent from the feed, so
+                    // their leftover programmes must be dropped here rather than by the id prune.
+                    epgDao.deleteProgrammesForChannels(sourceId, it)
+                }
+            }
+        }
+        Log.d("EpgRepository", "EPG channel prune sourceId=$sourceId stale=${staleIds.size} ms=${SystemClock.elapsedRealtime() - startedAt}")
+        return staleIds.size
     }
 
     /**
@@ -173,21 +355,12 @@ class EpgRepository(
             ?.filter { it.length() > 0 && now - it.lastModified() <= CACHE_TTL_MS }
             ?: emptyList<java.io.File>()
         if (files.isEmpty()) return@withContext false // no fresh cache → caller falls back to a network re-sync
+        Log.d("EpgRepository", "Cached EPG channel filter ids=${keys.size} files=${files.size}")
 
-        // Pair each fresh cache file with its source id up front, so the pre-delete can be scoped to ONLY
-        // those sources. Clearing globally (across every source) would wipe a channel's programmes that
-        // live under a source whose cache isn't fresh here and can't be repopulated below — leaving the
-        // channel with no guide data, so it silently drops out of the guide list.
         val storeFiles = files.mapNotNull { f ->
             f.name.removePrefix("epg_").removeSuffix(".xmltv").toLongOrNull()?.let { it to f }
         }
         val storeIds = storeFiles.map { it.first }
-        // Parse-then-apply (never delete-then-refill): we only keep programmes for the matched keys, which is
-        // a tiny set (usually one channel ≈ a few dozen rows), so collecting them all in memory first is cheap.
-        // Only AFTER we have the replacement rows do we clear+insert — and only for keys we actually found data
-        // for. A key with no fresh data is left exactly as-is. This guarantees a match can never delete a
-        // channel's existing programmes without putting them back (the old code stranded a channel when the
-        // parse loop aborted on a large/bad cache file before reaching the source that held its programmes).
         val collected = HashMap<String, MutableList<EpgProgrammeEntity>>()
         for ((storeId, file) in storeFiles) {
             var foundHere = 0
@@ -204,17 +377,17 @@ class EpgRepository(
                                 foundHere++
                             }
                         },
+                        channelFilter = keys,
                     )
                 }
-            }.onFailure { android.util.Log.w("EpgRepository", "cacheFill parse failed storeId=$storeId (other sources unaffected)", it) }
+            }.onFailure { Log.w("EpgRepository", "cacheFill parse failed storeId=$storeId (other sources unaffected)", it) }
         }
 
-        // Apply per key: replace only keys we have fresh rows for; leave the rest untouched.
         var insertedTotal = 0
         for ((key, rows) in collected) {
             if (rows.isEmpty()) continue
             epgDao.clearChannelForSources(key, storeIds)
-            rows.chunked(CHUNK).forEach { epgDao.upsertProgrammes(it) }
+            rows.chunked(QUERY_CHUNK).forEach { epgDao.upsertProgrammes(it) }
             insertedTotal += rows.size
         }
         true // had fresh cache and processed it (true even if an id wasn't present — re-syncing wouldn't help)
@@ -233,7 +406,10 @@ class EpgRepository(
     }
 
     /** Drop a removed EPG source's stored programmes. */
-    suspend fun clear(storeId: Long) = withContext(Dispatchers.IO) { epgDao.clearSource(storeId) }
+    suspend fun clear(storeId: Long) = withContext(Dispatchers.IO) {
+        epgDao.clearSource(storeId)
+        epgDao.clearChannelsForSource(storeId)
+    }
 
     companion object {
         // Keep up to ~7 days of just-aired programmes so the Guide can browse a long catch-up archive
@@ -241,7 +417,94 @@ class EpgRepository(
         // many xmltv.php feeds only return 1–2 days of past programmes, so storage rarely reaches 7 days).
         private const val WINDOW_BACK_MS = 7L * 24 * 60 * 60 * 1000
         private const val WINDOW_AHEAD_MS = 48L * 60 * 60 * 1000 // and 48h ahead
-        private const val CHUNK = 2_000 // larger batches = far fewer transaction commits during bulk insert
+        private const val QUERY_CHUNK = 500
         private const val CACHE_TTL_MS = 24L * 60 * 60 * 1000 // reuse a cached XMLTV for incremental matches up to 24h
+        private const val PROGRESS_PROGRAMME_STEP = 500
+        private const val EPG_DOWNLOAD_ATTEMPTS = 3
+
+        // Upper bound on programme (id, hash) entries kept in memory during an incremental EPG sync.
+        // ~100k entries is roughly 15–20 MB of Java heap — safe on low-RAM TV boxes. Channels beyond
+        // the cap fall back to write-through (correct via the natural-key unique index + REPLACE),
+        // they just lose the skip-unchanged and precise-prune optimizations for this run.
+        private const val MAX_TRACKED_PROGRAMMES = 100_000
+    }
+}
+
+/** Decision for one parsed programme, from [ProgrammeHashTracker.observe]. */
+private sealed interface ProgrammeDecision {
+    data object New : ProgrammeDecision
+    data class Changed(val id: Long) : ProgrammeDecision
+    data object Unchanged : ProgrammeDecision
+    data object WriteThrough : ProgrammeDecision
+}
+
+/**
+ * Memory-bounded replacement for the old whole-source programme hash map. Hashes are loaded lazily
+ * per EPG channel (an indexed point query on the natural key) and only while the total entry count
+ * stays under [maxEntries]; channels first seen after that are handled write-through. For a fresh
+ * source nothing is loaded — the per-channel maps only dedupe repeats inside the feed itself.
+ */
+private class ProgrammeHashTracker(
+    private val dao: tv.own.owntv.core.database.dao.EpgDao,
+    private val sourceId: Long,
+    private val freshSource: Boolean,
+    private val maxEntries: Int,
+) {
+    // channel -> startMs -> (rowId, contentHash); rowId 0 = row inserted during this run
+    private val byChannel = HashMap<String, MutableMap<Long, Pair<Long, Int>>>()
+    private val seenByChannel = HashMap<String, MutableSet<Long>>()
+    private val untrackedChannels = HashSet<String>()
+    private var entries = 0
+    var overflowed = false
+        private set
+
+    suspend fun observe(channel: String, startMs: Long, hash: Int): ProgrammeDecision {
+        if (channel in untrackedChannels) return ProgrammeDecision.WriteThrough
+        val map = byChannel[channel] ?: run {
+            if (entries >= maxEntries) {
+                untrackedChannels.add(channel)
+                if (!overflowed) {
+                    overflowed = true
+                    Log.w("EpgRepository", "EPG hash tracker cap ($maxEntries) reached for sourceId=$sourceId — further channels sync write-through")
+                }
+                return ProgrammeDecision.WriteThrough
+            }
+            val loaded: MutableMap<Long, Pair<Long, Int>> = if (freshSource) {
+                HashMap()
+            } else {
+                dao.epgHashesForChannel(sourceId, channel)
+                    .associateTo(HashMap()) { it.startMs to (it.id to it.contentHash) }
+            }
+            entries += loaded.size
+            byChannel[channel] = loaded
+            loaded
+        }
+        if (!freshSource) seenByChannel.getOrPut(channel) { HashSet() }.add(startMs)
+        val existing = map[startMs]
+        return when {
+            existing == null -> {
+                map[startMs] = 0L to hash
+                entries++
+                ProgrammeDecision.New
+            }
+            existing.second == hash -> ProgrammeDecision.Unchanged
+            else -> {
+                map[startMs] = existing.first to hash
+                ProgrammeDecision.Changed(existing.first)
+            }
+        }
+    }
+
+    /** Row ids of tracked programmes that existed before this run but never appeared in the feed. */
+    fun staleTrackedIds(): List<Long> {
+        if (freshSource) return emptyList()
+        val stale = ArrayList<Long>()
+        for ((channel, map) in byChannel) {
+            val seen = seenByChannel[channel] ?: emptySet()
+            for ((startMs, value) in map) {
+                if (value.first != 0L && startMs !in seen) stale.add(value.first)
+            }
+        }
+        return stale
     }
 }

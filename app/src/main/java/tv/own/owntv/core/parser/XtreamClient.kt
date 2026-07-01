@@ -1,8 +1,12 @@
 package tv.own.owntv.core.parser
 
+import android.os.SystemClock
 import android.util.Base64
 import android.util.JsonReader
 import android.util.JsonToken
+import android.util.Log
+import kotlinx.coroutines.currentCoroutineContext
+import kotlinx.coroutines.ensureActive
 import tv.own.owntv.core.database.entity.SourceEntity
 import tv.own.owntv.core.network.HttpClient
 import java.io.InputStream
@@ -38,13 +42,13 @@ data class XtEpgEntry(val title: String, val description: String?, val startMs: 
 class XtreamClient(private val http: HttpClient) {
 
     // --- Categories ---
-    fun liveCategories(s: SourceEntity) = categories(s, "get_live_categories")
-    fun vodCategories(s: SourceEntity) = categories(s, "get_vod_categories")
-    fun seriesCategories(s: SourceEntity) = categories(s, "get_series_categories")
+    suspend fun liveCategories(s: SourceEntity, onProgress: ((Long, Long?) -> Unit)? = null) = categories(s, "get_live_categories", onProgress)
+    suspend fun vodCategories(s: SourceEntity, onProgress: ((Long, Long?) -> Unit)? = null) = categories(s, "get_vod_categories", onProgress)
+    suspend fun seriesCategories(s: SourceEntity, onProgress: ((Long, Long?) -> Unit)? = null) = categories(s, "get_series_categories", onProgress)
 
-    private fun categories(s: SourceEntity, action: String): List<XtCategory> {
+    private suspend fun categories(s: SourceEntity, action: String, onProgress: ((Long, Long?) -> Unit)? = null): List<XtCategory> {
         val out = ArrayList<XtCategory>()
-        http.get(api(s, action), s.userAgent) { input ->
+        http.get(api(s, action), s.userAgent, onProgress) { input ->
             streamObjects(input) { m ->
                 val id = m["category_id"] ?: return@streamObjects
                 out.add(XtCategory(id, m["category_name"] ?: id))
@@ -57,52 +61,113 @@ class XtreamClient(private val http: HttpClient) {
     // Each returns true if the full list parsed cleanly, false if the server truncated it mid-stream
     // (issue #15) — the sync uses that to fall back to per-category fetching. [categoryId] filters the
     // request server-side (`&category_id=X`), keeping payloads small enough to dodge the truncation.
-    fun streamLive(s: SourceEntity, categoryId: String? = null, onItem: (XtLiveStream) -> Unit): Boolean {
-        return http.get(api(s, "get_live_streams", categoryParam(categoryId)), s.userAgent) { input ->
-            streamObjects(input) { m ->
-                val id = m["stream_id"] ?: return@streamObjects
-                onItem(
-                    XtLiveStream(
-                        streamId = id, name = m["name"].orEmpty(), icon = m["stream_icon"],
-                        epgChannelId = m["epg_channel_id"]?.takeIf { it.isNotBlank() },
-                        categoryId = m["category_id"], num = m["num"]?.toIntOrNull(),
-                        archive = (m["tv_archive"]?.toIntOrNull() ?: 0) > 0,
-                        archiveDays = m["tv_archive_duration"]?.toIntOrNull() ?: 0,
-                    ),
-                )
-            }
+    suspend fun streamLive(
+        s: SourceEntity,
+        categoryId: String? = null,
+        onItem: suspend (XtLiveStream) -> Unit,
+        onProgress: ((Long, Long?) -> Unit)? = null,
+    ): Boolean =
+        streamLive(
+            s = s,
+            categoryId = categoryId,
+            transform = { streamId, name, icon, epgChannelId, itemCategoryId, num, archive, archiveDays ->
+                XtLiveStream(streamId, name, icon, epgChannelId, itemCategoryId, num, archive, archiveDays)
+            },
+            onItem = onItem,
+            onProgress = onProgress,
+        )
+
+    suspend fun <T : Any> streamLive(
+        s: SourceEntity,
+        categoryId: String? = null,
+        transform: (
+            streamId: String,
+            name: String,
+            icon: String?,
+            epgChannelId: String?,
+            categoryId: String?,
+            num: Int?,
+            archive: Boolean,
+            archiveDays: Int,
+        ) -> T?,
+        onItem: suspend (T) -> Unit,
+        onProgress: ((Long, Long?) -> Unit)? = null,
+    ): Boolean {
+        return http.get(api(s, "get_live_streams", categoryParam(categoryId)), s.userAgent, onProgress) { input ->
+            streamItems("get_live_streams", input, { reader -> readLiveStreamAs(reader, transform) }, onItem)
         }
     }
 
-    fun streamVod(s: SourceEntity, categoryId: String? = null, onItem: (XtVod) -> Unit): Boolean {
-        return http.get(api(s, "get_vod_streams", categoryParam(categoryId)), s.userAgent) { input ->
-            streamObjects(input) { m ->
-                val id = m["stream_id"] ?: return@streamObjects
-                onItem(
-                    XtVod(
-                        streamId = id, name = m["name"].orEmpty(), icon = m["stream_icon"],
-                        rating = m["rating"]?.toDoubleOrNull(),
-                        plot = m["plot"]?.takeIf { it.isNotBlank() } ?: m["description"]?.takeIf { it.isNotBlank() },
-                        categoryId = m["category_id"],
-                        containerExt = m["container_extension"], added = m["added"]?.toLongOrNull(),
-                    ),
-                )
-            }
+    suspend fun streamVod(
+        s: SourceEntity,
+        categoryId: String? = null,
+        onItem: suspend (XtVod) -> Unit,
+        onProgress: ((Long, Long?) -> Unit)? = null,
+    ): Boolean =
+        streamVod(
+            s = s,
+            categoryId = categoryId,
+            transform = { streamId, name, icon, rating, plot, itemCategoryId, containerExt, added ->
+                XtVod(streamId, name, icon, rating, plot, itemCategoryId, containerExt, added)
+            },
+            onItem = onItem,
+            onProgress = onProgress,
+        )
+
+    suspend fun <T : Any> streamVod(
+        s: SourceEntity,
+        categoryId: String? = null,
+        transform: (
+            streamId: String,
+            name: String,
+            icon: String?,
+            rating: Double?,
+            plot: String?,
+            categoryId: String?,
+            containerExt: String?,
+            added: Long?,
+        ) -> T?,
+        onItem: suspend (T) -> Unit,
+        onProgress: ((Long, Long?) -> Unit)? = null,
+    ): Boolean {
+        return http.get(api(s, "get_vod_streams", categoryParam(categoryId)), s.userAgent, onProgress) { input ->
+            streamItems("get_vod_streams", input, { reader -> readVodAs(reader, transform) }, onItem)
         }
     }
 
-    fun streamSeries(s: SourceEntity, categoryId: String? = null, onItem: (XtSeries) -> Unit): Boolean {
-        return http.get(api(s, "get_series", categoryParam(categoryId)), s.userAgent) { input ->
-            streamObjects(input) { m ->
-                val id = m["series_id"] ?: return@streamObjects
-                onItem(
-                    XtSeries(
-                        seriesId = id, name = m["name"].orEmpty(), cover = m["cover"],
-                        plot = m["plot"], rating = m["rating"]?.toDoubleOrNull(),
-                        categoryId = m["category_id"], year = m["year"]?.toIntOrNull(),
-                    ),
-                )
-            }
+    suspend fun streamSeries(
+        s: SourceEntity,
+        categoryId: String? = null,
+        onItem: suspend (XtSeries) -> Unit,
+        onProgress: ((Long, Long?) -> Unit)? = null,
+    ): Boolean =
+        streamSeries(
+            s = s,
+            categoryId = categoryId,
+            transform = { seriesId, name, cover, plot, rating, itemCategoryId, year ->
+                XtSeries(seriesId, name, cover, plot, rating, itemCategoryId, year)
+            },
+            onItem = onItem,
+            onProgress = onProgress,
+        )
+
+    suspend fun <T : Any> streamSeries(
+        s: SourceEntity,
+        categoryId: String? = null,
+        transform: (
+            seriesId: String,
+            name: String,
+            cover: String?,
+            plot: String?,
+            rating: Double?,
+            categoryId: String?,
+            year: Int?,
+        ) -> T?,
+        onItem: suspend (T) -> Unit,
+        onProgress: ((Long, Long?) -> Unit)? = null,
+    ): Boolean {
+        return http.get(api(s, "get_series", categoryParam(categoryId)), s.userAgent, onProgress) { input ->
+            streamItems("get_series", input, { reader -> readSeriesAs(reader, transform) }, onItem)
         }
     }
 
@@ -112,7 +177,7 @@ class XtreamClient(private val http: HttpClient) {
      * ARRAY of episodes (season taken from each episode's own `season` field). Both are handled, so series
      * that showed no episodes on stricter panels now populate.
      */
-    fun getSeriesInfo(s: SourceEntity, seriesId: String): XtSeriesInfo {
+    suspend fun getSeriesInfo(s: SourceEntity, seriesId: String): XtSeriesInfo {
         val episodes = ArrayList<XtEpisode>()
         http.get(api(s, "get_series_info", "&series_id=$seriesId"), s.userAgent) { input ->
             JsonReader(input.reader(Charsets.UTF_8)).use { reader ->
@@ -191,12 +256,28 @@ class XtreamClient(private val http: HttpClient) {
         else -> { skipValue(); null }
     }
 
+    /** Reads a long from a number or a numeric string, tolerating null/other. */
+    private fun JsonReader.nextLongOrNull(): Long? = when (peek()) {
+        JsonToken.NUMBER -> nextLong()
+        JsonToken.STRING -> nextString().trim().toLongOrNull()
+        JsonToken.NULL -> { nextNull(); null }
+        else -> { skipValue(); null }
+    }
+
+    /** Reads a double from a number or a numeric string, tolerating null/other. */
+    private fun JsonReader.nextDoubleOrNull(): Double? = when (peek()) {
+        JsonToken.NUMBER -> nextDouble()
+        JsonToken.STRING -> nextString().trim().toDoubleOrNull()
+        JsonToken.NULL -> { nextNull(); null }
+        else -> { skipValue(); null }
+    }
+
     /**
      * Short EPG (now + a few upcoming programmes) for a single live channel via `get_short_epg`.
      * Titles/descriptions are base64-encoded; timestamps are unix seconds. Returns entries sorted by
      * start time (empty if the panel has no guide for this channel).
      */
-    fun getShortEpg(s: SourceEntity, streamId: String, limit: Int = 6): List<XtEpgEntry> {
+    suspend fun getShortEpg(s: SourceEntity, streamId: String, limit: Int = 6): List<XtEpgEntry> {
         val out = ArrayList<XtEpgEntry>()
         http.get(api(s, "get_short_epg", "&stream_id=$streamId&limit=$limit"), s.userAgent) { input ->
             JsonReader(input.reader(Charsets.UTF_8)).use { reader ->
@@ -286,40 +367,77 @@ class XtreamClient(private val http: HttpClient) {
     private fun categoryParam(categoryId: String?): String =
         categoryId?.takeIf { it.isNotBlank() }?.let { "&category_id=$it" } ?: ""
 
+    /** Category lists are small, so keeping the map reader here keeps that path simple. */
+    private suspend fun streamObjects(input: InputStream, onObject: suspend (Map<String, String?>) -> Unit): Boolean =
+        streamItems("objects", input, ::readObject, onObject)
+
+    private suspend fun <T> streamItems(
+        label: String,
+        input: InputStream,
+        readItem: (JsonReader) -> T?,
+        onItem: suspend (T) -> Unit,
+    ): Boolean =
+        streamArray(label, input) { reader, metrics ->
+            val parseStart = SystemClock.elapsedRealtime()
+            val item = readItem(reader)
+            metrics.parseOrReadMs += SystemClock.elapsedRealtime() - parseStart
+            if (item != null) {
+                val callbackStart = SystemClock.elapsedRealtime()
+                onItem(item)
+                metrics.callbackMs += SystemClock.elapsedRealtime() - callbackStart
+            }
+        }
+
     /**
-     * Streams a top-level JSON array of objects, reading each object's scalar fields into a map.
-     * Returns true if the array parsed to its end, false if the server truncated it mid-stream (issue
-     * #15) — callers keep the partial data and can fall back to per-category fetching. A failure before
-     * any item is read is fatal (genuine auth/network error) and rethrown.
+     * Streams a top-level JSON array. Returns true if the array parsed to its end, false if the server
+     * truncated it mid-stream (issue #15). A failure before any item is read is fatal and rethrown.
      */
-    private fun streamObjects(input: InputStream, onObject: (Map<String, String?>) -> Unit): Boolean {
+    private suspend fun streamArray(label: String, input: InputStream, readItem: suspend (JsonReader, StreamMetrics) -> Unit): Boolean {
+        val ctx = currentCoroutineContext()
+        val startedAt = SystemClock.elapsedRealtime()
+        var lastLogAt = startedAt
+        var lastParseOrReadMs = 0L
+        var lastCallbackMs = 0L
         var count = 0
+        val metrics = StreamMetrics()
+        Log.d(TAG, "streamArray start label=$label")
         try {
             JsonReader(input.reader(Charsets.UTF_8)).use { reader ->
                 reader.isLenient = true
                 if (reader.peek() != JsonToken.BEGIN_ARRAY) {
                     // Some servers return {} or an error object instead of an array.
                     reader.skipValue()
+                    Log.d(TAG, "streamArray non-array label=$label totalMs=${SystemClock.elapsedRealtime() - startedAt}")
                     return true
                 }
                 reader.beginArray()
                 while (reader.hasNext()) {
-                    val map = HashMap<String, String?>()
-                    reader.beginObject()
-                    while (reader.hasNext()) {
-                        val name = reader.nextName()
-                        when (reader.peek()) {
-                            JsonToken.NULL -> { reader.nextNull(); map[name] = null }
-                            JsonToken.BEGIN_ARRAY, JsonToken.BEGIN_OBJECT -> reader.skipValue()
-                            else -> map[name] = reader.nextString()
-                        }
-                    }
-                    reader.endObject()
-                    onObject(map)
+                    ctx.ensureActive()
+                    readItem(reader, metrics)
                     count++
+                    if (count % STREAM_LOG_ITEM_STEP == 0) {
+                        val now = SystemClock.elapsedRealtime()
+                        val parseOrReadDelta = metrics.parseOrReadMs - lastParseOrReadMs
+                        val callbackDelta = metrics.callbackMs - lastCallbackMs
+                        Log.d(
+                            TAG,
+                            "streamArray parsed count=$count label=$label deltaMs=${now - lastLogAt} " +
+                                "parseOrReadMs=$parseOrReadDelta callbackMs=$callbackDelta " +
+                                "totalParseOrReadMs=${metrics.parseOrReadMs} totalCallbackMs=${metrics.callbackMs} " +
+                                "totalMs=${now - startedAt}",
+                        )
+                        lastLogAt = now
+                        lastParseOrReadMs = metrics.parseOrReadMs
+                        lastCallbackMs = metrics.callbackMs
+                    }
                 }
                 reader.endArray()
             }
+            Log.d(
+                TAG,
+                "streamArray end count=$count label=$label parseOrReadMs=${metrics.parseOrReadMs} " +
+                    "callbackMs=${metrics.callbackMs} totalMs=${SystemClock.elapsedRealtime() - startedAt}",
+            )
             return true
         } catch (c: kotlin.coroutines.cancellation.CancellationException) {
             throw c
@@ -327,8 +445,187 @@ class XtreamClient(private val http: HttpClient) {
             // Truncated mid-stream (JsonReader reports "Unterminated string …"). Keep everything parsed
             // so far; only a failure before ANY item is read is fatal.
             if (count == 0) throw e
-            android.util.Log.w("XtreamClient", "Stream truncated after $count items — partial list kept", e)
+            Log.w(
+                TAG,
+                "Stream truncated after $count items label=$label — partial list kept " +
+                    "parseOrReadMs=${metrics.parseOrReadMs} callbackMs=${metrics.callbackMs} " +
+                    "totalMs=${SystemClock.elapsedRealtime() - startedAt}",
+                e,
+            )
             return false
+        }
+    }
+
+    private class StreamMetrics {
+        var parseOrReadMs = 0L
+        var callbackMs = 0L
+    }
+
+    private companion object {
+        const val TAG = "XtreamClient"
+        const val STREAM_LOG_ITEM_STEP = 10_000
+    }
+
+    private fun <T : Any> readLiveStreamAs(
+        reader: JsonReader,
+        transform: (
+            streamId: String,
+            name: String,
+            icon: String?,
+            epgChannelId: String?,
+            categoryId: String?,
+            num: Int?,
+            archive: Boolean,
+            archiveDays: Int,
+        ) -> T?,
+    ): T? {
+        if (reader.peek() != JsonToken.BEGIN_OBJECT) {
+            reader.skipValue()
+            return null
+        }
+        var streamId: String? = null
+        var name = ""
+        var icon: String? = null
+        var epgChannelId: String? = null
+        var categoryId: String? = null
+        var num: Int? = null
+        var archive = false
+        var archiveDays = 0
+
+        reader.beginObject()
+        while (reader.hasNext()) {
+            when (reader.nextName()) {
+                "stream_id" -> streamId = reader.nextScalarStringOrNull()
+                "name" -> name = reader.nextScalarStringOrNull().orEmpty()
+                "stream_icon" -> icon = reader.nextScalarStringOrNull()
+                "epg_channel_id" -> epgChannelId = reader.nextScalarStringOrNull()?.takeIf { it.isNotBlank() }
+                "category_id" -> categoryId = reader.nextScalarStringOrNull()
+                "num" -> num = reader.nextIntOrNull()
+                "tv_archive" -> archive = (reader.nextIntOrNull() ?: 0) > 0
+                "tv_archive_duration" -> archiveDays = reader.nextIntOrNull() ?: 0
+                else -> reader.skipValue()
+            }
+        }
+        reader.endObject()
+        return streamId?.let { transform(it, name, icon, epgChannelId, categoryId, num, archive, archiveDays) }
+    }
+
+    private fun <T : Any> readVodAs(
+        reader: JsonReader,
+        transform: (
+            streamId: String,
+            name: String,
+            icon: String?,
+            rating: Double?,
+            plot: String?,
+            categoryId: String?,
+            containerExt: String?,
+            added: Long?,
+        ) -> T?,
+    ): T? {
+        if (reader.peek() != JsonToken.BEGIN_OBJECT) {
+            reader.skipValue()
+            return null
+        }
+        var streamId: String? = null
+        var name = ""
+        var icon: String? = null
+        var rating: Double? = null
+        var plot: String? = null
+        var description: String? = null
+        var categoryId: String? = null
+        var containerExt: String? = null
+        var added: Long? = null
+
+        reader.beginObject()
+        while (reader.hasNext()) {
+            when (reader.nextName()) {
+                "stream_id" -> streamId = reader.nextScalarStringOrNull()
+                "name" -> name = reader.nextScalarStringOrNull().orEmpty()
+                "stream_icon" -> icon = reader.nextScalarStringOrNull()
+                "rating" -> rating = reader.nextDoubleOrNull()
+                "plot" -> plot = reader.nextScalarStringOrNull()
+                "description" -> description = reader.nextScalarStringOrNull()
+                "category_id" -> categoryId = reader.nextScalarStringOrNull()
+                "container_extension" -> containerExt = reader.nextScalarStringOrNull()
+                "added" -> added = reader.nextLongOrNull()
+                else -> reader.skipValue()
+            }
+        }
+        reader.endObject()
+        val cleanPlot = plot?.takeIf { it.isNotBlank() } ?: description?.takeIf { it.isNotBlank() }
+        return streamId?.let { transform(it, name, icon, rating, cleanPlot, categoryId, containerExt, added) }
+    }
+
+    private fun <T : Any> readSeriesAs(
+        reader: JsonReader,
+        transform: (
+            seriesId: String,
+            name: String,
+            cover: String?,
+            plot: String?,
+            rating: Double?,
+            categoryId: String?,
+            year: Int?,
+        ) -> T?,
+    ): T? {
+        if (reader.peek() != JsonToken.BEGIN_OBJECT) {
+            reader.skipValue()
+            return null
+        }
+        var seriesId: String? = null
+        var name = ""
+        var cover: String? = null
+        var plot: String? = null
+        var rating: Double? = null
+        var categoryId: String? = null
+        var year: Int? = null
+
+        reader.beginObject()
+        while (reader.hasNext()) {
+            when (reader.nextName()) {
+                "series_id" -> seriesId = reader.nextScalarStringOrNull()
+                "name" -> name = reader.nextScalarStringOrNull().orEmpty()
+                "cover" -> cover = reader.nextScalarStringOrNull()
+                "plot" -> plot = reader.nextScalarStringOrNull()
+                "rating" -> rating = reader.nextDoubleOrNull()
+                "category_id" -> categoryId = reader.nextScalarStringOrNull()
+                "year" -> year = reader.nextIntOrNull()
+                else -> reader.skipValue()
+            }
+        }
+        reader.endObject()
+        return seriesId?.let { transform(it, name, cover, plot, rating, categoryId, year) }
+    }
+
+    private fun readObject(reader: JsonReader): Map<String, String?> {
+        val map = HashMap<String, String?>()
+        reader.beginObject()
+        while (reader.hasNext()) {
+            val name = reader.nextName()
+            when (reader.peek()) {
+                JsonToken.NULL -> {
+                    reader.nextNull()
+                    map[name] = null
+                }
+                JsonToken.BEGIN_ARRAY, JsonToken.BEGIN_OBJECT -> reader.skipValue()
+                else -> map[name] = reader.nextString()
+            }
+        }
+        reader.endObject()
+        return map
+    }
+
+    private fun JsonReader.nextScalarStringOrNull(): String? = when (peek()) {
+        JsonToken.NULL -> {
+            nextNull()
+            null
+        }
+        JsonToken.STRING, JsonToken.NUMBER -> nextString()
+        JsonToken.BOOLEAN -> nextBoolean().toString()
+        else -> {
+            skipValue()
+            null
         }
     }
 }
