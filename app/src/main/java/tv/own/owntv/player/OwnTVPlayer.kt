@@ -86,11 +86,19 @@ class OwnTVPlayer(
     private val connectivity: tv.own.owntv.core.network.ConnectivityObserver,
     private val okHttpClient: okhttp3.OkHttpClient,
     private val diagnostics: PlayerDiagnostics,
+    private val proxyHolder: tv.own.owntv.core.network.ProxyConfigHolder,
 ) : MPVLib.EventObserver {
 
     private companion object {
         const val TAG = "OwnTVPlayer"
         const val MAX_AUTO_RETRIES = 3 // silent retries (backoff) before showing the error UI
+        // --- Live silent-freeze watchdog (mpv) -----------------------------------------------------
+        // A live feed can wedge with the socket still open: mpv keeps pause=false / paused-for-cache=false
+        // and emits no END_FILE, but time-pos stops advancing — a frozen channel with "nothing happening".
+        // Poll time-pos; sustained no-progress while "playing" == a dropped feed → spinner + reconnect.
+        const val LIVE_STALL_POLL_MS = 2_500L   // poll interval for the live no-progress watchdog
+        const val LIVE_STALL_LIMIT = 4           // polls of no progress (~10s) before treating it as a stall
+        const val MAX_LIVE_RECONNECTS = 6        // consecutive stall-reconnects before the error UI takes over
         // Warn-level mpv lines worth keeping as the failure reason (HTTP codes, open/decode failures, …).
         val FAILURE_RX = Regex(
             "http|error|fail|refus|timed out|unrecogn|cannot|no such|invalid|denied|forbidden|not found|" +
@@ -179,6 +187,15 @@ class OwnTVPlayer(
     // the provider's `.m3u8` (HLS) variant before erroring — covers the rare panel that only serves HLS.
     // Per-item; reset on each genuinely-new item.
     @Volatile private var triedAltFormat = false
+    // If the source has no custom User-Agent and playback fails with a demuxer/access error, we retry
+    // once with the short "vlc" UA — some panels block the full "VLC/3.0.20 LibVLC/3.0.20" string but
+    // accept the short form. Per-item; reset on each genuinely-new item. Never runs when the user
+    // already set a custom UA (currentUserAgent != null).
+    @Volatile private var triedVlcUaFallback = false
+    // The raw custom User-Agent from the source settings, or null if the user left it blank.
+    // null = use DEFAULT_USER_AGENT on first attempt, "vlc" fallback on suspicious failure.
+    // non-null = always use the given UA, no automatic fallback.
+    private var currentUserAgent: String? = null
     private val _directRender = MutableStateFlow(false)
     /** True while the direct (decoder-to-surface) output is in use — HUD hides zoom, app draws subs. */
     val directRender: StateFlow<Boolean> = _directRender.asStateFlow()
@@ -421,6 +438,11 @@ class OwnTVPlayer(
     private val mpvHasActiveFile = AtomicBoolean(false)
     private var errorCheckJob: Job? = null
     private var videoCheckJob: Job? = null
+    // Live silent-freeze watchdog (see companion constants): polls time-pos while a live stream is playing
+    // and reconnects when it stops advancing. liveStallReconnects is the consecutive-failure budget; it
+    // resets to 0 once playback is healthy again (or on a genuinely new item).
+    private var liveStallJob: Job? = null
+    private var liveStallReconnects = 0
     // Catch-up/VOD streams that start mid-GOP (no H.264 SPS/PPS yet) can play audio with a blank video.
     // We try a software-decode reload once before surfacing an error, tracked per item.
     @Volatile private var triedSoftwareForVideo = false
@@ -873,7 +895,8 @@ class OwnTVPlayer(
         initialized = mpv != null
     }
 
-    /** Play a single item (movie / live channel) — clears any queue. [muted] is used by the live preview. */
+    /** Play a single item (movie / live channel) — clears any queue. [muted] is used by the live preview.
+     *  [userAgent] is the per-source custom UA from source settings; null means use the default. */
     fun play(
         url: String,
         title: String? = null,
@@ -885,7 +908,9 @@ class OwnTVPlayer(
         muted: Boolean = false,
         preferSoftware: Boolean = false,
         startPaused: Boolean = false,
+        userAgent: String? = null,
     ) {
+        currentUserAgent = userAgent?.takeIf { it.isNotBlank() }
         playlist = emptyList()
         playlistIndex = 0
         updateNav()
@@ -893,8 +918,10 @@ class OwnTVPlayer(
         loadUrl(url, MediaMeta(title, subtitle, year, logoUrl), isLive, startPositionMs, muted, preferSoftware = preferSoftware, startPaused = startPaused)
     }
 
-    /** Play a queue (a season's episodes) starting at [startIndex] — enables prev/next. */
-    fun playEpisodes(items: List<PlaylistItem>, startIndex: Int, startPositionMs: Long = 0) {
+    /** Play a queue (a season's episodes) starting at [startIndex] — enables prev/next.
+     *  [userAgent] is the per-source custom UA from source settings; null means use the default. */
+    fun playEpisodes(items: List<PlaylistItem>, startIndex: Int, startPositionMs: Long = 0, userAgent: String? = null) {
+        currentUserAgent = userAgent?.takeIf { it.isNotBlank() }
         playlist = items
         playlistIndex = startIndex.coerceIn(0, (items.size - 1).coerceAtLeast(0))
         val item = items.getOrNull(playlistIndex) ?: return
@@ -952,6 +979,7 @@ class OwnTVPlayer(
         loadGeneration++
         errorCheckJob?.cancel()
         videoCheckJob?.cancel()
+        liveStallJob?.cancel()
         _error.value = null
         lastMpvError = null // fresh item → drop the previous stream's captured error
         diagnostics.markLoad() // scope captured codec/audio errors to this stream
@@ -964,8 +992,10 @@ class OwnTVPlayer(
         // the SAME item passes resetRetries=false to keep that state.
         if (resetRetries) {
             autoRetries = 0
+            liveStallReconnects = 0 // genuinely new item → fresh live-reconnect budget
             triedAltFormat = false
             triedSoftwareForVideo = false
+            triedVlcUaFallback = false
             forceFullProbe = false // a genuinely new item starts with the trimmed (fast-zap) probe again
             // Pick this item's decode path. Catch-up forces SOFTWARE: archive (timeshift) segments often
             // start mid-GOP, which the hardware MediaCodec decoder can't recover from (blank video, and
@@ -1036,7 +1066,7 @@ class OwnTVPlayer(
                     // is at end of file + server doesn't support Range requests). This will never fix
                     // itself by retrying.
                     val bitrateKnown = mpv?.getPropertyString("video-bitrate")?.toLongOrNull()?.let { it > 0 } ?: false
-                    if (fileLoaded && currentHeightPx == 0 && !bitrateKnown && elapsed > 4_000) {
+                    if (fileLoaded && currentHeightPx == 0 && !bitrateKnown && elapsed > 6_000) {
                         android.util.Log.w(TAG, "watchdog MOOV-AT-END — FILE_LOADED but no bitrate/height after ${elapsed}ms, aborting (server lacks Range support)")
                         _error.value = "This video isn't formatted for streaming. Ask the provider to re-encode with fast-start, or download it first."
                         expectingPlayback = false; _buffering.value = false
@@ -1048,6 +1078,95 @@ class OwnTVPlayer(
                         android.util.Log.w(TAG, "watchdog T_DECODE — FILE_LOADED but no frame after ${elapsed}ms, HARD-RESETTING mpv")
                         triggerHardReset()
                         return@launch
+                    }
+                }
+            }
+        } else {
+            // Live silent-freeze watchdog. A live feed can wedge with the socket still open: mpv keeps
+            // pause=false / paused-for-cache=false and emits no END_FILE, but time-pos stops advancing — a
+            // frozen channel with no spinner, no retry, no error. paused-for-cache (the buffering spinner) and
+            // END_FILE (the reconnect path) only cover the cases mpv actually signals; this covers the silent
+            // one. Mirrors the ExoPlayer live engine's progress watchdog so both backends behave the same.
+            val gen = loadGeneration
+            liveStallJob = scope.launch {
+                var lastPos = -1L
+                var stalls = 0
+                // Audio-plays-no-video watchdog: position (audio clock) keeps advancing so the freeze
+                // check above never trips, yet mpv selected a video track (currentVideoCodec != null,
+                // set as soon as track selection happens) and never decoded a single frame
+                // (currentHeightPx stays 0). Legitimate audio-only radio channels have no video track
+                // at all, so they never enter this branch. Reuses the same bounded reconnect budget/UX
+                // as the freeze watchdog above.
+                var noVideoStalls = 0
+                while (gen == loadGeneration) {
+                    delay(LIVE_STALL_POLL_MS)
+                    if (gen != loadGeneration || !isLiveContent) return@launch
+                    // Only a genuinely-playing mpv live stream can "freeze". Skip while still opening
+                    // (expectingPlayback), while an error is shown, while paused/handed-off to ExoPlayer, or
+                    // while mpv itself is buffering (paused-for-cache already drives the spinner there).
+                    if (exoActive || expectingPlayback || _error.value != null || !_isPlaying.value) {
+                        stalls = 0; lastPos = -1L; noVideoStalls = 0
+                        continue
+                    }
+                    val pos = _position.value
+                    if (pos > 0 && pos == lastPos) {
+                        // No progress since the last poll.
+                        if (++stalls < LIVE_STALL_LIMIT) continue
+                        val frozenMs = LIVE_STALL_LIMIT * LIVE_STALL_POLL_MS
+                        if (!connectivity.isOnlineNow()) {
+                            // Offline: keep the spinner up and wait for the network rather than burning the
+                            // reconnect budget on a dead connection (it resumes once connectivity returns).
+                            android.util.Log.w(TAG, "live stall (mpv, Live) — frozen ~${frozenMs}ms but offline; showing spinner, waiting for network")
+                            _buffering.value = true
+                            stalls = 0
+                            continue
+                        }
+                        if (liveStallReconnects < MAX_LIVE_RECONNECTS) {
+                            liveStallReconnects++
+                            android.util.Log.w(TAG, "live stall (mpv, Live) — no progress for ~${frozenMs}ms, reconnect attempt $liveStallReconnects/$MAX_LIVE_RECONNECTS")
+                            _buffering.value = true // spinner while we re-fetch the live edge
+                            // Re-fetch in place, preserving the decoder retry budget; loadUrl bumps the
+                            // generation, ending this loop, and starts a fresh watchdog for the new load.
+                            loadUrl(currentUrl ?: return@launch, MediaMeta(currentTitle, currentSubtitle, currentYear, currentLogoUrl), isLive = true, startPositionMs = 0L, resetRetries = false)
+                            return@launch
+                        } else {
+                            android.util.Log.w(TAG, "live stall (mpv, Live) — reconnect budget exhausted after $MAX_LIVE_RECONNECTS attempts, surfacing error")
+                            _buffering.value = false
+                            _error.value = "Lost connection to this channel."
+                            return@launch
+                        }
+                    } else {
+                        // Progress (or not yet started) → healthy on the position check. Clear any stall
+                        // state and, if we'd been reconnecting, log the recovery and reset the budget.
+                        if (stalls > 0 || liveStallReconnects > 0) {
+                            android.util.Log.i(TAG, "live playback resumed (mpv, Live) after stall/reconnect")
+                        }
+                        stalls = 0
+                        liveStallReconnects = 0
+                        lastPos = pos
+                        // Audio is advancing, but a video track was selected and still hasn't produced a
+                        // single decoded frame — the "audio plays, no picture" case position-only checks
+                        // above can't see.
+                        if (currentVideoCodec != null && currentHeightPx == 0) {
+                            if (++noVideoStalls < LIVE_STALL_LIMIT) continue
+                            val elapsedMs = LIVE_STALL_LIMIT * LIVE_STALL_POLL_MS
+                            LiveDiagnosticsLog.event("no-video (mpv, Live) — audio progressing but no video frame after ~${elapsedMs}ms")
+                            if (liveStallReconnects < MAX_LIVE_RECONNECTS) {
+                                liveStallReconnects++
+                                noVideoStalls = 0
+                                android.util.Log.w(TAG, "no-video (mpv, Live) — reconnect attempt $liveStallReconnects/$MAX_LIVE_RECONNECTS")
+                                _buffering.value = true
+                                loadUrl(currentUrl ?: return@launch, MediaMeta(currentTitle, currentSubtitle, currentYear, currentLogoUrl), isLive = true, startPositionMs = 0L, resetRetries = false)
+                                return@launch
+                            } else {
+                                android.util.Log.w(TAG, "no-video (mpv, Live) — reconnect budget exhausted, surfacing error")
+                                _buffering.value = false
+                                _error.value = "Audio is playing, but video could not be rendered on this device."
+                                return@launch
+                            }
+                        } else {
+                            noVideoStalls = 0
+                        }
                     }
                 }
             }
@@ -1071,6 +1190,13 @@ class OwnTVPlayer(
                 _directRender.value = useDirect()
             }
             applyProbeProfile(url) // trim the demuxer probe for live (faster zap); full probe for VOD
+            // Apply the effective User-Agent for this stream. Per-load so a vlc-fallback retry or a
+            // newly-configured source UA takes effect without restarting the player.
+            setPropertyString("user-agent", currentUserAgent ?: HttpClient.DEFAULT_USER_AGENT)
+            // Global proxy (Approach 1): route mpv's own FFmpeg networking through the configured HTTP
+            // proxy, or clear it when disabled. Applied per-load so toggling the setting takes effect on
+            // the next stream. The URL may embed proxy credentials — it is NEVER logged here.
+            setPropertyString("http-proxy", proxyHolder.mpvProxyUrl() ?: "")
             loadfileWithStopClassification(url, "replacement loadfile")
             setPropertyBoolean("pause", false)
         }
@@ -1158,6 +1284,7 @@ class OwnTVPlayer(
         expectingPlayback = false
         errorCheckJob?.cancel()
         videoCheckJob?.cancel()
+        liveStallJob?.cancel()
         if (initialized) mpvAsync { stopWithStopClassification("stop") }
         currentUrl = null
         pendingUrl = null
@@ -1447,6 +1574,10 @@ class OwnTVPlayer(
                 if (value > 0) {
                     lastVideoHeightPx = value.toInt() // remember for recovery decisions on a later failed load
                     videoCheckJob?.cancel() // video is decoding → watchdog not needed
+                    // A real frame decoded → playback genuinely works. Dismiss any error the watchdog raised
+                    // prematurely while a slow hardware decoder (e.g. Realtek setPortMode negotiation) was
+                    // still producing its first frame — otherwise the popup stays stuck over playing video.
+                    if (_error.value != null) _error.value = null
                 }
                 updateAspect()
                 enforceDecodeGuard()
@@ -1772,9 +1903,28 @@ class OwnTVPlayer(
                                     isLiveContent, if (isLiveContent) 0L else _position.value, resetRetries = false,
                                 )
                             }
+                        } else if (currentUserAgent == null && !triedVlcUaFallback && currentUrl != null) {
+                            // All standard retries exhausted. If the user left the source User-Agent blank,
+                            // retry once with the short "vlc" UA — some providers block the full
+                            // "VLC/3.0.20 LibVLC/3.0.20" header but accept the short form.
+                            triedVlcUaFallback = true
+                            currentUserAgent = "vlc"
+                            forceFullProbe = true
+                            android.util.Log.w(TAG, "playback failed — retrying once with short vlc User-Agent")
+                            _buffering.value = true
+                            delay(300)
+                            if (gen == loadGeneration && currentUrl != null) {
+                                loadUrl(
+                                    currentUrl!!, MediaMeta(currentTitle, currentSubtitle, currentYear, currentLogoUrl),
+                                    isLiveContent, if (isLiveContent) 0L else _position.value, resetRetries = false,
+                                )
+                            }
                         } else {
                             _buffering.value = false
-                            _error.value = "Couldn't play this stream. The source may be offline or use an unsupported format."
+                            val hint = if (triedVlcUaFallback)
+                                " This provider may require a custom User-Agent in source settings."
+                            else ""
+                            _error.value = "Couldn't play this stream. The source may be offline or use an unsupported format.$hint"
                         }
                     }
                 } else if (isLiveContent && currentUrl != null) {

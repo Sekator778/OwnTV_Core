@@ -1,8 +1,8 @@
 {
   "formatVersion": 1,
   "database": {
-    "version": 8,
-    "identityHash": "1f37039ba212fcda33a0ff648ba76801",
+    "version": 9,
+    "identityHash": "92b5f29c196abf07e892067934769bfc",
     "entities": [
       {
         "tableName": "profiles",
@@ -1333,6 +1333,101 @@
         ]
       },
       {
+        "tableName": "content_order",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `profileId` INTEGER NOT NULL, `mediaType` TEXT NOT NULL, `contextKey` TEXT NOT NULL, `itemId` INTEGER NOT NULL, `position` INTEGER NOT NULL, FOREIGN KEY(`profileId`) REFERENCES `profiles`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "profileId",
+            "columnName": "profileId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "mediaType",
+            "columnName": "mediaType",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "contextKey",
+            "columnName": "contextKey",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "itemId",
+            "columnName": "itemId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "position",
+            "columnName": "position",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_content_order_profileId",
+            "unique": false,
+            "columnNames": [
+              "profileId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_content_order_profileId` ON `${TABLE_NAME}` (`profileId`)"
+          },
+          {
+            "name": "index_content_order_profileId_mediaType_contextKey",
+            "unique": false,
+            "columnNames": [
+              "profileId",
+              "mediaType",
+              "contextKey"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_content_order_profileId_mediaType_contextKey` ON `${TABLE_NAME}` (`profileId`, `mediaType`, `contextKey`)"
+          },
+          {
+            "name": "index_content_order_profileId_mediaType_contextKey_itemId",
+            "unique": true,
+            "columnNames": [
+              "profileId",
+              "mediaType",
+              "contextKey",
+              "itemId"
+            ],
+            "orders": [],
+            "createSql": "CREATE UNIQUE INDEX IF NOT EXISTS `index_content_order_profileId_mediaType_contextKey_itemId` ON `${TABLE_NAME}` (`profileId`, `mediaType`, `contextKey`, `itemId`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "profiles",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "profileId"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      },
+      {
         "tableName": "downloads",
         "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `profileId` INTEGER NOT NULL, `mediaType` TEXT NOT NULL, `itemId` INTEGER NOT NULL, `title` TEXT NOT NULL, `posterUrl` TEXT, `streamUrl` TEXT NOT NULL, `filePath` TEXT, `status` TEXT NOT NULL, `downloadedBytes` INTEGER NOT NULL, `totalBytes` INTEGER NOT NULL, `createdAt` INTEGER NOT NULL, `updatedAt` INTEGER NOT NULL, FOREIGN KEY(`profileId`) REFERENCES `profiles`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
         "fields": [
@@ -1879,7 +1974,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '1f37039ba212fcda33a0ff648ba76801')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '92b5f29c196abf07e892067934769bfc')"
     ]
   }
 }

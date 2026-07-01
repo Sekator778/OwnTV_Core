@@ -58,6 +58,17 @@ class ExoSubtitleEngine(
     private var pendingSubLang: String? = null
     private var pendingSubTypeIndex: Int = -1
     private var subtitleApplied = false
+    // First-frame watchdog: this handoff only exists to show an image subtitle over otherwise-healthy
+    // video, so if ExoPlayer never renders a frame (a format/decoder combo mpv handled fine but this
+    // renderer can't), fall back rather than leaving the user on audio with a blank screen.
+    private val mainHandler = android.os.Handler(android.os.Looper.getMainLooper())
+    private var firstFrameSeen = false
+    private val noVideoTimeout = Runnable {
+        if (!firstFrameSeen) {
+            android.util.Log.w(TAG, "no video frame after ${NO_VIDEO_TIMEOUT_MS}ms — falling back")
+            callbacks.onError("Audio is playing, but video could not be rendered on this device.")
+        }
+    }
     // Maps the audio-track id the HUD selects (== its ordinal in the list we publish) → the ExoPlayer
     // track group + index to override. Rebuilt whenever the track list changes.
     private var audioSelections: List<AudioSel> = emptyList()
@@ -85,6 +96,8 @@ class ExoSubtitleEngine(
         }
 
         override fun onRenderedFirstFrame() {
+            firstFrameSeen = true
+            mainHandler.removeCallbacks(noVideoTimeout)
             callbacks.onFirstFrame()
         }
 
@@ -110,6 +123,9 @@ class ExoSubtitleEngine(
         pendingSubLang = subLang
         pendingSubTypeIndex = subTypeIndex
         subtitleApplied = false
+        firstFrameSeen = false
+        mainHandler.removeCallbacks(noVideoTimeout)
+        mainHandler.postDelayed(noVideoTimeout, NO_VIDEO_TIMEOUT_MS)
 
         val p = player ?: build().also { player = it }
         p.setVideoSurface(surface)
@@ -241,6 +257,7 @@ class ExoSubtitleEngine(
      *  fully release so we never hold a second decoder/connection while mpv plays. */
     fun stop() {
         surface = null
+        mainHandler.removeCallbacks(noVideoTimeout)
         callbacks.onCues(emptyList())
         player?.let { p ->
             p.removeListener(listener)
@@ -255,5 +272,6 @@ class ExoSubtitleEngine(
 
     private companion object {
         const val TAG = "ExoSubtitleEngine"
+        const val NO_VIDEO_TIMEOUT_MS = 8_000L
     }
 }

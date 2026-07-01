@@ -368,11 +368,14 @@ class EpgRepository(
         if (files.isEmpty()) return@withContext false // no fresh cache → caller falls back to a network re-sync
         Log.d("EpgRepository", "Cached EPG channel filter ids=${keys.size} files=${files.size}")
 
-        keys.forEach { epgDao.clearChannel(it) } // avoid duplicates if matched more than once
-        for (file in files) {
-            val storeId = file.name.removePrefix("epg_").removeSuffix(".xmltv").toLongOrNull() ?: continue
-            val buffer = ArrayList<EpgProgrammeEntity>(512)
-            try {
+        val storeFiles = files.mapNotNull { f ->
+            f.name.removePrefix("epg_").removeSuffix(".xmltv").toLongOrNull()?.let { it to f }
+        }
+        val storeIds = storeFiles.map { it.first }
+        val collected = HashMap<String, MutableList<EpgProgrammeEntity>>()
+        for ((storeId, file) in storeFiles) {
+            var foundHere = 0
+            runCatching {
                 file.inputStream().use { input ->
                     XmltvParser.parse(
                         input,
@@ -380,30 +383,23 @@ class EpgRepository(
                         onProgramme = { channelId, startMs, stopMs, title, desc ->
                             val key = channelId.trim().lowercase()
                             if (key in keys && stopMs > from && startMs < to) {
-                                val programme = EpgProgrammeEntity(
-                                    sourceId = storeId,
-                                    epgChannelId = key,
-                                    startMs = startMs,
-                                    stopMs = stopMs,
-                                    title = title,
-                                    description = desc,
-                                )
-                                buffer.add(programme.copy(contentHash = programme.computeContentHash()))
-                                if (buffer.size >= BulkInsertHelper.CHUNK) {
-                                    epgDao.upsertProgrammes(buffer.toList())
-                                    buffer.clear()
-                                }
+                                collected.getOrPut(key) { ArrayList() }
+                                    .add(EpgProgrammeEntity(sourceId = storeId, epgChannelId = key, startMs = startMs, stopMs = stopMs, title = title, description = desc))
+                                foundHere++
                             }
                         },
                         channelFilter = keys,
                     )
                 }
-            } catch (c: CancellationException) {
-                throw c
-            } catch (e: Exception) {
-                Log.w("EpgRepository", "Cached EPG top-up failed for $storeId — keeping partial rows", e)
-            }
-            if (buffer.isNotEmpty()) epgDao.upsertProgrammes(buffer)
+            }.onFailure { Log.w("EpgRepository", "cacheFill parse failed storeId=$storeId (other sources unaffected)", it) }
+        }
+
+        var insertedTotal = 0
+        for ((key, rows) in collected) {
+            if (rows.isEmpty()) continue
+            epgDao.clearChannelForSources(key, storeIds)
+            rows.chunked(QUERY_CHUNK).forEach { epgDao.upsertProgrammes(it) }
+            insertedTotal += rows.size
         }
         true // had fresh cache and processed it (true even if an id wasn't present — re-syncing wouldn't help)
     }

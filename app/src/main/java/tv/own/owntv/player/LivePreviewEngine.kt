@@ -46,6 +46,8 @@ class LivePreviewEngine(
 ) : PlaybackEngine {
     enum class State { IDLE, LOADING, PLAYING, ERROR }
 
+    init { LiveDiagnosticsLog.init(context) }
+
     private var player: ExoPlayer? = null
     private var surface: Surface? = null
     private var muted: Boolean = true
@@ -94,6 +96,15 @@ class LivePreviewEngine(
     // without that decoder) — the VM hands such a stream to mpv (FFmpeg decodes everything) so it isn't silent.
     private val _audioUnsupported = MutableStateFlow(false)
     val audioUnsupported: StateFlow<Boolean> = _audioUnsupported.asStateFlow()
+    // One-shot per load: audio/position is progressing normally and a video track exists, but ExoPlayer has
+    // never rendered a single frame of it — the "audio plays, no picture" case the freeze/frame watchdogs
+    // below can't see (they only catch a freeze AFTER frames were once seen, or a total position stall).
+    // The VM observes this to try the existing mpv fallback once; legitimate audio-only streams never have
+    // a video track, so they never set this.
+    private val _noVideoDetected = MutableStateFlow(false)
+    val noVideoDetected: StateFlow<Boolean> = _noVideoDetected.asStateFlow()
+    private var noVideoTriggered = false
+    private var readySinceMs = 0L
 
     // Programmatic codec/audio errors (Reviewer: more reliable than logcat for ExoPlayer, and survives the
     // Android 14+ own-logcat lockdown). MediaCodec.CodecException.diagnosticInfo carries the exact code
@@ -210,6 +221,9 @@ class LivePreviewEngine(
     private val mainHandler = android.os.Handler(android.os.Looper.getMainLooper())
     private var hasPlayed = false
     private var retryCount = 0
+    // Set just before our own stop()/release() touches the player, so the STATE_IDLE that follows is
+    // recognized as a clean, self-caused cancellation rather than an unexpected mid-live drop.
+    private var stoppingIntentionally = false
     private val stallWatchdog = Runnable { reconnect("buffering stalled") }
 
     // Silent-freeze watchdog. A live HLS feed can keep ExoPlayer in STATE_READY with the playback CLOCK
@@ -230,55 +244,136 @@ class LivePreviewEngine(
     private var videoRenderer: Renderer? = null
     private val frameListener = VideoFrameMetadataListener { _, _, _, _ -> frameCounter.incrementAndGet() }
     private var lastProgressPos = -1L
+    private var lastProgressWallMs = 0L // SystemClock.elapsedRealtime() of the last forward position move
     private var frozenChecks = 0
     private val progressWatchdog = object : Runnable {
         override fun run() {
             val p = player
-            // isPlaying == actively progressing (playWhenReady && STATE_READY && no suppression) — the only
-            // state where a freeze is meaningful; during buffering/error this resets and the other watchdogs run.
-            if (p != null && hasPlayed && p.isPlaying && p.playbackState == Player.STATE_READY) {
+            // Gate on INTENT to play (playWhenReady && STATE_READY), NOT isPlaying. isPlaying drops to false
+            // during transient playback suppression and brief internal stalls WITHOUT entering STATE_BUFFERING
+            // or STATE_ERROR — and the old gate then reset the freeze counter every poll, so a real frozen-
+            // but-"ready" channel was never caught (no spinner / reconnect / error). playWhenReady stays true
+            // through those flickers, which is exactly the "should be advancing but isn't" condition we want.
+            if (p != null && hasPlayed && p.playWhenReady && p.playbackState == Player.STATE_READY) {
+                val now = android.os.SystemClock.elapsedRealtime()
                 val frames = frameCounter.get()
                 val hasVideo = p.videoFormat != null
                 if (frames > 0) everRendered = true
-                // Picture frozen = we WERE rendering but the frame count stopped (the live manifest clock may
-                // still advance, hiding this from a position-only check). Guarded by everRendered so a
-                // non-functional frame hook can't false-trigger on healthy playback.
+                val pos = p.currentPosition
+                val posAdvanced = pos > 0 && pos != lastProgressPos
+                if (posAdvanced) { lastProgressPos = pos; lastProgressWallMs = now }
+                else if (lastProgressWallMs == 0L) lastProgressWallMs = now // seed on the first ready poll
+                // Audio-plays-no-video: a video track exists but has never rendered a single frame, even
+                // though we're not in the total-freeze case above (position/audio clock IS advancing). Only
+                // fires once per load so the VM's one-shot mpv fallback isn't retriggered after it acts.
+                if (!noVideoTriggered && hasVideo && !everRendered && now - readySinceMs >= NO_VIDEO_TIMEOUT_MS) {
+                    noVideoTriggered = true
+                    LiveDiagnosticsLog.event("progressWatchdog: no video frame after ${now - readySinceMs}ms (pos=$pos advancing, video track present)")
+                    _noVideoDetected.value = true
+                }
+                // Backstop: zero forward progress for the whole window while we intend to play == a dead feed.
+                // Wall-clock based, so it CAN'T be missed by isPlaying flicker or a non-functional frame hook.
+                val noProgressMs = now - lastProgressWallMs
+                if (noProgressMs >= FREEZE_TIMEOUT_MS) {
+                    LiveDiagnosticsLog.event("progressWatchdog: no-progress detected for ${noProgressMs}ms (pos=$pos, state=READY, frameHook=$everRendered)")
+                    frozenChecks = 0
+                    reconnect("stream frozen — no progress ${noProgressMs}ms"); return
+                }
+                // Picture frozen but the live clock still advances (position moving) — only the rendered-frame
+                // count can see this. Guarded by everRendered so a non-functional frame hook can't false-fire.
                 val framesStuck = everRendered && hasVideo && frames == lastFrameCount
-                val posStuck = p.currentPosition > 0 && p.currentPosition == lastProgressPos // fully dead feed
-                if (framesStuck || posStuck) {
+                lastFrameCount = frames
+                if (framesStuck) {
                     if (++frozenChecks >= FROZEN_LIMIT) {
-                        frozenChecks = 0; lastFrameCount = frames; lastProgressPos = p.currentPosition
-                        reconnect("stream frozen"); return
+                        LiveDiagnosticsLog.event("progressWatchdog: picture frozen, frames stuck at $frames for $frozenChecks polls (pos still advancing)")
+                        frozenChecks = 0
+                        reconnect("picture frozen"); return
                     }
                 } else {
                     frozenChecks = 0
                 }
-                lastFrameCount = frames
-                if (p.currentPosition > 0) lastProgressPos = p.currentPosition
             } else {
-                frozenChecks = 0; lastProgressPos = -1L
+                frozenChecks = 0; lastProgressPos = -1L; lastProgressWallMs = 0L
             }
             mainHandler.postDelayed(this, PROGRESS_CHECK_MS)
         }
     }
 
+    /** One diagnostic line per ExoPlayer state transition — never includes the stream URL. */
+    private fun logStateChange(playbackState: Int) {
+        val name = when (playbackState) {
+            Player.STATE_IDLE -> "IDLE"; Player.STATE_BUFFERING -> "BUFFERING"
+            Player.STATE_READY -> "READY"; Player.STATE_ENDED -> "ENDED"; else -> "UNKNOWN($playbackState)"
+        }
+        val p = player
+        LiveDiagnosticsLog.event(
+            "state_changed state=$name playWhenReady=${p?.playWhenReady} isPlaying=${p?.isPlaying} " +
+                "pos=${p?.currentPosition} buffered=${p?.bufferedPosition} hasPlayed=$hasPlayed " +
+                "isLiveContent=$isLiveContent buffering=${_buffering.value} reconnect=$retryCount/$MAX_RECONNECTS"
+        )
+    }
+
     private val listener = object : Player.Listener {
         override fun onPlaybackStateChanged(playbackState: Int) {
+            logStateChange(playbackState)
             when (playbackState) {
                 Player.STATE_BUFFERING -> {
                     _state.value = State.LOADING; _buffering.value = true
                     // After it has played, a long buffer == a dropped feed → reconnect (live streams don't
                     // resume on their own here). Before first play, leave initial load alone.
-                    if (hasPlayed) { mainHandler.removeCallbacks(stallWatchdog); mainHandler.postDelayed(stallWatchdog, STALL_MS) }
+                    if (hasPlayed) {
+                        LiveDiagnosticsLog.event("stallWatchdog armed (${STALL_MS}ms)")
+                        mainHandler.removeCallbacks(stallWatchdog); mainHandler.postDelayed(stallWatchdog, STALL_MS)
+                    }
                 }
                 Player.STATE_READY -> {
+                    val resumed = hasPlayed // a READY after first play == recovered from a buffer/stall
                     _state.value = State.PLAYING; _buffering.value = false
                     hasPlayed = true; retryCount = 0; mainHandler.removeCallbacks(stallWatchdog)
+                    if (resumed) LiveDiagnosticsLog.event("playing — READY, spinner cleared, stallWatchdog cancelled")
                     // (re)start the silent-freeze poll now that we're actually playing. Reset the frame
                     // baseline so the freeze window is measured from this READY (a healthy stream renders its
                     // first frame well within the grace window; one that never does trips the watchdog).
-                    frameCounter.set(0); lastFrameCount = 0; everRendered = false; lastProgressPos = -1L; frozenChecks = 0
+                    frameCounter.set(0); lastFrameCount = 0; everRendered = false; lastProgressPos = -1L; lastProgressWallMs = 0L; frozenChecks = 0
+                    readySinceMs = android.os.SystemClock.elapsedRealtime(); noVideoTriggered = false
                     mainHandler.removeCallbacks(progressWatchdog); mainHandler.postDelayed(progressWatchdog, PROGRESS_CHECK_MS)
+                }
+                Player.STATE_ENDED -> {
+                    // A live HLS feed shouldn't legitimately "end" — this is a stall/hiccup (e.g. a stray
+                    // EXT-X-ENDLIST from a provider glitch, or a momentarily empty playlist), not a real
+                    // terminal state. Only react once we've actually been playing; before that, leave it
+                    // alone (mirrors the pre-fix behavior so a channel that never opens still falls through
+                    // to onPlayerError / the VM's mpv fallback instead of looping reconnects forever).
+                    mainHandler.removeCallbacks(stallWatchdog)
+                    if (hasPlayed) {
+                        LiveDiagnosticsLog.event("STATE_ENDED mid-live — treating as stall, reconnecting")
+                        _buffering.value = true
+                        reconnect("ended mid-live")
+                    } else {
+                        LiveDiagnosticsLog.event("STATE_ENDED before first play — no action")
+                        _buffering.value = false
+                    }
+                }
+                Player.STATE_IDLE -> {
+                    mainHandler.removeCallbacks(stallWatchdog)
+                    when {
+                        stoppingIntentionally -> {
+                            LiveDiagnosticsLog.event("STATE_IDLE — clean cancellation (stop/release/back)")
+                            stoppingIntentionally = false
+                            _buffering.value = false
+                        }
+                        hasPlayed -> {
+                            // Unexpected IDLE while we still intend to be on a live channel — same
+                            // dead-end this fix targets, just via STATE_IDLE instead of STATE_ENDED.
+                            LiveDiagnosticsLog.event("STATE_IDLE unexpected mid-live — treating as stall, reconnecting")
+                            _buffering.value = true
+                            reconnect("idle mid-live")
+                        }
+                        else -> {
+                            LiveDiagnosticsLog.event("STATE_IDLE before first play — no action")
+                            _buffering.value = false
+                        }
+                    }
                 }
                 else -> { _buffering.value = false; mainHandler.removeCallbacks(stallWatchdog) }
             }
@@ -298,7 +393,8 @@ class LivePreviewEngine(
         override fun onCues(cueGroup: androidx.media3.common.text.CueGroup) { _cues.value = cueGroup.cues }
 
         override fun onPlayerError(error: PlaybackException) {
-            android.util.Log.w(TAG, "ExoPlayer error: ${error.errorCodeName}", error)
+            android.util.Log.w(LiveDiagnosticsLog.TAG, "ExoPlayer error: ${error.errorCodeName}", error)
+            LiveDiagnosticsLog.event("player_error code=${error.errorCodeName} hasPlayed=$hasPlayed")
             if (hasPlayed) { reconnect("error ${error.errorCodeName}"); return } // mid-stream drop → reconnect
             // Never opened → a stream ExoPlayer can't handle; the VM falls back to mpv on this ERROR.
             _state.value = State.ERROR
@@ -319,8 +415,11 @@ class LivePreviewEngine(
 
     /** Start (or switch to) [url] as a muted/unmuted preview. Never throws — a stream ExoPlayer can't set
      *  up just falls back to the channel logo (the full mpv player can still play it). [meta] populates the
-     *  full-screen HUD title when this preview is promoted. */
-    fun play(url: String, muted: Boolean, meta: MediaMeta = MediaMeta()) {
+     *  full-screen HUD title when this preview is promoted. [userAgent] is the per-source custom UA. */
+    fun play(url: String, muted: Boolean, meta: MediaMeta = MediaMeta(), userAgent: String? = null) {
+        LiveDiagnosticsLog.event("play() url=${HttpClient.redactUrl(url)} muted=$muted")
+        stoppingIntentionally = false
+        currentUa = userAgent?.takeIf { it.isNotBlank() } ?: HttpClient.DEFAULT_USER_AGENT
         diagnostics.start(); diagnostics.markLoad()
         lastCodecError = null; lastVideoDecoder = null
         this.muted = muted
@@ -329,11 +428,12 @@ class LivePreviewEngine(
         audioTrackList = emptyList(); audioSelections = emptyList(); _audioCount.value = 0
         textTrackList = emptyList(); textSelections = emptyList(); _subCount.value = 0
         _subtitleOn.value = false; _cues.value = emptyList(); _audioUnsupported.value = false
+        _noVideoDetected.value = false; noVideoTriggered = false; readySinceMs = 0L
         _videoHeight.value = null; _streamChips.value = emptyList()
         _videoRes.value = null
         _error.value = null
         _errorInfo.value = null
-        frameCounter.set(0); lastFrameCount = 0; everRendered = false; lastProgressPos = -1L; frozenChecks = 0
+        frameCounter.set(0); lastFrameCount = 0; everRendered = false; lastProgressPos = -1L; lastProgressWallMs = 0L; frozenChecks = 0
         _currentMeta.value = meta
         _volume.value = if (muted) 0 else 100
         _state.value = State.LOADING
@@ -346,7 +446,8 @@ class LivePreviewEngine(
             p.prepare()
             p.playWhenReady = true
         }.onFailure {
-            android.util.Log.w(TAG, "preview play() failed for $url", it)
+            android.util.Log.w(LiveDiagnosticsLog.TAG, "preview play() failed for ${HttpClient.redactUrl(url)}", it)
+            LiveDiagnosticsLog.event("play() failed: ${it.message}")
             _state.value = State.ERROR
             _error.value = "Couldn't play this channel."
             val raw = lastCodecError ?: diagnostics.recentError() ?: it.message
@@ -387,18 +488,23 @@ class LivePreviewEngine(
     /** Stop playback and free the decoder/connection (e.g. before mpv takes over for fullscreen). Keeps the
      *  ExoPlayer instance alive for the next preview. */
     fun stop() {
+        LiveDiagnosticsLog.event("stop() — intentional")
+        stoppingIntentionally = true
         currentUrl = null
         hasPlayed = false; retryCount = 0; mainHandler.removeCallbacks(stallWatchdog); mainHandler.removeCallbacks(progressWatchdog)
         frameCounter.set(0); lastFrameCount = 0; everRendered = false; lastProgressPos = -1L; frozenChecks = 0
         audioTrackList = emptyList(); audioSelections = emptyList(); _audioCount.value = 0
         textTrackList = emptyList(); textSelections = emptyList(); _subCount.value = 0
         _subtitleOn.value = false; _cues.value = emptyList(); _audioUnsupported.value = false
+        _noVideoDetected.value = false; noVideoTriggered = false; readySinceMs = 0L
         _videoHeight.value = null; _streamChips.value = emptyList()
         _state.value = State.IDLE
         player?.run { stop(); clearMediaItems() }
     }
 
     fun release() {
+        LiveDiagnosticsLog.event("release() — intentional")
+        stoppingIntentionally = true
         mainHandler.removeCallbacks(stallWatchdog)
         mainHandler.removeCallbacks(progressWatchdog)
         player?.run { removeListener(listener); release() }
@@ -417,6 +523,7 @@ class LivePreviewEngine(
         val p = player
         val url = currentUrl
         if (p == null || url == null || retryCount >= MAX_RECONNECTS) {
+            LiveDiagnosticsLog.event("reconnect exhausted ($reason) at $retryCount/$MAX_RECONNECTS — giving up")
             _state.value = State.ERROR; _isPlaying.value = false; _buffering.value = false
             _error.value = "Lost connection to this channel."
             val raw = lastCodecError ?: diagnostics.recentError() ?: reason
@@ -425,7 +532,7 @@ class LivePreviewEngine(
         }
         retryCount++
         _error.value = null; _errorInfo.value = null; _state.value = State.LOADING; _buffering.value = true
-        android.util.Log.w(TAG, "live reconnect ($reason) — attempt $retryCount/$MAX_RECONNECTS")
+        LiveDiagnosticsLog.event("reconnect attempt $retryCount/$MAX_RECONNECTS reason=$reason")
         mainHandler.postDelayed({
             if (currentUrl != url) return@postDelayed // superseded (zapped / stopped)
             runCatching {
@@ -518,23 +625,31 @@ class LivePreviewEngine(
         _audioUnsupported.value = audio.isNotEmpty() && !anySupportedAudio
     }
 
-    private val httpDataSource by lazy {
-        OkHttpDataSource.Factory(okHttpClient).setUserAgent(HttpClient.DEFAULT_USER_AGENT)
-    }
-    private val defaultSourceFactory by lazy { DefaultMediaSourceFactory(httpDataSource) }
-    // HLS factory that exposes embedded CEA-608 closed captions even when the playlist doesn't *declare*
-    // them — US premium channels (HBO/Showtime/Cinemax) carry CC inside the video stream, not as a subtitle
-    // track, so ExoPlayer otherwise shows nothing. The forced 608 track then appears in the subtitle HUD.
-    private val hlsCcSourceFactory by lazy {
-        HlsMediaSource.Factory(httpDataSource).setExtractorFactory(DefaultHlsExtractorFactory(0, true))
+    // Effective User-Agent for the current stream; updated per play() call.
+    // null = no source UA configured, use DEFAULT_USER_AGENT.
+    private var currentUa: String = HttpClient.DEFAULT_USER_AGENT
+    private var dataSourceForUa: String = ""
+    private var cachedHttpDataSource: OkHttpDataSource.Factory? = null
+    private var cachedDefaultFactory: DefaultMediaSourceFactory? = null
+    private var cachedHlsCcFactory: HlsMediaSource.Factory? = null
+
+    private fun httpDataSourceFor(ua: String): OkHttpDataSource.Factory {
+        if (ua != dataSourceForUa || cachedHttpDataSource == null) {
+            cachedHttpDataSource = OkHttpDataSource.Factory(okHttpClient).setUserAgent(ua)
+            cachedDefaultFactory = DefaultMediaSourceFactory(cachedHttpDataSource!!)
+            cachedHlsCcFactory = HlsMediaSource.Factory(cachedHttpDataSource!!).setExtractorFactory(DefaultHlsExtractorFactory(0, true))
+            dataSourceForUa = ua
+        }
+        return cachedHttpDataSource!!
     }
 
     /** HLS → caption-aware factory; everything else (raw MPEG-TS, etc.) → default. */
     private fun mediaSourceFor(url: String): MediaSource {
+        httpDataSourceFor(currentUa) // ensure factories match current UA
         val item = MediaItem.fromUri(url)
-        val uri = item.localConfiguration?.uri ?: return defaultSourceFactory.createMediaSource(item)
-        return if (Util.inferContentType(uri) == C.CONTENT_TYPE_HLS) hlsCcSourceFactory.createMediaSource(item)
-        else defaultSourceFactory.createMediaSource(item)
+        val uri = item.localConfiguration?.uri ?: return cachedDefaultFactory!!.createMediaSource(item)
+        return if (Util.inferContentType(uri) == C.CONTENT_TYPE_HLS) cachedHlsCcFactory!!.createMediaSource(item)
+        else cachedDefaultFactory!!.createMediaSource(item)
     }
 
     private fun build(): ExoPlayer {
@@ -549,7 +664,7 @@ class LivePreviewEngine(
         val renderers = DefaultRenderersFactory(context).forceDisableMediaCodecAsynchronousQueueing()
         return ExoPlayer.Builder(context)
             .setRenderersFactory(renderers)
-            .setMediaSourceFactory(defaultSourceFactory)
+            .setMediaSourceFactory(DefaultMediaSourceFactory(httpDataSourceFor(currentUa)))
             .setLoadControl(loadControl)
             .build()
             .apply {
@@ -560,22 +675,28 @@ class LivePreviewEngine(
                 // error/stall watchdogs still cover total freezes, so this can't make things worse.
                 videoRenderer = (0 until rendererCount).map { getRenderer(it) }
                     .firstOrNull { it.trackType == C.TRACK_TYPE_VIDEO }
+                if (videoRenderer == null) {
+                    android.util.Log.w(LiveDiagnosticsLog.TAG, "frame hook NOT wired — no video renderer found; picture-freeze detection falls back to the no-progress backstop")
+                }
                 videoRenderer?.let { r ->
                     runCatching {
                         createMessage(r)
                             .setType(MediaCodecVideoRenderer.MSG_SET_VIDEO_FRAME_METADATA_LISTENER)
                             .setPayload(frameListener)
                             .send()
+                    }.onFailure {
+                        android.util.Log.w(LiveDiagnosticsLog.TAG, "frame hook send FAILED (${it.message}) — picture-freeze detection falls back to the no-progress backstop")
                     }
                 }
             }
     }
 
     companion object {
-        private const val TAG = "LivePreviewEngine"
         private const val MAX_RECONNECTS = 6        // ~consecutive failures before giving up (HUD Retry then)
         private const val STALL_MS = 12_000L        // buffering this long after playing == a dropped feed
         private const val PROGRESS_CHECK_MS = 2_500L // poll interval for the silent-freeze watchdog
-        private const val FROZEN_LIMIT = 3          // position frozen this many polls (~7.5s) == a dropped feed
+        private const val FROZEN_LIMIT = 3          // picture frozen this many polls (~7.5s) == a dropped feed
+        private const val FREEZE_TIMEOUT_MS = 8_000L // zero forward progress this long while READY == dead feed
+        private const val NO_VIDEO_TIMEOUT_MS = 8_000L // video track present, zero frames rendered this long == "audio plays, no picture"
     }
 }

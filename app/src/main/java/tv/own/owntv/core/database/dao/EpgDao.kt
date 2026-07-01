@@ -35,6 +35,14 @@ interface EpgDao {
     @Query("DELETE FROM epg_programmes WHERE epgChannelId = :epgChannelId")
     suspend fun clearChannel(epgChannelId: String)
 
+    /**
+     * Drop programmes for one EPG channel id only within the given sources. Used by the cache re-fill so
+     * we delete only what we're about to repopulate — a source whose cache isn't fresh keeps its data
+     * instead of being wiped and left empty (which would drop the channel out of the guide).
+     */
+    @Query("DELETE FROM epg_programmes WHERE epgChannelId = :epgChannelId AND sourceId IN (:sourceIds)")
+    suspend fun clearChannelForSources(epgChannelId: String, sourceIds: List<Long>)
+
     /** The programme airing at [now] on a given EPG channel. */
     @Query("SELECT * FROM epg_programmes WHERE epgChannelId = :epgChannelId AND startMs <= :now AND stopMs > :now ORDER BY startMs DESC LIMIT 1")
     suspend fun nowPlaying(epgChannelId: String, now: Long): EpgProgrammeEntity?
@@ -56,6 +64,23 @@ interface EpgDao {
     suspend fun programmeSummariesInWindow(sourceIds: List<Long>, from: Long, to: Long): List<EpgProgrammeEntity>
 
     /**
+     * One page of the guide window, WITHOUT the heavy `description` column. Two reasons this is paged
+     * (keyset on `id`, the primary key) instead of one query:
+     *   1. dropping `description` keeps rows small (grid needs only title/time);
+     *   2. a big lineup still returns far more rows than fit in a single ~2 MB CursorWindow, and the
+     *      androidx.sqlite statement driver can't page past one window (crash: "Couldn't read row N"),
+     *      so each call must be bounded by [limit].
+     * Caller loops with `afterId = lastId` until a short page, then groups by channel. description is
+     * fetched lazily via [programmeDescription] when a programme's detail dialog opens.
+     */
+    @Query("SELECT id, sourceId, epgChannelId, startMs, stopMs, title, NULL AS description, contentHash FROM epg_programmes WHERE sourceId IN (:sourceIds) AND stopMs > :from AND startMs < :to AND id > :afterId ORDER BY id ASC LIMIT :limit")
+    suspend fun programmesInWindowPage(sourceIds: List<Long>, from: Long, to: Long, afterId: Long, limit: Int): List<EpgProgrammeEntity>
+
+    /** One programme's synopsis, loaded on demand for the detail dialog (the grid load drops it). */
+    @Query("SELECT description FROM epg_programmes WHERE id = :programmeId LIMIT 1")
+    suspend fun programmeDescription(programmeId: Long): String?
+
+    /**
      * One guide row's programmes, loaded lazily when the row scrolls into view. [epgKey] must be the
      * normalized (trim+lowercase) id — programmes are stored normalized, so this hits the
      * (epgChannelId, startMs) index and stays instant even with 100k+ stored programmes.
@@ -74,6 +99,7 @@ interface EpgDao {
     /** How many programmes are stored for these sources (to tell "no guide yet" from "empty window"). */
     @Query("SELECT COUNT(*) FROM epg_programmes WHERE sourceId IN (:sourceIds)")
     suspend fun countForSources(sourceIds: List<Long>): Int
+
 
     /** Live programme count for one source — drives the EPG status shown on the source row. */
     @Query("SELECT COUNT(*) FROM epg_programmes WHERE sourceId = :sourceId")

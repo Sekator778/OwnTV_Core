@@ -128,6 +128,44 @@ interface ChannelDao {
     @Query("SELECT * FROM channels WHERE sourceId IN (:sourceIds) ORDER BY sourceId ASC, sortOrder ASC, name ASC")
     fun pagingAllOriginal(sourceIds: List<Long>): PagingSource<Int, ChannelEntity>
 
+    // --- Manual order (Move) — LEFT JOIN content_order; items with a row come first in their saved
+    //     position, the rest fall back to provider/playlist order. ---
+    @Query(
+        "SELECT c.* FROM channels c " +
+            "LEFT JOIN content_order o ON o.itemId = c.id AND o.profileId = :profileId AND o.mediaType = 'LIVE' AND o.contextKey = :contextKey " +
+            "WHERE c.categoryId = :categoryId " +
+            "ORDER BY (CASE WHEN o.position IS NULL THEN 1 ELSE 0 END), o.position, c.sortOrder, c.name",
+    )
+    fun pagingByCategoryManual(categoryId: Long, profileId: Long, contextKey: String): PagingSource<Int, ChannelEntity>
+
+    @Query(
+        "SELECT c.* FROM channels c " +
+            "INNER JOIN favorites f ON f.itemId = c.id AND f.mediaType = 'LIVE' " +
+            "LEFT JOIN content_order o ON o.itemId = c.id AND o.profileId = :profileId AND o.mediaType = 'LIVE' AND o.contextKey = :contextKey " +
+            "WHERE f.profileId = :profileId " +
+            "ORDER BY (CASE WHEN o.position IS NULL THEN 1 ELSE 0 END), o.position, f.addedAt DESC",
+    )
+    fun pagingFavoritesManual(profileId: Long, contextKey: String): PagingSource<Int, ChannelEntity>
+
+    /** Bounded snapshot of a folder in manual order, for the Move session's in-memory reorder. */
+    @Query(
+        "SELECT c.* FROM channels c " +
+            "LEFT JOIN content_order o ON o.itemId = c.id AND o.profileId = :profileId AND o.mediaType = 'LIVE' AND o.contextKey = :contextKey " +
+            "WHERE c.categoryId = :categoryId " +
+            "ORDER BY (CASE WHEN o.position IS NULL THEN 1 ELSE 0 END), o.position, c.sortOrder, c.name LIMIT :limit",
+    )
+    suspend fun snapshotByCategoryManual(categoryId: Long, profileId: Long, contextKey: String, limit: Int): List<ChannelEntity>
+
+    /** Bounded snapshot of Favorites in manual order, for the Move session's in-memory reorder. */
+    @Query(
+        "SELECT c.* FROM channels c " +
+            "INNER JOIN favorites f ON f.itemId = c.id AND f.mediaType = 'LIVE' " +
+            "LEFT JOIN content_order o ON o.itemId = c.id AND o.profileId = :profileId AND o.mediaType = 'LIVE' AND o.contextKey = :contextKey " +
+            "WHERE f.profileId = :profileId " +
+            "ORDER BY (CASE WHEN o.position IS NULL THEN 1 ELSE 0 END), o.position, f.addedAt DESC LIMIT :limit",
+    )
+    suspend fun snapshotFavoritesManual(profileId: Long, contextKey: String, limit: Int): List<ChannelEntity>
+
     // --- Counts ---
     @Query("SELECT COUNT(*) FROM channels WHERE categoryId = :categoryId")
     fun countByCategory(categoryId: Long): Flow<Int>

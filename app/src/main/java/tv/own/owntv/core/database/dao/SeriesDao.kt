@@ -68,6 +68,41 @@ interface SeriesDao {
     @Query("SELECT * FROM series WHERE sourceId IN (:sourceIds) ORDER BY sourceId ASC, sortOrder ASC, name ASC")
     fun pagingAllOriginal(sourceIds: List<Long>): PagingSource<Int, SeriesEntity>
 
+    // --- Manual order (Move) — see ChannelDao for the join shape. ---
+    @Query(
+        "SELECT s.* FROM series s " +
+            "LEFT JOIN content_order o ON o.itemId = s.id AND o.profileId = :profileId AND o.mediaType = 'SERIES' AND o.contextKey = :contextKey " +
+            "WHERE s.categoryId = :categoryId " +
+            "ORDER BY (CASE WHEN o.position IS NULL THEN 1 ELSE 0 END), o.position, s.sortOrder, s.name",
+    )
+    fun pagingByCategoryManual(categoryId: Long, profileId: Long, contextKey: String): PagingSource<Int, SeriesEntity>
+
+    @Query(
+        "SELECT s.* FROM series s " +
+            "INNER JOIN favorites f ON f.itemId = s.id AND f.mediaType = 'SERIES' " +
+            "LEFT JOIN content_order o ON o.itemId = s.id AND o.profileId = :profileId AND o.mediaType = 'SERIES' AND o.contextKey = :contextKey " +
+            "WHERE f.profileId = :profileId " +
+            "ORDER BY (CASE WHEN o.position IS NULL THEN 1 ELSE 0 END), o.position, f.addedAt DESC",
+    )
+    fun pagingFavoritesManual(profileId: Long, contextKey: String): PagingSource<Int, SeriesEntity>
+
+    @Query(
+        "SELECT s.* FROM series s " +
+            "LEFT JOIN content_order o ON o.itemId = s.id AND o.profileId = :profileId AND o.mediaType = 'SERIES' AND o.contextKey = :contextKey " +
+            "WHERE s.categoryId = :categoryId " +
+            "ORDER BY (CASE WHEN o.position IS NULL THEN 1 ELSE 0 END), o.position, s.sortOrder, s.name LIMIT :limit",
+    )
+    suspend fun snapshotByCategoryManual(categoryId: Long, profileId: Long, contextKey: String, limit: Int): List<SeriesEntity>
+
+    @Query(
+        "SELECT s.* FROM series s " +
+            "INNER JOIN favorites f ON f.itemId = s.id AND f.mediaType = 'SERIES' " +
+            "LEFT JOIN content_order o ON o.itemId = s.id AND o.profileId = :profileId AND o.mediaType = 'SERIES' AND o.contextKey = :contextKey " +
+            "WHERE f.profileId = :profileId " +
+            "ORDER BY (CASE WHEN o.position IS NULL THEN 1 ELSE 0 END), o.position, f.addedAt DESC LIMIT :limit",
+    )
+    suspend fun snapshotFavoritesManual(profileId: Long, contextKey: String, limit: Int): List<SeriesEntity>
+
     @Query("SELECT COUNT(*) FROM series WHERE categoryId = :categoryId")
     fun countByCategory(categoryId: Long): Flow<Int>
 

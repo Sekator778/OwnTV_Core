@@ -10,6 +10,7 @@ import kotlinx.coroutines.flow.first
 import org.json.JSONArray
 import org.json.JSONObject
 import tv.own.owntv.core.database.dao.ChannelDao
+import tv.own.owntv.core.database.dao.ContentOrderDao
 import tv.own.owntv.core.database.dao.FavoriteDao
 import tv.own.owntv.core.database.dao.HistoryDao
 import tv.own.owntv.core.database.dao.MovieDao
@@ -18,6 +19,7 @@ import tv.own.owntv.core.database.dao.ProfileDao
 import tv.own.owntv.core.database.dao.SeriesDao
 import tv.own.owntv.core.database.dao.UserDataExportRow
 import tv.own.owntv.core.database.dao.resolveExistingProfileId
+import tv.own.owntv.core.database.entity.ContentOrderEntity
 import tv.own.owntv.core.database.entity.FavoriteEntity
 import tv.own.owntv.core.database.entity.PlaybackProgressEntity
 import tv.own.owntv.core.database.entity.WatchHistoryEntity
@@ -43,10 +45,11 @@ class UserDataResolver(
     private val favoriteDao: FavoriteDao,
     private val historyDao: HistoryDao,
     private val progressDao: ProgressDao,
+    private val contentOrderDao: ContentOrderDao,
 ) {
 
-    /** Exports the chosen kinds ("fav" / "his" / "prog") as stable-key records for the backup file. */
-    suspend fun exportAll(kinds: Set<String> = setOf("fav", "his", "prog")): JSONArray {
+    /** Exports the chosen kinds ("fav" / "his" / "prog" / "order") as stable-key records for the backup file. */
+    suspend fun exportAll(kinds: Set<String> = setOf("fav", "his", "prog", "order")): JSONArray {
         val out = JSONArray()
         if ("fav" in kinds) favoriteDao.getAllOnce().forEach { f ->
             describe(f.mediaType, f.itemId)?.let { out.put(it.put("p", f.profileId).put("kind", "fav").put("at", f.addedAt)) }
@@ -57,6 +60,11 @@ class UserDataResolver(
         if ("prog" in kinds) progressDao.getAllOnce().forEach { pr ->
             describe(pr.mediaType, pr.itemId)?.let {
                 out.put(it.put("p", pr.profileId).put("kind", "prog").put("at", pr.updatedAt).put("pos", pr.positionMs).put("dur", pr.durationMs))
+            }
+        }
+        if ("order" in kinds) contentOrderDao.getAllOnce().forEach { o ->
+            describe(o.mediaType, o.itemId)?.let {
+                out.put(it.put("p", o.profileId).put("kind", "order").put("ctx", o.contextKey).put("pos", o.position))
             }
         }
         return out
@@ -93,11 +101,17 @@ class UserDataResolver(
      * Heals favorites/history/resume across a source re-sync. Content rows are clear-then-insert, so
      * their ids change every refresh and the user-data rows (keyed on the old ids) orphan — the count
      * badge still showed them, but the join returned nothing. Capture [exportAll] BEFORE the sync (ids
-     * still valid → stable keys), then call this AFTER it: re-resolve each record to the new ids, purge
-     * the now-orphaned rows so counts and lists agree, and keep anything still unresolvable (e.g.
-     * not-yet-loaded episodes) pending for a later sync / show-open.
+     * still valid → stable keys), then call this AFTER it: re-resolve each record to the new ids, and
+     * (only when [purge] is true) drop the now-orphaned rows so counts and lists agree. Keep anything
+     * still unresolvable (e.g. not-yet-loaded episodes) pending for a later sync / show-open.
+     *
+     * [purge] must be false when the sync didn't fully succeed (e.g. it failed partway through a
+     * chunked import): the clear-then-insert is deferred per chunk, so a partial import can leave
+     * content rows missing that are still valid — purging in that case would permanently delete
+     * favorites for content that's simply not re-synced yet, instead of leaving them to heal on the
+     * next successful sync.
      */
-    suspend fun relinkAfterSync(snapshot: JSONArray) {
+    suspend fun relinkAfterSync(snapshot: JSONArray, purge: Boolean = true) {
         val unresolved = JSONArray()
         for (i in 0 until snapshot.length()) {
             val e = snapshot.getJSONObject(i)
@@ -110,6 +124,7 @@ class UserDataResolver(
             favoriteDao.purgeOrphans()
             historyDao.purgeOrphans()
             progressDao.purgeOrphans()
+            contentOrderDao.purgeOrphans()
         }
         if (unresolved.length() > 0) addPending(unresolved)
         resolvePending() // also retries any in-flight backup restore
@@ -227,6 +242,9 @@ class UserDataResolver(
                         profileId = pid, mediaType = type, itemId = itemId,
                         positionMs = e.optLong("pos", 0), durationMs = e.optLong("dur", 0), updatedAt = at,
                     ),
+                )
+                "order" -> contentOrderDao.insertAll(
+                    listOf(ContentOrderEntity(profileId = pid, mediaType = type, contextKey = e.getString("ctx"), itemId = itemId, position = e.getInt("pos"))),
                 )
             }
             true

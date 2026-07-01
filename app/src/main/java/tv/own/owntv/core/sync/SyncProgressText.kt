@@ -82,7 +82,7 @@ fun importProgressDisplay(counts: SyncProgressCounts?): SyncProgressDisplay {
     return SyncProgressDisplay(
         title = "Importing catalog…",
         primaryText = primaryText,
-        detail = if (counts?.hasItems == true) "Syncing catalog" else "Preparing catalog",
+        detail = if (counts?.hasItems == true) "Syncing catalog" else "Connecting to source...",
     )
 }
 
@@ -97,7 +97,7 @@ fun syncProgressDisplay(counts: SyncProgressCounts?): SyncProgressDisplay =
     SyncProgressDisplay(
         title = "Importing catalog…",
         primaryText = counts?.label()?.ifBlank { null } ?: "Preparing catalog",
-        detail = if (counts?.hasItems == true) "Syncing catalog" else "Preparing catalog",
+        detail = if (counts?.hasItems == true) "Syncing catalog" else "Connecting to source...",
     )
 
 fun syncProgressCountsLabel(counts: SyncProgressCounts): String? =

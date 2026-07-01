@@ -69,6 +69,12 @@ class SettingsRepository(private val context: Context) {
         val LAST_LIVE_CATEGORY = stringPreferencesKey("last_live_category")
         val LAST_LIVE_CHANNEL = androidx.datastore.preferences.core.longPreferencesKey("last_live_channel")
         val VOD_VIEW_MODE = stringPreferencesKey("vod_view_mode")
+        // Global proxy (Approach 1 — one app-wide HTTP proxy). HTTP only; no per-source override yet.
+        val PROXY_ENABLED = booleanPreferencesKey("proxy_enabled")
+        val PROXY_HOST = stringPreferencesKey("proxy_host")
+        val PROXY_PORT = intPreferencesKey("proxy_port")
+        val PROXY_USER = stringPreferencesKey("proxy_user")
+        val PROXY_PASS = stringPreferencesKey("proxy_pass")
     }
 
     // --- Live TV: remember the last focused channel so reopening lands focus back on it ---
@@ -378,17 +384,55 @@ class SettingsRepository(private val context: Context) {
         context.dataStore.edit { it[Keys.ACTIVE_PROFILE] = id }
     }
 
+    // --- Global proxy (Approach 1 — one app-wide HTTP proxy) ---
+    // Covers all OkHttp traffic (playlist/API/EPG/images/downloads/updates/weather + ExoPlayer) and mpv
+    // playback via its http-proxy option. Per-source overrides and SOCKS are future work; the proxy
+    // password is intentionally NOT part of settings backup/export — see extras/PROXY_SUPPORT_PLAN.md.
+
+    /** Live snapshot of the proxy settings as a single object (consumed by ProxyConfigHolder). */
+    val proxyConfig: Flow<tv.own.owntv.core.network.ProxyConfig> = context.dataStore.data.map { p ->
+        tv.own.owntv.core.network.ProxyConfig(
+            enabled = p[Keys.PROXY_ENABLED] ?: false,
+            host = p[Keys.PROXY_HOST] ?: "",
+            port = p[Keys.PROXY_PORT] ?: 0,
+            username = p[Keys.PROXY_USER] ?: "",
+            password = p[Keys.PROXY_PASS] ?: "",
+        )
+    }
+
+    suspend fun setProxyEnabled(enabled: Boolean) {
+        context.dataStore.edit { it[Keys.PROXY_ENABLED] = enabled }
+    }
+
+    /** Persist the proxy form in one write (enabled + host/port/user/pass). Blank user/pass = no auth.
+     *  Port is clamped to a valid range; 0 means "unset". */
+    suspend fun saveProxy(enabled: Boolean, host: String, port: Int, username: String, password: String) {
+        context.dataStore.edit {
+            it[Keys.PROXY_ENABLED] = enabled
+            it[Keys.PROXY_HOST] = host.trim()
+            it[Keys.PROXY_PORT] = port.coerceIn(0, 65535)
+            it[Keys.PROXY_USER] = username.trim()
+            it[Keys.PROXY_PASS] = password
+        }
+    }
+
     // --- Backup / restore of pure UI/player preferences (device-agnostic) ---
     // Deliberately EXCLUDES the download folder (a device-specific path) and the profile/source-coupled
     // keys (active profile, default source, refresh-on-startup) — those ride with the sources backup.
 
     private val backupStringKeys = listOf(
         Keys.THEME_MODE, Keys.ACCENT, Keys.ACCENT_CUSTOM, Keys.DEFAULT_ZOOM,
-        Keys.PREF_AUDIO_LANG, Keys.PREF_SUB_LANG, Keys.SORT_LIVE, Keys.SORT_MOVIES,
-        Keys.SORT_SERIES, Keys.RESUME_MODE,
+        Keys.PREF_AUDIO_LANG, Keys.PREF_SUB_LANG, Keys.SORT_LIVE, Keys.SORT_GUIDE, Keys.SORT_MOVIES,
+        Keys.SORT_SERIES, Keys.RESUME_MODE, Keys.CATCHUP_TZ, Keys.ANIMATION_LEVEL, Keys.VOD_VIEW_MODE,
+        // Global proxy — non-secret fields only. The proxy password (Keys.PROXY_PASS) is NEVER part of
+        // this whitelist; it is handled separately by BackupManager (encrypted or omitted).
+        Keys.PROXY_HOST, Keys.PROXY_USER,
     )
-    private val backupIntKeys = listOf(Keys.UI_ZOOM_PCT, Keys.AUDIO_DELAY_MS)
-    private val backupBoolKeys = listOf(Keys.LIVE_PREVIEW, Keys.LIVE_PREVIEW_AUDIO, Keys.HDR_ENABLED, Keys.ANDROID_TV_HOME, Keys.HW_DECODING, Keys.UPDATE_CHECK_ON_START)
+    private val backupIntKeys = listOf(Keys.UI_ZOOM_PCT, Keys.AUDIO_DELAY_MS, Keys.CATCHUP_OFFSET_MIN, Keys.PROXY_PORT)
+    private val backupBoolKeys = listOf(
+        Keys.LIVE_PREVIEW, Keys.LIVE_PREVIEW_AUDIO, Keys.HDR_ENABLED, Keys.ANDROID_TV_HOME, Keys.HW_DECODING,
+        Keys.UPDATE_CHECK_ON_START, Keys.SURROUND_SOUND, Keys.AUTO_PLAY_NEXT, Keys.PROXY_ENABLED,
+    )
     private val backupFloatKeys = listOf(Keys.SUB_SCALE)
 
     suspend fun exportSettings(): org.json.JSONObject {
@@ -408,5 +452,43 @@ class SettingsRepository(private val context: Context) {
             backupBoolKeys.forEach { k -> if (o.has(k.name)) prefs[k] = o.getBoolean(k.name) }
             backupFloatKeys.forEach { k -> if (o.has(k.name)) prefs[k] = o.getDouble(k.name).toFloat() }
         }
+    }
+
+    // --- Backup: per-profile startup landing (dynamic "startup_mode_<id>" keys) ---
+
+    /** Exports all per-profile startup-mode keys as { "<profileId>": "<MODE>" }. */
+    suspend fun exportStartupModes(): org.json.JSONObject {
+        val prefix = "startup_mode_"
+        val out = org.json.JSONObject()
+        context.dataStore.data.first().asMap().forEach { (k, v) ->
+            if (k.name.startsWith(prefix) && v is String) {
+                out.put(k.name.removePrefix(prefix), v)
+            }
+        }
+        return out
+    }
+
+    /** Restores startup modes only for profile ids in [existingProfileIds] (others are dropped safely). */
+    suspend fun importStartupModes(o: org.json.JSONObject, existingProfileIds: Set<Long>) {
+        context.dataStore.edit { prefs ->
+            o.keys().forEach { key ->
+                val pid = key.toLongOrNull() ?: return@forEach
+                if (pid !in existingProfileIds) return@forEach
+                val mode = o.optString(key).takeIf { it.isNotEmpty() } ?: return@forEach
+                if (runCatching { StartupMode.valueOf(mode) }.isSuccess) {
+                    prefs[stringPreferencesKey("startup_mode_$pid")] = mode
+                }
+            }
+        }
+    }
+
+    // --- Backup: proxy password (handled out-of-band by BackupManager: encrypted or omitted) ---
+
+    /** Current proxy password, for the backup layer to encrypt. Never logged. */
+    suspend fun currentProxyPassword(): String = context.dataStore.data.first()[Keys.PROXY_PASS] ?: ""
+
+    /** Sets only the proxy password (used on restore once decrypted). Blank clears it. */
+    suspend fun setProxyPassword(password: String) {
+        context.dataStore.edit { it[Keys.PROXY_PASS] = password }
     }
 }

@@ -61,12 +61,12 @@ class OwnTVDatabaseMigrationTest {
     }
 
     @Test
-    fun migrateVersion7To8_addsEpgProgrammeHashingAndDedupesNaturalKeys() {
+    fun migrateVersion7To9_addsEpgProgrammeHashingAndContentOrder() {
         context.deleteDatabase(DB_NAME)
         bootstrapVersion7Database()
 
         val db = Room.databaseBuilder(context, OwnTVDatabase::class.java, DB_NAME)
-            .addMigrations(OwnTVDatabase.MIGRATION_7_8)
+            .addMigrations(OwnTVDatabase.MIGRATION_7_8, OwnTVDatabase.MIGRATION_8_9)
             .allowMainThreadQueries()
             .build()
 
@@ -74,8 +74,31 @@ class OwnTVDatabaseMigrationTest {
             val sqlite = db.openHelper.readableDatabase
             assertColumnExists(sqlite, "epg_programmes", "contentHash")
             assertIndexExists(sqlite, "index_epg_programmes_natural_key")
+            assertTableExists(sqlite, "content_order")
+            assertIndexExists(sqlite, "index_content_order_profileId_mediaType_contextKey_itemId")
             assertCount(sqlite, "epg_programmes", 2)
             assertCount(sqlite, "epg_channels", 2)
+        } finally {
+            db.close()
+        }
+    }
+
+    @Test
+    fun migrateVersion8To9_addsContentOrder() {
+        context.deleteDatabase(DB_NAME)
+        bootstrapVersion8Database()
+
+        val db = Room.databaseBuilder(context, OwnTVDatabase::class.java, DB_NAME)
+            .addMigrations(OwnTVDatabase.MIGRATION_8_9)
+            .allowMainThreadQueries()
+            .build()
+
+        try {
+            val sqlite = db.openHelper.readableDatabase
+            assertTableExists(sqlite, "content_order")
+            assertIndexExists(sqlite, "index_content_order_profileId")
+            assertIndexExists(sqlite, "index_content_order_profileId_mediaType_contextKey")
+            assertIndexExists(sqlite, "index_content_order_profileId_mediaType_contextKey_itemId")
         } finally {
             db.close()
         }
@@ -98,6 +121,16 @@ class OwnTVDatabaseMigrationTest {
             executeSchemaQueries(db, "tv.own.owntv.core.database.OwnTVDatabase/7.json")
             seedVersion7Data(db)
             db.version = 7
+        } finally {
+            db.close()
+        }
+    }
+
+    private fun bootstrapVersion8Database() {
+        val db = context.openOrCreateDatabase(DB_NAME, Context.MODE_PRIVATE, null)
+        try {
+            executeSchemaQueries(db, "tv.own.owntv.core.database.OwnTVDatabase/8.json")
+            db.version = 8
         } finally {
             db.close()
         }

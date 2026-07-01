@@ -64,8 +64,6 @@ class SourceRepository(
         val (result, _) = syncManager.sync(source, onProgress, contentTypes)
         Log.i(TAG, "core sync sourceId=${source.id} result=${result.name()} ms=${SystemClock.elapsedRealtime() - coreStartedAt}")
         if (result is SyncResult.Success) {
-            // Content rows just regenerated — re-attach the snapshot (and any restored backup data) to
-            // the new ids, and drop rows the provider removed.
             val relinkStartedAt = SystemClock.elapsedRealtime()
             runCatching { userData.relinkAfterSync(snapshot ?: org.json.JSONArray()) }
                 .onSuccess { Log.i(TAG, "userData relink sourceId=${source.id} rows=${snapshot?.length() ?: 0} ms=${SystemClock.elapsedRealtime() - relinkStartedAt}") }
