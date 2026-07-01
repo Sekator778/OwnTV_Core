@@ -1091,6 +1091,13 @@ class OwnTVPlayer(
             liveStallJob = scope.launch {
                 var lastPos = -1L
                 var stalls = 0
+                // Audio-plays-no-video watchdog: position (audio clock) keeps advancing so the freeze
+                // check above never trips, yet mpv selected a video track (currentVideoCodec != null,
+                // set as soon as track selection happens) and never decoded a single frame
+                // (currentHeightPx stays 0). Legitimate audio-only radio channels have no video track
+                // at all, so they never enter this branch. Reuses the same bounded reconnect budget/UX
+                // as the freeze watchdog above.
+                var noVideoStalls = 0
                 while (gen == loadGeneration) {
                     delay(LIVE_STALL_POLL_MS)
                     if (gen != loadGeneration || !isLiveContent) return@launch
@@ -1098,7 +1105,7 @@ class OwnTVPlayer(
                     // (expectingPlayback), while an error is shown, while paused/handed-off to ExoPlayer, or
                     // while mpv itself is buffering (paused-for-cache already drives the spinner there).
                     if (exoActive || expectingPlayback || _error.value != null || !_isPlaying.value) {
-                        stalls = 0; lastPos = -1L
+                        stalls = 0; lastPos = -1L; noVideoStalls = 0
                         continue
                     }
                     val pos = _position.value
@@ -1129,14 +1136,37 @@ class OwnTVPlayer(
                             return@launch
                         }
                     } else {
-                        // Progress (or not yet started) → healthy. Clear any stall state and, if we'd been
-                        // reconnecting, log the recovery and reset the budget.
+                        // Progress (or not yet started) → healthy on the position check. Clear any stall
+                        // state and, if we'd been reconnecting, log the recovery and reset the budget.
                         if (stalls > 0 || liveStallReconnects > 0) {
                             android.util.Log.i(TAG, "live playback resumed (mpv, Live) after stall/reconnect")
                         }
                         stalls = 0
                         liveStallReconnects = 0
                         lastPos = pos
+                        // Audio is advancing, but a video track was selected and still hasn't produced a
+                        // single decoded frame — the "audio plays, no picture" case position-only checks
+                        // above can't see.
+                        if (currentVideoCodec != null && currentHeightPx == 0) {
+                            if (++noVideoStalls < LIVE_STALL_LIMIT) continue
+                            val elapsedMs = LIVE_STALL_LIMIT * LIVE_STALL_POLL_MS
+                            LiveDiagnosticsLog.event("no-video (mpv, Live) — audio progressing but no video frame after ~${elapsedMs}ms")
+                            if (liveStallReconnects < MAX_LIVE_RECONNECTS) {
+                                liveStallReconnects++
+                                noVideoStalls = 0
+                                android.util.Log.w(TAG, "no-video (mpv, Live) — reconnect attempt $liveStallReconnects/$MAX_LIVE_RECONNECTS")
+                                _buffering.value = true
+                                loadUrl(currentUrl ?: return@launch, MediaMeta(currentTitle, currentSubtitle, currentYear, currentLogoUrl), isLive = true, startPositionMs = 0L, resetRetries = false)
+                                return@launch
+                            } else {
+                                android.util.Log.w(TAG, "no-video (mpv, Live) — reconnect budget exhausted, surfacing error")
+                                _buffering.value = false
+                                _error.value = "Audio is playing, but video could not be rendered on this device."
+                                return@launch
+                            }
+                        } else {
+                            noVideoStalls = 0
+                        }
                     }
                 }
             }

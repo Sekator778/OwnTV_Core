@@ -96,6 +96,15 @@ class LivePreviewEngine(
     // without that decoder) — the VM hands such a stream to mpv (FFmpeg decodes everything) so it isn't silent.
     private val _audioUnsupported = MutableStateFlow(false)
     val audioUnsupported: StateFlow<Boolean> = _audioUnsupported.asStateFlow()
+    // One-shot per load: audio/position is progressing normally and a video track exists, but ExoPlayer has
+    // never rendered a single frame of it — the "audio plays, no picture" case the freeze/frame watchdogs
+    // below can't see (they only catch a freeze AFTER frames were once seen, or a total position stall).
+    // The VM observes this to try the existing mpv fallback once; legitimate audio-only streams never have
+    // a video track, so they never set this.
+    private val _noVideoDetected = MutableStateFlow(false)
+    val noVideoDetected: StateFlow<Boolean> = _noVideoDetected.asStateFlow()
+    private var noVideoTriggered = false
+    private var readySinceMs = 0L
 
     // Programmatic codec/audio errors (Reviewer: more reliable than logcat for ExoPlayer, and survives the
     // Android 14+ own-logcat lockdown). MediaCodec.CodecException.diagnosticInfo carries the exact code
@@ -254,6 +263,14 @@ class LivePreviewEngine(
                 val posAdvanced = pos > 0 && pos != lastProgressPos
                 if (posAdvanced) { lastProgressPos = pos; lastProgressWallMs = now }
                 else if (lastProgressWallMs == 0L) lastProgressWallMs = now // seed on the first ready poll
+                // Audio-plays-no-video: a video track exists but has never rendered a single frame, even
+                // though we're not in the total-freeze case above (position/audio clock IS advancing). Only
+                // fires once per load so the VM's one-shot mpv fallback isn't retriggered after it acts.
+                if (!noVideoTriggered && hasVideo && !everRendered && now - readySinceMs >= NO_VIDEO_TIMEOUT_MS) {
+                    noVideoTriggered = true
+                    LiveDiagnosticsLog.event("progressWatchdog: no video frame after ${now - readySinceMs}ms (pos=$pos advancing, video track present)")
+                    _noVideoDetected.value = true
+                }
                 // Backstop: zero forward progress for the whole window while we intend to play == a dead feed.
                 // Wall-clock based, so it CAN'T be missed by isPlaying flicker or a non-functional frame hook.
                 val noProgressMs = now - lastProgressWallMs
@@ -318,6 +335,7 @@ class LivePreviewEngine(
                     // baseline so the freeze window is measured from this READY (a healthy stream renders its
                     // first frame well within the grace window; one that never does trips the watchdog).
                     frameCounter.set(0); lastFrameCount = 0; everRendered = false; lastProgressPos = -1L; lastProgressWallMs = 0L; frozenChecks = 0
+                    readySinceMs = android.os.SystemClock.elapsedRealtime(); noVideoTriggered = false
                     mainHandler.removeCallbacks(progressWatchdog); mainHandler.postDelayed(progressWatchdog, PROGRESS_CHECK_MS)
                 }
                 Player.STATE_ENDED -> {
@@ -410,6 +428,7 @@ class LivePreviewEngine(
         audioTrackList = emptyList(); audioSelections = emptyList(); _audioCount.value = 0
         textTrackList = emptyList(); textSelections = emptyList(); _subCount.value = 0
         _subtitleOn.value = false; _cues.value = emptyList(); _audioUnsupported.value = false
+        _noVideoDetected.value = false; noVideoTriggered = false; readySinceMs = 0L
         _videoHeight.value = null; _streamChips.value = emptyList()
         _videoRes.value = null
         _error.value = null
@@ -477,6 +496,7 @@ class LivePreviewEngine(
         audioTrackList = emptyList(); audioSelections = emptyList(); _audioCount.value = 0
         textTrackList = emptyList(); textSelections = emptyList(); _subCount.value = 0
         _subtitleOn.value = false; _cues.value = emptyList(); _audioUnsupported.value = false
+        _noVideoDetected.value = false; noVideoTriggered = false; readySinceMs = 0L
         _videoHeight.value = null; _streamChips.value = emptyList()
         _state.value = State.IDLE
         player?.run { stop(); clearMediaItems() }
@@ -677,5 +697,6 @@ class LivePreviewEngine(
         private const val PROGRESS_CHECK_MS = 2_500L // poll interval for the silent-freeze watchdog
         private const val FROZEN_LIMIT = 3          // picture frozen this many polls (~7.5s) == a dropped feed
         private const val FREEZE_TIMEOUT_MS = 8_000L // zero forward progress this long while READY == dead feed
+        private const val NO_VIDEO_TIMEOUT_MS = 8_000L // video track present, zero frames rendered this long == "audio plays, no picture"
     }
 }

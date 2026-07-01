@@ -52,11 +52,11 @@ class SourceRepository(
         // change on every refresh, so they'd otherwise orphan — count badge set, list empty).
         val snapshot = runCatching { userData.exportAll() }.getOrNull()
         val result = syncManager.sync(source, onProgress)
-        if (result == SyncResult.Success) {
-            // Content rows just regenerated — re-attach the snapshot (and any restored backup data) to
-            // the new ids, and drop rows the provider removed.
-            runCatching { userData.relinkAfterSync(snapshot ?: org.json.JSONArray()) }
-        }
+        // Re-attach the snapshot (and any restored backup data) to the new ids even when the sync
+        // failed partway (its clear-then-insert is deferred per chunk, so a partial import can still
+        // have wiped some old content) — otherwise those favorites stay invisible until a later sync.
+        // Only a full success is allowed to purge rows that are genuinely gone (provider removed them).
+        runCatching { userData.relinkAfterSync(snapshot ?: org.json.JSONArray(), purge = result == SyncResult.Success) }
         return result
     }
 }

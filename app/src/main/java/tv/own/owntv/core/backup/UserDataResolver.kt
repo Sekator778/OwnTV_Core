@@ -73,21 +73,29 @@ class UserDataResolver(
      * Heals favorites/history/resume across a source re-sync. Content rows are clear-then-insert, so
      * their ids change every refresh and the user-data rows (keyed on the old ids) orphan — the count
      * badge still showed them, but the join returned nothing. Capture [exportAll] BEFORE the sync (ids
-     * still valid → stable keys), then call this AFTER it: re-resolve each record to the new ids, purge
-     * the now-orphaned rows so counts and lists agree, and keep anything still unresolvable (e.g.
-     * not-yet-loaded episodes) pending for a later sync / show-open.
+     * still valid → stable keys), then call this AFTER it: re-resolve each record to the new ids, and
+     * (only when [purge] is true) drop the now-orphaned rows so counts and lists agree. Keep anything
+     * still unresolvable (e.g. not-yet-loaded episodes) pending for a later sync / show-open.
+     *
+     * [purge] must be false when the sync didn't fully succeed (e.g. it failed partway through a
+     * chunked import): the clear-then-insert is deferred per chunk, so a partial import can leave
+     * content rows missing that are still valid — purging in that case would permanently delete
+     * favorites for content that's simply not re-synced yet, instead of leaving them to heal on the
+     * next successful sync.
      */
-    suspend fun relinkAfterSync(snapshot: JSONArray) {
+    suspend fun relinkAfterSync(snapshot: JSONArray, purge: Boolean = true) {
         val unresolved = JSONArray()
         for (i in 0 until snapshot.length()) {
             val e = snapshot.getJSONObject(i)
             val ok = runCatching { resolveAndInsert(e) }.getOrDefault(false)
             if (!ok) unresolved.put(e)
         }
-        favoriteDao.purgeOrphans()
-        historyDao.purgeOrphans()
-        progressDao.purgeOrphans()
-        contentOrderDao.purgeOrphans()
+        if (purge) {
+            favoriteDao.purgeOrphans()
+            historyDao.purgeOrphans()
+            progressDao.purgeOrphans()
+            contentOrderDao.purgeOrphans()
+        }
         if (unresolved.length() > 0) addPending(unresolved)
         resolvePending() // also retries any in-flight backup restore
     }
