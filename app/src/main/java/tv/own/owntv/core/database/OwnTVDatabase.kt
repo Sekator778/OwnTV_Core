@@ -68,7 +68,8 @@ import tv.own.owntv.core.database.entity.TvProviderProgramEntity
         SeriesFtsEntity::class,
         EpisodeFtsEntity::class,
     ],
-    version = 9,
+    version = 9, // v7: content_order (Move). v8: contentHash + browse/unique indexes. v9: EPG contentHash + natural key
+
     exportSchema = true,
 )
 @TypeConverters(Converters::class)
@@ -185,25 +186,34 @@ abstract class OwnTVDatabase : RoomDatabase() {
         }
 
         /**
-         * v4 → v5: earlier v4 builds shipped without the EPG guide read-index, then the index was
-         * added while the database version stayed at 4. Devices on that older v4 fail Room's identity
-         * check on startup, so v5 makes the index addition an explicit migration.
+         * v4 → v6: main's v5 briefly added `favorites.sortOrder` and v6 removed it again, so the v4
+         * and v6 schemas are identical — a no-op hop keeps the public 3 → latest chain unbroken.
+         * (Dev builds that sat exactly on the transient v5 fall back to the destructive safety net,
+         * same as on main; v5 never shipped publicly.)
          */
-        val MIGRATION_4_5 = object : androidx.room.migration.Migration(4, 5) {
+        val MIGRATION_4_6 = object : androidx.room.migration.Migration(4, 6) {
             override fun migrate(db: androidx.sqlite.db.SupportSQLiteDatabase) {
-                db.execSQL("CREATE INDEX IF NOT EXISTS `index_epg_programmes_sourceId_epgChannelId` ON `epg_programmes` (`sourceId`, `epgChannelId`)")
+                // v4 and v6 schemas are identical.
             }
         }
 
-        val MIGRATION_5_6 = object : androidx.room.migration.Migration(5, 6) {
-            override fun migrate(db: androidx.sqlite.db.SupportSQLiteDatabase) {
-                db.execSQL("ALTER TABLE `channels` ADD COLUMN `contentHash` INTEGER NOT NULL DEFAULT 0")
-                db.execSQL("ALTER TABLE `movies` ADD COLUMN `contentHash` INTEGER NOT NULL DEFAULT 0")
-                db.execSQL("ALTER TABLE `series` ADD COLUMN `contentHash` INTEGER NOT NULL DEFAULT 0")
-            }
-        }
-
+        /**
+         * v6 → v7: manual reorder (Move) — per-profile `content_order` table. This is main's v7 and
+         * must keep that meaning: dev devices on unreleased main builds already sit on it.
+         */
         val MIGRATION_6_7 = object : androidx.room.migration.Migration(6, 7) {
+            override fun migrate(db: androidx.sqlite.db.SupportSQLiteDatabase) {
+                createContentOrderTable(db)
+            }
+        }
+
+        /**
+         * v7 → v8: incremental sync (PR #40) — `contentHash` on channels/movies/series plus the
+         * browse composite indexes and the unique `(sourceId, remoteId)` movie/series indexes.
+         * Everything is guarded so both v3.2.0-lineage and main-dev DBs (which already have the
+         * indexes) migrate cleanly.
+         */
+        val MIGRATION_7_8 = object : androidx.room.migration.Migration(7, 8) {
             override fun migrate(db: androidx.sqlite.db.SupportSQLiteDatabase) {
                 if (!hasColumn(db, "channels", "contentHash")) {
                     db.execSQL("ALTER TABLE `channels` ADD COLUMN `contentHash` INTEGER NOT NULL DEFAULT 0")
@@ -228,10 +238,17 @@ abstract class OwnTVDatabase : RoomDatabase() {
                 db.execSQL("CREATE INDEX IF NOT EXISTS `index_series_sourceId_sortOrder_name` ON `series` (`sourceId`, `sortOrder`, `name`)")
                 db.execSQL("CREATE INDEX IF NOT EXISTS `index_series_categoryId_sortOrder_name` ON `series` (`categoryId`, `sortOrder`, `name`)")
                 db.execSQL("CREATE UNIQUE INDEX IF NOT EXISTS `index_series_sourceId_remoteId` ON `series` (`sourceId`, `remoteId`)")
+                // Early v4 dev builds shipped without the EPG guide read-index (it was added while the
+                // version stayed 4) — heal them here since the 4→6 hop is a no-op.
+                db.execSQL("CREATE INDEX IF NOT EXISTS `index_epg_programmes_sourceId_epgChannelId` ON `epg_programmes` (`sourceId`, `epgChannelId`)")
             }
         }
 
-        val MIGRATION_7_8 = object : androidx.room.migration.Migration(7, 8) {
+        /**
+         * v8 → v9: incremental EPG sync (PR #40) — `contentHash` on programmes plus the natural-key
+         * unique index. Pre-existing duplicate rows are removed before the unique index is created.
+         */
+        val MIGRATION_8_9 = object : androidx.room.migration.Migration(8, 9) {
             override fun migrate(db: androidx.sqlite.db.SupportSQLiteDatabase) {
                 if (!hasColumn(db, "epg_programmes", "contentHash")) {
                     db.execSQL("ALTER TABLE `epg_programmes` ADD COLUMN `contentHash` INTEGER NOT NULL DEFAULT 0")
@@ -245,12 +262,6 @@ abstract class OwnTVDatabase : RoomDatabase() {
                     "CREATE UNIQUE INDEX IF NOT EXISTS `index_epg_programmes_natural_key` " +
                         "ON `epg_programmes` (`sourceId`, `epgChannelId`, `startMs`)",
                 )
-            }
-        }
-
-        val MIGRATION_8_9 = object : androidx.room.migration.Migration(8, 9) {
-            override fun migrate(db: androidx.sqlite.db.SupportSQLiteDatabase) {
-                createContentOrderTable(db)
             }
         }
 

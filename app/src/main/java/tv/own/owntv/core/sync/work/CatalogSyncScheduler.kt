@@ -19,6 +19,7 @@ class CatalogSyncScheduler(private val context: Context) {
         reason: String = "manual",
         contentTypes: SyncContentTypes = SyncContentTypes(),
         baseItemCount: Int = 0,
+        completesInitialSync: Boolean = false,
     ) {
         val request = OneTimeWorkRequestBuilder<CatalogSyncWorker>()
             .setInputData(workDataOf(
@@ -28,6 +29,7 @@ class CatalogSyncScheduler(private val context: Context) {
                 CatalogSyncWorker.KEY_LIVE to contentTypes.live,
                 CatalogSyncWorker.KEY_MOVIES to contentTypes.movies,
                 CatalogSyncWorker.KEY_SERIES to contentTypes.series,
+                CatalogSyncWorker.KEY_COMPLETES_INITIAL_SYNC to completesInitialSync,
             ))
             .setConstraints(
                 Constraints.Builder()

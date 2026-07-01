@@ -37,6 +37,11 @@ class CatalogSyncWorker(
             movies = inputData.getBoolean(KEY_MOVIES, true),
             series = inputData.getBoolean(KEY_SERIES, true),
         )
+        // Set when this run is the background remainder of a staged (priority) initial sync: the
+        // foreground pass plus this one cover all content types, so together they count as a full
+        // sync and the source must get its lastSyncAt — otherwise every later sync would take the
+        // fresh-import fast path forever (row-id churn, no stale-row pruning).
+        val completesInitialSync = inputData.getBoolean(KEY_COMPLETES_INITIAL_SYNC, false)
 
         val source = sourceRepository.getById(sourceId) ?: run {
             Log.w(TAG, "Source $sourceId not found — skipping ($reason)")
@@ -62,6 +67,10 @@ class CatalogSyncWorker(
             is SyncResult.Success -> {
                 val warningText = result.warnings.takeIf { it.isNotEmpty() }?.joinToString { it.label }
                 Log.i(TAG, "Sync succeeded for source ${source.id} (${source.name}) warnings=$warningText")
+                if (completesInitialSync) {
+                    sourceDao.markSynced(source.id, System.currentTimeMillis())
+                    Log.i(TAG, "Staged initial sync complete — markSynced sourceId=${source.id}")
+                }
                 val finalizeStartedAt = SystemClock.elapsedRealtime()
                 val deferIndexes = source.lastSyncAt == null
                 runCatching { importFinalizer.finalize(source, deferIndexes = deferIndexes) }
@@ -178,6 +187,7 @@ class CatalogSyncWorker(
         const val KEY_LIVE = "live"
         const val KEY_MOVIES = "movies"
         const val KEY_SERIES = "series"
+        const val KEY_COMPLETES_INITIAL_SYNC = "completesInitialSync"
         const val KEY_PROGRESS_LIVE_PROCESSED = "liveProcessed"
         const val KEY_PROGRESS_MOVIES_PROCESSED = "moviesProcessed"
         const val KEY_PROGRESS_SERIES_PROCESSED = "seriesProcessed"

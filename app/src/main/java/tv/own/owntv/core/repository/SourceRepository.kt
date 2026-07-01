@@ -63,12 +63,16 @@ class SourceRepository(
         val coreStartedAt = SystemClock.elapsedRealtime()
         val (result, _) = syncManager.sync(source, onProgress, contentTypes)
         Log.i(TAG, "core sync sourceId=${source.id} result=${result.name()} ms=${SystemClock.elapsedRealtime() - coreStartedAt}")
-        if (result is SyncResult.Success) {
-            val relinkStartedAt = SystemClock.elapsedRealtime()
-            runCatching { userData.relinkAfterSync(snapshot ?: org.json.JSONArray()) }
-                .onSuccess { Log.i(TAG, "userData relink sourceId=${source.id} rows=${snapshot?.length() ?: 0} ms=${SystemClock.elapsedRealtime() - relinkStartedAt}") }
-                .onFailure { Log.w(TAG, "userData relink failed sourceId=${source.id} ms=${SystemClock.elapsedRealtime() - relinkStartedAt}", it) }
-        }
+        // Always re-attach the snapshot to the new ids — a failed/cancelled sync can still have
+        // rewritten some rows (M3U is clear-then-insert; Xtream REPLACE-upserts renumber ids), and
+        // without a relink those favorites/history/resume entries turn invisible until a later
+        // successful sync. Purging genuinely-gone rows is only allowed after a FULL success:
+        // a partial content-type sync never touched the other types, and a failure proves nothing.
+        val purge = result is SyncResult.Success && contentTypes == SyncContentTypes()
+        val relinkStartedAt = SystemClock.elapsedRealtime()
+        runCatching { userData.relinkAfterSync(snapshot ?: org.json.JSONArray(), purge = purge) }
+            .onSuccess { Log.i(TAG, "userData relink sourceId=${source.id} rows=${snapshot?.length() ?: 0} purge=$purge ms=${SystemClock.elapsedRealtime() - relinkStartedAt}") }
+            .onFailure { Log.w(TAG, "userData relink failed sourceId=${source.id} ms=${SystemClock.elapsedRealtime() - relinkStartedAt}", it) }
         Log.i(TAG, "sync wrapper end sourceId=${source.id} result=${result.name()} totalMs=${SystemClock.elapsedRealtime() - startedAt}")
         return result
     }

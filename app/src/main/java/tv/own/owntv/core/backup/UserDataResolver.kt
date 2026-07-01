@@ -118,13 +118,15 @@ class UserDataResolver(
             val ok = runCatching { resolveAndInsert(e) }.getOrDefault(false)
             if (!ok) unresolved.put(e)
         }
-        if (snapshot.hasSourceSnapshotIds()) {
-            purgeSnapshotOrphans(snapshot)
-        } else {
-            favoriteDao.purgeOrphans()
-            historyDao.purgeOrphans()
-            progressDao.purgeOrphans()
-            contentOrderDao.purgeOrphans()
+        if (purge) {
+            if (snapshot.hasSourceSnapshotIds()) {
+                purgeSnapshotOrphans(snapshot)
+            } else {
+                favoriteDao.purgeOrphans()
+                historyDao.purgeOrphans()
+                progressDao.purgeOrphans()
+                contentOrderDao.purgeOrphans()
+            }
         }
         if (unresolved.length() > 0) addPending(unresolved)
         resolvePending() // also retries any in-flight backup restore

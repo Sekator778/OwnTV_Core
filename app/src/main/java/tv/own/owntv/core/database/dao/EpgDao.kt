@@ -21,11 +21,15 @@ interface EpgDao {
     @Query("DELETE FROM epg_programmes WHERE sourceId = :sourceId")
     suspend fun clearSource(sourceId: Long)
 
-    @Query("SELECT id, epgChannelId, startMs, contentHash FROM epg_programmes WHERE sourceId = :sourceId")
-    suspend fun epgHashesForSource(sourceId: Long): List<EpgHashProjection>
+    /** Hash snapshot for one channel — an indexed prefix query on the natural key, loaded lazily per channel. */
+    @Query("SELECT id, epgChannelId, startMs, contentHash FROM epg_programmes WHERE sourceId = :sourceId AND epgChannelId = :epgChannelId")
+    suspend fun epgHashesForChannel(sourceId: Long, epgChannelId: String): List<EpgHashProjection>
 
     @Query("DELETE FROM epg_programmes WHERE id IN (:ids)")
     suspend fun deleteProgrammesByIds(ids: List<Long>)
+
+    @Query("DELETE FROM epg_programmes WHERE sourceId = :sourceId AND epgChannelId IN (:epgChannelIds)")
+    suspend fun deleteProgrammesForChannels(sourceId: Long, epgChannelIds: List<String>)
 
     /** Drop programmes that have already finished, to bound storage. */
     @Query("DELETE FROM epg_programmes WHERE stopMs < :before")

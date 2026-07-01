@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 7,
-    "identityHash": "4bf20e71c3e63d2ea2efc212cd3c2873",
+    "identityHash": "29ae0b28cbb437f2c66979bcac8eb865",
     "entities": [
       {
         "tableName": "profiles",
@@ -289,7 +289,7 @@
       },
       {
         "tableName": "channels",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `sourceId` INTEGER NOT NULL, `categoryId` INTEGER, `name` TEXT NOT NULL, `logoUrl` TEXT, `streamUrl` TEXT NOT NULL, `epgChannelId` TEXT, `number` INTEGER, `remoteId` TEXT, `sortOrder` INTEGER NOT NULL, `catchup` INTEGER NOT NULL, `catchupDays` INTEGER NOT NULL, `catchupSource` TEXT, `contentHash` INTEGER NOT NULL DEFAULT 0, FOREIGN KEY(`sourceId`) REFERENCES `sources`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`categoryId`) REFERENCES `categories`(`id`) ON UPDATE NO ACTION ON DELETE SET NULL )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `sourceId` INTEGER NOT NULL, `categoryId` INTEGER, `name` TEXT NOT NULL, `logoUrl` TEXT, `streamUrl` TEXT NOT NULL, `epgChannelId` TEXT, `number` INTEGER, `remoteId` TEXT, `sortOrder` INTEGER NOT NULL, `catchup` INTEGER NOT NULL, `catchupDays` INTEGER NOT NULL, `catchupSource` TEXT, FOREIGN KEY(`sourceId`) REFERENCES `sources`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`categoryId`) REFERENCES `categories`(`id`) ON UPDATE NO ACTION ON DELETE SET NULL )",
         "fields": [
           {
             "fieldPath": "id",
@@ -362,13 +362,6 @@
             "fieldPath": "catchupSource",
             "columnName": "catchupSource",
             "affinity": "TEXT"
-          },
-          {
-            "fieldPath": "contentHash",
-            "columnName": "contentHash",
-            "affinity": "INTEGER",
-            "notNull": true,
-            "defaultValue": "0"
           }
         ],
         "primaryKey": {
@@ -494,7 +487,7 @@
       },
       {
         "tableName": "movies",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `sourceId` INTEGER NOT NULL, `categoryId` INTEGER, `name` TEXT NOT NULL, `posterUrl` TEXT, `backdropUrl` TEXT, `year` INTEGER, `rating` REAL, `durationSecs` INTEGER, `plot` TEXT, `streamUrl` TEXT NOT NULL, `containerExt` TEXT, `remoteId` TEXT, `addedAt` INTEGER, `sortOrder` INTEGER NOT NULL, `contentHash` INTEGER NOT NULL DEFAULT 0, FOREIGN KEY(`sourceId`) REFERENCES `sources`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`categoryId`) REFERENCES `categories`(`id`) ON UPDATE NO ACTION ON DELETE SET NULL )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `sourceId` INTEGER NOT NULL, `categoryId` INTEGER, `name` TEXT NOT NULL, `posterUrl` TEXT, `backdropUrl` TEXT, `year` INTEGER, `rating` REAL, `durationSecs` INTEGER, `plot` TEXT, `streamUrl` TEXT NOT NULL, `containerExt` TEXT, `remoteId` TEXT, `addedAt` INTEGER, `sortOrder` INTEGER NOT NULL, FOREIGN KEY(`sourceId`) REFERENCES `sources`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`categoryId`) REFERENCES `categories`(`id`) ON UPDATE NO ACTION ON DELETE SET NULL )",
         "fields": [
           {
             "fieldPath": "id",
@@ -575,13 +568,6 @@
             "columnName": "sortOrder",
             "affinity": "INTEGER",
             "notNull": true
-          },
-          {
-            "fieldPath": "contentHash",
-            "columnName": "contentHash",
-            "affinity": "INTEGER",
-            "notNull": true,
-            "defaultValue": "0"
           }
         ],
         "primaryKey": {
@@ -698,7 +684,7 @@
       },
       {
         "tableName": "series",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `sourceId` INTEGER NOT NULL, `categoryId` INTEGER, `name` TEXT NOT NULL, `posterUrl` TEXT, `backdropUrl` TEXT, `year` INTEGER, `rating` REAL, `plot` TEXT, `remoteId` TEXT, `sortOrder` INTEGER NOT NULL, `contentHash` INTEGER NOT NULL DEFAULT 0, FOREIGN KEY(`sourceId`) REFERENCES `sources`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`categoryId`) REFERENCES `categories`(`id`) ON UPDATE NO ACTION ON DELETE SET NULL )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `sourceId` INTEGER NOT NULL, `categoryId` INTEGER, `name` TEXT NOT NULL, `posterUrl` TEXT, `backdropUrl` TEXT, `year` INTEGER, `rating` REAL, `plot` TEXT, `remoteId` TEXT, `sortOrder` INTEGER NOT NULL, FOREIGN KEY(`sourceId`) REFERENCES `sources`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`categoryId`) REFERENCES `categories`(`id`) ON UPDATE NO ACTION ON DELETE SET NULL )",
         "fields": [
           {
             "fieldPath": "id",
@@ -758,13 +744,6 @@
             "columnName": "sortOrder",
             "affinity": "INTEGER",
             "notNull": true
-          },
-          {
-            "fieldPath": "contentHash",
-            "columnName": "contentHash",
-            "affinity": "INTEGER",
-            "notNull": true,
-            "defaultValue": "0"
           }
         ],
         "primaryKey": {
@@ -1333,6 +1312,101 @@
         ]
       },
       {
+        "tableName": "content_order",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `profileId` INTEGER NOT NULL, `mediaType` TEXT NOT NULL, `contextKey` TEXT NOT NULL, `itemId` INTEGER NOT NULL, `position` INTEGER NOT NULL, FOREIGN KEY(`profileId`) REFERENCES `profiles`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "profileId",
+            "columnName": "profileId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "mediaType",
+            "columnName": "mediaType",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "contextKey",
+            "columnName": "contextKey",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "itemId",
+            "columnName": "itemId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "position",
+            "columnName": "position",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_content_order_profileId",
+            "unique": false,
+            "columnNames": [
+              "profileId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_content_order_profileId` ON `${TABLE_NAME}` (`profileId`)"
+          },
+          {
+            "name": "index_content_order_profileId_mediaType_contextKey",
+            "unique": false,
+            "columnNames": [
+              "profileId",
+              "mediaType",
+              "contextKey"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_content_order_profileId_mediaType_contextKey` ON `${TABLE_NAME}` (`profileId`, `mediaType`, `contextKey`)"
+          },
+          {
+            "name": "index_content_order_profileId_mediaType_contextKey_itemId",
+            "unique": true,
+            "columnNames": [
+              "profileId",
+              "mediaType",
+              "contextKey",
+              "itemId"
+            ],
+            "orders": [],
+            "createSql": "CREATE UNIQUE INDEX IF NOT EXISTS `index_content_order_profileId_mediaType_contextKey_itemId` ON `${TABLE_NAME}` (`profileId`, `mediaType`, `contextKey`, `itemId`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "profiles",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "profileId"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      },
+      {
         "tableName": "downloads",
         "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `profileId` INTEGER NOT NULL, `mediaType` TEXT NOT NULL, `itemId` INTEGER NOT NULL, `title` TEXT NOT NULL, `posterUrl` TEXT, `streamUrl` TEXT NOT NULL, `filePath` TEXT, `status` TEXT NOT NULL, `downloadedBytes` INTEGER NOT NULL, `totalBytes` INTEGER NOT NULL, `createdAt` INTEGER NOT NULL, `updatedAt` INTEGER NOT NULL, FOREIGN KEY(`profileId`) REFERENCES `profiles`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
         "fields": [
@@ -1861,7 +1935,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '4bf20e71c3e63d2ea2efc212cd3c2873')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '29ae0b28cbb437f2c66979bcac8eb865')"
     ]
   }
 }

@@ -14,7 +14,6 @@ import tv.own.owntv.core.database.dao.EpgDao
 import tv.own.owntv.core.model.MediaType
 import tv.own.owntv.features.settings.data.SettingsRepository
 import tv.own.owntv.core.database.entity.EpgChannelEntity
-import tv.own.owntv.core.database.entity.EpgProgrammeKey
 import tv.own.owntv.core.database.entity.EpgProgrammeEntity
 import tv.own.owntv.core.database.entity.SourceEntity
 import tv.own.owntv.core.database.entity.computeContentHash
@@ -144,8 +143,10 @@ class EpgRepository(
         val channels = LinkedHashMap<String, EpgChannelEntity>()
         val channelsWithProgrammes = HashSet<String>()
         val buffer = ArrayList<EpgProgrammeEntity>(chunkSize)
-        val existingByKey = if (freshSource) mutableMapOf<EpgProgrammeKey, Pair<Long, Int>>() else loadProgrammeHashes(storeId).toMutableMap()
-        val seenKeys = HashSet<EpgProgrammeKey>()
+        // Per-channel, lazily-loaded and capped hash tracker: huge guides (millions of programme rows)
+        // must never be mirrored into one giant in-memory map on a low-RAM TV box. Channels beyond the
+        // cap degrade to write-through (REPLACE on the natural-key unique index keeps that correct).
+        val hashTracker = ProgrammeHashTracker(epgDao, storeId, freshSource, MAX_TRACKED_PROGRAMMES)
         var processedCount = 0
         var writtenCount = 0
         var inserted = 0
@@ -196,7 +197,6 @@ class EpgRepository(
                                 val key = channelId.trim().lowercase()
                                 if (stopMs > from && startMs < to && (needed == null || key in needed)) {
                                     channelsWithProgrammes.add(key)
-                                    val programmeKey = EpgProgrammeKey(key, startMs)
                                     val programme = EpgProgrammeEntity(
                                         sourceId = storeId,
                                         epgChannelId = key,
@@ -206,24 +206,23 @@ class EpgRepository(
                                         description = desc,
                                     )
                                     val hash = programme.computeContentHash()
-                                    val existing = existingByKey[programmeKey]
-                                    when (existing) {
-                                        null -> {
+                                    when (val decision = hashTracker.observe(key, startMs, hash)) {
+                                        is ProgrammeDecision.New -> {
                                             buffer.add(programme.copy(contentHash = hash))
                                             inserted++
-                                            existingByKey[programmeKey] = 0L to hash
                                         }
-                                        else -> {
-                                            if (existing.second != hash) {
-                                                buffer.add(programme.copy(id = existing.first, contentHash = hash))
-                                                updated++
-                                            } else {
-                                                skipped++
-                                            }
-                                            existingByKey[programmeKey] = existing.first to hash
+                                        is ProgrammeDecision.Changed -> {
+                                            buffer.add(programme.copy(id = decision.id, contentHash = hash))
+                                            updated++
+                                        }
+                                        ProgrammeDecision.Unchanged -> skipped++
+                                        // Over the memory cap (or duplicate-in-feed fallback): write through —
+                                        // the unique (sourceId, epgChannelId, startMs) index + REPLACE dedupe.
+                                        ProgrammeDecision.WriteThrough -> {
+                                            buffer.add(programme.copy(contentHash = hash))
+                                            inserted++
                                         }
                                     }
-                                    seenKeys.add(programmeKey)
                                     processedCount++
                                     if (buffer.size >= chunkSize) {
                                         val batchSize = buffer.size
@@ -284,7 +283,7 @@ class EpgRepository(
             Log.w("EpgRepository", "EPG sync incomplete — keeping partial (written=$writtenCount accepted=$processedCount inserted=$inserted updated=$updated skipped=$skipped)", e)
         }
         if (parseCompleted) {
-            removedProgrammes = pruneRemovedProgrammes(storeId, existingByKey, seenKeys)
+            removedProgrammes = pruneRemovedProgrammes(storeId, hashTracker)
             removedChannels = pruneRemovedChannels(storeId, channels.keys)
         }
         val pruneStartedAt = SystemClock.elapsedRealtime()
@@ -310,27 +309,11 @@ class EpgRepository(
         "Guide downloaded, but no programmes matched the current guide window. Check the device date/time or try another EPG feed.",
     )
 
-    private suspend fun loadProgrammeHashes(storeId: Long): Map<EpgProgrammeKey, Pair<Long, Int>> {
+    private suspend fun pruneRemovedProgrammes(sourceId: Long, tracker: ProgrammeHashTracker): Int {
         val startedAt = SystemClock.elapsedRealtime()
-        return epgDao.epgHashesForSource(storeId)
-            .associateBy({ EpgProgrammeKey(it.epgChannelId, it.startMs) }, { it.id to it.contentHash })
-            .also {
-                Log.d("EpgRepository", "EPG hash map loaded sourceId=$storeId size=${it.size} ms=${SystemClock.elapsedRealtime() - startedAt}")
-            }
-    }
-
-    private suspend fun pruneRemovedProgrammes(
-        sourceId: Long,
-        existingByKey: Map<EpgProgrammeKey, Pair<Long, Int>>,
-        seenKeys: Set<EpgProgrammeKey>,
-    ): Int {
-        val startedAt = SystemClock.elapsedRealtime()
-        val staleIds = existingByKey.entries.asSequence()
-            .filterNot { it.key in seenKeys }
-            .map { it.value.first }
-            .toList()
+        val staleIds = tracker.staleTrackedIds()
         staleIds.chunked(QUERY_CHUNK).forEach { epgDao.deleteProgrammesByIds(it) }
-        Log.d("EpgRepository", "EPG programme prune sourceId=$sourceId stale=${staleIds.size} ms=${SystemClock.elapsedRealtime() - startedAt}")
+        Log.d("EpgRepository", "EPG programme prune sourceId=$sourceId stale=${staleIds.size} overflowed=${tracker.overflowed} ms=${SystemClock.elapsedRealtime() - startedAt}")
         return staleIds.size
     }
 
@@ -340,11 +323,17 @@ class EpgRepository(
         val staleIds = if (seenChannelIds.isEmpty()) {
             if (existingChannelIds.isNotEmpty()) {
                 epgDao.clearChannelsForSource(sourceId)
+                epgDao.clearSource(sourceId)
             }
             existingChannelIds
         } else {
             existingChannelIds.filterNot(seenChannelIds::contains).also { stale ->
-                stale.chunked(QUERY_CHUNK).forEach { epgDao.deleteChannelsByEpgIds(sourceId, it) }
+                stale.chunked(QUERY_CHUNK).forEach {
+                    epgDao.deleteChannelsByEpgIds(sourceId, it)
+                    // The per-channel hash tracker never loads channels absent from the feed, so
+                    // their leftover programmes must be dropped here rather than by the id prune.
+                    epgDao.deleteProgrammesForChannels(sourceId, it)
+                }
             }
         }
         Log.d("EpgRepository", "EPG channel prune sourceId=$sourceId stale=${staleIds.size} ms=${SystemClock.elapsedRealtime() - startedAt}")
@@ -432,5 +421,90 @@ class EpgRepository(
         private const val CACHE_TTL_MS = 24L * 60 * 60 * 1000 // reuse a cached XMLTV for incremental matches up to 24h
         private const val PROGRESS_PROGRAMME_STEP = 500
         private const val EPG_DOWNLOAD_ATTEMPTS = 3
+
+        // Upper bound on programme (id, hash) entries kept in memory during an incremental EPG sync.
+        // ~100k entries is roughly 15–20 MB of Java heap — safe on low-RAM TV boxes. Channels beyond
+        // the cap fall back to write-through (correct via the natural-key unique index + REPLACE),
+        // they just lose the skip-unchanged and precise-prune optimizations for this run.
+        private const val MAX_TRACKED_PROGRAMMES = 100_000
+    }
+}
+
+/** Decision for one parsed programme, from [ProgrammeHashTracker.observe]. */
+private sealed interface ProgrammeDecision {
+    data object New : ProgrammeDecision
+    data class Changed(val id: Long) : ProgrammeDecision
+    data object Unchanged : ProgrammeDecision
+    data object WriteThrough : ProgrammeDecision
+}
+
+/**
+ * Memory-bounded replacement for the old whole-source programme hash map. Hashes are loaded lazily
+ * per EPG channel (an indexed point query on the natural key) and only while the total entry count
+ * stays under [maxEntries]; channels first seen after that are handled write-through. For a fresh
+ * source nothing is loaded — the per-channel maps only dedupe repeats inside the feed itself.
+ */
+private class ProgrammeHashTracker(
+    private val dao: tv.own.owntv.core.database.dao.EpgDao,
+    private val sourceId: Long,
+    private val freshSource: Boolean,
+    private val maxEntries: Int,
+) {
+    // channel -> startMs -> (rowId, contentHash); rowId 0 = row inserted during this run
+    private val byChannel = HashMap<String, MutableMap<Long, Pair<Long, Int>>>()
+    private val seenByChannel = HashMap<String, MutableSet<Long>>()
+    private val untrackedChannels = HashSet<String>()
+    private var entries = 0
+    var overflowed = false
+        private set
+
+    suspend fun observe(channel: String, startMs: Long, hash: Int): ProgrammeDecision {
+        if (channel in untrackedChannels) return ProgrammeDecision.WriteThrough
+        val map = byChannel[channel] ?: run {
+            if (entries >= maxEntries) {
+                untrackedChannels.add(channel)
+                if (!overflowed) {
+                    overflowed = true
+                    Log.w("EpgRepository", "EPG hash tracker cap ($maxEntries) reached for sourceId=$sourceId — further channels sync write-through")
+                }
+                return ProgrammeDecision.WriteThrough
+            }
+            val loaded: MutableMap<Long, Pair<Long, Int>> = if (freshSource) {
+                HashMap()
+            } else {
+                dao.epgHashesForChannel(sourceId, channel)
+                    .associateTo(HashMap()) { it.startMs to (it.id to it.contentHash) }
+            }
+            entries += loaded.size
+            byChannel[channel] = loaded
+            loaded
+        }
+        if (!freshSource) seenByChannel.getOrPut(channel) { HashSet() }.add(startMs)
+        val existing = map[startMs]
+        return when {
+            existing == null -> {
+                map[startMs] = 0L to hash
+                entries++
+                ProgrammeDecision.New
+            }
+            existing.second == hash -> ProgrammeDecision.Unchanged
+            else -> {
+                map[startMs] = existing.first to hash
+                ProgrammeDecision.Changed(existing.first)
+            }
+        }
+    }
+
+    /** Row ids of tracked programmes that existed before this run but never appeared in the feed. */
+    fun staleTrackedIds(): List<Long> {
+        if (freshSource) return emptyList()
+        val stale = ArrayList<Long>()
+        for ((channel, map) in byChannel) {
+            val seen = seenByChannel[channel] ?: emptySet()
+            for ((startMs, value) in map) {
+                if (value.first != 0L && startMs !in seen) stale.add(value.first)
+            }
+        }
+        return stale
     }
 }

@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 4,
-    "identityHash": "08bb6589701af6b3248026e46c4d34e1",
+    "identityHash": "70b6069a79d9960374e9e80e86d625ee",
     "entities": [
       {
         "tableName": "profiles",
@@ -416,6 +416,48 @@
             ],
             "orders": [],
             "createSql": "CREATE UNIQUE INDEX IF NOT EXISTS `index_channels_sourceId_remoteId` ON `${TABLE_NAME}` (`sourceId`, `remoteId`)"
+          },
+          {
+            "name": "index_channels_sourceId_name",
+            "unique": false,
+            "columnNames": [
+              "sourceId",
+              "name"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_channels_sourceId_name` ON `${TABLE_NAME}` (`sourceId`, `name`)"
+          },
+          {
+            "name": "index_channels_categoryId_name",
+            "unique": false,
+            "columnNames": [
+              "categoryId",
+              "name"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_channels_categoryId_name` ON `${TABLE_NAME}` (`categoryId`, `name`)"
+          },
+          {
+            "name": "index_channels_sourceId_sortOrder_name",
+            "unique": false,
+            "columnNames": [
+              "sourceId",
+              "sortOrder",
+              "name"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_channels_sourceId_sortOrder_name` ON `${TABLE_NAME}` (`sourceId`, `sortOrder`, `name`)"
+          },
+          {
+            "name": "index_channels_categoryId_sortOrder_name",
+            "unique": false,
+            "columnNames": [
+              "categoryId",
+              "sortOrder",
+              "name"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_channels_categoryId_sortOrder_name` ON `${TABLE_NAME}` (`categoryId`, `sortOrder`, `name`)"
           }
         ],
         "foreignKeys": [
@@ -563,6 +605,48 @@
             "createSql": "CREATE INDEX IF NOT EXISTS `index_movies_name` ON `${TABLE_NAME}` (`name`)"
           },
           {
+            "name": "index_movies_sourceId_name",
+            "unique": false,
+            "columnNames": [
+              "sourceId",
+              "name"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_movies_sourceId_name` ON `${TABLE_NAME}` (`sourceId`, `name`)"
+          },
+          {
+            "name": "index_movies_categoryId_name",
+            "unique": false,
+            "columnNames": [
+              "categoryId",
+              "name"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_movies_categoryId_name` ON `${TABLE_NAME}` (`categoryId`, `name`)"
+          },
+          {
+            "name": "index_movies_sourceId_sortOrder_name",
+            "unique": false,
+            "columnNames": [
+              "sourceId",
+              "sortOrder",
+              "name"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_movies_sourceId_sortOrder_name` ON `${TABLE_NAME}` (`sourceId`, `sortOrder`, `name`)"
+          },
+          {
+            "name": "index_movies_categoryId_sortOrder_name",
+            "unique": false,
+            "columnNames": [
+              "categoryId",
+              "sortOrder",
+              "name"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_movies_categoryId_sortOrder_name` ON `${TABLE_NAME}` (`categoryId`, `sortOrder`, `name`)"
+          },
+          {
             "name": "index_movies_sourceId_remoteId",
             "unique": true,
             "columnNames": [
@@ -695,6 +779,48 @@
             ],
             "orders": [],
             "createSql": "CREATE INDEX IF NOT EXISTS `index_series_name` ON `${TABLE_NAME}` (`name`)"
+          },
+          {
+            "name": "index_series_sourceId_name",
+            "unique": false,
+            "columnNames": [
+              "sourceId",
+              "name"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_series_sourceId_name` ON `${TABLE_NAME}` (`sourceId`, `name`)"
+          },
+          {
+            "name": "index_series_categoryId_name",
+            "unique": false,
+            "columnNames": [
+              "categoryId",
+              "name"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_series_categoryId_name` ON `${TABLE_NAME}` (`categoryId`, `name`)"
+          },
+          {
+            "name": "index_series_sourceId_sortOrder_name",
+            "unique": false,
+            "columnNames": [
+              "sourceId",
+              "sortOrder",
+              "name"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_series_sourceId_sortOrder_name` ON `${TABLE_NAME}` (`sourceId`, `sortOrder`, `name`)"
+          },
+          {
+            "name": "index_series_categoryId_sortOrder_name",
+            "unique": false,
+            "columnNames": [
+              "categoryId",
+              "sortOrder",
+              "name"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_series_categoryId_sortOrder_name` ON `${TABLE_NAME}` (`categoryId`, `sortOrder`, `name`)"
           },
           {
             "name": "index_series_sourceId_remoteId",
@@ -1566,6 +1692,16 @@
             ],
             "orders": [],
             "createSql": "CREATE INDEX IF NOT EXISTS `index_epg_programmes_stopMs` ON `${TABLE_NAME}` (`stopMs`)"
+          },
+          {
+            "name": "index_epg_programmes_sourceId_epgChannelId",
+            "unique": false,
+            "columnNames": [
+              "sourceId",
+              "epgChannelId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_epg_programmes_sourceId_epgChannelId` ON `${TABLE_NAME}` (`sourceId`, `epgChannelId`)"
           }
         ]
       },
@@ -1704,7 +1840,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '08bb6589701af6b3248026e46c4d34e1')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '70b6069a79d9960374e9e80e86d625ee')"
     ]
   }
 }
