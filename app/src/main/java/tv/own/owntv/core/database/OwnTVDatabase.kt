@@ -68,7 +68,7 @@ import tv.own.owntv.core.database.entity.TvProviderProgramEntity
         SeriesFtsEntity::class,
         EpisodeFtsEntity::class,
     ],
-    version = 7, // v4: unified v3. v5: A–Z composites. v6: playlist/provider composites. v7: content_order (Move)
+    version = 9,
     exportSchema = true,
 )
 @TypeConverters(Converters::class)
@@ -185,26 +185,90 @@ abstract class OwnTVDatabase : RoomDatabase() {
         }
 
         /**
-         * v6 → v7: per-profile manual item order ("Move up/down"). Additive — creates the
-         * `content_order` table; existing favorites/history/resume are untouched.
+         * v4 → v5: earlier v4 builds shipped without the EPG guide read-index, then the index was
+         * added while the database version stayed at 4. Devices on that older v4 fail Room's identity
+         * check on startup, so v5 makes the index addition an explicit migration.
          */
+        val MIGRATION_4_5 = object : androidx.room.migration.Migration(4, 5) {
+            override fun migrate(db: androidx.sqlite.db.SupportSQLiteDatabase) {
+                db.execSQL("CREATE INDEX IF NOT EXISTS `index_epg_programmes_sourceId_epgChannelId` ON `epg_programmes` (`sourceId`, `epgChannelId`)")
+            }
+        }
+
+        val MIGRATION_5_6 = object : androidx.room.migration.Migration(5, 6) {
+            override fun migrate(db: androidx.sqlite.db.SupportSQLiteDatabase) {
+                db.execSQL("ALTER TABLE `channels` ADD COLUMN `contentHash` INTEGER NOT NULL DEFAULT 0")
+                db.execSQL("ALTER TABLE `movies` ADD COLUMN `contentHash` INTEGER NOT NULL DEFAULT 0")
+                db.execSQL("ALTER TABLE `series` ADD COLUMN `contentHash` INTEGER NOT NULL DEFAULT 0")
+            }
+        }
+
         val MIGRATION_6_7 = object : androidx.room.migration.Migration(6, 7) {
             override fun migrate(db: androidx.sqlite.db.SupportSQLiteDatabase) {
+                if (!hasColumn(db, "channels", "contentHash")) {
+                    db.execSQL("ALTER TABLE `channels` ADD COLUMN `contentHash` INTEGER NOT NULL DEFAULT 0")
+                }
+                if (!hasColumn(db, "movies", "contentHash")) {
+                    db.execSQL("ALTER TABLE `movies` ADD COLUMN `contentHash` INTEGER NOT NULL DEFAULT 0")
+                }
+                if (!hasColumn(db, "series", "contentHash")) {
+                    db.execSQL("ALTER TABLE `series` ADD COLUMN `contentHash` INTEGER NOT NULL DEFAULT 0")
+                }
+                db.execSQL("CREATE INDEX IF NOT EXISTS `index_channels_sourceId_name` ON `channels` (`sourceId`, `name`)")
+                db.execSQL("CREATE INDEX IF NOT EXISTS `index_channels_categoryId_name` ON `channels` (`categoryId`, `name`)")
+                db.execSQL("CREATE INDEX IF NOT EXISTS `index_channels_sourceId_sortOrder_name` ON `channels` (`sourceId`, `sortOrder`, `name`)")
+                db.execSQL("CREATE INDEX IF NOT EXISTS `index_channels_categoryId_sortOrder_name` ON `channels` (`categoryId`, `sortOrder`, `name`)")
+                db.execSQL("CREATE INDEX IF NOT EXISTS `index_movies_sourceId_name` ON `movies` (`sourceId`, `name`)")
+                db.execSQL("CREATE INDEX IF NOT EXISTS `index_movies_categoryId_name` ON `movies` (`categoryId`, `name`)")
+                db.execSQL("CREATE INDEX IF NOT EXISTS `index_movies_sourceId_sortOrder_name` ON `movies` (`sourceId`, `sortOrder`, `name`)")
+                db.execSQL("CREATE INDEX IF NOT EXISTS `index_movies_categoryId_sortOrder_name` ON `movies` (`categoryId`, `sortOrder`, `name`)")
+                db.execSQL("CREATE UNIQUE INDEX IF NOT EXISTS `index_movies_sourceId_remoteId` ON `movies` (`sourceId`, `remoteId`)")
+                db.execSQL("CREATE INDEX IF NOT EXISTS `index_series_sourceId_name` ON `series` (`sourceId`, `name`)")
+                db.execSQL("CREATE INDEX IF NOT EXISTS `index_series_categoryId_name` ON `series` (`categoryId`, `name`)")
+                db.execSQL("CREATE INDEX IF NOT EXISTS `index_series_sourceId_sortOrder_name` ON `series` (`sourceId`, `sortOrder`, `name`)")
+                db.execSQL("CREATE INDEX IF NOT EXISTS `index_series_categoryId_sortOrder_name` ON `series` (`categoryId`, `sortOrder`, `name`)")
+                db.execSQL("CREATE UNIQUE INDEX IF NOT EXISTS `index_series_sourceId_remoteId` ON `series` (`sourceId`, `remoteId`)")
+            }
+        }
+
+        val MIGRATION_7_8 = object : androidx.room.migration.Migration(7, 8) {
+            override fun migrate(db: androidx.sqlite.db.SupportSQLiteDatabase) {
+                if (!hasColumn(db, "epg_programmes", "contentHash")) {
+                    db.execSQL("ALTER TABLE `epg_programmes` ADD COLUMN `contentHash` INTEGER NOT NULL DEFAULT 0")
+                }
                 db.execSQL(
-                    "CREATE TABLE IF NOT EXISTS `content_order` (" +
-                        "`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " +
-                        "`profileId` INTEGER NOT NULL, " +
-                        "`mediaType` TEXT NOT NULL, " +
-                        "`contextKey` TEXT NOT NULL, " +
-                        "`itemId` INTEGER NOT NULL, " +
-                        "`position` INTEGER NOT NULL, " +
-                        "FOREIGN KEY(`profileId`) REFERENCES `profiles`(`id`) ON DELETE CASCADE" +
+                    "DELETE FROM `epg_programmes` WHERE `id` NOT IN (" +
+                        "SELECT MIN(`id`) FROM `epg_programmes` GROUP BY `sourceId`, `epgChannelId`, `startMs`" +
                         ")",
                 )
-                db.execSQL("CREATE INDEX IF NOT EXISTS `index_content_order_profileId` ON `content_order` (`profileId`)")
-                db.execSQL("CREATE INDEX IF NOT EXISTS `index_content_order_profileId_mediaType_contextKey` ON `content_order` (`profileId`, `mediaType`, `contextKey`)")
-                db.execSQL("CREATE UNIQUE INDEX IF NOT EXISTS `index_content_order_profileId_mediaType_contextKey_itemId` ON `content_order` (`profileId`, `mediaType`, `contextKey`, `itemId`)")
+                db.execSQL(
+                    "CREATE UNIQUE INDEX IF NOT EXISTS `index_epg_programmes_natural_key` " +
+                        "ON `epg_programmes` (`sourceId`, `epgChannelId`, `startMs`)",
+                )
             }
+        }
+
+        val MIGRATION_8_9 = object : androidx.room.migration.Migration(8, 9) {
+            override fun migrate(db: androidx.sqlite.db.SupportSQLiteDatabase) {
+                createContentOrderTable(db)
+            }
+        }
+
+        private fun createContentOrderTable(db: androidx.sqlite.db.SupportSQLiteDatabase) {
+            db.execSQL(
+                "CREATE TABLE IF NOT EXISTS `content_order` (" +
+                    "`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " +
+                    "`profileId` INTEGER NOT NULL, " +
+                    "`mediaType` TEXT NOT NULL, " +
+                    "`contextKey` TEXT NOT NULL, " +
+                    "`itemId` INTEGER NOT NULL, " +
+                    "`position` INTEGER NOT NULL, " +
+                    "FOREIGN KEY(`profileId`) REFERENCES `profiles`(`id`) ON DELETE CASCADE" +
+                    ")",
+            )
+            db.execSQL("CREATE INDEX IF NOT EXISTS `index_content_order_profileId` ON `content_order` (`profileId`)")
+            db.execSQL("CREATE INDEX IF NOT EXISTS `index_content_order_profileId_mediaType_contextKey` ON `content_order` (`profileId`, `mediaType`, `contextKey`)")
+            db.execSQL("CREATE UNIQUE INDEX IF NOT EXISTS `index_content_order_profileId_mediaType_contextKey_itemId` ON `content_order` (`profileId`, `mediaType`, `contextKey`, `itemId`)")
         }
 
         private fun hasColumn(db: androidx.sqlite.db.SupportSQLiteDatabase, table: String, column: String): Boolean {

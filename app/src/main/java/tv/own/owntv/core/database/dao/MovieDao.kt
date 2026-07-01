@@ -5,13 +5,21 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Update
 import kotlinx.coroutines.flow.Flow
+import tv.own.owntv.core.database.entity.ContentHashProjection
 import tv.own.owntv.core.database.entity.MovieEntity
 
 @Dao
 interface MovieDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun upsertAll(movies: List<MovieEntity>)
+
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    suspend fun insertAll(movies: List<MovieEntity>)
+
+    @Update
+    suspend fun updateAll(movies: List<MovieEntity>)
 
     @Query("DELETE FROM movies WHERE sourceId = :sourceId")
     suspend fun clearSource(sourceId: Long)
@@ -22,6 +30,18 @@ interface MovieDao {
     // --- Stable-key lookups (Backup & Restore resolution: content ids change on re-sync) ---
     @Query("SELECT * FROM movies WHERE sourceId = :sourceId AND remoteId = :remoteId LIMIT 1")
     suspend fun findByRemote(sourceId: Long, remoteId: String): MovieEntity?
+
+    @Query("SELECT * FROM movies WHERE sourceId = :sourceId AND remoteId IN (:remoteIds)")
+    suspend fun findByRemoteIds(sourceId: Long, remoteIds: List<String>): List<MovieEntity>
+
+    @Query("SELECT remoteId FROM movies WHERE sourceId = :sourceId AND remoteId IS NOT NULL")
+    suspend fun remoteIdsForSource(sourceId: Long): List<String>
+
+    @Query("SELECT remoteId, id, contentHash FROM movies WHERE sourceId = :sourceId AND remoteId IS NOT NULL")
+    suspend fun contentHashesForSource(sourceId: Long): List<ContentHashProjection>
+
+    @Query("DELETE FROM movies WHERE sourceId = :sourceId AND remoteId IN (:remoteIds)")
+    suspend fun deleteByRemoteIds(sourceId: Long, remoteIds: List<String>)
 
     @Query("SELECT * FROM movies WHERE sourceId = :sourceId AND name = :name LIMIT 1")
     suspend fun findByName(sourceId: Long, name: String): MovieEntity?

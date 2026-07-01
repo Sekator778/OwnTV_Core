@@ -5,6 +5,7 @@ import okhttp3.Protocol
 import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
 import tv.own.owntv.core.backup.BackupManager
+import tv.own.owntv.core.database.BulkInsertHelper
 import tv.own.owntv.core.backup.UserDataResolver
 import tv.own.owntv.core.customize.CustomizationStore
 import tv.own.owntv.core.download.DownloadManager
@@ -21,6 +22,8 @@ import tv.own.owntv.core.repository.SourceRepository
 import tv.own.owntv.core.tv.TvHomeRepository
 import tv.own.owntv.core.update.UpdateManager
 import tv.own.owntv.core.sync.SyncManager
+import tv.own.owntv.core.sync.work.CatalogSyncScheduler
+import tv.own.owntv.core.sync.work.EpgSyncScheduler
 import tv.own.owntv.core.weather.WeatherRepository
 import java.util.concurrent.TimeUnit
 
@@ -66,18 +69,51 @@ val dataModule = module {
     single { tv.own.owntv.core.player.ForceMpvStore(androidContext()) }
     // store, sourceDao, epgRepository
     single { tv.own.owntv.core.epg.EpgMigration(get(), get(), get()) }
-    // channelDao, movieDao, seriesDao, db
-    single { tv.own.owntv.core.sync.ImportFinalizer(get(), get(), get(), get()) }
     single { M3uParser() }
     single { XtreamClient(get()) }
-    single { WeatherRepository(get(), get()) } // Phase 7 — weather chip
-    single { SyncManager(androidContext(), get(), get(), get(), get(), get(), get(), get(), get()) }
+    single { WeatherRepository(get(), get()) }
+    single { BulkInsertHelper(get()) }
+    single {
+        tv.own.owntv.core.sync.ImportFinalizer(
+            channelDao = get(),
+            movieDao = get(),
+            seriesDao = get(),
+            db = get(),
+            bulkInsertHelper = get(),
+        )
+    }
     // context, channelDao, movieDao, seriesDao, profileDao, favoriteDao, historyDao, progressDao, contentOrderDao
     single { UserDataResolver(androidContext(), get(), get(), get(), get(), get(), get(), get(), get()) }
     // sourceDao, syncManager, userDataResolver
     single { SourceRepository(get(), get(), get()) }
-    // epgDao, httpClient, xtreamClient, channelDao, customize, settings, context, db
-    single { EpgRepository(get(), get(), get(), get(), get(), get(), androidContext(), get()) }
+    single {
+        SyncManager(
+            context = androidContext(),
+            sourceDao = get(),
+            categoryDao = get(),
+            channelDao = get(),
+            movieDao = get(),
+            seriesDao = get(),
+            xtream = get(),
+            m3u = get(),
+            http = get(),
+            bulkInsertHelper = get(),
+        )
+    }
+    // epgDao, httpClient, xtreamClient, channelDao, customize, settings, context, db, bulkInsertHelper
+    single {
+        EpgRepository(
+            epgDao = get(),
+            http = get(),
+            xtream = get(),
+            channelDao = get(),
+            customize = get(),
+            settings = get(),
+            context = androidContext(),
+            db = get(),
+            bulkInsertHelper = get(),
+        )
+    }
     // seriesDao, sourceDao, xtreamClient, userDataResolver
     single { SeriesRepository(get(), get(), get(), get()) }
     // sourceDao, movieDao, seriesDao, progressDao
@@ -94,4 +130,6 @@ val dataModule = module {
     single { BackupManager(get(), get(), get(), get(), get(), get(), get()) }
     // context, okHttpClient — in-app updates from GitHub Releases
     single { UpdateManager(androidContext(), get()) }
+    single { CatalogSyncScheduler(androidContext()) }
+    single { EpgSyncScheduler(androidContext()) }
 }

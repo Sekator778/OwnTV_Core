@@ -6,8 +6,10 @@ import androidx.room.Embedded
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Update
 import kotlinx.coroutines.flow.Flow
 import tv.own.owntv.core.database.entity.ChannelEntity
+import tv.own.owntv.core.database.entity.ContentHashProjection
 
 /** A channel plus its category name, for richer global-search results ("category · #number"). */
 data class ChannelSearchResult(
@@ -31,6 +33,12 @@ interface ChannelDao {
     /** Batch insert; the sync layer calls this in chunks (~500) inside a transaction. */
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun upsertAll(channels: List<ChannelEntity>)
+
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    suspend fun insertAll(channels: List<ChannelEntity>)
+
+    @Update
+    suspend fun updateAll(channels: List<ChannelEntity>)
 
     @Query("DELETE FROM channels WHERE sourceId = :sourceId")
     suspend fun clearSource(sourceId: Long)
@@ -94,6 +102,18 @@ interface ChannelDao {
      *  without loading the whole channel table. */
     @Query("SELECT * FROM channels WHERE sourceId IN (:sourceIds) AND remoteId IN (:remoteIds)")
     suspend fun findByRemoteIds(sourceIds: List<Long>, remoteIds: List<String>): List<ChannelEntity>
+
+    @Query("SELECT * FROM channels WHERE sourceId = :sourceId AND remoteId IN (:remoteIds)")
+    suspend fun findByRemoteIds(sourceId: Long, remoteIds: List<String>): List<ChannelEntity>
+
+    @Query("SELECT remoteId FROM channels WHERE sourceId = :sourceId AND remoteId IS NOT NULL")
+    suspend fun remoteIdsForSource(sourceId: Long): List<String>
+
+    @Query("SELECT remoteId, id, contentHash FROM channels WHERE sourceId = :sourceId AND remoteId IS NOT NULL")
+    suspend fun contentHashesForSource(sourceId: Long): List<ContentHashProjection>
+
+    @Query("DELETE FROM channels WHERE sourceId = :sourceId AND remoteId IN (:remoteIds)")
+    suspend fun deleteByRemoteIds(sourceId: Long, remoteIds: List<String>)
 
     // --- Browsing (each list has a playlist-order and an A–Z variant; the sort chip picks one) ---
     @Query("SELECT * FROM channels WHERE categoryId = :categoryId ORDER BY sortOrder ASC, name ASC")

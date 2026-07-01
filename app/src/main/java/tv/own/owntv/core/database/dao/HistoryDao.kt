@@ -32,6 +32,34 @@ interface HistoryDao {
     @Query("SELECT * FROM watch_history")
     suspend fun getAllOnce(): List<WatchHistoryEntity>
 
+    /** User-data rows tied to one source, already joined to stable content keys for fast re-sync snapshots. */
+    @Query(
+        "SELECT h.profileId AS profileId, h.mediaType AS mediaType, h.itemId AS itemId, " +
+            "COALESCE(c.sourceId, m.sourceId, s.sourceId, episodeSeries.sourceId) AS sourceId, " +
+            "COALESCE(c.remoteId, m.remoteId, s.remoteId, e.remoteId) AS remoteId, " +
+            "COALESCE(c.name, m.name, s.name) AS name, " +
+            "episodeSeries.remoteId AS seriesRemoteId, episodeSeries.name AS seriesName, " +
+            "e.seasonNumber AS seasonNumber, e.episodeNumber AS episodeNumber, " +
+            "h.watchedAt AS at, 0 AS positionMs, 0 AS durationMs " +
+            "FROM watch_history h " +
+            "LEFT JOIN channels c ON h.mediaType = 'LIVE' AND h.itemId = c.id " +
+            "LEFT JOIN movies m ON h.mediaType = 'MOVIE' AND h.itemId = m.id " +
+            "LEFT JOIN series s ON h.mediaType = 'SERIES' AND h.itemId = s.id " +
+            "LEFT JOIN episodes e ON h.mediaType = 'EPISODE' AND h.itemId = e.id " +
+            "LEFT JOIN series episodeSeries ON e.seriesId = episodeSeries.id " +
+            "WHERE c.sourceId = :sourceId OR m.sourceId = :sourceId OR s.sourceId = :sourceId OR episodeSeries.sourceId = :sourceId",
+    )
+    suspend fun exportRowsForSource(sourceId: Long): List<UserDataExportRow>
+
+    @Query(
+        "DELETE FROM watch_history WHERE profileId = :profileId AND mediaType = :type AND itemId = :itemId AND (" +
+            "(:type = 'LIVE'   AND itemId NOT IN (SELECT id FROM channels)) OR " +
+            "(:type = 'MOVIE'  AND itemId NOT IN (SELECT id FROM movies))   OR " +
+            "(:type = 'SERIES' AND itemId NOT IN (SELECT id FROM series))" +
+            ")",
+    )
+    suspend fun purgeSnapshotOrphan(profileId: Long, type: MediaType, itemId: Long)
+
     /** Drops history rows orphaned by a re-sync (see FavoriteDao.purgeOrphans); episodes excluded. */
     @Query(
         "DELETE FROM watch_history WHERE " +

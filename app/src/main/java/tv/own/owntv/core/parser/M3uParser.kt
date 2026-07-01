@@ -1,5 +1,9 @@
 package tv.own.owntv.core.parser
 
+import android.os.SystemClock
+import android.util.Log
+import kotlinx.coroutines.currentCoroutineContext
+import kotlinx.coroutines.ensureActive
 import java.io.BufferedReader
 import java.io.InputStream
 
@@ -39,12 +43,21 @@ data class M3uHeader(val urlTvg: String?)
  */
 class M3uParser {
 
-    fun parse(input: InputStream, onEntry: (M3uEntry) -> Unit): M3uHeader {
+    suspend fun parse(input: InputStream, onEntry: suspend (M3uEntry) -> Unit): M3uHeader {
+        val startedAt = SystemClock.elapsedRealtime()
+        var lastLogAt = startedAt
+        var lastParseOrReadMs = 0L
+        var lastCallbackMs = 0L
+        var entries = 0
+        val metrics = ParseMetrics()
         var header = M3uHeader(urlTvg = null)
         var pending: PendingExtInf? = null
+        Log.d(TAG, "parse start")
 
         input.bufferedReader().forEachLineSafe { raw ->
+            val parseStart = SystemClock.elapsedRealtime()
             val line = raw.trim()
+            var callbackHandled = false
             when {
                 line.isEmpty() -> Unit
 
@@ -73,26 +86,59 @@ class M3uParser {
                     // A URL line completes the pending channel.
                     val p = pending
                     if (p != null && p.name.isNotEmpty()) {
-                        onEntry(
-                            M3uEntry(
-                                name = p.name,
-                                streamUrl = line,
-                                logo = p.logo,
-                                groupTitle = p.groupTitle,
-                                tvgId = p.tvgId,
-                                tvgChno = p.tvgChno,
-                                type = p.type,
-                                tvgType = p.tvgType,
-                                catchup = p.catchup,
-                                catchupSource = p.catchupSource,
-                                catchupDays = p.catchupDays,
-                            ),
-                        )
+                        metrics.parseOrReadMs += SystemClock.elapsedRealtime() - parseStart
+                        val callbackStart = SystemClock.elapsedRealtime()
+                        try {
+                            onEntry(
+                                M3uEntry(
+                                    name = p.name,
+                                    streamUrl = line,
+                                    logo = p.logo,
+                                    groupTitle = p.groupTitle,
+                                    tvgId = p.tvgId,
+                                    tvgChno = p.tvgChno,
+                                    type = p.type,
+                                    tvgType = p.tvgType,
+                                    catchup = p.catchup,
+                                    catchupSource = p.catchupSource,
+                                    catchupDays = p.catchupDays,
+                                ),
+                            )
+                        } finally {
+                            metrics.callbackMs += SystemClock.elapsedRealtime() - callbackStart
+                        }
+                        entries++
+                        callbackHandled = true
                     }
                     pending = null
                 }
             }
+
+            if (!callbackHandled) {
+                metrics.parseOrReadMs += SystemClock.elapsedRealtime() - parseStart
+            }
+
+            if (entries > 0 && entries % STREAM_LOG_ITEM_STEP == 0) {
+                val now = SystemClock.elapsedRealtime()
+                val parseOrReadDelta = metrics.parseOrReadMs - lastParseOrReadMs
+                val callbackDelta = metrics.callbackMs - lastCallbackMs
+                Log.d(
+                    TAG,
+                    "parse progress entries=$entries deltaMs=${now - lastLogAt} " +
+                        "parseOrReadMs=$parseOrReadDelta callbackMs=$callbackDelta " +
+                        "totalParseOrReadMs=${metrics.parseOrReadMs} totalCallbackMs=${metrics.callbackMs} " +
+                        "totalMs=${now - startedAt}",
+                )
+                lastLogAt = now
+                lastParseOrReadMs = metrics.parseOrReadMs
+                lastCallbackMs = metrics.callbackMs
+            }
         }
+        Log.d(
+            TAG,
+            "parse end entries=$entries parseOrReadMs=${metrics.parseOrReadMs} " +
+                "callbackMs=${metrics.callbackMs} totalMs=${SystemClock.elapsedRealtime() - startedAt}",
+        )
         return header
     }
 
@@ -109,6 +155,11 @@ class M3uParser {
         val catchupDays: Int?,
     )
 
+    private data class ParseMetrics(
+        var parseOrReadMs: Long = 0L,
+        var callbackMs: Long = 0L,
+    )
+
     /** Extracts a `key="value"` attribute from an EXTINF/EXTM3U line. */
     private fun attr(line: String, key: String): String? {
         val token = "$key=\""
@@ -119,14 +170,23 @@ class M3uParser {
         if (end < 0) return null
         return line.substring(from, end).takeIf { it.isNotBlank() }
     }
+
+    private companion object {
+        private const val TAG = "M3uParser"
+        private const val STREAM_LOG_ITEM_STEP = 10_000
+    }
 }
 
-private inline fun BufferedReader.forEachLineSafe(action: (String) -> Unit) {
-    use { reader ->
-        var line = reader.readLine()
+private suspend inline fun BufferedReader.forEachLineSafe(action: suspend (String) -> Unit) {
+    val ctx = currentCoroutineContext()
+    try {
+        var line = readLine()
         while (line != null) {
+            ctx.ensureActive()
             action(line)
-            line = reader.readLine()
+            line = readLine()
         }
+    } finally {
+        close()
     }
 }
