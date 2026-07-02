@@ -3,6 +3,8 @@ package tv.own.owntv.core.repository
 import android.os.SystemClock
 import android.util.Log
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import tv.own.owntv.core.database.dao.SourceDao
 import tv.own.owntv.core.database.entity.ProfileSourceCrossRef
 import tv.own.owntv.core.database.entity.SourceEntity
@@ -57,7 +59,7 @@ class SourceRepository(
         // change on every refresh, so they'd otherwise orphan — count badge set, list empty).
         val snapshotStartedAt = SystemClock.elapsedRealtime()
         val snapshot = runCatching { userData.exportForSource(source.id) }
-            .onSuccess { Log.i(TAG, "userData export sourceId=${source.id} rows=${it.length()} ms=${SystemClock.elapsedRealtime() - snapshotStartedAt}") }
+            .onSuccess { Log.i(TAG, "userData export sourceId=${source.id} rows=${it.length()} ${it.typeCounts()} ms=${SystemClock.elapsedRealtime() - snapshotStartedAt}") }
             .onFailure { Log.w(TAG, "userData export failed sourceId=${source.id} ms=${SystemClock.elapsedRealtime() - snapshotStartedAt}", it) }
             .getOrNull()
         val coreStartedAt = SystemClock.elapsedRealtime()
@@ -70,15 +72,31 @@ class SourceRepository(
         // a partial content-type sync never touched the other types, and a failure proves nothing.
         val purge = result is SyncResult.Success && contentTypes == SyncContentTypes()
         val relinkStartedAt = SystemClock.elapsedRealtime()
-        runCatching { userData.relinkAfterSync(snapshot ?: org.json.JSONArray(), purge = purge) }
-            .onSuccess { Log.i(TAG, "userData relink sourceId=${source.id} rows=${snapshot?.length() ?: 0} purge=$purge ms=${SystemClock.elapsedRealtime() - relinkStartedAt}") }
-            .onFailure { Log.w(TAG, "userData relink failed sourceId=${source.id} ms=${SystemClock.elapsedRealtime() - relinkStartedAt}", it) }
+        // Serialized: parallel source syncs (startup refresh runs every source at once) must not
+        // relink/purge against each other's mid-flight state.
+        relinkMutex.withLock {
+            runCatching { userData.relinkAfterSync(snapshot ?: org.json.JSONArray(), purge = purge) }
+                .onSuccess { Log.i(TAG, "userData relink sourceId=${source.id} rows=${snapshot?.length() ?: 0} purge=$purge ms=${SystemClock.elapsedRealtime() - relinkStartedAt}") }
+                .onFailure { Log.w(TAG, "userData relink failed sourceId=${source.id} ms=${SystemClock.elapsedRealtime() - relinkStartedAt}", it) }
+        }
         Log.i(TAG, "sync wrapper end sourceId=${source.id} result=${result.name()} totalMs=${SystemClock.elapsedRealtime() - startedAt}")
         return result
     }
 
+    /** Per-mediaType row counts of a snapshot, e.g. "types={LIVE=8, MOVIE=6}" — upgrade-path diagnostics. */
+    private fun org.json.JSONArray.typeCounts(): String {
+        val counts = LinkedHashMap<String, Int>()
+        for (i in 0 until length()) {
+            val t = optJSONObject(i)?.optString("t") ?: continue
+            counts[t] = (counts[t] ?: 0) + 1
+        }
+        return "types=$counts"
+    }
+
     private companion object {
         const val TAG = "SourceRepository"
+        /** Class-wide: SourceRepository is a Koin singleton, but keep the lock global regardless. */
+        val relinkMutex = Mutex()
     }
 }
 

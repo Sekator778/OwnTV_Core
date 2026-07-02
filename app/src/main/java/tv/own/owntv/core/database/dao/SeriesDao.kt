@@ -22,6 +22,14 @@ interface SeriesDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertSeries(series: List<SeriesEntity>)
 
+    /** Like [upsertSeries] but returns the row ids — the M3U series import needs them for episodes. */
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun upsertSeriesReturnIds(series: List<SeriesEntity>): List<Long>
+
+    /** Like [upsertSeasons] but returns the row ids — the M3U series import needs them for episodes. */
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun upsertSeasonsReturnIds(seasons: List<SeasonEntity>): List<Long>
+
     @Update
     suspend fun updateSeries(series: List<SeriesEntity>)
 

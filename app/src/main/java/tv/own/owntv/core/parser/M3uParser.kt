@@ -26,8 +26,12 @@ data class M3uEntry(
     /** `catchup-days` — how many days back the archive goes. */
     val catchupDays: Int?,
 ) {
+    /** Tagged as series content — per-episode entries like "Show S01E05" grouped into shows. */
+    val isSeries: Boolean get() = type == "series" || tvgType == "series"
+
     /** True when the entry is explicitly tagged as VOD (movie or series), not a live channel. */
-    val isVod: Boolean get() = type == "vod" || tvgType == "movie" || tvgType == "series" || type == "movie"
+    val isVod: Boolean get() =
+        isSeries || type == "vod" || type == "movie" || tvgType == "vod" || tvgType == "movie"
 }
 
 /** Header info from the `#EXTM3U` line (notably the `url-tvg` EPG URL). */

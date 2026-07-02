@@ -118,15 +118,13 @@ class UserDataResolver(
             val ok = runCatching { resolveAndInsert(e) }.getOrDefault(false)
             if (!ok) unresolved.put(e)
         }
-        if (purge) {
-            if (snapshot.hasSourceSnapshotIds()) {
-                purgeSnapshotOrphans(snapshot)
-            } else {
-                favoriteDao.purgeOrphans()
-                historyDao.purgeOrphans()
-                progressDao.purgeOrphans()
-                contentOrderDao.purgeOrphans()
-            }
+        // Purge is strictly snapshot-scoped: only rows this snapshot captured (by their old ids) may
+        // be dropped, and only when their content row is genuinely gone. An EMPTY snapshot must never
+        // purge — the old fallback ran a GLOBAL orphan purge across ALL sources, which could delete
+        // another source's favorites while that source's own sync had its content mid-rewrite
+        // (M3U clear-then-insert / Xtream stale-prune run concurrently on startup refresh).
+        if (purge && snapshot.hasSourceSnapshotIds()) {
+            purgeSnapshotOrphans(snapshot)
         }
         if (unresolved.length() > 0) addPending(unresolved)
         resolvePending() // also retries any in-flight backup restore
