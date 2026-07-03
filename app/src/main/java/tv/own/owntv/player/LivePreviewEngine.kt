@@ -59,6 +59,8 @@ class LivePreviewEngine(
     // Up-to-4 mini stream chips for the preview pane / player top bar: aspect · resolution · fps · audio.
     private val _streamChips = MutableStateFlow<List<String>>(emptyList())
     override val streamChips: StateFlow<List<String>> = _streamChips.asStateFlow()
+    // This engine IS ExoPlayer — static first chip for the fullscreen top bar.
+    override val engineChip: StateFlow<String?> = MutableStateFlow("EXO")
 
     // --- PlaybackEngine: lets the full-screen HUD drive a promoted preview (play/pause, state, volume) ---
     private val _isPlaying = MutableStateFlow(false)
@@ -147,6 +149,7 @@ class LivePreviewEngine(
     override fun streamInfo(): List<Pair<String, String>> {
         val p = player ?: return emptyList()
         val out = ArrayList<Pair<String, String>>()
+        out += "Engine" to "ExoPlayer"
         p.videoFormat?.let { f ->
             val line = listOfNotNull(
                 f.sampleMimeType?.substringAfterLast('/')?.let { mimeName(it) },

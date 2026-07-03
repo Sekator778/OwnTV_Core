@@ -87,6 +87,7 @@ class OwnTVPlayer(
     private val okHttpClient: okhttp3.OkHttpClient,
     private val diagnostics: PlayerDiagnostics,
     private val proxyHolder: tv.own.owntv.core.network.ProxyConfigHolder,
+    private val vodEngineStore: tv.own.owntv.core.player.VodEngineStore,
 ) : MPVLib.EventObserver {
 
     private companion object {
@@ -302,6 +303,11 @@ class OwnTVPlayer(
     // Video Player Settings — cached so ensureInit can apply them as mpv options, and the observers
     // below apply changes live to a running player.
     private var hwDecoding = true
+    private var vodPreferExo = false // Movies & Series start on ExoPlayer (mpv becomes the fallback)
+    // Per-item engine pins from the gear toggle (VOD counterpart of Live's compatibility mode) —
+    // eagerly mirrored so loadUrl can consult them synchronously.
+    @Volatile private var vodPinnedMpv: Set<String> = emptySet()
+    @Volatile private var vodPinnedExo: Set<String> = emptySet()
     private var surroundSound = false // off by default (opt-in); see SettingsRepository.surroundSound (#25)
     private var autoPlayNext = true
     private var subScale = 1.0
@@ -408,6 +414,9 @@ class OwnTVPlayer(
             }
         }.launchIn(scope)
         settings.autoPlayNext.onEach { autoPlayNext = it }.launchIn(scope)
+        settings.vodPreferExo.onEach { vodPreferExo = it }.launchIn(scope) // applies from the next VOD load
+        vodEngineStore.mpvUrls.onEach { vodPinnedMpv = it }.launchIn(scope)
+        vodEngineStore.exoUrls.onEach { vodPinnedExo = it }.launchIn(scope)
         settings.subtitleScale.onEach { s ->
             subScale = s.toDouble()
             if (initialized) mpvAsync { setPropertyDouble("sub-scale", subScale) }
@@ -547,6 +556,11 @@ class OwnTVPlayer(
     private val _streamChips = MutableStateFlow<List<String>>(emptyList())
     val streamChips: StateFlow<List<String>> = _streamChips.asStateFlow()
 
+    /** First top-bar chip: which engine is decoding right now ("MPV", or "EXO" during an ExoPlayer
+     *  handoff/fallback/preferred VOD playback). */
+    private val _engineChip = MutableStateFlow<String?>("MPV")
+    val engineChip: StateFlow<String?> = _engineChip.asStateFlow()
+
     private fun updateStreamChips() {
         val w = currentWidthPx; val h = currentHeightPx
         if (w <= 0 || h <= 0) { _streamChips.value = emptyList(); return }
@@ -594,6 +608,24 @@ class OwnTVPlayer(
     @Volatile private var surfaceH = 0
     private var exoEngine: ExoSubtitleEngine? = null
     @Volatile private var exoActive = false
+    // Engine-fallback state: a VOD that terminally failed on mpv is retried once on ExoPlayer. While
+    // [exoVodFallback] is set, Exo owns playback as a *player* (not an image-sub handoff): subtitle picks
+    // stay on Exo instead of reverting to mpv, and an Exo failure surfaces a combined both-engines error.
+    @Volatile private var exoVodFallback = false
+    @Volatile private var triedExoVodFallback = false
+    private var mpvFailureBeforeFallback: String? = null
+    // ExoPlayer-preferred mode (Settings → Video Player): the item STARTED on Exo, so an Exo failure
+    // falls back to mpv (the reverse chain); a later terminal mpv failure shows the combined error.
+    @Volatile private var exoPrimaryThisItem = false
+    @Volatile private var exoFailureBeforeMpv: String? = null
+    // A VOD load that wants to start on ExoPlayer but arrived before the surface exists (first open):
+    // attachSurface flushes pendingUrl into startExo instead of mpv's startLoad.
+    @Volatile private var pendingExoStart = false
+    // One-shot: the next loadUrl must recreate the SurfaceView even for ≤1080p content — set by the
+    // manual engine toggle, where the outgoing engine's MediaCodec session leaves the surface dirty.
+    @Volatile private var forceSurfaceResetNextLoad = false
+    // The image subtitle a deferred Exo start (pendingExoStart) must select once its surface arrives.
+    private var pendingExoSub: TrackOption? = null
     private var exoTickJob: Job? = null
     private var pendingImageSub: TrackOption? = null
     // A text subtitle picked while an Exo handoff is active: applied after mpv reloads (FILE_LOADED).
@@ -630,6 +662,9 @@ class OwnTVPlayer(
         override fun onVideoSize(width: Int, height: Int) {
             currentWidthPx = width; currentHeightPx = height
             if (height > 0) consecutiveHardResets = 0 // successful decode — reset thrash guard
+            // Remember heaviness like the mpv path does, so the NEXT load (autoplay/toggle back to mpv)
+            // knows a >1080p decoder session just ran on this surface and recreates it first.
+            if (height > 0) lastVideoHeightPx = height
             updateAspect()
             _videoRes.value = resolutionLabel(height)
         }
@@ -643,8 +678,26 @@ class OwnTVPlayer(
             _audioTrackList.value = tracks
             _audioCount.value = tracks.size
         }
+        override fun onTextTracks(tracks: List<TrackOption>) {
+            // Only when Exo owns playback as a VOD ENGINE: mpv never probed the file, so its subtitle
+            // list is empty — without this the HUD sub menu shows nothing (image subs included, which
+            // ExoPlayer renders natively). During the image-sub handoff mpv's own list stays.
+            if (!exoVodFallback) return
+            _subTrackList.value = tracks
+            _subCount.value = tracks.size
+        }
         override fun onVideoFps(fps: Float) { _videoFps.value = fps; updateStreamChips() }
-        override fun onError(message: String) { scope.launch { revertToMpv(error = message) } }
+        override fun onError(message: String) {
+            // Image-sub handoff → give playback back to mpv. Engine chains: Exo-as-primary falls back to
+            // mpv; Exo-as-fallback means mpv already failed this item, so reloading it there would just
+            // loop — surface the combined both-engines error.
+            when {
+                exoVodFallback && exoPrimaryThisItem -> scope.launch { fallbackToMpvVod(message) }
+                exoVodFallback -> scope.launch { failBothEngines(message) }
+                else -> scope.launch { revertToMpv(error = message) }
+            }
+        }
+        override fun onEnded() { scope.launch { onExoEnded() } }
     }
 
     /** ExoPlayer can decode this VOD's active audio? Always-safe codecs (AAC/AC3/…) pass immediately;
@@ -695,29 +748,219 @@ class OwnTVPlayer(
         expectingPlayback = false
         _error.value = null
         _buffering.value = true
+        val gen = loadGeneration
         // Capture the current frame to mask the decoder swap, THEN stop mpv + release its surface on the
-        // worker (frees the connection + decoder), THEN start ExoPlayer on the main scope — ordering keeps
-        // the surface single-owner at every step.
+        // worker (frees the connection + decoder), THEN — after a settle beat, on a FRESH surface — start
+        // ExoPlayer. The settle + recreation matter: mpv's MediaCodec takes a moment to release and leaves
+        // the surface dirty (Realtek), which intermittently gave Exo "audio plays, no video".
         captureFreezeThen {
             mpvAsync {
                 stopWithStopClassification("handoff to exo")
                 setPropertyString("vo", "null")
                 runCatching { this.detachSurface() } // mpv's detachSurface (the receiver), not OwnTVPlayer's
-                scope.launch { startExo(url, pos, surface, sub) }
+                scope.launch {
+                    delay(600) // let mpv's MediaCodec finish releasing before ExoPlayer claims the decoder
+                    if (gen != loadGeneration) return@launch // superseded meanwhile
+                    pendingUrl = url
+                    pendingSeekMs = pos
+                    pendingStartPaused = false
+                    pendingExoSub = sub
+                    pendingExoStart = true
+                    _surfaceResetToken.value++ // fresh surface → attachSurface routes it into startExo
+                }
             }
         }
     }
 
-    private fun startExo(url: String, pos: Long, surface: Surface, sub: TrackOption) {
+    private fun startExo(url: String, pos: Long, surface: Surface, sub: TrackOption?) {
         exoActive = true
+        _engineChip.value = "EXO"
         _exoActiveState.value = true // mount the SubtitleView overlay now (only while Exo owns playback)
         _directRender.value = true // ExoPlayer also renders direct-to-surface → the view sizes for zoom
         _subText.value = null // mpv's text overlay is off during the handoff
         val budget = playerBudget ?: PlayerBudget.of(context).also { playerBudget = it }
         val engine = exoEngine ?: ExoSubtitleEngine(context, okHttpClient, budget, exoCallbacks).also { exoEngine = it }
-        engine.start(url, pos, surface, sub.lang, sub.typeIndex)
+        engine.start(url, pos, surface, sub?.lang, sub?.typeIndex ?: -1, fallback = exoVodFallback)
         engine.setVolume(_volume.value) // carry the current HUD volume into ExoPlayer
         startExoTick()
+    }
+
+    /**
+     * Terminal mpv failure on a VOD → retry the same item ONCE on ExoPlayer before surfacing an error
+     * (some devices/streams play on ExoPlayer's MediaCodec path where mpv's can't — the Live TV screen
+     * already works this way, just in the other direction). Returns true when the fallback was started,
+     * in which case the caller must NOT surface its error.
+     *
+     * [mpvStuck] = mpv's core may be blocked in a stuck HTTP read (the hard-reset path): the instance is
+     * destroyed to abort the connection instead of being politely stopped — an IPTV panel capping VOD at
+     * one connection would otherwise refuse ExoPlayer's open while mpv still holds the slot.
+     */
+    private fun fallbackToExoVod(mpvError: String, mpvStuck: Boolean): Boolean {
+        if (isLiveContent || exoActive || triedExoVodFallback) return false
+        val url = currentUrl ?: return false
+        if (attachedSurface == null) return false
+        if (!audioCodecSafeForExo()) {
+            android.util.Log.w(TAG, "VOD failed on mpv but audio codec unsafe for ExoPlayer — no fallback")
+            return false
+        }
+        triedExoVodFallback = true
+        exoVodFallback = true
+        mpvFailureBeforeFallback = mpvError
+        android.util.Log.w(TAG, "VOD terminally failed on mpv ($mpvError) — falling back to ExoPlayer")
+        // Resume where mpv got to only if the file actually opened; otherwise _position is stale from the
+        // previous item — use the intended start position instead.
+        val pos = if (fileLoaded && _position.value > 0) _position.value else pendingSeekMs
+        loadGeneration++ // supersede any mpv retry/watchdog work for this item
+        errorCheckJob?.cancel(); videoCheckJob?.cancel()
+        expectingPlayback = false
+        _error.value = null
+        _buffering.value = true
+        currentHwdec = null // keep the mpv decode guard inert while ExoPlayer owns playback
+        if (mpvStuck) {
+            hardReset()
+            // hardReset() destroys mpv on its own thread and forces a fresh Surface; give both a moment,
+            // then start ExoPlayer on whatever surface is current (a recreated one re-points via
+            // attachSurface → exoEngine.setSurface).
+            scope.launch {
+                delay(500)
+                val s = attachedSurface ?: return@launch
+                startExo(url, pos, s, sub = null)
+            }
+        } else {
+            // mpv is responsive (END_FILE / decode guard): stop it cleanly to free the connection +
+            // decoder, then start ExoPlayer — same single-owner ordering as the image-sub handoff.
+            mpvAsync {
+                stopWithStopClassification("exo vod fallback")
+                setPropertyString("vo", "null")
+                runCatching { this.detachSurface() }
+                scope.launch {
+                    delay(500) // let mpv's MediaCodec release — a busy decoder would fail Exo instantly
+                    val s = attachedSurface ?: return@launch
+                    startExo(url, pos, s, sub = null)
+                }
+            }
+        }
+        return true
+    }
+
+    /** ExoPlayer-preferred mode: the item started on Exo and Exo failed — retry it on mpv (the reverse
+     *  of [fallbackToExoVod]). mpv gets its full retry ladder; a terminal mpv failure after this shows
+     *  the combined both-engines error via [vodErrorMessage]. */
+    private fun fallbackToMpvVod(exoError: String) {
+        if (!exoActive) return
+        val url = currentUrl ?: return
+        android.util.Log.w(TAG, "VOD terminally failed on ExoPlayer ($exoError) — falling back to mpv")
+        val pos = if (_position.value > 0) _position.value else pendingSeekMs
+        exoFailureBeforeMpv = exoError
+        exoPrimaryThisItem = false
+        triedExoVodFallback = true // never bounce this item back to Exo
+        deactivateExo()
+        _buffering.value = true
+        loadUrl(url, MediaMeta(currentTitle, currentSubtitle, currentYear, currentLogoUrl), isLive = false, pos, resetRetries = false)
+    }
+
+    /** HUD engine toggle for VOD: switch the CURRENT movie/episode between mpv and ExoPlayer at the same
+     *  position, without touching the global "Movies & Series player" setting. Lets the user check which
+     *  engine exposes the tracks/behavior they need (e.g. mpv-only subtitle or audio tracks after an
+     *  ExoPlayer start, or the reverse). Not persisted — the next item follows the setting again. */
+    fun toggleVodEngine() {
+        if (isLiveContent) return
+        val url = currentUrl ?: return
+        // Both directions swap one MediaCodec session for another on TV-class silicon: the outgoing
+        // decoder takes a moment to release, and the surface it rendered to stays dirty (Realtek
+        // 0x80001000). So each direction waits a settle beat AND starts the incoming engine on a FRESH
+        // surface — same recipe as the autoplay >1080p fix — otherwise the incoming engine hits
+        // "decoder busy", errors, and (via the auto-fallback) bounces straight back.
+        if (exoActive) {
+            // → mpv. Manual choice: clear the chain state so this doesn't read as "mpv after Exo failed"
+            // (which would turn a later mpv failure into the combined error) and re-arm the auto-fallback.
+            android.util.Log.i(TAG, "HUD engine toggle: ExoPlayer → mpv")
+            val pos = if (_position.value > 0) _position.value else pendingSeekMs
+            exoPrimaryThisItem = false
+            exoFailureBeforeMpv = null
+            deactivateExo() // releases Exo's codec
+            triedExoVodFallback = false // re-arm the auto-fallback for the manual choice
+            _buffering.value = true
+            // Remember the choice for THIS item (like Live's compatibility mode remembers the channel).
+            scope.launch { vodEngineStore.pin(url, tv.own.owntv.core.player.VodEnginePin.MPV) }
+            scope.launch {
+                delay(600) // let ExoPlayer's MediaCodec finish releasing before mpv claims the decoder
+                if (currentUrl != url) return@launch // superseded (user zapped/backed out meanwhile)
+                forceSurfaceResetNextLoad = true
+                loadUrl(url, MediaMeta(currentTitle, currentSubtitle, currentYear, currentLogoUrl), isLive = false, pos, resetRetries = false)
+            }
+        } else {
+            // → ExoPlayer. Marked primary so an Exo failure falls back to mpv instead of erroring as
+            // "both engines failed"; same mpv-first single-connection ordering as the preferred-engine path.
+            if (attachedSurface == null) return
+            android.util.Log.i(TAG, "HUD engine toggle: mpv → ExoPlayer")
+            val pos = if (fileLoaded && _position.value > 0) _position.value else pendingSeekMs
+            exoPrimaryThisItem = true
+            exoVodFallback = true
+            mpvFailureBeforeFallback = null
+            triedExoVodFallback = false
+            loadGeneration++ // supersede mpv retry/watchdog work for this item
+            val gen = loadGeneration
+            errorCheckJob?.cancel(); videoCheckJob?.cancel()
+            expectingPlayback = false
+            _error.value = null
+            _buffering.value = true
+            currentHwdec = null // keep the mpv decode guard inert while ExoPlayer owns playback
+            pendingSeekMs = pos
+            pendingStartPaused = false
+            // Remember the choice for THIS item (like Live's compatibility mode remembers the channel).
+            scope.launch { vodEngineStore.pin(url, tv.own.owntv.core.player.VodEnginePin.EXO) }
+            mpvAsync {
+                stopWithStopClassification("manual engine toggle")
+                setPropertyString("vo", "null")
+                runCatching { this.detachSurface() }
+                scope.launch {
+                    delay(600) // let mpv's MediaCodec finish releasing before ExoPlayer claims the decoder
+                    if (gen != loadGeneration) return@launch // superseded meanwhile
+                    // Start Exo on a FRESH surface: attachSurface sees pendingExoStart and routes the
+                    // recreated surface straight into startExo (mpv never touches it).
+                    pendingUrl = url
+                    pendingExoStart = true
+                    _surfaceResetToken.value++
+                }
+            }
+        }
+    }
+
+    /** Wraps a terminal mpv VOD error message: if ExoPlayer already failed this item first
+     *  (ExoPlayer-preferred setting), report that both engines failed rather than just mpv. */
+    private fun vodErrorMessage(mpvMsg: String): String {
+        val exoErr = exoFailureBeforeMpv ?: return mpvMsg
+        android.util.Log.w(TAG, "VOD failed on BOTH engines — exo first: '$exoErr' / mpv: '$mpvMsg'")
+        return "Playback failed on both video engines (ExoPlayer, then mpv). " +
+            "The file may be corrupted or use a format this TV can't play."
+    }
+
+    /** The engine fallback ALSO failed: stop ExoPlayer and surface one combined error. */
+    private fun failBothEngines(exoError: String) {
+        android.util.Log.w(TAG, "VOD failed on BOTH engines — mpv: '$mpvFailureBeforeFallback' / exo: '$exoError'")
+        deactivateExo()
+        _isPlaying.value = false
+        _buffering.value = false
+        _error.value = "Playback failed on both video engines (mpv and ExoPlayer). " +
+            "The file may be corrupted or use a format this TV can't play. ($exoError)"
+    }
+
+    /** ExoPlayer reached end-of-file while it owned VOD playback: mirror mpv's END_FILE auto-play-next
+     *  (advance the episode queue, or signal the series VM at the end of a season). */
+    private fun onExoEnded() {
+        if (!exoActive || isLiveContent) return
+        val dur = _duration.value
+        val pos = _position.value
+        val reachedEnd = dur > 0 && pos >= dur - 8_000
+        if (reachedEnd && autoPlayNext && playlist.isNotEmpty()) {
+            val gen = loadGeneration
+            if (playlistIndex < playlist.size - 1) {
+                scope.launch { delay(600); if (gen == loadGeneration) next() } // next ep (loadUrl drops Exo)
+            } else {
+                scope.launch { delay(600); if (gen == loadGeneration) _queueEnded.tryEmit(Unit) } // → next season
+            }
+        }
     }
 
     /** PixelCopy the live surface into a bitmap (shown during the swap), then run [block]. Best-effort:
@@ -755,6 +998,9 @@ class OwnTVPlayer(
     private fun deactivateExo() {
         if (!exoActive) return
         exoActive = false
+        exoVodFallback = false
+        mpvFailureBeforeFallback = null
+        _engineChip.value = "MPV"
         _exoActiveState.value = false // unmount the SubtitleView overlay → SurfaceView regains direct scan-out
         exoTickJob?.cancel()
         _exoCues.value = emptyList()
@@ -768,13 +1014,20 @@ class OwnTVPlayer(
      *  the same item at its current position with subtitles off (or [thenSelectSid] applied after load). */
     private fun revertToMpv(error: String? = null, thenSelectSid: Int? = null) {
         if (!exoActive) return
+        if (exoVodFallback) return // mpv already failed this item — never hand it back mid-fallback
         val url = currentUrl ?: return
         val pos = _position.value
-        deactivateExo()
+        deactivateExo() // releases Exo's codec
         error?.let { toast(it) }
         pendingSelectSid = thenSelectSid
         _subTrackList.value = _subTrackList.value.map { it.copy(selected = thenSelectSid != null && it.mpvId == thenSelectSid) }
-        loadUrl(url, MediaMeta(currentTitle, currentSubtitle, currentYear, currentLogoUrl), isLiveContent, pos, resetRetries = false)
+        _buffering.value = true
+        scope.launch {
+            delay(600) // let ExoPlayer's MediaCodec finish releasing before mpv claims the decoder
+            if (currentUrl != url) return@launch // superseded (user zapped/backed out meanwhile)
+            forceSurfaceResetNextLoad = true // Exo left the surface dirty — mpv gets a fresh one
+            loadUrl(url, MediaMeta(currentTitle, currentSubtitle, currentYear, currentLogoUrl), isLiveContent, pos, resetRetries = false)
+        }
     }
 
     private fun reattachMpvSurface() {
@@ -984,6 +1237,8 @@ class OwnTVPlayer(
         errorCheckJob?.cancel()
         videoCheckJob?.cancel()
         liveStallJob?.cancel()
+        pendingExoStart = false // a new load supersedes any Exo start waiting for a surface
+        pendingExoSub = null
         _error.value = null
         lastMpvError = null // fresh item → drop the previous stream's captured error
         diagnostics.markLoad() // scope captured codec/audio errors to this stream
@@ -1001,6 +1256,11 @@ class OwnTVPlayer(
             triedSoftwareForVideo = false
             triedVlcUaFallback = false
             triedOpenReset = false
+            triedExoVodFallback = false // genuinely new item → the ExoPlayer engine fallback is armed again
+            exoPrimaryThisItem = false
+            exoFailureBeforeMpv = null
+            exoVodFallback = false // (deactivateExo above clears it when Exo was active; this also covers
+            //                        a pendingExoStart load that was abandoned before its surface arrived)
             forceFullProbe = false // a genuinely new item starts with the trimmed (fast-zap) probe again
             // Pick this item's decode path. Catch-up forces SOFTWARE: archive (timeshift) segments often
             // start mid-GOP, which the hardware MediaCodec decoder can't recover from (blank video, and
@@ -1022,6 +1282,47 @@ class OwnTVPlayer(
         _videoSize.value = null
         _streamChips.value = emptyList()
         _subText.value = null
+        // ExoPlayer-preferred mode (Settings → Video Player): Movies & Series start on ExoPlayer, with
+        // mpv as the automatic fallback (the reverse of the default chain). A per-item gear-toggle pin
+        // overrides the setting in either direction. Catch-up stays on mpv (preferSoftware — timeshift
+        // segments need mpv's mid-GOP software-decode handling), and same-item mpv retries
+        // (resetRetries=false, incl. the Exo→mpv fallback itself) never reroute.
+        val startOnExo = when (url) {
+            in vodPinnedMpv -> false
+            in vodPinnedExo -> true
+            else -> vodPreferExo
+        }
+        if (!isLive && startOnExo && resetRetries && !preferSoftware) {
+            exoPrimaryThisItem = true
+            exoVodFallback = true // Exo owns VOD playback as an ENGINE — same HUD interception as fallback
+            android.util.Log.i(TAG, "VOD starting on ExoPlayer (preferred engine setting)")
+            _buffering.value = true
+            val surface = attachedSurface
+            if (surface == null) {
+                // First open: the player screen's SurfaceView isn't composed yet — attachSurface flushes.
+                pendingUrl = url
+                pendingExoStart = true
+            } else if (initialized && mpvHasActiveFile.get()) {
+                // A previous item may still be playing on mpv: stop it and free its connection/decoder
+                // BEFORE Exo opens (one-connection panels), same ordering as the image-sub handoff.
+                val gen = loadGeneration
+                mpvAsync {
+                    stopWithStopClassification("exo primary vod")
+                    setPropertyString("vo", "null")
+                    runCatching { this.detachSurface() }
+                    scope.launch {
+                        if (gen != loadGeneration) return@launch
+                        val s = attachedSurface ?: return@launch
+                        startExo(url, startPositionMs, s, sub = null)
+                        if (startPaused) exoEngine?.pause()
+                    }
+                }
+            } else {
+                startExo(url, startPositionMs, surface, sub = null)
+                if (startPaused) exoEngine?.pause()
+            }
+            return
+        }
         // Mute is a global mpv property, so set it now (applies whenever the file actually loads). The
         // live preview mutes; everything else plays with sound.
         mpvAsync { setPropertyBoolean("mute", muted) }
@@ -1033,7 +1334,9 @@ class OwnTVPlayer(
         // auto-play AND live channel zapping (4K→next 4K via D-pad/CH±, which otherwise hangs until you back
         // out and re-enter — a manual surface recreate). Only when the PREVIOUS item was >1080p, so normal
         // playback and the first 4K load are untouched.
-        if (lastVideoHeightPx > 1080 && surfaceAttached) {
+        val forceSurfaceReset = forceSurfaceResetNextLoad
+        forceSurfaceResetNextLoad = false
+        if ((lastVideoHeightPx > 1080 || forceSurfaceReset) && surfaceAttached) {
             pendingUrl = url
             _surfaceResetToken.value++
         } else if (surfaceAttached) {
@@ -1091,7 +1394,7 @@ class OwnTVPlayer(
                     val bitrateKnown = mpv?.getPropertyString("video-bitrate")?.toLongOrNull()?.let { it > 0 } ?: false
                     if (fileLoaded && currentHeightPx == 0 && !bitrateKnown && elapsed > 6_000) {
                         android.util.Log.w(TAG, "watchdog MOOV-AT-END — FILE_LOADED but no bitrate/height after ${elapsed}ms, aborting (server lacks Range support)")
-                        _error.value = "This video isn't formatted for streaming. Ask the provider to re-encode with fast-start, or download it first."
+                                    _error.value = vodErrorMessage("This video isn't formatted for streaming. Ask the provider to re-encode with fast-start, or download it first.")
                         expectingPlayback = false; _buffering.value = false
                         videoCheckJob?.cancel()
                         return@launch
@@ -1303,6 +1606,7 @@ class OwnTVPlayer(
 
     fun stop() {
         deactivateExo() // give the surface back to mpv before tearing down
+        pendingExoStart = false
         loadGeneration++ // cancels any queued-but-not-yet-executed load
         expectingPlayback = false
         errorCheckJob?.cancel()
@@ -1328,10 +1632,14 @@ class OwnTVPlayer(
     private fun triggerHardReset() {
         expectingPlayback = false; _buffering.value = false // prevent END_FILE re-trigger loop
         consecutiveHardResets++
+        // Before surfacing an error, retry the item once on ExoPlayer — a "malformed" verdict from mpv's
+        // demuxer/decoder is often device-specific, and Exo's MediaCodec path may play it fine (mpvStuck:
+        // the core may be blocked in the stuck HTTP read, so the fallback destroys it, as hardReset would).
+        if (fallbackToExoVod("mpv couldn't open or decode this file", mpvStuck = true)) return
         // Surface the error immediately — the user sees "can't play this video" rather than a blank screen.
-        _error.value = "This video's file is malformed or corrupted and can't be played."
+        _error.value = vodErrorMessage("This video's file is malformed or corrupted and can't be played.")
         if (consecutiveHardResets >= 3) {
-            _error.value = "Multiple videos failed to play. The source may be unavailable or the files are corrupted."
+            _error.value = vodErrorMessage("Multiple videos failed to play. The source may be unavailable or the files are corrupted.")
             videoCheckJob?.cancel()
             android.util.Log.w(TAG, "hardReset thrash guard — $consecutiveHardResets consecutive resets, aborting")
             return
@@ -1434,6 +1742,19 @@ class OwnTVPlayer(
         surfaceAttached = true
         // ExoPlayer owns playback right now (image-sub handoff) → give it the (re)created surface.
         if (exoActive) { exoEngine?.setSurface(surface); return }
+        // An ExoPlayer-preferred VOD load was waiting for this surface (first open) — start it there.
+        if (pendingExoStart) {
+            pendingExoStart = false
+            val url = pendingUrl
+            val sub = pendingExoSub
+            pendingUrl = null
+            pendingExoSub = null
+            if (url != null) {
+                startExo(url, pendingSeekMs, surface, sub = sub)
+                if (pendingStartPaused) exoEngine?.pause()
+            }
+            return
+        }
         mpv?.attachSurface(surface)
         mpv?.setOptionString("force-window", "yes")
         mpv?.setOptionString("vo", targetVo())
@@ -1466,11 +1787,25 @@ class OwnTVPlayer(
     fun audioTracks(): List<TrackOption> = _audioTrackList.value
     fun textTracks(): List<TrackOption> = _subTrackList.value
 
-    /** Technical readout for the stream-info overlay, read live from mpv (libmpv get_property is thread-safe). */
+    /** Technical readout for the stream-info overlay, read live from whichever engine owns playback —
+     *  mpv (libmpv get_property is thread-safe) or ExoPlayer (image-sub handoff / engine fallback /
+     *  ExoPlayer-preferred; the overlay polls from composition, i.e. the main thread Exo requires). */
     fun streamInfo(): List<Pair<String, String>> {
+        if (exoActive) {
+            val out = ArrayList<Pair<String, String>>()
+            out += "Engine" to when {
+                exoPrimaryThisItem -> "ExoPlayer (preferred)"
+                exoVodFallback -> "ExoPlayer (fallback — mpv failed this item)"
+                else -> "ExoPlayer (image-subtitle handoff)"
+            }
+            out += exoEngine?.streamInfo().orEmpty()
+            currentUrl?.let { out += "Source" to HttpClient.redactUrl(it) }
+            return out
+        }
         val m = mpv ?: return emptyList()
         fun str(p: String) = m.getPropertyString(p)?.takeIf { it.isNotBlank() }
         val out = ArrayList<Pair<String, String>>()
+        out += "Engine" to "mpv"
         // Video
         val vw = m.getPropertyInt("video-params/w") ?: m.getPropertyInt("width")
         val vh = m.getPropertyInt("video-params/h") ?: m.getPropertyInt("height")
@@ -1545,6 +1880,13 @@ class OwnTVPlayer(
 
     fun selectSubtitle(mpvId: Int) {
         val track = _subTrackList.value.find { it.mpvId == mpvId }
+        // Engine-fallback playback: mpv already failed this item, so subtitle picks (text AND image —
+        // ExoPlayer renders both natively) are applied on ExoPlayer instead of reverting to mpv.
+        if (exoActive && exoVodFallback) {
+            track?.let { exoEngine?.selectTextTrack(it.typeIndex, it.lang) }
+            _subTrackList.value = _subTrackList.value.map { it.copy(selected = it.mpvId == mpvId) }
+            return
+        }
         // Image subtitle on a VOD → hand playback to ExoPlayer (it draws bitmap subs on its own layer).
         // Live image subs aren't supported (no handoff) — selecting one just shows nothing.
         if (track?.image == true) {
@@ -1563,6 +1905,11 @@ class OwnTVPlayer(
     }
 
     fun disableSubtitles() {
+        if (exoActive && exoVodFallback) { // fallback playback stays on Exo — just turn its text off
+            exoEngine?.disableTextTracks()
+            _subTrackList.value = _subTrackList.value.map { it.copy(selected = false) }
+            return
+        }
         if (exoActive) { revertToMpv(); return } // turning subs off ends the image-sub handoff
         if (initialized) mpvAsync { setPropertyString("sid", "no") }
         _subTrackList.value = _subTrackList.value.map { it.copy(selected = false) }
@@ -1637,6 +1984,10 @@ class OwnTVPlayer(
             "Hardware decoding is turned off — software decoding can't handle $res video. " +
                 "Enable it in Settings → Video Player."
         }
+        // A VOD that mpv can only software-decode may still hardware-decode on ExoPlayer's MediaCodec
+        // path (different codec selection/negotiation) — retry it there before giving up. The fallback
+        // stops mpv itself; if Exo also lands without hardware decode it fails → combined error.
+        if (!isLiveContent && fallbackToExoVod(msg, mpvStuck = false)) return
         // Halt decoding but KEEP currentUrl so the HUD's Retry works (e.g. after the user flips the
         // hardware-decoding setting, which applies live).
         loadGeneration++
@@ -1647,7 +1998,7 @@ class OwnTVPlayer(
         scope.launch {
             _isPlaying.value = false
             _buffering.value = false
-            _error.value = msg
+            _error.value = vodErrorMessage(msg)
         }
     }
 
@@ -1943,11 +2294,14 @@ class OwnTVPlayer(
                                 )
                             }
                         } else {
+                            // mpv's whole retry ladder is exhausted. For a VOD, retry once on ExoPlayer
+                            // before erroring — it may play what mpv can't on this device/provider.
+                            if (!isLiveContent && fallbackToExoVod("stream never started on mpv (retries exhausted)", mpvStuck = false)) return@launch
                             _buffering.value = false
                             val hint = if (triedVlcUaFallback)
                                 " This provider may require a custom User-Agent in source settings."
                             else ""
-                            _error.value = "Couldn't play this stream. The source may be offline or use an unsupported format.$hint"
+                            _error.value = vodErrorMessage("Couldn't play this stream. The source may be offline or use an unsupported format.$hint")
                         }
                     }
                 } else if (isLiveContent && currentUrl != null) {

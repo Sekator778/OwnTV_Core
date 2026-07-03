@@ -19,6 +19,9 @@ interface PlaybackEngine {
     val videoRes: StateFlow<String?>
     /** Up-to-4 mini stream chips (aspect · resolution · fps · audio) for the player top bar. */
     val streamChips: StateFlow<List<String>> get() = NO_CHIPS
+    /** Short label of the engine currently decoding ("MPV" / "EXO"), shown as the first top-bar chip.
+     *  Null = don't show one. */
+    val engineChip: StateFlow<String?> get() = NULL_STRING
     val volume: StateFlow<Int>
     val zoomMode: StateFlow<ZoomMode>
     val audioCount: StateFlow<Int>
@@ -61,6 +64,7 @@ interface PlaybackEngine {
         private val NO_NAV: StateFlow<NavState> = MutableStateFlow(NavState(hasPrev = false, hasNext = false))
         private val NULL_ERROR: StateFlow<ErrorInfo?> = MutableStateFlow(null)
         private val NO_CHIPS: StateFlow<List<String>> = MutableStateFlow(emptyList())
+        private val NULL_STRING: StateFlow<String?> = MutableStateFlow(null)
     }
 }
 
@@ -72,6 +76,7 @@ class MpvPlaybackEngine(private val p: OwnTVPlayer) : PlaybackEngine {
     override val errorInfo get() = p.errorInfo
     override val videoRes get() = p.videoRes
     override val streamChips get() = p.streamChips
+    override val engineChip get() = p.engineChip
     override val volume get() = p.volume
     override val zoomMode get() = p.zoomMode
     override val audioCount get() = p.audioCount

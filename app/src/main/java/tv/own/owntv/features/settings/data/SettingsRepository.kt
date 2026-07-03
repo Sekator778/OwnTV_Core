@@ -48,6 +48,7 @@ class SettingsRepository(private val context: Context) {
         val ANDROID_TV_HOME = booleanPreferencesKey("android_tv_home")
         // Video Player Settings
         val HW_DECODING = booleanPreferencesKey("hw_decoding")
+        val VOD_PREFER_EXO = booleanPreferencesKey("vod_prefer_exo")
         val SURROUND_SOUND = booleanPreferencesKey("surround_sound")
         val AUTO_PLAY_NEXT = booleanPreferencesKey("auto_play_next")
         val DEFAULT_ZOOM = stringPreferencesKey("default_zoom")
@@ -219,6 +220,16 @@ class SettingsRepository(private val context: Context) {
 
     suspend fun setHwDecoding(enabled: Boolean) {
         context.dataStore.edit { it[Keys.HW_DECODING] = enabled }
+    }
+
+    /** Preferred engine for Movies & Series (VOD). Off (default) = mpv first with an automatic ExoPlayer
+     *  fallback; on = ExoPlayer first with an automatic mpv fallback. mpv is the default because it has
+     *  the wider codec support (DTS/TrueHD audio, odd containers) and the A/V-sync nudge; ExoPlayer-first
+     *  is for devices/providers where mpv's path can't open streams that ExoPlayer plays fine. */
+    val vodPreferExo: Flow<Boolean> = context.dataStore.data.map { it[Keys.VOD_PREFER_EXO] ?: false }
+
+    suspend fun setVodPreferExo(enabled: Boolean) {
+        context.dataStore.edit { it[Keys.VOD_PREFER_EXO] = enabled }
     }
 
     /** Surround sound (**off by default — opt-in**). Most users are on TV speakers / 2.0 soundbars, and
@@ -431,7 +442,7 @@ class SettingsRepository(private val context: Context) {
     private val backupIntKeys = listOf(Keys.UI_ZOOM_PCT, Keys.AUDIO_DELAY_MS, Keys.CATCHUP_OFFSET_MIN, Keys.PROXY_PORT)
     private val backupBoolKeys = listOf(
         Keys.LIVE_PREVIEW, Keys.LIVE_PREVIEW_AUDIO, Keys.HDR_ENABLED, Keys.ANDROID_TV_HOME, Keys.HW_DECODING,
-        Keys.UPDATE_CHECK_ON_START, Keys.SURROUND_SOUND, Keys.AUTO_PLAY_NEXT, Keys.PROXY_ENABLED,
+        Keys.VOD_PREFER_EXO, Keys.UPDATE_CHECK_ON_START, Keys.SURROUND_SOUND, Keys.AUTO_PLAY_NEXT, Keys.PROXY_ENABLED,
     )
     private val backupFloatKeys = listOf(Keys.SUB_SCALE)
 
