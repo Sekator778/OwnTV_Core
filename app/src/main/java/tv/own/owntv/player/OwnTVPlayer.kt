@@ -1580,22 +1580,19 @@ class OwnTVPlayer(
     // --- Zoom / aspect ---
     fun setZoomMode(mode: ZoomMode) {
         _zoomMode.value = mode
-        // Direct mode: the decoder owns the surface, so mpv's GL scaling properties don't apply — the
-        // surface VIEW resizes/crops itself per mode instead (see MpvVideoSurface, which observes
-        // zoomMode). Nothing to do on mpv here. GL mode (software rescue) still uses the props below.
+        android.util.Log.i(TAG, "setZoomMode: mode=$mode direct=${_directRender.value} aspect=${_videoAspect.value} live=$isLiveContent")
+        // The surface VIEW resizes/crops itself per mode (see MpvVideoSurface, which observes zoomMode)
+        // for every render path. Direct mode already fills the surface edge-to-edge on its own. GL mode
+        // (software rescue) must be told to do the same — mpv's own keepaspect/panscan/aspect-override
+        // are legacy properties that modern vo=gpu(-next) mostly ignores anyway, so rather than lean on
+        // them we just disable mpv's internal scaling entirely and let the view be the single source of
+        // truth for aspect/zoom in both render paths.
         if (_directRender.value) return
         mpvAsync {
-            // Reset, then apply the chosen mode's overrides.
             setPropertyString("video-unscaled", "no")
             setPropertyDouble("panscan", 0.0)
-            when (mode) {
-                ZoomMode.FIT -> { setPropertyString("keepaspect", "yes"); setPropertyString("video-aspect-override", "no") }
-                ZoomMode.FILL -> { setPropertyString("keepaspect", "yes"); setPropertyString("video-aspect-override", "no"); setPropertyDouble("panscan", 1.0) }
-                ZoomMode.STRETCH -> { setPropertyString("keepaspect", "no"); setPropertyString("video-aspect-override", "no") }
-                ZoomMode.ORIGINAL -> { setPropertyString("keepaspect", "yes"); setPropertyString("video-aspect-override", "no"); setPropertyString("video-unscaled", "yes") }
-                ZoomMode.FORCE_16_9 -> { setPropertyString("keepaspect", "yes"); setPropertyString("video-aspect-override", "16:9") }
-                ZoomMode.FORCE_4_3 -> { setPropertyString("keepaspect", "yes"); setPropertyString("video-aspect-override", "4:3") }
-            }
+            setPropertyString("keepaspect", "no")
+            setPropertyString("video-aspect-override", "no")
         }
     }
 

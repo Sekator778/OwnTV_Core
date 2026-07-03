@@ -56,6 +56,13 @@ class LivePreviewEngine(
     val state: StateFlow<State> = _state.asStateFlow()
     private val _videoHeight = MutableStateFlow<Int?>(null)
     val videoHeight: StateFlow<Int?> = _videoHeight.asStateFlow()
+    // PAR-corrected display aspect (w/h) + native pixel (w, h), used by ExoPreviewSurface's zoom/letterbox
+    // sizing (see Modifier.videoZoom). Mirrors OwnTVPlayer._videoAspect/_videoSize so live-on-ExoPlayer
+    // zooms identically to live-on-mpv / VOD.
+    private val _videoAspect = MutableStateFlow<Float?>(null)
+    val videoAspect: StateFlow<Float?> = _videoAspect.asStateFlow()
+    private val _videoSize = MutableStateFlow<Pair<Int, Int>?>(null)
+    val videoSize: StateFlow<Pair<Int, Int>?> = _videoSize.asStateFlow()
     // Up-to-4 mini stream chips for the preview pane / player top bar: aspect · resolution · fps · audio.
     private val _streamChips = MutableStateFlow<List<String>>(emptyList())
     override val streamChips: StateFlow<List<String>> = _streamChips.asStateFlow()
@@ -402,6 +409,12 @@ class LivePreviewEngine(
                 _videoHeight.value = videoSize.height
                 _videoRes.value = "${videoSize.height}p"
             }
+            if (videoSize.width > 0 && videoSize.height > 0) {
+                // Aspect for zoom/letterbox sizing (PAR-corrected), + native pixel size for Original (1:1).
+                _videoAspect.value =
+                    (videoSize.width.toFloat() * videoSize.pixelWidthHeightRatio) / videoSize.height.toFloat()
+                _videoSize.value = videoSize.width to videoSize.height
+            }
             updateStreamChips()
         }
 
@@ -450,7 +463,7 @@ class LivePreviewEngine(
         textTrackList = emptyList(); textSelections = emptyList(); _subCount.value = 0
         _subtitleOn.value = false; _cues.value = emptyList(); _audioUnsupported.value = false
         _noVideoDetected.value = false; noVideoTriggered = false; readySinceMs = 0L
-        _videoHeight.value = null; _streamChips.value = emptyList()
+        _videoHeight.value = null; _videoAspect.value = null; _videoSize.value = null; _streamChips.value = emptyList()
         _videoRes.value = null
         _error.value = null
         _errorInfo.value = null
@@ -519,7 +532,7 @@ class LivePreviewEngine(
         textTrackList = emptyList(); textSelections = emptyList(); _subCount.value = 0
         _subtitleOn.value = false; _cues.value = emptyList(); _audioUnsupported.value = false
         _noVideoDetected.value = false; noVideoTriggered = false; readySinceMs = 0L
-        _videoHeight.value = null; _streamChips.value = emptyList()
+        _videoHeight.value = null; _videoAspect.value = null; _videoSize.value = null; _streamChips.value = emptyList()
         _state.value = State.IDLE
         player?.run { stop(); clearMediaItems() }
     }
@@ -574,7 +587,7 @@ class LivePreviewEngine(
         if (p.isPlaying) p.pause() else p.play()
     }
 
-    override fun setZoomMode(mode: ZoomMode) { _zoomMode.value = mode } // surface scaling is Phase 3; renders FIT
+    override fun setZoomMode(mode: ZoomMode) { _zoomMode.value = mode } // ExoPreviewSurface observes this + videoAspect/Size and sizes the surface (see Modifier.videoZoom)
 
     override fun adjustVolume(delta: Int) {
         // Live engine (ExoPlayer) caps at 100% — boost above 100 is mpv-only (Exo can't amplify past unity
