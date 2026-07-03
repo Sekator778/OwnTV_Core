@@ -144,6 +144,10 @@ class OwnTVPlayer(
     private var fileLoaded = false
     private var loadStartTime = 0L
     private var consecutiveHardResets = 0
+    // T_OPEN first-strike: a hung open gets ONE silent hard-reset + reload of the same item before any
+    // error is shown. Covers auto-play advancing while the provider still holds the previous episode's
+    // connection slot — the reset aborts the stuck request and the retry then opens cleanly.
+    private var triedOpenReset = false
     // Snapshot of a non-live item taken when the app backgrounds (screensaver / Home), so it can be restored
     // paused at its position on return — otherwise the stream is freed and Play does nothing until a reload.
     private data class BackgroundRestore(val url: String, val meta: MediaMeta, val positionMs: Long, val wasPlaying: Boolean)
@@ -996,6 +1000,7 @@ class OwnTVPlayer(
             triedAltFormat = false
             triedSoftwareForVideo = false
             triedVlcUaFallback = false
+            triedOpenReset = false
             forceFullProbe = false // a genuinely new item starts with the trimmed (fast-zap) probe again
             // Pick this item's decode path. Catch-up forces SOFTWARE: archive (timeshift) segments often
             // start mid-GOP, which the hardware MediaCodec decoder can't recover from (blank video, and
@@ -1056,7 +1061,25 @@ class OwnTVPlayer(
                     if (currentHeightPx > 0) return@launch // playing normally — cancel watchdog
                     val elapsed = System.currentTimeMillis() - loadStartTime
                     if (!fileLoaded && elapsed > 10_000) {
-                        // Stage 1: demuxer hung during probe — stuck, not just slow
+                        // Stage 1: demuxer hung during probe — stuck, not just slow.
+                        // First strike: reset silently and reload the same item once. The common
+                        // trigger is auto-play advancing while the provider still holds the finished
+                        // episode's connection slot — destroying mpv aborts the stuck request and the
+                        // retry then opens cleanly. Only a second hang shows the error.
+                        if (!triedOpenReset) {
+                            triedOpenReset = true
+                            android.util.Log.w(TAG, "watchdog T_OPEN — no FILE_LOADED after ${elapsed}ms, silent hard-reset + retry")
+                            val url = currentUrl
+                            val seekMs = pendingSeekMs
+                            expectingPlayback = false
+                            _buffering.value = true
+                            hardReset()
+                            if (url != null) {
+                                delay(500) // let the fresh mpv core + recreated surface settle
+                                loadUrl(url, MediaMeta(currentTitle, currentSubtitle, currentYear, currentLogoUrl), isLiveContent, seekMs, resetRetries = false)
+                            }
+                            return@launch
+                        }
                         android.util.Log.w(TAG, "watchdog T_OPEN — no FILE_LOADED after ${elapsed}ms, HARD-RESETTING mpv")
                         triggerHardReset()
                         return@launch
