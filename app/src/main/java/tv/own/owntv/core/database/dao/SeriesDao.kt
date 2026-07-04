@@ -89,10 +89,10 @@ interface SeriesDao {
         "SELECT s.* FROM series s " +
             "INNER JOIN favorites f ON f.itemId = s.id AND f.mediaType = 'SERIES' " +
             "LEFT JOIN content_order o ON o.itemId = s.id AND o.profileId = :profileId AND o.mediaType = 'SERIES' AND o.contextKey = :contextKey " +
-            "WHERE f.profileId = :profileId " +
+            "WHERE f.profileId = :profileId AND s.sourceId IN (:sourceIds) " +
             "ORDER BY (CASE WHEN o.position IS NULL THEN 1 ELSE 0 END), o.position, f.addedAt DESC",
     )
-    fun pagingFavoritesManual(profileId: Long, contextKey: String): PagingSource<Int, SeriesEntity>
+    fun pagingFavoritesManual(profileId: Long, contextKey: String, sourceIds: List<Long>): PagingSource<Int, SeriesEntity>
 
     @Query(
         "SELECT s.* FROM series s " +
@@ -106,10 +106,10 @@ interface SeriesDao {
         "SELECT s.* FROM series s " +
             "INNER JOIN favorites f ON f.itemId = s.id AND f.mediaType = 'SERIES' " +
             "LEFT JOIN content_order o ON o.itemId = s.id AND o.profileId = :profileId AND o.mediaType = 'SERIES' AND o.contextKey = :contextKey " +
-            "WHERE f.profileId = :profileId " +
+            "WHERE f.profileId = :profileId AND s.sourceId IN (:sourceIds) " +
             "ORDER BY (CASE WHEN o.position IS NULL THEN 1 ELSE 0 END), o.position, f.addedAt DESC LIMIT :limit",
     )
-    suspend fun snapshotFavoritesManual(profileId: Long, contextKey: String, limit: Int): List<SeriesEntity>
+    suspend fun snapshotFavoritesManual(profileId: Long, contextKey: String, sourceIds: List<Long>, limit: Int): List<SeriesEntity>
 
     @Query("SELECT COUNT(*) FROM series WHERE categoryId = :categoryId")
     fun countByCategory(categoryId: Long): Flow<Int>
@@ -139,9 +139,9 @@ interface SeriesDao {
 
     @Query(
         "SELECT s.* FROM series s INNER JOIN favorites f ON f.itemId = s.id AND f.mediaType = 'SERIES' " +
-            "WHERE f.profileId = :profileId AND s.name LIKE '%' || :query || '%' ORDER BY f.addedAt DESC",
+            "WHERE f.profileId = :profileId AND s.sourceId IN (:sourceIds) AND s.name LIKE '%' || :query || '%' ORDER BY f.addedAt DESC",
     )
-    fun searchFavorites(query: String, profileId: Long): PagingSource<Int, SeriesEntity>
+    fun searchFavorites(query: String, profileId: Long, sourceIds: List<Long>): PagingSource<Int, SeriesEntity>
 
     @Query(
         "SELECT s.* FROM series s " +
@@ -150,20 +150,30 @@ interface SeriesDao {
     )
     fun pagingFavorites(profileId: Long): PagingSource<Int, SeriesEntity>
 
-    @Query("SELECT COUNT(*) FROM favorites WHERE profileId = :profileId AND mediaType = 'SERIES'")
-    fun countFavorites(profileId: Long): Flow<Int>
+    @Query(
+        "SELECT COUNT(*) FROM favorites f INNER JOIN series s ON s.id = f.itemId " +
+            "WHERE f.profileId = :profileId AND f.mediaType = 'SERIES' AND s.sourceId IN (:sourceIds)",
+    )
+    fun countFavorites(profileId: Long, sourceIds: List<Long>): Flow<Int>
+
+    /** History rail count, joined to series so it can honor the active-playlist filter. */
+    @Query(
+        "SELECT COUNT(*) FROM watch_history h INNER JOIN series s ON s.id = h.itemId " +
+            "WHERE h.profileId = :profileId AND h.mediaType = 'SERIES' AND s.sourceId IN (:sourceIds)",
+    )
+    fun countHistory(profileId: Long, sourceIds: List<Long>): Flow<Int>
 
     @Query(
         "SELECT s.* FROM series s INNER JOIN watch_history h ON h.itemId = s.id AND h.mediaType = 'SERIES' " +
-            "WHERE h.profileId = :profileId ORDER BY h.watchedAt DESC",
+            "WHERE h.profileId = :profileId AND s.sourceId IN (:sourceIds) ORDER BY h.watchedAt DESC",
     )
-    fun pagingHistory(profileId: Long): PagingSource<Int, SeriesEntity>
+    fun pagingHistory(profileId: Long, sourceIds: List<Long>): PagingSource<Int, SeriesEntity>
 
     @Query(
         "SELECT s.* FROM series s INNER JOIN watch_history h ON h.itemId = s.id AND h.mediaType = 'SERIES' " +
-            "WHERE h.profileId = :profileId AND s.name LIKE '%' || :query || '%' ORDER BY h.watchedAt DESC",
+            "WHERE h.profileId = :profileId AND s.sourceId IN (:sourceIds) AND s.name LIKE '%' || :query || '%' ORDER BY h.watchedAt DESC",
     )
-    fun searchHistory(query: String, profileId: Long): PagingSource<Int, SeriesEntity>
+    fun searchHistory(query: String, profileId: Long, sourceIds: List<Long>): PagingSource<Int, SeriesEntity>
 
     // --- Seasons ---
     @Insert(onConflict = OnConflictStrategy.REPLACE)

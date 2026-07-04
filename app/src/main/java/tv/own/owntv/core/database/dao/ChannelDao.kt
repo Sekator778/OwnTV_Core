@@ -142,10 +142,10 @@ interface ChannelDao {
         "SELECT c.* FROM channels c " +
             "INNER JOIN favorites f ON f.itemId = c.id AND f.mediaType = 'LIVE' " +
             "LEFT JOIN content_order o ON o.itemId = c.id AND o.profileId = :profileId AND o.mediaType = 'LIVE' AND o.contextKey = :contextKey " +
-            "WHERE f.profileId = :profileId " +
+            "WHERE f.profileId = :profileId AND c.sourceId IN (:sourceIds) " +
             "ORDER BY (CASE WHEN o.position IS NULL THEN 1 ELSE 0 END), o.position, f.addedAt DESC",
     )
-    fun pagingFavoritesManual(profileId: Long, contextKey: String): PagingSource<Int, ChannelEntity>
+    fun pagingFavoritesManual(profileId: Long, contextKey: String, sourceIds: List<Long>): PagingSource<Int, ChannelEntity>
 
     /** Bounded snapshot of a folder in manual order, for the Move session's in-memory reorder. */
     @Query(
@@ -161,10 +161,10 @@ interface ChannelDao {
         "SELECT c.* FROM channels c " +
             "INNER JOIN favorites f ON f.itemId = c.id AND f.mediaType = 'LIVE' " +
             "LEFT JOIN content_order o ON o.itemId = c.id AND o.profileId = :profileId AND o.mediaType = 'LIVE' AND o.contextKey = :contextKey " +
-            "WHERE f.profileId = :profileId " +
+            "WHERE f.profileId = :profileId AND c.sourceId IN (:sourceIds) " +
             "ORDER BY (CASE WHEN o.position IS NULL THEN 1 ELSE 0 END), o.position, f.addedAt DESC LIMIT :limit",
     )
-    suspend fun snapshotFavoritesManual(profileId: Long, contextKey: String, limit: Int): List<ChannelEntity>
+    suspend fun snapshotFavoritesManual(profileId: Long, contextKey: String, sourceIds: List<Long>, limit: Int): List<ChannelEntity>
 
     // --- Counts ---
     @Query("SELECT COUNT(*) FROM channels WHERE categoryId = :categoryId")
@@ -213,15 +213,15 @@ interface ChannelDao {
 
     @Query(
         "SELECT c.* FROM channels c INNER JOIN favorites f ON f.itemId = c.id AND f.mediaType = 'LIVE' " +
-            "WHERE f.profileId = :profileId AND c.name LIKE '%' || :query || '%' ORDER BY f.addedAt DESC",
+            "WHERE f.profileId = :profileId AND c.sourceId IN (:sourceIds) AND c.name LIKE '%' || :query || '%' ORDER BY f.addedAt DESC",
     )
-    fun searchFavorites(query: String, profileId: Long): PagingSource<Int, ChannelEntity>
+    fun searchFavorites(query: String, profileId: Long, sourceIds: List<Long>): PagingSource<Int, ChannelEntity>
 
     @Query(
         "SELECT c.* FROM channels c INNER JOIN watch_history h ON h.itemId = c.id AND h.mediaType = 'LIVE' " +
-            "WHERE h.profileId = :profileId AND c.name LIKE '%' || :query || '%' ORDER BY h.watchedAt DESC",
+            "WHERE h.profileId = :profileId AND c.sourceId IN (:sourceIds) AND c.name LIKE '%' || :query || '%' ORDER BY h.watchedAt DESC",
     )
-    fun searchHistory(query: String, profileId: Long): PagingSource<Int, ChannelEntity>
+    fun searchHistory(query: String, profileId: Long, sourceIds: List<Long>): PagingSource<Int, ChannelEntity>
 
     // --- Favorites / History (profile-scoped) ---
     @Query(
@@ -242,16 +242,23 @@ interface ChannelDao {
     // stale on a re-sync (the old "(2) but the folder is empty" bug) before the relink purges them.
     @Query(
         "SELECT COUNT(*) FROM favorites f INNER JOIN channels c ON c.id = f.itemId " +
-            "WHERE f.profileId = :profileId AND f.mediaType = 'LIVE'",
+            "WHERE f.profileId = :profileId AND f.mediaType = 'LIVE' AND c.sourceId IN (:sourceIds)",
     )
-    fun countFavorites(profileId: Long): Flow<Int>
+    fun countFavorites(profileId: Long, sourceIds: List<Long>): Flow<Int>
+
+    /** History rail count, joined to channels so it can honor the active-playlist filter. */
+    @Query(
+        "SELECT COUNT(*) FROM watch_history h INNER JOIN channels c ON c.id = h.itemId " +
+            "WHERE h.profileId = :profileId AND h.mediaType = 'LIVE' AND c.sourceId IN (:sourceIds)",
+    )
+    fun countHistory(profileId: Long, sourceIds: List<Long>): Flow<Int>
 
     @Query(
         "SELECT c.* FROM channels c " +
             "INNER JOIN watch_history h ON h.itemId = c.id AND h.mediaType = 'LIVE' " +
-            "WHERE h.profileId = :profileId ORDER BY h.watchedAt DESC",
+            "WHERE h.profileId = :profileId AND c.sourceId IN (:sourceIds) ORDER BY h.watchedAt DESC",
     )
-    fun pagingHistory(profileId: Long): PagingSource<Int, ChannelEntity>
+    fun pagingHistory(profileId: Long, sourceIds: List<Long>): PagingSource<Int, ChannelEntity>
 
     /** Recently-watched row at the top of Live TV. */
     @Query(

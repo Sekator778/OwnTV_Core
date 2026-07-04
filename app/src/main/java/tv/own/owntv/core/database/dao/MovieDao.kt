@@ -71,10 +71,10 @@ interface MovieDao {
         "SELECT m.* FROM movies m " +
             "INNER JOIN favorites f ON f.itemId = m.id AND f.mediaType = 'MOVIE' " +
             "LEFT JOIN content_order o ON o.itemId = m.id AND o.profileId = :profileId AND o.mediaType = 'MOVIE' AND o.contextKey = :contextKey " +
-            "WHERE f.profileId = :profileId " +
+            "WHERE f.profileId = :profileId AND m.sourceId IN (:sourceIds) " +
             "ORDER BY (CASE WHEN o.position IS NULL THEN 1 ELSE 0 END), o.position, f.addedAt DESC",
     )
-    fun pagingFavoritesManual(profileId: Long, contextKey: String): PagingSource<Int, MovieEntity>
+    fun pagingFavoritesManual(profileId: Long, contextKey: String, sourceIds: List<Long>): PagingSource<Int, MovieEntity>
 
     @Query(
         "SELECT m.* FROM movies m " +
@@ -88,10 +88,10 @@ interface MovieDao {
         "SELECT m.* FROM movies m " +
             "INNER JOIN favorites f ON f.itemId = m.id AND f.mediaType = 'MOVIE' " +
             "LEFT JOIN content_order o ON o.itemId = m.id AND o.profileId = :profileId AND o.mediaType = 'MOVIE' AND o.contextKey = :contextKey " +
-            "WHERE f.profileId = :profileId " +
+            "WHERE f.profileId = :profileId AND m.sourceId IN (:sourceIds) " +
             "ORDER BY (CASE WHEN o.position IS NULL THEN 1 ELSE 0 END), o.position, f.addedAt DESC LIMIT :limit",
     )
-    suspend fun snapshotFavoritesManual(profileId: Long, contextKey: String, limit: Int): List<MovieEntity>
+    suspend fun snapshotFavoritesManual(profileId: Long, contextKey: String, sourceIds: List<Long>, limit: Int): List<MovieEntity>
 
     @Query("SELECT COUNT(*) FROM movies WHERE categoryId = :categoryId")
     fun countByCategory(categoryId: Long): Flow<Int>
@@ -121,15 +121,15 @@ interface MovieDao {
 
     @Query(
         "SELECT m.* FROM movies m INNER JOIN favorites f ON f.itemId = m.id AND f.mediaType = 'MOVIE' " +
-            "WHERE f.profileId = :profileId AND m.name LIKE '%' || :query || '%' ORDER BY f.addedAt DESC",
+            "WHERE f.profileId = :profileId AND m.sourceId IN (:sourceIds) AND m.name LIKE '%' || :query || '%' ORDER BY f.addedAt DESC",
     )
-    fun searchFavorites(query: String, profileId: Long): PagingSource<Int, MovieEntity>
+    fun searchFavorites(query: String, profileId: Long, sourceIds: List<Long>): PagingSource<Int, MovieEntity>
 
     @Query(
         "SELECT m.* FROM movies m INNER JOIN watch_history h ON h.itemId = m.id AND h.mediaType = 'MOVIE' " +
-            "WHERE h.profileId = :profileId AND m.name LIKE '%' || :query || '%' ORDER BY h.watchedAt DESC",
+            "WHERE h.profileId = :profileId AND m.sourceId IN (:sourceIds) AND m.name LIKE '%' || :query || '%' ORDER BY h.watchedAt DESC",
     )
-    fun searchHistory(query: String, profileId: Long): PagingSource<Int, MovieEntity>
+    fun searchHistory(query: String, profileId: Long, sourceIds: List<Long>): PagingSource<Int, MovieEntity>
 
     @Query(
         "SELECT m.* FROM movies m " +
@@ -138,15 +138,25 @@ interface MovieDao {
     )
     fun pagingFavorites(profileId: Long): PagingSource<Int, MovieEntity>
 
-    @Query("SELECT COUNT(*) FROM favorites WHERE profileId = :profileId AND mediaType = 'MOVIE'")
-    fun countFavorites(profileId: Long): Flow<Int>
+    @Query(
+        "SELECT COUNT(*) FROM favorites f INNER JOIN movies m ON m.id = f.itemId " +
+            "WHERE f.profileId = :profileId AND f.mediaType = 'MOVIE' AND m.sourceId IN (:sourceIds)",
+    )
+    fun countFavorites(profileId: Long, sourceIds: List<Long>): Flow<Int>
+
+    /** History rail count, joined to movies so it can honor the active-playlist filter. */
+    @Query(
+        "SELECT COUNT(*) FROM watch_history h INNER JOIN movies m ON m.id = h.itemId " +
+            "WHERE h.profileId = :profileId AND h.mediaType = 'MOVIE' AND m.sourceId IN (:sourceIds)",
+    )
+    fun countHistory(profileId: Long, sourceIds: List<Long>): Flow<Int>
 
     @Query(
         "SELECT m.* FROM movies m " +
             "INNER JOIN watch_history h ON h.itemId = m.id AND h.mediaType = 'MOVIE' " +
-            "WHERE h.profileId = :profileId ORDER BY h.watchedAt DESC",
+            "WHERE h.profileId = :profileId AND m.sourceId IN (:sourceIds) ORDER BY h.watchedAt DESC",
     )
-    fun pagingHistory(profileId: Long): PagingSource<Int, MovieEntity>
+    fun pagingHistory(profileId: Long, sourceIds: List<Long>): PagingSource<Int, MovieEntity>
 
     /** Recently-watched / continue-watching row at the top of Movies. */
     @Query(
