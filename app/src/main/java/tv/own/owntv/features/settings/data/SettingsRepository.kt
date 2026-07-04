@@ -76,6 +76,9 @@ class SettingsRepository(private val context: Context) {
         val PROXY_PORT = intPreferencesKey("proxy_port")
         val PROXY_USER = stringPreferencesKey("proxy_user")
         val PROXY_PASS = stringPreferencesKey("proxy_pass")
+        // Weather chip: show/hide + manual location override (blank = auto-detect from public IP).
+        val WEATHER_ENABLED = booleanPreferencesKey("weather_enabled")
+        val WEATHER_LOCATION = stringPreferencesKey("weather_location")
     }
 
     // --- Live TV: remember the last focused channel so reopening lands focus back on it ---
@@ -114,6 +117,26 @@ class SettingsRepository(private val context: Context) {
 
     suspend fun setAnimationLevel(level: tv.own.owntv.ui.theme.AnimationLevel) {
         context.dataStore.edit { it[Keys.ANIMATION_LEVEL] = level.name }
+    }
+
+    // --- Weather chip (top bar): show/hide + manual location override for VPN users ---
+
+    /** Show the weather chip in the top bar (default ON). */
+    val weatherEnabled: Flow<Boolean> = context.dataStore.data.map { it[Keys.WEATHER_ENABLED] ?: true }
+
+    suspend fun setWeatherEnabled(enabled: Boolean) {
+        context.dataStore.edit { it[Keys.WEATHER_ENABLED] = enabled }
+    }
+
+    /**
+     * Manual weather location. Blank (default) = auto-detect from public IP. Otherwise a city name
+     * (geocoded via Open-Meteo) or a raw "lat,lon" pair. Lets users fix the wrong-city behaviour
+     * they see behind a VPN, where IP geolocation resolves to the VPN server's city.
+     */
+    val weatherLocation: Flow<String> = context.dataStore.data.map { it[Keys.WEATHER_LOCATION] ?: "" }
+
+    suspend fun setWeatherLocation(location: String) {
+        context.dataStore.edit { it[Keys.WEATHER_LOCATION] = location.trim() }
     }
 
     // --- Catch-up (archive) playback ---
@@ -435,6 +458,7 @@ class SettingsRepository(private val context: Context) {
         Keys.THEME_MODE, Keys.ACCENT, Keys.ACCENT_CUSTOM, Keys.DEFAULT_ZOOM,
         Keys.PREF_AUDIO_LANG, Keys.PREF_SUB_LANG, Keys.SORT_LIVE, Keys.SORT_GUIDE, Keys.SORT_MOVIES,
         Keys.SORT_SERIES, Keys.RESUME_MODE, Keys.CATCHUP_TZ, Keys.ANIMATION_LEVEL, Keys.VOD_VIEW_MODE,
+        Keys.WEATHER_LOCATION,
         // Global proxy — non-secret fields only. The proxy password (Keys.PROXY_PASS) is NEVER part of
         // this whitelist; it is handled separately by BackupManager (encrypted or omitted).
         Keys.PROXY_HOST, Keys.PROXY_USER,
@@ -443,6 +467,7 @@ class SettingsRepository(private val context: Context) {
     private val backupBoolKeys = listOf(
         Keys.LIVE_PREVIEW, Keys.LIVE_PREVIEW_AUDIO, Keys.HDR_ENABLED, Keys.ANDROID_TV_HOME, Keys.HW_DECODING,
         Keys.VOD_PREFER_EXO, Keys.UPDATE_CHECK_ON_START, Keys.SURROUND_SOUND, Keys.AUTO_PLAY_NEXT, Keys.PROXY_ENABLED,
+        Keys.WEATHER_ENABLED,
     )
     private val backupFloatKeys = listOf(Keys.SUB_SCALE)
 
