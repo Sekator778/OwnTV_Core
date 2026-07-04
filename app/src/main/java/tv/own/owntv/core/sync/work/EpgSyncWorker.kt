@@ -51,7 +51,10 @@ class EpgSyncWorker(
             throw c
         } catch (e: Exception) {
             val message = friendlySyncError(e.message, connectivity.isOnlineNow())
-            store.setSynced(source.id, System.currentTimeMillis(), message)
+            // Record the failure WITHOUT updating lastSyncAt — staleness-based auto-refresh treats
+            // lastSyncAt as the last *successful* sync, so a failed attempt must leave it untouched
+            // (otherwise a flaky network would falsely reset the threshold and stop retries).
+            store.markError(source.id, message)
             Log.w(TAG, "EPG sync failed sourceId=${source.id} reason=$reason", e)
             return Result.failure()
         }

@@ -20,6 +20,7 @@ class CatalogSyncScheduler(private val context: Context) {
         contentTypes: SyncContentTypes = SyncContentTypes(),
         baseItemCount: Int = 0,
         completesInitialSync: Boolean = false,
+        policy: ExistingWorkPolicy = ExistingWorkPolicy.REPLACE,
     ) {
         val request = OneTimeWorkRequestBuilder<CatalogSyncWorker>()
             .setInputData(workDataOf(
@@ -41,7 +42,7 @@ class CatalogSyncScheduler(private val context: Context) {
             .build()
 
         WorkManager.getInstance(context)
-            .enqueueUniqueWork(workName(sourceId), ExistingWorkPolicy.REPLACE, request)
+            .enqueueUniqueWork(workName(sourceId), policy, request)
     }
 
     fun cancelSync(sourceId: Long) {

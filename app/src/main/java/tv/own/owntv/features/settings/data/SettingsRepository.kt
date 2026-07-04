@@ -24,6 +24,38 @@ enum class StartupMode(val label: String) {
     HOME("Home"), LAST_CHANNEL("Last channel"), FAVORITES("Live · Favorites")
 }
 
+/**
+ * Per-source playlist auto-refresh mode. The interval entries are **staleness thresholds**, not strict
+ * timers: a source is refreshed when `now - lastSyncAt >= thresholdMs`. OFF disables auto-refresh;
+ * STARTUP refreshes on cold app start only; interval modes are checked on cold start and on resume.
+ * [thresholdMs] has a default of null so OFF/STARTUP can be declared without an explicit value.
+ */
+enum class PlaylistAutoRefresh(val label: String, val thresholdMs: Long? = null) {
+    OFF("Off"),
+    STARTUP("Refresh at startup"),
+    HOURS_6("6 hours", 6 * 3600_000L),
+    HOURS_12("12 hours", 12 * 3600_000L),
+    HOURS_24("24 hours", 24 * 3600_000L),
+    HOURS_48("48 hours", 48 * 3600_000L);
+
+    /** Interval (staleness-threshold) mode — checked on cold start AND on resume when threshold is exceeded. */
+    val isInterval: Boolean get() = thresholdMs != null && this != STARTUP
+}
+
+/** Per-EPG-source auto-refresh mode. Same staleness-threshold semantics as [PlaylistAutoRefresh]. */
+enum class EpgAutoRefresh(val label: String, val thresholdMs: Long? = null) {
+    OFF("Off"),
+    STARTUP("Refresh at startup"),
+    HOURS_1("1 hour", 1 * 3600_000L),
+    HOURS_3("3 hours", 3 * 3600_000L),
+    HOURS_6("6 hours", 6 * 3600_000L),
+    HOURS_12("12 hours", 12 * 3600_000L),
+    HOURS_24("24 hours", 24 * 3600_000L),
+    HOURS_48("48 hours", 48 * 3600_000L);
+
+    val isInterval: Boolean get() = thresholdMs != null && this != STARTUP
+}
+
 private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "owntv_settings")
 
 /**
@@ -42,6 +74,12 @@ class SettingsRepository(private val context: Context) {
         val DEFAULT_SOURCE = longPreferencesKey("default_source_id")
         val DOWNLOAD_ROOT = stringPreferencesKey("download_root")
         val REFRESH_SOURCE_IDS = stringSetPreferencesKey("refresh_source_ids")
+        // Per-source auto-refresh selections (JSON maps: { "<sourceId>": "<EnumName>" }). Replace the
+        // binary refresh-on-startup set with Off/Startup + staleness thresholds. Migration-safe: the legacy
+        // REFRESH_SOURCE_IDS set is read once (see migrateLegacyRefreshFlags) then ignored.
+        val PLAYLIST_AUTO_REFRESH = stringPreferencesKey("playlist_auto_refresh")
+        val EPG_AUTO_REFRESH = stringPreferencesKey("epg_auto_refresh")
+        val REFRESH_MIGRATED = booleanPreferencesKey("refresh_migration_done")
         val LIVE_PREVIEW = booleanPreferencesKey("live_preview")
         val LIVE_PREVIEW_AUDIO = booleanPreferencesKey("live_preview_audio")
         val HDR_ENABLED = booleanPreferencesKey("hdr_enabled")
@@ -312,17 +350,83 @@ class SettingsRepository(private val context: Context) {
         context.dataStore.edit { it[Keys.PREF_SUB_LANG] = lang }
     }
 
-    /** Per-source "refresh on startup" — the set of source ids to re-sync when the app launches. */
-    val refreshSourceIds: Flow<Set<Long>> = context.dataStore.data.map { prefs ->
-        prefs[Keys.REFRESH_SOURCE_IDS].orEmpty().mapNotNull { it.toLongOrNull() }.toSet()
+    // --- Per-source auto-refresh (Off / Startup / staleness threshold) ---
+    // Stored as a JSON map { "<sourceId>": "<EnumName>" } in the owntv_settings DataStore — migration-safe
+    // (Room uses destructive migrations, so anything that must survive a schema bump lives here). Reuses the
+    // existing lastSyncAt columns (SourceEntity.lastSyncAt for playlists, EpgSource.lastSyncAt for EPG) as the
+    // "last successful sync" timestamp; nothing new is stored for that.
+
+    /** Per-source playlist auto-refresh selection. Missing ids default to [PlaylistAutoRefresh.OFF]. */
+    val playlistAutoRefresh: Flow<Map<Long, PlaylistAutoRefresh>> =
+        context.dataStore.data.map { prefs -> parseRefreshMap(prefs[Keys.PLAYLIST_AUTO_REFRESH]) { PlaylistAutoRefresh.valueOf(it) } }
+
+    /** Per-source EPG auto-refresh selection. Missing ids default to [EpgAutoRefresh.OFF]. */
+    val epgAutoRefresh: Flow<Map<Long, EpgAutoRefresh>> =
+        context.dataStore.data.map { prefs -> parseRefreshMap(prefs[Keys.EPG_AUTO_REFRESH]) { EpgAutoRefresh.valueOf(it) } }
+
+    suspend fun setPlaylistAutoRefresh(sourceId: Long, mode: PlaylistAutoRefresh) {
+        context.dataStore.edit { prefs ->
+            prefs[Keys.PLAYLIST_AUTO_REFRESH] = writeRefreshMap(readRefreshMap(prefs[Keys.PLAYLIST_AUTO_REFRESH]), sourceId, mode.name)
+        }
     }
 
-    suspend fun setSourceRefresh(sourceId: Long, enabled: Boolean) {
+    suspend fun setEpgAutoRefresh(sourceId: Long, mode: EpgAutoRefresh) {
         context.dataStore.edit { prefs ->
-            val current = prefs[Keys.REFRESH_SOURCE_IDS].orEmpty().toMutableSet()
-            if (enabled) current.add(sourceId.toString()) else current.remove(sourceId.toString())
-            prefs[Keys.REFRESH_SOURCE_IDS] = current
+            prefs[Keys.EPG_AUTO_REFRESH] = writeRefreshMap(readRefreshMap(prefs[Keys.EPG_AUTO_REFRESH]), sourceId, mode.name)
         }
+    }
+
+    /**
+     * One-time migration of the legacy binary `refresh_source_ids` set → per-source `STARTUP` entries.
+     * Idempotent (guarded by [Keys.REFRESH_MIGRATED]) and non-overwriting: if the new
+     * [playlistAutoRefresh] map is already non-empty (user picked a mode in the new UI, or a prior migration
+     * ran), we only flip the flag and return — never clobbering existing selections.
+     */
+    suspend fun migrateLegacyRefreshFlags() {
+        context.dataStore.edit { prefs ->
+            if (prefs[Keys.REFRESH_MIGRATED] == true) return@edit
+            val existing = readRefreshMap(prefs[Keys.PLAYLIST_AUTO_REFRESH])
+            val legacyIds = prefs[Keys.REFRESH_SOURCE_IDS].orEmpty()
+            // Only migrate into an empty map — never overwrite selections already made in the new UI.
+            if (existing.isEmpty() && legacyIds.isNotEmpty()) {
+                val migrated = legacyIds.associate { it to PlaylistAutoRefresh.STARTUP.name }
+                prefs[Keys.PLAYLIST_AUTO_REFRESH] =
+                    org.json.JSONObject(migrated).toString()
+            }
+            prefs[Keys.REFRESH_MIGRATED] = true
+        }
+    }
+
+    private inline fun <reified E : Enum<E>> parseRefreshMap(raw: String?, valueOf: (String) -> E): Map<Long, E> {
+        if (raw.isNullOrBlank()) return emptyMap()
+        val obj = runCatching { org.json.JSONObject(raw) }.getOrNull() ?: return emptyMap()
+        val out = LinkedHashMap<Long, E>()
+        val keys = obj.keys()
+        while (keys.hasNext()) {
+            val key = keys.next()
+            val id = key.toLongOrNull() ?: continue
+            val name = obj.optString(key)
+            val mode = runCatching { valueOf(name) }.getOrNull() ?: continue
+            out[id] = mode
+        }
+        return out
+    }
+
+    private fun readRefreshMap(raw: String?): MutableMap<String, String> {
+        if (raw.isNullOrBlank()) return LinkedHashMap()
+        val obj = runCatching { org.json.JSONObject(raw) }.getOrNull() ?: return LinkedHashMap()
+        val out = LinkedHashMap<String, String>()
+        val keys = obj.keys()
+        while (keys.hasNext()) {
+            val key = keys.next()
+            out[key] = obj.optString(key)
+        }
+        return out
+    }
+
+    private fun writeRefreshMap(map: MutableMap<String, String>, sourceId: Long, value: String): String {
+        map[sourceId.toString()] = value
+        return org.json.JSONObject(map.toMap()).toString()
     }
 
     /** Whether focusing a channel auto-plays it in the Live preview pane. */
@@ -467,7 +571,7 @@ class SettingsRepository(private val context: Context) {
     private val backupBoolKeys = listOf(
         Keys.LIVE_PREVIEW, Keys.LIVE_PREVIEW_AUDIO, Keys.HDR_ENABLED, Keys.ANDROID_TV_HOME, Keys.HW_DECODING,
         Keys.VOD_PREFER_EXO, Keys.UPDATE_CHECK_ON_START, Keys.SURROUND_SOUND, Keys.AUTO_PLAY_NEXT, Keys.PROXY_ENABLED,
-        Keys.WEATHER_ENABLED,
+        Keys.WEATHER_ENABLED, Keys.RESUME_LAST_CHANNEL,
     )
     private val backupFloatKeys = listOf(Keys.SUB_SCALE)
 
@@ -516,6 +620,66 @@ class SettingsRepository(private val context: Context) {
                 }
             }
         }
+    }
+
+    // --- Backup: per-source auto-refresh maps (ride with the SOURCES section, since source/EPG ids
+    //     are preserved on restore). Exported as the raw { "<id>": "<EnumName>" } JSON maps. ---
+
+    /** Exports the per-source playlist auto-refresh map as { "<sourceId>": "<mode>" }. */
+    suspend fun exportPlaylistAutoRefresh(): org.json.JSONObject =
+        context.dataStore.data.first()[Keys.PLAYLIST_AUTO_REFRESH]
+            ?.let { runCatching { org.json.JSONObject(it) }.getOrNull() } ?: org.json.JSONObject()
+
+    /** Exports the per-EPG-source auto-refresh map as { "<epgSourceId>": "<mode>" }. */
+    suspend fun exportEpgAutoRefresh(): org.json.JSONObject =
+        context.dataStore.data.first()[Keys.EPG_AUTO_REFRESH]
+            ?.let { runCatching { org.json.JSONObject(it) }.getOrNull() } ?: org.json.JSONObject()
+
+    /**
+     * Restores the playlist auto-refresh map. Ids not in [existingSourceIds] are dropped; unknown
+     * enum values fall back to OFF. Replaces the whole map (SOURCES restore wipes+recreates sources,
+     * so pre-restore selections refer to deleted ids). Also marks the legacy refresh migration done
+     * so it can never clobber the restored selections.
+     */
+    suspend fun importPlaylistAutoRefresh(o: org.json.JSONObject, existingSourceIds: Set<Long>) {
+        val cleaned = sanitizeRefreshMap(o, existingSourceIds) { runCatching { PlaylistAutoRefresh.valueOf(it) }.getOrDefault(PlaylistAutoRefresh.OFF).name }
+        context.dataStore.edit { prefs ->
+            prefs[Keys.PLAYLIST_AUTO_REFRESH] = org.json.JSONObject(cleaned.toMap()).toString()
+            prefs[Keys.REFRESH_MIGRATED] = true
+        }
+    }
+
+    /** Restores the EPG auto-refresh map; same semantics as [importPlaylistAutoRefresh]. */
+    suspend fun importEpgAutoRefresh(o: org.json.JSONObject, existingEpgSourceIds: Set<Long>) {
+        val cleaned = sanitizeRefreshMap(o, existingEpgSourceIds) { runCatching { EpgAutoRefresh.valueOf(it) }.getOrDefault(EpgAutoRefresh.OFF).name }
+        context.dataStore.edit { prefs ->
+            prefs[Keys.EPG_AUTO_REFRESH] = org.json.JSONObject(cleaned.toMap()).toString()
+        }
+    }
+
+    private inline fun sanitizeRefreshMap(
+        o: org.json.JSONObject,
+        existingIds: Set<Long>,
+        sanitize: (String) -> String,
+    ): Map<String, String> {
+        val out = LinkedHashMap<String, String>()
+        o.keys().forEach { key ->
+            val id = key.toLongOrNull() ?: return@forEach
+            if (id !in existingIds) return@forEach
+            out[key] = sanitize(o.optString(key))
+        }
+        return out
+    }
+
+    // --- Backup: default source (SOURCES section — ids are preserved on restore) ---
+
+    /** Currently selected default source id, or null when none chosen. */
+    suspend fun currentDefaultSourceId(): Long? =
+        context.dataStore.data.first()[Keys.DEFAULT_SOURCE]?.takeIf { it > 0 }
+
+    /** Restores the default source only when that id survived the restore. */
+    suspend fun importDefaultSource(id: Long, existingSourceIds: Set<Long>) {
+        if (id in existingSourceIds) setDefaultSource(id)
     }
 
     // --- Backup: proxy password (handled out-of-band by BackupManager: encrypted or omitted) ---

@@ -13,7 +13,7 @@ import kotlinx.coroutines.flow.map
 
 class EpgSyncScheduler(private val context: Context) {
 
-    fun enqueueSync(sourceId: Long, reason: String, baseProgrammes: Int = 0) {
+    fun enqueueSync(sourceId: Long, reason: String, baseProgrammes: Int = 0, policy: ExistingWorkPolicy = ExistingWorkPolicy.REPLACE) {
         val request = OneTimeWorkRequestBuilder<EpgSyncWorker>()
             .setInputData(
                 workDataOf(
@@ -32,7 +32,7 @@ class EpgSyncScheduler(private val context: Context) {
             .build()
 
         WorkManager.getInstance(context)
-            .enqueueUniqueWork(workName(sourceId), ExistingWorkPolicy.REPLACE, request)
+            .enqueueUniqueWork(workName(sourceId), policy, request)
     }
 
     fun cancelSync(sourceId: Long) {

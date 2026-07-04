@@ -126,8 +126,9 @@ val dataModule = module {
     single { LauncherIntegrationRepository(get(), get(), get()) }
     // context, downloadDao, okHttpClient, settings
     single { DownloadManager(androidContext(), get(), get(), get()) }
-    // profileDao, sourceDao, settings, customizationStore, userDataResolver, epgSourceStore, tvHomeRepository
-    single { BackupManager(get(), get(), get(), get(), get(), get(), get()) }
+    // profileDao, sourceDao, settings, customizationStore, userDataResolver, epgSourceStore,
+    // launcherIntegrationRepository, forceMpvStore, vodEngineStore
+    single { BackupManager(get(), get(), get(), get(), get(), get(), get(), get(), get()) }
     // context, okHttpClient — in-app updates from GitHub Releases
     single { UpdateManager(androidContext(), get()) }
     single { CatalogSyncScheduler(androidContext()) }

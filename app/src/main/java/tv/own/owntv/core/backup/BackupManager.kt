@@ -32,6 +32,8 @@ class BackupManager(
     private val userData: UserDataResolver,
     private val epgSources: tv.own.owntv.core.epg.EpgSourceStore,
     private val launcherIntegrationRepository: LauncherIntegrationRepository,
+    private val forceMpvStore: tv.own.owntv.core.player.ForceMpvStore,
+    private val vodEngineStore: tv.own.owntv.core.player.VodEngineStore,
 ) {
     /** What a backup can contain; the user multi-selects these for export and restore. */
     enum class Section(val label: String, val desc: String) {
@@ -64,7 +66,7 @@ class BackupManager(
             val seal: ((String) -> JSONObject)? = key?.let { k -> { plain -> BackupCrypto.encrypt(k, plain) } }
 
             val root = JSONObject().apply {
-                put("version", 6)
+                put("version", 7) // v7: auto-refresh maps + default source (SOURCES); compat-mode pins (SETTINGS)
                 put("sections", JSONArray().apply { sections.forEach { put(it.name) } })
                 if (salt != null) put("crypto", BackupCrypto.cryptoBlock(salt))
                 if (Section.SOURCES in sections) {
@@ -73,6 +75,10 @@ class BackupManager(
                     put("links", JSONArray().apply { sourceDao.allLinks().forEach { put(JSONObject().put("profileId", it.profileId).put("sourceId", it.sourceId)) } })
                     put("epgSources", epgSources.exportJson()) // standalone EPG feeds ride with sources
                     put("startupModes", settings.exportStartupModes()) // per-profile landing, keyed by profile id
+                    // Per-source auto-refresh selections + default source, keyed by the preserved ids.
+                    put("playlistAutoRefresh", settings.exportPlaylistAutoRefresh())
+                    put("epgAutoRefresh", settings.exportEpgAutoRefresh())
+                    settings.currentDefaultSourceId()?.let { put("defaultSourceId", it) }
                 }
                 if (Section.CUSTOMIZE in sections) {
                     put("customizations", JSONObject().apply { customize.exportAll().forEach { (k, v) -> put(k, v) } })
@@ -87,6 +93,13 @@ class BackupManager(
                     val proxyPass = settings.currentProxyPassword()
                     if (seal != null && proxyPass.isNotEmpty()) s.put("proxy_pass_enc", seal(proxyPass))
                     put("settings", s)
+                    // Per-item "compatibility mode" engine pins (Live + VOD). Keyed by stream URL, so no
+                    // id remapping needed on restore. Optional block — older readers just ignore it.
+                    put("compatMode", JSONObject().apply {
+                        put("liveMpvUrls", JSONArray(forceMpvStore.exportUrls().toList()))
+                        put("vodMpvUrls", JSONArray(vodEngineStore.exportMpvUrls().toList()))
+                        put("vodExoUrls", JSONArray(vodEngineStore.exportExoUrls().toList()))
+                    })
                 }
             }
             if (!folder.exists()) folder.mkdirs()
@@ -178,6 +191,12 @@ class BackupManager(
                 val profileIds = profileDao.getAllOnce().map { it.id }.toSet()
                 profileIds.firstOrNull()?.let { settings.setActiveProfile(it) }
                 root.optJSONObject("startupModes")?.let { settings.importStartupModes(it, profileIds) }
+                // Auto-refresh maps + default source: ids not present after restore are dropped,
+                // unknown enum values fall back to OFF. Absent keys (older backups) leave defaults.
+                val sourceIds = sourceDao.getAllOnce().map { it.id }.toSet()
+                root.optJSONObject("playlistAutoRefresh")?.let { settings.importPlaylistAutoRefresh(it, sourceIds) }
+                root.optJSONObject("epgAutoRefresh")?.let { settings.importEpgAutoRefresh(it, epgSources.getAll().map { s -> s.id }.toSet()) }
+                if (root.has("defaultSourceId")) settings.importDefaultSource(root.getLong("defaultSourceId"), sourceIds)
                 count += profiles.length() + sources.length()
             }
 
@@ -213,6 +232,17 @@ class BackupManager(
                         unseal(s.opt("proxy_pass_enc"))?.let { settings.setProxyPassword(it) }
                     }
                     count += s.length()
+                }
+                // Per-item compatibility-mode engine pins. Optional; merged (union) into the current
+                // pins so a restore never drops locally-set pins. Corrupt/non-string entries ignored.
+                root.optJSONObject("compatMode")?.let { c ->
+                    runCatching { forceMpvStore.importUrls(jsonStrings(c.optJSONArray("liveMpvUrls"))) }
+                    runCatching {
+                        vodEngineStore.importUrls(
+                            jsonStrings(c.optJSONArray("vodMpvUrls")),
+                            jsonStrings(c.optJSONArray("vodExoUrls")),
+                        )
+                    }
                 }
             }
             count
@@ -279,3 +309,14 @@ class BackupManager(
 }
 
 private fun JSONObject.optStringOrNull(key: String): String? = if (isNull(key)) null else optString(key).takeIf { it.isNotEmpty() }
+
+/** Reads a JSON array as a list of non-blank strings, tolerating nulls/non-string entries. */
+private fun jsonStrings(arr: JSONArray?): List<String> {
+    if (arr == null) return emptyList()
+    val out = ArrayList<String>(arr.length())
+    for (i in 0 until arr.length()) {
+        val v = arr.opt(i)
+        if (v is String && v.isNotBlank()) out += v
+    }
+    return out
+}

@@ -77,6 +77,18 @@ class EpgSourceStore(private val context: Context) {
         }
     }
 
+    /**
+     * Record a sync failure WITHOUT touching [EpgSource.lastSyncAt]. The staleness-based auto-refresh logic
+     * treats `lastSyncAt` as the *last successful* sync, so a failed attempt must leave it unchanged —
+     * otherwise a flaky network would falsely reset the threshold and stop retries. Only [EpgSource.lastError]
+     * is updated here. Successes still go through [setSynced].
+     */
+    suspend fun markError(id: Long, message: String?) {
+        context.epgStore.edit { prefs ->
+            prefs[Keys.LIST] = write(parse(prefs[Keys.LIST]).map { if (it.id == id) it.copy(lastError = message) else it })
+        }
+    }
+
     /** Has the one-time "playlist EPG → EPG source" migration already run? */
     suspend fun isMigrated(): Boolean = context.epgStore.data.first()[Keys.MIGRATED] == 1L
     suspend fun markMigrated() { context.epgStore.edit { it[Keys.MIGRATED] = 1L } }

@@ -7,6 +7,7 @@ import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringSetPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 
 private val Context.forceMpvStore: DataStore<Preferences> by preferencesDataStore(name = "owntv_force_mpv")
@@ -30,5 +31,18 @@ class ForceMpvStore(private val context: Context) {
             val cur = prefs[key] ?: emptySet()
             prefs[key] = if (on) cur + url else cur - url
         }
+    }
+
+    // --- Backup / restore (optional section; keyed by stream URL, no id remapping needed) ---
+
+    /** Current pinned URLs, for backup export. */
+    suspend fun exportUrls(): Set<String> =
+        context.forceMpvStore.data.first()[key] ?: emptySet()
+
+    /** Merge [urls] into the current pins on restore (union — never drops existing pins). */
+    suspend fun importUrls(urls: Collection<String>) {
+        val clean = urls.filterNotNull().map { it.trim() }.filter { it.isNotEmpty() }
+        if (clean.isEmpty()) return
+        context.forceMpvStore.edit { prefs -> prefs[key] = (prefs[key] ?: emptySet()) + clean }
     }
 }

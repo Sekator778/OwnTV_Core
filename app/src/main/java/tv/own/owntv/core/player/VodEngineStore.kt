@@ -7,6 +7,7 @@ import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringSetPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 
 private val Context.vodEngineStore: DataStore<Preferences> by preferencesDataStore(name = "owntv_vod_engine")
@@ -37,6 +38,31 @@ class VodEngineStore(private val context: Context) {
             val exo = prefs[exoKey] ?: emptySet()
             prefs[mpvKey] = if (engine == VodEnginePin.MPV) mpv + url else mpv - url
             prefs[exoKey] = if (engine == VodEnginePin.EXO) exo + url else exo - url
+        }
+    }
+
+    // --- Backup / restore (optional section; keyed by stream URL, no id remapping needed) ---
+
+    /** Current MPV-pinned URLs, for backup export. */
+    suspend fun exportMpvUrls(): Set<String> = context.vodEngineStore.data.first()[mpvKey] ?: emptySet()
+
+    /** Current EXO-pinned URLs, for backup export. */
+    suspend fun exportExoUrls(): Set<String> = context.vodEngineStore.data.first()[exoKey] ?: emptySet()
+
+    /**
+     * Merge restored pins in. A URL present in both lists (corrupt backup) resolves to MPV then EXO
+     * removes it — so we drop any URL that appears in both to avoid an inconsistent double-pin.
+     */
+    suspend fun importUrls(mpvUrls: Collection<String>, exoUrls: Collection<String>) {
+        val mpv = mpvUrls.filterNotNull().map { it.trim() }.filter { it.isNotEmpty() }.toSet()
+        val exo = exoUrls.filterNotNull().map { it.trim() }.filter { it.isNotEmpty() }.toSet()
+        val conflicting = mpv intersect exo
+        val mpvClean = mpv - conflicting
+        val exoClean = exo - conflicting
+        if (mpvClean.isEmpty() && exoClean.isEmpty()) return
+        context.vodEngineStore.edit { prefs ->
+            prefs[mpvKey] = (prefs[mpvKey] ?: emptySet()) + mpvClean
+            prefs[exoKey] = (prefs[exoKey] ?: emptySet()) + exoClean
         }
     }
 }
