@@ -114,6 +114,14 @@ class LivePreviewEngine(
     val noVideoDetected: StateFlow<Boolean> = _noVideoDetected.asStateFlow()
     private var noVideoTriggered = false
     private var readySinceMs = 0L
+    // Set true once this tune is observed to be UHD (>1080p). Cheap panels (e.g. some Hisense) leak the 4K
+    // hardware decoder if it's merely parked/reused (ExoPlayer's normal stop) instead of fully released —
+    // every later channel then waits ~20 s for a decoder slot until the TV reboots. So when we LEAVE a UHD
+    // channel via stop() (Back / exit fullscreen / background / leaving the list) we fully release+rebuild
+    // the ExoPlayer so its MediaCodec is handed back cleanly. Deliberately NOT triggered from play(): that
+    // path is also the preview-pane re-tune on every focus, and rebuilding there churns 4K previews and
+    // pushes borderline streams into the mpv fallback. Scoped to UHD only — SD/HD keeps the fast reuse path.
+    @Volatile private var sawUhd = false
 
     // Programmatic codec/audio errors (Reviewer: more reliable than logcat for ExoPlayer, and survives the
     // Android 14+ own-logcat lockdown). MediaCodec.CodecException.diagnosticInfo carries the exact code
@@ -408,6 +416,7 @@ class LivePreviewEngine(
             if (videoSize.height > 0) {
                 _videoHeight.value = videoSize.height
                 _videoRes.value = "${videoSize.height}p"
+                if (videoSize.height > 1080) sawUhd = true // mark UHD → full decoder release on leave
             }
             if (videoSize.width > 0 && videoSize.height > 0) {
                 // Aspect for zoom/letterbox sizing (PAR-corrected), + native pixel size for Original (1:1).
@@ -449,6 +458,19 @@ class LivePreviewEngine(
     /** Start (or switch to) [url] as a muted/unmuted preview. Never throws — a stream ExoPlayer can't set
      *  up just falls back to the channel logo (the full mpv player can still play it). [meta] populates the
      *  full-screen HUD title when this preview is promoted. [userAgent] is the per-source custom UA. */
+    /** Fully release the ExoPlayer instance (and its MediaCodec) — used when leaving a UHD channel so the
+     *  4K hardware decoder is handed back cleanly instead of parked/reused. Keeps [surface] so the next
+     *  [play] rebuilds a fresh player and re-attaches. The next [play] lazily rebuilds via `player ?: build()`. */
+    fun releaseDecoderForUhd() {
+        if (!sawUhd) return // only pay the rebuild when leaving a genuine UHD stream
+        sawUhd = false
+        if (player == null) return
+        LiveDiagnosticsLog.event("UHD channel left — full decoder release+rebuild")
+        player?.run { removeListener(listener); release() }
+        player = null
+        videoRenderer = null
+    }
+
     fun play(url: String, muted: Boolean, meta: MediaMeta = MediaMeta(), userAgent: String? = null) {
         LiveDiagnosticsLog.event("play() url=${HttpClient.redactUrl(url)} muted=$muted")
         stoppingIntentionally = false
@@ -535,6 +557,8 @@ class LivePreviewEngine(
         _videoHeight.value = null; _videoAspect.value = null; _videoSize.value = null; _streamChips.value = emptyList()
         _state.value = State.IDLE
         player?.run { stop(); clearMediaItems() }
+        // Leaving a UHD channel (back / exit fullscreen / background): fully release the 4K decoder.
+        releaseDecoderForUhd()
     }
 
     fun release() {
@@ -547,6 +571,7 @@ class LivePreviewEngine(
         videoRenderer = null
         surface = null
         currentUrl = null
+        sawUhd = false
         _state.value = State.IDLE
     }
 
