@@ -117,6 +117,12 @@ class SettingsRepository(private val context: Context) {
         // Weather chip: show/hide + manual location override (blank = auto-detect from public IP).
         val WEATHER_ENABLED = booleanPreferencesKey("weather_enabled")
         val WEATHER_LOCATION = stringPreferencesKey("weather_location")
+        // TMDB metadata enrichment (see extras/future-plan/tmdb-metadata-plan.md). Master toggle + the two
+        // advanced tiers (own key / self-host URL). Blank tier fields = use the default caching Worker.
+        val METADATA_ENABLED = booleanPreferencesKey("metadata_enabled") // legacy; migrated to METADATA_MODE
+        val METADATA_MODE = stringPreferencesKey("metadata_mode")
+        val TMDB_API_KEY = stringPreferencesKey("tmdb_api_key")
+        val METADATA_SERVER_URL = stringPreferencesKey("metadata_server_url")
     }
 
     // --- Live TV: remember the last focused channel so reopening lands focus back on it ---
@@ -177,6 +183,58 @@ class SettingsRepository(private val context: Context) {
         context.dataStore.edit { it[Keys.WEATHER_LOCATION] = location.trim() }
     }
 
+    // --- TMDB metadata enrichment (plan §4) ---
+    // One provider, three configs. Enrichment is opt-outable via the master toggle; the two advanced
+    // fields (own key / self-host URL) override the default caching Worker when set.
+
+    /** Metadata source mode (plan §4.1). Defaults to Provider+TMDB; back-compat: an old boolean master
+     *  toggle maps false→Provider, true→Provider+TMDB when no explicit mode is stored yet. */
+    val metadataMode: Flow<tv.own.owntv.core.metadata.MetadataMode> = context.dataStore.data.map { p ->
+        parseMetadataMode(p)
+    }
+
+    private fun parseMetadataMode(p: Preferences): tv.own.owntv.core.metadata.MetadataMode {
+        p[Keys.METADATA_MODE]?.let { raw ->
+            runCatching { tv.own.owntv.core.metadata.MetadataMode.valueOf(raw) }.getOrNull()?.let { return it }
+        }
+        // No explicit mode yet — derive from the legacy boolean toggle.
+        return if (p[Keys.METADATA_ENABLED] == false) tv.own.owntv.core.metadata.MetadataMode.PROVIDER
+        else tv.own.owntv.core.metadata.MetadataMode.PROVIDER_PLUS_TMDB
+    }
+
+    suspend fun setMetadataMode(mode: tv.own.owntv.core.metadata.MetadataMode) {
+        context.dataStore.edit {
+            it[Keys.METADATA_MODE] = mode.name
+            it[Keys.METADATA_ENABLED] = mode.enrich // keep legacy key coherent for older readers
+        }
+    }
+
+    /** Tier 2 — the user's own TMDB v3 API key; blank = don't call TMDB directly. */
+    val tmdbApiKey: Flow<String> = context.dataStore.data.map { it[Keys.TMDB_API_KEY] ?: "" }
+
+    suspend fun setTmdbApiKey(key: String) {
+        context.dataStore.edit { it[Keys.TMDB_API_KEY] = key.trim() }
+    }
+
+    /** Tier 3 — a custom TMDB-shaped metadata server base URL; blank = don't self-host. */
+    val metadataServerUrl: Flow<String> = context.dataStore.data.map { it[Keys.METADATA_SERVER_URL] ?: "" }
+
+    suspend fun setMetadataServerUrl(url: String) {
+        context.dataStore.edit { it[Keys.METADATA_SERVER_URL] = url.trim() }
+    }
+
+    /** Live snapshot of the three metadata settings as one object (consumed by TmdbProvider). */
+    val metadataConfigFlow: Flow<tv.own.owntv.core.metadata.MetadataConfig> = context.dataStore.data.map { p ->
+        tv.own.owntv.core.metadata.MetadataConfig(
+            mode = parseMetadataMode(p),
+            tmdbApiKey = p[Keys.TMDB_API_KEY] ?: "",
+            customServerUrl = p[Keys.METADATA_SERVER_URL] ?: "",
+        )
+    }
+
+    /** One-shot read of the current metadata config (used by TmdbProvider per call). */
+    suspend fun metadataConfig(): tv.own.owntv.core.metadata.MetadataConfig = metadataConfigFlow.first()
+
     // --- Catch-up (archive) playback ---
 
     /** Which timezone to format Xtream timeshift URLs in. Most panels run on the server's local time, which
@@ -230,8 +288,9 @@ class SettingsRepository(private val context: Context) {
 
     // --- List sorting (per browse section) ---
 
-    /** How a browse section's lists are ordered. */
-    enum class SortMode { PLAYLIST, ALPHA }
+    /** How a browse section's lists are ordered. RATING (highest provider rating first) applies to
+     *  Movies/Series only; Live/EPG never select it. */
+    enum class SortMode { PLAYLIST, ALPHA, RATING }
 
     /** All three browse sections (Live/Movies/Series) default to the playlist/provider's own order — the
      *  natural grouping a user expects right after a sync. A–Z is one tap away (toggleSort). */
@@ -566,12 +625,15 @@ class SettingsRepository(private val context: Context) {
         // Global proxy — non-secret fields only. The proxy password (Keys.PROXY_PASS) is NEVER part of
         // this whitelist; it is handled separately by BackupManager (encrypted or omitted).
         Keys.PROXY_HOST, Keys.PROXY_USER,
+        // TMDB metadata: source mode + self-host URL. The user's own TMDB API key (Keys.TMDB_API_KEY) is a
+        // secret and is deliberately NOT backed up in plaintext (same policy as the proxy password).
+        Keys.METADATA_SERVER_URL, Keys.METADATA_MODE,
     )
     private val backupIntKeys = listOf(Keys.UI_ZOOM_PCT, Keys.AUDIO_DELAY_MS, Keys.CATCHUP_OFFSET_MIN, Keys.PROXY_PORT)
     private val backupBoolKeys = listOf(
         Keys.LIVE_PREVIEW, Keys.LIVE_PREVIEW_AUDIO, Keys.HDR_ENABLED, Keys.ANDROID_TV_HOME, Keys.HW_DECODING,
         Keys.VOD_PREFER_EXO, Keys.UPDATE_CHECK_ON_START, Keys.SURROUND_SOUND, Keys.AUTO_PLAY_NEXT, Keys.PROXY_ENABLED,
-        Keys.WEATHER_ENABLED, Keys.RESUME_LAST_CHANNEL,
+        Keys.WEATHER_ENABLED, Keys.RESUME_LAST_CHANNEL, Keys.METADATA_ENABLED,
     )
     private val backupFloatKeys = listOf(Keys.SUB_SCALE)
 
