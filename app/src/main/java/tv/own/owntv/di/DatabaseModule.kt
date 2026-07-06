@@ -25,6 +25,9 @@ val databaseModule = module {
                 OwnTVDatabase.MIGRATION_6_7,
                 OwnTVDatabase.MIGRATION_7_8,
                 OwnTVDatabase.MIGRATION_8_9,
+                OwnTVDatabase.MIGRATION_9_10,
+                OwnTVDatabase.MIGRATION_10_11,
+                OwnTVDatabase.MIGRATION_11_12,
             )
             .fallbackToDestructiveMigration(dropAllTables = true) // safety net for unforeseen jumps
             .build()
@@ -43,4 +46,5 @@ val databaseModule = module {
     single { get<OwnTVDatabase>().tvProviderProgramDao() }
     single { get<OwnTVDatabase>().downloadDao() }
     single { get<OwnTVDatabase>().epgDao() }
+    single { get<OwnTVDatabase>().metadataDao() }
 }

@@ -10,6 +10,7 @@ import tv.own.owntv.core.database.dao.DownloadDao
 import tv.own.owntv.core.database.dao.EpgDao
 import tv.own.owntv.core.database.dao.FavoriteDao
 import tv.own.owntv.core.database.dao.HistoryDao
+import tv.own.owntv.core.database.dao.MetadataDao
 import tv.own.owntv.core.database.dao.MovieDao
 import tv.own.owntv.core.database.dao.ProfileDao
 import tv.own.owntv.core.database.dao.ProgressDao
@@ -26,6 +27,8 @@ import tv.own.owntv.core.database.entity.EpgProgrammeEntity
 import tv.own.owntv.core.database.entity.EpisodeEntity
 import tv.own.owntv.core.database.entity.EpisodeFtsEntity
 import tv.own.owntv.core.database.entity.FavoriteEntity
+import tv.own.owntv.core.database.entity.MetadataCacheEntity
+import tv.own.owntv.core.database.entity.MetadataMatchEntity
 import tv.own.owntv.core.database.entity.MovieEntity
 import tv.own.owntv.core.database.entity.MovieFtsEntity
 import tv.own.owntv.core.database.entity.PlaybackProgressEntity
@@ -62,13 +65,16 @@ import tv.own.owntv.core.database.entity.TvProviderProgramEntity
         // EPG
         EpgChannelEntity::class,
         EpgProgrammeEntity::class,
+        // TMDB metadata enrichment cache (plan §7)
+        MetadataCacheEntity::class,
+        MetadataMatchEntity::class,
         // FTS (search)
         ChannelFtsEntity::class,
         MovieFtsEntity::class,
         SeriesFtsEntity::class,
         EpisodeFtsEntity::class,
     ],
-    version = 9, // v7: content_order (Move). v8: contentHash + browse/unique indexes. v9: EPG contentHash + natural key
+    version = 12, // v7: content_order (Move). v8: contentHash + browse/unique indexes. v9: EPG contentHash + natural key. v10: TMDB metadata cache. v11: movies/series rating-sort indexes. v12: metadata_cache trailerKey
 
     exportSchema = true,
 )
@@ -87,6 +93,7 @@ abstract class OwnTVDatabase : RoomDatabase() {
     abstract fun tvProviderProgramDao(): TvProviderProgramDao
     abstract fun downloadDao(): DownloadDao
     abstract fun epgDao(): EpgDao
+    abstract fun metadataDao(): tv.own.owntv.core.database.dao.MetadataDao
 
     companion object {
         const val NAME = "owntv.db"
@@ -262,6 +269,70 @@ abstract class OwnTVDatabase : RoomDatabase() {
                     "CREATE UNIQUE INDEX IF NOT EXISTS `index_epg_programmes_natural_key` " +
                         "ON `epg_programmes` (`sourceId`, `epgChannelId`, `startMs`)",
                 )
+            }
+        }
+
+        /**
+         * v9 → v10: TMDB metadata enrichment cache (plan §7). Two additive, purely-cache tables; no
+         * existing table is touched, so this is a safe additive migration.
+         */
+        val MIGRATION_9_10 = object : androidx.room.migration.Migration(9, 10) {
+            override fun migrate(db: androidx.sqlite.db.SupportSQLiteDatabase) {
+                db.execSQL(
+                    "CREATE TABLE IF NOT EXISTS `metadata_cache` (" +
+                        "`key` TEXT NOT NULL, " +
+                        "`tmdbId` INTEGER NOT NULL, " +
+                        "`imdbId` TEXT, " +
+                        "`type` TEXT NOT NULL, " +
+                        "`title` TEXT NOT NULL, " +
+                        "`year` INTEGER, " +
+                        "`overview` TEXT, " +
+                        "`posterPath` TEXT, " +
+                        "`backdropPath` TEXT, " +
+                        "`rating` REAL, " +
+                        "`genresJson` TEXT, " +
+                        "`castJson` TEXT, " +
+                        "`updatedAt` INTEGER NOT NULL, " +
+                        "PRIMARY KEY(`key`)" +
+                        ")",
+                )
+                db.execSQL("CREATE INDEX IF NOT EXISTS `index_metadata_cache_tmdbId` ON `metadata_cache` (`tmdbId`)")
+                db.execSQL("CREATE INDEX IF NOT EXISTS `index_metadata_cache_updatedAt` ON `metadata_cache` (`updatedAt`)")
+
+                db.execSQL(
+                    "CREATE TABLE IF NOT EXISTS `metadata_match` (" +
+                        "`localKey` TEXT NOT NULL, " +
+                        "`type` TEXT NOT NULL, " +
+                        "`tmdbId` INTEGER, " +
+                        "`confidence` REAL NOT NULL, " +
+                        "`updatedAt` INTEGER NOT NULL, " +
+                        "PRIMARY KEY(`localKey`)" +
+                        ")",
+                )
+                db.execSQL("CREATE INDEX IF NOT EXISTS `index_metadata_match_updatedAt` ON `metadata_match` (`updatedAt`)")
+            }
+        }
+
+        /**
+         * v10 → v11: composite indexes for the new "Rating" sort on Movies & Series
+         * ("ORDER BY rating DESC, name"). Additive index-only migration; no data or column changes.
+         */
+        val MIGRATION_10_11 = object : androidx.room.migration.Migration(10, 11) {
+            override fun migrate(db: androidx.sqlite.db.SupportSQLiteDatabase) {
+                db.execSQL("CREATE INDEX IF NOT EXISTS `index_movies_sourceId_rating_name` ON `movies` (`sourceId`, `rating`, `name`)")
+                db.execSQL("CREATE INDEX IF NOT EXISTS `index_movies_categoryId_rating_name` ON `movies` (`categoryId`, `rating`, `name`)")
+                db.execSQL("CREATE INDEX IF NOT EXISTS `index_series_sourceId_rating_name` ON `series` (`sourceId`, `rating`, `name`)")
+                db.execSQL("CREATE INDEX IF NOT EXISTS `index_series_categoryId_rating_name` ON `series` (`categoryId`, `rating`, `name`)")
+            }
+        }
+
+        /**
+         * v11 → v12: nullable `trailerKey` on the metadata_cache table (in-app YouTube trailers, plan §7.3).
+         * Additive column on a pure cache table; existing rows get NULL and simply re-fetch on next refresh.
+         */
+        val MIGRATION_11_12 = object : androidx.room.migration.Migration(11, 12) {
+            override fun migrate(db: androidx.sqlite.db.SupportSQLiteDatabase) {
+                db.execSQL("ALTER TABLE `metadata_cache` ADD COLUMN `trailerKey` TEXT")
             }
         }
 

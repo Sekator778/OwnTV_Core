@@ -71,6 +71,14 @@ val dataModule = module {
     single { tv.own.owntv.core.epg.EpgMigration(get(), get(), get()) }
     single { M3uParser() }
     single { XtreamClient(get()) }
+    // TMDB metadata enrichment (plan §4): one provider, three tiers resolved from SettingsRepository.
+    single<tv.own.owntv.core.metadata.MetadataProvider> {
+        tv.own.owntv.core.metadata.TmdbProvider(get(), get())
+    }
+    // provider, metadataDao, settings, overrideStore — the on-demand resolve + cache orchestrator (plan §7, §11.2 U5b).
+    single { tv.own.owntv.core.metadata.MetadataRepository(get(), get(), get(), get()) }
+    // Per-content TMDB name overrides (plan §11.2 U5b): DataStore side-store, no Room schema change.
+    single { tv.own.owntv.core.metadata.MetadataOverrideStore(androidContext()) }
     single { WeatherRepository(get(), get()) }
     single { BulkInsertHelper(get()) }
     single {

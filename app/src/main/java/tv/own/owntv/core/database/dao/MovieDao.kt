@@ -58,6 +58,14 @@ interface MovieDao {
     @Query("SELECT * FROM movies WHERE sourceId IN (:sourceIds) ORDER BY sourceId ASC, sortOrder ASC, name ASC")
     fun pagingAllOriginal(sourceIds: List<Long>): PagingSource<Int, MovieEntity>
 
+    // Highest provider rating first; unrated (NULL) sink to the bottom (SQLite sorts NULL last in DESC).
+    // Index-served by (sourceId, rating, name) / (categoryId, rating, name) — see MIGRATION_10_11.
+    @Query("SELECT * FROM movies WHERE sourceId IN (:sourceIds) ORDER BY rating DESC, name ASC")
+    fun pagingAllRating(sourceIds: List<Long>): PagingSource<Int, MovieEntity>
+
+    @Query("SELECT * FROM movies WHERE categoryId = :categoryId ORDER BY rating DESC, name ASC")
+    fun pagingByCategoryRating(categoryId: Long): PagingSource<Int, MovieEntity>
+
     // --- Manual order (Move) — see ChannelDao for the join shape. ---
     @Query(
         "SELECT m.* FROM movies m " +

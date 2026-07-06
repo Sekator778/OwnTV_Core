@@ -76,6 +76,14 @@ interface SeriesDao {
     @Query("SELECT * FROM series WHERE sourceId IN (:sourceIds) ORDER BY sourceId ASC, sortOrder ASC, name ASC")
     fun pagingAllOriginal(sourceIds: List<Long>): PagingSource<Int, SeriesEntity>
 
+    // Highest provider rating first; unrated (NULL) sink to the bottom (SQLite sorts NULL last in DESC).
+    // Index-served by (sourceId, rating, name) / (categoryId, rating, name) — see MIGRATION_10_11.
+    @Query("SELECT * FROM series WHERE sourceId IN (:sourceIds) ORDER BY rating DESC, name ASC")
+    fun pagingAllRating(sourceIds: List<Long>): PagingSource<Int, SeriesEntity>
+
+    @Query("SELECT * FROM series WHERE categoryId = :categoryId ORDER BY rating DESC, name ASC")
+    fun pagingByCategoryRating(categoryId: Long): PagingSource<Int, SeriesEntity>
+
     // --- Manual order (Move) — see ChannelDao for the join shape. ---
     @Query(
         "SELECT s.* FROM series s " +
