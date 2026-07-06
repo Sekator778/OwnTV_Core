@@ -14,6 +14,7 @@ import androidx.datastore.preferences.preferencesDataStore
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
+import tv.own.owntv.features.home.HomeConfig
 import tv.own.owntv.ui.theme.AccentColor
 import tv.own.owntv.ui.theme.ThemeMode
 import tv.own.owntv.ui.theme.UiZoom
@@ -153,6 +154,21 @@ class SettingsRepository(private val context: Context) {
         context.dataStore.edit { prefs ->
             val k = stringPreferencesKey("customize_pin_$profileId")
             if (pin.isNullOrBlank()) prefs.remove(k) else prefs[k] = pin.trim()
+        }
+    }
+
+    // --- Home: per-profile row order / visibility / hero filters. ---
+    private fun homeConfigKey(profileId: Long) = stringPreferencesKey("home_config_$profileId")
+
+    fun homeConfig(profileId: Long): Flow<HomeConfig> = context.dataStore.data.map { prefs ->
+        HomeConfig.fromJson(prefs[homeConfigKey(profileId)])
+    }
+
+    suspend fun updateHomeConfig(profileId: Long, transform: (HomeConfig) -> HomeConfig) {
+        context.dataStore.edit { prefs ->
+            val key = homeConfigKey(profileId)
+            val next = transform(HomeConfig.fromJson(prefs[key]))
+            if (next == HomeConfig()) prefs.remove(key) else prefs[key] = next.toJson().toString()
         }
     }
 
@@ -689,6 +705,19 @@ class SettingsRepository(private val context: Context) {
         return out
     }
 
+    /** Exports all per-profile Home config blobs as { "<profileId>": { ... } }. */
+    suspend fun exportHomeConfigs(): org.json.JSONObject {
+        val prefix = "home_config_"
+        val out = org.json.JSONObject()
+        context.dataStore.data.first().asMap().forEach { (k, v) ->
+            if (k.name.startsWith(prefix) && v is String) {
+                val blob = runCatching { org.json.JSONObject(v) }.getOrNull() ?: return@forEach
+                out.put(k.name.removePrefix(prefix), blob)
+            }
+        }
+        return out
+    }
+
     /** Restores startup modes only for profile ids in [existingProfileIds] (others are dropped safely). */
     suspend fun importStartupModes(o: org.json.JSONObject, existingProfileIds: Set<Long>) {
         context.dataStore.edit { prefs ->
@@ -699,6 +728,18 @@ class SettingsRepository(private val context: Context) {
                 if (runCatching { StartupMode.valueOf(mode) }.isSuccess) {
                     prefs[stringPreferencesKey("startup_mode_$pid")] = mode
                 }
+            }
+        }
+    }
+
+    /** Restores Home configs only for profile ids in [existingProfileIds] (others are dropped safely). */
+    suspend fun importHomeConfigs(o: org.json.JSONObject, existingProfileIds: Set<Long>) {
+        context.dataStore.edit { prefs ->
+            o.keys().forEach { key ->
+                val pid = key.toLongOrNull() ?: return@forEach
+                if (pid !in existingProfileIds) return@forEach
+                val blob = o.optJSONObject(key) ?: return@forEach
+                prefs[homeConfigKey(pid)] = blob.toString()
             }
         }
     }

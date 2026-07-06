@@ -66,7 +66,7 @@ class BackupManager(
             val seal: ((String) -> JSONObject)? = key?.let { k -> { plain -> BackupCrypto.encrypt(k, plain) } }
 
             val root = JSONObject().apply {
-                put("version", 7) // v7: auto-refresh maps + default source (SOURCES); compat-mode pins (SETTINGS)
+                put("version", 8) // v8: home configs move with customizations; compat-mode pins (SETTINGS)
                 put("sections", JSONArray().apply { sections.forEach { put(it.name) } })
                 if (salt != null) put("crypto", BackupCrypto.cryptoBlock(salt))
                 if (Section.SOURCES in sections) {
@@ -82,6 +82,7 @@ class BackupManager(
                 }
                 if (Section.CUSTOMIZE in sections) {
                     put("customizations", JSONObject().apply { customize.exportAll().forEach { (k, v) -> put(k, v) } })
+                    put("homeConfigs", settings.exportHomeConfigs())
                 }
                 // Favorites / history / resume positions, exported with stable keys (see UserDataResolver).
                 val kinds = kindsFor(sections)
@@ -121,7 +122,10 @@ class BackupManager(
             val root = JSONObject(file.readText())
             val out = mutableSetOf<Section>()
             if (root.has("profiles") || root.has("sources")) out += Section.SOURCES
-            if (root.optJSONObject("customizations")?.keys()?.hasNext() == true) out += Section.CUSTOMIZE
+            if (
+                root.optJSONObject("customizations")?.keys()?.hasNext() == true ||
+                root.optJSONObject("homeConfigs")?.keys()?.hasNext() == true
+            ) out += Section.CUSTOMIZE
             if (root.optJSONObject("settings")?.keys()?.hasNext() == true) out += Section.SETTINGS
             root.optJSONArray("userData")?.let { arr ->
                 for (i in 0 until arr.length()) {
@@ -155,6 +159,7 @@ class BackupManager(
             val root = JSONObject(file.readText())
             val crypto = root.optJSONObject("crypto")
             val pass = backupPassword?.takeIf { it.isNotBlank() }
+            var existingProfileIds = profileDao.getAllOnce().map { it.id }.toSet()
 
             // Derive + validate the key up front, before any destructive write.
             val key = if (crypto != null && pass != null) {
@@ -191,6 +196,7 @@ class BackupManager(
                 val profileIds = profileDao.getAllOnce().map { it.id }.toSet()
                 profileIds.firstOrNull()?.let { settings.setActiveProfile(it) }
                 root.optJSONObject("startupModes")?.let { settings.importStartupModes(it, profileIds) }
+                existingProfileIds = profileIds
                 // Auto-refresh maps + default source: ids not present after restore are dropped,
                 // unknown enum values fall back to OFF. Absent keys (older backups) leave defaults.
                 val sourceIds = sourceDao.getAllOnce().map { it.id }.toSet()
@@ -207,6 +213,7 @@ class BackupManager(
                     customize.importAll(cust)
                     count += cust.size
                 }
+                root.optJSONObject("homeConfigs")?.let { settings.importHomeConfigs(it, existingProfileIds) }
             }
 
             // Favorites/history/progress: stashed as pending records — they attach automatically as
