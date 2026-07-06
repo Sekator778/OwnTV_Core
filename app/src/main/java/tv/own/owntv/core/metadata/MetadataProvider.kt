@@ -92,6 +92,8 @@ data class MovieDetails(
     val rating: Double?,
     val genres: List<String>,
     val cast: List<String>,
+    /** Best YouTube trailer video key from `videos` (official Trailer > Trailer > Teaser); null if none. */
+    val trailerKey: String?,
 )
 
 /** Per-episode TMDB details (`/tv/{id}/season/{n}/episode/{m}`). Its own still, plot, air date, rating. */
@@ -106,11 +108,16 @@ data class EpisodeDetails(
 /** Enrichment source abstraction. Only [TmdbProvider] exists today; fanart.tv could be added later. */
 interface MetadataProvider {
 
-    /** Search movies by cleaned [title] (+ optional [year]). Best matches first; empty on no match. */
-    suspend fun searchMovie(title: String, year: Int? = null): List<MetadataSearchResult>
+    /**
+     * Search movies by cleaned [title] (+ optional [year]). Best matches first.
+     * **Empty list = TMDB answered "no results"** (callers may negative-cache);
+     * **null = transport failure** (network down, rate-limited, proxy error) — callers must NOT
+     * negative-cache, so the lookup retries on the next open instead of being wrong for 7 days.
+     */
+    suspend fun searchMovie(title: String, year: Int? = null): List<MetadataSearchResult>?
 
-    /** Search TV shows by cleaned [title] (+ optional first-air [year]). */
-    suspend fun searchTv(title: String, year: Int? = null): List<MetadataSearchResult>
+    /** Search TV shows by cleaned [title] (+ optional first-air [year]). Same null-vs-empty contract as [searchMovie]. */
+    suspend fun searchTv(title: String, year: Int? = null): List<MetadataSearchResult>?
 
     /** Full details for a resolved movie id; null on network/parse failure. */
     suspend fun movieDetails(tmdbId: Int): MovieDetails?

@@ -74,7 +74,7 @@ import tv.own.owntv.core.database.entity.TvProviderProgramEntity
         SeriesFtsEntity::class,
         EpisodeFtsEntity::class,
     ],
-    version = 11, // v7: content_order (Move). v8: contentHash + browse/unique indexes. v9: EPG contentHash + natural key. v10: TMDB metadata cache. v11: movies/series rating-sort indexes
+    version = 12, // v7: content_order (Move). v8: contentHash + browse/unique indexes. v9: EPG contentHash + natural key. v10: TMDB metadata cache. v11: movies/series rating-sort indexes. v12: metadata_cache trailerKey
 
     exportSchema = true,
 )
@@ -323,6 +323,16 @@ abstract class OwnTVDatabase : RoomDatabase() {
                 db.execSQL("CREATE INDEX IF NOT EXISTS `index_movies_categoryId_rating_name` ON `movies` (`categoryId`, `rating`, `name`)")
                 db.execSQL("CREATE INDEX IF NOT EXISTS `index_series_sourceId_rating_name` ON `series` (`sourceId`, `rating`, `name`)")
                 db.execSQL("CREATE INDEX IF NOT EXISTS `index_series_categoryId_rating_name` ON `series` (`categoryId`, `rating`, `name`)")
+            }
+        }
+
+        /**
+         * v11 → v12: nullable `trailerKey` on the metadata_cache table (in-app YouTube trailers, plan §7.3).
+         * Additive column on a pure cache table; existing rows get NULL and simply re-fetch on next refresh.
+         */
+        val MIGRATION_11_12 = object : androidx.room.migration.Migration(11, 12) {
+            override fun migrate(db: androidx.sqlite.db.SupportSQLiteDatabase) {
+                db.execSQL("ALTER TABLE `metadata_cache` ADD COLUMN `trailerKey` TEXT")
             }
         }
 

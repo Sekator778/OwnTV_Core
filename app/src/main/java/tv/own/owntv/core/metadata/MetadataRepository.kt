@@ -20,6 +20,7 @@ class MetadataRepository(
     private val provider: MetadataProvider,
     private val dao: MetadataDao,
     private val settings: SettingsRepository,
+    private val overrideStore: MetadataOverrideStore,
 ) {
 
     /**
@@ -43,16 +44,19 @@ class MetadataRepository(
             }
         }
 
-        // 2. Normalize the messy provider title and search TMDB.
-        val norm = TitleNormalizer.normalize(movie.name)
-        val year = movie.year ?: norm.year
-        if (norm.query.isBlank()) return null
+        // 2. Build the search query: a user override (plan §11.2 U5b) wins over the auto-normalizer.
+        val q = resolveQuery(localKey, movie.name, movie.year)
+        if (q.query.isBlank()) return null
 
-        val hits = runCatching { provider.searchMovie(norm.query, year) }
+        // null = transport failure (offline / rate-limited / proxy down): bail WITHOUT negative-caching,
+        // so the title retries next time instead of showing no metadata for 7 days.
+        val hits = runCatching { provider.searchMovie(q.query, q.year) }
             .onFailure { Log.w(TAG, "resolveMovie search failed: ${it.message}") }
-            .getOrNull().orEmpty()
+            .getOrNull() ?: return null
 
-        val best = pickBest(norm.query, year, hits)
+        // An override is the user telling us the exact name → trust TMDB's top relevance hit directly
+        // (no fuzzy threshold) so a hand-typed title isn't rejected over punctuation/formatting differences.
+        val best: Scored? = if (q.isOverride) hits.firstOrNull()?.let { Scored(it, 1.0) } else pickBest(q.query, q.year, hits)
         if (best == null) {
             // Negative cache: remember "searched, no confident match" so we don't re-hammer on scroll.
             dao.upsertMatch(MetadataMatchEntity(localKey, TYPE_MOVIE, tmdbId = null, confidence = 0.0, updatedAt = now))
@@ -82,15 +86,16 @@ class MetadataRepository(
             }
         }
 
-        val norm = TitleNormalizer.normalize(series.name)
-        val year = series.year ?: norm.year
-        if (norm.query.isBlank()) return null
+        val q = resolveQuery(localKey, series.name, series.year)
+        if (q.query.isBlank()) return null
 
-        val hits = runCatching { provider.searchTv(norm.query, year) }
+        // Same as resolveMovie: null = transport failure → no negative-cache, retry next open.
+        val hits = runCatching { provider.searchTv(q.query, q.year) }
             .onFailure { Log.w(TAG, "resolveSeries search failed: ${it.message}") }
-            .getOrNull().orEmpty()
+            .getOrNull() ?: return null
 
-        val best = pickBest(norm.query, year, hits)
+        // An override is the user telling us the exact name → trust TMDB's top relevance hit directly.
+        val best: Scored? = if (q.isOverride) hits.firstOrNull()?.let { Scored(it, 1.0) } else pickBest(q.query, q.year, hits)
         if (best == null) {
             dao.upsertMatch(MetadataMatchEntity(localKey, TYPE_TV, tmdbId = null, confidence = 0.0, updatedAt = now))
             return null
@@ -111,13 +116,14 @@ class MetadataRepository(
                 backdropPath = details.backdropPath, rating = details.rating,
                 genresJson = details.genres.takeIf { it.isNotEmpty() }?.let { JSONArray(it).toString() },
                 castJson = details.cast.takeIf { it.isNotEmpty() }?.let { JSONArray(it).toString() },
+                trailerKey = details.trailerKey,
                 updatedAt = now,
             )
             fallback != null -> MetadataCacheEntity(
                 key = tvCacheKey(tmdbId), tmdbId = tmdbId, imdbId = null, type = TYPE_TV,
                 title = fallback.title, year = fallback.year, overview = fallback.overview,
                 posterPath = fallback.posterPath, backdropPath = null, rating = null,
-                genresJson = null, castJson = null, updatedAt = now,
+                genresJson = null, castJson = null, trailerKey = null, updatedAt = now,
             )
             else -> return dao.getCache(tvCacheKey(tmdbId))
         }
@@ -153,11 +159,99 @@ class MetadataRepository(
             posterPath = d.stillPath, // 16:9 still, rendered via MetadataImages.backdrop sizing
             backdropPath = d.stillPath,
             rating = d.rating,
-            genresJson = null, castJson = null, updatedAt = now,
+            genresJson = null, castJson = null, trailerKey = null, updatedAt = now,
         )
         dao.upsertCache(entity)
         return entity
     }
+
+    /**
+     * Clear a movie's TMDB match (negative OR positive) and its cached details so the next [resolveMovie]
+     * re-searches from scratch (plan §11.2 U5a — manual "Refetch TMDB details"). Does NOT resolve; the caller
+     * re-triggers [resolveMovie] afterwards.
+     */
+    suspend fun clearMovie(movie: MovieEntity) {
+        val localKey = movieLocalKey(movie)
+        dao.getMatch(localKey)?.tmdbId?.let { dao.deleteCache(cacheKey(it)) }
+        dao.deleteMatch(localKey)
+    }
+
+    /**
+     * Clear a series' match + cached show details (plan §11.2 U5a). Per-episode cache rows for the old tmdbId
+     * are left in place — they're orphaned but harmless (episode resolve looks them up by tmdbId, so stale
+     * rows under an old id are simply never read). Caller re-triggers [resolveSeries].
+     */
+    suspend fun clearSeries(series: tv.own.owntv.core.database.entity.SeriesEntity) {
+        val localKey = seriesLocalKey(series)
+        dao.getMatch(localKey)?.tmdbId?.let { dao.deleteCache(tvCacheKey(it)) }
+        dao.deleteMatch(localKey)
+    }
+
+    /**
+     * Clear an episode's cache AND its show's match + show cache (plan §11.2 U5a). Episodes inherit the show's
+     * match, so an episode whose show was negative-cached can only recover by clearing the show match too.
+     * Caller re-triggers [resolveEpisode].
+     */
+    suspend fun clearEpisode(
+        series: tv.own.owntv.core.database.entity.SeriesEntity,
+        episode: tv.own.owntv.core.database.entity.EpisodeEntity,
+    ) {
+        val localKey = seriesLocalKey(series)
+        dao.getMatch(localKey)?.tmdbId?.let { tid ->
+            dao.deleteCache(tvCacheKey(tid)) // show details
+            dao.deleteCache(episodeCacheKey(tid, episode.seasonNumber, episode.episodeNumber)) // this episode
+        }
+        dao.deleteMatch(localKey) // show match (negative OR positive)
+    }
+
+    // --- TMDB name overrides (plan §11.2 U5b) ---
+    // Stored in DataStore (no Room schema change) and keyed by the same stable local key as matching, so
+    // they survive re-sync. Setting/clearing also drops the cached match+details so the next resolve
+    // re-searches under the new query (caller bumps the meta-refresh tick to trigger it).
+
+    /** The saved override for this movie, if any (used to prefill the dialog). */
+    suspend fun movieOverride(movie: MovieEntity): TmdbOverride? = overrideStore.get(movieLocalKey(movie))
+
+    /** The saved override for this series, if any. */
+    suspend fun seriesOverride(series: tv.own.owntv.core.database.entity.SeriesEntity): TmdbOverride? =
+        overrideStore.get(seriesLocalKey(series))
+
+    /** Save a movie's override and drop its cached match so the next resolve uses the new query. */
+    suspend fun setMovieOverride(movie: MovieEntity, title: String, year: Int?) {
+        overrideStore.set(movieLocalKey(movie), title, year)
+        clearMovie(movie)
+    }
+
+    /** Save a series' override and drop its cached match so the next resolve uses the new query. */
+    suspend fun setSeriesOverride(series: tv.own.owntv.core.database.entity.SeriesEntity, title: String, year: Int?) {
+        overrideStore.set(seriesLocalKey(series), title, year)
+        clearSeries(series)
+    }
+
+    /** Remove a movie's override and drop its cached match so the next resolve re-normalizes the provider title. */
+    suspend fun clearMovieOverride(movie: MovieEntity) {
+        overrideStore.clear(movieLocalKey(movie))
+        clearMovie(movie)
+    }
+
+    /** Remove a series' override and drop its cached match so the next resolve re-normalizes the provider title. */
+    suspend fun clearSeriesOverride(series: tv.own.owntv.core.database.entity.SeriesEntity) {
+        overrideStore.clear(seriesLocalKey(series))
+        clearSeries(series)
+    }
+
+    /**
+     * Build the TMDB search query + year for [localKey]: a user override (§11.2 U5b) wins over the
+     * auto-normalized provider title. [ResolvedQuery.isOverride] lets the caller bypass the fuzzy
+     * threshold and trust TMDB's top relevance hit when the user hand-typed the name.
+     */
+    private suspend fun resolveQuery(localKey: String, rawName: String, providerYear: Int?): ResolvedQuery {
+        overrideStore.get(localKey)?.let { return ResolvedQuery(it.title, it.year ?: providerYear, isOverride = true) }
+        val norm = TitleNormalizer.normalize(rawName)
+        return ResolvedQuery(norm.query, providerYear ?: norm.year, isOverride = false)
+    }
+
+    private data class ResolvedQuery(val query: String, val year: Int?, val isOverride: Boolean)
 
     /** Fetch full details for [tmdbId] and cache them; falls back to the search hit if details fail. */
     private suspend fun fetchAndCache(
@@ -182,13 +276,14 @@ class MetadataRepository(
                 rating = details.rating,
                 genresJson = details.genres.takeIf { it.isNotEmpty() }?.let { JSONArray(it).toString() },
                 castJson = details.cast.takeIf { it.isNotEmpty() }?.let { JSONArray(it).toString() },
+                trailerKey = details.trailerKey,
                 updatedAt = now,
             )
             fallback != null -> MetadataCacheEntity(
                 key = cacheKey(tmdbId), tmdbId = tmdbId, imdbId = null, type = TYPE_MOVIE,
                 title = fallback.title, year = fallback.year, overview = fallback.overview,
                 posterPath = fallback.posterPath, backdropPath = null, rating = null,
-                genresJson = null, castJson = null, updatedAt = now,
+                genresJson = null, castJson = null, trailerKey = null, updatedAt = now,
             )
             else -> return dao.getCache(cacheKey(tmdbId)) // nothing to write; return existing if any
         }

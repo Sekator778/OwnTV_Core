@@ -31,6 +31,7 @@ data class MetadataCacheEntity(
     val rating: Double?,
     val genresJson: String?,  // JSON array of genre names
     val castJson: String?,    // JSON array of top cast names
+    val trailerKey: String?,  // YouTube video key for the in-app trailer player (plan §7.3); null = no trailer
     val updatedAt: Long,      // for TTL / manual refresh
 )
 

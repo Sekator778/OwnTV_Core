@@ -32,13 +32,13 @@ class TmdbProvider(
         }
     }
 
-    override suspend fun searchMovie(title: String, year: Int?): List<MetadataSearchResult> =
+    override suspend fun searchMovie(title: String, year: Int?): List<MetadataSearchResult>? =
         search(MetadataType.MOVIE, title, year)
 
-    override suspend fun searchTv(title: String, year: Int?): List<MetadataSearchResult> =
+    override suspend fun searchTv(title: String, year: Int?): List<MetadataSearchResult>? =
         search(MetadataType.TV, title, year)
 
-    private suspend fun search(type: MetadataType, title: String, year: Int?): List<MetadataSearchResult> {
+    private suspend fun search(type: MetadataType, title: String, year: Int?): List<MetadataSearchResult>? {
         val query = title.trim()
         if (query.isEmpty()) return emptyList()
         val ep = resolveEndpoint()
@@ -55,9 +55,11 @@ class TmdbProvider(
             append("&include_adult=false")
             ep.apiKey?.takeIf { it.isNotBlank() }?.let { append("&api_key=").append(enc(it)) }
         }
+        // Transport failure (network down, HTTP 429 rate limit, proxy/Worker error) → null, NOT empty:
+        // an empty list means "TMDB said no results" and gets negative-cached for 7 days upstream.
         val json = runCatching { http.getText(url) }
             .onFailure { Log.w(TAG, "TMDB search failed type=$type: ${it.message}") }
-            .getOrNull() ?: return emptyList()
+            .getOrNull() ?: return null
 
         return parseResults(type, json)
     }
@@ -67,7 +69,7 @@ class TmdbProvider(
         val ep = resolveEndpoint()
         val url = buildString {
             append(ep.baseUrl).append("/3/movie/").append(tmdbId)
-            append("?append_to_response=credits,external_ids")
+            append("?append_to_response=credits,external_ids,videos")
             ep.apiKey?.takeIf { it.isNotBlank() }?.let { append("&api_key=").append(enc(it)) }
         }
         val json = runCatching { http.getText(url) }
@@ -81,7 +83,7 @@ class TmdbProvider(
         val ep = resolveEndpoint()
         val url = buildString {
             append(ep.baseUrl).append("/3/tv/").append(tmdbId)
-            append("?append_to_response=credits,external_ids")
+            append("?append_to_response=credits,external_ids,videos")
             ep.apiKey?.takeIf { it.isNotBlank() }?.let { append("&api_key=").append(enc(it)) }
         }
         val json = runCatching { http.getText(url) }
@@ -137,6 +139,7 @@ class TmdbProvider(
             rating = o.optDouble("vote_average", 0.0).takeIf { it > 0.0 },
             genres = genres,
             cast = cast,
+            trailerKey = parseTrailerKey(o),
         )
     }
 
@@ -164,7 +167,33 @@ class TmdbProvider(
             rating = o.optDouble("vote_average", 0.0).takeIf { it > 0.0 },
             genres = genres,
             cast = cast,
+            trailerKey = parseTrailerKey(o),
         )
+    }
+
+    /**
+     * Best YouTube trailer key from an `append_to_response=videos` payload (plan §7.3):
+     * official Trailer > any Trailer > Teaser. Only `site == "YouTube"` entries qualify
+     * (the in-app player is a YouTube IFrame wrapper). Null when the title has no usable video.
+     */
+    private fun parseTrailerKey(details: JSONObject): String? {
+        val arr = details.optJSONObject("videos")?.optJSONArray("results") ?: return null
+        var trailer: String? = null
+        var officialTrailer: String? = null
+        var teaser: String? = null
+        for (i in 0 until arr.length()) {
+            val v = arr.optJSONObject(i) ?: continue
+            if (!v.optString("site").equals("YouTube", ignoreCase = true)) continue
+            val key = v.optString("key").takeIf { it.isNotBlank() } ?: continue
+            when (v.optString("type")) {
+                "Trailer" -> {
+                    if (v.optBoolean("official") && officialTrailer == null) officialTrailer = key
+                    if (trailer == null) trailer = key
+                }
+                "Teaser" -> if (teaser == null) teaser = key
+            }
+        }
+        return officialTrailer ?: trailer ?: teaser
     }
 
     private fun parseResults(type: MetadataType, body: String): List<MetadataSearchResult> {
