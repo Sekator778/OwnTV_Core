@@ -13,7 +13,18 @@ enum class HomeRow(
     FAVORITE_CHANNELS("Favourite Channels", "Your favourited live channels"),
     CONTINUE_MOVIES("Continue Watching Movies", "Movies with a saved position"),
     CONTINUE_SERIES("Continue Watching Series", "Episodes to resume or play next"),
-    GUIDE_SLICE("On Now", "A mini TV Guide for your recent channels"),
+}
+
+enum class HomeLiveRowMode(
+    val label: String,
+) {
+    CARDS("Cards"),
+    ON_NOW("On Now");
+
+    fun toggled(): HomeLiveRowMode = when (this) {
+        CARDS -> ON_NOW
+        ON_NOW -> CARDS
+    }
 }
 
 enum class HeroKind {
@@ -26,6 +37,8 @@ data class HomeConfig(
     val heroIncludeLive: Boolean = true,
     val heroIncludeMovies: Boolean = true,
     val heroIncludeSeries: Boolean = true,
+    val recentLiveMode: HomeLiveRowMode = HomeLiveRowMode.CARDS,
+    val favoriteLiveMode: HomeLiveRowMode = HomeLiveRowMode.ON_NOW,
 ) {
     val visibleOrder: List<HomeRow>
         get() = order.filter { it.implemented && it !in hidden }
@@ -39,6 +52,8 @@ data class HomeConfig(
         put("heroLive", heroIncludeLive)
         put("heroMovies", heroIncludeMovies)
         put("heroSeries", heroIncludeSeries)
+        put("recentLiveMode", recentLiveMode.name)
+        put("favoriteLiveMode", favoriteLiveMode.name)
     }
 
     companion object {
@@ -55,6 +70,8 @@ data class HomeConfig(
                 heroIncludeLive = readBool(obj, "heroLive", "heroIncludeLive", default = true),
                 heroIncludeMovies = readBool(obj, "heroMovies", "heroIncludeMovies", default = true),
                 heroIncludeSeries = readBool(obj, "heroSeries", "heroIncludeSeries", default = true),
+                recentLiveMode = readLiveMode(obj, "recentLiveMode", HomeLiveRowMode.CARDS),
+                favoriteLiveMode = readLiveMode(obj, "favoriteLiveMode", HomeLiveRowMode.ON_NOW),
             )
         }
 
@@ -64,6 +81,9 @@ data class HomeConfig(
                 obj.has(fallback) -> obj.optBoolean(fallback, default)
                 else -> default
             }
+
+        private fun readLiveMode(obj: JSONObject, key: String, default: HomeLiveRowMode): HomeLiveRowMode =
+            runCatching { HomeLiveRowMode.valueOf(obj.optString(key)) }.getOrDefault(default)
     }
 }
 
