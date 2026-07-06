@@ -11,6 +11,10 @@ object UiZoom {
     const val DEFAULT = 100
     const val STEP = 5
 
+    /** Below this, low-RAM devices (2 GB sticks) can run out of memory from the extra on-screen
+     *  items — the zoom dialog shows an accept-the-risk warning before stepping under it (#51). */
+    const val LOW_RAM_WARN = 85
+
     fun clamp(percent: Int): Int = percent.coerceIn(MIN, MAX)
     fun label(percent: Int): String = "$percent%"
     fun factor(percent: Int): Float = percent / 100f
