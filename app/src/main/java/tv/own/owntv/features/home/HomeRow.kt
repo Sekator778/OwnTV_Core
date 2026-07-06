@@ -9,7 +9,7 @@ enum class HomeRow(
     val implemented: Boolean = true,
 ) {
     HERO("Keep Watching", "The large preview row at the top"),
-    RECENT_CHANNELS("Recently Watched TV", "Live channels you tuned recently"),
+    RECENT_CHANNELS("Recent Channels", "Live channels you tuned recently"),
     FAVORITE_CHANNELS("Favourite Channels", "Your favourited live channels"),
     CONTINUE_MOVIES("Continue Watching Movies", "Movies with a saved position"),
     CONTINUE_SERIES("Continue Watching Series", "Episodes to resume or play next"),
@@ -33,7 +33,7 @@ enum class HeroKind {
 
 data class HomeConfig(
     val order: List<HomeRow> = HomeRow.entries.toList(),
-    val hidden: Set<HomeRow> = emptySet(),
+    val hidden: Set<HomeRow> = setOf(HomeRow.RECENT_CHANNELS),
     val heroIncludeLive: Boolean = true,
     val heroIncludeMovies: Boolean = true,
     val heroIncludeSeries: Boolean = true,
@@ -61,9 +61,8 @@ data class HomeConfig(
             if (raw.isNullOrBlank()) return HomeConfig()
             val obj = runCatching { JSONObject(raw) }.getOrNull() ?: return HomeConfig()
             val storedOrder = obj.optJSONArray("order").toHomeRows()
-            val hidden = obj.optJSONArray("hidden")
-                .toHomeRows()
-                .toSet()
+            val hidden = if (obj.has("hidden")) obj.optJSONArray("hidden").toHomeRows().toSet()
+                else HomeConfig().hidden
             return HomeConfig(
                 order = mergeOrder(storedOrder),
                 hidden = hidden,
