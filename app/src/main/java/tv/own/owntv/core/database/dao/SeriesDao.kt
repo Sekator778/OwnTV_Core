@@ -125,6 +125,13 @@ interface SeriesDao {
     @Query("SELECT COUNT(*) FROM series WHERE sourceId IN (:sourceIds)")
     fun countAll(sourceIds: List<Long>): Flow<Int>
 
+    /** "All Series" count with hidden categories excluded (matches the filtered ALL list). */
+    @Query(
+        "SELECT COUNT(*) FROM series WHERE sourceId IN (:sourceIds) " +
+            "AND (categoryId IS NULL OR categoryId NOT IN (:excludedCategoryIds))",
+    )
+    fun countAllExcluding(sourceIds: List<Long>, excludedCategoryIds: List<Long>): Flow<Int>
+
     @Query("SELECT COUNT(*) FROM series WHERE sourceId = :sourceId")
     suspend fun countForSourceOnce(sourceId: Long): Int
 

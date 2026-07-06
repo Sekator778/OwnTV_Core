@@ -107,6 +107,13 @@ interface MovieDao {
     @Query("SELECT COUNT(*) FROM movies WHERE sourceId IN (:sourceIds)")
     fun countAll(sourceIds: List<Long>): Flow<Int>
 
+    /** "All Movies" count with hidden categories excluded (matches the filtered ALL list). */
+    @Query(
+        "SELECT COUNT(*) FROM movies WHERE sourceId IN (:sourceIds) " +
+            "AND (categoryId IS NULL OR categoryId NOT IN (:excludedCategoryIds))",
+    )
+    fun countAllExcluding(sourceIds: List<Long>, excludedCategoryIds: List<Long>): Flow<Int>
+
     @Query("SELECT COUNT(*) FROM movies WHERE sourceId = :sourceId")
     suspend fun countForSourceOnce(sourceId: Long): Int
 

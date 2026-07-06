@@ -14,6 +14,8 @@ import org.json.JSONArray
 import org.json.JSONObject
 import tv.own.owntv.core.database.entity.CategoryEntity
 import tv.own.owntv.core.database.entity.ChannelEntity
+import tv.own.owntv.core.database.entity.MovieEntity
+import tv.own.owntv.core.database.entity.SeriesEntity
 import tv.own.owntv.core.model.MediaType
 
 private val Context.customizeStore: DataStore<Preferences> by preferencesDataStore(name = "owntv_customizations")
@@ -26,6 +28,8 @@ private val Context.customizeStore: DataStore<Preferences> by preferencesDataSto
 object CustomizeKeys {
     fun category(c: CategoryEntity): String = "${c.sourceId}:${c.remoteId ?: c.name}"
     fun channel(ch: ChannelEntity): String = "${ch.sourceId}:${ch.remoteId ?: ch.name}"
+    fun movie(m: MovieEntity): String = "${m.sourceId}:${m.remoteId ?: m.name}"
+    fun series(s: SeriesEntity): String = "${s.sourceId}:${s.remoteId ?: s.name}"
 }
 
 /** One browse section's customizations (categories + items) for a profile. */

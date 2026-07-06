@@ -141,6 +141,21 @@ class SettingsRepository(private val context: Context) {
         context.dataStore.edit { it[stringPreferencesKey("startup_mode_$profileId")] = mode.name }
     }
 
+    // --- Customize & Hidden Items: optional per-profile PIN lock on the screen (so hidden items can't
+    //     be unhidden by someone else). Deliberately NOT exported in backups — a lock code shouldn't
+    //     travel in a readable backup file, and a restored backup shouldn't lock anyone out. ---
+    fun customizePin(profileId: Long): Flow<String?> = context.dataStore.data.map { prefs ->
+        prefs[stringPreferencesKey("customize_pin_$profileId")]?.takeIf { it.isNotBlank() }
+    }
+
+    /** null/blank clears the lock. */
+    suspend fun setCustomizePin(profileId: Long, pin: String?) {
+        context.dataStore.edit { prefs ->
+            val k = stringPreferencesKey("customize_pin_$profileId")
+            if (pin.isNullOrBlank()) prefs.remove(k) else prefs[k] = pin.trim()
+        }
+    }
+
     // --- Startup: auto-open the last-watched live channel (default OFF) — legacy, now migrated to startupMode ---
     val resumeLastChannel: Flow<Boolean> = context.dataStore.data.map { it[Keys.RESUME_LAST_CHANNEL] ?: false }
     suspend fun setResumeLastChannel(enabled: Boolean) {
@@ -628,6 +643,10 @@ class SettingsRepository(private val context: Context) {
         // TMDB metadata: source mode + self-host URL. The user's own TMDB API key (Keys.TMDB_API_KEY) is a
         // secret and is deliberately NOT backed up in plaintext (same policy as the proxy password).
         Keys.METADATA_SERVER_URL, Keys.METADATA_MODE,
+        // Download folder. Backed up so a same-device reinstall keeps the chosen folder; on a different
+        // device a path that no longer exists is harmless — StorageAccess.resolveRoot falls back to app
+        // storage, so a stale restore never breaks downloads.
+        Keys.DOWNLOAD_ROOT,
     )
     private val backupIntKeys = listOf(Keys.UI_ZOOM_PCT, Keys.AUDIO_DELAY_MS, Keys.CATCHUP_OFFSET_MIN, Keys.PROXY_PORT)
     private val backupBoolKeys = listOf(

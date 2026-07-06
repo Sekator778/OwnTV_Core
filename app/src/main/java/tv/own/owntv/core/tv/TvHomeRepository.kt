@@ -218,6 +218,11 @@ class TvHomeRepository(
 
         val groupId = launcherPlanner.movieStableKeyHash(movie)
         val existing = tvProviderProgramDao.find(profileId, TvProviderSurface.WATCH_NEXT, MediaType.MOVIE, groupId)
+        if (CustomizeKeys.movie(movie) in customize.observe(profileId, MediaType.MOVIE).first().hiddenItems) {
+            logD("syncMovie skip user-hidden profile=$profileId movieId=$movieId groupId=$groupId")
+            deleteExisting(profileId, existing, MediaType.MOVIE, groupId)
+            return
+        }
         val eligible = launcherPlanner.eligibleForWatchNext(positionMs, durationMs)
         logD(
             "syncMovie profile=$profileId movieId=$movieId groupId=$groupId existing=${existing?.providerProgramId ?: -1} " +
@@ -256,6 +261,11 @@ class TvHomeRepository(
         val isComplete = launcherPlanner.isCompleted(positionMs, durationMs)
         val currentGroupId = launcherPlanner.episodeStableKeyHash(show, episode)
         val existingCurrent = tvProviderProgramDao.find(profileId, TvProviderSurface.WATCH_NEXT, MediaType.EPISODE, currentGroupId)
+        if (CustomizeKeys.series(show) in customize.observe(profileId, MediaType.SERIES).first().hiddenItems) {
+            logD("syncEpisode skip user-hidden profile=$profileId episodeId=$episodeId showId=${show.id}")
+            deleteExisting(profileId, existingCurrent, MediaType.EPISODE, currentGroupId)
+            return
+        }
         val eligible = launcherPlanner.eligibleForWatchNext(positionMs, durationMs)
         logD(
             "syncEpisode profile=$profileId episodeId=$episodeId showId=${show.id} groupId=$currentGroupId existing=${existingCurrent?.providerProgramId ?: -1} " +
