@@ -274,4 +274,17 @@ interface ChannelDao {
             "WHERE h.profileId = :profileId ORDER BY h.watchedAt DESC LIMIT :limit",
     )
     fun recentlyWatchedWithTimestamp(profileId: Long, limit: Int): Flow<List<ChannelWithWatchedAt>>
+
+    /** Recently-watched live channels, filtered to the active playlist ids before the LIMIT is applied. */
+    @Query(
+        "SELECT c.*, h.watchedAt FROM channels c " +
+            "INNER JOIN watch_history h ON h.itemId = c.id AND h.mediaType = 'LIVE' " +
+            "WHERE h.profileId = :profileId AND c.sourceId IN (:sourceIds) " +
+            "ORDER BY h.watchedAt DESC LIMIT :limit",
+    )
+    fun recentlyWatchedWithTimestampFiltered(
+        profileId: Long,
+        sourceIds: List<Long>,
+        limit: Int,
+    ): Flow<List<ChannelWithWatchedAt>>
 }
