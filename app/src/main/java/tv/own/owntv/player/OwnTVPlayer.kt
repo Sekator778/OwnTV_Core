@@ -188,6 +188,10 @@ class OwnTVPlayer(
     // per item, before the error shows — so the user no longer has to flip the global hardware-decoding
     // setting off. Per-item only; never changes the user's setting. Reset on each genuinely-new item.
     @Volatile private var forceSoftwareThisLoad = false
+    /** CEA-608/708 CC text is decoder side data the hardware decoder never surfaces, so the synthetic
+     *  CC track stays empty under hwdec (#57). While a CC track is selected we decode in software
+     *  (≤1080p, GL render path); cleared on deselect / next load. */
+    @Volatile private var ccSoftwareOverride = false
     // A live Xtream stream that won't start on the default `.ts` (MPEG-TS) endpoint is retried once on
     // the provider's `.m3u8` (HLS) variant before erroring — covers the rare panel that only serves HLS.
     // Per-item; reset on each genuinely-new item.
@@ -207,7 +211,15 @@ class OwnTVPlayer(
 
     /** Hardware decoding effectively in use right now — the global setting, minus a per-item override
      *  forced on after the hardware decoder failed to start a stream. */
-    private fun hwDecodingActive(): Boolean = hwDecoding && !forceSoftwareThisLoad
+    private fun hwDecodingActive(): Boolean = hwDecoding && !forceSoftwareThisLoad && !ccSoftwareOverride
+
+    /** Flip the CC software-decode override and reinit the decoder/output if it changed. */
+    private fun setCcSoftwareOverride(on: Boolean) {
+        if (ccSoftwareOverride == on) return
+        ccSoftwareOverride = on
+        android.util.Log.i(TAG, "CC software-decode override ${if (on) "ON" else "OFF"} (height=${currentHeightPx}px)")
+        if (initialized) mpvAsync { applyRenderConfig() }
+    }
 
     /** Silent-retry budget per content type: Live TV is worth retrying (cold-boot decoder lag, server
      *  hiccups). VOD gets 2 — most failures are bad links, but a back-to-back load (e.g. auto-play to the
@@ -1268,8 +1280,9 @@ class OwnTVPlayer(
             // the user's hardware-decoding setting. (Software renders via GL, which is broken on the
             // emulator, so skip the override there.)
             val wantSoftware = preferSoftware && !glUnsupported
-            val needReconfig = forceSoftwareThisLoad != wantSoftware
+            val needReconfig = forceSoftwareThisLoad != wantSoftware || ccSoftwareOverride
             forceSoftwareThisLoad = wantSoftware
+            ccSoftwareOverride = false // CC override is per-selection; a new item starts per the setting
             if (needReconfig) mpvAsync { applyRenderConfig() }
         }
         // Reset the decode watchdog + per-file video state.
@@ -1898,6 +1911,15 @@ class OwnTVPlayer(
             setPropertyInt("sid", mpvId)
             setPropertyString("sub-visibility", "yes") // ensure subs aren't hidden
         }
+        // CEA-608/708 CC: text only flows from the SOFTWARE decoder's side data (#57), so decode in
+        // software while this track is selected — but only where that's viable (≤1080p, GL works).
+        val isCc = track?.codec?.lowercase()?.startsWith("eia") == true
+        if (isCc && !glUnsupported && currentHeightPx in 1..1080) {
+            setCcSoftwareOverride(true)
+        } else {
+            if (isCc) android.util.Log.w(TAG, "CC track selected but software decode not viable (height=${currentHeightPx}px, gl=${!glUnsupported}) — captions may stay empty")
+            setCcSoftwareOverride(false)
+        }
         _subTrackList.value = _subTrackList.value.map { it.copy(selected = it.mpvId == mpvId) }
     }
 
@@ -1908,6 +1930,7 @@ class OwnTVPlayer(
             return
         }
         if (exoActive) { revertToMpv(); return } // turning subs off ends the image-sub handoff
+        setCcSoftwareOverride(false) // CC off → back to the configured (hardware) decode path
         if (initialized) mpvAsync { setPropertyString("sid", "no") }
         _subTrackList.value = _subTrackList.value.map { it.copy(selected = false) }
     }

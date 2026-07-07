@@ -681,6 +681,12 @@ class LivePreviewEngine(
         }
         audioTrackList = audio; audioSelections = aSel; _audioCount.value = audio.size
         textTrackList = text; textSelections = tSel; _subCount.value = text.size
+        if (tv.own.owntv.BuildConfig.DEBUG) {
+            LiveDiagnosticsLog.event(
+                "tracks: audio=${audio.size} text=${text.size}" +
+                    text.joinToString(prefix = " [", postfix = "]") { it.label },
+            )
+        }
         // Audio exists but ExoPlayer can decode none of it → the VM will route this stream to mpv.
         val anySupportedAudio = tracks.groups.any { g ->
             g.type == androidx.media3.common.C.TRACK_TYPE_AUDIO && (0 until g.length).any { g.isTrackSupported(it) }
@@ -695,11 +701,30 @@ class LivePreviewEngine(
     private var cachedHttpDataSource: OkHttpDataSource.Factory? = null
     private var cachedDefaultFactory: DefaultMediaSourceFactory? = null
     private var cachedHlsCcFactory: HlsMediaSource.Factory? = null
-
     private fun httpDataSourceFor(ua: String): OkHttpDataSource.Factory {
         if (ua != dataSourceForUa || cachedHttpDataSource == null) {
             cachedHttpDataSource = OkHttpDataSource.Factory(okHttpClient).setUserAgent(ua)
-            cachedDefaultFactory = DefaultMediaSourceFactory(cachedHttpDataSource!!)
+            // Raw MPEG-TS (typical Xtream live ".ts"): providers rarely declare caption descriptors in
+            // the PMT, so the stock TS extractor never exposes the embedded CEA-608 track (#57).
+            // FLAG_OVERRIDE_CAPTION_DESCRIPTORS makes it expose the standard CC1 track regardless; the
+            // flag only affects TS — every other format sniffs exactly as before. Passed into the same
+            // DefaultMediaSourceFactory that has always handled non-HLS live, so routing is unchanged.
+            // The flag alone is NOT enough: DefaultExtractorsFactory passes an empty subtitle-format
+            // list to DefaultTsPayloadReaderFactory, and with the override flag that empty list is
+            // returned verbatim (= zero CC tracks, even declared ones). The CEA-608 CC1 format must be
+            // supplied explicitly via setTsSubtitleFormats.
+            val cc1 = androidx.media3.common.Format.Builder()
+                .setSampleMimeType(androidx.media3.common.MimeTypes.APPLICATION_CEA608)
+                .setAccessibilityChannel(1) // CC1 — the standard primary caption channel
+                .build()
+            cachedDefaultFactory = DefaultMediaSourceFactory(
+                cachedHttpDataSource!!,
+                androidx.media3.extractor.DefaultExtractorsFactory()
+                    .setTsExtractorFlags(
+                        androidx.media3.extractor.ts.DefaultTsPayloadReaderFactory.FLAG_OVERRIDE_CAPTION_DESCRIPTORS,
+                    )
+                    .setTsSubtitleFormats(listOf(cc1)),
+            )
             cachedHlsCcFactory = HlsMediaSource.Factory(cachedHttpDataSource!!).setExtractorFactory(DefaultHlsExtractorFactory(0, true))
             dataSourceForUa = ua
         }

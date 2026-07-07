@@ -75,6 +75,7 @@ class BackupManager(
                     put("links", JSONArray().apply { sourceDao.allLinks().forEach { put(JSONObject().put("profileId", it.profileId).put("sourceId", it.sourceId)) } })
                     put("epgSources", epgSources.exportJson()) // standalone EPG feeds ride with sources
                     put("startupModes", settings.exportStartupModes()) // per-profile landing, keyed by profile id
+                    put("customizePins", settings.exportCustomizePins()) // per-profile Customize PIN lock (optional block)
                     // Per-source auto-refresh selections + default source, keyed by the preserved ids.
                     put("playlistAutoRefresh", settings.exportPlaylistAutoRefresh())
                     put("epgAutoRefresh", settings.exportEpgAutoRefresh())
@@ -191,6 +192,7 @@ class BackupManager(
                 val profileIds = profileDao.getAllOnce().map { it.id }.toSet()
                 profileIds.firstOrNull()?.let { settings.setActiveProfile(it) }
                 root.optJSONObject("startupModes")?.let { settings.importStartupModes(it, profileIds) }
+                root.optJSONObject("customizePins")?.let { settings.importCustomizePins(it, profileIds) }
                 // Auto-refresh maps + default source: ids not present after restore are dropped,
                 // unknown enum values fall back to OFF. Absent keys (older backups) leave defaults.
                 val sourceIds = sourceDao.getAllOnce().map { it.id }.toSet()

@@ -89,6 +89,7 @@ class SettingsRepository(private val context: Context) {
         val VOD_PREFER_EXO = booleanPreferencesKey("vod_prefer_exo")
         val SURROUND_SOUND = booleanPreferencesKey("surround_sound")
         val AUTO_PLAY_NEXT = booleanPreferencesKey("auto_play_next")
+        val EXTERNAL_PLAYER = booleanPreferencesKey("external_player")
         val DEFAULT_ZOOM = stringPreferencesKey("default_zoom")
         val SUB_SCALE = floatPreferencesKey("sub_scale")
         val AUDIO_DELAY_MS = intPreferencesKey("audio_delay_ms")
@@ -117,6 +118,7 @@ class SettingsRepository(private val context: Context) {
         // Weather chip: show/hide + manual location override (blank = auto-detect from public IP).
         val WEATHER_ENABLED = booleanPreferencesKey("weather_enabled")
         val WEATHER_LOCATION = stringPreferencesKey("weather_location")
+        val WEATHER_FAHRENHEIT = booleanPreferencesKey("weather_fahrenheit")
         // TMDB metadata enrichment (see extras/future-plan/tmdb-metadata-plan.md). Master toggle + the two
         // advanced tiers (own key / self-host URL). Blank tier fields = use the default caching Worker.
         val METADATA_ENABLED = booleanPreferencesKey("metadata_enabled") // legacy; migrated to METADATA_MODE
@@ -196,6 +198,13 @@ class SettingsRepository(private val context: Context) {
 
     suspend fun setWeatherLocation(location: String) {
         context.dataStore.edit { it[Keys.WEATHER_LOCATION] = location.trim() }
+    }
+
+    /** Show the weather temperature in Fahrenheit instead of Celsius (default °C). */
+    val weatherFahrenheit: Flow<Boolean> = context.dataStore.data.map { it[Keys.WEATHER_FAHRENHEIT] ?: false }
+
+    suspend fun setWeatherFahrenheit(fahrenheit: Boolean) {
+        context.dataStore.edit { it[Keys.WEATHER_FAHRENHEIT] = fahrenheit }
     }
 
     // --- TMDB metadata enrichment (plan §4) ---
@@ -365,6 +374,14 @@ class SettingsRepository(private val context: Context) {
 
     suspend fun setVodPreferExo(enabled: Boolean) {
         context.dataStore.edit { it[Keys.VOD_PREFER_EXO] = enabled }
+    }
+
+    /** Hand movies, series, and downloads to an external player (VLC, MX Player) instead of the
+     *  in-app engine. Off by default. Live TV is never routed externally. */
+    val externalPlayer: Flow<Boolean> = context.dataStore.data.map { it[Keys.EXTERNAL_PLAYER] ?: false }
+
+    suspend fun setExternalPlayer(enabled: Boolean) {
+        context.dataStore.edit { it[Keys.EXTERNAL_PLAYER] = enabled }
     }
 
     /** Surround sound (**off by default — opt-in**). Most users are on TV speakers / 2.0 soundbars, and
@@ -651,8 +668,8 @@ class SettingsRepository(private val context: Context) {
     private val backupIntKeys = listOf(Keys.UI_ZOOM_PCT, Keys.AUDIO_DELAY_MS, Keys.CATCHUP_OFFSET_MIN, Keys.PROXY_PORT)
     private val backupBoolKeys = listOf(
         Keys.LIVE_PREVIEW, Keys.LIVE_PREVIEW_AUDIO, Keys.HDR_ENABLED, Keys.ANDROID_TV_HOME, Keys.HW_DECODING,
-        Keys.VOD_PREFER_EXO, Keys.UPDATE_CHECK_ON_START, Keys.SURROUND_SOUND, Keys.AUTO_PLAY_NEXT, Keys.PROXY_ENABLED,
-        Keys.WEATHER_ENABLED, Keys.RESUME_LAST_CHANNEL, Keys.METADATA_ENABLED,
+        Keys.VOD_PREFER_EXO, Keys.EXTERNAL_PLAYER, Keys.UPDATE_CHECK_ON_START, Keys.SURROUND_SOUND, Keys.AUTO_PLAY_NEXT, Keys.PROXY_ENABLED,
+        Keys.WEATHER_ENABLED, Keys.WEATHER_FAHRENHEIT, Keys.RESUME_LAST_CHANNEL, Keys.METADATA_ENABLED,
     )
     private val backupFloatKeys = listOf(Keys.SUB_SCALE)
 
@@ -672,6 +689,32 @@ class SettingsRepository(private val context: Context) {
             backupIntKeys.forEach { k -> if (o.has(k.name)) prefs[k] = o.getInt(k.name) }
             backupBoolKeys.forEach { k -> if (o.has(k.name)) prefs[k] = o.getBoolean(k.name) }
             backupFloatKeys.forEach { k -> if (o.has(k.name)) prefs[k] = o.getDouble(k.name).toFloat() }
+        }
+    }
+
+    // --- Backup: per-profile Customize PIN lock (dynamic "customize_pin_<id>" keys) ---
+
+    /** Exports all per-profile Customize PINs as { "<profileId>": "<pin>" }. */
+    suspend fun exportCustomizePins(): org.json.JSONObject {
+        val prefix = "customize_pin_"
+        val out = org.json.JSONObject()
+        context.dataStore.data.first().asMap().forEach { (k, v) ->
+            if (k.name.startsWith(prefix) && v is String && v.isNotBlank()) {
+                out.put(k.name.removePrefix(prefix), v)
+            }
+        }
+        return out
+    }
+
+    /** Restores Customize PINs only for profile ids in [existingProfileIds] (others are dropped safely). */
+    suspend fun importCustomizePins(o: org.json.JSONObject, existingProfileIds: Set<Long>) {
+        context.dataStore.edit { prefs ->
+            o.keys().forEach { key ->
+                val pid = key.toLongOrNull() ?: return@forEach
+                if (pid !in existingProfileIds) return@forEach
+                val pin = o.optString(key).takeIf { it.isNotEmpty() } ?: return@forEach
+                prefs[stringPreferencesKey("customize_pin_$pid")] = pin
+            }
         }
     }
 
