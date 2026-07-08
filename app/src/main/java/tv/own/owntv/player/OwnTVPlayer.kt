@@ -479,6 +479,18 @@ class OwnTVPlayer(
     private val _nav = MutableStateFlow(NavState(false, false))
     val nav: StateFlow<NavState> = _nav.asStateFlow()
 
+    // Title of the next queued item (in-season next episode), for the HUD's "Next episode in Ns" card.
+    // Null when there's no next item (single movie, or the season's last episode).
+    private val _nextUpTitle = MutableStateFlow<String?>(null)
+    val nextUpTitle: StateFlow<String?> = _nextUpTitle.asStateFlow()
+
+    // Set true when the user hits "Cancel" on the next-episode countdown card — suppresses the automatic
+    // end-of-file advance for the CURRENT item only. Reset on every fresh load (see loadUrl).
+    private var autoNextCancelled = false
+
+    /** HUD "Cancel" on the next-episode countdown: skip the automatic advance for the current item. */
+    fun cancelAutoNext() { autoNextCancelled = true }
+
     // Emitted when the LAST item of an episode queue finishes naturally and auto-play is on, so the
     // series ViewModel can continue into the next season (it has the full series; the player only has
     // the current season's queue). Within-season advance is handled by the player itself.
@@ -965,7 +977,7 @@ class OwnTVPlayer(
         val dur = _duration.value
         val pos = _position.value
         val reachedEnd = dur > 0 && pos >= dur - 8_000
-        if (reachedEnd && autoPlayNext && playlist.isNotEmpty()) {
+        if (reachedEnd && autoPlayNext && !autoNextCancelled && playlist.isNotEmpty()) {
             val gen = loadGeneration
             if (playlistIndex < playlist.size - 1) {
                 scope.launch { delay(600); if (gen == loadGeneration) next() } // next ep (loadUrl drops Exo)
@@ -1221,6 +1233,7 @@ class OwnTVPlayer(
 
     private fun updateNav() {
         _nav.value = NavState(playlistIndex > 0, playlistIndex < playlist.size - 1)
+        _nextUpTitle.value = playlist.getOrNull(playlistIndex + 1)?.meta?.title
     }
 
     private fun loadUrl(
@@ -1263,6 +1276,7 @@ class OwnTVPlayer(
         // the SAME item passes resetRetries=false to keep that state.
         if (resetRetries) {
             autoRetries = 0
+            autoNextCancelled = false // genuinely new item → re-arm the auto-advance / countdown card
             liveStallReconnects = 0 // genuinely new item → fresh live-reconnect budget
             triedAltFormat = false
             triedSoftwareForVideo = false
@@ -2351,7 +2365,7 @@ class OwnTVPlayer(
                     val dur = _duration.value
                     val pos = _position.value
                     val reachedEnd = dur > 0 && pos >= dur - 8_000
-                    if (reachedEnd && autoPlayNext && playlist.isNotEmpty()) {
+                    if (reachedEnd && autoPlayNext && !autoNextCancelled && playlist.isNotEmpty()) {
                         // Advance after a short settle (let the ended episode's decoder release). The fresh
                         // Surface in loadUrl is what actually prevents the back-to-back >1080p 0x80001000.
                         val gen = loadGeneration

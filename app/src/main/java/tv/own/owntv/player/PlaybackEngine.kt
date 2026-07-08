@@ -49,6 +49,9 @@ interface PlaybackEngine {
     val duration: StateFlow<Long> get() = ZERO_LONG
     val speed: StateFlow<Double> get() = ONE_DOUBLE
     val nav: StateFlow<NavState> get() = NO_NAV
+    /** Title of the next queued item (in-season next episode), for the HUD next-episode countdown card.
+     *  Null when there is no next item — a live engine leaves it null. */
+    val nextUpTitle: StateFlow<String?> get() = NULL_STRING
     /** In-player A/V-sync nudge (ms) — VOD/mpv only; a live engine leaves it at 0. */
     val audioDelayMs: StateFlow<Int> get() = ZERO_INT
     fun setSpeed(speed: Double) {}
@@ -56,6 +59,8 @@ interface PlaybackEngine {
     fun previous() {}
     fun next() {}
     fun seekBy(deltaMs: Long) {}
+    /** HUD "Cancel" on the next-episode countdown — suppress the automatic advance for the current item. */
+    fun cancelAutoNext() {}
 
     companion object {
         private val ZERO_INT: StateFlow<Int> = MutableStateFlow(0)
@@ -87,6 +92,7 @@ class MpvPlaybackEngine(private val p: OwnTVPlayer) : PlaybackEngine {
     override val duration get() = p.duration
     override val speed get() = p.speed
     override val nav get() = p.nav
+    override val nextUpTitle get() = p.nextUpTitle
     override val audioDelayMs get() = p.audioDelayMs
     override fun togglePlayPause() = p.togglePlayPause()
     override fun setZoomMode(mode: ZoomMode) = p.setZoomMode(mode)
@@ -104,4 +110,5 @@ class MpvPlaybackEngine(private val p: OwnTVPlayer) : PlaybackEngine {
     override fun previous() = p.previous()
     override fun next() = p.next()
     override fun seekBy(deltaMs: Long) = p.seekBy(deltaMs)
+    override fun cancelAutoNext() = p.cancelAutoNext()
 }
