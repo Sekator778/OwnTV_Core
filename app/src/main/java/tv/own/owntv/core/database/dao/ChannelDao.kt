@@ -234,9 +234,9 @@ interface ChannelDao {
     @Query(
         "SELECT c.* FROM channels c " +
             "INNER JOIN favorites f ON f.itemId = c.id AND f.mediaType = 'LIVE' " +
-            "WHERE f.profileId = :profileId ORDER BY LOWER(c.name) ASC, c.id ASC LIMIT :limit",
+            "WHERE f.profileId = :profileId ORDER BY LOWER(c.name) ASC, c.id ASC",
     )
-    fun favoritesListAlpha(profileId: Long, limit: Int): Flow<List<ChannelEntity>>
+    fun favoritesListAlpha(profileId: Long): Flow<List<ChannelEntity>>
 
     // Counts via the same join the list uses, so the badge can't show favorites whose channel id went
     // stale on a re-sync (the old "(2) but the folder is empty" bug) before the relink purges them.
