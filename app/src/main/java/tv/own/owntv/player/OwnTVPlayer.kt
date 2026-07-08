@@ -1998,8 +1998,9 @@ class OwnTVPlayer(
         decodeGuardTripped = true
         val res = resolutionLabel(h) ?: "${h}p"
         val msg = if (hwDecoding) {
-            "This TV's hardware decoder doesn't support this $res video, and software decoding " +
-                "above 1080p would overload the TV."
+            "This stream's format couldn't be hardware-decoded on this TV, so it fell back to " +
+                "software decoding — which can't sustain $res without overloading the TV. The TV " +
+                "may still play other 4K content fine; this particular stream's format is the issue."
         } else {
             "Hardware decoding is turned off — software decoding can't handle $res video. " +
                 "Enable it in Settings → Video Player."
