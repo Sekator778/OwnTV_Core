@@ -74,7 +74,7 @@ import tv.own.owntv.core.database.entity.TvProviderProgramEntity
         SeriesFtsEntity::class,
         EpisodeFtsEntity::class,
     ],
-    version = 12, // v7: content_order (Move). v8: contentHash + browse/unique indexes. v9: EPG contentHash + natural key. v10: TMDB metadata cache. v11: movies/series rating-sort indexes. v12: metadata_cache trailerKey
+    version = 13, // v7: content_order (Move). v8: contentHash + browse/unique indexes. v9: EPG contentHash + natural key. v10: TMDB metadata cache. v11: movies/series rating-sort indexes. v12: metadata_cache trailerKey. v13: metadata_cache logoPath
 
     exportSchema = true,
 )
@@ -333,6 +333,16 @@ abstract class OwnTVDatabase : RoomDatabase() {
         val MIGRATION_11_12 = object : androidx.room.migration.Migration(11, 12) {
             override fun migrate(db: androidx.sqlite.db.SupportSQLiteDatabase) {
                 db.execSQL("ALTER TABLE `metadata_cache` ADD COLUMN `trailerKey` TEXT")
+            }
+        }
+
+        /**
+         * v12 → v13: nullable `logoPath` on the metadata_cache table (Home hero title-logo treatment).
+         * Additive column on a pure cache table; existing rows simply use text-title fallback until refreshed.
+         */
+        val MIGRATION_12_13 = object : androidx.room.migration.Migration(12, 13) {
+            override fun migrate(db: androidx.sqlite.db.SupportSQLiteDatabase) {
+                db.execSQL("ALTER TABLE `metadata_cache` ADD COLUMN `logoPath` TEXT")
             }
         }
 

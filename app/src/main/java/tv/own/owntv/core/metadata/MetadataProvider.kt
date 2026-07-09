@@ -94,6 +94,8 @@ data class MovieDetails(
     val cast: List<String>,
     /** Best YouTube trailer video key from `videos` (official Trailer > Trailer > Teaser); null if none. */
     val trailerKey: String?,
+    /** Best title/logo image path from TMDB images; null when no usable logo exists. */
+    val logoPath: String?,
 )
 
 /** Per-episode TMDB details (`/tv/{id}/season/{n}/episode/{m}`). Its own still, plot, air date, rating. */

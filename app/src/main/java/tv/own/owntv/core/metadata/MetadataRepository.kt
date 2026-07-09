@@ -117,13 +117,14 @@ class MetadataRepository(
                 genresJson = details.genres.takeIf { it.isNotEmpty() }?.let { JSONArray(it).toString() },
                 castJson = details.cast.takeIf { it.isNotEmpty() }?.let { JSONArray(it).toString() },
                 trailerKey = details.trailerKey,
+                logoPath = details.logoPath,
                 updatedAt = now,
             )
             fallback != null -> MetadataCacheEntity(
                 key = tvCacheKey(tmdbId), tmdbId = tmdbId, imdbId = null, type = TYPE_TV,
                 title = fallback.title, year = fallback.year, overview = fallback.overview,
                 posterPath = fallback.posterPath, backdropPath = null, rating = null,
-                genresJson = null, castJson = null, trailerKey = null, updatedAt = now,
+                genresJson = null, castJson = null, trailerKey = null, logoPath = null, updatedAt = now,
             )
             else -> return dao.getCache(tvCacheKey(tmdbId))
         }
@@ -160,6 +161,7 @@ class MetadataRepository(
             backdropPath = d.stillPath,
             rating = d.rating,
             genresJson = null, castJson = null, trailerKey = null, updatedAt = now,
+            logoPath = null,
         )
         dao.upsertCache(entity)
         return entity
@@ -277,13 +279,14 @@ class MetadataRepository(
                 genresJson = details.genres.takeIf { it.isNotEmpty() }?.let { JSONArray(it).toString() },
                 castJson = details.cast.takeIf { it.isNotEmpty() }?.let { JSONArray(it).toString() },
                 trailerKey = details.trailerKey,
+                logoPath = details.logoPath,
                 updatedAt = now,
             )
             fallback != null -> MetadataCacheEntity(
                 key = cacheKey(tmdbId), tmdbId = tmdbId, imdbId = null, type = TYPE_MOVIE,
                 title = fallback.title, year = fallback.year, overview = fallback.overview,
                 posterPath = fallback.posterPath, backdropPath = null, rating = null,
-                genresJson = null, castJson = null, trailerKey = null, updatedAt = now,
+                genresJson = null, castJson = null, trailerKey = null, logoPath = null, updatedAt = now,
             )
             else -> return dao.getCache(cacheKey(tmdbId)) // nothing to write; return existing if any
         }

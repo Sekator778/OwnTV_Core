@@ -32,6 +32,7 @@ data class MetadataCacheEntity(
     val genresJson: String?,  // JSON array of genre names
     val castJson: String?,    // JSON array of top cast names
     val trailerKey: String?,  // YouTube video key for the in-app trailer player (plan §7.3); null = no trailer
+    val logoPath: String?,    // TMDB title/logo path for cinematic Home hero treatment; null = text title fallback
     val updatedAt: Long,      // for TTL / manual refresh
 )
 
