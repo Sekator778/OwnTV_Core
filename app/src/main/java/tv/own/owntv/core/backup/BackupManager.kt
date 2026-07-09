@@ -18,8 +18,9 @@ import tv.own.owntv.features.settings.data.SettingsRepository
 /**
  * Phase 12 — backup & restore of the painful-to-re-enter setup: **profiles** (name/avatar/kids/PIN),
  * **sources** (URLs + credentials + per-source UA) and their profile links, plus per-profile
- * **customizations** (hidden/renamed/reordered categories & channels), favorites, watch history and
- * resume positions — as a JSON file. The user picks which [Section]s to include on export and which
+ * **customizations** (hidden/renamed/reordered categories & channels), favorites, watch history,
+ * resume positions and manual Move positions — as a JSON file. The user picks which [Section]s to
+ * include on export and which
  * to apply on restore. Content (channels/movies/series) is NOT backed up — it's large and re-syncs
  * from the sources after restore. Profile/source ids are preserved on restore, so customization keys
  * stay valid.
@@ -42,6 +43,7 @@ class BackupManager(
         FAVORITES("Favorites", "Starred channels, movies and series"),
         HISTORY("Watch history", "Recently watched lists"),
         RESUME("Resume positions", "Where you stopped in movies & episodes"),
+        MANUAL_REORDER("Manual reorder", "Your Move up/down positions for channels, movies and series"),
         SETTINGS("App settings", "Theme, accent, player & layout preferences"),
     }
 
@@ -134,6 +136,7 @@ class BackupManager(
                         "fav" -> out += Section.FAVORITES
                         "his" -> out += Section.HISTORY
                         "prog" -> out += Section.RESUME
+                        "order" -> out += Section.MANUAL_REORDER
                     }
                 }
             }
@@ -282,6 +285,7 @@ class BackupManager(
         if (Section.FAVORITES in sections) add("fav")
         if (Section.HISTORY in sections) add("his")
         if (Section.RESUME in sections) add("prog")
+        if (Section.MANUAL_REORDER in sections) add("order")
     }
 
     // --- mapping ---
