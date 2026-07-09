@@ -25,7 +25,9 @@ room = "2.8.4"
 paging = "3.5.0"
 
 # --- Media playback ---
-media3 = "1.10.0"
+# Bumped to 1.10.1: decoder-error recovery + renderer-prewarming crash fix, HLS fallback AIOOBE fix
+# (#3161) and HLS #EXT-X-MAP init-segment carry-over (#3105) — all hit by the Exo image-sub handoff.
+media3 = "1.10.1"
 # libmpv (FFmpeg-based) — full codec/track support for IPTV, caching, speed, etc.
 libmpv = "1.0.0"
 
