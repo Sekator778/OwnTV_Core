@@ -24,6 +24,13 @@ interface DownloadDao {
     @Query("SELECT * FROM downloads WHERE profileId = :profileId ORDER BY createdAt DESC")
     fun observeForProfile(profileId: Long): Flow<List<DownloadEntity>>
 
+    /** Episode downloads belonging to one series (for the series poster-panel aggregate status strip). */
+    @Query(
+        "SELECT d.* FROM downloads d INNER JOIN episodes e ON e.id = d.itemId " +
+            "WHERE d.mediaType = 'EPISODE' AND e.seriesId = :seriesId",
+    )
+    fun observeForSeries(seriesId: Long): Flow<List<DownloadEntity>>
+
     @Query("SELECT * FROM downloads WHERE status = :status ORDER BY createdAt ASC")
     suspend fun byStatus(status: DownloadStatus): List<DownloadEntity>
 

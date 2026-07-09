@@ -28,6 +28,10 @@ interface HistoryDao {
     @Query("SELECT COUNT(*) FROM watch_history WHERE profileId = :profileId AND mediaType = :type")
     fun count(profileId: Long, type: MediaType): Flow<Int>
 
+    /** The single most-recently-watched item (any type) — drives the top-bar Continue chip. */
+    @Query("SELECT * FROM watch_history WHERE profileId = :profileId ORDER BY watchedAt DESC LIMIT 1")
+    fun observeMostRecent(profileId: Long): Flow<WatchHistoryEntity?>
+
     /** Everything, for Backup & Restore. */
     @Query("SELECT * FROM watch_history")
     suspend fun getAllOnce(): List<WatchHistoryEntity>

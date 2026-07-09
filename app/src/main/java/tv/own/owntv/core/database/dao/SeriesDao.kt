@@ -190,6 +190,22 @@ interface SeriesDao {
     )
     fun searchHistory(query: String, profileId: Long, sourceIds: List<Long>): PagingSource<Int, SeriesEntity>
 
+    /** Search "Continue" chip: recently-watched series snapshot (one-shot). */
+    @Query(
+        "SELECT s.* FROM series s INNER JOIN watch_history h ON h.itemId = s.id AND h.mediaType = 'SERIES' " +
+            "WHERE h.profileId = :profileId AND s.sourceId IN (:sourceIds) ORDER BY h.watchedAt DESC LIMIT :limit",
+    )
+    suspend fun recentlyWatchedSnapshot(profileId: Long, sourceIds: List<Long>, limit: Int): List<SeriesEntity>
+
+    /** Search "Unwatched" chip: favourite series with no watch-history row (bounded by favourites). */
+    @Query(
+        "SELECT s.* FROM series s " +
+            "INNER JOIN favorites f ON f.itemId = s.id AND f.mediaType = 'SERIES' AND f.profileId = :profileId " +
+            "LEFT JOIN watch_history h ON h.itemId = s.id AND h.mediaType = 'SERIES' AND h.profileId = :profileId " +
+            "WHERE s.sourceId IN (:sourceIds) AND h.itemId IS NULL ORDER BY f.addedAt DESC LIMIT :limit",
+    )
+    suspend fun unwatchedFavorites(profileId: Long, sourceIds: List<Long>, limit: Int): List<SeriesEntity>
+
     // --- Seasons ---
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun upsertSeasons(seasons: List<SeasonEntity>)

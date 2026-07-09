@@ -108,6 +108,7 @@ class SettingsRepository(private val context: Context) {
         val ANIMATION_LEVEL = stringPreferencesKey("animation_level")
         val RESUME_LAST_CHANNEL = booleanPreferencesKey("resume_last_channel")
         val LAST_LIVE_CATEGORY = stringPreferencesKey("last_live_category")
+        val RECENT_SEARCHES = stringPreferencesKey("recent_searches")
         val LAST_LIVE_CHANNEL = androidx.datastore.preferences.core.longPreferencesKey("last_live_channel")
         val VOD_VIEW_MODE = stringPreferencesKey("vod_view_mode")
         // Global proxy (Approach 1 — one app-wide HTTP proxy). HTTP only; no per-source override yet.
@@ -184,6 +185,27 @@ class SettingsRepository(private val context: Context) {
     val lastLiveCategory: Flow<String> = context.dataStore.data.map { it[Keys.LAST_LIVE_CATEGORY] ?: "" }
     suspend fun setLastLiveCategory(key: String) {
         context.dataStore.edit { it[Keys.LAST_LIVE_CATEGORY] = key }
+    }
+
+    // --- Search: recent search terms (most-recent first, capped). Stored as one newline-joined string
+    //     so no schema/table is needed; blank entries are ignored on read. ---
+    val recentSearches: Flow<List<String>> = context.dataStore.data.map { prefs ->
+        prefs[Keys.RECENT_SEARCHES]?.split('\n')?.map { it.trim() }?.filter { it.isNotEmpty() } ?: emptyList()
+    }
+
+    /** Push a query to the top of the recents (case-insensitive dedup), capped at 12 entries. */
+    suspend fun addRecentSearch(query: String) {
+        val q = query.trim()
+        if (q.length < 2) return
+        context.dataStore.edit { prefs ->
+            val current = prefs[Keys.RECENT_SEARCHES]?.split('\n')?.map { it.trim() }?.filter { it.isNotEmpty() } ?: emptyList()
+            val next = (listOf(q) + current.filterNot { it.equals(q, ignoreCase = true) }).take(12)
+            prefs[Keys.RECENT_SEARCHES] = next.joinToString("\n")
+        }
+    }
+
+    suspend fun clearRecentSearches() {
+        context.dataStore.edit { it.remove(Keys.RECENT_SEARCHES) }
     }
 
     // --- Appearance: animation level (perf control for low-end boxes) ---

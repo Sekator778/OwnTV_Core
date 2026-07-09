@@ -12,6 +12,7 @@ import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
+import kotlinx.coroutines.withContext
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import tv.own.owntv.core.database.dao.DownloadDao
@@ -23,6 +24,12 @@ import tv.own.owntv.core.storage.StorageAccess
 import tv.own.owntv.features.settings.data.SettingsRepository
 import java.io.File
 import java.util.concurrent.ConcurrentHashMap
+
+/** Free/total bytes of the volume backing the download root. */
+data class DownloadStorageInfo(val freeBytes: Long, val totalBytes: Long) {
+    val usedBytes: Long get() = (totalBytes - freeBytes).coerceAtLeast(0L)
+    val usedFraction: Float get() = if (totalBytes > 0) (usedBytes.toFloat() / totalBytes).coerceIn(0f, 1f) else 0f
+}
 
 /**
  * Phase 12 — downloads movies & series episodes for offline playback. Files go under the user-chosen
@@ -48,6 +55,16 @@ class DownloadManager(
     }
 
     fun observe(profileId: Long): Flow<List<DownloadEntity>> = downloadDao.observeForProfile(profileId)
+
+    /** Episode downloads for one series (poster-panel aggregate status). */
+    fun observeForSeries(seriesId: Long): Flow<List<DownloadEntity>> = downloadDao.observeForSeries(seriesId)
+
+    /** Free/total space of the volume holding the current download root (for the Downloads storage bar). */
+    suspend fun storageInfo(): DownloadStorageInfo = withContext(Dispatchers.IO) {
+        val root = runCatching { StorageAccess.resolveRoot(context, settings.downloadRoot.first()) }
+            .getOrNull() ?: StorageAccess.defaultRoot(context)
+        DownloadStorageInfo(freeBytes = root.usableSpace, totalBytes = root.totalSpace)
+    }
 
     /** Queue a download into `<root>/<relativeDir>/<fileName>`. */
     fun enqueue(
