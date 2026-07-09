@@ -69,7 +69,8 @@ class TmdbProvider(
         val ep = resolveEndpoint()
         val url = buildString {
             append(ep.baseUrl).append("/3/movie/").append(tmdbId)
-            append("?append_to_response=credits,external_ids,videos")
+            append("?append_to_response=credits,external_ids,videos,images")
+            append("&include_image_language=en,null")
             ep.apiKey?.takeIf { it.isNotBlank() }?.let { append("&api_key=").append(enc(it)) }
         }
         val json = runCatching { http.getText(url) }
@@ -83,7 +84,8 @@ class TmdbProvider(
         val ep = resolveEndpoint()
         val url = buildString {
             append(ep.baseUrl).append("/3/tv/").append(tmdbId)
-            append("?append_to_response=credits,external_ids,videos")
+            append("?append_to_response=credits,external_ids,videos,images")
+            append("&include_image_language=en,null")
             ep.apiKey?.takeIf { it.isNotBlank() }?.let { append("&api_key=").append(enc(it)) }
         }
         val json = runCatching { http.getText(url) }
@@ -140,6 +142,7 @@ class TmdbProvider(
             genres = genres,
             cast = cast,
             trailerKey = parseTrailerKey(o),
+            logoPath = parseLogoPath(o),
         )
     }
 
@@ -168,6 +171,7 @@ class TmdbProvider(
             genres = genres,
             cast = cast,
             trailerKey = parseTrailerKey(o),
+            logoPath = parseLogoPath(o),
         )
     }
 
@@ -194,6 +198,25 @@ class TmdbProvider(
             }
         }
         return officialTrailer ?: trailer ?: teaser
+    }
+
+    private data class LogoCandidate(val path: String, val languageRank: Int, val width: Int)
+
+    private fun parseLogoPath(details: JSONObject): String? {
+        val arr = details.optJSONObject("images")?.optJSONArray("logos") ?: return null
+        val candidates = ArrayList<LogoCandidate>(arr.length())
+        for (i in 0 until arr.length()) {
+            val logo = arr.optJSONObject(i) ?: continue
+            val path = logo.optString("file_path").takeIf { it.isNotBlank() && it != "null" } ?: continue
+            if (path.endsWith(".svg", ignoreCase = true)) continue
+            val languageRank = when (logo.optString("iso_639_1").takeIf { it.isNotBlank() && it != "null" }) {
+                "en" -> 0
+                null -> 1
+                else -> 2
+            }
+            candidates += LogoCandidate(path = path, languageRank = languageRank, width = logo.optInt("width", 0))
+        }
+        return candidates.minWithOrNull(compareBy<LogoCandidate> { it.languageRank }.thenByDescending { it.width })?.path
     }
 
     private fun parseResults(type: MetadataType, body: String): List<MetadataSearchResult> {

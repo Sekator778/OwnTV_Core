@@ -100,6 +100,14 @@ interface EpgDao {
     )
     suspend fun programmeSummariesForChannel(sourceIds: List<Long>, epgKey: String, from: Long, to: Long): List<EpgProgrammeEntity>
 
+    /** Lightweight rows for several Home On Now channels at once. */
+    @Query(
+        "SELECT id, sourceId, epgChannelId, startMs, stopMs, title, NULL AS description, 0 AS contentHash " +
+            "FROM epg_programmes WHERE epgChannelId IN (:epgKeys) AND sourceId IN (:sourceIds) " +
+            "AND stopMs > :from AND startMs < :to ORDER BY epgChannelId ASC, startMs ASC",
+    )
+    suspend fun programmeSummariesForChannels(sourceIds: List<Long>, epgKeys: List<String>, from: Long, to: Long): List<EpgProgrammeEntity>
+
     /** How many programmes are stored for these sources (to tell "no guide yet" from "empty window"). */
     @Query("SELECT COUNT(*) FROM epg_programmes WHERE sourceId IN (:sourceIds)")
     suspend fun countForSources(sourceIds: List<Long>): Int
