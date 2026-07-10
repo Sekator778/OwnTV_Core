@@ -167,13 +167,19 @@ class CustomizationStore(private val context: Context) {
 
 /**
  * Applies category customizations: hidden categories drop out, custom names replace the originals,
- * and reordered keys come first (in their stored order) with the rest keeping natural order.
+ * and reordered keys come first (in their stored order). The rest keep natural (playlist) order, or
+ * sort A–Z by displayed name when [alphaRest] is set — manual moves always stay pinned on top.
  */
-fun List<CategoryEntity>.applyCustomizations(c: SectionCustomizations): List<Pair<CategoryEntity, String>> {
-    if (c.isEmpty) return map { it to it.name }
-    val visible = filter { CustomizeKeys.category(it) !in c.hiddenCategories }
+fun List<CategoryEntity>.applyCustomizations(
+    c: SectionCustomizations,
+    alphaRest: Boolean = false,
+): List<Pair<CategoryEntity, String>> {
+    val visible =
+        if (c.hiddenCategories.isEmpty()) this
+        else filter { CustomizeKeys.category(it) !in c.hiddenCategories }
+    val named = visible.map { cat -> cat to (c.categoryNames[CustomizeKeys.category(cat)] ?: cat.name) }
     val orderIndex = c.categoryOrder.withIndex().associate { (i, k) -> k to i }
-    val (pinned, rest) = visible.partition { CustomizeKeys.category(it) in orderIndex }
-    val sorted = pinned.sortedBy { orderIndex.getValue(CustomizeKeys.category(it)) } + rest
-    return sorted.map { cat -> cat to (c.categoryNames[CustomizeKeys.category(cat)] ?: cat.name) }
+    val (pinned, rest) = named.partition { (cat, _) -> CustomizeKeys.category(cat) in orderIndex }
+    return pinned.sortedBy { (cat, _) -> orderIndex.getValue(CustomizeKeys.category(cat)) } +
+        (if (alphaRest) rest.sortedBy { (_, name) -> name.lowercase() } else rest)
 }
