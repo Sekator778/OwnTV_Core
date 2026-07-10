@@ -22,6 +22,9 @@ import java.io.InputStream
  */
 class HttpClient(private val client: OkHttpClient) {
 
+    /** Non-2xx response. Thrown before the body block runs, so retrying it never re-emits parsed items. */
+    class HttpStatusException(val code: Int, message: String) : IOException(message)
+
     suspend fun <T> get(
         url: String,
         userAgent: String? = null,
@@ -52,7 +55,7 @@ class HttpClient(private val client: OkHttpClient) {
                 call.execute().use { response ->
                     responseReceived = true
                     val headersAt = SystemClock.elapsedRealtime()
-                    if (!response.isSuccessful) throw IOException("HTTP ${response.code} for ${redact(url)}")
+                    if (!response.isSuccessful) throw HttpStatusException(response.code, "HTTP ${response.code} for ${redact(url)}")
                     val body = response.body ?: throw IOException("Empty response body for ${redact(url)}")
                     val totalBytes = body.contentLength().takeIf { it >= 0 }
                     Log.d(
@@ -69,7 +72,11 @@ class HttpClient(private val client: OkHttpClient) {
                 }
             } catch (e: IOException) {
                 coroutineContext.ensureActive()
-                val retrying = !responseReceived && attempt < attempts
+                // Retry only when the body block never ran: no response at all, or a 5xx/429 status
+                // (thrown before the block). Mid-body failures are NOT retried — the block may already
+                // have consumed items, and the truncation fallback handles those.
+                val retryableStatus = e is HttpStatusException && (e.code in 500..599 || e.code == 429)
+                val retrying = (!responseReceived || retryableStatus) && attempt < attempts
                 Log.w(
                     TAG,
                     "GET failed url=$safeUrl attempt=$attempt/$attempts totalMs=${SystemClock.elapsedRealtime() - startedAt} " +
@@ -139,10 +146,9 @@ private class ProgressInputStream(
     private var readBlockedMs = 0L
     private var maxReadMs = 0L
 
+    // No per-call timing here: a caller reading byte-by-byte would pay two clock syscalls per byte.
     override fun read(): Int {
-        val started = SystemClock.elapsedRealtime()
         val value = super.read()
-        recordRead(SystemClock.elapsedRealtime() - started)
         if (value >= 0) advance(1)
         return value
     }
@@ -175,7 +181,7 @@ private class ProgressInputStream(
     }
 
     private fun notifyProgress(force: Boolean = false) {
-        val now = System.currentTimeMillis()
+        val now = SystemClock.elapsedRealtime() // monotonic — wall clock can jump on NTP sync
         val bytesDelta = bytesRead - lastNotifiedBytes
         val timeDelta = now - lastNotifiedAt
         val complete = totalBytes?.let { bytesRead >= it } == true

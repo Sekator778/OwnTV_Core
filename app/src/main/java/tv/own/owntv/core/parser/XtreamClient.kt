@@ -48,7 +48,7 @@ class XtreamClient(private val http: HttpClient) {
 
     private suspend fun categories(s: SourceEntity, action: String, onProgress: ((Long, Long?) -> Unit)? = null): List<XtCategory> {
         val out = ArrayList<XtCategory>()
-        http.get(api(s, action), s.userAgent, onProgress) { input ->
+        http.get(api(s, action), s.userAgent, onProgress, maxAttempts = CATEGORY_MAX_ATTEMPTS) { input ->
             streamObjects(input) { m ->
                 val id = m["category_id"] ?: return@streamObjects
                 out.add(XtCategory(id, m["category_name"] ?: id))
@@ -377,14 +377,22 @@ class XtreamClient(private val http: HttpClient) {
         readItem: (JsonReader) -> T?,
         onItem: suspend (T) -> Unit,
     ): Boolean =
-        streamArray(label, input) { reader, metrics ->
-            val parseStart = SystemClock.elapsedRealtime()
-            val item = readItem(reader)
-            metrics.parseOrReadMs += SystemClock.elapsedRealtime() - parseStart
-            if (item != null) {
-                val callbackStart = SystemClock.elapsedRealtime()
-                onItem(item)
-                metrics.callbackMs += SystemClock.elapsedRealtime() - callbackStart
+        // Per-item timing costs millions of elapsedRealtime() syscalls on a 170k+ catalog, so the
+        // detailed metrics only run when the tag is debuggable (`setprop log.tag.XtreamClient DEBUG`).
+        if (DEBUG) {
+            streamArray(label, input) { reader, metrics ->
+                val parseStart = SystemClock.elapsedRealtime()
+                val item = readItem(reader)
+                metrics.parseOrReadMs += SystemClock.elapsedRealtime() - parseStart
+                if (item != null) {
+                    val callbackStart = SystemClock.elapsedRealtime()
+                    onItem(item)
+                    metrics.callbackMs += SystemClock.elapsedRealtime() - callbackStart
+                }
+            }
+        } else {
+            streamArray(label, input) { reader, _ ->
+                readItem(reader)?.let { onItem(it) }
             }
         }
 
@@ -400,7 +408,7 @@ class XtreamClient(private val http: HttpClient) {
         var lastCallbackMs = 0L
         var count = 0
         val metrics = StreamMetrics()
-        Log.d(TAG, "streamArray start label=$label")
+        if (DEBUG) Log.d(TAG, "streamArray start label=$label")
         try {
             JsonReader(input.reader(Charsets.UTF_8)).use { reader ->
                 reader.isLenient = true
@@ -415,7 +423,7 @@ class XtreamClient(private val http: HttpClient) {
                     ctx.ensureActive()
                     readItem(reader, metrics)
                     count++
-                    if (count % STREAM_LOG_ITEM_STEP == 0) {
+                    if (DEBUG && count % STREAM_LOG_ITEM_STEP == 0) {
                         val now = SystemClock.elapsedRealtime()
                         val parseOrReadDelta = metrics.parseOrReadMs - lastParseOrReadMs
                         val callbackDelta = metrics.callbackMs - lastCallbackMs
@@ -433,11 +441,7 @@ class XtreamClient(private val http: HttpClient) {
                 }
                 reader.endArray()
             }
-            Log.d(
-                TAG,
-                "streamArray end count=$count label=$label parseOrReadMs=${metrics.parseOrReadMs} " +
-                    "callbackMs=${metrics.callbackMs} totalMs=${SystemClock.elapsedRealtime() - startedAt}",
-            )
+            Log.i(TAG, "streamArray end count=$count label=$label totalMs=${SystemClock.elapsedRealtime() - startedAt}")
             return true
         } catch (c: kotlin.coroutines.cancellation.CancellationException) {
             throw c
@@ -464,6 +468,10 @@ class XtreamClient(private val http: HttpClient) {
     private companion object {
         const val TAG = "XtreamClient"
         const val STREAM_LOG_ITEM_STEP = 10_000
+        /** Detailed per-item parse metrics — off in normal runs, enabled via `setprop log.tag.XtreamClient DEBUG`. */
+        val DEBUG = Log.isLoggable(TAG, Log.DEBUG)
+        /** Category lists are tiny; a retry on a connect/DNS blip saves the whole sync phase. */
+        const val CATEGORY_MAX_ATTEMPTS = 3
     }
 
     private fun <T : Any> readLiveStreamAs(

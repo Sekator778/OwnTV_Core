@@ -11,6 +11,7 @@ import tv.own.owntv.core.epg.EpgSourceStore
 import tv.own.owntv.core.network.ConnectivityObserver
 import tv.own.owntv.core.repository.EpgRepository
 import tv.own.owntv.core.util.friendlySyncError
+import tv.own.owntv.core.util.isTransientSyncError
 
 class EpgSyncWorker(
     context: Context,
@@ -50,13 +51,21 @@ class EpgSyncWorker(
             Log.i(TAG, "EPG sync cancelled sourceId=${source.id} reason=$reason")
             throw c
         } catch (e: Exception) {
-            val message = friendlySyncError(e.message, connectivity.isOnlineNow())
+            val online = connectivity.isOnlineNow()
+            val message = friendlySyncError(e.message, online)
             // Record the failure WITHOUT updating lastSyncAt — staleness-based auto-refresh treats
             // lastSyncAt as the last *successful* sync, so a failed attempt must leave it untouched
             // (otherwise a flaky network would falsely reset the threshold and stop retries).
             store.markError(source.id, message)
-            Log.w(TAG, "EPG sync failed sourceId=${source.id} reason=$reason", e)
-            return Result.failure()
+            // Transient network trouble → WorkManager retry with backoff instead of staying stale
+            // until the next scheduled window. Permanent errors (bad URL, malformed XML) stay terminal.
+            return if ((e is java.io.IOException || isTransientSyncError(e.message, online)) && runAttemptCount < MAX_RETRY_ATTEMPTS) {
+                Log.w(TAG, "EPG sync failed transiently sourceId=${source.id} reason=$reason attempt=$runAttemptCount — will retry", e)
+                Result.retry()
+            } else {
+                Log.w(TAG, "EPG sync failed sourceId=${source.id} reason=$reason", e)
+                Result.failure()
+            }
         }
     }
 
@@ -109,6 +118,7 @@ class EpgSyncWorker(
 
     companion object {
         const val TAG = "EpgSyncWorker"
+        private const val MAX_RETRY_ATTEMPTS = 3
         private const val PROGRESS_MIN_INTERVAL_MS = 750L
         const val KEY_SOURCE_ID = "sourceId"
         const val KEY_REASON = "reason"

@@ -48,6 +48,9 @@ data class M3uHeader(val urlTvg: String?)
 class M3uParser {
 
     suspend fun parse(input: InputStream, onEntry: suspend (M3uEntry) -> Unit): M3uHeader {
+        // Per-line timing costs millions of elapsedRealtime() syscalls on a 100k+ playlist, so the
+        // detailed metrics only run when the tag is debuggable (`setprop log.tag.M3uParser DEBUG`).
+        val debug = Log.isLoggable(TAG, Log.DEBUG)
         val startedAt = SystemClock.elapsedRealtime()
         var lastLogAt = startedAt
         var lastParseOrReadMs = 0L
@@ -56,31 +59,33 @@ class M3uParser {
         val metrics = ParseMetrics()
         var header = M3uHeader(urlTvg = null)
         var pending: PendingExtInf? = null
-        Log.d(TAG, "parse start")
+        if (debug) Log.d(TAG, "parse start")
 
         input.bufferedReader().forEachLineSafe { raw ->
-            val parseStart = SystemClock.elapsedRealtime()
+            val parseStart = if (debug) SystemClock.elapsedRealtime() else 0L
             val line = raw.trim()
             var callbackHandled = false
             when {
                 line.isEmpty() -> Unit
 
                 line.startsWith("#EXTM3U") -> {
-                    header = M3uHeader(urlTvg = attr(line, "url-tvg") ?: attr(line, "x-tvg-url"))
+                    val attrs = parseAttrs(line)
+                    header = M3uHeader(urlTvg = attrs.attr("url-tvg") ?: attrs.attr("x-tvg-url"))
                 }
 
                 line.startsWith("#EXTINF") -> {
+                    val attrs = parseAttrs(line)
                     pending = PendingExtInf(
                         name = line.substringAfterLast(',').trim(),
-                        logo = attr(line, "tvg-logo"),
-                        groupTitle = attr(line, "group-title"),
-                        tvgId = attr(line, "tvg-id"),
-                        tvgChno = attr(line, "tvg-chno")?.toIntOrNull(),
-                        type = attr(line, "type"),
-                        tvgType = attr(line, "tvg-type"),
-                        catchup = attr(line, "catchup") ?: attr(line, "catchup-type"),
-                        catchupSource = attr(line, "catchup-source"),
-                        catchupDays = attr(line, "catchup-days")?.toIntOrNull(),
+                        logo = attrs.attr("tvg-logo"),
+                        groupTitle = attrs.attr("group-title"),
+                        tvgId = attrs.attr("tvg-id"),
+                        tvgChno = attrs.attr("tvg-chno")?.toIntOrNull(),
+                        type = attrs.attr("type"),
+                        tvgType = attrs.attr("tvg-type"),
+                        catchup = attrs.attr("catchup") ?: attrs.attr("catchup-type"),
+                        catchupSource = attrs.attr("catchup-source"),
+                        catchupDays = attrs.attr("catchup-days")?.toIntOrNull(),
                     )
                 }
 
@@ -90,8 +95,8 @@ class M3uParser {
                     // A URL line completes the pending channel.
                     val p = pending
                     if (p != null && p.name.isNotEmpty()) {
-                        metrics.parseOrReadMs += SystemClock.elapsedRealtime() - parseStart
-                        val callbackStart = SystemClock.elapsedRealtime()
+                        if (debug) metrics.parseOrReadMs += SystemClock.elapsedRealtime() - parseStart
+                        val callbackStart = if (debug) SystemClock.elapsedRealtime() else 0L
                         try {
                             onEntry(
                                 M3uEntry(
@@ -109,7 +114,7 @@ class M3uParser {
                                 ),
                             )
                         } finally {
-                            metrics.callbackMs += SystemClock.elapsedRealtime() - callbackStart
+                            if (debug) metrics.callbackMs += SystemClock.elapsedRealtime() - callbackStart
                         }
                         entries++
                         callbackHandled = true
@@ -118,31 +123,29 @@ class M3uParser {
                 }
             }
 
-            if (!callbackHandled) {
-                metrics.parseOrReadMs += SystemClock.elapsedRealtime() - parseStart
-            }
+            if (debug) {
+                if (!callbackHandled) {
+                    metrics.parseOrReadMs += SystemClock.elapsedRealtime() - parseStart
+                }
 
-            if (entries > 0 && entries % STREAM_LOG_ITEM_STEP == 0) {
-                val now = SystemClock.elapsedRealtime()
-                val parseOrReadDelta = metrics.parseOrReadMs - lastParseOrReadMs
-                val callbackDelta = metrics.callbackMs - lastCallbackMs
-                Log.d(
-                    TAG,
-                    "parse progress entries=$entries deltaMs=${now - lastLogAt} " +
-                        "parseOrReadMs=$parseOrReadDelta callbackMs=$callbackDelta " +
-                        "totalParseOrReadMs=${metrics.parseOrReadMs} totalCallbackMs=${metrics.callbackMs} " +
-                        "totalMs=${now - startedAt}",
-                )
-                lastLogAt = now
-                lastParseOrReadMs = metrics.parseOrReadMs
-                lastCallbackMs = metrics.callbackMs
+                if (entries > 0 && entries % STREAM_LOG_ITEM_STEP == 0) {
+                    val now = SystemClock.elapsedRealtime()
+                    val parseOrReadDelta = metrics.parseOrReadMs - lastParseOrReadMs
+                    val callbackDelta = metrics.callbackMs - lastCallbackMs
+                    Log.d(
+                        TAG,
+                        "parse progress entries=$entries deltaMs=${now - lastLogAt} " +
+                            "parseOrReadMs=$parseOrReadDelta callbackMs=$callbackDelta " +
+                            "totalParseOrReadMs=${metrics.parseOrReadMs} totalCallbackMs=${metrics.callbackMs} " +
+                            "totalMs=${now - startedAt}",
+                    )
+                    lastLogAt = now
+                    lastParseOrReadMs = metrics.parseOrReadMs
+                    lastCallbackMs = metrics.callbackMs
+                }
             }
         }
-        Log.d(
-            TAG,
-            "parse end entries=$entries parseOrReadMs=${metrics.parseOrReadMs} " +
-                "callbackMs=${metrics.callbackMs} totalMs=${SystemClock.elapsedRealtime() - startedAt}",
-        )
+        Log.i(TAG, "parse end entries=$entries totalMs=${SystemClock.elapsedRealtime() - startedAt}")
         return header
     }
 
@@ -164,16 +167,31 @@ class M3uParser {
         var callbackMs: Long = 0L,
     )
 
-    /** Extracts a `key="value"` attribute from an EXTINF/EXTM3U line. */
-    private fun attr(line: String, key: String): String? {
-        val token = "$key=\""
-        val start = line.indexOf(token)
-        if (start < 0) return null
-        val from = start + token.length
-        val end = line.indexOf('"', from)
-        if (end < 0) return null
-        return line.substring(from, end).takeIf { it.isNotBlank() }
+    /**
+     * Extracts every `key="value"` attribute from an EXTINF/EXTM3U line in one left-to-right scan
+     * (the old per-key `indexOf` re-scanned the line ~10× per entry — the dominant parse cost on huge
+     * playlists — and could also mis-match a key that is a suffix of another, e.g. `type` inside
+     * `tvg-type="…"`). Keys are matched exactly and case-sensitively, as before.
+     */
+    private fun parseAttrs(line: String): Map<String, String> {
+        var eq = line.indexOf("=\"")
+        if (eq < 0) return emptyMap()
+        val map = HashMap<String, String>(12)
+        while (eq >= 0) {
+            val valueEnd = line.indexOf('"', eq + 2)
+            if (valueEnd < 0) break
+            var keyStart = eq
+            while (keyStart > 0) {
+                val c = line[keyStart - 1]
+                if (c.isLetterOrDigit() || c == '-' || c == '_') keyStart-- else break
+            }
+            if (keyStart < eq) map[line.substring(keyStart, eq)] = line.substring(eq + 2, valueEnd)
+            eq = line.indexOf("=\"", valueEnd + 1)
+        }
+        return map
     }
+
+    private fun Map<String, String>.attr(key: String): String? = this[key]?.takeIf { it.isNotBlank() }
 
     private companion object {
         private const val TAG = "M3uParser"

@@ -10,6 +10,8 @@ import androidx.work.workDataOf
 import tv.own.owntv.core.database.dao.SourceDao
 import tv.own.owntv.core.launcher.LauncherIntegrationRepository
 import tv.own.owntv.core.model.SourceType
+import tv.own.owntv.core.network.ConnectivityObserver
+import tv.own.owntv.core.util.isTransientSyncError
 import tv.own.owntv.core.repository.SourceRepository
 import tv.own.owntv.core.sync.ImportFinalizer
 import tv.own.owntv.core.sync.ImportStage
@@ -24,6 +26,7 @@ class CatalogSyncWorker(
     private val importFinalizer: ImportFinalizer,
     private val catalogSyncScheduler: CatalogSyncScheduler,
     private val launcherIntegrationRepository: LauncherIntegrationRepository,
+    private val connectivity: ConnectivityObserver,
 ) : CoroutineWorker(context, params) {
 
     override suspend fun doWork(): Result {
@@ -88,8 +91,15 @@ class CatalogSyncWorker(
                 Result.success()
             }
             is SyncResult.Failed -> {
-                Log.w(TAG, "Sync failed for source ${source.id}: ${result.message}")
-                Result.failure()
+                // A network blip / server 5xx shouldn't leave the catalog stale until the next
+                // scheduled window — ask WorkManager to retry with backoff. Auth/URL failures stay terminal.
+                if (isTransientSyncError(result.message, connectivity.isOnlineNow()) && runAttemptCount < MAX_RETRY_ATTEMPTS) {
+                    Log.w(TAG, "Sync failed transiently for source ${source.id} attempt=$runAttemptCount — will retry: ${result.message}")
+                    Result.retry()
+                } else {
+                    Log.w(TAG, "Sync failed for source ${source.id}: ${result.message}")
+                    Result.failure()
+                }
             }
             SyncResult.Cancelled -> Result.failure()
         }
@@ -179,6 +189,7 @@ class CatalogSyncWorker(
 
     companion object {
         const val TAG = "CatalogSyncWorker"
+        private const val MAX_RETRY_ATTEMPTS = 3
         private const val PROGRESS_MIN_INTERVAL_MS = 750L
         private const val PROGRESS_ITEM_STEP = 1_000
         const val KEY_SOURCE_ID = "sourceId"

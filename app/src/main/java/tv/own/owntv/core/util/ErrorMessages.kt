@@ -27,5 +27,23 @@ fun friendlySyncError(raw: String?, online: Boolean): String = when {
     else -> raw
 }
 
+/**
+ * True when a sync failure looks transient (offline, network blip, server 5xx) — i.e. worth a
+ * WorkManager [androidx.work.ListenableWorker.Result.retry] with backoff instead of a terminal failure.
+ * Auth/URL problems (401/403/404, malformed data) are permanent: retrying them just hammers the panel.
+ */
+fun isTransientSyncError(raw: String?, online: Boolean): Boolean = when {
+    !online -> true
+    raw.isNullOrBlank() -> false
+    else -> raw.containsAny(
+        "timeout", "timed out",
+        "Unable to resolve host", "UnknownHost", "No address associated",
+        "Failed to connect", "ECONNREFUSED", "Connection refused", "Connection reset",
+        "Software caused connection abort", "unexpected end of stream",
+        "stream was reset", "PROTOCOL_ERROR", "StreamReset",
+        "HTTP 429", "HTTP 500", "HTTP 502", "HTTP 503", "HTTP 504",
+    )
+}
+
 private fun String.containsAny(vararg needles: String): Boolean =
     needles.any { contains(it, ignoreCase = true) }

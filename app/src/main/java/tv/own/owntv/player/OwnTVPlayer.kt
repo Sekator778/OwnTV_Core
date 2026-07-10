@@ -588,14 +588,32 @@ class OwnTVPlayer(
     private fun updateStreamChips() {
         val w = currentWidthPx; val h = currentHeightPx
         if (w <= 0 || h <= 0) { _streamChips.value = emptyList(); return }
-        val chips = ArrayList<String>(4)
-        aspectLabel(w, h)?.let { chips += it }
-        _videoRes.value?.let { chips += it }
-        (_videoFps.value ?: mpv?.getPropertyString("container-fps")?.toFloatOrNull())?.let { if (it > 0) chips += "${Math.round(it)} FPS" }
-        when (mpv?.getPropertyInt("audio-params/channel-count")) {
-            1 -> "MONO"; 2 -> "STEREO"; 6 -> "5.1"; 8 -> "7.1"; else -> null
-        }?.let { chips += it }
-        _streamChips.value = chips
+        val base = ArrayList<String>(4)
+        aspectLabel(w, h)?.let { base += it }
+        _videoRes.value?.let { base += it }
+        val knownFps = _videoFps.value
+        val m = mpv
+        if (m == null) {
+            knownFps?.let { if (it > 0) base += "${Math.round(it)} FPS" }
+            _streamChips.value = base
+            return
+        }
+        // Synchronous libmpv reads can block for seconds while the core is stuck in a stalling network
+        // read (same reason all writes go through mpvExecutor) — never issue them from the UI thread.
+        // runCatching also covers a rejected execute() after release() shut the executor down.
+        runCatching {
+            mpvExecutor.execute {
+                val chips = ArrayList<String>(4).apply { addAll(base) }
+                runCatching {
+                    (knownFps ?: m.getPropertyString("container-fps")?.toFloatOrNull())
+                        ?.let { if (it > 0) chips += "${Math.round(it)} FPS" }
+                    when (m.getPropertyInt("audio-params/channel-count")) {
+                        1 -> "MONO"; 2 -> "STEREO"; 6 -> "5.1"; 8 -> "7.1"; else -> null
+                    }?.let { chips += it }
+                }
+                _streamChips.value = chips
+            }
+        }
     }
     private fun aspectLabel(w: Int, h: Int): String? {
         if (w <= 0 || h <= 0) return null
@@ -1738,6 +1756,8 @@ class OwnTVPlayer(
     }
 
     fun release() {
+        // Queued freeze-frame/PixelCopy callbacks must never fire after teardown (released surface/bitmap).
+        freezeHandler.removeCallbacksAndMessages(null)
         errorCheckJob?.cancel()
         exoTickJob?.cancel()
         exoActive = false
