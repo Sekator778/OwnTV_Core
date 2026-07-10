@@ -1187,7 +1187,10 @@ class OwnTVPlayer(
             _error.collect {
                 _errorInfo.value = if (it != null) {
                     val raw = diagnostics.recentError() ?: lastMpvError
-                    ErrorInfo(reason = raw?.let(PlayerErrors::reasonFor), spec = mediaSpec(), raw = raw)
+                    val info = ErrorInfo(reason = raw?.let(PlayerErrors::reasonFor), spec = mediaSpec(), raw = raw)
+                    // Persist for Settings → "Playback error log" (users can't pull logcat after the fact).
+                    PlaybackErrorLog.log(context, if (exoActive) "exoplayer" else "mpv", isLiveContent, info)
+                    info
                 } else null
             }
         }

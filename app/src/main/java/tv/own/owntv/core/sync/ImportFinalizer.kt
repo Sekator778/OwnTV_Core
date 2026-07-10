@@ -51,9 +51,19 @@ class ImportFinalizer(
     private val seriesDao: SeriesDao,
     private val db: OwnTVDatabase,
     private val bulkInsertHelper: BulkInsertHelper,
+    private val metadataDao: tv.own.owntv.core.database.dao.MetadataDao,
 ) {
     suspend fun finalize(source: SourceEntity, deferIndexes: Boolean = false): SyncCounts {
         val counts = contentCounts(source.id)
+        // C4: bounded TTL eviction of the TMDB caches — they grow without limit as the user
+        // browses. Piggy-backed here (the operation that changes data), never on cold start.
+        // Indexed DELETE on updatedAt; evicted rows simply re-fetch on next focus.
+        runCatching {
+            val cutoff = System.currentTimeMillis() - METADATA_TTL_MS
+            val cache = metadataDao.evictCacheOlderThan(cutoff)
+            val matches = metadataDao.evictMatchesOlderThan(cutoff)
+            if (cache > 0 || matches > 0) Log.i(TAG, "Metadata eviction: cache=$cache matches=$matches")
+        }
         if (!deferIndexes) {
             // A sync does REPLACE on 100k+ rows, which invalidates SQLite's planner statistics
             // (sqlite_stat1). With stale stats the query planner IGNORES the single-column and
@@ -131,5 +141,9 @@ class ImportFinalizer(
 
     companion object {
         private const val TAG = "ImportFinalizer"
+
+        /** TMDB cache TTL (C4): entries untouched for this long are evicted after a sync.
+         *  90 days ≫ the repository's own refresh window, so this only drops long-abandoned rows. */
+        private const val METADATA_TTL_MS = 90L * 24 * 60 * 60 * 1000
     }
 }

@@ -6,6 +6,7 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
+import androidx.room.withTransaction
 import kotlinx.coroutines.flow.first
 import org.json.JSONArray
 import org.json.JSONObject
@@ -46,6 +47,7 @@ class UserDataResolver(
     private val historyDao: HistoryDao,
     private val progressDao: ProgressDao,
     private val contentOrderDao: ContentOrderDao,
+    private val db: tv.own.owntv.core.database.OwnTVDatabase,
 ) {
 
     /** Exports the chosen kinds ("fav" / "his" / "prog" / "order") as stable-key records for the backup file. */
@@ -112,12 +114,7 @@ class UserDataResolver(
      * next successful sync.
      */
     suspend fun relinkAfterSync(snapshot: JSONArray, purge: Boolean = true) {
-        val unresolved = JSONArray()
-        for (i in 0 until snapshot.length()) {
-            val e = snapshot.getJSONObject(i)
-            val ok = runCatching { resolveAndInsert(e) }.getOrDefault(false)
-            if (!ok) unresolved.put(e)
-        }
+        val unresolved = resolveAllChunked(snapshot)
         // Purge is strictly snapshot-scoped: only rows this snapshot captured (by their old ids) may
         // be dropped, and only when their content row is genuinely gone. An EMPTY snapshot must never
         // purge — the old fallback ran a GLOBAL orphan purge across ALL sources, which could delete
@@ -133,7 +130,7 @@ class UserDataResolver(
     private fun JSONArray.hasSourceSnapshotIds(): Boolean =
         length() > 0 && (0 until length()).all { getJSONObject(it).has("oid") }
 
-    private suspend fun purgeSnapshotOrphans(snapshot: JSONArray) {
+    private suspend fun purgeSnapshotOrphans(snapshot: JSONArray) = db.withTransaction {
         for (i in 0 until snapshot.length()) {
             val e = snapshot.getJSONObject(i)
             val type = runCatching { MediaType.valueOf(e.getString("t")) }.getOrNull() ?: continue
@@ -180,15 +177,34 @@ class UserDataResolver(
         val entries = runCatching { JSONArray(raw) }.getOrNull() ?: return
         if (entries.length() == 0) return
 
-        val remaining = JSONArray()
-        for (i in 0 until entries.length()) {
-            val e = entries.getJSONObject(i)
-            val resolved = runCatching { resolveAndInsert(e) }.getOrDefault(false)
-            if (!resolved) remaining.put(e)
-        }
+        val remaining = resolveAllChunked(entries)
         context.pendingStore.edit { prefs ->
             if (remaining.length() == 0) prefs.remove(PENDING_KEY) else prefs[PENDING_KEY] = remaining.toString()
         }
+    }
+
+    /**
+     * Resolves and inserts records in chunked transactions (B3): each record used to be 2–4 lookups
+     * plus a single-row insert in its OWN write transaction (one fsync each) — a restore of
+     * thousands of favorites/history rows became thousands of fsyncs. Per-record failures are
+     * still caught individually (a bad record never aborts its chunk); chunking keeps any single
+     * transaction short so sync/UI writers aren't starved. Returns the records that didn't resolve.
+     */
+    private suspend fun resolveAllChunked(entries: JSONArray): JSONArray {
+        val unresolved = JSONArray()
+        var i = 0
+        while (i < entries.length()) {
+            val end = minOf(i + RESOLVE_CHUNK, entries.length())
+            db.withTransaction {
+                for (j in i until end) {
+                    val e = entries.getJSONObject(j)
+                    val ok = runCatching { resolveAndInsert(e) }.getOrDefault(false)
+                    if (!ok) unresolved.put(e)
+                }
+            }
+            i = end
+        }
+        return unresolved
     }
 
     // --- export side: content row → stable identity ---
@@ -253,4 +269,9 @@ class UserDataResolver(
 
     private fun JSONObject.optStringOrNull(key: String): String? =
         if (isNull(key)) null else optString(key).takeIf { it.isNotEmpty() }
+
+    private companion object {
+        /** Records per write transaction in [resolveAllChunked]. */
+        const val RESOLVE_CHUNK = 500
+    }
 }

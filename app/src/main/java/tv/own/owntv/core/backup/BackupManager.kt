@@ -1,5 +1,6 @@
 package tv.own.owntv.core.backup
 
+import androidx.room.withTransaction
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.json.JSONArray
@@ -35,6 +36,7 @@ class BackupManager(
     private val launcherIntegrationRepository: LauncherIntegrationRepository,
     private val forceMpvStore: tv.own.owntv.core.player.ForceMpvStore,
     private val vodEngineStore: tv.own.owntv.core.player.VodEngineStore,
+    private val db: tv.own.owntv.core.database.OwnTVDatabase,
 ) {
     /** What a backup can contain; the user multi-selects these for export and restore. */
     enum class Section(val label: String, val desc: String) {
@@ -187,14 +189,19 @@ class BackupManager(
                 val links = root.optJSONArray("links") ?: JSONArray()
 
                 profileDao.getAllOnce().forEach { profile -> runCatching { launcherIntegrationRepository.clearProfile(profile.id) } }
-                profileDao.deleteAll()       // cascades favorites/history/progress/profile_source
-                sourceDao.deleteAllSources() // cascades content + profile_source
+                // B3: one transaction around the destructive wipe + re-insert — a crash mid-import
+                // used to leave a half-restored DB (profiles gone, sources partially written); now
+                // it's all-or-nothing, and thousands of row inserts share one commit/fsync.
+                db.withTransaction {
+                    profileDao.deleteAll()       // cascades favorites/history/progress/profile_source
+                    sourceDao.deleteAllSources() // cascades content + profile_source
 
-                for (i in 0 until profiles.length()) profileDao.insert(profileFrom(profiles.getJSONObject(i)))
-                for (i in 0 until sources.length()) sourceDao.insert(sourceFrom(sources.getJSONObject(i), unseal))
-                for (i in 0 until links.length()) {
-                    val l = links.getJSONObject(i)
-                    sourceDao.link(ProfileSourceCrossRef(profileId = l.getLong("profileId"), sourceId = l.getLong("sourceId")))
+                    for (i in 0 until profiles.length()) profileDao.insert(profileFrom(profiles.getJSONObject(i)))
+                    for (i in 0 until sources.length()) sourceDao.insert(sourceFrom(sources.getJSONObject(i), unseal))
+                    for (i in 0 until links.length()) {
+                        val l = links.getJSONObject(i)
+                        sourceDao.link(ProfileSourceCrossRef(profileId = l.getLong("profileId"), sourceId = l.getLong("sourceId")))
+                    }
                 }
                 epgSources.importJson(root.optString("epgSources").takeIf { it.isNotBlank() })
                 val profileIds = profileDao.getAllOnce().map { it.id }.toSet()

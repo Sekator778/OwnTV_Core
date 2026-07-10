@@ -80,8 +80,10 @@ class OwnTVDatabaseMigrationTest {
             assertIndexExists(sqlite, "index_epg_programmes_natural_key")
             assertTableExists(sqlite, "content_order")
             assertIndexExists(sqlite, "index_content_order_profileId_mediaType_contextKey_itemId")
-            // The natural-key dedupe must have removed the duplicate programme row.
-            assertCount(sqlite, "epg_programmes", 2)
+            // D1: v8→v9 now truncates the rebuildable programme cache (instant first launch)
+            // instead of the old row-wise de-dup; the guide re-downloads on the next EPG sync.
+            // epg_channels is untouched.
+            assertCount(sqlite, "epg_programmes", 0)
             assertCount(sqlite, "epg_channels", 2)
         } finally {
             db.close()

@@ -89,10 +89,11 @@ val dataModule = module {
             seriesDao = get(),
             db = get(),
             bulkInsertHelper = get(),
+            metadataDao = get(),
         )
     }
-    // context, channelDao, movieDao, seriesDao, profileDao, favoriteDao, historyDao, progressDao, contentOrderDao
-    single { UserDataResolver(androidContext(), get(), get(), get(), get(), get(), get(), get(), get()) }
+    // context, channelDao, movieDao, seriesDao, profileDao, favoriteDao, historyDao, progressDao, contentOrderDao, db
+    single { UserDataResolver(androidContext(), get(), get(), get(), get(), get(), get(), get(), get(), get()) }
     // sourceDao, syncManager, userDataResolver
     single { SourceRepository(get(), get(), get()) }
     single {
@@ -136,8 +137,8 @@ val dataModule = module {
     // context, downloadDao, okHttpClient, settings
     single { DownloadManager(androidContext(), get(), get(), get()) }
     // profileDao, sourceDao, settings, customizationStore, userDataResolver, epgSourceStore,
-    // launcherIntegrationRepository, forceMpvStore, vodEngineStore
-    single { BackupManager(get(), get(), get(), get(), get(), get(), get(), get(), get()) }
+    // launcherIntegrationRepository, forceMpvStore, vodEngineStore, db
+    single { BackupManager(get(), get(), get(), get(), get(), get(), get(), get(), get(), get()) }
     // context, okHttpClient — in-app updates from GitHub Releases
     single { UpdateManager(androidContext(), get()) }
     single { CatalogSyncScheduler(androidContext()) }

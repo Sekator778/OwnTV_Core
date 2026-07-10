@@ -134,6 +134,15 @@ interface MovieDao {
     @Query("SELECT * FROM movies WHERE sourceId IN (:sourceIds) AND name LIKE '%' || :query || '%' ORDER BY name ASC LIMIT :limit")
     suspend fun searchList(query: String, sourceIds: List<Long>, limit: Int): List<MovieEntity>
 
+    /** FTS-backed bounded list for global as-you-type search: index-served prefix-token match instead
+     *  of the leading-wildcard LIKE above, which scans all ~170k rows per keystroke. [ftsQuery] must be
+     *  a sanitized FTS MATCH expression (see SearchViewModel.ftsQueryFor). */
+    @Query(
+        "SELECT * FROM movies WHERE sourceId IN (:sourceIds) " +
+            "AND id IN (SELECT rowid FROM movies_fts WHERE movies_fts MATCH :ftsQuery) ORDER BY name ASC LIMIT :limit",
+    )
+    suspend fun searchListFts(ftsQuery: String, sourceIds: List<Long>, limit: Int): List<MovieEntity>
+
     @Query(
         "SELECT m.* FROM movies m INNER JOIN favorites f ON f.itemId = m.id AND f.mediaType = 'MOVIE' " +
             "WHERE f.profileId = :profileId AND m.sourceId IN (:sourceIds) AND m.name LIKE '%' || :query || '%' ORDER BY f.addedAt DESC",

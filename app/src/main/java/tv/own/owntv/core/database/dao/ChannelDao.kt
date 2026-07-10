@@ -211,6 +211,16 @@ interface ChannelDao {
     )
     suspend fun searchListDetailed(query: String, sourceIds: List<Long>, limit: Int): List<ChannelSearchResult>
 
+    /** FTS-backed variant of [searchListDetailed] for global as-you-type search (see MovieDao.searchListFts). */
+    @Query(
+        "SELECT c.*, cat.name AS categoryName FROM channels c " +
+            "LEFT JOIN categories cat ON c.categoryId = cat.id " +
+            "WHERE c.sourceId IN (:sourceIds) " +
+            "AND c.id IN (SELECT rowid FROM channels_fts WHERE channels_fts MATCH :ftsQuery) " +
+            "ORDER BY c.name ASC LIMIT :limit",
+    )
+    suspend fun searchListDetailedFts(ftsQuery: String, sourceIds: List<Long>, limit: Int): List<ChannelSearchResult>
+
     @Query(
         "SELECT c.* FROM channels c INNER JOIN favorites f ON f.itemId = c.id AND f.mediaType = 'LIVE' " +
             "WHERE f.profileId = :profileId AND c.sourceId IN (:sourceIds) AND c.name LIKE '%' || :query || '%' ORDER BY f.addedAt DESC",

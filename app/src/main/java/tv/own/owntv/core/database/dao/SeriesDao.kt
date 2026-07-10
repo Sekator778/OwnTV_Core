@@ -152,6 +152,13 @@ interface SeriesDao {
     @Query("SELECT * FROM series WHERE sourceId IN (:sourceIds) AND name LIKE '%' || :query || '%' ORDER BY name ASC LIMIT :limit")
     suspend fun searchList(query: String, sourceIds: List<Long>, limit: Int): List<SeriesEntity>
 
+    /** FTS-backed bounded list for global as-you-type search (see MovieDao.searchListFts). */
+    @Query(
+        "SELECT * FROM series WHERE sourceId IN (:sourceIds) " +
+            "AND id IN (SELECT rowid FROM series_fts WHERE series_fts MATCH :ftsQuery) ORDER BY name ASC LIMIT :limit",
+    )
+    suspend fun searchListFts(ftsQuery: String, sourceIds: List<Long>, limit: Int): List<SeriesEntity>
+
     @Query(
         "SELECT s.* FROM series s INNER JOIN favorites f ON f.itemId = s.id AND f.mediaType = 'SERIES' " +
             "WHERE f.profileId = :profileId AND s.sourceId IN (:sourceIds) AND s.name LIKE '%' || :query || '%' ORDER BY f.addedAt DESC",

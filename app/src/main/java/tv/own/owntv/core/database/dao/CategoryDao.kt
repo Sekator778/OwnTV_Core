@@ -14,8 +14,9 @@ interface CategoryDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun upsertAll(categories: List<CategoryEntity>): List<Long>
 
+    /** Returns rowids (−1 for IGNOREd conflicts) so the sync can learn new category ids without a re-query. */
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun insertAll(categories: List<CategoryEntity>)
+    suspend fun insertAll(categories: List<CategoryEntity>): List<Long>
 
     @Update
     suspend fun updateAll(categories: List<CategoryEntity>)

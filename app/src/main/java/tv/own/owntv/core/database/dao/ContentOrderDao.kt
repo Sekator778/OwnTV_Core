@@ -5,6 +5,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
+import kotlinx.coroutines.flow.Flow
 import tv.own.owntv.core.database.entity.ContentOrderEntity
 import tv.own.owntv.core.model.MediaType
 
@@ -19,6 +20,12 @@ interface ContentOrderDao {
 
     @Query("DELETE FROM content_order WHERE profileId = :profileId AND mediaType = :type AND contextKey = :contextKey")
     suspend fun clearContext(profileId: Long, type: MediaType, contextKey: String)
+
+    /** Context keys that actually have manual-order rows for this profile/section — the C3 fast
+     *  path: folders with no overrides use the plain indexed paging query instead of the
+     *  unindexable content_order join-sort (which materializes the whole folder per page). */
+    @Query("SELECT DISTINCT contextKey FROM content_order WHERE profileId = :profileId AND mediaType = :type")
+    fun observeContextKeys(profileId: Long, type: MediaType): Flow<List<String>>
 
     /** Replaces a context's entire order in one transaction (commit point of a Move). */
     @Transaction

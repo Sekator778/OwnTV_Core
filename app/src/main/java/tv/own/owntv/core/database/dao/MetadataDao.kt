@@ -40,4 +40,14 @@ interface MetadataDao {
 
     @Query("DELETE FROM metadata_match")
     suspend fun clearMatches()
+
+    // --- bounded eviction (C4): both tables grow unbounded as the user browses a ~220k-item
+    //     catalog. TTL delete rides the existing Index("updatedAt"); rows re-fetch on next focus.
+    //     Run off the cold-start path (after a sync completes — ImportFinalizer.finalize). ---
+
+    @Query("DELETE FROM metadata_cache WHERE updatedAt < :cutoff")
+    suspend fun evictCacheOlderThan(cutoff: Long): Int
+
+    @Query("DELETE FROM metadata_match WHERE updatedAt < :cutoff")
+    suspend fun evictMatchesOlderThan(cutoff: Long): Int
 }
