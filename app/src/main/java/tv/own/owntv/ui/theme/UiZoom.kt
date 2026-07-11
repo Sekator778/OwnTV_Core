@@ -6,8 +6,8 @@ package tv.own.owntv.ui.theme
  * [MIN]..[MAX] in [STEP] increments. Persisted via DataStore and adjusted from Settings.
  */
 object UiZoom {
-    const val MIN = 65
-    const val MAX = 140
+    const val MIN = 50
+    const val MAX = 150
     const val DEFAULT = 100
     const val STEP = 5
 

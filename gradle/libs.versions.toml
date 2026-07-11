@@ -31,6 +31,11 @@ media3 = "1.10.1"
 # libmpv (FFmpeg-based) — full codec/track support for IPTV, caching, speed, etc.
 libmpv = "1.0.0"
 
+# Installs the APK's merged baseline profiles (Compose/Media3/library-shipped) into ART at
+# install/boot time. Essential for a sideloaded app: without it, baseline profiles only ever
+# reach devices through Play cloud profiles, which OwnTV doesn't have.
+profileinstaller = "1.4.1"
+
 # --- Kotlin libs ---
 coroutines = "1.10.2"
 
@@ -83,6 +88,9 @@ androidx-room-testing = { group = "androidx.room", name = "room-testing", versio
 androidx-room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
 androidx-paging-runtime = { group = "androidx.paging", name = "paging-runtime", version.ref = "paging" }
 androidx-paging-compose = { group = "androidx.paging", name = "paging-compose", version.ref = "paging" }
+
+# Baseline profile installer (AOT-compiles hot paths from bundled profiles on sideloaded installs)
+androidx-profileinstaller = { group = "androidx.profileinstaller", name = "profileinstaller", version.ref = "profileinstaller" }
 
 # Coroutines
 kotlinx-coroutines-android = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref = "coroutines" }
