@@ -1,5 +1,7 @@
 package tv.own.owntv.features.home
 
+import androidx.compose.runtime.Immutable
+
 import org.json.JSONArray
 import org.json.JSONObject
 
@@ -31,6 +33,7 @@ enum class HeroKind {
     LIVE, MOVIES, SERIES,
 }
 
+@Immutable
 data class HomeConfig(
     val order: List<HomeRow> = HomeRow.entries.toList(),
     val hidden: Set<HomeRow> = setOf(HomeRow.RECENT_CHANNELS),

@@ -1,5 +1,7 @@
 package tv.own.owntv.core.database.entity
 
+import androidx.compose.runtime.Immutable
+
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
@@ -26,6 +28,7 @@ import tv.own.owntv.core.model.MediaType
         Index(value = ["sourceId", "mediaType", "remoteId"], unique = true),
     ],
 )
+@Immutable
 data class CategoryEntity(
     @PrimaryKey(autoGenerate = true) val id: Long = 0,
     val sourceId: Long,
@@ -56,6 +59,7 @@ data class CategoryEntity(
         Index(value = ["categoryId", "sortOrder", "name"]),
     ],
 )
+@Immutable
 data class ChannelEntity(
     @PrimaryKey(autoGenerate = true) val id: Long = 0,
     val sourceId: Long,
@@ -102,6 +106,7 @@ data class ChannelEntity(
         Index(value = ["categoryId", "rating", "name"]),
     ],
 )
+@Immutable
 data class MovieEntity(
     @PrimaryKey(autoGenerate = true) val id: Long = 0,
     val sourceId: Long,
@@ -143,6 +148,7 @@ data class MovieEntity(
         Index(value = ["categoryId", "rating", "name"]),
     ],
 )
+@Immutable
 data class SeriesEntity(
     @PrimaryKey(autoGenerate = true) val id: Long = 0,
     val sourceId: Long,

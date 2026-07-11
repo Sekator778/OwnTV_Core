@@ -691,7 +691,7 @@ class SettingsRepository(private val context: Context) {
         Keys.THEME_MODE, Keys.ACCENT, Keys.ACCENT_CUSTOM, Keys.DEFAULT_ZOOM,
         Keys.PREF_AUDIO_LANG, Keys.PREF_SUB_LANG, Keys.SORT_LIVE, Keys.SORT_GUIDE, Keys.SORT_MOVIES,
         Keys.SORT_SERIES, Keys.RESUME_MODE, Keys.CATCHUP_TZ, Keys.ANIMATION_LEVEL, Keys.VOD_VIEW_MODE,
-        Keys.WEATHER_LOCATION,
+        Keys.WEATHER_LOCATION, Keys.RECENT_SEARCHES,
         // Global proxy — non-secret fields only. The proxy password (Keys.PROXY_PASS) is NEVER part of
         // this whitelist; it is handled separately by BackupManager (encrypted or omitted).
         Keys.PROXY_HOST, Keys.PROXY_USER,
@@ -873,6 +873,9 @@ class SettingsRepository(private val context: Context) {
 
     /** Current proxy password, for the backup layer to encrypt. Never logged. */
     suspend fun currentProxyPassword(): String = context.dataStore.data.first()[Keys.PROXY_PASS] ?: ""
+
+    /** The user's own TMDB API key — a secret; BackupManager exports it encrypted-only (like the proxy password). */
+    suspend fun currentTmdbApiKey(): String = context.dataStore.data.first()[Keys.TMDB_API_KEY] ?: ""
 
     /** Sets only the proxy password (used on restore once decrypted). Blank clears it. */
     suspend fun setProxyPassword(password: String) {

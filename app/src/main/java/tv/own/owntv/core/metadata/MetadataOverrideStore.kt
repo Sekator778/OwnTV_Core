@@ -55,6 +55,24 @@ class MetadataOverrideStore(private val context: Context) {
         }
     }
 
+    // --- backup & restore (keys embed the source ids, which BackupManager preserves on restore) ---
+
+    /** The whole override map as its JSON blob ("" when empty), for the backup file. */
+    suspend fun exportJson(): String = context.metadataOverrideStore.data.first()[mapKey] ?: ""
+
+    /** Merges [raw] into the current map (backup entries win per key); returns the imported keys so
+     *  the caller can invalidate any cached TMDB match/details stored under them. */
+    suspend fun importJson(raw: String?): Set<String> {
+        val incoming = parseMap(raw)
+        if (incoming.isEmpty()) return emptySet()
+        context.metadataOverrideStore.edit { prefs ->
+            val map = parseMap(prefs[mapKey])
+            map.putAll(incoming)
+            prefs[mapKey] = serializeMap(map)
+        }
+        return incoming.keys
+    }
+
     private fun parseMap(raw: String?): HashMap<String, TmdbOverride> {
         if (raw.isNullOrBlank()) return HashMap()
         return runCatching {

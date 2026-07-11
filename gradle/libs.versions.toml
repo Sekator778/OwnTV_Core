@@ -14,7 +14,7 @@ tvProvider = "1.1.0"
 lifecycle = "2.10.0"
 navigationCompose = "2.9.8"
 datastore = "1.2.1"
-work = "2.10.0"
+work = "2.11.2"
 
 # --- Build tooling ---
 # KSP2 (decoupled versioning) targeting Kotlin 2.3.x. Used by Room. Verified 2026-06-09.
@@ -40,8 +40,8 @@ profileinstaller = "1.4.1"
 coroutines = "1.10.2"
 
 # --- Third party ---
-coil = "3.3.0"
-koin = "4.1.1"
+coil = "3.5.0"
+koin = "4.2.2"
 okhttp = "4.12.0"
 youtubePlayer = "13.0.0"
 
