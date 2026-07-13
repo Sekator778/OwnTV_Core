@@ -20,9 +20,14 @@ import androidx.media3.exoplayer.source.DefaultMediaSourceFactory
 import androidx.media3.exoplayer.source.MediaSource
 import androidx.media3.exoplayer.video.MediaCodecVideoRenderer
 import androidx.media3.exoplayer.video.VideoFrameMetadataListener
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import okhttp3.OkHttpClient
 import tv.own.owntv.core.network.HttpClient
 
@@ -233,10 +238,21 @@ class LivePreviewEngine(
     var currentUrl: String? = null
         private set
 
+    /**
+     * Reconnect URL provider — set ONLY when the current item's URL is short-lived and must be
+     * re-minted on reconnect (Stalker live, plan §5.4.1). Before a reconnect/HUD-retry reload, the
+     * engine awaits this; a null provider or null result → replay [currentUrl] as-is (M3U/Xtream,
+     * whose URLs are stable). Installed/cleared by `LiveViewModel` on each tune.
+     */
+    @Volatile var reconnectUrlProvider: tv.own.owntv.core.stalker.ReconnectUrlProvider? = null
+
+
     // Live auto-reconnect: a channel that DID play and then errors/stalls (provider hiccup / Wi-Fi blip)
     // re-fetches from the live edge instead of dead-ending. A channel that NEVER opened keeps the old
     // ERROR (so the VM falls back to mpv). retryCount resets whenever playback goes healthy again.
     private val mainHandler = android.os.Handler(android.os.Looper.getMainLooper())
+    /** Scope for the reconnect URL-provider (awaiting its suspend freshUrl() off-main, then reloading on main). */
+    private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
     private var hasPlayed = false
     private var retryCount = 0
     // Set just before our own stop()/release() touches the player, so the STATE_IDLE that follows is
@@ -577,7 +593,11 @@ class LivePreviewEngine(
 
     /** Live auto-reconnect: re-fetch [currentUrl] from the live edge after a mid-stream error/stall. Backs
      *  off and gives up after [MAX_RECONNECTS] consecutive failures (then the HUD's Retry button takes over).
-     *  retryCount is reset to 0 as soon as playback goes healthy again (STATE_READY). */
+     *  retryCount is reset to 0 as soon as playback goes healthy again (STATE_READY).
+     *
+     *  For an expiring-URL source (Stalker, plan §5.4.1) the reconnect must NOT replay the now-dead
+     *  resolved URL — a [reconnectUrlProvider] mints a fresh one first (null/absent → replay as-is,
+     *  which is correct for M3U/Xtream and direct-URL Stalker portals). */
     private fun reconnect(reason: String) {
         mainHandler.removeCallbacks(stallWatchdog); mainHandler.removeCallbacks(progressWatchdog)
         val p = player
@@ -595,15 +615,34 @@ class LivePreviewEngine(
         reconnectPending = true
         _error.value = null; _errorInfo.value = null; _state.value = State.LOADING; _buffering.value = true
         LiveDiagnosticsLog.event("reconnect attempt $retryCount/$MAX_RECONNECTS reason=$reason")
-        mainHandler.postDelayed({
-            if (currentUrl != url) { reconnectPending = false; return@postDelayed } // superseded (zapped / stopped)
-            reconnectPending = false
-            runCatching {
-                p.setMediaItem(MediaItem.fromUri(url)) // fresh fetch (live edge)
-                p.prepare()
-                p.playWhenReady = true
-            }.onFailure { _state.value = State.ERROR; _error.value = "Lost connection to this channel." }
-        }, (1500L * retryCount).coerceAtMost(4000L))
+        val delayMs = (1500L * retryCount).coerceAtMost(4000L)
+        // Resolve a fresh URL off-main (Stalker create_link is a network call) before the delayed reload.
+        val provider = reconnectUrlProvider
+        scope.launch {
+            val fresh = if (provider != null) {
+                withContext(Dispatchers.IO) {
+                    runCatching { provider.freshUrl() }
+                        .onFailure { LiveDiagnosticsLog.event("reconnect fresh-url failed: ${it.message}") }
+                        .getOrNull()
+                }
+            } else null
+            // Coalesce the backoff delay with the resolve: whichever is later wins, but the resolve must
+            // complete before we reload. Post the reload so it lands on the main thread's Looper after delay.
+            mainHandler.postDelayed({
+                if (currentUrl != url) { reconnectPending = false; return@postDelayed } // superseded (zapped / stopped)
+                reconnectPending = false
+                val loadUrl = fresh ?: url // null provider/result → replay the (still-valid) stored URL
+                if (fresh != null && fresh != url) {
+                    currentUrl = fresh // adopt the refreshed URL so a later reconnect compares against it
+                    LiveDiagnosticsLog.event("reconnect re-resolved expiring URL (${HttpClient.redactUrl(fresh)})")
+                }
+                runCatching {
+                    p.setMediaItem(MediaItem.fromUri(loadUrl)) // fresh fetch (live edge)
+                    p.prepare()
+                    p.playWhenReady = true
+                }.onFailure { _state.value = State.ERROR; _error.value = "Lost connection to this channel." }
+            }, delayMs)
+        }
     }
 
     // --- PlaybackEngine controls (full-screen HUD) ---
@@ -624,7 +663,20 @@ class LivePreviewEngine(
     }
 
     override fun toggleMute() = setMuted(!muted)
-    override fun retry() { currentUrl?.let { play(it, muted, _currentMeta.value) } }
+    override fun retry() {
+        val url = currentUrl ?: return
+        val provider = reconnectUrlProvider
+        if (provider == null) { play(url, muted, _currentMeta.value); return }
+        // Expiring-URL source (Stalker): re-resolve before retrying, then reload on the main thread.
+        scope.launch {
+            val fresh = withContext(Dispatchers.IO) {
+                runCatching { provider.freshUrl() }
+                    .onFailure { LiveDiagnosticsLog.event("retry fresh-url failed: ${it.message}") }
+                    .getOrNull()
+            }
+            play(fresh ?: url, muted, _currentMeta.value)
+        }
+    }
     override fun selectAudio(id: Int) {
         val p = player ?: return
         val sel = audioSelections.firstOrNull { it.id == id } ?: return

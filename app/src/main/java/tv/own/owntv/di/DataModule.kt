@@ -72,6 +72,10 @@ val dataModule = module {
     single { tv.own.owntv.core.epg.EpgMigration(get(), get(), get()) }
     single { M3uParser() }
     single { XtreamClient(get()) }
+    // Stalker portal (plan Phase A/B): protocol client on the shared OkHttpClient + in-memory sessions.
+    single { tv.own.owntv.core.stalker.StalkerClient(get()) }
+    single { tv.own.owntv.core.stalker.StalkerAuthManager(get()) }
+    single { tv.own.owntv.core.stalker.StreamUrlResolver(get(), get()) }
     // TMDB metadata enrichment (plan §4): one provider, three tiers resolved from SettingsRepository.
     single<tv.own.owntv.core.metadata.MetadataProvider> {
         tv.own.owntv.core.metadata.TmdbProvider(get(), get())
@@ -108,6 +112,8 @@ val dataModule = module {
             m3u = get(),
             http = get(),
             bulkInsertHelper = get(),
+            stalkerClient = get(),
+            stalkerAuth = get(),
         )
     }
     // epgDao, httpClient, xtreamClient, channelDao, customize, settings, context, db, bulkInsertHelper
@@ -124,8 +130,8 @@ val dataModule = module {
             bulkInsertHelper = get(),
         )
     }
-    // seriesDao, sourceDao, xtreamClient, userDataResolver
-    single { SeriesRepository(get(), get(), get(), get()) }
+    // seriesDao, sourceDao, xtreamClient, userDataResolver, stalkerClient, stalkerAuthManager
+    single { SeriesRepository(get(), get(), get(), get(), get(), get()) }
     // sourceDao, movieDao, seriesDao, progressDao
     single { LauncherRecommendationPlanner(get(), get(), get(), get()) }
     // sourceDao, channelDao, movieDao, seriesDao, progressDao
@@ -134,8 +140,9 @@ val dataModule = module {
     single { TvHomeRepository(androidContext(), get(), get(), get(), get(), get(), get(), get(), get(), get()) }
     // planner, resolver, tvHomeRepository
     single { LauncherIntegrationRepository(get(), get(), get()) }
-    // context, downloadDao, okHttpClient, settings
-    single { DownloadManager(androidContext(), get(), get(), get()) }
+    // context, downloadDao, okHttpClient, settings, sourceDao, movieDao, seriesDao, streamUrlResolver
+    // (the last four are D-3: Stalker downloads resolve the stored cmd at download-start time)
+    single { DownloadManager(androidContext(), get(), get(), get(), get(), get(), get(), get()) }
     // profileDao, sourceDao, settings, customizationStore, userDataResolver, epgSourceStore,
     // launcherIntegrationRepository, forceMpvStore, vodEngineStore, db, metadataOverrideStore, metadataDao
     single { BackupManager(get(), get(), get(), get(), get(), get(), get(), get(), get(), get(), get(), get()) }

@@ -55,6 +55,9 @@ class CatalogSyncWorker(
         val trackedContentTypes = when (source.type) {
             SourceType.XTREAM -> contentTypes
             SourceType.M3U, SourceType.LOCAL_BACKUP -> SyncContentTypes(live = true, movies = false, series = false)
+            // Stalker (Phase F): full catalog like Xtream — live + VOD + series all sync (C-1/D-1),
+            // and re-syncs are hash-diffed upserts (StalkerSyncer), so auto refresh is non-destructive.
+            SourceType.STALKER -> contentTypes
         }
         val progressPublisher = ProgressPublisher(trackedContentTypes, baseItemCount)
         progressPublisher.publishStarting()

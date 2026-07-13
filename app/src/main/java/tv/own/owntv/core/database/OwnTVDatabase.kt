@@ -74,7 +74,7 @@ import tv.own.owntv.core.database.entity.TvProviderProgramEntity
         SeriesFtsEntity::class,
         EpisodeFtsEntity::class,
     ],
-    version = 13, // v7: content_order (Move). v8: contentHash + browse/unique indexes. v9: EPG contentHash + natural key. v10: TMDB metadata cache. v11: movies/series rating-sort indexes. v12: metadata_cache trailerKey. v13: metadata_cache logoPath
+    version = 14, // v7: content_order (Move). v8: contentHash + browse/unique indexes. v9: EPG contentHash + natural key. v10: TMDB metadata cache. v11: movies/series rating-sort indexes. v12: metadata_cache trailerKey. v13: metadata_cache logoPath. v14: sources.mac (Stalker portal)
 
     exportSchema = true,
 )
@@ -350,6 +350,18 @@ abstract class OwnTVDatabase : RoomDatabase() {
         val MIGRATION_12_13 = object : androidx.room.migration.Migration(12, 13) {
             override fun migrate(db: androidx.sqlite.db.SupportSQLiteDatabase) {
                 db.execSQL("ALTER TABLE `metadata_cache` ADD COLUMN `logoPath` TEXT")
+            }
+        }
+
+        /**
+         * v13 → v14: nullable `mac` on sources for the Stalker portal source type (null for
+         * M3U/Xtream). Additive; preserves all user data.
+         */
+        val MIGRATION_13_14 = object : androidx.room.migration.Migration(13, 14) {
+            override fun migrate(db: androidx.sqlite.db.SupportSQLiteDatabase) {
+                if (!hasColumn(db, "sources", "mac")) {
+                    db.execSQL("ALTER TABLE `sources` ADD COLUMN `mac` TEXT")
+                }
             }
         }
 

@@ -42,6 +42,13 @@ class SourceRepository(
         SourceEntity(name = name, type = SourceType.M3U, url = url, userAgent = userAgent, epgUrl = epgUrl),
     )
 
+    suspend fun addStalkerSource(
+        profileId: Long, name: String, portalUrl: String, mac: String, userAgent: String? = null,
+    ): SourceEntity = addAndLink(
+        profileId,
+        SourceEntity(name = name, type = SourceType.STALKER, url = portalUrl, mac = mac, userAgent = userAgent),
+    )
+
     private suspend fun addAndLink(profileId: Long, source: SourceEntity): SourceEntity {
         val id = sourceDao.insert(source)
         sourceDao.link(ProfileSourceCrossRef(profileId = profileId, sourceId = id))

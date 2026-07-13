@@ -74,6 +74,19 @@ fun syncProgressCountsForSource(
         moviesActive = false,
         seriesActive = false,
     )
+    // Stalker: LIVE ships (Phase C-1); VOD/series arrive in Phase D. Progress is shaped like Xtream
+    // so a later Phase D needs no change here.
+    SourceType.STALKER -> {
+        val hasActivePhase = liveActive || moviesActive || seriesActive
+        SyncProgressCounts(
+            live = liveProcessed,
+            movies = moviesProcessed,
+            series = seriesProcessed,
+            liveActive = if (hasActivePhase) liveActive else true,
+            moviesActive = if (hasActivePhase) moviesActive else true,
+            seriesActive = if (hasActivePhase) seriesActive else true,
+        )
+    }
 }
 
 fun importProgressDisplay(counts: SyncProgressCounts?): SyncProgressDisplay {

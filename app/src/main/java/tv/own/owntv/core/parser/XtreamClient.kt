@@ -348,6 +348,44 @@ class XtreamClient(private val http: HttpClient) {
         "${base(s)}/series/${s.username}/${s.password}/$episodeId.${ext ?: "mp4"}"
 
     /** Full XMLTV guide for the whole account (all channels) — the bulk EPG used by the guide grid. */
+    /**
+     * Account expiry from the bare `player_api.php` call (`user_info.exp_date`, epoch seconds) —
+     * null when the panel reports none/unlimited or the payload is malformed. Small response; used
+     * for the Manage-sources "Expires …" line, never during sync.
+     */
+    suspend fun accountExpiryMs(s: SourceEntity): Long? {
+        val u = URLEncoder.encode(s.username.orEmpty(), "UTF-8")
+        val p = URLEncoder.encode(s.password.orEmpty(), "UTF-8")
+        return http.get("${base(s)}/player_api.php?username=$u&password=$p", s.userAgent) { input ->
+            var expSec: Long? = null
+            JsonReader(java.io.InputStreamReader(input, Charsets.UTF_8)).use { r ->
+                if (r.peek() != JsonToken.BEGIN_OBJECT) return@use
+                r.beginObject()
+                while (r.hasNext()) {
+                    if (r.nextName() == "user_info" && r.peek() == JsonToken.BEGIN_OBJECT) {
+                        r.beginObject()
+                        while (r.hasNext()) {
+                            if (r.nextName() == "exp_date") {
+                                expSec = when (r.peek()) {
+                                    JsonToken.STRING -> r.nextString().toLongOrNull()
+                                    JsonToken.NUMBER -> r.nextLong()
+                                    else -> { r.skipValue(); null }
+                                }
+                            } else {
+                                r.skipValue()
+                            }
+                        }
+                        r.endObject()
+                    } else {
+                        r.skipValue()
+                    }
+                }
+                r.endObject()
+            }
+            expSec?.takeIf { it > 0 }?.times(1000)
+        }
+    }
+
     fun xmltvUrl(s: SourceEntity): String {
         val u = URLEncoder.encode(s.username.orEmpty(), "UTF-8")
         val p = URLEncoder.encode(s.password.orEmpty(), "UTF-8")

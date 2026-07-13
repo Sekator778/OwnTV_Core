@@ -36,10 +36,13 @@ class SyncManager(
     m3u: M3uParser,
     http: HttpClient,
     bulkInsertHelper: BulkInsertHelper,
+    stalkerClient: tv.own.owntv.core.stalker.StalkerClient,
+    stalkerAuth: tv.own.owntv.core.stalker.StalkerAuthManager,
 ) {
     private val support = SyncSupport(categoryDao, channelDao, movieDao, seriesDao)
     private val xtreamSyncer = XtreamSyncer(xtream, bulkInsertHelper, support)
     private val m3uSyncer = M3uSyncer(context, sourceDao, categoryDao, channelDao, movieDao, seriesDao, m3u, http, bulkInsertHelper)
+    private val stalkerSyncer = StalkerSyncer(stalkerClient, stalkerAuth, bulkInsertHelper, support, sourceDao)
 
     private val lastSyncStats = java.util.concurrent.ConcurrentHashMap<Long, SyncRunStats>()
 
@@ -52,6 +55,8 @@ class SyncManager(
             val trackedContentTypes = when (source.type) {
                 SourceType.XTREAM -> contentTypes
                 SourceType.M3U, SourceType.LOCAL_BACKUP -> SyncContentTypes(live = true, movies = false, series = false)
+                // Stalker: LIVE (Phase C-1) + VOD/series (Phase D-1) all sync via StalkerSyncer.
+                SourceType.STALKER -> contentTypes
             }
             Log.i(
                 TAG,
@@ -64,6 +69,7 @@ class SyncManager(
                     SourceType.XTREAM -> xtreamSyncer.sync(source, progress, stats, contentTypes)
                     SourceType.M3U -> m3uSyncer.sync(source, progress, stats)
                     SourceType.LOCAL_BACKUP -> Unit
+                    SourceType.STALKER -> stalkerSyncer.sync(source, progress, stats, contentTypes)
                 }
                 if (source.type != SourceType.XTREAM || contentTypes == SyncContentTypes()) {
                     val markStartedAt = SystemClock.elapsedRealtime()

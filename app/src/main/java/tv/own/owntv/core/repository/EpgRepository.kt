@@ -105,6 +105,9 @@ class EpgRepository(
         SourceType.XTREAM -> source.epgUrl?.takeIf { it.isNotBlank() } ?: xtream.xmltvUrl(source)
         SourceType.M3U -> source.epgUrl?.takeIf { it.isNotBlank() }
         SourceType.LOCAL_BACKUP -> null
+        // Stalker: user-pasted XMLTV, or the portal-advertised one adopted into epgUrl at sync
+        // (StalkerSyncer.adoptPortalXmltvUrl, Phase E §5.5). Bulk get_epg_info is never used (OOM risk).
+        SourceType.STALKER -> source.epgUrl?.takeIf { it.isNotBlank() }
     }
 
     fun hasGuide(source: SourceEntity): Boolean = guideUrl(source) != null

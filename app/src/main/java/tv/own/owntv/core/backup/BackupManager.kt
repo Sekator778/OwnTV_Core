@@ -72,7 +72,7 @@ class BackupManager(
             val seal: ((String) -> JSONObject)? = key?.let { k -> { plain -> BackupCrypto.encrypt(k, plain) } }
 
             val root = JSONObject().apply {
-                put("version", 9) // v9: custom TMDB names (CUSTOMIZE), encrypted TMDB API key + recent searches (SETTINGS)
+                put("version", 10) // v10: sources.mac (Stalker portal MAC, encrypted like password). v9: custom TMDB names (CUSTOMIZE), encrypted TMDB API key + recent searches (SETTINGS)
                 put("sections", JSONArray().apply { sections.forEach { put(it.name) } })
                 if (salt != null) put("crypto", BackupCrypto.cryptoBlock(salt))
                 if (Section.SOURCES in sections) {
@@ -298,12 +298,17 @@ class BackupManager(
         return true // crypto block but no actual encrypted field — nothing to validate against
     }
 
-    /** Finds the first encrypted secret object in the file (a source password or the proxy password). */
+    /** Finds the first encrypted secret object in the file (a source password, a Stalker MAC, or the proxy/TMDB key). */
     private fun firstEncryptedSecret(root: JSONObject): JSONObject? {
         root.optJSONArray("sources")?.let { arr ->
             for (i in 0 until arr.length()) {
-                val pw = arr.getJSONObject(i).opt("password")
+                val src = arr.getJSONObject(i)
+                val pw = src.opt("password")
                 if (BackupCrypto.isEncrypted(pw)) return pw as JSONObject
+                // A Stalker source's MAC is its only secret (password is null), so probe it too —
+                // otherwise an all-Stalker backup couldn't validate the passphrase.
+                val mac = src.opt("mac")
+                if (BackupCrypto.isEncrypted(mac)) return mac as JSONObject
             }
         }
         root.optJSONObject("settings")?.opt("proxy_pass_enc")?.let { if (BackupCrypto.isEncrypted(it)) return it as JSONObject }
@@ -336,6 +341,9 @@ class BackupManager(
         // Password: encrypted object when a passphrase was given, otherwise omitted (never plaintext).
         val pw = s.password?.takeIf { it.isNotEmpty() }
         put("password", if (pw != null && seal != null) seal(pw) else JSONObject.NULL)
+        // Stalker MAC: same secret policy as the password — encrypted with a passphrase, else omitted.
+        val macVal = s.mac?.takeIf { it.isNotEmpty() }
+        put("mac", if (macVal != null && seal != null) seal(macVal) else JSONObject.NULL)
         put("userAgent", s.userAgent ?: JSONObject.NULL); put("epgUrl", s.epgUrl ?: JSONObject.NULL)
         put("createdAt", s.createdAt); put("lastSyncAt", s.lastSyncAt ?: JSONObject.NULL)
     }
@@ -345,6 +353,9 @@ class BackupManager(
         type = runCatching { SourceType.valueOf(o.getString("type")) }.getOrDefault(SourceType.M3U),
         url = o.getString("url"), username = o.optStringOrNull("username"),
         password = if (o.isNull("password")) null else unseal(o.opt("password")),
+        // Stalker MAC: restored from its encrypted block when a passphrase was given; null on backups
+        // older than v10 (no "mac" key) or when the MAC was omitted (no passphrase).
+        mac = if (o.isNull("mac")) null else unseal(o.opt("mac")),
         userAgent = o.optStringOrNull("userAgent"), epgUrl = o.optStringOrNull("epgUrl"),
         createdAt = o.optLong("createdAt", System.currentTimeMillis()),
         lastSyncAt = if (o.isNull("lastSyncAt")) null else o.optLong("lastSyncAt"),

@@ -23,7 +23,7 @@ data class ProfileEntity(
     val createdAt: Long = System.currentTimeMillis(),
 )
 
-/** An IPTV source (M3U file/URL or Xtream account). Content rows reference their `sourceId`. */
+/** An IPTV source (M3U file/URL, Xtream account, or Stalker portal). Content rows reference their `sourceId`. */
 @Entity(
     tableName = "sources",
     indices = [Index("type")],
@@ -35,6 +35,8 @@ data class SourceEntity(
     val url: String,
     val username: String? = null,
     val password: String? = null,
+    /** Stalker portal MAC in canonical `AA:BB:CC:DD:EE:FF` form; null for M3U/Xtream. */
+    val mac: String? = null,
     val userAgent: String? = null,
     /** XMLTV guide URL (M3U `url-tvg` or manually entered); Xtream EPG comes from the API. */
     val epgUrl: String? = null,

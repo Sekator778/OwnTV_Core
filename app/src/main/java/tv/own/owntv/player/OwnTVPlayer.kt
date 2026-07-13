@@ -17,6 +17,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import tv.own.owntv.core.network.HttpClient
 import tv.own.owntv.features.settings.data.SettingsRepository
 import java.util.Locale
@@ -62,9 +63,12 @@ data class MediaMeta(
     val logoUrl: String? = null,
 )
 
-/** An item in a play queue (e.g. a season's episodes), for prev/next. */
+/** An item in a play queue (e.g. a season's episodes), for prev/next.
+ *  [resolveUrl] mints the playable URL right before this item loads (Stalker episodes: a per-episode
+ *  `create_link` — the stored [url] is the season cmd shared by the whole queue, and each play needs
+ *  a fresh short-lived link). Null (M3U/Xtream) = load [url] directly, exactly as before. */
 @Immutable
-data class PlaylistItem(val url: String, val meta: MediaMeta = MediaMeta())
+data class PlaylistItem(val url: String, val meta: MediaMeta = MediaMeta(), val resolveUrl: (suspend () -> String)? = null)
 
 /** Whether prev/next are available in the current queue. */
 @Immutable
@@ -158,6 +162,14 @@ class OwnTVPlayer(
     private var pendingSeekMs = 0L
     @Volatile private var pendingStartPaused = false // load this item paused (restore a backgrounded VOD)
     private var currentUrl: String? = null
+    /**
+     * Reconnect URL provider — set ONLY for an expiring-URL source (Stalker live, plan §5.4.1). The
+     * live stall-reconnect watchdogs and HUD Retry await it before reloading, so a Stalker stream
+     * that dies mid-session gets a fresh create_link instead of looping on the dead resolved URL.
+     * Null (default) → M3U/Xtream behavior unchanged (replay the stored URL). Installed/cleared by
+     * `LiveViewModel` on each tune. VOD never sets this (VOD URLs are stable).
+     */
+    @Volatile var reconnectUrlProvider: tv.own.owntv.core.stalker.ReconnectUrlProvider? = null
     private var expectingPlayback = false
     /** Two-stage watchdog (Dev 3 approach). [fileLoaded] is set when mpv fires EVENT_FILE_LOADED.
      *  [loadStartTime] marks when loadUrl started — used for T_OPEN (5s) and T_DECODE (7s) timeouts.
@@ -1248,7 +1260,7 @@ class OwnTVPlayer(
         playlistIndex = startIndex.coerceIn(0, (items.size - 1).coerceAtLeast(0))
         val item = items.getOrNull(playlistIndex) ?: return
         _zoomMode.value = defaultZoom
-        loadUrl(item.url, item.meta, isLive = false, startPositionMs)
+        loadItem(item, startPositionMs)
         updateNav()
     }
 
@@ -1268,8 +1280,35 @@ class OwnTVPlayer(
 
     private fun playCurrent() {
         val item = playlist.getOrNull(playlistIndex) ?: return
-        loadUrl(item.url, item.meta, isLive = false, 0)
+        loadItem(item, startPositionMs = 0)
         updateNav()
+    }
+
+    /** Load a queue item. A plain item loads its stored URL synchronously (unchanged path); an item
+     *  with [PlaylistItem.resolveUrl] awaits the fresh URL off-main first, aborting if a newer
+     *  load/stop supersedes it meanwhile (same generation guard as the live reconnect resolve). */
+    private fun loadItem(item: PlaylistItem, startPositionMs: Long) {
+        val resolve = item.resolveUrl
+        if (resolve == null) {
+            loadUrl(item.url, item.meta, isLive = false, startPositionMs)
+            return
+        }
+        val gen = loadGeneration
+        _buffering.value = true // resolving counts as loading — keep the spinner up instead of a dead frame
+        scope.launch {
+            val url = try {
+                kotlinx.coroutines.withContext(Dispatchers.IO) { resolve() }
+            } catch (e: Exception) {
+                android.util.Log.w(TAG, "queue item resolve failed: ${e.message}")
+                if (gen == loadGeneration) {
+                    _buffering.value = false
+                    _error.value = "Could not get a stream link from the portal. Check the connection and try again."
+                }
+                return@launch
+            }
+            if (gen != loadGeneration) return@launch // superseded by another load/stop meanwhile
+            loadUrl(url, item.meta, isLive = false, startPositionMs)
+        }
     }
 
     private fun updateNav() {
@@ -1519,9 +1558,10 @@ class OwnTVPlayer(
                             liveStallReconnects++
                             android.util.Log.w(TAG, "live stall (mpv, Live) — no progress for ~${frozenMs}ms, reconnect attempt $liveStallReconnects/$MAX_LIVE_RECONNECTS")
                             _buffering.value = true // spinner while we re-fetch the live edge
-                            // Re-fetch in place, preserving the decoder retry budget; loadUrl bumps the
+                            // Re-fetch in place, preserving the decoder retry budget; reloadLive bumps the
                             // generation, ending this loop, and starts a fresh watchdog for the new load.
-                            loadUrl(currentUrl ?: return@launch, MediaMeta(currentTitle, currentSubtitle, currentYear, currentLogoUrl), isLive = true, startPositionMs = 0L, resetRetries = false)
+                            val stalledUrl = currentUrl ?: return@launch
+                            reloadLive(stalledUrl, resetRetries = false)
                             return@launch
                         } else {
                             android.util.Log.w(TAG, "live stall (mpv, Live) — reconnect budget exhausted after $MAX_LIVE_RECONNECTS attempts, surfacing error")
@@ -1550,7 +1590,8 @@ class OwnTVPlayer(
                                 noVideoStalls = 0
                                 android.util.Log.w(TAG, "no-video (mpv, Live) — reconnect attempt $liveStallReconnects/$MAX_LIVE_RECONNECTS")
                                 _buffering.value = true
-                                loadUrl(currentUrl ?: return@launch, MediaMeta(currentTitle, currentSubtitle, currentYear, currentLogoUrl), isLive = true, startPositionMs = 0L, resetRetries = false)
+                                val stalledUrl = currentUrl ?: return@launch
+                                reloadLive(stalledUrl, resetRetries = false)
                                 return@launch
                             } else {
                                 android.util.Log.w(TAG, "no-video (mpv, Live) — reconnect budget exhausted, surfacing error")
@@ -1666,7 +1707,29 @@ class OwnTVPlayer(
 
     fun retry() {
         val url = currentUrl ?: return
-        loadUrl(url, MediaMeta(currentTitle, currentSubtitle, currentYear, currentLogoUrl), isLiveContent, 0)
+        reloadLive(url, resetRetries = true)
+    }
+
+    /**
+     * Re-fetch the live edge — used by the stall-reconnect watchdogs and HUD Retry. For an
+     * expiring-URL source (Stalker, [reconnectUrlProvider] set) it mints a fresh URL first (a
+     * network call on IO); otherwise it reloads [url] directly. `loadGeneration` is captured so a
+     * zap/stop during the resolve aborts the reload.
+     */
+    private fun reloadLive(url: String, resetRetries: Boolean) {
+        val provider = reconnectUrlProvider
+        if (provider == null) {
+            loadUrl(url, MediaMeta(currentTitle, currentSubtitle, currentYear, currentLogoUrl), isLive = true, startPositionMs = 0L, resetRetries = resetRetries)
+            return
+        }
+        val gen = loadGeneration
+        scope.launch {
+            val fresh = withContext(Dispatchers.IO) {
+                runCatching { provider.freshUrl() }.getOrNull()
+            }
+            if (gen != loadGeneration || currentUrl == null) return@launch // zapped/stopped during resolve
+            loadUrl(fresh ?: url, MediaMeta(currentTitle, currentSubtitle, currentYear, currentLogoUrl), isLive = true, startPositionMs = 0L, resetRetries = resetRetries)
+        }
     }
 
     fun stop() {

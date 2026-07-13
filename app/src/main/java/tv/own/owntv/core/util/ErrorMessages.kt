@@ -15,6 +15,16 @@ fun friendlySyncError(raw: String?, online: Boolean): String = when {
         "Couldn't connect to the server. It may be down, or the address may be wrong."
     raw.containsAny("stream was reset", "PROTOCOL_ERROR", "StreamReset") ->
         "The server interrupted the download. Please try again."
+    // Stalker/MAC portals (Phase F): these needles match StalkerClient/StalkerSyncer's own exception
+    // strings, so MAC-auth failures don't fall through to the username/password copy below.
+    // "MAC not authorized" also matches parseEnvelope's "empty payload — token expired or MAC not
+    // authorized" (thrown after the one-shot re-handshake already failed, so it's a MAC problem).
+    raw.containsAny("MAC may not be authorized", "MAC not authorized", "Portal rejected", "no valid MAC") ->
+        "The portal refused this MAC address. Check the MAC (and the TV's date & time) — or the subscription may have expired."
+    raw.containsAny("Portal handshake", "portal API endpoint") ->
+        "Couldn't reach the portal. Check the portal URL — it usually ends in /c/."
+    raw.containsAny("token may have expired", "returned no cmd") ->
+        "The portal session expired. Please try again."
     raw.containsAny("HTTP 401", "HTTP 403") ->
         "The server rejected your login. Check your username and password."
     raw.contains("HTTP 404") -> "Not found on the server. Check the URL."
