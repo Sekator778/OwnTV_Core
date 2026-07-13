@@ -127,6 +127,11 @@ class SettingsRepository(private val context: Context) {
         val METADATA_MODE = stringPreferencesKey("metadata_mode")
         val TMDB_API_KEY = stringPreferencesKey("tmdb_api_key")
         val METADATA_SERVER_URL = stringPreferencesKey("metadata_server_url")
+        // Nav menu customization (v4.3.0): DYNAMIC auto-adapts the side icons to what the active playlist
+        // offers; STATIC lets the user hide specific icons. NAV_HIDDEN holds MainSection.name values the
+        // user has hidden (STATIC mode only — DYNAMIC ignores it).
+        val NAV_MENU_MODE = stringPreferencesKey("nav_menu_mode")
+        val NAV_MENU_HIDDEN = stringSetPreferencesKey("nav_menu_hidden")
     }
 
     // --- Live TV: remember the last focused channel so reopening lands focus back on it ---
@@ -346,6 +351,33 @@ class SettingsRepository(private val context: Context) {
 
     suspend fun setResumeMode(mode: ResumeMode) {
         context.dataStore.edit { it[Keys.RESUME_MODE] = mode.name }
+    }
+
+    // --- Nav menu customization (v4.3.0) ---
+    // DYNAMIC: the side icons adapt to what the active playlist actually contains (Home & Settings
+    // always show; Live/Guide show when there are channels; Movies/Series show when their content
+    // exists; Downloads shows when Movies OR Series exist since Live has no download). STATIC: the
+    // user picks exactly which icons to hide. Default STATIC (all visible) → existing users see no
+    // change until they opt into Dynamic.
+
+    enum class NavMenuMode(val label: String) { DYNAMIC("Dynamic"), STATIC("Static") }
+
+    val navMenuMode: Flow<NavMenuMode> = context.dataStore.data.map { prefs ->
+        prefs[Keys.NAV_MENU_MODE]?.let { runCatching { NavMenuMode.valueOf(it) }.getOrNull() } ?: NavMenuMode.STATIC
+    }
+
+    suspend fun setNavMenuMode(mode: NavMenuMode) {
+        context.dataStore.edit { it[Keys.NAV_MENU_MODE] = mode.name }
+    }
+
+    /** Names of the [tv.own.owntv.features.shell.MainSection] browse items the user has hidden (STATIC mode). */
+    val navMenuHidden: Flow<Set<String>> = context.dataStore.data.map { it[Keys.NAV_MENU_HIDDEN] ?: emptySet() }
+
+    /** Replace the whole hidden set. Empty = all visible. */
+    suspend fun setNavMenuHidden(hidden: Set<String>) {
+        context.dataStore.edit { prefs ->
+            if (hidden.isEmpty()) prefs.remove(Keys.NAV_MENU_HIDDEN) else prefs[Keys.NAV_MENU_HIDDEN] = hidden
+        }
     }
 
     // --- List sorting (per browse section) ---
@@ -702,6 +734,12 @@ class SettingsRepository(private val context: Context) {
         // device a path that no longer exists is harmless — StorageAccess.resolveRoot falls back to app
         // storage, so a stale restore never breaks downloads.
         Keys.DOWNLOAD_ROOT,
+        // Nav menu mode rides with settings backup so a reinstall keeps the user's DYNAMIC/STATIC choice.
+        Keys.NAV_MENU_MODE,
+    )
+    private val backupStringSetKeys = listOf(
+        // The STATIC-mode hidden set rides with backup so a reinstall keeps the user's hidden icons.
+        Keys.NAV_MENU_HIDDEN,
     )
     private val backupIntKeys = listOf(Keys.UI_ZOOM_PCT, Keys.AUDIO_DELAY_MS, Keys.CATCHUP_OFFSET_MIN, Keys.PROXY_PORT)
     private val backupBoolKeys = listOf(
@@ -715,6 +753,7 @@ class SettingsRepository(private val context: Context) {
         val p = context.dataStore.data.first()
         return org.json.JSONObject().apply {
             backupStringKeys.forEach { k -> p[k]?.let { put(k.name, it) } }
+            backupStringSetKeys.forEach { k -> p[k]?.let { put(k.name, org.json.JSONArray(it)) } }
             backupIntKeys.forEach { k -> p[k]?.let { put(k.name, it) } }
             backupBoolKeys.forEach { k -> p[k]?.let { put(k.name, it) } }
             backupFloatKeys.forEach { k -> p[k]?.let { put(k.name, it.toDouble()) } }
@@ -724,6 +763,9 @@ class SettingsRepository(private val context: Context) {
     suspend fun importSettings(o: org.json.JSONObject) {
         context.dataStore.edit { prefs ->
             backupStringKeys.forEach { k -> if (o.has(k.name)) prefs[k] = o.getString(k.name) }
+            backupStringSetKeys.forEach { k ->
+                if (o.has(k.name)) prefs[k] = o.getJSONArray(k.name).let { arr -> buildSet { for (i in 0 until arr.length()) add(arr.getString(i)) } }
+            }
             backupIntKeys.forEach { k -> if (o.has(k.name)) prefs[k] = o.getInt(k.name) }
             backupBoolKeys.forEach { k -> if (o.has(k.name)) prefs[k] = o.getBoolean(k.name) }
             backupFloatKeys.forEach { k -> if (o.has(k.name)) prefs[k] = o.getDouble(k.name).toFloat() }
