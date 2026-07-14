@@ -26,14 +26,11 @@ class OwnTVDatabaseMigrationTest {
     }
 
     @Test
-    fun migrateVersion2To4_preservesUserData_andUnifiesTvProviderAndCatchup() {
+    fun migrateVersion2ToCurrent_preservesUserData_andUnifiesTvProviderAndCatchup() {
         context.deleteDatabase(DB_NAME)
         bootstrapVersion2Database()
 
-        val db = Room.databaseBuilder(context, OwnTVDatabase::class.java, DB_NAME)
-            .addMigrations(OwnTVDatabase.MIGRATION_1_2, OwnTVDatabase.MIGRATION_2_3, OwnTVDatabase.MIGRATION_3_4)
-            .allowMainThreadQueries()
-            .build()
+        val db = openWithAllMigrations()
 
         try {
             val sqlite = db.openHelper.readableDatabase
@@ -62,14 +59,11 @@ class OwnTVDatabaseMigrationTest {
 
     /** Dev devices on unreleased main builds (DB v7 with content_order, no contentHash). */
     @Test
-    fun migrateVersion7To9_addsContentHashesAndEpgNaturalKey() {
+    fun migrateVersion7ToCurrent_addsContentHashesAndEpgNaturalKey() {
         context.deleteDatabase(DB_NAME)
         bootstrapVersion7Database()
 
-        val db = Room.databaseBuilder(context, OwnTVDatabase::class.java, DB_NAME)
-            .addMigrations(OwnTVDatabase.MIGRATION_7_8, OwnTVDatabase.MIGRATION_8_9)
-            .allowMainThreadQueries()
-            .build()
+        val db = openWithAllMigrations()
 
         try {
             val sqlite = db.openHelper.readableDatabase
@@ -92,20 +86,11 @@ class OwnTVDatabaseMigrationTest {
 
     /** The public upgrade path: a real v3.2.0 database (DB v3) all the way to the current version. */
     @Test
-    fun migrateVersion3To9_publicUpgradePath_preservesUserData() {
+    fun migrateVersion3ToCurrent_publicUpgradePath_preservesUserData() {
         context.deleteDatabase(DB_NAME)
         bootstrapVersion3Database()
 
-        val db = Room.databaseBuilder(context, OwnTVDatabase::class.java, DB_NAME)
-            .addMigrations(
-                OwnTVDatabase.MIGRATION_3_4,
-                OwnTVDatabase.MIGRATION_4_6,
-                OwnTVDatabase.MIGRATION_6_7,
-                OwnTVDatabase.MIGRATION_7_8,
-                OwnTVDatabase.MIGRATION_8_9,
-            )
-            .allowMainThreadQueries()
-            .build()
+        val db = openWithAllMigrations()
 
         try {
             val sqlite = db.openHelper.readableDatabase
@@ -121,6 +106,10 @@ class OwnTVDatabaseMigrationTest {
             assertIndexExists(sqlite, "index_series_sourceId_remoteId")
             assertIndexExists(sqlite, "index_epg_programmes_natural_key")
             assertIndexExists(sqlite, "index_epg_programmes_sourceId_epgChannelId")
+            assertTableExists(sqlite, "metadata_cache")
+            assertColumnExists(sqlite, "metadata_cache", "logoPath")
+            assertColumnExists(sqlite, "sources", "mac")
+            assertIndexExists(sqlite, "index_movies_sourceId_rating_name")
             // User data survives.
             assertCount(sqlite, "profiles", 1)
             assertCount(sqlite, "sources", 1)
@@ -135,6 +124,65 @@ class OwnTVDatabaseMigrationTest {
             db.close()
         }
     }
+
+    /**
+     * Regression for the 4.0.x → 4.1.0 upgrade crash: an interrupted bulk import leaves
+     * BulkInsertHelper's dropped non-unique indexes missing. That drift is invisible while the DB
+     * version doesn't change, but the next migration triggers Room's full-schema validation, which
+     * used to throw "Migration didn't properly handle" and crash-loop the app at launch. The final
+     * migration now runs OwnTVDatabase.healSchema, so opening a drifted v12 database must succeed
+     * and end with every expected index back in place.
+     */
+    @Test
+    fun migrateDriftedVersion12ToCurrent_healsDroppedIndexes() {
+        context.deleteDatabase(DB_NAME)
+        val db12 = context.openOrCreateDatabase(DB_NAME, Context.MODE_PRIVATE, null)
+        try {
+            executeSchemaQueries(db12, "tv.own.owntv.core.database.OwnTVDatabase/12.json")
+            db12.execSQL("INSERT INTO profiles (id, name, avatarColor, avatarId, isKids, pinHash, createdAt) VALUES (1, 'Primary', 1122867, 7, 0, NULL, 1)")
+            // Simulate the interrupted-import drift.
+            db12.execSQL("DROP INDEX IF EXISTS `index_movies_sourceId_rating_name`")
+            db12.execSQL("DROP INDEX IF EXISTS `index_series_categoryId_rating_name`")
+            db12.execSQL("DROP INDEX IF EXISTS `index_channels_sourceId`")
+            db12.execSQL("DROP INDEX IF EXISTS `index_epg_programmes_stopMs`")
+            db12.version = 12
+        } finally {
+            db12.close()
+        }
+
+        val db = openWithAllMigrations()
+        try {
+            // Would throw IllegalStateException here without the heal (validation failure).
+            val sqlite = db.openHelper.readableDatabase
+            assertIndexExists(sqlite, "index_movies_sourceId_rating_name")
+            assertIndexExists(sqlite, "index_series_categoryId_rating_name")
+            assertIndexExists(sqlite, "index_channels_sourceId")
+            assertIndexExists(sqlite, "index_epg_programmes_stopMs")
+            assertColumnExists(sqlite, "metadata_cache", "logoPath")
+            assertColumnExists(sqlite, "sources", "mac")
+            assertCount(sqlite, "profiles", 1)
+        } finally {
+            db.close()
+        }
+    }
+
+    private fun openWithAllMigrations() = Room.databaseBuilder(context, OwnTVDatabase::class.java, DB_NAME)
+        .addMigrations(
+            OwnTVDatabase.MIGRATION_1_2,
+            OwnTVDatabase.MIGRATION_2_3,
+            OwnTVDatabase.MIGRATION_3_4,
+            OwnTVDatabase.MIGRATION_4_6,
+            OwnTVDatabase.MIGRATION_6_7,
+            OwnTVDatabase.MIGRATION_7_8,
+            OwnTVDatabase.MIGRATION_8_9,
+            OwnTVDatabase.MIGRATION_9_10,
+            OwnTVDatabase.MIGRATION_10_11,
+            OwnTVDatabase.MIGRATION_11_12,
+            OwnTVDatabase.MIGRATION_12_13,
+            OwnTVDatabase.MIGRATION_13_14,
+        )
+        .allowMainThreadQueries()
+        .build()
 
     private fun bootstrapVersion2Database() {
         val db = context.openOrCreateDatabase(DB_NAME, Context.MODE_PRIVATE, null)

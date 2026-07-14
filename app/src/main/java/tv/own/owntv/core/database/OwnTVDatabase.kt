@@ -356,12 +356,103 @@ abstract class OwnTVDatabase : RoomDatabase() {
         /**
          * v13 → v14: nullable `mac` on sources for the Stalker portal source type (null for
          * M3U/Xtream). Additive; preserves all user data.
+         *
+         * Also runs [healSchema]: Room re-validates the ENTIRE schema after any migration, and DBs
+         * with runtime index drift (a bulk import interrupted mid-sync leaves BulkInsertHelper's
+         * dropped indexes missing) would otherwise fail validation and crash-loop at launch — this
+         * bricked 4.0.x → 4.1.0 upgrades for affected users. See [healSchema] for the standing rule.
          */
         val MIGRATION_13_14 = object : androidx.room.migration.Migration(13, 14) {
             override fun migrate(db: androidx.sqlite.db.SupportSQLiteDatabase) {
                 if (!hasColumn(db, "sources", "mac")) {
                     db.execSQL("ALTER TABLE `sources` ADD COLUMN `mac` TEXT")
                 }
+                healSchema(db)
+            }
+        }
+
+        /**
+         * Canonical CREATE statements for every NON-unique index Room expects on the four
+         * bulk-synced tables, keyed by table (must stay in sync with the current schema JSON).
+         * BulkInsertHelper drops exactly these during eligible fresh imports; restore, the
+         * post-import ensure* passes, and [healSchema] all recreate from this one list so a gap
+         * can't survive anywhere. Unique indexes are deliberately absent: no code path ever drops
+         * them, and re-creating a unique index on unexpected data could itself fail.
+         */
+        val EXPECTED_NON_UNIQUE_INDEXES: Map<String, List<String>> = mapOf(
+            "channels" to listOf(
+                "CREATE INDEX IF NOT EXISTS `index_channels_sourceId` ON `channels` (`sourceId`)",
+                "CREATE INDEX IF NOT EXISTS `index_channels_categoryId` ON `channels` (`categoryId`)",
+                "CREATE INDEX IF NOT EXISTS `index_channels_name` ON `channels` (`name`)",
+                "CREATE INDEX IF NOT EXISTS `index_channels_epgChannelId` ON `channels` (`epgChannelId`)",
+                "CREATE INDEX IF NOT EXISTS `index_channels_sourceId_name` ON `channels` (`sourceId`, `name`)",
+                "CREATE INDEX IF NOT EXISTS `index_channels_categoryId_name` ON `channels` (`categoryId`, `name`)",
+                "CREATE INDEX IF NOT EXISTS `index_channels_sourceId_sortOrder_name` ON `channels` (`sourceId`, `sortOrder`, `name`)",
+                "CREATE INDEX IF NOT EXISTS `index_channels_categoryId_sortOrder_name` ON `channels` (`categoryId`, `sortOrder`, `name`)",
+            ),
+            "movies" to listOf(
+                "CREATE INDEX IF NOT EXISTS `index_movies_sourceId` ON `movies` (`sourceId`)",
+                "CREATE INDEX IF NOT EXISTS `index_movies_categoryId` ON `movies` (`categoryId`)",
+                "CREATE INDEX IF NOT EXISTS `index_movies_name` ON `movies` (`name`)",
+                "CREATE INDEX IF NOT EXISTS `index_movies_sourceId_name` ON `movies` (`sourceId`, `name`)",
+                "CREATE INDEX IF NOT EXISTS `index_movies_categoryId_name` ON `movies` (`categoryId`, `name`)",
+                "CREATE INDEX IF NOT EXISTS `index_movies_sourceId_sortOrder_name` ON `movies` (`sourceId`, `sortOrder`, `name`)",
+                "CREATE INDEX IF NOT EXISTS `index_movies_categoryId_sortOrder_name` ON `movies` (`categoryId`, `sortOrder`, `name`)",
+                "CREATE INDEX IF NOT EXISTS `index_movies_sourceId_rating_name` ON `movies` (`sourceId`, `rating`, `name`)",
+                "CREATE INDEX IF NOT EXISTS `index_movies_categoryId_rating_name` ON `movies` (`categoryId`, `rating`, `name`)",
+            ),
+            "series" to listOf(
+                "CREATE INDEX IF NOT EXISTS `index_series_sourceId` ON `series` (`sourceId`)",
+                "CREATE INDEX IF NOT EXISTS `index_series_categoryId` ON `series` (`categoryId`)",
+                "CREATE INDEX IF NOT EXISTS `index_series_name` ON `series` (`name`)",
+                "CREATE INDEX IF NOT EXISTS `index_series_sourceId_name` ON `series` (`sourceId`, `name`)",
+                "CREATE INDEX IF NOT EXISTS `index_series_categoryId_name` ON `series` (`categoryId`, `name`)",
+                "CREATE INDEX IF NOT EXISTS `index_series_sourceId_sortOrder_name` ON `series` (`sourceId`, `sortOrder`, `name`)",
+                "CREATE INDEX IF NOT EXISTS `index_series_categoryId_sortOrder_name` ON `series` (`categoryId`, `sortOrder`, `name`)",
+                "CREATE INDEX IF NOT EXISTS `index_series_sourceId_rating_name` ON `series` (`sourceId`, `rating`, `name`)",
+                "CREATE INDEX IF NOT EXISTS `index_series_categoryId_rating_name` ON `series` (`categoryId`, `rating`, `name`)",
+            ),
+            "epg_programmes" to listOf(
+                "CREATE INDEX IF NOT EXISTS `index_epg_programmes_epgChannelId_startMs` ON `epg_programmes` (`epgChannelId`, `startMs`)",
+                "CREATE INDEX IF NOT EXISTS `index_epg_programmes_sourceId` ON `epg_programmes` (`sourceId`)",
+                "CREATE INDEX IF NOT EXISTS `index_epg_programmes_stopMs` ON `epg_programmes` (`stopMs`)",
+                "CREATE INDEX IF NOT EXISTS `index_epg_programmes_sourceId_epgChannelId` ON `epg_programmes` (`sourceId`, `epgChannelId`)",
+            ),
+        )
+
+        /**
+         * Room's exact generated DDL for the external-content FTS tables. Only `createAllTables`
+         * (fresh install) ever creates them — no migration does — so keep the strings verbatim from
+         * the generated OwnTVDatabase_Impl or validation will reject the healed table.
+         */
+        private val EXPECTED_FTS_TABLES: Map<String, String> = mapOf(
+            "channels_fts" to "CREATE VIRTUAL TABLE IF NOT EXISTS `channels_fts` USING FTS4(`name` TEXT NOT NULL, content=`channels`)",
+            "movies_fts" to "CREATE VIRTUAL TABLE IF NOT EXISTS `movies_fts` USING FTS4(`name` TEXT NOT NULL, content=`movies`)",
+            "series_fts" to "CREATE VIRTUAL TABLE IF NOT EXISTS `series_fts` USING FTS4(`name` TEXT NOT NULL, content=`series`)",
+            "episodes_fts" to "CREATE VIRTUAL TABLE IF NOT EXISTS `episodes_fts` USING FTS4(`name` TEXT NOT NULL, content=`episodes`)",
+        )
+
+        /**
+         * Bring a live database back to the schema Room expects, idempotently (pure no-op on a
+         * healthy DB). Recreates the non-unique indexes on the bulk-synced tables and any missing
+         * FTS table (rebuilt from its content table when it had to be created).
+         *
+         * STANDING RULE: every future *final* migration (14 → 15, …) must call this. Room validates
+         * the whole schema once, after the last migration in the chain — so the heal only protects
+         * an upgrade if it runs in the step users actually pass through.
+         */
+        fun healSchema(db: androidx.sqlite.db.SupportSQLiteDatabase) {
+            EXPECTED_FTS_TABLES.forEach { (name, createSql) ->
+                val exists = db.query(
+                    "SELECT 1 FROM sqlite_master WHERE type='table' AND name='$name'",
+                ).use { it.moveToFirst() }
+                if (!exists) {
+                    db.execSQL(createSql)
+                    db.execSQL("INSERT INTO `$name`(`$name`) VALUES('rebuild')")
+                }
+            }
+            EXPECTED_NON_UNIQUE_INDEXES.values.forEach { statements ->
+                statements.forEach { db.execSQL(it) }
             }
         }
 

@@ -45,18 +45,23 @@ class EpgRepository(
     private fun cacheFile(storeId: Long) = java.io.File(context.cacheDir, "epg_$storeId.xmltv")
 
     /**
-     * Ensure the `epg_programmes(sourceId, epgChannelId)` index exists — it turns the Guide's "which channels
-     * have guide data" lookup from a multi-second full scan into a fast index scan. The index is **permanent**
-     * and **auto-maintained** by SQLite on every future insert, so this builds it exactly once (a few seconds,
-     * in the background, the first time) and is an instant no-op every call after. Run at startup (for users
-     * who already have EPG) and after each EPG sync (for brand-new EPG).
+     * Ensure every non-unique `epg_programmes` index exists — the Guide read-index
+     * `(sourceId, epgChannelId)` turns the "which channels have guide data" lookup from a
+     * multi-second full scan into a fast index scan; the others are Room-declared and get dropped
+     * by an eligible fresh EPG bulk import, so this pass must recreate ALL of them (the canonical
+     * list is shared with BulkInsertHelper's restore and the migration heal — a missing index would
+     * crash the next migration's schema validation). Indexes are **permanent** and
+     * **auto-maintained** by SQLite, so this builds them exactly once (in the background) and is an
+     * instant no-op every call after. Run at startup (for users who already have EPG) and after
+     * each EPG sync (for brand-new EPG).
      */
     suspend fun ensureEpgIndexes() = withContext(Dispatchers.IO) {
         try {
             val startedAt = SystemClock.elapsedRealtime()
-            db.openHelper.writableDatabase.execSQL(
-                "CREATE INDEX IF NOT EXISTS index_epg_programmes_sourceId_epgChannelId ON epg_programmes(sourceId, epgChannelId)",
-            )
+            val w = db.openHelper.writableDatabase
+            tv.own.owntv.core.database.OwnTVDatabase.EXPECTED_NON_UNIQUE_INDEXES
+                .getValue("epg_programmes")
+                .forEach { w.execSQL(it) }
             Log.d("EpgRepository", "ensureEpgIndexes ms=${SystemClock.elapsedRealtime() - startedAt}")
         } catch (c: CancellationException) {
             throw c

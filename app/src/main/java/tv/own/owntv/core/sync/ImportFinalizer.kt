@@ -97,34 +97,13 @@ class ImportFinalizer(
         runCatching {
             val w = db.openHelper.writableDatabase
             val indexesStartedAt = SystemClock.elapsedRealtime()
-            // Idempotent (IF NOT EXISTS): no-op once the indices exist. Covers DBs that somehow lack them.
-            // Channels — single-column read paths + A–Z + playlist/provider composites.
-            w.execSQL("CREATE INDEX IF NOT EXISTS `index_channels_sourceId` ON `channels` (`sourceId`)")
-            w.execSQL("CREATE INDEX IF NOT EXISTS `index_channels_categoryId` ON `channels` (`categoryId`)")
-            w.execSQL("CREATE INDEX IF NOT EXISTS `index_channels_name` ON `channels` (`name`)")
-            w.execSQL("CREATE INDEX IF NOT EXISTS `index_channels_epgChannelId` ON `channels` (`epgChannelId`)")
-            w.execSQL("CREATE INDEX IF NOT EXISTS `index_channels_sourceId_name` ON `channels` (`sourceId`, `name`)")
-            w.execSQL("CREATE INDEX IF NOT EXISTS `index_channels_categoryId_name` ON `channels` (`categoryId`, `name`)")
-            w.execSQL("CREATE INDEX IF NOT EXISTS `index_channels_sourceId_sortOrder_name` ON `channels` (`sourceId`, `sortOrder`, `name`)")
-            w.execSQL("CREATE INDEX IF NOT EXISTS `index_channels_categoryId_sortOrder_name` ON `channels` (`categoryId`, `sortOrder`, `name`)")
-
-            // Movies — single-column read paths + A–Z + playlist/provider composites.
-            w.execSQL("CREATE INDEX IF NOT EXISTS `index_movies_sourceId` ON `movies` (`sourceId`)")
-            w.execSQL("CREATE INDEX IF NOT EXISTS `index_movies_categoryId` ON `movies` (`categoryId`)")
-            w.execSQL("CREATE INDEX IF NOT EXISTS `index_movies_name` ON `movies` (`name`)")
-            w.execSQL("CREATE INDEX IF NOT EXISTS `index_movies_sourceId_name` ON `movies` (`sourceId`, `name`)")
-            w.execSQL("CREATE INDEX IF NOT EXISTS `index_movies_categoryId_name` ON `movies` (`categoryId`, `name`)")
-            w.execSQL("CREATE INDEX IF NOT EXISTS `index_movies_sourceId_sortOrder_name` ON `movies` (`sourceId`, `sortOrder`, `name`)")
-            w.execSQL("CREATE INDEX IF NOT EXISTS `index_movies_categoryId_sortOrder_name` ON `movies` (`categoryId`, `sortOrder`, `name`)")
-
-            // Series — same coverage as Movies.
-            w.execSQL("CREATE INDEX IF NOT EXISTS `index_series_sourceId` ON `series` (`sourceId`)")
-            w.execSQL("CREATE INDEX IF NOT EXISTS `index_series_categoryId` ON `series` (`categoryId`)")
-            w.execSQL("CREATE INDEX IF NOT EXISTS `index_series_name` ON `series` (`name`)")
-            w.execSQL("CREATE INDEX IF NOT EXISTS `index_series_sourceId_name` ON `series` (`sourceId`, `name`)")
-            w.execSQL("CREATE INDEX IF NOT EXISTS `index_series_categoryId_name` ON `series` (`categoryId`, `name`)")
-            w.execSQL("CREATE INDEX IF NOT EXISTS `index_series_sourceId_sortOrder_name` ON `series` (`sourceId`, `sortOrder`, `name`)")
-            w.execSQL("CREATE INDEX IF NOT EXISTS `index_series_categoryId_sortOrder_name` ON `series` (`categoryId`, `sortOrder`, `name`)")
+            // Idempotent (IF NOT EXISTS): no-op once the indices exist. Covers DBs that somehow lack
+            // them. Canonical list shared with BulkInsertHelper's restore and the migration heal, so
+            // this pass can never miss an index those paths expect (the old hand-copied list omitted
+            // the rating-sort indexes — drift that crashed the next migration's schema validation).
+            listOf("channels", "movies", "series").forEach { table ->
+                OwnTVDatabase.EXPECTED_NON_UNIQUE_INDEXES.getValue(table).forEach { w.execSQL(it) }
+            }
             Log.d(TAG, "ensureContentIndexes create indexes ms=${SystemClock.elapsedRealtime() - indexesStartedAt}")
 
             // Refresh planner stats so the indices above are chosen for the grids' "WHERE … ORDER BY …" —

@@ -74,15 +74,19 @@ class BulkInsertHelper(
     private fun restoreIndexes(state: BulkIndexState, ftsOnly: Boolean = false) {
         val sdb = db.openHelper.writableDatabase
         val start = SystemClock.elapsedRealtime()
+        // Restore the canonical Room-expected set, not the pre-drop snapshot: if the DB was already
+        // drifted when the snapshot was taken, the snapshot would preserve the gap and the next
+        // migration's schema validation would crash the app.
+        val canonical = OwnTVDatabase.EXPECTED_NON_UNIQUE_INDEXES[state.table].orEmpty()
         if (!ftsOnly) {
-            state.indexCreateSqls.forEach { sdb.execSQL(it) }
+            canonical.forEach { sdb.execSQL(it) }
         }
         if (state.ftsTable != null) {
             sdb.execSQL("INSERT INTO `${state.ftsTable}`(`${state.ftsTable}`) VALUES('rebuild')")
         }
         if (state.triggerSql != null) sdb.execSQL(state.triggerSql)
 
-        val restoredIndexCount = if (ftsOnly) 0 else state.indexCreateSqls.size
+        val restoredIndexCount = if (ftsOnly) 0 else canonical.size
         Log.i(TAG, "Restored $restoredIndexCount indexes${if (state.ftsTable != null) " + FTS" else ""} on ${state.table} ms=${SystemClock.elapsedRealtime() - start}")
     }
 
