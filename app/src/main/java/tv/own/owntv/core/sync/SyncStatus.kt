@@ -51,7 +51,25 @@ data class SyncContentTypes(
         movies = !priority.movies && movies,
         series = !priority.series && series,
     )
+
+    /** "Movies & Series" / "Live TV" … — for user-facing "still syncing in the background" notes. */
+    fun label(): String = listOfNotNull(
+        "Live TV".takeIf { live },
+        "Movies".takeIf { movies },
+        "Series".takeIf { series },
+    ).joinToString(" & ")
 }
+
+/**
+ * Appends a "the rest is still coming" line to a staged import's success summary. Without it the
+ * "All set!" screen reads as if the whole catalog were only what the foreground pass imported
+ * (e.g. a Stalker add shows just live channels), and users report the sync as broken instead of
+ * noticing the background pill.
+ */
+fun String.withRemainderNote(remainder: SyncContentTypes): String =
+    if (!remainder.hasAny) this
+    else "$this\n${remainder.label()} are still syncing in the background — you can start watching now. " +
+        "Progress shows in the small pill at the bottom of the screen."
 
 data class SyncRunStats(
     val sourceId: Long,

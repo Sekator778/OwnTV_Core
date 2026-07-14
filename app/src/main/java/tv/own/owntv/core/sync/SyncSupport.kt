@@ -54,6 +54,8 @@ internal class SyncSupport(
         remoteIdsForSource = { movieDao.remoteIdsForSource(it) },
         deleteByRemoteIds = { src, ids -> movieDao.deleteByRemoteIds(src, ids) },
         loadHashes = { movieDao.contentHashesForSource(it) },
+        countsByCategory = { src -> movieDao.countsByCategoryOnce(src).associate { it.categoryId to it.itemCount } },
+        remoteIdsForCategory = { src, cat -> movieDao.remoteIdsForCategory(src, cat) },
     )
 
     val seriesAdapter = ContentAdapter<SeriesEntity>(
@@ -65,6 +67,8 @@ internal class SyncSupport(
         remoteIdsForSource = { seriesDao.remoteIdsForSource(it) },
         deleteByRemoteIds = { src, ids -> seriesDao.deleteByRemoteIds(src, ids) },
         loadHashes = { seriesDao.contentHashesForSource(it) },
+        countsByCategory = { src -> seriesDao.countsByCategoryOnce(src).associate { it.categoryId to it.itemCount } },
+        remoteIdsForCategory = { src, cat -> seriesDao.remoteIdsForCategory(src, cat) },
     )
 
     /** Hash-diffed stable upsert: unchanged rows are skipped, changed rows keep their local id. */
@@ -332,6 +336,10 @@ internal class ContentAdapter<T>(
     val remoteIdsForSource: suspend (Long) -> List<String>,
     val deleteByRemoteIds: suspend (Long, List<String>) -> Unit,
     val loadHashes: suspend (Long) -> List<ContentHashProjection>,
+    /** Re-sync delta check (paged catalogs): current per-category item counts; null = not supported. */
+    val countsByCategory: (suspend (sourceId: Long) -> Map<Long, Int>)? = null,
+    /** RemoteIds of one category's existing rows — protects a delta-skipped category from pruning. */
+    val remoteIdsForCategory: (suspend (sourceId: Long, categoryId: Long) -> List<String>)? = null,
 )
 
 internal data class UpsertStats(

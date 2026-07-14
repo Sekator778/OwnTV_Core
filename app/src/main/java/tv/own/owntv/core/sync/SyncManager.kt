@@ -38,6 +38,7 @@ class SyncManager(
     bulkInsertHelper: BulkInsertHelper,
     stalkerClient: tv.own.owntv.core.stalker.StalkerClient,
     stalkerAuth: tv.own.owntv.core.stalker.StalkerAuthManager,
+    private val activityTracker: SyncActivityTracker,
 ) {
     private val support = SyncSupport(categoryDao, channelDao, movieDao, seriesDao)
     private val xtreamSyncer = XtreamSyncer(xtream, bulkInsertHelper, support)
@@ -63,7 +64,11 @@ class SyncManager(
                 "sync start sourceId=${source.id} name=${source.name} type=${source.type} " +
                     "requestedContentTypes=$contentTypes trackedContentTypes=$trackedContentTypes",
             )
-            val progress = SyncCounters(trackedContentTypes, onProgress)
+            activityTracker.started(source.id, source.name)
+            val progress = SyncCounters(trackedContentTypes) { stage ->
+                activityTracker.progress(source.id, stage)
+                onProgress(stage)
+            }
             val result = try {
                 when (source.type) {
                     SourceType.XTREAM -> xtreamSyncer.sync(source, progress, stats, contentTypes)
@@ -71,7 +76,11 @@ class SyncManager(
                     SourceType.LOCAL_BACKUP -> Unit
                     SourceType.STALKER -> stalkerSyncer.sync(source, progress, stats, contentTypes)
                 }
-                if (source.type != SourceType.XTREAM || contentTypes == SyncContentTypes()) {
+                // Only a FULL pass may stamp lastSyncAt. A staged partial pass (Xtream priority
+                // toggles, Stalker live-first) leaves it null; the background remainder worker stamps
+                // it via completesInitialSync once every content type has synced. Stamping early would
+                // flip later passes onto the non-fresh (hash-diff + prune) path against half-empty tables.
+                if (contentTypes == SyncContentTypes()) {
                     val markStartedAt = SystemClock.elapsedRealtime()
                     sourceDao.markSynced(source.id, System.currentTimeMillis())
                     Log.d(TAG, "markSynced sourceId=${source.id} ms=${SystemClock.elapsedRealtime() - markStartedAt}")
@@ -82,6 +91,8 @@ class SyncManager(
                 throw c
             } catch (e: Exception) {
                 SyncResult.Failed(e.message ?: "Sync failed")
+            } finally {
+                activityTracker.finished(source.id) // also on cancellation — never leave a stuck pill
             }
             val runStats = stats.build(result)
             lastSyncStats[source.id] = runStats

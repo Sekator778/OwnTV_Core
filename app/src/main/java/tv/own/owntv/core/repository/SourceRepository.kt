@@ -22,6 +22,10 @@ class SourceRepository(
     private val sourceDao: SourceDao,
     private val syncManager: SyncManager,
     private val userData: tv.own.owntv.core.backup.UserDataResolver,
+    private val channelDao: tv.own.owntv.core.database.dao.ChannelDao,
+    private val movieDao: tv.own.owntv.core.database.dao.MovieDao,
+    private val seriesDao: tv.own.owntv.core.database.dao.SeriesDao,
+    private val categoryDao: tv.own.owntv.core.database.dao.CategoryDao,
 ) {
     fun observeSources(profileId: Long): Flow<List<SourceEntity>> = sourceDao.observeForProfile(profileId)
 
@@ -56,6 +60,21 @@ class SourceRepository(
     }
 
     suspend fun deleteSource(source: SourceEntity) = sourceDao.delete(source)
+
+    /**
+     * Wipe a source's imported content (channels/movies/series + their categories) but KEEP the
+     * source row and its credentials. Used when a backgrounded first import fails: deleting the
+     * source would make the user's playlist silently vanish, while keeping the partial content
+     * would duplicate rows on the next sync (a never-synced source takes the insertFresh path,
+     * which assumes empty tables). Content before categories — same order the syncers clear in.
+     */
+    suspend fun clearSourceContent(sourceId: Long) {
+        channelDao.clearSource(sourceId)
+        movieDao.clearSource(sourceId)
+        seriesDao.clearSource(sourceId) // seasons/episodes cascade
+        listOf(tv.own.owntv.core.model.MediaType.LIVE, tv.own.owntv.core.model.MediaType.MOVIE, tv.own.owntv.core.model.MediaType.SERIES)
+            .forEach { categoryDao.clear(sourceId, it) }
+    }
 
     suspend fun updateSource(source: SourceEntity) = sourceDao.update(source)
 

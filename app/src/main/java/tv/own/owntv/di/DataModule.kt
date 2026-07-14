@@ -98,8 +98,8 @@ val dataModule = module {
     }
     // context, channelDao, movieDao, seriesDao, profileDao, favoriteDao, historyDao, progressDao, contentOrderDao, db
     single { UserDataResolver(androidContext(), get(), get(), get(), get(), get(), get(), get(), get(), get()) }
-    // sourceDao, syncManager, userDataResolver
-    single { SourceRepository(get(), get(), get()) }
+    // sourceDao, syncManager, userDataResolver, channelDao, movieDao, seriesDao, categoryDao
+    single { SourceRepository(get(), get(), get(), get(), get(), get(), get()) }
     single {
         SyncManager(
             context = androidContext(),
@@ -114,8 +114,11 @@ val dataModule = module {
             bulkInsertHelper = get(),
             stalkerClient = get(),
             stalkerAuth = get(),
+            activityTracker = get(),
         )
     }
+    // App-wide "sync running" signal for the shell status pill (every sync funnels through SyncManager).
+    single { tv.own.owntv.core.sync.SyncActivityTracker() }
     // epgDao, httpClient, xtreamClient, channelDao, customize, settings, context, db, bulkInsertHelper
     single {
         EpgRepository(

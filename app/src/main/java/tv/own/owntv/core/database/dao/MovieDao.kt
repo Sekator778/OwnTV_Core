@@ -10,6 +10,9 @@ import kotlinx.coroutines.flow.Flow
 import tv.own.owntv.core.database.entity.ContentHashProjection
 import tv.own.owntv.core.database.entity.MovieEntity
 
+/** One category's current item count for a source (re-sync delta check). */
+data class CategoryItemCount(val categoryId: Long, val itemCount: Int)
+
 @Dao
 interface MovieDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
@@ -42,6 +45,13 @@ interface MovieDao {
 
     @Query("DELETE FROM movies WHERE sourceId = :sourceId AND remoteId IN (:remoteIds)")
     suspend fun deleteByRemoteIds(sourceId: Long, remoteIds: List<String>)
+
+    // --- Re-sync delta check (Stalker paged catalogs): skip categories whose item count is unchanged ---
+    @Query("SELECT categoryId, COUNT(*) AS itemCount FROM movies WHERE sourceId = :sourceId AND categoryId IS NOT NULL GROUP BY categoryId")
+    suspend fun countsByCategoryOnce(sourceId: Long): List<CategoryItemCount>
+
+    @Query("SELECT remoteId FROM movies WHERE sourceId = :sourceId AND categoryId = :categoryId AND remoteId IS NOT NULL")
+    suspend fun remoteIdsForCategory(sourceId: Long, categoryId: Long): List<String>
 
     @Query("SELECT * FROM movies WHERE sourceId = :sourceId AND name = :name LIMIT 1")
     suspend fun findByName(sourceId: Long, name: String): MovieEntity?

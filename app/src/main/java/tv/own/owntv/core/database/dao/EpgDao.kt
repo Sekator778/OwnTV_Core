@@ -51,6 +51,10 @@ interface EpgDao {
     @Query("SELECT * FROM epg_programmes WHERE epgChannelId = :epgChannelId AND startMs <= :now AND stopMs > :now ORDER BY startMs DESC LIMIT 1")
     suspend fun nowPlaying(epgChannelId: String, now: Long): EpgProgrammeEntity?
 
+    /** The most recently FINISHED programme on a channel (the "Before" slot in the player overlay). */
+    @Query("SELECT * FROM epg_programmes WHERE epgChannelId = :epgChannelId AND stopMs <= :now ORDER BY stopMs DESC LIMIT 1")
+    suspend fun previousProgramme(epgChannelId: String, now: Long): EpgProgrammeEntity?
+
     /** Now + upcoming programmes for a channel (now/next and a short guide). */
     @Query("SELECT * FROM epg_programmes WHERE epgChannelId = :epgChannelId AND stopMs > :now ORDER BY startMs ASC LIMIT :limit")
     fun upcoming(epgChannelId: String, now: Long, limit: Int): Flow<List<EpgProgrammeEntity>>

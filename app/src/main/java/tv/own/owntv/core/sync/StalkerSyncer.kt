@@ -11,8 +11,6 @@ import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.sync.Semaphore
-import kotlinx.coroutines.sync.withPermit
 import tv.own.owntv.core.database.BulkInsertHelper
 import tv.own.owntv.core.database.entity.ChannelEntity
 import tv.own.owntv.core.database.entity.MovieEntity
@@ -62,7 +60,9 @@ internal class StalkerSyncer(
         runCatching { adoptPortalXmltvUrl(s, creds) }
             .onFailure { Log.w(TAG, "portal XMLTV probe failed sourceId=${s.id}: ${it.message}") }
         if (contentTypes.live) syncLive(s, progress, stats, creds)
-        val budget = Semaphore(GLOBAL_CONCURRENCY)
+        // Shared adaptive budget: movies and series draw from one gate, so the portal never sees
+        // more than the learned limit regardless of how many phases are in flight.
+        val budget = AdaptivePortalLimiter(isThrottle = ::isPortalThrottle)
         coroutineScope {
             if (contentTypes.movies) launch { guardStep("movies", stats) { syncMovies(s, progress, stats, creds, budget) } }
             if (contentTypes.series) launch { guardStep("series", stats) { syncSeries(s, progress, stats, creds, budget) } }
@@ -178,7 +178,7 @@ internal class StalkerSyncer(
         Log.i(TAG, "$label phase end sourceId=${s.id} unique=${total[0]} ms=${SystemClock.elapsedRealtime() - elapsedStart}")
     }
 
-    private suspend fun syncMovies(s: SourceEntity, progress: SyncCounters, stats: SyncStatsCollector, creds: StalkerCredentials, budget: Semaphore) =
+    private suspend fun syncMovies(s: SourceEntity, progress: SyncCounters, stats: SyncStatsCollector, creds: StalkerCredentials, budget: AdaptivePortalLimiter) =
         syncPagedCatalog(
             s, progress, stats, creds, budget,
             phase = SyncPhase.MOVIES, mediaType = MediaType.MOVIE,
@@ -197,7 +197,7 @@ internal class StalkerSyncer(
             },
         )
 
-    private suspend fun syncSeries(s: SourceEntity, progress: SyncCounters, stats: SyncStatsCollector, creds: StalkerCredentials, budget: Semaphore) =
+    private suspend fun syncSeries(s: SourceEntity, progress: SyncCounters, stats: SyncStatsCollector, creds: StalkerCredentials, budget: AdaptivePortalLimiter) =
         syncPagedCatalog(
             s, progress, stats, creds, budget,
             phase = SyncPhase.SERIES, mediaType = MediaType.SERIES,
@@ -226,7 +226,7 @@ internal class StalkerSyncer(
         progress: SyncCounters,
         stats: SyncStatsCollector,
         creds: StalkerCredentials,
-        budget: Semaphore,
+        budget: AdaptivePortalLimiter,
         phase: SyncPhase,
         mediaType: MediaType,
         table: String,
@@ -265,6 +265,14 @@ internal class StalkerSyncer(
         // (or wholly) missing from this pass, so the prune below must be skipped — otherwise the
         // missing items would be deleted as "stale" (the plan's re-sync data-loss scenario).
         val pageFailures = java.util.concurrent.atomic.AtomicInteger(0)
+        // Re-sync delta check: a category whose portal total_items equals its local row count very
+        // likely didn't change — skip its pages entirely (the bulk of a re-sync's requests). The
+        // count moves on any add/remove regardless of the portal's sort order (unlike "compare the
+        // first item"). Blind spot: same-count swaps (1 added + 1 removed) keep the old rows until
+        // a count change; item *detail* edits are invisible either way (hash-diff needs the row).
+        val dbCategoryCounts: Map<Long, Int> =
+            if (!freshSource) adapter.countsByCategory?.invoke(s.id) ?: emptyMap() else emptyMap()
+        val skippedCatDbIds = ArrayList<Long>() // written by the single producer, read after its join
 
         bulkInsertHelper.withOptimizedBulkInsert(table, ftsTable, eligible = freshSource, ftsOnly = true) {
             // Unlike live (one bulk get_all_channels), VOD/series must be paged per category. Walking
@@ -308,10 +316,12 @@ internal class StalkerSyncer(
 
                             val sem = budget
                             // Page 1 of every category, concurrently (bounded) — learns per-category totals.
+                            // retryTransient OUTSIDE withPermit: a backoff delay must not hold a slot, and
+                            // every throttled attempt teaches the adaptive limiter.
                             val firsts = cats.map { cat ->
                                 async {
                                     val page1 = try {
-                                        sem.withPermit { retryTransient("$label cat=${cat.id} page=1") { fetchPage(cat.id, 1) } }
+                                        retryTransient("$label cat=${cat.id} page=1") { sem.withPermit { fetchPage(cat.id, 1) } }
                                     } catch (c: CancellationException) {
                                         throw c
                                     } catch (e: Exception) {
@@ -332,26 +342,35 @@ internal class StalkerSyncer(
                             var catBase = 0
                             for ((cat, page1, catDbId) in firsts) {
                                 if (page1 == null) continue
-                                page1.items.forEachIndexed { i, item -> items.send(Triple(item, catDbId, catBase + i)) }
                                 val maxPer = page1.maxPageItems.takeIf { it > 0 } ?: page1.items.size
                                 if (maxPer > maxPerSeen) maxPerSeen = maxPer
                                 val pages = (if (maxPer > 0) (page1.totalItems + maxPer - 1) / maxPer else 1)
                                     .coerceAtMost(MAX_PAGES_PER_GENRE)
+                                // Unchanged count ⇒ keep the category's rows as-is, skip its pages.
+                                // catBase still advances so the other categories' sort layout is stable.
+                                if (catDbId != null && page1.totalItems > 0 && dbCategoryCounts[catDbId] == page1.totalItems) {
+                                    skippedCatDbIds.add(catDbId)
+                                    catBase += (pages * maxPer).coerceAtLeast(page1.items.size)
+                                    continue
+                                }
+                                page1.items.forEachIndexed { i, item -> items.send(Triple(item, catDbId, catBase + i)) }
                                 for (p in 2..pages) pageTasks.add(PageTask(cat.id, p, catDbId, catBase + (p - 1) * maxPer))
                                 catBase += (pages * maxPer).coerceAtLeast(page1.items.size)
                             }
-                            Log.i(TAG, "$label page-plan sourceId=${s.id} cats=${cats.size} itemsPerPage~=$maxPerSeen extraPages=${pageTasks.size} concurrency=$GLOBAL_CONCURRENCY")
+                            Log.i(TAG, "$label page-plan sourceId=${s.id} cats=${cats.size} itemsPerPage~=$maxPerSeen extraPages=${pageTasks.size} concurrency=adaptive(${budget.currentLimit}..${budget.max})")
 
-                            // Remaining pages drained by a fixed worker pool over a task channel.
+                            // Remaining pages drained by a worker pool over a task channel. Workers are
+                            // spawned at the limiter's MAX; the adaptive gate inside decides how many
+                            // actually run in parallel at any moment.
                             val taskCh = Channel<PageTask>(Channel.UNLIMITED)
                             pageTasks.forEach { taskCh.trySend(it) }
                             taskCh.close()
-                            val workers = (1..GLOBAL_CONCURRENCY).map {
+                            val workers = (1..budget.max).map {
                                 launch {
                                     for ((catId, p, catDbId, sortBase) in taskCh) {
                                         ctx.ensureActive()
                                         val pr = try {
-                                            budget.withPermit { retryTransient("$label cat=$catId page=$p") { fetchPage(catId, p) } }
+                                            retryTransient("$label cat=$catId page=$p") { budget.withPermit { fetchPage(catId, p) } }
                                         } catch (c: CancellationException) {
                                             throw c
                                         } catch (e: Exception) {
@@ -380,6 +399,14 @@ internal class StalkerSyncer(
                 stats.phaseErrors[countsKey] = "${pageFailures.get()} portal page(s) failed — some items may be missing until the next sync"
             }
             if (!freshSource && remoteIds != null) {
+                // Delta-skipped categories were never re-fetched, so their items aren't in this
+                // pass's remoteIds — add their EXISTING rows or the prune would delete them all.
+                if (skippedCatDbIds.isNotEmpty()) {
+                    adapter.remoteIdsForCategory?.let { fetch ->
+                        skippedCatDbIds.forEach { remoteIds.addAll(fetch(s.id, it)) }
+                    }
+                    Log.i(TAG, "$label delta-skip sourceId=${s.id} unchangedCategories=${skippedCatDbIds.size}")
+                }
                 if (pageFailures.get() == 0) {
                     support.pruneRemoteIds(label, s.id, remoteIds, adapter.remoteIdsForSource, adapter.deleteByRemoteIds)
                     support.pruneCategories(s.id, mediaType, categories.seenRemoteIds, label)
@@ -434,6 +461,13 @@ internal class StalkerSyncer(
         }
     }
 
+    /** Throttle signals that shrink the adaptive budget: rate-limit/overload HTTP codes + timeouts. */
+    private fun isPortalThrottle(e: Throwable): Boolean = when (e) {
+        is StalkerClient.StalkerHttpException -> e.code == 429 || e.code in 500..599
+        is java.net.SocketTimeoutException -> true
+        else -> false
+    }
+
     /** One page fetch with the shared auth (re-handshakes once on token expiry). */
     private suspend fun fetchPage(creds: StalkerCredentials, genreId: String, page: Int): StalkerClient.Page<StalkerClient.Channel> =
         retryTransient("${SyncPhase.LIVE.label} genre=$genreId page=$page") {
@@ -473,14 +507,6 @@ internal class StalkerSyncer(
         /** Pages fetched in parallel per window (live per-genre fallback). Portal list APIs tolerate
          *  this (unlike playback streams, which are single-connection). */
         private const val PAGE_CONCURRENCY = 6
-
-        /** Total concurrent page fetches to the portal for the VOD/series importer. This is now a
-         *  SHARED budget: movies and series run concurrently but draw permits from one Semaphore, so
-         *  the portal never sees more than this many simultaneous requests regardless of how many
-         *  phases/categories are in flight. Capped to stay under portal rate-limiters (HTTP 429/509);
-         *  bump down if a portal starts rejecting pages. Only used when the bulk `category=*` single-dump
-         *  fast path is unavailable (paging is then the only path). */
-        private const val GLOBAL_CONCURRENCY = 10
 
         /** Flush every N channels so import progress shows early (see [chunkSize] note). */
         private const val STALKER_CHUNK = 1_500

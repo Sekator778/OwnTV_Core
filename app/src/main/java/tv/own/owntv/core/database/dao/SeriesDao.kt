@@ -55,6 +55,13 @@ interface SeriesDao {
     @Query("DELETE FROM series WHERE sourceId = :sourceId AND remoteId IN (:remoteIds)")
     suspend fun deleteByRemoteIds(sourceId: Long, remoteIds: List<String>)
 
+    // --- Re-sync delta check (Stalker paged catalogs): skip categories whose item count is unchanged ---
+    @Query("SELECT categoryId, COUNT(*) AS itemCount FROM series WHERE sourceId = :sourceId AND categoryId IS NOT NULL GROUP BY categoryId")
+    suspend fun countsByCategoryOnce(sourceId: Long): List<CategoryItemCount>
+
+    @Query("SELECT remoteId FROM series WHERE sourceId = :sourceId AND categoryId = :categoryId AND remoteId IS NOT NULL")
+    suspend fun remoteIdsForCategory(sourceId: Long, categoryId: Long): List<String>
+
     @Query("SELECT * FROM series WHERE sourceId = :sourceId AND name = :name LIMIT 1")
     suspend fun findSeriesByName(sourceId: Long, name: String): SeriesEntity?
 
