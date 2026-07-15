@@ -119,6 +119,9 @@ val dataModule = module {
     }
     // App-wide "sync running" signal for the shell status pill (every sync funnels through SyncManager).
     single { tv.own.owntv.core.sync.SyncActivityTracker() }
+    // Same idea for EPG: EpgSyncWorker reports started/progress/finished here so the pill also reflects
+    // guide/EPG downloads (manual resync from Settings, auto startup refresh, …).
+    single { tv.own.owntv.core.sync.EpgActivityTracker() }
     // epgDao, httpClient, xtreamClient, channelDao, customize, settings, context, db, bulkInsertHelper
     single {
         EpgRepository(

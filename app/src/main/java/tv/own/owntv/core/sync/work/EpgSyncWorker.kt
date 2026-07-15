@@ -10,6 +10,7 @@ import kotlinx.coroutines.CancellationException
 import tv.own.owntv.core.epg.EpgSourceStore
 import tv.own.owntv.core.network.ConnectivityObserver
 import tv.own.owntv.core.repository.EpgRepository
+import tv.own.owntv.core.sync.EpgActivityTracker
 import tv.own.owntv.core.util.friendlySyncError
 import tv.own.owntv.core.util.isTransientSyncError
 
@@ -19,6 +20,7 @@ class EpgSyncWorker(
     private val epgRepository: EpgRepository,
     private val store: EpgSourceStore,
     private val connectivity: ConnectivityObserver,
+    private val activityTracker: EpgActivityTracker,
 ) : CoroutineWorker(context, params) {
 
     override suspend fun doWork(): Result {
@@ -32,9 +34,12 @@ class EpgSyncWorker(
         }
 
         val baseProgrammes = inputData.getInt(KEY_BASE_PROGRAMMES, 0)
-        val progress = ProgressPublisher(baseProgrammes)
+        val progress = ProgressPublisher(baseProgrammes) { channels, programmes ->
+            activityTracker.progress(source.id, channels, programmes)
+        }
         val startedAt = SystemClock.elapsedRealtime()
         Log.i(TAG, "Starting EPG sync sourceId=${source.id} reason=$reason")
+        activityTracker.started(source.id, source.name)
 
         try {
             val programmes = epgRepository.refreshUrl(source.id, source.url, source.userAgent) { channels, count ->
@@ -66,10 +71,16 @@ class EpgSyncWorker(
                 Log.w(TAG, "EPG sync failed sourceId=${source.id} reason=$reason", e)
                 Result.failure()
             }
+        } finally {
+            // Always clear the pill entry — success, failure, retry, or cancellation — so it never sticks.
+            activityTracker.finished(source.id)
         }
     }
 
-    private inner class ProgressPublisher(private val baseProgrammes: Int) {
+    private inner class ProgressPublisher(
+        private val baseProgrammes: Int,
+        private val onEmit: (channels: Int, programmes: Int) -> Unit,
+    ) {
         private var lastEmitAtMs = 0L
         private var lastChannels = -1
         private var lastProgrammes = -1
@@ -109,6 +120,8 @@ class EpgSyncWorker(
                     KEY_BASE_PROGRAMMES to baseProgrammes,
                 ),
             )
+            // Also push the counts to the shell status pill (independent of WorkManager progress).
+            onEmit(channels, programmes)
             lastEmitAtMs = now
             lastChannels = channels
             lastProgrammes = programmes

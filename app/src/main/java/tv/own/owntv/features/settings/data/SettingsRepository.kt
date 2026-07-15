@@ -150,7 +150,7 @@ class SettingsRepository(private val context: Context) {
         context.dataStore.edit { it[stringPreferencesKey("startup_mode_$profileId")] = mode.name }
     }
 
-    // --- Customize & Hidden Items: optional per-profile PIN lock on the screen (so hidden items can't
+    // --- Customize Categories & Items: optional per-profile PIN lock on the screen (so hidden items can't
     //     be unhidden by someone else). Deliberately NOT exported in backups — a lock code shouldn't
     //     travel in a readable backup file, and a restored backup shouldn't lock anyone out. ---
     fun customizePin(profileId: Long): Flow<String?> = context.dataStore.data.map { prefs ->
