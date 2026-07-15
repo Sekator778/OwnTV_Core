@@ -15,6 +15,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import tv.own.owntv.features.home.HomeConfig
+import tv.own.owntv.core.util.Pin
 import tv.own.owntv.ui.theme.AccentColor
 import tv.own.owntv.ui.theme.ThemeMode
 import tv.own.owntv.ui.theme.UiZoom
@@ -161,7 +162,7 @@ class SettingsRepository(private val context: Context) {
     suspend fun setCustomizePin(profileId: Long, pin: String?) {
         context.dataStore.edit { prefs ->
             val k = stringPreferencesKey("customize_pin_$profileId")
-            if (pin.isNullOrBlank()) prefs.remove(k) else prefs[k] = pin.trim()
+            if (pin.isNullOrBlank()) prefs.remove(k) else prefs[k] = Pin.hash(pin.trim())
         }
     }
 
@@ -793,9 +794,18 @@ class SettingsRepository(private val context: Context) {
                 val pid = key.toLongOrNull() ?: return@forEach
                 if (pid !in existingProfileIds) return@forEach
                 val pin = o.optString(key).takeIf { it.isNotEmpty() } ?: return@forEach
-                prefs[stringPreferencesKey("customize_pin_$pid")] = pin
+                prefs[stringPreferencesKey("customize_pin_$pid")] = normalizeCustomizePin(pin)
             }
         }
+    }
+
+    private fun normalizeCustomizePin(value: String): String {
+        val trimmed = value.trim()
+        return if (CUSTOMIZE_PIN_HASH_REGEX.matches(trimmed)) trimmed else Pin.hash(trimmed)
+    }
+
+    private companion object {
+        val CUSTOMIZE_PIN_HASH_REGEX = Regex("^[0-9a-fA-F]{16}:[0-9a-fA-F]{64}$")
     }
 
     // --- Backup: per-profile startup landing (dynamic "startup_mode_<id>" keys) ---

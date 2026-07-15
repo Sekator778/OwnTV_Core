@@ -98,7 +98,7 @@ class HeroPreviewEngine(
             p.prepare()
             p.playWhenReady = true
         }.onFailure {
-            android.util.Log.w(TAG, "Hero preview play failed for $url", it)
+            android.util.Log.w(TAG, "Hero preview play failed for ${HttpClient.redactUrl(url)}", it)
             hasStarted = false
             currentUrl = null
             player?.run {
