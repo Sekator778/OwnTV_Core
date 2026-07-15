@@ -89,7 +89,7 @@ enum class ZoomMode(val label: String) {
  * it hands playback to [ExoSubtitleEngine] (ExoPlayer), which keeps video zero-copy AND draws the bitmap
  * sub on its own layer. The handoff is transparent: ExoPlayer's state is mirrored into these same flows.
  */
-@OptIn(androidx.media3.common.util.UnstableApi::class)
+@androidx.annotation.OptIn(androidx.media3.common.util.UnstableApi::class)
 class OwnTVPlayer(
     private val context: Context,
     private val settings: SettingsRepository,
@@ -2057,7 +2057,7 @@ class OwnTVPlayer(
 
     private fun label(title: String?, lang: String?, id: Int): String {
         val l = lang?.takeIf { it.isNotBlank() && it != "und" }
-            ?.let { runCatching { Locale(it).displayLanguage }.getOrNull()?.ifBlank { it } ?: it }
+            ?.let { runCatching { Locale.forLanguageTag(it).displayLanguage }.getOrNull()?.ifBlank { it } ?: it }
         return listOfNotNull(title?.takeIf { it.isNotBlank() }, l).joinToString(" · ").ifBlank { "Track $id" }
     }
 

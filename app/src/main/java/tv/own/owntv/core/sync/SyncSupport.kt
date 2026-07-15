@@ -193,8 +193,8 @@ internal class SyncSupport(
             val current = row.remoteId?.let(existingByRemoteId::get)
             when {
                 current == null -> inserts.add(row)
-                row != current -> { updates.add(row); row.remoteId?.let { ids[it] = current.id } }
-                else -> { skipped++; row.remoteId?.let { ids[it] = current.id } }
+                row != current -> { updates.add(row); ids[row.remoteId] = current.id }
+                else -> { skipped++; ids[row.remoteId] = current.id }
             }
         }
         if (updates.isNotEmpty()) categoryDao.updateAll(updates)

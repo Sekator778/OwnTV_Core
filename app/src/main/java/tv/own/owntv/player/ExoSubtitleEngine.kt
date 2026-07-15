@@ -39,7 +39,7 @@ import java.util.Locale
  * path where mpv's can't. In fallback mode no subtitle is auto-selected and errors are worded as
  * engine failures rather than subtitle failures.
  */
-@OptIn(UnstableApi::class)
+@androidx.annotation.OptIn(UnstableApi::class)
 class ExoSubtitleEngine(
     private val context: Context,
     private val okHttpClient: OkHttpClient,
@@ -312,7 +312,7 @@ class ExoSubtitleEngine(
 
     private fun audioLabel(title: String?, lang: String?, id: Int): String {
         val l = lang?.takeIf { it.isNotBlank() && it != "und" }
-            ?.let { runCatching { Locale(it).displayLanguage }.getOrNull()?.ifBlank { it } ?: it }
+            ?.let { runCatching { Locale.forLanguageTag(it).displayLanguage }.getOrNull()?.ifBlank { it } ?: it }
         return listOfNotNull(title?.takeIf { it.isNotBlank() }, l).joinToString(" · ").ifBlank { "Track ${id + 1}" }
     }
 
