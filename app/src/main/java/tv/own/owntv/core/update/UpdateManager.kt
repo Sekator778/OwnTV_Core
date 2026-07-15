@@ -19,7 +19,9 @@ import java.io.File
 /**
  * In-app updates straight from GitHub Releases: checks the repo's latest release, compares its tag
  * with the installed version, downloads the release APK, and hands it to the system installer.
- * No server of our own — the releases CI already publishes `OwnTV-vX.Y.Z.apk` per tag.
+ * No server of our own — the releases CI already publishes `OwnTV-vX.Y.Z.apk` (arm) and
+ * `OwnTV-x86_64-vX.Y.Z.apk` per tag; the asset matching this device's ABI is chosen, so updates
+ * also work on an x86_64 emulator.
  */
 class UpdateManager(
     private val context: Context,
@@ -60,13 +62,19 @@ class UpdateManager(
                     val version = o.getString("tag_name").removePrefix("v")
                     val notes = o.optString("body").take(16_000)
                     val assets = o.optJSONArray("assets")
+                    // Releases carry one APK per ABI flavor (arm = default, x86_64 suffixed).
+                    // Pick the one matching this device so emulators self-update too.
+                    val wantX86 = android.os.Build.SUPPORTED_ABIS.firstOrNull() == "x86_64"
                     var apkUrl: String? = null
                     if (assets != null) {
                         for (i in 0 until assets.length()) {
                             val a = assets.getJSONObject(i)
-                            if (a.getString("name").endsWith(".apk")) {
+                            val name = a.getString("name")
+                            if (!name.endsWith(".apk")) continue
+                            if (name.contains("x86_64") == wantX86) {
                                 apkUrl = a.getString("browser_download_url"); break
                             }
+                            if (apkUrl == null) apkUrl = a.getString("browser_download_url") // fallback: any APK
                         }
                     }
                     if (apkUrl == null) error("The latest release has no APK attached")
