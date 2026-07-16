@@ -20,13 +20,20 @@ object EpgMatcher {
     /** Score at/above which a match is worth showing for human review (below = ignored). */
     const val REVIEW_THRESHOLD = 0.74
 
+    /** Loose score at/above which a picker entry counts as "related" and floats to the top —
+     *  it only affects ordering (never applies a match), so it can be far below [REVIEW_THRESHOLD]. */
+    const val PICKER_SUGGEST_THRESHOLD = 0.55
+
     // Cosmetic tokens that say nothing about *which* channel this is.
     private val NOISE = setOf(
         "hd", "fhd", "uhd", "sd", "4k", "8k", "hq", "lq",
         "hevc", "h265", "h264", "fps", "raw", "vip", "backup", "feed", "alt",
+        "1080p", "1080", "720p", "720", "480p", "540p", "2160p", "fullhd",
+        "multi", "multisub", "latino",
     )
 
-    // Country/region codes IPTV names tag on as a leading/trailing group prefix ("DE| …", "… UK").
+    // Country/region codes IPTV names tag on as a leading/trailing group prefix ("DE| …", "… UK"),
+    // plus the spelled-out country names EPG feeds use ("MTV France" ↔ "FR| MTV").
     // Only stripped at the ends (never mid-name), so a real word in the middle is never lost.
     private val COUNTRY = setOf(
         "us", "uk", "ca", "au", "nz", "ie", "za", "in", "pk",
@@ -34,6 +41,20 @@ object EpgMatcher {
         "pl", "cz", "sk", "hu", "ro", "bg", "gr", "tr", "ru", "ua",
         "se", "no", "dk", "fi", "is", "ee", "lv", "lt", "hr", "rs", "si",
         "br", "mx", "ar", "cl", "co", "pe", "ve", "ae", "sa", "qa", "eg",
+        "usa", "america", "canada", "australia", "ireland", "england", "scotland", "wales",
+        "france", "germany", "deutschland", "austria", "switzerland", "spain", "espana",
+        "italy", "italia", "portugal", "netherlands", "holland", "belgium",
+        "poland", "polska", "czech", "czechia", "slovakia", "hungary", "romania", "bulgaria",
+        "greece", "turkey", "turkiye", "russia", "ukraine",
+        "sweden", "norway", "denmark", "finland", "iceland", "croatia", "serbia", "slovenia",
+        "brazil", "brasil", "mexico", "argentina", "chile", "colombia", "peru", "venezuela",
+        "egypt", "arabia", "arabic",
+    )
+
+    // Spelled-out channel numbers normalize to digits so "BBC One" and "BBC 1" compare equal.
+    private val NUMBER_WORDS = mapOf(
+        "one" to "1", "two" to "2", "three" to "3", "four" to "4", "five" to "5",
+        "six" to "6", "seven" to "7", "eight" to "8", "nine" to "9", "ten" to "10",
     )
 
     private val BRACKETS = Regex("[\\[(\\{][^\\])}]*[\\])}]")
@@ -51,12 +72,58 @@ object EpgMatcher {
         s = s.replace(BRACKETS, " ")
         s = s.replace(SEPARATORS, " ")
         s = s.replace(NON_ALNUM, " ")
-        val tokens = s.split(SPACES).filter { it.isNotBlank() && it !in NOISE }.toMutableList()
-        // Drop a country/region tag at either end (keep at least one real token).
-        if (tokens.size > 1 && tokens.first() in COUNTRY) tokens.removeAt(0)
-        if (tokens.size > 1 && tokens.last() in COUNTRY) tokens.removeAt(tokens.size - 1)
+        val tokens = s.split(SPACES).filter { it.isNotBlank() && it !in NOISE }
+            .map { NUMBER_WORDS[it] ?: it }.toMutableList()
+        // Drop a country/region tag at either end — but only if a wordy token remains, so channels
+        // that ARE a country plus a number ("France 24", "France 2") keep their name.
+        fun canDropCountryAt(index: Int) = tokens.size > 1 && tokens[index] in COUNTRY &&
+            tokens.filterIndexed { i, _ -> i != index }.any { t -> t.any { it.isLetter() } }
+        if (canDropCountryAt(0)) tokens.removeAt(0)
+        if (tokens.isNotEmpty() && canDropCountryAt(tokens.size - 1)) tokens.removeAt(tokens.size - 1)
         return tokens.joinToString(" ").trim()
     }
+
+    // ---- Combined similarity: Jaro-Winkler OR token overlap, guarded by channel numbers ----
+
+    private val DIGIT_RUN = Regex("\\d+")
+
+    /** Different channel numbers ("MTV 2" vs "MTV 3") can never even reach review. */
+    private const val DIGIT_MISMATCH_CAP = 0.60
+
+    /** A number on only one side ("MTV" vs "MTV 2") stays below auto-apply — review at best. */
+    private const val DIGIT_MISSING_CAP = 0.90
+
+    /**
+     * Similarity of two already-normalized names (0..1): the better of Jaro-Winkler (typos,
+     * concatenated ids like "fusstv3") and token overlap (reordered words, "MTV France HD" vs
+     * "France MTV"), then capped when the embedded channel numbers disagree — string similarity
+     * alone happily matches "Sky Sports 2" to "Sky Sports 3", which is always wrong.
+     */
+    fun scoreNormalized(a: String, b: String): Double {
+        if (a.isEmpty() || b.isEmpty()) return 0.0
+        if (a == b) return 1.0
+        var score = maxOf(jaroWinkler(a, b), tokenDice(a, b))
+        val da = digitRuns(a)
+        val db = digitRuns(b)
+        if (da != db) {
+            val cap = if (da.isNotEmpty() && db.isNotEmpty()) DIGIT_MISMATCH_CAP else DIGIT_MISSING_CAP
+            score = minOf(score, cap)
+        }
+        return score
+    }
+
+    /** Sørensen–Dice over the two token sets — order-insensitive word overlap. */
+    private fun tokenDice(a: String, b: String): Double {
+        val ta = a.split(' ').toSet()
+        val tb = b.split(' ').toSet()
+        if (ta.isEmpty() || tb.isEmpty()) return 0.0
+        val inter = ta.count { it in tb }
+        return 2.0 * inter / (ta.size + tb.size)
+    }
+
+    /** Sorted digit runs with leading zeros dropped, so "MTV 02" and "mtv2" both yield ["2"]. */
+    private fun digitRuns(s: String): List<String> =
+        DIGIT_RUN.findAll(s).map { it.value.trimStart('0').ifEmpty { "0" } }.toList().sorted()
 
     /**
      * Jaro–Winkler similarity (0..1) — tolerant of typos/transpositions and biased toward common
@@ -138,8 +205,8 @@ object EpgMatcher {
         if (target.isEmpty()) return null
         var best: Result? = null
         for (c in candidates) {
-            val byName = if (c.normName.isNotEmpty()) jaroWinkler(target, c.normName) else 0.0
-            val byId = jaroWinkler(target, c.normId)
+            val byName = scoreNormalized(target, c.normName)
+            val byId = scoreNormalized(target, c.normId)
             val score = maxOf(byName, byId)
             if (score >= minScore && (best == null || score > best.score)) {
                 best = Result(c.epgChannelId, c.displayName, score)
@@ -147,5 +214,27 @@ object EpgMatcher {
             }
         }
         return best
+    }
+
+    /**
+     * Order picker entries for the manual "Match EPG" dialog: everything scoring at least
+     * [PICKER_SUGGEST_THRESHOLD] against [channelName] floats to the top (best first), the rest keep
+     * their incoming (alphabetical) order. Ranking only — nothing here applies a match.
+     */
+    fun <T> rankForPicker(
+        channelName: String,
+        items: List<T>,
+        displayName: (T) -> String?,
+        epgChannelId: (T) -> String,
+    ): List<T> {
+        val target = normalizeForEpg(channelName)
+        if (target.isEmpty() || items.isEmpty()) return items
+        val scored = items.map { item ->
+            val byName = displayName(item)?.let { scoreNormalized(target, normalizeForEpg(it)) } ?: 0.0
+            val byId = scoreNormalized(target, normalizeForEpg(epgChannelId(item)))
+            item to maxOf(byName, byId)
+        }
+        val (suggested, rest) = scored.partition { it.second >= PICKER_SUGGEST_THRESHOLD }
+        return suggested.sortedByDescending { it.second }.map { it.first } + rest.map { it.first }
     }
 }

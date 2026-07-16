@@ -12,7 +12,45 @@ class EpgMatcherTest {
         assertEquals("fuss tv 3", EpgMatcher.normalizeForEpg("DE| FUSS-TV 3 [HD]"))
         assertEquals("sky sport bundesliga 1", EpgMatcher.normalizeForEpg("Sky Sport Bundesliga 1 FHD"))
         assertEquals("cnn", EpgMatcher.normalizeForEpg("(US) CNN ᴴᴰ"))
-        assertEquals("bbc one", EpgMatcher.normalizeForEpg("BBC.One.UK"))
+        assertEquals("bbc 1", EpgMatcher.normalizeForEpg("BBC.One.UK")) // number words → digits
+    }
+
+    @Test
+    fun normalize_dropsSpelledOutCountryNamesAtEnds() {
+        assertEquals("mtv", EpgMatcher.normalizeForEpg("MTV France"))
+        assertEquals("mtv", EpgMatcher.normalizeForEpg("FR| MTV HD"))
+        // Mid-name words are never dropped.
+        assertEquals("france 24", EpgMatcher.normalizeForEpg("France 24"))
+    }
+
+    @Test
+    fun score_tokenOverlapMatchesReorderedWords() {
+        val a = EpgMatcher.normalizeForEpg("MTV France")
+        val b = EpgMatcher.normalizeForEpg("FR| MTV")
+        assertTrue(EpgMatcher.scoreNormalized(a, b) >= EpgMatcher.AUTO_THRESHOLD)
+    }
+
+    @Test
+    fun score_differentChannelNumbersNeverReachReview() {
+        val a = EpgMatcher.normalizeForEpg("Sky Sports 2")
+        val b = EpgMatcher.normalizeForEpg("Sky Sports 3")
+        assertTrue(EpgMatcher.scoreNormalized(a, b) < EpgMatcher.REVIEW_THRESHOLD)
+    }
+
+    @Test
+    fun score_numberOnOneSideStaysBelowAutoApply() {
+        val a = EpgMatcher.normalizeForEpg("MTV")
+        val b = EpgMatcher.normalizeForEpg("MTV 2")
+        assertTrue(EpgMatcher.scoreNormalized(a, b) < EpgMatcher.AUTO_THRESHOLD)
+    }
+
+    @Test
+    fun rankForPicker_putsRelatedChannelsFirstKeepsRestInOrder() {
+        val items = listOf("A Channel", "B Channel", "MTV Hits", "MTV France", "Zebra TV")
+        val ranked = EpgMatcher.rankForPicker("FR| MTV", items, { it }, { it })
+        assertEquals("MTV France", ranked[0]) // country stripped → exact match
+        assertEquals("MTV Hits", ranked[1])
+        assertEquals(listOf("A Channel", "B Channel", "Zebra TV"), ranked.drop(2))
     }
 
     @Test

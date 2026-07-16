@@ -29,8 +29,24 @@ object TitleNormalizer {
     private val QUALITY_MARKER = Regex(
         "(?i)\\b(4k|uhd|fhd|hd|sd|hevc|h\\.?265|h\\.?264|x265|x264|hdr10?\\+?|dolby|atmos|" +
             "multi[- ]?sub|multisub|dual[- ]?audio|remux|web[- ]?dl|webrip|bluray|bdrip|dvdrip|hdrip|" +
-            "imax|extended|uncut|remastered|vip)\\b"
+            "imax|extended|uncut|remastered|vip|" +
+            "vostfr|vost|vf|subbed|dubbed|dublado|legendado|castellano|truefrench|hdlight|" +
+            // [257]\.1 needs the literal dot so "Area 51" / "Formula 51" are never touched.
+            "10bit|8bit|60fps|50fps|aac|e?ac3|dts|ddp?|[257]\\.1|hdtc|hdcam|camrip)\\b"
     )
+
+    // Trailing season/episode tail on a series name: "Breaking Bad S05", "Loki Season 2",
+    // "Dark Staffel 1", "Casa Temporada 3 E04". The bare "s" form must sit directly against the
+    // number (S05) so possessives ("Ocean's 8") and plural words are never eaten.
+    private val SEASON_EPISODE_TAIL = Regex(
+        "(?i)[\\s\\-–—:._]*(?:(?:season|saison|temporada|staffel)\\s*\\d{1,2}|s\\d{1,2})" +
+            "(?:\\s*(?:e|ep|episode|x)\\s*\\d{1,4})?\\s*$"
+    )
+
+    // Trailing UPPERCASE language tag providers append ("Movie Name FR", "Show LAT").
+    // Case-sensitive on purpose: a title-case word like "Fr"/"Sub" is never touched, and the risky
+    // real-word codes (IT, US) are deliberately excluded.
+    private val TRAILING_LANG_TAG = Regex("""\s+(?:FR|EN|DE|ES|PT|NL|PL|TR|AR|RU|LAT|SUB|DUB|MULTI)$""")
 
     // A 4-digit year, optionally in parens/brackets: (2021), [1999], 2015.
     private val YEAR = Regex("""[\[(]?\b(19\d{2}|20\d{2})\b[\])]?""")
@@ -58,6 +74,12 @@ object TitleNormalizer {
             .replace(QUALITY_MARKER, " ")
             .replace(YEAR, " ")
             .replace(EMOJI_FLAG, " ")
+
+        // 3b. Peel trailing season/episode tails and language tags (repeatedly — "Show S01 FR"),
+        //     but never down to an empty query (a title that IS just "S01E01" stays as-is).
+        val beforeTails = s
+        do { prev = s; s = s.trimEnd().replace(SEASON_EPISODE_TAIL, "").replace(TRAILING_LANG_TAG, "") } while (s != prev)
+        if (s.isBlank()) s = beforeTails
 
         // 4. Collapse separators/whitespace and trim edge junk.
         s = s.replace('_', ' ').replace('.', ' ')
