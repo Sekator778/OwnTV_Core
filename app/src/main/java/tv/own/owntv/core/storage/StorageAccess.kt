@@ -1,11 +1,14 @@
 package tv.own.owntv.core.storage
 
+import android.Manifest
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
 import android.os.Environment
 import android.provider.Settings
+import androidx.core.content.ContextCompat
 import java.io.File
 
 /**
@@ -15,18 +18,33 @@ import java.io.File
  */
 object StorageAccess {
 
-    fun hasAllFilesAccess(): Boolean =
-        Build.VERSION.SDK_INT < Build.VERSION_CODES.R || Environment.isExternalStorageManager()
+    /**
+     * Whether shared storage can be browsed: All-files access on Android 11+, or the classic
+     * READ_EXTERNAL_STORAGE grant on Android 10 and below. A media-only grant on 11–12L does NOT
+     * count — the picker offers exactly one grant path (full access), never a media tier.
+     */
+    fun hasStorageAccess(context: Context): Boolean =
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) Environment.isExternalStorageManager()
+        else ContextCompat.checkSelfPermission(context, Manifest.permission.READ_EXTERNAL_STORAGE) ==
+            PackageManager.PERMISSION_GRANTED
 
-    /** Opens the system screen to grant All-files access (best effort; some TVs lack the screen). */
-    fun requestAllFilesAccess(context: Context) {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.R) return
-        val perApp = Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION, Uri.parse("package:${context.packageName}"))
-            .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-        if (runCatching { context.startActivity(perApp) }.isFailure) {
-            runCatching {
-                context.startActivity(Intent(Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
-            }
+    /**
+     * One uniform grant route on every device: OwnTV's own App-info settings screen, where the
+     * user picks storage access themselves (Permissions → Files and media / Storage →
+     * "Allow management of all files"). Deliberately NOT the All-files intent — OEM builds hijack
+     * it (TCL Android 12 routes it to "Permission Shield", which has no storage entry) — and NOT
+     * a runtime permission dialog, which on 11–12L could only grant a useless media-only tier.
+     * READ_EXTERNAL_STORAGE stays declared (maxSdk 32) so "Files and media" is listed there.
+     */
+    fun openStoragePermissionSettings(context: Context) {
+        val pkg = Uri.parse("package:${context.packageName}")
+        val candidates = listOf(
+            Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, pkg),
+            Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION, pkg),
+            Intent(Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION),
+        )
+        for (intent in candidates) {
+            if (runCatching { context.startActivity(intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)) }.isSuccess) return
         }
     }
 
