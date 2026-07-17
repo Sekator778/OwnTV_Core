@@ -8,7 +8,7 @@ package tv.own.owntv.ui.theme
 object UiZoom {
     const val MIN = 50
     const val MAX = 150
-    const val DEFAULT = 100
+    const val DEFAULT = 90
     const val STEP = 5
 
     /** Below this, low-RAM devices (2 GB sticks) can run out of memory from the extra on-screen
