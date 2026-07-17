@@ -112,6 +112,11 @@ interface EpgDao {
     @Query("SELECT COUNT(*) FROM epg_programmes WHERE sourceId IN (:sourceIds)")
     suspend fun countForSources(sourceIds: List<Long>): Int
 
+    /** Current/upcoming programmes for one (normalized) EPG channel id — 0 means the feed has nothing
+     *  scheduled from now on, so a freshly-matched channel would show an empty guide row. */
+    @Query("SELECT COUNT(*) FROM epg_programmes WHERE epgChannelId = :epgChannelId AND stopMs > :now")
+    suspend fun countUpcomingForChannel(epgChannelId: String, now: Long): Int
+
 
     /** Live programme count for one source — drives the EPG status shown on the source row. */
     @Query("SELECT COUNT(*) FROM epg_programmes WHERE sourceId = :sourceId")

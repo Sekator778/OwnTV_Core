@@ -398,7 +398,12 @@ class EpgRepository(
             rows.chunked(QUERY_CHUNK).forEach { epgDao.upsertProgrammes(it) }
             insertedTotal += rows.size
         }
-        true // had fresh cache and processed it (true even if an id wasn't present — re-syncing wouldn't help)
+        // Report handled ONLY if the cache actually yielded programmes for a requested id. A fresh cache
+        // that contains none of them (stale file, or a channel whose programmes weren't in the earlier
+        // tee'd download) must fall through to a network re-sync — the match is now persisted, so the
+        // re-sync's channel filter includes it and will fetch the missing schedule. Returning true here
+        // used to leave a just-matched channel permanently empty with no fallback.
+        insertedTotal > 0
     }
 
     /** An InputStream that mirrors every byte it reads into [out] — lets us parse a download while caching it. */
