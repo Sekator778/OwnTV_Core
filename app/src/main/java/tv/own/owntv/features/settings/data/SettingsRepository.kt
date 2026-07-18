@@ -99,6 +99,7 @@ class SettingsRepository(private val context: Context) {
         // Video Player Settings
         val HW_DECODING = booleanPreferencesKey("hw_decoding")
         val VOD_PREFER_EXO = booleanPreferencesKey("vod_prefer_exo")
+        val MEASURED_STREAM_STATS = booleanPreferencesKey("measured_stream_stats")
         val SURROUND_SOUND = booleanPreferencesKey("surround_sound")
         val AUTO_PLAY_NEXT = booleanPreferencesKey("auto_play_next")
         val EXTERNAL_PLAYER = booleanPreferencesKey("external_player")
@@ -463,6 +464,16 @@ class SettingsRepository(private val context: Context) {
         context.dataStore.edit { it[Keys.VOD_PREFER_EXO] = enabled }
     }
 
+    /** Measure live fps / bitrate / dropped frames for the stream-info overlay. On (default) = the
+     *  overlay shows measured values that ExoPlayer doesn't declare for raw MPEG-TS. Off = a hard
+     *  escape hatch: no live measuring runs at all (declared values only), for any low-end TV where
+     *  the measuring is ever suspected of causing stutter. Never affects the actual playback pipeline. */
+    val measuredStreamStats: Flow<Boolean> = context.dataStore.data.map { it[Keys.MEASURED_STREAM_STATS] ?: true }
+
+    suspend fun setMeasuredStreamStats(enabled: Boolean) {
+        context.dataStore.edit { it[Keys.MEASURED_STREAM_STATS] = enabled }
+    }
+
     /** Hand movies, series, and downloads to an external player (VLC, MX Player) instead of the
      *  in-app engine. Off by default. Live TV is never routed externally. */
     val externalPlayer: Flow<Boolean> = context.dataStore.data.map { it[Keys.EXTERNAL_PLAYER] ?: false }
@@ -782,7 +793,7 @@ class SettingsRepository(private val context: Context) {
     private val backupIntKeys = listOf(Keys.UI_ZOOM_PCT, Keys.AUDIO_DELAY_MS, Keys.CATCHUP_OFFSET_MIN, Keys.PROXY_PORT, Keys.CH_NAV_UP_SKIP, Keys.CH_NAV_DOWN_SKIP)
     private val backupBoolKeys = listOf(
         Keys.LIVE_PREVIEW, Keys.LIVE_PREVIEW_AUDIO, Keys.HDR_ENABLED, Keys.ANDROID_TV_HOME, Keys.HW_DECODING,
-        Keys.VOD_PREFER_EXO, Keys.EXTERNAL_PLAYER, Keys.UPDATE_CHECK_ON_START, Keys.SURROUND_SOUND, Keys.AUTO_PLAY_NEXT, Keys.PROXY_ENABLED,
+        Keys.VOD_PREFER_EXO, Keys.MEASURED_STREAM_STATS, Keys.EXTERNAL_PLAYER, Keys.UPDATE_CHECK_ON_START, Keys.SURROUND_SOUND, Keys.AUTO_PLAY_NEXT, Keys.PROXY_ENABLED,
         Keys.WEATHER_ENABLED, Keys.WEATHER_FAHRENHEIT, Keys.RESUME_LAST_CHANNEL, Keys.METADATA_ENABLED, Keys.CH_NAV_ENABLED,
     )
     private val backupFloatKeys = listOf(Keys.SUB_SCALE)

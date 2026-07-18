@@ -349,6 +349,8 @@ class OwnTVPlayer(
     // Video Player Settings — cached so ensureInit can apply them as mpv options, and the observers
     // below apply changes live to a running player.
     private var hwDecoding = true
+    // Escape-hatch toggle: when off, no live fps/bitrate measuring runs at all (declared values only).
+    private var measuredStreamStats = true
     private var vodPreferExo = false // Movies & Series start on ExoPlayer (mpv becomes the fallback)
     // Per-item engine pins from the gear toggle (VOD counterpart of Live's compatibility mode) —
     // eagerly mirrored so loadUrl can consult them synchronously.
@@ -470,6 +472,10 @@ class OwnTVPlayer(
         }.launchIn(scope)
         settings.autoPlayNext.onEach { autoPlayNext = it }.launchIn(scope)
         settings.vodPreferExo.onEach { vodPreferExo = it }.launchIn(scope) // applies from the next VOD load
+        settings.measuredStreamStats.onEach { on ->
+            measuredStreamStats = on
+            if (!on) exoEngine?.setBitrateTrackingEnabled(false) // turning it off stops any in-flight measuring now
+        }.launchIn(scope)
         vodEngineStore.mpvUrls.onEach { vodPinnedMpv = it }.launchIn(scope)
         vodEngineStore.exoUrls.onEach { vodPinnedExo = it }.launchIn(scope)
         settings.subtitleScale.onEach { s ->
@@ -2037,7 +2043,8 @@ class OwnTVPlayer(
     fun textTracks(): List<TrackOption> = _subTrackList.value
 
     fun setBitrateTrackingEnabled(enabled: Boolean) {
-        exoEngine?.setBitrateTrackingEnabled(enabled)
+        // Gated by the escape-hatch toggle: with it off, no throughput measuring ever starts.
+        exoEngine?.setBitrateTrackingEnabled(enabled && measuredStreamStats)
     }
 
     fun refreshStreamChips() = updateStreamChips()

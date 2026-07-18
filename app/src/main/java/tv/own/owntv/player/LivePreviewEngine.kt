@@ -27,6 +27,8 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import okhttp3.OkHttpClient
@@ -49,7 +51,14 @@ class LivePreviewEngine(
     private val context: Context,
     private val okHttpClient: OkHttpClient,
     private val diagnostics: PlayerDiagnostics,
+    settings: tv.own.owntv.features.settings.data.SettingsRepository,
 ) : PlaybackEngine {
+
+    // Escape-hatch toggle (Settings → Video player → Diagnostics). When off, no live fps/bitrate
+    // measuring runs on this engine — declared values only. Never affects the playback pipeline.
+    @Volatile private var measuredStatsEnabled = true
+    private val settingsFlow = settings.measuredStreamStats
+    private val settingsScope = kotlinx.coroutines.CoroutineScope(kotlinx.coroutines.Dispatchers.Main.immediate)
     enum class State { IDLE, LOADING, PLAYING, ERROR }
 
     init { LiveDiagnosticsLog.init(context) }
@@ -137,6 +146,12 @@ class LivePreviewEngine(
     private val throughputTracker = ThroughputTracker()
     private val fpsSample = FpsSample()
     private var dropsBaseline = 0
+
+    init {
+        // Keep the escape-hatch flag current; turning it off stops any in-flight measuring immediately.
+        settingsFlow.onEach { measuredStatsEnabled = it; if (!it) throughputTracker.setEnabled(false) }
+            .launchIn(settingsScope)
+    }
     private val analytics = object : androidx.media3.exoplayer.analytics.AnalyticsListener {
         override fun onVideoCodecError(eventTime: androidx.media3.exoplayer.analytics.AnalyticsListener.EventTime, videoCodecError: Exception) {
             lastCodecError = codecDetail("video", videoCodecError)
@@ -222,9 +237,10 @@ class LivePreviewEngine(
     private fun displayFps(f: Format) = f.frameRate.takeIf { it > 0 } ?: fpsSample.lastFps
 
     override fun refreshStreamChips() = ensureFpsMeasurement()
-    override fun setBitrateTrackingEnabled(enabled: Boolean) = throughputTracker.setEnabled(enabled)
+    override fun setBitrateTrackingEnabled(enabled: Boolean) = throughputTracker.setEnabled(enabled && measuredStatsEnabled)
 
     private fun ensureFpsMeasurement() {
+        if (!measuredStatsEnabled) return // escape hatch: no live fps measuring at all
         if ((player?.videoFormat?.frameRate ?: 0f) <= 0f) restartFpsMeasurement()
     }
 
