@@ -38,8 +38,13 @@ import tv.own.owntv.core.database.entity.SeasonEntity
 import tv.own.owntv.core.database.entity.SeriesEntity
 import tv.own.owntv.core.database.entity.SeriesFtsEntity
 import tv.own.owntv.core.database.entity.SourceEntity
+import tv.own.owntv.core.database.entity.SubtitleCacheEntity
+import tv.own.owntv.core.database.entity.SubtitleLinkEntity
+import tv.own.owntv.core.database.entity.SubtitleSelectionEntity
+import tv.own.owntv.core.database.entity.SubtitleTimingEntity
 import tv.own.owntv.core.database.entity.WatchHistoryEntity
 import tv.own.owntv.core.database.entity.TvProviderProgramEntity
+import tv.own.owntv.core.database.dao.SubtitleDao
 
 @Database(
     entities = [
@@ -68,13 +73,18 @@ import tv.own.owntv.core.database.entity.TvProviderProgramEntity
         // TMDB metadata enrichment cache (plan §7)
         MetadataCacheEntity::class,
         MetadataMatchEntity::class,
+        // External subtitles (OpenSubtitles / local files) — subtitle plan Phase 2
+        SubtitleCacheEntity::class,
+        SubtitleSelectionEntity::class,
+        SubtitleTimingEntity::class,
+        SubtitleLinkEntity::class,
         // FTS (search)
         ChannelFtsEntity::class,
         MovieFtsEntity::class,
         SeriesFtsEntity::class,
         EpisodeFtsEntity::class,
     ],
-    version = 14, // v7: content_order (Move). v8: contentHash + browse/unique indexes. v9: EPG contentHash + natural key. v10: TMDB metadata cache. v11: movies/series rating-sort indexes. v12: metadata_cache trailerKey. v13: metadata_cache logoPath. v14: sources.mac (Stalker portal)
+    version = 16, // v7: content_order (Move). v8: contentHash + browse/unique indexes. v9: EPG contentHash + natural key. v10: TMDB metadata cache. v11: movies/series rating-sort indexes. v12: metadata_cache trailerKey. v13: metadata_cache logoPath. v14: sources.mac (Stalker portal). v15: external-subtitle cache/selection/timing tables. v16: subtitle_link (downloaded-sub ↔ content)
 
     exportSchema = true,
 )
@@ -94,6 +104,7 @@ abstract class OwnTVDatabase : RoomDatabase() {
     abstract fun downloadDao(): DownloadDao
     abstract fun epgDao(): EpgDao
     abstract fun metadataDao(): tv.own.owntv.core.database.dao.MetadataDao
+    abstract fun subtitleDao(): SubtitleDao
 
     companion object {
         const val NAME = "owntv.db"
@@ -367,6 +378,94 @@ abstract class OwnTVDatabase : RoomDatabase() {
                 if (!hasColumn(db, "sources", "mac")) {
                     db.execSQL("ALTER TABLE `sources` ADD COLUMN `mac` TEXT")
                 }
+                healSchema(db)
+            }
+        }
+
+        /**
+         * v14 → v15: external subtitles (subtitle plan Phase 2). Three additive tables — a device-wide
+         * `subtitle_cache` of downloaded/imported files, per-profile `subtitle_selection`, and
+         * per-subtitle `subtitle_timing`. No existing table is touched, so all user data is preserved.
+         *
+         * Runs [healSchema] per the standing rule (every final migration must): this is now the last
+         * hop in the chain, so it carries the schema-drift heal that a public-release upgrade relies on.
+         */
+        val MIGRATION_14_15 = object : androidx.room.migration.Migration(14, 15) {
+            override fun migrate(db: androidx.sqlite.db.SupportSQLiteDatabase) {
+                db.execSQL(
+                    "CREATE TABLE IF NOT EXISTS `subtitle_cache` (" +
+                        "`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " +
+                        "`source` TEXT NOT NULL, " +
+                        "`openSubFileId` INTEGER, " +
+                        "`language` TEXT, " +
+                        "`languageName` TEXT, " +
+                        "`releaseName` TEXT, " +
+                        "`format` TEXT, " +
+                        "`hearingImpaired` INTEGER NOT NULL DEFAULT 0, " +
+                        "`fileName` TEXT NOT NULL, " +
+                        "`cachedPath` TEXT NOT NULL, " +
+                        "`lastUsedAt` INTEGER NOT NULL" +
+                        ")",
+                )
+                db.execSQL("CREATE UNIQUE INDEX IF NOT EXISTS `index_subtitle_cache_openSubFileId` ON `subtitle_cache` (`openSubFileId`)")
+                db.execSQL("CREATE INDEX IF NOT EXISTS `index_subtitle_cache_lastUsedAt` ON `subtitle_cache` (`lastUsedAt`)")
+
+                db.execSQL(
+                    "CREATE TABLE IF NOT EXISTS `subtitle_selection` (" +
+                        "`profileId` INTEGER NOT NULL, " +
+                        "`contentKey` TEXT NOT NULL, " +
+                        "`cacheId` INTEGER, " +
+                        "`off` INTEGER NOT NULL DEFAULT 0, " +
+                        "`updatedAt` INTEGER NOT NULL, " +
+                        "PRIMARY KEY(`profileId`, `contentKey`), " +
+                        "FOREIGN KEY(`profileId`) REFERENCES `profiles`(`id`) ON DELETE CASCADE, " +
+                        "FOREIGN KEY(`cacheId`) REFERENCES `subtitle_cache`(`id`) ON DELETE SET NULL" +
+                        ")",
+                )
+                db.execSQL("CREATE INDEX IF NOT EXISTS `index_subtitle_selection_profileId` ON `subtitle_selection` (`profileId`)")
+                db.execSQL("CREATE INDEX IF NOT EXISTS `index_subtitle_selection_cacheId` ON `subtitle_selection` (`cacheId`)")
+
+                db.execSQL(
+                    "CREATE TABLE IF NOT EXISTS `subtitle_timing` (" +
+                        "`profileId` INTEGER NOT NULL, " +
+                        "`contentKey` TEXT NOT NULL, " +
+                        "`subtitleKey` TEXT NOT NULL, " +
+                        "`offsetMs` INTEGER NOT NULL, " +
+                        "`updatedAt` INTEGER NOT NULL, " +
+                        "PRIMARY KEY(`profileId`, `contentKey`, `subtitleKey`), " +
+                        "FOREIGN KEY(`profileId`) REFERENCES `profiles`(`id`) ON DELETE CASCADE" +
+                        ")",
+                )
+                db.execSQL("CREATE INDEX IF NOT EXISTS `index_subtitle_timing_profileId` ON `subtitle_timing` (`profileId`)")
+
+                healSchema(db)
+            }
+        }
+
+        /**
+         * v15 → v16: `subtitle_link` — ties each downloaded subtitle to the movie/episode it was
+         * fetched for (subtitle plan §11), so a title's subtitles re-list on replay and the
+         * "Delete subtitles" surfaces can browse by Movies/Series. Additive; runs [healSchema] as the
+         * new last hop in the chain (standing rule).
+         */
+        val MIGRATION_15_16 = object : androidx.room.migration.Migration(15, 16) {
+            override fun migrate(db: androidx.sqlite.db.SupportSQLiteDatabase) {
+                db.execSQL(
+                    "CREATE TABLE IF NOT EXISTS `subtitle_link` (" +
+                        "`profileId` INTEGER NOT NULL, " +
+                        "`contentKey` TEXT NOT NULL, " +
+                        "`cacheId` INTEGER NOT NULL, " +
+                        "`mediaType` TEXT NOT NULL, " +
+                        "`contentTitle` TEXT NOT NULL, " +
+                        "`addedAt` INTEGER NOT NULL, " +
+                        "PRIMARY KEY(`profileId`, `contentKey`, `cacheId`), " +
+                        "FOREIGN KEY(`profileId`) REFERENCES `profiles`(`id`) ON DELETE CASCADE, " +
+                        "FOREIGN KEY(`cacheId`) REFERENCES `subtitle_cache`(`id`) ON DELETE CASCADE" +
+                        ")",
+                )
+                db.execSQL("CREATE INDEX IF NOT EXISTS `index_subtitle_link_profileId` ON `subtitle_link` (`profileId`)")
+                db.execSQL("CREATE INDEX IF NOT EXISTS `index_subtitle_link_cacheId` ON `subtitle_link` (`cacheId`)")
+                db.execSQL("CREATE INDEX IF NOT EXISTS `index_subtitle_link_profileId_mediaType` ON `subtitle_link` (`profileId`, `mediaType`)")
                 healSchema(db)
             }
         }

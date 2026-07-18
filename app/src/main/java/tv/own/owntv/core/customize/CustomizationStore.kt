@@ -126,6 +126,15 @@ class CustomizationStore(private val context: Context) {
         }
     }
 
+    /** Merge-restore (backup): overwrites only the provided keys, keeping every other profile's
+     *  customizations untouched (restore must never wipe profiles that aren't in the file). */
+    suspend fun mergeAll(entries: Map<String, String>) {
+        if (entries.isEmpty()) return
+        context.customizeStore.edit { prefs ->
+            entries.forEach { (k, v) -> if (k.startsWith("cust_")) prefs[stringPreferencesKey(k)] = v }
+        }
+    }
+
     // --- JSON (org.json, matching BackupManager's style) ---
 
     private fun parse(raw: String?): SectionCustomizations {

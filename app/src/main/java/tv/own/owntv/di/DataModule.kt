@@ -84,6 +84,15 @@ val dataModule = module {
     single { tv.own.owntv.core.metadata.MetadataRepository(get(), get(), get(), get()) }
     // Per-content TMDB name overrides (plan §11.2 U5b): DataStore side-store, no Room schema change.
     single { tv.own.owntv.core.metadata.MetadataOverrideStore(androidContext()) }
+    // OpenSubtitles (subtitle plan Phase 1): Worker-proxied REST client + Keystore-sealed
+    // per-profile sessions + the sign-in/out orchestrator with one-shot silent re-login.
+    single { tv.own.owntv.core.subtitles.OpenSubtitlesClient(get()) }
+    single { tv.own.owntv.core.subtitles.OpenSubtitlesAuthStore(androidContext()) }
+    single { tv.own.owntv.core.subtitles.OpenSubtitlesAccountManager(get(), get()) }
+    // context, client, accountManager, okHttpClient, subtitleDao — search/download/cache orchestration
+    single { tv.own.owntv.core.subtitles.SubtitleRepository(androidContext(), get(), get(), get(), get()) }
+    // repository, accountManager, settings, player — bridges the playing item to the OpenSubtitles search
+    single { tv.own.owntv.core.subtitles.SubtitleController(get(), get(), get(), get()) }
     single { WeatherRepository(get(), get()) }
     single { BulkInsertHelper(get()) }
     single {
@@ -150,8 +159,8 @@ val dataModule = module {
     // (the last four are D-3: Stalker downloads resolve the stored cmd at download-start time)
     single { DownloadManager(androidContext(), get(), get(), get(), get(), get(), get(), get()) }
     // profileDao, sourceDao, settings, customizationStore, userDataResolver, epgSourceStore,
-    // launcherIntegrationRepository, forceMpvStore, vodEngineStore, db, metadataOverrideStore, metadataDao
-    single { BackupManager(get(), get(), get(), get(), get(), get(), get(), get(), get(), get(), get(), get()) }
+    // forceMpvStore, vodEngineStore, db, metadataOverrideStore, metadataDao
+    single { BackupManager(get(), get(), get(), get(), get(), get(), get(), get(), get(), get(), get()) }
     // context, okHttpClient — in-app updates from GitHub Releases
     single { UpdateManager(androidContext(), get()) }
     single { CatalogSyncScheduler(androidContext()) }

@@ -46,6 +46,9 @@ okhttp = "4.12.0"
 youtubePlayer = "13.0.0"
 # QR generation for the Remote (companion) add-source flow — pure-Java, offline, no Android deps.
 zxing = "3.5.3"
+# Charset detection for local subtitle files (subtitle plan §7.2 / review R6) — tiny, pure-Java
+# Mozilla universalchardet port; local .srt files are frequently Windows-125x, not UTF-8.
+juniversalchardet = "2.5.0"
 
 # --- Test ---
 junit = "4.13.2"
@@ -103,6 +106,9 @@ coil-network-okhttp = { group = "io.coil-kt.coil3", name = "coil-network-okhttp"
 
 # QR code generation (Remote companion add-source) — encodes the LAN URL into a scannable bitmap.
 zxing-core = { group = "com.google.zxing", name = "core", version.ref = "zxing" }
+
+# Charset detection for local subtitle files (subtitle plan §7.2 / review R6).
+juniversalchardet = { group = "com.github.albfernandez", name = "juniversalchardet", version.ref = "juniversalchardet" }
 
 # Networking (M3U/Xtream fetch)
 okhttp = { group = "com.squareup.okhttp3", name = "okhttp", version.ref = "okhttp" }

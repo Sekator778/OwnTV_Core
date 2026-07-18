@@ -118,6 +118,7 @@ class OwnTVPlayer(
         const val SURFACE_HANDOFF_MS = 500L        // shorter release wait on the surface-attach handoff paths
         const val CORE_RESET_SETTLE_MS = 500L      // fresh mpv core + recreated surface settle after a hard reset
         const val EXO_POSITION_TICK_MS = 500L      // ExoPlayer position/duration emit interval while Exo is active
+        const val EXO_SUB_DELAY_DEBOUNCE_MS = 350L // settle time before a timing change re-prepares on Exo (§8)
         const val SURROUND_CHECK_MS = 7_000L       // wait before verifying surround audio actually produces sound
         const val DECODE_CHECK_MS = 4_000L         // wait before verifying video decode actually produces frames
         const val LIVE_RECONNECT_DELAY_MS = 3_500L // pause before reconnecting a dropped live stream
@@ -360,6 +361,15 @@ class OwnTVPlayer(
     private val _audioDelayMs = MutableStateFlow(0)
     /** Effective audio delay in ms (Settings default + the in-player A/V-sync nudge). */
     val audioDelayMs: StateFlow<Int> = _audioDelayMs.asStateFlow()
+    private val _subDelayMs = MutableStateFlow(0)
+    /** Subtitle-timing offset (ms) for the active subtitle (subtitle plan §8). Positive = shown later. */
+    val subDelayMs: StateFlow<Int> = _subDelayMs.asStateFlow()
+    private var exoSubDelayJob: Job? = null
+    /** Set by the subtitle layer (§8.4): fired when the ACTIVE subtitle changes so its remembered
+     *  timing can be applied. Identity: "path:&lt;file&gt;" external, "emb:&lt;ordinal&gt;:&lt;lang&gt;" embedded, null off. */
+    var onActiveSubtitleChanged: ((identity: String?) -> Unit)? = null
+    /** Set by the subtitle layer: fired after each USER timing change with the value to persist. */
+    var onSubtitleDelayUserChange: ((offsetMs: Int) -> Unit)? = null
     private var prefAudioLang = ""
     private var prefSubLang = ""
     private var defaultZoom = ZoomMode.FIT
@@ -528,6 +538,14 @@ class OwnTVPlayer(
     // the current season's queue). Within-season advance is handled by the player itself.
     private val _queueEnded = kotlinx.coroutines.flow.MutableSharedFlow<Unit>(extraBufferCapacity = 1)
     val queueEnded: kotlinx.coroutines.flow.SharedFlow<Unit> = _queueEnded
+
+    // Emitted with the new playlist index when the player ITSELF advances within an episode queue
+    // (auto-next / HUD prev-next). The series ViewModel initiated neither, but owns per-episode state
+    // keyed to the playing item — the subtitle search/restore context (subtitle plan Phase 5) — so it
+    // must be told. Index-based on purpose: Stalker queue items mint fresh URLs per load, so the
+    // URL-matching used elsewhere can't identify the new episode.
+    private val _queueItemChanged = kotlinx.coroutines.flow.MutableSharedFlow<Int>(extraBufferCapacity = 4)
+    val queueItemChanged: kotlinx.coroutines.flow.SharedFlow<Int> = _queueItemChanged
 
     var currentTitle: String? = null
         private set
@@ -704,6 +722,15 @@ class OwnTVPlayer(
     private var pendingImageSub: TrackOption? = null
     // A text subtitle picked while an Exo handoff is active: applied after mpv reloads (FILE_LOADED).
     @Volatile private var pendingSelectSid: Int? = null
+    // An external subtitle added while an Exo image-sub handoff was active: attached after mpv reloads.
+    @Volatile private var pendingExternalAdd: ExternalSub? = null
+    // External subs attached during THIS item's playback (either engine). Re-seeded into the incoming
+    // engine on a manual engine toggle so they stay listed and the active one stays active (§10).
+    private val sessionExternalSubs = ArrayList<ExternalSub>()
+    // The external sub a deferred Exo start must select (engine toggle with an external sub active).
+    @Volatile private var pendingExoExternalSelect: ExternalSub? = null
+    // Embedded sub to re-select after an Exo→mpv toggle reload (0-based ordinal among sub tracks).
+    @Volatile private var pendingSelectSubOrdinal: Int? = null
     private val freezeHandler = android.os.Handler(android.os.Looper.getMainLooper())
 
     private val _exoCues = MutableStateFlow<List<androidx.media3.common.text.Cue>>(emptyList())
@@ -746,7 +773,13 @@ class OwnTVPlayer(
             _position.value = positionMs
             if (durationMs > 0) _duration.value = durationMs
         }
-        override fun onFirstFrame() { _buffering.value = false; _freezeFrame.value = null }
+        override fun onFirstFrame() {
+            _buffering.value = false; _freezeFrame.value = null
+            // Exo owns this VOD as an engine (fallback/preferred): re-list previously downloaded subs
+            // (§9), same as mpv's FILE_LOADED hook. Re-fires after each side-load re-prepare, but the
+            // restore path no-ops when there's nothing new to attach.
+            if (exoVodFallback && !isLiveContent) onVodFileLoaded?.invoke()
+        }
         override fun onCues(cues: List<androidx.media3.common.text.Cue>) { _exoCues.value = cues }
         override fun onAudioTracks(tracks: List<TrackOption>) {
             _audioTrackList.value = tracks
@@ -854,7 +887,18 @@ class OwnTVPlayer(
         _subText.value = null // mpv's text overlay is off during the handoff
         val budget = playerBudget ?: PlayerBudget.of(context).also { playerBudget = it }
         val engine = exoEngine ?: ExoSubtitleEngine(context, okHttpClient, budget, exoCallbacks).also { exoEngine = it }
-        engine.start(url, pos, surface, sub?.lang, sub?.typeIndex ?: -1, fallback = exoVodFallback)
+        val extSelect = pendingExoExternalSelect
+        pendingExoExternalSelect = null
+        engine.start(
+            url, pos, surface, sub?.lang, sub?.typeIndex ?: -1, fallback = exoVodFallback,
+            // Re-seed this session's external subs so they stay listed across the engine switch (§10);
+            // only when Exo owns playback as a VOD engine (the HUD shows Exo's track list then).
+            sideloadSubs = if (exoVodFallback) sessionExternalSubs.toList() else emptyList(),
+            selectExternalLabel = extSelect?.title,
+        )
+        // Re-apply the carried subtitle's remembered timing (§8.4) on the incoming engine.
+        if (extSelect != null) onActiveSubtitleChanged?.invoke("path:${extSelect.path}")
+        else if (sub != null && !sub.image) onActiveSubtitleChanged?.invoke("emb:${sub.typeIndex}:${sub.lang ?: ""}")
         engine.setVolume(_volume.value) // carry the current HUD volume into ExoPlayer
         startExoTick()
     }
@@ -950,6 +994,12 @@ class OwnTVPlayer(
             // (which would turn a later mpv failure into the combined error) and re-arm the auto-fallback.
             android.util.Log.i(TAG, "HUD engine toggle: ExoPlayer → mpv")
             val pos = if (_position.value > 0) _position.value else pendingSeekMs
+            // Carry the active subtitle across the switch (§10): an external sub re-attaches + selects
+            // after mpv reloads; an embedded pick re-selects by its ordinal among sub tracks.
+            val selSub = _subTrackList.value.firstOrNull { it.selected }
+            val extSel = selSub?.let { s -> sessionExternalSubs.firstOrNull { it.title == s.label } }
+            if (extSel != null) pendingExternalAdd = extSel
+            else if (selSub != null) pendingSelectSubOrdinal = selSub.typeIndex.takeIf { it >= 0 }
             exoPrimaryThisItem = false
             exoFailureBeforeMpv = null
             deactivateExo() // releases Exo's codec
@@ -969,6 +1019,12 @@ class OwnTVPlayer(
             if (attachedSurface == null) return
             android.util.Log.i(TAG, "HUD engine toggle: mpv → ExoPlayer")
             val pos = if (fileLoaded && _position.value > 0) _position.value else pendingSeekMs
+            // Carry the active subtitle across the switch (§10): session externals are re-seeded into
+            // ExoPlayer by startExo — an active external is selected there by label, an embedded pick
+            // by its ordinal (via pendingExoSub).
+            val selSub = _subTrackList.value.firstOrNull { it.selected }
+            pendingExoExternalSelect = selSub?.let { s -> sessionExternalSubs.firstOrNull { it.title == s.label } }
+            val carrySub = if (pendingExoExternalSelect == null) selSub else null
             exoPrimaryThisItem = true
             exoVodFallback = true
             mpvFailureBeforeFallback = null
@@ -994,6 +1050,7 @@ class OwnTVPlayer(
                     // Start Exo on a FRESH surface: attachSurface sees pendingExoStart and routes the
                     // recreated surface straight into startExo (mpv never touches it).
                     pendingUrl = url
+                    pendingExoSub = carrySub
                     pendingExoStart = true
                     _surfaceResetToken.value++
                 }
@@ -1282,6 +1339,7 @@ class OwnTVPlayer(
         val item = playlist.getOrNull(playlistIndex) ?: return
         loadItem(item, startPositionMs = 0)
         updateNav()
+        _queueItemChanged.tryEmit(playlistIndex)
     }
 
     /** Load a queue item. A plain item loads its stored URL synchronously (unchanged path); an item
@@ -1363,6 +1421,12 @@ class OwnTVPlayer(
             triedVlcUaFallback = false
             triedOpenReset = false
             triedExoVodFallback = false // genuinely new item → the ExoPlayer engine fallback is armed again
+            pendingSelectSid = null // stale handoff leftovers must not apply to the new item
+            pendingExternalAdd = null
+            pendingSelectSubOrdinal = null
+            pendingExoExternalSelect = null
+            sessionExternalSubs.clear() // genuinely new item → its own external-sub session
+            applySubtitleDelay(0) // timing never carries onto another item/subtitle (§8.4)
             exoPrimaryThisItem = false
             exoFailureBeforeMpv = null
             exoVodFallback = false // (deactivateExo above clears it when Exo was active; this also covers
@@ -1670,6 +1734,53 @@ class OwnTVPlayer(
      *  Settings default on the next item, so it never carries a wrong offset onto a good file. */
     fun adjustAudioDelay(deltaMs: Int) {
         applyAudioDelay((_audioDelayMs.value + deltaMs).coerceIn(-5_000, 5_000))
+    }
+
+    // --- Subtitle timing (subtitle plan §8): offset for the ACTIVE subtitle. Positive = shown later. ---
+
+    /** True when timing adjustment applies to the active subtitle on this engine (§8.1): any text sub
+     *  on mpv (`sub-delay`); side-loaded external subs only on ExoPlayer (shifted copy at load). */
+    fun subtitleTimingAvailable(): Boolean {
+        if (isLiveContent) return false
+        val sel = _subTrackList.value.firstOrNull { it.selected } ?: return false
+        if (sel.image) return false
+        return if (exoActive) sessionExternalSubs.any { it.title == sel.label } else true
+    }
+
+    fun adjustSubtitleDelay(deltaMs: Int) {
+        setSubtitleDelay((_subDelayMs.value + deltaMs).coerceIn(-30_000, 30_000), byUser = true)
+    }
+
+    fun resetSubtitleDelay() = setSubtitleDelay(0, byUser = true)
+
+    /** Apply a remembered offset (from the subtitle layer, §8.4) without re-persisting it. */
+    fun applySubtitleDelay(offsetMs: Int) = setSubtitleDelay(offsetMs, byUser = false)
+
+    private fun setSubtitleDelay(ms: Int, byUser: Boolean) {
+        _subDelayMs.value = ms
+        if (exoActive) {
+            // Each Exo change re-prepares the stream (shifted-file side-load) — debounce so holding a
+            // step button doesn't restart playback per 100 ms press.
+            exoSubDelayJob?.cancel()
+            exoSubDelayJob = scope.launch {
+                delay(EXO_SUB_DELAY_DEBOUNCE_MS)
+                val sel = _subTrackList.value.firstOrNull { it.selected } ?: return@launch
+                if (sessionExternalSubs.any { it.title == sel.label }) exoEngine?.setSubtitleDelayMs(ms, sel.label)
+            }
+        } else if (initialized) {
+            mpvAsync { setPropertyDouble("sub-delay", ms / 1000.0) }
+        }
+        if (byUser) onSubtitleDelayUserChange?.invoke(ms)
+    }
+
+    /** Tell the subtitle layer which subtitle is active ("path:&lt;file&gt;" external, "emb:…" embedded,
+     *  null off) so it can apply that subtitle's remembered timing (§8.4). */
+    private fun notifyActiveSubtitle(track: TrackOption?) {
+        val identity = track?.let { t ->
+            sessionExternalSubs.firstOrNull { it.title == t.label }?.let { "path:${it.path}" }
+                ?: "emb:${t.typeIndex}:${t.lang ?: ""}"
+        }
+        onActiveSubtitleChanged?.invoke(identity)
     }
 
     // --- Volume (mpv software volume, independent of the system/hardware volume) ---
@@ -2015,6 +2126,7 @@ class OwnTVPlayer(
         if (exoActive && exoVodFallback) {
             track?.let { exoEngine?.selectTextTrack(it.typeIndex, it.lang) }
             _subTrackList.value = _subTrackList.value.map { it.copy(selected = it.mpvId == mpvId) }
+            notifyActiveSubtitle(track)
             return
         }
         // Image subtitle on a VOD → hand playback to ExoPlayer (it draws bitmap subs on its own layer).
@@ -2041,18 +2153,108 @@ class OwnTVPlayer(
             setCcSoftwareOverride(false)
         }
         _subTrackList.value = _subTrackList.value.map { it.copy(selected = it.mpvId == mpvId) }
+        notifyActiveSubtitle(track)
     }
 
     fun disableSubtitles() {
         if (exoActive && exoVodFallback) { // fallback playback stays on Exo — just turn its text off
             exoEngine?.disableTextTracks()
             _subTrackList.value = _subTrackList.value.map { it.copy(selected = false) }
+            notifyActiveSubtitle(null)
             return
         }
         if (exoActive) { revertToMpv(); return } // turning subs off ends the image-sub handoff
         setCcSoftwareOverride(false) // CC off → back to the configured (hardware) decode path
         if (initialized) mpvAsync { setPropertyString("sid", "no") }
         _subTrackList.value = _subTrackList.value.map { it.copy(selected = false) }
+        notifyActiveSubtitle(null)
+    }
+
+    /**
+     * Attach an external subtitle file (OpenSubtitles download or local pick) and select it
+     * immediately (subtitle plan §6.5). mpv's `sub-add … select` attaches it live with no playback
+     * interruption. [title] labels it in the track list; [lang] is the ISO code when known.
+     *
+     * When ExoPlayer owns VOD playback (engine fallback / preferred engine) the sub is side-loaded
+     * natively via a position-preserving re-prepare (§10). During an image-sub handoff, picking an
+     * external TEXT sub returns playback to mpv and attaches it once mpv reloads.
+     */
+    /** One external subtitle to (re)attach — see [restoreExternalSubtitles]. */
+    data class ExternalSub(val path: String, val title: String, val lang: String?)
+
+    /** Set by the subtitle layer; fired after a VOD file finishes loading so previously downloaded
+     *  subtitles can be re-listed (subtitle plan §9). Runs on the mpv event thread. */
+    var onVodFileLoaded: (() -> Unit)? = null
+
+    /**
+     * Re-attach previously downloaded subtitles WITHOUT changing the current selection (they show in
+     * the Subtitles list; the user re-picks — owner decision). No-op on ExoPlayer/live.
+     */
+    fun restoreExternalSubtitles(subs: List<ExternalSub>) {
+        if (subs.isEmpty()) return
+        subs.forEach { s -> if (sessionExternalSubs.none { it.path == s.path }) sessionExternalSubs.add(s) }
+        if (exoActive) {
+            // Only when Exo owns playback as a VOD engine; during an image-sub handoff mpv re-lists
+            // them itself after the handoff ends (its FILE_LOADED re-fires the restore hook).
+            if (exoVodFallback) exoEngine?.restoreExternalSubtitles(subs)
+            return
+        }
+        if (!initialized) return
+        mpvAsync {
+            val originalSid = getPropertyString("sid") ?: "no" // preserve the user's current choice
+            // Skip files already in the track list (a toggle carry-over may have re-attached one first).
+            val existing = _subTrackList.value.map { it.label }.toSet()
+            val toAdd = subs.filter { it.title !in existing }
+            if (toAdd.isEmpty()) return@mpvAsync
+            toAdd.forEach { command(arrayOf("sub-add", it.path, "auto", it.title, "")) }
+            setPropertyString("sid", originalSid) // "auto" may have selected one — undo that
+            val sid = getPropertyInt("sid") ?: -1
+            val list = queryTracks("sub").map { it.copy(selected = it.mpvId == sid) }
+            _subTrackList.value = list
+            _subCount.value = list.size
+        }
+    }
+
+    fun addExternalSubtitle(path: String, title: String, lang: String? = null) {
+        if (sessionExternalSubs.none { it.path == path }) sessionExternalSubs.add(ExternalSub(path, title, lang))
+        if (exoActive) {
+            if (exoVodFallback) {
+                // Exo owns VOD playback (engine fallback / preferred engine): side-load natively (§10).
+                exoEngine?.addExternalSubtitle(path, title, lang)
+                onActiveSubtitleChanged?.invoke("path:$path")
+            } else {
+                // Image-sub handoff: an external TEXT sub means the image sub is being replaced — return
+                // to mpv and attach the sub once its file reloads (mirrors the pendingSelectSid path).
+                pendingExternalAdd = ExternalSub(path, title, lang)
+                revertToMpv()
+            }
+            return
+        }
+        if (!initialized) return
+        mpvAsync {
+            // Already attached (e.g. re-applied after an engine toggle raced the §9 restore): don't add a
+            // duplicate row — just select the existing track.
+            _subTrackList.value.firstOrNull { it.label == title }?.let { existing ->
+                setPropertyInt("sid", existing.mpvId)
+                setPropertyString("sub-visibility", "yes")
+                _subTrackList.value = _subTrackList.value.map { it.copy(selected = it.mpvId == existing.mpvId) }
+                onActiveSubtitleChanged?.invoke("path:$path")
+                return@mpvAsync
+            }
+            // Empty mpv lang so the HUD label is exactly [title] ("Bengali — OpenSubtitles") rather than
+            // title + a duplicated language name from queryTracks' label().
+            command(arrayOf("sub-add", path, "select", title, ""))
+            setPropertyString("sub-visibility", "yes")
+            // sub-add is synchronous, so track-list now includes the new sub — refresh the HUD list so it
+            // shows (labelled and selected). Runs on the mpv-cmd worker, off the main thread (queryTracks' rule).
+            // Mark "selected" from mpv's actual current sid so the Subtitles menu opens focused on the
+            // just-added track (queryTracks' own selected flag can lag right after sub-add).
+            val sid = getPropertyInt("sid") ?: -1
+            val subs = queryTracks("sub").map { it.copy(selected = it.mpvId == sid) }
+            _subTrackList.value = subs
+            _subCount.value = subs.size
+            onActiveSubtitleChanged?.invoke("path:$path")
+        }
     }
 
     private fun label(title: String?, lang: String?, id: Int): String {
@@ -2207,6 +2409,9 @@ class OwnTVPlayer(
                 _subTrackList.value = queryTracks("sub")
                 _audioCount.value = _audioTrackList.value.size
                 _subCount.value = _subTrackList.value.size
+                // Re-list previously downloaded subtitles for a VOD item (subtitle plan §9). Fires after
+                // the fresh track list is built so restoreExternalSubtitles appends onto it.
+                if (!isLiveContent) onVodFileLoaded?.invoke()
                 // Fast-zap safety net: a trimmed probe can miss the audio PMT on a sparse stream, leaving
                 // a video-only load. If that happens, re-probe fully (once) so the channel plays with sound.
                 if (usedTrimmedProbe && !forceFullProbe && _audioTrackList.value.isEmpty()) {
@@ -2222,6 +2427,23 @@ class OwnTVPlayer(
                     mpv?.setPropertyInt("sid", sid)
                     mpv?.setPropertyString("sub-visibility", "yes")
                     _subTrackList.value = _subTrackList.value.map { it.copy(selected = it.mpvId == sid) }
+                    notifyActiveSubtitle(_subTrackList.value.firstOrNull { it.mpvId == sid })
+                }
+                // An external subtitle added during an Exo handoff (or active across an Exo→mpv engine
+                // toggle): attach + select it now that mpv is back.
+                pendingExternalAdd?.let { s ->
+                    pendingExternalAdd = null
+                    addExternalSubtitle(s.path, s.title, s.lang)
+                }
+                // Embedded sub carried across an Exo→mpv engine toggle: re-select it by ordinal.
+                pendingSelectSubOrdinal?.let { ord ->
+                    pendingSelectSubOrdinal = null
+                    _subTrackList.value.getOrNull(ord)?.let { t ->
+                        mpv?.setPropertyInt("sid", t.mpvId)
+                        mpv?.setPropertyString("sub-visibility", "yes")
+                        _subTrackList.value = _subTrackList.value.map { it.copy(selected = it.mpvId == t.mpvId) }
+                        notifyActiveSubtitle(t)
+                    }
                 }
                 mpv?.getPropertyBoolean("pause")?.let { _isPlaying.value = !it }
                 mpv?.getPropertyInt("height")?.let { _videoRes.value = resolutionLabel(it) }

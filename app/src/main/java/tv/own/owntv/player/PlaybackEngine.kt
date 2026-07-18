@@ -37,6 +37,9 @@ interface PlaybackEngine {
     fun selectAudio(id: Int)
     fun selectSubtitle(id: Int)
     fun disableSubtitles()
+    /** Attach + select an external subtitle file (OpenSubtitles/local). VOD only (mpv sub-add, or an
+     *  ExoPlayer side-load re-prepare); a live engine ignores it (subtitle plan §3.4). */
+    fun addExternalSubtitle(path: String, title: String, lang: String?) {}
     fun audioTracks(): List<TrackOption>
     fun textTracks(): List<TrackOption>
 
@@ -54,8 +57,14 @@ interface PlaybackEngine {
     val nextUpTitle: StateFlow<String?> get() = NULL_STRING
     /** In-player A/V-sync nudge (ms) — VOD/mpv only; a live engine leaves it at 0. */
     val audioDelayMs: StateFlow<Int> get() = ZERO_INT
+    /** Subtitle-timing offset (ms) for the ACTIVE subtitle — VOD only (subtitle plan §8). */
+    val subDelayMs: StateFlow<Int> get() = ZERO_INT
     fun setSpeed(speed: Double) {}
     fun adjustAudioDelay(deltaMs: Int) {}
+    fun adjustSubtitleDelay(deltaMs: Int) {}
+    fun resetSubtitleDelay() {}
+    /** True when timing adjustment applies to the active subtitle on this engine (plan §8.1). */
+    fun subtitleTimingAvailable(): Boolean = false
     fun previous() {}
     fun next() {}
     fun seekBy(deltaMs: Long) {}
@@ -94,6 +103,10 @@ class MpvPlaybackEngine(private val p: OwnTVPlayer) : PlaybackEngine {
     override val nav get() = p.nav
     override val nextUpTitle get() = p.nextUpTitle
     override val audioDelayMs get() = p.audioDelayMs
+    override val subDelayMs get() = p.subDelayMs
+    override fun adjustSubtitleDelay(deltaMs: Int) = p.adjustSubtitleDelay(deltaMs)
+    override fun resetSubtitleDelay() = p.resetSubtitleDelay()
+    override fun subtitleTimingAvailable() = p.subtitleTimingAvailable()
     override fun togglePlayPause() = p.togglePlayPause()
     override fun setZoomMode(mode: ZoomMode) = p.setZoomMode(mode)
     override fun adjustVolume(delta: Int) = p.adjustVolume(delta)
@@ -102,6 +115,7 @@ class MpvPlaybackEngine(private val p: OwnTVPlayer) : PlaybackEngine {
     override fun selectAudio(id: Int) = p.selectAudio(id)
     override fun selectSubtitle(id: Int) = p.selectSubtitle(id)
     override fun disableSubtitles() = p.disableSubtitles()
+    override fun addExternalSubtitle(path: String, title: String, lang: String?) = p.addExternalSubtitle(path, title, lang)
     override fun audioTracks() = p.audioTracks()
     override fun textTracks() = p.textTracks()
     override fun streamInfo() = p.streamInfo()

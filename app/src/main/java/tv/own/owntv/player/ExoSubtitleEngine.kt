@@ -69,6 +69,18 @@ class ExoSubtitleEngine(
     private var pendingSubLang: String? = null
     private var pendingSubTypeIndex: Int = -1
     private var subtitleApplied = false
+    // Side-loaded external subtitle files (OpenSubtitles/local — subtitle plan §6.5/§10). ExoPlayer
+    // can't attach a subtitle to a playing item, so each add/restore re-prepares the same URL with
+    // SubtitleConfigurations at the current position (the plan's "seamless re-prepare").
+    private data class ExternalSubCfg(val path: String, val title: String, val lang: String?)
+    private var currentUrl: String? = null
+    private val externalSubs = ArrayList<ExternalSubCfg>()
+    // Label of a just-added external sub to select once its track appears in onTracksChanged.
+    private var pendingExternalLabel: String? = null
+    // Subtitle-timing offset for the active external sub (§8): applied by side-loading a
+    // timestamp-shifted copy of that file on the next (re-)prepare.
+    private var subDelayMs = 0
+    private var delayLabel: String? = null
     // Engine-fallback playback (mpv terminally failed this VOD): no auto subtitle, engine-worded errors.
     private var fallbackMode = false
     // First-frame watchdog: this handoff only exists to show an image subtitle over otherwise-healthy
@@ -135,7 +147,14 @@ class ExoSubtitleEngine(
      *  subtitle identified by [subLang]/[subTypeIndex] (the track the user picked in mpv's list).
      *  [fallback] = engine-fallback playback after a terminal mpv failure: no subtitle is auto-selected
      *  (pass subLang = null, subTypeIndex = -1) and errors are worded as engine failures. */
-    fun start(url: String, positionMs: Long, surface: Surface, subLang: String?, subTypeIndex: Int, fallback: Boolean = false) {
+    fun start(
+        url: String, positionMs: Long, surface: Surface, subLang: String?, subTypeIndex: Int,
+        fallback: Boolean = false,
+        // External subtitle files to side-load from the first prepare (engine toggle carry-over, §10);
+        // [selectExternalLabel] names the one to select, or null to attach them all unselected.
+        sideloadSubs: List<OwnTVPlayer.ExternalSub> = emptyList(),
+        selectExternalLabel: String? = null,
+    ) {
         this.surface = surface
         fallbackMode = fallback
         pendingSubLang = subLang
@@ -145,17 +164,116 @@ class ExoSubtitleEngine(
         mainHandler.removeCallbacks(noVideoTimeout)
         mainHandler.postDelayed(noVideoTimeout, NO_VIDEO_TIMEOUT_MS)
 
+        currentUrl = url
+        externalSubs.clear()
+        sideloadSubs.forEach { externalSubs.add(ExternalSubCfg(it.path, it.title, it.lang)) }
+        pendingExternalLabel = selectExternalLabel
+        subDelayMs = 0
+        delayLabel = null
+
         val p = player ?: build().also { player = it }
         p.setVideoSurface(surface)
-        p.setMediaItem(MediaItem.fromUri(url))
+        p.setMediaItem(buildMediaItem(url))
         p.prepare()
         if (positionMs > 0) p.seekTo(positionMs)
         p.playWhenReady = true
     }
 
+    private fun buildMediaItem(url: String): MediaItem {
+        val builder = MediaItem.Builder().setUri(url)
+        if (externalSubs.isNotEmpty()) {
+            builder.setSubtitleConfigurations(externalSubs.map { s ->
+                // Timing offset for the active external sub: side-load a timestamp-shifted copy (§8).
+                val file = if (s.title == delayLabel && subDelayMs != 0) {
+                    SubtitleShift.shiftedCopy(context, java.io.File(s.path), subDelayMs)
+                } else java.io.File(s.path)
+                MediaItem.SubtitleConfiguration.Builder(android.net.Uri.fromFile(file))
+                    .setMimeType(subtitleMime(s.path))
+                    .setLabel(s.title)
+                    .apply { s.lang?.let { setLanguage(it) } }
+                    .build()
+            })
+        }
+        return builder.build()
+    }
+
+    private fun subtitleMime(path: String): String = when (path.substringAfterLast('.').lowercase()) {
+        "ass", "ssa" -> androidx.media3.common.MimeTypes.TEXT_SSA
+        "vtt", "webvtt" -> androidx.media3.common.MimeTypes.TEXT_VTT
+        else -> androidx.media3.common.MimeTypes.APPLICATION_SUBRIP
+    }
+
+    /** Attach + select an external subtitle file (plan §6.5): re-prepare the same URL with the sub
+     *  side-loaded, at the same position, and select it by label once its track appears. */
+    fun addExternalSubtitle(path: String, title: String, lang: String?) {
+        val p = player ?: return
+        val url = currentUrl ?: return
+        if (externalSubs.none { it.path == path }) externalSubs.add(ExternalSubCfg(path, title, lang))
+        pendingExternalLabel = title
+        subtitleApplied = false
+        reprepareKeepingPosition(p, url)
+    }
+
+    /** Re-attach previously downloaded subtitles WITHOUT changing the current selection (plan §9 —
+     *  they show in the Subtitles list; the user re-picks). No-op when nothing new to attach. */
+    fun restoreExternalSubtitles(subs: List<OwnTVPlayer.ExternalSub>) {
+        val p = player ?: return
+        val url = currentUrl ?: return
+        var added = false
+        subs.forEach { s ->
+            if (externalSubs.none { it.path == s.path }) {
+                externalSubs.add(ExternalSubCfg(s.path, s.title, s.lang)); added = true
+            }
+        }
+        if (!added) return
+        // Capture the currently-selected text track (by ordinal) so applyPendingSubtitle re-applies it
+        // after the re-prepare — a TrackSelectionOverride holds TrackGroup instances, which the new
+        // prepare replaces, so without this the default selector could auto-pick a sub the user never chose.
+        var idx = 0; var selIdx = -1; var selLang: String? = null
+        for (group in p.currentTracks.groups) {
+            if (group.type != C.TRACK_TYPE_TEXT) continue
+            for (i in 0 until group.length) {
+                if (group.isTrackSelected(i)) { selIdx = idx; selLang = group.getTrackFormat(i).language }
+                idx++
+            }
+        }
+        pendingSubTypeIndex = selIdx // -1 + null lang → applyPendingSubtitle keeps text OFF
+        pendingSubLang = if (selIdx >= 0) selLang else null
+        pendingExternalLabel = null
+        subtitleApplied = false
+        reprepareKeepingPosition(p, url)
+    }
+
+    /** Apply a subtitle-timing offset to the active external sub [activeLabel] (§8): re-prepare with a
+     *  shifted copy of its file at the same position, then re-select it. The caller debounces. */
+    fun setSubtitleDelayMs(ms: Int, activeLabel: String) {
+        val p = player ?: return
+        val url = currentUrl ?: return
+        if (subDelayMs == ms && delayLabel == activeLabel) return
+        subDelayMs = ms
+        delayLabel = activeLabel
+        pendingExternalLabel = activeLabel // re-select after the re-prepare
+        subtitleApplied = false
+        reprepareKeepingPosition(p, url)
+    }
+
+    private fun reprepareKeepingPosition(p: ExoPlayer, url: String) {
+        val pos = p.currentPosition.coerceAtLeast(0)
+        val wasPlaying = p.playWhenReady
+        p.setMediaItem(buildMediaItem(url), pos)
+        p.prepare()
+        p.playWhenReady = wasPlaying
+    }
+
     private fun build(): ExoPlayer {
-        val dataSource = OkHttpDataSource.Factory(okHttpClient)
-            .setUserAgent(HttpClient.DEFAULT_USER_AGENT)
+        // OkHttp for the stream itself, wrapped in DefaultDataSource so file:// URIs (side-loaded
+        // external subtitle files in app storage) route to FileDataSource — the bare OkHttp factory
+        // can't open them, and Media3 swallows a side-loaded subtitle's load failure silently (the
+        // track lists but never produces cues).
+        val dataSource = androidx.media3.datasource.DefaultDataSource.Factory(
+            context,
+            OkHttpDataSource.Factory(okHttpClient).setUserAgent(HttpClient.DEFAULT_USER_AGENT),
+        )
         // Match mpv's buffering depth so stability doesn't drop after the handoff (Dev refinement #3).
         val maxBufferMs = (budget.cacheSecs.toIntOrNull() ?: 30) * 1000
         val minBufferMs = (maxBufferMs / 2).coerceIn(15_000, maxBufferMs)
@@ -245,8 +363,12 @@ class ExoSubtitleEngine(
                 val image = mime == androidx.media3.common.MimeTypes.APPLICATION_PGS ||
                     mime == androidx.media3.common.MimeTypes.APPLICATION_VOBSUB ||
                     mime == androidx.media3.common.MimeTypes.APPLICATION_DVBSUBS
+                // Side-loaded external subs keep their configured label verbatim ("Bengali — OpenSubtitles")
+                // — audioLabel would append the language again, and the engine-toggle carry-over matches
+                // the selected row back to the session's external subs by exact title.
+                val external = format.label != null && externalSubs.any { it.title == format.label }
                 out.add(TrackOption(
-                    label = audioLabel(format.label, format.language, id),
+                    label = if (external) format.label!! else audioLabel(format.label, format.language, id),
                     mpvId = id, selected = group.isTrackSelected(i), image = image,
                     lang = format.language, typeIndex = id,
                 ))
@@ -261,6 +383,24 @@ class ExoSubtitleEngine(
     private fun applyPendingSubtitle(tracks: Tracks) {
         if (subtitleApplied) return
         val p = player ?: return
+        // A just-side-loaded external subtitle: select it by its label (set on the SubtitleConfiguration).
+        pendingExternalLabel?.let { label ->
+            for (group in tracks.groups) {
+                if (group.type != C.TRACK_TYPE_TEXT) continue
+                for (i in 0 until group.length) {
+                    if (group.getTrackFormat(i).label == label) {
+                        p.trackSelectionParameters = p.trackSelectionParameters.buildUpon()
+                            .setOverrideForType(TrackSelectionOverride(group.mediaTrackGroup, listOf(i)))
+                            .setTrackTypeDisabled(C.TRACK_TYPE_TEXT, false)
+                            .build()
+                        pendingExternalLabel = null
+                        subtitleApplied = true
+                        return
+                    }
+                }
+            }
+            return // its track hasn't appeared in this update yet — wait for the next onTracksChanged
+        }
         // Engine-fallback playback with no subtitle picked: keep text tracks OFF rather than letting the
         // "?: textTracks.first()" recovery below auto-select one the user never asked for.
         if (pendingSubTypeIndex < 0 && pendingSubLang == null) {
@@ -375,6 +515,11 @@ class ExoSubtitleEngine(
         player = null
         audioSelections = emptyList()
         fallbackMode = false
+        currentUrl = null
+        externalSubs.clear()
+        pendingExternalLabel = null
+        subDelayMs = 0
+        delayLabel = null
     }
 
     fun release() = stop()
