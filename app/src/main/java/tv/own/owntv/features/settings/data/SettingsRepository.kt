@@ -60,6 +60,16 @@ enum class EpgAutoRefresh(val label: String, val thresholdMs: Long? = null) {
 
 private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "owntv_settings")
 
+/** CH+- key paging limits. Top-level so any caller (VM, UI) can reference them via the class. */
+object ChNavLimits {
+    /** Hard cap for the CH+- skip counts — protects against typos (e.g. 999999) overloading slow TVs. */
+    const val HARD_MAX = 1000
+    /** Above this value the settings UI shows an advisory warning (high skips overshoot short lists). */
+    const val WARN_THRESHOLD = 50
+    /** Default per-direction skip (single CH+/- press moves this many items). */
+    const val DEFAULT_SKIP = 10
+}
+
 /**
  * Persists app-level preferences. Phase 1 only needs the theme selection; this will grow to hold
  * UI zoom, custom user-agent, refresh-on-start, etc. in later phases.
@@ -133,6 +143,12 @@ class SettingsRepository(private val context: Context) {
         // user has hidden (STATIC mode only — DYNAMIC ignores it).
         val NAV_MENU_MODE = stringPreferencesKey("nav_menu_mode")
         val NAV_MENU_HIDDEN = stringSetPreferencesKey("nav_menu_hidden")
+        // CH+- key paging for browse panels (Live/Movies/Series: category rail + item list/grid).
+        // Master toggle + a per-direction skip count (CH+ toward first, CH− toward last). Counts are
+        // clamped to [1, CH_NAV_HARD_MAX] on write; the UI warns above CH_NAV_WARN_THRESHOLD.
+        val CH_NAV_ENABLED = booleanPreferencesKey("ch_nav_enabled")
+        val CH_NAV_UP_SKIP = intPreferencesKey("ch_nav_up_skip")
+        val CH_NAV_DOWN_SKIP = intPreferencesKey("ch_nav_down_skip")
     }
 
     // --- Live TV: remember the last focused channel so reopening lands focus back on it ---
@@ -498,6 +514,27 @@ class SettingsRepository(private val context: Context) {
         context.dataStore.edit { it[Keys.AUDIO_DELAY_MS] = ms }
     }
 
+    // --- CH+- key paging (browse panels): master toggle + per-direction skip counts ---
+    // Clamped to [1, ChNavLimits.HARD_MAX] on write so an accidental huge value can never persist.
+    val chNavEnabled: Flow<Boolean> = context.dataStore.data.map { it[Keys.CH_NAV_ENABLED] ?: true }
+    suspend fun setChNavEnabled(enabled: Boolean) {
+        context.dataStore.edit { it[Keys.CH_NAV_ENABLED] = enabled }
+    }
+    /** CH+ skip count (jumps this many items toward the first item). */
+    val chNavUpSkip: Flow<Int> = context.dataStore.data.map {
+        (it[Keys.CH_NAV_UP_SKIP] ?: ChNavLimits.DEFAULT_SKIP).coerceIn(1, ChNavLimits.HARD_MAX)
+    }
+    suspend fun setChNavUpSkip(n: Int) {
+        context.dataStore.edit { it[Keys.CH_NAV_UP_SKIP] = n.coerceIn(1, ChNavLimits.HARD_MAX) }
+    }
+    /** CH− skip count (jumps this many items toward the last item). */
+    val chNavDownSkip: Flow<Int> = context.dataStore.data.map {
+        (it[Keys.CH_NAV_DOWN_SKIP] ?: ChNavLimits.DEFAULT_SKIP).coerceIn(1, ChNavLimits.HARD_MAX)
+    }
+    suspend fun setChNavDownSkip(n: Int) {
+        context.dataStore.edit { it[Keys.CH_NAV_DOWN_SKIP] = n.coerceIn(1, ChNavLimits.HARD_MAX) }
+    }
+
     /** Preferred audio language (ISO code, mpv alang); blank = no preference. */
     val preferredAudioLang: Flow<String> = context.dataStore.data.map { it[Keys.PREF_AUDIO_LANG] ?: "" }
 
@@ -742,11 +779,11 @@ class SettingsRepository(private val context: Context) {
         // The STATIC-mode hidden set rides with backup so a reinstall keeps the user's hidden icons.
         Keys.NAV_MENU_HIDDEN,
     )
-    private val backupIntKeys = listOf(Keys.UI_ZOOM_PCT, Keys.AUDIO_DELAY_MS, Keys.CATCHUP_OFFSET_MIN, Keys.PROXY_PORT)
+    private val backupIntKeys = listOf(Keys.UI_ZOOM_PCT, Keys.AUDIO_DELAY_MS, Keys.CATCHUP_OFFSET_MIN, Keys.PROXY_PORT, Keys.CH_NAV_UP_SKIP, Keys.CH_NAV_DOWN_SKIP)
     private val backupBoolKeys = listOf(
         Keys.LIVE_PREVIEW, Keys.LIVE_PREVIEW_AUDIO, Keys.HDR_ENABLED, Keys.ANDROID_TV_HOME, Keys.HW_DECODING,
         Keys.VOD_PREFER_EXO, Keys.EXTERNAL_PLAYER, Keys.UPDATE_CHECK_ON_START, Keys.SURROUND_SOUND, Keys.AUTO_PLAY_NEXT, Keys.PROXY_ENABLED,
-        Keys.WEATHER_ENABLED, Keys.WEATHER_FAHRENHEIT, Keys.RESUME_LAST_CHANNEL, Keys.METADATA_ENABLED,
+        Keys.WEATHER_ENABLED, Keys.WEATHER_FAHRENHEIT, Keys.RESUME_LAST_CHANNEL, Keys.METADATA_ENABLED, Keys.CH_NAV_ENABLED,
     )
     private val backupFloatKeys = listOf(Keys.SUB_SCALE)
 
