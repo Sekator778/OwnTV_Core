@@ -118,6 +118,7 @@ class OwnTVPlayer(
         const val SURFACE_HANDOFF_MS = 500L        // shorter release wait on the surface-attach handoff paths
         const val CORE_RESET_SETTLE_MS = 500L      // fresh mpv core + recreated surface settle after a hard reset
         const val EXO_POSITION_TICK_MS = 500L      // ExoPlayer position/duration emit interval while Exo is active
+        const val EXO_FPS_RECHECK_MS = 1_500L      // retry the fps chip once a measurement window can have elapsed
         const val SURROUND_CHECK_MS = 7_000L       // wait before verifying surround audio actually produces sound
         const val DECODE_CHECK_MS = 4_000L         // wait before verifying video decode actually produces frames
         const val LIVE_RECONNECT_DELAY_MS = 3_500L // pause before reconnecting a dropped live stream
@@ -625,8 +626,9 @@ class OwnTVPlayer(
         _videoRes.value?.let { base += it }
         val knownFps = _videoFps.value
         val m = mpv
-        if (m == null) {
-            knownFps?.let { if (it > 0) base += "${Math.round(it)} FPS" }
+        // mpv stays alive (just stopped/surfaceless) during a handoff, so check exoActive, not m == null.
+        if (exoActive || m == null) {
+            (knownFps ?: exoEngine?.currentFps())?.let { if (it > 0) base += "${Math.round(it)} FPS" }
             _streamChips.value = base
             return
         }
@@ -741,6 +743,9 @@ class OwnTVPlayer(
             if (height > 0) lastVideoHeightPx = height
             updateAspect()
             _videoRes.value = resolutionLabel(height)
+            updateStreamChips() // onVideoFps may never fire; don't wait on it for resolution/measured fps
+            val gen = loadGeneration // a measured fps needs a rendered-frame window, so retry once it can exist
+            scope.launch { delay(EXO_FPS_RECHECK_MS); if (gen == loadGeneration && exoActive) updateStreamChips() }
         }
         override fun onPositionDuration(positionMs: Long, durationMs: Long) {
             _position.value = positionMs
@@ -1917,6 +1922,12 @@ class OwnTVPlayer(
     fun audioTracks(): List<TrackOption> = _audioTrackList.value
     fun textTracks(): List<TrackOption> = _subTrackList.value
 
+    fun setBitrateTrackingEnabled(enabled: Boolean) {
+        exoEngine?.setBitrateTrackingEnabled(enabled)
+    }
+
+    fun refreshStreamChips() = updateStreamChips()
+
     /** Technical readout for the stream-info overlay, read live from whichever engine owns playback —
      *  mpv (libmpv get_property is thread-safe) or ExoPlayer (image-sub handoff / engine fallback /
      *  ExoPlayer-preferred; the overlay polls from composition, i.e. the main thread Exo requires). */
@@ -2068,6 +2079,8 @@ class OwnTVPlayer(
     }
 
     override fun eventProperty(property: String, value: Long) {
+        // mpv's stop() during a handoff to Exo fires stale events afterward that would overwrite state Exo already set.
+        if (exoActive) return
         when (property) {
             "time-pos" -> {
                 _position.value = value * 1000
@@ -2154,6 +2167,7 @@ class OwnTVPlayer(
     }
 
     override fun eventProperty(property: String, value: Boolean) {
+        if (exoActive) return
         when (property) {
             "pause" -> _isPlaying.value = !value
             "paused-for-cache" -> _buffering.value = value
@@ -2180,6 +2194,7 @@ class OwnTVPlayer(
         }
     }
     override fun eventProperty(property: String, value: Double) {
+        if (exoActive) return
         if (property == "speed") _speed.value = value
         if (property == "container-fps" && value > 0) _videoFps.value = value.toFloat()
     }
@@ -2187,6 +2202,8 @@ class OwnTVPlayer(
     override fun event(eventId: Int) {
         when (eventId) {
             MPVLib.MpvEvent.MPV_EVENT_FILE_LOADED -> {
+                // Stale FILE_LOADED from mpv's own stop() during a handoff to Exo, not a real load.
+                if (exoActive) return
                 fileLoaded = true
                 val pendingStops = pendingStopEndFiles.getAndSet(0)
                 if (pendingStops > 0) {

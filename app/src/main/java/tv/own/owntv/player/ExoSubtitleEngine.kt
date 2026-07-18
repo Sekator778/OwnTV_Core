@@ -90,6 +90,21 @@ class ExoSubtitleEngine(
 
     val isActive: Boolean get() = player != null
 
+    private val throughputTracker = ThroughputTracker()
+    private val fpsSample = FpsSample()
+    private var dropsBaseline = 0
+    private val analytics = object : androidx.media3.exoplayer.analytics.AnalyticsListener {
+        override fun onVideoDecoderInitialized(eventTime: androidx.media3.exoplayer.analytics.AnalyticsListener.EventTime, decoderName: String, initializedTimestampMs: Long, initializationDurationMs: Long) {
+            dropsBaseline = currentDroppedFrames(player) // a new decoder session may start its own counters
+        }
+    }
+
+    /** Declared fps if present, else a live measurement. */
+    fun currentFps(): Float? {
+        val p = player ?: return null
+        return p.videoFormat?.frameRate?.takeIf { it > 0 } ?: fpsSample.sample(p)
+    }
+
     private val listener = object : Player.Listener {
         override fun onIsPlayingChanged(isPlaying: Boolean) {
             callbacks.onPlayingChanged(isPlaying)
@@ -142,6 +157,7 @@ class ExoSubtitleEngine(
         pendingSubTypeIndex = subTypeIndex
         subtitleApplied = false
         firstFrameSeen = false
+        throughputTracker.reset(); fpsSample.resetAll(); dropsBaseline = currentDroppedFrames(player)
         mainHandler.removeCallbacks(noVideoTimeout)
         mainHandler.postDelayed(noVideoTimeout, NO_VIDEO_TIMEOUT_MS)
 
@@ -156,6 +172,7 @@ class ExoSubtitleEngine(
     private fun build(): ExoPlayer {
         val dataSource = OkHttpDataSource.Factory(okHttpClient)
             .setUserAgent(HttpClient.DEFAULT_USER_AGENT)
+            .setTransferListener(throughputTracker)
         // Match mpv's buffering depth so stability doesn't drop after the handoff (Dev refinement #3).
         val maxBufferMs = (budget.cacheSecs.toIntOrNull() ?: 30) * 1000
         val minBufferMs = (maxBufferMs / 2).coerceIn(15_000, maxBufferMs)
@@ -172,7 +189,7 @@ class ExoSubtitleEngine(
             .setLoadControl(loadControl)
             .setTrackSelector(trackSelector)
             .build()
-            .apply { addListener(listener) }
+            .apply { addListener(listener); addAnalyticsListener(analytics) }
     }
 
     /** Re-point ExoPlayer at a (re)created surface, or null to release it (surfaceDestroyed). */
@@ -316,22 +333,25 @@ class ExoSubtitleEngine(
         return listOfNotNull(title?.takeIf { it.isNotBlank() }, l).joinToString(" · ").ifBlank { "Track ${id + 1}" }
     }
 
+    fun setBitrateTrackingEnabled(enabled: Boolean) = throughputTracker.setEnabled(enabled)
+
     /** Technical readout for the stream-info overlay while this engine owns playback (main thread only —
      *  the overlay polls from composition). Mirrors [LivePreviewEngine.streamInfo]'s format. */
     fun streamInfo(): List<Pair<String, String>> {
         val p = player ?: return emptyList()
         val out = ArrayList<Pair<String, String>>()
         p.videoFormat?.let { f ->
+            val fps = currentFps()
             val line = listOfNotNull(
                 f.sampleMimeType?.substringAfterLast('/')?.let { mimeName(it) },
                 if (f.width > 0 && f.height > 0) "${f.width}×${f.height}" else null,
-                if (f.frameRate > 0) "%.2f fps".format(f.frameRate) else null,
+                fps?.let { "%.2f fps".format(it) },
             ).joinToString(" · ")
             if (line.isNotBlank()) out += "Video" to line
             when (f.colorInfo?.colorTransfer) {
                 C.COLOR_TRANSFER_ST2084 -> "HDR10 (PQ)"; C.COLOR_TRANSFER_HLG -> "HLG"; else -> null
             }?.let { out += "HDR" to it }
-            if (f.bitrate > 0) out += "Bitrate" to "%.1f Mbps".format(f.bitrate / 1_000_000.0)
+            out += bitrateRow(f, throughputTracker)
         }
         p.audioFormat?.let { f ->
             val line = listOfNotNull(
@@ -341,7 +361,7 @@ class ExoSubtitleEngine(
             ).joinToString(" · ")
             if (line.isNotBlank()) out += "Audio" to line
         }
-        if (p.totalBufferedDuration > 0) out += "Buffer" to "%.1f s".format(p.totalBufferedDuration / 1000.0)
+        bufferRow(p, dropsBaseline)?.let { out += it }
         return out
     }
 

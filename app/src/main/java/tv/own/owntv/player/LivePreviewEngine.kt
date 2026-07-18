@@ -3,6 +3,7 @@ package tv.own.owntv.player
 import android.content.Context
 import android.view.Surface
 import androidx.media3.common.C
+import androidx.media3.common.Format
 import androidx.media3.common.MediaItem
 import androidx.media3.common.PlaybackException
 import androidx.media3.common.Player
@@ -133,6 +134,9 @@ class LivePreviewEngine(
     // (e.g. 0x80001000); AudioSink errors name the audio failure. Reset per load, preferred when present.
     @Volatile private var lastCodecError: String? = null
     @Volatile private var lastVideoDecoder: String? = null // e.g. "OMX.realtek.video.decoder", for the spec line
+    private val throughputTracker = ThroughputTracker()
+    private val fpsSample = FpsSample()
+    private var dropsBaseline = 0
     private val analytics = object : androidx.media3.exoplayer.analytics.AnalyticsListener {
         override fun onVideoCodecError(eventTime: androidx.media3.exoplayer.analytics.AnalyticsListener.EventTime, videoCodecError: Exception) {
             lastCodecError = codecDetail("video", videoCodecError)
@@ -145,6 +149,7 @@ class LivePreviewEngine(
         }
         override fun onVideoDecoderInitialized(eventTime: androidx.media3.exoplayer.analytics.AnalyticsListener.EventTime, decoderName: String, initializedTimestampMs: Long, initializationDurationMs: Long) {
             lastVideoDecoder = decoderName
+            dropsBaseline = currentDroppedFrames(player) // a new decoder session may start its own counters
         }
     }
 
@@ -174,13 +179,13 @@ class LivePreviewEngine(
             val line = listOfNotNull(
                 f.sampleMimeType?.substringAfterLast('/')?.let { mimeName(it) },
                 if (f.width > 0 && f.height > 0) "${f.width}×${f.height}" else null,
-                if (f.frameRate > 0) "%.2f fps".format(f.frameRate) else null,
+                displayFps(f)?.let { "%.2f fps".format(it) },
             ).joinToString(" · ")
             if (line.isNotBlank()) out += "Video" to line
             when (f.colorInfo?.colorTransfer) {
                 C.COLOR_TRANSFER_ST2084 -> "HDR10 (PQ)"; C.COLOR_TRANSFER_HLG -> "HLG"; else -> null
             }?.let { out += "HDR" to it }
-            if (f.bitrate > 0) out += "Bitrate" to "%.1f Mbps".format(f.bitrate / 1_000_000.0)
+            out += bitrateRow(f, throughputTracker)
         }
         out += "Decoder" to "ExoPlayer (hardware)"
         p.audioFormat?.let { f ->
@@ -191,7 +196,7 @@ class LivePreviewEngine(
             ).joinToString(" · ")
             if (line.isNotBlank()) out += "Audio" to line
         }
-        if (p.totalBufferedDuration > 0) out += "Buffer" to "%.1f s".format(p.totalBufferedDuration / 1000.0)
+        bufferRow(p, dropsBaseline)?.let { out += it }
         currentUrl?.let { out += "Source" to HttpClient.redactUrl(it) }
         return out
     }
@@ -202,13 +207,23 @@ class LivePreviewEngine(
         p.videoFormat?.let { f ->
             if (f.width > 0 && f.height > 0) aspectLabel(f.width, f.height)?.let { chips += it }
             qualityLabel(f.height)?.let { chips += it }
-            if (f.frameRate > 0) chips += "${Math.round(f.frameRate)} FPS"
+            displayFps(f)?.let { chips += "${Math.round(it)} FPS" }
         }
         p.audioFormat?.let { f ->
             (when (f.channelCount) { 1 -> "MONO"; 2 -> "STEREO"; 6 -> "5.1"; 8 -> "7.1"; else -> null })?.let { chips += it }
         }
         _streamChips.value = chips
     }
+
+    private fun displayFps(f: Format) = f.frameRate.takeIf { it > 0 } ?: fpsSample.lastFps
+
+    override fun refreshStreamChips() = ensureFpsMeasurement()
+    override fun setBitrateTrackingEnabled(enabled: Boolean) = throughputTracker.setEnabled(enabled)
+
+    private fun ensureFpsMeasurement() {
+        if ((player?.videoFormat?.frameRate ?: 0f) <= 0f) restartFpsMeasurement()
+    }
+
     private fun aspectLabel(w: Int, h: Int): String? {
         if (w <= 0 || h <= 0) return null
         val r = w.toFloat() / h
@@ -285,6 +300,25 @@ class LivePreviewEngine(
     private var everRendered = false
     private var videoRenderer: Renderer? = null
     private val frameListener = VideoFrameMetadataListener { _, _, _, _ -> frameCounter.incrementAndGet() }
+    private var fpsAttempts = 0
+    private val fpsFastRefresh: Runnable = Runnable {
+        val fresh = player?.let { fpsSample.peek(it) }
+        fpsAttempts++
+        // Retry until a reading matches a standard rate, capped so a genuinely unusual one doesn't retry forever.
+        val done = fpsAttempts >= FPS_MAX_ATTEMPTS || (fpsAttempts >= 2 && fpsSample.confident)
+        if (done) {
+            fresh?.let { fpsSample.publish(it) }
+            updateStreamChips()
+        } else {
+            mainHandler.postDelayed(fpsFastRefresh, FPS_TICK_MS)
+        }
+    }
+    private fun restartFpsMeasurement() {
+        mainHandler.removeCallbacks(fpsFastRefresh)
+        fpsSample.resetWindow() // keeps the old reading visible until replaced
+        fpsAttempts = 0
+        mainHandler.postDelayed(fpsFastRefresh, FPS_BASELINE_MS)
+    }
     private var lastProgressPos = -1L
     private var lastProgressWallMs = 0L // SystemClock.elapsedRealtime() of the last forward position move
     private var frozenChecks = 0
@@ -379,6 +413,7 @@ class LivePreviewEngine(
                     frameCounter.set(0); lastFrameCount = 0; everRendered = false; lastProgressPos = -1L; lastProgressWallMs = 0L; frozenChecks = 0
                     readySinceMs = android.os.SystemClock.elapsedRealtime(); noVideoTriggered = false
                     mainHandler.removeCallbacks(progressWatchdog); mainHandler.postDelayed(progressWatchdog, PROGRESS_CHECK_MS)
+                    ensureFpsMeasurement()
                 }
                 Player.STATE_ENDED -> {
                     // A live HLS feed shouldn't legitimately "end" — this is a stall/hiccup (e.g. a stray
@@ -441,9 +476,12 @@ class LivePreviewEngine(
                 _videoSize.value = videoSize.width to videoSize.height
             }
             updateStreamChips()
+            ensureFpsMeasurement()
         }
 
-        override fun onTracksChanged(tracks: androidx.media3.common.Tracks) { rebuildTracks(tracks); updateStreamChips() }
+        override fun onTracksChanged(tracks: androidx.media3.common.Tracks) {
+            rebuildTracks(tracks); updateStreamChips(); ensureFpsMeasurement()
+        }
         override fun onCues(cueGroup: androidx.media3.common.text.CueGroup) { _cues.value = cueGroup.cues }
 
         override fun onPlayerError(error: PlaybackException) {
@@ -496,7 +534,7 @@ class LivePreviewEngine(
         this.muted = muted
         currentUrl = url
         hasPlayed = false; retryCount = 0; reconnectPending = false; gaveUp = false
-        mainHandler.removeCallbacks(stallWatchdog); mainHandler.removeCallbacks(progressWatchdog)
+        mainHandler.removeCallbacks(stallWatchdog); mainHandler.removeCallbacks(progressWatchdog); mainHandler.removeCallbacks(fpsFastRefresh)
         audioTrackList = emptyList(); audioSelections = emptyList(); _audioCount.value = 0
         textTrackList = emptyList(); textSelections = emptyList(); _subCount.value = 0
         _subtitleOn.value = false; _cues.value = emptyList(); _audioUnsupported.value = false
@@ -506,6 +544,7 @@ class LivePreviewEngine(
         _error.value = null
         _errorInfo.value = null
         frameCounter.set(0); lastFrameCount = 0; everRendered = false; lastProgressPos = -1L; lastProgressWallMs = 0L; frozenChecks = 0
+        throughputTracker.reset(); fpsSample.resetAll(); dropsBaseline = currentDroppedFrames(player)
         _currentMeta.value = meta
         _volume.value = if (muted) 0 else 100
         _state.value = State.LOADING
@@ -564,7 +603,7 @@ class LivePreviewEngine(
         stoppingIntentionally = true
         currentUrl = null
         hasPlayed = false; retryCount = 0; reconnectPending = false; gaveUp = false
-        mainHandler.removeCallbacks(stallWatchdog); mainHandler.removeCallbacks(progressWatchdog)
+        mainHandler.removeCallbacks(stallWatchdog); mainHandler.removeCallbacks(progressWatchdog); mainHandler.removeCallbacks(fpsFastRefresh)
         frameCounter.set(0); lastFrameCount = 0; everRendered = false; lastProgressPos = -1L; frozenChecks = 0
         audioTrackList = emptyList(); audioSelections = emptyList(); _audioCount.value = 0
         textTrackList = emptyList(); textSelections = emptyList(); _subCount.value = 0
@@ -599,7 +638,7 @@ class LivePreviewEngine(
      *  resolved URL — a [reconnectUrlProvider] mints a fresh one first (null/absent → replay as-is,
      *  which is correct for M3U/Xtream and direct-URL Stalker portals). */
     private fun reconnect(reason: String) {
-        mainHandler.removeCallbacks(stallWatchdog); mainHandler.removeCallbacks(progressWatchdog)
+        mainHandler.removeCallbacks(stallWatchdog); mainHandler.removeCallbacks(progressWatchdog); mainHandler.removeCallbacks(fpsFastRefresh)
         val p = player
         val url = currentUrl
         if (p == null || url == null || retryCount >= MAX_RECONNECTS) {
@@ -756,6 +795,7 @@ class LivePreviewEngine(
     private fun httpDataSourceFor(ua: String): OkHttpDataSource.Factory {
         if (ua != dataSourceForUa || cachedHttpDataSource == null) {
             cachedHttpDataSource = OkHttpDataSource.Factory(okHttpClient).setUserAgent(ua)
+                .setTransferListener(throughputTracker)
             // Raw MPEG-TS (typical Xtream live ".ts"): providers rarely declare caption descriptors in
             // the PMT, so the stock TS extractor never exposes the embedded CEA-608 track (#57).
             // FLAG_OVERRIDE_CAPTION_DESCRIPTORS makes it expose the standard CC1 track regardless; the
@@ -838,5 +878,8 @@ class LivePreviewEngine(
         private const val FROZEN_LIMIT = 3          // picture frozen this many polls (~7.5s) == a dropped feed
         private const val FREEZE_TIMEOUT_MS = 8_000L // zero forward progress this long while READY == dead feed
         private const val NO_VIDEO_TIMEOUT_MS = 8_000L // video track present, zero frames rendered this long == "audio plays, no picture"
+        private const val FPS_BASELINE_MS = 500L
+        private const val FPS_TICK_MS = 1_000L
+        private const val FPS_MAX_ATTEMPTS = 5
     }
 }

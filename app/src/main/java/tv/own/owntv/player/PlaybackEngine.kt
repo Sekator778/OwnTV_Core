@@ -19,6 +19,10 @@ interface PlaybackEngine {
     val videoRes: StateFlow<String?>
     /** Up-to-4 mini stream chips (aspect · resolution · fps · audio) for the player top bar. */
     val streamChips: StateFlow<List<String>> get() = NO_CHIPS
+    /** Re-check [streamChips] now. */
+    fun refreshStreamChips() {}
+    /** Bitrate is only ever displayed in the debug overlay — enable tracking only while it's open. */
+    fun setBitrateTrackingEnabled(enabled: Boolean) {}
     /** Short label of the engine currently decoding ("MPV" / "EXO"), shown as the first top-bar chip.
      *  Null = don't show one. */
     val engineChip: StateFlow<String?> get() = NULL_STRING
@@ -105,6 +109,8 @@ class MpvPlaybackEngine(private val p: OwnTVPlayer) : PlaybackEngine {
     override fun audioTracks() = p.audioTracks()
     override fun textTracks() = p.textTracks()
     override fun streamInfo() = p.streamInfo()
+    override fun setBitrateTrackingEnabled(enabled: Boolean) = p.setBitrateTrackingEnabled(enabled)
+    override fun refreshStreamChips() = p.refreshStreamChips()
     override fun setSpeed(speed: Double) = p.setSpeed(speed)
     override fun adjustAudioDelay(deltaMs: Int) = p.adjustAudioDelay(deltaMs)
     override fun previous() = p.previous()
