@@ -30,6 +30,8 @@ val databaseModule = module {
                 OwnTVDatabase.MIGRATION_11_12,
                 OwnTVDatabase.MIGRATION_12_13,
                 OwnTVDatabase.MIGRATION_13_14,
+                OwnTVDatabase.MIGRATION_14_15,
+                OwnTVDatabase.MIGRATION_15_16,
             )
             .fallbackToDestructiveMigration(dropAllTables = true) // safety net for unforeseen jumps
             .addCallback(object : RoomDatabase.Callback() {
@@ -58,4 +60,5 @@ val databaseModule = module {
     single { get<OwnTVDatabase>().downloadDao() }
     single { get<OwnTVDatabase>().epgDao() }
     single { get<OwnTVDatabase>().metadataDao() }
+    single { get<OwnTVDatabase>().subtitleDao() }
 }

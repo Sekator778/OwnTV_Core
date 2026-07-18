@@ -883,7 +883,9 @@ class SettingsRepository(private val context: Context) {
     suspend fun importPlaylistAutoRefresh(o: org.json.JSONObject, existingSourceIds: Set<Long>) {
         val cleaned = sanitizeRefreshMap(o, existingSourceIds) { runCatching { PlaylistAutoRefresh.valueOf(it) }.getOrDefault(PlaylistAutoRefresh.OFF).name }
         context.dataStore.edit { prefs ->
-            prefs[Keys.PLAYLIST_AUTO_REFRESH] = org.json.JSONObject(cleaned.toMap()).toString()
+            // Merge-restore: keep the device's existing per-source choices, backup entries win per key.
+            val merged = parseRefreshMap(prefs[Keys.PLAYLIST_AUTO_REFRESH]) + cleaned
+            prefs[Keys.PLAYLIST_AUTO_REFRESH] = org.json.JSONObject(merged as Map<*, *>).toString()
             prefs[Keys.REFRESH_MIGRATED] = true
         }
     }
@@ -892,8 +894,16 @@ class SettingsRepository(private val context: Context) {
     suspend fun importEpgAutoRefresh(o: org.json.JSONObject, existingEpgSourceIds: Set<Long>) {
         val cleaned = sanitizeRefreshMap(o, existingEpgSourceIds) { runCatching { EpgAutoRefresh.valueOf(it) }.getOrDefault(EpgAutoRefresh.OFF).name }
         context.dataStore.edit { prefs ->
-            prefs[Keys.EPG_AUTO_REFRESH] = org.json.JSONObject(cleaned.toMap()).toString()
+            val merged = parseRefreshMap(prefs[Keys.EPG_AUTO_REFRESH]) + cleaned
+            prefs[Keys.EPG_AUTO_REFRESH] = org.json.JSONObject(merged as Map<*, *>).toString()
         }
+    }
+
+    private fun parseRefreshMap(raw: String?): Map<String, String> {
+        val o = raw?.let { runCatching { org.json.JSONObject(it) }.getOrNull() } ?: return emptyMap()
+        val out = LinkedHashMap<String, String>()
+        o.keys().forEach { k -> out[k] = o.optString(k) }
+        return out
     }
 
     private inline fun sanitizeRefreshMap(

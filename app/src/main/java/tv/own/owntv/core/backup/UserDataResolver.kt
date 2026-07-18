@@ -158,12 +158,10 @@ class UserDataResolver(
         }
     }
 
-    /** Replaces the pending set with a backup's records (empty/absent clears), then tries resolving. */
+    /** Merge-restore (backup): appends the backup's records to the pending set (deduplicated) and
+     *  tries resolving — never drops records already pending for profiles not in the backup. */
     suspend fun importAll(entries: JSONArray?) {
-        context.pendingStore.edit { prefs ->
-            if (entries == null || entries.length() == 0) prefs.remove(PENDING_KEY)
-            else prefs[PENDING_KEY] = entries.toString()
-        }
+        if (entries != null && entries.length() > 0) addPending(entries)
         resolvePending()
     }
 

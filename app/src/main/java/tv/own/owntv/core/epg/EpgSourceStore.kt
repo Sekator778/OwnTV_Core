@@ -106,6 +106,35 @@ class EpgSourceStore(private val context: Context) {
         }
     }
 
+    /**
+     * Merge-restore (backup): adds the backup's EPG sources WITHOUT touching existing ones — an
+     * incoming source whose URL already exists maps to the existing entry. Returns the id mapping
+     * (backup id → device id) so the caller can remap the per-source auto-refresh selections.
+     */
+    suspend fun mergeJson(raw: String?): Map<Long, Long> {
+        val incoming = parse(raw)
+        if (incoming.isEmpty()) return emptyMap()
+        val idMap = HashMap<Long, Long>()
+        context.epgStore.edit { prefs ->
+            val existing = parse(prefs[Keys.LIST]).toMutableList()
+            var nextId = prefs[Keys.NEXT_ID] ?: -1L
+            incoming.forEach { src ->
+                val match = existing.firstOrNull { it.url.trim() == src.url.trim() }
+                if (match != null) {
+                    idMap[src.id] = match.id
+                } else {
+                    val added = src.copy(id = nextId, lastSyncAt = null, lastError = null)
+                    nextId -= 1
+                    existing += added
+                    idMap[src.id] = added.id
+                }
+            }
+            prefs[Keys.LIST] = write(existing)
+            prefs[Keys.NEXT_ID] = nextId
+        }
+        return idMap
+    }
+
     private fun parse(raw: String?): List<EpgSource> {
         if (raw.isNullOrBlank()) return emptyList()
         return runCatching {
