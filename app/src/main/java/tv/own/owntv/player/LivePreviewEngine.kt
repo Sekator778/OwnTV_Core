@@ -201,8 +201,9 @@ class LivePreviewEngine(
         return out
     }
     /** Recompute the preview's mini chips (aspect · resolution · fps · audio · bitrate) from the active
-     *  formats. Bitrate uses the declared [Format.bitrate] where the provider set one, else the live
-     *  network measurement from [ThroughputTracker] once it has produced a reading. */
+     *  formats. Bitrate is the declared [Format.bitrate] only — measuring live throughput on every
+     *  preview stream drags 4K playback, so the chip stays blank for raw MPEG-TS (the debug overlay
+     *  still shows a measured value when opened). */
     private fun updateStreamChips() {
         val p = player ?: run { _streamChips.value = emptyList(); return }
         val chips = ArrayList<String>(5)
@@ -210,7 +211,7 @@ class LivePreviewEngine(
             if (f.width > 0 && f.height > 0) aspectLabel(f.width, f.height)?.let { chips += it }
             qualityLabel(f.height)?.let { chips += it }
             displayFps(f)?.let { chips += "${Math.round(it)} FPS" }
-            displayBitrateMbps(f)?.let { chips += "%.1f Mbps".format(it) }
+            f.bitrate.takeIf { it > 0 }?.let { chips += "%.1f Mbps".format(it / 1_000_000.0) }
         }
         p.audioFormat?.let { f ->
             (when (f.channelCount) { 1 -> "MONO"; 2 -> "STEREO"; 6 -> "5.1"; 8 -> "7.1"; else -> null })?.let { chips += it }
@@ -220,20 +221,7 @@ class LivePreviewEngine(
 
     private fun displayFps(f: Format) = f.frameRate.takeIf { it > 0 } ?: fpsSample.lastFps
 
-    /** Mbps for the chip: declared bitrate first (a provider value is more accurate than our network
-     *  measurement for a steady VOD stream), else the live throughput reading once one exists. */
-    private fun displayBitrateMbps(f: Format): Double? {
-        f.bitrate.takeIf { it > 0 }?.let { return it / 1_000_000.0 }
-        val measured = throughputTracker.peekBitsPerSecond
-        return if (measured > 0) measured / 1_000_000.0 else null
-    }
-
-    /** Rebuild chips now (a fresh bitrate/fps reading may have arrived) and re-attempt fps measurement
-     *  if the stream still hasn't declared one. */
-    override fun refreshStreamChips() {
-        updateStreamChips()
-        ensureFpsMeasurement()
-    }
+    override fun refreshStreamChips() = ensureFpsMeasurement()
     override fun setBitrateTrackingEnabled(enabled: Boolean) = throughputTracker.setEnabled(enabled)
 
     private fun ensureFpsMeasurement() {
@@ -561,7 +549,6 @@ class LivePreviewEngine(
         _errorInfo.value = null
         frameCounter.set(0); lastFrameCount = 0; everRendered = false; lastProgressPos = -1L; lastProgressWallMs = 0L; frozenChecks = 0
         throughputTracker.reset(); fpsSample.resetAll(); dropsBaseline = currentDroppedFrames(player)
-        throughputTracker.setEnabled(true) // preview always shows the bitrate chip, so always measure
         _currentMeta.value = meta
         _volume.value = if (muted) 0 else 100
         _state.value = State.LOADING
@@ -621,7 +608,6 @@ class LivePreviewEngine(
         currentUrl = null
         hasPlayed = false; retryCount = 0; reconnectPending = false; gaveUp = false
         mainHandler.removeCallbacks(stallWatchdog); mainHandler.removeCallbacks(progressWatchdog); mainHandler.removeCallbacks(fpsFastRefresh)
-        throughputTracker.setEnabled(false) // preview stopped — no point measuring a dead stream
         frameCounter.set(0); lastFrameCount = 0; everRendered = false; lastProgressPos = -1L; frozenChecks = 0
         audioTrackList = emptyList(); audioSelections = emptyList(); _audioCount.value = 0
         textTrackList = emptyList(); textSelections = emptyList(); _subCount.value = 0
@@ -639,7 +625,6 @@ class LivePreviewEngine(
         stoppingIntentionally = true
         mainHandler.removeCallbacks(stallWatchdog)
         mainHandler.removeCallbacks(progressWatchdog)
-        throughputTracker.setEnabled(false)
         player?.run { removeListener(listener); release() }
         player = null
         videoRenderer = null
