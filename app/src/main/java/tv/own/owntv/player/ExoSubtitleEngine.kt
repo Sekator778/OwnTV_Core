@@ -117,6 +117,16 @@ class ExoSubtitleEngine(
         return p.videoFormat?.frameRate?.takeIf { it > 0 } ?: fpsSample.sample(p)
     }
 
+    /** Mbps for the top-bar chip: declared bitrate (a provider value is more accurate than our network
+     *  measurement for a steady VOD stream) where available, else the live throughput reading once one
+     *  exists. Null when neither is known yet. */
+    fun currentBitrateMbps(): Double? {
+        val p = player ?: return null
+        p.videoFormat?.bitrate?.takeIf { it > 0 }?.let { return it / 1_000_000.0 }
+        val measured = throughputTracker.peekBitsPerSecond
+        return if (measured > 0) measured / 1_000_000.0 else null
+    }
+
     private val listener = object : Player.Listener {
         override fun onIsPlayingChanged(isPlaying: Boolean) {
             callbacks.onPlayingChanged(isPlaying)

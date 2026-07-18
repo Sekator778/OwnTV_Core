@@ -639,7 +639,7 @@ class OwnTVPlayer(
     private fun updateStreamChips() {
         val w = currentWidthPx; val h = currentHeightPx
         if (w <= 0 || h <= 0) { _streamChips.value = emptyList(); return }
-        val base = ArrayList<String>(4)
+        val base = ArrayList<String>(5)
         aspectLabel(w, h)?.let { base += it }
         _videoRes.value?.let { base += it }
         val knownFps = _videoFps.value
@@ -647,6 +647,7 @@ class OwnTVPlayer(
         // mpv stays alive (just stopped/surfaceless) during a handoff, so check exoActive, not m == null.
         if (exoActive || m == null) {
             (knownFps ?: exoEngine?.currentFps())?.let { if (it > 0) base += "${Math.round(it)} FPS" }
+            exoEngine?.currentBitrateMbps()?.let { base += "%.1f Mbps".format(it) }
             _streamChips.value = base
             return
         }
@@ -655,10 +656,12 @@ class OwnTVPlayer(
         // runCatching also covers a rejected execute() after release() shut the executor down.
         runCatching {
             mpvExecutor.execute {
-                val chips = ArrayList<String>(4).apply { addAll(base) }
+                val chips = ArrayList<String>(5).apply { addAll(base) }
                 runCatching {
                     (knownFps ?: m.getPropertyString("container-fps")?.toFloatOrNull())
                         ?.let { if (it > 0) chips += "${Math.round(it)} FPS" }
+                    m.getPropertyString("video-bitrate")?.toLongOrNull()
+                        ?.let { if (it > 0) chips += "%.1f Mbps".format(it / 1_000_000.0) }
                     when (m.getPropertyInt("audio-params/channel-count")) {
                         1 -> "MONO"; 2 -> "STEREO"; 6 -> "5.1"; 8 -> "7.1"; else -> null
                     }?.let { chips += it }
