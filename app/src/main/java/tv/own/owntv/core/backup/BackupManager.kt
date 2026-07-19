@@ -111,6 +111,7 @@ class BackupManager(
                         },
                     )
                     put("homeConfigs", filterByProfile(settings.exportHomeConfigs(), pidKeys))
+                    put("hideNewCategories", filterByProfile(settings.exportHideNewCategories(), pidKeys))
                     // User-corrected TMDB titles/years. Keyed by "type:sourceId:remoteId|name" — source ids
                     // are preserved on restore, so the map rides verbatim. Optional block; older readers ignore it.
                     tmdbOverrides.exportJson().takeIf { it.isNotBlank() }?.let { put("tmdbOverrides", it) }
@@ -170,6 +171,7 @@ class BackupManager(
             if (
                 root.optJSONObject("customizations")?.keys()?.hasNext() == true ||
                 root.optJSONObject("homeConfigs")?.keys()?.hasNext() == true ||
+                root.optJSONObject("hideNewCategories")?.keys()?.hasNext() == true ||
                 root.optString("tmdbOverrides").isNotBlank()
             ) out += Section.CUSTOMIZE
             if (root.optJSONObject("settings")?.keys()?.hasNext() == true) out += Section.SETTINGS
@@ -366,6 +368,7 @@ class BackupManager(
                     count += cust.size
                 }
                 root.optJSONObject("homeConfigs")?.let { settings.importHomeConfigs(remapKeys(it, profileIdMap), existingProfileIds) }
+                root.optJSONObject("hideNewCategories")?.let { settings.importHideNewCategories(remapKeys(it, profileIdMap), existingProfileIds) }
                 // Custom TMDB names: merge (backup wins per key), then drop any cached match/details stored
                 // under the imported keys so the corrected title is re-fetched instead of showing stale art.
                 // Keys embed the source id ("movie:<sourceId>:…") — remap before merging.

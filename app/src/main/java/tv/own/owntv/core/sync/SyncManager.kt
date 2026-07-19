@@ -10,12 +10,14 @@ import tv.own.owntv.core.database.dao.CategoryDao
 import tv.own.owntv.core.database.dao.ChannelDao
 import tv.own.owntv.core.database.dao.MovieDao
 import tv.own.owntv.core.database.dao.SeriesDao
+import tv.own.owntv.core.customize.CustomizationStore
 import tv.own.owntv.core.database.dao.SourceDao
 import tv.own.owntv.core.database.entity.SourceEntity
 import tv.own.owntv.core.model.SourceType
 import tv.own.owntv.core.network.HttpClient
 import tv.own.owntv.core.parser.M3uParser
 import tv.own.owntv.core.parser.XtreamClient
+import tv.own.owntv.features.settings.data.SettingsRepository
 
 /**
  * Imports a source into the database — a thin dispatcher over the per-source-type syncers
@@ -39,8 +41,10 @@ class SyncManager(
     stalkerClient: tv.own.owntv.core.stalker.StalkerClient,
     stalkerAuth: tv.own.owntv.core.stalker.StalkerAuthManager,
     private val activityTracker: SyncActivityTracker,
+    customize: CustomizationStore,
+    settings: SettingsRepository,
 ) {
-    private val support = SyncSupport(categoryDao, channelDao, movieDao, seriesDao)
+    private val support = SyncSupport(categoryDao, channelDao, movieDao, seriesDao, sourceDao, customize, settings)
     private val xtreamSyncer = XtreamSyncer(xtream, bulkInsertHelper, support)
     private val m3uSyncer = M3uSyncer(context, sourceDao, categoryDao, channelDao, movieDao, seriesDao, m3u, http, bulkInsertHelper)
     private val stalkerSyncer = StalkerSyncer(stalkerClient, stalkerAuth, bulkInsertHelper, support, sourceDao)

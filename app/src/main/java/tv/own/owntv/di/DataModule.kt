@@ -124,6 +124,8 @@ val dataModule = module {
             stalkerClient = get(),
             stalkerAuth = get(),
             activityTracker = get(),
+            customize = get(),
+            settings = get(),
         )
     }
     // App-wide "sync running" signal for the shell status pill (every sync funnels through SyncManager).
