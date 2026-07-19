@@ -6,11 +6,15 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.async
 import kotlinx.coroutines.ensureActive
+import kotlinx.coroutines.flow.first
+import tv.own.owntv.core.customize.CustomizationStore
+import tv.own.owntv.core.customize.CustomizeKeys
 import tv.own.owntv.core.database.BulkInsertHelper
 import tv.own.owntv.core.database.dao.CategoryDao
 import tv.own.owntv.core.database.dao.ChannelDao
 import tv.own.owntv.core.database.dao.MovieDao
 import tv.own.owntv.core.database.dao.SeriesDao
+import tv.own.owntv.core.database.dao.SourceDao
 import tv.own.owntv.core.database.entity.CategoryEntity
 import tv.own.owntv.core.database.entity.ChannelEntity
 import tv.own.owntv.core.database.entity.ContentHashProjection
@@ -19,6 +23,7 @@ import tv.own.owntv.core.database.entity.SeriesEntity
 import tv.own.owntv.core.database.entity.SourceEntity
 import tv.own.owntv.core.database.entity.computeContentHash
 import tv.own.owntv.core.model.MediaType
+import tv.own.owntv.features.settings.data.SettingsRepository
 import kotlin.coroutines.CoroutineContext
 
 /**
@@ -33,6 +38,9 @@ internal class SyncSupport(
     channelDao: ChannelDao,
     movieDao: MovieDao,
     seriesDao: SeriesDao,
+    private val sourceDao: SourceDao,
+    private val customize: CustomizationStore,
+    private val settings: SettingsRepository,
 ) {
     val channelAdapter = ContentAdapter<ChannelEntity>(
         remoteIdOf = { it.remoteId },
@@ -117,10 +125,11 @@ internal class SyncSupport(
         }
     }
 
-    suspend fun pruneCategories(sourceId: Long, type: MediaType, seenRemoteIds: Set<String>, label: String) {
+    suspend fun pruneCategories(sourceId: Long, type: MediaType, seenRemoteIds: Set<String>, label: String, stats: SyncStatsCollector) {
         val start = SystemClock.elapsedRealtime()
         val stale = categoryDao.remoteIdsForSource(sourceId, type).filterNot(seenRemoteIds::contains)
         stale.chunked(QUERY_CHUNK).forEach { categoryDao.deleteByRemoteIds(sourceId, type, it) }
+        if (stale.isNotEmpty()) stats.processedCounts.merge(CATEGORIES_REMOVED_KEY, stale.size, Int::plus)
         Log.i(TAG, "$label category prune sourceId=$sourceId type=$type stale=${stale.size} ms=${SystemClock.elapsedRealtime() - start}")
     }
 
@@ -141,8 +150,13 @@ internal class SyncSupport(
         s: SourceEntity,
         type: MediaType,
         parsed: List<tv.own.owntv.core.parser.XtCategory>,
+        stats: SyncStatsCollector,
     ): CategoryRefresh {
         val start = SystemClock.elapsedRealtime()
+        // s.lastSyncAt never changes during a sync run (SyncManager stamps it only after the syncer
+        // returns), so this is safe to derive here rather than threading a freshSource param through
+        // every call site.
+        val freshSource = s.lastSyncAt == null
         Log.d(TAG, "refreshCategories start sourceId=${s.id} type=$type count=${parsed.size}")
         val uniqueCategories = parsed.distinctBy { it.id }
         val existing = existingCategoriesByRemoteId(s.id, type, uniqueCategories.map { it.id })
@@ -165,6 +179,12 @@ internal class SyncSupport(
                 "dbInserted=${upsert.stats.inserted} dbUpdated=${upsert.stats.updated} " +
                 "dbSkipped=${upsert.stats.skippedUnchanged} ms=${SystemClock.elapsedRealtime() - upsertStart}",
         )
+        // Everything is technically "new" on a fresh source's first sync — neither the hide-by-default
+        // preference nor the sync summary is meaningful there, only on a genuine resync.
+        if (!freshSource && upsert.newRows.isNotEmpty()) {
+            stats.processedCounts.merge(CATEGORIES_ADDED_KEY, upsert.newRows.size, Int::plus)
+            applyHideNewCategoriesDefault(s.id, type, upsert.newRows)
+        }
         // C5: ids come straight from the upsert (existing rows + returned insert rowids) — the old
         // second existingCategoriesByRemoteId round-trip only re-fetched just-upserted rows.
         return CategoryRefresh(idsByRemoteId = upsert.idsByRemoteId, seenRemoteIds = uniqueCategories.mapTo(HashSet()) { it.id }).also {
@@ -177,7 +197,7 @@ internal class SyncSupport(
             .mapNotNull { category -> category.remoteId?.let { it to category } }
             .toMap()
 
-    private class CategoryUpsert(val stats: UpsertStats, val idsByRemoteId: Map<String, Long>)
+    private class CategoryUpsert(val stats: UpsertStats, val idsByRemoteId: Map<String, Long>, val newRows: List<CategoryEntity>)
 
     private suspend fun upsertCategoriesStable(
         sourceId: Long,
@@ -215,7 +235,21 @@ internal class SyncSupport(
         return CategoryUpsert(
             stats = UpsertStats(inserted = inserts.size, updated = updates.size, skippedUnchanged = skipped),
             idsByRemoteId = ids,
+            newRows = inserts,
         )
+    }
+
+    /** Applies each profile's own "hide new categories" preference (same across Live/Movies/Series) to
+     *  categories just discovered on a resync — a source can be shared by several profiles. */
+    private suspend fun applyHideNewCategoriesDefault(sourceId: Long, type: MediaType, newRows: List<CategoryEntity>) {
+        val profileIds = sourceDao.profileIdsForSource(sourceId)
+        if (profileIds.isEmpty()) return
+        val keys = newRows.map { CustomizeKeys.category(it) }
+        profileIds.forEach { profileId ->
+            if (settings.hideNewCategoriesDefault(profileId).first()) {
+                customize.setCategoriesHidden(profileId, type, keys, hidden = true)
+            }
+        }
     }
 
     /**
@@ -318,6 +352,11 @@ internal class SyncSupport(
         const val CATEGORY_REQUEST_DELAY_MS = 150L // pace per-category fallback requests (avoid HTTP 429)
         private const val SLOW_INSERT_LOG_MS = 250L
         val IgnoreByteProgress: (Long, Long?) -> Unit = { _, _ -> }
+
+        /** [SyncStatsCollector.processedCounts] keys aggregating category changes across all phases,
+         *  for the sync-complete summary — not shown at all when a fresh source makes every category "new". */
+        const val CATEGORIES_ADDED_KEY = "categoriesAdded"
+        const val CATEGORIES_REMOVED_KEY = "categoriesRemoved"
     }
 }
 

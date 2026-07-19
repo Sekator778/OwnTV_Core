@@ -21,7 +21,14 @@ interface CategoryDao {
     @Update
     suspend fun updateAll(categories: List<CategoryEntity>)
 
-    @Query("SELECT * FROM categories WHERE sourceId IN (:sourceIds) AND mediaType = :type ORDER BY sortOrder ASC, name ASC")
+    /** Grouped by provider (source creation order) first, so multi-source lists don't interleave two
+     *  providers' categories. */
+    @Query(
+        "SELECT categories.* FROM categories " +
+            "JOIN sources ON sources.id = categories.sourceId " +
+            "WHERE categories.sourceId IN (:sourceIds) AND categories.mediaType = :type " +
+            "ORDER BY sources.createdAt ASC, categories.sortOrder ASC, categories.name ASC",
+    )
     fun observe(sourceIds: List<Long>, type: MediaType): Flow<List<CategoryEntity>>
 
     @Query("SELECT * FROM categories WHERE id = :id")

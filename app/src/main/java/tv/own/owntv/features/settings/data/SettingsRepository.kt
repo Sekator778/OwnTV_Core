@@ -183,6 +183,16 @@ class SettingsRepository(private val context: Context) {
         }
     }
 
+    /** Whether a category the provider adds on a later resync is hidden automatically. Same across
+     *  Live/Movies/Series for a profile — there's no reason to want it to differ by section. */
+    fun hideNewCategoriesDefault(profileId: Long): Flow<Boolean> = context.dataStore.data.map { prefs ->
+        prefs[booleanPreferencesKey("hide_new_categories_$profileId")] ?: false
+    }
+
+    suspend fun setHideNewCategoriesDefault(profileId: Long, hidden: Boolean) {
+        context.dataStore.edit { it[booleanPreferencesKey("hide_new_categories_$profileId")] = hidden }
+    }
+
     // --- Home: per-profile row order / visibility / hero filters. ---
     private fun homeConfigKey(profileId: Long) = stringPreferencesKey("home_config_$profileId")
 
@@ -905,6 +915,31 @@ class SettingsRepository(private val context: Context) {
                 if (pid !in existingProfileIds) return@forEach
                 val blob = o.optJSONObject(key) ?: return@forEach
                 prefs[homeConfigKey(pid)] = blob.toString()
+            }
+        }
+    }
+
+    // --- Backup: per-profile "hide new categories" preference (dynamic "hide_new_categories_<id>" keys) ---
+
+    /** Exports all per-profile "hide new categories" preferences as { "<profileId>": true/false }. */
+    suspend fun exportHideNewCategories(): org.json.JSONObject {
+        val prefix = "hide_new_categories_"
+        val out = org.json.JSONObject()
+        context.dataStore.data.first().asMap().forEach { (k, v) ->
+            if (k.name.startsWith(prefix) && v is Boolean) {
+                out.put(k.name.removePrefix(prefix), v)
+            }
+        }
+        return out
+    }
+
+    /** Restores the preference only for profile ids in [existingProfileIds] (others are dropped safely). */
+    suspend fun importHideNewCategories(o: org.json.JSONObject, existingProfileIds: Set<Long>) {
+        context.dataStore.edit { prefs ->
+            o.keys().forEach { key ->
+                val pid = key.toLongOrNull() ?: return@forEach
+                if (pid !in existingProfileIds) return@forEach
+                prefs[booleanPreferencesKey("hide_new_categories_$pid")] = o.getBoolean(key)
             }
         }
     }

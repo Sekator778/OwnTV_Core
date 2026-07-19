@@ -22,12 +22,25 @@ enum class SyncPhase(val label: String) {
 
 /** Terminal result of a sync run. */
 sealed interface SyncResult {
-    data class Success(val warnings: List<SyncWarning> = emptyList()) : SyncResult {
+    data class Success(
+        val warnings: List<SyncWarning> = emptyList(),
+        /** Category churn on a resync (always 0 on a source's first sync, where everything is "new"). */
+        val categoriesAdded: Int = 0,
+        val categoriesRemoved: Int = 0,
+    ) : SyncResult {
         fun warningSummary(): String? =
             warnings.takeIf { it.isNotEmpty() }?.joinToString(
                 prefix = "Imported with warnings: ",
                 separator = " · ",
             ) { "${it.label} failed" }
+
+        fun categoryChangeSummary(): String? {
+            if (categoriesAdded == 0 && categoriesRemoved == 0) return null
+            return listOfNotNull(
+                "$categoriesAdded categories added".takeIf { categoriesAdded > 0 },
+                "$categoriesRemoved removed".takeIf { categoriesRemoved > 0 },
+            ).joinToString(", ")
+        }
     }
 
     data object Cancelled : SyncResult
