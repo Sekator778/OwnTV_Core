@@ -38,6 +38,7 @@ class BackupManager(
     private val db: tv.own.owntv.core.database.OwnTVDatabase,
     private val tmdbOverrides: tv.own.owntv.core.metadata.MetadataOverrideStore,
     private val metadataDao: tv.own.owntv.core.database.dao.MetadataDao,
+    private val openSubAuth: tv.own.owntv.core.subtitles.OpenSubtitlesAuthStore,
 ) {
     /** What a backup can contain; the user multi-selects these for export and restore. Profiles are
      *  NOT a section: every backup is inherently profile-based — the export flow's first step picks
@@ -83,7 +84,7 @@ class BackupManager(
             val seal: ((String) -> JSONObject)? = key?.let { k -> { plain -> BackupCrypto.encrypt(k, plain) } }
 
             val root = JSONObject().apply {
-                put("version", 11) // v11: profile-scoped export (profiles always present, per-profile data filtered). v10: sources.mac. v9: custom TMDB names, encrypted TMDB key
+                put("version", 12) // v12: per-profile OpenSubtitles login (encrypted-only). v11: profile-scoped export (profiles always present, per-profile data filtered). v10: sources.mac. v9: custom TMDB names, encrypted TMDB key
                 put("sections", JSONArray().apply { sections.forEach { put(it.name) } })
                 if (salt != null) put("crypto", BackupCrypto.cryptoBlock(salt))
                 // Ticked profiles always ride (backup is profile-based); restore needs SOURCES to apply them.
@@ -144,6 +145,18 @@ class BackupManager(
                         put("vodMpvUrls", JSONArray(vodEngineStore.exportMpvUrls().toList()))
                         put("vodExoUrls", JSONArray(vodEngineStore.exportExoUrls().toList()))
                     })
+                    // Per-profile OpenSubtitles login (username + password/token). A secret: the whole
+                    // session blob is encrypted with the backup passphrase, so it rides ONLY when one is
+                    // set — omitted otherwise, exactly like the source/proxy/TMDB secrets. Ticked profiles only.
+                    if (seal != null) {
+                        put("openSubtitles", JSONArray().apply {
+                            profiles.forEach { p ->
+                                openSubAuth.exportJson(p.id)?.let { blob ->
+                                    put(JSONObject().put("p", p.id).put("session", seal(blob.toString())))
+                                }
+                            }
+                        })
+                    }
                 }
             }
             if (!folder.exists()) folder.mkdirs()
@@ -425,6 +438,22 @@ class BackupManager(
                         )
                     }
                 }
+                // Per-profile OpenSubtitles login: decrypt each blob and store it under the remapped
+                // device profile id. Encrypted-only, so it's skipped when there's no key (no passphrase).
+                // Only profiles that exist on this device get one; an expired token later self-heals via
+                // the store's silent re-login when a password rode along ("Stay signed in").
+                root.optJSONArray("openSubtitles")?.let { arr ->
+                    val deviceProfileIds = profileDao.getAllOnce().map { it.id }.toSet()
+                    for (i in 0 until arr.length()) {
+                        val e = arr.getJSONObject(i)
+                        val filePid = e.optLong("p", -1)
+                        val pid = profileIdMap[filePid] ?: filePid
+                        if (pid !in deviceProfileIds) continue
+                        unseal(e.opt("session"))?.let { plain ->
+                            runCatching { openSubAuth.importJson(pid, JSONObject(plain)) }
+                        }
+                    }
+                }
             }
             count
         }
@@ -453,6 +482,13 @@ class BackupManager(
         }
         root.optJSONObject("settings")?.opt("proxy_pass_enc")?.let { if (BackupCrypto.isEncrypted(it)) return it as JSONObject }
         root.optJSONObject("settings")?.opt("tmdb_key_enc")?.let { if (BackupCrypto.isEncrypted(it)) return it as JSONObject }
+        // A per-profile OpenSubtitles login is encrypted too — probe it so an all-OpenSubtitles backup validates.
+        root.optJSONArray("openSubtitles")?.let { arr ->
+            for (i in 0 until arr.length()) {
+                val sealed = arr.getJSONObject(i).opt("session")
+                if (BackupCrypto.isEncrypted(sealed)) return sealed as JSONObject
+            }
+        }
         return null
     }
 

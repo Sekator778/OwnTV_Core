@@ -70,6 +70,17 @@ class OpenSubtitlesAuthStore(context: Context) {
 
     private fun key(profileId: Long) = "profile_$profileId"
 
+    // --- backup / restore (used by BackupManager; the blob is re-sealed with the backup passphrase,
+    // so this returns/accepts PLAIN JSON — never write the plaintext anywhere but the encrypted backup) ---
+
+    /** The stored session for [profileId] as plain JSON (username, password, token, …), or null. */
+    fun exportJson(profileId: Long): JSONObject? = load(profileId)?.let { JSONObject(encode(it)) }
+
+    /** Restores a session rebuilt from [json] (as returned by [exportJson]) under [profileId]. */
+    fun importJson(profileId: Long, json: JSONObject) {
+        runCatching { save(profileId, decode(json.toString())) }
+    }
+
     // --- serialization ---
 
     private fun encode(s: Session): String = JSONObject().apply {

@@ -159,8 +159,8 @@ val dataModule = module {
     // (the last four are D-3: Stalker downloads resolve the stored cmd at download-start time)
     single { DownloadManager(androidContext(), get(), get(), get(), get(), get(), get(), get()) }
     // profileDao, sourceDao, settings, customizationStore, userDataResolver, epgSourceStore,
-    // forceMpvStore, vodEngineStore, db, metadataOverrideStore, metadataDao
-    single { BackupManager(get(), get(), get(), get(), get(), get(), get(), get(), get(), get(), get()) }
+    // forceMpvStore, vodEngineStore, db, metadataOverrideStore, metadataDao, openSubtitlesAuthStore
+    single { BackupManager(get(), get(), get(), get(), get(), get(), get(), get(), get(), get(), get(), get()) }
     // context, okHttpClient — in-app updates from GitHub Releases
     single { UpdateManager(androidContext(), get()) }
     single { CatalogSyncScheduler(androidContext()) }
