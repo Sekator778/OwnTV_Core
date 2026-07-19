@@ -87,7 +87,7 @@ internal class StalkerSyncer(
         }.filter { it.id.isNotBlank() && it.id != "*" }
         Log.i(TAG, "$label genres sourceId=${s.id} count=${genres.size}")
 
-        val categories = support.refreshCategories(s, MediaType.LIVE, genres.map { XtCategory(it.id, it.title) })
+        val categories = support.refreshCategories(s, MediaType.LIVE, genres.map { XtCategory(it.id, it.title) }, stats)
         val catMap = categories.idsByRemoteId
 
         val insertFn: suspend (List<ChannelEntity>) -> UpsertStats = if (freshSource) {
@@ -168,7 +168,7 @@ internal class StalkerSyncer(
             }
             if (!freshSource && remoteIds != null) {
                 support.pruneRemoteIds(label, s.id, remoteIds, adapter.remoteIdsForSource, adapter.deleteByRemoteIds)
-                support.pruneCategories(s.id, MediaType.LIVE, categories.seenRemoteIds, label)
+                support.pruneCategories(s.id, MediaType.LIVE, categories.seenRemoteIds, label, stats)
             }
         }
 
@@ -250,7 +250,7 @@ internal class StalkerSyncer(
         val cats = auth.withAuthRetry(creds) { fetchCategories(it) }
             .filter { it.id.isNotBlank() && it.id != "*" }
         Log.i(TAG, "$label categories sourceId=${s.id} count=${cats.size}")
-        val categories = support.refreshCategories(s, mediaType, cats.map { XtCategory(it.id, it.title) })
+        val categories = support.refreshCategories(s, mediaType, cats.map { XtCategory(it.id, it.title) }, stats)
         val catMap = categories.idsByRemoteId
 
         val insertFn: suspend (List<T>) -> UpsertStats = if (freshSource) {
@@ -409,7 +409,7 @@ internal class StalkerSyncer(
                 }
                 if (pageFailures.get() == 0) {
                     support.pruneRemoteIds(label, s.id, remoteIds, adapter.remoteIdsForSource, adapter.deleteByRemoteIds)
-                    support.pruneCategories(s.id, mediaType, categories.seenRemoteIds, label)
+                    support.pruneCategories(s.id, mediaType, categories.seenRemoteIds, label, stats)
                 } else {
                     // Failed pages mean this pass's remoteIds set is incomplete; pruning against it would
                     // delete every item of the missing pages/categories as "stale" (mirrors Xtream's

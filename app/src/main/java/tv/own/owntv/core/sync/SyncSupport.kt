@@ -125,10 +125,11 @@ internal class SyncSupport(
         }
     }
 
-    suspend fun pruneCategories(sourceId: Long, type: MediaType, seenRemoteIds: Set<String>, label: String) {
+    suspend fun pruneCategories(sourceId: Long, type: MediaType, seenRemoteIds: Set<String>, label: String, stats: SyncStatsCollector) {
         val start = SystemClock.elapsedRealtime()
         val stale = categoryDao.remoteIdsForSource(sourceId, type).filterNot(seenRemoteIds::contains)
         stale.chunked(QUERY_CHUNK).forEach { categoryDao.deleteByRemoteIds(sourceId, type, it) }
+        if (stale.isNotEmpty()) stats.processedCounts.merge(CATEGORIES_REMOVED_KEY, stale.size, Int::plus)
         Log.i(TAG, "$label category prune sourceId=$sourceId type=$type stale=${stale.size} ms=${SystemClock.elapsedRealtime() - start}")
     }
 
@@ -149,6 +150,7 @@ internal class SyncSupport(
         s: SourceEntity,
         type: MediaType,
         parsed: List<tv.own.owntv.core.parser.XtCategory>,
+        stats: SyncStatsCollector,
     ): CategoryRefresh {
         val start = SystemClock.elapsedRealtime()
         // s.lastSyncAt never changes during a sync run (SyncManager stamps it only after the syncer
@@ -177,9 +179,10 @@ internal class SyncSupport(
                 "dbInserted=${upsert.stats.inserted} dbUpdated=${upsert.stats.updated} " +
                 "dbSkipped=${upsert.stats.skippedUnchanged} ms=${SystemClock.elapsedRealtime() - upsertStart}",
         )
-        // Everything is technically "new" on a fresh source's first sync — the hide-by-default
-        // preference isn't meaningful there, only on a genuine resync.
+        // Everything is technically "new" on a fresh source's first sync — neither the hide-by-default
+        // preference nor the sync summary is meaningful there, only on a genuine resync.
         if (!freshSource && upsert.newRows.isNotEmpty()) {
+            stats.processedCounts.merge(CATEGORIES_ADDED_KEY, upsert.newRows.size, Int::plus)
             applyHideNewCategoriesDefault(s.id, type, upsert.newRows)
         }
         // C5: ids come straight from the upsert (existing rows + returned insert rowids) — the old
@@ -349,6 +352,11 @@ internal class SyncSupport(
         const val CATEGORY_REQUEST_DELAY_MS = 150L // pace per-category fallback requests (avoid HTTP 429)
         private const val SLOW_INSERT_LOG_MS = 250L
         val IgnoreByteProgress: (Long, Long?) -> Unit = { _, _ -> }
+
+        /** [SyncStatsCollector.processedCounts] keys aggregating category changes across all phases,
+         *  for the sync-complete summary — not shown at all when a fresh source makes every category "new". */
+        const val CATEGORIES_ADDED_KEY = "categoriesAdded"
+        const val CATEGORIES_REMOVED_KEY = "categoriesRemoved"
     }
 }
 

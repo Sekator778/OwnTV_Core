@@ -90,7 +90,11 @@ class SyncManager(
                     Log.d(TAG, "markSynced sourceId=${source.id} ms=${SystemClock.elapsedRealtime() - markStartedAt}")
                 }
                 progress.completeAll()
-                SyncResult.Success(stats.warnings())
+                SyncResult.Success(
+                    warnings = stats.warnings(),
+                    categoriesAdded = stats.processedCounts[SyncSupport.CATEGORIES_ADDED_KEY] ?: 0,
+                    categoriesRemoved = stats.processedCounts[SyncSupport.CATEGORIES_REMOVED_KEY] ?: 0,
+                )
             } catch (c: CancellationException) {
                 throw c
             } catch (e: Exception) {

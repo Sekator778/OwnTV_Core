@@ -201,7 +201,7 @@ internal class XtreamSyncer(
         val cats = p.fetchCategories(SyncSupport.IgnoreByteProgress)
         Log.d(TAG, "$label categories fetched sourceId=${s.id} count=${cats.size} ms=${SystemClock.elapsedRealtime() - categoriesStart}")
         val refreshStart = SystemClock.elapsedRealtime()
-        val categories = support.refreshCategories(s, p.type, cats)
+        val categories = support.refreshCategories(s, p.type, cats, stats)
         Log.d(TAG, "$label categories refreshed sourceId=${s.id} mapped=${categories.idsByRemoteId.size} ms=${SystemClock.elapsedRealtime() - refreshStart}")
         val streams = p.makeStreams(categories.idsByRemoteId)
         val insertFn: suspend (List<T>) -> UpsertStats = if (freshSource) {
@@ -237,7 +237,7 @@ internal class XtreamSyncer(
             }
             if (!freshSource && done) {
                 support.pruneRemoteIds(label, s.id, remoteIds!!, p.adapter.remoteIdsForSource, p.adapter.deleteByRemoteIds)
-                support.pruneCategories(s.id, p.type, categories.seenRemoteIds, label)
+                support.pruneCategories(s.id, p.type, categories.seenRemoteIds, label, stats)
             } else if (!freshSource) {
                 Log.i(TAG, "$label prune skipped sourceId=${s.id} reason=incomplete_bulk")
             }
