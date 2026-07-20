@@ -73,7 +73,8 @@ class SyncManager(
                 activityTracker.progress(source.id, stage)
                 onProgress(stage)
             }
-            val result = try {
+            var result: SyncResult = SyncResult.Cancelled
+            try {
                 when (source.type) {
                     SourceType.XTREAM -> xtreamSyncer.sync(source, progress, stats, contentTypes)
                     SourceType.M3U -> m3uSyncer.sync(source, progress, stats)
@@ -90,17 +91,18 @@ class SyncManager(
                     Log.d(TAG, "markSynced sourceId=${source.id} ms=${SystemClock.elapsedRealtime() - markStartedAt}")
                 }
                 progress.completeAll()
-                SyncResult.Success(
+                result = SyncResult.Success(
                     warnings = stats.warnings(),
                     categoriesAdded = stats.processedCounts[SyncSupport.CATEGORIES_ADDED_KEY] ?: 0,
                     categoriesRemoved = stats.processedCounts[SyncSupport.CATEGORIES_REMOVED_KEY] ?: 0,
                 )
             } catch (c: CancellationException) {
+                result = SyncResult.Cancelled
                 throw c
             } catch (e: Exception) {
-                SyncResult.Failed(e.message ?: "Sync failed")
+                result = SyncResult.Failed(e.message ?: "Sync failed")
             } finally {
-                activityTracker.finished(source.id) // also on cancellation — never leave a stuck pill
+                activityTracker.finished(source.id, source.name, result) // also on cancellation — never leave a stuck pill
             }
             val runStats = stats.build(result)
             lastSyncStats[source.id] = runStats
