@@ -315,6 +315,28 @@ class OwnTVPlayer(
         // forever during OPEN so the stream never starts. So enable it only for raw MPEG-TS live.
         val eofReconnect = if (isLiveContent && lower.contains(".ts")) ",reconnect_at_eof=1" else ""
         setPropertyString("stream-lavf-o", "$reconnect$eofReconnect")
+        // Live latency (#72): how far ahead the demuxer buffers. Live streams honour the user's choice
+        // (or the device budget default when Balanced); VOD always uses the budget default.
+        val budgetReadahead = playerBudget?.readaheadSecs ?: "30"
+        setPropertyString("demuxer-readahead-secs", if (isLiveContent) (liveBufferSecs?.toString() ?: budgetReadahead) else budgetReadahead)
+        // Broken-timestamp live streams (some IPTV 4K feeds send non-increasing/duplicate PTS): mpv is
+        // strict about PTS and drops nearly every frame ("Invalid video timestamp: X -> X"), which looks
+        // like lag even though decode is fine (ExoPlayer tolerates it). For LIVE we derive frame timing
+        // from the container FPS instead (correct-pts=no); VOD keeps accurate PTS for seeking.
+        setPropertyString("correct-pts", if (isLiveContent) "no" else "yes")
+        // correct-pts=no fixes the *decode-time* PTS, but mpv still times video against the AUDIO master
+        // clock at the VO stage — on a feed whose timestamps never line up, that plus framedrop discards
+        // nearly every rendered frame (log: identical `mt:` on every frame, "A/V desync", render fps ~8 of
+        // 30). video-sync=desync tells mpv to present each frame for its nominal duration instead of
+        // dropping to chase the clock — the standard fix for unreliable live PTS. LIVE only; VOD keeps the
+        // default audio-synced timing (accurate for seeking, and VOD PTS is sound).
+        setPropertyString("video-sync", if (isLiveContent) "desync" else "audio")
+        // …and stop mpv from *dropping* frames on such a feed. Even after the PTS recovers and increments
+        // cleanly, the global framedrop=decoder+vo stays in permanent "catch-up" mode and releases every
+        // output buffer with render=false (log: `[ROB]V …,r:0,drop frame` on every frame while `mt:`
+        // advances normally). For LIVE we disable framedrop so mpv presents what it decodes (decode is
+        // hardware and keeps up here); VOD keeps decoder+vo so a genuinely slow file can still shed frames.
+        setPropertyString("framedrop", if (isLiveContent) "no" else "decoder+vo")
         val trim = rawTs && !forceFullProbe
         usedTrimmedProbe = trim
         if (!trim) {
@@ -351,6 +373,9 @@ class OwnTVPlayer(
     private var hwDecoding = true
     // Escape-hatch toggle: when off, no live fps/bitrate measuring runs at all (declared values only).
     private var measuredStreamStats = true
+    // Live latency (#72): demuxer readahead seconds for live streams; null = keep the device budget
+    // default (Balanced). Applied per-load in applyProbeProfile (live only, so VOD is never affected).
+    @Volatile private var liveBufferSecs: Int? = null
     private var vodPreferExo = false // Movies & Series start on ExoPlayer (mpv becomes the fallback)
     // Per-item engine pins from the gear toggle (VOD counterpart of Live's compatibility mode) —
     // eagerly mirrored so loadUrl can consult them synchronously.
@@ -475,6 +500,14 @@ class OwnTVPlayer(
         settings.measuredStreamStats.onEach { on ->
             measuredStreamStats = on
             if (!on) exoEngine?.setBitrateTrackingEnabled(false) // turning it off stops any in-flight measuring now
+        }.launchIn(scope)
+        settings.liveBufferSeconds.onEach {
+            liveBufferSecs = it
+            // Re-apply live to a playing live channel; VOD is untouched. Next-open covers the rest.
+            if (initialized && isLiveContent) {
+                val budgetReadahead = playerBudget?.readaheadSecs ?: "30"
+                mpvAsync { setPropertyString("demuxer-readahead-secs", it?.toString() ?: budgetReadahead) }
+            }
         }.launchIn(scope)
         vodEngineStore.mpvUrls.onEach { vodPinnedMpv = it }.launchIn(scope)
         vodEngineStore.exoUrls.onEach { vodPinnedExo = it }.launchIn(scope)

@@ -2,6 +2,7 @@ package tv.own.owntv.core.companion
 
 import android.content.Context
 import android.util.Log
+import java.io.File
 import java.net.BindException
 import java.security.SecureRandom
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -39,6 +40,13 @@ class CompanionController(context: Context) {
     private val _lastPayload = MutableStateFlow<CompanionPayload?>(null)
     val lastPayload: StateFlow<CompanionPayload?> = _lastPayload.asStateFlow()
 
+    /** Backup files uploaded from a phone in [startForBackupRestore] mode, saved to cache and emitted here. */
+    private val _backups = MutableSharedFlow<File>(extraBufferCapacity = 4)
+    val backups: SharedFlow<File> = _backups.asSharedFlow()
+
+    /** Cache folder the remote-export flow writes the backup into before serving it for download. */
+    val backupExportDir: File get() = File(appContext.cacheDir, "remote-backup-export").apply { mkdirs() }
+
     /** A fresh 6-digit PIN per [start], so a leaked code is short-lived. */
     @Volatile private var currentPin: String = ""
 
@@ -49,7 +57,16 @@ class CompanionController(context: Context) {
             .getOrNull()
     }
 
-    fun start(port: Int) {
+    /** Starts the add-source companion server (the original Remote add-source flow). */
+    fun start(port: Int) = startInternal(port, CompanionMode.ADD_SOURCE)
+
+    /** Starts the companion server in backup-restore mode: the phone uploads a backup JSON, emitted on [backups]. */
+    fun startForBackupRestore(port: Int) = startInternal(port, CompanionMode.BACKUP_RESTORE)
+
+    /** Starts the companion server in backup-download mode, serving [file] for the phone to download. */
+    fun startForBackupDownload(port: Int, file: File) = startInternal(port, CompanionMode.BACKUP_DOWNLOAD, file)
+
+    private fun startInternal(port: Int, mode: CompanionMode, downloadFile: File? = null) {
         if (port !in 1..65535) {
             _state.value = CompanionServerState.Failed("Enter a valid port between 1 and 65535.")
             return
@@ -58,11 +75,19 @@ class CompanionController(context: Context) {
         try {
             currentPin = generatePin()
             _lastPayload.value = null
-            val urls = server.start(port, currentPin, loraBytes) { payload ->
-                Log.d(TAG, "Received ${payload.type} payload '${payload.name.ifBlank { "(unnamed)" }}' — forwarding to UI")
-                _lastPayload.value = payload
-                _payloads.tryEmit(payload)
-            }
+            val urls = server.start(
+                port = port,
+                pin = currentPin,
+                fontBytes = loraBytes,
+                mode = mode,
+                onPayload = { payload ->
+                    Log.d(TAG, "Received ${payload.type} payload '${payload.name.ifBlank { "(unnamed)" }}' — forwarding to UI")
+                    _lastPayload.value = payload
+                    _payloads.tryEmit(payload)
+                },
+                onBackup = ::onBackupUploaded,
+                downloadFile = downloadFile,
+            )
             _state.value = CompanionServerState.Listening(
                 port = port,
                 urls = urls,
@@ -74,6 +99,17 @@ class CompanionController(context: Context) {
             Log.w(TAG, "Failed to start companion listener", t)
             _state.value = CompanionServerState.Failed(friendlyError(t, port))
         }
+    }
+
+    /** Persists an uploaded backup JSON to a cache file and emits it for the restore UI to inspect. */
+    private fun onBackupUploaded(text: String) {
+        runCatching {
+            val file = File.createTempFile("owntv-remote-restore", ".json", appContext.cacheDir)
+            file.writeText(text)
+            Log.d(TAG, "Received remote backup (${text.length} chars) → ${file.name}")
+            file
+        }.onSuccess { _backups.tryEmit(it) }
+            .onFailure { Log.w(TAG, "Failed to persist uploaded backup", it) }
     }
 
     fun stop() {

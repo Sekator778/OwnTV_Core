@@ -12,6 +12,7 @@ import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.core.stringSetPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import tv.own.owntv.features.home.HomeConfig
@@ -94,6 +95,12 @@ class SettingsRepository(private val context: Context) {
         val REFRESH_MIGRATED = booleanPreferencesKey("refresh_migration_done")
         val LIVE_PREVIEW = booleanPreferencesKey("live_preview")
         val LIVE_PREVIEW_AUDIO = booleanPreferencesKey("live_preview_audio")
+        // Docked mini-player: size (% of screen width) and screen corner/edge.
+        val MINI_PLAYER_SIZE_PCT = intPreferencesKey("mini_player_size_pct")
+        val MINI_PLAYER_POSITION = stringPreferencesKey("mini_player_position")
+        // Live TV latency: preset name + the custom seconds used when the preset is CUSTOM.
+        val LIVE_LATENCY_MODE = stringPreferencesKey("live_latency_mode")
+        val LIVE_LATENCY_CUSTOM_SECS = intPreferencesKey("live_latency_custom_secs")
         val HDR_ENABLED = booleanPreferencesKey("hdr_enabled")
         val ANDROID_TV_HOME = booleanPreferencesKey("android_tv_home")
         // Video Player Settings
@@ -708,6 +715,47 @@ class SettingsRepository(private val context: Context) {
         context.dataStore.edit { it[Keys.UI_ZOOM_PCT] = UiZoom.clamp(percent) }
     }
 
+    /** Docked mini-player size as a percentage of screen width (clamped to the allowed range). */
+    val miniPlayerSizePct: Flow<Int> = context.dataStore.data.map { prefs ->
+        tv.own.owntv.player.MiniPlayerSize.clamp(prefs[Keys.MINI_PLAYER_SIZE_PCT] ?: tv.own.owntv.player.MiniPlayerSize.DEFAULT)
+    }
+
+    suspend fun setMiniPlayerSizePct(percent: Int) {
+        context.dataStore.edit { it[Keys.MINI_PLAYER_SIZE_PCT] = tv.own.owntv.player.MiniPlayerSize.clamp(percent) }
+    }
+
+    /** Docked mini-player screen position (a [tv.own.owntv.player.MiniPlayerPosition] name). */
+    val miniPlayerPosition: Flow<String> = context.dataStore.data.map { prefs ->
+        prefs[Keys.MINI_PLAYER_POSITION] ?: tv.own.owntv.player.MiniPlayerPosition.DEFAULT.name
+    }
+
+    suspend fun setMiniPlayerPosition(name: String) {
+        context.dataStore.edit { it[Keys.MINI_PLAYER_POSITION] = name }
+    }
+
+    /** Live TV latency preset (a [LiveLatency] name). */
+    val liveLatencyMode: Flow<String> = context.dataStore.data.map { prefs ->
+        prefs[Keys.LIVE_LATENCY_MODE] ?: LiveLatency.DEFAULT.name
+    }
+
+    suspend fun setLiveLatencyMode(name: String) {
+        context.dataStore.edit { it[Keys.LIVE_LATENCY_MODE] = name }
+    }
+
+    /** Custom live buffer seconds, used when the preset is [LiveLatency.CUSTOM]. */
+    val liveLatencyCustomSecs: Flow<Int> = context.dataStore.data.map { prefs ->
+        LiveBuffer.clampCustom(prefs[Keys.LIVE_LATENCY_CUSTOM_SECS] ?: LiveBuffer.CUSTOM_DEFAULT)
+    }
+
+    suspend fun setLiveLatencyCustomSecs(secs: Int) {
+        context.dataStore.edit { it[Keys.LIVE_LATENCY_CUSTOM_SECS] = LiveBuffer.clampCustom(secs) }
+    }
+
+    /** Effective live buffer in seconds the engines apply (null = keep engine defaults, i.e. Balanced). */
+    val liveBufferSeconds: Flow<Int?> = combine(liveLatencyMode, liveLatencyCustomSecs) { mode, custom ->
+        LiveBuffer.effectiveSeconds(LiveLatency.fromName(mode), custom)
+    }
+
     val accent: Flow<AccentColor> = context.dataStore.data.map { prefs ->
         prefs[Keys.ACCENT]?.let { runCatching { AccentColor.valueOf(it) }.getOrNull() }
             ?: AccentColor.TEAL
@@ -795,12 +843,16 @@ class SettingsRepository(private val context: Context) {
         Keys.DOWNLOAD_ROOT,
         // Nav menu mode rides with settings backup so a reinstall keeps the user's DYNAMIC/STATIC choice.
         Keys.NAV_MENU_MODE,
+        // Docked mini-player position rides with settings backup (size is an int key, see backupIntKeys).
+        Keys.MINI_PLAYER_POSITION,
+        // Live TV latency preset (custom seconds is an int key, see backupIntKeys).
+        Keys.LIVE_LATENCY_MODE,
     )
     private val backupStringSetKeys = listOf(
         // The STATIC-mode hidden set rides with backup so a reinstall keeps the user's hidden icons.
         Keys.NAV_MENU_HIDDEN,
     )
-    private val backupIntKeys = listOf(Keys.UI_ZOOM_PCT, Keys.AUDIO_DELAY_MS, Keys.CATCHUP_OFFSET_MIN, Keys.PROXY_PORT, Keys.CH_NAV_UP_SKIP, Keys.CH_NAV_DOWN_SKIP)
+    private val backupIntKeys = listOf(Keys.UI_ZOOM_PCT, Keys.AUDIO_DELAY_MS, Keys.CATCHUP_OFFSET_MIN, Keys.PROXY_PORT, Keys.CH_NAV_UP_SKIP, Keys.CH_NAV_DOWN_SKIP, Keys.MINI_PLAYER_SIZE_PCT, Keys.LIVE_LATENCY_CUSTOM_SECS)
     private val backupBoolKeys = listOf(
         Keys.LIVE_PREVIEW, Keys.LIVE_PREVIEW_AUDIO, Keys.HDR_ENABLED, Keys.ANDROID_TV_HOME, Keys.HW_DECODING,
         Keys.VOD_PREFER_EXO, Keys.MEASURED_STREAM_STATS, Keys.EXTERNAL_PLAYER, Keys.UPDATE_CHECK_ON_START, Keys.SURROUND_SOUND, Keys.AUTO_PLAY_NEXT, Keys.PROXY_ENABLED,

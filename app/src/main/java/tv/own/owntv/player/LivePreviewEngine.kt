@@ -59,6 +59,9 @@ class LivePreviewEngine(
     @Volatile private var measuredStatsEnabled = true
     private val settingsFlow = settings.measuredStreamStats
     private val settingsScope = kotlinx.coroutines.CoroutineScope(kotlinx.coroutines.Dispatchers.Main.immediate)
+    // Live latency (#72): target live-edge offset in seconds; null = engine default (Balanced). Applied
+    // as a MediaItem.LiveConfiguration on the next channel open.
+    @Volatile private var liveBufferSecs: Int? = null
     enum class State { IDLE, LOADING, PLAYING, ERROR }
 
     init { LiveDiagnosticsLog.init(context) }
@@ -151,6 +154,7 @@ class LivePreviewEngine(
         // Keep the escape-hatch flag current; turning it off stops any in-flight measuring immediately.
         settingsFlow.onEach { measuredStatsEnabled = it; if (!it) throughputTracker.setEnabled(false) }
             .launchIn(settingsScope)
+        settings.liveBufferSeconds.onEach { liveBufferSecs = it }.launchIn(settingsScope)
     }
     private val analytics = object : androidx.media3.exoplayer.analytics.AnalyticsListener {
         override fun onVideoCodecError(eventTime: androidx.media3.exoplayer.analytics.AnalyticsListener.EventTime, videoCodecError: Exception) {
@@ -846,7 +850,13 @@ class LivePreviewEngine(
     /** HLS → caption-aware factory; everything else (raw MPEG-TS, etc.) → default. */
     private fun mediaSourceFor(url: String): MediaSource {
         httpDataSourceFor(currentUa) // ensure factories match current UA
-        val item = MediaItem.fromUri(url)
+        // Live latency (#72): a target live-edge offset for live streams (HLS/DASH). Ignored by
+        // progressive/raw-TS sources, so it can only help where it applies.
+        val item = MediaItem.Builder().setUri(url).apply {
+            liveBufferSecs?.let {
+                setLiveConfiguration(MediaItem.LiveConfiguration.Builder().setTargetOffsetMs(it * 1000L).build())
+            }
+        }.build()
         val uri = item.localConfiguration?.uri ?: return cachedDefaultFactory!!.createMediaSource(item)
         return if (Util.inferContentType(uri) == C.CONTENT_TYPE_HLS) cachedHlsCcFactory!!.createMediaSource(item)
         else cachedDefaultFactory!!.createMediaSource(item)

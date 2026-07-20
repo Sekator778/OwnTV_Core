@@ -3,6 +3,7 @@ package tv.own.owntv.core.companion
 import android.util.Log
 import java.io.BufferedInputStream
 import java.io.ByteArrayOutputStream
+import java.io.File
 import java.io.IOException
 import java.net.InetSocketAddress
 import java.net.ServerSocket
@@ -43,27 +44,54 @@ class CompanionHttpServer {
     /** Bundled Lora TTF served at `/lora.ttf` so the web form matches the app's popup font offline. */
     @Volatile private var fontBytes: ByteArray? = null
 
+    /** Which page/endpoint set is live for the current session (add-source vs. backup upload). */
+    @Volatile private var mode: CompanionMode = CompanionMode.ADD_SOURCE
+
+    /** Session callbacks — set on [start], only the one matching [mode] ever fires. */
+    @Volatile private var onPayload: (CompanionPayload) -> Unit = {}
+    @Volatile private var onBackup: (String) -> Unit = {}
+
+    /** The backup file served at `/backup.json` in [CompanionMode.BACKUP_DOWNLOAD] mode. */
+    @Volatile private var downloadFile: File? = null
+
     /**
-     * Bind [port] and start accepting. [pin] gates the form and the POST endpoints. [fontBytes], when
-     * provided, is served at `/lora.ttf`. Returns the LAN URLs to show on the TV. Throws on bind
-     * failure (the caller maps that to [CompanionServerState.Failed]).
+     * Bind [port] and start accepting. [pin] gates the pages and POST endpoints. [fontBytes], when
+     * provided, is served at `/lora.ttf`. [mode] selects the served page (add-source form or backup
+     * upload); [onPayload] receives an add-source submission, [onBackup] the raw JSON of an uploaded
+     * backup. Returns the LAN URLs to show on the TV. Throws on bind failure (the caller maps that to
+     * [CompanionServerState.Failed]).
      */
-    fun start(port: Int, pin: String, fontBytes: ByteArray?, onPayload: (CompanionPayload) -> Unit): List<String> {
+    fun start(
+        port: Int,
+        pin: String,
+        fontBytes: ByteArray?,
+        mode: CompanionMode = CompanionMode.ADD_SOURCE,
+        onPayload: (CompanionPayload) -> Unit = {},
+        onBackup: (String) -> Unit = {},
+        downloadFile: File? = null,
+    ): List<String> {
         stop()
         this.pin = pin
         this.fontBytes = fontBytes
+        this.mode = mode
+        this.onPayload = onPayload
+        this.onBackup = onBackup
+        this.downloadFile = downloadFile
         val socket = ServerSocket()
         socket.reuseAddress = true
         socket.bind(InetSocketAddress(port))
         serverSocket = socket
         running.set(true)
-        scope.launch { acceptLoop(socket, onPayload) }
+        scope.launch { acceptLoop(socket) }
         return CompanionLink.lanUrls(port)
     }
 
     fun stop() {
         running.set(false)
         pin = ""
+        onPayload = {}
+        onBackup = {}
+        downloadFile = null
         runCatching { serverSocket?.close() }
         serverSocket = null
     }
@@ -74,7 +102,7 @@ class CompanionHttpServer {
         scope.cancel()
     }
 
-    private suspend fun acceptLoop(socket: ServerSocket, onPayload: (CompanionPayload) -> Unit) {
+    private suspend fun acceptLoop(socket: ServerSocket) {
         try {
             while (running.get() && !socket.isClosed) {
                 val client = try {
@@ -83,16 +111,17 @@ class CompanionHttpServer {
                     if (running.get()) Log.w(TAG, "Companion accept failed", e)
                     break
                 }
-                scope.launch { handleClient(client, onPayload) }
+                scope.launch { handleClient(client) }
             }
         } finally {
             stop()
         }
     }
 
-    private fun handleClient(client: Socket, onPayload: (CompanionPayload) -> Unit) {
+    private fun handleClient(client: Socket) {
         client.use { socket ->
-            socket.soTimeout = 10_000
+            // Backup uploads can be a few MB over Wi-Fi; give them more headroom than a tiny form post.
+            socket.soTimeout = if (mode == CompanionMode.BACKUP_RESTORE) 30_000 else 10_000
             val input = BufferedInputStream(socket.getInputStream())
             val requestLine = readLine(input) ?: return sendText(socket, 400, "Bad request")
             val parts = requestLine.split(' ')
@@ -120,9 +149,9 @@ class CompanionHttpServer {
             }
 
             // Landing: a correct PIN in the query (e.g. the "send another" link) skips straight to the
-            // form; otherwise show the PIN gate.
+            // page for the current mode; otherwise show the PIN gate.
             if (method == "GET" && (path == "/" || path == "/index.html")) {
-                val page = if (pinOk(queryPin)) CompanionHtml.formPage(pin)
+                val page = if (pinOk(queryPin)) authedPage()
                 else CompanionHtml.pinPage(if (queryPin.isNotBlank()) "That PIN did not match — try again." else null)
                 return sendHtml(socket, 200, page)
             }
@@ -130,9 +159,29 @@ class CompanionHttpServer {
             // PIN submission from the gate.
             if (method == "POST" && path == "/") {
                 val submitted = parseQuery(readBody(input, headers))["pin"].orEmpty()
-                val page = if (pinOk(submitted)) CompanionHtml.formPage(pin)
+                val page = if (pinOk(submitted)) authedPage()
                 else CompanionHtml.pinPage("That PIN did not match — try again.")
                 return sendHtml(socket, 200, page)
+            }
+
+            // Backup download (BACKUP_DOWNLOAD mode) — PIN required, streams the exported JSON file.
+            if (method == "GET" && path == "/backup.json") {
+                val headerPin = headers["x-companion-pin"].orEmpty()
+                if (!pinOk(queryPin.ifBlank { headerPin })) return sendText(socket, 401, "Unauthorized")
+                val file = downloadFile
+                val bytes = file?.takeIf { it.exists() }?.let { runCatching { it.readBytes() }.getOrNull() }
+                    ?: return sendText(socket, 404, "No backup available")
+                return sendDownload(socket, bytes, "owntv-backup.json")
+            }
+
+            // Backup upload (BACKUP_RESTORE mode) — PIN required, JSON body is the backup file.
+            if (method == "POST" && path == "/backup") {
+                val headerPin = headers["x-companion-pin"].orEmpty()
+                if (!pinOk(queryPin.ifBlank { headerPin })) return sendText(socket, 401, "Unauthorized")
+                val body = readBody(input, headers)
+                if (body.isBlank()) return sendText(socket, 400, "Empty backup")
+                onBackup(body)
+                return sendHtml(socket, 200, CompanionHtml.backupSentPage(pin))
             }
 
             // Source submissions — PIN required (query or header), else 401.
@@ -155,6 +204,13 @@ class CompanionHttpServer {
     }
 
     private fun pinOk(candidate: String): Boolean = pin.isNotBlank() && pinEquals(candidate, pin)
+
+    /** The page served after a valid PIN, for the current [mode]. */
+    private fun authedPage(): String = when (mode) {
+        CompanionMode.ADD_SOURCE -> CompanionHtml.formPage(pin)
+        CompanionMode.BACKUP_RESTORE -> CompanionHtml.backupUploadPage(pin)
+        CompanionMode.BACKUP_DOWNLOAD -> CompanionHtml.backupDownloadPage(pin)
+    }
 
     private fun readBody(input: BufferedInputStream, headers: Map<String, String>): String {
         val length = headers["content-length"]?.toIntOrNull()?.coerceAtLeast(0) ?: 0
@@ -246,6 +302,25 @@ class CompanionHttpServer {
 
     private fun sendText(socket: Socket, code: Int, body: String) =
         sendBytes(socket, code, "text/plain; charset=utf-8", body.toByteArray(StandardCharsets.UTF_8))
+
+    /** Streams [bytes] as a file download so the browser saves it rather than rendering it. */
+    private fun sendDownload(socket: Socket, bytes: ByteArray, filename: String) {
+        runCatching {
+            socket.getOutputStream().use { out ->
+                val header = buildString {
+                    append("HTTP/1.1 200 OK\r\n")
+                    append("Content-Type: application/json; charset=utf-8\r\n")
+                    append("Content-Disposition: attachment; filename=\"").append(filename).append("\"\r\n")
+                    append("Content-Length: ").append(bytes.size).append("\r\n")
+                    append("Cache-Control: no-store\r\n")
+                    append("Connection: close\r\n\r\n")
+                }
+                out.write(header.toByteArray(StandardCharsets.UTF_8))
+                out.write(bytes)
+                out.flush()
+            }
+        }
+    }
 
     private fun sendBytes(socket: Socket, code: Int, contentType: String, bytes: ByteArray) {
         val status = when (code) {

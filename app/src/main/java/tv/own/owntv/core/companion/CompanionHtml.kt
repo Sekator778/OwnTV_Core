@@ -207,6 +207,72 @@ internal object CompanionHtml {
         )
     }
 
+    /** Backup upload page — pick an OwnTV backup JSON and send its contents to the TV. [pin] authenticates the POST. */
+    fun backupUploadPage(pin: String): String = page(
+        "OwnTV — Restore backup",
+        """
+          <div class="card">
+            <h1>Restore a backup</h1>
+            <p>Choose an OwnTV backup file (<code>.json</code>) and press Send. It is transferred to the
+               TV — pick up the remote and choose what to restore there.</p>
+            <form id="f" onsubmit="return false">
+              <label>Backup file
+                <input id="file" type="file" accept=".json,application/json" required>
+              </label>
+              <button class="go" id="send" type="submit">Send to TV</button>
+            </form>
+            <p id="status" class="hint"></p>
+          </div>
+          <script>
+            var f=document.getElementById('file'), b=document.getElementById('send'),
+                s=document.getElementById('status');
+            document.getElementById('f').addEventListener('submit',function(){
+              var file=f.files&&f.files[0];
+              if(!file){s.textContent='Please choose a backup file first.';return false;}
+              b.disabled=true; s.textContent='Sending…';
+              var r=new FileReader();
+              r.onload=function(){
+                fetch('/backup?pin=$pin',{method:'POST',headers:{'Content-Type':'application/json'},body:r.result})
+                  .then(function(res){
+                    if(res.ok){document.open();res.text().then(function(t){document.write(t);document.close();});}
+                    else{b.disabled=false; s.textContent='Upload failed ('+res.status+'). Check the PIN and try again.';}
+                  })
+                  .catch(function(){b.disabled=false; s.textContent='Could not reach the TV. Stay on the same Wi-Fi and try again.';});
+              };
+              r.onerror=function(){b.disabled=false; s.textContent='Could not read that file.';};
+              r.readAsText(file);
+              return false;
+            });
+          </script>
+        """.trimIndent(),
+    )
+
+    /** Confirmation after a backup upload — the file is now waiting on the TV. */
+    fun backupSentPage(pin: String): String = page(
+        "OwnTV — Sent",
+        """
+          <div class="card">
+            <h1>Sent to your TV ✓</h1>
+            <p>Your backup is now on the TV. Pick up the remote and choose which parts to restore.</p>
+            <p><a href="/?pin=$pin">Send a different file</a></p>
+          </div>
+        """.trimIndent(),
+    )
+
+    /** Backup download page — fetch the backup JSON the TV just exported. [pin] authenticates the download. */
+    fun backupDownloadPage(pin: String): String = page(
+        "OwnTV — Download backup",
+        """
+          <div class="card">
+            <h1>Download your backup</h1>
+            <p>Your TV has prepared an OwnTV backup file. Tap the button to save it to this device
+               (<code>owntv-backup.json</code>). Keep it somewhere safe — you can restore from it later.</p>
+            <a class="go" href="/backup.json?pin=$pin" download="owntv-backup.json"
+               style="display:block;text-align:center;text-decoration:none">Download backup</a>
+          </div>
+        """.trimIndent(),
+    )
+
     private fun autoRefreshSelect(): String = """
         <label>Auto refresh
           <select name="autoRefresh">
