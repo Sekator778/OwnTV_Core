@@ -3,6 +3,8 @@ package tv.own.owntv.core.database
 import android.os.SystemClock
 import android.util.Log
 import androidx.annotation.WorkerThread
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 
 class BulkInsertHelper(
     private val db: OwnTVDatabase,
@@ -14,15 +16,20 @@ class BulkInsertHelper(
         ftsOnly: Boolean = false,
         block: suspend () -> T,
     ): T {
-        val state = if (eligible && tableIsEmpty(table)) {
-            dropIndexesForBulkInsert(table, ftsTable)
-        } else {
-            null
+        if (!eligible || !tableIsEmpty(table)) {
+            return block()
         }
-        return try {
-            block()
-        } finally {
-            if (state != null) restoreIndexes(state, ftsOnly = ftsOnly)
+        return indexMutex.withLock {
+            val state = if (tableIsEmpty(table)) {
+                dropIndexesForBulkInsert(table, ftsTable)
+            } else {
+                null
+            }
+            try {
+                block()
+            } finally {
+                if (state != null) restoreIndexes(state, ftsOnly = ftsOnly)
+            }
         }
     }
 
@@ -117,5 +124,6 @@ class BulkInsertHelper(
         private val KNOWN_TABLES = setOf("channels", "movies", "series", "epg_programmes")
         private val KNOWN_ANALYZE_TABLES = KNOWN_TABLES + setOf("categories", "epg_channels")
         private val KNOWN_FTS = setOf("channels_fts", "movies_fts", "series_fts")
+        private val indexMutex = Mutex()
     }
 }
