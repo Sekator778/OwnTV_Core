@@ -322,7 +322,10 @@ class BackupManager(
                         }
                         applySources -> {
                             val keepId = incoming.id > 0 && incoming.id !in takenSourceIds
-                            val rowId = sourceDao.insert(if (keepId) incoming else incoming.copy(id = 0))
+                            val toInsert = if (keepId) incoming else incoming.copy(id = 0)
+                            // A restored backup starts with empty catalog tables. Nullifying lastSyncAt ensures
+                            // the first sync is treated as a fresh sync, preserving the restored category settings.
+                            val rowId = sourceDao.insert(toInsert.copy(lastSyncAt = null))
                             val deviceId = if (keepId) incoming.id else rowId
                             takenSourceIds += deviceId
                             sourceIdMap[incoming.id] = deviceId

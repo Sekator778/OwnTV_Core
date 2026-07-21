@@ -211,6 +211,7 @@ internal class XtreamSyncer(
         }
         val total = intArrayOf(0)
         val remoteIds = if (freshSource) null else HashSet<String>()
+        var done = false
         bulkInsertHelper.withOptimizedBulkInsert(
             p.table,
             p.ftsTable,
@@ -220,27 +221,27 @@ internal class XtreamSyncer(
             val bulkStart = SystemClock.elapsedRealtime()
             Log.i(TAG, "$label bulk start sourceId=${s.id}")
             val chunkSize = if (freshSource) BulkInsertHelper.CHUNK_FRESH else BulkInsertHelper.CHUNK
-            val done = bulkOrFallback(label) {
+            done = bulkOrFallback(label) {
                 support.chunked<T, Boolean>(ctx, p.phase, label, progress, insertFn, total, remoteIds, p.adapter.remoteIdOf, chunkSize) { add ->
                     streams.bulk(add)
                 }
             }
             Log.i(TAG, "$label bulk end sourceId=${s.id} complete=$done unique=${total[0]} ms=${SystemClock.elapsedRealtime() - bulkStart}")
-            if (!done) {
-                stats.usedFallback = true
-                val fallbackStart = SystemClock.elapsedRealtime()
-                Log.i(TAG, "$label fallback start sourceId=${s.id} categories=${cats.size} bulkPartial=${total[0]}")
-                sliceByCategory(ctx, p.phase, label, progress, cats, insertFn, total, total[0], remoteIds, p.adapter.remoteIdOf) { cat, add ->
-                    streams.byCategory(cat, add)
-                }
-                Log.i(TAG, "$label fallback end sourceId=${s.id} unique=${total[0]} ms=${SystemClock.elapsedRealtime() - fallbackStart}")
-            }
             if (!freshSource && done) {
                 support.pruneRemoteIds(label, s.id, remoteIds!!, p.adapter.remoteIdsForSource, p.adapter.deleteByRemoteIds)
                 support.pruneCategories(s.id, p.type, categories.seenRemoteIds, label, stats)
             } else if (!freshSource) {
                 Log.i(TAG, "$label prune skipped sourceId=${s.id} reason=incomplete_bulk")
             }
+        }
+        if (!done) {
+            stats.usedFallback = true
+            val fallbackStart = SystemClock.elapsedRealtime()
+            Log.i(TAG, "$label fallback start sourceId=${s.id} categories=${cats.size} bulkPartial=${total[0]}")
+            sliceByCategory(ctx, p.phase, label, progress, cats, insertFn, total, total[0], remoteIds, p.adapter.remoteIdOf) { cat, add ->
+                streams.byCategory(cat, add)
+            }
+            Log.i(TAG, "$label fallback end sourceId=${s.id} unique=${total[0]} ms=${SystemClock.elapsedRealtime() - fallbackStart}")
         }
         progress.update(p.phase, total[0])
         p.timingKey?.let { stats.phaseTiming[it] = System.currentTimeMillis() - phaseStart }

@@ -34,12 +34,8 @@ sealed interface SyncResult {
                 separator = " · ",
             ) { "${it.label} failed" }
 
-        fun categoryChangeSummary(): String? {
-            if (categoriesAdded == 0 && categoriesRemoved == 0) return null
-            return listOfNotNull(
-                "$categoriesAdded categories added".takeIf { categoriesAdded > 0 },
-                "$categoriesRemoved removed".takeIf { categoriesRemoved > 0 },
-            ).joinToString(", ")
+        fun categoryChangeSummary(): String {
+            return "$categoriesAdded categories added, $categoriesRemoved removed"
         }
     }
 

@@ -109,6 +109,9 @@ class SourceRepository(
         return result
     }
 
+    fun getLastSyncStats(sourceId: Long): tv.own.owntv.core.sync.SyncRunStats? =
+        syncManager.getLastSyncStats(sourceId)
+
     /** Per-mediaType row counts of a snapshot, e.g. "types={LIVE=8, MOVIE=6}" — upgrade-path diagnostics. */
     private fun org.json.JSONArray.typeCounts(): String {
         val counts = LinkedHashMap<String, Int>()
