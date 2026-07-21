@@ -43,6 +43,10 @@ interface ChannelDao {
     @Query("DELETE FROM channels WHERE sourceId = :sourceId")
     suspend fun clearSource(sourceId: Long)
 
+    /** One-time cleanup of pre-stable-key M3U rows (remoteId was always NULL under clear-then-insert). */
+    @Query("DELETE FROM channels WHERE sourceId = :sourceId AND remoteId IS NULL")
+    suspend fun deleteNullRemoteIds(sourceId: Long)
+
     @Query("SELECT * FROM channels WHERE id = :id")
     suspend fun getById(id: Long): ChannelEntity?
 

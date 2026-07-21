@@ -3,12 +3,23 @@ package tv.own.owntv.core.database
 import android.os.SystemClock
 import android.util.Log
 import androidx.annotation.WorkerThread
+import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
+import kotlinx.coroutines.withContext
 
 class BulkInsertHelper(
     private val db: OwnTVDatabase,
 ) {
+    /** Writers currently inside [withOptimizedBulkInsert] for one table, plus its active bulk mode. */
+    private class TableBulkState {
+        var writers = 0
+        var dropped: BulkIndexState? = null
+        var ftsOnly = false
+    }
+
+    private val tableStates = HashMap<String, TableBulkState>()
+
     suspend fun <T> withOptimizedBulkInsert(
         table: String,
         ftsTable: String? = null,
@@ -16,19 +27,36 @@ class BulkInsertHelper(
         ftsOnly: Boolean = false,
         block: suspend () -> T,
     ): T {
-        if (!eligible || !tableIsEmpty(table)) {
-            return block()
-        }
-        return indexMutex.withLock {
-            val state = if (tableIsEmpty(table)) {
-                dropIndexesForBulkInsert(table, ftsTable)
-            } else {
-                null
+        // Register as a writer on this table. The FIRST eligible writer on an empty table drops the
+        // indexes/FTS trigger; anyone arriving while that mode is active — eligible or not — joins
+        // the writer count instead of racing it, so the restore below can never run while another
+        // sync is still inserting. (The old shape checked tableIsEmpty BEFORE taking the lock, so a
+        // second source could bypass the mode once the first had inserted rows, then collide with
+        // its restore — the truncated-movies/skipped-series concurrent-sync bug.) block() runs
+        // OUTSIDE the lock, so concurrent syncs fetch/parse/insert in parallel.
+        stateMutex.withLock {
+            val state = tableStates.getOrPut(table) { TableBulkState() }
+            if (eligible && state.dropped == null && tableIsEmpty(table)) {
+                state.dropped = dropIndexesForBulkInsert(table, ftsTable)
+                state.ftsOnly = ftsOnly
             }
-            try {
-                block()
-            } finally {
-                if (state != null) restoreIndexes(state, ftsOnly = ftsOnly)
+            state.writers++
+        }
+        try {
+            return block()
+        } finally {
+            // NonCancellable: a cancelled sync must still deregister and (as the last writer)
+            // restore — otherwise the table stays index-less until the next app open heals it.
+            withContext(NonCancellable) {
+                stateMutex.withLock {
+                    val state = tableStates.getValue(table)
+                    state.writers--
+                    val toRestore = state.dropped?.takeIf { state.writers == 0 }
+                    if (toRestore != null) {
+                        state.dropped = null
+                        restoreIndexes(toRestore, ftsOnly = state.ftsOnly)
+                    }
+                }
             }
         }
     }
@@ -124,6 +152,9 @@ class BulkInsertHelper(
         private val KNOWN_TABLES = setOf("channels", "movies", "series", "epg_programmes")
         private val KNOWN_ANALYZE_TABLES = KNOWN_TABLES + setOf("categories", "epg_channels")
         private val KNOWN_FTS = setOf("channels_fts", "movies_fts", "series_fts")
-        private val indexMutex = Mutex()
+
+        // One app-wide lock for bulk-mode state + index/FTS DDL — held only for the short state
+        // transitions (and the last writer's restore), never across a sync's insert loop.
+        private val stateMutex = Mutex()
     }
 }

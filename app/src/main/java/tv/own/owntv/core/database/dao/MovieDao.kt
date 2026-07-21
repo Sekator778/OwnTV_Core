@@ -46,6 +46,10 @@ interface MovieDao {
     @Query("DELETE FROM movies WHERE sourceId = :sourceId AND remoteId IN (:remoteIds)")
     suspend fun deleteByRemoteIds(sourceId: Long, remoteIds: List<String>)
 
+    /** One-time cleanup of pre-stable-key M3U rows (remoteId was always NULL under clear-then-insert). */
+    @Query("DELETE FROM movies WHERE sourceId = :sourceId AND remoteId IS NULL")
+    suspend fun deleteNullRemoteIds(sourceId: Long)
+
     // --- Re-sync delta check (Stalker paged catalogs): skip categories whose item count is unchanged ---
     @Query("SELECT categoryId, COUNT(*) AS itemCount FROM movies WHERE sourceId = :sourceId AND categoryId IS NOT NULL GROUP BY categoryId")
     suspend fun countsByCategoryOnce(sourceId: Long): List<CategoryItemCount>

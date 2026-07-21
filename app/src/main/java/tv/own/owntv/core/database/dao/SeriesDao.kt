@@ -245,4 +245,11 @@ interface SeriesDao {
 
     @Query("DELETE FROM episodes WHERE seriesId = :seriesId")
     suspend fun deleteEpisodes(seriesId: Long)
+
+    @Query("DELETE FROM seasons WHERE seriesId = :seriesId")
+    suspend fun deleteSeasons(seriesId: Long)
+
+    /** One-time cleanup of pre-stable-key M3U rows (remoteId was always NULL under clear-then-insert). */
+    @Query("DELETE FROM series WHERE sourceId = :sourceId AND remoteId IS NULL")
+    suspend fun deleteNullRemoteIds(sourceId: Long)
 }

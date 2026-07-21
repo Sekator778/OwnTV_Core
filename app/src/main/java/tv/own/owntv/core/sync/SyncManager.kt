@@ -4,8 +4,6 @@ import android.os.SystemClock
 import android.util.Log
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.sync.Mutex
-import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
 import tv.own.owntv.core.database.BulkInsertHelper
 import tv.own.owntv.core.database.dao.CategoryDao
@@ -48,7 +46,7 @@ class SyncManager(
 ) {
     private val support = SyncSupport(categoryDao, channelDao, movieDao, seriesDao, sourceDao, customize, settings)
     private val xtreamSyncer = XtreamSyncer(xtream, bulkInsertHelper, support)
-    private val m3uSyncer = M3uSyncer(context, sourceDao, categoryDao, channelDao, movieDao, seriesDao, m3u, http, bulkInsertHelper)
+    private val m3uSyncer = M3uSyncer(context, sourceDao, categoryDao, channelDao, movieDao, seriesDao, m3u, http, bulkInsertHelper, support)
     private val stalkerSyncer = StalkerSyncer(stalkerClient, stalkerAuth, bulkInsertHelper, support, sourceDao)
 
     private val lastSyncStats = java.util.concurrent.ConcurrentHashMap<Long, SyncRunStats>()
@@ -77,30 +75,25 @@ class SyncManager(
             }
             var result: SyncResult = SyncResult.Cancelled
             try {
-                // Serialize catalog syncs app-wide: two (or more) sources syncing at once race on the
-                // shared SQLite tables — BulkInsertHelper drops/restores indexes + FTS triggers per table,
-                // and a concurrent syncer bypasses that lock (its tableIsEmpty check fails once the first
-                // source has inserted rows) and writes into a half-indexed table. That causes lock
-                // timeouts that truncate one source's movies and skip its series entirely. One mutex here
-                // makes the race impossible regardless of how many playlists sync at once. Queued syncs
-                // still show their pill (started() above) and the finally below clears it even if the
-                // coroutine is cancelled while waiting for the lock.
-                syncMutex.withLock {
-                    when (source.type) {
-                        SourceType.XTREAM -> xtreamSyncer.sync(source, progress, stats, contentTypes)
-                        SourceType.M3U -> m3uSyncer.sync(source, progress, stats)
-                        SourceType.LOCAL_BACKUP -> Unit
-                        SourceType.STALKER -> stalkerSyncer.sync(source, progress, stats, contentTypes)
-                    }
-                    // Only a FULL pass may stamp lastSyncAt. A staged partial pass (Xtream priority
-                    // toggles, Stalker live-first) leaves it null; the background remainder worker stamps
-                    // it via completesInitialSync once every content type has synced. Stamping early would
-                    // flip later passes onto the non-fresh (hash-diff + prune) path against half-empty tables.
-                    if (contentTypes == SyncContentTypes()) {
-                        val markStartedAt = SystemClock.elapsedRealtime()
-                        sourceDao.markSynced(source.id, System.currentTimeMillis())
-                        Log.d(TAG, "markSynced sourceId=${source.id} ms=${SystemClock.elapsedRealtime() - markStartedAt}")
-                    }
+                // Concurrent catalog syncs are safe without an app-wide lock: the only cross-source
+                // race was BulkInsertHelper's pre-lock tableIsEmpty bypass (a second source writing
+                // into a half-indexed table while the first restored it). That is now closed inside
+                // BulkInsertHelper itself — a joining sync registers as a writer and index restore
+                // waits for the last writer — so sources fetch/parse/insert fully in parallel here.
+                when (source.type) {
+                    SourceType.XTREAM -> xtreamSyncer.sync(source, progress, stats, contentTypes)
+                    SourceType.M3U -> m3uSyncer.sync(source, progress, stats)
+                    SourceType.LOCAL_BACKUP -> Unit
+                    SourceType.STALKER -> stalkerSyncer.sync(source, progress, stats, contentTypes)
+                }
+                // Only a FULL pass may stamp lastSyncAt. A staged partial pass (Xtream priority
+                // toggles, Stalker live-first) leaves it null; the background remainder worker stamps
+                // it via completesInitialSync once every content type has synced. Stamping early would
+                // flip later passes onto the non-fresh (hash-diff + prune) path against half-empty tables.
+                if (contentTypes == SyncContentTypes()) {
+                    val markStartedAt = SystemClock.elapsedRealtime()
+                    sourceDao.markSynced(source.id, System.currentTimeMillis())
+                    Log.d(TAG, "markSynced sourceId=${source.id} ms=${SystemClock.elapsedRealtime() - markStartedAt}")
                 }
                 progress.completeAll()
                 result = SyncResult.Success(
@@ -148,8 +141,5 @@ class SyncManager(
 
     companion object {
         private const val TAG = SyncSupport.TAG
-        // App-wide: SyncManager is a Koin singleton, but keep the lock global regardless — every
-        // concurrent catalog sync (manual resync, startup refresh, WorkManager) funnels through here.
-        private val syncMutex = Mutex()
     }
 }

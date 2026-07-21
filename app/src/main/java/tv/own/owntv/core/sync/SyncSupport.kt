@@ -240,8 +240,10 @@ internal class SyncSupport(
     }
 
     /** Applies each profile's own "hide new categories" preference (same across Live/Movies/Series) to
-     *  categories just discovered on a resync — a source can be shared by several profiles. */
-    private suspend fun applyHideNewCategoriesDefault(sourceId: Long, type: MediaType, newRows: List<CategoryEntity>) {
+     *  categories just discovered on a resync — a source can be shared by several profiles.
+     *  Non-private: M3uSyncer discovers categories incrementally during the stream, so it applies
+     *  this itself at end-of-parse instead of going through [refreshCategories]. */
+    suspend fun applyHideNewCategoriesDefault(sourceId: Long, type: MediaType, newRows: List<CategoryEntity>) {
         val profileIds = sourceDao.profileIdsForSource(sourceId)
         if (profileIds.isEmpty()) return
         val keys = newRows.map { CustomizeKeys.category(it) }

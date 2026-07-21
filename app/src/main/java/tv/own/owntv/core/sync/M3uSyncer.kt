@@ -3,10 +3,12 @@ package tv.own.owntv.core.sync
 import android.net.Uri
 import android.os.SystemClock
 import android.util.Log
-import kotlinx.coroutines.currentCoroutineContext
-import kotlinx.coroutines.ensureActive
 import java.io.File
 import java.io.InputStream
+import java.util.Objects
+import kotlinx.coroutines.CompletableDeferred
+import kotlinx.coroutines.currentCoroutineContext
+import kotlinx.coroutines.ensureActive
 import tv.own.owntv.core.database.BulkInsertHelper
 import tv.own.owntv.core.database.dao.CategoryDao
 import tv.own.owntv.core.database.dao.ChannelDao
@@ -20,15 +22,20 @@ import tv.own.owntv.core.database.entity.MovieEntity
 import tv.own.owntv.core.database.entity.SeasonEntity
 import tv.own.owntv.core.database.entity.SeriesEntity
 import tv.own.owntv.core.database.entity.SourceEntity
+import tv.own.owntv.core.database.entity.computeContentHash
 import tv.own.owntv.core.model.MediaType
 import tv.own.owntv.core.network.HttpClient
 import tv.own.owntv.core.parser.M3uParser
 
 /**
- * The M3U import flow (split out of SyncManager, Phase 0 of the Stalker plan). M3U uses
- * clear-then-insert because playlists do not provide stable item ids — but the clears are deferred
- * per type, so a failed download never leaves the source empty and a live-only playlist never
- * touches previously-imported VOD rows (and vice versa).
+ * The M3U import flow (split out of SyncManager, Phase 0 of the Stalker plan). M3U playlists carry
+ * no provider item ids, so a stable key is synthesized per item — `name|group` (with an `#n` suffix
+ * for in-playlist duplicates) stored in `remoteId` — and resyncs run the same hash-diffed stable
+ * upsert as Xtream/Stalker: unchanged rows are skipped, changed rows keep their local id (so
+ * favorites/history/progress/manual-order survive resyncs), vanished rows are pruned. `sortOrder`
+ * is folded into the content hash so playlist reordering still propagates. Pruning only touches a
+ * content type that actually appeared in the playlist, so a failed download or a live-only playlist
+ * never wipes previously-imported rows of other types.
  */
 internal class M3uSyncer(
     private val context: android.content.Context,
@@ -40,7 +47,32 @@ internal class M3uSyncer(
     private val m3u: M3uParser,
     private val http: HttpClient,
     private val bulkInsertHelper: BulkInsertHelper,
+    private val support: SyncSupport,
 ) {
+    // M3U-specific adapters: same DAO wiring as SyncSupport's, but the hash folds in sortOrder —
+    // "Playlist order" replays the file's order, so a reordered playlist must count as changed.
+    private val channelAdapter = ContentAdapter<ChannelEntity>(
+        remoteIdOf = { it.remoteId },
+        hashOf = { Objects.hash(it.computeContentHash(), it.sortOrder) },
+        copyWith = { row, id, hash -> if (id != null) row.copy(id = id, contentHash = hash) else row.copy(contentHash = hash) },
+        updateAll = { channelDao.updateAll(it) },
+        insertAll = { channelDao.insertAll(it) },
+        remoteIdsForSource = { channelDao.remoteIdsForSource(it) },
+        deleteByRemoteIds = { src, ids -> channelDao.deleteByRemoteIds(src, ids) },
+        loadHashes = { channelDao.contentHashesForSource(it) },
+    )
+
+    private val movieAdapter = ContentAdapter<MovieEntity>(
+        remoteIdOf = { it.remoteId },
+        hashOf = { Objects.hash(it.computeContentHash(), it.sortOrder) },
+        copyWith = { row, id, hash -> if (id != null) row.copy(id = id, contentHash = hash) else row.copy(contentHash = hash) },
+        updateAll = { movieDao.updateAll(it) },
+        insertAll = { movieDao.insertAll(it) },
+        remoteIdsForSource = { movieDao.remoteIdsForSource(it) },
+        deleteByRemoteIds = { src, ids -> movieDao.deleteByRemoteIds(src, ids) },
+        loadHashes = { movieDao.contentHashesForSource(it) },
+    )
+
     suspend fun sync(s: SourceEntity, progress: SyncCounters, stats: SyncStatsCollector) {
         val channelsStart = System.currentTimeMillis()
         val elapsedStart = SystemClock.elapsedRealtime()
@@ -52,7 +84,7 @@ internal class M3uSyncer(
         // file://content:// URIs) is read straight from the device; a normal URL is downloaded. Same parser.
         val isLocal = s.url.startsWith("/") || s.url.startsWith("file://") || s.url.startsWith("content://")
         val localPlaylist = if (isLocal) openLocalPlaylist(s.url) else null
-        Log.i(TAG, "M3U phase start sourceId=${s.id} local=$isLocal bytesTotal=${localPlaylist?.second ?: -1}")
+        Log.i(TAG, "M3U phase start sourceId=${s.id} local=$isLocal fresh=$freshSource bytesTotal=${localPlaylist?.second ?: -1}")
         progress.update(SyncPhase.LIVE, 0)
 
         var processed = 0
@@ -64,36 +96,32 @@ internal class M3uSyncer(
             eligible = freshSource,
             ftsOnly = true,
         ) {
-            // Deferred per-type clears — only wipe a type's old data once the first real row of that
-            // type is about to be written, so a failed download never leaves the source empty and a
-            // live-only playlist never touches previously-imported VOD rows (and vice versa).
-            var channelsCleared = false
-            var moviesCleared = false
-            suspend fun ensureChannelsCleared() {
-                if (channelsCleared) return
-                channelsCleared = true
-                val start = SystemClock.elapsedRealtime()
-                channelDao.clearSource(s.id)
-                categoryDao.clear(s.id, MediaType.LIVE)
-                Log.d(TAG, "M3U clear channels+categories sourceId=${s.id} ms=${SystemClock.elapsedRealtime() - start}")
-            }
-            suspend fun ensureMoviesCleared() {
-                if (moviesCleared) return
-                moviesCleared = true
-                val start = SystemClock.elapsedRealtime()
-                movieDao.clearSource(s.id)
-                categoryDao.clear(s.id, MediaType.MOVIE)
-                Log.d(TAG, "M3U clear movies+categories sourceId=${s.id} ms=${SystemClock.elapsedRealtime() - start}")
-            }
-            var seriesCleared = false
-            suspend fun ensureSeriesCleared() {
-                if (seriesCleared) return
-                seriesCleared = true
-                val start = SystemClock.elapsedRealtime()
-                seriesDao.clearSource(s.id) // seasons/episodes cascade
-                categoryDao.clear(s.id, MediaType.SERIES)
-                Log.d(TAG, "M3U clear series+categories sourceId=${s.id} ms=${SystemClock.elapsedRealtime() - start}")
-            }
+            // Existing rows' (remoteId -> id, contentHash) lookups — loaded lazily per type so a
+            // live-only playlist never pays for movie/series queries. Loaded even on a fresh source:
+            // a retried first sync may have leftover rows from the failed attempt, and diffing
+            // against them (instead of blind-inserting) keeps the path single and idempotent.
+            var channelHashes: Map<String, Pair<Long, Int>>? = null
+            var movieHashes: Map<String, Pair<Long, Int>>? = null
+            var seriesHashes: Map<String, Pair<Long, Int>>? = null
+            suspend fun channelHashLookup() = channelHashes ?: loadHashLookup("M3U live", s.id) {
+                channelDao.contentHashesForSource(it)
+            }.also { channelHashes = it }
+            suspend fun movieHashLookup() = movieHashes ?: loadHashLookup("M3U movies", s.id) {
+                movieDao.contentHashesForSource(it)
+            }.also { movieHashes = it }
+            suspend fun seriesHashLookup() = seriesHashes ?: loadHashLookup("M3U series", s.id) {
+                seriesDao.contentHashesForSource(it)
+            }.also { seriesHashes = it }
+
+            // Stable-key bookkeeping: occurrence counters make in-playlist duplicate keys unique and
+            // deterministic; seen sets drive the end-of-parse prune.
+            val channelKeyCounters = HashMap<String, Int>()
+            val movieKeyCounters = HashMap<String, Int>()
+            val seenChannelKeys = HashSet<String>()
+            val seenMovieKeys = HashSet<String>()
+            val seenSeriesKeys = HashSet<String>()
+            val seenGroupsByType = HashMap<MediaType, MutableSet<String>>()
+            val newCategoriesByType = HashMap<MediaType, MutableList<CategoryEntity>>()
 
             // Categories are per-mediaType: the same group-title can exist for both live and VOD.
             val groupToCategoryId = HashMap<Pair<MediaType, String>, Long>()
@@ -105,6 +133,7 @@ internal class M3uSyncer(
             var categoryOrder = 0
 
             fun queueCategory(type: MediaType, group: String) {
+                seenGroupsByType.getOrPut(type) { HashSet() }.add(group)
                 val key = type to group
                 if (groupToCategoryId.containsKey(key) || !pendingCategoryKeys.add(key)) return
                 pendingCategories.add(
@@ -118,78 +147,117 @@ internal class M3uSyncer(
                 )
             }
 
+            // Stable category upsert (mirrors SyncSupport.upsertCategoriesStable, but incremental —
+            // M3U discovers groups mid-stream): existing groups keep their category id, so content
+            // rows' categoryId — and the hashes derived from it — stay stable across resyncs.
             suspend fun flushCategories() {
                 if (pendingCategories.isEmpty()) return
                 ctx.ensureActive()
-                // A type's deferred clear MUST run before that type's categories are inserted — a
-                // later ensure*Cleared() would delete just-written category rows and leave content
-                // pointing at dead ids (FOREIGN KEY constraint failed on the content insert).
-                if (pendingCategories.any { it.mediaType == MediaType.LIVE }) ensureChannelsCleared()
-                if (pendingCategories.any { it.mediaType == MediaType.MOVIE }) ensureMoviesCleared()
-                if (pendingCategories.any { it.mediaType == MediaType.SERIES }) ensureSeriesCleared()
-                val keys = pendingCategoryKeys.toList()
-                val categories = pendingCategories.toList()
                 val start = SystemClock.elapsedRealtime()
-                val ids = categoryDao.upsertAll(categories)
-                keys.forEachIndexed { index, key ->
-                    ids.getOrNull(index)?.let { groupToCategoryId[key] = it }
+                pendingCategories.groupBy { it.mediaType }.forEach { (type, cats) ->
+                    val existing = cats.mapNotNull { it.remoteId }.chunked(SyncSupport.QUERY_CHUNK)
+                        .flatMap { categoryDao.findByRemoteIds(s.id, type, it) }
+                        .associateBy { it.remoteId }
+                    val inserts = ArrayList<CategoryEntity>()
+                    val updates = ArrayList<CategoryEntity>()
+                    cats.forEach { row ->
+                        val current = existing[row.remoteId]
+                        when {
+                            current == null -> inserts.add(row)
+                            row.name != current.name || row.sortOrder != current.sortOrder -> {
+                                updates.add(row.copy(id = current.id))
+                                groupToCategoryId[type to row.remoteId!!] = current.id
+                            }
+                            else -> groupToCategoryId[type to row.remoteId!!] = current.id
+                        }
+                    }
+                    if (updates.isNotEmpty()) categoryDao.updateAll(updates)
+                    if (inserts.isNotEmpty()) {
+                        val ids = categoryDao.insertAll(inserts)
+                        val missed = ArrayList<String>()
+                        inserts.forEachIndexed { i, row ->
+                            val rid = row.remoteId ?: return@forEachIndexed
+                            val id = ids.getOrNull(i) ?: -1L
+                            if (id > 0) groupToCategoryId[type to rid] = id else missed.add(rid)
+                        }
+                        // IGNOREd conflicts return −1 (shouldn't happen — inserts were pre-checked);
+                        // heal by re-fetching just those rows.
+                        if (missed.isNotEmpty()) {
+                            missed.chunked(SyncSupport.QUERY_CHUNK)
+                                .flatMap { categoryDao.findByRemoteIds(s.id, type, it) }
+                                .forEach { cat -> cat.remoteId?.let { groupToCategoryId[type to it] = cat.id } }
+                        }
+                        if (!freshSource) newCategoriesByType.getOrPut(type) { ArrayList() }.addAll(inserts)
+                    }
                 }
-                Log.d(TAG, "M3U categories flush sourceId=${s.id} rows=${categories.size} mapped=${keys.size} ms=${SystemClock.elapsedRealtime() - start}")
+                Log.d(TAG, "M3U categories flush sourceId=${s.id} rows=${pendingCategories.size} ms=${SystemClock.elapsedRealtime() - start}")
                 pendingCategoryKeys.clear()
                 pendingCategories.clear()
             }
 
             suspend fun flushChannels() {
                 if (buffer.isEmpty()) return
-                ensureChannelsCleared()
                 flushCategories()
                 ctx.ensureActive()
                 val channels = buffer.map { item ->
                     val entry = item.entry
+                    val group = entry.groupTitle
                     ChannelEntity(
                         sourceId = s.id,
-                        categoryId = entry.groupTitle?.let { groupToCategoryId[MediaType.LIVE to it] },
+                        categoryId = group?.let { groupToCategoryId[MediaType.LIVE to it] },
                         name = entry.name,
                         logoUrl = entry.logo,
                         streamUrl = entry.streamUrl,
                         epgChannelId = entry.tvgId,
                         number = entry.tvgChno,
-                        remoteId = null, // M3U has no stable id; rely on clear-then-insert
+                        remoteId = stableKey(channelKeyCounters, entry.name, group),
                         sortOrder = item.order,
                         catchup = entry.catchup != null,
                         catchupDays = entry.catchupDays ?: 0,
                         catchupSource = entry.catchupSource,
                     )
                 }
+                channels.forEach { seenChannelKeys.add(it.remoteId!!) }
                 val start = SystemClock.elapsedRealtime()
-                channelDao.upsertAll(channels)
+                val upsert = support.upsertStable(channels, CompletableDeferred(channelHashLookup()), channelAdapter)
                 processed += channels.size
-                Log.d(TAG, "M3U channel flush sourceId=${s.id} rows=${channels.size} processed=$processed ms=${SystemClock.elapsedRealtime() - start}")
+                Log.d(
+                    TAG,
+                    "M3U channel flush sourceId=${s.id} rows=${channels.size} dbInserted=${upsert.inserted} " +
+                        "dbUpdated=${upsert.updated} dbSkipped=${upsert.skippedUnchanged} processed=$processed " +
+                        "ms=${SystemClock.elapsedRealtime() - start}",
+                )
                 buffer.clear()
                 progress.update(SyncPhase.LIVE, processed)
             }
 
             suspend fun flushMovies() {
                 if (movieBuffer.isEmpty()) return
-                ensureMoviesCleared()
                 flushCategories()
                 ctx.ensureActive()
                 val movies = movieBuffer.map { item ->
                     val entry = item.entry
+                    val group = entry.groupTitle
                     MovieEntity(
                         sourceId = s.id,
-                        categoryId = entry.groupTitle?.let { groupToCategoryId[MediaType.MOVIE to it] },
+                        categoryId = group?.let { groupToCategoryId[MediaType.MOVIE to it] },
                         name = entry.name,
                         posterUrl = entry.logo,
                         streamUrl = entry.streamUrl,
-                        remoteId = null, // M3U has no stable id; rely on clear-then-insert
+                        remoteId = stableKey(movieKeyCounters, entry.name, group),
                         sortOrder = item.order,
                     )
                 }
+                movies.forEach { seenMovieKeys.add(it.remoteId!!) }
                 val start = SystemClock.elapsedRealtime()
-                movieDao.upsertAll(movies)
+                val upsert = support.upsertStable(movies, CompletableDeferred(movieHashLookup()), movieAdapter)
                 moviesProcessed += movies.size
-                Log.d(TAG, "M3U movie flush sourceId=${s.id} rows=${movies.size} processed=$moviesProcessed ms=${SystemClock.elapsedRealtime() - start}")
+                Log.d(
+                    TAG,
+                    "M3U movie flush sourceId=${s.id} rows=${movies.size} dbInserted=${upsert.inserted} " +
+                        "dbUpdated=${upsert.updated} dbSkipped=${upsert.skippedUnchanged} processed=$moviesProcessed " +
+                        "ms=${SystemClock.elapsedRealtime() - start}",
+                )
                 movieBuffer.clear()
                 progress.update(SyncPhase.MOVIES, moviesProcessed)
             }
@@ -199,49 +267,83 @@ internal class M3uSyncer(
             // playlists are small — hundreds to a few thousand lines — so buffering them is cheap).
             val seriesAccumulator = LinkedHashMap<String, M3uShowAccumulator>()
 
-            suspend fun flushSeries() {
-                if (seriesAccumulator.isEmpty()) return
-                ensureSeriesCleared()
-                flushCategories()
-                ctx.ensureActive()
-                val start = SystemClock.elapsedRealtime()
-                val shows = seriesAccumulator.values.toList()
-                val seriesIds = seriesDao.upsertSeriesReturnIds(
-                    shows.map { show ->
-                        SeriesEntity(
-                            sourceId = s.id,
-                            categoryId = show.group?.let { groupToCategoryId[MediaType.SERIES to it] },
-                            name = show.name,
-                            posterUrl = show.logo,
-                            remoteId = null, // M3U has no stable id; rely on clear-then-insert
-                            sortOrder = show.order,
+            suspend fun writeEpisodes(seriesId: Long, show: M3uShowAccumulator): Int {
+                val seasonNumbers = show.episodes.map { it.season }.distinct().sorted()
+                val seasonIds = seriesDao.upsertSeasonsReturnIds(
+                    seasonNumbers.map { n -> SeasonEntity(seriesId = seriesId, seasonNumber = n, name = "Season $n") },
+                )
+                val seasonIdByNumber = seasonNumbers.zip(seasonIds).toMap()
+                seriesDao.upsertEpisodes(
+                    show.episodes.map { ep ->
+                        EpisodeEntity(
+                            seriesId = seriesId,
+                            seasonId = seasonIdByNumber[ep.season],
+                            seasonNumber = ep.season,
+                            episodeNumber = ep.episode,
+                            name = ep.title,
+                            streamUrl = ep.streamUrl,
                         )
                     },
                 )
+                return show.episodes.size
+            }
+
+            suspend fun flushSeries() {
+                if (seriesAccumulator.isEmpty()) return
+                flushCategories()
+                ctx.ensureActive()
+                val start = SystemClock.elapsedRealtime()
+                val existing = seriesHashLookup()
+                val shows = seriesAccumulator.values.toList()
+                val inserts = ArrayList<Pair<SeriesEntity, M3uShowAccumulator>>()
+                val changed = ArrayList<Pair<SeriesEntity, M3uShowAccumulator>>() // entity already rekeyed to local id
+                var skipped = 0
+                shows.forEach { show ->
+                    // Accumulator entries are unique per show name, so name|group needs no counter.
+                    val key = "${show.name}$KEY_SEPARATOR${show.group.orEmpty()}"
+                    seenSeriesKeys.add(key)
+                    val entity = SeriesEntity(
+                        sourceId = s.id,
+                        categoryId = show.group?.let { groupToCategoryId[MediaType.SERIES to it] },
+                        name = show.name,
+                        posterUrl = show.logo,
+                        remoteId = key,
+                        sortOrder = show.order,
+                    )
+                    // The series hash folds in the episode list: a playlist that only adds S01E06
+                    // must count as changed even though the show row itself is identical.
+                    val hash = Objects.hash(entity.computeContentHash(), entity.sortOrder, episodesHash(show))
+                    val current = existing[key]
+                    when {
+                        current == null -> inserts.add(entity.copy(contentHash = hash) to show)
+                        current.second != hash -> changed.add(entity.copy(id = current.first, contentHash = hash) to show)
+                        else -> skipped++ // episodes untouched too — they only change with the folded hash
+                    }
+                }
                 var episodesWritten = 0
-                shows.forEachIndexed { index, show ->
-                    val seriesId = seriesIds.getOrNull(index) ?: return@forEachIndexed
-                    val seasonNumbers = show.episodes.map { it.season }.distinct().sorted()
-                    val seasonIds = seriesDao.upsertSeasonsReturnIds(
-                        seasonNumbers.map { n -> SeasonEntity(seriesId = seriesId, seasonNumber = n, name = "Season $n") },
-                    )
-                    val seasonIdByNumber = seasonNumbers.zip(seasonIds).toMap()
-                    seriesDao.upsertEpisodes(
-                        show.episodes.map { ep ->
-                            EpisodeEntity(
-                                seriesId = seriesId,
-                                seasonId = seasonIdByNumber[ep.season],
-                                seasonNumber = ep.season,
-                                episodeNumber = ep.episode,
-                                name = ep.title,
-                                streamUrl = ep.streamUrl,
-                            )
-                        },
-                    )
-                    episodesWritten += show.episodes.size
+                if (inserts.isNotEmpty()) {
+                    val ids = seriesDao.upsertSeriesReturnIds(inserts.map { it.first })
+                    inserts.forEachIndexed { i, (_, show) ->
+                        val id = ids.getOrNull(i)?.takeIf { it > 0 } ?: return@forEachIndexed
+                        episodesWritten += writeEpisodes(id, show)
+                    }
+                }
+                if (changed.isNotEmpty()) {
+                    seriesDao.updateSeries(changed.map { it.first })
+                    changed.forEach { (entity, show) ->
+                        // Rewrite the hierarchy so vanished episodes disappear; the series id is kept.
+                        seriesDao.deleteSeasons(entity.id)
+                        seriesDao.deleteEpisodes(entity.id)
+                        episodesWritten += writeEpisodes(entity.id, show)
+                    }
                 }
                 seriesProcessed = shows.size
-                Log.d(TAG, "M3U series flush sourceId=${s.id} shows=${shows.size} episodes=$episodesWritten ms=${SystemClock.elapsedRealtime() - start}")
+                Log.d(
+                    TAG,
+                    "M3U series flush sourceId=${s.id} shows=${shows.size} dbInserted=${inserts.size} " +
+                        "dbUpdated=${changed.size} dbSkipped=$skipped episodes=$episodesWritten " +
+                        "ms=${SystemClock.elapsedRealtime() - start}",
+                )
                 seriesAccumulator.clear()
                 progress.update(SyncPhase.SERIES, seriesProcessed)
             }
@@ -294,6 +396,40 @@ internal class M3uSyncer(
                 flushMovies()
             }
             flushSeries()
+
+            // Prune — only for content types that actually appeared, so a live-only playlist (or one
+            // whose VOD section failed to parse) never wipes previously-imported rows of other types.
+            // Runs only after a fully successful parse (an exception above skips it), and also drops
+            // legacy null-remoteId rows from the clear-then-insert era (one-time upgrade cleanup).
+            if (processed > 0) {
+                support.pruneRemoteIds("M3U live", s.id, seenChannelKeys, { channelDao.remoteIdsForSource(it) }) { src, ids ->
+                    channelDao.deleteByRemoteIds(src, ids)
+                }
+                channelDao.deleteNullRemoteIds(s.id)
+                support.pruneCategories(s.id, MediaType.LIVE, seenGroupsByType[MediaType.LIVE].orEmpty(), "M3U live", stats)
+            }
+            if (moviesProcessed > 0) {
+                support.pruneRemoteIds("M3U movies", s.id, seenMovieKeys, { movieDao.remoteIdsForSource(it) }) { src, ids ->
+                    movieDao.deleteByRemoteIds(src, ids)
+                }
+                movieDao.deleteNullRemoteIds(s.id)
+                support.pruneCategories(s.id, MediaType.MOVIE, seenGroupsByType[MediaType.MOVIE].orEmpty(), "M3U movies", stats)
+            }
+            if (seriesProcessed > 0) {
+                support.pruneRemoteIds("M3U series", s.id, seenSeriesKeys, { seriesDao.remoteIdsForSource(it) }) { src, ids ->
+                    seriesDao.deleteByRemoteIds(src, ids)
+                }
+                seriesDao.deleteNullRemoteIds(s.id) // seasons/episodes cascade
+                support.pruneCategories(s.id, MediaType.SERIES, seenGroupsByType[MediaType.SERIES].orEmpty(), "M3U series", stats)
+            }
+
+            // "Hide new categories on resync" — same behavior as Xtream/Stalker's refreshCategories.
+            newCategoriesByType.forEach { (type, cats) ->
+                if (cats.isNotEmpty()) {
+                    stats.processedCounts.merge(SyncSupport.CATEGORIES_ADDED_KEY, cats.size, Int::plus)
+                    support.applyHideNewCategoriesDefault(s.id, type, cats)
+                }
+            }
             header
         }
         // Persist the playlist's EPG url (url-tvg) for the EPG engine if the source didn't have one.
@@ -308,6 +444,17 @@ internal class M3uSyncer(
         if (moviesProcessed > 0) stats.processedCounts["movies"] = moviesProcessed
         if (seriesProcessed > 0) stats.processedCounts["series"] = seriesProcessed
         Log.i(TAG, "M3U phase end sourceId=${s.id} processed=$processed movies=$moviesProcessed series=$seriesProcessed ms=${SystemClock.elapsedRealtime() - elapsedStart}")
+    }
+
+    private suspend fun loadHashLookup(
+        label: String,
+        sourceId: Long,
+        load: suspend (Long) -> List<tv.own.owntv.core.database.entity.ContentHashProjection>,
+    ): Map<String, Pair<Long, Int>> {
+        val start = SystemClock.elapsedRealtime()
+        return load(sourceId).associateBy({ it.remoteId }, { it.id to it.contentHash }).also {
+            Log.d(TAG, "$label hash map loaded sourceId=$sourceId size=${it.size} ms=${SystemClock.elapsedRealtime() - start}")
+        }
     }
 
     private data class PendingM3uChannel(
@@ -385,5 +532,24 @@ internal class M3uSyncer(
 
         /** "1x05" alternative marker. */
         private val M3U_EPISODE_NXN = Regex("""(?i)\b(\d{1,2})x(\d{1,3})\b""")
+
+        /** Separates name from group in synthesized keys; unlikely in real channel names. */
+        private const val KEY_SEPARATOR = "\u0001"
+
+        /**
+         * Synthesized stable id for an M3U item: `name␁group`, with an `␁#n` suffix for the 2nd+
+         * occurrence of the same name+group in one playlist (true duplicates, kept distinct so the
+         * unique `(sourceId, remoteId)` index can't silently drop them). Deterministic across
+         * resyncs as long as the playlist keeps its duplicates in file order.
+         */
+        private fun stableKey(counters: HashMap<String, Int>, name: String, group: String?): String {
+            val base = "$name$KEY_SEPARATOR${group.orEmpty()}"
+            val n = counters.merge(base, 1, Int::plus)!!
+            return if (n == 1) base else "$base$KEY_SEPARATOR#$n"
+        }
+
+        /** Order-sensitive hash of a show's episode list, folded into the series content hash. */
+        private fun episodesHash(show: M3uShowAccumulator): Int =
+            show.episodes.fold(0) { acc, ep -> 31 * acc + Objects.hash(ep.season, ep.episode, ep.title, ep.streamUrl) }
     }
 }
