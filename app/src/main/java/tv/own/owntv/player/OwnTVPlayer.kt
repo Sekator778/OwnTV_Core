@@ -650,6 +650,10 @@ class OwnTVPlayer(
     }
     private val _volume = MutableStateFlow(100)
     val volume: StateFlow<Int> = _volume.asStateFlow()
+    // Audio Mode: video decoder/output stopped, audio kept alive (mpv `vid=no`, or ExoPlayer surface
+    // released). Toggled by enterAudioOnly()/exitAudioOnly(); the shell drives it from PlayerMode.AUDIO.
+    private val _audioOnly = MutableStateFlow(false)
+    val audioOnly: StateFlow<Boolean> = _audioOnly.asStateFlow()
     private val _videoRes = MutableStateFlow<String?>(null)
     val videoRes: StateFlow<String?> = _videoRes.asStateFlow()
 
@@ -2064,6 +2068,26 @@ class OwnTVPlayer(
         mpv?.setPropertyString("vo", "null")
         mpv?.setOptionString("force-window", "no")
         mpv?.detachSurface()
+    }
+
+    // --- Audio Mode (Audio Mode plan §5) ---
+    // Drop video output but keep audio playing at position. mpv `vid=no` stops the video decoder live
+    // (no reload, audio uninterrupted); ExoPlayer (image-sub handoff path) just releases its surface.
+    // Restored by exitAudioOnly() before the video surface remounts on return to fullscreen/mini.
+    fun enterAudioOnly() {
+        if (_audioOnly.value) return
+        _audioOnly.value = true
+        if (exoActive) { exoEngine?.setSurface(null); return }
+        if (!initialized) return
+        mpvAsync { setPropertyString("vid", "no") }
+    }
+
+    fun exitAudioOnly() {
+        if (!_audioOnly.value) return
+        _audioOnly.value = false
+        if (exoActive) { attachedSurface?.let { exoEngine?.setSurface(it) }; return }
+        if (!initialized) return
+        mpvAsync { setPropertyString("vid", "auto") }
     }
 
     // --- Tracks ---

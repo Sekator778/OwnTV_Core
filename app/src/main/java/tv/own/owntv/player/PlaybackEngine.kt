@@ -33,6 +33,15 @@ interface PlaybackEngine {
     val currentMeta: StateFlow<MediaMeta>
     val isLiveContent: Boolean
 
+    /** True while the engine decodes audio only (video output stopped to save power) — Audio Mode. */
+    val audioOnly: StateFlow<Boolean> get() = FALSE_FLOW
+    /** Stop the video decoder/output but keep audio playing at position (Audio Mode enter). No-op if
+     *  already audio-only. Audio is uninterrupted — mpv drops the video track (`vid=no`), ExoPlayer
+     *  releases its surface. */
+    fun enterAudioOnly() {}
+    /** Resume video output (Audio Mode exit → back to fullscreen/mini). No-op if not audio-only. */
+    fun exitAudioOnly() {}
+
     fun togglePlayPause()
     fun setZoomMode(mode: ZoomMode)
     fun adjustVolume(delta: Int)
@@ -83,6 +92,7 @@ interface PlaybackEngine {
         private val NULL_ERROR: StateFlow<ErrorInfo?> = MutableStateFlow(null)
         private val NO_CHIPS: StateFlow<List<String>> = MutableStateFlow(emptyList())
         private val NULL_STRING: StateFlow<String?> = MutableStateFlow(null)
+        private val FALSE_FLOW: StateFlow<Boolean> = MutableStateFlow(false)
     }
 }
 
@@ -101,6 +111,9 @@ class MpvPlaybackEngine(private val p: OwnTVPlayer) : PlaybackEngine {
     override val subCount get() = p.subCount
     override val currentMeta get() = p.currentMeta
     override val isLiveContent get() = p.isLiveContent
+    override val audioOnly get() = p.audioOnly
+    override fun enterAudioOnly() = p.enterAudioOnly()
+    override fun exitAudioOnly() = p.exitAudioOnly()
     override val position get() = p.position
     override val duration get() = p.duration
     override val speed get() = p.speed

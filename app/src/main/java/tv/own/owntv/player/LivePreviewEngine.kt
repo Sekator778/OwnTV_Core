@@ -366,7 +366,7 @@ class LivePreviewEngine(
                 // Audio-plays-no-video: a video track exists but has never rendered a single frame, even
                 // though we're not in the total-freeze case above (position/audio clock IS advancing). Only
                 // fires once per load so the VM's one-shot mpv fallback isn't retriggered after it acts.
-                if (!noVideoTriggered && hasVideo && !everRendered && now - readySinceMs >= NO_VIDEO_TIMEOUT_MS) {
+                if (!_audioOnly.value && !noVideoTriggered && hasVideo && !everRendered && now - readySinceMs >= NO_VIDEO_TIMEOUT_MS) {
                     noVideoTriggered = true
                     LiveDiagnosticsLog.event("progressWatchdog: no video frame after ${now - readySinceMs}ms (pos=$pos advancing, video track present)")
                     _noVideoDetected.value = true
@@ -381,7 +381,10 @@ class LivePreviewEngine(
                 }
                 // Picture frozen but the live clock still advances (position moving) — only the rendered-frame
                 // count can see this. Guarded by everRendered so a non-functional frame hook can't false-fire.
-                val framesStuck = everRendered && hasVideo && frames == lastFrameCount
+                // In Audio Mode the surface is intentionally detached, so no frames render and the count
+                // sits still — that's expected, not a frozen picture. Skip the frame-based freeze check;
+                // the position/no-progress backstop above still catches a genuinely dead feed.
+                val framesStuck = !_audioOnly.value && everRendered && hasVideo && frames == lastFrameCount
                 lastFrameCount = frames
                 if (framesStuck) {
                     if (++frozenChecks >= FROZEN_LIMIT) {
@@ -706,6 +709,20 @@ class LivePreviewEngine(
                 }.onFailure { _state.value = State.ERROR; _error.value = "Lost connection to this channel." }
             }, delayMs)
         }
+    }
+
+    // --- Audio Mode (Audio Mode plan §5): keep audio playing, release the video surface ---
+    private val _audioOnly = MutableStateFlow(false)
+    override val audioOnly: StateFlow<Boolean> = _audioOnly.asStateFlow()
+    override fun enterAudioOnly() {
+        if (_audioOnly.value) return
+        _audioOnly.value = true
+        player?.clearVideoSurface() // audio keeps playing without a surface; [surface] kept for return
+    }
+    override fun exitAudioOnly() {
+        if (!_audioOnly.value) return
+        _audioOnly.value = false
+        surface?.let { player?.setVideoSurface(it) }
     }
 
     // --- PlaybackEngine controls (full-screen HUD) ---
