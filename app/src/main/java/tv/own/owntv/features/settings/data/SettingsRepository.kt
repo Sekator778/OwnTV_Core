@@ -176,8 +176,9 @@ class SettingsRepository(private val context: Context) {
     }
 
     // --- Customize Categories & Items: optional per-profile PIN lock on the screen (so hidden items can't
-    //     be unhidden by someone else). Deliberately NOT exported in backups — a lock code shouldn't
-    //     travel in a readable backup file, and a restored backup shouldn't lock anyone out. ---
+    //     be unhidden by someone else). Exported/imported in backups as a salted SHA-256 hash (see
+    //     exportCustomizePins / importCustomizePins → BackupManager `customizePins`), so the PIN value
+    //     itself never travels in a readable form. ---
     fun customizePin(profileId: Long): Flow<String?> = context.dataStore.data.map { prefs ->
         prefs[stringPreferencesKey("customize_pin_$profileId")]?.takeIf { it.isNotBlank() }
     }
