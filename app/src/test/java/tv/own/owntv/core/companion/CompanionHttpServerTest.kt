@@ -6,6 +6,7 @@ import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Test
 import tv.own.owntv.core.model.SourceType
+import tv.own.owntv.core.sync.SyncScopeChoice
 
 /**
  * Tests the pure parse/auth logic of the companion server (no socket bound). The JSON branch relies
@@ -42,7 +43,7 @@ class CompanionHttpServerTest {
     @Test
     fun `xtream form parses all fields`() {
         val body = "type=xtream&name=My+IPTV&server=http://h:80&user=u&pass=p&userAgent=UA&epgUrl=http://e" +
-            "&syncLive=on&syncMovies=on&syncSeries=on&isDefault=on&autoRefresh=HOURS_6"
+            "&syncLive=now&syncMovies=later&syncSeries=off&isDefault=on&autoRefresh=HOURS_6"
         val p = server.parsePayload(form, body, SourceType.XTREAM)!!
         assertEquals(SourceType.XTREAM, p.type)
         assertEquals("My IPTV", p.name)
@@ -52,7 +53,10 @@ class CompanionHttpServerTest {
         assertEquals("UA", p.userAgent)
         assertEquals("http://e", p.epgUrl)
         assertEquals("HOURS_6", p.autoRefresh)
-        assertTrue(p.syncLive && p.syncMovies && p.syncSeries && p.isDefault)
+        assertEquals(SyncScopeChoice.Now, p.syncLive)
+        assertEquals(SyncScopeChoice.Later, p.syncMovies)
+        assertEquals(SyncScopeChoice.Off, p.syncSeries)
+        assertTrue(p.isDefault)
     }
 
     @Test
@@ -61,19 +65,25 @@ class CompanionHttpServerTest {
     }
 
     @Test
-    fun `explicit false sync fields parse as off`() {
-        // The web form pairs each checkbox with a hidden value=false, so an unchecked box submits
-        // "false" (last-value-wins gives "true" when checked). Verify false is honoured, not defaulted.
-        val body = "type=xtream&server=h&user=u&pass=p&syncLive=false&syncMovies=false&syncSeries=false&isDefault=false"
-        val p = server.parsePayload(form, body, SourceType.XTREAM)!!
-        assertFalse(p.syncLive || p.syncMovies || p.syncSeries || p.isDefault)
-    }
+    fun `legacy boolean sync fields map to Now or Off`() {
+        val off = server.parsePayload(
+            form,
+            "type=xtream&server=h&user=u&pass=p&syncLive=false&syncMovies=false&syncSeries=false&isDefault=false",
+            SourceType.XTREAM,
+        )!!
+        assertEquals(SyncScopeChoice.Off, off.syncLive)
+        assertEquals(SyncScopeChoice.Off, off.syncMovies)
+        assertEquals(SyncScopeChoice.Off, off.syncSeries)
+        assertFalse(off.isDefault)
 
-    @Test
-    fun `checked box overrides the hidden false when both are posted`() {
-        // Mirrors the real form wire order: hidden false first, checkbox true second.
-        val body = "type=xtream&server=h&user=u&pass=p&syncLive=false&syncLive=true"
-        assertTrue(server.parsePayload(form, body, SourceType.XTREAM)!!.syncLive)
+        val on = server.parsePayload(
+            form,
+            "type=xtream&server=h&user=u&pass=p&syncLive=true&syncMovies=on&syncSeries=1",
+            SourceType.XTREAM,
+        )!!
+        assertEquals(SyncScopeChoice.Now, on.syncLive)
+        assertEquals(SyncScopeChoice.Now, on.syncMovies)
+        assertEquals(SyncScopeChoice.Now, on.syncSeries)
     }
 
     // ---- M3U ----

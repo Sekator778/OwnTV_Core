@@ -160,6 +160,9 @@ class OwnTVDatabaseMigrationTest {
             assertIndexExists(sqlite, "index_epg_programmes_stopMs")
             assertColumnExists(sqlite, "metadata_cache", "logoPath")
             assertColumnExists(sqlite, "sources", "mac")
+            assertColumnExists(sqlite, "sources", "syncLive")
+            assertColumnExists(sqlite, "sources", "syncMovies")
+            assertColumnExists(sqlite, "sources", "syncSeries")
             assertCount(sqlite, "profiles", 1)
         } finally {
             db.close()
@@ -180,6 +183,9 @@ class OwnTVDatabaseMigrationTest {
             OwnTVDatabase.MIGRATION_11_12,
             OwnTVDatabase.MIGRATION_12_13,
             OwnTVDatabase.MIGRATION_13_14,
+            OwnTVDatabase.MIGRATION_14_15,
+            OwnTVDatabase.MIGRATION_15_16,
+            OwnTVDatabase.MIGRATION_16_17,
         )
         .allowMainThreadQueries()
         .build()

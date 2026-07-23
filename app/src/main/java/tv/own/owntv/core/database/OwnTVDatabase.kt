@@ -84,7 +84,7 @@ import tv.own.owntv.core.database.dao.SubtitleDao
         SeriesFtsEntity::class,
         EpisodeFtsEntity::class,
     ],
-    version = 16, // v7: content_order (Move). v8: contentHash + browse/unique indexes. v9: EPG contentHash + natural key. v10: TMDB metadata cache. v11: movies/series rating-sort indexes. v12: metadata_cache trailerKey. v13: metadata_cache logoPath. v14: sources.mac (Stalker portal). v15: external-subtitle cache/selection/timing tables. v16: subtitle_link (downloaded-sub ↔ content)
+    version = 17, // v7: content_order (Move). v8: contentHash + browse/unique indexes. v9: EPG contentHash + natural key. v10: TMDB metadata cache. v11: movies/series rating-sort indexes. v12: metadata_cache trailerKey. v13: metadata_cache logoPath. v14: sources.mac (Stalker portal). v15: external-subtitle cache/selection/timing tables. v16: subtitle_link (downloaded-sub ↔ content). v17: sources.syncLive/Movies/Series (skip-sync enabledScope)
 
     exportSchema = true,
 )
@@ -445,8 +445,7 @@ abstract class OwnTVDatabase : RoomDatabase() {
         /**
          * v15 → v16: `subtitle_link` — ties each downloaded subtitle to the movie/episode it was
          * fetched for (subtitle plan §11), so a title's subtitles re-list on replay and the
-         * "Delete subtitles" surfaces can browse by Movies/Series. Additive; runs [healSchema] as the
-         * new last hop in the chain (standing rule).
+         * "Delete subtitles" surfaces can browse by Movies/Series. Additive.
          */
         val MIGRATION_15_16 = object : androidx.room.migration.Migration(15, 16) {
             override fun migrate(db: androidx.sqlite.db.SupportSQLiteDatabase) {
@@ -466,6 +465,27 @@ abstract class OwnTVDatabase : RoomDatabase() {
                 db.execSQL("CREATE INDEX IF NOT EXISTS `index_subtitle_link_profileId` ON `subtitle_link` (`profileId`)")
                 db.execSQL("CREATE INDEX IF NOT EXISTS `index_subtitle_link_cacheId` ON `subtitle_link` (`cacheId`)")
                 db.execSQL("CREATE INDEX IF NOT EXISTS `index_subtitle_link_profileId_mediaType` ON `subtitle_link` (`profileId`, `mediaType`)")
+                healSchema(db)
+            }
+        }
+
+        /**
+         * v16 → v17: per-section enabledScope on sources (`syncLive` / `syncMovies` / `syncSeries`).
+         * Default On (1) preserves today's "always sync everything" behaviour for existing sources.
+         * Off means never fetch AND never show that section — cache is retained. Additive; runs
+         * [healSchema] as the new last hop (standing rule).
+         */
+        val MIGRATION_16_17 = object : androidx.room.migration.Migration(16, 17) {
+            override fun migrate(db: androidx.sqlite.db.SupportSQLiteDatabase) {
+                if (!hasColumn(db, "sources", "syncLive")) {
+                    db.execSQL("ALTER TABLE `sources` ADD COLUMN `syncLive` INTEGER NOT NULL DEFAULT 1")
+                }
+                if (!hasColumn(db, "sources", "syncMovies")) {
+                    db.execSQL("ALTER TABLE `sources` ADD COLUMN `syncMovies` INTEGER NOT NULL DEFAULT 1")
+                }
+                if (!hasColumn(db, "sources", "syncSeries")) {
+                    db.execSQL("ALTER TABLE `sources` ADD COLUMN `syncSeries` INTEGER NOT NULL DEFAULT 1")
+                }
                 healSchema(db)
             }
         }

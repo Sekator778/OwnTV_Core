@@ -8,6 +8,7 @@ import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
 import tv.own.owntv.core.database.dao.SourceDao
 import tv.own.owntv.core.database.entity.SourceEntity
+import tv.own.owntv.core.model.MediaType
 import tv.own.owntv.features.settings.data.SettingsRepository
 
 /**
@@ -17,9 +18,21 @@ import tv.own.owntv.features.settings.data.SettingsRepository
  * A default of `-1` (or a default that no longer belongs to the profile) means **All playlists** — the
  * full merged view. This is purely a *display* filter: every playlist still imports and stores all of its
  * content and EPG; this only decides which source ids the grids/guide read from.
+ *
+ * Per-section accessors ([liveSourceIds] / [movieSourceIds] / [seriesSourceIds]) further hide sources
+ * whose enabledScope marks that section Off — cache stays on disk, rows just don't surface.
  */
 data class ActiveProfileSources(val profileId: Long, val sources: List<SourceEntity>) {
     val sourceIds: List<Long> get() = sources.map { it.id }
+    val liveSourceIds: List<Long> get() = sources.filter { it.syncLive }.map { it.id }
+    val movieSourceIds: List<Long> get() = sources.filter { it.syncMovies }.map { it.id }
+    val seriesSourceIds: List<Long> get() = sources.filter { it.syncSeries }.map { it.id }
+
+    fun sourceIdsFor(type: MediaType): List<Long> = when (type) {
+        MediaType.LIVE -> liveSourceIds
+        MediaType.MOVIE -> movieSourceIds
+        MediaType.SERIES, MediaType.EPISODE -> seriesSourceIds
+    }
 }
 
 /**
@@ -51,13 +64,27 @@ fun activeProfileSources(
 /**
  * One-shot version of [activeProfileSources] for imperative code paths: the [profileId]'s linked source
  * ids, narrowed to the active-playlist filter when one is set (else all). Empty when the profile has none.
+ *
+ * When [section] is set, only sources with that section's enabledScope flag On are returned.
  */
 suspend fun activeSourceIds(
     settings: SettingsRepository,
     sourceDao: SourceDao,
     profileId: Long,
+    section: MediaType? = null,
 ): List<Long> {
-    val all = sourceDao.sourceIdsForProfile(profileId)
+    val all = sourceDao.observeForProfile(profileId).first()
     val defaultId = settings.defaultSourceId.first()
-    return if (defaultId > 0 && defaultId in all) listOf(defaultId) else all
+    val filtered = if (defaultId > 0 && all.any { it.id == defaultId }) {
+        all.filter { it.id == defaultId }
+    } else {
+        all
+    }
+    val scoped = when (section) {
+        MediaType.LIVE -> filtered.filter { it.syncLive }
+        MediaType.MOVIE -> filtered.filter { it.syncMovies }
+        MediaType.SERIES, MediaType.EPISODE -> filtered.filter { it.syncSeries }
+        null -> filtered
+    }
+    return scoped.map { it.id }
 }

@@ -131,18 +131,14 @@ internal object CompanionHtml {
               </div>
               <label>User-Agent <input name="userAgent" placeholder="Optional"></label>
               <label>EPG URL <input name="epgUrl" placeholder="Optional"></label>
-              <!-- Hidden "false" pairs so an unchecked box still submits a value (checkboxes post
-                   nothing when off); the checkbox, posted after, overrides to true when checked. -->
-              <input type="hidden" name="syncLive" value="false">
-              <input type="hidden" name="syncMovies" value="false">
-              <input type="hidden" name="syncSeries" value="false">
-              <input type="hidden" name="isDefault" value="false">
-              <div class="checks">
-                <label class="check"><input type="checkbox" name="syncLive" value="true" checked> Live TV</label>
-                <label class="check"><input type="checkbox" name="syncMovies" value="true" checked> Movies</label>
-                <label class="check"><input type="checkbox" name="syncSeries" value="true" checked> Series</label>
-                <label class="check"><input type="checkbox" name="isDefault" value="true"> Default playlist</label>
+              <p class="hint">What to sync — Now imports first, Later syncs in the background, Off is never fetched.</p>
+              <div class="grid">
+                ${scopeSelect("syncLive", "Live TV")}
+                ${scopeSelect("syncMovies", "Movies")}
+                ${scopeSelect("syncSeries", "Series")}
               </div>
+              <input type="hidden" name="isDefault" value="false">
+              <label class="check"><input type="checkbox" name="isDefault" value="true"> Default playlist</label>
               <button class="go" type="submit">Send to TV</button>
             </form>
 
@@ -169,6 +165,12 @@ internal object CompanionHtml {
               <label>Portal URL <input name="portalUrl" placeholder="http://host:port/c/" required></label>
               <label>MAC address <input name="mac" placeholder="00:1A:79:AA:BB:CC" required></label>
               <label>User-Agent <input name="userAgent" placeholder="Optional"></label>
+              <p class="hint">What to sync — Live defaults to Now; Movies/Series default to Later (Stalker VOD is slow).</p>
+              <div class="grid">
+                ${scopeSelect("syncLive", "Live TV", selected = "now")}
+                ${scopeSelect("syncMovies", "Movies", selected = "later")}
+                ${scopeSelect("syncSeries", "Series", selected = "later")}
+              </div>
               <input type="hidden" name="isDefault" value="false">
               <label class="check"><input type="checkbox" name="isDefault" value="true"> Default playlist</label>
               <button class="go" type="submit">Send to TV</button>
@@ -285,6 +287,20 @@ internal object CompanionHtml {
           </select>
         </label>
     """.trimIndent()
+
+    private fun scopeSelect(name: String, label: String, selected: String = "now"): String {
+        fun opt(value: String, text: String) =
+            """<option value="$value"${if (value == selected) " selected" else ""}>$text</option>"""
+        return """
+            <label>$label
+              <select name="$name">
+                ${opt("now", "Now")}
+                ${opt("later", "Later")}
+                ${opt("off", "Off")}
+              </select>
+            </label>
+        """.trimIndent()
+    }
 
     private fun String.escapeHtml(): String =
         replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;").replace("\"", "&quot;")

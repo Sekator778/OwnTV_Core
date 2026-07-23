@@ -34,8 +34,11 @@ class LauncherRecommendationPlanner(
     }
 
     suspend fun buildContinuationItems(profileId: Long): List<LauncherContinuationItem> = withContext(Dispatchers.IO) {
-        val sourceIds = sourceIdsForProfile(profileId)
-        if (sourceIds.isEmpty()) return@withContext emptyList()
+        val sources = sourcesForProfile(profileId)
+        if (sources.isEmpty()) return@withContext emptyList()
+        val movieSourceIds = sources.filter { it.syncMovies }.map { it.id }.toSet()
+        val seriesSourceIds = sources.filter { it.syncSeries }.map { it.id }.toSet()
+        if (movieSourceIds.isEmpty() && seriesSourceIds.isEmpty()) return@withContext emptyList()
 
         val allProgress = progressDao.getAllOnce().filter { it.profileId == profileId }
         val out = ArrayList<LauncherContinuationItem>()
@@ -44,7 +47,7 @@ class LauncherRecommendationPlanner(
             when (progress.mediaType) {
                 MediaType.MOVIE -> {
                     val movie = movieDao.getById(progress.itemId) ?: continue
-                    if (movie.sourceId !in sourceIds) continue
+                    if (movie.sourceId !in movieSourceIds) continue
                     if (!eligibleForWatchNext(progress.positionMs, progress.durationMs)) continue
                     out += movieItem(movie, progress)
                 }
@@ -59,7 +62,7 @@ class LauncherRecommendationPlanner(
             if (progress.mediaType != MediaType.EPISODE) continue
             val episode = seriesDao.getEpisodeById(progress.itemId) ?: continue
             val show = seriesDao.getSeriesById(episode.seriesId) ?: continue
-            if (show.sourceId !in sourceIds) continue
+            if (show.sourceId !in seriesSourceIds) continue
             val current = latestBySeries[episode.seriesId]
             if (current == null || progress.updatedAt >= current.updatedAt) {
                 latestBySeries[episode.seriesId] = progress
@@ -79,10 +82,23 @@ class LauncherRecommendationPlanner(
         out.sortedByDescending { it.lastEngagementAt }.take(CONTINUATION_MAX_ITEMS)
     }
 
-    suspend fun sourceIdsForProfile(profileId: Long): Set<Long> = sourceDao.sourceIdsForProfile(profileId).toSet()
+    suspend fun sourcesForProfile(profileId: Long): List<tv.own.owntv.core.database.entity.SourceEntity> =
+        sourceDao.observeForProfile(profileId).first()
+
+    suspend fun sourceIdsForProfile(profileId: Long): Set<Long> = sourcesForProfile(profileId).map { it.id }.toSet()
 
     suspend fun isVisibleToProfile(profileId: Long, sourceId: Long): Boolean =
         sourceIdsForProfile(profileId).contains(sourceId)
+
+    /** Section-aware visibility: Off sections stay out of Watch Next / launcher surfaces. */
+    suspend fun isVisibleToProfile(profileId: Long, sourceId: Long, section: MediaType): Boolean {
+        val source = sourcesForProfile(profileId).firstOrNull { it.id == sourceId } ?: return false
+        return when (section) {
+            MediaType.LIVE -> source.syncLive
+            MediaType.MOVIE -> source.syncMovies
+            MediaType.SERIES, MediaType.EPISODE -> source.syncSeries
+        }
+    }
 
     suspend fun orderedEpisodes(seriesId: Long): List<EpisodeEntity> =
         seriesDao.episodesBySeries(seriesId).first().sortedWith(compareBy<EpisodeEntity> { it.seasonNumber }.thenBy { it.episodeNumber })

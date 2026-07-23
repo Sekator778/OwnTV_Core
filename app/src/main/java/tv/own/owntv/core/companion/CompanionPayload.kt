@@ -1,6 +1,7 @@
 package tv.own.owntv.core.companion
 
 import tv.own.owntv.core.model.SourceType
+import tv.own.owntv.core.sync.SyncScopeChoice
 
 /**
  * One add-source submission from the Remote companion web form. A single shape covers all three
@@ -23,8 +24,8 @@ data class CompanionPayload(
     val epgUrl: String = "",
     /** Name of a [tv.own.owntv.features.settings.data.PlaylistAutoRefresh] entry; defaults to OFF. */
     val autoRefresh: String = "OFF",
-    val syncLive: Boolean = true,
-    val syncMovies: Boolean = true,
-    val syncSeries: Boolean = true,
+    val syncLive: SyncScopeChoice = SyncScopeChoice.Now,
+    val syncMovies: SyncScopeChoice = SyncScopeChoice.Now,
+    val syncSeries: SyncScopeChoice = SyncScopeChoice.Now,
     val isDefault: Boolean = false,
 )
