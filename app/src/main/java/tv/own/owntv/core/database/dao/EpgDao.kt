@@ -59,6 +59,11 @@ interface EpgDao {
     @Query("SELECT * FROM epg_programmes WHERE epgChannelId = :epgChannelId AND stopMs > :now ORDER BY startMs ASC LIMIT :limit")
     fun upcoming(epgChannelId: String, now: Long, limit: Int): Flow<List<EpgProgrammeEntity>>
 
+    /** Total guide coverage for a channel, in whole days (latest stop − earliest start). Null when there
+     *  is no stored guide for the channel. Used for the "EPG · Nd" hint in the Live preview metadata. */
+    @Query("SELECT (MAX(stopMs) - MIN(startMs)) / 86400000 FROM epg_programmes WHERE epgChannelId = :epgChannelId")
+    suspend fun coverageDays(epgChannelId: String): Int?
+
     /** Lightweight guide rows: the grid needs titles/times, not potentially huge XMLTV descriptions. */
     @Query(
         "SELECT id, sourceId, epgChannelId, startMs, stopMs, title, NULL AS description, 0 AS contentHash " +
