@@ -84,7 +84,7 @@ class BackupManager(
             val seal: ((String) -> JSONObject)? = key?.let { k -> { plain -> BackupCrypto.encrypt(k, plain) } }
 
             val root = JSONObject().apply {
-                put("version", 12) // v12: per-profile OpenSubtitles login (encrypted-only). v11: profile-scoped export (profiles always present, per-profile data filtered). v10: sources.mac. v9: custom TMDB names, encrypted TMDB key
+                put("version", 13) // v13: sources.syncLive/Movies/Series. v12: per-profile OpenSubtitles login (encrypted-only). v11: profile-scoped export. v10: sources.mac. v9: custom TMDB names, encrypted TMDB key
                 put("sections", JSONArray().apply { sections.forEach { put(it.name) } })
                 if (salt != null) put("crypto", BackupCrypto.cryptoBlock(salt))
                 // Ticked profiles always ride (backup is profile-based); restore needs SOURCES to apply them.
@@ -586,6 +586,7 @@ class BackupManager(
         val macVal = s.mac?.takeIf { it.isNotEmpty() }
         put("mac", if (macVal != null && seal != null) seal(macVal) else JSONObject.NULL)
         put("userAgent", s.userAgent ?: JSONObject.NULL); put("epgUrl", s.epgUrl ?: JSONObject.NULL)
+        put("syncLive", s.syncLive); put("syncMovies", s.syncMovies); put("syncSeries", s.syncSeries)
         put("createdAt", s.createdAt); put("lastSyncAt", s.lastSyncAt ?: JSONObject.NULL)
     }
 
@@ -598,6 +599,10 @@ class BackupManager(
         // older than v10 (no "mac" key) or when the MAC was omitted (no passphrase).
         mac = if (o.isNull("mac")) null else unseal(o.opt("mac")),
         userAgent = o.optStringOrNull("userAgent"), epgUrl = o.optStringOrNull("epgUrl"),
+        // Pre-v13 backups omit the flags — default On so restore matches today's behaviour.
+        syncLive = if (o.has("syncLive")) o.optBoolean("syncLive", true) else true,
+        syncMovies = if (o.has("syncMovies")) o.optBoolean("syncMovies", true) else true,
+        syncSeries = if (o.has("syncSeries")) o.optBoolean("syncSeries", true) else true,
         createdAt = o.optLong("createdAt", System.currentTimeMillis()),
         lastSyncAt = if (o.isNull("lastSyncAt")) null else o.optLong("lastSyncAt"),
     )

@@ -34,9 +34,14 @@ class SourceRepository(
     suspend fun addXtreamSource(
         profileId: Long, name: String, serverUrl: String, username: String, password: String,
         userAgent: String? = null, epgUrl: String? = null,
+        syncLive: Boolean = true, syncMovies: Boolean = true, syncSeries: Boolean = true,
     ): SourceEntity = addAndLink(
         profileId,
-        SourceEntity(name = name, type = SourceType.XTREAM, url = serverUrl, username = username, password = password, userAgent = userAgent, epgUrl = epgUrl),
+        SourceEntity(
+            name = name, type = SourceType.XTREAM, url = serverUrl,
+            username = username, password = password, userAgent = userAgent, epgUrl = epgUrl,
+            syncLive = syncLive, syncMovies = syncMovies, syncSeries = syncSeries,
+        ),
     )
 
     suspend fun addM3uSource(
@@ -48,9 +53,13 @@ class SourceRepository(
 
     suspend fun addStalkerSource(
         profileId: Long, name: String, portalUrl: String, mac: String, userAgent: String? = null,
+        syncLive: Boolean = true, syncMovies: Boolean = true, syncSeries: Boolean = true,
     ): SourceEntity = addAndLink(
         profileId,
-        SourceEntity(name = name, type = SourceType.STALKER, url = portalUrl, mac = mac, userAgent = userAgent),
+        SourceEntity(
+            name = name, type = SourceType.STALKER, url = portalUrl, mac = mac, userAgent = userAgent,
+            syncLive = syncLive, syncMovies = syncMovies, syncSeries = syncSeries,
+        ),
     )
 
     private suspend fun addAndLink(profileId: Long, source: SourceEntity): SourceEntity {
@@ -94,9 +103,11 @@ class SourceRepository(
         // Always re-attach the snapshot to the new ids — a failed/cancelled sync can still have
         // rewritten some rows (M3U is clear-then-insert; Xtream REPLACE-upserts renumber ids), and
         // without a relink those favorites/history/resume entries turn invisible until a later
-        // successful sync. Purging genuinely-gone rows is only allowed after a FULL success:
-        // a partial content-type sync never touched the other types, and a failure proves nothing.
-        val purge = result is SyncResult.Success && contentTypes == SyncContentTypes()
+        // successful sync. Purging genuinely-gone rows is only allowed after a complete enabled
+        // success: a partial content-type sync never touched the other types, and a failure proves
+        // nothing. Off sections retain cache + user data, so their favorites stay resolvable.
+        val effective = contentTypes.effectiveFor(source)
+        val purge = result is SyncResult.Success && effective.isCompleteFor(SyncContentTypes.enabledFor(source))
         val relinkStartedAt = SystemClock.elapsedRealtime()
         // Serialized: parallel source syncs (startup refresh runs every source at once) must not
         // relink/purge against each other's mid-flight state.

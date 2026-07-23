@@ -20,14 +20,17 @@ class LauncherLaunchResolver(
     private val progressDao: ProgressDao,
 ) {
     suspend fun resolveLaunch(profileId: Long, deepLink: LauncherDeepLink): LauncherLaunch? = withContext(Dispatchers.IO) {
-        val sourceIds = sourceDao.sourceIdsForProfile(profileId).toSet()
-        if (sourceIds.isEmpty()) return@withContext null
+        val sources = sourceDao.observeForProfile(profileId).first()
+        if (sources.isEmpty()) return@withContext null
+        val liveIds = sources.filter { it.syncLive }.map { it.id }.toSet()
+        val movieIds = sources.filter { it.syncMovies }.map { it.id }.toSet()
+        val seriesIds = sources.filter { it.syncSeries }.map { it.id }.toSet()
 
         when (deepLink) {
-            is LauncherDeepLink.Movie -> resolveMovie(profileId, deepLink, sourceIds)
-            is LauncherDeepLink.Live -> resolveLiveChannel(deepLink, sourceIds)
+            is LauncherDeepLink.Movie -> resolveMovie(profileId, deepLink, movieIds)
+            is LauncherDeepLink.Live -> resolveLiveChannel(deepLink, liveIds)
             LauncherDeepLink.OpenLiveSection -> null
-            is LauncherDeepLink.Episode -> resolveEpisode(profileId, deepLink, sourceIds)
+            is LauncherDeepLink.Episode -> resolveEpisode(profileId, deepLink, seriesIds)
         }
     }
 

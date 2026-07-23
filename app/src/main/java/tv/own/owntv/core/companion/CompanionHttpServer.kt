@@ -270,9 +270,9 @@ class CompanionHttpServer {
             userAgent = pick(fields, "userAgent", "user_agent").trim(),
             epgUrl = pick(fields, "epgUrl", "epg_url").trim(),
             autoRefresh = pick(fields, "autoRefresh", "auto_refresh").ifBlank { "OFF" },
-            syncLive = bool(fields, "syncLive", "sync_live", default = true),
-            syncMovies = bool(fields, "syncMovies", "sync_movies", default = true),
-            syncSeries = bool(fields, "syncSeries", "sync_series", default = true),
+            syncLive = scopeChoice(fields, "syncLive", "sync_live", default = tv.own.owntv.core.sync.SyncScopeChoice.Now),
+            syncMovies = scopeChoice(fields, "syncMovies", "sync_movies", default = tv.own.owntv.core.sync.SyncScopeChoice.Now),
+            syncSeries = scopeChoice(fields, "syncSeries", "sync_series", default = tv.own.owntv.core.sync.SyncScopeChoice.Now),
             isDefault = bool(fields, "isDefault", "is_default", default = false),
         )
     }
@@ -295,6 +295,16 @@ class CompanionHttpServer {
     private fun bool(fields: Map<String, String>, primary: String, secondary: String, default: Boolean): Boolean {
         val raw = fields[primary] ?: fields[secondary] ?: return default
         return raw.equals("true", true) || raw == "1" || raw.equals("on", true) || raw.equals("yes", true)
+    }
+
+    private fun scopeChoice(
+        fields: Map<String, String>,
+        primary: String,
+        secondary: String,
+        default: tv.own.owntv.core.sync.SyncScopeChoice,
+    ): tv.own.owntv.core.sync.SyncScopeChoice {
+        val raw = fields[primary] ?: fields[secondary] ?: return default
+        return tv.own.owntv.core.sync.SyncScopeChoice.parse(raw, default)
     }
 
     private fun sendHtml(socket: Socket, code: Int, body: String) =

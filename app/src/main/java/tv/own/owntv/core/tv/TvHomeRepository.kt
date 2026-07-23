@@ -170,9 +170,12 @@ class TvHomeRepository(
         val now = System.currentTimeMillis()
         if (now - channelRow.lastPublishedAt < RECENT_LIVE_REFRESH_INTERVAL_MS) return
 
-        val sourceIds = sourceDao.sourceIdsForProfile(profileId).toSet()
+        val liveSourceIds = sourceDao.observeForProfile(profileId).first()
+            .filter { it.syncLive }
+            .map { it.id }
+            .toSet()
         val recentChannels = channelDao.recentlyWatched(profileId, RECENT_LIVE_MAX_ITEMS * 2).first()
-            .filter { it.sourceId in sourceIds }
+            .filter { it.sourceId in liveSourceIds }
             .filter { !isHidden(customizations, it) }
             .distinctBy { it.id }
             .take(RECENT_LIVE_MAX_ITEMS)
@@ -180,7 +183,7 @@ class TvHomeRepository(
             .filter { it.groupId != RECENT_LIVE_CHANNEL_GROUP_ID }
         logD(
             "refreshRecentLive profile=$profileId channelId=$channelId recent=${recentChannels.size} " +
-                "sourceCount=${sourceIds.size} existing=${existingRows.size}",
+                "sourceCount=${liveSourceIds.size} existing=${existingRows.size}",
         )
 
         val desiredKeys = recentChannels.map { launcherPlanner.liveStableKey(it) }.toSet()
@@ -211,7 +214,7 @@ class TvHomeRepository(
 
     private suspend fun syncMovie(profileId: Long, movieId: Long, positionMs: Long, durationMs: Long, force: Boolean = false) {
         val movie = movieDao.getById(movieId) ?: return
-        if (!launcherPlanner.isVisibleToProfile(profileId, movie.sourceId)) {
+        if (!launcherPlanner.isVisibleToProfile(profileId, movie.sourceId, MediaType.MOVIE)) {
             logD("syncMovie skip hidden profile=$profileId movieId=$movieId sourceId=${movie.sourceId}")
             return
         }
@@ -251,7 +254,7 @@ class TvHomeRepository(
     private suspend fun syncEpisode(profileId: Long, episodeId: Long, positionMs: Long, durationMs: Long, force: Boolean = false) {
         val episode = seriesDao.getEpisodeById(episodeId) ?: return
         val show = seriesDao.getSeriesById(episode.seriesId) ?: return
-        if (!launcherPlanner.isVisibleToProfile(profileId, show.sourceId)) {
+        if (!launcherPlanner.isVisibleToProfile(profileId, show.sourceId, MediaType.SERIES)) {
             logD("syncEpisode skip hidden profile=$profileId episodeId=$episodeId showId=${show.id} sourceId=${show.sourceId}")
             return
         }

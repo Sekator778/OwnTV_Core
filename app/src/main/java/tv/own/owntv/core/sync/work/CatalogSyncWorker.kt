@@ -9,7 +9,6 @@ import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import tv.own.owntv.core.database.dao.SourceDao
 import tv.own.owntv.core.launcher.LauncherIntegrationRepository
-import tv.own.owntv.core.model.SourceType
 import tv.own.owntv.core.network.ConnectivityObserver
 import tv.own.owntv.core.util.isTransientSyncError
 import tv.own.owntv.core.repository.SourceRepository
@@ -51,16 +50,21 @@ class CatalogSyncWorker(
             return Result.failure()
         }
 
-        Log.i(TAG, "Starting sync for source ${source.id} (${source.name}) reason=$reason contentTypes=$contentTypes baseItemCount=$baseItemCount")
-        val trackedContentTypes = when (source.type) {
-            SourceType.XTREAM -> contentTypes
-            SourceType.M3U, SourceType.LOCAL_BACKUP -> SyncContentTypes(live = true, movies = false, series = false)
-            // Stalker (Phase F): full catalog like Xtream — live + VOD + series all sync (C-1/D-1),
-            // and re-syncs are hash-diffed upserts (StalkerSyncer), so auto refresh is non-destructive.
-            SourceType.STALKER -> contentTypes
-        }
-        val progressPublisher = ProgressPublisher(trackedContentTypes, baseItemCount)
+        val effective = contentTypes.effectiveFor(source)
+        Log.i(
+            TAG,
+            "Starting sync for source ${source.id} (${source.name}) reason=$reason " +
+                "contentTypes=$contentTypes effective=$effective baseItemCount=$baseItemCount",
+        )
+        val progressPublisher = ProgressPublisher(effective, baseItemCount)
         progressPublisher.publishStarting()
+
+        // Stale enqueue after a section was turned Off: clean pill, no syncer calls, no lastSyncAt stamp.
+        if (!effective.hasAny) {
+            progressPublisher.flush()
+            Log.i(TAG, "Sync no-op empty effective sourceId=${source.id} reason=$reason")
+            return Result.success()
+        }
 
         val syncStartedAt = SystemClock.elapsedRealtime()
         val result = sourceRepository.sync(source, onProgress = { stage ->
@@ -73,6 +77,8 @@ class CatalogSyncWorker(
             is SyncResult.Success -> {
                 val warningText = result.warnings.takeIf { it.isNotEmpty() }?.joinToString { it.label }
                 Log.i(TAG, "Sync succeeded for source ${source.id} (${source.name}) warnings=$warningText")
+                // Remainder of a staged initial sync: stamp lastSyncAt once priority+remainder together
+                // cover the enabled catalog (SyncManager alone won't — each pass is incomplete).
                 if (completesInitialSync) {
                     sourceDao.markSynced(source.id, System.currentTimeMillis())
                     Log.i(TAG, "Staged initial sync complete — markSynced sourceId=${source.id}")
