@@ -249,6 +249,63 @@ internal object CompanionHtml {
         """.trimIndent(),
     )
 
+    /**
+     * Background-image upload page (IMAGE_UPLOAD mode). The image is read as a base64 data-URL and
+     * POSTed as text to `/background` — reusing the server's text body path keeps binary handling out
+     * of the socket code; the TV decodes the base64 back to bytes. [pin] authenticates the POST.
+     */
+    fun imageUploadPage(pin: String): String = page(
+        "OwnTV — Background image",
+        """
+          <div class="card">
+            <h1>Send a background image</h1>
+            <p>Choose a photo (JPG, PNG or WebP) and press Send. It becomes the background picture
+               behind the TV interface.</p>
+            <form id="f" onsubmit="return false">
+              <label>Image file
+                <input id="file" type="file" accept="image/*" required>
+              </label>
+              <button class="go" id="send" type="submit">Send to TV</button>
+            </form>
+            <p id="status" class="hint"></p>
+          </div>
+          <script>
+            var f=document.getElementById('file'), b=document.getElementById('send'),
+                s=document.getElementById('status');
+            document.getElementById('f').addEventListener('submit',function(){
+              var file=f.files&&f.files[0];
+              if(!file){s.textContent='Please choose an image first.';return false;}
+              if(file.size>25*1024*1024){s.textContent='That image is too large (max 25 MB).';return false;}
+              b.disabled=true; s.textContent='Sending…';
+              var r=new FileReader();
+              r.onload=function(){
+                fetch('/background?pin=$pin',{method:'POST',headers:{'Content-Type':'text/plain'},body:r.result})
+                  .then(function(res){
+                    if(res.ok){document.open();res.text().then(function(t){document.write(t);document.close();});}
+                    else{b.disabled=false; s.textContent='Upload failed ('+res.status+'). Check the PIN and try again.';}
+                  })
+                  .catch(function(){b.disabled=false; s.textContent='Could not reach the TV. Stay on the same Wi-Fi and try again.';});
+              };
+              r.onerror=function(){b.disabled=false; s.textContent='Could not read that file.';};
+              r.readAsDataURL(file);
+              return false;
+            });
+          </script>
+        """.trimIndent(),
+    )
+
+    /** Confirmation after a background-image upload — it is now applied on the TV. */
+    fun imageSentPage(pin: String): String = page(
+        "OwnTV — Sent",
+        """
+          <div class="card">
+            <h1>Sent to your TV ✓</h1>
+            <p>Your image is now the TV background.</p>
+            <p><a href="/?pin=$pin">Send a different image</a></p>
+          </div>
+        """.trimIndent(),
+    )
+
     /** Confirmation after a backup upload — the file is now waiting on the TV. */
     fun backupSentPage(pin: String): String = page(
         "OwnTV — Sent",

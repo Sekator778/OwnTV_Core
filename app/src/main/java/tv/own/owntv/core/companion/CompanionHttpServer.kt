@@ -50,6 +50,7 @@ class CompanionHttpServer {
     /** Session callbacks — set on [start], only the one matching [mode] ever fires. */
     @Volatile private var onPayload: (CompanionPayload) -> Unit = {}
     @Volatile private var onBackup: (String) -> Unit = {}
+    @Volatile private var onImage: (bytes: ByteArray, extension: String) -> Unit = { _, _ -> }
 
     /** The backup file served at `/backup.json` in [CompanionMode.BACKUP_DOWNLOAD] mode. */
     @Volatile private var downloadFile: File? = null
@@ -68,6 +69,7 @@ class CompanionHttpServer {
         mode: CompanionMode = CompanionMode.ADD_SOURCE,
         onPayload: (CompanionPayload) -> Unit = {},
         onBackup: (String) -> Unit = {},
+        onImage: (bytes: ByteArray, extension: String) -> Unit = { _, _ -> },
         downloadFile: File? = null,
     ): List<String> {
         stop()
@@ -76,6 +78,7 @@ class CompanionHttpServer {
         this.mode = mode
         this.onPayload = onPayload
         this.onBackup = onBackup
+        this.onImage = onImage
         this.downloadFile = downloadFile
         val socket = ServerSocket()
         socket.reuseAddress = true
@@ -91,6 +94,7 @@ class CompanionHttpServer {
         pin = ""
         onPayload = {}
         onBackup = {}
+        onImage = { _, _ -> }
         downloadFile = null
         runCatching { serverSocket?.close() }
         serverSocket = null
@@ -120,8 +124,8 @@ class CompanionHttpServer {
 
     private fun handleClient(client: Socket) {
         client.use { socket ->
-            // Backup uploads can be a few MB over Wi-Fi; give them more headroom than a tiny form post.
-            socket.soTimeout = if (mode == CompanionMode.BACKUP_RESTORE) 30_000 else 10_000
+            // Backup/image uploads can be several MB over Wi-Fi; give them more headroom than a tiny form post.
+            socket.soTimeout = if (mode == CompanionMode.BACKUP_RESTORE || mode == CompanionMode.IMAGE_UPLOAD) 30_000 else 10_000
             val input = BufferedInputStream(socket.getInputStream())
             val requestLine = readLine(input) ?: return sendText(socket, 400, "Bad request")
             val parts = requestLine.split(' ')
@@ -184,6 +188,18 @@ class CompanionHttpServer {
                 return sendHtml(socket, 200, CompanionHtml.backupSentPage(pin))
             }
 
+            // Background-image upload (IMAGE_UPLOAD mode) — PIN required. Body is a base64 data-URL
+            // (`data:image/jpeg;base64,...`) produced by the web page's FileReader; decoding it here
+            // keeps binary handling out of the socket path.
+            if (method == "POST" && path == "/background") {
+                val headerPin = headers["x-companion-pin"].orEmpty()
+                if (!pinOk(queryPin.ifBlank { headerPin })) return sendText(socket, 401, "Unauthorized")
+                val body = readBody(input, headers)
+                val decoded = decodeImageDataUrl(body) ?: return sendText(socket, 400, "Not a valid image upload")
+                onImage(decoded.first, decoded.second)
+                return sendHtml(socket, 200, CompanionHtml.imageSentPage(pin))
+            }
+
             // Source submissions — PIN required (query or header), else 401.
             if (method == "POST" && (path == "/xtream" || path == "/m3u" || path == "/stalker")) {
                 val headerPin = headers["x-companion-pin"].orEmpty()
@@ -210,6 +226,26 @@ class CompanionHttpServer {
         CompanionMode.ADD_SOURCE -> CompanionHtml.formPage(pin)
         CompanionMode.BACKUP_RESTORE -> CompanionHtml.backupUploadPage(pin)
         CompanionMode.BACKUP_DOWNLOAD -> CompanionHtml.backupDownloadPage(pin)
+        CompanionMode.IMAGE_UPLOAD -> CompanionHtml.imageUploadPage(pin)
+    }
+
+    /**
+     * Decode a `data:image/<subtype>;base64,<payload>` data-URL into raw bytes + a file extension,
+     * or null when the body isn't one (wrong prefix, non-image mime, or bad base64).
+     */
+    private fun decodeImageDataUrl(body: String): Pair<ByteArray, String>? {
+        val match = Regex("^data:image/([a-zA-Z0-9.+-]+);base64,", RegexOption.IGNORE_CASE).find(body) ?: return null
+        val ext = when (match.groupValues[1].lowercase()) {
+            "jpeg", "jpg" -> "jpg"
+            "png" -> "png"
+            "webp" -> "webp"
+            "bmp" -> "bmp"
+            else -> return null // keep the accepted set in lockstep with the TV-side picker's extensions
+        }
+        val bytes = runCatching {
+            android.util.Base64.decode(body.substring(match.value.length), android.util.Base64.DEFAULT)
+        }.getOrNull() ?: return null
+        return if (bytes.isEmpty()) null else bytes to ext
     }
 
     private fun readBody(input: BufferedInputStream, headers: Map<String, String>): String {

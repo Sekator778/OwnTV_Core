@@ -47,6 +47,10 @@ class CompanionController(context: Context) {
     /** Cache folder the remote-export flow writes the backup into before serving it for download. */
     val backupExportDir: File get() = File(appContext.cacheDir, "remote-backup-export").apply { mkdirs() }
 
+    /** Image files uploaded from a phone in [startForImageUpload] mode, saved to cache and emitted here. */
+    private val _images = MutableSharedFlow<File>(extraBufferCapacity = 4)
+    val images: SharedFlow<File> = _images.asSharedFlow()
+
     /** A fresh 6-digit PIN per [start], so a leaked code is short-lived. */
     @Volatile private var currentPin: String = ""
 
@@ -65,6 +69,9 @@ class CompanionController(context: Context) {
 
     /** Starts the companion server in backup-download mode, serving [file] for the phone to download. */
     fun startForBackupDownload(port: Int, file: File) = startInternal(port, CompanionMode.BACKUP_DOWNLOAD, file)
+
+    /** Starts the companion server in image-upload mode: the phone sends a background image, emitted on [images]. */
+    fun startForImageUpload(port: Int) = startInternal(port, CompanionMode.IMAGE_UPLOAD)
 
     private fun startInternal(port: Int, mode: CompanionMode, downloadFile: File? = null) {
         if (port !in 1..65535) {
@@ -86,6 +93,7 @@ class CompanionController(context: Context) {
                     _payloads.tryEmit(payload)
                 },
                 onBackup = ::onBackupUploaded,
+                onImage = ::onImageUploaded,
                 downloadFile = downloadFile,
             )
             _state.value = CompanionServerState.Listening(
@@ -110,6 +118,17 @@ class CompanionController(context: Context) {
             file
         }.onSuccess { _backups.tryEmit(it) }
             .onFailure { Log.w(TAG, "Failed to persist uploaded backup", it) }
+    }
+
+    /** Persists an uploaded background image to a cache file and emits it for the settings UI to ingest. */
+    private fun onImageUploaded(bytes: ByteArray, extension: String) {
+        runCatching {
+            val file = File.createTempFile("owntv-remote-bg", ".$extension", appContext.cacheDir)
+            file.writeBytes(bytes)
+            Log.d(TAG, "Received remote background image (${bytes.size} bytes) → ${file.name}")
+            file
+        }.onSuccess { _images.tryEmit(it) }
+            .onFailure { Log.w(TAG, "Failed to persist uploaded image", it) }
     }
 
     fun stop() {

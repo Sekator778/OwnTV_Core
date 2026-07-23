@@ -77,6 +77,13 @@ object ChNavLimits {
  */
 class SettingsRepository(private val context: Context) {
 
+    // Liquid Glass defaults: OFF (empty scope) — the glass look is strictly opt-in, the app looks
+    // unchanged until the user enables it in Settings → Glass Effect. Alpha/blur defaults are the
+    // "nice preset" applied once glass is turned on.
+    private val GLASS_SCOPE_DEFAULT_BITS: Int = 0
+    private val GLASS_ALPHA_DEFAULT_PCT: Int = 75
+    private val GLASS_BLUR_DEFAULT_PCT: Int = 80
+
     private object Keys {
         val THEME_MODE = stringPreferencesKey("theme_mode")
         val UI_ZOOM_PCT = intPreferencesKey("ui_zoom_percent")
@@ -157,6 +164,16 @@ class SettingsRepository(private val context: Context) {
         val CH_NAV_ENABLED = booleanPreferencesKey("ch_nav_enabled")
         val CH_NAV_UP_SKIP = intPreferencesKey("ch_nav_up_skip")
         val CH_NAV_DOWN_SKIP = intPreferencesKey("ch_nav_down_skip")
+        // Background image (Liquid Glass). bg_image_path holds the absolute path of the image we
+        // COPIED into app-private storage (so a USB unplug or source-folder delete never blanks it);
+        // blank = no background (feature off, panels stay solid). glass_scope is the bitmask of which
+        // surfaces go translucent (GlassConfig.fromBitmask); glass_alpha is the fill alpha in 0..100;
+        // glass_blur is the backdrop frost strength in 0..100 (Phase 4 — real backdrop blur; 0 keeps
+        // the older Tier-1 translucency-only look).
+        val BG_IMAGE_PATH = stringPreferencesKey("bg_image_path")
+        val GLASS_SCOPE = intPreferencesKey("glass_scope")
+        val GLASS_ALPHA = intPreferencesKey("glass_alpha")
+        val GLASS_BLUR = intPreferencesKey("glass_blur")
     }
 
     // --- Live TV: remember the last focused channel so reopening lands focus back on it ---
@@ -777,6 +794,38 @@ class SettingsRepository(private val context: Context) {
         context.dataStore.edit { it[Keys.ACCENT_CUSTOM] = hex.trim() }
     }
 
+    // --- Liquid Glass: background image + which surfaces go translucent + how translucent ---
+    /** Absolute path to the user's background image (copied into app-private storage); blank = off. */
+    val bgImagePath: Flow<String> = context.dataStore.data.map { it[Keys.BG_IMAGE_PATH] ?: "" }
+
+    /** Glass scope as a [GlassConfig] bitfield. Empty scope = feature off. */
+    val glassConfig: Flow<tv.own.owntv.ui.theme.GlassConfig> = context.dataStore.data.map { p ->
+        val bits = p[Keys.GLASS_SCOPE] ?: GLASS_SCOPE_DEFAULT_BITS
+        val alphaPct = p[Keys.GLASS_ALPHA] ?: GLASS_ALPHA_DEFAULT_PCT
+        val blurPct = p[Keys.GLASS_BLUR] ?: GLASS_BLUR_DEFAULT_PCT
+        tv.own.owntv.ui.theme.GlassConfig.fromBitmask(bits, alpha = alphaPct / 100f, blurStrength = blurPct / 100f)
+    }
+
+    /** Persist the background image path. Pass "" to clear (turn glass off). */
+    suspend fun setBgImagePath(path: String) {
+        context.dataStore.edit { it[Keys.BG_IMAGE_PATH] = path.trim() }
+    }
+
+    /** Persist the glass scope bitfield (see [tv.own.owntv.ui.theme.GlassConfig.toBitmask]). */
+    suspend fun setGlassScopeBitmask(bits: Int) {
+        context.dataStore.edit { it[Keys.GLASS_SCOPE] = bits }
+    }
+
+    /** Persist glass alpha as an integer 0..100. */
+    suspend fun setGlassAlphaPercent(pct: Int) {
+        context.dataStore.edit { it[Keys.GLASS_ALPHA] = pct.coerceIn(0, 100) }
+    }
+
+    /** Persist the backdrop blur ("frost") strength as an integer 0..100. 0 = Tier-1 translucency only. */
+    suspend fun setGlassBlurPercent(pct: Int) {
+        context.dataStore.edit { it[Keys.GLASS_BLUR] = pct.coerceIn(0, 100) }
+    }
+
     /** Avatar for the current (placeholder) profile until real profiles arrive in the wizard. */
     val avatarId: Flow<Int> = context.dataStore.data.map { it[Keys.AVATAR_ID] ?: 0 }
 
@@ -848,12 +897,16 @@ class SettingsRepository(private val context: Context) {
         Keys.MINI_PLAYER_POSITION,
         // Live TV latency preset (custom seconds is an int key, see backupIntKeys).
         Keys.LIVE_LATENCY_MODE,
+        // Liquid Glass: the background image path + scope/alpha so a reinstall keeps the look.
+        // NOTE: only the path string travels — the image bytes live in app-private storage which is
+        // wiped on uninstall, so on a new device a stale path is ignored gracefully (falls back to none).
+        Keys.BG_IMAGE_PATH,
     )
     private val backupStringSetKeys = listOf(
         // The STATIC-mode hidden set rides with backup so a reinstall keeps the user's hidden icons.
         Keys.NAV_MENU_HIDDEN,
     )
-    private val backupIntKeys = listOf(Keys.UI_ZOOM_PCT, Keys.AUDIO_DELAY_MS, Keys.CATCHUP_OFFSET_MIN, Keys.PROXY_PORT, Keys.CH_NAV_UP_SKIP, Keys.CH_NAV_DOWN_SKIP, Keys.MINI_PLAYER_SIZE_PCT, Keys.LIVE_LATENCY_CUSTOM_SECS)
+    private val backupIntKeys = listOf(Keys.UI_ZOOM_PCT, Keys.AUDIO_DELAY_MS, Keys.CATCHUP_OFFSET_MIN, Keys.PROXY_PORT, Keys.CH_NAV_UP_SKIP, Keys.CH_NAV_DOWN_SKIP, Keys.MINI_PLAYER_SIZE_PCT, Keys.LIVE_LATENCY_CUSTOM_SECS, Keys.GLASS_SCOPE, Keys.GLASS_ALPHA, Keys.GLASS_BLUR)
     private val backupBoolKeys = listOf(
         Keys.LIVE_PREVIEW, Keys.LIVE_PREVIEW_AUDIO, Keys.HDR_ENABLED, Keys.ANDROID_TV_HOME, Keys.HW_DECODING,
         Keys.VOD_PREFER_EXO, Keys.MEASURED_STREAM_STATS, Keys.EXTERNAL_PLAYER, Keys.UPDATE_CHECK_ON_START, Keys.SURROUND_SOUND, Keys.AUTO_PLAY_NEXT, Keys.PROXY_ENABLED,
