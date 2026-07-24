@@ -37,4 +37,15 @@ class SyncActivityTracker {
         _active.value = _active.value - sourceId
         _lastCompleted.value = CompletedSync(sourceId, sourceName, result, android.os.SystemClock.elapsedRealtime())
     }
+
+    /**
+     * Clears a completed sync once the pill has picked it up for display, so it isn't re-shown on
+     * every fresh composition of the pill (e.g. after exiting fullscreen playback). Guarded by
+     * timestamp so a newer completion that arrived in the meantime is never dropped.
+     */
+    fun consumeCompleted(timestamp: Long) {
+        if (_lastCompleted.value?.timestamp == timestamp) {
+            _lastCompleted.value = null
+        }
+    }
 }
