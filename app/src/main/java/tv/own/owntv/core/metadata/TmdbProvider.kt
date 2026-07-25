@@ -19,17 +19,35 @@ class TmdbProvider(
     private val settings: SettingsRepository,
 ) : MetadataProvider {
 
-    /** Resolved base URL + auth for one call. [apiKey] is null for Worker / self-host tiers. */
-    private data class Endpoint(val baseUrl: String, val apiKey: String?)
+    /**
+     * Resolved base URL + auth + content language for one call. [apiKey] is null for Worker / self-host
+     * tiers; [language] is blank when the user hasn't chosen one (TMDB then defaults to en-US).
+     */
+    private data class Endpoint(val baseUrl: String, val apiKey: String?, val language: String)
 
     /** Precedence per plan §4: self-host URL > user key > default Worker. */
     private suspend fun resolveEndpoint(): Endpoint {
         val cfg = settings.metadataConfig()
+        val lang = cfg.resolvedLanguage
         return when (cfg.tier) {
-            MetadataConfig.Tier.SELF_HOST -> Endpoint(cfg.customServerUrl.trimEnd('/'), apiKey = null)
-            MetadataConfig.Tier.OWN_KEY -> Endpoint(TMDB_DIRECT_BASE, apiKey = cfg.tmdbApiKey.trim())
-            MetadataConfig.Tier.DEFAULT_WORKER -> Endpoint(DEFAULT_WORKER_BASE, apiKey = null)
+            MetadataConfig.Tier.SELF_HOST -> Endpoint(cfg.customServerUrl.trimEnd('/'), apiKey = null, language = lang)
+            MetadataConfig.Tier.OWN_KEY -> Endpoint(TMDB_DIRECT_BASE, apiKey = cfg.tmdbApiKey.trim(), language = lang)
+            MetadataConfig.Tier.DEFAULT_WORKER -> Endpoint(DEFAULT_WORKER_BASE, apiKey = null, language = lang)
         }
+    }
+
+    /** `&language=<code>`, or "" when no language is configured (TMDB falls back to en-US). */
+    private fun Endpoint.langParam(): String =
+        if (language.isBlank()) "" else "&language=" + enc(language)
+
+    /**
+     * `include_image_language` for detail calls. Always keeps `en,null` (null = textless art, which is
+     * what most posters/backdrops are) and prepends the chosen language so localized artwork wins when
+     * TMDB has it. Uses the base language only — TMDB indexes images by ISO 639-1, not by region.
+     */
+    private fun Endpoint.imageLangParam(): String {
+        val base = language.substringBefore('-').takeIf { it.isNotBlank() && it != "en" }
+        return "&include_image_language=" + (if (base != null) "$base,en,null" else "en,null")
     }
 
     override suspend fun searchMovie(title: String, year: Int?): List<MetadataSearchResult>? =
@@ -53,6 +71,7 @@ class TmdbProvider(
             append("?query=").append(enc(query))
             append(yearParam)
             append("&include_adult=false")
+            append(ep.langParam())
             ep.apiKey?.takeIf { it.isNotBlank() }?.let { append("&api_key=").append(enc(it)) }
         }
         // Transport failure (network down, HTTP 429 rate limit, proxy/Worker error) → null, NOT empty:
@@ -70,13 +89,14 @@ class TmdbProvider(
         val url = buildString {
             append(ep.baseUrl).append("/3/movie/").append(tmdbId)
             append("?append_to_response=credits,external_ids,videos,images")
-            append("&include_image_language=en,null")
+            append(ep.imageLangParam())
+            append(ep.langParam())
             ep.apiKey?.takeIf { it.isNotBlank() }?.let { append("&api_key=").append(enc(it)) }
         }
         val json = runCatching { http.getText(url) }
             .onFailure { Log.w(TAG, "TMDB movie details failed id=$tmdbId: ${it.message}") }
             .getOrNull() ?: return null
-        return runCatching { parseMovieDetails(json) }.getOrNull()
+        return runCatching { parseMovieDetails(json, ep.language.substringBefore('-')) }.getOrNull()
     }
 
     override suspend fun tvDetails(tmdbId: Int): MovieDetails? {
@@ -85,13 +105,14 @@ class TmdbProvider(
         val url = buildString {
             append(ep.baseUrl).append("/3/tv/").append(tmdbId)
             append("?append_to_response=credits,external_ids,videos,images")
-            append("&include_image_language=en,null")
+            append(ep.imageLangParam())
+            append(ep.langParam())
             ep.apiKey?.takeIf { it.isNotBlank() }?.let { append("&api_key=").append(enc(it)) }
         }
         val json = runCatching { http.getText(url) }
             .onFailure { Log.w(TAG, "TMDB tv details failed id=$tmdbId: ${it.message}") }
             .getOrNull() ?: return null
-        return runCatching { parseTvDetails(json) }.getOrNull()
+        return runCatching { parseTvDetails(json, ep.language.substringBefore('-')) }.getOrNull()
     }
 
     override suspend fun tvEpisodeDetails(tvId: Int, season: Int, episode: Int): EpisodeDetails? {
@@ -100,7 +121,13 @@ class TmdbProvider(
         val url = buildString {
             append(ep.baseUrl).append("/3/tv/").append(tvId)
             append("/season/").append(season).append("/episode/").append(episode)
-            ep.apiKey?.takeIf { it.isNotBlank() }?.let { append("?api_key=").append(enc(it)) }
+            // Unlike the other endpoints this one has no base query string, so build the params as a list
+            // and join — otherwise whichever of language/api_key comes first has to own the "?".
+            val params = buildList {
+                if (ep.language.isNotBlank()) add("language=" + enc(ep.language))
+                ep.apiKey?.takeIf { it.isNotBlank() }?.let { add("api_key=" + enc(it)) }
+            }
+            if (params.isNotEmpty()) append("?").append(params.joinToString("&"))
         }
         val json = runCatching { http.getText(url) }
             .onFailure { Log.w(TAG, "TMDB episode details failed tv=$tvId s$season e$episode: ${it.message}") }
@@ -118,7 +145,7 @@ class TmdbProvider(
         }.getOrNull()
     }
 
-    private fun parseTvDetails(body: String): MovieDetails? {
+    private fun parseTvDetails(body: String, preferredLang: String): MovieDetails? {
         val o = JSONObject(body)
         val id = o.optInt("id", 0)
         if (id == 0) return null
@@ -142,11 +169,11 @@ class TmdbProvider(
             genres = genres,
             cast = cast,
             trailerKey = parseTrailerKey(o),
-            logoPath = parseLogoPath(o),
+            logoPath = parseLogoPath(o, preferredLang),
         )
     }
 
-    private fun parseMovieDetails(body: String): MovieDetails? {
+    private fun parseMovieDetails(body: String, preferredLang: String): MovieDetails? {
         val o = JSONObject(body)
         val id = o.optInt("id", 0)
         if (id == 0) return null
@@ -171,7 +198,7 @@ class TmdbProvider(
             genres = genres,
             cast = cast,
             trailerKey = parseTrailerKey(o),
-            logoPath = parseLogoPath(o),
+            logoPath = parseLogoPath(o, preferredLang),
         )
     }
 
@@ -202,7 +229,11 @@ class TmdbProvider(
 
     private data class LogoCandidate(val path: String, val languageRank: Int, val width: Int)
 
-    private fun parseLogoPath(details: JSONObject): String? {
+    /**
+     * Best title logo. [preferredLang] (base ISO 639-1 of the user's chosen metadata language, blank when
+     * unset) ranks first so a localized logo wins; English and textless art stay as the fallbacks.
+     */
+    private fun parseLogoPath(details: JSONObject, preferredLang: String): String? {
         val arr = details.optJSONObject("images")?.optJSONArray("logos") ?: return null
         val candidates = ArrayList<LogoCandidate>(arr.length())
         for (i in 0 until arr.length()) {
@@ -210,9 +241,10 @@ class TmdbProvider(
             val path = logo.optString("file_path").takeIf { it.isNotBlank() && it != "null" } ?: continue
             if (path.endsWith(".svg", ignoreCase = true)) continue
             val languageRank = when (logo.optString("iso_639_1").takeIf { it.isNotBlank() && it != "null" }) {
-                "en" -> 0
-                null -> 1
-                else -> 2
+                preferredLang.takeIf { it.isNotBlank() && it != "en" } -> 0
+                "en" -> 1
+                null -> 2
+                else -> 3
             }
             candidates += LogoCandidate(path = path, languageRank = languageRank, width = logo.optInt("width", 0))
         }

@@ -224,7 +224,7 @@ class LivePreviewEngine(
      *  preview stream drags 4K playback, so the chip stays blank for raw MPEG-TS (the debug overlay
      *  still shows a measured value when opened). */
     private fun updateStreamChips() {
-        val p = player ?: run { _streamChips.value = emptyList(); return }
+        val p = player ?: run { _streamChips.value = emptyList(); _videoFps.value = null; return }
         val chips = ArrayList<String>(5)
         p.videoFormat?.let { f ->
             if (f.width > 0 && f.height > 0) aspectLabel(f.width, f.height)?.let { chips += it }
@@ -236,7 +236,15 @@ class LivePreviewEngine(
             (when (f.channelCount) { 1 -> "MONO"; 2 -> "STEREO"; 6 -> "5.1"; 8 -> "7.1"; else -> null })?.let { chips += it }
         }
         _streamChips.value = chips
+        // Publish the frame rate for the auto-frame-rate switcher too (mpv's OwnTVPlayer has its own
+        // videoFps flow; this is the ExoPlayer live equivalent). Declared Format.frameRate when the
+        // stream carries one, otherwise the measured sample.
+        _videoFps.value = p.videoFormat?.let { displayFps(it) }?.takeIf { it > 0f }
     }
+
+    private val _videoFps = MutableStateFlow<Float?>(null)
+    /** Video frame rate of the current live stream, or null while unknown. */
+    val videoFps: StateFlow<Float?> = _videoFps.asStateFlow()
 
     private fun displayFps(f: Format) = f.frameRate.takeIf { it > 0 } ?: fpsSample.lastFps
 
@@ -566,7 +574,7 @@ class LivePreviewEngine(
         textTrackList = emptyList(); textSelections = emptyList(); _subCount.value = 0
         _subtitleOn.value = false; _cues.value = emptyList(); _audioUnsupported.value = false
         _noVideoDetected.value = false; noVideoTriggered = false; readySinceMs = 0L
-        _videoHeight.value = null; _videoAspect.value = null; _videoSize.value = null; _streamChips.value = emptyList()
+        _videoHeight.value = null; _videoAspect.value = null; _videoSize.value = null; _streamChips.value = emptyList(); _videoFps.value = null
         _videoRes.value = null
         _error.value = null
         _errorInfo.value = null
@@ -636,7 +644,7 @@ class LivePreviewEngine(
         textTrackList = emptyList(); textSelections = emptyList(); _subCount.value = 0
         _subtitleOn.value = false; _cues.value = emptyList(); _audioUnsupported.value = false
         _noVideoDetected.value = false; noVideoTriggered = false; readySinceMs = 0L
-        _videoHeight.value = null; _videoAspect.value = null; _videoSize.value = null; _streamChips.value = emptyList()
+        _videoHeight.value = null; _videoAspect.value = null; _videoSize.value = null; _streamChips.value = emptyList(); _videoFps.value = null
         _state.value = State.IDLE
         player?.run { stop(); clearMediaItems() }
         // Leaving a UHD channel (back / exit fullscreen / background): fully release the 4K decoder.
@@ -893,6 +901,10 @@ class LivePreviewEngine(
             .setRenderersFactory(renderers)
             .setMediaSourceFactory(DefaultMediaSourceFactory(httpDataSourceFor(currentUa)))
             .setLoadControl(loadControl)
+            // Auto frame rate on this engine is done by FrameRateController (window-level display-mode
+            // switch, wired in ExoPreviewSurface). Media3's own Surface.setFrameRate() hint stays at its
+            // default ONLY_IF_SEAMLESS strategy — there is no "always" strategy to opt into, and it's a
+            // no-op below API 30 anyway, which is exactly the case AFR was reported broken on.
             .build()
             .apply {
                 addListener(listener); addAnalyticsListener(analytics)

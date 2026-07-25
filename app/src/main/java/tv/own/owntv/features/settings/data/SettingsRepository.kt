@@ -109,6 +109,7 @@ class SettingsRepository(private val context: Context) {
         val LIVE_LATENCY_MODE = stringPreferencesKey("live_latency_mode")
         val LIVE_LATENCY_CUSTOM_SECS = intPreferencesKey("live_latency_custom_secs")
         val HDR_ENABLED = booleanPreferencesKey("hdr_enabled")
+        val AUTO_FRAME_RATE = booleanPreferencesKey("auto_frame_rate")
         val ANDROID_TV_HOME = booleanPreferencesKey("android_tv_home")
         // Video Player Settings
         val HW_DECODING = booleanPreferencesKey("hw_decoding")
@@ -153,6 +154,10 @@ class SettingsRepository(private val context: Context) {
         val METADATA_MODE = stringPreferencesKey("metadata_mode")
         val TMDB_API_KEY = stringPreferencesKey("tmdb_api_key")
         val METADATA_SERVER_URL = stringPreferencesKey("metadata_server_url")
+        // TMDB content language (ISO 639-1, optionally with region — e.g. "el", "pt-BR"). Blank = the
+        // TMDB default (en-US), which is what every install used before this setting existed, so leaving
+        // it blank keeps existing users' metadata exactly as it was. "auto" = follow the device locale.
+        val METADATA_LANGUAGE = stringPreferencesKey("metadata_language")
         // Nav menu customization (v4.3.0): DYNAMIC auto-adapts the side icons to what the active playlist
         // offers; STATIC lets the user hide specific icons. NAV_HIDDEN holds MainSection.name values the
         // user has hidden (STATIC mode only — DYNAMIC ignores it).
@@ -164,6 +169,22 @@ class SettingsRepository(private val context: Context) {
         val CH_NAV_ENABLED = booleanPreferencesKey("ch_nav_enabled")
         val CH_NAV_UP_SKIP = intPreferencesKey("ch_nav_up_skip")
         val CH_NAV_DOWN_SKIP = intPreferencesKey("ch_nav_down_skip")
+        // "Browsing & lists" — two independent per-section toggles (Live TV / Movies / Series).
+        //
+        // REMEMBER_LAST_*  = remember last ITEM. OFF (default) = switching category resets the browse list
+        //                    to the top; ON = each category keeps its own scroll position. The Live one
+        //                    also gates lastLiveChannelId (the focused-channel restore on re-entry).
+        // REMEMBER_CAT_*   = remember last CATEGORY. ON (default) = reopening the section lands on the
+        //                    category you left; OFF = always start on All. Live TV has always behaved this
+        //                    way; Movies/Series gained the same persistence alongside the toggle.
+        val REMEMBER_LAST_LIVE = booleanPreferencesKey("remember_last_live")
+        val REMEMBER_LAST_MOVIES = booleanPreferencesKey("remember_last_movies")
+        val REMEMBER_LAST_SERIES = booleanPreferencesKey("remember_last_series")
+        val REMEMBER_CAT_LIVE = booleanPreferencesKey("remember_cat_live")
+        val REMEMBER_CAT_MOVIES = booleanPreferencesKey("remember_cat_movies")
+        val REMEMBER_CAT_SERIES = booleanPreferencesKey("remember_cat_series")
+        val LAST_MOVIES_CATEGORY = stringPreferencesKey("last_movies_category")
+        val LAST_SERIES_CATEGORY = stringPreferencesKey("last_series_category")
         // Background image (Liquid Glass). bg_image_path holds the absolute path of the image we
         // COPIED into app-private storage (so a USB unplug or source-folder delete never blanks it);
         // blank = no background (feature off, panels stay solid). glass_scope is the bitmask of which
@@ -239,10 +260,50 @@ class SettingsRepository(private val context: Context) {
         context.dataStore.edit { it[Keys.RESUME_LAST_CHANNEL] = enabled }
     }
 
-    // --- Live TV: remember the last selected category so reopening lands where you left off ---
+    // --- Remember the last selected category so reopening a section lands where you left off.
+    //     Written by each section's view model (debounced), read once on restore. ---
     val lastLiveCategory: Flow<String> = context.dataStore.data.map { it[Keys.LAST_LIVE_CATEGORY] ?: "" }
     suspend fun setLastLiveCategory(key: String) {
         context.dataStore.edit { it[Keys.LAST_LIVE_CATEGORY] = key }
+    }
+    val lastMoviesCategory: Flow<String> = context.dataStore.data.map { it[Keys.LAST_MOVIES_CATEGORY] ?: "" }
+    suspend fun setLastMoviesCategory(key: String) {
+        context.dataStore.edit { it[Keys.LAST_MOVIES_CATEGORY] = key }
+    }
+    val lastSeriesCategory: Flow<String> = context.dataStore.data.map { it[Keys.LAST_SERIES_CATEGORY] ?: "" }
+    suspend fun setLastSeriesCategory(key: String) {
+        context.dataStore.edit { it[Keys.LAST_SERIES_CATEGORY] = key }
+    }
+
+    // --- Per-section "remember last CATEGORY" (default ON each — Live TV's long-standing behaviour,
+    //     now also available for Movies/Series). OFF = the section always opens on All. ---
+    val rememberCategoryLive: Flow<Boolean> = context.dataStore.data.map { it[Keys.REMEMBER_CAT_LIVE] ?: true }
+    suspend fun setRememberCategoryLive(enabled: Boolean) {
+        context.dataStore.edit { it[Keys.REMEMBER_CAT_LIVE] = enabled }
+    }
+    val rememberCategoryMovies: Flow<Boolean> = context.dataStore.data.map { it[Keys.REMEMBER_CAT_MOVIES] ?: true }
+    suspend fun setRememberCategoryMovies(enabled: Boolean) {
+        context.dataStore.edit { it[Keys.REMEMBER_CAT_MOVIES] = enabled }
+    }
+    val rememberCategorySeries: Flow<Boolean> = context.dataStore.data.map { it[Keys.REMEMBER_CAT_SERIES] ?: true }
+    suspend fun setRememberCategorySeries(enabled: Boolean) {
+        context.dataStore.edit { it[Keys.REMEMBER_CAT_SERIES] = enabled }
+    }
+
+    // --- Per-section "remember last ITEM per category" (default OFF each).
+    //     OFF = switching category resets the browse list to the top; ON = each category keeps its own
+    //     scroll position. The Live toggle additionally gates the lastLiveChannelId restore on re-entry. ---
+    val rememberLastLive: Flow<Boolean> = context.dataStore.data.map { it[Keys.REMEMBER_LAST_LIVE] ?: false }
+    suspend fun setRememberLastLive(enabled: Boolean) {
+        context.dataStore.edit { it[Keys.REMEMBER_LAST_LIVE] = enabled }
+    }
+    val rememberLastMovies: Flow<Boolean> = context.dataStore.data.map { it[Keys.REMEMBER_LAST_MOVIES] ?: false }
+    suspend fun setRememberLastMovies(enabled: Boolean) {
+        context.dataStore.edit { it[Keys.REMEMBER_LAST_MOVIES] = enabled }
+    }
+    val rememberLastSeries: Flow<Boolean> = context.dataStore.data.map { it[Keys.REMEMBER_LAST_SERIES] ?: false }
+    suspend fun setRememberLastSeries(enabled: Boolean) {
+        context.dataStore.edit { it[Keys.REMEMBER_LAST_SERIES] = enabled }
     }
 
     // --- Search: recent search terms (most-recent first, capped). Stored as one newline-joined string
@@ -343,12 +404,24 @@ class SettingsRepository(private val context: Context) {
         context.dataStore.edit { it[Keys.METADATA_SERVER_URL] = url.trim() }
     }
 
-    /** Live snapshot of the three metadata settings as one object (consumed by TmdbProvider). */
+    /**
+     * TMDB content language. Blank = TMDB's own default (en-US) — the pre-existing behaviour, so an
+     * upgrade never silently changes anyone's metadata. "auto" = follow the device locale, resolved at
+     * call time by [tv.own.owntv.core.metadata.MetadataConfig.resolvedLanguage].
+     */
+    val metadataLanguage: Flow<String> = context.dataStore.data.map { it[Keys.METADATA_LANGUAGE] ?: "" }
+
+    suspend fun setMetadataLanguage(code: String) {
+        context.dataStore.edit { it[Keys.METADATA_LANGUAGE] = code.trim() }
+    }
+
+    /** Live snapshot of the metadata settings as one object (consumed by TmdbProvider). */
     val metadataConfigFlow: Flow<tv.own.owntv.core.metadata.MetadataConfig> = context.dataStore.data.map { p ->
         tv.own.owntv.core.metadata.MetadataConfig(
             mode = parseMetadataMode(p),
             tmdbApiKey = p[Keys.TMDB_API_KEY] ?: "",
             customServerUrl = p[Keys.METADATA_SERVER_URL] ?: "",
+            language = p[Keys.METADATA_LANGUAGE] ?: "",
         )
     }
 
@@ -695,6 +768,17 @@ class SettingsRepository(private val context: Context) {
         context.dataStore.edit { it[Keys.HDR_ENABLED] = enabled }
     }
 
+    /**
+     * Switch the display's refresh rate to match the video frame rate (24/25/30/50/60 fps) during
+     * full-screen playback, and restore it on exit. Applies to both engines and to Live TV as well as
+     * VOD. Default on; turn off if a TV/AV receiver re-handshakes HDMI noisily on every channel change.
+     */
+    val autoFrameRate: Flow<Boolean> = context.dataStore.data.map { it[Keys.AUTO_FRAME_RATE] ?: true }
+
+    suspend fun setAutoFrameRate(enabled: Boolean) {
+        context.dataStore.edit { it[Keys.AUTO_FRAME_RATE] = enabled }
+    }
+
     /** Mirror continue-watching rows into Android TV home surfaces. */
     val androidTvHomeEnabled: Flow<Boolean> = context.dataStore.data.map { it[Keys.ANDROID_TV_HOME] ?: true }
 
@@ -886,7 +970,7 @@ class SettingsRepository(private val context: Context) {
         Keys.PROXY_HOST, Keys.PROXY_USER,
         // TMDB metadata: source mode + self-host URL. The user's own TMDB API key (Keys.TMDB_API_KEY) is a
         // secret and is deliberately NOT backed up in plaintext (same policy as the proxy password).
-        Keys.METADATA_SERVER_URL, Keys.METADATA_MODE,
+        Keys.METADATA_SERVER_URL, Keys.METADATA_MODE, Keys.METADATA_LANGUAGE,
         // Download folder. Backed up so a same-device reinstall keeps the chosen folder; on a different
         // device a path that no longer exists is harmless — StorageAccess.resolveRoot falls back to app
         // storage, so a stale restore never breaks downloads.
@@ -908,9 +992,11 @@ class SettingsRepository(private val context: Context) {
     )
     private val backupIntKeys = listOf(Keys.UI_ZOOM_PCT, Keys.AUDIO_DELAY_MS, Keys.CATCHUP_OFFSET_MIN, Keys.PROXY_PORT, Keys.CH_NAV_UP_SKIP, Keys.CH_NAV_DOWN_SKIP, Keys.MINI_PLAYER_SIZE_PCT, Keys.LIVE_LATENCY_CUSTOM_SECS, Keys.GLASS_SCOPE, Keys.GLASS_ALPHA, Keys.GLASS_BLUR)
     private val backupBoolKeys = listOf(
-        Keys.LIVE_PREVIEW, Keys.LIVE_PREVIEW_AUDIO, Keys.HDR_ENABLED, Keys.ANDROID_TV_HOME, Keys.HW_DECODING,
+        Keys.LIVE_PREVIEW, Keys.LIVE_PREVIEW_AUDIO, Keys.HDR_ENABLED, Keys.AUTO_FRAME_RATE, Keys.ANDROID_TV_HOME, Keys.HW_DECODING,
         Keys.VOD_PREFER_EXO, Keys.MEASURED_STREAM_STATS, Keys.EXTERNAL_PLAYER, Keys.UPDATE_CHECK_ON_START, Keys.SURROUND_SOUND, Keys.AUTO_PLAY_NEXT, Keys.PROXY_ENABLED,
         Keys.WEATHER_ENABLED, Keys.WEATHER_FAHRENHEIT, Keys.RESUME_LAST_CHANNEL, Keys.METADATA_ENABLED, Keys.CH_NAV_ENABLED,
+        Keys.REMEMBER_LAST_LIVE, Keys.REMEMBER_LAST_MOVIES, Keys.REMEMBER_LAST_SERIES,
+        Keys.REMEMBER_CAT_LIVE, Keys.REMEMBER_CAT_MOVIES, Keys.REMEMBER_CAT_SERIES,
     )
     private val backupFloatKeys = listOf(Keys.SUB_SCALE)
 

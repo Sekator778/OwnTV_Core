@@ -168,6 +168,18 @@ class MetadataRepository(
     }
 
     /**
+     * Drop every cached TMDB detail row so the next resolve re-fetches. Used when the metadata language
+     * changes: cached rows hold language-specific text (overview, genres, title) but the cache key is only
+     * `<type>:<tmdbId>`, so without this users would keep seeing the old language until the 60-day TTL.
+     *
+     * Deliberately leaves `metadata_match` intact — a title→tmdbId match is language-independent, and
+     * keeping it avoids re-running a search for every item in a ~220k catalog.
+     */
+    suspend fun clearCacheForLanguageChange() {
+        dao.clearCache()
+    }
+
+    /**
      * Clear a movie's TMDB match (negative OR positive) and its cached details so the next [resolveMovie]
      * re-searches from scratch (plan §11.2 U5a — manual "Refetch TMDB details"). Does NOT resolve; the caller
      * re-triggers [resolveMovie] afterwards.

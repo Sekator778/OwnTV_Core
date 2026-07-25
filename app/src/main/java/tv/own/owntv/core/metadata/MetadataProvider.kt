@@ -58,9 +58,28 @@ data class MetadataConfig(
     val mode: MetadataMode = MetadataMode.PROVIDER_PLUS_TMDB,
     val tmdbApiKey: String = "",
     val customServerUrl: String = "",
+    val language: String = "",
 ) {
     /** Whether TMDB lookups should run at all. */
     val enabled: Boolean get() = mode.enrich
+
+    /**
+     * The TMDB `language` parameter value for a call, or blank to send none (TMDB then defaults to
+     * en-US — the app's behaviour before this setting existed).
+     *
+     * [LANGUAGE_AUTO] resolves to the device locale as `<lang>-<REGION>` (e.g. `el-GR`), falling back to
+     * the bare language tag when the locale carries no country. TMDB degrades gracefully: an unknown
+     * region falls back to the base language, and a field with no translation comes back in English.
+     */
+    val resolvedLanguage: String
+        get() = when {
+            language.isBlank() -> ""
+            language != LANGUAGE_AUTO -> language
+            else -> java.util.Locale.getDefault().let { l ->
+                val lang = l.language.takeIf { it.isNotBlank() } ?: return@let ""
+                if (l.country.isNotBlank()) "$lang-${l.country}" else lang
+            }
+        }
 
     /** Which tier this config resolves to (for the Settings label). */
     val tier: Tier
@@ -74,6 +93,11 @@ data class MetadataConfig(
         DEFAULT_WORKER("Default (shared)"),
         OWN_KEY("Your TMDB key"),
         SELF_HOST("Self-hosted"),
+    }
+
+    companion object {
+        /** Sentinel [language] value meaning "follow the device locale". */
+        const val LANGUAGE_AUTO = "auto"
     }
 }
 
