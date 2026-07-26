@@ -22,11 +22,18 @@ class StalkerClientTest {
         assertEquals("00:1A:79:AA:BB:CC", StalkerClient.canonicalizeMac(" 00.1a.79.aa.bb.cc "))
     }
 
+    /** Some panels issue "virtual" MACs with letters past F — those must be accepted, not rejected. */
     @Test
-    fun mac_rejectsWrongLengthAndNonHex()  {
+    fun mac_acceptsNonHexLetters() {
+        assertEquals("00:1A:79:AA:BB:PQ", StalkerClient.canonicalizeMac("00:1a:79:aa:bb:pq"))
+        assertEquals("ZZ:ZZ:ZZ:ZZ:ZZ:ZZ", StalkerClient.canonicalizeMac("zzzzzzzzzzzz"))
+    }
+
+    @Test
+    fun mac_rejectsWrongLengthAndNonAlphanumeric()  {
         assertNull(StalkerClient.canonicalizeMac("001a79aabbc"))
         assertNull(StalkerClient.canonicalizeMac("001a79aabbccdd"))
-        assertNull(StalkerClient.canonicalizeMac("001g79aabbcc"))
+        assertNull(StalkerClient.canonicalizeMac("001&79aabbcc"))
         assertNull(StalkerClient.canonicalizeMac(""))
     }
 

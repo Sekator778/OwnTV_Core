@@ -607,12 +607,17 @@ open class StalkerClient(private val client: OkHttpClient) {
 
         /**
          * Canonicalize a MAC to `AA:BB:CC:DD:EE:FF`. Accepts `aabbccddeeff`, `aa-bb-…`, `aa.bb.…`
-         * or colon form, any case. Returns null if it isn't 12 hex digits.
+         * or colon form, any case. Returns null if it isn't 12 alphanumeric characters.
+         *
+         * Deliberately NOT restricted to hex: several Stalker panels hand out "virtual" MACs that
+         * contain letters past F (e.g. …:PQ). The portal only ever echoes the string back to itself,
+         * so rejecting them locked real users out for no protocol reason. Only the 12-symbol shape
+         * is enforced, which still catches typos and truncated pastes.
          */
         fun canonicalizeMac(raw: String): String? {
-            val hex = raw.trim().replace(Regex("[:\\-. ]"), "")
-            if (hex.length != 12 || !hex.all { it.isDigit() || it.lowercaseChar() in 'a'..'f' }) return null
-            return hex.uppercase().chunked(2).joinToString(":")
+            val body = raw.trim().replace(Regex("[:\\-. ]"), "")
+            if (body.length != 12 || !body.all { it.isDigit() || it.lowercaseChar() in 'a'..'z' }) return null
+            return body.uppercase().chunked(2).joinToString(":")
         }
 
         /** Strip the `/c/` UI path and trailing slashes off whatever the user pasted → the portal root. */
