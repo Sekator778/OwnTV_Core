@@ -136,6 +136,30 @@ interface ChannelDao {
     @Query("SELECT remoteId, id, contentHash, sortOrder FROM channels WHERE sourceId = :sourceId AND remoteId IS NOT NULL")
     suspend fun contentHashesForSource(sourceId: Long): List<ContentHashProjection>
 
+    // --- Direct tune (channel-number lookup) ---
+    /** All channels whose provider number matches [number] in the given sources. Non-unique because
+     *  provider data can contain duplicates; the caller applies visibility and zap-context policy. */
+    @Query("SELECT * FROM channels WHERE sourceId IN (:sourceIds) AND number = :number ORDER BY sourceId ASC, sortOrder ASC, name ASC, id ASC")
+    suspend fun findByNumber(sourceIds: List<Long>, number: Int): List<ChannelEntity>
+
+    /** Bounded window of channels in provider order AFTER [afterSortOrder]/[afterId] within a category.
+     *  Combined with [channelsBeforeCategory] to build a neighbourhood around a tuned channel.
+     *  Ordered by (sortOrder, id) to match the cursor predicate — avoids mismatch when sortOrder ties. */
+    @Query("SELECT * FROM channels WHERE categoryId = :categoryId AND (sortOrder > :afterSortOrder OR (sortOrder = :afterSortOrder AND id > :afterId)) ORDER BY sortOrder ASC, id ASC LIMIT :limit")
+    suspend fun channelsAfterCategory(categoryId: Long, afterSortOrder: Int, afterId: Long, limit: Int): List<ChannelEntity>
+
+    /** Bounded window of channels in provider order BEFORE [beforeSortOrder]/[beforeId] within a category. */
+    @Query("SELECT * FROM channels WHERE categoryId = :categoryId AND (sortOrder < :beforeSortOrder OR (sortOrder = :beforeSortOrder AND id < :beforeId)) ORDER BY sortOrder DESC, id DESC LIMIT :limit")
+    suspend fun channelsBeforeCategory(categoryId: Long, beforeSortOrder: Int, beforeId: Long, limit: Int): List<ChannelEntity>
+
+    /** Bounded window of channels in provider order AFTER [afterSortOrder]/[afterId] within a source. */
+    @Query("SELECT * FROM channels WHERE sourceId = :sourceId AND (sortOrder > :afterSortOrder OR (sortOrder = :afterSortOrder AND id > :afterId)) ORDER BY sortOrder ASC, id ASC LIMIT :limit")
+    suspend fun channelsAfterSource(sourceId: Long, afterSortOrder: Int, afterId: Long, limit: Int): List<ChannelEntity>
+
+    /** Bounded window of channels in provider order BEFORE [beforeSortOrder]/[beforeId] within a source. */
+    @Query("SELECT * FROM channels WHERE sourceId = :sourceId AND (sortOrder < :beforeSortOrder OR (sortOrder = :beforeSortOrder AND id < :beforeId)) ORDER BY sortOrder DESC, id DESC LIMIT :limit")
+    suspend fun channelsBeforeSource(sourceId: Long, beforeSortOrder: Int, beforeId: Long, limit: Int): List<ChannelEntity>
+
     @Query("DELETE FROM channels WHERE sourceId = :sourceId AND remoteId IN (:remoteIds)")
     suspend fun deleteByRemoteIds(sourceId: Long, remoteIds: List<String>)
 

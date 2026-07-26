@@ -84,7 +84,7 @@ import tv.own.owntv.core.database.dao.SubtitleDao
         SeriesFtsEntity::class,
         EpisodeFtsEntity::class,
     ],
-    version = 19, // v7: content_order (Move). v8: contentHash + browse/unique indexes. v9: EPG contentHash + natural key. v10: TMDB metadata cache. v11: movies/series rating-sort indexes. v12: metadata_cache trailerKey. v13: metadata_cache logoPath. v14: sources.mac (Stalker portal). v15: external-subtitle cache/selection/timing tables. v16: subtitle_link (downloaded-sub ↔ content). v17: sources.syncLive/Movies/Series (skip-sync enabledScope). v18: series.episodesSyncedAt (episode-cache freshness, S8). v19: epg_channels.iconUrl (XMLTV channel logos)
+    version = 20, // v7: content_order (Move). v8: contentHash + browse/unique indexes. v9: EPG contentHash + natural key. v10: TMDB metadata cache. v11: movies/series rating-sort indexes. v12: metadata_cache trailerKey. v13: metadata_cache logoPath. v14: sources.mac (Stalker portal). v15: external-subtitle cache/selection/timing tables. v16: subtitle_link (downloaded-sub ↔ content). v17: sources.syncLive/Movies/Series (skip-sync enabledScope). v18: series.episodesSyncedAt (episode-cache freshness, S8). v19: epg_channels.iconUrl (XMLTV channel logos). v20: channels (sourceId, number) index for direct tune
 
     exportSchema = true,
 )
@@ -495,8 +495,6 @@ abstract class OwnTVDatabase : RoomDatabase() {
          * Existing rows default to 0 ("never"), so every already-cached show refreshes its episodes
          * once on next open, which is exactly what an upgrading user needs: the shows frozen by S8
          * pick up their missing episodes without deleting and re-adding the playlist.
-         *
-         * Last hop, so it carries [healSchema] (standing rule).
          */
         val MIGRATION_17_18 = object : androidx.room.migration.Migration(17, 18) {
             override fun migrate(db: androidx.sqlite.db.SupportSQLiteDatabase) {
@@ -513,6 +511,19 @@ abstract class OwnTVDatabase : RoomDatabase() {
                 if (!hasColumn(db, "epg_channels", "iconUrl")) {
                     db.execSQL("ALTER TABLE `epg_channels` ADD COLUMN `iconUrl` TEXT")
                 }
+                healSchema(db)
+            }
+        }
+
+        /**
+         * v19 → v20: non-unique `(sourceId, number)` index on `channels` for direct-tune channel-number
+         * lookup. Additive index-only migration; no data or column changes.
+         *
+         * Last hop, so it carries [healSchema] (standing rule).
+         */
+        val MIGRATION_19_20 = object : androidx.room.migration.Migration(19, 20) {
+            override fun migrate(db: androidx.sqlite.db.SupportSQLiteDatabase) {
+                db.execSQL("CREATE INDEX IF NOT EXISTS `index_channels_sourceId_number` ON `channels` (`sourceId`, `number`)")
                 healSchema(db)
             }
         }
@@ -535,6 +546,7 @@ abstract class OwnTVDatabase : RoomDatabase() {
                 "CREATE INDEX IF NOT EXISTS `index_channels_categoryId_name` ON `channels` (`categoryId`, `name`)",
                 "CREATE INDEX IF NOT EXISTS `index_channels_sourceId_sortOrder_name` ON `channels` (`sourceId`, `sortOrder`, `name`)",
                 "CREATE INDEX IF NOT EXISTS `index_channels_categoryId_sortOrder_name` ON `channels` (`categoryId`, `sortOrder`, `name`)",
+                "CREATE INDEX IF NOT EXISTS `index_channels_sourceId_number` ON `channels` (`sourceId`, `number`)",
             ),
             "movies" to listOf(
                 "CREATE INDEX IF NOT EXISTS `index_movies_sourceId` ON `movies` (`sourceId`)",

@@ -57,6 +57,7 @@ data class CategoryEntity(
         Index(value = ["categoryId", "name"]),
         Index(value = ["sourceId", "sortOrder", "name"]),
         Index(value = ["categoryId", "sortOrder", "name"]),
+        Index(value = ["sourceId", "number"]),
     ],
 )
 @Immutable
