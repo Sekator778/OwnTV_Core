@@ -19,6 +19,8 @@ import androidx.media3.exoplayer.DefaultRenderersFactory
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.exoplayer.source.DefaultMediaSourceFactory
 import androidx.media3.exoplayer.trackselection.DefaultTrackSelector
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import okhttp3.OkHttpClient
 import tv.own.owntv.core.network.HttpClient
 import java.util.Locale
@@ -81,6 +83,18 @@ class ExoSubtitleEngine(
     // timestamp-shifted copy of that file on the next (re-)prepare.
     private var subDelayMs = 0
     private var delayLabel: String? = null
+    // X2: shifted copies, keyed by source path + offset. Generating one reads, re-times and rewrites
+    // the whole subtitle file — on a big ASS that is tens to hundreds of milliseconds, and
+    // buildMediaItem runs on the main thread on every (re-)prepare, so it used to freeze the HUD on
+    // every delay nudge. The work now happens on IO once per (file, offset) and the re-prepare waits
+    // for it; returning to a previous offset is a map lookup.
+    private val shiftedSubs = java.util.concurrent.ConcurrentHashMap<String, java.io.File>()
+    private val shiftScope = kotlinx.coroutines.CoroutineScope(
+        kotlinx.coroutines.SupervisorJob() + kotlinx.coroutines.Dispatchers.Main.immediate,
+    )
+    private var shiftJob: kotlinx.coroutines.Job? = null
+
+    private fun shiftKey(path: String, offsetMs: Int) = "$path|$offsetMs"
     // Engine-fallback playback (mpv terminally failed this VOD): no auto subtitle, engine-worded errors.
     private var fallbackMode = false
     // First-frame watchdog: this handoff only exists to show an image subtitle over otherwise-healthy
@@ -88,8 +102,13 @@ class ExoSubtitleEngine(
     // renderer can't), fall back rather than leaving the user on audio with a blank screen.
     private val mainHandler = android.os.Handler(android.os.Looper.getMainLooper())
     private var firstFrameSeen = false
+    // X1: whether this file declares a video track at all. Radio stations filed under Movies, music
+    // VOD and audio-only catch-up recordings have none — nothing is broken there and the watchdog
+    // below must stay quiet. Assumed true until onTracksChanged says otherwise, so a file whose
+    // tracks never arrive is still covered. Mirrors LivePreviewEngine's `hasVideo` gate.
+    private var hasVideoTrack = true
     private val noVideoTimeout = Runnable {
-        if (!firstFrameSeen) {
+        if (!firstFrameSeen && hasVideoTrack) {
             android.util.Log.w(TAG, "no video frame after ${NO_VIDEO_TIMEOUT_MS}ms — falling back")
             callbacks.onError("Audio is playing, but video could not be rendered on this device.")
         }
@@ -153,6 +172,7 @@ class ExoSubtitleEngine(
         }
 
         override fun onTracksChanged(tracks: Tracks) {
+            updateVideoTrackPresence(tracks)
             rebuildAudioTracks(tracks)
             rebuildTextTracks(tracks)
             applyPendingSubtitle(tracks)
@@ -182,6 +202,7 @@ class ExoSubtitleEngine(
         pendingSubTypeIndex = subTypeIndex
         subtitleApplied = false
         firstFrameSeen = false
+        hasVideoTrack = true
         throughputTracker.reset(); fpsSample.resetAll(); dropsBaseline = currentDroppedFrames(player)
         mainHandler.removeCallbacks(noVideoTimeout)
         mainHandler.postDelayed(noVideoTimeout, NO_VIDEO_TIMEOUT_MS)
@@ -206,8 +227,11 @@ class ExoSubtitleEngine(
         if (externalSubs.isNotEmpty()) {
             builder.setSubtitleConfigurations(externalSubs.map { s ->
                 // Timing offset for the active external sub: side-load a timestamp-shifted copy (§8).
+                // X2 — never generate it here (main thread); setSubtitleDelayMs prepares the copy off
+                // the main thread and only re-prepares once it is in the cache. The original is the
+                // fallback, which is also what shiftedCopy itself returns on a parse/IO failure.
                 val file = if (s.title == delayLabel && subDelayMs != 0) {
-                    SubtitleShift.shiftedCopy(context, java.io.File(s.path), subDelayMs)
+                    shiftedSubs[shiftKey(s.path, subDelayMs)] ?: java.io.File(s.path)
                 } else java.io.File(s.path)
                 MediaItem.SubtitleConfiguration.Builder(android.net.Uri.fromFile(file))
                     .setMimeType(subtitleMime(s.path))
@@ -272,11 +296,28 @@ class ExoSubtitleEngine(
         val p = player ?: return
         val url = currentUrl ?: return
         if (subDelayMs == ms && delayLabel == activeLabel) return
+        val source = externalSubs.firstOrNull { it.title == activeLabel }?.path
         subDelayMs = ms
         delayLabel = activeLabel
         pendingExternalLabel = activeLabel // re-select after the re-prepare
         subtitleApplied = false
-        reprepareKeepingPosition(p, url)
+        // Nothing to generate (offset cleared, unknown label) or already generated: re-prepare now.
+        if (source == null || ms == 0 || shiftedSubs.containsKey(shiftKey(source, ms))) {
+            reprepareKeepingPosition(p, url)
+            return
+        }
+        // X2 — build the shifted copy on IO, then re-prepare. A newer offset arriving meanwhile
+        // cancels this one, and the staleness check stops a late result from re-preparing over it.
+        shiftJob?.cancel()
+        shiftJob = shiftScope.launch {
+            val shifted = withContext(kotlinx.coroutines.Dispatchers.IO) {
+                SubtitleShift.shiftedCopy(context, java.io.File(source), ms)
+            }
+            shiftedSubs[shiftKey(source, ms)] = shifted
+            if (subDelayMs != ms || delayLabel != activeLabel) return@launch
+            val current = player ?: return@launch
+            reprepareKeepingPosition(current, currentUrl ?: return@launch)
+        }
     }
 
     private fun reprepareKeepingPosition(p: ExoPlayer, url: String) {
@@ -355,6 +396,18 @@ class ExoSubtitleEngine(
         p.trackSelectionParameters = p.trackSelectionParameters.buildUpon()
             .setOverrideForType(TrackSelectionOverride(sel.group, listOf(sel.trackIndex)))
             .build()
+    }
+
+    /** X1: audio-only media is a valid state, not a device fault — cancel the no-video watchdog for
+     *  it. Only a file that *declares* a video track and never renders a frame is a real problem. */
+    private fun updateVideoTrackPresence(tracks: Tracks) {
+        if (tracks.groups.isEmpty()) return // nothing known yet — keep the watchdog armed
+        val hasVideo = tracks.groups.any { it.type == C.TRACK_TYPE_VIDEO }
+        hasVideoTrack = hasVideo
+        if (!hasVideo) {
+            android.util.Log.i(TAG, "no video track in this file — audio-only, no-video watchdog disarmed")
+            mainHandler.removeCallbacks(noVideoTimeout)
+        }
     }
 
     private fun rebuildAudioTracks(tracks: Tracks) {
@@ -548,6 +601,13 @@ class ExoSubtitleEngine(
         pendingExternalLabel = null
         subDelayMs = 0
         delayLabel = null
+        // X2 — the shifted copies only make sense for the session that generated them; drop them so
+        // they don't accumulate in cacheDir. The name guard keeps a fallback result (which is the
+        // user's own subtitle file) safe from deletion.
+        shiftJob?.cancel()
+        shiftJob = null
+        shiftedSubs.values.forEach { f -> runCatching { if (f.name.startsWith("subshift_")) f.delete() } }
+        shiftedSubs.clear()
     }
 
     fun release() = stop()

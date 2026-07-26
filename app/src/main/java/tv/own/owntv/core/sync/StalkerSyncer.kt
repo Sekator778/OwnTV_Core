@@ -13,6 +13,7 @@ import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.launch
 import tv.own.owntv.core.database.BulkInsertHelper
 import tv.own.owntv.core.database.entity.ChannelEntity
+import tv.own.owntv.core.database.entity.computeContentHash
 import tv.own.owntv.core.database.entity.MovieEntity
 import tv.own.owntv.core.database.entity.SeriesEntity
 import tv.own.owntv.core.database.entity.SourceEntity
@@ -97,6 +98,12 @@ internal class StalkerSyncer(
         }
         val total = intArrayOf(0)
         val remoteIds = if (freshSource) null else HashSet<String>()
+        // Genres/pages this pass could not fetch. A non-zero count means remoteIds is incomplete,
+        // so pruning against it would delete the missing genres' channels as "stale".
+        val pageFailures = java.util.concurrent.atomic.AtomicInteger(0)
+        // Audit S7 diagnostic: the first few channels this pass builds, so their per-field
+        // fingerprints can be compared across two consecutive syncs — see [logFieldFingerprints].
+        val fieldDiffSample = ArrayList<ChannelEntity>(FIELD_DIFF_SAMPLE)
         var order = 0
         // Small flush chunk (vs Xtream's 10k fresh) so the count appears quickly instead of the UI
         // sitting on "Connecting to source…" until the first big insert — Stalker catalogs are small
@@ -106,8 +113,7 @@ internal class StalkerSyncer(
         bulkInsertHelper.withOptimizedBulkInsert("channels", "channels_fts", eligible = freshSource, ftsOnly = true) {
             support.chunked<ChannelEntity, Unit>(ctx, SyncPhase.LIVE, label, progress, insertFn, total, remoteIds, adapter.remoteIdOf, chunkSize) { add ->
                 val emit: suspend (StalkerClient.Channel, String?) -> Unit = { ch, fallbackGenreId ->
-                    add(
-                        ChannelEntity(
+                    val entity = ChannelEntity(
                             sourceId = s.id,
                             // A channel's own tv_genre_id wins; fall back to the genre we asked for.
                             categoryId = ch.genreId?.let { catMap[it] } ?: fallbackGenreId?.let { catMap[it] },
@@ -120,8 +126,9 @@ internal class StalkerSyncer(
                             sortOrder = order++,
                             catchup = ch.archive,
                             catchupDays = ch.archiveDuration,
-                        ),
                     )
+                    if (fieldDiffSample.size < FIELD_DIFF_SAMPLE) fieldDiffSample.add(entity)
+                    add(entity)
                 }
 
                 // FAST PATH: one bulk get_all_channels download (13k channels served ~14/page would
@@ -138,16 +145,46 @@ internal class StalkerSyncer(
                     Log.w(TAG, "$label get_all_channels failed (${e.message}) — falling back to per-genre paging")
                     null
                 }
-                if (bulk != null && bulk.isNotEmpty()) {
-                    Log.i(TAG, "$label get_all_channels ok count=${bulk.size} ms=${SystemClock.elapsedRealtime() - bulkStart}")
+                // A non-empty bulk is not the same as a COMPLETE bulk: some portals answer
+                // get_all_channels with a truncated list. Cross-check the size against the portal's
+                // own declared total (the synthetic "*" genre's page 1, the same probe the VOD path
+                // uses at syncPagedCatalog) and only trust the dump when it covers that total. When
+                // the probe itself fails we can't judge, so the dump is accepted as before — the
+                // catalog-shrink guard in SyncSupport still protects the prune.
+                val declaredTotal = if (bulk != null && bulk.isNotEmpty()) {
+                    try {
+                        fetchPage(creds, "*", 1).totalItems
+                    } catch (c: kotlinx.coroutines.CancellationException) {
+                        throw c
+                    } catch (e: Exception) {
+                        Log.w(TAG, "$label bulk verification probe failed (${e.message}) — accepting dump unverified")
+                        0
+                    }
+                } else 0
+                val bulkComplete = bulk != null && bulk.isNotEmpty() && bulk.size >= declaredTotal
+                if (bulkComplete) {
+                    Log.i(TAG, "$label get_all_channels ok count=${bulk!!.size} declaredTotal=$declaredTotal ms=${SystemClock.elapsedRealtime() - bulkStart}")
                     bulk.forEach { emit(it, null) }
                 } else {
+                    if (bulk != null && bulk.isNotEmpty()) {
+                        Log.w(TAG, "$label get_all_channels truncated count=${bulk.size} declaredTotal=$declaredTotal — falling back to per-genre paging")
+                    }
                     // FALLBACK: per-genre paged fetch (portal denied/emptied the bulk list). Pages fetched
                     // CONCURRENTLY in windows; add() runs single-threaded after each window's awaitAll.
                     Log.i(TAG, "$label per-genre fallback begin genres=${genres.size}")
                     genres.forEachIndexed { gi, genre ->
                         ctx.ensureActive()
-                        val first = fetchPage(creds, genre.id, 1)
+                        // A genre that can't be fetched must not silently shrink the pass: count the
+                        // failure so the prune below is skipped (mirrors the VOD path's pageFailures).
+                        val first = try {
+                            fetchPage(creds, genre.id, 1)
+                        } catch (c: kotlinx.coroutines.CancellationException) {
+                            throw c
+                        } catch (e: Exception) {
+                            pageFailures.incrementAndGet()
+                            Log.w(TAG, "$label genre=${genre.id} page1 failed (${e.message})")
+                            return@forEachIndexed
+                        }
                         first.items.forEach { emit(it, genre.id) }
                         val maxPer = first.maxPageItems.takeIf { it > 0 } ?: first.items.size
                         val pages = (if (maxPer > 0) (first.totalItems + maxPer - 1) / maxPer else 1)
@@ -158,24 +195,70 @@ internal class StalkerSyncer(
                             ctx.ensureActive()
                             val windowEnd = minOf(page + PAGE_CONCURRENCY - 1, pages)
                             val window = coroutineScope {
-                                (page..windowEnd).map { p -> async { fetchPage(creds, genre.id, p) } }.awaitAll()
+                                (page..windowEnd).map { p ->
+                                    async {
+                                        try {
+                                            fetchPage(creds, genre.id, p)
+                                        } catch (c: kotlinx.coroutines.CancellationException) {
+                                            throw c
+                                        } catch (e: Exception) {
+                                            pageFailures.incrementAndGet()
+                                            Log.w(TAG, "$label genre=${genre.id} page=$p failed (${e.message})")
+                                            null
+                                        }
+                                    }
+                                }.awaitAll()
                             }
-                            window.forEach { pageResult -> pageResult.items.forEach { emit(it, genre.id) } }
+                            window.forEach { pageResult -> pageResult?.items?.forEach { emit(it, genre.id) } }
                             page = windowEnd + 1
                         }
                     }
                 }
             }
+            if (pageFailures.get() > 0) {
+                stats.phaseErrors["channels"] =
+                    "${pageFailures.get()} portal page(s) failed — some channels may be missing until the next sync"
+            }
             if (!freshSource && remoteIds != null) {
-                support.pruneRemoteIds(label, s.id, remoteIds, adapter.remoteIdsForSource, adapter.deleteByRemoteIds)
-                support.pruneCategories(s.id, MediaType.LIVE, categories.seenRemoteIds, label, stats)
+                if (pageFailures.get() == 0) {
+                    support.pruneRemoteIds(label, s.id, remoteIds, stats, adapter.remoteIdsForSource, adapter.deleteByRemoteIds)
+                    support.pruneCategories(s.id, MediaType.LIVE, categories.seenRemoteIds, label, stats)
+                } else {
+                    Log.i(TAG, "$label prune skipped sourceId=${s.id} reason=page_failures failures=${pageFailures.get()}")
+                }
             }
         }
 
+        logFieldFingerprints(label, s.id, fieldDiffSample)
         progress.update(SyncPhase.LIVE, total[0])
         stats.phaseTiming["channels"] = System.currentTimeMillis() - phaseStart
         stats.processedCounts["channels"] = total[0]
         Log.i(TAG, "$label phase end sourceId=${s.id} unique=${total[0]} ms=${SystemClock.elapsedRealtime() - elapsedStart}")
+    }
+
+    /**
+     * Audit S7 diagnostic — which channel field makes Stalker rewrite ~99% of its rows every sync.
+     *
+     * Stalker resyncs report `dbUpdated≈1500 dbSkipped=0` with identical counts run after run, i.e.
+     * the hash differs for nearly every channel even though the catalog plainly hasn't changed. The
+     * audit's instruction is to identify the volatile field with a real field diff *before* changing
+     * anything — excluding the wrong field from the hash would mask genuine provider updates.
+     *
+     * Each field is logged as a **hash, never a value**: a Stalker `cmd` can embed the portal host,
+     * the MAC or a play token, and these lines get pasted into bug reports. Run a sync twice and diff
+     * the two blocks — whichever `field=` number moves for the same `remoteId` is the culprit.
+     */
+    private fun logFieldFingerprints(label: String, sourceId: Long, sample: List<ChannelEntity>) {
+        sample.forEach { c ->
+            Log.i(
+                TAG,
+                "$label fieldDiff sourceId=$sourceId remoteId=${c.remoteId} hash=${c.computeContentHash()} " +
+                    "categoryId=${c.categoryId} name=${c.name.hashCode()} logoUrl=${c.logoUrl.hashCode()} " +
+                    "streamUrl=${c.streamUrl.hashCode()} epgChannelId=${c.epgChannelId.hashCode()} " +
+                    "number=${c.number} catchup=${c.catchup} catchupDays=${c.catchupDays} " +
+                    "catchupSource=${c.catchupSource.hashCode()} sortOrder=${c.sortOrder}",
+            )
+        }
     }
 
     private suspend fun syncMovies(s: SourceEntity, progress: SyncCounters, stats: SyncStatsCollector, creds: StalkerCredentials, budget: AdaptivePortalLimiter) =
@@ -408,7 +491,7 @@ internal class StalkerSyncer(
                     Log.i(TAG, "$label delta-skip sourceId=${s.id} unchangedCategories=${skippedCatDbIds.size}")
                 }
                 if (pageFailures.get() == 0) {
-                    support.pruneRemoteIds(label, s.id, remoteIds, adapter.remoteIdsForSource, adapter.deleteByRemoteIds)
+                    support.pruneRemoteIds(label, s.id, remoteIds, stats, adapter.remoteIdsForSource, adapter.deleteByRemoteIds)
                     support.pruneCategories(s.id, mediaType, categories.seenRemoteIds, label, stats)
                 } else {
                     // Failed pages mean this pass's remoteIds set is incomplete; pruning against it would
@@ -510,6 +593,9 @@ internal class StalkerSyncer(
 
         /** Flush every N channels so import progress shows early (see [chunkSize] note). */
         private const val STALKER_CHUNK = 1_500
+
+        /** How many channels the S7 field-diff diagnostic fingerprints per sync (see [logFieldFingerprints]). */
+        private const val FIELD_DIFF_SAMPLE = 3
 
         /** Total attempts per page for transient 429/5xx errors (1 original + 2 retries). */
         private const val PAGE_ATTEMPTS = 3

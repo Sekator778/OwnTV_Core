@@ -49,7 +49,7 @@ interface SeriesDao {
     @Query("SELECT remoteId FROM series WHERE sourceId = :sourceId AND remoteId IS NOT NULL")
     suspend fun remoteIdsForSource(sourceId: Long): List<String>
 
-    @Query("SELECT remoteId, id, contentHash FROM series WHERE sourceId = :sourceId AND remoteId IS NOT NULL")
+    @Query("SELECT remoteId, id, contentHash, sortOrder FROM series WHERE sourceId = :sourceId AND remoteId IS NOT NULL")
     suspend fun contentHashesForSource(sourceId: Long): List<ContentHashProjection>
 
     @Query("DELETE FROM series WHERE sourceId = :sourceId AND remoteId IN (:remoteIds)")
@@ -61,6 +61,10 @@ interface SeriesDao {
 
     @Query("SELECT remoteId FROM series WHERE sourceId = :sourceId AND categoryId = :categoryId AND remoteId IS NOT NULL")
     suspend fun remoteIdsForCategory(sourceId: Long, categoryId: Long): List<String>
+
+    /** Prune scope for the per-category sync fallback — see [MovieDao.remoteIdsInCategories]. */
+    @Query("SELECT remoteId FROM series WHERE sourceId = :sourceId AND categoryId IN (:categoryIds) AND remoteId IS NOT NULL")
+    suspend fun remoteIdsInCategories(sourceId: Long, categoryIds: List<Long>): List<String>
 
     @Query("SELECT * FROM series WHERE sourceId = :sourceId AND name = :name LIMIT 1")
     suspend fun findSeriesByName(sourceId: Long, name: String): SeriesEntity?
@@ -245,6 +249,37 @@ interface SeriesDao {
 
     @Query("DELETE FROM episodes WHERE seriesId = :seriesId")
     suspend fun deleteEpisodes(seriesId: Long)
+
+    // --- Episode refresh (S8) ---
+    // The refresh path must preserve episode row ids: watch history, resume positions and
+    // next-episode autoplay all key on them, so a delete-then-reinsert would silently detach the
+    // user's progress on every refresh. Hence read/update/insert/delete-the-gone rather than
+    // deleteEpisodes + upsertEpisodes.
+
+    @Query("SELECT * FROM episodes WHERE seriesId = :seriesId ORDER BY seasonNumber ASC, episodeNumber ASC")
+    suspend fun episodesBySeriesOnce(seriesId: Long): List<EpisodeEntity>
+
+    @Update
+    suspend fun updateEpisodes(episodes: List<EpisodeEntity>)
+
+    @Query("DELETE FROM episodes WHERE id IN (:ids)")
+    suspend fun deleteEpisodesByIds(ids: List<Long>)
+
+    /** Stamps a show's episode cache as freshly loaded (epoch ms). */
+    @Query("UPDATE series SET episodesSyncedAt = :at WHERE id = :seriesId")
+    suspend fun markEpisodesSynced(seriesId: Long, at: Long)
+
+    /**
+     * Invalidates every episode cache belonging to a source, so the next open of any of its shows
+     * re-fetches. Called after a successful sync: "just resync" is what a user does when episodes
+     * look stale, and before S8 that did nothing at all for episodes.
+     *
+     * The `!= 0` keeps this proportional to the shows actually opened rather than to the catalog:
+     * a 46k-series source where the user has opened twelve shows writes twelve rows. It also makes
+     * the call a genuine no-op for M3U, whose shows are never stamped.
+     */
+    @Query("UPDATE series SET episodesSyncedAt = 0 WHERE sourceId = :sourceId AND episodesSyncedAt != 0")
+    suspend fun invalidateEpisodeCaches(sourceId: Long)
 
     @Query("DELETE FROM seasons WHERE seriesId = :seriesId")
     suspend fun deleteSeasons(seriesId: Long)

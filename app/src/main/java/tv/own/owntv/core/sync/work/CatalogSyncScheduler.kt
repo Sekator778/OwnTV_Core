@@ -20,6 +20,11 @@ class CatalogSyncScheduler(private val context: Context) {
         contentTypes: SyncContentTypes = SyncContentTypes(),
         baseItemCount: Int = 0,
         completesInitialSync: Boolean = false,
+        /**
+         * User asked for a clean resync: bypasses the catalog-shrink prune guard for this run only,
+         * so titles the provider no longer lists are removed. Never set for an automatic sync.
+         */
+        forcePrune: Boolean = false,
         policy: ExistingWorkPolicy = ExistingWorkPolicy.REPLACE,
     ) {
         val request = OneTimeWorkRequestBuilder<CatalogSyncWorker>()
@@ -31,6 +36,7 @@ class CatalogSyncScheduler(private val context: Context) {
                 CatalogSyncWorker.KEY_MOVIES to contentTypes.movies,
                 CatalogSyncWorker.KEY_SERIES to contentTypes.series,
                 CatalogSyncWorker.KEY_COMPLETES_INITIAL_SYNC to completesInitialSync,
+                CatalogSyncWorker.KEY_FORCE_PRUNE to forcePrune,
             ))
             .setConstraints(
                 Constraints.Builder()

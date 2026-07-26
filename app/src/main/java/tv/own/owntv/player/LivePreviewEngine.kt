@@ -52,6 +52,7 @@ class LivePreviewEngine(
     private val okHttpClient: OkHttpClient,
     private val diagnostics: PlayerDiagnostics,
     settings: tv.own.owntv.features.settings.data.SettingsRepository,
+    connectivity: tv.own.owntv.core.network.ConnectivityObserver,
 ) : PlaybackEngine {
 
     // Escape-hatch toggle (Settings → Video player → Diagnostics). When off, no live fps/bitrate
@@ -314,6 +315,39 @@ class LivePreviewEngine(
     // from re-arming and stops error/IDLE from calling reconnect() again until a fresh play()/retry().
     private var gaveUp = false
     private val stallWatchdog = Runnable { reconnect("buffering stalled") }
+    // A STATE_READY on its own is not recovery — a feed that flaps READY→stall→READY every few seconds
+    // used to zero retryCount on each blip, so the ladder never advanced and never gave up. The count is
+    // only cleared once playback has held for [HEALTHY_MS]; any reconnect cancels this.
+    private val healthyReset = Runnable {
+        if (retryCount > 0) LiveDiagnosticsLog.event("playback healthy for ${HEALTHY_MS}ms — reconnect ladder reset")
+        retryCount = 0
+    }
+
+    // Auto-resume after the ladder is spent. The ladder covers ~2 minutes of blind retrying, which is as
+    // far as guessing usefully goes — a longer ladder would only make a genuinely dead provider take
+    // longer to report. Past that we stop guessing and wait to be told: when the network comes back,
+    // resume the channel we were parked on. An outage of any length then recovers by itself, while a
+    // provider outage (network never dropped, so nothing fires here) still surfaces its error.
+    init {
+        connectivity.isOnline
+            .onEach { online -> if (online) onNetworkRestored() }
+            .launchIn(settingsScope)
+    }
+
+    /**
+     * The network came back. Only act when a live channel is sitting on the terminal "Lost connection"
+     * state — anything else is either already playing, already recovering, or was stopped on purpose,
+     * and must not be restarted behind the user's back.
+     */
+    private fun onNetworkRestored() {
+        if (!gaveUp || currentUrl == null || !hasPlayed || stoppingIntentionally) return
+        LiveDiagnosticsLog.event("network restored — resuming the channel the ladder gave up on")
+        gaveUp = false
+        retryCount = 0
+        _error.value = null; _errorInfo.value = null
+        _state.value = State.LOADING; _buffering.value = true
+        reconnect("network restored")
+    }
 
     // Silent-freeze watchdog. A live HLS feed can keep ExoPlayer in STATE_READY with the playback CLOCK
     // still advancing — no buffering event, no onPlayerError — while the video renderer has stopped
@@ -440,7 +474,10 @@ class LivePreviewEngine(
                 Player.STATE_READY -> {
                     val resumed = hasPlayed // a READY after first play == recovered from a buffer/stall
                     _state.value = State.PLAYING; _buffering.value = false
-                    hasPlayed = true; retryCount = 0; mainHandler.removeCallbacks(stallWatchdog)
+                    hasPlayed = true; mainHandler.removeCallbacks(stallWatchdog)
+                    // Recovery is measured, not assumed: arm the ladder reset and let it fire only if this
+                    // READY actually holds (see [healthyReset]).
+                    mainHandler.removeCallbacks(healthyReset); mainHandler.postDelayed(healthyReset, HEALTHY_MS)
                     if (resumed) LiveDiagnosticsLog.event("playing — READY, spinner cleared, stallWatchdog cancelled")
                     // (re)start the silent-freeze poll now that we're actually playing. Reset the frame
                     // baseline so the freeze window is measured from this READY (a healthy stream renders its
@@ -570,6 +607,7 @@ class LivePreviewEngine(
         currentUrl = url
         hasPlayed = false; retryCount = 0; reconnectPending = false; gaveUp = false
         mainHandler.removeCallbacks(stallWatchdog); mainHandler.removeCallbacks(progressWatchdog); mainHandler.removeCallbacks(fpsFastRefresh)
+        mainHandler.removeCallbacks(healthyReset)
         audioTrackList = emptyList(); audioSelections = emptyList(); _audioCount.value = 0
         textTrackList = emptyList(); textSelections = emptyList(); _subCount.value = 0
         _subtitleOn.value = false; _cues.value = emptyList(); _audioUnsupported.value = false
@@ -639,6 +677,7 @@ class LivePreviewEngine(
         currentUrl = null
         hasPlayed = false; retryCount = 0; reconnectPending = false; gaveUp = false
         mainHandler.removeCallbacks(stallWatchdog); mainHandler.removeCallbacks(progressWatchdog); mainHandler.removeCallbacks(fpsFastRefresh)
+        mainHandler.removeCallbacks(healthyReset)
         frameCounter.set(0); lastFrameCount = 0; everRendered = false; lastProgressPos = -1L; frozenChecks = 0
         audioTrackList = emptyList(); audioSelections = emptyList(); _audioCount.value = 0
         textTrackList = emptyList(); textSelections = emptyList(); _subCount.value = 0
@@ -656,6 +695,7 @@ class LivePreviewEngine(
         stoppingIntentionally = true
         mainHandler.removeCallbacks(stallWatchdog)
         mainHandler.removeCallbacks(progressWatchdog)
+        mainHandler.removeCallbacks(healthyReset)
         player?.run { removeListener(listener); release() }
         player = null
         videoRenderer = null
@@ -674,6 +714,7 @@ class LivePreviewEngine(
      *  which is correct for M3U/Xtream and direct-URL Stalker portals). */
     private fun reconnect(reason: String) {
         mainHandler.removeCallbacks(stallWatchdog); mainHandler.removeCallbacks(progressWatchdog); mainHandler.removeCallbacks(fpsFastRefresh)
+        mainHandler.removeCallbacks(healthyReset) // this attempt is a failure, not a recovery
         val p = player
         val url = currentUrl
         if (p == null || url == null || retryCount >= MAX_RECONNECTS) {
@@ -689,7 +730,7 @@ class LivePreviewEngine(
         reconnectPending = true
         _error.value = null; _errorInfo.value = null; _state.value = State.LOADING; _buffering.value = true
         LiveDiagnosticsLog.event("reconnect attempt $retryCount/$MAX_RECONNECTS reason=$reason")
-        val delayMs = (1500L * retryCount).coerceAtMost(4000L)
+        val delayMs = reconnectDelayMs(retryCount)
         // Resolve a fresh URL off-main (Stalker create_link is a network call) before the delayed reload.
         val provider = reconnectUrlProvider
         scope.launch {
@@ -932,6 +973,24 @@ class LivePreviewEngine(
 
     companion object {
         private const val MAX_RECONNECTS = 8        // ~consecutive failures before giving up (HUD Retry then)
+        /** Playback must hold this long before the reconnect ladder is considered recovered. */
+        internal const val HEALTHY_MS = 60_000L
+
+        /**
+         * The reconnect backoff ladder, in milliseconds. The old rule — `1500 * n` capped at 4 s — hammered
+         * a dead feed eight times inside ~26 s and gave up, so a router reboot or a provider restart that
+         * takes a minute always ended in "Lost connection". These steps span the ladder over ~35 s and
+         * then hold at the last one, which comfortably outlives a typical blip.
+         */
+        private val RECONNECT_DELAYS_MS = longArrayOf(1_500L, 3_000L, 6_000L, 10_000L, 15_000L)
+
+        /**
+         * Delay before reconnect attempt [attempt] (1-based, as [retryCount] is post-increment). Attempts
+         * past the ladder repeat its final step. Pure, so the schedule is unit-testable.
+         */
+        internal fun reconnectDelayMs(attempt: Int): Long =
+            RECONNECT_DELAYS_MS[(attempt - 1).coerceIn(0, RECONNECT_DELAYS_MS.lastIndex)]
+
         private const val STALL_MS = 12_000L        // buffering this long after playing == a dropped feed
         private const val PROGRESS_CHECK_MS = 2_500L // poll interval for the silent-freeze watchdog
         private const val FROZEN_LIMIT = 3          // picture frozen this many polls (~7.5s) == a dropped feed

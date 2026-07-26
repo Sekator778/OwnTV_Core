@@ -163,10 +163,133 @@ class OwnTVDatabaseMigrationTest {
             assertColumnExists(sqlite, "sources", "syncLive")
             assertColumnExists(sqlite, "sources", "syncMovies")
             assertColumnExists(sqlite, "sources", "syncSeries")
+            assertColumnExists(sqlite, "series", "episodesSyncedAt")
             assertCount(sqlite, "profiles", 1)
         } finally {
             db.close()
         }
+    }
+
+    /**
+     * D2 — the tests above each pick one interesting starting version, which leaves the hops in
+     * between covered only by accident. A user can arrive from *any* shipped version, so every
+     * exported schema must migrate all the way to the current one and pass Room's full-schema
+     * validation. This is the test that fails when a new migration is added without its predecessor
+     * being reachable, or when a hand-written migration drifts from the entity definitions.
+     *
+     * Schema-only on purpose: seeding each version would mean hand-maintaining a column list per
+     * version, and data preservation is already asserted from v2/v3/v7 above.
+     */
+    @Test
+    fun everyExportedSchemaVersionMigratesToCurrent() {
+        MIGRATABLE_START_VERSIONS.forEach { version ->
+            context.deleteDatabase(DB_NAME)
+            val old = context.openOrCreateDatabase(DB_NAME, Context.MODE_PRIVATE, null)
+            try {
+                executeSchemaQueries(old, "tv.own.owntv.core.database.OwnTVDatabase/$version.json")
+                old.version = version
+            } finally {
+                old.close()
+            }
+
+            val db = openWithAllMigrations()
+            try {
+                // Room validates the whole schema while opening; a broken hop throws here.
+                val sqlite = db.openHelper.readableDatabase
+                assertEquals("v$version did not reach the current version", CURRENT_VERSION, sqlite.version)
+                OwnTVDatabase.EXPECTED_NON_UNIQUE_INDEXES.values.flatten().forEach {
+                    assertIndexExists(sqlite, indexNameOf(it))
+                }
+            } finally {
+                db.close()
+            }
+        }
+    }
+
+    /**
+     * D2 — MIGRATION_4_6 skips version 5 rather than shipping 4→5 and 5→6. That is only safe
+     * because v5 never reached a public build: it existed on dev machines for one change to
+     * `favorites` that was reverted before release, so 4.json and 6.json describe the identical
+     * schema (same identityHash). If a future change ever makes them differ, this no-op hop would
+     * silently leave a v4 database malformed — so pin the property the shortcut depends on.
+     */
+    @Test
+    fun migration4to6IsANoOpBecauseVersion5WasNeverPublic() {
+        assertEquals(4, OwnTVDatabase.MIGRATION_4_6.startVersion)
+        assertEquals(6, OwnTVDatabase.MIGRATION_4_6.endVersion)
+        assertEquals(
+            "4.json and 6.json describe different schemas — MIGRATION_4_6 can no longer be a no-op",
+            identityHashOf(4),
+            identityHashOf(6),
+        )
+    }
+
+    /**
+     * D2 — [OwnTVDatabase.healSchema] is the last line of defence against the interrupted-import
+     * drift that crash-looped 4.0.x → 4.1.0. The test above proves it rescues one drifted upgrade;
+     * this one proves it is complete: strip *every* object it claims to guarantee (all non-unique
+     * indexes on the bulk-synced tables and all four external-content FTS tables) from a current
+     * database, heal, and require the full set back — each FTS table actually queryable, not just
+     * present in sqlite_master.
+     */
+    @Test
+    fun healSchemaRestoresEveryGuaranteedIndexAndFtsTable() {
+        context.deleteDatabase(DB_NAME)
+        val expectedIndexes = OwnTVDatabase.EXPECTED_NON_UNIQUE_INDEXES.values.flatten().map(::indexNameOf)
+        val expectedFts = OwnTVDatabase.EXPECTED_FTS_TABLES.keys
+
+        val current = context.openOrCreateDatabase(DB_NAME, Context.MODE_PRIVATE, null)
+        try {
+            executeSchemaQueries(current, "tv.own.owntv.core.database.OwnTVDatabase/$CURRENT_VERSION.json")
+            current.execSQL("INSERT INTO profiles (id, name, avatarColor, avatarId, isKids, pinHash, createdAt) VALUES (1, 'Primary', 1122867, 7, 0, NULL, 1)")
+            expectedIndexes.forEach { current.execSQL("DROP INDEX IF EXISTS `$it`") }
+            expectedFts.forEach { current.execSQL("DROP TABLE IF EXISTS `$it`") }
+            current.version = CURRENT_VERSION
+        } finally {
+            current.close()
+        }
+
+        val db = openWithAllMigrations()
+        try {
+            val sqlite = db.openHelper.writableDatabase
+            // Opening at the current version runs no migration, so nothing has healed yet.
+            expectedIndexes.forEach { assertMissing(sqlite, "index", it) }
+            expectedFts.forEach { assertMissing(sqlite, "table", it) }
+
+            OwnTVDatabase.healSchema(sqlite)
+
+            expectedIndexes.forEach { assertIndexExists(sqlite, it) }
+            expectedFts.forEach { fts ->
+                assertTableExists(sqlite, fts)
+                // A CREATE VIRTUAL TABLE that registered but is unusable (missing shadow tables,
+                // content table mismatch) only shows up when something reads from it.
+                countRows(sqlite, "SELECT COUNT(*) FROM `$fts`")
+            }
+            // Idempotent: the app runs this on every drifted open.
+            OwnTVDatabase.healSchema(sqlite)
+            expectedIndexes.forEach { assertIndexExists(sqlite, it) }
+            assertCount(sqlite, "profiles", 1)
+        } finally {
+            db.close()
+        }
+    }
+
+    /** `CREATE INDEX IF NOT EXISTS \`name\` ON …` -> `name`. */
+    private fun indexNameOf(createSql: String) =
+        createSql.substringAfter("IF NOT EXISTS `").substringBefore('`')
+
+    private fun identityHashOf(version: Int): String {
+        val asset = "tv.own.owntv.core.database.OwnTVDatabase/$version.json"
+        val json = JSONObject(testContext.assets.open(asset).bufferedReader().use { it.readText() })
+        return json.getJSONObject("database").getString("identityHash")
+    }
+
+    private fun assertMissing(db: SupportSQLiteDatabase, type: String, name: String) {
+        assertEquals(
+            "$type $name should not exist yet",
+            0L,
+            countRows(db, "SELECT COUNT(*) FROM sqlite_master WHERE type = ? AND name = ?", arrayOf<Any?>(type, name)),
+        )
     }
 
     private fun openWithAllMigrations() = Room.databaseBuilder(context, OwnTVDatabase::class.java, DB_NAME)
@@ -186,6 +309,7 @@ class OwnTVDatabaseMigrationTest {
             OwnTVDatabase.MIGRATION_14_15,
             OwnTVDatabase.MIGRATION_15_16,
             OwnTVDatabase.MIGRATION_16_17,
+            OwnTVDatabase.MIGRATION_17_18,
         )
         .allowMainThreadQueries()
         .build()
@@ -341,5 +465,17 @@ class OwnTVDatabaseMigrationTest {
 
     companion object {
         private const val DB_NAME = "owntv-migration-test.db"
+
+        /** Must match `@Database(version = …)` on [OwnTVDatabase]. */
+        private const val CURRENT_VERSION = 18
+
+        /**
+         * Every version with an exported schema that a real database can be sitting at.
+         * Deliberate omissions:
+         *  - 1 and 8 were never exported, so no database can be reconstructed at them.
+         *  - 5 exists on disk but was never public and has no migration out of it (MIGRATION_4_6
+         *    jumps over it); see [migration4to6IsANoOpBecauseVersion5WasNeverPublic].
+         */
+        private val MIGRATABLE_START_VERSIONS = listOf(2, 3, 4, 6, 7, 9) + (10 until CURRENT_VERSION)
     }
 }

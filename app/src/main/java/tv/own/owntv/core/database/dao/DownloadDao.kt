@@ -34,6 +34,13 @@ interface DownloadDao {
     @Query("SELECT * FROM downloads WHERE status = :status ORDER BY createdAt ASC")
     suspend fun byStatus(status: DownloadStatus): List<DownloadEntity>
 
+    /**
+     * The download queue, oldest first. RUNNING counts as pending: a row is only left in that state
+     * when the process died mid-transfer, and it resumes from the partial file.
+     */
+    @Query("SELECT * FROM downloads WHERE status IN ('QUEUED', 'RUNNING') ORDER BY createdAt ASC")
+    suspend fun pending(): List<DownloadEntity>
+
     @Query("SELECT COUNT(*) FROM downloads WHERE profileId = :profileId")
     fun count(profileId: Long): Flow<Int>
 

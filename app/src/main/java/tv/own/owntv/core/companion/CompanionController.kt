@@ -56,6 +56,10 @@ class CompanionController(context: Context) {
 
     /** Bundled Lora TTF bytes, loaded once and served on the web form; null if the resource can't be read. */
     private val loraBytes: ByteArray? by lazy {
+        // openRawResource serves any file-backed resource, not just res/raw; a font is exactly that,
+        // and we want the TTF bytes verbatim rather than a loaded Typeface. runCatching covers the
+        // resource being unavailable, which is the only thing the lint check is protecting against.
+        @Suppress("ResourceType")
         runCatching { appContext.resources.openRawResource(R.font.lora_variable).use { it.readBytes() } }
             .onFailure { Log.w(TAG, "Could not load Lora for companion web form; falling back to serif", it) }
             .getOrNull()
@@ -95,6 +99,13 @@ class CompanionController(context: Context) {
                 onBackup = ::onBackupUploaded,
                 onImage = ::onImageUploaded,
                 downloadFile = downloadFile,
+                onLocked = {
+                    // The server has already stopped itself; just reflect it on the TV so the user
+                    // knows why the link went away and that restarting gives them a new PIN.
+                    Log.w(TAG, "Companion link locked out after repeated wrong PINs")
+                    currentPin = ""
+                    _state.value = CompanionServerState.Locked
+                },
             )
             _state.value = CompanionServerState.Listening(
                 port = port,

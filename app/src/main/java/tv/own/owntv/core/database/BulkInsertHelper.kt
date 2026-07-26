@@ -122,7 +122,14 @@ class BulkInsertHelper(
         if (state.triggerSql != null) sdb.execSQL(state.triggerSql)
 
         val restoredIndexCount = if (ftsOnly) 0 else canonical.size
-        Log.i(TAG, "Restored $restoredIndexCount indexes${if (state.ftsTable != null) " + FTS" else ""} on ${state.table} ms=${SystemClock.elapsedRealtime() - start}")
+        val msg = "Restored $restoredIndexCount indexes${if (state.ftsTable != null) " + FTS" else ""} on ${state.table} ms=${SystemClock.elapsedRealtime() - start}"
+        // Zero is never valid for a table whose indexes we just dropped: it means the canonical set
+        // is missing, so the table is now permanently index-less. Shout about it.
+        if (!ftsOnly && canonical.isEmpty()) {
+            Log.e(TAG, "$msg — no canonical indexes for ${state.table}, indexes were dropped and NOT restored")
+        } else {
+            Log.i(TAG, msg)
+        }
     }
 
     private fun requireKnownTable(table: String) {
@@ -149,8 +156,14 @@ class BulkInsertHelper(
         const val CHUNK_FRESH = 10_000
 
         private const val TAG = "BulkInsertHelper"
-        private val KNOWN_TABLES = setOf("channels", "movies", "series", "epg_programmes")
-        private val KNOWN_ANALYZE_TABLES = KNOWN_TABLES + setOf("categories", "epg_channels")
+        // Derived, never hand-maintained: restoreIndexes() rebuilds a table from its canonical
+        // entry in EXPECTED_NON_UNIQUE_INDEXES, so a table that is bulk-droppable but missing from
+        // that map would have its indexes dropped and never restored — silently, until the next
+        // migration's schema validation crash-loops the app on upgrade (the 4.1.0 failure mode).
+        // Deriving the set makes that combination impossible to express.
+        internal val KNOWN_TABLES: Set<String> get() = OwnTVDatabase.EXPECTED_NON_UNIQUE_INDEXES.keys
+        // Deliberately wider than KNOWN_TABLES: these are analyzed but never bulk-dropped.
+        private val KNOWN_ANALYZE_TABLES: Set<String> get() = KNOWN_TABLES + setOf("categories", "epg_channels")
         private val KNOWN_FTS = setOf("channels_fts", "movies_fts", "series_fts")
 
         // One app-wide lock for bulk-mode state + index/FTS DDL — held only for the short state

@@ -1,5 +1,6 @@
 package tv.own.owntv.core.backup
 
+import android.util.Log
 import androidx.room.withTransaction
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
@@ -161,14 +162,40 @@ class BackupManager(
                 }
             }
             if (!folder.exists()) folder.mkdirs()
-            val out = File(folder, "owntv-backup.json")
-            out.writeText(root.toString(2))
-            out.absolutePath
+            writeAtomically(File(folder, BACKUP_FILENAME), root.toString(2))
         }
+    }
+
+    /**
+     * Read a backup file, falling back to the rotated `.bak` when the primary is missing or is not
+     * parseable JSON — the case an interrupted pre-atomic export used to leave behind.
+     */
+    private fun readBackupJson(file: File): JSONObject {
+        val primary = runCatching { JSONObject(file.readText()) }
+        if (primary.isSuccess) return primary.getOrThrow()
+        val bak = File(file.parentFile, "${file.name}$BAK_SUFFIX")
+        if (bak.exists()) {
+            runCatching { JSONObject(bak.readText()) }.getOrNull()?.let { return it }
+        }
+        throw primary.exceptionOrNull() ?: IllegalStateException("Not an OwnTV backup file")
     }
 
     /** Result of inspecting a backup file: which sections it holds, and whether secrets are encrypted. */
     data class Inspection(val sections: Set<Section>, val encrypted: Boolean)
+
+    /**
+     * Outcome of a restore: how many rows/entries were applied, and how many `sources[]` entries were
+     * left out because this build doesn't know their [SourceType] (B4 — see [sourceFrom]).
+     */
+    data class ImportSummary(val items: Int, val skippedSources: Int = 0) {
+        /** A sentence to append to the user-facing restore message, empty when nothing was skipped. */
+        val skippedNote: String
+            get() = when (skippedSources) {
+                0 -> ""
+                1 -> " 1 source was skipped — it uses a playlist type this version doesn't support."
+                else -> " $skippedSources sources were skipped — they use playlist types this version doesn't support."
+            }
+    }
 
     /** Thrown when a backup is encrypted and the supplied passphrase is wrong (or missing where required). */
     class WrongPasswordException : Exception("Wrong backup password")
@@ -176,7 +203,7 @@ class BackupManager(
     /** What a backup file contains + whether it carries encrypted secrets (older files have no "sections"). */
     suspend fun sectionsIn(file: File): Result<Inspection> = withContext(Dispatchers.IO) {
         runCatching {
-            val root = JSONObject(file.readText())
+            val root = readBackupJson(file)
             val out = mutableSetOf<Section>()
             // v11+ files always carry "profiles" (backup is profile-based); only "sources" marks the
             // Sources section. Older files wrote both together, so this reads them identically.
@@ -227,9 +254,9 @@ class BackupManager(
         file: File,
         sections: Set<Section> = Section.entries.toSet(),
         backupPassword: String? = null,
-    ): Result<Int> = withContext(Dispatchers.IO) {
+    ): Result<ImportSummary> = withContext(Dispatchers.IO) {
         runCatching {
-            val root = JSONObject(file.readText())
+            val root = readBackupJson(file)
             val crypto = root.optJSONObject("crypto")
             val pass = backupPassword?.takeIf { it.isNotBlank() }
             var existingProfileIds = profileDao.getAllOnce().map { it.id }.toSet()
@@ -249,6 +276,9 @@ class BackupManager(
             }
 
             var count = 0
+            // Sources whose "type" this build can't parse: skipped rather than coerced (B4), and
+            // reported back so the restore message can say what was left out.
+            var skippedSources = 0
 
             // Id remapping (file id → device id). Filled during the profile/source merge below. When
             // the SOURCES section isn't being restored, matching still runs read-only so the other
@@ -261,18 +291,33 @@ class BackupManager(
             val fileSources = root.optJSONArray("sources") ?: JSONArray()
             val applySources = Section.SOURCES in sections && (root.has("profiles") || root.has("sources"))
 
+            // Interrupted-restore marker (B2): set before the first write of any kind, cleared only
+            // after the last one. A restore spans the database AND several DataStore files, so no
+            // single transaction can cover it; the marker is what makes a half-applied restore
+            // visible instead of silent (the shell prompts about it at the next launch).
+            settings.markRestoreStarted("${file.name} · ${sections.joinToString(", ") { it.name }}")
+            Log.i(
+                TAG,
+                "Restore start file=${file.name} sections=${sections.joinToString(",") { it.name }} " +
+                    "encrypted=${crypto != null} key=${key != null} profiles=${fileProfiles.length()} sources=${fileSources.length()}",
+            )
+
             // MERGE-restore (owner decision): a restore never deletes existing profiles or sources.
-            // One transaction still wraps all row writes so a crash mid-import changes nothing.
+            // One transaction wraps the profile/source/link row writes — the part where a partial
+            // apply would be actively wrong (a source inserted but its profile link missing). The
+            // DataStore-backed sections below (settings, customizations, engine pins, logins) can't
+            // join it, and neither can the user-data resolve, which is deliberately chunked (B3) so
+            // a large restore doesn't hold one write transaction for its whole duration.
             db.withTransaction {
                 // --- profiles: match by NAME (case-insensitive) — ids are per-device counters and
                 // collide across devices, so they can't identify a person. Match → update in place;
                 // new name → insert (keeping the file id only when it's free).
                 val deviceProfiles = profileDao.getAllOnce()
-                val byName = deviceProfiles.associateBy { it.name.trim().lowercase() }
+                val byName = deviceProfiles.associateBy { profileMatchKey(it.name) }
                 val takenProfileIds = deviceProfiles.map { it.id }.toMutableSet()
                 for (i in 0 until fileProfiles.length()) {
                     val incoming = profileFrom(fileProfiles.getJSONObject(i))
-                    val existing = byName[incoming.name.trim().lowercase()]
+                    val existing = byName[profileMatchKey(incoming.name)]
                     when {
                         existing != null -> {
                             if (applySources) {
@@ -300,12 +345,15 @@ class BackupManager(
                 // --- sources: match by type+URL+username. Match → keep the device row (refresh the
                 // secrets/extras the file carries); unknown → insert. Nothing is wiped.
                 val deviceSources = sourceDao.getAllOnce()
-                fun keyOf(type: String, url: String, user: String?) = "$type|${url.trim()}|${user.orEmpty()}"
-                val byKey = deviceSources.associateBy { keyOf(it.type.name, it.url, it.username) }
+                val byKey = deviceSources.associateBy { sourceMatchKey(it.type.name, it.url, it.username) }
                 val takenSourceIds = deviceSources.map { it.id }.toMutableSet()
                 for (i in 0 until fileSources.length()) {
                     val incoming = sourceFrom(fileSources.getJSONObject(i), unseal)
-                    val existing = byKey[keyOf(incoming.type.name, incoming.url, incoming.username)]
+                    if (incoming == null) {
+                        skippedSources++
+                        continue
+                    }
+                    val existing = byKey[sourceMatchKey(incoming.type.name, incoming.url, incoming.username)]
                     when {
                         existing != null -> {
                             if (applySources) {
@@ -365,7 +413,7 @@ class BackupManager(
                     val mapped = sourceIdMap[root.getLong("defaultSourceId")] ?: root.getLong("defaultSourceId")
                     settings.importDefaultSource(mapped, sourceIds)
                 }
-                count += fileProfiles.length() + fileSources.length()
+                count += fileProfiles.length() + fileSources.length() - skippedSources
             }
 
             if (Section.CUSTOMIZE in sections) {
@@ -390,9 +438,15 @@ class BackupManager(
                 // Keys embed the source id ("movie:<sourceId>:…") — remap before merging.
                 root.optString("tmdbOverrides").takeIf { it.isNotBlank() }?.let { raw ->
                     runCatching {
-                        tmdbOverrides.importJson(remapTmdbOverrideKeys(raw, sourceIdMap)).forEach { k ->
-                            metadataDao.deleteMatch(k)
-                            metadataDao.deleteCache(k)
+                        val touched = tmdbOverrides.importJson(remapTmdbOverrideKeys(raw, sourceIdMap))
+                        // One transaction for the cache invalidation: these two deletes per key are
+                        // a pair — a half-done pass would leave a stale details row keyed to a match
+                        // that's already gone, which reads back as the old title's artwork.
+                        db.withTransaction {
+                            touched.forEach { k ->
+                                metadataDao.deleteMatch(k)
+                                metadataDao.deleteCache(k)
+                            }
                         }
                     }
                 }
@@ -461,7 +515,9 @@ class BackupManager(
                     }
                 }
             }
-            count
+            settings.clearRestoreMarker()
+            Log.i(TAG, "Restore done items=$count skippedSources=$skippedSources")
+            ImportSummary(items = count, skippedSources = skippedSources)
         }
     }
 
@@ -498,65 +554,6 @@ class BackupManager(
         return null
     }
 
-    // --- merge-restore id remapping helpers ---
-
-    /** Rewrites an id-keyed JSON map ({"<fileId>": …}) to device ids; unmapped keys pass through. */
-    private fun remapKeys(o: JSONObject, idMap: Map<Long, Long>): JSONObject {
-        if (idMap.isEmpty()) return o
-        val out = JSONObject()
-        o.keys().forEach { k ->
-            val mapped = k.toLongOrNull()?.let { idMap[it] }?.toString() ?: k
-            out.put(mapped, o.get(k))
-        }
-        return out
-    }
-
-    /** Rewrites the "<sourceId>:<rest>" content keys inside one SectionCustomizations JSON blob. */
-    private fun remapCustomizationValue(raw: String, sourceIdMap: Map<Long, Long>): String {
-        if (sourceIdMap.isEmpty()) return raw
-        fun remapContentKey(k: String): String {
-            val sid = k.substringBefore(':').toLongOrNull() ?: return k
-            val mapped = sourceIdMap[sid] ?: return k
-            return "$mapped:${k.substringAfter(':')}"
-        }
-        return runCatching {
-            val o = JSONObject(raw)
-            val out = JSONObject()
-            o.keys().forEach { field ->
-                when (val v = o.get(field)) {
-                    is JSONArray -> out.put(field, JSONArray().apply { for (i in 0 until v.length()) put(remapContentKey(v.getString(i))) })
-                    is JSONObject -> out.put(field, JSONObject().apply { v.keys().forEach { k -> put(remapContentKey(k), v.get(k)) } })
-                    else -> out.put(field, v)
-                }
-            }
-            out.toString()
-        }.getOrDefault(raw)
-    }
-
-    /** Rewrites "type:<sourceId>:<rest>" keys of the custom-TMDB-name map to device source ids. */
-    private fun remapTmdbOverrideKeys(raw: String, sourceIdMap: Map<Long, Long>): String {
-        if (sourceIdMap.isEmpty()) return raw
-        return runCatching {
-            val o = JSONObject(raw)
-            val out = JSONObject()
-            o.keys().forEach { k ->
-                val parts = k.split(':', limit = 3)
-                val mapped = if (parts.size == 3) {
-                    parts[1].toLongOrNull()?.let { sourceIdMap[it] }?.let { "${parts[0]}:$it:${parts[2]}" } ?: k
-                } else k
-                out.put(mapped, o.get(k))
-            }
-            out.toString()
-        }.getOrDefault(raw)
-    }
-
-    /** Keeps only the entries of a profile-id-keyed JSON map that belong to the ticked profiles. */
-    private fun filterByProfile(map: JSONObject, pidKeys: Set<String>): JSONObject {
-        val out = JSONObject()
-        map.keys().forEach { k -> if (k in pidKeys) out.put(k, map.get(k)) }
-        return out
-    }
-
     private fun kindsFor(sections: Set<Section>): Set<String> = buildSet {
         if (Section.FAVORITES in sections) add("fav")
         if (Section.HISTORY in sections) add("his")
@@ -590,22 +587,159 @@ class BackupManager(
         put("createdAt", s.createdAt); put("lastSyncAt", s.lastSyncAt ?: JSONObject.NULL)
     }
 
-    private fun sourceFrom(o: JSONObject, unseal: (Any?) -> String?) = SourceEntity(
-        id = o.getLong("id"), name = o.getString("name"),
-        type = runCatching { SourceType.valueOf(o.getString("type")) }.getOrDefault(SourceType.M3U),
-        url = o.getString("url"), username = o.optStringOrNull("username"),
-        password = if (o.isNull("password")) null else unseal(o.opt("password")),
-        // Stalker MAC: restored from its encrypted block when a passphrase was given; null on backups
-        // older than v10 (no "mac" key) or when the MAC was omitted (no passphrase).
-        mac = if (o.isNull("mac")) null else unseal(o.opt("mac")),
-        userAgent = o.optStringOrNull("userAgent"), epgUrl = o.optStringOrNull("epgUrl"),
-        // Pre-v13 backups omit the flags — default On so restore matches today's behaviour.
-        syncLive = if (o.has("syncLive")) o.optBoolean("syncLive", true) else true,
-        syncMovies = if (o.has("syncMovies")) o.optBoolean("syncMovies", true) else true,
-        syncSeries = if (o.has("syncSeries")) o.optBoolean("syncSeries", true) else true,
-        createdAt = o.optLong("createdAt", System.currentTimeMillis()),
-        lastSyncAt = if (o.isNull("lastSyncAt")) null else o.optLong("lastSyncAt"),
-    )
+    /**
+     * Maps one `sources[]` entry, or **null when its `type` isn't a [SourceType] this build knows**
+     * (B4). It used to coerce an unknown type to [SourceType.M3U], which silently turned a newer
+     * build's Stalker/other portal into a broken M3U row pointing at a portal URL — worse than not
+     * restoring it, because the user has no way to tell it apart from a real playlist. Callers skip
+     * and count these, and the restore summary says how many were left out.
+     */
+    private fun sourceFrom(o: JSONObject, unseal: (Any?) -> String?): SourceEntity? {
+        val type = parseSourceType(o.optString("type")) ?: run {
+            Log.w(TAG, "Restore: skipping source '${o.optString("name")}' — unknown type '${o.optString("type")}'")
+            return null
+        }
+        return SourceEntity(
+            id = o.getLong("id"), name = o.getString("name"),
+            type = type,
+            url = o.getString("url"), username = o.optStringOrNull("username"),
+            password = if (o.isNull("password")) null else unseal(o.opt("password")),
+            // Stalker MAC: restored from its encrypted block when a passphrase was given; null on backups
+            // older than v10 (no "mac" key) or when the MAC was omitted (no passphrase).
+            mac = if (o.isNull("mac")) null else unseal(o.opt("mac")),
+            userAgent = o.optStringOrNull("userAgent"), epgUrl = o.optStringOrNull("epgUrl"),
+            // Pre-v13 backups omit the flags — default On so restore matches today's behaviour.
+            syncLive = if (o.has("syncLive")) o.optBoolean("syncLive", true) else true,
+            syncMovies = if (o.has("syncMovies")) o.optBoolean("syncMovies", true) else true,
+            syncSeries = if (o.has("syncSeries")) o.optBoolean("syncSeries", true) else true,
+            createdAt = o.optLong("createdAt", System.currentTimeMillis()),
+            lastSyncAt = if (o.isNull("lastSyncAt")) null else o.optLong("lastSyncAt"),
+        )
+    }
+
+    companion object {
+        internal const val TAG = "BackupManager"
+
+        /**
+         * The `sources[].type` rule, kept pure so it's testable: a name this build's [SourceType]
+         * knows, or null. Never a fallback — see [sourceFrom] for why coercing to M3U was worse
+         * than skipping.
+         */
+        internal fun parseSourceType(raw: String?): SourceType? =
+            raw?.takeIf { it.isNotBlank() }?.let { name -> SourceType.entries.firstOrNull { it.name == name } }
+
+        const val BACKUP_FILENAME = "owntv-backup.json"
+        internal const val TMP_SUFFIX = ".tmp"
+        internal const val BAK_SUFFIX = ".bak"
+
+        /**
+         * Write [text] to [target] without ever leaving a truncated file behind: content goes to a
+         * `.tmp` sibling, is flushed to disk (fsync) so a power cut can't leave an empty-but-renamed
+         * file, the previous good backup rotates to `.bak`, and only then does the tmp take the final
+         * name. A failure anywhere drops the tmp and leaves the old backup exactly as it was.
+         *
+         * Returns the **final** path — callers (the export UI, the companion download) rely on that.
+         */
+        internal fun writeAtomically(target: File, text: String): String {
+            val tmp = File(target.parentFile, "${target.name}$TMP_SUFFIX")
+            try {
+                java.io.FileOutputStream(tmp).use { fos ->
+                    fos.write(text.toByteArray(Charsets.UTF_8))
+                    fos.flush()
+                    fos.fd.sync()
+                }
+                if (target.exists()) {
+                    val bak = File(target.parentFile, "${target.name}$BAK_SUFFIX")
+                    bak.delete()
+                    target.renameTo(bak) // best effort: a failed rotation must not block the new write
+                }
+                if (!tmp.renameTo(target)) error("Could not finalize backup file")
+            } catch (e: Throwable) {
+                tmp.delete()
+                throw e
+            }
+            return target.absolutePath
+        }
+    }
+}
+
+// --- merge-restore id remapping helpers ---
+//
+// Top-level and `internal` rather than private members of BackupManager: they are pure String/JSON
+// functions with no dependency on the manager's DAOs, and a merge-restore that gets one of them
+// wrong silently attaches a restored profile's favorites, folder customizations or TMDB overrides to
+// the WRONG source on the device. That is worth unit tests, and unit tests need them reachable.
+
+/**
+ * Identity a restored profile is merged onto: the display name, trimmed and case-folded. Case-folded
+ * with Kotlin's locale-invariant [lowercase] on purpose — a Turkish-locale device must not decide
+ * "Kids" and "KIDS" are different people and end up with two profiles.
+ */
+internal fun profileMatchKey(name: String) = name.trim().lowercase()
+
+/**
+ * Identity a restored source is merged onto. Username is part of the key because one portal commonly
+ * serves several accounts; the password is not, so a re-exported backup with a rotated password
+ * still updates the existing row instead of duplicating it.
+ */
+internal fun sourceMatchKey(type: String, url: String, username: String?) =
+    "$type|${url.trim()}|${username.orEmpty()}"
+
+/** Rewrites an id-keyed JSON map ({"<fileId>": …}) to device ids; unmapped keys pass through. */
+internal fun remapKeys(o: JSONObject, idMap: Map<Long, Long>): JSONObject {
+    if (idMap.isEmpty()) return o
+    val out = JSONObject()
+    o.keys().forEach { k ->
+        val mapped = k.toLongOrNull()?.let { idMap[it] }?.toString() ?: k
+        out.put(mapped, o.get(k))
+    }
+    return out
+}
+
+/** Rewrites the "<sourceId>:<rest>" content keys inside one SectionCustomizations JSON blob. */
+internal fun remapCustomizationValue(raw: String, sourceIdMap: Map<Long, Long>): String {
+    if (sourceIdMap.isEmpty()) return raw
+    fun remapContentKey(k: String): String {
+        val sid = k.substringBefore(':').toLongOrNull() ?: return k
+        val mapped = sourceIdMap[sid] ?: return k
+        return "$mapped:${k.substringAfter(':')}"
+    }
+    return runCatching {
+        val o = JSONObject(raw)
+        val out = JSONObject()
+        o.keys().forEach { field ->
+            when (val v = o.get(field)) {
+                is JSONArray -> out.put(field, JSONArray().apply { for (i in 0 until v.length()) put(remapContentKey(v.getString(i))) })
+                is JSONObject -> out.put(field, JSONObject().apply { v.keys().forEach { k -> put(remapContentKey(k), v.get(k)) } })
+                else -> out.put(field, v)
+            }
+        }
+        out.toString()
+    }.getOrDefault(raw)
+}
+
+/** Rewrites "type:<sourceId>:<rest>" keys of the custom-TMDB-name map to device source ids. */
+internal fun remapTmdbOverrideKeys(raw: String, sourceIdMap: Map<Long, Long>): String {
+    if (sourceIdMap.isEmpty()) return raw
+    return runCatching {
+        val o = JSONObject(raw)
+        val out = JSONObject()
+        o.keys().forEach { k ->
+            val parts = k.split(':', limit = 3)
+            val mapped = if (parts.size == 3) {
+                parts[1].toLongOrNull()?.let { sourceIdMap[it] }?.let { "${parts[0]}:$it:${parts[2]}" } ?: k
+            } else k
+            out.put(mapped, o.get(k))
+        }
+        out.toString()
+    }.getOrDefault(raw)
+}
+
+/** Keeps only the entries of a profile-id-keyed JSON map that belong to the ticked profiles. */
+internal fun filterByProfile(map: JSONObject, pidKeys: Set<String>): JSONObject {
+    val out = JSONObject()
+    map.keys().forEach { k -> if (k in pidKeys) out.put(k, map.get(k)) }
+    return out
 }
 
 private fun JSONObject.optStringOrNull(key: String): String? = if (isNull(key)) null else optString(key).takeIf { it.isNotEmpty() }

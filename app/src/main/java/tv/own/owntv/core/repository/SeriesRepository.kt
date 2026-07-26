@@ -24,23 +24,68 @@ class SeriesRepository(
     private val stalkerClient: StalkerClient,
     private val stalkerAuth: StalkerAuthManager,
 ) {
-    /** Returns true if episodes are available (cached or freshly fetched). Xtream + Stalker. */
+    /**
+     * Returns true if episodes are available (cached or freshly fetched). Xtream + Stalker.
+     *
+     * The cache used to be write-once — `episodeCount > 0` meant "done, never ask again" — and since
+     * the syncers deliberately don't fetch episodes either, nothing in the app could ever add an
+     * episode to a show the user had already opened. New episodes only appeared if the source was
+     * deleted and re-added (which cascade-drops the rows). That's S8; the cache now expires, and a
+     * source sync invalidates it outright.
+     */
     suspend fun loadEpisodes(series: SeriesEntity): Boolean = withContext(Dispatchers.IO) {
-        if (seriesDao.episodeCount(series.id) > 0) return@withContext true
-        val source = sourceDao.getById(series.sourceId) ?: return@withContext false
+        val cachedCount = seriesDao.episodeCount(series.id)
+        val hasCache = cachedCount > 0
+        val source = sourceDao.getById(series.sourceId) ?: return@withContext hasCache
+
+        // M3U is not affected by S8 and deliberately doesn't take this path: its episodes come from
+        // the playlist during the sync itself, and `M3uSyncer.flushSeries` folds the episode list
+        // into the show's content hash — so a playlist that gains an episode rewrites that show's
+        // hierarchy on the next resync. There is nothing to fetch on demand and no cache to expire.
+        if (source.type != SourceType.XTREAM && source.type != SourceType.STALKER) return@withContext hasCache
+
+        // Read the stamp from the database rather than the passed-in entity: callers hold list rows
+        // that may have been loaded before a sync invalidated the cache.
+        val syncedAt = seriesDao.getSeriesById(series.id)?.episodesSyncedAt ?: series.episodesSyncedAt
+        if (!shouldRefreshEpisodes(cachedCount, syncedAt, System.currentTimeMillis())) return@withContext true
+
         val remoteId = series.remoteId
-        if (remoteId.isNullOrBlank()) return@withContext false
-        when (source.type) {
-            SourceType.XTREAM -> loadXtreamEpisodes(series, source, remoteId)
-            SourceType.STALKER -> loadStalkerEpisodes(series, source, remoteId)
-            else -> false
+        if (remoteId.isNullOrBlank()) return@withContext hasCache
+        val fetched = when (source.type) {
+            SourceType.XTREAM -> fetchXtreamEpisodes(series, source, remoteId)
+            else -> fetchStalkerEpisodes(series, source, remoteId)
         }
+        // A failed or empty fetch must never empty a populated show: a provider hiccup would
+        // otherwise wipe a season the user was midway through. Leave the stamp alone so the next
+        // open retries instead of waiting out the TTL on nothing.
+        if (fetched.isNullOrEmpty()) return@withContext hasCache
+        applyEpisodes(series.id, fetched)
+        true
     }
 
-    private suspend fun loadXtreamEpisodes(series: SeriesEntity, source: SourceEntity, remoteId: String): Boolean = try {
+    /**
+     * Writes a fetched list over the stored one, preserving the row id of every episode that
+     * survives — see [planEpisodeMerge]. Rebuilding the rows wholesale would detach watch history,
+     * resume positions and next-episode autoplay on every single refresh.
+     */
+    private suspend fun applyEpisodes(seriesId: Long, fetched: List<EpisodeEntity>) {
+        val plan = planEpisodeMerge(seriesDao.episodesBySeriesOnce(seriesId), fetched)
+        plan.updates.chunked(CHUNK).forEach { seriesDao.updateEpisodes(it) }
+        plan.inserts.chunked(CHUNK).forEach { seriesDao.upsertEpisodes(it) }
+        plan.deleteIds.chunked(CHUNK).forEach { seriesDao.deleteEpisodesByIds(it) }
+        seriesDao.markEpisodesSynced(seriesId, System.currentTimeMillis())
+        android.util.Log.i(
+            TAG,
+            "episodes seriesId=$seriesId fetched=${fetched.size} new=${plan.inserts.size} " +
+                "updated=${plan.updates.size} removed=${plan.deleteIds.size}",
+        )
+        // Episode rows just appeared — restored/pending episode history and resume can attach now.
+        if (plan.inserts.isNotEmpty()) runCatching { userData.resolvePending() }
+    }
+
+    private suspend fun fetchXtreamEpisodes(series: SeriesEntity, source: SourceEntity, remoteId: String): List<EpisodeEntity>? = try {
         val info = xtream.getSeriesInfo(source, remoteId)
-        seriesDao.deleteEpisodes(series.id)
-        val episodes = info.episodes.map { e ->
+        info.episodes.map { e ->
             EpisodeEntity(
                 seriesId = series.id,
                 seasonId = null,
@@ -52,12 +97,9 @@ class SeriesRepository(
                 remoteId = e.id,
             )
         }
-        episodes.chunked(500).forEach { seriesDao.upsertEpisodes(it) }
-        // Episode rows just appeared — restored episode history/resume can attach now.
-        if (episodes.isNotEmpty()) runCatching { userData.resolvePending() }
-        episodes.isNotEmpty()
     } catch (e: Exception) {
-        false
+        android.util.Log.w(TAG, "xtream episode load failed seriesId=${series.id}", e)
+        null
     }
 
     /**
@@ -67,8 +109,8 @@ class SeriesRepository(
      * `create_link&type=vod&series=<episode>` (StreamUrlResolver) — never at listing time, the links
      * are short-lived.
      */
-    private suspend fun loadStalkerEpisodes(series: SeriesEntity, source: SourceEntity, remoteId: String): Boolean = try {
-        val mac = source.mac?.let { StalkerClient.canonicalizeMac(it) } ?: return false
+    private suspend fun fetchStalkerEpisodes(series: SeriesEntity, source: SourceEntity, remoteId: String): List<EpisodeEntity>? = try {
+        val mac = source.mac?.let { StalkerClient.canonicalizeMac(it) } ?: return null
         val creds = StalkerCredentials(source.id, source.url, mac, source.userAgent)
         val seasons = ArrayList<StalkerClient.SeasonItem>()
         var page = 1
@@ -108,13 +150,10 @@ class SeriesRepository(
             TAG,
             "stalker episodes seriesId=${series.id} remoteId=$remoteId seasons=${seasons.size} episodes=${episodes.size}",
         )
-        seriesDao.deleteEpisodes(series.id)
-        episodes.chunked(500).forEach { seriesDao.upsertEpisodes(it) }
-        if (episodes.isNotEmpty()) runCatching { userData.resolvePending() }
-        episodes.isNotEmpty()
+        episodes
     } catch (e: Exception) {
         android.util.Log.w(TAG, "stalker episode load failed seriesId=${series.id}", e)
-        false
+        null
     }
 
     private companion object {
@@ -122,5 +161,8 @@ class SeriesRepository(
 
         /** Safety cap on season paging (a show never has hundreds of season pages). */
         const val MAX_SEASON_PAGES = 20
+
+        /** Write batch size for the episode merge. */
+        const val CHUNK = 500
     }
 }

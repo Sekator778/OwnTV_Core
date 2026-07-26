@@ -42,7 +42,27 @@ class EpgRepository(
 
     /** Where a source's downloaded XMLTV is cached, so a later smart-match can top up programmes from it
      *  without re-hitting the network (see [storeProgrammesForIdsFromCache]). */
-    private fun cacheFile(storeId: Long) = java.io.File(context.cacheDir, "epg_$storeId.xmltv")
+    private fun cacheFile(storeId: Long) = java.io.File(context.cacheDir, "epg_$storeId$EPG_CACHE_SUFFIX")
+
+    /**
+     * Where the download is tee'd *while it runs*. It only becomes [cacheFile] once the parse has
+     * completed cleanly, so a guide truncated by a network drop is never left behind under the name
+     * readers trust (E1). The `.tmp` suffix also keeps it out of [storeProgrammesForIdsFromCache]'s
+     * `endsWith(".xmltv")` scan while it's being written.
+     */
+    private fun tempCacheFile(storeId: Long) = java.io.File(context.cacheDir, "epg_$storeId$EPG_CACHE_TEMP_SUFFIX")
+
+    /**
+     * Drop temp caches abandoned by a killed process. Only files older than the cache TTL are touched:
+     * a *fresh* `.tmp` may belong to another source syncing right now, and deleting it would silently
+     * cost that sync its cache.
+     */
+    private fun sweepOrphanedTempCaches(now: Long) {
+        runCatching {
+            context.cacheDir.listFiles()
+                ?.forEach { if (isOrphanedEpgTempCache(it.name, it.lastModified(), now, CACHE_TTL_MS)) it.delete() }
+        }
+    }
 
     /**
      * Ensure every non-unique `epg_programmes` index exists — the Guide read-index
@@ -169,7 +189,12 @@ class EpgRepository(
         // programmes without another network round-trip — without slowing the live sync. The first
         // replacement batch is committed atomically so readers keep seeing the old guide until the new rows
         // are ready.
+        // …tee'd to a temp name and promoted only on a clean parse: a truncated file would otherwise be
+        // indistinguishable from a complete one for a full day, and a smart-match reading it would
+        // conclude the missing channels simply have no schedule.
         val file = cacheFile(storeId)
+        val tmpFile = tempCacheFile(storeId)
+        sweepOrphanedTempCaches(now)
         suspend fun storeProgrammes(batch: List<EpgProgrammeEntity>) {
             if (batch.isEmpty()) return
             val startedAt = SystemClock.elapsedRealtime()
@@ -188,7 +213,7 @@ class EpgRepository(
                 eligible = globallyEmpty,
                 ftsOnly = false,
             ) {
-                file.outputStream().use { out ->
+                tmpFile.outputStream().use { out ->
                     http.get(url, userAgent, maxAttempts = EPG_DOWNLOAD_ATTEMPTS) { input ->
                         XmltvParser.parse(
                             TeeInputStream(input, out),
@@ -289,6 +314,16 @@ class EpgRepository(
                 )
             }
             Log.w("EpgRepository", "EPG sync incomplete — keeping partial (written=$writtenCount accepted=$processedCount inserted=$inserted updated=$updated skipped=$skipped)", e)
+        } finally {
+            // The rows already written stay (a partial guide still beats none) — only the *cache file*
+            // is held to a completeness bar, because unlike the rows it gets re-read later as if it were
+            // the whole feed. Anything short of a clean parse leaves the previous good cache in place.
+            if (parseCompleted && tmpFile.length() > 0) {
+                if (!(file.delete() || !file.exists()) || !tmpFile.renameTo(file)) {
+                    Log.w("EpgRepository", "EPG cache promote failed storeId=$storeId — cache skipped this run")
+                }
+            }
+            if (tmpFile.exists()) tmpFile.delete() // no-op after a successful rename
         }
         if (parseCompleted) {
             removedProgrammes = pruneRemovedProgrammes(storeId, hashTracker)
@@ -359,14 +394,16 @@ class EpgRepository(
         if (keys.isEmpty()) return@withContext true
         val now = System.currentTimeMillis()
         val from = now - WINDOW_BACK_MS; val to = now + WINDOW_AHEAD_MS
-        val files = context.cacheDir.listFiles { f -> f.name.startsWith("epg_") && f.name.endsWith(".xmltv") }
-            ?.filter { it.length() > 0 && now - it.lastModified() <= CACHE_TTL_MS }
+        // Only promoted (complete) caches are eligible — an in-flight or abandoned `.xmltv.tmp` is
+        // excluded by name, so a truncated download can't be mistaken for the whole feed (E1).
+        val files = context.cacheDir.listFiles()
+            ?.filter { isUsableEpgCache(it.name, it.length(), it.lastModified(), now, CACHE_TTL_MS) }
             ?: emptyList<java.io.File>()
         if (files.isEmpty()) return@withContext false // no fresh cache → caller falls back to a network re-sync
         Log.d("EpgRepository", "Cached EPG channel filter ids=${keys.size} files=${files.size}")
 
         val storeFiles = files.mapNotNull { f ->
-            f.name.removePrefix("epg_").removeSuffix(".xmltv").toLongOrNull()?.let { it to f }
+            epgCacheStoreId(f.name)?.let { it to f }
         }
         val storeIds = storeFiles.map { it.first }
         val collected = HashMap<String, MutableList<EpgProgrammeEntity>>()
@@ -404,6 +441,68 @@ class EpgRepository(
         // re-sync's channel filter includes it and will fetch the missing schedule. Returning true here
         // used to leave a just-matched channel permanently empty with no fallback.
         insertedTotal > 0
+    }
+
+    /**
+     * Fill guide gaps left by a catalog sync that finished after the guide sync started (S9).
+     *
+     * [refreshUrl] filters the feed down to the channels the user owns, and reads that set **once**,
+     * at the start. Sync a playlist and a guide at the same time and every channel the playlist
+     * hadn't written yet is treated as "not mine" and skipped — the sync still reports success, and
+     * the missing programmes stay missing until the user happens to re-sync EPG. (Observed: a guide
+     * synced alongside a Stalker import stored 130k programmes; the same feed re-synced afterwards
+     * stored 220k.) The same hole opens whenever a later resync adds channels.
+     *
+     * This runs after a catalog sync and repairs it **from the cached feed — no network**. Only
+     * channels with no guide data at all are considered, so a normal resync finds nothing and does no
+     * work beyond one indexed query. Returns the number of channels it filled.
+     *
+     * Deliberately never starts a download: EPG is opt-in, and no cache means the user hasn't synced
+     * a guide for this feed yet.
+     */
+    suspend fun fillGuideGapsForSource(sourceId: Long): Int = withContext(Dispatchers.IO) {
+        // Nothing to repair before the user has ever synced a guide — and without this the query
+        // below would return every channel the source has.
+        if (bulkInsertHelper.tableIsEmpty("epg_programmes")) return@withContext 0
+        val missing = channelDao.epgChannelIdsWithoutProgrammes(sourceId)
+            .filterTo(HashSet()) { it.isNotBlank() }
+        if (missing.isEmpty()) return@withContext 0
+
+        // Most channels without guide data are not a gap at all — their tvg-id simply isn't in any
+        // feed the user subscribes to (observed in the field: 760 of 11,527). Parsing the whole
+        // cached XMLTV for those takes ~14s and will never find anything, so don't repeat an attempt
+        // that already came up empty against the same missing set and the same cache files. Held in
+        // memory only: one wasted pass per process is a fair price for never persisting a decision
+        // that could go stale.
+        val fingerprint = "${missing.size}|${missing.hashCode()}|${cacheFingerprint()}"
+        if (futileGapFills[sourceId] == fingerprint) {
+            Log.d("EpgRepository", "guide gap fill sourceId=$sourceId skipped — same gap and same cache as the last empty attempt")
+            return@withContext 0
+        }
+        Log.i("EpgRepository", "guide gap fill sourceId=$sourceId channelsWithoutProgrammes=${missing.size}")
+        val filled = runCatching { storeProgrammesForIdsFromCache(missing) }
+            .onFailure { Log.w("EpgRepository", "guide gap fill failed sourceId=$sourceId", it) }
+            .getOrDefault(false)
+        // A false return means no fresh cache, or the cache genuinely carries nothing for these ids
+        // (they may simply not be in this feed) — either way there is nothing more to do offline.
+        val remaining = if (filled) channelDao.epgChannelIdsWithoutProgrammes(sourceId).size else missing.size
+        val repaired = (missing.size - remaining).coerceAtLeast(0)
+        Log.i("EpgRepository", "guide gap fill done sourceId=$sourceId repaired=$repaired stillMissing=$remaining")
+        if (repaired == 0) futileGapFills[sourceId] = fingerprint else futileGapFills.remove(sourceId)
+        repaired
+    }
+
+    /** Per-source fingerprint of the last gap fill that found nothing — see [fillGuideGapsForSource]. */
+    private val futileGapFills = java.util.concurrent.ConcurrentHashMap<Long, String>()
+
+    /** Identifies the current set of usable cache files, so a new/refreshed guide invalidates a skip. */
+    private fun cacheFingerprint(): String {
+        val now = System.currentTimeMillis()
+        return context.cacheDir.listFiles()
+            ?.filter { isUsableEpgCache(it.name, it.length(), it.lastModified(), now, CACHE_TTL_MS) }
+            ?.sortedBy { it.name }
+            ?.joinToString(",") { "${it.name}:${it.length()}:${it.lastModified()}" }
+            .orEmpty()
     }
 
     /** An InputStream that mirrors every byte it reads into [out] — lets us parse a download while caching it. */

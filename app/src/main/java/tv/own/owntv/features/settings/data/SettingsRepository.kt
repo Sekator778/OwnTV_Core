@@ -13,6 +13,7 @@ import androidx.datastore.preferences.core.stringSetPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import tv.own.owntv.features.home.HomeConfig
@@ -77,6 +78,18 @@ object ChNavLimits {
  */
 class SettingsRepository(private val context: Context) {
 
+    /**
+     * Every settings flow below is derived through this (audit ST2, step 2).
+     *
+     * DataStore emits the **whole** `Preferences` object to **every** collector on **every** write,
+     * so without the `distinctUntilChanged` a single toggle re-ran ~100 `map { }` lambdas and pushed
+     * ~100 "new" StateFlow values app-wide — each one a potential recomposition — even though only
+     * one key had actually changed. One operator here stops that propagation for all of them at
+     * once, which is why this is a helper rather than 74 hand-edited call sites.
+     */
+    private fun <T> prefsFlow(transform: (Preferences) -> T): Flow<T> =
+        context.dataStore.data.map(transform).distinctUntilChanged()
+
     // Liquid Glass defaults: OFF (empty scope) — the glass look is strictly opt-in, the app looks
     // unchanged until the user enables it in Settings → Glass Effect. Alpha/blur defaults are the
     // "nice preset" applied once glass is turned on.
@@ -100,6 +113,10 @@ class SettingsRepository(private val context: Context) {
         val PLAYLIST_AUTO_REFRESH = stringPreferencesKey("playlist_auto_refresh")
         val EPG_AUTO_REFRESH = stringPreferencesKey("epg_auto_refresh")
         val REFRESH_MIGRATED = booleanPreferencesKey("refresh_migration_done")
+        val EPG_REFILL_CHECKED = booleanPreferencesKey("epg_refill_checked")
+        // Set while a backup restore is applying, cleared only when it completes (B2). A value that
+        // survives to the next launch means the restore was interrupted and may be half-applied.
+        val RESTORE_IN_PROGRESS = stringPreferencesKey("restore_in_progress")
         val LIVE_PREVIEW = booleanPreferencesKey("live_preview")
         val LIVE_PREVIEW_AUDIO = booleanPreferencesKey("live_preview_audio")
         // Docked mini-player: size (% of screen width) and screen corner/edge.
@@ -198,14 +215,14 @@ class SettingsRepository(private val context: Context) {
     }
 
     // --- Live TV: remember the last focused channel so reopening lands focus back on it ---
-    val lastLiveChannelId: Flow<Long> = context.dataStore.data.map { it[Keys.LAST_LIVE_CHANNEL] ?: -1L }
+    val lastLiveChannelId: Flow<Long> = prefsFlow { it[Keys.LAST_LIVE_CHANNEL] ?: -1L }
     suspend fun setLastLiveChannelId(id: Long) {
         context.dataStore.edit { it[Keys.LAST_LIVE_CHANNEL] = id }
     }
 
     // --- Startup: per-profile landing (v4.0.0). Falls back to the legacy global resume toggle for existing
     //     users (so "Resume last channel = On" keeps working until they pick a per-profile mode). ---
-    fun startupMode(profileId: Long): Flow<StartupMode> = context.dataStore.data.map { prefs ->
+    fun startupMode(profileId: Long): Flow<StartupMode> = prefsFlow { prefs ->
         prefs[stringPreferencesKey("startup_mode_$profileId")]?.let { runCatching { StartupMode.valueOf(it) }.getOrNull() }
             ?: if (prefs[Keys.RESUME_LAST_CHANNEL] == true) StartupMode.LAST_CHANNEL else StartupMode.HOME
     }
@@ -217,7 +234,7 @@ class SettingsRepository(private val context: Context) {
     //     be unhidden by someone else). Exported/imported in backups as a salted SHA-256 hash (see
     //     exportCustomizePins / importCustomizePins → BackupManager `customizePins`), so the PIN value
     //     itself never travels in a readable form. ---
-    fun customizePin(profileId: Long): Flow<String?> = context.dataStore.data.map { prefs ->
+    fun customizePin(profileId: Long): Flow<String?> = prefsFlow { prefs ->
         prefs[stringPreferencesKey("customize_pin_$profileId")]?.takeIf { it.isNotBlank() }
     }
 
@@ -231,7 +248,7 @@ class SettingsRepository(private val context: Context) {
 
     /** Whether a category the provider adds on a later resync is hidden automatically. Same across
      *  Live/Movies/Series for a profile — there's no reason to want it to differ by section. */
-    fun hideNewCategoriesDefault(profileId: Long): Flow<Boolean> = context.dataStore.data.map { prefs ->
+    fun hideNewCategoriesDefault(profileId: Long): Flow<Boolean> = prefsFlow { prefs ->
         prefs[booleanPreferencesKey("hide_new_categories_$profileId")] ?: false
     }
 
@@ -242,7 +259,7 @@ class SettingsRepository(private val context: Context) {
     // --- Home: per-profile row order / visibility / hero filters. ---
     private fun homeConfigKey(profileId: Long) = stringPreferencesKey("home_config_$profileId")
 
-    fun homeConfig(profileId: Long): Flow<HomeConfig> = context.dataStore.data.map { prefs ->
+    fun homeConfig(profileId: Long): Flow<HomeConfig> = prefsFlow { prefs ->
         HomeConfig.fromJson(prefs[homeConfigKey(profileId)])
     }
 
@@ -255,37 +272,37 @@ class SettingsRepository(private val context: Context) {
     }
 
     // --- Startup: auto-open the last-watched live channel (default OFF) — legacy, now migrated to startupMode ---
-    val resumeLastChannel: Flow<Boolean> = context.dataStore.data.map { it[Keys.RESUME_LAST_CHANNEL] ?: false }
+    val resumeLastChannel: Flow<Boolean> = prefsFlow { it[Keys.RESUME_LAST_CHANNEL] ?: false }
     suspend fun setResumeLastChannel(enabled: Boolean) {
         context.dataStore.edit { it[Keys.RESUME_LAST_CHANNEL] = enabled }
     }
 
     // --- Remember the last selected category so reopening a section lands where you left off.
     //     Written by each section's view model (debounced), read once on restore. ---
-    val lastLiveCategory: Flow<String> = context.dataStore.data.map { it[Keys.LAST_LIVE_CATEGORY] ?: "" }
+    val lastLiveCategory: Flow<String> = prefsFlow { it[Keys.LAST_LIVE_CATEGORY] ?: "" }
     suspend fun setLastLiveCategory(key: String) {
         context.dataStore.edit { it[Keys.LAST_LIVE_CATEGORY] = key }
     }
-    val lastMoviesCategory: Flow<String> = context.dataStore.data.map { it[Keys.LAST_MOVIES_CATEGORY] ?: "" }
+    val lastMoviesCategory: Flow<String> = prefsFlow { it[Keys.LAST_MOVIES_CATEGORY] ?: "" }
     suspend fun setLastMoviesCategory(key: String) {
         context.dataStore.edit { it[Keys.LAST_MOVIES_CATEGORY] = key }
     }
-    val lastSeriesCategory: Flow<String> = context.dataStore.data.map { it[Keys.LAST_SERIES_CATEGORY] ?: "" }
+    val lastSeriesCategory: Flow<String> = prefsFlow { it[Keys.LAST_SERIES_CATEGORY] ?: "" }
     suspend fun setLastSeriesCategory(key: String) {
         context.dataStore.edit { it[Keys.LAST_SERIES_CATEGORY] = key }
     }
 
     // --- Per-section "remember last CATEGORY" (default ON each — Live TV's long-standing behaviour,
     //     now also available for Movies/Series). OFF = the section always opens on All. ---
-    val rememberCategoryLive: Flow<Boolean> = context.dataStore.data.map { it[Keys.REMEMBER_CAT_LIVE] ?: true }
+    val rememberCategoryLive: Flow<Boolean> = prefsFlow { it[Keys.REMEMBER_CAT_LIVE] ?: true }
     suspend fun setRememberCategoryLive(enabled: Boolean) {
         context.dataStore.edit { it[Keys.REMEMBER_CAT_LIVE] = enabled }
     }
-    val rememberCategoryMovies: Flow<Boolean> = context.dataStore.data.map { it[Keys.REMEMBER_CAT_MOVIES] ?: true }
+    val rememberCategoryMovies: Flow<Boolean> = prefsFlow { it[Keys.REMEMBER_CAT_MOVIES] ?: true }
     suspend fun setRememberCategoryMovies(enabled: Boolean) {
         context.dataStore.edit { it[Keys.REMEMBER_CAT_MOVIES] = enabled }
     }
-    val rememberCategorySeries: Flow<Boolean> = context.dataStore.data.map { it[Keys.REMEMBER_CAT_SERIES] ?: true }
+    val rememberCategorySeries: Flow<Boolean> = prefsFlow { it[Keys.REMEMBER_CAT_SERIES] ?: true }
     suspend fun setRememberCategorySeries(enabled: Boolean) {
         context.dataStore.edit { it[Keys.REMEMBER_CAT_SERIES] = enabled }
     }
@@ -293,22 +310,22 @@ class SettingsRepository(private val context: Context) {
     // --- Per-section "remember last ITEM per category" (default OFF each).
     //     OFF = switching category resets the browse list to the top; ON = each category keeps its own
     //     scroll position. The Live toggle additionally gates the lastLiveChannelId restore on re-entry. ---
-    val rememberLastLive: Flow<Boolean> = context.dataStore.data.map { it[Keys.REMEMBER_LAST_LIVE] ?: false }
+    val rememberLastLive: Flow<Boolean> = prefsFlow { it[Keys.REMEMBER_LAST_LIVE] ?: false }
     suspend fun setRememberLastLive(enabled: Boolean) {
         context.dataStore.edit { it[Keys.REMEMBER_LAST_LIVE] = enabled }
     }
-    val rememberLastMovies: Flow<Boolean> = context.dataStore.data.map { it[Keys.REMEMBER_LAST_MOVIES] ?: false }
+    val rememberLastMovies: Flow<Boolean> = prefsFlow { it[Keys.REMEMBER_LAST_MOVIES] ?: false }
     suspend fun setRememberLastMovies(enabled: Boolean) {
         context.dataStore.edit { it[Keys.REMEMBER_LAST_MOVIES] = enabled }
     }
-    val rememberLastSeries: Flow<Boolean> = context.dataStore.data.map { it[Keys.REMEMBER_LAST_SERIES] ?: false }
+    val rememberLastSeries: Flow<Boolean> = prefsFlow { it[Keys.REMEMBER_LAST_SERIES] ?: false }
     suspend fun setRememberLastSeries(enabled: Boolean) {
         context.dataStore.edit { it[Keys.REMEMBER_LAST_SERIES] = enabled }
     }
 
     // --- Search: recent search terms (most-recent first, capped). Stored as one newline-joined string
     //     so no schema/table is needed; blank entries are ignored on read. ---
-    val recentSearches: Flow<List<String>> = context.dataStore.data.map { prefs ->
+    val recentSearches: Flow<List<String>> = prefsFlow { prefs ->
         prefs[Keys.RECENT_SEARCHES]?.split('\n')?.map { it.trim() }?.filter { it.isNotEmpty() } ?: emptyList()
     }
 
@@ -328,7 +345,7 @@ class SettingsRepository(private val context: Context) {
     }
 
     // --- Appearance: animation level (perf control for low-end boxes) ---
-    val animationLevel: Flow<tv.own.owntv.ui.theme.AnimationLevel> = context.dataStore.data.map { prefs ->
+    val animationLevel: Flow<tv.own.owntv.ui.theme.AnimationLevel> = prefsFlow { prefs ->
         prefs[Keys.ANIMATION_LEVEL]?.let { runCatching { tv.own.owntv.ui.theme.AnimationLevel.valueOf(it) }.getOrNull() }
             ?: tv.own.owntv.ui.theme.AnimationLevel.FULL
     }
@@ -340,7 +357,7 @@ class SettingsRepository(private val context: Context) {
     // --- Weather chip (top bar): show/hide + manual location override for VPN users ---
 
     /** Show the weather chip in the top bar (default ON). */
-    val weatherEnabled: Flow<Boolean> = context.dataStore.data.map { it[Keys.WEATHER_ENABLED] ?: true }
+    val weatherEnabled: Flow<Boolean> = prefsFlow { it[Keys.WEATHER_ENABLED] ?: true }
 
     suspend fun setWeatherEnabled(enabled: Boolean) {
         context.dataStore.edit { it[Keys.WEATHER_ENABLED] = enabled }
@@ -351,14 +368,14 @@ class SettingsRepository(private val context: Context) {
      * (geocoded via Open-Meteo) or a raw "lat,lon" pair. Lets users fix the wrong-city behaviour
      * they see behind a VPN, where IP geolocation resolves to the VPN server's city.
      */
-    val weatherLocation: Flow<String> = context.dataStore.data.map { it[Keys.WEATHER_LOCATION] ?: "" }
+    val weatherLocation: Flow<String> = prefsFlow { it[Keys.WEATHER_LOCATION] ?: "" }
 
     suspend fun setWeatherLocation(location: String) {
         context.dataStore.edit { it[Keys.WEATHER_LOCATION] = location.trim() }
     }
 
     /** Show the weather temperature in Fahrenheit instead of Celsius (default °C). */
-    val weatherFahrenheit: Flow<Boolean> = context.dataStore.data.map { it[Keys.WEATHER_FAHRENHEIT] ?: false }
+    val weatherFahrenheit: Flow<Boolean> = prefsFlow { it[Keys.WEATHER_FAHRENHEIT] ?: false }
 
     suspend fun setWeatherFahrenheit(fahrenheit: Boolean) {
         context.dataStore.edit { it[Keys.WEATHER_FAHRENHEIT] = fahrenheit }
@@ -370,7 +387,7 @@ class SettingsRepository(private val context: Context) {
 
     /** Metadata source mode (plan §4.1). Defaults to Provider+TMDB; back-compat: an old boolean master
      *  toggle maps false→Provider, true→Provider+TMDB when no explicit mode is stored yet. */
-    val metadataMode: Flow<tv.own.owntv.core.metadata.MetadataMode> = context.dataStore.data.map { p ->
+    val metadataMode: Flow<tv.own.owntv.core.metadata.MetadataMode> = prefsFlow { p ->
         parseMetadataMode(p)
     }
 
@@ -391,14 +408,14 @@ class SettingsRepository(private val context: Context) {
     }
 
     /** Tier 2 — the user's own TMDB v3 API key; blank = don't call TMDB directly. */
-    val tmdbApiKey: Flow<String> = context.dataStore.data.map { it[Keys.TMDB_API_KEY] ?: "" }
+    val tmdbApiKey: Flow<String> = prefsFlow { it[Keys.TMDB_API_KEY] ?: "" }
 
     suspend fun setTmdbApiKey(key: String) {
         context.dataStore.edit { it[Keys.TMDB_API_KEY] = key.trim() }
     }
 
     /** Tier 3 — a custom TMDB-shaped metadata server base URL; blank = don't self-host. */
-    val metadataServerUrl: Flow<String> = context.dataStore.data.map { it[Keys.METADATA_SERVER_URL] ?: "" }
+    val metadataServerUrl: Flow<String> = prefsFlow { it[Keys.METADATA_SERVER_URL] ?: "" }
 
     suspend fun setMetadataServerUrl(url: String) {
         context.dataStore.edit { it[Keys.METADATA_SERVER_URL] = url.trim() }
@@ -409,14 +426,14 @@ class SettingsRepository(private val context: Context) {
      * upgrade never silently changes anyone's metadata. "auto" = follow the device locale, resolved at
      * call time by [tv.own.owntv.core.metadata.MetadataConfig.resolvedLanguage].
      */
-    val metadataLanguage: Flow<String> = context.dataStore.data.map { it[Keys.METADATA_LANGUAGE] ?: "" }
+    val metadataLanguage: Flow<String> = prefsFlow { it[Keys.METADATA_LANGUAGE] ?: "" }
 
     suspend fun setMetadataLanguage(code: String) {
         context.dataStore.edit { it[Keys.METADATA_LANGUAGE] = code.trim() }
     }
 
     /** Live snapshot of the metadata settings as one object (consumed by TmdbProvider). */
-    val metadataConfigFlow: Flow<tv.own.owntv.core.metadata.MetadataConfig> = context.dataStore.data.map { p ->
+    val metadataConfigFlow: Flow<tv.own.owntv.core.metadata.MetadataConfig> = prefsFlow { p ->
         tv.own.owntv.core.metadata.MetadataConfig(
             mode = parseMetadataMode(p),
             tmdbApiKey = p[Keys.TMDB_API_KEY] ?: "",
@@ -437,12 +454,12 @@ class SettingsRepository(private val context: Context) {
     /** Manual UTC offset bounds (whole hours), in minutes. */
     val catchupOffsetRangeMinutes: IntRange = -12 * 60..14 * 60
 
-    val catchupTimezone: Flow<CatchupTimezone> = context.dataStore.data.map { prefs ->
+    val catchupTimezone: Flow<CatchupTimezone> = prefsFlow { prefs ->
         prefs[Keys.CATCHUP_TZ]?.let { runCatching { CatchupTimezone.valueOf(it) }.getOrNull() } ?: CatchupTimezone.DEVICE
     }
 
     /** Manual mode's offset from UTC, in minutes (0 = UTC, the previous default). */
-    val catchupOffsetMinutes: Flow<Int> = context.dataStore.data.map { it[Keys.CATCHUP_OFFSET_MIN] ?: 0 }
+    val catchupOffsetMinutes: Flow<Int> = prefsFlow { it[Keys.CATCHUP_OFFSET_MIN] ?: 0 }
 
     suspend fun setCatchupTimezone(mode: CatchupTimezone) {
         context.dataStore.edit { it[Keys.CATCHUP_TZ] = mode.name }
@@ -459,7 +476,7 @@ class SettingsRepository(private val context: Context) {
     }
 
     /** Automatically check GitHub Releases for a newer version shortly after launch. */
-    val updateCheckOnStart: Flow<Boolean> = context.dataStore.data.map { it[Keys.UPDATE_CHECK_ON_START] ?: true }
+    val updateCheckOnStart: Flow<Boolean> = prefsFlow { it[Keys.UPDATE_CHECK_ON_START] ?: true }
 
     suspend fun setUpdateCheckOnStart(enabled: Boolean) {
         context.dataStore.edit { it[Keys.UPDATE_CHECK_ON_START] = enabled }
@@ -471,7 +488,7 @@ class SettingsRepository(private val context: Context) {
         AUTO("Always resume"), ASK("Ask to resume"), NEVER("Never resume")
     }
 
-    val resumeMode: Flow<ResumeMode> = context.dataStore.data.map { prefs ->
+    val resumeMode: Flow<ResumeMode> = prefsFlow { prefs ->
         prefs[Keys.RESUME_MODE]?.let { runCatching { ResumeMode.valueOf(it) }.getOrNull() } ?: ResumeMode.ASK
     }
 
@@ -488,7 +505,7 @@ class SettingsRepository(private val context: Context) {
 
     enum class NavMenuMode(val label: String) { DYNAMIC("Dynamic"), STATIC("Static") }
 
-    val navMenuMode: Flow<NavMenuMode> = context.dataStore.data.map { prefs ->
+    val navMenuMode: Flow<NavMenuMode> = prefsFlow { prefs ->
         prefs[Keys.NAV_MENU_MODE]?.let { runCatching { NavMenuMode.valueOf(it) }.getOrNull() } ?: NavMenuMode.STATIC
     }
 
@@ -497,7 +514,7 @@ class SettingsRepository(private val context: Context) {
     }
 
     /** Names of the [tv.own.owntv.features.shell.MainSection] browse items the user has hidden (STATIC mode). */
-    val navMenuHidden: Flow<Set<String>> = context.dataStore.data.map { it[Keys.NAV_MENU_HIDDEN] ?: emptySet() }
+    val navMenuHidden: Flow<Set<String>> = prefsFlow { it[Keys.NAV_MENU_HIDDEN] ?: emptySet() }
 
     /** Replace the whole hidden set. Empty = all visible. */
     suspend fun setNavMenuHidden(hidden: Set<String>) {
@@ -514,9 +531,9 @@ class SettingsRepository(private val context: Context) {
 
     /** All three browse sections (Live/Movies/Series) default to the playlist/provider's own order — the
      *  natural grouping a user expects right after a sync. A–Z is one tap away (toggleSort). */
-    val sortLive: Flow<SortMode> = context.dataStore.data.map { parseSort(it[Keys.SORT_LIVE], SortMode.PLAYLIST) }
-    val sortMovies: Flow<SortMode> = context.dataStore.data.map { parseSort(it[Keys.SORT_MOVIES], SortMode.PLAYLIST) }
-    val sortSeries: Flow<SortMode> = context.dataStore.data.map { parseSort(it[Keys.SORT_SERIES], SortMode.PLAYLIST) }
+    val sortLive: Flow<SortMode> = prefsFlow { parseSort(it[Keys.SORT_LIVE], SortMode.PLAYLIST) }
+    val sortMovies: Flow<SortMode> = prefsFlow { parseSort(it[Keys.SORT_MOVIES], SortMode.PLAYLIST) }
+    val sortSeries: Flow<SortMode> = prefsFlow { parseSort(it[Keys.SORT_SERIES], SortMode.PLAYLIST) }
 
     suspend fun setSortLive(mode: SortMode) {
         context.dataStore.edit { it[Keys.SORT_LIVE] = mode.name }
@@ -538,14 +555,14 @@ class SettingsRepository(private val context: Context) {
 
     /** How Movies & Series browse: the poster wall, or a compact list (more titles at once). */
     enum class VodViewMode(val label: String) { GRID("Grid"), LIST("List") }
-    val vodViewMode: Flow<VodViewMode> = context.dataStore.data.map { prefs ->
+    val vodViewMode: Flow<VodViewMode> = prefsFlow { prefs ->
         prefs[Keys.VOD_VIEW_MODE]?.let { runCatching { VodViewMode.valueOf(it) }.getOrNull() } ?: VodViewMode.GRID
     }
     suspend fun setVodViewMode(mode: VodViewMode) {
         context.dataStore.edit { it[Keys.VOD_VIEW_MODE] = mode.name }
     }
 
-    val sortGuide: Flow<GuideSort> = context.dataStore.data.map { prefs ->
+    val sortGuide: Flow<GuideSort> = prefsFlow { prefs ->
         prefs[Keys.SORT_GUIDE]?.let { runCatching { GuideSort.valueOf(it) }.getOrNull() } ?: GuideSort.LIVE_TV
     }
 
@@ -556,7 +573,7 @@ class SettingsRepository(private val context: Context) {
     // --- Video Player Settings ---
 
     /** Hardware decoding (mpv hwdec auto-safe). Off = force software decoding for tricky streams. */
-    val hwDecoding: Flow<Boolean> = context.dataStore.data.map { it[Keys.HW_DECODING] ?: true }
+    val hwDecoding: Flow<Boolean> = prefsFlow { it[Keys.HW_DECODING] ?: true }
 
     suspend fun setHwDecoding(enabled: Boolean) {
         context.dataStore.edit { it[Keys.HW_DECODING] = enabled }
@@ -566,7 +583,7 @@ class SettingsRepository(private val context: Context) {
      *  fallback; on = ExoPlayer first with an automatic mpv fallback. mpv is the default because it has
      *  the wider codec support (DTS/TrueHD audio, odd containers) and the A/V-sync nudge; ExoPlayer-first
      *  is for devices/providers where mpv's path can't open streams that ExoPlayer plays fine. */
-    val vodPreferExo: Flow<Boolean> = context.dataStore.data.map { it[Keys.VOD_PREFER_EXO] ?: false }
+    val vodPreferExo: Flow<Boolean> = prefsFlow { it[Keys.VOD_PREFER_EXO] ?: false }
 
     suspend fun setVodPreferExo(enabled: Boolean) {
         context.dataStore.edit { it[Keys.VOD_PREFER_EXO] = enabled }
@@ -576,7 +593,7 @@ class SettingsRepository(private val context: Context) {
      *  overlay shows measured values that ExoPlayer doesn't declare for raw MPEG-TS. Off = a hard
      *  escape hatch: no live measuring runs at all (declared values only), for any low-end TV where
      *  the measuring is ever suspected of causing stutter. Never affects the actual playback pipeline. */
-    val measuredStreamStats: Flow<Boolean> = context.dataStore.data.map { it[Keys.MEASURED_STREAM_STATS] ?: true }
+    val measuredStreamStats: Flow<Boolean> = prefsFlow { it[Keys.MEASURED_STREAM_STATS] ?: true }
 
     suspend fun setMeasuredStreamStats(enabled: Boolean) {
         context.dataStore.edit { it[Keys.MEASURED_STREAM_STATS] = enabled }
@@ -584,7 +601,7 @@ class SettingsRepository(private val context: Context) {
 
     /** Hand movies, series, and downloads to an external player (VLC, MX Player) instead of the
      *  in-app engine. Off by default. Live TV is never routed externally. */
-    val externalPlayer: Flow<Boolean> = context.dataStore.data.map { it[Keys.EXTERNAL_PLAYER] ?: false }
+    val externalPlayer: Flow<Boolean> = prefsFlow { it[Keys.EXTERNAL_PLAYER] ?: false }
 
     suspend fun setExternalPlayer(enabled: Boolean) {
         context.dataStore.edit { it[Keys.EXTERNAL_PLAYER] = enabled }
@@ -599,35 +616,35 @@ class SettingsRepository(private val context: Context) {
      *  Second, subtler failure mode (confirmed in the field): even when multichannel LPCM plays correctly,
      *  the wider HDMI/ARC buffer adds latency the TV/soundbar doesn't report back, so audio lags video
      *  (lip-sync drift) on VODs. Stereo's small, well-reported buffer stays locked. Hence: default OFF. */
-    val surroundSound: Flow<Boolean> = context.dataStore.data.map { it[Keys.SURROUND_SOUND] ?: false }
+    val surroundSound: Flow<Boolean> = prefsFlow { it[Keys.SURROUND_SOUND] ?: false }
 
     suspend fun setSurroundSound(enabled: Boolean) {
         context.dataStore.edit { it[Keys.SURROUND_SOUND] = enabled }
     }
 
     /** Auto-play the next episode (and roll into the next season) when one finishes. On by default. */
-    val autoPlayNext: Flow<Boolean> = context.dataStore.data.map { it[Keys.AUTO_PLAY_NEXT] ?: true }
+    val autoPlayNext: Flow<Boolean> = prefsFlow { it[Keys.AUTO_PLAY_NEXT] ?: true }
 
     suspend fun setAutoPlayNext(enabled: Boolean) {
         context.dataStore.edit { it[Keys.AUTO_PLAY_NEXT] = enabled }
     }
 
     /** Default zoom/aspect mode applied when playback starts (a [tv.own.owntv.player.ZoomMode] name). */
-    val defaultZoom: Flow<String> = context.dataStore.data.map { it[Keys.DEFAULT_ZOOM] ?: "FIT" }
+    val defaultZoom: Flow<String> = prefsFlow { it[Keys.DEFAULT_ZOOM] ?: "FIT" }
 
     suspend fun setDefaultZoom(name: String) {
         context.dataStore.edit { it[Keys.DEFAULT_ZOOM] = name }
     }
 
     /** Subtitle scale multiplier (mpv sub-scale); 1.0 = normal. */
-    val subtitleScale: Flow<Float> = context.dataStore.data.map { it[Keys.SUB_SCALE] ?: 1.0f }
+    val subtitleScale: Flow<Float> = prefsFlow { it[Keys.SUB_SCALE] ?: 1.0f }
 
     suspend fun setSubtitleScale(scale: Float) {
         context.dataStore.edit { it[Keys.SUB_SCALE] = scale }
     }
 
     /** Audio sync offset in milliseconds (mpv audio-delay); +ve delays audio. */
-    val audioDelayMs: Flow<Int> = context.dataStore.data.map { it[Keys.AUDIO_DELAY_MS] ?: 0 }
+    val audioDelayMs: Flow<Int> = prefsFlow { it[Keys.AUDIO_DELAY_MS] ?: 0 }
 
     suspend fun setAudioDelayMs(ms: Int) {
         context.dataStore.edit { it[Keys.AUDIO_DELAY_MS] = ms }
@@ -635,19 +652,19 @@ class SettingsRepository(private val context: Context) {
 
     // --- CH+- key paging (browse panels): master toggle + per-direction skip counts ---
     // Clamped to [1, ChNavLimits.HARD_MAX] on write so an accidental huge value can never persist.
-    val chNavEnabled: Flow<Boolean> = context.dataStore.data.map { it[Keys.CH_NAV_ENABLED] ?: true }
+    val chNavEnabled: Flow<Boolean> = prefsFlow { it[Keys.CH_NAV_ENABLED] ?: true }
     suspend fun setChNavEnabled(enabled: Boolean) {
         context.dataStore.edit { it[Keys.CH_NAV_ENABLED] = enabled }
     }
     /** CH+ skip count (jumps this many items toward the first item). */
-    val chNavUpSkip: Flow<Int> = context.dataStore.data.map {
+    val chNavUpSkip: Flow<Int> = prefsFlow {
         (it[Keys.CH_NAV_UP_SKIP] ?: ChNavLimits.DEFAULT_SKIP).coerceIn(1, ChNavLimits.HARD_MAX)
     }
     suspend fun setChNavUpSkip(n: Int) {
         context.dataStore.edit { it[Keys.CH_NAV_UP_SKIP] = n.coerceIn(1, ChNavLimits.HARD_MAX) }
     }
     /** CH− skip count (jumps this many items toward the last item). */
-    val chNavDownSkip: Flow<Int> = context.dataStore.data.map {
+    val chNavDownSkip: Flow<Int> = prefsFlow {
         (it[Keys.CH_NAV_DOWN_SKIP] ?: ChNavLimits.DEFAULT_SKIP).coerceIn(1, ChNavLimits.HARD_MAX)
     }
     suspend fun setChNavDownSkip(n: Int) {
@@ -655,14 +672,14 @@ class SettingsRepository(private val context: Context) {
     }
 
     /** Preferred audio language (ISO code, mpv alang); blank = no preference. */
-    val preferredAudioLang: Flow<String> = context.dataStore.data.map { it[Keys.PREF_AUDIO_LANG] ?: "" }
+    val preferredAudioLang: Flow<String> = prefsFlow { it[Keys.PREF_AUDIO_LANG] ?: "" }
 
     suspend fun setPreferredAudioLang(lang: String) {
         context.dataStore.edit { it[Keys.PREF_AUDIO_LANG] = lang }
     }
 
     /** Preferred subtitle language (ISO code, mpv slang); blank = no preference. */
-    val preferredSubLang: Flow<String> = context.dataStore.data.map { it[Keys.PREF_SUB_LANG] ?: "" }
+    val preferredSubLang: Flow<String> = prefsFlow { it[Keys.PREF_SUB_LANG] ?: "" }
 
     suspend fun setPreferredSubLang(lang: String) {
         context.dataStore.edit { it[Keys.PREF_SUB_LANG] = lang }
@@ -676,11 +693,11 @@ class SettingsRepository(private val context: Context) {
 
     /** Per-source playlist auto-refresh selection. Missing ids default to [PlaylistAutoRefresh.OFF]. */
     val playlistAutoRefresh: Flow<Map<Long, PlaylistAutoRefresh>> =
-        context.dataStore.data.map { prefs -> parseRefreshMap(prefs[Keys.PLAYLIST_AUTO_REFRESH]) { PlaylistAutoRefresh.valueOf(it) } }
+        prefsFlow { prefs -> parseRefreshMap(prefs[Keys.PLAYLIST_AUTO_REFRESH]) { PlaylistAutoRefresh.valueOf(it) } }
 
     /** Per-source EPG auto-refresh selection. Missing ids default to [EpgAutoRefresh.OFF]. */
     val epgAutoRefresh: Flow<Map<Long, EpgAutoRefresh>> =
-        context.dataStore.data.map { prefs -> parseRefreshMap(prefs[Keys.EPG_AUTO_REFRESH]) { EpgAutoRefresh.valueOf(it) } }
+        prefsFlow { prefs -> parseRefreshMap(prefs[Keys.EPG_AUTO_REFRESH]) { EpgAutoRefresh.valueOf(it) } }
 
     suspend fun setPlaylistAutoRefresh(sourceId: Long, mode: PlaylistAutoRefresh) {
         context.dataStore.edit { prefs ->
@@ -713,6 +730,39 @@ class SettingsRepository(private val context: Context) {
             }
             prefs[Keys.REFRESH_MIGRATED] = true
         }
+    }
+
+    /**
+     * One-shot guard for the post-migration EPG refill (audit D4).
+     *
+     * `MIGRATION_8_9` deletes every row in `epg_programmes` (it adds `contentHash` and a natural-key
+     * unique index, which the old rows can't satisfy) and nothing schedules a re-fetch — so an
+     * upgrading user was left with an empty guide until they happened to re-sync EPG by hand. This
+     * runs the detection exactly once per install, which also covers users who passed through 8→9
+     * long ago and are still sitting on an empty guide.
+     */
+    val epgRefillChecked: Flow<Boolean> = prefsFlow { it[Keys.EPG_REFILL_CHECKED] == true }
+
+    suspend fun markEpgRefillChecked() {
+        context.dataStore.edit { prefs -> prefs[Keys.EPG_REFILL_CHECKED] = true }
+    }
+
+    /**
+     * Interrupted-restore marker (B2). A restore writes to the database *and* to several DataStore
+     * files; only the row writes can share a transaction, so a crash or a pulled plug part-way
+     * through leaves a half-applied merge that nothing would otherwise notice. The marker is written
+     * before the first write and removed after the last one, so a value still present at the next
+     * launch means "that restore didn't finish". The value is the backup file name plus the sections
+     * that were being applied — enough to tell the user what to re-run, and never a secret.
+     */
+    val restoreInProgress: Flow<String?> = prefsFlow { it[Keys.RESTORE_IN_PROGRESS] }
+
+    suspend fun markRestoreStarted(description: String) {
+        context.dataStore.edit { prefs -> prefs[Keys.RESTORE_IN_PROGRESS] = description }
+    }
+
+    suspend fun clearRestoreMarker() {
+        context.dataStore.edit { prefs -> prefs.remove(Keys.RESTORE_IN_PROGRESS) }
     }
 
     private inline fun <reified E : Enum<E>> parseRefreshMap(raw: String?, valueOf: (String) -> E): Map<Long, E> {
@@ -748,21 +798,21 @@ class SettingsRepository(private val context: Context) {
     }
 
     /** Whether focusing a channel auto-plays it in the Live preview pane. */
-    val livePreviewEnabled: Flow<Boolean> = context.dataStore.data.map { it[Keys.LIVE_PREVIEW] ?: true }
+    val livePreviewEnabled: Flow<Boolean> = prefsFlow { it[Keys.LIVE_PREVIEW] ?: true }
 
     suspend fun setLivePreviewEnabled(enabled: Boolean) {
         context.dataStore.edit { it[Keys.LIVE_PREVIEW] = enabled }
     }
 
     /** Whether the Live preview plays audio (off by default so browsing stays quiet). */
-    val livePreviewAudio: Flow<Boolean> = context.dataStore.data.map { it[Keys.LIVE_PREVIEW_AUDIO] ?: false }
+    val livePreviewAudio: Flow<Boolean> = prefsFlow { it[Keys.LIVE_PREVIEW_AUDIO] ?: false }
 
     suspend fun setLivePreviewAudio(enabled: Boolean) {
         context.dataStore.edit { it[Keys.LIVE_PREVIEW_AUDIO] = enabled }
     }
 
     /** Use HDR output when the video and display support it. */
-    val hdrEnabled: Flow<Boolean> = context.dataStore.data.map { it[Keys.HDR_ENABLED] ?: true }
+    val hdrEnabled: Flow<Boolean> = prefsFlow { it[Keys.HDR_ENABLED] ?: true }
 
     suspend fun setHdrEnabled(enabled: Boolean) {
         context.dataStore.edit { it[Keys.HDR_ENABLED] = enabled }
@@ -773,34 +823,34 @@ class SettingsRepository(private val context: Context) {
      * full-screen playback, and restore it on exit. Applies to both engines and to Live TV as well as
      * VOD. Default on; turn off if a TV/AV receiver re-handshakes HDMI noisily on every channel change.
      */
-    val autoFrameRate: Flow<Boolean> = context.dataStore.data.map { it[Keys.AUTO_FRAME_RATE] ?: true }
+    val autoFrameRate: Flow<Boolean> = prefsFlow { it[Keys.AUTO_FRAME_RATE] ?: true }
 
     suspend fun setAutoFrameRate(enabled: Boolean) {
         context.dataStore.edit { it[Keys.AUTO_FRAME_RATE] = enabled }
     }
 
     /** Mirror continue-watching rows into Android TV home surfaces. */
-    val androidTvHomeEnabled: Flow<Boolean> = context.dataStore.data.map { it[Keys.ANDROID_TV_HOME] ?: true }
+    val androidTvHomeEnabled: Flow<Boolean> = prefsFlow { it[Keys.ANDROID_TV_HOME] ?: true }
 
     suspend fun setAndroidTvHomeEnabled(enabled: Boolean) {
         context.dataStore.edit { it[Keys.ANDROID_TV_HOME] = enabled }
     }
 
     /** The source shown as "active" in the sidebar; -1 = none chosen (fall back to the first source). */
-    val defaultSourceId: Flow<Long> = context.dataStore.data.map { it[Keys.DEFAULT_SOURCE] ?: -1L }
+    val defaultSourceId: Flow<Long> = prefsFlow { it[Keys.DEFAULT_SOURCE] ?: -1L }
 
     suspend fun setDefaultSource(id: Long) {
         context.dataStore.edit { it[Keys.DEFAULT_SOURCE] = id }
     }
 
     /** User-chosen download base folder; blank = app-specific storage. */
-    val downloadRoot: Flow<String> = context.dataStore.data.map { it[Keys.DOWNLOAD_ROOT] ?: "" }
+    val downloadRoot: Flow<String> = prefsFlow { it[Keys.DOWNLOAD_ROOT] ?: "" }
 
     suspend fun setDownloadRoot(path: String) {
         context.dataStore.edit { it[Keys.DOWNLOAD_ROOT] = path }
     }
 
-    val themeMode: Flow<ThemeMode> = context.dataStore.data.map { prefs ->
+    val themeMode: Flow<ThemeMode> = prefsFlow { prefs ->
         prefs[Keys.THEME_MODE]?.let { runCatching { ThemeMode.valueOf(it) }.getOrNull() }
             ?: ThemeMode.DARK
     }
@@ -809,7 +859,7 @@ class SettingsRepository(private val context: Context) {
         context.dataStore.edit { it[Keys.THEME_MODE] = mode.name }
     }
 
-    val uiZoomPercent: Flow<Int> = context.dataStore.data.map { prefs ->
+    val uiZoomPercent: Flow<Int> = prefsFlow { prefs ->
         UiZoom.clamp(prefs[Keys.UI_ZOOM_PCT] ?: UiZoom.DEFAULT)
     }
 
@@ -818,7 +868,7 @@ class SettingsRepository(private val context: Context) {
     }
 
     /** Docked mini-player size as a percentage of screen width (clamped to the allowed range). */
-    val miniPlayerSizePct: Flow<Int> = context.dataStore.data.map { prefs ->
+    val miniPlayerSizePct: Flow<Int> = prefsFlow { prefs ->
         tv.own.owntv.player.MiniPlayerSize.clamp(prefs[Keys.MINI_PLAYER_SIZE_PCT] ?: tv.own.owntv.player.MiniPlayerSize.DEFAULT)
     }
 
@@ -827,7 +877,7 @@ class SettingsRepository(private val context: Context) {
     }
 
     /** Docked mini-player screen position (a [tv.own.owntv.player.MiniPlayerPosition] name). */
-    val miniPlayerPosition: Flow<String> = context.dataStore.data.map { prefs ->
+    val miniPlayerPosition: Flow<String> = prefsFlow { prefs ->
         prefs[Keys.MINI_PLAYER_POSITION] ?: tv.own.owntv.player.MiniPlayerPosition.DEFAULT.name
     }
 
@@ -836,7 +886,7 @@ class SettingsRepository(private val context: Context) {
     }
 
     /** Live TV latency preset (a [LiveLatency] name). */
-    val liveLatencyMode: Flow<String> = context.dataStore.data.map { prefs ->
+    val liveLatencyMode: Flow<String> = prefsFlow { prefs ->
         prefs[Keys.LIVE_LATENCY_MODE] ?: LiveLatency.DEFAULT.name
     }
 
@@ -845,7 +895,7 @@ class SettingsRepository(private val context: Context) {
     }
 
     /** Custom live buffer seconds, used when the preset is [LiveLatency.CUSTOM]. */
-    val liveLatencyCustomSecs: Flow<Int> = context.dataStore.data.map { prefs ->
+    val liveLatencyCustomSecs: Flow<Int> = prefsFlow { prefs ->
         LiveBuffer.clampCustom(prefs[Keys.LIVE_LATENCY_CUSTOM_SECS] ?: LiveBuffer.CUSTOM_DEFAULT)
     }
 
@@ -858,7 +908,7 @@ class SettingsRepository(private val context: Context) {
         LiveBuffer.effectiveSeconds(LiveLatency.fromName(mode), custom)
     }
 
-    val accent: Flow<AccentColor> = context.dataStore.data.map { prefs ->
+    val accent: Flow<AccentColor> = prefsFlow { prefs ->
         prefs[Keys.ACCENT]?.let { runCatching { AccentColor.valueOf(it) }.getOrNull() }
             ?: AccentColor.TEAL
     }
@@ -872,7 +922,7 @@ class SettingsRepository(private val context: Context) {
     }
 
     /** Custom accent as a hex string ("#52DBC8"); blank = use the [accent] preset. */
-    val customAccent: Flow<String> = context.dataStore.data.map { it[Keys.ACCENT_CUSTOM] ?: "" }
+    val customAccent: Flow<String> = prefsFlow { it[Keys.ACCENT_CUSTOM] ?: "" }
 
     suspend fun setCustomAccent(hex: String) {
         context.dataStore.edit { it[Keys.ACCENT_CUSTOM] = hex.trim() }
@@ -880,10 +930,10 @@ class SettingsRepository(private val context: Context) {
 
     // --- Liquid Glass: background image + which surfaces go translucent + how translucent ---
     /** Absolute path to the user's background image (copied into app-private storage); blank = off. */
-    val bgImagePath: Flow<String> = context.dataStore.data.map { it[Keys.BG_IMAGE_PATH] ?: "" }
+    val bgImagePath: Flow<String> = prefsFlow { it[Keys.BG_IMAGE_PATH] ?: "" }
 
     /** Glass scope as a [GlassConfig] bitfield. Empty scope = feature off. */
-    val glassConfig: Flow<tv.own.owntv.ui.theme.GlassConfig> = context.dataStore.data.map { p ->
+    val glassConfig: Flow<tv.own.owntv.ui.theme.GlassConfig> = prefsFlow { p ->
         val bits = p[Keys.GLASS_SCOPE] ?: GLASS_SCOPE_DEFAULT_BITS
         val alphaPct = p[Keys.GLASS_ALPHA] ?: GLASS_ALPHA_DEFAULT_PCT
         val blurPct = p[Keys.GLASS_BLUR] ?: GLASS_BLUR_DEFAULT_PCT
@@ -911,14 +961,14 @@ class SettingsRepository(private val context: Context) {
     }
 
     /** Avatar for the current (placeholder) profile until real profiles arrive in the wizard. */
-    val avatarId: Flow<Int> = context.dataStore.data.map { it[Keys.AVATAR_ID] ?: 0 }
+    val avatarId: Flow<Int> = prefsFlow { it[Keys.AVATAR_ID] ?: 0 }
 
     suspend fun setAvatarId(id: Int) {
         context.dataStore.edit { it[Keys.AVATAR_ID] = id }
     }
 
     /** Active profile id; -1 means first-run / setup not yet completed. */
-    val activeProfileId: Flow<Long> = context.dataStore.data.map { it[Keys.ACTIVE_PROFILE] ?: -1L }
+    val activeProfileId: Flow<Long> = prefsFlow { it[Keys.ACTIVE_PROFILE] ?: -1L }
 
     suspend fun setActiveProfile(id: Long) {
         context.dataStore.edit { it[Keys.ACTIVE_PROFILE] = id }
@@ -930,7 +980,7 @@ class SettingsRepository(private val context: Context) {
     // password is intentionally NOT part of settings backup/export — see extras/PROXY_SUPPORT_PLAN.md.
 
     /** Live snapshot of the proxy settings as a single object (consumed by ProxyConfigHolder). */
-    val proxyConfig: Flow<tv.own.owntv.core.network.ProxyConfig> = context.dataStore.data.map { p ->
+    val proxyConfig: Flow<tv.own.owntv.core.network.ProxyConfig> = prefsFlow { p ->
         tv.own.owntv.core.network.ProxyConfig(
             enabled = p[Keys.PROXY_ENABLED] ?: false,
             host = p[Keys.PROXY_HOST] ?: "",

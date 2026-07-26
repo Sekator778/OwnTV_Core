@@ -8,6 +8,7 @@ import tv.own.owntv.core.backup.BackupManager
 import tv.own.owntv.core.database.BulkInsertHelper
 import tv.own.owntv.core.backup.UserDataResolver
 import tv.own.owntv.core.customize.CustomizationStore
+import tv.own.owntv.core.download.DownloadEngine
 import tv.own.owntv.core.download.DownloadManager
 import tv.own.owntv.core.network.ConnectivityObserver
 import tv.own.owntv.core.network.HttpClient
@@ -157,9 +158,11 @@ val dataModule = module {
     single { TvHomeRepository(androidContext(), get(), get(), get(), get(), get(), get(), get(), get(), get()) }
     // planner, resolver, tvHomeRepository
     single { LauncherIntegrationRepository(get(), get(), get()) }
-    // context, downloadDao, okHttpClient, settings, sourceDao, movieDao, seriesDao, streamUrlResolver
+    // downloadDao, okHttpClient, sourceDao, movieDao, seriesDao, streamUrlResolver
     // (the last four are D-3: Stalker downloads resolve the stored cmd at download-start time)
-    single { DownloadManager(androidContext(), get(), get(), get(), get(), get(), get(), get()) }
+    single { DownloadEngine(get(), get(), get(), get(), get(), get()) }
+    // context, downloadDao, settings, engine
+    single { DownloadManager(androidContext(), get(), get(), get()) }
     // profileDao, sourceDao, settings, customizationStore, userDataResolver, epgSourceStore,
     // forceMpvStore, vodEngineStore, db, metadataOverrideStore, metadataDao, openSubtitlesAuthStore
     single { BackupManager(get(), get(), get(), get(), get(), get(), get(), get(), get(), get(), get(), get()) }

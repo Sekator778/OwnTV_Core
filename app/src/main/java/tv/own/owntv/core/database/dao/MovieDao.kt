@@ -40,7 +40,7 @@ interface MovieDao {
     @Query("SELECT remoteId FROM movies WHERE sourceId = :sourceId AND remoteId IS NOT NULL")
     suspend fun remoteIdsForSource(sourceId: Long): List<String>
 
-    @Query("SELECT remoteId, id, contentHash FROM movies WHERE sourceId = :sourceId AND remoteId IS NOT NULL")
+    @Query("SELECT remoteId, id, contentHash, sortOrder FROM movies WHERE sourceId = :sourceId AND remoteId IS NOT NULL")
     suspend fun contentHashesForSource(sourceId: Long): List<ContentHashProjection>
 
     @Query("DELETE FROM movies WHERE sourceId = :sourceId AND remoteId IN (:remoteIds)")
@@ -56,6 +56,12 @@ interface MovieDao {
 
     @Query("SELECT remoteId FROM movies WHERE sourceId = :sourceId AND categoryId = :categoryId AND remoteId IS NOT NULL")
     suspend fun remoteIdsForCategory(sourceId: Long, categoryId: Long): List<String>
+
+    /** Prune scope for the per-category sync fallback: rows in the categories that were fetched
+     *  successfully. Rows with no category are never returned by a per-category request, so they
+     *  must stay out of scope or a fallback pass would delete them all. */
+    @Query("SELECT remoteId FROM movies WHERE sourceId = :sourceId AND categoryId IN (:categoryIds) AND remoteId IS NOT NULL")
+    suspend fun remoteIdsInCategories(sourceId: Long, categoryIds: List<Long>): List<String>
 
     @Query("SELECT * FROM movies WHERE sourceId = :sourceId AND name = :name LIMIT 1")
     suspend fun findByName(sourceId: Long, name: String): MovieEntity?

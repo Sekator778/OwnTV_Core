@@ -162,6 +162,14 @@ data class SeriesEntity(
     val remoteId: String? = null,
     val sortOrder: Int = 0,
     @ColumnInfo(defaultValue = "0") val contentHash: Int = 0,
+    /**
+     * When this show's episode list was last fetched from the provider (epoch ms; 0 = never).
+     * Episodes are loaded lazily on open and used to be cached forever, so a show never gained the
+     * episodes the provider added after the first open (S8). This drives the freshness check in
+     * `SeriesRepository.loadEpisodes`. Deliberately *not* in [computeContentHash] — it is local
+     * bookkeeping, not provider content.
+     */
+    @ColumnInfo(defaultValue = "0") val episodesSyncedAt: Long = 0,
 )
 
 @Entity(
@@ -206,10 +214,16 @@ data class EpisodeEntity(
     val remoteId: String? = null,
 )
 
+/**
+ * What a resync needs to know about a row it already holds. [sortOrder] is deliberately *outside*
+ * `computeContentHash()`: folding it in would change every stored hash at once and turn the next
+ * resync of a large catalog into a full rewrite, so the syncer compares it separately (S1).
+ */
 data class ContentHashProjection(
     val remoteId: String,
     val id: Long,
     val contentHash: Int,
+    val sortOrder: Int,
 )
 
 fun ChannelEntity.computeContentHash(): Int = Objects.hash(

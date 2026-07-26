@@ -5,6 +5,7 @@ import androidx.work.ListenableWorker
 import androidx.work.WorkerFactory
 import androidx.work.WorkerParameters
 import org.koin.core.context.GlobalContext
+import tv.own.owntv.core.download.DownloadWorker
 
 class KoinWorkerFactory : WorkerFactory() {
     override fun createWorker(
@@ -31,8 +32,14 @@ class KoinWorkerFactory : WorkerFactory() {
                 koin.get(),
                 koin.get(),
                 koin.get(),
+                koin.get(),
             )
             ContentIndexWorker::class.java.name -> ContentIndexWorker(
+                appContext,
+                workerParameters,
+                koin.get(),
+            )
+            DownloadWorker::class.java.name -> DownloadWorker(
                 appContext,
                 workerParameters,
                 koin.get(),

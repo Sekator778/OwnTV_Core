@@ -53,10 +53,19 @@ class SyncManager(
 
     fun getLastSyncStats(sourceId: Long): SyncRunStats? = lastSyncStats[sourceId]
 
-    suspend fun sync(source: SourceEntity, onProgress: (ImportStage) -> Unit, contentTypes: SyncContentTypes = SyncContentTypes()): Pair<SyncResult, SyncRunStats> =
+    suspend fun sync(
+        source: SourceEntity,
+        onProgress: (ImportStage) -> Unit,
+        contentTypes: SyncContentTypes = SyncContentTypes(),
+        /**
+         * User-requested clean resync. Scoped to this one run — it is never persisted and never set
+         * by an automatic sync, so the catalog-shrink guard protects every other pass as before.
+         */
+        forcePrune: Boolean = false,
+    ): Pair<SyncResult, SyncRunStats> =
         withContext(Dispatchers.IO) {
             val syncStartedAt = SystemClock.elapsedRealtime()
-            val stats = SyncStatsCollector(source.id)
+            val stats = SyncStatsCollector(source.id).apply { this.forcePrune = forcePrune }
             // Single derivation: request ∩ enabledScope, then type-constrained (replaces the old
             // trackedContentTypes source-type switch). A stale enqueue can't revive an Off section.
             val effective = contentTypes.effectiveFor(source)
@@ -64,7 +73,7 @@ class SyncManager(
             Log.i(
                 TAG,
                 "sync start sourceId=${source.id} name=${source.name} type=${source.type} " +
-                    "requestedContentTypes=$contentTypes effective=$effective target=$target",
+                    "requestedContentTypes=$contentTypes effective=$effective target=$target forcePrune=$forcePrune",
             )
             activityTracker.started(source.id, source.name)
             val progress = SyncCounters(effective) { stage ->

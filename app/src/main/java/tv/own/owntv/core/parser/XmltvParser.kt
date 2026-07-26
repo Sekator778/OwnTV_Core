@@ -8,9 +8,6 @@ import kotlinx.coroutines.ensureActive
 import org.xmlpull.v1.XmlPullParser
 import java.io.InputStream
 import java.io.PushbackInputStream
-import java.text.SimpleDateFormat
-import java.util.Locale
-import java.util.TimeZone
 import java.util.zip.GZIPInputStream
 
 /**
@@ -282,22 +279,12 @@ object XmltvParser {
         }
     }
 
-    /** XMLTV time is `yyyyMMddHHmmss` optionally followed by a ` +0000` style offset. */
-    private fun parseTime(raw: String?): Long {
-        val t = raw?.trim()?.replace(" ", "") ?: return 0
-        if (t.length < 14) return 0
-        return try {
-            if (t.length >= 15 && (t[14] == '+' || t[14] == '-')) {
-                SimpleDateFormat("yyyyMMddHHmmssZ", Locale.US).parse(t)?.time ?: 0
-            } else {
-                SimpleDateFormat("yyyyMMddHHmmss", Locale.US)
-                    .apply { timeZone = TimeZone.getTimeZone("UTC") }
-                    .parse(t.take(14))?.time ?: 0
-            }
-        } catch (e: Exception) {
-            0
-        }
-    }
+    /**
+     * XMLTV time is `yyyyMMddHHmmss` optionally followed by a ` +0000` style offset.
+     * See [parseXmltvTime] — this used to build a `SimpleDateFormat` per timestamp, which is two
+     * per programme and ~200,000 on a large guide (E2).
+     */
+    private fun parseTime(raw: String?): Long = parseXmltvTime(raw)
 
     private fun maybeGunzip(input: InputStream): InputStream {
         val pb = PushbackInputStream(input, 2)

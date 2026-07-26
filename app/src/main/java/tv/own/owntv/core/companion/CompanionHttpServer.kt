@@ -35,8 +35,32 @@ import tv.own.owntv.core.model.SourceType
  */
 class CompanionHttpServer {
 
-    private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
+    /**
+     * The server's **own** slice of the IO pool (C3). Every accepted socket used to be handled on the
+     * shared `Dispatchers.IO`, where each one holds a thread for up to its `soTimeout` (10 s, or 30 s
+     * for uploads) — so a connection flood, or just a browser pre-connecting aggressively, could park
+     * the whole pool and stall the app's own syncs, downloads and image loading. A limited view caps
+     * the blast radius at [MAX_PARALLELISM] threads. It's a view of `Dispatchers.IO`, not a pool of
+     * its own, so there is nothing extra to release in [close].
+     */
+    @OptIn(kotlinx.coroutines.ExperimentalCoroutinesApi::class)
+    private val ioDispatcher = Dispatchers.IO.limitedParallelism(MAX_PARALLELISM)
+
+    private val scope = CoroutineScope(SupervisorJob() + ioDispatcher)
     private val running = AtomicBoolean(false)
+
+    /** In-flight connections (C3). Beyond the cap a socket is closed at once rather than queued. */
+    private val inFlight = java.util.concurrent.Semaphore(MAX_IN_FLIGHT)
+
+    /**
+     * Consecutive wrong PINs this session (C2). A 6-digit PIN is a million possibilities, which a
+     * script on a LAN exhausts in minutes; the constant-time compare stops timing leakage but says
+     * nothing about volume. Reset by any correct PIN.
+     */
+    private val failedPins = java.util.concurrent.atomic.AtomicInteger(0)
+
+    /** Fired when [MAX_PIN_ATTEMPTS] is reached and the server shuts itself down. */
+    @Volatile private var onLocked: () -> Unit = {}
 
     @Volatile private var serverSocket: ServerSocket? = null
     @Volatile private var pin: String = ""
@@ -71,9 +95,12 @@ class CompanionHttpServer {
         onBackup: (String) -> Unit = {},
         onImage: (bytes: ByteArray, extension: String) -> Unit = { _, _ -> },
         downloadFile: File? = null,
+        onLocked: () -> Unit = {},
     ): List<String> {
         stop()
         this.pin = pin
+        this.onLocked = onLocked
+        failedPins.set(0)
         this.fontBytes = fontBytes
         this.mode = mode
         this.onPayload = onPayload
@@ -95,6 +122,7 @@ class CompanionHttpServer {
         onPayload = {}
         onBackup = {}
         onImage = { _, _ -> }
+        onLocked = {}
         downloadFile = null
         runCatching { serverSocket?.close() }
         serverSocket = null
@@ -115,14 +143,27 @@ class CompanionHttpServer {
                     if (running.get()) Log.w(TAG, "Companion accept failed", e)
                     break
                 }
-                scope.launch { handleClient(client) }
+                // C3: shed rather than queue. A queued connection still holds a socket and would be
+                // served long after the client gave up; closing it immediately keeps the cap honest.
+                if (!inFlight.tryAcquire()) {
+                    Log.w(TAG, "Companion connection refused — $MAX_IN_FLIGHT already in flight")
+                    runCatching { client.close() }
+                    continue
+                }
+                scope.launch {
+                    try {
+                        handleClient(client)
+                    } finally {
+                        inFlight.release()
+                    }
+                }
             }
         } finally {
             stop()
         }
     }
 
-    private fun handleClient(client: Socket) {
+    private suspend fun handleClient(client: Socket) {
         client.use { socket ->
             // Backup/image uploads can be several MB over Wi-Fi; give them more headroom than a tiny form post.
             socket.soTimeout = if (mode == CompanionMode.BACKUP_RESTORE || mode == CompanionMode.IMAGE_UPLOAD) 30_000 else 10_000
@@ -155,23 +196,35 @@ class CompanionHttpServer {
             // Landing: a correct PIN in the query (e.g. the "send another" link) skips straight to the
             // page for the current mode; otherwise show the PIN gate.
             if (method == "GET" && (path == "/" || path == "/index.html")) {
-                val page = if (pinOk(queryPin)) authedPage()
-                else CompanionHtml.pinPage(if (queryPin.isNotBlank()) "That PIN did not match — try again." else null)
-                return sendHtml(socket, 200, page)
+                if (pinOk(queryPin)) {
+                    pinAccepted()
+                    return sendHtml(socket, 200, authedPage())
+                }
+                // An empty PIN is just someone opening the link, not a guess — only count real ones.
+                if (queryPin.isNotBlank() && pinRejected()) return sendText(socket, 403, LOCKOUT_MESSAGE)
+                return sendHtml(
+                    socket,
+                    200,
+                    CompanionHtml.pinPage(if (queryPin.isNotBlank()) "That PIN did not match — try again." else null),
+                )
             }
 
             // PIN submission from the gate.
             if (method == "POST" && path == "/") {
-                val submitted = parseQuery(readBody(input, headers))["pin"].orEmpty()
-                val page = if (pinOk(submitted)) authedPage()
-                else CompanionHtml.pinPage("That PIN did not match — try again.")
-                return sendHtml(socket, 200, page)
+                val body = readBody(input, headers, maxBodyBytes(path)) ?: return sendText(socket, 413, "Body too large")
+                val submitted = parseQuery(body)["pin"].orEmpty()
+                if (pinOk(submitted)) {
+                    pinAccepted()
+                    return sendHtml(socket, 200, authedPage())
+                }
+                if (pinRejected()) return sendText(socket, 403, LOCKOUT_MESSAGE)
+                return sendHtml(socket, 200, CompanionHtml.pinPage("That PIN did not match — try again."))
             }
 
             // Backup download (BACKUP_DOWNLOAD mode) — PIN required, streams the exported JSON file.
             if (method == "GET" && path == "/backup.json") {
                 val headerPin = headers["x-companion-pin"].orEmpty()
-                if (!pinOk(queryPin.ifBlank { headerPin })) return sendText(socket, 401, "Unauthorized")
+                if (!requirePin(queryPin.ifBlank { headerPin })) return sendText(socket, 401, "Unauthorized")
                 val file = downloadFile
                 val bytes = file?.takeIf { it.exists() }?.let { runCatching { it.readBytes() }.getOrNull() }
                     ?: return sendText(socket, 404, "No backup available")
@@ -181,8 +234,8 @@ class CompanionHttpServer {
             // Backup upload (BACKUP_RESTORE mode) — PIN required, JSON body is the backup file.
             if (method == "POST" && path == "/backup") {
                 val headerPin = headers["x-companion-pin"].orEmpty()
-                if (!pinOk(queryPin.ifBlank { headerPin })) return sendText(socket, 401, "Unauthorized")
-                val body = readBody(input, headers)
+                if (!requirePin(queryPin.ifBlank { headerPin })) return sendText(socket, 401, "Unauthorized")
+                val body = readBody(input, headers, maxBodyBytes(path)) ?: return sendText(socket, 413, "Backup too large")
                 if (body.isBlank()) return sendText(socket, 400, "Empty backup")
                 onBackup(body)
                 return sendHtml(socket, 200, CompanionHtml.backupSentPage(pin))
@@ -193,8 +246,8 @@ class CompanionHttpServer {
             // keeps binary handling out of the socket path.
             if (method == "POST" && path == "/background") {
                 val headerPin = headers["x-companion-pin"].orEmpty()
-                if (!pinOk(queryPin.ifBlank { headerPin })) return sendText(socket, 401, "Unauthorized")
-                val body = readBody(input, headers)
+                if (!requirePin(queryPin.ifBlank { headerPin })) return sendText(socket, 401, "Unauthorized")
+                val body = readBody(input, headers, maxBodyBytes(path)) ?: return sendText(socket, 413, "Image too large")
                 val decoded = decodeImageDataUrl(body) ?: return sendText(socket, 400, "Not a valid image upload")
                 onImage(decoded.first, decoded.second)
                 return sendHtml(socket, 200, CompanionHtml.imageSentPage(pin))
@@ -203,13 +256,14 @@ class CompanionHttpServer {
             // Source submissions — PIN required (query or header), else 401.
             if (method == "POST" && (path == "/xtream" || path == "/m3u" || path == "/stalker")) {
                 val headerPin = headers["x-companion-pin"].orEmpty()
-                if (!pinOk(queryPin.ifBlank { headerPin })) return sendText(socket, 401, "Unauthorized")
+                if (!requirePin(queryPin.ifBlank { headerPin })) return sendText(socket, 401, "Unauthorized")
                 val fallback = when (path) {
                     "/stalker" -> SourceType.STALKER
                     "/m3u" -> SourceType.M3U
                     else -> SourceType.XTREAM
                 }
-                val payload = parsePayload(headers["content-type"], readBody(input, headers), fallback)
+                val body = readBody(input, headers, maxBodyBytes(path)) ?: return sendText(socket, 413, "Body too large")
+                val payload = parsePayload(headers["content-type"], body, fallback)
                     ?: return sendText(socket, 400, "Missing required fields")
                 onPayload(payload)
                 return sendHtml(socket, 200, CompanionHtml.savedPage(payload, pin))
@@ -220,6 +274,42 @@ class CompanionHttpServer {
     }
 
     private fun pinOk(candidate: String): Boolean = pin.isNotBlank() && pinEquals(candidate, pin)
+
+    /**
+     * PIN check for the direct POST endpoints, with the C2 attempt counting applied. Returns true
+     * when the caller may proceed.
+     */
+    private suspend fun requirePin(candidate: String): Boolean {
+        if (pinOk(candidate)) {
+            pinAccepted()
+            return true
+        }
+        pinRejected()
+        return false
+    }
+
+    /** A correct PIN clears the strike count — the limit is on *consecutive* failures. */
+    private fun pinAccepted() {
+        failedPins.set(0)
+    }
+
+    /**
+     * Records a wrong PIN. Returns true once the session is locked out.
+     *
+     * The delay is **fixed**, not proportional to the attempt number: a variable delay would leak a
+     * timing signal, which is exactly what `pinEquals` exists to avoid. On the cap the server stops
+     * itself — reopening the screen on the TV mints a fresh PIN, so a lockout costs an attacker a
+     * complete restart and the legitimate user one button press.
+     */
+    private suspend fun pinRejected(): Boolean {
+        val attempts = failedPins.incrementAndGet()
+        kotlinx.coroutines.delay(FAILED_PIN_DELAY_MS)
+        if (attempts < MAX_PIN_ATTEMPTS) return false
+        Log.w(TAG, "Companion link locked after $attempts incorrect PIN attempts")
+        onLocked()
+        stop()
+        return true
+    }
 
     /** The page served after a valid PIN, for the current [mode]. */
     private fun authedPage(): String = when (mode) {
@@ -248,17 +338,38 @@ class CompanionHttpServer {
         return if (bytes.isEmpty()) null else bytes to ext
     }
 
-    private fun readBody(input: BufferedInputStream, headers: Map<String, String>): String {
-        val length = headers["content-length"]?.toIntOrNull()?.coerceAtLeast(0) ?: 0
-        if (length == 0) return ""
-        val bytes = ByteArray(length)
-        var offset = 0
-        while (offset < length) {
-            val read = input.read(bytes, offset, length - offset)
+    /**
+     * How many body bytes this endpoint may accept. Uploads (a backup JSON, a base64 background
+     * image) legitimately run to megabytes; PIN posts and source forms are a few hundred bytes, so
+     * they get the small cap — the PIN gate is reachable *before* authentication and must not let an
+     * unauthenticated client on the LAN size an allocation for us.
+     */
+    internal fun maxBodyBytes(path: String): Int = when {
+        path == "/backup" || path == "/background" -> UPLOAD_BODY_LIMIT
+        else -> FORM_BODY_LIMIT
+    }
+
+    /**
+     * Read the request body, bounded by [limit]. Returns null when the body exceeds the cap (the
+     * caller answers 413) — `Content-Length` is a client-supplied hint that is checked against the
+     * cap but never used to pre-allocate, so a bogus header costs nothing.
+     */
+    internal fun readBody(input: BufferedInputStream, headers: Map<String, String>, limit: Int): String? {
+        val declared = headers["content-length"]?.toLongOrNull() ?: 0L
+        if (declared > limit) return null
+        if (declared == 0L) return ""
+        val buffer = ByteArrayOutputStream(declared.coerceAtMost(INITIAL_BODY_BUFFER.toLong()).toInt())
+        val chunk = ByteArray(BODY_CHUNK)
+        var total = 0L
+        while (total < declared) {
+            val want = minOf(chunk.size.toLong(), declared - total).toInt()
+            val read = input.read(chunk, 0, want)
             if (read <= 0) break
-            offset += read
+            total += read
+            if (total > limit) return null // defensive: a body longer than it declared
+            buffer.write(chunk, 0, read)
         }
-        return String(bytes, 0, offset, StandardCharsets.UTF_8)
+        return buffer.toString(StandardCharsets.UTF_8.name())
     }
 
     /**
@@ -370,7 +481,8 @@ class CompanionHttpServer {
 
     private fun sendBytes(socket: Socket, code: Int, contentType: String, bytes: ByteArray) {
         val status = when (code) {
-            200 -> "OK"; 400 -> "Bad Request"; 401 -> "Unauthorized"; 404 -> "Not Found"; else -> "OK"
+            200 -> "OK"; 400 -> "Bad Request"; 401 -> "Unauthorized"; 404 -> "Not Found"
+            413 -> "Payload Too Large"; else -> "OK"
         }
         runCatching {
             socket.getOutputStream().use { out ->
@@ -404,6 +516,29 @@ class CompanionHttpServer {
 
     companion object {
         private const val TAG = "CompanionServer"
+
+        /** Backup JSON / base64 image uploads. Generous, but finite. */
+        internal const val UPLOAD_BODY_LIMIT = 16 * 1024 * 1024
+
+        /** PIN posts and source forms — a few hundred bytes in practice. */
+        internal const val FORM_BODY_LIMIT = 64 * 1024
+
+        /** Consecutive wrong PINs before the link closes itself (C2). */
+        internal const val MAX_PIN_ATTEMPTS = 10
+
+        /** Fixed pause before answering a wrong PIN (C2) — fixed so it carries no timing signal. */
+        internal const val FAILED_PIN_DELAY_MS = 500L
+
+        internal const val LOCKOUT_MESSAGE = "Too many incorrect PIN attempts — the link was closed for safety."
+
+        /** Threads the companion server may take from the shared IO pool (C3). */
+        private const val MAX_PARALLELISM = 6
+
+        /** Connections served at once (C3); further ones are closed immediately rather than queued. */
+        private const val MAX_IN_FLIGHT = 16
+
+        private const val INITIAL_BODY_BUFFER = 64 * 1024
+        private const val BODY_CHUNK = 16 * 1024
 
         /** Length-checked, constant-time PIN compare so timing cannot leak the PIN digit by digit. */
         fun pinEquals(submitted: String, expected: String): Boolean {

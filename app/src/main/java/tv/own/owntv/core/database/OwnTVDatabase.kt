@@ -84,7 +84,7 @@ import tv.own.owntv.core.database.dao.SubtitleDao
         SeriesFtsEntity::class,
         EpisodeFtsEntity::class,
     ],
-    version = 17, // v7: content_order (Move). v8: contentHash + browse/unique indexes. v9: EPG contentHash + natural key. v10: TMDB metadata cache. v11: movies/series rating-sort indexes. v12: metadata_cache trailerKey. v13: metadata_cache logoPath. v14: sources.mac (Stalker portal). v15: external-subtitle cache/selection/timing tables. v16: subtitle_link (downloaded-sub ↔ content). v17: sources.syncLive/Movies/Series (skip-sync enabledScope)
+    version = 18, // v7: content_order (Move). v8: contentHash + browse/unique indexes. v9: EPG contentHash + natural key. v10: TMDB metadata cache. v11: movies/series rating-sort indexes. v12: metadata_cache trailerKey. v13: metadata_cache logoPath. v14: sources.mac (Stalker portal). v15: external-subtitle cache/selection/timing tables. v16: subtitle_link (downloaded-sub ↔ content). v17: sources.syncLive/Movies/Series (skip-sync enabledScope). v18: series.episodesSyncedAt (episode-cache freshness, S8)
 
     exportSchema = true,
 )
@@ -491,6 +491,23 @@ abstract class OwnTVDatabase : RoomDatabase() {
         }
 
         /**
+         * v18: `series.episodesSyncedAt` — when this show's episode list was last fetched.
+         * Existing rows default to 0 ("never"), so every already-cached show refreshes its episodes
+         * once on next open, which is exactly what an upgrading user needs: the shows frozen by S8
+         * pick up their missing episodes without deleting and re-adding the playlist.
+         *
+         * Last hop, so it carries [healSchema] (standing rule).
+         */
+        val MIGRATION_17_18 = object : androidx.room.migration.Migration(17, 18) {
+            override fun migrate(db: androidx.sqlite.db.SupportSQLiteDatabase) {
+                if (!hasColumn(db, "series", "episodesSyncedAt")) {
+                    db.execSQL("ALTER TABLE `series` ADD COLUMN `episodesSyncedAt` INTEGER NOT NULL DEFAULT 0")
+                }
+                healSchema(db)
+            }
+        }
+
+        /**
          * Canonical CREATE statements for every NON-unique index Room expects on the four
          * bulk-synced tables, keyed by table (must stay in sync with the current schema JSON).
          * BulkInsertHelper drops exactly these during eligible fresh imports; restore, the
@@ -544,7 +561,8 @@ abstract class OwnTVDatabase : RoomDatabase() {
          * (fresh install) ever creates them — no migration does — so keep the strings verbatim from
          * the generated OwnTVDatabase_Impl or validation will reject the healed table.
          */
-        private val EXPECTED_FTS_TABLES: Map<String, String> = mapOf(
+        // internal, not private: the migration test asserts healSchema restores every entry.
+        internal val EXPECTED_FTS_TABLES: Map<String, String> = mapOf(
             "channels_fts" to "CREATE VIRTUAL TABLE IF NOT EXISTS `channels_fts` USING FTS4(`name` TEXT NOT NULL, content=`channels`)",
             "movies_fts" to "CREATE VIRTUAL TABLE IF NOT EXISTS `movies_fts` USING FTS4(`name` TEXT NOT NULL, content=`movies`)",
             "series_fts" to "CREATE VIRTUAL TABLE IF NOT EXISTS `series_fts` USING FTS4(`name` TEXT NOT NULL, content=`series`)",
@@ -573,6 +591,38 @@ abstract class OwnTVDatabase : RoomDatabase() {
             EXPECTED_NON_UNIQUE_INDEXES.values.forEach { statements ->
                 statements.forEach { db.execSQL(it) }
             }
+        }
+
+        /**
+         * Every schema object [healSchema] guarantees: the FTS tables plus the name of each
+         * non-unique index, parsed once from the canonical CREATE statements above so the two
+         * lists can never drift apart.
+         */
+        private val EXPECTED_SCHEMA_OBJECTS: List<String> by lazy {
+            EXPECTED_FTS_TABLES.keys.toList() +
+                EXPECTED_NON_UNIQUE_INDEXES.values.flatten()
+                    .map { it.substringAfter("IF NOT EXISTS `").substringBefore('`') }
+        }
+
+        /**
+         * ST4: the cheap drift probe that gates the heal on the app-open path. One `sqlite_master`
+         * count answers "is anything missing?"; on a healthy database — the normal case — that is a
+         * single index lookup instead of ~30 `CREATE INDEX IF NOT EXISTS` statements landing on
+         * whichever thread issues the first query, at exactly the moment the first grid wants data.
+         *
+         * Deliberately still inside `onOpen`: a query that ran before the heal finished would hit a
+         * missing index, which is the slow path the heal exists to prevent. Returns true if it healed.
+         */
+        fun healSchemaIfDrifted(db: androidx.sqlite.db.SupportSQLiteDatabase): Boolean {
+            val expected = EXPECTED_SCHEMA_OBJECTS
+            val placeholders = expected.joinToString(",") { "?" }
+            val present = db.query(
+                "SELECT COUNT(*) FROM sqlite_master WHERE name IN ($placeholders)",
+                expected.toTypedArray(),
+            ).use { if (it.moveToFirst()) it.getInt(0) else 0 }
+            if (present >= expected.size) return false
+            healSchema(db)
+            return true
         }
 
         private fun createContentOrderTable(db: androidx.sqlite.db.SupportSQLiteDatabase) {

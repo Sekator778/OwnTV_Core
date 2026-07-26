@@ -73,6 +73,22 @@ interface ChannelDao {
     @Query("SELECT DISTINCT LOWER(TRIM(epgChannelId)) FROM channels WHERE epgChannelId IS NOT NULL AND epgChannelId != ''")
     suspend fun allEpgChannelIds(): List<String>
 
+    /**
+     * Normalised tvg-ids of this source's channels that currently have **no** guide data at all (S9).
+     *
+     * A guide sync filters the feed to the channels the user owns, and that set is snapshotted once
+     * when it starts — so a catalog sync running at the same time (or any later one that adds
+     * channels) leaves those channels' programmes permanently missing until the user re-syncs EPG by
+     * hand. This finds exactly the channels in that hole, so they can be topped up from the cached
+     * feed without another download.
+     */
+    @Query(
+        "SELECT DISTINCT LOWER(TRIM(epgChannelId)) FROM channels " +
+            "WHERE sourceId = :sourceId AND epgChannelId IS NOT NULL AND TRIM(epgChannelId) != '' " +
+            "AND LOWER(TRIM(epgChannelId)) NOT IN (SELECT DISTINCT epgChannelId FROM epg_programmes)",
+    )
+    suspend fun epgChannelIdsWithoutProgrammes(sourceId: Long): List<String>
+
     /** Largest archive window (days) across these sources' catch-up channels — 0 if none have catch-up.
      *  Drives how far back the Guide extends so archived programmes are visible. */
     @Query("SELECT COALESCE(MAX(catchupDays), 0) FROM channels WHERE sourceId IN (:sourceIds) AND catchup = 1")
@@ -113,7 +129,11 @@ interface ChannelDao {
     @Query("SELECT remoteId FROM channels WHERE sourceId = :sourceId AND remoteId IS NOT NULL")
     suspend fun remoteIdsForSource(sourceId: Long): List<String>
 
-    @Query("SELECT remoteId, id, contentHash FROM channels WHERE sourceId = :sourceId AND remoteId IS NOT NULL")
+    /** Prune scope for the per-category sync fallback — see [MovieDao.remoteIdsInCategories]. */
+    @Query("SELECT remoteId FROM channels WHERE sourceId = :sourceId AND categoryId IN (:categoryIds) AND remoteId IS NOT NULL")
+    suspend fun remoteIdsInCategories(sourceId: Long, categoryIds: List<Long>): List<String>
+
+    @Query("SELECT remoteId, id, contentHash, sortOrder FROM channels WHERE sourceId = :sourceId AND remoteId IS NOT NULL")
     suspend fun contentHashesForSource(sourceId: Long): List<ContentHashProjection>
 
     @Query("DELETE FROM channels WHERE sourceId = :sourceId AND remoteId IN (:remoteIds)")

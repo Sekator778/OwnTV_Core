@@ -228,7 +228,7 @@ internal class XtreamSyncer(
             }
             Log.i(TAG, "$label bulk end sourceId=${s.id} complete=$done unique=${total[0]} ms=${SystemClock.elapsedRealtime() - bulkStart}")
             if (!freshSource && done) {
-                support.pruneRemoteIds(label, s.id, remoteIds!!, p.adapter.remoteIdsForSource, p.adapter.deleteByRemoteIds)
+                support.pruneRemoteIds(label, s.id, remoteIds!!, stats, p.adapter.remoteIdsForSource, p.adapter.deleteByRemoteIds)
                 support.pruneCategories(s.id, p.type, categories.seenRemoteIds, label, stats)
             } else if (!freshSource) {
                 Log.i(TAG, "$label prune skipped sourceId=${s.id} reason=incomplete_bulk")
@@ -238,15 +238,62 @@ internal class XtreamSyncer(
             stats.usedFallback = true
             val fallbackStart = SystemClock.elapsedRealtime()
             Log.i(TAG, "$label fallback start sourceId=${s.id} categories=${cats.size} bulkPartial=${total[0]}")
-            sliceByCategory(ctx, p.phase, label, progress, cats, insertFn, total, total[0], remoteIds, p.adapter.remoteIdOf) { cat, add ->
+            val outcome: FallbackOutcome = sliceByCategory(ctx, p.phase, label, progress, cats, insertFn, total, total[0], remoteIds, p.adapter.remoteIdOf) { cat, add ->
                 streams.byCategory(cat, add)
             }
             Log.i(TAG, "$label fallback end sourceId=${s.id} unique=${total[0]} ms=${SystemClock.elapsedRealtime() - fallbackStart}")
+            if (!freshSource) pruneAfterFallback(s, p, label, categories, outcome, remoteIds!!, stats)
         }
         progress.update(p.phase, total[0])
         p.timingKey?.let { stats.phaseTiming[it] = System.currentTimeMillis() - phaseStart }
         stats.processedCounts[p.countsKey] = total[0]
         Log.i(TAG, "$label phase end sourceId=${s.id} unique=${total[0]} ms=${SystemClock.elapsedRealtime() - elapsedStart}")
+    }
+
+    /**
+     * Prune after a per-category fallback (S2). Before this, a fallback run never pruned at all, so
+     * titles the provider had removed stayed in the catalog forever on any panel that can't serve the
+     * bulk list.
+     *
+     * The prune is scoped to the categories that were fetched *completely*, never the whole source.
+     * That is not just caution about partial failures: a per-category request can never return an
+     * item that has no category, so a source-wide prune here would delete every uncategorized row.
+     * Scoping also gives partial pruning for free — a run where half the categories failed still
+     * cleans the half that succeeded. The Phase 0 catalog-shrink guard applies on top, with the
+     * scoped row count as its denominator.
+     */
+    private suspend fun <T> pruneAfterFallback(
+        s: SourceEntity,
+        p: XtreamPhase<T>,
+        label: String,
+        categories: CategoryRefresh,
+        outcome: FallbackOutcome,
+        seenRemoteIds: Set<String>,
+        stats: SyncStatsCollector,
+    ) {
+        val inCategories = p.adapter.remoteIdsInCategories
+        val categoryIds = outcome.pruneScope(categories.idsByRemoteId)
+        if (inCategories == null || categoryIds.isEmpty()) {
+            Log.i(
+                TAG,
+                "$label prune skipped sourceId=${s.id} reason=fallback_no_complete_category " +
+                    "succeeded=${outcome.succeededCategoryRemoteIds.size} aborted=${outcome.aborted} stoppedEarly=${outcome.stoppedEarly}",
+            )
+            return
+        }
+        Log.i(TAG, "$label fallback prune scope sourceId=${s.id} categories=${categoryIds.size}/${outcome.attempted} complete=${outcome.complete}")
+        support.pruneRemoteIds(
+            label = "$label fallback",
+            sourceId = s.id,
+            seenRemoteIds = seenRemoteIds,
+            stats = stats,
+            loadExisting = { src -> categoryIds.chunked(SyncSupport.QUERY_CHUNK).flatMap { inCategories(src, it) } },
+            deleteRemoteIds = p.adapter.deleteByRemoteIds,
+        )
+        // The category list itself was fetched in full before the fallback began, so it is safe to
+        // trim removed categories even though some of their item lists failed. Deleting a category
+        // only nulls its items' categoryId (SET_NULL); it never deletes items.
+        support.pruneCategories(s.id, p.type, categories.seenRemoteIds, label, stats)
     }
 
     private suspend inline fun guardStep(phase: String, stats: SyncStatsCollector, block: suspend () -> Unit) {
@@ -302,10 +349,14 @@ internal class XtreamSyncer(
         seenKeys: MutableSet<String>? = null,
         uniqueKey: ((T) -> String?)? = null,
         stream: suspend (cat: XtCategory, add: suspend (T) -> Unit) -> Boolean,
-    ) {
+    ): FallbackOutcome {
         var truncations = 0
+        val succeeded = ArrayList<String>(categories.size)
+        var aborted = false
+        var stoppedEarly = false
         Log.i(TAG, "$label fallback categories begin count=${categories.size} bulkPartial=$bulkPartial currentUnique=${total[0]}")
-        categories.forEachIndexed { index, cat ->
+        categories.forEachIndexed loop@{ index, cat ->
+            if (aborted || stoppedEarly) return@loop
             ctx.ensureActive()
             // Gentle pacing between the many small requests so we don't trip a rate-limiter (HTTP 429)
             // while looping through every category.
@@ -326,8 +377,8 @@ internal class XtreamSyncer(
                 // category against a dead server.
                 val isServerError = e.message?.startsWith("HTTP") == true
                 android.util.Log.w("SyncManager", "$label: category ${cat.id} failed (${e.message}) — ${if (isServerError) "skipping category" else "ABORTING fallback"}", e)
-                if (isServerError) return@forEachIndexed
-                else return
+                if (!isServerError) aborted = true
+                return@loop
             }
             val delta = total[0] - before
             Log.d(
@@ -335,18 +386,30 @@ internal class XtreamSyncer(
                 "$label fallback category end index=${index + 1}/${categories.size} id=${cat.id} " +
                     "complete=$complete newUnique=$delta totalUnique=${total[0]} ms=${SystemClock.elapsedRealtime() - categoryStart}",
             )
-            if (!complete) {
+            if (complete) {
+                succeeded.add(cat.id)
+            } else {
                 truncations++
                 if ((bulkPartial > 0 && delta >= bulkPartial) || truncations >= 3) {
                     android.util.Log.w(
                         "SyncManager",
                         "$label: per-category fetch still truncating (panel likely ignores category_id) — stopping fallback after ${total[0]} items",
                     )
-                    return // stop the fallback entirely
+                    stoppedEarly = true // stop the fallback entirely
                 }
             }
         }
-        Log.i(TAG, "$label fallback categories end totalUnique=${total[0]} truncations=$truncations")
+        Log.i(
+            TAG,
+            "$label fallback categories end totalUnique=${total[0]} truncations=$truncations " +
+                "succeeded=${succeeded.size}/${categories.size} aborted=$aborted stoppedEarly=$stoppedEarly",
+        )
+        return FallbackOutcome(
+            succeededCategoryRemoteIds = succeeded,
+            aborted = aborted,
+            stoppedEarly = stoppedEarly,
+            attempted = categories.size,
+        )
     }
 
     companion object {

@@ -45,17 +45,20 @@ internal class SyncSupport(
     val channelAdapter = ContentAdapter<ChannelEntity>(
         remoteIdOf = { it.remoteId },
         hashOf = { it.computeContentHash() },
+        sortOrderOf = { it.sortOrder },
         copyWith = { row, id, hash -> if (id != null) row.copy(id = id, contentHash = hash) else row.copy(contentHash = hash) },
         updateAll = { channelDao.updateAll(it) },
         insertAll = { channelDao.insertAll(it) },
         remoteIdsForSource = { channelDao.remoteIdsForSource(it) },
         deleteByRemoteIds = { src, ids -> channelDao.deleteByRemoteIds(src, ids) },
         loadHashes = { channelDao.contentHashesForSource(it) },
+        remoteIdsInCategories = { src, cats -> channelDao.remoteIdsInCategories(src, cats) },
     )
 
     val movieAdapter = ContentAdapter<MovieEntity>(
         remoteIdOf = { it.remoteId },
         hashOf = { it.computeContentHash() },
+        sortOrderOf = { it.sortOrder },
         copyWith = { row, id, hash -> if (id != null) row.copy(id = id, contentHash = hash) else row.copy(contentHash = hash) },
         updateAll = { movieDao.updateAll(it) },
         insertAll = { movieDao.insertAll(it) },
@@ -64,11 +67,13 @@ internal class SyncSupport(
         loadHashes = { movieDao.contentHashesForSource(it) },
         countsByCategory = { src -> movieDao.countsByCategoryOnce(src).associate { it.categoryId to it.itemCount } },
         remoteIdsForCategory = { src, cat -> movieDao.remoteIdsForCategory(src, cat) },
+        remoteIdsInCategories = { src, cats -> movieDao.remoteIdsInCategories(src, cats) },
     )
 
     val seriesAdapter = ContentAdapter<SeriesEntity>(
         remoteIdOf = { it.remoteId },
         hashOf = { it.computeContentHash() },
+        sortOrderOf = { it.sortOrder },
         copyWith = { row, id, hash -> if (id != null) row.copy(id = id, contentHash = hash) else row.copy(contentHash = hash) },
         updateAll = { seriesDao.updateSeries(it) },
         insertAll = { seriesDao.insertSeries(it) },
@@ -77,31 +82,25 @@ internal class SyncSupport(
         loadHashes = { seriesDao.contentHashesForSource(it) },
         countsByCategory = { src -> seriesDao.countsByCategoryOnce(src).associate { it.categoryId to it.itemCount } },
         remoteIdsForCategory = { src, cat -> seriesDao.remoteIdsForCategory(src, cat) },
+        remoteIdsInCategories = { src, cats -> seriesDao.remoteIdsInCategories(src, cats) },
     )
 
-    /** Hash-diffed stable upsert: unchanged rows are skipped, changed rows keep their local id. */
+    /**
+     * Hash-diffed stable upsert: unchanged rows are skipped, changed rows keep their local id.
+     *
+     * There are three outcomes, not two (S1). `sortOrder` is deliberately not part of
+     * `computeContentHash()` — folding it in would change every stored hash at once, so the first
+     * resync after such a change rewrites a 170k-row catalog end to end. Instead the stored
+     * `sortOrder` travels alongside the hash and is compared separately: a row whose content is
+     * identical but whose provider position moved is written (so browse order follows the provider)
+     * and counted as `moved`, while a row that matches on both is still skipped entirely. Manual
+     * reorder is unaffected — it lives in `content_order` and is applied over the top of this.
+     */
     suspend fun <T> upsertStable(
         rows: List<T>,
-        hashDeferred: Deferred<Map<String, Pair<Long, Int>>>,
+        hashDeferred: Deferred<Map<String, StoredRow>>,
         adapter: ContentAdapter<T>,
-    ): UpsertStats {
-        val hashMap = hashDeferred.await()
-        val inserts = ArrayList<T>()
-        val updates = ArrayList<T>()
-        var skipped = 0
-        rows.forEach { row ->
-            val existing = adapter.remoteIdOf(row)?.let { hashMap[it] }
-            val hash = adapter.hashOf(row)
-            when {
-                existing == null -> inserts.add(adapter.copyWith(row, null, hash))
-                hash != existing.second -> updates.add(adapter.copyWith(row, existing.first, hash))
-                else -> skipped++
-            }
-        }
-        if (updates.isNotEmpty()) adapter.updateAll(updates)
-        if (inserts.isNotEmpty()) adapter.insertAll(inserts)
-        return UpsertStats(inserted = inserts.size, updated = updates.size, skippedUnchanged = skipped)
-    }
+    ): UpsertStats = upsertStable(rows, hashDeferred.await(), adapter)
 
     /** First-ever import: no diffing, just hash + insert. */
     suspend fun <T> insertFresh(rows: List<T>, adapter: ContentAdapter<T>): UpsertStats {
@@ -110,24 +109,48 @@ internal class SyncSupport(
         return UpsertStats(inserted = hashed.size)
     }
 
-    private fun List<ContentHashProjection>.toHashLookup(): Map<String, Pair<Long, Int>> =
-        associateBy({ it.remoteId }, { it.id to it.contentHash })
+    private fun List<ContentHashProjection>.toHashLookup(): Map<String, StoredRow> =
+        associateBy({ it.remoteId }, { StoredRow(it.id, it.contentHash, it.sortOrder) })
 
     fun asyncHashLoad(
         scope: CoroutineScope,
         label: String,
         sourceId: Long,
         load: suspend () -> List<ContentHashProjection>,
-    ): Deferred<Map<String, Pair<Long, Int>>> = scope.async {
+    ): Deferred<Map<String, StoredRow>> = scope.async {
         val start = SystemClock.elapsedRealtime()
         load().toHashLookup().also {
             Log.d(TAG, "$label hash map loaded sourceId=$sourceId size=${it.size} ms=${SystemClock.elapsedRealtime() - start}")
         }
     }
 
+    /**
+     * Catalog-shrink guard. A pass that *looks* complete but saw only a fraction of the catalog (a
+     * provider serving a truncated list, a panel briefly answering with a tiny payload) would
+     * otherwise delete most of the user's content — and with it every favorite, history entry and
+     * resume position keyed to those rows. So when a source already holds a meaningful number of
+     * rows and this pass would remove more than half of them, the prune is skipped and the run
+     * reports a warning instead. A fresh/small source (≤ [PRUNE_MIN_ROWS]) prunes normally, and a
+     * user-requested force-clean sync ([SyncStatsCollector.forcePrune]) bypasses the guard entirely
+     * for the case where the catalog really did shrink.
+     *
+     * Returns true when the prune may proceed.
+     */
+    private fun pruneAllowed(label: String, sourceId: Long, stored: Int, stale: Int, stats: SyncStatsCollector): Boolean {
+        if (shouldPrune(stored, stale, stats.forcePrune)) return true
+        val percent = (stale * 100) / stored
+        Log.w(TAG, "$label prune skipped sourceId=$sourceId reason=catalog_shrink stored=$stored stale=$stale")
+        stats.phaseErrors[label] =
+            "kept $stored existing items — this import returned $percent% fewer, which looks like an " +
+                "incomplete provider response. Sync again, or use Force clean sync if the provider really removed them."
+        return false
+    }
+
     suspend fun pruneCategories(sourceId: Long, type: MediaType, seenRemoteIds: Set<String>, label: String, stats: SyncStatsCollector) {
         val start = SystemClock.elapsedRealtime()
-        val stale = categoryDao.remoteIdsForSource(sourceId, type).filterNot(seenRemoteIds::contains)
+        val existing = categoryDao.remoteIdsForSource(sourceId, type)
+        val stale = existing.filterNot(seenRemoteIds::contains)
+        if (!pruneAllowed("$label categories", sourceId, existing.size, stale.size, stats)) return
         stale.chunked(QUERY_CHUNK).forEach { categoryDao.deleteByRemoteIds(sourceId, type, it) }
         if (stale.isNotEmpty()) stats.processedCounts.merge(CATEGORIES_REMOVED_KEY, stale.size, Int::plus)
         Log.i(TAG, "$label category prune sourceId=$sourceId type=$type stale=${stale.size} ms=${SystemClock.elapsedRealtime() - start}")
@@ -137,11 +160,14 @@ internal class SyncSupport(
         label: String,
         sourceId: Long,
         seenRemoteIds: Set<String>,
+        stats: SyncStatsCollector,
         loadExisting: suspend (Long) -> List<String>,
         deleteRemoteIds: suspend (Long, List<String>) -> Unit,
     ) {
         val start = SystemClock.elapsedRealtime()
-        val stale = loadExisting(sourceId).filterNot(seenRemoteIds::contains)
+        val existing = loadExisting(sourceId)
+        val stale = existing.filterNot(seenRemoteIds::contains)
+        if (!pruneAllowed(label, sourceId, existing.size, stale.size, stats)) return
         stale.chunked(QUERY_CHUNK).forEach { deleteRemoteIds(sourceId, it) }
         Log.i(TAG, "$label content prune sourceId=$sourceId stale=${stale.size} ms=${SystemClock.elapsedRealtime() - start}")
     }
@@ -351,6 +377,51 @@ internal class SyncSupport(
         /** Shared log tag — kept as "SyncManager" across the split so existing logcat filters still work. */
         const val TAG = "SyncManager"
         const val QUERY_CHUNK = 500
+
+        /** Below this many stored rows a prune is always allowed (fresh/small sources). */
+        private const val PRUNE_MIN_ROWS = 100
+
+        /** A prune may remove at most this fraction of the stored rows before the guard trips. */
+        private const val PRUNE_MAX_SHRINK = 0.5
+
+        /**
+         * The catalog-shrink decision on its own, free of DAOs and logging so it can be unit tested:
+         * true when deleting [stale] of [stored] rows is a plausible provider update rather than a
+         * truncated response.
+         */
+        /**
+         * The hash-diff itself, free of DAOs and logging so it can be unit tested. See the instance
+         * overload for why `sortOrder` is compared here rather than folded into the content hash.
+         */
+        suspend fun <T> upsertStable(
+            rows: List<T>,
+            stored: Map<String, StoredRow>,
+            adapter: ContentAdapter<T>,
+        ): UpsertStats {
+            val inserts = ArrayList<T>()
+            val updates = ArrayList<T>()
+            var skipped = 0
+            var moved = 0
+            rows.forEach { row ->
+                val existing = adapter.remoteIdOf(row)?.let { stored[it] }
+                val hash = adapter.hashOf(row)
+                when {
+                    existing == null -> inserts.add(adapter.copyWith(row, null, hash))
+                    hash != existing.contentHash -> updates.add(adapter.copyWith(row, existing.id, hash))
+                    adapter.sortOrderOf(row) != existing.sortOrder -> {
+                        moved++
+                        updates.add(adapter.copyWith(row, existing.id, hash))
+                    }
+                    else -> skipped++
+                }
+            }
+            if (updates.isNotEmpty()) adapter.updateAll(updates)
+            if (inserts.isNotEmpty()) adapter.insertAll(inserts)
+            return UpsertStats(inserted = inserts.size, updated = updates.size, skippedUnchanged = skipped, moved = moved)
+        }
+
+        fun shouldPrune(stored: Int, stale: Int, force: Boolean): Boolean =
+            force || stored <= PRUNE_MIN_ROWS || stale <= stored * PRUNE_MAX_SHRINK
         const val CATEGORY_REQUEST_DELAY_MS = 150L // pace per-category fallback requests (avoid HTTP 429)
         private const val SLOW_INSERT_LOG_MS = 250L
         val IgnoreByteProgress: (Long, Long?) -> Unit = { _, _ -> }
@@ -370,6 +441,8 @@ internal class SyncSupport(
 internal class ContentAdapter<T>(
     val remoteIdOf: (T) -> String?,
     val hashOf: (T) -> Int,
+    /** Provider position, compared against the stored one outside the hash — see [SyncSupport.upsertStable]. */
+    val sortOrderOf: (T) -> Int,
     /** Copy with contentHash set; a non-null [id] rekeys the row to the existing local row. */
     val copyWith: (row: T, id: Long?, hash: Int) -> T,
     val updateAll: suspend (List<T>) -> Unit,
@@ -381,13 +454,44 @@ internal class ContentAdapter<T>(
     val countsByCategory: (suspend (sourceId: Long) -> Map<Long, Int>)? = null,
     /** RemoteIds of one category's existing rows — protects a delta-skipped category from pruning. */
     val remoteIdsForCategory: (suspend (sourceId: Long, categoryId: Long) -> List<String>)? = null,
+    /** RemoteIds across a set of categories — the prune scope after a per-category fallback (S2). */
+    val remoteIdsInCategories: (suspend (sourceId: Long, categoryIds: List<Long>) -> List<String>)? = null,
 )
+
+/** What the DB already holds for one remote id: local row id, content hash, and provider position. */
+internal data class StoredRow(val id: Long, val contentHash: Int, val sortOrder: Int)
 
 internal data class UpsertStats(
     val inserted: Int = 0,
     val updated: Int = 0,
     val skippedUnchanged: Int = 0,
+    /** Subset of [updated] written only because the provider moved the row (content identical). */
+    val moved: Int = 0,
 )
+
+/**
+ * Result of an Xtream per-category fallback pass (S2). [succeededCategoryRemoteIds] are the
+ * categories whose list was fetched *completely* — a truncated, failed, skipped or never-reached
+ * category is absent, so its rows are left alone. Top-level (not nested in XtreamSyncer) so
+ * [pruneScope] can be unit tested.
+ */
+internal class FallbackOutcome(
+    val succeededCategoryRemoteIds: List<String>,
+    val aborted: Boolean,
+    val stoppedEarly: Boolean,
+    val attempted: Int,
+) {
+    val complete: Boolean get() = !aborted && !stoppedEarly && succeededCategoryRemoteIds.size == attempted
+
+    /**
+     * Local category ids a prune may touch: only the fully-fetched categories, mapped through the
+     * refresh's remoteId→id table. Empty means prune nothing. Rows with no category are never in
+     * scope by construction — a per-category request can't return them, so a source-wide prune here
+     * would delete every uncategorized item.
+     */
+    fun pruneScope(idsByRemoteId: Map<String, Long>): List<Long> =
+        succeededCategoryRemoteIds.mapNotNull(idsByRemoteId::get).distinct()
+}
 
 internal data class CategoryRefresh(
     val idsByRemoteId: Map<String, Long>,
@@ -441,6 +545,12 @@ internal class SyncStatsCollector(val sourceId: Long) {
     val processedCounts = java.util.concurrent.ConcurrentHashMap<String, Int>()
     val phaseErrors = java.util.concurrent.ConcurrentHashMap<String, String>()
     @Volatile var usedFallback = false
+
+    /**
+     * Set by a user-requested "force clean sync": bypasses the catalog-shrink prune guard so a
+     * genuinely shrunken provider catalog can be trimmed down. Off for every automatic sync.
+     */
+    @Volatile var forcePrune = false
 
     fun warnings() = phaseErrors.map { (phase, message) -> SyncWarning(phase, message) }
 

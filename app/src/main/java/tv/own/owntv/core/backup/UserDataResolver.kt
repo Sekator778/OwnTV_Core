@@ -12,6 +12,7 @@ import org.json.JSONArray
 import org.json.JSONObject
 import tv.own.owntv.core.database.dao.ChannelDao
 import tv.own.owntv.core.database.dao.ContentOrderDao
+import tv.own.owntv.core.database.dao.ContentOrderExportRow
 import tv.own.owntv.core.database.dao.FavoriteDao
 import tv.own.owntv.core.database.dao.HistoryDao
 import tv.own.owntv.core.database.dao.MovieDao
@@ -72,13 +73,27 @@ class UserDataResolver(
         return out
     }
 
-    /** Exports only the rows attached to [sourceId], so a single-source re-sync starts promptly. */
-    suspend fun exportForSource(sourceId: Long, kinds: Set<String> = setOf("fav", "his", "prog")): JSONArray {
+    /**
+     * Exports only the rows attached to [sourceId], so a single-source re-sync starts promptly.
+     *
+     * "order" is in the default set (B1): manual Move positions orphan on a resync exactly like
+     * favorites do — content is clear-then-insert, so every itemId in `content_order` goes stale —
+     * and leaving them out of the snapshot silently threw away the user's hand-arranged folders.
+     */
+    suspend fun exportForSource(sourceId: Long, kinds: Set<String> = setOf("fav", "his", "prog", "order")): JSONArray {
         val out = JSONArray()
         if ("fav" in kinds) favoriteDao.exportRowsForSource(sourceId).forEach { row -> row.toJson("fav")?.let { out.put(it) } }
         if ("his" in kinds) historyDao.exportRowsForSource(sourceId).forEach { row -> row.toJson("his")?.let { out.put(it) } }
         if ("prog" in kinds) progressDao.exportRowsForSource(sourceId).forEach { row -> row.toJson("prog")?.let { out.put(it) } }
+        if ("order" in kinds) contentOrderDao.exportRowsForSource(sourceId).forEach { row -> row.toJson()?.let { out.put(it) } }
         return out
+    }
+
+    private fun ContentOrderExportRow.toJson(): JSONObject? {
+        val itemName = name ?: return null
+        return JSONObject().put("t", mediaType.name).put("src", sourceId).putOpt("rid", remoteId).put("name", itemName)
+            .put("p", profileId).put("kind", "order").put("ctx", contextKey).put("pos", position)
+            .put("oid", itemId)
     }
 
     private fun UserDataExportRow.toJson(kind: String): JSONObject? {
@@ -140,6 +155,7 @@ class UserDataResolver(
                 "fav" -> favoriteDao.purgeSnapshotOrphan(profileId, type, itemId)
                 "his" -> historyDao.purgeSnapshotOrphan(profileId, type, itemId)
                 "prog" -> progressDao.purgeSnapshotOrphan(profileId, type, itemId)
+                "order" -> contentOrderDao.purgeSnapshotOrphan(profileId, type, itemId)
             }
         }
     }

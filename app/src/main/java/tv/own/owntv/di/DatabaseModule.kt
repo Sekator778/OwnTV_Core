@@ -10,8 +10,10 @@ import tv.own.owntv.core.database.OwnTVDatabase
  * Provides the Room database (WAL journal mode for fast concurrent reads during large imports) and
  * each DAO. Foreign-key enforcement is on by default in Room.
  *
- * Destructive fallback is enabled while the schema is still evolving (pre-1.0); real migrations
- * arrive before release.
+ * There is deliberately NO destructive-migration fallback: the migration chain below covers every
+ * shipped version, and a wipe-on-mismatch "safety net" would silently delete a user's profiles,
+ * sources, favorites, history and resume positions on the first schema surprise. A missing or
+ * failing migration must surface as an error we can fix, not as an empty app.
  */
 val databaseModule = module {
     single {
@@ -33,15 +35,21 @@ val databaseModule = module {
                 OwnTVDatabase.MIGRATION_14_15,
                 OwnTVDatabase.MIGRATION_15_16,
                 OwnTVDatabase.MIGRATION_16_17,
+                OwnTVDatabase.MIGRATION_17_18,
             )
-            .fallbackToDestructiveMigration(dropAllTables = true) // safety net for unforeseen jumps
             .addCallback(object : RoomDatabase.Callback() {
                 // Self-heal index/FTS drift on every open (no-op when healthy): an interrupted bulk
                 // import can leave BulkInsertHelper's dropped indexes missing, which is invisible
                 // now but fails Room's full-schema validation at the NEXT version bump (the
                 // 4.0.x → 4.1.0 crash-loop). Healing here repairs drift long before that migration.
+                //
+                // ST4: gated behind a single sqlite_master count so a healthy open pays one index
+                // lookup instead of ~30 DDL statements on the thread issuing the first query. The
+                // heal itself stays in onOpen — moving it off would let a query beat it to a missing
+                // index. The OwnTVPerf timeline reports both the cost and whether it healed.
                 override fun onOpen(db: androidx.sqlite.db.SupportSQLiteDatabase) {
-                    runCatching { OwnTVDatabase.healSchema(db) }
+                    val healed = runCatching { OwnTVDatabase.healSchemaIfDrifted(db) }.getOrDefault(false)
+                    tv.own.owntv.Perf.stamp(if (healed) "db-heal(repaired)" else "db-heal(clean)")
                 }
             })
             .build()

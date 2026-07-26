@@ -126,6 +126,46 @@ class CompanionHttpServerTest {
 
     // ---- robustness ----
 
+    // ---- body cap (C1) ----
+
+    private fun read(body: String, contentLength: String, limit: Int): String? =
+        server.readBody(
+            java.io.BufferedInputStream(java.io.ByteArrayInputStream(body.toByteArray())),
+            mapOf("content-length" to contentLength),
+            limit,
+        )
+
+    @Test
+    fun `uploads get the large cap and forms the small one`() {
+        assertEquals(CompanionHttpServer.UPLOAD_BODY_LIMIT, server.maxBodyBytes("/backup"))
+        assertEquals(CompanionHttpServer.UPLOAD_BODY_LIMIT, server.maxBodyBytes("/background"))
+        assertEquals(CompanionHttpServer.FORM_BODY_LIMIT, server.maxBodyBytes("/"))
+        assertEquals(CompanionHttpServer.FORM_BODY_LIMIT, server.maxBodyBytes("/xtream"))
+    }
+
+    @Test
+    fun `a body within the cap is read whole`() {
+        assertEquals("pin=123456", read("pin=123456", "10", CompanionHttpServer.FORM_BODY_LIMIT))
+        assertEquals("", read("", "0", CompanionHttpServer.FORM_BODY_LIMIT))
+    }
+
+    @Test
+    fun `an oversized Content-Length is rejected without allocating it`() {
+        // The pre-fix code did ByteArray(2_000_000_000) here — an unauthenticated OOM from the LAN.
+        assertNull(read("", "2000000000", CompanionHttpServer.FORM_BODY_LIMIT))
+        assertNull(read("", (CompanionHttpServer.UPLOAD_BODY_LIMIT + 1).toString(), CompanionHttpServer.UPLOAD_BODY_LIMIT))
+    }
+
+    @Test
+    fun `a body longer than the cap is cut off even when the header lies small`() {
+        assertNull(read("x".repeat(200), "200", 64))
+    }
+
+    @Test
+    fun `a truncated body does not hang or throw`() {
+        assertEquals("abc", read("abc", "500", CompanionHttpServer.FORM_BODY_LIMIT))
+    }
+
     @Test
     fun `malformed json body does not throw and yields null`() {
         // org.json is stubbed in unit tests; parsePayload must swallow it, not crash the accept thread.

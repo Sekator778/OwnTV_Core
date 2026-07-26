@@ -20,4 +20,11 @@ sealed interface CompanionServerState {
         val qr: ImageBitmap?,
     ) : CompanionServerState
     data class Failed(val message: String) : CompanionServerState
+
+    /**
+     * Closed by the server itself after [CompanionHttpServer.MAX_PIN_ATTEMPTS] wrong PINs (C2).
+     * Distinct from [Failed] because nothing went wrong with the app — the user just needs to start
+     * the link again, which mints a fresh PIN.
+     */
+    data object Locked : CompanionServerState
 }

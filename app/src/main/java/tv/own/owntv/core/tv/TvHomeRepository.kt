@@ -1,5 +1,6 @@
 package tv.own.owntv.core.tv
 
+import android.annotation.SuppressLint
 import android.content.ContentUris
 import android.content.ContentResolver
 import android.content.Context
@@ -40,6 +41,10 @@ import tv.own.owntv.features.settings.data.SettingsRepository
 import java.security.MessageDigest
 
 /** Mirrors the app's continue-watching state into Android TV provider rows. */
+// androidx.tvprovider's PreviewChannel/PreviewProgram/WatchNextProgram builders are the documented,
+// intended public API for the launcher rows, but their `Builder` supertypes carry @RestrictTo, so
+// every call here is flagged. Nothing in this file reaches into a genuinely internal API.
+@SuppressLint("RestrictedApi")
 class TvHomeRepository(
     private val context: Context,
     private val sourceDao: SourceDao,

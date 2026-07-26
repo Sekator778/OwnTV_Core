@@ -21,8 +21,10 @@ enum class VodEnginePin { MPV, EXO }
  * once and it opens on that engine forever after, regardless of the global "Movies & Series player"
  * setting. Items never toggled keep following the setting.
  *
- * Keyed by stream URL — the only stable identity across playlist re-syncs (rows are REPLACE-upserted
- * on refresh, so Room ids don't survive; the URL does).
+ * Keyed by [enginePinKey] — sourceId + media type + provider remoteId — which survives playlist
+ * re-syncs on all three source types (Room ids don't, and a Stalker stream URL is minted fresh per
+ * play, so the old URL key never matched there). Pins written by older builds are keyed by stream URL
+ * and are still read, then rewritten under the stable key (see [migrateKey] — P6).
  */
 class VodEngineStore(private val context: Context) {
     private val mpvKey = stringSetPreferencesKey("mpv_urls")
@@ -41,7 +43,18 @@ class VodEngineStore(private val context: Context) {
         }
     }
 
-    // --- Backup / restore (optional section; keyed by stream URL, no id remapping needed) ---
+    /** Migrate-on-read: an existing pin found under the legacy URL key moves to [stableKey],
+     *  preserving which engine it was pinned to. */
+    suspend fun migrateKey(legacyUrl: String, stableKey: String) {
+        context.vodEngineStore.edit { prefs ->
+            val mpv = prefs[mpvKey] ?: emptySet()
+            val exo = prefs[exoKey] ?: emptySet()
+            if (legacyUrl in mpv) prefs[mpvKey] = mpv - legacyUrl + stableKey
+            if (legacyUrl in exo) prefs[exoKey] = exo - legacyUrl + stableKey
+        }
+    }
+
+    // --- Backup / restore (optional section; opaque keys, no id remapping needed) ---
 
     /** Current MPV-pinned URLs, for backup export. */
     suspend fun exportMpvUrls(): Set<String> = context.vodEngineStore.data.first()[mpvKey] ?: emptySet()
