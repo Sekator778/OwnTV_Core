@@ -328,10 +328,16 @@ class OwnTVPlayer(
     //     estimated-display-fps=23.9 and vsync-jitter=0.55 while the panel was a steady 30Hz, i.e. mpv
     //     cannot MEASURE vsync under mediacodec_embed. Every display-* sync mode is built on that
     //     measurement, so handing it a correct nominal rate doesn't help.
-    //   - moving live to the GL path (vo=gpu + hwdec=mediacodec-copy + display-resample) didn't help
-    //     either, and made the problem unmeasurable: mpv STILL reported display-fps=null on vo=gpu, and
-    //     the decoder detaches from the TV's video port (vdoPort=RHAL_CRM_VIDEO_PORT_NONE, tunnel=0), so
-    //     the vSyncDiff counter goes silent — zero events means "no instrument", not "no judder". Removed.
+    //   - moving live to the GL path made it clearly WORSE, twice. First with vo=gpu + display-resample
+    //     (unmeasurable: the decoder leaves the TV's video port — vdoPort=RHAL_CRM_VIDEO_PORT_NONE,
+    //     tunnel=0 — so the vSyncDiff counter goes silent; zero events meant "no instrument", not "no
+    //     judder"). Then properly, with vo=gpu-next + opengl-swapinterval=1 + display-resample, which
+    //     DID give mpv a real display clock ("Estimated source FPS: 30.000, display FPS: 30.000" from
+    //     libplacebo) — but gpu-next routes mediacodec frames through the aimagereader interop, and this
+    //     GPU (GL_RENDERER='PowerVR B-Series BXE-4-32') can't feed it 4K: the log fills with
+    //     "aimagereader: Waiting for frame timed out! / acquireLatestImage failed: -30001" and a
+    //     "Forcing queue refill, PTS(0.6) < VPTS(8.37)". Owner confirmed clearly worse, visible stutter.
+    //     The GL path is a dead end on TV-class GPUs; both attempts removed.
     // Also note the judder is random per load, not per channel: across 10 measured loads the rate ranged
     // 0.39–6.93 mistimed frames/s with no predictor (channel, engine toggle vs direct start, and fresh vs
     // reused Surface all failed). That is the signature of two free-running clocks, i.e. no phase lock.
@@ -2802,6 +2808,9 @@ class OwnTVPlayer(
                                 "estimated-display-fps=${getPropertyString("estimated-display-fps")} " +
                                 "vsync-jitter=${getPropertyString("vsync-jitter")} " +
                                 "video-sync=${getPropertyString("video-sync")} " +
+                            "vo=${getPropertyString("vo")} " +
+                            "mistimed=${getPropertyString("mistimed-frame-count")} " +
+                            "vo-delayed=${getPropertyString("vo-delayed-frame-count")} " +
                                 "android-display=${androidDisplayHz()} " +
                                 "load#=$mpvLoadCount freshSurface=$usedFreshSurface",
                         )
