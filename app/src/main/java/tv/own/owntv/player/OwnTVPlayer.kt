@@ -300,6 +300,49 @@ class OwnTVPlayer(
     // null = use DEFAULT_USER_AGENT on first attempt, "vlc" fallback on suspicious failure.
     // non-null = always use the given UA, no automatic fallback.
     private var currentUserAgent: String? = null
+    // Diagnostics for the "smooth on the first mpv channel, slightly juddery from the second onward"
+    // report: how many loads this (reused) mpv core has served, and whether the last one recreated the
+    // SurfaceView. Read back in the one-shot "display timing" log.
+    @Volatile private var mpvLoadCount = 0
+    @Volatile private var usedFreshSurface = false
+
+    /** Refresh rate Android reports for the default display right now, e.g. "30.000002Hz@modeId=2". */
+    private fun androidDisplayHz(): String = runCatching {
+        val d = defaultDisplay() ?: return "unknown"
+        "${d.refreshRate}Hz@modeId=${d.mode?.modeId}"
+    }.getOrElse { "unknown" }
+
+    private fun defaultDisplay(): android.view.Display? = runCatching {
+        val dm = context.getSystemService(Context.DISPLAY_SERVICE) as android.hardware.display.DisplayManager
+        dm.getDisplay(android.view.Display.DEFAULT_DISPLAY)
+    }.getOrNull()
+
+    // Vsync-aligned presentation was TRIED for live and does not work on this VO — do not re-attempt it
+    // via mpv options. Measured 2026-07-27 on a 30.000002Hz panel, 4K live, vo=mediacodec_embed:
+    //   - default (video-sync=desync): mpv presents with no vsync alignment. The TV's own pipeline logged
+    //     ~94 mistimed frames/min (W/VideoClient "vSyncDiff"), average interval 33668µs vs the correct
+    //     33333µs. That is the mild judder users see; decode is clean (frame-drops=0, decoder-drops=0).
+    //   - feeding mpv the panel rate (display-fps-override, accepted: display-fps read back 30.000002)
+    //     and switching to video-sync=display-resample made it slightly WORSE, not better: ~76 mistimed
+    //     frames/min and a 26202µs average. The reason is in the same log line — mpv reported
+    //     estimated-display-fps=23.9 and vsync-jitter=0.55 while the panel was a steady 30Hz, i.e. mpv
+    //     cannot MEASURE vsync under mediacodec_embed. Every display-* sync mode is built on that
+    //     measurement, so handing it a correct nominal rate doesn't help.
+    //   - moving live to the GL path (vo=gpu + hwdec=mediacodec-copy + display-resample) didn't help
+    //     either, and made the problem unmeasurable: mpv STILL reported display-fps=null on vo=gpu, and
+    //     the decoder detaches from the TV's video port (vdoPort=RHAL_CRM_VIDEO_PORT_NONE, tunnel=0), so
+    //     the vSyncDiff counter goes silent — zero events means "no instrument", not "no judder". Removed.
+    // Also note the judder is random per load, not per channel: across 10 measured loads the rate ranged
+    // 0.39–6.93 mistimed frames/s with no predictor (channel, engine toggle vs direct start, and fresh vs
+    // reused Surface all failed). That is the signature of two free-running clocks, i.e. no phase lock.
+    // ExoPlayer is smooth on the identical stream only because MediaCodecVideoRenderer releases each
+    // output buffer with a vsync-adjusted presentation timestamp (VideoFrameReleaseHelper). Matching that
+    // needs a timed releaseOutputBuffer (+ a Choreographer vsync source and a presentation thread) inside
+    // libmpv's android VO — a native-side change, not an option. libmpv is already on its newest release
+    // (1.0.0 = mpv 0.41.0), and mpv master still uses the untimed av_mediacodec_release_buffer, so there
+    // is no upgrade that fixes this. Accepted: live on mpv keeps mild judder; ExoPlayer is the smooth
+    // engine and mpv remains the fallback for streams ExoPlayer can't open.
+
     private val _directRender = MutableStateFlow(false)
     /** True while the direct (decoder-to-surface) output is in use — HUD hides zoom, app draws subs. */
     val directRender: StateFlow<Boolean> = _directRender.asStateFlow()
@@ -1699,6 +1742,8 @@ class OwnTVPlayer(
         // auto-play AND live channel zapping (4K→next 4K via D-pad/CH±, which otherwise hangs until you back
         // out and re-enter — a manual surface recreate). Only when the PREVIOUS item was >1080p, so normal
         // playback and the first 4K load are untouched.
+        mpvLoadCount++
+        usedFreshSurface = needsFreshSurface
         if (needsFreshSurface) {
             pendingUrl = url
             _surfaceResetToken.value++
@@ -2746,6 +2791,19 @@ class OwnTVPlayer(
                                 "cache=${getPropertyString("demuxer-cache-duration")}s " +
                                 "paused-for-cache=${getPropertyString("paused-for-cache")} " +
                                 "video-bitrate=${getPropertyString("video-bitrate")}",
+                        )
+                        // Display-timing readout. The mpv core is REUSED across channels while
+                        // FrameRateController switches the panel's refresh rate underneath it (60↔30Hz),
+                        // so a stale display-fps belief here would explain judder that only appears from
+                        // the SECOND mpv load onward. Compared against what Android reports right now.
+                        android.util.Log.i(
+                            TAG,
+                            "display timing: mpv display-fps=${getPropertyString("display-fps")} " +
+                                "estimated-display-fps=${getPropertyString("estimated-display-fps")} " +
+                                "vsync-jitter=${getPropertyString("vsync-jitter")} " +
+                                "video-sync=${getPropertyString("video-sync")} " +
+                                "android-display=${androidDisplayHz()} " +
+                                "load#=$mpvLoadCount freshSurface=$usedFreshSurface",
                         )
                         // The direct surface can only display hardware frames. If the direct decoder
                         // didn't engage (cold-boot decoder-busy, etc.), retry direct a few times (it

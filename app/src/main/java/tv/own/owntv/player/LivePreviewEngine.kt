@@ -70,6 +70,15 @@ class LivePreviewEngine(
     private var player: ExoPlayer? = null
     private var surface: Surface? = null
     private var muted: Boolean = true
+    // Volume-0 is NOT a reliable mute. When the TV/AVR declares AC3/E-AC3/DTS support, MediaCodecAudioRenderer
+    // picks the passthrough "decoder" and the compressed 5.1 bitstream is forwarded to HDMI untouched —
+    // AudioTrack.setVolume() has no effect on an IEC61937 stream, so those channels kept playing sound in a
+    // "muted" preview while stereo AAC/MP3 channels muted correctly. So a muted preview also DESELECTS the
+    // audio track type, which stops the renderer (and the passthrough sink) outright.
+    // Exception: a stream with no video track at all (radio/audio-only) would then have nothing to render and
+    // would stall the freeze watchdog — those keep the volume-0 path, which works for their PCM/stereo audio.
+    private var audioTrackDisabled = false
+    private var hasVideoTrack = true
 
     private val _state = MutableStateFlow(State.IDLE)
     val state: StateFlow<State> = _state.asStateFlow()
@@ -625,7 +634,10 @@ class LivePreviewEngine(
         runCatching {
             val p = player ?: build().also { player = it }
             surface?.let { p.setVideoSurface(it) }
-            p.volume = if (muted) 0f else 1f
+            // Assume video until the tracks arrive, so a muted preview never leaks a frame of audio while
+            // the stream is still being sniffed; rebuildTracks() relaxes this for audio-only streams.
+            hasVideoTrack = true
+            applyMute(force = true)
             p.setMediaSource(mediaSourceFor(url))
             p.prepare()
             p.playWhenReady = true
@@ -641,8 +653,22 @@ class LivePreviewEngine(
 
     fun setMuted(m: Boolean) {
         muted = m
-        player?.volume = if (m) 0f else 1f
         _volume.value = if (m) 0 else 100
+        applyMute()
+    }
+
+    /** Push [muted] onto the player: volume, plus the audio-track deselect that also silences a
+     *  passthrough (AC3/E-AC3/DTS 5.1) bitstream. [force] re-sends the track parameters even when the
+     *  desired state is unchanged — needed right after a (re)built player, whose parameters are fresh. */
+    private fun applyMute(force: Boolean = false) {
+        val p = player ?: return
+        p.volume = if (muted) 0f else 1f
+        val disable = muted && hasVideoTrack
+        if (!force && disable == audioTrackDisabled) return
+        audioTrackDisabled = disable
+        p.trackSelectionParameters = p.trackSelectionParameters.buildUpon()
+            .setTrackTypeDisabled(C.TRACK_TYPE_AUDIO, disable)
+            .build()
     }
 
     // Snapshot of the live channel taken when the app backgrounds (screensaver / Home), so it can be restored
@@ -788,6 +814,7 @@ class LivePreviewEngine(
         val v = (_volume.value + delta).coerceIn(0, 100)
         _volume.value = v
         muted = v == 0
+        applyMute() // re-enables/deselects the audio track when crossing 0 (passthrough-safe mute)
         player?.volume = v / 100f
     }
 
@@ -860,6 +887,10 @@ class LivePreviewEngine(
                 }
             }
         }
+        // Audio-only (radio) streams must keep their audio renderer even when muted — deselecting it would
+        // leave nothing to render and the progress watchdog would read that as a dead feed.
+        hasVideoTrack = tracks.groups.any { it.type == androidx.media3.common.C.TRACK_TYPE_VIDEO }
+        applyMute()
         audioTrackList = audio; audioSelections = aSel; _audioCount.value = audio.size
         textTrackList = text; textSelections = tSel; _subCount.value = text.size
         if (tv.own.owntv.BuildConfig.DEBUG) {
