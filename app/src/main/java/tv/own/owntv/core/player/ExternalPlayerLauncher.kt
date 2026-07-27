@@ -25,22 +25,29 @@ class ExternalPlayerLauncher(private val context: Context) {
             toast("Could not open this stream.")
             return false
         }
-        val intent = Intent(Intent.ACTION_VIEW)
-            .setDataAndType(uri, mimeFor(url))
-            .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_GRANT_READ_URI_PERMISSION)
+        // Try the precise MIME first, then widen. VLC and MX Player advertise `video/*` but NOT every
+        // specific type: a live channel ending `.ts` (video/mp2t) or `.m3u8` (application/x-mpegURL)
+        // matched no activity at all and reported "no external player installed", even though the same
+        // players happily took a movie's video/mp4. Falling back to `video/*`, and finally to the URI
+        // with no type at all, gets live streams to the same players without touching the movie path.
+        for (mime in mimeCandidates(url)) {
+            val intent = Intent(Intent.ACTION_VIEW)
+                .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_GRANT_READ_URI_PERMISSION)
+            if (mime != null) intent.setDataAndType(uri, mime) else intent.data = uri
 
-        val targets = context.packageManager.queryIntentActivities(intent, 0)
-        return when {
-            targets.isEmpty() -> {
-                toast("No external player found - install VLC or MX Player.")
-                false
+            val targets = context.packageManager.queryIntentActivities(intent, 0)
+            if (targets.isEmpty()) continue
+            return if (targets.size == 1) {
+                startActivity(intent)
+            } else {
+                startActivity(
+                    Intent.createChooser(intent, title ?: "Play with")
+                        .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK),
+                )
             }
-            targets.size == 1 -> startActivity(intent)
-            else -> startActivity(
-                Intent.createChooser(intent, title ?: "Play with")
-                    .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK),
-            )
         }
+        toast("No external player found - install VLC or MX Player.")
+        return false
     }
 
     // Whether any installed app can handle a video URL.
@@ -71,16 +78,18 @@ class ExternalPlayerLauncher(private val context: Context) {
         }.getOrNull()
     }
 
-    // A MIME type the common external players accept for IPTV URLs.
-    private fun mimeFor(url: String): String {
+    // MIME types to offer for a URL, most specific first, ending with an untyped attempt. Duplicates
+    // are dropped so a plain video/* URL doesn't query the same intent twice.
+    private fun mimeCandidates(url: String): List<String?> {
         val path = url.substringBefore('?').substringAfterLast('/', "")
         val ext = path.substringAfterLast('.', "").lowercase()
-        return when (ext) {
+        val specific = when (ext) {
             "m3u8", "m3u" -> "application/x-mpegURL"
             "ts", "m2t", "mts" -> "video/mp2t"
             "mp4", "m4v", "mov", "3gp" -> "video/mp4"
             else -> "video/*"
         }
+        return listOf(specific, "video/*", null).distinct()
     }
 
     private fun toast(message: String) {

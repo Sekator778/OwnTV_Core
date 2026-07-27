@@ -134,7 +134,12 @@ class SettingsRepository(private val context: Context) {
         val MEASURED_STREAM_STATS = booleanPreferencesKey("measured_stream_stats")
         val SURROUND_SOUND = booleanPreferencesKey("surround_sound")
         val AUTO_PLAY_NEXT = booleanPreferencesKey("auto_play_next")
+        /** Legacy single external-player toggle (movies + series + downloads). Superseded by the three
+         *  per-section keys below but still read as their default, so an existing setting survives. */
         val EXTERNAL_PLAYER = booleanPreferencesKey("external_player")
+        val EXTERNAL_PLAYER_LIVE = booleanPreferencesKey("external_player_live")
+        val EXTERNAL_PLAYER_MOVIES = booleanPreferencesKey("external_player_movies")
+        val EXTERNAL_PLAYER_SERIES = booleanPreferencesKey("external_player_series")
         val DEFAULT_ZOOM = stringPreferencesKey("default_zoom")
         val SUB_SCALE = floatPreferencesKey("sub_scale")
         val AUDIO_DELAY_MS = intPreferencesKey("audio_delay_ms")
@@ -148,6 +153,7 @@ class SettingsRepository(private val context: Context) {
         val RESUME_MODE = stringPreferencesKey("resume_mode")
         val UPDATE_CHECK_ON_START = booleanPreferencesKey("update_check_on_start")
         val CATCHUP_TZ = stringPreferencesKey("catchup_timezone")
+        val CATCHUP_PLAYER = stringPreferencesKey("catchup_player")
         val CATCHUP_OFFSET_MIN = intPreferencesKey("catchup_offset_minutes")
         val ANIMATION_LEVEL = stringPreferencesKey("animation_level")
         val RESUME_LAST_CHANNEL = booleanPreferencesKey("resume_last_channel")
@@ -465,6 +471,19 @@ class SettingsRepository(private val context: Context) {
         context.dataStore.edit { it[Keys.CATCHUP_TZ] = mode.name }
     }
 
+    /** Which player takes a catch-up archive programme. Archives are mid-GOP MPEG-TS, the hardest thing
+     *  the in-app engines have to swallow, so handing them to VLC/MX is a genuine escape hatch — but the
+     *  in-app player keeps the HUD, resume and engine toggle, so **INTERNAL stays the default**. */
+    enum class CatchupPlayer { ASK, INTERNAL, EXTERNAL }
+
+    val catchupPlayer: Flow<CatchupPlayer> = prefsFlow { prefs ->
+        prefs[Keys.CATCHUP_PLAYER]?.let { runCatching { CatchupPlayer.valueOf(it) }.getOrNull() } ?: CatchupPlayer.INTERNAL
+    }
+
+    suspend fun setCatchupPlayer(mode: CatchupPlayer) {
+        context.dataStore.edit { it[Keys.CATCHUP_PLAYER] = mode.name }
+    }
+
     suspend fun setCatchupOffsetMinutes(minutes: Int) {
         context.dataStore.edit { it[Keys.CATCHUP_OFFSET_MIN] = minutes.coerceIn(catchupOffsetRangeMinutes) }
     }
@@ -599,12 +618,37 @@ class SettingsRepository(private val context: Context) {
         context.dataStore.edit { it[Keys.MEASURED_STREAM_STATS] = enabled }
     }
 
-    /** Hand movies, series, and downloads to an external player (VLC, MX Player) instead of the
-     *  in-app engine. Off by default. Live TV is never routed externally. */
-    val externalPlayer: Flow<Boolean> = prefsFlow { it[Keys.EXTERNAL_PLAYER] ?: false }
+    /** Which section a stream belongs to when deciding whether it goes to an external player. */
+    enum class ExternalPlayerSection { LIVE_TV, MOVIES, SERIES }
 
-    suspend fun setExternalPlayer(enabled: Boolean) {
-        context.dataStore.edit { it[Keys.EXTERNAL_PLAYER] = enabled }
+    /** Hand this section's streams to an external player (VLC, MX Player) instead of the in-app engine.
+     *  Off by default everywhere.
+     *
+     *  Movies and Series fall back to [Keys.EXTERNAL_PLAYER], the single global toggle these three keys
+     *  replaced — that's the upgrade path, so a user who had it on keeps external playback for exactly
+     *  the sections it used to cover. Live TV has no such fallback: the old toggle never routed live
+     *  streams out, so inheriting it would silently start sending channels to VLC after an update. */
+    val externalPlayerMovies: Flow<Boolean> = prefsFlow { it[Keys.EXTERNAL_PLAYER_MOVIES] ?: it[Keys.EXTERNAL_PLAYER] ?: false }
+    val externalPlayerSeries: Flow<Boolean> = prefsFlow { it[Keys.EXTERNAL_PLAYER_SERIES] ?: it[Keys.EXTERNAL_PLAYER] ?: false }
+    val externalPlayerLive: Flow<Boolean> = prefsFlow { it[Keys.EXTERNAL_PLAYER_LIVE] ?: false }
+
+    fun externalPlayer(section: ExternalPlayerSection): Flow<Boolean> = when (section) {
+        ExternalPlayerSection.LIVE_TV -> externalPlayerLive
+        ExternalPlayerSection.MOVIES -> externalPlayerMovies
+        ExternalPlayerSection.SERIES -> externalPlayerSeries
+    }
+
+    /** A download is a movie or an episode, so it follows that section's setting. */
+    fun externalPlayerFor(mediaType: tv.own.owntv.core.model.MediaType): Flow<Boolean> =
+        if (mediaType == tv.own.owntv.core.model.MediaType.SERIES) externalPlayerSeries else externalPlayerMovies
+
+    suspend fun setExternalPlayer(section: ExternalPlayerSection, enabled: Boolean) {
+        val key = when (section) {
+            ExternalPlayerSection.LIVE_TV -> Keys.EXTERNAL_PLAYER_LIVE
+            ExternalPlayerSection.MOVIES -> Keys.EXTERNAL_PLAYER_MOVIES
+            ExternalPlayerSection.SERIES -> Keys.EXTERNAL_PLAYER_SERIES
+        }
+        context.dataStore.edit { it[key] = enabled }
     }
 
     /** Surround sound (**off by default — opt-in**). Most users are on TV speakers / 2.0 soundbars, and
@@ -1013,7 +1057,7 @@ class SettingsRepository(private val context: Context) {
     private val backupStringKeys = listOf(
         Keys.THEME_MODE, Keys.ACCENT, Keys.ACCENT_CUSTOM, Keys.DEFAULT_ZOOM,
         Keys.PREF_AUDIO_LANG, Keys.PREF_SUB_LANG, Keys.SORT_LIVE, Keys.SORT_GUIDE, Keys.SORT_MOVIES,
-        Keys.SORT_SERIES, Keys.RESUME_MODE, Keys.CATCHUP_TZ, Keys.ANIMATION_LEVEL, Keys.VOD_VIEW_MODE,
+        Keys.SORT_SERIES, Keys.RESUME_MODE, Keys.CATCHUP_TZ, Keys.CATCHUP_PLAYER, Keys.ANIMATION_LEVEL, Keys.VOD_VIEW_MODE,
         Keys.WEATHER_LOCATION, Keys.RECENT_SEARCHES,
         // Global proxy — non-secret fields only. The proxy password (Keys.PROXY_PASS) is NEVER part of
         // this whitelist; it is handled separately by BackupManager (encrypted or omitted).
@@ -1043,7 +1087,8 @@ class SettingsRepository(private val context: Context) {
     private val backupIntKeys = listOf(Keys.UI_ZOOM_PCT, Keys.AUDIO_DELAY_MS, Keys.CATCHUP_OFFSET_MIN, Keys.PROXY_PORT, Keys.CH_NAV_UP_SKIP, Keys.CH_NAV_DOWN_SKIP, Keys.MINI_PLAYER_SIZE_PCT, Keys.LIVE_LATENCY_CUSTOM_SECS, Keys.GLASS_SCOPE, Keys.GLASS_ALPHA, Keys.GLASS_BLUR)
     private val backupBoolKeys = listOf(
         Keys.LIVE_PREVIEW, Keys.LIVE_PREVIEW_AUDIO, Keys.HDR_ENABLED, Keys.AUTO_FRAME_RATE, Keys.ANDROID_TV_HOME, Keys.HW_DECODING,
-        Keys.VOD_PREFER_EXO, Keys.MEASURED_STREAM_STATS, Keys.EXTERNAL_PLAYER, Keys.UPDATE_CHECK_ON_START, Keys.SURROUND_SOUND, Keys.AUTO_PLAY_NEXT, Keys.PROXY_ENABLED,
+        Keys.VOD_PREFER_EXO, Keys.MEASURED_STREAM_STATS, Keys.EXTERNAL_PLAYER,
+        Keys.EXTERNAL_PLAYER_LIVE, Keys.EXTERNAL_PLAYER_MOVIES, Keys.EXTERNAL_PLAYER_SERIES, Keys.UPDATE_CHECK_ON_START, Keys.SURROUND_SOUND, Keys.AUTO_PLAY_NEXT, Keys.PROXY_ENABLED,
         Keys.WEATHER_ENABLED, Keys.WEATHER_FAHRENHEIT, Keys.RESUME_LAST_CHANNEL, Keys.METADATA_ENABLED, Keys.CH_NAV_ENABLED,
         Keys.REMEMBER_LAST_LIVE, Keys.REMEMBER_LAST_MOVIES, Keys.REMEMBER_LAST_SERIES,
         Keys.REMEMBER_CAT_LIVE, Keys.REMEMBER_CAT_MOVIES, Keys.REMEMBER_CAT_SERIES,

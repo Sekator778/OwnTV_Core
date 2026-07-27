@@ -1005,6 +1005,9 @@ class OwnTVPlayer(
             // only when Exo owns playback as a VOD engine (the HUD shows Exo's track list then).
             sideloadSubs = if (exoVodFallback) sessionExternalSubs.toList() else emptyList(),
             selectExternalLabel = extSelect?.title,
+            // Carry this item's decode path across the engine switch: a catch-up archive is software-only
+            // on mpv for the mid-GOP reason, and ExoPlayer's hardware decoder fails it the same way.
+            preferSoftware = forceSoftwareThisLoad,
         )
         // Re-apply the carried subtitle's remembered timing (§8.4) on the incoming engine.
         if (extSelect != null) onActiveSubtitleChanged?.invoke("path:${extSelect.path}")
@@ -1039,6 +1042,7 @@ class OwnTVPlayer(
         // previous item — use the intended start position instead.
         val pos = if (fileLoaded && _position.value > 0) _position.value else pendingSeekMs
         loadGeneration++ // supersede any mpv retry/watchdog work for this item
+        val gen = loadGeneration
         errorCheckJob?.cancel(); videoCheckJob?.cancel()
         expectingPlayback = false
         _error.value = null
@@ -1046,13 +1050,23 @@ class OwnTVPlayer(
         currentHwdec = null // keep the mpv decode guard inert while ExoPlayer owns playback
         if (mpvStuck) {
             hardReset()
-            // hardReset() destroys mpv on its own thread and forces a fresh Surface; give both a moment,
-            // then start ExoPlayer on whatever surface is current (a recreated one re-points via
-            // attachSurface → exoEngine.setSurface).
+            // hardReset() destroys mpv on its own thread and forces a fresh Surface; give the core a
+            // moment to die (it holds the panel's connection slot), then arm the deferred Exo start and
+            // request ANOTHER surface recreate. Grabbing `attachedSurface` here instead would race the
+            // recreate hardReset() just triggered: the old surface is already abandoned but not yet
+            // reported destroyed, so ExoPlayer configures onto a dead window and dies with
+            // `nativeWindowConnect returned an error: Invalid argument (-22)` → "failed on both engines"
+            // for an item that plays fine on retry. Routing through pendingExoStart guarantees the
+            // surface startExo receives was created AFTER this point.
             scope.launch {
                 delay(CORE_RESET_SETTLE_MS)
-                val s = attachedSurface ?: return@launch
-                startExo(url, pos, s, sub = null)
+                if (gen != loadGeneration) return@launch // superseded (user zapped/backed out meanwhile)
+                pendingUrl = url
+                pendingSeekMs = pos
+                pendingExoSub = null
+                pendingStartPaused = false
+                pendingExoStart = true
+                _surfaceResetToken.value++
             }
         } else {
             // mpv is responsive (END_FILE / decode guard): stop it cleanly to free the connection +
@@ -1078,7 +1092,7 @@ class OwnTVPlayer(
         if (!exoActive) return
         val url = currentUrl ?: return
         android.util.Log.w(TAG, "VOD terminally failed on ExoPlayer ($exoError) — falling back to mpv")
-        val pos = if (_position.value > 0) _position.value else pendingSeekMs
+        val pos = engineSwitchResumePos()
         exoFailureBeforeMpv = exoError
         exoPrimaryThisItem = false
         triedExoVodFallback = true // never bounce this item back to Exo
@@ -1103,7 +1117,7 @@ class OwnTVPlayer(
             // → mpv. Manual choice: clear the chain state so this doesn't read as "mpv after Exo failed"
             // (which would turn a later mpv failure into the combined error) and re-arm the auto-fallback.
             android.util.Log.i(TAG, "HUD engine toggle: ExoPlayer → mpv")
-            val pos = if (_position.value > 0) _position.value else pendingSeekMs
+            val pos = engineSwitchResumePos()
             // Carry the active subtitle across the switch (§10): an external sub re-attaches + selects
             // after mpv reloads; an embedded pick re-selects by its ordinal among sub tracks.
             val selSub = _subTrackList.value.firstOrNull { it.selected }
@@ -1176,6 +1190,21 @@ class OwnTVPlayer(
         return "Playback failed on both video engines (ExoPlayer, then mpv). " +
             "The file may be corrupted or use a format this TV can't play."
     }
+
+    /**
+     * Where mpv should resume when an item is handed back to it (engine toggle or Exo fallback).
+     *
+     * Normally that's the current position. But a catch-up archive ([forceSoftwareThisLoad]) is served
+     * by the panel as a plain stream with no Range support, so re-opening it at an offset fails outright:
+     * the MOOV-AT-END watchdog aborts ("server lacks Range support") and the user gets a "failed on both
+     * engines" error for a programme mpv had been playing happily seconds earlier. Restarting the archive
+     * from the beginning actually plays — and for a "Watch from start" programme that's the intended
+     * position anyway.
+     */
+    private fun engineSwitchResumePos(): Long =
+        if (forceSoftwareThisLoad) 0L
+        else if (_position.value > 0) _position.value
+        else pendingSeekMs
 
     /** The engine fallback ALSO failed: stop ExoPlayer and surface one combined error. */
     private fun failBothEngines(exoError: String) {

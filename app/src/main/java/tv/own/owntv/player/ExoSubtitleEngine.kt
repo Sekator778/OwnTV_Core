@@ -17,6 +17,7 @@ import androidx.media3.datasource.okhttp.OkHttpDataSource
 import androidx.media3.exoplayer.DefaultLoadControl
 import androidx.media3.exoplayer.DefaultRenderersFactory
 import androidx.media3.exoplayer.ExoPlayer
+import androidx.media3.exoplayer.mediacodec.MediaCodecSelector
 import androidx.media3.exoplayer.source.DefaultMediaSourceFactory
 import androidx.media3.exoplayer.trackselection.DefaultTrackSelector
 import kotlinx.coroutines.launch
@@ -109,10 +110,20 @@ class ExoSubtitleEngine(
     private var hasVideoTrack = true
     private val noVideoTimeout = Runnable {
         if (!firstFrameSeen && hasVideoTrack) {
-            android.util.Log.w(TAG, "no video frame after ${NO_VIDEO_TIMEOUT_MS}ms — falling back")
+            android.util.Log.w(
+                TAG,
+                "no video frame after ${noVideoTimeoutMs()}ms — falling back " +
+                    "(decodedDrops=${currentDroppedFrames(player) - dropsBaseline} format=${player?.videoFormat?.sampleMimeType})",
+            )
             callbacks.onError("Audio is playing, but video could not be rendered on this device.")
         }
     }
+
+    /** How long to wait for the first frame. A catch-up archive gets far longer: it decodes in SOFTWARE
+     *  and starts mid-GOP, so the decoder must chew through inter-frames until the next keyframe before
+     *  it can render anything — on a low-spec box that can comfortably exceed the normal 8 s budget. */
+    private fun noVideoTimeoutMs(): Long =
+        if (softwarePreferred) NO_VIDEO_TIMEOUT_SOFTWARE_MS else NO_VIDEO_TIMEOUT_MS
     // Maps the audio-track id the HUD selects (== its ordinal in the list we publish) → the ExoPlayer
     // track group + index to override. Rebuilt whenever the track list changes.
     private var audioSelections: List<AudioSel> = emptyList()
@@ -126,7 +137,19 @@ class ExoSubtitleEngine(
     private var dropsBaseline = 0
     private val analytics = object : androidx.media3.exoplayer.analytics.AnalyticsListener {
         override fun onVideoDecoderInitialized(eventTime: androidx.media3.exoplayer.analytics.AnalyticsListener.EventTime, decoderName: String, initializedTimestampMs: Long, initializationDurationMs: Long) {
+            // Which decoder actually won the selector, and how long it took to come up. The name is the
+            // only reliable way to tell a software decoder (c2.android.* / OMX.google.*) from the vendor
+            // hardware one, and mid-GOP archives hinge on getting the former.
+            android.util.Log.i(TAG, "video decoder: $decoderName (init ${initializationDurationMs}ms, software=${softwarePreferred})")
             dropsBaseline = currentDroppedFrames(player) // a new decoder session may start its own counters
+        }
+
+        override fun onVideoInputFormatChanged(
+            eventTime: androidx.media3.exoplayer.analytics.AnalyticsListener.EventTime,
+            format: androidx.media3.common.Format,
+            decoderReuseEvaluation: androidx.media3.exoplayer.DecoderReuseEvaluation?,
+        ) {
+            android.util.Log.i(TAG, "video input format: ${format.sampleMimeType} ${format.width}x${format.height} fps=${format.frameRate}")
         }
     }
 
@@ -195,7 +218,10 @@ class ExoSubtitleEngine(
         // [selectExternalLabel] names the one to select, or null to attach them all unselected.
         sideloadSubs: List<OwnTVPlayer.ExternalSub> = emptyList(),
         selectExternalLabel: String? = null,
+        /** Decode this item on a software decoder (catch-up archive) — see [softwareFirstSelector]. */
+        preferSoftware: Boolean = false,
     ) {
+        softwarePreferred = preferSoftware
         this.surface = surface
         fallbackMode = fallback
         pendingSubLang = subLang
@@ -205,7 +231,7 @@ class ExoSubtitleEngine(
         hasVideoTrack = true
         throughputTracker.reset(); fpsSample.resetAll(); dropsBaseline = currentDroppedFrames(player)
         mainHandler.removeCallbacks(noVideoTimeout)
-        mainHandler.postDelayed(noVideoTimeout, NO_VIDEO_TIMEOUT_MS)
+        mainHandler.postDelayed(noVideoTimeout, noVideoTimeoutMs())
 
         currentUrl = url
         externalSubs.clear()
@@ -214,7 +240,14 @@ class ExoSubtitleEngine(
         subDelayMs = 0
         delayLabel = null
 
-        val p = player ?: build().also { player = it }
+        // The renderer factory (and so the decoder selector) is baked in at construction: if this item
+        // wants the other decode path than the cached player was built for, drop and rebuild it.
+        if (player != null && builtForSoftware != softwarePreferred) {
+            android.util.Log.i(TAG, "rebuilding ExoPlayer for ${if (softwarePreferred) "software" else "hardware"} decode")
+            player?.release()
+            player = null
+        }
+        val p = player ?: build().also { player = it; builtForSoftware = softwarePreferred }
         p.setVideoSurface(surface)
         p.setMediaItem(buildMediaItem(url))
         p.prepare()
@@ -328,6 +361,19 @@ class ExoSubtitleEngine(
         p.playWhenReady = wasPlaying
     }
 
+    /** Decode path requested for the item being started, and the one the built [player] actually holds —
+     *  the renderer factory is fixed at construction, so a change forces a rebuild in [start]. */
+    private var softwarePreferred = false
+    private var builtForSoftware = false
+
+    /** [MediaCodecSelector.DEFAULT]'s list, reordered to put software decoders first. Media3 tries the
+     *  list in order and falls through on failure, so the hardware decoder stays available as a backstop
+     *  rather than being removed outright. */
+    private val softwareFirstSelector = MediaCodecSelector { mime, secure, tunneling ->
+        MediaCodecSelector.DEFAULT.getDecoderInfos(mime, secure, tunneling)
+            .sortedBy { it.hardwareAccelerated } // false (software) sorts before true
+    }
+
     private fun build(): ExoPlayer {
         // OkHttp for the stream itself, wrapped in DefaultDataSource so file:// URIs (side-loaded
         // external subtitle files in app storage) route to FileDataSource — the bare OkHttp factory
@@ -350,8 +396,16 @@ class ExoSubtitleEngine(
             // Honor the user's preferred languages where present; subtitle selection is forced explicitly.
             parameters = buildUponParameters().build()
         }
+        // Catch-up archives decode on SOFTWARE, mirroring mpv's preferSoftware path. Timeshift segments
+        // start mid-GOP, and TV-class hardware decoders can't recover from that: the Realtek OMX decoder
+        // accepts the format, plays the audio, then never emits a video frame ("setPortMode ...
+        // DynamicANWBuffer failed", "BAD CODEC: stride 1920 -> 64"). A software decoder resyncs at the
+        // next keyframe and plays cleanly, which is exactly why mpv was pinned to software here.
+        val renderers = DefaultRenderersFactory(context).apply {
+            if (softwarePreferred) setMediaCodecSelector(softwareFirstSelector)
+        }
         return ExoPlayer.Builder(context)
-            .setRenderersFactory(DefaultRenderersFactory(context))
+            .setRenderersFactory(renderers)
             .setMediaSourceFactory(DefaultMediaSourceFactory(dataSource))
             .setLoadControl(loadControl)
             .setTrackSelector(trackSelector)
@@ -615,5 +669,7 @@ class ExoSubtitleEngine(
     private companion object {
         const val TAG = "ExoSubtitleEngine"
         const val NO_VIDEO_TIMEOUT_MS = 8_000L
+        /** Mid-GOP + software decode needs a much longer first-frame budget — see [noVideoTimeoutMs]. */
+        const val NO_VIDEO_TIMEOUT_SOFTWARE_MS = 25_000L
     }
 }
