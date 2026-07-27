@@ -180,6 +180,11 @@ interface ChannelDao {
     )
     suspend fun snapshotByCategoryManual(categoryId: Long, profileId: Long, contextKey: String, limit: Int): List<ChannelEntity>
 
+    /** Bounded snapshot across all of a profile's playlists, in provider order — the in-player zap /
+     *  channel-list fallback for a channel that has no category of its own. */
+    @Query("SELECT * FROM channels WHERE sourceId IN (:sourceIds) ORDER BY sourceId ASC, sortOrder ASC, name ASC LIMIT :limit")
+    suspend fun snapshotAll(sourceIds: List<Long>, limit: Int): List<ChannelEntity>
+
     /** Bounded snapshot of Favorites in manual order, for the Move session's in-memory reorder. */
     @Query(
         "SELECT c.* FROM channels c " +
