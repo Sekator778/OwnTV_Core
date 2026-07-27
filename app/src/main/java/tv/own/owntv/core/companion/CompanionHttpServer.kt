@@ -221,14 +221,16 @@ class CompanionHttpServer {
                 return sendHtml(socket, 200, CompanionHtml.pinPage("That PIN did not match — try again."))
             }
 
-            // Backup download (BACKUP_DOWNLOAD mode) — PIN required, streams the exported JSON file.
-            if (method == "GET" && path == "/backup.json") {
+            // Backup download (BACKUP_DOWNLOAD mode) — PIN required, streams the exported container.
+            // `/backup.json` stays routed here: the old path costs nothing to keep and a phone that
+            // bookmarked it still works. What it serves is whatever export produced — a `.own` file.
+            if (method == "GET" && (path == "/backup.own" || path == "/backup.json")) {
                 val headerPin = headers["x-companion-pin"].orEmpty()
                 if (!requirePin(queryPin.ifBlank { headerPin })) return sendText(socket, 401, "Unauthorized")
                 val file = downloadFile
                 val bytes = file?.takeIf { it.exists() }?.let { runCatching { it.readBytes() }.getOrNull() }
                     ?: return sendText(socket, 404, "No backup available")
-                return sendDownload(socket, bytes, "owntv-backup.json")
+                return sendDownload(socket, bytes, file.name)
             }
 
             // Backup upload (BACKUP_RESTORE mode) — PIN required, JSON body is the backup file.

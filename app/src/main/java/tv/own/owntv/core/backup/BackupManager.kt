@@ -40,6 +40,8 @@ class BackupManager(
     private val tmdbOverrides: tv.own.owntv.core.metadata.MetadataOverrideStore,
     private val metadataDao: tv.own.owntv.core.database.dao.MetadataDao,
     private val openSubAuth: tv.own.owntv.core.subtitles.OpenSubtitlesAuthStore,
+    /** `filesDir/backgrounds` — where the Liquid Glass wallpaper lives, so a backup can carry it. */
+    private val backgroundsDir: File,
 ) {
     /** What a backup can contain; the user multi-selects these for export and restore. Profiles are
      *  NOT a section: every backup is inherently profile-based — the export flow's first step picks
@@ -56,12 +58,19 @@ class BackupManager(
     }
 
     /**
-     * Writes the chosen [sections] into [folder] as owntv-backup.json; returns the file path.
+     * Writes the chosen [sections] into [folder] as `owntv-backup.own`; returns the file path.
+     *
+     * The output is a [BackupContainer]: the same backup JSON this class has always produced, plus
+     * the Liquid Glass wallpaper's actual bytes when one is set. Exporting bare `.json` is gone (the
+     * path in it was device-local and its contents were readable to anyone) — restore still accepts
+     * old `.json` files, and always will.
      *
      * Secret fields (source passwords, proxy password) are NEVER written as plaintext. When
-     * [backupPassword] is a non-blank passphrase, they are encrypted field-by-field (AES-GCM) and a
-     * root `crypto` block records the KDF params. When it is null/blank, secrets are simply omitted —
-     * the caller is expected to have warned the user that passwords must be re-entered after restore.
+     * [backupPassword] is a non-blank passphrase, they are encrypted field-by-field (AES-GCM), a
+     * root `crypto` block records the KDF params, **and the whole container is sealed with the same
+     * passphrase** so nothing inside — URLs, usernames, history, the file list — is readable without
+     * it. When it is null/blank, secrets are simply omitted and the container is a plain ZIP; the
+     * caller is expected to have warned the user that passwords must be re-entered after restore.
      */
     suspend fun export(
         folder: File,
@@ -85,7 +94,7 @@ class BackupManager(
             val seal: ((String) -> JSONObject)? = key?.let { k -> { plain -> BackupCrypto.encrypt(k, plain) } }
 
             val root = JSONObject().apply {
-                put("version", 13) // v13: sources.syncLive/Movies/Series. v12: per-profile OpenSubtitles login (encrypted-only). v11: profile-scoped export. v10: sources.mac. v9: custom TMDB names, encrypted TMDB key
+                put("version", 14) // v14: .own container (wallpaper rides along). v13: sources.syncLive/Movies/Series. v12: per-profile OpenSubtitles login (encrypted-only). v11: profile-scoped export. v10: sources.mac. v9: custom TMDB names, encrypted TMDB key
                 put("sections", JSONArray().apply { sections.forEach { put(it.name) } })
                 if (salt != null) put("crypto", BackupCrypto.cryptoBlock(salt))
                 // Ticked profiles always ride (backup is profile-based); restore needs SOURCES to apply them.
@@ -162,27 +171,91 @@ class BackupManager(
                     }
                 }
             }
+            // The wallpaper's bytes, not its path. `settings.bg_image_path` still rides in the settings
+            // block, but it points into THIS device's filesDir — restoring it verbatim gave the next
+            // device a dangling path and a blank background. Import re-derives the path from this entry.
+            val wallpaper = if (Section.SETTINGS in sections) currentWallpaper() else null
+            wallpaper?.let { root.put("wallpaper", it.name) }
+
             if (!folder.exists()) folder.mkdirs()
-            writeAtomically(File(folder, BACKUP_FILENAME), root.toString(2))
+            writeAtomically(
+                File(folder, BACKUP_FILENAME),
+                BackupContainer.pack(BackupContainer.Payload(root.toString(2), wallpaper), backupPassword),
+            )
         }
     }
 
+    /** The current Liquid Glass background as a container asset, or null when unset/missing/oversized. */
+    private suspend fun currentWallpaper(): BackupContainer.Asset? {
+        val path = settings.bgImagePath.first().trim()
+        if (path.isEmpty()) return null
+        val file = File(path)
+        // Size cap: the wallpaper is a user-picked file and a backup the user may send over the
+        // companion link. A 100 MB TIFF must not silently become a 100 MB backup.
+        if (!file.isFile || file.length() !in 1..MAX_WALLPAPER_BYTES) return null
+        return runCatching { BackupContainer.Asset(file.name, file.readBytes()) }.getOrNull()
+    }
+
     /**
-     * Read a backup file, falling back to the rotated `.bak` when the primary is missing or is not
-     * parseable JSON — the case an interrupted pre-atomic export used to leave behind.
+     * Writes the wallpaper carried by a restored container into `filesDir/backgrounds` and points the
+     * setting at it. Mirrors `ingestBackgroundImage`: the folder is wiped first so it never
+     * accumulates, and the filename keeps a fresh timestamp so Coil's path-keyed cache and the
+     * settings Flow both see a genuinely new value.
+     *
+     * When the file carries no wallpaper (legacy `.json`, or a backup made with no background set),
+     * the restored `bg_image_path` is a path from another device: cleared unless it happens to exist.
      */
-    private fun readBackupJson(file: File): JSONObject {
-        val primary = runCatching { JSONObject(file.readText()) }
-        if (primary.isSuccess) return primary.getOrThrow()
+    private suspend fun applyWallpaper(asset: BackupContainer.Asset?) {
+        if (asset == null) {
+            val restored = settings.bgImagePath.first().trim()
+            if (restored.isNotEmpty() && !File(restored).isFile) settings.setBgImagePath("")
+            return
+        }
+        runCatching {
+            if (!backgroundsDir.exists()) backgroundsDir.mkdirs()
+            backgroundsDir.listFiles()?.forEach { it.delete() }
+            val ext = File(asset.name).extension.ifBlank { "png" }.lowercase()
+            val dest = File(backgroundsDir, "background_${System.currentTimeMillis()}.$ext")
+            dest.writeBytes(asset.bytes)
+            settings.setBgImagePath(dest.absolutePath)
+        }.onFailure { Log.w(TAG, "Wallpaper restore failed: ${it.message}") }
+    }
+
+    /**
+     * Read a backup file in any supported format ([BackupContainer.Kind]), falling back to the
+     * rotated `.bak` when the primary is unreadable — the case an interrupted pre-atomic export used
+     * to leave behind. A [WrongPasswordException] from a sealed container is rethrown as-is rather
+     * than triggering the `.bak` fallback: the file is fine, the password isn't.
+     */
+    private fun readBackup(file: File, password: String?): Pair<JSONObject, BackupContainer.Asset?> {
+        fun read(f: File): Pair<JSONObject, BackupContainer.Asset?> =
+            BackupContainer.open(f, password).let { JSONObject(it.json) to it.wallpaper }
+
+        val primary = runCatching { read(file) }
+        primary.getOrNull()?.let { return it }
+        (primary.exceptionOrNull() as? WrongPasswordException)?.let { throw it }
         val bak = File(file.parentFile, "${file.name}$BAK_SUFFIX")
         if (bak.exists()) {
-            runCatching { JSONObject(bak.readText()) }.getOrNull()?.let { return it }
+            runCatching { read(bak) }.getOrNull()?.let { return it }
         }
         throw primary.exceptionOrNull() ?: IllegalStateException("Not an OwnTV backup file")
     }
 
-    /** Result of inspecting a backup file: which sections it holds, and whether secrets are encrypted. */
-    data class Inspection(val sections: Set<Section>, val encrypted: Boolean)
+    /**
+     * Result of inspecting a backup file: which sections it holds, whether secrets are encrypted, and
+     * whether the whole file was sealed ([sealed]).
+     *
+     * [sealed] drives the restore UI's order. A field-encrypted backup can be inspected without the
+     * password (only the secrets are opaque), so the user picks sections first and the password
+     * afterwards — and may skip it. A sealed container reveals nothing at all until it is decrypted,
+     * so the password comes FIRST and cannot be skipped.
+     */
+    data class Inspection(val sections: Set<Section>, val encrypted: Boolean, val sealed: Boolean = false)
+
+    /** True when [file] is a container that cannot be inspected at all without the backup password. */
+    suspend fun isSealed(file: File): Boolean = withContext(Dispatchers.IO) {
+        BackupContainer.probe(file) == BackupContainer.Kind.ENCRYPTED_CONTAINER
+    }
 
     /**
      * Outcome of a restore: how many rows/entries were applied, and how many `sources[]` entries were
@@ -201,10 +274,14 @@ class BackupManager(
     /** Thrown when a backup is encrypted and the supplied passphrase is wrong (or missing where required). */
     class WrongPasswordException : Exception("Wrong backup password")
 
-    /** What a backup file contains + whether it carries encrypted secrets (older files have no "sections"). */
-    suspend fun sectionsIn(file: File): Result<Inspection> = withContext(Dispatchers.IO) {
+    /**
+     * What a backup file contains + whether it carries encrypted secrets (older files have no
+     * "sections"). [password] is required only for a sealed container — see [isSealed].
+     */
+    suspend fun sectionsIn(file: File, password: String? = null): Result<Inspection> = withContext(Dispatchers.IO) {
         runCatching {
-            val root = readBackupJson(file)
+            val sealed = BackupContainer.probe(file) == BackupContainer.Kind.ENCRYPTED_CONTAINER
+            val (root, _) = readBackup(file, password)
             val out = mutableSetOf<Section>()
             // v11+ files always carry "profiles" (backup is profile-based); only "sources" marks the
             // Sources section. Older files wrote both together, so this reads them identically.
@@ -227,7 +304,7 @@ class BackupManager(
                 }
             }
             if (out.isEmpty()) error("Not an OwnTV backup file")
-            Inspection(out, encrypted = root.has("crypto"))
+            Inspection(out, encrypted = root.has("crypto"), sealed = sealed)
         }
     }
 
@@ -257,7 +334,7 @@ class BackupManager(
         backupPassword: String? = null,
     ): Result<ImportSummary> = withContext(Dispatchers.IO) {
         runCatching {
-            val root = readBackupJson(file)
+            val (root, wallpaper) = readBackup(file, backupPassword)
             val crypto = root.optJSONObject("crypto")
             val pass = backupPassword?.takeIf { it.isNotBlank() }
             var existingProfileIds = profileDao.getAllOnce().map { it.id }.toSet()
@@ -489,6 +566,8 @@ class BackupManager(
                     }
                     count += s.length()
                 }
+                // After importSettings, because that is what wrote the file's (device-local) bg path.
+                applyWallpaper(wallpaper)
                 // Per-item compatibility-mode engine pins. Optional; merged (union) into the current
                 // pins so a restore never drops locally-set pins. Corrupt/non-string entries ignored.
                 root.optJSONObject("compatMode")?.let { c ->
@@ -630,7 +709,22 @@ class BackupManager(
         internal fun parseSourceType(raw: String?): SourceType? =
             raw?.takeIf { it.isNotBlank() }?.let { name -> SourceType.entries.firstOrNull { it.name == name } }
 
-        const val BACKUP_FILENAME = "owntv-backup.json"
+        /** What export writes since v4.2 — a [BackupContainer], not a bare JSON file. */
+        const val BACKUP_FILENAME = "owntv-backup.own"
+
+        /** The pre-4.2 name. Export never produces it any more; restore still accepts such files. */
+        const val LEGACY_BACKUP_FILENAME = "owntv-backup.json"
+
+        /** File-picker filter for restore: the new container plus every legacy `.json` in the wild. */
+        val RESTORE_EXTENSIONS = setOf("own", "json")
+
+        /**
+         * Biggest wallpaper we will carry inside a backup (see `currentWallpaper`). Held below the
+         * companion upload cap (`CompanionHttpServer.UPLOAD_BODY_LIMIT`, 16 MB) with room for base64's
+         * ~33% inflation, so a backup that exports fine can always be sent back over the phone link.
+         */
+        private const val MAX_WALLPAPER_BYTES = 8L * 1024 * 1024
+
         internal const val TMP_SUFFIX = ".tmp"
         internal const val BAK_SUFFIX = ".bak"
 
@@ -642,11 +736,15 @@ class BackupManager(
          *
          * Returns the **final** path — callers (the export UI, the companion download) rely on that.
          */
-        internal fun writeAtomically(target: File, text: String): String {
+        internal fun writeAtomically(target: File, text: String): String =
+            writeAtomically(target, text.toByteArray(Charsets.UTF_8))
+
+        /** Byte-level [writeAtomically] — the container is binary, so text can't be the only entry point. */
+        internal fun writeAtomically(target: File, bytes: ByteArray): String {
             val tmp = File(target.parentFile, "${target.name}$TMP_SUFFIX")
             try {
                 java.io.FileOutputStream(tmp).use { fos ->
-                    fos.write(text.toByteArray(Charsets.UTF_8))
+                    fos.write(bytes)
                     fos.flush()
                     fos.fd.sync()
                 }

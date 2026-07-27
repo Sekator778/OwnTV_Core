@@ -13,8 +13,9 @@ import javax.crypto.spec.SecretKeySpec
 /**
  * Field-level secret encryption for backups (NOT whole-file encryption — only individual secret values).
  *
- * Only individual secret values (source/proxy passwords) are encrypted; everything else in
- * owntv-backup.json stays human-readable. A user-supplied passphrase is stretched with PBKDF2 over a
+ * Only individual secret values (source/proxy passwords) are encrypted; everything else in the backup
+ * JSON stays human-readable — whole-file protection is [BackupContainer]'s job, which seals the
+ * container with the same passphrase. A user-supplied passphrase is stretched with PBKDF2 over a
  * per-backup random salt (so the file is portable across devices — no Android Keystore), then each
  * field is sealed with AES-256-GCM using a fresh random IV. The GCM tag authenticates both the value
  * and lets us detect a wrong passphrase (decrypt throws) without ever comparing the passphrase itself.
@@ -75,6 +76,26 @@ object BackupCrypto {
         cipher.init(Cipher.ENCRYPT_MODE, key, GCMParameterSpec(GCM_TAG_BITS, iv))
         val ct = cipher.doFinal(plaintext.toByteArray(Charsets.UTF_8))
         return JSONObject().put("iv", b64(iv)).put("ct", b64(ct))
+    }
+
+    /**
+     * Seals arbitrary bytes, returning `iv || ciphertext` as one blob — used by [BackupContainer] to
+     * encrypt the WHOLE `.own` container, not just individual fields. The IV rides in front because a
+     * container has nowhere to put a JSON wrapper: everything after the plaintext header is opaque.
+     */
+    fun encryptBytes(key: SecretKey, plaintext: ByteArray): ByteArray {
+        val iv = ByteArray(IV_BYTES).also { rng.nextBytes(it) }
+        val cipher = Cipher.getInstance("AES/GCM/NoPadding")
+        cipher.init(Cipher.ENCRYPT_MODE, key, GCMParameterSpec(GCM_TAG_BITS, iv))
+        return iv + cipher.doFinal(plaintext)
+    }
+
+    /** Opens an [encryptBytes] blob. Throws on a wrong passphrase (GCM tag mismatch) or truncation. */
+    fun decryptBytes(key: SecretKey, blob: ByteArray): ByteArray {
+        require(blob.size > IV_BYTES) { "Truncated encrypted backup" }
+        val cipher = Cipher.getInstance("AES/GCM/NoPadding")
+        cipher.init(Cipher.DECRYPT_MODE, key, GCMParameterSpec(GCM_TAG_BITS, blob.copyOf(IV_BYTES)))
+        return cipher.doFinal(blob, IV_BYTES, blob.size - IV_BYTES)
     }
 
     /** True if [value] is an encrypted secret object (vs a legacy plaintext string). */

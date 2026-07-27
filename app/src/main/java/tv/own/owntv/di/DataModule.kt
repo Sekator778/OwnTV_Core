@@ -164,8 +164,14 @@ val dataModule = module {
     // context, downloadDao, settings, engine
     single { DownloadManager(androidContext(), get(), get(), get()) }
     // profileDao, sourceDao, settings, customizationStore, userDataResolver, epgSourceStore,
-    // forceMpvStore, vodEngineStore, db, metadataOverrideStore, metadataDao, openSubtitlesAuthStore
-    single { BackupManager(get(), get(), get(), get(), get(), get(), get(), get(), get(), get(), get(), get()) }
+    // forceMpvStore, vodEngineStore, db, metadataOverrideStore, metadataDao, openSubtitlesAuthStore,
+    // backgroundsDir (same folder ingestBackgroundImage writes to — the .own container carries the wallpaper)
+    single {
+        BackupManager(
+            get(), get(), get(), get(), get(), get(), get(), get(), get(), get(), get(), get(),
+            java.io.File(androidContext().filesDir, "backgrounds"),
+        )
+    }
     // context, okHttpClient — in-app updates from GitHub Releases
     single { UpdateManager(androidContext(), get()) }
     single { CatalogSyncScheduler(androidContext()) }

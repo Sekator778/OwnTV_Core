@@ -215,11 +215,11 @@ internal object CompanionHtml {
         """
           <div class="card">
             <h1>Restore a backup</h1>
-            <p>Choose an OwnTV backup file (<code>.json</code>) and press Send. It is transferred to the
-               TV — pick up the remote and choose what to restore there.</p>
+            <p>Choose an OwnTV backup file (<code>.own</code>, or an older <code>.json</code>) and press
+               Send. It is transferred to the TV — pick up the remote and choose what to restore there.</p>
             <form id="f" onsubmit="return false">
               <label>Backup file
-                <input id="file" type="file" accept=".json,application/json" required>
+                <input id="file" type="file" accept=".own,.json,application/json,application/octet-stream" required>
               </label>
               <button class="go" id="send" type="submit">Send to TV</button>
             </form>
@@ -242,7 +242,9 @@ internal object CompanionHtml {
                   .catch(function(){b.disabled=false; s.textContent='Could not reach the TV. Stay on the same Wi-Fi and try again.';});
               };
               r.onerror=function(){b.disabled=false; s.textContent='Could not read that file.';};
-              r.readAsText(file);
+              // Data-URL, not text: a .own container is binary and readAsText would mangle it. The TV
+              // decodes the base64 back to bytes (legacy .json uploads arrive the same way).
+              r.readAsDataURL(file);
               return false;
             });
           </script>
@@ -318,15 +320,15 @@ internal object CompanionHtml {
         """.trimIndent(),
     )
 
-    /** Backup download page — fetch the backup JSON the TV just exported. [pin] authenticates the download. */
+    /** Backup download page — fetch the backup container the TV just exported. [pin] authenticates it. */
     fun backupDownloadPage(pin: String): String = page(
         "OwnTV — Download backup",
         """
           <div class="card">
             <h1>Download your backup</h1>
             <p>Your TV has prepared an OwnTV backup file. Tap the button to save it to this device
-               (<code>owntv-backup.json</code>). Keep it somewhere safe — you can restore from it later.</p>
-            <a class="go" href="/backup.json?pin=$pin" download="owntv-backup.json"
+               (<code>owntv-backup.own</code>). Keep it somewhere safe — you can restore from it later.</p>
+            <a class="go" href="/backup.own?pin=$pin" download="owntv-backup.own"
                style="display:block;text-align:center;text-decoration:none">Download backup</a>
           </div>
         """.trimIndent(),

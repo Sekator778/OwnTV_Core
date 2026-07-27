@@ -120,12 +120,27 @@ class CompanionController(context: Context) {
         }
     }
 
-    /** Persists an uploaded backup JSON to a cache file and emits it for the restore UI to inspect. */
+    /**
+     * Persists an uploaded backup to a cache file and emits it for the restore UI to inspect.
+     *
+     * Two wire shapes, because a `.own` container is binary while the old `.json` was not:
+     * a **data-URL** (`data:...;base64,…`) is decoded back to bytes — the same trick the background
+     * image upload uses, so the socket layer stays text-only — and anything else is a legacy JSON
+     * backup pasted through verbatim. The extension follows suit so the restore path's format sniff
+     * and the temp file agree.
+     */
     private fun onBackupUploaded(text: String) {
         runCatching {
-            val file = File.createTempFile("owntv-remote-restore", ".json", appContext.cacheDir)
-            file.writeText(text)
-            Log.d(TAG, "Received remote backup (${text.length} chars) → ${file.name}")
+            val base64 = text.substringAfter("base64,", missingDelimiterValue = "")
+                .takeIf { text.startsWith("data:") && it.isNotBlank() }
+            val bytes = base64?.let { android.util.Base64.decode(it, android.util.Base64.DEFAULT) }
+            val file = File.createTempFile(
+                "owntv-remote-restore",
+                if (bytes != null) ".own" else ".json",
+                appContext.cacheDir,
+            )
+            if (bytes != null) file.writeBytes(bytes) else file.writeText(text)
+            Log.d(TAG, "Received remote backup (${file.length()} bytes) → ${file.name}")
             file
         }.onSuccess { _backups.tryEmit(it) }
             .onFailure { Log.w(TAG, "Failed to persist uploaded backup", it) }

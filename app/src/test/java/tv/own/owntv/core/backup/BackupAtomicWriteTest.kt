@@ -10,8 +10,12 @@ import java.io.File
 
 /**
  * B3 — a backup export must never destroy the previous backup. The old code streamed straight over
- * `owntv-backup.json`, so a crash, a full disk or a pulled USB stick mid-write left the user with a
+ * the backup file, so a crash, a full disk or a pulled USB stick mid-write left the user with a
  * truncated file and no earlier copy.
+ *
+ * Exercised through the String overload; the container path ([BackupContainer]) writes bytes through
+ * the very same function, and its round-trip is covered on-device by `BackupContainerTest` — org.json
+ * and android.util.Base64 are both stubs in plain JVM unit tests.
  */
 class BackupAtomicWriteTest {
 
