@@ -7,6 +7,7 @@ import androidx.room.Query
 import kotlinx.coroutines.flow.Flow
 import tv.own.owntv.core.database.entity.EpgHashProjection
 import tv.own.owntv.core.database.entity.EpgChannelEntity
+import tv.own.owntv.core.database.entity.EpgChannelIcon
 import tv.own.owntv.core.database.entity.EpgProgrammeEntity
 
 /** EPG storage + now/next lookups. Programmes are kept to a rolling window and pruned. */
@@ -138,6 +139,14 @@ interface EpgDao {
             "GROUP BY epgChannelId ORDER BY displayName ASC LIMIT :limit",
     )
     suspend fun listEpgChannels(sourceIds: List<Long>, query: String, limit: Int): List<EpgChannelEntity>
+
+    /**
+     * Channel `<icon src>` logos from the EPG sources the user enabled "Use this guide's logos" on.
+     * Only rows with an icon are returned, so a feed without icons costs nothing. Ids are already
+     * stored normalized (trim+lowercase), which is the key the override map is looked up by.
+     */
+    @Query("SELECT epgChannelId, iconUrl FROM epg_channels WHERE sourceId IN (:sourceIds) AND iconUrl IS NOT NULL AND iconUrl != ''")
+    fun observeChannelIcons(sourceIds: List<Long>): Flow<List<EpgChannelIcon>>
 
     @Query("SELECT epgChannelId FROM epg_channels WHERE sourceId = :sourceId")
     suspend fun epgChannelIdsForSource(sourceId: Long): List<String>

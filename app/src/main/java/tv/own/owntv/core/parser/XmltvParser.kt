@@ -20,14 +20,15 @@ object XmltvParser {
     private const val STREAM_LOG_ITEM_STEP = 10_000
 
     /**
-     * Parse an XMLTV stream. [onChannel] gets (id, displayName); [onProgramme] gets
+     * Parse an XMLTV stream. [onChannel] gets (id, displayName, iconUrl — the feed's `<icon src>`
+     * channel logo, null when absent or not an http(s) URL); [onProgramme] gets
      * (channelId, startMs, stopMs, title, description). If [channelFilter] is present, programmes
      * whose normalized channel id is not in the set are skipped before child parsing. Gzip is
      * detected from the magic bytes.
      */
     suspend fun parse(
         input: InputStream,
-        onChannel: suspend (id: String, displayName: String?) -> Unit,
+        onChannel: suspend (id: String, displayName: String?, iconUrl: String?) -> Unit,
         onProgramme: suspend (channelId: String, startMs: Long, stopMs: Long, title: String, description: String?) -> Unit,
         channelFilter: Set<String>? = null,
     ) {
@@ -119,7 +120,7 @@ object XmltvParser {
 
     private suspend fun readChannel(
         parser: XmlPullParser,
-        onChannel: suspend (String, String?) -> Unit,
+        onChannel: suspend (String, String?, String?) -> Unit,
         metrics: ParseMetrics,
         channelFilter: Set<String>?,
         seenChannelIds: MutableSet<String>,
@@ -137,6 +138,9 @@ object XmltvParser {
             return false
         }
         var displayName: String? = null
+        // XMLTV `<icon src="…"/>` — the feed's own channel logo. Kept only when it looks like an http(s)
+        // URL: some feeds put local paths or junk here, and a non-loadable value would blank the logo.
+        var iconUrl: String? = null
         try {
             while (true) {
                 ctx.ensureActive()
@@ -144,6 +148,9 @@ object XmltvParser {
                     XmlPullParser.START_TAG -> {
                         if (parser.name == "display-name" && displayName == null) {
                             displayName = readText(parser).trim().takeIf { it.isNotBlank() }
+                        } else if (parser.name == "icon" && iconUrl == null) {
+                            iconUrl = parser.getAttributeValue(null, "src")?.trim()
+                                ?.takeIf { it.startsWith("http://", true) || it.startsWith("https://", true) }
                         }
                     }
                     XmlPullParser.END_TAG -> if (parser.name == "channel") break
@@ -170,7 +177,7 @@ object XmltvParser {
             }
             val callbackStart = SystemClock.elapsedRealtime()
             try {
-                onChannel(id, displayName)
+                onChannel(id, displayName, iconUrl)
             } finally {
                 metrics.callbackMs += SystemClock.elapsedRealtime() - callbackStart
             }

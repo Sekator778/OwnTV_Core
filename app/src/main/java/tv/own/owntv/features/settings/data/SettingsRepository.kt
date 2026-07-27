@@ -112,6 +112,8 @@ class SettingsRepository(private val context: Context) {
         // REFRESH_SOURCE_IDS set is read once (see migrateLegacyRefreshFlags) then ignored.
         val PLAYLIST_AUTO_REFRESH = stringPreferencesKey("playlist_auto_refresh")
         val EPG_AUTO_REFRESH = stringPreferencesKey("epg_auto_refresh")
+        // Per-EPG-source: use that feed's own <icon src> channel logos instead of the playlist's.
+        val EPG_USE_LOGOS = stringPreferencesKey("epg_use_logos")
         val REFRESH_MIGRATED = booleanPreferencesKey("refresh_migration_done")
         val EPG_REFILL_CHECKED = booleanPreferencesKey("epg_refill_checked")
         // Set while a backup restore is applying, cleared only when it completes (B2). A value that
@@ -743,6 +745,22 @@ class SettingsRepository(private val context: Context) {
     val epgAutoRefresh: Flow<Map<Long, EpgAutoRefresh>> =
         prefsFlow { prefs -> parseRefreshMap(prefs[Keys.EPG_AUTO_REFRESH]) { EpgAutoRefresh.valueOf(it) } }
 
+    /**
+     * EPG sources whose own `<icon src>` channel logos should replace the playlist's logos. Per source,
+     * so one feed can supply logos while another only supplies programmes. Missing ids default to off.
+     */
+    val epgUseLogos: Flow<Set<Long>> = prefsFlow { prefs ->
+        parseRefreshMap(prefs[Keys.EPG_USE_LOGOS])
+            .filterValues { it.toBoolean() }
+            .keys.mapNotNullTo(LinkedHashSet()) { it.toLongOrNull() }
+    }
+
+    suspend fun setEpgUseLogos(sourceId: Long, enabled: Boolean) {
+        context.dataStore.edit { prefs ->
+            prefs[Keys.EPG_USE_LOGOS] = writeRefreshMap(readRefreshMap(prefs[Keys.EPG_USE_LOGOS]), sourceId, enabled.toString())
+        }
+    }
+
     suspend fun setPlaylistAutoRefresh(sourceId: Long, mode: PlaylistAutoRefresh) {
         context.dataStore.edit { prefs ->
             prefs[Keys.PLAYLIST_AUTO_REFRESH] = writeRefreshMap(readRefreshMap(prefs[Keys.PLAYLIST_AUTO_REFRESH]), sourceId, mode.name)
@@ -1266,6 +1284,20 @@ class SettingsRepository(private val context: Context) {
         context.dataStore.edit { prefs ->
             val merged = parseRefreshMap(prefs[Keys.EPG_AUTO_REFRESH]) + cleaned
             prefs[Keys.EPG_AUTO_REFRESH] = org.json.JSONObject(merged as Map<*, *>).toString()
+        }
+    }
+
+    /** Exports the per-EPG-source "use this feed's logos" map as { "<epgSourceId>": "true" }. */
+    suspend fun exportEpgUseLogos(): org.json.JSONObject =
+        context.dataStore.data.first()[Keys.EPG_USE_LOGOS]
+            ?.let { runCatching { org.json.JSONObject(it) }.getOrNull() } ?: org.json.JSONObject()
+
+    /** Restores the EPG logo-preference map; same merge semantics as [importEpgAutoRefresh]. */
+    suspend fun importEpgUseLogos(o: org.json.JSONObject, existingEpgSourceIds: Set<Long>) {
+        val cleaned = sanitizeRefreshMap(o, existingEpgSourceIds) { it.toBoolean().toString() }
+        context.dataStore.edit { prefs ->
+            val merged = parseRefreshMap(prefs[Keys.EPG_USE_LOGOS]) + cleaned
+            prefs[Keys.EPG_USE_LOGOS] = org.json.JSONObject(merged as Map<*, *>).toString()
         }
     }
 

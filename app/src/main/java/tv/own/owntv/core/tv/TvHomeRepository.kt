@@ -1,5 +1,6 @@
 package tv.own.owntv.core.tv
 
+import tv.own.owntv.core.epg.displayLogoUrl
 import android.annotation.SuppressLint
 import android.content.ContentUris
 import android.content.ContentResolver
@@ -522,7 +523,7 @@ class TvHomeRepository(
         customizations: SectionCustomizations,
     ) {
         val label = customizations.itemNames[CustomizeKeys.channel(channel)] ?: channel.name
-        val art = safeLiveArtUri(channel.logoUrl)
+        val art = safeLiveArtUri(channel.displayLogoUrl)
         val stableKey = launcherPlanner.liveStableKey(channel)
         val stableKeyString = launcherPlanner.liveStableKeyString(channel)
         val program = PreviewProgram.Builder()

@@ -217,13 +217,13 @@ class EpgRepository(
                     http.get(url, userAgent, maxAttempts = EPG_DOWNLOAD_ATTEMPTS) { input ->
                         XmltvParser.parse(
                             TeeInputStream(input, out),
-                            onChannel = { id, name ->
+                            onChannel = { id, name, icon ->
                                 // Ids are stored normalized (trim+lowercase) so guide lookups can use the
                                 // (epgChannelId, startMs) index directly — XMLTV ids often differ from the
                                 // panel's epg_channel_id only in case.
                                 val key = id.trim().lowercase()
                                 channels.getOrPut(key) {
-                                    EpgChannelEntity(sourceId = storeId, epgChannelId = key, displayName = name)
+                                    EpgChannelEntity(sourceId = storeId, epgChannelId = key, displayName = name, iconUrl = icon)
                                 }
                             },
                             onProgramme = { channelId, startMs, stopMs, title, desc ->
@@ -413,7 +413,7 @@ class EpgRepository(
                 file.inputStream().use { input ->
                     XmltvParser.parse(
                         input,
-                        onChannel = { _, _ -> },
+                        onChannel = { _, _, _ -> },
                         onProgramme = { channelId, startMs, stopMs, title, desc ->
                             val key = channelId.trim().lowercase()
                             if (key in keys && stopMs > from && startMs < to) {

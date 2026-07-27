@@ -100,6 +100,7 @@ class BackupManager(
                     // Per-source auto-refresh selections + default source, keyed by the preserved ids.
                     put("playlistAutoRefresh", settings.exportPlaylistAutoRefresh())
                     put("epgAutoRefresh", settings.exportEpgAutoRefresh())
+                    put("epgUseLogos", settings.exportEpgUseLogos())
                     settings.currentDefaultSourceId()?.let { put("defaultSourceId", it) }
                 }
                 if (Section.CUSTOMIZE in sections) {
@@ -409,6 +410,7 @@ class BackupManager(
                 val sourceIds = sourceDao.getAllOnce().map { it.id }.toSet()
                 root.optJSONObject("playlistAutoRefresh")?.let { settings.importPlaylistAutoRefresh(remapKeys(it, sourceIdMap), sourceIds) }
                 root.optJSONObject("epgAutoRefresh")?.let { settings.importEpgAutoRefresh(remapKeys(it, epgIdMap), epgSources.getAll().map { s -> s.id }.toSet()) }
+                root.optJSONObject("epgUseLogos")?.let { settings.importEpgUseLogos(remapKeys(it, epgIdMap), epgSources.getAll().map { s -> s.id }.toSet()) }
                 if (root.has("defaultSourceId")) {
                     val mapped = sourceIdMap[root.getLong("defaultSourceId")] ?: root.getLong("defaultSourceId")
                     settings.importDefaultSource(mapped, sourceIds)
