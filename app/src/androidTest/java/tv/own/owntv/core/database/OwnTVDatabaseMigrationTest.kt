@@ -110,6 +110,10 @@ class OwnTVDatabaseMigrationTest {
             assertColumnExists(sqlite, "metadata_cache", "logoPath")
             assertColumnExists(sqlite, "sources", "mac")
             assertIndexExists(sqlite, "index_movies_sourceId_rating_name")
+            // v20: direct-tune index on (sourceId, number).
+            assertIndexExists(sqlite, "index_channels_sourceId_number")
+            // Channel number column preserved through the full migration chain.
+            assertColumnValue(sqlite, "channels", "number", 30, 1L)
             // User data survives.
             assertCount(sqlite, "profiles", 1)
             assertCount(sqlite, "sources", 1)
@@ -311,6 +315,7 @@ class OwnTVDatabaseMigrationTest {
             OwnTVDatabase.MIGRATION_16_17,
             OwnTVDatabase.MIGRATION_17_18,
             OwnTVDatabase.MIGRATION_18_19,
+            OwnTVDatabase.MIGRATION_19_20,
         )
         .allowMainThreadQueries()
         .build()
@@ -451,6 +456,14 @@ class OwnTVDatabaseMigrationTest {
                 arrayOf<Any?>(column),
             ),
         )
+    }
+
+    private fun assertColumnValue(db: SupportSQLiteDatabase, table: String, column: String, rowId: Long, expected: Long?) {
+        db.query(SimpleSQLiteQuery("SELECT `$column` FROM `$table` WHERE id = ?", arrayOf(rowId))).use { cursor ->
+            if (!cursor.moveToFirst()) throw AssertionError("Row $rowId not found in $table")
+            val actual = if (cursor.isNull(0)) null else cursor.getLong(0)
+            assertEquals(expected, actual)
+        }
     }
 
     private fun assertCount(db: SupportSQLiteDatabase, table: String, expected: Long) {
