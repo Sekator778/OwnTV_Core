@@ -134,6 +134,7 @@ class SettingsRepository(private val context: Context) {
         val HW_DECODING = booleanPreferencesKey("hw_decoding")
         val VOD_PREFER_EXO = booleanPreferencesKey("vod_prefer_exo")
         val MEASURED_STREAM_STATS = booleanPreferencesKey("measured_stream_stats")
+        val DIRECT_TUNE = booleanPreferencesKey("direct_tune")
         val SURROUND_SOUND = booleanPreferencesKey("surround_sound")
         val AUTO_PLAY_NEXT = booleanPreferencesKey("auto_play_next")
         /** Legacy single external-player toggle (movies + series + downloads). Superseded by the three
@@ -618,6 +619,15 @@ class SettingsRepository(private val context: Context) {
 
     suspend fun setMeasuredStreamStats(enabled: Boolean) {
         context.dataStore.edit { it[Keys.MEASURED_STREAM_STATS] = enabled }
+    }
+
+    /** Type a provider channel number on the remote during full-screen live playback to jump straight
+     *  to that channel. On (default). Off = number keys are ignored during playback, for anyone whose
+     *  remote sends digits accidentally or who doesn't want the keys captured. */
+    val directTune: Flow<Boolean> = prefsFlow { it[Keys.DIRECT_TUNE] ?: true }
+
+    suspend fun setDirectTune(enabled: Boolean) {
+        context.dataStore.edit { it[Keys.DIRECT_TUNE] = enabled }
     }
 
     /** Which section a stream belongs to when deciding whether it goes to an external player. */
@@ -1105,7 +1115,7 @@ class SettingsRepository(private val context: Context) {
     private val backupIntKeys = listOf(Keys.UI_ZOOM_PCT, Keys.AUDIO_DELAY_MS, Keys.CATCHUP_OFFSET_MIN, Keys.PROXY_PORT, Keys.CH_NAV_UP_SKIP, Keys.CH_NAV_DOWN_SKIP, Keys.MINI_PLAYER_SIZE_PCT, Keys.LIVE_LATENCY_CUSTOM_SECS, Keys.GLASS_SCOPE, Keys.GLASS_ALPHA, Keys.GLASS_BLUR)
     private val backupBoolKeys = listOf(
         Keys.LIVE_PREVIEW, Keys.LIVE_PREVIEW_AUDIO, Keys.HDR_ENABLED, Keys.AUTO_FRAME_RATE, Keys.ANDROID_TV_HOME, Keys.HW_DECODING,
-        Keys.VOD_PREFER_EXO, Keys.MEASURED_STREAM_STATS, Keys.EXTERNAL_PLAYER,
+        Keys.VOD_PREFER_EXO, Keys.MEASURED_STREAM_STATS, Keys.DIRECT_TUNE, Keys.EXTERNAL_PLAYER,
         Keys.EXTERNAL_PLAYER_LIVE, Keys.EXTERNAL_PLAYER_MOVIES, Keys.EXTERNAL_PLAYER_SERIES, Keys.UPDATE_CHECK_ON_START, Keys.SURROUND_SOUND, Keys.AUTO_PLAY_NEXT, Keys.PROXY_ENABLED,
         Keys.WEATHER_ENABLED, Keys.WEATHER_FAHRENHEIT, Keys.RESUME_LAST_CHANNEL, Keys.METADATA_ENABLED, Keys.CH_NAV_ENABLED,
         Keys.REMEMBER_LAST_LIVE, Keys.REMEMBER_LAST_MOVIES, Keys.REMEMBER_LAST_SERIES,

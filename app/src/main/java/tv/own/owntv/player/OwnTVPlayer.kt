@@ -923,7 +923,7 @@ class OwnTVPlayer(
             // knows a >1080p decoder session just ran on this surface and recreates it first.
             if (height > 0) lastVideoHeightPx = height
             updateAspect()
-            _videoRes.value = resolutionLabel(height)
+            _videoRes.value = resolutionLabel(height, width)
             updateStreamChips() // onVideoFps may never fire; don't wait on it for resolution/measured fps
             val gen = loadGeneration // a measured fps needs a rendered-frame window, so retry once it can exist
             scope.launch { delay(EXO_FPS_RECHECK_MS); if (gen == loadGeneration && exoActive) updateStreamChips() }
@@ -2623,15 +2623,13 @@ class OwnTVPlayer(
         }
     }
 
-    private fun resolutionLabel(height: Int): String? = when {
-        height <= 0 -> null
-        height >= 2160 -> "4K"
-        height >= 1440 -> "1440p"
-        height >= 1080 -> "1080p"
-        height >= 720 -> "720p"
-        height >= 480 -> "480p"
-        else -> "${height}p"
-    }
+    /**
+     * Shares [classifyResolution] with the live preview engine so the same channel never shows one
+     * quality fullscreen and another in the preview pane. Width defaults to the last reported frame
+     * width, which is what lets a vertically-cropped cinemascope stream classify correctly.
+     */
+    private fun resolutionLabel(height: Int, width: Int = currentWidthPx): String? =
+        classifyResolution(width, height)
 
     override fun eventProperty(property: String, value: Boolean) {
         if (exoActive) return
@@ -2734,7 +2732,9 @@ class OwnTVPlayer(
                     }
                 }
                 mpv?.getPropertyBoolean("pause")?.let { _isPlaying.value = !it }
-                mpv?.getPropertyInt("height")?.let { _videoRes.value = resolutionLabel(it) }
+                mpv?.getPropertyInt("height")?.let {
+                    _videoRes.value = resolutionLabel(it, mpv?.getPropertyInt("width") ?: currentWidthPx)
+                }
                 setZoomMode(_zoomMode.value) // re-apply zoom on the new track
                 if (pendingSeekMs > 0) {
                     val seekMs = pendingSeekMs
