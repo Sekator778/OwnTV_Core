@@ -1,3 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Source English strings (en-US is the canonical source). Common actions, buttons and generic
+  errors. Split across the five strings*.xml files so large extraction PRs stay reviewable and
+  Weblate's component-discovery addon (Phase 4b) can pair each with its own base file.
+
+  Authoring rules (see docs/i18n.md):
+    - Always positional placeholders (%1$s), never bare %s.
+    - One string per sentence; never concatenate fragments.
+    - <plurals> for anything counted; `other` is mandatory in every <plurals>.
+    - translatable="false" keys live in donottranslate.xml, not here.
+    - Never persist a resolved translation or a resource id.
+    - A string used for comparison/parsing/protocol is a KEY, not a display label: never translate it.
+
+  Phase 0 ships this file empty of translatable keys; Phase 1 extracts the ~1,600 literals into
+  this and the four sibling files below.
+-->
 <resources>
-    <string name="app_name">OwnTV</string>
 </resources>

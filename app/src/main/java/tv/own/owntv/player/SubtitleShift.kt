@@ -2,6 +2,7 @@ package tv.own.owntv.player
 
 import android.content.Context
 import java.io.File
+import java.util.Locale
 
 /**
  * Timestamp-shifted copies of external subtitle files, for subtitle-timing adjustment on the
@@ -40,7 +41,13 @@ object SubtitleShift {
                 val (h, min, s, ms) = m.destructured
                 val total = (h.toLong() * 3_600_000 + min.toLong() * 60_000 + s.toLong() * 1_000 + ms.toLong() + offsetMs)
                     .coerceAtLeast(0)
-                "%02d:%02d:%02d%c%03d".format(
+                // Locale.ROOT, not the default locale: Java's Formatter localises %d digits, so on an
+                // Arabic / Persian / Nepali device a bare format(...) writes Arabic-Indic or Devanagari
+                // digits into the shifted SRT/VTT and the file becomes unparseable. Timestamps are a
+                // wire format, always ASCII. (See docs/internationalization.md Phase 0a.)
+                String.format(
+                    Locale.ROOT,
+                    "%02d:%02d:%02d%c%03d",
                     total / 3_600_000, total / 60_000 % 60, total / 1_000 % 60,
                     if (dot) '.' else ',', total % 1_000,
                 )
@@ -57,7 +64,11 @@ object SubtitleShift {
                 val (h, min, s, cs) = m.destructured
                 val total = (h.toLong() * 3_600_000 + min.toLong() * 60_000 + s.toLong() * 1_000 + cs.toLong() * 10 + offsetMs)
                     .coerceAtLeast(0)
-                "%d:%02d:%02d.%02d".format(
+                // Same Locale.ROOT rationale as shiftSrtVtt: ASS timestamps are ASCII, never
+                // localised digits. (See docs/internationalization.md Phase 0a.)
+                String.format(
+                    Locale.ROOT,
+                    "%d:%02d:%02d.%02d",
                     total / 3_600_000, total / 60_000 % 60, total / 1_000 % 60, total % 1_000 / 10,
                 )
             }

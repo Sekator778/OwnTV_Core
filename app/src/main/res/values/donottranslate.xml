@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Brand and protocol constants that must NEVER be translated. See docs/internationalization.md 0c.
+  These keys are intentionally translatable="false" and are excluded from coverage computation and
+  from translation export. Keep them here, not in strings*.xml.
+-->
+<resources>
+    <string name="app_name" translatable="false">OwnTV</string>
+</resources>

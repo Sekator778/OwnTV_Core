@@ -16,6 +16,7 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
+import tv.own.owntv.core.i18n.LocaleStore
 import tv.own.owntv.features.home.HomeConfig
 import tv.own.owntv.core.util.Pin
 import tv.own.owntv.ui.theme.AccentColor
@@ -76,7 +77,7 @@ object ChNavLimits {
  * Persists app-level preferences. Phase 1 only needs the theme selection; this will grow to hold
  * UI zoom, custom user-agent, refresh-on-start, etc. in later phases.
  */
-class SettingsRepository(private val context: Context) {
+class SettingsRepository(private val context: Context, private val localeStore: LocaleStore) {
 
     /**
      * Every settings flow below is derived through this (audit ST2, step 2).
@@ -1235,6 +1236,10 @@ class SettingsRepository(private val context: Context) {
             backupIntKeys.forEach { k -> p[k]?.let { put(k.name, it) } }
             backupBoolKeys.forEach { k -> p[k]?.let { put(k.name, it) } }
             backupFloatKeys.forEach { k -> p[k]?.let { put(k.name, it.toDouble()) } }
+            // The UI language lives in SharedPreferences (LocaleStore), not DataStore, so it carries as
+            // solate, explicitly serialised field rather than pretending it is a DataStore key. `""` means
+            // follow system (see docs/internationalization.md 0b, "Backup interaction").
+            put(UI_LANGUAGE_KEY, localeStore.currentTag.value)
         }
     }
 
@@ -1248,6 +1253,11 @@ class SettingsRepository(private val context: Context) {
             backupBoolKeys.forEach { k -> if (o.has(k.name)) prefs[k] = o.getBoolean(k.name) }
             backupFloatKeys.forEach { k -> if (o.has(k.name)) prefs[k] = o.getDouble(k.name).toFloat() }
         }
+        // The locale is written through the single store API (awaited before import returns) so the
+        // value is durable on the next cold start; the visible StateFlow also updates. A restored German
+        // sentence is never persisted, only the raw tag — "" follows system (same as unset). Missing key
+        // (older backups made before i18n) defaults to the empty tag, i.e. follow system.
+        if (o.has(UI_LANGUAGE_KEY)) localeStore.set(o.getString(UI_LANGUAGE_KEY))
     }
 
     // --- Backup: per-profile Customize PIN lock (dynamic "customize_pin_<id>" keys) ---
@@ -1283,6 +1293,9 @@ class SettingsRepository(private val context: Context) {
 
     private companion object {
         val CUSTOMIZE_PIN_HASH_REGEX = Regex("^[0-9a-fA-F]{16}:[0-9a-fA-F]{64}$")
+
+        /** Backup payload field name for the UI locale tag (read from / written to [LocaleStore]). */
+        const val UI_LANGUAGE_KEY = "ui_language"
     }
 
     // --- Backup: per-profile startup landing (dynamic "startup_mode_<id>" keys) ---

@@ -1,0 +1,14 @@
+# Developer-only assertion allowlist for tools/i18n/check_hardcoded_strings.py.
+#
+# `require` / `check` / `error` / thrown-exception messages are baselined BY DEFAULT (they often
+# reach users via exception.message on backup/update failures). A message is exempt from the
+# baseline ONLY by listing it here, as reviewed proof that it is genuinely developer-only —
+# one tab-separated line per entry:
+#
+#   <relative path>\t<one-line reason>\t<content, with newlines as \n>
+#
+# Example (do NOT uncomment absent the real file):
+#   app/src/main/java/tv/own/owntv/core/Example.kt\tByte-format parse bug, never surfaced to users\texpected magic 0x...
+#
+# Adding a row here without a real, file-local reason defeats the guard the way over-baselining does;
+# CI separately fails if the committed baseline no longer matches the code.
