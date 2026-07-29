@@ -11,19 +11,27 @@ Owns (docs/internationalization.md 0d / 4c / 4d):
   - XML escaping checked on the RAW XML source (not ElementTree-decoded text) so valid entities
     like ``&amp;`` and ``&lt;`` are not false-positive'd.
   - duplicate keys (strings, plurals, arrays — all detected BEFORE overwrite).
-  - non-translatable leakage into translation files.
-  - empty / unfinished translations (blank text or identical-to-source for Tier 1 locales).
+  - non-translatable leakage into translation files, and translatable="false" placement: a
+    false-marked string inside strings.xml (not donottranslate.xml) is rejected.
+  - empty translations for packaged locales.
   - translation-only keys (keys in a translation file that don't exist in source, including leaked
     donottranslate keys).
   - ``<plurals>`` validity, mandatory ``other``, per-locale CLDR plural-quantity completeness, and
     placeholder parity for EVERY translation quantity (including locale-specific forms like Arabic
-    zero/two/few/many that don't exist in the source).
+    zero/two/few/many that don't exist in the source). Source English must carry its own required
+    quantities (one, other).
   - **Tier 1 coverage enforcement**: every Tier 1, packaged locale at 100% — release-gating.
+
+Unfinished/needs-editing state is NOT detected by textual equality (legitimate translations like
+OK, TV, PIN, Wi-Fi are identical across languages). Release-packaged translations instead require an
+explicit state in ``tools/i18n/translation_status.json``; only ``translated`` or ``approved`` states
+are accepted, while Weblate ``needs-editing``/``needs-review``/``untranslated`` states fail.
 
 Coverage is **computed** here, never read from a stored field.
 """
 from __future__ import annotations
 
+import argparse
 import json
 import re
 import sys
@@ -33,17 +41,30 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 LOCALES_JSON = ROOT / "tools" / "i18n" / "locales.json"
 RES = ROOT / "app" / "src" / "main" / "res"
+TRANSLATION_STATUS = ROOT / "tools" / "i18n" / "translation_status.json"
+_APPROVED_TRANSLATION_STATES = {"translated", "approved"}
 
 # --- resource parsing ---------------------------------------------------------
 
 # Full printf-style format specifier: %, optional N$, optional flags [-#+0,(], optional width,
 # optional .precision, then a conversion char. %% is the escaped literal percent. This covers
-# %1$s, %2$d, %1$.2f, %02d, %-10s, etc. Space is excluded from flags so "50% off" is not matched.
-_FMT = re.compile(r"%(?:\d+\$)?[\-#+0,(]*\d*(?:\.\d+)?[sdifL@bBhHcCoxXeEgGaA%n]")
-# Positional only: %1$s, %2$.2f ... — captures the 1-based index for parity checking.
-_POS = re.compile(r"%(\d+)\$[\-#+0,(]*\d*(?:\.\d+)?[sdifL@bBhHcCoxXeEgGaA]")
-# Bare (non-positional): %s %d %f ... — forbidden in source so translators can reorder.
-_BARE = re.compile(r"%(?!\d+\$)[\-#+0,(]*\d*(?:\.\d+)?[sdifL@bBhHcCoxXeEgGaA]")
+# %1$s, %2$d, %1$.2f, %02d, %-10s, %1$tY (date-time), etc. Space is excluded from flags so
+# "50% off" is not matched. Java's date/time conversion is a single conversion consisting of
+# t/T plus a suffix (Y, m, d, H, ...), so it must be an alternative to ordinary conversions rather
+# than an optional prefix followed by another required conversion character.
+_DATE_CONVERSION = r"[tT][HIklMNSpzZsQYyBbhAaCceRTrYDFjmde]"
+_ORDINARY_CONVERSION = r"[sdifL@bBhHcCoxXeEgGaAn%]"
+_FMT = re.compile(
+    rf"%(?:\d+\$)?[\-#+0,(]*\d*(?:\.\d+)?(?:{_DATE_CONVERSION}|{_ORDINARY_CONVERSION})"
+)
+# Positional only: %1$s, %2$.2f, %1$tY ... — captures the 1-based index for parity checking.
+_POS = re.compile(
+    rf"%(\d+)\$[\-#+0,(]*\d*(?:\.\d+)?(?:{_DATE_CONVERSION}|[sdifL@bBhHcCoxXeEgGaA])"
+)
+# Bare (non-positional): %s %d %f %tY ... — forbidden in source so translators can reorder.
+_BARE = re.compile(
+    rf"%(?!\d+\$)[\-#+0,(]*\d*(?:\.\d+)?(?:{_DATE_CONVERSION}|[sdifL@bBhHcCoxXeEgGaA])"
+)
 # Valid XML entity: &amp; &lt; &#123; &#x1F; ...
 _ENTITY = re.compile(r"&(?:[a-zA-Z]+|#x?[0-9]+);")
 # xliff:g child tags inside string bodies (the only child element allowed in Android string resources).
@@ -144,6 +165,12 @@ def _check_escaping(file_path: Path) -> list[str]:
         b = _FMT.sub("", b)
         # Strip escaped apostrophes and quotes.
         b = b.replace("\\'", "").replace('\\"', "")
+        # Android allows a bare apostrophe if the ENTIRE string is wrapped in double quotes
+        # ("This'll work") — the outer quotes are part of the value and escape the inner '.
+        # ElementTree strips the outer quotes, so check the raw body: if it starts and ends with
+        # ", the inner apostrophes are valid. Strip the quotes and remove inner ' before checking.
+        if len(body) >= 2 and body[0] == '"' and body[-1] == '"':
+            b = b.replace("'", "")
         # Any remaining ', % is an unescaped character that will break the Android build.
         bad = []
         if "'" in b:
@@ -155,17 +182,106 @@ def _check_escaping(file_path: Path) -> list[str]:
     return errs
 
 
+def _check_translatable_false_placement(file_path: Path) -> list[str]:
+    """Reject translatable=\"false\" on a string outside ``donottranslate.xml``.
+
+    Parse XML attributes instead of matching one quote style in raw text: XML permits both single
+    and double quotes, and attribute order is immaterial. ``donottranslate.xml`` is never passed to
+    this function, so the only accepted home for a false-marked string is that file.
+    """
+    errs: list[str] = []
+    try:
+        root = ET.parse(file_path).getroot()
+    except ET.ParseError:
+        # The normal parser reports the XML error; avoid duplicating it here.
+        return errs
+    for el in root.iter("string"):
+        if el.get("translatable") == "false":
+            name = el.get("name", "?")
+            errs.append(
+                f"{file_path.parent.name}/{file_path.name}: translatable='false' on '{name}' must be "
+                f"in donottranslate.xml, not in a translatable strings file")
+    return errs
+
+
+def _check_donottranslate_file(file_path: Path, tag: str) -> list[str]:
+    """Reject a localized ``donottranslate.xml`` and report its leaked keys explicitly."""
+    if not file_path.is_file():
+        return []
+    errs: list[str] = []
+    try:
+        root = ET.parse(file_path).getroot()
+    except ET.ParseError as e:
+        return [f"{tag} {file_path.name}: XML parse error: {e}"]
+    for el in root:
+        name = el.get("name")
+        if name:
+            errs.append(f"{tag}: donottranslate.xml leaked key '{name}' into a translation directory")
+    return errs
+
+
+def _load_translation_status() -> tuple[dict[str, dict[str, str]], list[str]]:
+    """Load explicit Weblate/reviewer state used for release-gated translations.
+
+    The file is deliberately a small checked-in snapshot rather than inferred from translated text:
+    identical text can be a legitimate translation, while a Weblate ``needs-editing`` flag cannot be
+    observed reliably after Android XML export. Missing status is tolerated until a locale actually
+    has packaged translation entries; then every such key must have an accepted state.
+    """
+    if not TRANSLATION_STATUS.is_file():
+        return {}, []
+    try:
+        payload = json.loads(TRANSLATION_STATUS.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as e:
+        return {}, [f"translation_status.json: invalid JSON: {e}"]
+    if not isinstance(payload, dict):
+        return {}, ["translation_status.json: root must be an object"]
+    if payload.get("schemaVersion") != 1:
+        return {}, ["translation_status.json: schemaVersion must be 1"]
+    locales = payload.get("locales")
+    if not isinstance(locales, dict):
+        return {}, ["translation_status.json: locales must be an object"]
+    out: dict[str, dict[str, str]] = {}
+    errs: list[str] = []
+    for tag, entries in locales.items():
+        if not isinstance(tag, str) or not tag.strip():
+            errs.append("translation_status.json: locale keys must be non-blank strings")
+            continue
+        if not isinstance(entries, dict):
+            errs.append(f"translation_status.json {tag}: entries must be an object")
+            continue
+        states: dict[str, str] = {}
+        for key, state in entries.items():
+            if not isinstance(key, str) or not key.strip():
+                errs.append(f"translation_status.json {tag}: translation keys must be non-blank strings")
+                continue
+            if not isinstance(state, str) or not state.strip():
+                errs.append(f"translation_status.json {tag} {key}: state must be a non-blank string")
+                continue
+            states[key] = state
+            if state not in _APPROVED_TRANSLATION_STATES:
+                errs.append(
+                    f"translation_status.json {tag} {key}: state '{state}' is unfinished; "
+                    "only 'translated' or 'approved' is release-safe")
+        out[tag] = states
+    return out, errs
+
+
 # --- plural rules -------------------------------------------------------------
 
+# CLDR plural rules per locale. "other" is mandatory for every <plurals>; the rest are the
+# quantities the locale's ICU rule actually selects. Updated to current CLDR: French, Italian,
+# Portuguese and Spanish select "one"/"many"/"other" (the "many" form is used for large round
+# numbers in fr/it/pt/es per CLDR 42+).
 _PLURAL_RULES = {
     "en": ["one", "other"], "en-US": ["one", "other"], "en-GB": ["one", "other"],
     "ar": ["zero", "one", "two", "few", "many", "other"],
     "cs": ["one", "few", "other"], "da": ["one", "other"], "nl": ["one", "other"],
-    "fr": ["one", "other"], "de": ["one", "other"], "it": ["one", "other"],
+    "fr": ["one", "many", "other"], "de": ["one", "other"], "it": ["one", "many", "other"],
     "ja": ["other"], "ko": ["other"], "nb": ["one", "other"], "sv": ["one", "other"],
     "pl": ["one", "few", "many", "other"], "ru": ["one", "few", "many", "other"],
-    "pt": ["one", "other"], "pt-BR": ["one", "other"], "pt-PT": ["one", "other"],
-    "zh-CN": ["other"], "zh-TW": ["other"], "es-US": ["one", "other"], "es-ES": ["one", "other"],
+    "pt": ["one", "many", "other"], "pt-BR": ["one", "many", "other"], "pt-PT": ["one", "many", "other"],
+    "zh-CN": ["other"], "zh-TW": ["other"], "es-US": ["one", "many", "other"], "es-ES": ["one", "many", "other"],
     "tr": ["one", "other"],
 }
 
@@ -185,6 +301,12 @@ def _has_bare(text: str) -> bool:
 
 _REQUIRED_FIELDS = {"id", "languageTag", "resourceQualifier", "resourceDirectory", "weblateCode",
                     "englishName", "endonym", "script", "rtl", "tier", "packaged", "pickerVisible"}
+_CATALOGUE_STRING_FIELDS = ("id", "languageTag", "resourceQualifier", "resourceDirectory", "weblateCode",
+                            "englishName", "endonym", "script")
+_RUNTIME_TAG_RE = re.compile(r"^[a-z]{2,3}(?:-[A-Z][a-z]{3})?(?:-(?:[A-Z]{2}|[0-9]{3}))?$")
+_SCRIPT_RE = re.compile(r"^[A-Z][a-z]{3}$")
+_WEBLATE_RE = re.compile(r"^[a-z]{2,3}(?:_(?:[A-Z][a-z]{3}|[A-Z]{2}|[0-9]{3}))?$")
+_DIRECTORY_RE = re.compile(r"^values(?:-[A-Za-z0-9+_-]+)*$")
 
 # Exact set of Tier 1 language tags the catalogue must contain (docs/internationalization.md 4d).
 _EXPECTED_TIER1_TAGS = {
@@ -196,88 +318,119 @@ _EXPECTED_TIER1_TAGS = {
 #   xx              — language only (en, de, ar)
 #   xx-rYY          — language + region (en-rGB, pt-rPT)
 #   xx-Script       — language + script (zh-Hans)  [4-letter script, title case]
-#   b+xx+Script     — the Android b+ folder form for script-qualified resources (b+sr+Latn)
-#   b+xx+YY         — the b+ form with a region subtag
-# The b+ form is required by the plan for script-qualified resources that cannot use the xx-Script
-# form (e.g. sr+Latn where the language alone defaults to Cyrl).
-_QUAL_RE = re.compile(r"^(?:[a-z]{2,3}(?:-r[A-Z]{2}|-[A-Z][a-z]{3})?|b\+[a-z]{2,3}(?:\+[A-Za-z]{2,4})+)$")
+#   b+xx            — the Android b+ folder form, language only
+#   b+xx+Script     — the b+ form with a script subtag (b+sr+Latn)
+#   b+xx+YY         — the b+ form with a 2-letter region subtag
+#   b+xx+419        — the b+ form with a UN M.49 numeric region subtag (b+es+419)
+# Script subtags are 4 letters, title case (Latn, Hans, Hant, Cyrl). Region subtags are 2 uppercase
+# letters OR 3 digits (UN M.49). Lowercase script (b+sr+latn) is REJECTED — Android requires
+# canonical capitalisation.
+_QUAL_RE = re.compile(
+    r"^(?:[a-z]{2,3}(?:-r[A-Z]{2}|-[A-Z][a-z]{3})?"
+    r"|b\+[a-z]{2,3}(?:\+(?:[A-Z][a-z]{3}|[A-Z]{2}|[0-9]{3}))*)$"
+)
 
 # Canonical Weblate code mappings — pinned so a typo (pt_BR where pt_PT was meant, or es_ES swapped
-# for es_419) is caught at catalogue-validation time, not discovered when Weblate pairs the wrong
-# translation component. The key is the resourceQualifier; the value is the required weblateCode.
+# for es_419) is caught at catalogue-validation time. Every entry in the catalogue is pinned here so
+# a non-matching code (e.g. German's weblateCode changed from 'de' to 'fr') is always caught, not just
+# the selected special cases. The key is the resourceQualifier; the value is the required weblateCode.
 _CANONICAL_WEBLATE = {
-    "en": "en",
-    "en-rGB": "en_GB",
+    "en": "en", "en-rGB": "en_GB",
     "ar": "ar",
-    "pt": "pt_BR",       # Brazilian Portuguese is the default pt qualifier
-    "pt-rPT": "pt_PT",
-    "zh-rCN": "zh_Hans",
-    "zh-rTW": "zh_Hant",
-    "es": "es_ES",       # Castilian Spanish is the default es qualifier
-    "es-rUS": "es_419",   # Latin American Spanish uses the UN M.49 region code
+    "pt": "pt_BR", "pt-rPT": "pt_PT",
+    "zh-rCN": "zh_Hans", "zh-rTW": "zh_Hant",
+    "es": "es_ES", "es-rUS": "es_419",
     "nb": "nb_NO",
+    "cs": "cs", "da": "da", "nl": "nl", "fr": "fr", "de": "de", "it": "it",
+    "ja": "ja", "ko": "ko", "pl": "pl", "ru": "ru", "sv": "sv", "tr": "tr",
 }
 
 
 def _validate_catalogue(data: list) -> list[str]:
     fails: list[str] = []
+    if not isinstance(data, list):
+        return ["locales.json root must be an array of locale objects"]
     ids: set[str] = set()
     tags: set[str] = set()
     qualifiers: set[str] = set()
     dirs: set[str] = set()
     tier1_tags: set[str] = set()
-    for e in data:
+    for index, e in enumerate(data):
+        if not isinstance(e, dict):
+            fails.append(f"locales.json entry {index}: must be an object")
+            continue
         eid = e.get("id", "?")
         missing = _REQUIRED_FIELDS - e.keys()
         if missing:
             fails.append(f"locales.json entry {eid}: missing fields: {sorted(missing)}")
-        if eid in ids:
-            fails.append(f"locales.json duplicate id: {eid}")
-        ids.add(eid)
-        tag = e.get("languageTag", "")
-        if tag in tags:
-            fails.append(f"locales.json duplicate languageTag: {tag}")
-        tags.add(tag)
-        q = e.get("resourceQualifier", "")
+        # Schema string fields are required, typed and non-blank. Checking this before regexes keeps
+        # malformed JSON from becoming a Python TypeError in the validator itself.
+        for fld in _CATALOGUE_STRING_FIELDS:
+            value = e.get(fld)
+            if not isinstance(value, str) or not value.strip():
+                fails.append(f"locales.json {eid}: {fld} must be a non-blank string")
+
+        if isinstance(eid, str) and eid.strip():
+            if eid in ids:
+                fails.append(f"locales.json duplicate id: {eid}")
+            ids.add(eid)
+        tag = e.get("languageTag") if isinstance(e.get("languageTag"), str) else ""
+        if tag:
+            if not _RUNTIME_TAG_RE.fullmatch(tag):
+                fails.append(f"locales.json {eid}: invalid languageTag '{tag}'")
+            if tag in tags:
+                fails.append(f"locales.json duplicate languageTag: {tag}")
+            tags.add(tag)
+        q = e.get("resourceQualifier") if isinstance(e.get("resourceQualifier"), str) else ""
         if q:
-            if not _QUAL_RE.match(q):
+            if not _QUAL_RE.fullmatch(q):
                 fails.append(f"locales.json {eid}: invalid resourceQualifier '{q}'")
             if q in qualifiers:
                 fails.append(f"locales.json duplicate resourceQualifier '{q}'")
             qualifiers.add(q)
-        d = e.get("resourceDirectory", "")
+        d = e.get("resourceDirectory") if isinstance(e.get("resourceDirectory"), str) else ""
         if d:
+            if not _DIRECTORY_RE.fullmatch(d):
+                fails.append(f"locales.json {eid}: invalid resourceDirectory '{d}'")
             if d in dirs:
                 fails.append(f"locales.json duplicate resourceDirectory '{d}'")
             dirs.add(d)
-            # Directory/qualifier correspondence: values-<qualifier> (or "values" for the source).
-            if d != "values":
-                expected = "values-" + q
-                if d != expected:
-                    fails.append(f"locales.json {eid}: resourceDirectory '{d}' should be '{expected}'")
+            # Directory/qualifier correspondence: values-<qualifier> (or values for the en source).
+            expected = "values" if q == "en" else "values-" + q
+            if d != expected:
+                fails.append(f"locales.json {eid}: resourceDirectory '{d}' should be '{expected}'")
+
         # Stored coverage is forbidden — coverage is always computed.
         if "coverage" in e:
             fails.append(f"locales.json {eid}: 'coverage' field must not be stored (it is computed)")
-        if e.get("pickerVisible") and not e.get("packaged"):
-            fails.append(f"locales.json {eid}: pickerVisible=true requires packaged=true")
-        for fld in ("rtl", "packaged", "pickerVisible"):
-            if not isinstance(e.get(fld), bool):
+        rtl = e.get("rtl")
+        packaged = e.get("packaged")
+        picker_visible = e.get("pickerVisible")
+        for fld, value in (("rtl", rtl), ("packaged", packaged), ("pickerVisible", picker_visible)):
+            if type(value) is not bool:
                 fails.append(f"locales.json {eid}: {fld} must be boolean")
-        if not isinstance(e.get("tier"), int) or e["tier"] < 0:
-            fails.append(f"locales.json {eid}: tier must be a non-negative int")
-        # Weblate code must be non-empty and look like a Weblate code (xx or xx_YY).
-        wc = e.get("weblateCode", "")
-        # Weblate codes: xx, xx_YY (region), xx_Hans (script), xx_419 (UN M.49 numeric region).
-        if not wc or not re.match(r"^[a-z]{2,3}(?:_[A-Za-z0-9]{2,4})?$", wc):
+        if picker_visible is True and packaged is not True:
+            fails.append(f"locales.json {eid}: pickerVisible=true requires packaged=true")
+        tier = e.get("tier")
+        valid_tier = type(tier) is int and tier in (0, 1)
+        if not valid_tier:
+            fails.append(f"locales.json {eid}: tier must be 0 or 1 (got {tier!r})")
+        script = e.get("script") if isinstance(e.get("script"), str) else ""
+        if script and not _SCRIPT_RE.fullmatch(script):
+            fails.append(f"locales.json {eid}: invalid script '{script}'")
+        wc = e.get("weblateCode") if isinstance(e.get("weblateCode"), str) else ""
+        if wc and not _WEBLATE_RE.fullmatch(wc):
             fails.append(f"locales.json {eid}: invalid weblateCode '{wc}'")
-        # Canonical mapping: for qualifiers with a pinned weblateCode, the stored value must match
-        # exactly — a swapped code (pt_PT on the pt qualifier) pairs the wrong Weblate component.
+        # Canonical mapping: for every committed qualifier with a pinned weblateCode, the stored
+        # value must match exactly — a swapped code pairs the wrong Weblate component.
         expected_wc = _CANONICAL_WEBLATE.get(q)
         if expected_wc is not None and wc != expected_wc:
             fails.append(f"locales.json {eid}: weblateCode '{wc}' should be '{expected_wc}' for qualifier '{q}'")
-        if e.get("tier") == 1:
+        if valid_tier and tier == 1 and tag:
             tier1_tags.add(tag)
-    # Exact Tier 1 membership.
+
+    # Exact Tier 1 membership: the catalogue may contain the documented tier-0 en-GB override, but
+    # the release target itself is exactly the 21 tags below.
     if tier1_tags != _EXPECTED_TIER1_TAGS:
         missing = _EXPECTED_TIER1_TAGS - tier1_tags
         extra = tier1_tags - _EXPECTED_TIER1_TAGS
@@ -288,41 +441,9 @@ def _validate_catalogue(data: list) -> list[str]:
     return fails
 
 
-# --- main ---------------------------------------------------------------------
-
-def main() -> int:
+def _validate_source_entries(src: dict[str, dict]) -> list[str]:
+    """Validate source keys independently so translation directories are still checked when empty."""
     fails: list[str] = []
-
-    # --- locales.json ----------------------------------------------------------
-    if not LOCALES_JSON.is_file():
-        print("error: tools/i18n/locales.json missing")
-        return 1
-    try:
-        data = json.loads(LOCALES_JSON.read_text(encoding="utf-8"))
-    except json.JSONDecodeError as e:
-        print(f"error: locales.json is not valid JSON: {e}")
-        return 1
-    fails.extend(_validate_catalogue(data))
-
-    # --- source English --------------------------------------------------------
-    src, src_errs = _parse_dir(RES / "values")
-    fails.extend(src_errs)
-    # Escaping checks run on raw XML for every strings*.xml file in values/.
-    for f in sorted((RES / "values").glob("strings*.xml")):
-        if f.name == "donottranslate.xml":
-            continue
-        fails.extend(_check_escaping(f))
-
-    if not src:
-        if fails:
-            print("i18n validation FAILED:")
-            for f in fails:
-                print("  " + f)
-            return 1
-        print("i18n validate: no translatable source keys yet (Phase 0 empty split files); catalogue OK.")
-        return 0
-
-    # Source key-level checks.
     for key, payload in src.items():
         name = key.rstrip("#[]")
         kind = payload["kind"]
@@ -330,6 +451,10 @@ def main() -> int:
             qtys = set(payload["plurals"].keys())
             if "other" not in qtys:
                 fails.append(f"source plural {name}: mandatory `other` quantity missing")
+            # Source English must carry the quantities English's own CLDR rule requires (one, other).
+            for q in _PLURAL_RULES.get("en", []):
+                if q not in qtys:
+                    fails.append(f"source plural {name}: missing required English quantity `{q}`")
             for q, text in payload["plurals"].items():
                 if _has_bare(text):
                     fails.append(f"source plural {name}/{q}: bare placeholder (use %1$s etc.): {text!r}")
@@ -347,24 +472,92 @@ def main() -> int:
                 fails.append(f"source {name}: bare placeholder (use %1$s etc.): {text!r}")
             if payload.get("translatable", True) and text.strip() == "":
                 fails.append(f"source {name}: empty translatable string")
+    return fails
+
+
+# --- main ---------------------------------------------------------------------
+
+def main(release: bool = False) -> int:
+    """Validate resources; [release] additionally requires review state for packaged translations."""
+    fails: list[str] = []
+
+    # --- locales.json ----------------------------------------------------------
+    if not LOCALES_JSON.is_file():
+        print("error: tools/i18n/locales.json missing")
+        return 1
+    try:
+        data = json.loads(LOCALES_JSON.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as e:
+        print(f"error: locales.json is not valid JSON: {e}")
+        return 1
+    fails.extend(_validate_catalogue(data))
+    status, status_errs = _load_translation_status()
+    fails.extend(status_errs)
+    if not isinstance(data, list):
+        data = []  # Keep reporting schema errors instead of crashing while walking malformed input.
+
+    # --- source English --------------------------------------------------------
+    src, src_errs = _parse_dir(RES / "values")
+    fails.extend(src_errs)
+    # Escaping checks run on raw XML for every strings*.xml file in values/.
+    for f in sorted((RES / "values").glob("strings*.xml")):
+        if f.name == "donottranslate.xml":
+            continue
+        fails.extend(_check_escaping(f))
+        # translatable="false" must live in donottranslate.xml, not in strings*.xml. A false-marked
+        # string in strings.xml will be picked up by Weblate as a translatable key and pollutes the
+        # translation component. Check the raw XML for the attribute on <string> elements.
+        fails.extend(_check_translatable_false_placement(f))
+
+    fails.extend(_validate_source_entries(src))
 
     # --- per-locale ------------------------------------------------------------
     tier1_coverage_problems: list[str] = []
+    catalogue_tags = {
+        e.get("languageTag") for e in data if isinstance(e, dict) and isinstance(e.get("languageTag"), str)
+    }
+    for status_tag, status_entries in status.items():
+        if status_tag not in catalogue_tags:
+            fails.append(f"translation_status.json: unknown locale '{status_tag}'")
+        for status_key in status_entries:
+            if status_key not in src:
+                fails.append(f"translation_status.json {status_tag}: unknown translation key '{status_key}'")
 
     for e in data:
-        resdir = e["resourceDirectory"]
-        if resdir == "values":
+        if not isinstance(e, dict):
             continue
-        loc_keys, loc_errs = _parse_dir(RES / resdir)
+        resdir = e.get("resourceDirectory")
+        tag = e.get("languageTag")
+        if not isinstance(resdir, str) or not isinstance(tag, str) or resdir == "values":
+            continue
+        loc_dir = RES / resdir
+        loc_keys, loc_errs = _parse_dir(loc_dir)
         fails.extend(loc_errs)
-        for f in sorted((RES / resdir).glob("strings*.xml")):
+        for f in sorted(loc_dir.glob("strings*.xml")):
             if f.name == "donottranslate.xml":
                 continue
             fails.extend(_check_escaping(f))
-        tag = e["languageTag"]
+            fails.extend(_check_translatable_false_placement(f))
+        # A localized donottranslate.xml is never a valid translation component. Report its keys
+        # instead of silently skipping the file as _parse_dir does for the source constants file.
+        fails.extend(_check_donottranslate_file(loc_dir / "donottranslate.xml", tag))
         rule = _PLURAL_RULES.get(tag)
         is_packaged = e.get("packaged") is True
-        is_tier1 = e.get("tier") == 1
+        is_tier1 = type(e.get("tier")) is int and e.get("tier") == 1
+        status_entries = status.get(tag, {})
+        if is_packaged and release:
+            for lkey in loc_keys:
+                state = status_entries.get(lkey)
+                if state not in _APPROVED_TRANSLATION_STATES:
+                    if state is None:
+                        fails.append(
+                            f"{tag} {lkey.rstrip('#[]')}: missing translation review state in "
+                            "tools/i18n/translation_status.json")
+                    # Invalid states are already reported by _load_translation_status; avoid a
+                    # duplicate verbose error here while still making the release gate explicit.
+            for status_key in status_entries:
+                if status_key not in loc_keys:
+                    fails.append(f"translation_status.json {tag}: stale key '{status_key}' is not in resources")
 
         # Translation-only keys: keys in the translation that don't exist in source (including leaked
         # donottranslate keys). Every translation key must have a source counterpart.
@@ -393,12 +586,17 @@ def main() -> int:
                     for q in rule:
                         if q not in qloc:
                             fails.append(f"{tag} plural {skey.rstrip('#[]')}: missing required quantity {q}")
-                # Placeholder parity for EVERY quantity in the translation, not just those in source.
-                # Locale-specific quantities (Arabic zero/two/few/many) must carry the same placeholders
-                # as the source. Compare against the source `other` quantity for quantities not in source.
-                src_other_ph = _placeholders(psrc["plurals"].get("other", ""))
+                # Placeholder parity for EVERY quantity in the translation. For a quantity that
+                # exists in the source, compare against the source placeholders for THAT quantity.
+                # For a locale-specific quantity (Arabic zero/two/few/many) not in the source, compare
+                # against the source `other` quantity. A quantity present with ZERO placeholders must
+                # match a source quantity that also has zero — the `or` fallback previously conflated
+                # "quantity absent" (empty list) with "quantity present with no placeholders".
                 for q, ltext in ploc.get("plurals", {}).items():
-                    sp = _placeholders(psrc["plurals"].get(q, "")) or src_other_ph
+                    if q in psrc["plurals"]:
+                        sp = _placeholders(psrc["plurals"][q])
+                    else:
+                        sp = _placeholders(psrc["plurals"].get("other", ""))
                     lp = _placeholders(ltext)
                     if sorted(sp) != sorted(lp):
                         fails.append(f"{tag} plural {skey.rstrip('#[]')}/{q}: placeholder mismatch src {sp} vs loc {lp}")
@@ -455,9 +653,15 @@ def main() -> int:
         if len(fails) > 200:
             print(f"  ... and {len(fails) - 200} more")
         return 1
-    print("i18n validation OK")
+    if not src:
+        print("i18n validate: no translatable source keys yet (Phase 0 empty split files); catalogue OK.")
+    else:
+        print("i18n validation OK")
     return 0
 
 
 if __name__ == "__main__":
-    raise SystemExit(main())
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--release", action="store_true",
+                        help="require explicit translated/approved state for every packaged translation")
+    raise SystemExit(main(release=parser.parse_args().release))

@@ -107,13 +107,18 @@ class TestValidateStrings(unittest.TestCase):
     def setUp(self):
         self.vs = _load("vs_test", "tools/i18n/validate_strings.py")
         self.tmpdir = Path(tempfile.mkdtemp())
+        self.vs.TRANSLATION_STATUS = self.tmpdir / "tools/i18n/translation_status.json"
 
-    def _run(self, res, locales_json):
+    def _write_status(self, payload):
+        self.vs.TRANSLATION_STATUS.parent.mkdir(parents=True, exist_ok=True)
+        self.vs.TRANSLATION_STATUS.write_text(json.dumps(payload))
+
+    def _run(self, res, locales_json, release=False):
         self.vs.RES = res
         self.vs.LOCALES_JSON = locales_json
         buf = io.StringIO()
         with contextlib.redirect_stdout(buf):
-            rc = self.vs.main()
+            rc = self.vs.main(release=release)
         return rc, buf.getvalue()
 
     def test_catalogue_missing_coverage_field_ok(self):
@@ -288,8 +293,30 @@ class TestValidateStrings(unittest.TestCase):
         de_xml = '<resources><string name="ok">OK</string><string name="hello">Hello world</string></resources>'
         locales = _tier1_with([_locale("de", "de", "de", "values-de", packaged=True, pickerVisible=True)])
         res = _make_fixture(self.tmpdir, source, locales, {"values-de": de_xml})
+        self._write_status({"schemaVersion": 1, "locales": {"de": {"ok": "translated", "hello": "approved"}}})
         rc, out = self._run(res, self.tmpdir / "tools/i18n/locales.json")
         self.assertEqual(rc, 0, out)
+
+    def test_needs_editing_translation_state_rejected(self):
+        """Unfinished metadata fails; equality to the source is never used as the proxy."""
+        source = '<resources><string name="hello">Hello</string></resources>'
+        de_xml = '<resources><string name="hello">Hello</string></resources>'
+        locales = _tier1_with([_locale("de", "de", "de", "values-de", packaged=True, pickerVisible=True)])
+        res = _make_fixture(self.tmpdir, source, locales, {"values-de": de_xml})
+        self._write_status({"schemaVersion": 1, "locales": {"de": {"hello": "needs-editing"}}})
+        rc, out = self._run(res, self.tmpdir / "tools/i18n/locales.json")
+        self.assertEqual(rc, 1, out)
+        self.assertIn("is unfinished", out)
+
+    def test_missing_review_state_for_packaged_translation_rejected(self):
+        source = '<resources><string name="hello">Hello</string></resources>'
+        de_xml = '<resources><string name="hello">Hallo</string></resources>'
+        locales = _tier1_with([_locale("de", "de", "de", "values-de", packaged=True, pickerVisible=True)])
+        res = _make_fixture(self.tmpdir, source, locales, {"values-de": de_xml})
+        self._write_status({"schemaVersion": 1, "locales": {}})
+        rc, out = self._run(res, self.tmpdir / "tools/i18n/locales.json", release=True)
+        self.assertEqual(rc, 1, out)
+        self.assertIn("missing translation review state", out)
 
     def test_bare_placeholder_in_translation_rejected(self):
         """A translation that introduces a bare %s where the source has none must be rejected."""
@@ -330,11 +357,12 @@ class TestValidateStrings(unittest.TestCase):
         locales = [e for e in locales if e["id"] != "sr-Latn"]
         # Add it back with tier=0 so it doesn't affect the Tier 1 membership check
         sr = _locale("sr-Latn", "sr-Latn", "b+sr+Latn", "values-b+sr+Latn", tier=0,
-                     packaged=False, pickerVisible=False)
+                     weblateCode="sr_Latn", packaged=False, pickerVisible=False)
         locales.append(sr)
         res = _make_fixture(self.tmpdir, source, locales)
         rc, out = self._run(res, self.tmpdir / "tools/i18n/locales.json")
-        # Should pass — b+ qualifier is valid, no qualifier error
+        # Should pass — b+ qualifier is valid and its Weblate code uses the canonical underscore form.
+        self.assertEqual(rc, 0, out)
         self.assertNotIn("invalid resourceQualifier", out)
 
     def test_canonical_weblate_mapping_pin(self):
@@ -382,6 +410,177 @@ class TestValidateStrings(unittest.TestCase):
         self.assertEqual(rc, 1, out)
         self.assertIn("bare placeholder", out)
 
+    # --- Plural validation fixes ---
+
+    def test_source_plural_missing_one_rejected(self):
+        """Source English must carry the 'one' quantity (English's CLDR rule requires one, other)."""
+        source = '<resources><plurals name="songs"><item quantity="other">%1$d songs</item></plurals></resources>'
+        locales = _full_tier1()
+        res = _make_fixture(self.tmpdir, source, locales)
+        rc, out = self._run(res, self.tmpdir / "tools/i18n/locales.json")
+        self.assertEqual(rc, 1, out)
+        self.assertIn("missing required English quantity `one`", out)
+
+    def test_plural_zero_placeholders_not_confused_with_absent(self):
+        """A source quantity present with zero placeholders must match a translation with zero —
+        the old `or` fallback confused 'quantity absent' (empty list) with 'present, no placeholders'."""
+        source = '<resources><plurals name="songs"><item quantity="one">One song</item><item quantity="other">%1$d songs</item></plurals></resources>'
+        de_xml = '<resources><plurals name="songs"><item quantity="one">Ein Lied</item><item quantity="other">%1$d Lieder</item></plurals></resources>'
+        locales = _tier1_with([_locale("de", "de", "de", "values-de", packaged=False, pickerVisible=False)])
+        res = _make_fixture(self.tmpdir, source, locales, {"values-de": de_xml})
+        rc, out = self._run(res, self.tmpdir / "tools/i18n/locales.json")
+        self.assertEqual(rc, 0, f"valid zero-placeholder quantity was rejected: {out}")
+
+    def test_french_plural_many_required(self):
+        """French's CLDR rule includes 'many' (for large round numbers) — a French translation
+        missing 'many' must be rejected."""
+        source = '<resources><plurals name="songs"><item quantity="one">%1$d song</item><item quantity="other">%1$d songs</item></plurals></resources>'
+        fr_xml = '<resources><plurals name="songs"><item quantity="one">%1$d chanson</item><item quantity="other">%1$d chansons</item></plurals></resources>'
+        locales = _tier1_with([_locale("fr", "fr", "fr", "values-fr", packaged=False, pickerVisible=False)])
+        res = _make_fixture(self.tmpdir, source, locales, {"values-fr": fr_xml})
+        rc, out = self._run(res, self.tmpdir / "tools/i18n/locales.json")
+        self.assertEqual(rc, 1, out)
+        self.assertIn("missing required quantity many", out)
+
+    # --- Qualifier and Weblate validation fixes ---
+
+    def test_b_plus_numeric_region_accepted(self):
+        """b+es+419 (UN M.49 numeric region in b+ form) must be accepted."""
+        source = '<resources><string name="hello">Hello</string></resources>'
+        locales = _full_tier1()
+        # Add a non-tier1 entry with b+es+419
+        locales.append(_locale("es-419", "es-419", "b+es+419", "values-b+es+419", tier=0,
+                               weblateCode="es_419", packaged=False, pickerVisible=False))
+        res = _make_fixture(self.tmpdir, source, locales)
+        rc, out = self._run(res, self.tmpdir / "tools/i18n/locales.json")
+        self.assertEqual(rc, 0, f"b+es+419 was rejected: {out}")
+        self.assertNotIn("invalid resourceQualifier", out)
+
+    def test_b_plus_lowercase_script_rejected(self):
+        """b+sr+latn (lowercase script) must be rejected — Android requires title-case script."""
+        source = '<resources><string name="hello">Hello</string></resources>'
+        locales = _full_tier1()
+        locales.append(_locale("sr-Latn", "sr-Latn", "b+sr+latn", "values-b+sr+latn", tier=0,
+                               packaged=False, pickerVisible=False))
+        res = _make_fixture(self.tmpdir, source, locales)
+        rc, out = self._run(res, self.tmpdir / "tools/i18n/locales.json")
+        self.assertIn("invalid resourceQualifier", out)
+
+    def test_canonical_weblate_all_entries_pinned(self):
+        """Changing German's weblateCode from 'de' to 'fr' must be rejected — all entries are pinned."""
+        source = '<resources><string name="hello">Hello</string></resources>'
+        locales = _full_tier1()
+        for e in locales:
+            if e["id"] == "de":
+                e["weblateCode"] = "fr"  # wrong — should be 'de'
+        res = _make_fixture(self.tmpdir, source, locales)
+        rc, out = self._run(res, self.tmpdir / "tools/i18n/locales.json")
+        self.assertEqual(rc, 1, out)
+        self.assertIn("should be 'de'", out)
+
+    def test_tier_42_rejected(self):
+        """tier=42 must be rejected — only 0 and 1 are valid."""
+        source = '<resources><string name="hello">Hello</string></resources>'
+        locales = _full_tier1()
+        for e in locales:
+            if e["id"] == "de":
+                e["tier"] = 42
+        res = _make_fixture(self.tmpdir, source, locales)
+        rc, out = self._run(res, self.tmpdir / "tools/i18n/locales.json")
+        self.assertEqual(rc, 1, out)
+        self.assertIn("tier must be 0 or 1", out)
+
+    def test_blank_english_name_rejected(self):
+        """A blank englishName must be rejected."""
+        source = '<resources><string name="hello">Hello</string></resources>'
+        locales = _full_tier1()
+        for e in locales:
+            if e["id"] == "de":
+                e["englishName"] = ""
+        res = _make_fixture(self.tmpdir, source, locales)
+        rc, out = self._run(res, self.tmpdir / "tools/i18n/locales.json")
+        self.assertEqual(rc, 1, out)
+        self.assertIn("englishName must be a non-blank string", out)
+
+    def test_boolean_true_tier_rejected(self):
+        """JSON true is an int subclass in Python; it must not satisfy the integer tier schema."""
+        source = '<resources><string name="hello">Hello</string></resources>'
+        locales = _full_tier1()
+        for e in locales:
+            if e["id"] == "de":
+                e["tier"] = True
+        res = _make_fixture(self.tmpdir, source, locales)
+        rc, out = self._run(res, self.tmpdir / "tools/i18n/locales.json")
+        self.assertEqual(rc, 1, out)
+        self.assertIn("tier must be 0 or 1", out)
+
+    def test_catalogue_root_type_rejected_without_crash(self):
+        source = '<resources><string name="hello">Hello</string></resources>'
+        res = _make_fixture(self.tmpdir, source, [])
+        (self.tmpdir / "tools/i18n/locales.json").write_text(json.dumps({"de": {}}))
+        rc, out = self._run(res, self.tmpdir / "tools/i18n/locales.json")
+        self.assertEqual(rc, 1, out)
+        self.assertIn("root must be an array", out)
+
+    # --- translatable=false placement and formatting fixes ---
+
+    def test_translatable_false_in_strings_xml_rejected(self):
+        """translatable='false' inside strings.xml must be rejected — it belongs in donottranslate.xml."""
+        source = '<resources><string name="brand" translatable="false">OwnTV</string><string name="hello">Hello</string></resources>'
+        locales = _full_tier1()
+        res = _make_fixture(self.tmpdir, source, locales)
+        rc, out = self._run(res, self.tmpdir / "tools/i18n/locales.json")
+        self.assertEqual(rc, 1, out)
+        self.assertIn("translatable='false' on 'brand' must be in donottranslate.xml", out)
+
+    def test_translatable_false_single_quote_is_rejected(self):
+        source = "<resources><string name='brand' translatable='false'>OwnTV</string></resources>"
+        locales = _full_tier1()
+        res = _make_fixture(self.tmpdir, source, locales)
+        rc, out = self._run(res, self.tmpdir / "tools/i18n/locales.json")
+        self.assertEqual(rc, 1, out)
+        self.assertIn("translatable='false' on 'brand'", out)
+
+    def test_translation_donottranslate_file_is_rejected(self):
+        source = '<resources><string name="hello">Hello</string></resources>'
+        locales = _full_tier1()
+        res = _make_fixture(self.tmpdir, source, locales, {"values-de": '<resources></resources>'})
+        (res / "values-de/donottranslate.xml").write_text(
+            '<resources><string name="app_name" translatable="false">OwnTV</string></resources>')
+        # Make the synthetic locale part of the catalogue without changing the exact Tier 1 set.
+        for e in locales:
+            if e["id"] == "de":
+                e["packaged"] = False
+                e["pickerVisible"] = False
+        rc, out = self._run(res, self.tmpdir / "tools/i18n/locales.json")
+        self.assertEqual(rc, 1, out)
+        self.assertIn("donottranslate.xml leaked key 'app_name'", out)
+
+    def test_empty_source_still_checks_translation_only_keys(self):
+        source = '<resources></resources>'
+        locales = _full_tier1()
+        res = _make_fixture(self.tmpdir, source, locales, {
+            "values-de": '<resources><string name="leaked">Leaked</string></resources>'})
+        rc, out = self._run(res, self.tmpdir / "tools/i18n/locales.json")
+        self.assertEqual(rc, 1, out)
+        self.assertIn("translation-only key 'leaked'", out)
+
+    def test_date_time_placeholder_recognized(self):
+        "%1$tY (date-time) must be recognized as positional, not flagged as unescaped percent."""
+        source = '<resources><string name="year">Year %1$tY</string></resources>'
+        locales = _full_tier1()
+        res = _make_fixture(self.tmpdir, source, locales)
+        rc, out = self._run(res, self.tmpdir / "tools/i18n/locales.json")
+        self.assertEqual(rc, 0, f"date-time placeholder was rejected: {out}")
+
+    def test_whole_string_quoted_apostrophe_accepted(self):
+        """'This\'ll work' wrapped in whole-string double quotes is valid Android — not rejected."""
+        source = '<resources><string name="x">"This\'ll work"</string></resources>'
+        locales = _full_tier1()
+        res = _make_fixture(self.tmpdir, source, locales)
+        rc, out = self._run(res, self.tmpdir / "tools/i18n/locales.json")
+        self.assertEqual(rc, 0, f"whole-string quoted apostrophe was rejected: {out}")
+
 
 # ===========================================================================
 # check_hardcoded_strings.py
@@ -402,6 +601,13 @@ class TestCheckHardcodedStrings(unittest.TestCase):
 
     def _write_kt(self, name, content):
         (self.chs.SRC / name).write_text(content)
+
+    def test_bcp47_tags_safe_but_ui_words_not(self):
+        self._write_kt("Locale.kt", 'package x\nval tags = listOf("en-US", "b+sr+Latn", "retry")\n')
+        unsafe = {k[1] for k in self.chs._scan()}
+        self.assertNotIn("en-US", unsafe)
+        self.assertNotIn("b+sr+Latn", unsafe)
+        self.assertIn("retry", unsafe)
 
     def test_live_text_not_safe(self):
         """Text("LIVE") must NOT be classified as safe — it's user-facing display text."""
@@ -507,6 +713,25 @@ private fun String.containsAny(vararg n: String) = n.any { contains(it) }
         counts = self.chs._scan()
         self.assertNotIn("sourceId", {k[1] for k in counts}, "const val KEY_... value was not exempted")
 
+    def test_safe_declaration_does_not_exempt_adjacent_literal(self):
+        """TAG/KEY declarations exempt only their initializer, not another literal on the line."""
+        self._write_kt("Keys.kt", 'package x\nconst val TAG = "Worker"; val label = "LIVE"\nconst val KEY_ID = "profileId"; val title = "Settings"\n')
+        unsafe = {k[1] for k in self.chs._scan()}
+        self.assertIn("LIVE", unsafe)
+        self.assertIn("Settings", unsafe)
+        self.assertNotIn("Worker", unsafe)
+        self.assertNotIn("profileId", unsafe)
+
+    def test_safe_call_does_not_exempt_adjacent_literal_for_log_or_regex(self):
+        """Log/Regex position handling must not fall back to a whole-line exemption."""
+        self._write_kt("Patterns.kt", 'package x\nfun f() { Log.i("TAG", "developer ${x ?: "message"}"); val x = "Visible label"\nval r = Regex("[a-z]+"); val y = "Another label" }\n')
+        unsafe = {k[1] for k in self.chs._scan()}
+        self.assertIn("Visible label", unsafe)
+        self.assertIn("Another label", unsafe)
+        self.assertNotIn('developer ${x ?: "message"}', unsafe)
+        self.assertNotIn("message", unsafe)
+        self.assertNotIn("[a-z]+", unsafe)
+
     def test_camelcase_display_text_not_safe(self):
         """A CamelCase word like 'Settings' used as Text() content must NOT be exempted."""
         self._write_kt("Main.kt", 'package x\nfun f() = Text("Settings")\n')
@@ -564,6 +789,81 @@ private fun String.containsAny(vararg n: String) = n.any { contains(it) }
             bootstrap = True
         rc = self.chs.cmd_verify(Args())
         self.assertEqual(rc, 1, "over-baseline was not detected")
+
+    # --- Position-based invariant: a safe call exempts ONLY its argument, not other literals ---
+
+    def test_json_put_value_literal_not_safe(self):
+        """json.put("title", "Visible label") — the value 'Visible label' is user-facing text and
+        must NOT be exempted just because a JSON .put() call is on the same line."""
+        self._write_kt("Main.kt", 'package x\nimport org.json.JSONObject\nfun f() {\n  val j = JSONObject()\n  j.put("title", "Visible label")\n}\n')
+        counts = self.chs._scan()
+        unsafe = {k[1] for k in counts}
+        self.assertIn("Visible label", unsafe, "JSON .put() value literal was wrongly exempted")
+        self.assertNotIn("title", unsafe, "JSON .put() key was not exempted")
+
+    def test_json_call_does_not_exempt_adjacent_literal(self):
+        """A literal on the same line as a JSON call but NOT its argument must remain unsafe.
+        error("geo no match") on a line with .optJSONArray("results") — 'geo no match' is the
+        error message (user-facing via exception), 'results' is the JSON key."""
+        kt = 'package x\nimport org.json.JSONObject\nfun f(json: String) {\n  val hit = JSONObject(json).optJSONArray("results") ?: return error("geo no match")\n}\n'
+        self._write_kt("Weather.kt", kt)
+        counts = self.chs._scan()
+        unsafe = {k[1] for k in counts}
+        self.assertIn("geo no match", unsafe, "error() message was wrongly exempted by adjacent JSON call")
+        self.assertNotIn("results", unsafe, "JSON key 'results' was not exempted")
+
+    def test_atomicinteger_get_does_not_exempt_adjacent_literal(self):
+        """pageFailures.get() > 0 on a line with a user-facing string — the .get() is
+        AtomicInteger.get(), NOT JSON, and the adjacent string must remain unsafe."""
+        kt = 'package x\nimport java.util.concurrent.atomic.AtomicInteger\nfun f(pageFailures: AtomicInteger) {\n  val msg = "${pageFailures.get()} portal page(s) failed"\n  Log.i("TAG", msg)\n}\n'
+        self._write_kt("Syncer.kt", kt)
+        counts = self.chs._scan()
+        unsafe = {k[1] for k in counts}
+        # The interpolated string (with the ${} hole) must be in the baseline — .get() is not JSON
+        self.assertTrue(any("portal page(s) failed" in c for c in unsafe),
+                        "user-facing string was wrongly exempted by AtomicInteger.get()")
+
+    def test_nested_interpolation_inner_literal_detected(self):
+        """Changing the inner literal of "Movies / ${title ?: "All"}" must change the baseline."""
+        self._write_kt("Screen.kt", 'package x\nfun f() = Text("Movies / ${title ?: "All"}")\n')
+        lits = list(self.chs._iter_literals('package x\nfun f() = Text("Movies / ${title ?: "All"}")\n'))
+        contents = [self.chs._decode(raw) for s, e, raw in lits]
+        self.assertIn("All", contents, "nested interpolation inner literal 'All' was not detected")
+
+    def test_nested_interpolation_change_detected(self):
+        """Changing 'All' to 'Everything' inside interpolation produces a different scan."""
+        src1 = 'package x\nval x = "Movies / ${title ?: "All"}"\n'
+        src2 = 'package x\nval x = "Movies / ${title ?: "Everything"}"\n'
+        lits1 = {self.chs._decode(raw) for s, e, raw in self.chs._iter_literals(src1)}
+        lits2 = {self.chs._decode(raw) for s, e, raw in self.chs._iter_literals(src2)}
+        self.assertIn("All", lits1)
+        self.assertIn("Everything", lits2)
+        self.assertNotIn("All", lits2, "changing inner literal did not change the scan")
+        self._write_kt("Screen.kt", src1)
+        scan1 = {k[1] for k in self.chs._scan()}
+        self._write_kt("Screen.kt", src2)
+        scan2 = {k[1] for k in self.chs._scan()}
+        self.assertIn("All", scan1)
+        self.assertIn("Everything", scan2)
+        self.assertNotIn("All", scan2, "baseline scan ignored the nested interpolation literal")
+
+    def test_room_index_value_literal_not_safe(self):
+        """Index(value = ["col"]) — the column name is safe, but an adjacent display literal is not."""
+        kt = 'package x\nimport androidx.room.Entity\nimport androidx.room.Index\n@Entity(indices = [Index("sourceId")])\nclass E {\n  val label = "Settings"\n}\n'
+        self._write_kt("Entity.kt", kt)
+        counts = self.chs._scan()
+        unsafe = {k[1] for k in counts}
+        self.assertNotIn("sourceId", unsafe, "Room Index column name was not exempted")
+        self.assertIn("Settings", unsafe, "adjacent display text was wrongly exempted")
+
+    def test_uri_param_value_literal_not_safe(self):
+        """.appendQueryParameter("sourceId", label) — the value 'label' (a display string) is not safe."""
+        kt = 'package x\nimport android.net.Uri\nfun f(b: Uri.Builder) = b.appendQueryParameter("sourceId", "Visible label")\n'
+        self._write_kt("DeepLink.kt", kt)
+        counts = self.chs._scan()
+        unsafe = {k[1] for k in counts}
+        self.assertNotIn("sourceId", unsafe, "URI param name was not exempted")
+        self.assertIn("Visible label", unsafe, "URI param value literal was wrongly exempted")
 
 
 # ===========================================================================

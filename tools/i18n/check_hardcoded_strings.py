@@ -7,28 +7,21 @@ multiset** of every Kotlin string literal outside a small "safe category" list, 
 ``tools/i18n/hardcoded_baseline.txt``. Each Phase 1 batch deletes occurrences from it; at the end of
 Phase 1 the file is empty and the check becomes an absolute "no literals outside safe categories".
 
-Why a baseline and not a UAST lint rule: both approaches need the same safe-category list to be
-useful, and the baseline reaches full coverage in a Python script with no lint-module wiring. Revisit
-lint only if false positives become the bottleneck.
-
-Two distinct CI failures (see the plan, ".github/workflows/i18n.yml"):
-  1. regression  — a literal in the current code is absent from the merge-base baseline.
-  2. over-baseline — the committed baseline contains an entry the current code does NOT produce,
-     i.e. someone hand-padded the baseline to game the guard.
+**Invariant: a safe category exempts ONLY the literal in the argument position, never every literal
+on the same line/statement.** A line like ``json.put("title", "Visible label")`` exempts ``"title"``
+(the JSON field name) but NOT ``"Visible label"`` (user-facing text). This is enforced by
+position-based argument detection (``_call_arg_positions``), the same technique used for
+ErrorMessages.kt comparison needles — every literal whose start position falls inside the first
+argument of a safe call is exempted, and no other.
 
 Identity = file path + normalised content + occurrence count (a multiset per (path, content)). Adding
 a SECOND occurrence of an already-baselined ``"Try again"`` in the same file grows the count and
 fails (regression), so the duplicate-occurrence test is covered.
 
 Usage:
-    python3 tools/i18n/check_hardcoded_strings.py            # regenerate the committed baseline
+    python3 tools/i18n/check_hardcoded_strings.py generate
     python3 tools/i18n/check_hardcoded_strings.py verify \\
         --base   <(git show base:tools/i18n/hardcoded_baseline.txt)>
-
-The script is deliberately conservative about exemptions: a mis-sized safe list that lets real
-literals slip through is worse than no guard. ``require`` / ``check`` / ``error`` messages are
-baselined by default; a confirmed developer-only assertion is exempt ONLY through the explicit,
-reasoned allowlist at ``tools/i18n/assertion_allowlist.txt``.
 """
 from __future__ import annotations
 
@@ -42,6 +35,10 @@ ROOT = Path(__file__).resolve().parents[2]
 SRC = ROOT / "app" / "src" / "main" / "java"
 BASELINE = ROOT / "tools" / "i18n" / "hardcoded_baseline.txt"
 ASSERTION_ALLOWLIST = ROOT / "tools" / "i18n" / "assertion_allowlist.txt"
+# Increment only when the literal extraction/safety semantics change. A changed scanner needs one
+# explicit baseline migration; ordinary Phase 1 code changes must continue to satisfy the merge-base
+# ratchet without a silent escape hatch.
+SCANNER_VERSION = 2
 
 # --- string-literal extraction -------------------------------------------------
 
@@ -51,6 +48,13 @@ def _iter_literals(src: str):
     A small stateful scanner so that ``//`` line comments, ``/* */`` block comments and ``'c'`` char
     literals are correctly skipped — a plain regex would match quoted text *inside* comments and
     pollute the baseline. Triple-quoted strings may contain ``"`` and span lines.
+
+    **Nested quotes inside string interpolation** are handled: when a ``"`` is encountered inside a
+    ``${...}`` interpolation expression, the scanner tracks brace depth and treats the interpolated
+    ``"..."`` as a separate literal, so ``"Movies / ${title ?: "All"}"`` yields TWO literals:
+    ``"Movies / ${title ?: "All"}"`` (the outer, with the interpolation hole) and ``"All"`` (the
+    inner). Without this, changing the inner ``"All"`` to ``"Everything"`` would leave the baseline
+    unchanged — the old inner literal would never be scanned independently.
     """
     i, n = 0, len(src)
     while i < n:
@@ -81,23 +85,133 @@ def _iter_literals(src: str):
             j = src.find('"""', i + 3)
             if j == -1:
                 return
-            yield i, j + 3, src[i:j + 3]
+            # Yield the triple-quoted literal, then scan its interior for nested "..." literals
+            # inside ${...} interpolation expressions.
+            outer = src[i:j + 3]
+            yield i, j + 3, outer
+            for ns, ne, nraw in _nested_literals(i, outer):
+                yield ns, ne, nraw
             i = j + 3
             continue
         if c == '"':
-            j = i + 1
-            while j < n:
-                if src[j] == '\\':
+            j, end = _scan_double_quoted(src, i, n)
+            if end is not None:
+                outer = src[i:end]
+                yield i, end, outer
+                for ns, ne, nraw in _nested_literals(i, outer):
+                    yield ns, ne, nraw
+                i = end
+            else:
+                i += 1
+            continue
+        i += 1
+
+
+def _scan_double_quoted(src: str, i: int, n: int) -> tuple[int, int | None]:
+    """Find the end of a ``"..."`` literal starting at [i], respecting escapes and ${} interpolation.
+
+    Returns (j, end) where end is one past the closing quote, or (j, None) if unterminated on this
+    line. Inside ``${...}``, braces are tracked so the closing ``}`` is found correctly, and any
+    nested ``"..."`` inside the interpolation is skipped (it is yielded separately by _yield_nested).
+    """
+    j = i + 1
+    while j < n:
+        c = src[j]
+        if c == '\\':
+            j += 2
+            continue
+        if c == '\n':
+            return j, None  # unterminated on this line
+        if c == '"':
+            return j, j + 1
+        if c == '$' and j + 1 < n and src[j + 1] == '{':
+            # Skip the ${...} interpolation block, tracking brace depth so nested {} are handled.
+            # Any "..." inside is a nested literal yielded separately by _yield_nested.
+            depth = 1
+            j += 2
+            while j < n and depth > 0:
+                cj = src[j]
+                if cj == '\\':
                     j += 2
                     continue
-                if src[j] == '"' or src[j] == '\n':
-                    break
+                if cj == '{':
+                    depth += 1
+                    j += 1
+                    continue
+                if cj == '}':
+                    depth -= 1
+                    j += 1
+                    continue
+                if cj == '"':
+                    # Skip a nested "..." inside the interpolation — it's a separate literal.
+                    k = j + 1
+                    while k < n:
+                        ck = src[k]
+                        if ck == '\\':
+                            k += 2
+                            continue
+                        if ck == '"':
+                            k += 1
+                            break
+                        k += 1
+                    j = k
+                    continue
                 j += 1
-            # Unterminated on this line — skip to avoid hoovering up nothing.
-            if j < n and src[j] == '"':
-                yield i, j + 1, src[i:j + 1]
-                i = j + 1
-            else:
+            continue
+        j += 1
+    return j, None
+
+
+def _nested_literals(outer_start: int, outer: str):
+    """Yield nested ``"..."`` literals inside ``${...}`` interpolation of [outer].
+
+    [outer_start] is the source position of the outer literal's first char; [outer] is the raw text.
+    We scan the body (between the quotes) for ``${`` and emit every ``"..."`` found inside the brace
+    block as a separate literal with a start position relative to [outer_start]. This makes the
+    baseline sensitive to changes in interpolated string values.
+    """
+    if outer.startswith('"""'):
+        body = outer[3:-3]
+        body_off = outer_start + 3
+    else:
+        body = outer[1:-1]
+        body_off = outer_start + 1
+    i, n = 0, len(body)
+    while i < n:
+        if body[i] == '$' and i + 1 < n and body[i + 1] == '{':
+            depth = 1
+            i += 2
+            while i < n and depth > 0:
+                c = body[i]
+                if c == '\\':
+                    i += 2
+                    continue
+                if c == '{':
+                    depth += 1
+                    i += 1
+                    continue
+                if c == '}':
+                    depth -= 1
+                    i += 1
+                    continue
+                if c == '"':
+                    # A nested string literal inside the interpolation — emit it.
+                    j = i + 1
+                    while j < n:
+                        cj = body[j]
+                        if cj == '\\':
+                            j += 2
+                            continue
+                        if cj == '"':
+                            j += 1
+                            break
+                        j += 1
+                    raw = body[i:j]
+                    start = body_off + i
+                    end = body_off + j
+                    yield start, end, raw
+                    i = j
+                    continue
                 i += 1
             continue
         i += 1
@@ -123,32 +237,36 @@ def _normalize(content: str) -> str:
     return re.sub(r"\s+", " ", content).strip()
 
 
-# --- safe-category detection ---------------------------------------------------
+# --- safe-category detection (position-based) ----------------------------------
 
 _LOG_CALL = re.compile(r"\b(?:android\.util\.Log|Log|Timber)\.[devwifws]+\s*\(")
-_LOG_TAG_DECL = re.compile(r"\b(const\s+)?val\s+\w*(?:TAG|[Tt]ag)\w*\s*(?::\s*\w+\s*)?=\s*\"")
+# Declaration patterns are used positionally below. They deliberately stop at the assignment rather
+# than exempting every literal on the declaration's line.
+_LOG_TAG_DECL = re.compile(
+    r"\b(?:const\s+)?val\s+\w*(?:TAG|[Tt]ag)\w*[ \t]*(?::[ \t]*[A-Za-z_]\w*(?:[<>,.? ]*)[ \t]*)?=[ \t]*"
+)
 _REGEX_CALL = re.compile(r"\bRegex\s*\(")
 _SQL = re.compile(r"\b(SELECT |INSERT INTO |UPDATE |DELETE FROM |CREATE TABLE |CREATE INDEX |ALTER TABLE |DROP TABLE )",
                    re.IGNORECASE)
 _MIME = re.compile(r"^[a-z][\w.+-]+/[a-z0-9][\w.+-]*$")
 _URL = re.compile(r"^(?:https?|content|file|intent|mailto|tel|ftp|data)://")
-# BCP-47 language/region/script tag (en, en-US, zh-Hans, pt-BR, en-rGB …). The Android res qualifier
-# form en-rGB is also matched so the locale-runtime constants are safe.
-_BCP47 = re.compile(r"^[a-z]{2}(?:-[A-Z][a-z]{3}|-r[A-Z]{2}|-[A-Z]{2})?(?:-[A-Z]{2})?$")
-# A JSON object/fragment key written as a literal: "key": or "key" : — translator never sees these.
-# This catches inline JSON like "key": value but NOT json.put("key", value) where the literal is
-# just the key string (the ": is outside the quotes). The .put() form is caught by _JSON_API below.
+# BCP-47 language/region/script tags and Android's b+ resource form. Do not treat every short
+# lowercase word as a language tag: ``now``, ``one`` and ``own`` are ordinary UI/protocol words.
+# Language-only tags are limited to the app's catalogue; qualified tags retain shape validation.
+_BCP47_LANGUAGE_ONLY = {
+    "ar", "cs", "da", "de", "en", "es", "fr", "it", "ja", "ko", "nb", "nl", "pl", "pt",
+    "ru", "sv", "tr", "zh",
+}
+_BCP47_QUALIFIED = re.compile(
+    r"^(?:[a-z]{2,3}(?:-[A-Z][a-z]{3})?(?:-(?:[A-Z]{2}|[0-9]{3})|-r[A-Z]{2})"
+    r"|b\+[a-z]{2,3}(?:\+(?:[A-Z][a-z]{3}|[A-Z]{2}|[0-9]{3}))*)$"
+)
+
+def _is_bcp47(content: str) -> bool:
+    return content in _BCP47_LANGUAGE_ONLY or bool(_BCP47_QUALIFIED.fullmatch(content))
+# A JSON object/fragment key written as a literal: "key": or "key" : (inline JSON, not .put()).
 _JSON_KEY = re.compile(r'^"[A-Za-z_][\w-]*"\s*:')
-# JSON API calls where the first string argument is a field name, not display text:
-#   json.put("profileId", id), obj.optString("section"), root.optJSONObject("settings"), etc.
-# Also matches bare put("key", ...) inside JSONObject().apply { } blocks where there is no leading dot.
-# The prefix (?:^|\W) matches both .method( and bare method( at a statement/call boundary, but NOT
-# word_method( (where a word char precedes, e.g. some_custom_put). The string literal is the key —
-# a protocol field the translator never sees.
-_JSON_API = re.compile(r"(?:^|\W)(?:put|putOpt|get|getOpt|getString|optString|getInt|optInt|getBoolean|optBoolean|getLong|optLong|getDouble|optDouble|getJSONObject|optJSONObject|getJSONArray|optJSONArray|opt|remove|has)\s*\(")
-# A snake_case / kebab-case identifier that looks like a preference/DataStore key or protocol field,
-# not a sentence: lowercase, digits, underscores/hyphens/dots, no spaces, and not a readable phrase.
-# Require at least one underscore/dot/hyphen so a bare word like "Settings" is NOT misclassified.
+# A snake_case / kebab-case identifier — preference/DataStore key or protocol field, not a sentence.
 _IDENT_KEY = re.compile(r"^[a-z][a-z0-9_./-]*[_./-][a-z0-9_./-]*$")
 # A filesystem-ish path (contains a slash and no spaces).
 _PATH = re.compile(r"^[^\s]*[/\\][^\s]*$")
@@ -158,44 +276,164 @@ _DOTTED = re.compile(r"^(?:\.[a-z0-9]+|[a-z][a-z0-9]*(?:\.[a-z0-9]+)+)$")
 _PERF_STAMP = re.compile(r"\bPerf\.stamp\s*\(")
 # @Suppress(...) annotation arguments — compiler directive args, never user-facing text.
 _SUPPRESS_ANN = re.compile(r"@Suppress\s*\(")
-# Room entity annotation arguments: Index("col"), ForeignKey(childColumns = ["col"]), etc.
-# These are database column names, not display text.
-_ROOM_ANN = re.compile(r"\b(?:Index|ForeignKey|Entity|PrimaryKey|ColumnInfo|Embedded|Relation|Junction)\s*\(")
-# Column-name array contexts: childColumns = ["col"], parentColumns = ["col"], columnNames = ["col"].
-# Also primaryKeys, indices value arrays — all database column identifiers.
-_COL_ARRAY = re.compile(r"\b(?:childColumns|parentColumns|columnNames|columns|value|primaryKeys|indices)\s*=\s*\[")
-# URI query parameter APIs: .appendQueryParameter("key", ...), .appendOptionalQueryParameter("key", ...),
-# uri.queryLong("key"), uri.getQueryParameter("key") — the string is a URL parameter name.
-_URI_API = re.compile(r"\.(?:appendQueryParameter|appendOptionalQueryParameter|getQueryParameter|queryLong|queryString|queryInt|queryBool|queryDouble)\s*\(")
 # A const val KEY_... = "..." declaration — the value is a preference/DataStore/Worker key.
-_KEY_CONST = re.compile(r"\bconst\s+val\s+KEY_\w+\s*=")
-# ErrorMessages.kt comparison needles: string literals passed as arguments to containsAny() or
-# .contains() are stable English keys used for matching, never display text. The friendly return
-# values (the RHS of ->) are NOT needles and must be extracted to resources in Phase 1.
+_KEY_CONST = re.compile(r"\bconst\s+val\s+KEY_\w+[ \t]*(?::[ \t]*[A-Za-z_]\w*(?:[<>,.? ]*)[ \t]*)?=[ \t]*")
+
+# Call patterns whose FIRST string argument is a safe identifier (JSON field name, URI parameter,
+# Room column name, etc.). These are used with _call_arg_positions() so ONLY the literal at the
+# first-argument position is exempted — never other literals on the same line/statement.
+_JSON_API = re.compile(r"(?:^|\W|\.)(?:put|putOpt|getOpt|getString|optString|getInt|optInt|getBoolean|optBoolean|getLong|optLong|getDouble|optDouble|getJSONObject|optJSONObject|getJSONArray|optJSONArray|opt|remove|has)\s*\(")
+_JSON_GET = re.compile(r"\.(?:get|opt)\s*\(")  # .get("key") / .opt("key") — but NOT AtomicInteger.get()
+_URI_API = re.compile(r"\.(?:appendQueryParameter|appendOptionalQueryParameter|getQueryParameter|queryLong|queryString|queryInt|queryBool|queryDouble)\s*\(")
+# Room: Index("col"), ColumnInfo(name="col"), Index(value=["col"]) — the first string arg is a column.
+# ForeignKey(childColumns=["col"]) is handled by _COL_ARRAY below (array position, not call arg).
+_ROOM_CALL = re.compile(r"\b(?:Index|ColumnInfo)\s*\(")
+# Column-name array contexts: childColumns = ["col"], parentColumns = ["col"], primaryKeys = ["col"].
+# These are arrays of column-name literals; _col_array_positions() yields positions inside the [].
+_COL_ARRAY = re.compile(r"\b(?:childColumns|parentColumns|columnNames|columns|primaryKeys)\s*=\s*\[")
+
+# ErrorMessages.kt comparison needles: string literals inside .containsAny()/.contains() calls.
 _ERROR_MESSAGES_FILE = "app/src/main/java/tv/own/owntv/core/util/ErrorMessages.kt"
 _NEEDLE_CALL = re.compile(r"\.(?:containsAny|contains)\s*\(")
 
 
-def _needle_positions(text: str) -> set[int]:
-    """Character positions inside .containsAny()/.contains() argument lists in ErrorMessages.kt.
+def _call_arg_positions(text: str, call_re: re.Pattern) -> set[int]:
+    """Character positions of the FIRST string-literal argument of every call matching [call_re].
 
-    Multi-line calls (where the opening paren is on a different line than the needle string literals)
-    are handled by paren-depth tracking: every character between the opening paren and its matching
-    close is recorded. A literal whose start position falls in that range is a comparison needle.
+    For each match, this finds the opening paren, then scans forward (tracking paren/brace depth)
+    to the first ``"`` that begins a string literal at depth 1 inside the call. Only that literal's
+    start position is recorded — so ``json.put("title", "Visible label")`` records the position of
+    ``"title"`` but NOT ``"Visible label"``. This is the invariant: a safe call exempts ONLY its
+    first string argument, never every literal on the same line.
     """
     positions: set[int] = set()
-    for m in _NEEDLE_CALL.finditer(text):
+    for m in call_re.finditer(text):
+        paren_pos = text.find("(", m.start())
+        if paren_pos == -1:
+            continue
         depth = 1
-        pos = m.end()
+        pos = paren_pos + 1
         while pos < len(text) and depth > 0:
-            ch = text[pos]
-            if ch == "(":
+            c = text[pos]
+            if c == '\\':
+                pos += 2
+                continue
+            if c == '(':
                 depth += 1
-            elif ch == ")":
+                pos += 1
+                continue
+            if c == ')':
                 depth -= 1
-            if depth > 0:
+                pos += 1
+                continue
+            if depth == 1 and c == '"':
+                # Found the first string literal at argument depth — record and stop.
                 positions.add(pos)
+                break
             pos += 1
+    return positions
+
+
+def _call_all_arg_positions(text: str, call_re: re.Pattern) -> set[int]:
+    """Character positions of EVERY string-literal argument of every call matching [call_re].
+
+    Used for .containsAny()/.contains() (ErrorMessages needles) where all string arguments are
+    comparison keys, and for Room Index(value=["col", "col"]) where all array elements are column
+    names. Each recorded position is the start of a ``"`` literal inside the call at depth ≥ 1.
+    """
+    positions: set[int] = set()
+    for m in call_re.finditer(text):
+        paren_pos = text.find("(", m.start())
+        if paren_pos == -1:
+            continue
+        depth = 1
+        pos = paren_pos + 1
+        while pos < len(text) and depth > 0:
+            c = text[pos]
+            if c == '\\':
+                pos += 2
+                continue
+            if c == '(':
+                depth += 1
+                pos += 1
+                continue
+            if c == ')':
+                depth -= 1
+                pos += 1
+                continue
+            if c == '"':
+                positions.add(pos)
+                # Skip to the end of this literal so we don't re-record inner content.
+                k = pos + 1
+                while k < len(text):
+                    ck = text[k]
+                    if ck == '\\':
+                        k += 2
+                        continue
+                    if ck == '"':
+                        k += 1
+                        break
+                    k += 1
+                pos = k
+                continue
+            pos += 1
+    return positions
+
+
+def _col_array_positions(text: str) -> set[int]:
+    """Character positions of string literals inside column-name arrays (childColumns=[...], etc.)."""
+    positions: set[int] = set()
+    for m in _COL_ARRAY.finditer(text):
+        bracket_pos = text.find("[", m.start())
+        if bracket_pos == -1:
+            continue
+        depth = 1
+        pos = bracket_pos + 1
+        while pos < len(text) and depth > 0:
+            c = text[pos]
+            if c == '[':
+                depth += 1
+                pos += 1
+                continue
+            if c == ']':
+                depth -= 1
+                pos += 1
+                continue
+            if c == '"':
+                positions.add(pos)
+                k = pos + 1
+                while k < len(text):
+                    ck = text[k]
+                    if ck == '\\':
+                        k += 2
+                        continue
+                    if ck == '"':
+                        k += 1
+                        break
+                    k += 1
+                pos = k
+                continue
+            pos += 1
+    return positions
+
+
+def _annotation_arg_positions(text: str, ann_re: re.Pattern) -> set[int]:
+    """Character positions of string arguments inside an annotation's parens (e.g. @Suppress(...))."""
+    return _call_all_arg_positions(text, ann_re)
+
+
+def _declaration_string_positions(text: str, declaration_re: re.Pattern) -> set[int]:
+    """Opening positions of direct string initializers matched by [declaration_re].
+
+    TAG and KEY constants are developer/protocol identifiers, but only their initializer is safe.
+    Restricting this to the first quote immediately after ``=`` prevents an unrelated literal on the
+    same statement from inheriting the declaration's exemption.
+    """
+    positions: set[int] = set()
+    for m in declaration_re.finditer(text):
+        pos = m.end()
+        if pos < len(text) and text[pos] == '"':
+            positions.add(pos)
     return positions
 
 
@@ -209,7 +447,7 @@ def _statement_text(src: str, pos: int) -> str:
 
 
 def _is_safe(rel_path: str, content: str, stmt: str, line: str, allowlist: set[tuple[str, str]],
-             start: int = -1, needles: set[int] | None = None) -> bool:
+             start: int = -1, safe_positions: set[int] | None = None) -> bool:
     norm = _normalize(content)
     # Explicit, reasoned assertion allowlist (developer-only require/check/error) by file+content.
     if (rel_path, norm) in allowlist:
@@ -217,22 +455,14 @@ def _is_safe(rel_path: str, content: str, stmt: str, line: str, allowlist: set[t
     # Empty strings are never user-facing text.
     if norm == "":
         return True
-    # ErrorMessages.kt: only the comparison NEEDLES (literals inside .containsAny()/.contains() calls)
-    # are safe — stable English keys used for matching. The friendly return-value messages are
-    # user-facing text that Phase 1 must extract, so they are NOT exempted. Needle positions are
-    # pre-computed by _needle_positions() with paren-depth tracking for multi-line calls.
-    if rel_path == _ERROR_MESSAGES_FILE and needles is not None and start in needles:
+    # Position-based safe categories: ONLY the literal at a safe call's argument position is exempt.
+    # This is the core invariant — a safe call on the same line does NOT exempt other literals.
+    if safe_positions is not None and start in safe_positions:
         return True
-    # Log tags declared as constants.
-    if _LOG_TAG_DECL.search(line):
-        return True
-    # Arguments to Log./Timber. calls (both the tag and the message are developer-only, never user text).
-    if _LOG_CALL.search(stmt):
-        return True
-    # Regex patterns.
-    if _REGEX_CALL.search(stmt):
-        return True
-    # SQL fragments.
+    # Log/Regex arguments and TAG/KEY initializers are all handled by exact character positions in
+    # _compute_safe_positions. There is intentionally no statement/line-level fallback here: an
+    # unrelated literal next to a safe call must remain in the baseline.
+    # SQL fragments (content-based: a fragment containing SELECT/INSERT/etc. is SQL).
     if _SQL.search(content):
         return True
     # MIME types.
@@ -241,16 +471,11 @@ def _is_safe(rel_path: str, content: str, stmt: str, line: str, allowlist: set[t
     # URLs/schemes.
     if _URL.match(content):
         return True
-    # BCP-47 language/region/script tags and Android res qualifiers (en, en-US, zh-Hans, pt-BR, en-rGB).
-    if _BCP47.match(content):
+    # BCP-47 language/region/script tags and Android res qualifiers.
+    if _is_bcp47(content):
         return True
     # JSON object keys written inline ("key": value).
     if _JSON_KEY.match(content):
-        return True
-    # JSON API field-name arguments: json.put("profileId", id), obj.optString("section"), etc.
-    # The string literal is a protocol field name, not display text. The statement slice includes
-    # the .put( / .optString( / .getJSONObject( call, so a string argument in that position is safe.
-    if _JSON_API.search(stmt):
         return True
     # Filesystem-ish paths (contain a slash, no spaces).
     if _PATH.match(content) and " " not in content:
@@ -260,25 +485,6 @@ def _is_safe(rel_path: str, content: str, stmt: str, line: str, allowlist: set[t
         return True
     # snake_case / kebab-case / dotted preference or DataStore keys (have a separator, no spaces).
     if _IDENT_KEY.match(content) and " " not in content:
-        return True
-    # Perf.stamp() arguments — logcat timing markers (db-probed, first-composition, etc.).
-    if _PERF_STAMP.search(stmt):
-        return True
-    # @Suppress(...) annotation arguments — compiler directive args (UNCHECKED_CAST, etc.).
-    if _SUPPRESS_ANN.search(line) or _SUPPRESS_ANN.search(stmt):
-        return True
-    # Room entity annotation arguments: Index("sourceId"), ForeignKey(childColumns = ["sourceId"]).
-    # Database column names are never user-facing text.
-    if _ROOM_ANN.search(stmt) or _ROOM_ANN.search(line):
-        return True
-    # Column-name array contexts: childColumns = ["col"], parentColumns = ["col"], primaryKeys = ["col"].
-    if _COL_ARRAY.search(stmt) or _COL_ARRAY.search(line):
-        return True
-    # URI query parameter APIs: .appendQueryParameter("key", ...), uri.queryLong("key").
-    if _URI_API.search(stmt):
-        return True
-    # const val KEY_... = "..." — the value is a preference/DataStore/Worker key.
-    if _KEY_CONST.search(line):
         return True
     return False
 
@@ -291,7 +497,6 @@ def _load_assertion_allowlist() -> set[tuple[str, str]]:
         s = raw.strip()
         if not s or s.startswith("#"):
             continue
-        # Format: <relative path> \t <one-line reason> \t <content>  (tab-separated; content last).
         parts = s.split("\t")
         if len(parts) < 3:
             continue
@@ -303,6 +508,58 @@ def _load_assertion_allowlist() -> set[tuple[str, str]]:
 _GENERATED_MARKER = "// DO NOT EDIT — generated"
 
 
+def _compute_safe_positions(text: str, rel_path: str) -> set[int]:
+    """All character positions of literals that are safe by CALL ARGUMENT position.
+
+    This is the position-based enforcement of the invariant: a safe call exempts ONLY its string
+    argument(s), never every literal on the same line. Aggregates:
+      - JSON API first-arg positions (.put/.getString/.optJSONObject/... — first string arg only)
+      - URI API first-arg positions (.appendQueryParameter/.queryLong/... — first string arg only)
+      - Room Index()/ColumnInfo() first-arg positions (column name)
+      - Room column-name array positions (childColumns=[...], primaryKeys=[...])
+      - Perf.stamp() first-arg positions
+      - @Suppress() all-arg positions
+      - Regex() first-arg positions
+      - Log./Timber. all-arg positions (tag + message are both developer-only)
+      - TAG and KEY constant initializers
+      - ErrorMessages.kt .containsAny()/.contains() all-arg positions (comparison needles)
+    """
+    safe: set[int] = set()
+    safe |= _call_arg_positions(text, _JSON_API)
+    safe |= _call_arg_positions(text, _JSON_GET)
+    safe |= _call_arg_positions(text, _URI_API)
+    safe |= _call_arg_positions(text, _ROOM_CALL)
+    safe |= _col_array_positions(text)
+    safe |= _call_arg_positions(text, _PERF_STAMP)
+    safe |= _annotation_arg_positions(text, _SUPPRESS_ANN)
+    safe |= _call_arg_positions(text, _REGEX_CALL)
+    safe |= _call_all_arg_positions(text, _LOG_CALL)
+    safe |= _declaration_string_positions(text, _LOG_TAG_DECL)
+    safe |= _declaration_string_positions(text, _KEY_CONST)
+    if rel_path == _ERROR_MESSAGES_FILE:
+        safe |= _call_all_arg_positions(text, _NEEDLE_CALL)
+    return safe
+
+
+def _expand_nested_safe_positions(text: str, safe_positions: set[int]) -> set[int]:
+    """Propagate a safe argument boundary to literals nested inside that argument.
+
+    Kotlin permits string literals inside ``${...}``. If the outer literal is a Log/Regex/JSON-key
+    argument, its nested default value is part of the same developer/protocol argument; treating it
+    as user-facing would reintroduce a false positive merely because the scanner became interpolation
+    aware. User-facing outer literals have no safe position, so their nested UI text remains unsafe.
+    """
+    spans = list(_iter_literals(text))
+    safe = set(safe_positions)
+    for outer_start, outer_end, _ in spans:
+        if outer_start not in safe_positions:
+            continue
+        for nested_start, nested_end, _ in spans:
+            if outer_start < nested_start and nested_end <= outer_end:
+                safe.add(nested_start)
+    return safe
+
+
 def _scan() -> dict[tuple[str, str], int]:
     """Return the multiset {(rel_path, normalised_content): occurrence_count} of unsafe literals."""
     allowlist = _load_assertion_allowlist()
@@ -310,19 +567,16 @@ def _scan() -> dict[tuple[str, str], int]:
     for kt in sorted(SRC.rglob("*.kt")):
         rel = kt.relative_to(ROOT).as_posix()
         text = kt.read_text(encoding="utf-8")
-        # Skip generated Kotlin (e.g. SupportedLocales.kt) — its literals are catalogue data, not code.
         if _GENERATED_MARKER in text[:120]:
             continue
         lines = text.splitlines()
-        # Pre-compute needle positions for ErrorMessages.kt so multi-line containsAny/contains calls
-        # are correctly identified (the line-based _statement_text would miss them).
-        needles = _needle_positions(text) if rel == _ERROR_MESSAGES_FILE else set()
+        safe_positions = _expand_nested_safe_positions(text, _compute_safe_positions(text, rel))
         for start, end, raw in _iter_literals(text):
             content = _decode(raw)
             line_no = text.count("\n", 0, start)
             line = lines[line_no] if line_no < len(lines) else ""
             stmt = _statement_text(text, start)
-            if _is_safe(rel, content, stmt, line, allowlist, start=start, needles=needles):
+            if _is_safe(rel, content, stmt, line, allowlist, start=start, safe_positions=safe_positions):
                 continue
             counts[(rel, _normalize(content))] += 1
     return dict(counts)
@@ -331,6 +585,7 @@ def _scan() -> dict[tuple[str, str], int]:
 def _serialize(counts: dict[tuple[str, str], int]) -> str:
     lines = [
         "# DO NOT EDIT by hand — generated by tools/i18n/check_hardcoded_strings.py.",
+        f"# scanner-version: {SCANNER_VERSION}",
         "# One tab-separated line per (file, normalised content) with its occurrence count.",
         "# Phase 1 deletes occurrences until this file is empty; the CI guard then becomes absolute.",
         "# Format: <count>\\t<relative path>\\t<content with \\t/\\n escaped>",
@@ -340,6 +595,16 @@ def _serialize(counts: dict[tuple[str, str], int]) -> str:
         esc = content.replace("\\", "\\\\").replace("\t", "\\t").replace("\n", "\\n")
         lines.append(f"{count}\t{rel}\t{esc}")
     return "\n".join(lines) + "\n"
+
+
+def _scanner_version(text: str) -> int | None:
+    for line in text.splitlines():
+        if line.startswith("# scanner-version:"):
+            try:
+                return int(line.split(":", 1)[1].strip())
+            except ValueError:
+                return None
+    return None
 
 
 def _parse(text: str) -> dict[tuple[str, str], int]:
@@ -381,14 +646,17 @@ def cmd_generate(_args) -> int:
 
 
 def cmd_verify(args) -> int:
-    base = _parse(Path(args.base).read_text(encoding="utf-8")) if args.base else {}
+    base_text = Path(args.base).read_text(encoding="utf-8") if args.base else ""
+    base = _parse(base_text) if args.base else {}
     current = _scan()
-    committed = _parse(BASELINE.read_text(encoding="utf-8"))
+    committed_text = BASELINE.read_text(encoding="utf-8")
+    committed = _parse(committed_text)
     fails = 0
-    # The regression leg compares the current scan against the merge-base baseline. On the PR that
-    # INTRODUCES the baseline file, the merge base has no such file — the workflow passes --bootstrap,
-    # which skips this leg (there is no prior baseline to regress against). The other two legs still
-    # apply, so on the introducing PR the committed baseline must exactly match the current scan.
+    committed_version = _scanner_version(committed_text)
+    if committed_version != SCANNER_VERSION:
+        fails += 1
+        print(f"BASELINE VERSION — committed baseline scanner-version {committed_version!r} "
+              f"does not match checker version {SCANNER_VERSION}; regenerate it.")
     if not args.bootstrap:
         reg = _subset(current, base)
         if reg:
@@ -406,11 +674,6 @@ def cmd_verify(args) -> int:
             print("  " + r)
         if len(over) > 50:
             print(f"  ... and {len(over) - 50} more")
-    # The third leg: every literal the current code produces must be IN the committed baseline.
-    # Without this a PR can delete every committed baseline entry while leaving all literals in
-    # source and still pass (the other two legs only compare against the merge base / current scan).
-    # The committed baseline is the ratchet's record of what is still permitted; it must stay a
-    # superset of the current scan so shrinking it actually requires deleting a literal from source.
     stale = _subset(current, committed)
     if stale:
         fails += 1
