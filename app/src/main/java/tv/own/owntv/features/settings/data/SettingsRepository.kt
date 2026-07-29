@@ -157,6 +157,7 @@ class SettingsRepository(private val context: Context) {
         val UPDATE_CHECK_ON_START = booleanPreferencesKey("update_check_on_start")
         val CATCHUP_TZ = stringPreferencesKey("catchup_timezone")
         val CATCHUP_PLAYER = stringPreferencesKey("catchup_player")
+        val EPISODE_ORDER = stringPreferencesKey("episode_order")
         val CATCHUP_OFFSET_MIN = intPreferencesKey("catchup_offset_minutes")
         val ANIMATION_LEVEL = stringPreferencesKey("animation_level")
         val RESUME_LAST_CHANNEL = booleanPreferencesKey("resume_last_channel")
@@ -551,6 +552,15 @@ class SettingsRepository(private val context: Context) {
      *  Movies/Series only; Live/EPG never select it. */
     enum class SortMode { PLAYLIST, ALPHA, RATING, DATE_ADDED }
 
+    /** How seasons and episodes are ordered in the series episode list (visual only — playback
+     *  always follows episode number 1,2,3…). Global; applies to every series. */
+    enum class EpisodeOrder(val label: String, val descending: Boolean) {
+        DEFAULT("1→N", descending = false),
+        DESCENDING("N→1", descending = true);
+
+        fun next(): EpisodeOrder = entries[(ordinal + 1) % entries.size]
+    }
+
     /** All three browse sections (Live/Movies/Series) default to the playlist/provider's own order — the
      *  natural grouping a user expects right after a sync. A–Z is one tap away (toggleSort). */
     val sortLive: Flow<SortMode> = prefsFlow { parseSort(it[Keys.SORT_LIVE], SortMode.PLAYLIST) }
@@ -563,6 +573,14 @@ class SettingsRepository(private val context: Context) {
 
     suspend fun setSortMovies(mode: SortMode) {
         context.dataStore.edit { it[Keys.SORT_MOVIES] = mode.name }
+    }
+
+    val episodeOrder: Flow<EpisodeOrder> = prefsFlow { prefs ->
+        prefs[Keys.EPISODE_ORDER]?.let { runCatching { EpisodeOrder.valueOf(it) }.getOrNull() } ?: EpisodeOrder.DEFAULT
+    }
+
+    suspend fun setEpisodeOrder(order: EpisodeOrder) {
+        context.dataStore.edit { it[Keys.EPISODE_ORDER] = order.name }
     }
 
     suspend fun setSortSeries(mode: SortMode) {
