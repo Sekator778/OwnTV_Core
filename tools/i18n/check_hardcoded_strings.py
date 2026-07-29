@@ -132,7 +132,25 @@ _SQL = re.compile(r"\b(SELECT |INSERT INTO |UPDATE |DELETE FROM |CREATE TABLE |C
                    re.IGNORECASE)
 _MIME = re.compile(r"^[a-z][\w.+-]+/[a-z0-9][\w.+-]*$")
 _URL = re.compile(r"^(?:https?|content|file|intent|mailto|tel|ftp|data)://")
-_BCP47 = re.compile(r"^[a-z]{2}(?:-[A-Z][a-z]{3})?(?:-[A-Z]{2})?$")
+# BCP-47 language/region/script tag (en, en-US, zh-Hans, pt-BR, en-rGB …). The Android res qualifier
+# form en-rGB is also matched so the locale-runtime constants are safe.
+_BCP47 = re.compile(r"^[a-z]{2}(?:-[A-Z][a-z]{3}|-r[A-Z]{2}|-[A-Z]{2})?(?:-[A-Z]{2})?$")
+# A JSON object/fragment key: "key": or "key" : — translator never sees these.
+_JSON_KEY = re.compile(r'^"[A-Za-z_][\w-]*"\s*:')
+# A snake_case / kebab-case identifier that looks like a preference/DataStore key or protocol field,
+# not a sentence: lowercase, digits, underscores/hyphens/dots, no spaces, and not a readable phrase.
+# Require at least one underscore/dot/hyphen so a bare word like "Settings" is NOT misclassified.
+_IDENT_KEY = re.compile(r"^[a-z][a-z0-9_./-]*[_./-][a-z0-9_./-]*$")
+# A filesystem-ish path (contains a slash and no spaces).
+_PATH = re.compile(r"^[^\s]*[/\\][^\s]*$")
+# File extension or a dotted protocol token like ".mp4", "application/json", "owntv_locale".
+_DOTTED = re.compile(r"^(?:\.[a-z0-9]+|[a-z][a-z0-9]*(?:\.[a-z0-9]+)+)$")
+# A single ALL_CAPS or ALL_LOWER token with no spaces and <= 32 chars — enum/constant-style names,
+# logcat stamps, Perf.stamp markers, @Suppress args. Excludes anything with a space (a sentence).
+_TOKEN = re.compile(r"^[A-Za-z_][A-Za-z0-9_]{0,31}$")
+# An exception/comparison needle in ErrorMessages.kt: a phrase used for *matching*, not display. We
+# cannot know intent from content alone, so this is handled by file-scoped detection below.
+_ERROR_MESSAGES_FILE = "app/src/main/java/tv/own/owntv/core/util/ErrorMessages.kt"
 
 
 def _statement_text(src: str, pos: int) -> str:
@@ -148,6 +166,13 @@ def _is_safe(rel_path: str, content: str, stmt: str, line: str, allowlist: set[t
     norm = _normalize(content)
     # Explicit, reasoned assertion allowlist (developer-only require/check/error) by file+content.
     if (rel_path, norm) in allowlist:
+        return True
+    # Empty strings are never user-facing text.
+    if norm == "":
+        return True
+    # ErrorMessages.kt: every string literal there is a stable comparison needle (see docs/i18n.md,
+    # "The ErrorMessages English-needle caveat"). Translating one silently breaks classification.
+    if rel_path == _ERROR_MESSAGES_FILE:
         return True
     # Log tags declared as constants.
     if _LOG_TAG_DECL.search(line):
@@ -167,7 +192,42 @@ def _is_safe(rel_path: str, content: str, stmt: str, line: str, allowlist: set[t
     # URLs/schemes.
     if _URL.match(content):
         return True
+    # BCP-47 language/region/script tags and Android res qualifiers (en, en-US, zh-Hans, pt-BR, en-rGB).
+    if _BCP47.match(content):
+        return True
+    # JSON object keys ("key":).
+    if _JSON_KEY.match(content):
+        return True
+    # Filesystem-ish paths (contain a slash, no spaces).
+    if _PATH.match(content) and " " not in content:
+        return True
+    # Dotted protocol tokens / file extensions: application/json, .mp4, owntv.db.bak.
+    if _DOTTED.match(content):
+        return True
+    # snake_case / kebab-case / dotted preference or DataStore keys (have a separator, no spaces).
+    if _IDENT_KEY.match(content) and " " not in content:
+        return True
+    # A bare token (no spaces, <= 32 chars, identifier-only): enum/constant names, Perf.stamp markers,
+    # @Suppress args, logcat tags. This is the broadest category — it keeps dev-only identifiers out
+    # of the baseline without needing a per-token allowlist. A user-facing *sentence* always has a
+    # space or punctuation this regex rejects, so real display text is never misclassified as safe.
+    if _TOKEN.match(content) and " " not in content and not _looks_like_sentence(content):
+        return True
     return False
+
+
+def _looks_like_sentence(content: str) -> bool:
+    """Heuristic: does this look like user-facing text rather than an identifier?
+
+    A token with interior mixed case AND a vowel pattern suggests a word, not a constant. But the
+    strongest signal is a space or sentence-ending punctuation, already excluded by the caller. The
+    remaining risk is a single CamelCase word like "Settings" — that is NOT safe (it is display text),
+    so require ALL_CAPS or ALL_LOWER for the bare-token category. A mixed-case token is left in the
+    baseline for human review.
+    """
+    has_upper = any(c.isupper() for c in content)
+    has_lower = any(c.islower() for c in content)
+    return has_upper and has_lower  # CamelCase like "Settings" → not a safe identifier token
 
 
 def _load_assertion_allowlist() -> set[tuple[str, str]]:
@@ -285,8 +345,23 @@ def cmd_verify(args) -> int:
             print("  " + r)
         if len(over) > 50:
             print(f"  ... and {len(over) - 50} more")
+    # The third leg: every literal the current code produces must be IN the committed baseline.
+    # Without this a PR can delete every committed baseline entry while leaving all literals in
+    # source and still pass (the other two legs only compare against the merge base / current scan).
+    # The committed baseline is the ratchet's record of what is still permitted; it must stay a
+    # superset of the current scan so shrinking it actually requires deleting a literal from source.
+    stale = _subset(current, committed)
+    if stale:
+        fails += 1
+        print("STALE BASELINE — current code has literals absent from the COMMITTED baseline;")
+        print("  regenerate the baseline (tools/i18n/check_hardcoded_strings.py generate) only AFTER")
+        print("  confirming each new literal was extracted to a resource, not merely added to the file.")
+        for r in stale[:50]:
+            print("  " + r)
+        if len(stale) > 50:
+            print(f"  ... and {len(stale) - 50} more")
     if fails == 0:
-        print("i18n baseline OK: current ⊆ merge-base, and committed baseline matches current.")
+        print("i18n baseline OK: current ⊆ merge-base, committed ⊆ current, and current ⊆ committed.")
     return 1 if fails else 0
 
 

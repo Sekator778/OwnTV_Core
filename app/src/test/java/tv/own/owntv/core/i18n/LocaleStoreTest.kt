@@ -21,7 +21,7 @@ class LocaleStoreTest {
 
     @Test
     fun `readBlocking returns the empty tag when nothing is stored`() {
-        val store = LocaleStore(newPrefs())
+        val store = LocaleStore(newPrefs(), null)
         assertEquals("", store.readBlocking())
         assertEquals("", store.currentTag.value)
     }
@@ -30,15 +30,15 @@ class LocaleStoreTest {
     fun `empty tag is a valid persisted value distinct from unset`() {
         // "follow system" is the durable instruction, not "leave the current locale unchanged".
         val prefs = newPrefs()
-        runBlocking { LocaleStore(prefs).set("") }
-        val reopened = LocaleStore(prefs)
+        runBlocking { LocaleStore(prefs, null).set("") }
+        val reopened = LocaleStore(prefs, null)
         assertEquals("", reopened.readBlocking())
     }
 
     @Test
     fun `set persists and publishes the tag`() {
         val prefs = newPrefs()
-        val store = LocaleStore(prefs)
+        val store = LocaleStore(prefs, null)
         runBlocking { store.set("de") }
         assertEquals("de", store.currentTag.value)
         assertEquals("de", store.readBlocking())
@@ -47,9 +47,9 @@ class LocaleStoreTest {
     @Test
     fun `the value is readable after a simulated process restart`() {
         val prefs = newPrefs()
-        runBlocking { LocaleStore(prefs).set("fr") }
+        runBlocking { LocaleStore(prefs, null).set("fr") }
         // A new process reopens the same SharedPreferences file; the StateFlow is per-instance.
-        val afterRestart = LocaleStore(prefs)
+        val afterRestart = LocaleStore(prefs, null)
         assertEquals("fr", afterRestart.readBlocking())
         assertEquals("fr", afterRestart.currentTag.value)
     }
@@ -57,7 +57,7 @@ class LocaleStoreTest {
     @Test
     fun `reset to system default writes the empty tag through the same API`() {
         val prefs = newPrefs()
-        val store = LocaleStore(prefs)
+        val store = LocaleStore(prefs, null)
         runBlocking { store.set("de") }
         runBlocking { store.set("") } // same write path the picker / backup import use
         assertEquals("", store.readBlocking())
@@ -66,7 +66,7 @@ class LocaleStoreTest {
     @Test
     fun `a failed commit is surfaced, not swallowed`() {
         val prefs = newPrefs().apply { commitResult = false }
-        val store = LocaleStore(prefs)
+        val store = LocaleStore(prefs, null)
         assertThrows(IllegalStateException::class.java) {
             runBlocking { store.set("de") }
         }
@@ -78,9 +78,9 @@ class LocaleStoreTest {
     fun `backup import writes through the same API`() {
         // Backup import calls LocaleStore.set(tag); there is no second write path.
         val prefs = newPrefs()
-        runBlocking { LocaleStore(prefs).set("tr") }
+        runBlocking { LocaleStore(prefs, null).set("tr") }
         assertTrue("tr" in prefs.stored.values)
-        assertEquals("tr", LocaleStore(prefs).readBlocking())
+        assertEquals("tr", LocaleStore(prefs, null).readBlocking())
     }
 }
 

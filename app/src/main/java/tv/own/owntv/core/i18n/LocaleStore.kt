@@ -25,6 +25,13 @@ import kotlinx.coroutines.withContext
  */
 class LocaleStore internal constructor(
     private val preferences: SharedPreferences,
+    /**
+     * The application context for [applyGlobally] after an in-session write, or null for the throwaway
+     * read-only instances built in `attachBaseContext` (which only call [readBlocking]; a write there
+     * would be a bug). The Koin singleton is constructed with the real `Application` so writes update
+     * the process `Locale` defaults immediately (see [set]).
+     */
+    private val applicationContext: Context?,
 ) {
 
     private val _currentTag: MutableStateFlow<String> = MutableStateFlow(readBlocking())
@@ -39,9 +46,16 @@ class LocaleStore internal constructor(
     fun readBlocking(): String = preferences.getString(KEY_UI_LANGUAGE, "").orEmpty()
 
     /**
-     * Durably persists [tag] and publishes it to [currentTag]. Uses `commit()` (synchronous, durable)
-     * off the main thread so the operation only returns after the value is on disk — the locale is
-     * needed on the *next cold start*, so durability is required, not "best effort".
+     * Durably persists [tag], publishes it to [currentTag], and re-applies the process `Locale` /
+     * `LocaleList` defaults so `java.text`, `java.time`, `String.format` and every other
+     * `Locale.getDefault()` reader follow the new selection immediately — not on the next unrelated
+     * configuration callback. `LocalizedContent` handles the Compose locals and the script-family
+     * `Activity.recreate()`; this handles the non-Compose `Locale.getDefault()` readers (see
+     * `docs/internationalization.md` 0b, "The write path updates process defaults").
+     *
+     * Uses `commit()` (synchronous, durable) off the main thread so the operation only returns after
+     * the value is on disk — the locale is needed on the *next cold start*, so durability is required,
+     * not "best effort".
      *
      * Returns `true` when the write was committed. A `false` (failed `commit`) is surfaced as an
      * [IllegalStateException] rather than swallowed: a silent locale-write failure would leave the
@@ -53,6 +67,7 @@ class LocaleStore internal constructor(
         }
         check(committed) { "Failed to persist application locale" }
         _currentTag.value = tag
+        applicationContext?.let { AppLocale.applyGlobally(tag, it) }
         return true
     }
 
@@ -67,10 +82,22 @@ class LocaleStore internal constructor(
          * the same, so the persisted value is always consistent. The in-process [StateFlow] is
          * per-instance, so callers that must observe writes (the picker, renderers) take the Koin
          * singleton rather than building their own.
+         *
+         * **Does not call `context.applicationContext`.** During `Application.attachBaseContext` the
+         * framework has not yet assigned `LoadedApk.mApplication`, so `getApplicationContext()` returns
+         * null and the store crashes before `onCreate`. The supplied context's own
+         * `getSharedPreferences` opens the same package-private file regardless of which context in the
+         * hierarchy is used, so the base context is used directly. The Koin singleton is built from the
+         * fully-initialised `Application` after `startKoin`, where `applicationContext` is safe.
          */
         fun from(context: Context): LocaleStore {
-            val prefs = context.applicationContext.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-            return LocaleStore(prefs)
+            val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+            // applicationContext is null until the Application is constructed; in attachBaseContext the
+            // base context is not yet an Application, and context.applicationContext returns null there.
+            // Only a fully-initialised Application (the Koin singleton path) carries it, so writes can
+            // apply globally. Read-only attachBaseContext instances get null and never write.
+            val app = context.applicationContext
+            return LocaleStore(prefs, app)
         }
     }
 }

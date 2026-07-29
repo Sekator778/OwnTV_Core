@@ -22,7 +22,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
 LOCALES_JSON = ROOT / "tools" / "i18n" / "locales.json"
-RES = ROOT / "app" / "main" / "res"
+RES = ROOT / "app" / "src" / "main" / "res"
 OUT = ROOT / "app" / "src" / "main" / "java" / "tv" / "own" / "owntv" / "core" / "i18n" / "SupportedLocales.kt"
 
 PACKAGE = "tv.own.owntv.core.i18n"
@@ -79,7 +79,8 @@ def _kt_string(s: str) -> str:
     return "".join(out)
 
 
-def main() -> int:
+def _generate() -> tuple[str, int, int]:
+    """Return (generated_text, num_entries, num_source_keys)."""
     data = json.loads(LOCALES_JSON.read_text(encoding="utf-8"))
     source_keys = _string_keys(RES / "values")
 
@@ -167,9 +168,47 @@ def main() -> int:
     L.append("}")
     L.append("")
     OUT.parent.mkdir(parents=True, exist_ok=True)
-    OUT.write_text("\n".join(L), encoding="utf-8")
-    print(f"generated {OUT.relative_to(ROOT)} ({len(entries)} locales, {len(source_keys)} source keys)")
+    return "\n".join(L), len(entries), len(source_keys)
+
+
+def cmd_generate() -> int:
+    text, n_entries, n_keys = _generate()
+    OUT.parent.mkdir(parents=True, exist_ok=True)
+    OUT.write_text(text, encoding="utf-8")
+    print(f"generated {OUT.relative_to(ROOT)} ({n_entries} locales, {n_keys} source keys)")
     return 0
+
+
+def cmd_check() -> int:
+    """Fail if the checked-in SupportedLocales.kt is stale relative to locales.json + the res tree.
+
+    CI runs this so a PR that edits the catalogue or adds a translation file cannot forget to
+    regenerate — the picker's coverage column and the CI gate both read the generated file, so a
+    stale check-in makes them disagree with the truth.
+    """
+    if not OUT.is_file():
+        print(f"error: {OUT.relative_to(ROOT)} missing; run gen_supported_locales.py")
+        return 1
+    text, n_entries, n_keys = _generate()
+    current = OUT.read_text(encoding="utf-8")
+    if current == text:
+        print(f"SupportedLocales.kt fresh ({n_entries} locales, {n_keys} source keys)")
+        return 0
+    print("SupportedLocales.kt is STALE — regenerate with:")
+    print("  python3 tools/i18n/gen_supported_locales.py")
+    return 1
+
+
+def main() -> int:
+    import argparse
+    ap = argparse.ArgumentParser()
+    sub = ap.add_subparsers(dest="cmd", required=False)
+    sub.add_parser("generate", help="write SupportedLocales.kt (default)")
+    sub.add_parser("check", help="fail if SupportedLocales.kt is stale")
+    args = ap.parse_args()
+    if args.cmd == "check":
+        return cmd_check()
+    return cmd_generate()
 
 
 if __name__ == "__main__":
