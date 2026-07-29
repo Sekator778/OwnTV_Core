@@ -36,8 +36,10 @@ def _string_keys(directory: Path) -> set[str]:
     """Translatable entry keys in a ``values[-x]`` directory.
 
     Skips ``donottranslate.xml`` (brand + protocol constants, all ``translatable="false"``) and any
-    string flagged ``translatable="false"``. ``<plurals>`` keys are suffixed with ``#`` so a plural and
-    a string sharing a base name never collapse the coverage count.
+    string flagged ``translatable="false"``. ``<plurals>`` keys are suffixed with ``#`` and
+    ``<string-array>`` keys with ``[]`` so entries of different kinds sharing a base name never
+    collapse the coverage count. This must match ``validate_strings.py``'s suffix scheme exactly so
+    the picker's coverage column and the CI gate agree.
     """
     if not directory.is_dir():
         return set()
@@ -59,6 +61,8 @@ def _string_keys(directory: Path) -> set[str]:
                 keys.add(name)
             elif el.tag == "plurals":
                 keys.add(name + "#")
+            elif el.tag == "string-array":
+                keys.add(name + "[]")
     return keys
 
 

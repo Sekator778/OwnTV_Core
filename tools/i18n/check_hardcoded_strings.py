@@ -145,12 +145,38 @@ _IDENT_KEY = re.compile(r"^[a-z][a-z0-9_./-]*[_./-][a-z0-9_./-]*$")
 _PATH = re.compile(r"^[^\s]*[/\\][^\s]*$")
 # File extension or a dotted protocol token like ".mp4", "application/json", "owntv_locale".
 _DOTTED = re.compile(r"^(?:\.[a-z0-9]+|[a-z][a-z0-9]*(?:\.[a-z0-9]+)+)$")
-# A single ALL_CAPS or ALL_LOWER token with no spaces and <= 32 chars — enum/constant-style names,
-# logcat stamps, Perf.stamp markers, @Suppress args. Excludes anything with a space (a sentence).
-_TOKEN = re.compile(r"^[A-Za-z_][A-Za-z0-9_]{0,31}$")
-# An exception/comparison needle in ErrorMessages.kt: a phrase used for *matching*, not display. We
-# cannot know intent from content alone, so this is handled by file-scoped detection below.
+# Perf.stamp() call arguments — logcat timing markers, never user-facing text.
+_PERF_STAMP = re.compile(r"\bPerf\.stamp\s*\(")
+# @Suppress(...) annotation arguments — compiler directive args, never user-facing text.
+_SUPPRESS_ANN = re.compile(r"@Suppress\s*\(")
+# ErrorMessages.kt comparison needles: string literals passed as arguments to containsAny() or
+# .contains() are stable English keys used for matching, never display text. The friendly return
+# values (the RHS of ->) are NOT needles and must be extracted to resources in Phase 1.
 _ERROR_MESSAGES_FILE = "app/src/main/java/tv/own/owntv/core/util/ErrorMessages.kt"
+_NEEDLE_CALL = re.compile(r"\.(?:containsAny|contains)\s*\(")
+
+
+def _needle_positions(text: str) -> set[int]:
+    """Character positions inside .containsAny()/.contains() argument lists in ErrorMessages.kt.
+
+    Multi-line calls (where the opening paren is on a different line than the needle string literals)
+    are handled by paren-depth tracking: every character between the opening paren and its matching
+    close is recorded. A literal whose start position falls in that range is a comparison needle.
+    """
+    positions: set[int] = set()
+    for m in _NEEDLE_CALL.finditer(text):
+        depth = 1
+        pos = m.end()
+        while pos < len(text) and depth > 0:
+            ch = text[pos]
+            if ch == "(":
+                depth += 1
+            elif ch == ")":
+                depth -= 1
+            if depth > 0:
+                positions.add(pos)
+            pos += 1
+    return positions
 
 
 def _statement_text(src: str, pos: int) -> str:
@@ -162,7 +188,8 @@ def _statement_text(src: str, pos: int) -> str:
     return src[start:end]
 
 
-def _is_safe(rel_path: str, content: str, stmt: str, line: str, allowlist: set[tuple[str, str]]) -> bool:
+def _is_safe(rel_path: str, content: str, stmt: str, line: str, allowlist: set[tuple[str, str]],
+             start: int = -1, needles: set[int] | None = None) -> bool:
     norm = _normalize(content)
     # Explicit, reasoned assertion allowlist (developer-only require/check/error) by file+content.
     if (rel_path, norm) in allowlist:
@@ -170,9 +197,11 @@ def _is_safe(rel_path: str, content: str, stmt: str, line: str, allowlist: set[t
     # Empty strings are never user-facing text.
     if norm == "":
         return True
-    # ErrorMessages.kt: every string literal there is a stable comparison needle (see docs/i18n.md,
-    # "The ErrorMessages English-needle caveat"). Translating one silently breaks classification.
-    if rel_path == _ERROR_MESSAGES_FILE:
+    # ErrorMessages.kt: only the comparison NEEDLES (literals inside .containsAny()/.contains() calls)
+    # are safe — stable English keys used for matching. The friendly return-value messages are
+    # user-facing text that Phase 1 must extract, so they are NOT exempted. Needle positions are
+    # pre-computed by _needle_positions() with paren-depth tracking for multi-line calls.
+    if rel_path == _ERROR_MESSAGES_FILE and needles is not None and start in needles:
         return True
     # Log tags declared as constants.
     if _LOG_TAG_DECL.search(line):
@@ -207,27 +236,13 @@ def _is_safe(rel_path: str, content: str, stmt: str, line: str, allowlist: set[t
     # snake_case / kebab-case / dotted preference or DataStore keys (have a separator, no spaces).
     if _IDENT_KEY.match(content) and " " not in content:
         return True
-    # A bare token (no spaces, <= 32 chars, identifier-only): enum/constant names, Perf.stamp markers,
-    # @Suppress args, logcat tags. This is the broadest category — it keeps dev-only identifiers out
-    # of the baseline without needing a per-token allowlist. A user-facing *sentence* always has a
-    # space or punctuation this regex rejects, so real display text is never misclassified as safe.
-    if _TOKEN.match(content) and " " not in content and not _looks_like_sentence(content):
+    # Perf.stamp() arguments — logcat timing markers (db-probed, first-composition, etc.).
+    if _PERF_STAMP.search(stmt):
+        return True
+    # @Suppress(...) annotation arguments — compiler directive args (UNCHECKED_CAST, etc.).
+    if _SUPPRESS_ANN.search(line) or _SUPPRESS_ANN.search(stmt):
         return True
     return False
-
-
-def _looks_like_sentence(content: str) -> bool:
-    """Heuristic: does this look like user-facing text rather than an identifier?
-
-    A token with interior mixed case AND a vowel pattern suggests a word, not a constant. But the
-    strongest signal is a space or sentence-ending punctuation, already excluded by the caller. The
-    remaining risk is a single CamelCase word like "Settings" — that is NOT safe (it is display text),
-    so require ALL_CAPS or ALL_LOWER for the bare-token category. A mixed-case token is left in the
-    baseline for human review.
-    """
-    has_upper = any(c.isupper() for c in content)
-    has_lower = any(c.islower() for c in content)
-    return has_upper and has_lower  # CamelCase like "Settings" → not a safe identifier token
 
 
 def _load_assertion_allowlist() -> set[tuple[str, str]]:
@@ -261,12 +276,15 @@ def _scan() -> dict[tuple[str, str], int]:
         if _GENERATED_MARKER in text[:120]:
             continue
         lines = text.splitlines()
+        # Pre-compute needle positions for ErrorMessages.kt so multi-line containsAny/contains calls
+        # are correctly identified (the line-based _statement_text would miss them).
+        needles = _needle_positions(text) if rel == _ERROR_MESSAGES_FILE else set()
         for start, end, raw in _iter_literals(text):
             content = _decode(raw)
             line_no = text.count("\n", 0, start)
             line = lines[line_no] if line_no < len(lines) else ""
             stmt = _statement_text(text, start)
-            if _is_safe(rel, content, stmt, line, allowlist):
+            if _is_safe(rel, content, stmt, line, allowlist, start=start, needles=needles):
                 continue
             counts[(rel, _normalize(content))] += 1
     return dict(counts)
@@ -329,14 +347,19 @@ def cmd_verify(args) -> int:
     current = _scan()
     committed = _parse(BASELINE.read_text(encoding="utf-8"))
     fails = 0
-    reg = _subset(current, base)
-    if reg:
-        fails += 1
-        print("REGRESSION — current code has literals absent from the merge-base baseline:")
-        for r in reg[:50]:
-            print("  " + r)
-        if len(reg) > 50:
-            print(f"  ... and {len(reg) - 50} more")
+    # The regression leg compares the current scan against the merge-base baseline. On the PR that
+    # INTRODUCES the baseline file, the merge base has no such file — the workflow passes --bootstrap,
+    # which skips this leg (there is no prior baseline to regress against). The other two legs still
+    # apply, so on the introducing PR the committed baseline must exactly match the current scan.
+    if not args.bootstrap:
+        reg = _subset(current, base)
+        if reg:
+            fails += 1
+            print("REGRESSION — current code has literals absent from the merge-base baseline:")
+            for r in reg[:50]:
+                print("  " + r)
+            if len(reg) > 50:
+                print(f"  ... and {len(reg) - 50} more")
     over = _subset(committed, current)
     if over:
         fails += 1
@@ -361,7 +384,10 @@ def cmd_verify(args) -> int:
         if len(stale) > 50:
             print(f"  ... and {len(stale) - 50} more")
     if fails == 0:
-        print("i18n baseline OK: current ⊆ merge-base, committed ⊆ current, and current ⊆ committed.")
+        if args.bootstrap:
+            print("i18n baseline OK (bootstrap): committed baseline exactly matches current scan.")
+        else:
+            print("i18n baseline OK: current ⊆ merge-base, committed ⊆ current, and current ⊆ committed.")
     return 1 if fails else 0
 
 
@@ -371,6 +397,8 @@ def main() -> int:
     sub.add_parser("generate")
     v = sub.add_parser("verify")
     v.add_argument("--base", help="path to the merge-base baseline file")
+    v.add_argument("--bootstrap", action="store_true",
+                   help="skip the merge-base regression leg (for the PR that introduces the baseline)")
     args = ap.parse_args()
     if args.cmd == "generate":
         return cmd_generate(args)

@@ -82,6 +82,40 @@ class LocaleStoreTest {
         assertTrue("tr" in prefs.stored.values)
         assertEquals("tr", LocaleStore(prefs, null).readBlocking())
     }
+
+    // --- applicationContext nullable behaviour (P0/P1 review fixes) ---
+
+    @Test
+    fun `attachBaseContext read-only store has null applicationContext and never writes globally`() {
+        // During Application.attachBaseContext, applicationContext is null (LoadedApk.mApplication
+        // unassigned). A read-only bootstrap store must not attempt applyGlobally on set(). This test
+        // pins that: a store built with null applicationContext still persists and publishes, but
+        // does NOT call the platform Locale/LocaleList defaults — verified by the fact that set()
+        // does not crash on stubbed android.jar (Resources.getSystem() returns null with stubs,
+        // so applyGlobally WOULD NPE if it were called).
+        val prefs = newPrefs()
+        val store = LocaleStore(prefs, null)
+        runBlocking { store.set("de") }
+        assertEquals("de", store.currentTag.value)
+        assertEquals("de", store.readBlocking())
+        // No crash — applyGlobally was skipped because applicationContext was null.
+    }
+
+    @Test
+    fun `null applicationContext store survives multiple writes`() {
+        // The attachBaseContext bootstrap path constructs a store per call; verify repeated writes
+        // through different null-appContext instances all persist to the same SharedPreferences file.
+        val prefs = newPrefs()
+        runBlocking { LocaleStore(prefs, null).set("de") }
+        runBlocking { LocaleStore(prefs, null).set("fr") }
+        runBlocking { LocaleStore(prefs, null).set("") }
+        assertEquals("", LocaleStore(prefs, null).readBlocking())
+    }
+
+    // NOTE: Testing set() with a non-null applicationContext (the Koin singleton path that calls
+    // AppLocale.applyGlobally) requires Robolectric or an instrumented test — on the JVM with stubbed
+    // android.jar, Resources.getSystem() returns null and applyGlobally NPEs. The null-appContext
+    // tests above verify the guard; the non-null path is covered by the build + manual device QA.
 }
 
 /** Minimal in-memory SharedPreferences. Implements only what LocaleStore uses; the rest throw. */
