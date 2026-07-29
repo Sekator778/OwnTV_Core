@@ -280,16 +280,75 @@ class TestValidateStrings(unittest.TestCase):
         self.assertEqual(rc, 1, out)
         self.assertIn("translatable='false' must not appear", out)
 
-    def test_untranslated_tier1_identical_to_source(self):
-        """A Tier 1 translation identical to the source is likely untranslated."""
-        source = '<resources><string name="hello">Hello world</string></resources>'
-        de_xml = '<resources><string name="hello">Hello world</string></resources>'
-        locales = [_locale("en", "en-US", "en", "values"),
-                   _locale("de", "de", "de", "values-de", packaged=True, pickerVisible=True)]
+    def test_identical_to_source_is_not_rejected(self):
+        """A Tier 1 translation identical to the source is NOT rejected — legitimate unchanged
+        translations (OK, TV, PIN, Wi-Fi, brand names, loanwords) must pass. 'Needs editing' must
+        come from Weblate state, not textual equality."""
+        source = '<resources><string name="ok">OK</string><string name="hello">Hello world</string></resources>'
+        de_xml = '<resources><string name="ok">OK</string><string name="hello">Hello world</string></resources>'
+        locales = _tier1_with([_locale("de", "de", "de", "values-de", packaged=True, pickerVisible=True)])
+        res = _make_fixture(self.tmpdir, source, locales, {"values-de": de_xml})
+        rc, out = self._run(res, self.tmpdir / "tools/i18n/locales.json")
+        self.assertEqual(rc, 0, out)
+
+    def test_bare_placeholder_in_translation_rejected(self):
+        """A translation that introduces a bare %s where the source has none must be rejected."""
+        source = '<resources><string name="hello">Hello</string></resources>'
+        de_xml = '<resources><string name="hello">Hallo %s</string></resources>'
+        locales = _tier1_with([_locale("de", "de", "de", "values-de", packaged=False, pickerVisible=False)])
         res = _make_fixture(self.tmpdir, source, locales, {"values-de": de_xml})
         rc, out = self._run(res, self.tmpdir / "tools/i18n/locales.json")
         self.assertEqual(rc, 1, out)
-        self.assertIn("identical to source", out)
+        self.assertIn("bare placeholder in translation", out)
+
+    def test_bare_placeholder_in_translation_array_rejected(self):
+        """A bare %s in a translated string-array item must be rejected."""
+        source = '<resources><string-array name="items"><item>A</item><item>B</item></string-array></resources>'
+        de_xml = '<resources><string-array name="items"><item>A</item><item>B %s</item></string-array></resources>'
+        locales = _tier1_with([_locale("de", "de", "de", "values-de", packaged=False, pickerVisible=False)])
+        res = _make_fixture(self.tmpdir, source, locales, {"values-de": de_xml})
+        rc, out = self._run(res, self.tmpdir / "tools/i18n/locales.json")
+        self.assertEqual(rc, 1, out)
+        self.assertIn("bare placeholder in translation", out)
+
+    def test_bare_placeholder_in_translation_plural_rejected(self):
+        """A bare %s in a translated plural quantity must be rejected."""
+        source = '<resources><plurals name="songs"><item quantity="one">%1$d song</item><item quantity="other">%1$d songs</item></plurals></resources>'
+        de_xml = '<resources><plurals name="songs"><item quantity="one">%1$d Lied</item><item quantity="other">%s Lieder</item></plurals></resources>'
+        locales = _tier1_with([_locale("de", "de", "de", "values-de", packaged=False, pickerVisible=False)])
+        res = _make_fixture(self.tmpdir, source, locales, {"values-de": de_xml})
+        rc, out = self._run(res, self.tmpdir / "tools/i18n/locales.json")
+        self.assertEqual(rc, 1, out)
+        self.assertIn("bare placeholder in translation", out)
+
+    def test_b_plus_qualifier_accepted(self):
+        """b+sr+Latn (Android script-qualified folder form) must be accepted."""
+        source = '<resources><string name="hello">Hello</string></resources>'
+        locales = _tier1_with([_locale("sr-Latn", "sr-Latn", "b+sr+Latn", "values-b+sr+Latn",
+                                        packaged=False, pickerVisible=False)])
+        # Remove one tier1 to keep membership exact (sr-Latn is not in the expected set)
+        locales = [e for e in locales if e["id"] != "sr-Latn"]
+        # Add it back with tier=0 so it doesn't affect the Tier 1 membership check
+        sr = _locale("sr-Latn", "sr-Latn", "b+sr+Latn", "values-b+sr+Latn", tier=0,
+                     packaged=False, pickerVisible=False)
+        locales.append(sr)
+        res = _make_fixture(self.tmpdir, source, locales)
+        rc, out = self._run(res, self.tmpdir / "tools/i18n/locales.json")
+        # Should pass — b+ qualifier is valid, no qualifier error
+        self.assertNotIn("invalid resourceQualifier", out)
+
+    def test_canonical_weblate_mapping_pin(self):
+        """A wrong weblateCode for a pinned qualifier must be rejected."""
+        source = '<resources><string name="hello">Hello</string></resources>'
+        locales = _full_tier1()
+        # Corrupt pt-BR's weblateCode (should be pt_BR, not pt_PT)
+        for e in locales:
+            if e["id"] == "pt-BR":
+                e["weblateCode"] = "pt_PT"
+        res = _make_fixture(self.tmpdir, source, locales)
+        rc, out = self._run(res, self.tmpdir / "tools/i18n/locales.json")
+        self.assertEqual(rc, 1, out)
+        self.assertIn("should be 'pt_BR'", out)
 
     def test_xliff_placeholder_parity(self):
         """Placeholders wrapped in <xliff:g> must be captured for parity checking."""
@@ -395,6 +454,64 @@ private fun String.containsAny(vararg n: String) = n.any { contains(it) }
         # Friendly message MUST be in the baseline
         self.assertIn("The server took too long to respond. Please try again.", contents,
                         "friendly return-value message was incorrectly exempted")
+
+    def test_json_put_field_name_safe(self):
+        """json.put("profileId", id) — the string is a JSON field name, not display text."""
+        self._write_kt("Main.kt", 'package x\nimport org.json.JSONObject\nfun f(id: Long) {\n  val j = JSONObject()\n  j.put("profileId", id)\n}\n')
+        counts = self.chs._scan()
+        self.assertNotIn("profileId", {k[1] for k in counts}, "JSON .put() field name was not exempted")
+
+    def test_json_put_in_apply_block_safe(self):
+        """put("version", 14) inside JSONObject().apply { } — no leading dot, still a JSON key."""
+        self._write_kt("Main.kt", 'package x\nimport org.json.JSONObject\nfun f() {\n  JSONObject().apply {\n    put("version", 14)\n    put("sections", 3)\n  }\n}\n')
+        counts = self.chs._scan()
+        contents = {k[1] for k in counts}
+        self.assertNotIn("version", contents, "JSON put() in apply block: 'version' was not exempted")
+        self.assertNotIn("sections", contents, "JSON put() in apply block: 'sections' was not exempted")
+
+    def test_json_get_string_safe(self):
+        """obj.getString("profileId") — the string is a JSON field name."""
+        self._write_kt("Main.kt", 'package x\nimport org.json.JSONObject\nfun f(j: JSONObject): String = j.getString("profileId")\n')
+        counts = self.chs._scan()
+        self.assertNotIn("profileId", {k[1] for k in counts}, "JSON .getString() field name was not exempted")
+
+    def test_json_opt_json_object_safe(self):
+        """root.optJSONObject("settings") — the string is a JSON field name."""
+        self._write_kt("Main.kt", 'package x\nimport org.json.JSONObject\nfun f(root: JSONObject) = root.optJSONObject("settings")\n')
+        counts = self.chs._scan()
+        self.assertNotIn("settings", {k[1] for k in counts}, "JSON .optJSONObject() field name was not exempted")
+
+    def test_room_index_column_name_safe(self):
+        """Index("sourceId") — Room entity column name, not display text."""
+        self._write_kt("Entity.kt", 'package x\nimport androidx.room.Entity\nimport androidx.room.Index\n@Entity(indices = [Index("sourceId")])\nclass E\n')
+        counts = self.chs._scan()
+        self.assertNotIn("sourceId", {k[1] for k in counts}, "Room Index() column name was not exempted")
+
+    def test_room_primary_keys_safe(self):
+        """primaryKeys = ["profileId", "contentKey"] — Room primary key column names."""
+        self._write_kt("Entity.kt", 'package x\nimport androidx.room.Entity\n@Entity(primaryKeys = ["profileId", "contentKey"])\nclass E\n')
+        counts = self.chs._scan()
+        contents = {k[1] for k in counts}
+        self.assertNotIn("profileId", contents, "Room primaryKeys column name was not exempted")
+        self.assertNotIn("contentKey", contents, "Room primaryKeys column name was not exempted")
+
+    def test_uri_query_parameter_safe(self):
+        """.appendQueryParameter("sourceId", ...) — URI parameter name, not display text."""
+        self._write_kt("DeepLink.kt", 'package x\nimport android.net.Uri\nfun f(b: Uri.Builder, id: Long) = b.appendQueryParameter("sourceId", id.toString())\n')
+        counts = self.chs._scan()
+        self.assertNotIn("sourceId", {k[1] for k in counts}, "URI query parameter name was not exempted")
+
+    def test_key_const_value_safe(self):
+        """const val KEY_SOURCE_ID = "sourceId" — the value is a preference/DataStore key."""
+        self._write_kt("Worker.kt", 'package x\nclass W {\n  companion object {\n    const val KEY_SOURCE_ID = "sourceId"\n  }\n}\n')
+        counts = self.chs._scan()
+        self.assertNotIn("sourceId", {k[1] for k in counts}, "const val KEY_... value was not exempted")
+
+    def test_camelcase_display_text_not_safe(self):
+        """A CamelCase word like 'Settings' used as Text() content must NOT be exempted."""
+        self._write_kt("Main.kt", 'package x\nfun f() = Text("Settings")\n')
+        counts = self.chs._scan()
+        self.assertIn("Settings", {k[1] for k in counts}, "CamelCase display text was incorrectly exempted")
 
     def test_bootstrap_skips_regression_leg(self):
         """--bootstrap must skip the regression leg (no merge-base baseline to compare against)."""

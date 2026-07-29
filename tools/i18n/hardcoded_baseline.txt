@@ -8,14 +8,9 @@
 2	app/src/main/java/tv/own/owntv/core/backup/BackupContainer.kt	Not an OwnTV backup file
 1	app/src/main/java/tv/own/owntv/core/backup/BackupContainer.kt	OWNTVBK1
 1	app/src/main/java/tv/own/owntv/core/backup/BackupContainer.kt	Truncated backup file
-1	app/src/main/java/tv/own/owntv/core/backup/BackupContainer.kt	scheme
 1	app/src/main/java/tv/own/owntv/core/backup/BackupCrypto.kt	AES
 1	app/src/main/java/tv/own/owntv/core/backup/BackupCrypto.kt	PBKDF2WithHmacSHA256
 1	app/src/main/java/tv/own/owntv/core/backup/BackupCrypto.kt	Truncated encrypted backup
-2	app/src/main/java/tv/own/owntv/core/backup/BackupCrypto.kt	iterations
-1	app/src/main/java/tv/own/owntv/core/backup/BackupCrypto.kt	kdf
-2	app/src/main/java/tv/own/owntv/core/backup/BackupCrypto.kt	salt
-1	app/src/main/java/tv/own/owntv/core/backup/BackupCrypto.kt	scheme
 1	app/src/main/java/tv/own/owntv/core/backup/BackupManager.kt	$mapped:${k.substringAfter(':')}
 1	app/src/main/java/tv/own/owntv/core/backup/BackupManager.kt	$skippedSources sources were skipped — they use playlist types this version doesn't support.
 1	app/src/main/java/tv/own/owntv/core/backup/BackupManager.kt	$type|${url.trim()}|${username.orEmpty()}
@@ -44,82 +39,25 @@
 1	app/src/main/java/tv/own/owntv/core/backup/BackupManager.kt	Where you stopped in movies & episodes
 1	app/src/main/java/tv/own/owntv/core/backup/BackupManager.kt	Wrong backup password
 1	app/src/main/java/tv/own/owntv/core/backup/BackupManager.kt	Your Move up/down positions for channels, movies and series
-2	app/src/main/java/tv/own/owntv/core/backup/BackupManager.kt	avatarColor
-2	app/src/main/java/tv/own/owntv/core/backup/BackupManager.kt	avatarId
 1	app/src/main/java/tv/own/owntv/core/backup/BackupManager.kt	background_${System.currentTimeMillis()}.$ext
-2	app/src/main/java/tv/own/owntv/core/backup/BackupManager.kt	compatMode
-4	app/src/main/java/tv/own/owntv/core/backup/BackupManager.kt	createdAt
-3	app/src/main/java/tv/own/owntv/core/backup/BackupManager.kt	crypto
-1	app/src/main/java/tv/own/owntv/core/backup/BackupManager.kt	cust_${pid}_${body.substringAfter('_')}
-3	app/src/main/java/tv/own/owntv/core/backup/BackupManager.kt	customizations
-2	app/src/main/java/tv/own/owntv/core/backup/BackupManager.kt	customizePins
-4	app/src/main/java/tv/own/owntv/core/backup/BackupManager.kt	defaultSourceId
+1	app/src/main/java/tv/own/owntv/core/backup/BackupManager.kt	customizations
 1	app/src/main/java/tv/own/owntv/core/backup/BackupManager.kt	encrypted=${crypto != null} key=${key != null} profiles=${fileProfiles.length()} sources=${fileSources.length()}
-2	app/src/main/java/tv/own/owntv/core/backup/BackupManager.kt	epgAutoRefresh
-2	app/src/main/java/tv/own/owntv/core/backup/BackupManager.kt	epgSources
-2	app/src/main/java/tv/own/owntv/core/backup/BackupManager.kt	epgUrl
-2	app/src/main/java/tv/own/owntv/core/backup/BackupManager.kt	epgUseLogos
+1	app/src/main/java/tv/own/owntv/core/backup/BackupManager.kt	epgUrl
 2	app/src/main/java/tv/own/owntv/core/backup/BackupManager.kt	fav
-3	app/src/main/java/tv/own/owntv/core/backup/BackupManager.kt	hideNewCategories
 2	app/src/main/java/tv/own/owntv/core/backup/BackupManager.kt	his
-3	app/src/main/java/tv/own/owntv/core/backup/BackupManager.kt	homeConfigs
-2	app/src/main/java/tv/own/owntv/core/backup/BackupManager.kt	isKids
 1	app/src/main/java/tv/own/owntv/core/backup/BackupManager.kt	json
-2	app/src/main/java/tv/own/owntv/core/backup/BackupManager.kt	kind
-3	app/src/main/java/tv/own/owntv/core/backup/BackupManager.kt	lastSyncAt
-2	app/src/main/java/tv/own/owntv/core/backup/BackupManager.kt	links
-2	app/src/main/java/tv/own/owntv/core/backup/BackupManager.kt	liveMpvUrls
-4	app/src/main/java/tv/own/owntv/core/backup/BackupManager.kt	mac
-4	app/src/main/java/tv/own/owntv/core/backup/BackupManager.kt	name
-3	app/src/main/java/tv/own/owntv/core/backup/BackupManager.kt	openSubtitles
 2	app/src/main/java/tv/own/owntv/core/backup/BackupManager.kt	order
 1	app/src/main/java/tv/own/owntv/core/backup/BackupManager.kt	own
-5	app/src/main/java/tv/own/owntv/core/backup/BackupManager.kt	p
-4	app/src/main/java/tv/own/owntv/core/backup/BackupManager.kt	password
-2	app/src/main/java/tv/own/owntv/core/backup/BackupManager.kt	pinHash
-2	app/src/main/java/tv/own/owntv/core/backup/BackupManager.kt	playlistAutoRefresh
 1	app/src/main/java/tv/own/owntv/core/backup/BackupManager.kt	png
-2	app/src/main/java/tv/own/owntv/core/backup/BackupManager.kt	profileId
-3	app/src/main/java/tv/own/owntv/core/backup/BackupManager.kt	profiles
 2	app/src/main/java/tv/own/owntv/core/backup/BackupManager.kt	prog
-1	app/src/main/java/tv/own/owntv/core/backup/BackupManager.kt	sections
-3	app/src/main/java/tv/own/owntv/core/backup/BackupManager.kt	session
-5	app/src/main/java/tv/own/owntv/core/backup/BackupManager.kt	settings
-2	app/src/main/java/tv/own/owntv/core/backup/BackupManager.kt	sourceId
-5	app/src/main/java/tv/own/owntv/core/backup/BackupManager.kt	sources
-2	app/src/main/java/tv/own/owntv/core/backup/BackupManager.kt	src
-2	app/src/main/java/tv/own/owntv/core/backup/BackupManager.kt	startupModes
-3	app/src/main/java/tv/own/owntv/core/backup/BackupManager.kt	syncLive
-3	app/src/main/java/tv/own/owntv/core/backup/BackupManager.kt	syncMovies
-3	app/src/main/java/tv/own/owntv/core/backup/BackupManager.kt	syncSeries
-3	app/src/main/java/tv/own/owntv/core/backup/BackupManager.kt	tmdbOverrides
-2	app/src/main/java/tv/own/owntv/core/backup/BackupManager.kt	type
-2	app/src/main/java/tv/own/owntv/core/backup/BackupManager.kt	url
-2	app/src/main/java/tv/own/owntv/core/backup/BackupManager.kt	userAgent
-3	app/src/main/java/tv/own/owntv/core/backup/BackupManager.kt	userData
-2	app/src/main/java/tv/own/owntv/core/backup/BackupManager.kt	username
-1	app/src/main/java/tv/own/owntv/core/backup/BackupManager.kt	version
-2	app/src/main/java/tv/own/owntv/core/backup/BackupManager.kt	vodExoUrls
-2	app/src/main/java/tv/own/owntv/core/backup/BackupManager.kt	vodMpvUrls
-1	app/src/main/java/tv/own/owntv/core/backup/BackupManager.kt	wallpaper
-3	app/src/main/java/tv/own/owntv/core/backup/UserDataResolver.kt	ctx
-3	app/src/main/java/tv/own/owntv/core/backup/UserDataResolver.kt	dur
+1	app/src/main/java/tv/own/owntv/core/backup/BackupManager.kt	userAgent
 1	app/src/main/java/tv/own/owntv/core/backup/UserDataResolver.kt	entries
-8	app/src/main/java/tv/own/owntv/core/backup/UserDataResolver.kt	fav
-8	app/src/main/java/tv/own/owntv/core/backup/UserDataResolver.kt	his
-8	app/src/main/java/tv/own/owntv/core/backup/UserDataResolver.kt	kind
-8	app/src/main/java/tv/own/owntv/core/backup/UserDataResolver.kt	name
-4	app/src/main/java/tv/own/owntv/core/backup/UserDataResolver.kt	oid
-8	app/src/main/java/tv/own/owntv/core/backup/UserDataResolver.kt	order
-8	app/src/main/java/tv/own/owntv/core/backup/UserDataResolver.kt	p
-6	app/src/main/java/tv/own/owntv/core/backup/UserDataResolver.kt	pos
-9	app/src/main/java/tv/own/owntv/core/backup/UserDataResolver.kt	prog
-8	app/src/main/java/tv/own/owntv/core/backup/UserDataResolver.kt	rid
-3	app/src/main/java/tv/own/owntv/core/backup/UserDataResolver.kt	season
-3	app/src/main/java/tv/own/owntv/core/backup/UserDataResolver.kt	sname
-8	app/src/main/java/tv/own/owntv/core/backup/UserDataResolver.kt	src
-3	app/src/main/java/tv/own/owntv/core/backup/UserDataResolver.kt	srid
-9	app/src/main/java/tv/own/owntv/core/backup/UserDataResolver.kt	t
+5	app/src/main/java/tv/own/owntv/core/backup/UserDataResolver.kt	fav
+5	app/src/main/java/tv/own/owntv/core/backup/UserDataResolver.kt	his
+5	app/src/main/java/tv/own/owntv/core/backup/UserDataResolver.kt	order
+5	app/src/main/java/tv/own/owntv/core/backup/UserDataResolver.kt	prog
+1	app/src/main/java/tv/own/owntv/core/backup/UserDataResolver.kt	rid
+1	app/src/main/java/tv/own/owntv/core/backup/UserDataResolver.kt	srid
 1	app/src/main/java/tv/own/owntv/core/companion/CompanionController.kt	.$extension
 1	app/src/main/java/tv/own/owntv/core/companion/CompanionController.kt	Could not open the local server.
 1	app/src/main/java/tv/own/owntv/core/companion/CompanionController.kt	Enter a valid port between 1 and 65535.
@@ -229,13 +167,7 @@
 1	app/src/main/java/tv/own/owntv/core/customize/CustomizationStore.kt	${ch.sourceId}:${ch.remoteId ?: ch.name}
 1	app/src/main/java/tv/own/owntv/core/customize/CustomizationStore.kt	${m.sourceId}:${m.remoteId ?: m.name}
 1	app/src/main/java/tv/own/owntv/core/customize/CustomizationStore.kt	${s.sourceId}:${s.remoteId ?: s.name}
-2	app/src/main/java/tv/own/owntv/core/customize/CustomizationStore.kt	catNames
-2	app/src/main/java/tv/own/owntv/core/customize/CustomizationStore.kt	catOrder
 1	app/src/main/java/tv/own/owntv/core/customize/CustomizationStore.kt	cust_${profileId}_${type.name}
-2	app/src/main/java/tv/own/owntv/core/customize/CustomizationStore.kt	epgMatch
-2	app/src/main/java/tv/own/owntv/core/customize/CustomizationStore.kt	hiddenCats
-2	app/src/main/java/tv/own/owntv/core/customize/CustomizationStore.kt	hiddenItems
-2	app/src/main/java/tv/own/owntv/core/customize/CustomizationStore.kt	itemNames
 1	app/src/main/java/tv/own/owntv/core/database/BulkInsertHelper.kt	ANALYZE `$table`
 1	app/src/main/java/tv/own/owntv/core/database/BulkInsertHelper.kt	DROP INDEX IF EXISTS `$name`
 1	app/src/main/java/tv/own/owntv/core/database/BulkInsertHelper.kt	DROP TRIGGER IF EXISTS `$triggerName`
@@ -243,7 +175,6 @@
 1	app/src/main/java/tv/own/owntv/core/database/BulkInsertHelper.kt	UNIQUE
 1	app/src/main/java/tv/own/owntv/core/database/BulkInsertHelper.kt	Unknown FTS table: $ftsTable
 2	app/src/main/java/tv/own/owntv/core/database/BulkInsertHelper.kt	Unknown table: $table
-1	app/src/main/java/tv/own/owntv/core/database/BulkInsertHelper.kt	categories
 1	app/src/main/java/tv/own/owntv/core/database/BulkInsertHelper.kt	else
 1	app/src/main/java/tv/own/owntv/core/database/BulkInsertHelper.kt	room_fts_content_sync_${it}_AFTER_INSERT
 1	app/src/main/java/tv/own/owntv/core/database/BulkInsertHelper.kt	} on ${state.table} ms=${SystemClock.elapsedRealtime() - start}
@@ -480,57 +411,16 @@
 2	app/src/main/java/tv/own/owntv/core/database/dao/SubtitleDao.kt	c.releaseName AS releaseName, c.format AS format, c.fileName AS fileName,
 2	app/src/main/java/tv/own/owntv/core/database/dao/SubtitleDao.kt	l.mediaType AS mediaType, c.language AS language, c.languageName AS languageName,
 1	app/src/main/java/tv/own/owntv/core/database/dao/TvProviderProgramDao.kt	AND mediaType = :mediaType AND groupId = :groupId LIMIT 1
-4	app/src/main/java/tv/own/owntv/core/database/entity/ContentEntities.kt	0
 1	app/src/main/java/tv/own/owntv/core/database/entity/ContentEntities.kt	categories
-14	app/src/main/java/tv/own/owntv/core/database/entity/ContentEntities.kt	categoryId
 1	app/src/main/java/tv/own/owntv/core/database/entity/ContentEntities.kt	channels
-1	app/src/main/java/tv/own/owntv/core/database/entity/ContentEntities.kt	epgChannelId
 1	app/src/main/java/tv/own/owntv/core/database/entity/ContentEntities.kt	episodes
-2	app/src/main/java/tv/own/owntv/core/database/entity/ContentEntities.kt	mediaType
 1	app/src/main/java/tv/own/owntv/core/database/entity/ContentEntities.kt	movies
-20	app/src/main/java/tv/own/owntv/core/database/entity/ContentEntities.kt	name
-1	app/src/main/java/tv/own/owntv/core/database/entity/ContentEntities.kt	number
-4	app/src/main/java/tv/own/owntv/core/database/entity/ContentEntities.kt	rating
-5	app/src/main/java/tv/own/owntv/core/database/entity/ContentEntities.kt	remoteId
-2	app/src/main/java/tv/own/owntv/core/database/entity/ContentEntities.kt	seasonId
 1	app/src/main/java/tv/own/owntv/core/database/entity/ContentEntities.kt	seasons
 1	app/src/main/java/tv/own/owntv/core/database/entity/ContentEntities.kt	series
-5	app/src/main/java/tv/own/owntv/core/database/entity/ContentEntities.kt	seriesId
-6	app/src/main/java/tv/own/owntv/core/database/entity/ContentEntities.kt	sortOrder
-22	app/src/main/java/tv/own/owntv/core/database/entity/ContentEntities.kt	sourceId
-1	app/src/main/java/tv/own/owntv/core/database/entity/EpgEntities.kt	0
-4	app/src/main/java/tv/own/owntv/core/database/entity/EpgEntities.kt	epgChannelId
-5	app/src/main/java/tv/own/owntv/core/database/entity/EpgEntities.kt	sourceId
-2	app/src/main/java/tv/own/owntv/core/database/entity/EpgEntities.kt	startMs
-1	app/src/main/java/tv/own/owntv/core/database/entity/EpgEntities.kt	stopMs
-1	app/src/main/java/tv/own/owntv/core/database/entity/MetadataEntities.kt	tmdbId
-2	app/src/main/java/tv/own/owntv/core/database/entity/MetadataEntities.kt	updatedAt
-2	app/src/main/java/tv/own/owntv/core/database/entity/ProfileEntities.kt	profileId
-1	app/src/main/java/tv/own/owntv/core/database/entity/ProfileEntities.kt	profiles
-3	app/src/main/java/tv/own/owntv/core/database/entity/ProfileEntities.kt	sourceId
 1	app/src/main/java/tv/own/owntv/core/database/entity/ProfileEntities.kt	sources
-1	app/src/main/java/tv/own/owntv/core/database/entity/ProfileEntities.kt	type
-1	app/src/main/java/tv/own/owntv/core/database/entity/SubtitleEntities.kt	0
-5	app/src/main/java/tv/own/owntv/core/database/entity/SubtitleEntities.kt	cacheId
-3	app/src/main/java/tv/own/owntv/core/database/entity/SubtitleEntities.kt	contentKey
-1	app/src/main/java/tv/own/owntv/core/database/entity/SubtitleEntities.kt	lastUsedAt
-1	app/src/main/java/tv/own/owntv/core/database/entity/SubtitleEntities.kt	mediaType
-1	app/src/main/java/tv/own/owntv/core/database/entity/SubtitleEntities.kt	openSubFileId
-10	app/src/main/java/tv/own/owntv/core/database/entity/SubtitleEntities.kt	profileId
-1	app/src/main/java/tv/own/owntv/core/database/entity/SubtitleEntities.kt	subtitleKey
-1	app/src/main/java/tv/own/owntv/core/database/entity/TvProviderEntities.kt	groupId
-1	app/src/main/java/tv/own/owntv/core/database/entity/TvProviderEntities.kt	mediaType
-3	app/src/main/java/tv/own/owntv/core/database/entity/TvProviderEntities.kt	profileId
-1	app/src/main/java/tv/own/owntv/core/database/entity/TvProviderEntities.kt	surface
 1	app/src/main/java/tv/own/owntv/core/database/entity/UserDataEntities.kt	__fav__
-2	app/src/main/java/tv/own/owntv/core/database/entity/UserDataEntities.kt	contextKey
 1	app/src/main/java/tv/own/owntv/core/database/entity/UserDataEntities.kt	downloads
 1	app/src/main/java/tv/own/owntv/core/database/entity/UserDataEntities.kt	favorites
-5	app/src/main/java/tv/own/owntv/core/database/entity/UserDataEntities.kt	itemId
-6	app/src/main/java/tv/own/owntv/core/database/entity/UserDataEntities.kt	mediaType
-17	app/src/main/java/tv/own/owntv/core/database/entity/UserDataEntities.kt	profileId
-1	app/src/main/java/tv/own/owntv/core/database/entity/UserDataEntities.kt	status
-1	app/src/main/java/tv/own/owntv/core/database/entity/UserDataEntities.kt	watchedAt
 1	app/src/main/java/tv/own/owntv/core/download/DownloadEngine.kt	Range
 1	app/src/main/java/tv/own/owntv/core/download/DownloadEngine.kt	User-Agent
 1	app/src/main/java/tv/own/owntv/core/download/DownloadEngine.kt	bytes=$existing-
@@ -541,21 +431,21 @@
 1	app/src/main/java/tv/own/owntv/core/epg/CatchupUrl.kt	UTC
 1	app/src/main/java/tv/own/owntv/core/epg/CatchupUrl.kt	Y
 1	app/src/main/java/tv/own/owntv/core/epg/CatchupUrl.kt	append
-3	app/src/main/java/tv/own/owntv/core/epg/CatchupUrl.kt	d
+2	app/src/main/java/tv/own/owntv/core/epg/CatchupUrl.kt	d
 1	app/src/main/java/tv/own/owntv/core/epg/CatchupUrl.kt	duration
 1	app/src/main/java/tv/own/owntv/core/epg/CatchupUrl.kt	end
-2	app/src/main/java/tv/own/owntv/core/epg/CatchupUrl.kt	h
-3	app/src/main/java/tv/own/owntv/core/epg/CatchupUrl.kt	m
-2	app/src/main/java/tv/own/owntv/core/epg/CatchupUrl.kt	min
+1	app/src/main/java/tv/own/owntv/core/epg/CatchupUrl.kt	h
+2	app/src/main/java/tv/own/owntv/core/epg/CatchupUrl.kt	m
+1	app/src/main/java/tv/own/owntv/core/epg/CatchupUrl.kt	min
 1	app/src/main/java/tv/own/owntv/core/epg/CatchupUrl.kt	offset
-2	app/src/main/java/tv/own/owntv/core/epg/CatchupUrl.kt	s
+1	app/src/main/java/tv/own/owntv/core/epg/CatchupUrl.kt	s
 1	app/src/main/java/tv/own/owntv/core/epg/CatchupUrl.kt	start
 1	app/src/main/java/tv/own/owntv/core/epg/CatchupUrl.kt	stop
 1	app/src/main/java/tv/own/owntv/core/epg/CatchupUrl.kt	timestamp
 1	app/src/main/java/tv/own/owntv/core/epg/CatchupUrl.kt	utc
 1	app/src/main/java/tv/own/owntv/core/epg/CatchupUrl.kt	utcend
 1	app/src/main/java/tv/own/owntv/core/epg/CatchupUrl.kt	utcstart
-2	app/src/main/java/tv/own/owntv/core/epg/CatchupUrl.kt	y
+1	app/src/main/java/tv/own/owntv/core/epg/CatchupUrl.kt	y
 1	app/src/main/java/tv/own/owntv/core/epg/EpgMatcher.kt	0
 1	app/src/main/java/tv/own/owntv/core/epg/EpgMatcher.kt	1
 1	app/src/main/java/tv/own/owntv/core/epg/EpgMatcher.kt	10
@@ -657,27 +547,14 @@
 1	app/src/main/java/tv/own/owntv/core/epg/EpgMigration.kt	${src.name} EPG
 1	app/src/main/java/tv/own/owntv/core/epg/EpgSourceStore.kt	EPG
 1	app/src/main/java/tv/own/owntv/core/epg/EpgSourceStore.kt	[]
-2	app/src/main/java/tv/own/owntv/core/epg/EpgSourceStore.kt	err
-2	app/src/main/java/tv/own/owntv/core/epg/EpgSourceStore.kt	name
 1	app/src/main/java/tv/own/owntv/core/epg/EpgSourceStore.kt	sources
-2	app/src/main/java/tv/own/owntv/core/epg/EpgSourceStore.kt	url
 1	app/src/main/java/tv/own/owntv/core/i18n/LocaleStore.kt	Failed to persist application locale
-3	app/src/main/java/tv/own/owntv/core/launcher/LauncherDeepLink.kt	episode
-2	app/src/main/java/tv/own/owntv/core/launcher/LauncherDeepLink.kt	episodeRemoteId
-6	app/src/main/java/tv/own/owntv/core/launcher/LauncherDeepLink.kt	itemId
+1	app/src/main/java/tv/own/owntv/core/launcher/LauncherDeepLink.kt	episode
 2	app/src/main/java/tv/own/owntv/core/launcher/LauncherDeepLink.kt	live
 1	app/src/main/java/tv/own/owntv/core/launcher/LauncherDeepLink.kt	movie
-4	app/src/main/java/tv/own/owntv/core/launcher/LauncherDeepLink.kt	name
 1	app/src/main/java/tv/own/owntv/core/launcher/LauncherDeepLink.kt	open
 1	app/src/main/java/tv/own/owntv/core/launcher/LauncherDeepLink.kt	owntv
 1	app/src/main/java/tv/own/owntv/core/launcher/LauncherDeepLink.kt	play
-4	app/src/main/java/tv/own/owntv/core/launcher/LauncherDeepLink.kt	remoteId
-2	app/src/main/java/tv/own/owntv/core/launcher/LauncherDeepLink.kt	season
-2	app/src/main/java/tv/own/owntv/core/launcher/LauncherDeepLink.kt	seriesId
-2	app/src/main/java/tv/own/owntv/core/launcher/LauncherDeepLink.kt	seriesName
-2	app/src/main/java/tv/own/owntv/core/launcher/LauncherDeepLink.kt	seriesRemoteId
-2	app/src/main/java/tv/own/owntv/core/launcher/LauncherDeepLink.kt	seriesSourceId
-4	app/src/main/java/tv/own/owntv/core/launcher/LauncherDeepLink.kt	sourceId
 1	app/src/main/java/tv/own/owntv/core/launcher/LauncherRecommendationPlanner.kt	Episode ${targetEpisode.episodeNumber}
 1	app/src/main/java/tv/own/owntv/core/launcher/LauncherRecommendationPlanner.kt	Movie
 1	app/src/main/java/tv/own/owntv/core/launcher/LauncherRecommendationPlanner.kt	SHA-256
@@ -690,8 +567,6 @@
 2	app/src/main/java/tv/own/owntv/core/metadata/MetadataImages.kt	w500
 1	app/src/main/java/tv/own/owntv/core/metadata/MetadataImages.kt	w780
 1	app/src/main/java/tv/own/owntv/core/metadata/MetadataOverrideStore.kt	overrides
-2	app/src/main/java/tv/own/owntv/core/metadata/MetadataOverrideStore.kt	t
-2	app/src/main/java/tv/own/owntv/core/metadata/MetadataOverrideStore.kt	y
 1	app/src/main/java/tv/own/owntv/core/metadata/MetadataProvider.kt	$lang-${l.country}
 1	app/src/main/java/tv/own/owntv/core/metadata/MetadataProvider.kt	Default (shared)
 1	app/src/main/java/tv/own/owntv/core/metadata/MetadataProvider.kt	Provider + TMDB
@@ -718,33 +593,15 @@
 1	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	&include_image_language=
 1	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	&language=
 1	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	&year=$year
-4	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	?
+2	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	?
 2	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	?append_to_response=credits,external_ids,videos,images
 1	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	?query=
 1	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	Teaser
 1	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	Trailer
 1	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	UTF-8
-1	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	YouTube
 1	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	api_key=
-2	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	cast
-2	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	credits
 1	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	en,null
-2	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	genres
-1	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	images
-1	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	key
 1	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	language=
-1	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	logos
-7	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	name
-12	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	null
-1	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	official
-4	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	overview
-1	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	popularity
-2	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	results
-1	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	site
-2	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	title
-1	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	type
-1	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	videos
-1	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	width
 1	app/src/main/java/tv/own/owntv/core/network/HttpClient.kt	).orEmpty()} headersMs=${headersAt - startedAt}
 1	app/src/main/java/tv/own/owntv/core/network/HttpClient.kt	Empty response body for ${redact(url)}
 1	app/src/main/java/tv/own/owntv/core/network/HttpClient.kt	GET body progress url=$label bytes=$bytesRead total=${totalBytes ?: -1}
@@ -773,7 +630,6 @@
 2	app/src/main/java/tv/own/owntv/core/parser/M3uParser.kt	movie
 1	app/src/main/java/tv/own/owntv/core/parser/M3uParser.kt	parse progress entries=$entries deltaMs=${now - lastLogAt}
 1	app/src/main/java/tv/own/owntv/core/parser/M3uParser.kt	parseOrReadMs=$parseOrReadDelta callbackMs=$callbackDelta
-2	app/src/main/java/tv/own/owntv/core/parser/M3uParser.kt	series
 1	app/src/main/java/tv/own/owntv/core/parser/M3uParser.kt	totalMs=${now - startedAt}
 1	app/src/main/java/tv/own/owntv/core/parser/M3uParser.kt	totalParseOrReadMs=${metrics.parseOrReadMs} totalCallbackMs=${metrics.callbackMs}
 1	app/src/main/java/tv/own/owntv/core/parser/M3uParser.kt	type
@@ -801,8 +657,6 @@
 1	app/src/main/java/tv/own/owntv/core/parser/XtreamClient.kt	${base(s)}/movie/${s.username}/${s.password}/$streamId.${ext ?:
 1	app/src/main/java/tv/own/owntv/core/parser/XtreamClient.kt	${base(s)}/series/${s.username}/${s.password}/$episodeId.${ext ?:
 1	app/src/main/java/tv/own/owntv/core/parser/XtreamClient.kt	&category_id=$it
-1	app/src/main/java/tv/own/owntv/core/parser/XtreamClient.kt	&series_id=$seriesId
-1	app/src/main/java/tv/own/owntv/core/parser/XtreamClient.kt	&stream_id=$streamId&limit=$limit
 1	app/src/main/java/tv/own/owntv/core/parser/XtreamClient.kt	Episode $epNum
 1	app/src/main/java/tv/own/owntv/core/parser/XtreamClient.kt	Stream truncated after $count items label=$label — partial list kept
 1	app/src/main/java/tv/own/owntv/core/parser/XtreamClient.kt	UTC
@@ -868,7 +722,6 @@
 1	app/src/main/java/tv/own/owntv/core/repository/SourceRepository.kt	Cancelled
 1	app/src/main/java/tv/own/owntv/core/repository/SourceRepository.kt	Failed
 1	app/src/main/java/tv/own/owntv/core/repository/SourceRepository.kt	Success
-1	app/src/main/java/tv/own/owntv/core/repository/SourceRepository.kt	t
 1	app/src/main/java/tv/own/owntv/core/repository/SourceRepository.kt	types=$counts
 2	app/src/main/java/tv/own/owntv/core/stalker/StalkerAuthManager.kt	] ?:
 1	app/src/main/java/tv/own/owntv/core/stalker/StalkerAuthManager.kt	profileFields=${profile.size} status=${profile[
@@ -958,17 +811,8 @@
 1	app/src/main/java/tv/own/owntv/core/subtitles/MovieHash.kt	r
 1	app/src/main/java/tv/own/owntv/core/subtitles/OpenSubtitlesAuthStore.kt	$iv:$body
 1	app/src/main/java/tv/own/owntv/core/subtitles/OpenSubtitlesAuthStore.kt	AndroidKeyStore
-3	app/src/main/java/tv/own/owntv/core/subtitles/OpenSubtitlesAuthStore.kt	alw
-2	app/src/main/java/tv/own/owntv/core/subtitles/OpenSubtitlesAuthStore.kt	h
-3	app/src/main/java/tv/own/owntv/core/subtitles/OpenSubtitlesAuthStore.kt	lvl
 1	app/src/main/java/tv/own/owntv/core/subtitles/OpenSubtitlesAuthStore.kt	malformed sealed blob
-3	app/src/main/java/tv/own/owntv/core/subtitles/OpenSubtitlesAuthStore.kt	p
 1	app/src/main/java/tv/own/owntv/core/subtitles/OpenSubtitlesAuthStore.kt	profile_$profileId
-3	app/src/main/java/tv/own/owntv/core/subtitles/OpenSubtitlesAuthStore.kt	rem
-3	app/src/main/java/tv/own/owntv/core/subtitles/OpenSubtitlesAuthStore.kt	rst
-2	app/src/main/java/tv/own/owntv/core/subtitles/OpenSubtitlesAuthStore.kt	t
-2	app/src/main/java/tv/own/owntv/core/subtitles/OpenSubtitlesAuthStore.kt	u
-2	app/src/main/java/tv/own/owntv/core/subtitles/OpenSubtitlesAuthStore.kt	vip
 1	app/src/main/java/tv/own/owntv/core/subtitles/OpenSubtitlesClient.kt	${it.key}=${java.net.URLEncoder.encode(it.value,
 1	app/src/main/java/tv/own/owntv/core/subtitles/OpenSubtitlesClient.kt	&
 1	app/src/main/java/tv/own/owntv/core/subtitles/OpenSubtitlesClient.kt	)}
@@ -984,22 +828,13 @@
 2	app/src/main/java/tv/own/owntv/core/subtitles/OpenSubtitlesClient.kt	POST
 1	app/src/main/java/tv/own/owntv/core/subtitles/OpenSubtitlesClient.kt	User-Agent
 1	app/src/main/java/tv/own/owntv/core/subtitles/OpenSubtitlesClient.kt	X-OS-Host
-1	app/src/main/java/tv/own/owntv/core/subtitles/OpenSubtitlesClient.kt	data
-1	app/src/main/java/tv/own/owntv/core/subtitles/OpenSubtitlesClient.kt	level
-1	app/src/main/java/tv/own/owntv/core/subtitles/OpenSubtitlesClient.kt	password
-1	app/src/main/java/tv/own/owntv/core/subtitles/OpenSubtitlesClient.kt	srt
-1	app/src/main/java/tv/own/owntv/core/subtitles/OpenSubtitlesClient.kt	token
-1	app/src/main/java/tv/own/owntv/core/subtitles/OpenSubtitlesClient.kt	user
-2	app/src/main/java/tv/own/owntv/core/subtitles/OpenSubtitlesClient.kt	username
-1	app/src/main/java/tv/own/owntv/core/subtitles/OpenSubtitlesClient.kt	vip
-1	app/src/main/java/tv/own/owntv/core/subtitles/SubtitleController.kt	$title · S${season}E${episode}
 1	app/src/main/java/tv/own/owntv/core/subtitles/SubtitleController.kt	,
 1	app/src/main/java/tv/own/owntv/core/subtitles/SubtitleController.kt	Local file
-2	app/src/main/java/tv/own/owntv/core/subtitles/SubtitleController.kt	MOVIE
+1	app/src/main/java/tv/own/owntv/core/subtitles/SubtitleController.kt	MOVIE
 1	app/src/main/java/tv/own/owntv/core/subtitles/SubtitleController.kt	No active profile
 2	app/src/main/java/tv/own/owntv/core/subtitles/SubtitleController.kt	No item is playing
 1	app/src/main/java/tv/own/owntv/core/subtitles/SubtitleController.kt	OpenSubtitles
-2	app/src/main/java/tv/own/owntv/core/subtitles/SubtitleController.kt	SERIES
+1	app/src/main/java/tv/own/owntv/core/subtitles/SubtitleController.kt	SERIES
 1	app/src/main/java/tv/own/owntv/core/subtitles/SubtitleController.kt	ara
 1	app/src/main/java/tv/own/owntv/core/subtitles/SubtitleController.kt	chi
 1	app/src/main/java/tv/own/owntv/core/subtitles/SubtitleController.kt	deu
@@ -1038,12 +873,8 @@
 1	app/src/main/java/tv/own/owntv/core/subtitles/SubtitleRepository.kt	The selected subtitle file is empty.
 1	app/src/main/java/tv/own/owntv/core/subtitles/SubtitleRepository.kt	The selected subtitle file is no longer available.
 1	app/src/main/java/tv/own/owntv/core/subtitles/SubtitleRepository.kt	ass
-1	app/src/main/java/tv/own/owntv/core/subtitles/SubtitleRepository.kt	link
-1	app/src/main/java/tv/own/owntv/core/subtitles/SubtitleRepository.kt	local:$cacheId
 1	app/src/main/java/tv/own/owntv/core/subtitles/SubtitleRepository.kt	local_${now()}_${file.nameWithoutExtension}.$format
-1	app/src/main/java/tv/own/owntv/core/subtitles/SubtitleRepository.kt	opensub:$it
 1	app/src/main/java/tv/own/owntv/core/subtitles/SubtitleRepository.kt	opensub_${fileId}.$format
-1	app/src/main/java/tv/own/owntv/core/subtitles/SubtitleRepository.kt	remaining
 3	app/src/main/java/tv/own/owntv/core/subtitles/SubtitleRepository.kt	srt
 1	app/src/main/java/tv/own/owntv/core/subtitles/SubtitleRepository.kt	ssa
 1	app/src/main/java/tv/own/owntv/core/subtitles/SubtitleRepository.kt	subtitles
@@ -1068,7 +899,6 @@
 2	app/src/main/java/tv/own/owntv/core/sync/ImportFinalizer.kt	series
 1	app/src/main/java/tv/own/owntv/core/sync/ImportFinalizer.kt	synced
 2	app/src/main/java/tv/own/owntv/core/sync/ImportFinalizer.kt	·
-1	app/src/main/java/tv/own/owntv/core/sync/M3uSyncer.kt	
 1	app/src/main/java/tv/own/owntv/core/sync/M3uSyncer.kt	$base$KEY_SEPARATOR#$n
 1	app/src/main/java/tv/own/owntv/core/sync/M3uSyncer.kt	$name$KEY_SEPARATOR${group.orEmpty()}
 1	app/src/main/java/tv/own/owntv/core/sync/M3uSyncer.kt	${show.name}$KEY_SEPARATOR${show.group.orEmpty()}
@@ -1095,8 +925,6 @@
 1	app/src/main/java/tv/own/owntv/core/sync/StalkerSyncer.kt	$label cat=${cat.id} page=1
 1	app/src/main/java/tv/own/owntv/core/sync/StalkerSyncer.kt	$label fieldDiff sourceId=$sourceId remoteId=${c.remoteId} hash=${c.computeContentHash()}
 1	app/src/main/java/tv/own/owntv/core/sync/StalkerSyncer.kt	${SyncPhase.LIVE.label} genre=$genreId page=$page
-1	app/src/main/java/tv/own/owntv/core/sync/StalkerSyncer.kt	${pageFailures.get()} portal page(s) failed — some channels may be missing until the next sync
-1	app/src/main/java/tv/own/owntv/core/sync/StalkerSyncer.kt	${pageFailures.get()} portal page(s) failed — some items may be missing until the next sync
 4	app/src/main/java/tv/own/owntv/core/sync/StalkerSyncer.kt	*
 1	app/src/main/java/tv/own/owntv/core/sync/StalkerSyncer.kt	Stalker source ${s.id} has no valid MAC address
 1	app/src/main/java/tv/own/owntv/core/sync/StalkerSyncer.kt	catchupSource=${c.catchupSource.hashCode()} sortOrder=${c.sortOrder}
@@ -1185,35 +1013,12 @@
 1	app/src/main/java/tv/own/owntv/core/sync/work/CatalogSyncWorker.kt	Progress emit total=${stage.totalProcessed} live=${stage.liveProcessed}
 1	app/src/main/java/tv/own/owntv/core/sync/work/CatalogSyncWorker.kt	Starting sync for source ${source.id} (${source.name}) reason=$reason
 1	app/src/main/java/tv/own/owntv/core/sync/work/CatalogSyncWorker.kt	Success
-1	app/src/main/java/tv/own/owntv/core/sync/work/CatalogSyncWorker.kt	baseItemCount
-1	app/src/main/java/tv/own/owntv/core/sync/work/CatalogSyncWorker.kt	completesInitialSync
 1	app/src/main/java/tv/own/owntv/core/sync/work/CatalogSyncWorker.kt	contentTypes=$contentTypes effective=$effective baseItemCount=$baseItemCount forcePrune=$forcePrune
-1	app/src/main/java/tv/own/owntv/core/sync/work/CatalogSyncWorker.kt	forcePrune
-1	app/src/main/java/tv/own/owntv/core/sync/work/CatalogSyncWorker.kt	live
-1	app/src/main/java/tv/own/owntv/core/sync/work/CatalogSyncWorker.kt	liveActive
-1	app/src/main/java/tv/own/owntv/core/sync/work/CatalogSyncWorker.kt	liveProcessed
-1	app/src/main/java/tv/own/owntv/core/sync/work/CatalogSyncWorker.kt	movies
 1	app/src/main/java/tv/own/owntv/core/sync/work/CatalogSyncWorker.kt	movies=${stage.moviesProcessed} series=${stage.seriesProcessed}
-1	app/src/main/java/tv/own/owntv/core/sync/work/CatalogSyncWorker.kt	moviesActive
-1	app/src/main/java/tv/own/owntv/core/sync/work/CatalogSyncWorker.kt	moviesProcessed
-1	app/src/main/java/tv/own/owntv/core/sync/work/CatalogSyncWorker.kt	reason
-1	app/src/main/java/tv/own/owntv/core/sync/work/CatalogSyncWorker.kt	series
-1	app/src/main/java/tv/own/owntv/core/sync/work/CatalogSyncWorker.kt	seriesActive
-1	app/src/main/java/tv/own/owntv/core/sync/work/CatalogSyncWorker.kt	seriesProcessed
 1	app/src/main/java/tv/own/owntv/core/sync/work/CatalogSyncWorker.kt	sinceLastMs=${now - lastEmitAtMs}
-1	app/src/main/java/tv/own/owntv/core/sync/work/CatalogSyncWorker.kt	sourceId
-1	app/src/main/java/tv/own/owntv/core/sync/work/CatalogSyncWorker.kt	unknown
-1	app/src/main/java/tv/own/owntv/core/sync/work/ContentIndexWorker.kt	reason
-1	app/src/main/java/tv/own/owntv/core/sync/work/ContentIndexWorker.kt	unknown
 1	app/src/main/java/tv/own/owntv/core/sync/work/EpgSyncScheduler.kt	epg-source-$sourceId
 1	app/src/main/java/tv/own/owntv/core/sync/work/EpgSyncScheduler.kt	epg-sync-source-$sourceId
 1	app/src/main/java/tv/own/owntv/core/sync/work/EpgSyncWorker.kt	EPG sync finished sourceId=${source.id} reason=$reason programmes=$programmes ms=${SystemClock.elapsedRealtime() - startedAt}
-1	app/src/main/java/tv/own/owntv/core/sync/work/EpgSyncWorker.kt	baseProgrammes
-1	app/src/main/java/tv/own/owntv/core/sync/work/EpgSyncWorker.kt	channels
-1	app/src/main/java/tv/own/owntv/core/sync/work/EpgSyncWorker.kt	programmes
-1	app/src/main/java/tv/own/owntv/core/sync/work/EpgSyncWorker.kt	reason
-1	app/src/main/java/tv/own/owntv/core/sync/work/EpgSyncWorker.kt	sourceId
-1	app/src/main/java/tv/own/owntv/core/sync/work/EpgSyncWorker.kt	unknown
 1	app/src/main/java/tv/own/owntv/core/tv/TvHomeDeepLink.kt	Use tv.own.owntv.core.launcher.LauncherDeepLink
 1	app/src/main/java/tv/own/owntv/core/tv/TvHomeDeepLink.kt	Use tv.own.owntv.core.launcher.LauncherLaunch
 1	app/src/main/java/tv/own/owntv/core/tv/TvHomeRepository.kt	${surface.name}:${mediaType.name}:$groupId
@@ -1284,11 +1089,7 @@
 2	app/src/main/java/tv/own/owntv/core/update/UpdateManager.kt	OwnTV
 1	app/src/main/java/tv/own/owntv/core/update/UpdateManager.kt	The latest release has no APK attached
 2	app/src/main/java/tv/own/owntv/core/update/UpdateManager.kt	User-Agent
-1	app/src/main/java/tv/own/owntv/core/update/UpdateManager.kt	assets
-1	app/src/main/java/tv/own/owntv/core/update/UpdateManager.kt	body
-1	app/src/main/java/tv/own/owntv/core/update/UpdateManager.kt	name
 1	app/src/main/java/tv/own/owntv/core/update/UpdateManager.kt	updates
-1	app/src/main/java/tv/own/owntv/core/update/UpdateManager.kt	v
 1	app/src/main/java/tv/own/owntv/core/util/ErrorMessages.kt	Couldn't connect to the server. It may be down, or the address may be wrong.
 1	app/src/main/java/tv/own/owntv/core/util/ErrorMessages.kt	Couldn't reach the portal. Check the portal URL — it usually ends in /c/.
 1	app/src/main/java/tv/own/owntv/core/util/ErrorMessages.kt	Couldn't reach the server. Check the address and your connection.
@@ -1324,17 +1125,9 @@
 1	app/src/main/java/tv/own/owntv/core/weather/WeatherRepository.kt	UTF-8
 1	app/src/main/java/tv/own/owntv/core/weather/WeatherRepository.kt	User-Agent
 1	app/src/main/java/tv/own/owntv/core/weather/WeatherRepository.kt	Weather fetch failed: $msg
-1	app/src/main/java/tv/own/owntv/core/weather/WeatherRepository.kt	city
-1	app/src/main/java/tv/own/owntv/core/weather/WeatherRepository.kt	current
-1	app/src/main/java/tv/own/owntv/core/weather/WeatherRepository.kt	geo no match
-2	app/src/main/java/tv/own/owntv/core/weather/WeatherRepository.kt	latitude
-2	app/src/main/java/tv/own/owntv/core/weather/WeatherRepository.kt	longitude
-1	app/src/main/java/tv/own/owntv/core/weather/WeatherRepository.kt	name
 1	app/src/main/java/tv/own/owntv/core/weather/WeatherRepository.kt	no geo
 1	app/src/main/java/tv/own/owntv/core/weather/WeatherRepository.kt	no loc
 1	app/src/main/java/tv/own/owntv/core/weather/WeatherRepository.kt	no weather
-1	app/src/main/java/tv/own/owntv/core/weather/WeatherRepository.kt	region
-1	app/src/main/java/tv/own/owntv/core/weather/WeatherRepository.kt	results
 2	app/src/main/java/tv/own/owntv/di/DataModule.kt	User-Agent
 1	app/src/main/java/tv/own/owntv/di/DataModule.kt	backgrounds
 1	app/src/main/java/tv/own/owntv/features/customize/CustomizeScreen.kt	$count ${if (count == 1)
@@ -1414,8 +1207,6 @@
 1	app/src/main/java/tv/own/owntv/features/downloads/DownloadsScreen.kt	Series
 1	app/src/main/java/tv/own/owntv/features/downloads/DownloadsScreen.kt	Storage
 1	app/src/main/java/tv/own/owntv/features/downloads/DownloadsScreen.kt	Waiting
-1	app/src/main/java/tv/own/owntv/features/downloads/DownloadsScreen.kt	d_${download.id}
-1	app/src/main/java/tv/own/owntv/features/downloads/DownloadsScreen.kt	hdr_$label
 2	app/src/main/java/tv/own/owntv/features/downloads/DownloadsScreen.kt	—
 1	app/src/main/java/tv/own/owntv/features/downloads/DownloadsScreen.kt	›
 1	app/src/main/java/tv/own/owntv/features/epg/EpgScreen.kt	$it ${channel.name}
@@ -1514,16 +1305,14 @@
 1	app/src/main/java/tv/own/owntv/features/home/HomeRow.kt	Recent Channels
 1	app/src/main/java/tv/own/owntv/features/home/HomeRow.kt	The large preview row at the top
 1	app/src/main/java/tv/own/owntv/features/home/HomeRow.kt	Your favourited live channels
-2	app/src/main/java/tv/own/owntv/features/home/HomeRow.kt	favoriteLiveMode
+1	app/src/main/java/tv/own/owntv/features/home/HomeRow.kt	favoriteLiveMode
 1	app/src/main/java/tv/own/owntv/features/home/HomeRow.kt	heroIncludeLive
 1	app/src/main/java/tv/own/owntv/features/home/HomeRow.kt	heroIncludeMovies
 1	app/src/main/java/tv/own/owntv/features/home/HomeRow.kt	heroIncludeSeries
-2	app/src/main/java/tv/own/owntv/features/home/HomeRow.kt	heroLive
-2	app/src/main/java/tv/own/owntv/features/home/HomeRow.kt	heroMovies
-2	app/src/main/java/tv/own/owntv/features/home/HomeRow.kt	heroSeries
-3	app/src/main/java/tv/own/owntv/features/home/HomeRow.kt	hidden
-2	app/src/main/java/tv/own/owntv/features/home/HomeRow.kt	order
-2	app/src/main/java/tv/own/owntv/features/home/HomeRow.kt	recentLiveMode
+1	app/src/main/java/tv/own/owntv/features/home/HomeRow.kt	heroLive
+1	app/src/main/java/tv/own/owntv/features/home/HomeRow.kt	heroMovies
+1	app/src/main/java/tv/own/owntv/features/home/HomeRow.kt	heroSeries
+1	app/src/main/java/tv/own/owntv/features/home/HomeRow.kt	recentLiveMode
 1	app/src/main/java/tv/own/owntv/features/home/HomeScreen.kt	All Home rows are hidden.
 1	app/src/main/java/tv/own/owntv/features/home/HomeScreen.kt	Continue watching will show up on Home once you have playback history.
 1	app/src/main/java/tv/own/owntv/features/home/HomeScreen.kt	E%02d
@@ -2356,7 +2145,6 @@
 1	app/src/main/java/tv/own/owntv/features/settings/data/SettingsRepository.kt	catchup
 1	app/src/main/java/tv/own/owntv/features/settings/data/SettingsRepository.kt	customize_pin_$pid
 2	app/src/main/java/tv/own/owntv/features/settings/data/SettingsRepository.kt	customize_pin_$profileId
-1	app/src/main/java/tv/own/owntv/features/settings/data/SettingsRepository.kt	hide_new_categories_$pid
 2	app/src/main/java/tv/own/owntv/features/settings/data/SettingsRepository.kt	hide_new_categories_$profileId
 1	app/src/main/java/tv/own/owntv/features/settings/data/SettingsRepository.kt	home_config_$profileId
 1	app/src/main/java/tv/own/owntv/features/settings/data/SettingsRepository.kt	startup_mode_$pid
@@ -2868,11 +2656,6 @@
 1	app/src/main/java/tv/own/owntv/features/subtitles/SubtitleSearchViewModel.kt	Couldn't reach OpenSubtitles. Check your internet connection and try again.
 1	app/src/main/java/tv/own/owntv/features/subtitles/SubtitleSearchViewModel.kt	Subtitle
 1	app/src/main/java/tv/own/owntv/features/subtitles/SubtitleSearchViewModel.kt	Your OpenSubtitles download limit has been reached. Embedded subtitles and local subtitle files are still available.
-1	app/src/main/java/tv/own/owntv/features/subtitles/SubtitleSearchViewModel.kt	attributes
-1	app/src/main/java/tv/own/owntv/features/subtitles/SubtitleSearchViewModel.kt	data
-1	app/src/main/java/tv/own/owntv/features/subtitles/SubtitleSearchViewModel.kt	files
-1	app/src/main/java/tv/own/owntv/features/subtitles/SubtitleSearchViewModel.kt	language
-1	app/src/main/java/tv/own/owntv/features/subtitles/SubtitleSearchViewModel.kt	release
 1	app/src/main/java/tv/own/owntv/features/subtitles/SubtitleSearchViewModel.kt	· resets in $r
 2	app/src/main/java/tv/own/owntv/features/update/UpdateDialog.kt	##
 2	app/src/main/java/tv/own/owntv/features/update/UpdateDialog.kt	###
@@ -3274,14 +3057,6 @@
 1	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	•
 1	app/src/main/java/tv/own/owntv/player/PlaybackErrorLog.kt	${Build.MANUFACTURER} ${Build.MODEL}
 1	app/src/main/java/tv/own/owntv/player/PlaybackErrorLog.kt	Android ${Build.VERSION.RELEASE} (API ${Build.VERSION.SDK_INT})
-2	app/src/main/java/tv/own/owntv/player/PlaybackErrorLog.kt	android
-2	app/src/main/java/tv/own/owntv/player/PlaybackErrorLog.kt	atMs
-2	app/src/main/java/tv/own/owntv/player/PlaybackErrorLog.kt	engine
-2	app/src/main/java/tv/own/owntv/player/PlaybackErrorLog.kt	live
-2	app/src/main/java/tv/own/owntv/player/PlaybackErrorLog.kt	model
-2	app/src/main/java/tv/own/owntv/player/PlaybackErrorLog.kt	raw
-2	app/src/main/java/tv/own/owntv/player/PlaybackErrorLog.kt	reason
-2	app/src/main/java/tv/own/owntv/player/PlaybackErrorLog.kt	spec
 1	app/src/main/java/tv/own/owntv/player/PlayerBudget.kt	10
 1	app/src/main/java/tv/own/owntv/player/PlayerBudget.kt	120
 1	app/src/main/java/tv/own/owntv/player/PlayerBudget.kt	128MiB

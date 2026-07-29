@@ -192,9 +192,31 @@ _EXPECTED_TIER1_TAGS = {
     "ja", "ko", "nb", "pl", "ru", "es-US", "es-ES", "sv", "tr",
 }
 
-# Valid Android resource qualifier forms for locales: xx, xx-rYY, xx-rYYY (3-digit? no, region is 2),
-# xx-Script (4 letters). We allow: [a-z]{2,3}, [a-z]{2}-r[A-Z]{2}, [a-z]{2}-[A-Z][a-z]{3}.
-_QUAL_RE = re.compile(r"^[a-z]{2,3}(?:-r[A-Z]{2}|-[A-Z][a-z]{3})?$")
+# Valid Android resource qualifier forms for locales:
+#   xx              — language only (en, de, ar)
+#   xx-rYY          — language + region (en-rGB, pt-rPT)
+#   xx-Script       — language + script (zh-Hans)  [4-letter script, title case]
+#   b+xx+Script     — the Android b+ folder form for script-qualified resources (b+sr+Latn)
+#   b+xx+YY         — the b+ form with a region subtag
+# The b+ form is required by the plan for script-qualified resources that cannot use the xx-Script
+# form (e.g. sr+Latn where the language alone defaults to Cyrl).
+_QUAL_RE = re.compile(r"^(?:[a-z]{2,3}(?:-r[A-Z]{2}|-[A-Z][a-z]{3})?|b\+[a-z]{2,3}(?:\+[A-Za-z]{2,4})+)$")
+
+# Canonical Weblate code mappings — pinned so a typo (pt_BR where pt_PT was meant, or es_ES swapped
+# for es_419) is caught at catalogue-validation time, not discovered when Weblate pairs the wrong
+# translation component. The key is the resourceQualifier; the value is the required weblateCode.
+_CANONICAL_WEBLATE = {
+    "en": "en",
+    "en-rGB": "en_GB",
+    "ar": "ar",
+    "pt": "pt_BR",       # Brazilian Portuguese is the default pt qualifier
+    "pt-rPT": "pt_PT",
+    "zh-rCN": "zh_Hans",
+    "zh-rTW": "zh_Hant",
+    "es": "es_ES",       # Castilian Spanish is the default es qualifier
+    "es-rUS": "es_419",   # Latin American Spanish uses the UN M.49 region code
+    "nb": "nb_NO",
+}
 
 
 def _validate_catalogue(data: list) -> list[str]:
@@ -248,6 +270,11 @@ def _validate_catalogue(data: list) -> list[str]:
         # Weblate codes: xx, xx_YY (region), xx_Hans (script), xx_419 (UN M.49 numeric region).
         if not wc or not re.match(r"^[a-z]{2,3}(?:_[A-Za-z0-9]{2,4})?$", wc):
             fails.append(f"locales.json {eid}: invalid weblateCode '{wc}'")
+        # Canonical mapping: for qualifiers with a pinned weblateCode, the stored value must match
+        # exactly — a swapped code (pt_PT on the pt qualifier) pairs the wrong Weblate component.
+        expected_wc = _CANONICAL_WEBLATE.get(q)
+        if expected_wc is not None and wc != expected_wc:
+            fails.append(f"locales.json {eid}: weblateCode '{wc}' should be '{expected_wc}' for qualifier '{q}'")
         if e.get("tier") == 1:
             tier1_tags.add(tag)
     # Exact Tier 1 membership.
@@ -375,6 +402,11 @@ def main() -> int:
                     lp = _placeholders(ltext)
                     if sorted(sp) != sorted(lp):
                         fails.append(f"{tag} plural {skey.rstrip('#[]')}/{q}: placeholder mismatch src {sp} vs loc {lp}")
+                    # Translations must not introduce bare placeholders (translators must use
+                    # positional so reordering is possible). Source already forbids them; a
+                    # translation adding %s where the source has none is a translator mistake.
+                    if _has_bare(ltext):
+                        fails.append(f"{tag} plural {skey.rstrip('#[]')}/{q}: bare placeholder in translation (use %1$s etc.): {ltext!r}")
                     if ltext.strip() == "":
                         fails.append(f"{tag} plural {skey.rstrip('#[]')}/{q}: empty translation")
             elif psrc["kind"] == "array":
@@ -389,6 +421,8 @@ def main() -> int:
                         lp = _placeholders(ltext)
                         if sorted(sp) != sorted(lp):
                             fails.append(f"{tag} array {skey.rstrip('[]')}[{i}]: placeholder mismatch src {sp} vs loc {lp}")
+                        if _has_bare(ltext):
+                            fails.append(f"{tag} array {skey.rstrip('[]')}[{i}]: bare placeholder in translation (use %1$s etc.): {ltext!r}")
                         if ltext.strip() == "":
                             fails.append(f"{tag} array {skey.rstrip('[]')}[{i}]: empty translation")
             elif psrc["kind"] == "string":
@@ -398,15 +432,15 @@ def main() -> int:
                 lp = _placeholders(ltext)
                 if sorted(sp) != sorted(lp):
                     fails.append(f"{tag} {skey}: placeholder mismatch src {sp} vs loc {lp}")
+                # Translations must not introduce bare placeholders. Source already forbids them;
+                # a translation adding %s where the source has none is a translator mistake.
+                if _has_bare(ltext):
+                    fails.append(f"{tag} {skey}: bare placeholder in translation (use %1$s etc.): {ltext!r}")
                 if ltext.strip() == "":
                     if is_packaged:
                         fails.append(f"{tag} {skey}: empty translation for a packaged locale")
                     else:
                         fails.append(f"{tag} {skey}: empty translation")
-                # Unfinished: a Tier 1 translation identical to the source likely wasn't translated.
-                # (en-rGB is tier 0 and legitimately shares most strings with en-US, so excluded.)
-                if is_tier1 and ltext.strip() != "" and ltext.strip() == stext.strip():
-                    fails.append(f"{tag} {skey}: translation identical to source (likely untranslated)")
 
     if tier1_coverage_problems:
         fails.append(

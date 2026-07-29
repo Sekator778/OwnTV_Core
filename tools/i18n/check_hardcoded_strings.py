@@ -135,8 +135,17 @@ _URL = re.compile(r"^(?:https?|content|file|intent|mailto|tel|ftp|data)://")
 # BCP-47 language/region/script tag (en, en-US, zh-Hans, pt-BR, en-rGB …). The Android res qualifier
 # form en-rGB is also matched so the locale-runtime constants are safe.
 _BCP47 = re.compile(r"^[a-z]{2}(?:-[A-Z][a-z]{3}|-r[A-Z]{2}|-[A-Z]{2})?(?:-[A-Z]{2})?$")
-# A JSON object/fragment key: "key": or "key" : — translator never sees these.
+# A JSON object/fragment key written as a literal: "key": or "key" : — translator never sees these.
+# This catches inline JSON like "key": value but NOT json.put("key", value) where the literal is
+# just the key string (the ": is outside the quotes). The .put() form is caught by _JSON_API below.
 _JSON_KEY = re.compile(r'^"[A-Za-z_][\w-]*"\s*:')
+# JSON API calls where the first string argument is a field name, not display text:
+#   json.put("profileId", id), obj.optString("section"), root.optJSONObject("settings"), etc.
+# Also matches bare put("key", ...) inside JSONObject().apply { } blocks where there is no leading dot.
+# The prefix (?:^|\W) matches both .method( and bare method( at a statement/call boundary, but NOT
+# word_method( (where a word char precedes, e.g. some_custom_put). The string literal is the key —
+# a protocol field the translator never sees.
+_JSON_API = re.compile(r"(?:^|\W)(?:put|putOpt|get|getOpt|getString|optString|getInt|optInt|getBoolean|optBoolean|getLong|optLong|getDouble|optDouble|getJSONObject|optJSONObject|getJSONArray|optJSONArray|opt|remove|has)\s*\(")
 # A snake_case / kebab-case identifier that looks like a preference/DataStore key or protocol field,
 # not a sentence: lowercase, digits, underscores/hyphens/dots, no spaces, and not a readable phrase.
 # Require at least one underscore/dot/hyphen so a bare word like "Settings" is NOT misclassified.
@@ -149,6 +158,17 @@ _DOTTED = re.compile(r"^(?:\.[a-z0-9]+|[a-z][a-z0-9]*(?:\.[a-z0-9]+)+)$")
 _PERF_STAMP = re.compile(r"\bPerf\.stamp\s*\(")
 # @Suppress(...) annotation arguments — compiler directive args, never user-facing text.
 _SUPPRESS_ANN = re.compile(r"@Suppress\s*\(")
+# Room entity annotation arguments: Index("col"), ForeignKey(childColumns = ["col"]), etc.
+# These are database column names, not display text.
+_ROOM_ANN = re.compile(r"\b(?:Index|ForeignKey|Entity|PrimaryKey|ColumnInfo|Embedded|Relation|Junction)\s*\(")
+# Column-name array contexts: childColumns = ["col"], parentColumns = ["col"], columnNames = ["col"].
+# Also primaryKeys, indices value arrays — all database column identifiers.
+_COL_ARRAY = re.compile(r"\b(?:childColumns|parentColumns|columnNames|columns|value|primaryKeys|indices)\s*=\s*\[")
+# URI query parameter APIs: .appendQueryParameter("key", ...), .appendOptionalQueryParameter("key", ...),
+# uri.queryLong("key"), uri.getQueryParameter("key") — the string is a URL parameter name.
+_URI_API = re.compile(r"\.(?:appendQueryParameter|appendOptionalQueryParameter|getQueryParameter|queryLong|queryString|queryInt|queryBool|queryDouble)\s*\(")
+# A const val KEY_... = "..." declaration — the value is a preference/DataStore/Worker key.
+_KEY_CONST = re.compile(r"\bconst\s+val\s+KEY_\w+\s*=")
 # ErrorMessages.kt comparison needles: string literals passed as arguments to containsAny() or
 # .contains() are stable English keys used for matching, never display text. The friendly return
 # values (the RHS of ->) are NOT needles and must be extracted to resources in Phase 1.
@@ -224,8 +244,13 @@ def _is_safe(rel_path: str, content: str, stmt: str, line: str, allowlist: set[t
     # BCP-47 language/region/script tags and Android res qualifiers (en, en-US, zh-Hans, pt-BR, en-rGB).
     if _BCP47.match(content):
         return True
-    # JSON object keys ("key":).
+    # JSON object keys written inline ("key": value).
     if _JSON_KEY.match(content):
+        return True
+    # JSON API field-name arguments: json.put("profileId", id), obj.optString("section"), etc.
+    # The string literal is a protocol field name, not display text. The statement slice includes
+    # the .put( / .optString( / .getJSONObject( call, so a string argument in that position is safe.
+    if _JSON_API.search(stmt):
         return True
     # Filesystem-ish paths (contain a slash, no spaces).
     if _PATH.match(content) and " " not in content:
@@ -241,6 +266,19 @@ def _is_safe(rel_path: str, content: str, stmt: str, line: str, allowlist: set[t
         return True
     # @Suppress(...) annotation arguments — compiler directive args (UNCHECKED_CAST, etc.).
     if _SUPPRESS_ANN.search(line) or _SUPPRESS_ANN.search(stmt):
+        return True
+    # Room entity annotation arguments: Index("sourceId"), ForeignKey(childColumns = ["sourceId"]).
+    # Database column names are never user-facing text.
+    if _ROOM_ANN.search(stmt) or _ROOM_ANN.search(line):
+        return True
+    # Column-name array contexts: childColumns = ["col"], parentColumns = ["col"], primaryKeys = ["col"].
+    if _COL_ARRAY.search(stmt) or _COL_ARRAY.search(line):
+        return True
+    # URI query parameter APIs: .appendQueryParameter("key", ...), uri.queryLong("key").
+    if _URI_API.search(stmt):
+        return True
+    # const val KEY_... = "..." — the value is a preference/DataStore/Worker key.
+    if _KEY_CONST.search(line):
         return True
     return False
 
