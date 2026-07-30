@@ -615,7 +615,8 @@ class TestValidateStrings(unittest.TestCase):
     def test_invalid_java_format_placeholders_rejected(self):
         """Formatter-invalid flag/conversion combinations must fail before runtime formatting."""
         invalid = ["%0$s", "%1$#s", "%1$-s", "%1$.2d", "%1$0tY", "%1$0f",
-                   "%1$+x", "%1$,e", "%1$#g", "%1$(a", "%1$L", "%1$tJ", "%1$n"]
+                   "%1$+x", "%1$,e", "%1$#g", "%1$(a", "%1$L", "%1$tJ", "%1$n",
+                   "%1$2147483648s", "%1$.2147483648s", "%2147483648$s"]
         locales = _full_tier1()
         for placeholder in invalid:
             with self.subTest(placeholder=placeholder):
@@ -654,397 +655,147 @@ class TestCheckHardcodedStrings(unittest.TestCase):
     def setUp(self):
         self.chs = _load("chs_test", "tools/i18n/check_hardcoded_strings.py")
         self.tmpdir = Path(tempfile.mkdtemp())
-        # Point SRC and BASELINE at the temp dir.
         self.chs.SRC = self.tmpdir / "src"
         self.chs.SRC.mkdir()
-        self.chs.BASELINE = self.tmpdir / "baseline.txt"
-        self.chs.ASSERTION_ALLOWLIST = self.tmpdir / "allowlist.txt"
         self.chs.ROOT = self.tmpdir
-        self.chs._ERROR_MESSAGES_FILE = "src/ErrorMessages.kt"
+        self.chs.BASELINE = self.tmpdir / "baseline.txt"
+        self.chs.SAFE_MANIFEST = self.tmpdir / "safe_literals.txt"
+        self.chs.SAFE_MANIFEST.write_text(self.chs._serialize_safe({}))
 
     def _write_kt(self, name, content):
-        (self.chs.SRC / name).write_text(content)
+        path = self.chs.SRC / name
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(content)
+        return path
 
-    def test_bcp47_tags_safe_but_ui_words_not(self):
-        self._write_kt("Locale.kt", 'package x\nval tags = listOf("en-US", "b+sr+Latn", "retry")\n')
-        unsafe = {k[1] for k in self.chs._scan()}
-        self.assertNotIn("en-US", unsafe)
-        self.assertNotIn("b+sr+Latn", unsafe)
-        self.assertIn("retry", unsafe)
+    def _args(self, base=None, bootstrap=True):
+        class Args:
+            pass
+        args = Args()
+        args.base = base
+        args.bootstrap = bootstrap
+        return args
 
-    def test_select_and_update_prefixes_are_not_sql(self):
-        """SQL detection must not hide ordinary copy merely because it starts with a keyword."""
-        self.assertFalse(self.chs._is_sql("Update profile set preferences"))
-        self.assertFalse(self.chs._is_sql("Select an item from Favorites (optional)"))
-        self._write_kt("Labels.kt", '''package x
-fun f() {
-    Text("Select a channel to preview it here.")
-    Text("Update now")
-    Text("Update this source's details, or change its auto-refresh setting.")
-}
+    def test_inventory_is_mechanical_and_occurrence_aware(self):
+        self._write_kt("Main.kt", '''package x
+// "ignored comment"
+val a = "Visible"
+val b = "Visible"
+val c = "SELECT * FROM channels"
+val d = 'x'
 ''')
-        unsafe = {key[1] for key in self.chs._scan()}
-        self.assertIn("Select a channel to preview it here.", unsafe)
-        self.assertIn("Update now", unsafe)
-        self.assertIn("Update this source's details, or change its auto-refresh setting.", unsafe)
+        inventory = self.chs._inventory()
+        self.assertEqual(inventory[("src/Main.kt", "Visible")], 2)
+        self.assertEqual(inventory[("src/Main.kt", "SELECT * FROM channels")], 1)
+        self.assertFalse(any("ignored" in text for _, text in inventory))
 
-    def test_real_sql_still_safe(self):
-        self._write_kt("Database.kt", 'package x\nval q = "SELECT * FROM users WHERE id = :id"\nval u = "UPDATE users SET name = :name WHERE id = :id"\n')
-        unsafe = {key[1] for key in self.chs._scan()}
-        self.assertNotIn("SELECT * FROM users WHERE id = :id", unsafe)
-        self.assertNotIn("UPDATE users SET name = :name WHERE id = :id", unsafe)
+    def test_inventory_does_not_guess_semantics(self):
+        self._write_kt("Main.kt", 'package x\nfun f() { Log.d("TAG", "diagnostic"); Text("Update now") }\n')
+        texts = {key[1] for key in self.chs._scan()}
+        self.assertEqual(texts, {"TAG", "diagnostic", "Update now"})
 
-    def test_unqualified_query_name_does_not_make_copy_safe(self):
-        self._write_kt("Query.kt", 'package x\nfun f() = query("Visible query label")\n')
-        self.assertIn("Visible query label", {key[1] for key in self.chs._scan()})
+    def test_nested_interpolation_literals_are_separate(self):
+        source = 'package x\nval x = "Movies / ${title ?: "All"}"\n'
+        self._write_kt("Screen.kt", source)
+        texts = {key[1] for key in self.chs._inventory()}
+        self.assertIn("All", texts)
+        self.assertTrue(any("Movies /" in text for text in texts))
 
-    def test_live_text_not_safe(self):
-        """Text("LIVE") must NOT be classified as safe — it's user-facing display text."""
-        self._write_kt("PlayerHud.kt", 'package x\nfun f() = Text("LIVE")\n')
-        counts = self.chs._scan()
-        # "LIVE" should be in the unsafe set
-        live_keys = [k for k in counts if "LIVE" in k[1]]
-        self.assertTrue(live_keys, "LIVE was incorrectly exempted as a safe token")
-
-    def test_ok_text_not_safe(self):
-        self._write_kt("ProfileComponents.kt", 'package x\nval x = "OK"\n')
-        counts = self.chs._scan()
-        ok_keys = [k for k in counts if k[1] == "OK"]
-        self.assertTrue(ok_keys, "OK was incorrectly exempted as a safe token")
-
-    def test_perf_stamp_safe(self):
-        self._write_kt("Main.kt", 'package x\nfun f() = Perf.stamp("db-probed")\n')
-        counts = self.chs._scan()
-        stamp_keys = [k for k in counts if "db-probed" in k[1]]
-        self.assertFalse(stamp_keys, "Perf.stamp arg was not exempted")
-
-    def test_suppress_annotation_safe(self):
-        self._write_kt("Main.kt", 'package x\n@Suppress("UNCHECKED_CAST")\nfun f() = Unit\n')
-        counts = self.chs._scan()
-        sup_keys = [k for k in counts if "UNCHECKED_CAST" in k[1]]
-        self.assertFalse(sup_keys, "@Suppress arg was not exempted")
-
-    def test_error_messages_needles_safe_but_friendly_not(self):
-        """Only .containsAny()/.contains() arguments (needles) are safe; return values are not."""
-        kt = '''package x
-fun friendlySyncError(raw: String?): String = when {
-    raw!!.containsAny("timeout", "timed out") ->
-        "The server took too long to respond. Please try again."
-    else -> raw
-}
-fun isTransientSyncError(raw: String?): Boolean = when {
-    else -> raw!!.containsAny(
-        "timeout", "timed out",
-        "Connection refused",
-    )
-}
-private fun String.containsAny(vararg n: String) = n.any { contains(it) }
-'''
-        self._write_kt("ErrorMessages.kt", kt)
-        counts = self.chs._scan()
-        contents = {k[1] for k in counts}
-        # Needles must NOT be in the baseline
-        self.assertNotIn("timeout", contents, "needle 'timeout' was not exempted")
-        self.assertNotIn("Connection refused", contents, "multi-line needle 'Connection refused' was not exempted")
-        # Friendly message MUST be in the baseline
-        self.assertIn("The server took too long to respond. Please try again.", contents,
-                        "friendly return-value message was incorrectly exempted")
-
-    def test_json_put_field_name_safe(self):
-        """json.put("profileId", id) — the string is a JSON field name, not display text."""
-        self._write_kt("Main.kt", 'package x\nimport org.json.JSONObject\nfun f(id: Long) {\n  val j = JSONObject()\n  j.put("profileId", id)\n}\n')
-        counts = self.chs._scan()
-        self.assertNotIn("profileId", {k[1] for k in counts}, "JSON .put() field name was not exempted")
-
-    def test_json_put_in_apply_block_safe(self):
-        """put("version", 14) inside JSONObject().apply { } — no leading dot, still a JSON key."""
-        self._write_kt("Main.kt", 'package x\nimport org.json.JSONObject\nfun f() {\n  JSONObject().apply {\n    put("version", 14)\n    put("sections", 3)\n  }\n}\n')
-        counts = self.chs._scan()
-        contents = {k[1] for k in counts}
-        self.assertNotIn("version", contents, "JSON put() in apply block: 'version' was not exempted")
-        self.assertNotIn("sections", contents, "JSON put() in apply block: 'sections' was not exempted")
-
-    def test_json_get_string_safe(self):
-        """obj.getString("profileId") — the string is a JSON field name."""
-        self._write_kt("Main.kt", 'package x\nimport org.json.JSONObject\nfun f(j: JSONObject): String = j.getString("profileId")\n')
-        counts = self.chs._scan()
-        self.assertNotIn("profileId", {k[1] for k in counts}, "JSON .getString() field name was not exempted")
-
-    def test_json_opt_json_object_safe(self):
-        """root.optJSONObject("settings") — the string is a JSON field name."""
-        self._write_kt("Main.kt", 'package x\nimport org.json.JSONObject\nfun f(root: JSONObject) = root.optJSONObject("settings")\n')
-        counts = self.chs._scan()
-        self.assertNotIn("settings", {k[1] for k in counts}, "JSON .optJSONObject() field name was not exempted")
-
-    def test_room_index_column_name_safe(self):
-        """Index("sourceId") — Room entity column name, not display text."""
-        self._write_kt("Entity.kt", 'package x\nimport androidx.room.Entity\nimport androidx.room.Index\n@Entity(indices = [Index("sourceId"), Index(value = ["contentKey", "profileId"])])\nclass E\n')
-        counts = self.chs._scan()
-        contents = {k[1] for k in counts}
-        self.assertNotIn("sourceId", contents, "Room Index() column name was not exempted")
-        self.assertNotIn("contentKey", contents, "Room Index(value=[...]) column name was not exempted")
-        self.assertNotIn("profileId", contents, "Room Index(value=[...]) column name was not exempted")
-
-    def test_room_primary_keys_safe(self):
-        """primaryKeys = ["profileId", "contentKey"] — Room primary key column names."""
-        self._write_kt("Entity.kt", 'package x\nimport androidx.room.Entity\n@Entity(primaryKeys = ["profileId", "contentKey"])\nclass E\n')
-        counts = self.chs._scan()
-        contents = {k[1] for k in counts}
-        self.assertNotIn("profileId", contents, "Room primaryKeys column name was not exempted")
-        self.assertNotIn("contentKey", contents, "Room primaryKeys column name was not exempted")
-
-    def test_uri_query_parameter_safe(self):
-        """.appendQueryParameter("sourceId", ...) — URI parameter name, not display text."""
-        self._write_kt("DeepLink.kt", 'package x\nimport android.net.Uri\nfun f(b: Uri.Builder, id: Long) = b.appendQueryParameter("sourceId", id.toString())\n')
-        counts = self.chs._scan()
-        self.assertNotIn("sourceId", {k[1] for k in counts}, "URI query parameter name was not exempted")
-
-    def test_key_const_value_safe(self):
-        """const val KEY_SOURCE_ID = "sourceId" — the value is a preference/DataStore key."""
-        self._write_kt("Worker.kt", 'package x\nclass W {\n  companion object {\n    const val KEY_SOURCE_ID = "sourceId"\n  }\n}\n')
-        counts = self.chs._scan()
-        self.assertNotIn("sourceId", {k[1] for k in counts}, "const val KEY_... value was not exempted")
-
-    def test_safe_declaration_does_not_exempt_adjacent_literal(self):
-        """TAG/KEY declarations exempt only their initializer, not another literal on the line."""
-        self._write_kt("Keys.kt", 'package x\nconst val TAG = "Worker"; val label = "LIVE"\nconst val KEY_ID = "profileId"; val title = "Settings"\n')
-        unsafe = {k[1] for k in self.chs._scan()}
-        self.assertIn("LIVE", unsafe)
-        self.assertIn("Settings", unsafe)
-        self.assertNotIn("Worker", unsafe)
-        self.assertNotIn("profileId", unsafe)
-
-    def test_safe_call_does_not_exempt_adjacent_literal_for_log_or_regex(self):
-        """Log/Regex position handling must not fall back to a whole-line exemption."""
-        self._write_kt("Patterns.kt", 'package x\nfun f() { Log.i("TAG", "developer ${x ?: "message"}"); val x = "Visible label"\nval r = Regex("[a-z]+"); val y = "Another label" }\n')
-        unsafe = {k[1] for k in self.chs._scan()}
-        self.assertIn("Visible label", unsafe)
-        self.assertIn("Another label", unsafe)
-        self.assertNotIn('developer ${x ?: "message"}', unsafe)
-        self.assertIn("message", unsafe, "nested log fallback was incorrectly inherited as safe")
-        self.assertNotIn("[a-z]+", unsafe)
-
-    def test_nested_log_argument_does_not_exempt_visible_literal(self):
-        """Only direct log arguments are safe; a nested formatter call can return UI text."""
-        self._write_kt("LogContext.kt", 'package x\nfun f() { Log.w("TAG", makeMessage("Visible copy")); Log.d("TAG", "Developer diagnostic") }\n')
-        unsafe = {key[1] for key in self.chs._scan()}
-        self.assertIn("Visible copy", unsafe)
-        self.assertNotIn("Developer diagnostic", unsafe)
-
-    def test_camelcase_display_text_not_safe(self):
-        """A CamelCase word like 'Settings' used as Text() content must NOT be exempted."""
-        self._write_kt("Main.kt", 'package x\nfun f() = Text("Settings")\n')
-        counts = self.chs._scan()
-        self.assertIn("Settings", {k[1] for k in counts}, "CamelCase display text was incorrectly exempted")
-
-    def test_bootstrap_skips_regression_leg(self):
-        """--bootstrap must skip the regression leg (no merge-base baseline to compare against)."""
-        self._write_kt("Main.kt", 'package x\nval x = "Hello world"\n')
-        # Generate the committed baseline so it matches current scan.
-        self.chs.cmd_generate(None)
-        # Verify with --bootstrap and no --base — should pass (committed == current).
-        class Args:
-            base = None
-            bootstrap = True
-        rc = self.chs.cmd_verify(Args())
-        self.assertEqual(rc, 0)
-
-    def test_scanner_migration_workflow_freezes_app_tree(self):
-        """Version migration must not be able to bootstrap over application-source changes."""
-        workflow = (ROOT / ".github/workflows/i18n.yml").read_text()
-        self.assertIn('git diff --name-only "$BASE_SHA" HEAD -- app/src/main', workflow)
-        self.assertIn("Scanner migrations may not change app/src/main", workflow)
-
-    def test_stale_baseline_detected(self):
-        """Deleting committed baseline entries while leaving literals in source must fail."""
-        self._write_kt("Main.kt", 'package x\nval x = "Hello"\nval y = "World"\n')
-        self.chs.cmd_generate(None)
-        # Empty the committed baseline (simulate deletion without extraction).
-        self.chs.BASELINE.write_text("# header only\n")
-        class Args:
-            base = None
-            bootstrap = True
-        rc = self.chs.cmd_verify(Args())
-        self.assertEqual(rc, 1, "stale baseline was not detected")
-
-    def test_regression_against_merge_base(self):
-        """A new literal absent from the merge-base baseline must fail (non-bootstrap)."""
-        self._write_kt("Main.kt", 'package x\nval x = "Hello"\n')
-        self.chs.cmd_generate(None)
-        base_file = self.tmpdir / "base.txt"
-        base_file.write_text(self.chs.BASELINE.read_text())
-        # Add a new literal.
-        self._write_kt("Main.kt", 'package x\nval x = "Hello"\nval y = "New literal"\n')
-        class Args:
-            base = str(base_file)
-            bootstrap = False
-        rc = self.chs.cmd_verify(Args())
-        self.assertEqual(rc, 1, "regression was not detected")
-
-    def test_over_baseline_detected(self):
-        """Committed baseline entries not produced by current code must fail."""
-        self._write_kt("Main.kt", 'package x\nval x = "Hello"\n')
-        self.chs.cmd_generate(None)
-        # Add a fake entry to the committed baseline.
-        text = self.chs.BASELINE.read_text()
-        text += '1\tsrc/Main.kt\tFAKE ENTRY\n'
-        self.chs.BASELINE.write_text(text)
-        class Args:
-            base = str(self.chs.BASELINE)
-            bootstrap = True
-        rc = self.chs.cmd_verify(Args())
-        self.assertEqual(rc, 1, "over-baseline was not detected")
-
-    # --- Position-based invariant: a safe call exempts ONLY its argument, not other literals ---
-
-    def test_json_put_value_literal_not_safe(self):
-        """json.put("title", "Visible label") — the value 'Visible label' is user-facing text and
-        must NOT be exempted just because a JSON .put() call is on the same line."""
-        self._write_kt("Main.kt", 'package x\nimport org.json.JSONObject\nfun f() {\n  val j = JSONObject()\n  j.put("title", "Visible label")\n}\n')
-        counts = self.chs._scan()
-        unsafe = {k[1] for k in counts}
-        self.assertIn("Visible label", unsafe, "JSON .put() value literal was wrongly exempted")
-        self.assertNotIn("title", unsafe, "JSON .put() key was not exempted")
-
-    def test_nested_json_argument_is_not_inherited_safe(self):
-        """A fallback inside a JSON/log expression is not safe merely because its parent is safe."""
-        self._write_kt("NestedJson.kt", 'package x\nimport org.json.JSONObject\nfun f(j: JSONObject) {\n  Log.d("TAG", "payload=${j.optString("label", "Visible fallback")}")\n}\n')
-        unsafe = {k[1] for k in self.chs._scan()}
-        self.assertIn("Visible fallback", unsafe)
-        self.assertNotIn("label", unsafe, "JSON field name should remain a safe direct argument")
-
-    def test_first_argument_must_be_literal_and_json_receiver_verified(self):
-        """Only a direct first argument on a verified JSONObject/URI call is safe.
-
-        A key variable followed by a visible value must not make the value safe, and a MutableMap's
-        put() must not inherit JSONObject's protocol exemption merely from sharing the method name.
-        """
-        kt = '''package x
-import org.json.JSONObject
-fun f(json: JSONObject, builder: android.net.Uri.Builder, key: String,
-      values: MutableMap<String, Int>) {
-    json.put(key, "Visible title")
-    builder.appendQueryParameter(key, "Visible value")
-    values.put("Visible category", 1)
-}
-'''
-        self._write_kt("Calls.kt", kt)
-        unsafe = {k[1] for k in self.chs._scan()}
-        self.assertIn("Visible title", unsafe)
-        self.assertIn("Visible value", unsafe)
-        self.assertIn("Visible category", unsafe)
-
-    def test_content_shape_is_not_a_safe_category(self):
-        """Kebab/snake/path-looking UI copy must remain in the ratchet; key factories are contextual."""
-        kt = '''package x
-import androidx.datastore.preferences.core.stringPreferencesKey
-fun f() {
-    Text("sign-in")
-    Text("audio-only")
-    Text("and/or")
-    Text("retry_later")
-    Text("retry.later")
-    stringPreferencesKey("retry_later")
-}
-'''
-        self._write_kt("Shapes.kt", kt)
-        unsafe = {k[1] for k in self.chs._scan()}
-        self.assertTrue({"sign-in", "audio-only", "and/or", "retry_later", "retry.later"} <= unsafe)
-        # The same spelling is safe only at the explicit DataStore key factory call.
-        self.assertEqual(sum(1 for key in self.chs._scan() if key[1] == "retry_later"), 1)
-
-    def test_baseline_escape_round_trip_preserves_backslash_sequences(self):
-        """A literal backslash followed by 'n' must not deserialize as a real newline."""
-        counts = {
-            ("Main.kt", r"literal\nsequence"): 1,
-            ("Main.kt", "actual\nnewline\tand\\slash"): 2,
-        }
-        encoded = self.chs._serialize(counts)
-        self.assertEqual(self.chs._parse(encoded), counts)
-
-    def test_kotlin_escape_decoder_keeps_escaped_unicode_distinct(self):
-        """\\\\u0041 (literal slash) must not collapse to the runtime escape \\u0041."""
+    def test_kotlin_escape_decoder_preserves_literal_backslashes(self):
         self.assertEqual(self.chs._decode(r'"\u0041"'), "A")
         self.assertEqual(self.chs._decode(r'"\\u0041"'), r"\u0041")
-        self.assertNotEqual(self.chs._decode(r'"\u0041"'), self.chs._decode(r'"\\u0041"'))
         self.assertEqual(self.chs._decode(r'"\n"'), "\n")
         self.assertEqual(self.chs._decode(r'"\\n"'), r"\n")
 
-    def test_json_call_does_not_exempt_adjacent_literal(self):
-        """A literal on the same line as a JSON call but NOT its argument must remain unsafe.
-        error("geo no match") on a line with .optJSONArray("results") — 'geo no match' is the
-        error message (user-facing via exception), 'results' is the JSON key."""
-        kt = 'package x\nimport org.json.JSONObject\nfun f(json: String) {\n  val hit = JSONObject(json).optJSONArray("results") ?: return error("geo no match")\n}\n'
-        self._write_kt("Weather.kt", kt)
-        counts = self.chs._scan()
-        unsafe = {k[1] for k in counts}
-        self.assertIn("geo no match", unsafe, "error() message was wrongly exempted by adjacent JSON call")
-        self.assertNotIn("results", unsafe, "JSON key 'results' was not exempted")
+    def test_manifest_round_trips_backslashes_tabs_and_newlines(self):
+        counts = {
+            ("src/Main.kt", r"literal\nsequence"): 1,
+            ("src/Main.kt", "actual\nnewline\tand\\slash"): 2,
+        }
+        self.assertEqual(self.chs._parse(self.chs._serialize(counts)), counts)
+        entries = {key: (count, "technical") for key, count in counts.items()}
+        safe, categories, errors = self.chs._parse_safe(self.chs._serialize_safe(entries))
+        self.assertFalse(errors)
+        self.assertEqual(safe, counts)
+        self.assertEqual(set(categories.values()), {"technical"})
 
-    def test_atomicinteger_get_does_not_exempt_adjacent_literal(self):
-        """pageFailures.get() > 0 on a line with a user-facing string — the .get() is
-        AtomicInteger.get(), NOT JSON, and the adjacent string must remain unsafe."""
-        kt = 'package x\nimport java.util.concurrent.atomic.AtomicInteger\nfun f(pageFailures: AtomicInteger) {\n  val msg = "${pageFailures.get()} portal page(s) failed"\n  Log.i("TAG", msg)\n}\n'
-        self._write_kt("Syncer.kt", kt)
-        counts = self.chs._scan()
-        unsafe = {k[1] for k in counts}
-        # The interpolated string (with the ${} hole) must be in the baseline — .get() is not JSON
-        self.assertTrue(any("portal page(s) failed" in c for c in unsafe),
-                        "user-facing string was wrongly exempted by AtomicInteger.get()")
+    def test_generate_classifies_every_non_safe_literal_as_baseline(self):
+        self._write_kt("Main.kt", 'package x\nval a = "Hello"\nval b = "World"\n')
+        self.assertEqual(self.chs.cmd_generate(None), 0)
+        self.assertEqual(
+            set(self.chs._parse(self.chs.BASELINE.read_text())),
+            {("src/Main.kt", "Hello"), ("src/Main.kt", "World")},
+        )
 
-    def test_nested_interpolation_inner_literal_detected(self):
-        """Changing the inner literal of "Movies / ${title ?: "All"}" must change the baseline."""
-        self._write_kt("Screen.kt", 'package x\nfun f() = Text("Movies / ${title ?: "All"}")\n')
-        lits = list(self.chs._iter_literals('package x\nfun f() = Text("Movies / ${title ?: "All"}")\n'))
-        contents = [self.chs._decode(raw) for s, e, raw in lits]
-        self.assertIn("All", contents, "nested interpolation inner literal 'All' was not detected")
+    def test_explicit_safe_entry_is_removed_from_baseline(self):
+        self._write_kt("Main.kt", 'package x\nval tag = "Worker"\nval label = "Settings"\n')
+        entries = {("src/Main.kt", "Worker"): (1, "log")}
+        self.chs.SAFE_MANIFEST.write_text(self.chs._serialize_safe(entries))
+        self.assertEqual(self.chs.cmd_generate(None), 0)
+        baseline = self.chs._parse(self.chs.BASELINE.read_text())
+        self.assertNotIn(("src/Main.kt", "Worker"), baseline)
+        self.assertIn(("src/Main.kt", "Settings"), baseline)
 
-    def test_nested_interpolation_change_detected(self):
-        """Changing 'All' to 'Everything' inside interpolation produces a different scan."""
-        src1 = 'package x\nval x = "Movies / ${title ?: "All"}"\n'
-        src2 = 'package x\nval x = "Movies / ${title ?: "Everything"}"\n'
-        lits1 = {self.chs._decode(raw) for s, e, raw in self.chs._iter_literals(src1)}
-        lits2 = {self.chs._decode(raw) for s, e, raw in self.chs._iter_literals(src2)}
-        self.assertIn("All", lits1)
-        self.assertIn("Everything", lits2)
-        self.assertNotIn("All", lits2, "changing inner literal did not change the scan")
-        self._write_kt("Screen.kt", src1)
-        scan1 = {k[1] for k in self.chs._scan()}
-        self._write_kt("Screen.kt", src2)
-        scan2 = {k[1] for k in self.chs._scan()}
-        self.assertIn("All", scan1)
-        self.assertIn("Everything", scan2)
-        self.assertNotIn("All", scan2, "baseline scan ignored the nested interpolation literal")
+    def test_bootstrap_requires_exact_baseline_plus_safe_inventory(self):
+        self._write_kt("Main.kt", 'package x\nval x = "Hello"\nval tag = "TAG"\n')
+        self.chs.SAFE_MANIFEST.write_text(
+            self.chs._serialize_safe({("src/Main.kt", "TAG"): (1, "log")})
+        )
+        self.assertEqual(self.chs.cmd_generate(None), 0)
+        self.assertEqual(self.chs.cmd_verify(self._args()), 0)
 
-    def test_room_columninfo_named_column_safe(self):
-        """ColumnInfo(name = "profileId") is a contextual Room column declaration."""
-        kt = '''package x
-import androidx.room.ColumnInfo
-class E {
-    @ColumnInfo(name = "profileId")
-    val id: Long = 0
-}
-'''
-        self._write_kt("Entity.kt", kt)
-        self.assertNotIn("profileId", {k[1] for k in self.chs._scan()})
+    def test_unclassified_literal_fails_verification(self):
+        self._write_kt("Main.kt", 'package x\nval x = "Hello"\n')
+        self.assertEqual(self.chs.cmd_generate(None), 0)
+        self._write_kt("Main.kt", 'package x\nval x = "Hello"\nval y = "New literal"\n')
+        self.assertEqual(self.chs.cmd_verify(self._args()), 1)
 
-    def test_room_index_value_literal_not_safe(self):
-        """Index(value = ["col"]) — the column name is safe, but an adjacent display literal is not."""
-        kt = 'package x\nimport androidx.room.Entity\nimport androidx.room.Index\n@Entity(indices = [Index("sourceId")])\nclass E {\n  val label = "Settings"\n}\n'
-        self._write_kt("Entity.kt", kt)
-        counts = self.chs._scan()
-        unsafe = {k[1] for k in counts}
-        self.assertNotIn("sourceId", unsafe, "Room Index column name was not exempted")
-        self.assertIn("Settings", unsafe, "adjacent display text was wrongly exempted")
+    def test_stale_safe_literal_fails_verification_and_generation(self):
+        self._write_kt("Main.kt", 'package x\nval x = "Hello"\n')
+        self.chs.SAFE_MANIFEST.write_text(
+            self.chs._serialize_safe({("src/Main.kt", "Gone"): (1, "technical")})
+        )
+        self.chs.BASELINE.write_text(self.chs._serialize({("src/Main.kt", "Hello"): 1}))
+        self.assertEqual(self.chs.cmd_verify(self._args()), 1)
+        self.assertEqual(self.chs.cmd_generate(None), 1)
 
-    def test_uri_param_value_literal_not_safe(self):
-        """.appendQueryParameter("sourceId", label) — the value 'label' (a display string) is not safe."""
-        kt = 'package x\nimport android.net.Uri\nfun f(b: Uri.Builder) = b.appendQueryParameter("sourceId", "Visible label")\n'
-        self._write_kt("DeepLink.kt", kt)
-        counts = self.chs._scan()
-        unsafe = {k[1] for k in counts}
-        self.assertNotIn("sourceId", unsafe, "URI param name was not exempted")
-        self.assertIn("Visible label", unsafe, "URI param value literal was wrongly exempted")
+    def test_unknown_safe_category_is_rejected(self):
+        text = self.chs._serialize_safe({}).replace(
+            "\n\n", "\n1\tmagic\tsrc/Main.kt\tTAG\n\n", 1
+        )
+        _, _, errors = self.chs._parse_safe(text)
+        self.assertTrue(any("unknown category" in error for error in errors))
+
+    def test_merge_base_ratchet_rejects_baseline_growth(self):
+        self._write_kt("Main.kt", 'package x\nval x = "Hello"\n')
+        self.assertEqual(self.chs.cmd_generate(None), 0)
+        base = self.tmpdir / "base.txt"
+        base.write_text(self.chs.BASELINE.read_text())
+        self._write_kt("Main.kt", 'package x\nval x = "Hello"\nval y = "New literal"\n')
+        self.assertEqual(self.chs.cmd_generate(None), 0)
+        self.assertEqual(self.chs.cmd_verify(self._args(str(base), bootstrap=False)), 1)
+
+    def test_classify_safe_moves_literal_out_of_baseline(self):
+        self._write_kt("Main.kt", 'package x\nval tag = "Worker"\n')
+        self.assertEqual(self.chs.cmd_generate(None), 0)
+        class Args:
+            path = "src/Main.kt"
+            text = "Worker"
+            category = "log"
+            count = None
+        self.assertEqual(self.chs.cmd_classify_safe(Args()), 0)
+        self.assertEqual(self.chs._parse(self.chs.BASELINE.read_text()), {})
+        safe, categories, errors = self.chs._safe_entries()
+        self.assertFalse(errors)
+        self.assertEqual(safe[("src/Main.kt", "Worker")], 1)
+        self.assertEqual(categories[("src/Main.kt", "Worker")], "log")
+
+    def test_scanner_migration_policy_freezes_app_tree(self):
+        workflow = (ROOT / ".github/workflows/i18n.yml").read_text()
+        checker = (ROOT / "tools/i18n/check_hardcoded_strings.py").read_text()
+        self.assertIn("verify-ci --base-sha", workflow)
+        self.assertIn('"diff", "--name-only", base_sha, "HEAD", "--", "app/src/main"', checker)
+        self.assertIn("Scanner migrations may not change app/src/main", checker)
 
 
 # ===========================================================================

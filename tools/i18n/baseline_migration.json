@@ -1,5 +1,5 @@
 {
-  "fromScannerVersion": 4,
-  "toScannerVersion": 5,
-  "reason": "Scanner v5 uses conversion-specific Java Formatter flag matrices and strict SQL statement grammar, while retaining proven SQL argument-position exemptions. The baseline is regenerated once for these corrected guardrail semantics."
+  "fromScannerVersion": 5,
+  "toScannerVersion": 6,
+  "reason": "Scanner v6 removes semantic SQL/JSON/call inference. Every Kotlin literal is now classified explicitly as either shrinking translation debt or reviewed technical policy in safe_literals.txt."
 }
