@@ -689,9 +689,33 @@ abstract class OwnTVDatabase : RoomDatabase() {
                 }
             }
             EXPECTED_NON_UNIQUE_INDEXES.values.forEach { statements ->
-                statements.forEach { db.execSQL(it) }
+                statements.forEach { if (indexColumnsExist(db, it)) db.execSQL(it) }
             }
         }
+
+        /**
+         * True when every column an index statement references already exists.
+         *
+         * Needed because healSchema runs from EVERY migration, not just the last one, while this
+         * list always describes the CURRENT schema. Upgrading from an old version therefore heals
+         * against a table that has not gained its newer columns yet (series.addedAt arrives in
+         * v21), which would abort the whole chain with "no such column". Skipping such an index is
+         * safe: the migration that adds the column creates it, and the final hop's heal — by which
+         * point the column exists — restores it if it is ever missing.
+         */
+        private fun indexColumnsExist(
+            db: androidx.sqlite.db.SupportSQLiteDatabase,
+            createIndexSql: String,
+        ): Boolean {
+            val match = INDEX_TARGET.find(createIndexSql) ?: return true
+            val table = match.groupValues[1]
+            return match.groupValues[2].split(',')
+                .map { it.trim().trim('`') }
+                .all { it.isEmpty() || hasColumn(db, table, it) }
+        }
+
+        /** Pulls the table name and column list out of a canonical CREATE INDEX statement. */
+        private val INDEX_TARGET = Regex("ON\\s+`([^`]+)`\\s*\\(([^)]*)\\)", RegexOption.IGNORE_CASE)
 
         /**
          * Every schema object [healSchema] guarantees: the FTS tables plus the name of each

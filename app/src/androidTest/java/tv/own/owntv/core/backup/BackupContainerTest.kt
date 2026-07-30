@@ -86,7 +86,8 @@ class BackupContainerTest {
     }
 
     @Test
-    fun `legacy json file still opens`() {
+    // No backticked/spaced name: minSdk 26 dexes below DEX 040, where spaces in method names are illegal.
+    fun legacyJsonFileStillOpens() {
         val file = write(json.toByteArray(), name = "owntv-backup.json")
 
         assertEquals(BackupContainer.Kind.LEGACY_JSON, BackupContainer.probe(file))
