@@ -20,6 +20,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import tv.own.owntv.core.network.HttpClient
 import tv.own.owntv.features.settings.data.SettingsRepository
+import tv.own.owntv.features.settings.data.SubtitleStyle
 import java.util.Locale
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
@@ -124,6 +125,12 @@ class OwnTVPlayer(
 
     internal companion object {
         const val TAG = "OwnTVPlayer"
+
+        // mpv's stock subtitle values, restored verbatim for every option of the custom look (#96)
+        // that is left on "Default" — or whenever the master toggle is off.
+        private const val MPV_DEFAULT_SUB_COLOR = "#FFFFFFFF"
+        private const val MPV_DEFAULT_SUB_BACK_COLOR = "#00000000"
+        private const val MPV_DEFAULT_SUB_SCALE = 1.0
 
         /**
          * Routing for an END_FILE that arrives before FILE_LOADED ever did. For a VOD that means the
@@ -493,7 +500,14 @@ class OwnTVPlayer(
     @Volatile private var vodPinnedExo: Set<String> = emptySet()
     private var surroundSound = false // off by default (opt-in); see SettingsRepository.surroundSound (#25)
     private var autoPlayNext = true
-    private var subScale = 1.0
+    // Subtitle appearance (#96). While subStyleOn is false NOTHING here is pushed to mpv, so its own
+    // defaults (and any ASS styling a file carries) stay exactly as they are today — and each option
+    // left on its own "Default" value is likewise never pushed.
+    private var subStyleOn = false
+    private var subScale = SubtitleStyle.SCALE_DEFAULT.toDouble()
+    private var subColorHex = SubtitleStyle.COLOR_DEFAULT
+    private var subPosition = SubtitleStyle.Position.DEFAULT
+    private var subBgOpacity = SubtitleStyle.OPACITY_DEFAULT
     private var audioDelaySec = 0.0
     private var baseAudioDelayMs = 0 // the Settings audio-delay; each new file resets the in-player nudge to it
     private val _audioDelayMs = MutableStateFlow(0)
@@ -619,9 +633,29 @@ class OwnTVPlayer(
         }.launchIn(scope)
         vodEngineStore.mpvUrls.onEach { vodPinnedMpv = it }.launchIn(scope)
         vodEngineStore.exoUrls.onEach { vodPinnedExo = it }.launchIn(scope)
+        // Subtitle appearance (#96). Moving anything back to "Default" — or turning the master toggle
+        // OFF — has to actively restore mpv's own value: the properties were already set on the
+        // running instance, so simply skipping the write would leave the last custom look on screen
+        // until the next channel/file load.
+        settings.subtitleStyleEnabled.onEach { on ->
+            subStyleOn = on
+            if (initialized) mpvAsync { applySubtitleStyle() }
+        }.launchIn(scope)
         settings.subtitleScale.onEach { s ->
             subScale = s.toDouble()
-            if (initialized) mpvAsync { setPropertyDouble("sub-scale", subScale) }
+            if (initialized) mpvAsync { applySubtitleStyle() }
+        }.launchIn(scope)
+        settings.subtitleColor.onEach { hex ->
+            subColorHex = hex
+            if (initialized) mpvAsync { applySubtitleStyle() }
+        }.launchIn(scope)
+        settings.subtitlePosition.onEach { position ->
+            subPosition = position
+            if (initialized) mpvAsync { applySubtitleStyle() }
+        }.launchIn(scope)
+        settings.subtitleBgOpacity.onEach { pct ->
+            subBgOpacity = pct
+            if (initialized) mpvAsync { applySubtitleStyle() }
         }.launchIn(scope)
         settings.audioDelayMs.onEach { ms ->
             baseAudioDelayMs = ms // the Settings default each new file resets to
@@ -1426,7 +1460,19 @@ class OwnTVPlayer(
             setOptionString("stream-lavf-o", "reconnect=1,reconnect_streamed=1,reconnect_delay_max=8,reconnect_on_http_error=5xx")
             setOptionString("user-agent", HttpClient.DEFAULT_USER_AGENT)
             setOptionString("sub-scale-with-window", "yes")
-            setOptionString("sub-scale", subScale.toString())
+            // Subtitle appearance (#96) — applied at init so the very first subtitle of the session
+            // already looks right. Each option is skipped entirely while it (or the master toggle)
+            // is on "Default", leaving mpv's own value in place.
+            if (subStyleOn) {
+                if (SubtitleStyle.hasScale(subScale.toFloat())) setOptionString("sub-scale", subScale.toString())
+                if (SubtitleStyle.hasColor(subColorHex)) setOptionString("sub-color", SubtitleStyle.mpvColor(subColorHex))
+                if (SubtitleStyle.hasOpacity(subBgOpacity)) setOptionString("sub-back-color", SubtitleStyle.mpvBackColor(subBgOpacity))
+                if (subPosition != SubtitleStyle.Position.DEFAULT) {
+                    setOptionString("sub-pos", SubtitleStyle.mpvSubPos(subPosition).toString())
+                    setOptionString("sub-align-x", SubtitleStyle.mpvAlignX(subPosition))
+                }
+                if (subStyleOverridesAss()) setOptionString("sub-ass-override", "force")
+            }
             setOptionString("audio-delay", audioDelaySec.toString())
             if (prefAudioLang.isNotBlank()) setOptionString("alang", prefAudioLang)
             if (prefSubLang.isNotBlank()) setOptionString("slang", prefSubLang)
@@ -1965,6 +2011,48 @@ class OwnTVPlayer(
     fun setSpeed(speed: Double) {
         if (exoActive) exoEngine?.setSpeed(speed) else if (initialized) mpvAsync { setPropertyDouble("speed", speed) }
         _speed.value = speed
+    }
+
+    /**
+     * True when the user's picks can only be honoured by discarding a file's own ASS styling —
+     * mpv's default "yes" already lets [sub-color] through for plain SRT, but ASS wins otherwise.
+     * A file left entirely on "Default" options keeps its authored styling untouched.
+     */
+    private fun subStyleOverridesAss(): Boolean = subStyleOn && (
+        SubtitleStyle.hasColor(subColorHex) ||
+            SubtitleStyle.hasOpacity(subBgOpacity) ||
+            subPosition != SubtitleStyle.Position.DEFAULT
+        )
+
+    /**
+     * Push the custom subtitle look (#96) onto the running mpv instance. Every option resolves to
+     * mpv's own value when it's on "Default" (or the master toggle is off). Must run on the mpv
+     * thread (call inside [mpvAsync]).
+     *
+     * Writing the defaults back is not optional: these properties persist on the instance, so
+     * restoring them explicitly is the only thing that makes turning an option back to "Default"
+     * take effect on a file that is already playing.
+     */
+    private fun MPVLib.applySubtitleStyle() {
+        val on = subStyleOn
+        setPropertyDouble(
+            "sub-scale",
+            if (on && SubtitleStyle.hasScale(subScale.toFloat())) subScale else MPV_DEFAULT_SUB_SCALE,
+        )
+        setPropertyString(
+            "sub-color",
+            if (on && SubtitleStyle.hasColor(subColorHex)) SubtitleStyle.mpvColor(subColorHex) else MPV_DEFAULT_SUB_COLOR,
+        )
+        setPropertyString(
+            "sub-back-color",
+            if (on && SubtitleStyle.hasOpacity(subBgOpacity)) SubtitleStyle.mpvBackColor(subBgOpacity) else MPV_DEFAULT_SUB_BACK_COLOR,
+        )
+        val position = if (on) subPosition else SubtitleStyle.Position.DEFAULT
+        setPropertyInt("sub-pos", SubtitleStyle.mpvSubPos(position))
+        // Horizontal alignment is a newer mpv option than the rest — never let a build without it
+        // take down the whole style update.
+        runCatching { setPropertyString("sub-align-x", SubtitleStyle.mpvAlignX(position)) }
+        setPropertyString("sub-ass-override", if (subStyleOverridesAss()) "force" else "yes")
     }
 
     private fun applyAudioDelay(ms: Int) {

@@ -145,6 +145,12 @@ class SettingsRepository(private val context: Context) {
         val EXTERNAL_PLAYER_SERIES = booleanPreferencesKey("external_player_series")
         val DEFAULT_ZOOM = stringPreferencesKey("default_zoom")
         val SUB_SCALE = floatPreferencesKey("sub_scale")
+        // Subtitle appearance (#96): off by default so every renderer keeps its stock look —
+        // notably the embedded broadcaster styling of Live TV CEA-608/teletext cues.
+        val SUB_STYLE_ENABLED = booleanPreferencesKey("sub_style_enabled")
+        val SUB_COLOR = stringPreferencesKey("sub_color")
+        val SUB_POSITION = stringPreferencesKey("sub_position")
+        val SUB_BG_OPACITY = intPreferencesKey("sub_bg_opacity")
         val AUDIO_DELAY_MS = intPreferencesKey("audio_delay_ms")
         val PREF_AUDIO_LANG = stringPreferencesKey("pref_audio_lang")
         val PREF_SUB_LANG = stringPreferencesKey("pref_sub_lang")
@@ -692,11 +698,56 @@ class SettingsRepository(private val context: Context) {
         context.dataStore.edit { it[Keys.DEFAULT_ZOOM] = name }
     }
 
-    /** Subtitle scale multiplier (mpv sub-scale); 1.0 = normal. */
-    val subtitleScale: Flow<Float> = prefsFlow { it[Keys.SUB_SCALE] ?: 1.0f }
+    // --- Subtitle appearance (#96): size, text color, screen position, background transparency ---
+    // Two levels of opt-in. The master toggle gates everything: while it's off NOTHING here is
+    // applied and every renderer keeps its stock look (mpv defaults, the overlay's hardcoded 45%
+    // box, and — the case #96 is actually about — SubtitleView's embedded broadcaster styling).
+    // Each option then has its own "Default" value, so turning the toggle ON still changes nothing
+    // until the user picks something: only the options actually set reach a renderer.
+
+    /** Subtitle scale multiplier (mpv sub-scale); [SubtitleStyle.SCALE_DEFAULT] = untouched. */
+    val subtitleScale: Flow<Float> = prefsFlow { it[Keys.SUB_SCALE] ?: SubtitleStyle.SCALE_DEFAULT }
 
     suspend fun setSubtitleScale(scale: Float) {
         context.dataStore.edit { it[Keys.SUB_SCALE] = scale }
+    }
+
+    /**
+     * Master toggle for the custom subtitle look; off = stock rendering everywhere.
+     *
+     * Unset defaults to *on* for anyone who had already changed the subtitle size back when it was
+     * a standalone setting — it lives under this toggle now, so defaulting to off would silently
+     * revert their size on upgrade.
+     */
+    val subtitleStyleEnabled: Flow<Boolean> = prefsFlow { prefs ->
+        prefs[Keys.SUB_STYLE_ENABLED] ?: SubtitleStyle.hasScale(prefs[Keys.SUB_SCALE] ?: SubtitleStyle.SCALE_DEFAULT)
+    }
+
+    suspend fun setSubtitleStyleEnabled(enabled: Boolean) {
+        context.dataStore.edit { it[Keys.SUB_STYLE_ENABLED] = enabled }
+    }
+
+    /** Subtitle text color as "#RRGGBB"; blank ([SubtitleStyle.COLOR_DEFAULT]) = untouched. */
+    val subtitleColor: Flow<String> = prefsFlow { it[Keys.SUB_COLOR] ?: SubtitleStyle.COLOR_DEFAULT }
+
+    suspend fun setSubtitleColor(hex: String) {
+        context.dataStore.edit { it[Keys.SUB_COLOR] = hex.trim() }
+    }
+
+    /** One of six fixed screen anchors, or [SubtitleStyle.Position.DEFAULT] = untouched. */
+    val subtitlePosition: Flow<SubtitleStyle.Position> =
+        prefsFlow { SubtitleStyle.Position.fromKey(it[Keys.SUB_POSITION]) }
+
+    suspend fun setSubtitlePosition(position: SubtitleStyle.Position) {
+        context.dataStore.edit { it[Keys.SUB_POSITION] = position.key }
+    }
+
+    /** Subtitle background opacity 0..100 (0 = no box, 100 = solid); negative = untouched. */
+    val subtitleBgOpacity: Flow<Int> = prefsFlow { it[Keys.SUB_BG_OPACITY] ?: SubtitleStyle.OPACITY_DEFAULT }
+
+    suspend fun setSubtitleBgOpacity(pct: Int) {
+        val value = if (pct < SubtitleStyle.OPACITY_MIN) SubtitleStyle.OPACITY_DEFAULT else SubtitleStyle.clampOpacity(pct)
+        context.dataStore.edit { it[Keys.SUB_BG_OPACITY] = value }
     }
 
     /** Audio sync offset in milliseconds (mpv audio-delay); +ve delays audio. */
@@ -1107,12 +1158,16 @@ class SettingsRepository(private val context: Context) {
         // NOTE: only the path string travels — the image bytes live in app-private storage which is
         // wiped on uninstall, so on a new device a stale path is ignored gracefully (falls back to none).
         Keys.BG_IMAGE_PATH,
+        // Subtitle appearance: text color and screen position (toggle is a bool key, size a float
+        // key, background transparency an int key).
+        Keys.SUB_COLOR,
+        Keys.SUB_POSITION,
     )
     private val backupStringSetKeys = listOf(
         // The STATIC-mode hidden set rides with backup so a reinstall keeps the user's hidden icons.
         Keys.NAV_MENU_HIDDEN,
     )
-    private val backupIntKeys = listOf(Keys.UI_ZOOM_PCT, Keys.AUDIO_DELAY_MS, Keys.CATCHUP_OFFSET_MIN, Keys.PROXY_PORT, Keys.CH_NAV_UP_SKIP, Keys.CH_NAV_DOWN_SKIP, Keys.MINI_PLAYER_SIZE_PCT, Keys.LIVE_LATENCY_CUSTOM_SECS, Keys.GLASS_SCOPE, Keys.GLASS_ALPHA, Keys.GLASS_BLUR)
+    private val backupIntKeys = listOf(Keys.UI_ZOOM_PCT, Keys.AUDIO_DELAY_MS, Keys.CATCHUP_OFFSET_MIN, Keys.PROXY_PORT, Keys.CH_NAV_UP_SKIP, Keys.CH_NAV_DOWN_SKIP, Keys.MINI_PLAYER_SIZE_PCT, Keys.LIVE_LATENCY_CUSTOM_SECS, Keys.GLASS_SCOPE, Keys.GLASS_ALPHA, Keys.GLASS_BLUR, Keys.SUB_BG_OPACITY)
     private val backupBoolKeys = listOf(
         Keys.LIVE_PREVIEW, Keys.LIVE_PREVIEW_AUDIO, Keys.HDR_ENABLED, Keys.AUTO_FRAME_RATE, Keys.ANDROID_TV_HOME, Keys.HW_DECODING,
         Keys.VOD_PREFER_EXO, Keys.MEASURED_STREAM_STATS, Keys.DIRECT_TUNE, Keys.EXTERNAL_PLAYER,
@@ -1120,6 +1175,7 @@ class SettingsRepository(private val context: Context) {
         Keys.WEATHER_ENABLED, Keys.WEATHER_FAHRENHEIT, Keys.RESUME_LAST_CHANNEL, Keys.METADATA_ENABLED, Keys.CH_NAV_ENABLED,
         Keys.REMEMBER_LAST_LIVE, Keys.REMEMBER_LAST_MOVIES, Keys.REMEMBER_LAST_SERIES,
         Keys.REMEMBER_CAT_LIVE, Keys.REMEMBER_CAT_MOVIES, Keys.REMEMBER_CAT_SERIES,
+        Keys.SUB_STYLE_ENABLED,
     )
     private val backupFloatKeys = listOf(Keys.SUB_SCALE)
 
