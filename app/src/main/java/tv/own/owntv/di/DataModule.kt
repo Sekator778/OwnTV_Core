@@ -107,7 +107,7 @@ val dataModule = module {
         )
     }
     // context, channelDao, movieDao, seriesDao, profileDao, favoriteDao, historyDao, progressDao, contentOrderDao, db
-    single { UserDataResolver(androidContext(), get(), get(), get(), get(), get(), get(), get(), get(), get()) }
+    single { UserDataResolver(androidContext(), get(), get(), get(), get(), get(), get(), get(), get(), get(), get()) }
     // sourceDao, syncManager, userDataResolver, channelDao, movieDao, seriesDao, categoryDao
     single { SourceRepository(get(), get(), get(), get(), get(), get(), get()) }
     single {

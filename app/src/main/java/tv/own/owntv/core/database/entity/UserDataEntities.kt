@@ -132,3 +132,37 @@ data class DownloadEntity(
     val createdAt: Long = System.currentTimeMillis(),
     val updatedAt: Long = System.currentTimeMillis(),
 )
+
+/**
+ * Per-profile, per-series presentation order for the series episode view ("Sorting" popup): the
+ * season rail and the episode list are ordered independently, each Oldest-first (ascending) or
+ * Newest-first (descending). A series with no row uses the defaults (both ascending), so the table
+ * only ever holds the shows the user actually changed.
+ *
+ * PRESENTATION ONLY — playback order (autoplay next episode) is never affected by these values.
+ *
+ * Deliberately a separate user-data table rather than a column on `series`: the catalog tables are
+ * bulk-synced and would wipe it. Like favorites/history/content_order it foreign-keys the profile
+ * only — `seriesId` is a volatile local id (content is re-inserted on sync), so stale rows are
+ * dropped by [purgeOrphans] and re-attached from stable keys by UserDataResolver.
+ */
+@Entity(
+    tableName = "series_sort_order",
+    foreignKeys = [
+        ForeignKey(entity = ProfileEntity::class, parentColumns = ["id"], childColumns = ["profileId"], onDelete = ForeignKey.CASCADE),
+    ],
+    indices = [
+        Index("profileId"),
+        Index(value = ["profileId", "seriesId"], unique = true),
+    ],
+)
+data class SeriesSortOrderEntity(
+    @PrimaryKey(autoGenerate = true) val id: Long = 0,
+    val profileId: Long,
+    /** Local `series.id`. Volatile across a re-sync/restore — see the class KDoc. */
+    val seriesId: Long,
+    /** Season rail order. false = Oldest first (default), true = Newest first. */
+    val seasonsDescending: Boolean = false,
+    /** Episode list order. false = Oldest first (default), true = Newest first. */
+    val episodesDescending: Boolean = false,
+)

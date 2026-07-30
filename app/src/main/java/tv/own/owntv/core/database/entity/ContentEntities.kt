@@ -105,6 +105,9 @@ data class ChannelEntity(
         // Rating sort (v11): "ORDER BY rating DESC, name" is index-served, not a full temp-B-tree sort.
         Index(value = ["sourceId", "rating", "name"]),
         Index(value = ["categoryId", "rating", "name"]),
+        // Date added sort (v21): same shape as the rating pair, for "ORDER BY addedAt DESC, sortOrder DESC".
+        Index(value = ["sourceId", "addedAt", "sortOrder"]),
+        Index(value = ["categoryId", "addedAt", "sortOrder"]),
     ],
 )
 @Immutable
@@ -147,6 +150,9 @@ data class MovieEntity(
         // Rating sort (v11): "ORDER BY rating DESC, name" is index-served, not a full temp-B-tree sort.
         Index(value = ["sourceId", "rating", "name"]),
         Index(value = ["categoryId", "rating", "name"]),
+        // Date added sort (v21): same shape as the rating pair, for "ORDER BY addedAt DESC, sortOrder DESC".
+        Index(value = ["sourceId", "addedAt", "sortOrder"]),
+        Index(value = ["categoryId", "addedAt", "sortOrder"]),
     ],
 )
 @Immutable

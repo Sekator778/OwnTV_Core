@@ -95,17 +95,18 @@ interface SeriesDao {
     @Query("SELECT * FROM series WHERE categoryId = :categoryId ORDER BY rating DESC, name ASC")
     fun pagingByCategoryRating(categoryId: Long): PagingSource<Int, SeriesEntity>
 
-    // Date added / last modification (newest first). NULLs explicitly last.
-    @Query("SELECT * FROM series WHERE sourceId IN (:sourceIds) ORDER BY addedAt IS NULL, addedAt DESC, id DESC, name ASC")
+    // Date added / last modification (newest first). NULLs sort lowest in SQLite, so unknown
+    // dates land last and fall through to sortOrder DESC (reverse playlist order).
+    @Query("SELECT * FROM series WHERE sourceId IN (:sourceIds) ORDER BY addedAt DESC, sortOrder DESC, id DESC")
     fun pagingAllDateAdded(sourceIds: List<Long>): PagingSource<Int, SeriesEntity>
 
-    @Query("SELECT * FROM series WHERE categoryId = :categoryId ORDER BY addedAt IS NULL, addedAt DESC, id DESC, name ASC")
+    @Query("SELECT * FROM series WHERE categoryId = :categoryId ORDER BY addedAt DESC, sortOrder DESC, id DESC")
     fun pagingByCategoryDateAdded(categoryId: Long): PagingSource<Int, SeriesEntity>
 
-    @Query("SELECT * FROM series WHERE sourceId IN (:sourceIds) AND name LIKE '%' || :query || '%' ORDER BY addedAt IS NULL, addedAt DESC, id DESC, name ASC")
+    @Query("SELECT * FROM series WHERE sourceId IN (:sourceIds) AND name LIKE '%' || :query || '%' ORDER BY addedAt DESC, sortOrder DESC, id DESC")
     fun searchAllDateAdded(query: String, sourceIds: List<Long>): PagingSource<Int, SeriesEntity>
 
-    @Query("SELECT * FROM series WHERE categoryId = :categoryId AND name LIKE '%' || :query || '%' ORDER BY addedAt IS NULL, addedAt DESC, id DESC, name ASC")
+    @Query("SELECT * FROM series WHERE categoryId = :categoryId AND name LIKE '%' || :query || '%' ORDER BY addedAt DESC, sortOrder DESC, id DESC")
     fun searchInCategoryDateAdded(query: String, categoryId: Long): PagingSource<Int, SeriesEntity>
 
     // --- Manual order (Move) — see ChannelDao for the join shape. ---
