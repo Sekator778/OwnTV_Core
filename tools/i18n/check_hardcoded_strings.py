@@ -260,7 +260,7 @@ def _serialize(counts: dict[tuple[str, str], int]) -> str:
     ]
     for (relative, content), count in sorted(counts.items()):
         lines.append(f"{count}\t{relative}\t{_escape(content)}")
-    return "\n".join(lines) + "\n"
+    return "\n".join(lines).rstrip("\n") + "\n"
 
 
 def _parse(text: str) -> dict[tuple[str, str], int]:

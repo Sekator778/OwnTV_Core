@@ -171,7 +171,6 @@ def _generate() -> tuple[str, int, int]:
     L.append("    fun isRtl(tag: String): Boolean = all.firstOrNull { it.languageTag == tag }?.rtl == true")
     L.append("}")
     L.append("")
-    OUT.parent.mkdir(parents=True, exist_ok=True)
     return "\n".join(L), len(entries), len(source_keys)
 
 
