@@ -1,4 +1,169 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Onboarding, add-source and companion-server strings. Phase 1 populates this. -->
-<resources>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <string name="setup_background_image">Background image</string>
+    <string name="setup_background_image_description">Pick a photo to show behind the interface, or clear it to restore solid panels.</string>
+    <string name="setup_from_device">Local</string>
+    <string name="setup_from_phone">Remote</string>
+    <string name="setup_send_from_phone">Send from your phone</string>
+    <string name="setup_phone_background_description">On a phone on the same Wi-Fi, scan the QR (or open the URL), enter this PIN and send a photo. It becomes the background instantly.</string>
+    <string name="setup_opening_server">Opening server…</string>
+    <string name="setup_enter_pin_browser">Enter this PIN in the browser</string>
+    <string name="setup_open_url">Or open this URL</string>
+    <string name="setup_try_again">Try again</string>
+    <string name="setup_start_again_new_pin">Start again with a new PIN</string>
+    <string name="setup_companion_invalid_port">Enter a valid port between 1 and 65535.</string>
+    <string name="setup_companion_port_in_use">Port <xliff:g id="port">%1$d</xliff:g> is already in use. Try another port.</string>
+    <string name="setup_companion_unavailable">Could not open the local server. Try again.</string>
+    <string name="setup_companion_locked">Too many incorrect PIN attempts — the link was closed for safety.</string>
+
+    <string name="setup_move_order_instructions">▲/▼ to move · OK to save · Back to cancel</string>
+    <string name="setup_tmdb_name">Set TMDB name</string>
+    <string name="setup_tmdb_description">Type the exact TMDB title to match. Year is optional but helps when several titles share a name.</string>
+    <string name="setup_year_optional">Year (optional)</string>
+    <string name="setup_pick_location">Pick a location</string>
+    <string name="setup_grant_storage_access">Grant full storage access</string>
+    <string name="setup_use_folder">Use this folder</string>
+    <string name="setup_new_folder">New folder</string>
+    <string name="setup_folder_name">Folder name</string>
+    <string name="setup_folder_example">e.g. My TV</string>
+    <string name="setup_from_current_folder">..</string>
+
+    <string name="setup_move_indicator">↕</string>
+    <string name="setup_items_per_skip">Items per skip</string>
+
+    <string name="setup_welcome_tagline">Your own IPTV player.</string>
+    <string name="setup_get_started">Get Started</string>
+    <string name="setup_before_you_start">Before you start</string>
+    <string name="setup_disclaimer">OwnTV is a media player only. It includes no channels, playlists, or content. You are responsible for adding your own legally accessible Xtream, M3U, or Stalker sources.</string>
+    <string name="setup_i_understand">I Understand</string>
+    <string name="setup_set_up_owntv">Set up OwnTV</string>
+    <string name="setup_setup_choice_description">Start fresh, or bring back your profiles, playlists and favorites from a backup file.</string>
+    <string name="setup_new_profile">New profile</string>
+    <string name="setup_create_profile_add_sources">Create a profile and add sources</string>
+    <string name="setup_restore_backup">Restore backup</string>
+    <string name="setup_import_profiles_playlists">Import profiles &amp; playlists from a file</string>
+    <string name="setup_add_playlist">Add a playlist</string>
+    <string name="setup_add_playlist_description">Add a source for this profile, or set one up later.</string>
+    <string name="setup_new">New</string>
+    <string name="setup_add_m3u_xtream">Add an M3U or Xtream source</string>
+    <string name="setup_existing">Existing</string>
+    <string name="setup_use_other_profile_playlists">Use another profile\'s playlists</string>
+    <string name="setup_import">Import</string>
+    <string name="setup_restore_backup_file">Restore from a backup file</string>
+    <string name="setup_skip_for_now">Skip for now</string>
+    <string name="setup_use_existing_playlists">Use existing playlists</string>
+    <string name="setup_pick_playlists">Pick the playlists to add to this profile.</string>
+    <plurals name="setup_add_selected_playlists">
+        <item quantity="one">Add <xliff:g id="count">%1$d</xliff:g></item>
+        <item quantity="other">Add <xliff:g id="count">%1$d</xliff:g></item>
+    </plurals>
+    <string name="setup_restoring">Restoring…</string>
+    <string name="setup_wrong_backup_password">Wrong backup password</string>
+    <string name="setup_enter_backup_password">Enter backup password</string>
+    <string name="setup_password_mismatch_sealed">That password didn\'t match. This backup is encrypted — it can\'t be opened without the password it was created with.</string>
+    <string name="setup_password_mismatch">That password didn\'t match. Try again, or skip to restore everything except saved passwords.</string>
+    <string name="setup_backup_encrypted_prompt">This backup is encrypted. Enter the backup password to open and restore it.</string>
+    <string name="setup_backup_passwords_encrypted_prompt">This backup\'s passwords are encrypted. Enter the backup password to restore them, or skip to restore everything else and re-enter passwords later.</string>
+    <string name="setup_backup_password">Backup password</string>
+    <string name="setup_skip_no_passwords">Skip (no passwords)</string>
+    <string name="setup_restore">Restore</string>
+    <string name="setup_restore_failed">Restore failed</string>
+    <string name="setup_backup_read_failed">Couldn\'t read the backup file</string>
+    <string name="setup_invalid_mac">Invalid MAC address — use AA:BB:CC:DD:EE:FF</string>
+    <string name="setup_pick_backup_file">Pick a backup file to restore</string>
+    <string name="setup_restore_a_backup">Restore a backup</string>
+    <string name="setup_restore_choice_description">Send the backup from another device (phone or laptop) on the same Wi-Fi, or pick a backup file already on this device.</string>
+    <string name="setup_upload_from_wifi_device">Upload from a device on your Wi-Fi</string>
+    <string name="setup_local_file">Local file</string>
+    <string name="setup_pick_backup_local">Pick a backup file on this device</string>
+    <string name="setup_run_in_background">Run in background</string>
+    <string name="setup_importing_catalog">Importing catalog…</string>
+    <string name="setup_preparing_catalog">Preparing catalog</string>
+    <string name="setup_watching_during_import">You can start watching while the rest of the catalog loads.</string>
+    <string name="setup_all_set">All set!</string>
+    <string name="setup_restored_items"><xliff:g id="items">%1$d</xliff:g> items restored. Re-sync your sources to load content.</string>
+    <string name="setup_passwords_omitted">Re-enter any saved passwords afterwards.</string>
+    <plurals name="setup_skipped_sources">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> source was skipped because this version doesn\'t support its playlist type.</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> sources were skipped because this version doesn\'t support their playlist types.</item>
+    </plurals>
+    <string name="setup_continue">Continue</string>
+    <string name="setup_import_failed">Import failed</string>
+    <string name="setup_try_again_caps">Try Again</string>
+
+    <string name="setup_add_from_phone">Add from your phone</string>
+    <string name="setup_phone_add_description">On a phone or laptop on the same Wi-Fi, scan the QR (or open the URL), enter this PIN, fill in your playlist and tap Send to TV. Its details then appear here, ready to import — you press Start Import with the remote.</string>
+    <string name="setup_opening">Opening…</string>
+    <string name="setup_open_server">Open server</string>
+    <string name="setup_stop_server">Stop server</string>
+
+    <string name="setup_add_source">Add a source</string>
+    <string name="setup_add_source_description">Fill the form on your phone, or type the details here with the remote.</string>
+    <string name="setup_manual">Manual</string>
+    <string name="setup_use_phone_same_wifi">Use a phone on the same Wi-Fi</string>
+    <string name="setup_type_source_here">Type Xtream / M3U / Stalker here</string>
+    <string name="setup_edit_source">Edit source</string>
+    <string name="setup_add_your_source">Add your source</string>
+    <string name="setup_edit_source_description">Update this source\'s details, or change its auto-refresh setting.</string>
+    <string name="setup_byo_source_description">OwnTV is a player — bring your own Xtream, M3U, or Stalker source.</string>
+    <string name="setup_xtream">Xtream</string>
+    <string name="setup_m3u">M3U / M3U8</string>
+    <string name="setup_stalker_mac">Stalker (MAC)</string>
+    <string name="setup_source_name_optional">Name (optional)</string>
+    <string name="setup_default_iptv">My IPTV</string>
+    <string name="setup_name_default_playlist">My Playlist</string>
+    <string name="setup_default_portal">My Portal</string>
+    <string name="setup_default_profile">Profile</string>
+    <string name="setup_server_url">Server URL</string>
+    <string name="setup_server_example">http://host:port</string>
+    <string name="setup_username">Username</string>
+    <string name="setup_password">Password</string>
+    <string name="setup_password_keep">Password (leave blank to keep)</string>
+    <string name="setup_playlist_url_local_file">Playlist URL or local file</string>
+    <string name="setup_playlist_example">http://…/playlist.m3u</string>
+    <string name="setup_playlist_file_unavailable">Couldn\'t open the playlist file. Pick it again; it may have moved.</string>
+    <string name="setup_playlist_path_unsupported">This local playlist path is not supported.</string>
+    <string name="setup_local_file_choose">Choose a local .m3u / .m3u8 file…</string>
+    <string name="setup_local_file_prefix">Local file: <xliff:g id="name">%1$s</xliff:g></string>
+    <string name="setup_portal_url">Portal URL</string>
+    <string name="setup_portal_example">http://host:port/c/</string>
+    <string name="setup_mac_address">MAC address</string>
+    <string name="setup_mac_example">00:1A:79:AA:BB:CC</string>
+    <string name="setup_mac_invalid">Enter 12 characters, e.g. 00:1A:79:AA:BB:CC</string>
+    <string name="setup_device_model_preset">Device model preset (User-Agent)…</string>
+    <string name="setup_testing">Testing…</string>
+    <string name="setup_test_connection">Test connection</string>
+    <string name="setup_stalker_test_ok">✓ <xliff:g id="message">%1$s</xliff:g></string>
+    <string name="setup_stalker_test_connected">✓ Connected via <xliff:g id="endpoint">%1$s</xliff:g> (<xliff:g id="fields">%2$d</xliff:g> profile fields)</string>
+    <string name="setup_stalker_test_expires"> · expires <xliff:g id="date">%1$s</xliff:g></string>
+    <string name="setup_user_agent_optional">User-Agent (optional)</string>
+    <string name="setup_user_agent_example">e.g. VLC/3.0.20 LibVLC/3.0.20</string>
+    <string name="setup_auto_refresh">Auto refresh</string>
+    <string name="setup_auto_refresh_description">Off, on startup, or when data is stale</string>
+    <string name="setup_default_playlist">Default playlist</string>
+    <string name="setup_default_playlist_description">Show only this playlist across the app. Turn off for all playlists; change anytime from the top bar.</string>
+    <string name="setup_what_to_sync">What to sync</string>
+    <string name="setup_sync_off_editing">Off sections stay hidden and are never fetched. Turning a section back On shows cached rows immediately.</string>
+    <string name="setup_sync_choices">Now imports first · Later syncs in the background · Off is never fetched or shown.</string>
+    <string name="setup_live_tv">Live TV</string>
+    <string name="setup_channels_categories">Channels and categories</string>
+    <string name="setup_movies">Movies</string>
+    <string name="setup_vod_movie_catalog">VOD movie catalog</string>
+    <string name="setup_series">Series</string>
+    <string name="setup_tv_series_catalog">TV series catalog</string>
+    <string name="setup_start_import">Start Import</string>
+    <string name="setup_update_source_save">Save</string>
+    <string name="setup_pick_playlist_file">Pick a playlist file (.m3u / .m3u8)</string>
+    <string name="setup_device_model_preset_title">Device model preset</string>
+    <string name="setup_auto_refresh_title">Auto refresh</string>
+    <string name="setup_on">On</string>
+    <string name="setup_now">Now</string>
+    <string name="setup_later">Later</string>
+    <string name="setup_off">Off</string>
+    <string name="setup_scope_value">◀ <xliff:g id="value">%1$s</xliff:g> ▶</string>
+    <string name="setup_default_mag">Default (MAG200)</string>
+    <string name="setup_mag250">MAG250</string>
+    <string name="setup_mag254">MAG254</string>
+    <string name="setup_mag270">MAG270</string>
+    <string name="setup_mag420">MAG420</string>
 </resources>

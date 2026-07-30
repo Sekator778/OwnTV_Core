@@ -82,10 +82,10 @@ class SubtitleRepository(
         }
 
         val session = accounts.session(profileId)
-            ?: throw IllegalStateException("Not signed in to OpenSubtitles")
+            ?: throw IllegalStateException()
         val response = client.requestDownload(session.token, session.apiHost, fileId)
         val link = response.optString("link").takeIf { it.isNotBlank() }
-            ?: throw IOException("OpenSubtitles returned no download link")
+            ?: throw IOException()
         onQuota(
             response.optInt("remaining", -1).takeIf { it >= 0 },
             response.optString("reset_time").takeIf { it.isNotBlank() },
@@ -120,7 +120,7 @@ class SubtitleRepository(
      * an engine switch or replay never piles up duplicates (§10).
      */
     suspend fun importLocalFile(file: File): ResolvedSubtitle = withContext(Dispatchers.IO) {
-        if (!file.isFile) throw IOException("The selected subtitle file is no longer available.")
+        if (!file.isFile) throw IOException()
         dao.findLocalByFileName(file.name)?.let { existing ->
             if (File(existing.cachedPath).exists()) {
                 dao.touchCache(existing.id, now())
@@ -130,7 +130,7 @@ class SubtitleRepository(
         }
 
         val raw = file.readBytes()
-        if (raw.isEmpty()) throw IOException("The selected subtitle file is empty.")
+        if (raw.isEmpty()) throw IOException()
         val utf8 = SubtitleCharset.toUtf8(raw)
         // The managed copy gets the NORMALIZED extension (".webvtt" → ".vtt"): both engines pick
         // their parser from the path extension, and only the canonical ones are mapped.
@@ -243,8 +243,8 @@ class SubtitleRepository(
     private fun fetch(url: String): ByteArray {
         val request = Request.Builder().url(url).build()
         okHttpClient.newCall(request).execute().use { resp ->
-            if (!resp.isSuccessful) throw IOException("Subtitle download HTTP ${resp.code}")
-            return resp.body?.bytes() ?: throw IOException("Empty subtitle download")
+            if (!resp.isSuccessful) throw IOException()
+            return resp.body?.bytes() ?: throw IOException()
         }
     }
 

@@ -5,23 +5,19 @@ import androidx.compose.runtime.Immutable
 import org.json.JSONArray
 import org.json.JSONObject
 
-enum class HomeRow(
-    val title: String,
-    val settingsDesc: String,
-    val implemented: Boolean = true,
-) {
-    HERO("Keep Watching", "The large preview row at the top"),
-    RECENT_CHANNELS("Recent Channels", "Live channels you tuned recently"),
-    FAVORITE_CHANNELS("Favourite Channels", "Your favourited live channels"),
-    CONTINUE_MOVIES("Continue Watching Movies", "Movies with a saved position"),
-    CONTINUE_SERIES("Continue Watching Series", "Episodes to resume or play next"),
+enum class HomeRow {
+    HERO,
+    RECENT_CHANNELS,
+    FAVORITE_CHANNELS,
+    CONTINUE_MOVIES,
+    CONTINUE_SERIES;
+
+    val implemented: Boolean get() = true
 }
 
-enum class HomeLiveRowMode(
-    val label: String,
-) {
-    CARDS("Cards"),
-    ON_NOW("On Now");
+enum class HomeLiveRowMode {
+    CARDS,
+    ON_NOW;
 
     fun toggled(): HomeLiveRowMode = when (this) {
         CARDS -> ON_NOW

@@ -201,7 +201,7 @@ internal class XtreamSyncer(
         val freshSource = s.lastSyncAt == null
         val phaseStart = System.currentTimeMillis()
         val elapsedStart = SystemClock.elapsedRealtime()
-        val label = p.phase.label
+        val label = p.phase.name
         Log.i(TAG, "$label phase start sourceId=${s.id} fresh=$freshSource")
         progress.update(p.phase, 0)
         val hashDeferred = if (!freshSource) support.asyncHashLoad(this, label, s.id) { p.adapter.loadHashes(s.id) } else null

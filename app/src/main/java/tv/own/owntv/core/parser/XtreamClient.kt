@@ -244,7 +244,9 @@ class XtreamClient(private val http: HttpClient) {
             }
         }
         reader.endObject()
-        id?.let { out.add(XtEpisode(it, season, epNum, title.ifBlank { "Episode $epNum" }, ext)) }
+        // Keep a missing provider title empty. The Compose episode renderer supplies a localized
+        // episode-number fallback; storing English here would freeze the device language in the DB.
+        id?.let { out.add(XtEpisode(it, season, epNum, title.trim(), ext)) }
     }
 
     /** Reads a string, coercing numbers and tolerating JSON null. */

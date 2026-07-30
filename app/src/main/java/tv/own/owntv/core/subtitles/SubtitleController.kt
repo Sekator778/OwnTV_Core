@@ -23,6 +23,9 @@ import tv.own.owntv.player.OwnTVPlayer
  * The search screen (in the player HUD overlay) reads [current] and calls [search] / [apply]; on
  * apply the downloaded subtitle is attached to the running mpv player and remembered for resume.
  */
+class NoActiveProfileException : IllegalStateException()
+class NoCurrentItemException : IllegalStateException()
+
 class SubtitleController(
     private val repository: SubtitleRepository,
     private val accounts: OpenSubtitlesAccountManager,
@@ -45,9 +48,6 @@ class SubtitleController(
     ) {
         val mediaType: String get() = if (isEpisode) "SERIES" else "MOVIE"
 
-        /** Title for the delete lists: "Oppenheimer" or "Breaking Bad · S1E1". */
-        val displayTitle: String
-            get() = if (isEpisode && season != null && episode != null) "$title · S${season}E${episode}" else title
     }
 
     private val _current = MutableStateFlow<Context?>(null)
@@ -133,7 +133,7 @@ class SubtitleController(
      *  user lands back in the search that started it (§5.2). Throws for the sign-in-failed dialog. */
     suspend fun signIn(username: String, password: String, staySignedIn: Boolean) {
         val pid = _current.value?.profileId ?: activeProfile()
-        check(pid >= 0) { "No active profile" }
+        check(pid >= 0) { NoActiveProfileException() }
         accounts.signIn(pid, username, password, staySignedIn)
     }
 
@@ -202,7 +202,7 @@ class SubtitleController(
         hearingImpaired: Boolean,
         onQuota: (remaining: Int?, resetTime: String?) -> Unit = { _, _ -> },
     ) {
-        val ctx = _current.value ?: throw IllegalStateException("No item is playing")
+        val ctx = _current.value ?: throw NoCurrentItemException()
         val resolved = repository.downloadAndCache(
             profileId = ctx.profileId,
             fileId = fileId,
@@ -213,10 +213,15 @@ class SubtitleController(
             onQuota = onQuota,
         )
         pathToKey[resolved.path] = resolved.subtitleKey // timing identity (§8.4), before the attach fires
-        player.addExternalSubtitle(resolved.path, labelFor(resolved), resolved.language)
+        player.addExternalSubtitle(
+            path = resolved.path,
+            title = rawTrackLabel(resolved),
+            lang = resolved.language,
+            source = resolved.playerSource(),
+        )
         repository.rememberSelection(ctx.profileId, ctx.contentKey, resolved.cacheId)
-        // Link it to this item so it re-lists on replay and appears in the delete surfaces (§11).
-        repository.linkDownload(ctx.profileId, ctx.contentKey, resolved.cacheId, ctx.mediaType, ctx.displayTitle)
+        // Persist raw provider title only; episode wording is resolved by the Compose delete screen.
+        repository.linkDownload(ctx.profileId, ctx.contentKey, resolved.cacheId, ctx.mediaType, ctx.title)
     }
 
     /**
@@ -225,20 +230,32 @@ class SubtitleController(
      * so it re-lists on replay and shows in the delete surfaces. No account or network needed.
      */
     suspend fun applyLocal(file: java.io.File) {
-        val ctx = _current.value ?: throw IllegalStateException("No item is playing")
+        val ctx = _current.value ?: throw NoCurrentItemException()
         val resolved = repository.importLocalFile(file)
         pathToKey[resolved.path] = resolved.subtitleKey // timing identity (§8.4), before the attach fires
-        player.addExternalSubtitle(resolved.path, labelFor(resolved), resolved.language)
+        player.addExternalSubtitle(
+            path = resolved.path,
+            title = rawTrackLabel(resolved),
+            lang = resolved.language,
+            source = resolved.playerSource(),
+        )
         repository.rememberSelection(ctx.profileId, ctx.contentKey, resolved.cacheId)
-        repository.linkDownload(ctx.profileId, ctx.contentKey, resolved.cacheId, ctx.mediaType, ctx.displayTitle)
+        // Persist raw provider title only; episode wording is resolved by the Compose delete screen.
+        repository.linkDownload(ctx.profileId, ctx.contentKey, resolved.cacheId, ctx.mediaType, ctx.title)
     }
 
-    /** Track-row label: "Bengali — OpenSubtitles" / "movie.en.srt — Local file" (plan §4/§7.3). */
-    private fun labelFor(s: SubtitleRepository.ResolvedSubtitle): String =
-        if (s.source == SubtitleRepository.SOURCE_LOCAL) {
-            listOfNotNull(s.languageName ?: s.language ?: s.releaseName, "Local file").joinToString(" — ")
+    /**
+     * The player engine receives only raw subtitle metadata. The HUD adds the localized source
+     * label at render time, so a locale switch cannot leave a translated label in engine state.
+     */
+    private fun rawTrackLabel(s: SubtitleRepository.ResolvedSubtitle): String =
+        (s.languageName ?: s.language ?: s.releaseName).orEmpty().ifBlank { s.subtitleKey }
+
+    private fun SubtitleRepository.ResolvedSubtitle.playerSource(): tv.own.owntv.player.ExternalSubtitleSource =
+        if (source == SubtitleRepository.SOURCE_LOCAL) {
+            tv.own.owntv.player.ExternalSubtitleSource.LOCAL
         } else {
-            listOfNotNull(s.languageName ?: s.language, "OpenSubtitles").joinToString(" — ")
+            tv.own.owntv.player.ExternalSubtitleSource.OPENSUBTITLES
         }
 
     /** Re-attach (unselected) every subtitle previously downloaded for the current item, on file load. */
@@ -249,7 +266,14 @@ class SubtitleController(
             if (subs.isEmpty()) return@launch
             subs.forEach { pathToKey[it.path] = it.subtitleKey } // timing identities (§8.4)
             player.restoreExternalSubtitles(
-                subs.map { s -> OwnTVPlayer.ExternalSub(s.path, labelFor(s), s.language) },
+                subs.map { s ->
+                    OwnTVPlayer.ExternalSub(
+                        path = s.path,
+                        title = rawTrackLabel(s),
+                        lang = s.language,
+                        source = s.playerSource(),
+                    )
+                },
             )
         }
     }

@@ -47,14 +47,14 @@ class BackupManager(
      *  NOT a section: every backup is inherently profile-based — the export flow's first step picks
      *  which profiles to include (PIN-verified for locked non-active ones), and the ticked profiles'
      *  rows always ride in the file. */
-    enum class Section(val label: String, val desc: String) {
-        SOURCES("Sources", "Playlists, EPG feeds and credentials"),
-        CUSTOMIZE("Customizations", "Hidden/renamed/reordered categories, channels, EPG matches & custom TMDB names"),
-        FAVORITES("Favorites", "Starred channels, movies and series"),
-        HISTORY("Watch history", "Recently watched lists"),
-        RESUME("Resume positions", "Where you stopped in movies & episodes"),
-        MANUAL_REORDER("Manual reorder", "Your Move up/down positions for channels, movies and series"),
-        SETTINGS("App settings", "Theme, accent, player & layout preferences"),
+    enum class Section {
+        SOURCES,
+        CUSTOMIZE,
+        FAVORITES,
+        HISTORY,
+        RESUME,
+        MANUAL_REORDER,
+        SETTINGS,
     }
 
     /**
@@ -238,7 +238,7 @@ class BackupManager(
         if (bak.exists()) {
             runCatching { read(bak) }.getOrNull()?.let { return it }
         }
-        throw primary.exceptionOrNull() ?: IllegalStateException("Not an OwnTV backup file")
+        throw primary.exceptionOrNull() ?: IllegalStateException()
     }
 
     /**
@@ -261,18 +261,10 @@ class BackupManager(
      * Outcome of a restore: how many rows/entries were applied, and how many `sources[]` entries were
      * left out because this build doesn't know their [SourceType] (B4 — see [sourceFrom]).
      */
-    data class ImportSummary(val items: Int, val skippedSources: Int = 0) {
-        /** A sentence to append to the user-facing restore message, empty when nothing was skipped. */
-        val skippedNote: String
-            get() = when (skippedSources) {
-                0 -> ""
-                1 -> " 1 source was skipped — it uses a playlist type this version doesn't support."
-                else -> " $skippedSources sources were skipped — they use playlist types this version doesn't support."
-            }
-    }
+    data class ImportSummary(val items: Int, val skippedSources: Int = 0)
 
     /** Thrown when a backup is encrypted and the supplied passphrase is wrong (or missing where required). */
-    class WrongPasswordException : Exception("Wrong backup password")
+    class WrongPasswordException : Exception()
 
     /**
      * What a backup file contains + whether it carries encrypted secrets (older files have no
@@ -303,7 +295,7 @@ class BackupManager(
                     }
                 }
             }
-            if (out.isEmpty()) error("Not an OwnTV backup file")
+            if (out.isEmpty()) error("backup_invalid")
             Inspection(out, encrypted = root.has("crypto"), sealed = sealed)
         }
     }
@@ -762,7 +754,7 @@ class BackupManager(
                     bak.delete()
                     target.renameTo(bak) // best effort: a failed rotation must not block the new write
                 }
-                if (!tmp.renameTo(target)) error("Could not finalize backup file")
+                if (!tmp.renameTo(target)) error("backup_finalize_failed")
             } catch (e: Throwable) {
                 tmp.delete()
                 throw e

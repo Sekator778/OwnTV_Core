@@ -23,7 +23,7 @@ object PlaybackErrorLog {
         val atMs: Long,
         val engine: String,
         val live: Boolean,
-        val reason: String?,
+        val reason: PlayerFailureReason?,
         val spec: String?,
         val raw: String?,
         val model: String,
@@ -47,7 +47,7 @@ object PlaybackErrorLog {
                         engine = engine,
                         live = live,
                         reason = info.reason,
-                        spec = info.spec,
+                        spec = info.spec?.toStorageValue(),
                         raw = info.raw,
                         model = "${Build.MANUFACTURER} ${Build.MODEL}".trim(),
                         android = "Android ${Build.VERSION.RELEASE} (API ${Build.VERSION.SDK_INT})",
@@ -76,7 +76,9 @@ object PlaybackErrorLog {
                 atMs = o.optLong("atMs"),
                 engine = o.optString("engine"),
                 live = o.optBoolean("live"),
-                reason = o.optString("reason").takeIf { it.isNotEmpty() },
+                reason = o.optString("reason").takeIf { it.isNotEmpty() }?.let { key ->
+                    runCatching { PlayerFailureReason.valueOf(key) }.getOrNull()
+                },
                 spec = o.optString("spec").takeIf { it.isNotEmpty() },
                 raw = o.optString("raw").takeIf { it.isNotEmpty() },
                 model = o.optString("model"),
@@ -93,7 +95,7 @@ object PlaybackErrorLog {
                     .put("atMs", e.atMs)
                     .put("engine", e.engine)
                     .put("live", e.live)
-                    .put("reason", e.reason ?: "")
+                    .put("reason", e.reason?.name ?: "")
                     .put("spec", e.spec ?: "")
                     .put("raw", e.raw ?: "")
                     .put("model", e.model)
@@ -103,3 +105,16 @@ object PlaybackErrorLog {
         file(context).writeText(arr.toString())
     }
 }
+
+/** Stable technical representation used only for the persisted diagnostic history. */
+private fun MediaSpec.toStorageValue(): String = buildList {
+    codec?.let(::add)
+    resolution?.let(::add)
+    decoder?.let {
+        when (it) {
+            is DecoderSpec.Hardware -> add("hardware" + if (it.direct) ":direct" else "")
+            is DecoderSpec.Software -> add("software" + if (it.gpu) ":gpu" else "")
+            is DecoderSpec.Named -> add(it.value + if (it.hardware) ":hardware" else "")
+        }
+    }
+}.joinToString(" • ").ifBlank { "" }

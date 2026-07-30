@@ -10,6 +10,12 @@ import androidx.compose.ui.graphics.ImageBitmap
  * page before the form is served. Submissions arrive as [CompanionPayload]s (the TV user still presses
  * Start Import — the phone only fills the form).
  */
+sealed interface CompanionFailure {
+    data object InvalidPort : CompanionFailure
+    data class PortInUse(val port: Int) : CompanionFailure
+    data object Unavailable : CompanionFailure
+}
+
 sealed interface CompanionServerState {
     data object Idle : CompanionServerState
     data object Starting : CompanionServerState
@@ -19,7 +25,7 @@ sealed interface CompanionServerState {
         val pin: String,
         val qr: ImageBitmap?,
     ) : CompanionServerState
-    data class Failed(val message: String) : CompanionServerState
+    data class Failed(val failure: CompanionFailure) : CompanionServerState
 
     /**
      * Closed by the server itself after [CompanionHttpServer.MAX_PIN_ATTEMPTS] wrong PINs (C2).

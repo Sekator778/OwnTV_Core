@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <!-- Profiles -->
+    <string name="profiles_pin">PIN</string>
+    <string name="profiles_new">New profile</string>
+    <string name="profiles_edit">Edit profile</string>
+    <string name="profiles_name">Name</string>
+    <string name="profiles_name_hint">e.g. Alex</string>
+    <string name="profiles_avatar">AVATAR</string>
+    <string name="profiles_kids">Kids profile</string>
+    <string name="profiles_kids_description">Simplified, safe browsing</string>
+    <string name="profiles_remove_pin">Remove PIN lock</string>
+    <string name="profiles_no_pin">This profile opens without a PIN</string>
+    <string name="profiles_change_pin">Change PIN (blank = keep)</string>
+    <string name="profiles_optional_pin">PIN (optional)</string>
+    <string name="profiles_pin_digits">4–6 digits</string>
+    <string name="profiles_pin_placeholder">····</string>
+    <string name="profiles_name_taken">This name is already taken — please choose another name.</string>
+    <string name="profiles_create">Create</string>
+    <string name="profiles_save">Save</string>
+    <string name="profiles_gate_title">Who\'s watching?</string>
+    <string name="profiles_wrong_pin">Wrong PIN — try again</string>
+    <string name="profiles_enter_pin"><xliff:g id="name">%1$s</xliff:g> — enter PIN</string>
+    <string name="profiles_kids_badge">KIDS</string>
+    <string name="profiles_add">Add profile</string>
+    <string name="profiles_title">Profiles</string>
+    <string name="profiles_add_button">Add Profile</string>
+    <string name="profiles_delete_title">Delete “<xliff:g id="name">%1$s</xliff:g>”?</string>
+    <string name="profiles_delete_message">Removes this profile and its favorites and history. Sources are kept.</string>
+    <string name="profiles_kids_tag">Kids</string>
+    <string name="profiles_locked_tag">PIN locked</string>
+    <string name="profiles_change_pin_hint">Change PIN (blank = keep)</string>
+
+    <!-- Search -->
+    <string name="search_title">Search</string>
+    <string name="search_continue">Continue watching</string>
+    <string name="search_unwatched">Unwatched</string>
+    <string name="search_hint">Search channels, movies &amp; series…</string>
+    <string name="search_recent">Recent searches</string>
+    <string name="search_recent_empty">Your recent searches will show here.</string>
+    <string name="search_minimum_query">Type at least 2 characters to search across everything.</string>
+    <string name="search_no_results"><xliff:g id="query">%1$s</xliff:g> — no results.</string>
+    <string name="search_nothing_in_list">Nothing in <xliff:g id="list">%1$s</xliff:g> yet.</string>
+    <string name="search_clear">Clear</string>
+    <string name="search_jump_to">Jump to</string>
+    <string name="search_watch_live">Watch live</string>
+    <string name="search_play">Play</string>
+    <string name="search_open_series">Open series</string>
+    <string name="search_movie">Movie</string>
+    <string name="search_series">Series</string>
+    <string name="search_channels">Channels</string>
+    <string name="search_channel_number">#<xliff:g id="number">%1$s</xliff:g></string>
+
+    <!-- Home -->
+    <string name="home_keep_watching">Keep Watching</string>
+    <string name="home_play_next">Play Next</string>
+    <string name="home_tune_in">Tune In</string>
+    <string name="home_recent_live">Recently watched live</string>
+    <string name="profiles_default_name">Profile</string>
+    <string name="launcher_recent_live_title">Recent Live</string>
+    <string name="launcher_recent_live_description">Recently watched live channels</string>
+    <string name="launcher_movie_type">Movie</string>
+    <string name="launcher_episode_number">Episode <xliff:g id="episode">%1$d</xliff:g></string>
+    <string name="home_no_preview">Nothing to preview yet.</string>
+    <string name="home_no_rows">All Home rows are hidden.</string>
+    <string name="home_enable_rows">Turn rows back on in Settings → Home screen.</string>
+    <string name="home_start_watching">Start watching to see your activity here.</string>
+    <string name="home_continue_empty">Your continue-watching items will appear here once playback history is available.</string>
+    <string name="home_last_watched_now">Last watched just now</string>
+    <string name="home_finish_by">Finish by <xliff:g id="time">%1$s</xliff:g></string>
+    <string name="home_resume">Resume</string>
+    <plurals name="home_last_watched_minutes">
+        <item quantity="one">Last watched <xliff:g id="count">%1$d</xliff:g> minute ago</item>
+        <item quantity="other">Last watched <xliff:g id="count">%1$d</xliff:g> minutes ago</item>
+    </plurals>
+    <plurals name="home_last_watched_hours">
+        <item quantity="one">Last watched <xliff:g id="count">%1$d</xliff:g> hour ago</item>
+        <item quantity="other">Last watched <xliff:g id="count">%1$d</xliff:g> hours ago</item>
+    </plurals>
+    <plurals name="home_last_watched_days">
+        <item quantity="one">Last watched <xliff:g id="count">%1$d</xliff:g> day ago</item>
+        <item quantity="other">Last watched <xliff:g id="count">%1$d</xliff:g> days ago</item>
+    </plurals>
+    <string name="home_season_episode">S<xliff:g id="season">%1$02d</xliff:g> E<xliff:g id="episode">%2$02d</xliff:g></string>
+    <string name="home_season">S<xliff:g id="season">%1$02d</xliff:g></string>
+    <string name="home_episode">E<xliff:g id="episode">%1$02d</xliff:g></string>
+    <string name="home_row_cards">Cards</string>
+    <string name="home_row_keep_watching">Keep Watching</string>
+    <string name="home_row_continue_movies">Continue Watching Movies</string>
+    <string name="home_row_continue_series">Continue Watching Series</string>
+    <string name="home_row_recent_channels">Recent Channels</string>
+    <string name="home_row_favorite_channels">Favourite Channels</string>
+    <string name="home_row_on_now">On Now</string>
+    <string name="home_row_hero_description">The large preview row at the top</string>
+    <string name="home_row_continue_movies_description">Movies with a saved position</string>
+    <string name="home_row_continue_series_description">Episodes to resume or play next</string>
+    <string name="home_row_recent_description">Live channels you tuned recently</string>
+    <string name="home_row_favorite_description">Your favourited live channels</string>
+    <string name="home_on_now_title"><xliff:g id="title">%1$s</xliff:g> · ON NOW</string>
+    <string name="home_ok_to_watch">OK to watch</string>
+    <string name="home_ok_to_browse">OK to browse</string>
+    <string name="home_no_programme_details">No programme details</string>
+    <string name="home_guide_unavailable">Guide data unavailable</string>
+    <string name="home_next">Next</string>
+    <string name="home_channel_number"><xliff:g id="number">%1$s</xliff:g>  <xliff:g id="name">%2$s</xliff:g></string>
+    <string name="home_time_range"><xliff:g id="start">%1$s</xliff:g>-<xliff:g id="end">%2$s</xliff:g></string>
+    <string name="home_now_time">NOW · <xliff:g id="time">%1$s</xliff:g></string>
+    <string name="home_up_next_time">UP NEXT · <xliff:g id="time">%1$s</xliff:g></string>
+    <string name="home_upcoming_item"><xliff:g id="time">%1$s</xliff:g> <xliff:g id="title">%2$s</xliff:g></string>
+    <plurals name="home_channel_count">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> channel</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> channels</item>
+    </plurals>
+</resources>

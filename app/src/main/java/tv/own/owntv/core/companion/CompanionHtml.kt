@@ -1,15 +1,14 @@
 package tv.own.owntv.core.companion
 
+import android.content.Context
+import androidx.annotation.StringRes
+import org.json.JSONObject
+import tv.own.owntv.R
 import tv.own.owntv.core.model.SourceType
 
 /**
- * The HTML the [CompanionHttpServer] serves to the phone, styled to match OwnTV: the app's near-black
- * teal-tinted dark palette, Lora (the app's popup serif, served from `/lora.ttf`) for headings, and
- * the system sans for body text. Kept separate from the socket plumbing so the markup is easy to
- * iterate on and unit-testable in isolation.
- *
- * The palette mirrors [tv.own.owntv.ui.theme] dark tokens: background #040E0B, surfaces #1B211F /
- * #252B29, text #DEE4E1 / #BFC9C4, outline #3F4945, teal accent #52DBC8.
+ * Localized HTML renderer for the companion web UI. Markup, CSS and protocol identifiers remain
+ * here; every sentence or label visible to the phone is resolved from Android resources first.
  */
 internal object CompanionHtml {
 
@@ -74,293 +73,323 @@ internal object CompanionHtml {
     private const val LOGO_SVG =
         """<svg viewBox="0 0 24 24" fill="none"><path d="M8 5v14l11-7z" fill="currentColor"/></svg>"""
 
-    private fun page(title: String, inner: String): String = """
-        <!doctype html><html lang="en"><head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>$title</title>
-        <style>$CSS</style>
-        </head><body><main>
-          <div class="brandrow"><span class="dot">$LOGO_SVG</span><span class="brand">OwnTV</span></div>
-          $inner
-        </main></body></html>
-    """.trimIndent()
+    private class Copy(private val context: Context) {
+        private fun s(@StringRes id: Int): String = context.getString(id)
 
-    /** The PIN gate shown when the plain QR/URL is opened without a valid PIN. */
-    fun pinPage(error: String?): String = page(
-        "OwnTV — Enter PIN",
-        """
-          <div class="card">
-            <h1>Enter the PIN</h1>
-            <p>Type the 6-digit PIN shown on your TV to continue.</p>
-            ${if (error != null) """<p class="err">${error.escapeHtml()}</p>""" else ""}
-            <form method="post" action="/">
-              <input class="pin" name="pin" inputmode="numeric" pattern="[0-9]*" maxlength="6"
-                     autofocus placeholder="••••••" aria-label="PIN" required>
-              <button class="go" type="submit">Continue</button>
-            </form>
-          </div>
-        """.trimIndent(),
-    )
+        val app = s(R.string.app_name)
+        val pinTitle = s(R.string.companion_pin_page_title)
+        val pinHeading = s(R.string.companion_pin_heading)
+        val pinDescription = s(R.string.companion_pin_description)
+        val pinPlaceholder = s(R.string.companion_pin_placeholder)
+        val pinAria = s(R.string.companion_pin_aria)
+        val continueLabel = s(R.string.companion_continue)
+        val pinMismatch = s(R.string.companion_pin_mismatch)
 
-    /** The add-source form. [pin] is baked into every submit endpoint so posts stay authenticated. */
-    fun formPage(pin: String): String = page(
-        "OwnTV — Add source",
-        """
-          <div class="card">
-            <h1>Add a source</h1>
-            <p>Fill in one source and press Send. It appears on the TV — pick up the remote and press
-               <strong>Start Import</strong> there when you are ready.</p>
+        val addTitle = s(R.string.companion_add_page_title)
+        val addHeading = s(R.string.companion_add_heading)
+        val addDescription = s(R.string.companion_add_description)
+        val xtream = s(R.string.setup_xtream)
+        val m3u = s(R.string.setup_m3u)
+        val stalker = s(R.string.setup_stalker_mac)
+        val name = s(R.string.setup_source_name_optional)
+        val defaultIptv = s(R.string.setup_default_iptv)
+        val defaultPlaylist = s(R.string.setup_name_default_playlist)
+        val defaultPortal = s(R.string.setup_default_portal)
+        val serverUrl = s(R.string.setup_server_url)
+        val serverExample = s(R.string.setup_server_example)
+        val playlistUrl = s(R.string.setup_playlist_url_local_file)
+        val playlistExample = s(R.string.setup_playlist_example)
+        val portalUrl = s(R.string.setup_portal_url)
+        val portalExample = s(R.string.setup_portal_example)
+        val username = s(R.string.setup_username)
+        val password = s(R.string.setup_password)
+        val userAgent = s(R.string.setup_user_agent_optional)
+        val optional = s(R.string.phase1_metadata_optional)
+        val epgUrl = s(R.string.phase1_epg_sources_url)
+        val epgExample = s(R.string.phase1_epg_sources_url_hint)
+        val syncXtreamHint = s(R.string.companion_sync_xtream_hint)
+        val syncStalkerHint = s(R.string.companion_sync_stalker_hint)
+        val live = s(R.string.setup_live_tv)
+        val movies = s(R.string.setup_movies)
+        val series = s(R.string.setup_series)
+        val now = s(R.string.setup_now)
+        val later = s(R.string.setup_later)
+        val off = s(R.string.setup_off)
+        val autoRefresh = s(R.string.setup_auto_refresh)
+        val refreshStartup = s(R.string.phase1_sources_refresh_startup)
+        val refresh6 = s(R.string.phase1_sources_refresh_6h)
+        val refresh12 = s(R.string.phase1_sources_refresh_12h)
+        val refresh24 = s(R.string.phase1_sources_refresh_24h)
+        val refresh48 = s(R.string.phase1_sources_refresh_48h)
+        val defaultPlaylistLabel = s(R.string.companion_default_playlist)
+        val sendToTv = s(R.string.companion_send_to_tv)
 
-            <div class="tabs">
-              <button type="button" class="tab active" data-k="xtream">Xtream</button>
-              <button type="button" class="tab" data-k="m3u">M3U</button>
-              <button type="button" class="tab" data-k="stalker">Stalker</button>
-            </div>
+        val savedTitle = s(R.string.companion_saved_page_title)
+        val savedHeading = s(R.string.companion_saved_heading)
+        val savedSendAnother = s(R.string.companion_saved_send_another)
+        val savedBackupBody = s(R.string.companion_saved_backup_body)
+        val savedBackupLink = s(R.string.companion_saved_backup_link)
+        val savedImageBody = s(R.string.companion_saved_image_body)
+        val savedImageLink = s(R.string.companion_saved_image_link)
 
-            <form class="panel active" data-k="xtream" method="post" action="/xtream?pin=$pin">
-              <input type="hidden" name="type" value="xtream">
-              <div class="grid">
-                <label>Name <input name="name" placeholder="My IPTV"></label>
-                ${autoRefreshSelect()}
-              </div>
-              <label>Server URL <input name="server" placeholder="http://host:port" required></label>
-              <div class="grid">
-                <label>Username <input name="user" autocomplete="username" required></label>
-                <label>Password <input name="pass" type="password" autocomplete="current-password" required></label>
-              </div>
-              <label>User-Agent <input name="userAgent" placeholder="Optional"></label>
-              <label>EPG URL <input name="epgUrl" placeholder="Optional"></label>
-              <p class="hint">What to sync — Now imports first, Later syncs in the background, Off is never fetched.</p>
-              <div class="grid">
-                ${scopeSelect("syncLive", "Live TV")}
-                ${scopeSelect("syncMovies", "Movies")}
-                ${scopeSelect("syncSeries", "Series")}
-              </div>
-              <input type="hidden" name="isDefault" value="false">
-              <label class="check"><input type="checkbox" name="isDefault" value="true"> Default playlist</label>
-              <button class="go" type="submit">Send to TV</button>
-            </form>
+        val backupTitle = s(R.string.companion_backup_page_title)
+        val backupHeading = s(R.string.companion_backup_heading)
+        val backupDescription = s(R.string.companion_backup_description)
+        val backupFile = s(R.string.companion_backup_file)
+        val chooseBackup = s(R.string.companion_choose_backup)
+        val sending = s(R.string.companion_sending)
+        val couldNotReach = s(R.string.companion_could_not_reach)
+        val couldNotRead = s(R.string.companion_could_not_read)
+        val uploadFailedPrefix = s(R.string.companion_upload_failed_prefix)
+        val uploadFailedSuffix = s(R.string.companion_upload_failed_suffix)
 
-            <form class="panel" data-k="m3u" method="post" action="/m3u?pin=$pin">
-              <input type="hidden" name="type" value="m3u">
-              <div class="grid">
-                <label>Name <input name="name" placeholder="My Playlist"></label>
-                ${autoRefreshSelect()}
-              </div>
-              <label>Playlist URL <input name="server" placeholder="http://…/playlist.m3u" required></label>
-              <label>User-Agent <input name="userAgent" placeholder="Optional"></label>
-              <label>EPG URL <input name="epgUrl" placeholder="Optional"></label>
-              <input type="hidden" name="isDefault" value="false">
-              <label class="check"><input type="checkbox" name="isDefault" value="true"> Default playlist</label>
-              <button class="go" type="submit">Send to TV</button>
-            </form>
+        val imageTitle = s(R.string.companion_image_page_title)
+        val imageHeading = s(R.string.companion_image_heading)
+        val imageDescription = s(R.string.companion_image_description)
+        val imageFile = s(R.string.companion_image_file)
+        val chooseImage = s(R.string.companion_choose_image)
+        val imageTooLarge = s(R.string.companion_image_too_large)
 
-            <form class="panel" data-k="stalker" method="post" action="/stalker?pin=$pin">
-              <input type="hidden" name="type" value="stalker">
-              <div class="grid">
-                <label>Name <input name="name" placeholder="My Portal"></label>
-                ${autoRefreshSelect()}
-              </div>
-              <label>Portal URL <input name="portalUrl" placeholder="http://host:port/c/" required></label>
-              <label>MAC address <input name="mac" placeholder="00:1A:79:AA:BB:CC" required></label>
-              <label>User-Agent <input name="userAgent" placeholder="Optional"></label>
-              <p class="hint">What to sync — Live defaults to Now; Movies/Series default to Later (Stalker VOD is slow).</p>
-              <div class="grid">
-                ${scopeSelect("syncLive", "Live TV", selected = "now")}
-                ${scopeSelect("syncMovies", "Movies", selected = "later")}
-                ${scopeSelect("syncSeries", "Series", selected = "later")}
-              </div>
-              <input type="hidden" name="isDefault" value="false">
-              <label class="check"><input type="checkbox" name="isDefault" value="true"> Default playlist</label>
-              <button class="go" type="submit">Send to TV</button>
-            </form>
-          </div>
-          <script>
-            var tabs=document.querySelectorAll('.tab'), panels=document.querySelectorAll('.panel');
-            tabs.forEach(function(t){t.addEventListener('click',function(){
-              var k=t.getAttribute('data-k');
-              tabs.forEach(function(x){x.classList.toggle('active',x===t)});
-              panels.forEach(function(p){p.classList.toggle('active',p.getAttribute('data-k')===k)});
-            });});
-          </script>
-        """.trimIndent(),
-    )
-
-    /** Confirmation after a submission — the details are now waiting on the TV. */
-    fun savedPage(payload: CompanionPayload, pin: String): String {
-        val name = payload.name.ifBlank {
-            when (payload.type) {
-                SourceType.STALKER -> "My Portal"
-                SourceType.M3U -> "My Playlist"
-                else -> "My IPTV"
-            }
-        }
-        return page(
-            "OwnTV — Sent",
-            """
-              <div class="card">
-                <h1>Sent to your TV ✓</h1>
-                <p><strong>${name.escapeHtml()}</strong> (${payload.type.name}) is now on the TV's Add source
-                   screen. Check the details there and press <strong>Start Import</strong> on the remote.</p>
-                <p><a href="/?pin=$pin">Send another source</a></p>
-              </div>
-            """.trimIndent(),
-        )
+        val downloadTitle = s(R.string.companion_download_page_title)
+        val downloadHeading = s(R.string.companion_download_heading)
+        val downloadDescription = s(R.string.companion_download_description)
+        val downloadBackup = s(R.string.companion_download_backup)
     }
 
-    /** Backup upload page — pick an OwnTV backup JSON and send its contents to the TV. [pin] authenticates the POST. */
-    fun backupUploadPage(pin: String): String = page(
-        "OwnTV — Restore backup",
-        """
-          <div class="card">
-            <h1>Restore a backup</h1>
-            <p>Choose an OwnTV backup file (<code>.own</code>, or an older <code>.json</code>) and press
-               Send. It is transferred to the TV — pick up the remote and choose what to restore there.</p>
-            <form id="f" onsubmit="return false">
-              <label>Backup file
-                <input id="file" type="file" accept=".own,.json,application/json,application/octet-stream" required>
-              </label>
-              <button class="go" id="send" type="submit">Send to TV</button>
-            </form>
-            <p id="status" class="hint"></p>
-          </div>
-          <script>
-            var f=document.getElementById('file'), b=document.getElementById('send'),
-                s=document.getElementById('status');
-            document.getElementById('f').addEventListener('submit',function(){
-              var file=f.files&&f.files[0];
-              if(!file){s.textContent='Please choose a backup file first.';return false;}
-              b.disabled=true; s.textContent='Sending…';
-              var r=new FileReader();
-              r.onload=function(){
-                fetch('/backup?pin=$pin',{method:'POST',headers:{'Content-Type':'application/json'},body:r.result})
-                  .then(function(res){
-                    if(res.ok){document.open();res.text().then(function(t){document.write(t);document.close();});}
-                    else{b.disabled=false; s.textContent='Upload failed ('+res.status+'). Check the PIN and try again.';}
-                  })
-                  .catch(function(){b.disabled=false; s.textContent='Could not reach the TV. Stay on the same Wi-Fi and try again.';});
-              };
-              r.onerror=function(){b.disabled=false; s.textContent='Could not read that file.';};
-              // Data-URL, not text: a .own container is binary and readAsText would mangle it. The TV
-              // decodes the base64 back to bytes (legacy .json uploads arrive the same way).
-              r.readAsDataURL(file);
-              return false;
-            });
-          </script>
-        """.trimIndent(),
-    )
-
-    /**
-     * Background-image upload page (IMAGE_UPLOAD mode). The image is read as a base64 data-URL and
-     * POSTed as text to `/background` — reusing the server's text body path keeps binary handling out
-     * of the socket code; the TV decodes the base64 back to bytes. [pin] authenticates the POST.
-     */
-    fun imageUploadPage(pin: String): String = page(
-        "OwnTV — Background image",
-        """
-          <div class="card">
-            <h1>Send a background image</h1>
-            <p>Choose a photo (JPG, PNG or WebP) and press Send. It becomes the background picture
-               behind the TV interface.</p>
-            <form id="f" onsubmit="return false">
-              <label>Image file
-                <input id="file" type="file" accept="image/*" required>
-              </label>
-              <button class="go" id="send" type="submit">Send to TV</button>
-            </form>
-            <p id="status" class="hint"></p>
-          </div>
-          <script>
-            var f=document.getElementById('file'), b=document.getElementById('send'),
-                s=document.getElementById('status');
-            document.getElementById('f').addEventListener('submit',function(){
-              var file=f.files&&f.files[0];
-              if(!file){s.textContent='Please choose an image first.';return false;}
-              if(file.size>25*1024*1024){s.textContent='That image is too large (max 25 MB).';return false;}
-              b.disabled=true; s.textContent='Sending…';
-              var r=new FileReader();
-              r.onload=function(){
-                fetch('/background?pin=$pin',{method:'POST',headers:{'Content-Type':'text/plain'},body:r.result})
-                  .then(function(res){
-                    if(res.ok){document.open();res.text().then(function(t){document.write(t);document.close();});}
-                    else{b.disabled=false; s.textContent='Upload failed ('+res.status+'). Check the PIN and try again.';}
-                  })
-                  .catch(function(){b.disabled=false; s.textContent='Could not reach the TV. Stay on the same Wi-Fi and try again.';});
-              };
-              r.onerror=function(){b.disabled=false; s.textContent='Could not read that file.';};
-              r.readAsDataURL(file);
-              return false;
-            });
-          </script>
-        """.trimIndent(),
-    )
-
-    /** Confirmation after a background-image upload — it is now applied on the TV. */
-    fun imageSentPage(pin: String): String = page(
-        "OwnTV — Sent",
-        """
-          <div class="card">
-            <h1>Sent to your TV ✓</h1>
-            <p>Your image is now the TV background.</p>
-            <p><a href="/?pin=$pin">Send a different image</a></p>
-          </div>
-        """.trimIndent(),
-    )
-
-    /** Confirmation after a backup upload — the file is now waiting on the TV. */
-    fun backupSentPage(pin: String): String = page(
-        "OwnTV — Sent",
-        """
-          <div class="card">
-            <h1>Sent to your TV ✓</h1>
-            <p>Your backup is now on the TV. Pick up the remote and choose which parts to restore.</p>
-            <p><a href="/?pin=$pin">Send a different file</a></p>
-          </div>
-        """.trimIndent(),
-    )
-
-    /** Backup download page — fetch the backup container the TV just exported. [pin] authenticates it. */
-    fun backupDownloadPage(pin: String): String = page(
-        "OwnTV — Download backup",
-        """
-          <div class="card">
-            <h1>Download your backup</h1>
-            <p>Your TV has prepared an OwnTV backup file. Tap the button to save it to this device
-               (<code>owntv-backup.own</code>). Keep it somewhere safe — you can restore from it later.</p>
-            <a class="go" href="/backup.own?pin=$pin" download="owntv-backup.own"
-               style="display:block;text-align:center;text-decoration:none">Download backup</a>
-          </div>
-        """.trimIndent(),
-    )
-
-    private fun autoRefreshSelect(): String = """
-        <label>Auto refresh
-          <select name="autoRefresh">
-            <option value="OFF" selected>Off</option>
-            <option value="STARTUP">Refresh at startup</option>
-            <option value="HOURS_6">Every 6 hours</option>
-            <option value="HOURS_12">Every 12 hours</option>
-            <option value="HOURS_24">Every 24 hours</option>
-            <option value="HOURS_48">Every 48 hours</option>
-          </select>
-        </label>
-    """.trimIndent()
-
-    private fun scopeSelect(name: String, label: String, selected: String = "now"): String {
-        fun opt(value: String, text: String) =
-            """<option value="$value"${if (value == selected) " selected" else ""}>$text</option>"""
+    private fun page(context: Context, title: String, inner: String): String {
+        val c = Copy(context)
         return """
-            <label>$label
-              <select name="$name">
-                ${opt("now", "Now")}
-                ${opt("later", "Later")}
-                ${opt("off", "Off")}
-              </select>
-            </label>
+            <!doctype html><html lang="en"><head>
+            <meta charset="utf-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1">
+            <title>${title.h()}</title><style>$CSS</style>
+            </head><body><main>
+              <div class="brandrow"><span class="dot">$LOGO_SVG</span><span class="brand">${c.app.h()}</span></div>
+              $inner
+            </main></body></html>
         """.trimIndent()
     }
 
-    private fun String.escapeHtml(): String =
+    fun pinPage(context: Context, error: String?): String {
+        val c = Copy(context)
+        return page(context, c.pinTitle, """
+            <div class="card">
+              <h1>${c.pinHeading.h()}</h1>
+              <p>${c.pinDescription.h()}</p>
+              ${if (error != null) "<p class=\"err\">${error.h()}</p>" else ""}
+              <form method="post" action="/">
+                <input class="pin" name="pin" inputmode="numeric" pattern="[0-9]*" maxlength="6"
+                       autofocus placeholder="${c.pinPlaceholder.h()}" aria-label="${c.pinAria.h()}" required>
+                <button class="go" type="submit">${c.continueLabel.h()}</button>
+              </form>
+            </div>
+        """.trimIndent())
+    }
+
+    fun formPage(context: Context, pin: String): String {
+        val c = Copy(context)
+        return page(context, c.addTitle, """
+            <div class="card">
+              <h1>${c.addHeading.h()}</h1>
+              <p>${c.addDescription.h()}</p>
+              <div class="tabs">
+                <button type="button" class="tab active" data-k="xtream">${c.xtream.h()}</button>
+                <button type="button" class="tab" data-k="m3u">${c.m3u.h()}</button>
+                <button type="button" class="tab" data-k="stalker">${c.stalker.h()}</button>
+              </div>
+
+              <form class="panel active" data-k="xtream" method="post" action="/xtream?pin=$pin">
+                <input type="hidden" name="type" value="xtream">
+                <div class="grid">
+                  <label>${c.name.h()} <input name="name" placeholder="${c.defaultIptv.h()}"></label>
+                  ${autoRefreshSelect(c)}
+                </div>
+                <label>${c.serverUrl.h()} <input name="server" placeholder="${c.serverExample.h()}" required></label>
+                <div class="grid">
+                  <label>${c.username.h()} <input name="user" autocomplete="username" required></label>
+                  <label>${c.password.h()} <input name="pass" type="password" autocomplete="current-password" required></label>
+                </div>
+                <label>${c.userAgent.h()} <input name="userAgent" placeholder="${c.optional.h()}"></label>
+                <label>${c.epgUrl.h()} <input name="epgUrl" placeholder="${c.optional.h()}"></label>
+                <p class="hint">${c.syncXtreamHint.h()}</p>
+                <div class="grid">
+                  ${scopeSelect(c, "syncLive", c.live)}
+                  ${scopeSelect(c, "syncMovies", c.movies)}
+                  ${scopeSelect(c, "syncSeries", c.series)}
+                </div>
+                <input type="hidden" name="isDefault" value="false">
+                <label class="check"><input type="checkbox" name="isDefault" value="true"> ${c.defaultPlaylistLabel.h()}</label>
+                <button class="go" type="submit">${c.sendToTv.h()}</button>
+              </form>
+
+              <form class="panel" data-k="m3u" method="post" action="/m3u?pin=$pin">
+                <input type="hidden" name="type" value="m3u">
+                <div class="grid">
+                  <label>${c.name.h()} <input name="name" placeholder="${c.defaultPlaylist.h()}"></label>
+                  ${autoRefreshSelect(c)}
+                </div>
+                <label>${c.playlistUrl.h()} <input name="server" placeholder="${c.playlistExample.h()}" required></label>
+                <label>${c.userAgent.h()} <input name="userAgent" placeholder="${c.optional.h()}"></label>
+                <label>${c.epgUrl.h()} <input name="epgUrl" placeholder="${c.optional.h()}"></label>
+                <input type="hidden" name="isDefault" value="false">
+                <label class="check"><input type="checkbox" name="isDefault" value="true"> ${c.defaultPlaylistLabel.h()}</label>
+                <button class="go" type="submit">${c.sendToTv.h()}</button>
+              </form>
+
+              <form class="panel" data-k="stalker" method="post" action="/stalker?pin=$pin">
+                <input type="hidden" name="type" value="stalker">
+                <div class="grid">
+                  <label>${c.name.h()} <input name="name" placeholder="${c.defaultPortal.h()}"></label>
+                  ${autoRefreshSelect(c)}
+                </div>
+                <label>${c.portalUrl.h()} <input name="portalUrl" placeholder="${c.portalExample.h()}" required></label>
+                <label>${context.getString(R.string.setup_mac_address).h()} <input name="mac" placeholder="${context.getString(R.string.setup_mac_example).h()}" required></label>
+                <label>${c.userAgent.h()} <input name="userAgent" placeholder="${c.optional.h()}"></label>
+                <p class="hint">${c.syncStalkerHint.h()}</p>
+                <div class="grid">
+                  ${scopeSelect(c, "syncLive", c.live, "now")}
+                  ${scopeSelect(c, "syncMovies", c.movies, "later")}
+                  ${scopeSelect(c, "syncSeries", c.series, "later")}
+                </div>
+                <input type="hidden" name="isDefault" value="false">
+                <label class="check"><input type="checkbox" name="isDefault" value="true"> ${c.defaultPlaylistLabel.h()}</label>
+                <button class="go" type="submit">${c.sendToTv.h()}</button>
+              </form>
+            </div>
+            <script>
+              var tabs=document.querySelectorAll('.tab'), panels=document.querySelectorAll('.panel');
+              tabs.forEach(function(t){t.addEventListener('click',function(){
+                var k=t.getAttribute('data-k');
+                tabs.forEach(function(x){x.classList.toggle('active',x===t)});
+                panels.forEach(function(p){p.classList.toggle('active',p.getAttribute('data-k')===k)});
+              });});
+            </script>
+        """.trimIndent())
+    }
+
+    fun savedPage(context: Context, payload: CompanionPayload, pin: String): String {
+        val c = Copy(context)
+        val name = payload.name.ifBlank {
+            when (payload.type) {
+                SourceType.STALKER -> c.defaultPortal
+                SourceType.M3U -> c.defaultPlaylist
+                else -> c.defaultIptv
+            }
+        }
+        val body = context.getString(R.string.companion_saved_source_body, name)
+        return page(context, c.savedTitle, """
+            <div class="card">
+              <h1>${c.savedHeading.h()}</h1>
+              <p>${body.h()}</p>
+              <p><a href="/?pin=$pin">${c.savedSendAnother.h()}</a></p>
+            </div>
+        """.trimIndent())
+    }
+
+    fun backupUploadPage(context: Context, pin: String): String {
+        val c = Copy(context)
+        return page(context, c.backupTitle, uploadPage(c, pin, backup = true))
+    }
+
+    fun imageUploadPage(context: Context, pin: String): String {
+        val c = Copy(context)
+        return page(context, c.imageTitle, uploadPage(c, pin, backup = false))
+    }
+
+    private fun uploadPage(c: Copy, pin: String, backup: Boolean): String {
+        val heading = if (backup) c.backupHeading else c.imageHeading
+        val description = if (backup) c.backupDescription else c.imageDescription
+        val fileLabel = if (backup) c.backupFile else c.imageFile
+        val choose = if (backup) c.chooseBackup else c.chooseImage
+        val endpoint = if (backup) "/backup" else "/background"
+        val contentType = if (backup) "application/json" else "text/plain"
+        val accept = if (backup) ".own,.json,application/json,application/octet-stream" else "image/*"
+        return """
+            <div class="card">
+              <h1>${heading.h()}</h1>
+              <p>${description.h()}</p>
+              <form id="f" onsubmit="return false">
+                <label>${fileLabel.h()} <input id="file" type="file" accept="$accept" required></label>
+                <button class="go" id="send" type="submit">${c.sendToTv.h()}</button>
+              </form>
+              <p id="status" class="hint"></p>
+            </div>
+            <script>
+              var f=document.getElementById('file'), b=document.getElementById('send'), s=document.getElementById('status');
+              document.getElementById('f').addEventListener('submit',function(){
+                var file=f.files&&f.files[0];
+                if(!file){s.textContent=${choose.js()};return false;}
+                ${if (!backup) "if(file.size>25*1024*1024){s.textContent=${c.imageTooLarge.js()};return false;}" else ""}
+                b.disabled=true; s.textContent=${c.sending.js()};
+                var r=new FileReader();
+                r.onload=function(){
+                  fetch('$endpoint?pin=$pin',{method:'POST',headers:{'Content-Type':'$contentType'},body:r.result})
+                    .then(function(res){
+                      if(res.ok){document.open();res.text().then(function(t){document.write(t);document.close();});}
+                      else{b.disabled=false;s.textContent=${c.uploadFailedPrefix.js()}+res.status+${c.uploadFailedSuffix.js()};}
+                    })
+                    .catch(function(){b.disabled=false;s.textContent=${c.couldNotReach.js()};});
+                };
+                r.onerror=function(){b.disabled=false;s.textContent=${c.couldNotRead.js()};};
+                r.readAsDataURL(file); return false;
+              });
+            </script>
+        """.trimIndent()
+    }
+
+    fun imageSentPage(context: Context, pin: String): String {
+        val c = Copy(context)
+        return page(context, c.savedTitle, """
+            <div class="card"><h1>${c.savedHeading.h()}</h1>
+              <p>${c.savedImageBody.h()}</p><p><a href="/?pin=$pin">${c.savedImageLink.h()}</a></p>
+            </div>
+        """.trimIndent())
+    }
+
+    fun backupSentPage(context: Context, pin: String): String {
+        val c = Copy(context)
+        return page(context, c.savedTitle, """
+            <div class="card"><h1>${c.savedHeading.h()}</h1>
+              <p>${c.savedBackupBody.h()}</p><p><a href="/?pin=$pin">${c.savedBackupLink.h()}</a></p>
+            </div>
+        """.trimIndent())
+    }
+
+    fun backupDownloadPage(context: Context, pin: String): String {
+        val c = Copy(context)
+        return page(context, c.downloadTitle, """
+            <div class="card"><h1>${c.downloadHeading.h()}</h1>
+              <p>${c.downloadDescription.h()}</p>
+              <a class="go" href="/backup.own?pin=$pin" download="owntv-backup.own" style="display:block;text-align:center;text-decoration:none">${c.downloadBackup.h()}</a>
+            </div>
+        """.trimIndent())
+    }
+
+    private fun autoRefreshSelect(c: Copy): String = """
+        <label>${c.autoRefresh.h()} <select name="autoRefresh">
+          <option value="OFF" selected>${c.off.h()}</option>
+          <option value="STARTUP">${c.refreshStartup.h()}</option>
+          <option value="HOURS_6">${c.refresh6.h()}</option>
+          <option value="HOURS_12">${c.refresh12.h()}</option>
+          <option value="HOURS_24">${c.refresh24.h()}</option>
+          <option value="HOURS_48">${c.refresh48.h()}</option>
+        </select></label>
+    """.trimIndent()
+
+    private fun scopeSelect(c: Copy, name: String, label: String, selected: String = "now"): String {
+        fun option(value: String, text: String) =
+            """<option value="$value"${if (value == selected) " selected" else ""}>${text.h()}</option>"""
+        return """
+            <label>${label.h()} <select name="$name">
+              ${option("now", c.now)}${option("later", c.later)}${option("off", c.off)}
+            </select></label>
+        """.trimIndent()
+    }
+
+    private fun s(@StringRes id: Int, context: Context): String = context.getString(id)
+
+    private fun String.js(): String = JSONObject.quote(this)
+
+    private fun String.h(): String =
         replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;").replace("\"", "&quot;")
 }

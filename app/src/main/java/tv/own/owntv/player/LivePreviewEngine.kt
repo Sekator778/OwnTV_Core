@@ -107,8 +107,8 @@ class LivePreviewEngine(
     override val isPlaying: StateFlow<Boolean> = _isPlaying.asStateFlow()
     private val _buffering = MutableStateFlow(false)
     override val buffering: StateFlow<Boolean> = _buffering.asStateFlow()
-    private val _error = MutableStateFlow<String?>(null)
-    override val error: StateFlow<String?> = _error.asStateFlow()
+    private val _error = MutableStateFlow<PlaybackFailure?>(null)
+    override val error: StateFlow<PlaybackFailure?> = _error.asStateFlow()
     private val _errorInfo = MutableStateFlow<ErrorInfo?>(null)
     override val errorInfo: StateFlow<ErrorInfo?> = _errorInfo.asStateFlow()
     private val _videoRes = MutableStateFlow<String?>(null)
@@ -187,13 +187,15 @@ class LivePreviewEngine(
         }
     }
 
-    /** "HEVC 1920x1080 • OMX.realtek.video.decoder" from the active stream, for the error screen's spec line. */
-    private fun exoSpec(): String? {
+    /** Semantic media details for the playback error renderer. */
+    private fun exoSpec(): MediaSpec? {
         val f = player?.videoFormat
         val codec = f?.sampleMimeType?.substringAfterLast('/')?.let { mimeName(it) }
-        val res = if (f != null && f.width > 0 && f.height > 0) "${f.width}x${f.height}" else null
-        val head = listOfNotNull(codec, res).joinToString(" ").ifBlank { null }
-        return listOfNotNull(head, lastVideoDecoder).joinToString(" • ").ifBlank { null }
+        val resolution = if (f != null && f.width > 0 && f.height > 0) "${f.width}x${f.height}" else null
+        val decoder = lastVideoDecoder?.let { DecoderSpec.Named(it, hardware = true) }
+            ?: if (f != null) DecoderSpec.Hardware() else null
+        return MediaSpec(codec = codec, resolution = resolution, decoder = decoder)
+            .takeIf { it.codec != null || it.resolution != null || it.decoder != null }
     }
     private fun mimeName(m: String) = when (m.lowercase()) {
         "hevc" -> "HEVC"; "avc" -> "H.264"; "av01" -> "AV1"; "x-vnd.on2.vp9", "vp9" -> "VP9"
@@ -583,7 +585,7 @@ class LivePreviewEngine(
             _state.value = State.ERROR
             _isPlaying.value = false
             _buffering.value = false
-            _error.value = "Couldn't play this channel."
+            _error.value = PlaybackFailure.Channel
             val raw = lastCodecError ?: diagnostics.recentError()
                 ?: error.errorCodeName + ((error.cause?.message ?: error.message)?.let { ": $it" } ?: "")
             _errorInfo.value = ErrorInfo(PlayerErrors.reasonFor(raw), exoSpec(), raw)
@@ -693,7 +695,7 @@ class LivePreviewEngine(
             android.util.Log.w(LiveDiagnosticsLog.TAG, "preview play() failed for ${HttpClient.redactUrl(url)}", it)
             LiveDiagnosticsLog.event("play() failed: ${it.message}")
             _state.value = State.ERROR
-            _error.value = "Couldn't play this channel."
+            _error.value = PlaybackFailure.Channel
             val raw = lastCodecError ?: diagnostics.recentError() ?: it.message
             _errorInfo.value = raw?.let { r -> ErrorInfo(PlayerErrors.reasonFor(r), exoSpec(), r) }
         }
@@ -795,7 +797,7 @@ class LivePreviewEngine(
             LiveDiagnosticsLog.event("reconnect exhausted ($reason) at $retryCount/$MAX_RECONNECTS — giving up")
             gaveUp = true
             _state.value = State.ERROR; _isPlaying.value = false; _buffering.value = false
-            _error.value = "Lost connection to this channel."
+            _error.value = PlaybackFailure.LostConnection
             val raw = lastCodecError ?: diagnostics.recentError() ?: reason
             _errorInfo.value = ErrorInfo(PlayerErrors.reasonFor(raw), exoSpec(), raw)
             return
@@ -832,7 +834,7 @@ class LivePreviewEngine(
                     p.setMediaSource(mediaSourceFor(loadUrl)) // fresh fetch (live edge)
                     p.prepare()
                     p.playWhenReady = true
-                }.onFailure { _state.value = State.ERROR; _error.value = "Lost connection to this channel." }
+                }.onFailure { _state.value = State.ERROR; _error.value = PlaybackFailure.LostConnection }
             }, delayMs)
         }
     }
@@ -889,7 +891,7 @@ class LivePreviewEngine(
             }.onFailure {
                 LiveDiagnosticsLog.event("decoder rebuild failed: ${it.message}")
                 _state.value = State.ERROR
-                _error.value = "Couldn't play this channel."
+                _error.value = PlaybackFailure.Channel
                 _errorInfo.value = ErrorInfo(PlayerErrors.reasonFor(it.message ?: ""), exoSpec(), it.message ?: "")
             }
         }, DECODER_REBUILD_DELAY_MS)
@@ -985,13 +987,31 @@ class LivePreviewEngine(
                 androidx.media3.common.C.TRACK_TYPE_AUDIO -> for (i in 0 until group.length) {
                     val f = group.getTrackFormat(i)
                     val lang = f.language?.takeIf { it.isNotBlank() && it != "und" }
-                    audio.add(TrackOption(f.label ?: lang?.uppercase() ?: "Audio ${aId + 1}", aId, group.isTrackSelected(i), lang = lang))
+                    audio.add(
+                        TrackOption(
+                            label = f.label.orEmpty(),
+                            mpvId = aId,
+                            selected = group.isTrackSelected(i),
+                            lang = lang,
+                            typeIndex = aId,
+                            labelKind = TrackLabelKind.AUDIO,
+                        ),
+                    )
                     aSel.add(AudioSel(aId, group.mediaTrackGroup, i)); aId++
                 }
                 androidx.media3.common.C.TRACK_TYPE_TEXT -> for (i in 0 until group.length) {
                     val f = group.getTrackFormat(i)
                     val lang = f.language?.takeIf { it.isNotBlank() && it != "und" }
-                    text.add(TrackOption(f.label ?: lang?.uppercase() ?: "Subtitle ${tId + 1}", tId, _subtitleOn.value && group.isTrackSelected(i), lang = lang))
+                    text.add(
+                        TrackOption(
+                            label = f.label.orEmpty(),
+                            mpvId = tId,
+                            selected = _subtitleOn.value && group.isTrackSelected(i),
+                            lang = lang,
+                            typeIndex = tId,
+                            labelKind = TrackLabelKind.SUBTITLE,
+                        ),
+                    )
                     tSel.add(TextSel(tId, group.mediaTrackGroup, i)); tId++
                 }
             }

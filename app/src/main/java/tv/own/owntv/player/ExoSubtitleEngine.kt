@@ -24,7 +24,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import okhttp3.OkHttpClient
 import tv.own.owntv.core.network.HttpClient
-import java.util.Locale
 
 /**
  * ExoPlayer (Media3) used **only** for the one case mpv's direct path can't handle: a VOD with an
@@ -62,7 +61,7 @@ class ExoSubtitleEngine(
          *  this engine owns playback as a VOD engine (mpv never probed the file, so its list is empty). */
         fun onTextTracks(tracks: List<TrackOption>)
         fun onVideoFps(fps: Float)
-        fun onError(message: String)
+        fun onError(failure: PlaybackFailure)
         /** Playback reached the end of the file (drives VOD auto-play-next while this engine is active). */
         fun onEnded()
     }
@@ -75,7 +74,12 @@ class ExoSubtitleEngine(
     // Side-loaded external subtitle files (OpenSubtitles/local — subtitle plan §6.5/§10). ExoPlayer
     // can't attach a subtitle to a playing item, so each add/restore re-prepares the same URL with
     // SubtitleConfigurations at the current position (the plan's "seamless re-prepare").
-    private data class ExternalSubCfg(val path: String, val title: String, val lang: String?)
+    private data class ExternalSubCfg(
+        val path: String,
+        val title: String,
+        val lang: String?,
+        val source: ExternalSubtitleSource,
+    )
     private var currentUrl: String? = null
     private val externalSubs = ArrayList<ExternalSubCfg>()
     // Label of a just-added external sub to select once its track appears in onTracksChanged.
@@ -115,7 +119,7 @@ class ExoSubtitleEngine(
                 "no video frame after ${noVideoTimeoutMs()}ms — falling back " +
                     "(decodedDrops=${currentDroppedFrames(player) - dropsBaseline} format=${player?.videoFormat?.sampleMimeType})",
             )
-            callbacks.onError("Audio is playing, but video could not be rendered on this device.")
+            callbacks.onError(PlaybackFailure.AudioNoVideo)
         }
     }
 
@@ -203,7 +207,7 @@ class ExoSubtitleEngine(
 
         override fun onPlayerError(error: PlaybackException) {
             android.util.Log.w(TAG, "ExoPlayer error: ${error.errorCodeName}", error)
-            callbacks.onError(friendlyError(error))
+            callbacks.onError(friendlyFailure(error))
         }
     }
 
@@ -235,7 +239,7 @@ class ExoSubtitleEngine(
 
         currentUrl = url
         externalSubs.clear()
-        sideloadSubs.forEach { externalSubs.add(ExternalSubCfg(it.path, it.title, it.lang)) }
+        sideloadSubs.forEach { externalSubs.add(ExternalSubCfg(it.path, it.title, it.lang, it.source)) }
         pendingExternalLabel = selectExternalLabel
         subDelayMs = 0
         delayLabel = null
@@ -284,10 +288,15 @@ class ExoSubtitleEngine(
 
     /** Attach + select an external subtitle file (plan §6.5): re-prepare the same URL with the sub
      *  side-loaded, at the same position, and select it by label once its track appears. */
-    fun addExternalSubtitle(path: String, title: String, lang: String?) {
+    fun addExternalSubtitle(
+        path: String,
+        title: String,
+        lang: String?,
+        source: ExternalSubtitleSource = ExternalSubtitleSource.OPENSUBTITLES,
+    ) {
         val p = player ?: return
         val url = currentUrl ?: return
-        if (externalSubs.none { it.path == path }) externalSubs.add(ExternalSubCfg(path, title, lang))
+        if (externalSubs.none { it.path == path }) externalSubs.add(ExternalSubCfg(path, title, lang, source))
         pendingExternalLabel = title
         subtitleApplied = false
         reprepareKeepingPosition(p, url)
@@ -301,7 +310,7 @@ class ExoSubtitleEngine(
         var added = false
         subs.forEach { s ->
             if (externalSubs.none { it.path == s.path }) {
-                externalSubs.add(ExternalSubCfg(s.path, s.title, s.lang)); added = true
+                externalSubs.add(ExternalSubCfg(s.path, s.title, s.lang, s.source)); added = true
             }
         }
         if (!added) return
@@ -472,8 +481,16 @@ class ExoSubtitleEngine(
             if (group.type != C.TRACK_TYPE_AUDIO) continue
             for (i in 0 until group.length) {
                 val format = group.getTrackFormat(i)
-                val label = audioLabel(format.label, format.language, id)
-                out.add(TrackOption(label = label, mpvId = id, selected = group.isTrackSelected(i)))
+                out.add(
+                    TrackOption(
+                        label = format.label.orEmpty(),
+                        mpvId = id,
+                        selected = group.isTrackSelected(i),
+                        lang = format.language,
+                        typeIndex = id,
+                        labelKind = TrackLabelKind.AUDIO,
+                    ),
+                )
                 sels.add(AudioSel(id, group.mediaTrackGroup, i))
                 id++
             }
@@ -495,15 +512,22 @@ class ExoSubtitleEngine(
                 val image = mime == androidx.media3.common.MimeTypes.APPLICATION_PGS ||
                     mime == androidx.media3.common.MimeTypes.APPLICATION_VOBSUB ||
                     mime == androidx.media3.common.MimeTypes.APPLICATION_DVBSUBS
-                // Side-loaded external subs keep their configured label verbatim ("Bengali — OpenSubtitles")
-                // — audioLabel would append the language again, and the engine-toggle carry-over matches
-                // the selected row back to the session's external subs by exact title.
-                val external = format.label != null && externalSubs.any { it.title == format.label }
-                out.add(TrackOption(
-                    label = if (external) format.label!! else audioLabel(format.label, format.language, id),
-                    mpvId = id, selected = group.isTrackSelected(i), image = image,
-                    lang = format.language, typeIndex = id,
-                ))
+                // Side-loaded external subs keep their raw configured label; the Compose renderer adds
+                // the localized source label. The raw value remains an engine identity for selection and
+                // engine-toggle carry-over, never a translated sentence.
+                val external = format.label?.let { label -> externalSubs.firstOrNull { it.title == label } }
+                out.add(
+                    TrackOption(
+                        label = format.label.orEmpty(),
+                        mpvId = id,
+                        selected = group.isTrackSelected(i),
+                        image = image,
+                        lang = format.language,
+                        typeIndex = id,
+                        labelKind = TrackLabelKind.SUBTITLE,
+                        externalSource = external?.source,
+                    ),
+                )
                 id++
             }
         }
@@ -582,12 +606,6 @@ class ExoSubtitleEngine(
             .build()
     }
 
-    private fun audioLabel(title: String?, lang: String?, id: Int): String {
-        val l = lang?.takeIf { it.isNotBlank() && it != "und" }
-            ?.let { runCatching { Locale.forLanguageTag(it).displayLanguage }.getOrNull()?.ifBlank { it } ?: it }
-        return listOfNotNull(title?.takeIf { it.isNotBlank() }, l).joinToString(" · ").ifBlank { "Track ${id + 1}" }
-    }
-
     fun setBitrateTrackingEnabled(enabled: Boolean) = throughputTracker.setEnabled(enabled)
 
     /** Technical readout for the stream-info overlay while this engine owns playback (main thread only —
@@ -625,15 +643,15 @@ class ExoSubtitleEngine(
         "mp4v-es" -> "MPEG-4"; "mpeg2" -> "MPEG-2"; else -> m.uppercase()
     }
 
-    private fun friendlyError(error: PlaybackException): String = when (error.errorCode) {
+    private fun friendlyFailure(error: PlaybackException): PlaybackFailure = when (error.errorCode) {
         PlaybackException.ERROR_CODE_DECODING_FORMAT_UNSUPPORTED,
         PlaybackException.ERROR_CODE_DECODER_INIT_FAILED,
         PlaybackException.ERROR_CODE_AUDIO_TRACK_INIT_FAILED ->
-            if (fallbackMode) "ExoPlayer can't decode this video's format on this device (${error.errorCodeName})."
-            else "Image subtitles aren't available for this file's format."
+            if (fallbackMode) PlaybackFailure.ExoDecode(error.errorCodeName)
+            else PlaybackFailure.ImageFormat
         else ->
-            if (fallbackMode) "ExoPlayer couldn't play this stream (${error.errorCodeName})."
-            else "Couldn't show image subtitles for this file."
+            if (fallbackMode) PlaybackFailure.ExoPlay(error.errorCodeName)
+            else PlaybackFailure.ImageShow
     }
 
     /** Stop and free the ExoPlayer (the handoff back to mpv, or stop()). Keeps the instance? No —

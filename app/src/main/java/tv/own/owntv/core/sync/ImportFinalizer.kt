@@ -12,32 +12,7 @@ import tv.own.owntv.core.database.dao.SeriesDao
 import tv.own.owntv.core.database.entity.SourceEntity
 
 /** Per-type counts after a playlist import, for the success breakdown. */
-data class SyncCounts(val channels: Int, val movies: Int, val series: Int, val epg: Int = 0) {
-    /** e.g. "40K channels · 100K movies · 30K series · 30K EPG synced". */
-    fun summary(includeEpg: Boolean): String {
-        val parts = buildList {
-            if (channels > 0) add("${human(channels)} channels")
-            if (movies > 0) add("${human(movies)} movies")
-            if (series > 0) add("${human(series)} series")
-            if (includeEpg && epg > 0) add("${human(epg)} EPG")
-        }
-        return if (parts.isEmpty()) "Synced successfully" else parts.joinToString(" · ") + " synced"
-    }
-
-    /** Content breakdown without a trailing verb, for list rows: "40K channels · 100K movies · 30K series". */
-    val breakdown: String
-        get() = buildList {
-            if (channels > 0) add("${human(channels)} channels")
-            if (movies > 0) add("${human(movies)} movies")
-            if (series > 0) add("${human(series)} series")
-        }.joinToString(" · ")
-
-    private fun human(n: Int): String = when {
-        n >= 1_000_000 -> "%.1fM".format(n / 1_000_000.0).removeSuffix(".0M").let { if (it.endsWith("M")) it else "${it}M" }
-        n >= 1_000 -> "%.1fK".format(n / 1_000.0).removeSuffix(".0K").let { if (it.endsWith("K")) it else "${it}K" }
-        else -> n.toString()
-    }
-}
+data class SyncCounts(val channels: Int, val movies: Int, val series: Int, val epg: Int = 0)
 
 /**
  * Runs after a playlist syncs: returns the per-type content counts for the success message. EPG is NOT

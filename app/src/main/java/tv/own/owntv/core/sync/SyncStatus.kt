@@ -37,10 +37,10 @@ data class ImportStage(
 }
 
 /** Xtream / M3U progress is reported in these three phases. */
-enum class SyncPhase(val label: String) {
-    LIVE("Live"),
-    MOVIES("Movies"),
-    SERIES("Series"),
+enum class SyncPhase {
+    LIVE,
+    MOVIES,
+    SERIES,
 }
 
 /** Terminal result of a sync run. */
@@ -50,26 +50,25 @@ sealed interface SyncResult {
         /** Category churn on a resync (always 0 on a source's first sync, where everything is "new"). */
         val categoriesAdded: Int = 0,
         val categoriesRemoved: Int = 0,
-    ) : SyncResult {
-        fun warningSummary(): String? =
-            warnings.takeIf { it.isNotEmpty() }?.joinToString(
-                prefix = "Imported with warnings: ",
-                separator = " · ",
-            ) { "${it.label} failed" }
-
-        fun categoryChangeSummary(): String {
-            return "$categoriesAdded categories added, $categoriesRemoved removed"
-        }
-    }
+    ) : SyncResult
 
     data object Cancelled : SyncResult
     data class Failed(val message: String) : SyncResult
 }
 
-data class SyncWarning(val phase: String, val message: String) {
-    val label: String
-        get() = phase.replaceFirstChar { it.uppercase() }
+sealed interface SyncWarningKind {
+    data object GENERIC : SyncWarningKind
+    data object PAGE_FAILURE : SyncWarningKind
+    data class CATALOG_SHRINK(val stored: Int, val percentFewer: Int) : SyncWarningKind
 }
+
+data class SyncWarning(
+    val phase: String,
+    /** Raw provider/exception text, only used for an otherwise-unclassified phase error. */
+    val message: String = "",
+    val kind: SyncWarningKind = SyncWarningKind.GENERIC,
+    val count: Int = 0,
+)
 
 data class SyncContentTypes(
     val live: Boolean = true,
@@ -104,13 +103,6 @@ data class SyncContentTypes(
     fun effectiveFor(source: SourceEntity): SyncContentTypes =
         intersect(enabledOf(source)).constrainedTo(source.type)
 
-    /** "Movies & Series" / "Live TV" … — for user-facing "still syncing in the background" notes. */
-    fun label(): String = listOfNotNull(
-        "Live TV".takeIf { live },
-        "Movies".takeIf { movies },
-        "Series".takeIf { series },
-    ).joinToString(" & ")
-
     companion object {
         /** Raw persisted enabledScope (Off = false). */
         fun enabledOf(s: SourceEntity) = SyncContentTypes(s.syncLive, s.syncMovies, s.syncSeries)
@@ -131,17 +123,6 @@ data class SyncContentTypes(
         )
     }
 }
-
-/**
- * Appends a "the rest is still coming" line to a staged import's success summary. Without it the
- * "All set!" screen reads as if the whole catalog were only what the foreground pass imported
- * (e.g. a Stalker add shows just live channels), and users report the sync as broken instead of
- * noticing the background pill.
- */
-fun String.withRemainderNote(remainder: SyncContentTypes): String =
-    if (!remainder.hasAny) this
-    else "$this\n${remainder.label()} are still syncing in the background — you can start watching now. " +
-        "Progress shows in the small pill at the bottom of the screen."
 
 data class SyncRunStats(
     val sourceId: Long,

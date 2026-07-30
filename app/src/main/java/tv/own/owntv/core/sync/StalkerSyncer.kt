@@ -73,7 +73,7 @@ internal class StalkerSyncer(
     private suspend fun syncLive(s: SourceEntity, progress: SyncCounters, stats: SyncStatsCollector, creds: StalkerCredentials) = coroutineScope {
         val ctx = currentCoroutineContext()
         val freshSource = s.lastSyncAt == null
-        val label = SyncPhase.LIVE.label
+        val label = SyncPhase.LIVE.name
         val phaseStart = System.currentTimeMillis()
         val elapsedStart = SystemClock.elapsedRealtime()
         Log.i(TAG, "$label phase start sourceId=${s.id} fresh=$freshSource")
@@ -216,8 +216,7 @@ internal class StalkerSyncer(
                 }
             }
             if (pageFailures.get() > 0) {
-                stats.phaseErrors["channels"] =
-                    "${pageFailures.get()} portal page(s) failed — some channels may be missing until the next sync"
+                stats.addWarning(SyncWarning(SyncPhase.LIVE.name, kind = SyncWarningKind.PAGE_FAILURE, count = pageFailures.get()))
             }
             if (!freshSource && remoteIds != null) {
                 if (pageFailures.get() == 0) {
@@ -327,7 +326,7 @@ internal class StalkerSyncer(
         val freshSource = s.lastSyncAt == null
         val phaseStart = System.currentTimeMillis()
         val elapsedStart = SystemClock.elapsedRealtime()
-        val label = phase.label
+        val label = phase.name
         Log.i(TAG, "$label phase start sourceId=${s.id} fresh=$freshSource")
         progress.update(phase, 0)
 
@@ -482,7 +481,7 @@ internal class StalkerSyncer(
             }
             // A degraded pass must not report a clean success — surface it as a sync warning.
             if (pageFailures.get() > 0) {
-                stats.phaseErrors[countsKey] = "${pageFailures.get()} portal page(s) failed — some items may be missing until the next sync"
+                stats.addWarning(SyncWarning(phase.name, kind = SyncWarningKind.PAGE_FAILURE, count = pageFailures.get()))
             }
             if (!freshSource && remoteIds != null) {
                 // Delta-skipped categories were never re-fetched, so their items aren't in this
@@ -556,7 +555,7 @@ internal class StalkerSyncer(
 
     /** One page fetch with the shared auth (re-handshakes once on token expiry). */
     private suspend fun fetchPage(creds: StalkerCredentials, genreId: String, page: Int): StalkerClient.Page<StalkerClient.Channel> =
-        retryTransient("${SyncPhase.LIVE.label} genre=$genreId page=$page") {
+        retryTransient("${SyncPhase.LIVE.name} genre=$genreId page=$page") {
             auth.withAuthRetry(creds) { session ->
                 client.getLiveChannelsPage(session.apiBase, creds.mac, session.token, creds.userAgent, genreId, page)
             }

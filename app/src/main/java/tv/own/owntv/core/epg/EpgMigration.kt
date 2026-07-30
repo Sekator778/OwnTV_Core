@@ -21,7 +21,9 @@ class EpgMigration(
                 val url = epgRepository.guideUrl(src) ?: continue
                 if (url in existingUrls) continue
                 existingUrls += url
-                val epg = store.add("${src.name} EPG", url, src.userAgent)
+                // Keep the provider/source name as the persisted label; translated suffixes would
+                // freeze the migration language and become stale on a later locale switch.
+                val epg = store.add(src.name, url, src.userAgent)
                 val now = System.currentTimeMillis()
                 runCatching { epgRepository.refreshUrl(epg.id, epg.url, epg.userAgent) }
                     .onSuccess { store.setSynced(epg.id, now, null) }

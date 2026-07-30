@@ -9,11 +9,11 @@ package tv.own.owntv.features.settings.data
  * [BALANCED] is the default and applies no override — the engines keep their existing behaviour, so
  * it can never regress a stream that already works.
  */
-enum class LiveLatency(val label: String) {
-    LOW("Low latency"),
-    BALANCED("Balanced"),
-    STABLE("Stable"),
-    CUSTOM("Custom");
+enum class LiveLatency {
+    LOW,
+    BALANCED,
+    STABLE,
+    CUSTOM;
 
     companion object {
         val DEFAULT = BALANCED

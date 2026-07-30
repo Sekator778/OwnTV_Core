@@ -86,54 +86,94 @@ class PlayerDiagnostics {
     }
 }
 
-/** A playback failure broken into the three lines the error screen shows: a plain-English [reason], the
- *  media [spec] (codec • resolution • decoder), and the [raw] engine text. Any field may be null. */
-data class ErrorInfo(val reason: String?, val spec: String?, val raw: String?)
+/** Semantic decoder details for the media specification shown by the playback error renderer. */
+sealed interface DecoderSpec {
+    data class Hardware(val direct: Boolean = false) : DecoderSpec
+    data class Software(val gpu: Boolean = false) : DecoderSpec
+    data class Named(val value: String, val hardware: Boolean = false, val direct: Boolean = false) : DecoderSpec
+}
 
-/** Maps cryptic playback-failure strings (MediaCodec codes, HTTP/SSL, OOM) to a plain-English reason a user
- *  can act on. Applied to EVERY error source (logcat codec lines, mpv log lines, ExoPlayer codes) so one
- *  table covers them all. Reviewer-sourced cases (HTTP 509, ENOMEM, SSL, unsupported formats). */
+/** Technical media details. It deliberately carries values, not a locale-resolved sentence. */
+data class MediaSpec(
+    val codec: String?,
+    val resolution: String?,
+    val decoder: DecoderSpec?,
+)
+
+/** Typed playback failures. Fixed OwnTV wording is resolved by the Compose HUD; raw provider/engine text stays raw. */
+sealed interface PlaybackFailure {
+    data object Channel : PlaybackFailure
+    data object LostConnection : PlaybackFailure
+    data object StreamLink : PlaybackFailure
+    data object NotStreaming : PlaybackFailure
+    data object AudioNoVideo : PlaybackFailure
+    data object FileCorrupt : PlaybackFailure
+    data object MultipleVideos : PlaybackFailure
+    data object DecoderBusy : PlaybackFailure
+    data object NoInternet : PlaybackFailure
+    data object Surround : PlaybackFailure
+    data object ImageSubtitleAudio : PlaybackFailure
+    data object ImageFormat : PlaybackFailure
+    data object ImageShow : PlaybackFailure
+    data object BothEnginesExoFirst : PlaybackFailure
+    data class BothEnginesMpvFirst(val exoError: PlaybackFailure) : PlaybackFailure
+    data class ExoDecode(val code: String) : PlaybackFailure
+    data class ExoPlay(val code: String) : PlaybackFailure
+    data class HardwareFallback(val resolution: String) : PlaybackFailure
+    data class HardwareDisabled(val resolution: String) : PlaybackFailure
+    data class StreamUnavailable(val customUserAgentHint: Boolean) : PlaybackFailure
+    data class Raw(val message: String) : PlaybackFailure
+}
+
+/** A playback failure broken into semantic reason, technical media details, and raw engine text. */
+data class ErrorInfo(val reason: PlayerFailureReason?, val spec: MediaSpec?, val raw: String?)
+
+/** Semantic playback failures; wording belongs to the presentation layer. */
+enum class PlayerFailureReason {
+    DECODER_BUSY,
+    DECODER_TRANSIENT,
+    UNSUPPORTED_VIDEO,
+    DECODER_MEMORY,
+    DRM,
+    HTTP_509,
+    HTTP_403,
+    HTTP_401,
+    HTTP_404,
+    HTTP_400,
+    SSL,
+    FORMAT,
+    NETWORK,
+    AUDIO,
+}
+
+/** Maps cryptic playback-failure strings to semantic state. Comparison needles stay English because
+ * they are protocol/log inputs, never display text. */
 object PlayerErrors {
-    /**
-     * HTTP status extraction. A bare `"403" in text` check false-positives on stream URLs (full of
-     * digits, always containing "http") — e.g. `/movie/150925.mkv` looked like an HTTP 509. Only match
-     * a 3-digit code in an actual status phrase: "http error 403", "HTTP 403", "response code: 403",
-     * "status 403". `http://` never matches (no space after "http").
-     */
     private val HTTP_STATUS_RX =
         Regex("""(?:\bhttp(?: error)? |\bresponse code[:= ]+|\bstatus(?: code)?[:= ]+)(\d{3})\b""")
-
-    /** MediaCodec ENOMEM forms: "err -12", "status -12", "error -12" — NOT any "-12" substring
-     *  (which matched URLs and timestamps like "-123ms"). */
     private val ENOMEM_RX = Regex("""\b(?:err(?:or)?|status|code)\s*[:=]?\s*-12\b""")
 
-    /** Plain-English reason for a raw error string, or null if we don't recognize it. */
-    fun reasonFor(raw: String): String? {
+    fun classify(raw: String): PlayerFailureReason? {
         val l = raw.lowercase()
         val httpCode = HTTP_STATUS_RX.find(l)?.groupValues?.get(1)
         return when {
-            "0x80001000" in l -> "Hardware video decoder is busy or can't handle this stream"
-            "0x80001001" in l -> "Hardware video decoder error — transient, try again"
-            "0xfffffff3" in l || "0xffffffea" in l || "format_unsupported" in l || "omx_errorformat" in l ->
-                "This device's decoder doesn't support this video format/profile (e.g. HEVC 10-bit)"
-            "enomem" in l || "out of memory" in l || "no memory" in l || "insufficient" in l || ENOMEM_RX.containsMatchIn(l) ->
-                "Device ran out of memory for the decoder — try closing other apps"
-            "error_key" in l || "cryptoinfo" in l || "0x80001100" in l || ("drm" in l && "error" in l) ->
-                "DRM / secure-decoder error"
-            httpCode == "509" -> "Provider blocked the connection — too many streams at once (HTTP 509)"
-            httpCode == "403" -> "Provider denied access (HTTP 403) — credentials, subscription, or IP block"
-            httpCode == "401" -> "Provider rejected your login (HTTP 401)"
-            httpCode == "404" -> "Stream not found on the provider (HTTP 404)"
-            httpCode == "400" -> "Provider rejected the request (HTTP 400) — bad or expired link"
-            "certificate verify failed" in l || ("ssl" in l && "certif" in l) || "cert_" in l ->
-                "Provider's SSL certificate is invalid or expired"
-            "unrecognized file format" in l || "invalid data found" in l ->
-                "Stream format not recognized (bad or partial stream)"
-            "connection refused" in l || "connection reset" in l || "timed out" in l || "timeout" in l ->
-                "Network problem reaching the provider"
-            "audiotrack" in l || "audiosink" in l || "audioflinger" in l || "audio codec" in l ->
-                "Audio output error — the device couldn't play this audio format"
+            "0x80001000" in l -> PlayerFailureReason.DECODER_BUSY
+            "0x80001001" in l -> PlayerFailureReason.DECODER_TRANSIENT
+            "0xfffffff3" in l || "0xffffffea" in l || "format_unsupported" in l || "omx_errorformat" in l -> PlayerFailureReason.UNSUPPORTED_VIDEO
+            "enomem" in l || "out of memory" in l || "no memory" in l || "insufficient" in l || ENOMEM_RX.containsMatchIn(l) -> PlayerFailureReason.DECODER_MEMORY
+            "error_key" in l || "cryptoinfo" in l || "0x80001100" in l || ("drm" in l && "error" in l) -> PlayerFailureReason.DRM
+            httpCode == "509" -> PlayerFailureReason.HTTP_509
+            httpCode == "403" -> PlayerFailureReason.HTTP_403
+            httpCode == "401" -> PlayerFailureReason.HTTP_401
+            httpCode == "404" -> PlayerFailureReason.HTTP_404
+            httpCode == "400" -> PlayerFailureReason.HTTP_400
+            "certificate verify failed" in l || ("ssl" in l && "certif" in l) || "cert_" in l -> PlayerFailureReason.SSL
+            "unrecognized file format" in l || "invalid data found" in l -> PlayerFailureReason.FORMAT
+            "connection refused" in l || "connection reset" in l || "timed out" in l || "timeout" in l -> PlayerFailureReason.NETWORK
+            "audiotrack" in l || "audiosink" in l || "audioflinger" in l || "audio codec" in l -> PlayerFailureReason.AUDIO
             else -> null
         }
     }
+
+    fun reasonFor(raw: String): PlayerFailureReason? = classify(raw)
 }

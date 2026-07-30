@@ -8,6 +8,8 @@ import android.os.Build
 import androidx.core.app.NotificationCompat
 import androidx.work.ForegroundInfo
 import tv.own.owntv.R
+import tv.own.owntv.core.i18n.AppLocale
+import tv.own.owntv.core.i18n.LocaleStore
 
 /** The ongoing notification that keeps [DownloadWorker] alive as a foreground service. */
 internal object DownloadNotifications {
@@ -16,11 +18,12 @@ internal object DownloadNotifications {
     private const val NOTIFICATION_ID = 4201
 
     fun foregroundInfo(context: Context, progress: DownloadProgress?): ForegroundInfo {
-        ensureChannel(context)
+        val localized = localizedContext(context)
+        ensureChannel(context, localized)
         val builder = NotificationCompat.Builder(context, CHANNEL_ID)
             .setSmallIcon(android.R.drawable.stat_sys_download)
-            .setContentTitle(context.getString(R.string.app_name))
-            .setContentText(progress?.title ?: context.getString(R.string.app_name))
+            .setContentTitle(localized.getString(R.string.app_name))
+            .setContentText(progress?.title ?: localized.getString(R.string.app_name))
             .setOngoing(true)
             .setSilent(true)
             .setPriority(NotificationCompat.PRIORITY_LOW)
@@ -38,14 +41,20 @@ internal object DownloadNotifications {
         }
     }
 
-    private fun ensureChannel(context: Context) {
+    private fun ensureChannel(context: Context, localized: Context) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) return
         val manager = context.getSystemService(NotificationManager::class.java) ?: return
-        if (manager.getNotificationChannel(CHANNEL_ID) != null) return
         manager.createNotificationChannel(
-            NotificationChannel(CHANNEL_ID, "Downloads", NotificationManager.IMPORTANCE_LOW).apply {
+            NotificationChannel(
+                CHANNEL_ID,
+                localized.getString(R.string.common_nav_downloads),
+                NotificationManager.IMPORTANCE_LOW,
+            ).apply {
                 setShowBadge(false)
             },
         )
     }
+
+    private fun localizedContext(context: Context): Context =
+        AppLocale.wrap(context, LocaleStore.from(context).readBlocking())
 }

@@ -16,6 +16,5 @@ object UiZoom {
     const val LOW_RAM_WARN = 85
 
     fun clamp(percent: Int): Int = percent.coerceIn(MIN, MAX)
-    fun label(percent: Int): String = "$percent%"
     fun factor(percent: Int): Float = percent / 100f
 }

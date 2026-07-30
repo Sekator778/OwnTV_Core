@@ -21,6 +21,8 @@ import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
 import tv.own.owntv.R
 import tv.own.owntv.core.customize.CustomizationStore
+import tv.own.owntv.core.i18n.AppLocale
+import tv.own.owntv.core.i18n.LocaleStore
 import tv.own.owntv.core.customize.CustomizeKeys
 import tv.own.owntv.core.customize.SectionCustomizations
 import tv.own.owntv.core.database.dao.ChannelDao
@@ -57,6 +59,7 @@ class TvHomeRepository(
     private val customize: CustomizationStore,
     private val settings: SettingsRepository,
     private val launcherPlanner: LauncherRecommendationPlanner,
+    private val localeStore: LocaleStore,
 ) {
     private val resolver: ContentResolver get() = context.contentResolver
     private val channelHelper = PreviewChannelHelper(context)
@@ -68,7 +71,6 @@ class TvHomeRepository(
         private const val RECENT_LIVE_MAX_ITEMS = 10
         private const val RECENT_LIVE_REFRESH_INTERVAL_MS = 5_000L
         private const val RECENT_LIVE_CHANNEL_GROUP_ID = 0L
-        private const val RECENT_LIVE_CHANNEL_NAME = "Recent Live"
         private const val RECENT_LIVE_CHANNEL_STABLE_KEY = "recent-live"
     }
 
@@ -328,7 +330,7 @@ class TvHomeRepository(
             .setWatchNextType(TvContractCompat.WatchNextPrograms.WATCH_NEXT_TYPE_CONTINUE)
             .setType(TvContractCompat.PreviewProgramColumns.TYPE_MOVIE)
             .setTitle(movie.name)
-            .setDescription(movie.year?.toString() ?: "Movie")
+            .setDescription(movie.year?.toString() ?: renderContext().getString(R.string.launcher_movie_type))
             .setPosterArtUri(safeMediaArtUri(movie.posterUrl))
             .setPosterArtAspectRatio(TvContractCompat.PreviewProgramColumns.ASPECT_RATIO_MOVIE_POSTER)
             .setLastPlaybackPositionMillis(safeMillisToInt(row.lastPositionMs))
@@ -348,15 +350,16 @@ class TvHomeRepository(
         watchNextType: Int,
         rowStableKey: String,
     ) {
+        val renderContext = renderContext()
         val program = WatchNextProgram.Builder()
             .setWatchNextType(watchNextType)
             .setType(TvContractCompat.PreviewProgramColumns.TYPE_TV_EPISODE)
             .setTitle(episode.name.ifBlank { show.name })
             .setDescription(buildList {
                 add(show.name)
-                add("Season ${episode.seasonNumber}")
-                if (episode.episodeNumber > 0) add("Episode ${episode.episodeNumber}")
-            }.joinToString(" · "))
+                add(renderContext.getString(R.string.player_season_number, episode.seasonNumber))
+                if (episode.episodeNumber > 0) add(renderContext.getString(R.string.launcher_episode_number, episode.episodeNumber))
+            }.joinToString(renderContext.getString(R.string.player_metadata_separator)))
             .setPosterArtUri(safeMediaArtUri(show.posterUrl))
             .setPosterArtAspectRatio(TvContractCompat.PreviewProgramColumns.ASPECT_RATIO_MOVIE_POSTER)
             .setLastPlaybackPositionMillis(safeMillisToInt(row.lastPositionMs))
@@ -583,14 +586,18 @@ class TvHomeRepository(
     }
 
     private fun buildRecentLiveChannel(profileId: Long): PreviewChannel {
+        val renderContext = renderContext()
         return PreviewChannel.Builder()
-            .setDisplayName(RECENT_LIVE_CHANNEL_NAME)
-            .setDescription("Recently watched live channels")
+            .setDisplayName(renderContext.getString(R.string.launcher_recent_live_title))
+            .setDescription(renderContext.getString(R.string.launcher_recent_live_description))
             .setAppLinkIntentUri(LauncherDeepLink.OpenLiveSection.toUri())
             .setInternalProviderId(platformInternalId(TvProviderSurface.RECENT_LIVE, profileId, MediaType.LIVE, RECENT_LIVE_CHANNEL_STABLE_KEY))
             .setLogo(resourceUri(R.drawable.tv_banner))
             .build()
     }
+
+    /** The launcher is a named final renderer; resolve OwnTV-authored copy at publish time. */
+    private fun renderContext(): Context = AppLocale.wrap(context, localeStore.currentTag.value)
 
     private fun safeMillisToInt(value: Long): Int = value.coerceIn(0L, Int.MAX_VALUE.toLong()).toInt()
 

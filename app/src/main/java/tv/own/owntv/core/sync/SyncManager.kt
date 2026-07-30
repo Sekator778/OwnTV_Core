@@ -120,7 +120,7 @@ class SyncManager(
                 result = SyncResult.Cancelled
                 throw c
             } catch (e: Exception) {
-                result = SyncResult.Failed(e.message ?: "Sync failed")
+                result = SyncResult.Failed(e.message.orEmpty())
             } finally {
                 activityTracker.finished(source.id, source.name, result) // also on cancellation — never leave a stuck pill
             }

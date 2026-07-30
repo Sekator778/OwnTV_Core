@@ -18,6 +18,7 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import tv.own.owntv.R
 import tv.own.owntv.core.network.HttpClient
 import tv.own.owntv.features.settings.data.SettingsRepository
 import tv.own.owntv.features.settings.data.SubtitleStyle
@@ -30,8 +31,13 @@ import java.util.concurrent.atomic.AtomicInteger
  * owns playback its tracks reuse this field as an opaque ordinal). [image] flags an image-based subtitle
  * (PGS/VOBSUB/DVB) — selecting one on a VOD hands playback to ExoPlayer to render it. [typeIndex] is the
  * track's 0-based position among tracks of its own type, used to line a picked sub up with ExoPlayer's. */
+enum class TrackLabelKind { AUDIO, SUBTITLE }
+
+enum class ExternalSubtitleSource { LOCAL, OPENSUBTITLES }
+
 @Immutable
 data class TrackOption(
+    /** Raw engine/provider label. It is an identity, not translated in the player engine. */
     val label: String,
     val mpvId: Int,
     val selected: Boolean,
@@ -39,6 +45,8 @@ data class TrackOption(
     val codec: String? = null,
     val lang: String? = null,
     val typeIndex: Int = -1,
+    val labelKind: TrackLabelKind = TrackLabelKind.AUDIO,
+    val externalSource: ExternalSubtitleSource? = null,
 )
 
 /** Image-based subtitle codecs. They carry no text, so the app-drawn (direct render) overlay can't show
@@ -66,6 +74,9 @@ data class MediaMeta(
      *  [tv.own.owntv.core.player.enginePinKey]). Null falls back to the stream URL, which is what
      *  every pin used to be keyed on and is still correct for M3U/Xtream. */
     val contentKey: String? = null,
+    /** Optional semantic season/episode numbers; localized at the UI boundary. */
+    val seasonNumber: Int? = null,
+    val episodeNumber: Int? = null,
 )
 
 /** An item in a play queue (e.g. a season's episodes), for prev/next.
@@ -75,14 +86,42 @@ data class MediaMeta(
 @Immutable
 data class PlaylistItem(val url: String, val meta: MediaMeta = MediaMeta(), val resolveUrl: (suspend () -> String)? = null)
 
+/** Existing player toast boundary: fixed OwnTV copy is resolved only when Android renders the toast. */
+private fun PlaybackFailure.toastText(context: Context): String = when (this) {
+    PlaybackFailure.ImageSubtitleAudio -> context.getString(R.string.player_error_image_subtitle_audio)
+    PlaybackFailure.ImageFormat -> context.getString(R.string.player_error_image_format)
+    PlaybackFailure.ImageShow -> context.getString(R.string.player_error_image_show)
+    PlaybackFailure.Channel -> context.getString(R.string.player_error_channel)
+    PlaybackFailure.LostConnection -> context.getString(R.string.player_error_lost_connection)
+    PlaybackFailure.StreamLink -> context.getString(R.string.player_error_stream_link)
+    PlaybackFailure.NotStreaming -> context.getString(R.string.player_error_not_streaming)
+    PlaybackFailure.AudioNoVideo -> context.getString(R.string.player_error_audio_no_video)
+    PlaybackFailure.FileCorrupt -> context.getString(R.string.player_error_file_corrupt)
+    PlaybackFailure.MultipleVideos -> context.getString(R.string.player_error_multiple_videos)
+    PlaybackFailure.DecoderBusy -> context.getString(R.string.player_error_decoder_busy)
+    PlaybackFailure.NoInternet -> context.getString(R.string.player_error_no_internet)
+    PlaybackFailure.Surround -> context.getString(R.string.player_error_surround)
+    PlaybackFailure.BothEnginesExoFirst -> context.getString(R.string.player_error_both_engines_exo_first)
+    is PlaybackFailure.BothEnginesMpvFirst -> context.getString(R.string.player_error_both_engines_mpv_first, exoError.toString())
+    is PlaybackFailure.ExoDecode -> context.getString(R.string.player_error_exo_decode, code)
+    is PlaybackFailure.ExoPlay -> context.getString(R.string.player_error_exo_play, code)
+    is PlaybackFailure.HardwareFallback -> context.getString(R.string.player_error_hardware_fallback, resolution)
+    is PlaybackFailure.HardwareDisabled -> context.getString(R.string.player_error_hardware_disabled, resolution)
+    is PlaybackFailure.StreamUnavailable -> context.getString(
+        R.string.player_error_stream_unavailable,
+        if (customUserAgentHint) context.getString(R.string.player_error_custom_user_agent) else "",
+    )
+    is PlaybackFailure.Raw -> message
+}
+
 /** Whether prev/next are available in the current queue. */
 @Immutable
 data class NavState(val hasPrev: Boolean, val hasNext: Boolean)
 
 /** Video scaling modes exposed in the player's zoom menu. */
-enum class ZoomMode(val label: String) {
-    FIT("Fit Screen"), FILL("Fill / Crop"), STRETCH("Stretch"),
-    ORIGINAL("Original (1:1)"), FORCE_16_9("Force 16:9"), FORCE_4_3("Force 4:3"),
+enum class ZoomMode(@androidx.annotation.StringRes val labelRes: Int) {
+    FIT(tv.own.owntv.R.string.player_zoom_fit_screen), FILL(tv.own.owntv.R.string.player_zoom_fill_crop), STRETCH(tv.own.owntv.R.string.player_zoom_stretch),
+    ORIGINAL(tv.own.owntv.R.string.player_zoom_original), FORCE_16_9(tv.own.owntv.R.string.player_zoom_force_16_9), FORCE_4_3(tv.own.owntv.R.string.player_zoom_force_4_3),
 }
 
 /**
@@ -232,6 +271,9 @@ class OwnTVPlayer(
     private var currentUrl: String? = null
     /** P6 — stable engine-pin key of the loaded item (see [MediaMeta.contentKey]); null = key on the URL. */
     private var currentContentKey: String? = null
+    private var currentSeasonNumber: Int? = null
+    private var currentEpisodeNumber: Int? = null
+
     /**
      * Reconnect URL provider — set ONLY for an expiring-URL source (Stalker live, plan §5.4.1). The
      * live stall-reconnect watchdogs and HUD Retry await it before reloading, so a Stalker stream
@@ -756,8 +798,8 @@ class OwnTVPlayer(
     val duration: StateFlow<Long> = _duration.asStateFlow()
     private val _buffering = MutableStateFlow(false)
     val buffering: StateFlow<Boolean> = _buffering.asStateFlow()
-    private val _error = MutableStateFlow<String?>(null)
-    val error: StateFlow<String?> = _error.asStateFlow()
+    private val _error = MutableStateFlow<PlaybackFailure?>(null)
+    val error: StateFlow<PlaybackFailure?> = _error.asStateFlow()
     private val _errorInfo = MutableStateFlow<ErrorInfo?>(null)
     val errorInfo: StateFlow<ErrorInfo?> = _errorInfo.asStateFlow()
     @Volatile private var currentVideoCodec: String? = null // for the error screen's media spec line
@@ -781,14 +823,19 @@ class OwnTVPlayer(
         }
     }
 
-    /** "HEVC 3840x1920 • hardware decoder" from the current stream, for the error screen's spec line. Null
-     *  if nothing decoded yet (e.g. a stream that failed to open — then there's no codec/size to show). */
-    private fun mediaSpec(): String? {
+    /** Semantic media details for the playback error renderer. */
+    private fun mediaSpec(): MediaSpec? {
         val codec = currentVideoCodec?.uppercase()
-        val res = if (currentWidthPx > 0 && currentHeightPx > 0) "${currentWidthPx}x$currentHeightPx" else null
-        val decoder = currentHwdec?.let { if (it.contains("mediacodec")) "hardware decoder" else if (it == "no") "software decoder" else it }
-        val head = listOfNotNull(codec, res).joinToString(" ").ifBlank { null }
-        return listOfNotNull(head, decoder).joinToString(" • ").ifBlank { null }
+        val resolution = if (currentWidthPx > 0 && currentHeightPx > 0) "${currentWidthPx}x$currentHeightPx" else null
+        val decoder = currentHwdec?.let {
+            when {
+                it.contains("mediacodec", ignoreCase = true) -> DecoderSpec.Hardware(direct = _directRender.value)
+                it == "no" -> DecoderSpec.Software(gpu = !_directRender.value)
+                else -> DecoderSpec.Named(it, hardware = true, direct = _directRender.value)
+            }
+        }
+        return MediaSpec(codec = codec, resolution = resolution, decoder = decoder)
+            .takeIf { it.codec != null || it.resolution != null || it.decoder != null }
     }
     private val _volume = MutableStateFlow(100)
     val volume: StateFlow<Int> = _volume.asStateFlow()
@@ -895,11 +942,11 @@ class OwnTVPlayer(
     // stay on Exo instead of reverting to mpv, and an Exo failure surfaces a combined both-engines error.
     @Volatile private var exoVodFallback = false
     @Volatile private var triedExoVodFallback = false
-    private var mpvFailureBeforeFallback: String? = null
+    private var mpvFailureBeforeFallback: PlaybackFailure? = null
     // ExoPlayer-preferred mode (Settings → Video Player): the item STARTED on Exo, so an Exo failure
     // falls back to mpv (the reverse chain); a later terminal mpv failure shows the combined error.
     @Volatile private var exoPrimaryThisItem = false
-    @Volatile private var exoFailureBeforeMpv: String? = null
+    @Volatile private var exoFailureBeforeMpv: PlaybackFailure? = null
     // A VOD load that wants to start on ExoPlayer but arrived before the surface exists (first open):
     // attachSurface flushes pendingUrl into startExo instead of mpv's startLoad.
     @Volatile private var pendingExoStart = false
@@ -987,14 +1034,14 @@ class OwnTVPlayer(
             _subCount.value = tracks.size
         }
         override fun onVideoFps(fps: Float) { _videoFps.value = fps; updateStreamChips() }
-        override fun onError(message: String) {
+        override fun onError(failure: PlaybackFailure) {
             // Image-sub handoff → give playback back to mpv. Engine chains: Exo-as-primary falls back to
             // mpv; Exo-as-fallback means mpv already failed this item, so reloading it there would just
             // loop — surface the combined both-engines error.
             when {
-                exoVodFallback && exoPrimaryThisItem -> scope.launch { fallbackToMpvVod(message) }
-                exoVodFallback -> scope.launch { failBothEngines(message) }
-                else -> scope.launch { revertToMpv(error = message) }
+                exoVodFallback && exoPrimaryThisItem -> scope.launch { fallbackToMpvVod(failure) }
+                exoVodFallback -> scope.launch { failBothEngines(failure) }
+                else -> scope.launch { revertToMpv(error = failure) }
             }
         }
         override fun onEnded() { scope.launch { onExoEnded() } }
@@ -1036,7 +1083,7 @@ class OwnTVPlayer(
         val surface = attachedSurface ?: return
         val url = currentUrl ?: return
         if (!audioCodecSafeForExo()) {
-            toast("Image subtitles aren't available for this video's audio format.")
+            toast(context.getString(R.string.player_error_image_subtitle_audio))
             _subTrackList.value = _subTrackList.value.map { it.copy(selected = false) }
             return
         }
@@ -1109,7 +1156,7 @@ class OwnTVPlayer(
      * destroyed to abort the connection instead of being politely stopped — an IPTV panel capping VOD at
      * one connection would otherwise refuse ExoPlayer's open while mpv still holds the slot.
      */
-    private fun fallbackToExoVod(mpvError: String, mpvStuck: Boolean): Boolean {
+    private fun fallbackToExoVod(mpvError: PlaybackFailure, mpvStuck: Boolean): Boolean {
         if (isLiveContent || exoActive || triedExoVodFallback) return false
         val url = currentUrl ?: return false
         if (attachedSurface == null) return false
@@ -1171,7 +1218,7 @@ class OwnTVPlayer(
     /** ExoPlayer-preferred mode: the item started on Exo and Exo failed — retry it on mpv (the reverse
      *  of [fallbackToExoVod]). mpv gets its full retry ladder; a terminal mpv failure after this shows
      *  the combined both-engines error via [vodErrorMessage]. */
-    private fun fallbackToMpvVod(exoError: String) {
+    private fun fallbackToMpvVod(exoError: PlaybackFailure) {
         if (!exoActive) return
         val url = currentUrl ?: return
         android.util.Log.w(TAG, "VOD terminally failed on ExoPlayer ($exoError) — falling back to mpv")
@@ -1267,11 +1314,10 @@ class OwnTVPlayer(
 
     /** Wraps a terminal mpv VOD error message: if ExoPlayer already failed this item first
      *  (ExoPlayer-preferred setting), report that both engines failed rather than just mpv. */
-    private fun vodErrorMessage(mpvMsg: String): String {
+    private fun vodErrorMessage(mpvMsg: PlaybackFailure): PlaybackFailure {
         val exoErr = exoFailureBeforeMpv ?: return mpvMsg
         android.util.Log.w(TAG, "VOD failed on BOTH engines — exo first: '$exoErr' / mpv: '$mpvMsg'")
-        return "Playback failed on both video engines (ExoPlayer, then mpv). " +
-            "The file may be corrupted or use a format this TV can't play."
+        return PlaybackFailure.BothEnginesExoFirst
     }
 
     /**
@@ -1290,13 +1336,12 @@ class OwnTVPlayer(
         else pendingSeekMs
 
     /** The engine fallback ALSO failed: stop ExoPlayer and surface one combined error. */
-    private fun failBothEngines(exoError: String) {
+    private fun failBothEngines(exoError: PlaybackFailure) {
         android.util.Log.w(TAG, "VOD failed on BOTH engines — mpv: '$mpvFailureBeforeFallback' / exo: '$exoError'")
         deactivateExo()
         _isPlaying.value = false
         _buffering.value = false
-        _error.value = "Playback failed on both video engines (mpv and ExoPlayer). " +
-            "The file may be corrupted or use a format this TV can't play. ($exoError)"
+        _error.value = PlaybackFailure.BothEnginesMpvFirst(exoError)
     }
 
     /** ExoPlayer reached end-of-file while it owned VOD playback: mirror mpv's END_FILE auto-play-next
@@ -1365,13 +1410,13 @@ class OwnTVPlayer(
 
     /** Hand playback back to mpv (image sub turned off, a text sub picked, or an Exo failure), resuming
      *  the same item at its current position with subtitles off (or [thenSelectSid] applied after load). */
-    private fun revertToMpv(error: String? = null, thenSelectSid: Int? = null) {
+    private fun revertToMpv(error: PlaybackFailure? = null, thenSelectSid: Int? = null) {
         if (!exoActive) return
         if (exoVodFallback) return // mpv already failed this item — never hand it back mid-fallback
         val url = currentUrl ?: return
         val pos = _position.value
         deactivateExo() // releases Exo's codec
-        error?.let { toast(it) }
+        error?.let { toast(it.toastText(context)) }
         pendingSelectSid = thenSelectSid
         _subTrackList.value = _subTrackList.value.map { it.copy(selected = thenSelectSid != null && it.mpvId == thenSelectSid) }
         _buffering.value = true
@@ -1541,13 +1586,15 @@ class OwnTVPlayer(
         userAgent: String? = null,
         /** P6 — stable engine-pin identity; null keeps the legacy stream-URL key. */
         contentKey: String? = null,
+        seasonNumber: Int? = null,
+        episodeNumber: Int? = null,
     ) {
         currentUserAgent = userAgent?.takeIf { it.isNotBlank() }
         playlist = emptyList()
         playlistIndex = 0
         updateNav()
         _zoomMode.value = defaultZoom // start new content at the user's default zoom
-        loadUrl(url, MediaMeta(title, subtitle, year, logoUrl, contentKey), isLive, startPositionMs, muted, preferSoftware = preferSoftware, startPaused = startPaused)
+        loadUrl(url, MediaMeta(title, subtitle, year, logoUrl, contentKey, seasonNumber, episodeNumber), isLive, startPositionMs, muted, preferSoftware = preferSoftware, startPaused = startPaused)
     }
 
     /** Play a queue (a season's episodes) starting at [startIndex] — enables prev/next.
@@ -1601,7 +1648,7 @@ class OwnTVPlayer(
                 android.util.Log.w(TAG, "queue item resolve failed: ${e.message}")
                 if (gen == loadGeneration) {
                     _buffering.value = false
-                    _error.value = "Could not get a stream link from the portal. Check the connection and try again."
+                    _error.value = PlaybackFailure.StreamLink
                 }
                 return@launch
             }
@@ -1619,7 +1666,7 @@ class OwnTVPlayer(
      *  background restore) re-passes this rather than rebuilding it field by field, so a field added
      *  to [MediaMeta] can't be dropped on the way (P6: [MediaMeta.contentKey] is one such field). */
     private fun currentMetaSnapshot() =
-        MediaMeta(currentTitle, currentSubtitle, currentYear, currentLogoUrl, currentContentKey)
+        MediaMeta(currentTitle, currentSubtitle, currentYear, currentLogoUrl, currentContentKey, currentSeasonNumber, currentEpisodeNumber)
 
     /** P6 — move a legacy URL-keyed VOD pin onto the stable content key (no-op without one). */
     private fun migrateVodPin(url: String, stableKey: String?) {
@@ -1646,6 +1693,8 @@ class OwnTVPlayer(
         currentSubtitle = meta.subtitle
         currentYear = meta.year
         currentLogoUrl = meta.logoUrl
+        currentSeasonNumber = meta.seasonNumber
+        currentEpisodeNumber = meta.episodeNumber
         _currentMeta.value = meta // reactive — refreshes the HUD title / "now watching" card on every load
         isLiveContent = isLive
         currentUrl = url
@@ -1854,7 +1903,7 @@ class OwnTVPlayer(
                     val bitrateKnown = mpv?.getPropertyString("video-bitrate")?.toLongOrNull()?.let { it > 0 } ?: false
                     if (fileLoaded && currentHeightPx == 0 && !bitrateKnown && elapsed > 6_000) {
                         android.util.Log.w(TAG, "watchdog MOOV-AT-END — FILE_LOADED but no bitrate/height after ${elapsed}ms, aborting (server lacks Range support)")
-                                    _error.value = vodErrorMessage("This video isn't formatted for streaming. Ask the provider to re-encode with fast-start, or download it first.")
+                                    _error.value = vodErrorMessage(PlaybackFailure.NotStreaming)
                         expectingPlayback = false; _buffering.value = false
                         videoCheckJob?.cancel()
                         return@launch
@@ -1919,7 +1968,7 @@ class OwnTVPlayer(
                         } else {
                             android.util.Log.w(TAG, "live stall (mpv, Live) — reconnect budget exhausted after $MAX_LIVE_RECONNECTS attempts, surfacing error")
                             _buffering.value = false
-                            _error.value = "Lost connection to this channel."
+                            _error.value = PlaybackFailure.LostConnection
                             return@launch
                         }
                     } else {
@@ -1949,7 +1998,7 @@ class OwnTVPlayer(
                             } else {
                                 android.util.Log.w(TAG, "no-video (mpv, Live) — reconnect budget exhausted, surfacing error")
                                 _buffering.value = false
-                                _error.value = "Audio is playing, but video could not be rendered on this device."
+                                _error.value = PlaybackFailure.AudioNoVideo
                                 return@launch
                             }
                         } else {
@@ -2205,11 +2254,11 @@ class OwnTVPlayer(
         // Before surfacing an error, retry the item once on ExoPlayer — a "malformed" verdict from mpv's
         // demuxer/decoder is often device-specific, and Exo's MediaCodec path may play it fine (mpvStuck:
         // the core may be blocked in the stuck HTTP read, so the fallback destroys it, as hardReset would).
-        if (fallbackToExoVod("mpv couldn't open or decode this file", mpvStuck = true)) return
+        if (fallbackToExoVod(PlaybackFailure.Raw("mpv couldn't open or decode this file"), mpvStuck = true)) return
         // Surface the error immediately — the user sees "can't play this video" rather than a blank screen.
-        _error.value = vodErrorMessage("This video's file is malformed or corrupted and can't be played.")
+        _error.value = vodErrorMessage(PlaybackFailure.FileCorrupt)
         if (consecutiveHardResets >= 3) {
-            _error.value = vodErrorMessage("Multiple videos failed to play. The source may be unavailable or the files are corrupted.")
+            _error.value = vodErrorMessage(PlaybackFailure.MultipleVideos)
             videoCheckJob?.cancel()
             android.util.Log.w(TAG, "hardReset thrash guard — $consecutiveHardResets consecutive resets, aborting")
             return
@@ -2268,7 +2317,8 @@ class OwnTVPlayer(
         backgroundRestore = null
         if (currentUrl != null) return // already playing something else
         play(r.url, subtitle = r.meta.subtitle, year = r.meta.year, logoUrl = r.meta.logoUrl,
-            title = r.meta.title, isLive = false, startPositionMs = r.positionMs, startPaused = !r.wasPlaying)
+            title = r.meta.title, isLive = false, startPositionMs = r.positionMs, startPaused = !r.wasPlaying,
+            seasonNumber = r.meta.seasonNumber)
     }
 
     /** Drop any pending restore (e.g. on profile switch — don't bring back the previous user's item). */
@@ -2480,7 +2530,20 @@ class OwnTVPlayer(
             // Image-based subtitle (PGS/VOBSUB/DVB): mpv's direct path can't draw it — on VOD, selecting
             // it hands playback to ExoPlayer. typeIndex lines the pick up with ExoPlayer's track order.
             val image = type == "sub" && codec?.lowercase() in BITMAP_SUB_CODECS
-            out.add(TrackOption(label(title, lang, id), id, selected, image = image, codec = codec, lang = lang, typeIndex = typeIndex))
+            val external = if (type == "sub") sessionExternalSubs.firstOrNull { it.title == title } else null
+            out.add(
+                TrackOption(
+                    label = title.orEmpty(),
+                    mpvId = id,
+                    selected = selected,
+                    image = image,
+                    codec = codec,
+                    lang = lang,
+                    typeIndex = typeIndex,
+                    labelKind = if (type == "sub") TrackLabelKind.SUBTITLE else TrackLabelKind.AUDIO,
+                    externalSource = external?.source,
+                ),
+            )
             typeIndex++
         }
         return out
@@ -2552,7 +2615,13 @@ class OwnTVPlayer(
      * external TEXT sub returns playback to mpv and attaches it once mpv reloads.
      */
     /** One external subtitle to (re)attach — see [restoreExternalSubtitles]. */
-    data class ExternalSub(val path: String, val title: String, val lang: String?)
+    data class ExternalSub(
+        val path: String,
+        /** Stable/raw engine label used for matching; presentation adds the localized source label. */
+        val title: String,
+        val lang: String?,
+        val source: ExternalSubtitleSource = ExternalSubtitleSource.OPENSUBTITLES,
+    )
 
     /** Set by the subtitle layer; fired after a VOD file finishes loading so previously downloaded
      *  subtitles can be re-listed (subtitle plan §9). Runs on the mpv event thread. */
@@ -2587,17 +2656,22 @@ class OwnTVPlayer(
         }
     }
 
-    fun addExternalSubtitle(path: String, title: String, lang: String? = null) {
-        if (sessionExternalSubs.none { it.path == path }) sessionExternalSubs.add(ExternalSub(path, title, lang))
+    fun addExternalSubtitle(
+        path: String,
+        title: String,
+        lang: String? = null,
+        source: ExternalSubtitleSource = ExternalSubtitleSource.OPENSUBTITLES,
+    ) {
+        if (sessionExternalSubs.none { it.path == path }) sessionExternalSubs.add(ExternalSub(path, title, lang, source))
         if (exoActive) {
             if (exoVodFallback) {
                 // Exo owns VOD playback (engine fallback / preferred engine): side-load natively (§10).
-                exoEngine?.addExternalSubtitle(path, title, lang)
+                exoEngine?.addExternalSubtitle(path, title, lang, source)
                 onActiveSubtitleChanged?.invoke("path:$path")
             } else {
                 // Image-sub handoff: an external TEXT sub means the image sub is being replaced — return
                 // to mpv and attach the sub once its file reloads (mirrors the pendingSelectSid path).
-                pendingExternalAdd = ExternalSub(path, title, lang)
+                pendingExternalAdd = ExternalSub(path, title, lang, source)
                 revertToMpv()
             }
             return
@@ -2629,11 +2703,6 @@ class OwnTVPlayer(
         }
     }
 
-    private fun label(title: String?, lang: String?, id: Int): String {
-        val l = lang?.takeIf { it.isNotBlank() && it != "und" }
-            ?.let { runCatching { Locale.forLanguageTag(it).displayLanguage }.getOrNull()?.ifBlank { it } ?: it }
-        return listOfNotNull(title?.takeIf { it.isNotBlank() }, l).joinToString(" · ").ifBlank { "Track $id" }
-    }
 
     // --- mpv event callbacks (called off the main thread) ---
     override fun eventProperty(property: String) {
@@ -2693,13 +2762,10 @@ class OwnTVPlayer(
         android.util.Log.w(TAG, "Decode guard TRIPPED: ${h}px on software decoder")
         decodeGuardTripped = true
         val res = resolutionLabel(h) ?: "${h}p"
-        val msg = if (hwDecoding) {
-            "This stream's format couldn't be hardware-decoded on this TV, so it fell back to " +
-                "software decoding — which can't sustain $res without overloading the TV. The TV " +
-                "may still play other 4K content fine; this particular stream's format is the issue."
+        val msg: PlaybackFailure = if (hwDecoding) {
+            PlaybackFailure.HardwareFallback(res)
         } else {
-            "Hardware decoding is turned off — software decoding can't handle $res video. " +
-                "Enable it in Settings → Video Player."
+            PlaybackFailure.HardwareDisabled(res)
         }
         // A VOD that mpv can only software-decode may still hardware-decode on ExoPlayer's MediaCodec
         // path (different codec selection/negotiation) — retry it there before giving up. The fallback
@@ -2815,7 +2881,7 @@ class OwnTVPlayer(
                 // toggle): attach + select it now that mpv is back.
                 pendingExternalAdd?.let { s ->
                     pendingExternalAdd = null
-                    addExternalSubtitle(s.path, s.title, s.lang)
+                    addExternalSubtitle(s.path, s.title, s.lang, s.source)
                 }
                 // Embedded sub carried across an Exo→mpv engine toggle: re-select it by ordinal.
                 pendingSelectSubOrdinal?.let { ord ->
@@ -2864,7 +2930,7 @@ class OwnTVPlayer(
                                 setPropertyString("audio-channels", "stereo")
                                 setPropertyString("audio-format", "")
                                 setPropertyString("audio-samplerate", "0")
-                                toast("This audio output can't do surround — switched to stereo.")
+                                toast(context.getString(R.string.player_error_surround))
                                 if (sgen == loadGeneration && currentUrl != null) {
                                     loadUrl(currentUrl!!, currentMetaSnapshot(), isLiveContent, _position.value, resetRetries = false)
                                 }
@@ -2939,7 +3005,7 @@ class OwnTVPlayer(
                                 scope.launch { loadUrl(currentUrl ?: return@launch, currentMetaSnapshot(), isLiveContent, pos, resetRetries = false) }
                             } else {
                                 android.util.Log.w(TAG, "direct failed — retries exhausted, showing error")
-                                scope.launch { _buffering.value = false; _error.value = "This TV's video decoder is busy. Try again in a moment." }
+                                scope.launch { _buffering.value = false; _error.value = PlaybackFailure.DecoderBusy }
                             }
                             return@mpvAsync
                         }
@@ -2980,7 +3046,7 @@ class OwnTVPlayer(
                         if (!connectivity.isOnlineNow()) {
                             android.util.Log.w(TAG, "playback didn't start — offline, skipping retries")
                             _buffering.value = false
-                            _error.value = "No internet connection. Check your network and try again."
+                            _error.value = PlaybackFailure.NoInternet
                             return@launch
                         }
                         // A live `.ts` stream that retried once and still won't start may be on a panel
@@ -3064,12 +3130,9 @@ class OwnTVPlayer(
                         } else {
                             // mpv's whole retry ladder is exhausted. For a VOD, retry once on ExoPlayer
                             // before erroring — it may play what mpv can't on this device/provider.
-                            if (!isLiveContent && fallbackToExoVod("stream never started on mpv (retries exhausted)", mpvStuck = false)) return@launch
+                            if (!isLiveContent && fallbackToExoVod(PlaybackFailure.Raw("stream never started on mpv (retries exhausted)"), mpvStuck = false)) return@launch
                             _buffering.value = false
-                            val hint = if (triedVlcUaFallback)
-                                " This provider may require a custom User-Agent in source settings."
-                            else ""
-                            _error.value = vodErrorMessage("Couldn't play this stream. The source may be offline or use an unsupported format.$hint")
+                            _error.value = vodErrorMessage(PlaybackFailure.StreamUnavailable(triedVlcUaFallback))
                         }
                     }
                 } else if (isLiveContent && currentUrl != null) {
@@ -3081,7 +3144,7 @@ class OwnTVPlayer(
                     // succeeds, so the loop ends in playback rather than an endless re-init storm.
                     if (!connectivity.isOnlineNow()) {
                         _buffering.value = false
-                        _error.value = "No internet connection. Check your network and try again."
+                        _error.value = PlaybackFailure.NoInternet
                     } else {
                         _buffering.value = true
                         val gen = loadGeneration

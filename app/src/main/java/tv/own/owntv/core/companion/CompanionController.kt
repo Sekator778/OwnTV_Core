@@ -12,6 +12,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import tv.own.owntv.R
+import tv.own.owntv.core.i18n.LocaleStore
 
 /**
  * Owns the Remote companion HTTP listener for the app's lifetime. Registered as a Koin `single` so
@@ -26,10 +27,10 @@ import tv.own.owntv.R
  *
  * [start]/[stop] are safe to call from the UI thread; the server does its I/O on its own dispatcher.
  */
-class CompanionController(context: Context) {
+class CompanionController(context: Context, localeStore: LocaleStore) {
 
     private val appContext = context.applicationContext
-    private val server = CompanionHttpServer()
+    private val server = CompanionHttpServer(appContext, localeStore)
 
     private val _state = MutableStateFlow<CompanionServerState>(CompanionServerState.Idle)
     val state: StateFlow<CompanionServerState> = _state.asStateFlow()
@@ -79,7 +80,7 @@ class CompanionController(context: Context) {
 
     private fun startInternal(port: Int, mode: CompanionMode, downloadFile: File? = null) {
         if (port !in 1..65535) {
-            _state.value = CompanionServerState.Failed("Enter a valid port between 1 and 65535.")
+            _state.value = CompanionServerState.Failed(CompanionFailure.InvalidPort)
             return
         }
         _state.value = CompanionServerState.Starting
@@ -116,7 +117,7 @@ class CompanionController(context: Context) {
             )
         } catch (t: Throwable) {
             Log.w(TAG, "Failed to start companion listener", t)
-            _state.value = CompanionServerState.Failed(friendlyError(t, port))
+            _state.value = CompanionServerState.Failed(friendlyFailure(t, port))
         }
     }
 
@@ -176,9 +177,9 @@ class CompanionController(context: Context) {
 
     private fun generatePin(): String = SecureRandom().nextInt(1_000_000).toString().padStart(6, '0')
 
-    private fun friendlyError(t: Throwable, port: Int): String = when (t) {
-        is BindException -> "Port $port is already in use. Try again to pick a fresh one."
-        else -> t.message?.takeIf { it.isNotBlank() } ?: "Could not open the local server."
+    private fun friendlyFailure(t: Throwable, port: Int): CompanionFailure = when (t) {
+        is BindException -> CompanionFailure.PortInUse(port)
+        else -> CompanionFailure.Unavailable
     }
 
     private companion object {

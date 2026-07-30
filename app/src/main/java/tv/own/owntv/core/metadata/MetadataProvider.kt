@@ -31,13 +31,13 @@ data class MetadataSearchResult(
  * Metadata source mode (plan §4.1). Replaces the old on/off master toggle and also selects the render-time
  * field precedence for the merge (§7.1).
  */
-enum class MetadataMode(val label: String) {
+enum class MetadataMode {
     /** Only provider data; TMDB fully off (no lookups). */
-    PROVIDER("Provider only"),
+    PROVIDER,
     /** Provider wins; TMDB fills gaps & adds extras. `providerField ?: tmdbField`. */
-    PROVIDER_PLUS_TMDB("Provider + TMDB"),
+    PROVIDER_PLUS_TMDB,
     /** TMDB wins; provider only fills what TMDB lacks. `tmdbField ?: providerField`. */
-    TMDB_ONLY("TMDB only");
+    TMDB_ONLY;
 
     /** True when TMDB enrichment should run (both non-Provider modes). */
     val enrich: Boolean get() = this != PROVIDER
@@ -89,10 +89,10 @@ data class MetadataConfig(
             else -> Tier.DEFAULT_WORKER
         }
 
-    enum class Tier(val label: String) {
-        DEFAULT_WORKER("Default (shared)"),
-        OWN_KEY("Your TMDB key"),
-        SELF_HOST("Self-hosted"),
+    enum class Tier {
+        DEFAULT_WORKER,
+        OWN_KEY,
+        SELF_HOST,
     }
 
     companion object {

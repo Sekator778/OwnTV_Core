@@ -25,8 +25,8 @@ import tv.own.owntv.ui.theme.UiZoom
 
 /** Per-profile startup landing (Phase 3 / v4.0.0). LAST_CHANNEL also covers "auto-play my channel" since
  *  it's always the one you last watched. */
-enum class StartupMode(val label: String) {
-    HOME("Home"), LAST_CHANNEL("Last channel"), FAVORITES("Live · Favorites")
+enum class StartupMode {
+    HOME, LAST_CHANNEL, FAVORITES
 }
 
 /**
@@ -35,28 +35,28 @@ enum class StartupMode(val label: String) {
  * STARTUP refreshes on cold app start only; interval modes are checked on cold start and on resume.
  * [thresholdMs] has a default of null so OFF/STARTUP can be declared without an explicit value.
  */
-enum class PlaylistAutoRefresh(val label: String, val thresholdMs: Long? = null) {
-    OFF("Off"),
-    STARTUP("Refresh at startup"),
-    HOURS_6("6 hours", 6 * 3600_000L),
-    HOURS_12("12 hours", 12 * 3600_000L),
-    HOURS_24("24 hours", 24 * 3600_000L),
-    HOURS_48("48 hours", 48 * 3600_000L);
+enum class PlaylistAutoRefresh(val thresholdMs: Long? = null) {
+    OFF,
+    STARTUP,
+    HOURS_6(6 * 3600_000L),
+    HOURS_12(12 * 3600_000L),
+    HOURS_24(24 * 3600_000L),
+    HOURS_48(48 * 3600_000L);
 
     /** Interval (staleness-threshold) mode — checked on cold start AND on resume when threshold is exceeded. */
     val isInterval: Boolean get() = thresholdMs != null && this != STARTUP
 }
 
 /** Per-EPG-source auto-refresh mode. Same staleness-threshold semantics as [PlaylistAutoRefresh]. */
-enum class EpgAutoRefresh(val label: String, val thresholdMs: Long? = null) {
-    OFF("Off"),
-    STARTUP("Refresh at startup"),
-    HOURS_1("1 hour", 1 * 3600_000L),
-    HOURS_3("3 hours", 3 * 3600_000L),
-    HOURS_6("6 hours", 6 * 3600_000L),
-    HOURS_12("12 hours", 12 * 3600_000L),
-    HOURS_24("24 hours", 24 * 3600_000L),
-    HOURS_48("48 hours", 48 * 3600_000L);
+enum class EpgAutoRefresh(val thresholdMs: Long? = null) {
+    OFF,
+    STARTUP,
+    HOURS_1(1 * 3600_000L),
+    HOURS_3(3 * 3600_000L),
+    HOURS_6(6 * 3600_000L),
+    HOURS_12(12 * 3600_000L),
+    HOURS_24(24 * 3600_000L),
+    HOURS_48(48 * 3600_000L);
 
     val isInterval: Boolean get() = thresholdMs != null && this != STARTUP
 }
@@ -524,9 +524,7 @@ class SettingsRepository(private val context: Context, private val localeStore: 
 
     // --- Resume behavior for movies/episodes with a saved position ---
 
-    enum class ResumeMode(val label: String) {
-        AUTO("Always resume"), ASK("Ask to resume"), NEVER("Never resume")
-    }
+    enum class ResumeMode { AUTO, ASK, NEVER }
 
     val resumeMode: Flow<ResumeMode> = prefsFlow { prefs ->
         prefs[Keys.RESUME_MODE]?.let { runCatching { ResumeMode.valueOf(it) }.getOrNull() } ?: ResumeMode.ASK
@@ -543,7 +541,7 @@ class SettingsRepository(private val context: Context, private val localeStore: 
     // user picks exactly which icons to hide. Default STATIC (all visible) → existing users see no
     // change until they opt into Dynamic.
 
-    enum class NavMenuMode(val label: String) { DYNAMIC("Dynamic"), STATIC("Static") }
+    enum class NavMenuMode { DYNAMIC, STATIC }
 
     val navMenuMode: Flow<NavMenuMode> = prefsFlow { prefs ->
         prefs[Keys.NAV_MENU_MODE]?.let { runCatching { NavMenuMode.valueOf(it) }.getOrNull() } ?: NavMenuMode.STATIC
@@ -591,10 +589,10 @@ class SettingsRepository(private val context: Context, private val localeStore: 
         raw?.let { runCatching { SortMode.valueOf(it) }.getOrNull() } ?: default
 
     /** The TV Guide's own ordering. LIVE_TV mirrors the Live TV sort; CATCHUP floats archive channels up. */
-    enum class GuideSort(val label: String) { ALPHA("A–Z"), PROVIDER("Provider"), LIVE_TV("Live TV"), CATCHUP("Catch-up"), FAVORITES("Favorites") }
+    enum class GuideSort { ALPHA, PROVIDER, LIVE_TV, CATCHUP, FAVORITES }
 
     /** How Movies & Series browse: the poster wall, or a compact list (more titles at once). */
-    enum class VodViewMode(val label: String) { GRID("Grid"), LIST("List") }
+    enum class VodViewMode { GRID, LIST }
     val vodViewMode: Flow<VodViewMode> = prefsFlow { prefs ->
         prefs[Keys.VOD_VIEW_MODE]?.let { runCatching { VodViewMode.valueOf(it) }.getOrNull() } ?: VodViewMode.GRID
     }

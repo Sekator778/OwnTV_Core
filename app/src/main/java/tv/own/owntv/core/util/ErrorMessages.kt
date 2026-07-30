@@ -1,40 +1,53 @@
 package tv.own.owntv.core.util
 
+/** Semantic failure categories. The presentation layer supplies the translated wording. */
+sealed interface FriendlySyncFailure {
+    data object Offline : FriendlySyncFailure
+    data object Generic : FriendlySyncFailure
+    data object Timeout : FriendlySyncFailure
+    data object Unreachable : FriendlySyncFailure
+    data object ConnectionFailed : FriendlySyncFailure
+    data object StreamInterrupted : FriendlySyncFailure
+    data object MacNotAuthorised : FriendlySyncFailure
+    data object InvalidMac : FriendlySyncFailure
+    data object PortalHandshakeFailed : FriendlySyncFailure
+    data object PortalSessionExpired : FriendlySyncFailure
+    data object AuthenticationRejected : FriendlySyncFailure
+    data object NotFound : FriendlySyncFailure
+    data object ServerError : FriendlySyncFailure
+    data object SecureConnectionFailed : FriendlySyncFailure
+    data object MalformedGuide : FriendlySyncFailure
+    data object PlaylistFileUnavailable : FriendlySyncFailure
+    data object PlaylistPathUnsupported : FriendlySyncFailure
+    data class Unknown(val rawMessage: String) : FriendlySyncFailure
+}
+
 /**
- * Maps a raw exception / sync message to a friendly, user-facing one. [online] lets callers turn the
- * common "everything failed" case into a clear offline message instead of a stack-trace-ish string.
+ * Classifies a raw exception / sync message without producing user-facing language. [online] lets
+ * callers turn the common "everything failed" case into a semantic offline state instead of a
+ * stack-trace-ish string.
+ *
+ * The English needles below are stable comparison keys emitted by OwnTV's own networking code;
+ * translating either the throw sites or these needles would silently break classification.
  */
-fun friendlySyncError(raw: String?, online: Boolean): String = when {
-    !online -> "You appear to be offline. Check your connection and try again."
-    raw.isNullOrBlank() -> "Something went wrong. Please try again."
-    raw.containsAny("timeout", "timed out") ->
-        "The server took too long to respond. Please try again."
-    raw.containsAny("Unable to resolve host", "UnknownHost", "No address associated") ->
-        "Couldn't reach the server. Check the address and your connection."
-    raw.containsAny("Failed to connect", "ECONNREFUSED", "Connection refused", "Connection reset") ->
-        "Couldn't connect to the server. It may be down, or the address may be wrong."
-    raw.containsAny("stream was reset", "PROTOCOL_ERROR", "StreamReset") ->
-        "The server interrupted the download. Please try again."
-    // Stalker/MAC portals (Phase F): these needles match StalkerClient/StalkerSyncer's own exception
-    // strings, so MAC-auth failures don't fall through to the username/password copy below.
-    // "MAC not authorized" also matches parseEnvelope's "empty payload — token expired or MAC not
-    // authorized" (thrown after the one-shot re-handshake already failed, so it's a MAC problem).
-    raw.containsAny("MAC may not be authorized", "MAC not authorized", "Portal rejected", "no valid MAC") ->
-        "The portal refused this MAC address. Check the MAC (and the TV's date & time) — or the subscription may have expired."
-    raw.containsAny("Portal handshake", "portal API endpoint") ->
-        "Couldn't reach the portal. Check the portal URL — it usually ends in /c/."
-    raw.containsAny("token may have expired", "returned no cmd") ->
-        "The portal session expired. Please try again."
-    raw.containsAny("HTTP 401", "HTTP 403") ->
-        "The server rejected your login. Check your username and password."
-    raw.contains("HTTP 404") -> "Not found on the server. Check the URL."
-    raw.containsAny("HTTP 500", "HTTP 502", "HTTP 503", "HTTP 504") ->
-        "The server had a problem. Please try again later."
-    raw.containsAny("CertPath", "SSLHandshake", "trust anchor", "CertificateException") ->
-        "Secure connection failed — the server's certificate may be invalid."
-    raw.containsAny("END_TAG", "START_TAG", "XmlPull", "PullParser", "ParserException") ->
-        "The guide data from the server was malformed. Some of it may still have loaded — please try again, or check the EPG URL."
-    else -> raw
+fun classifySyncFailure(raw: String?, online: Boolean): FriendlySyncFailure = when {
+    !online -> FriendlySyncFailure.Offline
+    raw.isNullOrBlank() -> FriendlySyncFailure.Generic
+    raw.containsAny("timeout", "timed out") -> FriendlySyncFailure.Timeout
+    raw.containsAny("Unable to resolve host", "UnknownHost", "No address associated") -> FriendlySyncFailure.Unreachable
+    raw.containsAny("Failed to connect", "ECONNREFUSED", "Connection refused", "Connection reset") -> FriendlySyncFailure.ConnectionFailed
+    raw.containsAny("stream was reset", "PROTOCOL_ERROR", "StreamReset") -> FriendlySyncFailure.StreamInterrupted
+    raw.containsAny("MAC may not be authorized", "MAC not authorized", "Portal rejected", "no valid MAC") -> FriendlySyncFailure.MacNotAuthorised
+    raw.containsAny("Portal handshake", "portal API endpoint") -> FriendlySyncFailure.PortalHandshakeFailed
+    raw.containsAny("token may have expired", "returned no cmd") -> FriendlySyncFailure.PortalSessionExpired
+    raw.containsAny("HTTP 401", "HTTP 403") -> FriendlySyncFailure.AuthenticationRejected
+    raw.contains("HTTP 404", ignoreCase = true) -> FriendlySyncFailure.NotFound
+    raw.containsAny("HTTP 500", "HTTP 502", "HTTP 503", "HTTP 504") -> FriendlySyncFailure.ServerError
+    raw.containsAny("CertPath", "SSLHandshake", "trust anchor", "CertificateException") -> FriendlySyncFailure.SecureConnectionFailed
+    raw.containsAny("END_TAG", "START_TAG", "XmlPull", "PullParser", "ParserException") -> FriendlySyncFailure.MalformedGuide
+    raw.contains("playlist_file_unavailable", ignoreCase = true) -> FriendlySyncFailure.PlaylistFileUnavailable
+    raw.contains("playlist_path_unsupported", ignoreCase = true) -> FriendlySyncFailure.PlaylistPathUnsupported
+    else -> FriendlySyncFailure.Unknown(raw)
 }
 
 /**

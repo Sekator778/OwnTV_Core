@@ -6,4 +6,12 @@
 -->
 <resources>
     <string name="app_name" translatable="false">OwnTV</string>
+    <string name="brand_own" translatable="false">Own</string>
+    <string name="brand_tv" translatable="false">TV</string>
+    <string name="settings_player_exoplayer" translatable="false">ExoPlayer</string>
+    <string name="settings_player_mpv" translatable="false">mpv</string>
+    <string name="settings_degree_celsius" translatable="false">°C</string>
+    <string name="settings_degree_fahrenheit" translatable="false">°F</string>
+    <string name="player_engine_mpv" translatable="false">MPV</string>
+    <string name="player_engine_exo" translatable="false">EXO</string>
 </resources>

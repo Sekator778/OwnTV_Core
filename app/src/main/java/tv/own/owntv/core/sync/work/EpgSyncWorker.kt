@@ -11,7 +11,6 @@ import tv.own.owntv.core.epg.EpgSourceStore
 import tv.own.owntv.core.network.ConnectivityObserver
 import tv.own.owntv.core.repository.EpgRepository
 import tv.own.owntv.core.sync.EpgActivityTracker
-import tv.own.owntv.core.util.friendlySyncError
 import tv.own.owntv.core.util.isTransientSyncError
 
 class EpgSyncWorker(
@@ -57,11 +56,14 @@ class EpgSyncWorker(
             throw c
         } catch (e: Exception) {
             val online = connectivity.isOnlineNow()
-            val message = friendlySyncError(e.message, online)
+            // Persist the original exception text. Classification belongs to the EPG Compose renderer;
+            // storing a translated sentence would freeze the language active during the background run.
+            // The English comparison needles remain in ErrorMessages.kt and are stable protocol keys.
+            val rawMessage = e.message
             // Record the failure WITHOUT updating lastSyncAt — staleness-based auto-refresh treats
             // lastSyncAt as the last *successful* sync, so a failed attempt must leave it untouched
             // (otherwise a flaky network would falsely reset the threshold and stop retries).
-            store.markError(source.id, message)
+            store.markError(source.id, rawMessage)
             // Transient network trouble → WorkManager retry with backoff instead of staying stale
             // until the next scheduled window. Permanent errors (bad URL, malformed XML) stay terminal.
             return if ((e is java.io.IOException || isTransientSyncError(e.message, online)) && runAttemptCount < MAX_RETRY_ATTEMPTS) {

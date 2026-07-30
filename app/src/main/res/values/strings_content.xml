@@ -1,4 +1,191 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Home, live, movies, series, epg, search, downloads and subtitles strings. Phase 1 populates this. -->
-<resources>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <plurals name="content_downloading_items">
+        <item quantity="one">Downloading</item>
+        <item quantity="other">Downloading <xliff:g id="count">%1$d</xliff:g> items</item>
+    </plurals>
+    <plurals name="content_queued_items">
+        <item quantity="one">Queued</item>
+        <item quantity="other">Queued <xliff:g id="count">%1$d</xliff:g> items</item>
+    </plurals>
+    <plurals name="content_paused_items">
+        <item quantity="one">Paused</item>
+        <item quantity="other">Paused <xliff:g id="count">%1$d</xliff:g> items</item>
+    </plurals>
+    <plurals name="content_downloads_failed">
+        <item quantity="one">Download failed</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> downloads failed</item>
+    </plurals>
+
+    <string name="content_genre_action">Action</string>
+    <string name="content_genre_adult">Adult</string>
+    <string name="content_genre_anime">Anime</string>
+    <string name="content_genre_comedy">Comedy</string>
+    <string name="content_genre_documentary">Documentary</string>
+    <string name="content_genre_drama">Drama</string>
+    <string name="content_genre_entertainment">Entertainment</string>
+    <string name="content_genre_horror">Horror</string>
+    <string name="content_genre_kids">Kids</string>
+    <string name="content_genre_movies">Movies</string>
+    <string name="content_genre_music">Music</string>
+    <string name="content_genre_news">News</string>
+    <string name="content_genre_other">Other</string>
+    <string name="content_genre_religious">Religious</string>
+    <string name="content_genre_romance">Romance</string>
+    <string name="content_genre_scifi">Sci-Fi</string>
+    <string name="content_genre_series">Series</string>
+    <string name="content_genre_sport">Sport</string>
+    <string name="content_exit_owntv">Exit OwnTV?</string>
+    <string name="content_exit_confirmation">Are you sure you want to close the app?</string>
+    <string name="content_restore_incomplete_title">A restore didn\'t finish</string>
+    <string name="content_restore_incomplete_message">The app closed while restoring <xliff:g id="description">%1$s</xliff:g>, so some of it may be missing. Nothing was deleted — run the same restore again from Settings → Backup &amp; Restore to fill in the rest.</string>
+    <string name="content_playlist_picker_title">Show playlist</string>
+    <string name="content_playlist_picker_description">Choose which playlist to browse. This applies everywhere and is remembered.</string>
+    <string name="content_avatar_picker_title">Choose your avatar</string>
+    <string name="content_category_browser_title">Categories</string>
+    <string name="content_channel_overlay_title">Channels</string>
+    <string name="content_live_now">Now</string>
+    <string name="content_live_next">Next</string>
+    <string name="content_live_remaining"><xliff:g id="minutes">%1$d</xliff:g> min left</string>
+    <string name="content_media_overview">Overview</string>
+    <string name="content_media_cast">Cast</string>
+    <string name="content_media_press_back">Press Back to close</string>
+    <string name="content_add_favourite">Add to Favourites</string>
+    <string name="content_remove_favourite">Remove from Favourites</string>
+    <string name="content_mark_watched">Mark as watched</string>
+    <string name="content_mark_unwatched">Mark as unwatched</string>
+    <string name="content_move">Move</string>
+    <string name="content_move_to_category">Move to category…</string>
+    <string name="content_download">Download</string>
+    <string name="content_download_all_episodes">Download all episodes</string>
+    <string name="content_play">Play</string>
+    <string name="content_next_up">Next up</string>
+    <string name="content_favorited">Favorited</string>
+    <string name="content_favorite">Favorite</string>
+    <string name="content_show_watched">Show watched</string>
+    <string name="content_hide_watched">Hide watched</string>
+    <string name="content_sorting">Sorting</string>
+    <string name="content_seasons">Seasons</string>
+    <string name="content_episodes">Episodes</string>
+    <string name="content_oldest_first">Oldest first</string>
+    <string name="content_newest_first">Newest first</string>
+    <string name="content_last_watched">Last watched</string>
+    <string name="content_press_ok_episodes">Press OK on the poster to view episodes.</string>
+    <string name="content_play_external">Play with external player</string>
+    <string name="content_delete_subtitles">Delete OpenSub subtitles</string>
+    <string name="content_tmdb_details">TMDB Details</string>
+    <string name="content_play_trailer">Play Trailer</string>
+    <string name="content_refetch_tmdb">Refetch TMDB details</string>
+    <string name="content_set_tmdb_name">Set TMDB name</string>
+    <string name="content_close">Close</string>
+    <string name="content_focus_movie">Focus a movie to see details.</string>
+    <string name="content_focus_channel">Focus a channel to see it here.</string>
+    <string name="content_press_ok_fullscreen">Press OK to watch fullscreen · Long-press for options</string>
+    <string name="content_rename_hint">Only for this profile. Leave blank to restore the original name.</string>
+    <string name="content_focus_series">Focus a series, press OK to view episodes.</string>
+    <string name="content_focus_episode">Focus an episode to see details.</string>
+    <string name="content_no_movies_here">No movies here.</string>
+    <string name="content_no_series_here">No series here.</string>
+    <string name="content_no_episodes">No episodes available.</string>
+    <string name="content_no_movies_found">No movies found for “<xliff:g id="query">%1$s</xliff:g>”</string>
+    <string name="content_count_movies"><xliff:g id="category">%1$s</xliff:g> (<xliff:g id="count">%2$d</xliff:g> movies)</string>
+    <string name="content_count_series"><xliff:g id="category">%1$s</xliff:g> (<xliff:g id="count">%2$d</xliff:g> series)</string>
+    <string name="content_provider">Provider</string>
+    <string name="content_no_series_found">No series found for “<xliff:g id="query">%1$s</xliff:g>”</string>
+    <string name="content_search_movies"><xliff:g id="category">%1$s</xliff:g>…</string>
+    <string name="content_search_series"><xliff:g id="category">%1$s</xliff:g>…</string>
+    <string name="content_reorder_movie">Reorder movie</string>
+    <string name="content_reorder_series">Reorder series</string>
+    <string name="content_already_downloaded">Already downloaded — check the Downloads menu.</string>
+    <string name="content_refetching_tmdb">Refetching TMDB details…</string>
+    <string name="content_researching_tmdb">Re-searching TMDB…</string>
+    <string name="content_ok_play_options">OK to play · long-press for options</string>
+    <string name="content_resume_at">Resume <xliff:g id="position">%1$s</xliff:g></string>
+    <string name="content_duration_hours"><xliff:g id="hours">%1$d</xliff:g>h <xliff:g id="minutes">%2$d</xliff:g>m</string>
+    <string name="content_duration_minutes"><xliff:g id="minutes">%1$d</xliff:g>m</string>
+    <string name="content_rating">★ <xliff:g id="rating">%1$.1f</xliff:g></string>
+    <string name="content_metadata_separator">  •  </string>
+    <string name="content_genres_separator"> · </string>
+    <string name="content_season_episode">S<xliff:g id="season">%1$d</xliff:g> · E<xliff:g id="episode">%2$d</xliff:g></string>
+    <string name="content_season_episode_title">S<xliff:g id="season">%1$d</xliff:g> · E<xliff:g id="episode">%2$d</xliff:g> <xliff:g id="title">%3$s</xliff:g></string>
+    <string name="content_season">Season <xliff:g id="season">%1$d</xliff:g></string>
+    <string name="content_season_progress">Season <xliff:g id="season">%1$d</xliff:g> · <xliff:g id="completed">%2$d</xliff:g>/<xliff:g id="total">%3$d</xliff:g></string>
+    <string name="content_no_guide">No guide.</string>
+    <string name="content_no_epg">No EPG</string>
+    <string name="content_epg">EPG</string>
+    <string name="content_live_day_time_range"><xliff:g id="day">%1$s</xliff:g> <xliff:g id="start">%2$s</xliff:g> – <xliff:g id="stop">%3$s</xliff:g></string>
+    <string name="content_epg_days">EPG · <xliff:g id="days">%1$d</xliff:g>d</string>
+    <string name="content_catchup">Catch-up</string>
+    <string name="content_catchup_days">Catch-up · <xliff:g id="days">%1$d</xliff:g>d</string>
+    <string name="content_current"><xliff:g id="value">%1$s</xliff:g></string>
+    <string name="content_play_external_short">Play in external player</string>
+    <string name="content_rename">Rename</string>
+    <string name="content_rename_channel">Rename channel</string>
+    <string name="content_reorder_channel">Reorder channel</string>
+    <string name="content_hide_channel">Hide channel</string>
+    <string name="content_remove_history">Remove from History</string>
+    <string name="content_no_channels_here">No channels here.</string>
+    <string name="content_no_channels_found">No channels found for “<xliff:g id="query">%1$s</xliff:g>”</string>
+    <string name="content_count_channels"><xliff:g id="category">%1$s</xliff:g> (<xliff:g id="count">%2$d</xliff:g> channels)</string>
+    <string name="content_search_channels"><xliff:g id="category">%1$s</xliff:g>…</string>
+    <string name="content_match_epg">Match EPG</string>
+    <string name="content_catchup_title">Catch-up · <xliff:g id="channel">%1$s</xliff:g></string>
+    <string name="content_rewind_at">Rewind · <xliff:g id="time">%1$s</xliff:g></string>
+    <string name="content_catchup_prompt">Pick a recent programme to replay from the start.</string>
+    <string name="content_catchup_empty">No recent guide data for this channel yet — make sure its EPG is matched (long-press it, or use Match EPG).</string>
+    <string name="content_epg_match_prompt">Pick the guide channel for “<xliff:g id="channel">%1$s</xliff:g>”.</string>
+    <string name="content_epg_current_match">Current: <xliff:g id="match">%1$s</xliff:g></string>
+    <string name="content_epg_match_prompt_current">Pick the guide channel for “<xliff:g id="channel">%1$s</xliff:g>”. Current: <xliff:g id="match">%2$s</xliff:g></string>
+    <string name="content_search_guide_channels">Search guide channels…</string>
+    <string name="content_no_epg_data">No EPG data yet — add an EPG source in Settings.</string>
+    <string name="content_no_guide_channels">No guide channels match “<xliff:g id="query">%1$s</xliff:g>”.</string>
+    <string name="content_clear_match">Clear match</string>
+    <string name="content_live_now_label">NOW</string>
+    <string name="content_live_next_label">NEXT · <xliff:g id="time">%1$s</xliff:g></string>
+    <string name="content_live_later_label">LATER</string>
+    <string name="content_live_time_range_plain"><xliff:g id="start">%1$s</xliff:g> – <xliff:g id="stop">%2$s</xliff:g></string>
+    <string name="content_category_favorites">Favorites</string>
+    <string name="content_category_history">History</string>
+    <string name="content_category_all_channels">All Channels</string>
+    <string name="content_category_united_kingdom">United Kingdom</string>
+    <string name="content_category_united_states">United States</string>
+    <string name="content_category_germany">Germany</string>
+    <string name="content_category_sports">Sports</string>
+    <string name="content_category_all_movies">All Movies</string>
+    <string name="content_category_action">Action</string>
+    <string name="content_category_drama">Drama</string>
+    <string name="content_category_comedy">Comedy</string>
+    <string name="content_category_horror">Horror</string>
+    <string name="content_category_all_series">All Series</string>
+    <string name="content_category_animation">Animation</string>
+    <string name="content_category_documentary">Documentary</string>
+    <string name="content_category_all_downloads">All Downloads</string>
+    <string name="content_category_movies">Movies</string>
+    <string name="content_category_series">Series</string>
+    <string name="content_zero_channels">0 channels</string>
+    <string name="content_zero_movies">0 movies</string>
+    <string name="content_zero_series">0 series</string>
+    <string name="content_zero_downloads">0 downloads</string>
+    <string name="content_nothing_here">Nothing here yet</string>
+    <string name="content_add_source">Add a source</string>
+    <string name="content_preview_select_channel">Select a channel to preview it here.</string>
+    <string name="content_offline_banner">You\'re offline — playback and updates won\'t work until you reconnect.</string>
+    <string name="content_subtitle_select_file">Select local subtitle file</string>
+    <string name="content_subtitle_load_failed">Couldn\'t load the subtitle file.</string>
+    <string name="content_history">History</string>
+    <string name="content_all_playlists">All playlists</string>
+    <string name="content_search_categories">Search categories…</string>
+    <string name="content_no_categories_match">No categories match</string>
+    <string name="content_action_resume">Resume</string>
+    <string name="content_action_play">Play</string>
+    <string name="content_action_next_up">Next up</string>
+    <string name="content_action_last_channel">Last channel</string>
+    <string name="content_continue_label"><xliff:g id="action">%1$s</xliff:g> · <xliff:g id="name">%2$s</xliff:g></string>
+    <string name="content_empty_section"><xliff:g id="section">%1$s</xliff:g> arrives in a later phase. Add an M3U or Xtream source to populate this list.</string>
+    <string name="content_progress_percent"><xliff:g id="percent">%1$d</xliff:g>%%</string>
+    <string name="content_section_category"><xliff:g id="section">%1$s</xliff:g> / <xliff:g id="category">%2$s</xliff:g></string>
+    <string name="content_preview_player">Your own IPTV player.</string>
+    <string name="content_live_time_range"><xliff:g id="start">%1$s</xliff:g> – <xliff:g id="end">%2$s</xliff:g></string>
+    <string name="content_live_time_remaining"><xliff:g id="end">%1$s</xliff:g> · <xliff:g id="minutes">%2$d</xliff:g> min left</string>
+    <string name="common_browse">Browse</string>
 </resources>

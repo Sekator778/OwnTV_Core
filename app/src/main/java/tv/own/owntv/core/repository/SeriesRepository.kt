@@ -138,7 +138,9 @@ class SeriesRepository(
                         seasonId = null,
                         seasonNumber = seasonNo,
                         episodeNumber = epNo,
-                        name = "Episode $epNo",
+                        // The guide has no provider title for these Stalker rows. Keep the persisted
+                        // value locale-neutral; Compose renders the episode number when it is blank.
+                        name = "",
                         streamUrl = cmd, // season cmd — resolved per-episode at play time
                         containerExt = null,
                         remoteId = "${season.id}:$epNo",

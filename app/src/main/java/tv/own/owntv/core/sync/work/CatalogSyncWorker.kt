@@ -79,7 +79,7 @@ class CatalogSyncWorker(
 
         return when (result) {
             is SyncResult.Success -> {
-                val warningText = result.warnings.takeIf { it.isNotEmpty() }?.joinToString { it.label }
+                val warningText = result.warnings.takeIf { it.isNotEmpty() }?.joinToString { it.phase }
                 Log.i(TAG, "Sync succeeded for source ${source.id} (${source.name}) warnings=$warningText")
                 // Remainder of a staged initial sync: stamp lastSyncAt once priority+remainder together
                 // cover the enabled catalog (SyncManager alone won't — each pass is incomplete).

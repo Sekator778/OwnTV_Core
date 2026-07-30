@@ -136,7 +136,7 @@ class LauncherRecommendationPlanner(
             targetItemId = movie.id,
             stableKey = movieStableKey(movie),
             title = movie.name,
-            subtitle = movie.year?.toString() ?: "Movie",
+            subtitle = movie.year?.toString(),
             posterUrl = movie.posterUrl,
             playbackUri = LauncherDeepLink.Movie(
                 sourceId = movie.sourceId,
@@ -176,11 +176,9 @@ class LauncherRecommendationPlanner(
             targetItemId = targetEpisode.id,
             stableKey = episodeStableKey(show, sourceEpisode),
             title = targetEpisode.name.ifBlank { show.name },
-            subtitle = buildList {
-                add(show.name)
-                add("Season ${targetEpisode.seasonNumber}")
-                if (targetEpisode.episodeNumber > 0) add("Episode ${targetEpisode.episodeNumber}")
-            }.joinToString(" · "),
+            // Subtitle is rendered by TvHomeRepository with the active Android locale. Keep the
+            // planner's result semantic so this data layer never bakes English UI copy into a row.
+            subtitle = null,
             posterUrl = show.posterUrl,
             playbackUri = LauncherDeepLink.Episode(
                 seriesSourceId = show.sourceId,

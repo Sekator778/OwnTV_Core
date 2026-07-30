@@ -12,7 +12,7 @@ import kotlinx.coroutines.flow.StateFlow
 interface PlaybackEngine {
     val isPlaying: StateFlow<Boolean>
     val buffering: StateFlow<Boolean>
-    val error: StateFlow<String?>
+    val error: StateFlow<PlaybackFailure?>
     /** The structured underlying failure (plain reason • media spec • raw engine text), shown under the
      *  friendly message so users can report the real cause without adb/logcat. Null when none. */
     val errorInfo: StateFlow<ErrorInfo?> get() = NULL_ERROR

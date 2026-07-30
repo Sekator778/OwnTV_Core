@@ -264,7 +264,7 @@ internal class M3uSyncer(
             suspend fun writeEpisodes(seriesId: Long, show: M3uShowAccumulator): Int {
                 val seasonNumbers = show.episodes.map { it.season }.distinct().sorted()
                 val seasonIds = seriesDao.upsertSeasonsReturnIds(
-                    seasonNumbers.map { n -> SeasonEntity(seriesId = seriesId, seasonNumber = n, name = "Season $n") },
+                    seasonNumbers.map { n -> SeasonEntity(seriesId = seriesId, seasonNumber = n, name = n.toString()) },
                 )
                 val seasonIdByNumber = seasonNumbers.zip(seasonIds).toMap()
                 seriesDao.upsertEpisodes(
@@ -392,7 +392,7 @@ internal class M3uSyncer(
                             M3uEpisodeRow(
                                 season = parsed.season,
                                 episode = episode,
-                                title = parsed.title ?: "Episode $episode",
+                                title = parsed.title ?: parsed.show,
                                 streamUrl = e.streamUrl,
                             ),
                         )
@@ -554,12 +554,12 @@ internal class M3uSyncer(
         url.startsWith("/") -> File(url).inputStream()
         url.startsWith("file://") -> {
             val uri = Uri.parse(url)
-            File(uri.path ?: throw java.io.IOException("Couldn't open the playlist file. Re-pick it (it may have moved.)")).inputStream()
+            File(uri.path ?: throw java.io.IOException("playlist_file_unavailable")).inputStream()
         }
         url.startsWith("content://") ->
             context.contentResolver.openInputStream(Uri.parse(url))
-                ?: throw java.io.IOException("Couldn't open the playlist file. Re-pick it (it may have moved.)")
-        else -> throw java.io.IOException("Unsupported local playlist path")
+                ?: throw java.io.IOException("playlist_file_unavailable")
+        else -> throw java.io.IOException("playlist_path_unsupported")
     }
 
     companion object {

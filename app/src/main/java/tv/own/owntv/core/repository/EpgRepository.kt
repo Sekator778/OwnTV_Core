@@ -348,9 +348,7 @@ class EpgRepository(
         writtenCount
     }
 
-    class NoProgrammesInWindowException : java.io.IOException(
-        "Guide downloaded, but no programmes matched the current guide window. Check the device date/time or try another EPG feed.",
-    )
+    class NoProgrammesInWindowException : java.io.IOException()
 
     private suspend fun pruneRemovedProgrammes(sourceId: Long, tracker: ProgrammeHashTracker): Int {
         val startedAt = SystemClock.elapsedRealtime()

@@ -6,6 +6,8 @@ import android.net.Uri
 import android.widget.Toast
 import androidx.core.content.FileProvider
 import java.io.File
+import tv.own.owntv.core.i18n.AppLocale
+import tv.own.owntv.core.i18n.LocaleStore
 
 // Hands a stream URL (or a downloaded file path) to an external video player (VLC, MX Player, etc.)
 // via ACTION_VIEW. When it fires, the in-app player is bypassed entirely (the fullscreen player
@@ -19,10 +21,11 @@ import java.io.File
 class ExternalPlayerLauncher(private val context: Context) {
 
     // Open url externally. Returns true if an external app was actually launched.
-    fun launch(url: String, title: String? = null): Boolean {
+    fun launch(url: String, title: String? = null, subtitle: String? = null): Boolean {
+        val localized = localizedContext()
         val uri = uriFor(url)
         if (uri == null) {
-            toast("Could not open this stream.")
+            toast(localized.getString(tv.own.owntv.R.string.player_external_could_not_open))
             return false
         }
         // Try the precise MIME first, then widen. VLC and MX Player advertise `video/*` but NOT every
@@ -40,13 +43,18 @@ class ExternalPlayerLauncher(private val context: Context) {
             return if (targets.size == 1) {
                 startActivity(intent)
             } else {
+                val chooserTitle = if (title != null && subtitle != null) {
+                    localized.getString(tv.own.owntv.R.string.player_external_play_with_item, title, subtitle)
+                } else {
+                    title ?: localized.getString(tv.own.owntv.R.string.player_external_play_with)
+                }
                 startActivity(
-                    Intent.createChooser(intent, title ?: "Play with")
+                    Intent.createChooser(intent, chooserTitle)
                         .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK),
                 )
             }
         }
-        toast("No external player found - install VLC or MX Player.")
+        toast(localized.getString(tv.own.owntv.R.string.player_external_not_found))
         return false
     }
 
@@ -59,7 +67,7 @@ class ExternalPlayerLauncher(private val context: Context) {
 
     private fun startActivity(intent: Intent): Boolean =
         runCatching { context.startActivity(intent) }
-            .onFailure { toast("No external player found - install VLC or MX Player.") }
+            .onFailure { toast(localizedContext().getString(tv.own.owntv.R.string.player_external_not_found)) }
             .isSuccess
 
     // Network scheme: hand the URL over verbatim; otherwise treat as a local file path.
@@ -91,6 +99,9 @@ class ExternalPlayerLauncher(private val context: Context) {
         }
         return listOf(specific, "video/*", null).distinct()
     }
+
+    private fun localizedContext(): Context =
+        AppLocale.wrap(context, LocaleStore.from(context).readBlocking())
 
     private fun toast(message: String) {
         Toast.makeText(context, message, Toast.LENGTH_LONG).show()

@@ -15,6 +15,7 @@ import okhttp3.Request
 import org.json.JSONObject
 import tv.own.owntv.BuildConfig
 import java.io.File
+import java.io.IOException
 
 /**
  * In-app updates straight from GitHub Releases: checks the repo's latest release, compares its tag
@@ -35,7 +36,8 @@ class UpdateManager(
         data object UpToDate : State
         data class Available(val info: UpdateInfo) : State
         data class Downloading(val percent: Int) : State
-        data class Failed(val message: String) : State
+        enum class FailureKind { CHECK, DOWNLOAD }
+        data class Failed(val kind: FailureKind) : State
     }
 
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
@@ -57,7 +59,7 @@ class UpdateManager(
                     .header("User-Agent", "OwnTV")
                     .build()
                 client.newCall(request).execute().use { resp ->
-                    if (!resp.isSuccessful) error("GitHub responded ${resp.code}")
+                    if (!resp.isSuccessful) throw IOException()
                     val o = JSONObject(resp.body!!.string())
                     val version = o.getString("tag_name").removePrefix("v")
                     val notes = o.optString("body").take(16_000)
@@ -77,14 +79,14 @@ class UpdateManager(
                             if (apkUrl == null) apkUrl = a.getString("browser_download_url") // fallback: any APK
                         }
                     }
-                    if (apkUrl == null) error("The latest release has no APK attached")
+                    if (apkUrl == null) throw IOException()
                     if (isNewer(version, currentVersion)) {
                         _state.value = State.Available(UpdateInfo(version, notes, apkUrl))
                     } else {
                         _state.value = State.UpToDate
                     }
                 }
-            }.onFailure { _state.value = State.Failed(it.message ?: "Update check failed") }
+            }.onFailure { _state.value = State.Failed(State.FailureKind.CHECK) }
         }
     }
 
@@ -98,8 +100,8 @@ class UpdateManager(
                 val out = File(dir, "owntv-update.apk")
                 val request = Request.Builder().url(info.apkUrl).header("User-Agent", "OwnTV").build()
                 client.newCall(request).execute().use { resp ->
-                    if (!resp.isSuccessful) error("Download failed (${resp.code})")
-                    val body = resp.body ?: error("Empty download")
+                    if (!resp.isSuccessful) throw IOException()
+                    val body = resp.body ?: throw IOException()
                     val total = body.contentLength()
                     body.byteStream().use { input ->
                         out.outputStream().use { output ->
@@ -117,7 +119,7 @@ class UpdateManager(
                 }
                 install(out)
                 _state.value = State.Available(info) // dialog stays sane if the user cancels install
-            }.onFailure { _state.value = State.Failed(it.message ?: "Download failed") }
+            }.onFailure { _state.value = State.Failed(State.FailureKind.DOWNLOAD) }
         }
     }
 

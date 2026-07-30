@@ -18,6 +18,11 @@ import java.io.File
  */
 object StorageAccess {
 
+    enum class RootKind { INTERNAL, REMOVABLE, APP }
+
+    /** A storage root's kind and path; wording belongs to the Compose file picker. */
+    data class StorageRoot(val kind: RootKind, val file: File, val volumeName: String? = null)
+
     /**
      * Whether shared storage can be browsed: All-files access on Android 11+, or the classic
      * READ_EXTERNAL_STORAGE grant on Android 10 and below. A media-only grant on 11–12L does NOT
@@ -58,20 +63,21 @@ object StorageAccess {
         return if (dir != null && (dir.exists() || dir.mkdirs())) dir else defaultRoot(context)
     }
 
-    /** Top-level browsable storage roots (label → dir) for the folder picker. */
-    fun storageRoots(context: Context): List<Pair<String, File>> {
-        val roots = LinkedHashMap<String, File>()
+    /** Top-level browsable storage roots for the Compose folder picker. */
+    fun storageRoots(context: Context): List<StorageRoot> {
+        val roots = LinkedHashMap<String, StorageRoot>()
         val internal = Environment.getExternalStorageDirectory()
-        if (internal != null && internal.exists()) roots["Internal storage"] = internal
+        if (internal != null && internal.exists()) roots[internal.absolutePath] = StorageRoot(RootKind.INTERNAL, internal)
         // Removable volumes: derive each volume root from its app-specific dir (…/Android/data/pkg/files).
         context.getExternalFilesDirs(null).forEach { f ->
             val vol = f?.parentFile?.parentFile?.parentFile?.parentFile
             if (vol != null && vol.exists() && vol.absolutePath != internal?.absolutePath) {
-                roots[vol.name.ifBlank { "Removable storage" }] = vol
+                roots[vol.absolutePath] = StorageRoot(RootKind.REMOVABLE, vol, vol.name.takeIf { it.isNotBlank() })
             }
         }
-        roots["App storage (no permission needed)"] = defaultRoot(context)
-        return roots.map { it.key to it.value }
+        val appRoot = defaultRoot(context)
+        roots[appRoot.absolutePath] = StorageRoot(RootKind.APP, appRoot)
+        return roots.values.toList()
     }
 
     /** Strips characters that are illegal in file/folder names. */

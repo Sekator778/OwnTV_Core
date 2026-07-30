@@ -1,5 +1,6 @@
 package tv.own.owntv.core.companion
 
+import android.content.Context
 import android.util.Log
 import java.io.BufferedInputStream
 import java.io.ByteArrayOutputStream
@@ -16,6 +17,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
+import tv.own.owntv.R
+import tv.own.owntv.core.i18n.AppLocale
+import tv.own.owntv.core.i18n.LocaleStore
 import tv.own.owntv.core.model.SourceType
 
 /**
@@ -33,7 +37,10 @@ import tv.own.owntv.core.model.SourceType
  *
  * Everything HTTP happens off the main thread on [Dispatchers.IO]. Passwords/MAC are never logged.
  */
-class CompanionHttpServer {
+class CompanionHttpServer(
+    private val context: Context? = null,
+    private val localeStore: LocaleStore? = null,
+) {
 
     /**
      * The server's **own** slice of the IO pool (C3). Every accepted socket used to be handled on the
@@ -168,9 +175,9 @@ class CompanionHttpServer {
             // Backup/image uploads can be several MB over Wi-Fi; give them more headroom than a tiny form post.
             socket.soTimeout = if (mode == CompanionMode.BACKUP_RESTORE || mode == CompanionMode.IMAGE_UPLOAD) 30_000 else 10_000
             val input = BufferedInputStream(socket.getInputStream())
-            val requestLine = readLine(input) ?: return sendText(socket, 400, "Bad request")
+            val requestLine = readLine(input) ?: return sendText(socket, 400, localized(R.string.companion_error_bad_request))
             val parts = requestLine.split(' ')
-            if (parts.size < 3) return sendText(socket, 400, "Bad request")
+            if (parts.size < 3) return sendText(socket, 400, localized(R.string.companion_error_bad_request))
 
             val method = parts[0].uppercase()
             val rawPath = parts[1]
@@ -190,7 +197,7 @@ class CompanionHttpServer {
             // Font asset for the web form (no PIN needed — it is only a font).
             if (method == "GET" && path == "/lora.ttf") {
                 val bytes = fontBytes
-                return if (bytes != null) sendBytes(socket, 200, "font/ttf", bytes) else sendText(socket, 404, "Not found")
+                return if (bytes != null) sendBytes(socket, 200, "font/ttf", bytes) else sendText(socket, 404, localized(R.string.companion_error_not_found))
             }
 
             // Landing: a correct PIN in the query (e.g. the "send another" link) skips straight to the
@@ -201,24 +208,24 @@ class CompanionHttpServer {
                     return sendHtml(socket, 200, authedPage())
                 }
                 // An empty PIN is just someone opening the link, not a guess — only count real ones.
-                if (queryPin.isNotBlank() && pinRejected()) return sendText(socket, 403, LOCKOUT_MESSAGE)
+                if (queryPin.isNotBlank() && pinRejected()) return sendText(socket, 403, lockoutMessage())
                 return sendHtml(
                     socket,
                     200,
-                    CompanionHtml.pinPage(if (queryPin.isNotBlank()) "That PIN did not match — try again." else null),
+                    CompanionHtml.pinPage(htmlContext(), if (queryPin.isNotBlank()) pinMismatchMessage() else null),
                 )
             }
 
             // PIN submission from the gate.
             if (method == "POST" && path == "/") {
-                val body = readBody(input, headers, maxBodyBytes(path)) ?: return sendText(socket, 413, "Body too large")
+                val body = readBody(input, headers, maxBodyBytes(path)) ?: return sendText(socket, 413, localized(R.string.companion_error_body_too_large))
                 val submitted = parseQuery(body)["pin"].orEmpty()
                 if (pinOk(submitted)) {
                     pinAccepted()
                     return sendHtml(socket, 200, authedPage())
                 }
-                if (pinRejected()) return sendText(socket, 403, LOCKOUT_MESSAGE)
-                return sendHtml(socket, 200, CompanionHtml.pinPage("That PIN did not match — try again."))
+                if (pinRejected()) return sendText(socket, 403, lockoutMessage())
+                return sendHtml(socket, 200, CompanionHtml.pinPage(htmlContext(), pinMismatchMessage()))
             }
 
             // Backup download (BACKUP_DOWNLOAD mode) — PIN required, streams the exported container.
@@ -226,21 +233,21 @@ class CompanionHttpServer {
             // bookmarked it still works. What it serves is whatever export produced — a `.own` file.
             if (method == "GET" && (path == "/backup.own" || path == "/backup.json")) {
                 val headerPin = headers["x-companion-pin"].orEmpty()
-                if (!requirePin(queryPin.ifBlank { headerPin })) return sendText(socket, 401, "Unauthorized")
+                if (!requirePin(queryPin.ifBlank { headerPin })) return sendText(socket, 401, localized(R.string.companion_error_unauthorized))
                 val file = downloadFile
                 val bytes = file?.takeIf { it.exists() }?.let { runCatching { it.readBytes() }.getOrNull() }
-                    ?: return sendText(socket, 404, "No backup available")
+                    ?: return sendText(socket, 404, localized(R.string.companion_error_no_backup))
                 return sendDownload(socket, bytes, file.name)
             }
 
             // Backup upload (BACKUP_RESTORE mode) — PIN required, JSON body is the backup file.
             if (method == "POST" && path == "/backup") {
                 val headerPin = headers["x-companion-pin"].orEmpty()
-                if (!requirePin(queryPin.ifBlank { headerPin })) return sendText(socket, 401, "Unauthorized")
-                val body = readBody(input, headers, maxBodyBytes(path)) ?: return sendText(socket, 413, "Backup too large")
-                if (body.isBlank()) return sendText(socket, 400, "Empty backup")
+                if (!requirePin(queryPin.ifBlank { headerPin })) return sendText(socket, 401, localized(R.string.companion_error_unauthorized))
+                val body = readBody(input, headers, maxBodyBytes(path)) ?: return sendText(socket, 413, localized(R.string.companion_error_backup_too_large))
+                if (body.isBlank()) return sendText(socket, 400, localized(R.string.companion_error_empty_backup))
                 onBackup(body)
-                return sendHtml(socket, 200, CompanionHtml.backupSentPage(pin))
+                return sendHtml(socket, 200, CompanionHtml.backupSentPage(htmlContext(), pin))
             }
 
             // Background-image upload (IMAGE_UPLOAD mode) — PIN required. Body is a base64 data-URL
@@ -248,30 +255,30 @@ class CompanionHttpServer {
             // keeps binary handling out of the socket path.
             if (method == "POST" && path == "/background") {
                 val headerPin = headers["x-companion-pin"].orEmpty()
-                if (!requirePin(queryPin.ifBlank { headerPin })) return sendText(socket, 401, "Unauthorized")
-                val body = readBody(input, headers, maxBodyBytes(path)) ?: return sendText(socket, 413, "Image too large")
-                val decoded = decodeImageDataUrl(body) ?: return sendText(socket, 400, "Not a valid image upload")
+                if (!requirePin(queryPin.ifBlank { headerPin })) return sendText(socket, 401, localized(R.string.companion_error_unauthorized))
+                val body = readBody(input, headers, maxBodyBytes(path)) ?: return sendText(socket, 413, localized(R.string.companion_error_image_too_large))
+                val decoded = decodeImageDataUrl(body) ?: return sendText(socket, 400, localized(R.string.companion_error_invalid_image))
                 onImage(decoded.first, decoded.second)
-                return sendHtml(socket, 200, CompanionHtml.imageSentPage(pin))
+                return sendHtml(socket, 200, CompanionHtml.imageSentPage(htmlContext(), pin))
             }
 
             // Source submissions — PIN required (query or header), else 401.
             if (method == "POST" && (path == "/xtream" || path == "/m3u" || path == "/stalker")) {
                 val headerPin = headers["x-companion-pin"].orEmpty()
-                if (!requirePin(queryPin.ifBlank { headerPin })) return sendText(socket, 401, "Unauthorized")
+                if (!requirePin(queryPin.ifBlank { headerPin })) return sendText(socket, 401, localized(R.string.companion_error_unauthorized))
                 val fallback = when (path) {
                     "/stalker" -> SourceType.STALKER
                     "/m3u" -> SourceType.M3U
                     else -> SourceType.XTREAM
                 }
-                val body = readBody(input, headers, maxBodyBytes(path)) ?: return sendText(socket, 413, "Body too large")
+                val body = readBody(input, headers, maxBodyBytes(path)) ?: return sendText(socket, 413, localized(R.string.companion_error_body_too_large))
                 val payload = parsePayload(headers["content-type"], body, fallback)
-                    ?: return sendText(socket, 400, "Missing required fields")
+                    ?: return sendText(socket, 400, localized(R.string.companion_error_missing_fields))
                 onPayload(payload)
-                return sendHtml(socket, 200, CompanionHtml.savedPage(payload, pin))
+                return sendHtml(socket, 200, CompanionHtml.savedPage(htmlContext(), payload, pin))
             }
 
-            sendText(socket, 404, "Not found")
+            sendText(socket, 404, localized(R.string.companion_error_not_found))
         }
     }
 
@@ -315,10 +322,10 @@ class CompanionHttpServer {
 
     /** The page served after a valid PIN, for the current [mode]. */
     private fun authedPage(): String = when (mode) {
-        CompanionMode.ADD_SOURCE -> CompanionHtml.formPage(pin)
-        CompanionMode.BACKUP_RESTORE -> CompanionHtml.backupUploadPage(pin)
-        CompanionMode.BACKUP_DOWNLOAD -> CompanionHtml.backupDownloadPage(pin)
-        CompanionMode.IMAGE_UPLOAD -> CompanionHtml.imageUploadPage(pin)
+        CompanionMode.ADD_SOURCE -> CompanionHtml.formPage(htmlContext(), pin)
+        CompanionMode.BACKUP_RESTORE -> CompanionHtml.backupUploadPage(htmlContext(), pin)
+        CompanionMode.BACKUP_DOWNLOAD -> CompanionHtml.backupDownloadPage(htmlContext(), pin)
+        CompanionMode.IMAGE_UPLOAD -> CompanionHtml.imageUploadPage(htmlContext(), pin)
     }
 
     /**
@@ -516,6 +523,26 @@ class CompanionHttpServer {
         return buffer.toString(StandardCharsets.UTF_8.name())
     }
 
+    /**
+     * Companion pages are a named final renderer. Wrap at request/render time rather than retaining
+     * the Application's startup resources: a language change must affect the next phone page without
+     * restarting the server. The nullable context is retained for the small protocol-only test
+     * fixture, which never renders a page.
+     */
+    private fun htmlContext(): Context {
+        val base = context ?: throw IllegalStateException()
+        val store = localeStore ?: LocaleStore.from(base)
+        return AppLocale.wrap(base, store.readBlocking())
+    }
+
+    private fun localized(id: Int): String = htmlContext().getString(id)
+
+    private fun pinMismatchMessage(): String =
+        htmlContext().getString(tv.own.owntv.R.string.companion_pin_mismatch)
+
+    private fun lockoutMessage(): String =
+        htmlContext().getString(tv.own.owntv.R.string.setup_companion_locked)
+
     companion object {
         private const val TAG = "CompanionServer"
 
@@ -531,7 +558,6 @@ class CompanionHttpServer {
         /** Fixed pause before answering a wrong PIN (C2) — fixed so it carries no timing signal. */
         internal const val FAILED_PIN_DELAY_MS = 500L
 
-        internal const val LOCKOUT_MESSAGE = "Too many incorrect PIN attempts — the link was closed for safety."
 
         /** Threads the companion server may take from the shared IO pool (C3). */
         private const val MAX_PARALLELISM = 6

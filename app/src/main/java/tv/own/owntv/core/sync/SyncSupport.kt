@@ -140,9 +140,12 @@ internal class SyncSupport(
         if (shouldPrune(stored, stale, stats.forcePrune)) return true
         val percent = (stale * 100) / stored
         Log.w(TAG, "$label prune skipped sourceId=$sourceId reason=catalog_shrink stored=$stored stale=$stale")
-        stats.phaseErrors[label] =
-            "kept $stored existing items — this import returned $percent% fewer, which looks like an " +
-                "incomplete provider response. Sync again, or use Force clean sync if the provider really removed them."
+        stats.addWarning(
+            SyncWarning(
+                phase = label,
+                kind = SyncWarningKind.CATALOG_SHRINK(stored = stored, percentFewer = percent),
+            ),
+        )
         return false
     }
 
@@ -316,7 +319,7 @@ internal class SyncSupport(
             if (rows.isEmpty()) {
                 Log.d(
                     TAG,
-                    "$label chunk skipped phase=${phase.label} chunk=$chunkIndex raw=$rawCount skipped=$skipped " +
+                    "$label chunk skipped phase=${phase.name} chunk=$chunkIndex raw=$rawCount skipped=$skipped " +
                         "totalSkipped=$skippedDuplicates totalUnique=${total[0]} filterMs=$filterMs elapsedMs=${SystemClock.elapsedRealtime() - chunkRunStart}",
                 )
                 return
@@ -329,7 +332,7 @@ internal class SyncSupport(
             if (shouldLogChunk(chunkIndex, insertMs, skipped)) {
                 Log.d(
                     TAG,
-                    "$label chunk applied phase=${phase.label} chunk=$chunkIndex raw=$rawCount accepted=${rows.size} " +
+                    "$label chunk applied phase=${phase.name} chunk=$chunkIndex raw=$rawCount accepted=${rows.size} " +
                         "dbInserted=${upsertStats.inserted} dbUpdated=${upsertStats.updated} dbSkipped=${upsertStats.skippedUnchanged} " +
                         "dedupeSkipped=$skipped totalDedupeSkipped=$skippedDuplicates totalUnique=${total[0]} " +
                         "filterMs=$filterMs applyMs=$insertMs elapsedMs=${SystemClock.elapsedRealtime() - chunkRunStart}",
@@ -344,7 +347,7 @@ internal class SyncSupport(
         flush()
         Log.i(
             TAG,
-            "$label stream done phase=${phase.label} chunks=$chunkIndex totalUnique=${total[0]} " +
+            "$label stream done phase=${phase.name} chunks=$chunkIndex totalUnique=${total[0]} " +
                 "skippedDuplicates=$skippedDuplicates elapsedMs=${SystemClock.elapsedRealtime() - chunkRunStart}",
         )
         return result
@@ -544,6 +547,7 @@ internal class SyncStatsCollector(val sourceId: Long) {
     val phaseTiming = java.util.concurrent.ConcurrentHashMap<String, Long>()
     val processedCounts = java.util.concurrent.ConcurrentHashMap<String, Int>()
     val phaseErrors = java.util.concurrent.ConcurrentHashMap<String, String>()
+    private val warningFacts = java.util.concurrent.CopyOnWriteArrayList<SyncWarning>()
     @Volatile var usedFallback = false
 
     /**
@@ -552,7 +556,9 @@ internal class SyncStatsCollector(val sourceId: Long) {
      */
     @Volatile var forcePrune = false
 
-    fun warnings() = phaseErrors.map { (phase, message) -> SyncWarning(phase, message) }
+    fun addWarning(warning: SyncWarning) { warningFacts += warning }
+
+    fun warnings(): List<SyncWarning> = warningFacts.toList() + phaseErrors.map { (phase, message) -> SyncWarning(phase, message) }
 
     fun build(result: SyncResult) = SyncRunStats(
         sourceId = sourceId,
