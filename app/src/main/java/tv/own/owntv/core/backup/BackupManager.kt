@@ -639,7 +639,9 @@ class BackupManager(
         if (Section.FAVORITES in sections) add("fav")
         if (Section.HISTORY in sections) add("his")
         if (Section.RESUME in sections) add("prog")
-        if (Section.MANUAL_REORDER in sections) add("order")
+        // "sort" (per-series season/episode order) rides with MANUAL_REORDER: both are per-profile,
+        // per-item ordering preferences, so one tick covers everything the user has hand-ordered.
+        if (Section.MANUAL_REORDER in sections) { add("order"); add("sort") }
     }
 
     // --- mapping ---

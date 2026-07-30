@@ -316,6 +316,8 @@ class OwnTVDatabaseMigrationTest {
             OwnTVDatabase.MIGRATION_17_18,
             OwnTVDatabase.MIGRATION_18_19,
             OwnTVDatabase.MIGRATION_19_20,
+            OwnTVDatabase.MIGRATION_20_21,
+            OwnTVDatabase.MIGRATION_21_22,
         )
         .allowMainThreadQueries()
         .build()
@@ -481,7 +483,7 @@ class OwnTVDatabaseMigrationTest {
         private const val DB_NAME = "owntv-migration-test.db"
 
         /** Must match `@Database(version = …)` on [OwnTVDatabase]. */
-        private const val CURRENT_VERSION = 19
+        private const val CURRENT_VERSION = 22
 
         /**
          * Every version with an exported schema that a real database can be sitting at.

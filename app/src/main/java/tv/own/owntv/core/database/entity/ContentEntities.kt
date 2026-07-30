@@ -105,6 +105,9 @@ data class ChannelEntity(
         // Rating sort (v11): "ORDER BY rating DESC, name" is index-served, not a full temp-B-tree sort.
         Index(value = ["sourceId", "rating", "name"]),
         Index(value = ["categoryId", "rating", "name"]),
+        // Date added sort (v21): same shape as the rating pair, for "ORDER BY addedAt DESC, sortOrder DESC".
+        Index(value = ["sourceId", "addedAt", "sortOrder"]),
+        Index(value = ["categoryId", "addedAt", "sortOrder"]),
     ],
 )
 @Immutable
@@ -147,6 +150,9 @@ data class MovieEntity(
         // Rating sort (v11): "ORDER BY rating DESC, name" is index-served, not a full temp-B-tree sort.
         Index(value = ["sourceId", "rating", "name"]),
         Index(value = ["categoryId", "rating", "name"]),
+        // Date added sort (v21): same shape as the rating pair, for "ORDER BY addedAt DESC, sortOrder DESC".
+        Index(value = ["sourceId", "addedAt", "sortOrder"]),
+        Index(value = ["categoryId", "addedAt", "sortOrder"]),
     ],
 )
 @Immutable
@@ -163,6 +169,7 @@ data class SeriesEntity(
     val remoteId: String? = null,
     val sortOrder: Int = 0,
     @ColumnInfo(defaultValue = "0") val contentHash: Int = 0,
+    val addedAt: Long? = null,
     /**
      * When this show's episode list was last fetched from the provider (epoch ms; 0 = never).
      * Episodes are loaded lazily on open and used to be cached forever, so a show never gained the
@@ -239,5 +246,5 @@ fun MovieEntity.computeContentHash(): Int = Objects.hash(
 
 fun SeriesEntity.computeContentHash(): Int = Objects.hash(
     sourceId, categoryId, name, posterUrl, backdropUrl,
-    year, rating, plot, remoteId,
+    year, rating, plot, remoteId, addedAt,
 )

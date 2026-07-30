@@ -71,6 +71,9 @@ open class StalkerClient(private val client: OkHttpClient) {
         // The item's own category id (`category_id`). Used by the bulk `category=*` fast path to map each
         // item to its category (the per-category path already knows the category from the request).
         val categoryId: String?,
+        // Epoch ms for the "Date added" sort, from Ministra's `video.added` column. Null on trimmed
+        // reseller panels that omit it — the sort then falls through to playlist order.
+        val addedAt: Long?,
     )
 
     /** One page of `get_ordered_list`: the items plus the totals needed to page through the rest. */
@@ -373,12 +376,36 @@ open class StalkerClient(private val client: OkHttpClient) {
             plot = f["description"]?.takeIf { it.isNotBlank() },
             rating = (f["rating_imdb"] ?: f["rating"])?.trim()?.toDoubleOrNull()?.takeIf { it > 0 },
             categoryId = (f["category_id"] ?: f["category"])?.takeIf { it.isNotBlank() && it != "*" },
+            addedAt = parseAddedAt(f["added"]),
         )
     }
 
     private fun parseYear(raw: String?): Int? {
         val m = raw?.let { Regex("\\d{4}").find(it) } ?: return null
         return m.value.toIntOrNull()?.takeIf { it in 1900..2100 }
+    }
+
+    /**
+     * Ministra's `video.added` → epoch ms. It is a portal-local datetime STRING
+     * (`YYYY-MM-DD HH:MM:SS`, sometimes date-only), not an epoch — but a few panels do return a
+     * numeric epoch, so both are accepted. Interpreted in the device timezone: the portal's own
+     * offset is not exposed, and the value is only ever used to order items relative to each other.
+     * Anything unparseable is null ("unknown"), which sorts last.
+     */
+    private fun parseAddedAt(raw: String?): Long? {
+        val v = raw?.trim()?.takeIf { it.isNotBlank() && it != "0" } ?: return null
+        // Numeric epoch (seconds or already-ms) — same guard the Xtream path uses.
+        v.toLongOrNull()?.let { n ->
+            return n.takeIf { it > 0 }?.let { if (it < 10_000_000_000L) it * 1000L else it }
+        }
+        val m = Regex("(\\d{4})-(\\d{2})-(\\d{2})(?:[ T](\\d{2}):(\\d{2})(?::(\\d{2}))?)?").find(v) ?: return null
+        val (y, mo, d, h, mi, sec) = m.destructured
+        return runCatching {
+            java.util.GregorianCalendar(
+                y.toInt(), mo.toInt() - 1, d.toInt(),
+                h.toIntOrNull() ?: 0, mi.toIntOrNull() ?: 0, sec.toIntOrNull() ?: 0,
+            ).apply { set(java.util.Calendar.MILLISECOND, 0) }.timeInMillis.takeIf { it > 0 }
+        }.getOrNull()
     }
 
     /**

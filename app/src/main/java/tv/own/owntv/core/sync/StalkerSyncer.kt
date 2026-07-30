@@ -275,7 +275,8 @@ internal class StalkerSyncer(
                     posterUrl = item.poster, rating = item.rating, plot = item.plot,
                     // Portal command — resolved to a real URL at play time (create_link, type=vod) in D-2.
                     streamUrl = item.cmd ?: "", containerExt = null, remoteId = item.id,
-                    addedAt = null, sortOrder = order,
+                    // Portal `added` date when the panel exposes one; null falls through to playlist order.
+                    addedAt = item.addedAt, sortOrder = order,
                 )
             },
         )
@@ -294,6 +295,8 @@ internal class StalkerSyncer(
                     sourceId = s.id, categoryId = catDbId, name = item.name,
                     posterUrl = item.poster, plot = item.plot, rating = item.rating,
                     year = item.year, remoteId = item.id, sortOrder = order,
+                    // Portal `added` date when the panel exposes one; null falls through to playlist order.
+                    addedAt = item.addedAt,
                 )
             },
         )

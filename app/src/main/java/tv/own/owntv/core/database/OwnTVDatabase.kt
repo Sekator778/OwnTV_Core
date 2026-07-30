@@ -15,6 +15,7 @@ import tv.own.owntv.core.database.dao.MovieDao
 import tv.own.owntv.core.database.dao.ProfileDao
 import tv.own.owntv.core.database.dao.ProgressDao
 import tv.own.owntv.core.database.dao.SeriesDao
+import tv.own.owntv.core.database.dao.SeriesSortOrderDao
 import tv.own.owntv.core.database.dao.TvProviderProgramDao
 import tv.own.owntv.core.database.dao.SourceDao
 import tv.own.owntv.core.database.entity.CategoryEntity
@@ -37,6 +38,7 @@ import tv.own.owntv.core.database.entity.ProfileSourceCrossRef
 import tv.own.owntv.core.database.entity.SeasonEntity
 import tv.own.owntv.core.database.entity.SeriesEntity
 import tv.own.owntv.core.database.entity.SeriesFtsEntity
+import tv.own.owntv.core.database.entity.SeriesSortOrderEntity
 import tv.own.owntv.core.database.entity.SourceEntity
 import tv.own.owntv.core.database.entity.SubtitleCacheEntity
 import tv.own.owntv.core.database.entity.SubtitleLinkEntity
@@ -64,6 +66,7 @@ import tv.own.owntv.core.database.dao.SubtitleDao
         WatchHistoryEntity::class,
         PlaybackProgressEntity::class,
         ContentOrderEntity::class,
+        SeriesSortOrderEntity::class,
         DownloadEntity::class,
         // Android TV home-screen bookkeeping
         TvProviderProgramEntity::class,
@@ -84,7 +87,7 @@ import tv.own.owntv.core.database.dao.SubtitleDao
         SeriesFtsEntity::class,
         EpisodeFtsEntity::class,
     ],
-    version = 20, // v7: content_order (Move). v8: contentHash + browse/unique indexes. v9: EPG contentHash + natural key. v10: TMDB metadata cache. v11: movies/series rating-sort indexes. v12: metadata_cache trailerKey. v13: metadata_cache logoPath. v14: sources.mac (Stalker portal). v15: external-subtitle cache/selection/timing tables. v16: subtitle_link (downloaded-sub ↔ content). v17: sources.syncLive/Movies/Series (skip-sync enabledScope). v18: series.episodesSyncedAt (episode-cache freshness, S8). v19: epg_channels.iconUrl (XMLTV channel logos). v20: channels (sourceId, number) index for direct tune
+    version = 22, // v7: content_order (Move). v8: contentHash + browse/unique indexes. v9: EPG contentHash + natural key. v10: TMDB metadata cache. v11: movies/series rating-sort indexes. v12: metadata_cache trailerKey. v13: metadata_cache logoPath. v14: sources.mac (Stalker portal). v15: external-subtitle cache/selection/timing tables. v16: subtitle_link (downloaded-sub ↔ content). v17: sources.syncLive/Movies/Series (skip-sync enabledScope). v18: series.episodesSyncedAt (episode-cache freshness, S8). v19: epg_channels.iconUrl (XMLTV channel logos). v20: channels (sourceId, number) index for direct tune. v21: series.addedAt + date-added sort indexes. v22: series_sort_order (per-series season/episode order)
 
     exportSchema = true,
 )
@@ -100,6 +103,7 @@ abstract class OwnTVDatabase : RoomDatabase() {
     abstract fun historyDao(): HistoryDao
     abstract fun progressDao(): ProgressDao
     abstract fun contentOrderDao(): ContentOrderDao
+    abstract fun seriesSortOrderDao(): SeriesSortOrderDao
     abstract fun tvProviderProgramDao(): TvProviderProgramDao
     abstract fun downloadDao(): DownloadDao
     abstract fun epgDao(): EpgDao
@@ -529,6 +533,76 @@ abstract class OwnTVDatabase : RoomDatabase() {
         }
 
         /**
+         * v20 → v21: `series.addedAt` column + the indexes behind the "Date added" sort mode.
+         * Movies already have `addedAt` since the original schema; series did not.
+         *
+         * Deliberately NO triggers and NO backfill:
+         * - Room builds a fresh install from the exported schema JSON, and triggers are not part of
+         *   a Room schema, so a trigger would exist only on upgraded databases — a permanent
+         *   behaviour fork between two users on the same app version.
+         * - A NULL addedAt means "unknown". NULLs sort lowest, so `addedAt DESC` already puts them
+         *   last, where they fall through to the `sortOrder DESC` tiebreaker (reverse playlist
+         *   order). Stamping "now" on an entire catalog would claim everything was added today.
+         *
+         * Legacy `movies.addedAt` was stored raw from the Xtream `added` field, which is epoch
+         * SECONDS; new writes normalise to milliseconds, so convert the old rows in place. The
+         * `< 10000000000` guard makes it idempotent (a ms value is always above it).
+         *
+         * Still calls [healSchema] (harmless, idempotent) even though 21→22 is now the last hop.
+         */
+        val MIGRATION_20_21 = object : androidx.room.migration.Migration(20, 21) {
+            override fun migrate(db: androidx.sqlite.db.SupportSQLiteDatabase) {
+                // New column: series.addedAt (movies already has it since the original schema).
+                if (!hasColumn(db, "series", "addedAt")) {
+                    db.execSQL("ALTER TABLE `series` ADD COLUMN `addedAt` INTEGER")
+                }
+
+                // Seconds → milliseconds for pre-v21 Xtream movie rows.
+                db.execSQL(
+                    "UPDATE `movies` SET `addedAt` = `addedAt` * 1000 " +
+                        "WHERE `addedAt` IS NOT NULL AND `addedAt` > 0 AND `addedAt` < 10000000000"
+                )
+
+                // Indexes for the date-added sort (same shape as the v11 rating indexes).
+                db.execSQL("CREATE INDEX IF NOT EXISTS `index_movies_sourceId_addedAt_sortOrder` ON `movies` (`sourceId`, `addedAt`, `sortOrder`)")
+                db.execSQL("CREATE INDEX IF NOT EXISTS `index_movies_categoryId_addedAt_sortOrder` ON `movies` (`categoryId`, `addedAt`, `sortOrder`)")
+                db.execSQL("CREATE INDEX IF NOT EXISTS `index_series_sourceId_addedAt_sortOrder` ON `series` (`sourceId`, `addedAt`, `sortOrder`)")
+                db.execSQL("CREATE INDEX IF NOT EXISTS `index_series_categoryId_addedAt_sortOrder` ON `series` (`categoryId`, `addedAt`, `sortOrder`)")
+
+                healSchema(db)
+            }
+        }
+
+        /**
+         * v21 → v22: `series_sort_order` — the per-profile, per-series season/episode presentation
+         * order behind the "Sorting" popup.
+         *
+         * Its own hop rather than part of [MIGRATION_20_21] because v21 already exists in the wild
+         * on dev builds (the date-added half shipped first). Folding the table into 20→21 would have
+         * left those databases stamped 21 WITHOUT the table and with a stale identity hash, so Room
+         * would refuse to open them — no migration runs when the version already matches.
+         *
+         * Last hop, so it carries [healSchema] (standing rule).
+         */
+        val MIGRATION_21_22 = object : androidx.room.migration.Migration(21, 22) {
+            override fun migrate(db: androidx.sqlite.db.SupportSQLiteDatabase) {
+                db.execSQL(
+                    "CREATE TABLE IF NOT EXISTS `series_sort_order` (" +
+                        "`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " +
+                        "`profileId` INTEGER NOT NULL, " +
+                        "`seriesId` INTEGER NOT NULL, " +
+                        "`seasonsDescending` INTEGER NOT NULL, " +
+                        "`episodesDescending` INTEGER NOT NULL, " +
+                        "FOREIGN KEY(`profileId`) REFERENCES `profiles`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )"
+                )
+                db.execSQL("CREATE INDEX IF NOT EXISTS `index_series_sort_order_profileId` ON `series_sort_order` (`profileId`)")
+                db.execSQL("CREATE UNIQUE INDEX IF NOT EXISTS `index_series_sort_order_profileId_seriesId` ON `series_sort_order` (`profileId`, `seriesId`)")
+
+                healSchema(db)
+            }
+        }
+
+        /**
          * Canonical CREATE statements for every NON-unique index Room expects on the four
          * bulk-synced tables, keyed by table (must stay in sync with the current schema JSON).
          * BulkInsertHelper drops exactly these during eligible fresh imports; restore, the
@@ -558,6 +632,8 @@ abstract class OwnTVDatabase : RoomDatabase() {
                 "CREATE INDEX IF NOT EXISTS `index_movies_categoryId_sortOrder_name` ON `movies` (`categoryId`, `sortOrder`, `name`)",
                 "CREATE INDEX IF NOT EXISTS `index_movies_sourceId_rating_name` ON `movies` (`sourceId`, `rating`, `name`)",
                 "CREATE INDEX IF NOT EXISTS `index_movies_categoryId_rating_name` ON `movies` (`categoryId`, `rating`, `name`)",
+                "CREATE INDEX IF NOT EXISTS `index_movies_sourceId_addedAt_sortOrder` ON `movies` (`sourceId`, `addedAt`, `sortOrder`)",
+                "CREATE INDEX IF NOT EXISTS `index_movies_categoryId_addedAt_sortOrder` ON `movies` (`categoryId`, `addedAt`, `sortOrder`)",
             ),
             "series" to listOf(
                 "CREATE INDEX IF NOT EXISTS `index_series_sourceId` ON `series` (`sourceId`)",
@@ -569,6 +645,8 @@ abstract class OwnTVDatabase : RoomDatabase() {
                 "CREATE INDEX IF NOT EXISTS `index_series_categoryId_sortOrder_name` ON `series` (`categoryId`, `sortOrder`, `name`)",
                 "CREATE INDEX IF NOT EXISTS `index_series_sourceId_rating_name` ON `series` (`sourceId`, `rating`, `name`)",
                 "CREATE INDEX IF NOT EXISTS `index_series_categoryId_rating_name` ON `series` (`categoryId`, `rating`, `name`)",
+                "CREATE INDEX IF NOT EXISTS `index_series_sourceId_addedAt_sortOrder` ON `series` (`sourceId`, `addedAt`, `sortOrder`)",
+                "CREATE INDEX IF NOT EXISTS `index_series_categoryId_addedAt_sortOrder` ON `series` (`categoryId`, `addedAt`, `sortOrder`)",
             ),
             "epg_programmes" to listOf(
                 "CREATE INDEX IF NOT EXISTS `index_epg_programmes_epgChannelId_startMs` ON `epg_programmes` (`epgChannelId`, `startMs`)",
@@ -676,3 +754,4 @@ abstract class OwnTVDatabase : RoomDatabase() {
         }
     }
 }
+
