@@ -175,6 +175,11 @@ class CompanionHttpServer(
             // Backup/image uploads can be several MB over Wi-Fi; give them more headroom than a tiny form post.
             socket.soTimeout = if (mode == CompanionMode.BACKUP_RESTORE || mode == CompanionMode.IMAGE_UPLOAD) 30_000 else 10_000
             val input = BufferedInputStream(socket.getInputStream())
+            // Resolve one locale context for the whole request. This keeps every error and page in a
+            // single effective locale even if the user changes the app language while a request is
+            // being parsed, and avoids rebuilding a ContextWrapper for each field/error branch.
+            val pageContext = localizedContext()
+            fun localized(id: Int): String = pageContext.getString(id)
             val requestLine = readLine(input) ?: return sendText(socket, 400, localized(R.string.companion_error_bad_request))
             val parts = requestLine.split(' ')
             if (parts.size < 3) return sendText(socket, 400, localized(R.string.companion_error_bad_request))
@@ -205,14 +210,14 @@ class CompanionHttpServer(
             if (method == "GET" && (path == "/" || path == "/index.html")) {
                 if (pinOk(queryPin)) {
                     pinAccepted()
-                    return sendHtml(socket, 200, authedPage())
+                    return sendHtml(socket, 200, authedPage(pageContext))
                 }
                 // An empty PIN is just someone opening the link, not a guess — only count real ones.
-                if (queryPin.isNotBlank() && pinRejected()) return sendText(socket, 403, lockoutMessage())
+                if (queryPin.isNotBlank() && pinRejected()) return sendText(socket, 403, lockoutMessage(pageContext))
                 return sendHtml(
                     socket,
                     200,
-                    CompanionHtml.pinPage(htmlContext(), if (queryPin.isNotBlank()) pinMismatchMessage() else null),
+                    CompanionHtml.pinPage(pageContext, if (queryPin.isNotBlank()) pinMismatchMessage(pageContext) else null),
                 )
             }
 
@@ -222,10 +227,10 @@ class CompanionHttpServer(
                 val submitted = parseQuery(body)["pin"].orEmpty()
                 if (pinOk(submitted)) {
                     pinAccepted()
-                    return sendHtml(socket, 200, authedPage())
+                    return sendHtml(socket, 200, authedPage(pageContext))
                 }
-                if (pinRejected()) return sendText(socket, 403, lockoutMessage())
-                return sendHtml(socket, 200, CompanionHtml.pinPage(htmlContext(), pinMismatchMessage()))
+                if (pinRejected()) return sendText(socket, 403, lockoutMessage(pageContext))
+                return sendHtml(socket, 200, CompanionHtml.pinPage(pageContext, pinMismatchMessage(pageContext)))
             }
 
             // Backup download (BACKUP_DOWNLOAD mode) — PIN required, streams the exported container.
@@ -247,7 +252,7 @@ class CompanionHttpServer(
                 val body = readBody(input, headers, maxBodyBytes(path)) ?: return sendText(socket, 413, localized(R.string.companion_error_backup_too_large))
                 if (body.isBlank()) return sendText(socket, 400, localized(R.string.companion_error_empty_backup))
                 onBackup(body)
-                return sendHtml(socket, 200, CompanionHtml.backupSentPage(htmlContext(), pin))
+                return sendHtml(socket, 200, CompanionHtml.backupSentPage(pageContext, pin))
             }
 
             // Background-image upload (IMAGE_UPLOAD mode) — PIN required. Body is a base64 data-URL
@@ -259,7 +264,7 @@ class CompanionHttpServer(
                 val body = readBody(input, headers, maxBodyBytes(path)) ?: return sendText(socket, 413, localized(R.string.companion_error_image_too_large))
                 val decoded = decodeImageDataUrl(body) ?: return sendText(socket, 400, localized(R.string.companion_error_invalid_image))
                 onImage(decoded.first, decoded.second)
-                return sendHtml(socket, 200, CompanionHtml.imageSentPage(htmlContext(), pin))
+                return sendHtml(socket, 200, CompanionHtml.imageSentPage(pageContext, pin))
             }
 
             // Source submissions — PIN required (query or header), else 401.
@@ -275,7 +280,7 @@ class CompanionHttpServer(
                 val payload = parsePayload(headers["content-type"], body, fallback)
                     ?: return sendText(socket, 400, localized(R.string.companion_error_missing_fields))
                 onPayload(payload)
-                return sendHtml(socket, 200, CompanionHtml.savedPage(htmlContext(), payload, pin))
+                return sendHtml(socket, 200, CompanionHtml.savedPage(pageContext, payload, pin))
             }
 
             sendText(socket, 404, localized(R.string.companion_error_not_found))
@@ -321,11 +326,11 @@ class CompanionHttpServer(
     }
 
     /** The page served after a valid PIN, for the current [mode]. */
-    private fun authedPage(): String = when (mode) {
-        CompanionMode.ADD_SOURCE -> CompanionHtml.formPage(htmlContext(), pin)
-        CompanionMode.BACKUP_RESTORE -> CompanionHtml.backupUploadPage(htmlContext(), pin)
-        CompanionMode.BACKUP_DOWNLOAD -> CompanionHtml.backupDownloadPage(htmlContext(), pin)
-        CompanionMode.IMAGE_UPLOAD -> CompanionHtml.imageUploadPage(htmlContext(), pin)
+    private fun authedPage(context: Context): String = when (mode) {
+        CompanionMode.ADD_SOURCE -> CompanionHtml.formPage(context, pin)
+        CompanionMode.BACKUP_RESTORE -> CompanionHtml.backupUploadPage(context, pin)
+        CompanionMode.BACKUP_DOWNLOAD -> CompanionHtml.backupDownloadPage(context, pin)
+        CompanionMode.IMAGE_UPLOAD -> CompanionHtml.imageUploadPage(context, pin)
     }
 
     /**
@@ -529,19 +534,17 @@ class CompanionHttpServer(
      * restarting the server. The nullable context is retained for the small protocol-only test
      * fixture, which never renders a page.
      */
-    private fun htmlContext(): Context {
-        val base = context ?: throw IllegalStateException()
+    private fun localizedContext(): Context {
+        val base = context ?: throw IllegalStateException("Companion HTTP rendering requires an application Context")
         val store = localeStore ?: LocaleStore.from(base)
         return AppLocale.wrap(base, store.readBlocking())
     }
 
-    private fun localized(id: Int): String = htmlContext().getString(id)
+    private fun pinMismatchMessage(context: Context): String =
+        context.getString(tv.own.owntv.R.string.companion_pin_mismatch)
 
-    private fun pinMismatchMessage(): String =
-        htmlContext().getString(tv.own.owntv.R.string.companion_pin_mismatch)
-
-    private fun lockoutMessage(): String =
-        htmlContext().getString(tv.own.owntv.R.string.setup_companion_locked)
+    private fun lockoutMessage(context: Context): String =
+        context.getString(tv.own.owntv.R.string.setup_companion_locked)
 
     companion object {
         private const val TAG = "CompanionServer"

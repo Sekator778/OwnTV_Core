@@ -60,9 +60,11 @@ def _string_keys(directory: Path) -> set[str]:
                     continue
                 keys.add(name)
             elif el.tag == "plurals":
-                keys.add(name + "#")
+                if el.get("translatable") != "false":
+                    keys.add(name + "#")
             elif el.tag == "string-array":
-                keys.add(name + "[]")
+                if el.get("translatable") != "false":
+                    keys.add(name + "[]")
     return keys
 
 
@@ -95,7 +97,9 @@ def _generate() -> tuple[str, int, int]:
             coverage = 100  # source language: every translatable source key is present by definition
         else:
             locale_keys = _string_keys(RES / resdir)
-            coverage = EMPTY_COVERAGE if not source_keys else round(100 * len(locale_keys & source_keys) / len(source_keys))
+            # A directory with no translated resources is distinct from a real 0% translation
+            # snapshot. The picker uses -1 to render an em dash until a locale has entries.
+            coverage = EMPTY_COVERAGE if not source_keys or not locale_keys else round(100 * len(locale_keys & source_keys) / len(source_keys))
         entries.append({**e, "coverage": coverage})
 
     L: list[str] = []
@@ -162,6 +166,13 @@ def _generate() -> tuple[str, int, int]:
     L.append("")
     L.append("    /** Rows the in-app picker should show: catalogue entries that are packaged AND offered. */")
     L.append("    val pickerRows: List<SupportedLocale> get() = all.filter { it.packaged && it.pickerVisible }")
+    L.append("")
+    L.append("    /** Canonicalize a supported runtime tag; empty means follow the system locale. */")
+    L.append("    fun canonicalTag(raw: String?): String? {")
+    L.append("        val trimmed = raw?.trim() ?: return null")
+    L.append("        if (trimmed.isEmpty()) return SYSTEM_DEFAULT_TAG")
+    L.append("        return all.firstOrNull { it.languageTag.equals(trimmed, ignoreCase = true) }?.languageTag")
+    L.append("    }")
     L.append("")
     L.append("    /** Look up the ISO 15924 script for a BCP-47 tag, or null if it is not a catalogue entry. */")
     L.append("    fun scriptForTag(tag: String): String? =")

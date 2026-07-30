@@ -182,7 +182,10 @@
     <string name="settings_autoplay_next">Auto-play next episode</string>
     <string name="settings_autoplay_next_description">When an episode ends, automatically start the next one — and roll into the next season.</string>
     <string name="settings_catchup">Catch-up</string>
-    <string name="settings_catchup_supported"><xliff:g id="count">%1$d</xliff:g> channels support catch-up · timezone and player for archive playback</string>
+    <plurals name="settings_catchup_supported">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> channel supports catch-up · timezone and player for archive playback</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> channels support catch-up · timezone and player for archive playback</item>
+    </plurals>
     <string name="settings_catchup_unavailable">No catch-up channels available on this playlist</string>
     <string name="settings_device">Device</string>
     <string name="settings_video_player">Video Player Settings</string>
@@ -453,9 +456,12 @@ Choose Balanced if a channel becomes unreliable.</string>
     <string name="settings_low_zoom_accept">I understand and accept the risk</string>
     <string name="settings_surface_transparency"><xliff:g id="percent">%1$d</xliff:g>%%</string>
     <string name="settings_surface_count_all">Surfaces: All</string>
-    <string name="settings_surface_count"><xliff:g id="count">%1$d</xliff:g> of <xliff:g id="total">%2$d</xliff:g> surfaces</string>
+    <plurals name="settings_surface_count">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> of <xliff:g id="total">%2$d</xliff:g> surface</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> of <xliff:g id="total">%2$d</xliff:g> surfaces</item>
+    </plurals>
     <string name="settings_surface_scope"><xliff:g id="scope">%1$s</xliff:g></string>
-    <string name="settings_background_required"> Set a background image to enable.</string>
+    <string name="settings_background_required">Set a background image to enable.</string>
     <string name="settings_catchup_timezone_device">Device</string>
     <string name="settings_catchup_player_ask">Always ask</string>
     <string name="settings_catchup_player_internal">OwnTV player</string>

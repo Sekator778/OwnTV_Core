@@ -126,9 +126,17 @@ def _parse_dir(directory: Path) -> tuple[dict[str, dict], list[str]]:
                     qtys[q] = _flatten_text(item)
                 for q in dup_q:
                     errs.append(f"{directory.name}/{f.name}: plural '{name}' duplicate quantity '{q}'")
-                out[key] = {"plurals": qtys, "kind": "plurals"}
+                out[key] = {
+                    "plurals": qtys,
+                    "kind": "plurals",
+                    "translatable": el.get("translatable") != "false",
+                }
             elif el.tag == "string-array":
-                out[key] = {"array": [_flatten_text(it) for it in el.findall("item")], "kind": "array"}
+                out[key] = {
+                    "array": [_flatten_text(it) for it in el.findall("item")],
+                    "kind": "array",
+                    "translatable": el.get("translatable") != "false",
+                }
     return out, errs
 
 
@@ -237,13 +245,25 @@ def _check_translatable_false_placement(file_path: Path) -> list[str]:
     except ET.ParseError:
         # The normal parser reports the XML error; avoid duplicating it here.
         return errs
-    for el in root.iter("string"):
-        if el.get("translatable") == "false":
-            name = el.get("name", "?")
-            errs.append(
-                f"{file_path.parent.name}/{file_path.name}: translatable='false' on '{name}' must be "
-                f"in donottranslate.xml, not in a translatable strings file")
+    for el in root:
+        if el.tag not in {"string", "plurals", "string-array"} or el.get("translatable") != "false":
+            continue
+        name = el.get("name", "?")
+        errs.append(
+            f"{file_path.parent.name}/{file_path.name}: translatable='false' on '{name}' must be "
+            f"in donottranslate.xml, not in a translatable strings file")
     return errs
+
+
+def _is_metadata_spacing_key(name: str) -> bool:
+    """Allow whitespace only where it is an intentional presentation separator/metadata token."""
+    return name.endswith("_separator") or name.endswith("_metadata_year")
+
+
+def _fragment_spacing_error(name: str, text: str, location: str) -> str | None:
+    if text and text != text.strip() and not _is_metadata_spacing_key(name):
+        return f"{location}: leading/trailing whitespace makes a sentence fragment; use a full template"
+    return None
 
 
 def _check_donottranslate_file(file_path: Path, tag: str) -> list[str]:
@@ -474,6 +494,8 @@ def _validate_source_entries(src: dict[str, dict]) -> list[str]:
     """Validate source keys independently so translation directories are still checked when empty."""
     fails: list[str] = []
     for key, payload in src.items():
+        if payload.get("translatable") is False:
+            continue
         name = key.rstrip("#[]")
         kind = payload["kind"]
         if kind == "plurals":
@@ -489,18 +511,27 @@ def _validate_source_entries(src: dict[str, dict]) -> list[str]:
                     fails.append(f"source plural {name}/{q}: bare placeholder (use %1$s etc.): {text!r}")
                 if text.strip() == "":
                     fails.append(f"source plural {name}/{q}: empty string")
+                spacing = _fragment_spacing_error(name, text, f"source plural {name}/{q}")
+                if spacing:
+                    fails.append(spacing)
         elif kind == "array":
             for i, text in enumerate(payload["array"]):
                 if _has_bare(text):
                     fails.append(f"source array {name}[{i}]: bare placeholder (use %1$s etc.): {text!r}")
                 if text.strip() == "":
                     fails.append(f"source array {name}[{i}]: empty string")
+                spacing = _fragment_spacing_error(name, text, f"source array {name}[{i}]")
+                if spacing:
+                    fails.append(spacing)
         elif kind == "string":
             text = payload["text"]
             if _has_bare(text):
                 fails.append(f"source {name}: bare placeholder (use %1$s etc.): {text!r}")
             if payload.get("translatable", True) and text.strip() == "":
                 fails.append(f"source {name}: empty translatable string")
+            spacing = _fragment_spacing_error(name, text, f"source {name}")
+            if spacing:
+                fails.append(spacing)
     return fails
 
 
@@ -609,7 +640,7 @@ def main(release: bool = False) -> int:
 
         for skey, psrc in src.items():
             # Skip source keys marked translatable="false" — they must NOT appear in translations.
-            if psrc["kind"] == "string" and not psrc.get("translatable", True):
+            if not psrc.get("translatable", True):
                 continue
             ploc = loc_keys.get(skey)
             if ploc is None:
@@ -648,6 +679,9 @@ def main(release: bool = False) -> int:
                         fails.append(f"{tag} plural {skey.rstrip('#[]')}/{q}: bare placeholder in translation (use %1$s etc.): {ltext!r}")
                     if ltext.strip() == "":
                         fails.append(f"{tag} plural {skey.rstrip('#[]')}/{q}: empty translation")
+                    spacing = _fragment_spacing_error(skey.rstrip("#[]"), ltext, f"{tag} plural {skey.rstrip('#[]')}/{q}")
+                    if spacing:
+                        fails.append(spacing)
             elif psrc["kind"] == "array":
                 sarr = psrc["array"]
                 larr = ploc.get("array", [])
@@ -664,6 +698,9 @@ def main(release: bool = False) -> int:
                             fails.append(f"{tag} array {skey.rstrip('[]')}[{i}]: bare placeholder in translation (use %1$s etc.): {ltext!r}")
                         if ltext.strip() == "":
                             fails.append(f"{tag} array {skey.rstrip('[]')}[{i}]: empty translation")
+                        spacing = _fragment_spacing_error(skey.rstrip("[]"), ltext, f"{tag} array {skey.rstrip('[]')}[{i}]")
+                        if spacing:
+                            fails.append(spacing)
             elif psrc["kind"] == "string":
                 stext = psrc["text"]
                 ltext = ploc.get("text", "")
@@ -675,6 +712,9 @@ def main(release: bool = False) -> int:
                 # a translation adding %s where the source has none is a translator mistake.
                 if _has_bare(ltext):
                     fails.append(f"{tag} {skey}: bare placeholder in translation (use %1$s etc.): {ltext!r}")
+                spacing = _fragment_spacing_error(skey, ltext, f"{tag} {skey}")
+                if spacing:
+                    fails.append(spacing)
                 if ltext.strip() == "":
                     if is_packaged:
                         fails.append(f"{tag} {skey}: empty translation for a packaged locale")

@@ -209,34 +209,44 @@ class LivePreviewEngine(
     private var activeIsHls = false
 
     /** Technical readout for the stream-info overlay, from the active ExoPlayer formats. */
-    override fun streamInfo(): List<Pair<String, String>> {
+    override fun streamInfo(): List<StreamInfoRow> {
         val p = player ?: return emptyList()
-        val out = ArrayList<Pair<String, String>>()
-        out += "Engine" to "ExoPlayer"
-        out += "Format" to if (activeIsHls) "HLS" else "MPEG-TS"
+        val out = ArrayList<StreamInfoRow>()
+        out += StreamInfoRow(StreamInfoLabel.ENGINE, StreamInfoValue.Engine(StreamEngine.EXOPLAYER))
+        out += StreamInfoRow(StreamInfoLabel.FORMAT, StreamInfoValue.Format(if (activeIsHls) "HLS" else "MPEG-TS"))
         p.videoFormat?.let { f ->
-            val line = listOfNotNull(
-                f.sampleMimeType?.substringAfterLast('/')?.let { mimeName(it) },
-                if (f.width > 0 && f.height > 0) "${f.width}×${f.height}" else null,
-                displayFps(f)?.let { "%.2f fps".format(it) },
-            ).joinToString(" · ")
-            if (line.isNotBlank()) out += "Video" to line
+            out += StreamInfoRow(
+                StreamInfoLabel.VIDEO,
+                StreamInfoValue.Video(
+                    codec = f.sampleMimeType?.substringAfterLast('/')?.let { mimeName(it) },
+                    width = f.width.takeIf { it > 0 },
+                    height = f.height.takeIf { it > 0 },
+                    fps = displayFps(f)?.toDouble(),
+                ),
+            )
             when (f.colorInfo?.colorTransfer) {
-                C.COLOR_TRANSFER_ST2084 -> "HDR10 (PQ)"; C.COLOR_TRANSFER_HLG -> "HLG"; else -> null
-            }?.let { out += "HDR" to it }
+                C.COLOR_TRANSFER_ST2084 -> StreamHdrMode.HDR10_PQ
+                C.COLOR_TRANSFER_HLG -> StreamHdrMode.HLG
+                else -> null
+            }?.let { out += StreamInfoRow(StreamInfoLabel.HDR, StreamInfoValue.Hdr(it)) }
             out += bitrateRow(f, throughputTracker)
         }
-        out += "Decoder" to "ExoPlayer (hardware)"
+        out += StreamInfoRow(
+            StreamInfoLabel.DECODER,
+            StreamInfoValue.Decoder(DecoderKind.HARDWARE, name = "ExoPlayer"),
+        )
         p.audioFormat?.let { f ->
-            val line = listOfNotNull(
-                f.sampleMimeType?.substringAfterLast('/')?.uppercase(),
-                when (f.channelCount) { 1 -> "mono"; 2 -> "stereo"; 6 -> "5.1"; 8 -> "7.1"; else -> null },
-                if (f.sampleRate > 0) "%.0f kHz".format(f.sampleRate / 1000.0) else null,
-            ).joinToString(" · ")
-            if (line.isNotBlank()) out += "Audio" to line
+            out += StreamInfoRow(
+                StreamInfoLabel.AUDIO,
+                StreamInfoValue.Audio(
+                    codec = f.sampleMimeType?.substringAfterLast('/')?.uppercase(),
+                    channelCount = f.channelCount.takeIf { it > 0 },
+                    sampleRateHz = f.sampleRate.takeIf { it > 0 },
+                ),
+            )
         }
         bufferRow(p, dropsBaseline)?.let { out += it }
-        currentUrl?.let { out += "Source" to HttpClient.redactUrl(it) }
+        currentUrl?.let { out += StreamInfoRow(StreamInfoLabel.SOURCE, StreamInfoValue.Source(HttpClient.redactUrl(it))) }
         return out
     }
     /** Recompute the preview's mini chips (aspect · resolution · fps · audio · bitrate) from the active

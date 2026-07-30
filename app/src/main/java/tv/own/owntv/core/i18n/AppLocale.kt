@@ -1,6 +1,8 @@
 package tv.own.owntv.core.i18n
 
+import android.app.Activity
 import android.content.Context
+import android.content.ContextWrapper
 import android.content.res.Configuration
 import android.content.res.Resources
 import android.os.LocaleList
@@ -30,7 +32,7 @@ object AppLocale {
      * tag → the parsed locale primary, followed by the non-duplicate device locales as fallback so
      * date/number formatting and resource fallback still behave naturally.
      */
-    fun effectiveLocaleList(tag: String, @Suppress("UNUSED_PARAMETER") base: Context): LocaleList {
+    fun effectiveLocaleList(tag: String): LocaleList {
         val trimmed = tag.trim()
         val deviceLocales = Resources.getSystem().configuration.locales
         if (trimmed.isEmpty()) return deviceLocales
@@ -54,7 +56,7 @@ object AppLocale {
      * Returns [base] unchanged when the effective list is empty (no locales to apply).
      */
     fun wrap(base: Context, tag: String): Context {
-        val locales = effectiveLocaleList(tag, base)
+        val locales = effectiveLocaleList(tag)
         if (locales.isEmpty) return base
         val config = Configuration(base.resources.configuration)
         config.setLocales(locales)
@@ -67,10 +69,45 @@ object AppLocale {
      * `Locale.getDefault()` reader — none of which Compose's locals touch. Not needed for
      * `DateFormat.getTimeFormat(ctx)`, which reads the context's own configuration.
      */
-    fun applyGlobally(tag: String, base: Context) {
-        val locales = effectiveLocaleList(tag, base)
+    fun applyGlobally(tag: String) {
+        val locales = effectiveLocaleList(tag)
         if (locales.isEmpty) return
         Locale.setDefault(locales[0])
         LocaleList.setDefault(locales)
     }
+
+    /**
+     * Compose needs localized Resources, but it must not receive the bare ContextImpl returned by
+     * createConfigurationContext(). That context is not an Activity: frame-rate matching, WebView
+     * theming, and activity launches all depend on being able to unwrap the host Activity.
+     *
+     * The wrapper keeps the Activity as its base and delegates only resource/assets lookups to the
+     * localized configuration context. Theme, window services, application context, and
+     * startActivity semantics remain those of the host Activity.
+     */
+    fun wrapForCompose(base: Context, tag: String): Context {
+        val localized = wrap(base, tag)
+        val activity = findActivity(base) ?: return localized
+        if (localized === base) return base
+        return ActivityResourceContext(activity, localized)
+    }
+
+    private fun findActivity(context: Context?): Activity? {
+        var current = context
+        while (current is ContextWrapper) {
+            if (current is Activity) return current
+            current = current.baseContext
+        }
+        return null
+    }
+}
+
+/** A localized resource view which still unwraps to the host Activity. */
+private class ActivityResourceContext(
+    host: Activity,
+    private val localized: Context,
+) : ContextWrapper(host) {
+    override fun getResources(): Resources = localized.resources
+    override fun getAssets() = localized.assets
+    override fun getTheme() = baseContext.theme
 }

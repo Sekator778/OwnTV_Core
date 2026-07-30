@@ -8,6 +8,7 @@ import androidx.work.NetworkType
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.WorkerParameters
+import tv.own.owntv.core.i18n.LocaleStore
 
 /**
  * Runs the download queue as a foreground service so transfers keep going once the user leaves
@@ -20,10 +21,11 @@ class DownloadWorker(
     appContext: Context,
     params: WorkerParameters,
     private val engine: DownloadEngine,
+    private val localeStore: LocaleStore,
 ) : CoroutineWorker(appContext, params) {
 
     override suspend fun doWork(): Result {
-        setForeground(DownloadNotifications.foregroundInfo(applicationContext, null))
+        setForeground(DownloadNotifications.foregroundInfo(applicationContext, null, localeStore))
         var lastTick = 0L
         engine.drainQueue { progress ->
             // The transfer reports twice a second; the notification does not need that.
@@ -31,7 +33,7 @@ class DownloadWorker(
             if (now - lastTick > NOTIFICATION_INTERVAL_MS) {
                 lastTick = now
                 runCatching {
-                    setForegroundAsync(DownloadNotifications.foregroundInfo(applicationContext, progress))
+                    setForegroundAsync(DownloadNotifications.foregroundInfo(applicationContext, progress, localeStore))
                 }
             }
         }

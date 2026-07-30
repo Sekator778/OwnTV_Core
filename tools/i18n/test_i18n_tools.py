@@ -580,6 +580,34 @@ class TestValidateStrings(unittest.TestCase):
         self.assertEqual(rc, 1, out)
         self.assertIn("translatable='false' on 'brand'", out)
 
+    def test_translatable_false_on_plural_or_array_is_rejected(self):
+        source = '''<resources>
+            <plurals name="songs" translatable="false"><item quantity="one">One</item><item quantity="other">Many</item></plurals>
+            <string-array name="items" translatable="false"><item>A</item></string-array>
+        </resources>'''
+        locales = _full_tier1()
+        res = _make_fixture(self.tmpdir, source, locales)
+        rc, out = self._run(res, self.tmpdir / "tools/i18n/locales.json")
+        self.assertEqual(rc, 1, out)
+        self.assertIn("translatable='false' on 'songs'", out)
+        self.assertIn("translatable='false' on 'items'", out)
+
+    def test_translation_false_plural_or_array_is_rejected(self):
+        source = '''<resources>
+            <plurals name="songs"><item quantity="one">One</item><item quantity="other">Many</item></plurals>
+            <string-array name="items"><item>A</item></string-array>
+        </resources>'''
+        de_xml = '''<resources>
+            <plurals name="songs" translatable="false"><item quantity="one">Ein</item><item quantity="other">Viele</item></plurals>
+            <string-array name="items" translatable="false"><item>A</item></string-array>
+        </resources>'''
+        locales = [_locale("en", "en-US", "en", "values"),
+                   _locale("de", "de", "de", "values-de", packaged=False, pickerVisible=False)]
+        res = _make_fixture(self.tmpdir, source, locales, {"values-de": de_xml})
+        rc, out = self._run(res, self.tmpdir / "tools/i18n/locales.json")
+        self.assertEqual(rc, 1, out)
+        self.assertIn("translatable='false' must not appear", out)
+
     def test_translation_donottranslate_file_is_rejected(self):
         source = '<resources><string name="hello">Hello</string></resources>'
         locales = _full_tier1()
@@ -644,6 +672,21 @@ class TestValidateStrings(unittest.TestCase):
         res = _make_fixture(self.tmpdir, source, locales)
         rc, out = self._run(res, self.tmpdir / "tools/i18n/locales.json")
         self.assertEqual(rc, 0, f"whole-string quoted apostrophe was rejected: {out}")
+
+    def test_leading_sentence_fragment_spacing_rejected(self):
+        source = '<resources><string name="x"> leading fragment</string></resources>'
+        locales = _full_tier1()
+        res = _make_fixture(self.tmpdir, source, locales)
+        rc, out = self._run(res, self.tmpdir / "tools/i18n/locales.json")
+        self.assertEqual(rc, 1, out)
+        self.assertIn("sentence fragment", out)
+
+    def test_metadata_separator_spacing_is_allowed(self):
+        source = '<resources><string name="x_separator">  ·  </string></resources>'
+        locales = _full_tier1()
+        res = _make_fixture(self.tmpdir, source, locales)
+        rc, out = self._run(res, self.tmpdir / "tools/i18n/locales.json")
+        self.assertEqual(rc, 0, out)
 
 
 # ===========================================================================

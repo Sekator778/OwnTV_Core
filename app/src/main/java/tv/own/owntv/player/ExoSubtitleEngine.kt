@@ -610,29 +610,35 @@ class ExoSubtitleEngine(
 
     /** Technical readout for the stream-info overlay while this engine owns playback (main thread only —
      *  the overlay polls from composition). Mirrors [LivePreviewEngine.streamInfo]'s format. */
-    fun streamInfo(): List<Pair<String, String>> {
+    fun streamInfo(): List<StreamInfoRow> {
         val p = player ?: return emptyList()
-        val out = ArrayList<Pair<String, String>>()
+        val out = ArrayList<StreamInfoRow>()
         p.videoFormat?.let { f ->
-            val fps = currentFps()
-            val line = listOfNotNull(
-                f.sampleMimeType?.substringAfterLast('/')?.let { mimeName(it) },
-                if (f.width > 0 && f.height > 0) "${f.width}×${f.height}" else null,
-                fps?.let { "%.2f fps".format(it) },
-            ).joinToString(" · ")
-            if (line.isNotBlank()) out += "Video" to line
+            out += StreamInfoRow(
+                StreamInfoLabel.VIDEO,
+                StreamInfoValue.Video(
+                    codec = f.sampleMimeType?.substringAfterLast('/')?.let { mimeName(it) },
+                    width = f.width.takeIf { it > 0 },
+                    height = f.height.takeIf { it > 0 },
+                    fps = currentFps()?.toDouble(),
+                ),
+            )
             when (f.colorInfo?.colorTransfer) {
-                C.COLOR_TRANSFER_ST2084 -> "HDR10 (PQ)"; C.COLOR_TRANSFER_HLG -> "HLG"; else -> null
-            }?.let { out += "HDR" to it }
+                C.COLOR_TRANSFER_ST2084 -> StreamHdrMode.HDR10_PQ
+                C.COLOR_TRANSFER_HLG -> StreamHdrMode.HLG
+                else -> null
+            }?.let { out += StreamInfoRow(StreamInfoLabel.HDR, StreamInfoValue.Hdr(it)) }
             out += bitrateRow(f, throughputTracker)
         }
         p.audioFormat?.let { f ->
-            val line = listOfNotNull(
-                f.sampleMimeType?.substringAfterLast('/')?.uppercase(),
-                when (f.channelCount) { 1 -> "mono"; 2 -> "stereo"; 6 -> "5.1"; 8 -> "7.1"; else -> null },
-                if (f.sampleRate > 0) "%.0f kHz".format(f.sampleRate / 1000.0) else null,
-            ).joinToString(" · ")
-            if (line.isNotBlank()) out += "Audio" to line
+            out += StreamInfoRow(
+                StreamInfoLabel.AUDIO,
+                StreamInfoValue.Audio(
+                    codec = f.sampleMimeType?.substringAfterLast('/')?.uppercase(),
+                    channelCount = f.channelCount.takeIf { it > 0 },
+                    sampleRateHz = f.sampleRate.takeIf { it > 0 },
+                ),
+            )
         }
         bufferRow(p, dropsBaseline)?.let { out += it }
         return out

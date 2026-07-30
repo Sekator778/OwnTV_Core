@@ -69,6 +69,7 @@
     <string name="player_switch_mpv">Switched to MPV</string>
     <string name="player_error_image_subtitle_audio">Image subtitles aren\'t available for this video\'s audio format.</string>
     <string name="player_error_both_engines_exo_first">Playback failed on both video engines (ExoPlayer, then mpv). The file may be corrupted or use a format this TV can\'t play.</string>
+    <!-- Translators: error is another complete localized failure sentence; it is rendered recursively. -->
     <string name="player_error_both_engines_mpv_first">Playback failed on both video engines (mpv and ExoPlayer). The file may be corrupted or use a format this TV can\'t play. (<xliff:g id="error">%1$s</xliff:g>)</string>
     <string name="player_error_stream_link">Could not get a stream link from the portal. Check the connection and try again.</string>
     <string name="player_error_not_streaming">This video isn\'t formatted for streaming. Ask the provider to re-encode with fast-start, or download it first.</string>
@@ -88,6 +89,8 @@
     <string name="player_error_decoder_busy">This TV\'s video decoder is busy. Try again in a moment.</string>
     <string name="player_error_no_internet">No internet connection. Check your network and try again.</string>
     <string name="player_error_stream_unavailable">Couldn\'t play this stream. The source may be offline or use an unsupported format. <xliff:g id="hint">%1$s</xliff:g></string>
+    <string name="player_error_mpv_open_decode">mpv couldn\'t open or decode this file.</string>
+    <string name="player_error_mpv_stream_never_started">The stream never started in mpv after several retries.</string>
     <string name="player_error_surround">This audio output can\'t do surround — switched to stereo.</string>
     <string name="player_error_hardware_fallback">This stream\'s format couldn\'t be hardware-decoded on this TV, so it fell back to software decoding — which can\'t sustain <xliff:g id="resolution">%1$s</xliff:g> without overloading the TV. The TV may still play other 4K content fine; this particular stream\'s format is the issue.</string>
     <string name="player_error_hardware_disabled">Hardware decoding is turned off — software decoding can\'t handle <xliff:g id="resolution">%1$s</xliff:g> video. Enable it in Settings → Video Player.</string>
@@ -115,13 +118,36 @@
     <string name="player_metadata_separator"> · </string>
     <string name="player_stream_info">Stream info</string>
     <string name="player_stream_engine">Engine</string>
+    <string name="player_stream_format">Format</string>
     <string name="player_stream_source">Source</string>
     <string name="player_stream_video">Video</string>
     <string name="player_stream_hdr">HDR</string>
+    <string name="player_stream_hdr10_pq">HDR10 (PQ)</string>
+    <string name="player_stream_hlg">HLG</string>
+    <string name="player_stream_sdr">SDR</string>
     <string name="player_stream_bitrate">Bitrate</string>
     <string name="player_stream_decoder">Decoder</string>
     <string name="player_stream_audio">Audio</string>
     <string name="player_stream_buffer">Buffer</string>
+    <string name="player_stream_engine_exo_preferred">ExoPlayer (preferred)</string>
+    <string name="player_stream_engine_exo_fallback">ExoPlayer (fallback after mpv failed)</string>
+    <string name="player_stream_engine_exo_image_subtitle">ExoPlayer (image-subtitle handoff)</string>
+    <string name="player_stream_fps"><xliff:g id="fps">%1$.2f</xliff:g> fps</string>
+    <string name="player_stream_bit_depth"><xliff:g id="bits">%1$d</xliff:g>-bit</string>
+    <string name="player_stream_mbps"><xliff:g id="value">%1$s</xliff:g> Mbps</string>
+    <string name="player_stream_khz"><xliff:g id="value">%1$s</xliff:g> kHz</string>
+    <string name="player_stream_kbps"><xliff:g id="value">%1$s</xliff:g> kbps</string>
+    <string name="player_stream_seconds"><xliff:g id="value">%1$s</xliff:g> s buffered</string>
+    <string name="player_audio_mono">mono</string>
+    <string name="player_audio_stereo">stereo</string>
+    <plurals name="player_audio_channels">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> channel</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> channels</item>
+    </plurals>
+    <plurals name="player_stream_dropped_frames">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> frame dropped</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> frames dropped</item>
+    </plurals>
     <string name="player_decoder_hardware">hardware decoder</string>
     <string name="player_decoder_software">software decoder</string>
     <string name="player_decoder_direct">direct</string>

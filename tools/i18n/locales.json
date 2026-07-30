@@ -24,7 +24,7 @@
     "script": "Latn",
     "rtl": false,
     "tier": 0,
-    "_comment": "Regional spelling override of the en-US source. Packaged from Phase 0 (the ~15 Favourites/Colour/Catalogue overrides land with the source-language work) but never a Tier 1 picker row: British English is not a separate translation target.",
+    "_comment": "Reviewed regional spelling override of the en-US source. Packaged from Phase 0, but never a Tier 1 picker row: British English is not a separate translation target.",
     "packaged": true,
     "pickerVisible": false
   },

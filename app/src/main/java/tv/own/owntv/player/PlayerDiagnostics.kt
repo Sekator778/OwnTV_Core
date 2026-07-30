@@ -122,6 +122,10 @@ sealed interface PlaybackFailure {
     data class HardwareFallback(val resolution: String) : PlaybackFailure
     data class HardwareDisabled(val resolution: String) : PlaybackFailure
     data class StreamUnavailable(val customUserAgentHint: Boolean) : PlaybackFailure
+    /** Fixed mpv diagnostics produced by OwnTV, not provider text; resolve at the UI boundary. */
+    data object MpvOpenDecode : PlaybackFailure
+    data object MpvStreamNeverStarted : PlaybackFailure
+    /** Genuine unknown engine/provider text; intentionally not translated. */
     data class Raw(val message: String) : PlaybackFailure
 }
 

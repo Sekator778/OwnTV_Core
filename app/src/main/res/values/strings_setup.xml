@@ -81,7 +81,10 @@
     <string name="setup_preparing_catalog">Preparing catalog</string>
     <string name="setup_watching_during_import">You can start watching while the rest of the catalog loads.</string>
     <string name="setup_all_set">All set!</string>
-    <string name="setup_restored_items"><xliff:g id="items">%1$d</xliff:g> items restored. Re-sync your sources to load content.</string>
+    <plurals name="setup_restored_items">
+        <item quantity="one"><xliff:g id="items">%1$d</xliff:g> item restored. Re-sync your sources to load content.</item>
+        <item quantity="other"><xliff:g id="items">%1$d</xliff:g> items restored. Re-sync your sources to load content.</item>
+    </plurals>
     <string name="setup_passwords_omitted">Re-enter any saved passwords afterwards.</string>
     <plurals name="setup_skipped_sources">
         <item quantity="one"><xliff:g id="count">%1$d</xliff:g> source was skipped because this version doesn\'t support its playlist type.</item>
@@ -134,8 +137,11 @@
     <string name="setup_testing">Testing…</string>
     <string name="setup_test_connection">Test connection</string>
     <string name="setup_stalker_test_ok">✓ <xliff:g id="message">%1$s</xliff:g></string>
-    <string name="setup_stalker_test_connected">✓ Connected via <xliff:g id="endpoint">%1$s</xliff:g> (<xliff:g id="fields">%2$d</xliff:g> profile fields)</string>
-    <string name="setup_stalker_test_expires"> · expires <xliff:g id="date">%1$s</xliff:g></string>
+    <plurals name="setup_stalker_test_connected">
+        <item quantity="one">✓ Connected via <xliff:g id="endpoint">%1$s</xliff:g> (<xliff:g id="fields">%2$d</xliff:g> profile field)</item>
+        <item quantity="other">✓ Connected via <xliff:g id="endpoint">%1$s</xliff:g> (<xliff:g id="fields">%2$d</xliff:g> profile fields)</item>
+    </plurals>
+    <string name="setup_stalker_test_expires">Expires <xliff:g id="date">%1$s</xliff:g></string>
     <string name="setup_user_agent_optional">User-Agent (optional)</string>
     <string name="setup_user_agent_example">e.g. VLC/3.0.20 LibVLC/3.0.20</string>
     <string name="setup_auto_refresh">Auto refresh</string>

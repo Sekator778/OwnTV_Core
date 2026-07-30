@@ -74,6 +74,16 @@ class SupportedLocalesTest {
     }
 
     @Test
+    fun `canonicalTag accepts only catalogue tags and canonicalizes case`() {
+        assertEquals("de", SupportedLocales.canonicalTag(" DE "))
+        assertEquals("pt-BR", SupportedLocales.canonicalTag("pt-br"))
+        assertEquals("", SupportedLocales.canonicalTag("  "))
+        assertNull(SupportedLocales.canonicalTag("und"))
+        assertNull(SupportedLocales.canonicalTag("de-DE"))
+        assertNull(SupportedLocales.canonicalTag("not-a-locale"))
+    }
+
+    @Test
     fun `scriptForTag returns the catalogue script for known tags`() {
         assertEquals("Arab", SupportedLocales.scriptForTag("ar"))
         assertEquals("Latn", SupportedLocales.scriptForTag("de"))
@@ -122,8 +132,9 @@ class SupportedLocalesTest {
     }
 
     @Test
-    fun `non-source locales have empty-coverage sentinel in Phase 0`() {
-        // No translatable source keys exist yet → coverage is -1 (the EMPTY_COVERAGE sentinel).
+    fun `untranslated locales have empty-coverage sentinel`() {
+        // The locale has no resource directory yet → coverage is -1 (the EMPTY_COVERAGE sentinel),
+        // distinct from a real translated 0% snapshot.
         val de = SupportedLocales.all.first { it.id == "de" }
         assertEquals(-1, de.coverage)
     }

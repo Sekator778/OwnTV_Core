@@ -36,12 +36,36 @@ class LocaleStoreTest {
     }
 
     @Test
-    fun `set persists and publishes the tag`() {
+    fun `set persists and publishes the canonical tag`() {
         val prefs = newPrefs()
         val store = LocaleStore(prefs, null)
-        runBlocking { store.set("de") }
+        runBlocking { store.set(" DE ") }
         assertEquals("de", store.currentTag.value)
         assertEquals("de", store.readBlocking())
+    }
+
+    @Test
+    fun `unsupported and malformed tags are rejected`() {
+        val store = LocaleStore(newPrefs(), null)
+        listOf("und", "de-DE", "fr-FR", "xx", "not a locale", "en_US").forEach { raw ->
+            assertThrows(IllegalArgumentException::class.java) { runBlocking { store.set(raw) } }
+        }
+        runBlocking { store.set(" en-gb ") }
+        assertEquals("en-GB", store.currentTag.value)
+    }
+
+    @Test
+    fun `corrupt stored locale falls back to system default`() {
+        val prefs = newPrefs().apply { edit().putString("ui_language", "und").commit() }
+        val store = LocaleStore(prefs, null)
+        assertEquals("", store.readBlocking())
+        assertEquals("", store.currentTag.value)
+    }
+
+    @Test
+    fun `wrong SharedPreferences value type cannot crash bootstrap read`() {
+        val prefs = newPrefs().apply { putRaw("ui_language", 42) }
+        assertEquals("", LocaleStore(prefs, null).readBlocking())
     }
 
     @Test
@@ -126,8 +150,14 @@ private class FakeSharedPreferences : SharedPreferences {
     /** Test-only accessor over the stored entries. */
     val stored: Map<String, Any?> get() = entries
 
+    fun putRaw(key: String, value: Any?) { entries[key] = value }
+
     override fun getAll(): Map<String, *> = entries
-    override fun getString(key: String, defValue: String?): String? = (entries[key] as? String) ?: defValue
+    override fun getString(key: String, defValue: String?): String? {
+        if (!entries.containsKey(key)) return defValue
+        return entries[key] as? String
+            ?: throw ClassCastException("Preference '$key' is not a String")
+    }
     override fun getStringSet(key: String, defValues: Set<String>?) = throw UnsupportedOperationException()
     override fun getInt(key: String, defValue: Int) = throw UnsupportedOperationException()
     override fun getLong(key: String, defValue: Long) = throw UnsupportedOperationException()

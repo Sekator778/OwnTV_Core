@@ -24,11 +24,62 @@ object PlaybackErrorLog {
         val engine: String,
         val live: Boolean,
         val reason: PlayerFailureReason?,
+        /** Legacy single-string diagnostic, retained for old files only. */
         val spec: String?,
         val raw: String?,
         val model: String,
         val android: String,
-    )
+        /** Structured fields written by current builds. */
+        val codec: String? = null,
+        val resolution: String? = null,
+        val decoderKind: String? = null,
+        val decoderName: String? = null,
+        val decoderHardware: Boolean = false,
+        val decoderDirect: Boolean = false,
+    ) {
+        /** Converts new stable fields back to the semantic presentation model. */
+        fun mediaSpec(): MediaSpec? {
+            val kind = decoderKind?.let { runCatching { DecoderKind.valueOf(it) }.getOrNull() }
+            val decoder = when (kind) {
+                DecoderKind.HARDWARE -> DecoderSpec.Hardware(direct = decoderDirect)
+                DecoderKind.SOFTWARE -> DecoderSpec.Software(gpu = !decoderDirect)
+                DecoderKind.NAMED, null -> (decoderName ?: decoderKind)?.let {
+                    // Unknown future decoder ids remain visible as raw names rather than being
+                    // silently dropped from the user's diagnostic history.
+                    DecoderSpec.Named(it, hardware = decoderHardware, direct = decoderDirect)
+                }
+            }
+            val structured = MediaSpec(codec = codec, resolution = resolution, decoder = decoder)
+                .takeIf { it.codec != null || it.resolution != null || it.decoder != null }
+            return structured ?: legacyMediaSpec()
+        }
+
+        /**
+         * Reads the pre-structured `spec` format without making it the new persistence contract.
+         * Known decoder forms are rendered through the current localized mapper; an unrecognised
+         * legacy string remains available through the Settings screen's explicit raw fallback.
+         */
+        private fun legacyMediaSpec(): MediaSpec? {
+            val fields = spec?.split(" • ")?.map(String::trim)?.filter(String::isNotEmpty) ?: return null
+            if (fields.isEmpty()) return null
+            val decoderToken = fields.last()
+            val decoder = when {
+                decoderToken == "hardware" || decoderToken == "hardware:direct" ->
+                    DecoderSpec.Hardware(direct = decoderToken.endsWith(":direct"))
+                decoderToken == "software" || decoderToken == "software:gpu" ->
+                    DecoderSpec.Software(gpu = decoderToken.endsWith(":gpu"))
+                decoderToken.endsWith(":hardware") ->
+                    DecoderSpec.Named(decoderToken.removeSuffix(":hardware"), hardware = true)
+                else -> null
+            }
+            val technical = if (decoder != null) fields.dropLast(1) else fields
+            return MediaSpec(
+                codec = technical.getOrNull(0),
+                resolution = technical.getOrNull(1),
+                decoder = decoder,
+            ).takeIf { it.codec != null || it.resolution != null || it.decoder != null }
+        }
+    }
 
     private val io = Executors.newSingleThreadExecutor { r -> Thread(r, "owntv-errorlog").apply { isDaemon = true } }
 
@@ -47,8 +98,15 @@ object PlaybackErrorLog {
                         engine = engine,
                         live = live,
                         reason = info.reason,
-                        spec = info.spec?.toStorageValue(),
+                        // Persist stable semantic fields, not a localized/English diagnostic sentence.
+                        spec = null,
                         raw = info.raw,
+                        codec = info.spec?.codec,
+                        resolution = info.spec?.resolution,
+                        decoderKind = info.spec?.decoder?.storageKind,
+                        decoderName = (info.spec?.decoder as? DecoderSpec.Named)?.value,
+                        decoderHardware = info.spec?.decoder?.isHardware == true,
+                        decoderDirect = info.spec?.decoder?.isDirect == true,
                         model = "${Build.MANUFACTURER} ${Build.MODEL}".trim(),
                         android = "Android ${Build.VERSION.RELEASE} (API ${Build.VERSION.SDK_INT})",
                     ),
@@ -83,6 +141,12 @@ object PlaybackErrorLog {
                 raw = o.optString("raw").takeIf { it.isNotEmpty() },
                 model = o.optString("model"),
                 android = o.optString("android"),
+                codec = o.optString("codec").takeIf { it.isNotEmpty() },
+                resolution = o.optString("resolution").takeIf { it.isNotEmpty() },
+                decoderKind = o.optString("decoderKind").takeIf { it.isNotEmpty() },
+                decoderName = o.optString("decoderName").takeIf { it.isNotEmpty() },
+                decoderHardware = o.optBoolean("decoderHardware"),
+                decoderDirect = o.optBoolean("decoderDirect"),
             )
         }
     }
@@ -96,7 +160,14 @@ object PlaybackErrorLog {
                     .put("engine", e.engine)
                     .put("live", e.live)
                     .put("reason", e.reason?.name ?: "")
+                    // `spec` remains for backward compatibility with pre-structured entries.
                     .put("spec", e.spec ?: "")
+                    .put("codec", e.codec ?: "")
+                    .put("resolution", e.resolution ?: "")
+                    .put("decoderKind", e.decoderKind ?: "")
+                    .put("decoderName", e.decoderName ?: "")
+                    .put("decoderHardware", e.decoderHardware)
+                    .put("decoderDirect", e.decoderDirect)
                     .put("raw", e.raw ?: "")
                     .put("model", e.model)
                     .put("android", e.android),
@@ -106,15 +177,23 @@ object PlaybackErrorLog {
     }
 }
 
-/** Stable technical representation used only for the persisted diagnostic history. */
-private fun MediaSpec.toStorageValue(): String = buildList {
-    codec?.let(::add)
-    resolution?.let(::add)
-    decoder?.let {
-        when (it) {
-            is DecoderSpec.Hardware -> add("hardware" + if (it.direct) ":direct" else "")
-            is DecoderSpec.Software -> add("software" + if (it.gpu) ":gpu" else "")
-            is DecoderSpec.Named -> add(it.value + if (it.hardware) ":hardware" else "")
-        }
+private val DecoderSpec.storageKind: String
+    get() = when (this) {
+        is DecoderSpec.Hardware -> DecoderKind.HARDWARE.name
+        is DecoderSpec.Software -> DecoderKind.SOFTWARE.name
+        is DecoderSpec.Named -> DecoderKind.NAMED.name
     }
-}.joinToString(" • ").ifBlank { "" }
+
+private val DecoderSpec.isHardware: Boolean
+    get() = when (this) {
+        is DecoderSpec.Hardware -> true
+        is DecoderSpec.Software -> false
+        is DecoderSpec.Named -> hardware
+    }
+
+private val DecoderSpec.isDirect: Boolean
+    get() = when (this) {
+        is DecoderSpec.Hardware -> direct
+        is DecoderSpec.Software -> !gpu
+        is DecoderSpec.Named -> direct
+    }

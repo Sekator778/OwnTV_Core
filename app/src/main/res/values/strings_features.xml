@@ -89,17 +89,17 @@
     <string name="home_row_continue_movies">Continue Watching Movies</string>
     <string name="home_row_continue_series">Continue Watching Series</string>
     <string name="home_row_recent_channels">Recent Channels</string>
-    <string name="home_row_favorite_channels">Favourite Channels</string>
+    <string name="home_row_favorite_channels">Favorite Channels</string>
     <string name="home_row_on_now">On Now</string>
     <string name="home_row_hero_description">The large preview row at the top</string>
     <string name="home_row_continue_movies_description">Movies with a saved position</string>
     <string name="home_row_continue_series_description">Episodes to resume or play next</string>
     <string name="home_row_recent_description">Live channels you tuned recently</string>
-    <string name="home_row_favorite_description">Your favourited live channels</string>
+    <string name="home_row_favorite_description">Your favorited live channels</string>
     <string name="home_on_now_title"><xliff:g id="title">%1$s</xliff:g> · ON NOW</string>
     <string name="home_ok_to_watch">OK to watch</string>
     <string name="home_ok_to_browse">OK to browse</string>
-    <string name="home_no_programme_details">No programme details</string>
+    <string name="home_no_programme_details">No program details</string>
     <string name="home_guide_unavailable">Guide data unavailable</string>
     <string name="home_next">Next</string>
     <string name="home_channel_number"><xliff:g id="number">%1$s</xliff:g>  <xliff:g id="name">%2$s</xliff:g></string>

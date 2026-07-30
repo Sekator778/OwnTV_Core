@@ -79,6 +79,13 @@ object ChNavLimits {
  */
 class SettingsRepository(private val context: Context, private val localeStore: LocaleStore) {
 
+    /** Result of importing the optional locale field without allowing bad backup data to abort the restore. */
+    data class SettingsImportResult(
+        val localePresent: Boolean = false,
+        val localeTag: String? = null,
+        val invalidLocale: Boolean = false,
+    )
+
     /**
      * Every settings flow below is derived through this (audit ST2, step 2).
      *
@@ -1241,7 +1248,7 @@ class SettingsRepository(private val context: Context, private val localeStore: 
         }
     }
 
-    suspend fun importSettings(o: org.json.JSONObject) {
+    suspend fun importSettings(o: org.json.JSONObject): SettingsImportResult {
         context.dataStore.edit { prefs ->
             backupStringKeys.forEach { k -> if (o.has(k.name)) prefs[k] = o.getString(k.name) }
             backupStringSetKeys.forEach { k ->
@@ -1251,11 +1258,24 @@ class SettingsRepository(private val context: Context, private val localeStore: 
             backupBoolKeys.forEach { k -> if (o.has(k.name)) prefs[k] = o.getBoolean(k.name) }
             backupFloatKeys.forEach { k -> if (o.has(k.name)) prefs[k] = o.getDouble(k.name).toFloat() }
         }
-        // The locale is written through the single store API (awaited before import returns) so the
-        // value is durable on the next cold start; the visible StateFlow also updates. A restored German
-        // sentence is never persisted, only the raw tag — "" follows system (same as unset). Missing key
-        // (older backups made before i18n) defaults to the empty tag, i.e. follow system.
-        if (o.has(UI_LANGUAGE_KEY)) localeStore.set(o.getString(UI_LANGUAGE_KEY))
+        // Do not publish a locale while the restore is still applying database/DataStore sections.
+        // The caller applies this validated value after the restore marker is cleared. Invalid data
+        // is reported but ignored so a malformed optional field cannot abort an otherwise valid import.
+        if (!o.has(UI_LANGUAGE_KEY)) return SettingsImportResult()
+        val raw = o.opt(UI_LANGUAGE_KEY) as? String
+        val normalized = raw?.let(localeStore::normalize)
+        return SettingsImportResult(
+            localePresent = true,
+            localeTag = normalized,
+            // Only a JSON string is a valid locale field. In particular, JSONObject.NULL and
+            // numbers must not silently turn into the empty system-default tag.
+            invalidLocale = raw == null || normalized == null,
+        )
+    }
+
+    /** Applies a locale deferred until a complete backup restore has cleared its marker. */
+    suspend fun applyImportedLocale(tag: String) {
+        localeStore.set(tag)
     }
 
     // --- Backup: per-profile Customize PIN lock (dynamic "customize_pin_<id>" keys) ---

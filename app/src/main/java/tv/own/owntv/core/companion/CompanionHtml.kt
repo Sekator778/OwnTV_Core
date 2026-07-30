@@ -140,8 +140,9 @@ internal object CompanionHtml {
         val sending = s(R.string.companion_sending)
         val couldNotReach = s(R.string.companion_could_not_reach)
         val couldNotRead = s(R.string.companion_could_not_read)
-        val uploadFailedPrefix = s(R.string.companion_upload_failed_prefix)
-        val uploadFailedSuffix = s(R.string.companion_upload_failed_suffix)
+        // Full sentence template; the browser substitutes only the numeric HTTP status after the
+        // Android resource has supplied the localized sentence and punctuation.
+        val uploadFailed = s(R.string.companion_upload_failed).replace("%1\$d", "__STATUS__")
 
         val imageTitle = s(R.string.companion_image_page_title)
         val imageHeading = s(R.string.companion_image_heading)
@@ -158,8 +159,15 @@ internal object CompanionHtml {
 
     private fun page(context: Context, title: String, inner: String): String {
         val c = Copy(context)
+        // AppLocale.wrap() resolves the effective device locale when the stored tag is empty.
+        // Advertise that effective locale to browser screen readers and choose the matching writing
+        // direction; never use the persisted empty tag itself as the HTML language.
+        val locale = context.resources.configuration.locales[0]
+            ?: java.util.Locale.getDefault()
+        val lang = locale.toLanguageTag().ifBlank { "en" }
+        val dir = if (context.resources.configuration.layoutDirection == android.view.View.LAYOUT_DIRECTION_RTL) "rtl" else "ltr"
         return """
-            <!doctype html><html lang="en"><head>
+            <!doctype html><html lang="${lang.h()}" dir="$dir"><head>
             <meta charset="utf-8">
             <meta name="viewport" content="width=device-width, initial-scale=1">
             <title>${title.h()}</title><style>$CSS</style>
@@ -326,7 +334,7 @@ internal object CompanionHtml {
                   fetch('$endpoint?pin=$pin',{method:'POST',headers:{'Content-Type':'$contentType'},body:r.result})
                     .then(function(res){
                       if(res.ok){document.open();res.text().then(function(t){document.write(t);document.close();});}
-                      else{b.disabled=false;s.textContent=${c.uploadFailedPrefix.js()}+res.status+${c.uploadFailedSuffix.js()};}
+                      else{b.disabled=false;s.textContent=${c.uploadFailed.js()}.replace('__STATUS__',String(res.status));}
                     })
                     .catch(function(){b.disabled=false;s.textContent=${c.couldNotReach.js()};});
                 };

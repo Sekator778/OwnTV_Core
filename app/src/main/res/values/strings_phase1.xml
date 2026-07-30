@@ -30,8 +30,8 @@
     <string name="companion_backup_file">Backup file</string>
     <string name="companion_choose_backup">Please choose a backup file first.</string>
     <string name="companion_sending">Sending…</string>
-    <string name="companion_upload_failed_prefix">Upload failed (</string>
-    <string name="companion_upload_failed_suffix">). Check the PIN and try again.</string>
+    <!-- Translators: status is the numeric HTTP response inserted by the companion web page. Keep the complete sentence. -->
+    <string name="companion_upload_failed">Upload failed (HTTP <xliff:g id="status">%1$d</xliff:g>). Check the PIN and try again.</string>
     <string name="companion_could_not_reach">Could not reach the TV. Stay on the same Wi-Fi and try again.</string>
     <string name="companion_could_not_read">Could not read that file.</string>
     <string name="companion_image_page_title">OwnTV — Background image</string>
@@ -159,9 +159,18 @@
     <string name="phase1_subtitles_refresh">Refresh</string>
     <string name="phase1_subtitles_close">Close</string>
     <string name="phase1_subtitles_sign_in_to_use">Use your opensubtitles.com account. Creating one is free.</string>
-    <string name="phase1_subtitles_remaining"><xliff:g id="remaining">%1$d</xliff:g> of <xliff:g id="total">%2$d</xliff:g> remaining today</string>
-    <string name="phase1_subtitles_remaining_short"><xliff:g id="remaining">%1$d</xliff:g> remaining today</string>
-    <string name="phase1_subtitles_remaining_reset"><xliff:g id="remaining">%1$d</xliff:g> remaining today · resets in <xliff:g id="reset">%2$s</xliff:g></string>
+    <plurals name="phase1_subtitles_remaining">
+        <item quantity="one"><xliff:g id="remaining">%1$d</xliff:g> download of <xliff:g id="total">%2$d</xliff:g> remaining today</item>
+        <item quantity="other"><xliff:g id="remaining">%1$d</xliff:g> downloads of <xliff:g id="total">%2$d</xliff:g> remaining today</item>
+    </plurals>
+    <plurals name="phase1_subtitles_remaining_short">
+        <item quantity="one"><xliff:g id="remaining">%1$d</xliff:g> download remaining today</item>
+        <item quantity="other"><xliff:g id="remaining">%1$d</xliff:g> downloads remaining today</item>
+    </plurals>
+    <plurals name="phase1_subtitles_remaining_reset">
+        <item quantity="one"><xliff:g id="remaining">%1$d</xliff:g> download remaining today · resets in <xliff:g id="reset">%2$s</xliff:g></item>
+        <item quantity="other"><xliff:g id="remaining">%1$d</xliff:g> downloads remaining today · resets in <xliff:g id="reset">%2$s</xliff:g></item>
+    </plurals>
     <plurals name="phase1_subtitles_remaining_count">
         <item quantity="one"><xliff:g id="remaining">%1$d</xliff:g> download remaining today</item>
         <item quantity="other"><xliff:g id="remaining">%1$d</xliff:g> downloads remaining today</item>
@@ -169,7 +178,6 @@
     <string name="phase1_subtitles_session">The connection session expires. Turn off to store only a temporary session.</string>
     <string name="phase1_subtitles_applies_current">applies to the current profile only.</string>
     <string name="phase1_subtitles_free_description_full">OpenSubtitles is a free, open community subtitle service. Sign in with your own opensubtitles.com account; creating one is free. This applies to the current profile only.</string>
-    <string name="phase1_subtitles_in_days">in <xliff:g id="days">%1$s</xliff:g></string>
     <string name="phase1_subtitles_session_expired">Your OpenSubtitles session has expired. To keep searching and downloading subtitles, sign in again from Settings → Video player → Subtitles → OpenSubtitles.</string>
     <string name="phase1_subtitles_account_needed">OpenSubtitles account needed\n\nTo search and download subtitles, sign in from Settings → Video player → Subtitles → OpenSubtitles. OpenSubtitles is a free, open community service — anyone can create a free account at opensubtitles.com.</string>
     <string name="phase1_subtitles_no_matches">No matching subtitles were found.</string>
@@ -182,7 +190,10 @@
     <string name="phase1_subtitles_trusted">Trusted</string>
     <string name="phase1_subtitles_sdh">SDH</string>
     <string name="phase1_subtitles_ai">AI</string>
-    <string name="phase1_subtitles_download_count"><xliff:g id="count">%1$d</xliff:g> downloads</string>
+    <plurals name="phase1_subtitles_download_count">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> download</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> downloads</item>
+    </plurals>
     <string name="phase1_subtitles_tags_separator"> · </string>
     <string name="phase1_subtitles_search">Search</string>
     <string name="phase1_subtitles_connected_as">Connected as</string>
@@ -213,7 +224,15 @@
     <string name="phase1_update_now">Update now</string>
     <string name="phase1_update_try_again">Try again</string>
     <string name="phase1_update_failed_check">Couldn\'t check for updates.</string>
-    <string name="phase1_update_failed_download">Couldn\'t download the update.</string>
+    <!-- Translators: code is an HTTP status such as 404; keep it numeric and keep this as a full sentence. -->
+    <string name="phase1_update_failed_check_http">The update server returned HTTP <xliff:g id="code">%1$s</xliff:g> while checking.</string>
+    <string name="phase1_update_no_compatible_apk">No update package for this device was found in the release.</string>
+    <string name="phase1_update_invalid_release_response">The update server returned an invalid release description.</string>
+    <string name="phase1_update_failed_download">Couldn\'t download the update because the network request failed.</string>
+    <!-- Translators: code is an HTTP status such as 503; keep it numeric and keep the punctuation. -->
+    <string name="phase1_update_failed_download_http">The update download returned HTTP <xliff:g id="code">%1$s</xliff:g>.</string>
+    <string name="phase1_update_empty_download">The update server returned an empty APK.</string>
+    <string name="phase1_update_install_failed">The downloaded update could not be opened by the system installer.</string>
     <string name="phase1_update_ready">OwnTV v<xliff:g id="available">%1$s</xliff:g> is ready (you have v<xliff:g id="current">%2$s</xliff:g>).</string>
 
     <string name="phase1_epg_create_profile">Create a profile to see the guide.</string>
@@ -221,26 +240,42 @@
     <string name="phase1_epg_no_channels_query">No guide channels found for “<xliff:g id="query">%1$s</xliff:g>”.</string>
     <string name="phase1_epg_mismatched_ids">Guide data is stored, but its channel ids don\'t match your channels\' EPG ids — this EPG feed may belong to a different provider lineup.</string>
     <string name="phase1_epg_catchup_unavailable">Catch-up isn\'t available for this channel.</string>
-    <string name="phase1_epg_matched_no_programmes">Matched — but this guide channel has no current programmes in the EPG feed yet.</string>
+    <string name="phase1_epg_matched_no_programmes">Matched — but this guide channel has no current programs in the EPG feed yet.</string>
     <string name="phase1_epg_add_playlist_first">Add a playlist first.</string>
     <string name="phase1_epg_no_match_data">No EPG data to match against yet.</string>
     <string name="phase1_epg_all_matched">Everything\'s already matched.</string>
     <string name="phase1_epg_no_match">No EPG match found for “<xliff:g id="channel">%1$s</xliff:g>” — try picking manually.</string>
-    <string name="phase1_epg_stats_loaded">Guide loaded: <xliff:g id="channels">%1$d</xliff:g> channels · <xliff:g id="programmes">%2$d</xliff:g> programmes · <xliff:g id="catchup">%3$s</xliff:g></string>
-    <string name="phase1_epg_no_catchup_channels">no catch-up channels</string>
-    <string name="phase1_epg_stats_no_catchup">No catch-up channels available</string>
+    <!-- Translators: the channel and programme counts are rendered independently so each can use its own plural form. -->
+    <plurals name="phase1_epg_stats_channels">
+        <item quantity="one">Guide loaded: <xliff:g id="channels">%1$d</xliff:g> channel.</item>
+        <item quantity="other">Guide loaded: <xliff:g id="channels">%1$d</xliff:g> channels.</item>
+    </plurals>
+    <plurals name="phase1_epg_stats_programmes">
+        <item quantity="one">The guide contains <xliff:g id="programmes">%1$d</xliff:g> program.</item>
+        <item quantity="other">The guide contains <xliff:g id="programmes">%1$d</xliff:g> programs.</item>
+    </plurals>
+    <!-- Translators: each placeholder is already a complete localized count/status phrase; reorder the phrases as needed. -->
+    <string name="phase1_epg_stats_loaded"><xliff:g id="channels">%1$s</xliff:g> <xliff:g id="programmes">%2$s</xliff:g> <xliff:g id="catchup">%3$s</xliff:g></string>
+    <string name="phase1_epg_no_catchup_channels">No channels support catch-up.</string>
+    <string name="phase1_epg_stats_no_catchup">No catch-up channels are available.</string>
     <plurals name="phase1_epg_catchup_count">
-        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> with catch-up</item>
-        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> with catch-up</item>
+        <item quantity="one">Catch-up is available on <xliff:g id="count">%1$d</xliff:g> channel.</item>
+        <item quantity="other">Catch-up is available on <xliff:g id="count">%1$d</xliff:g> channels.</item>
     </plurals>
     <plurals name="phase1_epg_stats_catchup_available">
-        <item quantity="one">Catch-up available on <xliff:g id="count">%1$d</xliff:g> channel</item>
-        <item quantity="other">Catch-up available on <xliff:g id="count">%1$d</xliff:g> channels</item>
+        <item quantity="one">Catch-up is available on <xliff:g id="count">%1$d</xliff:g> channel.</item>
+        <item quantity="other">Catch-up is available on <xliff:g id="count">%1$d</xliff:g> channels.</item>
     </plurals>
-    <plurals name="phase1_epg_auto_matched">
-        <item quantity="one">Auto-matched <xliff:g id="applied">%1$d</xliff:g> channel. <xliff:g id="review">%2$d</xliff:g> need review.</item>
-        <item quantity="other">Auto-matched <xliff:g id="applied">%1$d</xliff:g> channels. <xliff:g id="review">%2$d</xliff:g> need review.</item>
+    <plurals name="phase1_epg_auto_matched_applied">
+        <item quantity="one">Auto-matched <xliff:g id="applied">%1$d</xliff:g> channel.</item>
+        <item quantity="other">Auto-matched <xliff:g id="applied">%1$d</xliff:g> channels.</item>
     </plurals>
+    <plurals name="phase1_epg_auto_matched_review">
+        <item quantity="one"><xliff:g id="review">%1$d</xliff:g> channel needs review.</item>
+        <item quantity="other"><xliff:g id="review">%1$d</xliff:g> channels need review.</item>
+    </plurals>
+    <!-- Translators: applied and review are complete, independently pluralized sentences. Reorder them without changing their grammar. -->
+    <string name="phase1_epg_auto_matched"><xliff:g id="applied">%1$s</xliff:g> <xliff:g id="review">%2$s</xliff:g></string>
     <plurals name="phase1_epg_auto_matched_no_review">
         <item quantity="one">Auto-matched <xliff:g id="applied">%1$d</xliff:g> channel.</item>
         <item quantity="other">Auto-matched <xliff:g id="applied">%1$d</xliff:g> channels.</item>
@@ -249,15 +284,15 @@
     <string name="phase1_epg_matching">Matching…</string>
     <string name="phase1_epg_empty">No EPG added.</string>
     <string name="phase1_epg_no_guide">No guide.</string>
-    <string name="phase1_epg_no_programme">No programme at this time.</string>
-    <string name="phase1_epg_add_description">Add an EPG (XMLTV) source to fill the guide with programmes.</string>
-    <string name="phase1_epg_favourite_description">Favourite this channel, or set its guide data.</string>
+    <string name="phase1_epg_no_programme">No program at this time.</string>
+    <string name="phase1_epg_add_description">Add an EPG (XMLTV) source to fill the guide with programs.</string>
+    <string name="phase1_epg_favourite_description">Favorite this channel, or set its guide data.</string>
     <string name="phase1_epg_guide_category">Guide category</string>
     <string name="phase1_epg_all_categories">All categories</string>
     <string name="phase1_epg_search_hint">Search guide channels…</string>
     <string name="phase1_epg_add">Add EPG</string>
-    <string name="phase1_epg_add_favourite">Add to favourites</string>
-    <string name="phase1_epg_remove_favourite">Remove from favourites</string>
+    <string name="phase1_epg_add_favourite">Add to favorites</string>
+    <string name="phase1_epg_remove_favourite">Remove from favorites</string>
     <string name="phase1_epg_jump_now">Jump to Now</string>
     <string name="phase1_epg_sort"><xliff:g id="label">%1$s</xliff:g></string>
     <string name="phase1_epg_category"><xliff:g id="label">%1$s</xliff:g></string>
@@ -269,7 +304,7 @@
     <string name="phase1_epg_skip">Skip</string>
     <string name="phase1_epg_skip_all">Skip all</string>
     <string name="phase1_epg_pick_manually">Pick EPG manually</string>
-    <string name="phase1_epg_move_hint">Move right into a row, then browse with ◀ ▶ to preview a programme.</string>
+    <string name="phase1_epg_move_hint">Move right into a row, then browse with ◀ ▶ to preview a program.</string>
     <string name="phase1_epg_guide_channel"><xliff:g id="score">%1$s</xliff:g> · <xliff:g id="percent">%2$d</xliff:g>%%</string>
     <string name="phase1_epg_catchup">↻ catch-up</string>
     <string name="phase1_epg_channel_programme"><xliff:g id="channel">%1$s</xliff:g> · <xliff:g id="programme">%2$s</xliff:g></string>
@@ -290,8 +325,8 @@
     <string name="phase1_epg_now">NOW · <xliff:g id="time">%1$s</xliff:g></string>
     <string name="phase1_epg_watch_start">Watch from start</string>
     <string name="phase1_epg_watch_channel">Watch channel</string>
-    <string name="phase1_epg_favourite">Favourite</string>
-    <string name="phase1_epg_unfavourite">Unfavourite</string>
+    <string name="phase1_epg_favourite">Favorite</string>
+    <string name="phase1_epg_unfavourite">Unfavorite</string>
     <string name="phase1_epg_player_choice_description">Set a permanent choice in Settings › Catch-up.</string>
     <string name="phase1_epg_own_player">OwnTV player</string>
     <string name="phase1_epg_external_player">External player</string>
@@ -302,7 +337,6 @@
     <string name="phase1_sources_add">Add Source</string>
     <string name="phase1_sources_import_complete">Import complete</string>
     <string name="phase1_sources_import_failed">Import failed</string>
-    <string name="phase1_sources_import_warnings">Imported with warnings:</string>
     <string name="phase1_sources_importing">Importing catalog…</string>
     <string name="phase1_sources_preparing">Preparing catalog</string>
     <string name="phase1_sources_removing">Removing…</string>
@@ -371,10 +405,22 @@ Resync and remove missing titles also allows removing titles the provider no lon
     <string name="phase1_epg_sources_delete_message">Removes this EPG source and its guide data. Your channels stay.</string>
     <string name="phase1_epg_sources_syncing">Syncing</string>
     <string name="phase1_epg_sources_syncing_percent">Syncing <xliff:g id="percent">%1$d</xliff:g>%%</string>
-    <string name="phase1_epg_sources_synced_none">Synced, no programmes in window<xliff:g id="note">%1$s</xliff:g></string>
-    <string name="phase1_epg_sources_count"><xliff:g id="channels">%1$d</xliff:g> channels · <xliff:g id="programmes">%2$d</xliff:g> programmes<xliff:g id="note">%3$s</xliff:g></string>
-    <string name="phase1_epg_sources_count_channels"><xliff:g id="channels">%1$d</xliff:g> channels</string>
-    <string name="phase1_epg_sources_catchup"> · <xliff:g id="count">%1$d</xliff:g> with catch-up</string>
+    <string name="phase1_epg_sources_synced_none">Synced, but no programs were found in the time window.</string>
+    <plurals name="phase1_epg_sources_count_channels">
+        <item quantity="one">The guide contains <xliff:g id="channels">%1$d</xliff:g> channel.</item>
+        <item quantity="other">The guide contains <xliff:g id="channels">%1$d</xliff:g> channels.</item>
+    </plurals>
+    <plurals name="phase1_epg_sources_count_programmes">
+        <item quantity="one">It contains <xliff:g id="programmes">%1$d</xliff:g> program.</item>
+        <item quantity="other">It contains <xliff:g id="programmes">%1$d</xliff:g> programs.</item>
+    </plurals>
+    <!-- Translators: both placeholders are complete independently pluralized guide-count sentences. -->
+    <string name="phase1_epg_sources_count"><xliff:g id="channels">%1$s</xliff:g> <xliff:g id="programmes">%2$s</xliff:g></string>
+    <plurals name="phase1_epg_sources_catchup">
+        <item quantity="one">Catch-up is available on <xliff:g id="count">%1$d</xliff:g> channel.</item>
+        <item quantity="other">Catch-up is available on <xliff:g id="count">%1$d</xliff:g> channels.</item>
+    </plurals>
+    <string name="phase1_epg_sources_count_with_catchup"><xliff:g id="counts">%1$s</xliff:g> <xliff:g id="catchup">%2$s</xliff:g></string>
     <string name="phase1_epg_sources_error">⚠ <xliff:g id="error">%1$s</xliff:g></string>
     <string name="phase1_epg_sources_auto_refresh_title">Auto refresh</string>
     <string name="phase1_epg_sources_auto_refresh_description">Off, on startup, or when data is stale</string>
@@ -390,9 +436,19 @@ Resync and remove missing titles also allows removing titles the provider no lon
     <string name="phase1_epg_sources_deleting">Deleting…</string>
     <string name="phase1_epg_sources_syncing_label">Syncing</string>
     <string name="phase1_epg_sources_connecting">Connecting…</string>
-    <string name="phase1_epg_sources_status_count_channels"><xliff:g id="channels">%1$d</xliff:g> channels</string>
-    <string name="phase1_epg_sources_status_count"><xliff:g id="channels">%1$d</xliff:g> channels · <xliff:g id="programmes">%2$d</xliff:g> programmes<xliff:g id="note">%3$s</xliff:g></string>
-    <string name="phase1_epg_sources_status_synced">Synced, no programmes in window<xliff:g id="note">%1$s</xliff:g></string>
+    <plurals name="phase1_epg_sources_status_count_channels">
+        <item quantity="one">The guide contains <xliff:g id="channels">%1$d</xliff:g> channel.</item>
+        <item quantity="other">The guide contains <xliff:g id="channels">%1$d</xliff:g> channels.</item>
+    </plurals>
+    <plurals name="phase1_epg_sources_status_count_programmes">
+        <item quantity="one">It contains <xliff:g id="programmes">%1$d</xliff:g> program.</item>
+        <item quantity="other">It contains <xliff:g id="programmes">%1$d</xliff:g> programs.</item>
+    </plurals>
+    <!-- Translators: both placeholders are complete independently pluralized guide-count sentences. -->
+    <string name="phase1_epg_sources_status_count"><xliff:g id="channels">%1$s</xliff:g> <xliff:g id="programmes">%2$s</xliff:g></string>
+    <string name="phase1_epg_sources_status_count_with_catchup"><xliff:g id="counts">%1$s</xliff:g> <xliff:g id="catchup">%2$s</xliff:g></string>
+    <string name="phase1_epg_sources_status_synced">Synced, but no programs were found in the time window.</string>
+    <string name="phase1_epg_sources_status_synced_with_catchup"><xliff:g id="catchup">%1$s</xliff:g></string>
 
     <string name="phase1_backup_title">Backup &amp; Restore</string>
     <string name="phase1_backup_working">Working…</string>
@@ -418,14 +474,13 @@ Resync and remove missing titles also allows removing titles the provider no lon
     <string name="phase1_backup_remote">Remote</string>
     <string name="phase1_backup_everything">Everything</string>
     <string name="phase1_backup_kids_profile">Kids profile</string>
-    <string name="phase1_backup_current">· current</string>
+    <!-- Translators: name is a user-provided profile name; keep the full current-profile label intact. -->
+    <string name="phase1_backup_profile_current">“<xliff:g id="name">%1$s</xliff:g>” (current)</string>
     <string name="phase1_backup_profile_locked">“<xliff:g id="name">%1$s</xliff:g>” is locked</string>
     <string name="phase1_backup_profile_pin">Profile PIN</string>
     <string name="phase1_backup_pin_incorrect">PIN incorrect.</string>
     <string name="phase1_backup_pin_locked">PIN locked</string>
     <string name="phase1_backup_unlock">Unlock</string>
-    <string name="phase1_backup_need_pin">need their PIN.</string>
-    <string name="phase1_backup_without_pin">without the PIN, its data won\'t be backed up.</string>
     <string name="phase1_backup_export_button">Export backup</string>
     <string name="phase1_backup_restore_button">Restore backup</string>
     <string name="phase1_backup_continue">Continue</string>
@@ -449,11 +504,14 @@ Resync and remove missing titles also allows removing titles the provider no lon
     <string name="phase1_backup_section_reorder_desc">Your Move up/down positions for channels, movies and series</string>
     <string name="phase1_backup_section_settings">App settings</string>
     <string name="phase1_backup_section_settings_desc">Theme, accent, player &amp; layout preferences</string>
-    <string name="phase1_backup_saved_to">Saved to <xliff:g id="path">%1$s</xliff:g><xliff:g id="note">%2$s</xliff:g></string>
-    <string name="phase1_backup_passwords_omitted"> (passwords were not included)</string>
-    <string name="phase1_backup_restored"><xliff:g id="items">%1$d</xliff:g> items restored.</string>
+    <string name="phase1_backup_saved_to">Saved to <xliff:g id="path">%1$s</xliff:g>.</string>
+    <string name="phase1_backup_saved_to_without_passwords">Saved to <xliff:g id="path">%1$s</xliff:g>. Passwords were not included.</string>
+    <plurals name="phase1_backup_restored">
+        <item quantity="one"><xliff:g id="items">%1$d</xliff:g> item restored.</item>
+        <item quantity="other"><xliff:g id="items">%1$d</xliff:g> items restored.</item>
+    </plurals>
     <string name="phase1_backup_restore_resync">Re-sync your sources to load content.</string>
-    <string name="phase1_backup_restore_password_note"> Re-enter any saved passwords in Sources/Proxy.</string>
+    <string name="phase1_backup_restore_password_note">Re-enter any saved passwords in Sources/Proxy.</string>
     <plurals name="phase1_backup_skipped_sources">
         <item quantity="one"><xliff:g id="count">%1$d</xliff:g> source was skipped because its playlist type is not supported.</item>
         <item quantity="other"><xliff:g id="count">%1$d</xliff:g> sources were skipped because their playlist types are not supported.</item>
@@ -461,10 +519,12 @@ Resync and remove missing titles also allows removing titles the provider no lon
     <string name="phase1_backup_export_error">Export failed.</string>
     <string name="phase1_backup_read_error">Couldn\'t read the backup file.</string>
     <string name="phase1_backup_import_error">Import failed.</string>
+    <string name="phase1_backup_invalid_locale">This backup contained an unsupported app language. The restore succeeded, but your current language was kept.</string>
     <string name="phase1_backup_which_profiles">Which profiles to back up</string>
     <string name="phase1_backup_selected_profiles">The backup will contain only the selected profiles and their data. Locked profiles need their PIN.</string>
     <string name="phase1_backup_profile_pin_description">This isn\'t your current profile. Enter its PIN to include it in the backup — without the PIN, its data won\'t be backed up.</string>
     <string name="phase1_backup_save_description">Save your profiles, sources, customizations, favorites, history and resume positions to a file — or restore them on a new device. You choose what to include each time.</string>
+    <string name="phase1_setup_invalid_locale">This backup contained an unsupported app language. The restore succeeded, but your current language was kept.</string>
     <string name="phase1_recovery_title">OwnTV could not open its database</string>
     <string name="phase1_recovery_data_safe">Your profiles, playlists, favorites and history have NOT been deleted — this is a database upgrade failure, and the data is still on this device.</string>
     <string name="phase1_recovery_report">Please report this so it can be fixed, and include the message below.</string>

@@ -34,9 +34,9 @@ class BackupSourceTypeTest {
     }
 
     @Test
-    fun `the restore summary reports skipped sources and stays quiet when there are none`() {
-        assertEquals("", BackupManager.ImportSummary(items = 12).skippedNote)
-        assertEquals(true, BackupManager.ImportSummary(items = 12, skippedSources = 1).skippedNote.contains("1 source"))
-        assertEquals(true, BackupManager.ImportSummary(items = 12, skippedSources = 3).skippedNote.contains("3 sources"))
+    fun `the restore summary reports skipped sources as semantic data`() {
+        assertEquals(0, BackupManager.ImportSummary(items = 12).skippedSources)
+        assertEquals(1, BackupManager.ImportSummary(items = 12, skippedSources = 1).skippedSources)
+        assertEquals(3, BackupManager.ImportSummary(items = 12, skippedSources = 3).skippedSources)
     }
 }

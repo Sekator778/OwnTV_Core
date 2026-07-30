@@ -59,7 +59,10 @@
     <string name="sync_counts_synced"><xliff:g id="counts">%1$s</xliff:g> synced</string>
     <string name="sync_import_warnings">Imported with warnings: <xliff:g id="phases">%1$s</xliff:g></string>
     <string name="sync_warning_phase_error"><xliff:g id="phase">%1$s</xliff:g>: <xliff:g id="message">%2$s</xliff:g></string>
-    <string name="sync_warning_catalog_shrink">Kept <xliff:g id="stored">%1$d</xliff:g> existing items — this import returned <xliff:g id="percent">%2$d</xliff:g>%% fewer. Sync again, or use Force clean sync if the provider really removed them.</string>
+    <plurals name="sync_warning_catalog_shrink">
+        <item quantity="one">Kept <xliff:g id="stored">%1$d</xliff:g> existing item — this import returned <xliff:g id="percent">%2$d</xliff:g>%% fewer. Sync again, or use Force clean sync if the provider really removed it.</item>
+        <item quantity="other">Kept <xliff:g id="stored">%1$d</xliff:g> existing items — this import returned <xliff:g id="percent">%2$d</xliff:g>%% fewer. Sync again, or use Force clean sync if the provider really removed them.</item>
+    </plurals>
     <plurals name="sync_warning_page_failures">
         <item quantity="one"><xliff:g id="count">%1$d</xliff:g> source page failed; some content may be missing until the next sync.</item>
         <item quantity="other"><xliff:g id="count">%1$d</xliff:g> source pages failed; some content may be missing until the next sync.</item>
@@ -81,20 +84,20 @@
     <string name="sync_phase_movies">Movies</string>
     <string name="sync_phase_series">Series</string>
     <plurals name="sync_count_channels">
-        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> channel</item>
-        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> channels</item>
+        <item quantity="one"><xliff:g id="count">%1$s</xliff:g> channel</item>
+        <item quantity="other"><xliff:g id="count">%1$s</xliff:g> channels</item>
     </plurals>
     <plurals name="sync_count_movies">
-        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> movie</item>
-        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> movies</item>
+        <item quantity="one"><xliff:g id="count">%1$s</xliff:g> movie</item>
+        <item quantity="other"><xliff:g id="count">%1$s</xliff:g> movies</item>
     </plurals>
     <plurals name="sync_count_series">
-        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> series</item>
-        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> series</item>
+        <item quantity="one"><xliff:g id="count">%1$s</xliff:g> series</item>
+        <item quantity="other"><xliff:g id="count">%1$s</xliff:g> series</item>
     </plurals>
     <plurals name="sync_count_epg">
-        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> EPG entry</item>
-        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> EPG entries</item>
+        <item quantity="one"><xliff:g id="count">%1$s</xliff:g> EPG entry</item>
+        <item quantity="other"><xliff:g id="count">%1$s</xliff:g> EPG entries</item>
     </plurals>
     <plurals name="sync_status_more">
         <item quantity="one">+<xliff:g id="count">%1$d</xliff:g> more sync</item>

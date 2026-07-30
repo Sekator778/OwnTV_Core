@@ -1,5 +1,6 @@
 package tv.own.owntv.core.i18n
 
+import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
 import kotlinx.coroutines.Dispatchers
@@ -43,7 +44,17 @@ class LocaleStore internal constructor(
      * Synchronous read of the persisted tag. Safe to call from `attachBaseContext`.
      * Returns `""` (never null) when nothing is stored — i.e. follow the system default.
      */
-    fun readBlocking(): String = preferences.getString(KEY_UI_LANGUAGE, "").orEmpty()
+    fun readBlocking(): String {
+        // SharedPreferences can contain a value of the wrong primitive type after a damaged or
+        // hand-edited migration; getString itself throws ClassCastException in that case. A corrupt
+        // locale must never take down Application.attachBaseContext, so treat every read failure as
+        // the system-default selection.
+        val stored = runCatching { preferences.getString(KEY_UI_LANGUAGE, "") }.getOrNull()
+        return normalize(stored) ?: AppLocale.SYSTEM_DEFAULT_TAG
+    }
+
+    /** Canonicalizes a persisted/imported value, or returns null when it is not supported. */
+    fun normalize(raw: String?): String? = SupportedLocales.canonicalTag(raw)
 
     /**
      * Durably persists [tag], publishes it to [currentTag], and re-applies the process `Locale` /
@@ -62,12 +73,14 @@ class LocaleStore internal constructor(
      * user thinking they switched language while nothing persisted.
      */
     suspend fun set(tag: String): Boolean {
+        val canonical = normalize(tag)
+            ?: throw IllegalArgumentException("Unsupported application locale: ${tag.trim()}")
         val committed = withContext(Dispatchers.IO) {
-            preferences.edit().putString(KEY_UI_LANGUAGE, tag).commit()
+            preferences.edit().putString(KEY_UI_LANGUAGE, canonical).commit()
         }
         check(committed) { "Failed to persist application locale" }
-        _currentTag.value = tag
-        applicationContext?.let { AppLocale.applyGlobally(tag, it) }
+        _currentTag.value = canonical
+        applicationContext?.let { AppLocale.applyGlobally(canonical) }
         return true
     }
 
@@ -83,20 +96,18 @@ class LocaleStore internal constructor(
          * per-instance, so callers that must observe writes (the picker, renderers) take the Koin
          * singleton rather than building their own.
          *
-         * **Does not call `context.applicationContext`.** During `Application.attachBaseContext` the
-         * framework has not yet assigned `LoadedApk.mApplication`, so `getApplicationContext()` returns
-         * null and the store crashes before `onCreate`. The supplied context's own
-         * `getSharedPreferences` opens the same package-private file regardless of which context in the
-         * hierarchy is used, so the base context is used directly. The Koin singleton is built from the
-         * fully-initialised `Application` after `startKoin`, where `applicationContext` is safe.
+         * The bootstrap path never dereferences `context.applicationContext`. During
+         * `Application.attachBaseContext` the framework has not yet assigned `LoadedApk.mApplication`,
+         * so the supplied base context is used directly for preferences and the application reference
+         * is simply null. The Koin singleton is built from the fully-initialised `Application` after
+         * `startKoin`, where writes may update process defaults.
          */
         fun from(context: Context): LocaleStore {
             val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-            // applicationContext is null until the Application is constructed; in attachBaseContext the
-            // base context is not yet an Application, and context.applicationContext returns null there.
-            // Only a fully-initialised Application (the Koin singleton path) carries it, so writes can
-            // apply globally. Read-only attachBaseContext instances get null and never write.
-            val app = context.applicationContext
+            // Do not call context.applicationContext here: during Application.attachBaseContext the
+            // framework has not assigned LoadedApk.mApplication yet. The fully initialized Koin path
+            // passes the Application itself; all bootstrap/read-only contexts intentionally get null.
+            val app = context as? Application
             return LocaleStore(prefs, app)
         }
     }

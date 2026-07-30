@@ -58,7 +58,7 @@ interface PlaybackEngine {
 
     /** Live technical readout (label → value) for the stream-info overlay — codec, resolution, fps, HDR,
      *  bitrate, decoder, audio, buffer, source. A snapshot; the overlay re-reads it periodically. */
-    fun streamInfo(): List<Pair<String, String>> = emptyList()
+    fun streamInfo(): List<StreamInfoRow> = emptyList()
 
     // VOD-only — sensible no-op / empty defaults for a live engine.
     val position: StateFlow<Long> get() = ZERO_LONG

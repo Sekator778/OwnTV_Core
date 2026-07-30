@@ -50,8 +50,8 @@
     <string name="content_media_overview">Overview</string>
     <string name="content_media_cast">Cast</string>
     <string name="content_media_press_back">Press Back to close</string>
-    <string name="content_add_favourite">Add to Favourites</string>
-    <string name="content_remove_favourite">Remove from Favourites</string>
+    <string name="content_add_favourite">Add to Favorites</string>
+    <string name="content_remove_favourite">Remove from Favorites</string>
     <string name="content_mark_watched">Mark as watched</string>
     <string name="content_mark_unwatched">Mark as unwatched</string>
     <string name="content_move">Move</string>
@@ -88,8 +88,14 @@
     <string name="content_no_series_here">No series here.</string>
     <string name="content_no_episodes">No episodes available.</string>
     <string name="content_no_movies_found">No movies found for “<xliff:g id="query">%1$s</xliff:g>”</string>
-    <string name="content_count_movies"><xliff:g id="category">%1$s</xliff:g> (<xliff:g id="count">%2$d</xliff:g> movies)</string>
-    <string name="content_count_series"><xliff:g id="category">%1$s</xliff:g> (<xliff:g id="count">%2$d</xliff:g> series)</string>
+    <plurals name="content_count_movies">
+        <item quantity="one"><xliff:g id="category">%1$s</xliff:g> (<xliff:g id="count">%2$d</xliff:g> movie)</item>
+        <item quantity="other"><xliff:g id="category">%1$s</xliff:g> (<xliff:g id="count">%2$d</xliff:g> movies)</item>
+    </plurals>
+    <plurals name="content_count_series">
+        <item quantity="one"><xliff:g id="category">%1$s</xliff:g> (<xliff:g id="count">%2$d</xliff:g> series)</item>
+        <item quantity="other"><xliff:g id="category">%1$s</xliff:g> (<xliff:g id="count">%2$d</xliff:g> series)</item>
+    </plurals>
     <string name="content_provider">Provider</string>
     <string name="content_no_series_found">No series found for “<xliff:g id="query">%1$s</xliff:g>”</string>
     <string name="content_search_movies"><xliff:g id="category">%1$s</xliff:g>…</string>
@@ -126,12 +132,16 @@
     <string name="content_remove_history">Remove from History</string>
     <string name="content_no_channels_here">No channels here.</string>
     <string name="content_no_channels_found">No channels found for “<xliff:g id="query">%1$s</xliff:g>”</string>
-    <string name="content_count_channels"><xliff:g id="category">%1$s</xliff:g> (<xliff:g id="count">%2$d</xliff:g> channels)</string>
+    <plurals name="content_count_channels">
+        <item quantity="one"><xliff:g id="category">%1$s</xliff:g> (<xliff:g id="count">%2$d</xliff:g> channel)</item>
+        <item quantity="other"><xliff:g id="category">%1$s</xliff:g> (<xliff:g id="count">%2$d</xliff:g> channels)</item>
+    </plurals>
     <string name="content_search_channels"><xliff:g id="category">%1$s</xliff:g>…</string>
     <string name="content_match_epg">Match EPG</string>
     <string name="content_catchup_title">Catch-up · <xliff:g id="channel">%1$s</xliff:g></string>
+    <!-- Translators: time is formatted for the active UI locale at render time; keep this as one complete label. -->
     <string name="content_rewind_at">Rewind · <xliff:g id="time">%1$s</xliff:g></string>
-    <string name="content_catchup_prompt">Pick a recent programme to replay from the start.</string>
+    <string name="content_catchup_prompt">Pick a recent program to replay from the start.</string>
     <string name="content_catchup_empty">No recent guide data for this channel yet — make sure its EPG is matched (long-press it, or use Match EPG).</string>
     <string name="content_epg_match_prompt">Pick the guide channel for “<xliff:g id="channel">%1$s</xliff:g>”.</string>
     <string name="content_epg_current_match">Current: <xliff:g id="match">%1$s</xliff:g></string>

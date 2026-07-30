@@ -19,6 +19,7 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import tv.own.owntv.R
+import tv.own.owntv.core.i18n.LocaleStore
 import tv.own.owntv.core.network.HttpClient
 import tv.own.owntv.features.settings.data.SettingsRepository
 import tv.own.owntv.features.settings.data.SubtitleStyle
@@ -77,6 +78,8 @@ data class MediaMeta(
     /** Optional semantic season/episode numbers; localized at the UI boundary. */
     val seasonNumber: Int? = null,
     val episodeNumber: Int? = null,
+    /** Semantic live-rewind start; formatted by the current HUD locale, never in the ViewModel. */
+    val rewindStartMs: Long? = null,
 )
 
 /** An item in a play queue (e.g. a season's episodes), for prev/next.
@@ -85,34 +88,6 @@ data class MediaMeta(
  *  a fresh short-lived link). Null (M3U/Xtream) = load [url] directly, exactly as before. */
 @Immutable
 data class PlaylistItem(val url: String, val meta: MediaMeta = MediaMeta(), val resolveUrl: (suspend () -> String)? = null)
-
-/** Existing player toast boundary: fixed OwnTV copy is resolved only when Android renders the toast. */
-private fun PlaybackFailure.toastText(context: Context): String = when (this) {
-    PlaybackFailure.ImageSubtitleAudio -> context.getString(R.string.player_error_image_subtitle_audio)
-    PlaybackFailure.ImageFormat -> context.getString(R.string.player_error_image_format)
-    PlaybackFailure.ImageShow -> context.getString(R.string.player_error_image_show)
-    PlaybackFailure.Channel -> context.getString(R.string.player_error_channel)
-    PlaybackFailure.LostConnection -> context.getString(R.string.player_error_lost_connection)
-    PlaybackFailure.StreamLink -> context.getString(R.string.player_error_stream_link)
-    PlaybackFailure.NotStreaming -> context.getString(R.string.player_error_not_streaming)
-    PlaybackFailure.AudioNoVideo -> context.getString(R.string.player_error_audio_no_video)
-    PlaybackFailure.FileCorrupt -> context.getString(R.string.player_error_file_corrupt)
-    PlaybackFailure.MultipleVideos -> context.getString(R.string.player_error_multiple_videos)
-    PlaybackFailure.DecoderBusy -> context.getString(R.string.player_error_decoder_busy)
-    PlaybackFailure.NoInternet -> context.getString(R.string.player_error_no_internet)
-    PlaybackFailure.Surround -> context.getString(R.string.player_error_surround)
-    PlaybackFailure.BothEnginesExoFirst -> context.getString(R.string.player_error_both_engines_exo_first)
-    is PlaybackFailure.BothEnginesMpvFirst -> context.getString(R.string.player_error_both_engines_mpv_first, exoError.toString())
-    is PlaybackFailure.ExoDecode -> context.getString(R.string.player_error_exo_decode, code)
-    is PlaybackFailure.ExoPlay -> context.getString(R.string.player_error_exo_play, code)
-    is PlaybackFailure.HardwareFallback -> context.getString(R.string.player_error_hardware_fallback, resolution)
-    is PlaybackFailure.HardwareDisabled -> context.getString(R.string.player_error_hardware_disabled, resolution)
-    is PlaybackFailure.StreamUnavailable -> context.getString(
-        R.string.player_error_stream_unavailable,
-        if (customUserAgentHint) context.getString(R.string.player_error_custom_user_agent) else "",
-    )
-    is PlaybackFailure.Raw -> message
-}
 
 /** Whether prev/next are available in the current queue. */
 @Immutable
@@ -160,7 +135,9 @@ class OwnTVPlayer(
     private val diagnostics: PlayerDiagnostics,
     private val proxyHolder: tv.own.owntv.core.network.ProxyConfigHolder,
     private val vodEngineStore: tv.own.owntv.core.player.VodEngineStore,
+    private val localeStore: LocaleStore,
 ) : MPVLib.EventObserver {
+    private val toastRenderer = PlayerToastRenderer(context, localeStore)
 
     internal companion object {
         const val TAG = "OwnTVPlayer"
@@ -273,6 +250,7 @@ class OwnTVPlayer(
     private var currentContentKey: String? = null
     private var currentSeasonNumber: Int? = null
     private var currentEpisodeNumber: Int? = null
+    private var currentRewindStartMs: Long? = null
 
     /**
      * Reconnect URL provider — set ONLY for an expiring-URL source (Stalker live, plan §5.4.1). The
@@ -1083,7 +1061,7 @@ class OwnTVPlayer(
         val surface = attachedSurface ?: return
         val url = currentUrl ?: return
         if (!audioCodecSafeForExo()) {
-            toast(context.getString(R.string.player_error_image_subtitle_audio))
+            toast(toastRenderer.render(PlaybackFailure.ImageSubtitleAudio))
             _subTrackList.value = _subTrackList.value.map { it.copy(selected = false) }
             return
         }
@@ -1416,7 +1394,7 @@ class OwnTVPlayer(
         val url = currentUrl ?: return
         val pos = _position.value
         deactivateExo() // releases Exo's codec
-        error?.let { toast(it.toastText(context)) }
+        error?.let { toast(toastRenderer.render(it)) }
         pendingSelectSid = thenSelectSid
         _subTrackList.value = _subTrackList.value.map { it.copy(selected = thenSelectSid != null && it.mpvId == thenSelectSid) }
         _buffering.value = true
@@ -1588,13 +1566,14 @@ class OwnTVPlayer(
         contentKey: String? = null,
         seasonNumber: Int? = null,
         episodeNumber: Int? = null,
+        rewindStartMs: Long? = null,
     ) {
         currentUserAgent = userAgent?.takeIf { it.isNotBlank() }
         playlist = emptyList()
         playlistIndex = 0
         updateNav()
         _zoomMode.value = defaultZoom // start new content at the user's default zoom
-        loadUrl(url, MediaMeta(title, subtitle, year, logoUrl, contentKey, seasonNumber, episodeNumber), isLive, startPositionMs, muted, preferSoftware = preferSoftware, startPaused = startPaused)
+        loadUrl(url, MediaMeta(title, subtitle, year, logoUrl, contentKey, seasonNumber, episodeNumber, rewindStartMs), isLive, startPositionMs, muted, preferSoftware = preferSoftware, startPaused = startPaused)
     }
 
     /** Play a queue (a season's episodes) starting at [startIndex] — enables prev/next.
@@ -1666,7 +1645,7 @@ class OwnTVPlayer(
      *  background restore) re-passes this rather than rebuilding it field by field, so a field added
      *  to [MediaMeta] can't be dropped on the way (P6: [MediaMeta.contentKey] is one such field). */
     private fun currentMetaSnapshot() =
-        MediaMeta(currentTitle, currentSubtitle, currentYear, currentLogoUrl, currentContentKey, currentSeasonNumber, currentEpisodeNumber)
+        MediaMeta(currentTitle, currentSubtitle, currentYear, currentLogoUrl, currentContentKey, currentSeasonNumber, currentEpisodeNumber, currentRewindStartMs)
 
     /** P6 — move a legacy URL-keyed VOD pin onto the stable content key (no-op without one). */
     private fun migrateVodPin(url: String, stableKey: String?) {
@@ -1695,6 +1674,7 @@ class OwnTVPlayer(
         currentLogoUrl = meta.logoUrl
         currentSeasonNumber = meta.seasonNumber
         currentEpisodeNumber = meta.episodeNumber
+        currentRewindStartMs = meta.rewindStartMs
         _currentMeta.value = meta // reactive — refreshes the HUD title / "now watching" card on every load
         isLiveContent = isLive
         currentUrl = url
@@ -2254,7 +2234,7 @@ class OwnTVPlayer(
         // Before surfacing an error, retry the item once on ExoPlayer — a "malformed" verdict from mpv's
         // demuxer/decoder is often device-specific, and Exo's MediaCodec path may play it fine (mpvStuck:
         // the core may be blocked in the stuck HTTP read, so the fallback destroys it, as hardReset would).
-        if (fallbackToExoVod(PlaybackFailure.Raw("mpv couldn't open or decode this file"), mpvStuck = true)) return
+        if (fallbackToExoVod(PlaybackFailure.MpvOpenDecode, mpvStuck = true)) return
         // Surface the error immediately — the user sees "can't play this video" rather than a blank screen.
         _error.value = vodErrorMessage(PlaybackFailure.FileCorrupt)
         if (consecutiveHardResets >= 3) {
@@ -2316,9 +2296,20 @@ class OwnTVPlayer(
         val r = backgroundRestore ?: return
         backgroundRestore = null
         if (currentUrl != null) return // already playing something else
-        play(r.url, subtitle = r.meta.subtitle, year = r.meta.year, logoUrl = r.meta.logoUrl,
-            title = r.meta.title, isLive = false, startPositionMs = r.positionMs, startPaused = !r.wasPlaying,
-            seasonNumber = r.meta.seasonNumber)
+        play(
+            r.url,
+            title = r.meta.title,
+            subtitle = r.meta.subtitle,
+            year = r.meta.year,
+            logoUrl = r.meta.logoUrl,
+            isLive = false,
+            startPositionMs = r.positionMs,
+            startPaused = !r.wasPlaying,
+            contentKey = r.meta.contentKey,
+            seasonNumber = r.meta.seasonNumber,
+            episodeNumber = r.meta.episodeNumber,
+            rewindStartMs = r.meta.rewindStartMs,
+        )
     }
 
     /** Drop any pending restore (e.g. on profile switch — don't bring back the previous user's item). */
@@ -2445,71 +2436,86 @@ class OwnTVPlayer(
     /** Technical readout for the stream-info overlay, read live from whichever engine owns playback —
      *  mpv (libmpv get_property is thread-safe) or ExoPlayer (image-sub handoff / engine fallback /
      *  ExoPlayer-preferred; the overlay polls from composition, i.e. the main thread Exo requires). */
-    fun streamInfo(): List<Pair<String, String>> {
+    fun streamInfo(): List<StreamInfoRow> {
         if (exoActive) {
-            val out = ArrayList<Pair<String, String>>()
-            out += "Engine" to when {
-                exoPrimaryThisItem -> "ExoPlayer (preferred)"
-                exoVodFallback -> "ExoPlayer (fallback — mpv failed this item)"
-                else -> "ExoPlayer (image-subtitle handoff)"
+            val mode = when {
+                exoPrimaryThisItem -> StreamEngineMode.PREFERRED
+                exoVodFallback -> StreamEngineMode.FALLBACK
+                else -> StreamEngineMode.IMAGE_SUBTITLE_HANDOFF
             }
+            val out = ArrayList<StreamInfoRow>()
+            out += StreamInfoRow(StreamInfoLabel.ENGINE, StreamInfoValue.Engine(StreamEngine.EXOPLAYER, mode))
             out += exoEngine?.streamInfo().orEmpty()
-            currentUrl?.let { out += "Source" to HttpClient.redactUrl(it) }
+            currentUrl?.let { out += StreamInfoRow(StreamInfoLabel.SOURCE, StreamInfoValue.Source(HttpClient.redactUrl(it))) }
             return out
         }
         val m = mpv ?: return emptyList()
         fun str(p: String) = m.getPropertyString(p)?.takeIf { it.isNotBlank() }
-        val out = ArrayList<Pair<String, String>>()
-        out += "Engine" to "mpv"
+        val out = ArrayList<StreamInfoRow>()
+        out += StreamInfoRow(StreamInfoLabel.ENGINE, StreamInfoValue.Engine(StreamEngine.MPV))
         (str("file-format") ?: str("demuxer"))?.lowercase()?.let { d ->
             val fmt = when {
                 d.contains("hls") -> "HLS"
                 d.contains("mpegts") -> "MPEG-TS"
                 else -> d.uppercase()
             }
-            out += "Format" to fmt
+            out += StreamInfoRow(StreamInfoLabel.FORMAT, StreamInfoValue.Format(fmt))
         }
         // Video
         val vw = m.getPropertyInt("video-params/w") ?: m.getPropertyInt("width")
         val vh = m.getPropertyInt("video-params/h") ?: m.getPropertyInt("height")
         val pix = str("video-params/pixelformat").orEmpty()
-        val depth = when { "10" in pix -> "10-bit"; "12" in pix -> "12-bit"; pix.isNotEmpty() -> "8-bit"; else -> null }
-        val videoLine = listOfNotNull(
-            currentVideoCodec ?: str("video-codec"),
-            if (vw != null && vh != null && vw > 0) "${vw}×${vh}" else null,
-            str("container-fps")?.toDoubleOrNull()?.let { "%.2f fps".format(it) },
-            depth,
-        ).joinToString(" · ")
-        if (videoLine.isNotBlank()) out += "Video" to videoLine
-        // HDR (transfer curve)
-        when (str("video-params/gamma")?.lowercase()) {
-            "pq" -> "HDR10 (PQ)"; "hlg" -> "HLG"; null -> null; else -> "SDR"
-        }?.let { out += "HDR" to it }
-        // Bitrate
-        str("video-bitrate")?.toLongOrNull()?.let { if (it > 0) out += "Bitrate" to "%.1f Mbps".format(it / 1_000_000.0) }
-        // Decoder
-        val hw = str("hwdec-current")
-        out += "Decoder" to when {
-            hw != null && hw != "no" -> "$hw (hardware)" + if (_directRender.value) " · direct" else ""
-            else -> "software" + if (!_directRender.value) " (gpu)" else ""
+        val depth = when { "10" in pix -> 10; "12" in pix -> 12; pix.isNotEmpty() -> 8; else -> null }
+        if (currentVideoCodec != null || str("video-codec") != null || vw != null || vh != null || str("container-fps") != null) {
+            out += StreamInfoRow(
+                StreamInfoLabel.VIDEO,
+                StreamInfoValue.Video(
+                    codec = currentVideoCodec ?: str("video-codec"),
+                    width = vw?.takeIf { it > 0 },
+                    height = vh?.takeIf { it > 0 },
+                    fps = str("container-fps")?.toDoubleOrNull(),
+                    bitDepth = depth,
+                ),
+            )
         }
-        // Audio
-        val audioLine = listOfNotNull(
-            str("audio-codec-name")?.uppercase(),
-            when (m.getPropertyInt("audio-params/channel-count")) {
-                1 -> "mono"; 2 -> "stereo"; 6 -> "5.1"; 8 -> "7.1"; null -> null; else -> "ch"
+        when (str("video-params/gamma")?.lowercase()) {
+            "pq" -> StreamHdrMode.HDR10_PQ
+            "hlg" -> StreamHdrMode.HLG
+            null -> null
+            else -> StreamHdrMode.SDR
+        }?.let { out += StreamInfoRow(StreamInfoLabel.HDR, StreamInfoValue.Hdr(it)) }
+        str("video-bitrate")?.toLongOrNull()?.takeIf { it > 0 }?.let {
+            out += StreamInfoRow(StreamInfoLabel.BITRATE, StreamInfoValue.Bitrate(it))
+        }
+        val hw = str("hwdec-current")
+        out += StreamInfoRow(
+            StreamInfoLabel.DECODER,
+            if (hw != null && hw != "no") {
+                StreamInfoValue.Decoder(DecoderKind.NAMED, name = hw, direct = _directRender.value, hardware = true)
+            } else {
+                StreamInfoValue.Decoder(DecoderKind.SOFTWARE, direct = false)
             },
-            m.getPropertyInt("audio-params/samplerate")?.let { "%.0f kHz".format(it / 1000.0) },
-            str("audio-bitrate")?.toLongOrNull()?.let { if (it > 0) "%.0f kbps".format(it / 1000.0) else null },
-        ).joinToString(" · ")
-        if (audioLine.isNotBlank()) out += "Audio" to audioLine
-        // Buffer
-        val bufLine = listOfNotNull(
-            str("demuxer-cache-duration")?.toDoubleOrNull()?.let { "%.1f s".format(it) },
-            str("frame-drop-count")?.let { "drops $it" },
-        ).joinToString(" · ")
-        if (bufLine.isNotBlank()) out += "Buffer" to bufLine
-        currentUrl?.let { out += "Source" to HttpClient.redactUrl(it) }
+        )
+        val channelCount = m.getPropertyInt("audio-params/channel-count")
+        val sampleRate = m.getPropertyInt("audio-params/samplerate")
+        val audioBitrate = str("audio-bitrate")?.toLongOrNull()?.takeIf { it > 0 }
+        if (str("audio-codec-name") != null || channelCount != null || sampleRate != null || audioBitrate != null) {
+            out += StreamInfoRow(
+                StreamInfoLabel.AUDIO,
+                StreamInfoValue.Audio(
+                    codec = str("audio-codec-name")?.uppercase(),
+                    channelCount = channelCount,
+                    sampleRateHz = sampleRate,
+                    bitsPerSecond = audioBitrate,
+                ),
+            )
+        }
+        val buffered = str("demuxer-cache-duration")?.toDoubleOrNull()?.let { (it * 1000).toLong() }
+        val drops = str("frame-drop-count")?.toLongOrNull()
+        if (buffered != null || drops != null) {
+            out += StreamInfoRow(StreamInfoLabel.BUFFER, StreamInfoValue.Buffer(buffered, drops))
+        }
+        currentUrl?.let { out += StreamInfoRow(StreamInfoLabel.SOURCE, StreamInfoValue.Source(HttpClient.redactUrl(it))) }
         return out
     }
 
@@ -2930,7 +2936,7 @@ class OwnTVPlayer(
                                 setPropertyString("audio-channels", "stereo")
                                 setPropertyString("audio-format", "")
                                 setPropertyString("audio-samplerate", "0")
-                                toast(context.getString(R.string.player_error_surround))
+                                toast(toastRenderer.render(PlaybackFailure.Surround))
                                 if (sgen == loadGeneration && currentUrl != null) {
                                     loadUrl(currentUrl!!, currentMetaSnapshot(), isLiveContent, _position.value, resetRetries = false)
                                 }
@@ -3130,7 +3136,7 @@ class OwnTVPlayer(
                         } else {
                             // mpv's whole retry ladder is exhausted. For a VOD, retry once on ExoPlayer
                             // before erroring — it may play what mpv can't on this device/provider.
-                            if (!isLiveContent && fallbackToExoVod(PlaybackFailure.Raw("stream never started on mpv (retries exhausted)"), mpvStuck = false)) return@launch
+                            if (!isLiveContent && fallbackToExoVod(PlaybackFailure.MpvStreamNeverStarted, mpvStuck = false)) return@launch
                             _buffering.value = false
                             _error.value = vodErrorMessage(PlaybackFailure.StreamUnavailable(triedVlcUaFallback))
                         }

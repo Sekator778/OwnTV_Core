@@ -261,7 +261,12 @@ class BackupManager(
      * Outcome of a restore: how many rows/entries were applied, and how many `sources[]` entries were
      * left out because this build doesn't know their [SourceType] (B4 — see [sourceFrom]).
      */
-    data class ImportSummary(val items: Int, val skippedSources: Int = 0)
+    data class ImportSummary(
+        val items: Int,
+        val skippedSources: Int = 0,
+        /** Optional locale field was present but not in the SupportedLocales catalogue. */
+        val invalidLocale: Boolean = false,
+    )
 
     /** Thrown when a backup is encrypted and the supplied passphrase is wrong (or missing where required). */
     class WrongPasswordException : Exception()
@@ -349,6 +354,12 @@ class BackupManager(
             // Sources whose "type" this build can't parse: skipped rather than coerced (B4), and
             // reported back so the restore message can say what was left out.
             var skippedSources = 0
+            // Locale is deliberately deferred until every other restore operation and the marker
+            // clear have completed. Publishing it earlier can recreate the Activity while the
+            // database/DataStore merge is still in flight.
+            var pendingLocaleTag: String? = null
+            var localeFieldPresent = false
+            var invalidLocale = false
 
             // Id remapping (file id → device id). Filled during the profile/source merge below. When
             // the SOURCES section isn't being restored, matching still runs read-only so the other
@@ -554,7 +565,12 @@ class BackupManager(
 
             if (Section.SETTINGS in sections) {
                 root.optJSONObject("settings")?.let { s ->
-                    settings.importSettings(s) // non-secret keys (incl. proxy host/port/user/enabled)
+                    val importedSettings = settings.importSettings(s) // non-secret keys (incl. proxy host/port/user/enabled)
+                    if (importedSettings.localePresent) {
+                        localeFieldPresent = true
+                        pendingLocaleTag = importedSettings.localeTag
+                        invalidLocale = importedSettings.invalidLocale
+                    }
                     // Proxy password: decrypt if we have a key; if encrypted but no key, leave blank.
                     if (s.has("proxy_pass_enc")) {
                         unseal(s.opt("proxy_pass_enc"))?.let { settings.setProxyPassword(it) }
@@ -595,8 +611,14 @@ class BackupManager(
                 }
             }
             settings.clearRestoreMarker()
-            Log.i(TAG, "Restore done items=$count skippedSources=$skippedSources")
-            ImportSummary(items = count, skippedSources = skippedSources)
+            // Locale writes are last by design: all restore work and the interrupted-restore marker
+            // are complete before LocalizedContent can observe a script-family change and recreate
+            // the Activity. An invalid optional locale is ignored and reported in the summary.
+            if (localeFieldPresent) {
+                pendingLocaleTag?.let { tag -> settings.applyImportedLocale(tag) }
+            }
+            Log.i(TAG, "Restore done items=$count skippedSources=$skippedSources invalidLocale=$invalidLocale")
+            ImportSummary(items = count, skippedSources = skippedSources, invalidLocale = invalidLocale)
         }
     }
 
