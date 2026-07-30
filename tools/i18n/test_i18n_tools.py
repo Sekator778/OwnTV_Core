@@ -612,6 +612,29 @@ class TestValidateStrings(unittest.TestCase):
         rc, out = self._run(res, self.tmpdir / "tools/i18n/locales.json")
         self.assertEqual(rc, 0, f"Java format placeholders were rejected: {out}")
 
+    def test_invalid_java_format_placeholders_rejected(self):
+        """Formatter-invalid flag/conversion combinations must fail before runtime formatting."""
+        invalid = ["%0$s", "%1$#s", "%1$-s", "%1$.2d", "%1$0tY", "%1$0f", "%1$L", "%1$tJ", "%1$n"]
+        locales = _full_tier1()
+        for placeholder in invalid:
+            with self.subTest(placeholder=placeholder):
+                source = f'<resources><string name="x">Value {placeholder}</string></resources>'
+                case_dir = Path(tempfile.mkdtemp())
+                res = _make_fixture(case_dir, source, locales)
+                rc, out = self._run(res, case_dir / "tools/i18n/locales.json")
+                self.assertEqual(rc, 1, f"invalid placeholder {placeholder} passed: {out}")
+                self.assertIn("invalid Java/Android format placeholder", out)
+
+    def test_invalid_java_format_placeholder_in_translation_rejected(self):
+        source = '<resources><string name="x">Value %1$s</string></resources>'
+        de_xml = '<resources><string name="x">Wert %1$#s</string></resources>'
+        locales = [_locale("en", "en-US", "en", "values"),
+                   _locale("de", "de", "de", "values-de", packaged=False, pickerVisible=False)]
+        res = _make_fixture(self.tmpdir, source, locales, {"values-de": de_xml})
+        rc, out = self._run(res, self.tmpdir / "tools/i18n/locales.json")
+        self.assertEqual(rc, 1, out)
+        self.assertIn("invalid Java/Android format placeholder", out)
+
     def test_whole_string_quoted_apostrophe_accepted(self):
         """'This\'ll work' wrapped in whole-string double quotes is valid Android — not rejected."""
         source = '<resources><string name="x">"This\'ll work"</string></resources>'
@@ -647,6 +670,26 @@ class TestCheckHardcodedStrings(unittest.TestCase):
         self.assertNotIn("en-US", unsafe)
         self.assertNotIn("b+sr+Latn", unsafe)
         self.assertIn("retry", unsafe)
+
+    def test_select_and_update_prefixes_are_not_sql(self):
+        """SQL detection must not hide ordinary copy merely because it starts with a keyword."""
+        self._write_kt("Labels.kt", '''package x
+fun f() {
+    Text("Select a channel to preview it here.")
+    Text("Update now")
+    Text("Update this source's details, or change its auto-refresh setting.")
+}
+''')
+        unsafe = {key[1] for key in self.chs._scan()}
+        self.assertIn("Select a channel to preview it here.", unsafe)
+        self.assertIn("Update now", unsafe)
+        self.assertIn("Update this source's details, or change its auto-refresh setting.", unsafe)
+
+    def test_real_sql_still_safe(self):
+        self._write_kt("Database.kt", 'package x\nval q = "SELECT * FROM users WHERE id = :id"\nval u = "UPDATE users SET name = :name WHERE id = :id"\n')
+        unsafe = {key[1] for key in self.chs._scan()}
+        self.assertNotIn("SELECT * FROM users WHERE id = :id", unsafe)
+        self.assertNotIn("UPDATE users SET name = :name WHERE id = :id", unsafe)
 
     def test_live_text_not_safe(self):
         """Text("LIVE") must NOT be classified as safe — it's user-facing display text."""
@@ -771,8 +814,15 @@ private fun String.containsAny(vararg n: String) = n.any { contains(it) }
         self.assertIn("Visible label", unsafe)
         self.assertIn("Another label", unsafe)
         self.assertNotIn('developer ${x ?: "message"}', unsafe)
-        self.assertNotIn("message", unsafe)
+        self.assertIn("message", unsafe, "nested log fallback was incorrectly inherited as safe")
         self.assertNotIn("[a-z]+", unsafe)
+
+    def test_nested_log_argument_does_not_exempt_visible_literal(self):
+        """Only direct log arguments are safe; a nested formatter call can return UI text."""
+        self._write_kt("LogContext.kt", 'package x\nfun f() { Log.w("TAG", makeMessage("Visible copy")); Log.d("TAG", "Developer diagnostic") }\n')
+        unsafe = {key[1] for key in self.chs._scan()}
+        self.assertIn("Visible copy", unsafe)
+        self.assertNotIn("Developer diagnostic", unsafe)
 
     def test_camelcase_display_text_not_safe(self):
         """A CamelCase word like 'Settings' used as Text() content must NOT be exempted."""
@@ -849,6 +899,13 @@ private fun String.containsAny(vararg n: String) = n.any { contains(it) }
         self.assertIn("Visible label", unsafe, "JSON .put() value literal was wrongly exempted")
         self.assertNotIn("title", unsafe, "JSON .put() key was not exempted")
 
+    def test_nested_json_argument_is_not_inherited_safe(self):
+        """A fallback inside a JSON/log expression is not safe merely because its parent is safe."""
+        self._write_kt("NestedJson.kt", 'package x\nimport org.json.JSONObject\nfun f(j: JSONObject) {\n  Log.d("TAG", "payload=${j.optString("label", "Visible fallback")}")\n}\n')
+        unsafe = {k[1] for k in self.chs._scan()}
+        self.assertIn("Visible fallback", unsafe)
+        self.assertNotIn("label", unsafe, "JSON field name should remain a safe direct argument")
+
     def test_first_argument_must_be_literal_and_json_receiver_verified(self):
         """Only a direct first argument on a verified JSONObject/URI call is safe.
 
@@ -897,6 +954,14 @@ fun f() {
         }
         encoded = self.chs._serialize(counts)
         self.assertEqual(self.chs._parse(encoded), counts)
+
+    def test_kotlin_escape_decoder_keeps_escaped_unicode_distinct(self):
+        """\\\\u0041 (literal slash) must not collapse to the runtime escape \\u0041."""
+        self.assertEqual(self.chs._decode(r'"\u0041"'), "A")
+        self.assertEqual(self.chs._decode(r'"\\u0041"'), r"\u0041")
+        self.assertNotEqual(self.chs._decode(r'"\u0041"'), self.chs._decode(r'"\\u0041"'))
+        self.assertEqual(self.chs._decode(r'"\n"'), "\n")
+        self.assertEqual(self.chs._decode(r'"\\n"'), r"\n")
 
     def test_json_call_does_not_exempt_adjacent_literal(self):
         """A literal on the same line as a JSON call but NOT its argument must remain unsafe.

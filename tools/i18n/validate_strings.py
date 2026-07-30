@@ -47,25 +47,114 @@ _APPROVED_TRANSLATION_STATES = {"translated", "approved"}
 
 # --- resource parsing ---------------------------------------------------------
 
-# Full printf-style format specifier: %, optional N$, optional flags [-#+0,(], optional width,
-# optional .precision, then a conversion char. %% is the escaped literal percent. This covers
-# %1$s, %2$d, %1$.2f, %02d, %-10s, %1$tY (date-time), etc. Space is excluded from flags so
-# "50% off" is not matched. Java's date/time conversion is a single conversion consisting of
-# t/T plus a suffix (Y, m, d, H, ...), so it must be an alternative to ordinary conversions rather
-# than an optional prefix followed by another required conversion character.
+# Java/Android Formatter conversions. Keep this grammar narrower than C printf: conversions such as
+# %i, %L and %@ are not Java conversions, and a date conversion is ``t/T`` plus exactly one suffix.
 _DATE_CONVERSION = r"[tT][HIklMNSLpzZsQYyBbhAaCceRTrYDFjmde]"
-_ORDINARY_CONVERSION = r"[sSidfL@bBhHcCoxXeEgGaAn%]"
-_FMT = re.compile(
-    rf"%(?:\d+\$)?[\-#+0,(]*\d*(?:\.\d+)?(?:{_DATE_CONVERSION}|{_ORDINARY_CONVERSION})"
+_ORDINARY_CONVERSION = r"[bBhHsScCdoxXeEfFgGaAn%]"
+_FORMAT_RE = re.compile(
+    rf"%(?:(?P<index>[1-9]\d*)\$)?(?P<flags>[-#+ 0,(]*)?(?P<width>\d+)?"
+    rf"(?:\.(?P<precision>\d+))?(?:(?P<date>[tT])(?P<date_suffix>[HIklMNSLpzZsQYyBbhAaCceRTrYDFjmde])|"
+    rf"(?P<conversion>[bBhHsScCdoxXeEfFgGaAn%]))"
 )
-# Positional only: %1$s, %2$.2f, %1$tY ... — captures the 1-based index for parity checking.
-_POS = re.compile(
-    rf"%(\d+)\$[\-#+0,(]*\d*(?:\.\d+)?(?:{_DATE_CONVERSION}|[sSidfL@bBhHcCoxXeEgGaA])"
-)
-# Bare (non-positional): %s %d %f %tY ... — forbidden in source so translators can reorder.
-_BARE = re.compile(
-    rf"%(?!\d+\$)[\-#+0,(]*\d*(?:\.\d+)?(?:{_DATE_CONVERSION}|[sSidfL@bBhHcCoxXeEgGaA])"
-)
+# Kept as a public compatibility alias for callers/tests that inspect the recognised grammar.
+_FMT = _FORMAT_RE
+
+
+def _format_match_is_valid(match: re.Match) -> bool:
+    """Apply Java Formatter's conversion/flag constraints to a syntactic match."""
+    index = match.group("index")
+    flags = match.group("flags") or ""
+    width = match.group("width")
+    precision = match.group("precision")
+    conversion = match.group("conversion")
+    date_suffix = match.group("date_suffix")
+    if len(flags) != len(set(flags)) or ("-" in flags and "0" in flags) or ("+" in flags and " " in flags):
+        return False
+    # A space immediately after a prose percent (``50% off``) is indistinguishable from Java's
+    # space flag unless an explicit positional index disambiguates it. Bare formats are forbidden
+    # by this project anyway, so classify that shape as an invalid/unescaped percent instead of a
+    # phantom placeholder.
+    if " " in flags and not index:
+        return False
+    # %% and %n never consume an argument and cannot carry an index, flags, width or precision.
+    if conversion in {"%", "n"}:
+        return not index and not flags and width is None and precision is None and date_suffix is None
+    if date_suffix is not None:
+        # Date/time formatting permits left justification and a width, but not numeric flags or
+        # precision. A bare date spec is still syntactically valid and _has_bare() rejects it for
+        # resources because translators must be able to reorder positional arguments.
+        return set(flags) <= {"-"} and ("-" not in flags or width is not None) and precision is None
+    if conversion in {"s", "S", "b", "B", "h", "H"}:
+        return set(flags) <= {"-"} and ("-" not in flags or width is not None)
+    if conversion in {"c", "C"}:
+        return set(flags) <= {"-"} and ("-" not in flags or width is not None) and precision is None
+    if conversion in {"d", "o", "x", "X"}:
+        allowed = set("-+ 0,(#")
+        if not set(flags) <= allowed or ("#" in flags and conversion == "d"):
+            return False
+        return ("-" not in flags and "0" not in flags or width is not None) and precision is None
+    if conversion in {"e", "E", "f", "g", "G", "a", "A"}:
+        if not set(flags) <= set("-+ 0,(#"):
+            return False
+        return ("-" not in flags and "0" not in flags) or width is not None
+    return False
+
+
+def _format_tokens(text: str) -> tuple[list[tuple[int, int, int | None, str]], list[int]]:
+    """Return valid format tokens and source positions of invalid percent sequences.
+
+    Tokens are ``(start, end, positional_index_or_None, conversion)``. ``%%`` and ``%n`` are
+    included with a ``None`` index but are not placeholders. Invalid tokens are deliberately not
+    recovered by searching inside them; otherwise ``%1$#d`` could be partially accepted as a
+    shorter valid token.
+    """
+    tokens: list[tuple[int, int, int | None, str]] = []
+    invalid: list[int] = []
+    pos = 0
+    while pos < len(text):
+        if text[pos] != "%":
+            pos += 1
+            continue
+        match = _FORMAT_RE.match(text, pos)
+        if match is None:
+            invalid.append(pos)
+            pos += 1
+            continue
+        if not _format_match_is_valid(match):
+            invalid.append(pos)
+            pos = match.end()
+            continue
+        conversion = ((match.group("date") or "") + (match.group("date_suffix") or "")
+                      if match.group("date_suffix") is not None else match.group("conversion"))
+        index = int(match.group("index")) if match.group("index") else None
+        tokens.append((pos, match.end(), index, conversion))
+        pos = match.end()
+    return tokens, invalid
+
+
+def _strip_valid_formats(text: str) -> str:
+    tokens, _ = _format_tokens(text)
+    spans = {(start, end) for start, end, _, _ in tokens}
+    out: list[str] = []
+    pos = 0
+    while pos < len(text):
+        span = next((end for start, end in spans if start == pos), None)
+        if span is not None:
+            pos = span
+        else:
+            out.append(text[pos])
+            pos += 1
+    return "".join(out)
+
+
+def _invalid_format_snippets(text: str) -> list[str]:
+    _, invalid = _format_tokens(text)
+    return [text[pos:pos + 16] for pos in invalid]
+
+# Positional only: %1$s, %2$.2f, %1$tY ... — retained for compatibility; parity uses
+# _format_tokens() so invalid Java specs cannot masquerade as placeholders.
+_POS = re.compile(r"%([1-9]\d*)\$")
+_BARE = re.compile(r"%(?!\d+\$)[\-#+ 0,(]*\d*(?:\.\d+)?(?:" + _DATE_CONVERSION + r"|" + _ORDINARY_CONVERSION.replace("%", "") + r")")
 # Valid XML entity: &amp; &lt; &#123; &#x1F; ...
 _ENTITY = re.compile(r"&(?:[a-zA-Z]+|#x?[0-9]+);")
 # xliff:g child tags inside string bodies (the only child element allowed in Android string resources).
@@ -202,8 +291,11 @@ def _check_escaping(file_path: Path) -> list[str]:
         b = _XLIFF_TAG.sub("", body)
         # Strip valid XML entities so their & is not flagged.
         b = _ENTITY.sub("", b)
-        # Strip valid format specifiers (including %%).
-        b = _FMT.sub("", b)
+        # Strip only semantically valid Java/Android format specifiers (including %%). A broad
+        # regex would accept things such as %1$#s, %1$.2d or %1$0tY even though Formatter rejects
+        # them at runtime.
+        invalid_formats = _invalid_format_snippets(b)
+        b = _strip_valid_formats(b)
         # Strip escaped apostrophes and quotes.
         b = b.replace("\\'", "").replace('\\"', "")
         # Android allows a bare apostrophe if the ENTIRE string is wrapped in double quotes
@@ -218,6 +310,8 @@ def _check_escaping(file_path: Path) -> list[str]:
             bad.append("unescaped apostrophe (use \\' or &apos;)")
         if "%" in b:
             bad.append("unescaped percent (use %% or a format specifier)")
+        if invalid_formats:
+            bad.append("invalid Java/Android format placeholder(s): " + ", ".join(repr(s) for s in invalid_formats[:3]))
         if bad:
             errs.append(f"{file_path.parent.name}/{file_path.name} {label}: {'; '.join(bad)} in {body.strip()[:60]!r}")
     return errs
@@ -328,14 +422,17 @@ _PLURAL_RULES = {
 
 
 def _placeholders(text: str) -> list[int]:
-    return [int(m.group(1)) for m in _POS.finditer(text)]
+    tokens, _ = _format_tokens(text)
+    return [index for _, _, index, conversion in tokens
+            if index is not None and conversion not in {"%", "n"}]
 
 
 def _has_bare(text: str) -> bool:
-    # _BARE matches format specs WITHOUT N$; _FMT matches all (including %%). If _FMT matches
-    # something _BARE doesn't, that something is either positional or %%, both fine. If _BARE
-    # matches, it's a bare %s/%d etc. — forbidden in source.
-    return bool(_BARE.search(text))
+    # A valid format with no positional index is a bare placeholder. %% and %n do not consume an
+    # argument and are explicitly allowed; invalid specs are reported by _check_escaping().
+    tokens, _ = _format_tokens(text)
+    return any(index is None and conversion not in {"%", "n"}
+               for _, _, index, conversion in tokens)
 
 
 # --- locales.json catalogue validation ----------------------------------------

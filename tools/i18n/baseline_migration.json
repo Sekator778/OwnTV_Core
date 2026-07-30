@@ -1,5 +1,5 @@
 {
-  "fromScannerVersion": 2,
-  "toScannerVersion": 3,
-  "reason": "Scanner v3 requires verified JSON receivers and first-syntactic-argument matching, removes spelling-only key/path exemptions, and fixes baseline escape decoding. The baseline is regenerated once for those corrected extraction semantics."
+  "fromScannerVersion": 3,
+  "toScannerVersion": 4,
+  "reason": "Scanner v4 grammar-gates SQL keyword matching, limits JSON/log/regex exemptions to proven direct arguments, decodes Kotlin escapes losslessly, and keeps nested interpolation literals independent of outer exemptions. The baseline is regenerated once for these corrected extraction semantics."
 }

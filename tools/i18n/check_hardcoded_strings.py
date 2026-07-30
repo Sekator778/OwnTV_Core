@@ -38,7 +38,7 @@ ASSERTION_ALLOWLIST = ROOT / "tools" / "i18n" / "assertion_allowlist.txt"
 # Increment only when the literal extraction/safety semantics change. A changed scanner needs one
 # explicit baseline migration; ordinary Phase 1 code changes must continue to satisfy the merge-base
 # ratchet without a silent escape hatch.
-SCANNER_VERSION = 3
+SCANNER_VERSION = 4
 
 # --- string-literal extraction -------------------------------------------------
 
@@ -218,17 +218,49 @@ def _nested_literals(outer_start: int, outer: str):
 
 
 def _decode(raw: str) -> str:
-    """Strip quotes and unescape common Kotlin escapes for a normalised comparison key."""
+    """Strip quotes and decode Kotlin escapes without collapsing literal backslashes.
+
+    Repeated ``str.replace`` calls are unsafe here: decoding ``\\\\u0041`` to ``\\u0041`` and
+    then running a unicode replacement would make it indistinguishable from a source literal
+    ``\\u0041``. Decode one escape at a time instead. A doubled backslash consumes both slashes and
+    emits one literal backslash; the following ``u``/``n`` is then ordinary text, as it is in
+    Kotlin. Unknown escapes are retained losslessly (the Kotlin compiler will report them later).
+    """
     if raw.startswith('"""'):
-        body = raw[3:-3]
-    else:
-        body = raw[1:-1]
-    # Kotlin escapes: \n \t \r \\ \" \$ \' \uXXXX — keep it lossy: we only need a stable key.
-    body = (body.replace("\\n", "\n").replace("\\t", "\t").replace("\\r", "\r")
-            .replace('\\"', '"').replace("\\'", "'").replace("\\$", "$")
-            .replace("\\\\", "\\"))
-    body = re.sub(r"\\u([0-9a-fA-F]{4})", lambda m: chr(int(m.group(1), 16)), body)
-    return body
+        return raw[3:-3]  # Kotlin raw strings do not process backslash escapes.
+    body = raw[1:-1]
+    escapes = {
+        "b": "\b", "t": "\t", "n": "\n", "r": "\r", "f": "\f",
+        "\\": "\\", '"': '"', "'": "'", "$": "$",
+    }
+    out: list[str] = []
+    pos = 0
+    while pos < len(body):
+        if body[pos] != "\\":
+            out.append(body[pos])
+            pos += 1
+            continue
+        if pos + 1 >= len(body):
+            out.append("\\")
+            pos += 1
+            continue
+        nxt = body[pos + 1]
+        if nxt == "u" and pos + 5 < len(body):
+            digits = body[pos + 2:pos + 6]
+            if re.fullmatch(r"[0-9a-fA-F]{4}", digits):
+                out.append(chr(int(digits, 16)))
+                pos += 6
+                continue
+        decoded = escapes.get(nxt)
+        if decoded is not None:
+            out.append(decoded)
+            pos += 2
+        else:
+            # Preserve invalid escapes rather than silently dropping the slash. This is both
+            # lossless for the scanner and useful when the source is temporarily incomplete.
+            out.extend(("\\", nxt))
+            pos += 2
+    return "".join(out)
 
 
 def _normalize(content: str) -> str:
@@ -246,8 +278,24 @@ _LOG_TAG_DECL = re.compile(
     r"\b(?:const\s+)?val\s+\w*(?:TAG|[Tt]ag)\w*[ \t]*(?::[ \t]*[A-Za-z_]\w*(?:[<>,.? ]*)[ \t]*)?=[ \t]*"
 )
 _REGEX_CALL = re.compile(r"\bRegex\s*\(")
-_SQL = re.compile(r"\b(SELECT |INSERT INTO |UPDATE |DELETE FROM |CREATE TABLE |CREATE INDEX |ALTER TABLE |DROP TABLE )",
-                   re.IGNORECASE)
+# SQL is a safe category only when the literal has enough grammar to be a statement. Matching a
+# leading keyword alone is not enough: ``"Select a channel"`` and ``"Update now"`` are ordinary UI
+# copy. These intentionally conservative expressions may leave a small SQL fragment in the baseline;
+# a false negative is reviewable, while a false positive silently hides copy from Phase 1.
+_SQL_QUERY_ANNOTATION = re.compile(r"@(?:[A-Za-z_]\w*\.)*Query\s*\(")
+_SQL_EXEC_CALL = re.compile(r"\b(?:query|rawQuery|execSQL|compileStatement)\s*\(")
+_SQL = (
+    re.compile(r"^\s*SELECT\b(?=[\s\S]*\bFROM\s+[`A-Za-z_][\w$]*)(?=[\s\S]*(?:[*`=():]|:\w+|\b(?:WHERE|JOIN|ORDER|GROUP|LIMIT|IN|IS|AS|DISTINCT|COUNT|MAX|MIN|LOWER|TRIM)\b))", re.IGNORECASE),
+    re.compile(r"^\s*INSERT\s+INTO\b(?=[\s\S]*(?:\bVALUES\b|\bSELECT\b|[(`]))", re.IGNORECASE),
+    re.compile(r"^\s*UPDATE\s+[`A-Za-z_][\w$]*\s+SET\b", re.IGNORECASE),
+    re.compile(r"^\s*DELETE\s+FROM\s+[`A-Za-z_][\w$]*(?=[\s\S]*(?:\bWHERE\b|\bIN\b|\bIS\b|=|[`(]))", re.IGNORECASE),
+    re.compile(r"^\s*CREATE\s+(?:VIRTUAL\s+)?(?:TABLE|INDEX|TRIGGER)\b(?=[\s\S]*(?:IF\s+NOT\s+EXISTS|[`(]|\bUSING\b|\bON\b))", re.IGNORECASE),
+    re.compile(r"^\s*ALTER\s+TABLE\s+[`A-Za-z_][\w$]*(?=[\s\S]*(?:\bADD\b|\bDROP\b|\bRENAME\b|\bCOLUMN\b|[`]))", re.IGNORECASE),
+    re.compile(r"^\s*DROP\s+(?:TABLE|INDEX|TRIGGER)\b(?=[\s\S]*(?:IF\s+EXISTS|[`]))", re.IGNORECASE)
+)
+
+def _is_sql(content: str) -> bool:
+    return any(pattern.search(content) for pattern in _SQL)
 # MIME values have a constrained registered top-level type; this avoids classifying visible copy such
 # as "and/or" as protocol data merely because it contains a slash.
 _MIME = re.compile(
@@ -563,47 +611,61 @@ def _json_call_positions(text: str, json_return_functions: set[str] | None = Non
 
 
 def _call_all_arg_positions(text: str, call_re: re.Pattern) -> set[int]:
-    """Character positions of EVERY string-literal argument of every call matching [call_re].
+    """Positions of direct string operands in calls matching [call_re].
 
-    Used for .containsAny()/.contains() (ErrorMessages needles) where all string arguments are
-    comparison keys, and for Room Index(value=["col", "col"]) where all array elements are column
-    names. Each recorded position is the start of a ``"`` literal inside the call at depth ≥ 1.
+    A string inside a nested call is not an argument of the matched call. The old depth-only scan
+    treated ``Log.w(TAG, makeMessage("Visible copy"))`` as if the nested literal were a log message
+    and exempted it. Track all delimiters and record only quotes at the matched call's direct
+    argument level. Nested literals inside a direct interpolated string are handled separately by
+    ``_iter_literals``.
     """
     positions: set[int] = set()
     for m in call_re.finditer(text):
         paren_pos = text.find("(", m.start())
         if paren_pos == -1:
             continue
-        depth = 1
+        paren_depth = 1
+        bracket_depth = 0
+        brace_depth = 0
         pos = paren_pos + 1
-        while pos < len(text) and depth > 0:
+        while pos < len(text) and paren_depth > 0:
+            if text.startswith("//", pos):
+                end = text.find("\n", pos + 2)
+                pos = len(text) if end == -1 else end + 1
+                continue
+            if text.startswith("/*", pos):
+                end = text.find("*/", pos + 2)
+                pos = len(text) if end == -1 else end + 2
+                continue
+            if text.startswith('"""', pos):
+                end = text.find('"""', pos + 3)
+                if end == -1:
+                    break
+                if paren_depth == 1 and bracket_depth == 0 and brace_depth == 0:
+                    positions.add(pos)
+                pos = end + 3
+                continue
             c = text[pos]
-            if c == '\\':
-                pos += 2
+            if c == '"':
+                _, end = _scan_double_quoted(text, pos, len(text))
+                if end is None:
+                    break
+                if paren_depth == 1 and bracket_depth == 0 and brace_depth == 0:
+                    positions.add(pos)
+                pos = end
                 continue
             if c == '(':
-                depth += 1
-                pos += 1
-                continue
-            if c == ')':
-                depth -= 1
-                pos += 1
-                continue
-            if c == '"':
-                positions.add(pos)
-                # Skip to the end of this literal so we don't re-record inner content.
-                k = pos + 1
-                while k < len(text):
-                    ck = text[k]
-                    if ck == '\\':
-                        k += 2
-                        continue
-                    if ck == '"':
-                        k += 1
-                        break
-                    k += 1
-                pos = k
-                continue
+                paren_depth += 1
+            elif c == ')':
+                paren_depth -= 1
+            elif c == '[':
+                bracket_depth += 1
+            elif c == ']':
+                bracket_depth = max(0, bracket_depth - 1)
+            elif c == '{':
+                brace_depth += 1
+            elif c == '}':
+                brace_depth = max(0, brace_depth - 1)
             pos += 1
     return positions
 
@@ -690,8 +752,9 @@ def _is_safe(rel_path: str, content: str, stmt: str, line: str, allowlist: set[t
     # Log/Regex arguments and TAG/KEY initializers are all handled by exact character positions in
     # _compute_safe_positions. There is intentionally no statement/line-level fallback here: an
     # unrelated literal next to a safe call must remain in the baseline.
-    # SQL fragments (content-based: a fragment containing SELECT/INSERT/etc. is SQL).
-    if _SQL.search(content):
+    # SQL is content-based but deliberately grammar-gated; a leading SELECT/UPDATE in UI copy is
+    # not enough to enter this category.
+    if _is_sql(content):
         return True
     # MIME types.
     if _MIME.match(content):
@@ -737,6 +800,7 @@ def _compute_safe_positions(text: str, rel_path: str,
     This is the position-based enforcement of the invariant: a safe call exempts ONLY its string
     argument(s), never every literal on the same line. Aggregates:
       - verified JSONObject/JSONArray API first-arg positions (.put/.getString/.optJSONObject/...)
+      - Room @Query SQL operands and database query/execSQL first arguments
       - URI API first-arg positions (.appendQueryParameter/.queryLong/... — first string arg only)
       - DataStore key factory arguments (stringPreferencesKey/etc.)
       - File constructor and path resolver arguments
@@ -751,6 +815,12 @@ def _compute_safe_positions(text: str, rel_path: str,
     """
     safe: set[int] = set()
     safe |= _json_call_positions(text, json_return_functions)
+    # Room's @Query argument is SQL, including direct string operands joined with Kotlin '+'.
+    # Database query/execSQL APIs likewise receive SQL as their first argument. These are API-bound
+    # locations, not content/line-level exemptions, so a nested formatter or adjacent UI literal is
+    # still scanned.
+    safe |= _call_all_arg_positions(text, _SQL_QUERY_ANNOTATION)
+    safe |= _call_arg_positions(text, _SQL_EXEC_CALL)
     safe |= _call_arg_positions(text, _URI_API)
     safe |= _call_arg_positions(text, _PREF_KEY_CALL)
     safe |= _call_all_arg_positions(text, _FILE_PATH_CALL)
@@ -768,25 +838,6 @@ def _compute_safe_positions(text: str, rel_path: str,
     return safe
 
 
-def _expand_nested_safe_positions(text: str, safe_positions: set[int]) -> set[int]:
-    """Propagate a safe argument boundary to literals nested inside that argument.
-
-    Kotlin permits string literals inside ``${...}``. If the outer literal is a Log/Regex/JSON-key
-    argument, its nested default value is part of the same developer/protocol argument; treating it
-    as user-facing would reintroduce a false positive merely because the scanner became interpolation
-    aware. User-facing outer literals have no safe position, so their nested UI text remains unsafe.
-    """
-    spans = list(_iter_literals(text))
-    safe = set(safe_positions)
-    for outer_start, outer_end, _ in spans:
-        if outer_start not in safe_positions:
-            continue
-        for nested_start, nested_end, _ in spans:
-            if outer_start < nested_start and nested_end <= outer_end:
-                safe.add(nested_start)
-    return safe
-
-
 def _scan() -> dict[tuple[str, str], int]:
     """Return the multiset {(rel_path, normalised_content): occurrence_count} of unsafe literals."""
     allowlist = _load_assertion_allowlist()
@@ -798,8 +849,10 @@ def _scan() -> dict[tuple[str, str], int]:
         if _GENERATED_MARKER in text[:120]:
             continue
         lines = text.splitlines()
-        safe_positions = _expand_nested_safe_positions(
-            text, _compute_safe_positions(text, rel, json_return_functions))
+        # Every interpolated literal is a separate occurrence. Do not inherit an outer Log/JSON/
+        # Regex exemption: a nested fallback such as optString("label", "Visible fallback") is a
+        # distinct literal and must remain visible to the ratchet unless its own syntax proves it safe.
+        safe_positions = _compute_safe_positions(text, rel, json_return_functions)
         for start, end, raw in _iter_literals(text):
             content = _decode(raw)
             line_no = text.count("\n", 0, start)
