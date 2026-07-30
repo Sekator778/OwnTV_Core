@@ -614,7 +614,8 @@ class TestValidateStrings(unittest.TestCase):
 
     def test_invalid_java_format_placeholders_rejected(self):
         """Formatter-invalid flag/conversion combinations must fail before runtime formatting."""
-        invalid = ["%0$s", "%1$#s", "%1$-s", "%1$.2d", "%1$0tY", "%1$0f", "%1$L", "%1$tJ", "%1$n"]
+        invalid = ["%0$s", "%1$#s", "%1$-s", "%1$.2d", "%1$0tY", "%1$0f",
+                   "%1$+x", "%1$,e", "%1$#g", "%1$(a", "%1$L", "%1$tJ", "%1$n"]
         locales = _full_tier1()
         for placeholder in invalid:
             with self.subTest(placeholder=placeholder):
@@ -673,6 +674,8 @@ class TestCheckHardcodedStrings(unittest.TestCase):
 
     def test_select_and_update_prefixes_are_not_sql(self):
         """SQL detection must not hide ordinary copy merely because it starts with a keyword."""
+        self.assertFalse(self.chs._is_sql("Update profile set preferences"))
+        self.assertFalse(self.chs._is_sql("Select an item from Favorites (optional)"))
         self._write_kt("Labels.kt", '''package x
 fun f() {
     Text("Select a channel to preview it here.")
@@ -690,6 +693,10 @@ fun f() {
         unsafe = {key[1] for key in self.chs._scan()}
         self.assertNotIn("SELECT * FROM users WHERE id = :id", unsafe)
         self.assertNotIn("UPDATE users SET name = :name WHERE id = :id", unsafe)
+
+    def test_unqualified_query_name_does_not_make_copy_safe(self):
+        self._write_kt("Query.kt", 'package x\nfun f() = query("Visible query label")\n')
+        self.assertIn("Visible query label", {key[1] for key in self.chs._scan()})
 
     def test_live_text_not_safe(self):
         """Text("LIVE") must NOT be classified as safe — it's user-facing display text."""

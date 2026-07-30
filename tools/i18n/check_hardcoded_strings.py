@@ -38,7 +38,7 @@ ASSERTION_ALLOWLIST = ROOT / "tools" / "i18n" / "assertion_allowlist.txt"
 # Increment only when the literal extraction/safety semantics change. A changed scanner needs one
 # explicit baseline migration; ordinary Phase 1 code changes must continue to satisfy the merge-base
 # ratchet without a silent escape hatch.
-SCANNER_VERSION = 4
+SCANNER_VERSION = 5
 
 # --- string-literal extraction -------------------------------------------------
 
@@ -283,15 +283,30 @@ _REGEX_CALL = re.compile(r"\bRegex\s*\(")
 # copy. These intentionally conservative expressions may leave a small SQL fragment in the baseline;
 # a false negative is reviewable, while a false positive silently hides copy from Phase 1.
 _SQL_QUERY_ANNOTATION = re.compile(r"@(?:[A-Za-z_]\w*\.)*Query\s*\(")
-_SQL_EXEC_CALL = re.compile(r"\b(?:query|rawQuery|execSQL|compileStatement)\s*\(")
+# A receiver is required; an unrelated top-level function named query(...) must not inherit the
+# database exemption merely from its name.
+_SQL_EXEC_CALL = re.compile(r"\.(?:query|rawQuery|execSQL|compileStatement)\s*\(")
+# Content-based SQL recognition is deliberately grammar-gated. API-bound SQL (Room @Query and
+# database query/execSQL calls) is also marked safe by position below, but these patterns cover
+# standalone schema/query constants without treating English that merely contains SQL keywords as
+# protocol data.
+_SQL_IDENT = r"(?:`[^`]+`|[A-Za-z_][\w$]*)"
+_SQL_EXPR = rf"(?:\*|{_SQL_IDENT}(?:\s*\.\s*(?:{_SQL_IDENT}|\*))?(?:\s+AS\s+{_SQL_IDENT})?|[A-Za-z_]\w*\s*\([^;]*\))"
 _SQL = (
-    re.compile(r"^\s*SELECT\b(?=[\s\S]*\bFROM\s+[`A-Za-z_][\w$]*)(?=[\s\S]*(?:[*`=():]|:\w+|\b(?:WHERE|JOIN|ORDER|GROUP|LIMIT|IN|IS|AS|DISTINCT|COUNT|MAX|MIN|LOWER|TRIM)\b))", re.IGNORECASE),
-    re.compile(r"^\s*INSERT\s+INTO\b(?=[\s\S]*(?:\bVALUES\b|\bSELECT\b|[(`]))", re.IGNORECASE),
-    re.compile(r"^\s*UPDATE\s+[`A-Za-z_][\w$]*\s+SET\b", re.IGNORECASE),
-    re.compile(r"^\s*DELETE\s+FROM\s+[`A-Za-z_][\w$]*(?=[\s\S]*(?:\bWHERE\b|\bIN\b|\bIS\b|=|[`(]))", re.IGNORECASE),
-    re.compile(r"^\s*CREATE\s+(?:VIRTUAL\s+)?(?:TABLE|INDEX|TRIGGER)\b(?=[\s\S]*(?:IF\s+NOT\s+EXISTS|[`(]|\bUSING\b|\bON\b))", re.IGNORECASE),
-    re.compile(r"^\s*ALTER\s+TABLE\s+[`A-Za-z_][\w$]*(?=[\s\S]*(?:\bADD\b|\bDROP\b|\bRENAME\b|\bCOLUMN\b|[`]))", re.IGNORECASE),
-    re.compile(r"^\s*DROP\s+(?:TABLE|INDEX|TRIGGER)\b(?=[\s\S]*(?:IF\s+EXISTS|[`]))", re.IGNORECASE)
+    # A SELECT list must be made of SQL identifiers/wildcards/functions, not prose such as
+    # "Select an item from ..."; the table boundary also rejects trailing parenthetical prose.
+    re.compile(
+        rf"^\s*SELECT\s+(?:DISTINCT\s+)?{_SQL_EXPR}(?:\s*,\s*{_SQL_EXPR})*"
+        rf"\s+FROM\s+{_SQL_IDENT}(?=\s*(?:$|[),;]|(?:WHERE|JOIN|LEFT|RIGHT|INNER|OUTER|GROUP|ORDER|LIMIT|UNION)\b))",
+        re.IGNORECASE | re.DOTALL),
+    re.compile(rf"^\s*INSERT\s+INTO\s+{_SQL_IDENT}(?:\s*\([^)]*\))?\s+(?:VALUES\s*\(|SELECT\b)", re.IGNORECASE),
+    # SET must contain a column assignment, not just the word "set" in a sentence.
+    re.compile(rf"^\s*UPDATE\s+{_SQL_IDENT}\s+SET\s+{_SQL_IDENT}\s*=\s*\S", re.IGNORECASE),
+    re.compile(rf"^\s*DELETE\s+FROM\s+{_SQL_IDENT}\s+(?:WHERE|IN|USING|RETURNING)\b", re.IGNORECASE),
+    re.compile(rf"^\s*CREATE\s+(?:VIRTUAL\s+)?(?:TABLE|INDEX|TRIGGER)\s+(?:IF\s+NOT\s+EXISTS\s+)?{_SQL_IDENT}(?=\s+(?:USING|ON)\b|\s*\()", re.IGNORECASE),
+    re.compile(rf"^\s*ALTER\s+TABLE\s+{_SQL_IDENT}\s+(?:ADD\s+(?:COLUMN\s+)?|DROP\s+COLUMN\s+|RENAME\s+(?:TO|COLUMN)\s+)", re.IGNORECASE),
+    # A quoted identifier or explicit IF EXISTS clause distinguishes schema SQL from "Drop table X".
+    re.compile(rf"^\s*DROP\s+(?:TABLE|INDEX|TRIGGER)\s+(?:IF\s+EXISTS\s+{_SQL_IDENT}|`[^`]+`)", re.IGNORECASE),
 )
 
 def _is_sql(content: str) -> bool:

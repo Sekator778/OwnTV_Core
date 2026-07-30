@@ -88,15 +88,29 @@ def _format_match_is_valid(match: re.Match) -> bool:
         return set(flags) <= {"-"} and ("-" not in flags or width is not None)
     if conversion in {"c", "C"}:
         return set(flags) <= {"-"} and ("-" not in flags or width is not None) and precision is None
-    if conversion in {"d", "o", "x", "X"}:
-        allowed = set("-+ 0,(#")
-        if not set(flags) <= allowed or ("#" in flags and conversion == "d"):
+    # Java Formatter's numeric flag matrix is conversion-specific. In particular, sign flags do
+    # not apply to octal/hex, grouping is not valid for scientific notation, alternate form is not
+    # valid for general floating-point, and parenthesised negatives are not valid for hex-float.
+    allowed_flags = {
+        "d": "-+ 0,(",
+        "o": "-#0",
+        "x": "-#0",
+        "X": "-#0",
+        "e": "-+ 0(#",
+        "E": "-+ 0(#",
+        "f": "-+ 0,(#",
+        "g": "-+ 0,(",
+        "G": "-+ 0,(",
+        "a": "-+ 0#",
+        "A": "-+ 0#",
+    }
+    if conversion in allowed_flags:
+        if not set(flags) <= set(allowed_flags[conversion]):
             return False
-        return ("-" not in flags and "0" not in flags or width is not None) and precision is None
-    if conversion in {"e", "E", "f", "g", "G", "a", "A"}:
-        if not set(flags) <= set("-+ 0,(#"):
-            return False
-        return ("-" not in flags and "0" not in flags) or width is not None
+        width_ok = ("-" not in flags and "0" not in flags) or width is not None
+        if conversion in {"d", "o", "x", "X"}:
+            return width_ok and precision is None
+        return width_ok
     return False
 
 

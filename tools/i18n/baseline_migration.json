@@ -1,5 +1,5 @@
 {
-  "fromScannerVersion": 3,
-  "toScannerVersion": 4,
-  "reason": "Scanner v4 grammar-gates SQL keyword matching, limits JSON/log/regex exemptions to proven direct arguments, decodes Kotlin escapes losslessly, and keeps nested interpolation literals independent of outer exemptions. The baseline is regenerated once for these corrected extraction semantics."
+  "fromScannerVersion": 4,
+  "toScannerVersion": 5,
+  "reason": "Scanner v5 uses conversion-specific Java Formatter flag matrices and strict SQL statement grammar, while retaining proven SQL argument-position exemptions. The baseline is regenerated once for these corrected guardrail semantics."
 }
