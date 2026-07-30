@@ -38,7 +38,7 @@ ASSERTION_ALLOWLIST = ROOT / "tools" / "i18n" / "assertion_allowlist.txt"
 # Increment only when the literal extraction/safety semantics change. A changed scanner needs one
 # explicit baseline migration; ordinary Phase 1 code changes must continue to satisfy the merge-base
 # ratchet without a silent escape hatch.
-SCANNER_VERSION = 2
+SCANNER_VERSION = 3
 
 # --- string-literal extraction -------------------------------------------------
 
@@ -248,7 +248,12 @@ _LOG_TAG_DECL = re.compile(
 _REGEX_CALL = re.compile(r"\bRegex\s*\(")
 _SQL = re.compile(r"\b(SELECT |INSERT INTO |UPDATE |DELETE FROM |CREATE TABLE |CREATE INDEX |ALTER TABLE |DROP TABLE )",
                    re.IGNORECASE)
-_MIME = re.compile(r"^[a-z][\w.+-]+/[a-z0-9][\w.+-]*$")
+# MIME values have a constrained registered top-level type; this avoids classifying visible copy such
+# as "and/or" as protocol data merely because it contains a slash.
+_MIME = re.compile(
+    r"^(?:application|audio|video|image|text|font|multipart|message|model|chemical)/"
+    r"[a-z0-9][\w.+-]*$"
+)
 _URL = re.compile(r"^(?:https?|content|file|intent|mailto|tel|ftp|data)://")
 # BCP-47 language/region/script tags and Android's b+ resource form. Do not treat every short
 # lowercase word as a language tag: ``now``, ``one`` and ``own`` are ordinary UI/protocol words.
@@ -266,12 +271,14 @@ def _is_bcp47(content: str) -> bool:
     return content in _BCP47_LANGUAGE_ONLY or bool(_BCP47_QUALIFIED.fullmatch(content))
 # A JSON object/fragment key written as a literal: "key": or "key" : (inline JSON, not .put()).
 _JSON_KEY = re.compile(r'^"[A-Za-z_][\w-]*"\s*:')
-# A snake_case / kebab-case identifier — preference/DataStore key or protocol field, not a sentence.
-_IDENT_KEY = re.compile(r"^[a-z][a-z0-9_./-]*[_./-][a-z0-9_./-]*$")
-# A filesystem-ish path (contains a slash and no spaces).
-_PATH = re.compile(r"^[^\s]*[/\\][^\s]*$")
-# File extension or a dotted protocol token like ".mp4", "application/json", "owntv_locale".
-_DOTTED = re.compile(r"^(?:\.[a-z0-9]+|[a-z][a-z0-9]*(?:\.[a-z0-9]+)+)$")
+# Identifier/path spelling alone is deliberately NOT enough: Text("retry_later") and
+# Text("and/or") are display strings even though they look like persisted/protocol data. The
+# contextual calls below are the only automatic key/path exemptions.
+_PREF_KEY_CALL = re.compile(
+    r"\b(?:string|boolean|int|long|float|double|stringSet)PreferencesKey\s*\("
+)
+_FILE_PATH_CALL = re.compile(r"\b(?:java\.io\.)?File\s*\(")
+_PATH_METHOD_CALL = re.compile(r"\.(?:resolve|resolveSibling|child)\s*\(")
 # Perf.stamp() call arguments — logcat timing markers, never user-facing text.
 _PERF_STAMP = re.compile(r"\bPerf\.stamp\s*\(")
 # @Suppress(...) annotation arguments — compiler directive args, never user-facing text.
@@ -279,58 +286,279 @@ _SUPPRESS_ANN = re.compile(r"@Suppress\s*\(")
 # A const val KEY_... = "..." declaration — the value is a preference/DataStore/Worker key.
 _KEY_CONST = re.compile(r"\bconst\s+val\s+KEY_\w+[ \t]*(?::[ \t]*[A-Za-z_]\w*(?:[<>,.? ]*)[ \t]*)?=[ \t]*")
 
-# Call patterns whose FIRST string argument is a safe identifier (JSON field name, URI parameter,
-# Room column name, etc.). These are used with _call_arg_positions() so ONLY the literal at the
-# first-argument position is exempted — never other literals on the same line/statement.
-_JSON_API = re.compile(r"(?:^|\W|\.)(?:put|putOpt|getOpt|getString|optString|getInt|optInt|getBoolean|optBoolean|getLong|optLong|getDouble|optDouble|getJSONObject|optJSONObject|getJSONArray|optJSONArray|opt|remove|has)\s*\(")
-_JSON_GET = re.compile(r"\.(?:get|opt)\s*\(")  # .get("key") / .opt("key") — but NOT AtomicInteger.get()
+# Calls whose FIRST syntactic argument is a safe identifier (URI parameter, Room column name, etc.).
+# _call_arg_positions() records a position only when the first token after '(' is the literal itself;
+# a preceding KEY/name expression therefore cannot accidentally make the second argument safe.
 _URI_API = re.compile(r"\.(?:appendQueryParameter|appendOptionalQueryParameter|getQueryParameter|queryLong|queryString|queryInt|queryBool|queryDouble)\s*\(")
 # Room: Index("col"), ColumnInfo(name="col"), Index(value=["col"]) — the first string arg is a column.
 # ForeignKey(childColumns=["col"]) is handled by _COL_ARRAY below (array position, not call arg).
 _ROOM_CALL = re.compile(r"\b(?:Index|ColumnInfo)\s*\(")
 # Column-name array contexts: childColumns = ["col"], parentColumns = ["col"], primaryKeys = ["col"].
 # These are arrays of column-name literals; _col_array_positions() yields positions inside the [].
-_COL_ARRAY = re.compile(r"\b(?:childColumns|parentColumns|columnNames|columns|primaryKeys)\s*=\s*\[")
+_COL_ARRAY = re.compile(
+    r"(?:\b(?:childColumns|parentColumns|columnNames|columns|primaryKeys)\s*=\s*|"
+    r"\bIndex\s*\(\s*value\s*=\s*)\["
+)
 
 # ErrorMessages.kt comparison needles: string literals inside .containsAny()/.contains() calls.
 _ERROR_MESSAGES_FILE = "app/src/main/java/tv/own/owntv/core/util/ErrorMessages.kt"
 _NEEDLE_CALL = re.compile(r"\.(?:containsAny|contains)\s*\(")
 
+# JSON object/array methods. These names are only safe after _json_call_positions() proves that the
+# receiver is a JSONObject/JSONArray (or that the call is inside JSONObject().apply { ... }).
+_JSON_METHODS = (
+    "put|putOpt|get|has|isNull|remove|opt|optString|optInt|optBoolean|optLong|optDouble|"
+    "getString|getInt|getBoolean|getLong|getDouble|getJSONObject|optJSONObject|getJSONArray|optJSONArray"
+)
+_JSON_API = re.compile(rf"\b(?:{_JSON_METHODS})\s*\(")
+_JSON_RETURN_RE = re.compile(
+    r"\bfun\s+([A-Za-z_]\w*)\s*\([^)]*\)\s*:\s*(?:org\.json\.)?(JSONObject|JSONArray)\b"
+)
 
-def _call_arg_positions(text: str, call_re: re.Pattern) -> set[int]:
-    """Character positions of the FIRST string-literal argument of every call matching [call_re].
 
-    For each match, this finds the opening paren, then scans forward (tracking paren/brace depth)
-    to the first ``"`` that begins a string literal at depth 1 inside the call. Only that literal's
-    start position is recorded — so ``json.put("title", "Visible label")`` records the position of
-    ``"title"`` but NOT ``"Visible label"``. This is the invariant: a safe call exempts ONLY its
-    first string argument, never every literal on the same line.
+def _skip_ws_and_comments(text: str, pos: int) -> int:
+    """Return the first non-whitespace token, skipping Kotlin comments."""
+    while pos < len(text):
+        if text[pos].isspace():
+            pos += 1
+            continue
+        if text.startswith("//", pos):
+            end = text.find("\n", pos + 2)
+            return len(text) if end == -1 else _skip_ws_and_comments(text, end + 1)
+        if text.startswith("/*", pos):
+            end = text.find("*/", pos + 2)
+            return len(text) if end == -1 else _skip_ws_and_comments(text, end + 2)
+        break
+    return pos
+
+
+def _first_arg_literal_position(text: str, paren_pos: int,
+                                named_args: set[str] | None = None) -> int | None:
+    """Return the opening quote iff the first syntactic argument is a direct string literal.
+
+    Looking for the first quote at depth one is insufficient: in ``put(KEY, "value")`` it finds the
+    second argument. The first expression must begin with the quote after comments/whitespace; an
+    identifier, nested call, or any other expression means there is no safe literal. A small explicit
+    named-argument allowance is used for APIs such as ``ColumnInfo(name = "column")``; callers must
+    opt into those names rather than making every ``name = "..."`` expression safe.
+    """
+    pos = _skip_ws_and_comments(text, paren_pos + 1)
+    if pos < len(text) and text[pos] == '"':
+        return pos
+    if named_args:
+        identifier = re.match(r"[A-Za-z_]\w*", text[pos:])
+        if identifier and identifier.group(0) in named_args:
+            after_name = _skip_ws_and_comments(text, pos + len(identifier.group(0)))
+            if after_name < len(text) and text[after_name] == "=":
+                value = _skip_ws_and_comments(text, after_name + 1)
+                if value < len(text) and text[value] == '"':
+                    return value
+    return None
+
+
+def _call_arg_positions(text: str, call_re: re.Pattern,
+                        named_args: set[str] | None = None) -> set[int]:
+    """Character positions of the FIRST *syntactic* string argument of matching calls.
+
+    Only a literal that starts the argument list is recorded. In particular, a literal in the second
+    argument is never treated as the first merely because it is the first quote encountered.
     """
     positions: set[int] = set()
     for m in call_re.finditer(text):
         paren_pos = text.find("(", m.start())
         if paren_pos == -1:
             continue
-        depth = 1
-        pos = paren_pos + 1
-        while pos < len(text) and depth > 0:
-            c = text[pos]
-            if c == '\\':
-                pos += 2
-                continue
-            if c == '(':
-                depth += 1
-                pos += 1
-                continue
-            if c == ')':
-                depth -= 1
-                pos += 1
-                continue
-            if depth == 1 and c == '"':
-                # Found the first string literal at argument depth — record and stop.
-                positions.add(pos)
-                break
-            pos += 1
+        literal_pos = _first_arg_literal_position(text, paren_pos, named_args)
+        if literal_pos is not None:
+            positions.add(literal_pos)
+    return positions
+
+
+_JSON_METHOD_SET = set(_JSON_METHODS.split("|"))
+_JSON_TYPES = {"JSONObject", "JSONArray"}
+
+
+def _previous_nonspace(text: str, pos: int) -> int:
+    while pos >= 0 and text[pos].isspace():
+        pos -= 1
+    return pos
+
+
+def _identifier_before(text: str, pos: int) -> tuple[int, str] | None:
+    """Return the identifier ending immediately before [pos], if any."""
+    end = _previous_nonspace(text, pos - 1)
+    if end < 0 or not (text[end].isalnum() or text[end] == "_"):
+        return None
+    start = end
+    while start >= 0 and (text[start].isalnum() or text[start] == "_"):
+        start -= 1
+    return start + 1, text[start + 1:end + 1]
+
+
+def _matching_open_paren(text: str, close_pos: int) -> int | None:
+    depth = 0
+    for pos in range(close_pos, -1, -1):
+        if text[pos] == ")":
+            depth += 1
+        elif text[pos] == "(":
+            depth -= 1
+            if depth == 0:
+                return pos
+    return None
+
+
+def _collect_json_return_functions() -> set[str]:
+    """Collect JSON-returning function names across the Kotlin source tree."""
+    functions: set[str] = set()
+    if not SRC.is_dir():
+        return functions
+    for kt in SRC.rglob("*.kt"):
+        functions.update(match.group(1) for match in _JSON_RETURN_RE.finditer(
+            kt.read_text(encoding="utf-8")))
+    return functions
+
+
+def _json_type_names(text: str, json_return_functions: set[str] | None = None) -> set[str]:
+    """Find variables/parameters with an explicit or constructor-inferred JSON type.
+
+    This intentionally does not assume that every ``put``/``get`` receiver is JSON. A mutable map,
+    AtomicInteger, or arbitrary application class must remain outside the protocol exemption.
+    """
+    names: set[str] = set()
+    typed = re.compile(
+        r"\b(?:val|var)\s+([A-Za-z_]\w*)\s*:\s*(?:org\.json\.)?(JSONObject|JSONArray)\b"
+    )
+    parameter = re.compile(
+        r"(?:\(|,)\s*([A-Za-z_]\w*)\s*:\s*(?:org\.json\.)?(JSONObject|JSONArray)\b"
+    )
+    constructor = re.compile(
+        r"\b(?:val|var)\s+([A-Za-z_]\w*)\s*=\s*(?:org\.json\.)?(JSONObject|JSONArray)\s*\("
+    )
+    for pattern in (typed, parameter, constructor):
+        names.update(m.group(1) for m in pattern.finditer(text))
+
+    # Propagate calls whose declared return type is JSON, e.g. SettingsRepository.exportSettings().
+    # This keeps the receiver proof contextual without treating every ``put`` receiver as JSON.
+    returns = set(json_return_functions or ())
+    returns.update(match.group(1) for match in _JSON_RETURN_RE.finditer(text))
+    returned_assignment = re.compile(
+        r"\b(?:val|var)\s+([A-Za-z_]\w*)\s*=\s*(?:[A-Za-z_]\w*\.)*([A-Za-z_]\w*)\s*\("
+    )
+    for match in returned_assignment.finditer(text):
+        if match.group(2) in returns:
+            names.add(match.group(1))
+
+    # Propagate the common ``val child = parent.optJSONObject(...)`` form when parent is already
+    # verified, or when the RHS visibly starts from a JSONObject/JSONArray constructor.
+    result = re.compile(
+        r"\b(?:val|var)\s+([A-Za-z_]\w*)\s*=\s*([^;\n]+?)\.\s*"
+        r"(?:opt|get)(JSONObject|JSONArray)\s*\("
+    )
+    changed = True
+    while changed:
+        changed = False
+        for m in result.finditer(text):
+            rhs = m.group(2)
+            if re.search(r"\b(?:JSONObject|JSONArray)\s*\(", rhs) or any(
+                re.search(rf"\b{re.escape(name)}\b", rhs) for name in names
+            ):
+                if m.group(1) not in names:
+                    names.add(m.group(1))
+                    changed = True
+    return names
+
+
+def _json_receiver_is_json(text: str, end: int, names: set[str], depth: int = 0) -> bool:
+    """Whether the receiver expression ending immediately before a dot is JSON-typed."""
+    if depth > 12:
+        return False
+    pos = _previous_nonspace(text, end - 1)
+    while pos >= 0 and text[pos] == "?":  # Kotlin safe-call: json?.optString(...)
+        pos = _previous_nonspace(text, pos - 1)
+    if pos < 0:
+        return False
+    if text[pos] == ")":
+        open_pos = _matching_open_paren(text, pos)
+        if open_pos is None:
+            return False
+        token = _identifier_before(text, open_pos)
+        if token is None:
+            return False
+        token_start, name = token
+        if name in _JSON_TYPES:
+            return True  # JSONObject(...).put(...) / JSONArray(...).put(...)
+        if name not in _JSON_METHOD_SET:
+            return False
+        dot = _previous_nonspace(text, token_start - 1)
+        return dot >= 0 and text[dot] == "." and _json_receiver_is_json(text, dot, names, depth + 1)
+    token = _identifier_before(text, pos + 1)
+    return token is not None and token[1] in names | _JSON_TYPES
+
+
+def _matching_close_brace(text: str, open_pos: int) -> int:
+    """Find a Kotlin block's closing brace while ignoring comments and string contents."""
+    depth = 0
+    pos = open_pos
+    while pos < len(text):
+        if text.startswith("//", pos):
+            end = text.find("\n", pos + 2)
+            pos = len(text) if end == -1 else end + 1
+            continue
+        if text.startswith("/*", pos):
+            end = text.find("*/", pos + 2)
+            pos = len(text) if end == -1 else end + 2
+            continue
+        if text.startswith('"""', pos):
+            end = text.find('"""', pos + 3)
+            pos = len(text) if end == -1 else end + 3
+            continue
+        if text[pos] == '"':
+            _, end = _scan_double_quoted(text, pos, len(text))
+            pos = len(text) if end is None else end
+            continue
+        if text[pos] == "{":
+            depth += 1
+        elif text[pos] == "}":
+            depth -= 1
+            if depth == 0:
+                return pos
+        pos += 1
+    return len(text)
+
+
+def _json_scope_ranges(text: str) -> list[tuple[int, int]]:
+    """Ranges for unqualified JSON calls inside JSONObject/JSONArray scope functions."""
+    patterns = (
+        re.compile(r"(?:org\.json\.)?(?:JSONObject|JSONArray)\s*\([^{}]*\)\s*\.\s*"
+                   r"(?:apply|also|run)\s*\{"),
+        re.compile(r"\bwith\s*\(\s*(?:org\.json\.)?(?:JSONObject|JSONArray)\s*\([^{}]*\)\s*\)\s*\{"),
+    )
+    ranges: list[tuple[int, int]] = []
+    for pattern in patterns:
+        for match in pattern.finditer(text):
+            open_pos = text.rfind("{", match.start(), match.end())
+            if open_pos >= 0:
+                ranges.append((open_pos, _matching_close_brace(text, open_pos)))
+    return ranges
+
+
+def _json_call_positions(text: str, json_return_functions: set[str] | None = None) -> set[int]:
+    """Safe first-argument positions for calls proven to operate on org.json objects/arrays."""
+    names = _json_type_names(text, json_return_functions)
+    scopes = _json_scope_ranges(text)
+    positions: set[int] = set()
+    for match in _JSON_API.finditer(text):
+        paren_pos = text.find("(", match.start())
+        if paren_pos == -1:
+            continue
+        previous = _previous_nonspace(text, match.start() - 1)
+        verified = previous >= 0 and text[previous] == "." and _json_receiver_is_json(text, previous, names)
+        if not verified and (previous < 0 or text[previous] != "."):
+            verified = any(start <= match.start() <= end for start, end in scopes)
+        if verified:
+            literal_pos = _first_arg_literal_position(text, paren_pos)
+            if literal_pos is not None:
+                positions.add(literal_pos)
     return positions
 
 
@@ -477,15 +705,9 @@ def _is_safe(rel_path: str, content: str, stmt: str, line: str, allowlist: set[t
     # JSON object keys written inline ("key": value).
     if _JSON_KEY.match(content):
         return True
-    # Filesystem-ish paths (contain a slash, no spaces).
-    if _PATH.match(content) and " " not in content:
-        return True
-    # Dotted protocol tokens / file extensions: application/json, .mp4, owntv.db.bak.
-    if _DOTTED.match(content):
-        return True
-    # snake_case / kebab-case / dotted preference or DataStore keys (have a separator, no spaces).
-    if _IDENT_KEY.match(content) and " " not in content:
-        return True
+    # Identifier/path/file-extension spelling is intentionally NOT a safe category. Those shapes are
+    # common in visible copy ("sign-in", "retry_later", "audio-only", "and/or"). The contextual
+    # preference/File/resolve positions above are the reviewed proof that such a value is a key/path.
     return False
 
 
@@ -508,13 +730,16 @@ def _load_assertion_allowlist() -> set[tuple[str, str]]:
 _GENERATED_MARKER = "// DO NOT EDIT — generated"
 
 
-def _compute_safe_positions(text: str, rel_path: str) -> set[int]:
+def _compute_safe_positions(text: str, rel_path: str,
+                            json_return_functions: set[str] | None = None) -> set[int]:
     """All character positions of literals that are safe by CALL ARGUMENT position.
 
     This is the position-based enforcement of the invariant: a safe call exempts ONLY its string
     argument(s), never every literal on the same line. Aggregates:
-      - JSON API first-arg positions (.put/.getString/.optJSONObject/... — first string arg only)
+      - verified JSONObject/JSONArray API first-arg positions (.put/.getString/.optJSONObject/...)
       - URI API first-arg positions (.appendQueryParameter/.queryLong/... — first string arg only)
+      - DataStore key factory arguments (stringPreferencesKey/etc.)
+      - File constructor and path resolver arguments
       - Room Index()/ColumnInfo() first-arg positions (column name)
       - Room column-name array positions (childColumns=[...], primaryKeys=[...])
       - Perf.stamp() first-arg positions
@@ -525,10 +750,12 @@ def _compute_safe_positions(text: str, rel_path: str) -> set[int]:
       - ErrorMessages.kt .containsAny()/.contains() all-arg positions (comparison needles)
     """
     safe: set[int] = set()
-    safe |= _call_arg_positions(text, _JSON_API)
-    safe |= _call_arg_positions(text, _JSON_GET)
+    safe |= _json_call_positions(text, json_return_functions)
     safe |= _call_arg_positions(text, _URI_API)
-    safe |= _call_arg_positions(text, _ROOM_CALL)
+    safe |= _call_arg_positions(text, _PREF_KEY_CALL)
+    safe |= _call_all_arg_positions(text, _FILE_PATH_CALL)
+    safe |= _call_arg_positions(text, _PATH_METHOD_CALL)
+    safe |= _call_arg_positions(text, _ROOM_CALL, {"name"})
     safe |= _col_array_positions(text)
     safe |= _call_arg_positions(text, _PERF_STAMP)
     safe |= _annotation_arg_positions(text, _SUPPRESS_ANN)
@@ -563,6 +790,7 @@ def _expand_nested_safe_positions(text: str, safe_positions: set[int]) -> set[in
 def _scan() -> dict[tuple[str, str], int]:
     """Return the multiset {(rel_path, normalised_content): occurrence_count} of unsafe literals."""
     allowlist = _load_assertion_allowlist()
+    json_return_functions = _collect_json_return_functions()
     counts: Counter = Counter()
     for kt in sorted(SRC.rglob("*.kt")):
         rel = kt.relative_to(ROOT).as_posix()
@@ -570,7 +798,8 @@ def _scan() -> dict[tuple[str, str], int]:
         if _GENERATED_MARKER in text[:120]:
             continue
         lines = text.splitlines()
-        safe_positions = _expand_nested_safe_positions(text, _compute_safe_positions(text, rel))
+        safe_positions = _expand_nested_safe_positions(
+            text, _compute_safe_positions(text, rel, json_return_functions))
         for start, end, raw in _iter_literals(text):
             content = _decode(raw)
             line_no = text.count("\n", 0, start)
@@ -607,6 +836,33 @@ def _scanner_version(text: str) -> int | None:
     return None
 
 
+def _unescape_serialized(value: str) -> str:
+    """Decode the baseline escape format left-to-right.
+
+    Backslashes are escaped before ``\\n``/``\\t`` during serialization. Replacing ``\\n`` first
+    therefore turns the literal two-character sequence ``\\\\n`` into a backslash plus a real newline.
+    A small state machine preserves that distinction and leaves unknown escapes losslessly intact.
+    """
+    out: list[str] = []
+    pos = 0
+    while pos < len(value):
+        if value[pos] != "\\" or pos + 1 >= len(value):
+            out.append(value[pos])
+            pos += 1
+            continue
+        nxt = value[pos + 1]
+        if nxt == "\\":
+            out.append("\\")
+        elif nxt == "n":
+            out.append("\n")
+        elif nxt == "t":
+            out.append("\t")
+        else:
+            out.extend(("\\", nxt))
+        pos += 2
+    return "".join(out)
+
+
 def _parse(text: str) -> dict[tuple[str, str], int]:
     out: Counter = Counter()
     for raw in text.splitlines():
@@ -621,8 +877,7 @@ def _parse(text: str) -> dict[tuple[str, str], int]:
             n = int(count)
         except ValueError:
             continue
-        content = esc.replace("\\n", "\n").replace("\\t", "\t").replace("\\\\", "\\")
-        out[(rel, content)] = n
+        out[(rel, _unescape_serialized(esc))] = n
     return dict(out)
 
 

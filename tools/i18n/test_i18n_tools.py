@@ -456,6 +456,14 @@ class TestValidateStrings(unittest.TestCase):
         self.assertEqual(rc, 0, f"b+es+419 was rejected: {out}")
         self.assertNotIn("invalid resourceQualifier", out)
 
+    def test_plain_script_qualifier_rejected_by_aapt2_policy(self):
+        """Android script folders must use b+ syntax; sr-Latn is not an aapt2 resource qualifier."""
+        self.assertIsNone(self.vs._QUAL_RE.fullmatch("sr-Latn"))
+        self.assertIsNone(self.vs._QUAL_RE.fullmatch("b+de"))
+        self.assertIsNone(self.vs._QUAL_RE.fullmatch("b+en+US"))
+        self.assertIsNotNone(self.vs._QUAL_RE.fullmatch("b+sr+Latn"))
+        self.assertIsNotNone(self.vs._QUAL_RE.fullmatch("b+es+419"))
+
     def test_b_plus_lowercase_script_rejected(self):
         """b+sr+latn (lowercase script) must be rejected — Android requires title-case script."""
         source = '<resources><string name="hello">Hello</string></resources>'
@@ -524,6 +532,37 @@ class TestValidateStrings(unittest.TestCase):
 
     # --- translatable=false placement and formatting fixes ---
 
+    def test_source_donottranslate_requires_false(self):
+        """Every source entry in donottranslate.xml must explicitly be non-translatable."""
+        source = '<resources><string name="hello">Hello</string></resources>'
+        locales = _full_tier1()
+        res = _make_fixture(self.tmpdir, source, locales)
+        (res / "values/donottranslate.xml").write_text(
+            '<resources><string name="hidden">Visible text</string></resources>')
+        rc, out = self._run(res, self.tmpdir / "tools/i18n/locales.json")
+        self.assertEqual(rc, 1, out)
+        self.assertIn("must declare translatable=\"false\"", out)
+
+    def test_source_donottranslate_collides_with_source_key(self):
+        """The constants namespace may not duplicate a key from strings*.xml."""
+        source = '<resources><string name="hidden">Visible text</string></resources>'
+        locales = _full_tier1()
+        res = _make_fixture(self.tmpdir, source, locales)
+        (res / "values/donottranslate.xml").write_text(
+            '<resources><string name="hidden" translatable="false">Protocol</string></resources>')
+        rc, out = self._run(res, self.tmpdir / "tools/i18n/locales.json")
+        self.assertEqual(rc, 1, out)
+        self.assertIn("duplicate key 'hidden'", out)
+
+    def test_source_donottranslate_valid_entry_passes(self):
+        source = '<resources><string name="hello">Hello</string></resources>'
+        locales = _full_tier1()
+        res = _make_fixture(self.tmpdir, source, locales)
+        (res / "values/donottranslate.xml").write_text(
+            '<resources><string name="brand" translatable="false">OwnTV</string></resources>')
+        rc, out = self._run(res, self.tmpdir / "tools/i18n/locales.json")
+        self.assertEqual(rc, 0, out)
+
     def test_translatable_false_in_strings_xml_rejected(self):
         """translatable='false' inside strings.xml must be rejected — it belongs in donottranslate.xml."""
         source = '<resources><string name="brand" translatable="false">OwnTV</string><string name="hello">Hello</string></resources>'
@@ -565,13 +604,13 @@ class TestValidateStrings(unittest.TestCase):
         self.assertEqual(rc, 1, out)
         self.assertIn("translation-only key 'leaked'", out)
 
-    def test_date_time_placeholder_recognized(self):
-        "%1$tY (date-time) must be recognized as positional, not flagged as unescaped percent."""
-        source = '<resources><string name="year">Year %1$tY</string></resources>'
+    def test_full_java_format_placeholders_recognized(self):
+        "%1$tY, %1$tL and %1$S must be recognized as positional, not flagged as unescaped percent."""
+        source = '<resources><string name="year">Year %1$tY %1$tL %1$S</string></resources>'
         locales = _full_tier1()
         res = _make_fixture(self.tmpdir, source, locales)
         rc, out = self._run(res, self.tmpdir / "tools/i18n/locales.json")
-        self.assertEqual(rc, 0, f"date-time placeholder was rejected: {out}")
+        self.assertEqual(rc, 0, f"Java format placeholders were rejected: {out}")
 
     def test_whole_string_quoted_apostrophe_accepted(self):
         """'This\'ll work' wrapped in whole-string double quotes is valid Android — not rejected."""
@@ -689,9 +728,12 @@ private fun String.containsAny(vararg n: String) = n.any { contains(it) }
 
     def test_room_index_column_name_safe(self):
         """Index("sourceId") — Room entity column name, not display text."""
-        self._write_kt("Entity.kt", 'package x\nimport androidx.room.Entity\nimport androidx.room.Index\n@Entity(indices = [Index("sourceId")])\nclass E\n')
+        self._write_kt("Entity.kt", 'package x\nimport androidx.room.Entity\nimport androidx.room.Index\n@Entity(indices = [Index("sourceId"), Index(value = ["contentKey", "profileId"])])\nclass E\n')
         counts = self.chs._scan()
-        self.assertNotIn("sourceId", {k[1] for k in counts}, "Room Index() column name was not exempted")
+        contents = {k[1] for k in counts}
+        self.assertNotIn("sourceId", contents, "Room Index() column name was not exempted")
+        self.assertNotIn("contentKey", contents, "Room Index(value=[...]) column name was not exempted")
+        self.assertNotIn("profileId", contents, "Room Index(value=[...]) column name was not exempted")
 
     def test_room_primary_keys_safe(self):
         """primaryKeys = ["profileId", "contentKey"] — Room primary key column names."""
@@ -750,6 +792,12 @@ private fun String.containsAny(vararg n: String) = n.any { contains(it) }
         rc = self.chs.cmd_verify(Args())
         self.assertEqual(rc, 0)
 
+    def test_scanner_migration_workflow_freezes_app_tree(self):
+        """Version migration must not be able to bootstrap over application-source changes."""
+        workflow = (ROOT / ".github/workflows/i18n.yml").read_text()
+        self.assertIn('git diff --name-only "$BASE_SHA" HEAD -- app/src/main', workflow)
+        self.assertIn("Scanner migrations may not change app/src/main", workflow)
+
     def test_stale_baseline_detected(self):
         """Deleting committed baseline entries while leaving literals in source must fail."""
         self._write_kt("Main.kt", 'package x\nval x = "Hello"\nval y = "World"\n')
@@ -801,6 +849,55 @@ private fun String.containsAny(vararg n: String) = n.any { contains(it) }
         self.assertIn("Visible label", unsafe, "JSON .put() value literal was wrongly exempted")
         self.assertNotIn("title", unsafe, "JSON .put() key was not exempted")
 
+    def test_first_argument_must_be_literal_and_json_receiver_verified(self):
+        """Only a direct first argument on a verified JSONObject/URI call is safe.
+
+        A key variable followed by a visible value must not make the value safe, and a MutableMap's
+        put() must not inherit JSONObject's protocol exemption merely from sharing the method name.
+        """
+        kt = '''package x
+import org.json.JSONObject
+fun f(json: JSONObject, builder: android.net.Uri.Builder, key: String,
+      values: MutableMap<String, Int>) {
+    json.put(key, "Visible title")
+    builder.appendQueryParameter(key, "Visible value")
+    values.put("Visible category", 1)
+}
+'''
+        self._write_kt("Calls.kt", kt)
+        unsafe = {k[1] for k in self.chs._scan()}
+        self.assertIn("Visible title", unsafe)
+        self.assertIn("Visible value", unsafe)
+        self.assertIn("Visible category", unsafe)
+
+    def test_content_shape_is_not_a_safe_category(self):
+        """Kebab/snake/path-looking UI copy must remain in the ratchet; key factories are contextual."""
+        kt = '''package x
+import androidx.datastore.preferences.core.stringPreferencesKey
+fun f() {
+    Text("sign-in")
+    Text("audio-only")
+    Text("and/or")
+    Text("retry_later")
+    Text("retry.later")
+    stringPreferencesKey("retry_later")
+}
+'''
+        self._write_kt("Shapes.kt", kt)
+        unsafe = {k[1] for k in self.chs._scan()}
+        self.assertTrue({"sign-in", "audio-only", "and/or", "retry_later", "retry.later"} <= unsafe)
+        # The same spelling is safe only at the explicit DataStore key factory call.
+        self.assertEqual(sum(1 for key in self.chs._scan() if key[1] == "retry_later"), 1)
+
+    def test_baseline_escape_round_trip_preserves_backslash_sequences(self):
+        """A literal backslash followed by 'n' must not deserialize as a real newline."""
+        counts = {
+            ("Main.kt", r"literal\nsequence"): 1,
+            ("Main.kt", "actual\nnewline\tand\\slash"): 2,
+        }
+        encoded = self.chs._serialize(counts)
+        self.assertEqual(self.chs._parse(encoded), counts)
+
     def test_json_call_does_not_exempt_adjacent_literal(self):
         """A literal on the same line as a JSON call but NOT its argument must remain unsafe.
         error("geo no match") on a line with .optJSONArray("results") — 'geo no match' is the
@@ -846,6 +943,18 @@ private fun String.containsAny(vararg n: String) = n.any { contains(it) }
         self.assertIn("All", scan1)
         self.assertIn("Everything", scan2)
         self.assertNotIn("All", scan2, "baseline scan ignored the nested interpolation literal")
+
+    def test_room_columninfo_named_column_safe(self):
+        """ColumnInfo(name = "profileId") is a contextual Room column declaration."""
+        kt = '''package x
+import androidx.room.ColumnInfo
+class E {
+    @ColumnInfo(name = "profileId")
+    val id: Long = 0
+}
+'''
+        self._write_kt("Entity.kt", kt)
+        self.assertNotIn("profileId", {k[1] for k in self.chs._scan()})
 
     def test_room_index_value_literal_not_safe(self):
         """Index(value = ["col"]) — the column name is safe, but an adjacent display literal is not."""

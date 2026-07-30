@@ -12,7 +12,8 @@ Owns (docs/internationalization.md 0d / 4c / 4d):
     like ``&amp;`` and ``&lt;`` are not false-positive'd.
   - duplicate keys (strings, plurals, arrays — all detected BEFORE overwrite).
   - non-translatable leakage into translation files, and translatable="false" placement: a
-    false-marked string inside strings.xml (not donottranslate.xml) is rejected.
+    false-marked string inside strings.xml (not donottranslate.xml) is rejected; every source
+    donottranslate.xml entry must be false-marked and its keys cannot collide with strings*.xml.
   - empty translations for packaged locales.
   - translation-only keys (keys in a translation file that don't exist in source, including leaked
     donottranslate keys).
@@ -52,18 +53,18 @@ _APPROVED_TRANSLATION_STATES = {"translated", "approved"}
 # "50% off" is not matched. Java's date/time conversion is a single conversion consisting of
 # t/T plus a suffix (Y, m, d, H, ...), so it must be an alternative to ordinary conversions rather
 # than an optional prefix followed by another required conversion character.
-_DATE_CONVERSION = r"[tT][HIklMNSpzZsQYyBbhAaCceRTrYDFjmde]"
-_ORDINARY_CONVERSION = r"[sdifL@bBhHcCoxXeEgGaAn%]"
+_DATE_CONVERSION = r"[tT][HIklMNSLpzZsQYyBbhAaCceRTrYDFjmde]"
+_ORDINARY_CONVERSION = r"[sSidfL@bBhHcCoxXeEgGaAn%]"
 _FMT = re.compile(
     rf"%(?:\d+\$)?[\-#+0,(]*\d*(?:\.\d+)?(?:{_DATE_CONVERSION}|{_ORDINARY_CONVERSION})"
 )
 # Positional only: %1$s, %2$.2f, %1$tY ... — captures the 1-based index for parity checking.
 _POS = re.compile(
-    rf"%(\d+)\$[\-#+0,(]*\d*(?:\.\d+)?(?:{_DATE_CONVERSION}|[sdifL@bBhHcCoxXeEgGaA])"
+    rf"%(\d+)\$[\-#+0,(]*\d*(?:\.\d+)?(?:{_DATE_CONVERSION}|[sSidfL@bBhHcCoxXeEgGaA])"
 )
 # Bare (non-positional): %s %d %f %tY ... — forbidden in source so translators can reorder.
 _BARE = re.compile(
-    rf"%(?!\d+\$)[\-#+0,(]*\d*(?:\.\d+)?(?:{_DATE_CONVERSION}|[sdifL@bBhHcCoxXeEgGaA])"
+    rf"%(?!\d+\$)[\-#+0,(]*\d*(?:\.\d+)?(?:{_DATE_CONVERSION}|[sSidfL@bBhHcCoxXeEgGaA])"
 )
 # Valid XML entity: &amp; &lt; &#123; &#x1F; ...
 _ENTITY = re.compile(r"&(?:[a-zA-Z]+|#x?[0-9]+);")
@@ -132,6 +133,46 @@ def _parse_dir(directory: Path) -> tuple[dict[str, dict], list[str]]:
                 out[key] = {"plurals": qtys, "kind": "plurals"}
             elif el.tag == "string-array":
                 out[key] = {"array": [_flatten_text(it) for it in el.findall("item")], "kind": "array"}
+    return out, errs
+
+
+def _parse_donottranslate_file(file_path: Path, tag: str) -> tuple[dict[str, dict], list[str]]:
+    """Parse the source constants file and require every entry to be explicitly non-translatable.
+
+    ``donottranslate.xml`` is intentionally outside the normal source map: its keys must never be
+    covered or exported. It still needs structural validation, and its key namespace must not collide
+    with any ``strings*.xml`` source key.
+    """
+    out: dict[str, dict] = {}
+    errs: list[str] = []
+    if not file_path.is_file():
+        return out, errs
+    try:
+        root = ET.parse(file_path).getroot()
+    except ET.ParseError as e:
+        return out, [f"{tag} {file_path.name}: XML parse error: {e}"]
+    for el in root:
+        name = el.get("name")
+        if not name:
+            errs.append(f"{tag} {file_path.name}: every resource entry needs a name")
+            continue
+        if el.tag == "string":
+            key = name
+        elif el.tag == "plurals":
+            key = name + "#"
+        elif el.tag == "string-array":
+            key = name + "[]"
+        else:
+            errs.append(f"{tag} {file_path.name}: unsupported resource element <{el.tag}>")
+            continue
+        if key in out:
+            errs.append(f"{tag} {file_path.name}: duplicate key '{name}' ({el.tag})")
+            continue
+        if el.get("translatable") != "false":
+            errs.append(
+                f"{tag} {file_path.name}: '{name}' must declare translatable=\"false\""
+            )
+        out[key] = {"kind": el.tag, "translatable": el.get("translatable") == "false"}
     return out, errs
 
 
@@ -317,17 +358,15 @@ _EXPECTED_TIER1_TAGS = {
 # Valid Android resource qualifier forms for locales:
 #   xx              — language only (en, de, ar)
 #   xx-rYY          — language + region (en-rGB, pt-rPT)
-#   xx-Script       — language + script (zh-Hans)  [4-letter script, title case]
-#   b+xx            — the Android b+ folder form, language only
-#   b+xx+Script     — the b+ form with a script subtag (b+sr+Latn)
-#   b+xx+YY         — the b+ form with a 2-letter region subtag
-#   b+xx+419        — the b+ form with a UN M.49 numeric region subtag (b+es+419)
-# Script subtags are 4 letters, title case (Latn, Hans, Hant, Cyrl). Region subtags are 2 uppercase
-# letters OR 3 digits (UN M.49). Lowercase script (b+sr+latn) is REJECTED — Android requires
-# canonical capitalisation.
+#   b+xx+Script     — the Android b+ form with a script subtag (b+sr+Latn)
+#   b+xx+419        — the Android b+ form with a UN M.49 numeric region (b+es+419)
+# Script-qualified resources MUST use b+ syntax: aapt2 rejects the tempting ``sr-Latn`` folder.
+# Bare b+xx and b+xx+YY forms are intentionally rejected; the catalogue uses the canonical plain
+# language/xx-rYY forms for languages/regions and b+ only where Android requires script/numeric form.
+# Script subtags are 4 letters, title case (Latn, Hans, Hant, Cyrl); numeric regions are three digits.
 _QUAL_RE = re.compile(
-    r"^(?:[a-z]{2,3}(?:-r[A-Z]{2}|-[A-Z][a-z]{3})?"
-    r"|b\+[a-z]{2,3}(?:\+(?:[A-Z][a-z]{3}|[A-Z]{2}|[0-9]{3}))*)$"
+    r"^(?:[a-z]{2,3}(?:-r[A-Z]{2})?"
+    r"|b\+[a-z]{2,3}\+(?:[A-Z][a-z]{3}|[0-9]{3}))$"
 )
 
 # Canonical Weblate code mappings — pinned so a typo (pt_BR where pt_PT was meant, or es_ES swapped
@@ -497,10 +536,20 @@ def main(release: bool = False) -> int:
         data = []  # Keep reporting schema errors instead of crashing while walking malformed input.
 
     # --- source English --------------------------------------------------------
-    src, src_errs = _parse_dir(RES / "values")
+    source_values = RES / "values"
+    src, src_errs = _parse_dir(source_values)
     fails.extend(src_errs)
-    # Escaping checks run on raw XML for every strings*.xml file in values/.
-    for f in sorted((RES / "values").glob("strings*.xml")):
+    source_constants, constant_errs = _parse_donottranslate_file(
+        source_values / "donottranslate.xml", "source")
+    fails.extend(constant_errs)
+    # Constants have a separate namespace and are never translatable. A duplicate between the
+    # constants file and a strings*.xml file is still a source-key collision and must fail.
+    for key in sorted(set(src) & set(source_constants)):
+        fails.append(
+            f"source: duplicate key '{key.rstrip('#[]')}' appears in donottranslate.xml and strings*.xml"
+        )
+    # Escaping checks run on raw XML for every source resource file, including donottranslate.xml.
+    for f in sorted(source_values.glob("strings*.xml")):
         if f.name == "donottranslate.xml":
             continue
         fails.extend(_check_escaping(f))
@@ -508,6 +557,8 @@ def main(release: bool = False) -> int:
         # string in strings.xml will be picked up by Weblate as a translatable key and pollutes the
         # translation component. Check the raw XML for the attribute on <string> elements.
         fails.extend(_check_translatable_false_placement(f))
+    if (source_values / "donottranslate.xml").is_file():
+        fails.extend(_check_escaping(source_values / "donottranslate.xml"))
 
     fails.extend(_validate_source_entries(src))
 

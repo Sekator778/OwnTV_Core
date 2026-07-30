@@ -1,5 +1,5 @@
 {
-  "fromScannerVersion": 1,
-  "toScannerVersion": 2,
-  "reason": "Scanner v2 preserves nested Kotlin interpolation literals and applies safe categories by argument position. The baseline is regenerated once for those corrected extraction semantics."
+  "fromScannerVersion": 2,
+  "toScannerVersion": 3,
+  "reason": "Scanner v3 requires verified JSON receivers and first-syntactic-argument matching, removes spelling-only key/path exemptions, and fixes baseline escape decoding. The baseline is regenerated once for those corrected extraction semantics."
 }
