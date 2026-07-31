@@ -50,6 +50,55 @@ class PlaybackErrorLogTest {
         assertTrue(decoder.hardware)
     }
 
+    @Test
+    fun `legacy English reason maps to localized semantic reason`() {
+        val parsed = parsePersistedReason("Hardware video decoder is busy or can't handle this stream")
+
+        assertEquals(PlayerFailureReason.DECODER_BUSY, parsed.semantic)
+        assertEquals(null, parsed.legacyText)
+    }
+
+    @Test
+    fun `unknown legacy reason remains visible and survives rewrite`() {
+        val rawText = "Some future error we haven't mapped yet"
+        val parsed = parsePersistedReason(rawText)
+        val entry = PlaybackErrorLog.Entry(
+            atMs = 0L,
+            engine = "mpv",
+            live = false,
+            reason = parsed.semantic,
+            legacyReason = parsed.legacyText,
+            spec = null,
+            raw = null,
+            model = "",
+            android = "",
+        )
+
+        assertEquals(null, parsed.semantic)
+        assertEquals(rawText, parsed.legacyText)
+        assertEquals(rawText, entry.persistedReasonValue())
+    }
+
+    @Test
+    fun `current enum reason parses and persists by stable name`() {
+        val parsed = parsePersistedReason(PlayerFailureReason.NETWORK.name)
+        val entry = PlaybackErrorLog.Entry(
+            atMs = 0L,
+            engine = "mpv",
+            live = false,
+            reason = parsed.semantic,
+            legacyReason = parsed.legacyText,
+            spec = null,
+            raw = null,
+            model = "",
+            android = "",
+        )
+
+        assertEquals(PlayerFailureReason.NETWORK, parsed.semantic)
+        assertEquals(null, parsed.legacyText)
+        assertEquals("NETWORK", entry.persistedReasonValue())
+    }
+
     private fun entry(spec: String) = PlaybackErrorLog.Entry(
         atMs = 0L,
         engine = "mpv",

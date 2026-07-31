@@ -29,6 +29,8 @@ object PlaybackErrorLog {
         val raw: String?,
         val model: String,
         val android: String,
+        /** Pre-i18n English prose that didn't match any known [PlayerFailureReason] or legacy mapping. */
+        val legacyReason: String? = null,
         /** Structured fields written by current builds. */
         val codec: String? = null,
         val resolution: String? = null,
@@ -130,13 +132,13 @@ object PlaybackErrorLog {
         val arr = JSONArray(f.readText())
         return (0 until arr.length()).mapNotNull { i ->
             val o = arr.optJSONObject(i) ?: return@mapNotNull null
+            val persistedReason = parsePersistedReason(o.optString("reason").takeIf { it.isNotEmpty() })
             Entry(
                 atMs = o.optLong("atMs"),
                 engine = o.optString("engine"),
                 live = o.optBoolean("live"),
-                reason = o.optString("reason").takeIf { it.isNotEmpty() }?.let { key ->
-                    runCatching { PlayerFailureReason.valueOf(key) }.getOrNull()
-                },
+                reason = persistedReason.semantic,
+                legacyReason = persistedReason.legacyText,
                 spec = o.optString("spec").takeIf { it.isNotEmpty() },
                 raw = o.optString("raw").takeIf { it.isNotEmpty() },
                 model = o.optString("model"),
@@ -159,7 +161,9 @@ object PlaybackErrorLog {
                     .put("atMs", e.atMs)
                     .put("engine", e.engine)
                     .put("live", e.live)
-                    .put("reason", e.reason?.name ?: "")
+                    // Preserve an unknown pre-i18n reason when an old file is rewritten after a new
+                    // failure. Known legacy prose is upgraded to the stable enum name.
+                    .put("reason", e.persistedReasonValue())
                     // `spec` remains for backward compatibility with pre-structured entries.
                     .put("spec", e.spec ?: "")
                     .put("codec", e.codec ?: "")
@@ -197,3 +201,45 @@ private val DecoderSpec.isDirect: Boolean
         is DecoderSpec.Software -> !gpu
         is DecoderSpec.Named -> direct
     }
+
+internal data class PersistedPlaybackReason(
+    val semantic: PlayerFailureReason?,
+    val legacyText: String?,
+)
+
+/**
+ * Reads both generations of the JSON `reason` field. Current entries contain an enum name; old
+ * entries contain controlled English prose. Known prose becomes semantic state so it localizes in
+ * the current UI, while unknown prose remains visible and survives the next log rewrite.
+ */
+internal fun parsePersistedReason(value: String?): PersistedPlaybackReason {
+    val key = value?.takeIf { it.isNotBlank() }
+        ?: return PersistedPlaybackReason(semantic = null, legacyText = null)
+    val semantic = runCatching { PlayerFailureReason.valueOf(key) }.getOrNull()
+        ?: LEGACY_REASON_MAP[key]
+    return PersistedPlaybackReason(
+        semantic = semantic,
+        legacyText = key.takeIf { semantic == null },
+    )
+}
+
+internal fun PlaybackErrorLog.Entry.persistedReasonValue(): String =
+    reason?.name ?: legacyReason.orEmpty()
+
+/** Maps pre-i18n English prose stored in the `reason` field to the current [PlayerFailureReason]. */
+private val LEGACY_REASON_MAP: Map<String, PlayerFailureReason> = mapOf(
+    "Hardware video decoder is busy or can't handle this stream" to PlayerFailureReason.DECODER_BUSY,
+    "Hardware video decoder error — transient, try again" to PlayerFailureReason.DECODER_TRANSIENT,
+    "This device's decoder doesn't support this video format/profile (e.g. HEVC 10-bit)" to PlayerFailureReason.UNSUPPORTED_VIDEO,
+    "Device ran out of memory for the decoder — try closing other apps" to PlayerFailureReason.DECODER_MEMORY,
+    "DRM / secure-decoder error" to PlayerFailureReason.DRM,
+    "Provider blocked the connection — too many streams at once (HTTP 509)" to PlayerFailureReason.HTTP_509,
+    "Provider denied access (HTTP 403) — credentials, subscription, or IP block" to PlayerFailureReason.HTTP_403,
+    "Provider rejected your login (HTTP 401)" to PlayerFailureReason.HTTP_401,
+    "Stream not found on the provider (HTTP 404)" to PlayerFailureReason.HTTP_404,
+    "Provider rejected the request (HTTP 400) — bad or expired link" to PlayerFailureReason.HTTP_400,
+    "Provider's SSL certificate is invalid or expired" to PlayerFailureReason.SSL,
+    "Stream format not recognized (bad or partial stream)" to PlayerFailureReason.FORMAT,
+    "Network problem reaching the provider" to PlayerFailureReason.NETWORK,
+    "Audio output error — the device couldn't play this audio format" to PlayerFailureReason.AUDIO,
+)
