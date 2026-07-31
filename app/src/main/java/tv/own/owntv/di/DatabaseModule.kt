@@ -20,8 +20,6 @@ val databaseModule = module {
         Room.databaseBuilder(androidContext(), OwnTVDatabase::class.java, OwnTVDatabase.NAME)
             .setJournalMode(RoomDatabase.JournalMode.WRITE_AHEAD_LOGGING)
             .addMigrations(
-                OwnTVDatabase.MIGRATION_21_22,
-                OwnTVDatabase.MIGRATION_20_21,
                 OwnTVDatabase.MIGRATION_1_2,
                 OwnTVDatabase.MIGRATION_2_3,
                 OwnTVDatabase.MIGRATION_3_4,

@@ -35,12 +35,14 @@ class SourceRepository(
         profileId: Long, name: String, serverUrl: String, username: String, password: String,
         userAgent: String? = null, epgUrl: String? = null,
         syncLive: Boolean = true, syncMovies: Boolean = true, syncSeries: Boolean = true,
+        preferHls: Boolean = false,
     ): SourceEntity = addAndLink(
         profileId,
         SourceEntity(
             name = name, type = SourceType.XTREAM, url = serverUrl,
             username = username, password = password, userAgent = userAgent, epgUrl = epgUrl,
             syncLive = syncLive, syncMovies = syncMovies, syncSeries = syncSeries,
+            preferHls = preferHls,
         ),
     )
 

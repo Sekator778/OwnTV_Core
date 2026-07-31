@@ -47,9 +47,10 @@ data class SourceEntity(
     val syncLive: Boolean = true,
     val syncMovies: Boolean = true,
     val syncSeries: Boolean = true,
-    /** Whether the provider explicitly lists m3u8 in user_info.allowed_output_formats (v21). */
+    /** Whether the provider explicitly lists m3u8 in user_info.allowed_output_formats (v23). Detection
+     *  hint only — it refines the Settings wording, it does NOT gate [preferHls]. */
     val hlsSupported: Boolean = false,
-    /** User preference (v21): prioritize .m3u8 streams over .ts for Live TV when hlsSupported is true. */
+    /** User preference (v23): prioritize .m3u8 streams over .ts for Live TV and catch-up. */
     val preferHls: Boolean = false,
     val createdAt: Long = System.currentTimeMillis(),
     val lastSyncAt: Long? = null,
