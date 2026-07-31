@@ -980,10 +980,14 @@ Choose Balanced if a channel becomes unreliable.</string>
     <string name="settings_customize_hide_new">Hide — new categories added on re-sync are hidden by default</string>
     <!-- Translators: Option to show new categories added on re-sync. -->
     <string name="settings_customize_show_new">Show — new categories added on re-sync are shown by default</string>
-    <!-- Translators: Command button, selectable option, and current-state chip to hide a category. -->
+    <!-- Translators: Imperative command button to hide one or more categories. Translate as an action, not the state "Hidden". -->
     <string name="settings_customize_hide">Hide</string>
-    <!-- Translators: Command button, selectable option, and current-state chip to show a category. -->
+    <!-- Translators: Imperative command button to reveal one or more hidden categories. Translate as an action, not the state "Shown". -->
     <string name="settings_customize_show">Show</string>
+    <!-- Translators: Selected behavior and picker option meaning that categories added by a future re-sync will be hidden automatically. This names a policy, not a command button or the current state of an existing category. -->
+    <string name="settings_customize_behavior_hide">Hide</string>
+    <!-- Translators: Selected behavior and picker option meaning that categories added by a future re-sync will be shown automatically. This names a policy, not a command button or the current state of an existing category. -->
+    <string name="settings_customize_behavior_show">Show</string>
     <!-- Translators: Section header for hidden channels in the Customize screen. -->
     <string name="settings_customize_hidden_channels">Hidden channels</string>
     <!-- Translators: Section header for hidden movies in the Customize screen. -->
@@ -1007,7 +1011,7 @@ Choose Balanced if a channel becomes unreliable.</string>
         <item quantity="one"><xliff:g id="count">%1$d</xliff:g> category selected. Keep pressing ⤒ ↑ ↓ ⤓ to move it.</item>
         <item quantity="other"><xliff:g id="count">%1$d</xliff:g> categories selected. Keep pressing ⤒ ↑ ↓ ⤓ to move them together.</item>
     </plurals>
-    <!-- Translators: Button to rename a category. -->
+    <!-- Translators: Imperative label used both on a category Rename button and as the title of the dialog opened by that button. -->
     <string name="settings_customize_rename">Rename</string>
     <!-- Translators: Dialog title for renaming a provider category. -->
     <string name="settings_customize_rename_category">Rename category</string>
