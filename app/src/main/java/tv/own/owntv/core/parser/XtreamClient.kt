@@ -341,9 +341,9 @@ class XtreamClient(private val http: HttpClient) {
      * `…/timeshift/user/pass/{durationMinutes}/{yyyy-MM-dd:HH-mm}/{streamId}.ts`. The start is formatted
      * in [tz] (UTC by default — EPG timestamps are UTC; some panels expect server-local, hence the knob).
      */
-    fun timeshiftUrl(s: SourceEntity, streamId: String, startMs: Long, durationMinutes: Int, tz: java.util.TimeZone = java.util.TimeZone.getTimeZone("UTC")): String {
+    fun timeshiftUrl(s: SourceEntity, streamId: String, startMs: Long, durationMinutes: Int, tz: java.util.TimeZone = java.util.TimeZone.getTimeZone("UTC"), ext: String = "ts"): String {
         val fmt = java.text.SimpleDateFormat("yyyy-MM-dd:HH-mm", java.util.Locale.US).apply { timeZone = tz }
-        return "${base(s)}/timeshift/${s.username}/${s.password}/$durationMinutes/${fmt.format(java.util.Date(startMs))}/$streamId.ts"
+        return "${base(s)}/timeshift/${s.username}/${s.password}/$durationMinutes/${fmt.format(java.util.Date(startMs))}/$streamId.$ext"
     }
     fun movieUrl(s: SourceEntity, streamId: String, ext: String?) =
         "${base(s)}/movie/${s.username}/${s.password}/$streamId.${ext ?: "mp4"}"
@@ -351,43 +351,86 @@ class XtreamClient(private val http: HttpClient) {
         "${base(s)}/series/${s.username}/${s.password}/$episodeId.${ext ?: "mp4"}"
 
     /** Full XMLTV guide for the whole account (all channels) — the bulk EPG used by the guide grid. */
+    data class XtAccountDetails(
+        val expiryMs: Long? = null,
+        val hlsSupported: Boolean = false,
+    )
+
     /**
-     * Account expiry from the bare `player_api.php` call (`user_info.exp_date`, epoch seconds) —
-     * null when the panel reports none/unlimited or the payload is malformed. Small response; used
-     * for the Manage-sources "Expires …" line, never during sync.
+     * Account details (expiry + HLS support) from the bare `player_api.php` call
+     * (`user_info.exp_date` and `user_info.allowed_output_formats`).
+     *
+     * - [XtAccountDetails.expiryMs]: null when the panel reports none/unlimited or payload is malformed.
+     * - [XtAccountDetails.hlsSupported]: true only if `"m3u8"` is present in `allowed_output_formats`;
+     *   defaults to false when omitted, unlisted, or on network/parse failure.
      */
-    suspend fun accountExpiryMs(s: SourceEntity): Long? {
+    suspend fun fetchAccountDetails(s: SourceEntity): XtAccountDetails? {
         val u = URLEncoder.encode(s.username.orEmpty(), "UTF-8")
         val p = URLEncoder.encode(s.password.orEmpty(), "UTF-8")
-        return http.get("${base(s)}/player_api.php?username=$u&password=$p", s.userAgent) { input ->
-            var expSec: Long? = null
-            JsonReader(java.io.InputStreamReader(input, Charsets.UTF_8)).use { r ->
-                if (r.peek() != JsonToken.BEGIN_OBJECT) return@use
-                r.beginObject()
-                while (r.hasNext()) {
-                    if (r.nextName() == "user_info" && r.peek() == JsonToken.BEGIN_OBJECT) {
-                        r.beginObject()
-                        while (r.hasNext()) {
-                            if (r.nextName() == "exp_date") {
-                                expSec = when (r.peek()) {
-                                    JsonToken.STRING -> r.nextString().toLongOrNull()
-                                    JsonToken.NUMBER -> r.nextLong()
-                                    else -> { r.skipValue(); null }
+        return try {
+            http.get("${base(s)}/player_api.php?username=$u&password=$p", s.userAgent) { input ->
+                var expSec: Long? = null
+                var hlsSupported = false
+                JsonReader(java.io.InputStreamReader(input, Charsets.UTF_8)).use { r ->
+                    r.isLenient = true
+                    if (r.peek() != JsonToken.BEGIN_OBJECT) return@use
+                    r.beginObject()
+                    while (r.hasNext()) {
+                        if (r.nextName() == "user_info" && r.peek() == JsonToken.BEGIN_OBJECT) {
+                            r.beginObject()
+                            while (r.hasNext()) {
+                                when (r.nextName()) {
+                                    "exp_date" -> {
+                                        expSec = when (r.peek()) {
+                                            JsonToken.STRING -> r.nextString().toLongOrNull()
+                                            JsonToken.NUMBER -> r.nextLong()
+                                            else -> { r.skipValue(); null }
+                                        }
+                                    }
+                                    "allowed_output_formats", "user_output_formats" -> {
+                                        when (r.peek()) {
+                                            JsonToken.BEGIN_ARRAY -> {
+                                                r.beginArray()
+                                                while (r.hasNext()) {
+                                                    val fmt = r.nextStringOrNull()
+                                                    if (fmt?.equals("m3u8", ignoreCase = true) == true) {
+                                                        hlsSupported = true
+                                                    }
+                                                }
+                                                r.endArray()
+                                            }
+                                            JsonToken.STRING -> {
+                                                val str = r.nextString()
+                                                if (str.contains("m3u8", ignoreCase = true)) {
+                                                    hlsSupported = true
+                                                }
+                                            }
+                                            else -> r.skipValue()
+                                        }
+                                    }
+                                    else -> r.skipValue()
                                 }
-                            } else {
-                                r.skipValue()
                             }
+                            r.endObject()
+                        } else {
+                            r.skipValue()
                         }
-                        r.endObject()
-                    } else {
-                        r.skipValue()
                     }
+                    r.endObject()
                 }
-                r.endObject()
+                XtAccountDetails(
+                    expiryMs = expSec?.takeIf { it > 0 }?.times(1000),
+                    hlsSupported = hlsSupported,
+                )
             }
-            expSec?.takeIf { it > 0 }?.times(1000)
+        } catch (e: Exception) {
+            Log.w(TAG, "fetchAccountDetails failed for source ${s.id}", e)
+            null
         }
     }
+
+    /** Convenience delegate returning only [XtAccountDetails.expiryMs]. */
+    suspend fun accountExpiryMs(s: SourceEntity): Long? = fetchAccountDetails(s)?.expiryMs
 
     fun xmltvUrl(s: SourceEntity): String {
         val u = URLEncoder.encode(s.username.orEmpty(), "UTF-8")

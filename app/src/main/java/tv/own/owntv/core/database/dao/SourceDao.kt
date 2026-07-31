@@ -30,6 +30,12 @@ interface SourceDao {
     @Query("UPDATE sources SET lastSyncAt = :timestamp WHERE id = :id")
     suspend fun markSynced(id: Long, timestamp: Long)
 
+    @Query("UPDATE sources SET hlsSupported = :hlsSupported WHERE id = :id")
+    suspend fun updateHlsSupport(id: Long, hlsSupported: Boolean)
+
+    @Query("UPDATE sources SET preferHls = :preferHls WHERE id = :id")
+    suspend fun updatePreferHls(id: Long, preferHls: Boolean)
+
     // --- profile <-> source links (hybrid model) ---
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)

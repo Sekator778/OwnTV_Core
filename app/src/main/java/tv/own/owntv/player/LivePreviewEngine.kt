@@ -199,11 +199,14 @@ class LivePreviewEngine(
         return "$kind codec: ${e.message ?: e.javaClass.simpleName}"
     }
 
+    private var activeIsHls = false
+
     /** Technical readout for the stream-info overlay, from the active ExoPlayer formats. */
     override fun streamInfo(): List<Pair<String, String>> {
         val p = player ?: return emptyList()
         val out = ArrayList<Pair<String, String>>()
         out += "Engine" to "ExoPlayer"
+        out += "Format" to if (activeIsHls) "HLS" else "MPEG-TS"
         p.videoFormat?.let { f ->
             val line = listOfNotNull(
                 f.sampleMimeType?.substringAfterLast('/')?.let { mimeName(it) },
@@ -946,8 +949,13 @@ class LivePreviewEngine(
                 setLiveConfiguration(MediaItem.LiveConfiguration.Builder().setTargetOffsetMs(it * 1000L).build())
             }
         }.build()
-        val uri = item.localConfiguration?.uri ?: return cachedDefaultFactory!!.createMediaSource(item)
-        return if (Util.inferContentType(uri) == C.CONTENT_TYPE_HLS) cachedHlsCcFactory!!.createMediaSource(item)
+        val uri = item.localConfiguration?.uri ?: run {
+            activeIsHls = false
+            return cachedDefaultFactory!!.createMediaSource(item)
+        }
+        val isHls = Util.inferContentType(uri) == C.CONTENT_TYPE_HLS
+        activeIsHls = isHls
+        return if (isHls) cachedHlsCcFactory!!.createMediaSource(item)
         else cachedDefaultFactory!!.createMediaSource(item)
     }
 

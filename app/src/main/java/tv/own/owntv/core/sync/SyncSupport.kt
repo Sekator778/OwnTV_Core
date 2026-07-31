@@ -38,7 +38,7 @@ internal class SyncSupport(
     channelDao: ChannelDao,
     movieDao: MovieDao,
     seriesDao: SeriesDao,
-    private val sourceDao: SourceDao,
+    val sourceDao: SourceDao,
     private val customize: CustomizationStore,
     private val settings: SettingsRepository,
 ) {

@@ -2323,6 +2323,14 @@ class OwnTVPlayer(
         fun str(p: String) = m.getPropertyString(p)?.takeIf { it.isNotBlank() }
         val out = ArrayList<Pair<String, String>>()
         out += "Engine" to "mpv"
+        (str("file-format") ?: str("demuxer"))?.lowercase()?.let { d ->
+            val fmt = when {
+                d.contains("hls") -> "HLS"
+                d.contains("mpegts") -> "MPEG-TS"
+                else -> d.uppercase()
+            }
+            out += "Format" to fmt
+        }
         // Video
         val vw = m.getPropertyInt("video-params/w") ?: m.getPropertyInt("width")
         val vh = m.getPropertyInt("video-params/h") ?: m.getPropertyInt("height")
@@ -2903,11 +2911,13 @@ class OwnTVPlayer(
                             if (gen == loadGeneration) {
                                 loadUrl(catchupAlt, currentMetaSnapshot(), isLiveContent, 0L, resetRetries = false)
                             }
-                        } else if (isLiveContent && !triedAltFormat && autoRetries >= 1 && tsUrl != null && tsUrl.endsWith(".ts", ignoreCase = true)) {
+                        } else if (isLiveContent && !triedAltFormat && autoRetries >= 1 && tsUrl != null && (tsUrl.endsWith(".ts", ignoreCase = true) || tsUrl.endsWith(".m3u8", ignoreCase = true))) {
                             triedAltFormat = true
                             autoRetries = 0
-                            val alt = tsUrl.dropLast(3) + ".m3u8"
-                            android.util.Log.w(TAG, "live .ts didn't start — trying .m3u8 fallback")
+                            val isHls = tsUrl.endsWith(".m3u8", ignoreCase = true)
+                            val (from, to) = if (isHls) ".m3u8" to ".ts" else ".ts" to ".m3u8"
+                            val alt = tsUrl.dropLast(from.length) + to
+                            android.util.Log.w(TAG, "live stream didn't start ($from) — trying format fallback ($from -> $to)")
                             _buffering.value = true
                             delay(FALLBACK_RETRY_DELAY_MS)
                             if (gen == loadGeneration) {
