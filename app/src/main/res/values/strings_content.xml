@@ -65,7 +65,7 @@
     <string name="content_restore_incomplete_title">A restore didn\'t finish</string>
     <!-- Translators: Body text explaining that a restore was interrupted. "description" is a localized summary of what was being restored. Directs the user to Settings. -->
     <string name="content_restore_incomplete_message">The app closed while restoring <xliff:g id="description">%1$s</xliff:g>, so some of it may be missing. Nothing was deleted \u2014 run the same restore again from Settings \u2192 Backup &amp; Restore to fill in the rest.</string>
-    <!-- Translators: Dialog title for the playlist picker shown on the Live TV screen. -->
+    <!-- Translators: Global shell playlist picker dialog title. -->
     <string name="content_playlist_picker_title">Show playlist</string>
     <!-- Translators: Description in the playlist picker dialog. -->
     <string name="content_playlist_picker_description">Choose which playlist to browse. This applies everywhere and is remembered.</string>
@@ -75,13 +75,13 @@
     <string name="content_category_browser_title">Categories</string>
     <!-- Translators: Overlay title for the channel list overlay on the Live TV screen. -->
     <string name="content_channel_overlay_title">Channels</string>
-    <!-- Translators: Tab label for the current programme in the Live TV preview. This is a state, not a command. -->
+    <!-- Translators: Slot label inside LiveEpgCard for the current programme. -->
     <string name="content_live_now">Now</string>
-    <!-- Translators: Tab label for the upcoming programme in the Live TV preview. -->
+    <!-- Translators: Slot label inside LiveEpgCard for the upcoming programme. -->
     <string name="content_live_next">Next</string>
-    <!-- Translators: Tab label for the overview section on a movie/series detail screen. -->
+    <!-- Translators: Section heading in media details for the overview. -->
     <string name="content_media_overview">Overview</string>
-    <!-- Translators: Tab label for the cast section on a movie/series detail screen. -->
+    <!-- Translators: Section heading in media details for the cast. -->
     <string name="content_media_cast">Cast</string>
     <!-- Translators: Instructional text on the media detail screen telling the user how to close it. -->
     <string name="content_media_press_back">Press Back to close</string>
@@ -103,7 +103,7 @@
     <string name="content_download_all_episodes">Download all episodes</string>
     <!-- Translators: Button or context-menu option to play content. -->
     <string name="content_play">Play</string>
-    <!-- Translators: Section heading for the "Next up" row on a series screen. -->
+    <!-- Translators: Label inside a next-episode card. -->
     <string name="content_next_up">Next up</string>
     <!-- Translators: Status chip indicating content has been favorited. This is a state, not a command. -->
     <string name="content_favorited">Favorited</string>
@@ -115,9 +115,9 @@
     <string name="content_hide_watched">Hide watched</string>
     <!-- Translators: Button or section header for the sorting options. -->
     <string name="content_sorting">Sorting</string>
-    <!-- Translators: Tab or section label for the seasons list on a series screen. -->
+    <!-- Translators: Sorting-dialog row label for season ordering. -->
     <string name="content_seasons">Seasons</string>
-    <!-- Translators: Tab or section label for the episodes list on a season screen. -->
+    <!-- Translators: Sorting-dialog row label for episode ordering. -->
     <string name="content_episodes">Episodes</string>
     <!-- Translators: Sort option to show oldest items first. -->
     <string name="content_oldest_first">Oldest first</string>
@@ -133,7 +133,7 @@
     <string name="content_delete_subtitles">Delete OpenSub subtitles</string>
     <!-- Translators: Context-menu option to view TMDB details for a movie/series. "TMDB" is a brand name. -->
     <string name="content_tmdb_details">TMDB Details</string>
-    <!-- Translators: Context-menu option to play the trailer for a movie. -->
+    <!-- Translators: Context-menu option to play the trailer for a movie or series. -->
     <string name="content_play_trailer">Play Trailer</string>
     <!-- Translators: Context-menu option to re-fetch TMDB metadata. "TMDB" is a brand name. -->
     <string name="content_refetch_tmdb">Refetch TMDB details</string>
@@ -171,7 +171,7 @@
         <item quantity="one"><xliff:g id="category">%1$s</xliff:g> (<xliff:g id="count">%2$d</xliff:g> series)</item>
         <item quantity="other"><xliff:g id="category">%1$s</xliff:g> (<xliff:g id="count">%2$d</xliff:g> series)</item>
     </plurals>
-    <!-- Translators: Row label in media detail screens showing the content provider name. -->
+    <!-- Translators: Current sort-mode label in the SortChip toggle. -->
     <string name="content_provider">Provider</string>
     <!-- Translators: Empty-state message when a series search returns no results. "query" is the user\'s search text. -->
     <string name="content_no_series_found">No series found for \u201c<xliff:g id="query">%1$s</xliff:g>\u201d</string>
@@ -189,9 +189,9 @@
     <string name="content_refetching_tmdb">Refetching TMDB details\u2026</string>
     <!-- Translators: Loading status shown while re-searching TMDB for a title. -->
     <string name="content_researching_tmdb">Re-searching TMDB\u2026</string>
-    <!-- Translators: Instructional text on the Live TV channel card. The dot is a separator. -->
+    <!-- Translators: Instructional text on movie and series detail cards. The dot is a separator. -->
     <string name="content_ok_play_options">OK to play \u00b7 long-press for options</string>
-    <!-- Translators: Button to resume playback from a saved position. "position" is a formatted time string such as 12:34. -->
+    <!-- Translators: Secondary informational text showing a resume position. "position" is a formatted time string such as 12:34. -->
     <string name="content_resume_at">Resume <xliff:g id="position">%1$s</xliff:g></string>
     <!-- Translators: Duration display for content longer than one hour. "hours" and "minutes" are integers. -->
     <string name="content_duration_hours"><xliff:g id="hours">%1$d</xliff:g>h <xliff:g id="minutes">%2$d</xliff:g>m</string>
@@ -199,9 +199,9 @@
     <string name="content_duration_minutes"><xliff:g id="minutes">%1$d</xliff:g>m</string>
     <!-- Translators: Rating display with star symbol. "rating" is a decimal number such as 7.5. The star is a visual element. -->
     <string name="content_rating">\u2605 <xliff:g id="rating">%1$.1f</xliff:g></string>
-    <!-- Translators: Invisible separator between metadata segments in media detail screens. Double middle dot is intentional spacing. -->
+    <!-- Translators: Visible bullet separator between metadata segments in media detail screens. -->
     <string name="content_metadata_separator">  \u2022  </string>
-    <!-- Translators: Invisible separator between genre tags in media detail screens. Middle dot is intentional. -->
+    <!-- Translators: Visible middle-dot separator between genre tags and search metadata. -->
     <string name="content_genres_separator"> \u00b7 </string>
     <!-- Translators: Season/episode display format. "season" and "episode" are integers. S and E are conventional abbreviations. -->
     <string name="content_season_episode">S<xliff:g id="season">%1$d</xliff:g> \u00b7 E<xliff:g id="episode">%2$d</xliff:g></string>
@@ -225,7 +225,7 @@
     <string name="content_catchup_days">Catch-up \u00b7 <xliff:g id="days">%1$d</xliff:g>d</string>
     <!-- Translators: Context-menu option to play content in an external player. Shorter variant. -->
     <string name="content_play_external_short">Play in external player</string>
-    <!-- Translators: Context-menu option to rename a channel or movie. -->
+    <!-- Translators: Context-menu option to rename a Live TV channel. -->
     <string name="content_rename">Rename</string>
     <!-- Translators: Context-menu option to rename a channel specifically. -->
     <string name="content_rename_channel">Rename channel</string>
@@ -246,11 +246,11 @@
     </plurals>
     <!-- Translators: Search hint text in the channel category browser. -->
     <string name="content_search_channels"><xliff:g id="category">%1$s</xliff:g>\u2026</string>
-    <!-- Translators: Button to auto-match EPG guide data to channels. -->
+    <!-- Translators: Opens and labels the channel EPG matching flow. -->
     <string name="content_match_epg">Match EPG</string>
     <!-- Translators: Catch-up playback title showing which channel. "channel" is the channel name. -->
     <string name="content_catchup_title">Catch-up \u00b7 <xliff:g id="channel">%1$s</xliff:g></string>
-    <!-- Translators: Button to rewind to a specific time in catch-up playback. "time" is formatted for the active UI locale. Keep this as one complete label. -->
+    <!-- Translators: Localized player metadata subtitle for catch-up playback. "time" is formatted for the active UI locale. Keep this as one complete label. -->
     <string name="content_rewind_at">Rewind \u00b7 <xliff:g id="time">%1$s</xliff:g></string>
     <!-- Translators: Instructional text in the catch-up playback screen. -->
     <string name="content_catchup_prompt">Pick a recent program to replay from the start.</string>
@@ -292,7 +292,7 @@
     <string name="content_category_sports">Sports</string>
     <!-- Translators: Predefined category name for the "All Movies" view. -->
     <string name="content_category_all_movies">All Movies</string>
-    <!-- Translators: Predefined category name for Action movies. -->
+    <!-- Translators: Default category name for Action content (movies and series). -->
     <string name="content_category_action">Action</string>
     <!-- Translators: Predefined category name for Drama content. -->
     <string name="content_category_drama">Drama</string>
@@ -328,7 +328,7 @@
     <string name="content_preview_select_channel">Select a channel to preview it here.</string>
     <!-- Translators: Banner shown when the device is offline. -->
     <string name="content_offline_banner">You\'re offline \u2014 playback and updates won\'t work until you reconnect.</string>
-    <!-- Translators: Button in the subtitle track dialog to select a local subtitle file. -->
+    <!-- Translators: StorageBrowser dialog title for selecting a local subtitle file. -->
     <string name="content_subtitle_select_file">Select local subtitle file</string>
     <!-- Translators: Error when a local subtitle file cannot be loaded. -->
     <string name="content_subtitle_load_failed">Couldn\'t load the subtitle file.</string>
@@ -340,7 +340,7 @@
     <string name="content_search_categories">Search categories\u2026</string>
     <!-- Translators: Empty-state message when the category search returns no results. -->
     <string name="content_no_categories_match">No categories match</string>
-    <!-- Translators: Action button to resume playback. This is a state label for the currently-playing item. -->
+    <!-- Translators: Imperative action in the clickable top-bar Continue chip. -->
     <string name="content_action_resume">Resume</string>
     <!-- Translators: Action button to play content from the beginning. -->
     <string name="content_action_play">Play</string>
@@ -362,7 +362,7 @@
     <string name="content_live_time_range"><xliff:g id="start">%1$s</xliff:g> \u2013 <xliff:g id="end">%2$s</xliff:g></string>
     <!-- Translators: Remaining time display for a live programme. "end" is the end time; "minutes" is the minutes remaining. -->
     <string name="content_live_time_remaining"><xliff:g id="end">%1$s</xliff:g> \u00b7 <xliff:g id="minutes">%2$d</xliff:g> min left</string>
-    <!-- Translators: Button label for the Browse action in the bottom navigation bar. -->
+    <!-- Translators: Sidebar section heading for browsing content. -->
     <string name="common_browse">Browse</string>
 
 
@@ -488,7 +488,7 @@
     <string name="content_epg_no_programme">No program at this time.</string>
     <!-- Translators: Empty-state message on the EPG screen. Directs the user to add an EPG source. "EPG" and "XMLTV" are technical names. -->
     <string name="content_epg_add_description">Add an EPG (XMLTV) source to fill the guide with programs.</string>
-    <!-- Translators: Empty-state message on the EPG screen when no programme details are available. -->
+    <!-- Translators: Help text in the EPG channel-action dialog. -->
     <string name="content_epg_favourite_description">Favorite this channel, or set its guide data.</string>
     <!-- Translators: Label for the guide category filter in the EPG screen. -->
     <string name="content_epg_guide_category">Guide category</string>
@@ -506,7 +506,7 @@
     <string name="content_epg_jump_now">Jump to Now</string>
     <!-- Translators: Programme runtime display. "minutes" is the duration in minutes. "m" is an abbreviation for minutes. -->
     <string name="content_epg_runtime"><xliff:g id="minutes">%1$d</xliff:g>m</string>
-    <!-- Translators: Button to review EPG auto-matches. -->
+    <!-- Translators: EPG review-dialog heading. -->
     <string name="content_epg_review_matches">Review EPG matches</string>
     <!-- Translators: Description in the EPG review dialog explaining what to do with uncertain matches. -->
     <string name="content_epg_review_description">These channels were matched by name but weren\'t a confident fit. Accept the right ones; skip the rest.</string>
@@ -548,7 +548,7 @@
     <string name="content_epg_channel_score">\u2192 <xliff:g id="name">%1$s</xliff:g> \u00b7 <xliff:g id="percent">%2$d</xliff:g>%%</string>
     <!-- Translators: Channel number and name display in the EPG. "number" is the channel number, "name" is the channel name. -->
     <string name="content_epg_channel_number"><xliff:g id="number">%1$s</xliff:g>  <xliff:g id="name">%2$s</xliff:g></string>
-    <!-- Translators: Invisible separator between metadata segments in the EPG. Middle dot is intentional. -->
+    <!-- Translators: Visible middle-dot separator between EPG metadata segments. -->
     <string name="content_epg_bits_separator"> \u00b7 </string>
     <!-- Translators: Label on the EPG timeline for the current time slot with the time. "time" is the current time. All caps is intentional. -->
     <string name="content_epg_now">NOW \u00b7 <xliff:g id="time">%1$s</xliff:g></string>

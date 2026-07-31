@@ -46,7 +46,7 @@
     <string name="settings_series_keep_watching">Series in Keep Watching</string>
     <!-- Translators: Description of the series-in-Keep-Watching toggle. -->
     <string name="settings_series_keep_watching_description">Show episode resume cards in the hero row.</string>
-    <!-- Translators: Toggle label for Android TV home screen integration. -->
+    <!-- Translators: Used as both a group heading and toggle-row title for Android TV home integration. -->
     <string name="settings_android_tv_home">Android TV home</string>
     <!-- Translators: Description of the Android TV home screen integration. -->
     <string name="settings_android_tv_home_description">Show Continue Watching and recent live channels on the TV home screen.</string>
@@ -208,7 +208,7 @@
     <string name="settings_tmdb_api_key">TMDB API key (v3)</string>
     <!-- Translators: Text-field label for a self-hosted TMDB proxy URL. -->
     <string name="settings_self_host_url">Self-host server URL</string>
-    <!-- Translators: Button to test the TMDB connection or lookup. -->
+    <!-- Translators: TMDB test-section heading. -->
     <string name="settings_test">Test</string>
     <!-- Translators: Error when no title is entered for TMDB lookup. -->
     <string name="settings_metadata_empty_title">Enter a title to look up.</string>
@@ -244,7 +244,7 @@
     <string name="settings_tier_self_host">Self-hosted</string>
     <!-- Translators: Screen title for the Settings screen. -->
     <string name="settings_title">Settings</string>
-    <!-- Translators: Quick toggle label for the live preview setting in the top bar. -->
+    <!-- Translators: Quick toggle on the Settings screen for live preview. -->
     <string name="settings_quick_live_preview">Live preview</string>
     <!-- Translators: Quick toggle label for the preview sound setting. -->
     <string name="settings_quick_preview_sound">Preview sound</string>
@@ -505,19 +505,19 @@
     <string name="settings_accent_green">Green</string>
     <!-- Translators: Accent color preset name. -->
     <string name="settings_accent_amber">Amber</string>
-    <!-- Translators: Settings search keyword bag for the Profile section. -->
+    <!-- Translators: Settings search-result breadcrumb category for Profile. -->
     <string name="settings_group_profile">Profile</string>
-    <!-- Translators: Settings search keyword bag for the Content section. -->
+    <!-- Translators: Settings search-result breadcrumb category for Content. -->
     <string name="settings_group_content">Content</string>
-    <!-- Translators: Settings search keyword bag for the Appearance section. -->
+    <!-- Translators: Settings search-result breadcrumb category for Appearance. -->
     <string name="settings_group_appearance">Appearance</string>
-    <!-- Translators: Settings search keyword bag for the Playback section. -->
+    <!-- Translators: Settings search-result breadcrumb category for Playback. -->
     <string name="settings_group_playback">Playback</string>
-    <!-- Translators: Settings search keyword bag for the Network section. -->
+    <!-- Translators: Settings search-result breadcrumb category for Network. -->
     <string name="settings_group_network">Network</string>
     <!-- Translators: Short label for the DNS settings page. DNS is a technical acronym. -->
     <string name="settings_dns">DNS</string>
-    <!-- Translators: Settings search keyword bag for the App section. -->
+    <!-- Translators: Settings search-result breadcrumb category for App. -->
     <string name="settings_group_app">App</string>
     <!-- Translators: Settings search result label for the Guide channel logos setting. -->
     <string name="settings_search_guide_logos">Guide channel logos</string>
@@ -687,7 +687,7 @@
     <string name="settings_hardware_decoding">Hardware decoding</string>
     <!-- Translators: Description of the hardware decoding setting. -->
     <string name="settings_hardware_decoding_description">Use the TV\'s hardware decoder. Turn off if some streams stutter or show artifacts.</string>
-    <!-- Translators: Section header for the Movies & Series player settings. -->
+    <!-- Translators: Video Player settings-row title for Movies & Series. -->
     <string name="settings_movies_series_player">Movies &amp; Series player</string>
     <!-- Translators: Setting label for external player configuration. -->
     <string name="settings_external_player">External player</string>
@@ -713,7 +713,7 @@
     <string name="settings_preferred_subtitle_language">Preferred subtitle language</string>
     <!-- Translators: Description of the preferred language setting. -->
     <string name="settings_preferred_language_description">Auto-select this subtitle track when available.</string>
-    <!-- Translators: Setting label for OpenSubtitles integration. 'OpenSubtitles' is a brand name. -->
+    <!-- Translators: Settings heading/row and external subtitle-source label. 'OpenSubtitles' is a brand name. -->
     <string name="settings_open_subtitles">OpenSubtitles</string>
     <!-- Translators: Description of the OpenSubtitles setting. 'opensubtitles.com' is a website. -->
     <string name="settings_open_subtitles_description">Sign in to search and download subtitles, and manage downloaded subtitles. Per profile; a free opensubtitles.com account is required.</string>
@@ -725,7 +725,7 @@
     <string name="settings_audio_sync">Audio sync</string>
     <!-- Translators: Description of the audio sync setting. -->
     <string name="settings_audio_sync_description">Shift audio earlier or later to match the video.</string>
-    <!-- Translators: Section header for Live TV settings. -->
+    <!-- Translators: Used as both a Video Player settings group heading and a Customize-screen section chip. -->
     <string name="settings_live_tv">Live TV</string>
     <!-- Translators: Description of the live latency setting. -->
     <string name="settings_live_latency_description">How close to the live broadcast to play. Lower means closer to live but a smaller buffer, so weak streams may stutter or reconnect more. Applies to the next channel you open.</string>
@@ -791,21 +791,21 @@ Choose Balanced if a channel becomes unreliable.</string>
     <string name="settings_resume_ask">Ask to resume</string>
     <!-- Translators: Resume playback option: never resume, always start fresh. -->
     <string name="settings_resume_never">Never resume</string>
-    <!-- Translators: Button or section label for deleting downloaded subtitles. -->
+    <!-- Translators: Downloaded-subtitles screen title. -->
     <string name="settings_delete_subtitles">Delete subtitles</string>
-    <!-- Translators: Button to delete all items in a category. -->
+    <!-- Translators: Picker option to delete all downloaded subtitles. -->
     <string name="settings_delete_all">Delete all</string>
-    <!-- Translators: Label for the Movies section in subtitle settings. -->
+    <!-- Translators: Used in subtitle deletion and as a Customize-screen section chip. -->
     <string name="settings_movies">Movies</string>
-    <!-- Translators: Label for the Series section in subtitle settings. -->
+    <!-- Translators: Used in subtitle deletion and as a Customize-screen section chip. -->
     <string name="settings_series">Series</string>
     <!-- Translators: Empty-state message when no subtitles are downloaded. 'section' is Movies or Series. -->
     <string name="settings_no_downloaded_subtitles">No downloaded <xliff:g id="section">%1$s</xliff:g> subtitles.</string>
-    <!-- Translators: Button to delete a single subtitle file. -->
+    <!-- Translators: Single-subtitle confirmation-dialog title. -->
     <string name="settings_delete_subtitle">Delete subtitle</string>
     <!-- Translators: Confirmation message for deleting a subtitle. 'name' is the subtitle language, 'title' is the content title. -->
     <string name="settings_delete_subtitle_message">Delete the <xliff:g id="name">%1$s</xliff:g> subtitle for “<xliff:g id="title">%2$s</xliff:g>”? It can be downloaded again later.</string>
-    <!-- Translators: Button to delete all downloaded subtitles. -->
+    <!-- Translators: Scope-picker dialog title for deleting all downloaded subtitles. -->
     <string name="settings_delete_all_subtitles">Delete all subtitles</string>
     <!-- Translators: Button to delete all movie subtitles. -->
     <string name="settings_delete_all_movies">Delete all movies</string>
@@ -869,7 +869,7 @@ Choose Balanced if a channel becomes unreliable.</string>
     <string name="settings_low_zoom_warning"><xliff:g id="zoom">%1$d</xliff:g>%% zoom shows many more items on screen at once. On devices with limited memory (for example, 2 GB TV sticks) this can make the app unstable or crash, especially with large playlists and EPG data.\n\nPress OK to continue, or Back to stay at <xliff:g id="safe_zoom">%2$d</xliff:g>%%.</string>
     <!-- Translators: Button to acknowledge the low zoom warning. -->
     <string name="settings_low_zoom_accept">I understand and accept the risk</string>
-    <!-- Translators: Formatted transparency percentage display. 'percent' is the transparency level. -->
+    <!-- Translators: Generic percentage readout used for both transparency and blur intensity. "percent" is the value. -->
     <string name="settings_surface_transparency"><xliff:g id="percent">%1$d</xliff:g>%%</string>
     <!-- Translators: Status label when all glass surfaces are enabled. -->
     <string name="settings_surface_count_all">Surfaces: All</string>
@@ -980,9 +980,9 @@ Choose Balanced if a channel becomes unreliable.</string>
     <string name="settings_customize_hide_new">Hide — new categories added on re-sync are hidden by default</string>
     <!-- Translators: Option to show new categories added on re-sync. -->
     <string name="settings_customize_show_new">Show — new categories added on re-sync are shown by default</string>
-    <!-- Translators: Button to hide selected categories/items. -->
+    <!-- Translators: Command button, selectable option, and current-state chip to hide a category. -->
     <string name="settings_customize_hide">Hide</string>
-    <!-- Translators: Button to show hidden categories/items. -->
+    <!-- Translators: Command button, selectable option, and current-state chip to show a category. -->
     <string name="settings_customize_show">Show</string>
     <!-- Translators: Section header for hidden channels in the Customize screen. -->
     <string name="settings_customize_hidden_channels">Hidden channels</string>
@@ -1046,7 +1046,7 @@ Choose Balanced if a channel becomes unreliable.</string>
     <string name="settings_customize_hidden">Hidden</string>
     <!-- Translators: Button to unhide a category. -->
     <string name="settings_customize_unhide">Unhide</string>
-    <!-- Translators: Invisible separator between metadata segments in the Customize screen. Double middle dot is intentional. -->
+    <!-- Translators: Visible single middle-dot separator between metadata segments in the Customize screen. -->
     <string name="settings_customize_metadata_separator">  ·  </string>
 
     <!-- Translators: Screen title for the Sources management screen. -->
@@ -1083,9 +1083,9 @@ Choose Balanced if a channel becomes unreliable.</string>
     <string name="settings_sources_auto_refresh">⟳ <xliff:g id="mode">%1$s</xliff:g></string>
     <!-- Translators: Badge indicating the default source. All caps is intentional. -->
     <string name="settings_sources_default">DEFAULT</string>
-    <!-- Translators: Button to create a backup from this source. -->
+    <!-- Translators: Source-type label for a restored/local-backup source. -->
     <string name="settings_sources_backup">Backup</string>
-    <!-- Translators: Invisible separator between source detail segments. Middle dot is intentional. -->
+    <!-- Translators: Visible bullet separator between source detail segments. -->
     <string name="settings_sources_details_separator">  •  </string>
     <!-- Translators: Status text shown while preparing a source catalog. -->
     <string name="settings_sources_preparing_detail">Preparing catalog</string>
@@ -1128,15 +1128,15 @@ Resync and remove missing titles also allows removing titles the provider no lon
     <string name="settings_epg_sources_title">EPG Sources</string>
     <!-- Translators: Empty-state message when no EPG sources are configured. 'XMLTV' is a format name. -->
     <string name="settings_epg_sources_empty">No EPG sources yet. Add an XMLTV link.</string>
-    <!-- Translators: Button to add a new EPG source. -->
+    <!-- Translators: Add-EPG form heading. -->
     <string name="settings_epg_sources_add">Add EPG source</string>
-    <!-- Translators: Button to edit an EPG source. -->
+    <!-- Translators: Edit-EPG form heading. -->
     <string name="settings_epg_sources_edit">Edit EPG source</string>
     <!-- Translators: Button to add and immediately sync an EPG source. -->
     <string name="settings_epg_sources_add_sync">Add &amp; sync</string>
     <!-- Translators: Button to save changes and re-sync an EPG source. -->
     <string name="settings_epg_sources_save_sync">Save &amp; sync</string>
-    <!-- Translators: Button to auto-fill the EPG URL from a playlist. -->
+    <!-- Translators: Button opening the playlist picker and the picker's dialog heading. -->
     <string name="settings_epg_sources_fill_playlist">Fill from playlist</string>
     <!-- Translators: Status text when no playlists provide an EPG URL. -->
     <string name="settings_epg_sources_none_playlist">None of your playlists provide an EPG URL.</string>

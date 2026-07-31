@@ -102,7 +102,7 @@
     <string name="player_season_number">Season <xliff:g id="season">%1$d</xliff:g></string>
     <!-- Translators: Episode number fallback title in the player top bar and series screen when the episode has no name. "episode" is the episode number. -->
     <string name="player_episode_number">Episode <xliff:g id="episode">%1$d</xliff:g></string>
-    <!-- Translators: Formatted episode display for series entries in the subtitle deletion list. "title" is the episode name, "season" and "episode" are numbers. The separator dot and S/E prefix format is conventional for series. -->
+    <!-- Translators: Formatted episode display for series entries in the subtitle deletion list. "title" is the series/show title, "season" and "episode" are numbers. The separator dot and S/E prefix format is conventional for series. -->
     <string name="player_episode_context_title"><xliff:g id="title">%1$s</xliff:g> \u00b7 S<xliff:g id="season">%2$d</xliff:g>E<xliff:g id="episode">%3$d</xliff:g></string>
     <!-- Translators: Channel number display on the channel OSD card after a direct tune. "number" is the channel number string. The hash (#) is a conventional channel prefix. -->
     <string name="player_channel_number">#<xliff:g id="number">%1$s</xliff:g></string>
@@ -212,7 +212,7 @@
     <string name="player_audio_track_number">Audio <xliff:g id="number">%1$d</xliff:g></string>
     <!-- Translators: Fallback label for a subtitle track when it has no name or language. "number" is the track index. -->
     <string name="player_subtitle_track_number">Subtitle <xliff:g id="number">%1$d</xliff:g></string>
-    <!-- Translators: Invisible separator character between inline metadata segments in the player HUD and stream info overlay. This is a middle dot, not a translatable word. -->
+    <!-- Translators: Visible middle-dot separator between inline metadata segments in the player HUD, stream info overlay, launcher metadata, and subtitle track labels. -->
     <string name="player_metadata_separator"> \u00b7 </string>
     <!-- Translators: Title of the technical stream info overlay shown in the player. -->
     <string name="player_stream_info">Stream info</string>
@@ -286,7 +286,7 @@
     <string name="player_subtitles_search_title">Search OpenSubtitles</string>
     <!-- Translators: Loading indicator text in the subtitle search dialog. -->
     <string name="player_subtitles_working">Working\u2026</string>
-    <!-- Translators: Button label in the subtitle search dialog to refine the search query. -->
+    <!-- Translators: Edit Search button and heading of the query editor in the subtitle search dialog. -->
     <string name="player_subtitles_edit_search">Edit search</string>
     <!-- Translators: Text-field label in the subtitle search edit form. -->
     <string name="player_subtitles_title_label">Title</string>
@@ -294,7 +294,7 @@
     <string name="player_subtitles_delete_title">Delete OpenSub subtitles</string>
     <!-- Translators: Button to sign in to OpenSubtitles in the subtitle settings screen and sign-in dialog. -->
     <string name="player_subtitles_sign_in">Sign in</string>
-    <!-- Translators: Button to sign out of OpenSubtitles in the subtitle settings screen. -->
+    <!-- Translators: Clickable settings action row to sign out of OpenSubtitles. -->
     <string name="player_subtitles_sign_out">Sign out</string>
     <!-- Translators: Section header and info-row label in the OpenSubtitles account screen. -->
     <string name="player_subtitles_account">Account</string>
@@ -302,7 +302,7 @@
     <string name="player_subtitles_username">Username</string>
     <!-- Translators: Text-field label for the OpenSubtitles password in the sign-in form. -->
     <string name="player_subtitles_password">Password</string>
-    <!-- Translators: Checkbox label in the OpenSubtitles sign-in form to persist the session. -->
+    <!-- Translators: Toggle/settings row with an On/Off chip to persist the OpenSubtitles session. -->
     <string name="player_subtitles_stay_signed_in">Stay signed in</string>
     <!-- Translators: Dialog title for the OpenSubtitles sign-in form. "OpenSubtitles" is a brand name. -->
     <string name="player_subtitles_sign_in_title">Sign in to OpenSubtitles</string>
@@ -316,9 +316,9 @@
     <string name="player_subtitles_delete_description">Remove subtitles you\'ve downloaded for movies and series.</string>
     <!-- Translators: Description of the OpenSubtitles login removal action. Already downloaded subtitles remain available offline. -->
     <string name="player_subtitles_delete_login_message">Removes this profile\'s OpenSubtitles login from this device. Already downloaded subtitles stay available offline.</string>
-    <!-- Translators: Button label in the subtitle delete confirmation popup. -->
+    <!-- Translators: Settings action row opening the downloaded-subtitles screen. -->
     <string name="player_subtitles_delete_action">Delete subtitles</string>
-    <!-- Translators: Section header in the subtitle settings for downloaded subtitles. -->
+    <!-- Translators: InfoRow label for the remaining download allowance. -->
     <string name="player_subtitles_downloads">Downloads</string>
     <!-- Translators: Account level badge for OpenSubtitles VIP accounts. "VIP" is an abbreviation that should be preserved. -->
     <string name="player_subtitles_vip">VIP</string>
@@ -366,7 +366,7 @@
     <string name="player_subtitles_limit_reached">The daily subtitle search limit has been reached. Try again tomorrow.</string>
     <!-- Translators: Network error when the OpenSubtitles API cannot be reached. -->
     <string name="player_subtitles_network_error">Couldn\'t reach OpenSubtitles. Check your connection and try again.</string>
-    <!-- Translators: Row label in the subtitle search results for the subtitle language/format. -->
+    <!-- Translators: Fallback text when subtitle language/release metadata is absent. -->
     <string name="player_subtitles_subtitle">Subtitle</string>
     <!-- Translators: Tag chip in the subtitle search results indicating a trusted uploader. -->
     <string name="player_subtitles_trusted">Trusted</string>
@@ -379,7 +379,7 @@
         <item quantity="one"><xliff:g id="count">%1$d</xliff:g> download</item>
         <item quantity="other"><xliff:g id="count">%1$d</xliff:g> downloads</item>
     </plurals>
-    <!-- Translators: Invisible separator between tag chips in the subtitle search results and account info. This is a middle dot, not translatable text. -->
+    <!-- Translators: Visible middle-dot separator between tag chips in the subtitle search results and account info. -->
     <string name="player_subtitles_tags_separator"> \u00b7 </string>
     <!-- Translators: Button in the subtitle search edit form to submit the query. -->
     <string name="player_subtitles_search">Search</string>

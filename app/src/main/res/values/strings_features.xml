@@ -3,9 +3,9 @@
     <!-- Profiles -->
     <!-- Translators: Label for the PIN input in the profile editor. -->
     <string name="profiles_pin">PIN</string>
-    <!-- Translators: Button or section header to create a new profile. -->
+    <!-- Translators: Profile-editor dialog heading for creating a new profile. -->
     <string name="profiles_new">New profile</string>
-    <!-- Translators: Button or section header to edit an existing profile. -->
+    <!-- Translators: Profile-editor dialog heading for editing an existing profile. -->
     <string name="profiles_edit">Edit profile</string>
     <!-- Translators: Text-field label for the profile name in the profile editor. -->
     <string name="profiles_name">Name</string>
@@ -79,7 +79,7 @@
     <string name="search_nothing_in_list">Nothing in <xliff:g id="list">%1$s</xliff:g> yet.</string>
     <!-- Translators: Button to clear the search input. -->
     <string name="search_clear">Clear</string>
-    <!-- Translators: Button to jump to a search result in its native screen. -->
+    <!-- Translators: Search-results section heading for jumping to a result in its native screen. -->
     <string name="search_jump_to">Jump to</string>
     <!-- Translators: Action button in search results to tune to a live channel. -->
     <string name="search_watch_live">Watch live</string>
@@ -99,11 +99,11 @@
     <!-- Home -->
     <!-- Translators: Section header for the "Keep Watching" row on the Home screen. -->
     <string name="home_keep_watching">Keep Watching</string>
-    <!-- Translators: Section header for the "Play Next" row on the Home screen. -->
+    <!-- Translators: Hero-card action button to play the next episode. -->
     <string name="home_play_next">Play Next</string>
-    <!-- Translators: Section header for the "Tune In" row on the Home screen. -->
+    <!-- Translators: Hero-card action button to tune in to live content. -->
     <string name="home_tune_in">Tune In</string>
-    <!-- Translators: Section header for recently watched live channels on the Home screen. -->
+    <!-- Translators: Subtitle beneath an expanded live hero card. -->
     <string name="home_recent_live">Recently watched live</string>
     <!-- Translators: Default profile name placeholder in the profile editor. -->
     <string name="profiles_default_name">Profile</string>
@@ -129,7 +129,7 @@
     <string name="home_last_watched_now">Last watched just now</string>
     <!-- Translators: Estimated finish time for content being watched. "time" is the estimated finish time. -->
     <string name="home_finish_by">Finish by <xliff:g id="time">%1$s</xliff:g></string>
-    <!-- Translators: Action button to resume playback from a saved position. This is a state label for the currently-playing item. -->
+    <!-- Translators: Imperative hero-card action button to resume playback. -->
     <string name="home_resume">Resume</string>
     <!-- Translators: Plural "last watched" timestamp for minutes. "count" is the number of minutes. -->
     <plurals name="home_last_watched_minutes">
@@ -209,7 +209,7 @@
     <string name="update_title">App update</string>
     <!-- Translators: Loading status shown while checking for updates. -->
     <string name="update_checking">Checking for updates\u2026</string>
-    <!-- Translators: Section header in the update dialog for the changelog. -->
+    <!-- Translators: Update-dialog changelog heading and button label. -->
     <string name="update_whats_new">What\'s new</string>
     <!-- Translators: Progress status shown while downloading an update. "percent" is the download percentage. The double percent (%%) is an XML escape. -->
     <string name="update_downloading">Downloading update\u2026 <xliff:g id="percent">%1$d</xliff:g>%%</string>

@@ -31,13 +31,13 @@
     <!-- Translators: Error text shown when the companion link is locked after too many incorrect PIN attempts. Also sent as an HTTP response body to the phone browser. -->
     <string name="setup_companion_locked">Too many incorrect PIN attempts \u2014 the link was closed for safety.</string>
 
-    <!-- Translators: Button in the Set-TMDB-name dialog that opens a text field to override the TMDB search title. -->
+    <!-- Translators: Set-TMDB-name dialog heading. -->
     <string name="setup_tmdb_name">Set TMDB name</string>
     <!-- Translators: Description in the Set-TMDB-name dialog. "TMDB" is a brand name (The Movie Database) and must not be translated. -->
     <string name="setup_tmdb_description">Type the exact TMDB title to match. Year is optional but helps when several titles share a name.</string>
     <!-- Translators: Text-field label in the Set-TMDB-name dialog for an optional year to narrow the TMDB search. -->
     <string name="setup_year_optional">Year (optional)</string>
-    <!-- Translators: Button label in the storage browser dialog for selecting a download folder. -->
+    <!-- Translators: Storage-browser fallback title/path label when no folder is selected. -->
     <string name="setup_pick_location">Pick a location</string>
     <!-- Translators: Button label shown in the storage browser when the app does not yet have storage permission. -->
     <string name="setup_grant_storage_access">Grant full storage access</string>
@@ -175,7 +175,7 @@
     <string name="setup_add_from_phone">Add from your phone</string>
     <!-- Translators: Description on the RemoteSetupScreen explaining how to use the phone companion. -->
     <string name="setup_phone_add_description">On a phone or laptop on the same Wi-Fi, scan the QR (or open the URL), enter this PIN, fill in your playlist and tap Send to TV. Its details then appear here, ready to import \u2014 you press Start Import with the remote.</string>
-    <!-- Translators: Button label to start the companion HTTP server on the RemoteSetupScreen. Replaced by "Opening\u2026" while the server is starting. -->
+    <!-- Translators: Loading label while the companion server is starting. -->
     <string name="setup_opening">Opening\u2026</string>
     <!-- Translators: Button label on the RemoteSetupScreen to start the companion HTTP server. -->
     <string name="setup_open_server">Open server</string>
@@ -269,7 +269,7 @@
     <string name="setup_auto_refresh">Auto refresh</string>
     <!-- Translators: Description beneath the auto-refresh setting. Explains the three states: Off, on startup, or when data is stale. -->
     <string name="setup_auto_refresh_description">Off, on startup, or when data is stale</string>
-    <!-- Translators: Section heading for the default-playlist toggle on the source form. -->
+    <!-- Translators: Toggle-row label on the source form for default playlist. -->
     <string name="setup_default_playlist">Default playlist</string>
     <!-- Translators: Description beneath the default-playlist toggle. Explains that turning it on shows only this playlist across the app. -->
     <string name="setup_default_playlist_description">Show only this playlist across the app. Turn off for all playlists; change anytime from the top bar.</string>
@@ -301,7 +301,7 @@
     <string name="setup_device_model_preset_title">Device model preset</string>
     <!-- Translators: Dialog title for the auto-refresh setting on the source form. -->
     <string name="setup_auto_refresh_title">Auto refresh</string>
-    <!-- Translators: Compact state label for sync scope "Now" when toggling a scope while editing an existing source. On the add form, the same choice is labeled "Now" (setup_now). This variant is "On" because toggling while editing is binary. Also used in companion web page dropdowns. -->
+    <!-- Translators: Compact state label for the "Now" sync-scope when editing an existing source. -->
     <string name="setup_on">On</string>
     <!-- Translators: Sync scope choice meaning "import immediately". Shown as a cycling label in the sync scope row on the source form, and as an option in companion web page dropdowns. -->
     <string name="setup_now">Now</string>
