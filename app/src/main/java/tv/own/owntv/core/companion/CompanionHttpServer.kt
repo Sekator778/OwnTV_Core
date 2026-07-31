@@ -9,7 +9,6 @@ import java.io.IOException
 import java.net.InetSocketAddress
 import java.net.ServerSocket
 import java.net.Socket
-import java.net.URLDecoder
 import java.nio.charset.StandardCharsets
 import java.util.concurrent.atomic.AtomicBoolean
 import kotlinx.coroutines.CoroutineScope
@@ -38,8 +37,8 @@ import tv.own.owntv.core.model.SourceType
  * Everything HTTP happens off the main thread on [Dispatchers.IO]. Passwords/MAC are never logged.
  */
 class CompanionHttpServer(
-    private val context: Context? = null,
-    private val localeStore: LocaleStore? = null,
+    private val context: Context,
+    private val localeStore: LocaleStore,
 ) {
 
     /**
@@ -188,7 +187,7 @@ class CompanionHttpServer(
             val rawPath = parts[1]
             val path = rawPath.substringBefore('?')
             val query = rawPath.substringAfter('?', "")
-            val queryPin = parseQuery(query)["pin"].orEmpty()
+            val queryPin = CompanionHttpProtocol.parseQuery(query)["pin"].orEmpty()
 
             val headers = LinkedHashMap<String, String>()
             while (true) {
@@ -223,8 +222,9 @@ class CompanionHttpServer(
 
             // PIN submission from the gate.
             if (method == "POST" && path == "/") {
-                val body = readBody(input, headers, maxBodyBytes(path)) ?: return sendText(socket, 413, localized(R.string.companion_error_body_too_large))
-                val submitted = parseQuery(body)["pin"].orEmpty()
+                val body = CompanionHttpProtocol.readBody(input, headers, CompanionHttpProtocol.maxBodyBytes(path))
+                    ?: return sendText(socket, 413, localized(R.string.companion_error_body_too_large))
+                val submitted = CompanionHttpProtocol.parseQuery(body)["pin"].orEmpty()
                 if (pinOk(submitted)) {
                     pinAccepted()
                     return sendHtml(socket, 200, authedPage(pageContext))
@@ -249,7 +249,8 @@ class CompanionHttpServer(
             if (method == "POST" && path == "/backup") {
                 val headerPin = headers["x-companion-pin"].orEmpty()
                 if (!requirePin(queryPin.ifBlank { headerPin })) return sendText(socket, 401, localized(R.string.companion_error_unauthorized))
-                val body = readBody(input, headers, maxBodyBytes(path)) ?: return sendText(socket, 413, localized(R.string.companion_error_backup_too_large))
+                val body = CompanionHttpProtocol.readBody(input, headers, CompanionHttpProtocol.maxBodyBytes(path))
+                    ?: return sendText(socket, 413, localized(R.string.companion_error_backup_too_large))
                 if (body.isBlank()) return sendText(socket, 400, localized(R.string.companion_error_empty_backup))
                 onBackup(body)
                 return sendHtml(socket, 200, CompanionHtml.backupSentPage(pageContext, pin))
@@ -261,7 +262,8 @@ class CompanionHttpServer(
             if (method == "POST" && path == "/background") {
                 val headerPin = headers["x-companion-pin"].orEmpty()
                 if (!requirePin(queryPin.ifBlank { headerPin })) return sendText(socket, 401, localized(R.string.companion_error_unauthorized))
-                val body = readBody(input, headers, maxBodyBytes(path)) ?: return sendText(socket, 413, localized(R.string.companion_error_image_too_large))
+                val body = CompanionHttpProtocol.readBody(input, headers, CompanionHttpProtocol.maxBodyBytes(path))
+                    ?: return sendText(socket, 413, localized(R.string.companion_error_image_too_large))
                 val decoded = decodeImageDataUrl(body) ?: return sendText(socket, 400, localized(R.string.companion_error_invalid_image))
                 onImage(decoded.first, decoded.second)
                 return sendHtml(socket, 200, CompanionHtml.imageSentPage(pageContext, pin))
@@ -276,8 +278,9 @@ class CompanionHttpServer(
                     "/m3u" -> SourceType.M3U
                     else -> SourceType.XTREAM
                 }
-                val body = readBody(input, headers, maxBodyBytes(path)) ?: return sendText(socket, 413, localized(R.string.companion_error_body_too_large))
-                val payload = parsePayload(headers["content-type"], body, fallback)
+                val body = CompanionHttpProtocol.readBody(input, headers, CompanionHttpProtocol.maxBodyBytes(path))
+                    ?: return sendText(socket, 413, localized(R.string.companion_error_body_too_large))
+                val payload = CompanionHttpProtocol.parsePayload(headers["content-type"], body, fallback)
                     ?: return sendText(socket, 400, localized(R.string.companion_error_missing_fields))
                 onPayload(payload)
                 return sendHtml(socket, 200, CompanionHtml.savedPage(pageContext, payload, pin))
@@ -287,7 +290,7 @@ class CompanionHttpServer(
         }
     }
 
-    private fun pinOk(candidate: String): Boolean = pin.isNotBlank() && pinEquals(candidate, pin)
+    private fun pinOk(candidate: String): Boolean = pin.isNotBlank() && CompanionHttpProtocol.pinEquals(candidate, pin)
 
     /**
      * PIN check for the direct POST endpoints, with the C2 attempt counting applied. Returns true
@@ -350,122 +353,6 @@ class CompanionHttpServer(
             android.util.Base64.decode(body.substring(match.value.length), android.util.Base64.DEFAULT)
         }.getOrNull() ?: return null
         return if (bytes.isEmpty()) null else bytes to ext
-    }
-
-    /**
-     * How many body bytes this endpoint may accept. Uploads (a backup JSON, a base64 background
-     * image) legitimately run to megabytes; PIN posts and source forms are a few hundred bytes, so
-     * they get the small cap — the PIN gate is reachable *before* authentication and must not let an
-     * unauthenticated client on the LAN size an allocation for us.
-     */
-    internal fun maxBodyBytes(path: String): Int = when {
-        path == "/backup" || path == "/background" -> UPLOAD_BODY_LIMIT
-        else -> FORM_BODY_LIMIT
-    }
-
-    /**
-     * Read the request body, bounded by [limit]. Returns null when the body exceeds the cap (the
-     * caller answers 413) — `Content-Length` is a client-supplied hint that is checked against the
-     * cap but never used to pre-allocate, so a bogus header costs nothing.
-     */
-    internal fun readBody(input: BufferedInputStream, headers: Map<String, String>, limit: Int): String? {
-        val declared = headers["content-length"]?.toLongOrNull() ?: 0L
-        if (declared > limit) return null
-        if (declared == 0L) return ""
-        val buffer = ByteArrayOutputStream(declared.coerceAtMost(INITIAL_BODY_BUFFER.toLong()).toInt())
-        val chunk = ByteArray(BODY_CHUNK)
-        var total = 0L
-        while (total < declared) {
-            val want = minOf(chunk.size.toLong(), declared - total).toInt()
-            val read = input.read(chunk, 0, want)
-            if (read <= 0) break
-            total += read
-            if (total > limit) return null // defensive: a body longer than it declared
-            buffer.write(chunk, 0, read)
-        }
-        return buffer.toString(StandardCharsets.UTF_8.name())
-    }
-
-    /**
-     * Parse a submitted body into a [CompanionPayload], or null if required fields are missing.
-     * Public so tests exercise it without a socket. Accepts form-encoded and JSON bodies; field names
-     * tolerate camelCase / snake_case / common synonyms.
-     */
-    fun parsePayload(contentType: String?, bodyText: String, fallbackType: SourceType): CompanionPayload? {
-        val isJson = contentType?.contains("application/json", ignoreCase = true) == true ||
-            bodyText.trimStart().startsWith("{")
-        val fields = if (isJson) {
-            // A malformed JSON body (or a JSON-less test env) must not crash the accept thread.
-            runCatching { parseJsonFields(bodyText) }.getOrDefault(emptyMap())
-        } else {
-            parseQuery(bodyText)
-        }
-
-        val rawType = pick(fields, "type", "sourceType", "source_type").ifBlank { fallbackType.name }.trim().lowercase()
-        val type = when (rawType) {
-            "m3u", "m3u8" -> SourceType.M3U
-            "stalker" -> SourceType.STALKER
-            else -> SourceType.XTREAM
-        }
-
-        val server = pick(fields, "server", "url").trim()
-        val user = pick(fields, "user", "username").trim()
-        val pass = pick(fields, "pass", "password").trim()
-        val portalUrl = pick(fields, "portalUrl", "portal_url").trim()
-        val mac = pick(fields, "mac", "macAddress", "mac_address").trim()
-
-        when (type) {
-            SourceType.STALKER -> if (portalUrl.isBlank() || mac.isBlank()) return null
-            SourceType.M3U -> if (server.isBlank()) return null
-            SourceType.XTREAM, SourceType.LOCAL_BACKUP -> if (server.isBlank() || user.isBlank() || pass.isBlank()) return null
-        }
-
-        return CompanionPayload(
-            type = type,
-            name = pick(fields, "name").trim(),
-            server = server,
-            user = user,
-            pass = pass,
-            portalUrl = portalUrl,
-            mac = mac,
-            userAgent = pick(fields, "userAgent", "user_agent").trim(),
-            epgUrl = pick(fields, "epgUrl", "epg_url").trim(),
-            autoRefresh = pick(fields, "autoRefresh", "auto_refresh").ifBlank { "OFF" },
-            syncLive = scopeChoice(fields, "syncLive", "sync_live", default = tv.own.owntv.core.sync.SyncScopeChoice.Now),
-            syncMovies = scopeChoice(fields, "syncMovies", "sync_movies", default = tv.own.owntv.core.sync.SyncScopeChoice.Now),
-            syncSeries = scopeChoice(fields, "syncSeries", "sync_series", default = tv.own.owntv.core.sync.SyncScopeChoice.Now),
-            isDefault = bool(fields, "isDefault", "is_default", default = false),
-        )
-    }
-
-    private fun parseJsonFields(bodyText: String): Map<String, String> {
-        val json = org.json.JSONObject(bodyText)
-        val out = LinkedHashMap<String, String>()
-        json.keys().forEach { key ->
-            when (val value = json.opt(key)) {
-                null, org.json.JSONObject.NULL -> Unit
-                else -> out[key] = value.toString()
-            }
-        }
-        return out
-    }
-
-    private fun pick(fields: Map<String, String>, vararg keys: String): String =
-        keys.firstNotNullOfOrNull { key -> fields[key]?.takeIf { it.isNotBlank() } } ?: ""
-
-    private fun bool(fields: Map<String, String>, primary: String, secondary: String, default: Boolean): Boolean {
-        val raw = fields[primary] ?: fields[secondary] ?: return default
-        return raw.equals("true", true) || raw == "1" || raw.equals("on", true) || raw.equals("yes", true)
-    }
-
-    private fun scopeChoice(
-        fields: Map<String, String>,
-        primary: String,
-        secondary: String,
-        default: tv.own.owntv.core.sync.SyncScopeChoice,
-    ): tv.own.owntv.core.sync.SyncScopeChoice {
-        val raw = fields[primary] ?: fields[secondary] ?: return default
-        return tv.own.owntv.core.sync.SyncScopeChoice.parse(raw, default)
     }
 
     private fun sendHtml(socket: Socket, code: Int, body: String) =
@@ -531,14 +418,10 @@ class CompanionHttpServer(
     /**
      * Companion pages are a named final renderer. Wrap at request/render time rather than retaining
      * the Application's startup resources: a language change must affect the next phone page without
-     * restarting the server. The nullable context is retained for the small protocol-only test
-     * fixture, which never renders a page.
+     * restarting the server. Context and LocaleStore are mandatory production dependencies, so an
+     * instance cannot start listening and fail only when its first page is rendered.
      */
-    private fun localizedContext(): Context {
-        val base = context ?: throw IllegalStateException("Companion HTTP rendering requires an application Context")
-        val store = localeStore ?: LocaleStore.from(base)
-        return AppLocale.wrap(base, store.readBlocking())
-    }
+    private fun localizedContext(): Context = AppLocale.wrap(context, localeStore.readBlocking())
 
     private fun pinMismatchMessage(context: Context): String =
         context.getString(tv.own.owntv.R.string.companion_pin_mismatch)
@@ -549,11 +432,9 @@ class CompanionHttpServer(
     companion object {
         private const val TAG = "CompanionServer"
 
-        /** Backup JSON / base64 image uploads. Generous, but finite. */
-        internal const val UPLOAD_BODY_LIMIT = 16 * 1024 * 1024
-
-        /** PIN posts and source forms — a few hundred bytes in practice. */
-        internal const val FORM_BODY_LIMIT = 64 * 1024
+        /** Kept as compatibility aliases; protocol-only tests use [CompanionHttpProtocol] directly. */
+        internal const val UPLOAD_BODY_LIMIT = CompanionHttpProtocol.UPLOAD_BODY_LIMIT
+        internal const val FORM_BODY_LIMIT = CompanionHttpProtocol.FORM_BODY_LIMIT
 
         /** Consecutive wrong PINs before the link closes itself (C2). */
         internal const val MAX_PIN_ATTEMPTS = 10
@@ -568,31 +449,8 @@ class CompanionHttpServer(
         /** Connections served at once (C3); further ones are closed immediately rather than queued. */
         private const val MAX_IN_FLIGHT = 16
 
-        private const val INITIAL_BODY_BUFFER = 64 * 1024
-        private const val BODY_CHUNK = 16 * 1024
-
-        /** Length-checked, constant-time PIN compare so timing cannot leak the PIN digit by digit. */
-        fun pinEquals(submitted: String, expected: String): Boolean {
-            if (submitted.length != expected.length) return false
-            var diff = 0
-            for (i in expected.indices) diff = diff or (submitted[i].code xor expected[i].code)
-            return diff == 0
-        }
-
-        /** Parse an `application/x-www-form-urlencoded` string (query or body) into a key -> value map. */
-        fun parseQuery(query: String): Map<String, String> {
-            if (query.isBlank()) return emptyMap()
-            val out = LinkedHashMap<String, String>()
-            query.split('&').forEach { pair ->
-                if (pair.isBlank()) return@forEach
-                val split = pair.split('=', limit = 2)
-                val key = urlDecode(split[0])
-                if (key.isNotBlank()) out[key] = urlDecode(split.getOrNull(1).orEmpty())
-            }
-            return out
-        }
-
-        private fun urlDecode(value: String): String =
-            runCatching { URLDecoder.decode(value.replace('+', ' '), StandardCharsets.UTF_8.name()) }.getOrDefault(value)
+        /** Pure protocol delegates retained for callers that used the old static API. */
+        fun pinEquals(submitted: String, expected: String): Boolean = CompanionHttpProtocol.pinEquals(submitted, expected)
+        fun parseQuery(query: String): Map<String, String> = CompanionHttpProtocol.parseQuery(query)
     }
 }

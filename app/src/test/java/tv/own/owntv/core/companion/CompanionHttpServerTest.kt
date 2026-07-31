@@ -15,24 +15,24 @@ import tv.own.owntv.core.sync.SyncScopeChoice
  */
 class CompanionHttpServerTest {
 
-    private val server = CompanionHttpServer()
+    private val protocol = CompanionHttpProtocol
     private val form = "application/x-www-form-urlencoded"
 
     // ---- PIN comparison ----
 
     @Test
     fun `pin matches only when equal and same length`() {
-        assertTrue(CompanionHttpServer.pinEquals("123456", "123456"))
-        assertFalse(CompanionHttpServer.pinEquals("123456", "123457"))
-        assertFalse(CompanionHttpServer.pinEquals("12345", "123456"))
-        assertFalse(CompanionHttpServer.pinEquals("", "123456"))
+        assertTrue(protocol.pinEquals("123456", "123456"))
+        assertFalse(protocol.pinEquals("123456", "123457"))
+        assertFalse(protocol.pinEquals("12345", "123456"))
+        assertFalse(protocol.pinEquals("", "123456"))
     }
 
     // ---- query / form parsing ----
 
     @Test
     fun `parseQuery decodes pairs and plus-as-space`() {
-        val map = CompanionHttpServer.parseQuery("a=1&b=hello+world&c=")
+        val map = protocol.parseQuery("a=1&b=hello+world&c=")
         assertEquals("1", map["a"])
         assertEquals("hello world", map["b"])
         assertEquals("", map["c"])
@@ -44,7 +44,7 @@ class CompanionHttpServerTest {
     fun `xtream form parses all fields`() {
         val body = "type=xtream&name=My+IPTV&server=http://h:80&user=u&pass=p&userAgent=UA&epgUrl=http://e" +
             "&syncLive=now&syncMovies=later&syncSeries=off&isDefault=on&autoRefresh=HOURS_6"
-        val p = server.parsePayload(form, body, SourceType.XTREAM)!!
+        val p = protocol.parsePayload(form, body, SourceType.XTREAM)!!
         assertEquals(SourceType.XTREAM, p.type)
         assertEquals("My IPTV", p.name)
         assertEquals("http://h:80", p.server)
@@ -61,12 +61,12 @@ class CompanionHttpServerTest {
 
     @Test
     fun `xtream missing credentials is rejected`() {
-        assertNull(server.parsePayload(form, "type=xtream&server=http://h", SourceType.XTREAM))
+        assertNull(protocol.parsePayload(form, "type=xtream&server=http://h", SourceType.XTREAM))
     }
 
     @Test
     fun `legacy boolean sync fields map to Now or Off`() {
-        val off = server.parsePayload(
+        val off = protocol.parsePayload(
             form,
             "type=xtream&server=h&user=u&pass=p&syncLive=false&syncMovies=false&syncSeries=false&isDefault=false",
             SourceType.XTREAM,
@@ -76,7 +76,7 @@ class CompanionHttpServerTest {
         assertEquals(SyncScopeChoice.Off, off.syncSeries)
         assertFalse(off.isDefault)
 
-        val on = server.parsePayload(
+        val on = protocol.parsePayload(
             form,
             "type=xtream&server=h&user=u&pass=p&syncLive=true&syncMovies=on&syncSeries=1",
             SourceType.XTREAM,
@@ -90,7 +90,7 @@ class CompanionHttpServerTest {
 
     @Test
     fun `m3u form parses with url alias and only needs the url`() {
-        val p = server.parsePayload(form, "type=m3u&name=P&url=http://x/p.m3u", SourceType.M3U)!!
+        val p = protocol.parsePayload(form, "type=m3u&name=P&url=http://x/p.m3u", SourceType.M3U)!!
         assertEquals(SourceType.M3U, p.type)
         assertEquals("http://x/p.m3u", p.server)
         assertEquals("P", p.name)
@@ -98,14 +98,14 @@ class CompanionHttpServerTest {
 
     @Test
     fun `m3u without a url is rejected`() {
-        assertNull(server.parsePayload(form, "type=m3u&name=P", SourceType.M3U))
+        assertNull(protocol.parsePayload(form, "type=m3u&name=P", SourceType.M3U))
     }
 
     // ---- Stalker ----
 
     @Test
     fun `stalker form needs portal and mac`() {
-        val p = server.parsePayload(form, "type=stalker&portalUrl=http://h/c/&mac=00:1A:79:AA:BB:CC", SourceType.STALKER)!!
+        val p = protocol.parsePayload(form, "type=stalker&portalUrl=http://h/c/&mac=00:1A:79:AA:BB:CC", SourceType.STALKER)!!
         assertEquals(SourceType.STALKER, p.type)
         assertEquals("http://h/c/", p.portalUrl)
         assertEquals("00:1A:79:AA:BB:CC", p.mac)
@@ -113,14 +113,14 @@ class CompanionHttpServerTest {
 
     @Test
     fun `stalker missing mac is rejected`() {
-        assertNull(server.parsePayload(form, "type=stalker&portalUrl=http://h/c/", SourceType.STALKER))
+        assertNull(protocol.parsePayload(form, "type=stalker&portalUrl=http://h/c/", SourceType.STALKER))
     }
 
     // ---- fallback type ----
 
     @Test
     fun `blank type falls back to the endpoint's type`() {
-        val p = server.parsePayload(form, "server=h&user=u&pass=p", SourceType.XTREAM)!!
+        val p = protocol.parsePayload(form, "server=h&user=u&pass=p", SourceType.XTREAM)!!
         assertEquals(SourceType.XTREAM, p.type)
     }
 
@@ -129,7 +129,7 @@ class CompanionHttpServerTest {
     // ---- body cap (C1) ----
 
     private fun read(body: String, contentLength: String, limit: Int): String? =
-        server.readBody(
+        protocol.readBody(
             java.io.BufferedInputStream(java.io.ByteArrayInputStream(body.toByteArray())),
             mapOf("content-length" to contentLength),
             limit,
@@ -137,23 +137,23 @@ class CompanionHttpServerTest {
 
     @Test
     fun `uploads get the large cap and forms the small one`() {
-        assertEquals(CompanionHttpServer.UPLOAD_BODY_LIMIT, server.maxBodyBytes("/backup"))
-        assertEquals(CompanionHttpServer.UPLOAD_BODY_LIMIT, server.maxBodyBytes("/background"))
-        assertEquals(CompanionHttpServer.FORM_BODY_LIMIT, server.maxBodyBytes("/"))
-        assertEquals(CompanionHttpServer.FORM_BODY_LIMIT, server.maxBodyBytes("/xtream"))
+        assertEquals(CompanionHttpProtocol.UPLOAD_BODY_LIMIT, protocol.maxBodyBytes("/backup"))
+        assertEquals(CompanionHttpProtocol.UPLOAD_BODY_LIMIT, protocol.maxBodyBytes("/background"))
+        assertEquals(CompanionHttpProtocol.FORM_BODY_LIMIT, protocol.maxBodyBytes("/"))
+        assertEquals(CompanionHttpProtocol.FORM_BODY_LIMIT, protocol.maxBodyBytes("/xtream"))
     }
 
     @Test
     fun `a body within the cap is read whole`() {
-        assertEquals("pin=123456", read("pin=123456", "10", CompanionHttpServer.FORM_BODY_LIMIT))
-        assertEquals("", read("", "0", CompanionHttpServer.FORM_BODY_LIMIT))
+        assertEquals("pin=123456", read("pin=123456", "10", CompanionHttpProtocol.FORM_BODY_LIMIT))
+        assertEquals("", read("", "0", CompanionHttpProtocol.FORM_BODY_LIMIT))
     }
 
     @Test
     fun `an oversized Content-Length is rejected without allocating it`() {
         // The pre-fix code did ByteArray(2_000_000_000) here — an unauthenticated OOM from the LAN.
-        assertNull(read("", "2000000000", CompanionHttpServer.FORM_BODY_LIMIT))
-        assertNull(read("", (CompanionHttpServer.UPLOAD_BODY_LIMIT + 1).toString(), CompanionHttpServer.UPLOAD_BODY_LIMIT))
+        assertNull(read("", "2000000000", CompanionHttpProtocol.FORM_BODY_LIMIT))
+        assertNull(read("", (CompanionHttpProtocol.UPLOAD_BODY_LIMIT + 1).toString(), CompanionHttpProtocol.UPLOAD_BODY_LIMIT))
     }
 
     @Test
@@ -163,12 +163,12 @@ class CompanionHttpServerTest {
 
     @Test
     fun `a truncated body does not hang or throw`() {
-        assertEquals("abc", read("abc", "500", CompanionHttpServer.FORM_BODY_LIMIT))
+        assertEquals("abc", read("abc", "500", CompanionHttpProtocol.FORM_BODY_LIMIT))
     }
 
     @Test
     fun `malformed json body does not throw and yields null`() {
         // org.json is stubbed in unit tests; parsePayload must swallow it, not crash the accept thread.
-        assertNull(server.parsePayload("application/json", "{ this is not json", SourceType.XTREAM))
+        assertNull(protocol.parsePayload("application/json", "{ this is not json", SourceType.XTREAM))
     }
 }
