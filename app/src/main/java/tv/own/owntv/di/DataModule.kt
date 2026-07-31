@@ -33,8 +33,12 @@ val dataModule = module {
     // Live snapshot of the global proxy. Backs OkHttp's ProxySelector/Authenticator AND mpv's http-proxy,
     // so the proxy can be toggled at runtime without rebuilding the singleton OkHttpClient below.
     single { tv.own.owntv.core.network.ProxyConfigHolder(get<tv.own.owntv.features.settings.data.SettingsRepository>().proxyConfig) }
+    // Live snapshot of the global custom DNS (plain UDP or DoH). Same pattern as proxy — reads the
+    // live DataStore snapshot so DNS can be toggled without rebuilding the OkHttpClient singleton.
+    single { tv.own.owntv.core.network.DnsConfigHolder(get<tv.own.owntv.features.settings.data.SettingsRepository>().dnsConfig) }
     single {
         val proxyHolder = get<tv.own.owntv.core.network.ProxyConfigHolder>()
+        val dnsHolder = get<tv.own.owntv.core.network.DnsConfigHolder>()
         OkHttpClient.Builder()
             .connectTimeout(15, TimeUnit.SECONDS)  // fast fail on dead host
             .readTimeout(20, TimeUnit.SECONDS)    // detect mid-sync disconnect quickly
@@ -45,6 +49,9 @@ val dataModule = module {
             // behavior. Credentials are never logged.
             .proxySelector(proxyHolder.proxySelector)
             .proxyAuthenticator(proxyHolder.proxyAuthenticator)
+            // Global custom DNS: a Dns that reads the live snapshot so the DNS server can be changed
+            // at runtime without rebuilding this singleton client. Off = system DNS = exact prior behavior.
+            .dns(dnsHolder.dns)
             // Force HTTP/1.1. Several IPTV panels / EPG hosts (and their CDNs) have flaky HTTP/2 stacks
             // that send RST_STREAM(PROTOCOL_ERROR) on large/slow responses — e.g. big EPG XML downloads
             // (#17) — which OkHttp surfaces as "stream was reset: PROTOCOL_ERROR". HTTP/1.1 sidesteps it

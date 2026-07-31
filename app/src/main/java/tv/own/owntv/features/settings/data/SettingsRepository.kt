@@ -176,6 +176,11 @@ class SettingsRepository(private val context: Context) {
         val PROXY_PORT = intPreferencesKey("proxy_port")
         val PROXY_USER = stringPreferencesKey("proxy_user")
         val PROXY_PASS = stringPreferencesKey("proxy_pass")
+        // Global custom DNS — one app-wide DNS server (plain UDP or DoH). Sibling to global proxy.
+        val DNS_ENABLED = booleanPreferencesKey("dns_enabled")
+        val DNS_HOST = stringPreferencesKey("dns_host")
+        val DNS_PORT = intPreferencesKey("dns_port")
+        val DNS_DOH_URL = stringPreferencesKey("dns_doh_url")
         // Weather chip: show/hide + manual location override (blank = auto-detect from public IP).
         val WEATHER_ENABLED = booleanPreferencesKey("weather_enabled")
         val WEATHER_LOCATION = stringPreferencesKey("weather_location")
@@ -1162,17 +1167,20 @@ class SettingsRepository(private val context: Context) {
         // key, background transparency an int key).
         Keys.SUB_COLOR,
         Keys.SUB_POSITION,
+        // Custom DNS — not secret, backed up alongside proxy
+        Keys.DNS_HOST, Keys.DNS_DOH_URL,
     )
     private val backupStringSetKeys = listOf(
         // The STATIC-mode hidden set rides with backup so a reinstall keeps the user's hidden icons.
         Keys.NAV_MENU_HIDDEN,
     )
-    private val backupIntKeys = listOf(Keys.UI_ZOOM_PCT, Keys.AUDIO_DELAY_MS, Keys.CATCHUP_OFFSET_MIN, Keys.PROXY_PORT, Keys.CH_NAV_UP_SKIP, Keys.CH_NAV_DOWN_SKIP, Keys.MINI_PLAYER_SIZE_PCT, Keys.LIVE_LATENCY_CUSTOM_SECS, Keys.GLASS_SCOPE, Keys.GLASS_ALPHA, Keys.GLASS_BLUR, Keys.SUB_BG_OPACITY)
+    private val backupIntKeys = listOf(Keys.UI_ZOOM_PCT, Keys.AUDIO_DELAY_MS, Keys.CATCHUP_OFFSET_MIN, Keys.PROXY_PORT, Keys.DNS_PORT, Keys.CH_NAV_UP_SKIP, Keys.CH_NAV_DOWN_SKIP, Keys.MINI_PLAYER_SIZE_PCT, Keys.LIVE_LATENCY_CUSTOM_SECS, Keys.GLASS_SCOPE, Keys.GLASS_ALPHA, Keys.GLASS_BLUR, Keys.SUB_BG_OPACITY)
     private val backupBoolKeys = listOf(
         Keys.LIVE_PREVIEW, Keys.LIVE_PREVIEW_AUDIO, Keys.HDR_ENABLED, Keys.AUTO_FRAME_RATE, Keys.ANDROID_TV_HOME, Keys.HW_DECODING,
         Keys.VOD_PREFER_EXO, Keys.MEASURED_STREAM_STATS, Keys.DIRECT_TUNE, Keys.EXTERNAL_PLAYER,
         Keys.EXTERNAL_PLAYER_LIVE, Keys.EXTERNAL_PLAYER_MOVIES, Keys.EXTERNAL_PLAYER_SERIES, Keys.UPDATE_CHECK_ON_START, Keys.SURROUND_SOUND, Keys.AUTO_PLAY_NEXT, Keys.PROXY_ENABLED,
         Keys.WEATHER_ENABLED, Keys.WEATHER_FAHRENHEIT, Keys.RESUME_LAST_CHANNEL, Keys.METADATA_ENABLED, Keys.CH_NAV_ENABLED,
+        Keys.DNS_ENABLED,
         Keys.REMEMBER_LAST_LIVE, Keys.REMEMBER_LAST_MOVIES, Keys.REMEMBER_LAST_SERIES,
         Keys.REMEMBER_CAT_LIVE, Keys.REMEMBER_CAT_MOVIES, Keys.REMEMBER_CAT_SERIES,
         Keys.SUB_STYLE_ENABLED,
@@ -1410,5 +1418,29 @@ class SettingsRepository(private val context: Context) {
     /** Sets only the proxy password (used on restore once decrypted). Blank clears it. */
     suspend fun setProxyPassword(password: String) {
         context.dataStore.edit { it[Keys.PROXY_PASS] = password }
+    }
+
+    // --- Global custom DNS — sibling to the global proxy. Supports plain DNS-over-UDP (host + port)
+    //     and DNS-over-HTTPS (DoH) via a URL. No auth is needed for DNS; the server field is not a
+    //     secret (it's the DNS server the user wants to use). Backed by DnsConfigHolder, same pattern
+    //     as ProxyConfigHolder. ---
+
+    /** Live snapshot of the DNS config as a single object (consumed by DnsConfigHolder). */
+    val dnsConfig: Flow<tv.own.owntv.core.network.DnsConfig> = prefsFlow { p ->
+        tv.own.owntv.core.network.DnsConfig(
+            enabled = p[Keys.DNS_ENABLED] ?: false,
+            host = p[Keys.DNS_HOST] ?: "",
+            port = p[Keys.DNS_PORT] ?: 53,
+            dohUrl = p[Keys.DNS_DOH_URL] ?: "",
+        )
+    }
+
+    suspend fun saveDns(enabled: Boolean, host: String, port: Int, dohUrl: String) {
+        context.dataStore.edit {
+            it[Keys.DNS_ENABLED] = enabled
+            it[Keys.DNS_HOST] = host.trim()
+            it[Keys.DNS_PORT] = port.coerceIn(1, 65535)
+            it[Keys.DNS_DOH_URL] = dohUrl.trim()
+        }
     }
 }
