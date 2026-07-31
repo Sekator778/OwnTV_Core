@@ -87,7 +87,7 @@ import tv.own.owntv.core.database.dao.SubtitleDao
         SeriesFtsEntity::class,
         EpisodeFtsEntity::class,
     ],
-    version = 22, // v7: content_order (Move). v8: contentHash + browse/unique indexes. v9: EPG contentHash + natural key. v10: TMDB metadata cache. v11: movies/series rating-sort indexes. v12: metadata_cache trailerKey. v13: metadata_cache logoPath. v14: sources.mac (Stalker portal). v15: external-subtitle cache/selection/timing tables. v16: subtitle_link (downloaded-sub ↔ content). v17: sources.syncLive/Movies/Series (skip-sync enabledScope). v18: series.episodesSyncedAt (episode-cache freshness, S8). v19: epg_channels.iconUrl (XMLTV channel logos). v20: channels (sourceId, number) index for direct tune. v21: series.addedAt + date-added sort indexes. v22: series_sort_order (per-series season/episode order)
+    version = 23, // v7: content_order (Move). v8: contentHash + browse/unique indexes. v9: EPG contentHash + natural key. v10: TMDB metadata cache. v11: movies/series rating-sort indexes. v12: metadata_cache trailerKey. v13: metadata_cache logoPath. v14: sources.mac (Stalker portal). v15: external-subtitle cache/selection/timing tables. v16: subtitle_link (downloaded-sub ↔ content). v17: sources.syncLive/Movies/Series (skip-sync enabledScope). v18: series.episodesSyncedAt (episode-cache freshness, S8). v19: epg_channels.iconUrl (XMLTV channel logos). v20: channels (sourceId, number) index for direct tune. v21: series.addedAt + date-added sort indexes. v22: series_sort_order (per-series season/episode order). v23: sources.hlsSupported and sources.preferHls
 
     exportSchema = true,
 )
@@ -598,6 +598,25 @@ abstract class OwnTVDatabase : RoomDatabase() {
                 db.execSQL("CREATE INDEX IF NOT EXISTS `index_series_sort_order_profileId` ON `series_sort_order` (`profileId`)")
                 db.execSQL("CREATE UNIQUE INDEX IF NOT EXISTS `index_series_sort_order_profileId_seriesId` ON `series_sort_order` (`profileId`, `seriesId`)")
 
+                healSchema(db)
+            }
+        }
+
+        /**
+         * v22 → v23: `sources.hlsSupported` & `sources.preferHls` — per-source HLS support flag
+         * (detected from user_info.allowed_output_formats) and user preference for prioritizing
+         * .m3u8 live streams over .ts. Additive.
+         *
+         * Last hop, so it carries [healSchema] (standing rule).
+         */
+        val MIGRATION_22_23 = object : androidx.room.migration.Migration(22, 23) {
+            override fun migrate(db: androidx.sqlite.db.SupportSQLiteDatabase) {
+                if (!hasColumn(db, "sources", "hlsSupported")) {
+                    db.execSQL("ALTER TABLE `sources` ADD COLUMN `hlsSupported` INTEGER NOT NULL DEFAULT 0")
+                }
+                if (!hasColumn(db, "sources", "preferHls")) {
+                    db.execSQL("ALTER TABLE `sources` ADD COLUMN `preferHls` INTEGER NOT NULL DEFAULT 0")
+                }
                 healSchema(db)
             }
         }

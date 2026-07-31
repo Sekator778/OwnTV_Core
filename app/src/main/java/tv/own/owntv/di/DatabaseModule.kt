@@ -40,6 +40,9 @@ val databaseModule = module {
                 OwnTVDatabase.MIGRATION_17_18,
                 OwnTVDatabase.MIGRATION_18_19,
                 OwnTVDatabase.MIGRATION_19_20,
+                OwnTVDatabase.MIGRATION_20_21,
+                OwnTVDatabase.MIGRATION_21_22,
+                OwnTVDatabase.MIGRATION_22_23,
             )
             .addCallback(object : RoomDatabase.Callback() {
                 // Self-heal index/FTS drift on every open (no-op when healthy): an interrupted bulk

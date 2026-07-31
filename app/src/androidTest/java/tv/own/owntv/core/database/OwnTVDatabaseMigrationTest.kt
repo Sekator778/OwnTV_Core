@@ -317,7 +317,10 @@ class OwnTVDatabaseMigrationTest {
             OwnTVDatabase.MIGRATION_18_19,
             OwnTVDatabase.MIGRATION_19_20,
             OwnTVDatabase.MIGRATION_20_21,
+<<<<<<< HEAD
             OwnTVDatabase.MIGRATION_21_22,
+=======
+>>>>>>> 4e48ce2 (Add per-source "Prefer HLS for Live TV" option and format auto-detection)
         )
         .allowMainThreadQueries()
         .build()
@@ -483,7 +486,7 @@ class OwnTVDatabaseMigrationTest {
         private const val DB_NAME = "owntv-migration-test.db"
 
         /** Must match `@Database(version = …)` on [OwnTVDatabase]. */
-        private const val CURRENT_VERSION = 22
+        private const val CURRENT_VERSION = 23
 
         /**
          * Every version with an exported schema that a real database can be sitting at.

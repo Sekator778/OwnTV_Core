@@ -32,8 +32,12 @@ internal class XtreamSyncer(
     private val support: SyncSupport,
 ) {
     suspend fun sync(s: SourceEntity, progress: SyncCounters, stats: SyncStatsCollector, contentTypes: SyncContentTypes) {
+        val details = runCatching { xtream.fetchAccountDetails(s) }.getOrNull()
+        if (details != null) {
+            support.sourceDao.updateHlsSupport(s.id, details.hlsSupported)
+        }
         val semaphore = Semaphore(2)
-        Log.i(TAG, "Xtream sync scheduling sourceId=${s.id} contentTypes=$contentTypes concurrency=2")
+        Log.i(TAG, "Xtream sync scheduling sourceId=${s.id} contentTypes=$contentTypes concurrency=2 hlsSupported=${details?.hlsSupported}")
         coroutineScope {
             if (contentTypes.live) async { semaphore.withPermit { syncLive(s, progress, stats) } }
             if (contentTypes.movies) async { semaphore.withPermit { syncMovies(s, progress, stats) } }

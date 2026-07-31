@@ -83,6 +83,20 @@ data class ChannelEntity(
     @ColumnInfo(defaultValue = "0") val contentHash: Int = 0,
 )
 
+/** Returns the stream URL to tune, swapping .ts to .m3u8 if preferHls & hlsSupported are active for Xtream. */
+fun ChannelEntity.playStreamUrl(source: SourceEntity?): String =
+    resolveStreamUrl(streamUrl, source)
+
+/** Swaps .ts to .m3u8 if preferHls is active for an Xtream source. */
+fun resolveStreamUrl(url: String, source: SourceEntity?): String {
+    if (source != null && source.type == tv.own.owntv.core.model.SourceType.XTREAM && source.preferHls) {
+        if (url.endsWith(".ts", ignoreCase = true)) {
+            return url.dropLast(3) + ".m3u8"
+        }
+    }
+    return url
+}
+
 @Entity(
     tableName = "movies",
     foreignKeys = [
