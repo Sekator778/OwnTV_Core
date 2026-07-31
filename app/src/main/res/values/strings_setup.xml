@@ -16,7 +16,6 @@
     <string name="setup_companion_unavailable">Could not open the local server. Try again.</string>
     <string name="setup_companion_locked">Too many incorrect PIN attempts — the link was closed for safety.</string>
 
-    <string name="setup_move_order_instructions">▲/▼ to move · OK to save · Back to cancel</string>
     <string name="setup_tmdb_name">Set TMDB name</string>
     <string name="setup_tmdb_description">Type the exact TMDB title to match. Year is optional but helps when several titles share a name.</string>
     <string name="setup_year_optional">Year (optional)</string>
@@ -29,7 +28,6 @@
     <string name="setup_from_current_folder">..</string>
 
     <string name="setup_move_indicator">↕</string>
-    <string name="setup_items_per_skip">Items per skip</string>
 
     <string name="setup_welcome_tagline">Your own IPTV player.</string>
     <string name="setup_get_started">Get Started</string>
@@ -136,7 +134,6 @@
     <string name="setup_device_model_preset">Device model preset (User-Agent)…</string>
     <string name="setup_testing">Testing…</string>
     <string name="setup_test_connection">Test connection</string>
-    <string name="setup_stalker_test_ok">✓ <xliff:g id="message">%1$s</xliff:g></string>
     <plurals name="setup_stalker_test_connected">
         <item quantity="one">✓ Connected via <xliff:g id="endpoint">%1$s</xliff:g> (<xliff:g id="fields">%2$d</xliff:g> profile field)</item>
         <item quantity="other">✓ Connected via <xliff:g id="endpoint">%1$s</xliff:g> (<xliff:g id="fields">%2$d</xliff:g> profile fields)</item>
@@ -172,4 +169,61 @@
     <string name="setup_mag254">MAG254</string>
     <string name="setup_mag270">MAG270</string>
     <string name="setup_mag420">MAG420</string>
+
+
+    <!-- Companion web UI is rendered outside Compose but still resolves through Android resources. -->
+    <string name="companion_pin_page_title">OwnTV — Enter PIN</string>
+    <string name="companion_pin_heading">Enter the PIN</string>
+    <string name="companion_pin_description">Type the 6-digit PIN shown on your TV to continue.</string>
+    <string name="companion_pin_placeholder">••••••</string>
+    <string name="companion_pin_aria">PIN</string>
+    <string name="companion_continue">Continue</string>
+    <string name="companion_pin_mismatch">That PIN did not match — try again.</string>
+    <string name="companion_add_page_title">OwnTV — Add source</string>
+    <string name="companion_add_heading">Add a source</string>
+    <string name="companion_add_description">Fill in one source and press Send. It appears on the TV — pick up the remote and press Start Import there when you are ready.</string>
+    <string name="companion_default_playlist">Default playlist</string>
+    <string name="companion_send_to_tv">Send to TV</string>
+    <string name="companion_sync_xtream_hint">What to sync — Now imports first, Later syncs in the background, Off is never fetched.</string>
+    <string name="companion_sync_stalker_hint">What to sync — Live defaults to Now; Movies/Series default to Later (Stalker VOD is slow).</string>
+    <string name="companion_saved_page_title">OwnTV — Sent</string>
+    <string name="companion_saved_heading">Sent to your TV ✓</string>
+    <string name="companion_saved_source_body"><xliff:g id="name">%1$s</xliff:g> is now on the TV\'s Add source screen. Check the details there and press Start Import on the remote.</string>
+    <string name="companion_saved_send_another">Send another source</string>
+    <string name="companion_saved_backup_body">Your backup is now on the TV. Pick up the remote and choose which parts to restore.</string>
+    <string name="companion_saved_backup_link">Send a different file</string>
+    <string name="companion_saved_image_body">Your image is now the TV background.</string>
+    <string name="companion_saved_image_link">Send a different image</string>
+    <string name="companion_backup_page_title">OwnTV — Restore backup</string>
+    <string name="companion_backup_heading">Restore a backup</string>
+    <string name="companion_backup_description">Choose an OwnTV backup file (.own, or an older .json) and press Send. It is transferred to the TV — pick up the remote and choose what to restore there.</string>
+    <string name="companion_backup_file">Backup file</string>
+    <string name="companion_choose_backup">Please choose a backup file first.</string>
+    <string name="companion_sending">Sending…</string>
+    <!-- Translators: status is the numeric HTTP response inserted by the companion web page. Keep the complete sentence. -->
+    <string name="companion_upload_failed">Upload failed (HTTP <xliff:g id="status">%1$d</xliff:g>). Check the PIN and try again.</string>
+    <string name="companion_could_not_reach">Could not reach the TV. Stay on the same Wi-Fi and try again.</string>
+    <string name="companion_could_not_read">Could not read that file.</string>
+    <string name="companion_image_page_title">OwnTV — Background image</string>
+    <string name="companion_image_heading">Send a background image</string>
+    <string name="companion_image_description">Choose a photo (JPG, PNG or WebP) and press Send. It becomes the background picture behind the TV interface.</string>
+    <string name="companion_image_file">Image file</string>
+    <string name="companion_choose_image">Please choose an image first.</string>
+    <string name="companion_image_too_large">That image is too large (max 25 MB).</string>
+    <string name="companion_download_page_title">OwnTV — Download backup</string>
+    <string name="companion_download_heading">Download your backup</string>
+    <string name="companion_download_description">Your TV has prepared an OwnTV backup file. Tap the button to save it to this device (owntv-backup.own). Keep it somewhere safe — you can restore from it later.</string>
+    <string name="companion_download_backup">Download backup</string>
+    <string name="companion_error_bad_request">Bad request</string>
+    <string name="companion_error_body_too_large">Request body is too large.</string>
+    <string name="companion_error_unauthorized">Unauthorized. Check the PIN and try again.</string>
+    <string name="companion_error_not_found">Not found.</string>
+    <string name="companion_error_no_backup">No backup is available.</string>
+    <string name="companion_error_backup_too_large">The backup is too large.</string>
+    <string name="companion_error_empty_backup">The backup is empty.</string>
+    <string name="companion_error_image_too_large">The image is too large.</string>
+    <string name="companion_error_invalid_image">That is not a valid image upload.</string>
+    <string name="companion_error_missing_fields">Required fields are missing.</string>
+
+    <string name="setup_invalid_locale">This backup contained an unsupported app language. The restore succeeded, but your current language was kept.</string>
 </resources>

@@ -14,10 +14,6 @@
     <string name="player_mini_bottom_left">Bottom left</string>
     <string name="player_mini_bottom_center">Bottom center</string>
     <string name="player_mini_bottom_right">Bottom right</string>
-    <string name="player_resume_prompt">Resume playback?</string>
-    <string name="player_resume_position">You stopped at <xliff:g id="position">%1$s</xliff:g>.</string>
-    <string name="player_resume">Resume</string>
-    <string name="player_start_over">Start over</string>
     <string name="player_channel_label">CHANNEL</string>
     <string name="player_at_live_edge">● At the live edge</string>
     <string name="player_behind_live">● <xliff:g id="offset">%1$s</xliff:g> behind live</string>
@@ -95,8 +91,6 @@
     <string name="player_error_hardware_fallback">This stream\'s format couldn\'t be hardware-decoded on this TV, so it fell back to software decoding — which can\'t sustain <xliff:g id="resolution">%1$s</xliff:g> without overloading the TV. The TV may still play other 4K content fine; this particular stream\'s format is the issue.</string>
     <string name="player_error_hardware_disabled">Hardware decoding is turned off — software decoding can\'t handle <xliff:g id="resolution">%1$s</xliff:g> video. Enable it in Settings → Video Player.</string>
     <string name="player_error_custom_user_agent">This provider may require a custom User-Agent in source settings.</string>
-    <string name="player_error_software_resolution">software decoding — which can\'t sustain <xliff:g id="resolution">%1$s</xliff:g> without overloading the TV. The TV</string>
-    <string name="player_error_no_video_mpv">no-video (mpv, Live) — audio progressing but no video frame after ~<xliff:g id="elapsed">%1$d</xliff:g>ms</string>
     <string name="player_reason_decoder_busy">Hardware video decoder is busy or can\'t handle this stream</string>
     <string name="player_reason_decoder_transient">Hardware video decoder error — transient, try again</string>
     <string name="player_reason_unsupported_video">This device\'s decoder doesn\'t support this video format/profile (e.g. HEVC 10-bit)</string>
@@ -111,8 +105,6 @@
     <string name="player_reason_format">Stream format not recognized (bad or partial stream)</string>
     <string name="player_reason_network">Network problem reaching the provider</string>
     <string name="player_reason_audio">Audio output error — the device couldn\'t play this audio format</string>
-    <string name="player_stream_stats_label"><xliff:g id="label">%1$s</xliff:g>: <xliff:g id="value">%2$s</xliff:g></string>
-    <string name="player_track_id">Track <xliff:g id="id">%1$d</xliff:g></string>
     <string name="player_audio_track_number">Audio <xliff:g id="number">%1$d</xliff:g></string>
     <string name="player_subtitle_track_number">Subtitle <xliff:g id="number">%1$d</xliff:g></string>
     <string name="player_metadata_separator"> · </string>
@@ -152,4 +144,72 @@
     <string name="player_decoder_software">software decoder</string>
     <string name="player_decoder_direct">direct</string>
     <string name="player_decoder_gpu">GPU</string>
+
+
+    <string name="player_subtitles_search_title">Search OpenSubtitles</string>
+    <string name="player_subtitles_working">Working…</string>
+    <string name="player_subtitles_edit_search">Edit search</string>
+    <string name="player_subtitles_title_label">Title</string>
+    <string name="player_subtitles_delete_title">Delete OpenSub subtitles</string>
+    <string name="player_subtitles_sign_in">Sign in</string>
+    <string name="player_subtitles_sign_out">Sign out</string>
+    <string name="player_subtitles_account">Account</string>
+    <string name="player_subtitles_username">Username</string>
+    <string name="player_subtitles_password">Password</string>
+    <string name="player_subtitles_stay_signed_in">Stay signed in</string>
+    <string name="player_subtitles_sign_in_title">Sign in to OpenSubtitles</string>
+    <string name="player_subtitles_connect_description">Connect this profile\'s OpenSubtitles account.</string>
+    <string name="player_subtitles_contacting">Contacting OpenSubtitles…</string>
+    <string name="player_subtitles_api_notice">This product uses the OpenSubtitles API but is not endorsed or certified by OpenSubtitles.</string>
+    <string name="player_subtitles_delete_description">Remove subtitles you\'ve downloaded for movies and series.</string>
+    <string name="player_subtitles_delete_login_message">Removes this profile\'s OpenSubtitles login from this device. Already downloaded subtitles stay available offline.</string>
+    <string name="player_subtitles_delete_action">Delete subtitles</string>
+    <string name="player_subtitles_downloads">Downloads</string>
+    <string name="player_subtitles_vip">VIP</string>
+    <string name="player_subtitles_refresh">Refresh</string>
+    <string name="player_subtitles_sign_in_to_use">Use your opensubtitles.com account. Creating one is free.</string>
+    <plurals name="player_subtitles_remaining">
+        <item quantity="one"><xliff:g id="remaining">%1$d</xliff:g> download of <xliff:g id="total">%2$d</xliff:g> remaining today</item>
+        <item quantity="other"><xliff:g id="remaining">%1$d</xliff:g> downloads of <xliff:g id="total">%2$d</xliff:g> remaining today</item>
+    </plurals>
+    <plurals name="player_subtitles_remaining_short">
+        <item quantity="one"><xliff:g id="remaining">%1$d</xliff:g> download remaining today</item>
+        <item quantity="other"><xliff:g id="remaining">%1$d</xliff:g> downloads remaining today</item>
+    </plurals>
+    <plurals name="player_subtitles_remaining_reset">
+        <item quantity="one"><xliff:g id="remaining">%1$d</xliff:g> download remaining today · resets in <xliff:g id="reset">%2$s</xliff:g></item>
+        <item quantity="other"><xliff:g id="remaining">%1$d</xliff:g> downloads remaining today · resets in <xliff:g id="reset">%2$s</xliff:g></item>
+    </plurals>
+    <plurals name="player_subtitles_remaining_count">
+        <item quantity="one"><xliff:g id="remaining">%1$d</xliff:g> download remaining today</item>
+        <item quantity="other"><xliff:g id="remaining">%1$d</xliff:g> downloads remaining today</item>
+    </plurals>
+    <string name="player_subtitles_session">The connection session expires. Turn off to store only a temporary session.</string>
+    <string name="player_subtitles_free_description_full">OpenSubtitles is a free, open community subtitle service. Sign in with your own opensubtitles.com account; creating one is free. This applies to the current profile only.</string>
+    <string name="player_subtitles_session_expired">Your OpenSubtitles session has expired. To keep searching and downloading subtitles, sign in again from Settings → Video player → Subtitles → OpenSubtitles.</string>
+    <string name="player_subtitles_account_needed">OpenSubtitles account needed\n\nTo search and download subtitles, sign in from Settings → Video player → Subtitles → OpenSubtitles. OpenSubtitles is a free, open community service — anyone can create a free account at opensubtitles.com.</string>
+    <string name="player_subtitles_no_matches">No matching subtitles were found.</string>
+    <string name="player_subtitles_show_all_languages">Show all languages</string>
+    <string name="player_subtitles_all_languages">All languages</string>
+    <string name="player_subtitles_try_again">Try again</string>
+    <string name="player_subtitles_limit_reached">The daily subtitle search limit has been reached. Try again tomorrow.</string>
+    <string name="player_subtitles_network_error">Couldn\'t reach OpenSubtitles. Check your connection and try again.</string>
+    <string name="player_subtitles_subtitle">Subtitle</string>
+    <string name="player_subtitles_trusted">Trusted</string>
+    <string name="player_subtitles_sdh">SDH</string>
+    <string name="player_subtitles_ai">AI</string>
+    <plurals name="player_subtitles_download_count">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> download</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> downloads</item>
+    </plurals>
+    <string name="player_subtitles_tags_separator"> · </string>
+    <string name="player_subtitles_search">Search</string>
+    <string name="player_subtitles_connected_as">Connected as</string>
+    <string name="player_subtitles_resets">Resets</string>
+    <string name="player_subtitles_free_account">Free</string>
+    <string name="player_subtitles_in"><xliff:g id="value">%1$s</xliff:g></string>
+    <string name="player_subtitles_enter_credentials">Enter your OpenSubtitles username and password.</string>
+    <string name="player_subtitles_invalid_credentials">OpenSubtitles could not sign in with those account details.</string>
+    <string name="player_subtitles_sign_in_network_error">Couldn\'t reach OpenSubtitles. Check your internet connection and try again.</string>
+    <string name="player_subtitles_refresh_network_error">Couldn\'t refresh OpenSubtitles. Check your internet connection.</string>
 </resources>

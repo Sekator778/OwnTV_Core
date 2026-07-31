@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
+    <!-- British English overrides for the canonical en-US source. Resource names remain stable. -->
+    <string name="settings_sources_importing">Importing catalogue…</string>
+    <string name="settings_sources_preparing">Preparing catalogue</string>
+    <string name="settings_sources_preparing_detail">Preparing catalogue</string>
+    <string name="settings_sources_resync_description">Resync now fetches the latest catalogue and keeps everything already saved.
+
+Resync and remove missing titles also allows removing titles the provider no longer lists. Your favourites, history and resume positions for titles that are still listed are kept.</string>
+    <plurals name="settings_epg_sources_status_count_programmes">
+        <item quantity="one">It contains <xliff:g id="programmes">%1$d</xliff:g> programme.</item>
+        <item quantity="other">It contains <xliff:g id="programmes">%1$d</xliff:g> programmes.</item>
+    </plurals>
+    <string name="settings_epg_sources_status_synced">Synced, but no programmes were found in the time window.</string>
+    <string name="settings_backup_section_favorites">Favourites</string>
+    <string name="settings_backup_save_description">Save your profiles, sources, customizations, favourites, history and resume positions to a file — or restore them on a new device. You choose what to include each time.</string>
+    <string name="settings_accent">Accent colour</string>
+    <string name="settings_startup_favorites">Live · Favourites</string>
+    <string name="settings_choose_history">Choose what to remove for this profile. Playlists, favourites and downloads are not affected.</string>
+    <string name="settings_accent_dialog">Accent colour</string>
+    <string name="settings_color_picker">Colour picker</string>
+    <string name="settings_use_color">Use this colour</string>
+    <string name="settings_search_keywords_epg">xmltv guide feed programme</string>
+    <string name="settings_sync_guide_description">Download the programme guide (EPG) for “<xliff:g id="source">%1$s</xliff:g>”. You can also do this later in Settings → EPG.</string>
+</resources>

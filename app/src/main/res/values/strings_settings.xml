@@ -4,7 +4,6 @@
     <string name="settings_sort_alpha">A–Z</string>
     <string name="settings_sort_rating">Rating</string>
     <string name="settings_sort_date_added">Date added</string>
-    <string name="settings_provider">Provider</string>
     <string name="settings_mini_player">Mini-player</string>
     <string name="settings_mini_player_description">The small floating player you get when you dock (PiP) a channel while browsing. Change these here, or on the fly with the resize / move buttons on the mini-player itself.</string>
     <string name="settings_size">Size</string>
@@ -139,9 +138,9 @@
     <string name="settings_playlists">Playlists</string>
     <string name="settings_playlists_description">Add, re-sync or remove M3U / Xtream playlists</string>
     <string name="settings_epg_sources">EPG Sources</string>
-    <string name="settings_epg_sources_description">Add XMLTV guide feeds for the TV Guide</string>
+    <string name="settings_epg_sources_nav_description">Add XMLTV guide feeds for the TV Guide</string>
     <string name="settings_customize">Customize Categories &amp; Items</string>
-    <string name="settings_customize_description">Hide &amp; unhide items, rename &amp; reorder categories</string>
+    <string name="settings_customize_nav_description">Hide &amp; unhide items, rename &amp; reorder categories</string>
     <string name="settings_sidebar_description_root">Auto-adapt side icons to your playlist, or hide specific ones</string>
     <string name="settings_ch_paging">CH+- Key Paging</string>
     <string name="settings_ch_paging_description">Skip up/down in the category &amp; item lists with the CH+ / CH− keys</string>
@@ -240,28 +239,15 @@
     <string name="settings_clear_log">Clear log</string>
     <string name="settings_browsing_title">Browsing &amp; lists</string>
     <string name="settings_browsing_description_full">What Live TV, Movies and Series return to when you come back.</string>
-    <string name="settings_remember_category">Remember last category</string>
-    <string name="settings_remember_category_description">Reopen the section on the category you left, not All.</string>
-    <string name="settings_remember_item">Remember last item</string>
-    <string name="settings_remember_item_description">Each category keeps its own scroll position instead of starting at the top. Live TV also restores the last focused channel.</string>
     <string name="settings_section_toggle"><xliff:g id="section">%1$s</xliff:g>: <xliff:g id="state">%2$s</xliff:g></string>
     <string name="settings_glass_surfaces">Glass surfaces</string>
     <string name="settings_glass_surfaces_description">Choose which parts of the app render as glass. Turning every surface off turns glass off.</string>
     <string name="settings_all_surfaces_on">All surfaces: On</string>
     <string name="settings_all_surfaces_off">All surfaces: Off</string>
     <string name="settings_surface_toggle"><xliff:g id="surface">%1$s</xliff:g>: <xliff:g id="state">%2$s</xliff:g></string>
-    <string name="settings_surfaces_all">Surfaces: All</string>
-    <string name="settings_surfaces_count">Surfaces: <xliff:g id="count">%1$d</xliff:g> of <xliff:g id="total">%2$d</xliff:g></string>
-    <string name="settings_transparency">Transparency</string>
     <string name="settings_transparency_description">How much shows through the panels (<xliff:g id="min">%1$d</xliff:g>%%–<xliff:g id="max">%2$d</xliff:g>%%). Higher is more solid.</string>
-    <string name="settings_blur_frost">Blur / Frost</string>
-    <string name="settings_blur_description">How frosted the backdrop is (<xliff:g id="min">%1$d</xliff:g>%%–<xliff:g id="max">%2$d</xliff:g>%%). Only over a background image.</string>
-    <string name="settings_set_background">Set a background image to enable.</string>
-    <string name="settings_play_catchup_in">Play catch-up in</string>
     <string name="settings_catchup_description">How catch-up timestamps are sent. Use your device timezone, or set the offset your provider\'s server expects.</string>
     <string name="settings_manual">Manual</string>
-    <string name="settings_always_ask">Always ask</string>
-    <string name="settings_owntv_player">OwnTV player</string>
     <string name="settings_theme_dark">Dark</string>
     <string name="settings_theme_light">Light</string>
     <string name="settings_theme_system">System</string>
@@ -460,14 +446,10 @@ Choose Balanced if a channel becomes unreliable.</string>
         <item quantity="one"><xliff:g id="count">%1$d</xliff:g> of <xliff:g id="total">%2$d</xliff:g> surface</item>
         <item quantity="other"><xliff:g id="count">%1$d</xliff:g> of <xliff:g id="total">%2$d</xliff:g> surfaces</item>
     </plurals>
-    <string name="settings_surface_scope"><xliff:g id="scope">%1$s</xliff:g></string>
-    <string name="settings_background_required">Set a background image to enable.</string>
     <string name="settings_catchup_timezone_device">Device</string>
     <string name="settings_catchup_player_ask">Always ask</string>
     <string name="settings_catchup_player_internal">OwnTV player</string>
     <string name="settings_catchup_player_external">External player</string>
-    <string name="settings_on">On</string>
-    <string name="settings_off">Off</string>
     <string name="settings_soon">SOON</string>
     <string name="settings_download_folder_title">Choose the download folder</string>
     <string name="settings_pick_background_title">Pick a background image</string>
@@ -503,6 +485,225 @@ Choose Balanced if a channel becomes unreliable.</string>
     <string name="settings_browsing_last_item">Remember last item</string>
     <string name="settings_browsing_last_item_description">Each category keeps its own scroll position instead of starting at the top. Live TV also restores the last focused channel.</string>
     <string name="settings_catchup_player">Play catch-up in</string>
-    <string name="settings_accent_hex_prefix">#</string>
-    <string name="settings_accent_hex_placeholder">52DBC8</string>
+
+
+    <string name="settings_customize_title">Customize Categories &amp; Items</string>
+    <string name="settings_customize_pin_locked">This screen is PIN-locked.</string>
+    <string name="settings_customize_wrong_pin">Wrong PIN — try again</string>
+    <string name="settings_customize_enter_pin">Enter PIN</string>
+    <string name="settings_customize_set_pin">🔒 Set PIN</string>
+    <string name="settings_customize_change_pin">🔒 Change PIN</string>
+    <string name="settings_customize_remove_lock">Remove lock</string>
+    <string name="settings_customize_description">Hide &amp; unhide channels, movies and series, and rename or reorder categories for this profile. Survives re-syncs.</string>
+    <string name="settings_customize_new_category_behavior">New category behavior</string>
+    <string name="settings_customize_hide_new">Hide — new categories added on re-sync are hidden by default</string>
+    <string name="settings_customize_show_new">Show — new categories added on re-sync are shown by default</string>
+    <string name="settings_customize_hide">Hide</string>
+    <string name="settings_customize_show">Show</string>
+    <string name="settings_customize_hidden_channels">Hidden channels</string>
+    <string name="settings_customize_hidden_movies">Hidden movies</string>
+    <string name="settings_customize_hidden_series">Hidden series</string>
+    <string name="settings_customize_unhide_description">Unhide to bring an item back to the lists.</string>
+    <string name="settings_customize_categories">Categories</string>
+    <string name="settings_customize_empty">No categories in this section yet — add a source first.</string>
+    <string name="settings_customize_range_hide_start">Span selection started. Press Show/Hide on the end item to select the span.</string>
+    <string name="settings_customize_range_rename_start">Rename span started. Press Rename on the end item to select the span.</string>
+    <string name="settings_customize_range_move_start">Move span started. Press ⤒ ↑ ↓ ⤓ on the end item to move the whole span.</string>
+    <plurals name="settings_customize_range_selected">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> category selected. Keep pressing ⤒ ↑ ↓ ⤓ to move it.</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> categories selected. Keep pressing ⤒ ↑ ↓ ⤓ to move them together.</item>
+    </plurals>
+    <string name="settings_customize_rename">Rename</string>
+    <string name="settings_customize_rename_category">Rename category</string>
+    <string name="settings_customize_rename_or_delete_category">Rename or delete category</string>
+    <string name="settings_customize_new_category">＋ New category</string>
+    <string name="settings_customize_sort_button">Sort: <xliff:g id="label">%1$s</xliff:g> ▾</string>
+    <string name="settings_customize_new_categories_button">New categories: <xliff:g id="label">%1$s</xliff:g> ▾</string>
+    <string name="settings_customize_rename_hint">Only for this profile. Leave blank to restore “<xliff:g id="name">%1$s</xliff:g>”.</string>
+    <string name="settings_customize_remove_pin_title">Remove PIN lock?</string>
+    <string name="settings_customize_remove_pin_message">The Customize screen will open without asking for a PIN again.</string>
+    <string name="settings_customize_remove">Remove</string>
+    <string name="settings_customize_confirm_pin">Confirm new PIN</string>
+    <string name="settings_customize_pin_mismatch">PINs don\'t match — re-enter</string>
+    <string name="settings_customize_new_pin">Enter a new PIN</string>
+    <plurals name="settings_customize_selected_categories">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> category selected.</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> categories selected.</item>
+    </plurals>
+    <string name="settings_customize_hide_show_title">Hide or show categories</string>
+    <string name="settings_customize_was">was “<xliff:g id="name">%1$s</xliff:g>”</string>
+    <string name="settings_customize_hidden">Hidden</string>
+    <string name="settings_customize_unhide">Unhide</string>
+    <string name="settings_customize_metadata_separator">  ·  </string>
+
+    <string name="settings_sources_title">Sources</string>
+    <string name="settings_sources_description">Sources are shared across all profiles.</string>
+    <string name="settings_sources_empty">No sources yet. Add an M3U or Xtream source.</string>
+    <string name="settings_sources_add">Add Source</string>
+    <string name="settings_sources_import_failed">Import failed</string>
+    <string name="settings_sources_importing">Importing catalog…</string>
+    <string name="settings_sources_preparing">Preparing catalog</string>
+    <string name="settings_sources_deleting">DELETING…</string>
+    <string name="settings_sources_resync">Re-sync</string>
+    <string name="settings_sources_delete_title">Delete “<xliff:g id="name">%1$s</xliff:g>”?</string>
+    <string name="settings_sources_delete_message">This removes the source and all its channels, movies and series from every profile.</string>
+    <string name="settings_sources_type_m3u">M3U · <xliff:g id="url">%1$s</xliff:g></string>
+    <string name="settings_sources_type_xtream">Xtream · <xliff:g id="url">%1$s</xliff:g></string>
+    <string name="settings_sources_type_stalker">Stalker · <xliff:g id="url">%1$s</xliff:g></string>
+    <string name="settings_sources_expiry">Expires <xliff:g id="date">%1$s</xliff:g></string>
+    <string name="settings_sources_auto_refresh">⟳ <xliff:g id="mode">%1$s</xliff:g></string>
+    <string name="settings_sources_default">DEFAULT</string>
+    <string name="settings_sources_backup">Backup</string>
+    <string name="settings_sources_details_separator">  •  </string>
+    <string name="settings_sources_preparing_detail">Preparing catalog</string>
+    <string name="settings_sources_removing_detail">Removing…</string>
+    <string name="settings_sources_edit">Edit</string>
+    <string name="settings_sources_delete">Delete</string>
+    <string name="settings_sources_cancel">Cancel</string>
+    <string name="settings_sources_try_again">Try again</string>
+    <string name="settings_sources_import_title">Import complete</string>
+    <string name="settings_sources_resync_title_full">Resync “<xliff:g id="name">%1$s</xliff:g>”</string>
+    <string name="settings_sources_resync_now_full">Resync now</string>
+    <string name="settings_sources_resync_remove_full">Resync and remove missing titles</string>
+    <string name="settings_sources_resync_description">Resync now fetches the latest catalog and keeps everything already saved.
+
+Resync and remove missing titles also allows removing titles the provider no longer lists. Your favorites, history and resume positions for titles that are still listed are kept.</string>
+    <string name="settings_sources_refresh_off">Off</string>
+    <string name="settings_sources_refresh_startup">Refresh at startup</string>
+    <string name="settings_sources_refresh_6h">6 hours</string>
+    <string name="settings_sources_refresh_12h">12 hours</string>
+    <string name="settings_sources_refresh_24h">24 hours</string>
+    <string name="settings_sources_refresh_48h">48 hours</string>
+
+    <string name="settings_epg_sources_title">EPG Sources</string>
+    <string name="settings_epg_sources_empty">No EPG sources yet. Add an XMLTV link.</string>
+    <string name="settings_epg_sources_add">Add EPG source</string>
+    <string name="settings_epg_sources_edit">Edit EPG source</string>
+    <string name="settings_epg_sources_add_sync">Add &amp; sync</string>
+    <string name="settings_epg_sources_save_sync">Save &amp; sync</string>
+    <string name="settings_epg_sources_fill_playlist">Fill from playlist</string>
+    <string name="settings_epg_sources_none_playlist">None of your playlists provide an EPG URL.</string>
+    <string name="settings_epg_sources_use_logos">Use this guide\'s channel logos</string>
+    <string name="settings_epg_sources_logos_description">Show logos from this XMLTV feed instead of your playlist\'s. Channels this feed has no logo for keep the playlist one.</string>
+    <string name="settings_epg_sources_name">Name</string>
+    <string name="settings_epg_sources_url">XMLTV URL</string>
+    <string name="settings_epg_sources_user_agent">User-Agent (optional)</string>
+    <string name="settings_epg_sources_name_hint">e.g. UK Guide</string>
+    <string name="settings_epg_sources_url_hint">https://…/epg.xml(.gz)</string>
+    <string name="settings_epg_sources_user_agent_hint">Leave blank for default</string>
+    <string name="settings_epg_sources_description">XMLTV guide feeds that fill the TV Guide. They sync automatically when added and merge with your playlists\' channels.</string>
+    <string name="settings_epg_sources_delete_title">Delete “<xliff:g id="name">%1$s</xliff:g>”?</string>
+    <string name="settings_epg_sources_delete_message">Removes this EPG source and its guide data. Your channels stay.</string>
+    <string name="settings_epg_sources_syncing_percent">Syncing <xliff:g id="percent">%1$d</xliff:g>%%</string>
+    <!-- Translators: both placeholders are complete independently pluralized guide-count sentences. -->
+    <plurals name="settings_epg_sources_catchup">
+        <item quantity="one">Catch-up is available on <xliff:g id="count">%1$d</xliff:g> channel.</item>
+        <item quantity="other">Catch-up is available on <xliff:g id="count">%1$d</xliff:g> channels.</item>
+    </plurals>
+    <string name="settings_epg_sources_error">⚠ <xliff:g id="error">%1$s</xliff:g></string>
+    <string name="settings_epg_sources_auto_refresh_title">Auto refresh</string>
+    <string name="settings_epg_sources_auto_refresh_description">Off, on startup, or when data is stale</string>
+    <string name="settings_epg_sources_on">On</string>
+    <string name="settings_epg_sources_off">Off</string>
+    <string name="settings_epg_sources_not_synced">Not synced yet</string>
+    <string name="settings_epg_refresh_1h">1 hour</string>
+    <string name="settings_epg_refresh_3h">3 hours</string>
+    <string name="settings_epg_refresh_6h">6 hours</string>
+    <string name="settings_epg_refresh_12h">12 hours</string>
+    <string name="settings_epg_refresh_24h">24 hours</string>
+    <string name="settings_epg_refresh_48h">48 hours</string>
+    <string name="settings_epg_sources_deleting">Deleting…</string>
+    <string name="settings_epg_sources_syncing_label">Syncing</string>
+    <string name="settings_epg_sources_connecting">Connecting…</string>
+    <plurals name="settings_epg_sources_status_count_channels">
+        <item quantity="one">The guide contains <xliff:g id="channels">%1$d</xliff:g> channel.</item>
+        <item quantity="other">The guide contains <xliff:g id="channels">%1$d</xliff:g> channels.</item>
+    </plurals>
+    <plurals name="settings_epg_sources_status_count_programmes">
+        <item quantity="one">It contains <xliff:g id="programmes">%1$d</xliff:g> program.</item>
+        <item quantity="other">It contains <xliff:g id="programmes">%1$d</xliff:g> programs.</item>
+    </plurals>
+    <!-- Translators: both placeholders are complete independently pluralized guide-count sentences. -->
+    <string name="settings_epg_sources_status_count"><xliff:g id="channels">%1$s</xliff:g> <xliff:g id="programmes">%2$s</xliff:g></string>
+    <string name="settings_epg_sources_status_count_with_catchup"><xliff:g id="counts">%1$s</xliff:g> <xliff:g id="catchup">%2$s</xliff:g></string>
+    <string name="settings_epg_sources_status_synced">Synced, but no programs were found in the time window.</string>
+    <string name="settings_epg_sources_status_synced_with_catchup"><xliff:g id="catchup">%1$s</xliff:g></string>
+
+    <string name="settings_backup_title">Backup &amp; Restore</string>
+    <string name="settings_backup_working">Working…</string>
+    <string name="settings_backup_what_backup">What to back up</string>
+    <string name="settings_backup_what_restore">What to restore</string>
+    <string name="settings_backup_encrypt_title">Encrypt this backup?</string>
+    <string name="settings_backup_encrypt_message">With a backup password, the whole file is encrypted — playlists, profiles and saved passwords included — and nothing in it can be read without that password. Keep it safe: if you lose it, the backup cannot be opened at all. Without a password the file is not encrypted and saved passwords are left out of it.</string>
+    <string name="settings_backup_export_title">Export a backup</string>
+    <string name="settings_backup_export_message">Send the backup to another device (phone or laptop) on the same Wi-Fi, or save it to a file on this device.</string>
+    <string name="settings_backup_restore_title">Restore a backup</string>
+    <string name="settings_backup_restore_message">Send the backup from another device (phone or laptop) on the same Wi-Fi, or pick a backup file already on this device.</string>
+    <string name="settings_backup_password">Backup password</string>
+    <string name="settings_backup_enter_password">Enter backup password</string>
+    <string name="settings_backup_wrong_password">Wrong backup password</string>
+    <string name="settings_backup_password_mismatch">That password didn\'t match. Try again, or skip to restore everything except saved passwords.</string>
+    <string name="settings_backup_password_encrypted_mismatch">That password didn\'t match. This backup is encrypted — it can\'t be opened without the password it was created with.</string>
+    <string name="settings_backup_encrypted_description">This backup is encrypted. Enter the backup password to open it and choose what to restore.</string>
+    <string name="settings_backup_saved_passwords_description">This backup\'s passwords are encrypted. Enter the backup password to restore them, or skip to restore everything else and re-enter passwords later.</string>
+    <string name="settings_backup_choose_folder">Choose a folder to save the backup</string>
+    <string name="settings_backup_choose_folder_action">Choose folder</string>
+    <string name="settings_backup_pick_file">Pick a backup file to restore</string>
+    <string name="settings_backup_local_file">Local file</string>
+    <string name="settings_backup_remote">Remote</string>
+    <string name="settings_backup_everything">Everything</string>
+    <string name="settings_backup_kids_profile">Kids profile</string>
+    <!-- Translators: name is a user-provided profile name; keep the full current-profile label intact. -->
+    <string name="settings_backup_profile_current">“<xliff:g id="name">%1$s</xliff:g>” (current)</string>
+    <string name="settings_backup_profile_locked">“<xliff:g id="name">%1$s</xliff:g>” is locked</string>
+    <string name="settings_backup_profile_pin">Profile PIN</string>
+    <string name="settings_backup_pin_incorrect">PIN incorrect.</string>
+    <string name="settings_backup_pin_locked">PIN locked</string>
+    <string name="settings_backup_unlock">Unlock</string>
+    <string name="settings_backup_export_button">Export backup</string>
+    <string name="settings_backup_restore_button">Restore backup</string>
+    <string name="settings_backup_continue">Continue</string>
+    <string name="settings_backup_encrypt_export">Encrypt &amp; export</string>
+    <string name="settings_backup_export_unencrypted">Export unencrypted</string>
+    <string name="settings_backup_encrypt_prepare">Encrypt &amp; prepare</string>
+    <string name="settings_backup_prepare_unencrypted">Prepare unencrypted</string>
+    <string name="settings_backup_restore_action">Restore</string>
+    <string name="settings_backup_skip_passwords">Skip (no passwords)</string>
+    <string name="settings_backup_section_sources">Sources</string>
+    <string name="settings_backup_section_sources_desc">Playlists, EPG feeds and credentials</string>
+    <string name="settings_backup_section_customize">Customizations</string>
+    <string name="settings_backup_section_customize_desc">Hidden/renamed/reordered categories, channels, EPG matches &amp; custom TMDB names</string>
+    <string name="settings_backup_section_favorites">Favorites</string>
+    <string name="settings_backup_section_favorites_desc">Starred channels, movies and series</string>
+    <string name="settings_backup_section_history">Watch history</string>
+    <string name="settings_backup_section_history_desc">Recently watched lists</string>
+    <string name="settings_backup_section_resume">Resume positions</string>
+    <string name="settings_backup_section_resume_desc">Where you stopped in movies &amp; episodes</string>
+    <string name="settings_backup_section_reorder">Manual reorder</string>
+    <string name="settings_backup_section_reorder_desc">Your Move up/down positions for channels, movies and series</string>
+    <string name="settings_backup_section_settings">App settings</string>
+    <string name="settings_backup_section_settings_desc">Theme, accent, player &amp; layout preferences</string>
+    <string name="settings_backup_saved_to">Saved to <xliff:g id="path">%1$s</xliff:g>.</string>
+    <string name="settings_backup_saved_to_without_passwords">Saved to <xliff:g id="path">%1$s</xliff:g>. Passwords were not included.</string>
+    <plurals name="settings_backup_restored">
+        <item quantity="one"><xliff:g id="items">%1$d</xliff:g> item restored.</item>
+        <item quantity="other"><xliff:g id="items">%1$d</xliff:g> items restored.</item>
+    </plurals>
+    <string name="settings_backup_restore_resync">Re-sync your sources to load content.</string>
+    <string name="settings_backup_restore_password_note">Re-enter any saved passwords in Sources/Proxy.</string>
+    <plurals name="settings_backup_skipped_sources">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> source was skipped because its playlist type is not supported.</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> sources were skipped because their playlist types are not supported.</item>
+    </plurals>
+    <string name="settings_backup_export_error">Export failed.</string>
+    <string name="settings_backup_read_error">Couldn\'t read the backup file.</string>
+    <string name="settings_backup_import_error">Import failed.</string>
+    <string name="settings_backup_invalid_locale">This backup contained an unsupported app language. The restore succeeded, but your current language was kept.</string>
+    <string name="settings_backup_which_profiles">Which profiles to back up</string>
+    <string name="settings_backup_selected_profiles">The backup will contain only the selected profiles and their data. Locked profiles need their PIN.</string>
+    <string name="settings_backup_profile_pin_description">This isn\'t your current profile. Enter its PIN to include it in the backup — without the PIN, its data won\'t be backed up.</string>
+    <string name="settings_backup_save_description">Save your profiles, sources, customizations, favorites, history and resume positions to a file — or restore them on a new device. You choose what to include each time.</string>
+
+    <string name="settings_metadata_optional">optional</string>
+    <string name="settings_metadata_test_title">Oppenheimer</string>
 </resources>

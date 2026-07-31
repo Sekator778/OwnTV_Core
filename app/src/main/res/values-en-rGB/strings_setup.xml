@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
+    <!-- British English overrides for the canonical en-US source. Resource names remain stable. -->
+    <string name="setup_setup_choice_description">Start fresh, or bring back your profiles, playlists and favourites from a backup file.</string>
+    <string name="setup_importing_catalog">Importing catalogue…</string>
+    <string name="setup_preparing_catalog">Preparing catalogue</string>
+    <string name="setup_watching_during_import">You can start watching while the rest of the catalogue loads.</string>
+    <string name="setup_vod_movie_catalog">VOD movie catalogue</string>
+    <string name="setup_tv_series_catalog">TV series catalogue</string>
+</resources>

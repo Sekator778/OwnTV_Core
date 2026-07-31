@@ -46,7 +46,6 @@
     <string name="content_channel_overlay_title">Channels</string>
     <string name="content_live_now">Now</string>
     <string name="content_live_next">Next</string>
-    <string name="content_live_remaining"><xliff:g id="minutes">%1$d</xliff:g> min left</string>
     <string name="content_media_overview">Overview</string>
     <string name="content_media_cast">Cast</string>
     <string name="content_media_press_back">Press Back to close</string>
@@ -116,14 +115,12 @@
     <string name="content_season_episode_title">S<xliff:g id="season">%1$d</xliff:g> · E<xliff:g id="episode">%2$d</xliff:g> <xliff:g id="title">%3$s</xliff:g></string>
     <string name="content_season">Season <xliff:g id="season">%1$d</xliff:g></string>
     <string name="content_season_progress">Season <xliff:g id="season">%1$d</xliff:g> · <xliff:g id="completed">%2$d</xliff:g>/<xliff:g id="total">%3$d</xliff:g></string>
-    <string name="content_no_guide">No guide.</string>
     <string name="content_no_epg">No EPG</string>
     <string name="content_epg">EPG</string>
     <string name="content_live_day_time_range"><xliff:g id="day">%1$s</xliff:g> <xliff:g id="start">%2$s</xliff:g> – <xliff:g id="stop">%3$s</xliff:g></string>
     <string name="content_epg_days">EPG · <xliff:g id="days">%1$d</xliff:g>d</string>
     <string name="content_catchup">Catch-up</string>
     <string name="content_catchup_days">Catch-up · <xliff:g id="days">%1$d</xliff:g>d</string>
-    <string name="content_current"><xliff:g id="value">%1$s</xliff:g></string>
     <string name="content_play_external_short">Play in external player</string>
     <string name="content_rename">Rename</string>
     <string name="content_rename_channel">Rename channel</string>
@@ -144,7 +141,6 @@
     <string name="content_catchup_prompt">Pick a recent program to replay from the start.</string>
     <string name="content_catchup_empty">No recent guide data for this channel yet — make sure its EPG is matched (long-press it, or use Match EPG).</string>
     <string name="content_epg_match_prompt">Pick the guide channel for “<xliff:g id="channel">%1$s</xliff:g>”.</string>
-    <string name="content_epg_current_match">Current: <xliff:g id="match">%1$s</xliff:g></string>
     <string name="content_epg_match_prompt_current">Pick the guide channel for “<xliff:g id="channel">%1$s</xliff:g>”. Current: <xliff:g id="match">%2$s</xliff:g></string>
     <string name="content_search_guide_channels">Search guide channels…</string>
     <string name="content_no_epg_data">No EPG data yet — add an EPG source in Settings.</string>
@@ -198,4 +194,120 @@
     <string name="content_live_time_range"><xliff:g id="start">%1$s</xliff:g> – <xliff:g id="end">%2$s</xliff:g></string>
     <string name="content_live_time_remaining"><xliff:g id="end">%1$s</xliff:g> · <xliff:g id="minutes">%2$d</xliff:g> min left</string>
     <string name="common_browse">Browse</string>
+
+
+    <string name="content_downloads_title">Downloads</string>
+    <string name="content_downloads_description">Movies &amp; episodes saved for offline playback.</string>
+    <string name="content_downloads_empty">No downloads yet. Open a movie or episode and press Download.</string>
+    <string name="content_downloads_storage">Storage</string>
+    <string name="content_downloads_storage_free"><xliff:g id="free">%1$s</xliff:g> GB free of <xliff:g id="total">%2$s</xliff:g> GB</string>
+    <string name="content_storage_internal">Internal storage</string>
+    <string name="content_storage_removable">Removable storage</string>
+    <string name="content_storage_app">App storage (no permission needed)</string>
+    <string name="content_downloads_completed"><xliff:g id="size">%1$s</xliff:g> downloaded</string>
+    <string name="content_downloads_failure_message">Download failed — couldn\'t reach the source. Tap Retry.</string>
+    <string name="content_downloads_queued">Queued…</string>
+    <string name="content_downloads_count"><xliff:g id="count">%1$d</xliff:g></string>
+    <string name="content_downloads_active">Active</string>
+    <string name="content_downloads_waiting">Waiting</string>
+    <string name="content_downloads_completed_group">Completed</string>
+    <string name="content_downloads_failed_group">Failed</string>
+    <string name="content_downloads_progress"><xliff:g id="percent">%1$d</xliff:g>%% · <xliff:g id="downloaded">%2$s</xliff:g> / <xliff:g id="total">%3$s</xliff:g></string>
+    <string name="content_downloads_progress_unknown">Downloading… <xliff:g id="downloaded">%1$s</xliff:g></string>
+    <string name="content_downloads_folder_separator"> › </string>
+    <string name="content_downloads_play">Play</string>
+    <string name="content_downloads_external">External</string>
+    <string name="content_downloads_pause">Pause</string>
+    <string name="content_downloads_unknown_size">—</string>
+
+    <string name="content_epg_create_profile">Create a profile to see the guide.</string>
+    <string name="content_epg_add_playlist">Add a playlist to see the guide.</string>
+    <string name="content_epg_no_channels_query">No guide channels found for “<xliff:g id="query">%1$s</xliff:g>”.</string>
+    <string name="content_epg_mismatched_ids">Guide data is stored, but its channel ids don\'t match your channels\' EPG ids — this EPG feed may belong to a different provider lineup.</string>
+    <string name="content_epg_catchup_unavailable">Catch-up isn\'t available for this channel.</string>
+    <string name="content_epg_matched_no_programmes">Matched — but this guide channel has no current programs in the EPG feed yet.</string>
+    <string name="content_epg_add_playlist_first">Add a playlist first.</string>
+    <string name="content_epg_no_match_data">No EPG data to match against yet.</string>
+    <string name="content_epg_all_matched">Everything\'s already matched.</string>
+    <string name="content_epg_no_match">No EPG match found for “<xliff:g id="channel">%1$s</xliff:g>” — try picking manually.</string>
+    <!-- Translators: the channel and programme counts are rendered independently so each can use its own plural form. -->
+    <plurals name="content_epg_stats_channels">
+        <item quantity="one">Guide loaded: <xliff:g id="channels">%1$d</xliff:g> channel.</item>
+        <item quantity="other">Guide loaded: <xliff:g id="channels">%1$d</xliff:g> channels.</item>
+    </plurals>
+    <plurals name="content_epg_stats_programmes">
+        <item quantity="one">The guide contains <xliff:g id="programmes">%1$d</xliff:g> program.</item>
+        <item quantity="other">The guide contains <xliff:g id="programmes">%1$d</xliff:g> programs.</item>
+    </plurals>
+    <!-- Translators: each placeholder is already a complete localized count/status phrase; reorder the phrases as needed. -->
+    <string name="content_epg_stats_loaded"><xliff:g id="channels">%1$s</xliff:g> <xliff:g id="programmes">%2$s</xliff:g> <xliff:g id="catchup">%3$s</xliff:g></string>
+    <string name="content_epg_no_catchup_channels">No channels support catch-up.</string>
+    <string name="content_epg_stats_no_catchup">No catch-up channels are available.</string>
+    <plurals name="content_epg_catchup_count">
+        <item quantity="one">Catch-up is available on <xliff:g id="count">%1$d</xliff:g> channel.</item>
+        <item quantity="other">Catch-up is available on <xliff:g id="count">%1$d</xliff:g> channels.</item>
+    </plurals>
+    <plurals name="content_epg_stats_catchup_available">
+        <item quantity="one">Catch-up is available on <xliff:g id="count">%1$d</xliff:g> channel.</item>
+        <item quantity="other">Catch-up is available on <xliff:g id="count">%1$d</xliff:g> channels.</item>
+    </plurals>
+    <plurals name="content_epg_auto_matched_applied">
+        <item quantity="one">Auto-matched <xliff:g id="applied">%1$d</xliff:g> channel.</item>
+        <item quantity="other">Auto-matched <xliff:g id="applied">%1$d</xliff:g> channels.</item>
+    </plurals>
+    <plurals name="content_epg_auto_matched_review">
+        <item quantity="one"><xliff:g id="review">%1$d</xliff:g> channel needs review.</item>
+        <item quantity="other"><xliff:g id="review">%1$d</xliff:g> channels need review.</item>
+    </plurals>
+    <!-- Translators: applied and review are complete, independently pluralized sentences. Reorder them without changing their grammar. -->
+    <string name="content_epg_auto_matched"><xliff:g id="applied">%1$s</xliff:g> <xliff:g id="review">%2$s</xliff:g></string>
+    <plurals name="content_epg_auto_matched_no_review">
+        <item quantity="one">Auto-matched <xliff:g id="applied">%1$d</xliff:g> channel.</item>
+        <item quantity="other">Auto-matched <xliff:g id="applied">%1$d</xliff:g> channels.</item>
+    </plurals>
+    <string name="content_epg_title">TV Guide</string>
+    <string name="content_epg_matching">Matching…</string>
+    <string name="content_epg_empty">No EPG added.</string>
+    <string name="content_epg_no_guide">No guide.</string>
+    <string name="content_epg_no_programme">No program at this time.</string>
+    <string name="content_epg_add_description">Add an EPG (XMLTV) source to fill the guide with programs.</string>
+    <string name="content_epg_favourite_description">Favorite this channel, or set its guide data.</string>
+    <string name="content_epg_guide_category">Guide category</string>
+    <string name="content_epg_all_categories">All categories</string>
+    <string name="content_epg_search_hint">Search guide channels…</string>
+    <string name="content_epg_add">Add EPG</string>
+    <string name="content_epg_add_favourite">Add to favorites</string>
+    <string name="content_epg_remove_favourite">Remove from favorites</string>
+    <string name="content_epg_jump_now">Jump to Now</string>
+    <string name="content_epg_runtime"><xliff:g id="minutes">%1$d</xliff:g>m</string>
+    <string name="content_epg_review_matches">Review EPG matches</string>
+    <string name="content_epg_review_description">These channels were matched by name but weren\'t a confident fit. Accept the right ones; skip the rest.</string>
+    <string name="content_epg_accept">Accept</string>
+    <string name="content_epg_accept_all">Accept all</string>
+    <string name="content_epg_skip">Skip</string>
+    <string name="content_epg_skip_all">Skip all</string>
+    <string name="content_epg_pick_manually">Pick EPG manually</string>
+    <string name="content_epg_move_hint">Move right into a row, then browse with ◀ ▶ to preview a program.</string>
+    <string name="content_epg_catchup">↻ catch-up</string>
+    <string name="content_epg_time_range"><xliff:g id="start">%1$s</xliff:g> – <xliff:g id="end">%2$s</xliff:g></string>
+    <string name="content_epg_all">All</string>
+    <string name="content_epg_sort_alpha">A–Z</string>
+    <string name="content_epg_sort_provider">Provider</string>
+    <string name="content_epg_sort_live">Live TV</string>
+    <string name="content_epg_sort_catchup">Catch-up</string>
+    <string name="content_epg_sort_favorites">Favorites</string>
+    <string name="content_epg_category_button">Category: <xliff:g id="label">%1$s</xliff:g></string>
+    <string name="content_epg_sort_button">Sort: <xliff:g id="label">%1$s</xliff:g></string>
+    <string name="content_epg_match_button">Auto-match EPG</string>
+    <string name="content_epg_channel_score">→ <xliff:g id="name">%1$s</xliff:g> · <xliff:g id="percent">%2$d</xliff:g>%%</string>
+    <string name="content_epg_channel_number"><xliff:g id="number">%1$s</xliff:g>  <xliff:g id="name">%2$s</xliff:g></string>
+    <string name="content_epg_bits_separator"> · </string>
+    <string name="content_epg_now">NOW · <xliff:g id="time">%1$s</xliff:g></string>
+    <string name="content_epg_watch_start">Watch from start</string>
+    <string name="content_epg_watch_channel">Watch channel</string>
+    <string name="content_epg_favourite">Favorite</string>
+    <string name="content_epg_unfavourite">Unfavorite</string>
+    <string name="content_epg_player_choice_description">Set a permanent choice in Settings › Catch-up.</string>
+    <string name="content_epg_own_player">OwnTV player</string>
+    <string name="content_epg_external_player">External player</string>
 </resources>

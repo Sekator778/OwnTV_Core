@@ -29,7 +29,6 @@
     <string name="profiles_delete_message">Removes this profile and its favorites and history. Sources are kept.</string>
     <string name="profiles_kids_tag">Kids</string>
     <string name="profiles_locked_tag">PIN locked</string>
-    <string name="profiles_change_pin_hint">Change PIN (blank = keep)</string>
 
     <!-- Search -->
     <string name="search_title">Search</string>
@@ -111,4 +110,38 @@
         <item quantity="one"><xliff:g id="count">%1$d</xliff:g> channel</item>
         <item quantity="other"><xliff:g id="count">%1$d</xliff:g> channels</item>
     </plurals>
+
+
+    <string name="update_title">App update</string>
+    <string name="update_checking">Checking for updates…</string>
+    <string name="update_whats_new">What\'s new</string>
+    <string name="update_downloading">Downloading update… <xliff:g id="percent">%1$d</xliff:g>%%</string>
+    <string name="update_available">Update available</string>
+    <string name="update_latest">You\'re on the latest version (v<xliff:g id="version">%1$s</xliff:g>).</string>
+    <string name="update_available_version">Version <xliff:g id="available">%1$s</xliff:g> is available (you have v<xliff:g id="current">%2$s</xliff:g>).</string>
+    <string name="update_installer">The system installer opens when the download finishes.</string>
+    <string name="update_later">Later</string>
+    <string name="update_now">Update now</string>
+    <string name="update_try_again">Try again</string>
+    <string name="update_failed_check">Couldn\'t check for updates.</string>
+    <!-- Translators: code is an HTTP status such as 404; keep it numeric and keep this as a full sentence. -->
+    <string name="update_failed_check_http">The update server returned HTTP <xliff:g id="code">%1$s</xliff:g> while checking.</string>
+    <string name="update_no_compatible_apk">No update package for this device was found in the release.</string>
+    <string name="update_invalid_release_response">The update server returned an invalid release description.</string>
+    <string name="update_failed_download">Couldn\'t download the update because the network request failed.</string>
+    <!-- Translators: code is an HTTP status such as 503; keep it numeric and keep the punctuation. -->
+    <string name="update_failed_download_http">The update download returned HTTP <xliff:g id="code">%1$s</xliff:g>.</string>
+    <string name="update_empty_download">The update server returned an empty APK.</string>
+    <string name="update_install_failed">The downloaded update could not be opened by the system installer.</string>
+    <string name="update_ready">OwnTV v<xliff:g id="available">%1$s</xliff:g> is ready (you have v<xliff:g id="current">%2$s</xliff:g>).</string>
+
+    <string name="recovery_title">OwnTV could not open its database</string>
+    <string name="recovery_data_safe_full">Your profiles, playlists, favorites and history have NOT been deleted — this is a database upgrade failure, and the data is still on this device.
+
+Please report this so it can be fixed, and include the message below.</string>
+    <string name="recovery_retry">Try again</string>
+    <string name="recovery_backup_hint">If you have a backup file you can reset the app and restore it afterwards. Resetting deletes everything stored on this device.</string>
+    <string name="recovery_confirm_reset">Confirm: erase all app data</string>
+    <string name="recovery_reset">Reset app data (last resort)</string>
+
 </resources>
