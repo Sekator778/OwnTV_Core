@@ -2493,7 +2493,11 @@ class OwnTVPlayer(
             if (hw != null && hw != "no") {
                 StreamInfoValue.Decoder(DecoderKind.NAMED, name = hw, direct = _directRender.value, hardware = true)
             } else {
-                StreamInfoValue.Decoder(DecoderKind.SOFTWARE, direct = false)
+                StreamInfoValue.Decoder(
+                    kind = DecoderKind.SOFTWARE,
+                    direct = false,
+                    gpu = !_directRender.value,
+                )
             },
         )
         val channelCount = m.getPropertyInt("audio-params/channel-count")

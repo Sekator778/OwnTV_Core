@@ -28,6 +28,8 @@ sealed interface StreamInfoValue {
         val kind: DecoderKind,
         val name: String? = null,
         val direct: Boolean = false,
+        /** True when the software decoder is followed by the GPU rendering path. */
+        val gpu: Boolean = false,
         /** True only when [kind] is NAMED and the engine identified a hardware decoder. */
         val hardware: Boolean = false,
     ) : StreamInfoValue
