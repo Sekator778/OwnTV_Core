@@ -1,147 +1,262 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <!-- Profiles -->
+    <!-- Translators: Label for the PIN input in the profile editor. -->
     <string name="profiles_pin">PIN</string>
+    <!-- Translators: Button or section header to create a new profile. -->
     <string name="profiles_new">New profile</string>
+    <!-- Translators: Button or section header to edit an existing profile. -->
     <string name="profiles_edit">Edit profile</string>
+    <!-- Translators: Text-field label for the profile name in the profile editor. -->
     <string name="profiles_name">Name</string>
+    <!-- Translators: Placeholder example in the profile name text field. -->
     <string name="profiles_name_hint">e.g. Alex</string>
+    <!-- Translators: Section header for the avatar picker in the profile editor. All caps is intentional for this section label. -->
     <string name="profiles_avatar">AVATAR</string>
+    <!-- Translators: Toggle label in the profile editor for kids mode. -->
     <string name="profiles_kids">Kids profile</string>
+    <!-- Translators: Description beneath the kids-mode toggle in the profile editor. -->
     <string name="profiles_kids_description">Simplified, safe browsing</string>
+    <!-- Translators: Button in the profile editor to remove the PIN lock. -->
     <string name="profiles_remove_pin">Remove PIN lock</string>
+    <!-- Translators: Status text indicating the profile has no PIN lock. -->
     <string name="profiles_no_pin">This profile opens without a PIN</string>
+    <!-- Translators: Text-field label for changing the PIN in the profile editor. "blank = keep" means leaving it empty preserves the current PIN. -->
     <string name="profiles_change_pin">Change PIN (blank = keep)</string>
+    <!-- Translators: Text-field label for an optional PIN in the profile editor. -->
     <string name="profiles_optional_pin">PIN (optional)</string>
-    <string name="profiles_pin_digits">4–6 digits</string>
-    <string name="profiles_pin_placeholder">····</string>
-    <string name="profiles_name_taken">This name is already taken — please choose another name.</string>
+    <!-- Translators: Hint text below the PIN field indicating the required format. -->
+    <string name="profiles_pin_digits">4\u20136 digits</string>
+    <!-- Translators: Placeholder dots shown in the PIN input field. -->
+    <string name="profiles_pin_placeholder">\u00b7\u00b7\u00b7\u00b7</string>
+    <!-- Translators: Error message when a profile name is already taken. -->
+    <string name="profiles_name_taken">This name is already taken \u2014 please choose another name.</string>
+    <!-- Translators: Button in the profile editor to create the profile. -->
     <string name="profiles_create">Create</string>
+    <!-- Translators: Button in the profile editor to save changes. -->
     <string name="profiles_save">Save</string>
+    <!-- Translators: Heading on the profile gate / lock screen. -->
     <string name="profiles_gate_title">Who\'s watching?</string>
-    <string name="profiles_wrong_pin">Wrong PIN — try again</string>
-    <string name="profiles_enter_pin"><xliff:g id="name">%1$s</xliff:g> — enter PIN</string>
+    <!-- Translators: Error text on the PIN entry screen when the wrong PIN is entered. -->
+    <string name="profiles_wrong_pin">Wrong PIN \u2014 try again</string>
+    <!-- Translators: PIN entry prompt. "name" is the profile name. -->
+    <string name="profiles_enter_pin"><xliff:g id="name">%1$s</xliff:g> \u2014 enter PIN</string>
+    <!-- Translators: Badge shown on kids profiles. All caps is intentional for this badge. -->
     <string name="profiles_kids_badge">KIDS</string>
+    <!-- Translators: Button on the profile gate screen to add a new profile. -->
     <string name="profiles_add">Add profile</string>
+    <!-- Translators: Screen title for the profile management screen. -->
     <string name="profiles_title">Profiles</string>
+    <!-- Translators: Button on the profile management screen to add a profile. -->
     <string name="profiles_add_button">Add Profile</string>
-    <string name="profiles_delete_title">Delete “<xliff:g id="name">%1$s</xliff:g>”?</string>
+    <!-- Translators: Dialog title for profile deletion confirmation. "name" is the profile name. -->
+    <string name="profiles_delete_title">Delete \u201c<xliff:g id="name">%1$s</xliff:g>\u201d?</string>
+    <!-- Translators: Body text in the profile deletion confirmation dialog. Sources are kept. -->
     <string name="profiles_delete_message">Removes this profile and its favorites and history. Sources are kept.</string>
+    <!-- Translators: Tag shown on kids profiles in the profile list. -->
     <string name="profiles_kids_tag">Kids</string>
+    <!-- Translators: Tag shown on PIN-locked profiles in the profile list. -->
     <string name="profiles_locked_tag">PIN locked</string>
 
     <!-- Search -->
+    <!-- Translators: Screen title for the global search screen. -->
     <string name="search_title">Search</string>
+    <!-- Translators: Section header in search results for continue-watching items. -->
     <string name="search_continue">Continue watching</string>
+    <!-- Translators: Filter chip in search results for unwatched content. -->
     <string name="search_unwatched">Unwatched</string>
-    <string name="search_hint">Search channels, movies &amp; series…</string>
+    <!-- Translators: Search input field hint text. -->
+    <string name="search_hint">Search channels, movies &amp; series\u2026</string>
+    <!-- Translators: Section header in search results for recent searches. -->
     <string name="search_recent">Recent searches</string>
+    <!-- Translators: Empty-state message when there are no recent searches. -->
     <string name="search_recent_empty">Your recent searches will show here.</string>
+    <!-- Translators: Error message when the search query is too short. -->
     <string name="search_minimum_query">Type at least 2 characters to search across everything.</string>
-    <string name="search_no_results"><xliff:g id="query">%1$s</xliff:g> — no results.</string>
+    <!-- Translators: Empty-state message when a search returns no results. "query" is the search text. -->
+    <string name="search_no_results"><xliff:g id="query">%1$s</xliff:g> \u2014 no results.</string>
+    <!-- Translators: Empty-state message when a list category has no items. "list" is the list name. -->
     <string name="search_nothing_in_list">Nothing in <xliff:g id="list">%1$s</xliff:g> yet.</string>
+    <!-- Translators: Button to clear the search input. -->
     <string name="search_clear">Clear</string>
+    <!-- Translators: Button to jump to a search result in its native screen. -->
     <string name="search_jump_to">Jump to</string>
+    <!-- Translators: Action button in search results to tune to a live channel. -->
     <string name="search_watch_live">Watch live</string>
+    <!-- Translators: Action button in search results to play content. -->
     <string name="search_play">Play</string>
+    <!-- Translators: Action button in search results to open a series detail screen. -->
     <string name="search_open_series">Open series</string>
+    <!-- Translators: Content type label in search results. -->
     <string name="search_movie">Movie</string>
+    <!-- Translators: Content type label in search results. -->
     <string name="search_series">Series</string>
+    <!-- Translators: Content type label in search results. -->
     <string name="search_channels">Channels</string>
+    <!-- Translators: Channel number display in search results. "number" is the channel number. The hash (#) is a conventional channel prefix. -->
     <string name="search_channel_number">#<xliff:g id="number">%1$s</xliff:g></string>
 
     <!-- Home -->
+    <!-- Translators: Section header for the "Keep Watching" row on the Home screen. -->
     <string name="home_keep_watching">Keep Watching</string>
+    <!-- Translators: Section header for the "Play Next" row on the Home screen. -->
     <string name="home_play_next">Play Next</string>
+    <!-- Translators: Section header for the "Tune In" row on the Home screen. -->
     <string name="home_tune_in">Tune In</string>
+    <!-- Translators: Section header for recently watched live channels on the Home screen. -->
     <string name="home_recent_live">Recently watched live</string>
+    <!-- Translators: Default profile name placeholder in the profile editor. -->
     <string name="profiles_default_name">Profile</string>
+    <!-- Translators: Title for the Android TV home screen "Recent Live" row. -->
     <string name="launcher_recent_live_title">Recent Live</string>
+    <!-- Translators: Description for the Android TV home screen "Recent Live" row. -->
     <string name="launcher_recent_live_description">Recently watched live channels</string>
+    <!-- Translators: Content type label for movies in the Android TV home screen. -->
     <string name="launcher_movie_type">Movie</string>
+    <!-- Translators: Episode number display for the Android TV home screen. "episode" is the episode number. -->
     <string name="launcher_episode_number">Episode <xliff:g id="episode">%1$d</xliff:g></string>
+    <!-- Translators: Empty-state message on the Home screen when nothing is available to preview. -->
     <string name="home_no_preview">Nothing to preview yet.</string>
+    <!-- Translators: Empty-state message when all Home rows are hidden. -->
     <string name="home_no_rows">All Home rows are hidden.</string>
-    <string name="home_enable_rows">Turn rows back on in Settings → Home screen.</string>
+    <!-- Translators: Instructional text when Home rows are hidden. Directs to Settings. -->
+    <string name="home_enable_rows">Turn rows back on in Settings \u2192 Home screen.</string>
+    <!-- Translators: Empty-state message on the Home screen before any watch history exists. -->
     <string name="home_start_watching">Start watching to see your activity here.</string>
+    <!-- Translators: Empty-state message for the continue-watching row when no history exists. -->
     <string name="home_continue_empty">Your continue-watching items will appear here once playback history is available.</string>
+    <!-- Translators: Timestamp text for very recent activity (within the last minute). -->
     <string name="home_last_watched_now">Last watched just now</string>
+    <!-- Translators: Estimated finish time for content being watched. "time" is the estimated finish time. -->
     <string name="home_finish_by">Finish by <xliff:g id="time">%1$s</xliff:g></string>
+    <!-- Translators: Action button to resume playback from a saved position. This is a state label for the currently-playing item. -->
     <string name="home_resume">Resume</string>
+    <!-- Translators: Plural "last watched" timestamp for minutes. "count" is the number of minutes. -->
     <plurals name="home_last_watched_minutes">
         <item quantity="one">Last watched <xliff:g id="count">%1$d</xliff:g> minute ago</item>
         <item quantity="other">Last watched <xliff:g id="count">%1$d</xliff:g> minutes ago</item>
     </plurals>
+    <!-- Translators: Plural "last watched" timestamp for hours. "count" is the number of hours. -->
     <plurals name="home_last_watched_hours">
         <item quantity="one">Last watched <xliff:g id="count">%1$d</xliff:g> hour ago</item>
         <item quantity="other">Last watched <xliff:g id="count">%1$d</xliff:g> hours ago</item>
     </plurals>
+    <!-- Translators: Plural "last watched" timestamp for days. "count" is the number of days. -->
     <plurals name="home_last_watched_days">
         <item quantity="one">Last watched <xliff:g id="count">%1$d</xliff:g> day ago</item>
         <item quantity="other">Last watched <xliff:g id="count">%1$d</xliff:g> days ago</item>
     </plurals>
+    <!-- Translators: Season/episode display format with zero-padded numbers. S and E are conventional abbreviations. -->
     <string name="home_season_episode">S<xliff:g id="season">%1$02d</xliff:g> E<xliff:g id="episode">%2$02d</xliff:g></string>
+    <!-- Translators: Season number display with zero-padded number. "season" is the season number. -->
     <string name="home_season">S<xliff:g id="season">%1$02d</xliff:g></string>
+    <!-- Translators: Episode number display with zero-padded number. "episode" is the episode number. -->
     <string name="home_episode">E<xliff:g id="episode">%1$02d</xliff:g></string>
+    <!-- Translators: Home row type label for the card-style row. -->
     <string name="home_row_cards">Cards</string>
+    <!-- Translators: Home row name in Settings for the "Keep Watching" row. -->
     <string name="home_row_keep_watching">Keep Watching</string>
+    <!-- Translators: Home row name in Settings for the "Continue Watching Movies" row. -->
     <string name="home_row_continue_movies">Continue Watching Movies</string>
+    <!-- Translators: Home row name in Settings for the "Continue Watching Series" row. -->
     <string name="home_row_continue_series">Continue Watching Series</string>
+    <!-- Translators: Home row name in Settings for the "Recent Channels" row. -->
     <string name="home_row_recent_channels">Recent Channels</string>
+    <!-- Translators: Home row name in Settings for the "Favorite Channels" row. -->
     <string name="home_row_favorite_channels">Favorite Channels</string>
+    <!-- Translators: Home row name in Settings for the "On Now" row. -->
     <string name="home_row_on_now">On Now</string>
+    <!-- Translators: Home row description in Settings for the hero row. -->
     <string name="home_row_hero_description">The large preview row at the top</string>
+    <!-- Translators: Home row description in Settings for "Continue Watching Movies". -->
     <string name="home_row_continue_movies_description">Movies with a saved position</string>
+    <!-- Translators: Home row description in Settings for "Continue Watching Series". -->
     <string name="home_row_continue_series_description">Episodes to resume or play next</string>
+    <!-- Translators: Home row description in Settings for "Recent Channels". -->
     <string name="home_row_recent_description">Live channels you tuned recently</string>
+    <!-- Translators: Home row description in Settings for "Favorite Channels". -->
     <string name="home_row_favorite_description">Your favorited live channels</string>
-    <string name="home_on_now_title"><xliff:g id="title">%1$s</xliff:g> · ON NOW</string>
+    <!-- Translators: "On Now" title with content name. "title" is the programme title. All caps "ON NOW" is intentional. -->
+    <string name="home_on_now_title"><xliff:g id="title">%1$s</xliff:g> \u00b7 ON NOW</string>
+    <!-- Translators: Instructional text on the Home screen for OK button behavior. -->
     <string name="home_ok_to_watch">OK to watch</string>
+    <!-- Translators: Instructional text on the Home screen for OK button behavior when browsing. -->
     <string name="home_ok_to_browse">OK to browse</string>
+    <!-- Translators: Status text when no program details are available. -->
     <string name="home_no_programme_details">No program details</string>
+    <!-- Translators: Status text when guide data is unavailable. -->
     <string name="home_guide_unavailable">Guide data unavailable</string>
+    <!-- Translators: Label for the next item in a list. -->
     <string name="home_next">Next</string>
+    <!-- Translators: Channel number and name display on the Home screen. "number" is the channel number, "name" is the channel name. -->
     <string name="home_channel_number"><xliff:g id="number">%1$s</xliff:g>  <xliff:g id="name">%2$s</xliff:g></string>
+    <!-- Translators: Time range display on the Home screen programme card. "start" and "end" are times. The hyphen is a range indicator. -->
     <string name="home_time_range"><xliff:g id="start">%1$s</xliff:g>-<xliff:g id="end">%2$s</xliff:g></string>
-    <string name="home_now_time">NOW · <xliff:g id="time">%1$s</xliff:g></string>
-    <string name="home_up_next_time">UP NEXT · <xliff:g id="time">%1$s</xliff:g></string>
+    <!-- Translators: "Now" label with time on the Home screen programme card. "time" is the current time. All caps "NOW" is intentional. -->
+    <string name="home_now_time">NOW \u00b7 <xliff:g id="time">%1$s</xliff:g></string>
+    <!-- Translators: "Up Next" label with time on the Home screen. "time" is the start time. All caps is intentional. -->
+    <string name="home_up_next_time">UP NEXT \u00b7 <xliff:g id="time">%1$s</xliff:g></string>
+    <!-- Translators: Upcoming item display with time and title. "time" is the start time, "title" is the programme title. -->
     <string name="home_upcoming_item"><xliff:g id="time">%1$s</xliff:g> <xliff:g id="title">%2$s</xliff:g></string>
+    <!-- Translators: Plural channel count in the Home "Tune In" row. "count" is the number of channels. -->
     <plurals name="home_channel_count">
         <item quantity="one"><xliff:g id="count">%1$d</xliff:g> channel</item>
         <item quantity="other"><xliff:g id="count">%1$d</xliff:g> channels</item>
     </plurals>
 
 
+    <!-- Translators: Screen title for the app update dialog. -->
     <string name="update_title">App update</string>
-    <string name="update_checking">Checking for updates…</string>
+    <!-- Translators: Loading status shown while checking for updates. -->
+    <string name="update_checking">Checking for updates\u2026</string>
+    <!-- Translators: Section header in the update dialog for the changelog. -->
     <string name="update_whats_new">What\'s new</string>
-    <string name="update_downloading">Downloading update… <xliff:g id="percent">%1$d</xliff:g>%%</string>
+    <!-- Translators: Progress status shown while downloading an update. "percent" is the download percentage. The double percent (%%) is an XML escape. -->
+    <string name="update_downloading">Downloading update\u2026 <xliff:g id="percent">%1$d</xliff:g>%%</string>
+    <!-- Translators: Status text indicating an update is available. -->
     <string name="update_available">Update available</string>
+    <!-- Translators: Status text when the app is already on the latest version. "version" is the current version string. -->
     <string name="update_latest">You\'re on the latest version (v<xliff:g id="version">%1$s</xliff:g>).</string>
+    <!-- Translators: Version comparison display. "available" is the new version, "current" is the installed version. -->
     <string name="update_available_version">Version <xliff:g id="available">%1$s</xliff:g> is available (you have v<xliff:g id="current">%2$s</xliff:g>).</string>
+    <!-- Translators: Informational text in the update dialog after download completes. -->
     <string name="update_installer">The system installer opens when the download finishes.</string>
+    <!-- Translators: Button in the update dialog to postpone the update. -->
     <string name="update_later">Later</string>
+    <!-- Translators: Primary button in the update dialog to start the update immediately. -->
     <string name="update_now">Update now</string>
+    <!-- Translators: Button to retry checking for updates. -->
     <string name="update_try_again">Try again</string>
+    <!-- Translators: Error when the update check fails due to a network issue. -->
     <string name="update_failed_check">Couldn\'t check for updates.</string>
-    <!-- Translators: code is an HTTP status such as 404; keep it numeric and keep this as a full sentence. -->
+    <!-- Translators: Error when the update server returns an HTTP error. "code" is the HTTP status code such as 404. Keep this as a full sentence. -->
     <string name="update_failed_check_http">The update server returned HTTP <xliff:g id="code">%1$s</xliff:g> while checking.</string>
+    <!-- Translators: Error when no compatible APK is found in the release for this device. -->
     <string name="update_no_compatible_apk">No update package for this device was found in the release.</string>
+    <!-- Translators: Error when the update server returns an invalid release description. -->
     <string name="update_invalid_release_response">The update server returned an invalid release description.</string>
+    <!-- Translators: Error when the update download fails due to a network error. -->
     <string name="update_failed_download">Couldn\'t download the update because the network request failed.</string>
-    <!-- Translators: code is an HTTP status such as 503; keep it numeric and keep the punctuation. -->
+    <!-- Translators: Error when the update download returns an HTTP error. "code" is the HTTP status code such as 503. Keep the punctuation. -->
     <string name="update_failed_download_http">The update download returned HTTP <xliff:g id="code">%1$s</xliff:g>.</string>
+    <!-- Translators: Error when the update server returns an empty APK file. -->
     <string name="update_empty_download">The update server returned an empty APK.</string>
+    <!-- Translators: Error when the system installer cannot open the downloaded update. -->
     <string name="update_install_failed">The downloaded update could not be opened by the system installer.</string>
+    <!-- Translators: Status text when an update has been downloaded and is ready to install. "available" is the new version, "current" is the installed version. -->
     <string name="update_ready">OwnTV v<xliff:g id="available">%1$s</xliff:g> is ready (you have v<xliff:g id="current">%2$s</xliff:g>).</string>
 
+    <!-- Translators: Dialog title for the database recovery screen. "OwnTV" is a brand name. -->
     <string name="recovery_title">OwnTV could not open its database</string>
-    <string name="recovery_data_safe_full">Your profiles, playlists, favorites and history have NOT been deleted — this is a database upgrade failure, and the data is still on this device.
-
-Please report this so it can be fixed, and include the message below.</string>
+    <!-- Translators: Body text on the recovery screen explaining that data is safe and requesting a bug report. -->
+    <string name="recovery_data_safe_full">Your profiles, playlists, favorites and history have NOT been deleted \u2014 this is a database upgrade failure, and the data is still on this device.\n\nPlease report this so it can be fixed, and include the message below.</string>
+    <!-- Translators: Button on the recovery screen to retry opening the database. -->
     <string name="recovery_retry">Try again</string>
+    <!-- Translators: Hint text on the recovery screen suggesting the user restore from a backup. -->
     <string name="recovery_backup_hint">If you have a backup file you can reset the app and restore it afterwards. Resetting deletes everything stored on this device.</string>
+    <!-- Translators: Dialog title for the reset-confirmation dialog on the recovery screen. -->
     <string name="recovery_confirm_reset">Confirm: erase all app data</string>
+    <!-- Translators: Button on the recovery screen to reset all app data as a last resort. -->
     <string name="recovery_reset">Reset app data (last resort)</string>
 
 </resources>

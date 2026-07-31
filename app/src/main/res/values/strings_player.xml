@@ -1,215 +1,402 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <!-- Translators: Button in the trailer player's bottom transport bar to exit the trailer. -->
     <string name="player_trailer_exit">Exit</string>
+    <!-- Translators: Time progress display in the trailer player. "current" is the current position and "duration" is the total length, both formatted as mm:ss or h:mm:ss. -->
     <string name="player_trailer_progress"><xliff:g id="current">%1$s</xliff:g> / <xliff:g id="duration">%2$s</xliff:g></string>
+    <!-- Translators: Zoom mode option in the player's zoom dialog. Scales the video to fit within the screen without cropping. -->
     <string name="player_zoom_fit_screen">Fit Screen</string>
+    <!-- Translators: Zoom mode option. Fills the screen and crops edges if the aspect ratio differs. -->
     <string name="player_zoom_fill_crop">Fill / Crop</string>
+    <!-- Translators: Zoom mode option. Stretches the video to fill the screen regardless of aspect ratio. -->
     <string name="player_zoom_stretch">Stretch</string>
+    <!-- Translators: Zoom mode option. Displays the video at its original pixel size (1:1). -->
     <string name="player_zoom_original">Original (1:1)</string>
+    <!-- Translators: Zoom mode option. Forces a 16:9 aspect ratio regardless of the video\'s native ratio. -->
     <string name="player_zoom_force_16_9">Force 16:9</string>
+    <!-- Translators: Zoom mode option. Forces a 4:3 aspect ratio. -->
     <string name="player_zoom_force_4_3">Force 4:3</string>
+    <!-- Translators: Mini-player docking position label in the mini-player position settings. -->
     <string name="player_mini_top_left">Top left</string>
+    <!-- Translators: Mini-player docking position label. -->
     <string name="player_mini_top_center">Top center</string>
+    <!-- Translators: Mini-player docking position label. -->
     <string name="player_mini_top_right">Top right</string>
+    <!-- Translators: Mini-player docking position label. -->
     <string name="player_mini_bottom_left">Bottom left</string>
+    <!-- Translators: Mini-player docking position label. -->
     <string name="player_mini_bottom_center">Bottom center</string>
+    <!-- Translators: Mini-player docking position label. -->
     <string name="player_mini_bottom_right">Bottom right</string>
+    <!-- Translators: Label above the typed channel digits in the direct-tune OSD on the player. All caps is intentional for this OSD element. -->
     <string name="player_channel_label">CHANNEL</string>
-    <string name="player_at_live_edge">● At the live edge</string>
-    <string name="player_behind_live">● <xliff:g id="offset">%1$s</xliff:g> behind live</string>
-    <string name="player_live_offset">−<xliff:g id="offset">%1$s</xliff:g></string>
+    <!-- Translators: Player HUD status shown when the stream is at the live edge (offset <= 1 second). The leading dot is a visual status indicator. -->
+    <string name="player_at_live_edge">\u25cf At the live edge</string>
+    <!-- Translators: Player HUD status shown while time-shifted behind the live broadcast. "offset" is a localized duration such as 02:15. The leading dot is a visual status indicator. -->
+    <string name="player_behind_live">\u25cf <xliff:g id="offset">%1$s</xliff:g> behind live</string>
+    <!-- Translators: Floating tooltip on the live timeline bar showing how far behind live the user is. "offset" is a localized duration such as 05:30. The leading minus sign is part of the display. -->
+    <string name="player_live_offset">\u2212<xliff:g id="offset">%1$s</xliff:g></string>
+    <!-- Translators: Error text in the direct-tune channel number card when the entered number matches no known channel. -->
     <string name="player_channel_not_found">Channel not found</string>
+    <!-- Translators: Error text in the direct-tune channel number card when the entered number matches multiple channels. -->
     <string name="player_multiple_channels">Multiple channels</string>
+    <!-- Translators: Error text in the direct-tune channel number card when tuning fails for an unspecified reason. -->
     <string name="player_tune_failed">Tune failed</string>
+    <!-- Translators: Heading of the error overlay shown centered on the player screen when playback fails. -->
     <string name="player_playback_error">Playback error</string>
+    <!-- Translators: Technical detail text below the structured error in the player error overlay. "error" is the raw engine error string, shown for debugging/bug reports. -->
     <string name="player_raw_error">err: <xliff:g id="error">%1$s</xliff:g></string>
+    <!-- Translators: Dialog title for the audio track selection dialog in the player HUD. -->
     <string name="player_audio_track">Audio Track</string>
+    <!-- Translators: Dialog title for the subtitle track selection dialog in the player HUD. -->
     <string name="player_subtitles">Subtitles</string>
+    <!-- Translators: Option row label in the subtitle dialog, and dialog title for the subtitle timing adjustment dialog. -->
     <string name="player_subtitle_timing">Subtitle timing</string>
+    <!-- Translators: Section header in the subtitle dialog for the area with search and local-file options. All caps is intentional for this section label. -->
     <string name="player_add_subtitles">ADD SUBTITLES</string>
+    <!-- Translators: Section header in the subtitle dialog for the timing adjustment option. All caps is intentional. -->
     <string name="player_adjust">ADJUST</string>
+    <!-- Translators: Option row in the subtitle dialog to launch the OpenSubtitles search. "OpenSubtitles" is a brand name. -->
     <string name="player_search_subtitles">Search OpenSubtitles</string>
+    <!-- Translators: Option row in the subtitle dialog to open the system file picker for a local subtitle file. -->
     <string name="player_select_local_subtitle">Select local subtitle file</string>
+    <!-- Translators: Placeholder text in the audio or subtitle track dialog when no tracks are available. -->
     <string name="player_no_tracks">No tracks available.</string>
-    <string name="player_image_track"><xliff:g id="label">%1$s</xliff:g> · image</string>
+    <!-- Translators: Track label for image-based subtitle tracks (PGS/VOBSUB/DVB). "label" is the track name or language. -->
+    <string name="player_image_track"><xliff:g id="label">%1$s</xliff:g> \u00b7 image</string>
+    <!-- Translators: Section header in the audio dialog for the A/V sync adjustment controls. -->
     <string name="player_av_sync">A/V sync</string>
+    <!-- Translators: Status text in the subtitle timing dialog when the delay is exactly 0ms. -->
     <string name="player_no_offset">No offset</string>
+    <!-- Translators: Status text in the subtitle timing dialog when the delay is positive (subtitles appear after the audio). -->
     <string name="player_subtitles_later">Subtitles shown later</string>
+    <!-- Translators: Status text in the subtitle timing dialog when the delay is negative (subtitles appear before the audio). -->
     <string name="player_subtitles_earlier">Subtitles shown earlier</string>
+    <!-- Translators: Formatted audio delay display in the A/V sync controls when delay is exactly 0ms. -->
     <string name="player_delay_zero">0 ms</string>
+    <!-- Translators: Formatted audio delay display when delay is positive. The plus sign is intentional. "ms" means milliseconds. -->
     <string name="player_delay_positive">+<xliff:g id="ms">%1$d</xliff:g> ms</string>
+    <!-- Translators: Formatted audio delay display when delay is negative. "ms" means milliseconds. -->
     <string name="player_delay_negative"><xliff:g id="ms">%1$d</xliff:g> ms</string>
+    <!-- Translators: Speed option in the playback speed dialog for 1.0x (normal) speed. The "(Normal)" suffix distinguishes it from other speed values. -->
     <string name="player_speed_normal">1.0x (Normal)</string>
+    <!-- Translators: Compact speed label on the speed pill button in the player bottom bar. Only shown when speed is exactly 1.0x. -->
     <string name="player_speed_normal_short">1.0x</string>
+    <!-- Translators: Speed value display for non-1.0x speeds. "speed" is a decimal number such as 1.5 or 2.0. Used in the speed dialog and the bottom bar speed pill. -->
     <string name="player_speed"><xliff:g id="speed">%1$s</xliff:g>x</string>
+    <!-- Translators: Countdown text on the next-episode card shown in the last ~30 seconds before auto-advance. "seconds" is the remaining seconds as an integer. -->
     <string name="player_next_episode">Next episode in <xliff:g id="seconds">%1$d</xliff:g>s</string>
+    <!-- Translators: Button on the next-episode card to advance to the next episode immediately, bypassing the countdown. -->
     <string name="player_play_now">Play now</string>
+    <!-- Translators: Dialog title for the volume adjustment dialog in the player HUD. -->
     <string name="player_volume">Volume</string>
+    <!-- Translators: Button in the volume dialog to unmute audio. Shown when volume is currently 0. -->
     <string name="player_unmute">Unmute</string>
+    <!-- Translators: Button in the volume dialog to mute audio. Shown when volume is currently audible. -->
     <string name="player_mute">Mute</string>
+    <!-- Translators: Formatted percentage display in the volume dialog. The double percent (%%) is an Android XML escape for a literal %. -->
     <string name="player_percent"><xliff:g id="value">%1$d</xliff:g>%%</string>
+    <!-- Translators: Duration display in the player top bar metadata chips for VOD content. "minutes" is the total duration in minutes. -->
     <string name="player_duration_minutes"><xliff:g id="minutes">%1$d</xliff:g> min</string>
+    <!-- Translators: Season number in the player top bar subtitle and Android TV home "Watch Next" row. "season" is the season number. -->
     <string name="player_season_number">Season <xliff:g id="season">%1$d</xliff:g></string>
+    <!-- Translators: Episode number fallback title in the player top bar and series screen when the episode has no name. "episode" is the episode number. -->
     <string name="player_episode_number">Episode <xliff:g id="episode">%1$d</xliff:g></string>
-    <string name="player_episode_context_title"><xliff:g id="title">%1$s</xliff:g> · S<xliff:g id="season">%2$d</xliff:g>E<xliff:g id="episode">%3$d</xliff:g></string>
+    <!-- Translators: Formatted episode display for series entries in the subtitle deletion list. "title" is the episode name, "season" and "episode" are numbers. The separator dot and S/E prefix format is conventional for series. -->
+    <string name="player_episode_context_title"><xliff:g id="title">%1$s</xliff:g> \u00b7 S<xliff:g id="season">%2$d</xliff:g>E<xliff:g id="episode">%3$d</xliff:g></string>
+    <!-- Translators: Channel number display on the channel OSD card after a direct tune. "number" is the channel number string. The hash (#) is a conventional channel prefix. -->
     <string name="player_channel_number">#<xliff:g id="number">%1$s</xliff:g></string>
+    <!-- Translators: Live badge shown in the player top bar, on the live timeline tooltip, and in the audio now-playing bar. All caps is intentional for this badge. This is a state indicator, not a command. -->
     <string name="player_live">LIVE</string>
+    <!-- Translators: Formatted subtitle delay display in the subtitle timing dialog when delay is exactly 0.0 seconds. -->
     <string name="player_subtitle_delay_zero">0.0 s</string>
+    <!-- Translators: Formatted subtitle delay display when delay is positive. Also used for the +0.1s and +0.5s step buttons. The plus sign is intentional. "s" means seconds. -->
     <string name="player_subtitle_delay_positive">+<xliff:g id="seconds">%1$.1f</xliff:g> s</string>
-    <string name="player_subtitle_delay_negative">−<xliff:g id="seconds">%1$.1f</xliff:g> s</string>
+    <!-- Translators: Formatted subtitle delay display when delay is negative. Also used for the -0.5s and -0.1s step buttons. "s" means seconds. -->
+    <string name="player_subtitle_delay_negative">\u2212<xliff:g id="seconds">%1$.1f</xliff:g> s</string>
+    <!-- Translators: Time format for durations under one hour (mm:ss). "minutes" and "seconds" are integers. Used in the seek bar, live timeline, and audio mode. -->
     <string name="player_track_seconds"><xliff:g id="minutes">%1$d</xliff:g>:<xliff:g id="seconds">%2$02d</xliff:g></string>
+    <!-- Translators: Time format for durations of one hour or more (h:mm:ss). "hours", "minutes", and "seconds" are integers. -->
     <string name="player_track_hours"><xliff:g id="hours">%1$d</xliff:g>:<xliff:g id="minutes">%2$02d</xliff:g>:<xliff:g id="seconds">%3$02d</xliff:g></string>
+    <!-- Translators: Time progress display in the audio now-playing bar. "position" is the current time and "duration" is the total length. -->
     <string name="player_time_progress"><xliff:g id="position">%1$s</xliff:g> / <xliff:g id="duration">%2$s</xliff:g></string>
-    <string name="player_time_remaining">−<xliff:g id="time">%1$s</xliff:g></string>
+    <!-- Translators: Floating tooltip on the VOD seek bar showing remaining time. "time" is a formatted duration. The leading minus sign is intentional. -->
+    <string name="player_time_remaining">\u2212<xliff:g id="time">%1$s</xliff:g></string>
+    <!-- Translators: Toast message shown briefly when the user switches the video engine to ExoPlayer. "ExoPlayer" is a brand name. -->
     <string name="player_switch_exo">Switched to ExoPlayer</string>
+    <!-- Translators: Toast message shown briefly when the user switches the video engine to mpv. "MPV" is a brand name. -->
     <string name="player_switch_mpv">Switched to MPV</string>
+    <!-- Translators: Error message when image-based subtitles are incompatible with the video\'s audio format. -->
     <string name="player_error_image_subtitle_audio">Image subtitles aren\'t available for this video\'s audio format.</string>
+    <!-- Translators: Error message when both ExoPlayer and mpv fail. "ExoPlayer" and "mpv" are engine brand names. Shown in player error overlay and toast. -->
     <string name="player_error_both_engines_exo_first">Playback failed on both video engines (ExoPlayer, then mpv). The file may be corrupted or use a format this TV can\'t play.</string>
-    <!-- Translators: error is another complete localized failure sentence; it is rendered recursively. -->
+    <!-- Translators: Error message when both engines fail, with mpv tried first. "error" is another complete localized failure sentence; it is rendered recursively. -->
     <string name="player_error_both_engines_mpv_first">Playback failed on both video engines (mpv and ExoPlayer). The file may be corrupted or use a format this TV can\'t play. (<xliff:g id="error">%1$s</xliff:g>)</string>
+    <!-- Translators: Error when the Stalker portal fails to return a stream link. "portal" refers to the Stalker middleware. -->
     <string name="player_error_stream_link">Could not get a stream link from the portal. Check the connection and try again.</string>
+    <!-- Translators: Error when the video file is not properly configured for streaming (missing fast-start). -->
     <string name="player_error_not_streaming">This video isn\'t formatted for streaming. Ask the provider to re-encode with fast-start, or download it first.</string>
+    <!-- Translators: Error when the connection to a live channel is lost. -->
     <string name="player_error_lost_connection">Lost connection to this channel.</string>
+    <!-- Translators: Generic error when a channel fails to play. -->
     <string name="player_error_channel">Couldn\'t play this channel.</string>
+    <!-- Translators: Error when ExoPlayer cannot decode the video format. "error" is the engine error code/message. "ExoPlayer" is a brand name. -->
     <string name="player_error_exo_decode">ExoPlayer can\'t decode this video\'s format on this device (<xliff:g id="error">%1$s</xliff:g>).</string>
+    <!-- Translators: Error when ExoPlayer fails to play the stream. "error" is the engine error code/message. -->
     <string name="player_error_exo_play">ExoPlayer couldn\'t play this stream (<xliff:g id="error">%1$s</xliff:g>).</string>
+    <!-- Translators: Error when image-based subtitles are unavailable for the file\'s format. -->
     <string name="player_error_image_format">Image subtitles aren\'t available for this file\'s format.</string>
+    <!-- Translators: Error when image-based subtitles cannot be rendered for the file. -->
     <string name="player_error_image_show">Couldn\'t show image subtitles for this file.</string>
+    <!-- Translators: Toast when an external player cannot open the stream URL. -->
     <string name="player_external_could_not_open">Could not open this stream.</string>
+    <!-- Translators: Android Intent chooser title when multiple external players can handle the stream. -->
     <string name="player_external_play_with">Play with</string>
-    <string name="player_external_play_with_item">Play “<xliff:g id="channel">%1$s</xliff:g> · <xliff:g id="programme">%2$s</xliff:g>” with…</string>
-    <string name="player_external_not_found">No external player found — install VLC or MX Player.</string>
+    <!-- Translators: Android Intent chooser title with channel/programme context. "channel" is the channel name, "programme" is the programme title. The middle dot is a visual separator. -->
+    <string name="player_external_play_with_item">Play \u201c<xliff:g id="channel">%1$s</xliff:g> \u00b7 <xliff:g id="programme">%2$s</xliff:g>\u201d with\u2026</string>
+    <!-- Translators: Toast when no external player app is installed. "VLC" and "MX Player" are brand names. -->
+    <string name="player_external_not_found">No external player found \u2014 install VLC or MX Player.</string>
+    <!-- Translators: Error when audio plays but video cannot be rendered on this device. -->
     <string name="player_error_audio_no_video">Audio is playing, but video could not be rendered on this device.</string>
+    <!-- Translators: Error when the video file is corrupted or malformed. -->
     <string name="player_error_file_corrupt">This video\'s file is malformed or corrupted and can\'t be played.</string>
+    <!-- Translators: Error when multiple video tracks fail to play. -->
     <string name="player_error_multiple_videos">Multiple videos failed to play. The source may be unavailable or the files are corrupted.</string>
+    <!-- Translators: Error when the TV\'s hardware video decoder is busy. -->
     <string name="player_error_decoder_busy">This TV\'s video decoder is busy. Try again in a moment.</string>
+    <!-- Translators: Error when there is no internet connection. -->
     <string name="player_error_no_internet">No internet connection. Check your network and try again.</string>
+    <!-- Translators: Generic stream playback error with an optional hint. "hint" is a hint string (may be empty or contain player_error_custom_user_agent text). -->
     <string name="player_error_stream_unavailable">Couldn\'t play this stream. The source may be offline or use an unsupported format. <xliff:g id="hint">%1$s</xliff:g></string>
+    <!-- Translators: Error when mpv cannot open or decode the file. "mpv" is an engine brand name. -->
     <string name="player_error_mpv_open_decode">mpv couldn\'t open or decode this file.</string>
+    <!-- Translators: Error when mpv fails to start the stream after multiple retries. -->
     <string name="player_error_mpv_stream_never_started">The stream never started in mpv after several retries.</string>
-    <string name="player_error_surround">This audio output can\'t do surround — switched to stereo.</string>
-    <string name="player_error_hardware_fallback">This stream\'s format couldn\'t be hardware-decoded on this TV, so it fell back to software decoding — which can\'t sustain <xliff:g id="resolution">%1$s</xliff:g> without overloading the TV. The TV may still play other 4K content fine; this particular stream\'s format is the issue.</string>
-    <string name="player_error_hardware_disabled">Hardware decoding is turned off — software decoding can\'t handle <xliff:g id="resolution">%1$s</xliff:g> video. Enable it in Settings → Video Player.</string>
+    <!-- Translators: Notification when the audio output cannot do surround and falls back to stereo. -->
+    <string name="player_error_surround">This audio output can\'t do surround \u2014 switched to stereo.</string>
+    <!-- Translators: Error when hardware decoding fails and software decoding cannot handle the resolution. "resolution" is a string such as "4K" or "3840x2160". This is a technical diagnostic, not actionable advice for most users. -->
+    <string name="player_error_hardware_fallback">This stream\'s format couldn\'t be hardware-decoded on this TV, so it fell back to software decoding \u2014 which can\'t sustain <xliff:g id="resolution">%1$s</xliff:g> without overloading the TV. The TV may still play other 4K content fine; this particular stream\'s format is the issue.</string>
+    <!-- Translators: Error when hardware decoding is disabled in settings and the resolution is too high for software decoding. "resolution" is a string such as "4K". Directs the user to Settings. -->
+    <string name="player_error_hardware_disabled">Hardware decoding is turned off \u2014 software decoding can\'t handle <xliff:g id="resolution">%1$s</xliff:g> video. Enable it in Settings \u2192 Video Player.</string>
+    <!-- Translators: Hint appended to player_error_stream_unavailable when the provider may require a custom User-Agent. Shown as a hint, not a standalone error. -->
     <string name="player_error_custom_user_agent">This provider may require a custom User-Agent in source settings.</string>
+    <!-- Translators: Technical failure reason shown in the player error overlay detail section. "HEVC 10-bit" is a video codec example. -->
     <string name="player_reason_decoder_busy">Hardware video decoder is busy or can\'t handle this stream</string>
-    <string name="player_reason_decoder_transient">Hardware video decoder error — transient, try again</string>
+    <!-- Translators: Technical failure reason in the player error overlay. -->
+    <string name="player_reason_decoder_transient">Hardware video decoder error \u2014 transient, try again</string>
+    <!-- Translators: Technical failure reason. "HEVC 10-bit" is an example format/profile. -->
     <string name="player_reason_unsupported_video">This device\'s decoder doesn\'t support this video format/profile (e.g. HEVC 10-bit)</string>
-    <string name="player_reason_decoder_memory">Device ran out of memory for the decoder — try closing other apps</string>
+    <!-- Translators: Technical failure reason. Suggests closing other apps to free memory. -->
+    <string name="player_reason_decoder_memory">Device ran out of memory for the decoder \u2014 try closing other apps</string>
+    <!-- Translators: Technical failure reason. "DRM" means Digital Rights Management. -->
     <string name="player_reason_drm">DRM / secure-decoder error</string>
-    <string name="player_reason_http_509">Provider blocked the connection — too many streams at once (HTTP 509)</string>
-    <string name="player_reason_http_403">Provider denied access (HTTP 403) — credentials, subscription, or IP block</string>
+    <!-- Translators: Technical failure reason. "HTTP 509" is the HTTP status code. "too many streams at once" is the provider-side cause. -->
+    <string name="player_reason_http_509">Provider blocked the connection \u2014 too many streams at once (HTTP 509)</string>
+    <!-- Translators: Technical failure reason. "HTTP 403" is the status code. Lists possible causes: credentials, subscription, or IP block. -->
+    <string name="player_reason_http_403">Provider denied access (HTTP 403) \u2014 credentials, subscription, or IP block</string>
+    <!-- Translators: Technical failure reason. "HTTP 401" is the status code. -->
     <string name="player_reason_http_401">Provider rejected your login (HTTP 401)</string>
+    <!-- Translators: Technical failure reason. "HTTP 404" is the status code. -->
     <string name="player_reason_http_404">Stream not found on the provider (HTTP 404)</string>
-    <string name="player_reason_http_400">Provider rejected the request (HTTP 400) — bad or expired link</string>
+    <!-- Translators: Technical failure reason. "HTTP 400" is the status code. "bad or expired link" is the cause. -->
+    <string name="player_reason_http_400">Provider rejected the request (HTTP 400) \u2014 bad or expired link</string>
+    <!-- Translators: Technical failure reason about an invalid or expired SSL certificate from the provider. -->
     <string name="player_reason_ssl">Provider\'s SSL certificate is invalid or expired</string>
+    <!-- Translators: Technical failure reason when the stream format is unrecognized. -->
     <string name="player_reason_format">Stream format not recognized (bad or partial stream)</string>
+    <!-- Translators: Technical failure reason for network reachability issues. -->
     <string name="player_reason_network">Network problem reaching the provider</string>
-    <string name="player_reason_audio">Audio output error — the device couldn\'t play this audio format</string>
+    <!-- Translators: Technical failure reason when the audio format is unsupported. -->
+    <string name="player_reason_audio">Audio output error \u2014 the device couldn\'t play this audio format</string>
+    <!-- Translators: Fallback label for an audio track when it has no name or language. "number" is the track index. -->
     <string name="player_audio_track_number">Audio <xliff:g id="number">%1$d</xliff:g></string>
+    <!-- Translators: Fallback label for a subtitle track when it has no name or language. "number" is the track index. -->
     <string name="player_subtitle_track_number">Subtitle <xliff:g id="number">%1$d</xliff:g></string>
-    <string name="player_metadata_separator"> · </string>
+    <!-- Translators: Invisible separator character between inline metadata segments in the player HUD and stream info overlay. This is a middle dot, not a translatable word. -->
+    <string name="player_metadata_separator"> \u00b7 </string>
+    <!-- Translators: Title of the technical stream info overlay shown in the player. -->
     <string name="player_stream_info">Stream info</string>
+    <!-- Translators: Row label in the stream info overlay for the video engine (ExoPlayer/mpv). -->
     <string name="player_stream_engine">Engine</string>
+    <!-- Translators: Row label in the stream info overlay for the stream container/transport format. -->
     <string name="player_stream_format">Format</string>
+    <!-- Translators: Row label in the stream info overlay for the content source. -->
     <string name="player_stream_source">Source</string>
+    <!-- Translators: Row label in the stream info overlay for video codec information. -->
     <string name="player_stream_video">Video</string>
+    <!-- Translators: Row label in the stream info overlay for the HDR/SDR mode. -->
     <string name="player_stream_hdr">HDR</string>
+    <!-- Translators: HDR mode value in the stream info overlay. "HDR10 (PQ)" is a technical video standard name. -->
     <string name="player_stream_hdr10_pq">HDR10 (PQ)</string>
+    <!-- Translators: HDR mode value in the stream info overlay. "HLG" stands for Hybrid Log-Gamma, a technical video standard. -->
     <string name="player_stream_hlg">HLG</string>
+    <!-- Translators: HDR mode value in the stream info overlay. "SDR" stands for Standard Dynamic Range. -->
     <string name="player_stream_sdr">SDR</string>
+    <!-- Translators: Row label in the stream info overlay for the video bitrate. -->
     <string name="player_stream_bitrate">Bitrate</string>
+    <!-- Translators: Row label in the stream info overlay for the video decoder type. -->
     <string name="player_stream_decoder">Decoder</string>
+    <!-- Translators: Row label in the stream info overlay for audio codec information. -->
     <string name="player_stream_audio">Audio</string>
+    <!-- Translators: Row label in the stream info overlay for the buffer status. -->
     <string name="player_stream_buffer">Buffer</string>
+    <!-- Translators: Engine label in the stream info overlay when ExoPlayer is the primary engine. "ExoPlayer" is a brand name. -->
     <string name="player_stream_engine_exo_preferred">ExoPlayer (preferred)</string>
+    <!-- Translators: Engine label when ExoPlayer is used as a fallback after mpv failed. -->
     <string name="player_stream_engine_exo_fallback">ExoPlayer (fallback after mpv failed)</string>
+    <!-- Translators: Engine label when ExoPlayer is used specifically for image-subtitle rendering. -->
     <string name="player_stream_engine_exo_image_subtitle">ExoPlayer (image-subtitle handoff)</string>
+    <!-- Translators: Frame rate display in the stream info overlay. "fps" means frames per second. -->
     <string name="player_stream_fps"><xliff:g id="fps">%1$.2f</xliff:g> fps</string>
+    <!-- Translators: Bit depth display in the stream info overlay. "bits" is the bit depth integer (e.g. 8, 10). -->
     <string name="player_stream_bit_depth"><xliff:g id="bits">%1$d</xliff:g>-bit</string>
+    <!-- Translators: Bitrate display in the stream info overlay. "value" is a number. "Mbps" means megabits per second. -->
     <string name="player_stream_mbps"><xliff:g id="value">%1$s</xliff:g> Mbps</string>
+    <!-- Translators: Audio sample rate display in the stream info overlay. "value" is a number. "kHz" means kilohertz. -->
     <string name="player_stream_khz"><xliff:g id="value">%1$s</xliff:g> kHz</string>
+    <!-- Translators: Audio bitrate display in the stream info overlay. "value" is a number. "kbps" means kilobits per second. -->
     <string name="player_stream_kbps"><xliff:g id="value">%1$s</xliff:g> kbps</string>
+    <!-- Translators: Buffer duration display in the stream info overlay. "value" is a number. "s" means seconds. -->
     <string name="player_stream_seconds"><xliff:g id="value">%1$s</xliff:g> s buffered</string>
+    <!-- Translators: Audio channel label for mono audio in the stream info overlay. Lowercase is intentional for this technical label. -->
     <string name="player_audio_mono">mono</string>
+    <!-- Translators: Audio channel label for stereo audio in the stream info overlay. -->
     <string name="player_audio_stereo">stereo</string>
+    <!-- Translators: Plural audio channel count display in the stream info overlay. "count" is the number of audio channels. -->
     <plurals name="player_audio_channels">
         <item quantity="one"><xliff:g id="count">%1$d</xliff:g> channel</item>
         <item quantity="other"><xliff:g id="count">%1$d</xliff:g> channels</item>
     </plurals>
+    <!-- Translators: Plural dropped-frame count in the stream info overlay. "count" is the number of dropped frames. -->
     <plurals name="player_stream_dropped_frames">
         <item quantity="one"><xliff:g id="count">%1$d</xliff:g> frame dropped</item>
         <item quantity="other"><xliff:g id="count">%1$d</xliff:g> frames dropped</item>
     </plurals>
+    <!-- Translators: Decoder type label in the stream info overlay and media spec display. Lowercase is intentional. -->
     <string name="player_decoder_hardware">hardware decoder</string>
+    <!-- Translators: Decoder type label. Lowercase is intentional. -->
     <string name="player_decoder_software">software decoder</string>
+    <!-- Translators: Decoder qualifier appended when the decoder operates in direct mode. Lowercase is intentional. -->
     <string name="player_decoder_direct">direct</string>
+    <!-- Translators: Decoder qualifier appended when the decoder uses GPU acceleration. Uppercase is intentional for this abbreviation. -->
     <string name="player_decoder_gpu">GPU</string>
 
 
+    <!-- Translators: Dialog title for the OpenSubtitles search screen. "OpenSubtitles" is a brand name. -->
     <string name="player_subtitles_search_title">Search OpenSubtitles</string>
-    <string name="player_subtitles_working">Working…</string>
+    <!-- Translators: Loading indicator text in the subtitle search dialog. -->
+    <string name="player_subtitles_working">Working\u2026</string>
+    <!-- Translators: Button label in the subtitle search dialog to refine the search query. -->
     <string name="player_subtitles_edit_search">Edit search</string>
+    <!-- Translators: Text-field label in the subtitle search edit form. -->
     <string name="player_subtitles_title_label">Title</string>
+    <!-- Translators: Dialog title for the subtitle deletion confirmation popup. "OpenSub" is an abbreviation of OpenSubtitles. -->
     <string name="player_subtitles_delete_title">Delete OpenSub subtitles</string>
+    <!-- Translators: Button to sign in to OpenSubtitles in the subtitle settings screen and sign-in dialog. -->
     <string name="player_subtitles_sign_in">Sign in</string>
+    <!-- Translators: Button to sign out of OpenSubtitles in the subtitle settings screen. -->
     <string name="player_subtitles_sign_out">Sign out</string>
+    <!-- Translators: Section header and info-row label in the OpenSubtitles account screen. -->
     <string name="player_subtitles_account">Account</string>
+    <!-- Translators: Text-field label for the OpenSubtitles username in the sign-in form. -->
     <string name="player_subtitles_username">Username</string>
+    <!-- Translators: Text-field label for the OpenSubtitles password in the sign-in form. -->
     <string name="player_subtitles_password">Password</string>
+    <!-- Translators: Checkbox label in the OpenSubtitles sign-in form to persist the session. -->
     <string name="player_subtitles_stay_signed_in">Stay signed in</string>
+    <!-- Translators: Dialog title for the OpenSubtitles sign-in form. "OpenSubtitles" is a brand name. -->
     <string name="player_subtitles_sign_in_title">Sign in to OpenSubtitles</string>
+    <!-- Translators: Description in the OpenSubtitles connection settings screen. -->
     <string name="player_subtitles_connect_description">Connect this profile\'s OpenSubtitles account.</string>
-    <string name="player_subtitles_contacting">Contacting OpenSubtitles…</string>
+    <!-- Translators: Loading status shown while contacting the OpenSubtitles API. -->
+    <string name="player_subtitles_contacting">Contacting OpenSubtitles\u2026</string>
+    <!-- Translators: Legal notice in the OpenSubtitles settings. "OpenSubtitles" is a brand name. -->
     <string name="player_subtitles_api_notice">This product uses the OpenSubtitles API but is not endorsed or certified by OpenSubtitles.</string>
+    <!-- Translators: Description of what the subtitle delete action does. -->
     <string name="player_subtitles_delete_description">Remove subtitles you\'ve downloaded for movies and series.</string>
+    <!-- Translators: Description of the OpenSubtitles login removal action. Already downloaded subtitles remain available offline. -->
     <string name="player_subtitles_delete_login_message">Removes this profile\'s OpenSubtitles login from this device. Already downloaded subtitles stay available offline.</string>
+    <!-- Translators: Button label in the subtitle delete confirmation popup. -->
     <string name="player_subtitles_delete_action">Delete subtitles</string>
+    <!-- Translators: Section header in the subtitle settings for downloaded subtitles. -->
     <string name="player_subtitles_downloads">Downloads</string>
+    <!-- Translators: Account level badge for OpenSubtitles VIP accounts. "VIP" is an abbreviation that should be preserved. -->
     <string name="player_subtitles_vip">VIP</string>
+    <!-- Translators: Button to refresh the OpenSubtitles session or download list. -->
     <string name="player_subtitles_refresh">Refresh</string>
+    <!-- Translators: Description beneath the OpenSubtitles sign-in prompt. "opensubtitles.com" is a website URL. -->
     <string name="player_subtitles_sign_in_to_use">Use your opensubtitles.com account. Creating one is free.</string>
+    <!-- Translators: Plural text showing remaining daily download quota. "remaining" is the count left today; "total" is the daily limit. -->
     <plurals name="player_subtitles_remaining">
         <item quantity="one"><xliff:g id="remaining">%1$d</xliff:g> download of <xliff:g id="total">%2$d</xliff:g> remaining today</item>
         <item quantity="other"><xliff:g id="remaining">%1$d</xliff:g> downloads of <xliff:g id="total">%2$d</xliff:g> remaining today</item>
     </plurals>
+    <!-- Translators: Plural compact text showing remaining daily downloads (without the total). -->
     <plurals name="player_subtitles_remaining_short">
         <item quantity="one"><xliff:g id="remaining">%1$d</xliff:g> download remaining today</item>
         <item quantity="other"><xliff:g id="remaining">%1$d</xliff:g> downloads remaining today</item>
     </plurals>
+    <!-- Translators: Plural text showing remaining downloads and reset time. "remaining" is the count; "reset" is a time string such as "3h 20m". -->
     <plurals name="player_subtitles_remaining_reset">
-        <item quantity="one"><xliff:g id="remaining">%1$d</xliff:g> download remaining today · resets in <xliff:g id="reset">%2$s</xliff:g></item>
-        <item quantity="other"><xliff:g id="remaining">%1$d</xliff:g> downloads remaining today · resets in <xliff:g id="reset">%2$s</xliff:g></item>
+        <item quantity="one"><xliff:g id="remaining">%1$d</xliff:g> download remaining today \u00b7 resets in <xliff:g id="reset">%2$s</xliff:g></item>
+        <item quantity="other"><xliff:g id="remaining">%1$d</xliff:g> downloads remaining today \u00b7 resets in <xliff:g id="reset">%2$s</xliff:g></item>
     </plurals>
+    <!-- Translators: Plural text showing remaining daily downloads (used in a different context than remaining_short). -->
     <plurals name="player_subtitles_remaining_count">
         <item quantity="one"><xliff:g id="remaining">%1$d</xliff:g> download remaining today</item>
         <item quantity="other"><xliff:g id="remaining">%1$d</xliff:g> downloads remaining today</item>
     </plurals>
+    <!-- Translators: Description beneath the OpenSubtitles session toggle. Explains that turning it off stores only a temporary session. -->
     <string name="player_subtitles_session">The connection session expires. Turn off to store only a temporary session.</string>
+    <!-- Translators: Full description of the OpenSubtitles service in the subtitle settings. "opensubtitles.com" is a website URL. -->
     <string name="player_subtitles_free_description_full">OpenSubtitles is a free, open community subtitle service. Sign in with your own opensubtitles.com account; creating one is free. This applies to the current profile only.</string>
-    <string name="player_subtitles_session_expired">Your OpenSubtitles session has expired. To keep searching and downloading subtitles, sign in again from Settings → Video player → Subtitles → OpenSubtitles.</string>
-    <string name="player_subtitles_account_needed">OpenSubtitles account needed\n\nTo search and download subtitles, sign in from Settings → Video player → Subtitles → OpenSubtitles. OpenSubtitles is a free, open community service — anyone can create a free account at opensubtitles.com.</string>
+    <!-- Translators: Error shown when the OpenSubtitles session expires. Directs the user to Settings path. -->
+    <string name="player_subtitles_session_expired">Your OpenSubtitles session has expired. To keep searching and downloading subtitles, sign in again from Settings \u2192 Video player \u2192 Subtitles \u2192 OpenSubtitles.</string>
+    <!-- Translators: Error/dialog when the user needs an OpenSubtitles account to search. Directs to Settings path. "opensubtitles.com" is a website URL. -->
+    <string name="player_subtitles_account_needed">OpenSubtitles account needed\n\nTo search and download subtitles, sign in from Settings \u2192 Video player \u2192 Subtitles \u2192 OpenSubtitles. OpenSubtitles is a free, open community service \u2014 anyone can create a free account at opensubtitles.com.</string>
+    <!-- Translators: Empty-state message in the subtitle search results when no matches are found. -->
     <string name="player_subtitles_no_matches">No matching subtitles were found.</string>
+    <!-- Translators: Button label in the subtitle search to show results in all languages. -->
     <string name="player_subtitles_show_all_languages">Show all languages</string>
+    <!-- Translators: Label for the "all languages" filter option in subtitle search. -->
     <string name="player_subtitles_all_languages">All languages</string>
+    <!-- Translators: Button to retry the subtitle search. -->
     <string name="player_subtitles_try_again">Try again</string>
+    <!-- Translators: Error when the daily subtitle search/download limit is reached. -->
     <string name="player_subtitles_limit_reached">The daily subtitle search limit has been reached. Try again tomorrow.</string>
+    <!-- Translators: Network error when the OpenSubtitles API cannot be reached. -->
     <string name="player_subtitles_network_error">Couldn\'t reach OpenSubtitles. Check your connection and try again.</string>
+    <!-- Translators: Row label in the subtitle search results for the subtitle language/format. -->
     <string name="player_subtitles_subtitle">Subtitle</string>
+    <!-- Translators: Tag chip in the subtitle search results indicating a trusted uploader. -->
     <string name="player_subtitles_trusted">Trusted</string>
+    <!-- Translators: Tag chip in the subtitle search results indicating subtitles for the deaf and hard of hearing. "SDH" is a standard abbreviation. -->
     <string name="player_subtitles_sdh">SDH</string>
+    <!-- Translators: Tag chip in the subtitle search results indicating AI-translated subtitles. -->
     <string name="player_subtitles_ai">AI</string>
+    <!-- Translators: Plural text showing the number of subtitle downloads. "count" is the number. -->
     <plurals name="player_subtitles_download_count">
         <item quantity="one"><xliff:g id="count">%1$d</xliff:g> download</item>
         <item quantity="other"><xliff:g id="count">%1$d</xliff:g> downloads</item>
     </plurals>
-    <string name="player_subtitles_tags_separator"> · </string>
+    <!-- Translators: Invisible separator between tag chips in the subtitle search results and account info. This is a middle dot, not translatable text. -->
+    <string name="player_subtitles_tags_separator"> \u00b7 </string>
+    <!-- Translators: Button in the subtitle search edit form to submit the query. -->
     <string name="player_subtitles_search">Search</string>
+    <!-- Translators: Label in the OpenSubtitles account screen showing the connected username. -->
     <string name="player_subtitles_connected_as">Connected as</string>
+    <!-- Translators: Label in the OpenSubtitles account screen for the session reset time. -->
     <string name="player_subtitles_resets">Resets</string>
+    <!-- Translators: Account level badge for free OpenSubtitles accounts. -->
     <string name="player_subtitles_free_account">Free</string>
+    <!-- Translators: Wrapper that passes a value through unchanged. "value" is a formatted string from another resource. Used in the OpenSubtitles account info display. -->
     <string name="player_subtitles_in"><xliff:g id="value">%1$s</xliff:g></string>
+    <!-- Translators: Instruction in the OpenSubtitles sign-in form. -->
     <string name="player_subtitles_enter_credentials">Enter your OpenSubtitles username and password.</string>
+    <!-- Translators: Error when the OpenSubtitles sign-in fails with invalid credentials. -->
     <string name="player_subtitles_invalid_credentials">OpenSubtitles could not sign in with those account details.</string>
+    <!-- Translators: Network error when the OpenSubtitles sign-in request fails. -->
     <string name="player_subtitles_sign_in_network_error">Couldn\'t reach OpenSubtitles. Check your internet connection and try again.</string>
+    <!-- Translators: Network error when the OpenSubtitles session refresh fails. -->
     <string name="player_subtitles_refresh_network_error">Couldn\'t refresh OpenSubtitles. Check your internet connection.</string>
 </resources>

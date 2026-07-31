@@ -1,229 +1,432 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <!-- Translators: Screen title for the background-image chooser dialog. -->
     <string name="setup_background_image">Background image</string>
+    <!-- Translators: Description in the background-image chooser dialog explaining what the setting does. -->
     <string name="setup_background_image_description">Pick a photo to show behind the interface, or clear it to restore solid panels.</string>
+    <!-- Translators: Button in the background-image chooser that selects an image stored on this TV/device. Contrasts with the Remote button, which receives an image from a phone. -->
     <string name="setup_from_device">Local</string>
+    <!-- Translators: Button label used in three places: (1) Add-source chooser card for the companion-phone flow, (2) Import-backup chooser card for uploading from a phone, (3) Background-image chooser button for the remote companion flow. Always means "use a phone on the same Wi-Fi". Contrasts with Local/Manual. -->
     <string name="setup_from_phone">Remote</string>
+    <!-- Translators: Screen title for the remote-background dialog shown on the TV when sending a background image from a phone. -->
     <string name="setup_send_from_phone">Send from your phone</string>
+    <!-- Translators: Description in the remote-background dialog explaining how to send an image from a phone. -->
     <string name="setup_phone_background_description">On a phone on the same Wi-Fi, scan the QR (or open the URL), enter this PIN and send a photo. It becomes the background instantly.</string>
-    <string name="setup_opening_server">Opening server…</string>
+    <!-- Translators: Loading status shown while the companion HTTP server is starting. -->
+    <string name="setup_opening_server">Opening server\u2026</string>
+    <!-- Translators: Instruction above the PIN display on the TV screen, telling the user to enter it in the phone browser. -->
     <string name="setup_enter_pin_browser">Enter this PIN in the browser</string>
+    <!-- Translators: Label above the companion URL shown on the TV, as an alternative to scanning the QR code. -->
     <string name="setup_open_url">Or open this URL</string>
+    <!-- Translators: Button label to retry after the companion server fails to start. -->
     <string name="setup_try_again">Try again</string>
+    <!-- Translators: Button label to restart the companion server with a fresh PIN after too many wrong attempts. -->
     <string name="setup_start_again_new_pin">Start again with a new PIN</string>
+    <!-- Translators: Error text shown when the user enters an invalid port number for the companion server. -->
     <string name="setup_companion_invalid_port">Enter a valid port between 1 and 65535.</string>
+    <!-- Translators: Error text when the requested companion server port is already occupied. "port" is a numeric port such as 8080. -->
     <string name="setup_companion_port_in_use">Port <xliff:g id="port">%1$d</xliff:g> is already in use. Try another port.</string>
+    <!-- Translators: Error text when the companion HTTP server fails to start for any reason. -->
     <string name="setup_companion_unavailable">Could not open the local server. Try again.</string>
-    <string name="setup_companion_locked">Too many incorrect PIN attempts — the link was closed for safety.</string>
+    <!-- Translators: Error text shown when the companion link is locked after too many incorrect PIN attempts. Also sent as an HTTP response body to the phone browser. -->
+    <string name="setup_companion_locked">Too many incorrect PIN attempts \u2014 the link was closed for safety.</string>
 
+    <!-- Translators: Button in the Set-TMDB-name dialog that opens a text field to override the TMDB search title. -->
     <string name="setup_tmdb_name">Set TMDB name</string>
+    <!-- Translators: Description in the Set-TMDB-name dialog. "TMDB" is a brand name (The Movie Database) and must not be translated. -->
     <string name="setup_tmdb_description">Type the exact TMDB title to match. Year is optional but helps when several titles share a name.</string>
+    <!-- Translators: Text-field label in the Set-TMDB-name dialog for an optional year to narrow the TMDB search. -->
     <string name="setup_year_optional">Year (optional)</string>
+    <!-- Translators: Button label in the storage browser dialog for selecting a download folder. -->
     <string name="setup_pick_location">Pick a location</string>
+    <!-- Translators: Button label shown in the storage browser when the app does not yet have storage permission. -->
     <string name="setup_grant_storage_access">Grant full storage access</string>
+    <!-- Translators: Button label in the storage browser to confirm the currently visible folder as the download destination. -->
     <string name="setup_use_folder">Use this folder</string>
+    <!-- Translators: Button label in the storage browser to create a new subfolder, and also the dialog title for naming it. -->
     <string name="setup_new_folder">New folder</string>
+    <!-- Translators: Text-field label inside the new-folder sub-dialog of the storage browser. -->
     <string name="setup_folder_name">Folder name</string>
+    <!-- Translators: Placeholder example shown in the new-folder name text field. -->
     <string name="setup_folder_example">e.g. My TV</string>
+    <!-- Translators: Label for the "go up one directory" row in the storage browser. The two dots are a standard file-system convention. -->
     <string name="setup_from_current_folder">..</string>
 
-    <string name="setup_move_indicator">↕</string>
+    <!-- Translators: Visual drag indicator shown next to the active item during reorder mode. This is a symbol, not translatable text. -->
+    <string name="setup_move_indicator">\u2195</string>
 
+    <!-- Translators: Subtitle on the first-run welcome screen, below the OwnTV brand lockup. -->
     <string name="setup_welcome_tagline">Your own IPTV player.</string>
+    <!-- Translators: Primary action button on the first-run welcome screen. -->
     <string name="setup_get_started">Get Started</string>
+    <!-- Translators: Heading on the first-run disclaimer screen shown before the user can proceed. -->
     <string name="setup_before_you_start">Before you start</string>
+    <!-- Translators: Body text on the first-run disclaimer screen. "OwnTV", "Xtream", "M3U" are brand/protocol names that must not be translated. -->
     <string name="setup_disclaimer">OwnTV is a media player only. It includes no channels, playlists, or content. You are responsible for adding your own legally accessible Xtream, M3U, or Stalker sources.</string>
+    <!-- Translators: Button on the first-run disclaimer screen to acknowledge and proceed. -->
     <string name="setup_i_understand">I Understand</string>
+    <!-- Translators: Heading on the setup-choice screen (first run only) where the user chooses between a new profile or restoring a backup. -->
     <string name="setup_set_up_owntv">Set up OwnTV</string>
+    <!-- Translators: Description on the setup-choice screen. -->
     <string name="setup_setup_choice_description">Start fresh, or bring back your profiles, playlists and favorites from a backup file.</string>
+    <!-- Translators: ChoiceCard title on the setup-choice screen for creating a new profile. -->
     <string name="setup_new_profile">New profile</string>
+    <!-- Translators: Description text beneath the "New profile" choice card on the setup-choice screen. -->
     <string name="setup_create_profile_add_sources">Create a profile and add sources</string>
+    <!-- Translators: ChoiceCard title on the setup-choice screen for restoring from a backup. -->
     <string name="setup_restore_backup">Restore backup</string>
+    <!-- Translators: Description text beneath the "Restore backup" choice card. -->
     <string name="setup_import_profiles_playlists">Import profiles &amp; playlists from a file</string>
+    <!-- Translators: Heading on the "add a playlist" step of the setup wizard. -->
     <string name="setup_add_playlist">Add a playlist</string>
+    <!-- Translators: Description on the "add a playlist" step. -->
     <string name="setup_add_playlist_description">Add a source for this profile, or set one up later.</string>
+    <!-- Translators: ChoiceCard title for creating a new M3U/Xtream source from scratch. -->
     <string name="setup_new">New</string>
+    <!-- Translators: Description beneath the "New" choice card. "M3U" and "Xtream" are protocol/brand names that must not be translated. -->
     <string name="setup_add_m3u_xtream">Add an M3U or Xtream source</string>
+    <!-- Translators: ChoiceCard title for reusing playlists from another profile. Only shown when other profiles already have sources. -->
     <string name="setup_existing">Existing</string>
+    <!-- Translators: Description beneath the "Existing" choice card. Only shown when other profiles have sources. -->
     <string name="setup_use_other_profile_playlists">Use another profile\'s playlists</string>
+    <!-- Translators: ChoiceCard title for importing from a backup file. -->
     <string name="setup_import">Import</string>
+    <!-- Translators: Description beneath the "Import" choice card on the add-playlist step. -->
     <string name="setup_restore_backup_file">Restore from a backup file</string>
+    <!-- Translators: Button to skip adding a source and finish setup without any playlists. -->
     <string name="setup_skip_for_now">Skip for now</string>
+    <!-- Translators: Heading on the existing-sources screen where the user picks playlists from other profiles. -->
     <string name="setup_use_existing_playlists">Use existing playlists</string>
+    <!-- Translators: Description on the existing-sources screen. -->
     <string name="setup_pick_playlists">Pick the playlists to add to this profile.</string>
+    <!-- Translators: Plural button label shown on the playlist-picking screen. "count" is the number of playlists selected. -->
     <plurals name="setup_add_selected_playlists">
         <item quantity="one">Add <xliff:g id="count">%1$d</xliff:g></item>
         <item quantity="other">Add <xliff:g id="count">%1$d</xliff:g></item>
     </plurals>
-    <string name="setup_restoring">Restoring…</string>
+    <!-- Translators: Loading status shown while the backup restore is in progress. -->
+    <string name="setup_restoring">Restoring\u2026</string>
+    <!-- Translators: Error heading on the password-prompt screen after a wrong password is entered. -->
     <string name="setup_wrong_backup_password">Wrong backup password</string>
+    <!-- Translators: Heading on the initial backup-password prompt (before any attempt). -->
     <string name="setup_enter_backup_password">Enter backup password</string>
-    <string name="setup_password_mismatch_sealed">That password didn\'t match. This backup is encrypted — it can\'t be opened without the password it was created with.</string>
+    <!-- Translators: Error description when the wrong password is entered for a fully encrypted backup. No skip option is available. -->
+    <string name="setup_password_mismatch_sealed">That password didn\'t match. This backup is encrypted \u2014 it can\'t be opened without the password it was created with.</string>
+    <!-- Translators: Error description when the wrong password is entered for a partially encrypted backup. A skip option is available. -->
     <string name="setup_password_mismatch">That password didn\'t match. Try again, or skip to restore everything except saved passwords.</string>
+    <!-- Translators: Description on the password-prompt screen for a fully encrypted backup (first attempt). -->
     <string name="setup_backup_encrypted_prompt">This backup is encrypted. Enter the backup password to open and restore it.</string>
+    <!-- Translators: Description on the password-prompt screen when only the passwords section is encrypted (first attempt). -->
     <string name="setup_backup_passwords_encrypted_prompt">This backup\'s passwords are encrypted. Enter the backup password to restore them, or skip to restore everything else and re-enter passwords later.</string>
+    <!-- Translators: Text-field label for the backup password input. -->
     <string name="setup_backup_password">Backup password</string>
+    <!-- Translators: Button to skip password entry and restore without saved passwords. Only shown for partially encrypted backups. -->
     <string name="setup_skip_no_passwords">Skip (no passwords)</string>
+    <!-- Translators: Primary button on the password-prompt screen to confirm restore with the entered password. -->
     <string name="setup_restore">Restore</string>
+    <!-- Translators: Error heading on the import-progress screen when restore fails. -->
     <string name="setup_restore_failed">Restore failed</string>
+    <!-- Translators: Error text when the backup file is unreadable or corrupted. -->
     <string name="setup_backup_read_failed">Couldn\'t read the backup file</string>
-    <string name="setup_invalid_mac">Invalid MAC address — use AA:BB:CC:DD:EE:FF</string>
+    <!-- Translators: Error text when a Stalker MAC address is not in the expected format. "AA:BB:CC:DD:EE:FF" is an example format. -->
+    <string name="setup_invalid_mac">Invalid MAC address \u2014 use AA:BB:CC:DD:EE:FF</string>
+    <!-- Translators: Title of the storage browser when picking a backup file to restore. -->
     <string name="setup_pick_backup_file">Pick a backup file to restore</string>
+    <!-- Translators: Heading on the restore-chooser screen where the user picks between Remote and Local file. -->
     <string name="setup_restore_a_backup">Restore a backup</string>
+    <!-- Translators: Description on the restore-chooser screen. -->
     <string name="setup_restore_choice_description">Send the backup from another device (phone or laptop) on the same Wi-Fi, or pick a backup file already on this device.</string>
+    <!-- Translators: ChoiceCard description for the "Remote" option on the restore-chooser screen. -->
     <string name="setup_upload_from_wifi_device">Upload from a device on your Wi-Fi</string>
+    <!-- Translators: ChoiceCard title for the local-file option on the restore-chooser screen. Also used in player subtitle track options to label a locally loaded subtitle file. -->
     <string name="setup_local_file">Local file</string>
+    <!-- Translators: Description beneath the "Local file" choice card on the restore-chooser screen. -->
     <string name="setup_pick_backup_local">Pick a backup file on this device</string>
+    <!-- Translators: Button on the import-progress screen to continue watching while the catalog loads in the background. -->
     <string name="setup_run_in_background">Run in background</string>
-    <string name="setup_importing_catalog">Importing catalog…</string>
+    <!-- Translators: Status text shown above the spinner while the catalog is being imported. -->
+    <string name="setup_importing_catalog">Importing catalog\u2026</string>
+    <!-- Translators: Fallback progress text shown during import when no detailed progress data is available. -->
     <string name="setup_preparing_catalog">Preparing catalog</string>
+    <!-- Translators: Hint text on the import-progress screen telling the user they can start watching immediately. -->
     <string name="setup_watching_during_import">You can start watching while the rest of the catalog loads.</string>
+    <!-- Translators: Heading on the import-progress screen when import succeeds. -->
     <string name="setup_all_set">All set!</string>
+    <!-- Translators: Plural text on the import-success screen showing how many items were restored. "items" is the count. -->
     <plurals name="setup_restored_items">
         <item quantity="one"><xliff:g id="items">%1$d</xliff:g> item restored. Re-sync your sources to load content.</item>
         <item quantity="other"><xliff:g id="items">%1$d</xliff:g> items restored. Re-sync your sources to load content.</item>
     </plurals>
+    <!-- Translators: Info text shown on import success when passwords were not restored (user skipped or backup was partially encrypted). -->
     <string name="setup_passwords_omitted">Re-enter any saved passwords afterwards.</string>
+    <!-- Translators: Plural warning shown on import success when some sources were skipped due to unsupported playlist types. "count" is the number of skipped sources. -->
     <plurals name="setup_skipped_sources">
         <item quantity="one"><xliff:g id="count">%1$d</xliff:g> source was skipped because this version doesn\'t support its playlist type.</item>
         <item quantity="other"><xliff:g id="count">%1$d</xliff:g> sources were skipped because this version doesn\'t support their playlist types.</item>
     </plurals>
+    <!-- Translators: Button on the import-success screen to finish setup. -->
     <string name="setup_continue">Continue</string>
+    <!-- Translators: Error heading on the import-progress screen when import fails. -->
     <string name="setup_import_failed">Import failed</string>
+    <!-- Translators: Button on the import-failure screen to retry the import. Capitalized as a standalone button label. -->
     <string name="setup_try_again_caps">Try Again</string>
 
+    <!-- Translators: Heading on the RemoteSetupScreen for adding a source via phone companion. -->
     <string name="setup_add_from_phone">Add from your phone</string>
-    <string name="setup_phone_add_description">On a phone or laptop on the same Wi-Fi, scan the QR (or open the URL), enter this PIN, fill in your playlist and tap Send to TV. Its details then appear here, ready to import — you press Start Import with the remote.</string>
-    <string name="setup_opening">Opening…</string>
+    <!-- Translators: Description on the RemoteSetupScreen explaining how to use the phone companion. -->
+    <string name="setup_phone_add_description">On a phone or laptop on the same Wi-Fi, scan the QR (or open the URL), enter this PIN, fill in your playlist and tap Send to TV. Its details then appear here, ready to import \u2014 you press Start Import with the remote.</string>
+    <!-- Translators: Button label to start the companion HTTP server on the RemoteSetupScreen. Replaced by "Opening\u2026" while the server is starting. -->
+    <string name="setup_opening">Opening\u2026</string>
+    <!-- Translators: Button label on the RemoteSetupScreen to start the companion HTTP server. -->
     <string name="setup_open_server">Open server</string>
+    <!-- Translators: Button label on the RemoteSetupScreen to stop the companion HTTP server while it is running. -->
     <string name="setup_stop_server">Stop server</string>
 
+    <!-- Translators: Heading on the AddSourceChooserScreen where the user picks between Remote (phone companion) and Manual (on-device form). -->
     <string name="setup_add_source">Add a source</string>
+    <!-- Translators: Description on the AddSourceChooserScreen. -->
     <string name="setup_add_source_description">Fill the form on your phone, or type the details here with the remote.</string>
+    <!-- Translators: ChoiceCard title for the manual (on-device) source-entry option. Contrasts with Remote. -->
     <string name="setup_manual">Manual</string>
+    <!-- Translators: ChoiceCard subtitle for the "Remote" option on the add-source chooser. -->
     <string name="setup_use_phone_same_wifi">Use a phone on the same Wi-Fi</string>
+    <!-- Translators: ChoiceCard subtitle for the "Manual" option on the add-source chooser. "Xtream", "M3U", "Stalker" are protocol/brand names that must not be translated. -->
     <string name="setup_type_source_here">Type Xtream / M3U / Stalker here</string>
+    <!-- Translators: Heading on the AddSourceScreen when editing an existing source. -->
     <string name="setup_edit_source">Edit source</string>
+    <!-- Translators: Heading on the AddSourceScreen when adding a new source. -->
     <string name="setup_add_your_source">Add your source</string>
+    <!-- Translators: Description on the AddSourceScreen when editing an existing source. -->
     <string name="setup_edit_source_description">Update this source\'s details, or change its auto-refresh setting.</string>
-    <string name="setup_byo_source_description">OwnTV is a player — bring your own Xtream, M3U, or Stalker source.</string>
+    <!-- Translators: Description on the AddSourceScreen when adding a new source. "OwnTV", "Xtream", "M3U", "Stalker" are brand/protocol names that must not be translated. -->
+    <string name="setup_byo_source_description">OwnTV is a player \u2014 bring your own Xtream, M3U, or Stalker source.</string>
+    <!-- Translators: KindChip label for the Xtream source type selector. "Xtream" is a brand name that must not be translated. Shown on the TV form and the companion web page. -->
     <string name="setup_xtream">Xtream</string>
+    <!-- Translators: KindChip label for the M3U/M3U8 source type selector. "M3U" and "M3U8" are file format names that must not be translated. Shown on the TV form and the companion web page. -->
     <string name="setup_m3u">M3U / M3U8</string>
+    <!-- Translators: KindChip label for the Stalker portal source type selector. "Stalker" is a brand name that must not be translated. Only shown when Stalker support is enabled. Shown on the TV form and the companion web page. -->
     <string name="setup_stalker_mac">Stalker (MAC)</string>
+    <!-- Translators: Text-field label for the optional source name. Shown on the TV form and the companion web page. -->
     <string name="setup_source_name_optional">Name (optional)</string>
+    <!-- Translators: Default source name placeholder for Xtream sources when the user leaves the name blank. Used as fallback on the TV form and companion web page. -->
     <string name="setup_default_iptv">My IPTV</string>
+    <!-- Translators: Default source name placeholder for M3U sources when the user leaves the name blank. -->
     <string name="setup_name_default_playlist">My Playlist</string>
+    <!-- Translators: Default source name placeholder for Stalker sources when the user leaves the name blank. -->
     <string name="setup_default_portal">My Portal</string>
+    <!-- Translators: Default profile name used when the user leaves the profile name blank during first-run setup. -->
     <string name="setup_default_profile">Profile</string>
+    <!-- Translators: Text-field label for the Xtream server URL. Shown on the TV form and companion web page. -->
     <string name="setup_server_url">Server URL</string>
+    <!-- Translators: Placeholder example in the Xtream server URL field. "host:port" is a generic example. -->
     <string name="setup_server_example">http://host:port</string>
+    <!-- Translators: Text-field label for the Xtream username. Shown on the TV form and companion web page. -->
     <string name="setup_username">Username</string>
+    <!-- Translators: Text-field label for the Xtream password (new source, not editing). Shown on the TV form and companion web page. -->
     <string name="setup_password">Password</string>
+    <!-- Translators: Text-field label for the Xtream password when editing an existing source. Tells the user to leave blank to keep the current password. -->
     <string name="setup_password_keep">Password (leave blank to keep)</string>
+    <!-- Translators: Text-field label for the M3U playlist URL or local file path. Shown on the TV form and companion web page. -->
     <string name="setup_playlist_url_local_file">Playlist URL or local file</string>
-    <string name="setup_playlist_example">http://…/playlist.m3u</string>
+    <!-- Translators: Placeholder example in the M3U playlist URL field. The ellipsis indicates a truncated URL. -->
+    <string name="setup_playlist_example">http://\u2026/playlist.m3u</string>
+    <!-- Translators: Error text when a local M3U playlist file cannot be opened. -->
     <string name="setup_playlist_file_unavailable">Couldn\'t open the playlist file. Pick it again; it may have moved.</string>
+    <!-- Translators: Error text when a local playlist path uses an unsupported URI scheme. -->
     <string name="setup_playlist_path_unsupported">This local playlist path is not supported.</string>
-    <string name="setup_local_file_choose">Choose a local .m3u / .m3u8 file…</string>
+    <!-- Translators: Button label in the M3U source form to open the storage browser for a local playlist file. -->
+    <string name="setup_local_file_choose">Choose a local .m3u / .m3u8 file\u2026</string>
+    <!-- Translators: Label shown next to the chosen local file path in the M3U source form. "name" is the selected filename. -->
     <string name="setup_local_file_prefix">Local file: <xliff:g id="name">%1$s</xliff:g></string>
+    <!-- Translators: Text-field label for the Stalker portal URL. -->
     <string name="setup_portal_url">Portal URL</string>
+    <!-- Translators: Placeholder example in the Stalker portal URL field. The "/c/" suffix is typical. -->
     <string name="setup_portal_example">http://host:port/c/</string>
+    <!-- Translators: Text-field label for the Stalker MAC address in the source form. -->
     <string name="setup_mac_address">MAC address</string>
+    <!-- Translators: Placeholder example in the Stalker MAC address field. "00:1A:79:AA:BB:CC" is a typical MAC format. -->
     <string name="setup_mac_example">00:1A:79:AA:BB:CC</string>
+    <!-- Translators: Error text shown when the Stalker MAC address does not match the expected format. "00:1A:79:AA:BB:CC" is an example. -->
     <string name="setup_mac_invalid">Enter 12 characters, e.g. 00:1A:79:AA:BB:CC</string>
-    <string name="setup_device_model_preset">Device model preset (User-Agent)…</string>
-    <string name="setup_testing">Testing…</string>
+    <!-- Translators: Button label to open a device-model preset picker for the Stalker User-Agent. -->
+    <string name="setup_device_model_preset">Device model preset (User-Agent)\u2026</string>
+    <!-- Translators: Loading status shown while the source connection is being tested. -->
+    <string name="setup_testing">Testing\u2026</string>
+    <!-- Translators: Button label on the source form to test the connection before saving. -->
     <string name="setup_test_connection">Test connection</string>
+    <!-- Translators: Plural success message after a Stalker connection test. "endpoint" is the server URL; "fields" is the count of profile fields returned. -->
     <plurals name="setup_stalker_test_connected">
-        <item quantity="one">✓ Connected via <xliff:g id="endpoint">%1$s</xliff:g> (<xliff:g id="fields">%2$d</xliff:g> profile field)</item>
-        <item quantity="other">✓ Connected via <xliff:g id="endpoint">%1$s</xliff:g> (<xliff:g id="fields">%2$d</xliff:g> profile fields)</item>
+        <item quantity="one">\u2713 Connected via <xliff:g id="endpoint">%1$s</xliff:g> (<xliff:g id="fields">%2$d</xliff:g> profile field)</item>
+        <item quantity="other">\u2713 Connected via <xliff:g id="endpoint">%1$s</xliff:g> (<xliff:g id="fields">%2$d</xliff:g> profile fields)</item>
     </plurals>
+    <!-- Translators: Text shown after a successful Stalker test, indicating when the portal access expires. "date" is a localized date string. -->
     <string name="setup_stalker_test_expires">Expires <xliff:g id="date">%1$s</xliff:g></string>
+    <!-- Translators: Text-field label for an optional custom User-Agent string. -->
     <string name="setup_user_agent_optional">User-Agent (optional)</string>
+    <!-- Translators: Placeholder example in the User-Agent field. "VLC/3.0.20 LibVLC/3.0.20" is a typical User-Agent. -->
     <string name="setup_user_agent_example">e.g. VLC/3.0.20 LibVLC/3.0.20</string>
+    <!-- Translators: Section heading for the auto-refresh setting on the source form. -->
     <string name="setup_auto_refresh">Auto refresh</string>
+    <!-- Translators: Description beneath the auto-refresh setting. Explains the three states: Off, on startup, or when data is stale. -->
     <string name="setup_auto_refresh_description">Off, on startup, or when data is stale</string>
+    <!-- Translators: Section heading for the default-playlist toggle on the source form. -->
     <string name="setup_default_playlist">Default playlist</string>
+    <!-- Translators: Description beneath the default-playlist toggle. Explains that turning it on shows only this playlist across the app. -->
     <string name="setup_default_playlist_description">Show only this playlist across the app. Turn off for all playlists; change anytime from the top bar.</string>
+    <!-- Translators: Section heading for the content-sync scope settings on the source form (Live TV, Movies, Series). -->
     <string name="setup_what_to_sync">What to sync</string>
+    <!-- Translators: Description explaining what "Off" means for sync scope sections. -->
     <string name="setup_sync_off_editing">Off sections stay hidden and are never fetched. Turning a section back On shows cached rows immediately.</string>
-    <string name="setup_sync_choices">Now imports first · Later syncs in the background · Off is never fetched or shown.</string>
+    <!-- Translators: Brief description of how sync scope choices work: Now, Later, Off. -->
+    <string name="setup_sync_choices">Now imports first \u00b7 Later syncs in the background \u00b7 Off is never fetched or shown.</string>
+    <!-- Translators: Label for the Live TV sync scope row. Shown on the source form and companion web page. -->
     <string name="setup_live_tv">Live TV</string>
+    <!-- Translators: Description beneath the Live TV sync scope row. -->
     <string name="setup_channels_categories">Channels and categories</string>
+    <!-- Translators: Label for the Movies sync scope row. Shown on the source form and companion web page. -->
     <string name="setup_movies">Movies</string>
+    <!-- Translators: Description beneath the Movies sync scope row. "VOD" means Video on Demand. -->
     <string name="setup_vod_movie_catalog">VOD movie catalog</string>
+    <!-- Translators: Label for the Series sync scope row. Shown on the source form and companion web page. -->
     <string name="setup_series">Series</string>
+    <!-- Translators: Description beneath the Series sync scope row. -->
     <string name="setup_tv_series_catalog">TV series catalog</string>
+    <!-- Translators: Primary button on the source form to begin importing the source catalog. Capitalized as a standalone button label. -->
     <string name="setup_start_import">Start Import</string>
+    <!-- Translators: Button on the edit-source form to save changes. -->
     <string name="setup_update_source_save">Save</string>
+    <!-- Translators: Title of the storage browser dialog when picking a local M3U playlist file. -->
     <string name="setup_pick_playlist_file">Pick a playlist file (.m3u / .m3u8)</string>
+    <!-- Translators: Dialog title for the device-model preset picker. -->
     <string name="setup_device_model_preset_title">Device model preset</string>
+    <!-- Translators: Dialog title for the auto-refresh setting on the source form. -->
     <string name="setup_auto_refresh_title">Auto refresh</string>
+    <!-- Translators: Compact state label for sync scope "Now" when toggling a scope while editing an existing source. On the add form, the same choice is labeled "Now" (setup_now). This variant is "On" because toggling while editing is binary. Also used in companion web page dropdowns. -->
     <string name="setup_on">On</string>
+    <!-- Translators: Sync scope choice meaning "import immediately". Shown as a cycling label in the sync scope row on the source form, and as an option in companion web page dropdowns. -->
     <string name="setup_now">Now</string>
+    <!-- Translators: Sync scope choice meaning "sync later in background". Shown as a cycling label in the sync scope row. -->
     <string name="setup_later">Later</string>
+    <!-- Translators: Sync scope choice meaning "never fetch or show". Shown as a cycling label in the sync scope row, and as an option in companion web page dropdowns. -->
     <string name="setup_off">Off</string>
-    <string name="setup_scope_value">◀ <xliff:g id="value">%1$s</xliff:g> ▶</string>
+    <!-- Translators: Scope value display showing the current sync scope with left/right arrow indicators. "value" is one of Now/Later/Off. The arrows are visual indicators, not translatable. -->
+    <string name="setup_scope_value">\u25c0 <xliff:g id="value">%1$s</xliff:g> \u25b6</string>
+    <!-- Translators: Default device model preset option for Stalker sources. "MAG200" is a hardware model name. -->
     <string name="setup_default_mag">Default (MAG200)</string>
+    <!-- Translators: Device model preset option for Stalker sources. "MAG250" is a hardware model name. -->
     <string name="setup_mag250">MAG250</string>
+    <!-- Translators: Device model preset option. "MAG254" is a hardware model name. -->
     <string name="setup_mag254">MAG254</string>
+    <!-- Translators: Device model preset option. "MAG270" is a hardware model name. -->
     <string name="setup_mag270">MAG270</string>
+    <!-- Translators: Device model preset option. "MAG420" is a hardware model name. -->
     <string name="setup_mag420">MAG420</string>
 
 
     <!-- Companion web UI is rendered outside Compose but still resolves through Android resources. -->
-    <string name="companion_pin_page_title">OwnTV — Enter PIN</string>
+    <!-- Translators: Page title in the companion browser tab for the PIN entry page. "OwnTV" is a brand name. -->
+    <string name="companion_pin_page_title">OwnTV \u2014 Enter PIN</string>
+    <!-- Translators: Heading on the companion PIN entry page. -->
     <string name="companion_pin_heading">Enter the PIN</string>
+    <!-- Translators: Description on the companion PIN entry page. -->
     <string name="companion_pin_description">Type the 6-digit PIN shown on your TV to continue.</string>
-    <string name="companion_pin_placeholder">••••••</string>
+    <!-- Translators: Placeholder dots shown in the PIN input field on the companion page. -->
+    <string name="companion_pin_placeholder">\u2022\u2022\u2022\u2022\u2022\u2022</string>
+    <!-- Translators: Accessibility label for the PIN input field on the companion page. -->
     <string name="companion_pin_aria">PIN</string>
+    <!-- Translators: Button label on the companion PIN entry page to submit the PIN. -->
     <string name="companion_continue">Continue</string>
-    <string name="companion_pin_mismatch">That PIN did not match — try again.</string>
-    <string name="companion_add_page_title">OwnTV — Add source</string>
+    <!-- Translators: Error text on the companion PIN entry page when the entered PIN does not match. -->
+    <string name="companion_pin_mismatch">That PIN did not match \u2014 try again.</string>
+    <!-- Translators: Page title in the companion browser tab for the add-source page. "OwnTV" is a brand name. -->
+    <string name="companion_add_page_title">OwnTV \u2014 Add source</string>
+    <!-- Translators: Heading on the companion add-source page. -->
     <string name="companion_add_heading">Add a source</string>
-    <string name="companion_add_description">Fill in one source and press Send. It appears on the TV — pick up the remote and press Start Import there when you are ready.</string>
+    <!-- Translators: Description on the companion add-source page. -->
+    <string name="companion_add_description">Fill in one source and press Send. It appears on the TV \u2014 pick up the remote and press Start Import there when you are ready.</string>
+    <!-- Translators: Label for the default-playlist toggle on the companion add-source page. -->
     <string name="companion_default_playlist">Default playlist</string>
+    <!-- Translators: Button label on the companion add-source page to send the source to the TV. -->
     <string name="companion_send_to_tv">Send to TV</string>
-    <string name="companion_sync_xtream_hint">What to sync — Now imports first, Later syncs in the background, Off is never fetched.</string>
-    <string name="companion_sync_stalker_hint">What to sync — Live defaults to Now; Movies/Series default to Later (Stalker VOD is slow).</string>
-    <string name="companion_saved_page_title">OwnTV — Sent</string>
-    <string name="companion_saved_heading">Sent to your TV ✓</string>
+    <!-- Translators: Tooltip/hint text on the companion add-source page explaining the Xtream sync scope options. -->
+    <string name="companion_sync_xtream_hint">What to sync \u2014 Now imports first, Later syncs in the background, Off is never fetched.</string>
+    <!-- Translators: Tooltip/hint text on the companion add-source page explaining the Stalker sync scope defaults. -->
+    <string name="companion_sync_stalker_hint">What to sync \u2014 Live defaults to Now; Movies/Series default to Later (Stalker VOD is slow).</string>
+    <!-- Translators: Page title in the companion browser tab after a source was sent successfully. "OwnTV" is a brand name. -->
+    <string name="companion_saved_page_title">OwnTV \u2014 Sent</string>
+    <!-- Translators: Heading on the companion success page after sending a source. The checkmark is a visual indicator. -->
+    <string name="companion_saved_heading">Sent to your TV \u2713</string>
+    <!-- Translators: Body text on the companion success page when a source was sent. "name" is the source name entered by the user. -->
     <string name="companion_saved_source_body"><xliff:g id="name">%1$s</xliff:g> is now on the TV\'s Add source screen. Check the details there and press Start Import on the remote.</string>
+    <!-- Translators: Button on the companion success page to send another source. -->
     <string name="companion_saved_send_another">Send another source</string>
+    <!-- Translators: Body text on the companion success page when a backup was sent. -->
     <string name="companion_saved_backup_body">Your backup is now on the TV. Pick up the remote and choose which parts to restore.</string>
+    <!-- Translators: Link text on the companion success page to send a different backup file. -->
     <string name="companion_saved_backup_link">Send a different file</string>
+    <!-- Translators: Body text on the companion success page when a background image was sent. -->
     <string name="companion_saved_image_body">Your image is now the TV background.</string>
+    <!-- Translators: Link text on the companion success page to send a different image. -->
     <string name="companion_saved_image_link">Send a different image</string>
-    <string name="companion_backup_page_title">OwnTV — Restore backup</string>
+    <!-- Translators: Page title in the companion browser tab for the backup restore page. "OwnTV" is a brand name. -->
+    <string name="companion_backup_page_title">OwnTV \u2014 Restore backup</string>
+    <!-- Translators: Heading on the companion backup restore page. -->
     <string name="companion_backup_heading">Restore a backup</string>
-    <string name="companion_backup_description">Choose an OwnTV backup file (.own, or an older .json) and press Send. It is transferred to the TV — pick up the remote and choose what to restore there.</string>
+    <!-- Translators: Description on the companion backup restore page. -->
+    <string name="companion_backup_description">Choose an OwnTV backup file (.own, or an older .json) and press Send. It is transferred to the TV \u2014 pick up the remote and choose what to restore there.</string>
+    <!-- Translators: Label for the backup file input on the companion backup restore page. -->
     <string name="companion_backup_file">Backup file</string>
+    <!-- Translators: Error text on the companion backup restore page when no file has been selected. -->
     <string name="companion_choose_backup">Please choose a backup file first.</string>
-    <string name="companion_sending">Sending…</string>
-    <!-- Translators: status is the numeric HTTP response inserted by the companion web page. Keep the complete sentence. -->
+    <!-- Translators: Loading status shown on the companion page while a file is being uploaded to the TV. -->
+    <string name="companion_sending">Sending\u2026</string>
+    <!-- Translators: Error shown in the companion browser page when an upload to the TV fails. "status" is a numeric HTTP response such as 403. -->
     <string name="companion_upload_failed">Upload failed (HTTP <xliff:g id="status">%1$d</xliff:g>). Check the PIN and try again.</string>
+    <!-- Translators: Error text on the companion page when the TV cannot be reached over the network. -->
     <string name="companion_could_not_reach">Could not reach the TV. Stay on the same Wi-Fi and try again.</string>
+    <!-- Translators: Error text on the companion page when the selected file cannot be read. -->
     <string name="companion_could_not_read">Could not read that file.</string>
-    <string name="companion_image_page_title">OwnTV — Background image</string>
+    <!-- Translators: Page title in the companion browser tab for the background image upload page. "OwnTV" is a brand name. -->
+    <string name="companion_image_page_title">OwnTV \u2014 Background image</string>
+    <!-- Translators: Heading on the companion background image upload page. -->
     <string name="companion_image_heading">Send a background image</string>
+    <!-- Translators: Description on the companion background image upload page. -->
     <string name="companion_image_description">Choose a photo (JPG, PNG or WebP) and press Send. It becomes the background picture behind the TV interface.</string>
+    <!-- Translators: Label for the image file input on the companion image upload page. -->
     <string name="companion_image_file">Image file</string>
+    <!-- Translators: Error text on the companion image upload page when no image has been selected. -->
     <string name="companion_choose_image">Please choose an image first.</string>
+    <!-- Translators: Error text on the companion image upload page when the selected image exceeds 25 MB. -->
     <string name="companion_image_too_large">That image is too large (max 25 MB).</string>
-    <string name="companion_download_page_title">OwnTV — Download backup</string>
+    <!-- Translators: Page title in the companion browser tab for the backup download page. "OwnTV" is a brand name. -->
+    <string name="companion_download_page_title">OwnTV \u2014 Download backup</string>
+    <!-- Translators: Heading on the companion backup download page. -->
     <string name="companion_download_heading">Download your backup</string>
-    <string name="companion_download_description">Your TV has prepared an OwnTV backup file. Tap the button to save it to this device (owntv-backup.own). Keep it somewhere safe — you can restore from it later.</string>
+    <!-- Translators: Description on the companion backup download page. -->
+    <string name="companion_download_description">Your TV has prepared an OwnTV backup file. Tap the button to save it to this device (owntv-backup.own). Keep it somewhere safe \u2014 you can restore from it later.</string>
+    <!-- Translators: Button label on the companion backup download page. -->
     <string name="companion_download_backup">Download backup</string>
+    <!-- Translators: Generic HTTP 400 error text on the companion web page. -->
     <string name="companion_error_bad_request">Bad request</string>
+    <!-- Translators: HTTP 413 error text on the companion web page when the request body is too large. -->
     <string name="companion_error_body_too_large">Request body is too large.</string>
+    <!-- Translators: HTTP 401 error text on the companion web page when the PIN is wrong. -->
     <string name="companion_error_unauthorized">Unauthorized. Check the PIN and try again.</string>
+    <!-- Translators: HTTP 404 error text on the companion web page. -->
     <string name="companion_error_not_found">Not found.</string>
+    <!-- Translators: Error text on the companion download page when no backup is available on the TV. -->
     <string name="companion_error_no_backup">No backup is available.</string>
+    <!-- Translators: Error text on the companion download page when the backup file is too large to transfer. -->
     <string name="companion_error_backup_too_large">The backup is too large.</string>
+    <!-- Translators: Error text on the companion download page when the backup file is empty. -->
     <string name="companion_error_empty_backup">The backup is empty.</string>
+    <!-- Translators: Error text on the companion image upload page when the uploaded image is too large. -->
     <string name="companion_error_image_too_large">The image is too large.</string>
+    <!-- Translators: Error text on the companion image upload page when the uploaded file is not a valid image. -->
     <string name="companion_error_invalid_image">That is not a valid image upload.</string>
+    <!-- Translators: Error text on the companion page when required form fields are missing. -->
     <string name="companion_error_missing_fields">Required fields are missing.</string>
 
+    <!-- Translators: Warning shown after a successful restore when the backup contained a language the current app version does not support. The current language is kept. -->
     <string name="setup_invalid_locale">This backup contained an unsupported app language. The restore succeeded, but your current language was kept.</string>
 </resources>
