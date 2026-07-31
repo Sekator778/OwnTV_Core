@@ -29,7 +29,7 @@
     <string name="common_off">Off</string>
     <!-- Translators: Generic exit action or button label. -->
     <string name="common_exit">Exit</string>
-    <!-- Translators: Generic resume action or button label to resume playback. This is a state label, not a command. -->
+    <!-- Translators: Button label to resume playback from where it was paused. -->
     <string name="common_resume">Resume</string>
     <!-- Translators: Button to restart content from the beginning. -->
     <string name="common_start_over">Start over</string>
@@ -106,7 +106,7 @@
     <string name="sync_error_mac">The portal refused this MAC address. Check the MAC (and the TV\'s date &amp; time) \u2014 or the subscription may have expired.</string>
     <!-- Translators: Error message when the MAC address format is invalid. "AA:BB:CC:DD:EE:FF" is an example format. -->
     <string name="sync_error_invalid_mac">Invalid MAC address \u2014 use AA:BB:CC:DD:EE:FF</string>
-    <!-- Translators: Invisible separator between sync count segments. Double middle dot is intentional spacing. -->
+    <!-- Translators: Separator between sync count segments. The middle dot (·) is surrounded by spaces. -->
     <string name="sync_counts_separator">  \u00b7  </string>
     <!-- Translators: Status text when sync completes successfully. -->
     <string name="sync_counts_success">Synced successfully</string>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
-    <!-- Translators: Screen title for the playlist sort dialog. -->
+    <!-- Translators: Fallback label for the playlist sort mode in the SortChip toggle. -->
     <string name="settings_sort_playlist">Playlist</string>
     <!-- Translators: Sort option for alphabetical order. -->
     <string name="settings_sort_alpha">A–Z</string>
@@ -172,7 +172,7 @@
     <string name="settings_temperature_unit">Temperature unit</string>
     <!-- Translators: Description of the temperature unit setting. -->
     <string name="settings_temperature_description">Show the temperature in Celsius or Fahrenheit.</string>
-    <!-- Translators: Option label for automatic selection. Used for temperature unit and other auto-detect settings. -->
+    <!-- Translators: Option label for automatic weather location detection via public IP. -->
     <string name="settings_auto">Auto</string>
     <!-- Translators: Text-field label for entering a city name or coordinates. -->
     <string name="settings_city_latlon">City or lat,lon</string>
@@ -505,7 +505,7 @@
     <string name="settings_accent_green">Green</string>
     <!-- Translators: Accent color preset name. -->
     <string name="settings_accent_amber">Amber</string>
-    <!-- Search keyword bags are translated resources, not prose; keep terms users may type. -->
+    <!-- Translators: Settings search keyword bag for the Profile section. -->
     <string name="settings_group_profile">Profile</string>
     <!-- Translators: Settings search keyword bag for the Content section. -->
     <string name="settings_group_content">Content</string>

@@ -2446,6 +2446,7 @@
 2	technical	app/src/main/java/tv/own/owntv/features/settings/DeleteSubtitlesScreen.kt	ALL
 2	technical	app/src/main/java/tv/own/owntv/features/settings/DeleteSubtitlesScreen.kt	MOVIES
 3	protocol	app/src/main/java/tv/own/owntv/features/settings/DeleteSubtitlesScreen.kt	SERIES
+1	protocol	app/src/main/java/tv/own/owntv/features/settings/DeleteSubtitlesScreen.kt	· S${season}E${episode}
 1	technical	app/src/main/java/tv/own/owntv/features/settings/DeleteSubtitlesViewModel.kt	MOVIE
 1	technical	app/src/main/java/tv/own/owntv/features/settings/DeleteSubtitlesViewModel.kt	SERIES
 3	empty	app/src/main/java/tv/own/owntv/features/settings/EpgSourcesScreen.kt	\0
@@ -3190,7 +3191,7 @@
 1	technical	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	xsub
 15	technical	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	yes
 1	technical	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	ytdl
-7	empty	app/src/main/java/tv/own/owntv/player/PlaybackErrorLog.kt	\0
+6	empty	app/src/main/java/tv/own/owntv/player/PlaybackErrorLog.kt	\0
 1	technical	app/src/main/java/tv/own/owntv/player/PlaybackErrorLog.kt	${Build.MANUFACTURER} ${Build.MODEL}
 1	protocol	app/src/main/java/tv/own/owntv/player/PlaybackErrorLog.kt	:direct
 1	protocol	app/src/main/java/tv/own/owntv/player/PlaybackErrorLog.kt	:gpu
@@ -3217,6 +3218,20 @@
 1	protocol	app/src/main/java/tv/own/owntv/player/PlaybackErrorLog.kt	software:gpu
 2	json	app/src/main/java/tv/own/owntv/player/PlaybackErrorLog.kt	spec
 1	technical	app/src/main/java/tv/own/owntv/player/PlaybackErrorLog.kt	•
+1	protocol	app/src/main/java/tv/own/owntv/player/PlaybackErrorLog.kt	Audio output error — the device couldn't play this audio format
+1	protocol	app/src/main/java/tv/own/owntv/player/PlaybackErrorLog.kt	DRM / secure-decoder error
+1	protocol	app/src/main/java/tv/own/owntv/player/PlaybackErrorLog.kt	Device ran out of memory for the decoder — try closing other apps
+1	protocol	app/src/main/java/tv/own/owntv/player/PlaybackErrorLog.kt	Hardware video decoder error — transient, try again
+1	protocol	app/src/main/java/tv/own/owntv/player/PlaybackErrorLog.kt	Hardware video decoder is busy or can't handle this stream
+1	protocol	app/src/main/java/tv/own/owntv/player/PlaybackErrorLog.kt	Network problem reaching the provider
+1	protocol	app/src/main/java/tv/own/owntv/player/PlaybackErrorLog.kt	Provider blocked the connection — too many streams at once (HTTP 509)
+1	protocol	app/src/main/java/tv/own/owntv/player/PlaybackErrorLog.kt	Provider denied access (HTTP 403) — credentials, subscription, or IP block
+1	protocol	app/src/main/java/tv/own/owntv/player/PlaybackErrorLog.kt	Provider rejected the request (HTTP 400) — bad or expired link
+1	protocol	app/src/main/java/tv/own/owntv/player/PlaybackErrorLog.kt	Provider rejected your login (HTTP 401)
+1	protocol	app/src/main/java/tv/own/owntv/player/PlaybackErrorLog.kt	Provider's SSL certificate is invalid or expired
+1	protocol	app/src/main/java/tv/own/owntv/player/PlaybackErrorLog.kt	Stream format not recognized (bad or partial stream)
+1	protocol	app/src/main/java/tv/own/owntv/player/PlaybackErrorLog.kt	Stream not found on the provider (HTTP 404)
+1	protocol	app/src/main/java/tv/own/owntv/player/PlaybackErrorLog.kt	This device's decoder doesn't support this video format/profile (e.g. HEVC 10-bit)
 1	technical	app/src/main/java/tv/own/owntv/player/PlayerBudget.kt	10
 1	technical	app/src/main/java/tv/own/owntv/player/PlayerBudget.kt	120
 1	technical	app/src/main/java/tv/own/owntv/player/PlayerBudget.kt	128MiB
