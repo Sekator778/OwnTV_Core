@@ -57,7 +57,7 @@ class XtreamClientTest {
         """.trimIndent()
 
         val client = createClient(json)
-        val details = client.fetchAccountDetails(testSource)
+        val details = requireNotNull(client.fetchAccountDetails(testSource))
         assertTrue(details.hlsSupported)
         assertEquals(1796598000000L, details.expiryMs)
     }
@@ -75,7 +75,7 @@ class XtreamClientTest {
         """.trimIndent()
 
         val client = createClient(json)
-        val details = client.fetchAccountDetails(testSource)
+        val details = requireNotNull(client.fetchAccountDetails(testSource))
         assertFalse(details.hlsSupported)
         assertEquals(1796598000000L, details.expiryMs)
     }
@@ -93,7 +93,7 @@ class XtreamClientTest {
         """.trimIndent()
 
         val client = createClient(json)
-        val details = client.fetchAccountDetails(testSource)
+        val details = requireNotNull(client.fetchAccountDetails(testSource))
         assertFalse(details.hlsSupported)
     }
 }

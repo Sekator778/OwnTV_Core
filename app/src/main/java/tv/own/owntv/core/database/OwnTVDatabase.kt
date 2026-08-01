@@ -22,6 +22,7 @@ import tv.own.owntv.core.database.entity.CategoryEntity
 import tv.own.owntv.core.database.entity.ChannelEntity
 import tv.own.owntv.core.database.entity.ChannelFtsEntity
 import tv.own.owntv.core.database.entity.ContentOrderEntity
+import tv.own.owntv.core.database.entity.CustomCategoryMemberEntity
 import tv.own.owntv.core.database.entity.DownloadEntity
 import tv.own.owntv.core.database.entity.EpgChannelEntity
 import tv.own.owntv.core.database.entity.EpgProgrammeEntity
@@ -46,6 +47,7 @@ import tv.own.owntv.core.database.entity.SubtitleSelectionEntity
 import tv.own.owntv.core.database.entity.SubtitleTimingEntity
 import tv.own.owntv.core.database.entity.WatchHistoryEntity
 import tv.own.owntv.core.database.entity.TvProviderProgramEntity
+import tv.own.owntv.core.database.dao.CustomCategoryDao
 import tv.own.owntv.core.database.dao.SubtitleDao
 
 @Database(
@@ -66,6 +68,7 @@ import tv.own.owntv.core.database.dao.SubtitleDao
         WatchHistoryEntity::class,
         PlaybackProgressEntity::class,
         ContentOrderEntity::class,
+        CustomCategoryMemberEntity::class,
         SeriesSortOrderEntity::class,
         DownloadEntity::class,
         // Android TV home-screen bookkeeping
@@ -87,7 +90,7 @@ import tv.own.owntv.core.database.dao.SubtitleDao
         SeriesFtsEntity::class,
         EpisodeFtsEntity::class,
     ],
-    version = 23, // v7: content_order (Move). v8: contentHash + browse/unique indexes. v9: EPG contentHash + natural key. v10: TMDB metadata cache. v11: movies/series rating-sort indexes. v12: metadata_cache trailerKey. v13: metadata_cache logoPath. v14: sources.mac (Stalker portal). v15: external-subtitle cache/selection/timing tables. v16: subtitle_link (downloaded-sub ↔ content). v17: sources.syncLive/Movies/Series (skip-sync enabledScope). v18: series.episodesSyncedAt (episode-cache freshness, S8). v19: epg_channels.iconUrl (XMLTV channel logos). v20: channels (sourceId, number) index for direct tune. v21: series.addedAt + date-added sort indexes. v22: series_sort_order (per-series season/episode order). v23: sources.hlsSupported and sources.preferHls
+    version = 24, // v7: content_order (Move). v8: contentHash + browse/unique indexes. v9: EPG contentHash + natural key. v10: TMDB metadata cache. v11: movies/series rating-sort indexes. v12: metadata_cache trailerKey. v13: metadata_cache logoPath. v14: sources.mac (Stalker portal). v15: external-subtitle cache/selection/timing tables. v16: subtitle_link (downloaded-sub ↔ content). v17: sources.syncLive/Movies/Series (skip-sync enabledScope). v18: series.episodesSyncedAt (episode-cache freshness, S8). v19: epg_channels.iconUrl (XMLTV channel logos). v20: channels (sourceId, number) index for direct tune. v21: series.addedAt + date-added sort indexes. v22: series_sort_order (per-series season/episode order). v23: sources.hlsSupported and sources.preferHls. v24: custom_category_members (user custom categories, #87)
 
     exportSchema = true,
 )
@@ -103,6 +106,7 @@ abstract class OwnTVDatabase : RoomDatabase() {
     abstract fun historyDao(): HistoryDao
     abstract fun progressDao(): ProgressDao
     abstract fun contentOrderDao(): ContentOrderDao
+    abstract fun customCategoryDao(): CustomCategoryDao
     abstract fun seriesSortOrderDao(): SeriesSortOrderDao
     abstract fun tvProviderProgramDao(): TvProviderProgramDao
     abstract fun downloadDao(): DownloadDao
@@ -622,6 +626,23 @@ abstract class OwnTVDatabase : RoomDatabase() {
         }
 
         /**
+         * v23 → v24: `custom_category_members` — the user-created custom combined categories (issue
+         * #87). Membership rows per (profileId, mediaType, contextKey="custom:<uuid>", itemId),
+         * modeled exactly on `content_order`: the same position semantics, the same unique index,
+         * the same volatile itemId (content is clear-then-insert every sync, so rows are snapshotted
+         * with stable keys and re-attached by UserDataResolver). The category definitions themselves
+         * live in DataStore, so only this one table appears in the schema.
+         *
+         * Last hop, so it carries [healSchema] (standing rule).
+         */
+        val MIGRATION_23_24 = object : androidx.room.migration.Migration(23, 24) {
+            override fun migrate(db: androidx.sqlite.db.SupportSQLiteDatabase) {
+                createCustomCategoryMembersTable(db)
+                healSchema(db)
+            }
+        }
+
+        /**
          * Canonical CREATE statements for every NON-unique index Room expects on the four
          * bulk-synced tables, keyed by table (must stay in sync with the current schema JSON).
          * BulkInsertHelper drops exactly these during eligible fresh imports; restore, the
@@ -766,6 +787,23 @@ abstract class OwnTVDatabase : RoomDatabase() {
             if (present >= expected.size) return false
             healSchema(db)
             return true
+        }
+
+        private fun createCustomCategoryMembersTable(db: androidx.sqlite.db.SupportSQLiteDatabase) {
+            db.execSQL(
+                "CREATE TABLE IF NOT EXISTS `custom_category_members` (" +
+                    "`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " +
+                    "`profileId` INTEGER NOT NULL, " +
+                    "`mediaType` TEXT NOT NULL, " +
+                    "`contextKey` TEXT NOT NULL, " +
+                    "`itemId` INTEGER NOT NULL, " +
+                    "`position` INTEGER NOT NULL, " +
+                    "FOREIGN KEY(`profileId`) REFERENCES `profiles`(`id`) ON DELETE CASCADE" +
+                    ")",
+            )
+            db.execSQL("CREATE INDEX IF NOT EXISTS `index_custom_category_members_profileId` ON `custom_category_members` (`profileId`)")
+            db.execSQL("CREATE INDEX IF NOT EXISTS `index_custom_category_members_profileId_mediaType_contextKey` ON `custom_category_members` (`profileId`, `mediaType`, `contextKey`)")
+            db.execSQL("CREATE UNIQUE INDEX IF NOT EXISTS `index_custom_category_members_profileId_mediaType_contextKey_itemId` ON `custom_category_members` (`profileId`, `mediaType`, `contextKey`, `itemId`)")
         }
 
         private fun createContentOrderTable(db: androidx.sqlite.db.SupportSQLiteDatabase) {

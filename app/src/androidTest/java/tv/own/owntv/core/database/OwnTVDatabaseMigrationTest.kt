@@ -97,6 +97,9 @@ class OwnTVDatabaseMigrationTest {
             // Structure added along the way.
             assertTableExists(sqlite, "content_order")
             assertIndexExists(sqlite, "index_content_order_profileId_mediaType_contextKey_itemId")
+            // v24: custom category membership (issue #87).
+            assertTableExists(sqlite, "custom_category_members")
+            assertIndexExists(sqlite, "index_custom_category_members_profileId_mediaType_contextKey_itemId")
             assertColumnExists(sqlite, "channels", "contentHash")
             assertColumnExists(sqlite, "movies", "contentHash")
             assertColumnExists(sqlite, "series", "contentHash")
@@ -124,6 +127,42 @@ class OwnTVDatabaseMigrationTest {
             assertCount(sqlite, "series", 1)
             assertCount(sqlite, "favorites", 3)
             assertCount(sqlite, "playback_progress", 2)
+        } finally {
+            db.close()
+        }
+    }
+
+    /**
+     * The v23 → v24 hop: custom category membership (issue #87). A user arriving from a v23 dev
+     * build (or the next public release built on it) must gain the table with zero data loss —
+     * content_order rows made before the upgrade survive, and the new table is empty but fully
+     * indexed. `everyExportedSchemaVersionMigratesToCurrent` covers the schema-validity half of
+     * this hop from every start version; this test pins the user-data half.
+     */
+    @Test
+    fun migrateVersion23ToCurrent_addsCustomCategoryMembers() {
+        context.deleteDatabase(DB_NAME)
+        val db23 = context.openOrCreateDatabase(DB_NAME, Context.MODE_PRIVATE, null)
+        try {
+            executeSchemaQueries(db23, "tv.own.owntv.core.database.OwnTVDatabase/23.json")
+            db23.execSQL("INSERT INTO profiles (id, name, avatarColor, avatarId, isKids, pinHash, createdAt) VALUES (1, 'Primary', 1122867, 7, 0, NULL, 1)")
+            // A manual-order row the user made before the upgrade must survive it.
+            db23.execSQL("INSERT INTO content_order (profileId, mediaType, contextKey, itemId, position) VALUES (1, '${MediaType.LIVE.name}', '10:cat-live', 30, 0)")
+            db23.version = 23
+        } finally {
+            db23.close()
+        }
+
+        val db = openWithAllMigrations()
+        try {
+            val sqlite = db.openHelper.readableDatabase
+            assertTableExists(sqlite, "custom_category_members")
+            assertIndexExists(sqlite, "index_custom_category_members_profileId")
+            assertIndexExists(sqlite, "index_custom_category_members_profileId_mediaType_contextKey")
+            assertIndexExists(sqlite, "index_custom_category_members_profileId_mediaType_contextKey_itemId")
+            assertCount(sqlite, "profiles", 1)
+            assertCount(sqlite, "content_order", 1)
+            assertCount(sqlite, "custom_category_members", 0)
         } finally {
             db.close()
         }
@@ -317,10 +356,9 @@ class OwnTVDatabaseMigrationTest {
             OwnTVDatabase.MIGRATION_18_19,
             OwnTVDatabase.MIGRATION_19_20,
             OwnTVDatabase.MIGRATION_20_21,
-<<<<<<< HEAD
             OwnTVDatabase.MIGRATION_21_22,
-=======
->>>>>>> 4e48ce2 (Add per-source "Prefer HLS for Live TV" option and format auto-detection)
+            OwnTVDatabase.MIGRATION_22_23,
+            OwnTVDatabase.MIGRATION_23_24,
         )
         .allowMainThreadQueries()
         .build()
@@ -486,7 +524,7 @@ class OwnTVDatabaseMigrationTest {
         private const val DB_NAME = "owntv-migration-test.db"
 
         /** Must match `@Database(version = …)` on [OwnTVDatabase]. */
-        private const val CURRENT_VERSION = 23
+        private const val CURRENT_VERSION = 24
 
         /**
          * Every version with an exported schema that a real database can be sitting at.

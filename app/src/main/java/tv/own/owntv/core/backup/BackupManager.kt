@@ -94,7 +94,7 @@ class BackupManager(
             val seal: ((String) -> JSONObject)? = key?.let { k -> { plain -> BackupCrypto.encrypt(k, plain) } }
 
             val root = JSONObject().apply {
-                put("version", 14) // v14: .own container (wallpaper rides along). v13: sources.syncLive/Movies/Series. v12: per-profile OpenSubtitles login (encrypted-only). v11: profile-scoped export. v10: sources.mac. v9: custom TMDB names, encrypted TMDB key
+                put("version", 15) // v15: custom category membership (issue #87) rides userData as kind "member"; customCategories blobs pass through unremapped. v14: .own container (wallpaper rides along). v13: sources.syncLive/Movies/Series. v12: per-profile OpenSubtitles login (encrypted-only). v11: profile-scoped export. v10: sources.mac. v9: custom TMDB names, encrypted TMDB key
                 put("sections", JSONArray().apply { sections.forEach { put(it.name) } })
                 if (salt != null) put("crypto", BackupCrypto.cryptoBlock(salt))
                 // Ticked profiles always ride (backup is profile-based); restore needs SOURCES to apply them.
@@ -299,7 +299,7 @@ class BackupManager(
                         "fav" -> out += Section.FAVORITES
                         "his" -> out += Section.HISTORY
                         "prog" -> out += Section.RESUME
-                        "order" -> out += Section.MANUAL_REORDER
+                        "order", "sort", "member" -> out += Section.MANUAL_REORDER
                     }
                 }
             }
@@ -547,6 +547,12 @@ class BackupManager(
                         e.put("p", p)
                         val src = e.optLong("src", -1)
                         sourceIdMap[src]?.let { e.put("src", it) }
+                        // Manual-order context keys for provider folders use the same
+                        // "<sourceId>:<stable-category-id>" namespace as customization keys.
+                        // Custom-category ids ("custom:<uuid>") naturally pass through.
+                        if (e.has("ctx")) {
+                            e.put("ctx", remapContentContextKey(e.optString("ctx"), sourceIdMap))
+                        }
                         filtered.put(e)
                     }
                     userData.importAll(filtered)
@@ -639,9 +645,10 @@ class BackupManager(
         if (Section.FAVORITES in sections) add("fav")
         if (Section.HISTORY in sections) add("his")
         if (Section.RESUME in sections) add("prog")
-        // "sort" (per-series season/episode order) rides with MANUAL_REORDER: both are per-profile,
-        // per-item ordering preferences, so one tick covers everything the user has hand-ordered.
-        if (Section.MANUAL_REORDER in sections) { add("order"); add("sort") }
+        // "sort" (per-series season/episode order) and "member" (custom category membership, #87)
+        // ride with MANUAL_REORDER: all are per-profile, per-item ordering preferences, so one tick
+        // covers everything the user has hand-ordered.
+        if (Section.MANUAL_REORDER in sections) { add("order"); add("sort"); add("member") }
     }
 
     // --- mapping ---
@@ -798,7 +805,21 @@ internal fun remapKeys(o: JSONObject, idMap: Map<Long, Long>): JSONObject {
     return out
 }
 
-/** Rewrites the "<sourceId>:<rest>" content keys inside one SectionCustomizations JSON blob. */
+/** Remaps a provider-folder context key while preserving custom and built-in context keys. */
+internal fun remapContentContextKey(contextKey: String, sourceIdMap: Map<Long, Long>): String {
+    val sourceId = contextKey.substringBefore(':').toLongOrNull() ?: return contextKey
+    val mapped = sourceIdMap[sourceId] ?: return contextKey
+    return "$mapped:${contextKey.substringAfter(':')}"
+}
+
+/**
+ * Rewrites the "<sourceId>:<rest>" content keys inside one SectionCustomizations JSON blob.
+ *
+ * Custom category ids ("custom:<uuid>", the `customCats` array and any custom keys in the maps)
+ * contain no source id — "custom" never parses as a Long, so [remapContentKey] passes them through
+ * verbatim. The `customCats` array holds OBJECTS (id/name/icon) rather than strings, so the array
+ * branch handles both element kinds; without this the whole blob fell back unremapped.
+ */
 internal fun remapCustomizationValue(raw: String, sourceIdMap: Map<Long, Long>): String {
     if (sourceIdMap.isEmpty()) return raw
     fun remapContentKey(k: String): String {
@@ -811,8 +832,29 @@ internal fun remapCustomizationValue(raw: String, sourceIdMap: Map<Long, Long>):
         val out = JSONObject()
         o.keys().forEach { field ->
             when (val v = o.get(field)) {
-                is JSONArray -> out.put(field, JSONArray().apply { for (i in 0 until v.length()) put(remapContentKey(v.getString(i))) })
-                is JSONObject -> out.put(field, JSONObject().apply { v.keys().forEach { k -> put(remapContentKey(k), v.get(k)) } })
+                is JSONArray -> out.put(field, JSONArray().apply {
+                    for (i in 0 until v.length()) {
+                        val e = v.opt(i)
+                        when (e) {
+                            // Keyed list (hiddenCats, catOrder): remap content keys; custom keys pass through.
+                            is String -> put(remapContentKey(e))
+                            // customCats objects: ids are "custom:<uuid>" (never remapped); copy verbatim.
+                            is JSONObject -> put(e)
+                            else -> put(e)
+                        }
+                    }
+                })
+                is JSONObject -> {
+                    if (field == "movedFrom") {
+                        // movedFrom values are ORIGIN CATEGORY keys ("<sourceId>:…"), not labels —
+                        // unlike every other map (hiddenItems → label, epgMatch → epg id), BOTH
+                        // sides are content keys, so the values must be remapped too or the folder
+                        // filter never matches after a cross-device restore.
+                        out.put(field, JSONObject().apply { v.keys().forEach { k -> put(remapContentKey(k), remapContentKey(v.getString(k))) } })
+                    } else {
+                        out.put(field, JSONObject().apply { v.keys().forEach { k -> put(remapContentKey(k), v.get(k)) } })
+                    }
+                }
                 else -> out.put(field, v)
             }
         }

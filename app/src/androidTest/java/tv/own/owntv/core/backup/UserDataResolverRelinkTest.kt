@@ -58,6 +58,7 @@ class UserDataResolverRelinkTest {
             historyDao = db.historyDao(),
             progressDao = db.progressDao(),
             contentOrderDao = db.contentOrderDao(),
+            customCategoryDao = db.customCategoryDao(),
             seriesSortOrderDao = db.seriesSortOrderDao(),
             db = db,
         )

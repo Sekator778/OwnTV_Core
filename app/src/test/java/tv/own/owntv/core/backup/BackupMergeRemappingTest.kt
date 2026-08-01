@@ -102,6 +102,55 @@ class BackupMergeRemappingTest {
     }
 
     @Test
+    fun `custom category ids pass through unremapped and the object array survives`() {
+        // Issue #87: a custom category's id is "custom:<uuid>" — no source id to remap, and the
+        // customCats field is an array of OBJECTS, not strings. Before the fix the getString(i) on
+        // an object threw and the WHOLE blob fell back to the raw (unremapped) value, so a profile
+        // with a custom category silently lost every source-id remap on restore.
+        val raw = JSONObject()
+            .put("catOrder", JSONArray(listOf("custom:abc-123", "10:live:1")))
+            .put("hiddenItems", JSONObject().put("10:live:7", "News"))
+            .put(
+                "customCats",
+                JSONArray().apply { put(JSONObject().put("id", "custom:abc-123").put("name", "My Cat")) },
+            )
+            .toString()
+
+        val out = JSONObject(remapCustomizationValue(raw, mapOf(10L to 200L)))
+
+        // Custom ids in the keyed arrays pass through verbatim; source-keyed entries still remap.
+        assertEquals("custom:abc-123", out.getJSONArray("catOrder").getString(0))
+        assertEquals("200:live:1", out.getJSONArray("catOrder").getString(1))
+        // The object array is copied verbatim (its ids can never be source ids).
+        assertEquals("custom:abc-123", out.getJSONArray("customCats").getJSONObject(0).getString("id"))
+        assertEquals("My Cat", out.getJSONArray("customCats").getJSONObject(0).getString("name"))
+        // Ordinary content keys in the maps still remap — the blob did NOT fall back.
+        assertEquals("News", out.getJSONObject("hiddenItems").getString("200:live:7"))
+    }
+
+    @Test
+    fun `moved origin remaps both the item key and provider category value`() {
+        val raw = JSONObject()
+            .put("movedFrom", JSONObject().put("10:movie:99", "10:category:7"))
+            .toString()
+
+        val moved = JSONObject(remapCustomizationValue(raw, mapOf(10L to 200L)))
+            .getJSONObject("movedFrom")
+
+        assertEquals("200:category:7", moved.getString("200:movie:99"))
+        assertNull(moved.opt("10:movie:99"))
+    }
+
+    @Test
+    fun `user data context remaps provider folders but preserves custom and built-in contexts`() {
+        val ids = mapOf(10L to 200L)
+        assertEquals("200:category:7", remapContentContextKey("10:category:7", ids))
+        assertEquals("custom:abc-123", remapContentContextKey("custom:abc-123", ids))
+        assertEquals("favorites", remapContentContextKey("favorites", ids))
+        assertEquals("11:category:7", remapContentContextKey("11:category:7", ids))
+    }
+
+    @Test
     fun `malformed customization json is returned verbatim rather than dropped`() {
         // Restore must degrade to "this setting stays as it was", never to an exception mid-import.
         assertEquals("not json at all", remapCustomizationValue("not json at all", mapOf(1L to 2L)))

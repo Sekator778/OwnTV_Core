@@ -105,6 +105,43 @@ data class ContentOrderEntity(
     }
 }
 
+/**
+ * Membership rows of the user's custom combined categories (issue #87). One row pins one content
+ * item (channel/movie/series) to a [position] inside a custom category, identified by its stable
+ * DataStore key — `CustomizeKeys` with the `"custom:"` prefix, e.g. `"custom:1b2f…"` — in
+ * [contextKey]. Modeled EXACTLY on [ContentOrderEntity]: the same (profileId, mediaType, contextKey,
+ * itemId) uniqueness, the same position semantics (a custom category's rails JOIN this table and
+ * order by [position] first), so Move works inside custom categories through the identical
+ * content_order machinery (the custom category's own order rows live HERE, not in content_order).
+ *
+ * The membership itself is Room (not DataStore) on purpose: the browse rails need to JOIN
+ * `custom_category_members` against channels/movies/series, and DataStore string keys can't be
+ * JOINed. The catalog tables are clear-then-insert on every sync, so [itemId] is volatile — these
+ * rows are snapshotted with stable keys and re-attached after a sync by UserDataResolver, exactly
+ * like [ContentOrderEntity] and favorites/history.
+ */
+@Entity(
+    tableName = "custom_category_members",
+    foreignKeys = [
+        ForeignKey(entity = ProfileEntity::class, parentColumns = ["id"], childColumns = ["profileId"], onDelete = ForeignKey.CASCADE),
+    ],
+    indices = [
+        Index("profileId"),
+        Index(value = ["profileId", "mediaType", "contextKey"]),
+        Index(value = ["profileId", "mediaType", "contextKey", "itemId"], unique = true),
+    ],
+)
+data class CustomCategoryMemberEntity(
+    @PrimaryKey(autoGenerate = true) val id: Long = 0,
+    val profileId: Long,
+    /** LIVE / MOVIE / SERIES — never EPISODE (episodes aren't added to custom categories). */
+    val mediaType: MediaType,
+    /** The custom category's stable key (`"custom:<uuid>"`, see CustomizeKeys.CUSTOM_PREFIX). */
+    val contextKey: String,
+    val itemId: Long,
+    val position: Int,
+)
+
 @Entity(
     tableName = "downloads",
     foreignKeys = [

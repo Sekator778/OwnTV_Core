@@ -12,6 +12,7 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import org.json.JSONArray
 import org.json.JSONObject
+import java.util.UUID
 import tv.own.owntv.core.database.entity.CategoryEntity
 import tv.own.owntv.core.database.entity.ChannelEntity
 import tv.own.owntv.core.database.entity.MovieEntity
@@ -26,11 +27,29 @@ private val Context.customizeStore: DataStore<Preferences> by preferencesDataSto
  * id) fall back to the name — so a provider-side rename can detach an M3U customization.
  */
 object CustomizeKeys {
+    /** Prefix of custom combined-category ids (issue #87) — they share the key namespace, so
+     *  hide/rename/reorder need no new code. */
+    const val CUSTOM_PREFIX = "custom:"
+
+    fun isCustom(key: String): Boolean = key.startsWith(CUSTOM_PREFIX)
     fun category(c: CategoryEntity): String = "${c.sourceId}:${c.remoteId ?: c.name}"
     fun channel(ch: ChannelEntity): String = "${ch.sourceId}:${ch.remoteId ?: ch.name}"
     fun movie(m: MovieEntity): String = "${m.sourceId}:${m.remoteId ?: m.name}"
     fun series(s: SeriesEntity): String = "${s.sourceId}:${s.remoteId ?: s.name}"
 }
+
+/**
+ * A user-created category (issue #87) combining items from any provider category. Lives in the
+ * same customization namespace as everything else via [CustomCategory.id] ("custom:<uuid>"), so
+ * hide / rename / reorder work with no new code. Membership rows live in the Room table
+ * `custom_category_members` (per profile), keyed by [CustomCategory.id] as contextKey.
+ */
+data class CustomCategory(
+    val id: String,
+    val name: String,
+    /** Reserved for a future icon picker; always null for now. */
+    val icon: String? = null,
+)
 
 /** One browse section's customizations (categories + items) for a profile. */
 data class SectionCustomizations(
@@ -43,10 +62,18 @@ data class SectionCustomizations(
     val categoryOrder: List<String> = emptyList(),
     /** Manual EPG match: item key → the EPG channel id to use (overrides the channel's own epg id). */
     val epgMatches: Map<String, String> = emptyMap(),
+    /** User-created combined categories (issue #87); membership lives in Room. */
+    val customCategories: List<CustomCategory> = emptyList(),
+    /** Items moved OUT of a provider category into a custom category (issue #87): item key → the
+     *  provider category key it was moved from. The item stays in All/search/recent but leaves that
+     *  folder — that's what makes a "sidebar of only my folders" possible. Stable keys, so a re-sync
+     *  that re-lists the item does not undo the move. */
+    val movedFromOrigin: Map<String, String> = emptyMap(),
 ) {
     val isEmpty: Boolean
         get() = hiddenCategories.isEmpty() && hiddenItems.isEmpty() && categoryNames.isEmpty() &&
-            itemNames.isEmpty() && categoryOrder.isEmpty() && epgMatches.isEmpty()
+            itemNames.isEmpty() && categoryOrder.isEmpty() && epgMatches.isEmpty() &&
+            customCategories.isEmpty() && movedFromOrigin.isEmpty()
 }
 
 /**
@@ -90,6 +117,13 @@ class CustomizationStore(private val context: Context) {
             it.copy(hiddenItems = if (hidden) it.hiddenItems + (itemKey to label) else it.hiddenItems - itemKey)
         }
 
+    /** Hide/show a whole span of items in one atomic edit (range select in the Customize items
+     *  list). [items] maps stable key → label; the label is only meaningful when hiding. */
+    suspend fun setItemsHidden(profileId: Long, type: MediaType, items: Map<String, String>, hidden: Boolean) =
+        update(profileId, type) {
+            it.copy(hiddenItems = if (hidden) it.hiddenItems + items else it.hiddenItems - items.keys)
+        }
+
     suspend fun renameCategory(profileId: Long, type: MediaType, catKey: String, name: String?) =
         update(profileId, type) {
             it.copy(categoryNames = if (name.isNullOrBlank()) it.categoryNames - catKey else it.categoryNames + (catKey to name.trim()))
@@ -108,6 +142,64 @@ class CustomizationStore(private val context: Context) {
         update(profileId, type) {
             val key = epgChannelId?.trim()?.lowercase()?.takeIf { it.isNotEmpty() }
             it.copy(epgMatches = if (key == null) it.epgMatches - itemKey else it.epgMatches + (itemKey to key))
+        }
+
+    /**
+     * Applies all accepted bulk-rename results (issue #86) in ONE atomic edit, so a 2000-row rename
+     * lands as a single DataStore write. Values are trimmed; blank values are dropped (a bulk rule
+     * can never clear a name — per-row blank restore stays [renameItem]'s job).
+     */
+    suspend fun applyBulkRenames(profileId: Long, type: MediaType, renames: Map<String, String>) {
+        val clean = renames.mapValues { (_, v) -> v.trim() }.filterValues { it.isNotEmpty() }
+        if (clean.isEmpty()) return
+        update(profileId, type) { it.copy(itemNames = it.itemNames + clean) }
+    }
+
+    /** Removes every rename entry for the given category keys in one atomic edit — the "↺ Restore
+     *  original names" bulk path for category names. */
+    suspend fun clearCategoryNames(profileId: Long, type: MediaType, keys: Set<String>) =
+        update(profileId, type) { it.copy(categoryNames = it.categoryNames - keys) }
+
+    /** Removes every rename entry for the given item keys in one atomic edit — the "↺ Restore
+     *  original names" bulk path for channel/movie/series names. */
+    suspend fun clearItemNames(profileId: Long, type: MediaType, keys: Set<String>) =
+        update(profileId, type) { it.copy(itemNames = it.itemNames - keys) }
+
+    // --- custom categories (issue #87) ---
+
+    /** Creates a custom category with a fresh stable id ("custom:<uuid>") and returns it. */
+    suspend fun createCustomCategory(profileId: Long, type: MediaType, name: String): CustomCategory {
+        val cat = CustomCategory(id = "${CustomizeKeys.CUSTOM_PREFIX}${UUID.randomUUID()}", name = name.trim())
+        update(profileId, type) { it.copy(customCategories = it.customCategories + cat) }
+        return cat
+    }
+
+    /**
+     * Records or clears a "moved out of provider category [originKey]" mark for [itemKey] (issue
+     * #87). The browse pager for [originKey]'s folder drops the item; All/search/recent keep it.
+     */
+    suspend fun setItemMovedFromOrigin(profileId: Long, type: MediaType, itemKey: String, originKey: String, moved: Boolean) =
+        update(profileId, type) {
+            it.copy(movedFromOrigin = if (moved) it.movedFromOrigin + (itemKey to originKey) else it.movedFromOrigin - itemKey)
+        }
+
+    /** Deletes the category definition, restores provider origins for its former members, and
+     *  scrubs its category-level settings. Room member rows and
+     *  content_order rows are the caller's job (CustomCategoryDao.clearContext / ContentOrderDao.clearContext). */
+    suspend fun deleteCustomCategory(
+        profileId: Long,
+        type: MediaType,
+        id: String,
+        restoreOriginItemKeys: Set<String> = emptySet(),
+    ) =
+        update(profileId, type) {
+            it.copy(
+                customCategories = it.customCategories.filterNot { c -> c.id == id },
+                hiddenCategories = it.hiddenCategories - id,
+                categoryNames = it.categoryNames - id,
+                categoryOrder = it.categoryOrder - id,
+                movedFromOrigin = it.movedFromOrigin - restoreOriginItemKeys,
+            )
         }
 
     // --- backup & restore (profile/source ids are preserved by BackupManager, so keys stay valid) ---
@@ -148,6 +240,8 @@ class CustomizationStore(private val context: Context) {
                 itemNames = o.optJSONObject("itemNames").toStringMap(),
                 categoryOrder = o.optJSONArray("catOrder").toStringList(),
                 epgMatches = o.optJSONObject("epgMatch").toStringMap(),
+                customCategories = o.optJSONArray("customCats").toCustomCategories(),
+                movedFromOrigin = o.optJSONObject("movedFrom").toStringMap(),
             )
         }.getOrDefault(SectionCustomizations())
     }
@@ -159,6 +253,13 @@ class CustomizationStore(private val context: Context) {
         put("itemNames", JSONObject(c.itemNames as Map<*, *>))
         put("catOrder", JSONArray(c.categoryOrder))
         put("epgMatch", JSONObject(c.epgMatches as Map<*, *>))
+        put("movedFrom", JSONObject(c.movedFromOrigin as Map<*, *>))
+        put(
+            "customCats",
+            JSONArray(c.customCategories.map {
+                JSONObject().put("id", it.id).put("name", it.name).put("icon", it.icon)
+            }),
+        )
     }.toString()
 
     private fun JSONArray?.toStringList(): List<String> =
@@ -171,6 +272,19 @@ class CustomizationStore(private val context: Context) {
         val out = HashMap<String, String>()
         keys().forEach { k -> out[k] = getString(k) }
         return out
+    }
+
+    private fun JSONArray?.toCustomCategories(): List<CustomCategory> {
+        if (this == null) return emptyList()
+        return (0 until length()).mapNotNull { i ->
+            val o = optJSONObject(i) ?: return@mapNotNull null
+            val id = o.optString("id").takeIf { it.isNotEmpty() } ?: return@mapNotNull null
+            CustomCategory(
+                id = id,
+                name = o.optString("name"),
+                icon = o.optString("icon").ifEmpty { null },
+            )
+        }
     }
 }
 
@@ -191,4 +305,51 @@ fun List<CategoryEntity>.applyCustomizations(
     val (pinned, rest) = named.partition { (cat, _) -> CustomizeKeys.category(cat) in orderIndex }
     return pinned.sortedBy { (cat, _) -> orderIndex.getValue(CustomizeKeys.category(cat)) } +
         (if (alphaRest) rest.sortedBy { (_, name) -> name.lowercase() } else rest)
+}
+
+/** One rail entry after customizations are applied: a provider folder ([categoryId] set) or a user
+ *  custom combined category ([customId] set, issue #87). */
+data class CustomizedCategory(
+    val key: String,
+    val displayName: String,
+    val categoryId: Long? = null,
+    val customId: String? = null,
+)
+
+/**
+ * [applyCustomizations] extended with the user's custom combined categories (issue #87): provider
+ * folders and custom categories are merged into ONE ordered list, so hide / rename / reorder apply
+ * uniformly to both — their keys share the [CustomizeKeys] namespace, so a custom category drops
+ * into `hiddenCategories`, `categoryNames` and `categoryOrder` with no extra code.
+ *
+ * Hiding a custom category only removes its rail entry — its items still legitimately exist in
+ * their provider categories, so All/search/recent (which filter by resolved DB ids) are untouched.
+ */
+fun List<CategoryEntity>.applyCustomizationsWithCustoms(
+    c: SectionCustomizations,
+    customs: List<CustomCategory>,
+    alphaRest: Boolean = false,
+): List<CustomizedCategory> {
+    val visibleCats =
+        if (c.hiddenCategories.isEmpty()) this
+        else filter { CustomizeKeys.category(it) !in c.hiddenCategories }
+    // User folders lead the natural rail order, matching the agreed mockup. Explicit manual order
+    // still wins through categoryOrder below.
+    val entries = customs.filter { it.id !in c.hiddenCategories }.map { cc ->
+        CustomizedCategory(
+            key = cc.id,
+            displayName = c.categoryNames[cc.id] ?: cc.name,
+            customId = cc.id,
+        )
+    } + visibleCats.map { cat ->
+        CustomizedCategory(
+            key = CustomizeKeys.category(cat),
+            displayName = c.categoryNames[CustomizeKeys.category(cat)] ?: cat.name,
+            categoryId = cat.id,
+        )
+    }
+    val orderIndex = c.categoryOrder.withIndex().associate { (i, k) -> k to i }
+    val (pinned, rest) = entries.partition { it.key in orderIndex }
+    return pinned.sortedBy { orderIndex.getValue(it.key) } +
+        (if (alphaRest) rest.sortedBy { it.displayName.lowercase() } else rest)
 }
