@@ -1,11 +1,14 @@
 package tv.own.owntv.core.i18n
 
 import android.content.SharedPreferences
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertThrows
 import org.junit.Assert.assertTrue
 import org.junit.Test
+import java.util.Collections
 
 /**
  * LocaleStore unit tests (docs/internationalization.md, "Unit tests → LocaleStore").
@@ -107,6 +110,18 @@ class LocaleStoreTest {
         assertEquals("tr", LocaleStore(prefs, null).readBlocking())
     }
 
+    @Test
+    fun `concurrent sets complete in call order so the last selection wins`() = runBlocking {
+        // Force the first selection to finish after every later selection if writes overlap. Without
+        // writeMutex, "de" therefore wins incorrectly; with serialization, "en-US" remains last.
+        val prefs = newPrefs().apply { commitDelaysMs = mapOf("de" to 120L) }
+        val store = LocaleStore(prefs, null)
+        val tags = listOf("de", "fr", "tr", "en-US")
+        tags.map { tag -> async { store.set(tag) } }.awaitAll()
+        assertEquals("en-US", store.currentTag.value)
+        assertEquals("en-US", store.readBlocking())
+    }
+
     // --- applicationContext nullable behaviour (P0/P1 review fixes) ---
 
     @Test
@@ -144,8 +159,10 @@ class LocaleStoreTest {
 
 /** Minimal in-memory SharedPreferences. Implements only what LocaleStore uses; the rest throw. */
 private class FakeSharedPreferences : SharedPreferences {
-    private val entries: MutableMap<String, Any?> = mutableMapOf()
+    private val entries: MutableMap<String, Any?> = Collections.synchronizedMap(mutableMapOf())
     var commitResult: Boolean = true
+    /** Per-value IO latency used to force deterministic completion order in concurrency tests. */
+    var commitDelaysMs: Map<String, Long> = emptyMap()
 
     /** Test-only accessor over the stored entries. */
     val stored: Map<String, Any?> get() = entries
@@ -182,6 +199,11 @@ private class FakeSharedPreferences : SharedPreferences {
         override fun remove(key: String) = throw UnsupportedOperationException()
         override fun clear() = throw UnsupportedOperationException()
         override fun commit(): Boolean {
+            val delayMs = stagedValue?.let { outer.commitDelaysMs[it] } ?: 0L
+            if (delayMs > 0) {
+                // Blocking sleep mirrors real SharedPreferences.commit() IO on Dispatchers.IO.
+                Thread.sleep(delayMs)
+            }
             if (!outer.commitResult) return false
             outer.entries[stagedKey!!] = stagedValue
             return true

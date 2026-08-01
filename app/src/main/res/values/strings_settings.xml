@@ -260,6 +260,22 @@
     <string name="settings_search_label">Search settings</string>
     <!-- Translators: Placeholder text in the settings search field. -->
     <string name="settings_search_hint">Search settings…</string>
+    <!-- Translators: Settings navigation group label for General settings (language, etc.). -->
+    <string name="settings_group_general">General</string>
+    <!-- Translators: Settings navigation label for the app display language picker. -->
+    <string name="settings_language">Language</string>
+    <!-- Translators: Description of the app display language setting. -->
+    <string name="settings_language_description">App display language</string>
+    <!-- Translators: Label for following the device language. Shown as a chip on the Language settings row and as the first picker row. -->
+    <string name="settings_language_system_default">System default</string>
+    <!-- Translators: Subtitle under the System default row in the language picker. -->
+    <string name="settings_language_system_default_description">Follows device language</string>
+    <!-- Translators: Placeholder text in the language picker search field. -->
+    <string name="settings_language_search_hint">Search languages…</string>
+    <!-- Translators: Hidden keyword bag for the Language settings. Translate as individual search terms. -->
+    <string name="settings_search_keywords_language">language locale translation international i18n</string>
+    <!-- Translators: Translation coverage percentage badge next to a language in the picker. '%1$d' is the coverage number 0–100. The '%%' renders as a single percent sign. -->
+    <string name="settings_language_coverage"><xliff:g id="percent">%1$d</xliff:g>%%</string>
     <!-- Translators: Settings navigation group label for Profile settings. -->
     <string name="settings_profile_group">Profile</string>
     <!-- Translators: Description of the Profile settings group. -->

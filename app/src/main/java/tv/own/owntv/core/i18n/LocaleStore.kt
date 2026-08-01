@@ -7,6 +7,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
 
 /**
@@ -36,6 +38,12 @@ class LocaleStore internal constructor(
 ) {
 
     private val _currentTag: MutableStateFlow<String> = MutableStateFlow(readBlocking())
+
+    /**
+     * Serializes [set] so concurrent writers (rapid picker taps, overlapping backup import) cannot
+     * interleave IO commits with StateFlow / process-locale updates out of call order.
+     */
+    private val writeMutex = Mutex()
 
     /** The currently selected tag, observable in-process. `""` means follow system. */
     val currentTag: StateFlow<String> = _currentTag.asStateFlow()
@@ -72,7 +80,7 @@ class LocaleStore internal constructor(
      * [IllegalStateException] rather than swallowed: a silent locale-write failure would leave the
      * user thinking they switched language while nothing persisted.
      */
-    suspend fun set(tag: String): Boolean {
+    suspend fun set(tag: String): Boolean = writeMutex.withLock {
         val canonical = normalize(tag)
             ?: throw IllegalArgumentException("Unsupported application locale: ${tag.trim()}")
         val committed = withContext(Dispatchers.IO) {
@@ -81,7 +89,7 @@ class LocaleStore internal constructor(
         check(committed) { "Failed to persist application locale" }
         _currentTag.value = canonical
         applicationContext?.let { AppLocale.applyGlobally(canonical) }
-        return true
+        true
     }
 
     companion object {
