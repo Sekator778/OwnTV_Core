@@ -68,6 +68,9 @@ class LivePreviewEngine(
     init { LiveDiagnosticsLog.init(context) }
 
     private var player: ExoPlayer? = null
+    /** Media3 independently sends Surface.setFrameRate hints unless explicitly disabled. Keep that path
+     *  tied to OwnTV's AFR toggle too; the default preview/in-pane state must never switch the display. */
+    @Volatile private var autoFrameRateEnabled = false
     /** Device memory budget, resolved once and reused across player rebuilds (see [build]). */
     private var playerBudget: PlayerBudget? = null
     private var surface: Surface? = null
@@ -593,6 +596,16 @@ class LivePreviewEngine(
         if (s != null) player?.setVideoSurface(s) else player?.clearVideoSurface()
     }
 
+    /** Enable/disable Media3's own Surface.setFrameRate mechanism. This is separate from the window-level
+     *  [FrameRateController], so both must follow the same user setting. */
+    fun setAutoFrameRateEnabled(enabled: Boolean) {
+        autoFrameRateEnabled = enabled
+        player?.setVideoChangeFrameRateStrategy(
+            if (enabled) C.VIDEO_CHANGE_FRAME_RATE_STRATEGY_ONLY_IF_SEAMLESS
+            else C.VIDEO_CHANGE_FRAME_RATE_STRATEGY_OFF,
+        )
+    }
+
     /** Detach [s] only if it's still the surface in use. A surface-generation bump swaps one SurfaceView
      *  for another, and the outgoing view's `surfaceDestroyed` can land after the incoming view's
      *  `surfaceCreated` — a plain `setSurface(null)` would then throw away the good new surface. */
@@ -1094,12 +1107,15 @@ class LivePreviewEngine(
             .setRenderersFactory(renderers)
             .setMediaSourceFactory(DefaultMediaSourceFactory(httpDataSourceFor(currentUa)))
             .setLoadControl(loadControl)
-            // Auto frame rate on this engine is done by FrameRateController (window-level display-mode
-            // switch, wired in ExoPreviewSurface). Media3's own Surface.setFrameRate() hint stays at its
-            // default ONLY_IF_SEAMLESS strategy — there is no "always" strategy to opt into, and it's a
-            // no-op below API 30 anyway, which is exactly the case AFR was reported broken on.
             .build()
             .apply {
+                // Media3's default ONLY_IF_SEAMLESS still issues Surface.setFrameRate() requests. Some
+                // vendor stacks advertise a seamless switch but visibly re-handshake HDMI, so Off must
+                // explicitly disable this second AFR mechanism as well as FrameRateController.
+                setVideoChangeFrameRateStrategy(
+                    if (autoFrameRateEnabled) C.VIDEO_CHANGE_FRAME_RATE_STRATEGY_ONLY_IF_SEAMLESS
+                    else C.VIDEO_CHANGE_FRAME_RATE_STRATEGY_OFF,
+                )
                 addListener(listener); addAnalyticsListener(analytics)
                 // Wire the per-frame tick to the video renderer so the health watchdog can tell a frozen
                 // PICTURE (clock still running — invisible to a position-only check) from real playback.

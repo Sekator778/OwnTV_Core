@@ -129,6 +129,9 @@ class SettingsRepository(private val context: Context) {
         val LIVE_LATENCY_CUSTOM_SECS = intPreferencesKey("live_latency_custom_secs")
         val HDR_ENABLED = booleanPreferencesKey("hdr_enabled")
         val AUTO_FRAME_RATE = booleanPreferencesKey("auto_frame_rate")
+        // v4.1.6 one-shot: AFR caused visible HDMI re-handshakes on some TVs. Existing installs are
+        // forced Off once; subsequent user changes are preserved across every later update.
+        val AUTO_FRAME_RATE_RESET_416 = booleanPreferencesKey("auto_frame_rate_reset_416")
         val ANDROID_TV_HOME = booleanPreferencesKey("android_tv_home")
         // Video Player Settings
         val HW_DECODING = booleanPreferencesKey("hw_decoding")
@@ -949,12 +952,28 @@ class SettingsRepository(private val context: Context) {
     /**
      * Switch the display's refresh rate to match the video frame rate (24/25/30/50/60 fps) during
      * full-screen playback, and restore it on exit. Applies to both engines and to Live TV as well as
-     * VOD. Default on; turn off if a TV/AV receiver re-handshakes HDMI noisily on every channel change.
+     * VOD. Default off; users whose display switches cleanly can opt in.
      */
-    val autoFrameRate: Flow<Boolean> = prefsFlow { it[Keys.AUTO_FRAME_RATE] ?: true }
+    val autoFrameRate: Flow<Boolean> = prefsFlow { prefs ->
+        // Also report Off before the startup migration coroutine completes, so an auto-resumed channel
+        // cannot briefly request a display-mode switch on the first 4.1.6 launch.
+        if (prefs[Keys.AUTO_FRAME_RATE_RESET_416] == true) prefs[Keys.AUTO_FRAME_RATE] ?: false else false
+    }
 
     suspend fun setAutoFrameRate(enabled: Boolean) {
-        context.dataStore.edit { it[Keys.AUTO_FRAME_RATE] = enabled }
+        context.dataStore.edit {
+            it[Keys.AUTO_FRAME_RATE] = enabled
+            it[Keys.AUTO_FRAME_RATE_RESET_416] = true
+        }
+    }
+
+    /** v4.1.6 only: force AFR Off exactly once, including for users who previously enabled it. */
+    suspend fun migrateAutoFrameRate416() {
+        context.dataStore.edit { prefs ->
+            if (prefs[Keys.AUTO_FRAME_RATE_RESET_416] == true) return@edit
+            prefs[Keys.AUTO_FRAME_RATE] = false
+            prefs[Keys.AUTO_FRAME_RATE_RESET_416] = true
+        }
     }
 
     /** Mirror continue-watching rows into Android TV home surfaces. */
