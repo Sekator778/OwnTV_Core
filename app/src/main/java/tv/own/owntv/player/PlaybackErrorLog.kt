@@ -4,6 +4,7 @@ import android.content.Context
 import android.os.Build
 import org.json.JSONArray
 import org.json.JSONObject
+import tv.own.owntv.core.network.HttpClient
 import java.io.File
 import java.util.concurrent.Executors
 
@@ -46,9 +47,9 @@ object PlaybackErrorLog {
                         atMs = System.currentTimeMillis(),
                         engine = engine,
                         live = live,
-                        reason = info.reason,
-                        spec = info.spec,
-                        raw = info.raw,
+                        reason = info.reason?.let(HttpClient::redactUrl),
+                        spec = info.spec?.let(HttpClient::redactUrl),
+                        raw = info.raw?.let(HttpClient::redactUrl),
                         model = "${Build.MANUFACTURER} ${Build.MODEL}".trim(),
                         android = "Android ${Build.VERSION.RELEASE} (API ${Build.VERSION.SDK_INT})",
                     ),
@@ -76,9 +77,11 @@ object PlaybackErrorLog {
                 atMs = o.optLong("atMs"),
                 engine = o.optString("engine"),
                 live = o.optBoolean("live"),
-                reason = o.optString("reason").takeIf { it.isNotEmpty() },
-                spec = o.optString("spec").takeIf { it.isNotEmpty() },
-                raw = o.optString("raw").takeIf { it.isNotEmpty() },
+                // Sanitize while reading too: older versions persisted mpv failure lines containing
+                // the account embedded in an Xtream /live|movie/user/password/ URL.
+                reason = o.optString("reason").takeIf { it.isNotEmpty() }?.let(HttpClient::redactUrl),
+                spec = o.optString("spec").takeIf { it.isNotEmpty() }?.let(HttpClient::redactUrl),
+                raw = o.optString("raw").takeIf { it.isNotEmpty() }?.let(HttpClient::redactUrl),
                 model = o.optString("model"),
                 android = o.optString("android"),
             )

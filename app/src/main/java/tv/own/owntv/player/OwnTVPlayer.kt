@@ -22,6 +22,8 @@ import tv.own.owntv.core.network.HttpClient
 import tv.own.owntv.features.settings.data.SettingsRepository
 import tv.own.owntv.features.settings.data.SubtitleStyle
 import java.util.Locale
+import java.util.concurrent.CountDownLatch
+import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
 
@@ -167,6 +169,67 @@ class OwnTVPlayer(
         const val LIVE_STALL_POLL_MS = 2_500L   // poll interval for the live no-progress watchdog
         const val LIVE_STALL_LIMIT = 4           // polls of no progress (~10s) before treating it as a stall
         const val MAX_LIVE_RECONNECTS = 6        // consecutive stall-reconnects before the error UI takes over
+        const val LIVE_OPEN_TIMEOUT_MS = 10_000L // bound FFmpeg/network loops that never emit FILE_LOADED/END_FILE
+        internal const val STREAM_RECONNECT_OPTIONS =
+            "reconnect=1,reconnect_streamed=1,reconnect_delay_max=8,reconnect_on_http_error=5xx"
+
+        /**
+         * FFmpeg stream-layer options for one load. Every stream gets the plain reconnect set — that is
+         * the long-shipped behaviour and providers depend on it.
+         *
+         * The single exception is `reconnect_at_eof`, which keeps a CONTINUOUS stream alive across
+         * mid-stream EOFs but also reconnects on the EOF that ends a *finite* HTTP response. On an HLS
+         * playlist that means re-fetching the same ~2 KB manifest forever without ever demuxing, so it is
+         * enabled only for live raw MPEG-TS. [hls] must be the *effective* answer (see
+         * [LiveStreamQuirks.isHlsUrl]) — a panel that redirects `…/id.ts` to a manifest is HLS no matter
+         * what its URL says, and treating it as raw TS is exactly the permanent black screen this guards
+         * against. VOD/catch-up EOF is real and must end playback, so they never get it either.
+         */
+        internal fun streamLavfOptionsFor(url: String, live: Boolean, hls: Boolean): String = when {
+            live && !hls && url.contains(".ts", ignoreCase = true) -> "$STREAM_RECONNECT_OPTIONS,reconnect_at_eof=1"
+            else -> STREAM_RECONNECT_OPTIONS
+        }
+
+        /**
+         * FFmpeg demuxer options for one load.
+         *
+         * Live HLS keeps FFmpeg's default `live_start_index` (`-3`). An earlier attempt pinned it further
+         * back (`-5`) to dodge the 403s on the traced panel, and the logs showed that made things *worse*:
+         * that panel signs every segment URL with a short-lived token, so starting deeper in the window
+         * only asks for staler — more certainly expired — URLs. There is nothing to tune here.
+         */
+        /**
+         * True when mpv's last error is the server refusing the request outright with an HTTP status,
+         * rather than a network/decoder problem.
+         *
+         * Matches any 4xx — including the non-standard codes Xtream panels invent (one traced panel
+         * answers `458` to every FFmpeg open while serving ExoPlayer normally). Repeating the *identical*
+         * request after such a refusal cannot change the answer, and on a live channel the ladder's three
+         * backed-off retries turn into a request storm against a panel that is already saying no. The
+         * fallbacks that change the request — `.ts`↔`.m3u8`, the short `vlc` User-Agent — are still worth
+         * trying and stay armed; only the pointless repeats are cut.
+         */
+        internal fun isHardHttpRefusal(mpvError: String?): Boolean =
+            HTTP_REFUSAL_RX.containsMatchIn(mpvError ?: return false)
+
+        private val HTTP_REFUSAL_RX = Regex("""HTTP error 4\d\d""", RegexOption.IGNORE_CASE)
+
+        /** Identical requests allowed after a [isHardHttpRefusal] — one, so the format/UA fallbacks
+         *  (which need `autoRetries >= 1`) still get their turn without a storm in between. */
+        internal const val HARD_REFUSAL_MAX_RETRIES = 1
+
+        /** Longest an engine switch waits for mpv to finish tearing its stream down. */
+        internal const val MPV_RELEASE_TIMEOUT_MS = 1_500L
+
+        internal fun demuxerLavfOptionsFor(
+            url: String,
+            live: Boolean,
+            trimmedRawTsProbe: Boolean,
+            hls: Boolean,
+        ): String = when {
+            trimmedRawTsProbe -> "fflags=+nobuffer+genpts,seekable=1"
+            else -> ""
+        }
         // --- Engine-handoff / reconnect timing --------------------------------------------------------
         // Hardware assumptions live here, tunable in one place. TV boxes expose ONE hardware decoder:
         // when playback moves between mpv and ExoPlayer the outgoing engine's MediaCodec must finish
@@ -189,6 +252,21 @@ class OwnTVPlayer(
                 "unsupported|connection|reset|4\\d\\d|5\\d\\d",
             RegexOption.IGNORE_CASE,
         )
+        /** mpv's own report that a live feed's video timestamps can't be trusted. See [LiveStreamQuirks]. */
+        val BROKEN_PTS_RX = Regex(
+            "invalid video timestamp|non-monotonic|desynchroni",
+            RegexOption.IGNORE_CASE,
+        )
+
+        /**
+         * How many broken-timestamp warnings before free-running video timing is switched on.
+         *
+         * A single discontinuity (an ad break, a mux glitch) is normal on live TV and must NOT cost the
+         * stream its A/V sync; the feeds that need the workaround emit this on essentially every frame,
+         * so a couple of seconds' worth is an unambiguous signature.
+         */
+        internal const val BROKEN_PTS_HITS = 20
+
         // Generic "consequence" lines that shouldn't overwrite a more specific captured cause.
         val GENERIC_FAIL_RX = Regex(
             "failed to open|opening failed|could not open|loading failed|was aborted|finished playback",
@@ -422,38 +500,39 @@ class OwnTVPlayer(
         // the full probe (playlist + a segment) to open cleanly, and a trimmed probe handed mpv incomplete
         // info → the stream opened but the playloop wedged (regression: M3U HLS live hung after the decoder
         // inited, while v2.2.4 — which always full-probed — played). So trim ONLY raw TS, full-probe the rest.
-        val rawTs = lower.contains(".ts") || lower.contains("/timeshift/")
+        // A `.ts` URL the provider redirects to a manifest is HLS, not raw TS: trimming its probe wedges
+        // mpv's HLS open (see below), so the learned quirk has to disqualify it here too. Scoped to live —
+        // the redirect is a live-endpoint behaviour, and a catch-up `.ts` from the same host is still raw.
+        val effectiveHls = lower.substringBefore('?').endsWith(".m3u8") ||
+            (isLiveContent && LiveStreamQuirks.isKnownHlsHost(url))
+        val rawTs = (lower.contains(".ts") || lower.contains("/timeshift/")) && !effectiveHls
         // Make FFmpeg RECONNECT when a live server closes the HTTP connection (some drop the socket every
         // few seconds; without this mpv hits EOF → the app reconnects → a black/decoder-churn loop). NOT for
         // VOD/catch-up (isLiveContent=false) — those have a real end and must be allowed to finish.
-        val reconnect = "reconnect=1,reconnect_streamed=1,reconnect_delay_max=8,reconnect_on_http_error=5xx"
         // `reconnect_at_eof` keeps a CONTINUOUS stream going across mid-stream EOFs — but it also reconnects
         // on the EOF that ends a *finite* HTTP response (an HLS .m3u8 playlist, a redirect, …), looping
-        // forever during OPEN so the stream never starts. So enable it only for raw MPEG-TS live.
-        val eofReconnect = if (isLiveContent && lower.contains(".ts")) ",reconnect_at_eof=1" else ""
-        setPropertyString("stream-lavf-o", "$reconnect$eofReconnect")
+        // forever during OPEN so the stream never starts. [streamLavfOptionsFor] owns that distinction and
+        // is the single place stream-lavf-o is decided, for this path and the loadfile path alike.
+        setPropertyString("stream-lavf-o", streamLavfOptionsFor(url, isLiveContent, effectiveHls))
         // Live latency (#72): how far ahead the demuxer buffers. Live streams honour the user's choice
         // (or the device budget default when Balanced); VOD always uses the budget default.
         val budgetReadahead = playerBudget?.readaheadSecs ?: "30"
         setPropertyString("demuxer-readahead-secs", if (isLiveContent) (liveBufferSecs?.toString() ?: budgetReadahead) else budgetReadahead)
         // Broken-timestamp live streams (some IPTV 4K feeds send non-increasing/duplicate PTS): mpv is
         // strict about PTS and drops nearly every frame ("Invalid video timestamp: X -> X"), which looks
-        // like lag even though decode is fine (ExoPlayer tolerates it). For LIVE we derive frame timing
-        // from the container FPS instead (correct-pts=no); VOD keeps accurate PTS for seeking.
-        setPropertyString("correct-pts", if (isLiveContent) "no" else "yes")
-        // correct-pts=no fixes the *decode-time* PTS, but mpv still times video against the AUDIO master
-        // clock at the VO stage — on a feed whose timestamps never line up, that plus framedrop discards
-        // nearly every rendered frame (log: identical `mt:` on every frame, "A/V desync", render fps ~8 of
-        // 30). video-sync=desync tells mpv to present each frame for its nominal duration instead of
-        // dropping to chase the clock — the standard fix for unreliable live PTS. LIVE only; VOD keeps the
-        // default audio-synced timing (accurate for seeking, and VOD PTS is sound).
-        setPropertyString("video-sync", if (isLiveContent) "desync" else "audio")
-        // …and stop mpv from *dropping* frames on such a feed. Even after the PTS recovers and increments
-        // cleanly, the global framedrop=decoder+vo stays in permanent "catch-up" mode and releases every
-        // output buffer with render=false (log: `[ROB]V …,r:0,drop frame` on every frame while `mt:`
-        // advances normally). For LIVE we disable framedrop so mpv presents what it decodes (decode is
-        // hardware and keeps up here); VOD keeps decoder+vo so a genuinely slow file can still shed frames.
-        setPropertyString("framedrop", if (isLiveContent) "no" else "decoder+vo")
+        // like lag even though decode is fine (ExoPlayer tolerates it). The workaround is to stop timing
+        // video against the audio master clock — derive it from the container FPS (correct-pts=no),
+        // present each frame for its nominal duration (video-sync=desync) and never drop (framedrop=no).
+        //
+        // It is applied ONLY to feeds mpv has actually complained about ([noteBrokenTimestamp], learned in
+        // LiveStreamQuirks), never to live as a class. Free-running video timing is by definition unsynced
+        // from audio, so on a normal feed — whose PTS are perfectly sound — it slowly drifts the picture
+        // away from the sound, which is exactly the "audio early or late" a provider's raw MPEG-TS showed.
+        // A healthy stream therefore keeps mpv's accurate, audio-synced default, same as VOD.
+        val brokenPts = isLiveContent && LiveStreamQuirks.hasBrokenTimestamps(url)
+        setPropertyString("correct-pts", if (brokenPts) "no" else "yes")
+        setPropertyString("video-sync", if (brokenPts) "desync" else "audio")
+        setPropertyString("framedrop", if (brokenPts) "no" else "decoder+vo")
         val trim = rawTs && !forceFullProbe
         usedTrimmedProbe = trim
         if (!trim) {
@@ -467,12 +546,30 @@ class OwnTVPlayer(
             // into a multi-GB seek + retry loop that eventually kills the video output (blank screen).
             setPropertyString("demuxer-lavf-probesize", "5000000")
             setPropertyString("demuxer-lavf-analyzeduration", "0")
-            setPropertyString("demuxer-lavf-o", "")
+            val demuxerOptions = demuxerLavfOptionsFor(
+                url,
+                isLiveContent,
+                trimmedRawTsProbe = false,
+                hls = effectiveHls,
+            )
+            setPropertyString("demuxer-lavf-o", demuxerOptions)
+            LiveDiagnosticsLog.event(
+                "mpv_open hls=$effectiveHls live=$isLiveContent probe=full " +
+                    "demuxerLavfO=\"$demuxerOptions\" streamLavfO=\"${streamLavfOptionsFor(url, isLiveContent, effectiveHls)}\"",
+            )
             return
         }
         setPropertyString("demuxer-lavf-probesize", "1000000")
         setPropertyString("demuxer-lavf-analyzeduration", "1.0") // ~1s keeps HDR/colorspace detection safe
-        setPropertyString("demuxer-lavf-o", "fflags=+nobuffer+genpts,seekable=1")
+        setPropertyString(
+            "demuxer-lavf-o",
+            demuxerLavfOptionsFor(url, isLiveContent, trimmedRawTsProbe = true, hls = effectiveHls),
+        )
+        LiveDiagnosticsLog.event(
+            "mpv_open hls=$effectiveHls live=$isLiveContent probe=trimmed " +
+                "demuxerLavfO=\"fflags=+nobuffer+genpts,seekable=1\" " +
+                "streamLavfO=\"${streamLavfOptionsFor(url, isLiveContent, effectiveHls)}\"",
+        )
     }
 
     /** Reload the current item at its position (used when a setting change needs the chain re-inited). */
@@ -772,12 +869,38 @@ class OwnTVPlayer(
         override fun logMessage(prefix: String, level: Int, text: String) {
             val t = text.trim()
             if (t.isEmpty()) return
+            if (isLiveContent && BROKEN_PTS_RX.containsMatchIn(t)) noteBrokenTimestamp()
             val keep = level <= 20 /* error/fatal */ || (level <= 30 /* warn */ && FAILURE_RX.containsMatchIn(t))
             if (!keep) return
+            val safe = HttpClient.redactUrl("${prefix.trim().trimEnd(':')}: $t")
+            // The rolling diagnostic file follows a live stream across the ExoPlayer -> mpv fallback.
+            // mpv can include the full stream URL here, so sanitize before storing or displaying it.
+            LiveDiagnosticsLog.event("mpv level=$level $safe")
             // "Failed to open / loading failed" is the CONSEQUENCE — don't let it overwrite a more specific
             // cause already captured for this load (e.g. "HTTP error 400", an SSL error, a codec message).
             if (lastMpvError != null && GENERIC_FAIL_RX.containsMatchIn(t)) return
-            lastMpvError = "${prefix.trim().trimEnd(':')}: $t"
+            lastMpvError = safe
+        }
+    }
+
+    // Broken-timestamp detection state, reset per load. Touched from mpv's log thread.
+    @Volatile private var brokenPtsHits = 0
+    @Volatile private var brokenPtsHandled = false
+
+    /**
+     * mpv complained about this live feed's timestamps. Past [BROKEN_PTS_HITS] that is the pathological
+     * feed, not a discontinuity: switch to free-running video timing right away (both properties apply at
+     * runtime) and remember the stream so its next open starts that way, `correct-pts` included — that one
+     * only takes effect at decoder init, so this load keeps the accurate-PTS decode path.
+     */
+    private fun noteBrokenTimestamp() {
+        if (brokenPtsHandled || ++brokenPtsHits < BROKEN_PTS_HITS) return
+        brokenPtsHandled = true
+        currentUrl?.let { LiveStreamQuirks.rememberBrokenTimestamps(it) }
+        LiveDiagnosticsLog.event("mpv reported $brokenPtsHits broken video timestamps — switching to free-running video timing")
+        mpvAsync {
+            setPropertyString("video-sync", "desync")
+            setPropertyString("framedrop", "no")
         }
     }
 
@@ -1457,7 +1580,7 @@ class OwnTVPlayer(
             // Strict IPTV panels briefly answer 5xx (e.g. 509 connection-limit right after a channel
             // switch, while the old session still counts). Let FFmpeg retry those itself instead of
             // EOF-ing the stream — the demuxer cache rides over the gap with no visible interruption.
-            setOptionString("stream-lavf-o", "reconnect=1,reconnect_streamed=1,reconnect_delay_max=8,reconnect_on_http_error=5xx")
+            setOptionString("stream-lavf-o", STREAM_RECONNECT_OPTIONS)
             setOptionString("user-agent", HttpClient.DEFAULT_USER_AGENT)
             setOptionString("sub-scale-with-window", "yes")
             // Subtitle appearance (#96) — applied at init so the very first subtitle of the session
@@ -1650,6 +1773,10 @@ class OwnTVPlayer(
         isLiveContent = isLive
         currentUrl = url
         currentContentKey = meta.contentKey
+        LiveDiagnosticsLog.event(
+            "mpv_load live=$isLive url=${HttpClient.redactUrl(url)} " +
+                "ua=${if (currentUserAgent.isNullOrBlank()) "default" else "custom"}",
+        )
         loadGeneration++
         errorCheckJob?.cancel()
         videoCheckJob?.cancel()
@@ -1658,6 +1785,7 @@ class OwnTVPlayer(
         pendingExoSub = null
         _error.value = null
         lastMpvError = null // fresh item → drop the previous stream's captured error
+        brokenPtsHits = 0; brokenPtsHandled = false
         diagnostics.markLoad() // scope captured codec/audio errors to this stream
         _videoRes.value = null
         _videoFps.value = null
@@ -1887,6 +2015,25 @@ class OwnTVPlayer(
                 while (gen == loadGeneration) {
                     delay(LIVE_STALL_POLL_MS)
                     if (gen != loadGeneration || !isLiveContent) return@launch
+                    if (expectingPlayback) {
+                        val openingMs = System.currentTimeMillis() - loadStartTime
+                        if (openingMs >= LIVE_OPEN_TIMEOUT_MS) {
+                            // Only bound the silent hang here. The `.ts`↔`.m3u8` switch belongs to the
+                            // END_FILE ladder, which already owns `triedAltFormat`; flipping the format
+                            // here too made the two paths take turns and doubled the requests a refusing
+                            // panel saw.
+                            LiveDiagnosticsLog.event("mpv live open timed out after ${openingMs}ms — surfacing error")
+                            expectingPlayback = false
+                            _isPlaying.value = false
+                            _buffering.value = false
+                            val raw = lastMpvError ?: "No playable data received before timeout"
+                            _error.value = "Couldn't start this channel."
+                            _errorInfo.value = ErrorInfo(PlayerErrors.reasonFor(raw), mediaSpec(), raw)
+                            mpvAsync { stopWithStopClassification("live open timeout") }
+                            return@launch
+                        }
+                        continue
+                    }
                     // Only a genuinely-playing mpv live stream can "freeze". Skip while still opening
                     // (expectingPlayback), while an error is shown, while paused/handed-off to ExoPlayer, or
                     // while mpv itself is buffering (paused-for-cache already drives the spinner there).
@@ -1981,6 +2128,12 @@ class OwnTVPlayer(
             // Apply the effective User-Agent for this stream. Per-load so a vlc-fallback retry or a
             // newly-configured source UA takes effect without restarting the player.
             setPropertyString("user-agent", currentUserAgent ?: HttpClient.DEFAULT_USER_AGENT)
+            // reconnect_streamed helps one long-lived raw-TS response, but breaks HLS: EOF is the
+            // normal end of a manifest response, so FFmpeg reconnects the same tiny playlist forever.
+            setPropertyString(
+                "stream-lavf-o",
+                streamLavfOptionsFor(url, isLiveContent, LiveStreamQuirks.isHlsUrl(url) && isLiveContent),
+            )
             // Global proxy (Approach 1): route mpv's own FFmpeg networking through the configured HTTP
             // proxy, or clear it when disabled. Applied per-load so toggling the setting takes effect on
             // the next stream. The URL may embed proxy credentials — it is NEVER logged here.
@@ -2187,6 +2340,29 @@ class OwnTVPlayer(
         pendingUrl = null
         _isPlaying.value = false
         _buffering.value = false
+    }
+
+    /** True while mpv owns a stream (loaded or loading) — i.e. while it may still hold a provider session. */
+    val hasActiveStream: Boolean get() = currentUrl != null || pendingUrl != null
+
+    /**
+     * [stop], then wait until mpv has really finished tearing the stream down.
+     *
+     * [stop] only *queues* the stop on mpv's single-threaded executor, so a caller that starts another
+     * engine straight afterwards races FFmpeg's socket. Queueing a barrier behind the stop and waiting
+     * for it is exact: when the barrier runs, mpv has returned from the stop command. That matters on
+     * panels that allow one session per account ([LiveStreamQuirks.isSingleSession]) — there the second
+     * engine is refused outright while the first is still connected.
+     *
+     * Bounded: a wedged mpv core must not freeze an engine switch. Returns false if the wait timed out.
+     */
+    suspend fun stopAndAwaitRelease(timeoutMs: Long = MPV_RELEASE_TIMEOUT_MS): Boolean {
+        stop()
+        if (!initialized) return true
+        val stopped = CountDownLatch(1)
+        val queued = runCatching { mpvExecutor.execute { stopped.countDown() } }.isSuccess
+        if (!queued) return true // executor gone: nothing is holding a stream either
+        return withContext(Dispatchers.IO) { stopped.await(timeoutMs, TimeUnit.MILLISECONDS) }
     }
 
     /**
@@ -3015,7 +3191,13 @@ class OwnTVPlayer(
                         // The stream didn't start. Silently retry a few times with exponential backoff
                         // before surfacing the error — handles transient failures (cold-boot decoder-busy,
                         // a provider 5xx, the first-play surface race) so the user rarely sees an error.
-                        else if (autoRetries < maxRetries() && currentUrl != null) {
+                        // A live panel that answered with an HTTP refusal will answer the identical request
+                        // the same way; cut the repeats short so the format/UA fallbacks (which DO change
+                        // the request) run instead of a storm. See [isHardHttpRefusal].
+                        else if (
+                            autoRetries < maxRetries() && currentUrl != null &&
+                            !(isLiveContent && isHardHttpRefusal(lastMpvError) && autoRetries >= HARD_REFUSAL_MAX_RETRIES)
+                        ) {
                             autoRetries++
                             // Re-probe in FULL on retry: the trimmed fast-zap probe is first-attempt only, and
                             // an under-read 4K/HDR stream is a common reason a load fails to start.
