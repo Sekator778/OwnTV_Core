@@ -127,6 +127,9 @@ class SettingsRepository(private val context: Context) {
         // Live TV latency: preset name + the custom seconds used when the preset is CUSTOM.
         val LIVE_LATENCY_MODE = stringPreferencesKey("live_latency_mode")
         val LIVE_LATENCY_CUSTOM_SECS = intPreferencesKey("live_latency_custom_secs")
+        // v4.1.6 one-shot: reset live latency to the safe Balanced preset. Subsequent user changes are
+        // preserved across every later update.
+        val LIVE_LATENCY_RESET_416 = booleanPreferencesKey("live_latency_reset_416")
         val HDR_ENABLED = booleanPreferencesKey("hdr_enabled")
         val AUTO_FRAME_RATE = booleanPreferencesKey("auto_frame_rate")
         // v4.1.6 one-shot: AFR caused visible HDMI re-handshakes on some TVs. Existing installs are
@@ -1034,11 +1037,29 @@ class SettingsRepository(private val context: Context) {
 
     /** Live TV latency preset (a [LiveLatency] name). */
     val liveLatencyMode: Flow<String> = prefsFlow { prefs ->
-        prefs[Keys.LIVE_LATENCY_MODE] ?: LiveLatency.DEFAULT.name
+        // Also report Balanced before the startup migration coroutine completes, so an auto-resumed
+        // channel cannot briefly reuse an unsafe low/custom latency on the first 4.1.6 launch.
+        if (prefs[Keys.LIVE_LATENCY_RESET_416] == true) {
+            prefs[Keys.LIVE_LATENCY_MODE] ?: LiveLatency.DEFAULT.name
+        } else {
+            LiveLatency.BALANCED.name
+        }
     }
 
     suspend fun setLiveLatencyMode(name: String) {
-        context.dataStore.edit { it[Keys.LIVE_LATENCY_MODE] = name }
+        context.dataStore.edit {
+            it[Keys.LIVE_LATENCY_MODE] = name
+            it[Keys.LIVE_LATENCY_RESET_416] = true
+        }
+    }
+
+    /** v4.1.6 only: force live latency to Balanced exactly once, including existing custom choices. */
+    suspend fun migrateLiveLatency416() {
+        context.dataStore.edit { prefs ->
+            if (prefs[Keys.LIVE_LATENCY_RESET_416] == true) return@edit
+            prefs[Keys.LIVE_LATENCY_MODE] = LiveLatency.BALANCED.name
+            prefs[Keys.LIVE_LATENCY_RESET_416] = true
+        }
     }
 
     /** Custom live buffer seconds, used when the preset is [LiveLatency.CUSTOM]. */
