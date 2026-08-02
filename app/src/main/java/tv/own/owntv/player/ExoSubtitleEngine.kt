@@ -221,7 +221,10 @@ class ExoSubtitleEngine(
         /** Decode this item on a software decoder (catch-up archive) — see [softwareFirstSelector]. */
         preferSoftware: Boolean = false,
     ) {
-        softwarePreferred = preferSoftware
+        // "Hardware decoding = Off" used to reach mpv only, so a user who turned it off to work around a
+        // broken vendor decoder still got that decoder the moment playback landed on ExoPlayer. The
+        // selector puts software first and keeps hardware as a backstop, so this can only add a route.
+        softwarePreferred = preferSoftware || !hwDecodingEnabled
         this.surface = surface
         fallbackMode = fallback
         pendingSubLang = subLang
@@ -230,6 +233,7 @@ class ExoSubtitleEngine(
         firstFrameSeen = false
         hasVideoTrack = true
         throughputTracker.reset(); fpsSample.resetAll(); dropsBaseline = currentDroppedFrames(player)
+        audioWatchdog.reset()
         mainHandler.removeCallbacks(noVideoTimeout)
         mainHandler.postDelayed(noVideoTimeout, noVideoTimeoutMs())
 
@@ -242,12 +246,15 @@ class ExoSubtitleEngine(
 
         // The renderer factory (and so the decoder selector) is baked in at construction: if this item
         // wants the other decode path than the cached player was built for, drop and rebuild it.
-        if (player != null && builtForSoftware != softwarePreferred) {
-            android.util.Log.i(TAG, "rebuilding ExoPlayer for ${if (softwarePreferred) "software" else "hardware"} decode")
+        // The audio sink's capabilities are baked in at construction too, so the same rule applies: a
+        // cached player built before the session latched to stereo would keep the sink that failed.
+        val wantStereo = !AudioOutputPolicy.allowsMultichannel(surroundMode)
+        if (player != null && (builtForSoftware != softwarePreferred || builtForStereo != wantStereo)) {
+            android.util.Log.i(TAG, "rebuilding ExoPlayer for ${if (softwarePreferred) "software" else "hardware"} decode, ${if (wantStereo) "stereo" else "device"} audio")
             player?.release()
             player = null
         }
-        val p = player ?: build().also { player = it; builtForSoftware = softwarePreferred }
+        val p = player ?: build().also { player = it; builtForSoftware = softwarePreferred; builtForStereo = wantStereo }
         p.setVideoSurface(surface)
         p.setMediaItem(buildMediaItem(url))
         p.prepare()
@@ -364,7 +371,11 @@ class ExoSubtitleEngine(
     /** Decode path requested for the item being started, and the one the built [player] actually holds —
      *  the renderer factory is fixed at construction, so a change forces a rebuild in [start]. */
     private var softwarePreferred = false
+    /** Mirrors Settings → Video player → Hardware decoding, pushed in by [OwnTVPlayer]. */
+    @Volatile var hwDecodingEnabled = true
     private var builtForSoftware = false
+    /** Whether the cached player's audio sink was pinned to stereo PCM. See the rebuild check in `start`. */
+    private var builtForStereo = false
 
     /** [MediaCodecSelector.DEFAULT]'s list, reordered to put software decoders first. Media3 tries the
      *  list in order and falls through on failure, so the hardware decoder stays available as a backstop
@@ -401,7 +412,12 @@ class ExoSubtitleEngine(
         // accepts the format, plays the audio, then never emits a video frame ("setPortMode ...
         // DynamicANWBuffer failed", "BAD CODEC: stride 1920 -> 64"). A software decoder resyncs at the
         // next keyframe and plays cleanly, which is exactly why mpv was pinned to software here.
-        val renderers = DefaultRenderersFactory(context).apply {
+        // Stereo pinning mirrors the live engine: "Stereo only", or a session latch tripped by ANY engine,
+        // means this player must not be given a sink that can bitstream Dolby/DTS.
+        val renderers = OwnTVRenderersFactory(
+            context,
+            forceStereo = !AudioOutputPolicy.allowsMultichannel(surroundMode),
+        ).apply {
             if (softwarePreferred) setMediaCodecSelector(softwareFirstSelector)
         }
         return ExoPlayer.Builder(context)
@@ -410,7 +426,7 @@ class ExoSubtitleEngine(
             .setLoadControl(loadControl)
             .setTrackSelector(trackSelector)
             .build()
-            .apply { addListener(listener); addAnalyticsListener(analytics) }
+            .apply { addListener(listener); addAnalyticsListener(analytics); addAnalyticsListener(audioWatchdog) }
     }
 
     /** Re-point ExoPlayer at a (re)created surface, or null to release it (surfaceDestroyed). */
@@ -441,7 +457,23 @@ class ExoSubtitleEngine(
         val p = player ?: return
         val dur = p.duration.let { if (it == C.TIME_UNSET) 0L else it }
         callbacks.onPositionDuration(p.currentPosition.coerceAtLeast(0), dur.coerceAtLeast(0))
+        // The audio-output safety net rides the tick that is already running. On a hit the whole session
+        // latches to stereo and the owner restarts this item — the sink's capabilities are decided at
+        // construction, so nothing short of a rebuild can undo a bad choice.
+        audioWatchdog.poll(p.isPlaying)?.let { reason ->
+            android.util.Log.w("ExoSubtitleEngine", "audio watchdog: $reason — forcing stereo for this session")
+            AudioOutputPolicy.latchStereo("exo/vod: $reason")
+            onAudioFallback?.invoke("Your TV or soundbar couldn't play this audio — switched to stereo.")
+        }
     }
+
+    /** The user's Auto / Stereo only / Surround choice, pushed in by [OwnTVPlayer]; read at build time. */
+    @Volatile var surroundMode: SurroundMode = SurroundMode.AUTO
+
+    /** Fired once when the audio watchdog forces stereo; the owner shows the message and restarts. */
+    var onAudioFallback: ((String) -> Unit)? = null
+
+    private val audioWatchdog = AudioWatchdog()
 
     /** Select an audio track by the id we published in [Callbacks.onAudioTracks]. */
     fun selectAudio(id: Int) {
@@ -617,6 +649,13 @@ class ExoSubtitleEngine(
             if (line.isNotBlank()) out += "Audio" to line
         }
         bufferRow(p, dropsBaseline)?.let { out += it }
+        // Same readout as the live engine: who is decoding the audio, and whether the safety net fired.
+        out += "Audio out" to buildString {
+            append(if (audioWatchdog.passthrough) "passthrough (TV/receiver decodes)" else "decoded in app")
+            append(" · ")
+            append(if (AudioOutputPolicy.allowsMultichannel(surroundMode)) "multichannel allowed" else "stereo only")
+            AudioOutputPolicy.latchReason?.let { append(" · fell back: $it") }
+        }
         return out
     }
 

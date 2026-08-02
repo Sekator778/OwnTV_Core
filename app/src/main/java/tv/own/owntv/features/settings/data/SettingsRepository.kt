@@ -17,6 +17,7 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import tv.own.owntv.features.home.HomeConfig
+import tv.own.owntv.player.SurroundMode
 import tv.own.owntv.core.util.Pin
 import tv.own.owntv.ui.theme.AccentColor
 import tv.own.owntv.ui.theme.ThemeMode
@@ -142,6 +143,7 @@ class SettingsRepository(private val context: Context) {
         val MEASURED_STREAM_STATS = booleanPreferencesKey("measured_stream_stats")
         val DIRECT_TUNE = booleanPreferencesKey("direct_tune")
         val SURROUND_SOUND = booleanPreferencesKey("surround_sound")
+        val SURROUND_MODE = stringPreferencesKey("surround_mode")
         val AUTO_PLAY_NEXT = booleanPreferencesKey("auto_play_next")
         /** Legacy single external-player toggle (movies + series + downloads). Superseded by the three
          *  per-section keys below but still read as their default, so an existing setting survives. */
@@ -695,6 +697,32 @@ class SettingsRepository(private val context: Context) {
         context.dataStore.edit { it[Keys.SURROUND_SOUND] = enabled }
     }
 
+    /**
+     * The three-state replacement for [surroundSound] (Auto / Stereo only / Surround).
+     *
+     * The old boolean was a poor fit for two reasons. It only ever reached **mpv** — Live TV's default
+     * engine is ExoPlayer, where "off" changed nothing at all, so a TV that mis-plays multichannel kept
+     * mis-playing it however the switch was set. And "off" is the wrong default to *have* to choose: a
+     * user with a real receiver should get surround without reading a changelog, and a user whose TV
+     * lies about its capabilities should get sound back without knowing why it went.
+     *
+     * Hence Auto by default — try multichannel, but fall back the instant the output is caught failing
+     * (see [tv.own.owntv.player.AudioOutputPolicy]). The fallback watchdog runs in **all three** modes,
+     * including Surround: "no sound" is never what the user picked. Reading falls back to the old
+     * boolean so nobody's explicit choice is lost, and nothing is rewritten on upgrade.
+     */
+    val surroundMode: Flow<SurroundMode> = prefsFlow {
+        SurroundMode.of(it[Keys.SURROUND_MODE], it[Keys.SURROUND_SOUND])
+    }
+
+    suspend fun setSurroundMode(mode: SurroundMode) {
+        context.dataStore.edit {
+            it[Keys.SURROUND_MODE] = mode.name
+            // Keep the legacy key consistent so a downgrade to 4.1.6 lands somewhere sane.
+            it[Keys.SURROUND_SOUND] = mode == SurroundMode.SURROUND
+        }
+    }
+
     /** Auto-play the next episode (and roll into the next season) when one finishes. On by default. */
     val autoPlayNext: Flow<Boolean> = prefsFlow { it[Keys.AUTO_PLAY_NEXT] ?: true }
 
@@ -1209,6 +1237,9 @@ class SettingsRepository(private val context: Context) {
         Keys.SUB_POSITION,
         // Custom DNS — not secret, backed up alongside proxy
         Keys.DNS_HOST, Keys.DNS_DOH_URL,
+        // Surround mode (Auto/Stereo only/Surround). The legacy boolean is in backupBoolKeys and stays
+        // in sync, but the string is what is read first, so it has to travel too.
+        Keys.SURROUND_MODE,
     )
     private val backupStringSetKeys = listOf(
         // The STATIC-mode hidden set rides with backup so a reinstall keeps the user's hidden icons.

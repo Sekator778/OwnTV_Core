@@ -241,6 +241,10 @@ class OwnTVPlayer(
         const val EXO_FPS_RECHECK_MS = 1_500L      // retry the fps chip once a measurement window can have elapsed
         const val EXO_SUB_DELAY_DEBOUNCE_MS = 350L // settle time before a timing change re-prepares on Exo (§8)
         const val SURROUND_CHECK_MS = 7_000L       // wait before verifying surround audio actually produces sound
+        // Window the audio clock is sampled over for the "sink accepted the format then played silence"
+        // check. Long enough that a single stalled packet can't fake a freeze, short enough that a user
+        // isn't sitting in silence while we make up our mind.
+        const val SURROUND_SILENCE_CHECK_MS = 4_000L
         const val DECODE_CHECK_MS = 4_000L         // wait before verifying video decode actually produces frames
         const val LIVE_RECONNECT_DELAY_MS = 3_500L // pause before reconnecting a dropped live stream
         const val EOF_GRACE_MS = 1_500L            // grace for a late FILE_LOADED after an early EOF on live
@@ -478,14 +482,17 @@ class OwnTVPlayer(
         _directRender.value = targetVo() == "mediacodec_embed"
     }
 
-    /** mpv `audio-channels`: surround on → multichannel LPCM where the sink **unambiguously** supports it
-     *  (`auto-safe`), else a safe stereo downmix; surround off → force stereo. `auto-safe` (not `auto`)
-     *  because some sinks falsely claim 5.1/7.1. If a sink claims support but actually mis-plays multichannel
-     *  PCM (the "2× speed, no sound", #25), [surroundOutputBroken] is latched by the runaway detector and we
-     *  force stereo for the rest of the session. Always decoded PCM, so the audio clock stays alive. */
-    private fun audioChannelsValue(): String = if (surroundSound && !surroundOutputBroken) "auto-safe" else "stereo"
-    // Latched when surround output is detected broken on this device (audio drains ~2× → runaway video).
-    @Volatile private var surroundOutputBroken = false
+    /** mpv `audio-channels`: multichannel allowed → multichannel LPCM where the sink **unambiguously**
+     *  supports it (`auto-safe`), else a safe stereo downmix; Stereo only → force stereo. `auto-safe`
+     *  (not `auto`) because some sinks falsely claim 5.1/7.1. If a sink claims support but actually
+     *  mis-plays multichannel PCM (the "2× speed, no sound", #25) or goes silent, the failsafe latches
+     *  [AudioOutputPolicy] and every engine forces stereo for the rest of the session. Always decoded
+     *  PCM, so the audio clock stays alive. */
+    private fun audioChannelsValue(): String =
+        if (AudioOutputPolicy.allowsMultichannel(surroundMode)) "auto-safe" else "stereo"
+
+    /** True when this load may use multichannel — the mode allows it and the session isn't latched. */
+    private fun multichannelAllowed(): Boolean = AudioOutputPolicy.allowsMultichannel(surroundMode)
 
     /**
      * Trim FFmpeg's stream probe for **live** sources so channels start faster (the default ~5 MB / 5 s
@@ -595,7 +602,7 @@ class OwnTVPlayer(
     // eagerly mirrored so loadUrl can consult them synchronously.
     @Volatile private var vodPinnedMpv: Set<String> = emptySet()
     @Volatile private var vodPinnedExo: Set<String> = emptySet()
-    private var surroundSound = false // off by default (opt-in); see SettingsRepository.surroundSound (#25)
+    private var surroundMode = SurroundMode.AUTO // see SettingsRepository.surroundMode (#25)
     private var autoPlayNext = true
     // Subtitle appearance (#96). While subStyleOn is false NOTHING here is pushed to mpv, so its own
     // defaults (and any ASS styling a file carries) stay exactly as they are today — and each option
@@ -700,13 +707,15 @@ class OwnTVPlayer(
             hwDecoding = on
             if (initialized) mpvAsync { applyRenderConfig() }
         }.launchIn(scope)
-        settings.surroundSound.onEach { on ->
-            surroundSound = on
-            if (on) surroundOutputBroken = false // re-enabling surround = a fresh attempt at multichannel
+        settings.surroundMode.onEach { mode ->
+            val changed = surroundMode != mode
+            surroundMode = mode
+            // Touching the setting is the user asking the audio output for another chance.
+            if (changed) AudioOutputPolicy.clearLatch()
             // A reload re-inits the audio chain so the new channel layout takes effect on the playing stream.
             if (initialized) {
                 mpvAsync {
-                    val sur = surroundSound && !surroundOutputBroken
+                    val sur = multichannelAllowed()
                     setPropertyString("audio-channels", audioChannelsValue())
                     setPropertyString("audio-format", if (sur) "s16" else "")
                     setPropertyString("audio-samplerate", if (sur) "48000" else "0")
@@ -1203,6 +1212,19 @@ class OwnTVPlayer(
         _subText.value = null // mpv's text overlay is off during the handoff
         val budget = playerBudget ?: PlayerBudget.of(context).also { playerBudget = it }
         val engine = exoEngine ?: ExoSubtitleEngine(context, okHttpClient, budget, exoCallbacks).also { exoEngine = it }
+        // Keep the handoff engine on the same audio policy as mpv, and let its watchdog restart the item
+        // on a stereo sink — the session latch is already set by the time this fires, so `start` rebuilds.
+        engine.surroundMode = surroundMode
+        engine.hwDecodingEnabled = hwDecoding
+        val restartGen = loadGeneration
+        engine.onAudioFallback = { message ->
+            toast(message)
+            // Re-enter this same path: the latch is set, so `start` sees the sink mismatch and rebuilds
+            // the player on a stereo-only sink, resuming where the silence began.
+            if (restartGen == loadGeneration && exoActive) {
+                startExo(url, _position.value, surface, sub)
+            }
+        }
         val extSelect = pendingExoExternalSelect
         pendingExoExternalSelect = null
         engine.start(
@@ -1539,7 +1561,7 @@ class OwnTVPlayer(
             setOptionString("audio-channels", audioChannelsValue())
             // Compatibility for multichannel: some HALs choke on Float / 44.1 kHz 5.1 PCM (mis-sized buffer
             // → 2× drain, #25). Pin the universally-safe 16-bit/48 kHz output when surround is on.
-            val sur = surroundSound && !surroundOutputBroken
+            val sur = multichannelAllowed()
             setOptionString("audio-format", if (sur) "s16" else "")
             setOptionString("audio-samplerate", if (sur) "48000" else "0")
             setOptionString("force-window", "no")
@@ -2629,6 +2651,21 @@ class OwnTVPlayer(
             str("audio-bitrate")?.toLongOrNull()?.let { if (it > 0) "%.0f kbps".format(it / 1000.0) else null },
         ).joinToString(" · ")
         if (audioLine.isNotBlank()) out += "Audio" to audioLine
+        // What actually left the device, versus what the file contains. mpv never bitstreams (see
+        // audio-channels), so the interesting part is the layout the sink accepted and whether the
+        // session's stereo safety net has already fired.
+        out += "Audio out" to buildString {
+            val outCh = m.getPropertyInt("audio-out-params/channel-count")
+            append(
+                when (outCh) {
+                    1 -> "mono PCM"; 2 -> "stereo PCM"; 6 -> "5.1 PCM"; 8 -> "7.1 PCM"
+                    null -> "decoded in app"; else -> "${outCh}ch PCM"
+                },
+            )
+            append(" · ")
+            append(if (multichannelAllowed()) "multichannel allowed" else "stereo only")
+            AudioOutputPolicy.latchReason?.let { append(" · fell back: $it") }
+        }
         // Buffer
         val bufLine = listOfNotNull(
             str("demuxer-cache-duration")?.toDoubleOrNull()?.let { "%.1f s".format(it) },
@@ -3025,25 +3062,64 @@ class OwnTVPlayer(
                 // Checked in the 5–15 s window (past the start-up burst, before long drift) and skipped while
                 // seeking (a seek bursts frames to catch up and would false-trip). On a hit, latch surround off
                 // for the session and reload this item in stereo.
-                if (!isLiveContent) {
+                run {
                     val sgen = loadGeneration
                     scope.launch {
                         delay(SURROUND_CHECK_MS)
-                        if (sgen != loadGeneration || surroundOutputBroken || !surroundSound) return@launch
+                        if (sgen != loadGeneration || !multichannelAllowed()) return@launch
+                        // Two independent tells, because the two ways an output fails look nothing alike:
+                        //
+                        //  1. RUNAWAY — the sink drains multichannel PCM ~2× fast, so mpv's audio-master
+                        //     clock (and with it the video) runs away while the room stays silent.
+                        //     estimated-vf-fps ≈ 2× container-fps is the only visible symptom. Skipped
+                        //     while seeking (a seek bursts frames to catch up and would false-trip), and
+                        //     skipped entirely when container-fps is unknown — common on live TS, and a
+                        //     guess there would be a false positive on a perfectly good channel.
+                        //
+                        //  2. SILENCE — the sink accepts the format and simply never plays it. The clock
+                        //     keeps time (mpv falls back to the video clock), so nothing is "wrong" except
+                        //     that audio-pts is frozen while time-pos advances. This is the live failure
+                        //     the runaway check cannot see, and the one reported as "picture, no sound".
+                        val baseline = kotlinx.coroutines.CompletableDeferred<Pair<Double?, Double?>>()
+                        mpvAsync {
+                            baseline.complete(
+                                getPropertyString("audio-pts")?.toDoubleOrNull() to
+                                    getPropertyString("time-pos")?.toDoubleOrNull(),
+                            )
+                        }
+                        val (startAudioPts, startTimePos) =
+                            kotlinx.coroutines.withTimeoutOrNull(1_000) { baseline.await() } ?: (null to null)
+                        delay(SURROUND_SILENCE_CHECK_MS)
+                        if (sgen != loadGeneration || !multichannelAllowed()) return@launch
                         mpvAsync {
                             if (getPropertyString("seeking") == "yes") return@mpvAsync // catching up — not a real runaway
+                            if (getPropertyString("pause") == "yes") return@mpvAsync    // paused audio is not stalled audio
                             val cfps = getPropertyString("container-fps")?.toDoubleOrNull() ?: 0.0
                             val vfps = getPropertyString("estimated-vf-fps")?.toDoubleOrNull() ?: 0.0
-                            if (cfps > 1.0 && vfps > cfps * 1.5) {
-                                android.util.Log.w(TAG, "surround runaway: est-vf-fps=$vfps vs container-fps=$cfps — falling back to stereo")
-                                surroundOutputBroken = true
-                                setPropertyString("audio-channels", "stereo")
-                                setPropertyString("audio-format", "")
-                                setPropertyString("audio-samplerate", "0")
-                                toast("This audio output can't do surround — switched to stereo.")
-                                if (sgen == loadGeneration && currentUrl != null) {
-                                    loadUrl(currentUrl!!, currentMetaSnapshot(), isLiveContent, _position.value, resetRetries = false)
-                                }
+                            val runaway = cfps > 1.0 && vfps > cfps * 1.5
+
+                            val nowAudioPts = getPropertyString("audio-pts")?.toDoubleOrNull()
+                            val nowTimePos = getPropertyString("time-pos")?.toDoubleOrNull()
+                            // Only meaningful when an audio track is actually selected and the clock moved.
+                            val hasAudio = getPropertyString("aid").let { it != null && it != "no" && it != "false" }
+                            val videoMoved = startTimePos != null && nowTimePos != null &&
+                                nowTimePos - startTimePos > SURROUND_SILENCE_CHECK_MS / 2000.0
+                            val audioFrozen = hasAudio && videoMoved && startAudioPts != null &&
+                                nowAudioPts != null && kotlin.math.abs(nowAudioPts - startAudioPts) < 0.25
+
+                            val reason = when {
+                                runaway -> "audio drained ${"%.1f".format(vfps / cfps)}× too fast"
+                                audioFrozen -> "audio output produced no sound"
+                                else -> return@mpvAsync
+                            }
+                            android.util.Log.w(TAG, "surround failsafe: $reason (est-vf-fps=$vfps container-fps=$cfps) — falling back to stereo")
+                            AudioOutputPolicy.latchStereo("mpv: $reason")
+                            setPropertyString("audio-channels", "stereo")
+                            setPropertyString("audio-format", "")
+                            setPropertyString("audio-samplerate", "0")
+                            toast("This audio output can't do surround — switched to stereo.")
+                            if (sgen == loadGeneration && currentUrl != null) {
+                                loadUrl(currentUrl!!, currentMetaSnapshot(), isLiveContent, _position.value, resetRetries = false)
                             }
                         }
                     }

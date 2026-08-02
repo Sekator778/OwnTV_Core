@@ -170,7 +170,37 @@ class LivePreviewEngine(
         settingsFlow.onEach { measuredStatsEnabled = it; if (!it) throughputTracker.setEnabled(false) }
             .launchIn(settingsScope)
         settings.liveBufferSeconds.onEach { liveBufferSecs = it }.launchIn(settingsScope)
+        // Surround mode only takes effect on the next player build (the audio sink's capabilities are
+        // fixed at construction), so a change while a channel is playing rebuilds it — same as mpv's
+        // in-place reload. Changing the setting also clears the session latch, which is handled by
+        // whoever wrote the setting; here we only need the new value and a rebuild.
+        settings.surroundMode.onEach { mode ->
+            val changed = surroundMode != mode
+            surroundMode = mode
+            if (changed) currentUrl?.let { rebuildForAudioChange() }
+        }.launchIn(settingsScope)
+        // "Hardware decoding = Off" used to reach mpv only, which left Live TV — whose default engine is
+        // this one — on the hardware decoder the user was trying to avoid. Rebuild so the new selector
+        // takes effect; the factory is fixed at construction.
+        settings.hwDecoding.onEach { on ->
+            val changed = hwDecodingEnabled != on
+            hwDecodingEnabled = on
+            if (changed) currentUrl?.let { rebuildForAudioChange() }
+        }.launchIn(settingsScope)
     }
+
+    /** Mirrors Settings → Video player → Hardware decoding. Read at [build] time. */
+    @Volatile private var hwDecodingEnabled = true
+
+    /** The user's Auto / Stereo only / Surround choice. Read at [build] time. */
+    @Volatile private var surroundMode: SurroundMode = SurroundMode.AUTO
+
+    /**
+     * Watches this engine's audio output for "accepted the format then played silence" and for a sink
+     * that keeps underrunning. Polled from [progressWatchdog] — the tick that already runs whenever a
+     * channel is up — so it adds no timer and cannot outlive the engine.
+     */
+    private val audioWatchdog = AudioWatchdog()
     private val analytics = object : androidx.media3.exoplayer.analytics.AnalyticsListener {
         override fun onVideoCodecError(eventTime: androidx.media3.exoplayer.analytics.AnalyticsListener.EventTime, videoCodecError: Exception) {
             lastCodecError = codecDetail("video", videoCodecError)
@@ -277,7 +307,9 @@ class LivePreviewEngine(
             }?.let { out += "HDR" to it }
             out += bitrateRow(f, throughputTracker)
         }
-        out += "Decoder" to "ExoPlayer (hardware)"
+        // The real decoder name, not an assumption: with "Hardware decoding" off this engine now puts
+        // software decoders first, so a hard-coded "(hardware)" would have been actively misleading.
+        out += "Decoder" to (lastVideoDecoder ?: if (hwDecodingEnabled) "ExoPlayer (hardware)" else "ExoPlayer (software preferred)")
         p.audioFormat?.let { f ->
             val line = listOfNotNull(
                 f.sampleMimeType?.substringAfterLast('/')?.uppercase(),
@@ -285,6 +317,15 @@ class LivePreviewEngine(
                 if (f.sampleRate > 0) "%.0f kHz".format(f.sampleRate / 1000.0) else null,
             ).joinToString(" · ")
             if (line.isNotBlank()) out += "Audio" to line
+        }
+        // Which side of the HDMI cable is decoding, and whether the safety net has already fired. This is
+        // the only way to verify a surround setup without a receiver that shows its own input format:
+        // "passthrough" means the TV/receiver is decoding, "decoded" means OwnTV is and the sink gets PCM.
+        out += "Audio out" to buildString {
+            append(if (audioWatchdog.passthrough) "passthrough (TV/receiver decodes)" else "decoded in app")
+            append(" · ")
+            append(if (AudioOutputPolicy.allowsMultichannel(surroundMode)) "multichannel allowed" else "stereo only")
+            AudioOutputPolicy.latchReason?.let { append(" · fell back: $it") }
         }
         bufferRow(p, dropsBaseline)?.let { out += it }
         currentUrl?.let { out += "Source" to HttpClient.redactUrl(it) }
@@ -476,6 +517,16 @@ class LivePreviewEngine(
                         "health posMs=$pos bufferMs=${p.totalBufferedDuration} liveOffsetMs=${liveOffset ?: -1} " +
                             "frames=$frames dropped=$dropped isPlaying=${p.isPlaying}",
                     )
+                }
+                // Audio output health. Runs in EVERY surround mode including "Surround" — a user who asked
+                // for 5.1 did not ask for silence — and cannot be turned off. On a hit the session latches
+                // to stereo (which every engine reads) and this channel is rebuilt on a stereo-only sink.
+                audioWatchdog.poll(p.isPlaying)?.let { reason ->
+                    LiveDiagnosticsLog.event("audioWatchdog: $reason — forcing stereo for this session")
+                    AudioOutputPolicy.latchStereo("exo/live: $reason")
+                    onAudioFallback?.invoke("Your TV or soundbar couldn't play this audio — switched to stereo.")
+                    rebuildForAudioChange()
+                    return
                 }
                 // Audio-plays-no-video: a video track exists but has never rendered a single frame, even
                 // though we're not in the total-freeze case above (position/audio clock IS advancing). Only
@@ -756,6 +807,7 @@ class LivePreviewEngine(
         _errorInfo.value = null
         frameCounter.set(0); lastFrameCount = 0; everRendered = false; lastProgressPos = -1L; lastProgressWallMs = 0L; frozenChecks = 0
         throughputTracker.reset(); fpsSample.resetAll(); dropsBaseline = currentDroppedFrames(player)
+        audioWatchdog.reset()
         _currentMeta.value = meta
         _volume.value = if (muted) 0 else 100
         _state.value = State.LOADING
@@ -779,6 +831,35 @@ class LivePreviewEngine(
             val raw = lastCodecError ?: diagnostics.recentError() ?: it.message
             _errorInfo.value = raw?.let { r -> ErrorInfo(PlayerErrors.reasonFor(r), exoSpec(), r) }
         }
+    }
+
+    /**
+     * Notified when the audio watchdog has forced this session to stereo, with a message to show the
+     * user. Set by whoever owns the UI; a null callback means the fallback still happens silently
+     * (getting sound back matters more than announcing it).
+     */
+    var onAudioFallback: ((String) -> Unit)? = null
+
+    /**
+     * Rebuild the player so a changed audio configuration takes effect on the channel that is playing.
+     *
+     * A rebuild, not a reload: an ExoPlayer's audio sink capabilities are fixed when the renderers are
+     * constructed, so re-preparing the same player would keep the sink that just failed. Live has no
+     * position to preserve, so this is just "open the same channel again".
+     */
+    private fun rebuildForAudioChange() {
+        val url = currentUrl ?: return
+        val meta = _currentMeta.value
+        val ua = currentUa
+        val wasMuted = muted
+        audioWatchdog.reset()
+        mainHandler.removeCallbacks(stallWatchdog)
+        mainHandler.removeCallbacks(progressWatchdog)
+        mainHandler.removeCallbacks(healthyReset)
+        player?.run { removeListener(listener); release() }
+        player = null
+        videoRenderer = null
+        play(url, wasMuted, meta, ua)
     }
 
     fun setMuted(m: Boolean) {
@@ -1498,7 +1579,24 @@ class LivePreviewEngine(
         // API 31+, which corrupts (macroblocks) some UHD-HEVC streams on Realtek/Amlogic VPUs — the
         // synchronous path is what players like TiviMate use to avoid it. Channels it still can't decode
         // cleanly are handed to mpv via the per-channel "force mpv" routing.
-        val renderers = DefaultRenderersFactory(context).forceDisableMediaCodecAsynchronousQueueing()
+        //
+        // The audio sink is pinned to stereo PCM when the user asked for "Stereo only" or when the
+        // session latch has tripped. This is the half of the surround setting that never existed:
+        // the old boolean only reached mpv, while Live TV's default engine is this one, so a TV that
+        // mis-plays Dolby got exactly the same treatment however the switch was set.
+        val renderers = OwnTVRenderersFactory(context, forceStereo = !AudioOutputPolicy.allowsMultichannel(surroundMode))
+            .forceDisableMediaCodecAsynchronousQueueing()
+            .apply {
+                // Software first, hardware still in the list as a backstop — Media3 walks the decoder
+                // list in order and falls through on failure, so this can only add a route.
+                if (!hwDecodingEnabled) {
+                    setMediaCodecSelector { mime, secure, tunneling ->
+                        androidx.media3.exoplayer.mediacodec.MediaCodecSelector.DEFAULT
+                            .getDecoderInfos(mime, secure, tunneling)
+                            .sortedBy { it.hardwareAccelerated }
+                    }
+                }
+            }
         return ExoPlayer.Builder(context)
             .setRenderersFactory(renderers)
             .setMediaSourceFactory(DefaultMediaSourceFactory(httpDataSourceFor(currentUa)))
@@ -1512,7 +1610,7 @@ class LivePreviewEngine(
                     if (autoFrameRateEnabled) C.VIDEO_CHANGE_FRAME_RATE_STRATEGY_ONLY_IF_SEAMLESS
                     else C.VIDEO_CHANGE_FRAME_RATE_STRATEGY_OFF,
                 )
-                addListener(listener); addAnalyticsListener(analytics)
+                addListener(listener); addAnalyticsListener(analytics); addAnalyticsListener(audioWatchdog)
                 // Wire the per-frame tick to the video renderer so the health watchdog can tell a frozen
                 // PICTURE (clock still running — invisible to a position-only check) from real playback.
                 // Best-effort: if the renderer isn't found / doesn't accept the message, the position and
