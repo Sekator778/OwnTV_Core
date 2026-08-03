@@ -980,6 +980,72 @@ class TestCheckNumberLocale(unittest.TestCase):
 
 
 # ===========================================================================
+# check_text_overflow.py
+# ===========================================================================
+
+class TestCheckTextOverflow(unittest.TestCase):
+
+    def setUp(self):
+        self.checker = _load("text_overflow_test", "tools/i18n/check_text_overflow.py")
+        self.tmpdir = Path(tempfile.mkdtemp())
+        self.source = self.tmpdir / "Sample.kt"
+        self.allowlist = self.tmpdir / "allowlist.txt"
+        self.allowlist.write_text("")
+
+    def _check(self, source):
+        self.source.write_text(source)
+        return self.checker.check([self.source], self.allowlist)[0]
+
+    def test_multiline_nested_and_adjacent_text_calls(self):
+        errors = self._check('''
+            Text(
+                text = nested(value, fallback("x")),
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+            )
+            Text("second", maxLines = 2, overflow = TextOverflow.Ellipsis)
+        ''')
+        self.assertEqual([], errors)
+
+    def test_fully_qualified_text_is_detected(self):
+        errors = self._check('androidx.tv.material3.Text("title", maxLines = 1)')
+        self.assertEqual(1, len(errors))
+        self.assertIn("without overflow", errors[0])
+
+    def test_comments_and_string_contents_are_ignored(self):
+        errors = self._check(r'''
+            // Text("comment", maxLines = 1)
+            /* BasicText("comment", maxLines = 1) */
+            val normal = "Text(\"fake\", maxLines = 1)"
+            val triple = """BasicText("fake", maxLines = 1)"""
+            val interpolated = "${value}: Text(maxLines = 1)"
+        ''')
+        self.assertEqual([], errors)
+
+    def test_basic_text_requires_overflow(self):
+        errors = self._check('BasicText("body", maxLines = nested(limit, 1))')
+        self.assertEqual(1, len(errors))
+
+    def test_intentional_clip_uses_exact_exception(self):
+        self.source.write_text('Text(number.toString(), maxLines = 1, overflow = TextOverflow.Clip)')
+        path = self.source.as_posix()
+        self.allowlist.write_text(
+            f"{path}\tText(number.toString())\t1\tFixed-width technical identifier\n"
+        )
+        errors, used = self.checker.check([self.source], self.allowlist)
+        self.assertEqual([], errors)
+        self.assertEqual({(path, "Text(number.toString())", 1)}, used)
+
+    def test_unapproved_clip_fails(self):
+        errors = self._check('Text("title", maxLines = 1, overflow = TextOverflow.Clip)')
+        self.assertEqual(1, len(errors))
+        self.assertIn("unapproved", errors[0])
+
+    def test_non_text_max_lines_is_ignored(self):
+        self.assertEqual([], self._check('PosterCard(title, maxLines = 1)'))
+
+
+# ===========================================================================
 # check_pseudo_locales.py
 # ===========================================================================
 
