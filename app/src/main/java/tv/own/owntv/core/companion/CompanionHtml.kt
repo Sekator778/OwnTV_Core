@@ -33,7 +33,7 @@ internal object CompanionHtml {
           var(--bg);
         min-height:100vh;
       }
-      h1,h2,.brand{font-family:'Lora',Georgia,'Times New Roman',serif; font-weight:700; letter-spacing:.2px}
+      h1,h2,.brand{font-family:'Lora',Georgia,'Noto Sans',system-ui,sans-serif; font-weight:700; letter-spacing:.2px}
       main{max-width:760px; margin:0 auto; padding:28px 20px 56px}
       .brandrow{display:flex; align-items:center; gap:12px; margin-bottom:22px}
       .dot{width:34px; height:34px; border-radius:10px; background:#52DBC8;
@@ -62,7 +62,7 @@ internal object CompanionHtml {
       .panel.active{display:grid; gap:14px}
       button.go{border:0; border-radius:12px; padding:15px 16px; background:var(--accent);
         color:var(--accent-ink); font-weight:700; font-size:16px; cursor:pointer; margin-top:4px}
-      .pin{font-family:'Lora',Georgia,serif; font-size:34px; letter-spacing:12px; text-align:center;
+      .pin{font-family:'Lora',Georgia,'Noto Sans',system-ui,sans-serif; font-size:34px; letter-spacing:12px; text-align:center;
         padding:16px; caret-color:var(--accent)}
       .err{color:var(--danger); font-size:14px; margin:0 0 12px}
       .hint{font-size:13px; color:var(--muted); margin-top:6px}
