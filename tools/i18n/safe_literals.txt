@@ -201,7 +201,7 @@
 1	technical	app/src/main/java/tv/own/owntv/core/companion/CompanionHtml.kt	.own,.json,application/json,application/octet-stream
 1	technical	app/src/main/java/tv/own/owntv/core/companion/CompanionHtml.kt	/background
 1	technical	app/src/main/java/tv/own/owntv/core/companion/CompanionHtml.kt	/backup
-1	technical	app/src/main/java/tv/own/owntv/core/companion/CompanionHtml.kt	:root{ color-scheme: dark; --bg:#040E0B; --panel:#12191700; --card:#1B211F; --card-2:#252B29; --line:#3F4945; --text:#DEE4E1; --muted:#BFC9C4; --accent:#8CEE2B; --accent-ink:#123A06; --danger:#FFB4AB; } @font-face{ font-family:'Lora'; font-style:normal; font-weight:400 700; src:url('/lora.ttf') format('truetype'); font-display:swap; } *{box-sizing:border-box} body{ margin:0; color:var(--text); font-family:system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif; background: radial-gradient(1200px 520px at 12% -12%, rgba(140,238,43,0.10) 0%, transparent 60%), radial-gradient(900px 460px at 100% 0%, rgba(140,238,43,0.06) 0%, transparent 62%), var(--bg); min-height:100vh; } h1,h2,.brand{font-family:'Lora',Georgia,'Times New Roman',serif; font-weight:700; letter-spacing:.2px} main{max-width:760px; margin:0 auto; padding:28px 20px 56px} .brandrow{display:flex; align-items:center; gap:12px; margin-bottom:22px} .dot{width:34px; height:34px; border-radius:10px; background:#52DBC8; display:grid; place-items:center; color:#003730} .dot svg{width:18px; height:18px} .brand{font-size:20px; color:var(--text)} .card{background:var(--card); border:1px solid var(--line); border-radius:20px; padding:26px 22px; box-shadow:0 24px 60px rgba(0,0,0,.45)} h1{margin:0 0 8px; font-size:24px} p{line-height:1.55; color:var(--muted); margin:0 0 16px} form{display:grid; gap:14px} label{display:grid; gap:6px; font-size:14px; color:var(--text)} input,select{border:1px solid var(--line); border-radius:12px; padding:13px 14px; background:#0C1311; color:var(--text); font-size:16px; width:100%} input:focus,select:focus{outline:none; border-color:var(--accent); box-shadow:0 0 0 3px rgba(140,238,43,.20)} .grid{display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:14px} .checks{display:grid; gap:10px; grid-template-columns:repeat(2,minmax(0,1fr)); margin-top:2px} .check{display:flex; align-items:center; gap:9px; color:var(--muted)} .check input{width:18px; height:18px} .tabs{display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:10px; margin-bottom:18px} .tab{border:1px solid var(--line); border-radius:12px; padding:12px 10px; background:var(--card-2); color:var(--muted); font-weight:600; font-size:15px; cursor:pointer; font-family:inherit} .tab.active{border-color:var(--accent); background:#1E2E0C; color:#EAFFD0} .panel{display:none} .panel.active{display:grid; gap:14px} button.go{border:0; border-radius:12px; padding:15px 16px; background:var(--accent); color:var(--accent-ink); font-weight:700; font-size:16px; cursor:pointer; margin-top:4px} .pin{font-family:'Lora',Georgia,serif; font-size:34px; letter-spacing:12px; text-align:center; padding:16px; caret-color:var(--accent)} .err{color:var(--danger); font-size:14px; margin:0 0 12px} .hint{font-size:13px; color:var(--muted); margin-top:6px} a{color:var(--accent)} @media (max-width:640px){.grid,.checks,.tabs{grid-template-columns:1fr}}
+1	technical	app/src/main/java/tv/own/owntv/core/companion/CompanionHtml.kt	:root{ color-scheme: dark; --bg:#040E0B; --panel:#12191700; --card:#1B211F; --card-2:#252B29; --line:#3F4945; --text:#DEE4E1; --muted:#BFC9C4; --accent:#8CEE2B; --accent-ink:#123A06; --danger:#FFB4AB; } @font-face{ font-family:'Lora'; font-style:normal; font-weight:400 700; src:url('/lora.ttf') format('truetype'); font-display:swap; } *{box-sizing:border-box} body{ margin:0; color:var(--text); font-family:system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif; background: radial-gradient(1200px 520px at 12% -12%, rgba(140,238,43,0.10) 0%, transparent 60%), radial-gradient(900px 460px at 100% 0%, rgba(140,238,43,0.06) 0%, transparent 62%), var(--bg); min-height:100vh; } h1,h2,.brand{font-family:'Lora',Georgia,'Noto Sans',system-ui,sans-serif; font-weight:700; letter-spacing:.2px} main{max-width:760px; margin:0 auto; padding:28px 20px 56px} .brandrow{display:flex; align-items:center; gap:12px; margin-bottom:22px} .dot{width:34px; height:34px; border-radius:10px; background:#52DBC8; display:grid; place-items:center; color:#003730} .dot svg{width:18px; height:18px} .brand{font-size:20px; color:var(--text)} .card{background:var(--card); border:1px solid var(--line); border-radius:20px; padding:26px 22px; box-shadow:0 24px 60px rgba(0,0,0,.45)} h1{margin:0 0 8px; font-size:24px} p{line-height:1.55; color:var(--muted); margin:0 0 16px} form{display:grid; gap:14px} label{display:grid; gap:6px; font-size:14px; color:var(--text)} input,select{border:1px solid var(--line); border-radius:12px; padding:13px 14px; background:#0C1311; color:var(--text); font-size:16px; width:100%} input:focus,select:focus{outline:none; border-color:var(--accent); box-shadow:0 0 0 3px rgba(140,238,43,.20)} .grid{display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:14px} .checks{display:grid; gap:10px; grid-template-columns:repeat(2,minmax(0,1fr)); margin-top:2px} .check{display:flex; align-items:center; gap:9px; color:var(--muted)} .check input{width:18px; height:18px} .tabs{display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:10px; margin-bottom:18px} .tab{border:1px solid var(--line); border-radius:12px; padding:12px 10px; background:var(--card-2); color:var(--muted); font-weight:600; font-size:15px; cursor:pointer; font-family:inherit} .tab.active{border-color:var(--accent); background:#1E2E0C; color:#EAFFD0} .panel{display:none} .panel.active{display:grid; gap:14px} button.go{border:0; border-radius:12px; padding:15px 16px; background:var(--accent); color:var(--accent-ink); font-weight:700; font-size:16px; cursor:pointer; margin-top:4px} .pin{font-family:'Lora',Georgia,'Noto Sans',system-ui,sans-serif; font-size:34px; letter-spacing:12px; text-align:center; padding:16px; caret-color:var(--accent)} .err{color:var(--danger); font-size:14px; margin:0 0 12px} .hint{font-size:13px; color:var(--muted); margin-top:6px} a{color:var(--accent)} @media (max-width:640px){.grid,.checks,.tabs{grid-template-columns:1fr}}
 1	technical	app/src/main/java/tv/own/owntv/core/companion/CompanionHtml.kt	<
 1	technical	app/src/main/java/tv/own/owntv/core/companion/CompanionHtml.kt	<!doctype html><html lang="${lang.h()}" dir="$dir"><head> <meta charset="utf-8"> <meta name="viewport" content="width=device-width, initial-scale=1"> <title>${title.h()}</title><style>$CSS</style> </head><body><main> <div class="brandrow"><span class="dot">$LOGO_SVG</span><span class="brand">${c.app.h()}</span></div> $inner </main></body></html>
 1	technical	app/src/main/java/tv/own/owntv/core/companion/CompanionHtml.kt	<div class="card"> <h1>${c.addHeading.h()}</h1> <p>${c.addDescription.h()}</p> <div class="tabs"> <button type="button" class="tab active" data-k="xtream">${c.xtream.h()}</button> <button type="button" class="tab" data-k="m3u">${c.m3u.h()}</button> <button type="button" class="tab" data-k="stalker">${c.stalker.h()}</button> </div> <form class="panel active" data-k="xtream" method="post" action="/xtream?pin=$pin"> <input type="hidden" name="type" value="xtream"> <div class="grid"> <label>${c.name.h()} <input name="name" placeholder="${c.defaultIptv.h()}"></label> ${autoRefreshSelect(c)} </div> <label>${c.serverUrl.h()} <input name="server" placeholder="${c.serverExample.h()}" required></label> <div class="grid"> <label>${c.username.h()} <input name="user" autocomplete="username" required></label> <label>${c.password.h()} <input name="pass" type="password" autocomplete="current-password" required></label> </div> <label>${c.userAgent.h()} <input name="userAgent" placeholder="${c.optional.h()}"></label> <label>${c.epgUrl.h()} <input name="epgUrl" placeholder="${c.optional.h()}"></label> <p class="hint">${c.syncXtreamHint.h()}</p> <div class="grid"> ${scopeSelect(c, "syncLive", c.live)} ${scopeSelect(c, "syncMovies", c.movies)} ${scopeSelect(c, "syncSeries", c.series)} </div> <input type="hidden" name="isDefault" value="false"> <label class="check"><input type="checkbox" name="isDefault" value="true"> ${c.defaultPlaylistLabel.h()}</label> <button class="go" type="submit">${c.sendToTv.h()}</button> </form> <form class="panel" data-k="m3u" method="post" action="/m3u?pin=$pin"> <input type="hidden" name="type" value="m3u"> <div class="grid"> <label>${c.name.h()} <input name="name" placeholder="${c.defaultPlaylist.h()}"></label> ${autoRefreshSelect(c)} </div> <label>${c.playlistUrl.h()} <input name="server" placeholder="${c.playlistExample.h()}" required></label> <label>${c.userAgent.h()} <input name="userAgent" placeholder="${c.optional.h()}"></label> <label>${c.epgUrl.h()} <input name="epgUrl" placeholder="${c.optional.h()}"></label> <input type="hidden" name="isDefault" value="false"> <label class="check"><input type="checkbox" name="isDefault" value="true"> ${c.defaultPlaylistLabel.h()}</label> <button class="go" type="submit">${c.sendToTv.h()}</button> </form> <form class="panel" data-k="stalker" method="post" action="/stalker?pin=$pin"> <input type="hidden" name="type" value="stalker"> <div class="grid"> <label>${c.name.h()} <input name="name" placeholder="${c.defaultPortal.h()}"></label> ${autoRefreshSelect(c)} </div> <label>${c.portalUrl.h()} <input name="portalUrl" placeholder="${c.portalExample.h()}" required></label> <label>${context.getString(R.string.setup_mac_address).h()} <input name="mac" placeholder="${context.getString(R.string.setup_mac_example).h()}" required></label> <label>${c.userAgent.h()} <input name="userAgent" placeholder="${c.optional.h()}"></label> <p class="hint">${c.syncStalkerHint.h()}</p> <div class="grid"> ${scopeSelect(c, "syncLive", c.live, "now")} ${scopeSelect(c, "syncMovies", c.movies, "later")} ${scopeSelect(c, "syncSeries", c.series, "later")} </div> <input type="hidden" name="isDefault" value="false"> <label class="check"><input type="checkbox" name="isDefault" value="true"> ${c.defaultPlaylistLabel.h()}</label> <button class="go" type="submit">${c.sendToTv.h()}</button> </form> </div> <script> var tabs=document.querySelectorAll('.tab'), panels=document.querySelectorAll('.panel'); tabs.forEach(function(t){t.addEventListener('click',function(){ var k=t.getAttribute('data-k'); tabs.forEach(function(x){x.classList.toggle('active',x===t)}); panels.forEach(function(p){p.classList.toggle('active',p.getAttribute('data-k')===k)}); });}); </script>
@@ -1487,7 +1487,6 @@
 1	protocol	app/src/main/java/tv/own/owntv/core/parser/XtreamClient.kt	${base(s)}/player_api.php?username=$u&password=$p
 1	protocol	app/src/main/java/tv/own/owntv/core/parser/XtreamClient.kt	${base(s)}/player_api.php?username=$u&password=$p&action=$action$extra
 1	protocol	app/src/main/java/tv/own/owntv/core/parser/XtreamClient.kt	${base(s)}/series/${s.username}/${s.password}/$episodeId.${ext ?: "mp4"}
-1	protocol	app/src/main/java/tv/own/owntv/core/parser/XtreamClient.kt	${base(s)}/timeshift/${s.username}/${s.password}/$durationMinutes/${fmt.format(java.util.Date(startMs))}/$streamId.ts
 1	protocol	app/src/main/java/tv/own/owntv/core/parser/XtreamClient.kt	${base(s)}/xmltv.php?username=$u&password=$p
 1	protocol	app/src/main/java/tv/own/owntv/core/parser/XtreamClient.kt	&category_id=$it
 1	protocol	app/src/main/java/tv/own/owntv/core/parser/XtreamClient.kt	&series_id=$seriesId
@@ -2053,7 +2052,6 @@
 1	technical	app/src/main/java/tv/own/owntv/core/sync/XtreamSyncer.kt	ABORTING fallback
 1	technical	app/src/main/java/tv/own/owntv/core/sync/XtreamSyncer.kt	HTTP
 4	log	app/src/main/java/tv/own/owntv/core/sync/XtreamSyncer.kt	SyncManager
-1	log	app/src/main/java/tv/own/owntv/core/sync/XtreamSyncer.kt	Xtream sync scheduling sourceId=${s.id} contentTypes=$contentTypes concurrency=2
 2	technical	app/src/main/java/tv/own/owntv/core/sync/XtreamSyncer.kt	channels
 1	technical	app/src/main/java/tv/own/owntv/core/sync/XtreamSyncer.kt	channels_fts
 1	log	app/src/main/java/tv/own/owntv/core/sync/XtreamSyncer.kt	complete=$complete newUnique=$delta totalUnique=${total[0]} ms=${SystemClock.elapsedRealtime() - categoryStart}
@@ -2309,7 +2307,6 @@
 2	technical	app/src/main/java/tv/own/owntv/features/customize/CustomizeScreen.kt	SHOW
 1	technical	app/src/main/java/tv/own/owntv/features/customize/CustomizeScreen.kt	confirm
 1	technical	app/src/main/java/tv/own/owntv/features/customize/CustomizeScreen.kt	first
-1	technical	app/src/main/java/tv/own/owntv/features/customize/CustomizeScreen.kt	hid:${it.key}
 1	technical	app/src/main/java/tv/own/owntv/features/customize/CustomizeScreen.kt	↑
 1	technical	app/src/main/java/tv/own/owntv/features/customize/CustomizeScreen.kt	↓
 1	technical	app/src/main/java/tv/own/owntv/features/customize/CustomizeScreen.kt	⤒
@@ -2320,7 +2317,7 @@
 1	technical	app/src/main/java/tv/own/owntv/features/downloads/DownloadsScreen.kt	d_${download.id}
 1	technical	app/src/main/java/tv/own/owntv/features/downloads/DownloadsScreen.kt	hdr_$group
 2	technical	app/src/main/java/tv/own/owntv/features/epg/EpgScreen.kt	ALL
-1	technical	app/src/main/java/tv/own/owntv/features/epg/EpgScreen.kt	EEE d MMM
+1	technical	app/src/main/java/tv/own/owntv/features/epg/EpgScreen.kt	EEEdMMM
 4	empty	app/src/main/java/tv/own/owntv/features/epg/EpgViewModel.kt	\0
 2	log	app/src/main/java/tv/own/owntv/features/epg/EpgViewModel.kt	EpgViewModel
 1	log	app/src/main/java/tv/own/owntv/features/epg/EpgViewModel.kt	OwnTVHome
@@ -2365,7 +2362,6 @@
 1	log	app/src/main/java/tv/own/owntv/features/live/LiveViewModel.kt	OwnTVHome
 1	log	app/src/main/java/tv/own/owntv/features/live/LiveViewModel.kt	Stalker catch-up resolve failed channelId=${ch.id}
 1	log	app/src/main/java/tv/own/owntv/features/live/LiveViewModel.kt	Stalker rewind resolve failed channelId=${ch.id}
-2	compiler	app/src/main/java/tv/own/owntv/features/live/LiveViewModel.kt	UNUSED_PARAMETER
 1	log	app/src/main/java/tv/own/owntv/features/live/LiveViewModel.kt	auto-fallback disabled for '${channel.name}' — user chose ExoPlayer
 1	log	app/src/main/java/tv/own/owntv/features/live/LiveViewModel.kt	catch-up '${ch.name}' prog='${programme.title}' -> ${tv.own.owntv.core.network.HttpClient.redactUrl(url)}
 1	log	app/src/main/java/tv/own/owntv/features/live/LiveViewModel.kt	catch-up external '${ch.name}' prog='${programme.title}'
@@ -2380,7 +2376,6 @@
 1	log	app/src/main/java/tv/own/owntv/features/live/LiveViewModel.kt	stalker preview resolve failed '${channel.name}'
 1	log	app/src/main/java/tv/own/owntv/features/live/LiveViewModel.kt	stalker reconnect re-resolve failed '${channel.name}'
 1	log	app/src/main/java/tv/own/owntv/features/live/LiveViewModel.kt	stalker resolve failed channelId=${channel.id}
-1	log	app/src/main/java/tv/own/owntv/features/live/LiveViewModel.kt	starting mpv for '${channel.name}'
 1	log	app/src/main/java/tv/own/owntv/features/live/LiveViewModel.kt	tune '${channel.name}' -> ${if (pinned) "mpv (pinned)" else "exoplayer"}
 1	log	app/src/main/java/tv/own/owntv/features/live/LiveViewModel.kt	tuneByNumber($number) failed
 1	log	app/src/main/java/tv/own/owntv/features/live/LiveViewModel.kt	tuneByNumber: zap rebuild failed
@@ -2717,7 +2712,6 @@
 1	technical	app/src/main/java/tv/own/owntv/features/shell/components/MediaDetailsScreen.kt	·
 4	empty	app/src/main/java/tv/own/owntv/features/shell/components/SettingsScreen.kt	\0
 5	technical	app/src/main/java/tv/own/owntv/features/shell/components/SettingsScreen.kt	#
-1	technical	app/src/main/java/tv/own/owntv/features/shell/components/SettingsScreen.kt	#%06X
 1	technical	app/src/main/java/tv/own/owntv/features/shell/components/SettingsScreen.kt	$group $title $keywords
 1	technical	app/src/main/java/tv/own/owntv/features/shell/components/SettingsScreen.kt	+
 1	technical	app/src/main/java/tv/own/owntv/features/shell/components/SettingsScreen.kt	-
@@ -2726,7 +2720,7 @@
 1	technical	app/src/main/java/tv/own/owntv/features/shell/components/SettingsScreen.kt	UTC$sign%02d:%02d
 2	file-path	app/src/main/java/tv/own/owntv/features/shell/components/SettingsScreen.kt	backgrounds
 1	technical	app/src/main/java/tv/own/owntv/features/shell/components/SettingsScreen.kt	bmp
-1	technical	app/src/main/java/tv/own/owntv/features/shell/components/SettingsScreen.kt	d MMM HH:mm
+1	technical	app/src/main/java/tv/own/owntv/features/shell/components/SettingsScreen.kt	dMMM
 1	protocol	app/src/main/java/tv/own/owntv/features/shell/components/SettingsScreen.kt	exo
 1	protocol	app/src/main/java/tv/own/owntv/features/shell/components/SettingsScreen.kt	exoplayer
 1	technical	app/src/main/java/tv/own/owntv/features/shell/components/SettingsScreen.kt	github.com/ahXN00/OwnTV
@@ -3069,7 +3063,6 @@
 1	log	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	hwdec-current='$value' (height=${currentHeightPx}px, setting=${if (hwDecoding) "on" else "off"})
 1	technical	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	idle
 1	technical	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	keepaspect
-1	log	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	live .ts didn't start — trying .m3u8 fallback
 1	log	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	live playback resumed (mpv, Live) after stall/reconnect
 1	log	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	live stall (mpv, Live) — frozen ~${frozenMs}ms but offline; showing spinner, waiting for network
 1	log	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	live stall (mpv, Live) — no progress for ~${frozenMs}ms, reconnect attempt $liveStallReconnects/$MAX_LIVE_RECONNECTS
@@ -3198,6 +3191,20 @@
 1	protocol	app/src/main/java/tv/own/owntv/player/PlaybackErrorLog.kt	:gpu
 2	protocol	app/src/main/java/tv/own/owntv/player/PlaybackErrorLog.kt	:hardware
 1	technical	app/src/main/java/tv/own/owntv/player/PlaybackErrorLog.kt	Android ${Build.VERSION.RELEASE} (API ${Build.VERSION.SDK_INT})
+1	protocol	app/src/main/java/tv/own/owntv/player/PlaybackErrorLog.kt	Audio output error — the device couldn't play this audio format
+1	protocol	app/src/main/java/tv/own/owntv/player/PlaybackErrorLog.kt	DRM / secure-decoder error
+1	protocol	app/src/main/java/tv/own/owntv/player/PlaybackErrorLog.kt	Device ran out of memory for the decoder — try closing other apps
+1	protocol	app/src/main/java/tv/own/owntv/player/PlaybackErrorLog.kt	Hardware video decoder error — transient, try again
+1	protocol	app/src/main/java/tv/own/owntv/player/PlaybackErrorLog.kt	Hardware video decoder is busy or can't handle this stream
+1	protocol	app/src/main/java/tv/own/owntv/player/PlaybackErrorLog.kt	Network problem reaching the provider
+1	protocol	app/src/main/java/tv/own/owntv/player/PlaybackErrorLog.kt	Provider blocked the connection — too many streams at once (HTTP 509)
+1	protocol	app/src/main/java/tv/own/owntv/player/PlaybackErrorLog.kt	Provider denied access (HTTP 403) — credentials, subscription, or IP block
+1	protocol	app/src/main/java/tv/own/owntv/player/PlaybackErrorLog.kt	Provider rejected the request (HTTP 400) — bad or expired link
+1	protocol	app/src/main/java/tv/own/owntv/player/PlaybackErrorLog.kt	Provider rejected your login (HTTP 401)
+1	protocol	app/src/main/java/tv/own/owntv/player/PlaybackErrorLog.kt	Provider's SSL certificate is invalid or expired
+1	protocol	app/src/main/java/tv/own/owntv/player/PlaybackErrorLog.kt	Stream format not recognized (bad or partial stream)
+1	protocol	app/src/main/java/tv/own/owntv/player/PlaybackErrorLog.kt	Stream not found on the provider (HTTP 404)
+1	protocol	app/src/main/java/tv/own/owntv/player/PlaybackErrorLog.kt	This device's decoder doesn't support this video format/profile (e.g. HEVC 10-bit)
 2	json	app/src/main/java/tv/own/owntv/player/PlaybackErrorLog.kt	android
 2	json	app/src/main/java/tv/own/owntv/player/PlaybackErrorLog.kt	atMs
 2	json	app/src/main/java/tv/own/owntv/player/PlaybackErrorLog.kt	codec
@@ -3219,20 +3226,6 @@
 1	protocol	app/src/main/java/tv/own/owntv/player/PlaybackErrorLog.kt	software:gpu
 2	json	app/src/main/java/tv/own/owntv/player/PlaybackErrorLog.kt	spec
 1	technical	app/src/main/java/tv/own/owntv/player/PlaybackErrorLog.kt	•
-1	protocol	app/src/main/java/tv/own/owntv/player/PlaybackErrorLog.kt	Audio output error — the device couldn't play this audio format
-1	protocol	app/src/main/java/tv/own/owntv/player/PlaybackErrorLog.kt	DRM / secure-decoder error
-1	protocol	app/src/main/java/tv/own/owntv/player/PlaybackErrorLog.kt	Device ran out of memory for the decoder — try closing other apps
-1	protocol	app/src/main/java/tv/own/owntv/player/PlaybackErrorLog.kt	Hardware video decoder error — transient, try again
-1	protocol	app/src/main/java/tv/own/owntv/player/PlaybackErrorLog.kt	Hardware video decoder is busy or can't handle this stream
-1	protocol	app/src/main/java/tv/own/owntv/player/PlaybackErrorLog.kt	Network problem reaching the provider
-1	protocol	app/src/main/java/tv/own/owntv/player/PlaybackErrorLog.kt	Provider blocked the connection — too many streams at once (HTTP 509)
-1	protocol	app/src/main/java/tv/own/owntv/player/PlaybackErrorLog.kt	Provider denied access (HTTP 403) — credentials, subscription, or IP block
-1	protocol	app/src/main/java/tv/own/owntv/player/PlaybackErrorLog.kt	Provider rejected the request (HTTP 400) — bad or expired link
-1	protocol	app/src/main/java/tv/own/owntv/player/PlaybackErrorLog.kt	Provider rejected your login (HTTP 401)
-1	protocol	app/src/main/java/tv/own/owntv/player/PlaybackErrorLog.kt	Provider's SSL certificate is invalid or expired
-1	protocol	app/src/main/java/tv/own/owntv/player/PlaybackErrorLog.kt	Stream format not recognized (bad or partial stream)
-1	protocol	app/src/main/java/tv/own/owntv/player/PlaybackErrorLog.kt	Stream not found on the provider (HTTP 404)
-1	protocol	app/src/main/java/tv/own/owntv/player/PlaybackErrorLog.kt	This device's decoder doesn't support this video format/profile (e.g. HEVC 10-bit)
 1	technical	app/src/main/java/tv/own/owntv/player/PlayerBudget.kt	10
 1	technical	app/src/main/java/tv/own/owntv/player/PlayerBudget.kt	120
 1	technical	app/src/main/java/tv/own/owntv/player/PlayerBudget.kt	128MiB
@@ -3769,6 +3762,8 @@
 1	locale	app/src/main/java/tv/own/owntv/ui/components/TrackOptionText.kt	und
 1	uri	app/src/main/java/tv/own/owntv/ui/components/TrailerPlayerScreen.kt	https://www.youtube.com/watch?v=$videoKey
 1	uri	app/src/main/java/tv/own/owntv/ui/components/TrailerPlayerScreen.kt	vnd.youtube:$videoKey
+1	technical	app/src/main/java/tv/own/owntv/ui/format/TimeFormat.kt	Hm
+1	technical	app/src/main/java/tv/own/owntv/ui/format/TimeFormat.kt	hm
 1	empty	app/src/main/java/tv/own/owntv/ui/theme/OwnTVColors.kt	\0
 1	technical	app/src/main/java/tv/own/owntv/ui/theme/OwnTVColors.kt	#
 1	empty	app/src/main/java/tv/own/owntv/ui/theme/Theme.kt	\0
