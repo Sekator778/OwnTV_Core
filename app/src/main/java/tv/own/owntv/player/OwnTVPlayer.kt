@@ -26,6 +26,7 @@ import tv.own.owntv.features.settings.data.SubtitleStyle
 import java.util.Locale
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
+import java.util.Locale
 
 /**
  * A selectable audio/subtitle track. [mpvId] is the mpv track id used for `aid`/`sid` (when ExoPlayer
@@ -857,7 +858,7 @@ class OwnTVPlayer(
         // mpv stays alive (just stopped/surfaceless) during a handoff, so check exoActive, not m == null.
         if (exoActive || m == null) {
             (knownFps ?: exoEngine?.currentFps())?.let { if (it > 0) base += "${Math.round(it)} FPS" }
-            exoEngine?.currentBitrateMbps()?.let { base += "%.1f Mbps".format(it) }
+            exoEngine?.currentBitrateMbps()?.let { base += "%.1f Mbps".format(Locale.ROOT, it) }
             _streamChips.value = base
             return
         }
@@ -871,7 +872,7 @@ class OwnTVPlayer(
                     (knownFps ?: m.getPropertyString("container-fps")?.toFloatOrNull())
                         ?.let { if (it > 0) chips += "${Math.round(it)} FPS" }
                     m.getPropertyString("video-bitrate")?.toLongOrNull()
-                        ?.let { if (it > 0) chips += "%.1f Mbps".format(it / 1_000_000.0) }
+                        ?.let { if (it > 0) chips += "%.1f Mbps".format(Locale.ROOT, it / 1_000_000.0) }
                     when (m.getPropertyInt("audio-params/channel-count")) {
                         1 -> "MONO"; 2 -> "STEREO"; 6 -> "5.1"; 8 -> "7.1"; else -> null
                     }?.let { chips += it }
@@ -888,7 +889,7 @@ class OwnTVPlayer(
             r in 1.28f..1.40f -> "4:3"
             r >= 2.15f -> "21:9"
             r in 1.55f..1.66f -> "16:10"
-            else -> "%.2f:1".format(r)
+            else -> "%.2f:1".format(Locale.ROOT, r)
         }
     }
 

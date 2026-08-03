@@ -2,6 +2,7 @@ package tv.own.owntv.core.util
 
 import java.security.MessageDigest
 import java.security.SecureRandom
+import java.util.Locale
 
 /**
  * Lightweight salted PIN hashing for profile locks. Not a password vault — a 4-digit PIN has only
@@ -25,7 +26,7 @@ object Pin {
     private fun digest(salt: ByteArray, pin: String): String =
         MessageDigest.getInstance("SHA-256").digest(salt + pin.toByteArray()).toHex()
 
-    private fun ByteArray.toHex(): String = joinToString("") { "%02x".format(it) }
+    private fun ByteArray.toHex(): String = joinToString("") { "%02x".format(Locale.ROOT, it) }
 
     private fun String.fromHex(): ByteArray? = runCatching {
         chunked(2).map { it.toInt(16).toByte() }.toByteArray()

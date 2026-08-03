@@ -4,6 +4,7 @@ import java.io.File
 import java.io.RandomAccessFile
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
+import java.util.Locale
 
 /**
  * The OpenSubtitles "moviehash" (plan §3.3): file size + the first and last 64 KiB summed as
@@ -24,7 +25,7 @@ object MovieHash {
             var hash = size
             hash += sumChunk(raf, 0)
             hash += sumChunk(raf, size - CHUNK)
-            String.format("%016x", hash)
+            String.format(Locale.ROOT, "%016x", hash)
         }
     }.getOrNull()
 

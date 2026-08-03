@@ -1,0 +1,2 @@
+# CATEGORY<TAB>path<TAB>format-literal<TAB>occurrence<TAB>justification
+# Line numbers may be recorded in comments, but are never matching keys.

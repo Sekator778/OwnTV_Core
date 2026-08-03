@@ -33,6 +33,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import okhttp3.OkHttpClient
 import tv.own.owntv.core.network.HttpClient
+import java.util.Locale
 
 /**
  * ExoPlayer (Media3) that drives the muted **in-pane Live preview**. ExoPlayer starts HLS far faster than
@@ -260,7 +261,7 @@ class LivePreviewEngine(
             if (f.width > 0 && f.height > 0) aspectLabel(f.width, f.height)?.let { chips += it }
             qualityLabel(f.width, f.height)?.let { chips += it }
             displayFps(f)?.let { chips += "${Math.round(it)} FPS" }
-            f.bitrate.takeIf { it > 0 }?.let { chips += "%.1f Mbps".format(it / 1_000_000.0) }
+            f.bitrate.takeIf { it > 0 }?.let { chips += "%.1f Mbps".format(Locale.ROOT, it / 1_000_000.0) }
         }
         p.audioFormat?.let { f ->
             (when (f.channelCount) { 1 -> "MONO"; 2 -> "STEREO"; 6 -> "5.1"; 8 -> "7.1"; else -> null })?.let { chips += it }
@@ -294,7 +295,7 @@ class LivePreviewEngine(
             r in 1.28f..1.40f -> "4:3"
             r >= 2.15f -> "21:9"
             r in 1.55f..1.66f -> "16:10"
-            else -> "%.2f:1".format(r)
+            else -> "%.2f:1".format(Locale.ROOT, r)
         }
     }
     private fun qualityLabel(w: Int, h: Int): String? = classifyResolution(w, h)

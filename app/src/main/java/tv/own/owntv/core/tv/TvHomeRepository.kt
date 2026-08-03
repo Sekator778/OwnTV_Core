@@ -42,6 +42,7 @@ import tv.own.owntv.core.launcher.LauncherRecommendationPlanner
 import tv.own.owntv.core.model.MediaType
 import tv.own.owntv.features.settings.data.SettingsRepository
 import java.security.MessageDigest
+import java.util.Locale
 
 /** Mirrors the app's continue-watching state into Android TV provider rows. */
 // androidx.tvprovider's PreviewChannel/PreviewProgram/WatchNextProgram builders are the documented,
@@ -621,7 +622,8 @@ class TvHomeRepository(
     private fun platformInternalId(surface: TvProviderSurface, profileId: Long, mediaType: MediaType, stableKey: String): String =
         "owntv:${surface.name.lowercase()}:${sha256Hex("$profileId|${mediaType.name}|$stableKey")}"
 
-    private fun sha256Hex(value: String): String = sha256Bytes(value).joinToString("") { "%02x".format(it) }
+    private fun sha256Hex(value: String): String =
+        sha256Bytes(value).joinToString("") { "%02x".format(Locale.ROOT, it) }
 
     private fun sha256Bytes(value: String): ByteArray =
         MessageDigest.getInstance("SHA-256").digest(value.toByteArray(Charsets.UTF_8))

@@ -904,6 +904,82 @@ class TestGenSupportedLocales(unittest.TestCase):
 
 
 # ===========================================================================
+# check_number_locale.py
+# ===========================================================================
+
+class TestCheckNumberLocale(unittest.TestCase):
+
+    def setUp(self):
+        self.checker = _load("number_locale_test", "tools/i18n/check_number_locale.py")
+        self.tmpdir = Path(tempfile.mkdtemp())
+        self.source = self.tmpdir / "Sample.kt"
+        self.allowlist = self.tmpdir / "allowlist.txt"
+        self.allowlist.write_text("")
+
+    def _check(self, source):
+        self.source.write_text(source)
+        return self.checker.check([self.source], self.allowlist)[0]
+
+    def test_root_locale_passes_for_static_and_extension_calls(self):
+        errors = self._check('''
+            val first = String.format(Locale.ROOT, "%d", value)
+            val second = "%1$.2f".format(java.util.Locale.ROOT, nested(value, other))
+        ''')
+        self.assertEqual([], errors)
+
+    def test_missing_and_non_root_locales_fail(self):
+        for expression in (
+            '"%d".format(value)',
+            '"%d".format(Locale.getDefault(), value)',
+            '"%d".format(Locale.US, value)',
+            '"%d".format(locale, value)',
+            'String.format("%d", value)',
+        ):
+            with self.subTest(expression=expression):
+                self.assertTrue(self._check(f"val result = {expression}"))
+
+    def test_reviewed_display_waiver_passes(self):
+        self.source.write_text('val result = "%d".format(value)')
+        path = self.source.as_posix()
+        self.allowlist.write_text(f"DISPLAY\t{path}\t%d\t1\tLocalized value at a final UI renderer\n")
+        errors, used = self.checker.check([self.source], self.allowlist)
+        self.assertEqual([], errors)
+        self.assertEqual({(path, "%d", 1)}, used)
+
+    def test_hex_and_octal_are_mechanically_excluded(self):
+        self.assertEqual([], self._check('''
+            val hex = "%08x".format(value)
+            val octal = String.format("%o", value)
+        '''))
+
+    def test_comments_and_strings_with_fake_calls_are_ignored(self):
+        self.assertEqual([], self._check(r'''
+            // "%d".format(value)
+            /* String.format("%f", value) */
+            val normal = "fake: \\"%d\\".format(value)"
+            val triple = """fake: "%d".format(value)"""
+        '''))
+
+    def test_triple_and_interpolated_format_literals_are_scanned(self):
+        errors = self._check(r'''
+            val first = """count=$value %d""".format(Locale.ROOT, value)
+            val second = "count=${value}: %d".format(Locale.ROOT, value)
+        ''')
+        self.assertEqual([], errors)
+
+    def test_occurrence_distinguishes_identical_literals(self):
+        self.source.write_text('''
+            val first = "%d".format(Locale.ROOT, one)
+            val second = "%d".format(two)
+        ''')
+        path = self.source.as_posix()
+        self.allowlist.write_text(f"DISPLAY\t{path}\t%d\t2\tSecond call is localized display output\n")
+        errors, used = self.checker.check([self.source], self.allowlist)
+        self.assertEqual([], errors)
+        self.assertEqual({(path, "%d", 2)}, used)
+
+
+# ===========================================================================
 # check_pseudo_locales.py
 # ===========================================================================
 
