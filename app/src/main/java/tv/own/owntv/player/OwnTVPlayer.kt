@@ -26,7 +26,6 @@ import tv.own.owntv.features.settings.data.SubtitleStyle
 import java.util.Locale
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
-import java.util.Locale
 
 /**
  * A selectable audio/subtitle track. [mpvId] is the mpv track id used for `aid`/`sid` (when ExoPlayer
