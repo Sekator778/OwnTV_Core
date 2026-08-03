@@ -13,7 +13,6 @@ import androidx.media3.common.util.Util
 import androidx.media3.datasource.okhttp.OkHttpDataSource
 import androidx.media3.exoplayer.DefaultLoadControl
 import tv.own.owntv.features.settings.data.LiveBuffer
-import androidx.media3.exoplayer.DefaultRenderersFactory
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.exoplayer.Renderer
 import androidx.media3.exoplayer.hls.DefaultHlsExtractorFactory
@@ -1758,28 +1757,16 @@ class LivePreviewEngine(
             )
             .setTargetBufferBytes(LiveBuffer.targetBufferBytes(liveBufferSecs, defaultBytes))
             .build()
-        // forceDisableMediaCodecAsynchronousQueueing(): Media3 runs MediaCodec asynchronously by default on
-        // API 31+, which corrupts (macroblocks) some UHD-HEVC streams on Realtek/Amlogic VPUs — the
-        // synchronous path is what players like TiviMate use to avoid it. Channels it still can't decode
-        // cleanly are handed to mpv via the per-channel "force mpv" routing.
-        //
+        // Decode-path config is shared with the other ExoPlayer engines — see [ownTVRenderers].
         // The audio sink is pinned to stereo PCM when the user asked for "Stereo only" or when the
         // session latch has tripped. This is the half of the surround setting that never existed:
         // the old boolean only reached mpv, while Live TV's default engine is this one, so a TV that
         // mis-plays Dolby got exactly the same treatment however the switch was set.
-        val renderers = OwnTVRenderersFactory(context, forceStereo = !AudioOutputPolicy.allowsMultichannel(surroundMode))
-            .forceDisableMediaCodecAsynchronousQueueing()
-            .apply {
-                // Software first, hardware still in the list as a backstop — Media3 walks the decoder
-                // list in order and falls through on failure, so this can only add a route.
-                if (!hwDecodingEnabled) {
-                    setMediaCodecSelector { mime, secure, tunneling ->
-                        androidx.media3.exoplayer.mediacodec.MediaCodecSelector.DEFAULT
-                            .getDecoderInfos(mime, secure, tunneling)
-                            .sortedBy { it.hardwareAccelerated }
-                    }
-                }
-            }
+        val renderers = ownTVRenderers(
+            context,
+            forceStereo = !AudioOutputPolicy.allowsMultichannel(surroundMode),
+            softwareFirst = !hwDecodingEnabled,
+        )
         return ExoPlayer.Builder(context)
             .setRenderersFactory(renderers)
             .setMediaSourceFactory(DefaultMediaSourceFactory(httpDataSourceFor(currentUa)))

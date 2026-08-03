@@ -76,7 +76,14 @@ data class MediaMeta(
  *  `create_link` — the stored [url] is the season cmd shared by the whole queue, and each play needs
  *  a fresh short-lived link). Null (M3U/Xtream) = load [url] directly, exactly as before. */
 @Immutable
-data class PlaylistItem(val url: String, val meta: MediaMeta = MediaMeta(), val resolveUrl: (suspend () -> String)? = null)
+data class PlaylistItem(
+    val url: String,
+    val meta: MediaMeta = MediaMeta(),
+    val resolveUrl: (suspend () -> String)? = null,
+    /** Per-item HTTP headers (M3U `#EXTVLCOPT`/`#EXTHTTP`/`#KODIPROP`), stored `Key: Value` per line.
+     *  Applied to whichever engine loads this item; null = the source's own UA/headers only. */
+    val httpHeaders: String? = null,
+)
 
 /** Whether prev/next are available in the current queue. */
 @Immutable
@@ -148,6 +155,10 @@ class OwnTVPlayer(
 
         // mpv's stock subtitle values, restored verbatim for every option of the custom look (#96)
         // that is left on "Default" — or whenever the master toggle is off.
+        /** Consecutive automatic Exo→mpv VOD fallbacks that arm the session latch — see
+         *  [noteExoVodFallback]. Three is "not a coincidence" without punishing a bad run of files. */
+        private const val EXO_VOD_LATCH_AFTER = 3
+
         private const val MPV_DEFAULT_SUB_COLOR = "#FFFFFFFF"
         private const val MPV_DEFAULT_SUB_BACK_COLOR = "#00000000"
         private const val MPV_DEFAULT_SUB_SCALE = 1.0
@@ -447,6 +458,9 @@ class OwnTVPlayer(
     // Per-channel HTTP headers for the item being played (M3U `#EXTVLCOPT`/`#EXTHTTP`/`#KODIPROP`,
     // F16). A `User-Agent` in here overrides the per-source one — it is the more specific setting.
     private var currentHeaders: Map<String, String> = emptyMap()
+    // The source-level UA for the queue currently loaded (playEpisodes). Each item re-derives
+    // currentUserAgent from its own headers and falls back to this.
+    private var queueUserAgent: String? = null
     // Diagnostics for the "smooth on the first mpv channel, slightly juddery from the second onward"
     // report: how many loads this (reused) mpv core has served, and whether the last one recreated the
     // SurfaceView. Read back in the one-shot "display timing" log.
@@ -821,7 +835,13 @@ class OwnTVPlayer(
             }
         }.launchIn(scope)
         settings.autoPlayNext.onEach { autoPlayNext = it }.launchIn(scope)
-        settings.vodPreferExo.onEach { vodPreferExo = it }.launchIn(scope) // applies from the next VOD load
+        // Applies from the next VOD load. Touching the setting is an explicit "try it again" from the
+        // user, so it also clears the session latch armed by repeated ExoPlayer failures.
+        settings.vodPreferExo.onEach {
+            vodPreferExo = it
+            exoVodSessionLatched = false
+            exoVodFallbacksThisSession = 0
+        }.launchIn(scope)
         settings.measuredStreamStats.onEach { on ->
             measuredStreamStats = on
             if (!on) exoEngine?.setBitrateTrackingEnabled(false) // turning it off stops any in-flight measuring now
@@ -1147,6 +1167,10 @@ class OwnTVPlayer(
     // falls back to mpv (the reverse chain); a later terminal mpv failure shows the combined error.
     @Volatile private var exoPrimaryThisItem = false
     @Volatile private var exoFailureBeforeMpv: String? = null
+    // Consecutive automatic Exo→mpv VOD fallbacks this session, and the latch they arm — see
+    // [noteExoVodFallback]. Reset by a VOD that actually renders on Exo, and by a setting change.
+    @Volatile private var exoVodFallbacksThisSession = 0
+    @Volatile private var exoVodSessionLatched = false
     // A VOD load that wants to start on ExoPlayer but arrived before the surface exists (first open):
     // attachSurface flushes pendingUrl into startExo instead of mpv's startLoad.
     @Volatile private var pendingExoStart = false
@@ -1215,6 +1239,9 @@ class OwnTVPlayer(
         }
         override fun onFirstFrame() {
             _buffering.value = false; _freezeFrame.value = null
+            // A VOD that actually renders on Exo clears the consecutive-failure run: the session latch
+            // is meant for a device where Exo never works, not for one awkward file among good ones.
+            if (exoPrimaryThisItem) exoVodFallbacksThisSession = 0
             // Exo owns this VOD as an engine (fallback/preferred): re-list previously downloaded subs
             // (§9), same as mpv's FILE_LOADED hook. Re-fires after each side-load re-prepare, but the
             // restore path no-ops when there's nothing new to attach.
@@ -1234,12 +1261,12 @@ class OwnTVPlayer(
             _subCount.value = tracks.size
         }
         override fun onVideoFps(fps: Float) { _videoFps.value = fps; updateStreamChips() }
-        override fun onError(message: String) {
-            // Image-sub handoff → give playback back to mpv. Engine chains: Exo-as-primary falls back to
-            // mpv; Exo-as-fallback means mpv already failed this item, so reloading it there would just
-            // loop — surface the combined both-engines error.
+        // Image-sub handoff → give playback back to mpv. Engine chains: Exo-as-primary falls back to
+        // mpv; Exo-as-fallback means mpv already failed this item, so reloading it there would just
+        // loop — surface the combined both-engines error.
+        override fun onError(message: String, decodeFailure: Boolean) {
             when {
-                exoVodFallback && exoPrimaryThisItem -> scope.launch { fallbackToMpvVod(message) }
+                exoVodFallback && exoPrimaryThisItem -> scope.launch { fallbackToMpvVod(message, decodeFailure) }
                 exoVodFallback -> scope.launch { failBothEngines(message) }
                 else -> scope.launch { revertToMpv(error = message) }
             }
@@ -1503,13 +1530,22 @@ class OwnTVPlayer(
                 startExo(url, _position.value, surface, sub)
             }
         }
-        // Mid-GOP archive rendered nothing on Exo's hardware decoder: pin this item to software (the
-        // quirk store already learned the panel) and restart it from the beginning — an archive has no
-        // Range support, so resuming at an offset would fail outright.
-        engine.onArchiveSoftwareFallback = {
+        // ExoPlayer's own software rung: this item failed on Exo's hardware decoder in a way a software
+        // decoder can plausibly fix, so restart it HERE rather than handing it to mpv. Keeps the ladder
+        // symmetric (Exo hardware → Exo software → mpv hardware → mpv copy → mpv software) instead of
+        // leaving the user's preferred engine after a single hardware stumble.
+        //
+        // fromStart: a mid-GOP archive has no Range support, so resuming at an offset would fail
+        // outright — it restarts at 0. A normal movie/episode resumes where it stopped.
+        engine.onSoftwareRescue = { _, fromStart ->
             if (restartGen == loadGeneration && exoActive) {
                 forceSoftwareThisLoad = true
-                startExo(url, 0L, surface, sub)
+                PlaybackErrorLog.event(
+                    context, "exoplayer", isLiveContent,
+                    what = "Fell back to software decoding",
+                    detail = "hardware decoder produced no usable video on ExoPlayer",
+                )
+                startExo(url, if (fromStart) 0L else _position.value, surface, sub)
             }
         }
         val extSelect = pendingExoExternalSelect
@@ -1602,17 +1638,65 @@ class OwnTVPlayer(
         return true
     }
 
+    /**
+     * Book-keeping for an automatic ExoPlayer → mpv VOD fallback, so the user stops paying for the
+     * same discovery twice.
+     *
+     * Two independent memories, both deliberately conservative:
+     *
+     * 1. **Per item (persisted, decode failures only).** ExoPlayer proved it cannot decode THIS file
+     *    on this TV — on hardware and on software, since the software rung ran first. That verdict is
+     *    about the file and the device, so it is pinned and the next play starts on mpv immediately.
+     *    A network/source error is never pinned: it says nothing about the file. The user can always
+     *    override with the HUD engine toggle, which writes the opposite pin.
+     *
+     * 2. **Per session (not persisted, any cause).** [EXO_VOD_LATCH_AFTER] consecutive items falling
+     *    back means the problem is the device, not the files — every further movie would open on Exo,
+     *    stumble, and switch. So Exo stops being the preferred VOD engine for the rest of the session.
+     *    Mirrors [AudioOutputPolicy]'s stereo latch, and like it, clears on restart and whenever the
+     *    user changes the setting — so it can never permanently strand anyone on the wrong engine.
+     */
+    private fun noteExoVodFallback(decodeFailure: Boolean) {
+        if (decodeFailure) {
+            val key = currentContentKey ?: currentUrl
+            if (key != null) {
+                android.util.Log.w(TAG, "pinning this item to mpv — ExoPlayer can't decode it on this device")
+                scope.launch { vodEngineStore.pin(key, tv.own.owntv.core.player.VodEnginePin.MPV) }
+            }
+        }
+        exoVodFallbacksThisSession++
+        if (exoVodFallbacksThisSession >= EXO_VOD_LATCH_AFTER && !exoVodSessionLatched) {
+            exoVodSessionLatched = true
+            android.util.Log.w(
+                TAG,
+                "ExoPlayer failed $exoVodFallbacksThisSession VOD items in a row — preferring mpv for the rest of this session",
+            )
+            PlaybackErrorLog.event(
+                context, "exoplayer", live = false,
+                what = "Switched Movies & Series to mpv for this session",
+                detail = "ExoPlayer failed $exoVodFallbacksThisSession items in a row",
+            )
+        }
+    }
+
     /** ExoPlayer-preferred mode: the item started on Exo and Exo failed — retry it on mpv (the reverse
      *  of [fallbackToExoVod]). mpv gets its full retry ladder; a terminal mpv failure after this shows
      *  the combined both-engines error via [vodErrorMessage]. */
-    private fun fallbackToMpvVod(exoError: String) {
+    private fun fallbackToMpvVod(exoError: String, decodeFailure: Boolean = false) {
         if (!exoActive) return
         val url = currentUrl ?: return
         android.util.Log.w(TAG, "VOD terminally failed on ExoPlayer ($exoError) — falling back to mpv")
         val pos = engineSwitchResumePos()
+        noteExoVodFallback(decodeFailure)
         exoFailureBeforeMpv = exoError
         exoPrimaryThisItem = false
         triedExoVodFallback = true // never bounce this item back to Exo
+        // mpv starts on its OWN hardware rung and walks its own ladder from there (hardware → copy →
+        // software). "ExoPlayer couldn't decode this in hardware" says nothing about mpv's hardware
+        // path: the two negotiate MediaCodec differently, which is the whole reason both engines
+        // exist. Carrying Exo's software verdict over would skip the rung most likely to work.
+        forceSoftwareThisLoad = false
+        triedCopyRescue = false
         deactivateExo()
         _buffering.value = true
         loadUrl(url, currentMetaSnapshot(), isLive = false, pos, resetRetries = false)
@@ -2002,8 +2086,9 @@ class OwnTVPlayer(
     /** Play a queue (a season's episodes) starting at [startIndex] — enables prev/next.
      *  [userAgent] is the per-source custom UA from source settings; null means use the default. */
     fun playEpisodes(items: List<PlaylistItem>, startIndex: Int, startPositionMs: Long = 0, userAgent: String? = null) {
-        currentHeaders = emptyMap() // per-channel headers are a live-channel property; never carry them into a queue
-        currentUserAgent = userAgent?.takeIf { it.isNotBlank() }
+        // Headers are a per-ITEM property in a queue (an M3U episode line can carry its own
+        // #EXTVLCOPT), so they're applied in loadItem, not once for the whole queue.
+        queueUserAgent = userAgent?.takeIf { it.isNotBlank() }
         playlist = items
         playlistIndex = startIndex.coerceIn(0, (items.size - 1).coerceAtLeast(0))
         val item = items.getOrNull(playlistIndex) ?: return
@@ -2038,6 +2123,10 @@ class OwnTVPlayer(
      *  load/stop supersedes it meanwhile (same generation guard as the live reconnect resolve). */
     private fun loadItem(item: PlaylistItem, startPositionMs: Long) {
         val resolve = item.resolveUrl
+        // Per-item headers replace (never merge with) the previous item's, so a queue that mixes
+        // header-carrying and plain episodes can't leak one item's Referer onto the next.
+        currentHeaders = StreamHeaders.decode(item.httpHeaders)
+        currentUserAgent = StreamHeaders.userAgentOf(currentHeaders) ?: queueUserAgent
         // F12 — a queue item that mints its URL (Stalker episode) reuses that same resolver as its
         // reconnect provider, so a retry after the short-lived link expires asks the portal again
         // instead of replaying a dead URL. An item with a stable URL clears the previous item's
@@ -2194,7 +2283,8 @@ class OwnTVPlayer(
             pinKey != null && pinKey in vodPinnedExo -> true
             url in vodPinnedMpv -> { migrateVodPin(url, pinKey); false }
             url in vodPinnedExo -> { migrateVodPin(url, pinKey); true }
-            else -> vodPreferExo
+            // The session latch loses to an explicit per-item pin (handled above) but beats the setting.
+            else -> vodPreferExo && !exoVodSessionLatched
         }
         if (!isLive && startOnExo && resetRetries && !isArchive) {
             exoPrimaryThisItem = true

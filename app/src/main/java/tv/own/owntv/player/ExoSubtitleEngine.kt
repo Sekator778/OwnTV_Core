@@ -15,9 +15,7 @@ import androidx.media3.common.text.CueGroup
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.datasource.okhttp.OkHttpDataSource
 import androidx.media3.exoplayer.DefaultLoadControl
-import androidx.media3.exoplayer.DefaultRenderersFactory
 import androidx.media3.exoplayer.ExoPlayer
-import androidx.media3.exoplayer.mediacodec.MediaCodecSelector
 import androidx.media3.exoplayer.source.DefaultMediaSourceFactory
 import androidx.media3.exoplayer.trackselection.DefaultTrackSelector
 import kotlinx.coroutines.launch
@@ -62,7 +60,10 @@ class ExoSubtitleEngine(
          *  this engine owns playback as a VOD engine (mpv never probed the file, so its list is empty). */
         fun onTextTracks(tracks: List<TrackOption>)
         fun onVideoFps(fps: Float)
-        fun onError(message: String)
+        /** [decodeFailure] = this device could not decode the video, on hardware OR software (the
+         *  software rung was already spent or refused). A verdict about the file+device, not about the
+         *  network — so the owner may remember it, unlike a transient load error. */
+        fun onError(message: String, decodeFailure: Boolean = false)
         /** Playback reached the end of the file (drives VOD auto-play-next while this engine is active). */
         fun onEnded()
     }
@@ -115,19 +116,43 @@ class ExoSubtitleEngine(
                 "no video frame after ${noVideoTimeoutMs()}ms — falling back " +
                     "(decodedDrops=${currentDroppedFrames(player) - dropsBaseline} format=${player?.videoFormat?.sampleMimeType})",
             )
-            // A catch-up archive on the hardware decoder gets one software retry first: this exact
-            // symptom (audio plays, no frame ever renders) is what a mid-GOP timeshift segment does to
-            // decoders that can't resync, and a software decoder picks up at the next keyframe. The panel
-            // is remembered so the session's remaining archives open in software straight away.
+            // One software retry before giving up on this engine. "Audio plays, no frame ever renders"
+            // is precisely what a hardware decoder does when it accepts a format it can't actually
+            // handle — and a software decoder usually can. For a catch-up archive it is also the
+            // mid-GOP signature (a software decoder picks up at the next keyframe), so the panel is
+            // remembered and the session's remaining archives open in software straight away.
             val url = currentUrl
-            if (isArchiveItem && !softwarePreferred && url != null) {
-                LiveStreamQuirks.rememberArchiveNeedsSoftware(url)
-                android.util.Log.w(TAG, "archive rescue: restarting catch-up in software decode")
-                onArchiveSoftwareFallback?.invoke(url)
+            if (softwareRungAvailable() && url != null) {
+                if (isArchiveItem) LiveStreamQuirks.rememberArchiveNeedsSoftware(url)
+                android.util.Log.w(TAG, "software rescue: no frame on the hardware decoder, restarting in software decode")
+                onSoftwareRescue?.invoke(url, isArchiveItem)
                 return@Runnable
             }
-            callbacks.onError("Audio is playing, but video could not be rendered on this device.")
+            callbacks.onError(
+                "Audio is playing, but video could not be rendered on this device.",
+                decodeFailure = true,
+            )
         }
+    }
+
+    /**
+     * Whether this item can still be retried on a software decoder in THIS engine.
+     *
+     * Already on software → the rung is spent (and `start` sets `softwarePreferred` for the retry, so
+     * this is also what stops it looping). Above 1080p → refused, exactly as mpv's
+     * `canTrySoftwareRescue` refuses it: software-decoding 4K on TV silicon is a slideshow, not a
+     * rescue, and the time is better spent handing the item to the other engine. An unknown height is
+     * allowed — by the time a decoder fails the format is normally known, and the no-frame watchdog
+     * still catches a bad guess.
+     */
+    private fun softwareRungAvailable(): Boolean {
+        if (softwarePreferred) return false
+        val height = player?.videoFormat?.height ?: 0
+        if (height > 1080) {
+            android.util.Log.i(TAG, "software rescue declined: ${height}p is above the software-decode ceiling")
+            return false
+        }
+        return true
     }
 
     /** How long to wait for the first frame. A catch-up archive gets far longer: it decodes in SOFTWARE
@@ -214,7 +239,19 @@ class ExoSubtitleEngine(
 
         override fun onPlayerError(error: PlaybackException) {
             android.util.Log.w(TAG, "ExoPlayer error: ${error.errorCodeName}", error)
-            callbacks.onError(friendlyError(error))
+            // A decode-class failure gets this engine's software rung before playback leaves it. The
+            // old behaviour handed EVERY Exo error straight to mpv, so a file the software decoder
+            // could play was thrown at the other engine to discover that — the ladder is now
+            // Exo hardware → Exo software → mpv hardware → mpv copy → mpv software.
+            // Network / source / DRM errors are NOT retried here: a different decoder cannot fix them,
+            // and mpv (with its own retry ladder and different HTTP stack) is the better next step.
+            val url = currentUrl
+            if (error.errorCode in DECODE_ERROR_CODES && softwareRungAvailable() && url != null) {
+                android.util.Log.w(TAG, "software rescue: ${error.errorCodeName} on the hardware decoder, restarting in software decode")
+                onSoftwareRescue?.invoke(url, isArchiveItem)
+                return
+            }
+            callbacks.onError(friendlyError(error), decodeFailure = error.errorCode in DECODE_ERROR_CODES)
         }
     }
 
@@ -229,7 +266,7 @@ class ExoSubtitleEngine(
         // [selectExternalLabel] names the one to select, or null to attach them all unselected.
         sideloadSubs: List<OwnTVPlayer.ExternalSub> = emptyList(),
         selectExternalLabel: String? = null,
-        /** Decode this item on a software decoder — see [softwareFirstSelector]. */
+        /** Decode this item on a software decoder — see [ownTVRenderers]. */
         preferSoftware: Boolean = false,
         /** This item is a catch-up / live-rewind archive: mid-GOP, so a blank picture on the hardware
          *  decoder is rescued in software instead of erroring — see [noVideoTimeout]. */
@@ -412,14 +449,6 @@ class ExoSubtitleEngine(
     /** Whether the cached player's audio sink was pinned to stereo PCM. See the rebuild check in `start`. */
     private var builtForStereo = false
 
-    /** [MediaCodecSelector.DEFAULT]'s list, reordered to put software decoders first. Media3 tries the
-     *  list in order and falls through on failure, so the hardware decoder stays available as a backstop
-     *  rather than being removed outright. */
-    private val softwareFirstSelector = MediaCodecSelector { mime, secure, tunneling ->
-        MediaCodecSelector.DEFAULT.getDecoderInfos(mime, secure, tunneling)
-            .sortedBy { it.hardwareAccelerated } // false (software) sorts before true
-    }
-
     private fun build(): ExoPlayer {
         // OkHttp for the stream itself, wrapped in DefaultDataSource so file:// URIs (side-loaded
         // external subtitle files in app storage) route to FileDataSource — the bare OkHttp factory
@@ -449,12 +478,11 @@ class ExoSubtitleEngine(
         // the item here with softwarePreferred set, which resyncs at the next keyframe.
         // Stereo pinning mirrors the live engine: "Stereo only", or a session latch tripped by ANY engine,
         // means this player must not be given a sink that can bitstream Dolby/DTS.
-        val renderers = OwnTVRenderersFactory(
+        val renderers = ownTVRenderers(
             context,
             forceStereo = !AudioOutputPolicy.allowsMultichannel(surroundMode),
-        ).apply {
-            if (softwarePreferred) setMediaCodecSelector(softwareFirstSelector)
-        }
+            softwareFirst = softwarePreferred,
+        )
         return ExoPlayer.Builder(context)
             .setRenderersFactory(renderers)
             .setMediaSourceFactory(DefaultMediaSourceFactory(dataSource))
@@ -509,9 +537,14 @@ class ExoSubtitleEngine(
     /** Fired once when the audio watchdog forces stereo; the owner shows the message and restarts. */
     var onAudioFallback: ((String) -> Unit)? = null
 
-    /** Fired when a catch-up archive rendered no video on the hardware decoder; the owner restarts this
-     *  item in software (from the beginning — archives have no Range support). */
-    var onArchiveSoftwareFallback: ((String) -> Unit)? = null
+    /** Fired when this item failed on the hardware decoder and the software rung is still available;
+     *  the owner restarts it here with `preferSoftware`. [fromStart] when the item must restart at 0
+     *  rather than resume (a catch-up archive has no Range support, so re-opening at an offset fails).
+     *
+     *  This is ExoPlayer's own software rung, the mirror of mpv's [OwnTVPlayer] rescue ladder: without
+     *  it a file that only a software decoder can handle left the preferred engine immediately, even
+     *  though the very next thing tried (mpv in software) proved software decoding was the answer. */
+    var onSoftwareRescue: ((url: String, fromStart: Boolean) -> Unit)? = null
 
     private val audioWatchdog = AudioWatchdog()
 
@@ -750,5 +783,15 @@ class ExoSubtitleEngine(
         const val NO_VIDEO_TIMEOUT_MS = 8_000L
         /** Mid-GOP + software decode needs a much longer first-frame budget — see [noVideoTimeoutMs]. */
         const val NO_VIDEO_TIMEOUT_SOFTWARE_MS = 25_000L
+
+        /** Failures a different (software) decoder can plausibly fix — see the software rescue in
+         *  `onPlayerError`. Everything else (network, source, DRM, renderer/timeout) goes to mpv. */
+        val DECODE_ERROR_CODES = setOf(
+            PlaybackException.ERROR_CODE_DECODER_INIT_FAILED,
+            PlaybackException.ERROR_CODE_DECODER_QUERY_FAILED,
+            PlaybackException.ERROR_CODE_DECODING_FAILED,
+            PlaybackException.ERROR_CODE_DECODING_FORMAT_EXCEEDS_CAPABILITIES,
+            PlaybackException.ERROR_CODE_DECODING_FORMAT_UNSUPPORTED,
+        )
     }
 }

@@ -148,6 +148,11 @@ data class MovieEntity(
     val remoteId: String? = null,
     val addedAt: Long? = null,
     val sortOrder: Int = 0,
+    /** Per-item HTTP request headers as `Key: Value` per line — see
+     *  [tv.own.owntv.core.network.StreamHeaders]. The VOD twin of [ChannelEntity.httpHeaders]: an M3U
+     *  movie entry carries the same `#EXTVLCOPT` / `#EXTHTTP` / `#KODIPROP` directives a channel does,
+     *  and a restream that answers 403 without them does so for files exactly as for live (v28). */
+    val httpHeaders: String? = null,
     @ColumnInfo(defaultValue = "0") val contentHash: Int = 0,
 )
 
@@ -241,6 +246,8 @@ data class EpisodeEntity(
     val durationSecs: Int? = null,
     val containerExt: String? = null,
     val remoteId: String? = null,
+    /** Per-item HTTP request headers — see [MovieEntity.httpHeaders] (v28). */
+    val httpHeaders: String? = null,
 )
 
 /**
@@ -270,10 +277,15 @@ fun ChannelEntity.computeContentHash(): Int {
     return if (catchupType == null && httpHeaders == null) base else Objects.hash(base, catchupType, httpHeaders)
 }
 
-fun MovieEntity.computeContentHash(): Int = Objects.hash(
-    sourceId, categoryId, name, posterUrl, backdropUrl,
-    year, rating, durationSecs, plot, streamUrl, containerExt, remoteId, addedAt,
-)
+/** [httpHeaders] is folded in only when the movie actually carries headers — same reasoning as
+ *  [ChannelEntity.computeContentHash]: no full-catalog rewrite for the 99% that don't. */
+fun MovieEntity.computeContentHash(): Int {
+    val base = Objects.hash(
+        sourceId, categoryId, name, posterUrl, backdropUrl,
+        year, rating, durationSecs, plot, streamUrl, containerExt, remoteId, addedAt,
+    )
+    return if (httpHeaders == null) base else Objects.hash(base, httpHeaders)
+}
 
 fun SeriesEntity.computeContentHash(): Int = Objects.hash(
     sourceId, categoryId, name, posterUrl, backdropUrl,

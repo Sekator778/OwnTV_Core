@@ -1,14 +1,16 @@
 package tv.own.owntv.player
 
 import android.content.Context
+import android.os.Handler
+import android.os.Looper
 import android.view.Surface
+import androidx.media3.common.C
 import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
 import androidx.media3.common.PlaybackException
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.datasource.okhttp.OkHttpDataSource
 import androidx.media3.exoplayer.DefaultLoadControl
-import androidx.media3.exoplayer.DefaultRenderersFactory
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.exoplayer.source.DefaultMediaSourceFactory
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -36,6 +38,19 @@ class HeroPreviewEngine(
     private var surface: Surface? = null
     private var hasStarted = false
 
+    // No-frame watchdog. A hero stream that connects but never renders (dead decoder, audio-only
+    // remux, a server that accepts the socket and dribbles) used to leave the engine in LOADING
+    // forever, which the Home screen draws as a spinner on top of the poster with nothing behind it.
+    // Every other engine bounds this; here it just falls back to the poster. Main-looper Handler, so
+    // it shares ExoPlayer's application thread and can hold nothing alive past [release].
+    private val watchdog = Handler(Looper.getMainLooper())
+    private val noFrameTimeout = Runnable {
+        if (currentUrl == null || hasStarted) return@Runnable
+        android.util.Log.w(TAG, "Hero preview produced no frame in ${NO_FRAME_TIMEOUT_MS}ms — falling back to the poster")
+        stop()
+        _state.value = State.ERROR
+    }
+
     private val _state = MutableStateFlow(State.IDLE)
     val state: StateFlow<State> = _state.asStateFlow()
 
@@ -60,6 +75,7 @@ class HeroPreviewEngine(
         }
 
         override fun onRenderedFirstFrame() {
+            watchdog.removeCallbacks(noFrameTimeout)
             if (currentUrl != null) _state.value = State.PLAYING
         }
 
@@ -68,6 +84,7 @@ class HeroPreviewEngine(
             // HTTP 458 = "account session in use": the provider allows one stream at a time. Remember it
             // so every engine (Live preview included) stops competing for that single session (F19d).
             currentUrl?.let { url -> if (httpStatusOf(error) == 458) LiveStreamQuirks.rememberSessionLimit(url) }
+            watchdog.removeCallbacks(noFrameTimeout)
             hasStarted = false
             currentUrl = null
             player?.run {
@@ -114,11 +131,12 @@ class HeroPreviewEngine(
             if (effectiveUa != builtForUa) { player?.release(); player = null }
             val p = player ?: build(effectiveUa).also { player = it; builtForUa = effectiveUa }
             surface?.let { p.setVideoSurface(it) }
-            p.volume = 0f
             p.repeatMode = Player.REPEAT_MODE_ONE
             p.setMediaItem(MediaItem.fromUri(url), startPositionMs)
             p.prepare()
             p.playWhenReady = true
+            watchdog.removeCallbacks(noFrameTimeout)
+            watchdog.postDelayed(noFrameTimeout, NO_FRAME_TIMEOUT_MS)
         }.onFailure {
             android.util.Log.w(TAG, "Hero preview play failed for ${HttpClient.redactUrl(url)}", it)
             hasStarted = false
@@ -132,6 +150,7 @@ class HeroPreviewEngine(
     }
 
     fun stop() {
+        watchdog.removeCallbacks(noFrameTimeout)
         currentUrl = null
         hasStarted = false
         _state.value = State.IDLE
@@ -142,6 +161,7 @@ class HeroPreviewEngine(
     }
 
     fun release() {
+        watchdog.removeCallbacks(noFrameTimeout)
         player?.run {
             removeListener(listener)
             release()
@@ -159,14 +179,31 @@ class HeroPreviewEngine(
             .setBufferDurationsMs(2_000, 8_000, 1_000, 2_000)
             .build()
         return ExoPlayer.Builder(context)
-            .setRenderersFactory(DefaultRenderersFactory(context))
+            // Shares the decode-path config of the real engines ([ownTVRenderers]) instead of a stock
+            // factory: the hero preview draws the same UHD-HEVC trailers the player does, on the same
+            // VPU. forceStereo is belt-and-braces — the audio track is disabled below, so no sink is
+            // built at all, but nothing here may ever claim the HDMI passthrough output.
+            .setRenderersFactory(ownTVRenderers(context, forceStereo = true))
             .setMediaSourceFactory(DefaultMediaSourceFactory(dataSource))
             .setLoadControl(loadControl)
             .build()
-            .apply { addListener(listener) }
+            .apply {
+                // The preview is silent by definition. `volume = 0f` still decoded the audio track and
+                // opened a real AudioTrack — on a surround setup that could be an encoded passthrough
+                // sink, held by a muted home-screen preview while the actual player wanted it.
+                // Disabling the track type outright costs no decoder, no sink, and no contention.
+                trackSelectionParameters = trackSelectionParameters.buildUpon()
+                    .setTrackTypeDisabled(C.TRACK_TYPE_AUDIO, true)
+                    .build()
+                volume = 0f
+                addListener(listener)
+            }
     }
 
     companion object {
         private const val TAG = "HeroPreviewEngine"
+
+        /** No first frame within this window → give up and leave the poster showing. */
+        private const val NO_FRAME_TIMEOUT_MS = 12_000L
     }
 }

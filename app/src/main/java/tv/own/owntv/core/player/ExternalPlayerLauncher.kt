@@ -3,8 +3,10 @@ package tv.own.owntv.core.player
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import android.os.Bundle
 import android.widget.Toast
 import androidx.core.content.FileProvider
+import tv.own.owntv.core.network.StreamHeaders
 import java.io.File
 
 // Hands a stream URL (or a downloaded file path) to an external video player (VLC, MX Player, etc.)
@@ -14,12 +16,24 @@ import java.io.File
 // Network URLs (http/https/rtsp/rtmp/udp/mms) are handed over verbatim. Local download paths are
 // shared through the app FileProvider with a read permission grant.
 //
-// Limitations: no custom User-Agent / Referer / headers can be attached to an ACTION_VIEW intent,
-// so streams needing per-source auth headers may fail; no resume position or prev/next queue.
+// A source's User-Agent and any per-channel request headers are passed as intent extras. ACTION_VIEW
+// has no standard slot for these, but VLC and MX Player both read the de-facto keys used below, so a
+// stream behind a UA check or per-channel auth headers now has a chance of playing instead of a
+// guaranteed 403. Players that ignore the extras are unaffected — they see the same intent as before.
+//
+// Limitations: extras are best-effort (an unknown player may still ignore them); no resume position
+// or prev/next queue.
 class ExternalPlayerLauncher(private val context: Context) {
 
     // Open url externally. Returns true if an external app was actually launched.
-    fun launch(url: String, title: String? = null): Boolean {
+    // [userAgent] is the source's UA; [httpHeaders] is the stored `Key: Value` per-line block from
+    // ChannelEntity.httpHeaders (M3U `#EXTVLCOPT`/`#EXTHTTP`/`#KODIPROP`). Both are optional.
+    fun launch(
+        url: String,
+        title: String? = null,
+        userAgent: String? = null,
+        httpHeaders: String? = null,
+    ): Boolean {
         val uri = uriFor(url)
         if (uri == null) {
             toast("Could not open this stream.")
@@ -34,6 +48,7 @@ class ExternalPlayerLauncher(private val context: Context) {
             val intent = Intent(Intent.ACTION_VIEW)
                 .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_GRANT_READ_URI_PERMISSION)
             if (mime != null) intent.setDataAndType(uri, mime) else intent.data = uri
+            applyHeaders(intent, url, userAgent, httpHeaders)
 
             val targets = context.packageManager.queryIntentActivities(intent, 0)
             if (targets.isEmpty()) continue
@@ -62,14 +77,36 @@ class ExternalPlayerLauncher(private val context: Context) {
             .onFailure { toast("No external player found - install VLC or MX Player.") }
             .isSuccess
 
+    // Attach the source User-Agent and per-channel headers to the intent, using the keys the common
+    // Android players read. Local files need none of this, and an empty header set adds no extras.
+    //
+    // Keys, all de-facto rather than platform API:
+    //  - "headers": String[] of alternating name/value — MX Player, and VLC for Android since 3.x.
+    //  - "User-Agent": read by several players (incl. older VLC builds) as a standalone override.
+    //  - "android.media.intent.extra.HTTP_HEADERS": the Bundle form some ExoPlayer-based players use.
+    // A player that knows none of them ignores the extras entirely, which is the behaviour we had.
+    private fun applyHeaders(intent: Intent, url: String, userAgent: String?, httpHeaders: String?) {
+        if (Uri.parse(url).scheme?.lowercase() !in NETWORK_SCHEMES) return
+        val headers = LinkedHashMap<String, String>(4)
+        userAgent?.takeIf { it.isNotBlank() }?.let { headers["User-Agent"] = it }
+        // Per-channel headers win over the source UA: a playlist that sets its own User-Agent set it
+        // for this specific stream, which is the more specific instruction (same order the in-app
+        // engines apply them in).
+        headers.putAll(StreamHeaders.decode(httpHeaders))
+        if (headers.isEmpty()) return
+
+        intent.putExtra("headers", headers.flatMap { listOf(it.key, it.value) }.toTypedArray())
+        headers["User-Agent"]?.let { intent.putExtra("User-Agent", it) }
+        intent.putExtra(
+            "android.media.intent.extra.HTTP_HEADERS",
+            Bundle().apply { headers.forEach { (k, v) -> putString(k, v) } },
+        )
+    }
+
     // Network scheme: hand the URL over verbatim; otherwise treat as a local file path.
     private fun uriFor(url: String): Uri? {
         val scheme = Uri.parse(url).scheme?.lowercase()
-        if (scheme == "http" || scheme == "https" || scheme == "rtsp" ||
-            scheme == "rtmp" || scheme == "udp" || scheme == "mms"
-        ) {
-            return Uri.parse(url)
-        }
+        if (scheme in NETWORK_SCHEMES) return Uri.parse(url)
         val file = File(url)
         if (!file.exists()) return null
         val authority = context.packageName + ".fileprovider"
@@ -94,5 +131,10 @@ class ExternalPlayerLauncher(private val context: Context) {
 
     private fun toast(message: String) {
         Toast.makeText(context, message, Toast.LENGTH_LONG).show()
+    }
+
+    private companion object {
+        /** URL schemes handed to the external player as-is (everything else is a local file path). */
+        val NETWORK_SCHEMES = setOf("http", "https", "rtsp", "rtmp", "udp", "mms")
     }
 }
