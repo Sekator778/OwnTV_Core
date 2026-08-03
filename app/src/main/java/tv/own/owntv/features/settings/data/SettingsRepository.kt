@@ -145,6 +145,7 @@ class SettingsRepository(private val context: Context) {
         val HW_DECODING = booleanPreferencesKey("hw_decoding")
         val VOD_PREFER_EXO = booleanPreferencesKey("vod_prefer_exo")
         val MEASURED_STREAM_STATS = booleanPreferencesKey("measured_stream_stats")
+        val DETAILED_DIAGNOSTICS = booleanPreferencesKey("detailed_diagnostics")
         val DIRECT_TUNE = booleanPreferencesKey("direct_tune")
         val SURROUND_SOUND = booleanPreferencesKey("surround_sound")
         val SURROUND_MODE = stringPreferencesKey("surround_mode")
@@ -176,6 +177,7 @@ class SettingsRepository(private val context: Context) {
         val CATCHUP_TZ = stringPreferencesKey("catchup_timezone")
         val CATCHUP_PLAYER = stringPreferencesKey("catchup_player")
         val CATCHUP_OFFSET_MIN = intPreferencesKey("catchup_offset_minutes")
+        val EPG_OFFSET_MIN = intPreferencesKey("epg_offset_minutes")
         val ANIMATION_LEVEL = stringPreferencesKey("animation_level")
         val RESUME_LAST_CHANNEL = booleanPreferencesKey("resume_last_channel")
         val LAST_LIVE_CATEGORY = stringPreferencesKey("last_live_category")
@@ -514,6 +516,23 @@ class SettingsRepository(private val context: Context) {
         context.dataStore.edit { it[Keys.CATCHUP_OFFSET_MIN] = minutes.coerceIn(catchupOffsetRangeMinutes) }
     }
 
+    // --- EPG time offset ---
+
+    /** How far the guide may be shifted, in minutes (±12/14 h, in 30-minute steps from the UI). */
+    val epgOffsetRangeMinutes: IntRange = -12 * 60..14 * 60
+
+    /**
+     * Global guide shift, in minutes (0 = off). Some feeds publish their XMLTV in a timezone that
+     * isn't the one the channels actually air in; this moves every programme by a fixed amount.
+     * A per-channel override in the channel's long-press menu wins over this — that's what a
+     * mixed East/West lineup on a single guide needs, since one global shift can only fix one half.
+     */
+    val epgOffsetMinutes: Flow<Int> = prefsFlow { it[Keys.EPG_OFFSET_MIN] ?: 0 }
+
+    suspend fun setEpgOffsetMinutes(minutes: Int) {
+        context.dataStore.edit { it[Keys.EPG_OFFSET_MIN] = minutes.coerceIn(epgOffsetRangeMinutes) }
+    }
+
     /** The timezone catch-up/timeshift URLs are formatted in — device tz, or a manual UTC offset. */
     suspend fun resolveCatchupTimeZone(): java.util.TimeZone = when (catchupTimezone.first()) {
         CatchupTimezone.DEVICE -> java.util.TimeZone.getDefault()
@@ -642,6 +661,16 @@ class SettingsRepository(private val context: Context) {
 
     suspend fun setMeasuredStreamStats(enabled: Boolean) {
         context.dataStore.edit { it[Keys.MEASURED_STREAM_STATS] = enabled }
+    }
+
+    /** Detailed playback logging. Off (default): the live engine's trace is kept in memory only, as it
+     *  always was in a release build. On: the same trace is written to Logcat and to a bounded file, and
+     *  it rides along with an exported report — the only way a normal user can produce a live trace at
+     *  all, since a release build's diagnostics were previously compile-time off (F18). */
+    val detailedDiagnostics: Flow<Boolean> = prefsFlow { it[Keys.DETAILED_DIAGNOSTICS] ?: false }
+
+    suspend fun setDetailedDiagnostics(enabled: Boolean) {
+        context.dataStore.edit { it[Keys.DETAILED_DIAGNOSTICS] = enabled }
     }
 
     /** Type a provider channel number on the remote during full-screen live playback to jump straight
@@ -1278,10 +1307,10 @@ class SettingsRepository(private val context: Context) {
         // The STATIC-mode hidden set rides with backup so a reinstall keeps the user's hidden icons.
         Keys.NAV_MENU_HIDDEN,
     )
-    private val backupIntKeys = listOf(Keys.UI_ZOOM_PCT, Keys.AUDIO_DELAY_MS, Keys.CATCHUP_OFFSET_MIN, Keys.PROXY_PORT, Keys.DNS_PORT, Keys.CH_NAV_UP_SKIP, Keys.CH_NAV_DOWN_SKIP, Keys.MINI_PLAYER_SIZE_PCT, Keys.LIVE_LATENCY_CUSTOM_SECS, Keys.LIVE_PREROLL_SECS, Keys.GLASS_SCOPE, Keys.GLASS_ALPHA, Keys.GLASS_BLUR, Keys.SUB_BG_OPACITY)
+    private val backupIntKeys = listOf(Keys.UI_ZOOM_PCT, Keys.AUDIO_DELAY_MS, Keys.CATCHUP_OFFSET_MIN, Keys.EPG_OFFSET_MIN, Keys.PROXY_PORT, Keys.DNS_PORT, Keys.CH_NAV_UP_SKIP, Keys.CH_NAV_DOWN_SKIP, Keys.MINI_PLAYER_SIZE_PCT, Keys.LIVE_LATENCY_CUSTOM_SECS, Keys.LIVE_PREROLL_SECS, Keys.GLASS_SCOPE, Keys.GLASS_ALPHA, Keys.GLASS_BLUR, Keys.SUB_BG_OPACITY)
     private val backupBoolKeys = listOf(
         Keys.LIVE_PREVIEW, Keys.LIVE_PREVIEW_AUDIO, Keys.HDR_ENABLED, Keys.AUTO_FRAME_RATE, Keys.AUTO_FRAME_RATE_PROMPTED, Keys.ANDROID_TV_HOME, Keys.HW_DECODING,
-        Keys.VOD_PREFER_EXO, Keys.MEASURED_STREAM_STATS, Keys.DIRECT_TUNE, Keys.EXTERNAL_PLAYER,
+        Keys.VOD_PREFER_EXO, Keys.MEASURED_STREAM_STATS, Keys.DETAILED_DIAGNOSTICS, Keys.DIRECT_TUNE, Keys.EXTERNAL_PLAYER,
         Keys.EXTERNAL_PLAYER_LIVE, Keys.EXTERNAL_PLAYER_MOVIES, Keys.EXTERNAL_PLAYER_SERIES, Keys.UPDATE_CHECK_ON_START, Keys.SURROUND_SOUND, Keys.AUTO_PLAY_NEXT, Keys.PROXY_ENABLED,
         Keys.WEATHER_ENABLED, Keys.WEATHER_FAHRENHEIT, Keys.RESUME_LAST_CHANNEL, Keys.METADATA_ENABLED, Keys.CH_NAV_ENABLED,
         Keys.DNS_ENABLED,

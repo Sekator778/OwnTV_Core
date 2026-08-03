@@ -25,6 +25,7 @@ import tv.own.owntv.core.database.entity.SourceEntity
 import tv.own.owntv.core.database.entity.computeContentHash
 import tv.own.owntv.core.model.MediaType
 import tv.own.owntv.core.network.HttpClient
+import tv.own.owntv.core.network.StreamHeaders
 import tv.own.owntv.core.parser.M3uParser
 
 /**
@@ -197,6 +198,8 @@ internal class M3uSyncer(
                         catchup = entry.catchup != null,
                         catchupDays = entry.catchupDays ?: 0,
                         catchupSource = entry.catchupSource,
+                        catchupType = entry.catchup,
+                        httpHeaders = StreamHeaders.encode(entry.headers),
                     )
                 }
                 channels.forEach { seenChannelKeys.add(it.remoteId!!) }

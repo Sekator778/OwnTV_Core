@@ -80,6 +80,13 @@ data class ChannelEntity(
     /** M3U `catchup-source` URL template (with `${start}`/`${timestamp}`/… placeholders). Null for
      *  Xtream, whose timeshift URL is built from the source credentials instead. */
     val catchupSource: String? = null,
+    /** M3U `catchup` type — "default" / "append" / "shift" / "flussonic" / "xc". Decides HOW
+     *  [catchupSource] is used; without it the `append` convention can't be honoured (F17). */
+    val catchupType: String? = null,
+    /** Per-channel HTTP request headers as `Key: Value` per line — see
+     *  [tv.own.owntv.core.network.StreamHeaders]. Set from the M3U's `#EXTVLCOPT` / `#EXTHTTP` /
+     *  `#KODIPROP` directives or a `url|Key=Value` suffix; null for providers that carry none (F16). */
+    val httpHeaders: String? = null,
     @ColumnInfo(defaultValue = "0") val contentHash: Int = 0,
 )
 
@@ -248,10 +255,20 @@ data class ContentHashProjection(
     val sortOrder: Int,
 )
 
-fun ChannelEntity.computeContentHash(): Int = Objects.hash(
-    sourceId, categoryId, name, logoUrl, streamUrl,
-    epgChannelId, number, remoteId, catchup, catchupDays, catchupSource,
-)
+/**
+ * The v26 fields ([ChannelEntity.catchupType] / [ChannelEntity.httpHeaders]) are folded in ONLY when
+ * the channel actually carries one. Adding them unconditionally would change every stored hash at
+ * once and turn the next resync of a 100k-channel playlist into a full rewrite for everybody; this way
+ * only the (rare) channels that use them pay a single re-upsert, while a later change to a header or a
+ * catch-up type still propagates.
+ */
+fun ChannelEntity.computeContentHash(): Int {
+    val base = Objects.hash(
+        sourceId, categoryId, name, logoUrl, streamUrl,
+        epgChannelId, number, remoteId, catchup, catchupDays, catchupSource,
+    )
+    return if (catchupType == null && httpHeaders == null) base else Objects.hash(base, catchupType, httpHeaders)
+}
 
 fun MovieEntity.computeContentHash(): Int = Objects.hash(
     sourceId, categoryId, name, posterUrl, backdropUrl,

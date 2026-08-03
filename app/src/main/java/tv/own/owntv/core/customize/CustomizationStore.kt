@@ -62,6 +62,10 @@ data class SectionCustomizations(
     val categoryOrder: List<String> = emptyList(),
     /** Manual EPG match: item key → the EPG channel id to use (overrides the channel's own epg id). */
     val epgMatches: Map<String, String> = emptyMap(),
+    /** Per-channel EPG time shift: item key → minutes to move the guide by (as a string, so it
+     *  shares the JSON map helpers). Overrides the global offset; needed when East/West feeds of the
+     *  same network share one guide and only one of them is on the guide's clock. */
+    val epgShifts: Map<String, String> = emptyMap(),
     /** User-created combined categories (issue #87); membership lives in Room. */
     val customCategories: List<CustomCategory> = emptyList(),
     /** Items moved OUT of a provider category into a custom category (issue #87): item key → the
@@ -73,7 +77,7 @@ data class SectionCustomizations(
     val isEmpty: Boolean
         get() = hiddenCategories.isEmpty() && hiddenItems.isEmpty() && categoryNames.isEmpty() &&
             itemNames.isEmpty() && categoryOrder.isEmpty() && epgMatches.isEmpty() &&
-            customCategories.isEmpty() && movedFromOrigin.isEmpty()
+            epgShifts.isEmpty() && customCategories.isEmpty() && movedFromOrigin.isEmpty()
 }
 
 /**
@@ -142,6 +146,14 @@ class CustomizationStore(private val context: Context) {
         update(profileId, type) {
             val key = epgChannelId?.trim()?.lowercase()?.takeIf { it.isNotEmpty() }
             it.copy(epgMatches = if (key == null) it.epgMatches - itemKey else it.epgMatches + (itemKey to key))
+        }
+
+    /** Shift this channel's guide by [minutes]; null clears the override → the global EPG offset.
+     *  An explicit 0 IS an override — it pins one channel to the feed's own times while a global
+     *  offset moves the rest. */
+    suspend fun setEpgShift(profileId: Long, type: MediaType, itemKey: String, minutes: Int?) =
+        update(profileId, type) {
+            it.copy(epgShifts = if (minutes == null) it.epgShifts - itemKey else it.epgShifts + (itemKey to minutes.toString()))
         }
 
     /**
@@ -240,6 +252,7 @@ class CustomizationStore(private val context: Context) {
                 itemNames = o.optJSONObject("itemNames").toStringMap(),
                 categoryOrder = o.optJSONArray("catOrder").toStringList(),
                 epgMatches = o.optJSONObject("epgMatch").toStringMap(),
+                epgShifts = o.optJSONObject("epgShift").toStringMap(),
                 customCategories = o.optJSONArray("customCats").toCustomCategories(),
                 movedFromOrigin = o.optJSONObject("movedFrom").toStringMap(),
             )
@@ -253,6 +266,7 @@ class CustomizationStore(private val context: Context) {
         put("itemNames", JSONObject(c.itemNames as Map<*, *>))
         put("catOrder", JSONArray(c.categoryOrder))
         put("epgMatch", JSONObject(c.epgMatches as Map<*, *>))
+        put("epgShift", JSONObject(c.epgShifts as Map<*, *>))
         put("movedFrom", JSONObject(c.movedFromOrigin as Map<*, *>))
         put(
             "customCats",

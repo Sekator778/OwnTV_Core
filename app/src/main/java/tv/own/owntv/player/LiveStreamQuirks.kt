@@ -69,6 +69,7 @@ object LiveStreamQuirks {
     private val segmentRefusingHosts = ConcurrentHashMap.newKeySet<String>()
     private val singleSessionHosts = ConcurrentHashMap.newKeySet<String>()
     private val brokenTimestampStreams = ConcurrentHashMap.newKeySet<String>()
+    private val softwareArchiveHosts = ConcurrentHashMap.newKeySet<String>()
 
     /** Record that [url]'s host serves HLS even when its advertised URL says `.ts`. */
     fun rememberHlsRedirect(url: String) { hlsRedirectHosts += hostKey(url) }
@@ -124,9 +125,30 @@ object LiveStreamQuirks {
 
     fun hasBrokenTimestamps(url: String): Boolean = url in brokenTimestampStreams
 
+    /**
+     * Record that this panel's catch-up archive needs a SOFTWARE video decoder.
+     *
+     * Archive (timeshift) segments start mid-GOP, and some TV-class hardware decoders can't resync from
+     * that: the decoder accepts the format, audio plays, and no video frame is ever emitted (Realtek OMX:
+     * "setPortMode … DynamicANWBuffer failed", "BAD CODEC: stride 1920 -> 64"). A software decoder picks
+     * up cleanly at the next keyframe.
+     *
+     * Catch-up used to be pinned to software *unconditionally* for that reason, which cost every panel
+     * hardware decoding — including the majority whose decoders cope fine. So archives now open in
+     * hardware and drop to software only once this panel has actually been caught failing; the cost of a
+     * panel that does fail is one silent retry on the session's first catch-up.
+     *
+     * Panel-wide, because the mid-GOP archive mux is a property of the panel's timeshift server, not of
+     * one channel. Session-scoped like every other quirk here — a re-learn per app run is cheap and keeps
+     * a one-off decoder hiccup from permanently downgrading a healthy provider.
+     */
+    fun rememberArchiveNeedsSoftware(url: String) { softwareArchiveHosts += hostKey(url) }
+
+    fun archiveNeedsSoftware(url: String): Boolean = hostKey(url) in softwareArchiveHosts
+
     /** Test hook — the session cache is never cleared in production. */
     internal fun clearForTest() {
         hlsRedirectHosts.clear(); segmentRefusingHosts.clear(); singleSessionHosts.clear()
-        brokenTimestampStreams.clear()
+        brokenTimestampStreams.clear(); softwareArchiveHosts.clear()
     }
 }

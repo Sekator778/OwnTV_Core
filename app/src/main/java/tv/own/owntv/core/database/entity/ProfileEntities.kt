@@ -62,6 +62,16 @@ data class SourceEntity(
      * period — a user with one bad panel and three good ones should not have to slow all four down.
      */
     val livePrerollSecs: Int = FOLLOW_GLOBAL_PREROLL,
+    /**
+     * How many simultaneous streams the provider allows (v27), from Xtream's
+     * `user_info.max_connections`. `0` = unknown (M3U/Stalker, an older row, or a panel that doesn't
+     * report it).
+     *
+     * `1` is the interesting value: the two playback engines must never overlap on such an account, and
+     * until now the app only found that out by failing a tune and reading the 458 back. Knowing it at
+     * sync time means the very first zap already behaves.
+     */
+    val maxConnections: Int = 0,
     val createdAt: Long = System.currentTimeMillis(),
     val lastSyncAt: Long? = null,
 )

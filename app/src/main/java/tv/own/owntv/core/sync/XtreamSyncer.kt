@@ -35,9 +35,13 @@ internal class XtreamSyncer(
         val details = runCatching { xtream.fetchAccountDetails(s) }.getOrNull()
         if (details != null) {
             support.sourceDao.updateHlsSupport(s.id, details.hlsSupported)
+            // The panel states its session limit up front; the app used to learn it only by failing a
+            // tune and reading the 458 back (F30). Stored, so it also survives a restart.
+            support.sourceDao.updateMaxConnections(s.id, details.maxConnections)
+            if (details.maxConnections == 1) tv.own.owntv.player.LiveStreamQuirks.rememberSessionLimit(s.url)
         }
         val semaphore = Semaphore(2)
-        Log.i(TAG, "Xtream sync scheduling sourceId=${s.id} contentTypes=$contentTypes concurrency=2 hlsSupported=${details?.hlsSupported}")
+        Log.i(TAG, "Xtream sync scheduling sourceId=${s.id} contentTypes=$contentTypes concurrency=2 hlsSupported=${details?.hlsSupported} maxConnections=${details?.maxConnections}")
         coroutineScope {
             if (contentTypes.live) async { semaphore.withPermit { syncLive(s, progress, stats) } }
             if (contentTypes.movies) async { semaphore.withPermit { syncMovies(s, progress, stats) } }

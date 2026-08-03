@@ -114,6 +114,11 @@ class OwnTVDatabaseMigrationTest {
             assertColumnExists(sqlite, "sources", "mac")
             // v25: per-playlist "Pre-buffer" override.
             assertColumnExists(sqlite, "sources", "livePrerollSecs")
+            // v26: M3U catch-up style + per-channel HTTP headers.
+            assertColumnExists(sqlite, "channels", "catchupType")
+            assertColumnExists(sqlite, "channels", "httpHeaders")
+            // v27: Xtream session limit read at sync.
+            assertColumnExists(sqlite, "sources", "maxConnections")
             assertIndexExists(sqlite, "index_movies_sourceId_rating_name")
             // v20: direct-tune index on (sourceId, number).
             assertIndexExists(sqlite, "index_channels_sourceId_number")
@@ -527,7 +532,7 @@ class OwnTVDatabaseMigrationTest {
         private const val DB_NAME = "owntv-migration-test.db"
 
         /** Must match `@Database(version = …)` on [OwnTVDatabase]. */
-        private const val CURRENT_VERSION = 25
+        private const val CURRENT_VERSION = 27
 
         /**
          * Every version with an exported schema that a real database can be sitting at.

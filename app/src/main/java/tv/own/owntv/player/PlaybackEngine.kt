@@ -68,8 +68,11 @@ interface PlaybackEngine {
     /** Title of the next queued item (in-season next episode), for the HUD next-episode countdown card.
      *  Null when there is no next item — a live engine leaves it null. */
     val nextUpTitle: StateFlow<String?> get() = NULL_STRING
-    /** In-player A/V-sync nudge (ms) — VOD/mpv only; a live engine leaves it at 0. */
+    /** In-player A/V-sync nudge (ms) — mpv only; an ExoPlayer engine leaves it at 0. */
     val audioDelayMs: StateFlow<Int> get() = ZERO_INT
+    /** True when this engine can shift audio against video (mpv's `audio-delay`). ExoPlayer cannot, so
+     *  the HUD hides the nudge there. mpv supports it on live too — provider A/V drift is real (F19e). */
+    fun audioDelayAvailable(): Boolean = false
     /** Subtitle-timing offset (ms) for the ACTIVE subtitle — VOD only (subtitle plan §8). */
     val subDelayMs: StateFlow<Int> get() = ZERO_INT
     fun setSpeed(speed: Double) {}
@@ -120,6 +123,7 @@ class MpvPlaybackEngine(private val p: OwnTVPlayer) : PlaybackEngine {
     override val nav get() = p.nav
     override val nextUpTitle get() = p.nextUpTitle
     override val audioDelayMs get() = p.audioDelayMs
+    override fun audioDelayAvailable() = true
     override val subDelayMs get() = p.subDelayMs
     override fun adjustSubtitleDelay(deltaMs: Int) = p.adjustSubtitleDelay(deltaMs)
     override fun resetSubtitleDelay() = p.resetSubtitleDelay()

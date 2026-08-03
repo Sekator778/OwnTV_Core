@@ -32,8 +32,8 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import okhttp3.OkHttpClient
 import tv.own.owntv.core.network.HttpClient
+import tv.own.owntv.core.network.StreamHeaders
 
 /**
  * ExoPlayer (Media3) that drives the muted **in-pane Live preview**. ExoPlayer starts HLS far faster than
@@ -50,7 +50,7 @@ import tv.own.owntv.core.network.HttpClient
 @UnstableApi
 class LivePreviewEngine(
     private val context: Context,
-    private val okHttpClient: OkHttpClient,
+    private val streamingHttp: tv.own.owntv.core.network.StreamingHttpClient,
     private val diagnostics: PlayerDiagnostics,
     settings: tv.own.owntv.features.settings.data.SettingsRepository,
     connectivity: tv.own.owntv.core.network.ConnectivityObserver,
@@ -180,6 +180,14 @@ class LivePreviewEngine(
         // Keep the escape-hatch flag current; turning it off stops any in-flight measuring immediately.
         settingsFlow.onEach { measuredStatsEnabled = it; if (!it) throughputTracker.setEnabled(false) }
             .launchIn(settingsScope)
+        // Detailed playback logging (F18). A release build used to have the live trace compiled off, so
+        // the users who report provider-specific faults could produce nothing at all. The ring buffer
+        // always runs; this decides whether it also reaches Logcat and the rolling file. A debug or
+        // -PdiagnosticBuild build stays on regardless of the setting.
+        settings.detailedDiagnostics.onEach {
+            LiveDiagnosticsLog.enabled = it ||
+                tv.own.owntv.BuildConfig.DEBUG || tv.own.owntv.BuildConfig.DIAGNOSTIC_BUILD
+        }.launchIn(settingsScope)
         // Live latency no longer only sets a LiveConfiguration offset (which Media3 honours for HLS/DASH
         // and ignores for the raw MPEG-TS most Xtream live URLs are) — it now drives the LoadControl,
         // whose durations are fixed at construction. So a change while a channel is playing rebuilds,
@@ -565,6 +573,7 @@ class LivePreviewEngine(
                 audioWatchdog.poll(p.isPlaying)?.let { reason ->
                     LiveDiagnosticsLog.event("audioWatchdog: $reason — forcing stereo for this session")
                     AudioOutputPolicy.latchStereo("exo/live: $reason")
+                    PlaybackErrorLog.event(context, "ExoPlayer", live = true, what = "Switched to stereo audio", detail = reason)
                     onAudioFallback?.invoke("Your TV or soundbar couldn't play this audio — switched to stereo.")
                     rebuildForSettingChange()
                     return
@@ -836,12 +845,18 @@ class LivePreviewEngine(
         meta: MediaMeta = MediaMeta(),
         userAgent: String? = null,
         prerollSecsOverride: Int? = null,
+        /** Per-channel HTTP headers serialized as `Key: Value` per line (M3U, F16); null for none. */
+        httpHeaders: String? = null,
     ) {
         LiveDiagnosticsLog.event("play() url=${HttpClient.redactUrl(url)} muted=$muted")
         // Read BEFORE the player is (re)built below — the load control is fixed at construction.
         prerollOverrideSecs = prerollSecsOverride
         stoppingIntentionally = false
-        currentUa = userAgent?.takeIf { it.isNotBlank() } ?: HttpClient.DEFAULT_USER_AGENT
+        currentHeaders = StreamHeaders.decode(httpHeaders)
+        // A channel's own User-Agent is more specific than the playlist-wide one, so it wins (F16).
+        currentUa = StreamHeaders.userAgentOf(currentHeaders)
+            ?: userAgent?.takeIf { it.isNotBlank() }
+            ?: HttpClient.DEFAULT_USER_AGENT
         diagnostics.start(); diagnostics.markLoad()
         lastCodecError = null; lastVideoDecoder = null
         this.muted = muted
@@ -886,6 +901,7 @@ class LivePreviewEngine(
             // the stream is still being sniffed; rebuildTracks() relaxes this for audio-only streams.
             hasVideoTrack = true
             applyMute(force = true)
+            setVideoTrackDisabled(_audioOnly.value) // survives a player rebuild while Audio Mode is on (F19c)
             p.setMediaSource(mediaSourceFor(url))
             p.prepare()
             p.playWhenReady = true
@@ -919,6 +935,9 @@ class LivePreviewEngine(
         val ua = currentUa
         val wasMuted = muted
         val preroll = prerollOverrideSecs
+        // Re-encoded rather than kept as a map so the reopened channel goes down exactly the same path
+        // as a fresh tune (including the per-channel UA precedence).
+        val headers = StreamHeaders.encode(currentHeaders)
         audioWatchdog.reset()
         mainHandler.removeCallbacks(stallWatchdog)
         mainHandler.removeCallbacks(progressWatchdog)
@@ -926,7 +945,7 @@ class LivePreviewEngine(
         player?.run { removeListener(listener); release() }
         player = null
         videoRenderer = null
-        play(url, wasMuted, meta, ua, preroll)
+        play(url, wasMuted, meta, ua, preroll, headers)
     }
 
     fun setMuted(m: Boolean) {
@@ -947,6 +966,7 @@ class LivePreviewEngine(
         p.trackSelectionParameters = p.trackSelectionParameters.buildUpon()
             .setTrackTypeDisabled(C.TRACK_TYPE_AUDIO, disable)
             .build()
+        applyVolumeBoost(_volume.value) // re-binds the >100% effect after a player rebuild / mute change
     }
 
     // Snapshot of the live channel taken when the app backgrounds (screensaver / Home), so it can be restored
@@ -996,24 +1016,28 @@ class LivePreviewEngine(
     }
 
     /**
-     * Drop this engine's now-idle sockets instead of letting OkHttp's pool hold them for its default
+     * Drop the playback pool's now-idle sockets instead of letting OkHttp hold them for its default
      * 5 idle minutes.
      *
      * A panel that allows one session per account (see [LiveStreamQuirks.isSessionLimit]) refuses the
      * *second* client, so after a handoff a pooled ExoPlayer connection locks mpv out of the channel the
      * user just asked for — mpv/FFmpeg has its own HTTP stack and cannot reuse it. Eviction only closes
      * connections no call is using; anything in flight is untouched.
+     *
+     * This clears [StreamingHttpClient]'s own pool, not the app-wide one, so EPG/metadata/image
+     * connections keep their keep-alive across a zap (F28).
      */
     private fun releaseHttpConnections() {
         // Off the main thread: closing sockets is quick but still I/O, and stop() runs on a UI transition.
         Thread {
-            runCatching { okHttpClient.connectionPool.evictAll() }
+            runCatching { streamingHttp.evictAll() }
                 .onFailure { LiveDiagnosticsLog.event("connection pool evict failed: ${it.javaClass.simpleName}") }
         }.start()
     }
 
     fun release() {
         LiveDiagnosticsLog.event("release() — intentional")
+        releaseLoudness()
         stoppingIntentionally = true
         mainHandler.removeCallbacks(stallWatchdog)
         mainHandler.removeCallbacks(progressWatchdog)
@@ -1129,6 +1153,13 @@ class LivePreviewEngine(
                 "panel to mpv",
         )
         _segmentsRefused.value = true
+        // The user sees a channel that "just works after a pause" — this is the line that explains why,
+        // and it is the one piece of evidence a provider-specific report needs (F26).
+        PlaybackErrorLog.event(
+            context, "ExoPlayer", live = true,
+            what = "Handed this channel to mpv",
+            detail = "provider refused $status on ${refusedSegments.size} signed segment URLs",
+        )
     }
 
     /**
@@ -1147,6 +1178,11 @@ class LivePreviewEngine(
         sessionLimitSeen = true
         LiveDiagnosticsLog.event(
             "provider refused with HTTP 458 (account session still in use) uri=${HttpClient.redactUrl(uri)}",
+        )
+        PlaybackErrorLog.event(
+            context, "ExoPlayer", live = true,
+            what = "Provider allows one session at a time",
+            detail = "HTTP 458 while the previous engine's session was still open — waiting and retrying once",
         )
     }
 
@@ -1286,11 +1322,25 @@ class LivePreviewEngine(
         if (_audioOnly.value) return
         _audioOnly.value = true
         player?.clearVideoSurface() // audio keeps playing without a surface; [surface] kept for return
+        setVideoTrackDisabled(true)
     }
     override fun exitAudioOnly() {
         if (!_audioOnly.value) return
         _audioOnly.value = false
+        setVideoTrackDisabled(false)
         surface?.let { player?.setVideoSurface(it) }
+    }
+
+    /**
+     * Dropping the surface alone only stops the *drawing*: ExoPlayer keeps decoding every video frame into
+     * a dummy buffer, so Audio Mode still burns the decoder, the CPU and the bandwidth it was meant to save.
+     * Disabling the track releases the decoder outright and skips the video samples (F19c).
+     */
+    private fun setVideoTrackDisabled(disabled: Boolean) {
+        val p = player ?: return
+        p.trackSelectionParameters = p.trackSelectionParameters.buildUpon()
+            .setTrackTypeDisabled(C.TRACK_TYPE_VIDEO, disabled)
+            .build()
     }
 
     // --- PlaybackEngine controls (full-screen HUD) ---
@@ -1302,13 +1352,44 @@ class LivePreviewEngine(
     override fun setZoomMode(mode: ZoomMode) { _zoomMode.value = mode } // ExoPreviewSurface observes this + videoAspect/Size and sizes the surface (see Modifier.videoZoom)
 
     override fun adjustVolume(delta: Int) {
-        // Live engine (ExoPlayer) caps at 100% — boost above 100 is mpv-only (Exo can't amplify past unity
-        // and a gain audio-processor broke the audio sink). VOD/series/compat-live play on mpv and do boost.
-        val v = (_volume.value + delta).coerceIn(0, 100)
+        // ExoPlayer itself can't amplify past unity (and a gain audio-processor broke the audio sink), so
+        // 100–150% rides on the platform LoudnessEnhancer instead — same range as mpv, so a quiet channel
+        // can be lifted without leaving Live TV (F19a).
+        val v = (_volume.value + delta).coerceIn(0, MAX_VOLUME)
         _volume.value = v
         muted = v == 0
         applyMute() // re-enables/deselects the audio track when crossing 0 (passthrough-safe mute)
-        player?.volume = v / 100f
+        player?.volume = v.coerceAtMost(100) / 100f
+        applyVolumeBoost(v)
+    }
+
+    // --- Volume boost above 100% (F19a) ---
+    private var loudness: android.media.audiofx.LoudnessEnhancer? = null
+    private var loudnessSession = C.AUDIO_SESSION_ID_UNSET
+
+    /**
+     * Attach/AIM/drop the LoudnessEnhancer for [percent]. At or below 100 the effect is released outright,
+     * so a normal stream never carries an audio effect it doesn't need. Devices whose audio HAL refuses the
+     * effect (it is optional) just stay at unity — the volume readout still moves, nothing crashes.
+     *
+     * Also re-attaches after a player rebuild, since the effect is bound to one audio session id.
+     */
+    private fun applyVolumeBoost(percent: Int) {
+        val session = player?.audioSessionId ?: C.AUDIO_SESSION_ID_UNSET
+        if (session != loudnessSession) releaseLoudness()
+        val gainMb = (percent - 100).coerceAtLeast(0) * BOOST_MB_PER_PERCENT
+        if (gainMb <= 0 || session == C.AUDIO_SESSION_ID_UNSET) { releaseLoudness(); return }
+        val fx = loudness ?: runCatching { android.media.audiofx.LoudnessEnhancer(session) }
+            .onFailure { LiveDiagnosticsLog.event("volume boost unavailable: ${it.javaClass.simpleName}") }
+            .getOrNull()?.also { loudness = it; loudnessSession = session } ?: return
+        runCatching { fx.setTargetGain(gainMb); fx.enabled = true }
+            .onFailure { LiveDiagnosticsLog.event("volume boost failed: ${it.javaClass.simpleName}") }
+    }
+
+    private fun releaseLoudness() {
+        runCatching { loudness?.release() }
+        loudness = null
+        loudnessSession = C.AUDIO_SESSION_ID_UNSET
     }
 
     override fun toggleMute() = setMuted(!muted)
@@ -1402,7 +1483,11 @@ class LivePreviewEngine(
     // Effective User-Agent for the current stream; updated per play() call.
     // null = no source UA configured, use DEFAULT_USER_AGENT.
     private var currentUa: String = HttpClient.DEFAULT_USER_AGENT
+    /** Per-channel HTTP headers for the tuned channel (M3U `#EXTVLCOPT`/`#EXTHTTP`/`#KODIPROP`, F16).
+     *  Empty for providers that carry none, which is the usual case. */
+    private var currentHeaders: Map<String, String> = emptyMap()
     private var dataSourceForUa: String = ""
+    private var dataSourceForHeaders: Map<String, String> = emptyMap()
     private var cachedHttpDataSource: OkHttpDataSource.Factory? = null
     private var cachedDefaultFactory: DefaultMediaSourceFactory? = null
     private var cachedHlsCcFactory: HlsMediaSource.Factory? = null
@@ -1413,7 +1498,7 @@ class LivePreviewEngine(
      *  [HttpClient.redactUrl], body text additionally has this request's own user/pass/token strings
      *  masked ([textPrefix]), and Authorization/Cookie are logged as presence flags, never values. */
     private val diagnosticHttpClient by lazy {
-        okHttpClient.newBuilder()
+        streamingHttp.client.newBuilder()
             .addInterceptor { chain ->
                 val startedAt = android.os.SystemClock.elapsedRealtime()
                 val request = chain.request()
@@ -1553,9 +1638,14 @@ class LivePreviewEngine(
         }
 
     private fun httpDataSourceFor(ua: String): OkHttpDataSource.Factory {
-        if (ua != dataSourceForUa || cachedHttpDataSource == null) {
+        // Keyed on the headers as well as the UA: the three cached factories bake the data source in,
+        // so a channel with its own Referer must not reuse the previous channel's factory (F16).
+        if (ua != dataSourceForUa || currentHeaders != dataSourceForHeaders || cachedHttpDataSource == null) {
             cachedHttpDataSource = OkHttpDataSource.Factory(diagnosticHttpClient).setUserAgent(ua)
                 .setTransferListener(throughputTracker)
+                .setDefaultRequestProperties(
+                    currentHeaders.filterKeys { !it.equals("User-Agent", ignoreCase = true) },
+                )
             // Raw MPEG-TS (typical Xtream live ".ts"): providers rarely declare caption descriptors in
             // the PMT, so the stock TS extractor never exposes the embedded CEA-608 track (#57).
             // FLAG_OVERRIDE_CAPTION_DESCRIPTORS makes it expose the standard CC1 track regardless; the
@@ -1581,6 +1671,7 @@ class LivePreviewEngine(
                 .setExtractorFactory(DefaultHlsExtractorFactory(0, true))
                 .setLoadErrorHandlingPolicy(edgeRefusalPolicy)
             dataSourceForUa = ua
+            dataSourceForHeaders = currentHeaders
         }
         return cachedHttpDataSource!!
     }
@@ -1726,6 +1817,8 @@ class LivePreviewEngine(
     }
 
     companion object {
+        private const val MAX_VOLUME = 150          // same ceiling as mpv; 100–150 comes from LoudnessEnhancer
+        private const val BOOST_MB_PER_PERCENT = 7  // millibels per boost percent — 150% ≈ +3.5 dB, mpv's own gain
         private const val MAX_RECONNECTS = 8        // ~consecutive failures before giving up (HUD Retry then)
         /** Playback must hold this long before the reconnect ladder is considered recovered. */
         internal const val HEALTHY_MS = 60_000L

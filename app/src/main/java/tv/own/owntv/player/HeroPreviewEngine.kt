@@ -14,7 +14,6 @@ import androidx.media3.exoplayer.source.DefaultMediaSourceFactory
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import okhttp3.OkHttpClient
 import tv.own.owntv.core.network.HttpClient
 
 /**
@@ -27,7 +26,9 @@ import tv.own.owntv.core.network.HttpClient
 @UnstableApi
 class HeroPreviewEngine(
     private val context: Context,
-    private val okHttpClient: OkHttpClient,
+    private val streamingHttp: tv.own.owntv.core.network.StreamingHttpClient,
+    /** True while another engine (mpv) already holds a stream — used for the one-session guard. */
+    private val streamInUse: () -> Boolean = { false },
 ) {
     enum class State { IDLE, LOADING, PLAYING, ERROR }
 
@@ -64,6 +65,9 @@ class HeroPreviewEngine(
 
         override fun onPlayerError(error: PlaybackException) {
             android.util.Log.w(TAG, "Hero preview error: ${error.errorCodeName}", error)
+            // HTTP 458 = "account session in use": the provider allows one stream at a time. Remember it
+            // so every engine (Live preview included) stops competing for that single session (F19d).
+            currentUrl?.let { url -> if (httpStatusOf(error) == 458) LiveStreamQuirks.rememberSessionLimit(url) }
             hasStarted = false
             currentUrl = null
             player?.run {
@@ -74,6 +78,17 @@ class HeroPreviewEngine(
         }
     }
 
+    /** The HTTP status behind a load failure, following the cause chain Media3 wraps it in. */
+    private fun httpStatusOf(error: Throwable?): Int? {
+        var t = error
+        var hops = 0
+        while (t != null && hops++ < 8) {
+            (t as? androidx.media3.datasource.HttpDataSource.InvalidResponseCodeException)?.let { return it.responseCode }
+            t = t.cause
+        }
+        return null
+    }
+
     fun setSurface(s: Surface?) {
         surface = s
         if (s != null) player?.setVideoSurface(s) else player?.clearVideoSurface()
@@ -82,6 +97,13 @@ class HeroPreviewEngine(
     private var builtForUa: String = HttpClient.DEFAULT_USER_AGENT
 
     fun play(url: String, seekToMs: Long = 0L, userAgent: String? = null) {
+        // One-session provider with its single stream already in use: previewing here would knock the
+        // user's own playback off the air (or just fail with a 458). Stay on the poster instead (F19d) —
+        // the same rule the Live preview pane follows.
+        if (streamInUse() && LiveStreamQuirks.isSingleSession(url)) {
+            stop()
+            return
+        }
         val effectiveUa = userAgent?.takeIf { it.isNotBlank() } ?: HttpClient.DEFAULT_USER_AGENT
         currentUrl = url
         val startPositionMs = seekToMs.coerceAtLeast(0L)
@@ -132,7 +154,7 @@ class HeroPreviewEngine(
     }
 
     private fun build(ua: String = HttpClient.DEFAULT_USER_AGENT): ExoPlayer {
-        val dataSource = OkHttpDataSource.Factory(okHttpClient).setUserAgent(ua)
+        val dataSource = OkHttpDataSource.Factory(streamingHttp.client).setUserAgent(ua)
         val loadControl = DefaultLoadControl.Builder()
             .setBufferDurationsMs(2_000, 8_000, 1_000, 2_000)
             .build()

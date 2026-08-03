@@ -70,6 +70,10 @@ val dataModule = module {
             }
             .build()
     }
+    // The playback engines' client: same proxy/DNS/UA/protocol configuration as the singleton above,
+    // but its own connection pool, so a live stop can evict *stream* sockets without dropping keep-alive
+    // for EPG, panel API, metadata and image traffic (F28).
+    single { tv.own.owntv.core.network.StreamingHttpClient(get()) }
     single { HttpClient(get()) }
     single { ConnectivityObserver(androidContext()) }
     single { CustomizationStore(androidContext()) }

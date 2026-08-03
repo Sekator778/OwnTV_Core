@@ -4,6 +4,8 @@ import android.os.SystemClock
 import android.util.Log
 import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.ensureActive
+import org.json.JSONObject
+import tv.own.owntv.core.network.StreamHeaders
 import java.io.BufferedReader
 import java.io.InputStream
 
@@ -25,6 +27,9 @@ data class M3uEntry(
     val catchupSource: String?,
     /** `catchup-days` — how many days back the archive goes. */
     val catchupDays: Int?,
+    /** Per-channel HTTP request headers (F16) — from `#EXTVLCOPT` / `#EXTHTTP` / `#KODIPROP` or the
+     *  `url|Key=Value` pipe suffix. Empty when the entry carries none. */
+    val headers: Map<String, String> = emptyMap(),
 ) {
     /** Tagged as series content — per-episode entries like "Show S01E05" grouped into shows. */
     val isSeries: Boolean get() = type == "series" || tvgType == "series"
@@ -59,6 +64,9 @@ class M3uParser {
         val metrics = ParseMetrics()
         var header = M3uHeader(urlTvg = null)
         var pending: PendingExtInf? = null
+        // Per-channel HTTP options arrive on their own lines BETWEEN the #EXTINF and the URL, so they
+        // are collected separately and consumed by the URL line (F16).
+        var pendingHeaders: MutableMap<String, String>? = null
         if (debug) Log.d(TAG, "parse start")
 
         input.bufferedReader().forEachLineSafe { raw ->
@@ -75,6 +83,7 @@ class M3uParser {
 
                 line.startsWith("#EXTINF") -> {
                     val attrs = parseAttrs(line)
+                    pendingHeaders = null // a new entry starts; drop anything the previous one left
                     pending = PendingExtInf(
                         name = line.substringAfterLast(',').trim(),
                         logo = attrs.attr("tvg-logo"),
@@ -89,10 +98,29 @@ class M3uParser {
                     )
                 }
 
-                line.startsWith("#") -> Unit // other directives (e.g. #EXTGRP) ignored for now
+                line.startsWith("#") -> {
+                    // Per-channel HTTP options (F16). Every other directive (e.g. #EXTGRP) is ignored,
+                    // and the three prefixes are checked only inside this branch so a playlist without
+                    // them pays one startsWith("#") as before.
+                    parseHttpDirective(line)?.let { parsed ->
+                        val map = pendingHeaders ?: LinkedHashMap<String, String>(4).also { pendingHeaders = it }
+                        map.putAll(parsed)
+                    }
+                }
 
                 else -> {
-                    // A URL line completes the pending channel.
+                    // A URL line completes the pending channel. It may carry a `|Key=Value&Key=Value`
+                    // suffix, which belongs to the request, not to the URL.
+                    val pipe = pipeSuffixAt(line)
+                    val url = if (pipe > 0) line.substring(0, pipe) else line
+                    if (pipe > 0) {
+                        val fromUrl = parseAmpersandHeaders(line.substring(pipe + 1))
+                        if (fromUrl.isNotEmpty()) {
+                            // The suffix sits on the URL itself, so it wins over a directive above it.
+                            val map = pendingHeaders ?: LinkedHashMap<String, String>(4).also { pendingHeaders = it }
+                            map.putAll(fromUrl)
+                        }
+                    }
                     val p = pending
                     if (p != null && p.name.isNotEmpty()) {
                         if (debug) metrics.parseOrReadMs += SystemClock.elapsedRealtime() - parseStart
@@ -101,7 +129,7 @@ class M3uParser {
                             onEntry(
                                 M3uEntry(
                                     name = p.name,
-                                    streamUrl = line,
+                                    streamUrl = url,
                                     logo = p.logo,
                                     groupTitle = p.groupTitle,
                                     tvgId = p.tvgId,
@@ -111,6 +139,7 @@ class M3uParser {
                                     catchup = p.catchup,
                                     catchupSource = p.catchupSource,
                                     catchupDays = p.catchupDays,
+                                    headers = pendingHeaders ?: emptyMap(),
                                 ),
                             )
                         } finally {
@@ -120,6 +149,7 @@ class M3uParser {
                         callbackHandled = true
                     }
                     pending = null
+                    pendingHeaders = null
                 }
             }
 
@@ -193,9 +223,99 @@ class M3uParser {
 
     private fun Map<String, String>.attr(key: String): String? = this[key]?.takeIf { it.isNotBlank() }
 
+    /**
+     * Per-channel HTTP headers from the three conventions playlists use (F16). Returns null for every
+     * other `#` directive, which is the overwhelmingly common case.
+     *
+     *  - `#EXTVLCOPT:http-user-agent=Foo` / `http-referrer=` / `http-origin=` / `http-cookie=`
+     *  - `#EXTHTTP:{"cookie":"a=b","User-Agent":"Foo"}`
+     *  - `#KODIPROP:inputstream.adaptive.stream_headers=User-Agent=Foo&Referer=Bar`
+     *    (also `manifest_headers`, and the legacy `inputstream.adaptive.stream_header`)
+     */
+    private fun parseHttpDirective(line: String): Map<String, String>? = when {
+        line.startsWith(EXTVLCOPT) -> {
+            val opt = line.substring(EXTVLCOPT.length).trim()
+            val eq = opt.indexOf('=')
+            if (eq <= 0) {
+                null
+            } else {
+                val key = opt.substring(0, eq).trim().lowercase()
+                val value = opt.substring(eq + 1).trim().trim('"')
+                // `http-` options map 1:1 onto request headers; every other VLC option (network-caching,
+                // deinterlace, …) is a player setting we deliberately don't honour.
+                val name = if (key.startsWith("http-")) StreamHeaders.canonicalName(key.removePrefix("http-")) else null
+                if (name == null || value.isEmpty()) null else mapOf(name to value)
+            }
+        }
+
+        line.startsWith(EXTHTTP) -> runCatching {
+            val json = JSONObject(line.substring(EXTHTTP.length).trim())
+            val out = LinkedHashMap<String, String>(4)
+            json.keys().forEach { key ->
+                val name = StreamHeaders.canonicalName(key) ?: return@forEach
+                val value = json.optString(key).trim()
+                if (value.isNotEmpty()) out[name] = value
+            }
+            out.takeIf { it.isNotEmpty() }
+        }.getOrNull()
+
+        line.startsWith(KODIPROP) -> {
+            val prop = line.substring(KODIPROP.length).trim()
+            val eq = prop.indexOf('=')
+            val key = if (eq > 0) prop.substring(0, eq).trim().lowercase() else ""
+            if (eq > 0 && (key.endsWith(".stream_headers") || key.endsWith(".stream_header") || key.endsWith(".manifest_headers"))) {
+                parseAmpersandHeaders(prop.substring(eq + 1)).takeIf { it.isNotEmpty() }
+            } else {
+                null
+            }
+        }
+
+        else -> null
+    }
+
+    /** `User-Agent=Foo&Referer=Bar` (percent-encoded values) → header map. Shared by the KODIPROP
+     *  headers property and the `url|…` pipe suffix, which use the same encoding. */
+    private fun parseAmpersandHeaders(raw: String): Map<String, String> {
+        val text = raw.trim()
+        if (text.isEmpty()) return emptyMap()
+        val out = LinkedHashMap<String, String>(4)
+        text.split('&').forEach { pair ->
+            val eq = pair.indexOf('=')
+            if (eq <= 0) return@forEach
+            val name = StreamHeaders.canonicalName(pair.substring(0, eq)) ?: return@forEach
+            val value = decodeUrlComponent(pair.substring(eq + 1)).trim()
+            if (value.isNotEmpty()) out[name] = value
+        }
+        return out
+    }
+
+    /** Percent-decoding that can never throw: a malformed escape is kept verbatim, because losing the
+     *  whole header is worse than one odd character. */
+    private fun decodeUrlComponent(value: String): String =
+        if (value.indexOf('%') < 0 && value.indexOf('+') < 0) {
+            value
+        } else {
+            runCatching { java.net.URLDecoder.decode(value, "UTF-8") }.getOrDefault(value)
+        }
+
+    /**
+     * Index of the `|` that starts a header suffix on a URL line, or -1. Only a pipe *after* the
+     * scheme counts — a `|` inside a path or query is left alone, and a line without one costs a
+     * single [String.indexOf].
+     */
+    private fun pipeSuffixAt(line: String): Int {
+        val pipe = line.indexOf('|')
+        if (pipe <= 0) return -1
+        val scheme = line.indexOf("://")
+        return if (scheme in 0 until pipe && line.indexOf('=', pipe) > pipe) pipe else -1
+    }
+
     private companion object {
         private const val TAG = "M3uParser"
         private const val STREAM_LOG_ITEM_STEP = 10_000
+        private const val EXTVLCOPT = "#EXTVLCOPT:"
+        private const val EXTHTTP = "#EXTHTTP:"
+        private const val KODIPROP = "#KODIPROP:"
     }
 }
 
