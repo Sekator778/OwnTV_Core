@@ -104,8 +104,9 @@ object PlayerErrors {
         Regex("""(?:\bhttp(?: error)? |\bresponse code[:= ]+|\bstatus(?: code)?[:= ]+)(\d{3})\b""")
 
     /** MediaCodec ENOMEM forms: "err -12", "status -12", "error -12" — NOT any "-12" substring
-     *  (which matched URLs and timestamps like "-123ms"). */
-    private val ENOMEM_RX = Regex("""\b(?:err(?:or)?|status|code)\s*[:=]?\s*-12\b""")
+     *  (which matched URLs and timestamps like "-123ms"). MediaCodec usually logs the errno as
+     *  unsigned hex instead ("err 0xfffffff4"), so accept that spelling too. */
+    private val ENOMEM_RX = Regex("""\b(?:err(?:or)?|status|code)\s*[:=]?\s*(?:-12|0xfffffff4)\b""")
 
     /** Plain-English reason for a raw error string, or null if we don't recognize it. */
     fun reasonFor(raw: String): String? {
@@ -116,7 +117,8 @@ object PlayerErrors {
             "0x80001001" in l -> "Hardware video decoder error — transient, try again"
             "0xfffffff3" in l || "0xffffffea" in l || "format_unsupported" in l || "omx_errorformat" in l ->
                 "This device's decoder doesn't support this video format/profile (e.g. HEVC 10-bit)"
-            "enomem" in l || "out of memory" in l || "no memory" in l || "insufficient" in l || ENOMEM_RX.containsMatchIn(l) ->
+            "enomem" in l || "out of memory" in l || "no memory" in l || "insufficient" in l ||
+                "0xfffffff4" in l || ENOMEM_RX.containsMatchIn(l) ->
                 "Device ran out of memory for the decoder — try closing other apps"
             "error_key" in l || "cryptoinfo" in l || "0x80001100" in l || ("drm" in l && "error" in l) ->
                 "DRM / secure-decoder error"

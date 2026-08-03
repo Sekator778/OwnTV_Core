@@ -12,6 +12,7 @@ import androidx.media3.common.util.UnstableApi
 import androidx.media3.common.util.Util
 import androidx.media3.datasource.okhttp.OkHttpDataSource
 import androidx.media3.exoplayer.DefaultLoadControl
+import tv.own.owntv.features.settings.data.LiveBuffer
 import androidx.media3.exoplayer.DefaultRenderersFactory
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.exoplayer.Renderer
@@ -63,6 +64,16 @@ class LivePreviewEngine(
     // Live latency (#72): target live-edge offset in seconds; null = engine default (Balanced). Applied
     // as a MediaItem.LiveConfiguration on the next channel open.
     @Volatile private var liveBufferSecs: Int? = null
+    // "Pre-buffer" (F07): global choice, plus the per-playlist override the current tune
+    // was opened with (null = follow the global one). Both are read at [build] time — the load
+    // control's durations are fixed when the player is constructed.
+    @Volatile private var livePrerollSecs: Int = LiveBuffer.PREROLL_OFF
+    @Volatile private var prerollOverrideSecs: Int? = null
+
+    /** The buffering numbers the live [player] instance was actually constructed with. A LoadControl can't
+     *  be changed afterwards, so this is what [play] compares against to decide on a rebuild. */
+    @Volatile private var builtLoadControl: LiveBuffer.LoadControlMs? = null
+    private fun effectivePrerollSecs(): Int = prerollOverrideSecs ?: livePrerollSecs
     enum class State { IDLE, LOADING, PLAYING, ERROR }
 
     init { LiveDiagnosticsLog.init(context) }
@@ -169,7 +180,20 @@ class LivePreviewEngine(
         // Keep the escape-hatch flag current; turning it off stops any in-flight measuring immediately.
         settingsFlow.onEach { measuredStatsEnabled = it; if (!it) throughputTracker.setEnabled(false) }
             .launchIn(settingsScope)
-        settings.liveBufferSeconds.onEach { liveBufferSecs = it }.launchIn(settingsScope)
+        // Live latency no longer only sets a LiveConfiguration offset (which Media3 honours for HLS/DASH
+        // and ignores for the raw MPEG-TS most Xtream live URLs are) — it now drives the LoadControl,
+        // whose durations are fixed at construction. So a change while a channel is playing rebuilds,
+        // exactly like the surround/hardware-decoding settings above. (F06)
+        settings.liveBufferSeconds.onEach {
+            val changed = liveBufferSecs != it
+            liveBufferSecs = it
+            if (changed) currentUrl?.let { _ -> rebuildForSettingChange() }
+        }.launchIn(settingsScope)
+        settings.livePrerollSecs.onEach {
+            val changed = livePrerollSecs != it
+            livePrerollSecs = it
+            if (changed) currentUrl?.let { _ -> rebuildForSettingChange() }
+        }.launchIn(settingsScope)
         // Surround mode only takes effect on the next player build (the audio sink's capabilities are
         // fixed at construction), so a change while a channel is playing rebuilds it — same as mpv's
         // in-place reload. Changing the setting also clears the session latch, which is handled by
@@ -177,7 +201,7 @@ class LivePreviewEngine(
         settings.surroundMode.onEach { mode ->
             val changed = surroundMode != mode
             surroundMode = mode
-            if (changed) currentUrl?.let { rebuildForAudioChange() }
+            if (changed) currentUrl?.let { rebuildForSettingChange() }
         }.launchIn(settingsScope)
         // "Hardware decoding = Off" used to reach mpv only, which left Live TV — whose default engine is
         // this one — on the hardware decoder the user was trying to avoid. Rebuild so the new selector
@@ -185,7 +209,7 @@ class LivePreviewEngine(
         settings.hwDecoding.onEach { on ->
             val changed = hwDecodingEnabled != on
             hwDecodingEnabled = on
-            if (changed) currentUrl?.let { rebuildForAudioChange() }
+            if (changed) currentUrl?.let { rebuildForSettingChange() }
         }.launchIn(settingsScope)
     }
 
@@ -328,6 +352,18 @@ class LivePreviewEngine(
             AudioOutputPolicy.latchReason?.let { append(" · fell back: $it") }
         }
         bufferRow(p, dropsBaseline)?.let { out += it }
+        // The settings that shaped the buffer above, as this player was ACTUALLY built with them — the only
+        // way to tell "Live latency / Pre-buffer didn't apply" from "it applied and the buffer filled that
+        // fast" without a working logcat. Worded as an amount of video, never as a wait: "start after 10s"
+        // read as a ten-second countdown and made a working setting look broken.
+        builtLoadControl?.let { lc ->
+            out += "Live buffer" to buildString {
+                val preroll = effectivePrerollSecs()
+                append(if (preroll > 0) "pre-buffer ${preroll}s of video" else "pre-buffer off")
+                append(" · depth ${lc.minBufferMs / 1000}s")
+                prerollOverrideSecs?.let { append(" · playlist override") }
+            }
+        }
         currentUrl?.let { out += "Source" to HttpClient.redactUrl(it) }
         return out
     }
@@ -364,7 +400,12 @@ class LivePreviewEngine(
     override fun setBitrateTrackingEnabled(enabled: Boolean) = throughputTracker.setEnabled(enabled && measuredStatsEnabled)
 
     private fun ensureFpsMeasurement() {
-        if (!measuredStatsEnabled) return // escape hatch: no live fps measuring at all
+        // F14: "Measured stream stats" is presented as a *performance* escape hatch, but Auto frame rate
+        // depends on this measurement — raw MPEG-TS almost never declares Format.frameRate, so with the
+        // stats toggle off `videoFps` stayed null and AFR silently did nothing while appearing enabled.
+        // The measurement is cheap and bounded (FPS_MAX_ATTEMPTS samples, then it stops), so AFR keeps it
+        // alive on its own; only the continuous throughput/bitrate tracking follows the stats toggle.
+        if (!measuredStatsEnabled && !autoFrameRateEnabled) return
         if ((player?.videoFormat?.frameRate ?: 0f) <= 0f) restartFpsMeasurement()
     }
 
@@ -525,7 +566,7 @@ class LivePreviewEngine(
                     LiveDiagnosticsLog.event("audioWatchdog: $reason — forcing stereo for this session")
                     AudioOutputPolicy.latchStereo("exo/live: $reason")
                     onAudioFallback?.invoke("Your TV or soundbar couldn't play this audio — switched to stereo.")
-                    rebuildForAudioChange()
+                    rebuildForSettingChange()
                     return
                 }
                 // Audio-plays-no-video: a video track exists but has never rendered a single frame, even
@@ -729,11 +770,15 @@ class LivePreviewEngine(
     /** Enable/disable Media3's own Surface.setFrameRate mechanism. This is separate from the window-level
      *  [FrameRateController], so both must follow the same user setting. */
     fun setAutoFrameRateEnabled(enabled: Boolean) {
+        val turnedOn = enabled && !autoFrameRateEnabled
         autoFrameRateEnabled = enabled
         player?.setVideoChangeFrameRateStrategy(
             if (enabled) C.VIDEO_CHANGE_FRAME_RATE_STRATEGY_ONLY_IF_SEAMLESS
             else C.VIDEO_CHANGE_FRAME_RATE_STRATEGY_OFF,
         )
+        // Switching AFR on mid-channel has to start the fps measurement it needs (F14) — otherwise it only
+        // takes effect on the next tune, and only if "Measured stream stats" happens to be on.
+        if (turnedOn) ensureFpsMeasurement()
     }
 
     /** Detach [s] only if it's still the surface in use. A surface-generation bump swaps one SurfaceView
@@ -783,8 +828,18 @@ class LivePreviewEngine(
         recreateSurface()
     }
 
-    fun play(url: String, muted: Boolean, meta: MediaMeta = MediaMeta(), userAgent: String? = null) {
+    /** [prerollSecsOverride] = the tuned channel's playlist "Pre-buffer" override in
+     *  seconds; null follows the global setting. */
+    fun play(
+        url: String,
+        muted: Boolean,
+        meta: MediaMeta = MediaMeta(),
+        userAgent: String? = null,
+        prerollSecsOverride: Int? = null,
+    ) {
         LiveDiagnosticsLog.event("play() url=${HttpClient.redactUrl(url)} muted=$muted")
+        // Read BEFORE the player is (re)built below — the load control is fixed at construction.
+        prerollOverrideSecs = prerollSecsOverride
         stoppingIntentionally = false
         currentUa = userAgent?.takeIf { it.isNotBlank() } ?: HttpClient.DEFAULT_USER_AGENT
         diagnostics.start(); diagnostics.markLoad()
@@ -813,6 +868,17 @@ class LivePreviewEngine(
         _state.value = State.LOADING
         _buffering.value = true
         runCatching {
+            // A LoadControl is fixed when the player is constructed, and this engine keeps ONE player alive
+            // across tunes — so a setting changed while nothing was playing, or a per-playlist override that
+            // differs from the last channel's, would otherwise never take effect (the "Pre-buffer
+            // does nothing" report). Drop the player whenever the numbers it was built with no longer match.
+            val wanted = LiveBuffer.loadControlFor(liveBufferSecs, effectivePrerollSecs())
+            if (player != null && builtLoadControl != wanted) {
+                LiveDiagnosticsLog.event("load_control stale (was=$builtLoadControl want=$wanted) — rebuilding player")
+                player?.run { removeListener(listener); release() }
+                player = null
+                videoRenderer = null
+            }
             val p = player ?: build().also { player = it }
             // May be null right after a surface-generation bump — setSurface attaches it a frame later.
             surface?.let { p.setVideoSurface(it) }
@@ -847,11 +913,12 @@ class LivePreviewEngine(
      * constructed, so re-preparing the same player would keep the sink that just failed. Live has no
      * position to preserve, so this is just "open the same channel again".
      */
-    private fun rebuildForAudioChange() {
+    private fun rebuildForSettingChange() {
         val url = currentUrl ?: return
         val meta = _currentMeta.value
         val ua = currentUa
         val wasMuted = muted
+        val preroll = prerollOverrideSecs
         audioWatchdog.reset()
         mainHandler.removeCallbacks(stallWatchdog)
         mainHandler.removeCallbacks(progressWatchdog)
@@ -859,7 +926,7 @@ class LivePreviewEngine(
         player?.run { removeListener(listener); release() }
         player = null
         videoRenderer = null
-        play(url, wasMuted, meta, ua)
+        play(url, wasMuted, meta, ua, preroll)
     }
 
     fun setMuted(m: Boolean) {
@@ -1571,9 +1638,34 @@ class LivePreviewEngine(
         // The start thresholds stay tiny (1s to first play, 2s after a rebuffer): they, not the buffer
         // depth, are what tuning and preview scrolling cost.
         val budget = playerBudget ?: PlayerBudget.of(context).also { playerBudget = it }
+        //
+        // F06/F07: those numbers used to be hardcoded, which is why the **Live latency** setting did
+        // nothing at all for raw-TS live — it only ever set a `MediaItem.LiveConfiguration` offset, and
+        // Media3 honours that for HLS/DASH only. The preset now drives the depth (keeping the 2 s idle
+        // window at every setting), and the new "Pre-buffer" drives the start thresholds.
+        // Balanced + Off reproduces the previous constants exactly.
+        val lc = LiveBuffer.loadControlFor(liveBufferSecs, effectivePrerollSecs()).also { builtLoadControl = it }
+        val defaultBytes = if (budget.lowSpec) LOW_RAM_TARGET_BYTES else TARGET_BUFFER_BYTES
+        LiveDiagnosticsLog.event(
+            "load_control min=${lc.minBufferMs} max=${lc.maxBufferMs} start=${lc.bufferForPlaybackMs} " +
+                "restart=${lc.bufferForPlaybackAfterRebufferMs} preroll=${effectivePrerollSecs()}s " +
+                "latencySec=${liveBufferSecs ?: -1}",
+        )
+        // Also to Logcat unconditionally: the diagnostics log is off in a release build, and these numbers
+        // are the only way to tell "the setting didn't apply" from "the buffer filled that fast".
+        android.util.Log.i(
+            LiveDiagnosticsLog.TAG,
+            "live_buffer preroll=${effectivePrerollSecs()}s start=${lc.bufferForPlaybackMs}ms " +
+                "min=${lc.minBufferMs}ms max=${lc.maxBufferMs}ms latency=${liveBufferSecs ?: -1}",
+        )
         val loadControl = DefaultLoadControl.Builder()
-            .setBufferDurationsMs(MIN_BUFFER_MS, MAX_BUFFER_MS, 1_000, 2_000)
-            .setTargetBufferBytes(if (budget.lowSpec) LOW_RAM_TARGET_BYTES else TARGET_BUFFER_BYTES)
+            .setBufferDurationsMs(
+                lc.minBufferMs,
+                lc.maxBufferMs,
+                lc.bufferForPlaybackMs,
+                lc.bufferForPlaybackAfterRebufferMs,
+            )
+            .setTargetBufferBytes(LiveBuffer.targetBufferBytes(liveBufferSecs, defaultBytes))
             .build()
         // forceDisableMediaCodecAsynchronousQueueing(): Media3 runs MediaCodec asynchronously by default on
         // API 31+, which corrupts (macroblocks) some UHD-HEVC streams on Realtek/Amlogic VPUs — the

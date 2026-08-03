@@ -112,6 +112,8 @@ class OwnTVDatabaseMigrationTest {
             assertTableExists(sqlite, "metadata_cache")
             assertColumnExists(sqlite, "metadata_cache", "logoPath")
             assertColumnExists(sqlite, "sources", "mac")
+            // v25: per-playlist "Pre-buffer" override.
+            assertColumnExists(sqlite, "sources", "livePrerollSecs")
             assertIndexExists(sqlite, "index_movies_sourceId_rating_name")
             // v20: direct-tune index on (sourceId, number).
             assertIndexExists(sqlite, "index_channels_sourceId_number")
@@ -359,6 +361,7 @@ class OwnTVDatabaseMigrationTest {
             OwnTVDatabase.MIGRATION_21_22,
             OwnTVDatabase.MIGRATION_22_23,
             OwnTVDatabase.MIGRATION_23_24,
+            OwnTVDatabase.MIGRATION_24_25,
         )
         .allowMainThreadQueries()
         .build()
@@ -524,7 +527,7 @@ class OwnTVDatabaseMigrationTest {
         private const val DB_NAME = "owntv-migration-test.db"
 
         /** Must match `@Database(version = …)` on [OwnTVDatabase]. */
-        private const val CURRENT_VERSION = 24
+        private const val CURRENT_VERSION = 25
 
         /**
          * Every version with an exported schema that a real database can be sitting at.

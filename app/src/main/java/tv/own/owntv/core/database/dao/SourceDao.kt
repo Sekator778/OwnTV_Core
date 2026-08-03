@@ -36,6 +36,10 @@ interface SourceDao {
     @Query("UPDATE sources SET preferHls = :preferHls WHERE id = :id")
     suspend fun updatePreferHls(id: Long, preferHls: Boolean)
 
+    /** Per-playlist "Pre-buffer" override in seconds; `-1` follows the global setting. */
+    @Query("UPDATE sources SET livePrerollSecs = :secs WHERE id = :id")
+    suspend fun updateLivePreroll(id: Long, secs: Int)
+
     // --- profile <-> source links (hybrid model) ---
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)

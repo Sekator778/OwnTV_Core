@@ -106,15 +106,29 @@ class LiveReconnectLadderTest {
 
     @Test
     fun `an HTTP refusal stops the identical-request retries but leaves the fallbacks armed`() {
-        // The traced panel answers FFmpeg with a non-standard 458 while serving ExoPlayer normally;
-        // repeating the same request cannot change that, so only one repeat is allowed — enough for the
-        // format/User-Agent fallbacks, which need autoRetries >= 1, to still get their turn.
-        assertTrue(OwnTVPlayer.isHardHttpRefusal("ffmpeg: http: HTTP error 458 <none>"))
+        // A panel that refuses outright cannot be talked round by the same request, so only one repeat
+        // is allowed — enough for the format/User-Agent fallbacks, which need autoRetries >= 1, to
+        // still get their turn.
         assertTrue(OwnTVPlayer.isHardHttpRefusal("ffmpeg: http: HTTP error 403 Forbidden"))
+        assertTrue(OwnTVPlayer.isHardHttpRefusal("ffmpeg: http: HTTP error 404 Not Found"))
         assertFalse(OwnTVPlayer.isHardHttpRefusal("ffmpeg: http: HTTP error 502 Bad Gateway"))
         assertFalse(OwnTVPlayer.isHardHttpRefusal("stream: Failed to open http://panel/live/7.ts."))
         assertFalse(OwnTVPlayer.isHardHttpRefusal(null))
         assertEquals(1, OwnTVPlayer.HARD_REFUSAL_MAX_RETRIES)
+    }
+
+    @Test
+    fun `busy is not refusal — 458 429 408 keep their retries`() {
+        // F29: "the account's one session is already in use" (the non-standard 458 Xtream panels use),
+        // a rate limit and a request timeout all mean the stream is fine and we should ask again after
+        // a back-off — which is what the ExoPlayer side already does via LiveStreamQuirks.isSessionLimit.
+        // Treating them as hard refusals made mpv give up on panels ExoPlayer reconnects to.
+        assertEquals(OwnTVPlayer.HttpRefusal.BUSY, OwnTVPlayer.httpRefusalKind("ffmpeg: http: HTTP error 458 <none>"))
+        assertEquals(OwnTVPlayer.HttpRefusal.BUSY, OwnTVPlayer.httpRefusalKind("ffmpeg: http: HTTP error 429 Too Many Requests"))
+        assertEquals(OwnTVPlayer.HttpRefusal.BUSY, OwnTVPlayer.httpRefusalKind("ffmpeg: http: HTTP error 408 Request Timeout"))
+        assertEquals(OwnTVPlayer.HttpRefusal.HARD, OwnTVPlayer.httpRefusalKind("ffmpeg: http: HTTP error 401 Unauthorized"))
+        assertEquals(OwnTVPlayer.HttpRefusal.NONE, OwnTVPlayer.httpRefusalKind("ffmpeg: http: HTTP error 503 Unavailable"))
+        assertEquals(OwnTVPlayer.HttpRefusal.NONE, OwnTVPlayer.httpRefusalKind(null))
     }
 
     @Test

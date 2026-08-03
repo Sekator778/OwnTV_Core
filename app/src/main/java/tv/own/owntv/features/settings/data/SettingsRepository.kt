@@ -128,6 +128,7 @@ class SettingsRepository(private val context: Context) {
         // Live TV latency: preset name + the custom seconds used when the preset is CUSTOM.
         val LIVE_LATENCY_MODE = stringPreferencesKey("live_latency_mode")
         val LIVE_LATENCY_CUSTOM_SECS = intPreferencesKey("live_latency_custom_secs")
+        val LIVE_PREROLL_SECS = intPreferencesKey("live_preroll_secs")
         // v4.1.6 one-shot: reset live latency to the safe Balanced preset. Subsequent user changes are
         // preserved across every later update.
         val LIVE_LATENCY_RESET_416 = booleanPreferencesKey("live_latency_reset_416")
@@ -136,6 +137,9 @@ class SettingsRepository(private val context: Context) {
         // v4.1.6 one-shot: AFR caused visible HDMI re-handshakes on some TVs. Existing installs are
         // forced Off once; subsequent user changes are preserved across every later update.
         val AUTO_FRAME_RATE_RESET_416 = booleanPreferencesKey("auto_frame_rate_reset_416")
+
+        /** The one-time "this stream judders at your TV's refresh rate" suggestion has been answered. */
+        val AUTO_FRAME_RATE_PROMPTED = booleanPreferencesKey("auto_frame_rate_prompted")
         val ANDROID_TV_HOME = booleanPreferencesKey("android_tv_home")
         // Video Player Settings
         val HW_DECODING = booleanPreferencesKey("hw_decoding")
@@ -991,10 +995,26 @@ class SettingsRepository(private val context: Context) {
         if (prefs[Keys.AUTO_FRAME_RATE_RESET_416] == true) prefs[Keys.AUTO_FRAME_RATE] ?: false else false
     }
 
+    /**
+     * Whether the one-time Auto-frame-rate suggestion has already been answered (F13).
+     *
+     * The suggestion only appears when a 24/25/50 fps stream is playing full-screen on a display whose
+     * refresh rate is not a multiple of it *and* a matching mode exists — the case where mpv's direct
+     * `mediacodec_embed` path judders and AFR is the only cure. Answering it either way (or turning AFR
+     * on by hand) sets this for good; it is never shown twice.
+     */
+    val autoFrameRatePrompted: Flow<Boolean> = prefsFlow { it[Keys.AUTO_FRAME_RATE_PROMPTED] ?: false }
+
+    suspend fun setAutoFrameRatePrompted() {
+        context.dataStore.edit { it[Keys.AUTO_FRAME_RATE_PROMPTED] = true }
+    }
+
     suspend fun setAutoFrameRate(enabled: Boolean) {
         context.dataStore.edit {
             it[Keys.AUTO_FRAME_RATE] = enabled
             it[Keys.AUTO_FRAME_RATE_RESET_416] = true
+            // Someone who has found the setting doesn't need to be told it exists.
+            if (enabled) it[Keys.AUTO_FRAME_RATE_PROMPTED] = true
         }
     }
 
@@ -1097,6 +1117,19 @@ class SettingsRepository(private val context: Context) {
 
     suspend fun setLiveLatencyCustomSecs(secs: Int) {
         context.dataStore.edit { it[Keys.LIVE_LATENCY_CUSTOM_SECS] = LiveBuffer.clampCustom(secs) }
+    }
+
+    /**
+     * "Pre-buffer" (F07): how many seconds to fill before a live channel starts playing,
+     * and how many to refill after a rebuffer. 0 = Off, which keeps the engines' existing 1 s / 2 s
+     * start thresholds. A per-playlist override lives on `SourceEntity.livePrerollSecs`.
+     */
+    val livePrerollSecs: Flow<Int> = prefsFlow { prefs ->
+        (prefs[Keys.LIVE_PREROLL_SECS] ?: LiveBuffer.PREROLL_OFF).coerceIn(0, 30)
+    }
+
+    suspend fun setLivePrerollSecs(secs: Int) {
+        context.dataStore.edit { it[Keys.LIVE_PREROLL_SECS] = secs.coerceIn(0, 30) }
     }
 
     /** Effective live buffer in seconds the engines apply (null = keep engine defaults, i.e. Balanced). */
@@ -1245,9 +1278,9 @@ class SettingsRepository(private val context: Context) {
         // The STATIC-mode hidden set rides with backup so a reinstall keeps the user's hidden icons.
         Keys.NAV_MENU_HIDDEN,
     )
-    private val backupIntKeys = listOf(Keys.UI_ZOOM_PCT, Keys.AUDIO_DELAY_MS, Keys.CATCHUP_OFFSET_MIN, Keys.PROXY_PORT, Keys.DNS_PORT, Keys.CH_NAV_UP_SKIP, Keys.CH_NAV_DOWN_SKIP, Keys.MINI_PLAYER_SIZE_PCT, Keys.LIVE_LATENCY_CUSTOM_SECS, Keys.GLASS_SCOPE, Keys.GLASS_ALPHA, Keys.GLASS_BLUR, Keys.SUB_BG_OPACITY)
+    private val backupIntKeys = listOf(Keys.UI_ZOOM_PCT, Keys.AUDIO_DELAY_MS, Keys.CATCHUP_OFFSET_MIN, Keys.PROXY_PORT, Keys.DNS_PORT, Keys.CH_NAV_UP_SKIP, Keys.CH_NAV_DOWN_SKIP, Keys.MINI_PLAYER_SIZE_PCT, Keys.LIVE_LATENCY_CUSTOM_SECS, Keys.LIVE_PREROLL_SECS, Keys.GLASS_SCOPE, Keys.GLASS_ALPHA, Keys.GLASS_BLUR, Keys.SUB_BG_OPACITY)
     private val backupBoolKeys = listOf(
-        Keys.LIVE_PREVIEW, Keys.LIVE_PREVIEW_AUDIO, Keys.HDR_ENABLED, Keys.AUTO_FRAME_RATE, Keys.ANDROID_TV_HOME, Keys.HW_DECODING,
+        Keys.LIVE_PREVIEW, Keys.LIVE_PREVIEW_AUDIO, Keys.HDR_ENABLED, Keys.AUTO_FRAME_RATE, Keys.AUTO_FRAME_RATE_PROMPTED, Keys.ANDROID_TV_HOME, Keys.HW_DECODING,
         Keys.VOD_PREFER_EXO, Keys.MEASURED_STREAM_STATS, Keys.DIRECT_TUNE, Keys.EXTERNAL_PLAYER,
         Keys.EXTERNAL_PLAYER_LIVE, Keys.EXTERNAL_PLAYER_MOVIES, Keys.EXTERNAL_PLAYER_SERIES, Keys.UPDATE_CHECK_ON_START, Keys.SURROUND_SOUND, Keys.AUTO_PLAY_NEXT, Keys.PROXY_ENABLED,
         Keys.WEATHER_ENABLED, Keys.WEATHER_FAHRENHEIT, Keys.RESUME_LAST_CHANNEL, Keys.METADATA_ENABLED, Keys.CH_NAV_ENABLED,

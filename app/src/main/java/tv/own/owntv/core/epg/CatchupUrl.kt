@@ -83,7 +83,10 @@ object CatchupUrl {
         return when (source.type) {
             SourceType.XTREAM -> channel.remoteId?.let { streamId ->
                 val durationMin = (((programme.stopMs - programme.startMs) / 60_000L).toInt()).coerceAtLeast(1)
-                xtream.timeshiftUrl(source, streamId, programme.startMs, durationMin, tz)
+                // Prefer HLS applies to the archive as well as the live edge (F05): a panel that only
+                // serves this account `.m3u8` answers the `.ts` timeshift path with an error page.
+                val ext = if (source.preferHls) "m3u8" else "ts"
+                xtream.timeshiftUrl(source, streamId, programme.startMs, durationMin, tz, ext)
             }
             SourceType.M3U -> forM3u(channel.streamUrl, null, channel.catchupSource, programme.startMs, programme.stopMs)
             else -> null
