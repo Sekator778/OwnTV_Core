@@ -71,6 +71,9 @@ object LiveStreamQuirks {
     private val segmentRefusingHosts = ConcurrentHashMap.newKeySet<String>()
     private val singleSessionHosts = ConcurrentHashMap.newKeySet<String>()
     private val brokenTimestampStreams = ConcurrentHashMap.newKeySet<String>()
+    private val noHlsVariantStreams = ConcurrentHashMap.newKeySet<String>()
+    private val noHlsVariantMpvStreams = ConcurrentHashMap.newKeySet<String>()
+    private val prerollDefeatedStreams = ConcurrentHashMap.newKeySet<String>()
     private val softwareArchiveHosts = ConcurrentHashMap.newKeySet<String>()
 
     /** Record that [url]'s host serves HLS even when its advertised URL says `.ts`. */
@@ -128,6 +131,54 @@ object LiveStreamQuirks {
     fun hasBrokenTimestamps(url: String): Boolean = url in brokenTimestampStreams
 
     /**
+     * Record that this channel has no `.m3u8` sibling **the given engine can play**, so "Prefer HLS"
+     * must be ignored for it there.
+     *
+     * The playlist setting rewrites every Xtream `.ts` to `.m3u8` blindly, but a panel does not
+     * necessarily remux *every* channel: the odd one answers its `.m3u8` with a 404, an empty body, or a
+     * playlist whose segments never arrive — and the channel that played perfectly in TS mode turns into
+     * a black screen or a spinner that never resolves. The fix is to fall back to the `.ts` the panel
+     * does serve.
+     *
+     * **Scoped per engine, because "unplayable" is not the same verdict for both.** Traced on a 4K
+     * channel whose `.m3u8` is served perfectly well and plays on mpv, while ExoPlayer's audio renderer
+     * never produces a sample from it (`audio=false` with the buffer full). A single shared flag made
+     * ExoPlayer's verdict push mpv onto `.ts` too, costing the one combination that actually worked. So
+     * each engine only ever learns its own failures, and the fallback ladder gives the other engine the
+     * HLS variant a fair try before giving up on it.
+     *
+     * Keyed by the **channel's own `.ts` URL**, not the panel: on the very same provider all the other
+     * channels keep their HLS variant, which is the reason the user turned the setting on. Session-only,
+     * so a panel that finishes remuxing is back to HLS after the next app start.
+     */
+    fun rememberNoHlsVariant(tsUrl: String) { noHlsVariantStreams += tsUrl }
+
+    fun lacksHlsVariant(tsUrl: String): Boolean = tsUrl in noHlsVariantStreams
+
+    /** As [rememberNoHlsVariant], for mpv. */
+    fun rememberNoHlsVariantMpv(tsUrl: String) { noHlsVariantMpvStreams += tsUrl }
+
+    fun lacksHlsVariantMpv(tsUrl: String): Boolean = tsUrl in noHlsVariantMpvStreams
+
+    /**
+     * Record that this stream can never satisfy the "Pre-buffer" threshold, so it must open without one.
+     *
+     * ExoPlayer's `DefaultLoadControl` starts (and *resumes*) playback once **either** the requested
+     * amount of media or the byte cap is reached. On a very high-bitrate feed — a 4K live channel is the
+     * traced case — the byte cap is hit long before 10 s of media exists, so the time threshold is
+     * unreachable: playback starts on the byte rule, drains a few frames, drops back under the cap, and
+     * re-buffers immediately. The result is a `READY`/`BUFFERING` oscillation several times a second that
+     * looks exactly like a frozen picture with a stuck spinner — and it defeats every stall watchdog,
+     * because each `READY` cancels them before they can fire.
+     *
+     * Keyed by the **whole URL**: it is a property of one feed's bitrate, not of the panel, and the same
+     * provider's HD channels satisfy the pre-roll fine. Session-only.
+     */
+    fun rememberPrerollDefeated(url: String) { prerollDefeatedStreams += url }
+
+    fun defeatsPreroll(url: String): Boolean = url in prerollDefeatedStreams
+
+    /**
      * Record that this panel's catch-up archive needs a SOFTWARE video decoder.
      *
      * Archive (timeshift) segments start mid-GOP, and some TV-class hardware decoders can't resync from
@@ -170,5 +221,6 @@ object LiveStreamQuirks {
     internal fun clearForTest() {
         hlsRedirectHosts.clear(); segmentRefusingHosts.clear(); singleSessionHosts.clear()
         brokenTimestampStreams.clear(); softwareArchiveHosts.clear(); archivePersistence = null
+        noHlsVariantStreams.clear(); noHlsVariantMpvStreams.clear(); prerollDefeatedStreams.clear()
     }
 }

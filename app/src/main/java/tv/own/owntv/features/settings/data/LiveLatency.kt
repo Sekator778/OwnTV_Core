@@ -113,9 +113,15 @@ object LiveBuffer {
      * 25 Mbps UHD stream, which is what keeps that socket reading continuously — but it also means a
      * user who asked for a 15 s buffer would silently get 7. Scale the cap with the depth so the
      * request is real, bounded so a 4K channel can never pin an unreasonable amount of the app heap.
+     *
+     * [prerollSecs] counts towards the depth for the same reason: [loadControlFor] raises the *time*
+     * floor to hold the pre-roll, so a cap left at the Balanced size would stop the load before that
+     * floor could ever be reached. On a high-bitrate feed even the scaled cap can be the binding one —
+     * `LivePreviewEngine`'s re-buffer-flap detector is the backstop for that (it drops the pre-roll for
+     * that stream), because no sane heap budget holds 10 s of a 4K channel.
      */
-    fun targetBufferBytes(bufferSecs: Int?, defaultBytes: Int): Int {
-        val depthSecs = bufferSecs ?: BALANCED_SECS
+    fun targetBufferBytes(bufferSecs: Int?, prerollSecs: Int, defaultBytes: Int): Int {
+        val depthSecs = maxOf(bufferSecs ?: BALANCED_SECS, prerollSecs.coerceAtLeast(0))
         if (depthSecs <= BALANCED_SECS) return defaultBytes
         val scaled = defaultBytes.toLong() * depthSecs / BALANCED_SECS
         return scaled.coerceAtMost(defaultBytes.toLong() * 3).toInt()

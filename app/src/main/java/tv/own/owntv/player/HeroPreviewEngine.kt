@@ -16,6 +16,8 @@ import androidx.media3.exoplayer.source.DefaultMediaSourceFactory
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import tv.own.owntv.core.network.HttpClient
 
 /**
@@ -29,9 +31,20 @@ import tv.own.owntv.core.network.HttpClient
 class HeroPreviewEngine(
     private val context: Context,
     private val streamingHttp: tv.own.owntv.core.network.StreamingHttpClient,
+    settings: tv.own.owntv.features.settings.data.SettingsRepository? = null,
     /** True while another engine (mpv) already holds a stream — used for the one-session guard. */
     private val streamInUse: () -> Boolean = { false },
 ) {
+    /** Mirrors Settings → Video player → Hardware decoding, like every other engine. Read at [build]
+     *  time; a change rebuilds on the next preview (see the decode-path check in [play]). */
+    @Volatile private var hwDecodingEnabled = true
+
+    init {
+        settings?.hwDecoding
+            ?.onEach { hwDecodingEnabled = it }
+            ?.launchIn(kotlinx.coroutines.CoroutineScope(kotlinx.coroutines.Dispatchers.Main.immediate))
+    }
+
     enum class State { IDLE, LOADING, PLAYING, ERROR }
 
     private var player: ExoPlayer? = null
@@ -112,8 +125,13 @@ class HeroPreviewEngine(
     }
 
     private var builtForUa: String = HttpClient.DEFAULT_USER_AGENT
+    private var builtForHeaders: Map<String, String> = emptyMap()
+    private var builtForSoftware = false
 
-    fun play(url: String, seekToMs: Long = 0L, userAgent: String? = null) {
+    /** [httpHeaders] = this item's own `Key: Value` request headers (M3U `#EXTVLCOPT`/`#EXTHTTP`), or
+     *  null for none. A stream that needs a Referer to open needs it here too, or the hero preview is
+     *  the one place in the app that gets a 403 while the player itself plays the item fine. */
+    fun play(url: String, seekToMs: Long = 0L, userAgent: String? = null, httpHeaders: String? = null) {
         // One-session provider with its single stream already in use: previewing here would knock the
         // user's own playback off the air (or just fail with a 458). Stay on the poster instead (F19d) —
         // the same rule the Live preview pane follows.
@@ -121,15 +139,30 @@ class HeroPreviewEngine(
             stop()
             return
         }
-        val effectiveUa = userAgent?.takeIf { it.isNotBlank() } ?: HttpClient.DEFAULT_USER_AGENT
+        val headers = tv.own.owntv.core.network.StreamHeaders.decode(httpHeaders)
+        // An item's own User-Agent is more specific than the source-wide one, so it wins — same rule as
+        // the live and VOD engines.
+        val effectiveUa = tv.own.owntv.core.network.StreamHeaders.userAgentOf(headers)
+            ?: userAgent?.takeIf { it.isNotBlank() }
+            ?: HttpClient.DEFAULT_USER_AGENT
+        val requestHeaders = headers.filterKeys { !it.equals("User-Agent", ignoreCase = true) }
         currentUrl = url
         val startPositionMs = seekToMs.coerceAtLeast(0L)
         hasStarted = false
         _state.value = State.LOADING
         runCatching {
-            // Rebuild if UA changed (different source with different User-Agent).
-            if (effectiveUa != builtForUa) { player?.release(); player = null }
-            val p = player ?: build(effectiveUa).also { player = it; builtForUa = effectiveUa }
+            // Rebuild when the request identity or the decode path no longer matches what this player was
+            // built with: the data-source factory and the renderer factory are both fixed at construction.
+            val wantSoftware = !hwDecodingEnabled
+            if (effectiveUa != builtForUa || requestHeaders != builtForHeaders || wantSoftware != builtForSoftware) {
+                player?.release(); player = null
+            }
+            val p = player ?: build(effectiveUa, requestHeaders).also {
+                player = it
+                builtForUa = effectiveUa
+                builtForHeaders = requestHeaders
+                builtForSoftware = wantSoftware
+            }
             surface?.let { p.setVideoSurface(it) }
             p.repeatMode = Player.REPEAT_MODE_ONE
             p.setMediaItem(MediaItem.fromUri(url), startPositionMs)
@@ -173,8 +206,13 @@ class HeroPreviewEngine(
         _state.value = State.IDLE
     }
 
-    private fun build(ua: String = HttpClient.DEFAULT_USER_AGENT): ExoPlayer {
-        val dataSource = OkHttpDataSource.Factory(streamingHttp.client).setUserAgent(ua)
+    private fun build(
+        ua: String = HttpClient.DEFAULT_USER_AGENT,
+        headers: Map<String, String> = emptyMap(),
+    ): ExoPlayer {
+        val dataSource = OkHttpDataSource.Factory(streamingHttp.client)
+            .setUserAgent(ua)
+            .setDefaultRequestProperties(headers)
         val loadControl = DefaultLoadControl.Builder()
             .setBufferDurationsMs(2_000, 8_000, 1_000, 2_000)
             .build()
@@ -183,7 +221,10 @@ class HeroPreviewEngine(
             // factory: the hero preview draws the same UHD-HEVC trailers the player does, on the same
             // VPU. forceStereo is belt-and-braces — the audio track is disabled below, so no sink is
             // built at all, but nothing here may ever claim the HDMI passthrough output.
-            .setRenderersFactory(ownTVRenderers(context, forceStereo = true))
+            // softwareFirst follows the same setting the other engines read: a user who turned hardware
+            // decoding off did so to work around a broken vendor decoder, and the home screen was the one
+            // place still handing that decoder a 4K stream.
+            .setRenderersFactory(ownTVRenderers(context, forceStereo = true, softwareFirst = !hwDecodingEnabled))
             .setMediaSourceFactory(DefaultMediaSourceFactory(dataSource))
             .setLoadControl(loadControl)
             .build()

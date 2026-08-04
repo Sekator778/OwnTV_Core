@@ -741,6 +741,10 @@ class OwnTVPlayer(
     private var prefSubLang = ""
     private var defaultZoom = ZoomMode.FIT
 
+    /** Settings → Video player → Auto frame rate. mpv doesn't act on it (the Compose surface does), but
+     *  the ExoPlayer handoff engine has its own frame-rate mechanism that must follow the same switch. */
+    private var autoFrameRate = false
+
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
 
     /**
@@ -900,6 +904,10 @@ class OwnTVPlayer(
         settings.defaultZoom.onEach { name ->
             defaultZoom = runCatching { ZoomMode.valueOf(name) }.getOrDefault(ZoomMode.FIT)
         }.launchIn(scope)
+        // Auto frame rate drives the display-mode switch from the Compose surface; ExoPlayer has a
+        // SECOND mechanism (Surface.setFrameRate) that must follow the same switch, so the value is
+        // tracked here and handed to the handoff engine in [startExo].
+        settings.autoFrameRate.onEach { autoFrameRate = it }.launchIn(scope)
         // Subtitle overlay is fed by OBSERVING "sub-text" (see eventProperty) — not polling. The old
         // 250 ms getPropertyString poll logged a "property unavailable" error 4×/sec whenever no line
         // was on screen, flooding logcat and burning a cross-thread call the whole time.
@@ -1517,6 +1525,12 @@ class OwnTVPlayer(
         // on a stereo sink — the session latch is already set by the time this fires, so `start` rebuilds.
         engine.surroundMode = surroundMode
         engine.hwDecodingEnabled = hwDecoding
+        // Auto frame rate and the preferred languages used to reach mpv only, so an item that landed on
+        // ExoPlayer (image-subtitle handoff, "prefer ExoPlayer for VOD", or an mpv fallback) quietly
+        // ignored three settings the user had set. Same values, same source of truth.
+        engine.autoFrameRateEnabled = autoFrameRate
+        engine.prefAudioLang = prefAudioLang
+        engine.prefSubLang = prefSubLang
         // Carry this item's request identity across the handoff (F16) — a stream that needs a custom
         // UA/Referer on mpv needs exactly the same on ExoPlayer.
         engine.userAgent = currentUserAgent
@@ -2534,8 +2548,10 @@ class OwnTVPlayer(
                         lastPos = pos
                         // Audio is advancing, but a video track was selected and still hasn't produced a
                         // single decoded frame — the "audio plays, no picture" case position-only checks
-                        // above can't see.
-                        if (currentVideoCodec != null && currentHeightPx == 0) {
+                        // above can't see. Audio Mode is exempt: `vid=no` is the app deliberately turning
+                        // the picture off, and reporting "no video frame" for it would reconnect a healthy
+                        // channel and eventually show a decode error over working audio.
+                        if (!_audioOnly.value && currentVideoCodec != null && currentHeightPx == 0) {
                             if (++noVideoStalls < LIVE_STALL_LIMIT) continue
                             val elapsedMs = LIVE_STALL_LIMIT * LIVE_STALL_POLL_MS
                             LiveDiagnosticsLog.event("no-video (mpv, Live) — audio progressing but no video frame after ~${elapsedMs}ms")
@@ -3011,7 +3027,10 @@ class OwnTVPlayer(
     fun enterAudioOnly() {
         if (_audioOnly.value) return
         _audioOnly.value = true
-        if (exoActive) { exoEngine?.setSurface(null); return }
+        // Deselect the video track as well as dropping the surface: without it ExoPlayer keeps decoding
+        // frames into nothing, so Audio Mode cost the same power as watching (and its first-frame
+        // watchdog would eventually declare the device unable to render video).
+        if (exoActive) { exoEngine?.setVideoTrackDisabled(true); exoEngine?.setSurface(null); return }
         if (!initialized) return
         mpvAsync { setPropertyString("vid", "no") }
     }
@@ -3019,7 +3038,15 @@ class OwnTVPlayer(
     fun exitAudioOnly() {
         if (!_audioOnly.value) return
         _audioOnly.value = false
-        if (exoActive) { attachedSurface?.let { exoEngine?.setSurface(it) }; return }
+        if (exoActive) {
+            // Surface before track, always: leaving Audio Mode from the now-playing bar runs while the
+            // full-screen SurfaceView is still unmounted, and re-enabling video with no surface makes
+            // ExoPlayer build its decoder against a placeholder. The engine defers the re-enable to
+            // whichever of these two arrives with a real surface (here, or the later attachSurface).
+            attachedSurface?.let { exoEngine?.setSurface(it) }
+            exoEngine?.setVideoTrackDisabled(false)
+            return
+        }
         if (!initialized) return
         mpvAsync { setPropertyString("vid", "auto") }
     }
@@ -3594,7 +3621,10 @@ class OwnTVPlayer(
                 // second apart and only publish it if both samples agree and land on a broadcast rate.
                 // Two agreeing samples matter because the start-up burst and any cache stall skew a
                 // single reading, and a wrong fps here would ask the TV for the wrong display mode.
-                run {
+                // Only when something consumes the result: Auto frame rate (the display-mode switch) or
+                // the measured-stats escape hatch (the fps chip). With both off nobody reads _videoFps,
+                // and the probe was still waking the mpv worker three times per open for nothing.
+                if (autoFrameRate || measuredStreamStats) {
                     val fgen = loadGeneration
                     scope.launch {
                         delay(LIVE_FPS_PROBE_MS)
