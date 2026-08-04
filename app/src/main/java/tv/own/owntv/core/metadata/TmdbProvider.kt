@@ -260,10 +260,15 @@ class TmdbProvider(
             if (id == 0) continue
             val name = if (type == MetadataType.TV) o.optString("name") else o.optString("title")
             val date = if (type == MetadataType.TV) o.optString("first_air_date") else o.optString("release_date")
+            // Language-independent title: `name`/`title` above is translated when &language= is set, so
+            // the matcher needs the original alongside it (see MetadataSearchResult.originalTitle).
+            val original =
+                if (type == MetadataType.TV) o.optString("original_name") else o.optString("original_title")
             out += MetadataSearchResult(
                 tmdbId = id,
                 type = type,
                 title = name.ifBlank { "?" },
+                originalTitle = original.takeIf { it.isNotBlank() && it != "null" },
                 year = date.take(4).toIntOrNull(),
                 overview = o.optString("overview").takeIf { it.isNotBlank() },
                 posterPath = o.optString("poster_path").takeIf { it.isNotBlank() && it != "null" },

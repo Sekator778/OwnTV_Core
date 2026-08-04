@@ -167,6 +167,10 @@ class SettingsRepository(private val context: Context) {
         val AUDIO_DELAY_MS = intPreferencesKey("audio_delay_ms")
         val PREF_AUDIO_LANG = stringPreferencesKey("pref_audio_lang")
         val PREF_SUB_LANG = stringPreferencesKey("pref_sub_lang")
+        // OpenSubtitles online-search language filter. Separate from PREF_SUB_LANG (embedded tracks) —
+        // off by default, so a search returns every language OpenSubtitles has for the title.
+        val SUB_SEARCH_FILTER = booleanPreferencesKey("sub_search_filter")
+        val SUB_SEARCH_LANGS = stringPreferencesKey("sub_search_langs")
         // Per-section list sorting ("PLAYLIST" or "ALPHA")
         val SORT_LIVE = stringPreferencesKey("sort_live")
         val SORT_GUIDE = stringPreferencesKey("sort_guide")
@@ -209,6 +213,10 @@ class SettingsRepository(private val context: Context) {
         // TMDB default (en-US), which is what every install used before this setting existed, so leaving
         // it blank keeps existing users' metadata exactly as it was. "auto" = follow the device locale.
         val METADATA_LANGUAGE = stringPreferencesKey("metadata_language")
+        // Bumped whenever a matcher fix invalidates previously cached "no match" rows, so existing
+        // installs drop them once instead of waiting out the 7-day negative TTL. See
+        // MetadataRepository.MATCH_HEURISTICS_VERSION.
+        val METADATA_MATCH_HEAL_VERSION = intPreferencesKey("metadata_match_heal_version")
         // Nav menu customization (v4.3.0): DYNAMIC auto-adapts the side icons to what the active playlist
         // offers; STATIC lets the user hide specific icons. NAV_HIDDEN holds MainSection.name values the
         // user has hidden (STATIC mode only — DYNAMIC ignores it).
@@ -220,6 +228,21 @@ class SettingsRepository(private val context: Context) {
         val CH_NAV_ENABLED = booleanPreferencesKey("ch_nav_enabled")
         val CH_NAV_UP_SKIP = intPreferencesKey("ch_nav_up_skip")
         val CH_NAV_DOWN_SKIP = intPreferencesKey("ch_nav_down_skip")
+        // Manual panel-width adjustment (v4.3.x): per section (Live/Movies/Series) a master toggle plus
+        // one percentage per panel (category rail · item list/grid · preview). 100 = stock width; the
+        // three are normalized across the row, so they always fill the screen. See PanelWidths.kt.
+        val PANEL_W_LIVE_ON = booleanPreferencesKey("panel_w_live_on")
+        val PANEL_W_LIVE_CAT = intPreferencesKey("panel_w_live_cat")
+        val PANEL_W_LIVE_LIST = intPreferencesKey("panel_w_live_list")
+        val PANEL_W_LIVE_PREVIEW = intPreferencesKey("panel_w_live_preview")
+        val PANEL_W_MOVIES_ON = booleanPreferencesKey("panel_w_movies_on")
+        val PANEL_W_MOVIES_CAT = intPreferencesKey("panel_w_movies_cat")
+        val PANEL_W_MOVIES_LIST = intPreferencesKey("panel_w_movies_list")
+        val PANEL_W_MOVIES_PREVIEW = intPreferencesKey("panel_w_movies_preview")
+        val PANEL_W_SERIES_ON = booleanPreferencesKey("panel_w_series_on")
+        val PANEL_W_SERIES_CAT = intPreferencesKey("panel_w_series_cat")
+        val PANEL_W_SERIES_LIST = intPreferencesKey("panel_w_series_list")
+        val PANEL_W_SERIES_PREVIEW = intPreferencesKey("panel_w_series_preview")
         // "Browsing & lists" — two independent per-section toggles (Live TV / Movies / Series).
         //
         // REMEMBER_LAST_*  = remember last ITEM. OFF (default) = switching category resets the browse list
@@ -464,6 +487,14 @@ class SettingsRepository(private val context: Context) {
 
     suspend fun setMetadataLanguage(code: String) {
         context.dataStore.edit { it[Keys.METADATA_LANGUAGE] = code.trim() }
+    }
+
+    /** Matcher generation the cached "no match" rows were written under (0 = never healed). */
+    suspend fun metadataMatchHealVersion(): Int =
+        context.dataStore.data.first()[Keys.METADATA_MATCH_HEAL_VERSION] ?: 0
+
+    suspend fun setMetadataMatchHealVersion(version: Int) {
+        context.dataStore.edit { it[Keys.METADATA_MATCH_HEAL_VERSION] = version }
     }
 
     /** Live snapshot of the metadata settings as one object (consumed by TmdbProvider). */
@@ -850,6 +881,65 @@ class SettingsRepository(private val context: Context) {
         context.dataStore.edit { it[Keys.CH_NAV_DOWN_SKIP] = n.coerceIn(1, ChNavLimits.HARD_MAX) }
     }
 
+    // --- Manual panel widths: per browse section, a master toggle + one percentage per panel ---
+    // While the toggle is off the screens keep their stock layout code path entirely, so the feature
+    // can't affect anyone who never opens it. Percentages are clamped on both read and write.
+    private fun panelOnKey(s: PanelSection) = when (s) {
+        PanelSection.LIVE -> Keys.PANEL_W_LIVE_ON
+        PanelSection.MOVIES -> Keys.PANEL_W_MOVIES_ON
+        PanelSection.SERIES -> Keys.PANEL_W_SERIES_ON
+    }
+    private fun panelCategoryKey(s: PanelSection) = when (s) {
+        PanelSection.LIVE -> Keys.PANEL_W_LIVE_CAT
+        PanelSection.MOVIES -> Keys.PANEL_W_MOVIES_CAT
+        PanelSection.SERIES -> Keys.PANEL_W_SERIES_CAT
+    }
+    private fun panelListKey(s: PanelSection) = when (s) {
+        PanelSection.LIVE -> Keys.PANEL_W_LIVE_LIST
+        PanelSection.MOVIES -> Keys.PANEL_W_MOVIES_LIST
+        PanelSection.SERIES -> Keys.PANEL_W_SERIES_LIST
+    }
+    private fun panelPreviewKey(s: PanelSection) = when (s) {
+        PanelSection.LIVE -> Keys.PANEL_W_LIVE_PREVIEW
+        PanelSection.MOVIES -> Keys.PANEL_W_MOVIES_PREVIEW
+        PanelSection.SERIES -> Keys.PANEL_W_SERIES_PREVIEW
+    }
+
+    fun panelWidthEnabled(s: PanelSection): Flow<Boolean> = prefsFlow { it[panelOnKey(s)] ?: false }
+
+    /**
+     * The section's three shares, or null when nothing has been saved yet (the dialog then seeds
+     * itself from the stock layout). Read back through [balanceToTotal] so a value written by a
+     * different build can never leave the row over- or under-filled.
+     */
+    fun panelShares(s: PanelSection): Flow<PanelShares?> = prefsFlow { p ->
+        val category = p[panelCategoryKey(s)] ?: 0
+        val list = p[panelListKey(s)] ?: 0
+        val preview = p[panelPreviewKey(s)] ?: 0
+        if (category <= 0 || list <= 0 || preview <= 0) {
+            null
+        } else {
+            balanceToTotal(
+                PanelShares(
+                    PanelWidthLimits.snap(category),
+                    PanelWidthLimits.snap(list),
+                    PanelWidthLimits.snap(preview),
+                ),
+            )
+        }
+    }
+
+    /** "Okay" in the panel-width dialog — the toggle and all three shares land in one write. */
+    suspend fun setPanelWidths(s: PanelSection, enabled: Boolean, shares: PanelShares) {
+        val safe = balanceToTotal(shares)
+        context.dataStore.edit {
+            it[panelOnKey(s)] = enabled
+            it[panelCategoryKey(s)] = safe.category
+            it[panelListKey(s)] = safe.list
+            it[panelPreviewKey(s)] = safe.preview
+        }
+    }
+
     /** Preferred audio language (ISO code, mpv alang); blank = no preference. */
     val preferredAudioLang: Flow<String> = prefsFlow { it[Keys.PREF_AUDIO_LANG] ?: "" }
 
@@ -862,6 +952,26 @@ class SettingsRepository(private val context: Context) {
 
     suspend fun setPreferredSubLang(lang: String) {
         context.dataStore.edit { it[Keys.PREF_SUB_LANG] = lang }
+    }
+
+    // --- OpenSubtitles search language filter ---
+    // Deliberately its own setting rather than reusing [preferredSubLang]: that one picks an EMBEDDED
+    // track inside the stream (a 15-language mpv list that has no Greek, among others), which is a
+    // different question from "which languages should an online search return". Default OFF = show
+    // everything OpenSubtitles has for the title and let the user choose.
+
+    /** Whether OpenSubtitles results are restricted to [subSearchLanguages]. Off = all languages. */
+    val subSearchFilterEnabled: Flow<Boolean> = prefsFlow { it[Keys.SUB_SEARCH_FILTER] ?: false }
+
+    suspend fun setSubSearchFilterEnabled(enabled: Boolean) {
+        context.dataStore.edit { it[Keys.SUB_SEARCH_FILTER] = enabled }
+    }
+
+    /** Chosen OpenSubtitles language codes (ISO 639-1, e.g. "el,en"). Only applied when the filter is on. */
+    val subSearchLanguages: Flow<String> = prefsFlow { it[Keys.SUB_SEARCH_LANGS] ?: "" }
+
+    suspend fun setSubSearchLanguages(codes: String) {
+        context.dataStore.edit { it[Keys.SUB_SEARCH_LANGS] = codes.trim() }
     }
 
     // --- Per-source auto-refresh (Off / Startup / staleness threshold) ---
@@ -1270,7 +1380,7 @@ class SettingsRepository(private val context: Context) {
 
     private val backupStringKeys = listOf(
         Keys.THEME_MODE, Keys.ACCENT, Keys.ACCENT_CUSTOM, Keys.DEFAULT_ZOOM,
-        Keys.PREF_AUDIO_LANG, Keys.PREF_SUB_LANG, Keys.SORT_LIVE, Keys.SORT_GUIDE, Keys.SORT_MOVIES,
+        Keys.PREF_AUDIO_LANG, Keys.PREF_SUB_LANG, Keys.SUB_SEARCH_LANGS, Keys.SORT_LIVE, Keys.SORT_GUIDE, Keys.SORT_MOVIES,
         Keys.SORT_SERIES, Keys.RESUME_MODE, Keys.CATCHUP_TZ, Keys.CATCHUP_PLAYER, Keys.ANIMATION_LEVEL, Keys.VOD_VIEW_MODE,
         Keys.WEATHER_LOCATION, Keys.RECENT_SEARCHES,
         // Global proxy — non-secret fields only. The proxy password (Keys.PROXY_PASS) is NEVER part of
@@ -1307,7 +1417,10 @@ class SettingsRepository(private val context: Context) {
         // The STATIC-mode hidden set rides with backup so a reinstall keeps the user's hidden icons.
         Keys.NAV_MENU_HIDDEN,
     )
-    private val backupIntKeys = listOf(Keys.UI_ZOOM_PCT, Keys.AUDIO_DELAY_MS, Keys.CATCHUP_OFFSET_MIN, Keys.EPG_OFFSET_MIN, Keys.PROXY_PORT, Keys.DNS_PORT, Keys.CH_NAV_UP_SKIP, Keys.CH_NAV_DOWN_SKIP, Keys.MINI_PLAYER_SIZE_PCT, Keys.LIVE_LATENCY_CUSTOM_SECS, Keys.LIVE_PREROLL_SECS, Keys.GLASS_SCOPE, Keys.GLASS_ALPHA, Keys.GLASS_BLUR, Keys.SUB_BG_OPACITY)
+    private val backupIntKeys = listOf(Keys.UI_ZOOM_PCT, Keys.AUDIO_DELAY_MS, Keys.CATCHUP_OFFSET_MIN, Keys.EPG_OFFSET_MIN, Keys.PROXY_PORT, Keys.DNS_PORT, Keys.CH_NAV_UP_SKIP, Keys.CH_NAV_DOWN_SKIP, Keys.MINI_PLAYER_SIZE_PCT, Keys.LIVE_LATENCY_CUSTOM_SECS, Keys.LIVE_PREROLL_SECS, Keys.GLASS_SCOPE, Keys.GLASS_ALPHA, Keys.GLASS_BLUR, Keys.SUB_BG_OPACITY,
+        Keys.PANEL_W_LIVE_CAT, Keys.PANEL_W_LIVE_LIST, Keys.PANEL_W_LIVE_PREVIEW,
+        Keys.PANEL_W_MOVIES_CAT, Keys.PANEL_W_MOVIES_LIST, Keys.PANEL_W_MOVIES_PREVIEW,
+        Keys.PANEL_W_SERIES_CAT, Keys.PANEL_W_SERIES_LIST, Keys.PANEL_W_SERIES_PREVIEW)
     private val backupBoolKeys = listOf(
         Keys.LIVE_PREVIEW, Keys.LIVE_PREVIEW_AUDIO, Keys.HDR_ENABLED, Keys.AUTO_FRAME_RATE, Keys.AUTO_FRAME_RATE_PROMPTED, Keys.ANDROID_TV_HOME, Keys.HW_DECODING,
         Keys.VOD_PREFER_EXO, Keys.MEASURED_STREAM_STATS, Keys.DETAILED_DIAGNOSTICS, Keys.DIRECT_TUNE, Keys.EXTERNAL_PLAYER,
@@ -1316,7 +1429,8 @@ class SettingsRepository(private val context: Context) {
         Keys.DNS_ENABLED,
         Keys.REMEMBER_LAST_LIVE, Keys.REMEMBER_LAST_MOVIES, Keys.REMEMBER_LAST_SERIES,
         Keys.REMEMBER_CAT_LIVE, Keys.REMEMBER_CAT_MOVIES, Keys.REMEMBER_CAT_SERIES,
-        Keys.SUB_STYLE_ENABLED,
+        Keys.SUB_STYLE_ENABLED, Keys.SUB_SEARCH_FILTER,
+        Keys.PANEL_W_LIVE_ON, Keys.PANEL_W_MOVIES_ON, Keys.PANEL_W_SERIES_ON,
     )
     private val backupFloatKeys = listOf(Keys.SUB_SCALE)
 

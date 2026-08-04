@@ -12,6 +12,7 @@ import org.json.JSONObject
 import tv.own.owntv.core.database.entity.EpisodeEntity
 import tv.own.owntv.core.database.entity.MovieEntity
 import tv.own.owntv.core.database.entity.SeriesEntity
+import tv.own.owntv.core.metadata.TitleNormalizer
 import tv.own.owntv.features.settings.data.SettingsRepository
 import tv.own.owntv.player.OwnTVPlayer
 
@@ -137,57 +138,95 @@ class SubtitleController(
         accounts.signIn(pid, username, password, staySignedIn)
     }
 
-    /** The profile's preferred subtitle language(s) as OpenSubtitles codes (§6.4); empty = all. */
-    suspend fun preferredLanguages(): List<String> =
-        settings.preferredSubLang.first()
+    /** Cleaned-up title to prefill "Edit search" with — what the search itself uses, not the raw name. */
+    val searchTitle: String
+        get() = _current.value?.let { TitleNormalizer.normalize(it.title).query.ifBlank { it.title } }.orEmpty()
+
+    /**
+     * Language codes to restrict an OpenSubtitles search to (§6.4); empty = every language.
+     *
+     * Driven by the dedicated Settings → OpenSubtitles filter, which is OFF by default — so out of the
+     * box a search shows everything OpenSubtitles has for the title and the user picks. Deliberately
+     * NOT the player's `preferredSubLang`: that one auto-selects an embedded track and offers a short
+     * fixed language list, so borrowing it silently hid online results people never asked to hide.
+     */
+    suspend fun preferredLanguages(): List<String> {
+        if (!settings.subSearchFilterEnabled.first()) return emptyList()
+        return settings.subSearchLanguages.first()
             .split(',')
             .mapNotNull { it.trim().takeIf(String::isNotBlank)?.let(::toTwoLetter) }
             .distinct()
+    }
 
     /**
      * Run an OpenSubtitles search for the current item (§6.2, review R7). [languages] filters by
      * language code(s); [editedQuery] (non-null) overrides the metadata match with a free-text query
      * ("Edit search", §6.2). Returns the raw OpenSubtitles response for the results screen to parse.
+     *
+     * TMDB is an OPTIONAL precision boost here, never a gate. A known tmdb_id is the strongest match
+     * OpenSubtitles accepts, so it's tried first — but if it yields nothing (stale/wrong match, or the
+     * id simply isn't on OpenSubtitles) the search is retried by title, so the user always ends up
+     * seeing whatever OpenSubtitles actually has for the title. TMDB enrichment being off, failed or
+     * mis-matched must never cost the user their subtitles.
      */
     suspend fun search(languages: List<String>, editedQuery: String? = null): JSONObject {
         val ctx = _current.value ?: return JSONObject()
-        val q = HashMap<String, String>()
-        if (languages.isNotEmpty()) q["languages"] = languages.joinToString(",")
-
         val useQuery = editedQuery?.takeIf { it.isNotBlank() }
-        if (ctx.isEpisode) {
-            q["type"] = "episode"
-            ctx.season?.let { q["season_number"] = it.toString() }
-            ctx.episode?.let { q["episode_number"] = it.toString() }
-            if (useQuery != null) {
-                q["query"] = useQuery
-            } else if (ctx.tmdbId != null) {
-                q["parent_tmdb_id"] = ctx.tmdbId.toString() // R7: strongest episode match
-            } else {
-                q["query"] = ctx.title
-            }
-        } else {
-            q["type"] = "movie"
-            if (useQuery != null) {
-                q["query"] = useQuery
-            } else if (ctx.tmdbId != null) {
-                q["tmdb_id"] = ctx.tmdbId.toString()
-            } else {
-                q["query"] = ctx.title
-                ctx.year?.let { q["year"] = it.toString() }
-            }
-        }
-        // Moviehash enhancer (§3.3, downloads only): the complete file is local, so the OpenSubtitles
-        // hash can sharpen the match. Strictly best-effort — capped at 2s and never blocks the search.
-        if (ctx.localFilePath != null && editedQuery == null) {
+        // Computed once and shared by both attempts — hashing a multi-GB file twice would be wasteful.
+        val moviehash = if (ctx.localFilePath != null && useQuery == null) {
             kotlinx.coroutines.withTimeoutOrNull(2_000) {
                 kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.IO) {
                     MovieHash.compute(java.io.File(ctx.localFilePath))
                 }
-            }?.let { q["moviehash"] = it }
+            }
+        } else {
+            null
         }
-        return repository.search(q)
+
+        val byTmdbId = useQuery == null && ctx.tmdbId != null
+        val first = repository.search(buildQuery(ctx, languages, useQuery, byTmdbId, moviehash))
+        if (!byTmdbId || first.resultCount() > 0) return first
+        return repository.search(buildQuery(ctx, languages, useQuery = null, byTmdbId = false, moviehash))
     }
+
+    /**
+     * One OpenSubtitles query map. [byTmdbId] picks the id match; otherwise it's a title search using
+     * the NORMALIZED title — the raw provider name ("EN| The Tourist (2010) [4K]") is full of prefixes
+     * and quality tags that match nothing, which is the same cleanup TMDB lookups already do.
+     */
+    private fun buildQuery(
+        ctx: Context,
+        languages: List<String>,
+        useQuery: String?,
+        byTmdbId: Boolean,
+        moviehash: String?,
+    ): Map<String, String> {
+        val q = HashMap<String, String>()
+        if (languages.isNotEmpty()) q["languages"] = languages.joinToString(",")
+        moviehash?.let { q["moviehash"] = it }
+
+        val normalized = TitleNormalizer.normalize(ctx.title)
+        val titleQuery = useQuery ?: normalized.query.takeIf { it.isNotBlank() } ?: ctx.title
+
+        if (ctx.isEpisode) {
+            q["type"] = "episode"
+            ctx.season?.let { q["season_number"] = it.toString() }
+            ctx.episode?.let { q["episode_number"] = it.toString() }
+            if (byTmdbId) q["parent_tmdb_id"] = ctx.tmdbId.toString() else q["query"] = titleQuery
+        } else {
+            q["type"] = "movie"
+            if (byTmdbId) {
+                q["tmdb_id"] = ctx.tmdbId.toString()
+            } else {
+                q["query"] = titleQuery
+                // Only send a year we're confident in — a wrong one filters out every real result.
+                (ctx.year ?: normalized.year.takeIf { useQuery == null })?.let { q["year"] = it.toString() }
+            }
+        }
+        return q
+    }
+
+    private fun JSONObject.resultCount(): Int = optJSONArray("data")?.length() ?: 0
 
     /**
      * Download the chosen result (cache-first, review R3), attach it to the running player, and
@@ -306,10 +345,16 @@ class SubtitleController(
         "episode:${show.sourceId}:${show.remoteId ?: show.name}:S${ep.seasonNumber}E${ep.episodeNumber}"
 
     /** OwnTV stores ISO-639-2 (e.g. "eng"); OpenSubtitles wants 2-letter codes (e.g. "en"). */
-    private fun toTwoLetter(code: String): String? = when (code.lowercase()) {
+    private fun toTwoLetter(code: String): String? = when (val c = code.lowercase()) {
         "eng" -> "en"; "spa" -> "es"; "fra", "fre" -> "fr"; "deu", "ger" -> "de"; "ita" -> "it"
         "por" -> "pt"; "nld", "dut" -> "nl"; "rus" -> "ru"; "ara" -> "ar"; "hin" -> "hi"
         "zho", "chi" -> "zh"; "jpn" -> "ja"; "kor" -> "ko"; "tur" -> "tr"
-        else -> code.takeIf { it.length == 2 }?.lowercase()
+        // Already an OpenSubtitles code: "el", or a region-qualified one like "pt-br" / "zh-cn".
+        else -> c.takeIf { it.length == 2 || REGION_CODE.matches(it) }
+    }
+
+    private companion object {
+        /** OpenSubtitles' region-qualified language codes, e.g. "pt-br", "zh-cn". */
+        private val REGION_CODE = Regex("""[a-z]{2}-[a-z]{2}""")
     }
 }
