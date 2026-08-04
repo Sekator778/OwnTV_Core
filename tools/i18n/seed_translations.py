@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
-"""MANUAL, ONE-OFF supply-chain tool: drives the Anthropic Message Batches API (or the
-Claude Code CLI, see ``--backend claude``) to seed the Phase 4a community-translation
-snapshot (docs/i18n-phase4a-seed-translations.md).
+"""MANUAL, ONE-OFF supply-chain tool: drives the Anthropic Message Batches API, the
+Claude Code CLI (``--backend claude``), or the Codex CLI (``--backend codex``) to seed
+the Phase 4a community-translation snapshot (docs/i18n-phase4a-seed-translations.md).
 
 This is the only module under tools/i18n/ that imports ``anthropic``. It is never wired
 into CI and never run automatically by Gradle. Only the maintainer, with their own API
@@ -64,6 +64,12 @@ CLAUDE_BIN = "claude"
 CLAUDE_MODEL = "sonnet"
 CLAUDE_TIMEOUT_SECONDS = 900  # per one-shot completion
 CLAUDE_WORKERS = int(os.environ.get("SEED_CLAUDE_WORKERS", "8"))  # parallel claude -p calls
+
+# --- codex CLI backend (--backend codex) -------------------------------------------
+CODEX_BIN = "codex"
+CODEX_MODEL = "gpt-5.6-sol"
+CODEX_TIMEOUT_SECONDS = 900
+CODEX_WORKERS = int(os.environ.get("SEED_CODEX_WORKERS", "8"))
 
 try:
     from tools.i18n import seed_text as st
@@ -788,6 +794,140 @@ def _status_claude(args: argparse.Namespace, manifest: dict) -> int:
     return 0
 
 
+# --- codex CLI backend: submit / status / collect -------------------------------
+
+def _codex_command(system_text: str, user_message: str, schema: dict | None,
+                   model: str) -> list[str]:
+    """Build the one-shot ``codex exec`` argv for a prepared request's params.
+
+    codex exec does not have a ``--system-prompt`` flag, so the system instructions
+    are prepended to the user message with a delimiter."""
+    prompt = f"[SYSTEM]\n{system_text}\n[/SYSTEM]\n\n{user_message}"
+    cmd = [
+        CODEX_BIN, "exec",
+        "--model", model,
+        "--dangerously-bypass-approvals-and-sandbox",
+        "--ephemeral",
+        "--json",
+    ]
+    if schema:
+        import tempfile
+        schema_fd, schema_path = tempfile.mkstemp(suffix=".json", prefix="seed_codex_schema_")
+        with os.fdopen(schema_fd, "w") as sf:
+            json.dump(schema, sf)
+        cmd += ["--output-schema", schema_path]
+    cmd.append(prompt)
+    return cmd
+
+
+def _run_codex_request(cid: str, params: dict) -> dict:
+    """Run one prepared request as a one-shot codex exec completion. Parses the
+    JSONL output for the final agent message."""
+    system_text = params["system"][0]["text"]
+    user_message = params["messages"][0]["content"]
+    schema = params.get("output_config", {}).get("format", {}).get("schema")
+    model = os.environ.get("SEED_CODEX_MODEL", CODEX_MODEL)
+    cmd = _codex_command(system_text, user_message, schema, model)
+    env = {**os.environ, "CODEX_CODE_DISABLE_NONESSENTIAL_TRAFFIC": "1"}
+    try:
+        proc = subprocess.run(cmd, capture_output=True, text=True,
+                              timeout=CODEX_TIMEOUT_SECONDS, cwd=str(ROOT), env=env)
+    except FileNotFoundError:
+        sys.exit("error: 'codex' executable not found on PATH; install and authenticate the "
+                 "Codex CLI before using --backend codex")
+    except subprocess.TimeoutExpired:
+        return {"type": "error", "is_error": True,
+                "error": f"codex CLI timed out after {CODEX_TIMEOUT_SECONDS}s"}
+    # Parse JSONL output: extract the last agent message text
+    result_text = ""
+    usage = {}
+    for line in proc.stdout.splitlines():
+        line = line.strip()
+        if not line:
+            continue
+        try:
+            event = json.loads(line)
+        except json.JSONDecodeError:
+            continue
+        if event.get("type") == "item.completed":
+            item = event.get("item", {})
+            if item.get("type") == "agent_message":
+                result_text = item.get("text", "")
+        if event.get("type") == "turn.completed":
+            usage = event.get("usage", {})
+    if proc.returncode != 0 and not result_text:
+        snippet = (proc.stderr or proc.stdout or "").strip()
+        return {"type": "error", "is_error": True,
+                "error": snippet[:2000] or f"codex CLI exited with code {proc.returncode}"}
+    if not result_text:
+        return {"type": "error", "is_error": True,
+                "error": "codex CLI produced no agent message"}
+    return {"type": "result", "is_error": False, "result": result_text,
+            "usage": {"input_tokens": usage.get("input_tokens"),
+                      "output_tokens": usage.get("output_tokens"),
+                      "cache_read_input_tokens": usage.get("cached_input_tokens"),
+                      "cache_creation_input_tokens": usage.get("cache_write_input_tokens")}}
+
+
+def _submit_codex(args: argparse.Namespace, manifest: dict, stage: dict) -> int:
+    """Run every not-yet-run request as a one-shot ``codex exec`` completion,
+    persisting each raw JSON envelope immediately. Same parallel-executor pattern
+    as the claude backend."""
+    results_dir = _results_dir(args.run_id, args.stage)
+    results_dir.mkdir(parents=True, exist_ok=True)
+    pending = {
+        cid: r for cid, r in stage["requests"].items()
+        if not (results_dir / f"{cid}.raw.json").is_file()
+    }
+    if not pending:
+        sys.exit(f"error: stage '{args.stage}' has nothing pending (every request already "
+                 "has a raw result); use 'collect' to classify them")
+    verify_hashes(manifest, force_stale=args.force_stale)
+    req_dir = _requests_dir(args.run_id, args.stage)
+    for cid, r in pending.items():
+        payload = json.loads((req_dir / f"{cid}.json").read_text(encoding="utf-8"))
+        if _payload_hash(payload["params"]) != r["payloadHash"]:
+            sys.exit(f"error: on-disk request {cid} no longer matches its recorded payload "
+                     "hash; it may have been hand-edited since prepare")
+    batch_id = f"codex-{args.run_id}-{args.stage}-{datetime.now(timezone.utc).strftime('%H%M%S')}"
+    workers = min(len(pending), CODEX_WORKERS)
+    print(f"Submitting {len(pending)} request(s) for stage '{args.stage}' "
+          f"via the codex CLI (batch {batch_id}, {workers} workers) ...", flush=True)
+    completed = 0
+    with ThreadPoolExecutor(max_workers=workers) as executor:
+        futures = {}
+        for cid in sorted(pending):
+            payload = json.loads((req_dir / f"{cid}.json").read_text(encoding="utf-8"))
+            futures[executor.submit(_run_codex_request, cid, payload["params"])] = cid
+        for future in as_completed(futures):
+            cid = futures[future]
+            envelope = future.result()
+            (results_dir / f"{cid}.raw.json").write_text(
+                json.dumps(envelope, indent=2, ensure_ascii=False), encoding="utf-8")
+            record = stage["requests"][cid]
+            record["batchId"] = batch_id
+            record["submittedAt"] = datetime.now(timezone.utc).isoformat()
+            usage = envelope.get("usage") or {}
+            completed += 1
+            print(f"  [{completed}/{len(pending)}] {cid}: "
+                  f"{'ok' if not envelope.get('is_error') else 'ERROR'} "
+                  f"(in={usage.get('input_tokens')} out={usage.get('output_tokens')} "
+                  f"cache_read={usage.get('cache_read_input_tokens')})", flush=True)
+            save_manifest(args.run_id, manifest)
+    print(f"Submitted {len(pending)} request(s) for stage '{args.stage}' via the codex CLI "
+          f"(batch {batch_id}).")
+    print(f"Next: python3 tools/i18n/seed_translations.py status --run-id {args.run_id} --stage {args.stage}")
+    return 0
+
+
+def _collect_codex(args: argparse.Namespace, manifest: dict, stage: dict) -> int:
+    """Collect, transport-classify, and semantically validate raw codex CLI results.
+    Shares the same classification/retry pipeline as the claude backend."""
+    # codex envelopes already use the same shape as claude (type/result/is_error/usage)
+    # so _classify_transport_from_claude_envelope works unchanged.
+    return _collect_claude(args, manifest, stage)
+
+
 def cmd_submit(args: argparse.Namespace) -> int:
     """Submit every not-yet-submitted request in a stage (initial or accumulated
     retries) as one new batch. MAINTAINER-ONLY: spends API credit."""
@@ -795,6 +935,8 @@ def cmd_submit(args: argparse.Namespace) -> int:
     stage = manifest["stages"][args.stage]
     if args.backend == "claude":
         return _submit_claude(args, manifest, stage)
+    if args.backend == "codex":
+        return _submit_codex(args, manifest, stage)
     pending = {cid: r for cid, r in stage["requests"].items() if r["batchId"] is None}
     if not pending:
         sys.exit(f"error: stage '{args.stage}' has nothing pending (every request already "
@@ -831,7 +973,7 @@ def cmd_submit(args: argparse.Namespace) -> int:
 
 def cmd_status(args: argparse.Namespace) -> int:
     manifest = load_manifest(args.run_id)
-    if args.backend == "claude":
+    if args.backend in ("claude", "codex"):
         return _status_claude(args, manifest)
     anthropic = _load_anthropic()
     client = anthropic.Anthropic()
@@ -980,6 +1122,8 @@ def cmd_collect(args: argparse.Namespace) -> int:
     stage = manifest["stages"][args.stage]
     if args.backend == "claude":
         return _collect_claude(args, manifest, stage)
+    if args.backend == "codex":
+        return _collect_codex(args, manifest, stage)
     anthropic = _load_anthropic()
     catalogue = load_catalogue()
     batch_ids = sorted({r["batchId"] for r in stage["requests"].values() if r["batchId"]})
@@ -1124,7 +1268,7 @@ def cmd_check(args: argparse.Namespace) -> int:
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--backend", choices=["anthropic", "claude"], default="anthropic",
+    parser.add_argument("--backend", choices=["anthropic", "claude", "codex"], default="anthropic",
                         help="submission backend: 'anthropic' Message Batches API (default) or "
                              "'claude' one-shot completions via the Claude Code CLI "
                              "(claude -p --output-format json)")
