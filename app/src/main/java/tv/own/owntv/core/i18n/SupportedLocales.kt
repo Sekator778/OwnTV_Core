@@ -350,6 +350,20 @@ object SupportedLocales {
             pickerVisible = false,
             coverage = -1,
         ),
+        SupportedLocale(
+            id = "ml",
+            languageTag = "ml",
+            resourceQualifier = "ml",
+            weblateCode = "ml",
+            englishName = "Malayalam",
+            endonym = "മലയാളം",
+            script = "Mlym",
+            rtl = false,
+            tier = 1,
+            packaged = false,
+            pickerVisible = false,
+            coverage = 100,
+        ),
     )
 
     /** Rows the in-app picker should show: catalogue entries that are packaged AND offered. */

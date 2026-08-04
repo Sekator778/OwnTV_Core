@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
-"""MANUAL, ONE-OFF supply-chain tool: drives the Anthropic Message Batches API to seed
-the Phase 4a community-translation snapshot (docs/i18n-phase4a-seed-translations.md).
+"""MANUAL, ONE-OFF supply-chain tool: drives the Anthropic Message Batches API (or the
+Claude Code CLI, see ``--backend claude``) to seed the Phase 4a community-translation
+snapshot (docs/i18n-phase4a-seed-translations.md).
 
 This is the only module under tools/i18n/ that imports ``anthropic``. It is never wired
 into CI and never run automatically by Gradle. Only the maintainer, with their own API
@@ -9,6 +10,19 @@ credentials, runs the two commands that spend money or touch the network: ``subm
 the maintainer has results, ``validate-and-promote``, and ``check``) is safe to run
 repeatedly and offline except where it explicitly polls or downloads results for an
 already-submitted batch.
+
+Two backends are supported, selected with ``--backend`` (default ``anthropic``):
+
+- ``anthropic`` -- the Message Batches API. ``submit`` creates one batch per invocation,
+  ``status`` polls it, ``collect`` downloads and validates the results. Requires the
+  ``anthropic`` pip package and an ``ANTHROPIC_API_KEY``.
+- ``claude`` -- the Claude Code CLI (``claude -p --output-format json``), one one-shot
+  completion per prepared request instead of a batch. ``submit`` runs every request that
+  does not yet have an on-disk raw result synchronously and persists each result
+  immediately (idempotent, crash-safe); ``status`` reports submitted/collected counts;
+  ``collect`` classifies and validates the raw results and queues retries, exactly as in
+  the anthropic path. Requires an authenticated ``claude`` CLI on PATH. The model defaults
+  to the ``sonnet`` alias and can be overridden with ``SEED_CLAUDE_MODEL``.
 
 Text processing (extraction, tokenization, escaping, offline validation, atomic
 promotion) lives in ``tools/i18n/seed_text.py``, which stays stdlib-only.
@@ -22,6 +36,8 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import os
+import subprocess
 import sys
 from datetime import datetime, timezone
 from pathlib import Path
@@ -38,6 +54,14 @@ EFFORT = "high"
 MAX_KEYS_PER_CHUNK = 40
 MAX_FOLLOWUP_ATTEMPTS = 2  # two follow-up attempts after the initial request
 PILOT_LOCALES = ["de", "ar", "ja", "tr"]
+
+# --- claude CLI backend (--backend claude) -----------------------------------------
+CLAUDE_BIN = "claude"
+# Alias, not a full id: the proposed "sonnet-5" does not exist in the installed CLI
+# (2.1.212) -- `claude -p ... --model sonnet-5` fails with "may not exist or you may not
+# have access". Override with SEED_CLAUDE_MODEL to pin a different alias or full model id.
+CLAUDE_MODEL = "sonnet"
+CLAUDE_TIMEOUT_SECONDS = 900  # per one-shot completion
 
 try:
     from tools.i18n import seed_text as st
@@ -155,10 +179,11 @@ def save_manifest(run_id: str, manifest: dict) -> None:
     path.write_text(json.dumps(manifest, indent=2, sort_keys=True), encoding="utf-8")
 
 
-def new_manifest(run_id: str) -> dict:
+def new_manifest(run_id: str, *, backend: str = "anthropic") -> dict:
     return {
         "schemaVersion": 2,
         "runId": run_id,
+        "backend": backend,
         "createdAt": datetime.now(timezone.utc).isoformat(),
         "sourceInventoryHash": source_inventory_hash(),
         "localesJsonHash": locales_json_hash(),
@@ -283,14 +308,19 @@ def _translation_user_message(filename: str, units: dict[str, object], keys: lis
     payload: dict = {"sourceFile": filename, "items": items}
     if retry_errors:
         payload["previousAttemptErrors"] = dict(retry_errors)
-    return json.dumps(payload, ensure_ascii=False, indent=2)
+    # ensure_ascii=True (default) is REQUIRED for the claude backend: the model strips real
+    # U+E000 token-marker characters from its output, but round-trips the literal \ue000
+    # escape text into the real character. The anthropic batch path accepts either form.
+    return json.dumps(payload, indent=2)
 
 
 def _glossary_user_message(terms: list[str], retry_errors: dict[str, str] | None = None) -> str:
     payload: dict = {"consistentTerms": terms}
     if retry_errors:
         payload["previousAttemptErrors"] = dict(retry_errors)
-    return json.dumps(payload, ensure_ascii=False, indent=2)
+    # ensure_ascii=True (default): see _translation_user_message -- the claude backend needs
+    # literal \ue000 escape text rather than real U+E000 characters.
+    return json.dumps(payload, indent=2)
 
 
 def _batch_params(system_prompt: str, user_message: str, schema: dict, max_tokens: int) -> dict:
@@ -424,6 +454,35 @@ def _classify_transport(stage: str, result) -> dict:
     return {"status": "succeeded", "payload": payload, "usage": usage, "raw": raw}
 
 
+def _classify_transport_from_claude_envelope(stage: str, envelope: dict) -> dict:
+    """Map a raw claude CLI ``--output-format json`` envelope onto the same transport
+    classification shape :func:`_classify_transport` produces for batch results, so the
+    shared semantic-validation pipeline can treat both backends identically."""
+    if not isinstance(envelope, dict) or envelope.get("is_error") or envelope.get("type") != "result":
+        reason = envelope.get("error") or envelope.get("result") or "claude CLI did not return a result envelope"
+        return {"status": "retryable", "reason": f"claude CLI error: {reason}"}
+    usage_envelope = envelope.get("usage") or {}
+    usage = {
+        "inputTokens": usage_envelope.get("input_tokens"),
+        "outputTokens": usage_envelope.get("output_tokens"),
+        "cacheCreationInputTokens": usage_envelope.get("cache_creation_input_tokens"),
+        "cacheReadInputTokens": usage_envelope.get("cache_read_input_tokens"),
+    }
+    raw = {"stopReason": envelope.get("stop_reason"),
+           "content": [{"type": "text", "text": envelope.get("result")}]}
+    # The CLI's --json-schema path reports stop_reason "tool_use" because structured output
+    # is implemented as a forced tool call; the JSON is in `result` either way. Parseability
+    # of the result text is the real gate, so don't reject on stop_reason alone.
+    result_text = envelope.get("result")
+    if not isinstance(result_text, str) or not result_text.strip():
+        return {"status": "retryable", "reason": "no text content block", "usage": usage, "raw": raw}
+    try:
+        payload = json.loads(result_text)
+    except json.JSONDecodeError as e:
+        return {"status": "retryable", "reason": f"malformed JSON: {e}", "usage": usage, "raw": raw}
+    return {"status": "succeeded", "payload": payload, "usage": usage, "raw": raw}
+
+
 def _validate_glossary_payload(req_meta: dict, payload: dict) -> tuple[dict[str, str], dict[str, str]]:
     """Return (valid_term_translations, errors_by_term)."""
     requested = req_meta["terms"]
@@ -535,7 +594,7 @@ def cmd_prepare_glossary(args: argparse.Namespace) -> int:
     if unknown:
         sys.exit(f"error: unknown locale tag(s) in --locales: {unknown}")
     run_id = args.run_id or new_run_id()
-    manifest = load_manifest(run_id) if _manifest_path(run_id).is_file() else new_manifest(run_id)
+    manifest = load_manifest(run_id) if _manifest_path(run_id).is_file() else new_manifest(run_id, backend=args.backend)
     built = build_and_register_glossary_requests(manifest, run_id, locales, catalogue)
     save_manifest(run_id, manifest)
     print(f"run-id: {run_id}")
@@ -569,7 +628,7 @@ def cmd_prepare_translations(args: argparse.Namespace) -> int:
         glossary_by_locale = {tag: {t: t for t in placeholder_terms} for tag in locales}
 
     run_id = args.run_id or new_run_id()
-    manifest = load_manifest(run_id) if _manifest_path(run_id).is_file() else new_manifest(run_id)
+    manifest = load_manifest(run_id) if _manifest_path(run_id).is_file() else new_manifest(run_id, backend=args.backend)
     built = build_and_register_translation_requests(manifest, run_id, locales, catalogue, glossary_by_locale)
     save_manifest(run_id, manifest)
     print(f"run-id: {run_id}")
@@ -596,11 +655,134 @@ def _load_anthropic():
     return anthropic
 
 
+# --- claude CLI backend: submit / status ------------------------------------------
+
+def _claude_command(system_text: str, user_message: str, schema: dict | None,
+                    model: str) -> list[str]:
+    """Build the one-shot ``claude -p`` argv for a prepared request's params."""
+    cmd = [
+        CLAUDE_BIN, "-p",
+        "--model", model,
+        "--output-format", "json",
+        "--system-prompt", system_text,
+        "--tools", "",  # pure translation task: no tool access needed
+    ]
+    if schema:
+        cmd += ["--json-schema", json.dumps(schema, separators=(",", ":"))]
+    cmd.append(user_message)
+    return cmd
+
+
+def _run_claude_request(cid: str, params: dict) -> dict:
+    """Run one prepared request as a one-shot claude completion. Always returns a JSON
+    envelope; CLI failures become ``{'type': 'error', 'is_error': True, 'error': ...}`` so
+    ``collect`` can classify them as retryable like an errored batch item."""
+    system_text = params["system"][0]["text"]
+    user_message = params["messages"][0]["content"]
+    schema = params.get("output_config", {}).get("format", {}).get("schema")
+    model = os.environ.get("SEED_CLAUDE_MODEL", CLAUDE_MODEL)
+    cmd = _claude_command(system_text, user_message, schema, model)
+    env = {**os.environ, "CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC": "1"}
+    try:
+        proc = subprocess.run(cmd, capture_output=True, text=True,
+                              timeout=CLAUDE_TIMEOUT_SECONDS, cwd=str(ROOT), env=env)
+    except FileNotFoundError:
+        sys.exit("error: 'claude' executable not found on PATH; install and authenticate the "
+                 "Claude Code CLI (claude -p 'ping') before using --backend claude")
+    except subprocess.TimeoutExpired:
+        return {"type": "error", "is_error": True,
+                "error": f"claude CLI timed out after {CLAUDE_TIMEOUT_SECONDS}s"}
+    try:
+        envelope = json.loads(proc.stdout) if proc.stdout.strip() else {}
+    except json.JSONDecodeError:
+        envelope = {}
+    if not isinstance(envelope, dict):
+        envelope = {}
+    envelope.setdefault("type", "error" if proc.returncode else "result")
+    envelope.setdefault("is_error", proc.returncode != 0)
+    if proc.returncode != 0 and not envelope.get("error"):
+        snippet = (proc.stderr or proc.stdout or "").strip()
+        envelope["error"] = snippet[:2000] or f"claude CLI exited with code {proc.returncode}"
+    return envelope
+
+
+def _submit_claude(args: argparse.Namespace, manifest: dict, stage: dict) -> int:
+    """Run every not-yet-run request in a stage as a one-shot ``claude -p`` completion,
+    persisting each raw JSON envelope immediately. Idempotent and crash-safe: a request
+    with an on-disk raw result is never re-run, so an interrupted submit only re-runs the
+    requests that actually lack a result."""
+    results_dir = _results_dir(args.run_id, args.stage)
+    results_dir.mkdir(parents=True, exist_ok=True)
+    pending = {
+        cid: r for cid, r in stage["requests"].items()
+        if not (results_dir / f"{cid}.raw.json").is_file()
+    }
+    if not pending:
+        sys.exit(f"error: stage '{args.stage}' has nothing pending (every request already "
+                 "has a raw result); use 'collect' to classify them")
+    verify_hashes(manifest, force_stale=args.force_stale)
+    req_dir = _requests_dir(args.run_id, args.stage)
+    for cid, r in pending.items():
+        payload = json.loads((req_dir / f"{cid}.json").read_text(encoding="utf-8"))
+        if _payload_hash(payload["params"]) != r["payloadHash"]:
+            sys.exit(f"error: on-disk request {cid} no longer matches its recorded payload "
+                     "hash; it may have been hand-edited since prepare")
+    batch_id = f"claude-{args.run_id}-{args.stage}-{datetime.now(timezone.utc).strftime('%H%M%S')}"
+    for cid in sorted(pending):
+        payload = json.loads((req_dir / f"{cid}.json").read_text(encoding="utf-8"))
+        print(f"{cid}: running claude -p ...", flush=True)
+        envelope = _run_claude_request(cid, payload["params"])
+        (results_dir / f"{cid}.raw.json").write_text(
+            json.dumps(envelope, indent=2, ensure_ascii=False), encoding="utf-8")
+        record = stage["requests"][cid]
+        record["batchId"] = batch_id
+        record["submittedAt"] = datetime.now(timezone.utc).isoformat()
+        usage = envelope.get("usage") or {}
+        print(f"  -> {'ok' if not envelope.get('is_error') else 'ERROR'} "
+              f"(in={usage.get('input_tokens')} out={usage.get('output_tokens')} "
+              f"cache_read={usage.get('cache_read_input_tokens')})", flush=True)
+        save_manifest(args.run_id, manifest)  # crash-safe: persist after each request
+    print(f"Submitted {len(pending)} request(s) for stage '{args.stage}' via the claude CLI "
+          f"(batch {batch_id}).")
+    print(f"Next: python3 tools/i18n/seed_translations.py status --run-id {args.run_id} --stage {args.stage}")
+    return 0
+
+
+def _status_claude(args: argparse.Namespace, manifest: dict) -> int:
+    """Report per-stage submitted/collected counts for the claude backend. Every submit is
+    synchronous, so 'submitted' here means a raw result envelope exists on disk."""
+    stages = [args.stage] if args.stage else ["glossary", "translation"]
+    for stage_name in stages:
+        stage = manifest["stages"][stage_name]
+        reqs = stage["requests"]
+        if not reqs:
+            print(f"{stage_name}: nothing prepared yet")
+            continue
+        results_dir = _results_dir(args.run_id, stage_name)
+        done = errored = 0
+        for cid in reqs:
+            raw = results_dir / f"{cid}.raw.json"
+            if not raw.is_file():
+                continue
+            done += 1
+            try:
+                if json.loads(raw.read_text(encoding="utf-8")).get("is_error"):
+                    errored += 1
+            except json.JSONDecodeError:
+                errored += 1
+        collected = sum(1 for cid in reqs if cid in stage["results"])
+        print(f"{stage_name}: {done} submitted ({done - errored} ok, {errored} errored), "
+              f"{len(reqs) - done} not yet submitted, {collected} collected/validated")
+    return 0
+
+
 def cmd_submit(args: argparse.Namespace) -> int:
     """Submit every not-yet-submitted request in a stage (initial or accumulated
     retries) as one new batch. MAINTAINER-ONLY: spends API credit."""
     manifest = load_manifest(args.run_id)
     stage = manifest["stages"][args.stage]
+    if args.backend == "claude":
+        return _submit_claude(args, manifest, stage)
     pending = {cid: r for cid, r in stage["requests"].items() if r["batchId"] is None}
     if not pending:
         sys.exit(f"error: stage '{args.stage}' has nothing pending (every request already "
@@ -636,8 +818,10 @@ def cmd_submit(args: argparse.Namespace) -> int:
 
 
 def cmd_status(args: argparse.Namespace) -> int:
-    anthropic = _load_anthropic()
     manifest = load_manifest(args.run_id)
+    if args.backend == "claude":
+        return _status_claude(args, manifest)
+    anthropic = _load_anthropic()
     client = anthropic.Anthropic()
     stages = [args.stage] if args.stage else ["glossary", "translation"]
     for stage_name in stages:
@@ -699,13 +883,92 @@ def _queue_retry(manifest: dict, run_id: str, stage: str, cid: str, req_meta: di
     print(f"{tag}: queued retry {retry_cid} ({len(errors)} key(s), attempt {attempt}/{MAX_FOLLOWUP_ATTEMPTS})")
 
 
+def _classify_and_store_result(manifest: dict, run_id: str, stage_name: str, stage: dict,
+                               cid: str, req_meta: dict, transport: dict,
+                               units: dict | None, vs_module, catalogue: dict) -> None:
+    """Shared post-transport pipeline (both backends): semantic validation, per-result
+    persistence, manifest update, and retry queueing for failed keys."""
+    results_dir = _results_dir(run_id, stage_name)
+    results_dir.mkdir(parents=True, exist_ok=True)
+    if transport["status"] != "succeeded":
+        classified = {**transport, "customId": cid}
+        errors = {k: transport.get("reason", transport["status"])
+                  for k in (req_meta.get("keys") or req_meta.get("terms"))}
+    else:
+        payload = transport["payload"]
+        if stage_name == "glossary":
+            valid, errs = _validate_glossary_payload(req_meta, payload)
+        else:
+            plural_rule = vs_module._PLURAL_RULES.get(req_meta["locale"], ["one", "other"])
+            valid, errs = _validate_translation_payload(req_meta, payload, units, plural_rule)
+        classified = {**transport, "customId": cid, "valid": valid, "errors": errs,
+                      "status": "succeeded" if not errs else ("partial" if valid else "retryable")}
+        errors = errs
+    (results_dir / f"{cid}.json").write_text(
+        json.dumps(classified, indent=2, ensure_ascii=False), encoding="utf-8")
+    stage["results"][cid] = classified
+    if errors:
+        _queue_retry(manifest, run_id, stage_name, cid, req_meta, errors, catalogue, units)
+
+
+def _collect_claude(args: argparse.Namespace, manifest: dict, stage: dict) -> int:
+    """Collect, transport-classify, and semantically validate raw claude CLI results.
+    Identical retry/validation behavior to the anthropic path."""
+    batch_ids = sorted({r["batchId"] for r in stage["requests"].values() if r["batchId"]})
+    uncollected = [b for b in batch_ids if any(
+        r["batchId"] == b and cid not in stage["results"] for cid, r in stage["requests"].items()
+    )]
+    if not uncollected:
+        print(f"{args.stage}: nothing new to collect")
+        return 0
+
+    catalogue = load_catalogue()
+    units = st.extract_source()[0] if args.stage == "translation" else None
+    try:
+        from tools.i18n import validate_strings as vs
+    except ModuleNotFoundError:
+        import validate_strings as vs
+
+    results_dir = _results_dir(args.run_id, args.stage)
+    any_incomplete = False
+    for bid in uncollected:
+        # Snapshot: _queue_retry registers follow-up requests into stage["requests"] while
+        # we iterate, and Python forbids resizing a dict during iteration.
+        for cid, r in list(stage["requests"].items()):
+            if r["batchId"] != bid or cid in stage["results"]:
+                continue
+            raw_path = results_dir / f"{cid}.raw.json"
+            if not raw_path.is_file():
+                print(f"{cid}: submitted but no raw result on disk (interrupted submit?); "
+                      "re-run submit to recover it")
+                any_incomplete = True
+                continue
+            envelope = json.loads(raw_path.read_text(encoding="utf-8"))
+            transport = _classify_transport_from_claude_envelope(args.stage, envelope)
+            _classify_and_store_result(manifest, args.run_id, args.stage, stage, cid, r,
+                                       transport, units, vs, catalogue)
+
+    save_manifest(args.run_id, manifest)
+    succeeded = sum(1 for r in stage["results"].values() if r["status"] == "succeeded")
+    partial = sum(1 for r in stage["results"].values() if r["status"] == "partial")
+    retryable = sum(1 for r in stage["results"].values() if r["status"] == "retryable")
+    print(f"{args.stage}: {succeeded} fully succeeded, {partial} partial (retry queued), "
+          f"{retryable} need a full retry.")
+    pending_retries = sum(1 for r in stage["requests"].values() if r["batchId"] is None)
+    if pending_retries:
+        print(f"{pending_retries} retry request(s) queued; run submit again to send them.")
+    return 1 if (any_incomplete or partial or retryable) else 0
+
+
 def cmd_collect(args: argparse.Namespace) -> int:
     """Collect, transport-classify, and semantically validate results for every ended
     batch in a stage. Failed keys are automatically queued as retry requests (up to
     MAX_FOLLOWUP_ATTEMPTS); exhausted ones are written to <locale>-unresolved.json."""
-    anthropic = _load_anthropic()
     manifest = load_manifest(args.run_id)
     stage = manifest["stages"][args.stage]
+    if args.backend == "claude":
+        return _collect_claude(args, manifest, stage)
+    anthropic = _load_anthropic()
     catalogue = load_catalogue()
     batch_ids = sorted({r["batchId"] for r in stage["requests"].values() if r["batchId"]})
     uncollected = [b for b in batch_ids if any(
@@ -722,8 +985,6 @@ def cmd_collect(args: argparse.Namespace) -> int:
         import validate_strings as vs
 
     client = anthropic.Anthropic()
-    results_dir = _results_dir(args.run_id, args.stage)
-    results_dir.mkdir(parents=True, exist_ok=True)
     any_incomplete = False
 
     for bid in uncollected:
@@ -738,24 +999,8 @@ def cmd_collect(args: argparse.Namespace) -> int:
             if req_meta is None or req_meta["batchId"] != bid:
                 continue
             transport = _classify_transport(args.stage, result)
-            if transport["status"] != "succeeded":
-                classified = {**transport, "customId": cid}
-                errors = {k: transport.get("reason", transport["status"])
-                          for k in (req_meta.get("keys") or req_meta.get("terms"))}
-            else:
-                payload = transport["payload"]
-                if args.stage == "glossary":
-                    valid, errs = _validate_glossary_payload(req_meta, payload)
-                else:
-                    plural_rule = vs._PLURAL_RULES.get(req_meta["locale"], ["one", "other"])
-                    valid, errs = _validate_translation_payload(req_meta, payload, units, plural_rule)
-                classified = {**transport, "customId": cid, "valid": valid, "errors": errs,
-                              "status": "succeeded" if not errs else ("partial" if valid else "retryable")}
-                errors = errs
-            (results_dir / f"{cid}.json").write_text(json.dumps(classified, indent=2, ensure_ascii=False), encoding="utf-8")
-            stage["results"][cid] = classified
-            if errors:
-                _queue_retry(manifest, args.run_id, args.stage, cid, req_meta, errors, catalogue, units)
+            _classify_and_store_result(manifest, args.run_id, args.stage, stage, cid, req_meta,
+                                       transport, units, vs, catalogue)
 
     save_manifest(args.run_id, manifest)
     succeeded = sum(1 for r in stage["results"].values() if r["status"] == "succeeded")
@@ -856,7 +1101,8 @@ def cmd_resume(args: argparse.Namespace) -> int:
             continue
         batch_ids = sorted({stage["requests"][cid]["batchId"] for cid in pending})
         print(f"{stage_name}: resuming batch(es) {batch_ids} ({len(pending)} result(s) outstanding)")
-        rc = cmd_collect(argparse.Namespace(run_id=args.run_id, stage=stage_name)) or rc
+        rc = cmd_collect(argparse.Namespace(run_id=args.run_id, stage=stage_name,
+                                            backend=args.backend)) or rc
     return rc
 
 
@@ -866,6 +1112,10 @@ def cmd_check(args: argparse.Namespace) -> int:
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--backend", choices=["anthropic", "claude"], default="anthropic",
+                        help="submission backend: 'anthropic' Message Batches API (default) or "
+                             "'claude' one-shot completions via the Claude Code CLI "
+                             "(claude -p --output-format json)")
     sub = parser.add_subparsers(dest="cmd", required=True)
 
     p = sub.add_parser("prepare-glossary", help="build and persist glossary batch requests")
@@ -880,7 +1130,7 @@ def main() -> int:
     p.add_argument("--dry-run", action="store_true", help="also print one full sample request for review")
     p.set_defaults(func=cmd_prepare_translations)
 
-    p = sub.add_parser("submit", help="MAINTAINER ONLY: submit every pending request in a stage (spends credit)")
+    p = sub.add_parser("submit", help="MAINTAINER ONLY: submit every pending request in a stage (spends credit; claude backend runs one-shot completions)")
     p.add_argument("--run-id", required=True)
     p.add_argument("--stage", required=True, choices=["glossary", "translation"])
     p.add_argument("--force-stale", action="store_true")
