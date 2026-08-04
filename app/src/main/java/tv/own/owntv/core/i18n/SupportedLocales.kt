@@ -373,7 +373,7 @@ object SupportedLocales {
             tier = 1,
             packaged = true,
             pickerVisible = true,
-            coverage = 0,
+            coverage = 100,
         ),
         SupportedLocale(
             id = "bn",
@@ -387,7 +387,7 @@ object SupportedLocales {
             tier = 1,
             packaged = true,
             pickerVisible = true,
-            coverage = 0,
+            coverage = 100,
         ),
     )
 

@@ -1,0 +1,305 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <plurals name="content_downloading_items">
+        <item quantity="one">डाउनलोड हो रहा है</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> आइटम डाउनलोड हो रहे हैं</item>
+    </plurals>
+    <plurals name="content_queued_items">
+        <item quantity="one">कतार में</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> आइटम कतार में हैं</item>
+    </plurals>
+    <plurals name="content_paused_items">
+        <item quantity="one">रोका गया</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> आइटम रोके गए</item>
+    </plurals>
+    <plurals name="content_downloads_failed">
+        <item quantity="one">डाउनलोड विफल</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> डाउनलोड विफल</item>
+    </plurals>
+    <string name="content_genre_action">एक्शन</string>
+    <string name="content_genre_adult">वयस्क</string>
+    <string name="content_genre_anime">एनिमे</string>
+    <string name="content_genre_comedy">कॉमेडी</string>
+    <string name="content_genre_documentary">डॉक्यूमेंट्री</string>
+    <string name="content_genre_drama">ड्रामा</string>
+    <string name="content_genre_entertainment">मनोरंजन</string>
+    <string name="content_genre_horror">हॉरर</string>
+    <string name="content_genre_kids">बच्चों के लिए</string>
+    <string name="content_genre_movies">फ़िल्में</string>
+    <string name="content_genre_music">संगीत</string>
+    <string name="content_genre_news">समाचार</string>
+    <string name="content_genre_other">अन्य</string>
+    <string name="content_genre_religious">धार्मिक</string>
+    <string name="content_genre_romance">रोमांस</string>
+    <string name="content_genre_scifi">साइ-फाई</string>
+    <string name="content_genre_series">सीरीज़</string>
+    <string name="content_genre_sport">खेल</string>
+    <string name="content_exit_owntv">OwnTV से बाहर निकलें?</string>
+    <string name="content_exit_confirmation">क्या आप वाकई ऐप बंद करना चाहते हैं?</string>
+    <string name="content_restore_incomplete_title">एक रीस्टोर पूरा नहीं हुआ</string>
+    <string name="content_restore_incomplete_message"><xliff:g id="description">%1$s</xliff:g> को रीस्टोर करते समय ऐप बंद हो गया, इसलिए इसका कुछ हिस्सा छूट सकता है। कुछ भी हटाया नहीं गया — बाकी को पूरा करने के लिए सेटिंग्स → बैकअप और रीस्टोर से वही रीस्टोर फिर से चलाएं।</string>
+    <string name="content_playlist_picker_title">प्लेलिस्ट दिखाएं</string>
+    <string name="content_playlist_picker_description">चुनें कि कौन सी प्लेलिस्ट ब्राउज़ करनी है। यह हर जगह लागू होता है और याद रखा जाता है।</string>
+    <string name="content_avatar_picker_title">अपना अवतार चुनें</string>
+    <string name="content_category_browser_title">श्रेणियां</string>
+    <string name="content_channel_overlay_title">चैनल</string>
+    <string name="content_live_now">अभी</string>
+    <string name="content_live_next">अगला</string>
+    <string name="content_media_overview">अवलोकन</string>
+    <string name="content_media_cast">कलाकार</string>
+    <string name="content_media_press_back">बंद करने के लिए Back दबाएं</string>
+    <string name="content_add_favourite">पसंदीदा में जोड़ें</string>
+    <string name="content_remove_favourite">पसंदीदा से हटाएं</string>
+    <string name="content_mark_watched">देखा हुआ चिह्नित करें</string>
+    <string name="content_mark_unwatched">न देखा हुआ चिह्नित करें</string>
+    <string name="content_move">ले जाएं</string>
+    <string name="content_move_to_category">श्रेणी में ले जाएं…</string>
+    <string name="content_download">डाउनलोड</string>
+    <string name="content_download_all_episodes">सभी एपिसोड डाउनलोड करें</string>
+    <string name="content_play">चलाएं</string>
+    <string name="content_next_up">आगे</string>
+    <string name="content_favorited">पसंदीदा में शामिल</string>
+    <string name="content_favorite">पसंदीदा बनाएं</string>
+    <string name="content_show_watched">देखे गए दिखाएं</string>
+    <string name="content_hide_watched">देखे गए छुपाएं</string>
+    <string name="content_sorting">सॉर्टिंग</string>
+    <string name="content_seasons">सीज़न</string>
+    <string name="content_episodes">एपिसोड</string>
+    <string name="content_oldest_first">पहले सबसे पुराना</string>
+    <string name="content_newest_first">पहले सबसे नया</string>
+    <string name="content_last_watched">आखिरी बार देखा गया</string>
+    <string name="content_press_ok_episodes">एपिसोड देखने के लिए पोस्टर पर OK दबाएं।</string>
+    <string name="content_play_external">बाहरी प्लेयर से चलाएं</string>
+    <string name="content_delete_subtitles">OpenSub सबटाइटल हटाएं</string>
+    <string name="content_tmdb_details">TMDB विवरण</string>
+    <string name="content_play_trailer">ट्रेलर चलाएं</string>
+    <string name="content_refetch_tmdb">TMDB विवरण फिर से प्राप्त करें</string>
+    <string name="content_set_tmdb_name">TMDB नाम सेट करें</string>
+    <string name="content_close">बंद करें</string>
+    <string name="content_focus_movie">विवरण देखने के लिए किसी फ़िल्म पर फ़ोकस करें।</string>
+    <string name="content_focus_channel">इसे यहां देखने के लिए किसी चैनल पर फ़ोकस करें।</string>
+    <string name="content_press_ok_fullscreen">फ़ुल स्क्रीन में देखने के लिए OK दबाएं · विकल्पों के लिए लॉन्ग-प्रेस करें</string>
+    <string name="content_rename_hint">केवल इस प्रोफ़ाइल के लिए। मूल नाम बहाल करने के लिए खाली छोड़ें।</string>
+    <string name="content_focus_series">किसी सीरीज़ पर फ़ोकस करें, एपिसोड देखने के लिए OK दबाएं।</string>
+    <string name="content_focus_episode">विवरण देखने के लिए किसी एपिसोड पर फ़ोकस करें।</string>
+    <string name="content_no_movies_here">यहां कोई फ़िल्में नहीं हैं।</string>
+    <string name="content_no_series_here">यहां कोई सीरीज़ नहीं है।</string>
+    <string name="content_no_episodes">कोई एपिसोड उपलब्ध नहीं है।</string>
+    <string name="content_no_movies_found">“<xliff:g id="query">%1$s</xliff:g>” के लिए कोई फ़िल्म नहीं मिली</string>
+    <plurals name="content_count_movies">
+        <item quantity="one"><xliff:g id="category">%1$s</xliff:g> (<xliff:g id="count">%2$d</xliff:g> फ़िल्म)</item>
+        <item quantity="other"><xliff:g id="category">%1$s</xliff:g> (<xliff:g id="count">%2$d</xliff:g> फ़िल्में)</item>
+    </plurals>
+    <plurals name="content_count_series">
+        <item quantity="one"><xliff:g id="category">%1$s</xliff:g> (<xliff:g id="count">%2$d</xliff:g> सीरीज़)</item>
+        <item quantity="other"><xliff:g id="category">%1$s</xliff:g> (<xliff:g id="count">%2$d</xliff:g> सीरीज़)</item>
+    </plurals>
+    <string name="content_provider">प्रदाता</string>
+    <string name="content_no_series_found">“<xliff:g id="query">%1$s</xliff:g>” के लिए कोई सीरीज़ नहीं मिली</string>
+    <string name="content_search_movies"><xliff:g id="category">%1$s</xliff:g>…</string>
+    <string name="content_search_series"><xliff:g id="category">%1$s</xliff:g>…</string>
+    <string name="content_reorder_movie">फ़िल्म का क्रम बदलें</string>
+    <string name="content_reorder_series">सीरीज़ का क्रम बदलें</string>
+    <string name="content_already_downloaded">पहले से डाउनलोड है — डाउनलोड मेनू देखें।</string>
+    <string name="content_refetching_tmdb">TMDB विवरण फिर से प्राप्त हो रहा है…</string>
+    <string name="content_researching_tmdb">TMDB पर फिर से खोज हो रही है…</string>
+    <string name="content_ok_play_options">चलाने के लिए OK · विकल्पों के लिए लॉन्ग-प्रेस करें</string>
+    <string name="content_resume_at"><xliff:g id="position">%1$s</xliff:g> से रिज़्यूम करें</string>
+    <string name="content_duration_hours"><xliff:g id="hours">%1$d</xliff:g>घं <xliff:g id="minutes">%2$d</xliff:g>मि</string>
+    <string name="content_duration_minutes"><xliff:g id="minutes">%1$d</xliff:g>मि</string>
+    <string name="content_rating">★ <xliff:g id="rating">%1$.1f</xliff:g></string>
+    <string name="content_metadata_separator">  •  </string>
+    <string name="content_genres_separator"> · </string>
+    <string name="content_season_episode">S<xliff:g id="season">%1$d</xliff:g> · E<xliff:g id="episode">%2$d</xliff:g></string>
+    <string name="content_season_episode_title">S<xliff:g id="season">%1$d</xliff:g> · E<xliff:g id="episode">%2$d</xliff:g> <xliff:g id="title">%3$s</xliff:g></string>
+    <string name="content_season">सीज़न <xliff:g id="season">%1$d</xliff:g></string>
+    <string name="content_season_progress">सीज़न <xliff:g id="season">%1$d</xliff:g> · <xliff:g id="completed">%2$d</xliff:g>/<xliff:g id="total">%3$d</xliff:g></string>
+    <string name="content_no_epg">कोई EPG नहीं</string>
+    <string name="content_epg">EPG</string>
+    <string name="content_live_day_time_range"><xliff:g id="day">%1$s</xliff:g> <xliff:g id="start">%2$s</xliff:g> – <xliff:g id="stop">%3$s</xliff:g></string>
+    <string name="content_epg_days">EPG · <xliff:g id="days">%1$d</xliff:g> दिन</string>
+    <string name="content_catchup">कैच-अप</string>
+    <string name="content_catchup_days">कैच-अप · <xliff:g id="days">%1$d</xliff:g> दिन</string>
+    <string name="content_play_external_short">बाहरी प्लेयर में चलाएं</string>
+    <string name="content_rename">नाम बदलें</string>
+    <string name="content_rename_channel">चैनल का नाम बदलें</string>
+    <string name="content_reorder_channel">चैनल का क्रम बदलें</string>
+    <string name="content_hide_channel">चैनल छुपाएं</string>
+    <string name="content_remove_history">इतिहास से हटाएं</string>
+    <string name="content_no_channels_here">यहां कोई चैनल नहीं है।</string>
+    <string name="content_no_channels_found">“<xliff:g id="query">%1$s</xliff:g>” के लिए कोई चैनल नहीं मिला</string>
+    <plurals name="content_count_channels">
+        <item quantity="one"><xliff:g id="category">%1$s</xliff:g> (<xliff:g id="count">%2$d</xliff:g> चैनल)</item>
+        <item quantity="other"><xliff:g id="category">%1$s</xliff:g> (<xliff:g id="count">%2$d</xliff:g> चैनल)</item>
+    </plurals>
+    <string name="content_search_channels"><xliff:g id="category">%1$s</xliff:g>…</string>
+    <string name="content_match_epg">EPG मैच करें</string>
+    <string name="content_catchup_title">कैच-अप · <xliff:g id="channel">%1$s</xliff:g></string>
+    <string name="content_rewind_at">रिवाइंड · <xliff:g id="time">%1$s</xliff:g></string>
+    <string name="content_catchup_prompt">शुरू से फिर से चलाने के लिए हाल का कोई प्रोग्राम चुनें।</string>
+    <string name="content_catchup_empty">इस चैनल के लिए अभी तक कोई हाल का गाइड डेटा नहीं है — सुनिश्चित करें कि इसका EPG मैच किया गया है (इसे लॉन्ग-प्रेस करें, या EPG मैच करें का उपयोग करें)।</string>
+    <string name="content_epg_match_prompt">“<xliff:g id="channel">%1$s</xliff:g>” के लिए गाइड चैनल चुनें।</string>
+    <string name="content_epg_match_prompt_current">“<xliff:g id="channel">%1$s</xliff:g>” के लिए गाइड चैनल चुनें। मौजूदा: <xliff:g id="match">%2$s</xliff:g></string>
+    <string name="content_search_guide_channels">गाइड चैनल खोजें…</string>
+    <string name="content_no_epg_data">अभी तक कोई EPG डेटा नहीं है — सेटिंग्स में EPG स्रोत जोड़ें।</string>
+    <string name="content_no_guide_channels">“<xliff:g id="query">%1$s</xliff:g>” से कोई गाइड चैनल मेल नहीं खाता।</string>
+    <string name="content_clear_match">मैच हटाएं</string>
+    <string name="content_live_now_label">अभी</string>
+    <string name="content_live_next_label">आगे · <xliff:g id="time">%1$s</xliff:g></string>
+    <string name="content_live_later_label">बाद में</string>
+    <string name="content_live_time_range_plain"><xliff:g id="start">%1$s</xliff:g> – <xliff:g id="stop">%2$s</xliff:g></string>
+    <string name="content_category_favorites">पसंदीदा</string>
+    <string name="content_category_history">इतिहास</string>
+    <string name="content_category_all_channels">सभी चैनल</string>
+    <string name="content_category_united_kingdom">यूनाइटेड किंगडम</string>
+    <string name="content_category_united_states">संयुक्त राज्य अमेरिका</string>
+    <string name="content_category_germany">जर्मनी</string>
+    <string name="content_category_sports">खेल</string>
+    <string name="content_category_all_movies">सभी फ़िल्में</string>
+    <string name="content_category_action">एक्शन</string>
+    <string name="content_category_drama">ड्रामा</string>
+    <string name="content_category_comedy">कॉमेडी</string>
+    <string name="content_category_horror">हॉरर</string>
+    <string name="content_category_all_series">सभी सीरीज़</string>
+    <string name="content_category_animation">एनिमेशन</string>
+    <string name="content_category_documentary">डॉक्यूमेंट्री</string>
+    <string name="content_category_all_downloads">सभी डाउनलोड</string>
+    <string name="content_category_movies">फ़िल्में</string>
+    <string name="content_category_series">सीरीज़</string>
+    <string name="content_zero_channels">0 चैनल</string>
+    <string name="content_zero_movies">0 फ़िल्में</string>
+    <string name="content_zero_series">0 सीरीज़</string>
+    <string name="content_zero_downloads">0 डाउनलोड</string>
+    <string name="content_nothing_here">अभी यहां कुछ नहीं है</string>
+    <string name="content_add_source">स्रोत जोड़ें</string>
+    <string name="content_preview_select_channel">इसे यहां पूर्वावलोकन करने के लिए कोई चैनल चुनें।</string>
+    <string name="content_offline_banner">आप ऑफ़लाइन हैं — जब तक आप फिर से कनेक्ट नहीं होते, प्लेबैक और अपडेट काम नहीं करेंगे।</string>
+    <string name="content_subtitle_select_file">लोकल सबटाइटल फ़ाइल चुनें</string>
+    <string name="content_subtitle_load_failed">सबटाइटल फ़ाइल लोड नहीं हो सकी।</string>
+    <string name="content_history">इतिहास</string>
+    <string name="content_all_playlists">सभी प्लेलिस्ट</string>
+    <string name="content_search_categories">श्रेणियां खोजें…</string>
+    <string name="content_no_categories_match">कोई श्रेणी मेल नहीं खाती</string>
+    <string name="content_action_resume">रिज़्यूम</string>
+    <string name="content_action_play">चलाएं</string>
+    <string name="content_action_next_up">आगे</string>
+    <string name="content_action_last_channel">आखिरी चैनल</string>
+    <string name="content_continue_label"><xliff:g id="action">%1$s</xliff:g> · <xliff:g id="name">%2$s</xliff:g></string>
+    <string name="content_empty_section"><xliff:g id="section">%1$s</xliff:g> बाद के चरण में आएगा। इस सूची को भरने के लिए M3U या Xtream स्रोत जोड़ें।</string>
+    <string name="content_progress_percent"><xliff:g id="percent">%1$d</xliff:g>%%</string>
+    <string name="content_section_category"><xliff:g id="section">%1$s</xliff:g> / <xliff:g id="category">%2$s</xliff:g></string>
+    <string name="content_preview_player">आपका अपना IPTV प्लेयर।</string>
+    <string name="content_live_time_range"><xliff:g id="start">%1$s</xliff:g> – <xliff:g id="end">%2$s</xliff:g></string>
+    <string name="content_live_time_remaining"><xliff:g id="end">%1$s</xliff:g> · <xliff:g id="minutes">%2$d</xliff:g> मिनट बाकी</string>
+    <string name="common_browse">ब्राउज़ करें</string>
+    <string name="content_downloads_title">डाउनलोड</string>
+    <string name="content_downloads_description">ऑफ़लाइन प्लेबैक के लिए सेव की गई फ़िल्में और एपिसोड।</string>
+    <string name="content_downloads_empty">अभी तक कोई डाउनलोड नहीं है। कोई फ़िल्म या एपिसोड खोलें और डाउनलोड दबाएं।</string>
+    <string name="content_downloads_storage">स्टोरेज</string>
+    <string name="content_downloads_storage_free"><xliff:g id="total">%2$s</xliff:g> GB में से <xliff:g id="free">%1$s</xliff:g> GB खाली</string>
+    <string name="content_storage_internal">इंटरनल स्टोरेज</string>
+    <string name="content_storage_removable">रिमूवेबल स्टोरेज</string>
+    <string name="content_storage_app">ऐप स्टोरेज (अनुमति की ज़रूरत नहीं)</string>
+    <string name="content_downloads_completed"><xliff:g id="size">%1$s</xliff:g> डाउनलोड हो गया</string>
+    <string name="content_downloads_failure_message">डाउनलोड विफल — स्रोत तक नहीं पहुंच सका। रीट्राई पर टैप करें।</string>
+    <string name="content_downloads_queued">कतार में…</string>
+    <string name="content_downloads_count"><xliff:g id="count">%1$d</xliff:g></string>
+    <string name="content_downloads_active">सक्रिय</string>
+    <string name="content_downloads_waiting">प्रतीक्षा में</string>
+    <string name="content_downloads_completed_group">पूर्ण</string>
+    <string name="content_downloads_failed_group">विफल</string>
+    <string name="content_downloads_progress"><xliff:g id="percent">%1$d</xliff:g>%% · <xliff:g id="downloaded">%2$s</xliff:g> / <xliff:g id="total">%3$s</xliff:g></string>
+    <string name="content_downloads_progress_unknown">डाउनलोड हो रहा है… <xliff:g id="downloaded">%1$s</xliff:g></string>
+    <string name="content_downloads_folder_separator"> › </string>
+    <string name="content_downloads_play">चलाएं</string>
+    <string name="content_downloads_external">बाहरी</string>
+    <string name="content_downloads_pause">रोकें</string>
+    <string name="content_downloads_unknown_size">—</string>
+    <string name="content_epg_create_profile">गाइड देखने के लिए प्रोफ़ाइल बनाएं।</string>
+    <string name="content_epg_add_playlist">गाइड देखने के लिए प्लेलिस्ट जोड़ें।</string>
+    <string name="content_epg_no_channels_query">“<xliff:g id="query">%1$s</xliff:g>” के लिए कोई गाइड चैनल नहीं मिला।</string>
+    <string name="content_epg_mismatched_ids">गाइड डेटा सेव है, लेकिन इसकी चैनल आईडी आपके चैनलों की EPG आईडी से मेल नहीं खाती — यह EPG फ़ीड किसी दूसरे प्रदाता लाइनअप की हो सकती है।</string>
+    <string name="content_epg_catchup_unavailable">इस चैनल के लिए कैच-अप उपलब्ध नहीं है।</string>
+    <string name="content_epg_matched_no_programmes">मैच हो गया — लेकिन इस गाइड चैनल में EPG फ़ीड में अभी कोई मौजूदा प्रोग्राम नहीं है।</string>
+    <string name="content_epg_add_playlist_first">पहले प्लेलिस्ट जोड़ें।</string>
+    <string name="content_epg_no_match_data">मैच करने के लिए अभी तक कोई EPG डेटा नहीं है।</string>
+    <string name="content_epg_all_matched">सब कुछ पहले से मैच हो चुका है।</string>
+    <string name="content_epg_no_match">“<xliff:g id="channel">%1$s</xliff:g>” के लिए कोई EPG मैच नहीं मिला — मैन्युअल रूप से चुनने की कोशिश करें।</string>
+    <plurals name="content_epg_stats_channels">
+        <item quantity="one">गाइड लोड हो गई: <xliff:g id="channels">%1$d</xliff:g> चैनल.</item>
+        <item quantity="other">गाइड लोड हो गई: <xliff:g id="channels">%1$d</xliff:g> चैनल.</item>
+    </plurals>
+    <plurals name="content_epg_stats_programmes">
+        <item quantity="one">गाइड में <xliff:g id="programmes">%1$d</xliff:g> प्रोग्राम है.</item>
+        <item quantity="other">गाइड में <xliff:g id="programmes">%1$d</xliff:g> प्रोग्राम हैं.</item>
+    </plurals>
+    <string name="content_epg_stats_loaded"><xliff:g id="channels">%1$s</xliff:g> <xliff:g id="programmes">%2$s</xliff:g> <xliff:g id="catchup">%3$s</xliff:g></string>
+    <string name="content_epg_no_catchup_channels">किसी भी चैनल में कैच-अप सपोर्ट नहीं है।</string>
+    <string name="content_epg_stats_no_catchup">कोई कैच-अप चैनल उपलब्ध नहीं है।</string>
+    <plurals name="content_epg_catchup_count">
+        <item quantity="one">कैच-अप <xliff:g id="count">%1$d</xliff:g> चैनल पर उपलब्ध है.</item>
+        <item quantity="other">कैच-अप <xliff:g id="count">%1$d</xliff:g> चैनलों पर उपलब्ध है.</item>
+    </plurals>
+    <plurals name="content_epg_stats_catchup_available">
+        <item quantity="one">कैच-अप <xliff:g id="count">%1$d</xliff:g> चैनल पर उपलब्ध है.</item>
+        <item quantity="other">कैच-अप <xliff:g id="count">%1$d</xliff:g> चैनलों पर उपलब्ध है.</item>
+    </plurals>
+    <plurals name="content_epg_auto_matched_applied">
+        <item quantity="one"><xliff:g id="applied">%1$d</xliff:g> चैनल ऑटो-मैच किया गया.</item>
+        <item quantity="other"><xliff:g id="applied">%1$d</xliff:g> चैनल ऑटो-मैच किए गए.</item>
+    </plurals>
+    <plurals name="content_epg_auto_matched_review">
+        <item quantity="one"><xliff:g id="review">%1$d</xliff:g> चैनल की समीक्षा ज़रूरी है.</item>
+        <item quantity="other"><xliff:g id="review">%1$d</xliff:g> चैनलों की समीक्षा ज़रूरी है.</item>
+    </plurals>
+    <string name="content_epg_auto_matched"><xliff:g id="applied">%1$s</xliff:g> <xliff:g id="review">%2$s</xliff:g></string>
+    <plurals name="content_epg_auto_matched_no_review">
+        <item quantity="one">ऑटो-मैच किया गया <xliff:g id="applied">%1$d</xliff:g> चैनल.</item>
+        <item quantity="other">ऑटो-मैच किए गए <xliff:g id="applied">%1$d</xliff:g> चैनल.</item>
+    </plurals>
+    <string name="content_epg_title">टीवी गाइड</string>
+    <string name="content_epg_matching">मैच हो रहा है…</string>
+    <string name="content_epg_empty">कोई EPG नहीं जोड़ा गया।</string>
+    <string name="content_epg_no_guide">कोई गाइड नहीं।</string>
+    <string name="content_epg_no_programme">इस समय कोई प्रोग्राम नहीं है।</string>
+    <string name="content_epg_add_description">गाइड को प्रोग्राम से भरने के लिए EPG (XMLTV) स्रोत जोड़ें।</string>
+    <string name="content_epg_favourite_description">इस चैनल को पसंदीदा बनाएं, या इसका गाइड डेटा सेट करें।</string>
+    <string name="content_epg_guide_category">गाइड श्रेणी</string>
+    <string name="content_epg_all_categories">सभी श्रेणियां</string>
+    <string name="content_epg_search_hint">गाइड चैनल खोजें…</string>
+    <string name="content_epg_add">EPG जोड़ें</string>
+    <string name="content_epg_add_favourite">पसंदीदा में जोड़ें</string>
+    <string name="content_epg_remove_favourite">पसंदीदा से हटाएं</string>
+    <string name="content_epg_jump_now">अभी पर जाएं</string>
+    <string name="content_epg_runtime"><xliff:g id="minutes">%1$d</xliff:g>मि</string>
+    <string name="content_epg_review_matches">EPG मैच समीक्षा करें</string>
+    <string name="content_epg_review_description">इन चैनलों को नाम के आधार पर मैच किया गया था, लेकिन यह पक्का मेल नहीं था। सही वालों को स्वीकार करें; बाकी को छोड़ दें।</string>
+    <string name="content_epg_accept">स्वीकार करें</string>
+    <string name="content_epg_accept_all">सभी स्वीकार करें</string>
+    <string name="content_epg_skip">छोड़ें</string>
+    <string name="content_epg_skip_all">सभी छोड़ें</string>
+    <string name="content_epg_pick_manually">EPG मैन्युअल रूप से चुनें</string>
+    <string name="content_epg_move_hint">पंक्ति में दाईं ओर जाएं, फिर प्रोग्राम पूर्वावलोकन के लिए ◀ ▶ से ब्राउज़ करें।</string>
+    <string name="content_epg_catchup">↻ कैच-अप</string>
+    <string name="content_epg_time_range"><xliff:g id="start">%1$s</xliff:g> – <xliff:g id="end">%2$s</xliff:g></string>
+    <string name="content_epg_all">सभी</string>
+    <string name="content_epg_sort_alpha">A–Z</string>
+    <string name="content_epg_sort_provider">प्रदाता</string>
+    <string name="content_epg_sort_live">लाइव टीवी</string>
+    <string name="content_epg_sort_catchup">कैच-अप</string>
+    <string name="content_epg_sort_favorites">पसंदीदा</string>
+    <string name="content_epg_category_button">श्रेणी: <xliff:g id="label">%1$s</xliff:g></string>
+    <string name="content_epg_sort_button">क्रम: <xliff:g id="label">%1$s</xliff:g></string>
+    <string name="content_epg_match_button">EPG ऑटो-मैच करें</string>
+    <string name="content_epg_channel_score">→ <xliff:g id="name">%1$s</xliff:g> · <xliff:g id="percent">%2$d</xliff:g>%%</string>
+    <string name="content_epg_channel_number"><xliff:g id="number">%1$s</xliff:g>  <xliff:g id="name">%2$s</xliff:g></string>
+    <string name="content_epg_bits_separator"> · </string>
+    <string name="content_epg_now">अभी · <xliff:g id="time">%1$s</xliff:g></string>
+    <string name="content_epg_watch_start">शुरू से देखें</string>
+    <string name="content_epg_watch_channel">चैनल देखें</string>
+    <string name="content_epg_favourite">पसंदीदा बनाएं</string>
+    <string name="content_epg_unfavourite">पसंदीदा से हटाएं</string>
+    <string name="content_epg_player_choice_description">सेटिंग्स › कैच-अप में स्थायी विकल्प सेट करें।</string>
+    <string name="content_epg_own_player">OwnTV प्लेयर</string>
+    <string name="content_epg_external_player">बाहरी प्लेयर</string>
+</resources>

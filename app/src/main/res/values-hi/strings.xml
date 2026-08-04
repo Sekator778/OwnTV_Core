@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <string name="common_cancel">रद्द करें</string>
+    <string name="common_back">वापस</string>
+    <string name="common_save">सहेजें</string>
+    <string name="common_edit">संपादित करें</string>
+    <string name="common_delete">हटाएं</string>
+    <string name="common_clear">साफ़ करें</string>
+    <string name="common_retry">फिर से कोशिश करें</string>
+    <string name="common_create">बनाएं</string>
+    <string name="common_reset">रीसेट करें</string>
+    <string name="common_done">पूर्ण</string>
+    <string name="common_ok">ठीक है</string>
+    <string name="common_on">चालू</string>
+    <string name="common_off">बंद</string>
+    <string name="common_exit">बाहर निकलें</string>
+    <string name="common_resume">रिज़्यूम करें</string>
+    <string name="common_start_over">शुरू से देखें</string>
+    <string name="common_name">नाम</string>
+    <string name="common_own_tv_user">OwnTV उपयोगकर्ता</string>
+    <string name="common_switch_profile">प्रोफ़ाइल बदलें</string>
+    <string name="common_proxy">प्रॉक्सी</string>
+    <string name="common_title">शीर्षक</string>
+    <string name="common_search_hint">खोजें…</string>
+    <string name="common_search">खोज</string>
+    <string name="common_weather_fahrenheit"><xliff:g id="temperature">%1$d</xliff:g>°F</string>
+    <string name="common_weather_celsius"><xliff:g id="temperature">%1$d</xliff:g>°C</string>
+    <string name="common_weather_city"><xliff:g id="temperature">%1$s</xliff:g> · <xliff:g id="city">%2$s</xliff:g></string>
+    <string name="common_nav_search">खोज</string>
+    <string name="common_nav_home">होम</string>
+    <string name="common_nav_live_tv">लाइव टीवी</string>
+    <string name="common_nav_movies">फ़िल्में</string>
+    <string name="common_nav_series">सीरीज़</string>
+    <string name="common_nav_downloads">डाउनलोड</string>
+    <string name="common_nav_guide">गाइड</string>
+    <string name="common_nav_settings">सेटिंग्स</string>
+    <string name="shell_no_source">कोई स्रोत नहीं</string>
+    <string name="common_something_went_wrong">कुछ गलत हो गया</string>
+    <string name="common_move_instructions">ले जाने के लिए ▲/▼ · सहेजने के लिए OK · रद्द करने के लिए वापस</string>
+    <string name="common_number_grouped"><xliff:g id="count">%1$,d</xliff:g></string>
+    <string name="common_rating"><xliff:g id="rating">%1$.1f</xliff:g></string>
+    <string name="common_percent"><xliff:g id="percent">%1$d</xliff:g>%%</string>
+    <string name="common_timestamp_minutes"><xliff:g id="minutes">%1$d</xliff:g>:<xliff:g id="seconds">%2$02d</xliff:g></string>
+    <string name="common_timestamp_hours"><xliff:g id="hours">%1$d</xliff:g>:<xliff:g id="minutes">%2$02d</xliff:g>:<xliff:g id="seconds">%3$02d</xliff:g></string>
+    <string name="common_resume_position">आपने <xliff:g id="position">%1$s</xliff:g> पर रोका था।</string>
+    <string name="common_resume_prompt">प्लेबैक रिज़्यूम करें?</string>
+    <string name="sync_error_offline">ऐसा लगता है आप ऑफ़लाइन हैं। अपना कनेक्शन जांचें और फिर से कोशिश करें।</string>
+    <string name="sync_error_generic">कुछ गलत हो गया। कृपया फिर से कोशिश करें।</string>
+    <string name="sync_error_timeout">सर्वर ने जवाब देने में बहुत अधिक समय लिया। कृपया फिर से कोशिश करें।</string>
+    <string name="sync_error_unreachable">सर्वर तक नहीं पहुंच सके। पता और अपना कनेक्शन जांचें।</string>
+    <string name="sync_error_connection">सर्वर से कनेक्ट नहीं हो सका। यह डाउन हो सकता है, या पता गलत हो सकता है।</string>
+    <string name="sync_error_interrupted">सर्वर ने डाउनलोड बीच में रोक दिया। कृपया फिर से कोशिश करें।</string>
+    <string name="sync_error_mac">पोर्टल ने इस MAC पते को अस्वीकार कर दिया। MAC (और TV की तारीख व समय) जांचें — या सब्सक्रिप्शन समाप्त हो चुकी हो सकती है।</string>
+    <string name="sync_error_invalid_mac">अमान्य MAC पता — AA:BB:CC:DD:EE:FF का उपयोग करें</string>
+    <string name="sync_counts_separator">  ·  </string>
+    <string name="sync_counts_success">सफलतापूर्वक सिंक हुआ</string>
+    <string name="sync_counts_synced"><xliff:g id="counts">%1$s</xliff:g> सिंक हो गए</string>
+    <string name="sync_import_warnings">चेतावनियों के साथ इम्पोर्ट किया गया: <xliff:g id="phases">%1$s</xliff:g></string>
+    <string name="sync_warning_phase_error"><xliff:g id="phase">%1$s</xliff:g>: <xliff:g id="message">%2$s</xliff:g></string>
+    <plurals name="sync_warning_catalog_shrink">
+        <item quantity="one">मौजूदा <xliff:g id="stored">%1$d</xliff:g> आइटम रखा गया — इस इम्पोर्ट में <xliff:g id="percent">%2$d</xliff:g>%% कम आइटम मिले। फिर से सिंक करें, या यदि प्रदाता ने वास्तव में इसे हटाया है तो फ़ोर्स क्लीन सिंक का उपयोग करें।</item>
+        <item quantity="other">मौजूदा <xliff:g id="stored">%1$d</xliff:g> आइटम रखे गए — इस इम्पोर्ट में <xliff:g id="percent">%2$d</xliff:g>%% कम आइटम मिले। फिर से सिंक करें, या यदि प्रदाता ने वास्तव में उन्हें हटाया है तो फ़ोर्स क्लीन सिंक का उपयोग करें।</item>
+    </plurals>
+    <plurals name="sync_warning_page_failures">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> स्रोत पेज विफल रहा; अगली सिंक तक कुछ कंटेंट गायब हो सकता है।</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> स्रोत पेज विफल रहे; अगली सिंक तक कुछ कंटेंट गायब हो सकता है।</item>
+    </plurals>
+    <string name="sync_remainder_note">कैटलॉग का बाकी हिस्सा अभी भी बैकग्राउंड में सिंक हो रहा है — आप अभी देखना शुरू कर सकते हैं। प्रगति स्क्रीन के नीचे छोटी पिल में दिखती है।</string>
+    <string name="sync_progress_preparing">कैटलॉग तैयार किया जा रहा है</string>
+    <string name="sync_progress_connecting">स्रोत से कनेक्ट हो रहा है…</string>
+    <string name="sync_progress_syncing">कैटलॉग सिंक हो रहा है</string>
+    <string name="sync_progress_percent"><xliff:g id="percent">%1$d</xliff:g>%% सिंक हो रहा है</string>
+    <string name="sync_status_catalog"><xliff:g id="source">%1$s</xliff:g> सिंक हो रहा है</string>
+    <string name="sync_status_catalog_with_counts"><xliff:g id="source">%1$s</xliff:g> सिंक हो रहा है · <xliff:g id="counts">%2$s</xliff:g></string>
+    <string name="sync_status_epg">गाइड अपडेट हो रहा है · <xliff:g id="source">%1$s</xliff:g></string>
+    <string name="sync_status_epg_with_counts">गाइड अपडेट हो रहा है · <xliff:g id="source">%1$s</xliff:g> · <xliff:g id="counts">%2$s</xliff:g></string>
+    <string name="sync_status_complete">सिंक पूर्ण · <xliff:g id="source">%1$s</xliff:g></string>
+    <string name="sync_status_complete_with_changes">सिंक पूर्ण · <xliff:g id="source">%1$s</xliff:g> · <xliff:g id="changes">%2$s</xliff:g></string>
+    <string name="sync_status_failed">सिंक विफल · <xliff:g id="source">%1$s</xliff:g>: <xliff:g id="reason">%2$s</xliff:g></string>
+    <string name="sync_status_cancelled">सिंक रद्द · <xliff:g id="source">%1$s</xliff:g></string>
+    <string name="sync_phase_live">लाइव टीवी</string>
+    <string name="sync_phase_movies">फ़िल्में</string>
+    <string name="sync_phase_series">सीरीज़</string>
+    <plurals name="sync_count_channels">
+        <item quantity="one"><xliff:g id="count">%1$s</xliff:g> चैनल</item>
+        <item quantity="other"><xliff:g id="count">%1$s</xliff:g> चैनल</item>
+    </plurals>
+    <plurals name="sync_count_movies">
+        <item quantity="one"><xliff:g id="count">%1$s</xliff:g> फ़िल्म</item>
+        <item quantity="other"><xliff:g id="count">%1$s</xliff:g> फ़िल्में</item>
+    </plurals>
+    <plurals name="sync_count_series">
+        <item quantity="one"><xliff:g id="count">%1$s</xliff:g> सीरीज़</item>
+        <item quantity="other"><xliff:g id="count">%1$s</xliff:g> सीरीज़</item>
+    </plurals>
+    <plurals name="sync_count_epg">
+        <item quantity="one"><xliff:g id="count">%1$s</xliff:g> EPG एंट्री</item>
+        <item quantity="other"><xliff:g id="count">%1$s</xliff:g> EPG एंट्रियां</item>
+    </plurals>
+    <plurals name="sync_status_more">
+        <item quantity="one">+<xliff:g id="count">%1$d</xliff:g> और सिंक</item>
+        <item quantity="other">+<xliff:g id="count">%1$d</xliff:g> और सिंक हो रहे हैं</item>
+    </plurals>
+    <plurals name="sync_categories_added">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> श्रेणी जोड़ी गई</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> श्रेणियां जोड़ी गईं</item>
+    </plurals>
+    <plurals name="sync_categories_removed">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> श्रेणी हटाई गई</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> श्रेणियां हटाई गईं</item>
+    </plurals>
+    <string name="sync_error_portal">पोर्टल तक नहीं पहुंच सके। पोर्टल URL जांचें — यह आमतौर पर /c/ पर समाप्त होता है।</string>
+    <string name="sync_error_session">पोर्टल सत्र समाप्त हो गया। कृपया फिर से कोशिश करें।</string>
+    <string name="sync_error_auth">सर्वर ने आपका लॉगिन अस्वीकार कर दिया। अपना उपयोगकर्ता नाम और पासवर्ड जांचें।</string>
+    <string name="sync_error_not_found">सर्वर पर नहीं मिला। URL जांचें।</string>
+    <string name="sync_error_server">सर्वर में समस्या थी। कृपया बाद में फिर से कोशिश करें।</string>
+    <string name="sync_error_secure">सुरक्षित कनेक्शन विफल — सर्वर का प्रमाणपत्र अमान्य हो सकता है।</string>
+    <string name="sync_error_malformed_guide">सर्वर से गाइड डेटा गलत फॉर्मेट में था। इसका कुछ हिस्सा फिर भी लोड हुआ हो सकता है — कृपया फिर से कोशिश करें, या EPG URL जांचें।</string>
+    <string name="common_items_per_skip">प्रति स्किप आइटम</string>
+    <string name="common_plus">+</string>
+    <string name="common_minus">–</string>
+    <string name="common_hide">छुपाएं</string>
+    <string name="common_show">दिखाएं</string>
+    <string name="common_qr_code_companion_url">कम्पैनियन URL के लिए QR कोड</string>
+</resources>
