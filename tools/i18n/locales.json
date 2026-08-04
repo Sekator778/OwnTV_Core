@@ -307,5 +307,19 @@
     "tier": 1,
     "packaged": false,
     "pickerVisible": false
+  },
+  {
+    "id": "ml",
+    "languageTag": "ml",
+    "resourceQualifier": "ml",
+    "resourceDirectory": "values-ml",
+    "weblateCode": "ml",
+    "englishName": "Malayalam",
+    "endonym": "മലയാളം",
+    "script": "Mlym",
+    "rtl": false,
+    "tier": 1,
+    "packaged": false,
+    "pickerVisible": false
   }
 ]

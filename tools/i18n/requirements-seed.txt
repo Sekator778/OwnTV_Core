@@ -1,0 +1,13 @@
+# Dependencies for tools/i18n/seed_translations.py only.
+#
+# This is a manual, one-off supply-chain tool for the Phase 4a community-translation
+# seed. Install into a throwaway local venv; never install this file in CI or as part
+# of a normal `pip install -r requirements.txt` for the repo.
+#
+#   python3 -m venv .venv-seed
+#   source .venv-seed/bin/activate
+#   pip install -r tools/i18n/requirements-seed.txt
+#
+# tools/i18n/seed_text.py and every other tool under tools/i18n/ stay stdlib-only and
+# must keep working with this package absent.
+anthropic==0.116.0

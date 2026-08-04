@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Validate Android string resources and the locales.json catalogue.
 
-Owns (docs/internationalization.md 0d / 4c / 4d):
+Owns (docs/internationalization.md 0d / 4c / 4d, docs/i18n-phase4a-seed-translations.md):
   - locales.json schema: required fields, type checks, id/tag/qualifier uniqueness, qualifier
     validity, directory/qualifier correspondence, pickerVisible ⇒ packaged, stored coverage
     rejection, exact Tier 1 membership.
@@ -21,14 +21,16 @@ Owns (docs/internationalization.md 0d / 4c / 4d):
     placeholder parity for EVERY translation quantity (including locale-specific forms like Arabic
     zero/two/few/many that don't exist in the source). Source English must carry its own required
     quantities (one, other).
-  - **Tier 1 coverage enforcement**: every Tier 1, packaged locale at 100% — release-gating.
 
-Unfinished/needs-editing state is NOT detected by textual equality (legitimate translations like
-OK, TV, PIN, Wi-Fi are identical across languages). Release-packaged translations instead require an
-explicit state in ``tools/i18n/translation_status.json``; only ``translated`` or ``approved`` states
-are accepted, while Weblate ``needs-editing``/``needs-review``/``untranslated`` states fail.
+English in ``values/`` is the only language OwnTV guarantees complete. A missing localized key is
+valid Android fallback behaviour: it is reported (see ``--report``) but never fails the build. A
+localized value that *is* present must still be structurally safe — invalid XML, broken
+placeholders, invalid plurals, empty values and similar defects fail regardless of coverage, because
+those entries override the English fallback rather than deferring to it.
 
-Coverage is **computed** here, never read from a stored field.
+Coverage is **computed** here, never read from a stored field, and uses the same suffixed
+string/plurals/array key sets as ``gen_supported_locales.py`` so the CI report and the picker badge
+can never disagree.
 """
 from __future__ import annotations
 
@@ -42,8 +44,6 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 LOCALES_JSON = ROOT / "tools" / "i18n" / "locales.json"
 RES = ROOT / "app" / "src" / "main" / "res"
-TRANSLATION_STATUS = ROOT / "tools" / "i18n" / "translation_status.json"
-_APPROVED_TRANSLATION_STATES = {"translated", "approved"}
 
 # --- resource parsing ---------------------------------------------------------
 
@@ -282,53 +282,6 @@ def _check_donottranslate_file(file_path: Path, tag: str) -> list[str]:
     return errs
 
 
-def _load_translation_status() -> tuple[dict[str, dict[str, str]], list[str]]:
-    """Load explicit Weblate/reviewer state used for release-gated translations.
-
-    The file is deliberately a small checked-in snapshot rather than inferred from translated text:
-    identical text can be a legitimate translation, while a Weblate ``needs-editing`` flag cannot be
-    observed reliably after Android XML export. Missing status is tolerated until a locale actually
-    has packaged translation entries; then every such key must have an accepted state.
-    """
-    if not TRANSLATION_STATUS.is_file():
-        return {}, []
-    try:
-        payload = json.loads(TRANSLATION_STATUS.read_text(encoding="utf-8"))
-    except (OSError, json.JSONDecodeError) as e:
-        return {}, [f"translation_status.json: invalid JSON: {e}"]
-    if not isinstance(payload, dict):
-        return {}, ["translation_status.json: root must be an object"]
-    if payload.get("schemaVersion") != 1:
-        return {}, ["translation_status.json: schemaVersion must be 1"]
-    locales = payload.get("locales")
-    if not isinstance(locales, dict):
-        return {}, ["translation_status.json: locales must be an object"]
-    out: dict[str, dict[str, str]] = {}
-    errs: list[str] = []
-    for tag, entries in locales.items():
-        if not isinstance(tag, str) or not tag.strip():
-            errs.append("translation_status.json: locale keys must be non-blank strings")
-            continue
-        if not isinstance(entries, dict):
-            errs.append(f"translation_status.json {tag}: entries must be an object")
-            continue
-        states: dict[str, str] = {}
-        for key, state in entries.items():
-            if not isinstance(key, str) or not key.strip():
-                errs.append(f"translation_status.json {tag}: translation keys must be non-blank strings")
-                continue
-            if not isinstance(state, str) or not state.strip():
-                errs.append(f"translation_status.json {tag} {key}: state must be a non-blank string")
-                continue
-            states[key] = state
-            if state not in _APPROVED_TRANSLATION_STATES:
-                errs.append(
-                    f"translation_status.json {tag} {key}: state '{state}' is unfinished; "
-                    "only 'translated' or 'approved' is release-safe")
-        out[tag] = states
-    return out, errs
-
-
 # --- plural rules -------------------------------------------------------------
 
 # CLDR plural rules per locale. "other" is mandatory for every <plurals>; the rest are the
@@ -344,7 +297,7 @@ _PLURAL_RULES = {
     "pl": ["one", "few", "many", "other"], "ru": ["one", "few", "many", "other"],
     "pt": ["one", "many", "other"], "pt-BR": ["one", "many", "other"], "pt-PT": ["one", "many", "other"],
     "zh-CN": ["other"], "zh-TW": ["other"], "es-US": ["one", "many", "other"], "es-ES": ["one", "many", "other"],
-    "tr": ["one", "other"],
+    "tr": ["one", "other"], "ml": ["one", "other"],
 }
 
 
@@ -362,7 +315,7 @@ _DIRECTORY_RE = re.compile(r"^values(?:-[A-Za-z0-9+_-]+)*$")
 # Exact set of Tier 1 language tags the catalogue must contain (docs/internationalization.md 4d).
 _EXPECTED_TIER1_TAGS = {
     "en-US", "ar", "pt-BR", "pt-PT", "zh-CN", "zh-TW", "cs", "da", "nl", "fr", "de", "it",
-    "ja", "ko", "nb", "pl", "ru", "es-US", "es-ES", "sv", "tr",
+    "ja", "ko", "nb", "pl", "ru", "es-US", "es-ES", "sv", "tr", "ml",
 }
 
 # Valid Android resource qualifier forms for locales:
@@ -391,7 +344,7 @@ _CANONICAL_WEBLATE = {
     "es": "es_ES", "es-rUS": "es_419",
     "nb": "nb_NO",
     "cs": "cs", "da": "da", "nl": "nl", "fr": "fr", "de": "de", "it": "it",
-    "ja": "ja", "ko": "ko", "pl": "pl", "ru": "ru", "sv": "sv", "tr": "tr",
+    "ja": "ja", "ko": "ko", "pl": "pl", "ru": "ru", "sv": "sv", "tr": "tr", "ml": "ml",
 }
 
 
@@ -537,22 +490,42 @@ def _validate_source_entries(src: dict[str, dict]) -> list[str]:
 
 # --- main ---------------------------------------------------------------------
 
-def main(release: bool = False) -> int:
-    """Validate resources; [release] additionally requires review state for packaged translations."""
+def _format_text_report(source_keys: int, coverage_rows: list[dict]) -> str:
+    """Deterministic, catalogue-ordered coverage report (docs/i18n-phase4a-seed-translations.md)."""
+    lines = ["Translation coverage:"]
+    for row in coverage_rows:
+        pct = f"{row['coveragePercent']:.1f}%"
+        lines.append(
+            "  " + row["languageTag"].ljust(9)
+            + f"{row['translatedKeys']:>4}"
+            + f" / {source_keys} "
+            + f"{pct:>7}"
+            + f"{row['missingKeys']:>6} missing"
+        )
+    return "\n".join(lines)
+
+
+def main(report: str = "text") -> int:
+    """Validate resources; structural errors always gate, coverage is informational only.
+
+    ``report`` selects the informational coverage report format: ``text`` (default), ``json``, or
+    ``none``. In ``json`` mode stdout carries only the JSON document; every diagnostic goes to
+    stderr instead, so a caller can pipe stdout straight into a JSON parser even when the process
+    exits non-zero.
+    """
+    diagnostics = sys.stderr if report == "json" else sys.stdout
     fails: list[str] = []
 
     # --- locales.json ----------------------------------------------------------
     if not LOCALES_JSON.is_file():
-        print("error: tools/i18n/locales.json missing")
+        print("error: tools/i18n/locales.json missing", file=diagnostics)
         return 1
     try:
         data = json.loads(LOCALES_JSON.read_text(encoding="utf-8"))
     except (OSError, json.JSONDecodeError) as e:
-        print(f"error: locales.json is not valid JSON: {e}")
+        print(f"error: locales.json is not valid JSON: {e}", file=diagnostics)
         return 1
     fails.extend(_validate_catalogue(data))
-    status, status_errs = _load_translation_status()
-    fails.extend(status_errs)
     if not isinstance(data, list):
         data = []  # Keep reporting schema errors instead of crashing while walking malformed input.
 
@@ -584,16 +557,10 @@ def main(release: bool = False) -> int:
     fails.extend(_validate_source_entries(src))
 
     # --- per-locale ------------------------------------------------------------
-    tier1_coverage_problems: list[str] = []
-    catalogue_tags = {
-        e.get("languageTag") for e in data if isinstance(e, dict) and isinstance(e.get("languageTag"), str)
-    }
-    for status_tag, status_entries in status.items():
-        if status_tag not in catalogue_tags:
-            fails.append(f"translation_status.json: unknown locale '{status_tag}'")
-        for status_key in status_entries:
-            if status_key not in src:
-                fails.append(f"translation_status.json {status_tag}: unknown translation key '{status_key}'")
+    # Coverage denominator: the same suffixed translatable source key set gen_supported_locales.py
+    # intersects against, so the CI report and the picker badge can never disagree.
+    source_translatable_keys = {k for k, v in src.items() if v.get("translatable", True)}
+    coverage_rows: list[dict] = []
 
     for e in data:
         if not isinstance(e, dict):
@@ -616,20 +583,6 @@ def main(release: bool = False) -> int:
         rule = _PLURAL_RULES.get(tag)
         is_packaged = e.get("packaged") is True
         is_tier1 = type(e.get("tier")) is int and e.get("tier") == 1
-        status_entries = status.get(tag, {})
-        if is_packaged and release:
-            for lkey in loc_keys:
-                state = status_entries.get(lkey)
-                if state not in _APPROVED_TRANSLATION_STATES:
-                    if state is None:
-                        fails.append(
-                            f"{tag} {lkey.rstrip('#[]')}: missing translation review state in "
-                            "tools/i18n/translation_status.json")
-                    # Invalid states are already reported by _load_translation_status; avoid a
-                    # duplicate verbose error here while still making the release gate explicit.
-            for status_key in status_entries:
-                if status_key not in loc_keys:
-                    fails.append(f"translation_status.json {tag}: stale key '{status_key}' is not in resources")
 
         # Translation-only keys: keys in the translation that don't exist in source (including leaked
         # donottranslate keys). Every translation key must have a source counterpart.
@@ -638,18 +591,23 @@ def main(release: bool = False) -> int:
                 lname = lkey.rstrip("#[]")
                 fails.append(f"{tag}: translation-only key '{lname}' has no source counterpart")
 
+        translated = 0
         for skey, psrc in src.items():
             # Skip source keys marked translatable="false" — they must NOT appear in translations.
             if not psrc.get("translatable", True):
                 continue
             ploc = loc_keys.get(skey)
             if ploc is None:
-                if is_tier1 and is_packaged:
-                    tier1_coverage_problems.append(f"{tag}: {skey.rstrip('#[]')}")
+                # Missing is valid Android fallback behaviour: informational only, never a failure.
                 continue
-            # translatable="false" must NOT leak into translation files.
+            # translatable="false" must NOT leak into translation files. gen_supported_locales.py's
+            # _string_keys excludes such entries from its locale key set entirely, so a leaked entry
+            # must not count as translated here either — otherwise the two tools' coverage numerators
+            # would disagree on this (already-failing) case.
             if ploc.get("translatable") is False:
                 fails.append(f"{tag} {skey.rstrip('#[]')}: translatable='false' must not appear in a translation file")
+            else:
+                translated += 1
             if psrc["kind"] == "plurals":
                 qloc = set(ploc.get("plurals", {}).keys())
                 if "other" not in qloc:
@@ -721,28 +679,44 @@ def main(release: bool = False) -> int:
                     else:
                         fails.append(f"{tag} {skey}: empty translation")
 
-    if tier1_coverage_problems:
-        fails.append(
-            f"Tier 1 coverage gate failed: {len(tier1_coverage_problems)} missing key(s); "
-            "Tier 1 packaged locales must be at 100% before a localized release. First few: "
-            + ", ".join(tier1_coverage_problems[:10]))
+        if is_tier1:
+            total = len(source_translatable_keys)
+            missing = total - translated
+            percent = round(100 * translated / total, 1) if total else 0.0
+            coverage_rows.append({
+                "languageTag": tag,
+                "translatedKeys": translated,
+                "missingKeys": missing,
+                "coveragePercent": percent,
+            })
 
     if fails:
-        print("i18n validation FAILED:")
+        print("i18n validation FAILED:", file=diagnostics)
         for f in fails[:200]:
-            print("  " + f)
+            print("  " + f, file=diagnostics)
         if len(fails) > 200:
-            print(f"  ... and {len(fails) - 200} more")
-        return 1
-    if not src:
-        print("i18n validate: no translatable source keys yet (Phase 0 empty split files); catalogue OK.")
+            print(f"  ... and {len(fails) - 200} more", file=diagnostics)
+    elif not src:
+        print("i18n validate: no translatable source keys yet (Phase 0 empty split files); catalogue OK.",
+              file=diagnostics)
     else:
-        print("i18n validation OK")
-    return 0
+        print("i18n validation OK", file=diagnostics)
+
+    if report == "text":
+        print(_format_text_report(len(source_translatable_keys), coverage_rows), file=diagnostics)
+    elif report == "json":
+        payload = {
+            "schemaVersion": 1,
+            "sourceKeys": len(source_translatable_keys),
+            "locales": coverage_rows,
+        }
+        print(json.dumps(payload, indent=2), file=sys.stdout)
+
+    return 1 if fails else 0
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("--release", action="store_true",
-                        help="require explicit translated/approved state for every packaged translation")
-    raise SystemExit(main(release=parser.parse_args().release))
+    parser.add_argument("--report", choices=["text", "json", "none"], default="text",
+                        help="informational coverage report format (default: text)")
+    raise SystemExit(main(report=parser.parse_args().report))

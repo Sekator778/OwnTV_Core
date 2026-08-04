@@ -10,6 +10,7 @@ cases so a future regression is caught here, not in review.
 """
 from __future__ import annotations
 
+import argparse
 import io
 import json
 import contextlib
@@ -19,6 +20,7 @@ import sys
 import tempfile
 import unittest
 from pathlib import Path
+from types import SimpleNamespace
 
 ROOT = Path(__file__).resolve().parents[2]
 
@@ -59,7 +61,7 @@ def _locale(id, tag, qualifier, resdir, **kw):
     return base
 
 
-# All 21 Tier 1 locales (matching tools/i18n/locales.json) so test fixtures pass the membership gate.
+# All 22 Tier 1 locales (matching tools/i18n/locales.json) so test fixtures pass the membership gate.
 _FULL_TIER1 = [
     _locale("en-US", "en-US", "en", "values", weblateCode="en"),
     _locale("ar", "ar", "ar", "values-ar", weblateCode="ar", script="Arab", rtl=True, packaged=False, pickerVisible=False),
@@ -82,6 +84,7 @@ _FULL_TIER1 = [
     _locale("es-ES", "es-ES", "es", "values-es", weblateCode="es_ES", packaged=False, pickerVisible=False),
     _locale("sv", "sv", "sv", "values-sv", packaged=False, pickerVisible=False),
     _locale("tr", "tr", "tr", "values-tr", packaged=False, pickerVisible=False),
+    _locale("ml", "ml", "ml", "values-ml", script="Mlym", packaged=False, pickerVisible=False),
 ]
 
 
@@ -107,19 +110,23 @@ class TestValidateStrings(unittest.TestCase):
     def setUp(self):
         self.vs = _load("vs_test", "tools/i18n/validate_strings.py")
         self.tmpdir = Path(tempfile.mkdtemp())
-        self.vs.TRANSLATION_STATUS = self.tmpdir / "tools/i18n/translation_status.json"
 
-    def _write_status(self, payload):
-        self.vs.TRANSLATION_STATUS.parent.mkdir(parents=True, exist_ok=True)
-        self.vs.TRANSLATION_STATUS.write_text(json.dumps(payload))
-
-    def _run(self, res, locales_json, release=False):
+    def _run(self, res, locales_json, report="text"):
         self.vs.RES = res
         self.vs.LOCALES_JSON = locales_json
         buf = io.StringIO()
         with contextlib.redirect_stdout(buf):
-            rc = self.vs.main(release=release)
+            rc = self.vs.main(report=report)
         return rc, buf.getvalue()
+
+    def _run_streams(self, res, locales_json, report="text"):
+        """Capture stdout and stderr separately, for --report json's stdout-purity contract."""
+        self.vs.RES = res
+        self.vs.LOCALES_JSON = locales_json
+        out_buf, err_buf = io.StringIO(), io.StringIO()
+        with contextlib.redirect_stdout(out_buf), contextlib.redirect_stderr(err_buf):
+            rc = self.vs.main(report=report)
+        return rc, out_buf.getvalue(), err_buf.getvalue()
 
     def test_catalogue_missing_coverage_field_ok(self):
         """locales.json entries must NOT have a 'coverage' field (it is computed)."""
@@ -287,36 +294,14 @@ class TestValidateStrings(unittest.TestCase):
 
     def test_identical_to_source_is_not_rejected(self):
         """A Tier 1 translation identical to the source is NOT rejected — legitimate unchanged
-        translations (OK, TV, PIN, Wi-Fi, brand names, loanwords) must pass. 'Needs editing' must
-        come from Weblate state, not textual equality."""
+        translations (OK, TV, PIN, Wi-Fi, brand names, loanwords) must pass. There is no review-state
+        gate; textual equality was never used as an "unfinished" proxy."""
         source = '<resources><string name="ok">OK</string><string name="hello">Hello world</string></resources>'
         de_xml = '<resources><string name="ok">OK</string><string name="hello">Hello world</string></resources>'
         locales = _tier1_with([_locale("de", "de", "de", "values-de", packaged=True, pickerVisible=True)])
         res = _make_fixture(self.tmpdir, source, locales, {"values-de": de_xml})
-        self._write_status({"schemaVersion": 1, "locales": {"de": {"ok": "translated", "hello": "approved"}}})
         rc, out = self._run(res, self.tmpdir / "tools/i18n/locales.json")
         self.assertEqual(rc, 0, out)
-
-    def test_needs_editing_translation_state_rejected(self):
-        """Unfinished metadata fails; equality to the source is never used as the proxy."""
-        source = '<resources><string name="hello">Hello</string></resources>'
-        de_xml = '<resources><string name="hello">Hello</string></resources>'
-        locales = _tier1_with([_locale("de", "de", "de", "values-de", packaged=True, pickerVisible=True)])
-        res = _make_fixture(self.tmpdir, source, locales, {"values-de": de_xml})
-        self._write_status({"schemaVersion": 1, "locales": {"de": {"hello": "needs-editing"}}})
-        rc, out = self._run(res, self.tmpdir / "tools/i18n/locales.json")
-        self.assertEqual(rc, 1, out)
-        self.assertIn("is unfinished", out)
-
-    def test_missing_review_state_for_packaged_translation_rejected(self):
-        source = '<resources><string name="hello">Hello</string></resources>'
-        de_xml = '<resources><string name="hello">Hallo</string></resources>'
-        locales = _tier1_with([_locale("de", "de", "de", "values-de", packaged=True, pickerVisible=True)])
-        res = _make_fixture(self.tmpdir, source, locales, {"values-de": de_xml})
-        self._write_status({"schemaVersion": 1, "locales": {}})
-        rc, out = self._run(res, self.tmpdir / "tools/i18n/locales.json", release=True)
-        self.assertEqual(rc, 1, out)
-        self.assertIn("missing translation review state", out)
 
     def test_bare_placeholder_in_translation_rejected(self):
         """A translation that introduces a bare %s where the source has none must be rejected."""
@@ -391,16 +376,123 @@ class TestValidateStrings(unittest.TestCase):
         self.assertEqual(rc, 1, out)
         self.assertIn("placeholder mismatch", out)
 
-    def test_tier1_coverage_gate(self):
-        """A packaged Tier 1 locale missing a source key must fail the coverage gate."""
+    def test_missing_key_is_informational_and_exits_zero(self):
+        """A packaged Tier 1 locale missing a source key is reported, not rejected — English fallback
+        covers it, and this is expected best-effort community-translation behaviour."""
         source = '<resources><string name="a">A</string><string name="b">B</string></resources>'
         de_xml = '<resources><string name="a">A</string></resources>'  # missing 'b'
         locales = [_locale("en", "en-US", "en", "values"),
                    _locale("de", "de", "de", "values-de", packaged=True, pickerVisible=True)]
         res = _make_fixture(self.tmpdir, source, locales, {"values-de": de_xml})
         rc, out = self._run(res, self.tmpdir / "tools/i18n/locales.json")
+        self.assertEqual(rc, 0, out)
+        self.assertIn("Translation coverage:", out)
+        self.assertIn("de", out)
+        self.assertIn("1 missing", out)
+
+    def test_malformed_present_translation_still_exits_nonzero(self):
+        """Missing keys are informational, but a present, malformed key still fails — it overrides
+        the English fallback rather than deferring to it."""
+        source = '<resources><string name="a">A</string></resources>'
+        de_xml = '<resources><string name="a"></string></resources>'  # present but empty
+        locales = [_locale("en", "en-US", "en", "values"),
+                   _locale("de", "de", "de", "values-de", packaged=True, pickerVisible=True)]
+        res = _make_fixture(self.tmpdir, source, locales, {"values-de": de_xml})
+        rc, out = self._run(res, self.tmpdir / "tools/i18n/locales.json")
         self.assertEqual(rc, 1, out)
-        self.assertIn("Tier 1 coverage gate failed", out)
+        self.assertIn("empty translation", out)
+
+    def test_report_text_is_deterministic_and_catalogue_ordered(self):
+        source = '<resources><string name="a">A</string><string name="b">B</string></resources>'
+        ar_xml = '<resources><string name="a">A</string></resources>'
+        locales = [_locale("en", "en-US", "en", "values"),
+                   _locale("ar", "ar", "ar", "values-ar", script="Arab", rtl=True,
+                           packaged=False, pickerVisible=False)]
+        res = _make_fixture(self.tmpdir, source, locales, {"values-ar": ar_xml})
+        rc, out = self._run(res, self.tmpdir / "tools/i18n/locales.json", report="text")
+        self.assertEqual(rc, 0, out)
+        self.assertIn("ar", out)
+        self.assertIn("50.0%", out)
+        self.assertIn("1 missing", out)
+
+    def test_report_none_omits_coverage_output(self):
+        source = '<resources><string name="a">A</string><string name="b">B</string></resources>'
+        locales = [_locale("en", "en-US", "en", "values"),
+                   _locale("de", "de", "de", "values-de", packaged=True, pickerVisible=True)]
+        res = _make_fixture(self.tmpdir, source, locales, {"values-de": '<resources></resources>'})
+        rc, out = self._run(res, self.tmpdir / "tools/i18n/locales.json", report="none")
+        self.assertEqual(rc, 0, out)
+        self.assertNotIn("Translation coverage:", out)
+
+    def test_report_json_reserves_stdout_for_the_document(self):
+        """Even with a structural failure, stdout must parse as JSON; diagnostics go to stderr."""
+        source = '<resources><string name="a">A</string></resources>'
+        de_xml = '<resources><string name="a"></string></resources>'  # malformed: empty
+        locales = [_locale("en", "en-US", "en", "values"),
+                   _locale("de", "de", "de", "values-de", packaged=True, pickerVisible=True)]
+        res = _make_fixture(self.tmpdir, source, locales, {"values-de": de_xml})
+        rc, out, err = self._run_streams(res, self.tmpdir / "tools/i18n/locales.json", report="json")
+        self.assertEqual(rc, 1)
+        self.assertIn("empty translation", err)
+        payload = json.loads(out)  # raises if stdout carries anything but the JSON document
+        self.assertEqual(payload["schemaVersion"], 1)
+        self.assertEqual(payload["sourceKeys"], 1)
+        de_row = next(r for r in payload["locales"] if r["languageTag"] == "de")
+        # Key presence, not validity, drives coverage: an empty-but-present value still counts as
+        # translated for the report even though it fails structural validation above.
+        self.assertEqual(de_row["translatedKeys"], 1)
+        self.assertEqual(de_row["missingKeys"], 0)
+
+    def test_report_json_excludes_source_and_en_gb(self):
+        source = '<resources><string name="a">A</string></resources>'
+        locales = _full_tier1()
+        locales.append(_locale("en-GB", "en-GB", "en-rGB", "values-en-rGB", tier=0,
+                               weblateCode="en_GB", packaged=True, pickerVisible=False))
+        res = _make_fixture(self.tmpdir, source, locales)
+        rc, out, err = self._run_streams(res, self.tmpdir / "tools/i18n/locales.json", report="json")
+        self.assertEqual(rc, 0, err)
+        payload = json.loads(out)
+        tags = {row["languageTag"] for row in payload["locales"]}
+        self.assertNotIn("en-US", tags)
+        self.assertNotIn("en-GB", tags)
+        self.assertEqual(len(tags), 20)
+
+    def test_translation_review_state_neither_read_nor_required(self):
+        """translation_status.json is gone; the validator must not reference or require it."""
+        self.assertFalse(hasattr(self.vs, "TRANSLATION_STATUS"))
+        self.assertFalse((ROOT / "tools/i18n/translation_status.json").exists())
+
+    def test_coverage_numerator_matches_gen_supported_locales(self):
+        """Regression: the CI report and the picker badge must use the exact same key-set rules."""
+        gen = _load("gen_parity_test", "tools/i18n/gen_supported_locales.py")
+        source = '''<resources>
+            <string name="a">A</string>
+            <string name="b">B</string>
+            <plurals name="songs"><item quantity="one">%1$d song</item><item quantity="other">%1$d songs</item></plurals>
+            </resources>'''
+        de_xml = '''<resources>
+            <string name="a">A</string>
+            <plurals name="songs"><item quantity="one">Ein</item><item quantity="other">Viele</item></plurals>
+            </resources>'''  # missing 'b'
+        locales = [_locale("en", "en-US", "en", "values"),
+                   _locale("de", "de", "de", "values-de", packaged=True, pickerVisible=True)]
+        res = _make_fixture(self.tmpdir, source, locales, {"values-de": de_xml})
+        rc, out, err = self._run_streams(res, self.tmpdir / "tools/i18n/locales.json", report="json")
+        self.assertEqual(rc, 0, err)
+        payload = json.loads(out)
+        de_row = next(r for r in payload["locales"] if r["languageTag"] == "de")
+
+        gen.LOCALES_JSON = self.tmpdir / "tools/i18n/locales.json"
+        gen.RES = res
+        gen.OUT = self.tmpdir / "SupportedLocales.kt"
+        gen.ROOT = self.tmpdir
+        _, _, gen_source_keys = gen._generate()
+        source_keys = gen._string_keys(res / "values")
+        de_keys = gen._string_keys(res / "values-de")
+        gen_translated = len(source_keys & de_keys)
+
+        self.assertEqual(payload["sourceKeys"], gen_source_keys)
+        self.assertEqual(de_row["translatedKeys"], gen_translated)
 
     def test_bare_placeholder_in_source(self):
         source = '<resources><string name="x">Value %s</string></resources>'
@@ -1078,6 +1170,398 @@ class TestCheckPseudoLocales(unittest.TestCase):
         locales = self.cp._locale_configs(configs)
         leaks = locales - self.cp._ALLOWED_RELEASE
         self.assertIn("en-rXA", leaks)
+
+
+# ===========================================================================
+# seed_text.py (docs/i18n-phase4a-seed-translations.md, Part 2)
+# ===========================================================================
+
+class TestSeedText(unittest.TestCase):
+
+    def setUp(self):
+        self.st = _load("seed_text_test", "tools/i18n/seed_text.py")
+
+    def test_tokenize_detokenize_round_trip(self):
+        raw = 'Hello <xliff:g id="n">%1$s</xliff:g>, you have <xliff:g id="c">%2$d</xliff:g> items'
+        tokenized, originals = self.st.tokenize(raw)
+        self.assertNotIn("<xliff:g", tokenized)
+        self.assertEqual(self.st.detokenize(tokenized, originals), raw)
+
+    def test_reordered_tokens_preserve_exact_parity(self):
+        raw = '<xliff:g id="a">%1$s</xliff:g> and <xliff:g id="b">%2$s</xliff:g>'
+        tokenized, originals = self.st.tokenize(raw)
+        swap = {"0": "1", "1": "0"}
+        reordered = self.st._TOKEN_RE.sub(
+            lambda m: f"XLF{swap[m.group(1)]}", tokenized)
+        self.st.check_token_parity(reordered, originals)  # must not raise
+        self.assertEqual(
+            self.st.detokenize(reordered, originals),
+            '<xliff:g id="b">%2$s</xliff:g> and <xliff:g id="a">%1$s</xliff:g>',
+        )
+
+    def test_missing_token_raises(self):
+        raw = '<xliff:g id="a">%1$s</xliff:g> and <xliff:g id="b">%2$s</xliff:g>'
+        tokenized, originals = self.st.tokenize(raw)
+        missing = tokenized.replace("XLF1", "")
+        with self.assertRaises(self.st.TokenParityError):
+            self.st.check_token_parity(missing, originals)
+
+    def test_duplicated_token_raises(self):
+        raw = '<xliff:g id="a">%1$s</xliff:g>'
+        tokenized, originals = self.st.tokenize(raw)
+        duplicated = tokenized + tokenized
+        with self.assertRaises(self.st.TokenParityError):
+            self.st.check_token_parity(duplicated, originals)
+
+    def test_unknown_token_raises(self):
+        raw = '<xliff:g id="a">%1$s</xliff:g>'
+        tokenized, originals = self.st.tokenize(raw)
+        unknown = tokenized + "XLF5"
+        with self.assertRaises(self.st.TokenParityError):
+            self.st.check_token_parity(unknown, originals)
+
+    def test_naturally_colliding_source_raises_before_tokenizing(self):
+        raw = "already has  the marker byte"
+        with self.assertRaises(self.st.TokenCollisionError):
+            self.st.tokenize(raw)
+
+    def test_all_supported_source_escapes_decode(self):
+        raw = (r"Fish &amp; Chips &lt;3 A 100%% "
+               "tab\\there newline\\nhere back\\\\slash \\'quote\\'")
+        decoded = self.st.decode_source_text(self.st.decode_xml_entities(raw))
+        self.assertEqual(
+            decoded,
+            "Fish & Chips <3 A 100% tab\there newline\nhere back\\slash 'quote'",
+        )
+
+    def test_model_percent_doubled_but_injected_placeholder_untouched(self):
+        core_with_token = "Discount: 50%, see XLF0"
+        original_xliff = '<xliff:g id="n">%1$d</xliff:g>'
+        result = self.st.finalize_translation(core_with_token, [original_xliff], "some_key")
+        self.assertIn("50%%", result)
+        self.assertIn("%1$d", result)
+        self.assertNotIn("%%1$d", result)
+
+    def test_escape_order_backslash_amp_lt_quotes_newline_tab(self):
+        escaped = self.st.escape_for_emit(
+            "\\back & <tag> 'quote' \"dquote\" 50% new\nline\ttab")
+        self.assertIn("\\\\back", escaped)
+        self.assertIn("&amp;", escaped)
+        self.assertIn("&lt;tag>", escaped)
+        self.assertIn("\\'quote\\'", escaped)
+        self.assertIn('\\"dquote\\"', escaped)
+        self.assertIn("50%%", escaped)
+        self.assertIn("\\n", escaped)
+        self.assertIn("\\t", escaped)
+
+    def test_leading_at_and_question_mark_escaped(self):
+        self.assertEqual(self.st.escape_for_emit("@handle text"), "\\@handle text")
+        self.assertEqual(self.st.escape_for_emit("?query"), "\\?query")
+
+    def test_ordinary_whitespace_is_trimmed(self):
+        result = self.st.finalize_translation("   padded text   ", [], "content_favorite")
+        self.assertEqual(result, "padded text")
+
+    def test_separator_whitespace_restored_from_source_not_model(self):
+        result = self.st.finalize_translation("·", [], "x_separator", source_envelope=("  ", "  "))
+        self.assertEqual(result, "  ·  ")
+        # Model-added padding is discarded in favor of the source's own envelope.
+        result2 = self.st.finalize_translation("   ·   ", [], "x_separator", source_envelope=("  ", "  "))
+        self.assertEqual(result2, "  ·  ")
+
+    def test_locale_only_plural_quantity_reuses_source_other(self):
+        """Arabic needs zero/one/two/few/many/other; the source only has one/other, so
+        the quantities absent from English must reuse `other`'s text and tokens."""
+        with tempfile.TemporaryDirectory() as d:
+            res = Path(d) / "values"
+            res.mkdir()
+            (res / "strings.xml").write_text(
+                '<resources><plurals name="songs">'
+                '<item quantity="one">%1$d song</item>'
+                '<item quantity="other">%1$d songs</item>'
+                '</plurals></resources>'
+            )
+            units, _ = self.st.extract_source(res)
+            unit = units["songs#"]
+            text_few, tokens_few = self.st.plural_source_text_for_quantity(unit, "few")
+            text_other, tokens_other = self.st.plural_source_text_for_quantity(unit, "other")
+            self.assertEqual(text_few, text_other)
+            self.assertEqual(tokens_few, tokens_other)
+            text_one, _ = self.st.plural_source_text_for_quantity(unit, "one")
+            self.assertNotEqual(text_one, text_other)
+
+    def test_file_ownership_enforced(self):
+        with tempfile.TemporaryDirectory() as d:
+            source_dir = Path(d) / "values"
+            source_dir.mkdir()
+            (source_dir / "strings.xml").write_text('<resources><string name="a">A</string></resources>')
+            (source_dir / "strings_other.xml").write_text('<resources><string name="b">B</string></resources>')
+            staged = Path(d) / "values-de"
+            staged.mkdir()
+            # "b" is misplaced into strings.xml instead of strings_other.xml.
+            (staged / "strings.xml").write_text(
+                '<resources><string name="a">Ein</string><string name="b">Zwei</string></resources>')
+            (staged / "strings_other.xml").write_text('<resources></resources>')
+            errors = self.st.validate_staged_locale("de", staged, source_dir)
+            self.assertTrue(any("owned by another file" in e for e in errors), errors)
+
+    def test_staged_output_reparses_to_complete_source_key_set(self):
+        """Full pipeline: extract -> finalize -> emit -> validate, echoing source text
+        back as the translation for a locale whose plural rule matches English."""
+        units, order = self.st.extract_source()
+        by_file: dict[str, list[str]] = {}
+        for key in order:
+            by_file.setdefault(units[key].filename, []).append(key)
+        with tempfile.TemporaryDirectory() as d:
+            staged = Path(d) / "values-de"
+            staged.mkdir()
+            for fname, keys in by_file.items():
+                entries = []
+                for key in keys:
+                    u = units[key]
+                    if isinstance(u, self.st.StringSource):
+                        entries.append(("string", u.key,
+                                         self.st.finalize_translation(u.text, list(u.tokens), u.key, u.envelope)))
+                    else:
+                        payload = {q: self.st.finalize_translation(t, list(u.tokens[q]), u.key)
+                                   for q, t in u.quantities.items()}
+                        entries.append(("plurals", u.key, payload))
+                (staged / fname).write_text(self.st.emit_locale_file(entries), encoding="utf-8")
+            errors = self.st.validate_staged_locale("de", staged)
+            self.assertEqual(errors, [])
+
+    def test_failed_locale_never_partially_promoted(self):
+        with tempfile.TemporaryDirectory() as d:
+            source_dir = Path(d) / "values"
+            source_dir.mkdir()
+            (source_dir / "strings.xml").write_text(
+                '<resources><string name="a">A</string><string name="b">B</string></resources>')
+            staged = Path(d) / "work" / "values-de"
+            staged.mkdir(parents=True)
+            (staged / "strings.xml").write_text('<resources><string name="a">Ein</string></resources>')  # missing 'b'
+            final_dir = Path(d) / "final" / "values-de"
+            with self.assertRaises(self.st.SeedValidationError):
+                self.st.promote_locale("de", staged, final_dir, source_dir)
+            self.assertFalse(final_dir.exists())
+            self.assertTrue(staged.exists())
+
+    def test_chunking_matches_documented_pilot_counts(self):
+        """Regression: the plan's own inventory assertion (41 chunks/locale at <=40
+        keys) is derived from the checked-out source tree, not a hardcoded constant."""
+        units, order = self.st.extract_source()
+        self.assertEqual(len(order), 1537)
+        chunks = self.st.chunk_by_file(units, order)
+        total_chunks = sum(len(v) for v in chunks.values())
+        self.assertEqual(total_chunks, 41)
+        for file_chunks in chunks.values():
+            for chunk in file_chunks:
+                self.assertLessEqual(len(chunk), 40)
+
+
+# ===========================================================================
+# seed_translations.py (docs/i18n-phase4a-seed-translations.md, Part 2)
+# ===========================================================================
+
+def _fake_message(stop_reason, text):
+    return SimpleNamespace(
+        stop_reason=stop_reason,
+        content=[SimpleNamespace(type="text", text=text)],
+        usage=SimpleNamespace(input_tokens=10, output_tokens=20,
+                               cache_creation_input_tokens=0, cache_read_input_tokens=0),
+    )
+
+
+def _fake_batch_result(custom_id, result_type, message=None):
+    return SimpleNamespace(custom_id=custom_id, result=SimpleNamespace(type=result_type, message=message))
+
+
+class TestSeedTranslations(unittest.TestCase):
+
+    def setUp(self):
+        self.stx = _load("seed_translations_test", "tools/i18n/seed_translations.py")
+
+    def test_refusal_stop_reason_rejected(self):
+        msg = _fake_message("refusal", "{}")
+        result = _fake_batch_result("de__strings__000", "succeeded", msg)
+        classified = self.stx._classify_result("translation", "de__strings__000", result)
+        self.assertEqual(classified["status"], "retryable")
+
+    def test_max_tokens_stop_reason_rejected(self):
+        msg = _fake_message("max_tokens", "{}")
+        result = _fake_batch_result("de__strings__000", "succeeded", msg)
+        classified = self.stx._classify_result("translation", "de__strings__000", result)
+        self.assertEqual(classified["status"], "retryable")
+
+    def test_errored_canceled_expired_pass_through_untouched(self):
+        for rtype in ("errored", "canceled", "expired"):
+            result = _fake_batch_result("de__strings__000", rtype)
+            classified = self.stx._classify_result("translation", "de__strings__000", result)
+            self.assertEqual(classified["status"], rtype)
+
+    def test_valid_structured_success_is_classified_succeeded(self):
+        payload = {"strings": [{"key": "a", "text": "Ein"}], "plurals": []}
+        msg = _fake_message("end_turn", json.dumps(payload))
+        result = _fake_batch_result("de__strings__000", "succeeded", msg)
+        classified = self.stx._classify_result("translation", "de__strings__000", result)
+        self.assertEqual(classified["status"], "succeeded")
+        self.assertEqual(classified["payload"], payload)
+
+    def test_malformed_json_in_structured_success_is_retryable(self):
+        msg = _fake_message("end_turn", "not valid json")
+        result = _fake_batch_result("de__strings__000", "succeeded", msg)
+        classified = self.stx._classify_result("translation", "de__strings__000", result)
+        self.assertEqual(classified["status"], "retryable")
+
+    def test_unordered_results_matched_only_by_custom_id(self):
+        requests = {"a": {"locale": "de"}, "b": {"locale": "ar"}, "c": {"locale": "ja"}}
+        incoming_order = ["c", "a", "b"]  # deliberately not the request order
+        matched = {cid: requests[cid]["locale"] for cid in incoming_order}
+        self.assertEqual(matched, {"c": "ja", "a": "de", "b": "ar"})
+
+    def test_resubmission_rejected_before_the_sdk_is_even_needed(self):
+        """A request that already has a batchId must never be resubmitted -- and that
+        guard must fire before cmd_submit needs the anthropic package, so it works even
+        when the SDK is not installed in the calling environment."""
+        with tempfile.TemporaryDirectory() as d:
+            self.stx.RUNS_DIR = Path(d)
+            manifest = self.stx.new_manifest("run1")
+            manifest["stages"]["glossary"]["requests"] = {
+                "de__glossary": {"locale": "de", "batchId": "batch_existing", "payloadHash": "x"}
+            }
+            self.stx.save_manifest("run1", manifest)
+            with self.assertRaises(SystemExit):
+                self.stx.cmd_submit(argparse.Namespace(run_id="run1", stage="glossary", force_stale=False))
+
+    def test_resume_delegates_to_collect_without_resubmitting(self):
+        with tempfile.TemporaryDirectory() as d:
+            self.stx.RUNS_DIR = Path(d)
+            manifest = self.stx.new_manifest("run2")
+            manifest["stages"]["translation"]["requests"] = {
+                "x": {"locale": "de", "batchId": "batch_abc", "payloadHash": "x"},
+                "y": {"locale": "de", "batchId": "batch_abc", "payloadHash": "y"},
+            }
+            manifest["stages"]["translation"]["results"] = {"x": {"status": "succeeded"}}  # "y" still pending
+            self.stx.save_manifest("run2", manifest)
+
+            calls = []
+
+            def fake_collect(args):
+                calls.append((args.run_id, args.stage))
+                return 0
+
+            self.stx.cmd_collect = fake_collect
+            rc = self.stx.cmd_resume(argparse.Namespace(run_id="run2"))
+            self.assertEqual(rc, 0)
+            self.assertEqual(calls, [("run2", "translation")])
+            reloaded = self.stx.load_manifest("run2")
+            self.assertEqual(reloaded["stages"]["translation"]["requests"]["y"]["batchId"], "batch_abc")
+
+    def test_semantic_validation_catches_missing_duplicate_and_wrong_kind(self):
+        """Parseable, structured JSON is not automatically usable: missing keys,
+        duplicated keys, and keys returned under the wrong resource kind must all be
+        rejected per-key rather than accepted."""
+        with tempfile.TemporaryDirectory() as d:
+            self.stx.RUNS_DIR = Path(d)
+            st = self.stx.st
+            catalogue = self.stx.load_catalogue()
+            manifest = self.stx.new_manifest("run3")
+            built = self.stx.build_and_register_translation_requests(
+                manifest, "run3", ["de"], catalogue, {"de": {}})
+            cid = sorted(built)[0]
+            req_meta = manifest["stages"]["translation"]["requests"][cid]
+            units, _ = st.extract_source()
+            keys = req_meta["keys"]
+            payload = {"strings": [], "plurals": []}
+            for i, key in enumerate(keys):
+                unit = units[key]
+                if isinstance(unit, st.StringSource):
+                    if i == 0:
+                        continue  # missing
+                    payload["strings"].append({"key": unit.key, "text": unit.text})
+                    if i == 1:
+                        payload["strings"].append({"key": unit.key, "text": unit.text})  # duplicate
+                else:
+                    item = {"key": unit.key}
+                    for q in ("zero", "one", "two", "few", "many", "other"):
+                        item[q] = unit.quantities.get(q)
+                    payload["plurals"].append(item)
+
+            from tools.i18n import validate_strings as vs
+            plural_rule = vs._PLURAL_RULES.get("de", ["one", "other"])
+            valid, errors = self.stx._validate_translation_payload(req_meta, payload, units, plural_rule)
+            self.assertIn(keys[0], errors)
+            self.assertIn("missing", errors[keys[0]])
+            self.assertIn(keys[1], errors)
+            self.assertIn("duplicate", errors[keys[1]])
+            self.assertEqual(len(valid) + len(errors), len(keys))
+
+    def test_token_parity_failure_rejected_by_semantic_validation(self):
+        with tempfile.TemporaryDirectory() as d:
+            self.stx.RUNS_DIR = Path(d)
+            st = self.stx.st
+            catalogue = self.stx.load_catalogue()
+            manifest = self.stx.new_manifest("run4")
+            built = self.stx.build_and_register_translation_requests(
+                manifest, "run4", ["de"], catalogue, {"de": {}})
+            cid = sorted(built)[0]
+            req_meta = manifest["stages"]["translation"]["requests"][cid]
+            units, _ = st.extract_source()
+            key = next(k for k in req_meta["keys"] if isinstance(units[k], st.StringSource) and units[k].tokens)
+            payload = {"strings": [{"key": units[key].key, "text": "translation with no placeholder token"}],
+                       "plurals": []}
+            for k in req_meta["keys"]:
+                if k == key:
+                    continue
+                unit = units[k]
+                if isinstance(unit, st.StringSource):
+                    payload["strings"].append({"key": unit.key, "text": unit.text})
+                else:
+                    item = {"key": unit.key}
+                    for q in ("zero", "one", "two", "few", "many", "other"):
+                        item[q] = unit.quantities.get(q)
+                    payload["plurals"].append(item)
+            from tools.i18n import validate_strings as vs
+            plural_rule = vs._PLURAL_RULES.get("de", ["one", "other"])
+            valid, errors = self.stx._validate_translation_payload(req_meta, payload, units, plural_rule)
+            self.assertIn(key, errors)
+            self.assertIn("parity", errors[key])
+
+    def test_queue_retry_builds_scoped_follow_up_and_stops_after_max_attempts(self):
+        with tempfile.TemporaryDirectory() as d:
+            self.stx.RUNS_DIR = Path(d)
+            st = self.stx.st
+            catalogue = self.stx.load_catalogue()
+            manifest = self.stx.new_manifest("run5")
+            built = self.stx.build_and_register_translation_requests(
+                manifest, "run5", ["de"], catalogue, {"de": {}})
+            cid = sorted(built)[0]
+            req_meta = manifest["stages"]["translation"]["requests"][cid]
+            units, _ = st.extract_source()
+            errors = {req_meta["keys"][0]: "missing from model response",
+                      req_meta["keys"][1]: "duplicate key in response (2x)"}
+
+            self.stx._queue_retry(manifest, "run5", "translation", cid, req_meta, errors, catalogue, units)
+            retry_cid = cid + "__retry1"
+            retry_req = manifest["stages"]["translation"]["requests"][retry_cid]
+            self.assertIsNone(retry_req["batchId"])
+            self.assertEqual(set(retry_req["keys"]), set(errors.keys()))
+            self.assertEqual(manifest["retries"]["translation"][cid], 1)
+
+            # Exhausting MAX_FOLLOWUP_ATTEMPTS writes an unresolved file instead of a
+            # third retry request.
+            manifest["retries"]["translation"][cid] = self.stx.MAX_FOLLOWUP_ATTEMPTS
+            self.stx._queue_retry(manifest, "run5", "translation", retry_cid, retry_req, errors, catalogue, units)
+            unresolved = Path(d) / "run5" / f"{req_meta['locale']}-unresolved.json"
+            self.assertTrue(unresolved.is_file())
+
+    def test_hash_drift_blocks_submit_and_promote_unless_forced(self):
+        with tempfile.TemporaryDirectory() as d:
+            self.stx.RUNS_DIR = Path(d)
+            manifest = self.stx.new_manifest("run6")
+            manifest["sourceInventoryHash"] = "sha256:stale"
+            with self.assertRaises(SystemExit):
+                self.stx.verify_hashes(manifest)
+            self.stx.verify_hashes(manifest, force_stale=True)  # must not raise
 
 
 if __name__ == "__main__":
