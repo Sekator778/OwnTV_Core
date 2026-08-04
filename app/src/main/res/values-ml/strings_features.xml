@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <string name="profiles_pin">PIN</string>
+    <string name="profiles_new">പുതിയ പ്രൊഫൈൽ</string>
+    <string name="profiles_edit">പ്രൊഫൈൽ എഡിറ്റ് ചെയ്യുക</string>
+    <string name="profiles_name">പേര്</string>
+    <string name="profiles_name_hint">ഉദാ. Alex</string>
+    <string name="profiles_avatar">അവതാർ</string>
+    <string name="profiles_kids">കിഡ്സ് പ്രൊഫൈൽ</string>
+    <string name="profiles_kids_description">ലളിതവും സുരക്ഷിതവുമായ ബ്രൗസിംഗ്</string>
+    <string name="profiles_remove_pin">PIN ലോക്ക് നീക്കം ചെയ്യുക</string>
+    <string name="profiles_no_pin">ഈ പ്രൊഫൈൽ PIN ഇല്ലാതെ തുറക്കും</string>
+    <string name="profiles_change_pin">PIN മാറ്റുക (ശൂന്യമാക്കിയാൽ നിലവിലുള്ളത് നിലനിർത്തും)</string>
+    <string name="profiles_optional_pin">PIN (ഓപ്ഷണൽ)</string>
+    <string name="profiles_pin_digits">4–6 അക്കങ്ങൾ</string>
+    <string name="profiles_pin_placeholder">····</string>
+    <string name="profiles_name_taken">ഈ പേര് ഇതിനകം ഉപയോഗത്തിലുണ്ട് — ദയവായി മറ്റൊരു പേര് തിരഞ്ഞെടുക്കുക.</string>
+    <string name="profiles_create">സൃഷ്ടിക്കുക</string>
+    <string name="profiles_save">സേവ് ചെയ്യുക</string>
+    <string name="profiles_gate_title">ആരാണ് കാണുന്നത്?</string>
+    <string name="profiles_wrong_pin">തെറ്റായ PIN — വീണ്ടും ശ്രമിക്കുക</string>
+    <string name="profiles_enter_pin"><xliff:g id="name">%1$s</xliff:g> — PIN നൽകുക</string>
+    <string name="profiles_kids_badge">കിഡ്സ്</string>
+    <string name="profiles_add">പ്രൊഫൈൽ ചേർക്കുക</string>
+    <string name="profiles_title">പ്രൊഫൈലുകൾ</string>
+    <string name="profiles_add_button">പ്രൊഫൈൽ ചേർക്കുക</string>
+    <string name="profiles_delete_title">“<xliff:g id="name">%1$s</xliff:g>” ഇല്ലാതാക്കണോ?</string>
+    <string name="profiles_delete_message">ഈ പ്രൊഫൈലും അതിന്റെ പ്രിയപ്പെട്ടവയും വാച്ച് ഹിസ്റ്ററിയും നീക്കം ചെയ്യും. സോഴ്‌സുകൾ നിലനിർത്തും.</string>
+    <string name="profiles_kids_tag">കിഡ്സ്</string>
+    <string name="profiles_locked_tag">PIN ലോക്ക് ചെയ്തത്</string>
+    <string name="search_title">തിരയൽ</string>
+    <string name="search_continue">കാണൽ തുടരുക</string>
+    <string name="search_unwatched">കാണാത്തത്</string>
+    <string name="search_hint">ചാനലുകൾ, സിനിമകൾ &amp; സീരീസ് തിരയുക…</string>
+    <string name="search_recent">അടുത്തിടെയുള്ള തിരയലുകൾ</string>
+    <string name="search_recent_empty">നിങ്ങളുടെ അടുത്തിടെയുള്ള തിരയലുകൾ ഇവിടെ കാണിക്കും.</string>
+    <string name="search_minimum_query">എല്ലായിടത്തും തിരയാൻ കുറഞ്ഞത് 2 അക്ഷരങ്ങൾ ടൈപ്പ് ചെയ്യുക.</string>
+    <string name="search_no_results"><xliff:g id="query">%1$s</xliff:g> — ഫലങ്ങളൊന്നുമില്ല.</string>
+    <string name="search_nothing_in_list"><xliff:g id="list">%1$s</xliff:g>-ൽ ഇതുവരെ ഒന്നുമില്ല.</string>
+    <string name="search_clear">ക്ലിയർ ചെയ്യുക</string>
+    <string name="search_jump_to">ഇവിടേക്ക് പോകുക</string>
+    <string name="search_watch_live">ലൈവ് കാണുക</string>
+    <string name="search_play">പ്ലേ ചെയ്യുക</string>
+    <string name="search_open_series">സീരീസ് തുറക്കുക</string>
+    <string name="search_movie">സിനിമ</string>
+    <string name="search_series">സീരീസ്</string>
+    <string name="search_channels">ചാനലുകൾ</string>
+    <string name="search_channel_number">#<xliff:g id="number">%1$s</xliff:g></string>
+    <string name="home_keep_watching">കാണൽ തുടരുക</string>
+    <string name="home_play_next">അടുത്തത് പ്ലേ ചെയ്യുക</string>
+    <string name="home_tune_in">ട്യൂൺ ഇൻ ചെയ്യുക</string>
+    <string name="home_recent_live">അടുത്തിടെ കണ്ട ലൈവ്</string>
+    <string name="profiles_default_name">പ്രൊഫൈൽ</string>
+    <string name="launcher_recent_live_title">അടുത്തിടെയുള്ള ലൈവ്</string>
+    <string name="launcher_recent_live_description">അടുത്തിടെ കണ്ട ലൈവ് ചാനലുകൾ</string>
+    <string name="launcher_movie_type">സിനിമ</string>
+    <string name="launcher_episode_number">എപ്പിസോഡ് <xliff:g id="episode">%1$d</xliff:g></string>
+    <string name="home_no_preview">ഇതുവരെ പ്രിവ്യൂ ചെയ്യാൻ ഒന്നുമില്ല.</string>
+    <string name="home_no_rows">എല്ലാ ഹോം റോകളും മറച്ചിരിക്കുന്നു.</string>
+    <string name="home_enable_rows">സെറ്റിംഗ്‌സ് → ഹോം സ്ക്രീനിൽ റോകൾ വീണ്ടും ഓണാക്കുക.</string>
+    <string name="home_start_watching">കാണൽ ആരംഭിക്കൂ, നിങ്ങളുടെ പ്രവർത്തനം ഇവിടെ കാണാം.</string>
+    <string name="home_continue_empty">പ്ലേബാക്ക് ഹിസ്റ്ററി ലഭ്യമാകുമ്പോൾ, നിങ്ങളുടെ കാണൽ തുടരൽ ഇനങ്ങൾ ഇവിടെ ദൃശ്യമാകും.</string>
+    <string name="home_last_watched_now">ഇപ്പോൾ തന്നെ കണ്ടു</string>
+    <string name="home_finish_by"><xliff:g id="time">%1$s</xliff:g> ഓടെ അവസാനിക്കും</string>
+    <string name="home_resume">തുടരുക</string>
+    <plurals name="home_last_watched_minutes">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> മിനിറ്റ് മുമ്പ് കണ്ടു</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> മിനിറ്റ് മുമ്പ് കണ്ടു</item>
+    </plurals>
+    <plurals name="home_last_watched_hours">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> മണിക്കൂർ മുമ്പ് കണ്ടു</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> മണിക്കൂർ മുമ്പ് കണ്ടു</item>
+    </plurals>
+    <plurals name="home_last_watched_days">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> ദിവസം മുമ്പ് കണ്ടു</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> ദിവസം മുമ്പ് കണ്ടു</item>
+    </plurals>
+    <string name="home_season_episode">S<xliff:g id="season">%1$02d</xliff:g> E<xliff:g id="episode">%2$02d</xliff:g></string>
+    <string name="home_season">S<xliff:g id="season">%1$02d</xliff:g></string>
+    <string name="home_episode">E<xliff:g id="episode">%1$02d</xliff:g></string>
+    <string name="home_row_cards">കാർഡുകൾ</string>
+    <string name="home_row_keep_watching">കാണൽ തുടരുക</string>
+    <string name="home_row_continue_movies">സിനിമകൾ കാണൽ തുടരുക</string>
+    <string name="home_row_continue_series">സീരീസ് കാണൽ തുടരുക</string>
+    <string name="home_row_recent_channels">അടുത്തിടെയുള്ള ചാനലുകൾ</string>
+    <string name="home_row_favorite_channels">പ്രിയപ്പെട്ട ചാനലുകൾ</string>
+    <string name="home_row_on_now">ഇപ്പോൾ സംപ്രേഷണം ചെയ്യുന്നത്</string>
+    <string name="home_row_hero_description">മുകളിലുള്ള വലിയ പ്രിവ്യൂ റോ</string>
+    <string name="home_row_continue_movies_description">സേവ് ചെയ്ത സ്ഥാനമുള്ള സിനിമകൾ</string>
+    <string name="home_row_continue_series_description">തുടരാനോ അടുത്തതായി പ്ലേ ചെയ്യാനോ ഉള്ള എപ്പിസോഡുകൾ</string>
+    <string name="home_row_recent_description">നിങ്ങൾ അടുത്തിടെ ട്യൂൺ ചെയ്ത ലൈവ് ചാനലുകൾ</string>
+    <string name="home_row_favorite_description">നിങ്ങൾ പ്രിയപ്പെട്ടതാക്കിയ ലൈവ് ചാനലുകൾ</string>
+    <string name="home_on_now_title"><xliff:g id="title">%1$s</xliff:g> · ഇപ്പോൾ</string>
+    <string name="home_ok_to_watch">കാണാൻ OK</string>
+    <string name="home_ok_to_browse">ബ്രൗസ് ചെയ്യാൻ OK</string>
+    <string name="home_no_programme_details">പ്രോഗ്രാം വിശദാംശങ്ങൾ ലഭ്യമല്ല</string>
+    <string name="home_guide_unavailable">ഗൈഡ് ഡാറ്റ ലഭ്യമല്ല</string>
+    <string name="home_next">അടുത്തത്</string>
+    <string name="home_channel_number"><xliff:g id="number">%1$s</xliff:g>  <xliff:g id="name">%2$s</xliff:g></string>
+    <string name="home_time_range"><xliff:g id="start">%1$s</xliff:g>-<xliff:g id="end">%2$s</xliff:g></string>
+    <string name="home_now_time">ഇപ്പോൾ · <xliff:g id="time">%1$s</xliff:g></string>
+    <string name="home_up_next_time">അടുത്തത് · <xliff:g id="time">%1$s</xliff:g></string>
+    <string name="home_upcoming_item"><xliff:g id="time">%1$s</xliff:g> <xliff:g id="title">%2$s</xliff:g></string>
+    <plurals name="home_channel_count">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> ചാനൽ</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> ചാനലുകൾ</item>
+    </plurals>
+    <string name="update_title">ആപ്പ് അപ്ഡേറ്റ്</string>
+    <string name="update_checking">അപ്ഡേറ്റുകൾക്കായി പരിശോധിക്കുന്നു…</string>
+    <string name="update_whats_new">എന്താണ് പുതിയത്</string>
+    <string name="update_downloading">അപ്ഡേറ്റ് ഡൗൺലോഡ് ചെയ്യുന്നു… <xliff:g id="percent">%1$d</xliff:g>%%</string>
+    <string name="update_available">അപ്ഡേറ്റ് ലഭ്യമാണ്</string>
+    <string name="update_latest">നിങ്ങൾ ഏറ്റവും പുതിയ വേർഷനിലാണ് (v<xliff:g id="version">%1$s</xliff:g>).</string>
+    <string name="update_available_version">വേർഷൻ <xliff:g id="available">%1$s</xliff:g> ലഭ്യമാണ് (നിങ്ങളുടെ പക്കൽ v<xliff:g id="current">%2$s</xliff:g> ഉണ്ട്).</string>
+    <string name="update_installer">ഡൗൺലോഡ് പൂർത്തിയാകുമ്പോൾ സിസ്റ്റം ഇൻസ്റ്റാളർ തുറക്കും.</string>
+    <string name="update_later">പിന്നീട്</string>
+    <string name="update_now">ഇപ്പോൾ അപ്ഡേറ്റ് ചെയ്യുക</string>
+    <string name="update_try_again">വീണ്ടും ശ്രമിക്കുക</string>
+    <string name="update_failed_check">അപ്ഡേറ്റുകൾ പരിശോധിക്കാൻ കഴിഞ്ഞില്ല.</string>
+    <string name="update_failed_check_http">പരിശോധിക്കുമ്പോൾ അപ്ഡേറ്റ് സെർവർ HTTP <xliff:g id="code">%1$s</xliff:g> തിരികെ നൽകി.</string>
+    <string name="update_no_compatible_apk">റിലീസിൽ ഈ ഡിവൈസിനുള്ള അപ്ഡേറ്റ് പാക്കേജ് കണ്ടെത്തിയില്ല.</string>
+    <string name="update_invalid_release_response">അപ്ഡേറ്റ് സെർവർ അസാധുവായ റിലീസ് വിവരണം തിരികെ നൽകി.</string>
+    <string name="update_failed_download">നെറ്റ്‌വർക്ക് അഭ്യർത്ഥന പരാജയപ്പെട്ടതിനാൽ അപ്ഡേറ്റ് ഡൗൺലോഡ് ചെയ്യാൻ കഴിഞ്ഞില്ല.</string>
+    <string name="update_failed_download_http">അപ്ഡേറ്റ് ഡൗൺലോഡ് HTTP <xliff:g id="code">%1$s</xliff:g> തിരികെ നൽകി.</string>
+    <string name="update_empty_download">അപ്ഡേറ്റ് സെർവർ ശൂന്യമായ APK തിരികെ നൽകി.</string>
+    <string name="update_install_failed">ഡൗൺലോഡ് ചെയ്ത അപ്ഡേറ്റ് സിസ്റ്റം ഇൻസ്റ്റാളറിന് തുറക്കാൻ കഴിഞ്ഞില്ല.</string>
+    <string name="update_ready">OwnTV v<xliff:g id="available">%1$s</xliff:g> തയ്യാറാണ് (നിങ്ങളുടെ പക്കൽ v<xliff:g id="current">%2$s</xliff:g> ഉണ്ട്).</string>
+    <string name="recovery_title">OwnTV-ക്ക് അതിന്റെ ഡാറ്റാബേസ് തുറക്കാൻ കഴിഞ്ഞില്ല</string>
+    <string name="recovery_data_safe_full">നിങ്ങളുടെ പ്രൊഫൈലുകൾ, പ്ലേലിസ്റ്റുകൾ, പ്രിയപ്പെട്ടവ, ഹിസ്റ്ററി എന്നിവ ഇല്ലാതാക്കിയിട്ടില്ല — ഇതൊരു ഡാറ്റാബേസ് അപ്‌ഗ്രേഡ് പരാജയമാണ്, ഡാറ്റ ഇപ്പോഴും ഈ ഡിവൈസിലുണ്ട്.\n\nദയവായി ഇത് പരിഹരിക്കാൻ റിപ്പോർട്ട് ചെയ്യുക, താഴെയുള്ള സന്ദേശം ഉൾപ്പെടുത്തുക.</string>
+    <string name="recovery_retry">വീണ്ടും ശ്രമിക്കുക</string>
+    <string name="recovery_backup_hint">നിങ്ങളുടെ പക്കൽ ബാക്കപ്പ് ഫയൽ ഉണ്ടെങ്കിൽ ആപ്പ് റീസെറ്റ് ചെയ്ത് പിന്നീട് അത് പുനഃസ്ഥാപിക്കാം. റീസെറ്റ് ചെയ്യുന്നത് ഈ ഡിവൈസിൽ സൂക്ഷിച്ചിരിക്കുന്ന എല്ലാം ഇല്ലാതാക്കും.</string>
+    <string name="recovery_confirm_reset">സ്ഥിരീകരിക്കുക: എല്ലാ ആപ്പ് ഡാറ്റയും മായ്ക്കുക</string>
+    <string name="recovery_reset">ആപ്പ് ഡാറ്റ റീസെറ്റ് ചെയ്യുക (അവസാന ഉപായം)</string>
+</resources>

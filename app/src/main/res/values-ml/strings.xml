@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <string name="common_cancel">റദ്ദാക്കുക</string>
+    <string name="common_back">തിരികെ</string>
+    <string name="common_save">സേവ് ചെയ്യുക</string>
+    <string name="common_edit">എഡിറ്റ് ചെയ്യുക</string>
+    <string name="common_delete">ഇല്ലാതാക്കുക</string>
+    <string name="common_clear">മായ്ക്കുക</string>
+    <string name="common_retry">വീണ്ടും ശ്രമിക്കുക</string>
+    <string name="common_create">സൃഷ്ടിക്കുക</string>
+    <string name="common_reset">റീസെറ്റ് ചെയ്യുക</string>
+    <string name="common_done">കഴിഞ്ഞു</string>
+    <string name="common_ok">ശരി</string>
+    <string name="common_on">ഓൺ</string>
+    <string name="common_off">ഓഫ്</string>
+    <string name="common_exit">പുറത്തുകടക്കുക</string>
+    <string name="common_resume">തുടരുക</string>
+    <string name="common_start_over">തുടക്കം മുതൽ കാണുക</string>
+    <string name="common_name">പേര്</string>
+    <string name="common_own_tv_user">OwnTV ഉപയോക്താവ്</string>
+    <string name="common_switch_profile">പ്രൊഫൈൽ മാറ്റുക</string>
+    <string name="common_proxy">പ്രോക്സി</string>
+    <string name="common_title">ശീർഷകം</string>
+    <string name="common_search_hint">തിരയുക…</string>
+    <string name="common_search">തിരയൽ</string>
+    <string name="common_weather_fahrenheit"><xliff:g id="temperature">%1$d</xliff:g>°F</string>
+    <string name="common_weather_celsius"><xliff:g id="temperature">%1$d</xliff:g>°C</string>
+    <string name="common_weather_city"><xliff:g id="temperature">%1$s</xliff:g> · <xliff:g id="city">%2$s</xliff:g></string>
+    <string name="common_nav_search">തിരയൽ</string>
+    <string name="common_nav_home">ഹോം</string>
+    <string name="common_nav_live_tv">ലൈവ് ടിവി</string>
+    <string name="common_nav_movies">സിനിമകൾ</string>
+    <string name="common_nav_series">സീരീസ്</string>
+    <string name="common_nav_downloads">ഡൗൺലോഡുകൾ</string>
+    <string name="common_nav_guide">ഗൈഡ്</string>
+    <string name="common_nav_settings">സെറ്റിംഗ്‌സ്</string>
+    <string name="shell_no_source">സോഴ്‌സ് ഇല്ല</string>
+    <string name="common_something_went_wrong">എന്തോ കുഴപ്പം സംഭവിച്ചു</string>
+    <string name="common_move_instructions">▲/▼ നീക്കാൻ · OK സേവ് ചെയ്യാൻ · Back റദ്ദാക്കാൻ</string>
+    <string name="common_number_grouped"><xliff:g id="count">%1$,d</xliff:g></string>
+    <string name="common_rating"><xliff:g id="rating">%1$.1f</xliff:g></string>
+    <string name="common_percent"><xliff:g id="percent">%1$d</xliff:g>%%</string>
+    <string name="common_timestamp_minutes"><xliff:g id="minutes">%1$d</xliff:g>:<xliff:g id="seconds">%2$02d</xliff:g></string>
+    <string name="common_timestamp_hours"><xliff:g id="hours">%1$d</xliff:g>:<xliff:g id="minutes">%2$02d</xliff:g>:<xliff:g id="seconds">%3$02d</xliff:g></string>
+    <string name="common_resume_position">നിങ്ങൾ <xliff:g id="position">%1$s</xliff:g> ൽ നിർത്തി.</string>
+    <string name="common_resume_prompt">പ്ലേബാക്ക് തുടരണോ?</string>
+    <string name="sync_error_offline">നിങ്ങൾ ഓഫ്‌ലൈൻ ആണെന്ന് തോന്നുന്നു. നിങ്ങളുടെ കണക്ഷൻ പരിശോധിച്ച് വീണ്ടും ശ്രമിക്കുക.</string>
+    <string name="sync_error_generic">എന്തോ പിശക് സംഭവിച്ചു. ദയവായി വീണ്ടും ശ്രമിക്കുക.</string>
+    <string name="sync_error_timeout">സെർവർ പ്രതികരിക്കാൻ വളരെ സമയമെടുത്തു. ദയവായി വീണ്ടും ശ്രമിക്കുക.</string>
+    <string name="sync_error_unreachable">സെർവറിലേക്ക് എത്താൻ കഴിഞ്ഞില്ല. അഡ്രസ്സും നിങ്ങളുടെ കണക്ഷനും പരിശോധിക്കുക.</string>
+    <string name="sync_error_connection">സെർവറിലേക്ക് കണക്റ്റ് ചെയ്യാൻ കഴിഞ്ഞില്ല. അത് പ്രവർത്തനരഹിതമാകാം, അല്ലെങ്കിൽ അഡ്രസ്സ് തെറ്റായിരിക്കാം.</string>
+    <string name="sync_error_interrupted">സെർവർ ഡൗൺലോഡ് തടസ്സപ്പെടുത്തി. ദയവായി വീണ്ടും ശ്രമിക്കുക.</string>
+    <string name="sync_error_mac">പോർട്ടൽ ഈ MAC അഡ്രസ്സ് നിരസിച്ചു. MAC (കൂടാതെ ടിവിയുടെ തീയതിയും സമയവും) പരിശോധിക്കുക — അല്ലെങ്കിൽ സബ്സ്ക്രിപ്ഷൻ കാലഹരണപ്പെട്ടിരിക്കാം.</string>
+    <string name="sync_error_invalid_mac">അസാധുവായ MAC അഡ്രസ്സ് — AA:BB:CC:DD:EE:FF ഉപയോഗിക്കുക</string>
+    <string name="sync_counts_separator">  ·  </string>
+    <string name="sync_counts_success">വിജയകരമായി സിങ്ക് ചെയ്തു</string>
+    <string name="sync_counts_synced"><xliff:g id="counts">%1$s</xliff:g> സിങ്ക് ചെയ്തു</string>
+    <string name="sync_import_warnings">മുന്നറിയിപ്പുകളോടെ ഇംപോർട്ട് ചെയ്തു: <xliff:g id="phases">%1$s</xliff:g></string>
+    <string name="sync_warning_phase_error"><xliff:g id="phase">%1$s</xliff:g>: <xliff:g id="message">%2$s</xliff:g></string>
+    <plurals name="sync_warning_catalog_shrink">
+        <item quantity="one"><xliff:g id="stored">%1$d</xliff:g> നിലവിലുള്ള ഇനം സൂക്ഷിച്ചു — ഈ ഇംപോർട്ടിൽ <xliff:g id="percent">%2$d</xliff:g>%% കുറവ് ലഭിച്ചു. വീണ്ടും സിങ്ക് ചെയ്യുക, അല്ലെങ്കിൽ പ്രൊവൈഡർ യഥാർത്ഥത്തിൽ അത് നീക്കം ചെയ്തതെങ്കിൽ നിർബന്ധിത ക്ലീൻ സിങ്ക് ഉപയോഗിക്കുക.</item>
+        <item quantity="other"><xliff:g id="stored">%1$d</xliff:g> നിലവിലുള്ള ഇനങ്ങൾ സൂക്ഷിച്ചു — ഈ ഇംപോർട്ടിൽ <xliff:g id="percent">%2$d</xliff:g>%% കുറവ് ലഭിച്ചു. വീണ്ടും സിങ്ക് ചെയ്യുക, അല്ലെങ്കിൽ പ്രൊവൈഡർ യഥാർത്ഥത്തിൽ അവ നീക്കം ചെയ്തതെങ്കിൽ നിർബന്ധിത ക്ലീൻ സിങ്ക് ഉപയോഗിക്കുക.</item>
+    </plurals>
+    <plurals name="sync_warning_page_failures">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> സോഴ്‌സ് പേജ് പരാജയപ്പെട്ടു; അടുത്ത സിങ്ക് വരെ ചില കണ്ടന്റ് നഷ്ടമായേക്കാം.</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> സോഴ്‌സ് പേജുകൾ പരാജയപ്പെട്ടു; അടുത്ത സിങ്ക് വരെ ചില കണ്ടന്റ് നഷ്ടമായേക്കാം.</item>
+    </plurals>
+    <string name="sync_remainder_note">കാറ്റലോഗിന്റെ ബാക്കി ഭാഗം ഇപ്പോഴും ബാക്ക്‌ഗ്രൗണ്ടിൽ സിങ്ക് ചെയ്യുന്നു — നിങ്ങൾക്ക് ഇപ്പോൾ കാണാൻ തുടങ്ങാം. സ്ക്രീനിന്റെ താഴെയുള്ള ചെറിയ പിൽ ബോക്സിൽ പുരോഗതി കാണിക്കുന്നു.</string>
+    <string name="sync_progress_preparing">കാറ്റലോഗ് തയ്യാറാക്കുന്നു</string>
+    <string name="sync_progress_connecting">സോഴ്‌സിലേക്ക് കണക്റ്റ് ചെയ്യുന്നു…</string>
+    <string name="sync_progress_syncing">കാറ്റലോഗ് സിങ്ക് ചെയ്യുന്നു</string>
+    <string name="sync_progress_percent"><xliff:g id="percent">%1$d</xliff:g>%% സിങ്ക് ചെയ്യുന്നു</string>
+    <string name="sync_status_catalog"><xliff:g id="source">%1$s</xliff:g> സിങ്ക് ചെയ്യുന്നു</string>
+    <string name="sync_status_catalog_with_counts"><xliff:g id="source">%1$s</xliff:g> സിങ്ക് ചെയ്യുന്നു · <xliff:g id="counts">%2$s</xliff:g></string>
+    <string name="sync_status_epg">ഗൈഡ് അപ്ഡേറ്റ് ചെയ്യുന്നു · <xliff:g id="source">%1$s</xliff:g></string>
+    <string name="sync_status_epg_with_counts">ഗൈഡ് അപ്ഡേറ്റ് ചെയ്യുന്നു · <xliff:g id="source">%1$s</xliff:g> · <xliff:g id="counts">%2$s</xliff:g></string>
+    <string name="sync_status_complete">സിങ്ക് പൂർത്തിയായി · <xliff:g id="source">%1$s</xliff:g></string>
+    <string name="sync_status_complete_with_changes">സിങ്ക് പൂർത്തിയായി · <xliff:g id="source">%1$s</xliff:g> · <xliff:g id="changes">%2$s</xliff:g></string>
+    <string name="sync_status_failed">സിങ്ക് പരാജയപ്പെട്ടു · <xliff:g id="source">%1$s</xliff:g>: <xliff:g id="reason">%2$s</xliff:g></string>
+    <string name="sync_status_cancelled">സിങ്ക് റദ്ദാക്കി · <xliff:g id="source">%1$s</xliff:g></string>
+    <string name="sync_phase_live">ലൈവ് ടിവി</string>
+    <string name="sync_phase_movies">സിനിമകൾ</string>
+    <string name="sync_phase_series">സീരീസ്</string>
+    <plurals name="sync_count_channels">
+        <item quantity="one"><xliff:g id="count">%1$s</xliff:g> ചാനൽ</item>
+        <item quantity="other"><xliff:g id="count">%1$s</xliff:g> ചാനലുകൾ</item>
+    </plurals>
+    <plurals name="sync_count_movies">
+        <item quantity="one"><xliff:g id="count">%1$s</xliff:g> സിനിമ</item>
+        <item quantity="other"><xliff:g id="count">%1$s</xliff:g> സിനിമകൾ</item>
+    </plurals>
+    <plurals name="sync_count_series">
+        <item quantity="one"><xliff:g id="count">%1$s</xliff:g> സീരീസ്</item>
+        <item quantity="other"><xliff:g id="count">%1$s</xliff:g> സീരീസ്</item>
+    </plurals>
+    <plurals name="sync_count_epg">
+        <item quantity="one"><xliff:g id="count">%1$s</xliff:g> EPG എൻട്രി</item>
+        <item quantity="other"><xliff:g id="count">%1$s</xliff:g> EPG എൻട്രികൾ</item>
+    </plurals>
+    <plurals name="sync_status_more">
+        <item quantity="one">+<xliff:g id="count">%1$d</xliff:g> കൂടുതൽ സിങ്ക്</item>
+        <item quantity="other">+<xliff:g id="count">%1$d</xliff:g> കൂടുതൽ സിങ്ക് ചെയ്യുന്നു</item>
+    </plurals>
+    <plurals name="sync_categories_added">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> വിഭാഗം ചേർത്തു</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> വിഭാഗങ്ങൾ ചേർത്തു</item>
+    </plurals>
+    <plurals name="sync_categories_removed">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> വിഭാഗം നീക്കം ചെയ്തു</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> വിഭാഗങ്ങൾ നീക്കം ചെയ്തു</item>
+    </plurals>
+    <string name="sync_error_portal">പോർട്ടലിലേക്ക് എത്താൻ കഴിഞ്ഞില്ല. പോർട്ടൽ URL പരിശോധിക്കുക — ഇത് സാധാരണയായി /c/ ൽ അവസാനിക്കും.</string>
+    <string name="sync_error_session">പോർട്ടൽ സെഷൻ കാലഹരണപ്പെട്ടു. വീണ്ടും ശ്രമിക്കുക.</string>
+    <string name="sync_error_auth">സെർവർ നിങ്ങളുടെ ലോഗിൻ നിരസിച്ചു. നിങ്ങളുടെ യൂസർനെയിമും പാസ്‌വേഡും പരിശോധിക്കുക.</string>
+    <string name="sync_error_not_found">സെർവറിൽ കണ്ടെത്തിയില്ല. URL പരിശോധിക്കുക.</string>
+    <string name="sync_error_server">സെർവറിൽ ഒരു പ്രശ്നം ഉണ്ടായി. ദയവായി പിന്നീട് വീണ്ടും ശ്രമിക്കുക.</string>
+    <string name="sync_error_secure">സുരക്ഷിത കണക്ഷൻ പരാജയപ്പെട്ടു — സെർവറിന്റെ സർട്ടിഫിക്കറ്റ് അസാധുവായിരിക്കാം.</string>
+    <string name="sync_error_malformed_guide">സെർവറിൽ നിന്നുള്ള ഗൈഡ് ഡാറ്റ തെറ്റായ ഫോർമാറ്റിലായിരുന്നു. ഇതിൽ കുറച്ചു ഭാഗം ലോഡ് ആയിട്ടുണ്ടാകാം — ദയവായി വീണ്ടും ശ്രമിക്കുക, അല്ലെങ്കിൽ EPG URL പരിശോധിക്കുക.</string>
+    <string name="common_items_per_skip">ഓരോ സ്കിപ്പിലും ഉള്ള ഇനങ്ങൾ</string>
+    <string name="common_plus">+</string>
+    <string name="common_minus">–</string>
+    <string name="common_hide">മറയ്ക്കുക</string>
+    <string name="common_show">കാണിക്കുക</string>
+    <string name="common_qr_code_companion_url">കമ്പാനിയൻ URL-ന്റെ QR കോഡ്</string>
+</resources>

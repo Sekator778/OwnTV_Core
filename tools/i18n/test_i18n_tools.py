@@ -23,11 +23,13 @@ from pathlib import Path
 from types import SimpleNamespace
 
 ROOT = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(ROOT))  # so `from tools.i18n import ...` works when run as a script
 
 
 def _load(name: str, path: str):
     spec = importlib.util.spec_from_file_location(name, ROOT / path)
     mod = importlib.util.module_from_spec(spec)
+    sys.modules[name] = mod  # dataclasses/functools resolve class __module__ via sys.modules
     spec.loader.exec_module(mod)
     return mod
 
@@ -381,8 +383,10 @@ class TestValidateStrings(unittest.TestCase):
         covers it, and this is expected best-effort community-translation behaviour."""
         source = '<resources><string name="a">A</string><string name="b">B</string></resources>'
         de_xml = '<resources><string name="a">A</string></resources>'  # missing 'b'
-        locales = [_locale("en", "en-US", "en", "values"),
-                   _locale("de", "de", "de", "values-de", packaged=True, pickerVisible=True)]
+        locales = _full_tier1()
+        de = next(e for e in locales if e["id"] == "de")
+        de["packaged"] = True
+        de["pickerVisible"] = True
         res = _make_fixture(self.tmpdir, source, locales, {"values-de": de_xml})
         rc, out = self._run(res, self.tmpdir / "tools/i18n/locales.json")
         self.assertEqual(rc, 0, out)
@@ -405,9 +409,7 @@ class TestValidateStrings(unittest.TestCase):
     def test_report_text_is_deterministic_and_catalogue_ordered(self):
         source = '<resources><string name="a">A</string><string name="b">B</string></resources>'
         ar_xml = '<resources><string name="a">A</string></resources>'
-        locales = [_locale("en", "en-US", "en", "values"),
-                   _locale("ar", "ar", "ar", "values-ar", script="Arab", rtl=True,
-                           packaged=False, pickerVisible=False)]
+        locales = _full_tier1()
         res = _make_fixture(self.tmpdir, source, locales, {"values-ar": ar_xml})
         rc, out = self._run(res, self.tmpdir / "tools/i18n/locales.json", report="text")
         self.assertEqual(rc, 0, out)
@@ -417,8 +419,10 @@ class TestValidateStrings(unittest.TestCase):
 
     def test_report_none_omits_coverage_output(self):
         source = '<resources><string name="a">A</string><string name="b">B</string></resources>'
-        locales = [_locale("en", "en-US", "en", "values"),
-                   _locale("de", "de", "de", "values-de", packaged=True, pickerVisible=True)]
+        locales = _full_tier1()
+        de = next(e for e in locales if e["id"] == "de")
+        de["packaged"] = True
+        de["pickerVisible"] = True
         res = _make_fixture(self.tmpdir, source, locales, {"values-de": '<resources></resources>'})
         rc, out = self._run(res, self.tmpdir / "tools/i18n/locales.json", report="none")
         self.assertEqual(rc, 0, out)
@@ -428,8 +432,10 @@ class TestValidateStrings(unittest.TestCase):
         """Even with a structural failure, stdout must parse as JSON; diagnostics go to stderr."""
         source = '<resources><string name="a">A</string></resources>'
         de_xml = '<resources><string name="a"></string></resources>'  # malformed: empty
-        locales = [_locale("en", "en-US", "en", "values"),
-                   _locale("de", "de", "de", "values-de", packaged=True, pickerVisible=True)]
+        locales = _full_tier1()
+        de = next(e for e in locales if e["id"] == "de")
+        de["packaged"] = True
+        de["pickerVisible"] = True
         res = _make_fixture(self.tmpdir, source, locales, {"values-de": de_xml})
         rc, out, err = self._run_streams(res, self.tmpdir / "tools/i18n/locales.json", report="json")
         self.assertEqual(rc, 1)
@@ -455,7 +461,7 @@ class TestValidateStrings(unittest.TestCase):
         tags = {row["languageTag"] for row in payload["locales"]}
         self.assertNotIn("en-US", tags)
         self.assertNotIn("en-GB", tags)
-        self.assertEqual(len(tags), 20)
+        self.assertEqual(len(tags), 21)  # 20 community + ml
 
     def test_translation_review_state_neither_read_nor_required(self):
         """translation_status.json is gone; the validator must not reference or require it."""
@@ -472,10 +478,12 @@ class TestValidateStrings(unittest.TestCase):
             </resources>'''
         de_xml = '''<resources>
             <string name="a">A</string>
-            <plurals name="songs"><item quantity="one">Ein</item><item quantity="other">Viele</item></plurals>
+            <plurals name="songs"><item quantity="one">%1$d Ein</item><item quantity="other">%1$d Viele</item></plurals>
             </resources>'''  # missing 'b'
-        locales = [_locale("en", "en-US", "en", "values"),
-                   _locale("de", "de", "de", "values-de", packaged=True, pickerVisible=True)]
+        locales = _full_tier1()
+        de = next(e for e in locales if e["id"] == "de")
+        de["packaged"] = True
+        de["pickerVisible"] = True
         res = _make_fixture(self.tmpdir, source, locales, {"values-de": de_xml})
         rc, out, err = self._run_streams(res, self.tmpdir / "tools/i18n/locales.json", report="json")
         self.assertEqual(rc, 0, err)
@@ -1383,33 +1391,33 @@ class TestSeedTranslations(unittest.TestCase):
     def test_refusal_stop_reason_rejected(self):
         msg = _fake_message("refusal", "{}")
         result = _fake_batch_result("de__strings__000", "succeeded", msg)
-        classified = self.stx._classify_result("translation", "de__strings__000", result)
+        classified = self.stx._classify_transport("translation", result)
         self.assertEqual(classified["status"], "retryable")
 
     def test_max_tokens_stop_reason_rejected(self):
         msg = _fake_message("max_tokens", "{}")
         result = _fake_batch_result("de__strings__000", "succeeded", msg)
-        classified = self.stx._classify_result("translation", "de__strings__000", result)
+        classified = self.stx._classify_transport("translation", result)
         self.assertEqual(classified["status"], "retryable")
 
     def test_errored_canceled_expired_pass_through_untouched(self):
         for rtype in ("errored", "canceled", "expired"):
             result = _fake_batch_result("de__strings__000", rtype)
-            classified = self.stx._classify_result("translation", "de__strings__000", result)
+            classified = self.stx._classify_transport("translation", result)
             self.assertEqual(classified["status"], rtype)
 
     def test_valid_structured_success_is_classified_succeeded(self):
         payload = {"strings": [{"key": "a", "text": "Ein"}], "plurals": []}
         msg = _fake_message("end_turn", json.dumps(payload))
         result = _fake_batch_result("de__strings__000", "succeeded", msg)
-        classified = self.stx._classify_result("translation", "de__strings__000", result)
+        classified = self.stx._classify_transport("translation", result)
         self.assertEqual(classified["status"], "succeeded")
         self.assertEqual(classified["payload"], payload)
 
     def test_malformed_json_in_structured_success_is_retryable(self):
         msg = _fake_message("end_turn", "not valid json")
         result = _fake_batch_result("de__strings__000", "succeeded", msg)
-        classified = self.stx._classify_result("translation", "de__strings__000", result)
+        classified = self.stx._classify_transport("translation", result)
         self.assertEqual(classified["status"], "retryable")
 
     def test_unordered_results_matched_only_by_custom_id(self):
@@ -1430,7 +1438,7 @@ class TestSeedTranslations(unittest.TestCase):
             }
             self.stx.save_manifest("run1", manifest)
             with self.assertRaises(SystemExit):
-                self.stx.cmd_submit(argparse.Namespace(run_id="run1", stage="glossary", force_stale=False))
+                self.stx.cmd_submit(argparse.Namespace(run_id="run1", stage="glossary", force_stale=False, backend="anthropic"))
 
     def test_resume_delegates_to_collect_without_resubmitting(self):
         with tempfile.TemporaryDirectory() as d:
@@ -1450,7 +1458,7 @@ class TestSeedTranslations(unittest.TestCase):
                 return 0
 
             self.stx.cmd_collect = fake_collect
-            rc = self.stx.cmd_resume(argparse.Namespace(run_id="run2"))
+            rc = self.stx.cmd_resume(argparse.Namespace(run_id="run2", backend="anthropic"))
             self.assertEqual(rc, 0)
             self.assertEqual(calls, [("run2", "translation")])
             reloaded = self.stx.load_manifest("run2")
