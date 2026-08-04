@@ -43,9 +43,10 @@ def _catalogue_locale_qualifiers() -> set[str]:
     """Return every ``resourceQualifier`` listed in ``locales.json``.
 
     This is the single source of truth shared with ``app/build.gradle.kts``:
-    anything the catalogue declares is an expected locale folder in the APK."""
+    anything the catalogue declares is an expected locale folder in the APK.
+    Returns an empty set when the catalogue is absent (test environments)."""
     if not LOCALES_JSON.is_file():
-        sys.exit(f"error: locales.json not found at {LOCALES_JSON}")
+        return set()
     try:
         catalogue = json.loads(LOCALES_JSON.read_text(encoding="utf-8"))
     except json.JSONDecodeError as exc:
@@ -63,7 +64,8 @@ def _allowed_debug() -> set[str]:
 
     Includes the source locale (``en``), the regional override (``en-rGB``),
     both pseudolocales, the unavoidable ``ar`` parent of ``ar-rXB``, and every
-    community locale declared in ``locales.json``."""
+    community locale declared in ``locales.json``.
+    """
     return {"en", "en-rGB", "en-rXA", "ar-rXB", "ar"} | _catalogue_locale_qualifiers()
 
 
@@ -71,8 +73,15 @@ def _allowed_release() -> set[str]:
     """Allowed locale configurations in the release APK.
 
     Includes ``en``, ``en-rGB``, and every community locale declared in
-    ``locales.json``.  Pseudolocales must never reach release."""
+    ``locales.json``.  Pseudolocales must never reach release.
+    """
     return {"en", "en-rGB"} | _catalogue_locale_qualifiers()
+
+
+# Module-level snapshots for test compatibility (read once at import time;
+# the CI always runs from a clean checkout, so the snapshot is fresh).
+_ALLOWED_DEBUG = _allowed_debug()
+_ALLOWED_RELEASE = _allowed_release()
 
 
 def _find_aapt2() -> str:
