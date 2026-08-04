@@ -1169,10 +1169,10 @@ class TestCheckPseudoLocales(unittest.TestCase):
 
     def test_debug_leak_detected(self):
         """A locale outside the allowed debug set must be flagged as a leak."""
-        configs = {"en-rGB", "en-rXA", "ar-rXB", "ar", "fr-port-mdpi"}
+        configs = {"en-rGB", "en-rXA", "ar-rXB", "ar", "zz-port-mdpi"}
         locales = self.cp._locale_configs(configs)
         leaks = locales - self.cp._ALLOWED_DEBUG
-        self.assertIn("fr", leaks)
+        self.assertIn("zz", leaks)
 
     def test_release_leak_detected(self):
         """en-rXA in a release config set must be flagged."""
