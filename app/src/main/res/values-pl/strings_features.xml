@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <string name="profiles_pin">PIN</string>
+    <string name="profiles_new">Nowy profil</string>
+    <string name="profiles_edit">Edytuj profil</string>
+    <string name="profiles_name">Nazwa</string>
+    <string name="profiles_name_hint">np. Alex</string>
+    <string name="profiles_avatar">AVATAR</string>
+    <string name="profiles_kids">Profil dziecięcy</string>
+    <string name="profiles_kids_description">Uproszczone, bezpieczne przeglądanie</string>
+    <string name="profiles_remove_pin">Usuń blokadę PIN</string>
+    <string name="profiles_no_pin">Ten profil otwiera się bez PIN-u</string>
+    <string name="profiles_change_pin">Zmień PIN (puste pole = bez zmian)</string>
+    <string name="profiles_optional_pin">PIN (opcjonalnie)</string>
+    <string name="profiles_pin_digits">4–6 cyfr</string>
+    <string name="profiles_pin_placeholder">····</string>
+    <string name="profiles_name_taken">Ta nazwa jest już zajęta — wybierz inną nazwę.</string>
+    <string name="profiles_create">Utwórz</string>
+    <string name="profiles_save">Zapisz</string>
+    <string name="profiles_gate_title">Kto ogląda?</string>
+    <string name="profiles_wrong_pin">Nieprawidłowy PIN — spróbuj ponownie</string>
+    <string name="profiles_enter_pin"><xliff:g id="name">%1$s</xliff:g> — wprowadź PIN</string>
+    <string name="profiles_kids_badge">DZIECI</string>
+    <string name="profiles_add">Dodaj profil</string>
+    <string name="profiles_title">Zarządzanie profilami</string>
+    <string name="profiles_add_button">Dodaj profil</string>
+    <string name="profiles_delete_title">Usunąć „<xliff:g id="name">%1$s</xliff:g>”?</string>
+    <string name="profiles_delete_message">Usuwa ten profil oraz jego ulubione i historię. Źródła zostaną zachowane.</string>
+    <string name="profiles_kids_tag">Dzieci</string>
+    <string name="profiles_locked_tag">Blokada PIN</string>
+    <string name="search_title">Wyszukiwanie</string>
+    <string name="search_continue">Oglądaj dalej</string>
+    <string name="search_unwatched">Nieobejrzane</string>
+    <string name="search_hint">Szukaj kanałów, filmów i seriali…</string>
+    <string name="search_recent">Ostatnie wyszukiwania</string>
+    <string name="search_recent_empty">Tutaj pojawią się Twoje ostatnie wyszukiwania.</string>
+    <string name="search_minimum_query">Wpisz co najmniej 2 znaki, aby przeszukać całą zawartość.</string>
+    <string name="search_no_results"><xliff:g id="query">%1$s</xliff:g> — brak wyników.</string>
+    <string name="search_nothing_in_list">Na liście <xliff:g id="list">%1$s</xliff:g> jeszcze nic nie ma.</string>
+    <string name="search_clear">Wyczyść</string>
+    <string name="search_jump_to">Przejdź do</string>
+    <string name="search_watch_live">Oglądaj na żywo</string>
+    <string name="search_play">Odtwórz</string>
+    <string name="search_open_series">Otwórz serial</string>
+    <string name="search_movie">Film</string>
+    <string name="search_series">Serial</string>
+    <string name="search_channels">Kanały</string>
+    <string name="search_channel_number">#<xliff:g id="number">%1$s</xliff:g></string>
+    <string name="home_keep_watching">Oglądaj dalej</string>
+    <string name="home_play_next">Odtwórz następny</string>
+    <string name="home_tune_in">Włącz</string>
+    <string name="home_recent_live">Ostatnio oglądane na żywo</string>
+    <string name="profiles_default_name">Profil</string>
+    <string name="launcher_recent_live_title">Ostatnio oglądane na żywo</string>
+    <string name="launcher_recent_live_description">Ostatnio oglądane kanały na żywo</string>
+    <string name="launcher_movie_type">Film</string>
+    <string name="launcher_episode_number">Odcinek <xliff:g id="episode">%1$d</xliff:g></string>
+    <string name="home_no_preview">Nie ma jeszcze niczego do wyświetlenia w podglądzie.</string>
+    <string name="home_no_rows">Wszystkie wiersze ekranu głównego są ukryte.</string>
+    <string name="home_enable_rows">Włącz ponownie wiersze: Ustawienia → Ekran główny.</string>
+    <string name="home_start_watching">Zacznij oglądać, aby zobaczyć tutaj swoją aktywność.</string>
+    <string name="home_continue_empty">Elementy do dalszego oglądania pojawią się tutaj, gdy będzie dostępna historia odtwarzania.</string>
+    <string name="home_last_watched_now">Oglądano przed chwilą</string>
+    <string name="home_finish_by">Koniec o <xliff:g id="time">%1$s</xliff:g></string>
+    <string name="home_resume">Wznów</string>
+    <plurals name="home_last_watched_minutes">
+        <item quantity="one">Ostatnio oglądano <xliff:g id="count">%1$d</xliff:g> minutę temu</item>
+        <item quantity="few">Ostatnio oglądano <xliff:g id="count">%1$d</xliff:g> minuty temu</item>
+        <item quantity="many">Ostatnio oglądano <xliff:g id="count">%1$d</xliff:g> minut temu</item>
+        <item quantity="other">Ostatnio oglądano <xliff:g id="count">%1$d</xliff:g> minuty temu</item>
+    </plurals>
+    <plurals name="home_last_watched_hours">
+        <item quantity="one">Ostatnio oglądano <xliff:g id="count">%1$d</xliff:g> godzinę temu</item>
+        <item quantity="few">Ostatnio oglądano <xliff:g id="count">%1$d</xliff:g> godziny temu</item>
+        <item quantity="many">Ostatnio oglądano <xliff:g id="count">%1$d</xliff:g> godzin temu</item>
+        <item quantity="other">Ostatnio oglądano <xliff:g id="count">%1$d</xliff:g> godziny temu</item>
+    </plurals>
+    <plurals name="home_last_watched_days">
+        <item quantity="one">Ostatnio oglądano <xliff:g id="count">%1$d</xliff:g> dzień temu</item>
+        <item quantity="few">Ostatnio oglądano <xliff:g id="count">%1$d</xliff:g> dni temu</item>
+        <item quantity="many">Ostatnio oglądano <xliff:g id="count">%1$d</xliff:g> dni temu</item>
+        <item quantity="other">Ostatnio oglądano <xliff:g id="count">%1$d</xliff:g> dnia temu</item>
+    </plurals>
+    <string name="home_season_episode">S<xliff:g id="season">%1$02d</xliff:g> E<xliff:g id="episode">%2$02d</xliff:g></string>
+    <string name="home_season">S<xliff:g id="season">%1$02d</xliff:g></string>
+    <string name="home_episode">E<xliff:g id="episode">%1$02d</xliff:g></string>
+    <string name="home_row_cards">Karty</string>
+    <string name="home_row_keep_watching">Oglądaj dalej</string>
+    <string name="home_row_continue_movies">Kontynuuj oglądanie filmów</string>
+    <string name="home_row_continue_series">Kontynuuj oglądanie seriali</string>
+    <string name="home_row_recent_channels">Ostatnie kanały</string>
+    <string name="home_row_favorite_channels">Ulubione kanały</string>
+    <string name="home_row_on_now">Teraz</string>
+    <string name="home_row_hero_description">Duży wiersz podglądu u góry</string>
+    <string name="home_row_continue_movies_description">Filmy z zapisaną pozycją</string>
+    <string name="home_row_continue_series_description">Odcinki do wznowienia lub odtworzenia jako następne</string>
+    <string name="home_row_recent_description">Ostatnio oglądane kanały na żywo</string>
+    <string name="home_row_favorite_description">Twoje ulubione kanały na żywo</string>
+    <string name="home_on_now_title"><xliff:g id="title">%1$s</xliff:g> · TERAZ</string>
+    <string name="home_ok_to_watch">OK, aby oglądać</string>
+    <string name="home_ok_to_browse">OK, aby przeglądać</string>
+    <string name="home_no_programme_details">Brak szczegółów programu</string>
+    <string name="home_guide_unavailable">Dane przewodnika po programach są niedostępne</string>
+    <string name="home_next">Następny</string>
+    <string name="home_channel_number"><xliff:g id="number">%1$s</xliff:g>  <xliff:g id="name">%2$s</xliff:g></string>
+    <string name="home_time_range"><xliff:g id="start">%1$s</xliff:g>-<xliff:g id="end">%2$s</xliff:g></string>
+    <string name="home_now_time">TERAZ · <xliff:g id="time">%1$s</xliff:g></string>
+    <string name="home_up_next_time">NASTĘPNIE · <xliff:g id="time">%1$s</xliff:g></string>
+    <string name="home_upcoming_item"><xliff:g id="time">%1$s</xliff:g> <xliff:g id="title">%2$s</xliff:g></string>
+    <plurals name="home_channel_count">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> kanał</item>
+        <item quantity="few"><xliff:g id="count">%1$d</xliff:g> kanały</item>
+        <item quantity="many"><xliff:g id="count">%1$d</xliff:g> kanałów</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> kanału</item>
+    </plurals>
+    <string name="update_title">Aktualizacja aplikacji</string>
+    <string name="update_checking">Sprawdzanie dostępności aktualizacji…</string>
+    <string name="update_whats_new">Co nowego</string>
+    <string name="update_downloading">Pobieranie aktualizacji… <xliff:g id="percent">%1$d</xliff:g>%%</string>
+    <string name="update_available">Dostępna aktualizacja</string>
+    <string name="update_latest">Korzystasz z najnowszej wersji (v<xliff:g id="version">%1$s</xliff:g>).</string>
+    <string name="update_available_version">Dostępna jest wersja <xliff:g id="available">%1$s</xliff:g> (masz v<xliff:g id="current">%2$s</xliff:g>).</string>
+    <string name="update_installer">Po zakończeniu pobierania otworzy się instalator systemowy.</string>
+    <string name="update_later">Później</string>
+    <string name="update_now">Aktualizuj teraz</string>
+    <string name="update_try_again">Spróbuj ponownie</string>
+    <string name="update_failed_check">Nie udało się sprawdzić dostępności aktualizacji.</string>
+    <string name="update_failed_check_http">Podczas sprawdzania serwer aktualizacji zwrócił kod HTTP <xliff:g id="code">%1$s</xliff:g>.</string>
+    <string name="update_no_compatible_apk">W wydaniu nie znaleziono pakietu aktualizacji dla tego urządzenia.</string>
+    <string name="update_invalid_release_response">Serwer aktualizacji zwrócił nieprawidłowy opis wydania.</string>
+    <string name="update_failed_download">Nie udało się pobrać aktualizacji, ponieważ żądanie sieciowe zakończyło się niepowodzeniem.</string>
+    <string name="update_failed_download_http">Podczas pobierania aktualizacji zwrócono kod HTTP <xliff:g id="code">%1$s</xliff:g>.</string>
+    <string name="update_empty_download">Serwer aktualizacji zwrócił pusty plik APK.</string>
+    <string name="update_install_failed">Instalator systemowy nie mógł otworzyć pobranej aktualizacji.</string>
+    <string name="update_ready">OwnTV v<xliff:g id="available">%1$s</xliff:g> jest gotowa (masz v<xliff:g id="current">%2$s</xliff:g>).</string>
+    <string name="recovery_title">OwnTV nie mogła otworzyć swojej bazy danych</string>
+    <string name="recovery_data_safe_full">Dane Twoich profili, listy odtwarzania, ulubione i historia NIE zostały usunięte — aktualizacja bazy danych nie powiodła się, a dane nadal znajdują się na tym urządzeniu.\n\nZgłoś ten problem, aby można go było naprawić, i dołącz poniższy komunikat.</string>
+    <string name="recovery_retry">Spróbuj ponownie</string>
+    <string name="recovery_backup_hint">Jeśli masz plik kopii zapasowej, możesz zresetować aplikację, a następnie przywrócić z niego dane. Zresetowanie spowoduje usunięcie wszystkiego, co jest zapisane na tym urządzeniu.</string>
+    <string name="recovery_confirm_reset">Potwierdź: usuń wszystkie dane aplikacji</string>
+    <string name="recovery_reset">Zresetuj dane aplikacji (ostateczność)</string>
+</resources>

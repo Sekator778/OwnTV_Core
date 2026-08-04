@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <string name="player_trailer_exit">Afslut</string>
+    <string name="player_trailer_progress"><xliff:g id="current">%1$s</xliff:g> / <xliff:g id="duration">%2$s</xliff:g></string>
+    <string name="player_zoom_fit_screen">Tilpas til skærmen</string>
+    <string name="player_zoom_fill_crop">Udfyld / beskær</string>
+    <string name="player_zoom_stretch">Stræk</string>
+    <string name="player_zoom_original">Original (1:1)</string>
+    <string name="player_zoom_force_16_9">Tving 16:9</string>
+    <string name="player_zoom_force_4_3">Tving 4:3</string>
+    <string name="player_mini_top_left">Øverst til venstre</string>
+    <string name="player_mini_top_center">Øverst i midten</string>
+    <string name="player_mini_top_right">Øverst til højre</string>
+    <string name="player_mini_bottom_left">Nederst til venstre</string>
+    <string name="player_mini_bottom_center">Nederst i midten</string>
+    <string name="player_mini_bottom_right">Nederst til højre</string>
+    <string name="player_channel_label">KANAL</string>
+    <string name="player_at_live_edge">● Ved livepunktet</string>
+    <string name="player_behind_live">● <xliff:g id="offset">%1$s</xliff:g> bagud i forhold til live</string>
+    <string name="player_live_offset">−<xliff:g id="offset">%1$s</xliff:g></string>
+    <string name="player_channel_not_found">Kanalen blev ikke fundet</string>
+    <string name="player_multiple_channels">Flere kanaler</string>
+    <string name="player_tune_failed">Kanalskift mislykkedes</string>
+    <string name="player_playback_error">Afspilningsfejl</string>
+    <string name="player_raw_error">fejl: <xliff:g id="error">%1$s</xliff:g></string>
+    <string name="player_audio_track">Lydspor</string>
+    <string name="player_subtitles">Undertekster</string>
+    <string name="player_subtitle_timing">Underteksttiming</string>
+    <string name="player_add_subtitles">TILFØJ UNDERTEKSTER</string>
+    <string name="player_adjust">JUSTER</string>
+    <string name="player_search_subtitles">Søg på OpenSubtitles</string>
+    <string name="player_select_local_subtitle">Vælg lokal undertekstfil</string>
+    <string name="player_no_tracks">Ingen tilgængelige spor.</string>
+    <string name="player_image_track"><xliff:g id="label">%1$s</xliff:g> · billede</string>
+    <string name="player_av_sync">A/V-synkronisering</string>
+    <string name="player_no_offset">Ingen forskydning</string>
+    <string name="player_subtitles_later">Undertekster vises senere</string>
+    <string name="player_subtitles_earlier">Undertekster vises tidligere</string>
+    <string name="player_delay_zero">0 ms</string>
+    <string name="player_delay_positive">+<xliff:g id="ms">%1$d</xliff:g> ms</string>
+    <string name="player_delay_negative"><xliff:g id="ms">%1$d</xliff:g> ms</string>
+    <string name="player_speed_normal">1,0x (Normal)</string>
+    <string name="player_speed_normal_short">1,0x</string>
+    <string name="player_speed"><xliff:g id="speed">%1$s</xliff:g>x</string>
+    <string name="player_next_episode">Næste afsnit om <xliff:g id="seconds">%1$d</xliff:g> sek.</string>
+    <string name="player_play_now">Afspil nu</string>
+    <string name="player_volume">Lydstyrke</string>
+    <string name="player_unmute">Slå lyd til</string>
+    <string name="player_mute">Slå lyd fra</string>
+    <string name="player_percent"><xliff:g id="value">%1$d</xliff:g>%%</string>
+    <string name="player_duration_minutes"><xliff:g id="minutes">%1$d</xliff:g> min.</string>
+    <string name="player_season_number">Sæson <xliff:g id="season">%1$d</xliff:g></string>
+    <string name="player_episode_number">Afsnit <xliff:g id="episode">%1$d</xliff:g></string>
+    <string name="player_episode_context_title"><xliff:g id="title">%1$s</xliff:g> · S<xliff:g id="season">%2$d</xliff:g>E<xliff:g id="episode">%3$d</xliff:g></string>
+    <string name="player_channel_number">#<xliff:g id="number">%1$s</xliff:g></string>
+    <string name="player_live">LIVE</string>
+    <string name="player_subtitle_delay_zero">0,0 s</string>
+    <string name="player_subtitle_delay_positive">+<xliff:g id="seconds">%1$.1f</xliff:g> s</string>
+    <string name="player_subtitle_delay_negative">−<xliff:g id="seconds">%1$.1f</xliff:g> s</string>
+    <string name="player_track_seconds"><xliff:g id="minutes">%1$d</xliff:g>:<xliff:g id="seconds">%2$02d</xliff:g></string>
+    <string name="player_track_hours"><xliff:g id="hours">%1$d</xliff:g>:<xliff:g id="minutes">%2$02d</xliff:g>:<xliff:g id="seconds">%3$02d</xliff:g></string>
+    <string name="player_time_progress"><xliff:g id="position">%1$s</xliff:g> / <xliff:g id="duration">%2$s</xliff:g></string>
+    <string name="player_time_remaining">−<xliff:g id="time">%1$s</xliff:g></string>
+    <string name="player_switch_exo">Skiftede til ExoPlayer</string>
+    <string name="player_switch_mpv">Skiftede til MPV</string>
+    <string name="player_error_image_subtitle_audio">Billedbaserede undertekster er ikke tilgængelige med denne videos lydformat.</string>
+    <string name="player_error_both_engines_exo_first">Afspilningen mislykkedes på begge videoafspilningsmotorer (først ExoPlayer, derefter mpv). Filen kan være beskadiget eller bruge et format, som dette tv ikke kan afspille.</string>
+    <string name="player_error_both_engines_mpv_first">Afspilningen mislykkedes på begge videoafspilningsmotorer (mpv og ExoPlayer). Filen kan være beskadiget eller bruge et format, som dette tv ikke kan afspille. (<xliff:g id="error">%1$s</xliff:g>)</string>
+    <string name="player_error_stream_link">Kunne ikke hente et streamlink fra portalen. Kontrollér forbindelsen, og prøv igen.</string>
+    <string name="player_error_not_streaming">Denne video er ikke formateret til streaming. Bed udbyderen om at genkode den med hurtig start, eller download den først.</string>
+    <string name="player_error_lost_connection">Forbindelsen til denne kanal blev afbrudt.</string>
+    <string name="player_error_channel">Kunne ikke afspille denne kanal.</string>
+    <string name="player_error_exo_decode">ExoPlayer kan ikke afkode denne videos format på denne enhed (<xliff:g id="error">%1$s</xliff:g>).</string>
+    <string name="player_error_exo_play">ExoPlayer kunne ikke afspille denne stream (<xliff:g id="error">%1$s</xliff:g>).</string>
+    <string name="player_error_image_format">Billedbaserede undertekster er ikke tilgængelige for denne fils format.</string>
+    <string name="player_error_image_show">Kunne ikke vise billedbaserede undertekster for denne fil.</string>
+    <string name="player_external_could_not_open">Kunne ikke åbne denne stream.</string>
+    <string name="player_external_play_with">Afspil med</string>
+    <string name="player_external_play_with_item">Afspil “<xliff:g id="channel">%1$s</xliff:g> · <xliff:g id="programme">%2$s</xliff:g>” med…</string>
+    <string name="player_external_not_found">Ingen ekstern afspiller fundet — installér VLC eller MX Player.</string>
+    <string name="player_error_audio_no_video">Lyden afspilles, men videoen kunne ikke gengives på denne enhed.</string>
+    <string name="player_error_file_corrupt">Denne videos fil er ugyldig eller beskadiget og kan ikke afspilles.</string>
+    <string name="player_error_multiple_videos">Flere videoer kunne ikke afspilles. Kilden er muligvis utilgængelig, eller filerne er beskadigede.</string>
+    <string name="player_error_decoder_busy">Dette tv\'s videodekoder er optaget. Prøv igen om et øjeblik.</string>
+    <string name="player_error_no_internet">Ingen internetforbindelse. Kontrollér dit netværk, og prøv igen.</string>
+    <string name="player_error_stream_unavailable">Kunne ikke afspille denne stream. Kilden er muligvis offline eller bruger et format, der ikke understøttes. <xliff:g id="hint">%1$s</xliff:g></string>
+    <string name="player_error_mpv_open_decode">mpv kunne ikke åbne eller afkode denne fil.</string>
+    <string name="player_error_mpv_stream_never_started">Streamen startede aldrig i mpv efter flere forsøg.</string>
+    <string name="player_error_surround">Denne lydudgang understøtter ikke surroundlyd — der blev skiftet til stereo.</string>
+    <string name="player_error_hardware_fallback">Denne streams format kunne ikke hardwaredekodes på dette tv, så der blev skiftet til softwaredekodning — som ikke kan håndtere <xliff:g id="resolution">%1$s</xliff:g> uden at overbelaste tv\'et. Tv\'et kan muligvis stadig afspille andet 4K-indhold uden problemer; det er formatet på netop denne stream, der er problemet.</string>
+    <string name="player_error_hardware_disabled">Hardwaredekodning er slået fra — softwaredekodning kan ikke håndtere video i <xliff:g id="resolution">%1$s</xliff:g>. Aktivér den under Indstillinger → Videoafspiller.</string>
+    <string name="player_error_custom_user_agent">Denne udbyder kræver muligvis en brugerdefineret User-Agent i kildeindstillingerne.</string>
+    <string name="player_reason_decoder_busy">Hardwarevideodekoderen er optaget eller kan ikke håndtere denne stream</string>
+    <string name="player_reason_decoder_transient">Fejl i hardwarevideodekoderen — midlertidig, prøv igen</string>
+    <string name="player_reason_unsupported_video">Denne enheds dekoder understøtter ikke dette videoformat eller denne profil (f.eks. HEVC 10-bit)</string>
+    <string name="player_reason_decoder_memory">Enheden løb tør for hukommelse til dekoderen — prøv at lukke andre apps</string>
+    <string name="player_reason_drm">DRM-/sikker dekoder-fejl</string>
+    <string name="player_reason_http_509">Udbyderen blokerede forbindelsen — for mange samtidige streams (HTTP 509)</string>
+    <string name="player_reason_http_403">Udbyderen afviste adgang (HTTP 403) — loginoplysninger, abonnement eller IP-blokering</string>
+    <string name="player_reason_http_401">Udbyderen afviste dit login (HTTP 401)</string>
+    <string name="player_reason_http_404">Streamen blev ikke fundet hos udbyderen (HTTP 404)</string>
+    <string name="player_reason_http_400">Udbyderen afviste anmodningen (HTTP 400) — ugyldigt eller udløbet link</string>
+    <string name="player_reason_ssl">Udbyderens SSL-certifikat er ugyldigt eller udløbet</string>
+    <string name="player_reason_format">Streamformatet blev ikke genkendt (ugyldig eller ufuldstændig stream)</string>
+    <string name="player_reason_network">Netværksproblem ved forbindelsen til udbyderen</string>
+    <string name="player_reason_audio">Fejl i lydudgangen — enheden kunne ikke afspille dette lydformat</string>
+    <string name="player_audio_track_number">Lyd <xliff:g id="number">%1$d</xliff:g></string>
+    <string name="player_subtitle_track_number">Undertekst <xliff:g id="number">%1$d</xliff:g></string>
+    <string name="player_metadata_separator"> · </string>
+    <string name="player_stream_info">Streamoplysninger</string>
+    <string name="player_stream_engine">Afspilningsmotor</string>
+    <string name="player_stream_format">Format</string>
+    <string name="player_stream_source">Kilde</string>
+    <string name="player_stream_video">Video</string>
+    <string name="player_stream_hdr">HDR</string>
+    <string name="player_stream_hdr10_pq">HDR10 (PQ)</string>
+    <string name="player_stream_hlg">HLG</string>
+    <string name="player_stream_sdr">SDR</string>
+    <string name="player_stream_bitrate">Bithastighed</string>
+    <string name="player_stream_decoder">Dekoder</string>
+    <string name="player_stream_audio">Lyd</string>
+    <string name="player_stream_buffer">Buffer</string>
+    <string name="player_stream_engine_exo_preferred">ExoPlayer (foretrukket)</string>
+    <string name="player_stream_engine_exo_fallback">ExoPlayer (reserve efter fejl i mpv)</string>
+    <string name="player_stream_engine_exo_image_subtitle">ExoPlayer (overdragelse af billedundertekster)</string>
+    <string name="player_stream_fps"><xliff:g id="fps">%1$.2f</xliff:g> fps</string>
+    <string name="player_stream_bit_depth"><xliff:g id="bits">%1$d</xliff:g>-bit</string>
+    <string name="player_stream_mbps"><xliff:g id="value">%1$s</xliff:g> Mbps</string>
+    <string name="player_stream_khz"><xliff:g id="value">%1$s</xliff:g> kHz</string>
+    <string name="player_stream_kbps"><xliff:g id="value">%1$s</xliff:g> kbps</string>
+    <string name="player_stream_seconds"><xliff:g id="value">%1$s</xliff:g> s bufferet</string>
+    <string name="player_audio_mono">mono</string>
+    <string name="player_audio_stereo">stereo</string>
+    <plurals name="player_audio_channels">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> lydkanal</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> lydkanaler</item>
+    </plurals>
+    <plurals name="player_stream_dropped_frames">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> tabt billede</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> tabte billeder</item>
+    </plurals>
+    <string name="player_decoder_hardware">hardwaredekoder</string>
+    <string name="player_decoder_software">softwaredekoder</string>
+    <string name="player_decoder_direct">direkte</string>
+    <string name="player_decoder_gpu">GPU</string>
+    <string name="player_subtitles_search_title">Søg på OpenSubtitles</string>
+    <string name="player_subtitles_working">Arbejder…</string>
+    <string name="player_subtitles_edit_search">Rediger søgning</string>
+    <string name="player_subtitles_title_label">Titel</string>
+    <string name="player_subtitles_delete_title">Slet OpenSub-undertekster</string>
+    <string name="player_subtitles_sign_in">Log ind</string>
+    <string name="player_subtitles_sign_out">Log ud</string>
+    <string name="player_subtitles_account">Konto</string>
+    <string name="player_subtitles_username">Brugernavn</string>
+    <string name="player_subtitles_password">Adgangskode</string>
+    <string name="player_subtitles_stay_signed_in">Forbliv logget ind</string>
+    <string name="player_subtitles_sign_in_title">Log ind på OpenSubtitles</string>
+    <string name="player_subtitles_connect_description">Tilknyt denne profils OpenSubtitles-konto.</string>
+    <string name="player_subtitles_contacting">Kontakter OpenSubtitles…</string>
+    <string name="player_subtitles_api_notice">Dette produkt bruger OpenSubtitles API, men er ikke godkendt eller certificeret af OpenSubtitles.</string>
+    <string name="player_subtitles_delete_description">Fjern undertekster, du har downloadet til film og serier.</string>
+    <string name="player_subtitles_delete_login_message">Fjerner denne profils OpenSubtitles-login fra denne enhed. Allerede downloadede undertekster er fortsat tilgængelige offline.</string>
+    <string name="player_subtitles_delete_action">Slet undertekster</string>
+    <string name="player_subtitles_downloads">Downloads</string>
+    <string name="player_subtitles_vip">VIP</string>
+    <string name="player_subtitles_refresh">Opdater</string>
+    <string name="player_subtitles_sign_in_to_use">Brug din konto på opensubtitles.com. Det er gratis at oprette en.</string>
+    <plurals name="player_subtitles_remaining">
+        <item quantity="one"><xliff:g id="remaining">%1$d</xliff:g> download ud af <xliff:g id="total">%2$d</xliff:g> tilbage i dag</item>
+        <item quantity="other"><xliff:g id="remaining">%1$d</xliff:g> downloads ud af <xliff:g id="total">%2$d</xliff:g> tilbage i dag</item>
+    </plurals>
+    <plurals name="player_subtitles_remaining_short">
+        <item quantity="one"><xliff:g id="remaining">%1$d</xliff:g> download tilbage i dag</item>
+        <item quantity="other"><xliff:g id="remaining">%1$d</xliff:g> downloads tilbage i dag</item>
+    </plurals>
+    <plurals name="player_subtitles_remaining_reset">
+        <item quantity="one"><xliff:g id="remaining">%1$d</xliff:g> download tilbage i dag · nulstilles om <xliff:g id="reset">%2$s</xliff:g></item>
+        <item quantity="other"><xliff:g id="remaining">%1$d</xliff:g> downloads tilbage i dag · nulstilles om <xliff:g id="reset">%2$s</xliff:g></item>
+    </plurals>
+    <plurals name="player_subtitles_remaining_count">
+        <item quantity="one"><xliff:g id="remaining">%1$d</xliff:g> download tilbage i dag</item>
+        <item quantity="other"><xliff:g id="remaining">%1$d</xliff:g> downloads tilbage i dag</item>
+    </plurals>
+    <string name="player_subtitles_session">Forbindelsessessionen udløber. Slå dette fra for kun at gemme en midlertidig session.</string>
+    <string name="player_subtitles_free_description_full">OpenSubtitles er en gratis, åben fællesskabstjeneste for undertekster. Log ind med din egen konto på opensubtitles.com. Det er gratis at oprette en konto. Dette gælder kun for den aktuelle profil.</string>
+    <string name="player_subtitles_session_expired">Din OpenSubtitles-session er udløbet. Log ind igen under Indstillinger → Videoafspiller → Undertekster → OpenSubtitles for fortsat at kunne søge efter og downloade undertekster.</string>
+    <string name="player_subtitles_account_needed">OpenSubtitles-konto påkrævet\n\nLog ind under Indstillinger → Videoafspiller → Undertekster → OpenSubtitles for at søge efter og downloade undertekster. OpenSubtitles er en gratis, åben fællesskabstjeneste — alle kan oprette en gratis konto på opensubtitles.com.</string>
+    <string name="player_subtitles_no_matches">Der blev ikke fundet nogen matchende undertekster.</string>
+    <string name="player_subtitles_show_all_languages">Vis alle sprog</string>
+    <string name="player_subtitles_all_languages">Alle sprog</string>
+    <string name="player_subtitles_try_again">Prøv igen</string>
+    <string name="player_subtitles_limit_reached">Den daglige grænse for undertekstsøgninger er nået. Prøv igen i morgen.</string>
+    <string name="player_subtitles_network_error">Kunne ikke oprette forbindelse til OpenSubtitles. Kontrollér din forbindelse, og prøv igen.</string>
+    <string name="player_subtitles_subtitle">Undertekst</string>
+    <string name="player_subtitles_trusted">Pålidelig</string>
+    <string name="player_subtitles_sdh">SDH</string>
+    <string name="player_subtitles_ai">AI</string>
+    <plurals name="player_subtitles_download_count">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> download</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> downloads</item>
+    </plurals>
+    <string name="player_subtitles_tags_separator"> · </string>
+    <string name="player_subtitles_search">Søg</string>
+    <string name="player_subtitles_connected_as">Forbundet som</string>
+    <string name="player_subtitles_resets">Nulstilles</string>
+    <string name="player_subtitles_free_account">Gratis</string>
+    <string name="player_subtitles_in"><xliff:g id="value">%1$s</xliff:g></string>
+    <string name="player_subtitles_enter_credentials">Indtast dit brugernavn og din adgangskode til OpenSubtitles.</string>
+    <string name="player_subtitles_invalid_credentials">OpenSubtitles kunne ikke logge ind med disse kontooplysninger.</string>
+    <string name="player_subtitles_sign_in_network_error">Kunne ikke oprette forbindelse til OpenSubtitles. Kontrollér din internetforbindelse, og prøv igen.</string>
+    <string name="player_subtitles_refresh_network_error">Kunne ikke opdatere OpenSubtitles. Kontrollér din internetforbindelse.</string>
+</resources>

@@ -1,0 +1,240 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <string name="player_trailer_exit">خروج</string>
+    <string name="player_trailer_progress"><xliff:g id="current">%1$s</xliff:g> / <xliff:g id="duration">%2$s</xliff:g></string>
+    <string name="player_zoom_fit_screen">ملاءمة للشاشة</string>
+    <string name="player_zoom_fill_crop">ملء / اقتصاص</string>
+    <string name="player_zoom_stretch">تمديد</string>
+    <string name="player_zoom_original">الحجم الأصلي (1:1)</string>
+    <string name="player_zoom_force_16_9">فرض 16:9</string>
+    <string name="player_zoom_force_4_3">فرض 4:3</string>
+    <string name="player_mini_top_left">أعلى اليسار</string>
+    <string name="player_mini_top_center">أعلى الوسط</string>
+    <string name="player_mini_top_right">أعلى اليمين</string>
+    <string name="player_mini_bottom_left">أسفل اليسار</string>
+    <string name="player_mini_bottom_center">أسفل الوسط</string>
+    <string name="player_mini_bottom_right">أسفل اليمين</string>
+    <string name="player_channel_label">القناة</string>
+    <string name="player_at_live_edge">● عند حافة البث المباشر</string>
+    <string name="player_behind_live">● <xliff:g id="offset">%1$s</xliff:g> تأخيرًا عن البث المباشر</string>
+    <string name="player_live_offset">−<xliff:g id="offset">%1$s</xliff:g></string>
+    <string name="player_channel_not_found">لم يتم العثور على القناة</string>
+    <string name="player_multiple_channels">قنوات متعددة</string>
+    <string name="player_tune_failed">تعذّر ضبط القناة</string>
+    <string name="player_playback_error">خطأ في التشغيل</string>
+    <string name="player_raw_error">خطأ: <xliff:g id="error">%1$s</xliff:g></string>
+    <string name="player_audio_track">المسار الصوتي</string>
+    <string name="player_subtitles">الترجمات</string>
+    <string name="player_subtitle_timing">توقيت الترجمة</string>
+    <string name="player_add_subtitles">إضافة ترجمات</string>
+    <string name="player_adjust">ضبط</string>
+    <string name="player_search_subtitles">بحث في OpenSubtitles</string>
+    <string name="player_select_local_subtitle">اختيار ملف ترجمة محلي</string>
+    <string name="player_no_tracks">لا توجد مسارات متاحة.</string>
+    <string name="player_image_track"><xliff:g id="label">%1$s</xliff:g> · صورية</string>
+    <string name="player_av_sync">مزامنة الصوت/الفيديو</string>
+    <string name="player_no_offset">بلا إزاحة</string>
+    <string name="player_subtitles_later">عرض الترجمات لاحقًا</string>
+    <string name="player_subtitles_earlier">عرض الترجمات مبكرًا</string>
+    <string name="player_delay_zero">0 مللي ثانية</string>
+    <string name="player_delay_positive">+<xliff:g id="ms">%1$d</xliff:g> مللي ثانية</string>
+    <string name="player_delay_negative"><xliff:g id="ms">%1$d</xliff:g> مللي ثانية</string>
+    <string name="player_speed_normal">1.0x (عادية)</string>
+    <string name="player_speed_normal_short">1.0x</string>
+    <string name="player_speed"><xliff:g id="speed">%1$s</xliff:g>x</string>
+    <string name="player_next_episode">الحلقة التالية خلال <xliff:g id="seconds">%1$d</xliff:g> ث</string>
+    <string name="player_play_now">تشغيل الآن</string>
+    <string name="player_volume">مستوى الصوت</string>
+    <string name="player_unmute">إلغاء كتم الصوت</string>
+    <string name="player_mute">كتم الصوت</string>
+    <string name="player_percent"><xliff:g id="value">%1$d</xliff:g>%%</string>
+    <string name="player_duration_minutes"><xliff:g id="minutes">%1$d</xliff:g> دقيقة</string>
+    <string name="player_season_number">الموسم <xliff:g id="season">%1$d</xliff:g></string>
+    <string name="player_episode_number">الحلقة <xliff:g id="episode">%1$d</xliff:g></string>
+    <string name="player_episode_context_title"><xliff:g id="title">%1$s</xliff:g> · S<xliff:g id="season">%2$d</xliff:g>E<xliff:g id="episode">%3$d</xliff:g></string>
+    <string name="player_channel_number">#<xliff:g id="number">%1$s</xliff:g></string>
+    <string name="player_live">مباشر</string>
+    <string name="player_subtitle_delay_zero">0.0 ث</string>
+    <string name="player_subtitle_delay_positive">+<xliff:g id="seconds">%1$.1f</xliff:g> ث</string>
+    <string name="player_subtitle_delay_negative">−<xliff:g id="seconds">%1$.1f</xliff:g> ث</string>
+    <string name="player_track_seconds"><xliff:g id="minutes">%1$d</xliff:g>:<xliff:g id="seconds">%2$02d</xliff:g></string>
+    <string name="player_track_hours"><xliff:g id="hours">%1$d</xliff:g>:<xliff:g id="minutes">%2$02d</xliff:g>:<xliff:g id="seconds">%3$02d</xliff:g></string>
+    <string name="player_time_progress"><xliff:g id="position">%1$s</xliff:g> / <xliff:g id="duration">%2$s</xliff:g></string>
+    <string name="player_time_remaining">−<xliff:g id="time">%1$s</xliff:g></string>
+    <string name="player_switch_exo">تم التبديل إلى ExoPlayer</string>
+    <string name="player_switch_mpv">تم التبديل إلى mpv</string>
+    <string name="player_error_image_subtitle_audio">الترجمات الصورية غير متاحة مع تنسيق صوت هذا الفيديو.</string>
+    <string name="player_error_both_engines_exo_first">فشل التشغيل على كلا محرّكي الفيديو (ExoPlayer، ثم mpv). قد يكون الملف تالفًا أو يستخدم تنسيقًا لا يستطيع هذا التلفزيون تشغيله.</string>
+    <string name="player_error_both_engines_mpv_first">فشل التشغيل على كلا محرّكي الفيديو (mpv وExoPlayer). قد يكون الملف تالفًا أو يستخدم تنسيقًا لا يستطيع هذا التلفزيون تشغيله. (<xliff:g id="error">%1$s</xliff:g>)</string>
+    <string name="player_error_stream_link">تعذّر الحصول على رابط بث من البوابة. تحقّق من الاتصال وحاول مجددًا.</string>
+    <string name="player_error_not_streaming">هذا الفيديو غير مهيأ للبث. اطلب من المزوّد إعادة ترميزه مع تمكين البدء السريع، أو نزّله أولًا.</string>
+    <string name="player_error_lost_connection">انقطع الاتصال بهذه القناة.</string>
+    <string name="player_error_channel">تعذّر تشغيل هذه القناة.</string>
+    <string name="player_error_exo_decode">لا يستطيع ExoPlayer فك ترميز تنسيق هذا الفيديو على هذا الجهاز (<xliff:g id="error">%1$s</xliff:g>).</string>
+    <string name="player_error_exo_play">تعذّر على ExoPlayer تشغيل هذا البث (<xliff:g id="error">%1$s</xliff:g>).</string>
+    <string name="player_error_image_format">الترجمات الصورية غير متاحة مع تنسيق هذا الملف.</string>
+    <string name="player_error_image_show">تعذّر عرض الترجمات الصورية لهذا الملف.</string>
+    <string name="player_external_could_not_open">تعذّر فتح هذا البث.</string>
+    <string name="player_external_play_with">تشغيل باستخدام</string>
+    <string name="player_external_play_with_item">تشغيل «<xliff:g id="channel">%1$s</xliff:g> · <xliff:g id="programme">%2$s</xliff:g>» باستخدام…</string>
+    <string name="player_external_not_found">لم يتم العثور على مشغّل خارجي — ثبّت VLC أو MX Player.</string>
+    <string name="player_error_audio_no_video">يجري تشغيل الصوت، ولكن تعذّر عرض الفيديو على هذا الجهاز.</string>
+    <string name="player_error_file_corrupt">ملف هذا الفيديو غير صالح أو تالف ولا يمكن تشغيله.</string>
+    <string name="player_error_multiple_videos">فشل تشغيل عدة فيديوهات. قد لا يكون المصدر متاحًا أو قد تكون الملفات تالفة.</string>
+    <string name="player_error_decoder_busy">وحدة فك ترميز الفيديو في هذا التلفزيون مشغولة. حاول مجددًا بعد قليل.</string>
+    <string name="player_error_no_internet">لا يوجد اتصال بالإنترنت. تحقّق من شبكتك وحاول مجددًا.</string>
+    <string name="player_error_stream_unavailable">تعذّر تشغيل هذا البث. قد يكون المصدر غير متصل أو يستخدم تنسيقًا غير مدعوم. <xliff:g id="hint">%1$s</xliff:g></string>
+    <string name="player_error_mpv_open_decode">تعذّر على mpv فتح هذا الملف أو فك ترميزه.</string>
+    <string name="player_error_mpv_stream_never_started">لم يبدأ البث في mpv بعد عدة محاولات.</string>
+    <string name="player_error_surround">لا يدعم مخرج الصوت هذا الصوت المحيطي — تم التبديل إلى صوت ستيريو.</string>
+    <string name="player_error_hardware_fallback">تعذّر فك ترميز تنسيق هذا البث بالأجهزة على هذا التلفزيون، لذا تم الرجوع إلى فك الترميز بالبرامج — الذي لا يستطيع الحفاظ على تشغيل <xliff:g id="resolution">%1$s</xliff:g> دون تحميل التلفزيون فوق طاقته. قد يظل التلفزيون قادرًا على تشغيل محتوى 4K آخر دون مشكلة؛ تنسيق هذا البث تحديدًا هو السبب.</string>
+    <string name="player_error_hardware_disabled">فك الترميز بالأجهزة متوقف — ولا يستطيع فك الترميز بالبرامج معالجة فيديو بدقة <xliff:g id="resolution">%1$s</xliff:g>. فعّله من الإعدادات ← مشغّل الفيديو.</string>
+    <string name="player_error_custom_user_agent">قد يتطلب هذا المزوّد User-Agent مخصّصًا في إعدادات المصدر.</string>
+    <string name="player_reason_decoder_busy">وحدة فك ترميز الفيديو بالأجهزة مشغولة أو لا تستطيع معالجة هذا البث</string>
+    <string name="player_reason_decoder_transient">خطأ مؤقت في وحدة فك ترميز الفيديو بالأجهزة — حاول مجددًا</string>
+    <string name="player_reason_unsupported_video">لا تدعم وحدة فك الترميز في هذا الجهاز تنسيق/ملف هذا الفيديو (مثل HEVC‏ 10-bit)</string>
+    <string name="player_reason_decoder_memory">نفدت ذاكرة الجهاز المتاحة لوحدة فك الترميز — جرّب إغلاق التطبيقات الأخرى</string>
+    <string name="player_reason_drm">خطأ في DRM / وحدة فك الترميز الآمنة</string>
+    <string name="player_reason_http_509">حظر المزوّد الاتصال — عدد كبير جدًا من عمليات البث في الوقت نفسه (HTTP 509)</string>
+    <string name="player_reason_http_403">رفض المزوّد الوصول (HTTP 403) — بيانات الاعتماد أو الاشتراك أو حظر عنوان IP</string>
+    <string name="player_reason_http_401">رفض المزوّد تسجيل دخولك (HTTP 401)</string>
+    <string name="player_reason_http_404">لم يتم العثور على البث لدى المزوّد (HTTP 404)</string>
+    <string name="player_reason_http_400">رفض المزوّد الطلب (HTTP 400) — الرابط غير صالح أو منتهي الصلاحية</string>
+    <string name="player_reason_ssl">شهادة SSL الخاصة بالمزوّد غير صالحة أو منتهية الصلاحية</string>
+    <string name="player_reason_format">لم يتم التعرّف على تنسيق البث (بث غير صالح أو غير مكتمل)</string>
+    <string name="player_reason_network">مشكلة في الشبكة أثناء الوصول إلى المزوّد</string>
+    <string name="player_reason_audio">خطأ في إخراج الصوت — تعذّر على الجهاز تشغيل تنسيق الصوت هذا</string>
+    <string name="player_audio_track_number">المسار الصوتي <xliff:g id="number">%1$d</xliff:g></string>
+    <string name="player_subtitle_track_number">الترجمة <xliff:g id="number">%1$d</xliff:g></string>
+    <string name="player_metadata_separator"> · </string>
+    <string name="player_stream_info">معلومات البث</string>
+    <string name="player_stream_engine">المحرّك</string>
+    <string name="player_stream_format">التنسيق</string>
+    <string name="player_stream_source">المصدر</string>
+    <string name="player_stream_video">الفيديو</string>
+    <string name="player_stream_hdr">HDR</string>
+    <string name="player_stream_hdr10_pq">HDR10 (PQ)</string>
+    <string name="player_stream_hlg">HLG</string>
+    <string name="player_stream_sdr">SDR</string>
+    <string name="player_stream_bitrate">معدل البت</string>
+    <string name="player_stream_decoder">وحدة فك الترميز</string>
+    <string name="player_stream_audio">الصوت</string>
+    <string name="player_stream_buffer">المخزن المؤقت</string>
+    <string name="player_stream_engine_exo_preferred">ExoPlayer (المفضّل)</string>
+    <string name="player_stream_engine_exo_fallback">ExoPlayer (بديل بعد فشل mpv)</string>
+    <string name="player_stream_engine_exo_image_subtitle">ExoPlayer (نقل معالجة الترجمة الصورية)</string>
+    <string name="player_stream_fps"><xliff:g id="fps">%1$.2f</xliff:g> إطار/ث</string>
+    <string name="player_stream_bit_depth"><xliff:g id="bits">%1$d</xliff:g> بت</string>
+    <string name="player_stream_mbps"><xliff:g id="value">%1$s</xliff:g> ميغابت/ث</string>
+    <string name="player_stream_khz"><xliff:g id="value">%1$s</xliff:g> كيلوهرتز</string>
+    <string name="player_stream_kbps"><xliff:g id="value">%1$s</xliff:g> كيلوبت/ث</string>
+    <string name="player_stream_seconds"><xliff:g id="value">%1$s</xliff:g> ث في المخزن المؤقت</string>
+    <string name="player_audio_mono">أحادي</string>
+    <string name="player_audio_stereo">ستيريو</string>
+    <plurals name="player_audio_channels">
+        <item quantity="zero"><xliff:g id="count">%1$d</xliff:g> قنوات صوتية</item>
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> قناة صوتية</item>
+        <item quantity="two"><xliff:g id="count">%1$d</xliff:g> قناتان صوتيتان</item>
+        <item quantity="few"><xliff:g id="count">%1$d</xliff:g> قنوات صوتية</item>
+        <item quantity="many"><xliff:g id="count">%1$d</xliff:g> قناة صوتية</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> قناة صوتية</item>
+    </plurals>
+    <plurals name="player_stream_dropped_frames">
+        <item quantity="zero">تم إسقاط <xliff:g id="count">%1$d</xliff:g> إطار</item>
+        <item quantity="one">تم إسقاط <xliff:g id="count">%1$d</xliff:g> إطار واحد</item>
+        <item quantity="two">تم إسقاط <xliff:g id="count">%1$d</xliff:g> إطارين</item>
+        <item quantity="few">تم إسقاط <xliff:g id="count">%1$d</xliff:g> إطارات</item>
+        <item quantity="many">تم إسقاط <xliff:g id="count">%1$d</xliff:g> إطارًا</item>
+        <item quantity="other">تم إسقاط <xliff:g id="count">%1$d</xliff:g> إطار</item>
+    </plurals>
+    <string name="player_decoder_hardware">وحدة فك الترميز بالأجهزة</string>
+    <string name="player_decoder_software">وحدة فك الترميز بالبرامج</string>
+    <string name="player_decoder_direct">مباشر</string>
+    <string name="player_decoder_gpu">GPU</string>
+    <string name="player_subtitles_search_title">بحث في OpenSubtitles</string>
+    <string name="player_subtitles_working">جارٍ العمل…</string>
+    <string name="player_subtitles_edit_search">تعديل البحث</string>
+    <string name="player_subtitles_title_label">العنوان</string>
+    <string name="player_subtitles_delete_title">حذف ترجمات OpenSub</string>
+    <string name="player_subtitles_sign_in">تسجيل الدخول</string>
+    <string name="player_subtitles_sign_out">تسجيل الخروج</string>
+    <string name="player_subtitles_account">الحساب</string>
+    <string name="player_subtitles_username">اسم المستخدم</string>
+    <string name="player_subtitles_password">كلمة المرور</string>
+    <string name="player_subtitles_stay_signed_in">البقاء مسجّلًا الدخول</string>
+    <string name="player_subtitles_sign_in_title">تسجيل الدخول إلى OpenSubtitles</string>
+    <string name="player_subtitles_connect_description">ربط حساب OpenSubtitles الخاص بهذا الملف الشخصي.</string>
+    <string name="player_subtitles_contacting">جارٍ الاتصال بـ OpenSubtitles…</string>
+    <string name="player_subtitles_api_notice">يستخدم هذا المنتج واجهة API من OpenSubtitles، لكنه غير معتمد أو مصدّق عليه من OpenSubtitles.</string>
+    <string name="player_subtitles_delete_description">إزالة الترجمات التي نزّلتها للأفلام والمسلسلات.</string>
+    <string name="player_subtitles_delete_login_message">يزيل بيانات تسجيل دخول OpenSubtitles الخاصة بهذا الملف الشخصي من هذا الجهاز. تظل الترجمات التي نُزّلت بالفعل متاحة عند عدم الاتصال.</string>
+    <string name="player_subtitles_delete_action">حذف الترجمات</string>
+    <string name="player_subtitles_downloads">التنزيلات</string>
+    <string name="player_subtitles_vip">VIP</string>
+    <string name="player_subtitles_refresh">تحديث</string>
+    <string name="player_subtitles_sign_in_to_use">استخدم حسابك على opensubtitles.com. إنشاء حساب مجاني.</string>
+    <plurals name="player_subtitles_remaining">
+        <item quantity="zero"><xliff:g id="remaining">%1$d</xliff:g> تنزيلات متبقية اليوم من أصل <xliff:g id="total">%2$d</xliff:g></item>
+        <item quantity="one"><xliff:g id="remaining">%1$d</xliff:g> تنزيل واحد متبقٍ اليوم من أصل <xliff:g id="total">%2$d</xliff:g></item>
+        <item quantity="two"><xliff:g id="remaining">%1$d</xliff:g> تنزيلان متبقيان اليوم من أصل <xliff:g id="total">%2$d</xliff:g></item>
+        <item quantity="few"><xliff:g id="remaining">%1$d</xliff:g> تنزيلات متبقية اليوم من أصل <xliff:g id="total">%2$d</xliff:g></item>
+        <item quantity="many"><xliff:g id="remaining">%1$d</xliff:g> تنزيلًا متبقيًا اليوم من أصل <xliff:g id="total">%2$d</xliff:g></item>
+        <item quantity="other"><xliff:g id="remaining">%1$d</xliff:g> تنزيل متبقٍ اليوم من أصل <xliff:g id="total">%2$d</xliff:g></item>
+    </plurals>
+    <plurals name="player_subtitles_remaining_short">
+        <item quantity="zero"><xliff:g id="remaining">%1$d</xliff:g> تنزيلات متبقية اليوم</item>
+        <item quantity="one"><xliff:g id="remaining">%1$d</xliff:g> تنزيل واحد متبقٍ اليوم</item>
+        <item quantity="two"><xliff:g id="remaining">%1$d</xliff:g> تنزيلان متبقيان اليوم</item>
+        <item quantity="few"><xliff:g id="remaining">%1$d</xliff:g> تنزيلات متبقية اليوم</item>
+        <item quantity="many"><xliff:g id="remaining">%1$d</xliff:g> تنزيلًا متبقيًا اليوم</item>
+        <item quantity="other"><xliff:g id="remaining">%1$d</xliff:g> تنزيل متبقٍ اليوم</item>
+    </plurals>
+    <plurals name="player_subtitles_remaining_reset">
+        <item quantity="zero"><xliff:g id="remaining">%1$d</xliff:g> تنزيلات متبقية اليوم · يُعاد الضبط خلال <xliff:g id="reset">%2$s</xliff:g></item>
+        <item quantity="one"><xliff:g id="remaining">%1$d</xliff:g> تنزيل واحد متبقٍ اليوم · يُعاد الضبط خلال <xliff:g id="reset">%2$s</xliff:g></item>
+        <item quantity="two"><xliff:g id="remaining">%1$d</xliff:g> تنزيلان متبقيان اليوم · يُعاد الضبط خلال <xliff:g id="reset">%2$s</xliff:g></item>
+        <item quantity="few"><xliff:g id="remaining">%1$d</xliff:g> تنزيلات متبقية اليوم · يُعاد الضبط خلال <xliff:g id="reset">%2$s</xliff:g></item>
+        <item quantity="many"><xliff:g id="remaining">%1$d</xliff:g> تنزيلًا متبقيًا اليوم · يُعاد الضبط خلال <xliff:g id="reset">%2$s</xliff:g></item>
+        <item quantity="other"><xliff:g id="remaining">%1$d</xliff:g> تنزيل متبقٍ اليوم · يُعاد الضبط خلال <xliff:g id="reset">%2$s</xliff:g></item>
+    </plurals>
+    <plurals name="player_subtitles_remaining_count">
+        <item quantity="zero"><xliff:g id="remaining">%1$d</xliff:g> تنزيلات متبقية اليوم</item>
+        <item quantity="one"><xliff:g id="remaining">%1$d</xliff:g> تنزيل واحد متبقٍ اليوم</item>
+        <item quantity="two"><xliff:g id="remaining">%1$d</xliff:g> تنزيلان متبقيان اليوم</item>
+        <item quantity="few"><xliff:g id="remaining">%1$d</xliff:g> تنزيلات متبقية اليوم</item>
+        <item quantity="many"><xliff:g id="remaining">%1$d</xliff:g> تنزيلًا متبقيًا اليوم</item>
+        <item quantity="other"><xliff:g id="remaining">%1$d</xliff:g> تنزيل متبقٍ اليوم</item>
+    </plurals>
+    <string name="player_subtitles_session">تنتهي صلاحية جلسة الاتصال. أوقف هذا الخيار لتخزين جلسة مؤقتة فقط.</string>
+    <string name="player_subtitles_free_description_full">OpenSubtitles خدمة مجتمعية مجانية ومفتوحة للترجمات. سجّل الدخول باستخدام حسابك على opensubtitles.com؛ إنشاء حساب مجاني. ينطبق هذا على الملف الشخصي الحالي فقط.</string>
+    <string name="player_subtitles_session_expired">انتهت صلاحية جلسة OpenSubtitles. لمواصلة البحث عن الترجمات وتنزيلها، سجّل الدخول مجددًا من الإعدادات ← مشغّل الفيديو ← الترجمات ← OpenSubtitles.</string>
+    <string name="player_subtitles_account_needed">يلزم حساب OpenSubtitles\n\nللبحث عن الترجمات وتنزيلها، سجّل الدخول من الإعدادات ← مشغّل الفيديو ← الترجمات ← OpenSubtitles. إن OpenSubtitles خدمة مجتمعية مجانية ومفتوحة — ويمكن لأي شخص إنشاء حساب مجاني على opensubtitles.com.</string>
+    <string name="player_subtitles_no_matches">لم يتم العثور على ترجمات مطابقة.</string>
+    <string name="player_subtitles_show_all_languages">عرض كل اللغات</string>
+    <string name="player_subtitles_all_languages">كل اللغات</string>
+    <string name="player_subtitles_try_again">حاول مجددًا</string>
+    <string name="player_subtitles_limit_reached">تم بلوغ الحد اليومي للبحث عن الترجمات. حاول مجددًا غدًا.</string>
+    <string name="player_subtitles_network_error">تعذّر الوصول إلى OpenSubtitles. تحقّق من اتصالك وحاول مجددًا.</string>
+    <string name="player_subtitles_subtitle">ترجمة</string>
+    <string name="player_subtitles_trusted">موثوق</string>
+    <string name="player_subtitles_sdh">SDH</string>
+    <string name="player_subtitles_ai">AI</string>
+    <plurals name="player_subtitles_download_count">
+        <item quantity="zero"><xliff:g id="count">%1$d</xliff:g> تنزيلات</item>
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> تنزيل واحد</item>
+        <item quantity="two"><xliff:g id="count">%1$d</xliff:g> تنزيلان</item>
+        <item quantity="few"><xliff:g id="count">%1$d</xliff:g> تنزيلات</item>
+        <item quantity="many"><xliff:g id="count">%1$d</xliff:g> تنزيلًا</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> تنزيل</item>
+    </plurals>
+    <string name="player_subtitles_tags_separator"> · </string>
+    <string name="player_subtitles_search">بحث</string>
+    <string name="player_subtitles_connected_as">متصل باسم</string>
+    <string name="player_subtitles_resets">إعادة الضبط</string>
+    <string name="player_subtitles_free_account">مجاني</string>
+    <string name="player_subtitles_in"><xliff:g id="value">%1$s</xliff:g></string>
+    <string name="player_subtitles_enter_credentials">أدخل اسم المستخدم وكلمة المرور لحساب OpenSubtitles.</string>
+    <string name="player_subtitles_invalid_credentials">تعذّر على OpenSubtitles تسجيل الدخول باستخدام بيانات الحساب هذه.</string>
+    <string name="player_subtitles_sign_in_network_error">تعذّر الوصول إلى OpenSubtitles. تحقّق من اتصالك بالإنترنت وحاول مجددًا.</string>
+    <string name="player_subtitles_refresh_network_error">تعذّر تحديث OpenSubtitles. تحقّق من اتصالك بالإنترنت.</string>
+</resources>

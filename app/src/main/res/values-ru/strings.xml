@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <string name="common_cancel">Отмена</string>
+    <string name="common_back">Назад</string>
+    <string name="common_save">Сохранить</string>
+    <string name="common_edit">Изменить</string>
+    <string name="common_delete">Удалить</string>
+    <string name="common_clear">Очистить</string>
+    <string name="common_retry">Повторить</string>
+    <string name="common_create">Создать</string>
+    <string name="common_reset">Сбросить</string>
+    <string name="common_done">Готово</string>
+    <string name="common_ok">OK</string>
+    <string name="common_on">Вкл.</string>
+    <string name="common_off">Выкл.</string>
+    <string name="common_exit">Выйти</string>
+    <string name="common_resume">Продолжить</string>
+    <string name="common_start_over">Смотреть с начала</string>
+    <string name="common_name">Имя</string>
+    <string name="common_own_tv_user">Пользователь OwnTV</string>
+    <string name="common_switch_profile">Сменить профиль</string>
+    <string name="common_proxy">Прокси</string>
+    <string name="common_title">Название</string>
+    <string name="common_search_hint">Поиск…</string>
+    <string name="common_search">Поиск</string>
+    <string name="common_weather_fahrenheit"><xliff:g id="temperature">%1$d</xliff:g>°F</string>
+    <string name="common_weather_celsius"><xliff:g id="temperature">%1$d</xliff:g>°C</string>
+    <string name="common_weather_city"><xliff:g id="temperature">%1$s</xliff:g> · <xliff:g id="city">%2$s</xliff:g></string>
+    <string name="common_nav_search">Поиск</string>
+    <string name="common_nav_home">Главная</string>
+    <string name="common_nav_live_tv">Прямой эфир</string>
+    <string name="common_nav_movies">Фильмы</string>
+    <string name="common_nav_series">Сериалы</string>
+    <string name="common_nav_downloads">Загрузки</string>
+    <string name="common_nav_guide">Программа передач</string>
+    <string name="common_nav_settings">Настройки</string>
+    <string name="shell_no_source">Нет источника</string>
+    <string name="common_something_went_wrong">Что-то пошло не так</string>
+    <string name="common_move_instructions">▲/▼ — перемещение · OK — сохранить · Назад — отменить</string>
+    <string name="common_number_grouped"><xliff:g id="count">%1$,d</xliff:g></string>
+    <string name="common_rating"><xliff:g id="rating">%1$.1f</xliff:g></string>
+    <string name="common_percent"><xliff:g id="percent">%1$d</xliff:g>%%</string>
+    <string name="common_timestamp_minutes"><xliff:g id="minutes">%1$d</xliff:g>:<xliff:g id="seconds">%2$02d</xliff:g></string>
+    <string name="common_timestamp_hours"><xliff:g id="hours">%1$d</xliff:g>:<xliff:g id="minutes">%2$02d</xliff:g>:<xliff:g id="seconds">%3$02d</xliff:g></string>
+    <string name="common_resume_position">Вы остановились на <xliff:g id="position">%1$s</xliff:g>.</string>
+    <string name="common_resume_prompt">Продолжить воспроизведение?</string>
+    <string name="sync_error_offline">Похоже, вы не в сети. Проверьте соединение и повторите попытку.</string>
+    <string name="sync_error_generic">Что-то пошло не так. Повторите попытку.</string>
+    <string name="sync_error_timeout">Сервер слишком долго не отвечал. Повторите попытку.</string>
+    <string name="sync_error_unreachable">Не удалось связаться с сервером. Проверьте адрес и соединение.</string>
+    <string name="sync_error_connection">Не удалось подключиться к серверу. Возможно, он недоступен или указан неверный адрес.</string>
+    <string name="sync_error_interrupted">Сервер прервал загрузку. Повторите попытку.</string>
+    <string name="sync_error_mac">Портал отклонил этот MAC-адрес: проверьте MAC-адрес (а также дату и время на телевизоре) — возможно, срок подписки истёк.</string>
+    <string name="sync_error_invalid_mac">Недопустимый MAC-адрес — используйте формат AA:BB:CC:DD:EE:FF</string>
+    <string name="sync_counts_separator">  ·  </string>
+    <string name="sync_counts_success">Синхронизация успешно завершена</string>
+    <string name="sync_counts_synced"><xliff:g id="counts">%1$s</xliff:g> синхронизировано</string>
+    <string name="sync_import_warnings">Импорт выполнен с предупреждениями: <xliff:g id="phases">%1$s</xliff:g></string>
+    <string name="sync_warning_phase_error"><xliff:g id="phase">%1$s</xliff:g>: <xliff:g id="message">%2$s</xliff:g></string>
+    <plurals name="sync_warning_catalog_shrink">
+        <item quantity="one"><xliff:g id="stored">%1$d</xliff:g> существующий элемент сохранён — при этом импорте получено на <xliff:g id="percent">%2$d</xliff:g>%% меньше элементов. Выполните синхронизацию ещё раз или используйте принудительную чистую синхронизацию, если поставщик действительно удалил его.</item>
+        <item quantity="few"><xliff:g id="stored">%1$d</xliff:g> существующих элемента сохранены — при этом импорте получено на <xliff:g id="percent">%2$d</xliff:g>%% меньше элементов. Выполните синхронизацию ещё раз или используйте принудительную чистую синхронизацию, если поставщик действительно удалил их.</item>
+        <item quantity="many"><xliff:g id="stored">%1$d</xliff:g> существующих элементов сохранено — при этом импорте получено на <xliff:g id="percent">%2$d</xliff:g>%% меньше элементов. Выполните синхронизацию ещё раз или используйте принудительную чистую синхронизацию, если поставщик действительно удалил их.</item>
+        <item quantity="other"><xliff:g id="stored">%1$d</xliff:g> существующего элемента сохранено — при этом импорте получено на <xliff:g id="percent">%2$d</xliff:g>%% меньше элементов. Выполните синхронизацию ещё раз или используйте принудительную чистую синхронизацию, если поставщик действительно удалил их.</item>
+    </plurals>
+    <plurals name="sync_warning_page_failures">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> страница источника не загрузилась; до следующей синхронизации часть контента может отсутствовать.</item>
+        <item quantity="few"><xliff:g id="count">%1$d</xliff:g> страницы источника не загрузились; до следующей синхронизации часть контента может отсутствовать.</item>
+        <item quantity="many"><xliff:g id="count">%1$d</xliff:g> страниц источника не загрузилось; до следующей синхронизации часть контента может отсутствовать.</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> страницы источника не загрузилось; до следующей синхронизации часть контента может отсутствовать.</item>
+    </plurals>
+    <string name="sync_remainder_note">Остальная часть каталога всё ещё синхронизируется в фоновом режиме — можно уже начать просмотр. Ход синхронизации отображается в небольшом чипе в нижней части экрана.</string>
+    <string name="sync_progress_preparing">Подготовка каталога</string>
+    <string name="sync_progress_connecting">Соединение с источником…</string>
+    <string name="sync_progress_syncing">Синхронизация каталога</string>
+    <string name="sync_progress_percent">Синхронизация: <xliff:g id="percent">%1$d</xliff:g>%%</string>
+    <string name="sync_status_catalog">Синхронизация <xliff:g id="source">%1$s</xliff:g></string>
+    <string name="sync_status_catalog_with_counts">Синхронизация <xliff:g id="source">%1$s</xliff:g> · <xliff:g id="counts">%2$s</xliff:g></string>
+    <string name="sync_status_epg">Обновление программы передач · <xliff:g id="source">%1$s</xliff:g></string>
+    <string name="sync_status_epg_with_counts">Обновление программы передач · <xliff:g id="source">%1$s</xliff:g> · <xliff:g id="counts">%2$s</xliff:g></string>
+    <string name="sync_status_complete">Синхронизация завершена · <xliff:g id="source">%1$s</xliff:g></string>
+    <string name="sync_status_complete_with_changes">Синхронизация завершена · <xliff:g id="source">%1$s</xliff:g> · <xliff:g id="changes">%2$s</xliff:g></string>
+    <string name="sync_status_failed">Ошибка синхронизации · <xliff:g id="source">%1$s</xliff:g>: <xliff:g id="reason">%2$s</xliff:g></string>
+    <string name="sync_status_cancelled">Синхронизация отменена · <xliff:g id="source">%1$s</xliff:g></string>
+    <string name="sync_phase_live">Прямой эфир</string>
+    <string name="sync_phase_movies">Фильмы</string>
+    <string name="sync_phase_series">Сериалы</string>
+    <plurals name="sync_count_channels">
+        <item quantity="one"><xliff:g id="count">%1$s</xliff:g> канал</item>
+        <item quantity="few"><xliff:g id="count">%1$s</xliff:g> канала</item>
+        <item quantity="many"><xliff:g id="count">%1$s</xliff:g> каналов</item>
+        <item quantity="other"><xliff:g id="count">%1$s</xliff:g> канала</item>
+    </plurals>
+    <plurals name="sync_count_movies">
+        <item quantity="one"><xliff:g id="count">%1$s</xliff:g> фильм</item>
+        <item quantity="few"><xliff:g id="count">%1$s</xliff:g> фильма</item>
+        <item quantity="many"><xliff:g id="count">%1$s</xliff:g> фильмов</item>
+        <item quantity="other"><xliff:g id="count">%1$s</xliff:g> фильма</item>
+    </plurals>
+    <plurals name="sync_count_series">
+        <item quantity="one"><xliff:g id="count">%1$s</xliff:g> сериал</item>
+        <item quantity="few"><xliff:g id="count">%1$s</xliff:g> сериала</item>
+        <item quantity="many"><xliff:g id="count">%1$s</xliff:g> сериалов</item>
+        <item quantity="other"><xliff:g id="count">%1$s</xliff:g> сериала</item>
+    </plurals>
+    <plurals name="sync_count_epg">
+        <item quantity="one"><xliff:g id="count">%1$s</xliff:g> запись EPG</item>
+        <item quantity="few"><xliff:g id="count">%1$s</xliff:g> записи EPG</item>
+        <item quantity="many"><xliff:g id="count">%1$s</xliff:g> записей EPG</item>
+        <item quantity="other"><xliff:g id="count">%1$s</xliff:g> записи EPG</item>
+    </plurals>
+    <plurals name="sync_status_more">
+        <item quantity="one">+<xliff:g id="count">%1$d</xliff:g> синхронизация</item>
+        <item quantity="few">+<xliff:g id="count">%1$d</xliff:g> синхронизации</item>
+        <item quantity="many">+<xliff:g id="count">%1$d</xliff:g> синхронизаций</item>
+        <item quantity="other">+<xliff:g id="count">%1$d</xliff:g> синхронизации</item>
+    </plurals>
+    <plurals name="sync_categories_added">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> категория добавлена</item>
+        <item quantity="few"><xliff:g id="count">%1$d</xliff:g> категории добавлены</item>
+        <item quantity="many"><xliff:g id="count">%1$d</xliff:g> категорий добавлено</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> категории добавлено</item>
+    </plurals>
+    <plurals name="sync_categories_removed">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> категория удалена</item>
+        <item quantity="few"><xliff:g id="count">%1$d</xliff:g> категории удалены</item>
+        <item quantity="many"><xliff:g id="count">%1$d</xliff:g> категорий удалено</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> категории удалено</item>
+    </plurals>
+    <string name="sync_error_portal">Не удалось связаться с порталом. Проверьте URL портала — обычно он заканчивается на /c/.</string>
+    <string name="sync_error_session">Сеанс портала истёк. Повторите попытку.</string>
+    <string name="sync_error_auth">Сервер отклонил данные для входа. Проверьте имя пользователя и пароль.</string>
+    <string name="sync_error_not_found">На сервере ничего не найдено. Проверьте URL.</string>
+    <string name="sync_error_server">На сервере произошла ошибка. Повторите попытку позже.</string>
+    <string name="sync_error_secure">Не удалось установить защищённое соединение — возможно, сертификат сервера недействителен.</string>
+    <string name="sync_error_malformed_guide">Данные программы передач, полученные от сервера, имеют неверный формат. Возможно, некоторые данные всё же загрузились — повторите попытку или проверьте URL EPG.</string>
+    <string name="common_items_per_skip">Элементов за переход</string>
+    <string name="common_plus">+</string>
+    <string name="common_minus">–</string>
+    <string name="common_hide">Скрыть</string>
+    <string name="common_show">Показать</string>
+    <string name="common_qr_code_companion_url">QR-код для URL страницы-компаньона</string>
+</resources>

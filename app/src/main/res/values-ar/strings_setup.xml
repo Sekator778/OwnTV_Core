@@ -1,0 +1,240 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <string name="setup_background_image">صورة الخلفية</string>
+    <string name="setup_background_image_description">اختر صورة لعرضها خلف الواجهة، أو امسحها لاستعادة اللوحات ذات اللون الموحّد.</string>
+    <string name="setup_from_device">محلي</string>
+    <string name="setup_from_phone">عن بُعد</string>
+    <string name="setup_send_from_phone">الإرسال من هاتفك</string>
+    <string name="setup_phone_background_description">على هاتف متصل بشبكة Wi-Fi نفسها، امسح رمز QR ضوئيًا (أو افتح عنوان URL)، وأدخل PIN هذا ثم أرسل صورة. ستصبح الصورة الخلفية فورًا.</string>
+    <string name="setup_opening_server">جارٍ فتح الخادم…</string>
+    <string name="setup_enter_pin_browser">أدخل PIN هذا في المتصفح</string>
+    <string name="setup_open_url">أو افتح عنوان URL هذا</string>
+    <string name="setup_try_again">إعادة المحاولة</string>
+    <string name="setup_start_again_new_pin">البدء من جديد باستخدام PIN جديد</string>
+    <string name="setup_companion_invalid_port">أدخل منفذًا صالحًا بين 1 و65535.</string>
+    <string name="setup_companion_port_in_use">المنفذ <xliff:g id="port">%1$d</xliff:g> مستخدم بالفعل. جرّب منفذًا آخر.</string>
+    <string name="setup_companion_unavailable">تعذّر فتح الخادم المحلي. حاول مجددًا.</string>
+    <string name="setup_companion_locked">تجاوزت محاولات PIN غير الصحيحة الحد المسموح — أُغلق الرابط حفاظًا على الأمان.</string>
+    <string name="setup_tmdb_name">تعيين اسم TMDB</string>
+    <string name="setup_tmdb_description">اكتب عنوان TMDB الدقيق للمطابقة. السنة اختيارية، لكنها تساعد عندما تحمل عدة عناوين الاسم نفسه.</string>
+    <string name="setup_year_optional">السنة (اختياري)</string>
+    <string name="setup_pick_location">اختيار موقع</string>
+    <string name="setup_grant_storage_access">منح حق الوصول الكامل إلى وحدة التخزين</string>
+    <string name="setup_use_folder">استخدام هذا المجلد</string>
+    <string name="setup_new_folder">مجلد جديد</string>
+    <string name="setup_folder_name">اسم المجلد</string>
+    <string name="setup_folder_example">مثلاً: تلفازي</string>
+    <string name="setup_from_current_folder">..</string>
+    <string name="setup_move_indicator">↕</string>
+    <string name="setup_welcome_tagline">مشغّل IPTV الخاص بك.</string>
+    <string name="setup_get_started">البدء</string>
+    <string name="setup_before_you_start">قبل البدء</string>
+    <string name="setup_disclaimer">OwnTV هو مشغّل وسائط فقط. ولا يتضمن أي قنوات أو قوائم تشغيل أو محتوى. أنت مسؤول عن إضافة مصادر Xtream أو M3U أو Stalker الخاصة بك التي يحق لك الوصول إليها قانونيًا.</string>
+    <string name="setup_i_understand">فهمت</string>
+    <string name="setup_set_up_owntv">إعداد OwnTV</string>
+    <string name="setup_setup_choice_description">ابدأ من جديد، أو استعد ملفاتك الشخصية وقوائم التشغيل والمفضّلة من ملف نسخة احتياطية.</string>
+    <string name="setup_new_profile">ملف شخصي جديد</string>
+    <string name="setup_create_profile_add_sources">أنشئ ملفًا شخصيًا وأضف مصادر</string>
+    <string name="setup_restore_backup">استعادة نسخة احتياطية</string>
+    <string name="setup_import_profiles_playlists">استيراد الملفات الشخصية وقوائم التشغيل من ملف</string>
+    <string name="setup_add_playlist">إضافة قائمة تشغيل</string>
+    <string name="setup_add_playlist_description">أضف مصدرًا لهذا الملف الشخصي، أو أعدّه لاحقًا.</string>
+    <string name="setup_new">جديد</string>
+    <string name="setup_add_m3u_xtream">إضافة مصدر M3U أو Xtream</string>
+    <string name="setup_existing">موجود</string>
+    <string name="setup_use_other_profile_playlists">استخدام قوائم تشغيل ملف شخصي آخر</string>
+    <string name="setup_import">استيراد</string>
+    <string name="setup_restore_backup_file">الاستعادة من ملف نسخة احتياطية</string>
+    <string name="setup_skip_for_now">التخطي الآن</string>
+    <string name="setup_use_existing_playlists">استخدام قوائم تشغيل موجودة</string>
+    <string name="setup_pick_playlists">اختر قوائم التشغيل التي تريد إضافتها إلى هذا الملف الشخصي.</string>
+    <plurals name="setup_add_selected_playlists">
+        <item quantity="zero">إضافة <xliff:g id="count">%1$d</xliff:g> من قوائم التشغيل</item>
+        <item quantity="one">إضافة <xliff:g id="count">%1$d</xliff:g> قائمة تشغيل</item>
+        <item quantity="two">إضافة <xliff:g id="count">%1$d</xliff:g> قائمتي تشغيل</item>
+        <item quantity="few">إضافة <xliff:g id="count">%1$d</xliff:g> قوائم تشغيل</item>
+        <item quantity="many">إضافة <xliff:g id="count">%1$d</xliff:g> قائمة تشغيل</item>
+        <item quantity="other">إضافة <xliff:g id="count">%1$d</xliff:g> من قوائم التشغيل</item>
+    </plurals>
+    <string name="setup_restoring">جارٍ الاستعادة…</string>
+    <string name="setup_wrong_backup_password">كلمة مرور النسخة الاحتياطية غير صحيحة</string>
+    <string name="setup_enter_backup_password">أدخل كلمة مرور النسخة الاحتياطية</string>
+    <string name="setup_password_mismatch_sealed">كلمة المرور هذه غير مطابقة. هذه النسخة الاحتياطية مشفّرة — ولا يمكن فتحها دون كلمة المرور التي أُنشئت بها.</string>
+    <string name="setup_password_mismatch">كلمة المرور هذه غير مطابقة. حاول مجددًا، أو تخطَّ لاستعادة كل شيء باستثناء كلمات المرور المحفوظة.</string>
+    <string name="setup_backup_encrypted_prompt">هذه النسخة الاحتياطية مشفّرة. أدخل كلمة مرور النسخة الاحتياطية لفتحها واستعادتها.</string>
+    <string name="setup_backup_passwords_encrypted_prompt">كلمات المرور في هذه النسخة الاحتياطية مشفّرة. أدخل كلمة مرور النسخة الاحتياطية لاستعادتها، أو تخطَّ لاستعادة كل ما عداها وأعد إدخال كلمات المرور لاحقًا.</string>
+    <string name="setup_backup_password">كلمة مرور النسخة الاحتياطية</string>
+    <string name="setup_skip_no_passwords">التخطي (من دون كلمات مرور)</string>
+    <string name="setup_restore">استعادة</string>
+    <string name="setup_restore_failed">فشلت الاستعادة</string>
+    <string name="setup_backup_read_failed">تعذّرت قراءة ملف النسخة الاحتياطية</string>
+    <string name="setup_invalid_mac">عنوان MAC غير صالح — استخدم التنسيق AA:BB:CC:DD:EE:FF</string>
+    <string name="setup_pick_backup_file">اختيار ملف نسخة احتياطية لاستعادته</string>
+    <string name="setup_restore_a_backup">استعادة نسخة احتياطية</string>
+    <string name="setup_restore_choice_description">أرسل النسخة الاحتياطية من جهاز آخر (هاتف أو حاسوب محمول) متصل بشبكة Wi-Fi نفسها، أو اختر ملف نسخة احتياطية موجودًا على هذا الجهاز.</string>
+    <string name="setup_upload_from_wifi_device">التحميل من جهاز متصل بشبكة Wi-Fi لديك</string>
+    <string name="setup_local_file">ملف محلي</string>
+    <string name="setup_pick_backup_local">اختر ملف نسخة احتياطية على هذا الجهاز</string>
+    <string name="setup_run_in_background">التشغيل في الخلفية</string>
+    <string name="setup_importing_catalog">جارٍ استيراد الكتالوج…</string>
+    <string name="setup_preparing_catalog">جارٍ تجهيز الكتالوج</string>
+    <string name="setup_watching_during_import">يمكنك بدء المشاهدة أثناء تحميل بقية الكتالوج.</string>
+    <string name="setup_all_set">اكتمل الإعداد!</string>
+    <plurals name="setup_restored_items">
+        <item quantity="zero">تمت استعادة <xliff:g id="items">%1$d</xliff:g> من العناصر. أعِد مزامنة مصادرك لتحميل المحتوى.</item>
+        <item quantity="one">تمت استعادة <xliff:g id="items">%1$d</xliff:g> عنصر. أعِد مزامنة مصادرك لتحميل المحتوى.</item>
+        <item quantity="two">تمت استعادة <xliff:g id="items">%1$d</xliff:g> عنصرين. أعِد مزامنة مصادرك لتحميل المحتوى.</item>
+        <item quantity="few">تمت استعادة <xliff:g id="items">%1$d</xliff:g> عناصر. أعِد مزامنة مصادرك لتحميل المحتوى.</item>
+        <item quantity="many">تمت استعادة <xliff:g id="items">%1$d</xliff:g> عنصرًا. أعِد مزامنة مصادرك لتحميل المحتوى.</item>
+        <item quantity="other">تمت استعادة <xliff:g id="items">%1$d</xliff:g> من العناصر. أعِد مزامنة مصادرك لتحميل المحتوى.</item>
+    </plurals>
+    <string name="setup_passwords_omitted">أعد إدخال أي كلمات مرور محفوظة بعد ذلك.</string>
+    <plurals name="setup_skipped_sources">
+        <item quantity="zero">تم تخطي <xliff:g id="count">%1$d</xliff:g> من المصادر لأن هذا الإصدار لا يدعم أنواع قوائم التشغيل الخاصة بها.</item>
+        <item quantity="one">تم تخطي <xliff:g id="count">%1$d</xliff:g> مصدر لأن هذا الإصدار لا يدعم نوع قائمة التشغيل الخاص به.</item>
+        <item quantity="two">تم تخطي <xliff:g id="count">%1$d</xliff:g> مصدرين لأن هذا الإصدار لا يدعم نوعي قائمتي التشغيل الخاصين بهما.</item>
+        <item quantity="few">تم تخطي <xliff:g id="count">%1$d</xliff:g> مصادر لأن هذا الإصدار لا يدعم أنواع قوائم التشغيل الخاصة بها.</item>
+        <item quantity="many">تم تخطي <xliff:g id="count">%1$d</xliff:g> مصدرًا لأن هذا الإصدار لا يدعم أنواع قوائم التشغيل الخاصة بها.</item>
+        <item quantity="other">تم تخطي <xliff:g id="count">%1$d</xliff:g> من المصادر لأن هذا الإصدار لا يدعم أنواع قوائم التشغيل الخاصة بها.</item>
+    </plurals>
+    <string name="setup_continue">متابعة</string>
+    <string name="setup_import_failed">فشل الاستيراد</string>
+    <string name="setup_try_again_caps">إعادة المحاولة</string>
+    <string name="setup_add_from_phone">الإضافة من هاتفك</string>
+    <string name="setup_phone_add_description">على هاتف أو حاسوب محمول متصل بشبكة Wi-Fi نفسها، امسح رمز QR ضوئيًا (أو افتح عنوان URL)، وأدخل PIN هذا، ثم أدخل بيانات قائمة التشغيل واضغط على «إرسال إلى التلفاز». ستظهر تفاصيلها هنا جاهزة للاستيراد — ثم اضغط على «بدء الاستيراد» باستخدام جهاز التحكم عن بُعد.</string>
+    <string name="setup_opening">جارٍ الفتح…</string>
+    <string name="setup_open_server">فتح الخادم</string>
+    <string name="setup_stop_server">إيقاف الخادم</string>
+    <string name="setup_add_source">إضافة مصدر</string>
+    <string name="setup_add_source_description">املأ النموذج على هاتفك، أو اكتب التفاصيل هنا باستخدام جهاز التحكم عن بُعد.</string>
+    <string name="setup_manual">يدوي</string>
+    <string name="setup_use_phone_same_wifi">استخدام هاتف متصل بشبكة Wi-Fi نفسها</string>
+    <string name="setup_type_source_here">إدخال Xtream / M3U / Stalker هنا</string>
+    <string name="setup_edit_source">تعديل المصدر</string>
+    <string name="setup_add_your_source">إضافة مصدرك</string>
+    <string name="setup_edit_source_description">حدّث تفاصيل هذا المصدر، أو غيّر إعداد التحديث التلقائي الخاص به.</string>
+    <string name="setup_byo_source_description">OwnTV هو مشغّل — أضف مصدر Xtream أو M3U أو Stalker الخاص بك.</string>
+    <string name="setup_xtream">Xtream</string>
+    <string name="setup_m3u">M3U / M3U8</string>
+    <string name="setup_stalker_mac">Stalker (MAC)</string>
+    <string name="setup_source_name_optional">الاسم (اختياري)</string>
+    <string name="setup_default_iptv">IPTV الخاص بي</string>
+    <string name="setup_name_default_playlist">قائمة التشغيل الخاصة بي</string>
+    <string name="setup_default_portal">بوابتي</string>
+    <string name="setup_default_profile">ملف شخصي</string>
+    <string name="setup_server_url">عنوان URL للخادم</string>
+    <string name="setup_server_example">http://host:port</string>
+    <string name="setup_username">اسم المستخدم</string>
+    <string name="setup_password">كلمة المرور</string>
+    <string name="setup_password_keep">كلمة المرور (اتركها فارغة للاحتفاظ بالحالية)</string>
+    <string name="setup_playlist_url_local_file">عنوان URL لقائمة التشغيل أو ملف محلي</string>
+    <string name="setup_playlist_example">http://…/playlist.m3u</string>
+    <string name="setup_playlist_file_unavailable">تعذّر فتح ملف قائمة التشغيل. اختره مجددًا؛ فربما نُقل من مكانه.</string>
+    <string name="setup_playlist_path_unsupported">مسار قائمة التشغيل المحلية هذا غير مدعوم.</string>
+    <string name="setup_local_file_choose">اختيار ملف .m3u / .m3u8 محلي…</string>
+    <string name="setup_local_file_prefix">الملف المحلي: <xliff:g id="name">%1$s</xliff:g></string>
+    <string name="setup_portal_url">عنوان URL للبوابة</string>
+    <string name="setup_portal_example">http://host:port/c/</string>
+    <string name="setup_mac_address">عنوان MAC</string>
+    <string name="setup_mac_example">00:1A:79:AA:BB:CC</string>
+    <string name="setup_mac_invalid">أدخل 12 حرفًا، مثلاً: 00:1A:79:AA:BB:CC</string>
+    <string name="setup_device_model_preset">إعداد مسبق لطراز الجهاز (User-Agent)…</string>
+    <string name="setup_testing">جارٍ الاختبار…</string>
+    <string name="setup_test_connection">اختبار الاتصال</string>
+    <plurals name="setup_stalker_test_connected">
+        <item quantity="zero">✓ تم الاتصال عبر <xliff:g id="endpoint">%1$s</xliff:g> (<xliff:g id="fields">%2$d</xliff:g> من حقول الملف الشخصي)</item>
+        <item quantity="one">✓ تم الاتصال عبر <xliff:g id="endpoint">%1$s</xliff:g> (<xliff:g id="fields">%2$d</xliff:g> حقل للملف الشخصي)</item>
+        <item quantity="two">✓ تم الاتصال عبر <xliff:g id="endpoint">%1$s</xliff:g> (<xliff:g id="fields">%2$d</xliff:g> حقلا ملف شخصي)</item>
+        <item quantity="few">✓ تم الاتصال عبر <xliff:g id="endpoint">%1$s</xliff:g> (<xliff:g id="fields">%2$d</xliff:g> حقول للملف الشخصي)</item>
+        <item quantity="many">✓ تم الاتصال عبر <xliff:g id="endpoint">%1$s</xliff:g> (<xliff:g id="fields">%2$d</xliff:g> حقلًا للملف الشخصي)</item>
+        <item quantity="other">✓ تم الاتصال عبر <xliff:g id="endpoint">%1$s</xliff:g> (<xliff:g id="fields">%2$d</xliff:g> من حقول الملف الشخصي)</item>
+    </plurals>
+    <string name="setup_stalker_test_expires">تنتهي الصلاحية في <xliff:g id="date">%1$s</xliff:g></string>
+    <string name="setup_user_agent_optional">User-Agent (اختياري)</string>
+    <string name="setup_user_agent_example">مثلاً: VLC/3.0.20 LibVLC/3.0.20</string>
+    <string name="setup_auto_refresh">التحديث التلقائي</string>
+    <string name="setup_auto_refresh_description">إيقاف، أو عند بدء التشغيل، أو عندما تصبح البيانات قديمة</string>
+    <string name="setup_default_playlist">قائمة التشغيل الافتراضية</string>
+    <string name="setup_default_playlist_description">اعرض قائمة التشغيل هذه فقط في جميع أجزاء التطبيق. أوقفه لعرض جميع قوائم التشغيل؛ ويمكنك تغييره في أي وقت من الشريط العلوي.</string>
+    <string name="setup_what_to_sync">ما المطلوب مزامنته</string>
+    <string name="setup_sync_off_editing">تظل الأقسام المتوقفة مخفية ولا تُجلب مطلقًا. عند إعادة تشغيل قسم، تظهر الصفوف المخزنة مؤقتًا فورًا.</string>
+    <string name="setup_sync_choices">الآن: يُستورد أولًا · لاحقًا: تتم المزامنة في الخلفية · إيقاف: لا يُجلب ولا يظهر مطلقًا.</string>
+    <string name="setup_live_tv">البث التلفزيوني المباشر</string>
+    <string name="setup_channels_categories">القنوات والفئات</string>
+    <string name="setup_movies">أفلام</string>
+    <string name="setup_vod_movie_catalog">كتالوج أفلام VOD</string>
+    <string name="setup_series">مسلسلات</string>
+    <string name="setup_tv_series_catalog">كتالوج المسلسلات التلفزيونية</string>
+    <string name="setup_start_import">بدء الاستيراد</string>
+    <string name="setup_update_source_save">حفظ</string>
+    <string name="setup_pick_playlist_file">اختيار ملف قائمة تشغيل (.m3u / .m3u8)</string>
+    <string name="setup_device_model_preset_title">إعداد مسبق لطراز الجهاز</string>
+    <string name="setup_auto_refresh_title">التحديث التلقائي</string>
+    <string name="setup_on">مفعّل</string>
+    <string name="setup_now">الآن</string>
+    <string name="setup_later">لاحقًا</string>
+    <string name="setup_off">إيقاف</string>
+    <string name="setup_scope_value">◀ <xliff:g id="value">%1$s</xliff:g> ▶</string>
+    <string name="setup_default_mag">الافتراضي (MAG200)</string>
+    <string name="setup_mag250">MAG250</string>
+    <string name="setup_mag254">MAG254</string>
+    <string name="setup_mag270">MAG270</string>
+    <string name="setup_mag420">MAG420</string>
+    <string name="companion_pin_page_title">OwnTV — إدخال PIN</string>
+    <string name="companion_pin_heading">أدخل PIN</string>
+    <string name="companion_pin_description">اكتب PIN المكوّن من 6 أرقام والظاهر على تلفازك للمتابعة.</string>
+    <string name="companion_pin_placeholder">••••••</string>
+    <string name="companion_pin_aria">PIN</string>
+    <string name="companion_continue">متابعة</string>
+    <string name="companion_pin_mismatch">PIN هذا غير مطابق — حاول مجددًا.</string>
+    <string name="companion_add_page_title">OwnTV — إضافة مصدر</string>
+    <string name="companion_add_heading">إضافة مصدر</string>
+    <string name="companion_add_description">أدخل بيانات مصدر واحد واضغط على «إرسال». سيظهر على التلفاز — وعندما تصبح جاهزًا، أمسك جهاز التحكم عن بُعد واضغط هناك على «بدء الاستيراد».</string>
+    <string name="companion_default_playlist">قائمة التشغيل الافتراضية</string>
+    <string name="companion_send_to_tv">إرسال إلى التلفاز</string>
+    <string name="companion_sync_xtream_hint">ما المطلوب مزامنته — «الآن» يستورد أولًا، و«لاحقًا» يزامن في الخلفية، أما «إيقاف» فلا يجلب المحتوى مطلقًا.</string>
+    <string name="companion_sync_stalker_hint">ما المطلوب مزامنته — الإعداد الافتراضي للبث المباشر هو «الآن»، وللأفلام والمسلسلات «لاحقًا» (VOD في Stalker بطيء).</string>
+    <string name="companion_saved_page_title">OwnTV — تم الإرسال</string>
+    <string name="companion_saved_heading">تم الإرسال إلى تلفازك ✓</string>
+    <string name="companion_saved_source_body">أصبح <xliff:g id="name">%1$s</xliff:g> الآن على شاشة إضافة مصدر في التلفاز. تحقّق من التفاصيل هناك واضغط على «بدء الاستيراد» باستخدام جهاز التحكم عن بُعد.</string>
+    <string name="companion_saved_send_another">إرسال مصدر آخر</string>
+    <string name="companion_saved_backup_body">أصبحت نسختك الاحتياطية الآن على التلفاز. أمسك جهاز التحكم عن بُعد واختر الأجزاء التي تريد استعادتها.</string>
+    <string name="companion_saved_backup_link">إرسال ملف مختلف</string>
+    <string name="companion_saved_image_body">أصبحت صورتك الآن خلفية التلفاز.</string>
+    <string name="companion_saved_image_link">إرسال صورة مختلفة</string>
+    <string name="companion_backup_page_title">OwnTV — استعادة نسخة احتياطية</string>
+    <string name="companion_backup_heading">استعادة نسخة احتياطية</string>
+    <string name="companion_backup_description">اختر ملف نسخة احتياطية من OwnTV (بامتداد .own أو ملف .json أقدم) واضغط على «إرسال». سيُنقل إلى التلفاز — أمسك جهاز التحكم عن بُعد واختر هناك ما تريد استعادته.</string>
+    <string name="companion_backup_file">ملف النسخة الاحتياطية</string>
+    <string name="companion_choose_backup">يُرجى اختيار ملف نسخة احتياطية أولًا.</string>
+    <string name="companion_sending">جارٍ الإرسال…</string>
+    <string name="companion_upload_failed">فشل التحميل (HTTP <xliff:g id="status">%1$d</xliff:g>). تحقّق من PIN وحاول مجددًا.</string>
+    <string name="companion_could_not_reach">تعذّر الوصول إلى التلفاز. ابقَ متصلًا بشبكة Wi-Fi نفسها وحاول مجددًا.</string>
+    <string name="companion_could_not_read">تعذّرت قراءة هذا الملف.</string>
+    <string name="companion_image_page_title">OwnTV — صورة الخلفية</string>
+    <string name="companion_image_heading">إرسال صورة خلفية</string>
+    <string name="companion_image_description">اختر صورة (JPG أو PNG أو WebP) واضغط على «إرسال». ستصبح صورة الخلفية خلف واجهة التلفاز.</string>
+    <string name="companion_image_file">ملف الصورة</string>
+    <string name="companion_choose_image">يُرجى اختيار صورة أولًا.</string>
+    <string name="companion_image_too_large">هذه الصورة كبيرة جدًا (الحد الأقصى 25 MB).</string>
+    <string name="companion_download_page_title">OwnTV — تنزيل نسخة احتياطية</string>
+    <string name="companion_download_heading">تنزيل نسختك الاحتياطية</string>
+    <string name="companion_download_description">أعدّ تلفزيونك ملف نسخة احتياطية من OwnTV. اضغط على الزر لحفظه على هذا الجهاز (owntv-backup.own). احتفظ به في مكان آمن — يمكنك الاستعادة منه لاحقًا.</string>
+    <string name="companion_download_backup">تنزيل النسخة الاحتياطية</string>
+    <string name="companion_error_bad_request">طلب غير صالح</string>
+    <string name="companion_error_body_too_large">محتوى الطلب كبير جدًا.</string>
+    <string name="companion_error_unauthorized">غير مصرّح. تحقّق من PIN وحاول مجددًا.</string>
+    <string name="companion_error_not_found">غير موجود.</string>
+    <string name="companion_error_no_backup">لا تتوفر أي نسخة احتياطية.</string>
+    <string name="companion_error_backup_too_large">النسخة الاحتياطية كبيرة جدًا.</string>
+    <string name="companion_error_empty_backup">النسخة الاحتياطية فارغة.</string>
+    <string name="companion_error_image_too_large">الصورة كبيرة جدًا.</string>
+    <string name="companion_error_invalid_image">الملف المحمّل ليس صورة صالحة.</string>
+    <string name="companion_error_missing_fields">الحقول المطلوبة مفقودة.</string>
+    <string name="setup_invalid_locale">احتوت هذه النسخة الاحتياطية على لغة تطبيق غير مدعومة. نجحت الاستعادة، لكن تم الاحتفاظ بلغتك الحالية.</string>
+    <string name="setup_prefer_hls_live_tv">تفضيل HLS للبث التلفزيوني المباشر</string>
+    <string name="setup_prefer_hls_description">إعطاء الأولوية لـ HLS ‏(.m3u8) على MPEG-TS في البث التلفزيوني المباشر ومشاهدة البث الفائت. يُستخدم MPEG-TS إذا فشل HLS.</string>
+    <string name="setup_prefer_hls_description_supported">إعطاء الأولوية لـ HLS ‏(.m3u8) على MPEG-TS في البث التلفزيوني المباشر ومشاهدة البث الفائت. يُستخدم MPEG-TS إذا فشل HLS. يفيد مزوّدك بأنه يدعم HLS.</string>
+    <string name="setup_hide_new_categories">إخفاء الفئات الجديدة افتراضيًا</string>
+    <string name="setup_hide_new_categories_description">على مستوى الملف الشخصي: تبدأ الفئات التي تظهر في عمليات المزامنة المستقبلية مخفية. يمكنك رؤيتها في أي وقت في شاشة التخصيص.</string>
+</resources>

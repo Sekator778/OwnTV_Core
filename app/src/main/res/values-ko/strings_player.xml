@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <string name="player_trailer_exit">종료</string>
+    <string name="player_trailer_progress"><xliff:g id="current">%1$s</xliff:g> / <xliff:g id="duration">%2$s</xliff:g></string>
+    <string name="player_zoom_fit_screen">화면에 맞춤</string>
+    <string name="player_zoom_fill_crop">채우기 / 자르기</string>
+    <string name="player_zoom_stretch">늘이기</string>
+    <string name="player_zoom_original">원본 (1:1)</string>
+    <string name="player_zoom_force_16_9">16:9 강제 적용</string>
+    <string name="player_zoom_force_4_3">4:3 강제 적용</string>
+    <string name="player_mini_top_left">왼쪽 상단</string>
+    <string name="player_mini_top_center">상단 중앙</string>
+    <string name="player_mini_top_right">오른쪽 상단</string>
+    <string name="player_mini_bottom_left">왼쪽 하단</string>
+    <string name="player_mini_bottom_center">하단 중앙</string>
+    <string name="player_mini_bottom_right">오른쪽 하단</string>
+    <string name="player_channel_label">채널</string>
+    <string name="player_at_live_edge">● 실시간 지점</string>
+    <string name="player_behind_live">● <xliff:g id="offset">%1$s</xliff:g> 실시간 방송보다 지연</string>
+    <string name="player_live_offset">−<xliff:g id="offset">%1$s</xliff:g></string>
+    <string name="player_channel_not_found">채널을 찾을 수 없음</string>
+    <string name="player_multiple_channels">여러 채널이 일치함</string>
+    <string name="player_tune_failed">채널 전환 실패</string>
+    <string name="player_playback_error">재생 오류</string>
+    <string name="player_raw_error">오류: <xliff:g id="error">%1$s</xliff:g></string>
+    <string name="player_audio_track">오디오 트랙</string>
+    <string name="player_subtitles">자막</string>
+    <string name="player_subtitle_timing">자막 타이밍</string>
+    <string name="player_add_subtitles">자막 추가</string>
+    <string name="player_adjust">조정</string>
+    <string name="player_search_subtitles">OpenSubtitles 검색</string>
+    <string name="player_select_local_subtitle">로컬 자막 파일 선택</string>
+    <string name="player_no_tracks">사용 가능한 트랙이 없습니다.</string>
+    <string name="player_image_track"><xliff:g id="label">%1$s</xliff:g> · 이미지</string>
+    <string name="player_av_sync">A/V 동기화</string>
+    <string name="player_no_offset">지연 없음</string>
+    <string name="player_subtitles_later">자막을 나중에 표시</string>
+    <string name="player_subtitles_earlier">자막을 더 일찍 표시</string>
+    <string name="player_delay_zero">0 ms</string>
+    <string name="player_delay_positive">+<xliff:g id="ms">%1$d</xliff:g> ms</string>
+    <string name="player_delay_negative"><xliff:g id="ms">%1$d</xliff:g> ms</string>
+    <string name="player_speed_normal">1.0x (보통)</string>
+    <string name="player_speed_normal_short">1.0x</string>
+    <string name="player_speed"><xliff:g id="speed">%1$s</xliff:g>x</string>
+    <string name="player_next_episode">다음 에피소드까지 <xliff:g id="seconds">%1$d</xliff:g>초</string>
+    <string name="player_play_now">지금 재생</string>
+    <string name="player_volume">볼륨</string>
+    <string name="player_unmute">음소거 해제</string>
+    <string name="player_mute">음소거</string>
+    <string name="player_percent"><xliff:g id="value">%1$d</xliff:g>%%</string>
+    <string name="player_duration_minutes"><xliff:g id="minutes">%1$d</xliff:g>분</string>
+    <string name="player_season_number">시즌 <xliff:g id="season">%1$d</xliff:g></string>
+    <string name="player_episode_number">에피소드 <xliff:g id="episode">%1$d</xliff:g></string>
+    <string name="player_episode_context_title"><xliff:g id="title">%1$s</xliff:g> · S<xliff:g id="season">%2$d</xliff:g>E<xliff:g id="episode">%3$d</xliff:g></string>
+    <string name="player_channel_number">#<xliff:g id="number">%1$s</xliff:g></string>
+    <string name="player_live">실시간</string>
+    <string name="player_subtitle_delay_zero">0.0초</string>
+    <string name="player_subtitle_delay_positive">+<xliff:g id="seconds">%1$.1f</xliff:g>초</string>
+    <string name="player_subtitle_delay_negative">−<xliff:g id="seconds">%1$.1f</xliff:g>초</string>
+    <string name="player_track_seconds"><xliff:g id="minutes">%1$d</xliff:g>:<xliff:g id="seconds">%2$02d</xliff:g></string>
+    <string name="player_track_hours"><xliff:g id="hours">%1$d</xliff:g>:<xliff:g id="minutes">%2$02d</xliff:g>:<xliff:g id="seconds">%3$02d</xliff:g></string>
+    <string name="player_time_progress"><xliff:g id="position">%1$s</xliff:g> / <xliff:g id="duration">%2$s</xliff:g></string>
+    <string name="player_time_remaining">−<xliff:g id="time">%1$s</xliff:g></string>
+    <string name="player_switch_exo">ExoPlayer로 전환했습니다</string>
+    <string name="player_switch_mpv">mpv로 전환했습니다</string>
+    <string name="player_error_image_subtitle_audio">이 동영상의 오디오 형식에서는 이미지 자막을 사용할 수 없습니다.</string>
+    <string name="player_error_both_engines_exo_first">두 비디오 엔진 모두에서 재생하지 못했습니다(ExoPlayer, mpv 순서). 파일이 손상되었거나 이 TV에서 재생할 수 없는 형식일 수 있습니다.</string>
+    <string name="player_error_both_engines_mpv_first">두 비디오 엔진 모두에서 재생하지 못했습니다(mpv, ExoPlayer 순서). 파일이 손상되었거나 이 TV에서 재생할 수 없는 형식일 수 있습니다. (<xliff:g id="error">%1$s</xliff:g>)</string>
+    <string name="player_error_stream_link">포털에서 스트림 링크를 가져오지 못했습니다. 연결을 확인하고 다시 시도하세요.</string>
+    <string name="player_error_not_streaming">이 동영상은 스트리밍용으로 형식이 지정되지 않았습니다. 제공업체에 빠른 시작 방식으로 다시 인코딩해 달라고 요청하거나 먼저 다운로드하세요.</string>
+    <string name="player_error_lost_connection">이 채널과의 연결이 끊어졌습니다.</string>
+    <string name="player_error_channel">이 채널을 재생하지 못했습니다.</string>
+    <string name="player_error_exo_decode">ExoPlayer가 이 기기에서 동영상 형식을 디코딩할 수 없습니다(<xliff:g id="error">%1$s</xliff:g>).</string>
+    <string name="player_error_exo_play">ExoPlayer가 이 스트림을 재생하지 못했습니다(<xliff:g id="error">%1$s</xliff:g>).</string>
+    <string name="player_error_image_format">이 파일 형식에서는 이미지 자막을 사용할 수 없습니다.</string>
+    <string name="player_error_image_show">이 파일의 이미지 자막을 표시하지 못했습니다.</string>
+    <string name="player_external_could_not_open">이 스트림을 열지 못했습니다.</string>
+    <string name="player_external_play_with">재생 앱 선택</string>
+    <string name="player_external_play_with_item">“<xliff:g id="channel">%1$s</xliff:g> · <xliff:g id="programme">%2$s</xliff:g>” 재생 앱 선택…</string>
+    <string name="player_external_not_found">외부 플레이어를 찾을 수 없습니다. VLC 또는 MX Player를 설치하세요.</string>
+    <string name="player_error_audio_no_video">오디오는 재생 중이지만 이 기기에서 영상을 표시하지 못했습니다.</string>
+    <string name="player_error_file_corrupt">이 동영상 파일은 형식이 잘못되었거나 손상되어 재생할 수 없습니다.</string>
+    <string name="player_error_multiple_videos">여러 동영상을 재생하지 못했습니다. 소스를 사용할 수 없거나 파일이 손상되었을 수 있습니다.</string>
+    <string name="player_error_decoder_busy">이 TV의 비디오 디코더가 사용 중입니다. 잠시 후 다시 시도하세요.</string>
+    <string name="player_error_no_internet">인터넷에 연결되어 있지 않습니다. 네트워크를 확인하고 다시 시도하세요.</string>
+    <string name="player_error_stream_unavailable">이 스트림을 재생하지 못했습니다. 소스가 오프라인 상태이거나 지원되지 않는 형식을 사용할 수 있습니다. <xliff:g id="hint">%1$s</xliff:g></string>
+    <string name="player_error_mpv_open_decode">mpv가 이 파일을 열거나 디코딩하지 못했습니다.</string>
+    <string name="player_error_mpv_stream_never_started">여러 번 다시 시도했지만 mpv에서 스트림이 시작되지 않았습니다.</string>
+    <string name="player_error_surround">이 오디오 출력은 서라운드를 지원하지 않아 스테레오로 전환했습니다.</string>
+    <string name="player_error_hardware_fallback">이 TV에서 이 스트림 형식을 하드웨어로 디코딩하지 못해 소프트웨어 디코딩으로 전환했습니다. 하지만 TV에 과부하를 주지 않고 <xliff:g id="resolution">%1$s</xliff:g> 해상도를 처리할 수 없습니다. 이 TV에서 다른 4K 콘텐츠는 정상적으로 재생될 수 있으며, 문제는 이 스트림의 특정 형식입니다.</string>
+    <string name="player_error_hardware_disabled">하드웨어 디코딩이 꺼져 있어 소프트웨어 디코딩으로는 <xliff:g id="resolution">%1$s</xliff:g> 동영상을 처리할 수 없습니다. 설정 → 비디오 플레이어에서 하드웨어 디코딩을 사용 설정하세요.</string>
+    <string name="player_error_custom_user_agent">이 제공업체는 소스 설정에 사용자 지정 User-Agent가 필요할 수 있습니다.</string>
+    <string name="player_reason_decoder_busy">하드웨어 비디오 디코더가 사용 중이거나 이 스트림을 처리할 수 없음</string>
+    <string name="player_reason_decoder_transient">일시적인 하드웨어 비디오 디코더 오류 — 다시 시도하세요</string>
+    <string name="player_reason_unsupported_video">이 기기의 디코더가 해당 동영상 형식/프로필을 지원하지 않음(예: HEVC 10-bit)</string>
+    <string name="player_reason_decoder_memory">디코더에 사용할 기기 메모리가 부족함 — 다른 앱을 종료해 보세요</string>
+    <string name="player_reason_drm">DRM / 보안 디코더 오류</string>
+    <string name="player_reason_http_509">제공업체가 연결을 차단함 — 동시에 너무 많은 스트림 사용 중(HTTP 509)</string>
+    <string name="player_reason_http_403">제공업체가 접근을 거부함(HTTP 403) — 로그인 정보, 구독 또는 IP 차단 문제</string>
+    <string name="player_reason_http_401">제공업체가 로그인을 거부함(HTTP 401)</string>
+    <string name="player_reason_http_404">제공업체에서 스트림을 찾을 수 없음(HTTP 404)</string>
+    <string name="player_reason_http_400">제공업체가 요청을 거부함(HTTP 400) — 잘못되었거나 만료된 링크</string>
+    <string name="player_reason_ssl">제공업체의 SSL 인증서가 유효하지 않거나 만료됨</string>
+    <string name="player_reason_format">스트림 형식을 인식할 수 없음(잘못되었거나 불완전한 스트림)</string>
+    <string name="player_reason_network">제공업체에 연결하는 중 네트워크 문제 발생</string>
+    <string name="player_reason_audio">오디오 출력 오류 — 기기에서 이 오디오 형식을 재생하지 못함</string>
+    <string name="player_audio_track_number">오디오 <xliff:g id="number">%1$d</xliff:g></string>
+    <string name="player_subtitle_track_number">자막 <xliff:g id="number">%1$d</xliff:g></string>
+    <string name="player_metadata_separator"> · </string>
+    <string name="player_stream_info">스트림 정보</string>
+    <string name="player_stream_engine">엔진</string>
+    <string name="player_stream_format">형식</string>
+    <string name="player_stream_source">소스</string>
+    <string name="player_stream_video">비디오</string>
+    <string name="player_stream_hdr">HDR</string>
+    <string name="player_stream_hdr10_pq">HDR10 (PQ)</string>
+    <string name="player_stream_hlg">HLG</string>
+    <string name="player_stream_sdr">SDR</string>
+    <string name="player_stream_bitrate">비트레이트</string>
+    <string name="player_stream_decoder">디코더</string>
+    <string name="player_stream_audio">오디오</string>
+    <string name="player_stream_buffer">버퍼</string>
+    <string name="player_stream_engine_exo_preferred">ExoPlayer (우선 사용)</string>
+    <string name="player_stream_engine_exo_fallback">ExoPlayer (mpv 실패 후 대체 사용)</string>
+    <string name="player_stream_engine_exo_image_subtitle">ExoPlayer (이미지 자막 처리 전환)</string>
+    <string name="player_stream_fps"><xliff:g id="fps">%1$.2f</xliff:g> fps</string>
+    <string name="player_stream_bit_depth"><xliff:g id="bits">%1$d</xliff:g>비트</string>
+    <string name="player_stream_mbps"><xliff:g id="value">%1$s</xliff:g> Mbps</string>
+    <string name="player_stream_khz"><xliff:g id="value">%1$s</xliff:g> kHz</string>
+    <string name="player_stream_kbps"><xliff:g id="value">%1$s</xliff:g> kbps</string>
+    <string name="player_stream_seconds"><xliff:g id="value">%1$s</xliff:g>초 버퍼링됨</string>
+    <string name="player_audio_mono">모노</string>
+    <string name="player_audio_stereo">스테레오</string>
+    <plurals name="player_audio_channels">
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g>채널</item>
+    </plurals>
+    <plurals name="player_stream_dropped_frames">
+        <item quantity="other">드롭된 프레임 <xliff:g id="count">%1$d</xliff:g>개</item>
+    </plurals>
+    <string name="player_decoder_hardware">하드웨어 디코더</string>
+    <string name="player_decoder_software">소프트웨어 디코더</string>
+    <string name="player_decoder_direct">다이렉트</string>
+    <string name="player_decoder_gpu">GPU</string>
+    <string name="player_subtitles_search_title">OpenSubtitles 검색</string>
+    <string name="player_subtitles_working">처리 중…</string>
+    <string name="player_subtitles_edit_search">검색 수정</string>
+    <string name="player_subtitles_title_label">제목</string>
+    <string name="player_subtitles_delete_title">OpenSub 자막 삭제</string>
+    <string name="player_subtitles_sign_in">로그인</string>
+    <string name="player_subtitles_sign_out">로그아웃</string>
+    <string name="player_subtitles_account">계정</string>
+    <string name="player_subtitles_username">사용자 이름</string>
+    <string name="player_subtitles_password">비밀번호</string>
+    <string name="player_subtitles_stay_signed_in">로그인 상태 유지</string>
+    <string name="player_subtitles_sign_in_title">OpenSubtitles에 로그인</string>
+    <string name="player_subtitles_connect_description">이 프로필의 OpenSubtitles 계정을 연결합니다.</string>
+    <string name="player_subtitles_contacting">OpenSubtitles에 연결 중…</string>
+    <string name="player_subtitles_api_notice">이 제품은 OpenSubtitles API를 사용하지만 OpenSubtitles의 보증이나 인증을 받지 않았습니다.</string>
+    <string name="player_subtitles_delete_description">영화와 시리즈용으로 다운로드한 자막을 삭제합니다.</string>
+    <string name="player_subtitles_delete_login_message">이 기기에서 이 프로필의 OpenSubtitles 로그인 정보를 삭제합니다. 이미 다운로드한 자막은 오프라인에서도 계속 사용할 수 있습니다.</string>
+    <string name="player_subtitles_delete_action">자막 삭제</string>
+    <string name="player_subtitles_downloads">다운로드</string>
+    <string name="player_subtitles_vip">VIP</string>
+    <string name="player_subtitles_refresh">새로고침</string>
+    <string name="player_subtitles_sign_in_to_use">opensubtitles.com 계정을 사용하세요. 계정은 무료로 만들 수 있습니다.</string>
+    <plurals name="player_subtitles_remaining">
+        <item quantity="other">오늘 <xliff:g id="total">%2$d</xliff:g>회 중 <xliff:g id="remaining">%1$d</xliff:g>회 다운로드 가능</item>
+    </plurals>
+    <plurals name="player_subtitles_remaining_short">
+        <item quantity="other">오늘 <xliff:g id="remaining">%1$d</xliff:g>회 다운로드 가능</item>
+    </plurals>
+    <plurals name="player_subtitles_remaining_reset">
+        <item quantity="other">오늘 <xliff:g id="remaining">%1$d</xliff:g>회 다운로드 가능 · <xliff:g id="reset">%2$s</xliff:g> 후 초기화</item>
+    </plurals>
+    <plurals name="player_subtitles_remaining_count">
+        <item quantity="other">오늘 <xliff:g id="remaining">%1$d</xliff:g>회 다운로드 가능</item>
+    </plurals>
+    <string name="player_subtitles_session">연결 세션은 만료됩니다. 임시 세션만 저장하려면 이 옵션을 끄세요.</string>
+    <string name="player_subtitles_free_description_full">OpenSubtitles는 무료 개방형 커뮤니티 자막 서비스입니다. 본인의 opensubtitles.com 계정으로 로그인하세요. 계정은 무료로 만들 수 있습니다. 이 설정은 현재 프로필에만 적용됩니다.</string>
+    <string name="player_subtitles_session_expired">OpenSubtitles 세션이 만료되었습니다. 자막을 계속 검색하고 다운로드하려면 설정 → 비디오 플레이어 → 자막 → OpenSubtitles에서 다시 로그인하세요.</string>
+    <string name="player_subtitles_account_needed">OpenSubtitles 계정 필요\n\n자막을 검색하고 다운로드하려면 설정 → 비디오 플레이어 → 자막 → OpenSubtitles에서 로그인하세요. OpenSubtitles는 무료 개방형 커뮤니티 서비스이며 누구나 opensubtitles.com에서 무료 계정을 만들 수 있습니다.</string>
+    <string name="player_subtitles_no_matches">일치하는 자막을 찾지 못했습니다.</string>
+    <string name="player_subtitles_show_all_languages">모든 언어 표시</string>
+    <string name="player_subtitles_all_languages">모든 언어</string>
+    <string name="player_subtitles_try_again">다시 시도</string>
+    <string name="player_subtitles_limit_reached">일일 자막 검색 한도에 도달했습니다. 내일 다시 시도하세요.</string>
+    <string name="player_subtitles_network_error">OpenSubtitles에 연결하지 못했습니다. 연결을 확인하고 다시 시도하세요.</string>
+    <string name="player_subtitles_subtitle">자막</string>
+    <string name="player_subtitles_trusted">신뢰할 수 있음</string>
+    <string name="player_subtitles_sdh">SDH</string>
+    <string name="player_subtitles_ai">AI</string>
+    <plurals name="player_subtitles_download_count">
+        <item quantity="other">다운로드 <xliff:g id="count">%1$d</xliff:g>회</item>
+    </plurals>
+    <string name="player_subtitles_tags_separator"> · </string>
+    <string name="player_subtitles_search">검색</string>
+    <string name="player_subtitles_connected_as">연결된 계정</string>
+    <string name="player_subtitles_resets">초기화 시간</string>
+    <string name="player_subtitles_free_account">무료</string>
+    <string name="player_subtitles_in"><xliff:g id="value">%1$s</xliff:g></string>
+    <string name="player_subtitles_enter_credentials">OpenSubtitles 사용자 이름과 비밀번호를 입력하세요.</string>
+    <string name="player_subtitles_invalid_credentials">해당 계정 정보로 OpenSubtitles에 로그인하지 못했습니다.</string>
+    <string name="player_subtitles_sign_in_network_error">OpenSubtitles에 연결하지 못했습니다. 인터넷 연결을 확인하고 다시 시도하세요.</string>
+    <string name="player_subtitles_refresh_network_error">OpenSubtitles를 새로고침하지 못했습니다. 인터넷 연결을 확인하세요.</string>
+</resources>

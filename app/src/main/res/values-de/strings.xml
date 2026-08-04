@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <string name="common_cancel">Abbrechen</string>
+    <string name="common_back">Zurück</string>
+    <string name="common_save">Speichern</string>
+    <string name="common_edit">Bearbeiten</string>
+    <string name="common_delete">Löschen</string>
+    <string name="common_clear">Leeren</string>
+    <string name="common_retry">Erneut versuchen</string>
+    <string name="common_create">Erstellen</string>
+    <string name="common_reset">Zurücksetzen</string>
+    <string name="common_done">Fertig</string>
+    <string name="common_ok">OK</string>
+    <string name="common_on">Ein</string>
+    <string name="common_off">Aus</string>
+    <string name="common_exit">Beenden</string>
+    <string name="common_resume">Fortsetzen</string>
+    <string name="common_start_over">Von vorn beginnen</string>
+    <string name="common_name">Name</string>
+    <string name="common_own_tv_user">OwnTV-Nutzer</string>
+    <string name="common_switch_profile">Profil wechseln</string>
+    <string name="common_proxy">Proxy</string>
+    <string name="common_title">Titel</string>
+    <string name="common_search_hint">Suchen…</string>
+    <string name="common_search">Suche</string>
+    <string name="common_weather_fahrenheit"><xliff:g id="temperature">%1$d</xliff:g>°F</string>
+    <string name="common_weather_celsius"><xliff:g id="temperature">%1$d</xliff:g>°C</string>
+    <string name="common_weather_city"><xliff:g id="temperature">%1$s</xliff:g> · <xliff:g id="city">%2$s</xliff:g></string>
+    <string name="common_nav_search">Suche</string>
+    <string name="common_nav_home">Startseite</string>
+    <string name="common_nav_live_tv">Live-TV</string>
+    <string name="common_nav_movies">Filme</string>
+    <string name="common_nav_series">Serien</string>
+    <string name="common_nav_downloads">Downloads</string>
+    <string name="common_nav_guide">Programmübersicht</string>
+    <string name="common_nav_settings">Einstellungen</string>
+    <string name="shell_no_source">Keine Quelle</string>
+    <string name="common_something_went_wrong">Etwas ist schiefgelaufen</string>
+    <string name="common_move_instructions">▲/▼ zum Verschieben · OK zum Speichern · Zurück zum Abbrechen</string>
+    <string name="common_number_grouped"><xliff:g id="count">%1$,d</xliff:g></string>
+    <string name="common_rating"><xliff:g id="rating">%1$.1f</xliff:g></string>
+    <string name="common_percent"><xliff:g id="percent">%1$d</xliff:g>%%</string>
+    <string name="common_timestamp_minutes"><xliff:g id="minutes">%1$d</xliff:g>:<xliff:g id="seconds">%2$02d</xliff:g></string>
+    <string name="common_timestamp_hours"><xliff:g id="hours">%1$d</xliff:g>:<xliff:g id="minutes">%2$02d</xliff:g>:<xliff:g id="seconds">%3$02d</xliff:g></string>
+    <string name="common_resume_position">Sie haben bei <xliff:g id="position">%1$s</xliff:g> aufgehört.</string>
+    <string name="common_resume_prompt">Wiedergabe fortsetzen?</string>
+    <string name="sync_error_offline">Sie scheinen offline zu sein. Prüfen Sie Ihre Verbindung und versuchen Sie es erneut.</string>
+    <string name="sync_error_generic">Etwas ist schiefgelaufen. Bitte versuchen Sie es erneut.</string>
+    <string name="sync_error_timeout">Der Server hat zu lange für die Antwort gebraucht. Bitte versuchen Sie es erneut.</string>
+    <string name="sync_error_unreachable">Der Server war nicht erreichbar. Prüfen Sie die Adresse und Ihre Verbindung.</string>
+    <string name="sync_error_connection">Es konnte keine Verbindung zum Server hergestellt werden. Möglicherweise ist er nicht verfügbar oder die Adresse ist falsch.</string>
+    <string name="sync_error_interrupted">Der Server hat den Download unterbrochen. Bitte versuchen Sie es erneut.</string>
+    <string name="sync_error_mac">Das Portal hat diese MAC-Adresse abgelehnt. Prüfen Sie die MAC-Adresse (sowie Datum und Uhrzeit des Fernsehers) — oder das Abonnement ist möglicherweise abgelaufen.</string>
+    <string name="sync_error_invalid_mac">Ungültige MAC-Adresse — verwenden Sie das Format AA:BB:CC:DD:EE:FF</string>
+    <string name="sync_counts_separator">  ·  </string>
+    <string name="sync_counts_success">Erfolgreich synchronisiert</string>
+    <string name="sync_counts_synced"><xliff:g id="counts">%1$s</xliff:g> synchronisiert</string>
+    <string name="sync_import_warnings">Mit Warnungen importiert: <xliff:g id="phases">%1$s</xliff:g></string>
+    <string name="sync_warning_phase_error"><xliff:g id="phase">%1$s</xliff:g>: <xliff:g id="message">%2$s</xliff:g></string>
+    <plurals name="sync_warning_catalog_shrink">
+        <item quantity="one"><xliff:g id="stored">%1$d</xliff:g> vorhandener Eintrag wurde beibehalten — beim Importieren wurden <xliff:g id="percent">%2$d</xliff:g>%% weniger Einträge zurückgegeben. Synchronisieren Sie erneut oder verwenden Sie „Bereinigte Synchronisierung erzwingen“, wenn der Anbieter ihn tatsächlich entfernt hat.</item>
+        <item quantity="other"><xliff:g id="stored">%1$d</xliff:g> vorhandene Einträge wurden beibehalten — beim Importieren wurden <xliff:g id="percent">%2$d</xliff:g>%% weniger Einträge zurückgegeben. Synchronisieren Sie erneut oder verwenden Sie „Bereinigte Synchronisierung erzwingen“, wenn der Anbieter sie tatsächlich entfernt hat.</item>
+    </plurals>
+    <plurals name="sync_warning_page_failures">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> Seite der Quelle konnte nicht geladen werden; bis zur nächsten Synchronisierung fehlen möglicherweise einige Inhalte.</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> Seiten der Quelle konnten nicht geladen werden; bis zur nächsten Synchronisierung fehlen möglicherweise einige Inhalte.</item>
+    </plurals>
+    <string name="sync_remainder_note">Der Rest des Katalogs wird noch im Hintergrund synchronisiert — Sie können jetzt schon Inhalte ansehen. Der Fortschritt wird in der kleinen pillenförmigen Anzeige am unteren Bildschirmrand angezeigt.</string>
+    <string name="sync_progress_preparing">Katalog wird vorbereitet</string>
+    <string name="sync_progress_connecting">Verbindung zur Quelle wird hergestellt…</string>
+    <string name="sync_progress_syncing">Katalog wird synchronisiert</string>
+    <string name="sync_progress_percent">Synchronisierung läuft: <xliff:g id="percent">%1$d</xliff:g>%%</string>
+    <string name="sync_status_catalog">Synchronisierung: <xliff:g id="source">%1$s</xliff:g></string>
+    <string name="sync_status_catalog_with_counts">Synchronisierung: <xliff:g id="source">%1$s</xliff:g> · <xliff:g id="counts">%2$s</xliff:g></string>
+    <string name="sync_status_epg">Programmübersicht wird aktualisiert · <xliff:g id="source">%1$s</xliff:g></string>
+    <string name="sync_status_epg_with_counts">Programmübersicht wird aktualisiert · <xliff:g id="source">%1$s</xliff:g> · <xliff:g id="counts">%2$s</xliff:g></string>
+    <string name="sync_status_complete">Synchronisierung abgeschlossen · <xliff:g id="source">%1$s</xliff:g></string>
+    <string name="sync_status_complete_with_changes">Synchronisierung abgeschlossen · <xliff:g id="source">%1$s</xliff:g> · <xliff:g id="changes">%2$s</xliff:g></string>
+    <string name="sync_status_failed">Synchronisierung fehlgeschlagen · <xliff:g id="source">%1$s</xliff:g>: <xliff:g id="reason">%2$s</xliff:g></string>
+    <string name="sync_status_cancelled">Synchronisierung abgebrochen · <xliff:g id="source">%1$s</xliff:g></string>
+    <string name="sync_phase_live">Live-TV</string>
+    <string name="sync_phase_movies">Filme</string>
+    <string name="sync_phase_series">Serien</string>
+    <plurals name="sync_count_channels">
+        <item quantity="one"><xliff:g id="count">%1$s</xliff:g> Sender</item>
+        <item quantity="other"><xliff:g id="count">%1$s</xliff:g> Sender</item>
+    </plurals>
+    <plurals name="sync_count_movies">
+        <item quantity="one"><xliff:g id="count">%1$s</xliff:g> Film</item>
+        <item quantity="other"><xliff:g id="count">%1$s</xliff:g> Filme</item>
+    </plurals>
+    <plurals name="sync_count_series">
+        <item quantity="one"><xliff:g id="count">%1$s</xliff:g> Serie</item>
+        <item quantity="other"><xliff:g id="count">%1$s</xliff:g> Serien</item>
+    </plurals>
+    <plurals name="sync_count_epg">
+        <item quantity="one"><xliff:g id="count">%1$s</xliff:g> EPG-Eintrag</item>
+        <item quantity="other"><xliff:g id="count">%1$s</xliff:g> EPG-Einträge</item>
+    </plurals>
+    <plurals name="sync_status_more">
+        <item quantity="one">+<xliff:g id="count">%1$d</xliff:g> weitere Synchronisierung</item>
+        <item quantity="other">+<xliff:g id="count">%1$d</xliff:g> weitere Synchronisierungen</item>
+    </plurals>
+    <plurals name="sync_categories_added">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> Kategorie hinzugefügt</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> Kategorien hinzugefügt</item>
+    </plurals>
+    <plurals name="sync_categories_removed">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> Kategorie entfernt</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> Kategorien entfernt</item>
+    </plurals>
+    <string name="sync_error_portal">Das Portal war nicht erreichbar. Prüfen Sie die Portal-URL — sie endet normalerweise auf /c/.</string>
+    <string name="sync_error_session">Die Portal-Sitzung ist abgelaufen. Bitte versuchen Sie es erneut.</string>
+    <string name="sync_error_auth">Der Server hat Ihre Anmeldedaten abgelehnt. Prüfen Sie Ihren Benutzernamen und Ihr Passwort.</string>
+    <string name="sync_error_not_found">Auf dem Server nicht gefunden. Prüfen Sie die URL.</string>
+    <string name="sync_error_server">Beim Server ist ein Problem aufgetreten. Bitte versuchen Sie es später erneut.</string>
+    <string name="sync_error_secure">Sichere Verbindung fehlgeschlagen — das Zertifikat des Servers ist möglicherweise ungültig.</string>
+    <string name="sync_error_malformed_guide">Die Daten der Programmübersicht vom Server waren fehlerhaft. Ein Teil davon wurde möglicherweise trotzdem geladen — bitte versuchen Sie es erneut oder prüfen Sie die EPG-URL.</string>
+    <string name="common_items_per_skip">Elemente pro Sprung</string>
+    <string name="common_plus">+</string>
+    <string name="common_minus">–</string>
+    <string name="common_hide">Ausblenden</string>
+    <string name="common_show">Einblenden</string>
+    <string name="common_qr_code_companion_url">QR-Code für die Begleit-URL</string>
+</resources>

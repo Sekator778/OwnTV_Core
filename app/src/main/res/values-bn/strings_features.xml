@@ -4,102 +4,102 @@
     <string name="profiles_new">নতুন প্রোফাইল</string>
     <string name="profiles_edit">প্রোফাইল সম্পাদনা করুন</string>
     <string name="profiles_name">নাম</string>
-    <string name="profiles_name_hint">যেমন Alex</string>
-    <string name="profiles_avatar">অ্যাভাটার</string>
-    <string name="profiles_kids">কিডস প্রোফাইল</string>
-    <string name="profiles_kids_description">সরলীকৃত, নিরাপদ ব্রাউজিং</string>
+    <string name="profiles_name_hint">যেমন: অ্যালেক্স</string>
+    <string name="profiles_avatar">অবতার</string>
+    <string name="profiles_kids">শিশুদের প্রোফাইল</string>
+    <string name="profiles_kids_description">সহজ ও নিরাপদ ব্রাউজিং</string>
     <string name="profiles_remove_pin">PIN লক সরান</string>
     <string name="profiles_no_pin">এই প্রোফাইলটি PIN ছাড়াই খোলে</string>
-    <string name="profiles_change_pin">PIN পরিবর্তন করুন (ফাঁকা রাখলে অপরিবর্তিত থাকবে)</string>
+    <string name="profiles_change_pin">PIN পরিবর্তন করুন (খালি রাখলে আগেরটি থাকবে)</string>
     <string name="profiles_optional_pin">PIN (ঐচ্ছিক)</string>
-    <string name="profiles_pin_digits">৪–৬ সংখ্যা</string>
+    <string name="profiles_pin_digits">৪–৬ অঙ্ক</string>
     <string name="profiles_pin_placeholder">····</string>
-    <string name="profiles_name_taken">এই নামটি ইতিমধ্যে ব্যবহৃত হয়েছে — দয়া করে অন্য একটি নাম বেছে নিন।</string>
+    <string name="profiles_name_taken">এই নামটি ইতিমধ্যেই নেওয়া হয়েছে — অনুগ্রহ করে অন্য নাম বেছে নিন।</string>
     <string name="profiles_create">তৈরি করুন</string>
     <string name="profiles_save">সংরক্ষণ করুন</string>
     <string name="profiles_gate_title">কে দেখছেন?</string>
     <string name="profiles_wrong_pin">ভুল PIN — আবার চেষ্টা করুন</string>
     <string name="profiles_enter_pin"><xliff:g id="name">%1$s</xliff:g> — PIN লিখুন</string>
-    <string name="profiles_kids_badge">কিডস</string>
+    <string name="profiles_kids_badge">শিশুদের</string>
     <string name="profiles_add">প্রোফাইল যোগ করুন</string>
-    <string name="profiles_title">প্রোফাইলসমূহ</string>
+    <string name="profiles_title">প্রোফাইলগুলো</string>
     <string name="profiles_add_button">প্রোফাইল যোগ করুন</string>
-    <string name="profiles_delete_title">“<xliff:g id="name">%1$s</xliff:g>” মুছে ফেলবেন?</string>
-    <string name="profiles_delete_message">এটি এই প্রোফাইল এবং এর পছন্দসমূহ ও ইতিহাস মুছে ফেলবে। সোর্সসমূহ রাখা থাকবে।</string>
-    <string name="profiles_kids_tag">কিডস</string>
-    <string name="profiles_locked_tag">PIN লকড</string>
+    <string name="profiles_delete_title">“<xliff:g id="name">%1$s</xliff:g>” মুছবেন?</string>
+    <string name="profiles_delete_message">এই প্রোফাইল এবং এর পছন্দেরগুলো ও ইতিহাস মুছে যাবে। উৎসগুলো রাখা হবে।</string>
+    <string name="profiles_kids_tag">শিশুদের</string>
+    <string name="profiles_locked_tag">PIN লক করা আছে</string>
     <string name="search_title">অনুসন্ধান</string>
     <string name="search_continue">দেখা চালিয়ে যান</string>
-    <string name="search_unwatched">অদেখা</string>
-    <string name="search_hint">চ্যানেল, মুভি ও সিরিজ অনুসন্ধান করুন…</string>
+    <string name="search_unwatched">না-দেখা</string>
+    <string name="search_hint">চ্যানেল, সিনেমা ও সিরিজ অনুসন্ধান করুন…</string>
     <string name="search_recent">সাম্প্রতিক অনুসন্ধান</string>
-    <string name="search_recent_empty">আপনার সাম্প্রতিক অনুসন্ধানগুলো এখানে দেখানো হবে।</string>
-    <string name="search_minimum_query">সবকিছুতে অনুসন্ধান করতে অন্তত ২টি অক্ষর টাইপ করুন।</string>
+    <string name="search_recent_empty">আপনার সাম্প্রতিক অনুসন্ধানগুলো এখানে দেখা যাবে।</string>
+    <string name="search_minimum_query">সবকিছুতে অনুসন্ধান করতে অন্তত ২টি অক্ষর লিখুন।</string>
     <string name="search_no_results"><xliff:g id="query">%1$s</xliff:g> — কোনো ফলাফল নেই।</string>
     <string name="search_nothing_in_list"><xliff:g id="list">%1$s</xliff:g>-এ এখনো কিছু নেই।</string>
     <string name="search_clear">মুছুন</string>
-    <string name="search_jump_to">যান</string>
+    <string name="search_jump_to">সরাসরি যান</string>
     <string name="search_watch_live">লাইভ দেখুন</string>
-    <string name="search_play">প্লে করুন</string>
+    <string name="search_play">চালান</string>
     <string name="search_open_series">সিরিজ খুলুন</string>
-    <string name="search_movie">মুভি</string>
+    <string name="search_movie">সিনেমা</string>
     <string name="search_series">সিরিজ</string>
-    <string name="search_channels">চ্যানেল</string>
+    <string name="search_channels">চ্যানেলগুলো</string>
     <string name="search_channel_number">#<xliff:g id="number">%1$s</xliff:g></string>
     <string name="home_keep_watching">দেখা চালিয়ে যান</string>
-    <string name="home_play_next">পরেরটি প্লে করুন</string>
-    <string name="home_tune_in">টিউন ইন করুন</string>
+    <string name="home_play_next">পরের পর্ব চালান</string>
+    <string name="home_tune_in">লাইভ দেখুন</string>
     <string name="home_recent_live">সম্প্রতি দেখা লাইভ</string>
     <string name="profiles_default_name">প্রোফাইল</string>
     <string name="launcher_recent_live_title">সাম্প্রতিক লাইভ</string>
-    <string name="launcher_recent_live_description">সম্প্রতি দেখা লাইভ চ্যানেল</string>
-    <string name="launcher_movie_type">মুভি</string>
+    <string name="launcher_recent_live_description">সম্প্রতি দেখা লাইভ চ্যানেলগুলো</string>
+    <string name="launcher_movie_type">সিনেমা</string>
     <string name="launcher_episode_number">পর্ব <xliff:g id="episode">%1$d</xliff:g></string>
-    <string name="home_no_preview">এখনো প্রিভিউ করার মতো কিছু নেই।</string>
-    <string name="home_no_rows">সব হোম সারি লুকানো আছে।</string>
+    <string name="home_no_preview">এখনো প্রিভিউ দেখানোর মতো কিছু নেই।</string>
+    <string name="home_no_rows">হোম স্ক্রিনের সব সারি লুকানো আছে।</string>
     <string name="home_enable_rows">সেটিংস → হোম স্ক্রিন থেকে সারিগুলো আবার চালু করুন।</string>
-    <string name="home_start_watching">আপনার কার্যকলাপ এখানে দেখতে দেখা শুরু করুন।</string>
-    <string name="home_continue_empty">প্লেব্যাক ইতিহাস পাওয়া গেলে আপনার চালিয়ে যাওয়ার আইটেমগুলো এখানে দেখাবে।</string>
-    <string name="home_last_watched_now">এইমাত্র দেখা হয়েছে</string>
-    <string name="home_finish_by"><xliff:g id="time">%1$s</xliff:g>-এর মধ্যে শেষ হবে</string>
-    <string name="home_resume">পুনরায় শুরু</string>
+    <string name="home_start_watching">এখানে আপনার কার্যকলাপ দেখতে কিছু দেখা শুরু করুন।</string>
+    <string name="home_continue_empty">প্লেব্যাকের ইতিহাস পাওয়া গেলে দেখা চালিয়ে যাওয়ার আইটেমগুলো এখানে দেখা যাবে।</string>
+    <string name="home_last_watched_now">শেষ দেখা: এইমাত্র</string>
+    <string name="home_finish_by">শেষ হবে <xliff:g id="time">%1$s</xliff:g> নাগাদ</string>
+    <string name="home_resume">চালিয়ে যান</string>
     <plurals name="home_last_watched_minutes">
-        <item quantity="one">সর্বশেষ দেখা হয়েছে <xliff:g id="count">%1$d</xliff:g> মিনিট আগে</item>
-        <item quantity="other">সর্বশেষ দেখা হয়েছে <xliff:g id="count">%1$d</xliff:g> মিনিট আগে</item>
+        <item quantity="one">শেষ দেখা: <xliff:g id="count">%1$d</xliff:g> মিনিট আগে</item>
+        <item quantity="other">শেষ দেখা: <xliff:g id="count">%1$d</xliff:g> মিনিট আগে</item>
     </plurals>
     <plurals name="home_last_watched_hours">
-        <item quantity="one">সর্বশেষ দেখা হয়েছে <xliff:g id="count">%1$d</xliff:g> ঘণ্টা আগে</item>
-        <item quantity="other">সর্বশেষ দেখা হয়েছে <xliff:g id="count">%1$d</xliff:g> ঘণ্টা আগে</item>
+        <item quantity="one">শেষ দেখা: <xliff:g id="count">%1$d</xliff:g> ঘণ্টা আগে</item>
+        <item quantity="other">শেষ দেখা: <xliff:g id="count">%1$d</xliff:g> ঘণ্টা আগে</item>
     </plurals>
     <plurals name="home_last_watched_days">
-        <item quantity="one">সর্বশেষ দেখা হয়েছে <xliff:g id="count">%1$d</xliff:g> দিন আগে</item>
-        <item quantity="other">সর্বশেষ দেখা হয়েছে <xliff:g id="count">%1$d</xliff:g> দিন আগে</item>
+        <item quantity="one">শেষ দেখা: <xliff:g id="count">%1$d</xliff:g> দিন আগে</item>
+        <item quantity="other">শেষ দেখা: <xliff:g id="count">%1$d</xliff:g> দিন আগে</item>
     </plurals>
     <string name="home_season_episode">S<xliff:g id="season">%1$02d</xliff:g> E<xliff:g id="episode">%2$02d</xliff:g></string>
     <string name="home_season">S<xliff:g id="season">%1$02d</xliff:g></string>
     <string name="home_episode">E<xliff:g id="episode">%1$02d</xliff:g></string>
     <string name="home_row_cards">কার্ড</string>
     <string name="home_row_keep_watching">দেখা চালিয়ে যান</string>
-    <string name="home_row_continue_movies">মুভি দেখা চালিয়ে যান</string>
+    <string name="home_row_continue_movies">সিনেমা দেখা চালিয়ে যান</string>
     <string name="home_row_continue_series">সিরিজ দেখা চালিয়ে যান</string>
-    <string name="home_row_recent_channels">সাম্প্রতিক চ্যানেল</string>
-    <string name="home_row_favorite_channels">পছন্দের চ্যানেল</string>
+    <string name="home_row_recent_channels">সাম্প্রতিক চ্যানেলগুলো</string>
+    <string name="home_row_favorite_channels">পছন্দের চ্যানেলগুলো</string>
     <string name="home_row_on_now">এখন চলছে</string>
-    <string name="home_row_hero_description">শীর্ষে থাকা বড় প্রিভিউ সারি</string>
-    <string name="home_row_continue_movies_description">সংরক্ষিত অবস্থানসহ মুভি</string>
-    <string name="home_row_continue_series_description">পুনরায় শুরু করা বা পরে প্লে করার পর্ব</string>
-    <string name="home_row_recent_description">আপনি সম্প্রতি টিউন করা লাইভ চ্যানেল</string>
-    <string name="home_row_favorite_description">আপনার পছন্দের লাইভ চ্যানেল</string>
+    <string name="home_row_hero_description">একেবারে উপরের বড় প্রিভিউ সারি</string>
+    <string name="home_row_continue_movies_description">সংরক্ষিত অবস্থানসহ সিনেমাগুলো</string>
+    <string name="home_row_continue_series_description">চালিয়ে যাওয়ার বা পরেরটি চালানোর পর্বগুলো</string>
+    <string name="home_row_recent_description">আপনি সম্প্রতি টিউন করেছেন এমন লাইভ চ্যানেলগুলো</string>
+    <string name="home_row_favorite_description">আপনার পছন্দের লাইভ চ্যানেলগুলো</string>
     <string name="home_on_now_title"><xliff:g id="title">%1$s</xliff:g> · এখন চলছে</string>
     <string name="home_ok_to_watch">দেখতে OK চাপুন</string>
     <string name="home_ok_to_browse">ব্রাউজ করতে OK চাপুন</string>
-    <string name="home_no_programme_details">কোনো প্রোগ্রামের বিবরণ নেই</string>
-    <string name="home_guide_unavailable">গাইড ডেটা অনুপলব্ধ</string>
+    <string name="home_no_programme_details">অনুষ্ঠানের কোনো বিবরণ নেই</string>
+    <string name="home_guide_unavailable">অনুষ্ঠান নির্দেশিকার ডেটা পাওয়া যাচ্ছে না</string>
     <string name="home_next">পরবর্তী</string>
     <string name="home_channel_number"><xliff:g id="number">%1$s</xliff:g>  <xliff:g id="name">%2$s</xliff:g></string>
     <string name="home_time_range"><xliff:g id="start">%1$s</xliff:g>-<xliff:g id="end">%2$s</xliff:g></string>
     <string name="home_now_time">এখন · <xliff:g id="time">%1$s</xliff:g></string>
-    <string name="home_up_next_time">পরবর্তী · <xliff:g id="time">%1$s</xliff:g></string>
+    <string name="home_up_next_time">এরপর · <xliff:g id="time">%1$s</xliff:g></string>
     <string name="home_upcoming_item"><xliff:g id="time">%1$s</xliff:g> <xliff:g id="title">%2$s</xliff:g></string>
     <plurals name="home_channel_count">
         <item quantity="one"><xliff:g id="count">%1$d</xliff:g>টি চ্যানেল</item>
@@ -108,27 +108,27 @@
     <string name="update_title">অ্যাপ আপডেট</string>
     <string name="update_checking">আপডেট পরীক্ষা করা হচ্ছে…</string>
     <string name="update_whats_new">নতুন কী আছে</string>
-    <string name="update_downloading">আপডেট ডাউনলোড করা হচ্ছে… <xliff:g id="percent">%1$d</xliff:g>%%</string>
-    <string name="update_available">আপডেট উপলব্ধ</string>
-    <string name="update_latest">আপনি সর্বশেষ ভার্সনে আছেন (v<xliff:g id="version">%1$s</xliff:g>)।</string>
-    <string name="update_available_version">ভার্সন <xliff:g id="available">%1$s</xliff:g> উপলব্ধ (আপনার কাছে আছে v<xliff:g id="current">%2$s</xliff:g>)।</string>
+    <string name="update_downloading">আপডেট ডাউনলোড হচ্ছে… <xliff:g id="percent">%1$d</xliff:g>%%</string>
+    <string name="update_available">আপডেট পাওয়া গেছে</string>
+    <string name="update_latest">আপনি সর্বশেষ সংস্করণটি ব্যবহার করছেন (v<xliff:g id="version">%1$s</xliff:g>)।</string>
+    <string name="update_available_version">সংস্করণ <xliff:g id="available">%1$s</xliff:g> পাওয়া যাচ্ছে (আপনার কাছে v<xliff:g id="current">%2$s</xliff:g> আছে)।</string>
     <string name="update_installer">ডাউনলোড শেষ হলে সিস্টেম ইনস্টলার খুলবে।</string>
     <string name="update_later">পরে</string>
     <string name="update_now">এখনই আপডেট করুন</string>
     <string name="update_try_again">আবার চেষ্টা করুন</string>
     <string name="update_failed_check">আপডেট পরীক্ষা করা যায়নি।</string>
-    <string name="update_failed_check_http">পরীক্ষার সময় আপডেট সার্ভার HTTP <xliff:g id="code">%1$s</xliff:g> রিটার্ন করেছে।</string>
+    <string name="update_failed_check_http">পরীক্ষা করার সময় আপডেট সার্ভার HTTP <xliff:g id="code">%1$s</xliff:g> ফেরত দিয়েছে।</string>
     <string name="update_no_compatible_apk">রিলিজে এই ডিভাইসের জন্য কোনো আপডেট প্যাকেজ পাওয়া যায়নি।</string>
-    <string name="update_invalid_release_response">আপডেট সার্ভার একটি অবৈধ রিলিজ বিবরণ ফেরত দিয়েছে।</string>
-    <string name="update_failed_download">নেটওয়ার্ক অনুরোধ ব্যর্থ হওয়ায় আপডেট ডাউনলোড করা যায়নি।</string>
-    <string name="update_failed_download_http">আপডেট ডাউনলোড HTTP <xliff:g id="code">%1$s</xliff:g> রিটার্ন করেছে।</string>
+    <string name="update_invalid_release_response">আপডেট সার্ভার রিলিজের একটি অবৈধ বিবরণ ফেরত দিয়েছে।</string>
+    <string name="update_failed_download">নেটওয়ার্ক অনুরোধ ব্যর্থ হওয়ায় আপডেটটি ডাউনলোড করা যায়নি।</string>
+    <string name="update_failed_download_http">আপডেট ডাউনলোড HTTP <xliff:g id="code">%1$s</xliff:g> ফেরত দিয়েছে।</string>
     <string name="update_empty_download">আপডেট সার্ভার একটি খালি APK ফেরত দিয়েছে।</string>
-    <string name="update_install_failed">ডাউনলোড করা আপডেটটি সিস্টেম ইনস্টলার দ্বারা খোলা যায়নি।</string>
-    <string name="update_ready">OwnTV v<xliff:g id="available">%1$s</xliff:g> প্রস্তুত (আপনার কাছে আছে v<xliff:g id="current">%2$s</xliff:g>)।</string>
-    <string name="recovery_title">OwnTV তার ডেটাবেস খুলতে পারেনি</string>
-    <string name="recovery_data_safe_full">আপনার প্রোফাইলসমূহ, প্লেলিস্ট, পছন্দসমূহ ও ইতিহাস মুছে ফেলা হয়নি — এটি একটি ডেটাবেস আপগ্রেড ব্যর্থতা, এবং ডেটা এখনও এই ডিভাইসে আছে।\n\nদয়া করে এটি রিপোর্ট করুন যাতে এটি ঠিক করা যায়, এবং নিচের বার্তাটি অন্তর্ভুক্ত করুন।</string>
+    <string name="update_install_failed">সিস্টেম ইনস্টলার দিয়ে ডাউনলোড করা আপডেটটি খোলা যায়নি।</string>
+    <string name="update_ready">OwnTV v<xliff:g id="available">%1$s</xliff:g> প্রস্তুত (আপনার কাছে v<xliff:g id="current">%2$s</xliff:g> আছে)।</string>
+    <string name="recovery_title">OwnTV এর ডেটাবেস খুলতে পারেনি</string>
+    <string name="recovery_data_safe_full">আপনার প্রোফাইলগুলো, প্লেলিস্টগুলো, পছন্দেরগুলো ও ইতিহাস মোটেও মোছা হয়নি — এটি ডেটাবেস আপগ্রেড ব্যর্থ হওয়ার ঘটনা, এবং ডেটা এখনও এই ডিভাইসেই রয়েছে।\n\nঅনুগ্রহ করে সমস্যাটি জানান, যাতে এটি ঠিক করা যায়, এবং নিচের বার্তাটি সঙ্গে দিন।</string>
     <string name="recovery_retry">আবার চেষ্টা করুন</string>
-    <string name="recovery_backup_hint">যদি আপনার কাছে একটি ব্যাকআপ ফাইল থাকে, আপনি অ্যাপটি রিসেট করে পরে সেটি পুনরুদ্ধার করতে পারেন। রিসেট করলে এই ডিভাইসে সংরক্ষিত সবকিছু মুছে যাবে।</string>
-    <string name="recovery_confirm_reset">নিশ্চিত করুন: সব অ্যাপ ডেটা মুছুন</string>
-    <string name="recovery_reset">অ্যাপ ডেটা রিসেট করুন (শেষ উপায়)</string>
+    <string name="recovery_backup_hint">আপনার কাছে ব্যাকআপ ফাইল থাকলে অ্যাপটি রিসেট করে পরে সেটি পুনরুদ্ধার করতে পারেন। রিসেট করলে এই ডিভাইসে সংরক্ষিত সবকিছু মুছে যাবে।</string>
+    <string name="recovery_confirm_reset">নিশ্চিত করুন: অ্যাপের সব ডেটা মুছুন</string>
+    <string name="recovery_reset">অ্যাপের ডেটা রিসেট করুন (শেষ উপায়)</string>
 </resources>

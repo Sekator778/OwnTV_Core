@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <string name="profiles_pin">PIN</string>
+    <string name="profiles_new">新增使用者檔案</string>
+    <string name="profiles_edit">編輯使用者檔案</string>
+    <string name="profiles_name">名稱</string>
+    <string name="profiles_name_hint">例如 Alex</string>
+    <string name="profiles_avatar">頭像</string>
+    <string name="profiles_kids">兒童使用者檔案</string>
+    <string name="profiles_kids_description">簡化且安全的瀏覽體驗</string>
+    <string name="profiles_remove_pin">移除 PIN 鎖定</string>
+    <string name="profiles_no_pin">此使用者檔案無須 PIN 即可開啟</string>
+    <string name="profiles_change_pin">變更 PIN（留白表示保留原 PIN）</string>
+    <string name="profiles_optional_pin">PIN（選填）</string>
+    <string name="profiles_pin_digits">4–6 位數</string>
+    <string name="profiles_pin_placeholder">····</string>
+    <string name="profiles_name_taken">此名稱已有人使用——請選擇其他名稱。</string>
+    <string name="profiles_create">建立</string>
+    <string name="profiles_save">儲存</string>
+    <string name="profiles_gate_title">誰正在觀看？</string>
+    <string name="profiles_wrong_pin">PIN 錯誤——請再試一次</string>
+    <string name="profiles_enter_pin"><xliff:g id="name">%1$s</xliff:g> — 輸入 PIN</string>
+    <string name="profiles_kids_badge">兒童</string>
+    <string name="profiles_add">新增使用者檔案</string>
+    <string name="profiles_title">使用者檔案</string>
+    <string name="profiles_add_button">新增使用者檔案</string>
+    <string name="profiles_delete_title">刪除「<xliff:g id="name">%1$s</xliff:g>」？</string>
+    <string name="profiles_delete_message">將移除此使用者檔案及其我的最愛和觀看記錄。來源會保留。</string>
+    <string name="profiles_kids_tag">兒童</string>
+    <string name="profiles_locked_tag">PIN 鎖定</string>
+    <string name="search_title">搜尋</string>
+    <string name="search_continue">繼續觀看</string>
+    <string name="search_unwatched">尚未觀看</string>
+    <string name="search_hint">搜尋頻道、電影和影集…</string>
+    <string name="search_recent">最近的搜尋</string>
+    <string name="search_recent_empty">您最近的搜尋會顯示在這裡。</string>
+    <string name="search_minimum_query">請輸入至少 2 個字元，以搜尋所有內容。</string>
+    <string name="search_no_results"><xliff:g id="query">%1$s</xliff:g> — 找不到結果。</string>
+    <string name="search_nothing_in_list"><xliff:g id="list">%1$s</xliff:g> 目前還沒有任何內容。</string>
+    <string name="search_clear">清除</string>
+    <string name="search_jump_to">前往</string>
+    <string name="search_watch_live">觀看直播</string>
+    <string name="search_play">播放</string>
+    <string name="search_open_series">開啟影集</string>
+    <string name="search_movie">電影</string>
+    <string name="search_series">影集</string>
+    <string name="search_channels">頻道</string>
+    <string name="search_channel_number">#<xliff:g id="number">%1$s</xliff:g></string>
+    <string name="home_keep_watching">繼續觀看</string>
+    <string name="home_play_next">播放下一集</string>
+    <string name="home_tune_in">收看</string>
+    <string name="home_recent_live">最近觀看的直播</string>
+    <string name="profiles_default_name">使用者檔案</string>
+    <string name="launcher_recent_live_title">最近觀看的直播</string>
+    <string name="launcher_recent_live_description">最近觀看的直播頻道</string>
+    <string name="launcher_movie_type">電影</string>
+    <string name="launcher_episode_number">第 <xliff:g id="episode">%1$d</xliff:g> 集</string>
+    <string name="home_no_preview">目前還沒有可預覽的內容。</string>
+    <string name="home_no_rows">所有主畫面列都已隱藏。</string>
+    <string name="home_enable_rows">前往「設定」→「主畫面」重新開啟各列。</string>
+    <string name="home_start_watching">開始觀看後，即可在這裡查看您的活動記錄。</string>
+    <string name="home_continue_empty">有播放記錄後，可繼續觀看的內容就會顯示在這裡。</string>
+    <string name="home_last_watched_now">剛剛觀看</string>
+    <string name="home_finish_by">預計在 <xliff:g id="time">%1$s</xliff:g> 前看完</string>
+    <string name="home_resume">繼續播放</string>
+    <plurals name="home_last_watched_minutes">
+        <item quantity="other">上次觀看：<xliff:g id="count">%1$d</xliff:g> 分鐘前</item>
+    </plurals>
+    <plurals name="home_last_watched_hours">
+        <item quantity="other">上次觀看：<xliff:g id="count">%1$d</xliff:g> 小時前</item>
+    </plurals>
+    <plurals name="home_last_watched_days">
+        <item quantity="other">上次觀看：<xliff:g id="count">%1$d</xliff:g> 天前</item>
+    </plurals>
+    <string name="home_season_episode">第<xliff:g id="season">%1$02d</xliff:g>季 第<xliff:g id="episode">%2$02d</xliff:g>集</string>
+    <string name="home_season">第<xliff:g id="season">%1$02d</xliff:g>季</string>
+    <string name="home_episode">第<xliff:g id="episode">%1$02d</xliff:g>集</string>
+    <string name="home_row_cards">卡片式</string>
+    <string name="home_row_keep_watching">繼續觀看</string>
+    <string name="home_row_continue_movies">繼續觀看電影</string>
+    <string name="home_row_continue_series">繼續觀看影集</string>
+    <string name="home_row_recent_channels">最近觀看的頻道</string>
+    <string name="home_row_favorite_channels">最愛頻道</string>
+    <string name="home_row_on_now">現正播出</string>
+    <string name="home_row_hero_description">頂端的大型預覽列</string>
+    <string name="home_row_continue_movies_description">有已儲存播放進度的電影</string>
+    <string name="home_row_continue_series_description">可繼續播放或播放下一集的內容</string>
+    <string name="home_row_recent_description">您最近收看的直播頻道</string>
+    <string name="home_row_favorite_description">已加入我的最愛的直播頻道</string>
+    <string name="home_on_now_title"><xliff:g id="title">%1$s</xliff:g> · 現正播出</string>
+    <string name="home_ok_to_watch">按下 OK 即可觀看</string>
+    <string name="home_ok_to_browse">按下 OK 即可瀏覽</string>
+    <string name="home_no_programme_details">沒有節目詳細資訊</string>
+    <string name="home_guide_unavailable">節目表資料無法使用</string>
+    <string name="home_next">下一個</string>
+    <string name="home_channel_number"><xliff:g id="number">%1$s</xliff:g>  <xliff:g id="name">%2$s</xliff:g></string>
+    <string name="home_time_range"><xliff:g id="start">%1$s</xliff:g>-<xliff:g id="end">%2$s</xliff:g></string>
+    <string name="home_now_time">現在 · <xliff:g id="time">%1$s</xliff:g></string>
+    <string name="home_up_next_time">接下來 · <xliff:g id="time">%1$s</xliff:g></string>
+    <string name="home_upcoming_item"><xliff:g id="time">%1$s</xliff:g> <xliff:g id="title">%2$s</xliff:g></string>
+    <plurals name="home_channel_count">
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> 個頻道</item>
+    </plurals>
+    <string name="update_title">應用程式更新</string>
+    <string name="update_checking">正在檢查更新…</string>
+    <string name="update_whats_new">更新內容</string>
+    <string name="update_downloading">正在下載更新… <xliff:g id="percent">%1$d</xliff:g>%%</string>
+    <string name="update_available">有可用的更新</string>
+    <string name="update_latest">您使用的是最新版本（v<xliff:g id="version">%1$s</xliff:g>）。</string>
+    <string name="update_available_version">版本 <xliff:g id="available">%1$s</xliff:g> 已推出（目前為 v<xliff:g id="current">%2$s</xliff:g>）。</string>
+    <string name="update_installer">下載完成後，系統安裝程式將會開啟。</string>
+    <string name="update_later">稍後</string>
+    <string name="update_now">立即更新</string>
+    <string name="update_try_again">再試一次</string>
+    <string name="update_failed_check">無法檢查更新。</string>
+    <string name="update_failed_check_http">檢查時，更新伺服器傳回 HTTP <xliff:g id="code">%1$s</xliff:g>。</string>
+    <string name="update_no_compatible_apk">在此發行版本中找不到適用於此裝置的更新套件。</string>
+    <string name="update_invalid_release_response">更新伺服器傳回無效的版本說明。</string>
+    <string name="update_failed_download">因網路請求失敗，無法下載更新。</string>
+    <string name="update_failed_download_http">下載更新時傳回 HTTP <xliff:g id="code">%1$s</xliff:g>。</string>
+    <string name="update_empty_download">更新伺服器傳回空白的 APK。</string>
+    <string name="update_install_failed">系統安裝程式無法開啟已下載的更新。</string>
+    <string name="update_ready">OwnTV v<xliff:g id="available">%1$s</xliff:g> 已準備就緒（目前為 v<xliff:g id="current">%2$s</xliff:g>）。</string>
+    <string name="recovery_title">OwnTV 無法開啟其資料庫</string>
+    <string name="recovery_data_safe_full">您的使用者檔案、播放清單、我的最愛和觀看記錄並未遭到刪除——這是資料庫升級失敗，資料仍保存在此裝置上。\n\n請回報此問題以便修正，並附上以下訊息。</string>
+    <string name="recovery_retry">再試一次</string>
+    <string name="recovery_backup_hint">如果您有備份檔案，可以重設應用程式，之後再進行還原。重設會刪除此裝置上儲存的所有內容。</string>
+    <string name="recovery_confirm_reset">確認：清除所有應用程式資料</string>
+    <string name="recovery_reset">重設應用程式資料（最後手段）</string>
+</resources>

@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <string name="common_cancel">取消</string>
+    <string name="common_back">返回</string>
+    <string name="common_save">保存</string>
+    <string name="common_edit">编辑</string>
+    <string name="common_delete">删除</string>
+    <string name="common_clear">清除</string>
+    <string name="common_retry">重试</string>
+    <string name="common_create">创建</string>
+    <string name="common_reset">重置</string>
+    <string name="common_done">完成</string>
+    <string name="common_ok">确定</string>
+    <string name="common_on">已开启</string>
+    <string name="common_off">已关闭</string>
+    <string name="common_exit">退出</string>
+    <string name="common_resume">继续</string>
+    <string name="common_start_over">从头播放</string>
+    <string name="common_name">名称</string>
+    <string name="common_own_tv_user">OwnTV 用户</string>
+    <string name="common_switch_profile">切换用户档案</string>
+    <string name="common_proxy">代理</string>
+    <string name="common_title">标题</string>
+    <string name="common_search_hint">搜索…</string>
+    <string name="common_search">搜索</string>
+    <string name="common_weather_fahrenheit"><xliff:g id="temperature">%1$d</xliff:g>°F</string>
+    <string name="common_weather_celsius"><xliff:g id="temperature">%1$d</xliff:g>°C</string>
+    <string name="common_weather_city"><xliff:g id="temperature">%1$s</xliff:g> · <xliff:g id="city">%2$s</xliff:g></string>
+    <string name="common_nav_search">搜索</string>
+    <string name="common_nav_home">主屏幕</string>
+    <string name="common_nav_live_tv">直播电视</string>
+    <string name="common_nav_movies">电影</string>
+    <string name="common_nav_series">剧集</string>
+    <string name="common_nav_downloads">下载内容</string>
+    <string name="common_nav_guide">节目指南</string>
+    <string name="common_nav_settings">设置</string>
+    <string name="shell_no_source">未配置源</string>
+    <string name="common_something_went_wrong">出了点问题</string>
+    <string name="common_move_instructions">按 ▲/▼ 移动 · 按确定保存 · 按返回取消</string>
+    <string name="common_number_grouped"><xliff:g id="count">%1$,d</xliff:g></string>
+    <string name="common_rating"><xliff:g id="rating">%1$.1f</xliff:g></string>
+    <string name="common_percent"><xliff:g id="percent">%1$d</xliff:g>%%</string>
+    <string name="common_timestamp_minutes"><xliff:g id="minutes">%1$d</xliff:g>:<xliff:g id="seconds">%2$02d</xliff:g></string>
+    <string name="common_timestamp_hours"><xliff:g id="hours">%1$d</xliff:g>:<xliff:g id="minutes">%2$02d</xliff:g>:<xliff:g id="seconds">%3$02d</xliff:g></string>
+    <string name="common_resume_position">你在 <xliff:g id="position">%1$s</xliff:g> 处停止了播放。</string>
+    <string name="common_resume_prompt">继续播放？</string>
+    <string name="sync_error_offline">你似乎处于离线状态。请检查连接后重试。</string>
+    <string name="sync_error_generic">出了点问题。请重试。</string>
+    <string name="sync_error_timeout">服务器响应时间过长。请重试。</string>
+    <string name="sync_error_unreachable">无法访问服务器。请检查地址和连接。</string>
+    <string name="sync_error_connection">无法连接到服务器。服务器可能已停机，或地址可能有误。</string>
+    <string name="sync_error_interrupted">服务器中断了下载。请重试。</string>
+    <string name="sync_error_mac">门户拒绝了此 MAC 地址。请检查 MAC 地址（以及电视的日期和时间），或者订阅可能已过期。</string>
+    <string name="sync_error_invalid_mac">MAC 地址无效——请使用 AA:BB:CC:DD:EE:FF 格式</string>
+    <string name="sync_counts_separator">  ·  </string>
+    <string name="sync_counts_success">同步成功</string>
+    <string name="sync_counts_synced"><xliff:g id="counts">%1$s</xliff:g> 项已同步</string>
+    <string name="sync_import_warnings">已导入，但有警告：<xliff:g id="phases">%1$s</xliff:g></string>
+    <string name="sync_warning_phase_error"><xliff:g id="phase">%1$s</xliff:g>：<xliff:g id="message">%2$s</xliff:g></string>
+    <plurals name="sync_warning_catalog_shrink">
+        <item quantity="other">已保留 <xliff:g id="stored">%1$d</xliff:g> 个现有项目——本次导入返回的项目少了 <xliff:g id="percent">%2$d</xliff:g>%%。请再次同步；如果服务提供商确实已将这些项目移除，请使用“强制清理同步”。</item>
+    </plurals>
+    <plurals name="sync_warning_page_failures">
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> 个源页面同步失败；在下次同步前，部分内容可能缺失。</item>
+    </plurals>
+    <string name="sync_remainder_note">目录的其余内容仍在后台同步，你现在就可以开始观看。进度会显示在屏幕底部的小胶囊标签中。</string>
+    <string name="sync_progress_preparing">正在准备目录</string>
+    <string name="sync_progress_connecting">正在连接到源…</string>
+    <string name="sync_progress_syncing">正在同步目录</string>
+    <string name="sync_progress_percent">正在同步 <xliff:g id="percent">%1$d</xliff:g>%%</string>
+    <string name="sync_status_catalog">正在同步 <xliff:g id="source">%1$s</xliff:g></string>
+    <string name="sync_status_catalog_with_counts">正在同步 <xliff:g id="source">%1$s</xliff:g> · <xliff:g id="counts">%2$s</xliff:g></string>
+    <string name="sync_status_epg">正在更新节目指南 · <xliff:g id="source">%1$s</xliff:g></string>
+    <string name="sync_status_epg_with_counts">正在更新节目指南 · <xliff:g id="source">%1$s</xliff:g> · <xliff:g id="counts">%2$s</xliff:g></string>
+    <string name="sync_status_complete">同步完成 · <xliff:g id="source">%1$s</xliff:g></string>
+    <string name="sync_status_complete_with_changes">同步完成 · <xliff:g id="source">%1$s</xliff:g> · <xliff:g id="changes">%2$s</xliff:g></string>
+    <string name="sync_status_failed">同步失败 · <xliff:g id="source">%1$s</xliff:g>：<xliff:g id="reason">%2$s</xliff:g></string>
+    <string name="sync_status_cancelled">同步已取消 · <xliff:g id="source">%1$s</xliff:g></string>
+    <string name="sync_phase_live">直播电视</string>
+    <string name="sync_phase_movies">电影</string>
+    <string name="sync_phase_series">剧集</string>
+    <plurals name="sync_count_channels">
+        <item quantity="other"><xliff:g id="count">%1$s</xliff:g> 个频道</item>
+    </plurals>
+    <plurals name="sync_count_movies">
+        <item quantity="other"><xliff:g id="count">%1$s</xliff:g> 部电影</item>
+    </plurals>
+    <plurals name="sync_count_series">
+        <item quantity="other"><xliff:g id="count">%1$s</xliff:g> 部剧集</item>
+    </plurals>
+    <plurals name="sync_count_epg">
+        <item quantity="other"><xliff:g id="count">%1$s</xliff:g> 个电子节目指南（EPG）条目</item>
+    </plurals>
+    <plurals name="sync_status_more">
+        <item quantity="other">+<xliff:g id="count">%1$d</xliff:g> 项同步任务正在进行</item>
+    </plurals>
+    <plurals name="sync_categories_added">
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> 个分类已添加</item>
+    </plurals>
+    <plurals name="sync_categories_removed">
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> 个分类已移除</item>
+    </plurals>
+    <string name="sync_error_portal">无法访问门户。请检查门户 URL，它通常以 /c/ 结尾。</string>
+    <string name="sync_error_session">门户会话已过期。请重试。</string>
+    <string name="sync_error_auth">服务器拒绝了你的登录请求。请检查用户名和密码。</string>
+    <string name="sync_error_not_found">在服务器上未找到请求的内容。请检查 URL。</string>
+    <string name="sync_error_server">服务器出现问题。请稍后重试。</string>
+    <string name="sync_error_secure">安全连接失败——服务器证书可能无效。</string>
+    <string name="sync_error_malformed_guide">服务器返回的节目指南数据格式有误。部分数据可能仍已成功加载——请重试，或检查电子节目指南（EPG）URL。</string>
+    <string name="common_items_per_skip">每次跳过的项目数</string>
+    <string name="common_plus">+</string>
+    <string name="common_minus">–</string>
+    <string name="common_hide">隐藏</string>
+    <string name="common_show">显示</string>
+    <string name="common_qr_code_companion_url">配套服务 URL 的二维码</string>
+</resources>

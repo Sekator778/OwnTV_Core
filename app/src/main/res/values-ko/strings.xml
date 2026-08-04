@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <string name="common_cancel">취소</string>
+    <string name="common_back">뒤로</string>
+    <string name="common_save">저장</string>
+    <string name="common_edit">편집</string>
+    <string name="common_delete">삭제</string>
+    <string name="common_clear">지우기</string>
+    <string name="common_retry">다시 시도</string>
+    <string name="common_create">만들기</string>
+    <string name="common_reset">초기화</string>
+    <string name="common_done">완료</string>
+    <string name="common_ok">확인</string>
+    <string name="common_on">켜짐</string>
+    <string name="common_off">꺼짐</string>
+    <string name="common_exit">종료</string>
+    <string name="common_resume">이어보기</string>
+    <string name="common_start_over">처음부터 보기</string>
+    <string name="common_name">이름</string>
+    <string name="common_own_tv_user">OwnTV 사용자</string>
+    <string name="common_switch_profile">프로필 전환</string>
+    <string name="common_proxy">프록시</string>
+    <string name="common_title">제목</string>
+    <string name="common_search_hint">검색…</string>
+    <string name="common_search">검색</string>
+    <string name="common_weather_fahrenheit"><xliff:g id="temperature">%1$d</xliff:g>°F</string>
+    <string name="common_weather_celsius"><xliff:g id="temperature">%1$d</xliff:g>°C</string>
+    <string name="common_weather_city"><xliff:g id="temperature">%1$s</xliff:g> · <xliff:g id="city">%2$s</xliff:g></string>
+    <string name="common_nav_search">검색</string>
+    <string name="common_nav_home">홈</string>
+    <string name="common_nav_live_tv">실시간 TV</string>
+    <string name="common_nav_movies">영화</string>
+    <string name="common_nav_series">시리즈</string>
+    <string name="common_nav_downloads">다운로드</string>
+    <string name="common_nav_guide">편성표</string>
+    <string name="common_nav_settings">설정</string>
+    <string name="shell_no_source">소스 없음</string>
+    <string name="common_something_went_wrong">문제가 발생했습니다</string>
+    <string name="common_move_instructions">▲/▼로 이동 · 확인을 눌러 저장 · 뒤로를 눌러 취소</string>
+    <string name="common_number_grouped"><xliff:g id="count">%1$,d</xliff:g></string>
+    <string name="common_rating"><xliff:g id="rating">%1$.1f</xliff:g></string>
+    <string name="common_percent"><xliff:g id="percent">%1$d</xliff:g>%%</string>
+    <string name="common_timestamp_minutes"><xliff:g id="minutes">%1$d</xliff:g>:<xliff:g id="seconds">%2$02d</xliff:g></string>
+    <string name="common_timestamp_hours"><xliff:g id="hours">%1$d</xliff:g>:<xliff:g id="minutes">%2$02d</xliff:g>:<xliff:g id="seconds">%3$02d</xliff:g></string>
+    <string name="common_resume_position"><xliff:g id="position">%1$s</xliff:g>에서 시청을 중단했습니다.</string>
+    <string name="common_resume_prompt">이어서 재생할까요?</string>
+    <string name="sync_error_offline">오프라인 상태인 것 같습니다. 연결 상태를 확인하고 다시 시도하세요.</string>
+    <string name="sync_error_generic">문제가 발생했습니다. 다시 시도하세요.</string>
+    <string name="sync_error_timeout">서버 응답 시간이 너무 오래 걸렸습니다. 다시 시도하세요.</string>
+    <string name="sync_error_unreachable">서버에 연결할 수 없습니다. 주소와 연결 상태를 확인하세요.</string>
+    <string name="sync_error_connection">서버에 연결하지 못했습니다. 서버가 중단되었거나 주소가 잘못되었을 수 있습니다.</string>
+    <string name="sync_error_interrupted">서버에서 다운로드를 중단했습니다. 다시 시도하세요.</string>
+    <string name="sync_error_mac">포털에서 이 MAC 주소를 거부했습니다 — MAC 주소(및 TV의 날짜와 시간)를 확인해야 하며, 그렇지 않다면 구독이 만료되었을 수 있습니다.</string>
+    <string name="sync_error_invalid_mac">잘못된 MAC 주소입니다 — AA:BB:CC:DD:EE:FF 형식을 사용하세요</string>
+    <string name="sync_counts_separator">  ·  </string>
+    <string name="sync_counts_success">동기화에 성공했습니다</string>
+    <string name="sync_counts_synced"><xliff:g id="counts">%1$s</xliff:g>개 동기화됨</string>
+    <string name="sync_import_warnings">경고와 함께 가져옴: <xliff:g id="phases">%1$s</xliff:g></string>
+    <string name="sync_warning_phase_error"><xliff:g id="phase">%1$s</xliff:g>: <xliff:g id="message">%2$s</xliff:g></string>
+    <plurals name="sync_warning_catalog_shrink">
+        <item quantity="other">기존 항목 <xliff:g id="stored">%1$d</xliff:g>개를 유지했습니다 — 이번 가져오기에서 반환된 항목 수가 <xliff:g id="percent">%2$d</xliff:g>%% 더 적습니다. 제공업체에서 실제로 항목을 삭제했다면 다시 동기화하거나 강제 초기화 동기화를 사용하세요.</item>
+    </plurals>
+    <plurals name="sync_warning_page_failures">
+        <item quantity="other">소스 페이지 <xliff:g id="count">%1$d</xliff:g>개를 불러오지 못해 다음 동기화 전까지 일부 콘텐츠가 누락될 수 있습니다.</item>
+    </plurals>
+    <string name="sync_remainder_note">나머지 카탈로그는 백그라운드에서 계속 동기화되고 있으므로 지금 시청을 시작할 수 있습니다. 진행 상황은 화면 하단의 작은 알약 모양 표시에 나타납니다.</string>
+    <string name="sync_progress_preparing">카탈로그 준비 중</string>
+    <string name="sync_progress_connecting">소스에 연결하는 중…</string>
+    <string name="sync_progress_syncing">카탈로그 동기화 중</string>
+    <string name="sync_progress_percent"><xliff:g id="percent">%1$d</xliff:g>%% 동기화 중</string>
+    <string name="sync_status_catalog"><xliff:g id="source">%1$s</xliff:g> 동기화 중</string>
+    <string name="sync_status_catalog_with_counts"><xliff:g id="source">%1$s</xliff:g> 동기화 중 · <xliff:g id="counts">%2$s</xliff:g></string>
+    <string name="sync_status_epg">편성표 업데이트 중 · <xliff:g id="source">%1$s</xliff:g></string>
+    <string name="sync_status_epg_with_counts">편성표 업데이트 중 · <xliff:g id="source">%1$s</xliff:g> · <xliff:g id="counts">%2$s</xliff:g></string>
+    <string name="sync_status_complete">동기화 완료 · <xliff:g id="source">%1$s</xliff:g></string>
+    <string name="sync_status_complete_with_changes">동기화 완료 · <xliff:g id="source">%1$s</xliff:g> · <xliff:g id="changes">%2$s</xliff:g></string>
+    <string name="sync_status_failed">동기화 실패 · <xliff:g id="source">%1$s</xliff:g>: <xliff:g id="reason">%2$s</xliff:g></string>
+    <string name="sync_status_cancelled">동기화 취소됨 · <xliff:g id="source">%1$s</xliff:g></string>
+    <string name="sync_phase_live">실시간 TV</string>
+    <string name="sync_phase_movies">영화</string>
+    <string name="sync_phase_series">시리즈</string>
+    <plurals name="sync_count_channels">
+        <item quantity="other">채널 <xliff:g id="count">%1$s</xliff:g>개</item>
+    </plurals>
+    <plurals name="sync_count_movies">
+        <item quantity="other">영화 <xliff:g id="count">%1$s</xliff:g>편</item>
+    </plurals>
+    <plurals name="sync_count_series">
+        <item quantity="other">시리즈 <xliff:g id="count">%1$s</xliff:g>개</item>
+    </plurals>
+    <plurals name="sync_count_epg">
+        <item quantity="other">EPG 항목 <xliff:g id="count">%1$s</xliff:g>개</item>
+    </plurals>
+    <plurals name="sync_status_more">
+        <item quantity="other">+<xliff:g id="count">%1$d</xliff:g>개 더 동기화 중</item>
+    </plurals>
+    <plurals name="sync_categories_added">
+        <item quantity="other">카테고리 <xliff:g id="count">%1$d</xliff:g>개 추가</item>
+    </plurals>
+    <plurals name="sync_categories_removed">
+        <item quantity="other">카테고리 <xliff:g id="count">%1$d</xliff:g>개 삭제</item>
+    </plurals>
+    <string name="sync_error_portal">포털에 연결할 수 없습니다. 포털 URL을 확인하세요 — 일반적으로 /c/로 끝납니다.</string>
+    <string name="sync_error_session">포털 세션이 만료되었습니다. 다시 시도하세요.</string>
+    <string name="sync_error_auth">서버에서 로그인을 거부했습니다. 사용자 이름과 비밀번호를 확인하세요.</string>
+    <string name="sync_error_not_found">서버에서 찾을 수 없습니다. URL을 확인하세요.</string>
+    <string name="sync_error_server">서버에 문제가 발생했습니다. 나중에 다시 시도하세요.</string>
+    <string name="sync_error_secure">보안 연결에 실패했습니다 — 서버 인증서가 유효하지 않을 수 있습니다.</string>
+    <string name="sync_error_malformed_guide">서버에서 받은 편성표 데이터 형식이 잘못되었습니다. 일부는 이미 불러왔을 수 있습니다 — 다시 시도하거나 EPG URL을 확인하세요.</string>
+    <string name="common_items_per_skip">한 번에 건너뛸 항목 수</string>
+    <string name="common_plus">+</string>
+    <string name="common_minus">–</string>
+    <string name="common_hide">숨기기</string>
+    <string name="common_show">표시</string>
+    <string name="common_qr_code_companion_url">연동 URL의 QR 코드</string>
+</resources>

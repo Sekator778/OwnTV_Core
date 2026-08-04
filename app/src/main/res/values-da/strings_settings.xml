@@ -1,0 +1,832 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <string name="settings_sort_playlist">Afspilningsliste</string>
+    <string name="settings_sort_alpha">A–Å</string>
+    <string name="settings_sort_rating">Bedømmelse</string>
+    <string name="settings_sort_date_added">Dato tilføjet</string>
+    <string name="settings_mini_player">Miniafspiller</string>
+    <string name="settings_mini_player_description">Den lille flydende afspiller, du får, når du forankrer (PiP) en kanal, mens du navigerer. Skift indstillingerne her eller løbende med knapperne til at ændre størrelse og flytte på selve miniafspilleren.</string>
+    <string name="settings_size">Størrelse</string>
+    <string name="settings_mini_player_size_description">Hvor stor miniafspilleren er som en andel af skærmens bredde (<xliff:g id="min">%1$d</xliff:g>%%–<xliff:g id="max">%2$d</xliff:g>%%).</string>
+    <string name="settings_position">Placering</string>
+    <string name="settings_mini_player_position_description">Hvilket hjørne eller hvilken kant miniafspilleren forankres til.</string>
+    <string name="settings_mini_player_size">Miniafspillerens størrelse</string>
+    <string name="settings_mini_player_position">Miniafspillerens placering</string>
+    <string name="settings_home_screen">Startskærm</string>
+    <string name="settings_home_description">Skjul, omarranger og filtrer rækker på startskærmen for denne profil.</string>
+    <string name="settings_sections">Sektioner</string>
+    <string name="settings_hidden_sections">Skjulte sektioner forbliver på listen, så du kan slå dem til igen.</string>
+    <string name="settings_keep_watching">Fortsæt med at se</string>
+    <string name="settings_live_keep_watching">Livekanaler i Fortsæt med at se</string>
+    <string name="settings_live_keep_watching_description">Vis senest sete livekanaler i hero-rækken.</string>
+    <string name="settings_movies_keep_watching">Film i Fortsæt med at se</string>
+    <string name="settings_movies_keep_watching_description">Vis kort til fortsat afspilning af film i hero-rækken.</string>
+    <string name="settings_series_keep_watching">Serier i Fortsæt med at se</string>
+    <string name="settings_series_keep_watching_description">Vis kort til fortsat afspilning af afsnit i hero-rækken.</string>
+    <string name="settings_android_tv_home">Android TV-startskærm</string>
+    <string name="settings_android_tv_home_description">Vis Fortsæt med at se og seneste livekanaler på tv\'ets startskærm.</string>
+    <string name="settings_refresh_now">Opdater nu</string>
+    <string name="settings_refresh_description">Genopbyg kortene for Fortsæt med at se og seneste kanaler på Android TV-startskærmen.</string>
+    <string name="settings_rebuilding">Genopbygger…</string>
+    <string name="settings_done_check">Færdig ✓</string>
+    <string name="settings_mode"><xliff:g id="mode">%1$s</xliff:g></string>
+    <string name="settings_hidden">Skjult</string>
+    <string name="settings_sidebar_customization">Tilpasning af sidemenu</string>
+    <string name="settings_sidebar_description">Vælg, hvilke ikoner der vises i sidemenuen, eller lad dem tilpasse sig din afspilningsliste.</string>
+    <string name="settings_behavior">Funktionsmåde</string>
+    <string name="settings_nav_dynamic_description">Dynamisk — ikonerne tilpasses efter indholdet i din aktive afspilningsliste. Start og Indstillinger vises altid.</string>
+    <string name="settings_nav_static_description">Statisk — vælg manuelt, hvilke ikoner der vises nedenfor.</string>
+    <string name="settings_icons">Ikoner</string>
+    <string name="settings_shown_in_menu">Vist i sidemenuen</string>
+    <string name="settings_hidden_from_menu">Skjult fra sidemenuen</string>
+    <string name="settings_shown">Vist</string>
+    <string name="settings_nav_behavior">Navigationsmenuens funktionsmåde</string>
+    <string name="settings_static">Statisk</string>
+    <string name="settings_dynamic">Dynamisk</string>
+    <string name="settings_http_proxy">HTTP-proxy</string>
+    <string name="settings_use_proxy">Brug proxy</string>
+    <string name="settings_proxy_description">Send al trafik og afspilning fra OwnTV gennem en HTTP-proxy.</string>
+    <string name="settings_host">Vært</string>
+    <string name="settings_proxy_host_hint">proxy.example.com</string>
+    <string name="settings_port">Port</string>
+    <string name="settings_proxy_port_hint">8080</string>
+    <string name="settings_username_optional">Brugernavn (valgfrit)</string>
+    <string name="settings_password_optional">Adgangskode (valgfri)</string>
+    <string name="settings_test_proxy">Test proxy</string>
+    <string name="settings_testing">Tester…</string>
+    <string name="settings_proxy_privacy">Din proxyudbyder kan se, hvilke servere du opretter forbindelse til, og indholdet af al trafik, der ikke bruger HTTPS.</string>
+    <string name="settings_proxy_limitations">Indtil videre understøttes kun HTTP-proxy — SOCKS og separate proxyer pr. afspilningsliste understøttes endnu ikke.</string>
+    <string name="settings_proxy_connected"><xliff:g id="millis">%1$d</xliff:g> ms</string>
+    <string name="settings_proxy_invalid_address">Angiv en gyldig vært og port (1–65535).</string>
+    <string name="settings_proxy_host_unreachable">Proxyværten kan ikke nås.</string>
+    <string name="settings_proxy_timed_out">Forbindelsen til proxyen fik timeout.</string>
+    <string name="settings_proxy_connection_failed">Der kunne ikke oprettes forbindelse til proxyen (kontrollér vært/port).</string>
+    <string name="settings_proxy_http">Proxyen returnerede HTTP <xliff:g id="code">%1$d</xliff:g></string>
+    <string name="settings_proxy_failed">Proxytesten mislykkedes.</string>
+    <string name="settings_ch_nav_title">Sidevisning med CH+-tasterne</string>
+    <string name="settings_ch_nav_description">Gennemse kategori- eller elementlisten sidevis med CH+ / CH−-tasterne på fjernbetjeningen.</string>
+    <string name="settings_ch_nav_enabled">Brug CH+-tasterne til at gennemse lister sidevis</string>
+    <string name="settings_ch_nav_enabled_description">Når dette er slået til, springer CH+ og CH− i det fokuserede panel (kategorilinjen eller elementlisten samt kategorilisten under Tilpas). Når det er slået fra, gør tasterne intet på disse skærme.</string>
+    <string name="settings_ch_nav_up">CH+-spring (mod første)</string>
+    <string name="settings_ch_nav_up_description">Hvor mange elementer ét tryk på CH+ springer op. Et langt tryk går altid til det første element.</string>
+    <string name="settings_ch_nav_down">CH−-spring (mod sidste)</string>
+    <string name="settings_ch_nav_down_description">Hvor mange elementer ét tryk på CH− springer ned. Et langt tryk går altid til det sidste element.</string>
+    <string name="settings_skip_counts">Antal elementer pr. spring</string>
+    <string name="settings_how_it_works">Sådan fungerer det</string>
+    <string name="settings_ch_nav_help">• Spring begrænses ved enderne, så korte lister når enden med ét tryk.\n• Langt tryk på CH+ = første element, langt tryk på CH− = sidste element.\n• Lange tryk er deaktiveret på listen \"Alle\" (alle kanaler / film / serier) — korte tryk til at springe virker stadig dér.\n• Gælder det panel, der aktuelt har fokus — kategorilinjen eller elementlisten/gitteret.\n• Gennemser også kategorilisten sidevis under Indstillinger → Tilpas kategorier og elementer.</string>
+    <string name="settings_large_skips_warning">Store spring kan gå forbi korte lister og kan føles hakkende på mindre kraftige tv\'er.</string>
+    <string name="settings_ch_nav_picker">Sidevisning med CH+-tasterne</string>
+    <string name="settings_weather">Vejr</string>
+    <string name="settings_top_bar_weather">Vejr på toplinjen</string>
+    <string name="settings_show_weather">Vis vejret</string>
+    <string name="settings_show_weather_description">Vis det aktuelle vejr på toplinjen.</string>
+    <string name="settings_custom_location">Brugerdefineret placering</string>
+    <string name="settings_custom_location_description">Tilsidesæt den by, der bruges til vejret. Lad feltet stå tomt for automatisk registrering, eller angiv en by (f.eks. London) eller \"breddegrad,længdegrad\" (f.eks. 51.5,-0.12). Dette er nyttigt med en VPN, hvor automatisk registrering finder serverens by.</string>
+    <string name="settings_temperature_unit">Temperaturenhed</string>
+    <string name="settings_temperature_description">Vis temperaturen i Celsius eller Fahrenheit.</string>
+    <string name="settings_auto">Automatisk</string>
+    <string name="settings_city_latlon">By eller breddegrad,længdegrad</string>
+    <string name="settings_location_hint">Lad feltet stå tomt for automatisk registrering ud fra din offentlige IP-adresse. Angiv en by (f.eks. London) eller \"breddegrad,længdegrad\" (f.eks. 51.5,-0.12).</string>
+    <string name="settings_metadata">Metadata (TMDB)</string>
+    <string name="settings_metadata_source">Metadatakilde</string>
+    <string name="settings_metadata_source_description">Vælg, hvor oplysninger om film og serier hentes fra.</string>
+    <string name="settings_metadata_provider_description">Brug kun det, din afspilningsliste leverer. Ingen opslag hos TMDB.</string>
+    <string name="settings_metadata_provider_tmdb_description">Oplysningerne fra din afspilningsliste har førsteprioritet. TMDB udfylder manglerne og tilføjer medvirkende, genrer og baggrundsbilleder.</string>
+    <string name="settings_metadata_tmdb_only_description">Foretræk TMDB for alle felter. Brug kun din afspilningsliste som reserve, når TMDB ikke har nogen oplysninger.</string>
+    <string name="settings_selected">Valgt</string>
+    <string name="settings_active_tmdb_source">Aktiv TMDB-kilde: <xliff:g id="tier">%1$s</xliff:g></string>
+    <string name="settings_metadata_language">Metadatasprog</string>
+    <string name="settings_metadata_language_description">Sprog for handlingsbeskrivelser, genrer og titler fra TMDB. Felter, som TMDB ikke har oversat, forbliver på engelsk. Når dette ændres, ryddes de cachelagrede oplysninger, så de hentes igen.</string>
+    <string name="settings_advanced_options">Avancerede indstillinger</string>
+    <string name="settings_advanced_metadata_description">Brug din egen TMDB API-nøgle eller en server med egen hosting i stedet for den fælles standard.</string>
+    <string name="settings_metadata_server_description">Lad begge felter stå tomme for at bruge den indbyggede fællesserver (ingen opsætning). Angiv din egen TMDB API-nøgle for at kalde TMDB direkte eller URL\'en til en server med egen hosting for at bruge din egen proxy eller dit eget spejl. En URL har prioritet over en nøgle.</string>
+    <string name="settings_tmdb_api_key">TMDB API-nøgle (v3)</string>
+    <string name="settings_self_host_url">URL til server med egen hosting</string>
+    <string name="settings_test">Test</string>
+    <string name="settings_metadata_empty_title">Angiv en titel, der skal slås op.</string>
+    <string name="settings_metadata_server_unavailable">Metadataserveren kunne ikke nås — kontrollér netværk / nøgle / URL.</string>
+    <string name="settings_metadata_no_match">Intet TMDB-match for \"<xliff:g id="query">%1$s</xliff:g>\".</string>
+    <string name="settings_metadata_lookup_failed">Opslaget mislykkedes.</string>
+    <string name="settings_metadata_match_result"><xliff:g id="title">%1$s</xliff:g><xliff:g id="year">%2$s</xliff:g> · tmdb #<xliff:g id="id">%3$d</xliff:g></string>
+    <string name="settings_metadata_year"> (<xliff:g id="year">%1$d</xliff:g>)</string>
+    <string name="settings_lookup_movie">Slå en filmtitel op</string>
+    <string name="settings_test_lookup">Test opslag</string>
+    <string name="settings_looking_up">Slår op…</string>
+    <string name="settings_tmdb_attribution">Dette produkt bruger TMDB API, men er ikke godkendt eller certificeret af TMDB.</string>
+    <string name="settings_metadata_provider_only">Kun udbyder</string>
+    <string name="settings_metadata_provider_plus_tmdb">Udbyder + TMDB</string>
+    <string name="settings_metadata_tmdb_only">Kun TMDB</string>
+    <string name="settings_tier_default">Standard (fælles)</string>
+    <string name="settings_tier_key">Din TMDB-nøgle</string>
+    <string name="settings_tier_self_host">Egen hosting</string>
+    <string name="settings_title">Indstillinger</string>
+    <string name="settings_quick_live_preview">Liveforhåndsvisning</string>
+    <string name="settings_quick_preview_sound">Lyd ved forhåndsvisning</string>
+    <string name="settings_quick_channel_numbers">Kanalnumre</string>
+    <string name="settings_quick_hdr">HDR</string>
+    <string name="settings_quick_autoplay">Automatisk afspilning</string>
+    <string name="settings_quick_check_update">Søg efter opdatering</string>
+    <string name="settings_search_label">Søg i indstillinger</string>
+    <string name="settings_search_hint">Søg i indstillinger…</string>
+    <string name="settings_group_general">Generelt</string>
+    <string name="settings_language">Sprog</string>
+    <string name="settings_language_description">Appens visningssprog</string>
+    <string name="settings_language_system_default">Systemstandard</string>
+    <string name="settings_language_system_default_description">Følger enhedens sprog</string>
+    <string name="settings_language_search_hint">Søg efter sprog…</string>
+    <string name="settings_search_keywords_language">sprog landestandard oversættelse international i18n</string>
+    <string name="settings_language_coverage"><xliff:g id="percent">%1$d</xliff:g>%%</string>
+    <string name="settings_profile_group">Profil</string>
+    <string name="settings_profiles_description">Administrer seere, børnetilstand og PIN-låse</string>
+    <string name="settings_content_group">Indhold</string>
+    <string name="settings_playlists">Afspilningslister</string>
+    <string name="settings_playlists_description">Tilføj, synkroniser igen eller fjern M3U- / Xtream-afspilningslister</string>
+    <string name="settings_epg_sources">EPG-kilder</string>
+    <string name="settings_epg_sources_nav_description">Tilføj XMLTV-guidefeeds til programguiden</string>
+    <string name="settings_customize">Tilpas kategorier og elementer</string>
+    <string name="settings_customize_nav_description">Skjul og vis elementer, omdøb og omarranger kategorier</string>
+    <string name="settings_sidebar_description_root">Tilpas automatisk sideikonerne til din afspilningsliste, eller skjul bestemte ikoner</string>
+    <string name="settings_ch_paging">Sidevisning med CH+-tasterne</string>
+    <string name="settings_ch_paging_description">Spring op/ned i kategori- og elementlisterne med CH+ / CH−-tasterne</string>
+    <string name="settings_browsing_lists">Navigation og lister</string>
+    <string name="settings_browsing_description">Husk den seneste kategori og det seneste element i Live-tv, film og serier</string>
+    <string name="settings_home_root">Startskærm</string>
+    <string name="settings_home_root_description">Vælg, omarranger og filtrer rækkerne på startskærmen</string>
+    <string name="settings_metadata_root_description">Plakater, handlingsbeskrivelser, medvirkende og bedømmelser til film og serier</string>
+    <string name="settings_download_folder">Downloadmappe</string>
+    <string name="settings_app_storage">Applager</string>
+    <string name="settings_backup_restore">Sikkerhedskopi og gendannelse</string>
+    <string name="settings_backup_restore_description">Eksportér eller gendan profiler og kilder</string>
+    <string name="settings_clear_history">Ryd afspilningshistorik</string>
+    <string name="settings_clear_history_description">Fjern denne profils rækker for senest set og fortsat afspilning</string>
+    <string name="settings_appearance_group">Udseende</string>
+    <string name="settings_theme">Tema</string>
+    <string name="settings_theme_description">Lyst, mørkt eller følg systemet</string>
+    <string name="settings_accent">Accentfarve</string>
+    <string name="settings_accent_description">Farvelæg brugerfladen — forudindstillinger, palet eller hex-kode</string>
+    <string name="settings_glass_effect">Glaseffekt</string>
+    <string name="settings_glass_description">Gennemsigtige, matterede paneler, baggrundsbillede og gennemsigtighed</string>
+    <string name="settings_ui_zoom">Zoom af brugerflade</string>
+    <string name="settings_ui_zoom_description">Skaler hele brugerfladen</string>
+    <string name="settings_animations">Animationer</string>
+    <string name="settings_animations_description">Slå bevægelse i brugerfladen til eller fra — Fra føles hurtigere på mindre kraftige tv-bokse</string>
+    <string name="settings_weather_description_root">Vejrchip på toplinjen: vis eller skjul, brugerdefineret placering samt Celsius / Fahrenheit.</string>
+    <string name="settings_playback_group">Afspilning</string>
+    <string name="settings_live_preview_description">Afspil automatisk en kanal, når den får fokus</string>
+    <string name="settings_preview_audio">Lyd ved forhåndsvisning</string>
+    <string name="settings_preview_audio_description">Afspil lyd i liveforhåndsvisningen</string>
+    <string name="settings_mini_player_root">Miniafspiller</string>
+    <string name="settings_mini_player_root_description">Den forankrede miniafspillers størrelse og placering</string>
+    <string name="settings_hdr_description">Brug HDR-output, når videoen og tv\'et understøtter det</string>
+    <string name="settings_auto_frame_rate">Automatisk billedfrekvens</string>
+    <string name="settings_auto_frame_rate_description">Tilpas tv\'ets opdateringshastighed til videoen (24/25/50/60 fps) på fuld skærm for Live-tv og VOD, og gendan den ved afslutning. Slå dette fra, hvis dit tv eller din receiver foretager et støjende nyt HDMI-handshake ved hvert kanalskift.</string>
+    <string name="settings_surround_sound">Surroundsound</string>
+    <string name="settings_surround_description">Afkod Dolby/DTS til surround (5.1/7.1) til en rigtig 5.1/7.1-receiver. Lad funktionen være SLÅET FRA ved tv-højttalere eller en stereosoundbar — flerkanalslyd kan på nogle tv\'er og soundbarer få lyden til at halte efter billedet. Hvis synkroniseringen forskydes, skal du finjustere den i afspillerens menu Lyd → A/V-synkronisering.</string>
+    <string name="settings_autoplay_next">Afspil næste afsnit automatisk</string>
+    <string name="settings_autoplay_next_description">Når et afsnit slutter, startes det næste automatisk — og afspilningen fortsætter ind i næste sæson.</string>
+    <string name="settings_catchup">Arkiv</string>
+    <plurals name="settings_catchup_supported">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> kanal understøtter arkiv · tidszone og afspiller til afspilning fra arkivet</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> kanaler understøtter arkiv · tidszone og afspiller til afspilning fra arkivet</item>
+    </plurals>
+    <string name="settings_catchup_unavailable">Der er ingen kanaler med arkiv på denne afspilningsliste</string>
+    <string name="settings_device">Enhed</string>
+    <string name="settings_video_player">Indstillinger for videoafspiller</string>
+    <string name="settings_video_player_description">Dekoder, undertekster, synkronisering</string>
+    <string name="settings_playback_error_log">Log over afspilningsfejl</string>
+    <string name="settings_playback_speed">Afspilningshastighed</string>
+    <string name="settings_player_zoom">Afspillerzoom</string>
+    <string name="settings_playback_error_description">De seneste afspilningsfejl — oplysninger, du kan læse eller rapportere</string>
+    <string name="settings_network_group">Netværk</string>
+    <string name="settings_app_group">App</string>
+    <string name="settings_app_startup">Start af app</string>
+    <string name="settings_app_startup_description">Hvad OwnTV åbner ved start</string>
+    <string name="settings_check_updates">Søg efter opdateringer</string>
+    <string name="settings_check_updates_description">Hent den nyeste version fra GitHub Releases</string>
+    <string name="settings_update_startup">Søg efter opdateringer ved start</string>
+    <string name="settings_update_startup_description">Søg efter en ny version, når appen åbnes</string>
+    <string name="settings_about">Om</string>
+    <string name="settings_about_description">Version, licens og projektoplysninger</string>
+    <string name="settings_live_latency">Liveforsinkelse</string>
+    <string name="settings_no_settings_match">Ingen indstillinger matcher “<xliff:g id="query">%1$s</xliff:g>”</string>
+    <string name="settings_breadcrumb"><xliff:g id="group">%1$s</xliff:g> › <xliff:g id="title">%2$s</xliff:g></string>
+    <string name="settings_startup_home">Start</string>
+    <string name="settings_startup_last_channel">Seneste kanal</string>
+    <string name="settings_startup_favorites">Live · Favoritter</string>
+    <string name="settings_all_history">Al historik</string>
+    <string name="settings_choose_history">Vælg, hvad der skal fjernes for denne profil. Afspilningslister, favoritter og downloads påvirkes ikke.</string>
+    <string name="settings_clear_history_confirm">Ryd historik for <xliff:g id="scope">%1$s</xliff:g>?</string>
+    <string name="settings_cannot_undo">Dette kan ikke fortrydes.</string>
+    <string name="settings_no">Nej</string>
+    <string name="settings_yes_clear">Ja, ryd</string>
+    <string name="settings_accent_dialog">Accentfarve</string>
+    <string name="settings_presets">Forudindstillinger</string>
+    <string name="settings_hex_code">Hex-kode</string>
+    <string name="settings_hex">Hex</string>
+    <string name="settings_apply">Anvend</string>
+    <string name="settings_hex_error">Angiv 6 hex-cifre, f.eks. 52DBC8</string>
+    <string name="settings_color_picker">Farvevælger</string>
+    <string name="settings_use_color">Brug denne farve</string>
+    <string name="settings_about_version">Version <xliff:g id="version">%1$s</xliff:g></string>
+    <string name="settings_about_description_full">Din egen IPTV-afspiller til Android TV — en gratis app med åben kildekode, der udelukkende fungerer som afspiller. Den leverer ingen kanaler eller indhold; du bruger dine egne kilder, som du har lovlig adgang til.</string>
+    <string name="settings_about_license">© 2026 Ashiq Hasan · GPLv3-licens</string>
+    <string name="settings_join_telegram">Deltag i vores gruppe på Telegram</string>
+    <string name="settings_telegram_qr">QR-kode til Telegram-gruppen</string>
+    <string name="settings_telegram_scan">Scan QR-koden for at deltage fra din telefon, eller åbn linket ovenfor.</string>
+    <string name="settings_contributions">Bidrag, fejlrapporter og stjerner er velkomne på GitHub.</string>
+    <string name="settings_playback_error_title">Log over afspilningsfejl</string>
+    <string name="settings_playback_error_description_full">De seneste afspilningsfejl (nyeste først). Medtag disse oplysninger, når du rapporterer et problem.</string>
+    <string name="settings_loading">Indlæser…</string>
+    <string name="settings_no_playback_errors">Der er ikke registreret nogen afspilningsfejl.</string>
+    <string name="settings_live">Live</string>
+    <string name="settings_vod">VOD</string>
+    <string name="settings_clear_log">Ryd log</string>
+    <string name="settings_browsing_title">Navigation og lister</string>
+    <string name="settings_browsing_description_full">Hvad Live-tv, film og serier vender tilbage til, når du kommer tilbage.</string>
+    <string name="settings_section_toggle"><xliff:g id="section">%1$s</xliff:g>: <xliff:g id="state">%2$s</xliff:g></string>
+    <string name="settings_glass_surfaces">Glasoverflader</string>
+    <string name="settings_glass_surfaces_description">Vælg, hvilke dele af appen der vises som glas. Hvis alle overflader slås fra, slås glas fra.</string>
+    <string name="settings_all_surfaces_on">Alle overflader: Til</string>
+    <string name="settings_all_surfaces_off">Alle overflader: Fra</string>
+    <string name="settings_surface_toggle"><xliff:g id="surface">%1$s</xliff:g>: <xliff:g id="state">%2$s</xliff:g></string>
+    <string name="settings_transparency_description">Hvor meget der kan ses gennem panelerne (<xliff:g id="min">%1$d</xliff:g>%%–<xliff:g id="max">%2$d</xliff:g>%%). En højere værdi gør dem mere massive.</string>
+    <string name="settings_catchup_description">Hvordan tidsstempler til arkiv sendes. Brug enhedens tidszone, eller angiv den forskydning, som din udbyders server forventer.</string>
+    <string name="settings_manual">Manuel</string>
+    <string name="settings_theme_dark">Mørkt</string>
+    <string name="settings_theme_light">Lyst</string>
+    <string name="settings_theme_system">System</string>
+    <string name="settings_accent_teal">Blågrøn</string>
+    <string name="settings_accent_blue">Blå</string>
+    <string name="settings_accent_violet">Violet</string>
+    <string name="settings_accent_green">Grøn</string>
+    <string name="settings_accent_amber">Ravfarvet</string>
+    <string name="settings_group_profile">Profil</string>
+    <string name="settings_group_content">Indhold</string>
+    <string name="settings_group_appearance">Udseende</string>
+    <string name="settings_group_playback">Afspilning</string>
+    <string name="settings_group_network">Netværk</string>
+    <string name="settings_dns">DNS</string>
+    <string name="settings_group_app">App</string>
+    <string name="settings_search_guide_logos">Kanallogoer i programguiden</string>
+    <string name="settings_search_keywords_profiles">seere børn børnetilstand PIN-lås konto</string>
+    <string name="settings_search_keywords_playlists">M3U Xtream kilde synkroniser tilføj fjern</string>
+    <string name="settings_search_keywords_epg">XMLTV guide feed program</string>
+    <string name="settings_search_keywords_logos">kanal logo ikon XMLTV guide picon afspilningsliste</string>
+    <string name="settings_search_keywords_customize">skjul vis omdøb omarranger kategorier</string>
+    <string name="settings_search_keywords_sidebar">sidemenu ikoner dynamisk statisk skjul vis tilpas afspilningsliste</string>
+    <string name="settings_search_keywords_ch">kanal op ned spring side liste kategori kanal</string>
+    <string name="settings_search_keywords_browsing">husk placering rul kategori seneste element live film serier nulstil top</string>
+    <string name="settings_search_keywords_home">rækker hero omarranger filtrer</string>
+    <string name="settings_search_keywords_metadata">plakater handlingsbeskrivelser medvirkende bedømmelser</string>
+    <string name="settings_search_keywords_download">lager sti mappe</string>
+    <string name="settings_search_keywords_backup">eksportér importér profiler kilder</string>
+    <string name="settings_search_keywords_history">senest set fortsæt fjern</string>
+    <string name="settings_search_keywords_theme">lyst mørkt system</string>
+    <string name="settings_search_keywords_accent">farvetone palet hex forudindstilling</string>
+    <string name="settings_search_keywords_zoom">skaler brugerflade størrelse</string>
+    <string name="settings_search_keywords_animation">bevægelse hurtigere ydeevne</string>
+    <string name="settings_search_keywords_weather">toplinje chip placering celsius fahrenheit</string>
+    <string name="settings_search_keywords_live_preview">automatisk afspilning fokus kanal</string>
+    <string name="settings_search_keywords_sound">lyd live forhåndsvisning</string>
+    <string name="settings_search_keywords_channel_numbers">kanal nummer direkte indstilling indtast cifre tastatur numerisk zap lcn</string>
+    <string name="settings_search_keywords_mini">forankret pip miniafspiller størrelse placering skalering procent hjørne flyt</string>
+    <string name="settings_search_keywords_hdr">HDR højt dynamisk område output</string>
+    <string name="settings_search_keywords_afr">afr opdateringshastighed hz hakken 24fps 25fps 50hz 60hz skærmtilstand tilpas</string>
+    <string name="settings_search_keywords_surround">dolby DTS 5.1 7.1 receiver lyd</string>
+    <string name="settings_search_keywords_autoplay">automatisk afspilning serier sæson</string>
+    <string name="settings_search_keywords_catchup">arkiv tidszone forskydning tv-arkiv ekstern afspiller vlc mx</string>
+    <string name="settings_search_keywords_video">dekoder undertekster synkronisering</string>
+    <string name="settings_search_keywords_subtitle_appearance">undertekst størrelse farve kulør placering gennemsigtighed baggrund opacitet</string>
+    <string name="settings_search_keywords_latency">live buffer forsinkelse lav forsinkelse sekunder tæt på livepunkt</string>
+    <string name="settings_search_keywords_errors">fejl nedbrud svigt diagnostik rapport</string>
+    <string name="settings_search_keywords_proxy">http trafik rute</string>
+    <string name="settings_search_keywords_dns">domæne opslag resolver doh dns-over-https</string>
+    <string name="settings_search_keywords_startup">start åbn landingsside</string>
+    <string name="settings_search_keywords_updates">github udgivelse version</string>
+    <string name="settings_search_keywords_update_auto">automatisk opdatering ny version</string>
+    <string name="settings_search_keywords_about">version licens projekt oplysninger</string>
+    <string name="settings_language_default">Standard (engelsk)</string>
+    <string name="settings_language_device">Enhedens sprog</string>
+    <string name="settings_language_arabic">Arabisk</string>
+    <string name="settings_language_bulgarian">Bulgarsk</string>
+    <string name="settings_language_chinese">Kinesisk</string>
+    <string name="settings_language_croatian">Kroatisk</string>
+    <string name="settings_language_czech">Tjekkisk</string>
+    <string name="settings_language_danish">Dansk</string>
+    <string name="settings_language_dutch">Nederlandsk</string>
+    <string name="settings_language_english">Engelsk</string>
+    <string name="settings_language_estonian">Estisk</string>
+    <string name="settings_language_finnish">Finsk</string>
+    <string name="settings_language_french">Fransk</string>
+    <string name="settings_language_german">Tysk</string>
+    <string name="settings_language_greek">Græsk</string>
+    <string name="settings_language_hebrew">Hebraisk</string>
+    <string name="settings_language_hindi">Hindi</string>
+    <string name="settings_language_hungarian">Ungarsk</string>
+    <string name="settings_language_indonesian">Indonesisk</string>
+    <string name="settings_language_italian">Italiensk</string>
+    <string name="settings_language_japanese">Japansk</string>
+    <string name="settings_language_korean">Koreansk</string>
+    <string name="settings_language_latvian">Lettisk</string>
+    <string name="settings_language_lithuanian">Litauisk</string>
+    <string name="settings_language_malay">Malajisk</string>
+    <string name="settings_language_norwegian">Norsk</string>
+    <string name="settings_language_persian">Persisk</string>
+    <string name="settings_language_polish">Polsk</string>
+    <string name="settings_language_portuguese_brazil">Portugisisk (Brasilien)</string>
+    <string name="settings_language_portuguese_portugal">Portugisisk (Portugal)</string>
+    <string name="settings_language_romanian">Rumænsk</string>
+    <string name="settings_language_russian">Russisk</string>
+    <string name="settings_language_serbian">Serbisk</string>
+    <string name="settings_language_slovak">Slovakisk</string>
+    <string name="settings_language_slovenian">Slovensk</string>
+    <string name="settings_language_spanish">Spansk</string>
+    <string name="settings_language_spanish_latam">Spansk (Latinamerika)</string>
+    <string name="settings_language_swedish">Svensk</string>
+    <string name="settings_language_thai">Thai</string>
+    <string name="settings_language_turkish">Tyrkisk</string>
+    <string name="settings_language_ukrainian">Ukrainsk</string>
+    <string name="settings_language_vietnamese">Vietnamesisk</string>
+    <string name="settings_video_player_title">Videoafspiller</string>
+    <string name="settings_decoding">Afkodning</string>
+    <string name="settings_hardware_decoding">Hardwareafkodning</string>
+    <string name="settings_hardware_decoding_description">Brug tv\'ets hardwaredekoder. Slå dette fra, hvis nogle streams hakker eller viser billedfejl.</string>
+    <string name="settings_movies_series_player">Afspiller til film og serier</string>
+    <string name="settings_external_player">Ekstern afspiller</string>
+    <string name="settings_default_zoom">Standardzoom</string>
+    <string name="settings_default_zoom_description">Billedformat/zoom, der anvendes, når afspilningen starter.</string>
+    <string name="settings_resume_playback">Fortsæt afspilningen</string>
+    <string name="settings_resume_playback_description">Hvad der skal ske, når en film eller et afsnit har en gemt position.</string>
+    <string name="settings_subtitles">Undertekster</string>
+    <string name="settings_subtitle_appearance">Underteksternes udseende</string>
+    <string name="settings_subtitle_appearance_description">Størrelse, tekstfarve, placering på skærmen og baggrundens gennemsigtighed. Når funktionen er slået fra, beholder underteksterne deres standardudseende — inklusive den formatering, som tv-stationerne indlejrer i undertekster til Live-tv.</string>
+    <string name="settings_subtitle_size">Undertekststørrelse</string>
+    <string name="settings_subtitle_size_description">Skaler underteksternes tekst.</string>
+    <string name="settings_preferred_subtitle_language">Foretrukket undertekstsprog</string>
+    <string name="settings_preferred_language_description">Vælg automatisk dette undertekstspor, når det er tilgængeligt.</string>
+    <string name="settings_open_subtitles">OpenSubtitles</string>
+    <string name="settings_open_subtitles_description">Log ind for at søge efter og downloade undertekster samt administrere downloadede undertekster. Gælder pr. profil; der kræves en gratis konto på opensubtitles.com.</string>
+    <string name="settings_audio">Lyd</string>
+    <string name="settings_preferred_audio_language">Foretrukket lydsprog</string>
+    <string name="settings_audio_sync">Lydsynkronisering</string>
+    <string name="settings_audio_sync_description">Forskyd lyden frem eller tilbage, så den passer til videoen.</string>
+    <string name="settings_live_tv">Live-tv</string>
+    <string name="settings_live_latency_description">Hvor tæt på liveudsendelsen der skal afspilles. En lavere værdi betyder tættere på live, men en mindre buffer, så svage streams kan hakke eller genoprette forbindelsen oftere. Gælder for den næste kanal, du åbner.</string>
+    <string name="settings_channel_numbers">Kanalnumre</string>
+    <string name="settings_channel_numbers_description">Vis din udbyders kanalnummer ved siden af navnet på Live-tv-listen, i kanallisteoverlejringen og i afspilleren — og indtast et nummer på fjernbetjeningen under afspilning i fuld skærm for at gå direkte til den pågældende kanal (OK skifter med det samme, og Tilbage annullerer). Når funktionen er slået fra, skjules alle numre, og nummertasterne ignoreres; intet går tabt, og numrene gendannes, når funktionen slås til igen.</string>
+    <string name="settings_diagnostics">Diagnostik</string>
+    <string name="settings_measured_stats">Målte streamstatistikker</string>
+    <string name="settings_measured_stats_description">Vis aktuelle fps, bithastighed og tabte billeder i overlejringen med streamoplysninger (målt, mens overlejringen er åben, for streams, der ikke angiver disse værdier). Slå kun funktionen fra, hvis et mindre kraftigt tv hakker — den påvirker aldrig selve videoen, kun diagnostiktallene.</string>
+    <string name="settings_none_auto">Ingen / Automatisk</string>
+    <string name="settings_view_grid">Gitter</string>
+    <string name="settings_view_list">Liste</string>
+    <string name="settings_language_portuguese">Portugisisk</string>
+    <string name="settings_subtitle_small">Lille</string>
+    <string name="settings_subtitle_normal">Normal</string>
+    <string name="settings_subtitle_large">Stor</string>
+    <string name="settings_subtitle_extra_large">Ekstra stor</string>
+    <string name="settings_live_latency_low">Lav forsinkelse</string>
+    <string name="settings_live_latency_balanced">Balanceret</string>
+    <string name="settings_live_latency_stable">Stabil</string>
+    <string name="settings_live_latency_custom">Brugerdefineret</string>
+    <string name="settings_low_latency_warning">⚠️ Lav forsinkelse</string>
+    <string name="settings_low_latency_warning_description">Afspilning tættere på liveudsendelsen giver en mindre buffer. På langsommere forbindelser eller ustabile streams kan det medføre mere buffering, hakken eller genoprettelse af forbindelsen.\n\nVælg Balanceret, hvis en kanal bliver ustabil.</string>
+    <string name="settings_low_latency_understand">Jeg forstår</string>
+    <string name="settings_custom_live_buffer">Brugerdefineret livebuffer</string>
+    <string name="settings_live_buffer_seconds"><xliff:g id="seconds">%1$d</xliff:g>s</string>
+    <string name="settings_audio_delay"><xliff:g id="delay">%1$d</xliff:g> ms</string>
+    <string name="settings_external_player_description">Vælg, hvilke sektioner der skal åbnes i en ekstern app.</string>
+    <string name="settings_audio_delay_value"><xliff:g id="delay">%1$d</xliff:g> ms</string>
+    <string name="settings_movies_player_description">mpv (anbefales) understøtter flest formater — DTS/TrueHD-lyd og usædvanlige filer — og har desuden en løsning til A/V-synkronisering. Skift kun til ExoPlayer, hvis film eller afsnit ikke kan starte: Den kan afspille visse streams, som mpv ikke kan på bestemte tv\'er, men kan ikke afkode DTS/TrueHD-lyd og har ingen løsning til A/V-synkronisering. Uanset hvad du vælger, prøves den anden automatisk, hvis den valgte ikke virker.</string>
+    <string name="settings_external_player_row_description">Åbn streams i en ekstern app (VLC, MX Player) i stedet for den indbyggede afspiller, og vælg dette særskilt for hver sektion. Nyttigt til streams, som denne app ikke kan afkode, eller hvis du foretrækker en anden afspiller. Positionen for fortsat afspilning og forrige/næste er ikke tilgængelige under ekstern afspilning; streams, der kræver en brugerdefineret User-Agent eller referer, kan muligvis ikke afspilles.</string>
+    <string name="settings_resume_always">Fortsæt altid</string>
+    <string name="settings_resume_ask">Spørg, om afspilningen skal fortsættes</string>
+    <string name="settings_resume_never">Fortsæt aldrig</string>
+    <string name="settings_delete_subtitles">Slet undertekster</string>
+    <string name="settings_delete_all">Slet alle</string>
+    <string name="settings_movies">Film</string>
+    <string name="settings_series">Serier</string>
+    <string name="settings_no_downloaded_subtitles">Ingen downloadede undertekster til <xliff:g id="section">%1$s</xliff:g>.</string>
+    <string name="settings_delete_subtitle">Slet undertekst</string>
+    <string name="settings_delete_subtitle_message">Vil du slette underteksten <xliff:g id="name">%1$s</xliff:g> til “<xliff:g id="title">%2$s</xliff:g>”? Den kan downloades igen senere.</string>
+    <string name="settings_delete_all_subtitles">Slet alle undertekster</string>
+    <string name="settings_delete_all_movies">Slet alle film</string>
+    <string name="settings_delete_all_series">Slet alle serier</string>
+    <string name="settings_section_count"><xliff:g id="section">%1$s</xliff:g> (<xliff:g id="count">%2$d</xliff:g>)</string>
+    <string name="settings_sync_guide_question">Synkroniser tv-guiden nu?</string>
+    <string name="settings_sync_guide_description">Download programguiden (EPG) til “<xliff:g id="source">%1$s</xliff:g>”. Du kan også gøre det senere under Indstillinger → EPG.</string>
+    <string name="settings_not_now">Ikke nu</string>
+    <string name="settings_sync_now">Synkroniser nu</string>
+    <string name="settings_syncing_guide">Synkroniserer tv-guide…</string>
+    <string name="settings_connecting">Opretter forbindelse…</string>
+    <string name="settings_run_background">Kør i baggrunden</string>
+    <string name="settings_guide_synced">Tv-guiden er synkroniseret</string>
+    <string name="settings_guide_sync_failed">Synkronisering af tv-guiden mislykkedes</string>
+    <string name="settings_restore_remote_title">Gendan fra en anden enhed</string>
+    <string name="settings_restore_remote_description">Scan QR-koden på en telefon eller bærbar computer på samme Wi-Fi (eller åbn URL\'en), indtast denne PIN, vælg din OwnTV-sikkerhedskopifil, og tryk på Send til tv. Derefter vælger du her, hvad der skal gendannes.</string>
+    <string name="settings_opening_server">Åbner server…</string>
+    <string name="settings_enter_pin_browser">Indtast denne PIN i browseren</string>
+    <string name="settings_companion_qr">QR-kode til ledsagerens URL</string>
+    <string name="settings_open_url">Eller åbn denne URL</string>
+    <string name="settings_try_again">Prøv igen</string>
+    <string name="settings_new_pin">Start igen med en ny PIN</string>
+    <string name="settings_download_remote_title">Download på en anden enhed</string>
+    <string name="settings_download_remote_description">Scan QR-koden på en telefon eller bærbar computer på samme Wi-Fi (eller åbn URL\'en), indtast denne PIN, og download din sikkerhedskopifil for at opbevare den sikkert.</string>
+    <string name="settings_preparing_backup">Forbereder sikkerhedskopi…</string>
+    <string name="settings_liquid_glass_on">Flydende glas: Til</string>
+    <string name="settings_liquid_glass_off">Flydende glas: Fra</string>
+    <string name="settings_background_on">Baggrundsbillede: Til</string>
+    <string name="settings_background_off">Baggrundsbillede: Fra</string>
+    <string name="settings_ui_zoom_range">Skaler hele brugerfladen (<xliff:g id="min">%1$d</xliff:g>%%–<xliff:g id="max">%2$d</xliff:g>%%).</string>
+    <string name="settings_low_zoom_warning_title">⚠️ Advarsel om lav zoom</string>
+    <string name="settings_low_zoom_warning"><xliff:g id="zoom">%1$d</xliff:g>%% zoom viser mange flere elementer på skærmen på én gang. På enheder med begrænset hukommelse (f.eks. tv-sticks med 2 GB) kan det gøre appen ustabil eller få den til at gå ned, især med store afspilningslister og EPG-data.\n\nTryk på OK for at fortsætte eller på Tilbage for at blive på <xliff:g id="safe_zoom">%2$d</xliff:g>%%.</string>
+    <string name="settings_low_zoom_accept">Jeg forstår og accepterer risikoen</string>
+    <string name="settings_surface_transparency"><xliff:g id="percent">%1$d</xliff:g>%%</string>
+    <string name="settings_surface_count_all">Flader: Alle</string>
+    <plurals name="settings_surface_count">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> af <xliff:g id="total">%2$d</xliff:g> flade</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> af <xliff:g id="total">%2$d</xliff:g> flader</item>
+    </plurals>
+    <string name="settings_catchup_timezone_device">Enhed</string>
+    <string name="settings_catchup_player_ask">Spørg altid</string>
+    <string name="settings_catchup_player_internal">OwnTV-afspiller</string>
+    <string name="settings_catchup_player_external">Ekstern afspiller</string>
+    <string name="settings_soon">SNART</string>
+    <string name="settings_download_folder_title">Vælg downloadmappen</string>
+    <string name="settings_pick_background_title">Vælg et baggrundsbillede</string>
+    <string name="settings_theme_dialog">Tema</string>
+    <string name="settings_app_startup_dialog">Start af app</string>
+    <string name="settings_animations_dialog">Animationer</string>
+    <string name="settings_close">Luk</string>
+    <string name="settings_done">Færdig</string>
+    <string name="settings_reset">Nulstil</string>
+    <string name="settings_device_details"><xliff:g id="model">%1$s</xliff:g> · <xliff:g id="android">%2$s</xliff:g></string>
+    <string name="settings_playback_entry"><xliff:g id="time">%1$s</xliff:g> · <xliff:g id="engine">%2$s</xliff:g> · <xliff:g id="kind">%3$s</xliff:g></string>
+    <string name="settings_history_live">Live-tv</string>
+    <string name="settings_history_movies">Film</string>
+    <string name="settings_history_series">Serier</string>
+    <string name="settings_history_all">alle</string>
+    <string name="settings_decrease">–</string>
+    <string name="settings_increase">+</string>
+    <string name="settings_glass_effect_title">Glaseffekt</string>
+    <string name="settings_glass_effect_description">Gennemsigtige, matterede paneler over et baggrundsfoto eller over appens egen baggrund.</string>
+    <string name="settings_transparency_title">Gennemsigtighed</string>
+    <string name="settings_blur_title">Sløring / mattering</string>
+    <string name="settings_blur_description_enabled">Hvor matteret baggrundsbilledet er (<xliff:g id="min">%1$d</xliff:g>%%–<xliff:g id="max">%2$d</xliff:g>%%). Kun over et baggrundsbillede.</string>
+    <string name="settings_blur_description_disabled">Hvor matteret baggrundsbilledet er (<xliff:g id="min">%1$d</xliff:g>%%–<xliff:g id="max">%2$d</xliff:g>%%). Kun over et baggrundsbillede. Vælg et baggrundsbillede for at aktivere funktionen.</string>
+    <string name="settings_glass_surface_panels">Indholdspaneler</string>
+    <string name="settings_glass_surface_sidebar">Sidebjælke</string>
+    <string name="settings_glass_surface_preview">Forhåndsvisningsruder</string>
+    <string name="settings_glass_surface_dialogs">Dialogbokse og pop op-vinduer</string>
+    <string name="settings_glass_surface_topbar">Topbjælke</string>
+    <string name="settings_glass_surface_cards">Kort</string>
+    <string name="settings_glass_surface_miniplayer">Miniafspiller</string>
+    <string name="settings_browsing_last_category">Husk seneste kategori</string>
+    <string name="settings_browsing_last_category_description">Åbn sektionen igen i den kategori, du forlod, og ikke i Alle.</string>
+    <string name="settings_browsing_last_item">Husk seneste element</string>
+    <string name="settings_browsing_last_item_description">Hver kategori beholder sin egen rulleposition i stedet for at starte øverst. Live-tv gendanner også den senest fokuserede kanal.</string>
+    <string name="settings_catchup_player">Afspil arkiv med</string>
+    <string name="settings_customize_title">Tilpas kategorier og elementer</string>
+    <string name="settings_customize_pin_locked">Denne skærm er PIN-låst.</string>
+    <string name="settings_customize_wrong_pin">Forkert PIN — prøv igen</string>
+    <string name="settings_customize_enter_pin">Indtast PIN</string>
+    <string name="settings_customize_set_pin">🔒 Angiv PIN</string>
+    <string name="settings_customize_change_pin">🔒 Skift PIN</string>
+    <string name="settings_customize_remove_lock">Fjern lås</string>
+    <string name="settings_customize_description">Skjul og vis kanaler, film og serier, og omdøb eller omarranger kategorier for denne profil. Bevares ved synkronisering igen.</string>
+    <string name="settings_customize_new_category_behavior">Adfærd for nye kategorier</string>
+    <string name="settings_customize_hide_new">Skjul — nye kategorier, der tilføjes ved synkronisering igen, skjules som standard</string>
+    <string name="settings_customize_show_new">Vis — nye kategorier, der tilføjes ved synkronisering igen, vises som standard</string>
+    <string name="settings_customize_hide">Skjul</string>
+    <string name="settings_customize_show">Vis</string>
+    <string name="settings_customize_behavior_hide">Skjul</string>
+    <string name="settings_customize_behavior_show">Vis</string>
+    <string name="settings_customize_hidden_channels">Skjulte kanaler</string>
+    <string name="settings_customize_hidden_movies">Skjulte film</string>
+    <string name="settings_customize_hidden_series">Skjulte serier</string>
+    <string name="settings_customize_unhide_description">Vis et element igen for at få det tilbage på listerne.</string>
+    <string name="settings_customize_categories">Kategorier</string>
+    <string name="settings_customize_empty">Der er endnu ingen kategorier i denne sektion — tilføj først en kilde.</string>
+    <string name="settings_customize_range_hide_start">Valg af område startet. Tryk på Vis/Skjul på det sidste element for at vælge området.</string>
+    <string name="settings_customize_range_rename_start">Omdøbningsområde startet. Tryk på Omdøb på det sidste element for at vælge området.</string>
+    <string name="settings_customize_range_move_start">Flytteområde startet. Tryk på ⤒ ↑ ↓ ⤓ på det sidste element for at flytte hele området.</string>
+    <plurals name="settings_customize_range_selected">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> kategori valgt. Bliv ved med at trykke på ⤒ ↑ ↓ ⤓ for at flytte den.</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> kategorier valgt. Bliv ved med at trykke på ⤒ ↑ ↓ ⤓ for at flytte dem samlet.</item>
+    </plurals>
+    <string name="settings_customize_rename">Omdøb</string>
+    <string name="settings_customize_rename_category">Omdøb kategori</string>
+    <string name="settings_customize_rename_or_delete_category">Omdøb eller slet kategori</string>
+    <string name="settings_customize_new_category">＋ Ny kategori</string>
+    <string name="settings_customize_sort_button">Sortér: <xliff:g id="label">%1$s</xliff:g> ▾</string>
+    <string name="settings_customize_new_categories_button">Nye kategorier: <xliff:g id="label">%1$s</xliff:g> ▾</string>
+    <string name="settings_customize_rename_hint">Kun for denne profil. Lad feltet være tomt for at gendanne “<xliff:g id="name">%1$s</xliff:g>”.</string>
+    <string name="settings_customize_remove_pin_title">Fjern PIN-lås?</string>
+    <string name="settings_customize_remove_pin_message">Skærmen Tilpas åbnes fremover uden at bede om en PIN.</string>
+    <string name="settings_customize_remove">Fjern</string>
+    <string name="settings_customize_confirm_pin">Bekræft ny PIN</string>
+    <string name="settings_customize_pin_mismatch">PIN-koderne stemmer ikke overens — indtast igen</string>
+    <string name="settings_customize_new_pin">Indtast en ny PIN</string>
+    <plurals name="settings_customize_selected_categories">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> kategori valgt.</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> kategorier valgt.</item>
+    </plurals>
+    <string name="settings_customize_hide_show_title">Skjul eller vis kategorier</string>
+    <string name="settings_customize_was">var “<xliff:g id="name">%1$s</xliff:g>”</string>
+    <string name="settings_customize_hidden">Skjult</string>
+    <string name="settings_customize_unhide">Vis igen</string>
+    <string name="settings_customize_metadata_separator">  ·  </string>
+    <string name="settings_sources_title">Kilder</string>
+    <string name="settings_sources_description">Kilder deles på tværs af alle profiler.</string>
+    <string name="settings_sources_empty">Der er endnu ingen kilder. Tilføj en M3U- eller Xtream-kilde.</string>
+    <string name="settings_sources_add">Tilføj kilde</string>
+    <string name="settings_sources_import_failed">Importen mislykkedes</string>
+    <string name="settings_sources_importing">Importerer katalog…</string>
+    <string name="settings_sources_preparing">Forbereder katalog</string>
+    <string name="settings_sources_deleting">SLETTER…</string>
+    <string name="settings_sources_resync">Synkroniser igen</string>
+    <string name="settings_sources_delete_title">Slet “<xliff:g id="name">%1$s</xliff:g>”?</string>
+    <string name="settings_sources_delete_message">Dette fjerner kilden og alle dens kanaler, film og serier fra samtlige profiler.</string>
+    <string name="settings_sources_type_m3u">M3U · <xliff:g id="url">%1$s</xliff:g></string>
+    <string name="settings_sources_type_xtream">Xtream · <xliff:g id="url">%1$s</xliff:g></string>
+    <string name="settings_sources_type_stalker">Stalker · <xliff:g id="url">%1$s</xliff:g></string>
+    <string name="settings_sources_expiry">Udløber <xliff:g id="date">%1$s</xliff:g></string>
+    <string name="settings_sources_auto_refresh">⟳ <xliff:g id="mode">%1$s</xliff:g></string>
+    <string name="settings_sources_default">STANDARD</string>
+    <string name="settings_sources_backup">Sikkerhedskopi</string>
+    <string name="settings_sources_details_separator">  •  </string>
+    <string name="settings_sources_preparing_detail">Forbereder katalog</string>
+    <string name="settings_sources_removing_detail">Fjerner…</string>
+    <string name="settings_sources_edit">Rediger</string>
+    <string name="settings_sources_delete">Slet</string>
+    <string name="settings_sources_cancel">Annuller</string>
+    <string name="settings_sources_try_again">Prøv igen</string>
+    <string name="settings_sources_import_title">Importering fuldført</string>
+    <string name="settings_sources_resync_title_full">Synkroniser “<xliff:g id="name">%1$s</xliff:g>” igen</string>
+    <string name="settings_sources_resync_now_full">Synkroniser igen nu</string>
+    <string name="settings_sources_resync_remove_full">Synkroniser igen, og fjern manglende titler</string>
+    <string name="settings_sources_resync_description">Synkroniser igen nu henter det nyeste katalog og beholder alt, der allerede er gemt.\n\nSynkroniser igen, og fjern manglende titler gør det også muligt at fjerne titler, som udbyderen ikke længere viser. Dine favoritter, din historik og dine fortsættelsespositioner for titler, der stadig vises, bevares.</string>
+    <string name="settings_sources_refresh_off">Fra</string>
+    <string name="settings_sources_refresh_startup">Opdater ved opstart</string>
+    <string name="settings_sources_refresh_6h">6 timer</string>
+    <string name="settings_sources_refresh_12h">12 timer</string>
+    <string name="settings_sources_refresh_24h">24 timer</string>
+    <string name="settings_sources_refresh_48h">48 timer</string>
+    <string name="settings_epg_sources_title">EPG-kilder</string>
+    <string name="settings_epg_sources_empty">Der er endnu ingen EPG-kilder. Tilføj et XMLTV-link.</string>
+    <string name="settings_epg_sources_add">Tilføj EPG-kilde</string>
+    <string name="settings_epg_sources_edit">Rediger EPG-kilde</string>
+    <string name="settings_epg_sources_add_sync">Tilføj og synkroniser</string>
+    <string name="settings_epg_sources_save_sync">Gem og synkroniser</string>
+    <string name="settings_epg_sources_fill_playlist">Udfyld fra afspilningsliste</string>
+    <string name="settings_epg_sources_none_playlist">Ingen af dine afspilningslister indeholder en EPG-URL.</string>
+    <string name="settings_epg_sources_use_logos">Brug denne guides kanallogoer</string>
+    <string name="settings_epg_sources_logos_description">Vis logoer fra dette XMLTV-feed i stedet for dem fra din afspilningsliste. Kanaler, som dette feed ikke har et logo til, beholder logoet fra afspilningslisten.</string>
+    <string name="settings_epg_sources_name">Navn</string>
+    <string name="settings_epg_sources_url">XMLTV-URL</string>
+    <string name="settings_epg_sources_user_agent">User-Agent (valgfri)</string>
+    <string name="settings_epg_sources_name_hint">f.eks. britisk guide</string>
+    <string name="settings_epg_sources_url_hint">https://…/epg.xml(.gz)</string>
+    <string name="settings_epg_sources_user_agent_hint">Lad stå tomt for standardværdien</string>
+    <string name="settings_epg_sources_description">XMLTV-guidefeeds, der udfylder programguiden. De synkroniseres automatisk, når de tilføjes, og flettes sammen med kanalerne fra dine afspilningslister.</string>
+    <string name="settings_epg_sources_delete_title">Slet “<xliff:g id="name">%1$s</xliff:g>”?</string>
+    <string name="settings_epg_sources_delete_message">Fjerner denne EPG-kilde og dens guidedata. Dine kanaler bevares.</string>
+    <string name="settings_epg_sources_syncing_percent">Synkroniserer <xliff:g id="percent">%1$d</xliff:g>%%</string>
+    <plurals name="settings_epg_sources_catchup">
+        <item quantity="one">Arkiv er tilgængeligt på <xliff:g id="count">%1$d</xliff:g> kanal.</item>
+        <item quantity="other">Arkiv er tilgængeligt på <xliff:g id="count">%1$d</xliff:g> kanaler.</item>
+    </plurals>
+    <string name="settings_epg_sources_error">⚠ <xliff:g id="error">%1$s</xliff:g></string>
+    <string name="settings_epg_sources_auto_refresh_title">Automatisk opdatering</string>
+    <string name="settings_epg_sources_auto_refresh_description">Fra, ved opstart, eller når dataene er forældede</string>
+    <string name="settings_epg_sources_on">Til</string>
+    <string name="settings_epg_sources_off">Fra</string>
+    <string name="settings_epg_sources_not_synced">Endnu ikke synkroniseret</string>
+    <string name="settings_epg_refresh_1h">1 time</string>
+    <string name="settings_epg_refresh_3h">3 timer</string>
+    <string name="settings_epg_refresh_6h">6 timer</string>
+    <string name="settings_epg_refresh_12h">12 timer</string>
+    <string name="settings_epg_refresh_24h">24 timer</string>
+    <string name="settings_epg_refresh_48h">48 timer</string>
+    <string name="settings_epg_sources_deleting">Sletter…</string>
+    <string name="settings_epg_sources_syncing_label">Synkroniserer</string>
+    <string name="settings_epg_sources_connecting">Opretter forbindelse…</string>
+    <plurals name="settings_epg_sources_status_count_channels">
+        <item quantity="one">Guiden indeholder <xliff:g id="channels">%1$d</xliff:g> kanal.</item>
+        <item quantity="other">Guiden indeholder <xliff:g id="channels">%1$d</xliff:g> kanaler.</item>
+    </plurals>
+    <plurals name="settings_epg_sources_status_count_programmes">
+        <item quantity="one">Den indeholder <xliff:g id="programmes">%1$d</xliff:g> program.</item>
+        <item quantity="other">Den indeholder <xliff:g id="programmes">%1$d</xliff:g> programmer.</item>
+    </plurals>
+    <string name="settings_epg_sources_status_count"><xliff:g id="channels">%1$s</xliff:g> <xliff:g id="programmes">%2$s</xliff:g></string>
+    <string name="settings_epg_sources_status_count_with_catchup"><xliff:g id="counts">%1$s</xliff:g> <xliff:g id="catchup">%2$s</xliff:g></string>
+    <string name="settings_epg_sources_status_synced">Synkroniseret, men der blev ikke fundet nogen programmer i tidsintervallet.</string>
+    <string name="settings_epg_sources_status_synced_with_catchup"><xliff:g id="catchup">%1$s</xliff:g></string>
+    <string name="settings_backup_title">Sikkerhedskopiering og gendannelse</string>
+    <string name="settings_backup_working">Arbejder…</string>
+    <string name="settings_backup_what_backup">Hvad der skal sikkerhedskopieres</string>
+    <string name="settings_backup_what_restore">Hvad der skal gendannes</string>
+    <string name="settings_backup_encrypt_title">Kryptér denne sikkerhedskopi?</string>
+    <string name="settings_backup_encrypt_message">Med en adgangskode til sikkerhedskopien krypteres hele filen — inklusive afspilningslister, profiler og gemte adgangskoder — og intet i den kan læses uden denne adgangskode. Opbevar den sikkert: Hvis du mister den, kan sikkerhedskopien slet ikke åbnes. Uden en adgangskode krypteres filen ikke, og gemte adgangskoder udelades.</string>
+    <string name="settings_backup_export_title">Eksportér en sikkerhedskopi</string>
+    <string name="settings_backup_export_message">Send sikkerhedskopien til en anden enhed (telefon eller bærbar computer) på samme Wi-Fi, eller gem den som en fil på denne enhed.</string>
+    <string name="settings_backup_restore_title">Gendan en sikkerhedskopi</string>
+    <string name="settings_backup_restore_message">Send sikkerhedskopien fra en anden enhed (telefon eller bærbar computer) på samme Wi-Fi, eller vælg en sikkerhedskopifil, der allerede findes på denne enhed.</string>
+    <string name="settings_backup_password">Adgangskode til sikkerhedskopi</string>
+    <string name="settings_backup_enter_password">Indtast adgangskoden til sikkerhedskopien</string>
+    <string name="settings_backup_wrong_password">Forkert adgangskode til sikkerhedskopien</string>
+    <string name="settings_backup_password_mismatch">Adgangskoden stemte ikke overens. Prøv igen, eller spring over for at gendanne alt undtagen gemte adgangskoder.</string>
+    <string name="settings_backup_password_encrypted_mismatch">Adgangskoden stemte ikke overens. Denne sikkerhedskopi er krypteret — den kan ikke åbnes uden den adgangskode, den blev oprettet med.</string>
+    <string name="settings_backup_encrypted_description">Denne sikkerhedskopi er krypteret. Indtast adgangskoden til sikkerhedskopien for at åbne den og vælge, hvad der skal gendannes.</string>
+    <string name="settings_backup_saved_passwords_description">Adgangskoderne i denne sikkerhedskopi er krypterede. Indtast adgangskoden til sikkerhedskopien for at gendanne dem, eller spring over for at gendanne alt andet og indtaste adgangskoderne igen senere.</string>
+    <string name="settings_backup_choose_folder">Vælg en mappe til sikkerhedskopien</string>
+    <string name="settings_backup_choose_folder_action">Vælg mappe</string>
+    <string name="settings_backup_pick_file">Vælg en sikkerhedskopifil, der skal gendannes</string>
+    <string name="settings_backup_local_file">Lokal fil</string>
+    <string name="settings_backup_remote">Fjernenhed</string>
+    <string name="settings_backup_everything">Alt</string>
+    <string name="settings_backup_kids_profile">Børneprofil</string>
+    <string name="settings_backup_profile_current">“<xliff:g id="name">%1$s</xliff:g>” (aktuel)</string>
+    <string name="settings_backup_profile_locked">“<xliff:g id="name">%1$s</xliff:g>” er låst</string>
+    <string name="settings_backup_profile_pin">Profilens PIN</string>
+    <string name="settings_backup_pin_incorrect">Forkert PIN.</string>
+    <string name="settings_backup_pin_locked">PIN-låst</string>
+    <string name="settings_backup_unlock">Lås op</string>
+    <string name="settings_backup_export_button">Eksportér sikkerhedskopi</string>
+    <string name="settings_backup_restore_button">Gendan sikkerhedskopi</string>
+    <string name="settings_backup_continue">Fortsæt</string>
+    <string name="settings_backup_encrypt_export">Kryptér og eksportér</string>
+    <string name="settings_backup_export_unencrypted">Eksportér ukrypteret</string>
+    <string name="settings_backup_encrypt_prepare">Kryptér og forbered</string>
+    <string name="settings_backup_prepare_unencrypted">Forbered ukrypteret</string>
+    <string name="settings_backup_restore_action">Gendan</string>
+    <string name="settings_backup_skip_passwords">Spring over (ingen adgangskoder)</string>
+    <string name="settings_backup_section_sources">Kilder</string>
+    <string name="settings_backup_section_sources_desc">Afspilningslister, EPG-feeds og loginoplysninger</string>
+    <string name="settings_backup_section_customize">Tilpasninger</string>
+    <string name="settings_backup_section_customize_desc">Skjulte/omdøbte/omarrangerede kategorier, kanaler, EPG-match og brugerdefinerede TMDB-navne</string>
+    <string name="settings_backup_section_favorites">Favoritter</string>
+    <string name="settings_backup_section_favorites_desc">Favoritmarkerede kanaler, film og serier</string>
+    <string name="settings_backup_section_history">Afspilningshistorik</string>
+    <string name="settings_backup_section_history_desc">Lister over senest set</string>
+    <string name="settings_backup_section_resume">Gemte afspilningspositioner</string>
+    <string name="settings_backup_section_resume_desc">Hvor du stoppede i film og afsnit</string>
+    <string name="settings_backup_section_reorder">Manuel omarrangering</string>
+    <string name="settings_backup_section_reorder_desc">Dine placeringer efter Flyt op/ned for kanaler, film og serier</string>
+    <string name="settings_backup_section_settings">Appindstillinger</string>
+    <string name="settings_backup_section_settings_desc">Indstillinger for tema, accentfarve, afspiller og layout</string>
+    <string name="settings_backup_saved_to">Gemt i <xliff:g id="path">%1$s</xliff:g>.</string>
+    <string name="settings_backup_saved_to_without_passwords">Gemt i <xliff:g id="path">%1$s</xliff:g>. Adgangskoder blev ikke medtaget.</string>
+    <plurals name="settings_backup_restored">
+        <item quantity="one"><xliff:g id="items">%1$d</xliff:g> element gendannet.</item>
+        <item quantity="other"><xliff:g id="items">%1$d</xliff:g> elementer gendannet.</item>
+    </plurals>
+    <string name="settings_backup_restore_resync">Synkroniser dine kilder igen for at indlæse indhold.</string>
+    <string name="settings_backup_restore_password_note">Indtast eventuelle gemte adgangskoder igen under Kilder/Proxy.</string>
+    <plurals name="settings_backup_skipped_sources">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> kilde blev sprunget over, fordi dens type afspilningsliste ikke understøttes.</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> kilder blev sprunget over, fordi deres typer afspilningslister ikke understøttes.</item>
+    </plurals>
+    <string name="settings_backup_export_error">Eksporten mislykkedes.</string>
+    <string name="settings_backup_read_error">Sikkerhedskopifilen kunne ikke læses.</string>
+    <string name="settings_backup_import_error">Importen mislykkedes.</string>
+    <string name="settings_backup_invalid_locale">Denne sikkerhedskopi indeholdt et appsprog, der ikke understøttes. Gendannelsen lykkedes, men dit nuværende sprog blev bevaret.</string>
+    <string name="settings_backup_which_profiles">Hvilke profiler der skal sikkerhedskopieres</string>
+    <string name="settings_backup_selected_profiles">Sikkerhedskopien vil kun indeholde de valgte profiler og deres data. Låste profiler kræver deres PIN.</string>
+    <string name="settings_backup_profile_pin_description">Dette er ikke din aktuelle profil. Indtast dens PIN for at medtage den i sikkerhedskopien — uden PIN-koden bliver dens data ikke sikkerhedskopieret.</string>
+    <string name="settings_backup_save_description">Gem dine profiler, kilder, tilpasninger, favoritter, historik og fortsættelsespositioner i en fil — eller gendan dem på en ny enhed. Du vælger hver gang, hvad der skal medtages.</string>
+    <string name="settings_metadata_optional">valgfri</string>
+    <string name="settings_metadata_test_title">Oppenheimer</string>
+    <string name="settings_bulk_rename_title">Masseomdøbning</string>
+    <plurals name="settings_bulk_rename_selected">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> navn valgt. Tilføj regler, eller ryd automatisk op i det.</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> navne valgt. Tilføj regler, eller ryd automatisk op i dem.</item>
+    </plurals>
+    <string name="settings_bulk_rename_add_rule">✎ Tilføj regel</string>
+    <string name="settings_bulk_rename_auto_cleanup">✨ Automatisk oprydning</string>
+    <string name="settings_bulk_rename_restore_original">↺ Gendan oprindelige navne</string>
+    <string name="settings_bulk_rename_rules_title">Regler for masseomdøbning</string>
+    <string name="settings_bulk_rename_rules_description">Reglerne køres oppefra og ned. Adskil flere værdier med “;” — Tilføj accepterer præcis én.</string>
+    <string name="settings_bulk_rename_add_single_value_error">“Tilføj” kræver præcis én værdi — semikolon bruges til Fjern-regler.</string>
+    <string name="settings_bulk_rename_rule_required">Tilføj mindst én regel.</string>
+    <string name="settings_bulk_rename_rule_type">Regeltype</string>
+    <string name="settings_bulk_rename_action_add">Tilføj</string>
+    <string name="settings_bulk_rename_action_remove">Fjern</string>
+    <string name="settings_bulk_rename_where">Placering</string>
+    <string name="settings_bulk_rename_before">Før (præfiks)</string>
+    <string name="settings_bulk_rename_after">Efter (suffiks)</string>
+    <string name="settings_bulk_rename_rule_value">Regelværdi</string>
+    <string name="settings_bulk_rename_value_hint">Adskil flere værdier med “;” — Tilføj accepterer præcis én.</string>
+    <string name="settings_bulk_rename_value_example">værdi;værdi;værdi</string>
+    <string name="settings_bulk_rename_add_another_rule">＋ Tilføj endnu en regel</string>
+    <string name="settings_bulk_rename_trim_spaces">Fjern overflødige mellemrum</string>
+    <string name="settings_bulk_rename_trim_spaces_selected">✓ Fjern overflødige mellemrum</string>
+    <string name="settings_bulk_rename_ignore_case">Ignorer store/små bogstaver</string>
+    <string name="settings_bulk_rename_ignore_case_selected">✓ Ignorer store/små bogstaver</string>
+    <string name="settings_bulk_rename_review">Gennemgå omdøbninger</string>
+    <string name="settings_bulk_rename_review_description">Intet gemmes, før du anvender en række — Færdig gemmer alle anvendte ændringer på én gang.</string>
+    <string name="settings_bulk_rename_blank_rejected">tomt navn afvist — det oprindelige navn er bevaret</string>
+    <string name="settings_bulk_rename_unchanged">uændret — ingen regel matchede</string>
+    <string name="settings_bulk_rename_result">→ <xliff:g id="name">%1$s</xliff:g></string>
+    <string name="settings_bulk_rename_duplicate">navnet findes allerede — et andet element bruger det allerede</string>
+    <string name="settings_bulk_rename_apply">Anvend</string>
+    <string name="settings_bulk_rename_decline">Afvis</string>
+    <plurals name="settings_bulk_rename_will_change">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> ændres</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> ændres</item>
+    </plurals>
+    <plurals name="settings_bulk_rename_unchanged_count">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> uændret</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> uændrede</item>
+    </plurals>
+    <plurals name="settings_bulk_rename_duplicates_count">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> dublet</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> dubletter</item>
+    </plurals>
+    <string name="settings_bulk_rename_apply_all">Anvend alle</string>
+    <string name="settings_bulk_rename_decline_all">Afvis alle</string>
+    <string name="settings_bulk_rename_edit_rules">✎ Rediger regler</string>
+    <string name="settings_bulk_rename_restore_title">Gendan oprindelige navne?</string>
+    <string name="settings_bulk_rename_restore_description">Alle valgte navne gendannes til udbyderens oprindelige navne. Kun denne markering påvirkes.</string>
+    <string name="settings_bulk_rename_restore">Gendan</string>
+    <string name="settings_bulk_rename_too_many_title">For mange elementer</string>
+    <string name="settings_bulk_rename_too_many_description">Denne kategori indeholder for mange elementer til at omdøbe dem alle på én gang – omdøb dem i mindre intervaller.</string>
+    <string name="settings_bulk_rename_auto_country_provider">Auto: land- og udbydertags</string>
+    <string name="settings_bulk_rename_auto_quality_codec">Auto: kvalitets- og codec-tags overalt</string>
+    <string name="settings_bulk_rename_auto_emoji_symbols">Auto: emoji og symboler</string>
+    <string name="settings_customize_new_category_title">Ny kategori</string>
+    <string name="settings_customize_new_category_description">En kombineret kategori til denne profil – flyt kanaler, film eller serier til den.</string>
+    <string name="settings_customize_this_category">denne kategori</string>
+    <string name="settings_customize_sort_categories">Sortér kategorier</string>
+    <string name="settings_customize_delete_category">Slet “<xliff:g id="name">%1$s</xliff:g>”?</string>
+    <string name="settings_customize_delete_category_description">Den kombinerede kategori fjernes. Dens elementer forbliver i deres oprindelige kategorier.</string>
+    <string name="settings_customize_channels_description">Kanaler i denne kategori – omdøb, omarranger, skjul eller vis.</string>
+    <string name="settings_customize_movies_description">Film i denne kategori – omarranger, skjul eller vis.</string>
+    <string name="settings_customize_series_description">Serier i denne kategori – omarranger, skjul eller vis.</string>
+    <string name="settings_customize_hide_show_items">Skjul eller vis elementer</string>
+    <plurals name="settings_customize_selected_items">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> element valgt.</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> elementer valgt.</item>
+    </plurals>
+    <plurals name="settings_customize_move_items_selected">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> element valgt. Bliv ved med at trykke på ⤒ ↑ ↓ ⤓ for at flytte det.</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> elementer valgt. Bliv ved med at trykke på ⤒ ↑ ↓ ⤓ for at flytte dem sammen.</item>
+    </plurals>
+    <string name="settings_customize_rename_item_hint">Kun for denne profil. Lad feltet være tomt for at gendanne “<xliff:g id="name">%1$s</xliff:g>”.</string>
+    <string name="settings_customize_item_was">var “<xliff:g id="name">%1$s</xliff:g>”</string>
+    <string name="settings_customize_rename_items">✎ Omdøb elementer</string>
+    <string name="settings_customize_move_to">Flyt til…</string>
+    <string name="settings_customize_back">← Tilbage</string>
+    <string name="settings_move_category_title">Flyt til kategori</string>
+    <string name="settings_move_category_description">Elementet fjernes fra “<xliff:g id="name">%1$s</xliff:g>”, medmindre du vælger at beholde det der.</string>
+    <string name="settings_move_category_new">＋ Ny kategori…</string>
+    <string name="settings_move_category_keep">Behold også i “<xliff:g id="name">%1$s</xliff:g>”</string>
+    <string name="settings_move_category_action">Flyt</string>
+    <string name="settings_dns_description">Brug en brugerdefineret DNS-server til domæneopslag</string>
+    <string name="settings_dns_custom">Brugerdefineret DNS</string>
+    <string name="settings_dns_toggle_description">Foretag alle OwnTV-domæneopslag via en brugerdefineret DNS-server.</string>
+    <string name="settings_dns_use_custom">Brug brugerdefineret DNS</string>
+    <string name="settings_dns_server_missing">Brugerdefineret DNS er aktiveret, men der er ikke konfigureret nogen server. Indtast en serveradresse, og vælg Gem, eller slå funktionen fra.</string>
+    <string name="settings_dns_server">DNS-server</string>
+    <string name="settings_dns_server_hint">8.8.8.8 eller https://dns.google/dns-query</string>
+    <string name="settings_dns_test">Test DNS</string>
+    <string name="settings_dns_explanation">Brugerdefineret DNS kan hjælpe med at omgå domæneblokering hos internetudbyderen eller aktivere geografisk afblokering via SmartDNS-tjenester. DNS-over-HTTPS (DoH) anbefales – det krypterer dine opslag.</string>
+    <string name="settings_dns_limitations">Denne indstilling påvirker kun OkHttp-baseret trafik (synkronisering af afspilningslister, EPG, API-kald, billeder og ExoPlayer-streams). mpv bruger systemets resolver og påvirkes ikke.</string>
+    <string name="settings_dns_resolved">Slået op ✓ (<xliff:g id="millis">%1$d</xliff:g> ms) → <xliff:g id="addresses">%2$s</xliff:g></string>
+    <string name="settings_dns_enter_server">Indtast værtsnavnet på en DNS-server eller en DoH-URL.</string>
+    <string name="settings_dns_not_reachable">DNS-serveren kan ikke nås.</string>
+    <string name="settings_dns_timed_out">DNS-anmodningen fik timeout.</string>
+    <string name="settings_dns_network_unreachable">Netværket kan ikke nås – kontrollér serveradressen.</string>
+    <string name="settings_dns_connection_refused">Forbindelsen blev afvist – kontrollér serveradressen og porten.</string>
+    <string name="settings_dns_test_failed">DNS-testen mislykkedes – kontrollér serveradressen.</string>
+    <string name="settings_dns_no_addresses">DNS returnerede ingen adresser for <xliff:g id="host">%1$s</xliff:g>.</string>
+    <string name="settings_subtitle_customize">Tilpas undertekster</string>
+    <string name="settings_subtitle_customize_off">Når funktionen er slået fra, bevares underteksterne præcis, som streamen og afspilleren gengiver dem.</string>
+    <string name="settings_subtitle_preview_stock">Forhåndsvisning – standardudseende</string>
+    <string name="settings_subtitle_stock_description">Standardudseende, inklusive de farver og den placering, som tv-stationerne indlejrer i undertekster til Live-tv.</string>
+    <string name="settings_subtitle_reset_all">Nulstil alt</string>
+    <string name="settings_subtitle_color">Undertekstfarve</string>
+    <string name="settings_subtitle_color_default_description">Med Standard bestemmes farven af streamen og afspilleren.</string>
+    <string name="settings_subtitle_color_hex_hint">Indtast 6 hexadecimale cifre, f.eks. FFEB3B</string>
+    <string name="settings_subtitle_use_default">Brug standard</string>
+    <string name="settings_subtitle_position">Undertekstplacering</string>
+    <string name="settings_subtitle_background_transparency">Baggrundens gennemsigtighed</string>
+    <string name="settings_subtitle_preview_sample">Den hurtige brune ræv</string>
+    <string name="settings_subtitle_customize_description">Slå dette til, og ændr derefter kun det, du ønsker – alt, der står på Standard, bevarer standardudseendet, inklusive de farver og den placering, som tv-stationerne indlejrer i undertekster til Live-tv.</string>
+    <string name="settings_subtitle_default">Standard</string>
+    <string name="settings_subtitle_color_short">Farve</string>
+    <string name="settings_subtitle_color_description">Tekstfarve – en forudindstilling, vælgeren eller en hexkode.</string>
+    <string name="settings_subtitle_position_short">Placering</string>
+    <string name="settings_subtitle_position_description">Underteksternes placering på skærmen.</string>
+    <string name="settings_subtitle_background_description">Hvor uigennemsigtig boksen bag teksten er.</string>
+    <string name="settings_subtitle_hex">Hex</string>
+    <string name="settings_subtitle_position_default_description">Med Standard bestemmes placeringen af streamen – inklusive hvor en tv-station placerer en liveundertekst. Alle andre valg har altid forrang.</string>
+    <string name="settings_subtitle_background_none">Ingen</string>
+    <string name="settings_subtitle_background_solid">Uigennemsigtig</string>
+    <string name="settings_subtitle_color_white">Hvid</string>
+    <string name="settings_subtitle_color_yellow">Gul</string>
+    <string name="settings_subtitle_color_cyan">Cyan</string>
+    <string name="settings_subtitle_color_green">Grøn</string>
+    <string name="settings_subtitle_color_grey">Grå</string>
+</resources>

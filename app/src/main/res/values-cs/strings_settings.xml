@@ -1,0 +1,862 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <string name="settings_sort_playlist">Playlist</string>
+    <string name="settings_sort_alpha">A–Z</string>
+    <string name="settings_sort_rating">Hodnocení</string>
+    <string name="settings_sort_date_added">Datum přidání</string>
+    <string name="settings_mini_player">Minipřehrávač</string>
+    <string name="settings_mini_player_description">Malý plovoucí přehrávač, který se zobrazí, když při procházení ukotvíte kanál v režimu PiP. Tato nastavení můžete změnit zde nebo za běhu pomocí tlačítek pro změnu velikosti a přesunutí přímo na minipřehrávači.</string>
+    <string name="settings_size">Velikost</string>
+    <string name="settings_mini_player_size_description">Velikost minipřehrávače jako podíl šířky obrazovky (<xliff:g id="min">%1$d</xliff:g>%%–<xliff:g id="max">%2$d</xliff:g>%%).</string>
+    <string name="settings_position">Umístění</string>
+    <string name="settings_mini_player_position_description">Ke kterému rohu nebo okraji se minipřehrávač ukotví.</string>
+    <string name="settings_mini_player_size">Velikost minipřehrávače</string>
+    <string name="settings_mini_player_position">Umístění minipřehrávače</string>
+    <string name="settings_home_screen">Domovská obrazovka</string>
+    <string name="settings_home_description">Skrývejte, měňte pořadí a filtrujte řádky na domovské obrazovce pro tento profil.</string>
+    <string name="settings_sections">Sekce</string>
+    <string name="settings_hidden_sections">Skryté sekce zůstanou v seznamu, abyste je mohli znovu zapnout.</string>
+    <string name="settings_keep_watching">Pokračovat ve sledování</string>
+    <string name="settings_live_keep_watching">Živé kanály v řádku Pokračovat ve sledování</string>
+    <string name="settings_live_keep_watching_description">Zobrazit nedávno sledované živé kanály v hlavním řádku.</string>
+    <string name="settings_movies_keep_watching">Filmy v řádku Pokračovat ve sledování</string>
+    <string name="settings_movies_keep_watching_description">Zobrazit v hlavním řádku karty pro pokračování ve sledování filmů.</string>
+    <string name="settings_series_keep_watching">Seriály v řádku Pokračovat ve sledování</string>
+    <string name="settings_series_keep_watching_description">Zobrazit v hlavním řádku karty pro pokračování ve sledování epizod.</string>
+    <string name="settings_android_tv_home">Domovská obrazovka Android TV</string>
+    <string name="settings_android_tv_home_description">Zobrazit položky Pokračovat ve sledování a nedávné živé kanály na domovské obrazovce televizoru.</string>
+    <string name="settings_refresh_now">Aktualizovat nyní</string>
+    <string name="settings_refresh_description">Znovu vytvořit karty Pokračovat ve sledování a nedávných položek na domovské obrazovce Android TV.</string>
+    <string name="settings_rebuilding">Opětovné vytváření…</string>
+    <string name="settings_done_check">Hotovo ✓</string>
+    <string name="settings_mode"><xliff:g id="mode">%1$s</xliff:g></string>
+    <string name="settings_hidden">Skryté</string>
+    <string name="settings_sidebar_customization">Přizpůsobení postranní nabídky</string>
+    <string name="settings_sidebar_description">Zvolte, které ikony se zobrazí v postranní nabídce, nebo je nechte přizpůsobovat se vašemu playlistu.</string>
+    <string name="settings_behavior">Chování</string>
+    <string name="settings_nav_dynamic_description">Dynamické — ikony se přizpůsobují obsahu aktivního playlistu. Domovská obrazovka a Nastavení se zobrazují vždy.</string>
+    <string name="settings_nav_static_description">Statické — ručně zvolte, které ikony se zobrazí níže.</string>
+    <string name="settings_icons">Ikony</string>
+    <string name="settings_shown_in_menu">Zobrazeno v postranní nabídce</string>
+    <string name="settings_hidden_from_menu">Skryto z postranní nabídky</string>
+    <string name="settings_shown">Zobrazené</string>
+    <string name="settings_nav_behavior">Chování navigační nabídky</string>
+    <string name="settings_static">Statické</string>
+    <string name="settings_dynamic">Dynamické</string>
+    <string name="settings_http_proxy">HTTP proxy</string>
+    <string name="settings_use_proxy">Používat proxy</string>
+    <string name="settings_proxy_description">Odesílat veškerý provoz OwnTV i přehrávání přes HTTP proxy.</string>
+    <string name="settings_host">Hostitel</string>
+    <string name="settings_proxy_host_hint">proxy.example.com</string>
+    <string name="settings_port">Port</string>
+    <string name="settings_proxy_port_hint">8080</string>
+    <string name="settings_username_optional">Uživatelské jméno (volitelné)</string>
+    <string name="settings_password_optional">Heslo (volitelné)</string>
+    <string name="settings_test_proxy">Otestovat proxy</string>
+    <string name="settings_testing">Testování…</string>
+    <string name="settings_proxy_privacy">Poskytovatel proxy může zjistit, ke kterým serverům se připojujete, a zobrazit obsah veškerého provozu mimo HTTPS.</string>
+    <string name="settings_proxy_limitations">Prozatím je podporována pouze HTTP proxy — SOCKS ani samostatné proxy pro jednotlivé playlisty zatím podporovány nejsou.</string>
+    <string name="settings_proxy_connected"><xliff:g id="millis">%1$d</xliff:g> ms</string>
+    <string name="settings_proxy_invalid_address">Zadejte platného hostitele a port (1–65535).</string>
+    <string name="settings_proxy_host_unreachable">Hostitel proxy není dostupný.</string>
+    <string name="settings_proxy_timed_out">Vypršel časový limit připojení k proxy.</string>
+    <string name="settings_proxy_connection_failed">K proxy se nepodařilo připojit (zkontrolujte hostitele a port).</string>
+    <string name="settings_proxy_http">Proxy vrátila stav HTTP <xliff:g id="code">%1$d</xliff:g></string>
+    <string name="settings_proxy_failed">Test proxy se nezdařil.</string>
+    <string name="settings_ch_nav_title">Stránkování tlačítky CH+/CH−</string>
+    <string name="settings_ch_nav_description">Procházejte seznam kategorií nebo položek po stránkách pomocí tlačítek CH+ / CH− na dálkovém ovladači.</string>
+    <string name="settings_ch_nav_enabled">Používat tlačítka CH+/CH− ke stránkování seznamů</string>
+    <string name="settings_ch_nav_enabled_description">Je-li tato možnost zapnutá, tlačítka CH+ a CH− přeskakují v zaměřeném panelu (lišta kategorií nebo seznam položek a seznam kategorií na obrazovce Přizpůsobit). Je-li vypnutá, nemají tato tlačítka na uvedených obrazovkách žádnou funkci.</string>
+    <string name="settings_ch_nav_up">Přeskok CH+ (směrem k první položce)</string>
+    <string name="settings_ch_nav_up_description">O kolik položek se přeskočí nahoru při jednom stisknutí CH+. Dlouhé stisknutí vždy přejde na první položku.</string>
+    <string name="settings_ch_nav_down">Přeskok CH− (směrem k poslední položce)</string>
+    <string name="settings_ch_nav_down_description">O kolik položek se přeskočí dolů při jednom stisknutí CH−. Dlouhé stisknutí vždy přejde na poslední položku.</string>
+    <string name="settings_skip_counts">Počty přeskakovaných položek</string>
+    <string name="settings_how_it_works">Jak to funguje</string>
+    <string name="settings_ch_nav_help">• Přeskoky jsou na koncích omezené, takže u krátkých seznamů stačí k dosažení konce jedno stisknutí.\n• Dlouhé stisknutí CH+ = první položka, dlouhé stisknutí CH− = poslední položka.\n• Dlouhé stisknutí je vypnuté v seznamu „Vše“ (všechny kanály / filmy / seriály) — přeskakování krátkým stisknutím tam nadále funguje.\n• Funkce se použije v panelu, který je právě zaměřený — v liště kategorií nebo v seznamu či mřížce položek.\n• Po stránkách prochází také seznam kategorií v Nastavení → Přizpůsobit kategorie a položky.</string>
+    <string name="settings_large_skips_warning">Velké přeskoky mohou přeskočit krátké seznamy a na méně výkonných televizorech působit trhaně.</string>
+    <string name="settings_ch_nav_picker">Stránkování tlačítky CH+/CH−</string>
+    <string name="settings_weather">Počasí</string>
+    <string name="settings_top_bar_weather">Počasí v horní liště</string>
+    <string name="settings_show_weather">Zobrazovat počasí</string>
+    <string name="settings_show_weather_description">Zobrazit aktuální počasí v horní liště.</string>
+    <string name="settings_custom_location">Vlastní poloha</string>
+    <string name="settings_custom_location_description">Nahradit město používané pro počasí. Chcete-li použít automatické zjištění, ponechte pole prázdné. Jinak zadejte město (např. Praha) nebo souřadnice „zeměpisná šířka,délka“ (např. 50.08,14.43). To se hodí při používání VPN, kdy automatické zjištění určí město serveru.</string>
+    <string name="settings_temperature_unit">Jednotka teploty</string>
+    <string name="settings_temperature_description">Zobrazovat teplotu ve stupních Celsia nebo Fahrenheita.</string>
+    <string name="settings_auto">Automaticky</string>
+    <string name="settings_city_latlon">Město nebo zeměpisná šířka,délka</string>
+    <string name="settings_location_hint">Chcete-li použít automatické zjištění podle veřejné IP adresy, ponechte pole prázdné. Jinak zadejte město (např. Praha) nebo souřadnice „zeměpisná šířka,délka“ (např. 50.08,14.43).</string>
+    <string name="settings_metadata">Metadata (TMDB)</string>
+    <string name="settings_metadata_source">Zdroj metadat</string>
+    <string name="settings_metadata_source_description">Zvolte, odkud se mají získávat podrobnosti o filmech a seriálech.</string>
+    <string name="settings_metadata_provider_description">Používat pouze údaje z playlistu. Bez vyhledávání v TMDB.</string>
+    <string name="settings_metadata_provider_tmdb_description">Údaje z playlistu mají přednost; TMDB doplní chybějící informace a přidá obsazení, žánry a obrázky na pozadí.</string>
+    <string name="settings_metadata_tmdb_only_description">U všech polí upřednostnit TMDB; údaje z playlistu použít pouze v případě, že TMDB nic nenajde.</string>
+    <string name="settings_selected">Vybrané</string>
+    <string name="settings_active_tmdb_source">Aktivní zdroj TMDB: <xliff:g id="tier">%1$s</xliff:g></string>
+    <string name="settings_metadata_language">Jazyk metadat</string>
+    <string name="settings_metadata_language_description">Jazyk popisů děje, žánrů a názvů z TMDB. Pole, která TMDB nepřeložilo, zůstanou v angličtině. Při změně se vymažou podrobnosti z mezipaměti, aby se načetly znovu.</string>
+    <string name="settings_advanced_options">Pokročilé možnosti</string>
+    <string name="settings_advanced_metadata_description">Používejte místo výchozího sdíleného nastavení vlastní klíč API TMDB nebo vlastní server.</string>
+    <string name="settings_metadata_server_description">Chcete-li použít integrovaný sdílený server bez dalšího nastavení, ponechte obě pole prázdná. Chcete-li volat TMDB přímo, zadejte vlastní klíč API TMDB. Případně zadejte URL vlastního serveru a používejte vlastní proxy či zrcadlo. URL má přednost před klíčem.</string>
+    <string name="settings_tmdb_api_key">Klíč API TMDB (v3)</string>
+    <string name="settings_self_host_url">URL vlastního serveru</string>
+    <string name="settings_test">Test</string>
+    <string name="settings_metadata_empty_title">Zadejte název, který chcete vyhledat.</string>
+    <string name="settings_metadata_server_unavailable">K serveru metadat se nepodařilo připojit — zkontrolujte síť, klíč a URL.</string>
+    <string name="settings_metadata_no_match">V TMDB nebyla pro „<xliff:g id="query">%1$s</xliff:g>“ nalezena shoda.</string>
+    <string name="settings_metadata_lookup_failed">Vyhledávání se nezdařilo.</string>
+    <string name="settings_metadata_match_result"><xliff:g id="title">%1$s</xliff:g><xliff:g id="year">%2$s</xliff:g> · TMDB #<xliff:g id="id">%3$d</xliff:g></string>
+    <string name="settings_metadata_year"> (<xliff:g id="year">%1$d</xliff:g>)</string>
+    <string name="settings_lookup_movie">Vyhledat název filmu</string>
+    <string name="settings_test_lookup">Otestovat vyhledávání</string>
+    <string name="settings_looking_up">Vyhledávání…</string>
+    <string name="settings_tmdb_attribution">Tento produkt používá API TMDB, ale není společností TMDB schválen ani certifikován.</string>
+    <string name="settings_metadata_provider_only">Pouze poskytovatel</string>
+    <string name="settings_metadata_provider_plus_tmdb">Poskytovatel + TMDB</string>
+    <string name="settings_metadata_tmdb_only">Pouze TMDB</string>
+    <string name="settings_tier_default">Výchozí (sdílené)</string>
+    <string name="settings_tier_key">Váš klíč TMDB</string>
+    <string name="settings_tier_self_host">Vlastní server</string>
+    <string name="settings_title">Nastavení</string>
+    <string name="settings_quick_live_preview">Živý náhled</string>
+    <string name="settings_quick_preview_sound">Zvuk náhledu</string>
+    <string name="settings_quick_channel_numbers">Čísla kanálů</string>
+    <string name="settings_quick_hdr">HDR</string>
+    <string name="settings_quick_autoplay">Automatické přehrávání</string>
+    <string name="settings_quick_check_update">Zkontrolovat aktualizaci</string>
+    <string name="settings_search_label">Vyhledávání v nastavení</string>
+    <string name="settings_search_hint">Vyhledávání v nastavení…</string>
+    <string name="settings_group_general">Obecné</string>
+    <string name="settings_language">Jazyk</string>
+    <string name="settings_language_description">Jazyk rozhraní aplikace</string>
+    <string name="settings_language_system_default">Podle systému</string>
+    <string name="settings_language_system_default_description">Řídí se jazykem zařízení</string>
+    <string name="settings_language_search_hint">Vyhledávání jazyků…</string>
+    <string name="settings_search_keywords_language">jazyk národní prostředí lokalizace překlad mezinárodní i18n</string>
+    <string name="settings_language_coverage"><xliff:g id="percent">%1$d</xliff:g>%%</string>
+    <string name="settings_profile_group">Profil</string>
+    <string name="settings_profiles_description">Správa diváků, dětského režimu a zámků PIN</string>
+    <string name="settings_content_group">Obsah</string>
+    <string name="settings_playlists">Playlisty</string>
+    <string name="settings_playlists_description">Přidávejte, opětovně synchronizujte nebo odebírejte playlisty M3U / Xtream</string>
+    <string name="settings_epg_sources">Zdroje EPG</string>
+    <string name="settings_epg_sources_nav_description">Přidávejte zdroje TV programu XMLTV</string>
+    <string name="settings_customize">Přizpůsobit kategorie a položky</string>
+    <string name="settings_customize_nav_description">Skrývejte a zobrazujte položky, přejmenovávejte kategorie a měňte jejich pořadí</string>
+    <string name="settings_sidebar_description_root">Automaticky přizpůsobovat postranní ikony playlistu nebo skrýt konkrétní ikony</string>
+    <string name="settings_ch_paging">Stránkování tlačítky CH+/CH−</string>
+    <string name="settings_ch_paging_description">Přeskakujte nahoru a dolů v seznamech kategorií a položek pomocí tlačítek CH+ / CH−</string>
+    <string name="settings_browsing_lists">Procházení a seznamy</string>
+    <string name="settings_browsing_description">Pamatovat si poslední kategorii a poslední položku v živém vysílání, filmech a seriálech</string>
+    <string name="settings_home_root">Domovská obrazovka</string>
+    <string name="settings_home_root_description">Vybírejte, řaďte a filtrujte řádky na domovské obrazovce</string>
+    <string name="settings_metadata_root_description">Plakáty, popisy děje, obsazení a hodnocení filmů a seriálů</string>
+    <string name="settings_download_folder">Složka pro stahování</string>
+    <string name="settings_app_storage">Úložiště aplikace</string>
+    <string name="settings_backup_restore">Záloha a obnovení</string>
+    <string name="settings_backup_restore_description">Export nebo obnovení profilů a zdrojů</string>
+    <string name="settings_clear_history">Vymazat historii sledování</string>
+    <string name="settings_clear_history_description">Odebrat pro tento profil řádky nedávno sledovaných položek a pokračování ve sledování</string>
+    <string name="settings_appearance_group">Vzhled</string>
+    <string name="settings_theme">Motiv</string>
+    <string name="settings_theme_description">Světlý, tmavý nebo podle systému</string>
+    <string name="settings_accent">Barva zvýraznění</string>
+    <string name="settings_accent_description">Obarvení rozhraní — předvolby, paleta nebo hexadecimální kód</string>
+    <string name="settings_glass_effect">Efekt skla</string>
+    <string name="settings_glass_description">Průsvitné matné panely, obrázek na pozadí a průhlednost</string>
+    <string name="settings_ui_zoom">Přiblížení rozhraní</string>
+    <string name="settings_ui_zoom_description">Změna velikosti celého rozhraní</string>
+    <string name="settings_animations">Animace</string>
+    <string name="settings_animations_description">Zapněte nebo vypněte pohyb v rozhraní — vypnutí působí svižněji na méně výkonných TV boxech</string>
+    <string name="settings_weather_description_root">Štítek počasí v horní liště: zobrazení nebo skrytí, vlastní poloha a stupně Celsia či Fahrenheita.</string>
+    <string name="settings_playback_group">Přehrávání</string>
+    <string name="settings_live_preview_description">Automaticky přehrát kanál, když jej zaměříte</string>
+    <string name="settings_preview_audio">Zvuk náhledu</string>
+    <string name="settings_preview_audio_description">Přehrávat zvuk v živém náhledu</string>
+    <string name="settings_mini_player_root">Minipřehrávač</string>
+    <string name="settings_mini_player_root_description">Velikost a umístění ukotveného minipřehrávače</string>
+    <string name="settings_hdr_description">Používat výstup HDR, pokud jej video a televizor podporují</string>
+    <string name="settings_auto_frame_rate">Automatická snímková frekvence</string>
+    <string name="settings_auto_frame_rate_description">Při zobrazení na celé obrazovce přizpůsobit obnovovací frekvenci televizoru videu (24/25/50/60 sn./s) pro živé vysílání i VOD a při ukončení ji obnovit. Vypněte, pokud televizor nebo přijímač při každé změně kanálu rušivě znovu navazuje spojení HDMI.</string>
+    <string name="settings_surround_sound">Prostorový zvuk</string>
+    <string name="settings_surround_description">Dekódovat Dolby/DTS do prostorového zvuku (5.1/7.1) pro skutečný přijímač 5.1/7.1. U reproduktorů televizoru nebo stereofonního soundbaru ponechte VYPNUTO — na některých televizorech a soundbarech může vícekanálový zvuk zaostávat za obrazem. Pokud se rozchází, upravte v nabídce Zvuk přehrávače → Synchronizace A/V.</string>
+    <string name="settings_autoplay_next">Automaticky přehrát další epizodu</string>
+    <string name="settings_autoplay_next_description">Po skončení epizody automaticky spustit další — a pokračovat i do následující řady.</string>
+    <string name="settings_catchup">TV archiv</string>
+    <plurals name="settings_catchup_supported">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> kanál podporuje TV archiv · časové pásmo a přehrávač pro přehrávání TV archivu</item>
+        <item quantity="few"><xliff:g id="count">%1$d</xliff:g> kanály podporují TV archiv · časové pásmo a přehrávač pro přehrávání TV archivu</item>
+        <item quantity="many"><xliff:g id="count">%1$d</xliff:g> kanálu podporuje TV archiv · časové pásmo a přehrávač pro přehrávání TV archivu</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> kanálů podporuje TV archiv · časové pásmo a přehrávač pro přehrávání TV archivu</item>
+    </plurals>
+    <string name="settings_catchup_unavailable">V tomto playlistu nejsou k dispozici žádné kanály s TV archivem</string>
+    <string name="settings_device">Zařízení</string>
+    <string name="settings_video_player">Nastavení přehrávače videa</string>
+    <string name="settings_video_player_description">Dekodér, titulky, synchronizace</string>
+    <string name="settings_playback_error_log">Protokol chyb přehrávání</string>
+    <string name="settings_playback_speed">Rychlost přehrávání</string>
+    <string name="settings_player_zoom">Přiblížení obrazu přehrávače</string>
+    <string name="settings_playback_error_description">Poslední chyby přehrávání — podrobnosti, které si můžete přečíst nebo nahlásit</string>
+    <string name="settings_network_group">Síť</string>
+    <string name="settings_app_group">Aplikace</string>
+    <string name="settings_app_startup">Spuštění aplikace</string>
+    <string name="settings_app_startup_description">Co OwnTV otevře při spuštění</string>
+    <string name="settings_check_updates">Zkontrolovat aktualizace</string>
+    <string name="settings_check_updates_description">Získat nejnovější verzi z GitHub Releases</string>
+    <string name="settings_update_startup">Kontrolovat aktualizace při spuštění</string>
+    <string name="settings_update_startup_description">Při otevření aplikace vyhledat novou verzi</string>
+    <string name="settings_about">O aplikaci</string>
+    <string name="settings_about_description">Verze, licence a informace o projektu</string>
+    <string name="settings_live_latency">Zpoždění živého vysílání</string>
+    <string name="settings_no_settings_match">Výrazu „<xliff:g id="query">%1$s</xliff:g>“ neodpovídá žádné nastavení</string>
+    <string name="settings_breadcrumb"><xliff:g id="group">%1$s</xliff:g> › <xliff:g id="title">%2$s</xliff:g></string>
+    <string name="settings_startup_home">Domů</string>
+    <string name="settings_startup_last_channel">Poslední kanál</string>
+    <string name="settings_startup_favorites">Živé vysílání · Oblíbené</string>
+    <string name="settings_all_history">Celou historii</string>
+    <string name="settings_choose_history">Zvolte, co se má pro tento profil odstranit. Playlisty, oblíbené ani stahování nebudou ovlivněny.</string>
+    <string name="settings_clear_history_confirm">Vymazat historii <xliff:g id="scope">%1$s</xliff:g>?</string>
+    <string name="settings_cannot_undo">Tuto akci nelze vrátit zpět.</string>
+    <string name="settings_no">Ne</string>
+    <string name="settings_yes_clear">Ano, vymazat</string>
+    <string name="settings_accent_dialog">Barva zvýraznění</string>
+    <string name="settings_presets">Předvolby</string>
+    <string name="settings_hex_code">Hexadecimální kód</string>
+    <string name="settings_hex">Hex</string>
+    <string name="settings_apply">Použít</string>
+    <string name="settings_hex_error">Zadejte 6 hexadecimálních číslic, např. 52DBC8</string>
+    <string name="settings_color_picker">Výběr barvy</string>
+    <string name="settings_use_color">Použít tuto barvu</string>
+    <string name="settings_about_version">Verze <xliff:g id="version">%1$s</xliff:g></string>
+    <string name="settings_about_description_full">Váš vlastní přehrávač IPTV pro Android TV — bezplatná aplikace s otevřeným zdrojovým kódem sloužící pouze jako přehrávač. Neposkytuje žádné kanály ani obsah; vlastní legálně dostupné zdroje si přidáte sami.</string>
+    <string name="settings_about_license">© 2026 Ashiq Hasan · Licence GPLv3</string>
+    <string name="settings_join_telegram">Přidejte se k nám na Telegramu</string>
+    <string name="settings_telegram_qr">QR kód skupiny na Telegramu</string>
+    <string name="settings_telegram_scan">Naskenujte QR kód a připojte se z telefonu nebo otevřete odkaz výše.</string>
+    <string name="settings_contributions">Příspěvky, hlášení chyb a hvězdičky jsou na GitHubu vítány.</string>
+    <string name="settings_playback_error_title">Protokol chyb přehrávání</string>
+    <string name="settings_playback_error_description_full">Nejnovější chyby přehrávání (od nejnovějších). Při hlášení problému přiložte tyto podrobnosti.</string>
+    <string name="settings_loading">Načítání…</string>
+    <string name="settings_no_playback_errors">Nebyly zaznamenány žádné chyby přehrávání.</string>
+    <string name="settings_live">Živé vysílání</string>
+    <string name="settings_vod">VOD</string>
+    <string name="settings_clear_log">Vymazat protokol</string>
+    <string name="settings_browsing_title">Procházení a seznamy</string>
+    <string name="settings_browsing_description_full">Kam se po návratu vrátí živé vysílání, filmy a seriály.</string>
+    <string name="settings_section_toggle"><xliff:g id="section">%1$s</xliff:g>: <xliff:g id="state">%2$s</xliff:g></string>
+    <string name="settings_glass_surfaces">Skleněné plochy</string>
+    <string name="settings_glass_surfaces_description">Zvolte, které části aplikace se mají vykreslovat jako sklo. Vypnutím všech ploch vypnete efekt skla.</string>
+    <string name="settings_all_surfaces_on">Všechny plochy: Zapnuto</string>
+    <string name="settings_all_surfaces_off">Všechny plochy: Vypnuto</string>
+    <string name="settings_surface_toggle"><xliff:g id="surface">%1$s</xliff:g>: <xliff:g id="state">%2$s</xliff:g></string>
+    <string name="settings_transparency_description">Jak moc je obsah vidět skrz panely (<xliff:g id="min">%1$d</xliff:g>%%–<xliff:g id="max">%2$d</xliff:g>%%). Vyšší hodnota znamená menší průhlednost.</string>
+    <string name="settings_catchup_description">Jak se odesílají časové údaje TV archivu. Použijte časové pásmo zařízení nebo nastavte posun očekávaný serverem poskytovatele.</string>
+    <string name="settings_manual">Ručně</string>
+    <string name="settings_theme_dark">Tmavý</string>
+    <string name="settings_theme_light">Světlý</string>
+    <string name="settings_theme_system">Podle systému</string>
+    <string name="settings_accent_teal">Tyrkysová</string>
+    <string name="settings_accent_blue">Modrá</string>
+    <string name="settings_accent_violet">Fialová</string>
+    <string name="settings_accent_green">Zelená</string>
+    <string name="settings_accent_amber">Jantarová</string>
+    <string name="settings_group_profile">Profil</string>
+    <string name="settings_group_content">Obsah</string>
+    <string name="settings_group_appearance">Vzhled</string>
+    <string name="settings_group_playback">Přehrávání</string>
+    <string name="settings_group_network">Síť</string>
+    <string name="settings_dns">DNS</string>
+    <string name="settings_group_app">Aplikace</string>
+    <string name="settings_search_guide_logos">Loga kanálů v TV programu</string>
+    <string name="settings_search_keywords_profiles">diváci děti dětský režim PIN zámek účet</string>
+    <string name="settings_search_keywords_playlists">M3U Xtream zdroj synchronizace přidat odebrat</string>
+    <string name="settings_search_keywords_epg">XMLTV TV program zdroj pořad</string>
+    <string name="settings_search_keywords_logos">kanál logo ikona XMLTV TV program picon playlist</string>
+    <string name="settings_search_keywords_customize">skrýt zobrazit přejmenovat změnit pořadí kategorie</string>
+    <string name="settings_search_keywords_sidebar">postranní lišta ikony dynamické statické skrýt zobrazit přizpůsobit playlist</string>
+    <string name="settings_search_keywords_ch">kanál nahoru dolů přeskočit stránka seznam kategorie kanál</string>
+    <string name="settings_search_keywords_browsing">pamatovat pozice posouvání kategorie poslední položka živé vysílání filmy seriály obnovit začátek</string>
+    <string name="settings_search_keywords_home">řádky hlavní změnit pořadí filtr</string>
+    <string name="settings_search_keywords_metadata">plakáty popisy děje obsazení hodnocení</string>
+    <string name="settings_search_keywords_download">úložiště cesta složka adresář</string>
+    <string name="settings_search_keywords_backup">export import profily zdroje</string>
+    <string name="settings_search_keywords_history">nedávno sledované pokračovat odebrat</string>
+    <string name="settings_search_keywords_theme">světlý tmavý systém</string>
+    <string name="settings_search_keywords_accent">odstín paleta hex předvolba</string>
+    <string name="settings_search_keywords_zoom">měřítko rozhraní velikost</string>
+    <string name="settings_search_keywords_animation">pohyb svižnější výkon</string>
+    <string name="settings_search_keywords_weather">horní lišta štítek poloha celsius fahrenheit</string>
+    <string name="settings_search_keywords_live_preview">automaticky přehrát zaměření kanál</string>
+    <string name="settings_search_keywords_sound">zvuk živý náhled</string>
+    <string name="settings_search_keywords_channel_numbers">kanál číslo přímé naladění zadat číslice klávesnice číselná přepnout lcn</string>
+    <string name="settings_search_keywords_mini">ukotvený pip minipřehrávač velikost umístění měřítko procenta roh přesunout</string>
+    <string name="settings_search_keywords_hdr">vysoký dynamický rozsah výstup HDR</string>
+    <string name="settings_search_keywords_afr">afr obnovovací frekvence hz trhání 24fps 25fps 50hz 60hz režim obrazovky přizpůsobit</string>
+    <string name="settings_search_keywords_surround">Dolby DTS 5.1 7.1 přijímač zvuk</string>
+    <string name="settings_search_keywords_autoplay">automatické přehrávání seriály řada</string>
+    <string name="settings_search_keywords_catchup">archiv časové pásmo posun TV archiv externí přehrávač vlc mx</string>
+    <string name="settings_search_keywords_video">dekodér titulky synchronizace</string>
+    <string name="settings_search_keywords_subtitle_appearance">titulek velikost barva poloha průhlednost pozadí krytí</string>
+    <string name="settings_search_keywords_latency">živé vysílání vyrovnávací paměť latence zpoždění nízká latence sekundy blízko aktuálního bodu živého vysílání</string>
+    <string name="settings_search_keywords_errors">chyba pád selhání diagnostika hlášení</string>
+    <string name="settings_search_keywords_proxy">http provoz směrování</string>
+    <string name="settings_search_keywords_dns">doména vyhledávání překladač doh DNS-over-HTTPS</string>
+    <string name="settings_search_keywords_startup">spuštění otevřít úvodní obrazovka</string>
+    <string name="settings_search_keywords_updates">GitHub vydání verze</string>
+    <string name="settings_search_keywords_update_auto">automatická aktualizace nová verze</string>
+    <string name="settings_search_keywords_about">verze licence projekt informace</string>
+    <string name="settings_language_default">Výchozí (angličtina)</string>
+    <string name="settings_language_device">Jazyk zařízení</string>
+    <string name="settings_language_arabic">Arabština</string>
+    <string name="settings_language_bulgarian">Bulharština</string>
+    <string name="settings_language_chinese">Čínština</string>
+    <string name="settings_language_croatian">Chorvatština</string>
+    <string name="settings_language_czech">Čeština</string>
+    <string name="settings_language_danish">Dánština</string>
+    <string name="settings_language_dutch">Nizozemština</string>
+    <string name="settings_language_english">Angličtina</string>
+    <string name="settings_language_estonian">Estonština</string>
+    <string name="settings_language_finnish">Finština</string>
+    <string name="settings_language_french">Francouzština</string>
+    <string name="settings_language_german">Němčina</string>
+    <string name="settings_language_greek">Řečtina</string>
+    <string name="settings_language_hebrew">Hebrejština</string>
+    <string name="settings_language_hindi">Hindština</string>
+    <string name="settings_language_hungarian">Maďarština</string>
+    <string name="settings_language_indonesian">Indonéština</string>
+    <string name="settings_language_italian">Italština</string>
+    <string name="settings_language_japanese">Japonština</string>
+    <string name="settings_language_korean">Korejština</string>
+    <string name="settings_language_latvian">Lotyština</string>
+    <string name="settings_language_lithuanian">Litevština</string>
+    <string name="settings_language_malay">Malajština</string>
+    <string name="settings_language_norwegian">Norština</string>
+    <string name="settings_language_persian">Perština</string>
+    <string name="settings_language_polish">Polština</string>
+    <string name="settings_language_portuguese_brazil">Portugalština (Brazílie)</string>
+    <string name="settings_language_portuguese_portugal">Portugalština (Portugalsko)</string>
+    <string name="settings_language_romanian">Rumunština</string>
+    <string name="settings_language_russian">Ruština</string>
+    <string name="settings_language_serbian">Srbština</string>
+    <string name="settings_language_slovak">Slovenština</string>
+    <string name="settings_language_slovenian">Slovinština</string>
+    <string name="settings_language_spanish">Španělština</string>
+    <string name="settings_language_spanish_latam">Španělština (Latinská Amerika)</string>
+    <string name="settings_language_swedish">Švédština</string>
+    <string name="settings_language_thai">Thajština</string>
+    <string name="settings_language_turkish">Turečtina</string>
+    <string name="settings_language_ukrainian">Ukrajinština</string>
+    <string name="settings_language_vietnamese">Vietnamština</string>
+    <string name="settings_video_player_title">Přehrávač videa</string>
+    <string name="settings_decoding">Dekódování</string>
+    <string name="settings_hardware_decoding">Hardwarové dekódování</string>
+    <string name="settings_hardware_decoding_description">Používat hardwarový dekodér televizoru. Vypněte, pokud se některé streamy sekají nebo zobrazují obrazové vady.</string>
+    <string name="settings_movies_series_player">Přehrávač filmů a seriálů</string>
+    <string name="settings_external_player">Externí přehrávač</string>
+    <string name="settings_default_zoom">Výchozí přiblížení</string>
+    <string name="settings_default_zoom_description">Poměr stran a přiblížení použité při zahájení přehrávání.</string>
+    <string name="settings_resume_playback">Pokračovat v přehrávání</string>
+    <string name="settings_resume_playback_description">Co udělat, když má film nebo epizoda uloženou pozici.</string>
+    <string name="settings_subtitles">Titulky</string>
+    <string name="settings_subtitle_appearance">Vzhled titulků</string>
+    <string name="settings_subtitle_appearance_description">Velikost, barva textu, umístění na obrazovce a průhlednost pozadí. Když je tato možnost vypnutá, titulky si zachovají výchozí vzhled — včetně stylů, které vysílatelé vkládají do titulků živého vysílání.</string>
+    <string name="settings_subtitle_size">Velikost titulků</string>
+    <string name="settings_subtitle_size_description">Změnit měřítko textu titulků.</string>
+    <string name="settings_preferred_subtitle_language">Preferovaný jazyk titulků</string>
+    <string name="settings_preferred_language_description">Automaticky vybrat tuto stopu titulků, pokud je dostupná.</string>
+    <string name="settings_open_subtitles">OpenSubtitles</string>
+    <string name="settings_open_subtitles_description">Přihlaste se, abyste mohli vyhledávat a stahovat titulky a spravovat stažené titulky. Nastavení platí pro každý profil zvlášť a vyžaduje bezplatný účet na opensubtitles.com.</string>
+    <string name="settings_audio">Zvuk</string>
+    <string name="settings_preferred_audio_language">Preferovaný jazyk zvuku</string>
+    <string name="settings_audio_sync">Synchronizace zvuku</string>
+    <string name="settings_audio_sync_description">Posuňte zvuk dopředu nebo dozadu, aby odpovídal obrazu.</string>
+    <string name="settings_live_tv">Živé vysílání</string>
+    <string name="settings_live_latency_description">Určuje, jak blízko aktuálnímu vysílání se má přehrávat. Nižší hodnota znamená menší zpoždění oproti živému vysílání, ale také menší vyrovnávací paměť, takže slabé streamy se mohou častěji zadrhávat nebo znovu připojovat. Použije se u dalšího kanálu, který otevřete.</string>
+    <string name="settings_channel_numbers">Čísla kanálů</string>
+    <string name="settings_channel_numbers_description">Zobrazovat číslo kanálu od poskytovatele vedle jeho názvu v seznamu živého vysílání, překryvu seznamu kanálů a přehrávači. Během přehrávání na celé obrazovce také můžete zadat číslo na dálkovém ovladači a přejít přímo na daný kanál (tlačítko OK přepne okamžitě, tlačítko Zpět zadání zruší). Vypnutím se skryjí všechna čísla a číselná tlačítka se budou ignorovat. Nic se neztratí a po opětovném zapnutí se čísla obnoví.</string>
+    <string name="settings_diagnostics">Diagnostika</string>
+    <string name="settings_measured_stats">Měřené statistiky streamu</string>
+    <string name="settings_measured_stats_description">V překryvu s informacemi o streamu zobrazovat aktuální snímkovou frekvenci, datový tok a vynechané snímky (měří se, když je překryv otevřený, a to u streamů, které tyto hodnoty neuvádějí). Vypněte pouze v případě, že se obraz na méně výkonném televizoru zadrhává — skutečné video to nikdy neovlivňuje, pouze diagnostické hodnoty.</string>
+    <string name="settings_none_auto">Žádné / Automaticky</string>
+    <string name="settings_view_grid">Mřížka</string>
+    <string name="settings_view_list">Seznam</string>
+    <string name="settings_language_portuguese">Portugalština</string>
+    <string name="settings_subtitle_small">Malé</string>
+    <string name="settings_subtitle_normal">Normální</string>
+    <string name="settings_subtitle_large">Velké</string>
+    <string name="settings_subtitle_extra_large">Velmi velké</string>
+    <string name="settings_live_latency_low">Nízká latence</string>
+    <string name="settings_live_latency_balanced">Vyvážená</string>
+    <string name="settings_live_latency_stable">Stabilní</string>
+    <string name="settings_live_latency_custom">Vlastní</string>
+    <string name="settings_low_latency_warning">⚠️ Nízká latence</string>
+    <string name="settings_low_latency_warning_description">Přehrávání blíže aktuálnímu vysílání ponechává menší vyrovnávací paměť. U pomalejších připojení nebo nestabilních streamů to může způsobovat častější načítání, zadrhávání nebo opětovné připojování.\n\nPokud kanál přestane být spolehlivý, zvolte možnost Vyvážená.</string>
+    <string name="settings_low_latency_understand">Rozumím</string>
+    <string name="settings_custom_live_buffer">Vlastní vyrovnávací paměť živého vysílání</string>
+    <string name="settings_live_buffer_seconds"><xliff:g id="seconds">%1$d</xliff:g>s</string>
+    <string name="settings_audio_delay"><xliff:g id="delay">%1$d</xliff:g> ms</string>
+    <string name="settings_external_player_description">Vyberte, které sekce se mají otevírat v externí aplikaci.</string>
+    <string name="settings_audio_delay_value"><xliff:g id="delay">%1$d</xliff:g> ms</string>
+    <string name="settings_movies_player_description">mpv (doporučeno) podporuje nejširší škálu formátů — zvuk DTS/TrueHD, neobvyklé soubory — a také nabízí opravu synchronizace A/V. Na ExoPlayer přepněte pouze tehdy, pokud se filmy nebo epizody nespustí: na některých televizorech přehraje určité streamy, které mpv přehrát nedokáže, ale neumí dekódovat zvuk DTS/TrueHD a nenabízí opravu synchronizace A/V. Ať zvolíte kterýkoli, při selhání se automaticky vyzkouší druhý.</string>
+    <string name="settings_external_player_row_description">Otevírat streamy v externí aplikaci (VLC, MX Player) namísto vestavěného přehrávače, s volbou pro každou sekci. Užitečné pro streamy, které tato aplikace nedokáže dekódovat, nebo pokud dáváte přednost jinému přehrávači. Při externím přehrávání není k dispozici pokračování v přehrávání od poslední pozice ani předchozí/další; streamy vyžadující vlastní User-Agent nebo referer se nemusí přehrát.</string>
+    <string name="settings_resume_always">Vždy pokračovat</string>
+    <string name="settings_resume_ask">Zeptat se na pokračování</string>
+    <string name="settings_resume_never">Nikdy nepokračovat</string>
+    <string name="settings_delete_subtitles">Odstranit titulky</string>
+    <string name="settings_delete_all">Odstranit vše</string>
+    <string name="settings_movies">Filmy</string>
+    <string name="settings_series">Seriály</string>
+    <string name="settings_no_downloaded_subtitles">Žádné stažené titulky pro sekci <xliff:g id="section">%1$s</xliff:g>.</string>
+    <string name="settings_delete_subtitle">Odstranit titulek</string>
+    <string name="settings_delete_subtitle_message">Odstranit titulek <xliff:g id="name">%1$s</xliff:g> pro „<xliff:g id="title">%2$s</xliff:g>“? Později jej bude možné stáhnout znovu.</string>
+    <string name="settings_delete_all_subtitles">Odstranit všechny titulky</string>
+    <string name="settings_delete_all_movies">Odstranit všechny titulky k filmům</string>
+    <string name="settings_delete_all_series">Odstranit všechny titulky k seriálům</string>
+    <string name="settings_section_count"><xliff:g id="section">%1$s</xliff:g> (<xliff:g id="count">%2$d</xliff:g>)</string>
+    <string name="settings_sync_guide_question">Synchronizovat TV program nyní?</string>
+    <string name="settings_sync_guide_description">Stáhnout TV program (EPG) pro „<xliff:g id="source">%1$s</xliff:g>“. Můžete to provést také později v části Nastavení → EPG.</string>
+    <string name="settings_not_now">Teď ne</string>
+    <string name="settings_sync_now">Synchronizovat nyní</string>
+    <string name="settings_syncing_guide">Synchronizace TV programu…</string>
+    <string name="settings_connecting">Připojování…</string>
+    <string name="settings_run_background">Spustit na pozadí</string>
+    <string name="settings_guide_synced">TV program synchronizován</string>
+    <string name="settings_guide_sync_failed">Synchronizace TV programu se nezdařila</string>
+    <string name="settings_restore_remote_title">Obnovit z jiného zařízení</string>
+    <string name="settings_restore_remote_description">Na telefonu nebo notebooku připojeném ke stejné síti Wi-Fi naskenujte QR kód (nebo otevřete adresu URL), zadejte tento PIN, vyberte soubor zálohy OwnTV a klepněte na Odeslat do TV. Potom zde vyberete, co chcete obnovit.</string>
+    <string name="settings_opening_server">Spouštění serveru…</string>
+    <string name="settings_enter_pin_browser">Zadejte tento PIN v prohlížeči</string>
+    <string name="settings_companion_qr">QR kód adresy URL doprovodné stránky</string>
+    <string name="settings_open_url">Nebo otevřete tuto adresu URL</string>
+    <string name="settings_try_again">Zkusit znovu</string>
+    <string name="settings_new_pin">Spustit znovu s novým PIN</string>
+    <string name="settings_download_remote_title">Stáhnout na jiném zařízení</string>
+    <string name="settings_download_remote_description">Na telefonu nebo notebooku připojeném ke stejné síti Wi-Fi naskenujte QR kód (nebo otevřete adresu URL), zadejte tento PIN a stáhněte si soubor zálohy, abyste jej mohli bezpečně uchovat.</string>
+    <string name="settings_preparing_backup">Příprava zálohy…</string>
+    <string name="settings_liquid_glass_on">Tekuté sklo: Zapnuto</string>
+    <string name="settings_liquid_glass_off">Tekuté sklo: Vypnuto</string>
+    <string name="settings_background_on">Obrázek na pozadí: Zapnuto</string>
+    <string name="settings_background_off">Obrázek na pozadí: Vypnuto</string>
+    <string name="settings_ui_zoom_range">Změnit měřítko celého rozhraní (<xliff:g id="min">%1$d</xliff:g>%%–<xliff:g id="max">%2$d</xliff:g>%%).</string>
+    <string name="settings_low_zoom_warning_title">⚠️ Upozornění na malé přiblížení</string>
+    <string name="settings_low_zoom_warning">Při přiblížení <xliff:g id="zoom">%1$d</xliff:g>%% se na obrazovce zobrazí mnohem více položek najednou. Na zařízeních s omezenou pamětí (například TV stick s 2 GB) to může způsobit nestabilitu nebo pád aplikace, zejména u velkých playlistů a objemných dat EPG.\n\nStisknutím tlačítka OK pokračujte, nebo se tlačítkem Zpět vraťte k hodnotě <xliff:g id="safe_zoom">%2$d</xliff:g>%%.</string>
+    <string name="settings_low_zoom_accept">Rozumím a přijímám riziko</string>
+    <string name="settings_surface_transparency"><xliff:g id="percent">%1$d</xliff:g>%%</string>
+    <string name="settings_surface_count_all">Plochy: Všechny</string>
+    <plurals name="settings_surface_count">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> z <xliff:g id="total">%2$d</xliff:g> ploch</item>
+        <item quantity="few"><xliff:g id="count">%1$d</xliff:g> z <xliff:g id="total">%2$d</xliff:g> ploch</item>
+        <item quantity="many"><xliff:g id="count">%1$d</xliff:g> z <xliff:g id="total">%2$d</xliff:g> ploch</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> z <xliff:g id="total">%2$d</xliff:g> ploch</item>
+    </plurals>
+    <string name="settings_catchup_timezone_device">Zařízení</string>
+    <string name="settings_catchup_player_ask">Vždy se zeptat</string>
+    <string name="settings_catchup_player_internal">Přehrávač OwnTV</string>
+    <string name="settings_catchup_player_external">Externí přehrávač</string>
+    <string name="settings_soon">JIŽ BRZY</string>
+    <string name="settings_download_folder_title">Vyberte složku pro stahování</string>
+    <string name="settings_pick_background_title">Vyberte obrázek na pozadí</string>
+    <string name="settings_theme_dialog">Motiv</string>
+    <string name="settings_app_startup_dialog">Spuštění aplikace</string>
+    <string name="settings_animations_dialog">Animace</string>
+    <string name="settings_close">Zavřít</string>
+    <string name="settings_done">Hotovo</string>
+    <string name="settings_reset">Obnovit výchozí</string>
+    <string name="settings_device_details"><xliff:g id="model">%1$s</xliff:g> · <xliff:g id="android">%2$s</xliff:g></string>
+    <string name="settings_playback_entry"><xliff:g id="time">%1$s</xliff:g> · <xliff:g id="engine">%2$s</xliff:g> · <xliff:g id="kind">%3$s</xliff:g></string>
+    <string name="settings_history_live">Živé vysílání</string>
+    <string name="settings_history_movies">Filmy</string>
+    <string name="settings_history_series">Seriály</string>
+    <string name="settings_history_all">vše</string>
+    <string name="settings_decrease">–</string>
+    <string name="settings_increase">+</string>
+    <string name="settings_glass_effect_title">Efekt skla</string>
+    <string name="settings_glass_effect_description">Průsvitné matné panely přes fotografii na pozadí nebo přes vlastní pozadí aplikace.</string>
+    <string name="settings_transparency_title">Průhlednost</string>
+    <string name="settings_blur_title">Rozostření / Matnost</string>
+    <string name="settings_blur_description_enabled">Míra matnosti obrázku na pozadí (<xliff:g id="min">%1$d</xliff:g>%%–<xliff:g id="max">%2$d</xliff:g>%%). Pouze přes obrázek na pozadí.</string>
+    <string name="settings_blur_description_disabled">Míra matnosti obrázku na pozadí (<xliff:g id="min">%1$d</xliff:g>%%–<xliff:g id="max">%2$d</xliff:g>%%). Pouze přes obrázek na pozadí. Funkci aktivujete nastavením obrázku na pozadí.</string>
+    <string name="settings_glass_surface_panels">Panely obsahu</string>
+    <string name="settings_glass_surface_sidebar">Postranní panel</string>
+    <string name="settings_glass_surface_preview">Panely náhledu</string>
+    <string name="settings_glass_surface_dialogs">Dialogová okna a vyskakovací nabídky</string>
+    <string name="settings_glass_surface_topbar">Horní lišta</string>
+    <string name="settings_glass_surface_cards">Karty</string>
+    <string name="settings_glass_surface_miniplayer">Minipřehrávač</string>
+    <string name="settings_browsing_last_category">Pamatovat si poslední kategorii</string>
+    <string name="settings_browsing_last_category_description">Sekci znovu otevřít v kategorii, kterou jste opustili, nikoli v kategorii Vše.</string>
+    <string name="settings_browsing_last_item">Pamatovat si poslední položku</string>
+    <string name="settings_browsing_last_item_description">Každá kategorie si zachová vlastní pozici posunu namísto návratu na začátek. Živé vysílání také obnoví poslední zaměřený kanál.</string>
+    <string name="settings_catchup_player">Přehrávat TV archiv v</string>
+    <string name="settings_customize_title">Přizpůsobení kategorií a položek</string>
+    <string name="settings_customize_pin_locked">Tato obrazovka je chráněna zámkem PIN.</string>
+    <string name="settings_customize_wrong_pin">Nesprávný PIN — zkuste to znovu</string>
+    <string name="settings_customize_enter_pin">Zadejte PIN</string>
+    <string name="settings_customize_set_pin">🔒 Nastavit PIN</string>
+    <string name="settings_customize_change_pin">🔒 Změnit PIN</string>
+    <string name="settings_customize_remove_lock">Odstranit zámek</string>
+    <string name="settings_customize_description">Skrývejte a znovu zobrazujte kanály, filmy a seriály a přejmenovávejte nebo měňte pořadí kategorií pro tento profil. Změny se zachovají i po opětovné synchronizaci.</string>
+    <string name="settings_customize_new_category_behavior">Chování nových kategorií</string>
+    <string name="settings_customize_hide_new">Skrývat — nové kategorie přidané při opětovné synchronizaci budou ve výchozím nastavení skryté</string>
+    <string name="settings_customize_show_new">Zobrazovat — nové kategorie přidané při opětovné synchronizaci budou ve výchozím nastavení zobrazené</string>
+    <string name="settings_customize_hide">Skrýt</string>
+    <string name="settings_customize_show">Zobrazit</string>
+    <string name="settings_customize_behavior_hide">Skrývat</string>
+    <string name="settings_customize_behavior_show">Zobrazovat</string>
+    <string name="settings_customize_hidden_channels">Skryté kanály</string>
+    <string name="settings_customize_hidden_movies">Skryté filmy</string>
+    <string name="settings_customize_hidden_series">Skryté seriály</string>
+    <string name="settings_customize_unhide_description">Znovu zobrazte položku, aby se vrátila do seznamů.</string>
+    <string name="settings_customize_categories">Kategorie</string>
+    <string name="settings_customize_empty">V této sekci zatím nejsou žádné kategorie — nejprve přidejte zdroj.</string>
+    <string name="settings_customize_range_hide_start">Výběr rozsahu byl zahájen. Stisknutím možnosti Zobrazit/Skrýt u koncové položky vyberte rozsah.</string>
+    <string name="settings_customize_range_rename_start">Výběr rozsahu pro přejmenování byl zahájen. Stisknutím možnosti Přejmenovat u koncové položky vyberte rozsah.</string>
+    <string name="settings_customize_range_move_start">Výběr rozsahu pro přesunutí byl zahájen. Stisknutím ⤒ ↑ ↓ ⤓ u koncové položky přesuňte celý rozsah.</string>
+    <plurals name="settings_customize_range_selected">
+        <item quantity="one">Vybrána <xliff:g id="count">%1$d</xliff:g> kategorie. Opakovaným stisknutím ⤒ ↑ ↓ ⤓ ji přesunete.</item>
+        <item quantity="few">Vybrány <xliff:g id="count">%1$d</xliff:g> kategorie. Opakovaným stisknutím ⤒ ↑ ↓ ⤓ je přesunete společně.</item>
+        <item quantity="many">Vybráno <xliff:g id="count">%1$d</xliff:g> kategorie. Opakovaným stisknutím ⤒ ↑ ↓ ⤓ je přesunete společně.</item>
+        <item quantity="other">Vybráno <xliff:g id="count">%1$d</xliff:g> kategorií. Opakovaným stisknutím ⤒ ↑ ↓ ⤓ je přesunete společně.</item>
+    </plurals>
+    <string name="settings_customize_rename">Přejmenovat</string>
+    <string name="settings_customize_rename_category">Přejmenovat kategorii</string>
+    <string name="settings_customize_rename_or_delete_category">Přejmenovat nebo odstranit kategorii</string>
+    <string name="settings_customize_new_category">＋ Nová kategorie</string>
+    <string name="settings_customize_sort_button">Řazení: <xliff:g id="label">%1$s</xliff:g> ▾</string>
+    <string name="settings_customize_new_categories_button">Nové kategorie: <xliff:g id="label">%1$s</xliff:g> ▾</string>
+    <string name="settings_customize_rename_hint">Platí pouze pro tento profil. Ponecháním prázdného pole obnovíte název „<xliff:g id="name">%1$s</xliff:g>“.</string>
+    <string name="settings_customize_remove_pin_title">Odstranit zámek PIN?</string>
+    <string name="settings_customize_remove_pin_message">Obrazovka přizpůsobení se příště otevře bez požadavku na PIN.</string>
+    <string name="settings_customize_remove">Odstranit</string>
+    <string name="settings_customize_confirm_pin">Potvrďte nový PIN</string>
+    <string name="settings_customize_pin_mismatch">PIN se neshoduje — zadejte jej znovu</string>
+    <string name="settings_customize_new_pin">Zadejte nový PIN</string>
+    <plurals name="settings_customize_selected_categories">
+        <item quantity="one">Vybrána <xliff:g id="count">%1$d</xliff:g> kategorie.</item>
+        <item quantity="few">Vybrány <xliff:g id="count">%1$d</xliff:g> kategorie.</item>
+        <item quantity="many">Vybráno <xliff:g id="count">%1$d</xliff:g> kategorie.</item>
+        <item quantity="other">Vybráno <xliff:g id="count">%1$d</xliff:g> kategorií.</item>
+    </plurals>
+    <string name="settings_customize_hide_show_title">Skrýt nebo zobrazit kategorie</string>
+    <string name="settings_customize_was">původně „<xliff:g id="name">%1$s</xliff:g>“</string>
+    <string name="settings_customize_hidden">Skryté</string>
+    <string name="settings_customize_unhide">Znovu zobrazit</string>
+    <string name="settings_customize_metadata_separator">  ·  </string>
+    <string name="settings_sources_title">Zdroje</string>
+    <string name="settings_sources_description">Zdroje jsou sdílené mezi všemi profily.</string>
+    <string name="settings_sources_empty">Zatím nejsou přidány žádné zdroje. Přidejte zdroj M3U nebo Xtream.</string>
+    <string name="settings_sources_add">Přidat zdroj</string>
+    <string name="settings_sources_import_failed">Import se nezdařil</string>
+    <string name="settings_sources_importing">Importování katalogu…</string>
+    <string name="settings_sources_preparing">Příprava katalogu</string>
+    <string name="settings_sources_deleting">ODSTRAŇOVÁNÍ…</string>
+    <string name="settings_sources_resync">Opět synchronizovat</string>
+    <string name="settings_sources_delete_title">Odstranit „<xliff:g id="name">%1$s</xliff:g>“?</string>
+    <string name="settings_sources_delete_message">Tímto se ze všech profilů odstraní zdroj a všechny jeho kanály, filmy a seriály.</string>
+    <string name="settings_sources_type_m3u">M3U · <xliff:g id="url">%1$s</xliff:g></string>
+    <string name="settings_sources_type_xtream">Xtream · <xliff:g id="url">%1$s</xliff:g></string>
+    <string name="settings_sources_type_stalker">Stalker · <xliff:g id="url">%1$s</xliff:g></string>
+    <string name="settings_sources_expiry">Platnost do <xliff:g id="date">%1$s</xliff:g></string>
+    <string name="settings_sources_auto_refresh">⟳ <xliff:g id="mode">%1$s</xliff:g></string>
+    <string name="settings_sources_default">VÝCHOZÍ</string>
+    <string name="settings_sources_backup">Záloha</string>
+    <string name="settings_sources_details_separator">  •  </string>
+    <string name="settings_sources_preparing_detail">Příprava katalogu</string>
+    <string name="settings_sources_removing_detail">Odebírání…</string>
+    <string name="settings_sources_edit">Upravit</string>
+    <string name="settings_sources_delete">Odstranit</string>
+    <string name="settings_sources_cancel">Zrušit</string>
+    <string name="settings_sources_try_again">Zkusit znovu</string>
+    <string name="settings_sources_import_title">Import dokončen</string>
+    <string name="settings_sources_resync_title_full">Opětovná synchronizace „<xliff:g id="name">%1$s</xliff:g>“</string>
+    <string name="settings_sources_resync_now_full">Opět synchronizovat nyní</string>
+    <string name="settings_sources_resync_remove_full">Opět synchronizovat a odstranit chybějící tituly</string>
+    <string name="settings_sources_resync_description">Možnost Opět synchronizovat nyní načte nejnovější katalog a zachová vše, co už je uložené.\n\nMožnost Opět synchronizovat a odstranit chybějící tituly navíc umožňuje odstranit tituly, které už poskytovatel neuvádí. Oblíbené, historie a uložené pozice přehrávání titulů, které jsou stále uvedené, zůstanou zachovány.</string>
+    <string name="settings_sources_refresh_off">Vypnuto</string>
+    <string name="settings_sources_refresh_startup">Aktualizovat při spuštění</string>
+    <string name="settings_sources_refresh_6h">6 hodin</string>
+    <string name="settings_sources_refresh_12h">12 hodin</string>
+    <string name="settings_sources_refresh_24h">24 hodin</string>
+    <string name="settings_sources_refresh_48h">48 hodin</string>
+    <string name="settings_epg_sources_title">Zdroje EPG</string>
+    <string name="settings_epg_sources_empty">Zatím nejsou přidány žádné zdroje EPG. Přidejte odkaz XMLTV.</string>
+    <string name="settings_epg_sources_add">Přidat zdroj EPG</string>
+    <string name="settings_epg_sources_edit">Upravit zdroj EPG</string>
+    <string name="settings_epg_sources_add_sync">Přidat a synchronizovat</string>
+    <string name="settings_epg_sources_save_sync">Uložit a synchronizovat</string>
+    <string name="settings_epg_sources_fill_playlist">Vyplnit z playlistu</string>
+    <string name="settings_epg_sources_none_playlist">Žádný z vašich playlistů neposkytuje adresu URL EPG.</string>
+    <string name="settings_epg_sources_use_logos">Používat loga kanálů z tohoto TV programu</string>
+    <string name="settings_epg_sources_logos_description">Zobrazovat loga z tohoto zdroje XMLTV namísto log z playlistu. Kanály, pro které tento zdroj nemá logo, si ponechají logo z playlistu.</string>
+    <string name="settings_epg_sources_name">Název</string>
+    <string name="settings_epg_sources_url">Adresa URL XMLTV</string>
+    <string name="settings_epg_sources_user_agent">User-Agent (volitelné)</string>
+    <string name="settings_epg_sources_name_hint">např. TV program pro Česko</string>
+    <string name="settings_epg_sources_url_hint">https://…/epg.xml(.gz)</string>
+    <string name="settings_epg_sources_user_agent_hint">Pro výchozí hodnotu ponechte prázdné</string>
+    <string name="settings_epg_sources_description">Zdroje TV programu XMLTV, které naplňují TV program. Po přidání se automaticky synchronizují a slučují s kanály ve vašich playlistech.</string>
+    <string name="settings_epg_sources_delete_title">Odstranit „<xliff:g id="name">%1$s</xliff:g>“?</string>
+    <string name="settings_epg_sources_delete_message">Odstraní tento zdroj EPG a jeho data TV programu. Vaše kanály zůstanou zachovány.</string>
+    <string name="settings_epg_sources_syncing_percent">Synchronizace <xliff:g id="percent">%1$d</xliff:g>%%</string>
+    <plurals name="settings_epg_sources_catchup">
+        <item quantity="one">TV archiv je k dispozici na <xliff:g id="count">%1$d</xliff:g> kanálu.</item>
+        <item quantity="few">TV archiv je k dispozici na <xliff:g id="count">%1$d</xliff:g> kanálech.</item>
+        <item quantity="many">TV archiv je k dispozici na <xliff:g id="count">%1$d</xliff:g> kanálu.</item>
+        <item quantity="other">TV archiv je k dispozici na <xliff:g id="count">%1$d</xliff:g> kanálech.</item>
+    </plurals>
+    <string name="settings_epg_sources_error">⚠ <xliff:g id="error">%1$s</xliff:g></string>
+    <string name="settings_epg_sources_auto_refresh_title">Automatická aktualizace</string>
+    <string name="settings_epg_sources_auto_refresh_description">Vypnuto, při spuštění nebo při zastaralých datech</string>
+    <string name="settings_epg_sources_on">Zapnuto</string>
+    <string name="settings_epg_sources_off">Vypnuto</string>
+    <string name="settings_epg_sources_not_synced">Zatím nesynchronizováno</string>
+    <string name="settings_epg_refresh_1h">1 hodina</string>
+    <string name="settings_epg_refresh_3h">3 hodiny</string>
+    <string name="settings_epg_refresh_6h">6 hodin</string>
+    <string name="settings_epg_refresh_12h">12 hodin</string>
+    <string name="settings_epg_refresh_24h">24 hodin</string>
+    <string name="settings_epg_refresh_48h">48 hodin</string>
+    <string name="settings_epg_sources_deleting">Odstraňování…</string>
+    <string name="settings_epg_sources_syncing_label">Synchronizace</string>
+    <string name="settings_epg_sources_connecting">Připojování…</string>
+    <plurals name="settings_epg_sources_status_count_channels">
+        <item quantity="one">TV program obsahuje <xliff:g id="channels">%1$d</xliff:g> kanál.</item>
+        <item quantity="few">TV program obsahuje <xliff:g id="channels">%1$d</xliff:g> kanály.</item>
+        <item quantity="many">TV program obsahuje <xliff:g id="channels">%1$d</xliff:g> kanálu.</item>
+        <item quantity="other">TV program obsahuje <xliff:g id="channels">%1$d</xliff:g> kanálů.</item>
+    </plurals>
+    <plurals name="settings_epg_sources_status_count_programmes">
+        <item quantity="one">Obsahuje <xliff:g id="programmes">%1$d</xliff:g> pořad.</item>
+        <item quantity="few">Obsahuje <xliff:g id="programmes">%1$d</xliff:g> pořady.</item>
+        <item quantity="many">Obsahuje <xliff:g id="programmes">%1$d</xliff:g> pořadu.</item>
+        <item quantity="other">Obsahuje <xliff:g id="programmes">%1$d</xliff:g> pořadů.</item>
+    </plurals>
+    <string name="settings_epg_sources_status_count"><xliff:g id="channels">%1$s</xliff:g> <xliff:g id="programmes">%2$s</xliff:g></string>
+    <string name="settings_epg_sources_status_count_with_catchup"><xliff:g id="counts">%1$s</xliff:g> <xliff:g id="catchup">%2$s</xliff:g></string>
+    <string name="settings_epg_sources_status_synced">Synchronizováno, ale v daném časovém období nebyly nalezeny žádné pořady.</string>
+    <string name="settings_epg_sources_status_synced_with_catchup"><xliff:g id="catchup">%1$s</xliff:g></string>
+    <string name="settings_backup_title">Záloha a obnovení</string>
+    <string name="settings_backup_working">Probíhá zpracování…</string>
+    <string name="settings_backup_what_backup">Co zálohovat</string>
+    <string name="settings_backup_what_restore">Co obnovit</string>
+    <string name="settings_backup_encrypt_title">Zašifrovat tuto zálohu?</string>
+    <string name="settings_backup_encrypt_message">Pokud nastavíte heslo zálohy, bude zašifrován celý soubor — včetně playlistů, profilů a uložených hesel — a bez tohoto hesla z něj nebude možné nic přečíst. Heslo bezpečně uschovejte: pokud jej ztratíte, zálohu nebude možné vůbec otevřít. Bez hesla nebude soubor zašifrován a uložená hesla v něm nebudou zahrnuta.</string>
+    <string name="settings_backup_export_title">Exportovat zálohu</string>
+    <string name="settings_backup_export_message">Odešlete zálohu do jiného zařízení (telefonu nebo notebooku) připojeného ke stejné síti Wi-Fi nebo ji uložte do souboru v tomto zařízení.</string>
+    <string name="settings_backup_restore_title">Obnovit zálohu</string>
+    <string name="settings_backup_restore_message">Odešlete zálohu z jiného zařízení (telefonu nebo notebooku) připojeného ke stejné síti Wi-Fi nebo vyberte soubor zálohy, který už je v tomto zařízení.</string>
+    <string name="settings_backup_password">Heslo zálohy</string>
+    <string name="settings_backup_enter_password">Zadejte heslo zálohy</string>
+    <string name="settings_backup_wrong_password">Nesprávné heslo zálohy</string>
+    <string name="settings_backup_password_mismatch">Heslo se neshoduje. Zkuste to znovu nebo pokračujte bez hesla a obnovte vše kromě uložených hesel.</string>
+    <string name="settings_backup_password_encrypted_mismatch">Heslo se neshoduje. Tato záloha je zašifrovaná — bez hesla, pomocí kterého byla vytvořena, ji nelze otevřít.</string>
+    <string name="settings_backup_encrypted_description">Tato záloha je zašifrovaná. Zadáním hesla zálohy ji otevřete a vyberete, co chcete obnovit.</string>
+    <string name="settings_backup_saved_passwords_description">Hesla v této záloze jsou zašifrovaná. Zadáním hesla zálohy je obnovíte, případně pokračujte bez něj, obnovte vše ostatní a hesla zadejte znovu později.</string>
+    <string name="settings_backup_choose_folder">Vyberte složku pro uložení zálohy</string>
+    <string name="settings_backup_choose_folder_action">Vybrat složku</string>
+    <string name="settings_backup_pick_file">Vyberte soubor zálohy k obnovení</string>
+    <string name="settings_backup_local_file">Místní soubor</string>
+    <string name="settings_backup_remote">Vzdálené zařízení</string>
+    <string name="settings_backup_everything">Vše</string>
+    <string name="settings_backup_kids_profile">Dětský profil</string>
+    <string name="settings_backup_profile_current">„<xliff:g id="name">%1$s</xliff:g>“ (aktuální)</string>
+    <string name="settings_backup_profile_locked">Profil „<xliff:g id="name">%1$s</xliff:g>“ je uzamčen</string>
+    <string name="settings_backup_profile_pin">PIN profilu</string>
+    <string name="settings_backup_pin_incorrect">Nesprávný PIN.</string>
+    <string name="settings_backup_pin_locked">Chráněno zámkem PIN</string>
+    <string name="settings_backup_unlock">Odemknout</string>
+    <string name="settings_backup_export_button">Exportovat zálohu</string>
+    <string name="settings_backup_restore_button">Obnovit zálohu</string>
+    <string name="settings_backup_continue">Pokračovat</string>
+    <string name="settings_backup_encrypt_export">Zašifrovat a exportovat</string>
+    <string name="settings_backup_export_unencrypted">Exportovat bez šifrování</string>
+    <string name="settings_backup_encrypt_prepare">Zašifrovat a připravit</string>
+    <string name="settings_backup_prepare_unencrypted">Připravit bez šifrování</string>
+    <string name="settings_backup_restore_action">Obnovit</string>
+    <string name="settings_backup_skip_passwords">Přeskočit (bez hesel)</string>
+    <string name="settings_backup_section_sources">Zdroje</string>
+    <string name="settings_backup_section_sources_desc">Playlisty, zdroje EPG a přihlašovací údaje</string>
+    <string name="settings_backup_section_customize">Přizpůsobení</string>
+    <string name="settings_backup_section_customize_desc">Skryté, přejmenované a přeřazené kategorie a kanály, přiřazení EPG a vlastní názvy TMDB</string>
+    <string name="settings_backup_section_favorites">Oblíbené</string>
+    <string name="settings_backup_section_favorites_desc">Kanály, filmy a seriály označené hvězdičkou</string>
+    <string name="settings_backup_section_history">Historie sledování</string>
+    <string name="settings_backup_section_history_desc">Seznamy nedávno sledovaných položek</string>
+    <string name="settings_backup_section_resume">Uložené pozice přehrávání</string>
+    <string name="settings_backup_section_resume_desc">Místa, kde jste přestali sledovat filmy a epizody</string>
+    <string name="settings_backup_section_reorder">Ruční změna pořadí</string>
+    <string name="settings_backup_section_reorder_desc">Pořadí kanálů, filmů a seriálů nastavené pomocí funkcí Posunout nahoru a Posunout dolů</string>
+    <string name="settings_backup_section_settings">Nastavení aplikace</string>
+    <string name="settings_backup_section_settings_desc">Předvolby motivu, barvy zvýraznění, přehrávače a rozvržení</string>
+    <string name="settings_backup_saved_to">Uloženo do <xliff:g id="path">%1$s</xliff:g>.</string>
+    <string name="settings_backup_saved_to_without_passwords">Uloženo do <xliff:g id="path">%1$s</xliff:g>. Hesla nebyla zahrnuta.</string>
+    <plurals name="settings_backup_restored">
+        <item quantity="one">Obnovena <xliff:g id="items">%1$d</xliff:g> položka.</item>
+        <item quantity="few">Obnoveny <xliff:g id="items">%1$d</xliff:g> položky.</item>
+        <item quantity="many">Obnoveno <xliff:g id="items">%1$d</xliff:g> položky.</item>
+        <item quantity="other">Obnoveno <xliff:g id="items">%1$d</xliff:g> položek.</item>
+    </plurals>
+    <string name="settings_backup_restore_resync">Opětovnou synchronizací zdrojů načtěte obsah.</string>
+    <string name="settings_backup_restore_password_note">V části Zdroje/Proxy znovu zadejte všechna uložená hesla.</string>
+    <plurals name="settings_backup_skipped_sources">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> zdroj byl přeskočen, protože jeho typ playlistu není podporován.</item>
+        <item quantity="few"><xliff:g id="count">%1$d</xliff:g> zdroje byly přeskočeny, protože jejich typy playlistů nejsou podporovány.</item>
+        <item quantity="many"><xliff:g id="count">%1$d</xliff:g> zdroje bylo přeskočeno, protože jejich typy playlistů nejsou podporovány.</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> zdrojů bylo přeskočeno, protože jejich typy playlistů nejsou podporovány.</item>
+    </plurals>
+    <string name="settings_backup_export_error">Export se nezdařil.</string>
+    <string name="settings_backup_read_error">Soubor zálohy se nepodařilo přečíst.</string>
+    <string name="settings_backup_import_error">Import se nezdařil.</string>
+    <string name="settings_backup_invalid_locale">Tato záloha obsahovala nepodporovaný jazyk aplikace. Obnovení proběhlo úspěšně, ale aktuální jazyk zůstal zachován.</string>
+    <string name="settings_backup_which_profiles">Které profily zálohovat</string>
+    <string name="settings_backup_selected_profiles">Záloha bude obsahovat pouze vybrané profily a jejich data. Uzamčené profily vyžadují svůj PIN.</string>
+    <string name="settings_backup_profile_pin_description">Toto není váš aktuální profil. Chcete-li jej zahrnout do zálohy, zadejte jeho PIN — bez PIN nebudou jeho data zálohována.</string>
+    <string name="settings_backup_save_description">Uložte své profily, zdroje, přizpůsobení, oblíbené, historii a pozice pro pokračování do souboru — nebo je obnovte v novém zařízení. Pokaždé si zvolíte, co chcete zahrnout.</string>
+    <string name="settings_metadata_optional">volitelné</string>
+    <string name="settings_metadata_test_title">Oppenheimer</string>
+    <string name="settings_bulk_rename_title">Hromadné přejmenování</string>
+    <plurals name="settings_bulk_rename_selected">
+        <item quantity="one">Vybrán <xliff:g id="count">%1$d</xliff:g> název. Přidejte pravidla nebo jej automaticky upravte.</item>
+        <item quantity="few">Vybrány <xliff:g id="count">%1$d</xliff:g> názvy. Přidejte pravidla nebo je automaticky upravte.</item>
+        <item quantity="many">Vybráno <xliff:g id="count">%1$d</xliff:g> názvu. Přidejte pravidla nebo je automaticky upravte.</item>
+        <item quantity="other">Vybráno <xliff:g id="count">%1$d</xliff:g> názvů. Přidejte pravidla nebo je automaticky upravte.</item>
+    </plurals>
+    <string name="settings_bulk_rename_add_rule">✎ Přidat pravidlo</string>
+    <string name="settings_bulk_rename_auto_cleanup">✨ Automatické vyčištění</string>
+    <string name="settings_bulk_rename_restore_original">↺ Obnovit původní názvy</string>
+    <string name="settings_bulk_rename_rules_title">Pravidla hromadného přejmenování</string>
+    <string name="settings_bulk_rename_rules_description">Pravidla se provádějí shora dolů. Více hodnot oddělte znakem „;“ — pravidlo Přidat přijímá právě jednu.</string>
+    <string name="settings_bulk_rename_add_single_value_error">Pravidlo „Přidat“ vyžaduje právě jednu hodnotu — středníky jsou určeny pro pravidla Odebrat.</string>
+    <string name="settings_bulk_rename_rule_required">Přidejte alespoň jedno pravidlo.</string>
+    <string name="settings_bulk_rename_rule_type">Typ pravidla</string>
+    <string name="settings_bulk_rename_action_add">Přidat</string>
+    <string name="settings_bulk_rename_action_remove">Odebrat</string>
+    <string name="settings_bulk_rename_where">Umístění</string>
+    <string name="settings_bulk_rename_before">Před název (předpona)</string>
+    <string name="settings_bulk_rename_after">Za název (přípona)</string>
+    <string name="settings_bulk_rename_rule_value">Hodnota pravidla</string>
+    <string name="settings_bulk_rename_value_hint">Více hodnot oddělte znakem „;“ — pravidlo Přidat přijímá právě jednu.</string>
+    <string name="settings_bulk_rename_value_example">hodnota;hodnota;hodnota</string>
+    <string name="settings_bulk_rename_add_another_rule">＋ Přidat další pravidlo</string>
+    <string name="settings_bulk_rename_trim_spaces">Odstranit zbývající mezery</string>
+    <string name="settings_bulk_rename_trim_spaces_selected">✓ Odstranit zbývající mezery</string>
+    <string name="settings_bulk_rename_ignore_case">Nerozlišovat velká a malá písmena</string>
+    <string name="settings_bulk_rename_ignore_case_selected">✓ Nerozlišovat velká a malá písmena</string>
+    <string name="settings_bulk_rename_review">Kontrola přejmenování</string>
+    <string name="settings_bulk_rename_review_description">Nic se nezapíše, dokud nepoužijete změnu na řádku — tlačítko Hotovo zapíše všechny použité změny najednou.</string>
+    <string name="settings_bulk_rename_blank_rejected">prázdný název zamítnut — zachován původní</string>
+    <string name="settings_bulk_rename_unchanged">beze změny — žádné pravidlo neodpovídalo</string>
+    <string name="settings_bulk_rename_result">→ <xliff:g id="name">%1$s</xliff:g></string>
+    <string name="settings_bulk_rename_duplicate">duplicitní název — už jej používá jiná položka</string>
+    <string name="settings_bulk_rename_apply">Použít</string>
+    <string name="settings_bulk_rename_decline">Odmítnout</string>
+    <plurals name="settings_bulk_rename_will_change">
+        <item quantity="one">Změní se <xliff:g id="count">%1$d</xliff:g> název</item>
+        <item quantity="few">Změní se <xliff:g id="count">%1$d</xliff:g> názvy</item>
+        <item quantity="many">Změní se <xliff:g id="count">%1$d</xliff:g> názvu</item>
+        <item quantity="other">Změní se <xliff:g id="count">%1$d</xliff:g> názvů</item>
+    </plurals>
+    <plurals name="settings_bulk_rename_unchanged_count">
+        <item quantity="one">Beze změny zůstane <xliff:g id="count">%1$d</xliff:g> název</item>
+        <item quantity="few">Beze změny zůstanou <xliff:g id="count">%1$d</xliff:g> názvy</item>
+        <item quantity="many">Beze změny zůstane <xliff:g id="count">%1$d</xliff:g> názvu</item>
+        <item quantity="other">Beze změny zůstane <xliff:g id="count">%1$d</xliff:g> názvů</item>
+    </plurals>
+    <plurals name="settings_bulk_rename_duplicates_count">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> duplicita</item>
+        <item quantity="few"><xliff:g id="count">%1$d</xliff:g> duplicity</item>
+        <item quantity="many"><xliff:g id="count">%1$d</xliff:g> duplicity</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> duplicit</item>
+    </plurals>
+    <string name="settings_bulk_rename_apply_all">Použít vše</string>
+    <string name="settings_bulk_rename_decline_all">Odmítnout vše</string>
+    <string name="settings_bulk_rename_edit_rules">✎ Upravit pravidla</string>
+    <string name="settings_bulk_rename_restore_title">Obnovit původní názvy od poskytovatele?</string>
+    <string name="settings_bulk_rename_restore_description">Každý vybraný název se vrátí k původnímu názvu od poskytovatele. Změna se týká pouze tohoto výběru.</string>
+    <string name="settings_bulk_rename_restore">Obnovit</string>
+    <string name="settings_bulk_rename_too_many_title">Příliš mnoho položek</string>
+    <string name="settings_bulk_rename_too_many_description">Tato kategorie obsahuje příliš mnoho položek pro jedno hromadné přejmenování – přejmenujte je v menších rozsazích.</string>
+    <string name="settings_bulk_rename_auto_country_provider">Automaticky: štítky země/poskytovatele</string>
+    <string name="settings_bulk_rename_auto_quality_codec">Automaticky: štítky kvality/kodeku kdekoli</string>
+    <string name="settings_bulk_rename_auto_emoji_symbols">Automaticky: emoji a symboly</string>
+    <string name="settings_customize_new_category_title">Nová kategorie</string>
+    <string name="settings_customize_new_category_description">Kombinovaná kategorie pro tento profil – přesuňte do ní kanály, filmy nebo seriály.</string>
+    <string name="settings_customize_this_category">tato kategorie</string>
+    <string name="settings_customize_sort_categories">Seřadit kategorie</string>
+    <string name="settings_customize_delete_category">Smazat „<xliff:g id="name">%1$s</xliff:g>“?</string>
+    <string name="settings_customize_delete_category_description">Kombinovaná kategorie bude odstraněna. Její položky zůstanou ve svých původních kategoriích.</string>
+    <string name="settings_customize_channels_description">Kanály v této kategorii – můžete je přejmenovat, změnit jejich pořadí, skrýt je nebo znovu zobrazit.</string>
+    <string name="settings_customize_movies_description">Filmy v této kategorii – můžete změnit jejich pořadí, skrýt je nebo znovu zobrazit.</string>
+    <string name="settings_customize_series_description">Seriály v této kategorii – můžete změnit jejich pořadí, skrýt je nebo znovu zobrazit.</string>
+    <string name="settings_customize_hide_show_items">Skrýt nebo zobrazit položky</string>
+    <plurals name="settings_customize_selected_items">
+        <item quantity="one">Vybrána <xliff:g id="count">%1$d</xliff:g> položka.</item>
+        <item quantity="few">Vybrány <xliff:g id="count">%1$d</xliff:g> položky.</item>
+        <item quantity="many">Vybráno <xliff:g id="count">%1$d</xliff:g> položky.</item>
+        <item quantity="other">Vybráno <xliff:g id="count">%1$d</xliff:g> položek.</item>
+    </plurals>
+    <plurals name="settings_customize_move_items_selected">
+        <item quantity="one">Vybrána <xliff:g id="count">%1$d</xliff:g> položka. Opakovaným stisknutím ⤒ ↑ ↓ ⤓ ji přesunete.</item>
+        <item quantity="few">Vybrány <xliff:g id="count">%1$d</xliff:g> položky. Opakovaným stisknutím ⤒ ↑ ↓ ⤓ je přesunete společně.</item>
+        <item quantity="many">Vybráno <xliff:g id="count">%1$d</xliff:g> položky. Opakovaným stisknutím ⤒ ↑ ↓ ⤓ je přesunete společně.</item>
+        <item quantity="other">Vybráno <xliff:g id="count">%1$d</xliff:g> položek. Opakovaným stisknutím ⤒ ↑ ↓ ⤓ je přesunete společně.</item>
+    </plurals>
+    <string name="settings_customize_rename_item_hint">Platí pouze pro tento profil. Ponecháním prázdného pole obnovíte „<xliff:g id="name">%1$s</xliff:g>“.</string>
+    <string name="settings_customize_item_was">původně „<xliff:g id="name">%1$s</xliff:g>“</string>
+    <string name="settings_customize_rename_items">✎ Přejmenovat položky</string>
+    <string name="settings_customize_move_to">Přesunout do…</string>
+    <string name="settings_customize_back">← Zpět</string>
+    <string name="settings_move_category_title">Přesunout do kategorie</string>
+    <string name="settings_move_category_description">Položka bude z kategorie „<xliff:g id="name">%1$s</xliff:g>“ odebrána, pokud ji v ní neponecháte.</string>
+    <string name="settings_move_category_new">＋ Nová kategorie…</string>
+    <string name="settings_move_category_keep">Ponechat i v kategorii „<xliff:g id="name">%1$s</xliff:g>“</string>
+    <string name="settings_move_category_action">Přesunout</string>
+    <string name="settings_dns_description">Používat k vyhledávání domén vlastní server DNS</string>
+    <string name="settings_dns_custom">Vlastní DNS</string>
+    <string name="settings_dns_toggle_description">Všechna vyhledávání domén OwnTV provádět prostřednictvím vlastního serveru DNS.</string>
+    <string name="settings_dns_use_custom">Používat vlastní DNS</string>
+    <string name="settings_dns_server_missing">Používání vlastního DNS je zapnuté, ale není nastaven žádný server. Zadejte adresu serveru a vyberte Uložit nebo tuto funkci vypněte.</string>
+    <string name="settings_dns_server">Server DNS</string>
+    <string name="settings_dns_server_hint">8.8.8.8 nebo https://dns.google/dns-query</string>
+    <string name="settings_dns_test">Otestovat DNS</string>
+    <string name="settings_dns_explanation">Vlastní DNS může pomoci obejít blokování domén poskytovatelem internetového připojení nebo zpřístupnit obsah omezený podle polohy pomocí služeb SmartDNS. Doporučujeme DNS-over-HTTPS (DoH) – šifruje vaše dotazy.</string>
+    <string name="settings_dns_limitations">Toto nastavení má vliv pouze na provoz využívající OkHttp (synchronizaci playlistu, EPG, volání API, obrázky a streamy ExoPlayer). mpv používá systémový resolver a toto nastavení se ho netýká.</string>
+    <string name="settings_dns_resolved">Přeloženo ✓ (<xliff:g id="millis">%1$d</xliff:g> ms) → <xliff:g id="addresses">%2$s</xliff:g></string>
+    <string name="settings_dns_enter_server">Zadejte název hostitele serveru DNS nebo adresu URL DoH.</string>
+    <string name="settings_dns_not_reachable">Server DNS není dostupný.</string>
+    <string name="settings_dns_timed_out">Vypršel časový limit požadavku DNS.</string>
+    <string name="settings_dns_network_unreachable">Síť není dostupná – zkontrolujte adresu serveru.</string>
+    <string name="settings_dns_connection_refused">Připojení bylo odmítnuto – zkontrolujte adresu a port serveru.</string>
+    <string name="settings_dns_test_failed">Test DNS selhal – zkontrolujte adresu serveru.</string>
+    <string name="settings_dns_no_addresses">DNS nevrátil žádné adresy pro <xliff:g id="host">%1$s</xliff:g>.</string>
+    <string name="settings_subtitle_customize">Přizpůsobit titulky</string>
+    <string name="settings_subtitle_customize_off">Vypnutí ponechá titulky přesně v podobě, v jaké je vykreslují stream a přehrávač.</string>
+    <string name="settings_subtitle_preview_stock">Náhled – výchozí vzhled</string>
+    <string name="settings_subtitle_stock_description">Výchozí vzhled včetně barev a umístění, které vysílatelé vkládají do titulků živého vysílání.</string>
+    <string name="settings_subtitle_reset_all">Obnovit vše</string>
+    <string name="settings_subtitle_color">Barva titulků</string>
+    <string name="settings_subtitle_color_default_description">Při výchozím nastavení určují barvu stream a přehrávač.</string>
+    <string name="settings_subtitle_color_hex_hint">Zadejte 6 hexadecimálních znaků, např. FFEB3B</string>
+    <string name="settings_subtitle_use_default">Použít výchozí</string>
+    <string name="settings_subtitle_position">Umístění titulků</string>
+    <string name="settings_subtitle_background_transparency">Průhlednost pozadí</string>
+    <string name="settings_subtitle_preview_sample">Toto je ukázka titulků.</string>
+    <string name="settings_subtitle_customize_description">Zapněte tuto možnost a pak změňte jen to, co chcete – vše ponechané na hodnotě Výchozí si zachová výchozí vzhled včetně barev a umístění, které vysílatelé vkládají do titulků živého vysílání.</string>
+    <string name="settings_subtitle_default">Výchozí</string>
+    <string name="settings_subtitle_color_short">Barva</string>
+    <string name="settings_subtitle_color_description">Barva textu – předvolba, volič nebo hexadecimální kód.</string>
+    <string name="settings_subtitle_position_short">Umístění</string>
+    <string name="settings_subtitle_position_description">Umístění titulků na obrazovce.</string>
+    <string name="settings_subtitle_background_description">Míra neprůhlednosti pole za textem.</string>
+    <string name="settings_subtitle_hex">Hex</string>
+    <string name="settings_subtitle_position_default_description">Při výchozím nastavení určuje umístění stream – včetně toho, kam vysílatel umístí titulky živého vysílání. Jakákoli jiná volba má vždy přednost.</string>
+    <string name="settings_subtitle_background_none">Žádné</string>
+    <string name="settings_subtitle_background_solid">Neprůhledné</string>
+    <string name="settings_subtitle_color_white">Bílá</string>
+    <string name="settings_subtitle_color_yellow">Žlutá</string>
+    <string name="settings_subtitle_color_cyan">Azurová</string>
+    <string name="settings_subtitle_color_green">Zelená</string>
+    <string name="settings_subtitle_color_grey">Šedá</string>
+</resources>

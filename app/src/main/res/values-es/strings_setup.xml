@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <string name="setup_background_image">Imagen de fondo</string>
+    <string name="setup_background_image_description">Elige una foto para mostrarla detrás de la interfaz o elimínala para restaurar los paneles de color sólido.</string>
+    <string name="setup_from_device">Local</string>
+    <string name="setup_from_phone">A distancia</string>
+    <string name="setup_send_from_phone">Enviar desde el móvil</string>
+    <string name="setup_phone_background_description">En un móvil conectado a la misma Wi-Fi, escanea el código QR (o abre la URL), introduce este PIN y envía una foto. Se convertirá al instante en la imagen de fondo.</string>
+    <string name="setup_opening_server">Abriendo el servidor…</string>
+    <string name="setup_enter_pin_browser">Introduce este PIN en el navegador</string>
+    <string name="setup_open_url">O abre esta URL</string>
+    <string name="setup_try_again">Volver a intentarlo</string>
+    <string name="setup_start_again_new_pin">Volver a empezar con un PIN nuevo</string>
+    <string name="setup_companion_invalid_port">Introduce un puerto válido entre 1 y 65535.</string>
+    <string name="setup_companion_port_in_use">El puerto <xliff:g id="port">%1$d</xliff:g> ya está en uso. Prueba con otro puerto.</string>
+    <string name="setup_companion_unavailable">No se ha podido abrir el servidor local. Vuelve a intentarlo.</string>
+    <string name="setup_companion_locked">Demasiados intentos de PIN incorrectos: el enlace se ha cerrado por seguridad.</string>
+    <string name="setup_tmdb_name">Establecer nombre de TMDB</string>
+    <string name="setup_tmdb_description">Escribe el título exacto de TMDB que quieras buscar. El año es opcional, pero ayuda cuando varios títulos comparten el mismo nombre.</string>
+    <string name="setup_year_optional">Año (opcional)</string>
+    <string name="setup_pick_location">Elegir una ubicación</string>
+    <string name="setup_grant_storage_access">Conceder acceso completo al almacenamiento</string>
+    <string name="setup_use_folder">Usar esta carpeta</string>
+    <string name="setup_new_folder">Nueva carpeta</string>
+    <string name="setup_folder_name">Nombre de la carpeta</string>
+    <string name="setup_folder_example">p. ej., Mi TV</string>
+    <string name="setup_from_current_folder">..</string>
+    <string name="setup_move_indicator">↕</string>
+    <string name="setup_welcome_tagline">Tu propio reproductor de IPTV.</string>
+    <string name="setup_get_started">Empezar</string>
+    <string name="setup_before_you_start">Antes de empezar</string>
+    <string name="setup_disclaimer">OwnTV es únicamente un reproductor multimedia. No incluye canales, listas de reproducción ni contenido. Eres responsable de añadir tus propias fuentes Xtream, M3U o Stalker a las que tengas acceso legal.</string>
+    <string name="setup_i_understand">Lo entiendo</string>
+    <string name="setup_set_up_owntv">Configurar OwnTV</string>
+    <string name="setup_setup_choice_description">Empieza de cero o recupera tus perfiles, listas de reproducción y favoritos desde un archivo de copia de seguridad.</string>
+    <string name="setup_new_profile">Nuevo perfil</string>
+    <string name="setup_create_profile_add_sources">Crear un perfil y añadir fuentes</string>
+    <string name="setup_restore_backup">Restaurar copia de seguridad</string>
+    <string name="setup_import_profiles_playlists">Importar perfiles y listas de reproducción desde un archivo</string>
+    <string name="setup_add_playlist">Añadir una lista de reproducción</string>
+    <string name="setup_add_playlist_description">Añade una fuente para este perfil o configúrala más tarde.</string>
+    <string name="setup_new">Nueva</string>
+    <string name="setup_add_m3u_xtream">Añadir una fuente M3U o Xtream</string>
+    <string name="setup_existing">Existentes</string>
+    <string name="setup_use_other_profile_playlists">Usar las listas de reproducción de otro perfil</string>
+    <string name="setup_import">Importar</string>
+    <string name="setup_restore_backup_file">Restaurar desde un archivo de copia de seguridad</string>
+    <string name="setup_skip_for_now">Omitir por ahora</string>
+    <string name="setup_use_existing_playlists">Usar listas de reproducción existentes</string>
+    <string name="setup_pick_playlists">Elige las listas de reproducción que quieras añadir a este perfil.</string>
+    <plurals name="setup_add_selected_playlists">
+        <item quantity="one">Añadir <xliff:g id="count">%1$d</xliff:g></item>
+        <item quantity="many">Añadir <xliff:g id="count">%1$d</xliff:g></item>
+        <item quantity="other">Añadir <xliff:g id="count">%1$d</xliff:g></item>
+    </plurals>
+    <string name="setup_restoring">Restaurando…</string>
+    <string name="setup_wrong_backup_password">Contraseña de la copia de seguridad incorrecta</string>
+    <string name="setup_enter_backup_password">Introduce la contraseña de la copia de seguridad</string>
+    <string name="setup_password_mismatch_sealed">La contraseña no coincide. Esta copia de seguridad está cifrada y no se puede abrir sin la contraseña con la que se creó.</string>
+    <string name="setup_password_mismatch">La contraseña no coincide. Vuelve a intentarlo u omite este paso para restaurarlo todo excepto las contraseñas guardadas.</string>
+    <string name="setup_backup_encrypted_prompt">Esta copia de seguridad está cifrada. Introduce su contraseña para abrirla y restaurarla.</string>
+    <string name="setup_backup_passwords_encrypted_prompt">Las contraseñas de esta copia de seguridad están cifradas. Introduce la contraseña de la copia para restaurarlas u omite este paso para restaurar todo lo demás y volver a introducir las contraseñas más tarde.</string>
+    <string name="setup_backup_password">Contraseña de la copia de seguridad</string>
+    <string name="setup_skip_no_passwords">Omitir (sin contraseñas)</string>
+    <string name="setup_restore">Restaurar</string>
+    <string name="setup_restore_failed">Error al restaurar</string>
+    <string name="setup_backup_read_failed">No se ha podido leer el archivo de copia de seguridad</string>
+    <string name="setup_invalid_mac">Dirección MAC no válida: usa AA:BB:CC:DD:EE:FF</string>
+    <string name="setup_pick_backup_file">Elegir un archivo de copia de seguridad para restaurarlo</string>
+    <string name="setup_restore_a_backup">Restaurar una copia de seguridad</string>
+    <string name="setup_restore_choice_description">Envía la copia de seguridad desde otro dispositivo (un móvil o un portátil) conectado a la misma Wi-Fi, o elige un archivo de copia de seguridad que ya esté en este dispositivo.</string>
+    <string name="setup_upload_from_wifi_device">Subir desde un dispositivo conectado a tu Wi-Fi</string>
+    <string name="setup_local_file">Archivo local</string>
+    <string name="setup_pick_backup_local">Elegir un archivo de copia de seguridad de este dispositivo</string>
+    <string name="setup_run_in_background">Ejecutar en segundo plano</string>
+    <string name="setup_importing_catalog">Importando el catálogo…</string>
+    <string name="setup_preparing_catalog">Preparando el catálogo</string>
+    <string name="setup_watching_during_import">Puedes empezar a ver contenido mientras se carga el resto del catálogo.</string>
+    <string name="setup_all_set">¡Todo listo!</string>
+    <plurals name="setup_restored_items">
+        <item quantity="one">Se ha restaurado <xliff:g id="items">%1$d</xliff:g> elemento. Vuelve a sincronizar tus fuentes para cargar el contenido.</item>
+        <item quantity="many">Se han restaurado <xliff:g id="items">%1$d</xliff:g> elementos. Vuelve a sincronizar tus fuentes para cargar el contenido.</item>
+        <item quantity="other">Se han restaurado <xliff:g id="items">%1$d</xliff:g> elementos. Vuelve a sincronizar tus fuentes para cargar el contenido.</item>
+    </plurals>
+    <string name="setup_passwords_omitted">Vuelve a introducir después las contraseñas guardadas.</string>
+    <plurals name="setup_skipped_sources">
+        <item quantity="one">Se ha omitido <xliff:g id="count">%1$d</xliff:g> fuente porque esta versión no admite su tipo de lista de reproducción.</item>
+        <item quantity="many">Se han omitido <xliff:g id="count">%1$d</xliff:g> fuentes porque esta versión no admite sus tipos de lista de reproducción.</item>
+        <item quantity="other">Se han omitido <xliff:g id="count">%1$d</xliff:g> fuentes porque esta versión no admite sus tipos de lista de reproducción.</item>
+    </plurals>
+    <string name="setup_continue">Continuar</string>
+    <string name="setup_import_failed">Error al importar</string>
+    <string name="setup_try_again_caps">Volver a intentarlo</string>
+    <string name="setup_add_from_phone">Añadir desde el móvil</string>
+    <string name="setup_phone_add_description">En un móvil o portátil conectado a la misma Wi-Fi, escanea el código QR (o abre la URL), introduce este PIN, rellena los datos de la lista de reproducción y pulsa Enviar a la TV. Sus datos aparecerán aquí listos para importar: pulsa Iniciar importación con el mando.</string>
+    <string name="setup_opening">Abriendo…</string>
+    <string name="setup_open_server">Abrir servidor</string>
+    <string name="setup_stop_server">Detener servidor</string>
+    <string name="setup_add_source">Añadir una fuente</string>
+    <string name="setup_add_source_description">Rellena el formulario en el móvil o escribe aquí los datos con el mando.</string>
+    <string name="setup_manual">Manual</string>
+    <string name="setup_use_phone_same_wifi">Usar un móvil conectado a la misma Wi-Fi</string>
+    <string name="setup_type_source_here">Introducir aquí Xtream / M3U / Stalker</string>
+    <string name="setup_edit_source">Editar fuente</string>
+    <string name="setup_add_your_source">Añade tu fuente</string>
+    <string name="setup_edit_source_description">Actualiza los datos de esta fuente o cambia el ajuste de actualización automática.</string>
+    <string name="setup_byo_source_description">OwnTV es un reproductor: añade tu propia fuente Xtream, M3U o Stalker.</string>
+    <string name="setup_xtream">Xtream</string>
+    <string name="setup_m3u">M3U / M3U8</string>
+    <string name="setup_stalker_mac">Stalker (MAC)</string>
+    <string name="setup_source_name_optional">Nombre (opcional)</string>
+    <string name="setup_default_iptv">Mi IPTV</string>
+    <string name="setup_name_default_playlist">Mi lista de reproducción</string>
+    <string name="setup_default_portal">Mi portal</string>
+    <string name="setup_default_profile">Perfil</string>
+    <string name="setup_server_url">URL del servidor</string>
+    <string name="setup_server_example">http://host:port</string>
+    <string name="setup_username">Nombre de usuario</string>
+    <string name="setup_password">Contraseña</string>
+    <string name="setup_password_keep">Contraseña (déjala en blanco para conservarla)</string>
+    <string name="setup_playlist_url_local_file">URL de la lista de reproducción o archivo local</string>
+    <string name="setup_playlist_example">http://…/playlist.m3u</string>
+    <string name="setup_playlist_file_unavailable">No se ha podido abrir el archivo de la lista de reproducción. Vuelve a elegirlo; puede que se haya movido.</string>
+    <string name="setup_playlist_path_unsupported">Esta ruta de lista de reproducción local no es compatible.</string>
+    <string name="setup_local_file_choose">Elegir un archivo .m3u / .m3u8 local…</string>
+    <string name="setup_local_file_prefix">Archivo local: <xliff:g id="name">%1$s</xliff:g></string>
+    <string name="setup_portal_url">URL del portal</string>
+    <string name="setup_portal_example">http://host:port/c/</string>
+    <string name="setup_mac_address">Dirección MAC</string>
+    <string name="setup_mac_example">00:1A:79:AA:BB:CC</string>
+    <string name="setup_mac_invalid">Introduce 12 caracteres, p. ej., 00:1A:79:AA:BB:CC</string>
+    <string name="setup_device_model_preset">Modelo de dispositivo predefinido (User-Agent)…</string>
+    <string name="setup_testing">Probando…</string>
+    <string name="setup_test_connection">Probar conexión</string>
+    <plurals name="setup_stalker_test_connected">
+        <item quantity="one">✓ Conexión establecida mediante <xliff:g id="endpoint">%1$s</xliff:g> (<xliff:g id="fields">%2$d</xliff:g> campo de perfil)</item>
+        <item quantity="many">✓ Conexión establecida mediante <xliff:g id="endpoint">%1$s</xliff:g> (<xliff:g id="fields">%2$d</xliff:g> campos de perfil)</item>
+        <item quantity="other">✓ Conexión establecida mediante <xliff:g id="endpoint">%1$s</xliff:g> (<xliff:g id="fields">%2$d</xliff:g> campos de perfil)</item>
+    </plurals>
+    <string name="setup_stalker_test_expires">Caduca el <xliff:g id="date">%1$s</xliff:g></string>
+    <string name="setup_user_agent_optional">User-Agent (opcional)</string>
+    <string name="setup_user_agent_example">p. ej., VLC/3.0.20 LibVLC/3.0.20</string>
+    <string name="setup_auto_refresh">Actualización automática</string>
+    <string name="setup_auto_refresh_description">Desactivada, al iniciar o cuando los datos estén desactualizados</string>
+    <string name="setup_default_playlist">Lista de reproducción predeterminada</string>
+    <string name="setup_default_playlist_description">Muestra únicamente esta lista de reproducción en toda la aplicación. Desactiva esta opción para mostrar todas las listas de reproducción; puedes cambiarla en cualquier momento desde la barra superior.</string>
+    <string name="setup_what_to_sync">Qué sincronizar</string>
+    <string name="setup_sync_off_editing">Las secciones desactivadas permanecen ocultas y nunca se descargan. Al volver a activar una sección, las filas almacenadas en caché aparecen inmediatamente.</string>
+    <string name="setup_sync_choices">Ahora se importa primero · Más tarde se sincroniza en segundo plano · Desactivado nunca se descarga ni se muestra.</string>
+    <string name="setup_live_tv">TV en directo</string>
+    <string name="setup_channels_categories">Canales y categorías</string>
+    <string name="setup_movies">Películas</string>
+    <string name="setup_vod_movie_catalog">Catálogo de películas VOD</string>
+    <string name="setup_series">Series</string>
+    <string name="setup_tv_series_catalog">Catálogo de series de TV</string>
+    <string name="setup_start_import">Iniciar importación</string>
+    <string name="setup_update_source_save">Guardar</string>
+    <string name="setup_pick_playlist_file">Elegir un archivo de lista de reproducción (.m3u / .m3u8)</string>
+    <string name="setup_device_model_preset_title">Modelo de dispositivo predefinido</string>
+    <string name="setup_auto_refresh_title">Actualización automática</string>
+    <string name="setup_on">Activado</string>
+    <string name="setup_now">Ahora</string>
+    <string name="setup_later">Más tarde</string>
+    <string name="setup_off">Desactivado</string>
+    <string name="setup_scope_value">◀ <xliff:g id="value">%1$s</xliff:g> ▶</string>
+    <string name="setup_default_mag">Predeterminado (MAG200)</string>
+    <string name="setup_mag250">MAG250</string>
+    <string name="setup_mag254">MAG254</string>
+    <string name="setup_mag270">MAG270</string>
+    <string name="setup_mag420">MAG420</string>
+    <string name="companion_pin_page_title">OwnTV — Introducir PIN</string>
+    <string name="companion_pin_heading">Introduce el PIN</string>
+    <string name="companion_pin_description">Escribe el PIN de 6 dígitos que aparece en el televisor para continuar.</string>
+    <string name="companion_pin_placeholder">••••••</string>
+    <string name="companion_pin_aria">PIN</string>
+    <string name="companion_continue">Continuar</string>
+    <string name="companion_pin_mismatch">El PIN no coincide. Vuelve a intentarlo.</string>
+    <string name="companion_add_page_title">OwnTV — Añadir fuente</string>
+    <string name="companion_add_heading">Añadir una fuente</string>
+    <string name="companion_add_description">Rellena los datos de una fuente y pulsa Enviar. Aparecerá en el televisor; cuando estés listo, coge el mando y pulsa allí Iniciar importación.</string>
+    <string name="companion_default_playlist">Lista de reproducción predeterminada</string>
+    <string name="companion_send_to_tv">Enviar a la TV</string>
+    <string name="companion_sync_xtream_hint">Qué sincronizar: Ahora se importa primero, Más tarde se sincroniza en segundo plano y Desactivado nunca se descarga.</string>
+    <string name="companion_sync_stalker_hint">Qué sincronizar: TV en directo usa Ahora de forma predeterminada; Películas/Series usan Más tarde (el VOD de Stalker es lento).</string>
+    <string name="companion_saved_page_title">OwnTV — Enviado</string>
+    <string name="companion_saved_heading">Enviado al televisor ✓</string>
+    <string name="companion_saved_source_body"><xliff:g id="name">%1$s</xliff:g> ya está en la pantalla Añadir fuente del televisor. Comprueba allí los datos y pulsa Iniciar importación con el mando.</string>
+    <string name="companion_saved_send_another">Enviar otra fuente</string>
+    <string name="companion_saved_backup_body">La copia de seguridad ya está en el televisor. Coge el mando y elige qué partes quieres restaurar.</string>
+    <string name="companion_saved_backup_link">Enviar otro archivo</string>
+    <string name="companion_saved_image_body">Tu imagen es ahora el fondo del televisor.</string>
+    <string name="companion_saved_image_link">Enviar otra imagen</string>
+    <string name="companion_backup_page_title">OwnTV — Restaurar copia de seguridad</string>
+    <string name="companion_backup_heading">Restaurar una copia de seguridad</string>
+    <string name="companion_backup_description">Elige un archivo de copia de seguridad de OwnTV (.own o un .json antiguo) y pulsa Enviar. Se transferirá al televisor; coge el mando y elige allí qué quieres restaurar.</string>
+    <string name="companion_backup_file">Archivo de copia de seguridad</string>
+    <string name="companion_choose_backup">Elige primero un archivo de copia de seguridad.</string>
+    <string name="companion_sending">Enviando…</string>
+    <string name="companion_upload_failed">Error al subir el archivo (HTTP <xliff:g id="status">%1$d</xliff:g>). Comprueba el PIN y vuelve a intentarlo.</string>
+    <string name="companion_could_not_reach">No se ha podido conectar con el televisor. Mantén ambos dispositivos en la misma Wi-Fi y vuelve a intentarlo.</string>
+    <string name="companion_could_not_read">No se ha podido leer ese archivo.</string>
+    <string name="companion_image_page_title">OwnTV — Imagen de fondo</string>
+    <string name="companion_image_heading">Enviar una imagen de fondo</string>
+    <string name="companion_image_description">Elige una foto (JPG, PNG o WebP) y pulsa Enviar. Se convertirá en la imagen de fondo situada detrás de la interfaz del televisor.</string>
+    <string name="companion_image_file">Archivo de imagen</string>
+    <string name="companion_choose_image">Elige primero una imagen.</string>
+    <string name="companion_image_too_large">La imagen es demasiado grande (máximo: 25 MB).</string>
+    <string name="companion_download_page_title">OwnTV — Descargar copia de seguridad</string>
+    <string name="companion_download_heading">Descarga tu copia de seguridad</string>
+    <string name="companion_download_description">Tu TV ha preparado un archivo de copia de seguridad de OwnTV. Pulsa el botón para guardarlo en este dispositivo (owntv-backup.own). Guárdalo en un lugar seguro; podrás restaurarlo más adelante.</string>
+    <string name="companion_download_backup">Descargar copia de seguridad</string>
+    <string name="companion_error_bad_request">Solicitud incorrecta</string>
+    <string name="companion_error_body_too_large">El cuerpo de la solicitud es demasiado grande.</string>
+    <string name="companion_error_unauthorized">No autorizado. Comprueba el PIN y vuelve a intentarlo.</string>
+    <string name="companion_error_not_found">No se ha encontrado.</string>
+    <string name="companion_error_no_backup">No hay ninguna copia de seguridad disponible.</string>
+    <string name="companion_error_backup_too_large">La copia de seguridad es demasiado grande.</string>
+    <string name="companion_error_empty_backup">La copia de seguridad está vacía.</string>
+    <string name="companion_error_image_too_large">La imagen es demasiado grande.</string>
+    <string name="companion_error_invalid_image">El archivo subido no es una imagen válida.</string>
+    <string name="companion_error_missing_fields">Faltan campos obligatorios.</string>
+    <string name="setup_invalid_locale">Esta copia de seguridad contenía un idioma de la aplicación no compatible. La restauración se ha completado, pero se ha conservado el idioma actual.</string>
+    <string name="setup_prefer_hls_live_tv">Preferir HLS para la TV en directo</string>
+    <string name="setup_prefer_hls_description">Prioriza HLS (.m3u8) frente a MPEG-TS para la TV en directo y en diferido. Si HLS falla, se recurre a MPEG-TS.</string>
+    <string name="setup_prefer_hls_description_supported">Prioriza HLS (.m3u8) frente a MPEG-TS para la TV en directo y en diferido. Si HLS falla, se recurre a MPEG-TS. Tu proveedor indica que admite HLS.</string>
+    <string name="setup_hide_new_categories">Ocultar las categorías nuevas de forma predeterminada</string>
+    <string name="setup_hide_new_categories_description">Para todo el perfil: las categorías que aparezcan en futuras sincronizaciones estarán ocultas al principio. Puedes verlas cuando quieras en Personalizar.</string>
+</resources>

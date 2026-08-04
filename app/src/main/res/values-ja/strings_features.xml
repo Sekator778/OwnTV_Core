@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <string name="profiles_pin">PIN</string>
+    <string name="profiles_new">新しいプロフィール</string>
+    <string name="profiles_edit">プロフィールを編集</string>
+    <string name="profiles_name">名前</string>
+    <string name="profiles_name_hint">例：Alex</string>
+    <string name="profiles_avatar">アバター</string>
+    <string name="profiles_kids">子ども用プロフィール</string>
+    <string name="profiles_kids_description">シンプルで安全な閲覧</string>
+    <string name="profiles_remove_pin">PINロックを解除</string>
+    <string name="profiles_no_pin">このプロフィールはPINなしで開きます</string>
+    <string name="profiles_change_pin">PINを変更（空欄＝変更しない）</string>
+    <string name="profiles_optional_pin">PIN（任意）</string>
+    <string name="profiles_pin_digits">4～6桁</string>
+    <string name="profiles_pin_placeholder">····</string>
+    <string name="profiles_name_taken">この名前はすでに使用されています — 別の名前を選択してください。</string>
+    <string name="profiles_create">作成</string>
+    <string name="profiles_save">保存</string>
+    <string name="profiles_gate_title">どなたが視聴しますか？</string>
+    <string name="profiles_wrong_pin">PINが正しくありません — もう一度お試しください</string>
+    <string name="profiles_enter_pin"><xliff:g id="name">%1$s</xliff:g> — PINを入力</string>
+    <string name="profiles_kids_badge">キッズ</string>
+    <string name="profiles_add">プロフィールを追加</string>
+    <string name="profiles_title">プロフィール</string>
+    <string name="profiles_add_button">プロフィールを追加</string>
+    <string name="profiles_delete_title">「<xliff:g id="name">%1$s</xliff:g>」を削除しますか？</string>
+    <string name="profiles_delete_message">このプロフィールと、そのお気に入りおよび視聴履歴を削除します。ソースは保持されます。</string>
+    <string name="profiles_kids_tag">子ども用</string>
+    <string name="profiles_locked_tag">PINロック中</string>
+    <string name="search_title">検索</string>
+    <string name="search_continue">視聴を続ける</string>
+    <string name="search_unwatched">未視聴</string>
+    <string name="search_hint">チャンネル、映画、シリーズを検索…</string>
+    <string name="search_recent">最近の検索</string>
+    <string name="search_recent_empty">最近の検索がここに表示されます。</string>
+    <string name="search_minimum_query">すべてを検索するには、2文字以上入力してください。</string>
+    <string name="search_no_results"><xliff:g id="query">%1$s</xliff:g> — 検索結果はありません。</string>
+    <string name="search_nothing_in_list"><xliff:g id="list">%1$s</xliff:g>にはまだ何もありません。</string>
+    <string name="search_clear">クリア</string>
+    <string name="search_jump_to">移動先</string>
+    <string name="search_watch_live">ライブで視聴</string>
+    <string name="search_play">再生</string>
+    <string name="search_open_series">シリーズを開く</string>
+    <string name="search_movie">映画</string>
+    <string name="search_series">シリーズ</string>
+    <string name="search_channels">チャンネル</string>
+    <string name="search_channel_number">#<xliff:g id="number">%1$s</xliff:g></string>
+    <string name="home_keep_watching">視聴を続ける</string>
+    <string name="home_play_next">次を再生</string>
+    <string name="home_tune_in">今すぐ視聴</string>
+    <string name="home_recent_live">最近視聴したライブTV</string>
+    <string name="profiles_default_name">プロフィール</string>
+    <string name="launcher_recent_live_title">最近視聴したライブTV</string>
+    <string name="launcher_recent_live_description">最近視聴したライブチャンネル</string>
+    <string name="launcher_movie_type">映画</string>
+    <string name="launcher_episode_number">エピソード <xliff:g id="episode">%1$d</xliff:g></string>
+    <string name="home_no_preview">プレビューできるコンテンツはまだありません。</string>
+    <string name="home_no_rows">ホーム画面の行はすべて非表示です。</string>
+    <string name="home_enable_rows">設定 → ホーム画面で行を再度オンにしてください。</string>
+    <string name="home_start_watching">視聴を開始すると、ここにアクティビティが表示されます。</string>
+    <string name="home_continue_empty">再生履歴が記録されると、視聴を続けるコンテンツがここに表示されます。</string>
+    <string name="home_last_watched_now">たった今視聴しました</string>
+    <string name="home_finish_by">視聴終了予定：<xliff:g id="time">%1$s</xliff:g></string>
+    <string name="home_resume">再生を再開</string>
+    <plurals name="home_last_watched_minutes">
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g>分前に視聴</item>
+    </plurals>
+    <plurals name="home_last_watched_hours">
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g>時間前に視聴</item>
+    </plurals>
+    <plurals name="home_last_watched_days">
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g>日前に視聴</item>
+    </plurals>
+    <string name="home_season_episode">S<xliff:g id="season">%1$02d</xliff:g> E<xliff:g id="episode">%2$02d</xliff:g></string>
+    <string name="home_season">S<xliff:g id="season">%1$02d</xliff:g></string>
+    <string name="home_episode">E<xliff:g id="episode">%1$02d</xliff:g></string>
+    <string name="home_row_cards">カード</string>
+    <string name="home_row_keep_watching">視聴を続ける</string>
+    <string name="home_row_continue_movies">映画の視聴を続ける</string>
+    <string name="home_row_continue_series">シリーズの視聴を続ける</string>
+    <string name="home_row_recent_channels">最近視聴したチャンネル</string>
+    <string name="home_row_favorite_channels">お気に入りのチャンネル</string>
+    <string name="home_row_on_now">放送中</string>
+    <string name="home_row_hero_description">上部に表示される大きなプレビュー行</string>
+    <string name="home_row_continue_movies_description">再生位置が保存されている映画</string>
+    <string name="home_row_continue_series_description">再生を再開する、または次に再生するエピソード</string>
+    <string name="home_row_recent_description">最近視聴したライブチャンネル</string>
+    <string name="home_row_favorite_description">お気に入りに追加したライブチャンネル</string>
+    <string name="home_on_now_title"><xliff:g id="title">%1$s</xliff:g> · 放送中</string>
+    <string name="home_ok_to_watch">OKで視聴</string>
+    <string name="home_ok_to_browse">OKで閲覧</string>
+    <string name="home_no_programme_details">番組の詳細情報はありません</string>
+    <string name="home_guide_unavailable">番組表データを利用できません</string>
+    <string name="home_next">次へ</string>
+    <string name="home_channel_number"><xliff:g id="number">%1$s</xliff:g>  <xliff:g id="name">%2$s</xliff:g></string>
+    <string name="home_time_range"><xliff:g id="start">%1$s</xliff:g>-<xliff:g id="end">%2$s</xliff:g></string>
+    <string name="home_now_time">放送中 · <xliff:g id="time">%1$s</xliff:g></string>
+    <string name="home_up_next_time">次の番組 · <xliff:g id="time">%1$s</xliff:g></string>
+    <string name="home_upcoming_item"><xliff:g id="time">%1$s</xliff:g> <xliff:g id="title">%2$s</xliff:g></string>
+    <plurals name="home_channel_count">
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g>チャンネル</item>
+    </plurals>
+    <string name="update_title">アプリの更新</string>
+    <string name="update_checking">更新を確認しています…</string>
+    <string name="update_whats_new">新機能</string>
+    <string name="update_downloading">更新をダウンロードしています… <xliff:g id="percent">%1$d</xliff:g>%%</string>
+    <string name="update_available">更新があります</string>
+    <string name="update_latest">最新バージョン（v<xliff:g id="version">%1$s</xliff:g>）を使用しています。</string>
+    <string name="update_available_version">バージョン<xliff:g id="available">%1$s</xliff:g>を利用できます（現在のバージョン：v<xliff:g id="current">%2$s</xliff:g>）。</string>
+    <string name="update_installer">ダウンロードが完了すると、システムインストーラーが開きます。</string>
+    <string name="update_later">後で</string>
+    <string name="update_now">今すぐ更新</string>
+    <string name="update_try_again">再試行</string>
+    <string name="update_failed_check">更新を確認できませんでした。</string>
+    <string name="update_failed_check_http">確認中に更新サーバーからHTTP <xliff:g id="code">%1$s</xliff:g>が返されました。</string>
+    <string name="update_no_compatible_apk">このリリースには、このデバイスに対応する更新パッケージがありません。</string>
+    <string name="update_invalid_release_response">更新サーバーから無効なリリース情報が返されました。</string>
+    <string name="update_failed_download">ネットワークリクエストに失敗したため、更新をダウンロードできませんでした。</string>
+    <string name="update_failed_download_http">更新のダウンロードでHTTP <xliff:g id="code">%1$s</xliff:g>が返されました。</string>
+    <string name="update_empty_download">更新サーバーから空のAPKが返されました。</string>
+    <string name="update_install_failed">ダウンロードした更新をシステムインストーラーで開けませんでした。</string>
+    <string name="update_ready">OwnTV v<xliff:g id="available">%1$s</xliff:g>のインストール準備ができました（現在のバージョン：v<xliff:g id="current">%2$s</xliff:g>）。</string>
+    <string name="recovery_title">OwnTVはデータベースを開けませんでした</string>
+    <string name="recovery_data_safe_full">プロフィール、プレイリスト、お気に入り、視聴履歴は削除されていません — これはデータベースのアップグレード失敗によるもので、データはこのデバイスに残っています。\n\n修正できるよう、この問題を報告し、以下のメッセージを添えてください。</string>
+    <string name="recovery_retry">再試行</string>
+    <string name="recovery_backup_hint">バックアップファイルがある場合は、アプリをリセットしてから復元できます。リセットすると、このデバイスに保存されているすべてのデータが削除されます。</string>
+    <string name="recovery_confirm_reset">確認：アプリの全データを消去</string>
+    <string name="recovery_reset">アプリのデータをリセット（最終手段）</string>
+</resources>

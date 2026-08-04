@@ -1,0 +1,291 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <plurals name="content_downloading_items">
+        <item quantity="other">正在下载 <xliff:g id="count">%1$d</xliff:g> 个项目</item>
+    </plurals>
+    <plurals name="content_queued_items">
+        <item quantity="other">已将 <xliff:g id="count">%1$d</xliff:g> 个项目加入队列</item>
+    </plurals>
+    <plurals name="content_paused_items">
+        <item quantity="other">已暂停 <xliff:g id="count">%1$d</xliff:g> 个项目</item>
+    </plurals>
+    <plurals name="content_downloads_failed">
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> 个下载任务失败</item>
+    </plurals>
+    <string name="content_genre_action">动作</string>
+    <string name="content_genre_adult">成人</string>
+    <string name="content_genre_anime">动漫</string>
+    <string name="content_genre_comedy">喜剧</string>
+    <string name="content_genre_documentary">纪录片</string>
+    <string name="content_genre_drama">剧情</string>
+    <string name="content_genre_entertainment">娱乐</string>
+    <string name="content_genre_horror">恐怖</string>
+    <string name="content_genre_kids">儿童</string>
+    <string name="content_genre_movies">电影</string>
+    <string name="content_genre_music">音乐</string>
+    <string name="content_genre_news">新闻</string>
+    <string name="content_genre_other">其他</string>
+    <string name="content_genre_religious">宗教</string>
+    <string name="content_genre_romance">爱情</string>
+    <string name="content_genre_scifi">科幻</string>
+    <string name="content_genre_series">剧集</string>
+    <string name="content_genre_sport">体育</string>
+    <string name="content_exit_owntv">退出 OwnTV？</string>
+    <string name="content_exit_confirmation">确定要关闭此应用吗？</string>
+    <string name="content_restore_incomplete_title">恢复未完成</string>
+    <string name="content_restore_incomplete_message">应用在恢复 <xliff:g id="description">%1$s</xliff:g> 时关闭，因此部分内容可能缺失。没有删除任何内容——请前往设置 → 备份与恢复，再次执行相同的恢复操作以补全其余内容。</string>
+    <string name="content_playlist_picker_title">显示播放列表</string>
+    <string name="content_playlist_picker_description">选择要浏览的播放列表。此选择会应用于所有位置并被记住。</string>
+    <string name="content_avatar_picker_title">选择您的头像</string>
+    <string name="content_category_browser_title">分类</string>
+    <string name="content_channel_overlay_title">频道</string>
+    <string name="content_live_now">正在播出</string>
+    <string name="content_live_next">接下来</string>
+    <string name="content_media_overview">简介</string>
+    <string name="content_media_cast">演职人员</string>
+    <string name="content_media_press_back">按返回键关闭</string>
+    <string name="content_add_favourite">添加到收藏夹</string>
+    <string name="content_remove_favourite">从收藏夹中移除</string>
+    <string name="content_mark_watched">标记为已观看</string>
+    <string name="content_mark_unwatched">标记为未观看</string>
+    <string name="content_move">移动</string>
+    <string name="content_move_to_category">移动到分类…</string>
+    <string name="content_download">下载</string>
+    <string name="content_download_all_episodes">下载所有集</string>
+    <string name="content_play">播放</string>
+    <string name="content_next_up">接下来播放</string>
+    <string name="content_favorited">已收藏</string>
+    <string name="content_favorite">收藏</string>
+    <string name="content_show_watched">显示已观看内容</string>
+    <string name="content_hide_watched">隐藏已观看内容</string>
+    <string name="content_sorting">排序</string>
+    <string name="content_seasons">季</string>
+    <string name="content_episodes">集</string>
+    <string name="content_oldest_first">最早优先</string>
+    <string name="content_newest_first">最新优先</string>
+    <string name="content_last_watched">上次观看</string>
+    <string name="content_press_ok_episodes">在海报上按确定键可查看各集。</string>
+    <string name="content_play_external">使用外部播放器播放</string>
+    <string name="content_delete_subtitles">删除 OpenSub 字幕</string>
+    <string name="content_tmdb_details">TMDB 详情</string>
+    <string name="content_play_trailer">播放预告片</string>
+    <string name="content_refetch_tmdb">重新获取 TMDB 详情</string>
+    <string name="content_set_tmdb_name">设置 TMDB 名称</string>
+    <string name="content_close">关闭</string>
+    <string name="content_focus_movie">将焦点移到一部电影上以查看详情。</string>
+    <string name="content_focus_channel">将焦点移到一个频道上即可在此处查看。</string>
+    <string name="content_press_ok_fullscreen">按确定键全屏观看 · 长按查看更多选项</string>
+    <string name="content_rename_hint">仅对此用户档案生效。留空可恢复原始名称。</string>
+    <string name="content_focus_series">将焦点移到一部剧集上，然后按确定键查看各集。</string>
+    <string name="content_focus_episode">将焦点移到一集上以查看详情。</string>
+    <string name="content_no_movies_here">这里没有电影。</string>
+    <string name="content_no_series_here">这里没有剧集。</string>
+    <string name="content_no_episodes">没有可用的集。</string>
+    <string name="content_no_movies_found">未找到与“<xliff:g id="query">%1$s</xliff:g>”相关的电影</string>
+    <plurals name="content_count_movies">
+        <item quantity="other"><xliff:g id="category">%1$s</xliff:g>（<xliff:g id="count">%2$d</xliff:g> 部电影）</item>
+    </plurals>
+    <plurals name="content_count_series">
+        <item quantity="other"><xliff:g id="category">%1$s</xliff:g>（<xliff:g id="count">%2$d</xliff:g> 部剧集）</item>
+    </plurals>
+    <string name="content_provider">服务提供商</string>
+    <string name="content_no_series_found">未找到与“<xliff:g id="query">%1$s</xliff:g>”相关的剧集</string>
+    <string name="content_search_movies"><xliff:g id="category">%1$s</xliff:g>…</string>
+    <string name="content_search_series"><xliff:g id="category">%1$s</xliff:g>…</string>
+    <string name="content_reorder_movie">重新排列电影</string>
+    <string name="content_reorder_series">重新排列剧集</string>
+    <string name="content_already_downloaded">已下载——请查看下载内容菜单。</string>
+    <string name="content_refetching_tmdb">正在重新获取 TMDB 详情…</string>
+    <string name="content_researching_tmdb">正在重新搜索 TMDB…</string>
+    <string name="content_ok_play_options">按确定键播放 · 长按查看更多选项</string>
+    <string name="content_resume_at">从 <xliff:g id="position">%1$s</xliff:g> 继续播放</string>
+    <string name="content_duration_hours"><xliff:g id="hours">%1$d</xliff:g>小时 <xliff:g id="minutes">%2$d</xliff:g>分钟</string>
+    <string name="content_duration_minutes"><xliff:g id="minutes">%1$d</xliff:g>分钟</string>
+    <string name="content_rating">★ <xliff:g id="rating">%1$.1f</xliff:g></string>
+    <string name="content_metadata_separator">  •  </string>
+    <string name="content_genres_separator"> · </string>
+    <string name="content_season_episode">第<xliff:g id="season">%1$d</xliff:g>季 · 第<xliff:g id="episode">%2$d</xliff:g>集</string>
+    <string name="content_season_episode_title">第<xliff:g id="season">%1$d</xliff:g>季 · 第<xliff:g id="episode">%2$d</xliff:g>集 <xliff:g id="title">%3$s</xliff:g></string>
+    <string name="content_season">第 <xliff:g id="season">%1$d</xliff:g> 季</string>
+    <string name="content_season_progress">第 <xliff:g id="season">%1$d</xliff:g> 季 · <xliff:g id="completed">%2$d</xliff:g>/<xliff:g id="total">%3$d</xliff:g></string>
+    <string name="content_no_epg">无电子节目指南（EPG）</string>
+    <string name="content_epg">电子节目指南（EPG）</string>
+    <string name="content_live_day_time_range"><xliff:g id="day">%1$s</xliff:g> <xliff:g id="start">%2$s</xliff:g> – <xliff:g id="stop">%3$s</xliff:g></string>
+    <string name="content_epg_days">电子节目指南（EPG） · <xliff:g id="days">%1$d</xliff:g>天</string>
+    <string name="content_catchup">回看</string>
+    <string name="content_catchup_days">回看 · <xliff:g id="days">%1$d</xliff:g>天</string>
+    <string name="content_play_external_short">在外部播放器中播放</string>
+    <string name="content_rename">重命名</string>
+    <string name="content_rename_channel">重命名频道</string>
+    <string name="content_reorder_channel">重新排列频道</string>
+    <string name="content_hide_channel">隐藏频道</string>
+    <string name="content_remove_history">从观看记录中移除</string>
+    <string name="content_no_channels_here">这里没有频道。</string>
+    <string name="content_no_channels_found">未找到与“<xliff:g id="query">%1$s</xliff:g>”相关的频道</string>
+    <plurals name="content_count_channels">
+        <item quantity="other"><xliff:g id="category">%1$s</xliff:g>（<xliff:g id="count">%2$d</xliff:g> 个频道）</item>
+    </plurals>
+    <string name="content_search_channels"><xliff:g id="category">%1$s</xliff:g>…</string>
+    <string name="content_match_epg">匹配电子节目指南（EPG）</string>
+    <string name="content_catchup_title">回看 · <xliff:g id="channel">%1$s</xliff:g></string>
+    <string name="content_rewind_at">回退 · <xliff:g id="time">%1$s</xliff:g></string>
+    <string name="content_catchup_prompt">选择近期节目并从头重播。</string>
+    <string name="content_catchup_empty">此频道暂时没有近期节目指南数据——请确保其电子节目指南（EPG）已匹配（长按该频道，或使用“匹配电子节目指南（EPG）”）。</string>
+    <string name="content_epg_match_prompt">为“<xliff:g id="channel">%1$s</xliff:g>”选择节目指南频道。</string>
+    <string name="content_epg_match_prompt_current">为“<xliff:g id="channel">%1$s</xliff:g>”选择节目指南频道。当前：<xliff:g id="match">%2$s</xliff:g></string>
+    <string name="content_search_guide_channels">搜索节目指南频道…</string>
+    <string name="content_no_epg_data">暂时没有电子节目指南（EPG）数据——请在设置中添加电子节目指南（EPG）源。</string>
+    <string name="content_no_guide_channels">没有节目指南频道与“<xliff:g id="query">%1$s</xliff:g>”匹配。</string>
+    <string name="content_clear_match">清除匹配</string>
+    <string name="content_live_now_label">现在</string>
+    <string name="content_live_next_label">接下来 · <xliff:g id="time">%1$s</xliff:g></string>
+    <string name="content_live_later_label">稍后</string>
+    <string name="content_live_time_range_plain"><xliff:g id="start">%1$s</xliff:g> – <xliff:g id="stop">%2$s</xliff:g></string>
+    <string name="content_category_favorites">收藏夹</string>
+    <string name="content_category_history">观看记录</string>
+    <string name="content_category_all_channels">所有频道</string>
+    <string name="content_category_united_kingdom">英国</string>
+    <string name="content_category_united_states">美国</string>
+    <string name="content_category_germany">德国</string>
+    <string name="content_category_sports">体育</string>
+    <string name="content_category_all_movies">所有电影</string>
+    <string name="content_category_action">动作</string>
+    <string name="content_category_drama">剧情</string>
+    <string name="content_category_comedy">喜剧</string>
+    <string name="content_category_horror">恐怖</string>
+    <string name="content_category_all_series">所有剧集</string>
+    <string name="content_category_animation">动画</string>
+    <string name="content_category_documentary">纪录片</string>
+    <string name="content_category_all_downloads">所有下载内容</string>
+    <string name="content_category_movies">电影</string>
+    <string name="content_category_series">剧集</string>
+    <string name="content_zero_channels">0 个频道</string>
+    <string name="content_zero_movies">0 部电影</string>
+    <string name="content_zero_series">0 部剧集</string>
+    <string name="content_zero_downloads">0 个下载内容</string>
+    <string name="content_nothing_here">这里暂时没有内容</string>
+    <string name="content_add_source">添加源</string>
+    <string name="content_preview_select_channel">选择一个频道即可在此处预览。</string>
+    <string name="content_offline_banner">您当前处于离线状态——重新连接前，播放和更新将无法使用。</string>
+    <string name="content_subtitle_select_file">选择本地字幕文件</string>
+    <string name="content_subtitle_load_failed">无法加载字幕文件。</string>
+    <string name="content_history">观看记录</string>
+    <string name="content_all_playlists">所有播放列表</string>
+    <string name="content_search_categories">搜索分类…</string>
+    <string name="content_no_categories_match">没有匹配的分类</string>
+    <string name="content_action_resume">继续播放</string>
+    <string name="content_action_play">播放</string>
+    <string name="content_action_next_up">接下来播放</string>
+    <string name="content_action_last_channel">上次观看的频道</string>
+    <string name="content_continue_label"><xliff:g id="action">%1$s</xliff:g> · <xliff:g id="name">%2$s</xliff:g></string>
+    <string name="content_empty_section"><xliff:g id="section">%1$s</xliff:g> 将在后续阶段推出。添加 M3U 或 Xtream 源以填充此列表。</string>
+    <string name="content_progress_percent"><xliff:g id="percent">%1$d</xliff:g>%%</string>
+    <string name="content_section_category"><xliff:g id="section">%1$s</xliff:g> / <xliff:g id="category">%2$s</xliff:g></string>
+    <string name="content_preview_player">您自己的 IPTV 播放器。</string>
+    <string name="content_live_time_range"><xliff:g id="start">%1$s</xliff:g> – <xliff:g id="end">%2$s</xliff:g></string>
+    <string name="content_live_time_remaining"><xliff:g id="end">%1$s</xliff:g> · 剩余 <xliff:g id="minutes">%2$d</xliff:g> 分钟</string>
+    <string name="common_browse">浏览</string>
+    <string name="content_downloads_title">下载内容</string>
+    <string name="content_downloads_description">为离线播放而保存的电影和集。</string>
+    <string name="content_downloads_empty">尚无下载内容。打开一部电影或一集，然后按“下载”。</string>
+    <string name="content_downloads_storage">存储空间</string>
+    <string name="content_downloads_storage_free"><xliff:g id="free">%1$s</xliff:g> GB 可用，共 <xliff:g id="total">%2$s</xliff:g> GB</string>
+    <string name="content_storage_internal">内部存储空间</string>
+    <string name="content_storage_removable">可移动存储空间</string>
+    <string name="content_storage_app">应用存储空间（无需权限）</string>
+    <string name="content_downloads_completed">已下载 <xliff:g id="size">%1$s</xliff:g></string>
+    <string name="content_downloads_failure_message">下载失败——无法连接到源。请点击“重试”。</string>
+    <string name="content_downloads_queued">已排队…</string>
+    <string name="content_downloads_count"><xliff:g id="count">%1$d</xliff:g></string>
+    <string name="content_downloads_active">正在进行</string>
+    <string name="content_downloads_waiting">等待中</string>
+    <string name="content_downloads_completed_group">已完成</string>
+    <string name="content_downloads_failed_group">失败</string>
+    <string name="content_downloads_progress"><xliff:g id="percent">%1$d</xliff:g>%% · <xliff:g id="downloaded">%2$s</xliff:g> / <xliff:g id="total">%3$s</xliff:g></string>
+    <string name="content_downloads_progress_unknown">正在下载… <xliff:g id="downloaded">%1$s</xliff:g></string>
+    <string name="content_downloads_folder_separator"> › </string>
+    <string name="content_downloads_play">播放</string>
+    <string name="content_downloads_external">外部播放器</string>
+    <string name="content_downloads_pause">暂停</string>
+    <string name="content_downloads_unknown_size">—</string>
+    <string name="content_epg_create_profile">创建用户档案以查看节目指南。</string>
+    <string name="content_epg_add_playlist">添加播放列表以查看节目指南。</string>
+    <string name="content_epg_no_channels_query">未找到与“<xliff:g id="query">%1$s</xliff:g>”相关的节目指南频道。</string>
+    <string name="content_epg_mismatched_ids">节目指南数据已存储，但其中的频道 ID 与您的频道电子节目指南（EPG）ID 不匹配——此电子节目指南（EPG）数据源可能属于其他服务提供商的频道阵容。</string>
+    <string name="content_epg_catchup_unavailable">此频道不支持回看。</string>
+    <string name="content_epg_matched_no_programmes">已匹配——但此节目指南频道的电子节目指南（EPG）数据源中暂时没有当前节目。</string>
+    <string name="content_epg_add_playlist_first">请先添加播放列表。</string>
+    <string name="content_epg_no_match_data">暂时没有可用于匹配的电子节目指南（EPG）数据。</string>
+    <string name="content_epg_all_matched">所有内容均已匹配。</string>
+    <string name="content_epg_no_match">未找到与“<xliff:g id="channel">%1$s</xliff:g>”匹配的电子节目指南（EPG）——请尝试手动选择。</string>
+    <plurals name="content_epg_stats_channels">
+        <item quantity="other">节目指南已加载：<xliff:g id="channels">%1$d</xliff:g> 个频道。</item>
+    </plurals>
+    <plurals name="content_epg_stats_programmes">
+        <item quantity="other">节目指南包含 <xliff:g id="programmes">%1$d</xliff:g> 个节目。</item>
+    </plurals>
+    <string name="content_epg_stats_loaded"><xliff:g id="channels">%1$s</xliff:g> <xliff:g id="programmes">%2$s</xliff:g> <xliff:g id="catchup">%3$s</xliff:g></string>
+    <string name="content_epg_no_catchup_channels">没有频道支持回看。</string>
+    <string name="content_epg_stats_no_catchup">没有可回看的频道。</string>
+    <plurals name="content_epg_catchup_count">
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> 个频道支持回看。</item>
+    </plurals>
+    <plurals name="content_epg_stats_catchup_available">
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> 个频道支持回看。</item>
+    </plurals>
+    <plurals name="content_epg_auto_matched_applied">
+        <item quantity="other">已自动匹配 <xliff:g id="applied">%1$d</xliff:g> 个频道。</item>
+    </plurals>
+    <plurals name="content_epg_auto_matched_review">
+        <item quantity="other"><xliff:g id="review">%1$d</xliff:g> 个频道需要检查。</item>
+    </plurals>
+    <string name="content_epg_auto_matched"><xliff:g id="applied">%1$s</xliff:g> <xliff:g id="review">%2$s</xliff:g></string>
+    <plurals name="content_epg_auto_matched_no_review">
+        <item quantity="other">已自动匹配 <xliff:g id="applied">%1$d</xliff:g> 个频道。</item>
+    </plurals>
+    <string name="content_epg_title">电视节目指南</string>
+    <string name="content_epg_matching">正在匹配…</string>
+    <string name="content_epg_empty">尚未添加电子节目指南（EPG）。</string>
+    <string name="content_epg_no_guide">无节目指南。</string>
+    <string name="content_epg_no_programme">此时段没有节目。</string>
+    <string name="content_epg_add_description">添加电子节目指南（EPG）源（XMLTV），以在节目指南中填充节目。</string>
+    <string name="content_epg_favourite_description">收藏此频道，或设置其节目指南数据。</string>
+    <string name="content_epg_guide_category">节目指南分类</string>
+    <string name="content_epg_all_categories">所有分类</string>
+    <string name="content_epg_search_hint">搜索节目指南频道…</string>
+    <string name="content_epg_add">添加电子节目指南（EPG）</string>
+    <string name="content_epg_add_favourite">添加到收藏夹</string>
+    <string name="content_epg_remove_favourite">从收藏夹中移除</string>
+    <string name="content_epg_jump_now">跳转到现在</string>
+    <string name="content_epg_runtime"><xliff:g id="minutes">%1$d</xliff:g>分钟</string>
+    <string name="content_epg_review_matches">检查电子节目指南（EPG）匹配结果</string>
+    <string name="content_epg_review_description">这些频道已按名称匹配，但匹配度不够可靠。接受正确的匹配，跳过其余匹配。</string>
+    <string name="content_epg_accept">接受</string>
+    <string name="content_epg_accept_all">全部接受</string>
+    <string name="content_epg_skip">跳过</string>
+    <string name="content_epg_skip_all">全部跳过</string>
+    <string name="content_epg_pick_manually">手动选择电子节目指南（EPG）</string>
+    <string name="content_epg_move_hint">向右移入某一行，然后使用 ◀ ▶ 浏览并预览节目。</string>
+    <string name="content_epg_catchup">↻ 回看</string>
+    <string name="content_epg_time_range"><xliff:g id="start">%1$s</xliff:g> – <xliff:g id="end">%2$s</xliff:g></string>
+    <string name="content_epg_all">全部</string>
+    <string name="content_epg_sort_alpha">A–Z</string>
+    <string name="content_epg_sort_provider">服务提供商</string>
+    <string name="content_epg_sort_live">直播电视</string>
+    <string name="content_epg_sort_catchup">回看</string>
+    <string name="content_epg_sort_favorites">收藏夹</string>
+    <string name="content_epg_category_button">分类：<xliff:g id="label">%1$s</xliff:g></string>
+    <string name="content_epg_sort_button">排序：<xliff:g id="label">%1$s</xliff:g></string>
+    <string name="content_epg_match_button">自动匹配电子节目指南（EPG）</string>
+    <string name="content_epg_channel_score">→ <xliff:g id="name">%1$s</xliff:g> · <xliff:g id="percent">%2$d</xliff:g>%%</string>
+    <string name="content_epg_channel_number"><xliff:g id="number">%1$s</xliff:g>  <xliff:g id="name">%2$s</xliff:g></string>
+    <string name="content_epg_bits_separator"> · </string>
+    <string name="content_epg_now">现在 · <xliff:g id="time">%1$s</xliff:g></string>
+    <string name="content_epg_watch_start">从头观看</string>
+    <string name="content_epg_watch_channel">观看频道</string>
+    <string name="content_epg_favourite">收藏</string>
+    <string name="content_epg_unfavourite">取消收藏</string>
+    <string name="content_epg_player_choice_description">前往设置 › 回看以设置永久选项。</string>
+    <string name="content_epg_own_player">OwnTV 播放器</string>
+    <string name="content_epg_external_player">外部播放器</string>
+</resources>

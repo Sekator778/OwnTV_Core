@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <string name="profiles_pin">PIN</string>
+    <string name="profiles_new">ملف شخصي جديد</string>
+    <string name="profiles_edit">تعديل الملف الشخصي</string>
+    <string name="profiles_name">الاسم</string>
+    <string name="profiles_name_hint">مثلًا: Alex</string>
+    <string name="profiles_avatar">الصورة الرمزية</string>
+    <string name="profiles_kids">ملف الأطفال الشخصي</string>
+    <string name="profiles_kids_description">تصفح مبسّط وآمن</string>
+    <string name="profiles_remove_pin">إزالة قفل PIN</string>
+    <string name="profiles_no_pin">يمكن فتح هذا الملف الشخصي من دون PIN</string>
+    <string name="profiles_change_pin">تغيير PIN (اتركه فارغًا للاحتفاظ بالحالي)</string>
+    <string name="profiles_optional_pin">PIN (اختياري)</string>
+    <string name="profiles_pin_digits">من 4 إلى 6 أرقام</string>
+    <string name="profiles_pin_placeholder">····</string>
+    <string name="profiles_name_taken">هذا الاسم مستخدم بالفعل — يرجى اختيار اسم آخر.</string>
+    <string name="profiles_create">إنشاء</string>
+    <string name="profiles_save">حفظ</string>
+    <string name="profiles_gate_title">من يشاهد الآن؟</string>
+    <string name="profiles_wrong_pin">PIN غير صحيح — حاول مجددًا</string>
+    <string name="profiles_enter_pin"><xliff:g id="name">%1$s</xliff:g> — أدخل PIN</string>
+    <string name="profiles_kids_badge">أطفال</string>
+    <string name="profiles_add">إضافة ملف شخصي</string>
+    <string name="profiles_title">الملفات الشخصية</string>
+    <string name="profiles_add_button">إضافة ملف شخصي</string>
+    <string name="profiles_delete_title">حذف «<xliff:g id="name">%1$s</xliff:g>»؟</string>
+    <string name="profiles_delete_message">يؤدي هذا إلى حذف الملف الشخصي وعناصره المفضّلة وسجل مشاهدته. ستبقى المصادر.</string>
+    <string name="profiles_kids_tag">أطفال</string>
+    <string name="profiles_locked_tag">مقفل باستخدام PIN</string>
+    <string name="search_title">بحث</string>
+    <string name="search_continue">متابعة المشاهدة</string>
+    <string name="search_unwatched">غير مُشاهَد</string>
+    <string name="search_hint">ابحث في القنوات والأفلام والمسلسلات…</string>
+    <string name="search_recent">عمليات البحث الأخيرة</string>
+    <string name="search_recent_empty">ستظهر عمليات البحث الأخيرة هنا.</string>
+    <string name="search_minimum_query">اكتب حرفين على الأقل للبحث في كل المحتوى.</string>
+    <string name="search_no_results"><xliff:g id="query">%1$s</xliff:g> — لا توجد نتائج.</string>
+    <string name="search_nothing_in_list">لا شيء في <xliff:g id="list">%1$s</xliff:g> حتى الآن.</string>
+    <string name="search_clear">مسح</string>
+    <string name="search_jump_to">الانتقال إلى</string>
+    <string name="search_watch_live">مشاهدة مباشرة</string>
+    <string name="search_play">تشغيل</string>
+    <string name="search_open_series">فتح المسلسل</string>
+    <string name="search_movie">فيلم</string>
+    <string name="search_series">مسلسل</string>
+    <string name="search_channels">قنوات</string>
+    <string name="search_channel_number">#<xliff:g id="number">%1$s</xliff:g></string>
+    <string name="home_keep_watching">تابع المشاهدة</string>
+    <string name="home_play_next">تشغيل التالي</string>
+    <string name="home_tune_in">المشاهدة الآن</string>
+    <string name="home_recent_live">بث مباشر شوهد مؤخرًا</string>
+    <string name="profiles_default_name">ملف شخصي</string>
+    <string name="launcher_recent_live_title">البث المباشر الأخير</string>
+    <string name="launcher_recent_live_description">قنوات البث المباشر التي شوهدت مؤخرًا</string>
+    <string name="launcher_movie_type">فيلم</string>
+    <string name="launcher_episode_number">الحلقة <xliff:g id="episode">%1$d</xliff:g></string>
+    <string name="home_no_preview">لا يوجد شيء لمعاينته حتى الآن.</string>
+    <string name="home_no_rows">جميع صفوف الشاشة الرئيسية مخفية.</string>
+    <string name="home_enable_rows">فعّل الصفوف مجددًا من الإعدادات ← الشاشة الرئيسية.</string>
+    <string name="home_start_watching">ابدأ المشاهدة لترى نشاطك هنا.</string>
+    <string name="home_continue_empty">ستظهر هنا عناصر متابعة المشاهدة عند توفر سجل التشغيل.</string>
+    <string name="home_last_watched_now">شوهد آخر مرة للتو</string>
+    <string name="home_finish_by">الانتهاء بحلول <xliff:g id="time">%1$s</xliff:g></string>
+    <string name="home_resume">استئناف</string>
+    <plurals name="home_last_watched_minutes">
+        <item quantity="zero">شوهد آخر مرة قبل <xliff:g id="count">%1$d</xliff:g> دقيقة</item>
+        <item quantity="one">شوهد آخر مرة قبل <xliff:g id="count">%1$d</xliff:g> دقيقة</item>
+        <item quantity="two">شوهد آخر مرة قبل <xliff:g id="count">%1$d</xliff:g> دقيقتين</item>
+        <item quantity="few">شوهد آخر مرة قبل <xliff:g id="count">%1$d</xliff:g> دقائق</item>
+        <item quantity="many">شوهد آخر مرة قبل <xliff:g id="count">%1$d</xliff:g> دقيقة</item>
+        <item quantity="other">شوهد آخر مرة قبل <xliff:g id="count">%1$d</xliff:g> دقيقة</item>
+    </plurals>
+    <plurals name="home_last_watched_hours">
+        <item quantity="zero">شوهد آخر مرة قبل <xliff:g id="count">%1$d</xliff:g> ساعة</item>
+        <item quantity="one">شوهد آخر مرة قبل <xliff:g id="count">%1$d</xliff:g> ساعة</item>
+        <item quantity="two">شوهد آخر مرة قبل <xliff:g id="count">%1$d</xliff:g> ساعتين</item>
+        <item quantity="few">شوهد آخر مرة قبل <xliff:g id="count">%1$d</xliff:g> ساعات</item>
+        <item quantity="many">شوهد آخر مرة قبل <xliff:g id="count">%1$d</xliff:g> ساعة</item>
+        <item quantity="other">شوهد آخر مرة قبل <xliff:g id="count">%1$d</xliff:g> ساعة</item>
+    </plurals>
+    <plurals name="home_last_watched_days">
+        <item quantity="zero">شوهد آخر مرة قبل <xliff:g id="count">%1$d</xliff:g> يوم</item>
+        <item quantity="one">شوهد آخر مرة قبل <xliff:g id="count">%1$d</xliff:g> يوم</item>
+        <item quantity="two">شوهد آخر مرة قبل <xliff:g id="count">%1$d</xliff:g> يومين</item>
+        <item quantity="few">شوهد آخر مرة قبل <xliff:g id="count">%1$d</xliff:g> أيام</item>
+        <item quantity="many">شوهد آخر مرة قبل <xliff:g id="count">%1$d</xliff:g> يومًا</item>
+        <item quantity="other">شوهد آخر مرة قبل <xliff:g id="count">%1$d</xliff:g> يوم</item>
+    </plurals>
+    <string name="home_season_episode">م<xliff:g id="season">%1$02d</xliff:g> ح<xliff:g id="episode">%2$02d</xliff:g></string>
+    <string name="home_season">م<xliff:g id="season">%1$02d</xliff:g></string>
+    <string name="home_episode">ح<xliff:g id="episode">%1$02d</xliff:g></string>
+    <string name="home_row_cards">بطاقات</string>
+    <string name="home_row_keep_watching">تابع المشاهدة</string>
+    <string name="home_row_continue_movies">متابعة مشاهدة الأفلام</string>
+    <string name="home_row_continue_series">متابعة مشاهدة المسلسلات</string>
+    <string name="home_row_recent_channels">القنوات الأخيرة</string>
+    <string name="home_row_favorite_channels">القنوات المفضّلة</string>
+    <string name="home_row_on_now">يُعرض الآن</string>
+    <string name="home_row_hero_description">صف المعاينة الكبير في الأعلى</string>
+    <string name="home_row_continue_movies_description">أفلام ذات موضع تشغيل محفوظ</string>
+    <string name="home_row_continue_series_description">حلقات لاستئنافها أو تشغيل التالية</string>
+    <string name="home_row_recent_description">قنوات البث المباشر التي انتقلت إليها مؤخرًا</string>
+    <string name="home_row_favorite_description">قنوات البث المباشر المضافة إلى المفضّلة</string>
+    <string name="home_on_now_title"><xliff:g id="title">%1$s</xliff:g> · يُعرض الآن</string>
+    <string name="home_ok_to_watch">اضغط «موافق» للمشاهدة</string>
+    <string name="home_ok_to_browse">اضغط «موافق» للتصفح</string>
+    <string name="home_no_programme_details">لا تتوفر تفاصيل البرنامج</string>
+    <string name="home_guide_unavailable">بيانات دليل البرامج غير متاحة</string>
+    <string name="home_next">التالي</string>
+    <string name="home_channel_number"><xliff:g id="number">%1$s</xliff:g>  <xliff:g id="name">%2$s</xliff:g></string>
+    <string name="home_time_range"><xliff:g id="start">%1$s</xliff:g>-<xliff:g id="end">%2$s</xliff:g></string>
+    <string name="home_now_time">الآن · <xliff:g id="time">%1$s</xliff:g></string>
+    <string name="home_up_next_time">التالي · <xliff:g id="time">%1$s</xliff:g></string>
+    <string name="home_upcoming_item"><xliff:g id="time">%1$s</xliff:g> <xliff:g id="title">%2$s</xliff:g></string>
+    <plurals name="home_channel_count">
+        <item quantity="zero"><xliff:g id="count">%1$d</xliff:g> قناة</item>
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> قناة</item>
+        <item quantity="two"><xliff:g id="count">%1$d</xliff:g> قناتان</item>
+        <item quantity="few"><xliff:g id="count">%1$d</xliff:g> قنوات</item>
+        <item quantity="many"><xliff:g id="count">%1$d</xliff:g> قناة</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> قناة</item>
+    </plurals>
+    <string name="update_title">تحديث التطبيق</string>
+    <string name="update_checking">جارٍ التحقق من وجود تحديثات…</string>
+    <string name="update_whats_new">ما الجديد</string>
+    <string name="update_downloading">جارٍ تنزيل التحديث… <xliff:g id="percent">%1$d</xliff:g>%%</string>
+    <string name="update_available">يتوفر تحديث</string>
+    <string name="update_latest">أنت تستخدم أحدث إصدار (v<xliff:g id="version">%1$s</xliff:g>).</string>
+    <string name="update_available_version">يتوفر الإصدار <xliff:g id="available">%1$s</xliff:g> (لديك v<xliff:g id="current">%2$s</xliff:g>).</string>
+    <string name="update_installer">يُفتح مثبّت النظام عند اكتمال التنزيل.</string>
+    <string name="update_later">لاحقًا</string>
+    <string name="update_now">التحديث الآن</string>
+    <string name="update_try_again">إعادة المحاولة</string>
+    <string name="update_failed_check">تعذّر التحقق من وجود تحديثات.</string>
+    <string name="update_failed_check_http">استجاب خادم التحديث برمز HTTP <xliff:g id="code">%1$s</xliff:g> أثناء التحقق.</string>
+    <string name="update_no_compatible_apk">لم يُعثر في الإصدار على حزمة تحديث متوافقة مع هذا الجهاز.</string>
+    <string name="update_invalid_release_response">أعاد خادم التحديث وصف إصدار غير صالح.</string>
+    <string name="update_failed_download">تعذّر تنزيل التحديث بسبب فشل طلب الشبكة.</string>
+    <string name="update_failed_download_http">استجاب تنزيل التحديث برمز HTTP <xliff:g id="code">%1$s</xliff:g>.</string>
+    <string name="update_empty_download">أعاد خادم التحديث ملف APK فارغًا.</string>
+    <string name="update_install_failed">تعذّر على مثبّت النظام فتح التحديث الذي تم تنزيله.</string>
+    <string name="update_ready">OwnTV v<xliff:g id="available">%1$s</xliff:g> جاهز (لديك v<xliff:g id="current">%2$s</xliff:g>).</string>
+    <string name="recovery_title">تعذّر على OwnTV فتح قاعدة بياناته</string>
+    <string name="recovery_data_safe_full">لم تُحذف ملفاتك الشخصية أو قوائم التشغيل أو المفضّلة أو سجل المشاهدة — فهذا إخفاق في ترقية قاعدة البيانات، وما تزال البيانات على هذا الجهاز.\n\nيرجى الإبلاغ عن ذلك حتى يمكن إصلاحه، وإرفاق الرسالة أدناه.</string>
+    <string name="recovery_retry">إعادة المحاولة</string>
+    <string name="recovery_backup_hint">إذا كان لديك ملف نسخة احتياطية، فيمكنك إعادة ضبط التطبيق ثم الاستعادة منه بعد ذلك. تؤدي إعادة الضبط إلى حذف كل ما هو مخزّن على هذا الجهاز.</string>
+    <string name="recovery_confirm_reset">تأكيد: محو جميع بيانات التطبيق</string>
+    <string name="recovery_reset">إعادة ضبط بيانات التطبيق (كحل أخير)</string>
+</resources>
