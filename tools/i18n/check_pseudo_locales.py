@@ -10,10 +10,13 @@ full stated invariant, not just pseudolocale presence:
           allowed debug set. ``ar`` is allowed in debug only: generating ``ar-rXB`` causes the
           resource merger to retain the ``ar`` parent qualifier, which is unavoidable and documented.
   release APK must contain NEITHER ``en-rXA`` nor ``ar-rXB``, AND no locale configuration outside the
-          allowed release set (``en`` + ``en-rGB`` only).
+          allowed release set.
 
-The "no other production locale leaks" half is enforced here, not just documented: without it a
-library locale folder that slipped past ``localeFilters`` would ship unnoticed.
+The allowed locale set for both variants is derived from ``tools/i18n/locales.json`` — the same
+single source of truth that ``app/build.gradle.kts`` reads to populate ``localeFilters``. This script
+automatically includes every community locale listed in the catalogue, so the APK may contain any
+recognised locale even when it is not yet packaged for the in-app picker. Removing a locale from
+``locales.json`` removes it from the allowed set without a separate CI edit.
 
 Usage:
     python3 tools/i18n/check_pseudo_locales.py --apk path/to/app.apk --mode debug|release
@@ -22,6 +25,7 @@ Usage:
 from __future__ import annotations
 
 import argparse
+import json
 import os
 import re
 import shutil
@@ -29,15 +33,46 @@ import subprocess
 import sys
 from pathlib import Path
 
+ROOT = Path(__file__).resolve().parents[2]
+LOCALES_JSON = ROOT / "tools" / "i18n" / "locales.json"
+
 PSEUDO = ("en-rXA", "ar-rXB")
 
-# The full set of locale configurations the build is allowed to package. Everything else is a leak:
-# either a library locale folder that slipped past localeFilters, or a parent qualifier the resource
-# merger adds when a child is present. `ar` is in the debug set only — it is the unavoidable parent of
-# the `ar-rXB` pseudolocale. `en` (the source) and `en-rGB` (the packaged regional override) ship in
-# both variants. `en-rXA`/`ar-rXB` are debug-only.
-_ALLOWED_DEBUG = {"en", "en-rGB", "en-rXA", "ar-rXB", "ar"}
-_ALLOWED_RELEASE = {"en", "en-rGB"}
+
+def _catalogue_locale_qualifiers() -> set[str]:
+    """Return every ``resourceQualifier`` listed in ``locales.json``.
+
+    This is the single source of truth shared with ``app/build.gradle.kts``:
+    anything the catalogue declares is an expected locale folder in the APK."""
+    if not LOCALES_JSON.is_file():
+        sys.exit(f"error: locales.json not found at {LOCALES_JSON}")
+    try:
+        catalogue = json.loads(LOCALES_JSON.read_text(encoding="utf-8"))
+    except json.JSONDecodeError as exc:
+        sys.exit(f"error: invalid JSON in {LOCALES_JSON}: {exc}")
+    qualifiers: set[str] = set()
+    for entry in catalogue:
+        q = entry.get("resourceQualifier")
+        if q and isinstance(q, str) and q.strip():
+            qualifiers.add(q.strip())
+    return qualifiers
+
+
+def _allowed_debug() -> set[str]:
+    """Allowed locale configurations in the debug APK.
+
+    Includes the source locale (``en``), the regional override (``en-rGB``),
+    both pseudolocales, the unavoidable ``ar`` parent of ``ar-rXB``, and every
+    community locale declared in ``locales.json``."""
+    return {"en", "en-rGB", "en-rXA", "ar-rXB", "ar"} | _catalogue_locale_qualifiers()
+
+
+def _allowed_release() -> set[str]:
+    """Allowed locale configurations in the release APK.
+
+    Includes ``en``, ``en-rGB``, and every community locale declared in
+    ``locales.json``.  Pseudolocales must never reach release."""
+    return {"en", "en-rGB"} | _catalogue_locale_qualifiers()
 
 
 def _find_aapt2() -> str:
@@ -103,7 +138,7 @@ def main() -> int:
     configs = _apk_configs(args.apk, aapt2)
     locales = _locale_configs(configs)
     present = {p for p in PSEUDO if p in locales}
-    allowed = _ALLOWED_DEBUG if args.mode == "debug" else _ALLOWED_RELEASE
+    allowed = _allowed_debug() if args.mode == "debug" else _allowed_release()
     leaks = locales - allowed
     if args.mode == "debug":
         missing = set(PSEUDO) - present
