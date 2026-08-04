@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <string name="player_trailer_exit">बाहर निकलें</string>
+    <string name="player_trailer_progress"><xliff:g id="current">%1$s</xliff:g> / <xliff:g id="duration">%2$s</xliff:g></string>
+    <string name="player_zoom_fit_screen">स्क्रीन में फ़िट करें</string>
+    <string name="player_zoom_fill_crop">भरें / क्रॉप करें</string>
+    <string name="player_zoom_stretch">स्ट्रेच करें</string>
+    <string name="player_zoom_original">मूल (1:1)</string>
+    <string name="player_zoom_force_16_9">16:9 अनिवार्य करें</string>
+    <string name="player_zoom_force_4_3">4:3 अनिवार्य करें</string>
+    <string name="player_mini_top_left">ऊपर बाएँ</string>
+    <string name="player_mini_top_center">ऊपर मध्य</string>
+    <string name="player_mini_top_right">ऊपर दाएँ</string>
+    <string name="player_mini_bottom_left">नीचे बाएँ</string>
+    <string name="player_mini_bottom_center">नीचे मध्य</string>
+    <string name="player_mini_bottom_right">नीचे दाएँ</string>
+    <string name="player_channel_label">चैनल</string>
+    <string name="player_at_live_edge">● लाइव एज पर</string>
+    <string name="player_behind_live">● लाइव से <xliff:g id="offset">%1$s</xliff:g> पीछे</string>
+    <string name="player_live_offset">−<xliff:g id="offset">%1$s</xliff:g></string>
+    <string name="player_channel_not_found">चैनल नहीं मिला</string>
+    <string name="player_multiple_channels">कई चैनल</string>
+    <string name="player_tune_failed">ट्यून विफल</string>
+    <string name="player_playback_error">प्लेबैक त्रुटि</string>
+    <string name="player_raw_error">त्रुटि: <xliff:g id="error">%1$s</xliff:g></string>
+    <string name="player_audio_track">ऑडियो ट्रैक</string>
+    <string name="player_subtitles">सबटाइटल</string>
+    <string name="player_subtitle_timing">सबटाइटल टाइमिंग</string>
+    <string name="player_add_subtitles">सबटाइटल जोड़ें</string>
+    <string name="player_adjust">समायोजित करें</string>
+    <string name="player_search_subtitles">OpenSubtitles खोजें</string>
+    <string name="player_select_local_subtitle">लोकल सबटाइटल फ़ाइल चुनें</string>
+    <string name="player_no_tracks">कोई ट्रैक उपलब्ध नहीं है।</string>
+    <string name="player_image_track"><xliff:g id="label">%1$s</xliff:g> · इमेज</string>
+    <string name="player_av_sync">A/V सिंक</string>
+    <string name="player_no_offset">कोई ऑफ़सेट नहीं</string>
+    <string name="player_subtitles_later">सबटाइटल बाद में दिखाए जाएंगे</string>
+    <string name="player_subtitles_earlier">सबटाइटल पहले दिखाए जाएंगे</string>
+    <string name="player_delay_zero">0 ms</string>
+    <string name="player_delay_positive">+<xliff:g id="ms">%1$d</xliff:g> ms</string>
+    <string name="player_delay_negative"><xliff:g id="ms">%1$d</xliff:g> ms</string>
+    <string name="player_speed_normal">1.0x (सामान्य)</string>
+    <string name="player_speed_normal_short">1.0x</string>
+    <string name="player_speed"><xliff:g id="speed">%1$s</xliff:g>x</string>
+    <string name="player_next_episode">अगला एपिसोड <xliff:g id="seconds">%1$d</xliff:g>s में</string>
+    <string name="player_play_now">अभी चलाएं</string>
+    <string name="player_volume">वॉल्यूम</string>
+    <string name="player_unmute">अनम्यूट करें</string>
+    <string name="player_mute">म्यूट करें</string>
+    <string name="player_percent"><xliff:g id="value">%1$d</xliff:g>%%</string>
+    <string name="player_duration_minutes"><xliff:g id="minutes">%1$d</xliff:g> मिनट</string>
+    <string name="player_season_number">सीज़न <xliff:g id="season">%1$d</xliff:g></string>
+    <string name="player_episode_number">एपिसोड <xliff:g id="episode">%1$d</xliff:g></string>
+    <string name="player_episode_context_title"><xliff:g id="title">%1$s</xliff:g> · S<xliff:g id="season">%2$d</xliff:g>E<xliff:g id="episode">%3$d</xliff:g></string>
+    <string name="player_channel_number">#<xliff:g id="number">%1$s</xliff:g></string>
+    <string name="player_live">लाइव</string>
+    <string name="player_subtitle_delay_zero">0.0 s</string>
+    <string name="player_subtitle_delay_positive">+<xliff:g id="seconds">%1$.1f</xliff:g> s</string>
+    <string name="player_subtitle_delay_negative">−<xliff:g id="seconds">%1$.1f</xliff:g> s</string>
+    <string name="player_track_seconds"><xliff:g id="minutes">%1$d</xliff:g>:<xliff:g id="seconds">%2$02d</xliff:g></string>
+    <string name="player_track_hours"><xliff:g id="hours">%1$d</xliff:g>:<xliff:g id="minutes">%2$02d</xliff:g>:<xliff:g id="seconds">%3$02d</xliff:g></string>
+    <string name="player_time_progress"><xliff:g id="position">%1$s</xliff:g> / <xliff:g id="duration">%2$s</xliff:g></string>
+    <string name="player_time_remaining">−<xliff:g id="time">%1$s</xliff:g></string>
+    <string name="player_switch_exo">ExoPlayer पर स्विच किया गया</string>
+    <string name="player_switch_mpv">MPV पर स्विच किया गया</string>
+    <string name="player_error_image_subtitle_audio">इस वीडियो के ऑडियो फ़ॉर्मैट के लिए इमेज सबटाइटल उपलब्ध नहीं हैं।</string>
+    <string name="player_error_both_engines_exo_first">दोनों वीडियो इंजन (ExoPlayer, फिर mpv) पर प्लेबैक विफल हुआ। फ़ाइल क्षतिग्रस्त हो सकती है या ऐसे फ़ॉर्मैट में हो सकती है जिसे यह टीवी नहीं चला सकता।</string>
+    <string name="player_error_both_engines_mpv_first">दोनों वीडियो इंजन (mpv और ExoPlayer) पर प्लेबैक विफल हुआ। फ़ाइल क्षतिग्रस्त हो सकती है या ऐसे फ़ॉर्मैट में हो सकती है जिसे यह टीवी नहीं चला सकता। (<xliff:g id="error">%1$s</xliff:g>)</string>
+    <string name="player_error_stream_link">पोर्टल से स्ट्रीम लिंक प्राप्त नहीं किया जा सका। कनेक्शन जांचें और फिर से प्रयास करें।</string>
+    <string name="player_error_not_streaming">यह वीडियो स्ट्रीमिंग के लिए फ़ॉर्मैट नहीं किया गया है। प्रदाता से fast-start के साथ फिर से एन्कोड करने के लिए कहें, या पहले इसे डाउनलोड करें।</string>
+    <string name="player_error_lost_connection">इस चैनल से कनेक्शन खो गया।</string>
+    <string name="player_error_channel">यह चैनल नहीं चलाया जा सका।</string>
+    <string name="player_error_exo_decode">ExoPlayer इस डिवाइस पर इस वीडियो के फ़ॉर्मैट को डिकोड नहीं कर सकता (<xliff:g id="error">%1$s</xliff:g>)।</string>
+    <string name="player_error_exo_play">ExoPlayer इस स्ट्रीम को नहीं चला सका (<xliff:g id="error">%1$s</xliff:g>)।</string>
+    <string name="player_error_image_format">इस फ़ाइल के फ़ॉर्मैट के लिए इमेज सबटाइटल उपलब्ध नहीं हैं।</string>
+    <string name="player_error_image_show">इस फ़ाइल के लिए इमेज सबटाइटल नहीं दिखाए जा सके।</string>
+    <string name="player_external_could_not_open">यह स्ट्रीम नहीं खोली जा सकी।</string>
+    <string name="player_external_play_with">इससे चलाएं</string>
+    <string name="player_external_play_with_item">“<xliff:g id="channel">%1$s</xliff:g> · <xliff:g id="programme">%2$s</xliff:g>” इससे चलाएं…</string>
+    <string name="player_external_not_found">कोई बाहरी प्लेयर नहीं मिला — VLC या MX Player इंस्टॉल करें।</string>
+    <string name="player_error_audio_no_video">ऑडियो चल रहा है, लेकिन इस डिवाइस पर वीडियो रेंडर नहीं किया जा सका।</string>
+    <string name="player_error_file_corrupt">इस वीडियो की फ़ाइल गलत तरीके से बनी है या क्षतिग्रस्त है और इसे चलाया नहीं जा सकता।</string>
+    <string name="player_error_multiple_videos">कई वीडियो चलने में विफल रहे। स्रोत उपलब्ध नहीं हो सकता या फ़ाइलें क्षतिग्रस्त हैं।</string>
+    <string name="player_error_decoder_busy">इस टीवी का वीडियो डिकोडर व्यस्त है। कुछ समय बाद फिर से प्रयास करें।</string>
+    <string name="player_error_no_internet">इंटरनेट कनेक्शन नहीं है। अपना नेटवर्क जांचें और फिर से प्रयास करें।</string>
+    <string name="player_error_stream_unavailable">यह स्ट्रीम नहीं चलाई जा सकी। स्रोत ऑफ़लाइन हो सकता है या असमर्थित फ़ॉर्मैट का उपयोग कर सकता है। <xliff:g id="hint">%1$s</xliff:g></string>
+    <string name="player_error_mpv_open_decode">mpv इस फ़ाइल को खोल या डिकोड नहीं कर सका।</string>
+    <string name="player_error_mpv_stream_never_started">कई बार पुनः प्रयास के बाद भी mpv में स्ट्रीम शुरू नहीं हुई।</string>
+    <string name="player_error_surround">यह ऑडियो आउटपुट सराउंड नहीं कर सकता — स्टीरियो पर स्विच किया गया।</string>
+    <string name="player_error_hardware_fallback">इस स्ट्रीम के फ़ॉर्मैट को इस टीवी पर हार्डवेयर-डिकोड नहीं किया जा सका, इसलिए यह सॉफ़्टवेयर डिकोडिंग पर वापस चला गया — जो टीवी को ओवरलोड किए बिना <xliff:g id="resolution">%1$s</xliff:g> बनाए नहीं रख सकता। टीवी अन्य 4K कंटेंट अभी भी ठीक से चला सकता है; समस्या इस विशेष स्ट्रीम के फ़ॉर्मैट में है।</string>
+    <string name="player_error_hardware_disabled">हार्डवेयर डिकोडिंग बंद है — सॉफ़्टवेयर डिकोडिंग <xliff:g id="resolution">%1$s</xliff:g> वीडियो को संभाल नहीं सकता। इसे सेटिंग्स → वीडियो प्लेयर में सक्षम करें।</string>
+    <string name="player_error_custom_user_agent">इस प्रदाता को स्रोत सेटिंग्स में कस्टम User-Agent की आवश्यकता हो सकती है।</string>
+    <string name="player_reason_decoder_busy">हार्डवेयर वीडियो डिकोडर व्यस्त है या इस स्ट्रीम को संभाल नहीं सकता</string>
+    <string name="player_reason_decoder_transient">हार्डवेयर वीडियो डिकोडर त्रुटि — अस्थायी, फिर से प्रयास करें</string>
+    <string name="player_reason_unsupported_video">इस डिवाइस का डिकोडर इस वीडियो फ़ॉर्मैट/प्रोफ़ाइल का समर्थन नहीं करता (जैसे HEVC 10-bit)</string>
+    <string name="player_reason_decoder_memory">डिवाइस में डिकोडर के लिए मेमोरी खत्म हो गई — अन्य ऐप बंद करने का प्रयास करें</string>
+    <string name="player_reason_drm">DRM / सुरक्षित-डिकोडर त्रुटि</string>
+    <string name="player_reason_http_509">प्रदाता ने कनेक्शन ब्लॉक किया — एक साथ बहुत अधिक स्ट्रीम (HTTP 509)</string>
+    <string name="player_reason_http_403">प्रदाता ने एक्सेस अस्वीकार की (HTTP 403) — क्रेडेंशियल, सब्सक्रिप्शन, या IP ब्लॉक</string>
+    <string name="player_reason_http_401">प्रदाता ने आपका लॉगिन अस्वीकार किया (HTTP 401)</string>
+    <string name="player_reason_http_404">प्रदाता पर स्ट्रीम नहीं मिली (HTTP 404)</string>
+    <string name="player_reason_http_400">प्रदाता ने रिक्वेस्ट अस्वीकार की (HTTP 400) — खराब या समाप्त हो चुका लिंक</string>
+    <string name="player_reason_ssl">प्रदाता का SSL सर्टिफ़िकेट अमान्य है या समाप्त हो गया है</string>
+    <string name="player_reason_format">स्ट्रीम फ़ॉर्मैट पहचाना नहीं गया (खराब या अपूर्ण स्ट्रीम)</string>
+    <string name="player_reason_network">प्रदाता तक पहुँचने में नेटवर्क समस्या</string>
+    <string name="player_reason_audio">ऑडियो आउटपुट त्रुटि — डिवाइस इस ऑडियो फ़ॉर्मैट को नहीं चला सका</string>
+    <string name="player_audio_track_number">ऑडियो <xliff:g id="number">%1$d</xliff:g></string>
+    <string name="player_subtitle_track_number">सबटाइटल <xliff:g id="number">%1$d</xliff:g></string>
+    <string name="player_metadata_separator"> · </string>
+    <string name="player_stream_info">स्ट्रीम जानकारी</string>
+    <string name="player_stream_engine">इंजन</string>
+    <string name="player_stream_format">फ़ॉर्मैट</string>
+    <string name="player_stream_source">स्रोत</string>
+    <string name="player_stream_video">वीडियो</string>
+    <string name="player_stream_hdr">HDR</string>
+    <string name="player_stream_hdr10_pq">HDR10 (PQ)</string>
+    <string name="player_stream_hlg">HLG</string>
+    <string name="player_stream_sdr">SDR</string>
+    <string name="player_stream_bitrate">बिटरेट</string>
+    <string name="player_stream_decoder">डिकोडर</string>
+    <string name="player_stream_audio">ऑडियो</string>
+    <string name="player_stream_buffer">बफ़र</string>
+    <string name="player_stream_engine_exo_preferred">ExoPlayer (प्राथमिक)</string>
+    <string name="player_stream_engine_exo_fallback">ExoPlayer (mpv विफल होने के बाद फ़ॉलबैक)</string>
+    <string name="player_stream_engine_exo_image_subtitle">ExoPlayer (इमेज-सबटाइटल हैंडऑफ़)</string>
+    <string name="player_stream_fps"><xliff:g id="fps">%1$.2f</xliff:g> fps</string>
+    <string name="player_stream_bit_depth"><xliff:g id="bits">%1$d</xliff:g>-bit</string>
+    <string name="player_stream_mbps"><xliff:g id="value">%1$s</xliff:g> Mbps</string>
+    <string name="player_stream_khz"><xliff:g id="value">%1$s</xliff:g> kHz</string>
+    <string name="player_stream_kbps"><xliff:g id="value">%1$s</xliff:g> kbps</string>
+    <string name="player_stream_seconds"><xliff:g id="value">%1$s</xliff:g> s बफ़र किया गया</string>
+    <string name="player_audio_mono">मोनो</string>
+    <string name="player_audio_stereo">स्टीरियो</string>
+    <plurals name="player_audio_channels">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> चैनल</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> चैनल</item>
+    </plurals>
+    <plurals name="player_stream_dropped_frames">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> फ़्रेम ड्रॉप हुआ</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> फ़्रेम ड्रॉप हुए</item>
+    </plurals>
+    <string name="player_decoder_hardware">हार्डवेयर डिकोडर</string>
+    <string name="player_decoder_software">सॉफ़्टवेयर डिकोडर</string>
+    <string name="player_decoder_direct">डायरेक्ट</string>
+    <string name="player_decoder_gpu">GPU</string>
+    <string name="player_subtitles_search_title">OpenSubtitles खोजें</string>
+    <string name="player_subtitles_working">काम हो रहा है…</string>
+    <string name="player_subtitles_edit_search">खोज संपादित करें</string>
+    <string name="player_subtitles_title_label">शीर्षक</string>
+    <string name="player_subtitles_delete_title">OpenSub सबटाइटल हटाएं</string>
+    <string name="player_subtitles_sign_in">साइन इन करें</string>
+    <string name="player_subtitles_sign_out">साइन आउट करें</string>
+    <string name="player_subtitles_account">खाता</string>
+    <string name="player_subtitles_username">यूज़रनेम</string>
+    <string name="player_subtitles_password">पासवर्ड</string>
+    <string name="player_subtitles_stay_signed_in">साइन इन रहें</string>
+    <string name="player_subtitles_sign_in_title">OpenSubtitles में साइन इन करें</string>
+    <string name="player_subtitles_connect_description">इस प्रोफ़ाइल के OpenSubtitles खाते को कनेक्ट करें।</string>
+    <string name="player_subtitles_contacting">OpenSubtitles से संपर्क किया जा रहा है…</string>
+    <string name="player_subtitles_api_notice">यह प्रोडक्ट OpenSubtitles API का उपयोग करता है लेकिन OpenSubtitles द्वारा समर्थित या प्रमाणित नहीं है।</string>
+    <string name="player_subtitles_delete_description">फ़िल्में और सीरीज़ के लिए आपके द्वारा डाउनलोड किए गए सबटाइटल हटाएं।</string>
+    <string name="player_subtitles_delete_login_message">इस डिवाइस से इस प्रोफ़ाइल का OpenSubtitles लॉगिन हटा देता है। पहले से डाउनलोड किए गए सबटाइटल ऑफ़लाइन उपलब्ध रहते हैं।</string>
+    <string name="player_subtitles_delete_action">सबटाइटल हटाएं</string>
+    <string name="player_subtitles_downloads">डाउनलोड</string>
+    <string name="player_subtitles_vip">VIP</string>
+    <string name="player_subtitles_refresh">रीफ़्रेश करें</string>
+    <string name="player_subtitles_sign_in_to_use">अपने opensubtitles.com खाते का उपयोग करें। खाता बनाना मुफ़्त है।</string>
+    <plurals name="player_subtitles_remaining">
+        <item quantity="one">आज <xliff:g id="total">%2$d</xliff:g> में से <xliff:g id="remaining">%1$d</xliff:g> डाउनलोड बाकी है</item>
+        <item quantity="other">आज <xliff:g id="total">%2$d</xliff:g> में से <xliff:g id="remaining">%1$d</xliff:g> डाउनलोड बाकी हैं</item>
+    </plurals>
+    <plurals name="player_subtitles_remaining_short">
+        <item quantity="one">आज <xliff:g id="remaining">%1$d</xliff:g> डाउनलोड बाकी है</item>
+        <item quantity="other">आज <xliff:g id="remaining">%1$d</xliff:g> डाउनलोड बाकी हैं</item>
+    </plurals>
+    <plurals name="player_subtitles_remaining_reset">
+        <item quantity="one">आज <xliff:g id="remaining">%1$d</xliff:g> डाउनलोड बाकी है · <xliff:g id="reset">%2$s</xliff:g> में रीसेट होगा</item>
+        <item quantity="other">आज <xliff:g id="remaining">%1$d</xliff:g> डाउनलोड बाकी हैं · <xliff:g id="reset">%2$s</xliff:g> में रीसेट होगा</item>
+    </plurals>
+    <plurals name="player_subtitles_remaining_count">
+        <item quantity="one">आज <xliff:g id="remaining">%1$d</xliff:g> डाउनलोड बाकी है</item>
+        <item quantity="other">आज <xliff:g id="remaining">%1$d</xliff:g> डाउनलोड बाकी हैं</item>
+    </plurals>
+    <string name="player_subtitles_session">कनेक्शन सत्र समाप्त हो जाता है। केवल अस्थायी सत्र संग्रहीत करने के लिए इसे बंद करें।</string>
+    <string name="player_subtitles_free_description_full">OpenSubtitles एक मुफ़्त, खुली सामुदायिक सबटाइटल सेवा है। अपने opensubtitles.com खाते से साइन इन करें; खाता बनाना मुफ़्त है। यह केवल वर्तमान प्रोफ़ाइल पर लागू होता है।</string>
+    <string name="player_subtitles_session_expired">आपका OpenSubtitles सत्र समाप्त हो गया है। सबटाइटल खोजना और डाउनलोड करना जारी रखने के लिए, सेटिंग्स → वीडियो प्लेयर → सबटाइटल → OpenSubtitles से फिर से साइन इन करें।</string>
+    <string name="player_subtitles_account_needed">OpenSubtitles खाते की आवश्यकता है\n\nसबटाइटल खोजने और डाउनलोड करने के लिए, सेटिंग्स → वीडियो प्लेयर → सबटाइटल → OpenSubtitles से साइन इन करें। OpenSubtitles एक मुफ़्त, खुली सामुदायिक सेवा है — कोई भी opensubtitles.com पर मुफ़्त खाता बना सकता है।</string>
+    <string name="player_subtitles_no_matches">कोई मिलान वाले सबटाइटल नहीं मिले।</string>
+    <string name="player_subtitles_show_all_languages">सभी भाषाएं दिखाएं</string>
+    <string name="player_subtitles_all_languages">सभी भाषाएं</string>
+    <string name="player_subtitles_try_again">फिर से प्रयास करें</string>
+    <string name="player_subtitles_limit_reached">दैनिक सबटाइटल खोज सीमा पूरी हो गई है। कल फिर से प्रयास करें।</string>
+    <string name="player_subtitles_network_error">OpenSubtitles तक नहीं पहुंचा जा सका। अपना कनेक्शन जांचें और फिर से प्रयास करें।</string>
+    <string name="player_subtitles_subtitle">सबटाइटल</string>
+    <string name="player_subtitles_trusted">विश्वसनीय</string>
+    <string name="player_subtitles_sdh">SDH</string>
+    <string name="player_subtitles_ai">AI</string>
+    <plurals name="player_subtitles_download_count">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> डाउनलोड</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> डाउनलोड</item>
+    </plurals>
+    <string name="player_subtitles_tags_separator"> · </string>
+    <string name="player_subtitles_search">खोजें</string>
+    <string name="player_subtitles_connected_as">के रूप में कनेक्टेड</string>
+    <string name="player_subtitles_resets">रीसेट</string>
+    <string name="player_subtitles_free_account">मुफ़्त</string>
+    <string name="player_subtitles_in"><xliff:g id="value">%1$s</xliff:g></string>
+    <string name="player_subtitles_enter_credentials">अपना OpenSubtitles यूज़रनेम और पासवर्ड दर्ज करें।</string>
+    <string name="player_subtitles_invalid_credentials">OpenSubtitles उन खाता विवरणों से साइन इन नहीं कर सका।</string>
+    <string name="player_subtitles_sign_in_network_error">OpenSubtitles तक नहीं पहुंचा जा सका। अपना इंटरनेट कनेक्शन जांचें और फिर से प्रयास करें।</string>
+    <string name="player_subtitles_refresh_network_error">OpenSubtitles को रीफ़्रेश नहीं किया जा सका। अपना इंटरनेट कनेक्शन जांचें।</string>
+</resources>
