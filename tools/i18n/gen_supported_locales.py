@@ -27,9 +27,9 @@ OUT = ROOT / "app" / "src" / "main" / "java" / "tv" / "own" / "owntv" / "core" /
 
 PACKAGE = "tv.own.owntv.core.i18n"
 
-# A reserved marker for a locale with no translatable resources yet, so the picker can render "—"
-# cleanly and a real ~1% locale stays visibly distinct. Computed coverage otherwise is 0..100.
-EMPTY_COVERAGE = -1
+# A locale with no translated resources has real 0% coverage. This keeps the generated picker badge
+# identical to validate_strings.py's informational CI report.
+EMPTY_COVERAGE = 0
 
 
 def _string_keys(directory: Path) -> set[str]:
@@ -97,8 +97,8 @@ def _generate() -> tuple[str, int, int]:
             coverage = 100  # source language: every translatable source key is present by definition
         else:
             locale_keys = _string_keys(RES / resdir)
-            # A directory with no translated resources is distinct from a real 0% translation
-            # snapshot. The picker uses -1 to render an em dash until a locale has entries.
+            # No directory and an empty directory both mean the same user-visible thing: 0% of
+            # source keys currently have localized values.
             coverage = EMPTY_COVERAGE if not source_keys or not locale_keys else round(100 * len(locale_keys & source_keys) / len(source_keys))
         entries.append({**e, "coverage": coverage})
 
@@ -133,10 +133,7 @@ def _generate() -> tuple[str, int, int]:
     L.append("    val tier: Int,")
     L.append("    val packaged: Boolean,")
     L.append("    val pickerVisible: Boolean,")
-    L.append("    /**")
-    L.append("     * Computed coverage of translatable source keys, 0..100. `-1` marks a locale with no")
-    L.append("     * resources yet (rendered as `—`), so a real 1% locale stays visibly distinct.")
-    L.append("     */")
+    L.append("    /** Computed coverage of translatable source keys, 0..100. */")
     L.append("    val coverage: Int,")
     L.append(")")
     L.append("")

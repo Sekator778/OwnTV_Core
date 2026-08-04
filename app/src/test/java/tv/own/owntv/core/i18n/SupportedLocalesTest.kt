@@ -16,15 +16,15 @@ import org.junit.Test
 class SupportedLocalesTest {
 
     @Test
-    fun `catalogue has exactly 22 entries`() {
-        // 21 Tier 1 languages + en-rGB regional override (tier 0).
-        assertEquals(22, SupportedLocales.all.size)
+    fun `catalogue has exactly 25 entries`() {
+        // 24 Tier 1 languages + en-rGB regional override (tier 0).
+        assertEquals(25, SupportedLocales.all.size)
     }
 
     @Test
-    fun `catalogue has exactly 21 Tier 1 languages`() {
+    fun `catalogue has exactly 24 Tier 1 languages`() {
         val tier1 = SupportedLocales.all.filter { it.tier == 1 }
-        assertEquals(21, tier1.size)
+        assertEquals(24, tier1.size)
     }
 
     @Test
@@ -36,22 +36,17 @@ class SupportedLocalesTest {
     }
 
     @Test
-    fun `only en and en-rGB are packaged in Phase 0`() {
+    fun `all catalogue entries are packaged`() {
         val packaged = SupportedLocales.all.filter { it.packaged }
-        assertEquals(2, packaged.size)
-        assertTrue(packaged.any { it.id == "en-US" })
-        assertTrue(packaged.any { it.id == "en-GB" })
+        assertEquals(SupportedLocales.all.size, packaged.size)
     }
 
     @Test
-    fun `all non-English Tier 1 locales are unpackaged and hidden in Phase 0`() {
-        val nonEnglishTier1 = SupportedLocales.all.filter {
-            it.tier == 1 && !it.id.startsWith("en")
-        }
-        assertTrue(nonEnglishTier1.isNotEmpty())
-        nonEnglishTier1.forEach {
-            assertFalse("${it.id} should not be packaged in Phase 0", it.packaged)
-            assertFalse("${it.id} should not be picker-visible in Phase 0", it.pickerVisible)
+    fun `all Tier 1 locales are packaged and picker-visible`() {
+        val tier1 = SupportedLocales.all.filter { it.tier == 1 }
+        tier1.forEach {
+            assertTrue("${it.id} should be packaged", it.packaged)
+            assertTrue("${it.id} should be picker-visible", it.pickerVisible)
         }
     }
 
@@ -76,6 +71,8 @@ class SupportedLocalesTest {
     @Test
     fun `canonicalTag accepts only catalogue tags and canonicalizes case`() {
         assertEquals("de", SupportedLocales.canonicalTag(" DE "))
+        assertEquals("hi", SupportedLocales.canonicalTag("HI"))
+        assertEquals("bn", SupportedLocales.canonicalTag("BN"))
         assertEquals("pt-BR", SupportedLocales.canonicalTag("pt-br"))
         assertEquals("", SupportedLocales.canonicalTag("  "))
         assertNull(SupportedLocales.canonicalTag("und"))
@@ -88,6 +85,8 @@ class SupportedLocalesTest {
         assertEquals("Arab", SupportedLocales.scriptForTag("ar"))
         assertEquals("Latn", SupportedLocales.scriptForTag("de"))
         assertEquals("Hans", SupportedLocales.scriptForTag("zh-CN"))
+        assertEquals("Deva", SupportedLocales.scriptForTag("hi"))
+        assertEquals("Beng", SupportedLocales.scriptForTag("bn"))
         assertEquals("Hant", SupportedLocales.scriptForTag("zh-TW"))
         assertEquals("Cyrl", SupportedLocales.scriptForTag("ru"))
     }
@@ -111,9 +110,9 @@ class SupportedLocalesTest {
 
     @Test
     fun `pickerRows excludes non-packaged and non-visible locales`() {
-        // Phase 0: only en-US is packaged + pickerVisible. en-rGB is packaged but not pickerVisible.
         val rows = SupportedLocales.pickerRows
-        assertTrue(rows.isNotEmpty())
+        assertEquals(24, rows.size)
+        assertFalse(rows.any { it.id == "en-GB" })
         rows.forEach {
             assertTrue("${it.id} must be packaged", it.packaged)
             assertTrue("${it.id} must be pickerVisible", it.pickerVisible)
@@ -132,11 +131,9 @@ class SupportedLocalesTest {
     }
 
     @Test
-    fun `untranslated locales have empty-coverage sentinel`() {
-        // The locale has no resource directory yet → coverage is -1 (the EMPTY_COVERAGE sentinel),
-        // distinct from a real translated 0% snapshot.
+    fun `untranslated locales report zero percent coverage`() {
         val de = SupportedLocales.all.first { it.id == "de" }
-        assertEquals(-1, de.coverage)
+        assertEquals(0, de.coverage)
     }
 
     @Test

@@ -1383,4 +1383,253 @@ Resync and remove missing titles also allows removing titles the provider no lon
     <string name="settings_metadata_optional">optional</string>
     <!-- Translators: Example movie title used for testing TMDB lookup. 'Oppenheimer' is a film title. -->
     <string name="settings_metadata_test_title">Oppenheimer</string>
+
+    <!-- Translators: Title of the bulk rename flow for category items. -->
+    <string name="settings_bulk_rename_title">Bulk rename</string>
+    <!-- Translators: Explains how many names are selected before configuring bulk rename rules. 'count' is the number selected. -->
+    <plurals name="settings_bulk_rename_selected">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> name selected. Add rules, or clean it up automatically.</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> names selected. Add rules, or clean them up automatically.</item>
+    </plurals>
+    <!-- Translators: Button that opens the bulk rename rule editor. Keep the pencil symbol. -->
+    <string name="settings_bulk_rename_add_rule">✎ Add rule</string>
+    <!-- Translators: Button that applies a preset set of cleanup rules. Keep the sparkle symbol. -->
+    <string name="settings_bulk_rename_auto_cleanup">✨ Auto cleanup</string>
+    <!-- Translators: Button that restores provider-supplied names. Keep the restore symbol. -->
+    <string name="settings_bulk_rename_restore_original">↺ Restore original names</string>
+    <!-- Translators: Title of the bulk rename rule editor. -->
+    <string name="settings_bulk_rename_rules_title">Bulk rename rules</string>
+    <!-- Translators: Instructions for the ordered bulk rename rules. The semicolon is the value separator. -->
+    <string name="settings_bulk_rename_rules_description">Rules run top to bottom. Separate multiple values with “;” — Add takes exactly one.</string>
+    <!-- Translators: Validation error when an Add rule contains multiple semicolon-separated values. -->
+    <string name="settings_bulk_rename_add_single_value_error">“Add” needs exactly one value — semicolons are for Remove rules.</string>
+    <!-- Translators: Validation error when the user tries to apply an empty rule list. -->
+    <string name="settings_bulk_rename_rule_required">Add at least one rule.</string>
+    <!-- Translators: Picker title for choosing whether a rename rule adds or removes text. -->
+    <string name="settings_bulk_rename_rule_type">Rule type</string>
+    <!-- Translators: Rename rule action that adds text. -->
+    <string name="settings_bulk_rename_action_add">Add</string>
+    <!-- Translators: Rename rule action that removes text. -->
+    <string name="settings_bulk_rename_action_remove">Remove</string>
+    <!-- Translators: Picker title for choosing where a rename rule acts. -->
+    <string name="settings_bulk_rename_where">Where</string>
+    <!-- Translators: Rename rule placement before the current name. -->
+    <string name="settings_bulk_rename_before">Before (prefix)</string>
+    <!-- Translators: Rename rule placement after the current name. -->
+    <string name="settings_bulk_rename_after">After (suffix)</string>
+    <!-- Translators: Dialog title for entering the text used by a rename rule. -->
+    <string name="settings_bulk_rename_rule_value">Rule value</string>
+    <!-- Translators: Hint showing the semicolon-separated syntax for multiple Remove values. -->
+    <string name="settings_bulk_rename_value_hint">Separate multiple values with “;” — Add takes exactly one.</string>
+    <!-- Translators: Placeholder example in a rename-rule value field. -->
+    <string name="settings_bulk_rename_value_example">value;value;value</string>
+    <!-- Translators: Button that appends another rule row. Keep the plus symbol. -->
+    <string name="settings_bulk_rename_add_another_rule">＋ Add another rule</string>
+    <!-- Translators: Toggle label for removing extra spaces after applying rename rules. -->
+    <string name="settings_bulk_rename_trim_spaces">Trim leftover spaces</string>
+    <!-- Translators: Selected toggle label for removing extra spaces. Keep the check mark. -->
+    <string name="settings_bulk_rename_trim_spaces_selected">✓ Trim leftover spaces</string>
+    <!-- Translators: Toggle label for case-insensitive rename rules. -->
+    <string name="settings_bulk_rename_ignore_case">Ignore upper/lower case</string>
+    <!-- Translators: Selected case-insensitive toggle label. Keep the check mark. -->
+    <string name="settings_bulk_rename_ignore_case_selected">✓ Ignore upper/lower case</string>
+    <!-- Translators: Title of the screen that previews proposed bulk renames. -->
+    <string name="settings_bulk_rename_review">Review renames</string>
+    <!-- Translators: Explains that reviewed rows are not persisted until Done is pressed. -->
+    <string name="settings_bulk_rename_review_description">Nothing is written until you apply a row — Done writes everything applied in one step.</string>
+    <!-- Translators: Status for a rename result rejected because it would produce a blank name. -->
+    <string name="settings_bulk_rename_blank_rejected">blank name rejected — original kept</string>
+    <!-- Translators: Status for a name unchanged because no configured rule matched it. -->
+    <string name="settings_bulk_rename_unchanged">unchanged — no rule matched</string>
+    <!-- Translators: Preview of a proposed new name. 'name' is provider or user content and must remain unchanged. -->
+    <string name="settings_bulk_rename_result">→ <xliff:g id="name">%1$s</xliff:g></string>
+    <!-- Translators: Warning that a proposed name duplicates another existing item name. -->
+    <string name="settings_bulk_rename_duplicate">duplicate name — another item already uses it</string>
+    <!-- Translators: Per-row action that accepts a proposed rename. -->
+    <string name="settings_bulk_rename_apply">Apply</string>
+    <!-- Translators: Per-row action that rejects a proposed rename. -->
+    <string name="settings_bulk_rename_decline">Decline</string>
+    <!-- Translators: Count of proposed names that will change. -->
+    <plurals name="settings_bulk_rename_will_change">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> will change</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> will change</item>
+    </plurals>
+    <!-- Translators: Count of names unchanged by the proposed rules. -->
+    <plurals name="settings_bulk_rename_unchanged_count">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> unchanged</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> unchanged</item>
+    </plurals>
+    <!-- Translators: Count of proposed names that duplicate another item. -->
+    <plurals name="settings_bulk_rename_duplicates_count">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> duplicate</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> duplicates</item>
+    </plurals>
+    <!-- Translators: Bulk action that accepts every proposed rename. -->
+    <string name="settings_bulk_rename_apply_all">Apply all</string>
+    <!-- Translators: Bulk action that rejects every proposed rename. -->
+    <string name="settings_bulk_rename_decline_all">Decline all</string>
+    <!-- Translators: Button returning from the review to the rule editor. Keep the pencil symbol. -->
+    <string name="settings_bulk_rename_edit_rules">✎ Edit rules</string>
+    <!-- Translators: Confirmation title before restoring original provider names. -->
+    <string name="settings_bulk_rename_restore_title">Restore original names?</string>
+    <!-- Translators: Confirmation text before restoring original provider names for the current selection. -->
+    <string name="settings_bulk_rename_restore_description">Every selected name goes back to the provider\'s original. Only this selection is affected.</string>
+    <!-- Translators: Action that restores original provider names. -->
+    <string name="settings_bulk_rename_restore">Restore</string>
+    <!-- Translators: Error title when a category is too large for one bulk rename operation. -->
+    <string name="settings_bulk_rename_too_many_title">Too many items</string>
+    <!-- Translators: Error explaining that a large category must be renamed in smaller ranges. -->
+    <string name="settings_bulk_rename_too_many_description">This category has too many items for one bulk rename — rename it in smaller spans.</string>
+    <!-- Translators: Auto-cleanup rule label for country and provider tags. -->
+    <string name="settings_bulk_rename_auto_country_provider">Auto: country/provider tags</string>
+    <!-- Translators: Auto-cleanup rule label for quality and codec tags. -->
+    <string name="settings_bulk_rename_auto_quality_codec">Auto: quality/codec tags anywhere</string>
+    <!-- Translators: Auto-cleanup rule label for emoji and symbols. -->
+    <string name="settings_bulk_rename_auto_emoji_symbols">Auto: emoji and symbols</string>
+
+    <!-- Translators: Title for creating a user-defined category. -->
+    <string name="settings_customize_new_category_title">New category</string>
+    <!-- Translators: Description of a user-defined category that may combine several media types. -->
+    <string name="settings_customize_new_category_description">A combined category for this profile — move channels, movies or series into it.</string>
+    <!-- Translators: Fallback name for the category currently being viewed. -->
+    <string name="settings_customize_this_category">this category</string>
+    <!-- Translators: Dialog title for sorting customization categories. -->
+    <string name="settings_customize_sort_categories">Sort categories</string>
+    <!-- Translators: Confirmation title for deleting a user-defined category. 'name' is user content. -->
+    <string name="settings_customize_delete_category">Delete “<xliff:g id="name">%1$s</xliff:g>”?</string>
+    <!-- Translators: Explains that deleting a combined category does not delete or move its content. -->
+    <string name="settings_customize_delete_category_description">The combined category is removed. Its items stay in their original categories.</string>
+    <!-- Translators: Heading describing the contents and available actions for a live-channel category. -->
+    <string name="settings_customize_channels_description">Channels in this category — rename, reorder, hide or unhide.</string>
+    <!-- Translators: Heading describing the contents and available actions for a movie category. -->
+    <string name="settings_customize_movies_description">Movies in this category — reorder, hide or unhide.</string>
+    <!-- Translators: Heading describing the contents and available actions for a series category. -->
+    <string name="settings_customize_series_description">Series in this category — reorder, hide or unhide.</string>
+    <!-- Translators: Title of the item hide/show range dialog. -->
+    <string name="settings_customize_hide_show_items">Hide or show items</string>
+    <!-- Translators: Count of category items selected for a range operation. -->
+    <plurals name="settings_customize_selected_items">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> item selected.</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> items selected.</item>
+    </plurals>
+    <!-- Translators: Status while repeatedly moving a selected item span. 'count' is the number of selected items. Keep the arrow symbols. -->
+    <plurals name="settings_customize_move_items_selected">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> item selected. Keep pressing ⤒ ↑ ↓ ⤓ to move it.</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> items selected. Keep pressing ⤒ ↑ ↓ ⤓ to move them together.</item>
+    </plurals>
+    <!-- Translators: Hint shown when renaming one channel. 'name' is the provider's original channel name. -->
+    <string name="settings_customize_rename_item_hint">Only for this profile. Leave blank to restore “<xliff:g id="name">%1$s</xliff:g>”.</string>
+    <!-- Translators: Status describing a renamed item. 'name' is the provider's original name. -->
+    <string name="settings_customize_item_was">was “<xliff:g id="name">%1$s</xliff:g>”</string>
+    <!-- Translators: Button that starts a bulk rename of category items. Keep the pencil symbol. -->
+    <string name="settings_customize_rename_items">✎ Rename items</string>
+    <!-- Translators: Button opening the dialog for moving an item to a combined category. -->
+    <string name="settings_customize_move_to">Move to…</string>
+    <!-- Translators: Back button in the category-items screen. Keep the left arrow. -->
+    <string name="settings_customize_back">← Back</string>
+
+    <!-- Translators: Title of the dialog that moves an item into a user-defined category. -->
+    <string name="settings_move_category_title">Move to category</string>
+    <!-- Translators: Explains the default move behavior. 'name' is the current category name. -->
+    <string name="settings_move_category_description">The item leaves “<xliff:g id="name">%1$s</xliff:g>” unless you keep it there.</string>
+    <!-- Translators: Row that creates a new destination category. Keep the plus symbol. -->
+    <string name="settings_move_category_new">＋ New category…</string>
+    <!-- Translators: Toggle retaining the item in its original category. 'name' is the original category name. -->
+    <string name="settings_move_category_keep">Keep in “<xliff:g id="name">%1$s</xliff:g>” as well</string>
+    <!-- Translators: Action moving an item into the selected category. -->
+    <string name="settings_move_category_action">Move</string>
+
+    <!-- Translators: Settings row description for custom DNS. -->
+    <string name="settings_dns_description">Use a custom DNS server for domain lookups</string>
+    <!-- Translators: Title of the custom DNS settings screen. -->
+    <string name="settings_dns_custom">Custom DNS</string>
+    <!-- Translators: Description of the custom DNS toggle. OwnTV is a brand name. -->
+    <string name="settings_dns_toggle_description">Resolve all OwnTV domain lookups through a custom DNS server.</string>
+    <!-- Translators: Toggle label for custom DNS. -->
+    <string name="settings_dns_use_custom">Use custom DNS</string>
+    <!-- Translators: Warning shown when custom DNS is enabled without a server address. -->
+    <string name="settings_dns_server_missing">Custom DNS is enabled but no server is configured. Enter a server address and select Save, or turn this off.</string>
+    <!-- Translators: Text-field label for a custom DNS server. -->
+    <string name="settings_dns_server">DNS server</string>
+    <!-- Translators: Example of a plain DNS address or DNS-over-HTTPS URL. The addresses stay unchanged; translate only the word 'or'. -->
+    <string name="settings_dns_server_hint">8.8.8.8 or https://dns.google/dns-query</string>
+    <!-- Translators: Button that tests the configured DNS server. -->
+    <string name="settings_dns_test">Test DNS</string>
+    <!-- Translators: Explains possible reasons to use custom DNS. DNS-over-HTTPS and DoH stay unchanged. -->
+    <string name="settings_dns_explanation">Custom DNS can help bypass ISP-level domain blocking or enable geo-unblocking via SmartDNS services. DNS-over-HTTPS (DoH) is recommended — it encrypts your lookups.</string>
+    <!-- Translators: Technical limitation of custom DNS. Keep OkHttp, EPG, API, ExoPlayer and mpv unchanged. -->
+    <string name="settings_dns_limitations">This setting only affects OkHttp-based traffic (playlist sync, EPG, API calls, images, ExoPlayer streams). mpv uses the system resolver and is not affected.</string>
+    <!-- Translators: DNS test success result. 'millis' is latency in milliseconds and 'addresses' is a comma-separated technical address list. -->
+    <string name="settings_dns_resolved">Resolved ✓ (<xliff:g id="millis">%1$d</xliff:g> ms) → <xliff:g id="addresses">%2$s</xliff:g></string>
+    <!-- Translators: Validation error when custom DNS has no server host or DoH URL. DoH stays unchanged. -->
+    <string name="settings_dns_enter_server">Enter a DNS server host or a DoH URL.</string>
+    <!-- Translators: Friendly DNS-test failure when the server cannot be reached. -->
+    <string name="settings_dns_not_reachable">DNS server not reachable.</string>
+    <!-- Translators: Friendly DNS-test failure when the request times out. -->
+    <string name="settings_dns_timed_out">DNS request timed out.</string>
+    <!-- Translators: Friendly DNS-test failure when the network is unreachable. -->
+    <string name="settings_dns_network_unreachable">Network is unreachable — check the server address.</string>
+    <!-- Translators: Friendly DNS-test failure when the server refuses the connection. -->
+    <string name="settings_dns_connection_refused">Connection refused — check the server address and port.</string>
+    <!-- Translators: Friendly DNS-test failure for an otherwise unclassified app-generated error. -->
+    <string name="settings_dns_test_failed">DNS test failed — check the server address.</string>
+    <!-- Translators: DNS test failure when a hostname resolves to no addresses. 'host' is a technical hostname and must remain unchanged. -->
+    <string name="settings_dns_no_addresses">DNS returned no addresses for <xliff:g id="host">%1$s</xliff:g>.</string>
+
+    <!-- Translators: Master toggle label for custom subtitle styling. -->
+    <string name="settings_subtitle_customize">Customize subtitles</string>
+    <!-- Translators: Description when custom subtitle styling is disabled. -->
+    <string name="settings_subtitle_customize_off">Off keeps subtitles exactly as the stream and the player draw them.</string>
+    <!-- Translators: Heading above the custom subtitle preview. -->
+    <string name="settings_subtitle_preview_stock">Preview — stock look</string>
+    <!-- Translators: Explains that the disabled preview retains embedded broadcaster styling. -->
+    <string name="settings_subtitle_stock_description">Stock look, including the colors and placement broadcasters embed in Live TV subtitles.</string>
+    <!-- Translators: Button that restores every subtitle appearance setting to its default. -->
+    <string name="settings_subtitle_reset_all">Reset all</string>
+    <!-- Translators: Subtitle color setting title. -->
+    <string name="settings_subtitle_color">Subtitle color</string>
+    <!-- Translators: Description of the default subtitle color. -->
+    <string name="settings_subtitle_color_default_description">Default leaves the color to the stream and the player.</string>
+    <!-- Translators: Error hint for a hexadecimal subtitle color. FFEB3B is an example and stays unchanged. -->
+    <string name="settings_subtitle_color_hex_hint">Enter 6 hex digits, e.g. FFEB3B</string>
+    <!-- Translators: Button that leaves a subtitle appearance setting under player or stream control. -->
+    <string name="settings_subtitle_use_default">Use default</string>
+    <!-- Translators: Subtitle position setting title. -->
+    <string name="settings_subtitle_position">Subtitle position</string>
+    <!-- Translators: Subtitle background transparency setting title. -->
+    <string name="settings_subtitle_background_transparency">Background transparency</string>
+    <!-- Translators: Preview sentence for subtitle appearance. Replace with a short, natural sample sentence in the target language. -->
+    <string name="settings_subtitle_preview_sample">The quick brown fox</string>
+    <!-- Translators: Description of how custom subtitle appearance options inherit defaults. -->
+    <string name="settings_subtitle_customize_description">Turn this on, then change only what you want — anything left on Default keeps the stock look, including the colors and placement broadcasters embed in Live TV subtitles.</string>
+    <!-- Translators: Short label for a default or inherited subtitle appearance value. -->
+    <string name="settings_subtitle_default">Default</string>
+    <!-- Translators: Short subtitle color row title. -->
+    <string name="settings_subtitle_color_short">Color</string>
+    <!-- Translators: Description of the subtitle text color control. -->
+    <string name="settings_subtitle_color_description">Text color — a preset, the picker, or a hex code.</string>
+    <!-- Translators: Short subtitle position row title. -->
+    <string name="settings_subtitle_position_short">Position</string>
+    <!-- Translators: Description of the subtitle position control. -->
+    <string name="settings_subtitle_position_description">Where subtitles sit on screen.</string>
+    <!-- Translators: Description of the subtitle background transparency control. -->
+    <string name="settings_subtitle_background_description">How solid the box behind the text is.</string>
+    <!-- Translators: Label for a hexadecimal color field. -->
+    <string name="settings_subtitle_hex">Hex</string>
+    <!-- Translators: Explains the default subtitle position and fixed-position choices. -->
+    <string name="settings_subtitle_position_default_description">Default leaves placement to the stream — including where a broadcaster puts a live caption. Any other choice always wins.</string>
+    <!-- Translators: Subtitle background option meaning no background box. -->
+    <string name="settings_subtitle_background_none">None</string>
+    <!-- Translators: Subtitle background option meaning a fully solid background box. -->
+    <string name="settings_subtitle_background_solid">Solid</string>
+    <!-- Translators: Subtitle color preset name. -->
+    <string name="settings_subtitle_color_white">White</string>
+    <!-- Translators: Subtitle color preset name. -->
+    <string name="settings_subtitle_color_yellow">Yellow</string>
+    <!-- Translators: Subtitle color preset name. -->
+    <string name="settings_subtitle_color_cyan">Cyan</string>
+    <!-- Translators: Subtitle color preset name. -->
+    <string name="settings_subtitle_color_green">Green</string>
+    <!-- Translators: Subtitle color preset name. -->
+    <string name="settings_subtitle_color_grey">Grey</string>
 </resources>

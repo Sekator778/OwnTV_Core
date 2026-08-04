@@ -33,9 +33,6 @@
 1	app/src/main/java/tv/own/owntv/core/customize/RenameRules.kt	(?:\\[|\\()?\\b(?:4K|8K|UHD|FHD|HD|SD|RAW|VIP|HEVC|H265|H264|DOLBY|MULTI|QHD|2K|HDR|DV|2160P|2160|1080P|1080|720P|720|480P|480)\\b(?:\\]|\\))?
 1	app/src/main/java/tv/own/owntv/core/customize/RenameRules.kt	(?<![\\p{L}\\p{N}])$wrapped$
 1	app/src/main/java/tv/own/owntv/core/customize/RenameRules.kt	;
-1	app/src/main/java/tv/own/owntv/core/customize/RenameRules.kt	Auto: country/provider tags
-1	app/src/main/java/tv/own/owntv/core/customize/RenameRules.kt	Auto: emoji and symbols
-1	app/src/main/java/tv/own/owntv/core/customize/RenameRules.kt	Auto: quality/codec tags anywhere
 1	app/src/main/java/tv/own/owntv/core/customize/RenameRules.kt	[\\s|\\-–—·:._,]+
 1	app/src/main/java/tv/own/owntv/core/customize/RenameRules.kt	\\x{2B00}-\\x{2BFF}\\x{FE0F}\\x{1F000}-\\x{1FAFF}\\x{1F1E6}-\\x{1F1FF}])+
 1	app/src/main/java/tv/own/owntv/core/customize/RenameRules.kt	^$EDGE_SEPARATORS
@@ -113,7 +110,6 @@
 1	app/src/main/java/tv/own/owntv/core/database/dao/CustomCategoryDao.kt	SELECT m.profileId AS profileId, m.mediaType AS mediaType, m.itemId AS itemId,
 3	app/src/main/java/tv/own/owntv/core/database/dao/CustomCategoryDao.kt	SELECT mv.* FROM movies mv
 3	app/src/main/java/tv/own/owntv/core/database/dao/CustomCategoryDao.kt	SELECT s.* FROM series s
-2	app/src/main/java/tv/own/owntv/core/database/dao/CustomCategoryDao.kt	UNION ALL
 1	app/src/main/java/tv/own/owntv/core/database/dao/CustomCategoryDao.kt	WHERE c.sourceId = :sourceId OR mv.sourceId = :sourceId OR s.sourceId = :sourceId
 2	app/src/main/java/tv/own/owntv/core/database/dao/CustomCategoryDao.kt	WHERE c.sourceId IN (:sourceIds)
 1	app/src/main/java/tv/own/owntv/core/database/dao/CustomCategoryDao.kt	WHERE c.sourceId IN (:sourceIds) AND c.name LIKE '%' || :query || '%'
@@ -126,7 +122,6 @@
 1	app/src/main/java/tv/own/owntv/core/database/dao/CustomCategoryDao.kt	WHERE profileId = :profileId AND mediaType = :type AND contextKey IN (:contextKeys) AND (
 2	app/src/main/java/tv/own/owntv/core/database/dao/CustomCategoryDao.kt	WHERE s.sourceId IN (:sourceIds)
 1	app/src/main/java/tv/own/owntv/core/database/dao/CustomCategoryDao.kt	WHERE s.sourceId IN (:sourceIds) AND s.name LIKE '%' || :query || '%'
-1	app/src/main/java/tv/own/owntv/core/database/dao/CustomCategoryDao.kt	m.contextKey AS contextKey, m.position AS position,
 1	app/src/main/java/tv/own/owntv/core/database/dao/SourceDao.kt	UPDATE sources SET hlsSupported = :hlsSupported WHERE id = :id
 1	app/src/main/java/tv/own/owntv/core/database/dao/SourceDao.kt	UPDATE sources SET preferHls = :preferHls WHERE id = :id
 1	app/src/main/java/tv/own/owntv/core/database/entity/ContentEntities.kt	.m3u8
@@ -146,15 +141,10 @@
 1	app/src/main/java/tv/own/owntv/core/network/DnsConfig.kt	Cloudflare
 1	app/src/main/java/tv/own/owntv/core/network/DnsConfig.kt	DnsConfig
 1	app/src/main/java/tv/own/owntv/core/network/DnsConfig.kt	DoH HTTP ${resp.code}
-1	app/src/main/java/tv/own/owntv/core/network/DnsConfig.kt	DoH empty body
 1	app/src/main/java/tv/own/owntv/core/network/DnsConfig.kt	DoH lookup $hostname → ${results.map { it.hostAddress }} (server=$dohUrl)
-1	app/src/main/java/tv/own/owntv/core/network/DnsConfig.kt	DoH lookup failed for $hostname, falling back to system DNS
-1	app/src/main/java/tv/own/owntv/core/network/DnsConfig.kt	DoH lookup returned no addresses for $hostname, falling back to system DNS
 1	app/src/main/java/tv/own/owntv/core/network/DnsConfig.kt	Google
 1	app/src/main/java/tv/own/owntv/core/network/DnsConfig.kt	Quad9
 1	app/src/main/java/tv/own/owntv/core/network/DnsConfig.kt	UDP DNS lookup $hostname → ${result.map { it.hostAddress }} (server=$server:$port)
-1	app/src/main/java/tv/own/owntv/core/network/DnsConfig.kt	UDP DNS lookup failed for $hostname via $server:$port, falling back to system DNS
-1	app/src/main/java/tv/own/owntv/core/network/DnsConfig.kt	UDP DNS timeout for $hostname via $server:$port, falling back to system DNS
 1	app/src/main/java/tv/own/owntv/core/network/DnsConfig.kt	application/dns-json
 1	app/src/main/java/tv/own/owntv/core/network/DnsConfig.kt	data
 1	app/src/main/java/tv/own/owntv/core/network/DnsConfig.kt	https://cloudflare-dns.com/dns-query
@@ -167,180 +157,44 @@
 1	app/src/main/java/tv/own/owntv/core/parser/XtreamClient.kt	ts
 1	app/src/main/java/tv/own/owntv/core/parser/XtreamClient.kt	user_output_formats
 1	app/src/main/java/tv/own/owntv/core/sync/XtreamSyncer.kt	Xtream sync scheduling sourceId=${s.id} contentTypes=$contentTypes concurrency=2 hlsSupported=${details?.hlsSupported}
-3	app/src/main/java/tv/own/owntv/features/customize/BulkRenameDialogs.kt	\0
-1	app/src/main/java/tv/own/owntv/features/customize/BulkRenameDialogs.kt	$count ${if (count == 1) "name" else "names"} selected. Add rules, or clean them up automatically.
-1	app/src/main/java/tv/own/owntv/features/customize/BulkRenameDialogs.kt	${rows.count { !it.unchanged }} will change
-1	app/src/main/java/tv/own/owntv/features/customize/BulkRenameDialogs.kt	${rows.count { it.duplicate }} duplicates
-1	app/src/main/java/tv/own/owntv/features/customize/BulkRenameDialogs.kt	${rows.count { it.unchanged }} unchanged
-1	app/src/main/java/tv/own/owntv/features/customize/BulkRenameDialogs.kt	${rule.action.name} ▾
-1	app/src/main/java/tv/own/owntv/features/customize/BulkRenameDialogs.kt	${rule.placement.name} ▾
+2	app/src/main/java/tv/own/owntv/features/customize/BulkRenameDialogs.kt	\0
 1	app/src/main/java/tv/own/owntv/features/customize/BulkRenameDialogs.kt	ADD
-1	app/src/main/java/tv/own/owntv/features/customize/BulkRenameDialogs.kt	Add
-1	app/src/main/java/tv/own/owntv/features/customize/BulkRenameDialogs.kt	Add at least one rule.
-1	app/src/main/java/tv/own/owntv/features/customize/BulkRenameDialogs.kt	After (suffix)
-2	app/src/main/java/tv/own/owntv/features/customize/BulkRenameDialogs.kt	Apply
-1	app/src/main/java/tv/own/owntv/features/customize/BulkRenameDialogs.kt	Apply all
-1	app/src/main/java/tv/own/owntv/features/customize/BulkRenameDialogs.kt	Before (prefix)
-1	app/src/main/java/tv/own/owntv/features/customize/BulkRenameDialogs.kt	Bulk rename
-1	app/src/main/java/tv/own/owntv/features/customize/BulkRenameDialogs.kt	Bulk rename rules
-3	app/src/main/java/tv/own/owntv/features/customize/BulkRenameDialogs.kt	Cancel
-1	app/src/main/java/tv/own/owntv/features/customize/BulkRenameDialogs.kt	Decline
-1	app/src/main/java/tv/own/owntv/features/customize/BulkRenameDialogs.kt	Decline all
-1	app/src/main/java/tv/own/owntv/features/customize/BulkRenameDialogs.kt	Done
-1	app/src/main/java/tv/own/owntv/features/customize/BulkRenameDialogs.kt	Every selected name goes back to the provider's original. Only this selection is affected.
-1	app/src/main/java/tv/own/owntv/features/customize/BulkRenameDialogs.kt	Ignore upper/lower case
-1	app/src/main/java/tv/own/owntv/features/customize/BulkRenameDialogs.kt	Nothing is written until you apply a row — Done writes everything applied in one step.
-1	app/src/main/java/tv/own/owntv/features/customize/BulkRenameDialogs.kt	OK
 1	app/src/main/java/tv/own/owntv/features/customize/BulkRenameDialogs.kt	PREFIX
 1	app/src/main/java/tv/own/owntv/features/customize/BulkRenameDialogs.kt	REMOVE
-1	app/src/main/java/tv/own/owntv/features/customize/BulkRenameDialogs.kt	Remove
-1	app/src/main/java/tv/own/owntv/features/customize/BulkRenameDialogs.kt	Restore
-1	app/src/main/java/tv/own/owntv/features/customize/BulkRenameDialogs.kt	Restore original names?
-1	app/src/main/java/tv/own/owntv/features/customize/BulkRenameDialogs.kt	Review renames
-1	app/src/main/java/tv/own/owntv/features/customize/BulkRenameDialogs.kt	Rule type
-1	app/src/main/java/tv/own/owntv/features/customize/BulkRenameDialogs.kt	Rule value
-1	app/src/main/java/tv/own/owntv/features/customize/BulkRenameDialogs.kt	Rules run top to bottom. Separate multiple values with “;” — Add takes exactly one.
 1	app/src/main/java/tv/own/owntv/features/customize/BulkRenameDialogs.kt	SUFFIX
-1	app/src/main/java/tv/own/owntv/features/customize/BulkRenameDialogs.kt	Separate multiple values with “;” — Add takes exactly one.
-1	app/src/main/java/tv/own/owntv/features/customize/BulkRenameDialogs.kt	This category has too many items for one bulk rename — rename it in smaller spans.
-1	app/src/main/java/tv/own/owntv/features/customize/BulkRenameDialogs.kt	Too many items
-1	app/src/main/java/tv/own/owntv/features/customize/BulkRenameDialogs.kt	Trim leftover spaces
-1	app/src/main/java/tv/own/owntv/features/customize/BulkRenameDialogs.kt	Where
-1	app/src/main/java/tv/own/owntv/features/customize/BulkRenameDialogs.kt	blank name rejected — original kept
-1	app/src/main/java/tv/own/owntv/features/customize/BulkRenameDialogs.kt	duplicate name — another item already uses it
-1	app/src/main/java/tv/own/owntv/features/customize/BulkRenameDialogs.kt	name
-1	app/src/main/java/tv/own/owntv/features/customize/BulkRenameDialogs.kt	names
-1	app/src/main/java/tv/own/owntv/features/customize/BulkRenameDialogs.kt	unchanged — no rule matched
-1	app/src/main/java/tv/own/owntv/features/customize/BulkRenameDialogs.kt	value;value;value
-1	app/src/main/java/tv/own/owntv/features/customize/BulkRenameDialogs.kt	“Add” needs exactly one value — semicolons are for Remove rules.
-1	app/src/main/java/tv/own/owntv/features/customize/BulkRenameDialogs.kt	→ ${r.newName}
-1	app/src/main/java/tv/own/owntv/features/customize/BulkRenameDialogs.kt	↺ Restore original names
-1	app/src/main/java/tv/own/owntv/features/customize/BulkRenameDialogs.kt	✎ Add rule
-1	app/src/main/java/tv/own/owntv/features/customize/BulkRenameDialogs.kt	✎ Edit rules
-1	app/src/main/java/tv/own/owntv/features/customize/BulkRenameDialogs.kt	✓ Ignore upper/lower case
-1	app/src/main/java/tv/own/owntv/features/customize/BulkRenameDialogs.kt	✓ Trim leftover spaces
+2	app/src/main/java/tv/own/owntv/features/customize/BulkRenameDialogs.kt	▾
 1	app/src/main/java/tv/own/owntv/features/customize/BulkRenameDialogs.kt	✕
-1	app/src/main/java/tv/own/owntv/features/customize/BulkRenameDialogs.kt	✨ Auto cleanup
-1	app/src/main/java/tv/own/owntv/features/customize/BulkRenameDialogs.kt	＋ Add another rule
-1	app/src/main/java/tv/own/owntv/features/customize/CustomizeItemsScreen.kt	$count ${if (count == 1) "item" else "items"} selected.
-1	app/src/main/java/tv/own/owntv/features/customize/CustomizeItemsScreen.kt	${rangeSelectedKeys.size} items selected. Keep pressing ⤒ ↑ ↓ ⤓ to move them together.
-1	app/src/main/java/tv/own/owntv/features/customize/CustomizeItemsScreen.kt	A combined category for this profile — move channels, movies or series into it.
-2	app/src/main/java/tv/own/owntv/features/customize/CustomizeItemsScreen.kt	Cancel
-1	app/src/main/java/tv/own/owntv/features/customize/CustomizeItemsScreen.kt	Channels in this category — rename, reorder, hide or unhide.
-1	app/src/main/java/tv/own/owntv/features/customize/CustomizeItemsScreen.kt	Create
-1	app/src/main/java/tv/own/owntv/features/customize/CustomizeItemsScreen.kt	Hidden
-2	app/src/main/java/tv/own/owntv/features/customize/CustomizeItemsScreen.kt	Hide
-1	app/src/main/java/tv/own/owntv/features/customize/CustomizeItemsScreen.kt	Hide or show items
-1	app/src/main/java/tv/own/owntv/features/customize/CustomizeItemsScreen.kt	Move span started. Press ⤒ ↑ ↓ ⤓ on the end item to move the whole span.
-1	app/src/main/java/tv/own/owntv/features/customize/CustomizeItemsScreen.kt	Move to…
-1	app/src/main/java/tv/own/owntv/features/customize/CustomizeItemsScreen.kt	Movies in this category — reorder, hide or unhide.
-1	app/src/main/java/tv/own/owntv/features/customize/CustomizeItemsScreen.kt	New category
-1	app/src/main/java/tv/own/owntv/features/customize/CustomizeItemsScreen.kt	Only for this profile. Leave blank to restore "${row.originalName}".
-1	app/src/main/java/tv/own/owntv/features/customize/CustomizeItemsScreen.kt	Rename
-1	app/src/main/java/tv/own/owntv/features/customize/CustomizeItemsScreen.kt	Rename channel
-1	app/src/main/java/tv/own/owntv/features/customize/CustomizeItemsScreen.kt	Rename span started. Press Rename on the end item to select the span.
-1	app/src/main/java/tv/own/owntv/features/customize/CustomizeItemsScreen.kt	Series in this category — reorder, hide or unhide.
-2	app/src/main/java/tv/own/owntv/features/customize/CustomizeItemsScreen.kt	Show
-1	app/src/main/java/tv/own/owntv/features/customize/CustomizeItemsScreen.kt	Span selection started. Press Show/Hide on the end item to select the span.
-1	app/src/main/java/tv/own/owntv/features/customize/CustomizeItemsScreen.kt	item
-1	app/src/main/java/tv/own/owntv/features/customize/CustomizeItemsScreen.kt	items
-1	app/src/main/java/tv/own/owntv/features/customize/CustomizeItemsScreen.kt	this category
-1	app/src/main/java/tv/own/owntv/features/customize/CustomizeItemsScreen.kt	was "${row.originalName}"
-1	app/src/main/java/tv/own/owntv/features/customize/CustomizeItemsScreen.kt	·
-1	app/src/main/java/tv/own/owntv/features/customize/CustomizeItemsScreen.kt	← Back
 1	app/src/main/java/tv/own/owntv/features/customize/CustomizeItemsScreen.kt	↑
 1	app/src/main/java/tv/own/owntv/features/customize/CustomizeItemsScreen.kt	↓
-1	app/src/main/java/tv/own/owntv/features/customize/CustomizeItemsScreen.kt	✎ Rename items
-1	app/src/main/java/tv/own/owntv/features/customize/CustomizeItemsScreen.kt	✨ Auto cleanup
 1	app/src/main/java/tv/own/owntv/features/customize/CustomizeItemsScreen.kt	⤒
 1	app/src/main/java/tv/own/owntv/features/customize/CustomizeItemsScreen.kt	⤓
 3	app/src/main/java/tv/own/owntv/features/customize/CustomizeItemsViewModel.kt	\0
-1	app/src/main/java/tv/own/owntv/features/customize/CustomizeItemsViewModel.kt	EPISODE not applicable
-2	app/src/main/java/tv/own/owntv/features/customize/CustomizeItemsViewModel.kt	EPISODE not applicable to category items
-1	app/src/main/java/tv/own/owntv/features/customize/CustomizeScreen.kt	A combined category for this profile — move channels, movies or series into it.
 1	app/src/main/java/tv/own/owntv/features/customize/CustomizeScreen.kt	ALPHA
-1	app/src/main/java/tv/own/owntv/features/customize/CustomizeScreen.kt	A–Z
-1	app/src/main/java/tv/own/owntv/features/customize/CustomizeScreen.kt	Create
-1	app/src/main/java/tv/own/owntv/features/customize/CustomizeScreen.kt	Delete
-1	app/src/main/java/tv/own/owntv/features/customize/CustomizeScreen.kt	Delete “${row.displayName}”?
-1	app/src/main/java/tv/own/owntv/features/customize/CustomizeScreen.kt	New category
 1	app/src/main/java/tv/own/owntv/features/customize/CustomizeScreen.kt	PLAYLIST
-1	app/src/main/java/tv/own/owntv/features/customize/CustomizeScreen.kt	Provider
-1	app/src/main/java/tv/own/owntv/features/customize/CustomizeScreen.kt	Sort categories
-1	app/src/main/java/tv/own/owntv/features/customize/CustomizeScreen.kt	The combined category is removed. Its items stay in their original categories.
 1	app/src/main/java/tv/own/owntv/features/customize/CustomizeScreen.kt	hid:${entry.key}
 1	app/src/main/java/tv/own/owntv/features/customize/CustomizeViewModel.kt	Custom
-1	app/src/main/java/tv/own/owntv/features/customize/MoveToCategoryDialog.kt	${target.count}
-1	app/src/main/java/tv/own/owntv/features/customize/MoveToCategoryDialog.kt	Cancel
-1	app/src/main/java/tv/own/owntv/features/customize/MoveToCategoryDialog.kt	Keep in “$originName” as well
-1	app/src/main/java/tv/own/owntv/features/customize/MoveToCategoryDialog.kt	Move
-1	app/src/main/java/tv/own/owntv/features/customize/MoveToCategoryDialog.kt	Move to category
-1	app/src/main/java/tv/own/owntv/features/customize/MoveToCategoryDialog.kt	The item leaves “$originName” unless you keep it there.
 1	app/src/main/java/tv/own/owntv/features/customize/MoveToCategoryDialog.kt	new
 1	app/src/main/java/tv/own/owntv/features/customize/MoveToCategoryDialog.kt	○
 1	app/src/main/java/tv/own/owntv/features/customize/MoveToCategoryDialog.kt	●
 1	app/src/main/java/tv/own/owntv/features/customize/MoveToCategoryDialog.kt	☐
 1	app/src/main/java/tv/own/owntv/features/customize/MoveToCategoryDialog.kt	☑
-1	app/src/main/java/tv/own/owntv/features/customize/MoveToCategoryDialog.kt	＋ New category…
 1	app/src/main/java/tv/own/owntv/features/epg/EpgScreen.kt	ALL
-1	app/src/main/java/tv/own/owntv/features/live/LiveScreen.kt	A combined category for this profile — move channels, movies or series into it.
-1	app/src/main/java/tv/own/owntv/features/live/LiveScreen.kt	Create
-1	app/src/main/java/tv/own/owntv/features/live/LiveScreen.kt	New category
-2	app/src/main/java/tv/own/owntv/features/live/LiveScreen.kt	this category
 2	app/src/main/java/tv/own/owntv/features/live/LiveViewModel.kt	CUSTOM:
 1	app/src/main/java/tv/own/owntv/features/live/LiveViewModel.kt	CUSTOM:$id
 1	app/src/main/java/tv/own/owntv/features/live/LiveViewModel.kt	ExoPlayer error before first frame: ${info?.raw ?: previewEngine.error.value}
-1	app/src/main/java/tv/own/owntv/features/live/LiveViewModel.kt	engine: $message
 1	app/src/main/java/tv/own/owntv/features/live/LiveViewModel.kt	m3u8
-1	app/src/main/java/tv/own/owntv/features/live/LiveViewModel.kt	no decodable audio track
-1	app/src/main/java/tv/own/owntv/features/live/LiveViewModel.kt	no video frame rendered (audio plays, no picture)
-1	app/src/main/java/tv/own/owntv/features/live/LiveViewModel.kt	pinned to compatibility mode
 1	app/src/main/java/tv/own/owntv/features/live/LiveViewModel.kt	starting mpv for '${channel.name}' — reason=$reason
 1	app/src/main/java/tv/own/owntv/features/live/LiveViewModel.kt	ts
-1	app/src/main/java/tv/own/owntv/features/live/LiveViewModel.kt	user chose compatibility mode
-1	app/src/main/java/tv/own/owntv/features/movies/MoviesScreen.kt	A combined category for this profile — move channels, movies or series into it.
-1	app/src/main/java/tv/own/owntv/features/movies/MoviesScreen.kt	Create
-1	app/src/main/java/tv/own/owntv/features/movies/MoviesScreen.kt	New category
-2	app/src/main/java/tv/own/owntv/features/movies/MoviesScreen.kt	this category
-1	app/src/main/java/tv/own/owntv/features/series/SeriesScreen.kt	A combined category for this profile — move channels, movies or series into it.
-1	app/src/main/java/tv/own/owntv/features/series/SeriesScreen.kt	Create
-1	app/src/main/java/tv/own/owntv/features/series/SeriesScreen.kt	New category
-2	app/src/main/java/tv/own/owntv/features/series/SeriesScreen.kt	this category
 8	app/src/main/java/tv/own/owntv/features/settings/DnsSettingsScreen.kt	\0
 1	app/src/main/java/tv/own/owntv/features/settings/DnsSettingsScreen.kt	${cfg.host}$p
 1	app/src/main/java/tv/own/owntv/features/settings/DnsSettingsScreen.kt	,
-1	app/src/main/java/tv/own/owntv/features/settings/DnsSettingsScreen.kt	8.8.8.8 or https://dns.google/dns-query
 1	app/src/main/java/tv/own/owntv/features/settings/DnsSettingsScreen.kt	:${cfg.port}
-1	app/src/main/java/tv/own/owntv/features/settings/DnsSettingsScreen.kt	Custom DNS
-1	app/src/main/java/tv/own/owntv/features/settings/DnsSettingsScreen.kt	Custom DNS can help bypass ISP-level domain blocking or enable geo-unblocking via SmartDNS services. DNS-over-HTTPS (DoH) is recommended — it encrypts your lookups.
-1	app/src/main/java/tv/own/owntv/features/settings/DnsSettingsScreen.kt	Custom DNS is enabled but no server is configured. Enter a server address and tap Save, or turn this off.
-1	app/src/main/java/tv/own/owntv/features/settings/DnsSettingsScreen.kt	DNS
-1	app/src/main/java/tv/own/owntv/features/settings/DnsSettingsScreen.kt	DNS server
-1	app/src/main/java/tv/own/owntv/features/settings/DnsSettingsScreen.kt	Off
-1	app/src/main/java/tv/own/owntv/features/settings/DnsSettingsScreen.kt	On
-1	app/src/main/java/tv/own/owntv/features/settings/DnsSettingsScreen.kt	Resolve all OwnTV domain lookups through a custom DNS server.
-1	app/src/main/java/tv/own/owntv/features/settings/DnsSettingsScreen.kt	Resolved ✓ (${state.millis} ms) → ${state.resolvedIps.joinToString(", ")}
-1	app/src/main/java/tv/own/owntv/features/settings/DnsSettingsScreen.kt	Save
-1	app/src/main/java/tv/own/owntv/features/settings/DnsSettingsScreen.kt	Test DNS
-1	app/src/main/java/tv/own/owntv/features/settings/DnsSettingsScreen.kt	Testing…
-1	app/src/main/java/tv/own/owntv/features/settings/DnsSettingsScreen.kt	This setting only affects OkHttp-based traffic (playlist sync, EPG, API calls, images, ExoPlayer streams). mpv uses the system resolver and is not affected.
-1	app/src/main/java/tv/own/owntv/features/settings/DnsSettingsScreen.kt	Use custom DNS
 2	app/src/main/java/tv/own/owntv/features/settings/DnsSettingsScreen.kt	https://
 1	app/src/main/java/tv/own/owntv/features/settings/SettingsViewModel.kt	?
-1	app/src/main/java/tv/own/owntv/features/settings/SettingsViewModel.kt	Connection refused — check the server address and port.
-2	app/src/main/java/tv/own/owntv/features/settings/SettingsViewModel.kt	DNS request timed out.
-1	app/src/main/java/tv/own/owntv/features/settings/SettingsViewModel.kt	DNS returned no addresses for $testHost
-1	app/src/main/java/tv/own/owntv/features/settings/SettingsViewModel.kt	DNS server not reachable.
-1	app/src/main/java/tv/own/owntv/features/settings/SettingsViewModel.kt	DNS test failed — check the server address.
-1	app/src/main/java/tv/own/owntv/features/settings/SettingsViewModel.kt	Enter a DNS server host or a DoH URL.
-1	app/src/main/java/tv/own/owntv/features/settings/SettingsViewModel.kt	Network is unreachable
-1	app/src/main/java/tv/own/owntv/features/settings/SettingsViewModel.kt	Network is unreachable — check the server address.
 1	app/src/main/java/tv/own/owntv/features/settings/SettingsViewModel.kt	UnknownHostException
 1	app/src/main/java/tv/own/owntv/features/settings/SettingsViewModel.kt	dns.google
 1	app/src/main/java/tv/own/owntv/features/settings/SettingsViewModel.kt	refused
-1	app/src/main/java/tv/own/owntv/features/settings/SettingsViewModel.kt	timed out
 1	app/src/main/java/tv/own/owntv/features/settings/SettingsViewModel.kt	timeout
-1	app/src/main/java/tv/own/owntv/features/settings/SettingsViewModel.kt	unknown host
 1	app/src/main/java/tv/own/owntv/features/settings/VideoPlayerSettingsScreen.kt	\0
 5	app/src/main/java/tv/own/owntv/features/settings/VideoPlayerSettingsScreen.kt	#
 1	app/src/main/java/tv/own/owntv/features/settings/VideoPlayerSettingsScreen.kt	#4FC3F7
@@ -348,44 +202,8 @@
 1	app/src/main/java/tv/own/owntv/features/settings/VideoPlayerSettingsScreen.kt	#BDBDBD
 1	app/src/main/java/tv/own/owntv/features/settings/VideoPlayerSettingsScreen.kt	#FFEB3B
 2	app/src/main/java/tv/own/owntv/features/settings/VideoPlayerSettingsScreen.kt	#FFFFFF
-1	app/src/main/java/tv/own/owntv/features/settings/VideoPlayerSettingsScreen.kt	$pct%
 1	app/src/main/java/tv/own/owntv/features/settings/VideoPlayerSettingsScreen.kt	+
-1	app/src/main/java/tv/own/owntv/features/settings/VideoPlayerSettingsScreen.kt	Apply
-2	app/src/main/java/tv/own/owntv/features/settings/VideoPlayerSettingsScreen.kt	Background transparency
-1	app/src/main/java/tv/own/owntv/features/settings/VideoPlayerSettingsScreen.kt	Close
-1	app/src/main/java/tv/own/owntv/features/settings/VideoPlayerSettingsScreen.kt	Color
-1	app/src/main/java/tv/own/owntv/features/settings/VideoPlayerSettingsScreen.kt	Customize subtitles
-1	app/src/main/java/tv/own/owntv/features/settings/VideoPlayerSettingsScreen.kt	Cyan
-2	app/src/main/java/tv/own/owntv/features/settings/VideoPlayerSettingsScreen.kt	Default
-1	app/src/main/java/tv/own/owntv/features/settings/VideoPlayerSettingsScreen.kt	Default leaves placement to the stream — including where a broadcaster puts a
-1	app/src/main/java/tv/own/owntv/features/settings/VideoPlayerSettingsScreen.kt	Default leaves the color to the stream and the player.
-3	app/src/main/java/tv/own/owntv/features/settings/VideoPlayerSettingsScreen.kt	Done
-1	app/src/main/java/tv/own/owntv/features/settings/VideoPlayerSettingsScreen.kt	Enter 6 hex digits, e.g. FFEB3B
 1	app/src/main/java/tv/own/owntv/features/settings/VideoPlayerSettingsScreen.kt	FFFFFF
-1	app/src/main/java/tv/own/owntv/features/settings/VideoPlayerSettingsScreen.kt	Green
-1	app/src/main/java/tv/own/owntv/features/settings/VideoPlayerSettingsScreen.kt	Grey
-1	app/src/main/java/tv/own/owntv/features/settings/VideoPlayerSettingsScreen.kt	Hex
-2	app/src/main/java/tv/own/owntv/features/settings/VideoPlayerSettingsScreen.kt	How solid the box behind the text is.
-1	app/src/main/java/tv/own/owntv/features/settings/VideoPlayerSettingsScreen.kt	None
-1	app/src/main/java/tv/own/owntv/features/settings/VideoPlayerSettingsScreen.kt	Off
-1	app/src/main/java/tv/own/owntv/features/settings/VideoPlayerSettingsScreen.kt	Off keeps subtitles exactly as the stream and the player draw them.
-1	app/src/main/java/tv/own/owntv/features/settings/VideoPlayerSettingsScreen.kt	On
-1	app/src/main/java/tv/own/owntv/features/settings/VideoPlayerSettingsScreen.kt	Position
-1	app/src/main/java/tv/own/owntv/features/settings/VideoPlayerSettingsScreen.kt	Preview — stock look
-1	app/src/main/java/tv/own/owntv/features/settings/VideoPlayerSettingsScreen.kt	Reset all
-1	app/src/main/java/tv/own/owntv/features/settings/VideoPlayerSettingsScreen.kt	Solid
-1	app/src/main/java/tv/own/owntv/features/settings/VideoPlayerSettingsScreen.kt	Subtitle appearance
-1	app/src/main/java/tv/own/owntv/features/settings/VideoPlayerSettingsScreen.kt	Subtitle color
-1	app/src/main/java/tv/own/owntv/features/settings/VideoPlayerSettingsScreen.kt	Subtitle position
-1	app/src/main/java/tv/own/owntv/features/settings/VideoPlayerSettingsScreen.kt	Text color — a preset, the picker, or a hex code.
-1	app/src/main/java/tv/own/owntv/features/settings/VideoPlayerSettingsScreen.kt	The quick brown fox
-1	app/src/main/java/tv/own/owntv/features/settings/VideoPlayerSettingsScreen.kt	Turn this on, then change only what you want — anything left on Default keeps the
-2	app/src/main/java/tv/own/owntv/features/settings/VideoPlayerSettingsScreen.kt	Use default
-1	app/src/main/java/tv/own/owntv/features/settings/VideoPlayerSettingsScreen.kt	Where subtitles sit on screen.
-1	app/src/main/java/tv/own/owntv/features/settings/VideoPlayerSettingsScreen.kt	White
-1	app/src/main/java/tv/own/owntv/features/settings/VideoPlayerSettingsScreen.kt	Yellow
-1	app/src/main/java/tv/own/owntv/features/settings/VideoPlayerSettingsScreen.kt	live caption. Any other choice always wins.
-1	app/src/main/java/tv/own/owntv/features/settings/VideoPlayerSettingsScreen.kt	stock look, including the colors and placement broadcasters embed in Live TV subtitles.
 1	app/src/main/java/tv/own/owntv/features/settings/VideoPlayerSettingsScreen.kt	–
 2	app/src/main/java/tv/own/owntv/features/settings/data/SettingsRepository.kt	\0
 1	app/src/main/java/tv/own/owntv/features/settings/data/SettingsRepository.kt	auto_frame_rate_reset_416
@@ -401,13 +219,6 @@
 1	app/src/main/java/tv/own/owntv/features/settings/data/SubtitleStyle.kt	\0
 1	app/src/main/java/tv/own/owntv/features/settings/data/SubtitleStyle.kt	#
 2	app/src/main/java/tv/own/owntv/features/settings/data/SubtitleStyle.kt	#%08X
-1	app/src/main/java/tv/own/owntv/features/settings/data/SubtitleStyle.kt	Bottom center
-1	app/src/main/java/tv/own/owntv/features/settings/data/SubtitleStyle.kt	Bottom left
-1	app/src/main/java/tv/own/owntv/features/settings/data/SubtitleStyle.kt	Bottom right
-1	app/src/main/java/tv/own/owntv/features/settings/data/SubtitleStyle.kt	Default
-1	app/src/main/java/tv/own/owntv/features/settings/data/SubtitleStyle.kt	Top center
-1	app/src/main/java/tv/own/owntv/features/settings/data/SubtitleStyle.kt	Top left
-1	app/src/main/java/tv/own/owntv/features/settings/data/SubtitleStyle.kt	Top right
 1	app/src/main/java/tv/own/owntv/features/settings/data/SubtitleStyle.kt	bottom_center
 1	app/src/main/java/tv/own/owntv/features/settings/data/SubtitleStyle.kt	bottom_left
 1	app/src/main/java/tv/own/owntv/features/settings/data/SubtitleStyle.kt	bottom_right
@@ -418,21 +229,11 @@
 1	app/src/main/java/tv/own/owntv/features/settings/data/SubtitleStyle.kt	top_center
 1	app/src/main/java/tv/own/owntv/features/settings/data/SubtitleStyle.kt	top_left
 1	app/src/main/java/tv/own/owntv/features/settings/data/SubtitleStyle.kt	top_right
-1	app/src/main/java/tv/own/owntv/features/setup/AddSourceScreen.kt	\0
-1	app/src/main/java/tv/own/owntv/features/setup/AddSourceScreen.kt	Hide new categories by default
-1	app/src/main/java/tv/own/owntv/features/setup/AddSourceScreen.kt	Prefer HLS for Live TV
-1	app/src/main/java/tv/own/owntv/features/setup/AddSourceScreen.kt	Prioritize HLS (.m3u8) over MPEG-TS for Live TV & Catch-up. Falls back to MPEG-TS if HLS fails.
-1	app/src/main/java/tv/own/owntv/features/setup/AddSourceScreen.kt	Profile-wide: categories that appear on future syncs start hidden. See them anytime in Customize.
-1	app/src/main/java/tv/own/owntv/features/setup/AddSourceScreen.kt	Your provider reports HLS support.
-1	app/src/main/java/tv/own/owntv/features/shell/components/SettingsScreen.kt	DNS
-1	app/src/main/java/tv/own/owntv/features/shell/components/SettingsScreen.kt	Use a custom DNS server for domain lookups
 2	app/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	\0
 1	app/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	HLS
 1	app/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	MPEG-TS
 1	app/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	decoder failed before first frame (${error.errorCodeName}) — rebuilding the decoder and retrying once
-1	app/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	decoder failure before first frame — rebuild + retry once
 1	app/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	decoder rebuild failed: ${it.message}
-1	app/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	releaseDecoderForUhd(): releasing the 4K decoder + surface
 1	app/src/main/java/tv/own/owntv/player/MpvVideoSurface.kt	DEPRECATION
 1	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	#00000000
 1	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	#FFFFFFFF
@@ -458,7 +259,6 @@
 1	app/src/main/java/tv/own/owntv/ui/components/TvImeMetrics.kt	OwnTV-IME
 1	app/src/main/java/tv/own/owntv/ui/components/TvImeMetrics.kt	attach
 1	app/src/main/java/tv/own/owntv/ui/components/TvImeMetrics.kt	dismissed
-1	app/src/main/java/tv/own/owntv/ui/components/TvImeMetrics.kt	frame=$rect imeBottom=$imeBottom
 1	app/src/main/java/tv/own/owntv/ui/components/TvImeMetrics.kt	hidden
 1	app/src/main/java/tv/own/owntv/ui/components/TvImeMetrics.kt	insets
 1	app/src/main/java/tv/own/owntv/ui/components/TvImeMetrics.kt	keyboardTop=${next.keyboardTopPx} obscured=${next.obscuredBottomPx}

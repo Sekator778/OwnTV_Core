@@ -39,8 +39,8 @@
     "script": "Arab",
     "rtl": true,
     "tier": 1,
-    "packaged": false,
-    "pickerVisible": false
+    "packaged": true,
+    "pickerVisible": true
   },
   {
     "id": "pt-BR",
@@ -53,8 +53,8 @@
     "script": "Latn",
     "rtl": false,
     "tier": 1,
-    "packaged": false,
-    "pickerVisible": false
+    "packaged": true,
+    "pickerVisible": true
   },
   {
     "id": "pt-PT",
@@ -67,8 +67,8 @@
     "script": "Latn",
     "rtl": false,
     "tier": 1,
-    "packaged": false,
-    "pickerVisible": false
+    "packaged": true,
+    "pickerVisible": true
   },
   {
     "id": "zh-CN",
@@ -81,8 +81,8 @@
     "script": "Hans",
     "rtl": false,
     "tier": 1,
-    "packaged": false,
-    "pickerVisible": false
+    "packaged": true,
+    "pickerVisible": true
   },
   {
     "id": "zh-TW",
@@ -95,8 +95,8 @@
     "script": "Hant",
     "rtl": false,
     "tier": 1,
-    "packaged": false,
-    "pickerVisible": false
+    "packaged": true,
+    "pickerVisible": true
   },
   {
     "id": "cs",
@@ -109,8 +109,8 @@
     "script": "Latn",
     "rtl": false,
     "tier": 1,
-    "packaged": false,
-    "pickerVisible": false
+    "packaged": true,
+    "pickerVisible": true
   },
   {
     "id": "da",
@@ -123,8 +123,8 @@
     "script": "Latn",
     "rtl": false,
     "tier": 1,
-    "packaged": false,
-    "pickerVisible": false
+    "packaged": true,
+    "pickerVisible": true
   },
   {
     "id": "nl",
@@ -137,8 +137,8 @@
     "script": "Latn",
     "rtl": false,
     "tier": 1,
-    "packaged": false,
-    "pickerVisible": false
+    "packaged": true,
+    "pickerVisible": true
   },
   {
     "id": "fr",
@@ -151,8 +151,8 @@
     "script": "Latn",
     "rtl": false,
     "tier": 1,
-    "packaged": false,
-    "pickerVisible": false
+    "packaged": true,
+    "pickerVisible": true
   },
   {
     "id": "de",
@@ -165,8 +165,8 @@
     "script": "Latn",
     "rtl": false,
     "tier": 1,
-    "packaged": false,
-    "pickerVisible": false
+    "packaged": true,
+    "pickerVisible": true
   },
   {
     "id": "it",
@@ -179,8 +179,8 @@
     "script": "Latn",
     "rtl": false,
     "tier": 1,
-    "packaged": false,
-    "pickerVisible": false
+    "packaged": true,
+    "pickerVisible": true
   },
   {
     "id": "ja",
@@ -193,8 +193,8 @@
     "script": "Jpan",
     "rtl": false,
     "tier": 1,
-    "packaged": false,
-    "pickerVisible": false
+    "packaged": true,
+    "pickerVisible": true
   },
   {
     "id": "ko",
@@ -207,8 +207,8 @@
     "script": "Hang",
     "rtl": false,
     "tier": 1,
-    "packaged": false,
-    "pickerVisible": false
+    "packaged": true,
+    "pickerVisible": true
   },
   {
     "id": "nb",
@@ -221,8 +221,8 @@
     "script": "Latn",
     "rtl": false,
     "tier": 1,
-    "packaged": false,
-    "pickerVisible": false
+    "packaged": true,
+    "pickerVisible": true
   },
   {
     "id": "pl",
@@ -235,8 +235,8 @@
     "script": "Latn",
     "rtl": false,
     "tier": 1,
-    "packaged": false,
-    "pickerVisible": false
+    "packaged": true,
+    "pickerVisible": true
   },
   {
     "id": "ru",
@@ -249,8 +249,8 @@
     "script": "Cyrl",
     "rtl": false,
     "tier": 1,
-    "packaged": false,
-    "pickerVisible": false
+    "packaged": true,
+    "pickerVisible": true
   },
   {
     "id": "es-US",
@@ -263,8 +263,8 @@
     "script": "Latn",
     "rtl": false,
     "tier": 1,
-    "packaged": false,
-    "pickerVisible": false
+    "packaged": true,
+    "pickerVisible": true
   },
   {
     "id": "es-ES",
@@ -277,8 +277,8 @@
     "script": "Latn",
     "rtl": false,
     "tier": 1,
-    "packaged": false,
-    "pickerVisible": false
+    "packaged": true,
+    "pickerVisible": true
   },
   {
     "id": "sv",
@@ -291,8 +291,8 @@
     "script": "Latn",
     "rtl": false,
     "tier": 1,
-    "packaged": false,
-    "pickerVisible": false
+    "packaged": true,
+    "pickerVisible": true
   },
   {
     "id": "tr",
@@ -305,8 +305,8 @@
     "script": "Latn",
     "rtl": false,
     "tier": 1,
-    "packaged": false,
-    "pickerVisible": false
+    "packaged": true,
+    "pickerVisible": true
   },
   {
     "id": "ml",
@@ -319,7 +319,35 @@
     "script": "Mlym",
     "rtl": false,
     "tier": 1,
-    "packaged": false,
-    "pickerVisible": false
+    "packaged": true,
+    "pickerVisible": true
+  },
+  {
+    "id": "hi",
+    "languageTag": "hi",
+    "resourceQualifier": "hi",
+    "resourceDirectory": "values-hi",
+    "weblateCode": "hi",
+    "englishName": "Hindi",
+    "endonym": "हिन्दी",
+    "script": "Deva",
+    "rtl": false,
+    "tier": 1,
+    "packaged": true,
+    "pickerVisible": true
+  },
+  {
+    "id": "bn",
+    "languageTag": "bn",
+    "resourceQualifier": "bn",
+    "resourceDirectory": "values-bn",
+    "weblateCode": "bn",
+    "englishName": "Bangla",
+    "endonym": "বাংলা",
+    "script": "Beng",
+    "rtl": false,
+    "tier": 1,
+    "packaged": true,
+    "pickerVisible": true
   }
 ]

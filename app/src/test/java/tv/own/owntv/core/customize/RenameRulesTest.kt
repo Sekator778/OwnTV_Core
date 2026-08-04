@@ -191,7 +191,7 @@ class RenameRulesTest {
     fun autoCleanupRules_areVisibleAndRemovableInEditor() {
         val rules = RenameRules.autoCleanupRules()
         assertTrue(rules.all { it.pattern != null })
-        assertTrue(rules.all { !it.editorLabel.isNullOrBlank() })
+        assertTrue(rules.all { it.autoLabel != null })
     }
 
     @Test

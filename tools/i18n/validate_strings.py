@@ -297,7 +297,8 @@ _PLURAL_RULES = {
     "pl": ["one", "few", "many", "other"], "ru": ["one", "few", "many", "other"],
     "pt": ["one", "many", "other"], "pt-BR": ["one", "many", "other"], "pt-PT": ["one", "many", "other"],
     "zh-CN": ["other"], "zh-TW": ["other"], "es-US": ["one", "many", "other"], "es-ES": ["one", "many", "other"],
-    "tr": ["one", "other"], "ml": ["one", "other"],
+    "tr": ["one", "other"], "ml": ["one", "other"], "hi": ["one", "other"],
+    "bn": ["one", "other"],
 }
 
 
@@ -315,7 +316,7 @@ _DIRECTORY_RE = re.compile(r"^values(?:-[A-Za-z0-9+_-]+)*$")
 # Exact set of Tier 1 language tags the catalogue must contain (docs/internationalization.md 4d).
 _EXPECTED_TIER1_TAGS = {
     "en-US", "ar", "pt-BR", "pt-PT", "zh-CN", "zh-TW", "cs", "da", "nl", "fr", "de", "it",
-    "ja", "ko", "nb", "pl", "ru", "es-US", "es-ES", "sv", "tr", "ml",
+    "ja", "ko", "nb", "pl", "ru", "es-US", "es-ES", "sv", "tr", "ml", "hi", "bn",
 }
 
 # Valid Android resource qualifier forms for locales:
@@ -345,6 +346,7 @@ _CANONICAL_WEBLATE = {
     "nb": "nb_NO",
     "cs": "cs", "da": "da", "nl": "nl", "fr": "fr", "de": "de", "it": "it",
     "ja": "ja", "ko": "ko", "pl": "pl", "ru": "ru", "sv": "sv", "tr": "tr", "ml": "ml",
+    "hi": "hi", "bn": "bn",
 }
 
 

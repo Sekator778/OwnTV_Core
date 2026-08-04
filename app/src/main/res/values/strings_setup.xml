@@ -429,4 +429,15 @@
 
     <!-- Translators: Warning shown after a successful restore when the backup contained a language the current app version does not support. The current language is kept. -->
     <string name="setup_invalid_locale">This backup contained an unsupported app language. The restore succeeded, but your current language was kept.</string>
+
+    <!-- Translators: Toggle label for preferring HLS streams when an Xtream source offers multiple Live TV formats. -->
+    <string name="setup_prefer_hls_live_tv">Prefer HLS for Live TV</string>
+    <!-- Translators: Description of the HLS preference. HLS, .m3u8 and MPEG-TS are protocol names and stay unchanged. -->
+    <string name="setup_prefer_hls_description">Prioritize HLS (.m3u8) over MPEG-TS for Live TV &amp; Catch-up. Falls back to MPEG-TS if HLS fails.</string>
+    <!-- Translators: HLS preference description when the provider explicitly reports HLS support. HLS, .m3u8 and MPEG-TS stay unchanged. -->
+    <string name="setup_prefer_hls_description_supported">Prioritize HLS (.m3u8) over MPEG-TS for Live TV &amp; Catch-up. Falls back to MPEG-TS if HLS fails. Your provider reports HLS support.</string>
+    <!-- Translators: Profile-wide toggle controlling whether categories discovered by future source syncs start hidden. -->
+    <string name="setup_hide_new_categories">Hide new categories by default</string>
+    <!-- Translators: Description of the profile-wide new-category visibility toggle. Customize is the name of the customization screen. -->
+    <string name="setup_hide_new_categories_description">Profile-wide: categories that appear on future syncs start hidden. See them anytime in Customize.</string>
 </resources>

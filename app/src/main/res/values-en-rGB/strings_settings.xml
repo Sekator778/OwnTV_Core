@@ -22,4 +22,10 @@ Resync and remove missing titles also allows removing titles the provider no lon
     <string name="settings_use_color">Use this colour</string>
     <string name="settings_search_keywords_epg">xmltv guide feed programme</string>
     <string name="settings_sync_guide_description">Download the programme guide (EPG) for “<xliff:g id="source">%1$s</xliff:g>”. You can also do this later in Settings → EPG.</string>
+    <string name="settings_subtitle_stock_description">Stock look, including the colours and placement broadcasters embed in Live TV subtitles.</string>
+    <string name="settings_subtitle_color">Subtitle colour</string>
+    <string name="settings_subtitle_color_default_description">Default leaves the colour to the stream and the player.</string>
+    <string name="settings_subtitle_customize_description">Turn this on, then change only what you want — anything left on Default keeps the stock look, including the colours and placement broadcasters embed in Live TV subtitles.</string>
+    <string name="settings_subtitle_color_short">Colour</string>
+    <string name="settings_subtitle_color_description">Text colour — a preset, the picker, or a hex code.</string>
 </resources>

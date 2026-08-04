@@ -63,7 +63,7 @@ def _locale(id, tag, qualifier, resdir, **kw):
     return base
 
 
-# All 22 Tier 1 locales (matching tools/i18n/locales.json) so test fixtures pass the membership gate.
+# All 24 Tier 1 locales (matching tools/i18n/locales.json) so test fixtures pass the membership gate.
 _FULL_TIER1 = [
     _locale("en-US", "en-US", "en", "values", weblateCode="en"),
     _locale("ar", "ar", "ar", "values-ar", weblateCode="ar", script="Arab", rtl=True, packaged=False, pickerVisible=False),
@@ -87,6 +87,8 @@ _FULL_TIER1 = [
     _locale("sv", "sv", "sv", "values-sv", packaged=False, pickerVisible=False),
     _locale("tr", "tr", "tr", "values-tr", packaged=False, pickerVisible=False),
     _locale("ml", "ml", "ml", "values-ml", script="Mlym", packaged=False, pickerVisible=False),
+    _locale("hi", "hi", "hi", "values-hi", script="Deva", packaged=False, pickerVisible=False),
+    _locale("bn", "bn", "bn", "values-bn", script="Beng", packaged=False, pickerVisible=False),
 ]
 
 
@@ -178,7 +180,7 @@ class TestValidateStrings(unittest.TestCase):
 
     def test_catalogue_tier1_membership(self):
         source = '<resources><string name="hello">Hello</string></resources>'
-        # Only en-US as tier 1, missing the other 20
+        # Only en-US as tier 1, missing all 23 community targets
         locales = [_locale("en-US", "en-US", "en", "values")]
         res = _make_fixture(self.tmpdir, source, locales)
         rc, out = self._run(res, self.tmpdir / "tools/i18n/locales.json")
@@ -461,7 +463,7 @@ class TestValidateStrings(unittest.TestCase):
         tags = {row["languageTag"] for row in payload["locales"]}
         self.assertNotIn("en-US", tags)
         self.assertNotIn("en-GB", tags)
-        self.assertEqual(len(tags), 21)  # 20 community + ml
+        self.assertEqual(len(tags), 23)  # all community targets
 
     def test_translation_review_state_neither_read_nor_required(self):
         """translation_status.json is gone; the validator must not reference or require it."""
@@ -1354,13 +1356,13 @@ class TestSeedText(unittest.TestCase):
             self.assertTrue(staged.exists())
 
     def test_chunking_matches_documented_pilot_counts(self):
-        """Regression: the plan's own inventory assertion (41 chunks/locale at <=40
+        """Regression: the plan's own inventory assertion (44 chunks/locale at <=40
         keys) is derived from the checked-out source tree, not a hardcoded constant."""
         units, order = self.st.extract_source()
-        self.assertEqual(len(order), 1537)
+        self.assertEqual(len(order), 1655)
         chunks = self.st.chunk_by_file(units, order)
         total_chunks = sum(len(v) for v in chunks.values())
-        self.assertEqual(total_chunks, 41)
+        self.assertEqual(total_chunks, 44)
         for file_chunks in chunks.values():
             for chunk in file_chunks:
                 self.assertLessEqual(len(chunk), 40)

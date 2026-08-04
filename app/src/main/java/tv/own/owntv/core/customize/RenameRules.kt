@@ -22,6 +22,7 @@ object RenameRules {
 
     enum class Action { ADD, REMOVE }
     enum class Placement { PREFIX, SUFFIX }
+    enum class AutoLabel { COUNTRY_PROVIDER, QUALITY_CODEC, EMOJI_SYMBOLS }
 
     data class Rule(
         val action: Action,
@@ -30,8 +31,8 @@ object RenameRules {
         val value: String = "",
         /** Internal: raw regex applied directly instead of [value] tokens (auto-cleanup emoji). */
         val pattern: String? = null,
-        /** Human-readable text for an internal auto-cleanup rule in the rule editor. */
-        val editorLabel: String? = null,
+        /** Semantic label for an auto-cleanup rule; the UI supplies localized wording. */
+        val autoLabel: AutoLabel? = null,
     )
 
     data class Options(
@@ -116,19 +117,19 @@ object RenameRules {
                 Action.REMOVE,
                 Placement.PREFIX,
                 pattern = country,
-                editorLabel = "Auto: country/provider tags",
+                autoLabel = AutoLabel.COUNTRY_PROVIDER,
             ),
             Rule(
                 Action.REMOVE,
                 Placement.PREFIX,
                 pattern = quality,
-                editorLabel = "Auto: quality/codec tags anywhere",
+                autoLabel = AutoLabel.QUALITY_CODEC,
             ),
             Rule(
                 Action.REMOVE,
                 Placement.PREFIX,
                 pattern = emoji,
-                editorLabel = "Auto: emoji and symbols",
+                autoLabel = AutoLabel.EMOJI_SYMBOLS,
             ),
         )
     }

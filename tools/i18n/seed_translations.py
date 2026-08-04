@@ -39,6 +39,7 @@ import json
 import os
 import subprocess
 import sys
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -51,7 +52,7 @@ RUNS_DIR = ROOT / "runs" / "seed"
 MODEL = "claude-opus-4-8"
 THINKING = {"type": "adaptive"}
 EFFORT = "high"
-MAX_KEYS_PER_CHUNK = 40
+MAX_KEYS_PER_CHUNK = 350  # ~50% of 200K context window (25K system + ~35K input + ~25K output)
 MAX_FOLLOWUP_ATTEMPTS = 2  # two follow-up attempts after the initial request
 PILOT_LOCALES = ["de", "ar", "ja", "tr"]
 
@@ -62,6 +63,7 @@ CLAUDE_BIN = "claude"
 # have access". Override with SEED_CLAUDE_MODEL to pin a different alias or full model id.
 CLAUDE_MODEL = "sonnet"
 CLAUDE_TIMEOUT_SECONDS = 900  # per one-shot completion
+CLAUDE_WORKERS = int(os.environ.get("SEED_CLAUDE_WORKERS", "8"))  # parallel claude -p calls
 
 try:
     from tools.i18n import seed_text as st
@@ -728,20 +730,30 @@ def _submit_claude(args: argparse.Namespace, manifest: dict, stage: dict) -> int
             sys.exit(f"error: on-disk request {cid} no longer matches its recorded payload "
                      "hash; it may have been hand-edited since prepare")
     batch_id = f"claude-{args.run_id}-{args.stage}-{datetime.now(timezone.utc).strftime('%H%M%S')}"
-    for cid in sorted(pending):
-        payload = json.loads((req_dir / f"{cid}.json").read_text(encoding="utf-8"))
-        print(f"{cid}: running claude -p ...", flush=True)
-        envelope = _run_claude_request(cid, payload["params"])
-        (results_dir / f"{cid}.raw.json").write_text(
-            json.dumps(envelope, indent=2, ensure_ascii=False), encoding="utf-8")
-        record = stage["requests"][cid]
-        record["batchId"] = batch_id
-        record["submittedAt"] = datetime.now(timezone.utc).isoformat()
-        usage = envelope.get("usage") or {}
-        print(f"  -> {'ok' if not envelope.get('is_error') else 'ERROR'} "
-              f"(in={usage.get('input_tokens')} out={usage.get('output_tokens')} "
-              f"cache_read={usage.get('cache_read_input_tokens')})", flush=True)
-        save_manifest(args.run_id, manifest)  # crash-safe: persist after each request
+    workers = min(len(pending), CLAUDE_WORKERS)
+    print(f"Submitting {len(pending)} request(s) for stage '{args.stage}' "
+          f"via the claude CLI (batch {batch_id}, {workers} workers) ...", flush=True)
+    completed = 0
+    with ThreadPoolExecutor(max_workers=workers) as executor:
+        futures = {}
+        for cid in sorted(pending):
+            payload = json.loads((req_dir / f"{cid}.json").read_text(encoding="utf-8"))
+            futures[executor.submit(_run_claude_request, cid, payload["params"])] = cid
+        for future in as_completed(futures):
+            cid = futures[future]
+            envelope = future.result()
+            (results_dir / f"{cid}.raw.json").write_text(
+                json.dumps(envelope, indent=2, ensure_ascii=False), encoding="utf-8")
+            record = stage["requests"][cid]
+            record["batchId"] = batch_id
+            record["submittedAt"] = datetime.now(timezone.utc).isoformat()
+            usage = envelope.get("usage") or {}
+            completed += 1
+            print(f"  [{completed}/{len(pending)}] {cid}: "
+                  f"{'ok' if not envelope.get('is_error') else 'ERROR'} "
+                  f"(in={usage.get('input_tokens')} out={usage.get('output_tokens')} "
+                  f"cache_read={usage.get('cache_read_input_tokens')})", flush=True)
+            save_manifest(args.run_id, manifest)  # crash-safe: persist after each request
     print(f"Submitted {len(pending)} request(s) for stage '{args.stage}' via the claude CLI "
           f"(batch {batch_id}).")
     print(f"Next: python3 tools/i18n/seed_translations.py status --run-id {args.run_id} --stage {args.stage}")

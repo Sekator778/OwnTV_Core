@@ -7,4 +7,6 @@
     <string name="setup_watching_during_import">You can start watching while the rest of the catalogue loads.</string>
     <string name="setup_vod_movie_catalog">VOD movie catalogue</string>
     <string name="setup_tv_series_catalog">TV series catalogue</string>
+    <string name="setup_prefer_hls_description">Prioritise HLS (.m3u8) over MPEG-TS for Live TV &amp; Catch-up. Falls back to MPEG-TS if HLS fails.</string>
+    <string name="setup_prefer_hls_description_supported">Prioritise HLS (.m3u8) over MPEG-TS for Live TV &amp; Catch-up. Falls back to MPEG-TS if HLS fails. Your provider reports HLS support.</string>
 </resources>

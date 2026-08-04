@@ -32,14 +32,14 @@ object SubtitleStyle {
     const val OPACITY_START = 50
 
     /** One of six fixed screen anchors, or [DEFAULT] to leave placement to the stream/renderer. */
-    enum class Position(val key: String, val label: String) {
-        DEFAULT("default", "Default"),
-        TOP_LEFT("top_left", "Top left"),
-        TOP_CENTER("top_center", "Top center"),
-        TOP_RIGHT("top_right", "Top right"),
-        BOTTOM_LEFT("bottom_left", "Bottom left"),
-        BOTTOM_CENTER("bottom_center", "Bottom center"),
-        BOTTOM_RIGHT("bottom_right", "Bottom right");
+    enum class Position(val key: String) {
+        DEFAULT("default"),
+        TOP_LEFT("top_left"),
+        TOP_CENTER("top_center"),
+        TOP_RIGHT("top_right"),
+        BOTTOM_LEFT("bottom_left"),
+        BOTTOM_CENTER("bottom_center"),
+        BOTTOM_RIGHT("bottom_right");
 
         val isTop: Boolean get() = this == TOP_LEFT || this == TOP_CENTER || this == TOP_RIGHT
         val isLeft: Boolean get() = this == TOP_LEFT || this == BOTTOM_LEFT
