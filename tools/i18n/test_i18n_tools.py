@@ -569,6 +569,9 @@ class TestValidateStrings(unittest.TestCase):
         theme = settings.index("title = stringResource(R.string.settings_theme),")
         self.assertLess(appearance, language)
         self.assertLess(language, theme)
+        view_model = (ROOT / "app/src/main/java/tv/own/owntv/features/settings/LanguageSettingsViewModel.kt").read_text()
+        self.assertIn("sortedBy { it.englishName.lowercase(Locale.ROOT) }", view_model)
+        self.assertNotIn("sortedBy { it.endonym.lowercase() }", view_model)
 
     def test_canonical_url_and_qr_payload_artifacts_are_consistent(self):
         config = json.loads((ROOT / "tools/i18n/community.json").read_text())
