@@ -1,0 +1,832 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <string name="settings_sort_playlist">Oynatma listesi</string>
+    <string name="settings_sort_alpha">A–Z</string>
+    <string name="settings_sort_rating">Puan</string>
+    <string name="settings_sort_date_added">Eklenme tarihi</string>
+    <string name="settings_mini_player">Mini oynatıcı</string>
+    <string name="settings_mini_player_description">Gezinirken bir kanalı sabitlediğinizde (PiP) görünen küçük yüzer oynatıcıdır. Bu ayarları buradan veya mini oynatıcının üzerindeki yeniden boyutlandırma / taşıma düğmeleriyle anında değiştirebilirsiniz.</string>
+    <string name="settings_size">Boyut</string>
+    <string name="settings_mini_player_size_description">Mini oynatıcının ekran genişliğine oranla ne kadar büyük olduğu (<xliff:g id="min">%1$d</xliff:g>%%–<xliff:g id="max">%2$d</xliff:g>%%).</string>
+    <string name="settings_position">Konum</string>
+    <string name="settings_mini_player_position_description">Mini oynatıcının sabitleneceği köşe veya kenar.</string>
+    <string name="settings_mini_player_size">Mini oynatıcı boyutu</string>
+    <string name="settings_mini_player_position">Mini oynatıcı konumu</string>
+    <string name="settings_home_screen">Ana ekran</string>
+    <string name="settings_home_description">Bu profilin ana ekranındaki satırları gizleyin, yeniden sıralayın ve filtreleyin.</string>
+    <string name="settings_sections">Bölümler</string>
+    <string name="settings_hidden_sections">Gizlenen bölümler, tekrar açabilmeniz için listede kalır.</string>
+    <string name="settings_keep_watching">İzlemeye Devam Et</string>
+    <string name="settings_live_keep_watching">İzlemeye Devam Et satırındaki canlı kanallar</string>
+    <string name="settings_live_keep_watching_description">Son izlenen canlı kanalları öne çıkanlar satırında gösterin.</string>
+    <string name="settings_movies_keep_watching">İzlemeye Devam Et satırındaki filmler</string>
+    <string name="settings_movies_keep_watching_description">Filmlere devam etme kartlarını öne çıkanlar satırında gösterin.</string>
+    <string name="settings_series_keep_watching">İzlemeye Devam Et satırındaki diziler</string>
+    <string name="settings_series_keep_watching_description">Bölümlere devam etme kartlarını öne çıkanlar satırında gösterin.</string>
+    <string name="settings_android_tv_home">Android TV ana ekranı</string>
+    <string name="settings_android_tv_home_description">İzlemeye Devam Et içeriklerini ve son izlenen canlı kanalları TV ana ekranında gösterin.</string>
+    <string name="settings_refresh_now">Şimdi yenile</string>
+    <string name="settings_refresh_description">Android TV ana ekranındaki İzlemeye Devam Et / son izlenenler kartlarını yeniden oluşturun.</string>
+    <string name="settings_rebuilding">Yeniden oluşturuluyor…</string>
+    <string name="settings_done_check">Tamamlandı ✓</string>
+    <string name="settings_mode"><xliff:g id="mode">%1$s</xliff:g></string>
+    <string name="settings_hidden">Gizli</string>
+    <string name="settings_sidebar_customization">Kenar Menüsü Özelleştirmesi</string>
+    <string name="settings_sidebar_description">Kenar menüsünde hangi simgelerin görüneceğini seçin veya oynatma listenize göre uyarlanmalarını sağlayın.</string>
+    <string name="settings_behavior">Davranış</string>
+    <string name="settings_nav_dynamic_description">Dinamik — simgeler, etkin oynatma listenizin sunduklarına göre uyarlanır. Ana ekran ve Ayarlar her zaman gösterilir.</string>
+    <string name="settings_nav_static_description">Statik — aşağıda hangi simgelerin görüneceğini elle seçin.</string>
+    <string name="settings_icons">Simgeler</string>
+    <string name="settings_shown_in_menu">Kenar menüsünde gösteriliyor</string>
+    <string name="settings_hidden_from_menu">Kenar menüsünde gizli</string>
+    <string name="settings_shown">Gösteriliyor</string>
+    <string name="settings_nav_behavior">Gezinme menüsü davranışı</string>
+    <string name="settings_static">Statik</string>
+    <string name="settings_dynamic">Dinamik</string>
+    <string name="settings_http_proxy">HTTP Proxy</string>
+    <string name="settings_use_proxy">Proxy kullan</string>
+    <string name="settings_proxy_description">Tüm OwnTV trafiğini ve oynatmayı bir HTTP proxy üzerinden gönderin.</string>
+    <string name="settings_host">Sunucu</string>
+    <string name="settings_proxy_host_hint">proxy.example.com</string>
+    <string name="settings_port">Bağlantı noktası</string>
+    <string name="settings_proxy_port_hint">8080</string>
+    <string name="settings_username_optional">Kullanıcı adı (isteğe bağlı)</string>
+    <string name="settings_password_optional">Parola (isteğe bağlı)</string>
+    <string name="settings_test_proxy">Proxy\'yi test et</string>
+    <string name="settings_testing">Test ediliyor…</string>
+    <string name="settings_proxy_privacy">Proxy sağlayıcınız hangi sunuculara bağlandığınızı ve HTTPS kullanmayan trafiğin içeriğini görebilir.</string>
+    <string name="settings_proxy_limitations">Şimdilik yalnızca HTTP proxy desteklenir — SOCKS ve oynatma listesine özel proxy\'ler henüz desteklenmiyor.</string>
+    <string name="settings_proxy_connected"><xliff:g id="millis">%1$d</xliff:g> ms</string>
+    <string name="settings_proxy_invalid_address">Geçerli bir sunucu ve bağlantı noktası (1–65535) girin.</string>
+    <string name="settings_proxy_host_unreachable">Proxy sunucusuna ulaşılamıyor.</string>
+    <string name="settings_proxy_timed_out">Proxy bağlantısı zaman aşımına uğradı.</string>
+    <string name="settings_proxy_connection_failed">Proxy\'ye bağlanılamadı (sunucuyu/bağlantı noktasını kontrol edin).</string>
+    <string name="settings_proxy_http">Proxy, HTTP <xliff:g id="code">%1$d</xliff:g> kodunu döndürdü</string>
+    <string name="settings_proxy_failed">Proxy testi başarısız oldu.</string>
+    <string name="settings_ch_nav_title">CH+/CH− Tuşlarıyla Sayfalama</string>
+    <string name="settings_ch_nav_description">Uzaktan kumandanın CH+ / CH− tuşlarıyla kategori veya öge listesinde sayfalar hâlinde ilerleyin.</string>
+    <string name="settings_ch_nav_enabled">Listelerde sayfalama için CH+/CH− tuşlarını kullan</string>
+    <string name="settings_ch_nav_enabled_description">Açıldığında CH+ ve CH−, odaklanmış panelin içinde atlar (kategori şeridi veya öge listesi ve Kategorileri Özelleştir listesi). Kapatıldığında bu tuşlar söz konusu ekranlarda hiçbir şey yapmaz.</string>
+    <string name="settings_ch_nav_up">CH+ atlama sayısı (başa doğru)</string>
+    <string name="settings_ch_nav_up_description">CH+ tuşuna bir kez basıldığında kaç öge yukarı atlanacağı. Uzun basıldığında her zaman ilk ögeye gidilir.</string>
+    <string name="settings_ch_nav_down">CH− atlama sayısı (sona doğru)</string>
+    <string name="settings_ch_nav_down_description">CH− tuşuna bir kez basıldığında kaç öge aşağı atlanacağı. Uzun basıldığında her zaman son ögeye gidilir.</string>
+    <string name="settings_skip_counts">Atlama sayıları</string>
+    <string name="settings_how_it_works">Nasıl çalışır?</string>
+    <string name="settings_ch_nav_help">• Atlamalar listenin başında ve sonunda sınırlandırılır; böylece kısa listelerde tek basışta sona ulaşılır.\n• CH+ tuşuna uzun basma = ilk öge, CH− tuşuna uzun basma = son öge.\n• “Tümü” listesinde (tüm kanallar / filmler / diziler) uzun basma devre dışıdır — kısa basarak atlama burada da çalışır.\n• O anda odaklanmış olan panele uygulanır — kategori şeridi veya öge listesi/ızgarası.\n• Ayrıca Ayarlar → Kategorileri ve Ögeleri Özelleştir bölümündeki kategori listesinde sayfalar hâlinde ilerler.</string>
+    <string name="settings_large_skips_warning">Büyük atlama değerleri kısa listelerin sonunu aşar ve düşük donanımlı TV\'lerde geçişlerin fazla sıçramalı hissedilmesine neden olabilir.</string>
+    <string name="settings_ch_nav_picker">CH+/CH− tuşlarıyla sayfalama</string>
+    <string name="settings_weather">Hava durumu</string>
+    <string name="settings_top_bar_weather">Üst çubukta hava durumu</string>
+    <string name="settings_show_weather">Hava durumunu göster</string>
+    <string name="settings_show_weather_description">Güncel hava durumunu üst çubukta gösterin.</string>
+    <string name="settings_custom_location">Özel konum</string>
+    <string name="settings_custom_location_description">Hava durumu için kullanılan şehri değiştirin. Otomatik algılama için boş bırakın veya bir şehir (ör. Londra) ya da “enlem,boylam” (ör. 51.5,-0.12) girin. Otomatik algılamanın sunucunun şehrini bulduğu VPN bağlantılarında kullanışlıdır.</string>
+    <string name="settings_temperature_unit">Sıcaklık birimi</string>
+    <string name="settings_temperature_description">Sıcaklığı Celsius veya Fahrenheit cinsinden gösterin.</string>
+    <string name="settings_auto">Otomatik</string>
+    <string name="settings_city_latlon">Şehir veya enlem,boylam</string>
+    <string name="settings_location_hint">Genel IP adresinizden otomatik algılanması için boş bırakın. Bir şehir (ör. Londra) veya “enlem,boylam” (ör. 51.5,-0.12) girin.</string>
+    <string name="settings_metadata">Meta veri (TMDB)</string>
+    <string name="settings_metadata_source">Meta veri kaynağı</string>
+    <string name="settings_metadata_source_description">Film ve dizi ayrıntılarının nereden alınacağını seçin.</string>
+    <string name="settings_metadata_provider_description">Yalnızca oynatma listenizin sağladıklarını kullanın. TMDB sorgusu yapılmaz.</string>
+    <string name="settings_metadata_provider_tmdb_description">Oynatma listenizdeki bilgiler önceliklidir; TMDB eksikleri tamamlar ve oyuncu kadrosu, türler ile arka plan görsellerini ekler.</string>
+    <string name="settings_metadata_tmdb_only_description">Her alanda TMDB bilgilerini tercih edin; yalnızca TMDB hiçbir bilgi sunmadığında oynatma listenize başvurun.</string>
+    <string name="settings_selected">Seçili</string>
+    <string name="settings_active_tmdb_source">Etkin TMDB kaynağı: <xliff:g id="tier">%1$s</xliff:g></string>
+    <string name="settings_metadata_language">Meta veri dili</string>
+    <string name="settings_metadata_language_description">TMDB\'den alınan özetlerin, türlerin ve başlıkların dili. TMDB\'nin çevirmediği alanlar İngilizce kalır. Bu ayarın değiştirilmesi önbelleğe alınmış ayrıntıları temizler ve yeniden alınmalarını sağlar.</string>
+    <string name="settings_advanced_options">Gelişmiş seçenekler</string>
+    <string name="settings_advanced_metadata_description">Paylaşılan varsayılan yerine kendi TMDB API anahtarınızı veya kendi barındırdığınız sunucuyu kullanın.</string>
+    <string name="settings_metadata_server_description">Yerleşik paylaşımlı sunucuyu kullanmak için ikisini de boş bırakın (kurulum gerekmez). Doğrudan TMDB\'ye bağlanmak için kendi TMDB API anahtarınızı veya kendi proxy/yansınızı kullanmak için kendi barındırdığınız sunucunun URL\'sini girin. URL, anahtardan önceliklidir.</string>
+    <string name="settings_tmdb_api_key">TMDB API anahtarı (v3)</string>
+    <string name="settings_self_host_url">Kendi barındırdığınız sunucunun URL\'si</string>
+    <string name="settings_test">Test</string>
+    <string name="settings_metadata_empty_title">Aramak için bir başlık girin.</string>
+    <string name="settings_metadata_server_unavailable">Meta veri sunucusuna ulaşılamadı — ağı / anahtarı / URL\'yi kontrol edin.</string>
+    <string name="settings_metadata_no_match">“<xliff:g id="query">%1$s</xliff:g>” için TMDB eşleşmesi bulunamadı.</string>
+    <string name="settings_metadata_lookup_failed">Arama başarısız oldu.</string>
+    <string name="settings_metadata_match_result"><xliff:g id="title">%1$s</xliff:g><xliff:g id="year">%2$s</xliff:g> · tmdb #<xliff:g id="id">%3$d</xliff:g></string>
+    <string name="settings_metadata_year"> (<xliff:g id="year">%1$d</xliff:g>)</string>
+    <string name="settings_lookup_movie">Film başlığı ara</string>
+    <string name="settings_test_lookup">Aramayı test et</string>
+    <string name="settings_looking_up">Aranıyor…</string>
+    <string name="settings_tmdb_attribution">Bu ürün TMDB API\'sini kullanır ancak TMDB tarafından desteklenmez veya onaylanmaz.</string>
+    <string name="settings_metadata_provider_only">Yalnızca sağlayıcı</string>
+    <string name="settings_metadata_provider_plus_tmdb">Sağlayıcı + TMDB</string>
+    <string name="settings_metadata_tmdb_only">Yalnızca TMDB</string>
+    <string name="settings_tier_default">Varsayılan (paylaşımlı)</string>
+    <string name="settings_tier_key">TMDB anahtarınız</string>
+    <string name="settings_tier_self_host">Kendi sunucunuzda barındırılan</string>
+    <string name="settings_title">Ayarlar</string>
+    <string name="settings_quick_live_preview">Canlı önizleme</string>
+    <string name="settings_quick_preview_sound">Önizleme sesi</string>
+    <string name="settings_quick_channel_numbers">Kanal numaraları</string>
+    <string name="settings_quick_hdr">HDR</string>
+    <string name="settings_quick_autoplay">Otomatik oynatma</string>
+    <string name="settings_quick_check_update">Güncellemeleri denetle</string>
+    <string name="settings_search_label">Ayarlarda ara</string>
+    <string name="settings_search_hint">Ayarlarda ara…</string>
+    <string name="settings_group_general">Genel</string>
+    <string name="settings_language">Dil</string>
+    <string name="settings_language_description">Uygulamanın görüntüleme dili</string>
+    <string name="settings_language_system_default">Sistem varsayılanı</string>
+    <string name="settings_language_system_default_description">Cihaz dilini kullanır</string>
+    <string name="settings_language_search_hint">Dillerde ara…</string>
+    <string name="settings_search_keywords_language">dil yerel ayar çeviri uluslararası i18n</string>
+    <string name="settings_language_coverage"><xliff:g id="percent">%1$d</xliff:g>%%</string>
+    <string name="settings_profile_group">Profil</string>
+    <string name="settings_profiles_description">İzleyicileri, çocuk modunu ve PIN kilitlerini yönetin</string>
+    <string name="settings_content_group">İçerik</string>
+    <string name="settings_playlists">Oynatma listeleri</string>
+    <string name="settings_playlists_description">M3U / Xtream oynatma listeleri ekleyin, yeniden eşitleyin veya kaldırın</string>
+    <string name="settings_epg_sources">EPG Kaynakları</string>
+    <string name="settings_epg_sources_nav_description">TV program rehberi için XMLTV rehber akışları ekleyin</string>
+    <string name="settings_customize">Kategorileri ve Ögeleri Özelleştir</string>
+    <string name="settings_customize_nav_description">Ögeleri gizleyin ve gösterin, kategorileri yeniden adlandırın ve sıralayın</string>
+    <string name="settings_sidebar_description_root">Kenar simgelerini oynatma listenize göre otomatik uyarlayın veya belirli simgeleri gizleyin</string>
+    <string name="settings_ch_paging">CH+/CH− Tuşlarıyla Sayfalama</string>
+    <string name="settings_ch_paging_description">CH+ / CH− tuşlarıyla kategori ve öge listelerinde yukarı/aşağı atlayın</string>
+    <string name="settings_browsing_lists">Gezinme ve listeler</string>
+    <string name="settings_browsing_description">Canlı TV, Filmler ve Diziler bölümlerindeki son kategoriyi ve son ögeyi hatırlayın</string>
+    <string name="settings_home_root">Ana ekran</string>
+    <string name="settings_home_root_description">Ana ekrandaki satırları seçin, yeniden sıralayın ve filtreleyin</string>
+    <string name="settings_metadata_root_description">Filmler ve Diziler için afişler, özetler, oyuncu kadroları ve puanlar</string>
+    <string name="settings_download_folder">İndirme klasörü</string>
+    <string name="settings_app_storage">Uygulama depolama alanı</string>
+    <string name="settings_backup_restore">Yedekleme ve Geri Yükleme</string>
+    <string name="settings_backup_restore_description">Profilleri ve kaynakları dışa aktarın veya geri yükleyin</string>
+    <string name="settings_clear_history">İzleme geçmişini temizle</string>
+    <string name="settings_clear_history_description">Bu profilin son izlenenler ve devam et satırlarını kaldırın</string>
+    <string name="settings_appearance_group">Görünüm</string>
+    <string name="settings_theme">Tema</string>
+    <string name="settings_theme_description">Açık, koyu veya sistemi izle</string>
+    <string name="settings_accent">Vurgu rengi</string>
+    <string name="settings_accent_description">Arayüzü renklendirin — hazır ayarlar, palet veya onaltılık kod</string>
+    <string name="settings_glass_effect">Cam Efekti</string>
+    <string name="settings_glass_description">Yarı saydam buzlu paneller, arka plan görseli ve şeffaflık</string>
+    <string name="settings_ui_zoom">Arayüz Yakınlaştırması</string>
+    <string name="settings_ui_zoom_description">Tüm arayüzü ölçeklendirin</string>
+    <string name="settings_animations">Animasyonlar</string>
+    <string name="settings_animations_description">Arayüz hareketlerini açın veya kapatın — Kapalı seçeneği, düşük donanımlı TV kutularında daha hızlı hissettirir</string>
+    <string name="settings_weather_description_root">Üst çubuktaki hava durumu çipi: gösterin veya gizleyin, özel konumu ve Celsius / Fahrenheit birimini ayarlayın.</string>
+    <string name="settings_playback_group">Oynatma</string>
+    <string name="settings_live_preview_description">Odaklandığınız kanalı otomatik olarak oynatın</string>
+    <string name="settings_preview_audio">Önizleme sesi</string>
+    <string name="settings_preview_audio_description">Canlı önizlemede ses çalın</string>
+    <string name="settings_mini_player_root">Mini oynatıcı</string>
+    <string name="settings_mini_player_root_description">Sabitlenmiş mini oynatıcının boyutu ve konumu</string>
+    <string name="settings_hdr_description">Video ve TV desteklediğinde HDR çıkışı kullanın</string>
+    <string name="settings_auto_frame_rate">Otomatik kare hızı</string>
+    <string name="settings_auto_frame_rate_description">Canlı TV ve VOD içeriklerinde tam ekrandayken TV\'nin yenileme hızını videoyla (24/25/50/60 fps) eşleştirin ve çıkışta eski hâline getirin. TV\'niz veya alıcınız her kanal değişikliğinde HDMI el sıkışmasını gürültülü biçimde tekrarlıyorsa bu seçeneği kapatın.</string>
+    <string name="settings_surround_sound">Çevresel ses</string>
+    <string name="settings_surround_description">Gerçek bir 5.1/7.1 alıcı için Dolby/DTS sesini çevresel sese (5.1/7.1) dönüştürün. TV hoparlörleri veya stereo soundbar kullanıyorsanız KAPALI bırakın — çok kanallı ses bazı TV\'lerde/soundbar\'larda sesin görüntünün gerisinde kalmasına yol açabilir. Eşitleme kayarsa oynatıcının Ses menüsü → A/V eşitleme ayarını hafifçe değiştirin.</string>
+    <string name="settings_autoplay_next">Sonraki bölümü otomatik oynat</string>
+    <string name="settings_autoplay_next_description">Bir bölüm sona erdiğinde sonraki bölümü otomatik olarak başlatın — sezon bitince sonraki sezona geçin.</string>
+    <string name="settings_catchup">Geri izleme</string>
+    <plurals name="settings_catchup_supported">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> kanal geri izlemeyi destekliyor · arşiv oynatması için saat dilimi ve oynatıcı</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> kanal geri izlemeyi destekliyor · arşiv oynatması için saat dilimi ve oynatıcı</item>
+    </plurals>
+    <string name="settings_catchup_unavailable">Bu oynatma listesinde geri izlemeyi destekleyen kanal yok</string>
+    <string name="settings_device">Cihaz</string>
+    <string name="settings_video_player">Video Oynatıcı Ayarları</string>
+    <string name="settings_video_player_description">Kod çözücü, altyazılar, eşitleme</string>
+    <string name="settings_playback_error_log">Oynatma hata günlüğü</string>
+    <string name="settings_playback_speed">Oynatma Hızı</string>
+    <string name="settings_player_zoom">Oynatıcı Yakınlaştırması</string>
+    <string name="settings_playback_error_description">Son oynatma hataları — okunacak veya bildirilecek ayrıntılar</string>
+    <string name="settings_network_group">Ağ</string>
+    <string name="settings_app_group">Uygulama</string>
+    <string name="settings_app_startup">Uygulama başlangıcı</string>
+    <string name="settings_app_startup_description">OwnTV başlatıldığında açılacak bölüm</string>
+    <string name="settings_check_updates">Güncellemeleri denetle</string>
+    <string name="settings_check_updates_description">En son sürümü GitHub Releases üzerinden alın</string>
+    <string name="settings_update_startup">Başlangıçta güncellemeleri denetle</string>
+    <string name="settings_update_startup_description">Uygulama açıldığında yeni sürüm olup olmadığını denetleyin</string>
+    <string name="settings_about">Hakkında</string>
+    <string name="settings_about_description">Sürüm, lisans ve proje bilgileri</string>
+    <string name="settings_live_latency">Canlı yayın gecikmesi</string>
+    <string name="settings_no_settings_match">“<xliff:g id="query">%1$s</xliff:g>” ile eşleşen ayar yok</string>
+    <string name="settings_breadcrumb"><xliff:g id="group">%1$s</xliff:g> › <xliff:g id="title">%2$s</xliff:g></string>
+    <string name="settings_startup_home">Ana ekran</string>
+    <string name="settings_startup_last_channel">Son kanal</string>
+    <string name="settings_startup_favorites">Canlı · Favoriler</string>
+    <string name="settings_all_history">Tüm geçmiş</string>
+    <string name="settings_choose_history">Bu profilden nelerin kaldırılacağını seçin. Oynatma listeleri, favoriler ve indirilenler etkilenmez.</string>
+    <string name="settings_clear_history_confirm"><xliff:g id="scope">%1$s</xliff:g> geçmişi temizlensin mi?</string>
+    <string name="settings_cannot_undo">Bu işlem geri alınamaz.</string>
+    <string name="settings_no">Hayır</string>
+    <string name="settings_yes_clear">Evet, temizle</string>
+    <string name="settings_accent_dialog">Vurgu rengi</string>
+    <string name="settings_presets">Hazır ayarlar</string>
+    <string name="settings_hex_code">Onaltılık kod</string>
+    <string name="settings_hex">Onaltılık</string>
+    <string name="settings_apply">Uygula</string>
+    <string name="settings_hex_error">6 onaltılık basamak girin, ör. 52DBC8</string>
+    <string name="settings_color_picker">Renk seçici</string>
+    <string name="settings_use_color">Bu rengi kullan</string>
+    <string name="settings_about_version">Sürüm <xliff:g id="version">%1$s</xliff:g></string>
+    <string name="settings_about_description_full">Android TV için kendi IPTV oynatıcınız — ücretsiz, açık kaynaklı ve yalnızca oynatıcı işlevi sunan bir uygulama. Herhangi bir kanal veya içerik sağlamaz; yasal olarak erişebildiğiniz kaynakları kendiniz eklersiniz.</string>
+    <string name="settings_about_license">© 2026 Ashiq Hasan · GPLv3 Lisansı</string>
+    <string name="settings_join_telegram">Telegram topluluğumuza katılın</string>
+    <string name="settings_telegram_qr">Telegram grubu QR kodu</string>
+    <string name="settings_telegram_scan">Telefonunuzdan katılmak için QR kodunu tarayın veya yukarıdaki bağlantıyı açın.</string>
+    <string name="settings_contributions">Katkılar, hata bildirimleri ve yıldızlar GitHub\'da memnuniyetle karşılanır.</string>
+    <string name="settings_playback_error_title">Oynatma hata günlüğü</string>
+    <string name="settings_playback_error_description_full">En son oynatma hataları (en yeniden eskiye). Bir sorun bildirirken bu ayrıntıları ekleyin.</string>
+    <string name="settings_loading">Yükleniyor…</string>
+    <string name="settings_no_playback_errors">Kaydedilmiş oynatma hatası yok.</string>
+    <string name="settings_live">Canlı</string>
+    <string name="settings_vod">VOD</string>
+    <string name="settings_clear_log">Günlüğü temizle</string>
+    <string name="settings_browsing_title">Gezinme ve listeler</string>
+    <string name="settings_browsing_description_full">Canlı TV, Filmler ve Diziler bölümlerine döndüğünüzde hangi konuma gidileceği.</string>
+    <string name="settings_section_toggle"><xliff:g id="section">%1$s</xliff:g>: <xliff:g id="state">%2$s</xliff:g></string>
+    <string name="settings_glass_surfaces">Cam yüzeyler</string>
+    <string name="settings_glass_surfaces_description">Uygulamanın hangi bölümlerinin cam olarak görüntüleneceğini seçin. Tüm yüzeylerin kapatılması cam efektini kapatır.</string>
+    <string name="settings_all_surfaces_on">Tüm yüzeyler: Açık</string>
+    <string name="settings_all_surfaces_off">Tüm yüzeyler: Kapalı</string>
+    <string name="settings_surface_toggle"><xliff:g id="surface">%1$s</xliff:g>: <xliff:g id="state">%2$s</xliff:g></string>
+    <string name="settings_transparency_description">Panellerin arkasının ne kadar görüneceği (<xliff:g id="min">%1$d</xliff:g>%%–<xliff:g id="max">%2$d</xliff:g>%%). Değer yükseldikçe panel daha opak olur.</string>
+    <string name="settings_catchup_description">Geri izleme zaman damgalarının nasıl gönderileceği. Cihazınızın saat dilimini kullanın veya sağlayıcınızın sunucusunun beklediği zaman farkını ayarlayın.</string>
+    <string name="settings_manual">Manuel</string>
+    <string name="settings_theme_dark">Koyu</string>
+    <string name="settings_theme_light">Açık</string>
+    <string name="settings_theme_system">Sistem</string>
+    <string name="settings_accent_teal">Deniz mavisi</string>
+    <string name="settings_accent_blue">Mavi</string>
+    <string name="settings_accent_violet">Menekşe</string>
+    <string name="settings_accent_green">Yeşil</string>
+    <string name="settings_accent_amber">Kehribar</string>
+    <string name="settings_group_profile">Profil</string>
+    <string name="settings_group_content">İçerik</string>
+    <string name="settings_group_appearance">Görünüm</string>
+    <string name="settings_group_playback">Oynatma</string>
+    <string name="settings_group_network">Ağ</string>
+    <string name="settings_dns">DNS</string>
+    <string name="settings_group_app">Uygulama</string>
+    <string name="settings_search_guide_logos">Rehber kanal logoları</string>
+    <string name="settings_search_keywords_profiles">izleyiciler çocuk modu PIN kilidi hesap</string>
+    <string name="settings_search_keywords_playlists">M3U Xtream kaynak eşitleme ekle kaldır</string>
+    <string name="settings_search_keywords_epg">XMLTV rehber akış program</string>
+    <string name="settings_search_keywords_logos">kanal logo simge XMLTV rehber picon oynatma listesi</string>
+    <string name="settings_search_keywords_customize">gizle göster yeniden adlandır sırala kategoriler</string>
+    <string name="settings_search_keywords_sidebar">kenar şerit simgeler dinamik statik gizle göster uyarla oynatma listesi</string>
+    <string name="settings_search_keywords_ch">kanal yukarı aşağı atla sayfa liste kategori kanal</string>
+    <string name="settings_search_keywords_browsing">hatırla konum kaydır kategori son öge canlı filmler diziler sıfırla başa</string>
+    <string name="settings_search_keywords_home">satırlar öne çıkan yeniden sırala filtrele</string>
+    <string name="settings_search_keywords_metadata">afişler özetler oyuncu kadrosu puanlar</string>
+    <string name="settings_search_keywords_download">depolama yol dizin</string>
+    <string name="settings_search_keywords_backup">dışa aktarma içe aktarma profiller kaynaklar</string>
+    <string name="settings_search_keywords_history">son izlenenler devam et kaldır</string>
+    <string name="settings_search_keywords_theme">açık koyu sistem</string>
+    <string name="settings_search_keywords_accent">renk tonu palet onaltılık hazır ayar</string>
+    <string name="settings_search_keywords_zoom">ölçek arayüz boyut</string>
+    <string name="settings_search_keywords_animation">hareket hız performans</string>
+    <string name="settings_search_keywords_weather">üst çubuk çip konum Celsius Fahrenheit</string>
+    <string name="settings_search_keywords_live_preview">otomatik oynat odak kanal</string>
+    <string name="settings_search_keywords_sound">ses canlı önizleme</string>
+    <string name="settings_search_keywords_channel_numbers">kanal numara doğrudan ayarla yaz rakamlar tuş takımı sayısal geçiş lcn</string>
+    <string name="settings_search_keywords_mini">sabitlenmiş pip mini oynatıcı boyut konum ölçek yüzde köşe taşı</string>
+    <string name="settings_search_keywords_hdr">yüksek dinamik aralık çıkış</string>
+    <string name="settings_search_keywords_afr">afr yenileme hızı hz titreme 24fps 25fps 50hz 60hz ekran modu eşleştirme</string>
+    <string name="settings_search_keywords_surround">Dolby DTS 5.1 7.1 alıcı ses</string>
+    <string name="settings_search_keywords_autoplay">otomatik oynatma dizi sezon</string>
+    <string name="settings_search_keywords_catchup">arşiv saat dilimi zaman farkı geri izleme harici oynatıcı vlc mx</string>
+    <string name="settings_search_keywords_video">kod çözücü altyazılar eşitleme</string>
+    <string name="settings_search_keywords_subtitle_appearance">altyazı boyutu renk konum saydamlık arka plan opaklık</string>
+    <string name="settings_search_keywords_latency">canlı arabellek gecikme düşük saniye yayın noktası yakın</string>
+    <string name="settings_search_keywords_errors">hata çökme başarısızlık tanılama bildir</string>
+    <string name="settings_search_keywords_proxy">http trafik yönlendirme</string>
+    <string name="settings_search_keywords_dns">alan adı arama çözümleyici doh dns-over-https</string>
+    <string name="settings_search_keywords_startup">başlat aç giriş</string>
+    <string name="settings_search_keywords_updates">github sürüm</string>
+    <string name="settings_search_keywords_update_auto">otomatik güncelleme yeni sürüm</string>
+    <string name="settings_search_keywords_about">sürüm lisans proje bilgi</string>
+    <string name="settings_language_default">Varsayılan (İngilizce)</string>
+    <string name="settings_language_device">Cihaz dili</string>
+    <string name="settings_language_arabic">Arapça</string>
+    <string name="settings_language_bulgarian">Bulgarca</string>
+    <string name="settings_language_chinese">Çince</string>
+    <string name="settings_language_croatian">Hırvatça</string>
+    <string name="settings_language_czech">Çekçe</string>
+    <string name="settings_language_danish">Danca</string>
+    <string name="settings_language_dutch">Felemenkçe</string>
+    <string name="settings_language_english">İngilizce</string>
+    <string name="settings_language_estonian">Estonca</string>
+    <string name="settings_language_finnish">Fince</string>
+    <string name="settings_language_french">Fransızca</string>
+    <string name="settings_language_german">Almanca</string>
+    <string name="settings_language_greek">Yunanca</string>
+    <string name="settings_language_hebrew">İbranice</string>
+    <string name="settings_language_hindi">Hintçe</string>
+    <string name="settings_language_hungarian">Macarca</string>
+    <string name="settings_language_indonesian">Endonezce</string>
+    <string name="settings_language_italian">İtalyanca</string>
+    <string name="settings_language_japanese">Japonca</string>
+    <string name="settings_language_korean">Korece</string>
+    <string name="settings_language_latvian">Letonca</string>
+    <string name="settings_language_lithuanian">Litvanca</string>
+    <string name="settings_language_malay">Malayca</string>
+    <string name="settings_language_norwegian">Norveççe</string>
+    <string name="settings_language_persian">Farsça</string>
+    <string name="settings_language_polish">Lehçe</string>
+    <string name="settings_language_portuguese_brazil">Portekizce (Brezilya)</string>
+    <string name="settings_language_portuguese_portugal">Portekizce (Portekiz)</string>
+    <string name="settings_language_romanian">Rumence</string>
+    <string name="settings_language_russian">Rusça</string>
+    <string name="settings_language_serbian">Sırpça</string>
+    <string name="settings_language_slovak">Slovakça</string>
+    <string name="settings_language_slovenian">Slovence</string>
+    <string name="settings_language_spanish">İspanyolca</string>
+    <string name="settings_language_spanish_latam">İspanyolca (Latin Amerika)</string>
+    <string name="settings_language_swedish">İsveççe</string>
+    <string name="settings_language_thai">Tayca</string>
+    <string name="settings_language_turkish">Türkçe</string>
+    <string name="settings_language_ukrainian">Ukraynaca</string>
+    <string name="settings_language_vietnamese">Vietnamca</string>
+    <string name="settings_video_player_title">Video Oynatıcı</string>
+    <string name="settings_decoding">Kod çözme</string>
+    <string name="settings_hardware_decoding">Donanımla kod çözme</string>
+    <string name="settings_hardware_decoding_description">TV\'nin donanım kod çözücüsünü kullanın. Bazı akışlar takılıyor veya görüntü bozuklukları gösteriyorsa kapatın.</string>
+    <string name="settings_movies_series_player">Film ve Dizi oynatıcısı</string>
+    <string name="settings_external_player">Harici oynatıcı</string>
+    <string name="settings_default_zoom">Varsayılan yakınlaştırma</string>
+    <string name="settings_default_zoom_description">Oynatma başladığında uygulanacak en-boy oranı/yakınlaştırma.</string>
+    <string name="settings_resume_playback">Oynatmaya devam et</string>
+    <string name="settings_resume_playback_description">Bir filmin veya bölümün kayıtlı oynatma konumu olduğunda ne yapılacağı.</string>
+    <string name="settings_subtitles">Altyazılar</string>
+    <string name="settings_subtitle_appearance">Altyazı görünümü</string>
+    <string name="settings_subtitle_appearance_description">Boyut, metin rengi, ekrandaki konum ve arka plan saydamlığı. Kapalıyken altyazılar varsayılan görünümlerini korur — buna yayıncıların Canlı TV altyazılarına eklediği biçimlendirme de dahildir.</string>
+    <string name="settings_subtitle_size">Altyazı boyutu</string>
+    <string name="settings_subtitle_size_description">Altyazı metnini ölçeklendirin.</string>
+    <string name="settings_preferred_subtitle_language">Tercih edilen altyazı dili</string>
+    <string name="settings_preferred_language_description">Kullanılabilir olduğunda bu altyazı parçasını otomatik olarak seç.</string>
+    <string name="settings_open_subtitles">OpenSubtitles</string>
+    <string name="settings_open_subtitles_description">Altyazıları aramak ve indirmek, ayrıca indirilen altyazıları yönetmek için oturum açın. Her profil için ayrı ayrı geçerlidir; ücretsiz bir opensubtitles.com hesabı gerekir.</string>
+    <string name="settings_audio">Ses</string>
+    <string name="settings_preferred_audio_language">Tercih edilen ses dili</string>
+    <string name="settings_audio_sync">Ses eşitleme</string>
+    <string name="settings_audio_sync_description">Görüntüyle eşleşmesi için sesi öne veya geriye kaydırın.</string>
+    <string name="settings_live_tv">Canlı TV</string>
+    <string name="settings_live_latency_description">Yayının canlı yayın noktasına ne kadar yakın oynatılacağı. Daha düşük değer canlı yayına daha yakın ancak daha küçük bir arabellek anlamına gelir; bu nedenle zayıf akışlar daha sık takılabilir veya yeniden bağlanabilir. Açacağınız bir sonraki kanalda uygulanır.</string>
+    <string name="settings_channel_numbers">Kanal numaraları</string>
+    <string name="settings_channel_numbers_description">Sağlayıcınızın kanal numarasını Canlı TV listesindeki, kanal listesi ekran katmanındaki ve oynatıcıdaki adın yanında gösterin; ayrıca tam ekran oynatma sırasında doğrudan o kanala geçmek için uzaktan kumandadan bir numara girin (OK anında kanala geçer, Geri iptal eder). Kapalıyken tüm numaralar gizlenir ve sayı tuşları yok sayılır; hiçbir veri kaybolmaz ve tekrar açıldığında numaralar geri gelir.</string>
+    <string name="settings_diagnostics">Tanılama</string>
+    <string name="settings_measured_stats">Ölçülen akış istatistikleri</string>
+    <string name="settings_measured_stats_description">Akış bilgisi ekran katmanında anlık fps, bit hızı ve atlanan kareleri gösterin (bu değerleri bildirmeyen akışlarda, ekran katmanı açıkken ölçülür). Yalnızca düşük donanımlı bir TV takılıyorsa kapatın — gerçek görüntüyü hiçbir zaman etkilemez, yalnızca tanılama sayılarını etkiler.</string>
+    <string name="settings_none_auto">Yok / Otomatik</string>
+    <string name="settings_view_grid">Izgara</string>
+    <string name="settings_view_list">Liste</string>
+    <string name="settings_language_portuguese">Portekizce</string>
+    <string name="settings_subtitle_small">Küçük</string>
+    <string name="settings_subtitle_normal">Normal</string>
+    <string name="settings_subtitle_large">Büyük</string>
+    <string name="settings_subtitle_extra_large">Çok Büyük</string>
+    <string name="settings_live_latency_low">Düşük gecikme</string>
+    <string name="settings_live_latency_balanced">Dengeli</string>
+    <string name="settings_live_latency_stable">Kararlı</string>
+    <string name="settings_live_latency_custom">Özel</string>
+    <string name="settings_low_latency_warning">⚠️ Düşük gecikme</string>
+    <string name="settings_low_latency_warning_description">Canlı yayına daha yakın oynatmak daha küçük bir arabellek bırakır. Daha yavaş bağlantılarda veya kararsız akışlarda bu durum daha fazla arabelleğe almaya, takılmaya ya da yeniden bağlanmaya neden olabilir.\n\nBir kanal kararsız hâle gelirse Dengeli seçeneğini belirleyin.</string>
+    <string name="settings_low_latency_understand">Anladım</string>
+    <string name="settings_custom_live_buffer">Özel canlı yayın arabelleği</string>
+    <string name="settings_live_buffer_seconds"><xliff:g id="seconds">%1$d</xliff:g> sn.</string>
+    <string name="settings_audio_delay"><xliff:g id="delay">%1$d</xliff:g> ms</string>
+    <string name="settings_external_player_description">Hangi bölümlerin harici bir uygulamada açılacağını seçin.</string>
+    <string name="settings_audio_delay_value"><xliff:g id="delay">%1$d</xliff:g> ms</string>
+    <string name="settings_movies_player_description">mpv (önerilen) en geniş biçim desteğine sahiptir — DTS/TrueHD ses, sıra dışı dosyalar — ayrıca ses/görüntü eşitleme düzeltmesi sunar. Yalnızca filmler veya bölümler başlamazsa ExoPlayer\'a geçin: Belirli TV\'lerde mpv\'nin oynatamadığı bazı akışları oynatabilir ancak DTS/TrueHD sesin kodunu çözemez ve ses/görüntü eşitleme düzeltmesi yoktur. Hangisini seçerseniz seçin, başarısız olursa diğeri otomatik olarak denenir.</string>
+    <string name="settings_external_player_row_description">Akışları yerleşik oynatıcı yerine her kısım için ayrı seçilen harici bir uygulamada (VLC, MX Player) açın. Bu uygulamanın kodunu çözemediği akışlar için veya başka bir oynatıcıyı tercih ediyorsanız kullanışlıdır. Harici oynatma sırasında devam konumu ve önceki/sonraki özellikleri kullanılamaz; özel bir User-Agent veya yönlendiren bilgisi gerektiren akışlar oynatılamayabilir.</string>
+    <string name="settings_resume_always">Her zaman devam et</string>
+    <string name="settings_resume_ask">Devam etmeden önce sor</string>
+    <string name="settings_resume_never">Asla devam etme</string>
+    <string name="settings_delete_subtitles">Altyazıları sil</string>
+    <string name="settings_delete_all">Tümünü sil</string>
+    <string name="settings_movies">Filmler</string>
+    <string name="settings_series">Diziler</string>
+    <string name="settings_no_downloaded_subtitles"><xliff:g id="section">%1$s</xliff:g> için indirilmiş altyazı yok.</string>
+    <string name="settings_delete_subtitle">Altyazıyı sil</string>
+    <string name="settings_delete_subtitle_message"><xliff:g id="name">%1$s</xliff:g> altyazısını “<xliff:g id="title">%2$s</xliff:g>” içeriğinden silmek istiyor musunuz? Daha sonra yeniden indirilebilir.</string>
+    <string name="settings_delete_all_subtitles">Tüm altyazıları sil</string>
+    <string name="settings_delete_all_movies">Tüm film altyazılarını sil</string>
+    <string name="settings_delete_all_series">Tüm dizi altyazılarını sil</string>
+    <string name="settings_section_count"><xliff:g id="section">%1$s</xliff:g> (<xliff:g id="count">%2$d</xliff:g>)</string>
+    <string name="settings_sync_guide_question">Program rehberi şimdi eşitlensin mi?</string>
+    <string name="settings_sync_guide_description">“<xliff:g id="source">%1$s</xliff:g>” için program rehberini (EPG) indirin. Bunu daha sonra Ayarlar → EPG bölümünden de yapabilirsiniz.</string>
+    <string name="settings_not_now">Şimdi değil</string>
+    <string name="settings_sync_now">Şimdi eşitle</string>
+    <string name="settings_syncing_guide">Program rehberi eşitleniyor…</string>
+    <string name="settings_connecting">Bağlanıyor…</string>
+    <string name="settings_run_background">Arka planda çalıştır</string>
+    <string name="settings_guide_synced">Program rehberi eşitlendi</string>
+    <string name="settings_guide_sync_failed">Program rehberi eşitlenemedi</string>
+    <string name="settings_restore_remote_title">Başka bir cihazdan geri yükle</string>
+    <string name="settings_restore_remote_description">Aynı Wi-Fi ağına bağlı bir telefon veya dizüstü bilgisayarda QR kodunu tarayın (ya da URL\'yi açın), bu PIN\'i girin, OwnTV yedekleme dosyanızı seçin ve TV\'ye Gönder\'e dokunun. Ardından burada nelerin geri yükleneceğini seçin.</string>
+    <string name="settings_opening_server">Sunucu açılıyor…</string>
+    <string name="settings_enter_pin_browser">Bu PIN\'i tarayıcıya girin</string>
+    <string name="settings_companion_qr">Yardımcı URL\'nin QR kodu</string>
+    <string name="settings_open_url">Veya bu URL\'yi açın</string>
+    <string name="settings_try_again">Tekrar dene</string>
+    <string name="settings_new_pin">Yeni bir PIN ile yeniden başlat</string>
+    <string name="settings_download_remote_title">Başka bir cihaza indir</string>
+    <string name="settings_download_remote_description">Aynı Wi-Fi ağına bağlı bir telefon veya dizüstü bilgisayarda QR kodunu tarayın (ya da URL\'yi açın), bu PIN\'i girin ve güvenli bir yerde saklamak için yedekleme dosyanızı indirin.</string>
+    <string name="settings_preparing_backup">Yedekleme hazırlanıyor…</string>
+    <string name="settings_liquid_glass_on">Sıvı cam: Açık</string>
+    <string name="settings_liquid_glass_off">Sıvı cam: Kapalı</string>
+    <string name="settings_background_on">Arka plan görseli: Açık</string>
+    <string name="settings_background_off">Arka plan görseli: Kapalı</string>
+    <string name="settings_ui_zoom_range">Tüm arayüzü ölçeklendirin (<xliff:g id="min">%1$d</xliff:g>%%–<xliff:g id="max">%2$d</xliff:g>%%).</string>
+    <string name="settings_low_zoom_warning_title">⚠️ Düşük yakınlaştırma uyarısı</string>
+    <string name="settings_low_zoom_warning"><xliff:g id="zoom">%1$d</xliff:g>%% yakınlaştırma, ekranda aynı anda çok daha fazla öğe gösterir. Sınırlı belleğe sahip cihazlarda (örneğin 2 GB belleğe sahip TV çubuklarında), özellikle büyük oynatma listeleri ve EPG verileri kullanılırken bu durum uygulamanın kararsızlaşmasına veya çökmesine neden olabilir.\n\nDevam etmek için OK düğmesine, <xliff:g id="safe_zoom">%2$d</xliff:g>%% düzeyinde kalmak için Geri düğmesine basın.</string>
+    <string name="settings_low_zoom_accept">Anlıyorum ve riski kabul ediyorum</string>
+    <string name="settings_surface_transparency"><xliff:g id="percent">%1$d</xliff:g>%%</string>
+    <string name="settings_surface_count_all">Yüzeyler: Tümü</string>
+    <plurals name="settings_surface_count">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> / <xliff:g id="total">%2$d</xliff:g> yüzey</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> / <xliff:g id="total">%2$d</xliff:g> yüzey</item>
+    </plurals>
+    <string name="settings_catchup_timezone_device">Cihaz</string>
+    <string name="settings_catchup_player_ask">Her zaman sor</string>
+    <string name="settings_catchup_player_internal">OwnTV oynatıcı</string>
+    <string name="settings_catchup_player_external">Harici oynatıcı</string>
+    <string name="settings_soon">YAKINDA</string>
+    <string name="settings_download_folder_title">İndirme klasörünü seçin</string>
+    <string name="settings_pick_background_title">Bir arka plan görseli seçin</string>
+    <string name="settings_theme_dialog">Tema</string>
+    <string name="settings_app_startup_dialog">Uygulama başlangıcı</string>
+    <string name="settings_animations_dialog">Animasyonlar</string>
+    <string name="settings_close">Kapat</string>
+    <string name="settings_done">Bitti</string>
+    <string name="settings_reset">Sıfırla</string>
+    <string name="settings_device_details"><xliff:g id="model">%1$s</xliff:g> · <xliff:g id="android">%2$s</xliff:g></string>
+    <string name="settings_playback_entry"><xliff:g id="time">%1$s</xliff:g> · <xliff:g id="engine">%2$s</xliff:g> · <xliff:g id="kind">%3$s</xliff:g></string>
+    <string name="settings_history_live">Canlı TV</string>
+    <string name="settings_history_movies">Filmler</string>
+    <string name="settings_history_series">Diziler</string>
+    <string name="settings_history_all">tümü</string>
+    <string name="settings_decrease">–</string>
+    <string name="settings_increase">+</string>
+    <string name="settings_glass_effect_title">Cam Efekti</string>
+    <string name="settings_glass_effect_description">Bir arka plan fotoğrafının veya uygulamanın kendi arka planının üzerinde yarı saydam buzlu paneller.</string>
+    <string name="settings_transparency_title">Saydamlık</string>
+    <string name="settings_blur_title">Bulanıklık / Buzlanma</string>
+    <string name="settings_blur_description_enabled">Arka plan görselinin ne kadar buzlu görüneceği (<xliff:g id="min">%1$d</xliff:g>%%–<xliff:g id="max">%2$d</xliff:g>%%). Yalnızca bir arka plan görseli üzerinde uygulanır.</string>
+    <string name="settings_blur_description_disabled">Arka plan görselinin ne kadar buzlu görüneceği (<xliff:g id="min">%1$d</xliff:g>%%–<xliff:g id="max">%2$d</xliff:g>%%). Yalnızca bir arka plan görseli üzerinde uygulanır. Etkinleştirmek için bir arka plan görseli ayarlayın.</string>
+    <string name="settings_glass_surface_panels">İçerik panelleri</string>
+    <string name="settings_glass_surface_sidebar">Kenar çubuğu</string>
+    <string name="settings_glass_surface_preview">Ön izleme bölmeleri</string>
+    <string name="settings_glass_surface_dialogs">İletişim kutuları ve açılır pencereler</string>
+    <string name="settings_glass_surface_topbar">Üst çubuk</string>
+    <string name="settings_glass_surface_cards">Kartlar</string>
+    <string name="settings_glass_surface_miniplayer">Mini oynatıcı</string>
+    <string name="settings_browsing_last_category">Son kategoriyi hatırla</string>
+    <string name="settings_browsing_last_category_description">Bölümü Tümü yerine bıraktığınız kategoride yeniden açın.</string>
+    <string name="settings_browsing_last_item">Son öğeyi hatırla</string>
+    <string name="settings_browsing_last_item_description">Her kategori, en baştan başlamak yerine kendi kaydırma konumunu korur. Canlı TV ayrıca son odaklanılan kanalı geri getirir.</string>
+    <string name="settings_catchup_player">Geri izlemeyi şununla oynat</string>
+    <string name="settings_customize_title">Kategorileri ve Öğeleri Özelleştir</string>
+    <string name="settings_customize_pin_locked">Bu ekran PIN ile kilitli.</string>
+    <string name="settings_customize_wrong_pin">Yanlış PIN — tekrar deneyin</string>
+    <string name="settings_customize_enter_pin">PIN\'i girin</string>
+    <string name="settings_customize_set_pin">🔒 PIN ayarla</string>
+    <string name="settings_customize_change_pin">🔒 PIN\'i değiştir</string>
+    <string name="settings_customize_remove_lock">Kilidi kaldır</string>
+    <string name="settings_customize_description">Bu profil için kanalları, filmleri ve dizileri gizleyin veya yeniden gösterin; kategorileri yeniden adlandırın ya da sıralayın. Yeniden eşitlemelerden etkilenmez.</string>
+    <string name="settings_customize_new_category_behavior">Yeni kategori davranışı</string>
+    <string name="settings_customize_hide_new">Gizle — yeniden eşitleme sırasında eklenen yeni kategoriler varsayılan olarak gizlenir</string>
+    <string name="settings_customize_show_new">Göster — yeniden eşitleme sırasında eklenen yeni kategoriler varsayılan olarak gösterilir</string>
+    <string name="settings_customize_hide">Gizle</string>
+    <string name="settings_customize_show">Göster</string>
+    <string name="settings_customize_behavior_hide">Gizli</string>
+    <string name="settings_customize_behavior_show">Görünür</string>
+    <string name="settings_customize_hidden_channels">Gizli kanallar</string>
+    <string name="settings_customize_hidden_movies">Gizli filmler</string>
+    <string name="settings_customize_hidden_series">Gizli diziler</string>
+    <string name="settings_customize_unhide_description">Bir öğeyi listelere geri getirmek için yeniden gösterin.</string>
+    <string name="settings_customize_categories">Kategoriler</string>
+    <string name="settings_customize_empty">Bu bölümde henüz kategori yok — önce bir kaynak ekleyin.</string>
+    <string name="settings_customize_range_hide_start">Aralık seçimi başladı. Aralığı seçmek için son öğede Göster/Gizle düğmesine basın.</string>
+    <string name="settings_customize_range_rename_start">Yeniden adlandırma aralığı başladı. Aralığı seçmek için son öğede Yeniden adlandır düğmesine basın.</string>
+    <string name="settings_customize_range_move_start">Taşıma aralığı başladı. Tüm aralığı taşımak için son öğede ⤒ ↑ ↓ ⤓ düğmelerinden birine basın.</string>
+    <plurals name="settings_customize_range_selected">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> kategori seçildi. Taşımak için ⤒ ↑ ↓ ⤓ düğmelerinden birine basmaya devam edin.</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> kategori seçildi. Birlikte taşımak için ⤒ ↑ ↓ ⤓ düğmelerinden birine basmaya devam edin.</item>
+    </plurals>
+    <string name="settings_customize_rename">Yeniden adlandır</string>
+    <string name="settings_customize_rename_category">Kategoriyi yeniden adlandır</string>
+    <string name="settings_customize_rename_or_delete_category">Kategoriyi yeniden adlandır veya sil</string>
+    <string name="settings_customize_new_category">＋ Yeni kategori</string>
+    <string name="settings_customize_sort_button">Sırala: <xliff:g id="label">%1$s</xliff:g> ▾</string>
+    <string name="settings_customize_new_categories_button">Yeni kategoriler: <xliff:g id="label">%1$s</xliff:g> ▾</string>
+    <string name="settings_customize_rename_hint">Yalnızca bu profil için geçerlidir. “<xliff:g id="name">%1$s</xliff:g>” adını geri yüklemek için boş bırakın.</string>
+    <string name="settings_customize_remove_pin_title">PIN kilidi kaldırılsın mı?</string>
+    <string name="settings_customize_remove_pin_message">Özelleştirme ekranı artık PIN sormadan açılacak.</string>
+    <string name="settings_customize_remove">Kaldır</string>
+    <string name="settings_customize_confirm_pin">Yeni PIN\'i doğrulayın</string>
+    <string name="settings_customize_pin_mismatch">PIN\'ler eşleşmiyor — yeniden girin</string>
+    <string name="settings_customize_new_pin">Yeni bir PIN girin</string>
+    <plurals name="settings_customize_selected_categories">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> kategori seçildi.</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> kategori seçildi.</item>
+    </plurals>
+    <string name="settings_customize_hide_show_title">Kategorileri gizle veya göster</string>
+    <string name="settings_customize_was">önceki adı “<xliff:g id="name">%1$s</xliff:g>”</string>
+    <string name="settings_customize_hidden">Gizli</string>
+    <string name="settings_customize_unhide">Yeniden göster</string>
+    <string name="settings_customize_metadata_separator">  ·  </string>
+    <string name="settings_sources_title">Kaynaklar</string>
+    <string name="settings_sources_description">Kaynaklar tüm profiller arasında paylaşılır.</string>
+    <string name="settings_sources_empty">Henüz kaynak yok. Bir M3U veya Xtream kaynağı ekleyin.</string>
+    <string name="settings_sources_add">Kaynak ekle</string>
+    <string name="settings_sources_import_failed">İçe aktarma başarısız oldu</string>
+    <string name="settings_sources_importing">Katalog içe aktarılıyor…</string>
+    <string name="settings_sources_preparing">Katalog hazırlanıyor</string>
+    <string name="settings_sources_deleting">SİLİNİYOR…</string>
+    <string name="settings_sources_resync">Yeniden eşitle</string>
+    <string name="settings_sources_delete_title">“<xliff:g id="name">%1$s</xliff:g>” silinsin mi?</string>
+    <string name="settings_sources_delete_message">Bu işlem, kaynağı ve kaynağa ait tüm kanalları, filmleri ve dizileri her profilden kaldırır.</string>
+    <string name="settings_sources_type_m3u">M3U · <xliff:g id="url">%1$s</xliff:g></string>
+    <string name="settings_sources_type_xtream">Xtream · <xliff:g id="url">%1$s</xliff:g></string>
+    <string name="settings_sources_type_stalker">Stalker · <xliff:g id="url">%1$s</xliff:g></string>
+    <string name="settings_sources_expiry">Son kullanma tarihi: <xliff:g id="date">%1$s</xliff:g></string>
+    <string name="settings_sources_auto_refresh">⟳ <xliff:g id="mode">%1$s</xliff:g></string>
+    <string name="settings_sources_default">VARSAYILAN</string>
+    <string name="settings_sources_backup">Yedekleme</string>
+    <string name="settings_sources_details_separator">  •  </string>
+    <string name="settings_sources_preparing_detail">Katalog hazırlanıyor</string>
+    <string name="settings_sources_removing_detail">Kaldırılıyor…</string>
+    <string name="settings_sources_edit">Düzenle</string>
+    <string name="settings_sources_delete">Sil</string>
+    <string name="settings_sources_cancel">İptal</string>
+    <string name="settings_sources_try_again">Tekrar dene</string>
+    <string name="settings_sources_import_title">İçe aktarma tamamlandı</string>
+    <string name="settings_sources_resync_title_full">“<xliff:g id="name">%1$s</xliff:g>” kaynağını yeniden eşitle</string>
+    <string name="settings_sources_resync_now_full">Şimdi yeniden eşitle</string>
+    <string name="settings_sources_resync_remove_full">Yeniden eşitle ve eksik başlıkları kaldır</string>
+    <string name="settings_sources_resync_description">Şimdi yeniden eşitle, en son kataloğu getirir ve önceden kaydedilmiş her şeyi korur.\n\nYeniden eşitle ve eksik başlıkları kaldır seçeneği, sağlayıcının artık listelemediği başlıkların kaldırılmasına da izin verir. Hâlâ listelenen başlıklara ait favorileriniz, geçmişiniz ve devam etme konumlarınız korunur.</string>
+    <string name="settings_sources_refresh_off">Kapalı</string>
+    <string name="settings_sources_refresh_startup">Başlangıçta yenile</string>
+    <string name="settings_sources_refresh_6h">6 saat</string>
+    <string name="settings_sources_refresh_12h">12 saat</string>
+    <string name="settings_sources_refresh_24h">24 saat</string>
+    <string name="settings_sources_refresh_48h">48 saat</string>
+    <string name="settings_epg_sources_title">EPG Kaynakları</string>
+    <string name="settings_epg_sources_empty">Henüz EPG kaynağı yok. Bir XMLTV bağlantısı ekleyin.</string>
+    <string name="settings_epg_sources_add">EPG kaynağı ekle</string>
+    <string name="settings_epg_sources_edit">EPG kaynağını düzenle</string>
+    <string name="settings_epg_sources_add_sync">Ekle ve eşitle</string>
+    <string name="settings_epg_sources_save_sync">Kaydet ve eşitle</string>
+    <string name="settings_epg_sources_fill_playlist">Oynatma listesinden doldur</string>
+    <string name="settings_epg_sources_none_playlist">Oynatma listelerinizin hiçbiri EPG URL\'si sağlamıyor.</string>
+    <string name="settings_epg_sources_use_logos">Bu rehberin kanal logolarını kullan</string>
+    <string name="settings_epg_sources_logos_description">Oynatma listenizin logoları yerine bu XMLTV akışındaki logoları gösterin. Bu akışta logosu olmayan kanallar oynatma listesindeki logoyu kullanmaya devam eder.</string>
+    <string name="settings_epg_sources_name">Ad</string>
+    <string name="settings_epg_sources_url">XMLTV URL\'si</string>
+    <string name="settings_epg_sources_user_agent">User-Agent (isteğe bağlı)</string>
+    <string name="settings_epg_sources_name_hint">ör. Birleşik Krallık Rehberi</string>
+    <string name="settings_epg_sources_url_hint">https://…/epg.xml(.gz)</string>
+    <string name="settings_epg_sources_user_agent_hint">Varsayılan için boş bırakın</string>
+    <string name="settings_epg_sources_description">Program rehberini dolduran XMLTV rehber akışlarıdır. Eklendiklerinde otomatik olarak eşitlenir ve oynatma listelerinizdeki kanallarla birleştirilir.</string>
+    <string name="settings_epg_sources_delete_title">“<xliff:g id="name">%1$s</xliff:g>” silinsin mi?</string>
+    <string name="settings_epg_sources_delete_message">Bu EPG kaynağını ve rehber verilerini kaldırır. Kanallarınız kalır.</string>
+    <string name="settings_epg_sources_syncing_percent">Eşitleniyor: <xliff:g id="percent">%1$d</xliff:g>%%</string>
+    <plurals name="settings_epg_sources_catchup">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> kanalda geri izleme kullanılabilir.</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> kanalda geri izleme kullanılabilir.</item>
+    </plurals>
+    <string name="settings_epg_sources_error">⚠ <xliff:g id="error">%1$s</xliff:g></string>
+    <string name="settings_epg_sources_auto_refresh_title">Otomatik yenileme</string>
+    <string name="settings_epg_sources_auto_refresh_description">Kapalı, başlangıçta veya veriler eskidiğinde</string>
+    <string name="settings_epg_sources_on">Açık</string>
+    <string name="settings_epg_sources_off">Kapalı</string>
+    <string name="settings_epg_sources_not_synced">Henüz eşitlenmedi</string>
+    <string name="settings_epg_refresh_1h">1 saat</string>
+    <string name="settings_epg_refresh_3h">3 saat</string>
+    <string name="settings_epg_refresh_6h">6 saat</string>
+    <string name="settings_epg_refresh_12h">12 saat</string>
+    <string name="settings_epg_refresh_24h">24 saat</string>
+    <string name="settings_epg_refresh_48h">48 saat</string>
+    <string name="settings_epg_sources_deleting">Siliniyor…</string>
+    <string name="settings_epg_sources_syncing_label">Eşitleniyor</string>
+    <string name="settings_epg_sources_connecting">Bağlanıyor…</string>
+    <plurals name="settings_epg_sources_status_count_channels">
+        <item quantity="one">Rehber <xliff:g id="channels">%1$d</xliff:g> kanal içeriyor.</item>
+        <item quantity="other">Rehber <xliff:g id="channels">%1$d</xliff:g> kanal içeriyor.</item>
+    </plurals>
+    <plurals name="settings_epg_sources_status_count_programmes">
+        <item quantity="one"><xliff:g id="programmes">%1$d</xliff:g> program içeriyor.</item>
+        <item quantity="other"><xliff:g id="programmes">%1$d</xliff:g> program içeriyor.</item>
+    </plurals>
+    <string name="settings_epg_sources_status_count"><xliff:g id="channels">%1$s</xliff:g> <xliff:g id="programmes">%2$s</xliff:g></string>
+    <string name="settings_epg_sources_status_count_with_catchup"><xliff:g id="counts">%1$s</xliff:g> <xliff:g id="catchup">%2$s</xliff:g></string>
+    <string name="settings_epg_sources_status_synced">Eşitlendi ancak zaman aralığında program bulunamadı.</string>
+    <string name="settings_epg_sources_status_synced_with_catchup"><xliff:g id="catchup">%1$s</xliff:g></string>
+    <string name="settings_backup_title">Yedekleme ve Geri Yükleme</string>
+    <string name="settings_backup_working">İşleniyor…</string>
+    <string name="settings_backup_what_backup">Yedeklenecekler</string>
+    <string name="settings_backup_what_restore">Geri yüklenecekler</string>
+    <string name="settings_backup_encrypt_title">Bu yedekleme şifrelensin mi?</string>
+    <string name="settings_backup_encrypt_message">Bir yedekleme parolası kullanıldığında oynatma listeleri, profiller ve kayıtlı parolalar dâhil tüm dosya şifrelenir ve parola olmadan içindeki hiçbir veri okunamaz. Parolayı güvenli bir yerde saklayın: Kaybederseniz yedekleme hiçbir şekilde açılamaz. Parola kullanılmadığında dosya şifrelenmez ve kayıtlı parolalar dosyaya eklenmez.</string>
+    <string name="settings_backup_export_title">Yedeklemeyi dışa aktar</string>
+    <string name="settings_backup_export_message">Yedeklemeyi aynı Wi-Fi ağındaki başka bir cihaza (telefon veya dizüstü bilgisayar) gönderin ya da bu cihazda bir dosyaya kaydedin.</string>
+    <string name="settings_backup_restore_title">Yedeklemeyi geri yükle</string>
+    <string name="settings_backup_restore_message">Yedeklemeyi aynı Wi-Fi ağındaki başka bir cihazdan (telefon veya dizüstü bilgisayar) gönderin ya da bu cihazda bulunan bir yedekleme dosyasını seçin.</string>
+    <string name="settings_backup_password">Yedekleme parolası</string>
+    <string name="settings_backup_enter_password">Yedekleme parolasını girin</string>
+    <string name="settings_backup_wrong_password">Yanlış yedekleme parolası</string>
+    <string name="settings_backup_password_mismatch">Bu parola eşleşmedi. Tekrar deneyin veya kayıtlı parolalar dışındaki her şeyi geri yüklemek için atlayın.</string>
+    <string name="settings_backup_password_encrypted_mismatch">Bu parola eşleşmedi. Bu yedekleme şifrelenmiş — oluşturulurken kullanılan parola olmadan açılamaz.</string>
+    <string name="settings_backup_encrypted_description">Bu yedekleme şifrelenmiş. Açmak ve geri yüklenecekleri seçmek için yedekleme parolasını girin.</string>
+    <string name="settings_backup_saved_passwords_description">Bu yedeklemedeki parolalar şifrelenmiş. Parolaları geri yüklemek için yedekleme parolasını girin veya diğer her şeyi geri yüklemek ve parolaları daha sonra yeniden girmek için atlayın.</string>
+    <string name="settings_backup_choose_folder">Yedeklemenin kaydedileceği klasörü seçin</string>
+    <string name="settings_backup_choose_folder_action">Klasör seç</string>
+    <string name="settings_backup_pick_file">Geri yüklenecek bir yedekleme dosyası seçin</string>
+    <string name="settings_backup_local_file">Yerel dosya</string>
+    <string name="settings_backup_remote">Uzak cihaz</string>
+    <string name="settings_backup_everything">Her şey</string>
+    <string name="settings_backup_kids_profile">Çocuk profili</string>
+    <string name="settings_backup_profile_current">“<xliff:g id="name">%1$s</xliff:g>” (geçerli)</string>
+    <string name="settings_backup_profile_locked">“<xliff:g id="name">%1$s</xliff:g>” kilitli</string>
+    <string name="settings_backup_profile_pin">Profil PIN\'i</string>
+    <string name="settings_backup_pin_incorrect">PIN yanlış.</string>
+    <string name="settings_backup_pin_locked">PIN ile kilitli</string>
+    <string name="settings_backup_unlock">Kilidi aç</string>
+    <string name="settings_backup_export_button">Yedeklemeyi dışa aktar</string>
+    <string name="settings_backup_restore_button">Yedeklemeyi geri yükle</string>
+    <string name="settings_backup_continue">Devam et</string>
+    <string name="settings_backup_encrypt_export">Şifrele ve dışa aktar</string>
+    <string name="settings_backup_export_unencrypted">Şifrelemeden dışa aktar</string>
+    <string name="settings_backup_encrypt_prepare">Şifrele ve hazırla</string>
+    <string name="settings_backup_prepare_unencrypted">Şifrelemeden hazırla</string>
+    <string name="settings_backup_restore_action">Geri yükle</string>
+    <string name="settings_backup_skip_passwords">Atla (parolalar olmadan)</string>
+    <string name="settings_backup_section_sources">Kaynaklar</string>
+    <string name="settings_backup_section_sources_desc">Oynatma listeleri, EPG akışları ve kimlik bilgileri</string>
+    <string name="settings_backup_section_customize">Özelleştirmeler</string>
+    <string name="settings_backup_section_customize_desc">Gizlenen/yeniden adlandırılan/yeniden sıralanan kategoriler, kanallar, EPG eşleşmeleri ve özel TMDB adları</string>
+    <string name="settings_backup_section_favorites">Favoriler</string>
+    <string name="settings_backup_section_favorites_desc">Favorilere eklenen kanallar, filmler ve diziler</string>
+    <string name="settings_backup_section_history">İzleme geçmişi</string>
+    <string name="settings_backup_section_history_desc">Son izlenenler listeleri</string>
+    <string name="settings_backup_section_resume">Devam etme konumları</string>
+    <string name="settings_backup_section_resume_desc">Filmleri ve bölümleri bıraktığınız konumlar</string>
+    <string name="settings_backup_section_reorder">Elle yeniden sıralama</string>
+    <string name="settings_backup_section_reorder_desc">Kanallar, filmler ve diziler için Yukarı/aşağı taşıma konumlarınız</string>
+    <string name="settings_backup_section_settings">Uygulama ayarları</string>
+    <string name="settings_backup_section_settings_desc">Tema, vurgu rengi, oynatıcı ve düzen tercihleri</string>
+    <string name="settings_backup_saved_to"><xliff:g id="path">%1$s</xliff:g> konumuna kaydedildi.</string>
+    <string name="settings_backup_saved_to_without_passwords"><xliff:g id="path">%1$s</xliff:g> konumuna kaydedildi. Parolalar dâhil edilmedi.</string>
+    <plurals name="settings_backup_restored">
+        <item quantity="one"><xliff:g id="items">%1$d</xliff:g> öğe geri yüklendi.</item>
+        <item quantity="other"><xliff:g id="items">%1$d</xliff:g> öğe geri yüklendi.</item>
+    </plurals>
+    <string name="settings_backup_restore_resync">İçeriği yüklemek için kaynaklarınızı yeniden eşitleyin.</string>
+    <string name="settings_backup_restore_password_note">Kayıtlı parolaları Kaynaklar/Proxy bölümünde yeniden girin.</string>
+    <plurals name="settings_backup_skipped_sources">
+        <item quantity="one">Oynatma listesi türü desteklenmediği için <xliff:g id="count">%1$d</xliff:g> kaynak atlandı.</item>
+        <item quantity="other">Oynatma listesi türleri desteklenmediği için <xliff:g id="count">%1$d</xliff:g> kaynak atlandı.</item>
+    </plurals>
+    <string name="settings_backup_export_error">Dışa aktarma başarısız oldu.</string>
+    <string name="settings_backup_read_error">Yedekleme dosyası okunamadı.</string>
+    <string name="settings_backup_import_error">İçe aktarma başarısız oldu.</string>
+    <string name="settings_backup_invalid_locale">Bu yedekleme desteklenmeyen bir uygulama dili içeriyordu. Geri yükleme başarılı oldu ancak geçerli diliniz korundu.</string>
+    <string name="settings_backup_which_profiles">Yedeklenecek profiller</string>
+    <string name="settings_backup_selected_profiles">Yedekleme yalnızca seçilen profilleri ve verilerini içerecek. Kilitli profiller için PIN gerekir.</string>
+    <string name="settings_backup_profile_pin_description">Bu, geçerli profiliniz değil. Yedeklemeye eklemek için profilin PIN\'ini girin — PIN olmadan verileri yedeklenmez.</string>
+    <string name="settings_backup_save_description">Profillerinizi, kaynaklarınızı, özelleştirmelerinizi, favorilerinizi, geçmişinizi ve devam etme konumlarınızı bir dosyaya kaydedin — ya da yeni bir cihazda geri yükleyin. Her seferinde nelerin dâhil edileceğini siz seçersiniz.</string>
+    <string name="settings_metadata_optional">isteğe bağlı</string>
+    <string name="settings_metadata_test_title">Oppenheimer</string>
+    <string name="settings_bulk_rename_title">Toplu yeniden adlandırma</string>
+    <plurals name="settings_bulk_rename_selected">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> ad seçildi. Kurallar ekleyin veya otomatik olarak temizleyin.</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> ad seçildi. Kurallar ekleyin veya otomatik olarak temizleyin.</item>
+    </plurals>
+    <string name="settings_bulk_rename_add_rule">✎ Kural ekle</string>
+    <string name="settings_bulk_rename_auto_cleanup">✨ Otomatik temizleme</string>
+    <string name="settings_bulk_rename_restore_original">↺ Özgün adları geri yükle</string>
+    <string name="settings_bulk_rename_rules_title">Toplu yeniden adlandırma kuralları</string>
+    <string name="settings_bulk_rename_rules_description">Kurallar yukarıdan aşağıya çalışır. Birden fazla değeri “;” ile ayırın — Ekle tam olarak bir değer alır.</string>
+    <string name="settings_bulk_rename_add_single_value_error">“Ekle” için tam olarak bir değer gerekir — noktalı virgüller Kaldır kuralları içindir.</string>
+    <string name="settings_bulk_rename_rule_required">En az bir kural ekleyin.</string>
+    <string name="settings_bulk_rename_rule_type">Kural türü</string>
+    <string name="settings_bulk_rename_action_add">Ekle</string>
+    <string name="settings_bulk_rename_action_remove">Kaldır</string>
+    <string name="settings_bulk_rename_where">Konum</string>
+    <string name="settings_bulk_rename_before">Önce (ön ek)</string>
+    <string name="settings_bulk_rename_after">Sonra (son ek)</string>
+    <string name="settings_bulk_rename_rule_value">Kural değeri</string>
+    <string name="settings_bulk_rename_value_hint">Birden fazla değeri “;” ile ayırın — Ekle tam olarak bir değer alır.</string>
+    <string name="settings_bulk_rename_value_example">değer;değer;değer</string>
+    <string name="settings_bulk_rename_add_another_rule">＋ Başka bir kural ekle</string>
+    <string name="settings_bulk_rename_trim_spaces">Artan boşlukları kırp</string>
+    <string name="settings_bulk_rename_trim_spaces_selected">✓ Artan boşlukları kırp</string>
+    <string name="settings_bulk_rename_ignore_case">Büyük/küçük harfi yoksay</string>
+    <string name="settings_bulk_rename_ignore_case_selected">✓ Büyük/küçük harfi yoksay</string>
+    <string name="settings_bulk_rename_review">Yeniden adlandırmaları gözden geçir</string>
+    <string name="settings_bulk_rename_review_description">Bir satırı uygulayana kadar hiçbir şey kaydedilmez — Bitti, uygulanan her şeyi tek adımda kaydeder.</string>
+    <string name="settings_bulk_rename_blank_rejected">boş ad reddedildi — özgün ad korundu</string>
+    <string name="settings_bulk_rename_unchanged">değişmedi — hiçbir kural eşleşmedi</string>
+    <string name="settings_bulk_rename_result">→ <xliff:g id="name">%1$s</xliff:g></string>
+    <string name="settings_bulk_rename_duplicate">yinelenen ad — başka bir öğe bu adı zaten kullanıyor</string>
+    <string name="settings_bulk_rename_apply">Uygula</string>
+    <string name="settings_bulk_rename_decline">Reddet</string>
+    <plurals name="settings_bulk_rename_will_change">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> değişecek</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> değişecek</item>
+    </plurals>
+    <plurals name="settings_bulk_rename_unchanged_count">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> değişmeyecek</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> değişmeyecek</item>
+    </plurals>
+    <plurals name="settings_bulk_rename_duplicates_count">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> yinelenen ad</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> yinelenen ad</item>
+    </plurals>
+    <string name="settings_bulk_rename_apply_all">Tümünü uygula</string>
+    <string name="settings_bulk_rename_decline_all">Tümünü reddet</string>
+    <string name="settings_bulk_rename_edit_rules">✎ Kuralları düzenle</string>
+    <string name="settings_bulk_rename_restore_title">Özgün adlar geri yüklensin mi?</string>
+    <string name="settings_bulk_rename_restore_description">Seçilen her ad, sağlayıcının verdiği özgün adına döner. Yalnızca bu seçim etkilenir.</string>
+    <string name="settings_bulk_rename_restore">Geri yükle</string>
+    <string name="settings_bulk_rename_too_many_title">Çok fazla öğe var</string>
+    <string name="settings_bulk_rename_too_many_description">Bu kategoride tek seferde topluca yeniden adlandırılamayacak kadar çok öğe var — kategoriyi daha küçük aralıklar hâlinde yeniden adlandırın.</string>
+    <string name="settings_bulk_rename_auto_country_provider">Otomatik: ülke/sağlayıcı etiketleri</string>
+    <string name="settings_bulk_rename_auto_quality_codec">Otomatik: her yerdeki kalite/kodek etiketleri</string>
+    <string name="settings_bulk_rename_auto_emoji_symbols">Otomatik: emoji ve simgeler</string>
+    <string name="settings_customize_new_category_title">Yeni kategori</string>
+    <string name="settings_customize_new_category_description">Bu profil için birleşik bir kategori — kanalları, filmleri veya dizileri buraya taşıyın.</string>
+    <string name="settings_customize_this_category">bu kategori</string>
+    <string name="settings_customize_sort_categories">Kategorileri sırala</string>
+    <string name="settings_customize_delete_category">“<xliff:g id="name">%1$s</xliff:g>” silinsin mi?</string>
+    <string name="settings_customize_delete_category_description">Birleşik kategori kaldırılır. İçindeki öğeler özgün kategorilerinde kalır.</string>
+    <string name="settings_customize_channels_description">Bu kategorideki kanallar — yeniden adlandırın, sıralayın, gizleyin veya gösterin.</string>
+    <string name="settings_customize_movies_description">Bu kategorideki filmler — sıralayın, gizleyin veya gösterin.</string>
+    <string name="settings_customize_series_description">Bu kategorideki diziler — sıralayın, gizleyin veya gösterin.</string>
+    <string name="settings_customize_hide_show_items">Öğeleri gizle veya göster</string>
+    <plurals name="settings_customize_selected_items">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> öğe seçildi.</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> öğe seçildi.</item>
+    </plurals>
+    <plurals name="settings_customize_move_items_selected">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> öğe seçildi. Taşımak için ⤒ ↑ ↓ ⤓ tuşlarına basmaya devam edin.</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> öğe seçildi. Birlikte taşımak için ⤒ ↑ ↓ ⤓ tuşlarına basmaya devam edin.</item>
+    </plurals>
+    <string name="settings_customize_rename_item_hint">Yalnızca bu profil için. “<xliff:g id="name">%1$s</xliff:g>” adını geri yüklemek için boş bırakın.</string>
+    <string name="settings_customize_item_was">önceki adı “<xliff:g id="name">%1$s</xliff:g>” idi</string>
+    <string name="settings_customize_rename_items">✎ Öğeleri yeniden adlandır</string>
+    <string name="settings_customize_move_to">Şuraya taşı…</string>
+    <string name="settings_customize_back">← Geri</string>
+    <string name="settings_move_category_title">Kategoriye taşı</string>
+    <string name="settings_move_category_description">Öğe, orada da tutulmadığı sürece “<xliff:g id="name">%1$s</xliff:g>” kategorisinden ayrılır.</string>
+    <string name="settings_move_category_new">＋ Yeni kategori…</string>
+    <string name="settings_move_category_keep">“<xliff:g id="name">%1$s</xliff:g>” kategorisinde de tut</string>
+    <string name="settings_move_category_action">Taşı</string>
+    <string name="settings_dns_description">Alan adı sorguları için özel bir DNS sunucusu kullanın</string>
+    <string name="settings_dns_custom">Özel DNS</string>
+    <string name="settings_dns_toggle_description">Tüm OwnTV alan adı sorguları özel bir DNS sunucusu üzerinden çözümlenir.</string>
+    <string name="settings_dns_use_custom">Özel DNS kullan</string>
+    <string name="settings_dns_server_missing">Özel DNS etkin ancak hiçbir sunucu yapılandırılmadı. Bir sunucu adresi girip Kaydet’i seçin veya bu seçeneği kapatın.</string>
+    <string name="settings_dns_server">DNS sunucusu</string>
+    <string name="settings_dns_server_hint">8.8.8.8 veya https://dns.google/dns-query</string>
+    <string name="settings_dns_test">DNS’yi test et</string>
+    <string name="settings_dns_explanation">Özel DNS, internet servis sağlayıcısı düzeyindeki alan adı engellemelerini aşmaya veya SmartDNS hizmetleri aracılığıyla coğrafi engelleri kaldırmaya yardımcı olabilir. DNS-over-HTTPS (DoH) önerilir — sorgularınızı şifreler.</string>
+    <string name="settings_dns_limitations">Bu ayar yalnızca OkHttp tabanlı trafiği etkiler (oynatma listesi eşitlemesi, EPG, API çağrıları, görseller, ExoPlayer akışları). mpv sistem çözümleyicisini kullanır ve bu ayardan etkilenmez.</string>
+    <string name="settings_dns_resolved">Çözümlendi ✓ (<xliff:g id="millis">%1$d</xliff:g> ms) → <xliff:g id="addresses">%2$s</xliff:g></string>
+    <string name="settings_dns_enter_server">Bir DNS sunucusu ana bilgisayar adı veya DoH URL’si girin.</string>
+    <string name="settings_dns_not_reachable">DNS sunucusuna ulaşılamıyor.</string>
+    <string name="settings_dns_timed_out">DNS isteği zaman aşımına uğradı.</string>
+    <string name="settings_dns_network_unreachable">Ağa ulaşılamıyor — sunucu adresini kontrol edin.</string>
+    <string name="settings_dns_connection_refused">Bağlantı reddedildi — sunucu adresini ve bağlantı noktasını kontrol edin.</string>
+    <string name="settings_dns_test_failed">DNS testi başarısız oldu — sunucu adresini kontrol edin.</string>
+    <string name="settings_dns_no_addresses">DNS, <xliff:g id="host">%1$s</xliff:g> için hiçbir adres döndürmedi.</string>
+    <string name="settings_subtitle_customize">Altyazıları özelleştir</string>
+    <string name="settings_subtitle_customize_off">Kapalı olduğunda altyazılar, akışın ve oynatıcının çizdiği biçimde aynen kalır.</string>
+    <string name="settings_subtitle_preview_stock">Önizleme — özgün görünüm</string>
+    <string name="settings_subtitle_stock_description">Yayıncıların Canlı TV altyazılarına yerleştirdiği renkler ve konumlandırma dâhil özgün görünüm.</string>
+    <string name="settings_subtitle_reset_all">Tümünü sıfırla</string>
+    <string name="settings_subtitle_color">Altyazı rengi</string>
+    <string name="settings_subtitle_color_default_description">Varsayılan seçeneği renk seçimini akışa ve oynatıcıya bırakır.</string>
+    <string name="settings_subtitle_color_hex_hint">6 onaltılık basamak girin, ör. FFEB3B</string>
+    <string name="settings_subtitle_use_default">Varsayılanı kullan</string>
+    <string name="settings_subtitle_position">Altyazı konumu</string>
+    <string name="settings_subtitle_background_transparency">Arka plan saydamlığı</string>
+    <string name="settings_subtitle_preview_sample">Bu bir altyazı örneğidir.</string>
+    <string name="settings_subtitle_customize_description">Bunu açın, ardından yalnızca istediğiniz ayarları değiştirin — Varsayılan olarak bırakılan her şey, yayıncıların Canlı TV altyazılarına yerleştirdiği renkler ve konumlandırma dâhil özgün görünümü korur.</string>
+    <string name="settings_subtitle_default">Varsayılan</string>
+    <string name="settings_subtitle_color_short">Renk</string>
+    <string name="settings_subtitle_color_description">Metin rengi — hazır ayar, renk seçici veya onaltılık kod.</string>
+    <string name="settings_subtitle_position_short">Konum</string>
+    <string name="settings_subtitle_position_description">Altyazıların ekranda bulunduğu yer.</string>
+    <string name="settings_subtitle_background_description">Metnin arkasındaki kutunun ne kadar opak olduğu.</string>
+    <string name="settings_subtitle_hex">Onaltılık</string>
+    <string name="settings_subtitle_position_default_description">Varsayılan, konumu akışa bırakır — yayıncının canlı altyazıyı yerleştirdiği konum da buna dâhildir. Diğer tüm seçenekler her zaman önceliklidir.</string>
+    <string name="settings_subtitle_background_none">Yok</string>
+    <string name="settings_subtitle_background_solid">Opak</string>
+    <string name="settings_subtitle_color_white">Beyaz</string>
+    <string name="settings_subtitle_color_yellow">Sarı</string>
+    <string name="settings_subtitle_color_cyan">Camgöbeği</string>
+    <string name="settings_subtitle_color_green">Yeşil</string>
+    <string name="settings_subtitle_color_grey">Gri</string>
+</resources>

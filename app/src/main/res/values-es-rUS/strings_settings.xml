@@ -1,0 +1,847 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <string name="settings_sort_playlist">Lista de reproducción</string>
+    <string name="settings_sort_alpha">A–Z</string>
+    <string name="settings_sort_rating">Calificación</string>
+    <string name="settings_sort_date_added">Fecha de adición</string>
+    <string name="settings_mini_player">Minirreproductor</string>
+    <string name="settings_mini_player_description">El pequeño reproductor flotante que aparece cuando acoplas un canal en imagen en imagen (PiP) mientras navegas. Cambia estas opciones aquí o sobre la marcha con los botones para redimensionar o mover del propio minirreproductor.</string>
+    <string name="settings_size">Tamaño</string>
+    <string name="settings_mini_player_size_description">El tamaño del minirreproductor como proporción del ancho de la pantalla (<xliff:g id="min">%1$d</xliff:g>%%–<xliff:g id="max">%2$d</xliff:g>%%).</string>
+    <string name="settings_position">Posición</string>
+    <string name="settings_mini_player_position_description">La esquina o el borde donde se acopla el minirreproductor.</string>
+    <string name="settings_mini_player_size">Tamaño del minirreproductor</string>
+    <string name="settings_mini_player_position">Posición del minirreproductor</string>
+    <string name="settings_home_screen">Pantalla de inicio</string>
+    <string name="settings_home_description">Oculta, reordena y filtra las filas de Inicio para este perfil.</string>
+    <string name="settings_sections">Secciones</string>
+    <string name="settings_hidden_sections">Las secciones ocultas permanecen en la lista para que puedas volver a activarlas.</string>
+    <string name="settings_keep_watching">Seguir viendo</string>
+    <string name="settings_live_keep_watching">Canales en vivo en Seguir viendo</string>
+    <string name="settings_live_keep_watching_description">Muestra los canales en vivo vistos recientemente en la fila destacada.</string>
+    <string name="settings_movies_keep_watching">Películas en Seguir viendo</string>
+    <string name="settings_movies_keep_watching_description">Muestra tarjetas para reanudar películas en la fila destacada.</string>
+    <string name="settings_series_keep_watching">Series en Seguir viendo</string>
+    <string name="settings_series_keep_watching_description">Muestra tarjetas para reanudar episodios en la fila destacada.</string>
+    <string name="settings_android_tv_home">Inicio de Android TV</string>
+    <string name="settings_android_tv_home_description">Muestra Seguir viendo y los canales en vivo recientes en la pantalla de inicio del televisor.</string>
+    <string name="settings_refresh_now">Actualizar ahora</string>
+    <string name="settings_refresh_description">Vuelve a crear las tarjetas de Seguir viendo y recientes en el inicio de Android TV.</string>
+    <string name="settings_rebuilding">Volviendo a crear…</string>
+    <string name="settings_done_check">Listo ✓</string>
+    <string name="settings_mode"><xliff:g id="mode">%1$s</xliff:g></string>
+    <string name="settings_hidden">Oculto</string>
+    <string name="settings_sidebar_customization">Personalización del menú lateral</string>
+    <string name="settings_sidebar_description">Elige qué iconos aparecen en el menú lateral o deja que se adapten a tu lista de reproducción.</string>
+    <string name="settings_behavior">Comportamiento</string>
+    <string name="settings_nav_dynamic_description">Dinámico — los iconos se adaptan a lo que ofrece tu lista de reproducción activa. Inicio y Configuración siempre se muestran.</string>
+    <string name="settings_nav_static_description">Estático — elige manualmente qué iconos aparecen abajo.</string>
+    <string name="settings_icons">Iconos</string>
+    <string name="settings_shown_in_menu">Visible en el menú lateral</string>
+    <string name="settings_hidden_from_menu">Oculto en el menú lateral</string>
+    <string name="settings_shown">Visible</string>
+    <string name="settings_nav_behavior">Comportamiento del menú de navegación</string>
+    <string name="settings_static">Estático</string>
+    <string name="settings_dynamic">Dinámico</string>
+    <string name="settings_http_proxy">Proxy HTTP</string>
+    <string name="settings_use_proxy">Usar proxy</string>
+    <string name="settings_proxy_description">Envía todo el tráfico y la reproducción de OwnTV mediante un proxy HTTP.</string>
+    <string name="settings_host">Host</string>
+    <string name="settings_proxy_host_hint">proxy.example.com</string>
+    <string name="settings_port">Puerto</string>
+    <string name="settings_proxy_port_hint">8080</string>
+    <string name="settings_username_optional">Nombre de usuario (opcional)</string>
+    <string name="settings_password_optional">Contraseña (opcional)</string>
+    <string name="settings_test_proxy">Probar proxy</string>
+    <string name="settings_testing">Probando…</string>
+    <string name="settings_proxy_privacy">Tu proveedor de proxy puede ver a qué servidores te conectas y el contenido del tráfico que no use HTTPS.</string>
+    <string name="settings_proxy_limitations">Por ahora, solo se admiten proxies HTTP; los proxies SOCKS y los proxies por lista de reproducción aún no son compatibles.</string>
+    <string name="settings_proxy_connected"><xliff:g id="millis">%1$d</xliff:g> ms</string>
+    <string name="settings_proxy_invalid_address">Ingresa un host y un puerto válidos (1–65535).</string>
+    <string name="settings_proxy_host_unreachable">No se puede acceder al host del proxy.</string>
+    <string name="settings_proxy_timed_out">Se agotó el tiempo de espera de la conexión con el proxy.</string>
+    <string name="settings_proxy_connection_failed">No se pudo establecer conexión con el proxy (verifica el host y el puerto).</string>
+    <string name="settings_proxy_http">El proxy devolvió HTTP <xliff:g id="code">%1$d</xliff:g></string>
+    <string name="settings_proxy_failed">Falló la prueba del proxy.</string>
+    <string name="settings_ch_nav_title">Paginación con las teclas CH+/−</string>
+    <string name="settings_ch_nav_description">Recorre por páginas la lista de categorías o elementos con las teclas CH+ y CH− del control remoto.</string>
+    <string name="settings_ch_nav_enabled">Usar las teclas CH+/− para paginar listas</string>
+    <string name="settings_ch_nav_enabled_description">Cuando está activado, CH+ y CH− avanzan dentro del panel enfocado (la barra de categorías o la lista de elementos, incluida la lista de categorías de Personalizar). Cuando está desactivado, esas teclas no hacen nada en esas pantallas.</string>
+    <string name="settings_ch_nav_up">Salto con CH+ (hacia el primero)</string>
+    <string name="settings_ch_nav_up_description">Cuántos elementos se retroceden al presionar CH+ una vez. Una pulsación prolongada siempre va al primer elemento.</string>
+    <string name="settings_ch_nav_down">Salto con CH− (hacia el último)</string>
+    <string name="settings_ch_nav_down_description">Cuántos elementos se avanzan al presionar CH− una vez. Una pulsación prolongada siempre va al último elemento.</string>
+    <string name="settings_skip_counts">Cantidad de elementos por salto</string>
+    <string name="settings_how_it_works">Cómo funciona</string>
+    <string name="settings_ch_nav_help">• Los saltos se limitan en los extremos, por lo que las listas cortas llegan al final con una sola pulsación.\n• Pulsación prolongada de CH+ = primer elemento; pulsación prolongada de CH− = último elemento.\n• La pulsación prolongada está desactivada en la lista \"Todos\" (todos los canales, películas o series); los saltos con pulsaciones breves siguen funcionando allí.\n• Se aplica al panel que tenga el foco en ese momento: la barra de categorías o la lista/cuadrícula de elementos.\n• También recorre por páginas la lista de categorías en Configuración → Personalizar categorías y elementos.</string>
+    <string name="settings_large_skips_warning">Los saltos grandes se pasan del final de las listas cortas y pueden sentirse bruscos en televisores de gama baja.</string>
+    <string name="settings_ch_nav_picker">Paginación con las teclas CH+/−</string>
+    <string name="settings_weather">Clima</string>
+    <string name="settings_top_bar_weather">Clima en la barra superior</string>
+    <string name="settings_show_weather">Mostrar el clima</string>
+    <string name="settings_show_weather_description">Muestra el clima actual en la barra superior.</string>
+    <string name="settings_custom_location">Ubicación personalizada</string>
+    <string name="settings_custom_location_description">Reemplaza la ciudad usada para el clima. Déjalo en blanco para detectarla automáticamente o ingresa una ciudad (p. ej., Londres) o \"lat,lon\" (p. ej., 51.5,-0.12). Resulta útil con una VPN, ya que la detección automática obtiene la ciudad del servidor.</string>
+    <string name="settings_temperature_unit">Unidad de temperatura</string>
+    <string name="settings_temperature_description">Muestra la temperatura en grados Celsius o Fahrenheit.</string>
+    <string name="settings_auto">Automático</string>
+    <string name="settings_city_latlon">Ciudad o lat,lon</string>
+    <string name="settings_location_hint">Déjalo en blanco para detectar la ubicación automáticamente a partir de tu IP pública. Ingresa una ciudad (p. ej., Londres) o \"lat,lon\" (p. ej., 51.5,-0.12).</string>
+    <string name="settings_metadata">Metadatos (TMDB)</string>
+    <string name="settings_metadata_source">Fuente de metadatos</string>
+    <string name="settings_metadata_source_description">Elige de dónde se obtienen los detalles de películas y series.</string>
+    <string name="settings_metadata_provider_description">Usa únicamente lo que proporciona tu lista de reproducción. No se realizan búsquedas en TMDB.</string>
+    <string name="settings_metadata_provider_tmdb_description">La información de tu lista de reproducción tiene prioridad; TMDB completa lo que falta y agrega el reparto, los géneros y las imágenes de fondo.</string>
+    <string name="settings_metadata_tmdb_only_description">Da preferencia a TMDB para todos los campos; usa tu lista de reproducción solo cuando TMDB no tenga información.</string>
+    <string name="settings_selected">Seleccionado</string>
+    <string name="settings_active_tmdb_source">Fuente de TMDB activa: <xliff:g id="tier">%1$s</xliff:g></string>
+    <string name="settings_metadata_language">Idioma de los metadatos</string>
+    <string name="settings_metadata_language_description">Idioma de las sinopsis, los géneros y los títulos de TMDB. Los campos que TMDB no haya traducido permanecen en inglés. Al cambiarlo, se borran los detalles almacenados en caché para volver a obtenerlos.</string>
+    <string name="settings_advanced_options">Opciones avanzadas</string>
+    <string name="settings_advanced_metadata_description">Usa tu propia clave de API de TMDB o un servidor autoalojado en lugar del servidor compartido predeterminado.</string>
+    <string name="settings_metadata_server_description">Deja ambos campos en blanco para usar el servidor compartido integrado (sin configuración). Ingresa tu propia clave de API de TMDB para llamar directamente a TMDB o la URL de un servidor autoalojado para usar tu propio proxy o réplica. Una URL tiene prioridad sobre una clave.</string>
+    <string name="settings_tmdb_api_key">Clave de API de TMDB (v3)</string>
+    <string name="settings_self_host_url">URL del servidor autoalojado</string>
+    <string name="settings_test">Prueba</string>
+    <string name="settings_metadata_empty_title">Ingresa un título para buscarlo.</string>
+    <string name="settings_metadata_server_unavailable">No se pudo acceder al servidor de metadatos; verifica la red, la clave o la URL.</string>
+    <string name="settings_metadata_no_match">No hay coincidencias en TMDB para \"<xliff:g id="query">%1$s</xliff:g>\".</string>
+    <string name="settings_metadata_lookup_failed">Falló la búsqueda.</string>
+    <string name="settings_metadata_match_result"><xliff:g id="title">%1$s</xliff:g><xliff:g id="year">%2$s</xliff:g> · tmdb #<xliff:g id="id">%3$d</xliff:g></string>
+    <string name="settings_metadata_year"> (<xliff:g id="year">%1$d</xliff:g>)</string>
+    <string name="settings_lookup_movie">Buscar el título de una película</string>
+    <string name="settings_test_lookup">Probar búsqueda</string>
+    <string name="settings_looking_up">Buscando…</string>
+    <string name="settings_tmdb_attribution">Este producto usa la API de TMDB, pero TMDB no lo respalda ni certifica.</string>
+    <string name="settings_metadata_provider_only">Solo el proveedor</string>
+    <string name="settings_metadata_provider_plus_tmdb">Proveedor + TMDB</string>
+    <string name="settings_metadata_tmdb_only">Solo TMDB</string>
+    <string name="settings_tier_default">Predeterminado (compartido)</string>
+    <string name="settings_tier_key">Tu clave de TMDB</string>
+    <string name="settings_tier_self_host">Autoalojado</string>
+    <string name="settings_title">Configuración</string>
+    <string name="settings_quick_live_preview">Vista previa en vivo</string>
+    <string name="settings_quick_preview_sound">Sonido de la vista previa</string>
+    <string name="settings_quick_channel_numbers">Números de canal</string>
+    <string name="settings_quick_hdr">HDR</string>
+    <string name="settings_quick_autoplay">Reproducción automática</string>
+    <string name="settings_quick_check_update">Buscar una actualización</string>
+    <string name="settings_search_label">Buscar en la configuración</string>
+    <string name="settings_search_hint">Buscar en la configuración…</string>
+    <string name="settings_group_general">General</string>
+    <string name="settings_language">Idioma</string>
+    <string name="settings_language_description">Idioma de visualización de la aplicación</string>
+    <string name="settings_language_system_default">Predeterminado del sistema</string>
+    <string name="settings_language_system_default_description">Sigue el idioma del dispositivo</string>
+    <string name="settings_language_search_hint">Buscar idiomas…</string>
+    <string name="settings_search_keywords_language">idioma configuración regional traducción internacional i18n</string>
+    <string name="settings_language_coverage"><xliff:g id="percent">%1$d</xliff:g>%%</string>
+    <string name="settings_profile_group">Perfil</string>
+    <string name="settings_profiles_description">Administra espectadores, el modo infantil y los bloqueos con PIN</string>
+    <string name="settings_content_group">Contenido</string>
+    <string name="settings_playlists">Listas de reproducción</string>
+    <string name="settings_playlists_description">Agrega, vuelve a sincronizar o elimina listas de reproducción M3U o Xtream</string>
+    <string name="settings_epg_sources">Fuentes de EPG</string>
+    <string name="settings_epg_sources_nav_description">Agrega fuentes de guías XMLTV para la guía de TV</string>
+    <string name="settings_customize">Personalizar categorías y elementos</string>
+    <string name="settings_customize_nav_description">Oculta y vuelve a mostrar elementos; cambia el nombre y el orden de las categorías</string>
+    <string name="settings_sidebar_description_root">Adapta automáticamente los iconos laterales a tu lista de reproducción u oculta iconos específicos</string>
+    <string name="settings_ch_paging">Paginación con las teclas CH+/−</string>
+    <string name="settings_ch_paging_description">Salta hacia arriba o abajo en las listas de categorías y elementos con las teclas CH+ y CH−</string>
+    <string name="settings_browsing_lists">Navegación y listas</string>
+    <string name="settings_browsing_description">Recuerda la última categoría y el último elemento en TV en vivo, Películas y Series</string>
+    <string name="settings_home_root">Pantalla de inicio</string>
+    <string name="settings_home_root_description">Elige, reordena y filtra las filas de Inicio</string>
+    <string name="settings_metadata_root_description">Pósteres, sinopsis, reparto y calificaciones de películas y series</string>
+    <string name="settings_download_folder">Carpeta de descargas</string>
+    <string name="settings_app_storage">Almacenamiento de la aplicación</string>
+    <string name="settings_backup_restore">Copia de seguridad y restauración</string>
+    <string name="settings_backup_restore_description">Exporta o restaura perfiles y fuentes</string>
+    <string name="settings_clear_history">Borrar historial de reproducción</string>
+    <string name="settings_clear_history_description">Elimina las filas de vistos recientemente y Seguir viendo de este perfil</string>
+    <string name="settings_appearance_group">Apariencia</string>
+    <string name="settings_theme">Tema</string>
+    <string name="settings_theme_description">Claro, oscuro o según el sistema</string>
+    <string name="settings_accent">Color de énfasis</string>
+    <string name="settings_accent_description">Colorea la interfaz: ajustes preestablecidos, paleta o código hexadecimal</string>
+    <string name="settings_glass_effect">Efecto de vidrio</string>
+    <string name="settings_glass_description">Paneles translúcidos con efecto esmerilado, imagen de fondo y transparencia</string>
+    <string name="settings_ui_zoom">Zoom de la interfaz</string>
+    <string name="settings_ui_zoom_description">Ajusta la escala de toda la interfaz</string>
+    <string name="settings_animations">Animaciones</string>
+    <string name="settings_animations_description">Activa o desactiva el movimiento de la interfaz; desactivarlo ofrece mayor fluidez en dispositivos de TV de gama baja</string>
+    <string name="settings_weather_description_root">Chip del clima en la barra superior: mostrar u ocultar, ubicación personalizada y grados Celsius o Fahrenheit.</string>
+    <string name="settings_playback_group">Reproducción</string>
+    <string name="settings_live_preview_description">Reproduce automáticamente un canal al enfocarlo</string>
+    <string name="settings_preview_audio">Audio de la vista previa</string>
+    <string name="settings_preview_audio_description">Reproduce sonido en la vista previa en vivo</string>
+    <string name="settings_mini_player_root">Minirreproductor</string>
+    <string name="settings_mini_player_root_description">Tamaño y posición del minirreproductor acoplado</string>
+    <string name="settings_hdr_description">Usa la salida HDR cuando el video y el televisor sean compatibles</string>
+    <string name="settings_auto_frame_rate">Frecuencia de fotogramas automática</string>
+    <string name="settings_auto_frame_rate_description">Ajusta la frecuencia de actualización del televisor a la del video (24/25/50/60 fps) en pantalla completa para TV en vivo y VOD, y la restaura al salir. Desactívalo si tu televisor o receptor vuelve a negociar la conexión HDMI de forma molesta cada vez que cambias de canal.</string>
+    <string name="settings_surround_sound">Sonido envolvente</string>
+    <string name="settings_surround_description">Decodifica Dolby/DTS como sonido envolvente (5.1/7.1) para un receptor 5.1/7.1 real. Déjalo DESACTIVADO para los altavoces del televisor o una barra de sonido estéreo; en algunos televisores y barras de sonido, el audio multicanal puede retrasarse respecto del video. Si se desincroniza, ajusta ligeramente Menú de audio del reproductor → Sincronización A/V.</string>
+    <string name="settings_autoplay_next">Reproducir automáticamente el siguiente episodio</string>
+    <string name="settings_autoplay_next_description">Cuando termine un episodio, inicia automáticamente el siguiente y continúa con la próxima temporada.</string>
+    <string name="settings_catchup">TV en diferido</string>
+    <plurals name="settings_catchup_supported">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> canal admite TV en diferido · zona horaria y reproductor para reproducir el archivo</item>
+        <item quantity="many"><xliff:g id="count">%1$d</xliff:g> canales admiten TV en diferido · zona horaria y reproductor para reproducir el archivo</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> canales admiten TV en diferido · zona horaria y reproductor para reproducir el archivo</item>
+    </plurals>
+    <string name="settings_catchup_unavailable">No hay canales con TV en diferido disponibles en esta lista de reproducción</string>
+    <string name="settings_device">Dispositivo</string>
+    <string name="settings_video_player">Configuración del reproductor de video</string>
+    <string name="settings_video_player_description">Decodificador, subtítulos y sincronización</string>
+    <string name="settings_playback_error_log">Registro de errores de reproducción</string>
+    <string name="settings_playback_speed">Velocidad de reproducción</string>
+    <string name="settings_player_zoom">Zoom del reproductor</string>
+    <string name="settings_playback_error_description">Los últimos errores de reproducción: detalles para consultar o informar</string>
+    <string name="settings_network_group">Red</string>
+    <string name="settings_app_group">Aplicación</string>
+    <string name="settings_app_startup">Inicio de la aplicación</string>
+    <string name="settings_app_startup_description">Lo que abre OwnTV al iniciarse</string>
+    <string name="settings_check_updates">Buscar actualizaciones</string>
+    <string name="settings_check_updates_description">Obtén la versión más reciente de GitHub Releases</string>
+    <string name="settings_update_startup">Buscar actualizaciones al iniciar</string>
+    <string name="settings_update_startup_description">Busca una versión nueva cuando se abre la aplicación</string>
+    <string name="settings_about">Acerca de</string>
+    <string name="settings_about_description">Versión, licencia e información del proyecto</string>
+    <string name="settings_live_latency">Latencia de la transmisión en vivo</string>
+    <string name="settings_no_settings_match">Ninguna opción de configuración coincide con “<xliff:g id="query">%1$s</xliff:g>”</string>
+    <string name="settings_breadcrumb"><xliff:g id="group">%1$s</xliff:g> › <xliff:g id="title">%2$s</xliff:g></string>
+    <string name="settings_startup_home">Inicio</string>
+    <string name="settings_startup_last_channel">Último canal</string>
+    <string name="settings_startup_favorites">TV en vivo · Favoritos</string>
+    <string name="settings_all_history">Todo el historial</string>
+    <string name="settings_choose_history">Elige qué eliminar de este perfil. Las listas de reproducción, los favoritos y las descargas no se verán afectados.</string>
+    <string name="settings_clear_history_confirm">¿Borrar el historial de <xliff:g id="scope">%1$s</xliff:g>?</string>
+    <string name="settings_cannot_undo">Esta acción no se puede deshacer.</string>
+    <string name="settings_no">No</string>
+    <string name="settings_yes_clear">Sí, borrar</string>
+    <string name="settings_accent_dialog">Color de énfasis</string>
+    <string name="settings_presets">Ajustes preestablecidos</string>
+    <string name="settings_hex_code">Código hexadecimal</string>
+    <string name="settings_hex">Hexadecimal</string>
+    <string name="settings_apply">Aplicar</string>
+    <string name="settings_hex_error">Ingresa 6 dígitos hexadecimales, p. ej., 52DBC8</string>
+    <string name="settings_color_picker">Selector de color</string>
+    <string name="settings_use_color">Usar este color</string>
+    <string name="settings_about_version">Versión <xliff:g id="version">%1$s</xliff:g></string>
+    <string name="settings_about_description_full">Tu propio reproductor de IPTV para Android TV: una aplicación gratuita, de código abierto y exclusivamente reproductora. No proporciona canales ni contenido; tú agregas tus propias fuentes a las que tengas acceso legal.</string>
+    <string name="settings_about_license">© 2026 Ashiq Hasan · Licencia GPLv3</string>
+    <string name="settings_join_telegram">Únete a nosotros en Telegram</string>
+    <string name="settings_telegram_qr">Código QR del grupo de Telegram</string>
+    <string name="settings_telegram_scan">Escanea el código QR para unirte desde tu teléfono o abre el enlace de arriba.</string>
+    <string name="settings_contributions">Las contribuciones, los informes de errores y las estrellas son bienvenidos en GitHub.</string>
+    <string name="settings_playback_error_title">Registro de errores de reproducción</string>
+    <string name="settings_playback_error_description_full">Los errores de reproducción más recientes (los más nuevos primero). Incluye estos detalles al informar un problema.</string>
+    <string name="settings_loading">Cargando…</string>
+    <string name="settings_no_playback_errors">No hay errores de reproducción registrados.</string>
+    <string name="settings_live">TV en vivo</string>
+    <string name="settings_vod">VOD</string>
+    <string name="settings_clear_log">Borrar registro</string>
+    <string name="settings_browsing_title">Navegación y listas</string>
+    <string name="settings_browsing_description_full">El punto al que regresan TV en vivo, Películas y Series cuando vuelves.</string>
+    <string name="settings_section_toggle"><xliff:g id="section">%1$s</xliff:g>: <xliff:g id="state">%2$s</xliff:g></string>
+    <string name="settings_glass_surfaces">Superficies de vidrio</string>
+    <string name="settings_glass_surfaces_description">Elige qué partes de la aplicación se muestran como vidrio. Si desactivas todas las superficies, se desactiva el efecto de vidrio.</string>
+    <string name="settings_all_surfaces_on">Todas las superficies: Activadas</string>
+    <string name="settings_all_surfaces_off">Todas las superficies: Desactivadas</string>
+    <string name="settings_surface_toggle"><xliff:g id="surface">%1$s</xliff:g>: <xliff:g id="state">%2$s</xliff:g></string>
+    <string name="settings_transparency_description">Cuánto se ve a través de los paneles (<xliff:g id="min">%1$d</xliff:g>%%–<xliff:g id="max">%2$d</xliff:g>%%). Un valor mayor los hace más sólidos.</string>
+    <string name="settings_catchup_description">Cómo se envían las marcas de tiempo de la TV en diferido. Usa la zona horaria de tu dispositivo o establece el desfase que espera el servidor de tu proveedor.</string>
+    <string name="settings_manual">Manual</string>
+    <string name="settings_theme_dark">Oscuro</string>
+    <string name="settings_theme_light">Claro</string>
+    <string name="settings_theme_system">Sistema</string>
+    <string name="settings_accent_teal">Verde azulado</string>
+    <string name="settings_accent_blue">Azul</string>
+    <string name="settings_accent_violet">Violeta</string>
+    <string name="settings_accent_green">Verde</string>
+    <string name="settings_accent_amber">Ámbar</string>
+    <string name="settings_group_profile">Perfil</string>
+    <string name="settings_group_content">Contenido</string>
+    <string name="settings_group_appearance">Apariencia</string>
+    <string name="settings_group_playback">Reproducción</string>
+    <string name="settings_group_network">Red</string>
+    <string name="settings_dns">DNS</string>
+    <string name="settings_group_app">Aplicación</string>
+    <string name="settings_search_guide_logos">Logos de canales de la guía</string>
+    <string name="settings_search_keywords_profiles">espectadores niños modo infantil PIN bloqueo cuenta</string>
+    <string name="settings_search_keywords_playlists">M3U Xtream fuente sincronizar agregar eliminar</string>
+    <string name="settings_search_keywords_epg">XMLTV guía fuente programa</string>
+    <string name="settings_search_keywords_logos">canal logo icono XMLTV guía picon lista de reproducción</string>
+    <string name="settings_search_keywords_customize">ocultar mostrar cambiar nombre reordenar categorías</string>
+    <string name="settings_search_keywords_sidebar">barra lateral iconos dinámico estático ocultar mostrar adaptar lista de reproducción</string>
+    <string name="settings_search_keywords_ch">canal subir bajar saltar página lista categoría canal</string>
+    <string name="settings_search_keywords_browsing">recordar posición desplazamiento categoría último elemento TV en vivo películas series restablecer inicio</string>
+    <string name="settings_search_keywords_home">filas destacada reordenar filtrar</string>
+    <string name="settings_search_keywords_metadata">pósteres sinopsis reparto calificaciones</string>
+    <string name="settings_search_keywords_download">almacenamiento ruta directorio</string>
+    <string name="settings_search_keywords_backup">exportar importar perfiles fuentes</string>
+    <string name="settings_search_keywords_history">vistos recientemente continuar eliminar</string>
+    <string name="settings_search_keywords_theme">claro oscuro sistema</string>
+    <string name="settings_search_keywords_accent">tinte paleta hexadecimal preestablecido</string>
+    <string name="settings_search_keywords_zoom">escala interfaz tamaño</string>
+    <string name="settings_search_keywords_animation">movimiento fluidez rendimiento</string>
+    <string name="settings_search_keywords_weather">barra superior chip ubicación celsius fahrenheit</string>
+    <string name="settings_search_keywords_live_preview">reproducción automática foco canal</string>
+    <string name="settings_search_keywords_sound">sonido vista previa en vivo</string>
+    <string name="settings_search_keywords_channel_numbers">canal número sintonización directa escribir dígitos teclado numérico cambio lcn</string>
+    <string name="settings_search_keywords_mini">acoplado imagen en imagen PiP minirreproductor tamaño posición escala porcentaje esquina mover</string>
+    <string name="settings_search_keywords_hdr">alto rango dinámico salida HDR</string>
+    <string name="settings_search_keywords_afr">afr frecuencia actualización hz tirones 24fps 25fps 50hz 60hz modo pantalla ajustar</string>
+    <string name="settings_search_keywords_surround">Dolby DTS 5.1 7.1 receptor audio</string>
+    <string name="settings_search_keywords_autoplay">reproducción automática series temporada</string>
+    <string name="settings_search_keywords_catchup">archivo zona horaria desfase TV en diferido reproductor externo vlc mx</string>
+    <string name="settings_search_keywords_video">decodificador subtítulos sincronización</string>
+    <string name="settings_search_keywords_subtitle_appearance">subtítulo tamaño color posición transparencia fondo opacidad</string>
+    <string name="settings_search_keywords_latency">TV en vivo búfer latencia retraso baja latencia segundos cerca del punto de emisión en vivo</string>
+    <string name="settings_search_keywords_errors">error bloqueo falla diagnóstico informe</string>
+    <string name="settings_search_keywords_proxy">http tráfico ruta</string>
+    <string name="settings_search_keywords_dns">dominio búsqueda solucionador doh dns-over-https</string>
+    <string name="settings_search_keywords_startup">iniciar abrir destino</string>
+    <string name="settings_search_keywords_updates">GitHub lanzamiento versión</string>
+    <string name="settings_search_keywords_update_auto">automático actualización nueva versión</string>
+    <string name="settings_search_keywords_about">versión licencia proyecto información</string>
+    <string name="settings_language_default">Predeterminado (inglés)</string>
+    <string name="settings_language_device">Idioma del dispositivo</string>
+    <string name="settings_language_arabic">Árabe</string>
+    <string name="settings_language_bulgarian">Búlgaro</string>
+    <string name="settings_language_chinese">Chino</string>
+    <string name="settings_language_croatian">Croata</string>
+    <string name="settings_language_czech">Checo</string>
+    <string name="settings_language_danish">Danés</string>
+    <string name="settings_language_dutch">Neerlandés</string>
+    <string name="settings_language_english">Inglés</string>
+    <string name="settings_language_estonian">Estonio</string>
+    <string name="settings_language_finnish">Finés</string>
+    <string name="settings_language_french">Francés</string>
+    <string name="settings_language_german">Alemán</string>
+    <string name="settings_language_greek">Griego</string>
+    <string name="settings_language_hebrew">Hebreo</string>
+    <string name="settings_language_hindi">Hindi</string>
+    <string name="settings_language_hungarian">Húngaro</string>
+    <string name="settings_language_indonesian">Indonesio</string>
+    <string name="settings_language_italian">Italiano</string>
+    <string name="settings_language_japanese">Japonés</string>
+    <string name="settings_language_korean">Coreano</string>
+    <string name="settings_language_latvian">Letón</string>
+    <string name="settings_language_lithuanian">Lituano</string>
+    <string name="settings_language_malay">Malayo</string>
+    <string name="settings_language_norwegian">Noruego</string>
+    <string name="settings_language_persian">Persa</string>
+    <string name="settings_language_polish">Polaco</string>
+    <string name="settings_language_portuguese_brazil">Portugués (Brasil)</string>
+    <string name="settings_language_portuguese_portugal">Portugués (Portugal)</string>
+    <string name="settings_language_romanian">Rumano</string>
+    <string name="settings_language_russian">Ruso</string>
+    <string name="settings_language_serbian">Serbio</string>
+    <string name="settings_language_slovak">Eslovaco</string>
+    <string name="settings_language_slovenian">Esloveno</string>
+    <string name="settings_language_spanish">Español</string>
+    <string name="settings_language_spanish_latam">Español (Latinoamérica)</string>
+    <string name="settings_language_swedish">Sueco</string>
+    <string name="settings_language_thai">Tailandés</string>
+    <string name="settings_language_turkish">Turco</string>
+    <string name="settings_language_ukrainian">Ucraniano</string>
+    <string name="settings_language_vietnamese">Vietnamita</string>
+    <string name="settings_video_player_title">Reproductor de video</string>
+    <string name="settings_decoding">Decodificación</string>
+    <string name="settings_hardware_decoding">Decodificación por hardware</string>
+    <string name="settings_hardware_decoding_description">Usa el decodificador por hardware del televisor. Desactívalo si algunas transmisiones presentan tirones o defectos visuales.</string>
+    <string name="settings_movies_series_player">Reproductor de películas y series</string>
+    <string name="settings_external_player">Reproductor externo</string>
+    <string name="settings_default_zoom">Zoom predeterminado</string>
+    <string name="settings_default_zoom_description">Relación de aspecto/zoom aplicado al iniciar la reproducción.</string>
+    <string name="settings_resume_playback">Reanudar la reproducción</string>
+    <string name="settings_resume_playback_description">Qué hacer cuando una película o episodio tiene una posición guardada.</string>
+    <string name="settings_subtitles">Subtítulos</string>
+    <string name="settings_subtitle_appearance">Apariencia de los subtítulos</string>
+    <string name="settings_subtitle_appearance_description">Tamaño, color del texto, posición en pantalla y transparencia del fondo. Cuando está desactivada, los subtítulos conservan su apariencia original, incluido el estilo que las emisoras integran en los subtítulos de TV en vivo.</string>
+    <string name="settings_subtitle_size">Tamaño de los subtítulos</string>
+    <string name="settings_subtitle_size_description">Ajusta la escala del texto de los subtítulos.</string>
+    <string name="settings_preferred_subtitle_language">Idioma de subtítulos preferido</string>
+    <string name="settings_preferred_language_description">Selecciona automáticamente esta pista de subtítulos cuando esté disponible.</string>
+    <string name="settings_open_subtitles">OpenSubtitles</string>
+    <string name="settings_open_subtitles_description">Inicia sesión para buscar y descargar subtítulos, y administrar los subtítulos descargados. Se configura por perfil; se requiere una cuenta gratuita de opensubtitles.com.</string>
+    <string name="settings_audio">Audio</string>
+    <string name="settings_preferred_audio_language">Idioma de audio preferido</string>
+    <string name="settings_audio_sync">Sincronización de audio</string>
+    <string name="settings_audio_sync_description">Adelanta o retrasa el audio para que coincida con el video.</string>
+    <string name="settings_live_tv">TV en vivo</string>
+    <string name="settings_live_latency_description">Qué tan cerca de la emisión en vivo se reproduce. Un valor menor significa estar más cerca de la emisión en vivo, pero con un búfer más pequeño, por lo que las transmisiones débiles pueden entrecortarse o reconectarse con mayor frecuencia. Se aplica al próximo canal que abras.</string>
+    <string name="settings_channel_numbers">Números de canal</string>
+    <string name="settings_channel_numbers_description">Muestra el número de canal de tu proveedor junto al nombre en la lista de TV en vivo, la superposición de la lista de canales y el reproductor, y permite escribir un número con el control remoto durante la reproducción en pantalla completa para ir directamente a ese canal (OK lo sintoniza de inmediato y Atrás cancela). Al desactivarlo, se ocultan todos los números y se ignoran las teclas numéricas; no se pierde nada y, al volver a activarlo, se restauran.</string>
+    <string name="settings_diagnostics">Diagnóstico</string>
+    <string name="settings_measured_stats">Estadísticas de transmisión medidas</string>
+    <string name="settings_measured_stats_description">Muestra los fps en vivo, la tasa de bits y los fotogramas descartados en la superposición de información de la transmisión (medidos mientras la superposición está abierta, en transmisiones que no declaran estos valores). Desactívalo solo si un televisor de gama baja presenta interrupciones; nunca afecta el video real, solo las cifras del diagnóstico.</string>
+    <string name="settings_none_auto">Ninguno / Automático</string>
+    <string name="settings_view_grid">Cuadrícula</string>
+    <string name="settings_view_list">Lista</string>
+    <string name="settings_language_portuguese">Portugués</string>
+    <string name="settings_subtitle_small">Pequeño</string>
+    <string name="settings_subtitle_normal">Normal</string>
+    <string name="settings_subtitle_large">Grande</string>
+    <string name="settings_subtitle_extra_large">Extragrande</string>
+    <string name="settings_live_latency_low">Latencia baja</string>
+    <string name="settings_live_latency_balanced">Equilibrada</string>
+    <string name="settings_live_latency_stable">Estable</string>
+    <string name="settings_live_latency_custom">Personalizada</string>
+    <string name="settings_low_latency_warning">⚠️ Latencia baja</string>
+    <string name="settings_low_latency_warning_description">Reproducir más cerca de la emisión en vivo deja un búfer más pequeño. En conexiones más lentas o transmisiones inestables, esto puede provocar más almacenamiento en búfer, interrupciones o reconexiones.\n\nElige Equilibrada si un canal se vuelve inestable.</string>
+    <string name="settings_low_latency_understand">Entiendo</string>
+    <string name="settings_custom_live_buffer">Búfer en vivo personalizado</string>
+    <string name="settings_live_buffer_seconds"><xliff:g id="seconds">%1$d</xliff:g> s</string>
+    <string name="settings_audio_delay"><xliff:g id="delay">%1$d</xliff:g> ms</string>
+    <string name="settings_external_player_description">Elige qué secciones se abren en una aplicación externa.</string>
+    <string name="settings_audio_delay_value"><xliff:g id="delay">%1$d</xliff:g> ms</string>
+    <string name="settings_movies_player_description">mpv (recomendado) ofrece la compatibilidad más amplia con formatos —audio DTS/TrueHD y archivos poco comunes—, además de la corrección de sincronización de audio y video. Cambia a ExoPlayer solo si las películas o los episodios no se inician: reproduce algunas transmisiones que mpv no puede reproducir en ciertos televisores, pero no puede decodificar audio DTS/TrueHD y no incluye la corrección de sincronización de audio y video. Elijas el que elijas, si falla se prueba automáticamente el otro.</string>
+    <string name="settings_external_player_row_description">Abre las transmisiones en una aplicación externa (VLC, MX Player) en lugar del reproductor integrado, seleccionada para cada sección. Es útil para las transmisiones que esta aplicación no puede decodificar o si prefieres otro reproductor. La posición de reanudación y las opciones anterior/siguiente no están disponibles durante la reproducción externa; es posible que no se reproduzcan las transmisiones que requieran un User-Agent o Referer personalizado.</string>
+    <string name="settings_resume_always">Reanudar siempre</string>
+    <string name="settings_resume_ask">Preguntar si se desea reanudar</string>
+    <string name="settings_resume_never">Nunca reanudar</string>
+    <string name="settings_delete_subtitles">Eliminar subtítulos</string>
+    <string name="settings_delete_all">Eliminar todo</string>
+    <string name="settings_movies">Películas</string>
+    <string name="settings_series">Series</string>
+    <string name="settings_no_downloaded_subtitles">No hay subtítulos de <xliff:g id="section">%1$s</xliff:g> descargados.</string>
+    <string name="settings_delete_subtitle">Eliminar subtítulo</string>
+    <string name="settings_delete_subtitle_message">¿Eliminar el subtítulo en <xliff:g id="name">%1$s</xliff:g> de “<xliff:g id="title">%2$s</xliff:g>”? Se puede volver a descargar más adelante.</string>
+    <string name="settings_delete_all_subtitles">Eliminar todos los subtítulos</string>
+    <string name="settings_delete_all_movies">Eliminar todos los de películas</string>
+    <string name="settings_delete_all_series">Eliminar todos los de series</string>
+    <string name="settings_section_count"><xliff:g id="section">%1$s</xliff:g> (<xliff:g id="count">%2$d</xliff:g>)</string>
+    <string name="settings_sync_guide_question">¿Sincronizar ahora la guía de programación?</string>
+    <string name="settings_sync_guide_description">Descarga la guía de programación (EPG) de “<xliff:g id="source">%1$s</xliff:g>”. También puedes hacerlo después en Configuración → EPG.</string>
+    <string name="settings_not_now">Ahora no</string>
+    <string name="settings_sync_now">Sincronizar ahora</string>
+    <string name="settings_syncing_guide">Sincronizando la guía de programación…</string>
+    <string name="settings_connecting">Conectando…</string>
+    <string name="settings_run_background">Ejecutar en segundo plano</string>
+    <string name="settings_guide_synced">Guía de programación sincronizada</string>
+    <string name="settings_guide_sync_failed">No se pudo sincronizar la guía de programación</string>
+    <string name="settings_restore_remote_title">Restaurar desde otro dispositivo</string>
+    <string name="settings_restore_remote_description">En un teléfono o una laptop conectados a la misma red Wi-Fi, escanea el código QR (o abre la URL), ingresa este PIN, elige tu archivo de copia de seguridad de OwnTV y toca Enviar al televisor. Después eliges aquí qué restaurar.</string>
+    <string name="settings_opening_server">Abriendo el servidor…</string>
+    <string name="settings_enter_pin_browser">Ingresa este PIN en el navegador</string>
+    <string name="settings_companion_qr">Código QR de la URL complementaria</string>
+    <string name="settings_open_url">O abre esta URL</string>
+    <string name="settings_try_again">Volver a intentar</string>
+    <string name="settings_new_pin">Comenzar de nuevo con un PIN nuevo</string>
+    <string name="settings_download_remote_title">Descargar en otro dispositivo</string>
+    <string name="settings_download_remote_description">En un teléfono o una laptop conectados a la misma red Wi-Fi, escanea el código QR (o abre la URL), ingresa este PIN y descarga tu archivo de copia de seguridad para guardarlo de forma segura.</string>
+    <string name="settings_preparing_backup">Preparando la copia de seguridad…</string>
+    <string name="settings_liquid_glass_on">Vidrio líquido: Activado</string>
+    <string name="settings_liquid_glass_off">Vidrio líquido: Desactivado</string>
+    <string name="settings_background_on">Imagen de fondo: Activada</string>
+    <string name="settings_background_off">Imagen de fondo: Desactivada</string>
+    <string name="settings_ui_zoom_range">Ajusta la escala de toda la interfaz (<xliff:g id="min">%1$d</xliff:g>%%–<xliff:g id="max">%2$d</xliff:g>%%).</string>
+    <string name="settings_low_zoom_warning_title">⚠️ Advertencia de zoom bajo</string>
+    <string name="settings_low_zoom_warning">El zoom de <xliff:g id="zoom">%1$d</xliff:g>%% muestra muchos más elementos en pantalla al mismo tiempo. En dispositivos con memoria limitada (por ejemplo, dispositivos de streaming para TV con 2 GB), esto puede hacer que la aplicación se vuelva inestable o se cierre, especialmente con listas de reproducción grandes y datos de EPG.\n\nPresiona OK para continuar o Atrás para mantener el valor de <xliff:g id="safe_zoom">%2$d</xliff:g>%%.</string>
+    <string name="settings_low_zoom_accept">Entiendo y acepto el riesgo</string>
+    <string name="settings_surface_transparency"><xliff:g id="percent">%1$d</xliff:g>%%</string>
+    <string name="settings_surface_count_all">Superficies: Todas</string>
+    <plurals name="settings_surface_count">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> de <xliff:g id="total">%2$d</xliff:g> superficie</item>
+        <item quantity="many"><xliff:g id="count">%1$d</xliff:g> de <xliff:g id="total">%2$d</xliff:g> superficies</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> de <xliff:g id="total">%2$d</xliff:g> superficies</item>
+    </plurals>
+    <string name="settings_catchup_timezone_device">Dispositivo</string>
+    <string name="settings_catchup_player_ask">Preguntar siempre</string>
+    <string name="settings_catchup_player_internal">Reproductor de OwnTV</string>
+    <string name="settings_catchup_player_external">Reproductor externo</string>
+    <string name="settings_soon">PRÓXIMAMENTE</string>
+    <string name="settings_download_folder_title">Elegir la carpeta de descargas</string>
+    <string name="settings_pick_background_title">Elegir una imagen de fondo</string>
+    <string name="settings_theme_dialog">Tema</string>
+    <string name="settings_app_startup_dialog">Inicio de la aplicación</string>
+    <string name="settings_animations_dialog">Animaciones</string>
+    <string name="settings_close">Cerrar</string>
+    <string name="settings_done">Listo</string>
+    <string name="settings_reset">Restablecer</string>
+    <string name="settings_device_details"><xliff:g id="model">%1$s</xliff:g> · <xliff:g id="android">%2$s</xliff:g></string>
+    <string name="settings_playback_entry"><xliff:g id="time">%1$s</xliff:g> · <xliff:g id="engine">%2$s</xliff:g> · <xliff:g id="kind">%3$s</xliff:g></string>
+    <string name="settings_history_live">TV en vivo</string>
+    <string name="settings_history_movies">Películas</string>
+    <string name="settings_history_series">Series</string>
+    <string name="settings_history_all">todo</string>
+    <string name="settings_decrease">–</string>
+    <string name="settings_increase">+</string>
+    <string name="settings_glass_effect_title">Efecto de vidrio</string>
+    <string name="settings_glass_effect_description">Paneles translúcidos de vidrio esmerilado sobre una foto de fondo o sobre el fondo propio de la aplicación.</string>
+    <string name="settings_transparency_title">Transparencia</string>
+    <string name="settings_blur_title">Desenfoque / Esmerilado</string>
+    <string name="settings_blur_description_enabled">Qué tan esmerilada se ve la imagen de fondo (<xliff:g id="min">%1$d</xliff:g>%%–<xliff:g id="max">%2$d</xliff:g>%%). Solo se aplica sobre una imagen de fondo.</string>
+    <string name="settings_blur_description_disabled">Qué tan esmerilada se ve la imagen de fondo (<xliff:g id="min">%1$d</xliff:g>%%–<xliff:g id="max">%2$d</xliff:g>%%). Solo se aplica sobre una imagen de fondo. Configura una imagen de fondo para habilitarlo.</string>
+    <string name="settings_glass_surface_panels">Paneles de contenido</string>
+    <string name="settings_glass_surface_sidebar">Barra lateral</string>
+    <string name="settings_glass_surface_preview">Paneles de vista previa</string>
+    <string name="settings_glass_surface_dialogs">Cuadros de diálogo y ventanas emergentes</string>
+    <string name="settings_glass_surface_topbar">Barra superior</string>
+    <string name="settings_glass_surface_cards">Tarjetas</string>
+    <string name="settings_glass_surface_miniplayer">Minirreproductor</string>
+    <string name="settings_browsing_last_category">Recordar la última categoría</string>
+    <string name="settings_browsing_last_category_description">Vuelve a abrir la sección en la categoría donde la dejaste, no en Todas.</string>
+    <string name="settings_browsing_last_item">Recordar el último elemento</string>
+    <string name="settings_browsing_last_item_description">Cada categoría conserva su propia posición de desplazamiento en lugar de comenzar desde arriba. TV en vivo también restaura el último canal enfocado.</string>
+    <string name="settings_catchup_player">Reproducir TV en diferido en</string>
+    <string name="settings_customize_title">Personalizar categorías y elementos</string>
+    <string name="settings_customize_pin_locked">Esta pantalla está bloqueada con PIN.</string>
+    <string name="settings_customize_wrong_pin">PIN incorrecto — vuelve a intentarlo</string>
+    <string name="settings_customize_enter_pin">Ingresar PIN</string>
+    <string name="settings_customize_set_pin">🔒 Establecer PIN</string>
+    <string name="settings_customize_change_pin">🔒 Cambiar PIN</string>
+    <string name="settings_customize_remove_lock">Quitar bloqueo</string>
+    <string name="settings_customize_description">Oculta y vuelve a mostrar canales, películas y series, y cambia el nombre o el orden de las categorías de este perfil. Los cambios se conservan después de volver a sincronizar.</string>
+    <string name="settings_customize_new_category_behavior">Comportamiento de categorías nuevas</string>
+    <string name="settings_customize_hide_new">Ocultar — las categorías nuevas agregadas al volver a sincronizar se ocultan de forma predeterminada</string>
+    <string name="settings_customize_show_new">Mostrar — las categorías nuevas agregadas al volver a sincronizar se muestran de forma predeterminada</string>
+    <string name="settings_customize_hide">Ocultar</string>
+    <string name="settings_customize_show">Mostrar</string>
+    <string name="settings_customize_behavior_hide">Ocultar</string>
+    <string name="settings_customize_behavior_show">Mostrar</string>
+    <string name="settings_customize_hidden_channels">Canales ocultos</string>
+    <string name="settings_customize_hidden_movies">Películas ocultas</string>
+    <string name="settings_customize_hidden_series">Series ocultas</string>
+    <string name="settings_customize_unhide_description">Vuelve a mostrar un elemento para devolverlo a las listas.</string>
+    <string name="settings_customize_categories">Categorías</string>
+    <string name="settings_customize_empty">Aún no hay categorías en esta sección; primero agrega una fuente.</string>
+    <string name="settings_customize_range_hide_start">Se inició la selección de un intervalo. Presiona Mostrar/Ocultar en el elemento final para seleccionar el intervalo.</string>
+    <string name="settings_customize_range_rename_start">Se inició el cambio de nombre de un intervalo. Presiona Cambiar nombre en el elemento final para seleccionar el intervalo.</string>
+    <string name="settings_customize_range_move_start">Se inició el movimiento de un intervalo. Presiona ⤒ ↑ ↓ ⤓ en el elemento final para mover todo el intervalo.</string>
+    <plurals name="settings_customize_range_selected">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> categoría seleccionada. Sigue presionando ⤒ ↑ ↓ ⤓ para moverla.</item>
+        <item quantity="many"><xliff:g id="count">%1$d</xliff:g> categorías seleccionadas. Sigue presionando ⤒ ↑ ↓ ⤓ para moverlas juntas.</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> categorías seleccionadas. Sigue presionando ⤒ ↑ ↓ ⤓ para moverlas juntas.</item>
+    </plurals>
+    <string name="settings_customize_rename">Cambiar nombre</string>
+    <string name="settings_customize_rename_category">Cambiar nombre de la categoría</string>
+    <string name="settings_customize_rename_or_delete_category">Cambiar nombre o eliminar categoría</string>
+    <string name="settings_customize_new_category">＋ Nueva categoría</string>
+    <string name="settings_customize_sort_button">Ordenar: <xliff:g id="label">%1$s</xliff:g> ▾</string>
+    <string name="settings_customize_new_categories_button">Categorías nuevas: <xliff:g id="label">%1$s</xliff:g> ▾</string>
+    <string name="settings_customize_rename_hint">Solo para este perfil. Déjalo en blanco para restaurar “<xliff:g id="name">%1$s</xliff:g>”.</string>
+    <string name="settings_customize_remove_pin_title">¿Quitar el bloqueo con PIN?</string>
+    <string name="settings_customize_remove_pin_message">La pantalla Personalizar volverá a abrirse sin solicitar un PIN.</string>
+    <string name="settings_customize_remove">Quitar</string>
+    <string name="settings_customize_confirm_pin">Confirmar PIN nuevo</string>
+    <string name="settings_customize_pin_mismatch">Los PIN no coinciden — vuelve a ingresarlos</string>
+    <string name="settings_customize_new_pin">Ingresar un PIN nuevo</string>
+    <plurals name="settings_customize_selected_categories">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> categoría seleccionada.</item>
+        <item quantity="many"><xliff:g id="count">%1$d</xliff:g> categorías seleccionadas.</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> categorías seleccionadas.</item>
+    </plurals>
+    <string name="settings_customize_hide_show_title">Ocultar o mostrar categorías</string>
+    <string name="settings_customize_was">antes “<xliff:g id="name">%1$s</xliff:g>”</string>
+    <string name="settings_customize_hidden">Oculta</string>
+    <string name="settings_customize_unhide">Volver a mostrar</string>
+    <string name="settings_customize_metadata_separator">  ·  </string>
+    <string name="settings_sources_title">Fuentes</string>
+    <string name="settings_sources_description">Las fuentes se comparten entre todos los perfiles.</string>
+    <string name="settings_sources_empty">Aún no hay fuentes. Agrega una fuente M3U o Xtream.</string>
+    <string name="settings_sources_add">Agregar fuente</string>
+    <string name="settings_sources_import_failed">No se pudo importar</string>
+    <string name="settings_sources_importing">Importando catálogo…</string>
+    <string name="settings_sources_preparing">Preparando catálogo</string>
+    <string name="settings_sources_deleting">ELIMINANDO…</string>
+    <string name="settings_sources_resync">Volver a sincronizar</string>
+    <string name="settings_sources_delete_title">¿Eliminar “<xliff:g id="name">%1$s</xliff:g>”?</string>
+    <string name="settings_sources_delete_message">Esto elimina la fuente y todos sus canales, películas y series de todos los perfiles.</string>
+    <string name="settings_sources_type_m3u">M3U · <xliff:g id="url">%1$s</xliff:g></string>
+    <string name="settings_sources_type_xtream">Xtream · <xliff:g id="url">%1$s</xliff:g></string>
+    <string name="settings_sources_type_stalker">Stalker · <xliff:g id="url">%1$s</xliff:g></string>
+    <string name="settings_sources_expiry">Vence el <xliff:g id="date">%1$s</xliff:g></string>
+    <string name="settings_sources_auto_refresh">⟳ <xliff:g id="mode">%1$s</xliff:g></string>
+    <string name="settings_sources_default">PREDETERMINADA</string>
+    <string name="settings_sources_backup">Copia de seguridad</string>
+    <string name="settings_sources_details_separator">  •  </string>
+    <string name="settings_sources_preparing_detail">Preparando catálogo</string>
+    <string name="settings_sources_removing_detail">Quitando…</string>
+    <string name="settings_sources_edit">Editar</string>
+    <string name="settings_sources_delete">Eliminar</string>
+    <string name="settings_sources_cancel">Cancelar</string>
+    <string name="settings_sources_try_again">Volver a intentar</string>
+    <string name="settings_sources_import_title">Importación completada</string>
+    <string name="settings_sources_resync_title_full">Volver a sincronizar “<xliff:g id="name">%1$s</xliff:g>”</string>
+    <string name="settings_sources_resync_now_full">Volver a sincronizar ahora</string>
+    <string name="settings_sources_resync_remove_full">Volver a sincronizar y eliminar los títulos faltantes</string>
+    <string name="settings_sources_resync_description">Volver a sincronizar ahora obtiene el catálogo más reciente y conserva todo lo que ya está guardado.\n\nVolver a sincronizar y eliminar los títulos faltantes también permite eliminar los títulos que el proveedor ya no incluye. Se conservan tus favoritos, historial y posiciones de reanudación de los títulos que aún aparecen.</string>
+    <string name="settings_sources_refresh_off">Desactivada</string>
+    <string name="settings_sources_refresh_startup">Actualizar al iniciar</string>
+    <string name="settings_sources_refresh_6h">6 horas</string>
+    <string name="settings_sources_refresh_12h">12 horas</string>
+    <string name="settings_sources_refresh_24h">24 horas</string>
+    <string name="settings_sources_refresh_48h">48 horas</string>
+    <string name="settings_epg_sources_title">Fuentes de EPG</string>
+    <string name="settings_epg_sources_empty">Aún no hay fuentes de EPG. Agrega un enlace XMLTV.</string>
+    <string name="settings_epg_sources_add">Agregar fuente de EPG</string>
+    <string name="settings_epg_sources_edit">Editar fuente de EPG</string>
+    <string name="settings_epg_sources_add_sync">Agregar y sincronizar</string>
+    <string name="settings_epg_sources_save_sync">Guardar y sincronizar</string>
+    <string name="settings_epg_sources_fill_playlist">Completar desde una lista de reproducción</string>
+    <string name="settings_epg_sources_none_playlist">Ninguna de tus listas de reproducción proporciona una URL de EPG.</string>
+    <string name="settings_epg_sources_use_logos">Usar los logotipos de canales de esta guía</string>
+    <string name="settings_epg_sources_logos_description">Muestra los logotipos de esta fuente XMLTV en lugar de los de tu lista de reproducción. Los canales para los que esta fuente no tenga un logotipo conservarán el de la lista de reproducción.</string>
+    <string name="settings_epg_sources_name">Nombre</string>
+    <string name="settings_epg_sources_url">URL de XMLTV</string>
+    <string name="settings_epg_sources_user_agent">User-Agent (opcional)</string>
+    <string name="settings_epg_sources_name_hint">p. ej., Guía del Reino Unido</string>
+    <string name="settings_epg_sources_url_hint">https://…/epg.xml(.gz)</string>
+    <string name="settings_epg_sources_user_agent_hint">Déjalo en blanco para usar el predeterminado</string>
+    <string name="settings_epg_sources_description">Fuentes de guías XMLTV que completan la guía de programación. Se sincronizan automáticamente al agregarlas y se combinan con los canales de tus listas de reproducción.</string>
+    <string name="settings_epg_sources_delete_title">¿Eliminar “<xliff:g id="name">%1$s</xliff:g>”?</string>
+    <string name="settings_epg_sources_delete_message">Elimina esta fuente de EPG y los datos de su guía. Tus canales se conservan.</string>
+    <string name="settings_epg_sources_syncing_percent">Sincronizando <xliff:g id="percent">%1$d</xliff:g>%%</string>
+    <plurals name="settings_epg_sources_catchup">
+        <item quantity="one">La TV en diferido está disponible en <xliff:g id="count">%1$d</xliff:g> canal.</item>
+        <item quantity="many">La TV en diferido está disponible en <xliff:g id="count">%1$d</xliff:g> canales.</item>
+        <item quantity="other">La TV en diferido está disponible en <xliff:g id="count">%1$d</xliff:g> canales.</item>
+    </plurals>
+    <string name="settings_epg_sources_error">⚠ <xliff:g id="error">%1$s</xliff:g></string>
+    <string name="settings_epg_sources_auto_refresh_title">Actualización automática</string>
+    <string name="settings_epg_sources_auto_refresh_description">Desactivada, al iniciar o cuando los datos estén desactualizados</string>
+    <string name="settings_epg_sources_on">Activada</string>
+    <string name="settings_epg_sources_off">Desactivada</string>
+    <string name="settings_epg_sources_not_synced">Aún no se ha sincronizado</string>
+    <string name="settings_epg_refresh_1h">1 hora</string>
+    <string name="settings_epg_refresh_3h">3 horas</string>
+    <string name="settings_epg_refresh_6h">6 horas</string>
+    <string name="settings_epg_refresh_12h">12 horas</string>
+    <string name="settings_epg_refresh_24h">24 horas</string>
+    <string name="settings_epg_refresh_48h">48 horas</string>
+    <string name="settings_epg_sources_deleting">Eliminando…</string>
+    <string name="settings_epg_sources_syncing_label">Sincronizando</string>
+    <string name="settings_epg_sources_connecting">Conectando…</string>
+    <plurals name="settings_epg_sources_status_count_channels">
+        <item quantity="one">La guía contiene <xliff:g id="channels">%1$d</xliff:g> canal.</item>
+        <item quantity="many">La guía contiene <xliff:g id="channels">%1$d</xliff:g> canales.</item>
+        <item quantity="other">La guía contiene <xliff:g id="channels">%1$d</xliff:g> canales.</item>
+    </plurals>
+    <plurals name="settings_epg_sources_status_count_programmes">
+        <item quantity="one">Contiene <xliff:g id="programmes">%1$d</xliff:g> programa.</item>
+        <item quantity="many">Contiene <xliff:g id="programmes">%1$d</xliff:g> programas.</item>
+        <item quantity="other">Contiene <xliff:g id="programmes">%1$d</xliff:g> programas.</item>
+    </plurals>
+    <string name="settings_epg_sources_status_count"><xliff:g id="channels">%1$s</xliff:g> <xliff:g id="programmes">%2$s</xliff:g></string>
+    <string name="settings_epg_sources_status_count_with_catchup"><xliff:g id="counts">%1$s</xliff:g> <xliff:g id="catchup">%2$s</xliff:g></string>
+    <string name="settings_epg_sources_status_synced">Se sincronizó, pero no se encontraron programas en el intervalo de tiempo.</string>
+    <string name="settings_epg_sources_status_synced_with_catchup"><xliff:g id="catchup">%1$s</xliff:g></string>
+    <string name="settings_backup_title">Copia de seguridad y restauración</string>
+    <string name="settings_backup_working">Procesando…</string>
+    <string name="settings_backup_what_backup">Qué incluir en la copia de seguridad</string>
+    <string name="settings_backup_what_restore">Qué restaurar</string>
+    <string name="settings_backup_encrypt_title">¿Cifrar esta copia de seguridad?</string>
+    <string name="settings_backup_encrypt_message">Con una contraseña para la copia de seguridad, se cifra todo el archivo —incluidas las listas de reproducción, los perfiles y las contraseñas guardadas— y no se puede leer nada sin esa contraseña. Guárdala de forma segura: si la pierdes, la copia de seguridad no podrá abrirse. Sin contraseña, el archivo no se cifra y no se incluyen las contraseñas guardadas.</string>
+    <string name="settings_backup_export_title">Exportar una copia de seguridad</string>
+    <string name="settings_backup_export_message">Envía la copia de seguridad a otro dispositivo (teléfono o laptop) conectado a la misma red Wi-Fi, o guárdala en un archivo de este dispositivo.</string>
+    <string name="settings_backup_restore_title">Restaurar una copia de seguridad</string>
+    <string name="settings_backup_restore_message">Envía la copia de seguridad desde otro dispositivo (teléfono o laptop) conectado a la misma red Wi-Fi, o elige un archivo de copia de seguridad que ya esté en este dispositivo.</string>
+    <string name="settings_backup_password">Contraseña de la copia de seguridad</string>
+    <string name="settings_backup_enter_password">Ingresar contraseña de la copia de seguridad</string>
+    <string name="settings_backup_wrong_password">Contraseña de la copia de seguridad incorrecta</string>
+    <string name="settings_backup_password_mismatch">Esa contraseña no coincide. Vuelve a intentarlo u omítela para restaurar todo excepto las contraseñas guardadas.</string>
+    <string name="settings_backup_password_encrypted_mismatch">Esa contraseña no coincide. Esta copia de seguridad está cifrada y no se puede abrir sin la contraseña con la que se creó.</string>
+    <string name="settings_backup_encrypted_description">Esta copia de seguridad está cifrada. Ingresa su contraseña para abrirla y elegir qué restaurar.</string>
+    <string name="settings_backup_saved_passwords_description">Las contraseñas de esta copia de seguridad están cifradas. Ingresa la contraseña de la copia de seguridad para restaurarlas u omítela para restaurar todo lo demás y volver a ingresar las contraseñas más adelante.</string>
+    <string name="settings_backup_choose_folder">Elegir una carpeta para guardar la copia de seguridad</string>
+    <string name="settings_backup_choose_folder_action">Elegir carpeta</string>
+    <string name="settings_backup_pick_file">Elegir un archivo de copia de seguridad para restaurar</string>
+    <string name="settings_backup_local_file">Archivo local</string>
+    <string name="settings_backup_remote">Dispositivo remoto</string>
+    <string name="settings_backup_everything">Todo</string>
+    <string name="settings_backup_kids_profile">Perfil infantil</string>
+    <string name="settings_backup_profile_current">“<xliff:g id="name">%1$s</xliff:g>” (actual)</string>
+    <string name="settings_backup_profile_locked">“<xliff:g id="name">%1$s</xliff:g>” está bloqueado</string>
+    <string name="settings_backup_profile_pin">PIN del perfil</string>
+    <string name="settings_backup_pin_incorrect">PIN incorrecto.</string>
+    <string name="settings_backup_pin_locked">Bloqueado con PIN</string>
+    <string name="settings_backup_unlock">Desbloquear</string>
+    <string name="settings_backup_export_button">Exportar copia de seguridad</string>
+    <string name="settings_backup_restore_button">Restaurar copia de seguridad</string>
+    <string name="settings_backup_continue">Continuar</string>
+    <string name="settings_backup_encrypt_export">Cifrar y exportar</string>
+    <string name="settings_backup_export_unencrypted">Exportar sin cifrar</string>
+    <string name="settings_backup_encrypt_prepare">Cifrar y preparar</string>
+    <string name="settings_backup_prepare_unencrypted">Preparar sin cifrar</string>
+    <string name="settings_backup_restore_action">Restaurar</string>
+    <string name="settings_backup_skip_passwords">Omitir (sin contraseñas)</string>
+    <string name="settings_backup_section_sources">Fuentes</string>
+    <string name="settings_backup_section_sources_desc">Listas de reproducción, fuentes de EPG y credenciales</string>
+    <string name="settings_backup_section_customize">Personalizaciones</string>
+    <string name="settings_backup_section_customize_desc">Categorías y canales ocultos, renombrados o reordenados, coincidencias de EPG y nombres personalizados de TMDB</string>
+    <string name="settings_backup_section_favorites">Favoritos</string>
+    <string name="settings_backup_section_favorites_desc">Canales, películas y series marcados como favoritos</string>
+    <string name="settings_backup_section_history">Historial de reproducción</string>
+    <string name="settings_backup_section_history_desc">Listas de vistos recientemente</string>
+    <string name="settings_backup_section_resume">Posiciones de reanudación</string>
+    <string name="settings_backup_section_resume_desc">Dónde dejaste de ver películas y episodios</string>
+    <string name="settings_backup_section_reorder">Reordenamiento manual</string>
+    <string name="settings_backup_section_reorder_desc">Tus posiciones de Subir/Bajar para canales, películas y series</string>
+    <string name="settings_backup_section_settings">Configuración de la aplicación</string>
+    <string name="settings_backup_section_settings_desc">Preferencias de tema, color de énfasis, reproductor y diseño</string>
+    <string name="settings_backup_saved_to">Se guardó en <xliff:g id="path">%1$s</xliff:g>.</string>
+    <string name="settings_backup_saved_to_without_passwords">Se guardó en <xliff:g id="path">%1$s</xliff:g>. No se incluyeron las contraseñas.</string>
+    <plurals name="settings_backup_restored">
+        <item quantity="one">Se restauró <xliff:g id="items">%1$d</xliff:g> elemento.</item>
+        <item quantity="many">Se restauraron <xliff:g id="items">%1$d</xliff:g> elementos.</item>
+        <item quantity="other">Se restauraron <xliff:g id="items">%1$d</xliff:g> elementos.</item>
+    </plurals>
+    <string name="settings_backup_restore_resync">Vuelve a sincronizar tus fuentes para cargar el contenido.</string>
+    <string name="settings_backup_restore_password_note">Vuelve a ingresar las contraseñas guardadas en Fuentes/Proxy.</string>
+    <plurals name="settings_backup_skipped_sources">
+        <item quantity="one">Se omitió <xliff:g id="count">%1$d</xliff:g> fuente porque su tipo de lista de reproducción no es compatible.</item>
+        <item quantity="many">Se omitieron <xliff:g id="count">%1$d</xliff:g> fuentes porque sus tipos de lista de reproducción no son compatibles.</item>
+        <item quantity="other">Se omitieron <xliff:g id="count">%1$d</xliff:g> fuentes porque sus tipos de lista de reproducción no son compatibles.</item>
+    </plurals>
+    <string name="settings_backup_export_error">No se pudo exportar.</string>
+    <string name="settings_backup_read_error">No se pudo leer el archivo de copia de seguridad.</string>
+    <string name="settings_backup_import_error">No se pudo importar.</string>
+    <string name="settings_backup_invalid_locale">Esta copia de seguridad contenía un idioma de la aplicación no compatible. La restauración se completó, pero se conservó el idioma actual.</string>
+    <string name="settings_backup_which_profiles">Qué perfiles incluir en la copia de seguridad</string>
+    <string name="settings_backup_selected_profiles">La copia de seguridad solo contendrá los perfiles seleccionados y sus datos. Los perfiles bloqueados requieren su PIN.</string>
+    <string name="settings_backup_profile_pin_description">Este no es tu perfil actual. Ingresa su PIN para incluirlo en la copia de seguridad; sin el PIN, no se hará una copia de sus datos.</string>
+    <string name="settings_backup_save_description">Guarda tus perfiles, fuentes, personalizaciones, favoritos, historial y posiciones de reanudación en un archivo, o restáuralos en un dispositivo nuevo. Tú eliges qué incluir cada vez.</string>
+    <string name="settings_metadata_optional">opcional</string>
+    <string name="settings_metadata_test_title">Oppenheimer</string>
+    <string name="settings_bulk_rename_title">Cambio de nombre masivo</string>
+    <plurals name="settings_bulk_rename_selected">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> nombre seleccionado. Agrega reglas o límpialo automáticamente.</item>
+        <item quantity="many"><xliff:g id="count">%1$d</xliff:g> nombres seleccionados. Agrega reglas o límpialos automáticamente.</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> nombres seleccionados. Agrega reglas o límpialos automáticamente.</item>
+    </plurals>
+    <string name="settings_bulk_rename_add_rule">✎ Agregar regla</string>
+    <string name="settings_bulk_rename_auto_cleanup">✨ Limpieza automática</string>
+    <string name="settings_bulk_rename_restore_original">↺ Restaurar nombres originales</string>
+    <string name="settings_bulk_rename_rules_title">Reglas de cambio de nombre masivo</string>
+    <string name="settings_bulk_rename_rules_description">Las reglas se ejecutan de arriba abajo. Separa varios valores con “;”; Agregar acepta exactamente uno.</string>
+    <string name="settings_bulk_rename_add_single_value_error">“Agregar” necesita exactamente un valor; los puntos y coma son para las reglas de Quitar.</string>
+    <string name="settings_bulk_rename_rule_required">Agrega al menos una regla.</string>
+    <string name="settings_bulk_rename_rule_type">Tipo de regla</string>
+    <string name="settings_bulk_rename_action_add">Agregar</string>
+    <string name="settings_bulk_rename_action_remove">Quitar</string>
+    <string name="settings_bulk_rename_where">Ubicación</string>
+    <string name="settings_bulk_rename_before">Antes (prefijo)</string>
+    <string name="settings_bulk_rename_after">Después (sufijo)</string>
+    <string name="settings_bulk_rename_rule_value">Valor de la regla</string>
+    <string name="settings_bulk_rename_value_hint">Separa varios valores con “;”; Agregar acepta exactamente uno.</string>
+    <string name="settings_bulk_rename_value_example">valor;valor;valor</string>
+    <string name="settings_bulk_rename_add_another_rule">＋ Agregar otra regla</string>
+    <string name="settings_bulk_rename_trim_spaces">Quitar espacios sobrantes</string>
+    <string name="settings_bulk_rename_trim_spaces_selected">✓ Quitar espacios sobrantes</string>
+    <string name="settings_bulk_rename_ignore_case">Ignorar mayúsculas y minúsculas</string>
+    <string name="settings_bulk_rename_ignore_case_selected">✓ Ignorar mayúsculas y minúsculas</string>
+    <string name="settings_bulk_rename_review">Revisar cambios de nombre</string>
+    <string name="settings_bulk_rename_review_description">No se guarda nada hasta que aplicas una fila; Listo guarda todo lo aplicado en un solo paso.</string>
+    <string name="settings_bulk_rename_blank_rejected">se rechazó el nombre en blanco — se conservó el original</string>
+    <string name="settings_bulk_rename_unchanged">sin cambios — ninguna regla coincidió</string>
+    <string name="settings_bulk_rename_result">→ <xliff:g id="name">%1$s</xliff:g></string>
+    <string name="settings_bulk_rename_duplicate">nombre duplicado — otro elemento ya lo usa</string>
+    <string name="settings_bulk_rename_apply">Aplicar</string>
+    <string name="settings_bulk_rename_decline">Rechazar</string>
+    <plurals name="settings_bulk_rename_will_change">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> cambiará</item>
+        <item quantity="many"><xliff:g id="count">%1$d</xliff:g> cambiarán</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> cambiarán</item>
+    </plurals>
+    <plurals name="settings_bulk_rename_unchanged_count">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> sin cambio</item>
+        <item quantity="many"><xliff:g id="count">%1$d</xliff:g> sin cambios</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> sin cambios</item>
+    </plurals>
+    <plurals name="settings_bulk_rename_duplicates_count">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> duplicado</item>
+        <item quantity="many"><xliff:g id="count">%1$d</xliff:g> duplicados</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> duplicados</item>
+    </plurals>
+    <string name="settings_bulk_rename_apply_all">Aplicar todo</string>
+    <string name="settings_bulk_rename_decline_all">Rechazar todo</string>
+    <string name="settings_bulk_rename_edit_rules">✎ Editar reglas</string>
+    <string name="settings_bulk_rename_restore_title">¿Restaurar los nombres originales?</string>
+    <string name="settings_bulk_rename_restore_description">Cada nombre seleccionado vuelve al nombre original del proveedor. Solo se verá afectada esta selección.</string>
+    <string name="settings_bulk_rename_restore">Restaurar</string>
+    <string name="settings_bulk_rename_too_many_title">Demasiados elementos</string>
+    <string name="settings_bulk_rename_too_many_description">Esta categoría tiene demasiados elementos para un solo cambio de nombre masivo — cambia los nombres en intervalos más pequeños.</string>
+    <string name="settings_bulk_rename_auto_country_provider">Automático: etiquetas de país/proveedor</string>
+    <string name="settings_bulk_rename_auto_quality_codec">Automático: etiquetas de calidad/códec en cualquier parte</string>
+    <string name="settings_bulk_rename_auto_emoji_symbols">Automático: emojis y símbolos</string>
+    <string name="settings_customize_new_category_title">Nueva categoría</string>
+    <string name="settings_customize_new_category_description">Una categoría combinada para este perfil — mueve canales, películas o series a ella.</string>
+    <string name="settings_customize_this_category">esta categoría</string>
+    <string name="settings_customize_sort_categories">Ordenar categorías</string>
+    <string name="settings_customize_delete_category">¿Eliminar “<xliff:g id="name">%1$s</xliff:g>”?</string>
+    <string name="settings_customize_delete_category_description">Se elimina la categoría combinada. Sus elementos permanecen en sus categorías originales.</string>
+    <string name="settings_customize_channels_description">Canales de esta categoría — cambiar nombre, reordenar, ocultar o mostrar.</string>
+    <string name="settings_customize_movies_description">Películas de esta categoría — reordenar, ocultar o mostrar.</string>
+    <string name="settings_customize_series_description">Series de esta categoría — reordenar, ocultar o mostrar.</string>
+    <string name="settings_customize_hide_show_items">Ocultar o mostrar elementos</string>
+    <plurals name="settings_customize_selected_items">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> elemento seleccionado.</item>
+        <item quantity="many"><xliff:g id="count">%1$d</xliff:g> elementos seleccionados.</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> elementos seleccionados.</item>
+    </plurals>
+    <plurals name="settings_customize_move_items_selected">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> elemento seleccionado. Sigue presionando ⤒ ↑ ↓ ⤓ para moverlo.</item>
+        <item quantity="many"><xliff:g id="count">%1$d</xliff:g> elementos seleccionados. Sigue presionando ⤒ ↑ ↓ ⤓ para moverlos juntos.</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> elementos seleccionados. Sigue presionando ⤒ ↑ ↓ ⤓ para moverlos juntos.</item>
+    </plurals>
+    <string name="settings_customize_rename_item_hint">Solo para este perfil. Déjalo en blanco para restaurar “<xliff:g id="name">%1$s</xliff:g>”.</string>
+    <string name="settings_customize_item_was">era “<xliff:g id="name">%1$s</xliff:g>”</string>
+    <string name="settings_customize_rename_items">✎ Cambiar nombres</string>
+    <string name="settings_customize_move_to">Mover a…</string>
+    <string name="settings_customize_back">← Atrás</string>
+    <string name="settings_move_category_title">Mover a una categoría</string>
+    <string name="settings_move_category_description">El elemento se quita de “<xliff:g id="name">%1$s</xliff:g>”, a menos que elijas conservarlo allí.</string>
+    <string name="settings_move_category_new">＋ Nueva categoría…</string>
+    <string name="settings_move_category_keep">Conservar también en “<xliff:g id="name">%1$s</xliff:g>”</string>
+    <string name="settings_move_category_action">Mover</string>
+    <string name="settings_dns_description">Usar un servidor DNS personalizado para resolver dominios</string>
+    <string name="settings_dns_custom">DNS personalizado</string>
+    <string name="settings_dns_toggle_description">Resolver todas las consultas de dominios de OwnTV mediante un servidor DNS personalizado.</string>
+    <string name="settings_dns_use_custom">Usar DNS personalizado</string>
+    <string name="settings_dns_server_missing">El DNS personalizado está activado, pero no hay ningún servidor configurado. Ingresa la dirección de un servidor y selecciona Guardar, o desactiva esta opción.</string>
+    <string name="settings_dns_server">Servidor DNS</string>
+    <string name="settings_dns_server_hint">8.8.8.8 o https://dns.google/dns-query</string>
+    <string name="settings_dns_test">Probar DNS</string>
+    <string name="settings_dns_explanation">El DNS personalizado puede ayudar a evitar el bloqueo de dominios por parte del proveedor de internet o permitir el desbloqueo geográfico mediante servicios SmartDNS. Se recomienda DNS-over-HTTPS (DoH) — cifra tus consultas.</string>
+    <string name="settings_dns_limitations">Esta configuración solo afecta al tráfico basado en OkHttp (sincronización de listas de reproducción, EPG, llamadas a la API, imágenes y transmisiones de ExoPlayer). mpv usa el servicio de resolución del sistema y no se ve afectado.</string>
+    <string name="settings_dns_resolved">Resuelto ✓ (<xliff:g id="millis">%1$d</xliff:g> ms) → <xliff:g id="addresses">%2$s</xliff:g></string>
+    <string name="settings_dns_enter_server">Ingresa el host de un servidor DNS o una URL de DoH.</string>
+    <string name="settings_dns_not_reachable">No se puede acceder al servidor DNS.</string>
+    <string name="settings_dns_timed_out">Se agotó el tiempo de espera de la solicitud DNS.</string>
+    <string name="settings_dns_network_unreachable">No se puede acceder a la red — verifica la dirección del servidor.</string>
+    <string name="settings_dns_connection_refused">Conexión rechazada — verifica la dirección y el puerto del servidor.</string>
+    <string name="settings_dns_test_failed">La prueba de DNS falló — verifica la dirección del servidor.</string>
+    <string name="settings_dns_no_addresses">DNS no devolvió ninguna dirección para <xliff:g id="host">%1$s</xliff:g>.</string>
+    <string name="settings_subtitle_customize">Personalizar subtítulos</string>
+    <string name="settings_subtitle_customize_off">Al desactivar esta opción, los subtítulos se muestran exactamente como los presentan la transmisión y el reproductor.</string>
+    <string name="settings_subtitle_preview_stock">Vista previa — apariencia predeterminada</string>
+    <string name="settings_subtitle_stock_description">Apariencia predeterminada, incluidos los colores y la posición que las emisoras integran en los subtítulos de TV en vivo.</string>
+    <string name="settings_subtitle_reset_all">Restablecer todo</string>
+    <string name="settings_subtitle_color">Color de los subtítulos</string>
+    <string name="settings_subtitle_color_default_description">Con Predeterminado, el color queda a cargo de la transmisión y el reproductor.</string>
+    <string name="settings_subtitle_color_hex_hint">Ingresa 6 dígitos hexadecimales, p. ej., FFEB3B</string>
+    <string name="settings_subtitle_use_default">Usar valor predeterminado</string>
+    <string name="settings_subtitle_position">Posición de los subtítulos</string>
+    <string name="settings_subtitle_background_transparency">Transparencia del fondo</string>
+    <string name="settings_subtitle_preview_sample">El zorro marrón es veloz</string>
+    <string name="settings_subtitle_customize_description">Activa esta opción y luego cambia solo lo que quieras — todo lo que permanezca en Predeterminado conservará la apariencia predeterminada, incluidos los colores y la posición que las emisoras integran en los subtítulos de TV en vivo.</string>
+    <string name="settings_subtitle_default">Predeterminado</string>
+    <string name="settings_subtitle_color_short">Color</string>
+    <string name="settings_subtitle_color_description">Color del texto — un valor predefinido, el selector o un código hexadecimal.</string>
+    <string name="settings_subtitle_position_short">Posición</string>
+    <string name="settings_subtitle_position_description">Ubicación de los subtítulos en la pantalla.</string>
+    <string name="settings_subtitle_background_description">Qué tan sólido es el recuadro detrás del texto.</string>
+    <string name="settings_subtitle_hex">Hex</string>
+    <string name="settings_subtitle_position_default_description">Predeterminado deja que la transmisión determine la posición — incluida la ubicación que una emisora asigna a un subtítulo en vivo. Cualquier otra opción siempre prevalece.</string>
+    <string name="settings_subtitle_background_none">Ninguno</string>
+    <string name="settings_subtitle_background_solid">Sólido</string>
+    <string name="settings_subtitle_color_white">Blanco</string>
+    <string name="settings_subtitle_color_yellow">Amarillo</string>
+    <string name="settings_subtitle_color_cyan">Cian</string>
+    <string name="settings_subtitle_color_green">Verde</string>
+    <string name="settings_subtitle_color_grey">Gris</string>
+</resources>

@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <string name="profiles_pin">PIN</string>
+    <string name="profiles_new">Yeni profil</string>
+    <string name="profiles_edit">Profili düzenle</string>
+    <string name="profiles_name">Ad</string>
+    <string name="profiles_name_hint">ör. Alex</string>
+    <string name="profiles_avatar">AVATAR</string>
+    <string name="profiles_kids">Çocuk profili</string>
+    <string name="profiles_kids_description">Basitleştirilmiş, güvenli gezinme</string>
+    <string name="profiles_remove_pin">PIN kilidini kaldır</string>
+    <string name="profiles_no_pin">Bu profil PIN olmadan açılır</string>
+    <string name="profiles_change_pin">PIN\'i değiştir (boş bırakırsanız korunur)</string>
+    <string name="profiles_optional_pin">PIN (isteğe bağlı)</string>
+    <string name="profiles_pin_digits">4–6 basamak</string>
+    <string name="profiles_pin_placeholder">····</string>
+    <string name="profiles_name_taken">Bu ad zaten kullanılıyor — lütfen başka bir ad seçin.</string>
+    <string name="profiles_create">Oluştur</string>
+    <string name="profiles_save">Kaydet</string>
+    <string name="profiles_gate_title">Kim izliyor?</string>
+    <string name="profiles_wrong_pin">Yanlış PIN — tekrar deneyin</string>
+    <string name="profiles_enter_pin"><xliff:g id="name">%1$s</xliff:g> — PIN\'i girin</string>
+    <string name="profiles_kids_badge">ÇOCUK</string>
+    <string name="profiles_add">Profil ekle</string>
+    <string name="profiles_title">Profiller</string>
+    <string name="profiles_add_button">Profil ekle</string>
+    <string name="profiles_delete_title">“<xliff:g id="name">%1$s</xliff:g>” silinsin mi?</string>
+    <string name="profiles_delete_message">Bu profil ile favorilerini ve geçmişini kaldırır. Kaynaklar korunur.</string>
+    <string name="profiles_kids_tag">Çocuk</string>
+    <string name="profiles_locked_tag">PIN kilitli</string>
+    <string name="search_title">Arama</string>
+    <string name="search_continue">İzlemeye devam et</string>
+    <string name="search_unwatched">İzlenmemiş</string>
+    <string name="search_hint">Kanallarda, filmlerde ve dizilerde ara…</string>
+    <string name="search_recent">Son aramalar</string>
+    <string name="search_recent_empty">Son aramalarınız burada gösterilecek.</string>
+    <string name="search_minimum_query">Her yerde arama yapmak için en az 2 karakter yazın.</string>
+    <string name="search_no_results"><xliff:g id="query">%1$s</xliff:g> — sonuç bulunamadı.</string>
+    <string name="search_nothing_in_list">Henüz <xliff:g id="list">%1$s</xliff:g> listesinde hiçbir şey yok.</string>
+    <string name="search_clear">Temizle</string>
+    <string name="search_jump_to">Şuraya git</string>
+    <string name="search_watch_live">Canlı izle</string>
+    <string name="search_play">Oynat</string>
+    <string name="search_open_series">Diziyi aç</string>
+    <string name="search_movie">Film</string>
+    <string name="search_series">Dizi</string>
+    <string name="search_channels">Kanallar</string>
+    <string name="search_channel_number">#<xliff:g id="number">%1$s</xliff:g></string>
+    <string name="home_keep_watching">İzlemeye devam et</string>
+    <string name="home_play_next">Sonrakini oynat</string>
+    <string name="home_tune_in">Yayını aç</string>
+    <string name="home_recent_live">Son izlenen canlı yayın</string>
+    <string name="profiles_default_name">Profil</string>
+    <string name="launcher_recent_live_title">Son canlı yayınlar</string>
+    <string name="launcher_recent_live_description">Son izlenen canlı kanallar</string>
+    <string name="launcher_movie_type">Film</string>
+    <string name="launcher_episode_number">Bölüm <xliff:g id="episode">%1$d</xliff:g></string>
+    <string name="home_no_preview">Henüz önizlenecek bir şey yok.</string>
+    <string name="home_no_rows">Tüm ana ekran satırları gizli.</string>
+    <string name="home_enable_rows">Ayarlar → Ana ekran bölümünden satırları yeniden açın.</string>
+    <string name="home_start_watching">Etkinliğinizi burada görmek için izlemeye başlayın.</string>
+    <string name="home_continue_empty">Oynatma geçmişi kullanılabilir olduğunda izlemeye devam edeceğiniz içerikler burada gösterilecek.</string>
+    <string name="home_last_watched_now">Son izleme: az önce</string>
+    <string name="home_finish_by">Tahmini bitiş: <xliff:g id="time">%1$s</xliff:g></string>
+    <string name="home_resume">Devam et</string>
+    <plurals name="home_last_watched_minutes">
+        <item quantity="one">Son izleme: <xliff:g id="count">%1$d</xliff:g> dakika önce</item>
+        <item quantity="other">Son izleme: <xliff:g id="count">%1$d</xliff:g> dakika önce</item>
+    </plurals>
+    <plurals name="home_last_watched_hours">
+        <item quantity="one">Son izleme: <xliff:g id="count">%1$d</xliff:g> saat önce</item>
+        <item quantity="other">Son izleme: <xliff:g id="count">%1$d</xliff:g> saat önce</item>
+    </plurals>
+    <plurals name="home_last_watched_days">
+        <item quantity="one">Son izleme: <xliff:g id="count">%1$d</xliff:g> gün önce</item>
+        <item quantity="other">Son izleme: <xliff:g id="count">%1$d</xliff:g> gün önce</item>
+    </plurals>
+    <string name="home_season_episode">S<xliff:g id="season">%1$02d</xliff:g> B<xliff:g id="episode">%2$02d</xliff:g></string>
+    <string name="home_season">S<xliff:g id="season">%1$02d</xliff:g></string>
+    <string name="home_episode">B<xliff:g id="episode">%1$02d</xliff:g></string>
+    <string name="home_row_cards">Kartlar</string>
+    <string name="home_row_keep_watching">İzlemeye devam et</string>
+    <string name="home_row_continue_movies">Filmleri izlemeye devam et</string>
+    <string name="home_row_continue_series">Dizileri izlemeye devam et</string>
+    <string name="home_row_recent_channels">Son kanallar</string>
+    <string name="home_row_favorite_channels">Favori kanallar</string>
+    <string name="home_row_on_now">Şimdi yayında</string>
+    <string name="home_row_hero_description">Üstteki büyük önizleme satırı</string>
+    <string name="home_row_continue_movies_description">Oynatma konumu kaydedilmiş filmler</string>
+    <string name="home_row_continue_series_description">Devam edilecek veya sıradaki bölümü oynatılacak diziler</string>
+    <string name="home_row_recent_description">Yakın zamanda açtığınız canlı kanallar</string>
+    <string name="home_row_favorite_description">Favorilere eklediğiniz canlı kanallar</string>
+    <string name="home_on_now_title"><xliff:g id="title">%1$s</xliff:g> · ŞİMDİ YAYINDA</string>
+    <string name="home_ok_to_watch">İzlemek için OK\'e basın</string>
+    <string name="home_ok_to_browse">Göz atmak için OK\'e basın</string>
+    <string name="home_no_programme_details">Program ayrıntıları yok</string>
+    <string name="home_guide_unavailable">Program rehberi verileri kullanılamıyor</string>
+    <string name="home_next">Sonraki</string>
+    <string name="home_channel_number"><xliff:g id="number">%1$s</xliff:g>  <xliff:g id="name">%2$s</xliff:g></string>
+    <string name="home_time_range"><xliff:g id="start">%1$s</xliff:g>-<xliff:g id="end">%2$s</xliff:g></string>
+    <string name="home_now_time">ŞİMDİ · <xliff:g id="time">%1$s</xliff:g></string>
+    <string name="home_up_next_time">SIRADA · <xliff:g id="time">%1$s</xliff:g></string>
+    <string name="home_upcoming_item"><xliff:g id="time">%1$s</xliff:g> <xliff:g id="title">%2$s</xliff:g></string>
+    <plurals name="home_channel_count">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> kanal</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> kanal</item>
+    </plurals>
+    <string name="update_title">Uygulama güncellemesi</string>
+    <string name="update_checking">Güncellemeler denetleniyor…</string>
+    <string name="update_whats_new">Yenilikler</string>
+    <string name="update_downloading">Güncelleme indiriliyor… <xliff:g id="percent">%1$d</xliff:g>%%</string>
+    <string name="update_available">Güncelleme mevcut</string>
+    <string name="update_latest">En son sürümü kullanıyorsunuz (v<xliff:g id="version">%1$s</xliff:g>).</string>
+    <string name="update_available_version"><xliff:g id="available">%1$s</xliff:g> sürümü mevcut (sizde v<xliff:g id="current">%2$s</xliff:g> yüklü).</string>
+    <string name="update_installer">İndirme tamamlandığında sistem yükleyicisi açılır.</string>
+    <string name="update_later">Daha sonra</string>
+    <string name="update_now">Şimdi güncelle</string>
+    <string name="update_try_again">Tekrar deneyin</string>
+    <string name="update_failed_check">Güncellemeler denetlenemedi.</string>
+    <string name="update_failed_check_http">Güncelleme sunucusu denetleme sırasında HTTP <xliff:g id="code">%1$s</xliff:g> hatası döndürdü.</string>
+    <string name="update_no_compatible_apk">Sürümde bu cihaz için bir güncelleme paketi bulunamadı.</string>
+    <string name="update_invalid_release_response">Güncelleme sunucusu geçersiz bir sürüm açıklaması döndürdü.</string>
+    <string name="update_failed_download">Ağ isteği başarısız olduğu için güncelleme indirilemedi.</string>
+    <string name="update_failed_download_http">Güncelleme indirmesi HTTP <xliff:g id="code">%1$s</xliff:g> hatası döndürdü.</string>
+    <string name="update_empty_download">Güncelleme sunucusu boş bir APK döndürdü.</string>
+    <string name="update_install_failed">İndirilen güncelleme sistem yükleyicisi tarafından açılamadı.</string>
+    <string name="update_ready">OwnTV v<xliff:g id="available">%1$s</xliff:g> hazır (sizde v<xliff:g id="current">%2$s</xliff:g> yüklü).</string>
+    <string name="recovery_title">OwnTV veritabanını açamadı</string>
+    <string name="recovery_data_safe_full">Profilleriniz, oynatma listeleriniz, favorileriniz ve geçmişiniz SİLİNMEDİ — bu bir veritabanı yükseltme hatasıdır ve veriler hâlâ bu cihazdadır.\n\nLütfen düzeltilebilmesi için bu sorunu bildirin ve aşağıdaki mesajı ekleyin.</string>
+    <string name="recovery_retry">Tekrar deneyin</string>
+    <string name="recovery_backup_hint">Bir yedekleme dosyanız varsa uygulamayı sıfırlayıp ardından bu dosyadan geri yükleyebilirsiniz. Sıfırlama işlemi bu cihazda depolanan her şeyi siler.</string>
+    <string name="recovery_confirm_reset">Onay: tüm uygulama verilerini sil</string>
+    <string name="recovery_reset">Uygulama verilerini sıfırla (son çare)</string>
+</resources>

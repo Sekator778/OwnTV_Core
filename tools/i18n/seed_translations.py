@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """MANUAL, ONE-OFF supply-chain tool: drives the Anthropic Message Batches API, the
-Claude Code CLI (``--backend claude``), or the Codex CLI (``--backend codex``) to seed
-the Phase 4a community-translation snapshot (docs/i18n-phase4a-seed-translations.md).
+Claude Code CLI (``--backend claude``), the Codex CLI (``--backend codex``), or Pi
+(``--backend pi``) to seed the Phase 4a community-translation snapshot
+(docs/i18n-phase4a-seed-translations.md).
 
 This is the only module under tools/i18n/ that imports ``anthropic``. It is never wired
 into CI and never run automatically by Gradle. Only the maintainer, with their own API
@@ -11,7 +12,7 @@ the maintainer has results, ``validate-and-promote``, and ``check``) is safe to 
 repeatedly and offline except where it explicitly polls or downloads results for an
 already-submitted batch.
 
-Two backends are supported, selected with ``--backend`` (default ``anthropic``):
+Four backends are supported, selected with ``--backend`` (default ``anthropic``):
 
 - ``anthropic`` -- the Message Batches API. ``submit`` creates one batch per invocation,
   ``status`` polls it, ``collect`` downloads and validates the results. Requires the
@@ -23,6 +24,13 @@ Two backends are supported, selected with ``--backend`` (default ``anthropic``):
   ``collect`` classifies and validates the raw results and queues retries, exactly as in
   the anthropic path. Requires an authenticated ``claude`` CLI on PATH. The model defaults
   to the ``sonnet`` alias and can be overridden with ``SEED_CLAUDE_MODEL``.
+- ``codex`` -- the Codex CLI, with the same one-shot persistence and shared validation
+  lifecycle. The model defaults to ``gpt-5.6-sol`` and can be overridden with
+  ``SEED_CODEX_MODEL``.
+- ``pi`` -- Pi in non-interactive, no-tools mode, with the same one-shot persistence and
+  shared validation lifecycle. The model defaults to ``customapi/gpt-5.6-sol`` and can be
+  overridden with ``SEED_PI_MODEL``; reasoning defaults to ``high`` and can be overridden
+  with ``SEED_PI_THINKING``.
 
 Text processing (extraction, tokenization, escaping, offline validation, atomic
 promotion) lives in ``tools/i18n/seed_text.py``, which stays stdlib-only.
@@ -70,6 +78,13 @@ CODEX_BIN = "codex"
 CODEX_MODEL = "gpt-5.6-sol"
 CODEX_TIMEOUT_SECONDS = 900
 CODEX_WORKERS = int(os.environ.get("SEED_CODEX_WORKERS", "8"))
+
+# --- Pi backend (--backend pi) -----------------------------------------------------
+PI_BIN = "pi"
+PI_MODEL = "customapi/gpt-5.6-sol"
+PI_THINKING = "high"
+PI_TIMEOUT_SECONDS = 1800
+PI_WORKERS = int(os.environ.get("SEED_PI_WORKERS", "6"))
 
 try:
     from tools.i18n import seed_text as st
@@ -196,7 +211,11 @@ def new_manifest(run_id: str, *, backend: str = "anthropic") -> dict:
         "sourceInventoryHash": source_inventory_hash(),
         "localesJsonHash": locales_json_hash(),
         "glossaryHash": glossary_hash(),
-        "model": MODEL,
+        "model": {
+            "claude": os.environ.get("SEED_CLAUDE_MODEL", CLAUDE_MODEL),
+            "codex": os.environ.get("SEED_CODEX_MODEL", CODEX_MODEL),
+            "pi": os.environ.get("SEED_PI_MODEL", PI_MODEL),
+        }.get(backend, MODEL),
         "thinking": THINKING,
         "effort": EFFORT,
         "stages": {
@@ -255,9 +274,16 @@ def _locale_system_prompt(entry: dict, glossary_translations: dict[str, str] | N
                            for term in glossary["consistentTerms"] if term in glossary_translations)
     else:
         terms = "(glossary not yet collected for this locale -- placeholder preview only)"
-    return f"""You are a professional software localization translator, translating the \
-OwnTV Android TV application from source English into {entry['englishName']} \
-({entry['endonym']}, BCP-47 tag "{entry['languageTag']}").
+    return f"""You are a native {entry['englishName']} speaker and an avid user of IPTV \
+services. You understand IPTV terminology, electronic programme guides, live-channel \
+workflows, catch-up TV, playback, Android TV interaction patterns, and television UI \
+conventions as they are naturally discussed by {entry['englishName']} speakers. You \
+also hold professional qualifications in linguistics and English-to-{entry['englishName']} \
+translation, with expert command of grammar, register, idiom, morphology, script, and \
+localization quality.
+
+You are translating the OwnTV Android TV application from source English into \
+{entry['englishName']} ({entry['endonym']}, BCP-47 tag "{entry['languageTag']}").
 
 OwnTV is an IPTV / Xtream-Codes client for Android TV: playlists, live channels, an \
 electronic programme guide, catch-up TV, movies, and series.
@@ -623,17 +649,25 @@ def cmd_prepare_translations(args: argparse.Namespace) -> int:
     placeholder_used = False
     if args.run_id and _manifest_path(args.run_id).is_file():
         manifest = load_manifest(args.run_id)
+        glossary_stage = manifest["stages"]["glossary"]
+        expected_terms = set(load_glossary()["consistentTerms"])
         for tag in locales:
-            cid = st.glossary_custom_id(tag)
-            result = manifest["stages"]["glossary"]["results"].get(cid)
-            if result and result.get("status") == "succeeded":
-                glossary_by_locale[tag] = result["valid"]
-    if not glossary_by_locale:
+            combined: dict[str, str] = {}
+            for cid, request in glossary_stage["requests"].items():
+                if request["locale"] != tag:
+                    continue
+                result = glossary_stage["results"].get(cid)
+                if result and result.get("status") in ("succeeded", "partial"):
+                    combined.update(result.get("valid", {}))
+            if set(combined) == expected_terms:
+                glossary_by_locale[tag] = combined
+    if len(glossary_by_locale) != len(locales):
         # Realistically-sized placeholder so the preview's size/shape resembles the real
         # prompt: use each term as a stand-in for its own (not-yet-collected) translation.
         placeholder_used = True
         placeholder_terms = load_glossary()["consistentTerms"]
-        glossary_by_locale = {tag: {t: t for t in placeholder_terms} for tag in locales}
+        for tag in locales:
+            glossary_by_locale.setdefault(tag, {t: t for t in placeholder_terms})
 
     run_id = args.run_id or new_run_id()
     manifest = load_manifest(run_id) if _manifest_path(run_id).is_file() else new_manifest(run_id, backend=args.backend)
@@ -928,6 +962,126 @@ def _collect_codex(args: argparse.Namespace, manifest: dict, stage: dict) -> int
     return _collect_claude(args, manifest, stage)
 
 
+# --- Pi backend: submit / status / collect ----------------------------------------
+
+def _pi_command(system_text: str, user_message: str, schema: dict | None,
+                model: str) -> list[str]:
+    """Build the non-interactive, no-tools Pi argv for a prepared request."""
+    if schema:
+        system_text += (
+            "\n\nOutput contract:\nReturn only one JSON object conforming exactly to "
+            "this schema:\n" + json.dumps(schema, separators=(",", ":"))
+        )
+    return [
+        PI_BIN,
+        "--model", model,
+        "--thinking", os.environ.get("SEED_PI_THINKING", PI_THINKING),
+        "--mode", "text",
+        "--print",
+        "--no-session",
+        "--no-tools",
+        "--no-context-files",
+        "--no-extensions",
+        "--no-skills",
+        "--no-prompt-templates",
+        "--system-prompt", system_text,
+        user_message,
+    ]
+
+
+def _strip_markdown_fence(text: str) -> str:
+    """Remove a single outer Markdown fence when a provider ignores JSON-only wording."""
+    stripped = text.strip()
+    if not stripped.startswith("```") or not stripped.endswith("```"):
+        return stripped
+    first_newline = stripped.find("\n")
+    if first_newline < 0:
+        return stripped
+    return stripped[first_newline + 1:-3].strip()
+
+
+def _run_pi_request(cid: str, params: dict) -> dict:
+    """Run one prepared request as an ephemeral Pi completion."""
+    system_text = params["system"][0]["text"]
+    user_message = params["messages"][0]["content"]
+    schema = params.get("output_config", {}).get("format", {}).get("schema")
+    model = os.environ.get("SEED_PI_MODEL", PI_MODEL)
+    cmd = _pi_command(system_text, user_message, schema, model)
+    try:
+        proc = subprocess.run(cmd, capture_output=True, text=True,
+                              timeout=PI_TIMEOUT_SECONDS, cwd=str(ROOT))
+    except FileNotFoundError:
+        sys.exit("error: 'pi' executable not found on PATH; install and authenticate Pi "
+                 "before using --backend pi")
+    except subprocess.TimeoutExpired:
+        return {"type": "error", "is_error": True,
+                "error": f"Pi timed out after {PI_TIMEOUT_SECONDS}s"}
+    result_text = _strip_markdown_fence(proc.stdout)
+    if proc.returncode != 0:
+        snippet = (proc.stderr or proc.stdout or "").strip()
+        return {"type": "error", "is_error": True,
+                "error": snippet[:2000] or f"Pi exited with code {proc.returncode}"}
+    if not result_text:
+        return {"type": "error", "is_error": True,
+                "error": "Pi produced no assistant text"}
+    return {"type": "result", "is_error": False, "result": result_text,
+            "usage": {"input_tokens": None, "output_tokens": None,
+                      "cache_read_input_tokens": None,
+                      "cache_creation_input_tokens": None}}
+
+
+def _submit_pi(args: argparse.Namespace, manifest: dict, stage: dict) -> int:
+    """Run every not-yet-run request through Pi and persist each result immediately."""
+    results_dir = _results_dir(args.run_id, args.stage)
+    results_dir.mkdir(parents=True, exist_ok=True)
+    pending = {
+        cid: record for cid, record in stage["requests"].items()
+        if not (results_dir / f"{cid}.raw.json").is_file()
+    }
+    if not pending:
+        sys.exit(f"error: stage '{args.stage}' has nothing pending (every request already "
+                 "has a raw result); use 'collect' to classify them")
+    verify_hashes(manifest, force_stale=args.force_stale)
+    req_dir = _requests_dir(args.run_id, args.stage)
+    for cid, record in pending.items():
+        payload = json.loads((req_dir / f"{cid}.json").read_text(encoding="utf-8"))
+        if _payload_hash(payload["params"]) != record["payloadHash"]:
+            sys.exit(f"error: on-disk request {cid} no longer matches its recorded payload "
+                     "hash; it may have been hand-edited since prepare")
+    batch_id = f"pi-{args.run_id}-{args.stage}-{datetime.now(timezone.utc).strftime('%H%M%S')}"
+    workers = min(len(pending), PI_WORKERS)
+    print(f"Submitting {len(pending)} request(s) for stage '{args.stage}' "
+          f"via Pi (batch {batch_id}, {workers} workers) ...", flush=True)
+    completed = 0
+    with ThreadPoolExecutor(max_workers=workers) as executor:
+        futures = {}
+        for cid in sorted(pending):
+            payload = json.loads((req_dir / f"{cid}.json").read_text(encoding="utf-8"))
+            futures[executor.submit(_run_pi_request, cid, payload["params"])] = cid
+        for future in as_completed(futures):
+            cid = futures[future]
+            envelope = future.result()
+            (results_dir / f"{cid}.raw.json").write_text(
+                json.dumps(envelope, indent=2, ensure_ascii=False), encoding="utf-8")
+            record = stage["requests"][cid]
+            record["batchId"] = batch_id
+            record["submittedAt"] = datetime.now(timezone.utc).isoformat()
+            completed += 1
+            print(f"  [{completed}/{len(pending)}] {cid}: "
+                  f"{'ok' if not envelope.get('is_error') else 'ERROR'}", flush=True)
+            save_manifest(args.run_id, manifest)
+    print(f"Submitted {len(pending)} request(s) for stage '{args.stage}' via Pi "
+          f"(batch {batch_id}).")
+    print(f"Next: python3 tools/i18n/seed_translations.py status --run-id "
+          f"{args.run_id} --stage {args.stage}")
+    return 0
+
+
+def _collect_pi(args: argparse.Namespace, manifest: dict, stage: dict) -> int:
+    """Collect and validate raw Pi results through the shared one-shot pipeline."""
+    return _collect_claude(args, manifest, stage)
+
+
 def cmd_submit(args: argparse.Namespace) -> int:
     """Submit every not-yet-submitted request in a stage (initial or accumulated
     retries) as one new batch. MAINTAINER-ONLY: spends API credit."""
@@ -937,6 +1091,8 @@ def cmd_submit(args: argparse.Namespace) -> int:
         return _submit_claude(args, manifest, stage)
     if args.backend == "codex":
         return _submit_codex(args, manifest, stage)
+    if args.backend == "pi":
+        return _submit_pi(args, manifest, stage)
     pending = {cid: r for cid, r in stage["requests"].items() if r["batchId"] is None}
     if not pending:
         sys.exit(f"error: stage '{args.stage}' has nothing pending (every request already "
@@ -973,7 +1129,7 @@ def cmd_submit(args: argparse.Namespace) -> int:
 
 def cmd_status(args: argparse.Namespace) -> int:
     manifest = load_manifest(args.run_id)
-    if args.backend in ("claude", "codex"):
+    if args.backend in ("claude", "codex", "pi"):
         return _status_claude(args, manifest)
     anthropic = _load_anthropic()
     client = anthropic.Anthropic()
@@ -1124,6 +1280,8 @@ def cmd_collect(args: argparse.Namespace) -> int:
         return _collect_claude(args, manifest, stage)
     if args.backend == "codex":
         return _collect_codex(args, manifest, stage)
+    if args.backend == "pi":
+        return _collect_pi(args, manifest, stage)
     anthropic = _load_anthropic()
     catalogue = load_catalogue()
     batch_ids = sorted({r["batchId"] for r in stage["requests"].values() if r["batchId"]})
@@ -1268,10 +1426,11 @@ def cmd_check(args: argparse.Namespace) -> int:
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--backend", choices=["anthropic", "claude", "codex"], default="anthropic",
-                        help="submission backend: 'anthropic' Message Batches API (default) or "
-                             "'claude' one-shot completions via the Claude Code CLI "
-                             "(claude -p --output-format json)")
+    parser.add_argument("--backend", choices=["anthropic", "claude", "codex", "pi"],
+                        default="anthropic",
+                        help="submission backend: 'anthropic' Message Batches API (default), "
+                             "'claude' one-shot Claude Code CLI, 'codex' one-shot Codex CLI, "
+                             "or 'pi' one-shot Pi completions")
     sub = parser.add_subparsers(dest="cmd", required=True)
 
     p = sub.add_parser("prepare-glossary", help="build and persist glossary batch requests")

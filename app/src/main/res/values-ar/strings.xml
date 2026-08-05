@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <string name="common_cancel">إلغاء</string>
+    <string name="common_back">رجوع</string>
+    <string name="common_save">حفظ</string>
+    <string name="common_edit">تعديل</string>
+    <string name="common_delete">حذف</string>
+    <string name="common_clear">مسح</string>
+    <string name="common_retry">إعادة المحاولة</string>
+    <string name="common_create">إنشاء</string>
+    <string name="common_reset">إعادة الضبط</string>
+    <string name="common_done">تم</string>
+    <string name="common_ok">موافق</string>
+    <string name="common_on">مفعّل</string>
+    <string name="common_off">معطّل</string>
+    <string name="common_exit">خروج</string>
+    <string name="common_resume">استئناف</string>
+    <string name="common_start_over">المشاهدة من البداية</string>
+    <string name="common_name">الاسم</string>
+    <string name="common_own_tv_user">مستخدم OwnTV</string>
+    <string name="common_switch_profile">تبديل الملف الشخصي</string>
+    <string name="common_proxy">الوكيل</string>
+    <string name="common_title">العنوان</string>
+    <string name="common_search_hint">بحث…</string>
+    <string name="common_search">بحث</string>
+    <string name="common_weather_fahrenheit"><xliff:g id="temperature">%1$d</xliff:g>°F</string>
+    <string name="common_weather_celsius"><xliff:g id="temperature">%1$d</xliff:g>°C</string>
+    <string name="common_weather_city"><xliff:g id="temperature">%1$s</xliff:g> · <xliff:g id="city">%2$s</xliff:g></string>
+    <string name="common_nav_search">بحث</string>
+    <string name="common_nav_home">الرئيسية</string>
+    <string name="common_nav_live_tv">البث التلفزيوني المباشر</string>
+    <string name="common_nav_movies">أفلام</string>
+    <string name="common_nav_series">مسلسلات</string>
+    <string name="common_nav_downloads">التنزيلات</string>
+    <string name="common_nav_guide">دليل البرامج</string>
+    <string name="common_nav_settings">الإعدادات</string>
+    <string name="shell_no_source">لا يوجد مصدر</string>
+    <string name="common_something_went_wrong">حدث خطأ ما</string>
+    <string name="common_move_instructions">▲/▼ للنقل · موافق للحفظ · رجوع للإلغاء</string>
+    <string name="common_number_grouped"><xliff:g id="count">%1$,d</xliff:g></string>
+    <string name="common_rating"><xliff:g id="rating">%1$.1f</xliff:g></string>
+    <string name="common_percent"><xliff:g id="percent">%1$d</xliff:g>%%</string>
+    <string name="common_timestamp_minutes"><xliff:g id="minutes">%1$d</xliff:g>:<xliff:g id="seconds">%2$02d</xliff:g></string>
+    <string name="common_timestamp_hours"><xliff:g id="hours">%1$d</xliff:g>:<xliff:g id="minutes">%2$02d</xliff:g>:<xliff:g id="seconds">%3$02d</xliff:g></string>
+    <string name="common_resume_position">توقفت عند <xliff:g id="position">%1$s</xliff:g>.</string>
+    <string name="common_resume_prompt">هل تريد استئناف التشغيل؟</string>
+    <string name="sync_error_offline">يبدو أنك غير متصل. تحقق من اتصالك وحاول مرة أخرى.</string>
+    <string name="sync_error_generic">حدث خطأ ما. يُرجى المحاولة مرة أخرى.</string>
+    <string name="sync_error_timeout">استغرق الخادم وقتًا طويلًا للاستجابة. يُرجى المحاولة مرة أخرى.</string>
+    <string name="sync_error_unreachable">تعذّر الوصول إلى الخادم. تحقق من العنوان ومن اتصالك.</string>
+    <string name="sync_error_connection">تعذّر الاتصال بالخادم. قد يكون متوقفًا، أو قد يكون العنوان غير صحيح.</string>
+    <string name="sync_error_interrupted">قاطع الخادم عملية التنزيل. يُرجى المحاولة مرة أخرى.</string>
+    <string name="sync_error_mac">رفضت البوابة عنوان MAC هذا. تحقق من عنوان MAC (ومن تاريخ التلفاز ووقته) — أو ربما انتهت صلاحية الاشتراك.</string>
+    <string name="sync_error_invalid_mac">عنوان MAC غير صالح — استخدم AA:BB:CC:DD:EE:FF</string>
+    <string name="sync_counts_separator">  ·  </string>
+    <string name="sync_counts_success">تمت المزامنة بنجاح</string>
+    <string name="sync_counts_synced">تمت مزامنة <xliff:g id="counts">%1$s</xliff:g></string>
+    <string name="sync_import_warnings">تم الاستيراد مع وجود تحذيرات: <xliff:g id="phases">%1$s</xliff:g></string>
+    <string name="sync_warning_phase_error"><xliff:g id="phase">%1$s</xliff:g>: <xliff:g id="message">%2$s</xliff:g></string>
+    <plurals name="sync_warning_catalog_shrink">
+        <item quantity="zero">تم الاحتفاظ بـ <xliff:g id="stored">%1$d</xliff:g> من العناصر الموجودة — أعاد هذا الاستيراد عددًا أقل بنسبة <xliff:g id="percent">%2$d</xliff:g>%%. أجرِ المزامنة مرة أخرى، أو استخدم فرض المزامنة النظيفة إذا كان المزوّد قد أزالها بالفعل.</item>
+        <item quantity="one">تم الاحتفاظ بـ <xliff:g id="stored">%1$d</xliff:g> عنصر موجود — أعاد هذا الاستيراد عددًا أقل بنسبة <xliff:g id="percent">%2$d</xliff:g>%%. أجرِ المزامنة مرة أخرى، أو استخدم فرض المزامنة النظيفة إذا كان المزوّد قد أزاله بالفعل.</item>
+        <item quantity="two">تم الاحتفاظ بـ <xliff:g id="stored">%1$d</xliff:g> عنصرين موجودين — أعاد هذا الاستيراد عددًا أقل بنسبة <xliff:g id="percent">%2$d</xliff:g>%%. أجرِ المزامنة مرة أخرى، أو استخدم فرض المزامنة النظيفة إذا كان المزوّد قد أزالهما بالفعل.</item>
+        <item quantity="few">تم الاحتفاظ بـ <xliff:g id="stored">%1$d</xliff:g> عناصر موجودة — أعاد هذا الاستيراد عددًا أقل بنسبة <xliff:g id="percent">%2$d</xliff:g>%%. أجرِ المزامنة مرة أخرى، أو استخدم فرض المزامنة النظيفة إذا كان المزوّد قد أزالها بالفعل.</item>
+        <item quantity="many">تم الاحتفاظ بـ <xliff:g id="stored">%1$d</xliff:g> عنصرًا موجودًا — أعاد هذا الاستيراد عددًا أقل بنسبة <xliff:g id="percent">%2$d</xliff:g>%%. أجرِ المزامنة مرة أخرى، أو استخدم فرض المزامنة النظيفة إذا كان المزوّد قد أزالها بالفعل.</item>
+        <item quantity="other">تم الاحتفاظ بـ <xliff:g id="stored">%1$d</xliff:g> عنصر موجود — أعاد هذا الاستيراد عددًا أقل بنسبة <xliff:g id="percent">%2$d</xliff:g>%%. أجرِ المزامنة مرة أخرى، أو استخدم فرض المزامنة النظيفة إذا كان المزوّد قد أزالها بالفعل.</item>
+    </plurals>
+    <plurals name="sync_warning_page_failures">
+        <item quantity="zero"><xliff:g id="count">%1$d</xliff:g> صفحة من صفحات المصدر تعذّر تحميلها؛ قد يكون بعض المحتوى مفقودًا حتى المزامنة التالية.</item>
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> صفحة مصدر تعذّر تحميلها؛ قد يكون بعض المحتوى مفقودًا حتى المزامنة التالية.</item>
+        <item quantity="two"><xliff:g id="count">%1$d</xliff:g> صفحتان من صفحات المصدر تعذّر تحميلهما؛ قد يكون بعض المحتوى مفقودًا حتى المزامنة التالية.</item>
+        <item quantity="few"><xliff:g id="count">%1$d</xliff:g> صفحات مصدر تعذّر تحميلها؛ قد يكون بعض المحتوى مفقودًا حتى المزامنة التالية.</item>
+        <item quantity="many"><xliff:g id="count">%1$d</xliff:g> صفحة مصدر تعذّر تحميلها؛ قد يكون بعض المحتوى مفقودًا حتى المزامنة التالية.</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> صفحة مصدر تعذّر تحميلها؛ قد يكون بعض المحتوى مفقودًا حتى المزامنة التالية.</item>
+    </plurals>
+    <string name="sync_remainder_note">لا تزال بقية الكتالوج قيد المزامنة في الخلفية — يمكنك بدء المشاهدة الآن. يظهر التقدم في الشريحة الصغيرة أسفل الشاشة.</string>
+    <string name="sync_progress_preparing">جارٍ تحضير الكتالوج</string>
+    <string name="sync_progress_connecting">جارٍ الاتصال بالمصدر…</string>
+    <string name="sync_progress_syncing">جارٍ مزامنة الكتالوج</string>
+    <string name="sync_progress_percent">جارٍ المزامنة بنسبة <xliff:g id="percent">%1$d</xliff:g>%%</string>
+    <string name="sync_status_catalog">جارٍ مزامنة <xliff:g id="source">%1$s</xliff:g></string>
+    <string name="sync_status_catalog_with_counts">جارٍ مزامنة <xliff:g id="source">%1$s</xliff:g> · <xliff:g id="counts">%2$s</xliff:g></string>
+    <string name="sync_status_epg">جارٍ تحديث دليل البرامج · <xliff:g id="source">%1$s</xliff:g></string>
+    <string name="sync_status_epg_with_counts">جارٍ تحديث دليل البرامج · <xliff:g id="source">%1$s</xliff:g> · <xliff:g id="counts">%2$s</xliff:g></string>
+    <string name="sync_status_complete">اكتملت المزامنة · <xliff:g id="source">%1$s</xliff:g></string>
+    <string name="sync_status_complete_with_changes">اكتملت المزامنة · <xliff:g id="source">%1$s</xliff:g> · <xliff:g id="changes">%2$s</xliff:g></string>
+    <string name="sync_status_failed">فشلت المزامنة · <xliff:g id="source">%1$s</xliff:g>: <xliff:g id="reason">%2$s</xliff:g></string>
+    <string name="sync_status_cancelled">أُلغيت المزامنة · <xliff:g id="source">%1$s</xliff:g></string>
+    <string name="sync_phase_live">البث التلفزيوني المباشر</string>
+    <string name="sync_phase_movies">أفلام</string>
+    <string name="sync_phase_series">مسلسلات</string>
+    <plurals name="sync_count_channels">
+        <item quantity="zero"><xliff:g id="count">%1$s</xliff:g> قناة</item>
+        <item quantity="one"><xliff:g id="count">%1$s</xliff:g> قناة</item>
+        <item quantity="two"><xliff:g id="count">%1$s</xliff:g> قناتان</item>
+        <item quantity="few"><xliff:g id="count">%1$s</xliff:g> قنوات</item>
+        <item quantity="many"><xliff:g id="count">%1$s</xliff:g> قناة</item>
+        <item quantity="other"><xliff:g id="count">%1$s</xliff:g> قناة</item>
+    </plurals>
+    <plurals name="sync_count_movies">
+        <item quantity="zero"><xliff:g id="count">%1$s</xliff:g> فيلم</item>
+        <item quantity="one"><xliff:g id="count">%1$s</xliff:g> فيلم</item>
+        <item quantity="two"><xliff:g id="count">%1$s</xliff:g> فيلمان</item>
+        <item quantity="few"><xliff:g id="count">%1$s</xliff:g> أفلام</item>
+        <item quantity="many"><xliff:g id="count">%1$s</xliff:g> فيلمًا</item>
+        <item quantity="other"><xliff:g id="count">%1$s</xliff:g> فيلم</item>
+    </plurals>
+    <plurals name="sync_count_series">
+        <item quantity="zero"><xliff:g id="count">%1$s</xliff:g> مسلسل</item>
+        <item quantity="one"><xliff:g id="count">%1$s</xliff:g> مسلسل</item>
+        <item quantity="two"><xliff:g id="count">%1$s</xliff:g> مسلسلان</item>
+        <item quantity="few"><xliff:g id="count">%1$s</xliff:g> مسلسلات</item>
+        <item quantity="many"><xliff:g id="count">%1$s</xliff:g> مسلسلًا</item>
+        <item quantity="other"><xliff:g id="count">%1$s</xliff:g> مسلسل</item>
+    </plurals>
+    <plurals name="sync_count_epg">
+        <item quantity="zero"><xliff:g id="count">%1$s</xliff:g> إدخال في دليل البرامج الإلكتروني</item>
+        <item quantity="one"><xliff:g id="count">%1$s</xliff:g> إدخال في دليل البرامج الإلكتروني</item>
+        <item quantity="two"><xliff:g id="count">%1$s</xliff:g> إدخالان في دليل البرامج الإلكتروني</item>
+        <item quantity="few"><xliff:g id="count">%1$s</xliff:g> إدخالات في دليل البرامج الإلكتروني</item>
+        <item quantity="many"><xliff:g id="count">%1$s</xliff:g> إدخالًا في دليل البرامج الإلكتروني</item>
+        <item quantity="other"><xliff:g id="count">%1$s</xliff:g> إدخال في دليل البرامج الإلكتروني</item>
+    </plurals>
+    <plurals name="sync_status_more">
+        <item quantity="zero">+<xliff:g id="count">%1$d</xliff:g> عملية مزامنة أخرى قيد التنفيذ</item>
+        <item quantity="one">+<xliff:g id="count">%1$d</xliff:g> عملية مزامنة أخرى قيد التنفيذ</item>
+        <item quantity="two">+<xliff:g id="count">%1$d</xliff:g> عمليتا مزامنة أخريان قيد التنفيذ</item>
+        <item quantity="few">+<xliff:g id="count">%1$d</xliff:g> عمليات مزامنة أخرى قيد التنفيذ</item>
+        <item quantity="many">+<xliff:g id="count">%1$d</xliff:g> عملية مزامنة أخرى قيد التنفيذ</item>
+        <item quantity="other">+<xliff:g id="count">%1$d</xliff:g> عملية مزامنة أخرى قيد التنفيذ</item>
+    </plurals>
+    <plurals name="sync_categories_added">
+        <item quantity="zero">تمت إضافة <xliff:g id="count">%1$d</xliff:g> فئة</item>
+        <item quantity="one">تمت إضافة <xliff:g id="count">%1$d</xliff:g> فئة</item>
+        <item quantity="two">تمت إضافة <xliff:g id="count">%1$d</xliff:g> فئتين</item>
+        <item quantity="few">تمت إضافة <xliff:g id="count">%1$d</xliff:g> فئات</item>
+        <item quantity="many">تمت إضافة <xliff:g id="count">%1$d</xliff:g> فئة</item>
+        <item quantity="other">تمت إضافة <xliff:g id="count">%1$d</xliff:g> فئة</item>
+    </plurals>
+    <plurals name="sync_categories_removed">
+        <item quantity="zero">تمت إزالة <xliff:g id="count">%1$d</xliff:g> فئة</item>
+        <item quantity="one">تمت إزالة <xliff:g id="count">%1$d</xliff:g> فئة</item>
+        <item quantity="two">تمت إزالة <xliff:g id="count">%1$d</xliff:g> فئتين</item>
+        <item quantity="few">تمت إزالة <xliff:g id="count">%1$d</xliff:g> فئات</item>
+        <item quantity="many">تمت إزالة <xliff:g id="count">%1$d</xliff:g> فئة</item>
+        <item quantity="other">تمت إزالة <xliff:g id="count">%1$d</xliff:g> فئة</item>
+    </plurals>
+    <string name="sync_error_portal">تعذّر الوصول إلى البوابة. تحقق من عنوان URL الخاص بالبوابة — فهو ينتهي عادةً بـ /c/.</string>
+    <string name="sync_error_session">انتهت صلاحية جلسة البوابة. يُرجى المحاولة مرة أخرى.</string>
+    <string name="sync_error_auth">رفض الخادم بيانات تسجيل دخولك. تحقق من اسم المستخدم وكلمة المرور.</string>
+    <string name="sync_error_not_found">لم يتم العثور عليه على الخادم. تحقق من عنوان URL.</string>
+    <string name="sync_error_server">واجه الخادم مشكلة. يُرجى المحاولة مرة أخرى لاحقًا.</string>
+    <string name="sync_error_secure">فشل الاتصال الآمن — ربما تكون شهادة الخادم غير صالحة.</string>
+    <string name="sync_error_malformed_guide">كانت بيانات دليل البرامج الواردة من الخادم بتنسيق غير صالح. ربما تم تحميل بعضها رغم ذلك — يُرجى المحاولة مرة أخرى، أو التحقق من عنوان URL الخاص بدليل البرامج الإلكتروني.</string>
+    <string name="common_items_per_skip">عدد العناصر لكل تخطٍّ</string>
+    <string name="common_plus">+</string>
+    <string name="common_minus">–</string>
+    <string name="common_hide">إخفاء</string>
+    <string name="common_show">إظهار</string>
+    <string name="common_qr_code_companion_url">رمز QR لعنوان URL المرافق</string>
+</resources>

@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <string name="setup_background_image">Фоновое изображение</string>
+    <string name="setup_background_image_description">Выберите фотографию, которая будет отображаться за интерфейсом, или удалите её, чтобы вернуть однотонные панели.</string>
+    <string name="setup_from_device">На устройстве</string>
+    <string name="setup_from_phone">С телефона</string>
+    <string name="setup_send_from_phone">Отправка с телефона</string>
+    <string name="setup_phone_background_description">На телефоне, подключённом к той же сети Wi-Fi, отсканируйте QR-код (или откройте URL-адрес), введите этот PIN и отправьте фотографию. Она сразу станет фоновым изображением.</string>
+    <string name="setup_opening_server">Запуск сервера…</string>
+    <string name="setup_enter_pin_browser">Введите этот PIN в браузере</string>
+    <string name="setup_open_url">Или откройте этот URL-адрес</string>
+    <string name="setup_try_again">Повторить</string>
+    <string name="setup_start_again_new_pin">Начать заново с новым PIN</string>
+    <string name="setup_companion_invalid_port">Введите допустимый номер порта от 1 до 65535.</string>
+    <string name="setup_companion_port_in_use">Порт <xliff:g id="port">%1$d</xliff:g> уже используется. Попробуйте другой порт.</string>
+    <string name="setup_companion_unavailable">Не удалось запустить локальный сервер. Повторите попытку.</string>
+    <string name="setup_companion_locked">Слишком много неверных попыток ввода PIN — в целях безопасности соединение было закрыто.</string>
+    <string name="setup_tmdb_name">Указать название в TMDB</string>
+    <string name="setup_tmdb_description">Введите точное название из TMDB для сопоставления. Год указывать необязательно, но он поможет, если названия нескольких произведений совпадают.</string>
+    <string name="setup_year_optional">Год (необязательно)</string>
+    <string name="setup_pick_location">Выберите расположение</string>
+    <string name="setup_grant_storage_access">Предоставить полный доступ к хранилищу</string>
+    <string name="setup_use_folder">Использовать эту папку</string>
+    <string name="setup_new_folder">Новая папка</string>
+    <string name="setup_folder_name">Название папки</string>
+    <string name="setup_folder_example">Например, Моё ТВ</string>
+    <string name="setup_from_current_folder">..</string>
+    <string name="setup_move_indicator">↕</string>
+    <string name="setup_welcome_tagline">Ваш собственный IPTV-плеер.</string>
+    <string name="setup_get_started">Начать</string>
+    <string name="setup_before_you_start">Перед началом</string>
+    <string name="setup_disclaimer">OwnTV — это только медиаплеер. В нём нет каналов, плейлистов или контента. Вы самостоятельно добавляете собственные легально доступные источники Xtream, M3U или Stalker и несёте за них ответственность.</string>
+    <string name="setup_i_understand">Понятно</string>
+    <string name="setup_set_up_owntv">Настройка OwnTV</string>
+    <string name="setup_setup_choice_description">Начните с нуля или восстановите профили, плейлисты и избранное из файла резервной копии.</string>
+    <string name="setup_new_profile">Новый профиль</string>
+    <string name="setup_create_profile_add_sources">Создать профиль и добавить источники</string>
+    <string name="setup_restore_backup">Восстановить резервную копию</string>
+    <string name="setup_import_profiles_playlists">Импортировать профили и плейлисты из файла</string>
+    <string name="setup_add_playlist">Добавить плейлист</string>
+    <string name="setup_add_playlist_description">Добавьте источник для этого профиля или настройте его позже.</string>
+    <string name="setup_new">Новый</string>
+    <string name="setup_add_m3u_xtream">Добавить источник M3U или Xtream</string>
+    <string name="setup_existing">Существующие</string>
+    <string name="setup_use_other_profile_playlists">Использовать плейлисты другого профиля</string>
+    <string name="setup_import">Импорт</string>
+    <string name="setup_restore_backup_file">Восстановить из файла резервной копии</string>
+    <string name="setup_skip_for_now">Пока пропустить</string>
+    <string name="setup_use_existing_playlists">Использовать существующие плейлисты</string>
+    <string name="setup_pick_playlists">Выберите плейлисты, которые нужно добавить в этот профиль.</string>
+    <plurals name="setup_add_selected_playlists">
+        <item quantity="one">Добавить <xliff:g id="count">%1$d</xliff:g> плейлист</item>
+        <item quantity="few">Добавить <xliff:g id="count">%1$d</xliff:g> плейлиста</item>
+        <item quantity="many">Добавить <xliff:g id="count">%1$d</xliff:g> плейлистов</item>
+        <item quantity="other">Добавить <xliff:g id="count">%1$d</xliff:g> плейлиста</item>
+    </plurals>
+    <string name="setup_restoring">Восстановление…</string>
+    <string name="setup_wrong_backup_password">Неверный пароль резервной копии</string>
+    <string name="setup_enter_backup_password">Введите пароль резервной копии</string>
+    <string name="setup_password_mismatch_sealed">Пароль не подошёл. Эта резервная копия зашифрована — её нельзя открыть без пароля, с которым она была создана.</string>
+    <string name="setup_password_mismatch">Пароль не подошёл. Повторите попытку или пропустите этот шаг, чтобы восстановить всё, кроме сохранённых паролей.</string>
+    <string name="setup_backup_encrypted_prompt">Эта резервная копия зашифрована. Чтобы открыть и восстановить её, введите пароль резервной копии.</string>
+    <string name="setup_backup_passwords_encrypted_prompt">Пароли в этой резервной копии зашифрованы. Чтобы восстановить их, введите пароль резервной копии. Либо пропустите этот шаг, чтобы восстановить всё остальное, а пароли ввести позже.</string>
+    <string name="setup_backup_password">Пароль резервной копии</string>
+    <string name="setup_skip_no_passwords">Пропустить (без паролей)</string>
+    <string name="setup_restore">Восстановить</string>
+    <string name="setup_restore_failed">Не удалось выполнить восстановление</string>
+    <string name="setup_backup_read_failed">Не удалось прочитать файл резервной копии</string>
+    <string name="setup_invalid_mac">Недопустимый MAC-адрес — используйте формат AA:BB:CC:DD:EE:FF</string>
+    <string name="setup_pick_backup_file">Выберите файл резервной копии для восстановления</string>
+    <string name="setup_restore_a_backup">Восстановление резервной копии</string>
+    <string name="setup_restore_choice_description">Отправьте резервную копию с другого устройства (телефона или ноутбука), подключённого к той же сети Wi-Fi, либо выберите файл резервной копии на этом устройстве.</string>
+    <string name="setup_upload_from_wifi_device">Загрузить с устройства в вашей сети Wi-Fi</string>
+    <string name="setup_local_file">Локальный файл</string>
+    <string name="setup_pick_backup_local">Выбрать файл резервной копии на этом устройстве</string>
+    <string name="setup_run_in_background">Продолжить в фоновом режиме</string>
+    <string name="setup_importing_catalog">Импорт каталога…</string>
+    <string name="setup_preparing_catalog">Подготовка каталога</string>
+    <string name="setup_watching_during_import">Можно начать просмотр, пока загружается остальная часть каталога.</string>
+    <string name="setup_all_set">Всё готово!</string>
+    <plurals name="setup_restored_items">
+        <item quantity="one">Восстановлен <xliff:g id="items">%1$d</xliff:g> элемент. Повторно синхронизируйте источники, чтобы загрузить контент.</item>
+        <item quantity="few">Восстановлено <xliff:g id="items">%1$d</xliff:g> элемента. Повторно синхронизируйте источники, чтобы загрузить контент.</item>
+        <item quantity="many">Восстановлено <xliff:g id="items">%1$d</xliff:g> элементов. Повторно синхронизируйте источники, чтобы загрузить контент.</item>
+        <item quantity="other">Восстановлено <xliff:g id="items">%1$d</xliff:g> элемента. Повторно синхронизируйте источники, чтобы загрузить контент.</item>
+    </plurals>
+    <string name="setup_passwords_omitted">После этого повторно введите все сохранённые пароли.</string>
+    <plurals name="setup_skipped_sources">
+        <item quantity="one">Источник <xliff:g id="count">%1$d</xliff:g> был пропущен, поскольку эта версия не поддерживает тип его плейлиста.</item>
+        <item quantity="few">Источники (<xliff:g id="count">%1$d</xliff:g>) были пропущены, поскольку эта версия не поддерживает типы их плейлистов.</item>
+        <item quantity="many">Источники (<xliff:g id="count">%1$d</xliff:g>) были пропущены, поскольку эта версия не поддерживает типы их плейлистов.</item>
+        <item quantity="other">Источники (<xliff:g id="count">%1$d</xliff:g>) были пропущены, поскольку эта версия не поддерживает типы их плейлистов.</item>
+    </plurals>
+    <string name="setup_continue">Продолжить</string>
+    <string name="setup_import_failed">Не удалось выполнить импорт</string>
+    <string name="setup_try_again_caps">Повторить</string>
+    <string name="setup_add_from_phone">Добавление с телефона</string>
+    <string name="setup_phone_add_description">На телефоне или ноутбуке, подключённом к той же сети Wi-Fi, отсканируйте QR-код (или откройте URL-адрес), введите этот PIN, заполните данные плейлиста и нажмите «Отправить на телевизор». После этого здесь появятся данные, готовые к импорту, — нажмите «Начать импорт» на пульте ДУ.</string>
+    <string name="setup_opening">Запуск…</string>
+    <string name="setup_open_server">Запустить сервер</string>
+    <string name="setup_stop_server">Остановить сервер</string>
+    <string name="setup_add_source">Добавить источник</string>
+    <string name="setup_add_source_description">Заполните форму на телефоне или введите данные здесь с помощью пульта ДУ.</string>
+    <string name="setup_manual">Вручную</string>
+    <string name="setup_use_phone_same_wifi">Использовать телефон в той же сети Wi-Fi</string>
+    <string name="setup_type_source_here">Ввести здесь данные Xtream / M3U / Stalker</string>
+    <string name="setup_edit_source">Изменить источник</string>
+    <string name="setup_add_your_source">Добавьте свой источник</string>
+    <string name="setup_edit_source_description">Обновите данные этого источника или измените настройки его автообновления.</string>
+    <string name="setup_byo_source_description">OwnTV — это плеер: добавьте собственный источник Xtream, M3U или Stalker.</string>
+    <string name="setup_xtream">Xtream</string>
+    <string name="setup_m3u">M3U / M3U8</string>
+    <string name="setup_stalker_mac">Stalker (MAC)</string>
+    <string name="setup_source_name_optional">Название (необязательно)</string>
+    <string name="setup_default_iptv">Моё IPTV</string>
+    <string name="setup_name_default_playlist">Мой плейлист</string>
+    <string name="setup_default_portal">Мой портал</string>
+    <string name="setup_default_profile">Профиль</string>
+    <string name="setup_server_url">URL-адрес сервера</string>
+    <string name="setup_server_example">http://host:port</string>
+    <string name="setup_username">Имя пользователя</string>
+    <string name="setup_password">Пароль</string>
+    <string name="setup_password_keep">Пароль (оставьте пустым, чтобы сохранить текущий)</string>
+    <string name="setup_playlist_url_local_file">URL-адрес плейлиста или локальный файл</string>
+    <string name="setup_playlist_example">http://…/плейлист.m3u</string>
+    <string name="setup_playlist_file_unavailable">Не удалось открыть файл плейлиста. Выберите его снова: возможно, он был перемещён.</string>
+    <string name="setup_playlist_path_unsupported">Этот путь к локальному плейлисту не поддерживается.</string>
+    <string name="setup_local_file_choose">Выбрать локальный файл .m3u / .m3u8…</string>
+    <string name="setup_local_file_prefix">Локальный файл: <xliff:g id="name">%1$s</xliff:g></string>
+    <string name="setup_portal_url">URL-адрес портала</string>
+    <string name="setup_portal_example">http://host:port/c/</string>
+    <string name="setup_mac_address">MAC-адрес</string>
+    <string name="setup_mac_example">00:1A:79:AA:BB:CC</string>
+    <string name="setup_mac_invalid">Введите 12 символов, например 00:1A:79:AA:BB:CC</string>
+    <string name="setup_device_model_preset">Предустановка модели устройства (User-Agent)…</string>
+    <string name="setup_testing">Проверка…</string>
+    <string name="setup_test_connection">Проверить соединение</string>
+    <plurals name="setup_stalker_test_connected">
+        <item quantity="one">✓ Подключено через <xliff:g id="endpoint">%1$s</xliff:g> (<xliff:g id="fields">%2$d</xliff:g> поле профиля)</item>
+        <item quantity="few">✓ Подключено через <xliff:g id="endpoint">%1$s</xliff:g> (<xliff:g id="fields">%2$d</xliff:g> поля профиля)</item>
+        <item quantity="many">✓ Подключено через <xliff:g id="endpoint">%1$s</xliff:g> (<xliff:g id="fields">%2$d</xliff:g> полей профиля)</item>
+        <item quantity="other">✓ Подключено через <xliff:g id="endpoint">%1$s</xliff:g> (<xliff:g id="fields">%2$d</xliff:g> поля профиля)</item>
+    </plurals>
+    <string name="setup_stalker_test_expires">Доступ истекает <xliff:g id="date">%1$s</xliff:g></string>
+    <string name="setup_user_agent_optional">User-Agent (необязательно)</string>
+    <string name="setup_user_agent_example">Например, VLC/3.0.20 LibVLC/3.0.20</string>
+    <string name="setup_auto_refresh">Автообновление</string>
+    <string name="setup_auto_refresh_description">Выкл., при запуске или при устаревании данных</string>
+    <string name="setup_default_playlist">Плейлист по умолчанию</string>
+    <string name="setup_default_playlist_description">Показывать во всём приложении только этот плейлист. Выключите, чтобы показывать все плейлисты. Изменить настройку можно в любое время на верхней панели.</string>
+    <string name="setup_what_to_sync">Что синхронизировать</string>
+    <string name="setup_sync_off_editing">Выключенные разделы остаются скрытыми, и данные для них никогда не загружаются. При повторном включении раздела сохранённые в кеше ряды отображаются сразу.</string>
+    <string name="setup_sync_choices">«Сейчас» — импорт в первую очередь · «Позже» — синхронизация в фоновом режиме · «Выкл.» — данные не загружаются и не отображаются.</string>
+    <string name="setup_live_tv">Прямой эфир</string>
+    <string name="setup_channels_categories">Каналы и категории</string>
+    <string name="setup_movies">Фильмы</string>
+    <string name="setup_vod_movie_catalog">Каталог фильмов VOD</string>
+    <string name="setup_series">Сериалы</string>
+    <string name="setup_tv_series_catalog">Каталог сериалов</string>
+    <string name="setup_start_import">Начать импорт</string>
+    <string name="setup_update_source_save">Сохранить</string>
+    <string name="setup_pick_playlist_file">Выберите файл плейлиста (.m3u / .m3u8)</string>
+    <string name="setup_device_model_preset_title">Предустановка модели устройства</string>
+    <string name="setup_auto_refresh_title">Автообновление</string>
+    <string name="setup_on">Вкл.</string>
+    <string name="setup_now">Сейчас</string>
+    <string name="setup_later">Позже</string>
+    <string name="setup_off">Выкл.</string>
+    <string name="setup_scope_value">◀ <xliff:g id="value">%1$s</xliff:g> ▶</string>
+    <string name="setup_default_mag">По умолчанию (MAG200)</string>
+    <string name="setup_mag250">MAG250</string>
+    <string name="setup_mag254">MAG254</string>
+    <string name="setup_mag270">MAG270</string>
+    <string name="setup_mag420">MAG420</string>
+    <string name="companion_pin_page_title">OwnTV — ввод PIN</string>
+    <string name="companion_pin_heading">Введите PIN</string>
+    <string name="companion_pin_description">Чтобы продолжить, введите 6-значный PIN, показанный на телевизоре.</string>
+    <string name="companion_pin_placeholder">••••••</string>
+    <string name="companion_pin_aria">PIN</string>
+    <string name="companion_continue">Продолжить</string>
+    <string name="companion_pin_mismatch">PIN не совпадает — повторите попытку.</string>
+    <string name="companion_add_page_title">OwnTV — добавить источник</string>
+    <string name="companion_add_heading">Добавить источник</string>
+    <string name="companion_add_description">Заполните данные одного источника и нажмите «Отправить». Он появится на телевизоре — когда будете готовы, возьмите пульт ДУ и нажмите там «Начать импорт».</string>
+    <string name="companion_default_playlist">Плейлист по умолчанию</string>
+    <string name="companion_send_to_tv">Отправить на телевизор</string>
+    <string name="companion_sync_xtream_hint">Что синхронизировать: «Сейчас» — импорт в первую очередь, «Позже» — синхронизация в фоновом режиме, «Выкл.» — данные не загружаются.</string>
+    <string name="companion_sync_stalker_hint">Что синхронизировать: по умолчанию для прямого эфира выбрано «Сейчас», а для фильмов и сериалов — «Позже» (VOD в Stalker работает медленно).</string>
+    <string name="companion_saved_page_title">OwnTV — отправлено</string>
+    <string name="companion_saved_heading">Отправлено на телевизор ✓</string>
+    <string name="companion_saved_source_body">Источник <xliff:g id="name">%1$s</xliff:g> теперь отображается на экране добавления источника на телевизоре. Проверьте там данные и нажмите «Начать импорт» на пульте ДУ.</string>
+    <string name="companion_saved_send_another">Отправить другой источник</string>
+    <string name="companion_saved_backup_body">Резервная копия теперь находится на телевизоре. Возьмите пульт ДУ и выберите, какие данные восстановить.</string>
+    <string name="companion_saved_backup_link">Отправить другой файл</string>
+    <string name="companion_saved_image_body">Изображение теперь используется как фон на телевизоре.</string>
+    <string name="companion_saved_image_link">Отправить другое изображение</string>
+    <string name="companion_backup_page_title">OwnTV — восстановление резервной копии</string>
+    <string name="companion_backup_heading">Восстановление резервной копии</string>
+    <string name="companion_backup_description">Выберите файл резервной копии OwnTV (.own или более старый .json) и нажмите «Отправить». Он будет передан на телевизор — возьмите пульт ДУ и выберите там, какие данные восстановить.</string>
+    <string name="companion_backup_file">Файл резервной копии</string>
+    <string name="companion_choose_backup">Сначала выберите файл резервной копии.</string>
+    <string name="companion_sending">Отправка…</string>
+    <string name="companion_upload_failed">Не удалось загрузить файл (HTTP <xliff:g id="status">%1$d</xliff:g>). Проверьте PIN и повторите попытку.</string>
+    <string name="companion_could_not_reach">Не удалось подключиться к телевизору. Оставайтесь в той же сети Wi-Fi и повторите попытку.</string>
+    <string name="companion_could_not_read">Не удалось прочитать этот файл.</string>
+    <string name="companion_image_page_title">OwnTV — фоновое изображение</string>
+    <string name="companion_image_heading">Отправка фонового изображения</string>
+    <string name="companion_image_description">Выберите фотографию (JPG, PNG или WebP) и нажмите «Отправить». Она станет фоновым изображением за интерфейсом телевизора.</string>
+    <string name="companion_image_file">Файл изображения</string>
+    <string name="companion_choose_image">Сначала выберите изображение.</string>
+    <string name="companion_image_too_large">Это изображение слишком большое (не более 25 МБ).</string>
+    <string name="companion_download_page_title">OwnTV — скачать резервную копию</string>
+    <string name="companion_download_heading">Скачивание резервной копии</string>
+    <string name="companion_download_description">На вашем телевизоре подготовлен файл резервной копии OwnTV. Нажмите кнопку, чтобы сохранить его на этом устройстве (owntv-backup.own). Храните его в надёжном месте — позже с его помощью можно выполнить восстановление.</string>
+    <string name="companion_download_backup">Скачать резервную копию</string>
+    <string name="companion_error_bad_request">Некорректный запрос</string>
+    <string name="companion_error_body_too_large">Тело запроса слишком большое.</string>
+    <string name="companion_error_unauthorized">Ошибка авторизации. Проверьте PIN и повторите попытку.</string>
+    <string name="companion_error_not_found">Не найдено.</string>
+    <string name="companion_error_no_backup">Нет доступной резервной копии.</string>
+    <string name="companion_error_backup_too_large">Резервная копия слишком большая.</string>
+    <string name="companion_error_empty_backup">Резервная копия пуста.</string>
+    <string name="companion_error_image_too_large">Изображение слишком большое.</string>
+    <string name="companion_error_invalid_image">Загруженный файл не является допустимым изображением.</string>
+    <string name="companion_error_missing_fields">Не заполнены обязательные поля.</string>
+    <string name="setup_invalid_locale">В этой резервной копии был указан неподдерживаемый язык приложения. Восстановление выполнено, но текущий язык не изменён.</string>
+    <string name="setup_prefer_hls_live_tv">Предпочитать HLS для прямого эфира</string>
+    <string name="setup_prefer_hls_description">Отдавать приоритет HLS (.m3u8) перед MPEG-TS для прямого эфира и архива. Если HLS не работает, использовать MPEG-TS.</string>
+    <string name="setup_prefer_hls_description_supported">Отдавать приоритет HLS (.m3u8) перед MPEG-TS для прямого эфира и архива. Если HLS не работает, использовать MPEG-TS. Ваш поставщик сообщает о поддержке HLS.</string>
+    <string name="setup_hide_new_categories">По умолчанию скрывать новые категории</string>
+    <string name="setup_hide_new_categories_description">Для всего профиля: категории, появившиеся при последующих синхронизациях, изначально будут скрыты. Их всегда можно найти на экране «Персонализация».</string>
+</resources>

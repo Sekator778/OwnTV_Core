@@ -285,13 +285,13 @@ def _check_donottranslate_file(file_path: Path, tag: str) -> list[str]:
 # --- plural rules -------------------------------------------------------------
 
 # CLDR plural rules per locale. "other" is mandatory for every <plurals>; the rest are the
-# quantities the locale's ICU rule actually selects. Updated to current CLDR: French, Italian,
-# Portuguese and Spanish select "one"/"many"/"other" (the "many" form is used for large round
-# numbers in fr/it/pt/es per CLDR 42+).
+# quantities the locale's ICU rule actually selects. Updated to current CLDR: Czech includes
+# decimal `many`; French, Italian, Portuguese and Spanish select "one"/"many"/"other" (the
+# "many" form is used for large round numbers in fr/it/pt/es per CLDR 42+).
 _PLURAL_RULES = {
     "en": ["one", "other"], "en-US": ["one", "other"], "en-GB": ["one", "other"],
     "ar": ["zero", "one", "two", "few", "many", "other"],
-    "cs": ["one", "few", "other"], "da": ["one", "other"], "nl": ["one", "other"],
+    "cs": ["one", "few", "many", "other"], "da": ["one", "other"], "nl": ["one", "other"],
     "fr": ["one", "many", "other"], "de": ["one", "other"], "it": ["one", "many", "other"],
     "ja": ["other"], "ko": ["other"], "nb": ["one", "other"], "sv": ["one", "other"],
     "pl": ["one", "few", "many", "other"], "ru": ["one", "few", "many", "other"],

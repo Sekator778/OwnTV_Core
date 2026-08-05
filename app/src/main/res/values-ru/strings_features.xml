@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <string name="profiles_pin">PIN</string>
+    <string name="profiles_new">Новый профиль</string>
+    <string name="profiles_edit">Изменить профиль</string>
+    <string name="profiles_name">Имя</string>
+    <string name="profiles_name_hint">Например, Алекс</string>
+    <string name="profiles_avatar">АВАТАР</string>
+    <string name="profiles_kids">Детский профиль</string>
+    <string name="profiles_kids_description">Упрощённый и безопасный просмотр</string>
+    <string name="profiles_remove_pin">Удалить блокировку с помощью PIN</string>
+    <string name="profiles_no_pin">Этот профиль открывается без PIN</string>
+    <string name="profiles_change_pin">Изменить PIN (пусто = сохранить текущий)</string>
+    <string name="profiles_optional_pin">PIN (необязательно)</string>
+    <string name="profiles_pin_digits">4–6 цифр</string>
+    <string name="profiles_pin_placeholder">····</string>
+    <string name="profiles_name_taken">Это имя уже занято — выберите, пожалуйста, другое имя.</string>
+    <string name="profiles_create">Создать</string>
+    <string name="profiles_save">Сохранить</string>
+    <string name="profiles_gate_title">Кто смотрит?</string>
+    <string name="profiles_wrong_pin">Неверный PIN — попробуйте ещё раз</string>
+    <string name="profiles_enter_pin"><xliff:g id="name">%1$s</xliff:g> — введите PIN</string>
+    <string name="profiles_kids_badge">ДЕТСКИЙ</string>
+    <string name="profiles_add">Добавить профиль</string>
+    <string name="profiles_title">Профили</string>
+    <string name="profiles_add_button">Добавить профиль</string>
+    <string name="profiles_delete_title">Удалить «<xliff:g id="name">%1$s</xliff:g>»?</string>
+    <string name="profiles_delete_message">Этот профиль, его избранное и история будут удалены. Источники сохранятся.</string>
+    <string name="profiles_kids_tag">Детский</string>
+    <string name="profiles_locked_tag">Заблокирован с помощью PIN</string>
+    <string name="search_title">Поиск</string>
+    <string name="search_continue">Продолжить просмотр</string>
+    <string name="search_unwatched">Не просмотрено</string>
+    <string name="search_hint">Поиск каналов, фильмов и сериалов…</string>
+    <string name="search_recent">Недавние поисковые запросы</string>
+    <string name="search_recent_empty">Здесь появятся ваши недавние поисковые запросы.</string>
+    <string name="search_minimum_query">Введите не менее 2 символов для поиска по всему контенту.</string>
+    <string name="search_no_results"><xliff:g id="query">%1$s</xliff:g> — результатов нет.</string>
+    <string name="search_nothing_in_list">В <xliff:g id="list">%1$s</xliff:g> пока ничего нет.</string>
+    <string name="search_clear">Очистить</string>
+    <string name="search_jump_to">Перейти</string>
+    <string name="search_watch_live">Смотреть в прямом эфире</string>
+    <string name="search_play">Воспроизвести</string>
+    <string name="search_open_series">Открыть сериал</string>
+    <string name="search_movie">Фильм</string>
+    <string name="search_series">Сериал</string>
+    <string name="search_channels">Каналы</string>
+    <string name="search_channel_number">#<xliff:g id="number">%1$s</xliff:g></string>
+    <string name="home_keep_watching">Продолжить просмотр</string>
+    <string name="home_play_next">Смотреть следующую серию</string>
+    <string name="home_tune_in">Смотреть в прямом эфире</string>
+    <string name="home_recent_live">Недавно просмотрено в прямом эфире</string>
+    <string name="profiles_default_name">Профиль</string>
+    <string name="launcher_recent_live_title">Недавние эфиры</string>
+    <string name="launcher_recent_live_description">Каналы, недавно просмотренные в прямом эфире</string>
+    <string name="launcher_movie_type">Фильм</string>
+    <string name="launcher_episode_number">Серия <xliff:g id="episode">%1$d</xliff:g></string>
+    <string name="home_no_preview">Пока нечего показывать.</string>
+    <string name="home_no_rows">Все ряды на главном экране скрыты.</string>
+    <string name="home_enable_rows">Включите ряды в разделе «Настройки» → «Главный экран».</string>
+    <string name="home_start_watching">Начните смотреть, и здесь появится ваша активность.</string>
+    <string name="home_continue_empty">Контент для продолжения просмотра появится здесь, когда будет доступна история воспроизведения.</string>
+    <string name="home_last_watched_now">Последний просмотр: только что</string>
+    <string name="home_finish_by">Завершение к <xliff:g id="time">%1$s</xliff:g></string>
+    <string name="home_resume">Продолжить</string>
+    <plurals name="home_last_watched_minutes">
+        <item quantity="one">Последний просмотр: <xliff:g id="count">%1$d</xliff:g> минуту назад</item>
+        <item quantity="few">Последний просмотр: <xliff:g id="count">%1$d</xliff:g> минуты назад</item>
+        <item quantity="many">Последний просмотр: <xliff:g id="count">%1$d</xliff:g> минут назад</item>
+        <item quantity="other">Последний просмотр: <xliff:g id="count">%1$d</xliff:g> минуты назад</item>
+    </plurals>
+    <plurals name="home_last_watched_hours">
+        <item quantity="one">Последний просмотр: <xliff:g id="count">%1$d</xliff:g> час назад</item>
+        <item quantity="few">Последний просмотр: <xliff:g id="count">%1$d</xliff:g> часа назад</item>
+        <item quantity="many">Последний просмотр: <xliff:g id="count">%1$d</xliff:g> часов назад</item>
+        <item quantity="other">Последний просмотр: <xliff:g id="count">%1$d</xliff:g> часа назад</item>
+    </plurals>
+    <plurals name="home_last_watched_days">
+        <item quantity="one">Последний просмотр: <xliff:g id="count">%1$d</xliff:g> день назад</item>
+        <item quantity="few">Последний просмотр: <xliff:g id="count">%1$d</xliff:g> дня назад</item>
+        <item quantity="many">Последний просмотр: <xliff:g id="count">%1$d</xliff:g> дней назад</item>
+        <item quantity="other">Последний просмотр: <xliff:g id="count">%1$d</xliff:g> дня назад</item>
+    </plurals>
+    <string name="home_season_episode">S<xliff:g id="season">%1$02d</xliff:g> E<xliff:g id="episode">%2$02d</xliff:g></string>
+    <string name="home_season">S<xliff:g id="season">%1$02d</xliff:g></string>
+    <string name="home_episode">E<xliff:g id="episode">%1$02d</xliff:g></string>
+    <string name="home_row_cards">Карточки</string>
+    <string name="home_row_keep_watching">Продолжить просмотр</string>
+    <string name="home_row_continue_movies">Продолжить просмотр фильмов</string>
+    <string name="home_row_continue_series">Продолжить просмотр сериалов</string>
+    <string name="home_row_recent_channels">Недавние каналы</string>
+    <string name="home_row_favorite_channels">Избранные каналы</string>
+    <string name="home_row_on_now">Сейчас в эфире</string>
+    <string name="home_row_hero_description">Большой ряд предпросмотра в верхней части экрана</string>
+    <string name="home_row_continue_movies_description">Фильмы с сохранённой позицией</string>
+    <string name="home_row_continue_series_description">Серии, просмотр которых можно продолжить, или следующие серии</string>
+    <string name="home_row_recent_description">Каналы прямого эфира, которые вы недавно смотрели</string>
+    <string name="home_row_favorite_description">Ваши избранные каналы прямого эфира</string>
+    <string name="home_on_now_title"><xliff:g id="title">%1$s</xliff:g> · СЕЙЧАС В ЭФИРЕ</string>
+    <string name="home_ok_to_watch">OK — смотреть</string>
+    <string name="home_ok_to_browse">OK — перейти к выбору</string>
+    <string name="home_no_programme_details">Нет сведений о телепередаче</string>
+    <string name="home_guide_unavailable">Данные программы передач недоступны</string>
+    <string name="home_next">Далее</string>
+    <string name="home_channel_number"><xliff:g id="number">%1$s</xliff:g>  <xliff:g id="name">%2$s</xliff:g></string>
+    <string name="home_time_range"><xliff:g id="start">%1$s</xliff:g>-<xliff:g id="end">%2$s</xliff:g></string>
+    <string name="home_now_time">СЕЙЧАС · <xliff:g id="time">%1$s</xliff:g></string>
+    <string name="home_up_next_time">ДАЛЕЕ · <xliff:g id="time">%1$s</xliff:g></string>
+    <string name="home_upcoming_item"><xliff:g id="time">%1$s</xliff:g> <xliff:g id="title">%2$s</xliff:g></string>
+    <plurals name="home_channel_count">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> канал</item>
+        <item quantity="few"><xliff:g id="count">%1$d</xliff:g> канала</item>
+        <item quantity="many"><xliff:g id="count">%1$d</xliff:g> каналов</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> канала</item>
+    </plurals>
+    <string name="update_title">Обновление приложения</string>
+    <string name="update_checking">Проверка обновлений…</string>
+    <string name="update_whats_new">Что нового</string>
+    <string name="update_downloading">Загрузка обновления… <xliff:g id="percent">%1$d</xliff:g>%%</string>
+    <string name="update_available">Доступно обновление</string>
+    <string name="update_latest">У вас последняя версия (v<xliff:g id="version">%1$s</xliff:g>).</string>
+    <string name="update_available_version">Доступна версия <xliff:g id="available">%1$s</xliff:g> (у вас v<xliff:g id="current">%2$s</xliff:g>).</string>
+    <string name="update_installer">После завершения загрузки откроется системный установщик.</string>
+    <string name="update_later">Позже</string>
+    <string name="update_now">Обновить сейчас</string>
+    <string name="update_try_again">Попробовать ещё раз</string>
+    <string name="update_failed_check">Не удалось проверить наличие обновлений.</string>
+    <string name="update_failed_check_http">При проверке сервер обновлений вернул ошибку HTTP <xliff:g id="code">%1$s</xliff:g>.</string>
+    <string name="update_no_compatible_apk">В выпуске не найден пакет обновления для этого устройства.</string>
+    <string name="update_invalid_release_response">Сервер обновлений вернул недопустимое описание выпуска.</string>
+    <string name="update_failed_download">Не удалось загрузить обновление из-за сбоя сетевого запроса.</string>
+    <string name="update_failed_download_http">При загрузке обновления получена ошибка HTTP <xliff:g id="code">%1$s</xliff:g>.</string>
+    <string name="update_empty_download">Сервер обновлений вернул пустой файл APK.</string>
+    <string name="update_install_failed">Системному установщику не удалось открыть загруженное обновление.</string>
+    <string name="update_ready">OwnTV v<xliff:g id="available">%1$s</xliff:g> готова к установке (у вас v<xliff:g id="current">%2$s</xliff:g>).</string>
+    <string name="recovery_title">OwnTV не удалось открыть базу данных</string>
+    <string name="recovery_data_safe_full">Ваши профили, плейлисты, избранное и история НЕ удалены — произошёл сбой обновления базы данных, а данные всё ещё находятся на этом устройстве.\n\nПожалуйста, сообщите об этом, чтобы проблему можно было устранить, и приложите сообщение ниже.</string>
+    <string name="recovery_retry">Попробовать ещё раз</string>
+    <string name="recovery_backup_hint">Если у вас есть файл резервной копии, можно сбросить данные приложения, а затем восстановить их. При сбросе удаляется всё, что хранится на этом устройстве.</string>
+    <string name="recovery_confirm_reset">Подтверждение: удалить все данные приложения</string>
+    <string name="recovery_reset">Сбросить данные приложения (крайняя мера)</string>
+</resources>

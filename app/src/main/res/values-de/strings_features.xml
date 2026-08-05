@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <string name="profiles_pin">PIN</string>
+    <string name="profiles_new">Neues Profil</string>
+    <string name="profiles_edit">Profil bearbeiten</string>
+    <string name="profiles_name">Name</string>
+    <string name="profiles_name_hint">z. B. Alex</string>
+    <string name="profiles_avatar">AVATAR</string>
+    <string name="profiles_kids">Kinderprofil</string>
+    <string name="profiles_kids_description">Vereinfachtes, sicheres Stöbern</string>
+    <string name="profiles_remove_pin">PIN-Sperre entfernen</string>
+    <string name="profiles_no_pin">Dieses Profil wird ohne PIN geöffnet</string>
+    <string name="profiles_change_pin">PIN ändern (leer lassen = beibehalten)</string>
+    <string name="profiles_optional_pin">PIN (optional)</string>
+    <string name="profiles_pin_digits">4–6 Ziffern</string>
+    <string name="profiles_pin_placeholder">····</string>
+    <string name="profiles_name_taken">Dieser Name ist bereits vergeben — bitte einen anderen Namen wählen.</string>
+    <string name="profiles_create">Erstellen</string>
+    <string name="profiles_save">Speichern</string>
+    <string name="profiles_gate_title">Wer schaut gerade?</string>
+    <string name="profiles_wrong_pin">Falsche PIN — erneut versuchen</string>
+    <string name="profiles_enter_pin"><xliff:g id="name">%1$s</xliff:g> — PIN eingeben</string>
+    <string name="profiles_kids_badge">KINDER</string>
+    <string name="profiles_add">Profil hinzufügen</string>
+    <string name="profiles_title">Profile</string>
+    <string name="profiles_add_button">Profil hinzufügen</string>
+    <string name="profiles_delete_title">„<xliff:g id="name">%1$s</xliff:g>“ löschen?</string>
+    <string name="profiles_delete_message">Entfernt dieses Profil sowie die zugehörigen Favoriten und den Wiedergabeverlauf. Die Quellen bleiben erhalten.</string>
+    <string name="profiles_kids_tag">Kinder</string>
+    <string name="profiles_locked_tag">Mit PIN gesperrt</string>
+    <string name="search_title">Suche</string>
+    <string name="search_continue">Weiterschauen</string>
+    <string name="search_unwatched">Ungesehen</string>
+    <string name="search_hint">Sender, Filme und Serien durchsuchen…</string>
+    <string name="search_recent">Letzte Suchanfragen</string>
+    <string name="search_recent_empty">Deine letzten Suchanfragen werden hier angezeigt.</string>
+    <string name="search_minimum_query">Gib mindestens 2 Zeichen ein, um alle Inhalte zu durchsuchen.</string>
+    <string name="search_no_results"><xliff:g id="query">%1$s</xliff:g> — keine Ergebnisse.</string>
+    <string name="search_nothing_in_list">Noch nichts in <xliff:g id="list">%1$s</xliff:g>.</string>
+    <string name="search_clear">Löschen</string>
+    <string name="search_jump_to">Direkt zu</string>
+    <string name="search_watch_live">Live einschalten</string>
+    <string name="search_play">Abspielen</string>
+    <string name="search_open_series">Serie öffnen</string>
+    <string name="search_movie">Film</string>
+    <string name="search_series">Serien</string>
+    <string name="search_channels">Sender</string>
+    <string name="search_channel_number">#<xliff:g id="number">%1$s</xliff:g></string>
+    <string name="home_keep_watching">Weiterschauen</string>
+    <string name="home_play_next">Nächste Folge abspielen</string>
+    <string name="home_tune_in">Einschalten</string>
+    <string name="home_recent_live">Zuletzt live angesehen</string>
+    <string name="profiles_default_name">Profil</string>
+    <string name="launcher_recent_live_title">Zuletzt live angesehen</string>
+    <string name="launcher_recent_live_description">Zuletzt angesehene Live-Sender</string>
+    <string name="launcher_movie_type">Film</string>
+    <string name="launcher_episode_number">Folge <xliff:g id="episode">%1$d</xliff:g></string>
+    <string name="home_no_preview">Noch nichts für die Vorschau verfügbar.</string>
+    <string name="home_no_rows">Alle Startseitenzeilen sind ausgeblendet.</string>
+    <string name="home_enable_rows">Zeilen unter Einstellungen → Startbildschirm wieder aktivieren.</string>
+    <string name="home_start_watching">Schau dir etwas an, damit deine Aktivitäten hier angezeigt werden.</string>
+    <string name="home_continue_empty">Deine Einträge zum Weiterschauen werden hier angezeigt, sobald ein Wiedergabeverlauf verfügbar ist.</string>
+    <string name="home_last_watched_now">Zuletzt angesehen: gerade eben</string>
+    <string name="home_finish_by">Fertig um <xliff:g id="time">%1$s</xliff:g></string>
+    <string name="home_resume">Fortsetzen</string>
+    <plurals name="home_last_watched_minutes">
+        <item quantity="one">Zuletzt vor <xliff:g id="count">%1$d</xliff:g> Minute angesehen</item>
+        <item quantity="other">Zuletzt vor <xliff:g id="count">%1$d</xliff:g> Minuten angesehen</item>
+    </plurals>
+    <plurals name="home_last_watched_hours">
+        <item quantity="one">Zuletzt vor <xliff:g id="count">%1$d</xliff:g> Stunde angesehen</item>
+        <item quantity="other">Zuletzt vor <xliff:g id="count">%1$d</xliff:g> Stunden angesehen</item>
+    </plurals>
+    <plurals name="home_last_watched_days">
+        <item quantity="one">Zuletzt vor <xliff:g id="count">%1$d</xliff:g> Tag angesehen</item>
+        <item quantity="other">Zuletzt vor <xliff:g id="count">%1$d</xliff:g> Tagen angesehen</item>
+    </plurals>
+    <string name="home_season_episode">S<xliff:g id="season">%1$02d</xliff:g> E<xliff:g id="episode">%2$02d</xliff:g></string>
+    <string name="home_season">S<xliff:g id="season">%1$02d</xliff:g></string>
+    <string name="home_episode">E<xliff:g id="episode">%1$02d</xliff:g></string>
+    <string name="home_row_cards">Karten</string>
+    <string name="home_row_keep_watching">Weiterschauen</string>
+    <string name="home_row_continue_movies">Filme weiterschauen</string>
+    <string name="home_row_continue_series">Serien weiterschauen</string>
+    <string name="home_row_recent_channels">Zuletzt angesehene Sender</string>
+    <string name="home_row_favorite_channels">Favoritensender</string>
+    <string name="home_row_on_now">Läuft jetzt</string>
+    <string name="home_row_hero_description">Die große Vorschauzeile ganz oben</string>
+    <string name="home_row_continue_movies_description">Filme mit gespeicherter Wiedergabeposition</string>
+    <string name="home_row_continue_series_description">Fortzusetzende oder als Nächstes abzuspielende Folgen</string>
+    <string name="home_row_recent_description">Kürzlich eingeschaltete Live-Sender</string>
+    <string name="home_row_favorite_description">Deine Live-Sender in den Favoriten</string>
+    <string name="home_on_now_title"><xliff:g id="title">%1$s</xliff:g> · LÄUFT JETZT</string>
+    <string name="home_ok_to_watch">Mit OK ansehen</string>
+    <string name="home_ok_to_browse">Mit OK stöbern</string>
+    <string name="home_no_programme_details">Keine Details zur Sendung</string>
+    <string name="home_guide_unavailable">Daten der Programmübersicht nicht verfügbar</string>
+    <string name="home_next">Als Nächstes</string>
+    <string name="home_channel_number"><xliff:g id="number">%1$s</xliff:g>  <xliff:g id="name">%2$s</xliff:g></string>
+    <string name="home_time_range"><xliff:g id="start">%1$s</xliff:g>-<xliff:g id="end">%2$s</xliff:g></string>
+    <string name="home_now_time">JETZT · <xliff:g id="time">%1$s</xliff:g></string>
+    <string name="home_up_next_time">ALS NÄCHSTES · <xliff:g id="time">%1$s</xliff:g></string>
+    <string name="home_upcoming_item"><xliff:g id="time">%1$s</xliff:g> <xliff:g id="title">%2$s</xliff:g></string>
+    <plurals name="home_channel_count">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> Sender</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> Sender</item>
+    </plurals>
+    <string name="update_title">App-Update</string>
+    <string name="update_checking">Suche nach Updates…</string>
+    <string name="update_whats_new">Neuerungen</string>
+    <string name="update_downloading">Update wird heruntergeladen… <xliff:g id="percent">%1$d</xliff:g>%%</string>
+    <string name="update_available">Update verfügbar</string>
+    <string name="update_latest">Du verwendest die neueste Version (v<xliff:g id="version">%1$s</xliff:g>).</string>
+    <string name="update_available_version">Version <xliff:g id="available">%1$s</xliff:g> ist verfügbar (du verwendest v<xliff:g id="current">%2$s</xliff:g>).</string>
+    <string name="update_installer">Das Installationsprogramm des Systems wird geöffnet, sobald der Download abgeschlossen ist.</string>
+    <string name="update_later">Später</string>
+    <string name="update_now">Jetzt aktualisieren</string>
+    <string name="update_try_again">Erneut versuchen</string>
+    <string name="update_failed_check">Die Suche nach Updates ist fehlgeschlagen.</string>
+    <string name="update_failed_check_http">Der Update-Server hat bei der Suche HTTP <xliff:g id="code">%1$s</xliff:g> zurückgegeben.</string>
+    <string name="update_no_compatible_apk">In diesem Release wurde kein Update-Paket für dieses Gerät gefunden.</string>
+    <string name="update_invalid_release_response">Der Update-Server hat eine ungültige Release-Beschreibung zurückgegeben.</string>
+    <string name="update_failed_download">Das Update konnte nicht heruntergeladen werden, da die Netzwerkanfrage fehlgeschlagen ist.</string>
+    <string name="update_failed_download_http">Beim Update-Download wurde HTTP <xliff:g id="code">%1$s</xliff:g> zurückgegeben.</string>
+    <string name="update_empty_download">Der Update-Server hat eine leere APK-Datei zurückgegeben.</string>
+    <string name="update_install_failed">Das heruntergeladene Update konnte vom Installationsprogramm des Systems nicht geöffnet werden.</string>
+    <string name="update_ready">OwnTV v<xliff:g id="available">%1$s</xliff:g> ist bereit (du verwendest v<xliff:g id="current">%2$s</xliff:g>).</string>
+    <string name="recovery_title">OwnTV konnte seine Datenbank nicht öffnen</string>
+    <string name="recovery_data_safe_full">Ihre Profile, Wiedergabelisten, Favoriten und Ihr Wiedergabeverlauf wurden NICHT gelöscht — das Upgrade der Datenbank ist fehlgeschlagen, und die Daten befinden sich weiterhin auf diesem Gerät.\n\nBitte melden Sie dies, damit der Fehler behoben werden kann, und fügen Sie die nachstehende Meldung bei.</string>
+    <string name="recovery_retry">Erneut versuchen</string>
+    <string name="recovery_backup_hint">Wenn du eine Sicherungsdatei hast, kannst du die App zurücksetzen und sie anschließend wiederherstellen. Beim Zurücksetzen werden alle auf diesem Gerät gespeicherten Daten gelöscht.</string>
+    <string name="recovery_confirm_reset">Bestätigen: alle App-Daten löschen</string>
+    <string name="recovery_reset">App-Daten zurücksetzen (letzter Ausweg)</string>
+</resources>

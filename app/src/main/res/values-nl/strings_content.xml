@@ -1,0 +1,305 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <plurals name="content_downloading_items">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> item wordt gedownload</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> items worden gedownload</item>
+    </plurals>
+    <plurals name="content_queued_items">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> item in wachtrij</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> items in wachtrij</item>
+    </plurals>
+    <plurals name="content_paused_items">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> item gepauzeerd</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> items gepauzeerd</item>
+    </plurals>
+    <plurals name="content_downloads_failed">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> download mislukt</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> downloads mislukt</item>
+    </plurals>
+    <string name="content_genre_action">Actie</string>
+    <string name="content_genre_adult">Volwassenen</string>
+    <string name="content_genre_anime">Anime</string>
+    <string name="content_genre_comedy">Komedie</string>
+    <string name="content_genre_documentary">Documentaire</string>
+    <string name="content_genre_drama">Drama</string>
+    <string name="content_genre_entertainment">Amusement</string>
+    <string name="content_genre_horror">Horror</string>
+    <string name="content_genre_kids">Kinderen</string>
+    <string name="content_genre_movies">Films</string>
+    <string name="content_genre_music">Muziek</string>
+    <string name="content_genre_news">Nieuws</string>
+    <string name="content_genre_other">Overig</string>
+    <string name="content_genre_religious">Religie</string>
+    <string name="content_genre_romance">Romantiek</string>
+    <string name="content_genre_scifi">Sci-Fi</string>
+    <string name="content_genre_series">Series</string>
+    <string name="content_genre_sport">Sport</string>
+    <string name="content_exit_owntv">OwnTV afsluiten?</string>
+    <string name="content_exit_confirmation">Weet je zeker dat je de app wilt sluiten?</string>
+    <string name="content_restore_incomplete_title">Een herstelbewerking is niet voltooid</string>
+    <string name="content_restore_incomplete_message">De app is gesloten tijdens het herstellen van <xliff:g id="description">%1$s</xliff:g>, waardoor er mogelijk een deel ontbreekt. Er is niets verwijderd — voer dezelfde herstelbewerking opnieuw uit via Instellingen → Back-up en herstellen om de rest aan te vullen.</string>
+    <string name="content_playlist_picker_title">Afspeellijst weergeven</string>
+    <string name="content_playlist_picker_description">Kies in welke afspeellijst je wilt bladeren. Dit geldt overal en wordt onthouden.</string>
+    <string name="content_avatar_picker_title">Kies je avatar</string>
+    <string name="content_category_browser_title">Categorieën</string>
+    <string name="content_channel_overlay_title">Zenders</string>
+    <string name="content_live_now">Nu</string>
+    <string name="content_live_next">Hierna</string>
+    <string name="content_media_overview">Overzicht</string>
+    <string name="content_media_cast">Rolverdeling</string>
+    <string name="content_media_press_back">Druk op Terug om te sluiten</string>
+    <string name="content_add_favourite">Toevoegen aan favorieten</string>
+    <string name="content_remove_favourite">Uit favorieten verwijderen</string>
+    <string name="content_mark_watched">Markeren als bekeken</string>
+    <string name="content_mark_unwatched">Markeren als niet bekeken</string>
+    <string name="content_move">Verplaatsen</string>
+    <string name="content_move_to_category">Verplaatsen naar categorie…</string>
+    <string name="content_download">Downloaden</string>
+    <string name="content_download_all_episodes">Alle afleveringen downloaden</string>
+    <string name="content_play">Afspelen</string>
+    <string name="content_next_up">Hierna</string>
+    <string name="content_favorited">Favoriet</string>
+    <string name="content_favorite">Favoriet maken</string>
+    <string name="content_show_watched">Bekeken weergeven</string>
+    <string name="content_hide_watched">Bekeken verbergen</string>
+    <string name="content_sorting">Sortering</string>
+    <string name="content_seasons">Seizoenen</string>
+    <string name="content_episodes">Afleveringen</string>
+    <string name="content_oldest_first">Oudste eerst</string>
+    <string name="content_newest_first">Nieuwste eerst</string>
+    <string name="content_last_watched">Laatst bekeken</string>
+    <string name="content_press_ok_episodes">Druk op OK bij de poster om de afleveringen te bekijken.</string>
+    <string name="content_play_external">Afspelen met externe speler</string>
+    <string name="content_delete_subtitles">OpenSub-ondertiteling verwijderen</string>
+    <string name="content_tmdb_details">TMDB-details</string>
+    <string name="content_play_trailer">Trailer afspelen</string>
+    <string name="content_refetch_tmdb">TMDB-details opnieuw ophalen</string>
+    <string name="content_set_tmdb_name">TMDB-naam instellen</string>
+    <string name="content_close">Sluiten</string>
+    <string name="content_focus_movie">Focus op een film om details te bekijken.</string>
+    <string name="content_focus_channel">Focus op een zender om deze hier te bekijken.</string>
+    <string name="content_press_ok_fullscreen">Druk op OK om op volledig scherm te kijken · Houd ingedrukt voor opties</string>
+    <string name="content_rename_hint">Alleen voor dit profiel. Laat dit leeg om de oorspronkelijke naam te herstellen.</string>
+    <string name="content_focus_series">Focus op een serie en druk op OK om de afleveringen te bekijken.</string>
+    <string name="content_focus_episode">Focus op een aflevering om details te bekijken.</string>
+    <string name="content_no_movies_here">Hier zijn geen films.</string>
+    <string name="content_no_series_here">Hier zijn geen series.</string>
+    <string name="content_no_episodes">Geen afleveringen beschikbaar.</string>
+    <string name="content_no_movies_found">Geen films gevonden voor “<xliff:g id="query">%1$s</xliff:g>”</string>
+    <plurals name="content_count_movies">
+        <item quantity="one"><xliff:g id="category">%1$s</xliff:g> (<xliff:g id="count">%2$d</xliff:g> film)</item>
+        <item quantity="other"><xliff:g id="category">%1$s</xliff:g> (<xliff:g id="count">%2$d</xliff:g> films)</item>
+    </plurals>
+    <plurals name="content_count_series">
+        <item quantity="one"><xliff:g id="category">%1$s</xliff:g> (<xliff:g id="count">%2$d</xliff:g> serie)</item>
+        <item quantity="other"><xliff:g id="category">%1$s</xliff:g> (<xliff:g id="count">%2$d</xliff:g> series)</item>
+    </plurals>
+    <string name="content_provider">Aanbieder</string>
+    <string name="content_no_series_found">Geen series gevonden voor “<xliff:g id="query">%1$s</xliff:g>”</string>
+    <string name="content_search_movies"><xliff:g id="category">%1$s</xliff:g>…</string>
+    <string name="content_search_series"><xliff:g id="category">%1$s</xliff:g>…</string>
+    <string name="content_reorder_movie">Film opnieuw ordenen</string>
+    <string name="content_reorder_series">Serie opnieuw ordenen</string>
+    <string name="content_already_downloaded">Al gedownload — kijk in het menu Downloads.</string>
+    <string name="content_refetching_tmdb">TMDB-details opnieuw ophalen…</string>
+    <string name="content_researching_tmdb">Opnieuw zoeken in TMDB…</string>
+    <string name="content_ok_play_options">OK om af te spelen · houd ingedrukt voor opties</string>
+    <string name="content_resume_at">Hervatten vanaf <xliff:g id="position">%1$s</xliff:g></string>
+    <string name="content_duration_hours"><xliff:g id="hours">%1$d</xliff:g> u <xliff:g id="minutes">%2$d</xliff:g> min</string>
+    <string name="content_duration_minutes"><xliff:g id="minutes">%1$d</xliff:g> min</string>
+    <string name="content_rating">★ <xliff:g id="rating">%1$.1f</xliff:g></string>
+    <string name="content_metadata_separator">  •  </string>
+    <string name="content_genres_separator"> · </string>
+    <string name="content_season_episode">S<xliff:g id="season">%1$d</xliff:g> · E<xliff:g id="episode">%2$d</xliff:g></string>
+    <string name="content_season_episode_title">S<xliff:g id="season">%1$d</xliff:g> · E<xliff:g id="episode">%2$d</xliff:g> <xliff:g id="title">%3$s</xliff:g></string>
+    <string name="content_season">Seizoen <xliff:g id="season">%1$d</xliff:g></string>
+    <string name="content_season_progress">Seizoen <xliff:g id="season">%1$d</xliff:g> · <xliff:g id="completed">%2$d</xliff:g>/<xliff:g id="total">%3$d</xliff:g></string>
+    <string name="content_no_epg">Geen EPG</string>
+    <string name="content_epg">EPG</string>
+    <string name="content_live_day_time_range"><xliff:g id="day">%1$s</xliff:g> <xliff:g id="start">%2$s</xliff:g> – <xliff:g id="stop">%3$s</xliff:g></string>
+    <string name="content_epg_days">EPG · <xliff:g id="days">%1$d</xliff:g> d</string>
+    <string name="content_catchup">Terugkijken</string>
+    <string name="content_catchup_days">Terugkijken · <xliff:g id="days">%1$d</xliff:g> d</string>
+    <string name="content_play_external_short">Afspelen in externe speler</string>
+    <string name="content_rename">Naam wijzigen</string>
+    <string name="content_rename_channel">Naam van zender wijzigen</string>
+    <string name="content_reorder_channel">Zender opnieuw ordenen</string>
+    <string name="content_hide_channel">Zender verbergen</string>
+    <string name="content_remove_history">Uit kijkgeschiedenis verwijderen</string>
+    <string name="content_no_channels_here">Hier zijn geen zenders.</string>
+    <string name="content_no_channels_found">Geen zenders gevonden voor “<xliff:g id="query">%1$s</xliff:g>”</string>
+    <plurals name="content_count_channels">
+        <item quantity="one"><xliff:g id="category">%1$s</xliff:g> (<xliff:g id="count">%2$d</xliff:g> zender)</item>
+        <item quantity="other"><xliff:g id="category">%1$s</xliff:g> (<xliff:g id="count">%2$d</xliff:g> zenders)</item>
+    </plurals>
+    <string name="content_search_channels"><xliff:g id="category">%1$s</xliff:g>…</string>
+    <string name="content_match_epg">EPG koppelen</string>
+    <string name="content_catchup_title">Terugkijken · <xliff:g id="channel">%1$s</xliff:g></string>
+    <string name="content_rewind_at">Terugspoelen · <xliff:g id="time">%1$s</xliff:g></string>
+    <string name="content_catchup_prompt">Kies een recent programma om het vanaf het begin opnieuw af te spelen.</string>
+    <string name="content_catchup_empty">Nog geen recente gidsgegevens voor deze zender — controleer of de EPG is gekoppeld (houd de zender ingedrukt of gebruik EPG koppelen).</string>
+    <string name="content_epg_match_prompt">Kies de gidszender voor “<xliff:g id="channel">%1$s</xliff:g>”.</string>
+    <string name="content_epg_match_prompt_current">Kies de gidszender voor “<xliff:g id="channel">%1$s</xliff:g>”. Huidig: <xliff:g id="match">%2$s</xliff:g></string>
+    <string name="content_search_guide_channels">Gidszenders zoeken…</string>
+    <string name="content_no_epg_data">Nog geen EPG-gegevens — voeg een EPG-bron toe in Instellingen.</string>
+    <string name="content_no_guide_channels">Geen gidszenders komen overeen met “<xliff:g id="query">%1$s</xliff:g>”.</string>
+    <string name="content_clear_match">Koppeling wissen</string>
+    <string name="content_live_now_label">NU</string>
+    <string name="content_live_next_label">HIERNA · <xliff:g id="time">%1$s</xliff:g></string>
+    <string name="content_live_later_label">LATER</string>
+    <string name="content_live_time_range_plain"><xliff:g id="start">%1$s</xliff:g> – <xliff:g id="stop">%2$s</xliff:g></string>
+    <string name="content_category_favorites">Favorieten</string>
+    <string name="content_category_history">Kijkgeschiedenis</string>
+    <string name="content_category_all_channels">Alle zenders</string>
+    <string name="content_category_united_kingdom">Verenigd Koninkrijk</string>
+    <string name="content_category_united_states">Verenigde Staten</string>
+    <string name="content_category_germany">Duitsland</string>
+    <string name="content_category_sports">Sport</string>
+    <string name="content_category_all_movies">Alle films</string>
+    <string name="content_category_action">Actie</string>
+    <string name="content_category_drama">Drama</string>
+    <string name="content_category_comedy">Komedie</string>
+    <string name="content_category_horror">Horror</string>
+    <string name="content_category_all_series">Alle series</string>
+    <string name="content_category_animation">Animatie</string>
+    <string name="content_category_documentary">Documentaire</string>
+    <string name="content_category_all_downloads">Alle downloads</string>
+    <string name="content_category_movies">Films</string>
+    <string name="content_category_series">Series</string>
+    <string name="content_zero_channels">0 zenders</string>
+    <string name="content_zero_movies">0 films</string>
+    <string name="content_zero_series">0 series</string>
+    <string name="content_zero_downloads">0 downloads</string>
+    <string name="content_nothing_here">Hier is nog niets</string>
+    <string name="content_add_source">Bron toevoegen</string>
+    <string name="content_preview_select_channel">Selecteer een zender om hier een voorvertoning te bekijken.</string>
+    <string name="content_offline_banner">Je bent offline — afspelen en updates werken pas weer nadat je opnieuw verbinding hebt gemaakt.</string>
+    <string name="content_subtitle_select_file">Lokaal ondertitelingsbestand selecteren</string>
+    <string name="content_subtitle_load_failed">Kan het ondertitelingsbestand niet laden.</string>
+    <string name="content_history">Kijkgeschiedenis</string>
+    <string name="content_all_playlists">Alle afspeellijsten</string>
+    <string name="content_search_categories">Categorieën zoeken…</string>
+    <string name="content_no_categories_match">Geen overeenkomende categorieën</string>
+    <string name="content_action_resume">Hervatten</string>
+    <string name="content_action_play">Afspelen</string>
+    <string name="content_action_next_up">Hierna</string>
+    <string name="content_action_last_channel">Laatste zender</string>
+    <string name="content_continue_label"><xliff:g id="action">%1$s</xliff:g> · <xliff:g id="name">%2$s</xliff:g></string>
+    <string name="content_empty_section"><xliff:g id="section">%1$s</xliff:g> komt in een latere fase. Voeg een M3U- of Xtream-bron toe om deze lijst te vullen.</string>
+    <string name="content_progress_percent"><xliff:g id="percent">%1$d</xliff:g>%%</string>
+    <string name="content_section_category"><xliff:g id="section">%1$s</xliff:g> / <xliff:g id="category">%2$s</xliff:g></string>
+    <string name="content_preview_player">Je eigen IPTV-speler.</string>
+    <string name="content_live_time_range"><xliff:g id="start">%1$s</xliff:g> – <xliff:g id="end">%2$s</xliff:g></string>
+    <string name="content_live_time_remaining"><xliff:g id="end">%1$s</xliff:g> · nog <xliff:g id="minutes">%2$d</xliff:g> min</string>
+    <string name="common_browse">Bladeren</string>
+    <string name="content_downloads_title">Downloads</string>
+    <string name="content_downloads_description">Films en afleveringen die zijn opgeslagen om offline af te spelen.</string>
+    <string name="content_downloads_empty">Nog geen downloads. Open een film of aflevering en druk op Downloaden.</string>
+    <string name="content_downloads_storage">Opslag</string>
+    <string name="content_downloads_storage_free"><xliff:g id="free">%1$s</xliff:g> GB vrij van <xliff:g id="total">%2$s</xliff:g> GB</string>
+    <string name="content_storage_internal">Interne opslag</string>
+    <string name="content_storage_removable">Verwijderbare opslag</string>
+    <string name="content_storage_app">App-opslag (geen toestemming nodig)</string>
+    <string name="content_downloads_completed"><xliff:g id="size">%1$s</xliff:g> gedownload</string>
+    <string name="content_downloads_failure_message">Download mislukt — de bron kon niet worden bereikt. Druk op Opnieuw proberen.</string>
+    <string name="content_downloads_queued">In wachtrij…</string>
+    <string name="content_downloads_count"><xliff:g id="count">%1$d</xliff:g></string>
+    <string name="content_downloads_active">Actief</string>
+    <string name="content_downloads_waiting">Wachtend</string>
+    <string name="content_downloads_completed_group">Voltooid</string>
+    <string name="content_downloads_failed_group">Mislukt</string>
+    <string name="content_downloads_progress"><xliff:g id="percent">%1$d</xliff:g>%% · <xliff:g id="downloaded">%2$s</xliff:g> / <xliff:g id="total">%3$s</xliff:g></string>
+    <string name="content_downloads_progress_unknown">Downloaden… <xliff:g id="downloaded">%1$s</xliff:g></string>
+    <string name="content_downloads_folder_separator"> › </string>
+    <string name="content_downloads_play">Afspelen</string>
+    <string name="content_downloads_external">Extern</string>
+    <string name="content_downloads_pause">Pauzeren</string>
+    <string name="content_downloads_unknown_size">—</string>
+    <string name="content_epg_create_profile">Maak een profiel aan om de programmagids te bekijken.</string>
+    <string name="content_epg_add_playlist">Voeg een afspeellijst toe om de programmagids te bekijken.</string>
+    <string name="content_epg_no_channels_query">Geen gidszenders gevonden voor “<xliff:g id="query">%1$s</xliff:g>”.</string>
+    <string name="content_epg_mismatched_ids">Er zijn gidsgegevens opgeslagen, maar de zender-ID\'s komen niet overeen met de EPG-ID\'s van je zenders — deze EPG-feed hoort mogelijk bij het zenderaanbod van een andere aanbieder.</string>
+    <string name="content_epg_catchup_unavailable">Terugkijken is niet beschikbaar voor deze zender.</string>
+    <string name="content_epg_matched_no_programmes">Gekoppeld — maar deze gidszender bevat nog geen actuele programma\'s in de EPG-feed.</string>
+    <string name="content_epg_add_playlist_first">Voeg eerst een afspeellijst toe.</string>
+    <string name="content_epg_no_match_data">Nog geen EPG-gegevens om mee te vergelijken.</string>
+    <string name="content_epg_all_matched">Alles is al gekoppeld.</string>
+    <string name="content_epg_no_match">Geen EPG-koppeling gevonden voor “<xliff:g id="channel">%1$s</xliff:g>” — probeer handmatig een zender te kiezen.</string>
+    <plurals name="content_epg_stats_channels">
+        <item quantity="one">Gids geladen: <xliff:g id="channels">%1$d</xliff:g> zender.</item>
+        <item quantity="other">Gids geladen: <xliff:g id="channels">%1$d</xliff:g> zenders.</item>
+    </plurals>
+    <plurals name="content_epg_stats_programmes">
+        <item quantity="one">De gids bevat <xliff:g id="programmes">%1$d</xliff:g> programma.</item>
+        <item quantity="other">De gids bevat <xliff:g id="programmes">%1$d</xliff:g> programma\'s.</item>
+    </plurals>
+    <string name="content_epg_stats_loaded"><xliff:g id="channels">%1$s</xliff:g> <xliff:g id="programmes">%2$s</xliff:g> <xliff:g id="catchup">%3$s</xliff:g></string>
+    <string name="content_epg_no_catchup_channels">Geen enkele zender ondersteunt terugkijken.</string>
+    <string name="content_epg_stats_no_catchup">Er zijn geen zenders beschikbaar om terug te kijken.</string>
+    <plurals name="content_epg_catchup_count">
+        <item quantity="one">Terugkijken is beschikbaar voor <xliff:g id="count">%1$d</xliff:g> zender.</item>
+        <item quantity="other">Terugkijken is beschikbaar voor <xliff:g id="count">%1$d</xliff:g> zenders.</item>
+    </plurals>
+    <plurals name="content_epg_stats_catchup_available">
+        <item quantity="one">Terugkijken is beschikbaar voor <xliff:g id="count">%1$d</xliff:g> zender.</item>
+        <item quantity="other">Terugkijken is beschikbaar voor <xliff:g id="count">%1$d</xliff:g> zenders.</item>
+    </plurals>
+    <plurals name="content_epg_auto_matched_applied">
+        <item quantity="one"><xliff:g id="applied">%1$d</xliff:g> zender automatisch gekoppeld.</item>
+        <item quantity="other"><xliff:g id="applied">%1$d</xliff:g> zenders automatisch gekoppeld.</item>
+    </plurals>
+    <plurals name="content_epg_auto_matched_review">
+        <item quantity="one"><xliff:g id="review">%1$d</xliff:g> zender moet worden beoordeeld.</item>
+        <item quantity="other"><xliff:g id="review">%1$d</xliff:g> zenders moeten worden beoordeeld.</item>
+    </plurals>
+    <string name="content_epg_auto_matched"><xliff:g id="applied">%1$s</xliff:g> <xliff:g id="review">%2$s</xliff:g></string>
+    <plurals name="content_epg_auto_matched_no_review">
+        <item quantity="one"><xliff:g id="applied">%1$d</xliff:g> zender automatisch gekoppeld.</item>
+        <item quantity="other"><xliff:g id="applied">%1$d</xliff:g> zenders automatisch gekoppeld.</item>
+    </plurals>
+    <string name="content_epg_title">Programmagids</string>
+    <string name="content_epg_matching">Koppelen…</string>
+    <string name="content_epg_empty">Geen EPG toegevoegd.</string>
+    <string name="content_epg_no_guide">Geen gidsgegevens.</string>
+    <string name="content_epg_no_programme">Op dit moment is er geen programma.</string>
+    <string name="content_epg_add_description">Voeg een EPG-bron (XMLTV) toe om de programmagids met programma\'s te vullen.</string>
+    <string name="content_epg_favourite_description">Maak deze zender favoriet of stel de gidsgegevens in.</string>
+    <string name="content_epg_guide_category">Gidscategorie</string>
+    <string name="content_epg_all_categories">Alle categorieën</string>
+    <string name="content_epg_search_hint">Gidszenders zoeken…</string>
+    <string name="content_epg_add">EPG toevoegen</string>
+    <string name="content_epg_add_favourite">Toevoegen aan favorieten</string>
+    <string name="content_epg_remove_favourite">Uit favorieten verwijderen</string>
+    <string name="content_epg_jump_now">Naar nu</string>
+    <string name="content_epg_runtime"><xliff:g id="minutes">%1$d</xliff:g> min</string>
+    <string name="content_epg_review_matches">EPG-koppelingen beoordelen</string>
+    <string name="content_epg_review_description">Deze zenders zijn op naam gekoppeld, maar de overeenkomst was niet overtuigend. Accepteer de juiste en sla de rest over.</string>
+    <string name="content_epg_accept">Accepteren</string>
+    <string name="content_epg_accept_all">Alles accepteren</string>
+    <string name="content_epg_skip">Overslaan</string>
+    <string name="content_epg_skip_all">Alles overslaan</string>
+    <string name="content_epg_pick_manually">EPG handmatig kiezen</string>
+    <string name="content_epg_move_hint">Ga naar rechts een rij in en blader vervolgens met ◀ ▶ om een voorvertoning van een programma te bekijken.</string>
+    <string name="content_epg_catchup">↻ terugkijken</string>
+    <string name="content_epg_time_range"><xliff:g id="start">%1$s</xliff:g> – <xliff:g id="end">%2$s</xliff:g></string>
+    <string name="content_epg_all">Alles</string>
+    <string name="content_epg_sort_alpha">A–Z</string>
+    <string name="content_epg_sort_provider">Aanbieder</string>
+    <string name="content_epg_sort_live">Live-tv</string>
+    <string name="content_epg_sort_catchup">Terugkijken</string>
+    <string name="content_epg_sort_favorites">Favorieten</string>
+    <string name="content_epg_category_button">Categorie: <xliff:g id="label">%1$s</xliff:g></string>
+    <string name="content_epg_sort_button">Sorteren: <xliff:g id="label">%1$s</xliff:g></string>
+    <string name="content_epg_match_button">EPG automatisch koppelen</string>
+    <string name="content_epg_channel_score">→ <xliff:g id="name">%1$s</xliff:g> · <xliff:g id="percent">%2$d</xliff:g>%%</string>
+    <string name="content_epg_channel_number"><xliff:g id="number">%1$s</xliff:g>  <xliff:g id="name">%2$s</xliff:g></string>
+    <string name="content_epg_bits_separator"> · </string>
+    <string name="content_epg_now">NU · <xliff:g id="time">%1$s</xliff:g></string>
+    <string name="content_epg_watch_start">Vanaf het begin kijken</string>
+    <string name="content_epg_watch_channel">Zender kijken</string>
+    <string name="content_epg_favourite">Favoriet maken</string>
+    <string name="content_epg_unfavourite">Uit favorieten verwijderen</string>
+    <string name="content_epg_player_choice_description">Stel een permanente keuze in via Instellingen › Terugkijken.</string>
+    <string name="content_epg_own_player">OwnTV-speler</string>
+    <string name="content_epg_external_player">Externe speler</string>
+</resources>

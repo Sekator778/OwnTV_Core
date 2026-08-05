@@ -1,0 +1,892 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <string name="settings_sort_playlist">قائمة التشغيل</string>
+    <string name="settings_sort_alpha">أ–ي</string>
+    <string name="settings_sort_rating">التقييم</string>
+    <string name="settings_sort_date_added">تاريخ الإضافة</string>
+    <string name="settings_mini_player">المشغّل المصغّر</string>
+    <string name="settings_mini_player_description">المشغّل العائم الصغير الذي يظهر عند إرساء قناة بوضع (PiP) أثناء التصفح. غيّر هذه الخيارات هنا، أو أثناء الاستخدام عبر زري تغيير الحجم / النقل في المشغّل المصغّر نفسه.</string>
+    <string name="settings_size">الحجم</string>
+    <string name="settings_mini_player_size_description">حجم المشغّل المصغّر كنسبة من عرض الشاشة (<xliff:g id="min">%1$d</xliff:g>%%–<xliff:g id="max">%2$d</xliff:g>%%).</string>
+    <string name="settings_position">الموضع</string>
+    <string name="settings_mini_player_position_description">الزاوية أو الحافة التي يُرسى عندها المشغّل المصغّر.</string>
+    <string name="settings_mini_player_size">حجم المشغّل المصغّر</string>
+    <string name="settings_mini_player_position">موضع المشغّل المصغّر</string>
+    <string name="settings_home_screen">الشاشة الرئيسية</string>
+    <string name="settings_home_description">إخفاء صفوف الشاشة الرئيسية وإعادة ترتيبها وتصفيتها لهذا الملف الشخصي.</string>
+    <string name="settings_sections">الأقسام</string>
+    <string name="settings_hidden_sections">تظل الأقسام المخفية مدرجة لتتمكن من إظهارها مجددًا.</string>
+    <string name="settings_keep_watching">متابعة المشاهدة</string>
+    <string name="settings_live_keep_watching">القنوات المباشرة في متابعة المشاهدة</string>
+    <string name="settings_live_keep_watching_description">عرض القنوات المباشرة التي شوهدت مؤخرًا في الصف البارز.</string>
+    <string name="settings_movies_keep_watching">الأفلام في متابعة المشاهدة</string>
+    <string name="settings_movies_keep_watching_description">عرض بطاقات استئناف الأفلام في الصف البارز.</string>
+    <string name="settings_series_keep_watching">المسلسلات في متابعة المشاهدة</string>
+    <string name="settings_series_keep_watching_description">عرض بطاقات استئناف الحلقات في الصف البارز.</string>
+    <string name="settings_android_tv_home">الشاشة الرئيسية لـ Android TV</string>
+    <string name="settings_android_tv_home_description">عرض متابعة المشاهدة والقنوات المباشرة الحديثة على الشاشة الرئيسية للتلفزيون.</string>
+    <string name="settings_refresh_now">التحديث الآن</string>
+    <string name="settings_refresh_description">إعادة إنشاء بطاقات متابعة المشاهدة / البطاقات الحديثة على الشاشة الرئيسية لـ Android TV.</string>
+    <string name="settings_rebuilding">جارٍ إعادة الإنشاء…</string>
+    <string name="settings_done_check">تم ✓</string>
+    <string name="settings_mode"><xliff:g id="mode">%1$s</xliff:g></string>
+    <string name="settings_hidden">مخفي</string>
+    <string name="settings_sidebar_customization">تخصيص القائمة الجانبية</string>
+    <string name="settings_sidebar_description">اختر الأيقونات التي تظهر في القائمة الجانبية، أو دعها تتكيف مع قائمة التشغيل.</string>
+    <string name="settings_behavior">السلوك</string>
+    <string name="settings_nav_dynamic_description">ديناميكي — تتكيف الأيقونات مع ما توفره قائمة التشغيل النشطة. تظهر الشاشة الرئيسية والإعدادات دائمًا.</string>
+    <string name="settings_nav_static_description">ثابت — اختر يدويًا الأيقونات التي تظهر أدناه.</string>
+    <string name="settings_icons">الأيقونات</string>
+    <string name="settings_shown_in_menu">ظاهر في القائمة الجانبية</string>
+    <string name="settings_hidden_from_menu">مخفي من القائمة الجانبية</string>
+    <string name="settings_shown">ظاهر</string>
+    <string name="settings_nav_behavior">سلوك قائمة التنقل</string>
+    <string name="settings_static">ثابت</string>
+    <string name="settings_dynamic">ديناميكي</string>
+    <string name="settings_http_proxy">وكيل HTTP</string>
+    <string name="settings_use_proxy">استخدام الوكيل</string>
+    <string name="settings_proxy_description">إرسال كل حركة بيانات OwnTV والتشغيل عبر وكيل HTTP.</string>
+    <string name="settings_host">المضيف</string>
+    <string name="settings_proxy_host_hint">proxy.example.com</string>
+    <string name="settings_port">المنفذ</string>
+    <string name="settings_proxy_port_hint">8080</string>
+    <string name="settings_username_optional">اسم المستخدم (اختياري)</string>
+    <string name="settings_password_optional">كلمة المرور (اختيارية)</string>
+    <string name="settings_test_proxy">اختبار الوكيل</string>
+    <string name="settings_testing">جارٍ الاختبار…</string>
+    <string name="settings_proxy_privacy">يمكن لمزوّد الوكيل رؤية الخوادم التي تتصل بها ومحتويات أي حركة بيانات لا تستخدم HTTPS.</string>
+    <string name="settings_proxy_limitations">يدعم وكيل HTTP فقط حاليًا — لم تُدعم بعد وكلاء SOCKS أو الوكلاء المنفصلة لكل قائمة تشغيل.</string>
+    <string name="settings_proxy_connected"><xliff:g id="millis">%1$d</xliff:g> مللي ثانية</string>
+    <string name="settings_proxy_invalid_address">أدخل مضيفًا ومنفذًا صالحين (1–65535).</string>
+    <string name="settings_proxy_host_unreachable">يتعذر الوصول إلى مضيف الوكيل.</string>
+    <string name="settings_proxy_timed_out">انتهت مهلة الاتصال بالوكيل.</string>
+    <string name="settings_proxy_connection_failed">تعذر الاتصال بالوكيل (تحقق من المضيف/المنفذ).</string>
+    <string name="settings_proxy_http">أعاد الوكيل حالة HTTP <xliff:g id="code">%1$d</xliff:g></string>
+    <string name="settings_proxy_failed">فشل اختبار الوكيل.</string>
+    <string name="settings_ch_nav_title">التنقل بين الصفحات بمفتاحي CH+-</string>
+    <string name="settings_ch_nav_description">تنقّل بين صفحات قائمة الفئات أو العناصر باستخدام مفتاحي CH+ / CH− في جهاز التحكم عن بُعد.</string>
+    <string name="settings_ch_nav_enabled">استخدام مفتاحي CH+- للتنقل بين صفحات القوائم</string>
+    <string name="settings_ch_nav_enabled_description">عند التفعيل، يتخطى مفتاحا CH+ وCH− عناصر داخل اللوحة قيد التركيز (شريط الفئات أو قائمة العناصر، وكذلك قائمة تخصيص الفئات). وعند التعطيل، لا يفعل هذان المفتاحان شيئًا في تلك الشاشات.</string>
+    <string name="settings_ch_nav_up">تخطي CH+ (نحو الأول)</string>
+    <string name="settings_ch_nav_up_description">عدد العناصر التي تتخطاها ضغطة واحدة على CH+ إلى أعلى. يؤدي الضغط المطوّل دائمًا إلى الانتقال إلى العنصر الأول.</string>
+    <string name="settings_ch_nav_down">تخطي CH− (نحو الأخير)</string>
+    <string name="settings_ch_nav_down_description">عدد العناصر التي تتخطاها ضغطة واحدة على CH− إلى أسفل. يؤدي الضغط المطوّل دائمًا إلى الانتقال إلى العنصر الأخير.</string>
+    <string name="settings_skip_counts">أعداد التخطي</string>
+    <string name="settings_how_it_works">كيفية العمل</string>
+    <string name="settings_ch_nav_help">• يُقيّد التخطي عند طرفي القائمة، لذا تصل القوائم القصيرة إلى نهايتها بضغطة واحدة.\n• الضغط المطوّل على CH+ = العنصر الأول، والضغط المطوّل على CH− = العنصر الأخير.\n• يُعطّل الضغط المطوّل في قائمة \"الكل\" (كل قناة / فيلم / مسلسل) — ويظل التخطي بالضغط القصير متاحًا فيها.\n• ينطبق على اللوحة قيد التركيز حاليًا — شريط الفئات أو قائمة/شبكة العناصر.\n• وينقّل أيضًا بين صفحات قائمة الفئات في الإعدادات ← تخصيص الفئات والعناصر.</string>
+    <string name="settings_large_skips_warning">قد تتجاوز قيم التخطي الكبيرة القوائم القصيرة وقد تبدو الحركة متقطعة على أجهزة التلفزيون منخفضة الإمكانات.</string>
+    <string name="settings_ch_nav_picker">التنقل بين الصفحات بمفتاحي CH+-</string>
+    <string name="settings_weather">الطقس</string>
+    <string name="settings_top_bar_weather">الطقس في الشريط العلوي</string>
+    <string name="settings_show_weather">عرض الطقس</string>
+    <string name="settings_show_weather_description">عرض حالة الطقس الحالية في الشريط العلوي.</string>
+    <string name="settings_custom_location">موقع مخصص</string>
+    <string name="settings_custom_location_description">تجاوز المدينة المستخدمة للطقس. اترك الحقل فارغًا للكشف التلقائي، أو أدخل مدينة (مثل لندن) أو \"lat,lon\" (مثل 51.5,-0.12). يفيد ذلك عند استخدام VPN، حيث قد يحدد الكشف التلقائي مدينة الخادم.</string>
+    <string name="settings_temperature_unit">وحدة درجة الحرارة</string>
+    <string name="settings_temperature_description">عرض درجة الحرارة بالدرجة المئوية أو الفهرنهايت.</string>
+    <string name="settings_auto">تلقائي</string>
+    <string name="settings_city_latlon">المدينة أو lat,lon</string>
+    <string name="settings_location_hint">اترك الحقل فارغًا للكشف التلقائي من عنوان IP العام. أدخل مدينة (مثل لندن) أو \"lat,lon\" (مثل 51.5,-0.12).</string>
+    <string name="settings_metadata">البيانات الوصفية (TMDB)</string>
+    <string name="settings_metadata_source">مصدر البيانات الوصفية</string>
+    <string name="settings_metadata_source_description">اختر مصدر تفاصيل الأفلام والمسلسلات.</string>
+    <string name="settings_metadata_provider_description">استخدم فقط ما توفره قائمة التشغيل. بلا عمليات بحث في TMDB.</string>
+    <string name="settings_metadata_provider_tmdb_description">تكون الأولوية لمعلومات قائمة التشغيل؛ ويملأ TMDB الفجوات ويضيف طاقم التمثيل والأنواع والصور الخلفية.</string>
+    <string name="settings_metadata_tmdb_only_description">فضّل TMDB لكل حقل؛ ولا تستخدم قائمة التشغيل إلا عندما لا يحتوي TMDB على أي معلومات.</string>
+    <string name="settings_selected">محدد</string>
+    <string name="settings_active_tmdb_source">مصدر TMDB النشط: <xliff:g id="tier">%1$s</xliff:g></string>
+    <string name="settings_metadata_language">لغة البيانات الوصفية</string>
+    <string name="settings_metadata_language_description">لغة الملخصات والأنواع والعناوين من TMDB. تظل الحقول التي لم يترجمها TMDB باللغة الإنجليزية. يؤدي تغيير هذا الخيار إلى مسح التفاصيل المخزّنة مؤقتًا لإعادة جلبها.</string>
+    <string name="settings_advanced_options">خيارات متقدمة</string>
+    <string name="settings_advanced_metadata_description">استخدم مفتاح TMDB API الخاص بك أو خادمًا مستضافًا ذاتيًا بدلًا من الإعداد الافتراضي المشترك.</string>
+    <string name="settings_metadata_server_description">اترك الحقلين فارغين لاستخدام الخادم المشترك المضمّن (بلا إعداد). أدخل مفتاح TMDB API الخاص بك للاتصال بـ TMDB مباشرةً، أو عنوان URL لخادم مستضاف ذاتيًا لاستخدام الوكيل/النسخة المتطابقة الخاصة بك. تكون الأولوية لعنوان URL على المفتاح.</string>
+    <string name="settings_tmdb_api_key">مفتاح TMDB API ‏(v3)</string>
+    <string name="settings_self_host_url">عنوان URL للخادم المستضاف ذاتيًا</string>
+    <string name="settings_test">اختبار</string>
+    <string name="settings_metadata_empty_title">أدخل عنوانًا للبحث عنه.</string>
+    <string name="settings_metadata_server_unavailable">تعذر الوصول إلى خادم البيانات الوصفية — تحقق من الشبكة / المفتاح / عنوان URL.</string>
+    <string name="settings_metadata_no_match">لا توجد نتيجة مطابقة في TMDB لـ \"<xliff:g id="query">%1$s</xliff:g>\".</string>
+    <string name="settings_metadata_lookup_failed">فشل البحث.</string>
+    <string name="settings_metadata_match_result"><xliff:g id="title">%1$s</xliff:g><xliff:g id="year">%2$s</xliff:g> · tmdb #<xliff:g id="id">%3$d</xliff:g></string>
+    <string name="settings_metadata_year"> (<xliff:g id="year">%1$d</xliff:g>)</string>
+    <string name="settings_lookup_movie">البحث عن عنوان فيلم</string>
+    <string name="settings_test_lookup">اختبار البحث</string>
+    <string name="settings_looking_up">جارٍ البحث…</string>
+    <string name="settings_tmdb_attribution">يستخدم هذا المنتج TMDB API، لكنه غير معتمد أو مصدّق من TMDB.</string>
+    <string name="settings_metadata_provider_only">المزوّد فقط</string>
+    <string name="settings_metadata_provider_plus_tmdb">المزوّد + TMDB</string>
+    <string name="settings_metadata_tmdb_only">TMDB فقط</string>
+    <string name="settings_tier_default">الافتراضي (مشترك)</string>
+    <string name="settings_tier_key">مفتاح TMDB الخاص بك</string>
+    <string name="settings_tier_self_host">مستضاف ذاتيًا</string>
+    <string name="settings_title">الإعدادات</string>
+    <string name="settings_quick_live_preview">المعاينة المباشرة</string>
+    <string name="settings_quick_preview_sound">صوت المعاينة</string>
+    <string name="settings_quick_channel_numbers">أرقام القنوات</string>
+    <string name="settings_quick_hdr">HDR</string>
+    <string name="settings_quick_autoplay">التشغيل التلقائي</string>
+    <string name="settings_quick_check_update">التحقق من وجود تحديث</string>
+    <string name="settings_search_label">بحث في الإعدادات</string>
+    <string name="settings_search_hint">بحث في الإعدادات…</string>
+    <string name="settings_group_general">عام</string>
+    <string name="settings_language">اللغة</string>
+    <string name="settings_language_description">لغة عرض التطبيق</string>
+    <string name="settings_language_system_default">الإعداد الافتراضي للنظام</string>
+    <string name="settings_language_system_default_description">يتبع لغة الجهاز</string>
+    <string name="settings_language_search_hint">بحث في اللغات…</string>
+    <string name="settings_search_keywords_language">لغة إعدادات محلية ترجمة دولي i18n</string>
+    <string name="settings_language_coverage"><xliff:g id="percent">%1$d</xliff:g>%%</string>
+    <string name="settings_profile_group">الملف الشخصي</string>
+    <string name="settings_profiles_description">إدارة المشاهدين ووضع الأطفال وأقفال PIN</string>
+    <string name="settings_content_group">المحتوى</string>
+    <string name="settings_playlists">قوائم التشغيل</string>
+    <string name="settings_playlists_description">إضافة قوائم تشغيل M3U / Xtream أو إعادة مزامنتها أو إزالتها</string>
+    <string name="settings_epg_sources">مصادر دليل البرامج الإلكتروني</string>
+    <string name="settings_epg_sources_nav_description">إضافة موجزات دليل XMLTV إلى دليل البرامج</string>
+    <string name="settings_customize">تخصيص الفئات والعناصر</string>
+    <string name="settings_customize_nav_description">إخفاء العناصر وإظهارها وإعادة تسمية الفئات وترتيبها</string>
+    <string name="settings_sidebar_description_root">تكييف الأيقونات الجانبية تلقائيًا مع قائمة التشغيل أو إخفاء أيقونات محددة</string>
+    <string name="settings_ch_paging">التنقل بين الصفحات بمفتاحي CH+-</string>
+    <string name="settings_ch_paging_description">التخطي إلى أعلى/أسفل في قوائم الفئات والعناصر باستخدام مفتاحي CH+ / CH−</string>
+    <string name="settings_browsing_lists">التصفح والقوائم</string>
+    <string name="settings_browsing_description">تذكّر آخر فئة وآخر عنصر في البث التلفزيوني المباشر والأفلام والمسلسلات</string>
+    <string name="settings_home_root">الشاشة الرئيسية</string>
+    <string name="settings_home_root_description">اختيار صفوف الشاشة الرئيسية وإعادة ترتيبها وتصفيتها</string>
+    <string name="settings_metadata_root_description">الملصقات والملخصات وطاقم التمثيل والتقييمات للأفلام والمسلسلات</string>
+    <string name="settings_download_folder">مجلد التنزيل</string>
+    <string name="settings_app_storage">مساحة تخزين التطبيق</string>
+    <string name="settings_backup_restore">النسخ الاحتياطي والاستعادة</string>
+    <string name="settings_backup_restore_description">تصدير الملفات الشخصية والمصادر أو استعادتها</string>
+    <string name="settings_clear_history">مسح سجل المشاهدة</string>
+    <string name="settings_clear_history_description">إزالة صفوف ما شوهد مؤخرًا والمتابعة لهذا الملف الشخصي</string>
+    <string name="settings_appearance_group">المظهر</string>
+    <string name="settings_theme">السمة</string>
+    <string name="settings_theme_description">فاتحة أو داكنة أو تتبع النظام</string>
+    <string name="settings_accent">اللون المميّز</string>
+    <string name="settings_accent_description">تلوين الواجهة — إعدادات مسبقة أو لوحة ألوان أو رمز سداسي عشري</string>
+    <string name="settings_glass_effect">التأثير الزجاجي</string>
+    <string name="settings_glass_description">لوحات شفافة ضبابية وصورة خلفية ومستوى الشفافية</string>
+    <string name="settings_ui_zoom">تكبير الواجهة</string>
+    <string name="settings_ui_zoom_description">تغيير حجم الواجهة بالكامل</string>
+    <string name="settings_animations">الحركات</string>
+    <string name="settings_animations_description">تشغيل حركة الواجهة أو إيقافها — يبدو الأداء أسرع عند إيقافها على أجهزة التلفزيون منخفضة الإمكانات</string>
+    <string name="settings_weather_description_root">شريحة الطقس في الشريط العلوي: إظهارها أو إخفاؤها وتحديد موقع مخصص والاختيار بين الدرجة المئوية والفهرنهايت.</string>
+    <string name="settings_playback_group">التشغيل</string>
+    <string name="settings_live_preview_description">تشغيل قناة تلقائيًا عند وضع التركيز عليها</string>
+    <string name="settings_preview_audio">صوت المعاينة</string>
+    <string name="settings_preview_audio_description">تشغيل الصوت في المعاينة المباشرة</string>
+    <string name="settings_mini_player_root">المشغّل المصغّر</string>
+    <string name="settings_mini_player_root_description">حجم المشغّل المصغّر المُرسى وموضعه</string>
+    <string name="settings_hdr_description">استخدام خرج HDR عندما يدعمه الفيديو والتلفزيون</string>
+    <string name="settings_auto_frame_rate">معدل الإطارات التلقائي</string>
+    <string name="settings_auto_frame_rate_description">مطابقة معدل تحديث التلفزيون مع الفيديو (24/25/50/60 إطارًا في الثانية) في وضع ملء الشاشة، للبث التلفزيوني المباشر والفيديو حسب الطلب، واستعادته عند الخروج. عطّل هذا الخيار إذا كان التلفزيون أو جهاز الاستقبال يعيد مصافحة HDMI بصورة مزعجة عند كل تغيير للقناة.</string>
+    <string name="settings_surround_sound">الصوت المحيطي</string>
+    <string name="settings_surround_description">فك ترميز Dolby/DTS إلى صوت محيطي (5.1/7.1) لجهاز استقبال حقيقي يدعم 5.1/7.1. اتركه متوقفًا لسماعات التلفزيون أو مكبّر صوت استريو — قد يتأخر الصوت متعدد القنوات عن الفيديو في بعض أجهزة التلفزيون/مكبّرات الصوت. إذا انحرفت المزامنة، فاضبط قليلًا قائمة الصوت في المشغّل ← مزامنة A/V.</string>
+    <string name="settings_autoplay_next">تشغيل الحلقة التالية تلقائيًا</string>
+    <string name="settings_autoplay_next_description">عند انتهاء حلقة، شغّل الحلقة التالية تلقائيًا — وانتقل إلى الموسم التالي.</string>
+    <string name="settings_catchup">مشاهدة البث الفائت</string>
+    <plurals name="settings_catchup_supported">
+        <item quantity="zero"><xliff:g id="count">%1$d</xliff:g> قناة تدعم مشاهدة البث الفائت · المنطقة الزمنية والمشغّل لتشغيل الأرشيف</item>
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> قناة تدعم مشاهدة البث الفائت · المنطقة الزمنية والمشغّل لتشغيل الأرشيف</item>
+        <item quantity="two"><xliff:g id="count">%1$d</xliff:g> قناتان تدعمان مشاهدة البث الفائت · المنطقة الزمنية والمشغّل لتشغيل الأرشيف</item>
+        <item quantity="few"><xliff:g id="count">%1$d</xliff:g> قنوات تدعم مشاهدة البث الفائت · المنطقة الزمنية والمشغّل لتشغيل الأرشيف</item>
+        <item quantity="many"><xliff:g id="count">%1$d</xliff:g> قناة تدعم مشاهدة البث الفائت · المنطقة الزمنية والمشغّل لتشغيل الأرشيف</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> قناة تدعم مشاهدة البث الفائت · المنطقة الزمنية والمشغّل لتشغيل الأرشيف</item>
+    </plurals>
+    <string name="settings_catchup_unavailable">لا تتوفر قنوات لمشاهدة البث الفائت في قائمة التشغيل هذه</string>
+    <string name="settings_device">الجهاز</string>
+    <string name="settings_video_player">إعدادات مشغّل الفيديو</string>
+    <string name="settings_video_player_description">وحدة فك الترميز والترجمة والمزامنة</string>
+    <string name="settings_playback_error_log">سجل أخطاء التشغيل</string>
+    <string name="settings_playback_speed">سرعة التشغيل</string>
+    <string name="settings_player_zoom">تكبير المشغّل</string>
+    <string name="settings_playback_error_description">أحدث حالات فشل التشغيل — تفاصيل لقراءتها أو الإبلاغ عنها</string>
+    <string name="settings_network_group">الشبكة</string>
+    <string name="settings_app_group">التطبيق</string>
+    <string name="settings_app_startup">بدء تشغيل التطبيق</string>
+    <string name="settings_app_startup_description">ما يفتحه OwnTV عند بدء تشغيله</string>
+    <string name="settings_check_updates">التحقق من وجود تحديثات</string>
+    <string name="settings_check_updates_description">الحصول على أحدث إصدار من GitHub Releases</string>
+    <string name="settings_update_startup">التحقق من التحديثات عند بدء التشغيل</string>
+    <string name="settings_update_startup_description">البحث عن إصدار جديد عند فتح التطبيق</string>
+    <string name="settings_about">حول</string>
+    <string name="settings_about_description">الإصدار والترخيص ومعلومات المشروع</string>
+    <string name="settings_live_latency">زمن استجابة البث المباشر</string>
+    <string name="settings_no_settings_match">لا توجد إعدادات تطابق “<xliff:g id="query">%1$s</xliff:g>”</string>
+    <string name="settings_breadcrumb"><xliff:g id="group">%1$s</xliff:g> › <xliff:g id="title">%2$s</xliff:g></string>
+    <string name="settings_startup_home">الشاشة الرئيسية</string>
+    <string name="settings_startup_last_channel">آخر قناة</string>
+    <string name="settings_startup_favorites">البث المباشر · المفضّلة</string>
+    <string name="settings_all_history">السجل بالكامل</string>
+    <string name="settings_choose_history">اختر ما تريد إزالته لهذا الملف الشخصي. لن تتأثر قوائم التشغيل والمفضّلة والتنزيلات.</string>
+    <string name="settings_clear_history_confirm">هل تريد مسح سجل <xliff:g id="scope">%1$s</xliff:g>؟</string>
+    <string name="settings_cannot_undo">لا يمكن التراجع عن هذا الإجراء.</string>
+    <string name="settings_no">لا</string>
+    <string name="settings_yes_clear">نعم، امسح</string>
+    <string name="settings_accent_dialog">اللون المميّز</string>
+    <string name="settings_presets">إعدادات مسبقة</string>
+    <string name="settings_hex_code">الرمز السداسي العشري</string>
+    <string name="settings_hex">سداسي عشري</string>
+    <string name="settings_apply">تطبيق</string>
+    <string name="settings_hex_error">أدخل 6 أرقام سداسية عشرية، مثل 52DBC8</string>
+    <string name="settings_color_picker">أداة اختيار اللون</string>
+    <string name="settings_use_color">استخدام هذا اللون</string>
+    <string name="settings_about_version">الإصدار <xliff:g id="version">%1$s</xliff:g></string>
+    <string name="settings_about_description_full">مشغّل IPTV خاص بك لـ Android TV — تطبيق مجاني ومفتوح المصدر مخصص للتشغيل فقط. لا يوفر أي قنوات أو محتوى؛ بل تستخدم فيه مصادرك الخاصة المتاحة لك قانونيًا.</string>
+    <string name="settings_about_license">© 2026 Ashiq Hasan · ترخيص GPLv3</string>
+    <string name="settings_join_telegram">انضم إلينا على Telegram</string>
+    <string name="settings_telegram_qr">رمز QR لمجموعة Telegram</string>
+    <string name="settings_telegram_scan">امسح رمز QR للانضمام من هاتفك، أو افتح الرابط أعلاه.</string>
+    <string name="settings_contributions">نرحب بالمساهمات وتقارير الأخطاء والنجوم على GitHub.</string>
+    <string name="settings_playback_error_title">سجل أخطاء التشغيل</string>
+    <string name="settings_playback_error_description_full">أحدث حالات فشل التشغيل (الأحدث أولًا). أرفق هذه التفاصيل عند الإبلاغ عن مشكلة.</string>
+    <string name="settings_loading">جارٍ التحميل…</string>
+    <string name="settings_no_playback_errors">لم تُسجّل أي أخطاء تشغيل.</string>
+    <string name="settings_live">البث المباشر</string>
+    <string name="settings_vod">VOD</string>
+    <string name="settings_clear_log">مسح السجل</string>
+    <string name="settings_browsing_title">التصفح والقوائم</string>
+    <string name="settings_browsing_description_full">الموضع الذي يعود إليه البث التلفزيوني المباشر والأفلام والمسلسلات عند الرجوع.</string>
+    <string name="settings_section_toggle"><xliff:g id="section">%1$s</xliff:g>: <xliff:g id="state">%2$s</xliff:g></string>
+    <string name="settings_glass_surfaces">الأسطح الزجاجية</string>
+    <string name="settings_glass_surfaces_description">اختر أجزاء التطبيق التي تظهر بشكل زجاجي. يؤدي إيقاف كل الأسطح إلى إيقاف التأثير الزجاجي.</string>
+    <string name="settings_all_surfaces_on">كل الأسطح: مفعّلة</string>
+    <string name="settings_all_surfaces_off">كل الأسطح: متوقفة</string>
+    <string name="settings_surface_toggle"><xliff:g id="surface">%1$s</xliff:g>: <xliff:g id="state">%2$s</xliff:g></string>
+    <string name="settings_transparency_description">مقدار ما يظهر عبر اللوحات (<xliff:g id="min">%1$d</xliff:g>%%–<xliff:g id="max">%2$d</xliff:g>%%). تؤدي القيمة الأعلى إلى مظهر أكثر تعتيمًا.</string>
+    <string name="settings_catchup_description">كيفية إرسال الطوابع الزمنية لمشاهدة البث الفائت. استخدم المنطقة الزمنية لجهازك، أو عيّن الإزاحة التي يتوقعها خادم المزوّد.</string>
+    <string name="settings_manual">يدوي</string>
+    <string name="settings_theme_dark">داكنة</string>
+    <string name="settings_theme_light">فاتحة</string>
+    <string name="settings_theme_system">النظام</string>
+    <string name="settings_accent_teal">فيروزي</string>
+    <string name="settings_accent_blue">أزرق</string>
+    <string name="settings_accent_violet">بنفسجي</string>
+    <string name="settings_accent_green">أخضر</string>
+    <string name="settings_accent_amber">كهرماني</string>
+    <string name="settings_group_profile">الملف الشخصي</string>
+    <string name="settings_group_content">المحتوى</string>
+    <string name="settings_group_appearance">المظهر</string>
+    <string name="settings_group_playback">التشغيل</string>
+    <string name="settings_group_network">الشبكة</string>
+    <string name="settings_dns">DNS</string>
+    <string name="settings_group_app">التطبيق</string>
+    <string name="settings_search_guide_logos">شعارات القنوات في الدليل</string>
+    <string name="settings_search_keywords_profiles">مشاهدون أطفال وضع قفل PIN حساب</string>
+    <string name="settings_search_keywords_playlists">M3U Xtream مصدر مزامنة إضافة إزالة</string>
+    <string name="settings_search_keywords_epg">XMLTV دليل موجز برنامج</string>
+    <string name="settings_search_keywords_logos">قناة شعار أيقونة XMLTV دليل picon قائمة تشغيل</string>
+    <string name="settings_search_keywords_customize">إخفاء إظهار إعادة تسمية إعادة ترتيب فئات</string>
+    <string name="settings_search_keywords_sidebar">شريط جانبي أيقونات ديناميكي ثابت إخفاء إظهار تكييف قائمة تشغيل</string>
+    <string name="settings_search_keywords_ch">قناة أعلى أسفل تخطي صفحة قائمة فئة قناة</string>
+    <string name="settings_search_keywords_browsing">تذكّر موضع تمرير فئة آخر عنصر مباشر أفلام مسلسلات إعادة ضبط أعلى</string>
+    <string name="settings_search_keywords_home">صفوف بارز إعادة ترتيب تصفية</string>
+    <string name="settings_search_keywords_metadata">ملصقات ملخصات طاقم تمثيل تقييمات</string>
+    <string name="settings_search_keywords_download">تخزين مسار دليل</string>
+    <string name="settings_search_keywords_backup">تصدير استيراد ملفات شخصية مصادر</string>
+    <string name="settings_search_keywords_history">شوهد مؤخرًا متابعة إزالة</string>
+    <string name="settings_search_keywords_theme">فاتح داكن نظام</string>
+    <string name="settings_search_keywords_accent">تلوين لوحة ألوان سداسي عشري إعداد مسبق</string>
+    <string name="settings_search_keywords_zoom">مقياس واجهة حجم</string>
+    <string name="settings_search_keywords_animation">حركة سرعة أداء</string>
+    <string name="settings_search_keywords_weather">شريط علوي شريحة موقع مئوية فهرنهايت</string>
+    <string name="settings_search_keywords_live_preview">تشغيل تلقائي تركيز قناة</string>
+    <string name="settings_search_keywords_sound">صوت مباشر معاينة</string>
+    <string name="settings_search_keywords_channel_numbers">قناة رقم ضبط مباشر كتابة أرقام لوحة أرقام رقمي تبديل lcn</string>
+    <string name="settings_search_keywords_mini">إرساء pip مشغّل مصغّر حجم موضع مقياس نسبة زاوية نقل</string>
+    <string name="settings_search_keywords_hdr">نطاق ديناميكي عالٍ خرج</string>
+    <string name="settings_search_keywords_afr">afr تحديث معدل هرتز تقطع 24fps 25fps 50hz 60hz وضع عرض مطابقة</string>
+    <string name="settings_search_keywords_surround">Dolby DTS 5.1 7.1 جهاز استقبال صوت</string>
+    <string name="settings_search_keywords_autoplay">تشغيل تلقائي مسلسل موسم</string>
+    <string name="settings_search_keywords_catchup">أرشيف منطقة زمنية إزاحة مشاهدة البث الفائت مشغّل خارجي vlc mx</string>
+    <string name="settings_search_keywords_video">وحدة فك الترميز ترجمة مزامنة</string>
+    <string name="settings_search_keywords_subtitle_appearance">ترجمة حجم لون موضع شفافية خلفية عتامة</string>
+    <string name="settings_search_keywords_latency">مباشر مخزن مؤقت زمن استجابة تأخير منخفض ثوانٍ قرب حافة البث المباشر</string>
+    <string name="settings_search_keywords_errors">خطأ تعطل فشل تشخيصات تقرير</string>
+    <string name="settings_search_keywords_proxy">http حركة بيانات توجيه</string>
+    <string name="settings_search_keywords_dns">نطاق بحث محلل doh DNS-over-HTTPS</string>
+    <string name="settings_search_keywords_startup">تشغيل فتح واجهة بدء</string>
+    <string name="settings_search_keywords_updates">GitHub إصدار تحديث</string>
+    <string name="settings_search_keywords_update_auto">تلقائي تحديث إصدار جديد</string>
+    <string name="settings_search_keywords_about">إصدار ترخيص مشروع معلومات</string>
+    <string name="settings_language_default">الافتراضية (الإنجليزية)</string>
+    <string name="settings_language_device">لغة الجهاز</string>
+    <string name="settings_language_arabic">العربية</string>
+    <string name="settings_language_bulgarian">البلغارية</string>
+    <string name="settings_language_chinese">الصينية</string>
+    <string name="settings_language_croatian">الكرواتية</string>
+    <string name="settings_language_czech">التشيكية</string>
+    <string name="settings_language_danish">الدنماركية</string>
+    <string name="settings_language_dutch">الهولندية</string>
+    <string name="settings_language_english">الإنجليزية</string>
+    <string name="settings_language_estonian">الإستونية</string>
+    <string name="settings_language_finnish">الفنلندية</string>
+    <string name="settings_language_french">الفرنسية</string>
+    <string name="settings_language_german">الألمانية</string>
+    <string name="settings_language_greek">اليونانية</string>
+    <string name="settings_language_hebrew">العبرية</string>
+    <string name="settings_language_hindi">الهندية</string>
+    <string name="settings_language_hungarian">المجرية</string>
+    <string name="settings_language_indonesian">الإندونيسية</string>
+    <string name="settings_language_italian">الإيطالية</string>
+    <string name="settings_language_japanese">اليابانية</string>
+    <string name="settings_language_korean">الكورية</string>
+    <string name="settings_language_latvian">اللاتفية</string>
+    <string name="settings_language_lithuanian">الليتوانية</string>
+    <string name="settings_language_malay">الملايوية</string>
+    <string name="settings_language_norwegian">النرويجية</string>
+    <string name="settings_language_persian">الفارسية</string>
+    <string name="settings_language_polish">البولندية</string>
+    <string name="settings_language_portuguese_brazil">البرتغالية (البرازيل)</string>
+    <string name="settings_language_portuguese_portugal">البرتغالية (البرتغال)</string>
+    <string name="settings_language_romanian">الرومانية</string>
+    <string name="settings_language_russian">الروسية</string>
+    <string name="settings_language_serbian">الصربية</string>
+    <string name="settings_language_slovak">السلوفاكية</string>
+    <string name="settings_language_slovenian">السلوفينية</string>
+    <string name="settings_language_spanish">الإسبانية</string>
+    <string name="settings_language_spanish_latam">الإسبانية (أمريكا اللاتينية)</string>
+    <string name="settings_language_swedish">السويدية</string>
+    <string name="settings_language_thai">التايلاندية</string>
+    <string name="settings_language_turkish">التركية</string>
+    <string name="settings_language_ukrainian">الأوكرانية</string>
+    <string name="settings_language_vietnamese">الفيتنامية</string>
+    <string name="settings_video_player_title">مشغّل الفيديو</string>
+    <string name="settings_decoding">فك الترميز</string>
+    <string name="settings_hardware_decoding">فك الترميز بالأجهزة</string>
+    <string name="settings_hardware_decoding_description">استخدام وحدة فك الترميز بالأجهزة في التلفزيون. عطّل هذا الخيار إذا تقطعت بعض عمليات البث أو ظهرت بها عيوب مرئية.</string>
+    <string name="settings_movies_series_player">مشغّل الأفلام والمسلسلات</string>
+    <string name="settings_external_player">مشغّل خارجي</string>
+    <string name="settings_default_zoom">التكبير الافتراضي</string>
+    <string name="settings_default_zoom_description">نسبة العرض إلى الارتفاع/التكبير المطبّقة عند بدء التشغيل.</string>
+    <string name="settings_resume_playback">استئناف التشغيل</string>
+    <string name="settings_resume_playback_description">ما يجب فعله عندما يكون لفيلم أو حلقة موضع محفوظ.</string>
+    <string name="settings_subtitles">الترجمات</string>
+    <string name="settings_subtitle_appearance">مظهر الترجمة</string>
+    <string name="settings_subtitle_appearance_description">الحجم ولون النص والموضع على الشاشة وشفافية الخلفية. عند تعطيل هذا الخيار، تحتفظ الترجمات بمظهرها الأصلي — بما في ذلك التنسيق الذي تضمّنه جهات البث في ترجمات البث التلفزيوني المباشر.</string>
+    <string name="settings_subtitle_size">حجم الترجمة</string>
+    <string name="settings_subtitle_size_description">تغيير حجم نص الترجمة.</string>
+    <string name="settings_preferred_subtitle_language">لغة الترجمة المفضّلة</string>
+    <string name="settings_preferred_language_description">تحديد مسار الترجمة هذا تلقائيًا عند توفره.</string>
+    <string name="settings_open_subtitles">OpenSubtitles</string>
+    <string name="settings_open_subtitles_description">سجّل الدخول للبحث عن الترجمات وتنزيلها وإدارة الترجمات المنزّلة. الإعداد خاص بكل ملف شخصي؛ ويلزم حساب مجاني على opensubtitles.com.</string>
+    <string name="settings_audio">الصوت</string>
+    <string name="settings_preferred_audio_language">لغة الصوت المفضّلة</string>
+    <string name="settings_audio_sync">مزامنة الصوت</string>
+    <string name="settings_audio_sync_description">قدّم الصوت أو أخّره ليتطابق مع الفيديو.</string>
+    <string name="settings_live_tv">البث التلفزيوني المباشر</string>
+    <string name="settings_live_latency_description">مدى قرب التشغيل من البث المباشر. تعني القيمة الأقل قربًا أكبر من البث المباشر، ولكن مع مخزن مؤقت أصغر، لذلك قد تتقطّع عمليات البث الضعيفة أو تعيد الاتصال أكثر. ينطبق ذلك على القناة التالية التي تفتحها.</string>
+    <string name="settings_channel_numbers">أرقام القنوات</string>
+    <string name="settings_channel_numbers_description">اعرض رقم القناة الذي يحدده مزوّدك بجوار الاسم في قائمة البث التلفزيوني المباشر وطبقة قائمة القنوات المتراكبة والمشغّل — وأدخل رقمًا بجهاز التحكم عن بُعد أثناء التشغيل بملء الشاشة للانتقال مباشرةً إلى تلك القناة (ينتقل زر «موافق» فورًا، ويلغي زر «رجوع»). يؤدي إيقاف الخيار إلى إخفاء جميع الأرقام وتجاهل مفاتيح الأرقام؛ ولن تفقد شيئًا، إذ يعيد تشغيله إظهارها.</string>
+    <string name="settings_diagnostics">التشخيصات</string>
+    <string name="settings_measured_stats">إحصاءات البث المقاسة</string>
+    <string name="settings_measured_stats_description">اعرض معدل الإطارات المباشر ومعدل البت والإطارات الساقطة في طبقة معلومات البث المتراكبة (تُقاس أثناء فتح الطبقة المتراكبة لعمليات البث التي لا تعلن هذه القيم). أوقفه فقط إذا كان التلفزيون منخفض الإمكانات يتقطّع — فهو لا يؤثر مطلقًا في الفيديو الفعلي، بل في أرقام التشخيصات فقط.</string>
+    <string name="settings_none_auto">لا شيء / تلقائي</string>
+    <string name="settings_view_grid">شبكة</string>
+    <string name="settings_view_list">قائمة</string>
+    <string name="settings_language_portuguese">البرتغالية</string>
+    <string name="settings_subtitle_small">صغير</string>
+    <string name="settings_subtitle_normal">عادي</string>
+    <string name="settings_subtitle_large">كبير</string>
+    <string name="settings_subtitle_extra_large">كبير جدًا</string>
+    <string name="settings_live_latency_low">زمن انتقال منخفض</string>
+    <string name="settings_live_latency_balanced">متوازن</string>
+    <string name="settings_live_latency_stable">مستقر</string>
+    <string name="settings_live_latency_custom">مخصّص</string>
+    <string name="settings_low_latency_warning">⚠️ زمن انتقال منخفض</string>
+    <string name="settings_low_latency_warning_description">يؤدي التشغيل بالقرب من البث المباشر إلى تصغير المخزن المؤقت. وقد يتسبب ذلك في زيادة التخزين المؤقت أو التقطّع أو إعادة الاتصال عند استخدام اتصالات أبطأ أو عمليات بث غير مستقرة.\n\nاختر «متوازن» إذا أصبحت القناة غير موثوقة.</string>
+    <string name="settings_low_latency_understand">أفهم ذلك</string>
+    <string name="settings_custom_live_buffer">مخزن مؤقت مخصّص للبث المباشر</string>
+    <string name="settings_live_buffer_seconds"><xliff:g id="seconds">%1$d</xliff:g> ث</string>
+    <string name="settings_audio_delay"><xliff:g id="delay">%1$d</xliff:g> مللي ثانية</string>
+    <string name="settings_external_player_description">اختر الأقسام التي تُفتح في تطبيق خارجي.</string>
+    <string name="settings_audio_delay_value"><xliff:g id="delay">%1$d</xliff:g> مللي ثانية</string>
+    <string name="settings_movies_player_description">يتمتع mpv (موصى به) بأوسع دعم للتنسيقات — بما في ذلك صوت DTS/TrueHD والملفات غير المعتادة — بالإضافة إلى إصلاح مزامنة الصوت/الفيديو. انتقل إلى ExoPlayer فقط إذا تعذر بدء الأفلام أو الحلقات: فهو يشغّل بعض عمليات البث التي لا يستطيع mpv تشغيلها على بعض أجهزة التلفزيون، لكنه لا يستطيع فك ترميز صوت DTS/TrueHD ولا يتضمن إصلاحًا لمزامنة الصوت/الفيديو. أيًا كان اختيارك، ستتم تجربة الآخر تلقائيًا إذا فشل.</string>
+    <string name="settings_external_player_row_description">افتح عمليات البث في تطبيق خارجي (VLC أو MX Player) بدلًا من المشغّل المدمج، مع تحديد ذلك لكل قسم. يفيد هذا مع عمليات البث التي لا يستطيع هذا التطبيق فك ترميزها، أو إذا كنت تفضّل مشغّلًا آخر. لا يتوفر موضع الاستئناف ولا السابق/التالي أثناء التشغيل خارجيًا؛ وقد لا تعمل عمليات البث التي تحتاج إلى User-Agent مخصّص أو مُحيل.</string>
+    <string name="settings_resume_always">الاستئناف دائمًا</string>
+    <string name="settings_resume_ask">السؤال قبل الاستئناف</string>
+    <string name="settings_resume_never">عدم الاستئناف مطلقًا</string>
+    <string name="settings_delete_subtitles">حذف الترجمات</string>
+    <string name="settings_delete_all">حذف الكل</string>
+    <string name="settings_movies">أفلام</string>
+    <string name="settings_series">مسلسلات</string>
+    <string name="settings_no_downloaded_subtitles">لا توجد ترجمات منزّلة لقسم <xliff:g id="section">%1$s</xliff:g>.</string>
+    <string name="settings_delete_subtitle">حذف الترجمة</string>
+    <string name="settings_delete_subtitle_message">هل تريد حذف ترجمة <xliff:g id="name">%1$s</xliff:g> لـ «<xliff:g id="title">%2$s</xliff:g>»؟ يمكن تنزيلها مرة أخرى لاحقًا.</string>
+    <string name="settings_delete_all_subtitles">حذف جميع الترجمات</string>
+    <string name="settings_delete_all_movies">حذف جميع الأفلام</string>
+    <string name="settings_delete_all_series">حذف جميع المسلسلات</string>
+    <string name="settings_section_count"><xliff:g id="section">%1$s</xliff:g> (<xliff:g id="count">%2$d</xliff:g>)</string>
+    <string name="settings_sync_guide_question">هل تريد مزامنة دليل البرامج التلفزيونية الآن؟</string>
+    <string name="settings_sync_guide_description">نزّل دليل البرامج (دليل البرامج الإلكتروني) لـ «<xliff:g id="source">%1$s</xliff:g>». يمكنك أيضًا إجراء ذلك لاحقًا من الإعدادات ← دليل البرامج الإلكتروني.</string>
+    <string name="settings_not_now">ليس الآن</string>
+    <string name="settings_sync_now">المزامنة الآن</string>
+    <string name="settings_syncing_guide">جارٍ مزامنة دليل البرامج التلفزيونية…</string>
+    <string name="settings_connecting">جارٍ الاتصال…</string>
+    <string name="settings_run_background">التشغيل في الخلفية</string>
+    <string name="settings_guide_synced">تمت مزامنة دليل البرامج التلفزيونية</string>
+    <string name="settings_guide_sync_failed">فشلت مزامنة دليل البرامج التلفزيونية</string>
+    <string name="settings_restore_remote_title">الاستعادة من جهاز آخر</string>
+    <string name="settings_restore_remote_description">على هاتف أو حاسوب محمول متصل بشبكة Wi-Fi نفسها، امسح رمز QR ضوئيًا (أو افتح عنوان URL)، وأدخل رمز PIN هذا، واختر ملف النسخة الاحتياطية لـ OwnTV، ثم اضغط على «إرسال إلى التلفزيون». بعد ذلك تختار هنا ما تريد استعادته.</string>
+    <string name="settings_opening_server">جارٍ فتح الخادم…</string>
+    <string name="settings_enter_pin_browser">أدخل رمز PIN هذا في المتصفح</string>
+    <string name="settings_companion_qr">رمز QR لعنوان URL الخاص بالصفحة المرافقة</string>
+    <string name="settings_open_url">أو افتح عنوان URL هذا</string>
+    <string name="settings_try_again">إعادة المحاولة</string>
+    <string name="settings_new_pin">البدء من جديد باستخدام PIN جديد</string>
+    <string name="settings_download_remote_title">التنزيل على جهاز آخر</string>
+    <string name="settings_download_remote_description">على هاتف أو حاسوب محمول متصل بشبكة Wi-Fi نفسها، امسح رمز QR ضوئيًا (أو افتح عنوان URL)، وأدخل رمز PIN هذا، ثم نزّل ملف النسخة الاحتياطية واحتفظ به في مكان آمن.</string>
+    <string name="settings_preparing_backup">جارٍ إعداد النسخة الاحتياطية…</string>
+    <string name="settings_liquid_glass_on">الزجاج السائل: مفعّل</string>
+    <string name="settings_liquid_glass_off">الزجاج السائل: متوقف</string>
+    <string name="settings_background_on">صورة الخلفية: مفعّلة</string>
+    <string name="settings_background_off">صورة الخلفية: متوقفة</string>
+    <string name="settings_ui_zoom_range">تغيير حجم الواجهة بالكامل (<xliff:g id="min">%1$d</xliff:g>%%–<xliff:g id="max">%2$d</xliff:g>%%).</string>
+    <string name="settings_low_zoom_warning_title">⚠️ تحذير بشأن التكبير المنخفض</string>
+    <string name="settings_low_zoom_warning">يعرض التكبير بنسبة <xliff:g id="zoom">%1$d</xliff:g>%% عددًا أكبر بكثير من العناصر على الشاشة في وقت واحد. وقد يؤدي ذلك إلى عدم استقرار التطبيق أو تعطّله على الأجهزة ذات الذاكرة المحدودة (مثل أجهزة بث التلفزيون المزودة بذاكرة 2 غيغابايت)، خاصةً مع قوائم التشغيل الكبيرة وبيانات دليل البرامج الإلكتروني.\n\nاضغط على «موافق» للمتابعة، أو «رجوع» للبقاء عند <xliff:g id="safe_zoom">%2$d</xliff:g>%%.</string>
+    <string name="settings_low_zoom_accept">أفهم المخاطر وأقبلها</string>
+    <string name="settings_surface_transparency"><xliff:g id="percent">%1$d</xliff:g>%%</string>
+    <string name="settings_surface_count_all">الأسطح: الكل</string>
+    <plurals name="settings_surface_count">
+        <item quantity="zero"><xliff:g id="count">%1$d</xliff:g> من أصل <xliff:g id="total">%2$d</xliff:g> سطح</item>
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> من أصل <xliff:g id="total">%2$d</xliff:g> سطح</item>
+        <item quantity="two"><xliff:g id="count">%1$d</xliff:g> من أصل <xliff:g id="total">%2$d</xliff:g> سطحين</item>
+        <item quantity="few"><xliff:g id="count">%1$d</xliff:g> من أصل <xliff:g id="total">%2$d</xliff:g> أسطح</item>
+        <item quantity="many"><xliff:g id="count">%1$d</xliff:g> من أصل <xliff:g id="total">%2$d</xliff:g> سطحًا</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> من أصل <xliff:g id="total">%2$d</xliff:g> سطح</item>
+    </plurals>
+    <string name="settings_catchup_timezone_device">الجهاز</string>
+    <string name="settings_catchup_player_ask">السؤال دائمًا</string>
+    <string name="settings_catchup_player_internal">مشغّل OwnTV</string>
+    <string name="settings_catchup_player_external">مشغّل خارجي</string>
+    <string name="settings_soon">قريبًا</string>
+    <string name="settings_download_folder_title">اختيار مجلد التنزيل</string>
+    <string name="settings_pick_background_title">اختيار صورة خلفية</string>
+    <string name="settings_theme_dialog">السمة</string>
+    <string name="settings_app_startup_dialog">بدء تشغيل التطبيق</string>
+    <string name="settings_animations_dialog">الحركات</string>
+    <string name="settings_close">إغلاق</string>
+    <string name="settings_done">تم</string>
+    <string name="settings_reset">إعادة الضبط</string>
+    <string name="settings_device_details"><xliff:g id="model">%1$s</xliff:g> · <xliff:g id="android">%2$s</xliff:g></string>
+    <string name="settings_playback_entry"><xliff:g id="time">%1$s</xliff:g> · <xliff:g id="engine">%2$s</xliff:g> · <xliff:g id="kind">%3$s</xliff:g></string>
+    <string name="settings_history_live">البث التلفزيوني المباشر</string>
+    <string name="settings_history_movies">أفلام</string>
+    <string name="settings_history_series">مسلسلات</string>
+    <string name="settings_history_all">الكل</string>
+    <string name="settings_decrease">–</string>
+    <string name="settings_increase">+</string>
+    <string name="settings_glass_effect_title">تأثير الزجاج</string>
+    <string name="settings_glass_effect_description">ألواح شفافة ضبابية فوق صورة خلفية، أو فوق خلفية التطبيق نفسه.</string>
+    <string name="settings_transparency_title">الشفافية</string>
+    <string name="settings_blur_title">التمويه / الضبابية</string>
+    <string name="settings_blur_description_enabled">مدى ضبابية الصورة الخلفية (<xliff:g id="min">%1$d</xliff:g>%%–<xliff:g id="max">%2$d</xliff:g>%%). يُطبّق فوق صورة خلفية فقط.</string>
+    <string name="settings_blur_description_disabled">مدى ضبابية الصورة الخلفية (<xliff:g id="min">%1$d</xliff:g>%%–<xliff:g id="max">%2$d</xliff:g>%%). يُطبّق فوق صورة خلفية فقط. عيّن صورة خلفية لتمكينه.</string>
+    <string name="settings_glass_surface_panels">ألواح المحتوى</string>
+    <string name="settings_glass_surface_sidebar">الشريط الجانبي</string>
+    <string name="settings_glass_surface_preview">أجزاء المعاينة</string>
+    <string name="settings_glass_surface_dialogs">مربعات الحوار والنوافذ المنبثقة</string>
+    <string name="settings_glass_surface_topbar">الشريط العلوي</string>
+    <string name="settings_glass_surface_cards">البطاقات</string>
+    <string name="settings_glass_surface_miniplayer">المشغّل المصغّر</string>
+    <string name="settings_browsing_last_category">تذكّر آخر فئة</string>
+    <string name="settings_browsing_last_category_description">أعد فتح القسم على الفئة التي غادرتها، وليس على «الكل».</string>
+    <string name="settings_browsing_last_item">تذكّر آخر عنصر</string>
+    <string name="settings_browsing_last_item_description">تحتفظ كل فئة بموضع التمرير الخاص بها بدلًا من البدء من الأعلى. ويستعيد البث التلفزيوني المباشر أيضًا آخر قناة كانت قيد التركيز.</string>
+    <string name="settings_catchup_player">تشغيل مشاهدة البث الفائت باستخدام</string>
+    <string name="settings_customize_title">تخصيص الفئات والعناصر</string>
+    <string name="settings_customize_pin_locked">هذه الشاشة مقفلة باستخدام PIN.</string>
+    <string name="settings_customize_wrong_pin">رمز PIN غير صحيح — حاول مرة أخرى</string>
+    <string name="settings_customize_enter_pin">إدخال PIN</string>
+    <string name="settings_customize_set_pin">🔒 تعيين PIN</string>
+    <string name="settings_customize_change_pin">🔒 تغيير PIN</string>
+    <string name="settings_customize_remove_lock">إزالة القفل</string>
+    <string name="settings_customize_description">أخفِ القنوات والأفلام والمسلسلات أو أظهرها، وأعد تسمية الفئات أو ترتيبها لهذا الملف الشخصي. تبقى هذه التخصيصات بعد عمليات إعادة المزامنة.</string>
+    <string name="settings_customize_new_category_behavior">سلوك الفئات الجديدة</string>
+    <string name="settings_customize_hide_new">إخفاء — تُخفى افتراضيًا الفئات الجديدة المضافة عند إعادة المزامنة</string>
+    <string name="settings_customize_show_new">إظهار — تُعرض افتراضيًا الفئات الجديدة المضافة عند إعادة المزامنة</string>
+    <string name="settings_customize_hide">إخفاء</string>
+    <string name="settings_customize_show">إظهار</string>
+    <string name="settings_customize_behavior_hide">إخفاء الفئات الجديدة</string>
+    <string name="settings_customize_behavior_show">إظهار الفئات الجديدة</string>
+    <string name="settings_customize_hidden_channels">القنوات المخفية</string>
+    <string name="settings_customize_hidden_movies">الأفلام المخفية</string>
+    <string name="settings_customize_hidden_series">المسلسلات المخفية</string>
+    <string name="settings_customize_unhide_description">أظهر العنصر لإعادته إلى القوائم.</string>
+    <string name="settings_customize_categories">الفئات</string>
+    <string name="settings_customize_empty">لا توجد فئات في هذا القسم بعد — أضف مصدرًا أولًا.</string>
+    <string name="settings_customize_range_hide_start">بدأ تحديد النطاق. اضغط على «إظهار/إخفاء» عند العنصر الأخير لتحديد النطاق.</string>
+    <string name="settings_customize_range_rename_start">بدأ نطاق إعادة التسمية. اضغط على «إعادة التسمية» عند العنصر الأخير لتحديد النطاق.</string>
+    <string name="settings_customize_range_move_start">بدأ نطاق النقل. اضغط على ⤒ ↑ ↓ ⤓ عند العنصر الأخير لنقل النطاق بالكامل.</string>
+    <plurals name="settings_customize_range_selected">
+        <item quantity="zero">تم تحديد <xliff:g id="count">%1$d</xliff:g> فئة. واصل الضغط على ⤒ ↑ ↓ ⤓ لنقلها معًا.</item>
+        <item quantity="one">تم تحديد <xliff:g id="count">%1$d</xliff:g> فئة. واصل الضغط على ⤒ ↑ ↓ ⤓ لنقلها.</item>
+        <item quantity="two">تم تحديد <xliff:g id="count">%1$d</xliff:g> فئتين. واصل الضغط على ⤒ ↑ ↓ ⤓ لنقلهما معًا.</item>
+        <item quantity="few">تم تحديد <xliff:g id="count">%1$d</xliff:g> فئات. واصل الضغط على ⤒ ↑ ↓ ⤓ لنقلها معًا.</item>
+        <item quantity="many">تم تحديد <xliff:g id="count">%1$d</xliff:g> فئةً. واصل الضغط على ⤒ ↑ ↓ ⤓ لنقلها معًا.</item>
+        <item quantity="other">تم تحديد <xliff:g id="count">%1$d</xliff:g> فئة. واصل الضغط على ⤒ ↑ ↓ ⤓ لنقلها معًا.</item>
+    </plurals>
+    <string name="settings_customize_rename">إعادة التسمية</string>
+    <string name="settings_customize_rename_category">إعادة تسمية الفئة</string>
+    <string name="settings_customize_rename_or_delete_category">إعادة تسمية الفئة أو حذفها</string>
+    <string name="settings_customize_new_category">＋ فئة جديدة</string>
+    <string name="settings_customize_sort_button">الترتيب: <xliff:g id="label">%1$s</xliff:g> ▾</string>
+    <string name="settings_customize_new_categories_button">الفئات الجديدة: <xliff:g id="label">%1$s</xliff:g> ▾</string>
+    <string name="settings_customize_rename_hint">لهذا الملف الشخصي فقط. اتركه فارغًا لاستعادة «<xliff:g id="name">%1$s</xliff:g>».</string>
+    <string name="settings_customize_remove_pin_title">هل تريد إزالة قفل PIN؟</string>
+    <string name="settings_customize_remove_pin_message">ستُفتح شاشة التخصيص دون طلب رمز PIN مرة أخرى.</string>
+    <string name="settings_customize_remove">إزالة</string>
+    <string name="settings_customize_confirm_pin">تأكيد PIN الجديد</string>
+    <string name="settings_customize_pin_mismatch">رمزا PIN غير متطابقين — أعد الإدخال</string>
+    <string name="settings_customize_new_pin">إدخال PIN جديد</string>
+    <plurals name="settings_customize_selected_categories">
+        <item quantity="zero">تم تحديد <xliff:g id="count">%1$d</xliff:g> فئة.</item>
+        <item quantity="one">تم تحديد <xliff:g id="count">%1$d</xliff:g> فئة.</item>
+        <item quantity="two">تم تحديد <xliff:g id="count">%1$d</xliff:g> فئتين.</item>
+        <item quantity="few">تم تحديد <xliff:g id="count">%1$d</xliff:g> فئات.</item>
+        <item quantity="many">تم تحديد <xliff:g id="count">%1$d</xliff:g> فئةً.</item>
+        <item quantity="other">تم تحديد <xliff:g id="count">%1$d</xliff:g> فئة.</item>
+    </plurals>
+    <string name="settings_customize_hide_show_title">إخفاء الفئات أو إظهارها</string>
+    <string name="settings_customize_was">كان «<xliff:g id="name">%1$s</xliff:g>»</string>
+    <string name="settings_customize_hidden">مخفية</string>
+    <string name="settings_customize_unhide">إظهار</string>
+    <string name="settings_customize_metadata_separator">  ·  </string>
+    <string name="settings_sources_title">المصادر</string>
+    <string name="settings_sources_description">المصادر مشتركة بين جميع الملفات الشخصية.</string>
+    <string name="settings_sources_empty">لا توجد مصادر بعد. أضف مصدر M3U أو Xtream.</string>
+    <string name="settings_sources_add">إضافة مصدر</string>
+    <string name="settings_sources_import_failed">فشل الاستيراد</string>
+    <string name="settings_sources_importing">جارٍ استيراد الكتالوج…</string>
+    <string name="settings_sources_preparing">جارٍ إعداد الكتالوج</string>
+    <string name="settings_sources_deleting">جارٍ الحذف…</string>
+    <string name="settings_sources_resync">إعادة المزامنة</string>
+    <string name="settings_sources_delete_title">هل تريد حذف «<xliff:g id="name">%1$s</xliff:g>»؟</string>
+    <string name="settings_sources_delete_message">يؤدي ذلك إلى إزالة المصدر وجميع قنواته وأفلامه ومسلسلاته من كل ملف شخصي.</string>
+    <string name="settings_sources_type_m3u">M3U · <xliff:g id="url">%1$s</xliff:g></string>
+    <string name="settings_sources_type_xtream">Xtream · <xliff:g id="url">%1$s</xliff:g></string>
+    <string name="settings_sources_type_stalker">Stalker · <xliff:g id="url">%1$s</xliff:g></string>
+    <string name="settings_sources_expiry">تنتهي الصلاحية في <xliff:g id="date">%1$s</xliff:g></string>
+    <string name="settings_sources_auto_refresh">⟳ <xliff:g id="mode">%1$s</xliff:g></string>
+    <string name="settings_sources_default">افتراضي</string>
+    <string name="settings_sources_backup">نسخة احتياطية</string>
+    <string name="settings_sources_details_separator">  •  </string>
+    <string name="settings_sources_preparing_detail">جارٍ إعداد الكتالوج</string>
+    <string name="settings_sources_removing_detail">جارٍ الإزالة…</string>
+    <string name="settings_sources_edit">تعديل</string>
+    <string name="settings_sources_delete">حذف</string>
+    <string name="settings_sources_cancel">إلغاء</string>
+    <string name="settings_sources_try_again">إعادة المحاولة</string>
+    <string name="settings_sources_import_title">اكتمل الاستيراد</string>
+    <string name="settings_sources_resync_title_full">إعادة مزامنة «<xliff:g id="name">%1$s</xliff:g>»</string>
+    <string name="settings_sources_resync_now_full">إعادة المزامنة الآن</string>
+    <string name="settings_sources_resync_remove_full">إعادة المزامنة وإزالة العناوين المفقودة</string>
+    <string name="settings_sources_resync_description">تجلب إعادة المزامنة الآن أحدث كتالوج وتحتفظ بكل ما تم حفظه بالفعل.\n\nتتيح إعادة المزامنة وإزالة العناوين المفقودة أيضًا إزالة العناوين التي لم يعد المزوّد يدرجها. وتظل المفضّلة والسجل ومواضع الاستئناف محفوظة للعناوين التي ما زالت مدرجة.</string>
+    <string name="settings_sources_refresh_off">متوقف</string>
+    <string name="settings_sources_refresh_startup">التحديث عند بدء التشغيل</string>
+    <string name="settings_sources_refresh_6h">6 ساعات</string>
+    <string name="settings_sources_refresh_12h">12 ساعة</string>
+    <string name="settings_sources_refresh_24h">24 ساعة</string>
+    <string name="settings_sources_refresh_48h">48 ساعة</string>
+    <string name="settings_epg_sources_title">مصادر دليل البرامج الإلكتروني</string>
+    <string name="settings_epg_sources_empty">لا توجد مصادر لدليل البرامج الإلكتروني بعد. أضف رابط XMLTV.</string>
+    <string name="settings_epg_sources_add">إضافة مصدر لدليل البرامج الإلكتروني</string>
+    <string name="settings_epg_sources_edit">تعديل مصدر دليل البرامج الإلكتروني</string>
+    <string name="settings_epg_sources_add_sync">إضافة ومزامنة</string>
+    <string name="settings_epg_sources_save_sync">حفظ ومزامنة</string>
+    <string name="settings_epg_sources_fill_playlist">التعبئة من قائمة تشغيل</string>
+    <string name="settings_epg_sources_none_playlist">لا توفر أي من قوائم التشغيل لديك عنوان URL لدليل البرامج الإلكتروني.</string>
+    <string name="settings_epg_sources_use_logos">استخدام شعارات القنوات من هذا الدليل</string>
+    <string name="settings_epg_sources_logos_description">اعرض الشعارات من تغذية XMLTV هذه بدلًا من شعارات قائمة التشغيل. وتحتفظ القنوات التي لا تحتوي هذه التغذية على شعار لها بشعار قائمة التشغيل.</string>
+    <string name="settings_epg_sources_name">الاسم</string>
+    <string name="settings_epg_sources_url">عنوان URL لـ XMLTV</string>
+    <string name="settings_epg_sources_user_agent">User-Agent (اختياري)</string>
+    <string name="settings_epg_sources_name_hint">مثال: دليل المملكة المتحدة</string>
+    <string name="settings_epg_sources_url_hint">https://…/epg.xml(.gz)</string>
+    <string name="settings_epg_sources_user_agent_hint">اتركه فارغًا لاستخدام الإعداد الافتراضي</string>
+    <string name="settings_epg_sources_description">تغذيات دليل XMLTV التي تملأ دليل البرامج التلفزيونية. تتم مزامنتها تلقائيًا عند إضافتها وتُدمج مع قنوات قوائم التشغيل لديك.</string>
+    <string name="settings_epg_sources_delete_title">هل تريد حذف «<xliff:g id="name">%1$s</xliff:g>»؟</string>
+    <string name="settings_epg_sources_delete_message">يزيل مصدر دليل البرامج الإلكتروني هذا وبيانات دليله. وتبقى قنواتك.</string>
+    <string name="settings_epg_sources_syncing_percent">جارٍ المزامنة بنسبة <xliff:g id="percent">%1$d</xliff:g>%%</string>
+    <plurals name="settings_epg_sources_catchup">
+        <item quantity="zero">تتوفر مشاهدة البث الفائت على <xliff:g id="count">%1$d</xliff:g> قناة.</item>
+        <item quantity="one">تتوفر مشاهدة البث الفائت على <xliff:g id="count">%1$d</xliff:g> قناة.</item>
+        <item quantity="two">تتوفر مشاهدة البث الفائت على <xliff:g id="count">%1$d</xliff:g> قناتين.</item>
+        <item quantity="few">تتوفر مشاهدة البث الفائت على <xliff:g id="count">%1$d</xliff:g> قنوات.</item>
+        <item quantity="many">تتوفر مشاهدة البث الفائت على <xliff:g id="count">%1$d</xliff:g> قناةً.</item>
+        <item quantity="other">تتوفر مشاهدة البث الفائت على <xliff:g id="count">%1$d</xliff:g> قناة.</item>
+    </plurals>
+    <string name="settings_epg_sources_error">⚠ <xliff:g id="error">%1$s</xliff:g></string>
+    <string name="settings_epg_sources_auto_refresh_title">التحديث التلقائي</string>
+    <string name="settings_epg_sources_auto_refresh_description">متوقف، أو عند بدء التشغيل، أو عندما تصبح البيانات قديمة</string>
+    <string name="settings_epg_sources_on">مفعّل</string>
+    <string name="settings_epg_sources_off">متوقف</string>
+    <string name="settings_epg_sources_not_synced">لم تتم المزامنة بعد</string>
+    <string name="settings_epg_refresh_1h">ساعة واحدة</string>
+    <string name="settings_epg_refresh_3h">3 ساعات</string>
+    <string name="settings_epg_refresh_6h">6 ساعات</string>
+    <string name="settings_epg_refresh_12h">12 ساعة</string>
+    <string name="settings_epg_refresh_24h">24 ساعة</string>
+    <string name="settings_epg_refresh_48h">48 ساعة</string>
+    <string name="settings_epg_sources_deleting">جارٍ الحذف…</string>
+    <string name="settings_epg_sources_syncing_label">جارٍ المزامنة</string>
+    <string name="settings_epg_sources_connecting">جارٍ الاتصال…</string>
+    <plurals name="settings_epg_sources_status_count_channels">
+        <item quantity="zero">يحتوي الدليل على <xliff:g id="channels">%1$d</xliff:g> قناة.</item>
+        <item quantity="one">يحتوي الدليل على <xliff:g id="channels">%1$d</xliff:g> قناة.</item>
+        <item quantity="two">يحتوي الدليل على <xliff:g id="channels">%1$d</xliff:g> قناتين.</item>
+        <item quantity="few">يحتوي الدليل على <xliff:g id="channels">%1$d</xliff:g> قنوات.</item>
+        <item quantity="many">يحتوي الدليل على <xliff:g id="channels">%1$d</xliff:g> قناةً.</item>
+        <item quantity="other">يحتوي الدليل على <xliff:g id="channels">%1$d</xliff:g> قناة.</item>
+    </plurals>
+    <plurals name="settings_epg_sources_status_count_programmes">
+        <item quantity="zero">يحتوي على <xliff:g id="programmes">%1$d</xliff:g> برنامج.</item>
+        <item quantity="one">يحتوي على <xliff:g id="programmes">%1$d</xliff:g> برنامج.</item>
+        <item quantity="two">يحتوي على <xliff:g id="programmes">%1$d</xliff:g> برنامجين.</item>
+        <item quantity="few">يحتوي على <xliff:g id="programmes">%1$d</xliff:g> برامج.</item>
+        <item quantity="many">يحتوي على <xliff:g id="programmes">%1$d</xliff:g> برنامجًا.</item>
+        <item quantity="other">يحتوي على <xliff:g id="programmes">%1$d</xliff:g> برنامج.</item>
+    </plurals>
+    <string name="settings_epg_sources_status_count"><xliff:g id="channels">%1$s</xliff:g> <xliff:g id="programmes">%2$s</xliff:g></string>
+    <string name="settings_epg_sources_status_count_with_catchup"><xliff:g id="counts">%1$s</xliff:g> <xliff:g id="catchup">%2$s</xliff:g></string>
+    <string name="settings_epg_sources_status_synced">تمت المزامنة، ولكن لم يُعثر على برامج في النافذة الزمنية.</string>
+    <string name="settings_epg_sources_status_synced_with_catchup"><xliff:g id="catchup">%1$s</xliff:g></string>
+    <string name="settings_backup_title">النسخ الاحتياطي والاستعادة</string>
+    <string name="settings_backup_working">جارٍ العمل…</string>
+    <string name="settings_backup_what_backup">ما تريد نسخه احتياطيًا</string>
+    <string name="settings_backup_what_restore">ما تريد استعادته</string>
+    <string name="settings_backup_encrypt_title">هل تريد تشفير هذه النسخة الاحتياطية؟</string>
+    <string name="settings_backup_encrypt_message">عند استخدام كلمة مرور للنسخة الاحتياطية، يُشفّر الملف بالكامل — بما في ذلك قوائم التشغيل والملفات الشخصية وكلمات المرور المحفوظة — ولا يمكن قراءة أي شيء فيه دون كلمة المرور تلك. احتفظ بها في مكان آمن: إذا فقدتها، فلن يمكن فتح النسخة الاحتياطية مطلقًا. ودون كلمة مرور، لا يكون الملف مشفّرًا وتُستبعد منه كلمات المرور المحفوظة.</string>
+    <string name="settings_backup_export_title">تصدير نسخة احتياطية</string>
+    <string name="settings_backup_export_message">أرسل النسخة الاحتياطية إلى جهاز آخر (هاتف أو حاسوب محمول) على شبكة Wi-Fi نفسها، أو احفظها في ملف على هذا الجهاز.</string>
+    <string name="settings_backup_restore_title">استعادة نسخة احتياطية</string>
+    <string name="settings_backup_restore_message">أرسل النسخة الاحتياطية من جهاز آخر (هاتف أو حاسوب محمول) على شبكة Wi-Fi نفسها، أو اختر ملف نسخة احتياطية موجودًا بالفعل على هذا الجهاز.</string>
+    <string name="settings_backup_password">كلمة مرور النسخة الاحتياطية</string>
+    <string name="settings_backup_enter_password">إدخال كلمة مرور النسخة الاحتياطية</string>
+    <string name="settings_backup_wrong_password">كلمة مرور النسخة الاحتياطية غير صحيحة</string>
+    <string name="settings_backup_password_mismatch">كلمة المرور غير مطابقة. حاول مرة أخرى، أو تخطَّ ذلك لاستعادة كل شيء باستثناء كلمات المرور المحفوظة.</string>
+    <string name="settings_backup_password_encrypted_mismatch">كلمة المرور غير مطابقة. هذه النسخة الاحتياطية مشفّرة — ولا يمكن فتحها دون كلمة المرور التي أُنشئت بها.</string>
+    <string name="settings_backup_encrypted_description">هذه النسخة الاحتياطية مشفّرة. أدخل كلمة مرور النسخة الاحتياطية لفتحها واختيار ما تريد استعادته.</string>
+    <string name="settings_backup_saved_passwords_description">كلمات المرور في هذه النسخة الاحتياطية مشفّرة. أدخل كلمة مرور النسخة الاحتياطية لاستعادتها، أو تخطَّ ذلك لاستعادة كل شيء آخر وإعادة إدخال كلمات المرور لاحقًا.</string>
+    <string name="settings_backup_choose_folder">اختيار مجلد لحفظ النسخة الاحتياطية</string>
+    <string name="settings_backup_choose_folder_action">اختيار مجلد</string>
+    <string name="settings_backup_pick_file">اختيار ملف نسخة احتياطية لاستعادته</string>
+    <string name="settings_backup_local_file">ملف محلي</string>
+    <string name="settings_backup_remote">جهاز بعيد</string>
+    <string name="settings_backup_everything">الكل</string>
+    <string name="settings_backup_kids_profile">ملف الأطفال الشخصي</string>
+    <string name="settings_backup_profile_current">«<xliff:g id="name">%1$s</xliff:g>» (الحالي)</string>
+    <string name="settings_backup_profile_locked">«<xliff:g id="name">%1$s</xliff:g>» مقفل</string>
+    <string name="settings_backup_profile_pin">PIN الملف الشخصي</string>
+    <string name="settings_backup_pin_incorrect">رمز PIN غير صحيح.</string>
+    <string name="settings_backup_pin_locked">مقفل باستخدام PIN</string>
+    <string name="settings_backup_unlock">فتح القفل</string>
+    <string name="settings_backup_export_button">تصدير النسخة الاحتياطية</string>
+    <string name="settings_backup_restore_button">استعادة النسخة الاحتياطية</string>
+    <string name="settings_backup_continue">متابعة</string>
+    <string name="settings_backup_encrypt_export">تشفير وتصدير</string>
+    <string name="settings_backup_export_unencrypted">تصدير دون تشفير</string>
+    <string name="settings_backup_encrypt_prepare">تشفير وإعداد</string>
+    <string name="settings_backup_prepare_unencrypted">إعداد دون تشفير</string>
+    <string name="settings_backup_restore_action">استعادة</string>
+    <string name="settings_backup_skip_passwords">تخطٍّ (دون كلمات مرور)</string>
+    <string name="settings_backup_section_sources">المصادر</string>
+    <string name="settings_backup_section_sources_desc">قوائم التشغيل وتغذيات دليل البرامج الإلكتروني وبيانات الاعتماد</string>
+    <string name="settings_backup_section_customize">التخصيصات</string>
+    <string name="settings_backup_section_customize_desc">الفئات والقنوات المخفية/المعاد تسميتها/ترتيبها، ومطابقات دليل البرامج الإلكتروني وأسماء TMDB المخصّصة</string>
+    <string name="settings_backup_section_favorites">المفضّلة</string>
+    <string name="settings_backup_section_favorites_desc">القنوات والأفلام والمسلسلات المعلّمة بنجمة</string>
+    <string name="settings_backup_section_history">سجل المشاهدة</string>
+    <string name="settings_backup_section_history_desc">قوائم ما شوهد مؤخرًا</string>
+    <string name="settings_backup_section_resume">مواضع الاستئناف</string>
+    <string name="settings_backup_section_resume_desc">المواضع التي توقفت عندها في الأفلام والحلقات</string>
+    <string name="settings_backup_section_reorder">إعادة الترتيب يدويًا</string>
+    <string name="settings_backup_section_reorder_desc">مواضع التحريك لأعلى/لأسفل للقنوات والأفلام والمسلسلات</string>
+    <string name="settings_backup_section_settings">إعدادات التطبيق</string>
+    <string name="settings_backup_section_settings_desc">تفضيلات السمة واللون المميّز والمشغّل والتخطيط</string>
+    <string name="settings_backup_saved_to">تم الحفظ في <xliff:g id="path">%1$s</xliff:g>.</string>
+    <string name="settings_backup_saved_to_without_passwords">تم الحفظ في <xliff:g id="path">%1$s</xliff:g>. لم تُضمّن كلمات المرور.</string>
+    <plurals name="settings_backup_restored">
+        <item quantity="zero">تمت استعادة <xliff:g id="items">%1$d</xliff:g> عنصر.</item>
+        <item quantity="one">تمت استعادة <xliff:g id="items">%1$d</xliff:g> عنصر.</item>
+        <item quantity="two">تمت استعادة <xliff:g id="items">%1$d</xliff:g> عنصرين.</item>
+        <item quantity="few">تمت استعادة <xliff:g id="items">%1$d</xliff:g> عناصر.</item>
+        <item quantity="many">تمت استعادة <xliff:g id="items">%1$d</xliff:g> عنصرًا.</item>
+        <item quantity="other">تمت استعادة <xliff:g id="items">%1$d</xliff:g> عنصر.</item>
+    </plurals>
+    <string name="settings_backup_restore_resync">أعد مزامنة مصادرك لتحميل المحتوى.</string>
+    <string name="settings_backup_restore_password_note">أعد إدخال أي كلمات مرور محفوظة في المصادر/الوكيل.</string>
+    <plurals name="settings_backup_skipped_sources">
+        <item quantity="zero">تم تخطي <xliff:g id="count">%1$d</xliff:g> مصدر لأن أنواع قوائم التشغيل الخاصة بها غير مدعومة.</item>
+        <item quantity="one">تم تخطي <xliff:g id="count">%1$d</xliff:g> مصدر لأن نوع قائمة التشغيل الخاص به غير مدعوم.</item>
+        <item quantity="two">تم تخطي <xliff:g id="count">%1$d</xliff:g> مصدرين لأن نوعي قائمتي التشغيل الخاصين بهما غير مدعومين.</item>
+        <item quantity="few">تم تخطي <xliff:g id="count">%1$d</xliff:g> مصادر لأن أنواع قوائم التشغيل الخاصة بها غير مدعومة.</item>
+        <item quantity="many">تم تخطي <xliff:g id="count">%1$d</xliff:g> مصدرًا لأن أنواع قوائم التشغيل الخاصة بها غير مدعومة.</item>
+        <item quantity="other">تم تخطي <xliff:g id="count">%1$d</xliff:g> مصدر لأن نوع قائمة التشغيل الخاص به غير مدعوم.</item>
+    </plurals>
+    <string name="settings_backup_export_error">فشل التصدير.</string>
+    <string name="settings_backup_read_error">تعذرت قراءة ملف النسخة الاحتياطية.</string>
+    <string name="settings_backup_import_error">فشل الاستيراد.</string>
+    <string name="settings_backup_invalid_locale">احتوت هذه النسخة الاحتياطية على لغة تطبيق غير مدعومة. نجحت الاستعادة، ولكن تم الاحتفاظ بلغتك الحالية.</string>
+    <string name="settings_backup_which_profiles">الملفات الشخصية المراد نسخها احتياطيًا</string>
+    <string name="settings_backup_selected_profiles">ستحتوي النسخة الاحتياطية فقط على الملفات الشخصية المحددة وبياناتها. تحتاج الملفات الشخصية المقفلة إلى رمز PIN الخاص بها.</string>
+    <string name="settings_backup_profile_pin_description">هذا ليس ملفك الشخصي الحالي. أدخل رمز PIN الخاص به لتضمينه في النسخة الاحتياطية — ودون رمز PIN، لن تُنسخ بياناته احتياطيًا.</string>
+    <string name="settings_backup_save_description">احفظ ملفاتك الشخصية ومصادرك وتخصيصاتك والمفضّلة والسجل ومواضع الاستئناف في ملف — أو استعدها على جهاز جديد. وتختار ما تريد تضمينه في كل مرة.</string>
+    <string name="settings_metadata_optional">اختياري</string>
+    <string name="settings_metadata_test_title">Oppenheimer</string>
+    <string name="settings_bulk_rename_title">إعادة التسمية المجمّعة</string>
+    <plurals name="settings_bulk_rename_selected">
+        <item quantity="zero">تم تحديد <xliff:g id="count">%1$d</xliff:g> اسم. أضف قواعد، أو نظّفها تلقائيًا.</item>
+        <item quantity="one">تم تحديد <xliff:g id="count">%1$d</xliff:g> اسم. أضف قواعد، أو نظّفه تلقائيًا.</item>
+        <item quantity="two">تم تحديد <xliff:g id="count">%1$d</xliff:g> اسمين. أضف قواعد، أو نظّفهما تلقائيًا.</item>
+        <item quantity="few">تم تحديد <xliff:g id="count">%1$d</xliff:g> أسماء. أضف قواعد، أو نظّفها تلقائيًا.</item>
+        <item quantity="many">تم تحديد <xliff:g id="count">%1$d</xliff:g> اسمًا. أضف قواعد، أو نظّفها تلقائيًا.</item>
+        <item quantity="other">تم تحديد <xliff:g id="count">%1$d</xliff:g> اسم. أضف قواعد، أو نظّفه تلقائيًا.</item>
+    </plurals>
+    <string name="settings_bulk_rename_add_rule">✎ إضافة قاعدة</string>
+    <string name="settings_bulk_rename_auto_cleanup">✨ تنظيف تلقائي</string>
+    <string name="settings_bulk_rename_restore_original">↺ استعادة الأسماء الأصلية</string>
+    <string name="settings_bulk_rename_rules_title">قواعد إعادة التسمية المجمّعة</string>
+    <string name="settings_bulk_rename_rules_description">تُنفّذ القواعد من الأعلى إلى الأسفل. افصل بين القيم المتعددة باستخدام «;» — وتتطلب «إضافة» قيمة واحدة بالضبط.</string>
+    <string name="settings_bulk_rename_add_single_value_error">تتطلب «إضافة» قيمة واحدة بالضبط — والفواصل المنقوطة مخصّصة لقواعد «إزالة».</string>
+    <string name="settings_bulk_rename_rule_required">أضف قاعدة واحدة على الأقل.</string>
+    <string name="settings_bulk_rename_rule_type">نوع القاعدة</string>
+    <string name="settings_bulk_rename_action_add">إضافة</string>
+    <string name="settings_bulk_rename_action_remove">إزالة</string>
+    <string name="settings_bulk_rename_where">الموضع</string>
+    <string name="settings_bulk_rename_before">قبل الاسم (بادئة)</string>
+    <string name="settings_bulk_rename_after">بعد الاسم (لاحقة)</string>
+    <string name="settings_bulk_rename_rule_value">قيمة القاعدة</string>
+    <string name="settings_bulk_rename_value_hint">افصل بين القيم المتعددة باستخدام «;» — وتتطلب «إضافة» قيمة واحدة بالضبط.</string>
+    <string name="settings_bulk_rename_value_example">قيمة;قيمة;قيمة</string>
+    <string name="settings_bulk_rename_add_another_rule">＋ إضافة قاعدة أخرى</string>
+    <string name="settings_bulk_rename_trim_spaces">إزالة المسافات الزائدة المتبقية</string>
+    <string name="settings_bulk_rename_trim_spaces_selected">✓ إزالة المسافات الزائدة المتبقية</string>
+    <string name="settings_bulk_rename_ignore_case">تجاهل حالة الأحرف</string>
+    <string name="settings_bulk_rename_ignore_case_selected">✓ تجاهل حالة الأحرف</string>
+    <string name="settings_bulk_rename_review">مراجعة تغييرات الأسماء</string>
+    <string name="settings_bulk_rename_review_description">لن يُكتب شيء حتى تطبّق صفًا — ويكتب زر «تم» كل الصفوف المطبّقة في خطوة واحدة.</string>
+    <string name="settings_bulk_rename_blank_rejected">رُفض الاسم الفارغ — تم الاحتفاظ بالأصل</string>
+    <string name="settings_bulk_rename_unchanged">دون تغيير — لم تتطابق أي قاعدة</string>
+    <string name="settings_bulk_rename_result">→ <xliff:g id="name">%1$s</xliff:g></string>
+    <string name="settings_bulk_rename_duplicate">اسم مكرر — يستخدمه عنصر آخر بالفعل</string>
+    <string name="settings_bulk_rename_apply">تطبيق</string>
+    <string name="settings_bulk_rename_decline">رفض</string>
+    <plurals name="settings_bulk_rename_will_change">
+        <item quantity="zero"><xliff:g id="count">%1$d</xliff:g> اسم سيتغيّر</item>
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> اسم سيتغيّر</item>
+        <item quantity="two"><xliff:g id="count">%1$d</xliff:g> اسمان سيتغيّران</item>
+        <item quantity="few"><xliff:g id="count">%1$d</xliff:g> أسماء ستتغيّر</item>
+        <item quantity="many"><xliff:g id="count">%1$d</xliff:g> اسمًا سيتغيّر</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> اسم سيتغيّر</item>
+    </plurals>
+    <plurals name="settings_bulk_rename_unchanged_count">
+        <item quantity="zero"><xliff:g id="count">%1$d</xliff:g> اسم بلا تغيير</item>
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> اسم بلا تغيير</item>
+        <item quantity="two"><xliff:g id="count">%1$d</xliff:g> اسمان بلا تغيير</item>
+        <item quantity="few"><xliff:g id="count">%1$d</xliff:g> أسماء بلا تغيير</item>
+        <item quantity="many"><xliff:g id="count">%1$d</xliff:g> اسمًا بلا تغيير</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> اسم بلا تغيير</item>
+    </plurals>
+    <plurals name="settings_bulk_rename_duplicates_count">
+        <item quantity="zero"><xliff:g id="count">%1$d</xliff:g> اسم مكرر</item>
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> اسم مكرر</item>
+        <item quantity="two"><xliff:g id="count">%1$d</xliff:g> اسمان مكرران</item>
+        <item quantity="few"><xliff:g id="count">%1$d</xliff:g> أسماء مكررة</item>
+        <item quantity="many"><xliff:g id="count">%1$d</xliff:g> اسمًا مكررًا</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> اسم مكرر</item>
+    </plurals>
+    <string name="settings_bulk_rename_apply_all">تطبيق الكل</string>
+    <string name="settings_bulk_rename_decline_all">رفض الكل</string>
+    <string name="settings_bulk_rename_edit_rules">✎ تعديل القواعد</string>
+    <string name="settings_bulk_rename_restore_title">استعادة الأسماء الأصلية؟</string>
+    <string name="settings_bulk_rename_restore_description">سيعود كل اسم محدد إلى الاسم الأصلي لدى المزوّد. لن يتأثر سوى هذا التحديد.</string>
+    <string name="settings_bulk_rename_restore">استعادة</string>
+    <string name="settings_bulk_rename_too_many_title">عناصر كثيرة جدًا</string>
+    <string name="settings_bulk_rename_too_many_description">تحتوي هذه الفئة على عناصر أكثر مما يمكن إعادة تسميته دفعة واحدة — أعد تسميتها ضمن نطاقات أصغر.</string>
+    <string name="settings_bulk_rename_auto_country_provider">تلقائي: وسوم البلد/المزوّد</string>
+    <string name="settings_bulk_rename_auto_quality_codec">تلقائي: وسوم الجودة/برنامج الترميز أينما وُجدت</string>
+    <string name="settings_bulk_rename_auto_emoji_symbols">تلقائي: الرموز التعبيرية والرموز</string>
+    <string name="settings_customize_new_category_title">فئة جديدة</string>
+    <string name="settings_customize_new_category_description">فئة مجمّعة لهذا الملف الشخصي — انقل إليها القنوات أو الأفلام أو المسلسلات.</string>
+    <string name="settings_customize_this_category">هذه الفئة</string>
+    <string name="settings_customize_sort_categories">فرز الفئات</string>
+    <string name="settings_customize_delete_category">حذف «<xliff:g id="name">%1$s</xliff:g>»؟</string>
+    <string name="settings_customize_delete_category_description">تُزال الفئة المجمّعة. وتبقى عناصرها في فئاتها الأصلية.</string>
+    <string name="settings_customize_channels_description">قنوات هذه الفئة — إعادة التسمية أو الترتيب أو الإخفاء أو إلغاء الإخفاء.</string>
+    <string name="settings_customize_movies_description">أفلام هذه الفئة — إعادة الترتيب أو الإخفاء أو إلغاء الإخفاء.</string>
+    <string name="settings_customize_series_description">مسلسلات هذه الفئة — إعادة الترتيب أو الإخفاء أو إلغاء الإخفاء.</string>
+    <string name="settings_customize_hide_show_items">إخفاء العناصر أو إظهارها</string>
+    <plurals name="settings_customize_selected_items">
+        <item quantity="zero"><xliff:g id="count">%1$d</xliff:g> عنصر محدد.</item>
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> عنصر محدد.</item>
+        <item quantity="two"><xliff:g id="count">%1$d</xliff:g> عنصران محددان.</item>
+        <item quantity="few"><xliff:g id="count">%1$d</xliff:g> عناصر محددة.</item>
+        <item quantity="many"><xliff:g id="count">%1$d</xliff:g> عنصرًا محددًا.</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> عنصر محدد.</item>
+    </plurals>
+    <plurals name="settings_customize_move_items_selected">
+        <item quantity="zero"><xliff:g id="count">%1$d</xliff:g> عنصر محدد. واصل الضغط على ⤒ ↑ ↓ ⤓ لنقل العناصر معًا.</item>
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> عنصر محدد. واصل الضغط على ⤒ ↑ ↓ ⤓ لنقله.</item>
+        <item quantity="two"><xliff:g id="count">%1$d</xliff:g> عنصران محددان. واصل الضغط على ⤒ ↑ ↓ ⤓ لنقلهما معًا.</item>
+        <item quantity="few"><xliff:g id="count">%1$d</xliff:g> عناصر محددة. واصل الضغط على ⤒ ↑ ↓ ⤓ لنقلها معًا.</item>
+        <item quantity="many"><xliff:g id="count">%1$d</xliff:g> عنصرًا محددًا. واصل الضغط على ⤒ ↑ ↓ ⤓ لنقلها معًا.</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> عنصر محدد. واصل الضغط على ⤒ ↑ ↓ ⤓ لنقله.</item>
+    </plurals>
+    <string name="settings_customize_rename_item_hint">لهذا الملف الشخصي فقط. اتركه فارغًا لاستعادة «<xliff:g id="name">%1$s</xliff:g>».</string>
+    <string name="settings_customize_item_was">كان «<xliff:g id="name">%1$s</xliff:g>»</string>
+    <string name="settings_customize_rename_items">✎ إعادة تسمية العناصر</string>
+    <string name="settings_customize_move_to">نقل إلى…</string>
+    <string name="settings_customize_back">← رجوع</string>
+    <string name="settings_move_category_title">نقل إلى فئة</string>
+    <string name="settings_move_category_description">سيخرج العنصر من «<xliff:g id="name">%1$s</xliff:g>» ما لم تُبقِه فيها.</string>
+    <string name="settings_move_category_new">＋ فئة جديدة…</string>
+    <string name="settings_move_category_keep">أبقِه أيضًا ضمن «<xliff:g id="name">%1$s</xliff:g>»</string>
+    <string name="settings_move_category_action">نقل</string>
+    <string name="settings_dns_description">استخدام خادم DNS مخصص لاستعلامات النطاقات</string>
+    <string name="settings_dns_custom">DNS مخصص</string>
+    <string name="settings_dns_toggle_description">حلّ جميع أسماء النطاقات التي يستعلم عنها OwnTV عبر خادم DNS مخصص.</string>
+    <string name="settings_dns_use_custom">استخدام DNS مخصص</string>
+    <string name="settings_dns_server_missing">تم تمكين DNS المخصص، ولكن لم تتم تهيئة أي خادم. أدخل عنوان خادم وحدد حفظ، أو أوقف هذا الخيار.</string>
+    <string name="settings_dns_server">خادم DNS</string>
+    <string name="settings_dns_server_hint">8.8.8.8 أو https://dns.google/dns-query</string>
+    <string name="settings_dns_test">اختبار DNS</string>
+    <string name="settings_dns_explanation">يمكن أن يساعد DNS المخصص في تجاوز حظر النطاقات على مستوى مزوّد خدمة الإنترنت أو تمكين إلغاء الحظر الجغرافي عبر خدمات SmartDNS. يوصى باستخدام DNS-over-HTTPS (DoH) — فهو يشفّر استعلاماتك.</string>
+    <string name="settings_dns_limitations">لا يؤثر هذا الإعداد إلا في حركة البيانات المستندة إلى OkHttp (مزامنة قائمة التشغيل، ودليل البرامج الإلكتروني، واستدعاءات API، والصور، وعمليات بث ExoPlayer). يستخدم mpv محلل النظام ولا يتأثر بهذا الإعداد.</string>
+    <string name="settings_dns_resolved">تم الحلّ ✓ (<xliff:g id="millis">%1$d</xliff:g> مللي ثانية) → <xliff:g id="addresses">%2$s</xliff:g></string>
+    <string name="settings_dns_enter_server">أدخل مضيف خادم DNS أو عنوان URL لـ DoH.</string>
+    <string name="settings_dns_not_reachable">يتعذّر الوصول إلى خادم DNS.</string>
+    <string name="settings_dns_timed_out">انتهت مهلة طلب DNS.</string>
+    <string name="settings_dns_network_unreachable">يتعذّر الوصول إلى الشبكة — تحقق من عنوان الخادم.</string>
+    <string name="settings_dns_connection_refused">رُفض الاتصال — تحقق من عنوان الخادم والمنفذ.</string>
+    <string name="settings_dns_test_failed">فشل اختبار DNS — تحقق من عنوان الخادم.</string>
+    <string name="settings_dns_no_addresses">لم يُرجع DNS أي عناوين لـ <xliff:g id="host">%1$s</xliff:g>.</string>
+    <string name="settings_subtitle_customize">تخصيص الترجمة</string>
+    <string name="settings_subtitle_customize_off">عند الإيقاف، تظل الترجمة تمامًا كما يرسمها البث والمشغّل.</string>
+    <string name="settings_subtitle_preview_stock">معاينة — المظهر الأصلي</string>
+    <string name="settings_subtitle_stock_description">المظهر الأصلي، بما في ذلك الألوان والمواضع التي تضمّنها جهات البث في ترجمة البث التلفزيوني المباشر.</string>
+    <string name="settings_subtitle_reset_all">إعادة ضبط الكل</string>
+    <string name="settings_subtitle_color">لون الترجمة</string>
+    <string name="settings_subtitle_color_default_description">يترك الخيار الافتراضي اللون للبث والمشغّل.</string>
+    <string name="settings_subtitle_color_hex_hint">أدخل 6 خانات سداسية عشرية، مثل FFEB3B</string>
+    <string name="settings_subtitle_use_default">استخدام الافتراضي</string>
+    <string name="settings_subtitle_position">موضع الترجمة</string>
+    <string name="settings_subtitle_background_transparency">شفافية الخلفية</string>
+    <string name="settings_subtitle_preview_sample">قفز الثعلب البني سريعًا</string>
+    <string name="settings_subtitle_customize_description">فعّل هذا الخيار، ثم غيّر ما تريده فقط — كل ما يبقى على «افتراضي» يحتفظ بالمظهر الأصلي، بما في ذلك الألوان والمواضع التي تضمّنها جهات البث في ترجمة البث التلفزيوني المباشر.</string>
+    <string name="settings_subtitle_default">افتراضي</string>
+    <string name="settings_subtitle_color_short">اللون</string>
+    <string name="settings_subtitle_color_description">لون النص — قيمة مسبقة الضبط أو أداة الاختيار أو رمز سداسي عشري.</string>
+    <string name="settings_subtitle_position_short">الموضع</string>
+    <string name="settings_subtitle_position_description">موضع ظهور الترجمة على الشاشة.</string>
+    <string name="settings_subtitle_background_description">مدى عتامة المربع خلف النص.</string>
+    <string name="settings_subtitle_hex">سداسي عشري</string>
+    <string name="settings_subtitle_position_default_description">يترك الخيار الافتراضي تحديد الموضع للبث — بما في ذلك الموضع الذي تختاره جهة البث للنص المباشر. وتكون لأي خيار آخر الأولوية دائمًا.</string>
+    <string name="settings_subtitle_background_none">بدون</string>
+    <string name="settings_subtitle_background_solid">معتمة بالكامل</string>
+    <string name="settings_subtitle_color_white">أبيض</string>
+    <string name="settings_subtitle_color_yellow">أصفر</string>
+    <string name="settings_subtitle_color_cyan">سماوي</string>
+    <string name="settings_subtitle_color_green">أخضر</string>
+    <string name="settings_subtitle_color_grey">رمادي</string>
+</resources>

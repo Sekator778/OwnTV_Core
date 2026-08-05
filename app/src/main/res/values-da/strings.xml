@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <string name="common_cancel">Annuller</string>
+    <string name="common_back">Tilbage</string>
+    <string name="common_save">Gem</string>
+    <string name="common_edit">Rediger</string>
+    <string name="common_delete">Slet</string>
+    <string name="common_clear">Ryd</string>
+    <string name="common_retry">Prøv igen</string>
+    <string name="common_create">Opret</string>
+    <string name="common_reset">Nulstil</string>
+    <string name="common_done">Færdig</string>
+    <string name="common_ok">OK</string>
+    <string name="common_on">Til</string>
+    <string name="common_off">Fra</string>
+    <string name="common_exit">Afslut</string>
+    <string name="common_resume">Fortsæt</string>
+    <string name="common_start_over">Start forfra</string>
+    <string name="common_name">Navn</string>
+    <string name="common_own_tv_user">OwnTV-bruger</string>
+    <string name="common_switch_profile">Skift profil</string>
+    <string name="common_proxy">Proxy</string>
+    <string name="common_title">Titel</string>
+    <string name="common_search_hint">Søg…</string>
+    <string name="common_search">Søgning</string>
+    <string name="common_weather_fahrenheit"><xliff:g id="temperature">%1$d</xliff:g>°F</string>
+    <string name="common_weather_celsius"><xliff:g id="temperature">%1$d</xliff:g>°C</string>
+    <string name="common_weather_city"><xliff:g id="temperature">%1$s</xliff:g> · <xliff:g id="city">%2$s</xliff:g></string>
+    <string name="common_nav_search">Søgning</string>
+    <string name="common_nav_home">Start</string>
+    <string name="common_nav_live_tv">Live-tv</string>
+    <string name="common_nav_movies">Film</string>
+    <string name="common_nav_series">Serier</string>
+    <string name="common_nav_downloads">Downloads</string>
+    <string name="common_nav_guide">Programguide</string>
+    <string name="common_nav_settings">Indstillinger</string>
+    <string name="shell_no_source">Ingen kilde</string>
+    <string name="common_something_went_wrong">Noget gik galt</string>
+    <string name="common_move_instructions">▲/▼ for at flytte · OK for at gemme · Tilbage for at annullere</string>
+    <string name="common_number_grouped"><xliff:g id="count">%1$,d</xliff:g></string>
+    <string name="common_rating"><xliff:g id="rating">%1$.1f</xliff:g></string>
+    <string name="common_percent"><xliff:g id="percent">%1$d</xliff:g>%%</string>
+    <string name="common_timestamp_minutes"><xliff:g id="minutes">%1$d</xliff:g>:<xliff:g id="seconds">%2$02d</xliff:g></string>
+    <string name="common_timestamp_hours"><xliff:g id="hours">%1$d</xliff:g>:<xliff:g id="minutes">%2$02d</xliff:g>:<xliff:g id="seconds">%3$02d</xliff:g></string>
+    <string name="common_resume_position">Du stoppede ved <xliff:g id="position">%1$s</xliff:g>.</string>
+    <string name="common_resume_prompt">Fortsæt afspilningen?</string>
+    <string name="sync_error_offline">Det ser ud til, at du er offline. Kontrollér din forbindelse, og prøv igen.</string>
+    <string name="sync_error_generic">Noget gik galt. Prøv igen.</string>
+    <string name="sync_error_timeout">Serveren var for længe om at svare. Prøv igen.</string>
+    <string name="sync_error_unreachable">Serveren kunne ikke nås. Kontrollér adressen og din forbindelse.</string>
+    <string name="sync_error_connection">Der kunne ikke oprettes forbindelse til serveren. Den kan være nede, eller adressen kan være forkert.</string>
+    <string name="sync_error_interrupted">Serveren afbrød downloaden. Prøv igen.</string>
+    <string name="sync_error_mac">Portalen afviste denne MAC-adresse. Kontrollér MAC-adressen (og tv\'ets dato og klokkeslæt) — eller abonnementet kan være udløbet.</string>
+    <string name="sync_error_invalid_mac">Ugyldig MAC-adresse — brug AA:BB:CC:DD:EE:FF</string>
+    <string name="sync_counts_separator">  ·  </string>
+    <string name="sync_counts_success">Synkroniseret</string>
+    <string name="sync_counts_synced"><xliff:g id="counts">%1$s</xliff:g> synkroniseret</string>
+    <string name="sync_import_warnings">Importeret med advarsler: <xliff:g id="phases">%1$s</xliff:g></string>
+    <string name="sync_warning_phase_error"><xliff:g id="phase">%1$s</xliff:g>: <xliff:g id="message">%2$s</xliff:g></string>
+    <plurals name="sync_warning_catalog_shrink">
+        <item quantity="one">Beholdt <xliff:g id="stored">%1$d</xliff:g> eksisterende element — denne importering gav <xliff:g id="percent">%2$d</xliff:g>%% færre. Synkroniser igen, eller brug Gennemtving ren synkronisering, hvis udbyderen virkelig har fjernet det.</item>
+        <item quantity="other">Beholdt <xliff:g id="stored">%1$d</xliff:g> eksisterende elementer — denne importering gav <xliff:g id="percent">%2$d</xliff:g>%% færre. Synkroniser igen, eller brug Gennemtving ren synkronisering, hvis udbyderen virkelig har fjernet dem.</item>
+    </plurals>
+    <plurals name="sync_warning_page_failures">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> side fra kilden kunne ikke indlæses; noget indhold kan mangle indtil næste synkronisering.</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> sider fra kilden kunne ikke indlæses; noget indhold kan mangle indtil næste synkronisering.</item>
+    </plurals>
+    <string name="sync_remainder_note">Resten af kataloget synkroniseres stadig i baggrunden — du kan begynde at se nu. Forløbet vises på den lille pilleformede indikator nederst på skærmen.</string>
+    <string name="sync_progress_preparing">Forbereder katalog</string>
+    <string name="sync_progress_connecting">Opretter forbindelse til kilde…</string>
+    <string name="sync_progress_syncing">Synkroniserer katalog</string>
+    <string name="sync_progress_percent">Synkroniserer <xliff:g id="percent">%1$d</xliff:g>%%</string>
+    <string name="sync_status_catalog">Synkroniserer <xliff:g id="source">%1$s</xliff:g></string>
+    <string name="sync_status_catalog_with_counts">Synkroniserer <xliff:g id="source">%1$s</xliff:g> · <xliff:g id="counts">%2$s</xliff:g></string>
+    <string name="sync_status_epg">Opdaterer programguide · <xliff:g id="source">%1$s</xliff:g></string>
+    <string name="sync_status_epg_with_counts">Opdaterer programguide · <xliff:g id="source">%1$s</xliff:g> · <xliff:g id="counts">%2$s</xliff:g></string>
+    <string name="sync_status_complete">Synkronisering fuldført · <xliff:g id="source">%1$s</xliff:g></string>
+    <string name="sync_status_complete_with_changes">Synkronisering fuldført · <xliff:g id="source">%1$s</xliff:g> · <xliff:g id="changes">%2$s</xliff:g></string>
+    <string name="sync_status_failed">Synkronisering mislykkedes · <xliff:g id="source">%1$s</xliff:g>: <xliff:g id="reason">%2$s</xliff:g></string>
+    <string name="sync_status_cancelled">Synkronisering annulleret · <xliff:g id="source">%1$s</xliff:g></string>
+    <string name="sync_phase_live">Live-tv</string>
+    <string name="sync_phase_movies">Film</string>
+    <string name="sync_phase_series">Serier</string>
+    <plurals name="sync_count_channels">
+        <item quantity="one"><xliff:g id="count">%1$s</xliff:g> kanal</item>
+        <item quantity="other"><xliff:g id="count">%1$s</xliff:g> kanaler</item>
+    </plurals>
+    <plurals name="sync_count_movies">
+        <item quantity="one"><xliff:g id="count">%1$s</xliff:g> film</item>
+        <item quantity="other"><xliff:g id="count">%1$s</xliff:g> film</item>
+    </plurals>
+    <plurals name="sync_count_series">
+        <item quantity="one"><xliff:g id="count">%1$s</xliff:g> serie</item>
+        <item quantity="other"><xliff:g id="count">%1$s</xliff:g> serier</item>
+    </plurals>
+    <plurals name="sync_count_epg">
+        <item quantity="one"><xliff:g id="count">%1$s</xliff:g> EPG-program</item>
+        <item quantity="other"><xliff:g id="count">%1$s</xliff:g> EPG-programmer</item>
+    </plurals>
+    <plurals name="sync_status_more">
+        <item quantity="one">+<xliff:g id="count">%1$d</xliff:g> synkronisering mere</item>
+        <item quantity="other">+<xliff:g id="count">%1$d</xliff:g> synkroniseringer mere</item>
+    </plurals>
+    <plurals name="sync_categories_added">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> kategori tilføjet</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> kategorier tilføjet</item>
+    </plurals>
+    <plurals name="sync_categories_removed">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> kategori fjernet</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> kategorier fjernet</item>
+    </plurals>
+    <string name="sync_error_portal">Portalen kunne ikke nås. Kontrollér portalens URL — den slutter som regel med /c/.</string>
+    <string name="sync_error_session">Portalsessionen er udløbet. Prøv igen.</string>
+    <string name="sync_error_auth">Serveren afviste dit login. Kontrollér dit brugernavn og din adgangskode.</string>
+    <string name="sync_error_not_found">Blev ikke fundet på serveren. Kontrollér URL\'en.</string>
+    <string name="sync_error_server">Der opstod et problem på serveren. Prøv igen senere.</string>
+    <string name="sync_error_secure">Den sikre forbindelse mislykkedes — serverens certifikat kan være ugyldigt.</string>
+    <string name="sync_error_malformed_guide">Dataene til programguiden fra serveren havde et ugyldigt format. Noget af det kan stadig være blevet indlæst — prøv igen, eller kontrollér EPG-URL\'en.</string>
+    <string name="common_items_per_skip">Elementer pr. spring</string>
+    <string name="common_plus">+</string>
+    <string name="common_minus">–</string>
+    <string name="common_hide">Skjul</string>
+    <string name="common_show">Vis</string>
+    <string name="common_qr_code_companion_url">QR-kode til ledsager-URL\'en</string>
+</resources>

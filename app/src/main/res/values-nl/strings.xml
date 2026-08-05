@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <string name="common_cancel">Annuleren</string>
+    <string name="common_back">Terug</string>
+    <string name="common_save">Opslaan</string>
+    <string name="common_edit">Bewerken</string>
+    <string name="common_delete">Verwijderen</string>
+    <string name="common_clear">Wissen</string>
+    <string name="common_retry">Opnieuw proberen</string>
+    <string name="common_create">Maken</string>
+    <string name="common_reset">Opnieuw instellen</string>
+    <string name="common_done">Gereed</string>
+    <string name="common_ok">OK</string>
+    <string name="common_on">Aan</string>
+    <string name="common_off">Uit</string>
+    <string name="common_exit">Afsluiten</string>
+    <string name="common_resume">Hervatten</string>
+    <string name="common_start_over">Opnieuw beginnen</string>
+    <string name="common_name">Naam</string>
+    <string name="common_own_tv_user">OwnTV-gebruiker</string>
+    <string name="common_switch_profile">Van profiel wisselen</string>
+    <string name="common_proxy">Proxy</string>
+    <string name="common_title">Titel</string>
+    <string name="common_search_hint">Zoeken…</string>
+    <string name="common_search">Zoeken</string>
+    <string name="common_weather_fahrenheit"><xliff:g id="temperature">%1$d</xliff:g>°F</string>
+    <string name="common_weather_celsius"><xliff:g id="temperature">%1$d</xliff:g>°C</string>
+    <string name="common_weather_city"><xliff:g id="temperature">%1$s</xliff:g> · <xliff:g id="city">%2$s</xliff:g></string>
+    <string name="common_nav_search">Zoeken</string>
+    <string name="common_nav_home">Start</string>
+    <string name="common_nav_live_tv">Live-tv</string>
+    <string name="common_nav_movies">Films</string>
+    <string name="common_nav_series">Series</string>
+    <string name="common_nav_downloads">Downloads</string>
+    <string name="common_nav_guide">Gids</string>
+    <string name="common_nav_settings">Instellingen</string>
+    <string name="shell_no_source">Geen bron</string>
+    <string name="common_something_went_wrong">Er is iets misgegaan</string>
+    <string name="common_move_instructions">▲/▼ om te verplaatsen · OK om op te slaan · Terug om te annuleren</string>
+    <string name="common_number_grouped"><xliff:g id="count">%1$,d</xliff:g></string>
+    <string name="common_rating"><xliff:g id="rating">%1$.1f</xliff:g></string>
+    <string name="common_percent"><xliff:g id="percent">%1$d</xliff:g>%%</string>
+    <string name="common_timestamp_minutes"><xliff:g id="minutes">%1$d</xliff:g>:<xliff:g id="seconds">%2$02d</xliff:g></string>
+    <string name="common_timestamp_hours"><xliff:g id="hours">%1$d</xliff:g>:<xliff:g id="minutes">%2$02d</xliff:g>:<xliff:g id="seconds">%3$02d</xliff:g></string>
+    <string name="common_resume_position">Je bent gestopt op <xliff:g id="position">%1$s</xliff:g>.</string>
+    <string name="common_resume_prompt">Afspelen hervatten?</string>
+    <string name="sync_error_offline">Je lijkt offline te zijn. Controleer je verbinding en probeer het opnieuw.</string>
+    <string name="sync_error_generic">Er is iets misgegaan. Probeer het opnieuw.</string>
+    <string name="sync_error_timeout">Het duurde te lang voordat de server reageerde. Probeer het opnieuw.</string>
+    <string name="sync_error_unreachable">De server is niet bereikbaar. Controleer het adres en je verbinding.</string>
+    <string name="sync_error_connection">Kan geen verbinding maken met de server. Mogelijk is deze niet beschikbaar of is het adres onjuist.</string>
+    <string name="sync_error_interrupted">De server heeft de download onderbroken. Probeer het opnieuw.</string>
+    <string name="sync_error_mac">Het portaal heeft dit MAC-adres geweigerd. Controleer het MAC-adres (en de datum en tijd van de tv) — mogelijk is het abonnement verlopen.</string>
+    <string name="sync_error_invalid_mac">Ongeldig MAC-adres — gebruik AA:BB:CC:DD:EE:FF</string>
+    <string name="sync_counts_separator">  ·  </string>
+    <string name="sync_counts_success">Synchronisatie geslaagd</string>
+    <string name="sync_counts_synced"><xliff:g id="counts">%1$s</xliff:g> gesynchroniseerd</string>
+    <string name="sync_import_warnings">Geïmporteerd met waarschuwingen: <xliff:g id="phases">%1$s</xliff:g></string>
+    <string name="sync_warning_phase_error"><xliff:g id="phase">%1$s</xliff:g>: <xliff:g id="message">%2$s</xliff:g></string>
+    <plurals name="sync_warning_catalog_shrink">
+        <item quantity="one">Er is <xliff:g id="stored">%1$d</xliff:g> bestaand item behouden — bij het importeren zijn <xliff:g id="percent">%2$d</xliff:g>%% minder items opgehaald. Synchroniseer opnieuw of gebruik Geforceerd volledig synchroniseren als de aanbieder het echt heeft verwijderd.</item>
+        <item quantity="other">Er zijn <xliff:g id="stored">%1$d</xliff:g> bestaande items behouden — bij het importeren zijn <xliff:g id="percent">%2$d</xliff:g>%% minder items opgehaald. Synchroniseer opnieuw of gebruik Geforceerd volledig synchroniseren als de aanbieder ze echt heeft verwijderd.</item>
+    </plurals>
+    <plurals name="sync_warning_page_failures">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> bronpagina is mislukt; mogelijk ontbreekt er content tot de volgende synchronisatie.</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> bronpagina\'s zijn mislukt; mogelijk ontbreekt er content tot de volgende synchronisatie.</item>
+    </plurals>
+    <string name="sync_remainder_note">De rest van de catalogus wordt nog op de achtergrond gesynchroniseerd — je kunt nu al gaan kijken. De voortgang wordt weergegeven in de kleine pilvormige indicator onderaan het scherm.</string>
+    <string name="sync_progress_preparing">Catalogus voorbereiden</string>
+    <string name="sync_progress_connecting">Verbinding maken met bron…</string>
+    <string name="sync_progress_syncing">Catalogus synchroniseren</string>
+    <string name="sync_progress_percent">Synchroniseren: <xliff:g id="percent">%1$d</xliff:g>%%</string>
+    <string name="sync_status_catalog"><xliff:g id="source">%1$s</xliff:g> synchroniseren</string>
+    <string name="sync_status_catalog_with_counts"><xliff:g id="source">%1$s</xliff:g> synchroniseren · <xliff:g id="counts">%2$s</xliff:g></string>
+    <string name="sync_status_epg">Programmagids bijwerken · <xliff:g id="source">%1$s</xliff:g></string>
+    <string name="sync_status_epg_with_counts">Programmagids bijwerken · <xliff:g id="source">%1$s</xliff:g> · <xliff:g id="counts">%2$s</xliff:g></string>
+    <string name="sync_status_complete">Synchronisatie voltooid · <xliff:g id="source">%1$s</xliff:g></string>
+    <string name="sync_status_complete_with_changes">Synchronisatie voltooid · <xliff:g id="source">%1$s</xliff:g> · <xliff:g id="changes">%2$s</xliff:g></string>
+    <string name="sync_status_failed">Synchronisatie mislukt · <xliff:g id="source">%1$s</xliff:g>: <xliff:g id="reason">%2$s</xliff:g></string>
+    <string name="sync_status_cancelled">Synchronisatie geannuleerd · <xliff:g id="source">%1$s</xliff:g></string>
+    <string name="sync_phase_live">Live-tv</string>
+    <string name="sync_phase_movies">Films</string>
+    <string name="sync_phase_series">Series</string>
+    <plurals name="sync_count_channels">
+        <item quantity="one"><xliff:g id="count">%1$s</xliff:g> zender</item>
+        <item quantity="other"><xliff:g id="count">%1$s</xliff:g> zenders</item>
+    </plurals>
+    <plurals name="sync_count_movies">
+        <item quantity="one"><xliff:g id="count">%1$s</xliff:g> film</item>
+        <item quantity="other"><xliff:g id="count">%1$s</xliff:g> films</item>
+    </plurals>
+    <plurals name="sync_count_series">
+        <item quantity="one"><xliff:g id="count">%1$s</xliff:g> serie</item>
+        <item quantity="other"><xliff:g id="count">%1$s</xliff:g> series</item>
+    </plurals>
+    <plurals name="sync_count_epg">
+        <item quantity="one"><xliff:g id="count">%1$s</xliff:g> EPG-item</item>
+        <item quantity="other"><xliff:g id="count">%1$s</xliff:g> EPG-items</item>
+    </plurals>
+    <plurals name="sync_status_more">
+        <item quantity="one">+<xliff:g id="count">%1$d</xliff:g> synchronisatie meer</item>
+        <item quantity="other">+<xliff:g id="count">%1$d</xliff:g> synchronisaties meer</item>
+    </plurals>
+    <plurals name="sync_categories_added">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> categorie toegevoegd</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> categorieën toegevoegd</item>
+    </plurals>
+    <plurals name="sync_categories_removed">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> categorie verwijderd</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> categorieën verwijderd</item>
+    </plurals>
+    <string name="sync_error_portal">Het portaal is niet bereikbaar. Controleer de portaal-URL — deze eindigt meestal op /c/.</string>
+    <string name="sync_error_session">De portaalsessie is verlopen. Probeer het opnieuw.</string>
+    <string name="sync_error_auth">De server heeft je aanmelding geweigerd. Controleer je gebruikersnaam en wachtwoord.</string>
+    <string name="sync_error_not_found">Niet gevonden op de server. Controleer de URL.</string>
+    <string name="sync_error_server">Er is een probleem met de server. Probeer het later opnieuw.</string>
+    <string name="sync_error_secure">Beveiligde verbinding mislukt — het certificaat van de server is mogelijk ongeldig.</string>
+    <string name="sync_error_malformed_guide">De gegevens van de programmagids van de server waren onjuist opgemaakt. Een deel is mogelijk toch geladen — probeer het opnieuw of controleer de EPG-URL.</string>
+    <string name="common_items_per_skip">Aantal items per sprong</string>
+    <string name="common_plus">+</string>
+    <string name="common_minus">–</string>
+    <string name="common_hide">Verbergen</string>
+    <string name="common_show">Tonen</string>
+    <string name="common_qr_code_companion_url">QR-code voor de companion-URL</string>
+</resources>

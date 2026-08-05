@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <string name="player_trailer_exit">Wyjdź</string>
+    <string name="player_trailer_progress"><xliff:g id="current">%1$s</xliff:g> / <xliff:g id="duration">%2$s</xliff:g></string>
+    <string name="player_zoom_fit_screen">Dopasuj do ekranu</string>
+    <string name="player_zoom_fill_crop">Wypełnij / przytnij</string>
+    <string name="player_zoom_stretch">Rozciągnij</string>
+    <string name="player_zoom_original">Oryginalny rozmiar (1:1)</string>
+    <string name="player_zoom_force_16_9">Wymuś 16:9</string>
+    <string name="player_zoom_force_4_3">Wymuś 4:3</string>
+    <string name="player_mini_top_left">U góry po lewej</string>
+    <string name="player_mini_top_center">U góry na środku</string>
+    <string name="player_mini_top_right">U góry po prawej</string>
+    <string name="player_mini_bottom_left">U dołu po lewej</string>
+    <string name="player_mini_bottom_center">U dołu na środku</string>
+    <string name="player_mini_bottom_right">U dołu po prawej</string>
+    <string name="player_channel_label">KANAŁ</string>
+    <string name="player_at_live_edge">● Bieżący punkt transmisji</string>
+    <string name="player_behind_live">● <xliff:g id="offset">%1$s</xliff:g> za transmisją na żywo</string>
+    <string name="player_live_offset">−<xliff:g id="offset">%1$s</xliff:g></string>
+    <string name="player_channel_not_found">Nie znaleziono kanału</string>
+    <string name="player_multiple_channels">Wiele pasujących kanałów</string>
+    <string name="player_tune_failed">Nie udało się włączyć kanału</string>
+    <string name="player_playback_error">Błąd odtwarzania</string>
+    <string name="player_raw_error">błąd: <xliff:g id="error">%1$s</xliff:g></string>
+    <string name="player_audio_track">Ścieżka dźwiękowa</string>
+    <string name="player_subtitles">Napisy</string>
+    <string name="player_subtitle_timing">Synchronizacja napisów</string>
+    <string name="player_add_subtitles">DODAJ NAPISY</string>
+    <string name="player_adjust">DOSTOSUJ</string>
+    <string name="player_search_subtitles">Wyszukaj w OpenSubtitles</string>
+    <string name="player_select_local_subtitle">Wybierz lokalny plik napisów</string>
+    <string name="player_no_tracks">Brak dostępnych ścieżek.</string>
+    <string name="player_image_track"><xliff:g id="label">%1$s</xliff:g> · graficzne</string>
+    <string name="player_av_sync">Synchronizacja A/V</string>
+    <string name="player_no_offset">Brak opóźnienia</string>
+    <string name="player_subtitles_later">Napisy wyświetlane później</string>
+    <string name="player_subtitles_earlier">Napisy wyświetlane wcześniej</string>
+    <string name="player_delay_zero">0 ms</string>
+    <string name="player_delay_positive">+<xliff:g id="ms">%1$d</xliff:g> ms</string>
+    <string name="player_delay_negative"><xliff:g id="ms">%1$d</xliff:g> ms</string>
+    <string name="player_speed_normal">1.0x (normalna)</string>
+    <string name="player_speed_normal_short">1.0x</string>
+    <string name="player_speed"><xliff:g id="speed">%1$s</xliff:g>x</string>
+    <string name="player_next_episode">Następny odcinek za <xliff:g id="seconds">%1$d</xliff:g> s</string>
+    <string name="player_play_now">Odtwórz teraz</string>
+    <string name="player_volume">Głośność</string>
+    <string name="player_unmute">Włącz dźwięk</string>
+    <string name="player_mute">Wycisz</string>
+    <string name="player_percent"><xliff:g id="value">%1$d</xliff:g>%%</string>
+    <string name="player_duration_minutes"><xliff:g id="minutes">%1$d</xliff:g> min</string>
+    <string name="player_season_number">Sezon <xliff:g id="season">%1$d</xliff:g></string>
+    <string name="player_episode_number">Odcinek <xliff:g id="episode">%1$d</xliff:g></string>
+    <string name="player_episode_context_title"><xliff:g id="title">%1$s</xliff:g> · S<xliff:g id="season">%2$d</xliff:g>E<xliff:g id="episode">%3$d</xliff:g></string>
+    <string name="player_channel_number">#<xliff:g id="number">%1$s</xliff:g></string>
+    <string name="player_live">NA ŻYWO</string>
+    <string name="player_subtitle_delay_zero">0.0 s</string>
+    <string name="player_subtitle_delay_positive">+<xliff:g id="seconds">%1$.1f</xliff:g> s</string>
+    <string name="player_subtitle_delay_negative">−<xliff:g id="seconds">%1$.1f</xliff:g> s</string>
+    <string name="player_track_seconds"><xliff:g id="minutes">%1$d</xliff:g>:<xliff:g id="seconds">%2$02d</xliff:g></string>
+    <string name="player_track_hours"><xliff:g id="hours">%1$d</xliff:g>:<xliff:g id="minutes">%2$02d</xliff:g>:<xliff:g id="seconds">%3$02d</xliff:g></string>
+    <string name="player_time_progress"><xliff:g id="position">%1$s</xliff:g> / <xliff:g id="duration">%2$s</xliff:g></string>
+    <string name="player_time_remaining">−<xliff:g id="time">%1$s</xliff:g></string>
+    <string name="player_switch_exo">Przełączono na ExoPlayer</string>
+    <string name="player_switch_mpv">Przełączono na mpv</string>
+    <string name="player_error_image_subtitle_audio">Napisy graficzne nie są dostępne dla formatu dźwięku tego materiału wideo.</string>
+    <string name="player_error_both_engines_exo_first">Odtwarzanie nie powiodło się w obu silnikach wideo (najpierw ExoPlayer, potem mpv). Plik może być uszkodzony lub używać formatu, którego ten telewizor nie obsługuje.</string>
+    <string name="player_error_both_engines_mpv_first">Odtwarzanie nie powiodło się w obu silnikach wideo (mpv i ExoPlayer). Plik może być uszkodzony lub używać formatu, którego ten telewizor nie obsługuje. (<xliff:g id="error">%1$s</xliff:g>)</string>
+    <string name="player_error_stream_link">Nie udało się pobrać łącza do strumienia z portalu. Sprawdź połączenie i spróbuj ponownie.</string>
+    <string name="player_error_not_streaming">Ten materiał wideo nie jest sformatowany do przesyłania strumieniowego. Poproś dostawcę o ponowne zakodowanie z funkcją szybkiego startu albo najpierw go pobierz.</string>
+    <string name="player_error_lost_connection">Utracono połączenie z tym kanałem.</string>
+    <string name="player_error_channel">Nie udało się odtworzyć tego kanału.</string>
+    <string name="player_error_exo_decode">ExoPlayer nie może zdekodować formatu tego materiału wideo na tym urządzeniu (<xliff:g id="error">%1$s</xliff:g>).</string>
+    <string name="player_error_exo_play">ExoPlayer nie mógł odtworzyć tego strumienia (<xliff:g id="error">%1$s</xliff:g>).</string>
+    <string name="player_error_image_format">Napisy graficzne nie są dostępne dla formatu tego pliku.</string>
+    <string name="player_error_image_show">Nie udało się wyświetlić napisów graficznych dla tego pliku.</string>
+    <string name="player_external_could_not_open">Nie udało się otworzyć tego strumienia.</string>
+    <string name="player_external_play_with">Odtwórz za pomocą</string>
+    <string name="player_external_play_with_item">Odtwórz „<xliff:g id="channel">%1$s</xliff:g> · <xliff:g id="programme">%2$s</xliff:g>” za pomocą…</string>
+    <string name="player_external_not_found">Nie znaleziono odtwarzacza zewnętrznego — zainstaluj VLC lub MX Player.</string>
+    <string name="player_error_audio_no_video">Dźwięk jest odtwarzany, ale na tym urządzeniu nie udało się wyświetlić obrazu.</string>
+    <string name="player_error_file_corrupt">Plik tego materiału wideo jest nieprawidłowy lub uszkodzony i nie można go odtworzyć.</string>
+    <string name="player_error_multiple_videos">Nie udało się odtworzyć wielu materiałów wideo. Źródło może być niedostępne lub pliki są uszkodzone.</string>
+    <string name="player_error_decoder_busy">Dekoder wideo tego telewizora jest zajęty. Spróbuj ponownie za chwilę.</string>
+    <string name="player_error_no_internet">Brak połączenia z internetem. Sprawdź sieć i spróbuj ponownie.</string>
+    <string name="player_error_stream_unavailable">Nie udało się odtworzyć tego strumienia. Źródło może być bez połączenia lub używać nieobsługiwanego formatu. <xliff:g id="hint">%1$s</xliff:g></string>
+    <string name="player_error_mpv_open_decode">mpv nie mógł otworzyć ani zdekodować tego pliku.</string>
+    <string name="player_error_mpv_stream_never_started">Po kilku próbach strumień nadal nie uruchomił się w mpv.</string>
+    <string name="player_error_surround">To wyjście audio nie obsługuje dźwięku przestrzennego — przełączono na stereo.</string>
+    <string name="player_error_hardware_fallback">Formatu tego strumienia nie udało się zdekodować sprzętowo na tym telewizorze, dlatego użyto dekodowania programowego — które nie może płynnie obsłużyć <xliff:g id="resolution">%1$s</xliff:g> bez przeciążenia telewizora. Telewizor może nadal bez problemu odtwarzać inne treści 4K; problem dotyczy formatu tego konkretnego strumienia.</string>
+    <string name="player_error_hardware_disabled">Dekodowanie sprzętowe jest wyłączone — dekodowanie programowe nie obsłuży materiału wideo <xliff:g id="resolution">%1$s</xliff:g>. Włącz je w Ustawienia → Odtwarzacz wideo.</string>
+    <string name="player_error_custom_user_agent">Ten dostawca może wymagać niestandardowego nagłówka User-Agent w ustawieniach źródła.</string>
+    <string name="player_reason_decoder_busy">Dekoder sprzętowy wideo jest zajęty lub nie obsługuje tego strumienia</string>
+    <string name="player_reason_decoder_transient">Błąd dekodera sprzętowego wideo — tymczasowy, spróbuj ponownie</string>
+    <string name="player_reason_unsupported_video">Dekoder tego urządzenia nie obsługuje tego formatu lub profilu wideo (np. HEVC 10-bit)</string>
+    <string name="player_reason_decoder_memory">W urządzeniu zabrakło pamięci dla dekodera — spróbuj zamknąć inne aplikacje</string>
+    <string name="player_reason_drm">Błąd DRM / bezpiecznego dekodera</string>
+    <string name="player_reason_http_509">Dostawca zablokował połączenie — zbyt wiele strumieni jednocześnie (HTTP 509)</string>
+    <string name="player_reason_http_403">Dostawca odmówił dostępu (HTTP 403) — dane logowania, subskrypcja lub blokada adresu IP</string>
+    <string name="player_reason_http_401">Dostawca odrzucił dane logowania (HTTP 401)</string>
+    <string name="player_reason_http_404">Nie znaleziono strumienia u dostawcy (HTTP 404)</string>
+    <string name="player_reason_http_400">Dostawca odrzucił żądanie (HTTP 400) — nieprawidłowe lub wygasłe łącze</string>
+    <string name="player_reason_ssl">Certyfikat SSL dostawcy jest nieprawidłowy lub wygasł</string>
+    <string name="player_reason_format">Nie rozpoznano formatu strumienia (nieprawidłowy lub niepełny strumień)</string>
+    <string name="player_reason_network">Problem z połączeniem sieciowym z dostawcą</string>
+    <string name="player_reason_audio">Błąd wyjścia audio — urządzenie nie mogło odtworzyć tego formatu dźwięku</string>
+    <string name="player_audio_track_number">Ścieżka dźwiękowa <xliff:g id="number">%1$d</xliff:g></string>
+    <string name="player_subtitle_track_number">Ścieżka napisów <xliff:g id="number">%1$d</xliff:g></string>
+    <string name="player_metadata_separator"> · </string>
+    <string name="player_stream_info">Informacje o strumieniu</string>
+    <string name="player_stream_engine">Silnik</string>
+    <string name="player_stream_format">Format</string>
+    <string name="player_stream_source">Źródło</string>
+    <string name="player_stream_video">Wideo</string>
+    <string name="player_stream_hdr">HDR</string>
+    <string name="player_stream_hdr10_pq">HDR10 (PQ)</string>
+    <string name="player_stream_hlg">HLG</string>
+    <string name="player_stream_sdr">SDR</string>
+    <string name="player_stream_bitrate">Przepływność</string>
+    <string name="player_stream_decoder">Dekoder</string>
+    <string name="player_stream_audio">Dźwięk</string>
+    <string name="player_stream_buffer">Bufor</string>
+    <string name="player_stream_engine_exo_preferred">ExoPlayer (preferowany)</string>
+    <string name="player_stream_engine_exo_fallback">ExoPlayer (awaryjny po błędzie mpv)</string>
+    <string name="player_stream_engine_exo_image_subtitle">ExoPlayer (przejęcie napisów graficznych)</string>
+    <string name="player_stream_fps"><xliff:g id="fps">%1$.2f</xliff:g> fps</string>
+    <string name="player_stream_bit_depth"><xliff:g id="bits">%1$d</xliff:g> bitów</string>
+    <string name="player_stream_mbps"><xliff:g id="value">%1$s</xliff:g> Mbps</string>
+    <string name="player_stream_khz"><xliff:g id="value">%1$s</xliff:g> kHz</string>
+    <string name="player_stream_kbps"><xliff:g id="value">%1$s</xliff:g> kbps</string>
+    <string name="player_stream_seconds">Zbuforowano <xliff:g id="value">%1$s</xliff:g> s</string>
+    <string name="player_audio_mono">mono</string>
+    <string name="player_audio_stereo">stereo</string>
+    <plurals name="player_audio_channels">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> kanał</item>
+        <item quantity="few"><xliff:g id="count">%1$d</xliff:g> kanały</item>
+        <item quantity="many"><xliff:g id="count">%1$d</xliff:g> kanałów</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> kanału</item>
+    </plurals>
+    <plurals name="player_stream_dropped_frames">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> pominięta klatka</item>
+        <item quantity="few"><xliff:g id="count">%1$d</xliff:g> pominięte klatki</item>
+        <item quantity="many"><xliff:g id="count">%1$d</xliff:g> pominiętych klatek</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> pominiętej klatki</item>
+    </plurals>
+    <string name="player_decoder_hardware">dekoder sprzętowy</string>
+    <string name="player_decoder_software">dekoder programowy</string>
+    <string name="player_decoder_direct">bezpośredni</string>
+    <string name="player_decoder_gpu">GPU</string>
+    <string name="player_subtitles_search_title">Wyszukiwanie w OpenSubtitles</string>
+    <string name="player_subtitles_working">Przetwarzanie…</string>
+    <string name="player_subtitles_edit_search">Edytuj wyszukiwanie</string>
+    <string name="player_subtitles_title_label">Tytuł</string>
+    <string name="player_subtitles_delete_title">Usuń napisy z OpenSub</string>
+    <string name="player_subtitles_sign_in">Zaloguj się</string>
+    <string name="player_subtitles_sign_out">Wyloguj się</string>
+    <string name="player_subtitles_account">Konto</string>
+    <string name="player_subtitles_username">Nazwa użytkownika</string>
+    <string name="player_subtitles_password">Hasło</string>
+    <string name="player_subtitles_stay_signed_in">Nie wylogowuj</string>
+    <string name="player_subtitles_sign_in_title">Zaloguj się do OpenSubtitles</string>
+    <string name="player_subtitles_connect_description">Połącz konto OpenSubtitles z tym profilem.</string>
+    <string name="player_subtitles_contacting">Łączenie z OpenSubtitles…</string>
+    <string name="player_subtitles_api_notice">Ten produkt korzysta z API OpenSubtitles, ale nie jest wspierany ani certyfikowany przez OpenSubtitles.</string>
+    <string name="player_subtitles_delete_description">Usuń napisy pobrane do filmów i seriali.</string>
+    <string name="player_subtitles_delete_login_message">Usuwa dane logowania tego profilu do OpenSubtitles z tego urządzenia. Pobrane wcześniej napisy pozostaną dostępne bez połączenia.</string>
+    <string name="player_subtitles_delete_action">Usuń napisy</string>
+    <string name="player_subtitles_downloads">Pobrane</string>
+    <string name="player_subtitles_vip">VIP</string>
+    <string name="player_subtitles_refresh">Odśwież</string>
+    <string name="player_subtitles_sign_in_to_use">Użyj swojego konta opensubtitles.com. Możesz je utworzyć bezpłatnie.</string>
+    <plurals name="player_subtitles_remaining">
+        <item quantity="one">Pozostało dziś <xliff:g id="remaining">%1$d</xliff:g> pobranie z <xliff:g id="total">%2$d</xliff:g></item>
+        <item quantity="few">Pozostały dziś <xliff:g id="remaining">%1$d</xliff:g> pobrania z <xliff:g id="total">%2$d</xliff:g></item>
+        <item quantity="many">Pozostało dziś <xliff:g id="remaining">%1$d</xliff:g> pobrań z <xliff:g id="total">%2$d</xliff:g></item>
+        <item quantity="other">Pozostało dziś <xliff:g id="remaining">%1$d</xliff:g> pobrania z <xliff:g id="total">%2$d</xliff:g></item>
+    </plurals>
+    <plurals name="player_subtitles_remaining_short">
+        <item quantity="one">Pozostało dziś <xliff:g id="remaining">%1$d</xliff:g> pobranie</item>
+        <item quantity="few">Pozostały dziś <xliff:g id="remaining">%1$d</xliff:g> pobrania</item>
+        <item quantity="many">Pozostało dziś <xliff:g id="remaining">%1$d</xliff:g> pobrań</item>
+        <item quantity="other">Pozostało dziś <xliff:g id="remaining">%1$d</xliff:g> pobrania</item>
+    </plurals>
+    <plurals name="player_subtitles_remaining_reset">
+        <item quantity="one">Pozostało dziś <xliff:g id="remaining">%1$d</xliff:g> pobranie · odnowienie za <xliff:g id="reset">%2$s</xliff:g></item>
+        <item quantity="few">Pozostały dziś <xliff:g id="remaining">%1$d</xliff:g> pobrania · odnowienie za <xliff:g id="reset">%2$s</xliff:g></item>
+        <item quantity="many">Pozostało dziś <xliff:g id="remaining">%1$d</xliff:g> pobrań · odnowienie za <xliff:g id="reset">%2$s</xliff:g></item>
+        <item quantity="other">Pozostało dziś <xliff:g id="remaining">%1$d</xliff:g> pobrania · odnowienie za <xliff:g id="reset">%2$s</xliff:g></item>
+    </plurals>
+    <plurals name="player_subtitles_remaining_count">
+        <item quantity="one">Pozostało dziś <xliff:g id="remaining">%1$d</xliff:g> pobranie</item>
+        <item quantity="few">Pozostały dziś <xliff:g id="remaining">%1$d</xliff:g> pobrania</item>
+        <item quantity="many">Pozostało dziś <xliff:g id="remaining">%1$d</xliff:g> pobrań</item>
+        <item quantity="other">Pozostało dziś <xliff:g id="remaining">%1$d</xliff:g> pobrania</item>
+    </plurals>
+    <string name="player_subtitles_session">Sesja połączenia wygasa. Wyłącz tę opcję, aby przechowywać tylko sesję tymczasową.</string>
+    <string name="player_subtitles_free_description_full">OpenSubtitles to bezpłatna, otwarta społecznościowa usługa napisów. Zaloguj się przy użyciu własnego konta opensubtitles.com; możesz je utworzyć bezpłatnie. Dotyczy to tylko bieżącego profilu.</string>
+    <string name="player_subtitles_session_expired">Twoja sesja OpenSubtitles wygasła. Aby nadal wyszukiwać i pobierać napisy, zaloguj się ponownie w Ustawienia → Odtwarzacz wideo → Napisy → OpenSubtitles.</string>
+    <string name="player_subtitles_account_needed">Wymagane konto OpenSubtitles\n\nAby wyszukiwać i pobierać napisy, zaloguj się w Ustawienia → Odtwarzacz wideo → Napisy → OpenSubtitles. OpenSubtitles to bezpłatna, otwarta usługa społecznościowa — każdy może utworzyć bezpłatne konto na opensubtitles.com.</string>
+    <string name="player_subtitles_no_matches">Nie znaleziono pasujących napisów.</string>
+    <string name="player_subtitles_show_all_languages">Pokaż wszystkie języki</string>
+    <string name="player_subtitles_all_languages">Wszystkie języki</string>
+    <string name="player_subtitles_try_again">Spróbuj ponownie</string>
+    <string name="player_subtitles_limit_reached">Osiągnięto dzienny limit wyszukiwania napisów. Spróbuj ponownie jutro.</string>
+    <string name="player_subtitles_network_error">Nie udało się połączyć z OpenSubtitles. Sprawdź połączenie i spróbuj ponownie.</string>
+    <string name="player_subtitles_subtitle">Napisy</string>
+    <string name="player_subtitles_trusted">Zaufany</string>
+    <string name="player_subtitles_sdh">SDH</string>
+    <string name="player_subtitles_ai">AI</string>
+    <plurals name="player_subtitles_download_count">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> pobranie</item>
+        <item quantity="few"><xliff:g id="count">%1$d</xliff:g> pobrania</item>
+        <item quantity="many"><xliff:g id="count">%1$d</xliff:g> pobrań</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> pobrania</item>
+    </plurals>
+    <string name="player_subtitles_tags_separator"> · </string>
+    <string name="player_subtitles_search">Wyszukaj</string>
+    <string name="player_subtitles_connected_as">Połączono jako</string>
+    <string name="player_subtitles_resets">Odnowienie</string>
+    <string name="player_subtitles_free_account">Bezpłatne</string>
+    <string name="player_subtitles_in"><xliff:g id="value">%1$s</xliff:g></string>
+    <string name="player_subtitles_enter_credentials">Wprowadź nazwę użytkownika i hasło do OpenSubtitles.</string>
+    <string name="player_subtitles_invalid_credentials">OpenSubtitles nie mógł zalogować się przy użyciu tych danych konta.</string>
+    <string name="player_subtitles_sign_in_network_error">Nie udało się połączyć z OpenSubtitles. Sprawdź połączenie z internetem i spróbuj ponownie.</string>
+    <string name="player_subtitles_refresh_network_error">Nie udało się odświeżyć OpenSubtitles. Sprawdź połączenie z internetem.</string>
+</resources>

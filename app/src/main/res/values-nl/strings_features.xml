@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <string name="profiles_pin">PIN</string>
+    <string name="profiles_new">Nieuw profiel</string>
+    <string name="profiles_edit">Profiel bewerken</string>
+    <string name="profiles_name">Naam</string>
+    <string name="profiles_name_hint">bijv. Alex</string>
+    <string name="profiles_avatar">AVATAR</string>
+    <string name="profiles_kids">Kinderprofiel</string>
+    <string name="profiles_kids_description">Vereenvoudigd en veilig bladeren</string>
+    <string name="profiles_remove_pin">PIN-vergrendeling verwijderen</string>
+    <string name="profiles_no_pin">Dit profiel wordt zonder PIN geopend</string>
+    <string name="profiles_change_pin">PIN wijzigen (leeg = behouden)</string>
+    <string name="profiles_optional_pin">PIN (optioneel)</string>
+    <string name="profiles_pin_digits">4–6 cijfers</string>
+    <string name="profiles_pin_placeholder">····</string>
+    <string name="profiles_name_taken">Deze naam is al in gebruik — kies een andere naam.</string>
+    <string name="profiles_create">Aanmaken</string>
+    <string name="profiles_save">Opslaan</string>
+    <string name="profiles_gate_title">Wie kijkt er?</string>
+    <string name="profiles_wrong_pin">Onjuiste PIN — probeer het opnieuw</string>
+    <string name="profiles_enter_pin"><xliff:g id="name">%1$s</xliff:g> — voer PIN in</string>
+    <string name="profiles_kids_badge">KINDEREN</string>
+    <string name="profiles_add">Profiel toevoegen</string>
+    <string name="profiles_title">Profielen</string>
+    <string name="profiles_add_button">Profiel toevoegen</string>
+    <string name="profiles_delete_title">Verwijder “<xliff:g id="name">%1$s</xliff:g>”?</string>
+    <string name="profiles_delete_message">Verwijdert dit profiel en de bijbehorende favorieten en kijkgeschiedenis. Bronnen blijven behouden.</string>
+    <string name="profiles_kids_tag">Kinderen</string>
+    <string name="profiles_locked_tag">Vergrendeld met PIN</string>
+    <string name="search_title">Zoeken</string>
+    <string name="search_continue">Verder kijken</string>
+    <string name="search_unwatched">Onbekeken</string>
+    <string name="search_hint">Zoek naar zenders, films en series…</string>
+    <string name="search_recent">Recente zoekopdrachten</string>
+    <string name="search_recent_empty">Je recente zoekopdrachten verschijnen hier.</string>
+    <string name="search_minimum_query">Typ minstens 2 tekens om overal in te zoeken.</string>
+    <string name="search_no_results"><xliff:g id="query">%1$s</xliff:g> — geen resultaten.</string>
+    <string name="search_nothing_in_list">Nog niets in <xliff:g id="list">%1$s</xliff:g>.</string>
+    <string name="search_clear">Wissen</string>
+    <string name="search_jump_to">Ga naar</string>
+    <string name="search_watch_live">Live kijken</string>
+    <string name="search_play">Afspelen</string>
+    <string name="search_open_series">Serie openen</string>
+    <string name="search_movie">Film</string>
+    <string name="search_series">Series</string>
+    <string name="search_channels">Zenders</string>
+    <string name="search_channel_number">#<xliff:g id="number">%1$s</xliff:g></string>
+    <string name="home_keep_watching">Verder kijken</string>
+    <string name="home_play_next">Volgende afspelen</string>
+    <string name="home_tune_in">Afstemmen</string>
+    <string name="home_recent_live">Onlangs live bekeken</string>
+    <string name="profiles_default_name">Profiel</string>
+    <string name="launcher_recent_live_title">Onlangs live bekeken</string>
+    <string name="launcher_recent_live_description">Onlangs bekeken livezenders</string>
+    <string name="launcher_movie_type">Film</string>
+    <string name="launcher_episode_number">Aflevering <xliff:g id="episode">%1$d</xliff:g></string>
+    <string name="home_no_preview">Nog geen voorbeeld beschikbaar.</string>
+    <string name="home_no_rows">Alle rijen op het startscherm zijn verborgen.</string>
+    <string name="home_enable_rows">Schakel rijen weer in via Instellingen → Startscherm.</string>
+    <string name="home_start_watching">Begin met kijken om je activiteit hier te zien.</string>
+    <string name="home_continue_empty">Items om verder te kijken verschijnen hier zodra er afspeelgeschiedenis beschikbaar is.</string>
+    <string name="home_last_watched_now">Laatst bekeken: zojuist</string>
+    <string name="home_finish_by">Klaar om <xliff:g id="time">%1$s</xliff:g></string>
+    <string name="home_resume">Hervatten</string>
+    <plurals name="home_last_watched_minutes">
+        <item quantity="one">Laatst bekeken: <xliff:g id="count">%1$d</xliff:g> minuut geleden</item>
+        <item quantity="other">Laatst bekeken: <xliff:g id="count">%1$d</xliff:g> minuten geleden</item>
+    </plurals>
+    <plurals name="home_last_watched_hours">
+        <item quantity="one">Laatst bekeken: <xliff:g id="count">%1$d</xliff:g> uur geleden</item>
+        <item quantity="other">Laatst bekeken: <xliff:g id="count">%1$d</xliff:g> uur geleden</item>
+    </plurals>
+    <plurals name="home_last_watched_days">
+        <item quantity="one">Laatst bekeken: <xliff:g id="count">%1$d</xliff:g> dag geleden</item>
+        <item quantity="other">Laatst bekeken: <xliff:g id="count">%1$d</xliff:g> dagen geleden</item>
+    </plurals>
+    <string name="home_season_episode">S<xliff:g id="season">%1$02d</xliff:g> E<xliff:g id="episode">%2$02d</xliff:g></string>
+    <string name="home_season">S<xliff:g id="season">%1$02d</xliff:g></string>
+    <string name="home_episode">E<xliff:g id="episode">%1$02d</xliff:g></string>
+    <string name="home_row_cards">Kaarten</string>
+    <string name="home_row_keep_watching">Verder kijken</string>
+    <string name="home_row_continue_movies">Films verder kijken</string>
+    <string name="home_row_continue_series">Series verder kijken</string>
+    <string name="home_row_recent_channels">Recente zenders</string>
+    <string name="home_row_favorite_channels">Favoriete zenders</string>
+    <string name="home_row_on_now">Nu te zien</string>
+    <string name="home_row_hero_description">De grote voorbeeldrij bovenaan</string>
+    <string name="home_row_continue_movies_description">Films met een opgeslagen afspeelpositie</string>
+    <string name="home_row_continue_series_description">Afleveringen om te hervatten of als volgende af te spelen</string>
+    <string name="home_row_recent_description">Livezenders waarop je onlangs hebt afgestemd</string>
+    <string name="home_row_favorite_description">Je favoriete livezenders</string>
+    <string name="home_on_now_title"><xliff:g id="title">%1$s</xliff:g> · NU TE ZIEN</string>
+    <string name="home_ok_to_watch">OK om te kijken</string>
+    <string name="home_ok_to_browse">OK om te bladeren</string>
+    <string name="home_no_programme_details">Geen programmadetails</string>
+    <string name="home_guide_unavailable">Gegevens van de programmagids niet beschikbaar</string>
+    <string name="home_next">Volgende</string>
+    <string name="home_channel_number"><xliff:g id="number">%1$s</xliff:g>  <xliff:g id="name">%2$s</xliff:g></string>
+    <string name="home_time_range"><xliff:g id="start">%1$s</xliff:g>-<xliff:g id="end">%2$s</xliff:g></string>
+    <string name="home_now_time">NU · <xliff:g id="time">%1$s</xliff:g></string>
+    <string name="home_up_next_time">HIERNA · <xliff:g id="time">%1$s</xliff:g></string>
+    <string name="home_upcoming_item"><xliff:g id="time">%1$s</xliff:g> <xliff:g id="title">%2$s</xliff:g></string>
+    <plurals name="home_channel_count">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> zender</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> zenders</item>
+    </plurals>
+    <string name="update_title">App-update</string>
+    <string name="update_checking">Controleren op updates…</string>
+    <string name="update_whats_new">Wat is er nieuw</string>
+    <string name="update_downloading">Update downloaden… <xliff:g id="percent">%1$d</xliff:g>%%</string>
+    <string name="update_available">Update beschikbaar</string>
+    <string name="update_latest">Je hebt de nieuwste versie (v<xliff:g id="version">%1$s</xliff:g>).</string>
+    <string name="update_available_version">Versie <xliff:g id="available">%1$s</xliff:g> is beschikbaar (je hebt v<xliff:g id="current">%2$s</xliff:g>).</string>
+    <string name="update_installer">Het systeeminstallatieprogramma wordt geopend wanneer het downloaden is voltooid.</string>
+    <string name="update_later">Later</string>
+    <string name="update_now">Nu updaten</string>
+    <string name="update_try_again">Opnieuw proberen</string>
+    <string name="update_failed_check">Kan niet controleren op updates.</string>
+    <string name="update_failed_check_http">De updateserver retourneerde HTTP <xliff:g id="code">%1$s</xliff:g> tijdens de controle.</string>
+    <string name="update_no_compatible_apk">Er is in de release geen updatepakket voor dit apparaat gevonden.</string>
+    <string name="update_invalid_release_response">De updateserver retourneerde een ongeldige releasebeschrijving.</string>
+    <string name="update_failed_download">De update kon niet worden gedownload omdat het netwerkverzoek is mislukt.</string>
+    <string name="update_failed_download_http">De updatedownload retourneerde HTTP <xliff:g id="code">%1$s</xliff:g>.</string>
+    <string name="update_empty_download">De updateserver retourneerde een lege APK.</string>
+    <string name="update_install_failed">De gedownloade update kon niet door het systeeminstallatieprogramma worden geopend.</string>
+    <string name="update_ready">OwnTV v<xliff:g id="available">%1$s</xliff:g> staat klaar (je hebt v<xliff:g id="current">%2$s</xliff:g>).</string>
+    <string name="recovery_title">OwnTV kon de database niet openen</string>
+    <string name="recovery_data_safe_full">Je profielen, afspeellijsten, favorieten en kijkgeschiedenis zijn NIET verwijderd — dit is een mislukte database-upgrade en de gegevens staan nog steeds op dit apparaat.\n\nMeld dit zodat het kan worden opgelost en voeg het onderstaande bericht toe.</string>
+    <string name="recovery_retry">Opnieuw proberen</string>
+    <string name="recovery_backup_hint">Als je een back-upbestand hebt, kun je de app resetten en de back-up daarna herstellen. Bij het resetten wordt alles verwijderd wat op dit apparaat is opgeslagen.</string>
+    <string name="recovery_confirm_reset">Bevestigen: alle appgegevens wissen</string>
+    <string name="recovery_reset">Appgegevens resetten (laatste redmiddel)</string>
+</resources>

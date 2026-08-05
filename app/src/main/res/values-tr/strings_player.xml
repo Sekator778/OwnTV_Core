@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <string name="player_trailer_exit">Çıkış</string>
+    <string name="player_trailer_progress"><xliff:g id="current">%1$s</xliff:g> / <xliff:g id="duration">%2$s</xliff:g></string>
+    <string name="player_zoom_fit_screen">Ekrana sığdır</string>
+    <string name="player_zoom_fill_crop">Doldur / Kırp</string>
+    <string name="player_zoom_stretch">Uzat</string>
+    <string name="player_zoom_original">Orijinal (1:1)</string>
+    <string name="player_zoom_force_16_9">16:9\'a zorla</string>
+    <string name="player_zoom_force_4_3">4:3\'e zorla</string>
+    <string name="player_mini_top_left">Sol üst</string>
+    <string name="player_mini_top_center">Üst orta</string>
+    <string name="player_mini_top_right">Sağ üst</string>
+    <string name="player_mini_bottom_left">Sol alt</string>
+    <string name="player_mini_bottom_center">Alt orta</string>
+    <string name="player_mini_bottom_right">Sağ alt</string>
+    <string name="player_channel_label">KANAL</string>
+    <string name="player_at_live_edge">● Canlı yayın noktasında</string>
+    <string name="player_behind_live">● Canlı yayının <xliff:g id="offset">%1$s</xliff:g> gerisinde</string>
+    <string name="player_live_offset">−<xliff:g id="offset">%1$s</xliff:g></string>
+    <string name="player_channel_not_found">Kanal bulunamadı</string>
+    <string name="player_multiple_channels">Birden fazla kanal</string>
+    <string name="player_tune_failed">Kanal ayarlanamadı</string>
+    <string name="player_playback_error">Oynatma hatası</string>
+    <string name="player_raw_error">hata: <xliff:g id="error">%1$s</xliff:g></string>
+    <string name="player_audio_track">Ses Parçası</string>
+    <string name="player_subtitles">Altyazılar</string>
+    <string name="player_subtitle_timing">Altyazı zamanlaması</string>
+    <string name="player_add_subtitles">ALTYAZI EKLE</string>
+    <string name="player_adjust">AYARLA</string>
+    <string name="player_search_subtitles">OpenSubtitles\'da ara</string>
+    <string name="player_select_local_subtitle">Yerel altyazı dosyası seç</string>
+    <string name="player_no_tracks">Kullanılabilir parça yok.</string>
+    <string name="player_image_track"><xliff:g id="label">%1$s</xliff:g> · görsel</string>
+    <string name="player_av_sync">Ses/görüntü eşitleme</string>
+    <string name="player_no_offset">Gecikme yok</string>
+    <string name="player_subtitles_later">Altyazılar daha sonra gösteriliyor</string>
+    <string name="player_subtitles_earlier">Altyazılar daha önce gösteriliyor</string>
+    <string name="player_delay_zero">0 ms</string>
+    <string name="player_delay_positive">+<xliff:g id="ms">%1$d</xliff:g> ms</string>
+    <string name="player_delay_negative"><xliff:g id="ms">%1$d</xliff:g> ms</string>
+    <string name="player_speed_normal">1.0x (Normal)</string>
+    <string name="player_speed_normal_short">1.0x</string>
+    <string name="player_speed"><xliff:g id="speed">%1$s</xliff:g>x</string>
+    <string name="player_next_episode">Sonraki bölüm <xliff:g id="seconds">%1$d</xliff:g> sn sonra</string>
+    <string name="player_play_now">Şimdi oynat</string>
+    <string name="player_volume">Ses düzeyi</string>
+    <string name="player_unmute">Sesi aç</string>
+    <string name="player_mute">Sesi kapat</string>
+    <string name="player_percent"><xliff:g id="value">%1$d</xliff:g>%%</string>
+    <string name="player_duration_minutes"><xliff:g id="minutes">%1$d</xliff:g> dk</string>
+    <string name="player_season_number">Sezon <xliff:g id="season">%1$d</xliff:g></string>
+    <string name="player_episode_number">Bölüm <xliff:g id="episode">%1$d</xliff:g></string>
+    <string name="player_episode_context_title"><xliff:g id="title">%1$s</xliff:g> · S<xliff:g id="season">%2$d</xliff:g>E<xliff:g id="episode">%3$d</xliff:g></string>
+    <string name="player_channel_number">#<xliff:g id="number">%1$s</xliff:g></string>
+    <string name="player_live">CANLI</string>
+    <string name="player_subtitle_delay_zero">0.0 sn</string>
+    <string name="player_subtitle_delay_positive">+<xliff:g id="seconds">%1$.1f</xliff:g> sn</string>
+    <string name="player_subtitle_delay_negative">−<xliff:g id="seconds">%1$.1f</xliff:g> sn</string>
+    <string name="player_track_seconds"><xliff:g id="minutes">%1$d</xliff:g>:<xliff:g id="seconds">%2$02d</xliff:g></string>
+    <string name="player_track_hours"><xliff:g id="hours">%1$d</xliff:g>:<xliff:g id="minutes">%2$02d</xliff:g>:<xliff:g id="seconds">%3$02d</xliff:g></string>
+    <string name="player_time_progress"><xliff:g id="position">%1$s</xliff:g> / <xliff:g id="duration">%2$s</xliff:g></string>
+    <string name="player_time_remaining">−<xliff:g id="time">%1$s</xliff:g></string>
+    <string name="player_switch_exo">ExoPlayer\'a geçildi</string>
+    <string name="player_switch_mpv">mpv\'ye geçildi</string>
+    <string name="player_error_image_subtitle_audio">Görsel tabanlı altyazılar bu videonun ses biçiminde kullanılamaz.</string>
+    <string name="player_error_both_engines_exo_first">Her iki video motorunda da oynatma başarısız oldu (önce ExoPlayer, ardından mpv). Dosya bozuk olabilir veya bu TV\'nin oynatamadığı bir biçim kullanıyor olabilir.</string>
+    <string name="player_error_both_engines_mpv_first">Her iki video motorunda da oynatma başarısız oldu (mpv ve ExoPlayer). Dosya bozuk olabilir veya bu TV\'nin oynatamadığı bir biçim kullanıyor olabilir. (<xliff:g id="error">%1$s</xliff:g>)</string>
+    <string name="player_error_stream_link">Portaldan akış bağlantısı alınamadı. Bağlantıyı kontrol edip tekrar deneyin.</string>
+    <string name="player_error_not_streaming">Bu video, akış için biçimlendirilmemiş. Sağlayıcıdan videoyu hızlı başlatma özelliğiyle yeniden kodlamasını isteyin veya önce videoyu indirin.</string>
+    <string name="player_error_lost_connection">Bu kanalla bağlantı kesildi.</string>
+    <string name="player_error_channel">Bu kanal oynatılamadı.</string>
+    <string name="player_error_exo_decode">ExoPlayer bu cihazda videonun biçimini çözemiyor (<xliff:g id="error">%1$s</xliff:g>).</string>
+    <string name="player_error_exo_play">ExoPlayer bu akışı oynatamadı (<xliff:g id="error">%1$s</xliff:g>).</string>
+    <string name="player_error_image_format">Görsel tabanlı altyazılar bu dosyanın biçiminde kullanılamaz.</string>
+    <string name="player_error_image_show">Bu dosyanın görsel tabanlı altyazıları gösterilemedi.</string>
+    <string name="player_external_could_not_open">Bu akış açılamadı.</string>
+    <string name="player_external_play_with">Şununla oynat</string>
+    <string name="player_external_play_with_item">“<xliff:g id="channel">%1$s</xliff:g> · <xliff:g id="programme">%2$s</xliff:g>” içeriğini şununla oynat…</string>
+    <string name="player_external_not_found">Harici oynatıcı bulunamadı — VLC veya MX Player yükleyin.</string>
+    <string name="player_error_audio_no_video">Ses oynatılıyor ancak video bu cihazda görüntülenemedi.</string>
+    <string name="player_error_file_corrupt">Bu videonun dosyası hatalı biçimlendirilmiş veya bozuk olduğundan oynatılamıyor.</string>
+    <string name="player_error_multiple_videos">Birden fazla video oynatılamadı. Kaynak kullanılamıyor veya dosyalar bozuk olabilir.</string>
+    <string name="player_error_decoder_busy">Bu TV\'nin video kod çözücüsü meşgul. Biraz sonra tekrar deneyin.</string>
+    <string name="player_error_no_internet">İnternet bağlantısı yok. Ağınızı kontrol edip tekrar deneyin.</string>
+    <string name="player_error_stream_unavailable">Bu akış oynatılamadı. Kaynak çevrimdışı olabilir veya desteklenmeyen bir biçim kullanıyor olabilir. <xliff:g id="hint">%1$s</xliff:g></string>
+    <string name="player_error_mpv_open_decode">mpv bu dosyayı açamadı veya kodunu çözemedi.</string>
+    <string name="player_error_mpv_stream_never_started">Akış, birkaç kez yeniden denenmesine rağmen mpv\'de hiç başlamadı.</string>
+    <string name="player_error_surround">Bu ses çıkışı çevresel sesi desteklemiyor — stereoya geçildi.</string>
+    <string name="player_error_hardware_fallback">Bu akışın biçimi bu TV\'de donanımla çözülemediği için yazılımla kod çözmeye geçildi ancak bu yöntem TV\'yi aşırı yüklemeden <xliff:g id="resolution">%1$s</xliff:g> çözünürlüğünü sürdüremiyor. TV diğer 4K içerikleri sorunsuz oynatabilir; sorun bu akışın biçiminden kaynaklanıyor.</string>
+    <string name="player_error_hardware_disabled">Donanımla kod çözme kapalı — yazılımla kod çözme <xliff:g id="resolution">%1$s</xliff:g> videoyu işleyemiyor. Ayarlar → Video oynatıcı bölümünden etkinleştirin.</string>
+    <string name="player_error_custom_user_agent">Bu sağlayıcı, kaynak ayarlarında özel bir User-Agent kullanılmasını gerektirebilir.</string>
+    <string name="player_reason_decoder_busy">Donanım video kod çözücüsü meşgul veya bu akışı işleyemiyor</string>
+    <string name="player_reason_decoder_transient">Donanım video kod çözücüsü hatası — geçici bir hata, tekrar deneyin</string>
+    <string name="player_reason_unsupported_video">Bu cihazın kod çözücüsü, bu video biçimini/profilini desteklemiyor (ör. HEVC 10-bit)</string>
+    <string name="player_reason_decoder_memory">Cihazda kod çözücü için yeterli bellek kalmadı — diğer uygulamaları kapatmayı deneyin</string>
+    <string name="player_reason_drm">DRM / güvenli kod çözücü hatası</string>
+    <string name="player_reason_http_509">Sağlayıcı bağlantıyı engelledi — aynı anda çok fazla akış kullanılıyor (HTTP 509)</string>
+    <string name="player_reason_http_403">Sağlayıcı erişimi reddetti (HTTP 403) — kimlik bilgileri, abonelik veya IP engeli</string>
+    <string name="player_reason_http_401">Sağlayıcı oturum açma bilgilerinizi reddetti (HTTP 401)</string>
+    <string name="player_reason_http_404">Akış sağlayıcıda bulunamadı (HTTP 404)</string>
+    <string name="player_reason_http_400">Sağlayıcı isteği reddetti (HTTP 400) — hatalı veya süresi dolmuş bağlantı</string>
+    <string name="player_reason_ssl">Sağlayıcının SSL sertifikası geçersiz veya süresi dolmuş</string>
+    <string name="player_reason_format">Akış biçimi tanınmadı (hatalı veya eksik akış)</string>
+    <string name="player_reason_network">Sağlayıcıya erişirken ağ sorunu oluştu</string>
+    <string name="player_reason_audio">Ses çıkışı hatası — cihaz bu ses biçimini oynatamadı</string>
+    <string name="player_audio_track_number">Ses <xliff:g id="number">%1$d</xliff:g></string>
+    <string name="player_subtitle_track_number">Altyazı <xliff:g id="number">%1$d</xliff:g></string>
+    <string name="player_metadata_separator"> · </string>
+    <string name="player_stream_info">Akış bilgileri</string>
+    <string name="player_stream_engine">Motor</string>
+    <string name="player_stream_format">Biçim</string>
+    <string name="player_stream_source">Kaynak</string>
+    <string name="player_stream_video">Video</string>
+    <string name="player_stream_hdr">HDR</string>
+    <string name="player_stream_hdr10_pq">HDR10 (PQ)</string>
+    <string name="player_stream_hlg">HLG</string>
+    <string name="player_stream_sdr">SDR</string>
+    <string name="player_stream_bitrate">Bit hızı</string>
+    <string name="player_stream_decoder">Kod çözücü</string>
+    <string name="player_stream_audio">Ses</string>
+    <string name="player_stream_buffer">Arabellek</string>
+    <string name="player_stream_engine_exo_preferred">ExoPlayer (tercih edilen)</string>
+    <string name="player_stream_engine_exo_fallback">ExoPlayer (mpv başarısız olduktan sonra yedek seçenek)</string>
+    <string name="player_stream_engine_exo_image_subtitle">ExoPlayer (görsel altyazı aktarımı)</string>
+    <string name="player_stream_fps"><xliff:g id="fps">%1$.2f</xliff:g> fps</string>
+    <string name="player_stream_bit_depth"><xliff:g id="bits">%1$d</xliff:g> bit</string>
+    <string name="player_stream_mbps"><xliff:g id="value">%1$s</xliff:g> Mbps</string>
+    <string name="player_stream_khz"><xliff:g id="value">%1$s</xliff:g> kHz</string>
+    <string name="player_stream_kbps"><xliff:g id="value">%1$s</xliff:g> kbps</string>
+    <string name="player_stream_seconds"><xliff:g id="value">%1$s</xliff:g> sn arabelleğe alındı</string>
+    <string name="player_audio_mono">mono</string>
+    <string name="player_audio_stereo">stereo</string>
+    <plurals name="player_audio_channels">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> kanal</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> kanal</item>
+    </plurals>
+    <plurals name="player_stream_dropped_frames">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> kare atlandı</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> kare atlandı</item>
+    </plurals>
+    <string name="player_decoder_hardware">donanım kod çözücüsü</string>
+    <string name="player_decoder_software">yazılım kod çözücüsü</string>
+    <string name="player_decoder_direct">doğrudan</string>
+    <string name="player_decoder_gpu">GPU</string>
+    <string name="player_subtitles_search_title">OpenSubtitles\'da ara</string>
+    <string name="player_subtitles_working">İşleniyor…</string>
+    <string name="player_subtitles_edit_search">Aramayı düzenle</string>
+    <string name="player_subtitles_title_label">Başlık</string>
+    <string name="player_subtitles_delete_title">OpenSub altyazılarını sil</string>
+    <string name="player_subtitles_sign_in">Oturum aç</string>
+    <string name="player_subtitles_sign_out">Oturumu kapat</string>
+    <string name="player_subtitles_account">Hesap</string>
+    <string name="player_subtitles_username">Kullanıcı adı</string>
+    <string name="player_subtitles_password">Parola</string>
+    <string name="player_subtitles_stay_signed_in">Oturumu açık tut</string>
+    <string name="player_subtitles_sign_in_title">OpenSubtitles\'da oturum aç</string>
+    <string name="player_subtitles_connect_description">Bu profilin OpenSubtitles hesabını bağlayın.</string>
+    <string name="player_subtitles_contacting">OpenSubtitles ile bağlantı kuruluyor…</string>
+    <string name="player_subtitles_api_notice">Bu ürün OpenSubtitles API\'sini kullanır ancak OpenSubtitles tarafından desteklenmez veya onaylanmaz.</string>
+    <string name="player_subtitles_delete_description">Filmler ve diziler için indirdiğiniz altyazıları kaldırın.</string>
+    <string name="player_subtitles_delete_login_message">Bu profilin OpenSubtitles oturum açma bilgilerini bu cihazdan kaldırır. Daha önce indirilen altyazılar çevrimdışı olarak kullanılmaya devam eder.</string>
+    <string name="player_subtitles_delete_action">Altyazıları sil</string>
+    <string name="player_subtitles_downloads">İndirilenler</string>
+    <string name="player_subtitles_vip">VIP</string>
+    <string name="player_subtitles_refresh">Yenile</string>
+    <string name="player_subtitles_sign_in_to_use">opensubtitles.com hesabınızı kullanın. Ücretsiz hesap oluşturabilirsiniz.</string>
+    <plurals name="player_subtitles_remaining">
+        <item quantity="one">Bugün <xliff:g id="remaining">%1$d</xliff:g> / <xliff:g id="total">%2$d</xliff:g> indirme hakkı kaldı</item>
+        <item quantity="other">Bugün <xliff:g id="remaining">%1$d</xliff:g> / <xliff:g id="total">%2$d</xliff:g> indirme hakkı kaldı</item>
+    </plurals>
+    <plurals name="player_subtitles_remaining_short">
+        <item quantity="one">Bugün <xliff:g id="remaining">%1$d</xliff:g> indirme hakkı kaldı</item>
+        <item quantity="other">Bugün <xliff:g id="remaining">%1$d</xliff:g> indirme hakkı kaldı</item>
+    </plurals>
+    <plurals name="player_subtitles_remaining_reset">
+        <item quantity="one">Bugün <xliff:g id="remaining">%1$d</xliff:g> indirme hakkı kaldı · <xliff:g id="reset">%2$s</xliff:g> sonra yenilenir</item>
+        <item quantity="other">Bugün <xliff:g id="remaining">%1$d</xliff:g> indirme hakkı kaldı · <xliff:g id="reset">%2$s</xliff:g> sonra yenilenir</item>
+    </plurals>
+    <plurals name="player_subtitles_remaining_count">
+        <item quantity="one">Bugün <xliff:g id="remaining">%1$d</xliff:g> indirme hakkı kaldı</item>
+        <item quantity="other">Bugün <xliff:g id="remaining">%1$d</xliff:g> indirme hakkı kaldı</item>
+    </plurals>
+    <string name="player_subtitles_session">Bağlantı oturumunun süresi dolar. Yalnızca geçici bir oturum saklamak için kapatın.</string>
+    <string name="player_subtitles_free_description_full">OpenSubtitles, ücretsiz ve açık bir topluluk altyazı hizmetidir. Kendi opensubtitles.com hesabınızla oturum açın; ücretsiz hesap oluşturabilirsiniz. Bu yalnızca geçerli profil için uygulanır.</string>
+    <string name="player_subtitles_session_expired">OpenSubtitles oturumunuzun süresi doldu. Altyazı aramaya ve indirmeye devam etmek için Ayarlar → Video oynatıcı → Altyazılar → OpenSubtitles bölümünden tekrar oturum açın.</string>
+    <string name="player_subtitles_account_needed">OpenSubtitles hesabı gerekli\n\nAltyazı aramak ve indirmek için Ayarlar → Video oynatıcı → Altyazılar → OpenSubtitles bölümünden oturum açın. OpenSubtitles, ücretsiz ve açık bir topluluk hizmetidir — opensubtitles.com adresinden herkes ücretsiz hesap oluşturabilir.</string>
+    <string name="player_subtitles_no_matches">Eşleşen altyazı bulunamadı.</string>
+    <string name="player_subtitles_show_all_languages">Tüm dilleri göster</string>
+    <string name="player_subtitles_all_languages">Tüm diller</string>
+    <string name="player_subtitles_try_again">Tekrar dene</string>
+    <string name="player_subtitles_limit_reached">Günlük altyazı arama sınırına ulaşıldı. Yarın tekrar deneyin.</string>
+    <string name="player_subtitles_network_error">OpenSubtitles\'a ulaşılamadı. Bağlantınızı kontrol edip tekrar deneyin.</string>
+    <string name="player_subtitles_subtitle">Altyazı</string>
+    <string name="player_subtitles_trusted">Güvenilir</string>
+    <string name="player_subtitles_sdh">SDH</string>
+    <string name="player_subtitles_ai">AI</string>
+    <plurals name="player_subtitles_download_count">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> indirme</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> indirme</item>
+    </plurals>
+    <string name="player_subtitles_tags_separator"> · </string>
+    <string name="player_subtitles_search">Ara</string>
+    <string name="player_subtitles_connected_as">Bağlı hesap</string>
+    <string name="player_subtitles_resets">Yenilenme zamanı</string>
+    <string name="player_subtitles_free_account">Ücretsiz</string>
+    <string name="player_subtitles_in"><xliff:g id="value">%1$s</xliff:g></string>
+    <string name="player_subtitles_enter_credentials">OpenSubtitles kullanıcı adınızı ve parolanızı girin.</string>
+    <string name="player_subtitles_invalid_credentials">OpenSubtitles bu hesap bilgileriyle oturum açamadı.</string>
+    <string name="player_subtitles_sign_in_network_error">OpenSubtitles\'a ulaşılamadı. İnternet bağlantınızı kontrol edip tekrar deneyin.</string>
+    <string name="player_subtitles_refresh_network_error">OpenSubtitles yenilenemedi. İnternet bağlantınızı kontrol edin.</string>
+</resources>

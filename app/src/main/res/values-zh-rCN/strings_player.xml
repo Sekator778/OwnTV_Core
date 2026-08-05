@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <string name="player_trailer_exit">退出</string>
+    <string name="player_trailer_progress"><xliff:g id="current">%1$s</xliff:g> / <xliff:g id="duration">%2$s</xliff:g></string>
+    <string name="player_zoom_fit_screen">适应屏幕</string>
+    <string name="player_zoom_fill_crop">填充并裁剪</string>
+    <string name="player_zoom_stretch">拉伸</string>
+    <string name="player_zoom_original">原始尺寸（1:1）</string>
+    <string name="player_zoom_force_16_9">强制 16:9</string>
+    <string name="player_zoom_force_4_3">强制 4:3</string>
+    <string name="player_mini_top_left">左上</string>
+    <string name="player_mini_top_center">顶部居中</string>
+    <string name="player_mini_top_right">右上</string>
+    <string name="player_mini_bottom_left">左下</string>
+    <string name="player_mini_bottom_center">底部居中</string>
+    <string name="player_mini_bottom_right">右下</string>
+    <string name="player_channel_label">频道</string>
+    <string name="player_at_live_edge">● 已到直播最新位置</string>
+    <string name="player_behind_live">● 比直播延迟 <xliff:g id="offset">%1$s</xliff:g></string>
+    <string name="player_live_offset">−<xliff:g id="offset">%1$s</xliff:g></string>
+    <string name="player_channel_not_found">未找到频道</string>
+    <string name="player_multiple_channels">匹配到多个频道</string>
+    <string name="player_tune_failed">调台失败</string>
+    <string name="player_playback_error">播放错误</string>
+    <string name="player_raw_error">错误：<xliff:g id="error">%1$s</xliff:g></string>
+    <string name="player_audio_track">音轨</string>
+    <string name="player_subtitles">字幕</string>
+    <string name="player_subtitle_timing">字幕时间调整</string>
+    <string name="player_add_subtitles">添加字幕</string>
+    <string name="player_adjust">调整</string>
+    <string name="player_search_subtitles">搜索 OpenSubtitles</string>
+    <string name="player_select_local_subtitle">选择本地字幕文件</string>
+    <string name="player_no_tracks">没有可用轨道。</string>
+    <string name="player_image_track"><xliff:g id="label">%1$s</xliff:g> · 图像</string>
+    <string name="player_av_sync">音视频同步</string>
+    <string name="player_no_offset">无偏移</string>
+    <string name="player_subtitles_later">字幕稍后显示</string>
+    <string name="player_subtitles_earlier">字幕提前显示</string>
+    <string name="player_delay_zero">0 毫秒</string>
+    <string name="player_delay_positive">+<xliff:g id="ms">%1$d</xliff:g> 毫秒</string>
+    <string name="player_delay_negative"><xliff:g id="ms">%1$d</xliff:g> 毫秒</string>
+    <string name="player_speed_normal">1.0 倍（正常）</string>
+    <string name="player_speed_normal_short">1.0 倍</string>
+    <string name="player_speed"><xliff:g id="speed">%1$s</xliff:g> 倍</string>
+    <string name="player_next_episode"><xliff:g id="seconds">%1$d</xliff:g> 秒后播放下一集</string>
+    <string name="player_play_now">立即播放</string>
+    <string name="player_volume">音量</string>
+    <string name="player_unmute">取消静音</string>
+    <string name="player_mute">静音</string>
+    <string name="player_percent"><xliff:g id="value">%1$d</xliff:g>%%</string>
+    <string name="player_duration_minutes"><xliff:g id="minutes">%1$d</xliff:g> 分钟</string>
+    <string name="player_season_number">第 <xliff:g id="season">%1$d</xliff:g> 季</string>
+    <string name="player_episode_number">第 <xliff:g id="episode">%1$d</xliff:g> 集</string>
+    <string name="player_episode_context_title"><xliff:g id="title">%1$s</xliff:g> · S<xliff:g id="season">%2$d</xliff:g>E<xliff:g id="episode">%3$d</xliff:g></string>
+    <string name="player_channel_number">#<xliff:g id="number">%1$s</xliff:g></string>
+    <string name="player_live">直播</string>
+    <string name="player_subtitle_delay_zero">0.0 秒</string>
+    <string name="player_subtitle_delay_positive">+<xliff:g id="seconds">%1$.1f</xliff:g> 秒</string>
+    <string name="player_subtitle_delay_negative">−<xliff:g id="seconds">%1$.1f</xliff:g> 秒</string>
+    <string name="player_track_seconds"><xliff:g id="minutes">%1$d</xliff:g>:<xliff:g id="seconds">%2$02d</xliff:g></string>
+    <string name="player_track_hours"><xliff:g id="hours">%1$d</xliff:g>:<xliff:g id="minutes">%2$02d</xliff:g>:<xliff:g id="seconds">%3$02d</xliff:g></string>
+    <string name="player_time_progress"><xliff:g id="position">%1$s</xliff:g> / <xliff:g id="duration">%2$s</xliff:g></string>
+    <string name="player_time_remaining">−<xliff:g id="time">%1$s</xliff:g></string>
+    <string name="player_switch_exo">已切换至 ExoPlayer</string>
+    <string name="player_switch_mpv">已切换至 mpv</string>
+    <string name="player_error_image_subtitle_audio">此视频的音频格式不支持图像字幕。</string>
+    <string name="player_error_both_engines_exo_first">两个视频引擎均播放失败（先尝试 ExoPlayer，再尝试 mpv）。文件可能已损坏，或使用了此电视无法播放的格式。</string>
+    <string name="player_error_both_engines_mpv_first">两个视频引擎均播放失败（mpv 和 ExoPlayer）。文件可能已损坏，或使用了此电视无法播放的格式。（<xliff:g id="error">%1$s</xliff:g>）</string>
+    <string name="player_error_stream_link">无法从门户获取流媒体链接。请检查连接并重试。</string>
+    <string name="player_error_not_streaming">此视频的格式不适合流式播放。请让服务提供商使用快速启动重新编码，或先下载视频。</string>
+    <string name="player_error_lost_connection">与此频道的连接已断开。</string>
+    <string name="player_error_channel">无法播放此频道。</string>
+    <string name="player_error_exo_decode">ExoPlayer 无法在此设备上解码该视频格式（<xliff:g id="error">%1$s</xliff:g>）。</string>
+    <string name="player_error_exo_play">ExoPlayer 无法播放此流媒体（<xliff:g id="error">%1$s</xliff:g>）。</string>
+    <string name="player_error_image_format">此文件的格式不支持图像字幕。</string>
+    <string name="player_error_image_show">无法显示此文件的图像字幕。</string>
+    <string name="player_external_could_not_open">无法打开此流媒体。</string>
+    <string name="player_external_play_with">播放方式</string>
+    <string name="player_external_play_with_item">使用以下应用播放“<xliff:g id="channel">%1$s</xliff:g> · <xliff:g id="programme">%2$s</xliff:g>”…</string>
+    <string name="player_external_not_found">未找到外部播放器——请安装 VLC 或 MX Player。</string>
+    <string name="player_error_audio_no_video">音频正在播放，但此设备无法渲染视频。</string>
+    <string name="player_error_file_corrupt">此视频文件格式异常或已损坏，无法播放。</string>
+    <string name="player_error_multiple_videos">多个视频播放失败。源可能不可用，或文件已损坏。</string>
+    <string name="player_error_decoder_busy">此电视的视频解码器正忙。请稍后重试。</string>
+    <string name="player_error_no_internet">无互联网连接。请检查网络并重试。</string>
+    <string name="player_error_stream_unavailable">无法播放此流媒体。源可能已离线，或使用了不受支持的格式。<xliff:g id="hint">%1$s</xliff:g></string>
+    <string name="player_error_mpv_open_decode">mpv 无法打开或解码此文件。</string>
+    <string name="player_error_mpv_stream_never_started">多次重试后，流媒体仍未在 mpv 中开始播放。</string>
+    <string name="player_error_surround">此音频输出不支持环绕声——已切换为立体声。</string>
+    <string name="player_error_hardware_fallback">此电视无法对该流媒体格式进行硬件解码，因此已回退到软件解码，但软件解码无法在不过度占用电视资源的情况下流畅处理 <xliff:g id="resolution">%1$s</xliff:g>。此电视可能仍能正常播放其他 4K 内容；问题出在此流媒体的特定格式。</string>
+    <string name="player_error_hardware_disabled">硬件解码已关闭——软件解码无法处理 <xliff:g id="resolution">%1$s</xliff:g> 视频。请前往“设置 → 视频播放器”将其启用。</string>
+    <string name="player_error_custom_user_agent">此服务提供商可能要求在源设置中使用自定义 User-Agent。</string>
+    <string name="player_reason_decoder_busy">硬件视频解码器正忙或无法处理此流媒体</string>
+    <string name="player_reason_decoder_transient">硬件视频解码器错误——暂时性问题，请重试</string>
+    <string name="player_reason_unsupported_video">此设备的解码器不支持该视频格式或配置文件（例如 HEVC 10-bit）</string>
+    <string name="player_reason_decoder_memory">设备没有足够内存供解码器使用——请尝试关闭其他应用</string>
+    <string name="player_reason_drm">DRM / 安全解码器错误</string>
+    <string name="player_reason_http_509">服务提供商阻止了连接——同时播放的流媒体过多（HTTP 509）</string>
+    <string name="player_reason_http_403">服务提供商拒绝访问（HTTP 403）——可能是凭据、订阅或 IP 被封锁所致</string>
+    <string name="player_reason_http_401">服务提供商拒绝登录（HTTP 401）</string>
+    <string name="player_reason_http_404">在服务提供商处未找到流媒体（HTTP 404）</string>
+    <string name="player_reason_http_400">服务提供商拒绝了请求（HTTP 400）——链接无效或已过期</string>
+    <string name="player_reason_ssl">服务提供商的 SSL 证书无效或已过期</string>
+    <string name="player_reason_format">无法识别流媒体格式（流媒体无效或不完整）</string>
+    <string name="player_reason_network">连接服务提供商时出现网络问题</string>
+    <string name="player_reason_audio">音频输出错误——设备无法播放此音频格式</string>
+    <string name="player_audio_track_number">音轨 <xliff:g id="number">%1$d</xliff:g></string>
+    <string name="player_subtitle_track_number">字幕 <xliff:g id="number">%1$d</xliff:g></string>
+    <string name="player_metadata_separator"> · </string>
+    <string name="player_stream_info">流媒体信息</string>
+    <string name="player_stream_engine">引擎</string>
+    <string name="player_stream_format">格式</string>
+    <string name="player_stream_source">源</string>
+    <string name="player_stream_video">视频</string>
+    <string name="player_stream_hdr">HDR</string>
+    <string name="player_stream_hdr10_pq">HDR10 (PQ)</string>
+    <string name="player_stream_hlg">HLG</string>
+    <string name="player_stream_sdr">SDR</string>
+    <string name="player_stream_bitrate">比特率</string>
+    <string name="player_stream_decoder">解码器</string>
+    <string name="player_stream_audio">音频</string>
+    <string name="player_stream_buffer">缓冲</string>
+    <string name="player_stream_engine_exo_preferred">ExoPlayer（首选）</string>
+    <string name="player_stream_engine_exo_fallback">ExoPlayer（mpv 失败后的备用引擎）</string>
+    <string name="player_stream_engine_exo_image_subtitle">ExoPlayer（图像字幕接管）</string>
+    <string name="player_stream_fps"><xliff:g id="fps">%1$.2f</xliff:g> 帧/秒</string>
+    <string name="player_stream_bit_depth"><xliff:g id="bits">%1$d</xliff:g> 位</string>
+    <string name="player_stream_mbps"><xliff:g id="value">%1$s</xliff:g> Mbps</string>
+    <string name="player_stream_khz"><xliff:g id="value">%1$s</xliff:g> kHz</string>
+    <string name="player_stream_kbps"><xliff:g id="value">%1$s</xliff:g> kbps</string>
+    <string name="player_stream_seconds">已缓冲 <xliff:g id="value">%1$s</xliff:g> 秒</string>
+    <string name="player_audio_mono">单声道</string>
+    <string name="player_audio_stereo">立体声</string>
+    <plurals name="player_audio_channels">
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> 声道</item>
+    </plurals>
+    <plurals name="player_stream_dropped_frames">
+        <item quantity="other">已丢弃 <xliff:g id="count">%1$d</xliff:g> 帧</item>
+    </plurals>
+    <string name="player_decoder_hardware">硬件解码器</string>
+    <string name="player_decoder_software">软件解码器</string>
+    <string name="player_decoder_direct">直接模式</string>
+    <string name="player_decoder_gpu">GPU</string>
+    <string name="player_subtitles_search_title">搜索 OpenSubtitles</string>
+    <string name="player_subtitles_working">正在处理…</string>
+    <string name="player_subtitles_edit_search">编辑搜索</string>
+    <string name="player_subtitles_title_label">标题</string>
+    <string name="player_subtitles_delete_title">删除 OpenSub 字幕</string>
+    <string name="player_subtitles_sign_in">登录</string>
+    <string name="player_subtitles_sign_out">退出登录</string>
+    <string name="player_subtitles_account">账户</string>
+    <string name="player_subtitles_username">用户名</string>
+    <string name="player_subtitles_password">密码</string>
+    <string name="player_subtitles_stay_signed_in">保持登录状态</string>
+    <string name="player_subtitles_sign_in_title">登录 OpenSubtitles</string>
+    <string name="player_subtitles_connect_description">连接此用户档案的 OpenSubtitles 账户。</string>
+    <string name="player_subtitles_contacting">正在连接 OpenSubtitles…</string>
+    <string name="player_subtitles_api_notice">本产品使用 OpenSubtitles API，但未获得 OpenSubtitles 的认可或认证。</string>
+    <string name="player_subtitles_delete_description">移除为电影和剧集下载的字幕。</string>
+    <string name="player_subtitles_delete_login_message">从此设备移除此用户档案的 OpenSubtitles 登录信息。已下载的字幕仍可离线使用。</string>
+    <string name="player_subtitles_delete_action">删除字幕</string>
+    <string name="player_subtitles_downloads">下载次数</string>
+    <string name="player_subtitles_vip">VIP</string>
+    <string name="player_subtitles_refresh">刷新</string>
+    <string name="player_subtitles_sign_in_to_use">使用您的 opensubtitles.com 账户。可免费创建账户。</string>
+    <plurals name="player_subtitles_remaining">
+        <item quantity="other">今日剩余 <xliff:g id="remaining">%1$d</xliff:g> 次下载，共 <xliff:g id="total">%2$d</xliff:g> 次</item>
+    </plurals>
+    <plurals name="player_subtitles_remaining_short">
+        <item quantity="other">今日剩余 <xliff:g id="remaining">%1$d</xliff:g> 次下载</item>
+    </plurals>
+    <plurals name="player_subtitles_remaining_reset">
+        <item quantity="other">今日剩余 <xliff:g id="remaining">%1$d</xliff:g> 次下载 · <xliff:g id="reset">%2$s</xliff:g> 后重置</item>
+    </plurals>
+    <plurals name="player_subtitles_remaining_count">
+        <item quantity="other">今日剩余 <xliff:g id="remaining">%1$d</xliff:g> 次下载</item>
+    </plurals>
+    <string name="player_subtitles_session">连接会话会过期。关闭后仅保存临时会话。</string>
+    <string name="player_subtitles_free_description_full">OpenSubtitles 是一项免费、开放的社区字幕服务。请使用您自己的 opensubtitles.com 账户登录；账户可免费创建。此设置仅适用于当前用户档案。</string>
+    <string name="player_subtitles_session_expired">您的 OpenSubtitles 会话已过期。要继续搜索和下载字幕，请前往“设置 → 视频播放器 → 字幕 → OpenSubtitles”重新登录。</string>
+    <string name="player_subtitles_account_needed">需要 OpenSubtitles 账户\n\n要搜索和下载字幕，请前往“设置 → 视频播放器 → 字幕 → OpenSubtitles”登录。OpenSubtitles 是一项免费、开放的社区服务——任何人都可以在 opensubtitles.com 免费创建账户。</string>
+    <string name="player_subtitles_no_matches">未找到匹配的字幕。</string>
+    <string name="player_subtitles_show_all_languages">显示所有语言</string>
+    <string name="player_subtitles_all_languages">所有语言</string>
+    <string name="player_subtitles_try_again">重试</string>
+    <string name="player_subtitles_limit_reached">已达到每日字幕搜索上限。请明天再试。</string>
+    <string name="player_subtitles_network_error">无法连接 OpenSubtitles。请检查连接并重试。</string>
+    <string name="player_subtitles_subtitle">字幕</string>
+    <string name="player_subtitles_trusted">可信</string>
+    <string name="player_subtitles_sdh">SDH</string>
+    <string name="player_subtitles_ai">AI</string>
+    <plurals name="player_subtitles_download_count">
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> 次下载</item>
+    </plurals>
+    <string name="player_subtitles_tags_separator"> · </string>
+    <string name="player_subtitles_search">搜索</string>
+    <string name="player_subtitles_connected_as">当前登录账户</string>
+    <string name="player_subtitles_resets">重置时间</string>
+    <string name="player_subtitles_free_account">免费</string>
+    <string name="player_subtitles_in"><xliff:g id="value">%1$s</xliff:g></string>
+    <string name="player_subtitles_enter_credentials">请输入您的 OpenSubtitles 用户名和密码。</string>
+    <string name="player_subtitles_invalid_credentials">OpenSubtitles 无法使用这些账户信息登录。</string>
+    <string name="player_subtitles_sign_in_network_error">无法连接 OpenSubtitles。请检查互联网连接并重试。</string>
+    <string name="player_subtitles_refresh_network_error">无法刷新 OpenSubtitles。请检查互联网连接。</string>
+</resources>

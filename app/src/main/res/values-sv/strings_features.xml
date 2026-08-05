@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <string name="profiles_pin">PIN</string>
+    <string name="profiles_new">Ny profil</string>
+    <string name="profiles_edit">Redigera profil</string>
+    <string name="profiles_name">Namn</string>
+    <string name="profiles_name_hint">t.ex. Alex</string>
+    <string name="profiles_avatar">PROFILBILD</string>
+    <string name="profiles_kids">Barnprofil</string>
+    <string name="profiles_kids_description">Förenklad och säker navigering</string>
+    <string name="profiles_remove_pin">Ta bort PIN-lås</string>
+    <string name="profiles_no_pin">Den här profilen öppnas utan PIN</string>
+    <string name="profiles_change_pin">Ändra PIN (tomt = behåll)</string>
+    <string name="profiles_optional_pin">PIN (valfritt)</string>
+    <string name="profiles_pin_digits">4–6 siffror</string>
+    <string name="profiles_pin_placeholder">····</string>
+    <string name="profiles_name_taken">Det här namnet är redan upptaget — välj ett annat namn.</string>
+    <string name="profiles_create">Skapa</string>
+    <string name="profiles_save">Spara</string>
+    <string name="profiles_gate_title">Vem tittar?</string>
+    <string name="profiles_wrong_pin">Fel PIN — försök igen</string>
+    <string name="profiles_enter_pin"><xliff:g id="name">%1$s</xliff:g> — ange PIN</string>
+    <string name="profiles_kids_badge">BARN</string>
+    <string name="profiles_add">Lägg till profil</string>
+    <string name="profiles_title">Profiler</string>
+    <string name="profiles_add_button">Lägg till profil</string>
+    <string name="profiles_delete_title">Ta bort ”<xliff:g id="name">%1$s</xliff:g>”?</string>
+    <string name="profiles_delete_message">Tar bort den här profilen och dess favoriter och historik. Källorna behålls.</string>
+    <string name="profiles_kids_tag">Barn</string>
+    <string name="profiles_locked_tag">PIN-låst</string>
+    <string name="search_title">Sökning</string>
+    <string name="search_continue">Fortsätt titta</string>
+    <string name="search_unwatched">Inte sett</string>
+    <string name="search_hint">Sök bland kanaler, filmer och serier…</string>
+    <string name="search_recent">Senaste sökningar</string>
+    <string name="search_recent_empty">Dina senaste sökningar visas här.</string>
+    <string name="search_minimum_query">Skriv minst 2 tecken för att söka i allt innehåll.</string>
+    <string name="search_no_results"><xliff:g id="query">%1$s</xliff:g> — inga resultat.</string>
+    <string name="search_nothing_in_list">Inget i <xliff:g id="list">%1$s</xliff:g> än.</string>
+    <string name="search_clear">Rensa</string>
+    <string name="search_jump_to">Gå till</string>
+    <string name="search_watch_live">Titta live</string>
+    <string name="search_play">Spela upp</string>
+    <string name="search_open_series">Öppna serie</string>
+    <string name="search_movie">Film</string>
+    <string name="search_series">Serier</string>
+    <string name="search_channels">Kanaler</string>
+    <string name="search_channel_number">#<xliff:g id="number">%1$s</xliff:g></string>
+    <string name="home_keep_watching">Fortsätt titta</string>
+    <string name="home_play_next">Spela nästa</string>
+    <string name="home_tune_in">Titta live</string>
+    <string name="home_recent_live">Nyligen tittat på live-tv</string>
+    <string name="profiles_default_name">Profil</string>
+    <string name="launcher_recent_live_title">Senaste live-tv</string>
+    <string name="launcher_recent_live_description">Livekanaler du nyligen tittat på</string>
+    <string name="launcher_movie_type">Film</string>
+    <string name="launcher_episode_number">Avsnitt <xliff:g id="episode">%1$d</xliff:g></string>
+    <string name="home_no_preview">Det finns inget att förhandsvisa än.</string>
+    <string name="home_no_rows">Alla rader på startskärmen är dolda.</string>
+    <string name="home_enable_rows">Aktivera raderna igen under Inställningar → Startskärm.</string>
+    <string name="home_start_watching">Börja titta för att se din aktivitet här.</string>
+    <string name="home_continue_empty">Det du fortsätter titta på visas här när det finns uppspelningshistorik.</string>
+    <string name="home_last_watched_now">Tittade senast alldeles nyss</string>
+    <string name="home_finish_by">Klart <xliff:g id="time">%1$s</xliff:g></string>
+    <string name="home_resume">Återuppta</string>
+    <plurals name="home_last_watched_minutes">
+        <item quantity="one">Tittade senast för <xliff:g id="count">%1$d</xliff:g> minut sedan</item>
+        <item quantity="other">Tittade senast för <xliff:g id="count">%1$d</xliff:g> minuter sedan</item>
+    </plurals>
+    <plurals name="home_last_watched_hours">
+        <item quantity="one">Tittade senast för <xliff:g id="count">%1$d</xliff:g> timme sedan</item>
+        <item quantity="other">Tittade senast för <xliff:g id="count">%1$d</xliff:g> timmar sedan</item>
+    </plurals>
+    <plurals name="home_last_watched_days">
+        <item quantity="one">Tittade senast för <xliff:g id="count">%1$d</xliff:g> dag sedan</item>
+        <item quantity="other">Tittade senast för <xliff:g id="count">%1$d</xliff:g> dagar sedan</item>
+    </plurals>
+    <string name="home_season_episode">S<xliff:g id="season">%1$02d</xliff:g> E<xliff:g id="episode">%2$02d</xliff:g></string>
+    <string name="home_season">S<xliff:g id="season">%1$02d</xliff:g></string>
+    <string name="home_episode">E<xliff:g id="episode">%1$02d</xliff:g></string>
+    <string name="home_row_cards">Kort</string>
+    <string name="home_row_keep_watching">Fortsätt titta</string>
+    <string name="home_row_continue_movies">Fortsätt titta på filmer</string>
+    <string name="home_row_continue_series">Fortsätt titta på serier</string>
+    <string name="home_row_recent_channels">Senaste kanalerna</string>
+    <string name="home_row_favorite_channels">Favoritkanaler</string>
+    <string name="home_row_on_now">Sänds nu</string>
+    <string name="home_row_hero_description">Den stora förhandsvisningsraden längst upp</string>
+    <string name="home_row_continue_movies_description">Filmer med en sparad uppspelningsposition</string>
+    <string name="home_row_continue_series_description">Avsnitt att återuppta eller spela härnäst</string>
+    <string name="home_row_recent_description">Livekanaler du nyligen tittat på</string>
+    <string name="home_row_favorite_description">Dina favoritkanaler på live-tv</string>
+    <string name="home_on_now_title"><xliff:g id="title">%1$s</xliff:g> · SÄNDS NU</string>
+    <string name="home_ok_to_watch">OK för att titta</string>
+    <string name="home_ok_to_browse">OK för att bläddra</string>
+    <string name="home_no_programme_details">Ingen programinformation</string>
+    <string name="home_guide_unavailable">Programguidedata är inte tillgängliga</string>
+    <string name="home_next">Nästa</string>
+    <string name="home_channel_number"><xliff:g id="number">%1$s</xliff:g>  <xliff:g id="name">%2$s</xliff:g></string>
+    <string name="home_time_range"><xliff:g id="start">%1$s</xliff:g>-<xliff:g id="end">%2$s</xliff:g></string>
+    <string name="home_now_time">NU · <xliff:g id="time">%1$s</xliff:g></string>
+    <string name="home_up_next_time">HÄRNÄST · <xliff:g id="time">%1$s</xliff:g></string>
+    <string name="home_upcoming_item"><xliff:g id="time">%1$s</xliff:g> <xliff:g id="title">%2$s</xliff:g></string>
+    <plurals name="home_channel_count">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> kanal</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> kanaler</item>
+    </plurals>
+    <string name="update_title">Appuppdatering</string>
+    <string name="update_checking">Söker efter uppdateringar…</string>
+    <string name="update_whats_new">Nyheter</string>
+    <string name="update_downloading">Hämtar uppdatering… <xliff:g id="percent">%1$d</xliff:g>%%</string>
+    <string name="update_available">Uppdatering tillgänglig</string>
+    <string name="update_latest">Du har den senaste versionen (v<xliff:g id="version">%1$s</xliff:g>).</string>
+    <string name="update_available_version">Version <xliff:g id="available">%1$s</xliff:g> är tillgänglig (du har v<xliff:g id="current">%2$s</xliff:g>).</string>
+    <string name="update_installer">Systemets installationsprogram öppnas när nedladdningen är klar.</string>
+    <string name="update_later">Senare</string>
+    <string name="update_now">Uppdatera nu</string>
+    <string name="update_try_again">Försök igen</string>
+    <string name="update_failed_check">Det gick inte att söka efter uppdateringar.</string>
+    <string name="update_failed_check_http">Uppdateringsservern returnerade HTTP <xliff:g id="code">%1$s</xliff:g> under sökningen.</string>
+    <string name="update_no_compatible_apk">Inget uppdateringspaket för den här enheten hittades i utgåvan.</string>
+    <string name="update_invalid_release_response">Uppdateringsservern returnerade en ogiltig versionsbeskrivning.</string>
+    <string name="update_failed_download">Det gick inte att hämta uppdateringen eftersom nätverksbegäran misslyckades.</string>
+    <string name="update_failed_download_http">Nedladdningen av uppdateringen returnerade HTTP <xliff:g id="code">%1$s</xliff:g>.</string>
+    <string name="update_empty_download">Uppdateringsservern returnerade en tom APK.</string>
+    <string name="update_install_failed">Den hämtade uppdateringen kunde inte öppnas av systemets installationsprogram.</string>
+    <string name="update_ready">OwnTV v<xliff:g id="available">%1$s</xliff:g> är klar (du har v<xliff:g id="current">%2$s</xliff:g>).</string>
+    <string name="recovery_title">OwnTV kunde inte öppna sin databas</string>
+    <string name="recovery_data_safe_full">Dina profiler, spellistor, favoriter och din historik har INTE raderats — det här beror på att en databasuppgradering misslyckades, och data finns fortfarande kvar på den här enheten.\n\nRapportera detta så att felet kan åtgärdas och inkludera meddelandet nedan.</string>
+    <string name="recovery_retry">Försök igen</string>
+    <string name="recovery_backup_hint">Om du har en säkerhetskopieringsfil kan du nollställa appen och återställa säkerhetskopian efteråt. Nollställning raderar allt som lagras på den här enheten.</string>
+    <string name="recovery_confirm_reset">Bekräfta: radera alla appdata</string>
+    <string name="recovery_reset">Nollställ appdata (sista utvägen)</string>
+</resources>

@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <string name="setup_background_image">Obrázek na pozadí</string>
+    <string name="setup_background_image_description">Vyberte fotografii, která se zobrazí za rozhraním, nebo ji odeberte, chcete-li obnovit jednobarevné panely.</string>
+    <string name="setup_from_device">Ze zařízení</string>
+    <string name="setup_from_phone">Vzdáleně</string>
+    <string name="setup_send_from_phone">Odeslat z telefonu</string>
+    <string name="setup_phone_background_description">Na telefonu připojeném ke stejné Wi-Fi naskenujte QR kód (nebo otevřete adresu URL), zadejte tento PIN a odešlete fotografii. Okamžitě se nastaví jako obrázek na pozadí.</string>
+    <string name="setup_opening_server">Spouštění serveru…</string>
+    <string name="setup_enter_pin_browser">Zadejte tento PIN v prohlížeči</string>
+    <string name="setup_open_url">Nebo otevřete tuto adresu URL</string>
+    <string name="setup_try_again">Zkusit znovu</string>
+    <string name="setup_start_again_new_pin">Spustit znovu s novým PIN</string>
+    <string name="setup_companion_invalid_port">Zadejte platný port v rozsahu 1 až 65535.</string>
+    <string name="setup_companion_port_in_use">Port <xliff:g id="port">%1$d</xliff:g> se již používá. Zkuste jiný port.</string>
+    <string name="setup_companion_unavailable">Místní server se nepodařilo spustit. Zkuste to znovu.</string>
+    <string name="setup_companion_locked">Příliš mnoho nesprávných pokusů o zadání PIN — odkaz byl z bezpečnostních důvodů uzavřen.</string>
+    <string name="setup_tmdb_name">Nastavit název TMDB</string>
+    <string name="setup_tmdb_description">Zadejte přesný název z TMDB, který se má přiřadit. Rok je volitelný, ale pomůže, pokud má stejný název více titulů.</string>
+    <string name="setup_year_optional">Rok (volitelný)</string>
+    <string name="setup_pick_location">Vybrat umístění</string>
+    <string name="setup_grant_storage_access">Povolit úplný přístup k úložišti</string>
+    <string name="setup_use_folder">Použít tuto složku</string>
+    <string name="setup_new_folder">Nová složka</string>
+    <string name="setup_folder_name">Název složky</string>
+    <string name="setup_folder_example">např. Moje TV</string>
+    <string name="setup_from_current_folder">..</string>
+    <string name="setup_move_indicator">↕</string>
+    <string name="setup_welcome_tagline">Váš vlastní přehrávač IPTV.</string>
+    <string name="setup_get_started">Začít</string>
+    <string name="setup_before_you_start">Než začnete</string>
+    <string name="setup_disclaimer">OwnTV je pouze přehrávač médií. Neobsahuje žádné kanály, playlisty ani obsah. Za přidání vlastních legálně dostupných zdrojů Xtream, M3U nebo Stalker odpovídáte vy.</string>
+    <string name="setup_i_understand">Rozumím</string>
+    <string name="setup_set_up_owntv">Nastavení OwnTV</string>
+    <string name="setup_setup_choice_description">Začněte od začátku, nebo obnovte profily, playlisty a oblíbené ze souboru zálohy.</string>
+    <string name="setup_new_profile">Nový profil</string>
+    <string name="setup_create_profile_add_sources">Vytvořit profil a přidat zdroje</string>
+    <string name="setup_restore_backup">Obnovení ze zálohy</string>
+    <string name="setup_import_profiles_playlists">Import profilů a playlistů ze souboru</string>
+    <string name="setup_add_playlist">Přidat playlist</string>
+    <string name="setup_add_playlist_description">Přidejte zdroj pro tento profil, nebo jej nastavte později.</string>
+    <string name="setup_new">Nový</string>
+    <string name="setup_add_m3u_xtream">Přidat zdroj M3U nebo Xtream</string>
+    <string name="setup_existing">Existující</string>
+    <string name="setup_use_other_profile_playlists">Použít playlisty z jiného profilu</string>
+    <string name="setup_import">Import</string>
+    <string name="setup_restore_backup_file">Obnovit ze souboru zálohy</string>
+    <string name="setup_skip_for_now">Prozatím přeskočit</string>
+    <string name="setup_use_existing_playlists">Použít existující playlisty</string>
+    <string name="setup_pick_playlists">Vyberte playlisty, které chcete přidat do tohoto profilu.</string>
+    <plurals name="setup_add_selected_playlists">
+        <item quantity="one">Přidat <xliff:g id="count">%1$d</xliff:g></item>
+        <item quantity="few">Přidat <xliff:g id="count">%1$d</xliff:g></item>
+        <item quantity="many">Přidat <xliff:g id="count">%1$d</xliff:g></item>
+        <item quantity="other">Přidat <xliff:g id="count">%1$d</xliff:g></item>
+    </plurals>
+    <string name="setup_restoring">Probíhá obnovení…</string>
+    <string name="setup_wrong_backup_password">Nesprávné heslo zálohy</string>
+    <string name="setup_enter_backup_password">Zadejte heslo zálohy</string>
+    <string name="setup_password_mismatch_sealed">Zadané heslo se neshoduje. Tato záloha je zašifrovaná — bez hesla, se kterým byla vytvořena, ji nelze otevřít.</string>
+    <string name="setup_password_mismatch">Zadané heslo se neshoduje. Zkuste to znovu, nebo pokračujte bez hesla a obnovte vše kromě uložených hesel.</string>
+    <string name="setup_backup_encrypted_prompt">Tato záloha je zašifrovaná. Chcete-li ji otevřít a obnovit, zadejte heslo zálohy.</string>
+    <string name="setup_backup_passwords_encrypted_prompt">Hesla v této záloze jsou zašifrovaná. Chcete-li je obnovit, zadejte heslo zálohy, nebo pokračujte bez něj, obnovte vše ostatní a hesla zadejte znovu později.</string>
+    <string name="setup_backup_password">Heslo zálohy</string>
+    <string name="setup_skip_no_passwords">Přeskočit (bez hesel)</string>
+    <string name="setup_restore">Obnovit</string>
+    <string name="setup_restore_failed">Obnovení se nezdařilo</string>
+    <string name="setup_backup_read_failed">Soubor zálohy se nepodařilo přečíst</string>
+    <string name="setup_invalid_mac">Neplatná MAC adresa — použijte formát AA:BB:CC:DD:EE:FF</string>
+    <string name="setup_pick_backup_file">Vybrat soubor zálohy k obnovení</string>
+    <string name="setup_restore_a_backup">Obnovit zálohu</string>
+    <string name="setup_restore_choice_description">Odešlete zálohu z jiného zařízení (telefonu nebo notebooku) připojeného ke stejné Wi-Fi, nebo vyberte soubor zálohy, který je již uložený v tomto zařízení.</string>
+    <string name="setup_upload_from_wifi_device">Nahrát ze zařízení připojeného k vaší Wi-Fi</string>
+    <string name="setup_local_file">Místní soubor</string>
+    <string name="setup_pick_backup_local">Vybrat soubor zálohy v tomto zařízení</string>
+    <string name="setup_run_in_background">Pokračovat na pozadí</string>
+    <string name="setup_importing_catalog">Importování katalogu…</string>
+    <string name="setup_preparing_catalog">Příprava katalogu</string>
+    <string name="setup_watching_during_import">Můžete začít sledovat, zatímco se načítá zbytek katalogu.</string>
+    <string name="setup_all_set">Vše je připraveno!</string>
+    <plurals name="setup_restored_items">
+        <item quantity="one">Obnovena <xliff:g id="items">%1$d</xliff:g> položka. Pro načtení obsahu znovu synchronizujte své zdroje.</item>
+        <item quantity="few">Obnoveny <xliff:g id="items">%1$d</xliff:g> položky. Pro načtení obsahu znovu synchronizujte své zdroje.</item>
+        <item quantity="many">Obnoveno <xliff:g id="items">%1$d</xliff:g> položky. Pro načtení obsahu znovu synchronizujte své zdroje.</item>
+        <item quantity="other">Obnoveno <xliff:g id="items">%1$d</xliff:g> položek. Pro načtení obsahu znovu synchronizujte své zdroje.</item>
+    </plurals>
+    <string name="setup_passwords_omitted">Poté znovu zadejte všechna uložená hesla.</string>
+    <plurals name="setup_skipped_sources">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> zdroj byl přeskočen, protože tato verze nepodporuje jeho typ playlistu.</item>
+        <item quantity="few"><xliff:g id="count">%1$d</xliff:g> zdroje byly přeskočeny, protože tato verze nepodporuje jejich typy playlistů.</item>
+        <item quantity="many"><xliff:g id="count">%1$d</xliff:g> zdroje bylo přeskočeno, protože tato verze nepodporuje jejich typy playlistů.</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> zdrojů bylo přeskočeno, protože tato verze nepodporuje jejich typy playlistů.</item>
+    </plurals>
+    <string name="setup_continue">Pokračovat</string>
+    <string name="setup_import_failed">Import se nezdařil</string>
+    <string name="setup_try_again_caps">Zkusit znovu</string>
+    <string name="setup_add_from_phone">Přidat z telefonu</string>
+    <string name="setup_phone_add_description">Na telefonu nebo notebooku připojeném ke stejné Wi-Fi naskenujte QR kód (nebo otevřete adresu URL), zadejte tento PIN, vyplňte údaje playlistu a klepněte na Odeslat do TV. Jeho údaje se poté zobrazí zde a budou připravené k importu — pomocí dálkového ovladače stiskněte Spustit import.</string>
+    <string name="setup_opening">Spouštění…</string>
+    <string name="setup_open_server">Spustit server</string>
+    <string name="setup_stop_server">Zastavit server</string>
+    <string name="setup_add_source">Přidat zdroj</string>
+    <string name="setup_add_source_description">Vyplňte formulář na telefonu, nebo zde zadejte údaje pomocí dálkového ovladače.</string>
+    <string name="setup_manual">Ručně</string>
+    <string name="setup_use_phone_same_wifi">Použít telefon připojený ke stejné Wi-Fi</string>
+    <string name="setup_type_source_here">Zadat Xtream / M3U / Stalker zde</string>
+    <string name="setup_edit_source">Upravit zdroj</string>
+    <string name="setup_add_your_source">Přidat vlastní zdroj</string>
+    <string name="setup_edit_source_description">Aktualizujte údaje tohoto zdroje nebo změňte nastavení jeho automatické aktualizace.</string>
+    <string name="setup_byo_source_description">OwnTV je přehrávač — přidejte vlastní zdroj Xtream, M3U nebo Stalker.</string>
+    <string name="setup_xtream">Xtream</string>
+    <string name="setup_m3u">M3U / M3U8</string>
+    <string name="setup_stalker_mac">Stalker (MAC)</string>
+    <string name="setup_source_name_optional">Název (volitelný)</string>
+    <string name="setup_default_iptv">Moje IPTV</string>
+    <string name="setup_name_default_playlist">Můj playlist</string>
+    <string name="setup_default_portal">Můj portál</string>
+    <string name="setup_default_profile">Profil</string>
+    <string name="setup_server_url">Adresa URL serveru</string>
+    <string name="setup_server_example">http://hostitel:port</string>
+    <string name="setup_username">Uživatelské jméno</string>
+    <string name="setup_password">Heslo</string>
+    <string name="setup_password_keep">Heslo (ponecháním prázdného pole se nezmění)</string>
+    <string name="setup_playlist_url_local_file">Adresa URL playlistu nebo místní soubor</string>
+    <string name="setup_playlist_example">http://…/playlist.m3u</string>
+    <string name="setup_playlist_file_unavailable">Soubor playlistu se nepodařilo otevřít. Vyberte jej znovu, mohl být přesunut.</string>
+    <string name="setup_playlist_path_unsupported">Tato cesta k místnímu playlistu není podporována.</string>
+    <string name="setup_local_file_choose">Vybrat místní soubor .m3u / .m3u8…</string>
+    <string name="setup_local_file_prefix">Místní soubor: <xliff:g id="name">%1$s</xliff:g></string>
+    <string name="setup_portal_url">Adresa URL portálu</string>
+    <string name="setup_portal_example">http://hostitel:port/c/</string>
+    <string name="setup_mac_address">MAC adresa</string>
+    <string name="setup_mac_example">00:1A:79:AA:BB:CC</string>
+    <string name="setup_mac_invalid">Zadejte 12 znaků, např. 00:1A:79:AA:BB:CC</string>
+    <string name="setup_device_model_preset">Předvolba modelu zařízení (User-Agent)…</string>
+    <string name="setup_testing">Testování…</string>
+    <string name="setup_test_connection">Otestovat připojení</string>
+    <plurals name="setup_stalker_test_connected">
+        <item quantity="one">✓ Připojeno přes <xliff:g id="endpoint">%1$s</xliff:g> (<xliff:g id="fields">%2$d</xliff:g> pole profilu)</item>
+        <item quantity="few">✓ Připojeno přes <xliff:g id="endpoint">%1$s</xliff:g> (<xliff:g id="fields">%2$d</xliff:g> pole profilu)</item>
+        <item quantity="many">✓ Připojeno přes <xliff:g id="endpoint">%1$s</xliff:g> (<xliff:g id="fields">%2$d</xliff:g> pole profilu)</item>
+        <item quantity="other">✓ Připojeno přes <xliff:g id="endpoint">%1$s</xliff:g> (<xliff:g id="fields">%2$d</xliff:g> polí profilu)</item>
+    </plurals>
+    <string name="setup_stalker_test_expires">Platnost vyprší <xliff:g id="date">%1$s</xliff:g></string>
+    <string name="setup_user_agent_optional">User-Agent (volitelný)</string>
+    <string name="setup_user_agent_example">např. VLC/3.0.20 LibVLC/3.0.20</string>
+    <string name="setup_auto_refresh">Automatická aktualizace</string>
+    <string name="setup_auto_refresh_description">Vypnuto, při spuštění nebo když jsou data zastaralá</string>
+    <string name="setup_default_playlist">Výchozí playlist</string>
+    <string name="setup_default_playlist_description">V celé aplikaci zobrazovat pouze tento playlist. Vypnutím zobrazíte všechny playlisty; nastavení můžete kdykoli změnit na horní liště.</string>
+    <string name="setup_what_to_sync">Co synchronizovat</string>
+    <string name="setup_sync_off_editing">Vypnuté části zůstanou skryté a nikdy se nenačtou. Po opětovném zapnutí části se řádky z mezipaměti zobrazí okamžitě.</string>
+    <string name="setup_sync_choices">Nyní importuje přednostně · Později synchronizuje na pozadí · Vypnuto se nikdy nenačítá ani nezobrazuje.</string>
+    <string name="setup_live_tv">Živé vysílání</string>
+    <string name="setup_channels_categories">Kanály a kategorie</string>
+    <string name="setup_movies">Filmy</string>
+    <string name="setup_vod_movie_catalog">Katalog filmů VOD</string>
+    <string name="setup_series">Seriály</string>
+    <string name="setup_tv_series_catalog">Katalog TV seriálů</string>
+    <string name="setup_start_import">Spustit import</string>
+    <string name="setup_update_source_save">Uložit</string>
+    <string name="setup_pick_playlist_file">Vybrat soubor playlistu (.m3u / .m3u8)</string>
+    <string name="setup_device_model_preset_title">Předvolba modelu zařízení</string>
+    <string name="setup_auto_refresh_title">Automatická aktualizace</string>
+    <string name="setup_on">Zapnuto</string>
+    <string name="setup_now">Nyní</string>
+    <string name="setup_later">Později</string>
+    <string name="setup_off">Vypnuto</string>
+    <string name="setup_scope_value">◀ <xliff:g id="value">%1$s</xliff:g> ▶</string>
+    <string name="setup_default_mag">Výchozí (MAG200)</string>
+    <string name="setup_mag250">MAG250</string>
+    <string name="setup_mag254">MAG254</string>
+    <string name="setup_mag270">MAG270</string>
+    <string name="setup_mag420">MAG420</string>
+    <string name="companion_pin_page_title">OwnTV — Zadat PIN</string>
+    <string name="companion_pin_heading">Zadejte PIN</string>
+    <string name="companion_pin_description">Chcete-li pokračovat, zadejte šestimístný PIN zobrazený na televizoru.</string>
+    <string name="companion_pin_placeholder">••••••</string>
+    <string name="companion_pin_aria">PIN</string>
+    <string name="companion_continue">Pokračovat</string>
+    <string name="companion_pin_mismatch">Tento PIN se neshoduje — zkuste to znovu.</string>
+    <string name="companion_add_page_title">OwnTV — Přidat zdroj</string>
+    <string name="companion_add_heading">Přidat zdroj</string>
+    <string name="companion_add_description">Vyplňte jeden zdroj a stiskněte Odeslat. Zobrazí se na televizoru — až budete připraveni, vezměte dálkový ovladač a stiskněte tam Spustit import.</string>
+    <string name="companion_default_playlist">Výchozí playlist</string>
+    <string name="companion_send_to_tv">Odeslat do TV</string>
+    <string name="companion_sync_xtream_hint">Co synchronizovat — Nyní importuje přednostně, Později synchronizuje na pozadí a Vypnuto se nikdy nenačítá.</string>
+    <string name="companion_sync_stalker_hint">Co synchronizovat — výchozí volbou pro živé vysílání je Nyní; pro filmy a seriály je výchozí volbou Později (VOD přes Stalker je pomalé).</string>
+    <string name="companion_saved_page_title">OwnTV — Odesláno</string>
+    <string name="companion_saved_heading">Odesláno do televizoru ✓</string>
+    <string name="companion_saved_source_body"><xliff:g id="name">%1$s</xliff:g> je nyní na obrazovce Přidat zdroj v televizoru. Zkontrolujte tam údaje a pomocí dálkového ovladače stiskněte Spustit import.</string>
+    <string name="companion_saved_send_another">Odeslat další zdroj</string>
+    <string name="companion_saved_backup_body">Vaše záloha je nyní v televizoru. Vezměte dálkový ovladač a vyberte, které části chcete obnovit.</string>
+    <string name="companion_saved_backup_link">Odeslat jiný soubor</string>
+    <string name="companion_saved_image_body">Váš obrázek je nyní obrázkem na pozadí televizoru.</string>
+    <string name="companion_saved_image_link">Odeslat jiný obrázek</string>
+    <string name="companion_backup_page_title">OwnTV — Obnovení ze zálohy</string>
+    <string name="companion_backup_heading">Obnovit zálohu</string>
+    <string name="companion_backup_description">Vyberte soubor zálohy OwnTV (.own nebo starší .json) a stiskněte Odeslat. Přenese se do televizoru — vezměte dálkový ovladač a vyberte tam, co chcete obnovit.</string>
+    <string name="companion_backup_file">Soubor zálohy</string>
+    <string name="companion_choose_backup">Nejprve vyberte soubor zálohy.</string>
+    <string name="companion_sending">Odesílání…</string>
+    <string name="companion_upload_failed">Nahrávání se nezdařilo (HTTP <xliff:g id="status">%1$d</xliff:g>). Zkontrolujte PIN a zkuste to znovu.</string>
+    <string name="companion_could_not_reach">K televizoru se nepodařilo připojit. Zůstaňte připojeni ke stejné Wi-Fi a zkuste to znovu.</string>
+    <string name="companion_could_not_read">Tento soubor se nepodařilo přečíst.</string>
+    <string name="companion_image_page_title">OwnTV — Obrázek na pozadí</string>
+    <string name="companion_image_heading">Odeslat obrázek na pozadí</string>
+    <string name="companion_image_description">Vyberte fotografii (JPG, PNG nebo WebP) a stiskněte Odeslat. Nastaví se jako obrázek na pozadí za televizním rozhraním.</string>
+    <string name="companion_image_file">Soubor obrázku</string>
+    <string name="companion_choose_image">Nejprve vyberte obrázek.</string>
+    <string name="companion_image_too_large">Tento obrázek je příliš velký (max. 25 MB).</string>
+    <string name="companion_download_page_title">OwnTV — Stáhnout zálohu</string>
+    <string name="companion_download_heading">Stáhnout zálohu</string>
+    <string name="companion_download_description">Televizor připravil soubor zálohy OwnTV. Klepnutím na tlačítko jej uložte do tohoto zařízení (owntv-backup.own). Uchovávejte jej na bezpečném místě — později z něj můžete provést obnovení.</string>
+    <string name="companion_download_backup">Stáhnout zálohu</string>
+    <string name="companion_error_bad_request">Chybný požadavek</string>
+    <string name="companion_error_body_too_large">Tělo požadavku je příliš velké.</string>
+    <string name="companion_error_unauthorized">Nemáte oprávnění. Zkontrolujte PIN a zkuste to znovu.</string>
+    <string name="companion_error_not_found">Nenalezeno.</string>
+    <string name="companion_error_no_backup">Není k dispozici žádná záloha.</string>
+    <string name="companion_error_backup_too_large">Záloha je příliš velká.</string>
+    <string name="companion_error_empty_backup">Záloha je prázdná.</string>
+    <string name="companion_error_image_too_large">Obrázek je příliš velký.</string>
+    <string name="companion_error_invalid_image">Nahraný soubor není platný obrázek.</string>
+    <string name="companion_error_missing_fields">Chybí povinná pole.</string>
+    <string name="setup_invalid_locale">Tato záloha obsahovala nepodporovaný jazyk aplikace. Obnovení proběhlo úspěšně, ale váš aktuální jazyk zůstal zachován.</string>
+    <string name="setup_prefer_hls_live_tv">Upřednostnit HLS pro živé vysílání</string>
+    <string name="setup_prefer_hls_description">Upřednostní HLS (.m3u8) před MPEG-TS pro živé vysílání a TV archiv. Pokud HLS selže, použije se MPEG-TS.</string>
+    <string name="setup_prefer_hls_description_supported">Upřednostní HLS (.m3u8) před MPEG-TS pro živé vysílání a TV archiv. Pokud HLS selže, použije se MPEG-TS. Váš poskytovatel uvádí podporu HLS.</string>
+    <string name="setup_hide_new_categories">Ve výchozím nastavení skrývat nové kategorie</string>
+    <string name="setup_hide_new_categories_description">V celém profilu: kategorie, které se objeví při budoucích synchronizacích, budou zpočátku skryté. Kdykoli je zobrazíte v části Přizpůsobení.</string>
+</resources>

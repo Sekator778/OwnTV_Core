@@ -1,23 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
-    <!-- Translators: Plural download status shown on the download progress chip. "count" is the number of items being downloaded. When count is 1, just the word "Downloading" is shown. -->
+    <!-- Translators: Plural download status shown on the download progress chip. "count" is the number of items being downloaded. -->
     <plurals name="content_downloading_items">
-        <item quantity="one">Downloading</item>
+        <item quantity="one">Downloading <xliff:g id="count">%1$d</xliff:g> item</item>
         <item quantity="other">Downloading <xliff:g id="count">%1$d</xliff:g> items</item>
     </plurals>
     <!-- Translators: Plural queued status shown on the download progress chip. "count" is the number of queued items. -->
     <plurals name="content_queued_items">
-        <item quantity="one">Queued</item>
+        <item quantity="one">Queued <xliff:g id="count">%1$d</xliff:g> item</item>
         <item quantity="other">Queued <xliff:g id="count">%1$d</xliff:g> items</item>
     </plurals>
     <!-- Translators: Plural paused status shown on the download progress chip. "count" is the number of paused items. -->
     <plurals name="content_paused_items">
-        <item quantity="one">Paused</item>
+        <item quantity="one">Paused <xliff:g id="count">%1$d</xliff:g> item</item>
         <item quantity="other">Paused <xliff:g id="count">%1$d</xliff:g> items</item>
     </plurals>
     <!-- Translators: Plural download failure status. "count" is the number of failed downloads. -->
     <plurals name="content_downloads_failed">
-        <item quantity="one">Download failed</item>
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> download failed</item>
         <item quantity="other"><xliff:g id="count">%1$d</xliff:g> downloads failed</item>
     </plurals>
 

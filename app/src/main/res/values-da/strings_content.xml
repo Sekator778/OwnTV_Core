@@ -1,0 +1,305 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <plurals name="content_downloading_items">
+        <item quantity="one">Downloader <xliff:g id="count">%1$d</xliff:g> element</item>
+        <item quantity="other">Downloader <xliff:g id="count">%1$d</xliff:g> elementer</item>
+    </plurals>
+    <plurals name="content_queued_items">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> element i kø</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> elementer i kø</item>
+    </plurals>
+    <plurals name="content_paused_items">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> element sat på pause</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> elementer sat på pause</item>
+    </plurals>
+    <plurals name="content_downloads_failed">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> download mislykkedes</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> downloads mislykkedes</item>
+    </plurals>
+    <string name="content_genre_action">Action</string>
+    <string name="content_genre_adult">Voksen</string>
+    <string name="content_genre_anime">Anime</string>
+    <string name="content_genre_comedy">Komedie</string>
+    <string name="content_genre_documentary">Dokumentar</string>
+    <string name="content_genre_drama">Drama</string>
+    <string name="content_genre_entertainment">Underholdning</string>
+    <string name="content_genre_horror">Gyser</string>
+    <string name="content_genre_kids">Børn</string>
+    <string name="content_genre_movies">Film</string>
+    <string name="content_genre_music">Musik</string>
+    <string name="content_genre_news">Nyheder</string>
+    <string name="content_genre_other">Andet</string>
+    <string name="content_genre_religious">Religion</string>
+    <string name="content_genre_romance">Romantik</string>
+    <string name="content_genre_scifi">Science fiction</string>
+    <string name="content_genre_series">Serier</string>
+    <string name="content_genre_sport">Sport</string>
+    <string name="content_exit_owntv">Afslut OwnTV?</string>
+    <string name="content_exit_confirmation">Er du sikker på, at du vil lukke appen?</string>
+    <string name="content_restore_incomplete_title">En gendannelse blev ikke færdig</string>
+    <string name="content_restore_incomplete_message">Appen lukkede under gendannelsen af <xliff:g id="description">%1$s</xliff:g>, så noget af det mangler muligvis. Intet blev slettet — kør den samme gendannelse igen via Indstillinger → Sikkerhedskopi og gendannelse for at udfylde resten.</string>
+    <string name="content_playlist_picker_title">Vis afspilningsliste</string>
+    <string name="content_playlist_picker_description">Vælg, hvilken afspilningsliste du vil gennemse. Valget gælder overalt og huskes.</string>
+    <string name="content_avatar_picker_title">Vælg din avatar</string>
+    <string name="content_category_browser_title">Kategorier</string>
+    <string name="content_channel_overlay_title">Kanaler</string>
+    <string name="content_live_now">Nu</string>
+    <string name="content_live_next">Næste</string>
+    <string name="content_media_overview">Oversigt</string>
+    <string name="content_media_cast">Medvirkende</string>
+    <string name="content_media_press_back">Tryk på Tilbage for at lukke</string>
+    <string name="content_add_favourite">Føj til favoritter</string>
+    <string name="content_remove_favourite">Fjern fra favoritter</string>
+    <string name="content_mark_watched">Markér som set</string>
+    <string name="content_mark_unwatched">Markér som ikke set</string>
+    <string name="content_move">Flyt</string>
+    <string name="content_move_to_category">Flyt til kategori…</string>
+    <string name="content_download">Download</string>
+    <string name="content_download_all_episodes">Download alle afsnit</string>
+    <string name="content_play">Afspil</string>
+    <string name="content_next_up">Næste</string>
+    <string name="content_favorited">Føjet til favoritter</string>
+    <string name="content_favorite">Føj til favoritter</string>
+    <string name="content_show_watched">Vis sete</string>
+    <string name="content_hide_watched">Skjul sete</string>
+    <string name="content_sorting">Sortering</string>
+    <string name="content_seasons">Sæsoner</string>
+    <string name="content_episodes">Afsnit</string>
+    <string name="content_oldest_first">Ældste først</string>
+    <string name="content_newest_first">Nyeste først</string>
+    <string name="content_last_watched">Sidst set</string>
+    <string name="content_press_ok_episodes">Tryk på OK på plakaten for at se afsnit.</string>
+    <string name="content_play_external">Afspil med ekstern afspiller</string>
+    <string name="content_delete_subtitles">Slet OpenSub-undertekster</string>
+    <string name="content_tmdb_details">TMDB-oplysninger</string>
+    <string name="content_play_trailer">Afspil trailer</string>
+    <string name="content_refetch_tmdb">Hent TMDB-oplysninger igen</string>
+    <string name="content_set_tmdb_name">Angiv TMDB-navn</string>
+    <string name="content_close">Luk</string>
+    <string name="content_focus_movie">Fokusér på en film for at se oplysninger.</string>
+    <string name="content_focus_channel">Fokusér på en kanal for at se den her.</string>
+    <string name="content_press_ok_fullscreen">Tryk på OK for at se i fuld skærm · Hold nede for valgmuligheder</string>
+    <string name="content_rename_hint">Kun for denne profil. Lad feltet være tomt for at gendanne det oprindelige navn.</string>
+    <string name="content_focus_series">Fokusér på en serie, og tryk på OK for at se afsnit.</string>
+    <string name="content_focus_episode">Fokusér på et afsnit for at se oplysninger.</string>
+    <string name="content_no_movies_here">Ingen film her.</string>
+    <string name="content_no_series_here">Ingen serier her.</string>
+    <string name="content_no_episodes">Ingen tilgængelige afsnit.</string>
+    <string name="content_no_movies_found">Der blev ikke fundet nogen film for “<xliff:g id="query">%1$s</xliff:g>”</string>
+    <plurals name="content_count_movies">
+        <item quantity="one"><xliff:g id="category">%1$s</xliff:g> (<xliff:g id="count">%2$d</xliff:g> film)</item>
+        <item quantity="other"><xliff:g id="category">%1$s</xliff:g> (<xliff:g id="count">%2$d</xliff:g> film)</item>
+    </plurals>
+    <plurals name="content_count_series">
+        <item quantity="one"><xliff:g id="category">%1$s</xliff:g> (<xliff:g id="count">%2$d</xliff:g> serie)</item>
+        <item quantity="other"><xliff:g id="category">%1$s</xliff:g> (<xliff:g id="count">%2$d</xliff:g> serier)</item>
+    </plurals>
+    <string name="content_provider">Udbyder</string>
+    <string name="content_no_series_found">Der blev ikke fundet nogen serier for “<xliff:g id="query">%1$s</xliff:g>”</string>
+    <string name="content_search_movies"><xliff:g id="category">%1$s</xliff:g>…</string>
+    <string name="content_search_series"><xliff:g id="category">%1$s</xliff:g>…</string>
+    <string name="content_reorder_movie">Omarranger film</string>
+    <string name="content_reorder_series">Omarranger serie</string>
+    <string name="content_already_downloaded">Allerede downloadet — se menuen Downloads.</string>
+    <string name="content_refetching_tmdb">Henter TMDB-oplysninger igen…</string>
+    <string name="content_researching_tmdb">Søger igen på TMDB…</string>
+    <string name="content_ok_play_options">Tryk på OK for at afspille · hold nede for valgmuligheder</string>
+    <string name="content_resume_at">Fortsæt <xliff:g id="position">%1$s</xliff:g></string>
+    <string name="content_duration_hours"><xliff:g id="hours">%1$d</xliff:g> t. <xliff:g id="minutes">%2$d</xliff:g> min.</string>
+    <string name="content_duration_minutes"><xliff:g id="minutes">%1$d</xliff:g> min.</string>
+    <string name="content_rating">★ <xliff:g id="rating">%1$.1f</xliff:g></string>
+    <string name="content_metadata_separator">  •  </string>
+    <string name="content_genres_separator"> · </string>
+    <string name="content_season_episode">S<xliff:g id="season">%1$d</xliff:g> · A<xliff:g id="episode">%2$d</xliff:g></string>
+    <string name="content_season_episode_title">S<xliff:g id="season">%1$d</xliff:g> · A<xliff:g id="episode">%2$d</xliff:g> <xliff:g id="title">%3$s</xliff:g></string>
+    <string name="content_season">Sæson <xliff:g id="season">%1$d</xliff:g></string>
+    <string name="content_season_progress">Sæson <xliff:g id="season">%1$d</xliff:g> · <xliff:g id="completed">%2$d</xliff:g>/<xliff:g id="total">%3$d</xliff:g></string>
+    <string name="content_no_epg">Ingen EPG</string>
+    <string name="content_epg">EPG</string>
+    <string name="content_live_day_time_range"><xliff:g id="day">%1$s</xliff:g> <xliff:g id="start">%2$s</xliff:g> – <xliff:g id="stop">%3$s</xliff:g></string>
+    <string name="content_epg_days">EPG · <xliff:g id="days">%1$d</xliff:g> d.</string>
+    <string name="content_catchup">Arkiv</string>
+    <string name="content_catchup_days">Arkiv · <xliff:g id="days">%1$d</xliff:g> d.</string>
+    <string name="content_play_external_short">Afspil i ekstern afspiller</string>
+    <string name="content_rename">Omdøb</string>
+    <string name="content_rename_channel">Omdøb kanal</string>
+    <string name="content_reorder_channel">Omarranger kanal</string>
+    <string name="content_hide_channel">Skjul kanal</string>
+    <string name="content_remove_history">Fjern fra historik</string>
+    <string name="content_no_channels_here">Ingen kanaler her.</string>
+    <string name="content_no_channels_found">Der blev ikke fundet nogen kanaler for “<xliff:g id="query">%1$s</xliff:g>”</string>
+    <plurals name="content_count_channels">
+        <item quantity="one"><xliff:g id="category">%1$s</xliff:g> (<xliff:g id="count">%2$d</xliff:g> kanal)</item>
+        <item quantity="other"><xliff:g id="category">%1$s</xliff:g> (<xliff:g id="count">%2$d</xliff:g> kanaler)</item>
+    </plurals>
+    <string name="content_search_channels"><xliff:g id="category">%1$s</xliff:g>…</string>
+    <string name="content_match_epg">Match EPG</string>
+    <string name="content_catchup_title">Arkiv · <xliff:g id="channel">%1$s</xliff:g></string>
+    <string name="content_rewind_at">Spol tilbage · <xliff:g id="time">%1$s</xliff:g></string>
+    <string name="content_catchup_prompt">Vælg et nyligt program, som skal afspilles igen fra begyndelsen.</string>
+    <string name="content_catchup_empty">Der er endnu ingen nyere programguidedata for denne kanal — sørg for, at dens EPG er matchet (hold den nede, eller brug Match EPG).</string>
+    <string name="content_epg_match_prompt">Vælg kanalen i programguiden for “<xliff:g id="channel">%1$s</xliff:g>”.</string>
+    <string name="content_epg_match_prompt_current">Vælg kanalen i programguiden for “<xliff:g id="channel">%1$s</xliff:g>”. Nuværende: <xliff:g id="match">%2$s</xliff:g></string>
+    <string name="content_search_guide_channels">Søg efter kanaler i programguiden…</string>
+    <string name="content_no_epg_data">Ingen EPG-data endnu — tilføj en EPG-kilde under Indstillinger.</string>
+    <string name="content_no_guide_channels">Ingen kanaler i programguiden matcher “<xliff:g id="query">%1$s</xliff:g>”.</string>
+    <string name="content_clear_match">Ryd match</string>
+    <string name="content_live_now_label">NU</string>
+    <string name="content_live_next_label">NÆSTE · <xliff:g id="time">%1$s</xliff:g></string>
+    <string name="content_live_later_label">SENERE</string>
+    <string name="content_live_time_range_plain"><xliff:g id="start">%1$s</xliff:g> – <xliff:g id="stop">%2$s</xliff:g></string>
+    <string name="content_category_favorites">Favoritter</string>
+    <string name="content_category_history">Historik</string>
+    <string name="content_category_all_channels">Alle kanaler</string>
+    <string name="content_category_united_kingdom">Storbritannien</string>
+    <string name="content_category_united_states">USA</string>
+    <string name="content_category_germany">Tyskland</string>
+    <string name="content_category_sports">Sport</string>
+    <string name="content_category_all_movies">Alle film</string>
+    <string name="content_category_action">Action</string>
+    <string name="content_category_drama">Drama</string>
+    <string name="content_category_comedy">Komedie</string>
+    <string name="content_category_horror">Gyser</string>
+    <string name="content_category_all_series">Alle serier</string>
+    <string name="content_category_animation">Animation</string>
+    <string name="content_category_documentary">Dokumentar</string>
+    <string name="content_category_all_downloads">Alle downloads</string>
+    <string name="content_category_movies">Film</string>
+    <string name="content_category_series">Serier</string>
+    <string name="content_zero_channels">0 kanaler</string>
+    <string name="content_zero_movies">0 film</string>
+    <string name="content_zero_series">0 serier</string>
+    <string name="content_zero_downloads">0 downloads</string>
+    <string name="content_nothing_here">Her er ikke noget endnu</string>
+    <string name="content_add_source">Tilføj en kilde</string>
+    <string name="content_preview_select_channel">Vælg en kanal for at se en forhåndsvisning her.</string>
+    <string name="content_offline_banner">Du er offline — afspilning og opdateringer fungerer ikke, før du har forbindelse igen.</string>
+    <string name="content_subtitle_select_file">Vælg lokal undertekstfil</string>
+    <string name="content_subtitle_load_failed">Undertekstfilen kunne ikke indlæses.</string>
+    <string name="content_history">Historik</string>
+    <string name="content_all_playlists">Alle afspilningslister</string>
+    <string name="content_search_categories">Søg i kategorier…</string>
+    <string name="content_no_categories_match">Ingen kategorier matcher</string>
+    <string name="content_action_resume">Fortsæt</string>
+    <string name="content_action_play">Afspil</string>
+    <string name="content_action_next_up">Næste</string>
+    <string name="content_action_last_channel">Seneste kanal</string>
+    <string name="content_continue_label"><xliff:g id="action">%1$s</xliff:g> · <xliff:g id="name">%2$s</xliff:g></string>
+    <string name="content_empty_section"><xliff:g id="section">%1$s</xliff:g> kommer i en senere fase. Tilføj en M3U- eller Xtream-kilde for at udfylde denne liste.</string>
+    <string name="content_progress_percent"><xliff:g id="percent">%1$d</xliff:g>%%</string>
+    <string name="content_section_category"><xliff:g id="section">%1$s</xliff:g> / <xliff:g id="category">%2$s</xliff:g></string>
+    <string name="content_preview_player">Din egen IPTV-afspiller.</string>
+    <string name="content_live_time_range"><xliff:g id="start">%1$s</xliff:g> – <xliff:g id="end">%2$s</xliff:g></string>
+    <string name="content_live_time_remaining"><xliff:g id="end">%1$s</xliff:g> · <xliff:g id="minutes">%2$d</xliff:g> min. tilbage</string>
+    <string name="common_browse">Gennemse</string>
+    <string name="content_downloads_title">Downloads</string>
+    <string name="content_downloads_description">Film og afsnit gemt til offline afspilning.</string>
+    <string name="content_downloads_empty">Ingen downloads endnu. Åbn en film eller et afsnit, og tryk på Download.</string>
+    <string name="content_downloads_storage">Lagerplads</string>
+    <string name="content_downloads_storage_free"><xliff:g id="free">%1$s</xliff:g> GB ledig ud af <xliff:g id="total">%2$s</xliff:g> GB</string>
+    <string name="content_storage_internal">Intern lagerplads</string>
+    <string name="content_storage_removable">Flytbar lagerplads</string>
+    <string name="content_storage_app">Applager (kræver ingen tilladelse)</string>
+    <string name="content_downloads_completed"><xliff:g id="size">%1$s</xliff:g> downloadet</string>
+    <string name="content_downloads_failure_message">Download mislykkedes — der kunne ikke oprettes forbindelse til kilden. Tryk på Prøv igen.</string>
+    <string name="content_downloads_queued">I kø…</string>
+    <string name="content_downloads_count"><xliff:g id="count">%1$d</xliff:g></string>
+    <string name="content_downloads_active">Aktive</string>
+    <string name="content_downloads_waiting">Venter</string>
+    <string name="content_downloads_completed_group">Fuldførte</string>
+    <string name="content_downloads_failed_group">Mislykkede</string>
+    <string name="content_downloads_progress"><xliff:g id="percent">%1$d</xliff:g>%% · <xliff:g id="downloaded">%2$s</xliff:g> / <xliff:g id="total">%3$s</xliff:g></string>
+    <string name="content_downloads_progress_unknown">Downloader… <xliff:g id="downloaded">%1$s</xliff:g></string>
+    <string name="content_downloads_folder_separator"> › </string>
+    <string name="content_downloads_play">Afspil</string>
+    <string name="content_downloads_external">Ekstern</string>
+    <string name="content_downloads_pause">Sæt på pause</string>
+    <string name="content_downloads_unknown_size">—</string>
+    <string name="content_epg_create_profile">Opret en profil for at se programguiden.</string>
+    <string name="content_epg_add_playlist">Tilføj en afspilningsliste for at se programguiden.</string>
+    <string name="content_epg_no_channels_query">Der blev ikke fundet nogen kanaler i programguiden for “<xliff:g id="query">%1$s</xliff:g>”.</string>
+    <string name="content_epg_mismatched_ids">Programguidedata er gemt, men deres kanal-id\'er matcher ikke dine kanalers EPG-id\'er — dette EPG-feed tilhører muligvis en anden kanalpakke fra udbyderen.</string>
+    <string name="content_epg_catchup_unavailable">Arkiv er ikke tilgængeligt for denne kanal.</string>
+    <string name="content_epg_matched_no_programmes">Matchet — men denne kanal i programguiden har endnu ingen aktuelle programmer i EPG-feedet.</string>
+    <string name="content_epg_add_playlist_first">Tilføj først en afspilningsliste.</string>
+    <string name="content_epg_no_match_data">Der er endnu ingen EPG-data at matche med.</string>
+    <string name="content_epg_all_matched">Alt er allerede matchet.</string>
+    <string name="content_epg_no_match">Der blev ikke fundet et EPG-match for “<xliff:g id="channel">%1$s</xliff:g>” — prøv at vælge manuelt.</string>
+    <plurals name="content_epg_stats_channels">
+        <item quantity="one">Programguiden er indlæst: <xliff:g id="channels">%1$d</xliff:g> kanal.</item>
+        <item quantity="other">Programguiden er indlæst: <xliff:g id="channels">%1$d</xliff:g> kanaler.</item>
+    </plurals>
+    <plurals name="content_epg_stats_programmes">
+        <item quantity="one">Programguiden indeholder <xliff:g id="programmes">%1$d</xliff:g> program.</item>
+        <item quantity="other">Programguiden indeholder <xliff:g id="programmes">%1$d</xliff:g> programmer.</item>
+    </plurals>
+    <string name="content_epg_stats_loaded"><xliff:g id="channels">%1$s</xliff:g> <xliff:g id="programmes">%2$s</xliff:g> <xliff:g id="catchup">%3$s</xliff:g></string>
+    <string name="content_epg_no_catchup_channels">Ingen kanaler understøtter arkiv.</string>
+    <string name="content_epg_stats_no_catchup">Der er ingen tilgængelige arkivkanaler.</string>
+    <plurals name="content_epg_catchup_count">
+        <item quantity="one">Arkiv er tilgængeligt på <xliff:g id="count">%1$d</xliff:g> kanal.</item>
+        <item quantity="other">Arkiv er tilgængeligt på <xliff:g id="count">%1$d</xliff:g> kanaler.</item>
+    </plurals>
+    <plurals name="content_epg_stats_catchup_available">
+        <item quantity="one">Arkiv er tilgængeligt på <xliff:g id="count">%1$d</xliff:g> kanal.</item>
+        <item quantity="other">Arkiv er tilgængeligt på <xliff:g id="count">%1$d</xliff:g> kanaler.</item>
+    </plurals>
+    <plurals name="content_epg_auto_matched_applied">
+        <item quantity="one"><xliff:g id="applied">%1$d</xliff:g> kanal blev matchet automatisk.</item>
+        <item quantity="other"><xliff:g id="applied">%1$d</xliff:g> kanaler blev matchet automatisk.</item>
+    </plurals>
+    <plurals name="content_epg_auto_matched_review">
+        <item quantity="one"><xliff:g id="review">%1$d</xliff:g> kanal skal gennemgås.</item>
+        <item quantity="other"><xliff:g id="review">%1$d</xliff:g> kanaler skal gennemgås.</item>
+    </plurals>
+    <string name="content_epg_auto_matched"><xliff:g id="applied">%1$s</xliff:g> <xliff:g id="review">%2$s</xliff:g></string>
+    <plurals name="content_epg_auto_matched_no_review">
+        <item quantity="one"><xliff:g id="applied">%1$d</xliff:g> kanal blev matchet automatisk.</item>
+        <item quantity="other"><xliff:g id="applied">%1$d</xliff:g> kanaler blev matchet automatisk.</item>
+    </plurals>
+    <string name="content_epg_title">Tv-guide</string>
+    <string name="content_epg_matching">Matcher…</string>
+    <string name="content_epg_empty">Ingen EPG tilføjet.</string>
+    <string name="content_epg_no_guide">Ingen programguide.</string>
+    <string name="content_epg_no_programme">Intet program på dette tidspunkt.</string>
+    <string name="content_epg_add_description">Tilføj en EPG-kilde (XMLTV) for at fylde programguiden med programmer.</string>
+    <string name="content_epg_favourite_description">Føj denne kanal til favoritter, eller angiv dens programguidedata.</string>
+    <string name="content_epg_guide_category">Programguidekategori</string>
+    <string name="content_epg_all_categories">Alle kategorier</string>
+    <string name="content_epg_search_hint">Søg efter kanaler i programguiden…</string>
+    <string name="content_epg_add">Tilføj EPG</string>
+    <string name="content_epg_add_favourite">Føj til favoritter</string>
+    <string name="content_epg_remove_favourite">Fjern fra favoritter</string>
+    <string name="content_epg_jump_now">Gå til nu</string>
+    <string name="content_epg_runtime"><xliff:g id="minutes">%1$d</xliff:g> min.</string>
+    <string name="content_epg_review_matches">Gennemgå EPG-match</string>
+    <string name="content_epg_review_description">Disse kanaler blev matchet efter navn, men matchet var ikke sikkert. Acceptér de rigtige, og spring resten over.</string>
+    <string name="content_epg_accept">Acceptér</string>
+    <string name="content_epg_accept_all">Acceptér alle</string>
+    <string name="content_epg_skip">Spring over</string>
+    <string name="content_epg_skip_all">Spring alle over</string>
+    <string name="content_epg_pick_manually">Vælg EPG manuelt</string>
+    <string name="content_epg_move_hint">Gå til højre ind i en række, og naviger derefter med ◀ ▶ for at se en forhåndsvisning af et program.</string>
+    <string name="content_epg_catchup">↻ arkiv</string>
+    <string name="content_epg_time_range"><xliff:g id="start">%1$s</xliff:g> – <xliff:g id="end">%2$s</xliff:g></string>
+    <string name="content_epg_all">Alle</string>
+    <string name="content_epg_sort_alpha">A–Å</string>
+    <string name="content_epg_sort_provider">Udbyder</string>
+    <string name="content_epg_sort_live">Live-tv</string>
+    <string name="content_epg_sort_catchup">Arkiv</string>
+    <string name="content_epg_sort_favorites">Favoritter</string>
+    <string name="content_epg_category_button">Kategori: <xliff:g id="label">%1$s</xliff:g></string>
+    <string name="content_epg_sort_button">Sortér: <xliff:g id="label">%1$s</xliff:g></string>
+    <string name="content_epg_match_button">Match EPG automatisk</string>
+    <string name="content_epg_channel_score">→ <xliff:g id="name">%1$s</xliff:g> · <xliff:g id="percent">%2$d</xliff:g>%%</string>
+    <string name="content_epg_channel_number"><xliff:g id="number">%1$s</xliff:g>  <xliff:g id="name">%2$s</xliff:g></string>
+    <string name="content_epg_bits_separator"> · </string>
+    <string name="content_epg_now">NU · <xliff:g id="time">%1$s</xliff:g></string>
+    <string name="content_epg_watch_start">Se fra begyndelsen</string>
+    <string name="content_epg_watch_channel">Se kanal</string>
+    <string name="content_epg_favourite">Føj til favoritter</string>
+    <string name="content_epg_unfavourite">Fjern fra favoritter</string>
+    <string name="content_epg_player_choice_description">Angiv et permanent valg under Indstillinger › Arkiv.</string>
+    <string name="content_epg_own_player">OwnTV-afspiller</string>
+    <string name="content_epg_external_player">Ekstern afspiller</string>
+</resources>

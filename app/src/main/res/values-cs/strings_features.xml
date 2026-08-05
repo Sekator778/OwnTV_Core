@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <string name="profiles_pin">PIN</string>
+    <string name="profiles_new">Nový profil</string>
+    <string name="profiles_edit">Upravit profil</string>
+    <string name="profiles_name">Název</string>
+    <string name="profiles_name_hint">např. Alex</string>
+    <string name="profiles_avatar">AVATAR</string>
+    <string name="profiles_kids">Dětský profil</string>
+    <string name="profiles_kids_description">Zjednodušené a bezpečné procházení</string>
+    <string name="profiles_remove_pin">Odstranit zámek PIN</string>
+    <string name="profiles_no_pin">Tento profil se otevírá bez kódu PIN</string>
+    <string name="profiles_change_pin">Změnit PIN (prázdné = ponechat)</string>
+    <string name="profiles_optional_pin">PIN (volitelné)</string>
+    <string name="profiles_pin_digits">4–6 číslic</string>
+    <string name="profiles_pin_placeholder">····</string>
+    <string name="profiles_name_taken">Tento název se již používá — zvolte prosím jiný.</string>
+    <string name="profiles_create">Vytvořit</string>
+    <string name="profiles_save">Uložit</string>
+    <string name="profiles_gate_title">Kdo se dívá?</string>
+    <string name="profiles_wrong_pin">Nesprávný PIN — zkuste to znovu</string>
+    <string name="profiles_enter_pin"><xliff:g id="name">%1$s</xliff:g> — zadejte PIN</string>
+    <string name="profiles_kids_badge">DĚTI</string>
+    <string name="profiles_add">Přidat profil</string>
+    <string name="profiles_title">Profily</string>
+    <string name="profiles_add_button">Přidat profil</string>
+    <string name="profiles_delete_title">Odstranit „<xliff:g id="name">%1$s</xliff:g>“?</string>
+    <string name="profiles_delete_message">Odstraní tento profil spolu s jeho oblíbenými položkami a historií. Zdroje zůstanou zachovány.</string>
+    <string name="profiles_kids_tag">Dětský</string>
+    <string name="profiles_locked_tag">Uzamčeno kódem PIN</string>
+    <string name="search_title">Vyhledávání</string>
+    <string name="search_continue">Pokračovat ve sledování</string>
+    <string name="search_unwatched">Nezhlédnuté</string>
+    <string name="search_hint">Hledat kanály, filmy a seriály…</string>
+    <string name="search_recent">Nedávná vyhledávání</string>
+    <string name="search_recent_empty">Zde se zobrazí vaše nedávná vyhledávání.</string>
+    <string name="search_minimum_query">Chcete-li prohledat vše, zadejte alespoň 2 znaky.</string>
+    <string name="search_no_results"><xliff:g id="query">%1$s</xliff:g> — žádné výsledky.</string>
+    <string name="search_nothing_in_list">V <xliff:g id="list">%1$s</xliff:g> zatím nic není.</string>
+    <string name="search_clear">Vymazat</string>
+    <string name="search_jump_to">Přejít na</string>
+    <string name="search_watch_live">Sledovat živě</string>
+    <string name="search_play">Přehrát</string>
+    <string name="search_open_series">Otevřít seriál</string>
+    <string name="search_movie">Film</string>
+    <string name="search_series">Seriál</string>
+    <string name="search_channels">Kanály</string>
+    <string name="search_channel_number">#<xliff:g id="number">%1$s</xliff:g></string>
+    <string name="home_keep_watching">Pokračovat ve sledování</string>
+    <string name="home_play_next">Přehrát další</string>
+    <string name="home_tune_in">Sledovat živě</string>
+    <string name="home_recent_live">Nedávno sledované živé vysílání</string>
+    <string name="profiles_default_name">Profil</string>
+    <string name="launcher_recent_live_title">Nedávno sledované živé vysílání</string>
+    <string name="launcher_recent_live_description">Nedávno sledované kanály živého vysílání</string>
+    <string name="launcher_movie_type">Film</string>
+    <string name="launcher_episode_number">Epizoda <xliff:g id="episode">%1$d</xliff:g></string>
+    <string name="home_no_preview">Zatím není k dispozici žádný náhled.</string>
+    <string name="home_no_rows">Všechny řádky na domovské obrazovce jsou skryté.</string>
+    <string name="home_enable_rows">Řádky znovu zapnete v Nastavení → Domovská obrazovka.</string>
+    <string name="home_start_watching">Začněte něco sledovat a zde se zobrazí vaše aktivita.</string>
+    <string name="home_continue_empty">Položky k pokračování ve sledování se zde zobrazí, jakmile bude k dispozici historie přehrávání.</string>
+    <string name="home_last_watched_now">Naposledy sledováno před chvílí</string>
+    <string name="home_finish_by">Dokoukáte do <xliff:g id="time">%1$s</xliff:g></string>
+    <string name="home_resume">Pokračovat</string>
+    <plurals name="home_last_watched_minutes">
+        <item quantity="one">Naposledy sledováno před <xliff:g id="count">%1$d</xliff:g> minutou</item>
+        <item quantity="few">Naposledy sledováno před <xliff:g id="count">%1$d</xliff:g> minutami</item>
+        <item quantity="many">Naposledy sledováno před <xliff:g id="count">%1$d</xliff:g> minuty</item>
+        <item quantity="other">Naposledy sledováno před <xliff:g id="count">%1$d</xliff:g> minutami</item>
+    </plurals>
+    <plurals name="home_last_watched_hours">
+        <item quantity="one">Naposledy sledováno před <xliff:g id="count">%1$d</xliff:g> hodinou</item>
+        <item quantity="few">Naposledy sledováno před <xliff:g id="count">%1$d</xliff:g> hodinami</item>
+        <item quantity="many">Naposledy sledováno před <xliff:g id="count">%1$d</xliff:g> hodiny</item>
+        <item quantity="other">Naposledy sledováno před <xliff:g id="count">%1$d</xliff:g> hodinami</item>
+    </plurals>
+    <plurals name="home_last_watched_days">
+        <item quantity="one">Naposledy sledováno před <xliff:g id="count">%1$d</xliff:g> dnem</item>
+        <item quantity="few">Naposledy sledováno před <xliff:g id="count">%1$d</xliff:g> dny</item>
+        <item quantity="many">Naposledy sledováno před <xliff:g id="count">%1$d</xliff:g> dne</item>
+        <item quantity="other">Naposledy sledováno před <xliff:g id="count">%1$d</xliff:g> dny</item>
+    </plurals>
+    <string name="home_season_episode">S<xliff:g id="season">%1$02d</xliff:g> E<xliff:g id="episode">%2$02d</xliff:g></string>
+    <string name="home_season">S<xliff:g id="season">%1$02d</xliff:g></string>
+    <string name="home_episode">E<xliff:g id="episode">%1$02d</xliff:g></string>
+    <string name="home_row_cards">Karty</string>
+    <string name="home_row_keep_watching">Pokračovat ve sledování</string>
+    <string name="home_row_continue_movies">Pokračovat ve sledování filmů</string>
+    <string name="home_row_continue_series">Pokračovat ve sledování seriálů</string>
+    <string name="home_row_recent_channels">Nedávno sledované kanály</string>
+    <string name="home_row_favorite_channels">Oblíbené kanály</string>
+    <string name="home_row_on_now">Právě vysíláme</string>
+    <string name="home_row_hero_description">Velký řádek s náhledem nahoře</string>
+    <string name="home_row_continue_movies_description">Filmy s uloženou pozicí</string>
+    <string name="home_row_continue_series_description">Epizody, v jejichž přehrávání lze pokračovat, nebo přehrát další</string>
+    <string name="home_row_recent_description">Kanály živého vysílání, které jste nedávno sledovali</string>
+    <string name="home_row_favorite_description">Vaše oblíbené kanály živého vysílání</string>
+    <string name="home_on_now_title"><xliff:g id="title">%1$s</xliff:g> · PRÁVĚ VYSÍLÁME</string>
+    <string name="home_ok_to_watch">OK – sledovat</string>
+    <string name="home_ok_to_browse">OK – procházet</string>
+    <string name="home_no_programme_details">Podrobnosti o pořadu nejsou k dispozici</string>
+    <string name="home_guide_unavailable">Data TV programu nejsou k dispozici</string>
+    <string name="home_next">Další</string>
+    <string name="home_channel_number"><xliff:g id="number">%1$s</xliff:g>  <xliff:g id="name">%2$s</xliff:g></string>
+    <string name="home_time_range"><xliff:g id="start">%1$s</xliff:g>-<xliff:g id="end">%2$s</xliff:g></string>
+    <string name="home_now_time">NYNÍ · <xliff:g id="time">%1$s</xliff:g></string>
+    <string name="home_up_next_time">NÁSLEDUJE · <xliff:g id="time">%1$s</xliff:g></string>
+    <string name="home_upcoming_item"><xliff:g id="time">%1$s</xliff:g> <xliff:g id="title">%2$s</xliff:g></string>
+    <plurals name="home_channel_count">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> kanál</item>
+        <item quantity="few"><xliff:g id="count">%1$d</xliff:g> kanály</item>
+        <item quantity="many"><xliff:g id="count">%1$d</xliff:g> kanálu</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> kanálů</item>
+    </plurals>
+    <string name="update_title">Aktualizace aplikace</string>
+    <string name="update_checking">Kontrola aktualizací…</string>
+    <string name="update_whats_new">Co je nového</string>
+    <string name="update_downloading">Stahování aktualizace… <xliff:g id="percent">%1$d</xliff:g>%%</string>
+    <string name="update_available">Je dostupná aktualizace</string>
+    <string name="update_latest">Používáte nejnovější verzi (v<xliff:g id="version">%1$s</xliff:g>).</string>
+    <string name="update_available_version">Je dostupná verze <xliff:g id="available">%1$s</xliff:g> (máte v<xliff:g id="current">%2$s</xliff:g>).</string>
+    <string name="update_installer">Po dokončení stahování se otevře systémový instalační program.</string>
+    <string name="update_later">Později</string>
+    <string name="update_now">Aktualizovat nyní</string>
+    <string name="update_try_again">Zkusit znovu</string>
+    <string name="update_failed_check">Nepodařilo se zkontrolovat aktualizace.</string>
+    <string name="update_failed_check_http">Aktualizační server vrátil při kontrole kód HTTP <xliff:g id="code">%1$s</xliff:g>.</string>
+    <string name="update_no_compatible_apk">Ve vydání nebyl nalezen balíček aktualizace pro toto zařízení.</string>
+    <string name="update_invalid_release_response">Aktualizační server vrátil neplatný popis vydání.</string>
+    <string name="update_failed_download">Aktualizaci se nepodařilo stáhnout, protože síťový požadavek selhal.</string>
+    <string name="update_failed_download_http">Stahování aktualizace vrátilo kód HTTP <xliff:g id="code">%1$s</xliff:g>.</string>
+    <string name="update_empty_download">Aktualizační server vrátil prázdný soubor APK.</string>
+    <string name="update_install_failed">Systémovému instalačnímu programu se nepodařilo staženou aktualizaci otevřít.</string>
+    <string name="update_ready">OwnTV v<xliff:g id="available">%1$s</xliff:g> je připravena (máte v<xliff:g id="current">%2$s</xliff:g>).</string>
+    <string name="recovery_title">OwnTV nemohla otevřít svou databázi</string>
+    <string name="recovery_data_safe_full">Vaše profily, playlisty, oblíbené položky ani historie NEBYLY odstraněny — jde o selhání upgradu databáze a data jsou stále v tomto zařízení.\n\nNahlaste prosím tuto chybu, aby ji bylo možné opravit, a přiložte níže uvedenou zprávu.</string>
+    <string name="recovery_retry">Zkusit znovu</string>
+    <string name="recovery_backup_hint">Pokud máte soubor zálohy, můžete vymazat data aplikace a poté zálohu obnovit. Vymazáním dat se odstraní vše uložené v tomto zařízení.</string>
+    <string name="recovery_confirm_reset">Potvrzení: vymazat všechna data aplikace</string>
+    <string name="recovery_reset">Vymazat data aplikace (krajní řešení)</string>
+</resources>
