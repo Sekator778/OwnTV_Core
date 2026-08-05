@@ -543,6 +543,22 @@ class TestValidateStrings(unittest.TestCase):
         self.assertIn("BackHandler { onDismiss() }", screen)
         self.assertIn("openContributionLink(context, url)", screen)
         self.assertIn("copyContributionLink(context, url)", screen)
+        dialog = screen.split("private fun TranslationContributionDialog", 1)[1]
+        self.assertIn("color = colors.primary", dialog)
+        for resource in (
+            "settings_language_contribution_description",
+            "settings_language_contribution_qr_description",
+            "settings_language_contribution_qr_failed",
+            "settings_language_contribution_copy",
+        ):
+            self.assertIn(f"stringResource(R.string.{resource})", dialog)
+        for resource in (
+            "settings_language_contribution_open_failed",
+            "settings_language_contribution_copied",
+            "settings_language_contribution_copy_failed",
+        ):
+            self.assertIn(f"R.string.{resource}", dialog)
+        self.assertIn("stringResource(it)", dialog)
 
     def test_canonical_url_and_qr_payload_artifacts_are_consistent(self):
         config = json.loads((ROOT / "tools/i18n/community.json").read_text())
