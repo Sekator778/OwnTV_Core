@@ -13,7 +13,7 @@ Current Weblate language definitions are verified against
 Spanish is `es` (there is no `es_ES` definition), while Latin America is `es_419`.
 
 <!-- canonical-weblate:start -->
-**Canonical project overview:** <http://127.0.0.1:8080/projects/owntv/>
+**Canonical project overview:** <https://hosted.weblate.org/projects/owntv/>
 
 The app, README, and checked-in QR asset all use this value from `community.json`; replace that single source and regenerate when the project route changes.
 <!-- canonical-weblate:end -->

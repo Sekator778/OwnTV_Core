@@ -39,7 +39,7 @@ object SupportedLocales {
     const val TRANSLATION_READINESS_THRESHOLD_PERCENT: Int = 70
 
     /** Canonical Hosted Weblate project overview used by the app and generated documentation. */
-    const val CONTRIBUTION_PROJECT_URL: String = "http://127.0.0.1:8080/projects/owntv/"
+    const val CONTRIBUTION_PROJECT_URL: String = "https://hosted.weblate.org/projects/owntv/"
 
     /** Tag meaning "follow the current device locale list" (see ``LocaleStore``). */
     const val SYSTEM_DEFAULT_TAG: String = ""

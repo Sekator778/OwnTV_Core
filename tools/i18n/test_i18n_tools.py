@@ -547,7 +547,7 @@ class TestValidateStrings(unittest.TestCase):
     def test_canonical_url_and_qr_payload_artifacts_are_consistent(self):
         config = json.loads((ROOT / "tools/i18n/community.json").read_text())
         url = config["projectUrl"]
-        self.assertEqual("http://127.0.0.1:8080/projects/owntv/", url)
+        self.assertEqual("https://hosted.weblate.org/projects/owntv/", url)
         self.assertEqual(70, config["translationReadinessThresholdPercent"])
         generated = (ROOT / "app/src/main/java/tv/own/owntv/core/i18n/SupportedLocales.kt").read_text()
         readme = (ROOT / "README.md").read_text()
