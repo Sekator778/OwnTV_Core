@@ -1676,4 +1676,20 @@ Resync and remove missing titles also allows removing titles the provider no lon
     <string name="settings_panel_width_preview_panel"><xliff:g id="label">%1$s</xliff:g> panel</string>
     <string name="settings_panel_width_total">Total size</string>
     <string name="settings_panel_width_invalid_total">Total size is <xliff:g id="total">%1$d</xliff:g>%%. It has to be 100%% — please adjust.</string>
+    <!-- Translators: Global call to action on Language settings for helping translate the app. -->
+    <string name="settings_language_help_translate">Help translate OwnTV into your language</string>
+    <!-- Translators: Explains that the QR/link opens the whole translation project, where any language and all app sections are available. -->
+    <string name="settings_language_contribution_description">Scan the QR code or open the link to choose any available language and contribute across all six OwnTV translation components.</string>
+    <!-- Translators: Accessibility description for the QR image linking to the OwnTV translation project. -->
+    <string name="settings_language_contribution_qr_description">QR code for the OwnTV translation project overview</string>
+    <!-- Translators: Graceful fallback shown when the app cannot generate the translation QR code. -->
+    <string name="settings_language_contribution_qr_failed">The QR code could not be generated. Use the link shown below instead.</string>
+    <!-- Translators: Button that copies the translation project URL to the clipboard. -->
+    <string name="settings_language_contribution_copy">Copy link</string>
+    <!-- Translators: Confirmation after copying the translation project URL. -->
+    <string name="settings_language_contribution_copied">Link copied</string>
+    <!-- Translators: Error shown when no app can open the translation project link. -->
+    <string name="settings_language_contribution_open_failed">The link could not be opened. Copy it instead.</string>
+    <!-- Translators: Error shown if copying the translation project URL fails. -->
+    <string name="settings_language_contribution_copy_failed">The link could not be copied. Read or type the URL shown above.</string>
 </resources>

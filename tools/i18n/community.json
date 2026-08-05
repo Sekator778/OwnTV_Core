@@ -1,0 +1,6 @@
+{
+  "projectUrl": "http://127.0.0.1:8080/projects/owntv/",
+  "localTestOnly": true,
+  "translationReadinessThresholdPercent": 70,
+  "readmeQrAsset": "tools/i18n/owntv-weblate-qr.svg"
+}

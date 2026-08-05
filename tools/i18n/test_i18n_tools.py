@@ -63,7 +63,7 @@ def _locale(id, tag, qualifier, resdir, **kw):
     return base
 
 
-# All 24 Tier 1 locales (matching tools/i18n/locales.json) so test fixtures pass the membership gate.
+# The established 24 Tier 1 locales used by compact validator fixtures.
 _FULL_TIER1 = [
     _locale("en-US", "en-US", "en", "values", weblateCode="en"),
     _locale("ar", "ar", "ar", "values-ar", weblateCode="ar", script="Arab", rtl=True, packaged=False, pickerVisible=False),
@@ -83,13 +83,35 @@ _FULL_TIER1 = [
     _locale("pl", "pl", "pl", "values-pl", packaged=False, pickerVisible=False),
     _locale("ru", "ru", "ru", "values-ru", script="Cyrl", packaged=False, pickerVisible=False),
     _locale("es-US", "es-US", "es-rUS", "values-es-rUS", weblateCode="es_419", packaged=False, pickerVisible=False),
-    _locale("es-ES", "es-ES", "es", "values-es", weblateCode="es_ES", packaged=False, pickerVisible=False),
+    _locale("es-ES", "es-ES", "es", "values-es", weblateCode="es", packaged=False, pickerVisible=False),
     _locale("sv", "sv", "sv", "values-sv", packaged=False, pickerVisible=False),
     _locale("tr", "tr", "tr", "values-tr", packaged=False, pickerVisible=False),
     _locale("ml", "ml", "ml", "values-ml", script="Mlym", packaged=False, pickerVisible=False),
     _locale("hi", "hi", "hi", "values-hi", script="Deva", packaged=False, pickerVisible=False),
     _locale("bn", "bn", "bn", "values-bn", script="Beng", packaged=False, pickerVisible=False),
 ]
+_CATALOGUE_ONLY = [
+    _locale("bg", "bg", "bg", "values-bg", tier=2, packaged=False, pickerVisible=False),
+    _locale("hr", "hr", "hr", "values-hr", tier=2, packaged=False, pickerVisible=False),
+    _locale("et", "et", "et", "values-et", tier=2, packaged=False, pickerVisible=False),
+    _locale("fa", "fa", "fa", "values-fa", tier=2, script="Arab", rtl=True, packaged=False, pickerVisible=False),
+    _locale("fi", "fi", "fi", "values-fi", tier=2, packaged=False, pickerVisible=False),
+    _locale("el", "el", "el", "values-el", tier=2, script="Grek", packaged=False, pickerVisible=False),
+    _locale("he", "he", "iw", "values-iw", tier=2, weblateCode="he", script="Hebr", rtl=True, packaged=False, pickerVisible=False),
+    _locale("hu", "hu", "hu", "values-hu", tier=2, packaged=False, pickerVisible=False),
+    _locale("id", "id", "in", "values-in", tier=2, weblateCode="id", packaged=False, pickerVisible=False),
+    _locale("lv", "lv", "lv", "values-lv", tier=2, packaged=False, pickerVisible=False),
+    _locale("lt", "lt", "lt", "values-lt", tier=2, packaged=False, pickerVisible=False),
+    _locale("ms", "ms", "ms", "values-ms", tier=2, packaged=False, pickerVisible=False),
+    _locale("ro", "ro", "ro", "values-ro", tier=2, packaged=False, pickerVisible=False),
+    _locale("sr", "sr", "sr", "values-sr", tier=2, script="Cyrl", packaged=False, pickerVisible=False),
+    _locale("sk", "sk", "sk", "values-sk", tier=2, packaged=False, pickerVisible=False),
+    _locale("sl", "sl", "sl", "values-sl", tier=2, packaged=False, pickerVisible=False),
+    _locale("th", "th", "th", "values-th", tier=2, script="Thai", packaged=False, pickerVisible=False),
+    _locale("uk", "uk", "uk", "values-uk", tier=2, script="Cyrl", packaged=False, pickerVisible=False),
+    _locale("vi", "vi", "vi", "values-vi", tier=2, packaged=False, pickerVisible=False),
+]
+_FULL_TIER1.extend(_CATALOGUE_ONLY)
 
 
 def _full_tier1():
@@ -180,7 +202,7 @@ class TestValidateStrings(unittest.TestCase):
 
     def test_catalogue_tier1_membership(self):
         source = '<resources><string name="hello">Hello</string></resources>'
-        # Only en-US as tier 1, missing all 23 community targets
+        # Only en-US as tier 1, missing the established translated targets
         locales = [_locale("en-US", "en-US", "en", "values")]
         res = _make_fixture(self.tmpdir, source, locales)
         rc, out = self._run(res, self.tmpdir / "tools/i18n/locales.json")
@@ -380,9 +402,8 @@ class TestValidateStrings(unittest.TestCase):
         self.assertEqual(rc, 1, out)
         self.assertIn("placeholder mismatch", out)
 
-    def test_missing_key_is_informational_and_exits_zero(self):
-        """A packaged Tier 1 locale missing a source key is reported, not rejected — English fallback
-        covers it, and this is expected best-effort community-translation behaviour."""
+    def test_packaged_locale_below_readiness_is_rejected_even_with_safe_fallback(self):
+        """Missing keys still fall back safely, but release packaging now requires readiness."""
         source = '<resources><string name="a">A</string><string name="b">B</string></resources>'
         de_xml = '<resources><string name="a">A</string></resources>'  # missing 'b'
         locales = _full_tier1()
@@ -391,10 +412,8 @@ class TestValidateStrings(unittest.TestCase):
         de["pickerVisible"] = True
         res = _make_fixture(self.tmpdir, source, locales, {"values-de": de_xml})
         rc, out = self._run(res, self.tmpdir / "tools/i18n/locales.json")
-        self.assertEqual(rc, 0, out)
-        self.assertIn("Translation coverage:", out)
-        self.assertIn("de", out)
-        self.assertIn("1 missing", out)
+        self.assertEqual(rc, 1, out)
+        self.assertIn("below the 70% translation readiness threshold", out)
 
     def test_malformed_present_translation_still_exits_nonzero(self):
         """Missing keys are informational, but a present, malformed key still fails — it overrides
@@ -423,8 +442,8 @@ class TestValidateStrings(unittest.TestCase):
         source = '<resources><string name="a">A</string><string name="b">B</string></resources>'
         locales = _full_tier1()
         de = next(e for e in locales if e["id"] == "de")
-        de["packaged"] = True
-        de["pickerVisible"] = True
+        de["packaged"] = False
+        de["pickerVisible"] = False
         res = _make_fixture(self.tmpdir, source, locales, {"values-de": '<resources></resources>'})
         rc, out = self._run(res, self.tmpdir / "tools/i18n/locales.json", report="none")
         self.assertEqual(rc, 0, out)
@@ -463,7 +482,102 @@ class TestValidateStrings(unittest.TestCase):
         tags = {row["languageTag"] for row in payload["locales"]}
         self.assertNotIn("en-US", tags)
         self.assertNotIn("en-GB", tags)
-        self.assertEqual(len(tags), 23)  # all community targets
+        self.assertEqual(len(tags), 42)  # original 23 plus 19 catalogue-only community targets
+
+    def test_requested_catalogue_metadata_and_zero_resource_status(self):
+        catalogue = json.loads((ROOT / "tools/i18n/locales.json").read_text())
+        expected = {
+            "bg": ("bg", "bg", "bg", "Bulgarian", "Български", "Cyrl", False),
+            "hr": ("hr", "hr", "hr", "Croatian", "Hrvatski", "Latn", False),
+            "et": ("et", "et", "et", "Estonian", "Eesti", "Latn", False),
+            "fa": ("fa", "fa", "fa", "Persian", "فارسی", "Arab", True),
+            "fi": ("fi", "fi", "fi", "Finnish", "Suomi", "Latn", False),
+            "el": ("el", "el", "el", "Greek", "Ελληνικά", "Grek", False),
+            "he": ("he", "iw", "he", "Hebrew", "עברית", "Hebr", True),
+            "hu": ("hu", "hu", "hu", "Hungarian", "Magyar", "Latn", False),
+            "id": ("id", "in", "id", "Indonesian", "Bahasa Indonesia", "Latn", False),
+            "lv": ("lv", "lv", "lv", "Latvian", "Latviešu", "Latn", False),
+            "lt": ("lt", "lt", "lt", "Lithuanian", "Lietuvių", "Latn", False),
+            "ms": ("ms", "ms", "ms", "Malay", "Bahasa Melayu", "Latn", False),
+            "ro": ("ro", "ro", "ro", "Romanian", "Română", "Latn", False),
+            "sr": ("sr", "sr", "sr", "Serbian (Cyrillic)", "Српски", "Cyrl", False),
+            "sk": ("sk", "sk", "sk", "Slovak", "Slovenčina", "Latn", False),
+            "sl": ("sl", "sl", "sl", "Slovenian", "Slovenščina", "Latn", False),
+            "th": ("th", "th", "th", "Thai", "ไทย", "Thai", False),
+            "uk": ("uk", "uk", "uk", "Ukrainian", "Українська", "Cyrl", False),
+            "vi": ("vi", "vi", "vi", "Vietnamese", "Tiếng Việt", "Latn", False),
+        }
+        by_id = {e["id"]: e for e in catalogue}
+        self.assertEqual(set(expected), {e["id"] for e in catalogue if e["tier"] == 2})
+        for locale_id, (tag, qualifier, weblate, english, endonym, script, rtl) in expected.items():
+            with self.subTest(locale=locale_id):
+                entry = by_id[locale_id]
+                self.assertEqual((tag, qualifier, weblate, english, endonym, script, rtl), (
+                    entry["languageTag"], entry["resourceQualifier"], entry["weblateCode"],
+                    entry["englishName"], entry["endonym"], entry["script"], entry["rtl"]))
+                self.assertEqual(entry["resourceDirectory"], f"values-{qualifier}")
+                self.assertEqual(entry["tier"], 2)
+                self.assertFalse(entry["packaged"])
+                self.assertFalse(entry["pickerVisible"])
+                self.assertFalse((ROOT / "app/src/main/res" / entry["resourceDirectory"]).exists())
+
+    def test_spanish_default_uses_current_weblate_es_definition(self):
+        catalogue = json.loads((ROOT / "tools/i18n/locales.json").read_text())
+        self.assertEqual("es", next(e for e in catalogue if e["id"] == "es-ES")["weblateCode"])
+
+    def test_catalogue_only_directory_is_rejected_if_created(self):
+        source = '<resources><string name="hello">Hello</string></resources>'
+        locales = _full_tier1()
+        res = _make_fixture(self.tmpdir, source, locales, {
+            "values-bg": '<resources><string name="hello">Здравей</string></resources>'})
+        rc, out = self._run(res, self.tmpdir / "tools/i18n/locales.json")
+        self.assertEqual(rc, 1, out)
+        self.assertIn("catalogue-only locale must not have a resource directory", out)
+
+    def test_language_page_has_one_global_cta_and_remote_safe_contribution_panel(self):
+        screen = (ROOT / "app/src/main/java/tv/own/owntv/features/settings/LanguageSettingsScreen.kt").read_text()
+        page = screen.split("if (showContribution)", 1)[0]
+        self.assertEqual(1, page.count("settings_language_help_translate"))
+        self.assertEqual(1, screen.count("CompanionLink.renderQr(url)"))
+        self.assertIn("trapAllFocusExit", screen)
+        self.assertIn("BackHandler { onDismiss() }", screen)
+        self.assertIn("openContributionLink(context, url)", screen)
+        self.assertIn("copyContributionLink(context, url)", screen)
+
+    def test_canonical_url_and_qr_payload_artifacts_are_consistent(self):
+        config = json.loads((ROOT / "tools/i18n/community.json").read_text())
+        url = config["projectUrl"]
+        self.assertEqual("http://127.0.0.1:8080/projects/owntv/", url)
+        self.assertEqual(70, config["translationReadinessThresholdPercent"])
+        generated = (ROOT / "app/src/main/java/tv/own/owntv/core/i18n/SupportedLocales.kt").read_text()
+        readme = (ROOT / "README.md").read_text()
+        guide = (ROOT / "tools/i18n/README.md").read_text()
+        qr = (ROOT / config["readmeQrAsset"]).read_text()
+        self.assertIn(f'CONTRIBUTION_PROJECT_URL: String = "{url}"', generated)
+        self.assertIn(f"<{url}>", readme)
+        self.assertIn(f"<{url}>", guide)
+        self.assertIn(f"<metadata>{url}</metadata>", qr)
+        self.assertEqual(2, readme.count(url))  # Hosted Weblate link plus accessible plain link
+        self.assertEqual(1, guide.count(url))
+        self.assertEqual(1, qr.count(url))
+
+    def test_packaging_readiness_boundary_69_rejected_70_accepted(self):
+        source_items = "".join(f'<string name="k{i}">K{i}</string>' for i in range(100))
+        source = f"<resources>{source_items}</resources>"
+        for translated_count, expected_rc in ((69, 1), (70, 0)):
+            with self.subTest(translated=translated_count):
+                case = Path(tempfile.mkdtemp())
+                locales = _full_tier1()
+                bg = next(e for e in locales if e["id"] == "bg")
+                bg.update(tier=1, packaged=True, pickerVisible=True)
+                translated = "".join(
+                    f'<string name="k{i}">B{i}</string>' for i in range(translated_count))
+                res = _make_fixture(case, source, locales, {
+                    "values-bg": f"<resources>{translated}</resources>"})
+                rc, out = self._run(res, case / "tools/i18n/locales.json")
+                self.assertEqual(expected_rc, rc, out)
+                if translated_count == 69:
+                    self.assertIn("below the 70% translation readiness threshold", out)
 
     def test_translation_review_state_neither_read_nor_required(self):
         """translation_status.json is gone; the validator must not reference or require it."""
@@ -484,8 +598,8 @@ class TestValidateStrings(unittest.TestCase):
             </resources>'''  # missing 'b'
         locales = _full_tier1()
         de = next(e for e in locales if e["id"] == "de")
-        de["packaged"] = True
-        de["pickerVisible"] = True
+        de["packaged"] = False
+        de["pickerVisible"] = False
         res = _make_fixture(self.tmpdir, source, locales, {"values-de": de_xml})
         rc, out, err = self._run_streams(res, self.tmpdir / "tools/i18n/locales.json", report="json")
         self.assertEqual(rc, 0, err)
@@ -589,7 +703,7 @@ class TestValidateStrings(unittest.TestCase):
         self.assertIn("should be 'de'", out)
 
     def test_tier_42_rejected(self):
-        """tier=42 must be rejected — only 0 and 1 are valid."""
+        """tier=42 must be rejected — only the documented 0, 1, and 2 tiers are valid."""
         source = '<resources><string name="hello">Hello</string></resources>'
         locales = _full_tier1()
         for e in locales:
@@ -598,7 +712,7 @@ class TestValidateStrings(unittest.TestCase):
         res = _make_fixture(self.tmpdir, source, locales)
         rc, out = self._run(res, self.tmpdir / "tools/i18n/locales.json")
         self.assertEqual(rc, 1, out)
-        self.assertIn("tier must be 0 or 1", out)
+        self.assertIn("tier must be one of", out)
 
     def test_blank_english_name_rejected(self):
         """A blank englishName must be rejected."""
@@ -622,7 +736,7 @@ class TestValidateStrings(unittest.TestCase):
         res = _make_fixture(self.tmpdir, source, locales)
         rc, out = self._run(res, self.tmpdir / "tools/i18n/locales.json")
         self.assertEqual(rc, 1, out)
-        self.assertIn("tier must be 0 or 1", out)
+        self.assertIn("tier must be one of", out)
 
     def test_catalogue_root_type_rejected_without_crash(self):
         source = '<resources><string name="hello">Hello</string></resources>'
@@ -1360,7 +1474,10 @@ class TestSeedText(unittest.TestCase):
         units, order = self.st.extract_source()
         self.assertGreater(len(order), 0)
         chunks = self.st.chunk_by_file(units, order)
-        self.assertEqual(sum(len(chunk) for file_chunks in chunks.values() for chunk in file_chunks), len(order))
+        self.assertEqual(
+            sum(len(chunk) for file_chunks in chunks.values() for chunk in file_chunks),
+            len(order),
+        )
         for file_chunks in chunks.values():
             for chunk in file_chunks:
                 self.assertLessEqual(len(chunk), 40)

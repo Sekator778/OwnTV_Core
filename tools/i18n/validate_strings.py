@@ -43,6 +43,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
 LOCALES_JSON = ROOT / "tools" / "i18n" / "locales.json"
+COMMUNITY_CONFIG = ROOT / "tools" / "i18n" / "community.json"
 RES = ROOT / "app" / "src" / "main" / "res"
 
 # --- resource parsing ---------------------------------------------------------
@@ -299,6 +300,14 @@ _PLURAL_RULES = {
     "zh-CN": ["other"], "zh-TW": ["other"], "es-US": ["one", "many", "other"], "es-ES": ["one", "many", "other"],
     "tr": ["one", "other"], "ml": ["one", "other"], "hi": ["one", "other"],
     "bn": ["one", "other"],
+    "bg": ["one", "other"], "hr": ["one", "few", "other"],
+    "et": ["one", "other"], "fa": ["one", "other"], "fi": ["one", "other"],
+    "el": ["one", "other"], "he": ["one", "two", "many", "other"],
+    "hu": ["one", "other"], "id": ["other"], "lv": ["zero", "one", "other"],
+    "lt": ["one", "few", "many", "other"], "ms": ["other"],
+    "ro": ["one", "few", "other"], "sr": ["one", "few", "other"],
+    "sk": ["one", "few", "many", "other"], "sl": ["one", "two", "few", "other"],
+    "th": ["other"], "uk": ["one", "few", "many", "other"], "vi": ["other"],
 }
 
 
@@ -308,6 +317,7 @@ _REQUIRED_FIELDS = {"id", "languageTag", "resourceQualifier", "resourceDirectory
                     "englishName", "endonym", "script", "rtl", "tier", "packaged", "pickerVisible"}
 _CATALOGUE_STRING_FIELDS = ("id", "languageTag", "resourceQualifier", "resourceDirectory", "weblateCode",
                             "englishName", "endonym", "script")
+_VALID_TIERS = (0, 1, 2)
 _RUNTIME_TAG_RE = re.compile(r"^[a-z]{2,3}(?:-[A-Z][a-z]{3})?(?:-(?:[A-Z]{2}|[0-9]{3}))?$")
 _SCRIPT_RE = re.compile(r"^[A-Z][a-z]{3}$")
 _WEBLATE_RE = re.compile(r"^[a-z]{2,3}(?:_(?:[A-Z][a-z]{3}|[A-Z]{2}|[0-9]{3}))?$")
@@ -317,6 +327,11 @@ _DIRECTORY_RE = re.compile(r"^values(?:-[A-Za-z0-9+_-]+)*$")
 _EXPECTED_TIER1_TAGS = {
     "en-US", "ar", "pt-BR", "pt-PT", "zh-CN", "zh-TW", "cs", "da", "nl", "fr", "de", "it",
     "ja", "ko", "nb", "pl", "ru", "es-US", "es-ES", "sv", "tr", "ml", "hi", "bn",
+}
+
+_EXPECTED_CATALOGUE_ONLY_TAGS = {
+    "bg", "hr", "et", "fa", "fi", "el", "he", "hu", "id", "lv", "lt", "ms", "ro", "sr",
+    "sk", "sl", "th", "uk", "vi",
 }
 
 # Valid Android resource qualifier forms for locales:
@@ -333,8 +348,8 @@ _QUAL_RE = re.compile(
     r"|b\+[a-z]{2,3}\+(?:[A-Z][a-z]{3}|[0-9]{3}))$"
 )
 
-# Canonical Weblate code mappings — pinned so a typo (pt_BR where pt_PT was meant, or es_ES swapped
-# for es_419) is caught at catalogue-validation time. Every entry in the catalogue is pinned here so
+# Canonical Weblate code mappings — pinned so a typo (pt_BR where pt_PT was meant, or default es
+# swapped for es_419) is caught at catalogue-validation time. Every entry in the catalogue is pinned here so
 # a non-matching code (e.g. German's weblateCode changed from 'de' to 'fr') is always caught, not just
 # the selected special cases. The key is the resourceQualifier; the value is the required weblateCode.
 _CANONICAL_WEBLATE = {
@@ -342,8 +357,11 @@ _CANONICAL_WEBLATE = {
     "ar": "ar",
     "pt": "pt_BR", "pt-rPT": "pt_PT",
     "zh-rCN": "zh_Hans", "zh-rTW": "zh_Hant",
-    "es": "es_ES", "es-rUS": "es_419",
+    "es": "es", "es-rUS": "es_419",
     "nb": "nb_NO",
+    "bg": "bg", "hr": "hr", "et": "et", "fa": "fa", "fi": "fi", "el": "el",
+    "iw": "he", "hu": "hu", "in": "id", "lv": "lv", "lt": "lt", "ms": "ms",
+    "ro": "ro", "sr": "sr", "sk": "sk", "sl": "sl", "th": "th", "uk": "uk", "vi": "vi",
     "cs": "cs", "da": "da", "nl": "nl", "fr": "fr", "de": "de", "it": "it",
     "ja": "ja", "ko": "ko", "pl": "pl", "ru": "ru", "sv": "sv", "tr": "tr", "ml": "ml",
     "hi": "hi", "bn": "bn",
@@ -416,9 +434,9 @@ def _validate_catalogue(data: list) -> list[str]:
         if picker_visible is True and packaged is not True:
             fails.append(f"locales.json {eid}: pickerVisible=true requires packaged=true")
         tier = e.get("tier")
-        valid_tier = type(tier) is int and tier in (0, 1)
+        valid_tier = type(tier) is int and tier in _VALID_TIERS
         if not valid_tier:
-            fails.append(f"locales.json {eid}: tier must be 0 or 1 (got {tier!r})")
+            fails.append(f"locales.json {eid}: tier must be one of {_VALID_TIERS} (got {tier!r})")
         script = e.get("script") if isinstance(e.get("script"), str) else ""
         if script and not _SCRIPT_RE.fullmatch(script):
             fails.append(f"locales.json {eid}: invalid script '{script}'")
@@ -433,15 +451,32 @@ def _validate_catalogue(data: list) -> list[str]:
         if valid_tier and tier == 1 and tag:
             tier1_tags.add(tag)
 
-    # Exact Tier 1 membership: the catalogue may contain the documented tier-0 en-GB override, but
-    # the release target itself is exactly the 21 tags below.
-    if tier1_tags != _EXPECTED_TIER1_TAGS:
-        missing = _EXPECTED_TIER1_TAGS - tier1_tags
-        extra = tier1_tags - _EXPECTED_TIER1_TAGS
-        if missing:
-            fails.append(f"locales.json: missing Tier 1 languages: {sorted(missing)}")
-        if extra:
-            fails.append(f"locales.json: unexpected Tier 1 languages: {sorted(extra)}")
+    # The established release set is mandatory. Catalogue-only additions may later move from tier 2
+    # to tier 1 without adding a parallel code mapping here; the catalogue remains authoritative.
+    missing_tier1 = _EXPECTED_TIER1_TAGS - tier1_tags
+    unexpected_tier1 = tier1_tags - _EXPECTED_TIER1_TAGS - _EXPECTED_CATALOGUE_ONLY_TAGS
+    if missing_tier1:
+        fails.append(f"locales.json: missing Tier 1 languages: {sorted(missing_tier1)}")
+    if unexpected_tier1:
+        fails.append(f"locales.json: unexpected Tier 1 languages: {sorted(unexpected_tier1)}")
+    requested_tags = {
+        e.get("languageTag") for e in data
+        if isinstance(e, dict) and e.get("languageTag") in _EXPECTED_CATALOGUE_ONLY_TAGS
+    }
+    if requested_tags != _EXPECTED_CATALOGUE_ONLY_TAGS:
+        fails.append(
+            "locales.json: requested community catalogue mismatch: "
+            f"missing={sorted(_EXPECTED_CATALOGUE_ONLY_TAGS - requested_tags)}"
+        )
+    for e in data:
+        if not isinstance(e, dict) or e.get("tier") != 2:
+            continue
+        if e.get("packaged") is not False or e.get("pickerVisible") is not False:
+            fails.append(
+                f"locales.json {e.get('id', '?')}: catalogue-only tier 2 locales must remain "
+                "packaged=false and pickerVisible=false until promoted to tier 1"
+            )
+
     return fails
 
 
@@ -563,6 +598,15 @@ def main(report: str = "text") -> int:
     # intersects against, so the CI report and the picker badge can never disagree.
     source_translatable_keys = {k for k, v in src.items() if v.get("translatable", True)}
     coverage_rows: list[dict] = []
+    try:
+        community_config = json.loads(COMMUNITY_CONFIG.read_text(encoding="utf-8"))
+        threshold = community_config["translationReadinessThresholdPercent"]
+    except (OSError, json.JSONDecodeError, KeyError, TypeError) as error:
+        print(f"error: invalid tools/i18n/community.json: {error}", file=diagnostics)
+        return 1
+    if type(threshold) is not int:
+        print("error: translationReadinessThresholdPercent must be an integer", file=diagnostics)
+        return 1
 
     for e in data:
         if not isinstance(e, dict):
@@ -572,6 +616,11 @@ def main(report: str = "text") -> int:
         if not isinstance(resdir, str) or not isinstance(tag, str) or resdir == "values":
             continue
         loc_dir = RES / resdir
+        if e.get("tier") == 2 and loc_dir.exists():
+            fails.append(
+                f"{tag}: catalogue-only locale must not have a resource directory or seed files "
+                f"({resdir})"
+            )
         loc_keys, loc_errs = _parse_dir(loc_dir)
         fails.extend(loc_errs)
         for f in sorted(loc_dir.glob("strings*.xml")):
@@ -681,7 +730,7 @@ def main(report: str = "text") -> int:
                     else:
                         fails.append(f"{tag} {skey}: empty translation")
 
-        if is_tier1:
+        if tag != "en-GB":
             total = len(source_translatable_keys)
             missing = total - translated
             percent = round(100 * translated / total, 1) if total else 0.0
@@ -691,6 +740,11 @@ def main(report: str = "text") -> int:
                 "missingKeys": missing,
                 "coveragePercent": percent,
             })
+            if (is_packaged or e.get("pickerVisible") is True) and percent < threshold:
+                fails.append(
+                    f"{tag}: {percent:.1f}% is below the {threshold}% translation readiness "
+                    "threshold; keep packaged=false and pickerVisible=false"
+                )
 
     if fails:
         print("i18n validation FAILED:", file=diagnostics)
