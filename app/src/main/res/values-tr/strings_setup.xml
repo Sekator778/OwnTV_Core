@@ -217,8 +217,6 @@
     <string name="companion_error_missing_fields">Gerekli alanlar eksik.</string>
     <string name="setup_invalid_locale">Bu yedeklemede desteklenmeyen bir uygulama dili vardı. Geri yükleme başarılı oldu ancak mevcut diliniz korundu.</string>
     <string name="setup_prefer_hls_live_tv">Canlı TV için HLS\'yi tercih et</string>
-    <string name="setup_prefer_hls_description">Canlı TV ve geri izleme için HLS\'ye (.m3u8), MPEG-TS\'den daha yüksek öncelik verin. HLS başarısız olursa MPEG-TS kullanılır.</string>
-    <string name="setup_prefer_hls_description_supported">Canlı TV ve geri izleme için HLS\'ye (.m3u8), MPEG-TS\'den daha yüksek öncelik verin. HLS başarısız olursa MPEG-TS kullanılır. Sağlayıcınız HLS desteği bildiriyor.</string>
     <string name="setup_hide_new_categories">Yeni kategorileri varsayılan olarak gizle</string>
     <string name="setup_hide_new_categories_description">Profil genelinde: gelecekteki eşitlemelerde görünen kategoriler başlangıçta gizli olur. Bunları istediğiniz zaman Özelleştirme ekranında görebilirsiniz.</string>
 </resources>

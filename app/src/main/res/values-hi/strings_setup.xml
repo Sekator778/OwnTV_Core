@@ -217,8 +217,6 @@
     <string name="companion_error_missing_fields">ज़रूरी फ़ील्ड मौजूद नहीं हैं।</string>
     <string name="setup_invalid_locale">इस बैकअप में ऐप की ऐसी भाषा थी जो समर्थित नहीं है। रीस्टोर सफल रहा, लेकिन आपकी मौजूदा भाषा रखी गई।</string>
     <string name="setup_prefer_hls_live_tv">लाइव टीवी के लिए HLS को प्राथमिकता दें</string>
-    <string name="setup_prefer_hls_description">लाइव टीवी और कैच-अप के लिए MPEG-TS की तुलना में HLS (.m3u8) को प्राथमिकता दें। HLS विफल होने पर MPEG-TS का उपयोग किया जाएगा।</string>
-    <string name="setup_prefer_hls_description_supported">लाइव टीवी और कैच-अप के लिए MPEG-TS की तुलना में HLS (.m3u8) को प्राथमिकता दें। HLS विफल होने पर MPEG-TS का उपयोग किया जाएगा। आपका प्रदाता HLS समर्थन की जानकारी देता है।</string>
     <string name="setup_hide_new_categories">नई श्रेणियाँ डिफ़ॉल्ट रूप से छिपाएँ</string>
     <string name="setup_hide_new_categories_description">पूरी प्रोफ़ाइल के लिए: भविष्य के सिंक में दिखाई देने वाली श्रेणियाँ शुरुआत में छिपी रहेंगी। उन्हें कस्टमाइज़ करें में कभी भी देखें।</string>
 </resources>

@@ -213,8 +213,6 @@
     <string name="companion_error_missing_fields">必須項目が入力されていません。</string>
     <string name="setup_invalid_locale">このバックアップには、現在のアプリのバージョンでサポートされていない言語が含まれていました。復元には成功しましたが、現在の言語は変更されませんでした。</string>
     <string name="setup_prefer_hls_live_tv">ライブTVでHLSを優先</string>
-    <string name="setup_prefer_hls_description">ライブTVと見逃し配信では、MPEG-TSよりHLS（.m3u8）を優先します。HLSで失敗した場合はMPEG-TSに切り替えます。</string>
-    <string name="setup_prefer_hls_description_supported">ライブTVと見逃し配信では、MPEG-TSよりHLS（.m3u8）を優先します。HLSで失敗した場合はMPEG-TSに切り替えます。ご利用のプロバイダーからHLS対応が報告されています。</string>
     <string name="setup_hide_new_categories">新しいカテゴリをデフォルトで非表示</string>
     <string name="setup_hide_new_categories_description">プロフィール全体の設定です。今後の同期で追加されたカテゴリは、最初は非表示になります。［カスタマイズ］でいつでも確認できます。</string>
 </resources>

@@ -213,8 +213,6 @@
     <string name="companion_error_missing_fields">缺少必填字段。</string>
     <string name="setup_invalid_locale">此备份包含当前应用版本不支持的语言。恢复已成功，但保留了当前语言。</string>
     <string name="setup_prefer_hls_live_tv">直播电视优先使用 HLS</string>
-    <string name="setup_prefer_hls_description">直播电视和回看优先使用 HLS（.m3u8），而不是 MPEG-TS。如果 HLS 失败，则回退到 MPEG-TS。</string>
-    <string name="setup_prefer_hls_description_supported">直播电视和回看优先使用 HLS（.m3u8），而不是 MPEG-TS。如果 HLS 失败，则回退到 MPEG-TS。你的服务提供商已报告支持 HLS。</string>
     <string name="setup_hide_new_categories">默认隐藏新分类</string>
     <string name="setup_hide_new_categories_description">适用于整个用户档案：以后同步时出现的新分类默认隐藏。可随时在“自定义”中查看。</string>
 </resources>

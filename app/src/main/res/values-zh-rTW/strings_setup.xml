@@ -213,8 +213,6 @@
     <string name="companion_error_missing_fields">缺少必填欄位。</string>
     <string name="setup_invalid_locale">此備份包含目前應用程式版本不支援的語言。還原已成功，但仍保留您目前的語言。</string>
     <string name="setup_prefer_hls_live_tv">電視直播優先使用 HLS</string>
-    <string name="setup_prefer_hls_description">電視直播和回看優先使用 HLS (.m3u8)，而非 MPEG-TS。若 HLS 失敗，則改用 MPEG-TS。</string>
-    <string name="setup_prefer_hls_description_supported">電視直播和回看優先使用 HLS (.m3u8)，而非 MPEG-TS。若 HLS 失敗，則改用 MPEG-TS。您的供應商表示支援 HLS。</string>
     <string name="setup_hide_new_categories">預設隱藏新分類</string>
     <string name="setup_hide_new_categories_description">套用至整個使用者檔案：日後同步時出現的新分類一律先設為隱藏。您可隨時在「自訂」中查看。</string>
 </resources>

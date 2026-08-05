@@ -100,6 +100,51 @@ class LiveStreamQuirksTest {
         assertFalse(LiveStreamQuirks.isKnownHlsHost("http://off20.example:2086/live/u/p/1.ts"))
     }
 
+    // --- "this panel has no HLS at all" ------------------------------------------------------------
+
+    @Test
+    fun `one channel without an HLS variant says nothing about the panel`() {
+        // "Prefer HLS" is a per-playlist guess, and a single channel can genuinely be TS-only on a panel
+        // that otherwise serves HLS fine. Condemning the whole panel on one miss would cost every other
+        // channel its faster HLS start.
+        val taught = "http://panel.example:80/live/u/p/1.ts"
+        val sibling = "http://panel.example:80/live/u/p/2.ts"
+        LiveStreamQuirks.rememberNoHlsVariant(taught)
+        assertTrue(LiveStreamQuirks.lacksHlsVariant(taught))
+        assertFalse(LiveStreamQuirks.lacksHlsVariant(sibling))
+        assertFalse(LiveStreamQuirks.panelLacksHls(sibling))
+        assertTrue(LiveStreamQuirks.NO_HLS_CHANNELS_BEFORE_PANEL_WIDE > 1)
+    }
+
+    @Test
+    fun `enough channels without HLS writes the panel off for the session`() {
+        // Once N distinct channels on one host have all failed their HLS attempt, the panel has no HLS
+        // repackager — every remaining channel should skip straight to TS instead of paying the same
+        // failed probe again.
+        val host = "http://nohls.example:8080/live/u/p/"
+        repeat(LiveStreamQuirks.NO_HLS_CHANNELS_BEFORE_PANEL_WIDE) {
+            LiveStreamQuirks.rememberNoHlsVariant("$host$it.ts")
+        }
+        assertTrue(LiveStreamQuirks.panelLacksHls("${host}999.ts"))
+        assertTrue(LiveStreamQuirks.lacksHlsVariant("${host}999.ts"))
+        // mpv's own HLS ladder benefits from the same lesson — it is the panel that lacks HLS, not the
+        // engine that asked for it.
+        assertTrue(LiveStreamQuirks.lacksHlsVariantMpv("${host}999.ts"))
+        // And it stays scoped to that provider.
+        assertFalse(LiveStreamQuirks.panelLacksHls("http://other.example:8080/live/u/p/1.ts"))
+    }
+
+    @Test
+    fun `the same channel failing repeatedly never adds up to a panel verdict`() {
+        // Counting attempts rather than distinct channels would let one stubborn channel's retries
+        // condemn a panel whose other channels serve HLS perfectly well.
+        val one = "http://panel.example:80/live/u/p/7.ts"
+        repeat(LiveStreamQuirks.NO_HLS_CHANNELS_BEFORE_PANEL_WIDE * 2) {
+            LiveStreamQuirks.rememberNoHlsVariant(one)
+        }
+        assertFalse(LiveStreamQuirks.panelLacksHls("http://panel.example:80/live/u/p/8.ts"))
+    }
+
     // --- "the account only gets one session" -------------------------------------------------------
 
     @Test

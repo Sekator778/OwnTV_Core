@@ -217,8 +217,6 @@
     <string name="companion_error_missing_fields">Verplichte velden ontbreken.</string>
     <string name="setup_invalid_locale">Deze back-up bevatte een niet-ondersteunde app-taal. Het herstellen is gelukt, maar je huidige taal is behouden.</string>
     <string name="setup_prefer_hls_live_tv">Voorkeur geven aan HLS voor live-tv</string>
-    <string name="setup_prefer_hls_description">Geeft voor live-tv en terugkijken voorrang aan HLS (.m3u8) boven MPEG-TS. Valt terug op MPEG-TS als HLS mislukt.</string>
-    <string name="setup_prefer_hls_description_supported">Geeft voor live-tv en terugkijken voorrang aan HLS (.m3u8) boven MPEG-TS. Valt terug op MPEG-TS als HLS mislukt. Je aanbieder meldt ondersteuning voor HLS.</string>
     <string name="setup_hide_new_categories">Nieuwe categorieën standaard verbergen</string>
     <string name="setup_hide_new_categories_description">Voor het hele profiel: categorieën die bij toekomstige synchronisaties verschijnen, zijn aanvankelijk verborgen. Je kunt ze op elk moment bekijken onder Aanpassen.</string>
 </resources>

@@ -9,6 +9,7 @@ import androidx.room.Update
 import kotlinx.coroutines.flow.Flow
 import tv.own.owntv.core.database.entity.ProfileSourceCrossRef
 import tv.own.owntv.core.database.entity.SourceEntity
+import tv.own.owntv.core.model.HlsSupport
 
 @Dao
 interface SourceDao {
@@ -30,8 +31,23 @@ interface SourceDao {
     @Query("UPDATE sources SET lastSyncAt = :timestamp WHERE id = :id")
     suspend fun markSynced(id: Long, timestamp: Long)
 
+    /** The verdict from "Test HLS support", which actually requested an `.m3u8` stream. Overwrites
+     *  whatever the panel merely *claimed* at the last sync. */
     @Query("UPDATE sources SET hlsSupported = :hlsSupported WHERE id = :id")
-    suspend fun updateHlsSupport(id: Long, hlsSupported: Boolean)
+    suspend fun updateHlsSupport(id: Long, hlsSupported: HlsSupport)
+
+    /**
+     * What the panel reported about HLS at the last sync; [HlsSupport.UNKNOWN] until it has run once.
+     *
+     * Deliberately does NOT overwrite a stored [HlsSupport.SUPPORTED] with [HlsSupport.UNSUPPORTED]:
+     * plenty of panels serve HLS without listing it in `allowed_output_formats`, so a proven "yes" from
+     * the test button must survive the next sync's weaker claim.
+     */
+    @Query(
+        "UPDATE sources SET hlsSupported = :hlsSupported WHERE id = :id " +
+            "AND (:hlsSupported = 1 OR hlsSupported != 1)",
+    )
+    suspend fun updateHlsSupportFromSync(id: Long, hlsSupported: HlsSupport)
 
     /** Simultaneous streams the provider allows (Xtream `user_info.max_connections`); 0 = unknown. */
     @Query("UPDATE sources SET maxConnections = :maxConnections WHERE id = :id")

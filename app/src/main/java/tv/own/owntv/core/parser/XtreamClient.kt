@@ -33,6 +33,34 @@ data class XtEpisode(
     val id: String, val seasonNumber: Int, val episodeNumber: Int, val title: String, val containerExt: String?,
 )
 data class XtSeriesInfo(val episodes: List<XtEpisode>)
+
+/** What a real request for an `.m3u8` live URL got back — see [XtreamClient.probeHls]. */
+sealed interface HlsProbe {
+    /** A playlist came back. Proof the panel serves HLS, whatever it advertises. */
+    data object Served : HlsProbe
+    /** The account was out of connections, so the request never got as far as a format decision. */
+    data class Busy(val code: Int) : HlsProbe
+    /** The panel answered and the answer was not a playlist. */
+    data class NotServed(val reason: HlsNotServedReason) : HlsProbe
+    /** No usable answer — network failure, nothing to test with, or an unexpected status. */
+    data class Inconclusive(val reason: HlsInconclusiveReason) : HlsProbe
+}
+
+sealed interface HlsNotServedReason {
+    data object NotPlaylist : HlsNotServedReason
+    data class NoEndpoint(val httpCode: Int) : HlsNotServedReason
+}
+
+sealed interface HlsInconclusiveReason {
+    data class HttpError(val httpCode: Int) : HlsInconclusiveReason
+    data class Unexpected(val rawMessage: String) : HlsInconclusiveReason
+    data object NoAnswer : HlsInconclusiveReason
+    data object NoLiveChannels : HlsInconclusiveReason
+    data object DeadTestChannel : HlsInconclusiveReason
+}
+
+/** Declaration + real probe. [declared] is null when the panel couldn't be reached at all. */
+data class HlsTest(val declared: Boolean?, val probe: HlsProbe)
 data class XtEpgEntry(val title: String, val description: String?, val startMs: Long, val stopMs: Long)
 
 /**
@@ -447,6 +475,122 @@ class XtreamClient(private val http: HttpClient) {
     /** Convenience delegate returning only [XtAccountDetails.expiryMs]. */
     suspend fun accountExpiryMs(s: SourceEntity): Long? = fetchAccountDetails(s)?.expiryMs
 
+    // --- "Test HLS support" (playlist form) ---
+
+    /** Thrown from the first-item callback to abort a streamed list early. Never escapes [firstLiveStreamId]. */
+    private class StopStreaming : RuntimeException(null, null, false, false)
+
+    /**
+     * The stream id of the FIRST live channel the panel lists. Used to build a probe URL for a playlist
+     * that hasn't been synced yet — `get_live_streams` is parsed incrementally, so this aborts after one
+     * object instead of downloading a 340k-channel response.
+     *
+     * Returns the id even if the abort exception is swallowed downstream (the value is captured before
+     * the throw), so the early-exit trick can never cost a correct answer.
+     */
+    suspend fun firstLiveStreamId(s: SourceEntity): String? {
+        var first: String? = null
+        return try {
+            streamLive(s, onItem = { item ->
+                if (first == null) {
+                    first = item.streamId
+                    throw StopStreaming()
+                }
+            })
+            first
+        } catch (c: kotlin.coroutines.cancellation.CancellationException) {
+            throw c
+        } catch (e: Exception) {
+            first ?: run {
+                Log.w(TAG, "firstLiveStreamId failed for source ${s.id}", e)
+                null
+            }
+        }
+    }
+
+    /**
+     * Ask the panel for `…/live/user/pass/{id}.m3u8` and see what actually comes back. A panel's
+     * `allowed_output_formats` is a *claim*; plenty serve HLS without listing it and a few list it
+     * without serving it, so only this answers the question.
+     *
+     * Reads just the first few hundred bytes — an HLS playlist starts `#EXTM3U`, an error page doesn't —
+     * and never plays anything, so it costs one short request.
+     */
+    suspend fun probeHls(s: SourceEntity, streamId: String): HlsProbe {
+        val url = "${base(s)}/live/${s.username}/${s.password}/$streamId.m3u8"
+        return try {
+            http.get(url, s.userAgent) { input ->
+                val head = ByteArray(HLS_PROBE_BYTES)
+                var read = 0
+                while (read < head.size) {
+                    val n = input.read(head, read, head.size - read)
+                    if (n <= 0) break
+                    read += n
+                }
+                if (String(head, 0, read, Charsets.UTF_8).contains("#EXTM3U")) {
+                    HlsProbe.Served
+                } else {
+                    HlsProbe.NotServed(HlsNotServedReason.NotPlaylist)
+                }
+            }
+        } catch (c: kotlin.coroutines.cancellation.CancellationException) {
+            throw c
+        } catch (e: HttpClient.HttpStatusException) {
+            when (e.code) {
+                // Xtream's "too many connections". Every live URL returns this while the account is
+                // maxed out, `.ts` included, so it says nothing about HLS either way — not a "no".
+                458, 509 -> HlsProbe.Busy(e.code)
+                404, 400 -> HlsProbe.NotServed(HlsNotServedReason.NoEndpoint(e.code))
+                else -> HlsProbe.Inconclusive(HlsInconclusiveReason.HttpError(e.code))
+            }
+        } catch (e: Exception) {
+            Log.w(TAG, "probeHls failed for source ${s.id}", e)
+            HlsProbe.Inconclusive(
+                HlsInconclusiveReason.Unexpected(
+                    e.message?.takeIf { it.isNotBlank() } ?: e.javaClass.simpleName,
+                ),
+            )
+        }
+    }
+
+    /**
+     * Control probe: does this channel play at all over plain MPEG-TS? An MPEG-TS packet starts with
+     * the sync byte `0x47`, which an HTML error page never does — one byte settles it.
+     *
+     * Only used to interpret a *negative* HLS result. Panels routinely list a dead placeholder entry
+     * ("### INFO ###") as their first channel, and without this a dead channel would be reported as
+     * "your provider doesn't do HLS" when it means nothing of the sort.
+     */
+    private suspend fun probeTsPlayable(s: SourceEntity, streamId: String): Boolean = try {
+        http.get(liveUrl(s, streamId), s.userAgent) { input -> input.read() == 0x47 }
+    } catch (c: kotlin.coroutines.cancellation.CancellationException) {
+        throw c
+    } catch (e: Exception) {
+        Log.w(TAG, "probeTsPlayable failed for source ${s.id}", e)
+        false
+    }
+
+    /**
+     * The full "Test HLS support" run: the panel's own declaration, plus a real request for an `.m3u8`
+     * channel. [knownStreamId] skips the channel-list fetch when the playlist is already synced.
+     */
+    suspend fun testHlsSupport(s: SourceEntity, knownStreamId: String? = null): HlsTest {
+        val details = fetchAccountDetails(s)
+            ?: return HlsTest(declared = null, probe = HlsProbe.Inconclusive(HlsInconclusiveReason.NoAnswer))
+        val streamId = knownStreamId?.takeIf { it.isNotBlank() } ?: firstLiveStreamId(s)
+            ?: return HlsTest(details.hlsSupported, HlsProbe.Inconclusive(HlsInconclusiveReason.NoLiveChannels))
+        val probe = probeHls(s, streamId)
+        // A "no" is only trustworthy once the same channel is known to play over MPEG-TS. If it doesn't,
+        // the test channel is the problem, not HLS — say so instead of recording a false verdict.
+        if (probe is HlsProbe.NotServed && !probeTsPlayable(s, streamId)) {
+            return HlsTest(
+                details.hlsSupported,
+                HlsProbe.Inconclusive(HlsInconclusiveReason.DeadTestChannel),
+            )
+        }
+        return HlsTest(details.hlsSupported, probe)
+    }
+
     fun xmltvUrl(s: SourceEntity): String {
         val u = URLEncoder.encode(s.username.orEmpty(), "UTF-8")
         val p = URLEncoder.encode(s.password.orEmpty(), "UTF-8")
@@ -571,6 +715,8 @@ class XtreamClient(private val http: HttpClient) {
         val DEBUG = Log.isLoggable(TAG, Log.DEBUG)
         /** Category lists are tiny; a retry on a connect/DNS blip saves the whole sync phase. */
         const val CATEGORY_MAX_ATTEMPTS = 3
+        /** Enough of an HLS response to see `#EXTM3U` (or that an HTML error page came instead). */
+        const val HLS_PROBE_BYTES = 512
     }
 
     private fun <T : Any> readLiveStreamAs(

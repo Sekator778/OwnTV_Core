@@ -217,8 +217,6 @@
     <string name="companion_error_missing_fields">প্রয়োজনীয় ঘরগুলো পূরণ করা হয়নি।</string>
     <string name="setup_invalid_locale">এই ব্যাকআপে অ্যাপের এমন একটি ভাষা ছিল যা বর্তমান সংস্করণ সমর্থন করে না। পুনরুদ্ধার সফল হয়েছে, তবে আপনার বর্তমান ভাষাই রাখা হয়েছে।</string>
     <string name="setup_prefer_hls_live_tv">লাইভ টিভির জন্য HLS-কে অগ্রাধিকার দিন</string>
-    <string name="setup_prefer_hls_description">লাইভ টিভি ও ক্যাচ-আপের জন্য MPEG-TS-এর চেয়ে HLS (.m3u8)-কে অগ্রাধিকার দিন। HLS ব্যর্থ হলে MPEG-TS ব্যবহার করা হবে।</string>
-    <string name="setup_prefer_hls_description_supported">লাইভ টিভি ও ক্যাচ-আপের জন্য MPEG-TS-এর চেয়ে HLS (.m3u8)-কে অগ্রাধিকার দিন। HLS ব্যর্থ হলে MPEG-TS ব্যবহার করা হবে। আপনার প্রদানকারী HLS সমর্থনের কথা জানিয়েছে।</string>
     <string name="setup_hide_new_categories">নতুন বিভাগগুলো ডিফল্টভাবে লুকিয়ে রাখুন</string>
     <string name="setup_hide_new_categories_description">পুরো প্রোফাইলে প্রযোজ্য: ভবিষ্যতের সিঙ্কে আসা বিভাগগুলো শুরুতে লুকানো থাকবে। নিজের মতো সাজানো স্ক্রিনে যেকোনো সময় সেগুলো দেখুন।</string>
 </resources>

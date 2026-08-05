@@ -233,8 +233,6 @@
     <string name="companion_error_missing_fields">الحقول المطلوبة مفقودة.</string>
     <string name="setup_invalid_locale">احتوت هذه النسخة الاحتياطية على لغة تطبيق غير مدعومة. نجحت الاستعادة، لكن تم الاحتفاظ بلغتك الحالية.</string>
     <string name="setup_prefer_hls_live_tv">تفضيل HLS للبث التلفزيوني المباشر</string>
-    <string name="setup_prefer_hls_description">إعطاء الأولوية لـ HLS ‏(.m3u8) على MPEG-TS في البث التلفزيوني المباشر ومشاهدة البث الفائت. يُستخدم MPEG-TS إذا فشل HLS.</string>
-    <string name="setup_prefer_hls_description_supported">إعطاء الأولوية لـ HLS ‏(.m3u8) على MPEG-TS في البث التلفزيوني المباشر ومشاهدة البث الفائت. يُستخدم MPEG-TS إذا فشل HLS. يفيد مزوّدك بأنه يدعم HLS.</string>
     <string name="setup_hide_new_categories">إخفاء الفئات الجديدة افتراضيًا</string>
     <string name="setup_hide_new_categories_description">على مستوى الملف الشخصي: تبدأ الفئات التي تظهر في عمليات المزامنة المستقبلية مخفية. يمكنك رؤيتها في أي وقت في شاشة التخصيص.</string>
 </resources>

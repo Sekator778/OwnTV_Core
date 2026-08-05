@@ -432,10 +432,47 @@
 
     <!-- Translators: Toggle label for preferring HLS streams when an Xtream source offers multiple Live TV formats. -->
     <string name="setup_prefer_hls_live_tv">Prefer HLS for Live TV</string>
-    <!-- Translators: Description of the HLS preference. HLS, .m3u8 and MPEG-TS are protocol names and stay unchanged. -->
-    <string name="setup_prefer_hls_description">Prioritize HLS (.m3u8) over MPEG-TS for Live TV &amp; Catch-up. Falls back to MPEG-TS if HLS fails.</string>
-    <!-- Translators: HLS preference description when the provider explicitly reports HLS support. HLS, .m3u8 and MPEG-TS stay unchanged. -->
-    <string name="setup_prefer_hls_description_supported">Prioritize HLS (.m3u8) over MPEG-TS for Live TV &amp; Catch-up. Falls back to MPEG-TS if HLS fails. Your provider reports HLS support.</string>
+    <!-- Translators: Description of the HLS preference. HLS, .m3u8 and MPEG-TS are protocol names and stay unchanged. Catch-up is not affected by this setting. -->
+    <string name="setup_prefer_hls_description">Prioritize HLS (.m3u8) over MPEG-TS for Live TV. Falls back to MPEG-TS if HLS fails. Catch-up always uses MPEG-TS.</string>
+    <!-- Translators: HLS preference description when the provider explicitly reports HLS support. HLS, .m3u8 and MPEG-TS stay unchanged. Catch-up is not affected by this setting. -->
+    <string name="setup_prefer_hls_description_supported">Prioritize HLS (.m3u8) over MPEG-TS for Live TV. Falls back to MPEG-TS if HLS fails. Catch-up always uses MPEG-TS. Your provider reports HLS support.</string>
+    <!-- Translators: HLS preference description when the provider does not report HLS support. The user may still enable it because some providers under-report support. -->
+    <string name="setup_prefer_hls_description_unsupported">Prioritize HLS (.m3u8) over MPEG-TS for Live TV. Falls back to MPEG-TS if HLS fails. Catch-up always uses MPEG-TS. Your provider does not report HLS support — you can still try it.</string>
+
+    <!-- Translators: Button that checks whether an Xtream provider can serve HLS streams. -->
+    <string name="setup_hls_test_support">Test HLS support</string>
+    <!-- Translators: Button status while the HLS support check is running. -->
+    <string name="setup_hls_testing">Testing HLS…</string>
+    <!-- Translators: Generic HLS test failure. The placeholder is a raw system or provider error and must remain unchanged. -->
+    <string name="setup_hls_test_failed">Test failed: <xliff:g id="reason">%1$s</xliff:g></string>
+    <!-- Translators: HLS test failure shown when the provider account details could not be fetched. -->
+    <string name="setup_hls_test_provider_unreachable">Couldn’t reach the provider — check the server URL, username and password.</string>
+    <!-- Translators: Successful HLS test. Keep the check mark and HLS unchanged. -->
+    <string name="setup_hls_test_works">✓ HLS works — your provider returned a playlist.</string>
+    <!-- Translators: Successful HLS test when the provider serves HLS without advertising it. Keep the check mark and HLS unchanged. -->
+    <string name="setup_hls_test_works_unadvertised">✓ HLS works — your provider returned a playlist even though it doesn’t advertise HLS.</string>
+    <!-- Translators: HLS test could not run because all account connections were in use. The placeholder is an HTTP status code. -->
+    <string name="setup_hls_test_busy">Couldn’t finish — the account is out of connections right now (HTTP <xliff:g id="status">%1$d</xliff:g>). Stop anything else that’s streaming and test again.</string>
+    <!-- Translators: HLS test failure. The placeholder is a localized explanation such as "no HLS endpoint for this channel (HTTP 404)". -->
+    <string name="setup_hls_test_not_served">HLS didn’t work — <xliff:g id="reason">%1$s</xliff:g>. Leave this off and Live TV will use MPEG-TS.</string>
+    <!-- Translators: Reason an HLS test failed. This text is inserted into a longer sentence. -->
+    <string name="setup_hls_test_reason_not_playlist">the server answered, but not with a playlist</string>
+    <!-- Translators: Reason an HLS test failed. This text is inserted into a longer sentence. The placeholder is an HTTP status code. -->
+    <string name="setup_hls_test_reason_no_endpoint">no HLS endpoint for this channel (HTTP <xliff:g id="status">%1$d</xliff:g>)</string>
+    <!-- Translators: HLS test was inconclusive. The first placeholder is a localized or raw reason. The second is a localized sentence describing what the provider advertises. -->
+    <string name="setup_hls_test_inconclusive">Couldn’t verify (<xliff:g id="reason">%1$s</xliff:g>). <xliff:g id="provider_claim">%2$s</xliff:g></string>
+    <!-- Translators: Reason an HLS test was inconclusive. The placeholder is an HTTP status code. -->
+    <string name="setup_hls_test_reason_http">HTTP <xliff:g id="status">%1$d</xliff:g></string>
+    <!-- Translators: Reason an HLS test was inconclusive because the provider returned no account details. -->
+    <string name="setup_hls_test_reason_no_answer">no answer</string>
+    <!-- Translators: Reason an HLS test was inconclusive because the playlist has no channel that can be checked. -->
+    <string name="setup_hls_test_reason_no_live_channels">this playlist has no live channels to test</string>
+    <!-- Translators: Reason an HLS test was inconclusive because the selected test channel failed in both HLS and MPEG-TS formats. -->
+    <string name="setup_hls_test_reason_dead_channel">the test channel didn’t play over MPEG-TS either, so it may just be dead</string>
+    <!-- Translators: Provider claim shown after an inconclusive HLS test. -->
+    <string name="setup_hls_provider_advertises">Your provider does advertise HLS.</string>
+    <!-- Translators: Provider claim shown after an inconclusive HLS test. -->
+    <string name="setup_hls_provider_does_not_advertise">Your provider doesn’t advertise HLS.</string>
     <!-- Translators: Profile-wide toggle controlling whether categories discovered by future source syncs start hidden. -->
     <string name="setup_hide_new_categories">Hide new categories by default</string>
     <!-- Translators: Description of the profile-wide new-category visibility toggle. Customize is the name of the customization screen. -->

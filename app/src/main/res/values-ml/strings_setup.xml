@@ -217,8 +217,6 @@
     <string name="companion_error_missing_fields">ആവശ്യമായ ഫീൽഡുകൾ നൽകിയിട്ടില്ല.</string>
     <string name="setup_invalid_locale">ഈ ബാക്കപ്പിൽ പിന്തുണയ്ക്കാത്ത ഒരു ആപ്പ് ഭാഷ ഉണ്ടായിരുന്നു. പുനഃസ്ഥാപിക്കൽ വിജയിച്ചു, എന്നാൽ നിങ്ങളുടെ നിലവിലെ ഭാഷ നിലനിർത്തി.</string>
     <string name="setup_prefer_hls_live_tv">തത്സമയ ടിവിക്ക് HLS മുൻഗണന നൽകുക</string>
-    <string name="setup_prefer_hls_description">തത്സമയ ടിവിക്കും ക്യാച്ച്-അപ്പിനും MPEG-TS-നെക്കാൾ HLS (.m3u8)-ന് മുൻഗണന നൽകുക. HLS പരാജയപ്പെട്ടാൽ MPEG-TS ഉപയോഗിക്കും.</string>
-    <string name="setup_prefer_hls_description_supported">തത്സമയ ടിവിക്കും ക്യാച്ച്-അപ്പിനും MPEG-TS-നെക്കാൾ HLS (.m3u8)-ന് മുൻഗണന നൽകുക. HLS പരാജയപ്പെട്ടാൽ MPEG-TS ഉപയോഗിക്കും. നിങ്ങളുടെ സേവനദാതാവ് HLS പിന്തുണ അറിയിച്ചിട്ടുണ്ട്.</string>
     <string name="setup_hide_new_categories">പുതിയ വിഭാഗങ്ങൾ ഡിഫോൾട്ടായി മറയ്ക്കുക</string>
     <string name="setup_hide_new_categories_description">പ്രൊഫൈൽ മുഴുവനും: ഭാവിയിലെ സമന്വയിപ്പിക്കലുകളിൽ പ്രത്യക്ഷപ്പെടുന്ന വിഭാഗങ്ങൾ ആദ്യം മറഞ്ഞിരിക്കും. ഇഷ്ടാനുസൃതമാക്കൽ സ്ക്രീനിൽ അവ എപ്പോൾ വേണമെങ്കിലും കാണാം.</string>
 </resources>

@@ -221,8 +221,6 @@
     <string name="companion_error_missing_fields">Há campos obrigatórios não preenchidos.</string>
     <string name="setup_invalid_locale">Esta cópia de segurança continha um idioma do aplicativo que não é compatível. A restauração foi concluída, mas seu idioma atual foi mantido.</string>
     <string name="setup_prefer_hls_live_tv">Preferir HLS para TV ao vivo</string>
-    <string name="setup_prefer_hls_description">Prioriza HLS (.m3u8) em vez de MPEG-TS para TV ao vivo e programação retroativa. Se HLS falhar, usa MPEG-TS.</string>
-    <string name="setup_prefer_hls_description_supported">Prioriza HLS (.m3u8) em vez de MPEG-TS para TV ao vivo e programação retroativa. Se HLS falhar, usa MPEG-TS. Seu provedor informa que oferece suporte a HLS.</string>
     <string name="setup_hide_new_categories">Ocultar novas categorias por padrão</string>
     <string name="setup_hide_new_categories_description">Em todo o perfil: as categorias que aparecerem em futuras sincronizações começarão ocultas. Veja-as a qualquer momento em Personalização.</string>
 </resources>

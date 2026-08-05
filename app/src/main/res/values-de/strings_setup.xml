@@ -217,8 +217,6 @@
     <string name="companion_error_missing_fields">Erforderliche Felder fehlen.</string>
     <string name="setup_invalid_locale">Diese Sicherung enthielt eine nicht unterstützte App-Sprache. Die Wiederherstellung war erfolgreich, aber deine aktuelle Sprache wurde beibehalten.</string>
     <string name="setup_prefer_hls_live_tv">HLS für Live-TV bevorzugen</string>
-    <string name="setup_prefer_hls_description">HLS (.m3u8) wird für Live-TV und Catch-up gegenüber MPEG-TS bevorzugt. Wenn HLS fehlschlägt, wird auf MPEG-TS zurückgegriffen.</string>
-    <string name="setup_prefer_hls_description_supported">HLS (.m3u8) wird für Live-TV und Catch-up gegenüber MPEG-TS bevorzugt. Wenn HLS fehlschlägt, wird auf MPEG-TS zurückgegriffen. Dein Anbieter meldet Unterstützung für HLS.</string>
     <string name="setup_hide_new_categories">Neue Kategorien standardmäßig ausblenden</string>
     <string name="setup_hide_new_categories_description">Profilweit: Kategorien, die bei zukünftigen Synchronisierungen erscheinen, sind zunächst ausgeblendet. Du kannst sie jederzeit unter „Anpassung“ anzeigen.</string>
 </resources>

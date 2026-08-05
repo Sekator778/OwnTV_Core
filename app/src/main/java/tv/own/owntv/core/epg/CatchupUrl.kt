@@ -88,10 +88,12 @@ object CatchupUrl {
         return when (source.type) {
             SourceType.XTREAM -> channel.remoteId?.let { streamId ->
                 val durationMin = (((programme.stopMs - programme.startMs) / 60_000L).toInt()).coerceAtLeast(1)
-                // Prefer HLS applies to the archive as well as the live edge (F05): a panel that only
-                // serves this account `.m3u8` answers the `.ts` timeshift path with an error page.
-                val ext = if (source.preferHls) "m3u8" else "ts"
-                xtream.timeshiftUrl(source, streamId, programme.startMs, durationMin, tz, ext)
+                // Always `.ts`, and deliberately NOT subject to "Prefer HLS": that setting describes the
+                // live edge, which panels remux to HLS on demand. The timeshift server is a different
+                // thing — it serves recordings off disk with no HLS repackager in front of it, so asking
+                // it for `.m3u8` reliably produces an error page rather than a playlist. Tying the two
+                // together made "Prefer HLS" silently break catch-up for accounts whose live TV was fine.
+                xtream.timeshiftUrl(source, streamId, programme.startMs, durationMin, tz, "ts")
             }
             // F17 — the catch-up TYPE is now persisted, so `append` (and the templateless styles)
             // finally reach [forM3u]; it used to be hardcoded to null here.

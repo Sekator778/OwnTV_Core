@@ -630,6 +630,7 @@
 2	room-schema	app/src/main/java/tv/own/owntv/core/database/dao/ChannelDao.kt	SELECT c.*, h.watchedAt FROM channels c
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/dao/ChannelDao.kt	SELECT remoteId FROM channels WHERE sourceId = :sourceId AND categoryId IN (:categoryIds) AND remoteId IS NOT NULL
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/dao/ChannelDao.kt	SELECT remoteId FROM channels WHERE sourceId = :sourceId AND remoteId IS NOT NULL
+1	room-schema	app/src/main/java/tv/own/owntv/core/database/dao/ChannelDao.kt	SELECT remoteId FROM channels WHERE sourceId = :sourceId AND remoteId IS NOT NULL LIMIT 1
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/dao/ChannelDao.kt	SELECT remoteId, id, contentHash, sortOrder FROM channels WHERE sourceId = :sourceId AND remoteId IS NOT NULL
 2	room-schema	app/src/main/java/tv/own/owntv/core/database/dao/ChannelDao.kt	WHERE c.categoryId = :categoryId
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/dao/ChannelDao.kt	WHERE c.sourceId IN (:sourceIds)
@@ -949,6 +950,7 @@
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/dao/SeriesSortOrderDao.kt	SELECT o.profileId AS profileId, o.seriesId AS seriesId,
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/dao/SeriesSortOrderDao.kt	o.seasonsDescending AS seasonsDescending, o.episodesDescending AS episodesDescending,
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/dao/SeriesSortOrderDao.kt	s.sourceId AS sourceId, s.remoteId AS remoteId, s.name AS name
+1	room-schema	app/src/main/java/tv/own/owntv/core/database/dao/SourceDao.kt	AND (:hlsSupported = 1 OR hlsSupported != 1)
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/dao/SourceDao.kt	DELETE FROM profile_source WHERE profileId = :profileId AND sourceId = :sourceId
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/dao/SourceDao.kt	DELETE FROM sources
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/dao/SourceDao.kt	INNER JOIN profile_source ps ON ps.sourceId = s.id
@@ -959,6 +961,7 @@
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/dao/SourceDao.kt	SELECT profileId FROM profile_source WHERE sourceId = :sourceId
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/dao/SourceDao.kt	SELECT s.* FROM sources s
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/dao/SourceDao.kt	SELECT sourceId FROM profile_source WHERE profileId = :profileId
+2	room-schema	app/src/main/java/tv/own/owntv/core/database/dao/SourceDao.kt	UPDATE sources SET hlsSupported = :hlsSupported WHERE id = :id
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/dao/SourceDao.kt	UPDATE sources SET lastSyncAt = :timestamp WHERE id = :id
 1	sql	app/src/main/java/tv/own/owntv/core/database/dao/SourceDao.kt	UPDATE sources SET livePrerollSecs = :secs WHERE id = :id
 1	sql	app/src/main/java/tv/own/owntv/core/database/dao/SourceDao.kt	UPDATE sources SET maxConnections = :maxConnections WHERE id = :id
@@ -1104,7 +1107,6 @@
 2	protocol	app/src/main/java/tv/own/owntv/core/epg/CatchupUrl.kt	h
 1	protocol	app/src/main/java/tv/own/owntv/core/epg/CatchupUrl.kt	lutc
 3	protocol	app/src/main/java/tv/own/owntv/core/epg/CatchupUrl.kt	m
-1	protocol	app/src/main/java/tv/own/owntv/core/epg/CatchupUrl.kt	m3u8
 2	protocol	app/src/main/java/tv/own/owntv/core/epg/CatchupUrl.kt	min
 1	protocol	app/src/main/java/tv/own/owntv/core/epg/CatchupUrl.kt	mpegts
 1	protocol	app/src/main/java/tv/own/owntv/core/epg/CatchupUrl.kt	now
@@ -1562,6 +1564,8 @@
 1	protocol	app/src/main/java/tv/own/owntv/core/parser/XmltvParser.kt	—
 2	protocol	app/src/main/java/tv/own/owntv/core/parser/XmltvTime.kt	\0
 7	protocol	app/src/main/java/tv/own/owntv/core/parser/XtreamClient.kt	\0
+1	protocol	app/src/main/java/tv/own/owntv/core/parser/XtreamClient.kt	#EXTM3U
+1	protocol	app/src/main/java/tv/own/owntv/core/parser/XtreamClient.kt	${base(s)}/live/${s.username}/${s.password}/$streamId.m3u8
 1	protocol	app/src/main/java/tv/own/owntv/core/parser/XtreamClient.kt	${base(s)}/live/${s.username}/${s.password}/$streamId.ts
 1	protocol	app/src/main/java/tv/own/owntv/core/parser/XtreamClient.kt	${base(s)}/movie/${s.username}/${s.password}/$streamId.${ext ?: "mp4"}
 1	protocol	app/src/main/java/tv/own/owntv/core/parser/XtreamClient.kt	${base(s)}/player_api.php?username=$u&password=$p
@@ -1586,6 +1590,7 @@
 1	protocol	app/src/main/java/tv/own/owntv/core/parser/XtreamClient.kt	episode_num
 1	protocol	app/src/main/java/tv/own/owntv/core/parser/XtreamClient.kt	episodes
 1	protocol	app/src/main/java/tv/own/owntv/core/parser/XtreamClient.kt	exp_date
+1	log	app/src/main/java/tv/own/owntv/core/parser/XtreamClient.kt	firstLiveStreamId failed for source ${s.id}
 1	protocol	app/src/main/java/tv/own/owntv/core/parser/XtreamClient.kt	get_live_categories
 2	protocol	app/src/main/java/tv/own/owntv/core/parser/XtreamClient.kt	get_live_streams
 2	protocol	app/src/main/java/tv/own/owntv/core/parser/XtreamClient.kt	get_series
@@ -1604,6 +1609,8 @@
 1	protocol	app/src/main/java/tv/own/owntv/core/parser/XtreamClient.kt	parseOrReadMs=$parseOrReadDelta callbackMs=$callbackDelta
 1	protocol	app/src/main/java/tv/own/owntv/core/parser/XtreamClient.kt	parseOrReadMs=${metrics.parseOrReadMs} callbackMs=${metrics.callbackMs}
 2	protocol	app/src/main/java/tv/own/owntv/core/parser/XtreamClient.kt	plot
+1	log	app/src/main/java/tv/own/owntv/core/parser/XtreamClient.kt	probeHls failed for source ${s.id}
+1	log	app/src/main/java/tv/own/owntv/core/parser/XtreamClient.kt	probeTsPlayable failed for source ${s.id}
 2	protocol	app/src/main/java/tv/own/owntv/core/parser/XtreamClient.kt	rating
 1	protocol	app/src/main/java/tv/own/owntv/core/parser/XtreamClient.kt	season
 1	protocol	app/src/main/java/tv/own/owntv/core/parser/XtreamClient.kt	series_id
@@ -3247,6 +3254,10 @@
 1	technical	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	%.1f
 2	technical	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	%.1f Mbps
 1	technical	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	%.2f:1
+1	technical	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	+discardcorrupt+genpts
+1	technical	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	+nobuffer+genpts
+1	technical	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	+nobuffer+genpts+discardcorrupt
+1	technical	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	,
 2	technical	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	.m3u8
 3	technical	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	.ts
 1	technical	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	/sdk_
@@ -3364,7 +3375,7 @@
 3	technical	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	demuxer-max-bytes
 4	technical	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	demuxer-readahead-secs
 1	technical	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	demuxerLavfO="$demuxerOptions" streamLavfO="${streamLavfOptionsFor(url, isLiveContent, effectiveHls)}"
-1	technical	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	demuxerLavfO="fflags=+nobuffer+genpts,seekable=1"
+1	log	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	demuxerLavfO="$trimmedOptions"
 2	technical	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	desync
 1	technical	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	detachSurface
 1	technical	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	direct decoder never engaged on archive
@@ -3388,6 +3399,7 @@
 1	technical	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	emb:${t.typeIndex}:${t.lang ?: ""}
 2	technical	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	emulator
 1	technical	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	end file
+1	technical	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	err_detect=ignore_err
 1	log	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	est-vf-fps=${getPropertyString("estimated-vf-fps")}
 1	technical	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	estimated-display-fps
 1	log	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	estimated-display-fps=${getPropertyString("estimated-display-fps")}
@@ -3400,7 +3412,7 @@
 1	technical	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	fast
 2	technical	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	fbo-format
 1	log	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	fbo=${getPropertyString("fbo-format")} cache=${getPropertyString("demuxer-max-bytes")}
-1	technical	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	fflags=+nobuffer+genpts,seekable=1
+1	technical	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	fflags=$fflags
 1	technical	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	file loaded
 1	technical	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	flac
 4	technical	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	force-window
@@ -3440,6 +3452,8 @@
 1	log	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	live stall (mpv, Live) — frozen ~${frozenMs}ms but offline; showing spinner, waiting for network
 1	log	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	live stall (mpv, Live) — no progress for ~${frozenMs}ms, reconnect attempt $liveStallReconnects/$MAX_LIVE_RECONNECTS
 1	log	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	live stall (mpv, Live) — reconnect budget exhausted after $MAX_LIVE_RECONNECTS attempts, surfacing error
+1	log	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	live stall after $liveStallReconnects reconnects
+1	log	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	live stream didn't start — trying format fallback -> ${altFormat.substringAfterLast('.')}
 1	log	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	live=$isLiveContent; awaiting their END_FILEs
 1	technical	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	live_buffer preroll=${prerollSecs}s readahead=${liveReadahead ?: budgetReadahead} latency=${liveBufferSecs ?: -1}
 1	log	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	load#=$mpvLoadCount freshSurface=$usedFreshSurface
@@ -3458,6 +3472,7 @@
 1	technical	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	mpeg2
 1	technical	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	mpeg4
 5	technical	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	mpv
+1	log	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	mpv $why — reopening with tolerant demuxing (discardcorrupt/genpts/ignore_err)
 1	technical	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	mpv level=$level $safe
 1	log	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	mpv live open timed out after ${openingMs}ms — surfacing error
 1	log	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	mpv ready: lowSpec=${budget.lowSpec} direct=${useDirect()} hwdec=${getPropertyString("hwdec")}
@@ -3465,8 +3480,8 @@
 1	technical	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	mpv-cmd
 1	technical	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	mpv: $reason
 1	technical	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	mpv_load live=$isLive url=${HttpClient.redactUrl(url)}
-1	technical	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	mpv_open hls=$effectiveHls live=$isLiveContent probe=full
-1	technical	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	mpv_open hls=$effectiveHls live=$isLiveContent probe=trimmed
+1	log	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	mpv_open hls=$effectiveHls live=$isLiveContent probe=full tolerant=$tolerant
+1	log	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	mpv_open hls=$effectiveHls live=$isLiveContent probe=trimmed tolerant=$tolerant
 1	technical	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	msg-level
 2	technical	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	mute
 1	technical	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	network-timeout
@@ -3490,6 +3505,7 @@
 1	log	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	pendingStopEndFiles at cap $MAX_PENDING_STOP_CREDITS ($reason)
 1	technical	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	pgssub
 1	technical	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	pinning this item to mpv — ExoPlayer can't decode it on this device
+1	log	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	playback didn't start after retries
 1	log	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	playback didn't start on hardware — falling back to software decode
 1	log	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	playback didn't start — auto-retry $autoRetries/${maxRetries()} (full probe)
 1	log	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	playback didn't start — decoder failure
@@ -3507,6 +3523,7 @@
 2	technical	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	s16
 1	technical	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	sdk
 2	technical	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	seek
+1	technical	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	seekable=1
 2	technical	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	seeking
 1	technical	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	select
 1	technical	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	setSurfaceSize
