@@ -42,7 +42,6 @@ def _community_config() -> dict:
 
 def _readme_contribution(config: dict) -> str:
     url = config["projectUrl"]
-    asset = config["readmeQrAsset"]
     warning = (
         "> **Captain-configured rehearsal endpoint:** this URL is intentionally recorded without an "
         "independent production-route verification.\n\n"
@@ -52,9 +51,7 @@ def _readme_contribution(config: dict) -> str:
         f"{README_START}\n## Help translate OwnTV\n\n{warning}"
         "Contribute interface translations across OwnTV's six Android resource components on "
         f"[Hosted Weblate]({url}). See the [language contributor guide](tools/i18n/README.md) for "
-        "the workflow, identifiers, validation, and promotion policy.\n\n"
-        f"![QR code for the OwnTV Hosted Weblate project overview]({asset})\n\n"
-        f"Accessible plain link: <{url}>\n{README_END}"
+        f"the workflow, identifiers, validation, and promotion policy.\n{README_END}"
     )
 
 
@@ -63,8 +60,8 @@ def _guide_contribution(config: dict) -> str:
     return (
         f"{GUIDE_START}\n"
         f"**Canonical project overview:** <{url}>\n\n"
-        "The app, README, and checked-in QR asset all use this value from `community.json`; "
-        "replace that single source and regenerate when the project route changes.\n"
+        "The app, README, and this guide all use this value from `community.json`; replace that "
+        "single source when the project route changes.\n"
         f"{GUIDE_END}"
     )
 
@@ -91,76 +88,6 @@ def _update_guide(config: dict, check: bool) -> bool:
     return _replace_marked_block(GUIDE, GUIDE_START, GUIDE_END, _guide_contribution(config), check)
 
 
-def _generate_qr_svg(url: str, output: Path) -> None:
-    """Generate deterministic SVG with the same ZXing core dependency used by the Android app."""
-    import shutil
-    import subprocess
-
-    jars = sorted(Path.home().glob(".gradle/caches/modules-2/files-2.1/com.google.zxing/core/*/*/core-*.jar"))
-    jars = [p for p in jars if "sources" not in p.name and "javadoc" not in p.name]
-    if not jars:
-        raise SystemExit("error: ZXing core jar missing; resolve Gradle dependencies first")
-    javac = shutil.which("javac")
-    java = shutil.which("java")
-    try:
-        if not java:
-            raise OSError
-        subprocess.run([java, "-version"], check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-    except (OSError, subprocess.CalledProcessError):
-        android_studio_jdk = Path("/Applications/Android Studio.app/Contents/jbr/Contents/Home/bin")
-        javac = str(android_studio_jdk / "javac") if (android_studio_jdk / "javac").is_file() else None
-        java = str(android_studio_jdk / "java") if (android_studio_jdk / "java").is_file() else None
-    if not javac or not java:
-        raise SystemExit("error: JDK missing; install Android Studio or a Java 17+ runtime")
-
-    helper_dir = ROOT / "tools" / "i18n" / ".qr-build"
-    helper_dir.mkdir(exist_ok=True)
-    source = helper_dir / "QrSvg.java"
-    source.write_text(
-        '''import com.google.zxing.BarcodeFormat;
-import com.google.zxing.EncodeHintType;
-import com.google.zxing.common.BitMatrix;
-import com.google.zxing.qrcode.QRCodeWriter;
-import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.HashMap;
-import java.util.Map;
-
-public final class QrSvg {
-  public static void main(String[] args) throws Exception {
-    Map<EncodeHintType, Object> hints = new HashMap<>();
-    hints.put(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.M);
-    hints.put(EncodeHintType.MARGIN, 4);
-    hints.put(EncodeHintType.CHARACTER_SET, "UTF-8");
-    BitMatrix matrix = new QRCodeWriter().encode(args[0], BarcodeFormat.QR_CODE, 0, 0, hints);
-    StringBuilder svg = new StringBuilder("<svg xmlns=\\"http://www.w3.org/2000/svg\\" viewBox=\\"0 0 ")
-        .append(matrix.getWidth()).append(" ").append(matrix.getHeight())
-        .append("\\" role=\\"img\\" aria-label=\\"QR code for OwnTV translation contributions\\">\\n")
-        .append("<metadata>").append(args[0]).append("</metadata>\\n")
-        .append("<rect width=\\"100%\\" height=\\"100%\\" fill=\\"white\\"/>\\n<path d=\\"");
-    for (int y = 0; y < matrix.getHeight(); y++) {
-      for (int x = 0; x < matrix.getWidth(); x++) {
-        if (matrix.get(x, y)) svg.append("M").append(x).append(" ").append(y).append("h1v1h-1z");
-      }
-    }
-    svg.append("\\" fill=\\"black\\"/>\\n</svg>\\n");
-    Files.writeString(Path.of(args[1]), svg);
-  }
-}
-''',
-        encoding="utf-8",
-    )
-    subprocess.run([javac, "-cp", str(jars[-1]), str(source)], check=True)
-    subprocess.run([java, "-cp", f"{jars[-1]}:{helper_dir}", "QrSvg", url, str(output)], check=True)
-
-
-def _qr_payload(svg: Path) -> str | None:
-    import re
-    if not svg.is_file():
-        return None
-    match = re.search(r"<metadata>(.*?)</metadata>", svg.read_text(encoding="utf-8"))
-    return match.group(1) if match else None
 
 # A locale with no translated resources has real 0% coverage. This keeps the generated picker badge
 # identical to validate_strings.py's informational CI report.
@@ -345,24 +272,18 @@ def cmd_generate() -> int:
         config = _community_config()
         _update_readme(config, check=False)
         _update_guide(config, check=False)
-        qr_path = ROOT / config["readmeQrAsset"]
-        qr_path.parent.mkdir(parents=True, exist_ok=True)
-        _generate_qr_svg(config["projectUrl"], qr_path)
-        print(f"generated {qr_path.relative_to(ROOT)} and updated README.md")
+        print("updated README.md and tools/i18n/README.md")
     print(f"generated {OUT.relative_to(ROOT)} ({n_entries} locales, {n_keys} source keys)")
     return 0
 
 
 def _check_community_artifacts() -> int:
     config = _community_config()
-    qr_path = ROOT / config["readmeQrAsset"]
     stale = []
     if not _update_readme(config, check=True):
         stale.append("README contribution section")
     if not _update_guide(config, check=True):
         stale.append("i18n contributor guide canonical URL")
-    if _qr_payload(qr_path) != config["projectUrl"]:
-        stale.append("README QR payload")
     if stale:
         print("community contribution artifacts are STALE: " + ", ".join(stale))
         print("  python3 tools/i18n/gen_supported_locales.py")

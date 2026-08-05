@@ -568,14 +568,13 @@ class TestValidateStrings(unittest.TestCase):
         generated = (ROOT / "app/src/main/java/tv/own/owntv/core/i18n/SupportedLocales.kt").read_text()
         readme = (ROOT / "README.md").read_text()
         guide = (ROOT / "tools/i18n/README.md").read_text()
-        qr = (ROOT / config["readmeQrAsset"]).read_text()
         self.assertIn(f'CONTRIBUTION_PROJECT_URL: String = "{url}"', generated)
-        self.assertIn(f"<{url}>", readme)
+        self.assertIn(f"[Hosted Weblate]({url})", readme)
+        self.assertNotIn("owntv-weblate-qr.svg", readme)
+        self.assertNotIn("Accessible plain link:", readme)
         self.assertIn(f"<{url}>", guide)
-        self.assertIn(f"<metadata>{url}</metadata>", qr)
-        self.assertEqual(2, readme.count(url))  # Hosted Weblate link plus accessible plain link
+        self.assertEqual(1, readme.count(url))  # One clickable Hosted Weblate link
         self.assertEqual(1, guide.count(url))
-        self.assertEqual(1, qr.count(url))
 
     def test_packaging_readiness_boundary_69_rejected_70_accepted(self):
         source_items = "".join(f'<string name="k{i}">K{i}</string>' for i in range(100))

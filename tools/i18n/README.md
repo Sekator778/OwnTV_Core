@@ -15,7 +15,7 @@ Spanish is `es` (there is no `es_ES` definition), while Latin America is `es_419
 <!-- canonical-weblate:start -->
 **Canonical project overview:** <https://hosted.weblate.org/projects/owntv/>
 
-The app, README, and checked-in QR asset all use this value from `community.json`; replace that single source and regenerate when the project route changes.
+The app, README, and this guide all use this value from `community.json`; replace that single source when the project route changes.
 <!-- canonical-weblate:end -->
 
 ## Supported, selectable, and catalogue-only
@@ -43,7 +43,7 @@ Promotion is intentionally manual, not generated:
 2. Run the coverage report and confirm at least 70%.
 3. In the locale's single `locales.json` entry, change `tier` to `1`, `packaged` to `true`, and
    `pickerVisible` to `true` in one reviewed change.
-4. Regenerate `SupportedLocales.kt`, README content, and QR; validate resources and build the app.
+4. Regenerate `SupportedLocales.kt` and README content; validate resources and build the app.
 5. Review English fallback on missing keys and perform script/RTL/plural/focus smoke tests.
 
 Gradle reads only `packaged` qualifiers from the catalogue. Generated Kotlin applies the threshold
@@ -63,11 +63,10 @@ Hosted Weblate covers the six source files independently so contributors can wor
 - `strings_features.xml`
 
 Use the project/language overview, not one component or preselected language. The canonical endpoint,
-README link, app constant, and reproducible QR are generated from `tools/i18n/community.json`.
+README link, and app constant are generated from `tools/i18n/community.json`.
 
-> **URL status:** the captain selected the loopback project overview above as the canonical value
-> without independent production-route verification. It is intentionally marked `localTestOnly` in
-> `community.json`; changing the route requires editing that one value and regenerating all artifacts.
+> **URL status:** the captain selected the Hosted Weblate project overview above as the canonical value.
+> Changing the route requires editing that one value and regenerating the generated artifacts.
 
 ## Contributor and review workflow
 
@@ -98,5 +97,5 @@ python3 tools/i18n/check_text_overflow.py
 ```
 
 Never hand-edit generated `app/src/main/java/tv/own/owntv/core/i18n/SupportedLocales.kt`; run
-`python3 tools/i18n/gen_supported_locales.py`. That command also reproducibly regenerates the checked-in
-README QR with the existing ZXing core dependency and checks payload consistency.
+`python3 tools/i18n/gen_supported_locales.py`. That command updates the generated locale catalogue and
+README contribution link from the canonical source.
