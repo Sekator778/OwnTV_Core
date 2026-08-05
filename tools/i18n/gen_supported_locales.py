@@ -24,8 +24,143 @@ ROOT = Path(__file__).resolve().parents[2]
 LOCALES_JSON = ROOT / "tools" / "i18n" / "locales.json"
 RES = ROOT / "app" / "src" / "main" / "res"
 OUT = ROOT / "app" / "src" / "main" / "java" / "tv" / "own" / "owntv" / "core" / "i18n" / "SupportedLocales.kt"
+CANONICAL_OUT = OUT
+COMMUNITY_CONFIG = ROOT / "tools" / "i18n" / "community.json"
+README = ROOT / "README.md"
+GUIDE = ROOT / "tools" / "i18n" / "README.md"
+README_START = "<!-- i18n-contribution:start -->"
+README_END = "<!-- i18n-contribution:end -->"
+GUIDE_START = "<!-- canonical-weblate:start -->"
+GUIDE_END = "<!-- canonical-weblate:end -->"
 
 PACKAGE = "tv.own.owntv.core.i18n"
+
+
+def _community_config() -> dict:
+    return json.loads(COMMUNITY_CONFIG.read_text(encoding="utf-8"))
+
+
+def _readme_contribution(config: dict) -> str:
+    url = config["projectUrl"]
+    asset = config["readmeQrAsset"]
+    warning = (
+        "> **Captain-configured rehearsal endpoint:** this URL is intentionally recorded without an "
+        "independent production-route verification.\n\n"
+        if config.get("localTestOnly") else ""
+    )
+    return (
+        f"{README_START}\n## Help translate OwnTV\n\n{warning}"
+        "Contribute interface translations across OwnTV's six Android resource components on "
+        f"[Hosted Weblate]({url}). See the [language contributor guide](tools/i18n/README.md) for "
+        "the workflow, identifiers, validation, and promotion policy.\n\n"
+        f"![QR code for the OwnTV Hosted Weblate project overview]({asset})\n\n"
+        f"Accessible plain link: <{url}>\n{README_END}"
+    )
+
+
+def _guide_contribution(config: dict) -> str:
+    url = config["projectUrl"]
+    return (
+        f"{GUIDE_START}\n"
+        f"**Canonical project overview:** <{url}>\n\n"
+        "The app, README, and checked-in QR asset all use this value from `community.json`; "
+        "replace that single source and regenerate when the project route changes.\n"
+        f"{GUIDE_END}"
+    )
+
+
+def _replace_marked_block(path: Path, start_marker: str, end_marker: str, expected: str, check: bool) -> bool:
+    text = path.read_text(encoding="utf-8")
+    if start_marker in text and end_marker in text:
+        start = text.index(start_marker)
+        end = text.index(end_marker, start) + len(end_marker)
+        updated = text[:start] + expected + text[end:]
+    else:
+        updated = text.rstrip() + "\n\n" + expected + "\n"
+    if check:
+        return updated == text
+    path.write_text(updated, encoding="utf-8")
+    return True
+
+
+def _update_readme(config: dict, check: bool) -> bool:
+    return _replace_marked_block(README, README_START, README_END, _readme_contribution(config), check)
+
+
+def _update_guide(config: dict, check: bool) -> bool:
+    return _replace_marked_block(GUIDE, GUIDE_START, GUIDE_END, _guide_contribution(config), check)
+
+
+def _generate_qr_svg(url: str, output: Path) -> None:
+    """Generate deterministic SVG with the same ZXing core dependency used by the Android app."""
+    import shutil
+    import subprocess
+
+    jars = sorted(Path.home().glob(".gradle/caches/modules-2/files-2.1/com.google.zxing/core/*/*/core-*.jar"))
+    jars = [p for p in jars if "sources" not in p.name and "javadoc" not in p.name]
+    if not jars:
+        raise SystemExit("error: ZXing core jar missing; resolve Gradle dependencies first")
+    javac = shutil.which("javac")
+    java = shutil.which("java")
+    try:
+        if not java:
+            raise OSError
+        subprocess.run([java, "-version"], check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    except (OSError, subprocess.CalledProcessError):
+        android_studio_jdk = Path("/Applications/Android Studio.app/Contents/jbr/Contents/Home/bin")
+        javac = str(android_studio_jdk / "javac") if (android_studio_jdk / "javac").is_file() else None
+        java = str(android_studio_jdk / "java") if (android_studio_jdk / "java").is_file() else None
+    if not javac or not java:
+        raise SystemExit("error: JDK missing; install Android Studio or a Java 17+ runtime")
+
+    helper_dir = ROOT / "tools" / "i18n" / ".qr-build"
+    helper_dir.mkdir(exist_ok=True)
+    source = helper_dir / "QrSvg.java"
+    source.write_text(
+        '''import com.google.zxing.BarcodeFormat;
+import com.google.zxing.EncodeHintType;
+import com.google.zxing.common.BitMatrix;
+import com.google.zxing.qrcode.QRCodeWriter;
+import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.HashMap;
+import java.util.Map;
+
+public final class QrSvg {
+  public static void main(String[] args) throws Exception {
+    Map<EncodeHintType, Object> hints = new HashMap<>();
+    hints.put(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.M);
+    hints.put(EncodeHintType.MARGIN, 4);
+    hints.put(EncodeHintType.CHARACTER_SET, "UTF-8");
+    BitMatrix matrix = new QRCodeWriter().encode(args[0], BarcodeFormat.QR_CODE, 0, 0, hints);
+    StringBuilder svg = new StringBuilder("<svg xmlns=\\"http://www.w3.org/2000/svg\\" viewBox=\\"0 0 ")
+        .append(matrix.getWidth()).append(" ").append(matrix.getHeight())
+        .append("\\" role=\\"img\\" aria-label=\\"QR code for OwnTV translation contributions\\">\\n")
+        .append("<metadata>").append(args[0]).append("</metadata>\\n")
+        .append("<rect width=\\"100%\\" height=\\"100%\\" fill=\\"white\\"/>\\n<path d=\\"");
+    for (int y = 0; y < matrix.getHeight(); y++) {
+      for (int x = 0; x < matrix.getWidth(); x++) {
+        if (matrix.get(x, y)) svg.append("M").append(x).append(" ").append(y).append("h1v1h-1z");
+      }
+    }
+    svg.append("\\" fill=\\"black\\"/>\\n</svg>\\n");
+    Files.writeString(Path.of(args[1]), svg);
+  }
+}
+''',
+        encoding="utf-8",
+    )
+    subprocess.run([javac, "-cp", str(jars[-1]), str(source)], check=True)
+    subprocess.run([java, "-cp", f"{jars[-1]}:{helper_dir}", "QrSvg", url, str(output)], check=True)
+
+
+def _qr_payload(svg: Path) -> str | None:
+    import re
+    if not svg.is_file():
+        return None
+    match = re.search(r"<metadata>(.*?)</metadata>", svg.read_text(encoding="utf-8"))
+    return match.group(1) if match else None
 
 # A locale with no translated resources has real 0% coverage. This keeps the generated picker badge
 # identical to validate_strings.py's informational CI report.
@@ -88,6 +223,9 @@ def _kt_string(s: str) -> str:
 def _generate() -> tuple[str, int, int]:
     """Return (generated_text, num_entries, num_source_keys)."""
     data = json.loads(LOCALES_JSON.read_text(encoding="utf-8"))
+    config = _community_config()
+    threshold = config["translationReadinessThresholdPercent"]
+    project_url = config["projectUrl"]
     source_keys = _string_keys(RES / "values")
 
     entries: list[dict] = []
@@ -140,6 +278,12 @@ def _generate() -> tuple[str, int, int]:
     L.append("@Suppress(\"unused\")")
     L.append("object SupportedLocales {")
     L.append("")
+    L.append("    /** Community translations are promoted to shipping only at this coverage boundary. */")
+    L.append(f"    const val TRANSLATION_READINESS_THRESHOLD_PERCENT: Int = {threshold}")
+    L.append("")
+    L.append("    /** Canonical Hosted Weblate project overview used by the app and generated documentation. */")
+    L.append("    const val CONTRIBUTION_PROJECT_URL: String = " + _kt_string(project_url))
+    L.append("")
     L.append("    /** Tag meaning \"follow the current device locale list\" (see ``LocaleStore``). */")
     L.append('    const val SYSTEM_DEFAULT_TAG: String = ""')
     L.append("")
@@ -161,8 +305,19 @@ def _generate() -> tuple[str, int, int]:
         L.append("        ),")
     L.append("    )")
     L.append("")
-    L.append("    /** Rows the in-app picker should show: catalogue entries that are packaged AND offered. */")
-    L.append("    val pickerRows: List<SupportedLocale> get() = all.filter { it.packaged && it.pickerVisible }")
+    L.append("    /** Rows the in-app picker may show after explicit catalogue promotion and readiness. */")
+    L.append("    val pickerRows: List<SupportedLocale> get() = all.filter {")
+    L.append("        (it.id == \"en-US\" || it.coverage >= TRANSLATION_READINESS_THRESHOLD_PERCENT) &&")
+    L.append("            it.packaged && it.pickerVisible")
+    L.append("    }")
+    L.append("")
+    L.append("    /** A community locale is ready for manual packaging/picker promotion at 70% or above. */")
+    L.append("    fun isTranslationReady(coverage: Int): Boolean =")
+    L.append("        coverage >= TRANSLATION_READINESS_THRESHOLD_PERCENT")
+    L.append("")
+    L.append("    /** Visible community coverage badge; complete/source/system rows have no badge. */")
+    L.append("    fun coverageBadgePercent(locale: SupportedLocale): Int? =")
+    L.append("        locale.coverage.takeIf { locale.tier == 1 && locale.id != \"en-US\" && locale.pickerVisible && it < 100 }")
     L.append("")
     L.append("    /** Canonicalize a supported runtime tag; empty means follow the system locale. */")
     L.append("    fun canonicalTag(raw: String?): String? {")
@@ -186,7 +341,32 @@ def cmd_generate() -> int:
     text, n_entries, n_keys = _generate()
     OUT.parent.mkdir(parents=True, exist_ok=True)
     OUT.write_text(text, encoding="utf-8")
+    if OUT == CANONICAL_OUT:
+        config = _community_config()
+        _update_readme(config, check=False)
+        _update_guide(config, check=False)
+        qr_path = ROOT / config["readmeQrAsset"]
+        qr_path.parent.mkdir(parents=True, exist_ok=True)
+        _generate_qr_svg(config["projectUrl"], qr_path)
+        print(f"generated {qr_path.relative_to(ROOT)} and updated README.md")
     print(f"generated {OUT.relative_to(ROOT)} ({n_entries} locales, {n_keys} source keys)")
+    return 0
+
+
+def _check_community_artifacts() -> int:
+    config = _community_config()
+    qr_path = ROOT / config["readmeQrAsset"]
+    stale = []
+    if not _update_readme(config, check=True):
+        stale.append("README contribution section")
+    if not _update_guide(config, check=True):
+        stale.append("i18n contributor guide canonical URL")
+    if _qr_payload(qr_path) != config["projectUrl"]:
+        stale.append("README QR payload")
+    if stale:
+        print("community contribution artifacts are STALE: " + ", ".join(stale))
+        print("  python3 tools/i18n/gen_supported_locales.py")
+        return 1
     return 0
 
 
@@ -203,7 +383,9 @@ def cmd_check() -> int:
     text, n_entries, n_keys = _generate()
     current = OUT.read_text(encoding="utf-8")
     if current == text:
-        print(f"SupportedLocales.kt fresh ({n_entries} locales, {n_keys} source keys)")
+        if OUT == CANONICAL_OUT and _check_community_artifacts():
+            return 1
+        print(f"SupportedLocales.kt and community artifacts fresh ({n_entries} locales, {n_keys} source keys)")
         return 0
     print("SupportedLocales.kt is STALE — regenerate with:")
     print("  python3 tools/i18n/gen_supported_locales.py")

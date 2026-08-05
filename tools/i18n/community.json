@@ -1,0 +1,6 @@
+{
+  "projectUrl": "https://hosted.weblate.org/projects/owntv/",
+  "localTestOnly": false,
+  "translationReadinessThresholdPercent": 70,
+  "readmeQrAsset": "tools/i18n/owntv-weblate-qr.svg"
+}

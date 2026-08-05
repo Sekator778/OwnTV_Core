@@ -16,15 +16,10 @@ import org.junit.Test
 class SupportedLocalesTest {
 
     @Test
-    fun `catalogue has exactly 25 entries`() {
-        // 24 Tier 1 languages + en-rGB regional override (tier 0).
-        assertEquals(25, SupportedLocales.all.size)
-    }
-
-    @Test
-    fun `catalogue has exactly 24 Tier 1 languages`() {
-        val tier1 = SupportedLocales.all.filter { it.tier == 1 }
-        assertEquals(24, tier1.size)
+    fun `catalogue has source override established translations and catalogue-only backlog`() {
+        assertEquals(44, SupportedLocales.all.size)
+        assertEquals(24, SupportedLocales.all.count { it.tier == 1 })
+        assertEquals(19, SupportedLocales.all.count { it.tier == 2 })
     }
 
     @Test
@@ -36,13 +31,25 @@ class SupportedLocalesTest {
     }
 
     @Test
-    fun `all catalogue entries are packaged`() {
-        val packaged = SupportedLocales.all.filter { it.packaged }
-        assertEquals(SupportedLocales.all.size, packaged.size)
+    fun `catalogue-only locales are unshipped invisible and zero coverage`() {
+        val backlog = SupportedLocales.all.filter { it.tier == 2 }
+        assertEquals(19, backlog.size)
+        backlog.forEach {
+            assertFalse("${it.id} must not be packaged", it.packaged)
+            assertFalse("${it.id} must not be picker-visible", it.pickerVisible)
+            assertEquals("${it.id} must start at 0%", 0, it.coverage)
+        }
     }
 
     @Test
-    fun `all Tier 1 locales are packaged and picker-visible`() {
+    fun `translation readiness threshold has an exact 69 70 boundary`() {
+        assertEquals(70, SupportedLocales.TRANSLATION_READINESS_THRESHOLD_PERCENT)
+        assertFalse(SupportedLocales.isTranslationReady(69))
+        assertTrue(SupportedLocales.isTranslationReady(70))
+    }
+
+    @Test
+    fun `established Tier 1 locales are packaged and picker-visible`() {
         val tier1 = SupportedLocales.all.filter { it.tier == 1 }
         tier1.forEach {
             assertTrue("${it.id} should be packaged", it.packaged)
@@ -101,8 +108,10 @@ class SupportedLocalesTest {
     }
 
     @Test
-    fun `isRtl is true only for Arabic`() {
+    fun `rtl is true only for RTL catalogue scripts`() {
         assertTrue(SupportedLocales.isRtl("ar"))
+        assertTrue(SupportedLocales.isRtl("fa"))
+        assertTrue(SupportedLocales.isRtl("he"))
         assertFalse(SupportedLocales.isRtl("de"))
         assertFalse(SupportedLocales.isRtl("zh-CN"))
         assertFalse(SupportedLocales.isRtl("unknown"))
@@ -113,6 +122,7 @@ class SupportedLocalesTest {
         val rows = SupportedLocales.pickerRows
         assertEquals(24, rows.size)
         assertFalse(rows.any { it.id == "en-GB" })
+        assertFalse(rows.any { it.tier == 2 })
         rows.forEach {
             assertTrue("${it.id} must be packaged", it.packaged)
             assertTrue("${it.id} must be pickerVisible", it.pickerVisible)
@@ -128,6 +138,24 @@ class SupportedLocalesTest {
     fun `source language coverage is 100`() {
         val en = SupportedLocales.all.first { it.id == "en-US" }
         assertEquals(100, en.coverage)
+    }
+
+    @Test
+    fun `100 percent visible community locale hides coverage badge`() {
+        val complete = SupportedLocales.all.first { it.id == "de" }.copy(coverage = 100)
+        assertNull(SupportedLocales.coverageBadgePercent(complete))
+    }
+
+    @Test
+    fun `partial visible community locale shows badge while source and hidden locales do not`() {
+        val visible = SupportedLocales.all.first { it.id == "de" }.copy(coverage = 99)
+        val source = SupportedLocales.all.first { it.id == "en-US" }.copy(coverage = 99)
+        val hidden = visible.copy(pickerVisible = false)
+        val regionalOverride = visible.copy(tier = 0, pickerVisible = true)
+        assertEquals(99, SupportedLocales.coverageBadgePercent(visible))
+        assertNull(SupportedLocales.coverageBadgePercent(source))
+        assertNull(SupportedLocales.coverageBadgePercent(hidden))
+        assertNull(SupportedLocales.coverageBadgePercent(regionalOverride))
     }
 
     @Test
