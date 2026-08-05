@@ -559,6 +559,16 @@ class TestValidateStrings(unittest.TestCase):
         ):
             self.assertIn(f"R.string.{resource}", dialog)
         self.assertIn("stringResource(it)", dialog)
+        self.assertLess(
+            screen.index("label = stringResource(R.string.settings_language_help_translate)"),
+            screen.index("if (showSystemDefault)"),
+        )
+        settings = (ROOT / "app/src/main/java/tv/own/owntv/features/shell/components/SettingsScreen.kt").read_text()
+        appearance = settings.index("GroupLabel(stringResource(R.string.settings_appearance_group))")
+        language = settings.index("title = stringResource(R.string.settings_language),")
+        theme = settings.index("title = stringResource(R.string.settings_theme),")
+        self.assertLess(appearance, language)
+        self.assertLess(language, theme)
 
     def test_canonical_url_and_qr_payload_artifacts_are_consistent(self):
         config = json.loads((ROOT / "tools/i18n/community.json").read_text())
