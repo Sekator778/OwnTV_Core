@@ -2,6 +2,7 @@ package tv.own.owntv.core.database
 
 import androidx.room.TypeConverter
 import tv.own.owntv.core.model.DownloadStatus
+import tv.own.owntv.core.model.HlsSupport
 import tv.own.owntv.core.model.MediaType
 import tv.own.owntv.core.model.SourceType
 import tv.own.owntv.core.tv.TvProviderSurface
@@ -19,4 +20,10 @@ class Converters {
 
     @TypeConverter fun tvProviderSurfaceToString(v: TvProviderSurface): String = v.name
     @TypeConverter fun stringToTvProviderSurface(v: String): TvProviderSurface = TvProviderSurface.valueOf(v)
+
+    // The one enum stored as an INTEGER rather than its name: `sources.hlsSupported` was a boolean
+    // column before, and keeping the same affinity with the same 0/1 meanings is what lets it gain a
+    // third state without a schema change or a migration. See [HlsSupport].
+    @TypeConverter fun hlsSupportToInt(v: HlsSupport): Int = v.code
+    @TypeConverter fun intToHlsSupport(v: Int): HlsSupport = HlsSupport.fromCode(v)
 }

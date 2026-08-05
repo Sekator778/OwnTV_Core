@@ -73,6 +73,9 @@ object LiveStreamQuirks {
     private val brokenTimestampStreams = ConcurrentHashMap.newKeySet<String>()
     private val noHlsVariantStreams = ConcurrentHashMap.newKeySet<String>()
     private val noHlsVariantMpvStreams = ConcurrentHashMap.newKeySet<String>()
+    private val noHlsVariantHosts = ConcurrentHashMap.newKeySet<String>()
+    private val noHlsChannelsPerHost = ConcurrentHashMap<String, MutableSet<String>>()
+    private val tolerantDemuxStreams = ConcurrentHashMap.newKeySet<String>()
     private val prerollDefeatedStreams = ConcurrentHashMap.newKeySet<String>()
     private val softwareArchiveHosts = ConcurrentHashMap.newKeySet<String>()
 
@@ -151,14 +154,69 @@ object LiveStreamQuirks {
      * channels keep their HLS variant, which is the reason the user turned the setting on. Session-only,
      * so a panel that finishes remuxing is back to HLS after the next app start.
      */
-    fun rememberNoHlsVariant(tsUrl: String) { noHlsVariantStreams += tsUrl }
+    fun rememberNoHlsVariant(tsUrl: String) {
+        noHlsVariantStreams += tsUrl
+        notePanelHlsFailure(tsUrl)
+    }
 
-    fun lacksHlsVariant(tsUrl: String): Boolean = tsUrl in noHlsVariantStreams
+    fun lacksHlsVariant(tsUrl: String): Boolean = tsUrl in noHlsVariantStreams || panelLacksHls(tsUrl)
 
     /** As [rememberNoHlsVariant], for mpv. */
-    fun rememberNoHlsVariantMpv(tsUrl: String) { noHlsVariantMpvStreams += tsUrl }
+    fun rememberNoHlsVariantMpv(tsUrl: String) {
+        noHlsVariantMpvStreams += tsUrl
+        notePanelHlsFailure(tsUrl)
+    }
 
-    fun lacksHlsVariantMpv(tsUrl: String): Boolean = tsUrl in noHlsVariantMpvStreams
+    fun lacksHlsVariantMpv(tsUrl: String): Boolean = tsUrl in noHlsVariantMpvStreams || panelLacksHls(tsUrl)
+
+    /**
+     * Distinct channels that must fail their `.m3u8` before the *panel* is written off as HLS-less.
+     *
+     * The per-channel scope above is right for the odd unremuxed channel, but it is the wrong shape when
+     * a panel's HLS is broken account-wide — which is the common case, because `allowed_output_formats`
+     * advertises `m3u8` from the account record while the edge serving it 404s. There, every channel pays
+     * two dead opens (ExoPlayer's HLS rung, then mpv's) for the whole session, and the lesson is thrown
+     * away at every app start. Three channels is enough to tell "this one channel isn't remuxed" from
+     * "this panel doesn't do HLS" without one unlucky channel condemning a working panel.
+     */
+    const val NO_HLS_CHANNELS_BEFORE_PANEL_WIDE = 3
+
+    /**
+     * True once [NO_HLS_CHANNELS_BEFORE_PANEL_WIDE] different channels on this panel have failed HLS.
+     *
+     * Deliberately NOT per engine, unlike the per-channel records: a panel that doesn't serve HLS at all
+     * doesn't serve it to either engine, and the count only reaches the threshold when the failures were
+     * spread across channels rather than repeated on one.
+     */
+    fun panelLacksHls(url: String): Boolean = hostKey(url) in noHlsVariantHosts
+
+    private fun notePanelHlsFailure(tsUrl: String) {
+        val host = hostKey(tsUrl)
+        if (host in noHlsVariantHosts) return
+        // Keyed by the channel URL, so the same channel failing on both engines still counts once.
+        val channels = noHlsChannelsPerHost.computeIfAbsent(host) { ConcurrentHashMap.newKeySet() }
+        channels += tsUrl
+        if (channels.size >= NO_HLS_CHANNELS_BEFORE_PANEL_WIDE) {
+            noHlsVariantHosts += host
+            noHlsChannelsPerHost.remove(host)
+        }
+    }
+
+    /**
+     * Record that this stream only opens with FFmpeg's error tolerance turned on.
+     *
+     * mpv runs FFmpeg's demuxers at their strict defaults, which is why a re-streamed feed with lost
+     * packets, malformed PSI tables or jumping timestamps ends as an `END_FILE` here while VLC — whose TS
+     * demuxer is its own, and forgiving — plays it. The tolerant options ([OwnTVPlayer.demuxerLavfOptionsFor])
+     * close most of that gap, but they are a *retry*, never a default: dropping corrupt packets and
+     * synthesising timestamps costs accuracy on a stream whose data was fine all along.
+     *
+     * Keyed by the **whole URL**: a broken mux belongs to one feed, and its healthy neighbours on the same
+     * panel must keep the accurate path. Session-only.
+     */
+    fun rememberNeedsTolerantDemux(url: String) { tolerantDemuxStreams += url }
+
+    fun needsTolerantDemux(url: String): Boolean = url in tolerantDemuxStreams
 
     /**
      * Record that this stream can never satisfy the "Pre-buffer" threshold, so it must open without one.
@@ -222,5 +280,6 @@ object LiveStreamQuirks {
         hlsRedirectHosts.clear(); segmentRefusingHosts.clear(); singleSessionHosts.clear()
         brokenTimestampStreams.clear(); softwareArchiveHosts.clear(); archivePersistence = null
         noHlsVariantStreams.clear(); noHlsVariantMpvStreams.clear(); prerollDefeatedStreams.clear()
+        noHlsVariantHosts.clear(); noHlsChannelsPerHost.clear(); tolerantDemuxStreams.clear()
     }
 }

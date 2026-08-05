@@ -34,7 +34,12 @@ internal class XtreamSyncer(
     suspend fun sync(s: SourceEntity, progress: SyncCounters, stats: SyncStatsCollector, contentTypes: SyncContentTypes) {
         val details = runCatching { xtream.fetchAccountDetails(s) }.getOrNull()
         if (details != null) {
-            support.sourceDao.updateHlsSupport(s.id, details.hlsSupported)
+            // Only a panel that actually answered gets to settle this: `details == null` is a network or
+            // parse failure, and leaving the row UNKNOWN is the honest record of that.
+            support.sourceDao.updateHlsSupportFromSync(
+                s.id,
+                tv.own.owntv.core.model.HlsSupport.of(details.hlsSupported),
+            )
             // The panel states its session limit up front; the app used to learn it only by failing a
             // tune and reading the 458 back (F30). Stored, so it also survives a restart.
             support.sourceDao.updateMaxConnections(s.id, details.maxConnections)

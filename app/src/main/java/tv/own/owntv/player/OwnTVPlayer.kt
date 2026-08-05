@@ -198,6 +198,10 @@ class OwnTVPlayer(
         const val LIVE_STALL_POLL_MS = 2_500L   // poll interval for the live no-progress watchdog
         const val LIVE_STALL_LIMIT = 4           // polls of no progress (~10s) before treating it as a stall
         const val MAX_LIVE_RECONNECTS = 6        // consecutive stall-reconnects before the error UI takes over
+        // Identical reconnects that must fail before a live stall is treated as a damaged mux rather than a
+        // flaky network. Halfway through the budget: late enough that a transient blip has had its chances,
+        // early enough that the tolerant reopen still gets several attempts before the error UI.
+        const val TOLERANT_DEMUX_AFTER_RECONNECTS = 3
         const val LIVE_OPEN_TIMEOUT_MS = 10_000L // bound FFmpeg/network loops that never emit FILE_LOADED/END_FILE
         internal const val STREAM_RECONNECT_OPTIONS =
             "reconnect=1,reconnect_streamed=1,reconnect_delay_max=8,reconnect_on_http_error=5xx"
@@ -215,18 +219,13 @@ class OwnTVPlayer(
          * against. VOD/catch-up EOF is real and must end playback, so they never get it either.
          */
         internal fun streamLavfOptionsFor(url: String, live: Boolean, hls: Boolean): String = when {
-            live && !hls && url.contains(".ts", ignoreCase = true) -> "$STREAM_RECONNECT_OPTIONS,reconnect_at_eof=1"
+            // Path only — a `.ts` appearing in a query string says nothing about the transport, and the
+            // effective-HLS test above already reads the path alone.
+            live && !hls && url.substringBefore('?').contains(".ts", ignoreCase = true) ->
+                "$STREAM_RECONNECT_OPTIONS,reconnect_at_eof=1"
             else -> STREAM_RECONNECT_OPTIONS
         }
 
-        /**
-         * FFmpeg demuxer options for one load.
-         *
-         * Live HLS keeps FFmpeg's default `live_start_index` (`-3`). An earlier attempt pinned it further
-         * back (`-5`) to dodge the 403s on the traced panel, and the logs showed that made things *worse*:
-         * that panel signs every segment URL with a short-lived token, so starting deeper in the window
-         * only asks for staler — more certainly expired — URLs. There is nothing to tune here.
-         */
         /**
          * Classify mpv's last error, when it is the server refusing with an HTTP status rather than a
          * network/decoder problem.
@@ -267,14 +266,46 @@ class OwnTVPlayer(
         /** Longest an engine switch waits for mpv to finish tearing its stream down. */
         internal const val MPV_RELEASE_TIMEOUT_MS = 1_500L
 
+        /**
+         * FFmpeg's error-tolerance switches: drop corrupted packets instead of ending the file, and
+         * synthesise the timestamps a damaged mux is missing. This is what a forgiving player (VLC, whose
+         * TS demuxer is its own rather than FFmpeg's) does by nature and mpv does not — the reason a
+         * re-streamed feed with packet loss or malformed PSI tables plays there and `END_FILE`s here.
+         *
+         * Never a default. Discarding packets and inventing timestamps costs accuracy on a stream whose
+         * data was fine, so it is a retry rung only, remembered per stream in
+         * [LiveStreamQuirks.rememberNeedsTolerantDemux].
+         */
+        private const val TOLERANT_FFLAGS = "+discardcorrupt+genpts"
+        private const val TOLERANT_LAVF_OPTIONS = "err_detect=ignore_err"
+
+        /**
+         * FFmpeg demuxer options for one load.
+         *
+         * The trimmed fast-zap probe needs `+nobuffer+genpts` (see [applyProbeProfile]); [tolerant] adds
+         * the error tolerance above. `fflags` may appear only once, so the two sets are merged rather
+         * than concatenated.
+         *
+         * Live HLS keeps FFmpeg's default `live_start_index` (`-3`). An earlier attempt pinned it further
+         * back (`-5`) to dodge the 403s on the traced panel, and the logs showed that made things *worse*:
+         * that panel signs every segment URL with a short-lived token, so starting deeper in the window
+         * only asks for staler — more certainly expired — URLs. There is nothing to tune here.
+         */
         internal fun demuxerLavfOptionsFor(
-            url: String,
-            live: Boolean,
             trimmedRawTsProbe: Boolean,
-            hls: Boolean,
-        ): String = when {
-            trimmedRawTsProbe -> "fflags=+nobuffer+genpts,seekable=1"
-            else -> ""
+            tolerant: Boolean,
+        ): String {
+            val fflags = when {
+                trimmedRawTsProbe && tolerant -> "+nobuffer+genpts+discardcorrupt" // +genpts already present
+                trimmedRawTsProbe -> "+nobuffer+genpts"
+                tolerant -> TOLERANT_FFLAGS
+                else -> ""
+            }
+            return buildList {
+                if (fflags.isNotEmpty()) add("fflags=$fflags")
+                if (trimmedRawTsProbe) add("seekable=1")
+                if (tolerant) add(TOLERANT_LAVF_OPTIONS)
+            }.joinToString(",")
         }
         // --- Engine-handoff / reconnect timing --------------------------------------------------------
         // Hardware assumptions live here, tunable in one place. TV boxes expose ONE hardware decoder:
@@ -442,10 +473,25 @@ class OwnTVPlayer(
      *  CC track stays empty under hwdec (#57). While a CC track is selected we decode in software
      *  (≤1080p, GL render path); cleared on deselect / next load. */
     @Volatile private var ccSoftwareOverride = false
-    // A live Xtream stream that won't start on the default `.ts` (MPEG-TS) endpoint is retried once on
-    // the provider's `.m3u8` (HLS) variant before erroring — covers the rare panel that only serves HLS.
+    // A stream that won't start on the extension it was asked for is retried once on the other one —
+    // `.ts` ⇄ `.m3u8` — before erroring. For live that covers the panel which only serves HLS; for a
+    // catch-up archive it covers the far more common opposite, a panel whose live edge remuxes to HLS
+    // while its timeshift server only ever has `.ts` on disk (there is no HLS repackager in front of the
+    // archive), which "Prefer HLS" would otherwise turn into a dead end with no second chance.
     // Per-item; reset on each genuinely-new item.
     @Volatile private var triedAltFormat = false
+    // The catch-up `timeshift.php` query form — a SEPARATE alternate from the extension swap above, for
+    // the panels that reject the path-style archive URL outright. Sharing one flag with `triedAltFormat`
+    // meant whichever alternate ran first consumed the other's turn, so an archive only ever got one.
+    @Volatile private var triedCatchupPhpForm = false
+    // The URL the extension swap is derived from: the item's ORIGINAL URL, not `currentUrl`. Once the
+    // `timeshift.php` alternate has loaded there is no extension left on `currentUrl` to swap, so
+    // computing it from the live value is how the archive lost its format fallback.
+    @Volatile private var altFormatBaseUrl: String? = null
+    // FFmpeg error tolerance for this load ([demuxerLavfOptionsFor]) — the retry rung for a stream mpv's
+    // strict demuxer defaults reject. Per-item; `triedTolerantDemux` keeps it to a single attempt.
+    @Volatile private var tolerantDemuxThisLoad = false
+    @Volatile private var triedTolerantDemux = false
     // If the source has no custom User-Agent and playback fails with a demuxer/access error, we retry
     // once with the short "vlc" UA — some panels block the full "VLC/3.0.20 LibVLC/3.0.20" string but
     // accept the short form. Per-item; reset on each genuinely-new item. Never runs when the user
@@ -648,6 +694,8 @@ class OwnTVPlayer(
         setPropertyString("framedrop", if (brokenPts) "no" else "decoder+vo")
         val trim = rawTs && !forceFullProbe
         usedTrimmedProbe = trim
+        // Error tolerance: this load's retry rung, or a stream already caught needing it this session.
+        val tolerant = tolerantDemuxThisLoad || LiveStreamQuirks.needsTolerantDemux(url)
         if (!trim) {
             // Full probe — needed for HDR, complete track lists, and to open HLS/other live cleanly. Capping
             // the analyze time (even to 2.5 s) wedges mpv's HLS open on this hardware — it never reaches the
@@ -659,28 +707,21 @@ class OwnTVPlayer(
             // into a multi-GB seek + retry loop that eventually kills the video output (blank screen).
             setPropertyString("demuxer-lavf-probesize", "5000000")
             setPropertyString("demuxer-lavf-analyzeduration", "0")
-            val demuxerOptions = demuxerLavfOptionsFor(
-                url,
-                isLiveContent,
-                trimmedRawTsProbe = false,
-                hls = effectiveHls,
-            )
+            val demuxerOptions = demuxerLavfOptionsFor(trimmedRawTsProbe = false, tolerant = tolerant)
             setPropertyString("demuxer-lavf-o", demuxerOptions)
             LiveDiagnosticsLog.event(
-                "mpv_open hls=$effectiveHls live=$isLiveContent probe=full " +
+                "mpv_open hls=$effectiveHls live=$isLiveContent probe=full tolerant=$tolerant " +
                     "demuxerLavfO=\"$demuxerOptions\" streamLavfO=\"${streamLavfOptionsFor(url, isLiveContent, effectiveHls)}\"",
             )
             return
         }
         setPropertyString("demuxer-lavf-probesize", "1000000")
         setPropertyString("demuxer-lavf-analyzeduration", "1.0") // ~1s keeps HDR/colorspace detection safe
-        setPropertyString(
-            "demuxer-lavf-o",
-            demuxerLavfOptionsFor(url, isLiveContent, trimmedRawTsProbe = true, hls = effectiveHls),
-        )
+        val trimmedOptions = demuxerLavfOptionsFor(trimmedRawTsProbe = true, tolerant = tolerant)
+        setPropertyString("demuxer-lavf-o", trimmedOptions)
         LiveDiagnosticsLog.event(
-            "mpv_open hls=$effectiveHls live=$isLiveContent probe=trimmed " +
-                "demuxerLavfO=\"fflags=+nobuffer+genpts,seekable=1\" " +
+            "mpv_open hls=$effectiveHls live=$isLiveContent probe=trimmed tolerant=$tolerant " +
+                "demuxerLavfO=\"$trimmedOptions\" " +
                 "streamLavfO=\"${streamLavfOptionsFor(url, isLiveContent, effectiveHls)}\"",
         )
     }
@@ -2179,6 +2220,38 @@ class OwnTVPlayer(
     private fun currentMetaSnapshot() =
         MediaMeta(currentTitle, currentSubtitle, currentYear, currentLogoUrl, currentContentKey)
 
+    /**
+     * The `.ts` ⇄ `.m3u8` sibling of the item's ORIGINAL URL, or null when there is nothing to swap
+     * (no extension, or it is already what we're playing).
+     *
+     * Derived from [altFormatBaseUrl] rather than `currentUrl` on purpose: by the time this runs the
+     * loaded URL may be the extensionless `timeshift.php` alternate, which has no extension to flip.
+     */
+    private fun alternateFormatUrl(): String? {
+        val base = altFormatBaseUrl ?: return null
+        val from = when {
+            base.endsWith(".m3u8", ignoreCase = true) -> ".m3u8"
+            base.endsWith(".ts", ignoreCase = true) -> ".ts"
+            else -> return null
+        }
+        val to = if (from == ".m3u8") ".ts" else ".m3u8"
+        val alt = base.dropLast(from.length) + to
+        return alt.takeIf { it != currentUrl }
+    }
+
+    /**
+     * Reopen this stream with FFmpeg's error tolerance on — the rung for a feed mpv's strict demuxer
+     * defaults reject outright, and the one that closes most of the "VLC plays it, we don't" gap.
+     * Remembered for the session so the same channel doesn't pay the failed strict attempt again.
+     */
+    private fun noteNeedsTolerantDemux(url: String, why: String) {
+        if (triedTolerantDemux) return
+        triedTolerantDemux = true
+        tolerantDemuxThisLoad = true
+        LiveStreamQuirks.rememberNeedsTolerantDemux(url)
+        LiveDiagnosticsLog.event("mpv $why — reopening with tolerant demuxing (discardcorrupt/genpts/ignore_err)")
+    }
+
     /** P6 — move a legacy URL-keyed VOD pin onto the stable content key (no-op without one). */
     private fun migrateVodPin(url: String, stableKey: String?) {
         if (stableKey == null) return
@@ -2234,6 +2307,10 @@ class OwnTVPlayer(
             autoNextCancelled = false // genuinely new item → re-arm the auto-advance / countdown card
             liveStallReconnects = 0 // genuinely new item → fresh live-reconnect budget
             triedAltFormat = false
+            triedCatchupPhpForm = false
+            altFormatBaseUrl = url
+            tolerantDemuxThisLoad = false
+            triedTolerantDemux = false
             triedSoftwareForVideo = false
             triedVlcUaFallback = false
             triedOpenReset = false
@@ -2278,8 +2355,10 @@ class OwnTVPlayer(
         // ExoPlayer-preferred mode (Settings → Video Player): Movies & Series start on ExoPlayer, with
         // mpv as the automatic fallback (the reverse of the default chain). A per-item gear-toggle pin
         // overrides the setting in either direction. Catch-up stays on mpv (an archive needs mpv's
-        // mid-GOP handling and its software rescue rung), and same-item mpv retries
-        // (resetRetries=false, incl. the Exo→mpv fallback itself) never reroute.
+        // mid-GOP handling and its software rescue rung — timeshift recordings are damaged often enough
+        // that starting them on ExoPlayer trades a fast start for a support queue), and same-item mpv
+        // retries (resetRetries=false, incl. the Exo→mpv fallback itself) never reroute. The HUD gear
+        // toggle still switches a playing archive by hand; only the automatic start is pinned.
         // A back-to-back >1080p (4K-class) load on the SAME reused Surface throws Realtek 0x80001000 / a
         // frame-drop "slideshow" (the VPU buffer queue stays dirty after a heavy session), so such a load
         // gets a freshly recreated SurfaceView. Read and clear the flag HERE, above the engine split: the
@@ -2529,6 +2608,13 @@ class OwnTVPlayer(
                             // Re-fetch in place, preserving the decoder retry budget; reloadLive bumps the
                             // generation, ending this loop, and starts a fresh watchdog for the new load.
                             val stalledUrl = currentUrl ?: return@launch
+                            // A channel that opens and then repeatedly dies mid-stream is the OTHER shape of
+                            // the strict-demuxer problem (the END_FILE ladder only sees the ones that never
+                            // start). Halfway through the reconnect budget, stop re-fetching the same way and
+                            // reopen with error tolerance — reconnecting identically has already failed twice.
+                            if (liveStallReconnects >= TOLERANT_DEMUX_AFTER_RECONNECTS) {
+                                noteNeedsTolerantDemux(stalledUrl, "live stall after $liveStallReconnects reconnects")
+                            }
                             reloadLive(stalledUrl, resetRetries = false)
                             return@launch
                         } else {
@@ -3770,33 +3856,40 @@ class OwnTVPlayer(
                             _error.value = "No internet connection. Check your network and try again."
                             return@launch
                         }
-                        // A live `.ts` stream that retried once and still won't start may be on a panel
-                        // that only serves HLS — try the `.m3u8` variant of the same channel before erroring
-                        // (we default to `.ts` since it's more widely supported, with this as the safety net).
-                        val tsUrl = currentUrl
-                        val catchupAlt = if (!isLiveContent && !triedAltFormat) tv.own.owntv.core.epg.CatchupUrl.timeshiftPhpAlternate(tsUrl) else null
-                        if (catchupAlt != null) {
+                        // A LIVE stream that retried once and still won't start may be on a panel that only
+                        // serves HLS — try the `.m3u8` variant of the same channel before erroring (we
+                        // default to `.ts` since it's more widely supported, with this as the safety net).
+                        //
+                        // Live only, on purpose. An archive is never worth swapping to `.m3u8`: the
+                        // timeshift server has no HLS repackager, so the swap can only ever waste a rung
+                        // and several seconds in front of the user. Catch-up's alternate is the PHP query
+                        // form below, which is a genuinely different endpoint rather than a format guess.
+                        val altFormat = if (isLiveContent && !triedAltFormat && autoRetries >= 1) alternateFormatUrl() else null
+                        val catchupAlt =
+                            if (!isLiveContent && !triedCatchupPhpForm) {
+                                tv.own.owntv.core.epg.CatchupUrl.timeshiftPhpAlternate(currentUrl)
+                            } else {
+                                null
+                            }
+                        if (altFormat != null) {
+                            triedAltFormat = true
+                            autoRetries = 0
+                            android.util.Log.w(TAG, "live stream didn't start — trying format fallback -> ${altFormat.substringAfterLast('.')}")
+                            _buffering.value = true
+                            delay(FALLBACK_RETRY_DELAY_MS)
+                            if (gen == loadGeneration) {
+                                loadUrl(altFormat, currentMetaSnapshot(), isLiveContent, 0L, resetRetries = false)
+                            }
+                        } else if (catchupAlt != null) {
                             // Some Xtream panels reject the path-style catch-up URL (they return an HTML
                             // error page → "unrecognized format") but accept the PHP query form. Try it.
-                            triedAltFormat = true
+                            triedCatchupPhpForm = true
                             autoRetries = 0
                             android.util.Log.w(TAG, "catch-up path URL rejected — trying timeshift.php fallback")
                             _buffering.value = true
                             delay(FALLBACK_RETRY_DELAY_MS)
                             if (gen == loadGeneration) {
                                 loadUrl(catchupAlt, currentMetaSnapshot(), isLiveContent, 0L, resetRetries = false)
-                            }
-                        } else if (isLiveContent && !triedAltFormat && autoRetries >= 1 && tsUrl != null && (tsUrl.endsWith(".ts", ignoreCase = true) || tsUrl.endsWith(".m3u8", ignoreCase = true))) {
-                            triedAltFormat = true
-                            autoRetries = 0
-                            val isHls = tsUrl.endsWith(".m3u8", ignoreCase = true)
-                            val (from, to) = if (isHls) ".m3u8" to ".ts" else ".ts" to ".m3u8"
-                            val alt = tsUrl.dropLast(from.length) + to
-                            android.util.Log.w(TAG, "live stream didn't start ($from) — trying format fallback ($from -> $to)")
-                            _buffering.value = true
-                            delay(FALLBACK_RETRY_DELAY_MS)
-                            if (gen == loadGeneration) {
-                                loadUrl(alt, currentMetaSnapshot(), isLiveContent, 0L, resetRetries = false)
                             }
                         }
                         // The stream didn't start. Silently retry a few times with exponential backoff
@@ -3828,6 +3921,23 @@ class OwnTVPlayer(
                             _buffering.value = true
                             delay(backoffMs(autoRetries))
                             if (gen == loadGeneration && currentUrl != null) {
+                                loadUrl(
+                                    currentUrl!!, currentMetaSnapshot(),
+                                    isLiveContent, if (isLiveContent) 0L else _position.value, resetRetries = false,
+                                )
+                            }
+                        } else if (!triedTolerantDemux && currentUrl != null) {
+                            // Retries and the format alternates are spent and the stream still produced no
+                            // playable data. Before the decoder rescues below — which assume the container
+                            // was fine and only the decode failed — give the demuxer one pass with error
+                            // tolerance on. A damaged mux is the far likelier cause on a re-streamed feed,
+                            // and this is the cheapest rung on the ladder.
+                            noteNeedsTolerantDemux(currentUrl!!, "playback didn't start after retries")
+                            forceFullProbe = true
+                            _buffering.value = true
+                            delay(FALLBACK_RETRY_DELAY_MS)
+                            if (gen == loadGeneration && currentUrl != null) {
+                                // resetRetries=false keeps the exhausted budget, so this is exactly one attempt.
                                 loadUrl(
                                     currentUrl!!, currentMetaSnapshot(),
                                     isLiveContent, if (isLiveContent) 0L else _position.value, resetRetries = false,
