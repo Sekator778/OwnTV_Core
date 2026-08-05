@@ -1632,4 +1632,48 @@ Resync and remove missing titles also allows removing titles the provider no lon
     <string name="settings_subtitle_color_green">Green</string>
     <!-- Translators: Subtitle color preset name. -->
     <string name="settings_subtitle_color_grey">Grey</string>
+    <string name="settings_live_preroll">Pre-buffer live streams</string>
+    <string name="settings_live_preroll_description">Collect this much video before a live channel starts playing, and again after a stutter. This is an amount of video, not a countdown. Off keeps the fastest possible start.</string>
+    <string name="settings_live_preroll_per_playlist">Pre-buffer per playlist</string>
+    <string name="settings_live_preroll_per_playlist_description">Override the setting above for one playlist while keeping your other playlists fast.</string>
+    <!-- Translators: Number of playlists with a custom pre-buffer override. -->
+    <plurals name="settings_live_preroll_overrides">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> set</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> set</item>
+    </plurals>
+    <string name="settings_surround_stereo">Stereo only</string>
+    <string name="settings_surround_auto_description">Auto — try Dolby/DTS surround, and switch back to stereo automatically if the TV or soundbar does not play it. Recommended.</string>
+    <string name="settings_surround_stereo_description">Stereo only — always decode in the app and send plain 2.0 sound. Use this on TV speakers or a stereo soundbar, or if audio lags behind the picture.</string>
+    <string name="settings_surround_forced_description">Surround — send Dolby/DTS to a real 5.1/7.1 receiver. If it goes silent or stutters, OwnTV still falls back to stereo and tells you.</string>
+    <string name="settings_panel_width">Panel Width Adjustment</string>
+    <string name="settings_panel_width_description">Resize the category, list and preview panels in Live TV, Movies &amp; Series.</string>
+    <string name="settings_search_keywords_epg_offset">epg guide time offset shift timezone east west hours</string>
+    <string name="settings_search_keywords_panel_width">panel width size resize category list preview poster column layout live movies series</string>
+    <string name="settings_search_keywords_live_preroll">prebuffer preroll pre-roll buffering buffer before playing rebuffer stutter freeze per playlist</string>
+    <string name="settings_detailed_playback_logging">Detailed playback logging</string>
+    <string name="settings_search_keywords_detailed_logging">diagnostics verbose trace logcat debug report bug live engine</string>
+    <string name="settings_playback_kind_error">Error</string>
+    <string name="settings_playback_kind_event">Event</string>
+    <string name="settings_playback_kind_report">Report</string>
+    <!-- Translators: Playback-log entry header. The values are date/time, entry kind, engine, and stream type. -->
+    <string name="settings_playback_entry_with_kind"><xliff:g id="date">%1$s</xliff:g>  ·  <xliff:g id="kind">%2$s</xliff:g>  ·  <xliff:g id="engine">%3$s</xliff:g>  ·  <xliff:g id="stream_type">%4$s</xliff:g></string>
+    <string name="settings_export">Export</string>
+    <string name="settings_detailed_playback_logging_description">Keep a full trace of what the live engine does — every tune, fallback and reconnect — in Logcat and in the exported report. Leave it off unless you are chasing a problem; it never changes playback, only how much is written down.</string>
+    <string name="settings_live_preroll_playlist_picker">Which playlist?</string>
+    <string name="settings_live_preroll_follow">Follow setting</string>
+    <string name="settings_video_seconds"><xliff:g id="seconds">%1$d</xliff:g>s of video</string>
+    <string name="settings_epg_offset_root_description">Shift the whole guide when a feed’s times don’t match what’s actually on. A single channel can be shifted on its own from its long-press menu (Live TV or Guide) — that’s the one for East/West versions sharing a guide.</string>
+    <string name="settings_epg_offset_dialog_description">Moves every programme in the guide. Use it when the whole feed is on the wrong clock; for a single channel (an East/West version sharing one guide), long-press the channel in Live TV or the Guide and set its own offset there.</string>
+    <string name="settings_panel_width_screen_description">Set how much of the screen each panel takes — categories, the item list, and the preview.</string>
+    <string name="settings_panel_width_summary">Category <xliff:g id="category">%1$d</xliff:g>%% · List <xliff:g id="list">%2$d</xliff:g>%% · <xliff:g id="preview_label">%3$s</xliff:g> <xliff:g id="preview">%4$d</xliff:g>%%</string>
+    <string name="settings_panel_width_help">• The three panels share one row, so their percentages must add up to 100%%.\n• Widen one panel and you have to take the same amount off another before saving.\n• Reset puts a section back to the standard widths this screen started with.\n• Turning a section off restores its standard layout without losing your values.\n• Movie and series posters re-flow automatically, so a narrower list just shows fewer per row.</string>
+    <string name="settings_panel_width_preview">Preview</string>
+    <string name="settings_panel_width_poster">Poster</string>
+    <string name="settings_panel_width_dialog_title"><xliff:g id="section">%1$s</xliff:g> panel widths</string>
+    <string name="settings_panel_width_customize">Customize panel</string>
+    <string name="settings_panel_width_category">Category panel</string>
+    <string name="settings_panel_width_list">List panel</string>
+    <string name="settings_panel_width_preview_panel"><xliff:g id="label">%1$s</xliff:g> panel</string>
+    <string name="settings_panel_width_total">Total size</string>
+    <string name="settings_panel_width_invalid_total">Total size is <xliff:g id="total">%1$d</xliff:g>%%. It has to be 100%% — please adjust.</string>
 </resources>

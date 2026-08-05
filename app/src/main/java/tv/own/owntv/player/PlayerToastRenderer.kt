@@ -49,6 +49,7 @@ class PlayerToastRenderer(
         is PlaybackFailure.ExoPlay -> context.getString(R.string.player_error_exo_play, code)
         is PlaybackFailure.HardwareFallback -> context.getString(R.string.player_error_hardware_fallback, resolution)
         is PlaybackFailure.HardwareDisabled -> context.getString(R.string.player_error_hardware_disabled, resolution)
+        is PlaybackFailure.HardwareFormat -> context.getString(R.string.player_error_hardware_format, resolution, codec)
         is PlaybackFailure.StreamUnavailable -> context.getString(
             R.string.player_error_stream_unavailable,
             if (customUserAgentHint) context.getString(R.string.player_error_custom_user_agent) else "",

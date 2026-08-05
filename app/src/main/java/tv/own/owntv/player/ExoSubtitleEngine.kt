@@ -15,15 +15,14 @@ import androidx.media3.common.text.CueGroup
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.datasource.okhttp.OkHttpDataSource
 import androidx.media3.exoplayer.DefaultLoadControl
-import androidx.media3.exoplayer.DefaultRenderersFactory
 import androidx.media3.exoplayer.ExoPlayer
-import androidx.media3.exoplayer.mediacodec.MediaCodecSelector
 import androidx.media3.exoplayer.source.DefaultMediaSourceFactory
 import androidx.media3.exoplayer.trackselection.DefaultTrackSelector
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import okhttp3.OkHttpClient
 import tv.own.owntv.core.network.HttpClient
+import tv.own.owntv.core.network.StreamHeaders
+import java.util.Locale
 
 /**
  * ExoPlayer (Media3) used **only** for the one case mpv's direct path can't handle: a VOD with an
@@ -44,7 +43,7 @@ import tv.own.owntv.core.network.HttpClient
 @androidx.annotation.OptIn(UnstableApi::class)
 class ExoSubtitleEngine(
     private val context: Context,
-    private val okHttpClient: OkHttpClient,
+    private val streamingHttp: tv.own.owntv.core.network.StreamingHttpClient,
     private val budget: PlayerBudget,
     private val callbacks: Callbacks,
 ) {
@@ -61,7 +60,10 @@ class ExoSubtitleEngine(
          *  this engine owns playback as a VOD engine (mpv never probed the file, so its list is empty). */
         fun onTextTracks(tracks: List<TrackOption>)
         fun onVideoFps(fps: Float)
-        fun onError(failure: PlaybackFailure)
+        /** [decodeFailure] = this device could not decode the video, on hardware OR software (the
+         *  software rung was already spent or refused). A verdict about the file+device, not about the
+         *  network — so the owner may remember it, unlike a transient load error. */
+        fun onError(failure: PlaybackFailure, decodeFailure: Boolean = false)
         /** Playback reached the end of the file (drives VOD auto-play-next while this engine is active). */
         fun onEnded()
     }
@@ -112,15 +114,52 @@ class ExoSubtitleEngine(
     // below must stay quiet. Assumed true until onTracksChanged says otherwise, so a file whose
     // tracks never arrive is still covered. Mirrors LivePreviewEngine's `hasVideo` gate.
     private var hasVideoTrack = true
+    // Audio Mode: the video track is deselected, so no frame can ever arrive — see [setVideoTrackDisabled].
+    @Volatile private var audioOnly = false
     private val noVideoTimeout = Runnable {
-        if (!firstFrameSeen && hasVideoTrack) {
+        if (!firstFrameSeen && hasVideoTrack && !audioOnly) {
             android.util.Log.w(
                 TAG,
                 "no video frame after ${noVideoTimeoutMs()}ms — falling back " +
                     "(decodedDrops=${currentDroppedFrames(player) - dropsBaseline} format=${player?.videoFormat?.sampleMimeType})",
             )
-            callbacks.onError(PlaybackFailure.AudioNoVideo)
+            // One software retry before giving up on this engine. "Audio plays, no frame ever renders"
+            // is precisely what a hardware decoder does when it accepts a format it can't actually
+            // handle — and a software decoder usually can. For a catch-up archive it is also the
+            // mid-GOP signature (a software decoder picks up at the next keyframe), so the panel is
+            // remembered and the session's remaining archives open in software straight away.
+            val url = currentUrl
+            if (softwareRungAvailable() && url != null) {
+                if (isArchiveItem) LiveStreamQuirks.rememberArchiveNeedsSoftware(url)
+                android.util.Log.w(TAG, "software rescue: no frame on the hardware decoder, restarting in software decode")
+                onSoftwareRescue?.invoke(url, isArchiveItem)
+                return@Runnable
+            }
+            callbacks.onError(
+                PlaybackFailure.AudioNoVideo,
+                decodeFailure = true,
+            )
         }
+    }
+
+    /**
+     * Whether this item can still be retried on a software decoder in THIS engine.
+     *
+     * Already on software → the rung is spent (and `start` sets `softwarePreferred` for the retry, so
+     * this is also what stops it looping). Above 1080p → refused, exactly as mpv's
+     * `canTrySoftwareRescue` refuses it: software-decoding 4K on TV silicon is a slideshow, not a
+     * rescue, and the time is better spent handing the item to the other engine. An unknown height is
+     * allowed — by the time a decoder fails the format is normally known, and the no-frame watchdog
+     * still catches a bad guess.
+     */
+    private fun softwareRungAvailable(): Boolean {
+        if (softwarePreferred) return false
+        val height = player?.videoFormat?.height ?: 0
+        if (height > 1080) {
+            android.util.Log.i(TAG, "software rescue declined: ${height}p is above the software-decode ceiling")
+            return false
+        }
+        return true
     }
 
     /** How long to wait for the first frame. A catch-up archive gets far longer: it decodes in SOFTWARE
@@ -207,7 +246,19 @@ class ExoSubtitleEngine(
 
         override fun onPlayerError(error: PlaybackException) {
             android.util.Log.w(TAG, "ExoPlayer error: ${error.errorCodeName}", error)
-            callbacks.onError(friendlyFailure(error))
+            // A decode-class failure gets this engine's software rung before playback leaves it. The
+            // old behaviour handed EVERY Exo error straight to mpv, so a file the software decoder
+            // could play was thrown at the other engine to discover that — the ladder is now
+            // Exo hardware → Exo software → mpv hardware → mpv copy → mpv software.
+            // Network / source / DRM errors are NOT retried here: a different decoder cannot fix them,
+            // and mpv (with its own retry ladder and different HTTP stack) is the better next step.
+            val url = currentUrl
+            if (error.errorCode in DECODE_ERROR_CODES && softwareRungAvailable() && url != null) {
+                android.util.Log.w(TAG, "software rescue: ${error.errorCodeName} on the hardware decoder, restarting in software decode")
+                onSoftwareRescue?.invoke(url, isArchiveItem)
+                return
+            }
+            callbacks.onError(friendlyFailure(error), decodeFailure = error.errorCode in DECODE_ERROR_CODES)
         }
     }
 
@@ -222,10 +273,17 @@ class ExoSubtitleEngine(
         // [selectExternalLabel] names the one to select, or null to attach them all unselected.
         sideloadSubs: List<OwnTVPlayer.ExternalSub> = emptyList(),
         selectExternalLabel: String? = null,
-        /** Decode this item on a software decoder (catch-up archive) — see [softwareFirstSelector]. */
+        /** Decode this item on a software decoder — see [ownTVRenderers]. */
         preferSoftware: Boolean = false,
+        /** This item is a catch-up / live-rewind archive: mid-GOP, so a blank picture on the hardware
+         *  decoder is rescued in software instead of erroring — see [noVideoTimeout]. */
+        isArchive: Boolean = false,
     ) {
-        softwarePreferred = preferSoftware
+        // "Hardware decoding = Off" used to reach mpv only, so a user who turned it off to work around a
+        // broken vendor decoder still got that decoder the moment playback landed on ExoPlayer. The
+        // selector puts software first and keeps hardware as a backstop, so this can only add a route.
+        softwarePreferred = preferSoftware || !hwDecodingEnabled
+        isArchiveItem = isArchive
         this.surface = surface
         fallbackMode = fallback
         pendingSubLang = subLang
@@ -234,8 +292,14 @@ class ExoSubtitleEngine(
         firstFrameSeen = false
         hasVideoTrack = true
         throughputTracker.reset(); fpsSample.resetAll(); dropsBaseline = currentDroppedFrames(player)
+        audioWatchdog.reset()
         mainHandler.removeCallbacks(noVideoTimeout)
-        mainHandler.postDelayed(noVideoTimeout, noVideoTimeoutMs())
+        // Nothing to wait for while Audio Mode is on — the video track is deselected on purpose.
+        if (!audioOnly) mainHandler.postDelayed(noVideoTimeout, noVideoTimeoutMs())
+
+        // Applied per item, before prepare: the factory is created once but each load builds a fresh
+        // data source from it, so a changed UA/header set takes effect without rebuilding the player.
+        applyRequestHeaders()
 
         currentUrl = url
         externalSubs.clear()
@@ -246,12 +310,24 @@ class ExoSubtitleEngine(
 
         // The renderer factory (and so the decoder selector) is baked in at construction: if this item
         // wants the other decode path than the cached player was built for, drop and rebuild it.
-        if (player != null && builtForSoftware != softwarePreferred) {
-            android.util.Log.i(TAG, "rebuilding ExoPlayer for ${if (softwarePreferred) "software" else "hardware"} decode")
+        // The audio sink's capabilities are baked in at construction too, so the same rule applies: a
+        // cached player built before the session latched to stereo would keep the sink that failed.
+        val wantStereo = !AudioOutputPolicy.allowsMultichannel(surroundMode)
+        if (player != null && (builtForSoftware != softwarePreferred || builtForStereo != wantStereo)) {
+            android.util.Log.i(TAG, "rebuilding ExoPlayer for ${if (softwarePreferred) "software" else "hardware"} decode, ${if (wantStereo) "stereo" else "device"} audio")
             player?.release()
+            boost.release() // bound to the outgoing player's audio session
             player = null
         }
-        val p = player ?: build().also { player = it; builtForSoftware = softwarePreferred }
+        val p = player ?: build().also { player = it; builtForSoftware = softwarePreferred; builtForStereo = wantStereo }
+        // Both are plain setters, so a cached player picks up a setting changed since it was built —
+        // no rebuild needed for either (unlike the renderer factory and the audio sink above).
+        p.setVideoChangeFrameRateStrategy(
+            if (autoFrameRateEnabled) C.VIDEO_CHANGE_FRAME_RATE_STRATEGY_ONLY_IF_SEAMLESS
+            else C.VIDEO_CHANGE_FRAME_RATE_STRATEGY_OFF,
+        )
+        applyLanguagePrefs()
+        setVideoTrackDisabled(audioOnly) // survives a player rebuild while Audio Mode is on
         p.setVideoSurface(surface)
         p.setMediaItem(buildMediaItem(url))
         p.prepare()
@@ -373,15 +449,27 @@ class ExoSubtitleEngine(
     /** Decode path requested for the item being started, and the one the built [player] actually holds —
      *  the renderer factory is fixed at construction, so a change forces a rebuild in [start]. */
     private var softwarePreferred = false
+    private var isArchiveItem = false
+    /** Mirrors Settings → Video player → Hardware decoding, pushed in by [OwnTVPlayer]. */
+    @Volatile var hwDecodingEnabled = true
     private var builtForSoftware = false
 
-    /** [MediaCodecSelector.DEFAULT]'s list, reordered to put software decoders first. Media3 tries the
-     *  list in order and falls through on failure, so the hardware decoder stays available as a backstop
-     *  rather than being removed outright. */
-    private val softwareFirstSelector = MediaCodecSelector { mime, secure, tunneling ->
-        MediaCodecSelector.DEFAULT.getDecoderInfos(mime, secure, tunneling)
-            .sortedBy { it.hardwareAccelerated } // false (software) sorts before true
+    /** The per-source User-Agent and the per-channel headers of the item mpv handed over, pushed in by
+     *  [OwnTVPlayer] (F16). Without them a stream that only opens with a custom UA/Referer on mpv would
+     *  fail the moment the engine fallback took over. */
+    @Volatile var userAgent: String? = null
+    @Volatile var httpHeaders: Map<String, String> = emptyMap()
+    private var httpFactory: OkHttpDataSource.Factory? = null
+
+    private fun applyRequestHeaders() {
+        val factory = httpFactory ?: return
+        val perChannelUa = StreamHeaders.userAgentOf(httpHeaders)
+        factory.setUserAgent(perChannelUa ?: userAgent?.takeIf { it.isNotBlank() } ?: HttpClient.DEFAULT_USER_AGENT)
+        // Always set — an empty map clears the previous item's headers rather than leaking them.
+        factory.setDefaultRequestProperties(httpHeaders.filterKeys { !it.equals("User-Agent", ignoreCase = true) })
     }
+    /** Whether the cached player's audio sink was pinned to stereo PCM. See the rebuild check in `start`. */
+    private var builtForStereo = false
 
     private fun build(): ExoPlayer {
         // OkHttp for the stream itself, wrapped in DefaultDataSource so file:// URIs (side-loaded
@@ -389,43 +477,119 @@ class ExoSubtitleEngine(
         // can't open them, and Media3 swallows a side-loaded subtitle's load failure silently (the
         // track lists but never produces cues). The TransferListener stays on the inner OkHttp factory
         // so local subtitle-file bytes don't inflate the measured network bitrate.
-        val dataSource = androidx.media3.datasource.DefaultDataSource.Factory(
-            context,
-            OkHttpDataSource.Factory(okHttpClient)
-                .setUserAgent(HttpClient.DEFAULT_USER_AGENT)
-                .setTransferListener(throughputTracker),
-        )
+        val http = OkHttpDataSource.Factory(streamingHttp.client)
+            .setUserAgent(HttpClient.DEFAULT_USER_AGENT)
+            .setTransferListener(throughputTracker)
+        httpFactory = http
+        applyRequestHeaders()
+        val dataSource = androidx.media3.datasource.DefaultDataSource.Factory(context, http)
         // Match mpv's buffering depth so stability doesn't drop after the handoff (Dev refinement #3).
         val maxBufferMs = (budget.cacheSecs.toIntOrNull() ?: 30) * 1000
         val minBufferMs = (maxBufferMs / 2).coerceIn(15_000, maxBufferMs)
         val loadControl = DefaultLoadControl.Builder()
             .setBufferDurationsMs(minBufferMs, maxBufferMs, 2_500, 5_000)
+            // Durations alone are not a memory bound: at 120 s (the top RAM tier) a 4K stream can ask the
+            // allocator for hundreds of MB before the duration target is met, and a TV app dies long
+            // before that. Media3's own default is derived from the duration, so scale with the same
+            // tier instead of leaving it uncapped.
+            .setTargetBufferBytes(targetBufferBytes(maxBufferMs))
             .build()
         val trackSelector = DefaultTrackSelector(context).apply {
-            // Honor the user's preferred languages where present; subtitle selection is forced explicitly.
-            parameters = buildUponParameters().build()
+            // Settings → Video player → Preferred audio / subtitle language. These reached mpv only
+            // (alang/slang), so an image-subtitle handoff or an ExoPlayer-preferred VOD silently ignored
+            // them. An explicit subtitle pick still wins: applyPendingSubtitle sets an override.
+            parameters = buildUponParameters()
+                .setPreferredAudioLanguage(prefAudioLang.takeIf { it.isNotBlank() })
+                .setPreferredTextLanguage(prefSubLang.takeIf { it.isNotBlank() })
+                .build()
         }
-        // Catch-up archives decode on SOFTWARE, mirroring mpv's preferSoftware path. Timeshift segments
-        // start mid-GOP, and TV-class hardware decoders can't recover from that: the Realtek OMX decoder
-        // accepts the format, plays the audio, then never emits a video frame ("setPortMode ...
-        // DynamicANWBuffer failed", "BAD CODEC: stride 1920 -> 64"). A software decoder resyncs at the
-        // next keyframe and plays cleanly, which is exactly why mpv was pinned to software here.
-        val renderers = DefaultRenderersFactory(context).apply {
-            if (softwarePreferred) setMediaCodecSelector(softwareFirstSelector)
-        }
+        // Software decoding is a rescue, not the default. A catch-up archive starts mid-GOP and SOME
+        // TV-class hardware decoders can't recover from that — the Realtek OMX decoder accepts the
+        // format, plays the audio, then never emits a video frame ("setPortMode ... DynamicANWBuffer
+        // failed", "BAD CODEC: stride 1920 -> 64") — so [noVideoTimeout] catches that case and restarts
+        // the item here with softwarePreferred set, which resyncs at the next keyframe.
+        // Stereo pinning mirrors the live engine: "Stereo only", or a session latch tripped by ANY engine,
+        // means this player must not be given a sink that can bitstream Dolby/DTS.
+        val renderers = ownTVRenderers(
+            context,
+            forceStereo = !AudioOutputPolicy.allowsMultichannel(surroundMode),
+            softwareFirst = softwarePreferred,
+        )
         return ExoPlayer.Builder(context)
             .setRenderersFactory(renderers)
             .setMediaSourceFactory(DefaultMediaSourceFactory(dataSource))
             .setLoadControl(loadControl)
             .setTrackSelector(trackSelector)
             .build()
-            .apply { addListener(listener); addAnalyticsListener(analytics) }
+            .apply {
+                // Media3's default ONLY_IF_SEAMLESS still issues Surface.setFrameRate() requests, and this
+                // engine plays whole movies — exactly where a 24 fps file on a 60 Hz panel judders. mpv and
+                // the live engine already follow the setting; this one used to ignore it in both directions.
+                setVideoChangeFrameRateStrategy(
+                    if (autoFrameRateEnabled) C.VIDEO_CHANGE_FRAME_RATE_STRATEGY_ONLY_IF_SEAMLESS
+                    else C.VIDEO_CHANGE_FRAME_RATE_STRATEGY_OFF,
+                )
+                addListener(listener); addAnalyticsListener(analytics); addAnalyticsListener(audioWatchdog)
+            }
+    }
+
+    /**
+     * Byte cap to match the duration target. 24 MB (16 MB low-RAM) covers the 30 s base tier; higher RAM
+     * tiers ask for proportionally more, bounded at 3x so a 4K file can never pin an unreasonable slice of
+     * the app heap. Mirrors the live engine's cap, which exists for the same reason.
+     */
+    private fun targetBufferBytes(maxBufferMs: Int): Int {
+        val base = (if (budget.lowSpec) LOW_RAM_TARGET_BYTES else TARGET_BUFFER_BYTES).toLong()
+        val scaled = base * maxBufferMs / BASE_BUFFER_MS
+        return scaled.coerceIn(base, base * 3).toInt()
+    }
+
+    /**
+     * Audio Mode: stop decoding video entirely, without touching audio or position.
+     *
+     * Clearing the surface on its own left the video decoder running full speed into nothing — the whole
+     * point of Audio Mode is that it costs less than watching. Deselecting the track type stops the
+     * decoder outright, mirroring mpv's `vid=no` and the live engine's own Audio Mode.
+     *
+     * It also cancels the first-frame watchdog: with video deselected no frame can ever arrive, and the
+     * watchdog would read that as "this device can't render the picture" and start a software rescue —
+     * or surface a decode error — over a stream that is playing perfectly.
+     */
+    fun setVideoTrackDisabled(disabled: Boolean) {
+        audioOnly = disabled
+        if (disabled) mainHandler.removeCallbacks(noVideoTimeout)
+        // Re-enabling the video track needs a real output surface FIRST. Leaving Audio Mode from the
+        // now-playing bar re-enables video while the full-screen SurfaceView is still unmounted, so the
+        // renderer would create its decoder against a PlaceholderSurface and then be re-pointed at the
+        // real one with MediaCodec.setOutputSurface — which several TV chipsets survive only by
+        // rendering at a few frames a second (mpv is unaffected: `vid=auto` re-decodes into the surface
+        // it already holds). So defer the re-enable to [setSurface]; `audioOnly` above already records
+        // the intent, and nothing decodes in the meantime.
+        if (!disabled && surface == null) return
+        applyVideoTrackDisabled(disabled)
+    }
+
+    private fun applyVideoTrackDisabled(disabled: Boolean) {
+        val p = player ?: return
+        android.util.Log.i(TAG, "audio mode: video track ${if (disabled) "off" else "back on"}")
+        runCatching {
+            p.trackSelectionParameters = p.trackSelectionParameters.buildUpon()
+                .setTrackTypeDisabled(C.TRACK_TYPE_VIDEO, disabled)
+                .build()
+        }
     }
 
     /** Re-point ExoPlayer at a (re)created surface, or null to release it (surfaceDestroyed). */
     fun setSurface(surface: Surface?) {
         this.surface = surface
-        if (surface != null) player?.setVideoSurface(surface) else player?.clearVideoSurface()
+        if (surface == null) {
+            player?.clearVideoSurface()
+            return
+        }
+        player?.setVideoSurface(surface)
+        // Surface first, then the track: this is the deferred half of [setVideoTrackDisabled], so the
+        // decoder is created against the real surface instead of a placeholder it has to be moved off.
+        if (!audioOnly) applyVideoTrackDisabled(false)
     }
 
     fun play() { player?.play() }
@@ -441,16 +605,68 @@ class ExoSubtitleEngine(
 
     fun setSpeed(speed: Double) { player?.setPlaybackSpeed(speed.toFloat()) }
 
-    /** Set output volume. mpv uses 0–150 (%) with software boost; ExoPlayer is a 0–1 linear gain, so
-     *  values above 100% just clamp to full (no boost in the handoff). */
-    fun setVolume(percent: Int) { player?.volume = (percent / 100f).coerceIn(0f, 1f) }
+    /** Set output volume. ExoPlayer's own gain is 0–1 and cannot amplify, so 100–150% rides on the
+     *  platform LoudnessEnhancer — the same range mpv boosts in software, so the HUD's volume means the
+     *  same thing whichever engine owns the item (it used to silently stop at 100% here). */
+    fun setVolume(percent: Int) {
+        player?.volume = (percent / 100f).coerceIn(0f, 1f)
+        boost.apply(player?.audioSessionId ?: C.AUDIO_SESSION_ID_UNSET, percent)
+    }
+
+    private val boost = VolumeBoost { android.util.Log.i(TAG, it) }
 
     /** Called on a ~0.5s tick by [OwnTVPlayer] while active, so the HUD scrubber advances. */
     fun emitPositionDuration() {
         val p = player ?: return
         val dur = p.duration.let { if (it == C.TIME_UNSET) 0L else it }
         callbacks.onPositionDuration(p.currentPosition.coerceAtLeast(0), dur.coerceAtLeast(0))
+        // The audio-output safety net rides the tick that is already running. On a hit the whole session
+        // latches to stereo and the owner restarts this item — the sink's capabilities are decided at
+        // construction, so nothing short of a rebuild can undo a bad choice.
+        audioWatchdog.poll(p.isPlaying)?.let { reason ->
+            android.util.Log.w("ExoSubtitleEngine", "audio watchdog: $reason — forcing stereo for this session")
+            AudioOutputPolicy.latchStereo("exo/vod: $reason")
+            PlaybackErrorLog.event(context, "ExoPlayer", live = false, reason = PlayerFailureReason.STEREO_FALLBACK, detail = reason)
+            onAudioFallback?.invoke()
+        }
     }
+
+    /** The user's Auto / Stereo only / Surround choice, pushed in by [OwnTVPlayer]; read at build time. */
+    @Volatile var surroundMode: SurroundMode = SurroundMode.AUTO
+
+    /** Settings → Video player → Auto frame rate, pushed in by [OwnTVPlayer]; read at build time. */
+    @Volatile var autoFrameRateEnabled = false
+
+    /** Settings → Video player → Preferred audio / subtitle language (ISO code, blank = no preference).
+     *  Pushed in by [OwnTVPlayer]; applied at build time and in place from [start]. */
+    @Volatile var prefAudioLang: String = ""
+
+    @Volatile var prefSubLang: String = ""
+
+    /** Push the language preferences onto a player that was built before they last changed. */
+    private fun applyLanguagePrefs() {
+        val p = player ?: return
+        runCatching {
+            p.trackSelectionParameters = p.trackSelectionParameters.buildUpon()
+                .setPreferredAudioLanguage(prefAudioLang.takeIf { it.isNotBlank() })
+                .setPreferredTextLanguage(prefSubLang.takeIf { it.isNotBlank() })
+                .build()
+        }
+    }
+
+    /** Fired once when the audio watchdog forces stereo; the owner shows the message and restarts. */
+    var onAudioFallback: (() -> Unit)? = null
+
+    /** Fired when this item failed on the hardware decoder and the software rung is still available;
+     *  the owner restarts it here with `preferSoftware`. [fromStart] when the item must restart at 0
+     *  rather than resume (a catch-up archive has no Range support, so re-opening at an offset fails).
+     *
+     *  This is ExoPlayer's own software rung, the mirror of mpv's [OwnTVPlayer] rescue ladder: without
+     *  it a file that only a software decoder can handle left the preferred engine immediately, even
+     *  though the very next thing tried (mpv in software) proved software decoding was the answer. */
+    var onSoftwareRescue: ((url: String, fromStart: Boolean) -> Unit)? = null
+
+    private val audioWatchdog = AudioWatchdog()
 
     /** Select an audio track by the id we published in [Callbacks.onAudioTracks]. */
     fun selectAudio(id: Int) {
@@ -641,6 +857,15 @@ class ExoSubtitleEngine(
             )
         }
         bufferRow(p, dropsBaseline)?.let { out += it }
+        // Same readout as the live engine: who is decoding the audio, and whether the safety net fired.
+        out += StreamInfoRow(
+            StreamInfoLabel.AUDIO_OUTPUT,
+            StreamInfoValue.AudioOutput(
+                kind = if (audioWatchdog.passthrough) AudioOutputKind.PASSTHROUGH else AudioOutputKind.DECODED_IN_APP,
+                multichannelAllowed = AudioOutputPolicy.allowsMultichannel(surroundMode),
+                fallbackReason = AudioOutputPolicy.latchReason,
+            ),
+        )
         return out
     }
 
@@ -666,6 +891,7 @@ class ExoSubtitleEngine(
         surface = null
         mainHandler.removeCallbacks(noVideoTimeout)
         callbacks.onCues(emptyList())
+        boost.release() // the effect is bound to this player's audio session
         player?.let { p ->
             p.removeListener(listener)
             p.clearVideoSurface()
@@ -692,8 +918,22 @@ class ExoSubtitleEngine(
 
     private companion object {
         const val TAG = "ExoSubtitleEngine"
+        /** Byte caps for [targetBufferBytes]; [BASE_BUFFER_MS] is the lowest RAM tier's duration target. */
+        const val TARGET_BUFFER_BYTES = 24 * 1024 * 1024
+        const val LOW_RAM_TARGET_BYTES = 16 * 1024 * 1024
+        const val BASE_BUFFER_MS = 30_000
         const val NO_VIDEO_TIMEOUT_MS = 8_000L
         /** Mid-GOP + software decode needs a much longer first-frame budget — see [noVideoTimeoutMs]. */
         const val NO_VIDEO_TIMEOUT_SOFTWARE_MS = 25_000L
+
+        /** Failures a different (software) decoder can plausibly fix — see the software rescue in
+         *  `onPlayerError`. Everything else (network, source, DRM, renderer/timeout) goes to mpv. */
+        val DECODE_ERROR_CODES = setOf(
+            PlaybackException.ERROR_CODE_DECODER_INIT_FAILED,
+            PlaybackException.ERROR_CODE_DECODER_QUERY_FAILED,
+            PlaybackException.ERROR_CODE_DECODING_FAILED,
+            PlaybackException.ERROR_CODE_DECODING_FORMAT_EXCEEDS_CAPABILITIES,
+            PlaybackException.ERROR_CODE_DECODING_FORMAT_UNSUPPORTED,
+        )
     }
 }

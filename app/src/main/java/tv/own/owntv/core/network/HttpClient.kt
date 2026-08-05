@@ -112,7 +112,7 @@ class HttpClient(private val client: OkHttpClient) {
         /** Mask credentials for display (info overlay / logs): query params AND Xtream `/type/user/pass/`
          *  path segments, which is where live URLs embed them. */
         fun redactUrl(url: String): String = url
-            .replace(Regex("(?i)(username|password|user|pass|token)=[^&]*"), "$1=***")
+        .replace(Regex("(?i)(username|password|user|pass|token|data|auth|signature|sig|key)=[^&]*"), "$1=***")
             // `timeshift` is the catch-up/archive form (/timeshift/user/pass/duration/start/id.ts) — it
             // embeds the same credentials as a live URL, so it must be masked here too.
             .replace(Regex("(?i)(://[^/]+/(?:live|movie|series|vod|timeshift)/)([^/]+)/([^/]+)/"), "$1•••/•••/")

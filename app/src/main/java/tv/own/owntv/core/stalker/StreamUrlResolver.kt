@@ -87,7 +87,8 @@ class StreamUrlResolver(
 
 /**
  * Installed on a playback engine when the current item's URL can't simply be replayed on reconnect
- * (Stalker live, plan §5.4.1). Before retrying, the engine awaits [freshUrl]; a null return means
+ * (Stalker — live per plan §5.4.1, and VOD, whose `create_link` URL expires in a couple of hours,
+ * comfortably inside a film). Before retrying, the engine awaits [freshUrl]; a null return means
  * "replay the stored URL as-is" (also the default when no provider is set — i.e. M3U/Xtream, whose
  * URLs are stable forever).
  *

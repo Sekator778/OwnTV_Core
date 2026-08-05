@@ -1,7 +1,9 @@
 package tv.own.owntv.player
 
+import androidx.media3.common.C
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
+import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Test
 
@@ -45,6 +47,117 @@ class LiveReconnectLadderTest {
     @Test
     fun `recovery is only credited after a sustained healthy window`() {
         assertEquals(60_000L, LivePreviewEngine.HEALTHY_MS)
+    }
+
+    @Test
+    fun `fatal HLS HTTP recovery stays short instead of widening to fifteen seconds`() {
+        assertEquals(1_500L, LivePreviewEngine.hlsHttpReconnectDelayMs(1))
+        assertEquals(1_500L, LivePreviewEngine.hlsHttpReconnectDelayMs(5))
+        assertEquals(1_500L, LivePreviewEngine.hlsHttpReconnectDelayMs(8))
+    }
+
+    @Test
+    fun `redirected playlist is recognized from final URL or response content type`() {
+        assertTrue(LivePreviewEngine.isHlsResponse("http://cdn.test/live/7.m3u8?token=x", "application/octet-stream"))
+        assertTrue(LivePreviewEngine.isHlsResponse("http://cdn.test/live/7", "application/x-mpegURL; charset=UTF-8"))
+        assertTrue(LivePreviewEngine.isHlsResponse("http://cdn.test/live/7", "application/vnd.apple.mpegurl"))
+        assertFalse(LivePreviewEngine.isHlsResponse("http://cdn.test/live/7.ts", "video/MP2T"))
+    }
+
+    @Test
+    fun `a refused segment is retried once, not hammered until fatal`() {
+        assertEquals(LivePreviewEngine.EDGE_REFUSAL_RETRY_MS, LivePreviewEngine.edgeRefusalRetryDelayMs(1))
+        assertEquals(C.TIME_UNSET, LivePreviewEngine.edgeRefusalRetryDelayMs(2))
+        assertEquals(C.TIME_UNSET, LivePreviewEngine.edgeRefusalRetryDelayMs(5))
+    }
+
+    @Test
+    fun `only raw live MPEG-TS gets reconnect_at_eof — everything else keeps the plain reconnect set`() {
+        // Live HLS keeps the shipped reconnect options: dropping them was an unproven experiment and one
+        // provider's mpv playback stopped working under it.
+        assertEquals(
+            OwnTVPlayer.STREAM_RECONNECT_OPTIONS,
+            OwnTVPlayer.streamLavfOptionsFor("http://panel/live/7.m3u8?token=x", live = true, hls = true),
+        )
+        assertEquals(
+            "${OwnTVPlayer.STREAM_RECONNECT_OPTIONS},reconnect_at_eof=1",
+            OwnTVPlayer.streamLavfOptionsFor("http://panel/live/7.ts", live = true, hls = false),
+        )
+        assertEquals(
+            OwnTVPlayer.STREAM_RECONNECT_OPTIONS,
+            OwnTVPlayer.streamLavfOptionsFor("http://panel/movie/7.m3u8", live = false, hls = false),
+        )
+    }
+
+    @Test
+    fun `a redirecting ts URL is treated as HLS by mpv, not as a raw stream`() {
+        // The permanent-black-screen case: mpv reconnected to the same 1.8 KB manifest forever because
+        // the URL said `.ts`. Nothing about the URL changes — only what we learned about the panel.
+        assertEquals(
+            "${OwnTVPlayer.STREAM_RECONNECT_OPTIONS},reconnect_at_eof=1",
+            OwnTVPlayer.streamLavfOptionsFor("http://panel/live/7.ts", live = true, hls = false),
+        )
+        // Learned to be HLS → the manifest's EOF is legitimate, so no reconnect_at_eof.
+        assertEquals(
+            OwnTVPlayer.STREAM_RECONNECT_OPTIONS,
+            OwnTVPlayer.streamLavfOptionsFor("http://panel/live/7.ts", live = true, hls = true),
+        )
+    }
+
+    @Test
+    fun `an HTTP refusal stops the identical-request retries but leaves the fallbacks armed`() {
+        // A panel that refuses outright cannot be talked round by the same request, so only one repeat
+        // is allowed — enough for the format/User-Agent fallbacks, which need autoRetries >= 1, to
+        // still get their turn.
+        assertTrue(OwnTVPlayer.isHardHttpRefusal("ffmpeg: http: HTTP error 403 Forbidden"))
+        assertTrue(OwnTVPlayer.isHardHttpRefusal("ffmpeg: http: HTTP error 404 Not Found"))
+        assertFalse(OwnTVPlayer.isHardHttpRefusal("ffmpeg: http: HTTP error 502 Bad Gateway"))
+        assertFalse(OwnTVPlayer.isHardHttpRefusal("stream: Failed to open http://panel/live/7.ts."))
+        assertFalse(OwnTVPlayer.isHardHttpRefusal(null))
+        assertEquals(1, OwnTVPlayer.HARD_REFUSAL_MAX_RETRIES)
+    }
+
+    @Test
+    fun `busy is not refusal — 458 429 408 keep their retries`() {
+        // F29: "the account's one session is already in use" (the non-standard 458 Xtream panels use),
+        // a rate limit and a request timeout all mean the stream is fine and we should ask again after
+        // a back-off — which is what the ExoPlayer side already does via LiveStreamQuirks.isSessionLimit.
+        // Treating them as hard refusals made mpv give up on panels ExoPlayer reconnects to.
+        assertEquals(OwnTVPlayer.HttpRefusal.BUSY, OwnTVPlayer.httpRefusalKind("ffmpeg: http: HTTP error 458 <none>"))
+        assertEquals(OwnTVPlayer.HttpRefusal.BUSY, OwnTVPlayer.httpRefusalKind("ffmpeg: http: HTTP error 429 Too Many Requests"))
+        assertEquals(OwnTVPlayer.HttpRefusal.BUSY, OwnTVPlayer.httpRefusalKind("ffmpeg: http: HTTP error 408 Request Timeout"))
+        assertEquals(OwnTVPlayer.HttpRefusal.HARD, OwnTVPlayer.httpRefusalKind("ffmpeg: http: HTTP error 401 Unauthorized"))
+        assertEquals(OwnTVPlayer.HttpRefusal.NONE, OwnTVPlayer.httpRefusalKind("ffmpeg: http: HTTP error 503 Unavailable"))
+        assertEquals(OwnTVPlayer.HttpRefusal.NONE, OwnTVPlayer.httpRefusalKind(null))
+    }
+
+    @Test
+    fun `mpv always keeps FFmpeg's default live start`() {
+        // Regression guard: pinning live_start_index back (-5) to dodge the traced panel's 403s only
+        // asked for staler signed segment URLs. Live HLS must carry no demuxer option at all.
+        assertEquals(
+            "",
+            OwnTVPlayer.demuxerLavfOptionsFor(
+                "http://panel/live/7.m3u8?token=x", live = true, trimmedRawTsProbe = false, hls = true,
+            ),
+        )
+        assertEquals(
+            "fflags=+nobuffer+genpts,seekable=1",
+            OwnTVPlayer.demuxerLavfOptionsFor(
+                "http://panel/live/7.ts", live = true, trimmedRawTsProbe = true, hls = false,
+            ),
+        )
+        assertEquals(
+            "",
+            OwnTVPlayer.demuxerLavfOptionsFor(
+                "http://panel/movie/7.m3u8", live = false, trimmedRawTsProbe = false, hls = true,
+            ),
+        )
+    }
+
+    @Test
+    fun `mpv live opening loop is bounded`() {
+        assertEquals(10_000L, OwnTVPlayer.LIVE_OPEN_TIMEOUT_MS)
     }
 
     @Test

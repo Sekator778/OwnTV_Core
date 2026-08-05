@@ -4,6 +4,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Transaction
 import kotlinx.coroutines.flow.Flow
 import tv.own.owntv.core.database.entity.SeriesSortOrderEntity
 
@@ -23,17 +24,30 @@ interface SeriesSortOrderDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAll(rows: List<SeriesSortOrderEntity>)
 
+    /** The row id for a series, or null when the user has never changed it. */
+    @Query("SELECT id FROM series_sort_order WHERE profileId = :profileId AND seriesId = :seriesId LIMIT 1")
+    suspend fun findRowId(profileId: Long, seriesId: Long): Long?
+
     /**
      * Sets both orders in one write. REPLACE on the unique (profileId, seriesId) index would mint a
      * new autoGenerate id each time, so the existing row's id is carried over when there is one.
+     *
+     * Done as a lookup + REPLACE rather than an `ON CONFLICT … DO UPDATE` upsert on purpose: SQLite
+     * only learned that syntax in 3.24 (API 30), and minSdk here is 26 — the statement failed to
+     * compile with `near "ON": syntax error` on every older device.
      */
-    @Query(
-        "INSERT INTO series_sort_order (profileId, seriesId, seasonsDescending, episodesDescending) " +
-            "VALUES (:profileId, :seriesId, :seasonsDescending, :episodesDescending) " +
-            "ON CONFLICT(profileId, seriesId) DO UPDATE SET " +
-            "seasonsDescending = :seasonsDescending, episodesDescending = :episodesDescending",
-    )
-    suspend fun setOrder(profileId: Long, seriesId: Long, seasonsDescending: Boolean, episodesDescending: Boolean)
+    @Transaction
+    suspend fun setOrder(profileId: Long, seriesId: Long, seasonsDescending: Boolean, episodesDescending: Boolean) {
+        upsert(
+            SeriesSortOrderEntity(
+                id = findRowId(profileId, seriesId) ?: 0L,
+                profileId = profileId,
+                seriesId = seriesId,
+                seasonsDescending = seasonsDescending,
+                episodesDescending = episodesDescending,
+            ),
+        )
+    }
 
     /** Everything, for Backup & Restore / re-sync snapshotting. */
     @Query("SELECT * FROM series_sort_order")

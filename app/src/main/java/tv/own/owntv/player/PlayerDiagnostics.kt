@@ -121,6 +121,7 @@ sealed interface PlaybackFailure {
     data class ExoPlay(val code: String) : PlaybackFailure
     data class HardwareFallback(val resolution: String) : PlaybackFailure
     data class HardwareDisabled(val resolution: String) : PlaybackFailure
+    data class HardwareFormat(val resolution: String, val codec: String) : PlaybackFailure
     data class StreamUnavailable(val customUserAgentHint: Boolean) : PlaybackFailure
     /** Fixed mpv diagnostics produced by OwnTV, not provider text; resolve at the UI boundary. */
     data object MpvOpenDecode : PlaybackFailure
@@ -148,6 +149,14 @@ enum class PlayerFailureReason {
     FORMAT,
     NETWORK,
     AUDIO,
+    SOFTWARE_FALLBACK,
+    COPY_MODE_FALLBACK,
+    ARCHIVE_SOFTWARE_FALLBACK,
+    STEREO_FALLBACK,
+    VOD_ENGINE_SESSION_FALLBACK,
+    ONE_SESSION_PROVIDER,
+    MPV_HANDOFF,
+    STREAM_REPORT,
 }
 
 /** Maps cryptic playback-failure strings to semantic state. Comparison needles stay English because
@@ -155,7 +164,10 @@ enum class PlayerFailureReason {
 object PlayerErrors {
     private val HTTP_STATUS_RX =
         Regex("""(?:\bhttp(?: error)? |\bresponse code[:= ]+|\bstatus(?: code)?[:= ]+)(\d{3})\b""")
-    private val ENOMEM_RX = Regex("""\b(?:err(?:or)?|status|code)\s*[:=]?\s*-12\b""")
+    /** MediaCodec ENOMEM forms: "err -12", "status -12", "error -12" — NOT any "-12" substring
+     *  (which matched URLs and timestamps like "-123ms"). MediaCodec usually logs the errno as
+     *  unsigned hex instead ("err 0xfffffff4"), so accept that spelling too. */
+    private val ENOMEM_RX = Regex("""\b(?:err(?:or)?|status|code)\s*[:=]?\s*(?:-12|0xfffffff4)\b""")
 
     fun classify(raw: String): PlayerFailureReason? {
         val l = raw.lowercase()
@@ -164,7 +176,8 @@ object PlayerErrors {
             "0x80001000" in l -> PlayerFailureReason.DECODER_BUSY
             "0x80001001" in l -> PlayerFailureReason.DECODER_TRANSIENT
             "0xfffffff3" in l || "0xffffffea" in l || "format_unsupported" in l || "omx_errorformat" in l -> PlayerFailureReason.UNSUPPORTED_VIDEO
-            "enomem" in l || "out of memory" in l || "no memory" in l || "insufficient" in l || ENOMEM_RX.containsMatchIn(l) -> PlayerFailureReason.DECODER_MEMORY
+            "enomem" in l || "out of memory" in l || "no memory" in l || "insufficient" in l ||
+                "0xfffffff4" in l || ENOMEM_RX.containsMatchIn(l) -> PlayerFailureReason.DECODER_MEMORY
             "error_key" in l || "cryptoinfo" in l || "0x80001100" in l || ("drm" in l && "error" in l) -> PlayerFailureReason.DRM
             httpCode == "509" -> PlayerFailureReason.HTTP_509
             httpCode == "403" -> PlayerFailureReason.HTTP_403
@@ -174,7 +187,8 @@ object PlayerErrors {
             "certificate verify failed" in l || ("ssl" in l && "certif" in l) || "cert_" in l -> PlayerFailureReason.SSL
             "unrecognized file format" in l || "invalid data found" in l -> PlayerFailureReason.FORMAT
             "connection refused" in l || "connection reset" in l || "timed out" in l || "timeout" in l -> PlayerFailureReason.NETWORK
-            "audiotrack" in l || "audiosink" in l || "audioflinger" in l || "audio codec" in l -> PlayerFailureReason.AUDIO
+            "audiotrack" in l || "audiosink" in l || "audioflinger" in l || "audio codec" in l ->
+                PlayerFailureReason.AUDIO
             else -> null
         }
     }

@@ -566,4 +566,15 @@
     <string name="content_epg_own_player">OwnTV player</string>
     <!-- Translators: Player choice option for catch-up playback using an external player app. -->
     <string name="content_epg_external_player">External player</string>
+    <!-- Translators: Opens the per-channel adjustment that shifts guide programme times. -->
+    <string name="content_epg_time_offset">EPG time offset</string>
+    <!-- Translators: Compact signed EPG offset labels. "sign" is + or −; values are localized numbers. -->
+    <string name="content_epg_shift_minutes"><xliff:g id="sign">%1$s</xliff:g><xliff:g id="minutes">%2$s</xliff:g>m</string>
+    <string name="content_epg_shift_hours"><xliff:g id="sign">%1$s</xliff:g><xliff:g id="hours">%2$s</xliff:g>h</string>
+    <string name="content_epg_shift_hours_minutes"><xliff:g id="sign">%1$s</xliff:g><xliff:g id="hours">%2$s</xliff:g>h <xliff:g id="minutes">%3$s</xliff:g>m</string>
+    <string name="content_epg_offset_channel_description">Move the guide for “<xliff:g id="channel">%1$s</xliff:g>”. Use this when an East/West feed shares its guide with the other version — a negative offset pulls the guide earlier.</string>
+    <string name="content_epg_offset_following_global">Following the global offset (<xliff:g id="offset">%1$s</xliff:g>)</string>
+    <string name="content_epg_offset_channel_only">This channel only · global is <xliff:g id="offset">%1$s</xliff:g></string>
+    <string name="content_epg_offset_use_global">Use global</string>
+    <string name="content_preview_single_stream">Preview off — your provider allows one stream at a time</string>
 </resources>

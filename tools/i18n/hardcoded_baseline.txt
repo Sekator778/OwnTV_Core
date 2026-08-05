@@ -156,7 +156,6 @@
 2	app/src/main/java/tv/own/owntv/core/parser/XtreamClient.kt	m3u8
 1	app/src/main/java/tv/own/owntv/core/parser/XtreamClient.kt	ts
 1	app/src/main/java/tv/own/owntv/core/parser/XtreamClient.kt	user_output_formats
-1	app/src/main/java/tv/own/owntv/core/sync/XtreamSyncer.kt	Xtream sync scheduling sourceId=${s.id} contentTypes=$contentTypes concurrency=2 hlsSupported=${details?.hlsSupported}
 2	app/src/main/java/tv/own/owntv/features/customize/BulkRenameDialogs.kt	\0
 1	app/src/main/java/tv/own/owntv/features/customize/BulkRenameDialogs.kt	ADD
 1	app/src/main/java/tv/own/owntv/features/customize/BulkRenameDialogs.kt	PREFIX

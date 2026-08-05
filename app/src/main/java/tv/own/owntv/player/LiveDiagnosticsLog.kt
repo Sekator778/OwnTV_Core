@@ -19,7 +19,7 @@ import tv.own.owntv.BuildConfig
 object LiveDiagnosticsLog {
     const val TAG = "OwnTV-LivePreviewEngine"
 
-    @Volatile var enabled: Boolean = BuildConfig.DEBUG
+    @Volatile var enabled: Boolean = BuildConfig.DEBUG || BuildConfig.DIAGNOSTIC_BUILD
 
     private const val MAX_EVENTS = 1000
     private const val MAX_FILE_BYTES = 256 * 1024L

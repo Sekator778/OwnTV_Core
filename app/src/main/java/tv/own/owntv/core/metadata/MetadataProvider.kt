@@ -19,6 +19,13 @@ data class MetadataSearchResult(
     val tmdbId: Int,
     val type: MetadataType,
     val title: String,
+    /**
+     * TMDB's `original_title` / `original_name` — the title in the production's own language, which TMDB
+     * returns unchanged whatever `&language=` is set to. Matching scores against this AS WELL AS [title]:
+     * with a non-English metadata language [title] comes back translated (e.g. "Οπενχάιμερ"), which shares
+     * no tokens with the provider's Latin catalog name and used to sink every match. Null when TMDB omits it.
+     */
+    val originalTitle: String?,
     val year: Int?,
     val overview: String?,
     /** TMDB relative poster path (e.g. "/abc.jpg"); build the image.tmdb.org URL at render time. */

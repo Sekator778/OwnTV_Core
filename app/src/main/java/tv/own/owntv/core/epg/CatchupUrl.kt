@@ -25,6 +25,10 @@ object CatchupUrl {
     private val START_TOKENS = setOf("start", "utc", "timestamp", "start-timestamp", "utcstart")
     private val END_TOKENS = setOf("end", "utcend", "end-timestamp", "stop")
 
+    /** "Now", in unix seconds. `catchup-source="…?utc={utc}&lutc={lutc}"` is one of the most common
+     *  templates in the wild, and an unsubstituted `{lutc}` reached the provider verbatim (F17). */
+    private val NOW_TOKENS = setOf("lutc", "now", "timenow", "currenttime")
+
     private val TOKEN = Regex("\\$?\\{([A-Za-z_][A-Za-z0-9_-]*)\\}")
 
     /**
@@ -53,6 +57,7 @@ object CatchupUrl {
             when {
                 name in START_TOKENS -> startS.toString()
                 name in END_TOKENS -> endS.toString()
+                name in NOW_TOKENS -> (nowMs / 1000).toString()
                 name == "duration" -> durationS.toString()
                 name == "offset" -> offsetS.toString()
                 // Date parts are single-letter and case-sensitive in the wild (M = month/minute), so map
@@ -83,9 +88,21 @@ object CatchupUrl {
         return when (source.type) {
             SourceType.XTREAM -> channel.remoteId?.let { streamId ->
                 val durationMin = (((programme.stopMs - programme.startMs) / 60_000L).toInt()).coerceAtLeast(1)
-                xtream.timeshiftUrl(source, streamId, programme.startMs, durationMin, tz)
+                // Prefer HLS applies to the archive as well as the live edge (F05): a panel that only
+                // serves this account `.m3u8` answers the `.ts` timeshift path with an error page.
+                val ext = if (source.preferHls) "m3u8" else "ts"
+                xtream.timeshiftUrl(source, streamId, programme.startMs, durationMin, tz, ext)
             }
-            SourceType.M3U -> forM3u(channel.streamUrl, null, channel.catchupSource, programme.startMs, programme.stopMs)
+            // F17 — the catch-up TYPE is now persisted, so `append` (and the templateless styles)
+            // finally reach [forM3u]; it used to be hardcoded to null here.
+            SourceType.M3U -> forM3u(
+                channel.streamUrl,
+                channel.catchupType,
+                channel.catchupSource,
+                programme.startMs,
+                programme.stopMs,
+                tz,
+            )
             else -> null
         }
     }
@@ -108,16 +125,91 @@ object CatchupUrl {
     }
 
     /**
-     * Resolve an M3U channel's catch-up URL: substitute its [catchupSource] template, and for the
-     * `append` type join it onto the [liveUrl]. Returns null if there's no usable template.
+     * Resolve an M3U channel's catch-up URL from its `catchup` [catchupType] and `catchup-source`
+     * [catchupSource] template. Returns null when nothing usable can be built.
+     *
+     * Four conventions, in the order playlists use them:
+     *  - **append** — the template is a query fragment joined onto the [liveUrl] (the most common form,
+     *    and previously unreachable because the type was never stored, F17).
+     *  - **shift / timeshift** — usually typeless: append the standard `?utc=…&lutc=…` pair.
+     *  - **flussonic** — no template at all; the archive lives at a different path on the same server.
+     *  - **xc** — an Xtream panel behind an M3U playlist: rebuild the URL as `timeshift.php`.
+     *
+     * A plain template with no type is substituted as-is, exactly as before.
      */
-    fun forM3u(liveUrl: String, catchupType: String?, catchupSource: String?, startMs: Long, endMs: Long): String? {
+    fun forM3u(
+        liveUrl: String,
+        catchupType: String?,
+        catchupSource: String?,
+        startMs: Long,
+        endMs: Long,
+        tz: TimeZone = TimeZone.getTimeZone("UTC"),
+    ): String? {
         val template = catchupSource?.takeIf { it.isNotBlank() }
+        val type = catchupType?.trim()?.lowercase()?.takeIf { it.isNotEmpty() }
         return when {
-            template != null && catchupType.equals("append", ignoreCase = true) ->
-                liveUrl + fromTemplate(template, startMs, endMs)
+            template != null && type == "append" -> joinQuery(liveUrl, fromTemplate(template, startMs, endMs))
             template != null -> fromTemplate(template, startMs, endMs)
-            else -> null // no template → nothing we can build (a bare catchup="default" needs server support we don't model)
+            type == "shift" || type == "timeshift" -> joinQuery(liveUrl, fromTemplate(SHIFT_TEMPLATE, startMs, endMs))
+            type != null && type.startsWith("flussonic") -> flussonic(liveUrl, startMs, endMs)
+            type == "xc" || type == "xtream" -> xtreamStyle(liveUrl, startMs, endMs, tz)
+            // A bare catchup="default" with no source needs server support we can't model.
+            else -> null
         }
+    }
+
+    /** The `shift` convention's fixed query. */
+    private const val SHIFT_TEMPLATE = "?utc={utc}&lutc={lutc}"
+
+    /**
+     * Join an appended query [fragment] onto [base]. A channel URL that already carries a query (a CDN
+     * token, say) would otherwise get a second `?` and be rejected outright, so the separator is
+     * corrected — everything else is appended verbatim, as the convention expects.
+     */
+    private fun joinQuery(base: String, fragment: String): String = when {
+        fragment.startsWith("?") && base.contains('?') -> base + "&" + fragment.removePrefix("?")
+        else -> base + fragment
+    }
+
+    /**
+     * Flussonic: the archive is a sibling of the live playlist —
+     * `…/channel/index.m3u8` → `…/channel/timeshift_abs-<start>.m3u8`, and the MPEG-TS forms
+     * (`…/channel/mpegts`, `…/channel/index.ts`) → `…/channel/archive-<start>-<duration>.ts`.
+     * Any query string is preserved. Returns null when the URL doesn't look like one of those.
+     */
+    private fun flussonic(liveUrl: String, startMs: Long, endMs: Long): String? {
+        val query = liveUrl.substringAfter('?', "").let { if (it.isEmpty()) "" else "?$it" }
+        val path = liveUrl.substringBefore('?')
+        val slash = path.lastIndexOf('/')
+        if (slash <= 0) return null
+        val last = path.substring(slash + 1).lowercase()
+        val prefix = path.substring(0, slash + 1)
+        val startS = startMs / 1000
+        val durationS = ((endMs - startMs) / 1000).coerceAtLeast(1)
+        return when {
+            last.endsWith(".m3u8") -> "${prefix}timeshift_abs-$startS.m3u8$query"
+            last == "mpegts" || last.endsWith(".ts") -> "${prefix}archive-$startS-$durationS.ts$query"
+            else -> null
+        }
+    }
+
+    private val XC_LIVE_URL = Regex(
+        "^(https?://[^/]+)/(?:live/)?([^/]+)/([^/]+)/(\\d+)(?:\\.[A-Za-z0-9]+)?$",
+        RegexOption.IGNORE_CASE,
+    )
+
+    /**
+     * `catchup="xc"` — an Xtream panel served through a plain M3U playlist. The live URL carries the
+     * credentials (`…/live/user/pass/1234.ts`), so the panel's own timeshift endpoint can be rebuilt
+     * from it. The start timestamp is local to the provider, hence [tz]. Null when the URL isn't in
+     * that shape.
+     */
+    private fun xtreamStyle(liveUrl: String, startMs: Long, endMs: Long, tz: TimeZone): String? {
+        val g = XC_LIVE_URL.find(liveUrl.substringBefore('?'))?.groupValues ?: return null
+        val durationMin = (((endMs - startMs) / 60_000L).toInt()).coerceAtLeast(1)
+        val fmt = java.text.SimpleDateFormat("yyyy-MM-dd:HH-mm", java.util.Locale.US).apply { timeZone = tz }
+        val start = fmt.format(java.util.Date(startMs))
+        return "${g[1]}/streaming/timeshift.php?username=${g[2]}&password=${g[3]}&stream=${g[4]}" +
+            "&start=$start&duration=$durationMin"
     }
 }

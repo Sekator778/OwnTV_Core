@@ -12,7 +12,7 @@ import androidx.media3.common.util.UnstableApi
 import androidx.media3.common.util.Util
 import androidx.media3.datasource.okhttp.OkHttpDataSource
 import androidx.media3.exoplayer.DefaultLoadControl
-import androidx.media3.exoplayer.DefaultRenderersFactory
+import tv.own.owntv.features.settings.data.LiveBuffer
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.exoplayer.Renderer
 import androidx.media3.exoplayer.hls.DefaultHlsExtractorFactory
@@ -31,9 +31,9 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import okhttp3.OkHttpClient
 import tv.own.owntv.core.network.HttpClient
 import java.util.Locale
+import tv.own.owntv.core.network.StreamHeaders
 
 /**
  * ExoPlayer (Media3) that drives the muted **in-pane Live preview**. ExoPlayer starts HLS far faster than
@@ -50,7 +50,7 @@ import java.util.Locale
 @UnstableApi
 class LivePreviewEngine(
     private val context: Context,
-    private val okHttpClient: OkHttpClient,
+    private val streamingHttp: tv.own.owntv.core.network.StreamingHttpClient,
     private val diagnostics: PlayerDiagnostics,
     settings: tv.own.owntv.features.settings.data.SettingsRepository,
     connectivity: tv.own.owntv.core.network.ConnectivityObserver,
@@ -64,6 +64,25 @@ class LivePreviewEngine(
     // Live latency (#72): target live-edge offset in seconds; null = engine default (Balanced). Applied
     // as a MediaItem.LiveConfiguration on the next channel open.
     @Volatile private var liveBufferSecs: Int? = null
+    // "Pre-buffer" (F07): global choice, plus the per-playlist override the current tune
+    // was opened with (null = follow the global one). Both are read at [build] time — the load
+    // control's durations are fixed when the player is constructed.
+    @Volatile private var livePrerollSecs: Int = LiveBuffer.PREROLL_OFF
+    @Volatile private var prerollOverrideSecs: Int? = null
+
+    /** The buffering numbers the live [player] instance was actually constructed with. A LoadControl can't
+     *  be changed afterwards, so this is what [play] compares against to decide on a rebuild. */
+    @Volatile private var builtLoadControl: LiveBuffer.LoadControlMs? = null
+    /** The pre-roll this tune should use — zero for a stream already caught unable to satisfy one
+     *  ([LiveStreamQuirks.defeatsPreroll]), otherwise the per-playlist override or the global setting. */
+    private fun effectivePrerollSecs(): Int {
+        val chosen = prerollOverrideSecs ?: livePrerollSecs
+        if (chosen <= 0) return chosen
+        return if (currentUrl?.let { LiveStreamQuirks.defeatsPreroll(it) } == true) LiveBuffer.PREROLL_OFF else chosen
+    }
+    /** The pre-roll the current tune is waiting on, in seconds. A caller timing the open has to add this:
+     *  a 10 s pre-buffer legitimately delays the first frame by ~10 s before anything is wrong. */
+    val activePrerollSecs: Int get() = effectivePrerollSecs()
     enum class State { IDLE, LOADING, PLAYING, ERROR }
 
     init { LiveDiagnosticsLog.init(context) }
@@ -170,7 +189,103 @@ class LivePreviewEngine(
         // Keep the escape-hatch flag current; turning it off stops any in-flight measuring immediately.
         settingsFlow.onEach { measuredStatsEnabled = it; if (!it) throughputTracker.setEnabled(false) }
             .launchIn(settingsScope)
-        settings.liveBufferSeconds.onEach { liveBufferSecs = it }.launchIn(settingsScope)
+        // Detailed playback logging (F18) is observed for the whole process in OwnTVApp — this engine is
+        // a lazy singleton, so an observer here only started once the user opened Live TV.
+        // Live latency no longer only sets a LiveConfiguration offset (which Media3 honours for HLS/DASH
+        // and ignores for the raw MPEG-TS most Xtream live URLs are) — it now drives the LoadControl,
+        // whose durations are fixed at construction. So a change while a channel is playing rebuilds,
+        // exactly like the surround/hardware-decoding settings above. (F06)
+        settings.liveBufferSeconds.onEach {
+            val changed = liveBufferSecs != it
+            liveBufferSecs = it
+            if (changed) currentUrl?.let { _ -> rebuildForSettingChange() }
+        }.launchIn(settingsScope)
+        settings.livePrerollSecs.onEach {
+            val changed = livePrerollSecs != it
+            livePrerollSecs = it
+            if (changed) currentUrl?.let { _ -> rebuildForSettingChange() }
+        }.launchIn(settingsScope)
+        // Surround mode only takes effect on the next player build (the audio sink's capabilities are
+        // fixed at construction), so a change while a channel is playing rebuilds it — same as mpv's
+        // in-place reload. Changing the setting also clears the session latch, which is handled by
+        // whoever wrote the setting; here we only need the new value and a rebuild.
+        settings.surroundMode.onEach { mode ->
+            val changed = surroundMode != mode
+            surroundMode = mode
+            if (changed) currentUrl?.let { rebuildForSettingChange() }
+        }.launchIn(settingsScope)
+        // "Hardware decoding = Off" used to reach mpv only, which left Live TV — whose default engine is
+        // this one — on the hardware decoder the user was trying to avoid. Rebuild so the new selector
+        // takes effect; the factory is fixed at construction.
+        settings.hwDecoding.onEach { on ->
+            val changed = hwDecodingEnabled != on
+            hwDecodingEnabled = on
+            if (changed) currentUrl?.let { rebuildForSettingChange() }
+        }.launchIn(settingsScope)
+        // "Preferred audio/subtitle language" reached mpv only (alang/slang). Live TV's default engine is
+        // this one, so on every multi-language live channel the setting silently did nothing. Unlike the
+        // options above these are track-selection parameters, so they apply in place — no rebuild.
+        settings.preferredAudioLang.onEach { lang ->
+            if (prefAudioLang != lang) { prefAudioLang = lang; applyLanguagePrefs() }
+        }.launchIn(settingsScope)
+        settings.preferredSubLang.onEach { lang ->
+            if (prefSubLang != lang) { prefSubLang = lang; applyLanguagePrefs() }
+        }.launchIn(settingsScope)
+        // "Default zoom" was applied by mpv/VOD only (OwnTVPlayer), so a live channel promoted to
+        // fullscreen always started at FIT however the user had set it. Applied per tune, same as there.
+        settings.defaultZoom.onEach { name ->
+            defaultZoom = runCatching { ZoomMode.valueOf(name) }.getOrDefault(ZoomMode.FIT)
+        }.launchIn(settingsScope)
+    }
+
+    /** Mirrors Settings → Video player → Hardware decoding. Read at [build] time. */
+    @Volatile private var hwDecodingEnabled = true
+
+    /** Settings → Video player → Preferred audio / subtitle language (ISO code, blank = no preference). */
+    @Volatile private var prefAudioLang: String = ""
+    @Volatile private var prefSubLang: String = ""
+
+    /** Settings → Video player → Default zoom, applied to every new tune. */
+    @Volatile private var defaultZoom: ZoomMode = ZoomMode.FIT
+
+    /**
+     * Push the preferred-language settings into the live player's track selector.
+     *
+     * Safe to call with no player (the values are re-applied from [play]). A blank preference is written
+     * back as "no preference" so clearing the setting takes effect immediately instead of at the next
+     * tune. Media3 normalises ISO 639-2 codes itself, so "eng" here matches a track tagged `en`.
+     */
+    private fun applyLanguagePrefs() {
+        val p = player ?: return
+        runCatching {
+            p.trackSelectionParameters = p.trackSelectionParameters.buildUpon()
+                .setPreferredAudioLanguage(prefAudioLang.takeIf { it.isNotBlank() })
+                .setPreferredTextLanguage(prefSubLang.takeIf { it.isNotBlank() })
+                .build()
+        }
+    }
+
+    /** The user's Auto / Stereo only / Surround choice. Read at [build] time. */
+    @Volatile private var surroundMode: SurroundMode = SurroundMode.AUTO
+
+    /**
+     * Watches this engine's audio output for "accepted the format then played silence" and for a sink
+     * that keeps underrunning. Polled from [progressWatchdog] — the tick that already runs whenever a
+     * channel is up — so it adds no timer and cannot outlive the engine.
+     */
+    private val audioWatchdog = AudioWatchdog()
+    /** rendererIndex -> (C.TrackType, ready). Written from analytics callbacks, read by [rendererReadiness]. */
+    private val rendererReady = java.util.concurrent.ConcurrentHashMap<Int, Pair<Int, Boolean>>()
+    /** A one-line "video=false audio=true" summary of [rendererReady], for the stuck-open diagnostics. */
+    private fun rendererReadiness(): String {
+        if (rendererReady.isEmpty()) return "renderers=unreported"
+        return rendererReady.entries.sortedBy { it.key }.joinToString(" ") { (_, v) ->
+            val name = when (v.first) {
+                C.TRACK_TYPE_VIDEO -> "video"; C.TRACK_TYPE_AUDIO -> "audio"; C.TRACK_TYPE_TEXT -> "text"
+                else -> "type${v.first}"
+            }
+            "$name=${v.second}"
+        }
     }
     private val analytics = object : androidx.media3.exoplayer.analytics.AnalyticsListener {
         override fun onVideoCodecError(eventTime: androidx.media3.exoplayer.analytics.AnalyticsListener.EventTime, videoCodecError: Exception) {
@@ -186,6 +301,55 @@ class LivePreviewEngine(
             lastVideoDecoder = decoderName
             dropsBaseline = currentDroppedFrames(player) // a new decoder session may start its own counters
         }
+
+        /** The one signal that says *which* renderer is holding a channel in BUFFERING. ExoPlayer only
+         *  reaches READY once the load control is satisfied AND every enabled renderer reports ready, so
+         *  when [openWatchdog] finds a full buffer and no picture, this map names the culprit — video
+         *  (no usable keyframe / decoder producing nothing) versus audio (no samples at all, which is what
+         *  a loader parked on a shared HLS timestamp adjuster looks like from here). */
+        override fun onRendererReadyChanged(
+            eventTime: androidx.media3.exoplayer.analytics.AnalyticsListener.EventTime,
+            rendererIndex: Int,
+            rendererTrackType: Int,
+            isRendererReady: Boolean,
+        ) {
+            rendererReady[rendererIndex] = rendererTrackType to isRendererReady
+        }
+
+        /** Per-chunk failures, which is where a provider that won't serve its own live edge shows up —
+         *  [onPlayerError] only sees the aggregate once Media3 has given up on the chunk. */
+        override fun onLoadError(
+            eventTime: androidx.media3.exoplayer.analytics.AnalyticsListener.EventTime,
+            loadEventInfo: androidx.media3.exoplayer.source.LoadEventInfo,
+            mediaLoadData: androidx.media3.exoplayer.source.MediaLoadData,
+            error: java.io.IOException,
+            wasCanceled: Boolean,
+        ) {
+            val code = httpStatusOf(error)
+            LiveDiagnosticsLog.event(
+                "load_error status=${code ?: -1} type=${error.javaClass.simpleName} " +
+                    "dataType=${mediaLoadData.dataType} canceled=$wasCanceled " +
+                    "uri=${HttpClient.redactUrl(loadEventInfo.uri.toString())}",
+            )
+            if (code == null || wasCanceled) return
+            // Checked before the segment filter: the session limit is refused at the *manifest*, because
+            // the panel never lets the request through to a stream at all.
+            if (LiveStreamQuirks.isSessionLimit(code)) { noteSessionLimit(loadEventInfo.uri.toString()); return }
+            if (mediaLoadData.dataType != C.DATA_TYPE_MEDIA) return // a bad manifest is a different failure
+            if (!activeIsHls || !LiveStreamQuirks.isEdgeRefusal(code)) return
+            noteSegmentRefusal(loadEventInfo.uri.toString(), code)
+        }
+    }
+
+    /** The HTTP status behind a load failure, following the cause chain Media3 wraps it in. */
+    private fun httpStatusOf(error: Throwable?): Int? {
+        var t = error
+        var hops = 0
+        while (t != null && hops++ < 8) {
+            (t as? androidx.media3.datasource.HttpDataSource.InvalidResponseCodeException)?.let { return it.responseCode }
+            t = t.cause
+        }
+        return null
     }
 
     /** Semantic media details for the playback error renderer. */
@@ -208,6 +372,24 @@ class LivePreviewEngine(
     }
 
     private var activeIsHls = false
+    /** Actual media-source route for the current load, including runtime `.ts` -> HLS detection. */
+    val isHlsStream: Boolean get() = activeIsHls
+    /** The top-level request ended at an HLS manifest even though the submitted URL looked like raw TS. */
+    @Volatile private var responseWasHls = false
+    private var forceHlsForCurrentLoad = false
+    private var redirectedHlsRetryDone = false
+    /** Distinct live segments this load has been refused — the evidence behind [segmentsRefused]. */
+    private val refusedSegments = mutableSetOf<String>()
+    private val _segmentsRefused = MutableStateFlow(false)
+    /** The provider refuses its own signed segment URLs; ExoPlayer cannot recover, mpv can. One-shot
+     *  per load, collected by the ViewModel exactly like [noVideoDetected]. */
+    val segmentsRefused: StateFlow<Boolean> = _segmentsRefused
+    /** This load was refused because the account's one session is still held (HTTP 458), and whether the
+     *  single wait-and-retry that answers it has already been spent. */
+    private var sessionLimitSeen = false
+    private var sessionLimitRetryDone = false
+    /** The playlist shape is logged once per prepare (and again whenever we back off). */
+    private var playlistLogged = false
 
     /** Technical readout for the stream-info overlay, from the active ExoPlayer formats. */
     override fun streamInfo(): List<StreamInfoRow> {
@@ -234,7 +416,12 @@ class LivePreviewEngine(
         }
         out += StreamInfoRow(
             StreamInfoLabel.DECODER,
-            StreamInfoValue.Decoder(DecoderKind.HARDWARE, name = "ExoPlayer"),
+            lastVideoDecoder?.let { name ->
+                StreamInfoValue.Decoder(DecoderKind.NAMED, name = name, hardware = hwDecodingEnabled)
+            } ?: StreamInfoValue.Decoder(
+                if (hwDecodingEnabled) DecoderKind.HARDWARE else DecoderKind.SOFTWARE,
+                name = "ExoPlayer",
+            ),
         )
         p.audioFormat?.let { f ->
             out += StreamInfoRow(
@@ -246,7 +433,34 @@ class LivePreviewEngine(
                 ),
             )
         }
+        // Which side of the HDMI cable is decoding, and whether the safety net has already fired. This is
+        // the only way to verify a surround setup without a receiver that shows its own input format:
+        // "passthrough" means the TV/receiver is decoding, "decoded" means OwnTV is and the sink gets PCM.
+        out += StreamInfoRow(
+            StreamInfoLabel.AUDIO_OUTPUT,
+            StreamInfoValue.AudioOutput(
+                kind = if (audioWatchdog.passthrough) AudioOutputKind.PASSTHROUGH else AudioOutputKind.DECODED_IN_APP,
+                multichannelAllowed = AudioOutputPolicy.allowsMultichannel(surroundMode),
+                fallbackReason = AudioOutputPolicy.latchReason,
+            ),
+        )
         bufferRow(p, dropsBaseline)?.let { out += it }
+        // The settings that shaped the buffer above, as this player was ACTUALLY built with them — the only
+        // way to tell "Live latency / Pre-buffer didn't apply" from "it applied and the buffer filled that
+        // fast" without a working logcat. Worded as an amount of video, never as a wait: "start after 10s"
+        // read as a ten-second countdown and made a working setting look broken.
+        builtLoadControl?.let { lc ->
+            val preroll = effectivePrerollSecs()
+            out += StreamInfoRow(
+                StreamInfoLabel.LIVE_BUFFER,
+                StreamInfoValue.LiveBuffer(
+                    prerollEnabled = preroll > 0,
+                    prerollSeconds = preroll.toDouble(),
+                    depthSeconds = lc.minBufferMs / 1000.0,
+                    playlistOverride = prerollOverrideSecs != null,
+                ),
+            )
+        }
         currentUrl?.let { out += StreamInfoRow(StreamInfoLabel.SOURCE, StreamInfoValue.Source(HttpClient.redactUrl(it))) }
         return out
     }
@@ -283,7 +497,12 @@ class LivePreviewEngine(
     override fun setBitrateTrackingEnabled(enabled: Boolean) = throughputTracker.setEnabled(enabled && measuredStatsEnabled)
 
     private fun ensureFpsMeasurement() {
-        if (!measuredStatsEnabled) return // escape hatch: no live fps measuring at all
+        // F14: "Measured stream stats" is presented as a *performance* escape hatch, but Auto frame rate
+        // depends on this measurement — raw MPEG-TS almost never declares Format.frameRate, so with the
+        // stats toggle off `videoFps` stayed null and AFR silently did nothing while appearing enabled.
+        // The measurement is cheap and bounded (FPS_MAX_ATTEMPTS samples, then it stops), so AFR keeps it
+        // alive on its own; only the continuous throughput/bitrate tracking follows the stats toggle.
+        if (!measuredStatsEnabled && !autoFrameRateEnabled) return
         if ((player?.videoFormat?.frameRate ?: 0f) <= 0f) restartFpsMeasurement()
     }
 
@@ -429,6 +648,25 @@ class LivePreviewEngine(
                 val posAdvanced = pos > 0 && pos != lastProgressPos
                 if (posAdvanced) { lastProgressPos = pos; lastProgressWallMs = now }
                 else if (lastProgressWallMs == 0L) lastProgressWallMs = now // seed on the first ready poll
+                if (LiveDiagnosticsLog.enabled) {
+                    val liveOffset = p.currentLiveOffset.takeUnless { it == C.TIME_UNSET }
+                    val dropped = (currentDroppedFrames(p) - dropsBaseline).coerceAtLeast(0)
+                    LiveDiagnosticsLog.event(
+                        "health posMs=$pos bufferMs=${p.totalBufferedDuration} liveOffsetMs=${liveOffset ?: -1} " +
+                            "frames=$frames dropped=$dropped isPlaying=${p.isPlaying}",
+                    )
+                }
+                // Audio output health. Runs in EVERY surround mode including "Surround" — a user who asked
+                // for 5.1 did not ask for silence — and cannot be turned off. On a hit the session latches
+                // to stereo (which every engine reads) and this channel is rebuilt on a stereo-only sink.
+                audioWatchdog.poll(p.isPlaying)?.let { reason ->
+                    LiveDiagnosticsLog.event("audioWatchdog: $reason — forcing stereo for this session")
+                    AudioOutputPolicy.latchStereo("exo/live: $reason")
+                    PlaybackErrorLog.event(context, "ExoPlayer", live = true, reason = PlayerFailureReason.STEREO_FALLBACK, detail = reason)
+                    onAudioFallback?.invoke()
+                    rebuildForSettingChange()
+                    return
+                }
                 // Audio-plays-no-video: a video track exists but has never rendered a single frame, even
                 // though we're not in the total-freeze case above (position/audio clock IS advancing). Only
                 // fires once per load so the VM's one-shot mpv fallback isn't retriggered after it acts.
@@ -468,6 +706,151 @@ class LivePreviewEngine(
         }
     }
 
+    // --- pre-roll that the stream can't satisfy -----------------------------------------------------
+    private var flapWindowStartMs = 0L
+    private var flapCount = 0
+    private var flapWindowStartPos = 0L
+    /** A no-pre-roll reopen is queued; ignore further flapping until it lands (cleared by [play]). */
+    private var prerollRetunePending = false
+    private var openStartMs = 0L
+    private var openStuckPolls = 0
+    private var prerollBufferedMs = 0L
+    private var prerollStuckPolls = 0
+
+    /**
+     * Watch the *first* open of a live channel and separate the two ways it can fail to start, which look
+     * identical from outside (a spinner that never clears) and which nothing else here can see — every
+     * other watchdog arms at the first frame, which is exactly what never arrives.
+     *
+     * **1. The buffer is full and playback still won't start.** `DefaultLoadControl` has released it and
+     * the load control is satisfied, so what is missing is a *renderer*: one of them has no sample it can
+     * play at the current position. That is a broken stream, not a slow one — a mux whose audio and video
+     * timestamps disagree, or an HLS rendition whose loading thread is blocked waiting for a timestamp
+     * adjuster that never initialises (Media3 waits for that one forever by default). Traced on a 4K
+     * channel that reported *twenty* seconds buffered and never produced a frame, whose `.ts` variant plays
+     * — with audible A/V sync drift, the same defect from the other side. Nothing in ExoPlayer will rescue
+     * it, so fail the load at once and let the ViewModel retry it in TS / hand it to mpv, instead of
+     * holding a dead spinner until its open timeout.
+     *
+     * **2. The pre-roll can't be reached.** "Pre-buffer = 10s of video" is a threshold on the buffer, not a
+     * wait, and a live stream can only be loaded as far ahead as its provider publishes. If the buffer has
+     * stopped growing *short of* the threshold there is nothing left to wait for: drop the pre-roll for
+     * that one stream and reopen it. A healthy stream keeps filling (at the live edge, roughly a second of
+     * media per second) and is left alone. [PREROLL_OPEN_GRACE_MS] past the requested amount is the
+     * backstop for one that dribbles rather than stalls outright.
+     */
+    private val openWatchdog = object : Runnable {
+        override fun run() {
+            val p = player
+            val url = currentUrl
+            if (p == null || url == null || hasPlayed || gaveUp || prerollRetunePending) return
+            val buffered = p.totalBufferedDuration
+            val startMs = builtLoadControl?.bufferForPlaybackMs?.toLong() ?: LiveBuffer.DEFAULT_START_MS.toLong()
+            val waitedMs = android.os.SystemClock.elapsedRealtime() - openStartMs
+            // (1) enough buffered to start, and it isn't starting.
+            if (buffered >= startMs && buffered > 0L) {
+                if (++openStuckPolls >= OPEN_STUCK_POLLS) {
+                    logHlsPlaylist("open stalled")
+                    val detail = "${buffered}ms buffered (needs ${startMs}ms) after ${waitedMs}ms, no frame, " +
+                        rendererReadiness()
+                    LiveDiagnosticsLog.event("open stalled: $detail — the stream is buffered but unplayable here")
+                    android.util.Log.i(
+                        LiveDiagnosticsLog.TAG,
+                        "open stalled — $detail" + (hlsShape()?.let { ", $it" } ?: ""),
+                    )
+                    failLoad("buffered but never started playing ($detail)")
+                    return
+                }
+            } else {
+                openStuckPolls = 0
+            }
+            // (2) a pre-roll the stream can't fill.
+            val targetMs = effectivePrerollSecs() * 1000L
+            if (targetMs > 0L && buffered < targetMs) {
+                val grew = buffered - prerollBufferedMs
+                if (grew >= PREROLL_MIN_GROWTH_MS) prerollStuckPolls = 0 else prerollStuckPolls++
+                val stuck = prerollStuckPolls >= PREROLL_STUCK_POLLS
+                val tooLong = waitedMs >= targetMs + PREROLL_OPEN_GRACE_MS
+                if (stuck || tooLong) {
+                    val why = if (stuck) "buffer stopped growing at ${buffered}ms" else "still ${buffered}ms after ${waitedMs}ms"
+                    LiveDiagnosticsLog.event("pre-buffer unreachable ($why of ${targetMs}ms) — reopening this stream without one")
+                    android.util.Log.i(LiveDiagnosticsLog.TAG, "preroll defeated — $why of ${targetMs}ms, reopening without pre-buffer")
+                    dropPrerollAndReopen(url)
+                    return
+                }
+            } else {
+                prerollStuckPolls = 0
+            }
+            prerollBufferedMs = buffered
+            mainHandler.postDelayed(this, PREROLL_POLL_MS)
+        }
+    }
+
+    /** Remember that [url] can't hold a pre-roll and reopen it without one. Posted rather than run inline:
+     *  the reopen releases the player, and a caller may be inside that player's own listener callback. */
+    private fun dropPrerollAndReopen(url: String) {
+        LiveStreamQuirks.rememberPrerollDefeated(url)
+        prerollRetunePending = true
+        mainHandler.removeCallbacks(openWatchdog)
+        mainHandler.post { if (currentUrl == url) rebuildForSettingChange() else prerollRetunePending = false }
+    }
+
+    /**
+     * Catch a stream that oscillates `READY ↔ BUFFERING` several times a second instead of playing.
+     *
+     * Traced on a 4K live channel with "Pre-buffer = 10s of video": `DefaultLoadControl` starts and
+     * resumes playback on **either** threshold — the requested media duration *or* the byte cap — and on
+     * a feed that dense the byte cap is reached at well under 10 s of media, so the time threshold can
+     * never be met. Playback starts on the byte rule, plays a few frames, falls back under the cap and
+     * re-buffers at once: measured at ~8 transitions a second, indefinitely. To the user that is a frozen
+     * picture behind a flickering spinner.
+     *
+     * Nothing else in this class could see it. [stallWatchdog] is cancelled by every `STATE_READY`, and
+     * [progressWatchdog] only samples while `STATE_READY` is current and resets its counters whenever a
+     * poll misses one — so a flap this fast resets both faster than either can arm.
+     *
+     * The response is graded: first drop the pre-roll for this stream and reopen it (which is the actual
+     * cause, and keeps the channel on ExoPlayer with its captions and audio tracks intact); if it still
+     * flaps with no pre-roll, the stream simply cannot sustain playback here, so fail the load and let
+     * the ViewModel's ladder retry it in TS / hand it to mpv.
+     */
+    private fun noteRebufferFlap() {
+        if (prerollRetunePending) return
+        val now = android.os.SystemClock.elapsedRealtime()
+        val pos = player?.currentPosition ?: 0L
+        if (now - flapWindowStartMs > FLAP_WINDOW_MS) { flapWindowStartMs = now; flapCount = 0; flapWindowStartPos = pos }
+        if (++flapCount < FLAP_LIMIT) return
+        // A channel that re-buffers often but still moves forward is merely choppy — that's the reconnect
+        // ladder's business, not this. Only "many re-buffers, almost no playback" counts as a flap.
+        val advancedMs = pos - flapWindowStartPos
+        if (advancedMs >= FLAP_MIN_PROGRESS_MS) { flapWindowStartMs = now; flapCount = 0; flapWindowStartPos = pos; return }
+        val url = currentUrl
+        val detail = "$flapCount re-buffers in ${now - flapWindowStartMs}ms, position advanced ${advancedMs}ms"
+        flapWindowStartMs = now; flapCount = 0; flapWindowStartPos = pos
+        if (url != null && effectivePrerollSecs() > 0) {
+            LiveDiagnosticsLog.event("re-buffer flap ($detail) — this stream can't reach its pre-buffer, reopening without one")
+            android.util.Log.i(LiveDiagnosticsLog.TAG, "preroll defeated — reopening without pre-buffer ($detail)")
+            dropPrerollAndReopen(url)
+            return
+        }
+        LiveDiagnosticsLog.event("re-buffer flap ($detail) with no pre-buffer — giving up on ExoPlayer for this stream")
+        failLoad("playback kept re-buffering ($detail)")
+    }
+
+    /** Terminal failure of the current load that is NOT worth another reconnect: stand the watchdogs down
+     *  and surface an error so the ViewModel can retry elsewhere (TS variant / mpv) immediately. */
+    private fun failLoad(reason: String) {
+        mainHandler.removeCallbacks(stallWatchdog)
+        mainHandler.removeCallbacks(progressWatchdog)
+        mainHandler.removeCallbacks(openWatchdog)
+        mainHandler.removeCallbacks(healthyReset)
+        gaveUp = true
+        _isPlaying.value = false; _buffering.value = false
+        _error.value = PlaybackFailure.Channel
+        _errorInfo.value = ErrorInfo(PlayerErrors.reasonFor(reason), exoSpec(), reason)
+        _state.value = State.ERROR
+    }
+
     /** One diagnostic line per ExoPlayer state transition — never includes the stream URL. */
     private fun logStateChange(playbackState: Int) {
         val name = when (playbackState) {
@@ -493,12 +876,16 @@ class LivePreviewEngine(
                     if (hasPlayed && !gaveUp) {
                         LiveDiagnosticsLog.event("stallWatchdog armed (${STALL_MS}ms)")
                         mainHandler.removeCallbacks(stallWatchdog); mainHandler.postDelayed(stallWatchdog, STALL_MS)
+                        // …and the watchdog above can only fire if this state LASTS. A stream that bounces
+                        // straight back to READY re-arms it forever instead — see [noteRebufferFlap].
+                        if (!reconnectPending) noteRebufferFlap()
                     }
                 }
                 Player.STATE_READY -> {
                     val resumed = hasPlayed // a READY after first play == recovered from a buffer/stall
                     _state.value = State.PLAYING; _buffering.value = false
                     hasPlayed = true; mainHandler.removeCallbacks(stallWatchdog)
+                    if (activeIsHls && !playlistLogged) { playlistLogged = true; logHlsPlaylist("ready") }
                     // Recovery is measured, not assumed: arm the ladder reset and let it fire only if this
                     // READY actually holds (see [healthyReset]).
                     mainHandler.removeCallbacks(healthyReset); mainHandler.postDelayed(healthyReset, HEALTHY_MS)
@@ -509,6 +896,7 @@ class LivePreviewEngine(
                     frameCounter.set(0); lastFrameCount = 0; everRendered = false; lastProgressPos = -1L; lastProgressWallMs = 0L; frozenChecks = 0
                     readySinceMs = android.os.SystemClock.elapsedRealtime(); noVideoTriggered = false
                     mainHandler.removeCallbacks(progressWatchdog); mainHandler.postDelayed(progressWatchdog, PROGRESS_CHECK_MS)
+                    mainHandler.removeCallbacks(openWatchdog) // it opened — the pre-roll was satisfiable
                     ensureFpsMeasurement()
                 }
                 Player.STATE_ENDED -> {
@@ -586,8 +974,25 @@ class LivePreviewEngine(
             // mid-stream drop → reconnect, unless a reconnect from the SAME failed prepare is already
             // in flight (ExoPlayer often fires this alongside a STATE_IDLE for one physical failure) or
             // we've already exhausted retries and are waiting on the user/a fresh play().
-            if (hasPlayed && !reconnectPending && !gaveUp) { reconnect("error ${error.errorCodeName}"); return }
+            if (hasPlayed && !reconnectPending && !gaveUp) {
+                val hlsHttpFailure = activeIsHls && error.errorCode == PlaybackException.ERROR_CODE_IO_BAD_HTTP_STATUS
+                reconnect("error ${error.errorCodeName}", fastHlsHttpRecovery = hlsHttpFailure)
+                return
+            }
             if (hasPlayed) return
+            // Some Xtream panels advertise a `.ts` endpoint but HTTP-redirect it to an `.m3u8` manifest.
+            // Content type selection happened before that redirect, so the progressive extractor sees
+            // `#EXTM3U` and reports an unsupported container. Retry the SAME URL through HlsMediaSource;
+            // OkHttp follows the redirect again, now with the correct manifest/segment parser.
+            if (!redirectedHlsRetryDone && !activeIsHls && responseWasHls &&
+                error.errorCode == PlaybackException.ERROR_CODE_PARSING_CONTAINER_UNSUPPORTED
+            ) {
+                retryRedirectedStreamAsHls()
+                return
+            }
+            // Refused only because the previous engine's session hasn't been released yet — wait it out
+            // once instead of failing the channel or handing it back to mpv (see [noteSessionLimit]).
+            if (sessionLimitSeen && !sessionLimitRetryDone) { retryAfterSessionRelease(); return }
             // A hardware decoder that died before the first frame is usually recoverable on a FRESH
             // MediaCodec, so rebuild and try once more before conceding the channel to mpv (see
             // [rebuildDecoderAndRetry]).
@@ -612,11 +1017,15 @@ class LivePreviewEngine(
     /** Enable/disable Media3's own Surface.setFrameRate mechanism. This is separate from the window-level
      *  [FrameRateController], so both must follow the same user setting. */
     fun setAutoFrameRateEnabled(enabled: Boolean) {
+        val turnedOn = enabled && !autoFrameRateEnabled
         autoFrameRateEnabled = enabled
         player?.setVideoChangeFrameRateStrategy(
             if (enabled) C.VIDEO_CHANGE_FRAME_RATE_STRATEGY_ONLY_IF_SEAMLESS
             else C.VIDEO_CHANGE_FRAME_RATE_STRATEGY_OFF,
         )
+        // Switching AFR on mid-channel has to start the fps measurement it needs (F14) — otherwise it only
+        // takes effect on the next tune, and only if "Measured stream stats" happens to be on.
+        if (turnedOn) ensureFpsMeasurement()
     }
 
     /** Detach [s] only if it's still the surface in use. A surface-generation bump swaps one SurfaceView
@@ -666,16 +1075,37 @@ class LivePreviewEngine(
         recreateSurface()
     }
 
-    fun play(url: String, muted: Boolean, meta: MediaMeta = MediaMeta(), userAgent: String? = null) {
+    /** [prerollSecsOverride] = the tuned channel's playlist "Pre-buffer" override in
+     *  seconds; null follows the global setting. */
+    fun play(
+        url: String,
+        muted: Boolean,
+        meta: MediaMeta = MediaMeta(),
+        userAgent: String? = null,
+        prerollSecsOverride: Int? = null,
+        /** Per-channel HTTP headers serialized as `Key: Value` per line (M3U, F16); null for none. */
+        httpHeaders: String? = null,
+    ) {
         LiveDiagnosticsLog.event("play() url=${HttpClient.redactUrl(url)} muted=$muted")
+        // Read BEFORE the player is (re)built below — the load control is fixed at construction.
+        prerollOverrideSecs = prerollSecsOverride
         stoppingIntentionally = false
-        currentUa = userAgent?.takeIf { it.isNotBlank() } ?: HttpClient.DEFAULT_USER_AGENT
+        currentHeaders = StreamHeaders.decode(httpHeaders)
+        // A channel's own User-Agent is more specific than the playlist-wide one, so it wins (F16).
+        currentUa = StreamHeaders.userAgentOf(currentHeaders)
+            ?: userAgent?.takeIf { it.isNotBlank() }
+            ?: HttpClient.DEFAULT_USER_AGENT
         diagnostics.start(); diagnostics.markLoad()
         lastCodecError = null; lastVideoDecoder = null
         this.muted = muted
         currentUrl = url
         hasPlayed = false; retryCount = 0; reconnectPending = false; gaveUp = false; decoderRetryDone = false
+        flapWindowStartMs = 0L; flapCount = 0; flapWindowStartPos = 0L; prerollRetunePending = false
+        responseWasHls = false; forceHlsForCurrentLoad = false; redirectedHlsRetryDone = false
+        refusedSegments.clear(); _segmentsRefused.value = false; playlistLogged = false
+        sessionLimitSeen = false; sessionLimitRetryDone = false
         mainHandler.removeCallbacks(stallWatchdog); mainHandler.removeCallbacks(progressWatchdog); mainHandler.removeCallbacks(fpsFastRefresh)
+        mainHandler.removeCallbacks(openWatchdog)
         mainHandler.removeCallbacks(healthyReset)
         audioTrackList = emptyList(); audioSelections = emptyList(); _audioCount.value = 0
         textTrackList = emptyList(); textSelections = emptyList(); _subCount.value = 0
@@ -687,11 +1117,24 @@ class LivePreviewEngine(
         _errorInfo.value = null
         frameCounter.set(0); lastFrameCount = 0; everRendered = false; lastProgressPos = -1L; lastProgressWallMs = 0L; frozenChecks = 0
         throughputTracker.reset(); fpsSample.resetAll(); dropsBaseline = currentDroppedFrames(player)
+        audioWatchdog.reset()
         _currentMeta.value = meta
+        _zoomMode.value = defaultZoom // start new content at the user's default zoom, same as mpv/VOD
         _volume.value = if (muted) 0 else 100
         _state.value = State.LOADING
         _buffering.value = true
         runCatching {
+            // A LoadControl is fixed when the player is constructed, and this engine keeps ONE player alive
+            // across tunes — so a setting changed while nothing was playing, or a per-playlist override that
+            // differs from the last channel's, would otherwise never take effect (the "Pre-buffer
+            // does nothing" report). Drop the player whenever the numbers it was built with no longer match.
+            val wanted = LiveBuffer.loadControlFor(liveBufferSecs, effectivePrerollSecs())
+            if (player != null && builtLoadControl != wanted) {
+                LiveDiagnosticsLog.event("load_control stale (was=$builtLoadControl want=$wanted) — rebuilding player")
+                player?.run { removeListener(listener); release() }
+                player = null
+                videoRenderer = null
+            }
             val p = player ?: build().also { player = it }
             // May be null right after a surface-generation bump — setSurface attaches it a frame later.
             surface?.let { p.setVideoSurface(it) }
@@ -699,9 +1142,17 @@ class LivePreviewEngine(
             // the stream is still being sniffed; rebuildTracks() relaxes this for audio-only streams.
             hasVideoTrack = true
             applyMute(force = true)
+            applyLanguagePrefs() // survives a player rebuild, and seeds a player built before the setting arrived
+            setVideoTrackDisabled(_audioOnly.value) // survives a player rebuild while Audio Mode is on (F19c)
             p.setMediaSource(mediaSourceFor(url))
             p.prepare()
             p.playWhenReady = true
+            // An open that buffers but never starts would otherwise hold the spinner forever — see
+            // [openWatchdog]. Armed for every tune, pre-roll or not: branch (1) doesn't need one.
+            openStartMs = android.os.SystemClock.elapsedRealtime()
+            openStuckPolls = 0; prerollBufferedMs = 0L; prerollStuckPolls = 0
+            rendererReady.clear()
+            mainHandler.postDelayed(openWatchdog, PREROLL_POLL_MS)
         }.onFailure {
             android.util.Log.w(LiveDiagnosticsLog.TAG, "preview play() failed for ${HttpClient.redactUrl(url)}", it)
             LiveDiagnosticsLog.event("play() failed: ${it.message}")
@@ -710,6 +1161,39 @@ class LivePreviewEngine(
             val raw = lastCodecError ?: diagnostics.recentError() ?: it.message
             _errorInfo.value = raw?.let { r -> ErrorInfo(PlayerErrors.reasonFor(r), exoSpec(), r) }
         }
+    }
+
+    /**
+     * Notified when the audio watchdog has forced this session to stereo, with a message to show the
+     * user. Set by whoever owns the UI; a null callback means the fallback still happens silently
+     * (getting sound back matters more than announcing it).
+     */
+    var onAudioFallback: (() -> Unit)? = null
+
+    /**
+     * Rebuild the player so a changed audio configuration takes effect on the channel that is playing.
+     *
+     * A rebuild, not a reload: an ExoPlayer's audio sink capabilities are fixed when the renderers are
+     * constructed, so re-preparing the same player would keep the sink that just failed. Live has no
+     * position to preserve, so this is just "open the same channel again".
+     */
+    private fun rebuildForSettingChange() {
+        val url = currentUrl ?: return
+        val meta = _currentMeta.value
+        val ua = currentUa
+        val wasMuted = muted
+        val preroll = prerollOverrideSecs
+        // Re-encoded rather than kept as a map so the reopened channel goes down exactly the same path
+        // as a fresh tune (including the per-channel UA precedence).
+        val headers = StreamHeaders.encode(currentHeaders)
+        audioWatchdog.reset()
+        mainHandler.removeCallbacks(stallWatchdog)
+        mainHandler.removeCallbacks(progressWatchdog)
+        mainHandler.removeCallbacks(healthyReset)
+        player?.run { removeListener(listener); release() }
+        player = null
+        videoRenderer = null
+        play(url, wasMuted, meta, ua, preroll, headers)
     }
 
     fun setMuted(m: Boolean) {
@@ -730,6 +1214,7 @@ class LivePreviewEngine(
         p.trackSelectionParameters = p.trackSelectionParameters.buildUpon()
             .setTrackTypeDisabled(C.TRACK_TYPE_AUDIO, disable)
             .build()
+        applyVolumeBoost(_volume.value) // re-binds the >100% effect after a player rebuild / mute change
     }
 
     // Snapshot of the live channel taken when the app backgrounds (screensaver / Home), so it can be restored
@@ -764,6 +1249,7 @@ class LivePreviewEngine(
         currentUrl = null
         hasPlayed = false; retryCount = 0; reconnectPending = false; gaveUp = false; decoderRetryDone = false
         mainHandler.removeCallbacks(stallWatchdog); mainHandler.removeCallbacks(progressWatchdog); mainHandler.removeCallbacks(fpsFastRefresh)
+        mainHandler.removeCallbacks(openWatchdog)
         mainHandler.removeCallbacks(healthyReset)
         frameCounter.set(0); lastFrameCount = 0; everRendered = false; lastProgressPos = -1L; frozenChecks = 0
         audioTrackList = emptyList(); audioSelections = emptyList(); _audioCount.value = 0
@@ -773,15 +1259,38 @@ class LivePreviewEngine(
         _videoHeight.value = null; _videoAspect.value = null; _videoSize.value = null; _streamChips.value = emptyList(); _videoFps.value = null
         _state.value = State.IDLE
         player?.run { stop(); clearMediaItems() }
+        releaseHttpConnections()
         // Leaving a UHD channel (back / exit fullscreen / background): fully release the 4K decoder.
         releaseDecoderForUhd()
     }
 
+    /**
+     * Drop the playback pool's now-idle sockets instead of letting OkHttp hold them for its default
+     * 5 idle minutes.
+     *
+     * A panel that allows one session per account (see [LiveStreamQuirks.isSessionLimit]) refuses the
+     * *second* client, so after a handoff a pooled ExoPlayer connection locks mpv out of the channel the
+     * user just asked for — mpv/FFmpeg has its own HTTP stack and cannot reuse it. Eviction only closes
+     * connections no call is using; anything in flight is untouched.
+     *
+     * This clears [StreamingHttpClient]'s own pool, not the app-wide one, so EPG/metadata/image
+     * connections keep their keep-alive across a zap (F28).
+     */
+    private fun releaseHttpConnections() {
+        // Off the main thread: closing sockets is quick but still I/O, and stop() runs on a UI transition.
+        Thread {
+            runCatching { streamingHttp.evictAll() }
+                .onFailure { LiveDiagnosticsLog.event("connection pool evict failed: ${it.javaClass.simpleName}") }
+        }.start()
+    }
+
     fun release() {
         LiveDiagnosticsLog.event("release() — intentional")
+        releaseLoudness()
         stoppingIntentionally = true
         mainHandler.removeCallbacks(stallWatchdog)
         mainHandler.removeCallbacks(progressWatchdog)
+        mainHandler.removeCallbacks(openWatchdog)
         mainHandler.removeCallbacks(healthyReset)
         player?.run { removeListener(listener); release() }
         player = null
@@ -799,8 +1308,9 @@ class LivePreviewEngine(
      *  For an expiring-URL source (Stalker, plan §5.4.1) the reconnect must NOT replay the now-dead
      *  resolved URL — a [reconnectUrlProvider] mints a fresh one first (null/absent → replay as-is,
      *  which is correct for M3U/Xtream and direct-URL Stalker portals). */
-    private fun reconnect(reason: String) {
+    private fun reconnect(reason: String, fastHlsHttpRecovery: Boolean = false) {
         mainHandler.removeCallbacks(stallWatchdog); mainHandler.removeCallbacks(progressWatchdog); mainHandler.removeCallbacks(fpsFastRefresh)
+        mainHandler.removeCallbacks(openWatchdog)
         mainHandler.removeCallbacks(healthyReset) // this attempt is a failure, not a recovery
         val p = player
         val url = currentUrl
@@ -817,7 +1327,11 @@ class LivePreviewEngine(
         reconnectPending = true
         _error.value = null; _errorInfo.value = null; _state.value = State.LOADING; _buffering.value = true
         LiveDiagnosticsLog.event("reconnect attempt $retryCount/$MAX_RECONNECTS reason=$reason")
-        val delayMs = reconnectDelayMs(retryCount)
+        // A brief HTTP failure on HLS reconnects fast (segments are small and the next one is seconds
+        // away), but it does NOT get its retry count forgiven here: only [healthyReset] — sustained
+        // playback — clears the ladder. Forgiving on a bare READY let a feed that died 10 s later loop
+        // forever without ever reaching the honest "Lost connection" end state.
+        val delayMs = if (fastHlsHttpRecovery) hlsHttpReconnectDelayMs(retryCount) else reconnectDelayMs(retryCount)
         // Resolve a fresh URL off-main (Stalker create_link is a network call) before the delayed reload.
         val provider = reconnectUrlProvider
         scope.launch {
@@ -858,6 +1372,167 @@ class LivePreviewEngine(
     private fun isDecoderFailure(error: PlaybackException): Boolean =
         error.errorCode == PlaybackException.ERROR_CODE_DECODING_FAILED ||
             error.errorCode == PlaybackException.ERROR_CODE_DECODER_INIT_FAILED
+
+    /**
+     * A live HLS segment came back 403/404/410.
+     *
+     * The traced panel signs every segment URL with a short-lived token and then answers **all** of them
+     * `403 "Invalid token 2"` while the playlist itself keeps returning 200 — not one segment of the
+     * eight in the window ever succeeded. Media3 can only re-issue the exact URL it resolved from the
+     * playlist snapshot, so there is no offset, buffer size or retry count that rescues this: an earlier
+     * attempt at moving the playhead 40/60/90 s back into the window failed at every rung, because
+     * sitting further back makes the token *more* stale, not less.
+     *
+     * So the moment [LiveStreamQuirks.REFUSALS_BEFORE_HANDOFF] *distinct* segments have been refused,
+     * stop: flag it for the ViewModel, which hands the channel to mpv — FFmpeg re-reads the playlist and
+     * fetches with a fresh token, which is exactly why the same channel plays there. The panel is
+     * remembered so its next channel opens on mpv without the dead spinner first.
+     */
+    private fun noteSegmentRefusal(segmentUri: String, status: Int) {
+        val url = currentUrl ?: return
+        if (!refusedSegments.add(segmentUri)) return // same segment retried — not new evidence
+        if (refusedSegments.size == 1) logHlsPlaylist("segment HTTP $status")
+        LiveDiagnosticsLog.event(
+            "segment refused (HTTP $status) ${refusedSegments.size}/${LiveStreamQuirks.REFUSALS_BEFORE_HANDOFF} " +
+                "distinct segments on this load",
+        )
+        if (refusedSegments.size < LiveStreamQuirks.REFUSALS_BEFORE_HANDOFF) return
+        if (_segmentsRefused.value) return // already handed over
+        LiveStreamQuirks.rememberSegmentRefusal(url)
+        LiveDiagnosticsLog.event(
+            "provider refuses its own signed segment URLs — ExoPlayer cannot re-sign them; handing this " +
+                "panel to mpv",
+        )
+        _segmentsRefused.value = true
+        // The user sees a channel that "just works after a pause" — this is the line that explains why,
+        // and it is the one piece of evidence a provider-specific report needs (F26).
+        PlaybackErrorLog.event(
+            context, "ExoPlayer", live = true,
+            reason = PlayerFailureReason.MPV_HANDOFF,
+            detail = "provider refused $status on ${refusedSegments.size} signed segment URLs",
+        )
+    }
+
+    /**
+     * The panel refused us because its one allowed session is still held — almost always by mpv, which
+     * this engine just took over from.
+     *
+     * The stream is fine and the URL is right; we are simply the second client. The socket the other
+     * engine held has to finish closing and the panel has to notice, which takes longer than the handoff
+     * delay, so the answer is to wait and ask again once rather than to fail the channel or bounce it
+     * back to mpv (which would hand the session straight back and make the toggle useless).
+     */
+    private fun noteSessionLimit(uri: String) {
+        val url = currentUrl ?: return
+        LiveStreamQuirks.rememberSessionLimit(url)
+        if (sessionLimitSeen) return // one log line per load is enough; the retry is already armed
+        sessionLimitSeen = true
+        LiveDiagnosticsLog.event(
+            "provider refused with HTTP 458 (account session still in use) uri=${HttpClient.redactUrl(uri)}",
+        )
+        PlaybackErrorLog.event(
+            context, "ExoPlayer", live = true,
+            reason = PlayerFailureReason.ONE_SESSION_PROVIDER,
+            detail = "HTTP 458 while the previous engine's session was still open — waiting and retrying once",
+        )
+    }
+
+    /**
+     * Give the previous engine's session time to actually die, then try the same channel once more.
+     * Only for [noteSessionLimit] — a retry helps nothing when the URL or the stream is the problem.
+     */
+    private fun retryAfterSessionRelease() {
+        val p = player ?: return
+        val url = currentUrl ?: return
+        sessionLimitRetryDone = true
+        _state.value = State.LOADING; _buffering.value = true
+        _error.value = null; _errorInfo.value = null
+        LiveDiagnosticsLog.event("waiting ${SESSION_RELEASE_MS}ms for the provider to free the account session, then retrying")
+        mainHandler.postDelayed({
+            if (currentUrl != url) return@postDelayed
+            runCatching {
+                p.setMediaSource(mediaSourceFor(url))
+                p.prepare()
+                p.playWhenReady = true
+            }.onFailure {
+                _state.value = State.ERROR
+                _buffering.value = false
+                _error.value = PlaybackFailure.Channel
+                _errorInfo.value = ErrorInfo(PlayerErrors.reasonFor(it.message.orEmpty()), exoSpec(), it.message)
+            }
+        }, SESSION_RELEASE_MS)
+    }
+
+    /**
+     * Dump the shape of the live playlist Media3 is actually working from — the one piece of evidence
+     * that separates "the provider won't serve its newest segments" from an app-side URL/identity bug.
+     * Read from the in-memory snapshot ([Player.getCurrentManifest]); costs no extra request. Segment
+     * hosts are kept (they are the point), paths are truncated and credential-redacted.
+     */
+    private fun logHlsPlaylist(reason: String) {
+        if (!LiveDiagnosticsLog.enabled) return
+        val p = player ?: return
+        val manifest = p.currentManifest as? androidx.media3.exoplayer.hls.HlsManifest ?: return
+        val playlist = manifest.mediaPlaylist
+        val base = playlist.baseUri
+        val hosts = playlist.segments
+            .map { LiveStreamQuirks.hostKey(androidx.media3.common.util.UriUtil.resolveToUri(base, it.url).toString()) }
+        val tail = playlist.segments.takeLast(3).mapIndexed { i, seg ->
+            val abs = androidx.media3.common.util.UriUtil.resolveToUri(base, seg.url).toString()
+            val idx = playlist.mediaSequence + playlist.segments.size - minOf(3, playlist.segments.size) + i
+            "$idx@${LiveStreamQuirks.hostKey(abs)}${HttpClient.redactUrl(abs.substringAfter("://").substringAfter('/')).takeLast(28)}"
+        }
+        hlsShape()?.let { LiveDiagnosticsLog.event("hls_shape $it") }
+        LiveDiagnosticsLog.event(
+            "hls_playlist ($reason) mediaSeq=${playlist.mediaSequence} segs=${playlist.segments.size} " +
+                "targetDurSec=${playlist.targetDurationUs / 1_000_000.0} windowSec=${playlist.durationUs / 1_000_000.0} " +
+                "pdt=${playlist.hasProgramDateTime} startOffsetUs=${playlist.startOffsetUs} " +
+                "liveOffsetMs=${p.currentLiveOffset.takeUnless { it == C.TIME_UNSET } ?: -1} " +
+                "hosts=${hosts.groupingBy { it }.eachCount()} newest=$tail",
+        )
+    }
+
+    /**
+     * How the live HLS presentation is put together, or null if this isn't HLS. Decides whether a stuck
+     * open can even *be* a shared-timestamp-adjuster deadlock: that needs a separate audio or subtitle
+     * rendition, which loads on its own thread and waits to be aligned with the primary one. A single
+     * playlist of muxed audio+video has one loader and cannot deadlock that way, which would point the
+     * finger at the renderers (no usable keyframe, a decoder emitting nothing) instead.
+     */
+    private fun hlsShape(): String? {
+        val manifest = player?.currentManifest as? androidx.media3.exoplayer.hls.HlsManifest ?: return null
+        val mv = manifest.multivariantPlaylist
+        return "variants=${mv.variants.size} audios=${mv.audios.size} subs=${mv.subtitles.size} " +
+            "videos=${mv.videos.size} muxedAudio=${mv.muxedAudioFormat != null} " +
+            "muxedCaptions=${mv.muxedCaptionFormats?.size ?: 0} " +
+            "discontinuitySeq=${manifest.mediaPlaylist.discontinuitySequence}"
+    }
+
+    private fun retryRedirectedStreamAsHls() {
+        val p = player ?: return
+        val url = currentUrl ?: return
+        redirectedHlsRetryDone = true
+        forceHlsForCurrentLoad = true
+        // Panel-wide lesson, not a per-channel one: every other channel here — and mpv, if we hand over —
+        // now starts as HLS instead of repeating this failure.
+        LiveStreamQuirks.rememberHlsRedirect(url)
+        _state.value = State.LOADING; _buffering.value = true
+        _error.value = null; _errorInfo.value = null
+        LiveDiagnosticsLog.event("redirected .ts response is HLS — retrying with HlsMediaSource")
+        mainHandler.post {
+            if (currentUrl != url) return@post
+            runCatching {
+                p.setMediaSource(mediaSourceFor(url))
+                p.prepare()
+                p.playWhenReady = true
+            }.onFailure {
+                _state.value = State.ERROR
+                _buffering.value = false
+                _error.value = PlaybackFailure.Channel
+                _errorInfo.value = ErrorInfo(PlayerErrors.reasonFor(it.message.orEmpty()), exoSpec(), it.message)
+            }
+        }
+    }
 
     /**
      * One-shot recovery from a decoder that died **before the first frame**.
@@ -915,11 +1590,25 @@ class LivePreviewEngine(
         if (_audioOnly.value) return
         _audioOnly.value = true
         player?.clearVideoSurface() // audio keeps playing without a surface; [surface] kept for return
+        setVideoTrackDisabled(true)
     }
     override fun exitAudioOnly() {
         if (!_audioOnly.value) return
         _audioOnly.value = false
+        setVideoTrackDisabled(false)
         surface?.let { player?.setVideoSurface(it) }
+    }
+
+    /**
+     * Dropping the surface alone only stops the *drawing*: ExoPlayer keeps decoding every video frame into
+     * a dummy buffer, so Audio Mode still burns the decoder, the CPU and the bandwidth it was meant to save.
+     * Disabling the track releases the decoder outright and skips the video samples (F19c).
+     */
+    private fun setVideoTrackDisabled(disabled: Boolean) {
+        val p = player ?: return
+        p.trackSelectionParameters = p.trackSelectionParameters.buildUpon()
+            .setTrackTypeDisabled(C.TRACK_TYPE_VIDEO, disabled)
+            .build()
     }
 
     // --- PlaybackEngine controls (full-screen HUD) ---
@@ -931,14 +1620,26 @@ class LivePreviewEngine(
     override fun setZoomMode(mode: ZoomMode) { _zoomMode.value = mode } // ExoPreviewSurface observes this + videoAspect/Size and sizes the surface (see Modifier.videoZoom)
 
     override fun adjustVolume(delta: Int) {
-        // Live engine (ExoPlayer) caps at 100% — boost above 100 is mpv-only (Exo can't amplify past unity
-        // and a gain audio-processor broke the audio sink). VOD/series/compat-live play on mpv and do boost.
-        val v = (_volume.value + delta).coerceIn(0, 100)
+        // ExoPlayer itself can't amplify past unity (and a gain audio-processor broke the audio sink), so
+        // 100–150% rides on the platform LoudnessEnhancer instead — same range as mpv, so a quiet channel
+        // can be lifted without leaving Live TV (F19a).
+        val v = (_volume.value + delta).coerceIn(0, MAX_VOLUME)
         _volume.value = v
         muted = v == 0
         applyMute() // re-enables/deselects the audio track when crossing 0 (passthrough-safe mute)
-        player?.volume = v / 100f
+        player?.volume = v.coerceAtMost(100) / 100f
+        applyVolumeBoost(v)
     }
+
+    // --- Volume boost above 100% (F19a). Shared with the VOD ExoPlayer engine — see [VolumeBoost]. ---
+    private val boost = VolumeBoost { LiveDiagnosticsLog.event(it) }
+
+    /** Aim the boost effect at [percent]; also re-attaches after a player rebuild (new session id). */
+    private fun applyVolumeBoost(percent: Int) {
+        boost.apply(player?.audioSessionId ?: C.AUDIO_SESSION_ID_UNSET, percent)
+    }
+
+    private fun releaseLoudness() = boost.release()
 
     override fun toggleMute() = setMuted(!muted)
     override fun retry() {
@@ -991,6 +1692,16 @@ class LivePreviewEngine(
     /** Build the audio + subtitle track lists from the active stream so the HUD menus can switch language /
      *  subtitles (multi-track live channels, or a VOD file imported via M3U). Mirrors [ExoSubtitleEngine]. */
     private fun rebuildTracks(tracks: androidx.media3.common.Tracks) {
+        // A preferred subtitle language makes Media3 select a matching text track on its own. The cue
+        // overlay is mounted only while [subtitleOn], so without this the track would be decoded and never
+        // drawn — and the HUD would report "off" while a track really is selected. Only ever turns the
+        // overlay ON, and only for users who set the preference, so nobody else's live TV changes.
+        if (prefSubLang.isNotBlank() && !_subtitleOn.value) {
+            val autoSelected = tracks.groups.any { g ->
+                g.type == androidx.media3.common.C.TRACK_TYPE_TEXT && (0 until g.length).any { g.isTrackSelected(it) }
+            }
+            if (autoSelected) _subtitleOn.value = true
+        }
         val audio = ArrayList<TrackOption>(); val aSel = ArrayList<AudioSel>(); var aId = 0
         val text = ArrayList<TrackOption>(); val tSel = ArrayList<TextSel>(); var tId = 0
         for (group in tracks.groups) {
@@ -1049,14 +1760,169 @@ class LivePreviewEngine(
     // Effective User-Agent for the current stream; updated per play() call.
     // null = no source UA configured, use DEFAULT_USER_AGENT.
     private var currentUa: String = HttpClient.DEFAULT_USER_AGENT
+    /** Per-channel HTTP headers for the tuned channel (M3U `#EXTVLCOPT`/`#EXTHTTP`/`#KODIPROP`, F16).
+     *  Empty for providers that carry none, which is the usual case. */
+    private var currentHeaders: Map<String, String> = emptyMap()
     private var dataSourceForUa: String = ""
+    private var dataSourceForHeaders: Map<String, String> = emptyMap()
     private var cachedHttpDataSource: OkHttpDataSource.Factory? = null
     private var cachedDefaultFactory: DefaultMediaSourceFactory? = null
     private var cachedHlsCcFactory: HlsMediaSource.Factory? = null
+    /** Debug-build HTTP probe for provider-side failures. It persists redacted metadata, a
+     *  media-signature classification, and — for FAILED responses only — a short scrubbed text prefix of
+     *  the error body, which is usually the panel telling us exactly why it refused ("token expired",
+     *  "max connections"). Successful bodies are never read. Credentials never appear: URLs go through
+     *  [HttpClient.redactUrl], body text additionally has this request's own user/pass/token strings
+     *  masked ([textPrefix]), and Authorization/Cookie are logged as presence flags, never values. */
+    private val diagnosticHttpClient by lazy {
+        streamingHttp.client.newBuilder()
+            .addInterceptor { chain ->
+                val startedAt = android.os.SystemClock.elapsedRealtime()
+                val request = chain.request()
+                try {
+                    val response = chain.proceed(request)
+                    val finalUrl = response.request.url.toString()
+                    if (isHlsResponse(finalUrl, response.header("Content-Type"))) {
+                        responseWasHls = true
+                        // The panel — not just this URL — serves HLS behind a `.ts` endpoint. mpv needs to
+                        // know that too, or FFmpeg reconnects to the manifest's EOF forever.
+                        if (!request.url.toString().substringBefore('?').endsWith(".m3u8", ignoreCase = true)) {
+                            LiveStreamQuirks.rememberHlsRedirect(request.url.toString())
+                        }
+                    }
+                    if (LiveDiagnosticsLog.enabled) {
+                        val prefix = runCatching { response.peekBody(564).bytes() }.getOrDefault(byteArrayOf())
+                        val requested = request.url.toString()
+                        // A redirect is invisible in the final URL alone, and it is exactly what decides
+                        // whether a segment came from the panel's origin or its CDN.
+                        val via = if (requested != finalUrl) {
+                            " requested=${HttpClient.redactUrl(requested)}"
+                        } else {
+                            ""
+                        }
+                        // For an error the body IS the diagnosis ("token expired", "max connections", a
+                        // hotlink-protection page…). Metadata-only for success responses, as before.
+                        val body = if (!response.isSuccessful) {
+                            " body=\"${textPrefix(prefix, requested)}\""
+                        } else {
+                            ""
+                        }
+                        LiveDiagnosticsLog.event(
+                            "http_response role=${requestRole(requested)} code=${response.code} " +
+                                "type=${response.header("Content-Type").orEmpty()} " +
+                                "length=${response.body?.contentLength() ?: -1} signature=${mediaSignature(prefix)} " +
+                                "server=${response.header("Server").orEmpty()} xcache=${response.header("X-Cache").orEmpty()} " +
+                                "age=${response.header("Age").orEmpty()} retryAfter=${response.header("Retry-After").orEmpty()} " +
+                                "setCookie=${response.headers("Set-Cookie").size} " +
+                                "reqCookie=${request.header("Cookie") != null} reqAuth=${request.header("Authorization") != null} " +
+                                "reqRange=${request.header("Range") != null} ua=${request.header("User-Agent").orEmpty()} " +
+                                "elapsedMs=${android.os.SystemClock.elapsedRealtime() - startedAt} " +
+                                "url=${HttpClient.redactUrl(finalUrl)}$via$body",
+                        )
+                    }
+                    response
+                } catch (t: Throwable) {
+                    if (LiveDiagnosticsLog.enabled) {
+                        LiveDiagnosticsLog.event(
+                            "http_failure type=${t.javaClass.simpleName} message=${HttpClient.redactUrl(t.message.orEmpty())} " +
+                                "elapsedMs=${android.os.SystemClock.elapsedRealtime() - startedAt} " +
+                                "url=${HttpClient.redactUrl(request.url.toString())}",
+                        )
+                    }
+                    throw t
+                }
+            }
+            .build()
+    }
+
+    /**
+     * A failed response's body, reduced to one short printable line for the log: markup stripped,
+     * whitespace collapsed, capped, then scrubbed of anything that could identify the account. Scrubbing
+     * is done against [requestUrl]'s **own** credentials — the Xtream `/live/<user>/<pass>/` segments and
+     * signed query values — so even a panel that echoes the username back in an error page cannot leak it.
+     */
+    private fun textPrefix(bytes: ByteArray, requestUrl: String): String {
+        val text = bytes.decodeToString()
+            .replace(Regex("<[^>]*>"), " ")
+            .replace(Regex("\\s+"), " ")
+            .filter { it.code in 32..126 }
+            .trim()
+            .take(160)
+        return HttpClient.redactUrl(secretsIn(requestUrl).fold(text) { acc, secret -> acc.replace(secret, "***") })
+            .replace('"', '\'')
+    }
+
+    /** Credential-bearing substrings of [url] — path segments and signed query values — never logged. */
+    private fun secretsIn(url: String): List<String> {
+        val path = url.substringBefore('?')
+        val segments = Regex("(?i)/(?:live|movie|series|vod|timeshift)/([^/]+)/([^/]+)/")
+            .find(path)?.groupValues?.drop(1).orEmpty()
+        val queryValues = url.substringAfter('?', "").split('&')
+            .mapNotNull { it.substringAfter('=', "").takeIf { v -> v.length >= 6 } }
+        return (segments + queryValues).filter { it.length >= 3 }
+    }
+
+    /** What this request was for — the one thing a bare URL in the log doesn't say. */
+    private fun requestRole(url: String): String {
+        val path = url.substringBefore('?').lowercase()
+        return when {
+            path.endsWith(".m3u8") -> "playlist"
+            path.endsWith(".ts") || path.endsWith(".m4s") || path.endsWith(".mp4") -> "segment"
+            path.endsWith(".key") -> "key"
+            else -> "stream"
+        }
+    }
+
+    private fun mediaSignature(bytes: ByteArray): String {
+        if (bytes.isEmpty()) return "empty"
+        fun has(vararg expected: Int): Boolean =
+            bytes.size >= expected.size && expected.indices.all { (bytes[it].toInt() and 0xff) == expected[it] }
+        val textStart = bytes.take(32).map { it.toInt().toChar() }.joinToString("").trimStart().lowercase()
+        return when {
+            // Three sync bytes distinguish a real transport stream from an error page beginning with 'G'.
+            bytes.size > 376 && bytes[0] == 0x47.toByte() && bytes[188] == 0x47.toByte() && bytes[376] == 0x47.toByte() -> "mpeg-ts"
+            has(0x1a, 0x45, 0xdf, 0xa3) -> "matroska"
+            bytes.size >= 8 && bytes.copyOfRange(4, 8).decodeToString() == "ftyp" -> "mp4"
+            has(0x00, 0x00, 0x01, 0xba) -> "mpeg-ps"
+            has(0x49, 0x44, 0x33) -> "id3/audio"
+            textStart.startsWith("#extm3u") -> "hls-manifest"
+            textStart.startsWith("<!doctype") || textStart.startsWith("<html") -> "html"
+            textStart.startsWith("{") || textStart.startsWith("[") -> "json"
+            else -> "unknown"
+        }
+    }
+
+    /**
+     * Stock policy everywhere except a live media segment the provider outright refuses (403/404/410).
+     * Media3 can only re-issue the identical segment URL, and the traced panel answers 403 to it for as
+     * long as the playlist snapshot lives — the default ladder therefore spends ~8 s hammering a URL
+     * that will never succeed, drains the buffer and turns a recoverable hiccup into a dead channel.
+     * One short retry (a genuine blip), then fatal so [maybeBackOffFromLiveEdge]/the reconnect ladder
+     * can act. Manifests and every other data type keep the stock behaviour.
+     */
+    private val edgeRefusalPolicy =
+        object : androidx.media3.exoplayer.upstream.DefaultLoadErrorHandlingPolicy() {
+            override fun getRetryDelayMsFor(
+                loadErrorInfo: androidx.media3.exoplayer.upstream.LoadErrorHandlingPolicy.LoadErrorInfo,
+            ): Long {
+                val status = httpStatusOf(loadErrorInfo.exception)
+                val isSegment = loadErrorInfo.mediaLoadData.dataType == C.DATA_TYPE_MEDIA
+                if (isSegment && status != null && LiveStreamQuirks.isEdgeRefusal(status)) {
+                    return edgeRefusalRetryDelayMs(loadErrorInfo.errorCount)
+                }
+                return super.getRetryDelayMsFor(loadErrorInfo)
+            }
+        }
+
     private fun httpDataSourceFor(ua: String): OkHttpDataSource.Factory {
-        if (ua != dataSourceForUa || cachedHttpDataSource == null) {
-            cachedHttpDataSource = OkHttpDataSource.Factory(okHttpClient).setUserAgent(ua)
+        // Keyed on the headers as well as the UA: the three cached factories bake the data source in,
+        // so a channel with its own Referer must not reuse the previous channel's factory (F16).
+        if (ua != dataSourceForUa || currentHeaders != dataSourceForHeaders || cachedHttpDataSource == null) {
+            cachedHttpDataSource = OkHttpDataSource.Factory(diagnosticHttpClient).setUserAgent(ua)
                 .setTransferListener(throughputTracker)
+                .setDefaultRequestProperties(
+                    currentHeaders.filterKeys { !it.equals("User-Agent", ignoreCase = true) },
+                )
             // Raw MPEG-TS (typical Xtream live ".ts"): providers rarely declare caption descriptors in
             // the PMT, so the stock TS extractor never exposes the embedded CEA-608 track (#57).
             // FLAG_OVERRIDE_CAPTION_DESCRIPTORS makes it expose the standard CC1 track regardless; the
@@ -1078,8 +1944,17 @@ class LivePreviewEngine(
                     )
                     .setTsSubtitleFormats(listOf(cc1)),
             )
-            cachedHlsCcFactory = HlsMediaSource.Factory(cachedHttpDataSource!!).setExtractorFactory(DefaultHlsExtractorFactory(0, true))
+            cachedHlsCcFactory = HlsMediaSource.Factory(cachedHttpDataSource!!)
+                .setExtractorFactory(DefaultHlsExtractorFactory(0, true))
+                // Media3 defaults this to zero, which it documents as an *infinite* timeout: a rendition
+                // whose chunk can't be timestamp-aligned with the primary one parks its loading thread in
+                // an unbounded wait(), so that track never produces a sample and the player sits in
+                // BUFFERING forever with no error to react to. Bound it — a TimeoutException surfaces as a
+                // normal load error, which the retry ladder (TS retry, then mpv) can actually act on.
+                .setTimestampAdjusterInitializationTimeoutMs(HLS_TIMESTAMP_ALIGN_TIMEOUT_MS)
+                .setLoadErrorHandlingPolicy(edgeRefusalPolicy)
             dataSourceForUa = ua
+            dataSourceForHeaders = currentHeaders
         }
         return cachedHttpDataSource!!
     }
@@ -1088,9 +1963,33 @@ class LivePreviewEngine(
     private fun mediaSourceFor(url: String): MediaSource {
         httpDataSourceFor(currentUa) // ensure factories match current UA
         // Live latency (#72): a target live-edge offset for live streams (HLS/DASH). Ignored by
-        // progressive/raw-TS sources, so it can only help where it applies.
+        // progressive/raw-TS sources, so it can only help where it applies. Unset (Balanced) keeps
+        // Media3's own default: nothing in the app overrides the user's live latency any more. An earlier
+        // attempt to auto-widen it away from a 403-ing live edge was tested and did nothing — the traced
+        // panel refuses EVERY segment in its window, not just the newest (see [noteSegmentRefusal]).
+        //
+        // DO NOT "fix" the LOW = 2 s case by flooring the offset or by adding a playback-speed band.
+        // That looks obviously right — a 2 s target is structurally unreachable on a standard playlist
+        // (~6 s segments, ≥3-segment hold-back) — and it is wrong. Checked against the Media3 source
+        // (`HlsMediaSource.createTimelineForLive` / `updateLiveConfiguration`, release branch):
+        //
+        //  * The offset we set is NOT raised to the playlist's hold-back. It is used verbatim, clamped
+        //    only by `Util.constrainValue(targetLiveOffsetUs, liveEdgeOffsetUs,
+        //    playlist.durationUs + liveEdgeOffsetUs)` — i.e. against the window's own bounds only.
+        //  * BUT `updateLiveConfiguration` sets `disableSpeedAdjustment` when both playback speeds are
+        //    unset AND the playlist carries no `holdBackUs`/`partHoldBackUs`. A plain (non-LL) HLS
+        //    playlist has neither and we set neither speed — so Media3 pins playback speed to 1.0 and
+        //    never chases the unreachable target. The case the "fix" worries about is already safe.
+        //  * Calling `setMinPlaybackSpeed`/`setMaxPlaybackSpeed` to bound the chase would set both
+        //    speeds and therefore ENABLE speed adjustment on exactly those playlists, turning a pinned
+        //    1.0× into a live-edge chase. The fix would create the bug on the majority of streams.
+        //
+        // On a genuine LL-HLS playlist (which does publish hold-back) Media3's own defaults already
+        // bound the adjustment. Both stream classes are correct as-is; leave this alone unless you have
+        // re-read those two methods in the Media3 version we actually ship.
+        val targetOffsetSecs = liveBufferSecs
         val item = MediaItem.Builder().setUri(url).apply {
-            liveBufferSecs?.let {
+            targetOffsetSecs?.let {
                 setLiveConfiguration(MediaItem.LiveConfiguration.Builder().setTargetOffsetMs(it * 1000L).build())
             }
         }.build()
@@ -1098,8 +1997,16 @@ class LivePreviewEngine(
             activeIsHls = false
             return cachedDefaultFactory!!.createMediaSource(item)
         }
-        val isHls = Util.inferContentType(uri) == C.CONTENT_TYPE_HLS
+        // A panel already caught redirecting `.ts` → manifest goes straight to the HLS factory: without
+        // this every channel on it repeats the container-unsupported failure + retry before recovering.
+        val knownHlsHost = LiveStreamQuirks.isKnownHlsHost(url)
+        val isHls = forceHlsForCurrentLoad || knownHlsHost || Util.inferContentType(uri) == C.CONTENT_TYPE_HLS
         activeIsHls = isHls
+        LiveDiagnosticsLog.event(
+            "media_source inferred=${if (isHls) "hls" else "progressive"} knownHlsHost=$knownHlsHost " +
+                "targetOffsetSec=${targetOffsetSecs ?: -1} " +
+                "url=${HttpClient.redactUrl(url)}",
+        )
         return if (isHls) cachedHlsCcFactory!!.createMediaSource(item)
         else cachedDefaultFactory!!.createMediaSource(item)
     }
@@ -1125,15 +2032,45 @@ class LivePreviewEngine(
         // The start thresholds stay tiny (1s to first play, 2s after a rebuffer): they, not the buffer
         // depth, are what tuning and preview scrolling cost.
         val budget = playerBudget ?: PlayerBudget.of(context).also { playerBudget = it }
+        //
+        // F06/F07: those numbers used to be hardcoded, which is why the **Live latency** setting did
+        // nothing at all for raw-TS live — it only ever set a `MediaItem.LiveConfiguration` offset, and
+        // Media3 honours that for HLS/DASH only. The preset now drives the depth (keeping the 2 s idle
+        // window at every setting), and the new "Pre-buffer" drives the start thresholds.
+        // Balanced + Off reproduces the previous constants exactly.
+        val lc = LiveBuffer.loadControlFor(liveBufferSecs, effectivePrerollSecs()).also { builtLoadControl = it }
+        val defaultBytes = if (budget.lowSpec) LOW_RAM_TARGET_BYTES else TARGET_BUFFER_BYTES
+        LiveDiagnosticsLog.event(
+            "load_control min=${lc.minBufferMs} max=${lc.maxBufferMs} start=${lc.bufferForPlaybackMs} " +
+                "restart=${lc.bufferForPlaybackAfterRebufferMs} preroll=${effectivePrerollSecs()}s " +
+                "latencySec=${liveBufferSecs ?: -1}",
+        )
+        // Also to Logcat unconditionally: the diagnostics log is off in a release build, and these numbers
+        // are the only way to tell "the setting didn't apply" from "the buffer filled that fast".
+        android.util.Log.i(
+            LiveDiagnosticsLog.TAG,
+            "live_buffer preroll=${effectivePrerollSecs()}s start=${lc.bufferForPlaybackMs}ms " +
+                "min=${lc.minBufferMs}ms max=${lc.maxBufferMs}ms latency=${liveBufferSecs ?: -1}",
+        )
         val loadControl = DefaultLoadControl.Builder()
-            .setBufferDurationsMs(MIN_BUFFER_MS, MAX_BUFFER_MS, 1_000, 2_000)
-            .setTargetBufferBytes(if (budget.lowSpec) LOW_RAM_TARGET_BYTES else TARGET_BUFFER_BYTES)
+            .setBufferDurationsMs(
+                lc.minBufferMs,
+                lc.maxBufferMs,
+                lc.bufferForPlaybackMs,
+                lc.bufferForPlaybackAfterRebufferMs,
+            )
+            .setTargetBufferBytes(LiveBuffer.targetBufferBytes(liveBufferSecs, effectivePrerollSecs(), defaultBytes))
             .build()
-        // forceDisableMediaCodecAsynchronousQueueing(): Media3 runs MediaCodec asynchronously by default on
-        // API 31+, which corrupts (macroblocks) some UHD-HEVC streams on Realtek/Amlogic VPUs — the
-        // synchronous path is what players like TiviMate use to avoid it. Channels it still can't decode
-        // cleanly are handed to mpv via the per-channel "force mpv" routing.
-        val renderers = DefaultRenderersFactory(context).forceDisableMediaCodecAsynchronousQueueing()
+        // Decode-path config is shared with the other ExoPlayer engines — see [ownTVRenderers].
+        // The audio sink is pinned to stereo PCM when the user asked for "Stereo only" or when the
+        // session latch has tripped. This is the half of the surround setting that never existed:
+        // the old boolean only reached mpv, while Live TV's default engine is this one, so a TV that
+        // mis-plays Dolby got exactly the same treatment however the switch was set.
+        val renderers = ownTVRenderers(
+            context,
+            forceStereo = !AudioOutputPolicy.allowsMultichannel(surroundMode),
+            softwareFirst = !hwDecodingEnabled,
+        )
         return ExoPlayer.Builder(context)
             .setRenderersFactory(renderers)
             .setMediaSourceFactory(DefaultMediaSourceFactory(httpDataSourceFor(currentUa)))
@@ -1147,7 +2084,7 @@ class LivePreviewEngine(
                     if (autoFrameRateEnabled) C.VIDEO_CHANGE_FRAME_RATE_STRATEGY_ONLY_IF_SEAMLESS
                     else C.VIDEO_CHANGE_FRAME_RATE_STRATEGY_OFF,
                 )
-                addListener(listener); addAnalyticsListener(analytics)
+                addListener(listener); addAnalyticsListener(analytics); addAnalyticsListener(audioWatchdog)
                 // Wire the per-frame tick to the video renderer so the health watchdog can tell a frozen
                 // PICTURE (clock still running — invisible to a position-only check) from real playback.
                 // Best-effort: if the renderer isn't found / doesn't accept the message, the position and
@@ -1171,6 +2108,7 @@ class LivePreviewEngine(
     }
 
     companion object {
+        private const val MAX_VOLUME = VolumeBoost.MAX_VOLUME // same ceiling as mpv; 100–150 comes from LoudnessEnhancer
         private const val MAX_RECONNECTS = 8        // ~consecutive failures before giving up (HUD Retry then)
         /** Playback must hold this long before the reconnect ladder is considered recovered. */
         internal const val HEALTHY_MS = 60_000L
@@ -1189,6 +2127,32 @@ class LivePreviewEngine(
          */
         internal fun reconnectDelayMs(attempt: Int): Long =
             RECONNECT_DELAYS_MS[(attempt - 1).coerceIn(0, RECONNECT_DELAYS_MS.lastIndex)]
+
+        /** HLS already performs request-level retries. Once a forbidden segment becomes fatal, fetch a
+         * fresh manifest promptly instead of adding the generic outage ladder's 3–15 second UI freeze. */
+        internal fun hlsHttpReconnectDelayMs(attempt: Int): Long =
+            reconnectDelayMs(attempt).coerceAtMost(HLS_HTTP_RECONNECT_MAX_MS)
+
+        internal fun isHlsResponse(url: String, contentType: String?): Boolean {
+            val type = contentType.orEmpty().substringBefore(';').trim().lowercase()
+            return type == "application/x-mpegurl" || type == "application/vnd.apple.mpegurl" ||
+                url.substringBefore('?').endsWith(".m3u8", ignoreCase = true)
+        }
+
+        /** A segment URL a live playlist has already refused does not become valid by asking again at
+         *  the same URL — with a signed, expiring token it provably never can. One quick retry covers a
+         *  genuine blip, then let it go fatal so the mpv handoff can act instead of burning ~8 s on the
+         *  stock ladder while the buffer drains. */
+        internal fun edgeRefusalRetryDelayMs(errorCount: Int): Long =
+            if (errorCount <= 1) EDGE_REFUSAL_RETRY_MS else C.TIME_UNSET
+
+        private const val HLS_HTTP_RECONNECT_MAX_MS = 1_500L
+        internal const val EDGE_REFUSAL_RETRY_MS = 500L
+
+        /** How long to wait for a single-session panel to notice the other engine's socket is gone.
+         *  Measured on the traced panel: the handoff's own ~500 ms was never enough, and the refusal
+         *  persisted for the whole time mpv stayed connected — so this covers the release, not a poll. */
+        internal const val SESSION_RELEASE_MS = 2_000L
 
         // --- LoadControl (see [build]) ----------------------------------------------------------
         /** Resume reading the socket once the buffer drains to this. */
@@ -1210,6 +2174,29 @@ class LivePreviewEngine(
         private const val FROZEN_LIMIT = 3          // picture frozen this many polls (~7.5s) == a dropped feed
         private const val FREEZE_TIMEOUT_MS = 8_000L // zero forward progress this long while READY == dead feed
         private const val NO_VIDEO_TIMEOUT_MS = 8_000L // video track present, zero frames rendered this long == "audio plays, no picture"
+        // Re-buffer flap (see [noteRebufferFlap]): this many re-buffers inside the window while the
+        // position crawls == the stream is oscillating, not playing. The traced case managed ~8 per
+        // second, so it trips about two seconds in; a merely choppy channel re-buffers a handful of
+        // times a minute and clears the window long before reaching the limit.
+        private const val FLAP_WINDOW_MS = 6_000L
+        private const val FLAP_LIMIT = 12
+        private const val FLAP_MIN_PROGRESS_MS = 3_000L // real playback inside the window == choppy, not flapping
+        // "Buffered but not playing" (see [openWatchdog] branch 1). Four consecutive polls == four seconds
+        // of a satisfied load control with no frame, which no healthy channel produces: once enough is
+        // buffered to start, ExoPlayer starts within a poll or two even on a slow decoder handshake.
+        private const val OPEN_STUCK_POLLS = 4
+        /** How long an HLS rendition may wait to be timestamp-aligned with the primary one before the
+         *  load fails instead of hanging (Media3's default here is "wait forever"). Generous enough for a
+         *  slow first segment on a 4K feed, short enough that the TS/mpv fallbacks still feel prompt. */
+        private const val HLS_TIMESTAMP_ALIGN_TIMEOUT_MS = 8_000L
+        // Pre-roll reachability (see [openWatchdog]). One poll a second, and three flat polls in a row
+        // means the buffer has hit the stream's ceiling — a live source that is still filling adds roughly
+        // a second of media per second even when it is pinned to the live edge, so 400 ms of growth is a
+        // deliberately generous "still moving". The grace is the backstop for a stream that dribbles.
+        private const val PREROLL_POLL_MS = 1_000L
+        private const val PREROLL_MIN_GROWTH_MS = 400L
+        private const val PREROLL_STUCK_POLLS = 3
+        private const val PREROLL_OPEN_GRACE_MS = 5_000L
         private const val FPS_BASELINE_MS = 500L
         private const val FPS_TICK_MS = 1_000L
         private const val FPS_MAX_ATTEMPTS = 5

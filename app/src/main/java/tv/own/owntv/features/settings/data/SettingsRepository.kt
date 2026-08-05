@@ -18,6 +18,7 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import tv.own.owntv.core.i18n.LocaleStore
 import tv.own.owntv.features.home.HomeConfig
+import tv.own.owntv.player.SurroundMode
 import tv.own.owntv.core.util.Pin
 import tv.own.owntv.ui.theme.AccentColor
 import tv.own.owntv.ui.theme.ThemeMode
@@ -135,6 +136,7 @@ class SettingsRepository(private val context: Context, private val localeStore: 
         // Live TV latency: preset name + the custom seconds used when the preset is CUSTOM.
         val LIVE_LATENCY_MODE = stringPreferencesKey("live_latency_mode")
         val LIVE_LATENCY_CUSTOM_SECS = intPreferencesKey("live_latency_custom_secs")
+        val LIVE_PREROLL_SECS = intPreferencesKey("live_preroll_secs")
         // v4.1.6 one-shot: reset live latency to the safe Balanced preset. Subsequent user changes are
         // preserved across every later update.
         val LIVE_LATENCY_RESET_416 = booleanPreferencesKey("live_latency_reset_416")
@@ -143,13 +145,18 @@ class SettingsRepository(private val context: Context, private val localeStore: 
         // v4.1.6 one-shot: AFR caused visible HDMI re-handshakes on some TVs. Existing installs are
         // forced Off once; subsequent user changes are preserved across every later update.
         val AUTO_FRAME_RATE_RESET_416 = booleanPreferencesKey("auto_frame_rate_reset_416")
+
+        /** The one-time "this stream judders at your TV's refresh rate" suggestion has been answered. */
+        val AUTO_FRAME_RATE_PROMPTED = booleanPreferencesKey("auto_frame_rate_prompted")
         val ANDROID_TV_HOME = booleanPreferencesKey("android_tv_home")
         // Video Player Settings
         val HW_DECODING = booleanPreferencesKey("hw_decoding")
         val VOD_PREFER_EXO = booleanPreferencesKey("vod_prefer_exo")
         val MEASURED_STREAM_STATS = booleanPreferencesKey("measured_stream_stats")
+        val DETAILED_DIAGNOSTICS = booleanPreferencesKey("detailed_diagnostics")
         val DIRECT_TUNE = booleanPreferencesKey("direct_tune")
         val SURROUND_SOUND = booleanPreferencesKey("surround_sound")
+        val SURROUND_MODE = stringPreferencesKey("surround_mode")
         val AUTO_PLAY_NEXT = booleanPreferencesKey("auto_play_next")
         /** Legacy single external-player toggle (movies + series + downloads). Superseded by the three
          *  per-section keys below but still read as their default, so an existing setting survives. */
@@ -168,6 +175,10 @@ class SettingsRepository(private val context: Context, private val localeStore: 
         val AUDIO_DELAY_MS = intPreferencesKey("audio_delay_ms")
         val PREF_AUDIO_LANG = stringPreferencesKey("pref_audio_lang")
         val PREF_SUB_LANG = stringPreferencesKey("pref_sub_lang")
+        // OpenSubtitles online-search language filter. Separate from PREF_SUB_LANG (embedded tracks) —
+        // off by default, so a search returns every language OpenSubtitles has for the title.
+        val SUB_SEARCH_FILTER = booleanPreferencesKey("sub_search_filter")
+        val SUB_SEARCH_LANGS = stringPreferencesKey("sub_search_langs")
         // Per-section list sorting ("PLAYLIST" or "ALPHA")
         val SORT_LIVE = stringPreferencesKey("sort_live")
         val SORT_GUIDE = stringPreferencesKey("sort_guide")
@@ -178,6 +189,7 @@ class SettingsRepository(private val context: Context, private val localeStore: 
         val CATCHUP_TZ = stringPreferencesKey("catchup_timezone")
         val CATCHUP_PLAYER = stringPreferencesKey("catchup_player")
         val CATCHUP_OFFSET_MIN = intPreferencesKey("catchup_offset_minutes")
+        val EPG_OFFSET_MIN = intPreferencesKey("epg_offset_minutes")
         val ANIMATION_LEVEL = stringPreferencesKey("animation_level")
         val RESUME_LAST_CHANNEL = booleanPreferencesKey("resume_last_channel")
         val LAST_LIVE_CATEGORY = stringPreferencesKey("last_live_category")
@@ -209,6 +221,10 @@ class SettingsRepository(private val context: Context, private val localeStore: 
         // TMDB default (en-US), which is what every install used before this setting existed, so leaving
         // it blank keeps existing users' metadata exactly as it was. "auto" = follow the device locale.
         val METADATA_LANGUAGE = stringPreferencesKey("metadata_language")
+        // Bumped whenever a matcher fix invalidates previously cached "no match" rows, so existing
+        // installs drop them once instead of waiting out the 7-day negative TTL. See
+        // MetadataRepository.MATCH_HEURISTICS_VERSION.
+        val METADATA_MATCH_HEAL_VERSION = intPreferencesKey("metadata_match_heal_version")
         // Nav menu customization (v4.3.0): DYNAMIC auto-adapts the side icons to what the active playlist
         // offers; STATIC lets the user hide specific icons. NAV_HIDDEN holds MainSection.name values the
         // user has hidden (STATIC mode only — DYNAMIC ignores it).
@@ -220,6 +236,21 @@ class SettingsRepository(private val context: Context, private val localeStore: 
         val CH_NAV_ENABLED = booleanPreferencesKey("ch_nav_enabled")
         val CH_NAV_UP_SKIP = intPreferencesKey("ch_nav_up_skip")
         val CH_NAV_DOWN_SKIP = intPreferencesKey("ch_nav_down_skip")
+        // Manual panel-width adjustment (v4.3.x): per section (Live/Movies/Series) a master toggle plus
+        // one percentage per panel (category rail · item list/grid · preview). 100 = stock width; the
+        // three are normalized across the row, so they always fill the screen. See PanelWidths.kt.
+        val PANEL_W_LIVE_ON = booleanPreferencesKey("panel_w_live_on")
+        val PANEL_W_LIVE_CAT = intPreferencesKey("panel_w_live_cat")
+        val PANEL_W_LIVE_LIST = intPreferencesKey("panel_w_live_list")
+        val PANEL_W_LIVE_PREVIEW = intPreferencesKey("panel_w_live_preview")
+        val PANEL_W_MOVIES_ON = booleanPreferencesKey("panel_w_movies_on")
+        val PANEL_W_MOVIES_CAT = intPreferencesKey("panel_w_movies_cat")
+        val PANEL_W_MOVIES_LIST = intPreferencesKey("panel_w_movies_list")
+        val PANEL_W_MOVIES_PREVIEW = intPreferencesKey("panel_w_movies_preview")
+        val PANEL_W_SERIES_ON = booleanPreferencesKey("panel_w_series_on")
+        val PANEL_W_SERIES_CAT = intPreferencesKey("panel_w_series_cat")
+        val PANEL_W_SERIES_LIST = intPreferencesKey("panel_w_series_list")
+        val PANEL_W_SERIES_PREVIEW = intPreferencesKey("panel_w_series_preview")
         // "Browsing & lists" — two independent per-section toggles (Live TV / Movies / Series).
         //
         // REMEMBER_LAST_*  = remember last ITEM. OFF (default) = switching category resets the browse list
@@ -466,6 +497,14 @@ class SettingsRepository(private val context: Context, private val localeStore: 
         context.dataStore.edit { it[Keys.METADATA_LANGUAGE] = code.trim() }
     }
 
+    /** Matcher generation the cached "no match" rows were written under (0 = never healed). */
+    suspend fun metadataMatchHealVersion(): Int =
+        context.dataStore.data.first()[Keys.METADATA_MATCH_HEAL_VERSION] ?: 0
+
+    suspend fun setMetadataMatchHealVersion(version: Int) {
+        context.dataStore.edit { it[Keys.METADATA_MATCH_HEAL_VERSION] = version }
+    }
+
     /** Live snapshot of the metadata settings as one object (consumed by TmdbProvider). */
     val metadataConfigFlow: Flow<tv.own.owntv.core.metadata.MetadataConfig> = prefsFlow { p ->
         tv.own.owntv.core.metadata.MetadataConfig(
@@ -514,6 +553,23 @@ class SettingsRepository(private val context: Context, private val localeStore: 
 
     suspend fun setCatchupOffsetMinutes(minutes: Int) {
         context.dataStore.edit { it[Keys.CATCHUP_OFFSET_MIN] = minutes.coerceIn(catchupOffsetRangeMinutes) }
+    }
+
+    // --- EPG time offset ---
+
+    /** How far the guide may be shifted, in minutes (±12/14 h, in 30-minute steps from the UI). */
+    val epgOffsetRangeMinutes: IntRange = -12 * 60..14 * 60
+
+    /**
+     * Global guide shift, in minutes (0 = off). Some feeds publish their XMLTV in a timezone that
+     * isn't the one the channels actually air in; this moves every programme by a fixed amount.
+     * A per-channel override in the channel's long-press menu wins over this — that's what a
+     * mixed East/West lineup on a single guide needs, since one global shift can only fix one half.
+     */
+    val epgOffsetMinutes: Flow<Int> = prefsFlow { it[Keys.EPG_OFFSET_MIN] ?: 0 }
+
+    suspend fun setEpgOffsetMinutes(minutes: Int) {
+        context.dataStore.edit { it[Keys.EPG_OFFSET_MIN] = minutes.coerceIn(epgOffsetRangeMinutes) }
     }
 
     /** The timezone catch-up/timeshift URLs are formatted in — device tz, or a manual UTC offset. */
@@ -644,6 +700,16 @@ class SettingsRepository(private val context: Context, private val localeStore: 
         context.dataStore.edit { it[Keys.MEASURED_STREAM_STATS] = enabled }
     }
 
+    /** Detailed playback logging. Off (default): the live engine's trace is kept in memory only, as it
+     *  always was in a release build. On: the same trace is written to Logcat and to a bounded file, and
+     *  it rides along with an exported report — the only way a normal user can produce a live trace at
+     *  all, since a release build's diagnostics were previously compile-time off (F18). */
+    val detailedDiagnostics: Flow<Boolean> = prefsFlow { it[Keys.DETAILED_DIAGNOSTICS] ?: false }
+
+    suspend fun setDetailedDiagnostics(enabled: Boolean) {
+        context.dataStore.edit { it[Keys.DETAILED_DIAGNOSTICS] = enabled }
+    }
+
     /** Type a provider channel number on the remote during full-screen live playback to jump straight
      *  to that channel. On (default). Off = number keys are ignored during playback, for anyone whose
      *  remote sends digits accidentally or who doesn't want the keys captured. */
@@ -699,6 +765,32 @@ class SettingsRepository(private val context: Context, private val localeStore: 
 
     suspend fun setSurroundSound(enabled: Boolean) {
         context.dataStore.edit { it[Keys.SURROUND_SOUND] = enabled }
+    }
+
+    /**
+     * The three-state replacement for [surroundSound] (Auto / Stereo only / Surround).
+     *
+     * The old boolean was a poor fit for two reasons. It only ever reached **mpv** — Live TV's default
+     * engine is ExoPlayer, where "off" changed nothing at all, so a TV that mis-plays multichannel kept
+     * mis-playing it however the switch was set. And "off" is the wrong default to *have* to choose: a
+     * user with a real receiver should get surround without reading a changelog, and a user whose TV
+     * lies about its capabilities should get sound back without knowing why it went.
+     *
+     * Hence Auto by default — try multichannel, but fall back the instant the output is caught failing
+     * (see [tv.own.owntv.player.AudioOutputPolicy]). The fallback watchdog runs in **all three** modes,
+     * including Surround: "no sound" is never what the user picked. Reading falls back to the old
+     * boolean so nobody's explicit choice is lost, and nothing is rewritten on upgrade.
+     */
+    val surroundMode: Flow<SurroundMode> = prefsFlow {
+        SurroundMode.of(it[Keys.SURROUND_MODE], it[Keys.SURROUND_SOUND])
+    }
+
+    suspend fun setSurroundMode(mode: SurroundMode) {
+        context.dataStore.edit {
+            it[Keys.SURROUND_MODE] = mode.name
+            // Keep the legacy key consistent so a downgrade to 4.1.6 lands somewhere sane.
+            it[Keys.SURROUND_SOUND] = mode == SurroundMode.SURROUND
+        }
     }
 
     /** Auto-play the next episode (and roll into the next season) when one finishes. On by default. */
@@ -795,6 +887,65 @@ class SettingsRepository(private val context: Context, private val localeStore: 
         context.dataStore.edit { it[Keys.CH_NAV_DOWN_SKIP] = n.coerceIn(1, ChNavLimits.HARD_MAX) }
     }
 
+    // --- Manual panel widths: per browse section, a master toggle + one percentage per panel ---
+    // While the toggle is off the screens keep their stock layout code path entirely, so the feature
+    // can't affect anyone who never opens it. Percentages are clamped on both read and write.
+    private fun panelOnKey(s: PanelSection) = when (s) {
+        PanelSection.LIVE -> Keys.PANEL_W_LIVE_ON
+        PanelSection.MOVIES -> Keys.PANEL_W_MOVIES_ON
+        PanelSection.SERIES -> Keys.PANEL_W_SERIES_ON
+    }
+    private fun panelCategoryKey(s: PanelSection) = when (s) {
+        PanelSection.LIVE -> Keys.PANEL_W_LIVE_CAT
+        PanelSection.MOVIES -> Keys.PANEL_W_MOVIES_CAT
+        PanelSection.SERIES -> Keys.PANEL_W_SERIES_CAT
+    }
+    private fun panelListKey(s: PanelSection) = when (s) {
+        PanelSection.LIVE -> Keys.PANEL_W_LIVE_LIST
+        PanelSection.MOVIES -> Keys.PANEL_W_MOVIES_LIST
+        PanelSection.SERIES -> Keys.PANEL_W_SERIES_LIST
+    }
+    private fun panelPreviewKey(s: PanelSection) = when (s) {
+        PanelSection.LIVE -> Keys.PANEL_W_LIVE_PREVIEW
+        PanelSection.MOVIES -> Keys.PANEL_W_MOVIES_PREVIEW
+        PanelSection.SERIES -> Keys.PANEL_W_SERIES_PREVIEW
+    }
+
+    fun panelWidthEnabled(s: PanelSection): Flow<Boolean> = prefsFlow { it[panelOnKey(s)] ?: false }
+
+    /**
+     * The section's three shares, or null when nothing has been saved yet (the dialog then seeds
+     * itself from the stock layout). Read back through [balanceToTotal] so a value written by a
+     * different build can never leave the row over- or under-filled.
+     */
+    fun panelShares(s: PanelSection): Flow<PanelShares?> = prefsFlow { p ->
+        val category = p[panelCategoryKey(s)] ?: 0
+        val list = p[panelListKey(s)] ?: 0
+        val preview = p[panelPreviewKey(s)] ?: 0
+        if (category <= 0 || list <= 0 || preview <= 0) {
+            null
+        } else {
+            balanceToTotal(
+                PanelShares(
+                    PanelWidthLimits.snap(category),
+                    PanelWidthLimits.snap(list),
+                    PanelWidthLimits.snap(preview),
+                ),
+            )
+        }
+    }
+
+    /** "Okay" in the panel-width dialog — the toggle and all three shares land in one write. */
+    suspend fun setPanelWidths(s: PanelSection, enabled: Boolean, shares: PanelShares) {
+        val safe = balanceToTotal(shares)
+        context.dataStore.edit {
+            it[panelOnKey(s)] = enabled
+            it[panelCategoryKey(s)] = safe.category
+            it[panelListKey(s)] = safe.list
+            it[panelPreviewKey(s)] = safe.preview
+        }
+    }
+
     /** Preferred audio language (ISO code, mpv alang); blank = no preference. */
     val preferredAudioLang: Flow<String> = prefsFlow { it[Keys.PREF_AUDIO_LANG] ?: "" }
 
@@ -807,6 +958,26 @@ class SettingsRepository(private val context: Context, private val localeStore: 
 
     suspend fun setPreferredSubLang(lang: String) {
         context.dataStore.edit { it[Keys.PREF_SUB_LANG] = lang }
+    }
+
+    // --- OpenSubtitles search language filter ---
+    // Deliberately its own setting rather than reusing [preferredSubLang]: that one picks an EMBEDDED
+    // track inside the stream (a 15-language mpv list that has no Greek, among others), which is a
+    // different question from "which languages should an online search return". Default OFF = show
+    // everything OpenSubtitles has for the title and let the user choose.
+
+    /** Whether OpenSubtitles results are restricted to [subSearchLanguages]. Off = all languages. */
+    val subSearchFilterEnabled: Flow<Boolean> = prefsFlow { it[Keys.SUB_SEARCH_FILTER] ?: false }
+
+    suspend fun setSubSearchFilterEnabled(enabled: Boolean) {
+        context.dataStore.edit { it[Keys.SUB_SEARCH_FILTER] = enabled }
+    }
+
+    /** Chosen OpenSubtitles language codes (ISO 639-1, e.g. "el,en"). Only applied when the filter is on. */
+    val subSearchLanguages: Flow<String> = prefsFlow { it[Keys.SUB_SEARCH_LANGS] ?: "" }
+
+    suspend fun setSubSearchLanguages(codes: String) {
+        context.dataStore.edit { it[Keys.SUB_SEARCH_LANGS] = codes.trim() }
     }
 
     // --- Per-source auto-refresh (Off / Startup / staleness threshold) ---
@@ -969,10 +1140,26 @@ class SettingsRepository(private val context: Context, private val localeStore: 
         if (prefs[Keys.AUTO_FRAME_RATE_RESET_416] == true) prefs[Keys.AUTO_FRAME_RATE] ?: false else false
     }
 
+    /**
+     * Whether the one-time Auto-frame-rate suggestion has already been answered (F13).
+     *
+     * The suggestion only appears when a 24/25/50 fps stream is playing full-screen on a display whose
+     * refresh rate is not a multiple of it *and* a matching mode exists — the case where mpv's direct
+     * `mediacodec_embed` path judders and AFR is the only cure. Answering it either way (or turning AFR
+     * on by hand) sets this for good; it is never shown twice.
+     */
+    val autoFrameRatePrompted: Flow<Boolean> = prefsFlow { it[Keys.AUTO_FRAME_RATE_PROMPTED] ?: false }
+
+    suspend fun setAutoFrameRatePrompted() {
+        context.dataStore.edit { it[Keys.AUTO_FRAME_RATE_PROMPTED] = true }
+    }
+
     suspend fun setAutoFrameRate(enabled: Boolean) {
         context.dataStore.edit {
             it[Keys.AUTO_FRAME_RATE] = enabled
             it[Keys.AUTO_FRAME_RATE_RESET_416] = true
+            // Someone who has found the setting doesn't need to be told it exists.
+            if (enabled) it[Keys.AUTO_FRAME_RATE_PROMPTED] = true
         }
     }
 
@@ -1075,6 +1262,19 @@ class SettingsRepository(private val context: Context, private val localeStore: 
 
     suspend fun setLiveLatencyCustomSecs(secs: Int) {
         context.dataStore.edit { it[Keys.LIVE_LATENCY_CUSTOM_SECS] = LiveBuffer.clampCustom(secs) }
+    }
+
+    /**
+     * "Pre-buffer" (F07): how many seconds to fill before a live channel starts playing,
+     * and how many to refill after a rebuffer. 0 = Off, which keeps the engines' existing 1 s / 2 s
+     * start thresholds. A per-playlist override lives on `SourceEntity.livePrerollSecs`.
+     */
+    val livePrerollSecs: Flow<Int> = prefsFlow { prefs ->
+        (prefs[Keys.LIVE_PREROLL_SECS] ?: LiveBuffer.PREROLL_OFF).coerceIn(0, 30)
+    }
+
+    suspend fun setLivePrerollSecs(secs: Int) {
+        context.dataStore.edit { it[Keys.LIVE_PREROLL_SECS] = secs.coerceIn(0, 30) }
     }
 
     /** Effective live buffer in seconds the engines apply (null = keep engine defaults, i.e. Balanced). */
@@ -1186,7 +1386,7 @@ class SettingsRepository(private val context: Context, private val localeStore: 
 
     private val backupStringKeys = listOf(
         Keys.THEME_MODE, Keys.ACCENT, Keys.ACCENT_CUSTOM, Keys.DEFAULT_ZOOM,
-        Keys.PREF_AUDIO_LANG, Keys.PREF_SUB_LANG, Keys.SORT_LIVE, Keys.SORT_GUIDE, Keys.SORT_MOVIES,
+        Keys.PREF_AUDIO_LANG, Keys.PREF_SUB_LANG, Keys.SUB_SEARCH_LANGS, Keys.SORT_LIVE, Keys.SORT_GUIDE, Keys.SORT_MOVIES,
         Keys.SORT_SERIES, Keys.RESUME_MODE, Keys.CATCHUP_TZ, Keys.CATCHUP_PLAYER, Keys.ANIMATION_LEVEL, Keys.VOD_VIEW_MODE,
         Keys.WEATHER_LOCATION, Keys.RECENT_SEARCHES,
         // Global proxy — non-secret fields only. The proxy password (Keys.PROXY_PASS) is NEVER part of
@@ -1215,21 +1415,28 @@ class SettingsRepository(private val context: Context, private val localeStore: 
         Keys.SUB_POSITION,
         // Custom DNS — not secret, backed up alongside proxy
         Keys.DNS_HOST, Keys.DNS_DOH_URL,
+        // Surround mode (Auto/Stereo only/Surround). The legacy boolean is in backupBoolKeys and stays
+        // in sync, but the string is what is read first, so it has to travel too.
+        Keys.SURROUND_MODE,
     )
     private val backupStringSetKeys = listOf(
         // The STATIC-mode hidden set rides with backup so a reinstall keeps the user's hidden icons.
         Keys.NAV_MENU_HIDDEN,
     )
-    private val backupIntKeys = listOf(Keys.UI_ZOOM_PCT, Keys.AUDIO_DELAY_MS, Keys.CATCHUP_OFFSET_MIN, Keys.PROXY_PORT, Keys.DNS_PORT, Keys.CH_NAV_UP_SKIP, Keys.CH_NAV_DOWN_SKIP, Keys.MINI_PLAYER_SIZE_PCT, Keys.LIVE_LATENCY_CUSTOM_SECS, Keys.GLASS_SCOPE, Keys.GLASS_ALPHA, Keys.GLASS_BLUR, Keys.SUB_BG_OPACITY)
+    private val backupIntKeys = listOf(Keys.UI_ZOOM_PCT, Keys.AUDIO_DELAY_MS, Keys.CATCHUP_OFFSET_MIN, Keys.EPG_OFFSET_MIN, Keys.PROXY_PORT, Keys.DNS_PORT, Keys.CH_NAV_UP_SKIP, Keys.CH_NAV_DOWN_SKIP, Keys.MINI_PLAYER_SIZE_PCT, Keys.LIVE_LATENCY_CUSTOM_SECS, Keys.LIVE_PREROLL_SECS, Keys.GLASS_SCOPE, Keys.GLASS_ALPHA, Keys.GLASS_BLUR, Keys.SUB_BG_OPACITY,
+        Keys.PANEL_W_LIVE_CAT, Keys.PANEL_W_LIVE_LIST, Keys.PANEL_W_LIVE_PREVIEW,
+        Keys.PANEL_W_MOVIES_CAT, Keys.PANEL_W_MOVIES_LIST, Keys.PANEL_W_MOVIES_PREVIEW,
+        Keys.PANEL_W_SERIES_CAT, Keys.PANEL_W_SERIES_LIST, Keys.PANEL_W_SERIES_PREVIEW)
     private val backupBoolKeys = listOf(
-        Keys.LIVE_PREVIEW, Keys.LIVE_PREVIEW_AUDIO, Keys.HDR_ENABLED, Keys.AUTO_FRAME_RATE, Keys.ANDROID_TV_HOME, Keys.HW_DECODING,
-        Keys.VOD_PREFER_EXO, Keys.MEASURED_STREAM_STATS, Keys.DIRECT_TUNE, Keys.EXTERNAL_PLAYER,
+        Keys.LIVE_PREVIEW, Keys.LIVE_PREVIEW_AUDIO, Keys.HDR_ENABLED, Keys.AUTO_FRAME_RATE, Keys.AUTO_FRAME_RATE_PROMPTED, Keys.ANDROID_TV_HOME, Keys.HW_DECODING,
+        Keys.VOD_PREFER_EXO, Keys.MEASURED_STREAM_STATS, Keys.DETAILED_DIAGNOSTICS, Keys.DIRECT_TUNE, Keys.EXTERNAL_PLAYER,
         Keys.EXTERNAL_PLAYER_LIVE, Keys.EXTERNAL_PLAYER_MOVIES, Keys.EXTERNAL_PLAYER_SERIES, Keys.UPDATE_CHECK_ON_START, Keys.SURROUND_SOUND, Keys.AUTO_PLAY_NEXT, Keys.PROXY_ENABLED,
         Keys.WEATHER_ENABLED, Keys.WEATHER_FAHRENHEIT, Keys.RESUME_LAST_CHANNEL, Keys.METADATA_ENABLED, Keys.CH_NAV_ENABLED,
         Keys.DNS_ENABLED,
         Keys.REMEMBER_LAST_LIVE, Keys.REMEMBER_LAST_MOVIES, Keys.REMEMBER_LAST_SERIES,
         Keys.REMEMBER_CAT_LIVE, Keys.REMEMBER_CAT_MOVIES, Keys.REMEMBER_CAT_SERIES,
-        Keys.SUB_STYLE_ENABLED,
+        Keys.SUB_STYLE_ENABLED, Keys.SUB_SEARCH_FILTER,
+        Keys.PANEL_W_LIVE_ON, Keys.PANEL_W_MOVIES_ON, Keys.PANEL_W_SERIES_ON,
     )
     private val backupFloatKeys = listOf(Keys.SUB_SCALE)
 

@@ -1,7 +1,7 @@
 package tv.own.owntv.player
 
 /** Stable labels and typed values for the technical stream overlay. */
-enum class StreamInfoLabel { ENGINE, FORMAT, SOURCE, VIDEO, HDR, BITRATE, DECODER, AUDIO, BUFFER }
+enum class StreamInfoLabel { ENGINE, FORMAT, SOURCE, VIDEO, HDR, BITRATE, DECODER, AUDIO, AUDIO_OUTPUT, BUFFER, LIVE_BUFFER }
 
 enum class StreamEngine { MPV, EXOPLAYER }
 
@@ -10,6 +10,8 @@ enum class StreamEngineMode { NORMAL, PREFERRED, FALLBACK, IMAGE_SUBTITLE_HANDOF
 enum class StreamHdrMode { HDR10_PQ, HLG, SDR }
 
 enum class DecoderKind { HARDWARE, SOFTWARE, NAMED }
+
+enum class AudioOutputKind { PASSTHROUGH, DECODED_IN_APP, PCM }
 
 sealed interface StreamInfoValue {
     data class Engine(val engine: StreamEngine, val mode: StreamEngineMode = StreamEngineMode.NORMAL) : StreamInfoValue
@@ -39,7 +41,20 @@ sealed interface StreamInfoValue {
         val sampleRateHz: Int? = null,
         val bitsPerSecond: Long? = null,
     ) : StreamInfoValue
+    data class AudioOutput(
+        val kind: AudioOutputKind,
+        val channelCount: Int? = null,
+        val multichannelAllowed: Boolean,
+        val fallbackReason: String? = null,
+    ) : StreamInfoValue
     data class Buffer(val bufferedMs: Long? = null, val droppedFrames: Long? = null) : StreamInfoValue
+    data class LiveBuffer(
+        val prerollEnabled: Boolean,
+        val prerollSeconds: Double? = null,
+        val depthSeconds: Double? = null,
+        val readaheadSeconds: Double? = null,
+        val playlistOverride: Boolean = false,
+    ) : StreamInfoValue
     /** Only for genuinely unknown technical/provider text; fixed OwnTV prose must not use this. */
     data class Raw(val text: String) : StreamInfoValue
 }

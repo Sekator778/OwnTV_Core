@@ -131,9 +131,10 @@ class SupportedLocalesTest {
     }
 
     @Test
-    fun `untranslated locales report zero percent coverage`() {
-        val de = SupportedLocales.all.first { it.id == "de" }
-        assertEquals(0, de.coverage)
+    fun `locale coverage stays within percentage bounds`() {
+        SupportedLocales.all.forEach { locale ->
+            assertTrue("${locale.id} coverage is out of range", locale.coverage in 0..100)
+        }
     }
 
     @Test

@@ -90,7 +90,7 @@ import tv.own.owntv.core.database.dao.SubtitleDao
         SeriesFtsEntity::class,
         EpisodeFtsEntity::class,
     ],
-    version = 24, // v7: content_order (Move). v8: contentHash + browse/unique indexes. v9: EPG contentHash + natural key. v10: TMDB metadata cache. v11: movies/series rating-sort indexes. v12: metadata_cache trailerKey. v13: metadata_cache logoPath. v14: sources.mac (Stalker portal). v15: external-subtitle cache/selection/timing tables. v16: subtitle_link (downloaded-sub ↔ content). v17: sources.syncLive/Movies/Series (skip-sync enabledScope). v18: series.episodesSyncedAt (episode-cache freshness, S8). v19: epg_channels.iconUrl (XMLTV channel logos). v20: channels (sourceId, number) index for direct tune. v21: series.addedAt + date-added sort indexes. v22: series_sort_order (per-series season/episode order). v23: sources.hlsSupported and sources.preferHls. v24: custom_category_members (user custom categories, #87)
+    version = 28, // v7: content_order (Move). v8: contentHash + browse/unique indexes. v9: EPG contentHash + natural key. v10: TMDB metadata cache. v11: movies/series rating-sort indexes. v12: metadata_cache trailerKey. v13: metadata_cache logoPath. v14: sources.mac (Stalker portal). v15: external-subtitle cache/selection/timing tables. v16: subtitle_link (downloaded-sub ↔ content). v17: sources.syncLive/Movies/Series (skip-sync enabledScope). v18: series.episodesSyncedAt (episode-cache freshness, S8). v19: epg_channels.iconUrl (XMLTV channel logos). v20: channels (sourceId, number) index for direct tune. v21: series.addedAt + date-added sort indexes. v22: series_sort_order (per-series season/episode order). v23: sources.hlsSupported and sources.preferHls. v24: custom_category_members (user custom categories, #87). v25: sources.livePrerollSecs (per-playlist "Pre-buffer"). v26: channels.catchupType + channels.httpHeaders (M3U catch-up styles + per-channel HTTP headers). v27: sources.maxConnections (Xtream session limit read at sync). v28: movies.httpHeaders + episodes.httpHeaders (per-item M3U HTTP headers)
 
     exportSchema = true,
 )
@@ -638,6 +638,78 @@ abstract class OwnTVDatabase : RoomDatabase() {
         val MIGRATION_23_24 = object : androidx.room.migration.Migration(23, 24) {
             override fun migrate(db: androidx.sqlite.db.SupportSQLiteDatabase) {
                 createCustomCategoryMembersTable(db)
+                healSchema(db)
+            }
+        }
+
+        /**
+         * v24 → v25: `sources.livePrerollSecs` — the per-playlist "Pre-buffer" override
+         * (F07). `-1` (the default) means "follow the global setting", so every existing row keeps
+         * exactly today's behaviour. Additive, one column, no data rewrite.
+         */
+        val MIGRATION_24_25 = object : androidx.room.migration.Migration(24, 25) {
+            override fun migrate(db: androidx.sqlite.db.SupportSQLiteDatabase) {
+                if (!hasColumn(db, "sources", "livePrerollSecs")) {
+                    db.execSQL("ALTER TABLE `sources` ADD COLUMN `livePrerollSecs` INTEGER NOT NULL DEFAULT -1")
+                }
+                healSchema(db)
+            }
+        }
+
+        /**
+         * v25 → v26: two nullable `channels` columns for the M3U playback gaps —
+         * `catchupType` (the `catchup="append"`/`shift`/… style, previously parsed and thrown away,
+         * F17) and `httpHeaders` (per-channel `#EXTVLCOPT`/`#EXTHTTP`/`#KODIPROP` request headers,
+         * F16). Both null on every existing row, so behaviour is unchanged until the playlist is
+         * re-synced and the values are actually populated.
+         *
+         * Additive only — no rewrite of the (potentially 100k-row) channels table.
+         */
+        val MIGRATION_25_26 = object : androidx.room.migration.Migration(25, 26) {
+            override fun migrate(db: androidx.sqlite.db.SupportSQLiteDatabase) {
+                if (!hasColumn(db, "channels", "catchupType")) {
+                    db.execSQL("ALTER TABLE `channels` ADD COLUMN `catchupType` TEXT")
+                }
+                if (!hasColumn(db, "channels", "httpHeaders")) {
+                    db.execSQL("ALTER TABLE `channels` ADD COLUMN `httpHeaders` TEXT")
+                }
+                healSchema(db)
+            }
+        }
+
+        /**
+         * v26 → v27: `sources.maxConnections` — how many simultaneous streams the provider allows,
+         * read from Xtream's `user_info.max_connections` at sync (F30). `0` on every existing row,
+         * which means "unknown" and behaves exactly as before until the playlist is re-synced.
+         *
+         * Additive, and the `sources` table has a handful of rows.
+         */
+        val MIGRATION_26_27 = object : androidx.room.migration.Migration(26, 27) {
+            override fun migrate(db: androidx.sqlite.db.SupportSQLiteDatabase) {
+                if (!hasColumn(db, "sources", "maxConnections")) {
+                    db.execSQL("ALTER TABLE `sources` ADD COLUMN `maxConnections` INTEGER NOT NULL DEFAULT 0")
+                }
+            }
+        }
+
+        /**
+         * v27 → v28: `movies.httpHeaders` and `episodes.httpHeaders` — the per-item HTTP headers
+         * an M3U entry can carry (`#EXTVLCOPT:http-user-agent`, `http-referrer`, …), stored in the
+         * same `Key: Value`-per-line form as `channels.httpHeaders` (v26). NULL on every existing
+         * row, which behaves exactly as before until the playlist is re-synced.
+         *
+         * Additive only, so no table rewrite even on a 170k-movie catalog.
+         *
+         * Last hop, so it carries [healSchema] (standing rule).
+         */
+        val MIGRATION_27_28 = object : androidx.room.migration.Migration(27, 28) {
+            override fun migrate(db: androidx.sqlite.db.SupportSQLiteDatabase) {
+                if (!hasColumn(db, "movies", "httpHeaders")) {
+                    db.execSQL("ALTER TABLE `movies` ADD COLUMN `httpHeaders` TEXT")
+                }
+                if (!hasColumn(db, "episodes", "httpHeaders")) {
+                    db.execSQL("ALTER TABLE `episodes` ADD COLUMN `httpHeaders` TEXT")
+                }
                 healSchema(db)
             }
         }

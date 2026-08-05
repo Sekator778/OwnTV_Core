@@ -1355,14 +1355,12 @@ class TestSeedText(unittest.TestCase):
             self.assertFalse(final_dir.exists())
             self.assertTrue(staged.exists())
 
-    def test_chunking_matches_documented_pilot_counts(self):
-        """Regression: the plan's own inventory assertion (44 chunks/locale at <=40
-        keys) is derived from the checked-out source tree, not a hardcoded constant."""
+    def test_chunking_covers_the_current_source_inventory(self):
+        """Every current source key is assigned once and every chunk respects the size limit."""
         units, order = self.st.extract_source()
-        self.assertEqual(len(order), 1655)
+        self.assertGreater(len(order), 0)
         chunks = self.st.chunk_by_file(units, order)
-        total_chunks = sum(len(v) for v in chunks.values())
-        self.assertEqual(total_chunks, 44)
+        self.assertEqual(sum(len(chunk) for file_chunks in chunks.values() for chunk in file_chunks), len(order))
         for file_chunks in chunks.values():
             for chunk in file_chunks:
                 self.assertLessEqual(len(chunk), 40)

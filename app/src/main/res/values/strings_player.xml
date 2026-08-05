@@ -399,4 +399,58 @@
     <string name="player_subtitles_sign_in_network_error">Couldn\'t reach OpenSubtitles. Check your internet connection and try again.</string>
     <!-- Translators: Network error when the OpenSubtitles session refresh fails. -->
     <string name="player_subtitles_refresh_network_error">Couldn\'t refresh OpenSubtitles. Check your internet connection.</string>
+    <!-- Translators: Empty subtitle-search state after searching every language. -->
+    <string name="player_subtitles_no_matches_all_languages">No matching subtitles were found. Try editing the search title.</string>
+    <!-- Translators: Empty subtitle-search state when the preferred-language filter narrowed results. -->
+    <string name="player_subtitles_no_matches_chosen_language">No matching subtitles were found in your chosen language.</string>
+    <!-- Translators: Setting and picker title for the language used to filter OpenSubtitles searches. -->
+    <string name="player_subtitles_search_language">Search language</string>
+    <!-- Translators: Playback-log event headline. -->
+    <string name="player_reason_software_fallback">Fell back to software decoding</string>
+    <!-- Translators: Playback-log event headline. Copy mode is a technical mpv decoding mode. -->
+    <string name="player_reason_copy_mode_fallback">Fell back to copy-mode decoding</string>
+    <!-- Translators: Playback-log event headline for catch-up content. -->
+    <string name="player_reason_archive_software_fallback">Catch-up archive reopened in software decoding</string>
+    <!-- Translators: Playback-log event headline after surround output fails. -->
+    <string name="player_reason_stereo_fallback">Switched to stereo audio</string>
+    <!-- Translators: Playback-log event headline after repeated ExoPlayer failures. mpv is a player name. -->
+    <string name="player_reason_vod_engine_session_fallback">Switched Movies &amp; Series to mpv for this session</string>
+    <!-- Translators: Playback-log event headline for IPTV providers that permit only one active connection. -->
+    <string name="player_reason_one_session_provider">Provider allows one session at a time</string>
+    <!-- Translators: Playback-log event headline when ExoPlayer hands a channel to mpv. -->
+    <string name="player_reason_mpv_handoff">Handed this channel to mpv</string>
+    <!-- Translators: Playback-log headline for a diagnostic report explicitly saved by the user. -->
+    <string name="player_reason_stream_report">Stream report</string>
+    <!-- Translators: Row label describing what the audio engine sends to the TV or receiver. -->
+    <string name="player_stream_audio_output">Audio out</string>
+    <!-- Translators: Row label for the resolved live pre-buffer and readahead settings. -->
+    <string name="player_stream_live_buffer">Live buffer</string>
+    <!-- Translators: The TV or receiver decodes the compressed audio stream. -->
+    <string name="player_stream_audio_passthrough">passthrough (TV/receiver decodes)</string>
+    <!-- Translators: OwnTV decodes audio before sending it to the output device. -->
+    <string name="player_stream_audio_decoded_in_app">decoded in app</string>
+    <!-- Translators: PCM audio-output description. "channels" is a localized channel layout such as stereo or 5.1. -->
+    <string name="player_stream_audio_pcm"><xliff:g id="channels">%1$s</xliff:g> PCM</string>
+    <string name="player_stream_multichannel_allowed">multichannel allowed</string>
+    <!-- Translators: Diagnostic suffix followed by a raw technical reason. -->
+    <string name="player_stream_fell_back">fell back: <xliff:g id="reason">%1$s</xliff:g></string>
+    <!-- Translators: Live diagnostic value. "seconds" is how many seconds of video are collected before play begins. -->
+    <string name="player_stream_preroll_video">pre-buffer <xliff:g id="seconds">%1$s</xliff:g>s of video</string>
+    <string name="player_stream_preroll_off">pre-buffer off</string>
+    <!-- Translators: Live diagnostic value for buffer depth. -->
+    <string name="player_stream_depth">depth <xliff:g id="seconds">%1$s</xliff:g>s</string>
+    <!-- Translators: Live diagnostic value for mpv readahead. -->
+    <string name="player_stream_readahead">readahead <xliff:g id="seconds">%1$s</xliff:g>s</string>
+    <string name="player_stream_playlist_override">playlist override</string>
+    <!-- Translators: Playback error when a device cannot decode a particular resolution and codec. -->
+    <string name="player_error_hardware_format">This TV\'s video hardware can\'t decode <xliff:g id="resolution">%1$s</xliff:g> <xliff:g id="codec">%2$s</xliff:g>. The file is fine, but the TV can\'t play this format at this resolution.</string>
+    <!-- Translators: Brief confirmation after the user saves a stream report from the player. -->
+    <string name="player_report_saved">Stream report saved to the playback log</string>
+    <string name="player_subtitles_filter_title">Filter by language</string>
+    <string name="player_subtitles_filter_description">Off shows every language OpenSubtitles has for a title, so you can pick from the full list. On shows only your chosen language.</string>
+    <string name="player_subtitles_search_language_description">Only subtitles in this language appear in search results. You can still press “All languages” in the results to see everything for one search.</string>
+    <string name="player_subtitles_language_not_set">Not set</string>
+    <string name="player_frame_rate_prompt_title">This channel may judder</string>
+    <string name="player_frame_rate_prompt_description">It plays at <xliff:g id="fps">%1$d</xliff:g> fps while your TV is running at <xliff:g id="current_hz">%2$d</xliff:g> Hz, which can’t show those frames evenly — motion looks slightly jerky.\n\nAuto frame rate switches the TV to <xliff:g id="target_hz">%3$d</xliff:g> Hz while you watch and puts it back afterwards. Some TVs blank for a moment when the rate changes; you can turn it off again in Settings → Video Player.</string>
+    <string name="player_frame_rate_turn_on">Turn on</string>
 </resources>

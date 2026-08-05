@@ -356,6 +356,9 @@ class XtreamClient(private val http: HttpClient) {
     data class XtAccountDetails(
         val expiryMs: Long? = null,
         val hlsSupported: Boolean = false,
+        /** `user_info.max_connections` — simultaneous streams the account may open; 0 when the panel
+         *  omits it or reports nonsense. `1` is the one that changes playback (F30). */
+        val maxConnections: Int = 0,
     )
 
     /**
@@ -373,6 +376,7 @@ class XtreamClient(private val http: HttpClient) {
             http.get("${base(s)}/player_api.php?username=$u&password=$p", s.userAgent) { input ->
                 var expSec: Long? = null
                 var hlsSupported = false
+                var maxConnections = 0
                 JsonReader(java.io.InputStreamReader(input, Charsets.UTF_8)).use { r ->
                     r.isLenient = true
                     if (r.peek() != JsonToken.BEGIN_OBJECT) return@use
@@ -388,6 +392,14 @@ class XtreamClient(private val http: HttpClient) {
                                             JsonToken.NUMBER -> r.nextLong()
                                             else -> { r.skipValue(); null }
                                         }
+                                    }
+                                    // Panels send this as a string ("1") about as often as a number.
+                                    "max_connections" -> {
+                                        maxConnections = when (r.peek()) {
+                                            JsonToken.STRING -> r.nextString().trim().toIntOrNull() ?: 0
+                                            JsonToken.NUMBER -> r.nextInt()
+                                            else -> { r.skipValue(); 0 }
+                                        }.coerceAtLeast(0)
                                     }
                                     "allowed_output_formats", "user_output_formats" -> {
                                         when (r.peek()) {
@@ -423,6 +435,7 @@ class XtreamClient(private val http: HttpClient) {
                 XtAccountDetails(
                     expiryMs = expSec?.takeIf { it > 0 }?.times(1000),
                     hlsSupported = hlsSupported,
+                    maxConnections = maxConnections,
                 )
             }
         } catch (e: Exception) {

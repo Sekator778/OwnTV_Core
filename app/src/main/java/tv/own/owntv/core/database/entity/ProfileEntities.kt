@@ -23,6 +23,9 @@ data class ProfileEntity(
     val createdAt: Long = System.currentTimeMillis(),
 )
 
+/** [SourceEntity.livePrerollSecs] sentinel: use the global Settings value rather than a per-playlist one. */
+const val FOLLOW_GLOBAL_PREROLL = -1
+
 /** An IPTV source (M3U file/URL, Xtream account, or Stalker portal). Content rows reference their `sourceId`. */
 @Entity(
     tableName = "sources",
@@ -52,6 +55,23 @@ data class SourceEntity(
     val hlsSupported: Boolean = false,
     /** User preference (v23): prioritize .m3u8 streams over .ts for Live TV and catch-up. */
     val preferHls: Boolean = false,
+    /**
+     * Per-playlist "Pre-buffer" override in seconds (v25). `-1` = follow the global
+     * Settings value; `0` = off; `N` = fill N seconds before a live channel starts and after a
+     * rebuffer. Per-playlist because the problem it solves is a *provider* that hiccups on a fixed
+     * period — a user with one bad panel and three good ones should not have to slow all four down.
+     */
+    val livePrerollSecs: Int = FOLLOW_GLOBAL_PREROLL,
+    /**
+     * How many simultaneous streams the provider allows (v27), from Xtream's
+     * `user_info.max_connections`. `0` = unknown (M3U/Stalker, an older row, or a panel that doesn't
+     * report it).
+     *
+     * `1` is the interesting value: the two playback engines must never overlap on such an account, and
+     * until now the app only found that out by failing a tune and reading the 458 back. Knowing it at
+     * sync time means the very first zap already behaves.
+     */
+    val maxConnections: Int = 0,
     val createdAt: Long = System.currentTimeMillis(),
     val lastSyncAt: Long? = null,
 )

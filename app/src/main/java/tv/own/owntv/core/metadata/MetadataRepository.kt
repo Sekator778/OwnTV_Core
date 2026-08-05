@@ -22,6 +22,8 @@ class MetadataRepository(
     private val settings: SettingsRepository,
     private val overrideStore: MetadataOverrideStore,
 ) {
+    /** Guards [healNegativeMatchesOnce] so the DataStore read happens once per process, not per resolve. */
+    private val healNeeded = java.util.concurrent.atomic.AtomicBoolean(true)
 
     /**
      * Resolve TMDB metadata for a movie. Returns the cached row (fresh or freshly fetched), or null when
@@ -29,6 +31,7 @@ class MetadataRepository(
      */
     suspend fun resolveMovie(movie: MovieEntity): MetadataCacheEntity? {
         if (!settings.metadataConfig().enabled) return null
+        healNegativeMatchesOnce()
 
         val localKey = movieLocalKey(movie)
         val now = System.currentTimeMillis()
@@ -73,6 +76,7 @@ class MetadataRepository(
      */
     suspend fun resolveSeries(series: tv.own.owntv.core.database.entity.SeriesEntity): MetadataCacheEntity? {
         if (!settings.metadataConfig().enabled) return null
+        healNegativeMatchesOnce()
 
         val localKey = seriesLocalKey(series)
         val now = System.currentTimeMillis()
@@ -172,11 +176,35 @@ class MetadataRepository(
      * changes: cached rows hold language-specific text (overview, genres, title) but the cache key is only
      * `<type>:<tmdbId>`, so without this users would keep seeing the old language until the 60-day TTL.
      *
-     * Deliberately leaves `metadata_match` intact — a title→tmdbId match is language-independent, and
-     * keeping it avoids re-running a search for every item in a ~220k catalog.
+     * Deliberately leaves POSITIVE `metadata_match` rows intact — a title→tmdbId match is
+     * language-independent, and keeping it avoids re-running a search for every item in a ~220k catalog.
+     * Negative rows do go: a miss can be an artefact of the language the search ran under, and leaving it
+     * meant a bad language choice kept metadata (and the OpenSubtitles tmdb_id lookup) dead for 7 days
+     * even after the user switched back.
      */
+    /**
+     * One-shot drop of the "no match" rows written by an older matcher generation. Installs that ran
+     * with a non-English metadata language cached a miss for every title they opened (the search hit's
+     * title came back translated and scored ~0), and those rows outlive both the language change and the
+     * app upgrade — so without this the fix wouldn't reach the affected users for 7 days.
+     *
+     * Deliberately lazy: it rides the first detail-screen resolve, never cold start, and only the cheap
+     * negative rows go. Failures are swallowed and simply re-tried on the next resolve.
+     */
+    private suspend fun healNegativeMatchesOnce() {
+        if (!healNeeded.get()) return
+        runCatching {
+            if (settings.metadataMatchHealVersion() < MATCH_HEURISTICS_VERSION) {
+                dao.clearNegativeMatches()
+                settings.setMetadataMatchHealVersion(MATCH_HEURISTICS_VERSION)
+            }
+        }.onSuccess { healNeeded.set(false) }
+            .onFailure { Log.w(TAG, "negative-match heal failed: ${it.message}") }
+    }
+
     suspend fun clearCacheForLanguageChange() {
         dao.clearCache()
+        dao.clearNegativeMatches()
     }
 
     /**
@@ -317,15 +345,20 @@ class MetadataRepository(
 
     private data class Scored(val result: MetadataSearchResult, val score: Double)
 
-    /** 0..1 confidence from title similarity + year agreement. */
+    /**
+     * 0..1 confidence from title similarity + year agreement.
+     *
+     * Similarity takes the BEST of the localized and the original title. TMDB translates `title`/`name`
+     * when `&language=` is set, so a user on e.g. Greek metadata got Greek titles scored against Latin
+     * provider names — zero overlap, every match rejected, and the negative cache then hid metadata AND
+     * broke the OpenSubtitles tmdb_id lookup for 7 days. `original_title` is language-independent.
+     */
     private fun score(query: String, year: Int?, r: MetadataSearchResult): Double {
         val q = query.lowercase().trim()
-        val t = r.title.lowercase().trim()
-        var s = when {
-            q == t -> 1.0
-            t.contains(q) || q.contains(t) -> 0.75
-            else -> tokenOverlap(q, t)
-        }
+        var s = maxOf(
+            titleSimilarity(q, r.title),
+            r.originalTitle?.let { titleSimilarity(q, it) } ?: 0.0,
+        )
         if (year != null && r.year != null) {
             val diff = kotlin.math.abs(year - r.year)
             s += when {
@@ -335,6 +368,17 @@ class MetadataRepository(
             }
         }
         return s.coerceIn(0.0, 1.0)
+    }
+
+    /** Similarity of an already-lowercased query against one candidate title. */
+    private fun titleSimilarity(q: String, candidate: String): Double {
+        val t = candidate.lowercase().trim()
+        if (t.isBlank()) return 0.0
+        return when {
+            q == t -> 1.0
+            t.contains(q) || q.contains(t) -> 0.75
+            else -> tokenOverlap(q, t)
+        }
     }
 
     /** Jaccard overlap of word tokens — a cheap similarity for near-miss titles. */
@@ -354,6 +398,12 @@ class MetadataRepository(
 
         /** Accept a match at/above this confidence; below it, prefer no metadata over a wrong one. */
         private const val ACCEPT_THRESHOLD = 0.6
+
+        /**
+         * Bump when a matcher change makes previously cached misses wrong — existing installs then drop
+         * their negative rows once ([healNegativeMatchesOnce]). 1 = scoring against `original_title`.
+         */
+        private const val MATCH_HEURISTICS_VERSION = 1
 
         private const val POSITIVE_TTL_MS = 60L * 24 * 3600 * 1000  // 60 days
         private const val NEGATIVE_TTL_MS = 7L * 24 * 3600 * 1000   // 7 days
