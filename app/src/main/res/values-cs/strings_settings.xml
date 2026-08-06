@@ -911,4 +911,9 @@
     <string name="settings_language_contribution_copied">Odkaz zkopírován</string>
     <string name="settings_language_contribution_open_failed">Odkaz se nepodařilo otevřít. Místo toho ho zkopírujte.</string>
     <string name="settings_language_contribution_copy_failed">Odkaz se nepodařilo zkopírovat. Přečtěte si nebo zadejte výše uvedenou adresu URL.</string>
+    <string name="settings_auto_frame_rate_warning_suffix">Na tomto televizoru se nedoporučuje: na Androidu nižším než 12 nelze frekvenci měnit plynule.</string>
+    <string name="settings_auto_frame_rate_warning_title">Na tomto televizoru se nedoporučuje</string>
+    <string name="settings_auto_frame_rate_warning_description">Toto zařízení běží na Androidu <xliff:g id="android_version">%1$s</xliff:g>. Na Androidu nižším než 12 televizor nedokáže OwnTV sdělit, které obnovovací frekvence umí plynule přepínat, takže změna frekvence může na vteřinu nebo dvě zhasnout obrazovku – někdy i vícekrát během jednoho pořadu.\n\nDoporučujeme zde nechat automatickou snímkovou frekvenci vypnutou. Pokud váš televizor přepíná bez problémů, zapněte ji a uvidíte: můžete to kdykoli změnit zpět.</string>
+    <string name="settings_auto_frame_rate_keep_off">Ponechat vypnuté</string>
+    <string name="settings_auto_frame_rate_turn_on_anyway">Přesto zapnout</string>
 </resources>

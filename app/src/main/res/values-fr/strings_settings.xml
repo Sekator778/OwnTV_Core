@@ -895,4 +895,9 @@
     <string name="settings_language_contribution_copied">Lien copié</string>
     <string name="settings_language_contribution_open_failed">Le lien n\'a pas pu être ouvert. Copiez-le à la place.</string>
     <string name="settings_language_contribution_copy_failed">Le lien n\'a pas pu être copié. Lisez ou saisissez l\'URL affichée ci-dessus.</string>
+    <string name="settings_auto_frame_rate_warning_suffix">Déconseillé sur ce téléviseur : avant Android 12, la fréquence ne peut pas être modifiée en douceur.</string>
+    <string name="settings_auto_frame_rate_warning_title">Déconseillé sur ce téléviseur</string>
+    <string name="settings_auto_frame_rate_warning_description">Cet appareil fonctionne sous Android <xliff:g id="android_version">%1$s</xliff:g>. Avant Android 12, le téléviseur ne peut pas indiquer à OwnTV les fréquences de rafraîchissement vers lesquelles il peut basculer en douceur ; changer la fréquence peut donc faire passer l\'écran au noir pendant une seconde ou deux — parfois plus d\'une fois au cours d\'un programme.\n\nNous vous recommandons de laisser la fréquence d\'images automatique désactivée ici. Si votre téléviseur bascule proprement, activez-la et voyez : vous pouvez la désactiver à nouveau à tout moment.</string>
+    <string name="settings_auto_frame_rate_keep_off">Ne pas activer</string>
+    <string name="settings_auto_frame_rate_turn_on_anyway">Activer quand même</string>
 </resources>

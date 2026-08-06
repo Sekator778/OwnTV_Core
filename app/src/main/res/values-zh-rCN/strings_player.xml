@@ -234,4 +234,6 @@
     <string name="player_frame_rate_prompt_title">此频道可能出现画面抖动</string>
     <string name="player_frame_rate_prompt_description">它以 <xliff:g id="fps">%1$d</xliff:g> fps 播放，而你的电视以 <xliff:g id="current_hz">%2$d</xliff:g> Hz 运行，无法均匀显示这些帧——画面动起来会有些卡顿。\n\n自动帧率会在你观看时将电视切换到 <xliff:g id="target_hz">%3$d</xliff:g> Hz，并在之后恢复原状。部分电视在切换帧率时会短暂黑屏；你也可以在设置 → 视频播放器中再次关闭它。</string>
     <string name="player_frame_rate_turn_on">开启</string>
+    <string name="player_reason_live_fallback">直播播放已切换到备用方案</string>
+    <string name="player_reason_live_no_fallback">直播播放失败——没有备用方案可用</string>
 </resources>

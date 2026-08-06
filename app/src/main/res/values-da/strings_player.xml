@@ -241,4 +241,6 @@
     <string name="player_frame_rate_prompt_title">Denne kanal kan hakke</string>
     <string name="player_frame_rate_prompt_description">Den afspiller med <xliff:g id="fps">%1$d</xliff:g> fps, mens dit TV kører med <xliff:g id="current_hz">%2$d</xliff:g> Hz, hvilket ikke kan vise billederne jævnt — bevægelser ser lidt hakkende ud.\n\nAuto billedhastighed skifter TV\'et til <xliff:g id="target_hz">%3$d</xliff:g> Hz, mens du ser med, og sætter det tilbage bagefter. Nogle TV\'er viser sort skærm et øjeblik, når billedhastigheden skifter; du kan slå funktionen fra igen under Indstillinger → Videoafspiller.</string>
     <string name="player_frame_rate_turn_on">Slå til</string>
+    <string name="player_reason_live_fallback">Live-afspilning skiftede til en fallback</string>
+    <string name="player_reason_live_no_fallback">Live-afspilning fejlede – der er ingen fallback tilbage</string>
 </resources>

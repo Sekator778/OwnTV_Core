@@ -241,4 +241,6 @@
     <string name="player_frame_rate_prompt_title">इस चैनल में झटके लग सकते हैं</string>
     <string name="player_frame_rate_prompt_description">यह <xliff:g id="fps">%1$d</xliff:g> fps पर चलता है जबकि आपका टीवी <xliff:g id="current_hz">%2$d</xliff:g> Hz पर चल रहा है, जो उन फ़्रेमों को समान रूप से नहीं दिखा सकता — गति थोड़ी झटकेदार लगती है।\n\nऑटो फ़्रेम रेट देखते समय टीवी को <xliff:g id="target_hz">%3$d</xliff:g> Hz पर स्विच कर देता है और बाद में वापस कर देता है। कुछ टीवी रेट बदलने पर एक पल के लिए ब्लैंक हो जाते हैं; आप इसे सेटिंग्स → वीडियो प्लेयर में फिर से बंद कर सकते हैं।</string>
     <string name="player_frame_rate_turn_on">चालू करें</string>
+    <string name="player_reason_live_fallback">लाइव प्लेबैक एक फ़ॉलबैक पर स्विच हो गया</string>
+    <string name="player_reason_live_no_fallback">लाइव प्लेबैक विफल — कोई फ़ॉलबैक शेष नहीं है</string>
 </resources>

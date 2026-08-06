@@ -911,4 +911,9 @@
     <string name="settings_language_contribution_copied">Skopiowano link</string>
     <string name="settings_language_contribution_open_failed">Nie udało się otworzyć linku. Zamiast tego skopiuj go.</string>
     <string name="settings_language_contribution_copy_failed">Nie udało się skopiować linku. Odczytaj lub wpisz adres URL pokazany powyżej.</string>
+    <string name="settings_auto_frame_rate_warning_suffix">Niezalecane na tym telewizorze: na Androidzie poniżej 12 nie można płynnie zmieniać częstotliwości odświeżania.</string>
+    <string name="settings_auto_frame_rate_warning_title">Niezalecane na tym telewizorze</string>
+    <string name="settings_auto_frame_rate_warning_description">To urządzenie działa na Androidzie <xliff:g id="android_version">%1$s</xliff:g>. Na Androidzie poniżej 12 telewizor nie może przekazać OwnTV, na które częstotliwości odświeżania może płynnie przełączać, więc zmiana częstotliwości może sprawić, że ekran zgaśnie na sekundę lub dwie — czasem więcej niż raz podczas programu.\n\nZalecamy pozostawienie tutaj automatycznej częstotliwości odświeżania wyłączonej. Jeśli telewizor przełącza ją bez zakłóceń, włącz ją i zobacz: w każdej chwili możesz ją z powrotem wyłączyć.</string>
+    <string name="settings_auto_frame_rate_keep_off">Pozostaw wyłączone</string>
+    <string name="settings_auto_frame_rate_turn_on_anyway">Włącz mimo to</string>
 </resources>

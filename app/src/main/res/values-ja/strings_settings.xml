@@ -863,4 +863,9 @@
     <string name="settings_language_contribution_copied">リンクをコピーしました</string>
     <string name="settings_language_contribution_open_failed">リンクを開けませんでした。代わりにコピーしてください。</string>
     <string name="settings_language_contribution_copy_failed">リンクをコピーできませんでした。上に表示されているURLを読み取るか、入力してください。</string>
+    <string name="settings_auto_frame_rate_warning_suffix">このテレビでは非推奨：Android 12未満では、フレームレートをスムーズに変更できません。</string>
+    <string name="settings_auto_frame_rate_warning_title">このテレビでは非推奨</string>
+    <string name="settings_auto_frame_rate_warning_description">このデバイスはAndroid <xliff:g id="android_version">%1$s</xliff:g>で動作しています。Android 12未満では、テレビがOwnTVにスムーズに切り替え可能なリフレッシュレートを伝えられないため、レートを変更すると1〜2秒間画面が暗転する可能性があります。番組中に複数回発生することもあります。\n\nここではオートフレームレートをオフにしておくことをお勧めします。テレビが問題なく切り替えられる場合は、オンにして試してみてください。いつでも元に戻せます。</string>
+    <string name="settings_auto_frame_rate_keep_off">オフのまま</string>
+    <string name="settings_auto_frame_rate_turn_on_anyway">それでもオンにする</string>
 </resources>

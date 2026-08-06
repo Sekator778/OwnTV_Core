@@ -911,4 +911,9 @@
     <string name="settings_language_contribution_copied">Ссылка скопирована</string>
     <string name="settings_language_contribution_open_failed">Не удалось открыть ссылку. Скопируйте её.</string>
     <string name="settings_language_contribution_copy_failed">Не удалось скопировать ссылку. Прочитайте или введите URL, указанный выше.</string>
+    <string name="settings_auto_frame_rate_warning_suffix">Не рекомендуется на этом телевизоре: на Android ниже 12 частота не может меняться плавно.</string>
+    <string name="settings_auto_frame_rate_warning_title">Не рекомендуется на этом телевизоре</string>
+    <string name="settings_auto_frame_rate_warning_description">На этом устройстве установлен Android <xliff:g id="android_version">%1$s</xliff:g>. На Android ниже 12 телевизор не может сообщить OwnTV, между какими частотами обновления он может переключаться плавно, поэтому смена частоты может погасить экран на секунду-другую — иногда не один раз за время передачи.\n\nМы рекомендуем оставить автоподбор частоты кадров выключенным здесь. Если ваш телевизор переключается без проблем, включите его и проверьте: вы сможете вернуть всё обратно в любой момент.</string>
+    <string name="settings_auto_frame_rate_keep_off">Оставить выключенным</string>
+    <string name="settings_auto_frame_rate_turn_on_anyway">Включить всё равно</string>
 </resources>

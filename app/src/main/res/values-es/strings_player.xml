@@ -248,4 +248,6 @@
     <string name="player_frame_rate_prompt_title">Este canal puede verse entrecortado</string>
     <string name="player_frame_rate_prompt_description">Se reproduce a <xliff:g id="fps">%1$d</xliff:g> fps mientras tu TV funciona a <xliff:g id="current_hz">%2$d</xliff:g> Hz, una frecuencia que no puede mostrar esos fotogramas de forma uniforme — el movimiento se ve ligeramente entrecortado.\n\nLa frecuencia de imagen automática cambia la TV a <xliff:g id="target_hz">%3$d</xliff:g> Hz mientras ves el contenido y la restablece después. Algunas TVs se quedan en negro un momento al cambiar la frecuencia; puedes volver a desactivarla en Ajustes → Reproductor de vídeo.</string>
     <string name="player_frame_rate_turn_on">Activar</string>
+    <string name="player_reason_live_fallback">La reproducción en directo cambió a una alternativa</string>
+    <string name="player_reason_live_no_fallback">La reproducción en directo falló: no queda ninguna alternativa</string>
 </resources>

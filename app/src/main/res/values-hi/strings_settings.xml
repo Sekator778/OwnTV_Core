@@ -879,4 +879,9 @@
     <string name="settings_language_contribution_copied">लिंक कॉपी हो गया</string>
     <string name="settings_language_contribution_open_failed">लिंक नहीं खोला जा सका। इसके बजाय इसे कॉपी करें।</string>
     <string name="settings_language_contribution_copy_failed">लिंक कॉपी नहीं किया जा सका। ऊपर दिखाया गया URL पढ़ें या टाइप करें।</string>
+    <string name="settings_auto_frame_rate_warning_suffix">इस टीवी पर अनुशंसित नहीं: Android 12 से नीचे रेट सुचारू रूप से नहीं बदला जा सकता।</string>
+    <string name="settings_auto_frame_rate_warning_title">इस टीवी पर अनुशंसित नहीं</string>
+    <string name="settings_auto_frame_rate_warning_description">यह डिवाइस Android <xliff:g id="android_version">%1$s</xliff:g> पर चलता है। Android 12 से नीचे टीवी OwnTV को यह नहीं बता सकता कि वह किन रिफ़्रेश रेटों पर सुचारू रूप से स्विच कर सकता है, इसलिए रेट बदलने पर स्क्रीन एक-दो सेकंड के लिए काली हो सकती है — कभी-कभी कार्यक्रम के दौरान एक से अधिक बार।\n\nहम यहाँ Auto frame rate बंद रखने की अनुशंसा करते हैं। अगर आपका टीवी बिना किसी समस्या के स्विच करता है, तो इसे चालू करके देखें: आप इसे कभी भी वापस बदल सकते हैं।</string>
+    <string name="settings_auto_frame_rate_keep_off">बंद रखें</string>
+    <string name="settings_auto_frame_rate_turn_on_anyway">फिर भी चालू करें</string>
 </resources>

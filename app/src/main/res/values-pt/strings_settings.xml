@@ -895,4 +895,9 @@
     <string name="settings_language_contribution_copied">Link copiado</string>
     <string name="settings_language_contribution_open_failed">O link não pôde ser aberto. Copie-o.</string>
     <string name="settings_language_contribution_copy_failed">O link não pôde ser copiado. Leia ou digite a URL mostrada acima.</string>
+    <string name="settings_auto_frame_rate_warning_suffix">Não recomendado nesta TV: abaixo do Android 12, a taxa não pode ser alterada suavemente.</string>
+    <string name="settings_auto_frame_rate_warning_title">Não recomendado nesta TV</string>
+    <string name="settings_auto_frame_rate_warning_description">Este dispositivo roda Android <xliff:g id="android_version">%1$s</xliff:g>. Abaixo do Android 12, a TV não consegue informar ao OwnTV quais taxas de atualização ela pode alternar suavemente; portanto, alterar a taxa pode deixar a tela preta por um ou dois segundos — às vezes mais de uma vez durante um programa.\n\nRecomendamos deixar a Taxa de atualização automática desativada aqui. Se a sua TV alternar sem problemas, ative-a e veja: você pode desativá-la novamente a qualquer momento.</string>
+    <string name="settings_auto_frame_rate_keep_off">Manter desativada</string>
+    <string name="settings_auto_frame_rate_turn_on_anyway">Ativar mesmo assim</string>
 </resources>

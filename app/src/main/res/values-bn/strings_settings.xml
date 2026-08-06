@@ -879,4 +879,9 @@
     <string name="settings_language_contribution_copied">লিঙ্ক কপি হয়েছে</string>
     <string name="settings_language_contribution_open_failed">লিঙ্কটি খোলা যায়নি। পরিবর্তে এটি কপি করুন।</string>
     <string name="settings_language_contribution_copy_failed">লিঙ্কটি কপি করা যায়নি। উপরে দেখানো URL পড়ুন বা টাইপ করুন।</string>
+    <string name="settings_auto_frame_rate_warning_suffix">এই টিভিতে সুপারিশ করা হয় না: Android 12-এর নিচে ফ্রেম রেট মসৃণভাবে পরিবর্তন করা যায় না।</string>
+    <string name="settings_auto_frame_rate_warning_title">এই টিভিতে সুপারিশ করা হয় না</string>
+    <string name="settings_auto_frame_rate_warning_description">এই ডিভাইসে Android <xliff:g id="android_version">%1$s</xliff:g> চলছে। Android 12-এর নিচে টিভি OwnTV-কে জানাতে পারে না কোন রিফ্রেশ রেটগুলোতে এটি মসৃণভাবে সুইচ করতে পারে, তাই রেট পরিবর্তন করলে স্ক্রিন এক বা দুই সেকেন্ডের জন্য কালো হয়ে যেতে পারে — কখনও কখনও একটি অনুষ্ঠানের সময় একাধিকবারও।\n\nআমরা এখানে অটো ফ্রেম রেট বন্ধ রাখার পরামর্শ দিই। আপনার টিভি যদি নির্বিঘ্নে সুইচ করে, তবে এটি চালু করে দেখুন: আপনি যেকোনো সময় আবার বন্ধ করে দিতে পারবেন।</string>
+    <string name="settings_auto_frame_rate_keep_off">বন্ধ রাখুন</string>
+    <string name="settings_auto_frame_rate_turn_on_anyway">তা সত্ত্বেও চালু করুন</string>
 </resources>

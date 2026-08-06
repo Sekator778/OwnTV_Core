@@ -234,4 +234,6 @@
     <string name="player_frame_rate_prompt_title">此頻道可能會有畫面抖動</string>
     <string name="player_frame_rate_prompt_description">此頻道以 <xliff:g id="fps">%1$d</xliff:g> fps 播放，而您的電視目前以 <xliff:g id="current_hz">%2$d</xliff:g> Hz 運作，無法均勻顯示這些影格，因此動作看起來會稍微不流暢。\n\n自動畫面更新率會在您觀看時將電視切換為 <xliff:g id="target_hz">%3$d</xliff:g> Hz，並在之後切換回來。部分電視在更新率變更時會短暫出現黑畫面；您可以隨時在「設定」→「影片播放器」中再次關閉。</string>
     <string name="player_frame_rate_turn_on">開啟</string>
+    <string name="player_reason_live_fallback">直播播放已切換至備援方案</string>
+    <string name="player_reason_live_no_fallback">直播播放失敗—已無備援方案</string>
 </resources>

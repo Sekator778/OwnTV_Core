@@ -234,4 +234,6 @@
     <string name="player_frame_rate_prompt_title">このチャンネルはカクつく可能性があります</string>
     <string name="player_frame_rate_prompt_description">このチャンネルは <xliff:g id="fps">%1$d</xliff:g> fps で再生されますが、TVは <xliff:g id="current_hz">%2$d</xliff:g> Hz で動作しているため、フレームを均等に表示できず、動きがややカクついて見えます。\n\n自動フレームレートは、視聴中にTVを <xliff:g id="target_hz">%3$d</xliff:g> Hz に切り替え、終了後に元に戻します。レート変更時に一瞬画面が暗くなるTVもあります。設定 → ビデオプレーヤー で再度オフにできます。</string>
     <string name="player_frame_rate_turn_on">オンにする</string>
+    <string name="player_reason_live_fallback">ライブ再生はフォールバックに切り替わりました</string>
+    <string name="player_reason_live_no_fallback">ライブ再生に失敗しました — フォールバックは残っていません</string>
 </resources>

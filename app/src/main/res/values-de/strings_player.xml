@@ -241,4 +241,6 @@
     <string name="player_frame_rate_prompt_title">Bei diesem Sender kann das Bild ruckeln</string>
     <string name="player_frame_rate_prompt_description">Die Wiedergabe läuft mit <xliff:g id="fps">%1$d</xliff:g> fps, während dein Fernseher mit <xliff:g id="current_hz">%2$d</xliff:g> Hz läuft, wodurch dein Fernseher diese Bilder nicht gleichmäßig darstellen kann – Bewegungen wirken leicht ruckelig.\n\nDie automatische Bildrate schaltet deinen Fernseher während der Wiedergabe auf <xliff:g id="target_hz">%3$d</xliff:g> Hz und danach wieder zurück. Bei manchen Fernsehern wird der Bildschirm beim Ändern der Bildrate kurz schwarz; du kannst die Funktion unter Einstellungen → Videoplayer wieder deaktivieren.</string>
     <string name="player_frame_rate_turn_on">Einschalten</string>
+    <string name="player_reason_live_fallback">Live-Wiedergabe auf einen Fallback umgeschaltet</string>
+    <string name="player_reason_live_no_fallback">Live-Wiedergabe fehlgeschlagen – kein Fallback mehr übrig</string>
 </resources>

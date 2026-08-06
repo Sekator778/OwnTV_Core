@@ -863,4 +863,9 @@
     <string name="settings_language_contribution_copied">已複製連結</string>
     <string name="settings_language_contribution_open_failed">無法開啟連結。請改為複製。</string>
     <string name="settings_language_contribution_copy_failed">無法複製連結。請閱讀或輸入上方顯示的網址。</string>
+    <string name="settings_auto_frame_rate_warning_suffix">不建議在此電視上使用：在 Android 12 以下，更新率無法平滑切換。</string>
+    <string name="settings_auto_frame_rate_warning_title">不建議在此電視上使用</string>
+    <string name="settings_auto_frame_rate_warning_description">此裝置執行的是 Android <xliff:g id="android_version">%1$s</xliff:g>。在 Android 12 以下，電視無法告知 OwnTV 它可以順暢切換到哪些更新率，因此切換更新率可能會讓畫面變黑一兩秒——有時在節目播放期間還會發生不只一次。\n\n我們建議在此保持自動更新率關閉。如果你的電視切換得很順暢，不妨開啟試試看：你隨時都可以改回來。</string>
+    <string name="settings_auto_frame_rate_keep_off">保持關閉</string>
+    <string name="settings_auto_frame_rate_turn_on_anyway">仍要開啟</string>
 </resources>

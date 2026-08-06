@@ -879,4 +879,9 @@
     <string name="settings_language_contribution_copied">Link gekopieerd</string>
     <string name="settings_language_contribution_open_failed">De link kon niet worden geopend. Kopieer hem in plaats daarvan.</string>
     <string name="settings_language_contribution_copy_failed">De link kon niet worden gekopieerd. Lees of typ de hierboven getoonde URL.</string>
+    <string name="settings_auto_frame_rate_warning_suffix">Niet aanbevolen op deze tv: onder Android 12 kan de framesnelheid niet soepel worden gewijzigd.</string>
+    <string name="settings_auto_frame_rate_warning_title">Niet aanbevolen op deze tv</string>
+    <string name="settings_auto_frame_rate_warning_description">Dit apparaat draait op Android <xliff:g id="android_version">%1$s</xliff:g>. Onder Android 12 kan de tv OwnTV niet vertellen naar welke verversingsfrequenties hij soepel kan overschakelen, dus het wijzigen van de frequentie kan het scherm een seconde of twee zwart maken — soms meerdere keren tijdens een programma.\n\nWe raden aan om Automatische framesnelheid hier uit te laten staan. Als je tv probleemloos overschakelt, zet je hem aan en kijk je: je kunt hem op elk moment weer uitzetten.</string>
+    <string name="settings_auto_frame_rate_keep_off">Uit laten staan</string>
+    <string name="settings_auto_frame_rate_turn_on_anyway">Toch inschakelen</string>
 </resources>

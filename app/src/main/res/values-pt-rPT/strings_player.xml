@@ -248,4 +248,6 @@
     <string name="player_frame_rate_prompt_title">Este canal pode apresentar movimentos irregulares</string>
     <string name="player_frame_rate_prompt_description">É reproduzido a <xliff:g id="fps">%1$d</xliff:g> fps enquanto a sua TV está a funcionar a <xliff:g id="current_hz">%2$d</xliff:g> Hz, e essa combinação não consegue mostrar esses fotogramas de forma uniforme — o movimento parece ligeiramente entrecortado.\n\nA taxa de fotogramas automática muda a TV para <xliff:g id="target_hz">%3$d</xliff:g> Hz enquanto está a ver e repõe-na depois. Algumas TVs ficam sem imagem por um momento quando a taxa muda; pode desligá-la novamente em Definições → Leitor de vídeo.</string>
     <string name="player_frame_rate_turn_on">Ativar</string>
+    <string name="player_reason_live_fallback">A reprodução em direto mudou para uma alternativa</string>
+    <string name="player_reason_live_no_fallback">A reprodução em direto falhou — não resta nenhuma alternativa</string>
 </resources>

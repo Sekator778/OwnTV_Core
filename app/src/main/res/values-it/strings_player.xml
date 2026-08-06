@@ -248,4 +248,6 @@
     <string name="player_frame_rate_prompt_title">Questo canale potrebbe andare a scatti</string>
     <string name="player_frame_rate_prompt_description">Riproduce a <xliff:g id="fps">%1$d</xliff:g> fps mentre la tua TV, che è a <xliff:g id="current_hz">%2$d</xliff:g> Hz, non può mostrare questi fotogrammi in modo uniforme — il movimento risulta leggermente a scatti.\n\nIl frame rate automatico porta la TV a <xliff:g id="target_hz">%3$d</xliff:g> Hz mentre guardi e poi la ripristina. Alcune TV restano nere per un attimo quando cambia la frequenza; puoi disattivarlo di nuovo in Impostazioni → Lettore video.</string>
     <string name="player_frame_rate_turn_on">Attiva</string>
+    <string name="player_reason_live_fallback">La riproduzione in diretta è passata a un fallback</string>
+    <string name="player_reason_live_no_fallback">Riproduzione in diretta non riuscita — non rimane alcun fallback</string>
 </resources>

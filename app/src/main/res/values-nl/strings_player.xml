@@ -241,4 +241,6 @@
     <string name="player_frame_rate_prompt_title">Deze zender kan haperen</string>
     <string name="player_frame_rate_prompt_description">Het speelt af met <xliff:g id="fps">%1$d</xliff:g> fps terwijl je tv op <xliff:g id="current_hz">%2$d</xliff:g> Hz draait, waardoor die frames niet gelijkmatig kunnen worden weergegeven — beweging ziet er iets schokkerig uit.\n\nAutomatische framerate schakelt de tv tijdens het kijken naar <xliff:g id="target_hz">%3$d</xliff:g> Hz en zet hem daarna terug. Sommige tv\'s worden even zwart wanneer de frequentie verandert; je kunt dit weer uitzetten in Instellingen → Videospeler.</string>
     <string name="player_frame_rate_turn_on">Inschakelen</string>
+    <string name="player_reason_live_fallback">Live-weergave overgeschakeld naar een fallback</string>
+    <string name="player_reason_live_no_fallback">Live-weergave mislukt — er is geen fallback meer over</string>
 </resources>

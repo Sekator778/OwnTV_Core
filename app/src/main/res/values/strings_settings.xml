@@ -364,6 +364,16 @@
     <string name="settings_auto_frame_rate">Auto frame rate</string>
     <!-- Translators: Description of the auto frame rate setting. Explains when to turn it off. -->
     <string name="settings_auto_frame_rate_description">Match the TV\'s refresh rate to the video (24/25/50/60 fps) in full screen, for Live TV and VOD, and restore it on exit. Turn off if your TV or receiver re-handshakes HDMI noisily on every channel change.</string>
+    <!-- Translators: Extra warning appended to Auto frame rate on devices older than Android 12. -->
+    <string name="settings_auto_frame_rate_warning_suffix">Not recommended on this TV: below Android 12 the rate can\'t be changed smoothly.</string>
+    <!-- Translators: Title warning that Auto frame rate may blank the display on this older TV. -->
+    <string name="settings_auto_frame_rate_warning_title">Not recommended on this TV</string>
+    <!-- Translators: Auto frame rate warning. %1$s is the device Android version, such as 11. -->
+    <string name="settings_auto_frame_rate_warning_description">This device runs Android <xliff:g id="android_version">%1$s</xliff:g>. Below Android 12 the TV can\'t tell OwnTV which refresh rates it can switch to smoothly, so changing the rate may black the screen out for a second or two — sometimes more than once during a programme.\n\nWe recommend leaving Auto frame rate off here. If your TV switches cleanly, turn it on and see: you can change it back at any time.</string>
+    <!-- Translators: Safe action that leaves Auto frame rate disabled. -->
+    <string name="settings_auto_frame_rate_keep_off">Keep off</string>
+    <!-- Translators: Action that enables Auto frame rate despite the warning. -->
+    <string name="settings_auto_frame_rate_turn_on_anyway">Turn on anyway</string>
     <!-- Translators: Setting label for surround sound decoding. -->
     <string name="settings_surround_sound">Surround sound</string>
     <!-- Translators: Description of the surround sound setting. Explains when to leave it OFF. -->

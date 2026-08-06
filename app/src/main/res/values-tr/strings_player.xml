@@ -241,4 +241,6 @@
     <string name="player_frame_rate_prompt_title">Bu kanalda takılma görülebilir</string>
     <string name="player_frame_rate_prompt_description">İçerik <xliff:g id="fps">%1$d</xliff:g> fps ile oynatılırken TV\'niz <xliff:g id="current_hz">%2$d</xliff:g> Hz\'de çalışıyor; TV bu kareleri eşit aralıklarla gösteremez, bu yüzden hareket hafifçe takılmalı görünür.\n\nOtomatik kare hızı, izlerken TV\'yi <xliff:g id="target_hz">%3$d</xliff:g> Hz\'e geçirir ve ardından eski hâline döndürür. Bazı TV\'ler kare hızı değiştiğinde bir an kararır; bunu Ayarlar → Video Oynatıcı bölümünden yeniden kapatabilirsiniz.</string>
     <string name="player_frame_rate_turn_on">Aç</string>
+    <string name="player_reason_live_fallback">Canlı oynatma bir yedeğe geçti</string>
+    <string name="player_reason_live_no_fallback">Canlı oynatma başarısız oldu — kalan yedek yok</string>
 </resources>

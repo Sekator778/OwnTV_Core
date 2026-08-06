@@ -2451,12 +2451,15 @@
 2	technical	app/src/main/java/tv/own/owntv/features/live/LiveScreen.kt	−
 4	empty	app/src/main/java/tv/own/owntv/features/live/LiveViewModel.kt	\0
 1	technical	app/src/main/java/tv/own/owntv/features/live/LiveViewModel.kt	#$it
+1	technical	app/src/main/java/tv/own/owntv/features/live/LiveViewModel.kt	$label — $reason
 1	log	app/src/main/java/tv/own/owntv/features/live/LiveViewModel.kt	'${channel.name}' falling back to $label ($reason)
 1	log	app/src/main/java/tv/own/owntv/features/live/LiveViewModel.kt	'${channel.name}' opened on ExoPlayer
 1	log	app/src/main/java/tv/own/owntv/features/live/LiveViewModel.kt	'${channel.name}' opened on mpv
 1	log	app/src/main/java/tv/own/owntv/features/live/LiveViewModel.kt	'${channel.name}' stopped playing (state=$left) — ${EXO_STALL_HANDOFF_MS / 1000}s to recover
 1	log	app/src/main/java/tv/own/owntv/features/live/LiveViewModel.kt	'${channel.name}' — no fallback left ($reason)
+1	technical	app/src/main/java/tv/own/owntv/features/live/LiveViewModel.kt	'${channel.name}': $detail
 2	technical	app/src/main/java/tv/own/owntv/features/live/LiveViewModel.kt	ALL
+1	technical	app/src/main/java/tv/own/owntv/features/live/LiveViewModel.kt	ExoPlayer
 1	log	app/src/main/java/tv/own/owntv/features/live/LiveViewModel.kt	ExoPlayer + HLS
 1	log	app/src/main/java/tv/own/owntv/features/live/LiveViewModel.kt	ExoPlayer + TS
 1	log	app/src/main/java/tv/own/owntv/features/live/LiveViewModel.kt	ExoPlayer gave up mid-stream: ${previewEngine.errorInfo.value?.raw ?: previewEngine.error.value}
@@ -2477,7 +2480,7 @@
 1	log	app/src/main/java/tv/own/owntv/features/live/LiveViewModel.kt	ensurePlaying history profile=$pid channelId=${channel.id}
 1	log	app/src/main/java/tv/own/owntv/features/live/LiveViewModel.kt	ensurePlaying history record failed channelId=${channel.id} profile=$pid
 2	technical	app/src/main/java/tv/own/owntv/features/live/LiveViewModel.kt	exoplayer
-1	technical	app/src/main/java/tv/own/owntv/features/live/LiveViewModel.kt	mpv
+2	technical	app/src/main/java/tv/own/owntv/features/live/LiveViewModel.kt	mpv
 1	log	app/src/main/java/tv/own/owntv/features/live/LiveViewModel.kt	mpv (panel refuses segments)
 1	technical	app/src/main/java/tv/own/owntv/features/live/LiveViewModel.kt	mpv (pinned)
 1	log	app/src/main/java/tv/own/owntv/features/live/LiveViewModel.kt	mpv + HLS
@@ -2732,6 +2735,7 @@
 1	preference-key	app/src/main/java/tv/own/owntv/features/settings/data/SettingsRepository.kt	audio_delay_ms
 1	preference-key	app/src/main/java/tv/own/owntv/features/settings/data/SettingsRepository.kt	auto_frame_rate
 1	preference-key	app/src/main/java/tv/own/owntv/features/settings/data/SettingsRepository.kt	auto_frame_rate_prompted
+1	preference-key	app/src/main/java/tv/own/owntv/features/settings/data/SettingsRepository.kt	auto_frame_rate_reset_pre12
 1	preference-key	app/src/main/java/tv/own/owntv/features/settings/data/SettingsRepository.kt	auto_play_next
 1	preference-key	app/src/main/java/tv/own/owntv/features/settings/data/SettingsRepository.kt	avatar_id
 1	preference-key	app/src/main/java/tv/own/owntv/features/settings/data/SettingsRepository.kt	bg_image_path
@@ -2897,7 +2901,7 @@
 1	empty	app/src/main/java/tv/own/owntv/features/shell/components/MediaDetailsScreen.kt	\0
 1	technical	app/src/main/java/tv/own/owntv/features/shell/components/MediaDetailsScreen.kt	,
 1	technical	app/src/main/java/tv/own/owntv/features/shell/components/MediaDetailsScreen.kt	·
-4	empty	app/src/main/java/tv/own/owntv/features/shell/components/SettingsScreen.kt	\0
+6	empty	app/src/main/java/tv/own/owntv/features/shell/components/SettingsScreen.kt	\0
 5	technical	app/src/main/java/tv/own/owntv/features/shell/components/SettingsScreen.kt	#
 1	technical	app/src/main/java/tv/own/owntv/features/shell/components/SettingsScreen.kt	$group $title $keywords
 3	technical	app/src/main/java/tv/own/owntv/features/shell/components/SettingsScreen.kt	+
@@ -3018,6 +3022,7 @@
 1	technical	app/src/main/java/tv/own/owntv/player/ExoSubtitleEngine.kt	x-vnd.on2.vp9
 1	log	app/src/main/java/tv/own/owntv/player/FrameRateController.kt	AFR apply failed: ${it.message}
 1	log	app/src/main/java/tv/own/owntv/player/FrameRateController.kt	AFR reset failed: ${it.message}
+1	log	app/src/main/java/tv/own/owntv/player/FrameRateController.kt	AFR: ${fps}fps -> mode ${target.modeId} deferred ${waitMs}ms (cooldown)
 1	log	app/src/main/java/tv/own/owntv/player/FrameRateController.kt	AFR: display mode released
 1	log	app/src/main/java/tv/own/owntv/player/FrameRateController.kt	AFR: video ${fps}fps -> display mode ${target.modeId} (${target.refreshRate}Hz)
 1	log	app/src/main/java/tv/own/owntv/player/FrameRateController.kt	FrameRate

@@ -255,4 +255,6 @@
     <string name="player_frame_rate_prompt_title">Ten kanał może mieć niepłynny ruch</string>
     <string name="player_frame_rate_prompt_description">Odtwarza z prędkością <xliff:g id="fps">%1$d</xliff:g> fps, podczas gdy telewizor pracuje z częstotliwością <xliff:g id="current_hz">%2$d</xliff:g> Hz, co uniemożliwia równomierne wyświetlanie tych klatek — ruch wygląda na lekko szarpany.\n\nAutomatyczne dopasowanie częstotliwości odświeżania przełącza telewizor na <xliff:g id="target_hz">%3$d</xliff:g> Hz podczas oglądania, a po zakończeniu przywraca poprzednie ustawienie. Niektóre telewizory na chwilę wygaszają obraz przy zmianie częstotliwości; możesz ją ponownie wyłączyć w Ustawieniach → Odtwarzacz wideo.</string>
     <string name="player_frame_rate_turn_on">Włącz</string>
+    <string name="player_reason_live_fallback">Odtwarzanie na żywo przełączono na wariant zapasowy</string>
+    <string name="player_reason_live_no_fallback">Odtwarzanie na żywo nie powiodło się – nie pozostał żaden wariant zapasowy</string>
 </resources>

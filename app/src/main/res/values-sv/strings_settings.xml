@@ -879,4 +879,9 @@
     <string name="settings_language_contribution_copied">Länken kopierad</string>
     <string name="settings_language_contribution_open_failed">Länken kunde inte öppnas. Kopiera den istället.</string>
     <string name="settings_language_contribution_copy_failed">Länken kunde inte kopieras. Läs eller skriv webbadressen ovan.</string>
+    <string name="settings_auto_frame_rate_warning_suffix">Rekommenderas inte på den här TV:n: på Android-versioner lägre än 12 kan bildfrekvensen inte ändras smidigt.</string>
+    <string name="settings_auto_frame_rate_warning_title">Rekommenderas inte på den här TV:n</string>
+    <string name="settings_auto_frame_rate_warning_description">Den här enheten kör Android <xliff:g id="android_version">%1$s</xliff:g>. På Android-versioner lägre än 12 kan TV:n inte tala om för OwnTV vilka uppdateringsfrekvenser den kan växla till smidigt, så kan en ändring av bildfrekvensen göra att skärmen blir svart i en eller två sekunder — ibland mer än en gång under ett program.\n\nVi rekommenderar att du låter automatisk bildfrekvens vara av här. Om din TV växlar utan problem kan du slå på den och se: du kan när som helst ändra tillbaka.</string>
+    <string name="settings_auto_frame_rate_keep_off">Behåll av</string>
+    <string name="settings_auto_frame_rate_turn_on_anyway">Slå på ändå</string>
 </resources>

@@ -895,4 +895,9 @@
     <string name="settings_language_contribution_copied">Enlace copiado</string>
     <string name="settings_language_contribution_open_failed">No se ha podido abrir el enlace. Cópialo en su lugar.</string>
     <string name="settings_language_contribution_copy_failed">No se ha podido copiar el enlace. Lee o escribe la URL que se muestra arriba.</string>
+    <string name="settings_auto_frame_rate_warning_suffix">No recomendado en este televisor: por debajo de Android 12, la frecuencia de refresco no se puede cambiar con fluidez.</string>
+    <string name="settings_auto_frame_rate_warning_title">No recomendado en este televisor</string>
+    <string name="settings_auto_frame_rate_warning_description">Este dispositivo ejecuta Android <xliff:g id="android_version">%1$s</xliff:g>. Por debajo de Android 12, el televisor no puede indicarle a OwnTV a qué frecuencias de refresco puede cambiar con fluidez, así que cambiar la frecuencia puede dejar la pantalla en negro durante un segundo o dos — a veces más de una vez durante un programa.\n\nRecomendamos dejar la frecuencia de refresco automática desactivada en este televisor. Si tu televisor hace el cambio sin problemas, actívala y pruébalo: puedes volver a desactivarla cuando quieras.</string>
+    <string name="settings_auto_frame_rate_keep_off">Mantener desactivada</string>
+    <string name="settings_auto_frame_rate_turn_on_anyway">Activar de todos modos</string>
 </resources>

@@ -255,4 +255,6 @@
     <string name="player_frame_rate_prompt_title">На этом канале возможны рывки изображения</string>
     <string name="player_frame_rate_prompt_description">Канал воспроизводится со скоростью <xliff:g id="fps">%1$d</xliff:g> fps, а ваш телевизор работает с частотой <xliff:g id="current_hz">%2$d</xliff:g> Гц, поэтому не может показывать эти кадры равномерно — движение выглядит слегка прерывистым.\n\nАвтопереключение частоты кадров переводит телевизор на <xliff:g id="target_hz">%3$d</xliff:g> Гц, пока вы смотрите, а затем возвращает обратно. Некоторые телевизоры на мгновение гаснут при смене частоты; вы можете снова отключить эту функцию в разделе «Настройки» → «Видеоплеер».</string>
     <string name="player_frame_rate_turn_on">Включить</string>
+    <string name="player_reason_live_fallback">Воспроизведение прямого эфира переключено на резервный вариант</string>
+    <string name="player_reason_live_no_fallback">Воспроизведение прямого эфира не удалось — резервных вариантов не осталось</string>
 </resources>

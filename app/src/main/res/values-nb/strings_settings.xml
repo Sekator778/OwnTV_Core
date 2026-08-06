@@ -879,4 +879,9 @@
     <string name="settings_language_contribution_copied">Lenke kopiert</string>
     <string name="settings_language_contribution_open_failed">Lenken kunne ikke åpnes. Kopier den i stedet.</string>
     <string name="settings_language_contribution_copy_failed">Lenken kunne ikke kopieres. Les eller skriv inn URL-en som vises ovenfor.</string>
+    <string name="settings_auto_frame_rate_warning_suffix">Anbefales ikke på denne TV-en: under Android 12 kan oppdateringsfrekvensen ikke endres problemfritt.</string>
+    <string name="settings_auto_frame_rate_warning_title">Anbefales ikke på denne TV-en</string>
+    <string name="settings_auto_frame_rate_warning_description">Denne enheten kjører Android <xliff:g id="android_version">%1$s</xliff:g>. Under Android 12 kan TV-en ikke fortelle OwnTV hvilke oppdateringsfrekvenser den kan bytte til uten problemer, så det å endre oppdateringsfrekvensen kan føre til at skjermen blir svart i et par sekunder — noen ganger mer enn én gang under et program.\n\nVi anbefaler å la Auto bildefrekvens være av her. Hvis TV-en din bytter problemfritt, slå den på og se: du kan endre den tilbake når som helst.</string>
+    <string name="settings_auto_frame_rate_keep_off">La være av</string>
+    <string name="settings_auto_frame_rate_turn_on_anyway">Slå på likevel</string>
 </resources>

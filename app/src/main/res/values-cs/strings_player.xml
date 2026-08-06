@@ -255,4 +255,6 @@
     <string name="player_frame_rate_prompt_title">U tohoto kanálu se může obraz trhat</string>
     <string name="player_frame_rate_prompt_description">Vysílání běží rychlostí <xliff:g id="fps">%1$d</xliff:g> fps, zatímco vaše televize pracuje na <xliff:g id="current_hz">%2$d</xliff:g> Hz, a proto nemůže tyto snímky zobrazovat rovnoměrně – pohyb vypadá mírně trhaně.\n\nAutomatické přepínání snímkové frekvence přepne televizi na <xliff:g id="target_hz">%3$d</xliff:g> Hz, dokud se díváte, a poté ji vrátí zpět. U některých televizí se při změně frekvence obraz na chvíli zčerná; můžete to znovu vypnout v Nastavení → Přehrávač videa.</string>
     <string name="player_frame_rate_turn_on">Zapnout</string>
+    <string name="player_reason_live_fallback">Přehrávání živého vysílání přešlo na záložní možnost</string>
+    <string name="player_reason_live_no_fallback">Přehrávání živého vysílání selhalo — nezbývá žádná záložní možnost</string>
 </resources>

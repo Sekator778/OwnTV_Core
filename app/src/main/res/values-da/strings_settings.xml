@@ -879,4 +879,9 @@
     <string name="settings_language_contribution_copied">Link kopieret</string>
     <string name="settings_language_contribution_open_failed">Linket kunne ikke åbnes. Kopier det i stedet.</string>
     <string name="settings_language_contribution_copy_failed">Linket kunne ikke kopieres. Læs eller skriv URL’en ovenfor.</string>
+    <string name="settings_auto_frame_rate_warning_suffix">Ikke anbefalet på dette TV: under Android 12 kan billedhastigheden ikke ændres problemfrit.</string>
+    <string name="settings_auto_frame_rate_warning_title">Ikke anbefalet på dette TV</string>
+    <string name="settings_auto_frame_rate_warning_description">Denne enhed kører Android <xliff:g id="android_version">%1$s</xliff:g>. Under Android 12 kan TV\'et ikke fortælle OwnTV, hvilke opdateringshastigheder det kan skifte problemfrit imellem, så en ændring af hastigheden kan få skærmen til at blive sort i et sekund eller to — sommetider mere end én gang under et program.\n\nVi anbefaler at lade Auto-billedhastighed være slået fra her. Hvis dit TV skifter problemfrit, kan du slå det til og se: du kan altid skifte tilbage.</string>
+    <string name="settings_auto_frame_rate_keep_off">Hold slået fra</string>
+    <string name="settings_auto_frame_rate_turn_on_anyway">Slå til alligevel</string>
 </resources>

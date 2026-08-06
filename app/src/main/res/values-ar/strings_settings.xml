@@ -943,4 +943,9 @@
     <string name="settings_language_contribution_copied">تم نسخ الرابط</string>
     <string name="settings_language_contribution_open_failed">تعذّر فتح الرابط. انسخه بدلًا من ذلك.</string>
     <string name="settings_language_contribution_copy_failed">تعذّر نسخ الرابط. اقرأ الرابط المعروض أعلاه أو اكتبه.</string>
+    <string name="settings_auto_frame_rate_warning_suffix">غير موصى به على هذا التلفزيون: لا يمكن تغيير معدل الإطارات بسلاسة على الإصدارات الأقدم من Android 12.</string>
+    <string name="settings_auto_frame_rate_warning_title">غير موصى به على هذا التلفزيون</string>
+    <string name="settings_auto_frame_rate_warning_description">يعمل هذا الجهاز بنظام Android <xliff:g id="android_version">%1$s</xliff:g>. على الإصدارات الأقدم من Android 12، لا يستطيع التلفزيون إخبار OwnTV بمعدلات التحديث التي يمكنه التبديل إليها بسلاسة، لذا قد يؤدي تغيير معدل الإطارات إلى اسوداد الشاشة لثانية أو ثانيتين — وأحيانًا أكثر من مرة أثناء البرنامج.\n\nنوصي بترك معدل الإطارات التلقائي معطّلًا هنا. إذا كان تلفزيونك ينتقل بين معدلات التحديث بسلاسة، فعّله وجرّب: يمكنك تغييره مرة أخرى في أي وقت.</string>
+    <string name="settings_auto_frame_rate_keep_off">إبقاؤه معطّلًا</string>
+    <string name="settings_auto_frame_rate_turn_on_anyway">تفعيله على أي حال</string>
 </resources>

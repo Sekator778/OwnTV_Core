@@ -269,4 +269,6 @@
     <string name="player_frame_rate_prompt_title">قد تعاني هذه القناة من تقطيع الحركة</string>
     <string name="player_frame_rate_prompt_description">تعمل القناة بمعدل <xliff:g id="fps">%1$d</xliff:g> إطارًا في الثانية بينما يعمل تلفزيونك على <xliff:g id="current_hz">%2$d</xliff:g> هرتز، وهو ما لا يستطيع عرض هذه الإطارات بشكل متساوٍ — لذا تبدو الحركة متقطعة قليلًا.\n\nيعمل التبديل التلقائي لمعدل الإطارات على ضبط التلفزيون على <xliff:g id="target_hz">%3$d</xliff:g> هرتز أثناء المشاهدة، ثم يعيده إلى حالته بعد ذلك. تتحول شاشة بعض أجهزة التلفزيون إلى الأسود للحظة عند تغيّر المعدل؛ يمكنك إيقاف هذه الميزة مرة أخرى من الإعدادات ← مشغّل الفيديو.</string>
     <string name="player_frame_rate_turn_on">تشغيل</string>
+    <string name="player_reason_live_fallback">تم تحويل التشغيل المباشر إلى خيار بديل</string>
+    <string name="player_reason_live_no_fallback">فشل التشغيل المباشر — لا يوجد أي خيار بديل متبقٍ</string>
 </resources>

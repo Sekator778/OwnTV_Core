@@ -241,4 +241,6 @@
     <string name="player_frame_rate_prompt_title">ഈ ചാനലിന് ജട്ടർ ഉണ്ടാകാം</string>
     <string name="player_frame_rate_prompt_description">ഇത് <xliff:g id="fps">%1$d</xliff:g> fps-ൽ പ്ലേ ചെയ്യുമ്പോൾ നിങ്ങളുടെ ടിവി <xliff:g id="current_hz">%2$d</xliff:g> Hz-ൽ പ്രവർത്തിക്കുന്നു, അതിനാൽ ആ ഫ്രെയിമുകൾ ഒരേപോലെ കാണിക്കാൻ കഴിയില്ല — ചലനം ചെറുതായി ജെർക്കി ആയിരിക്കും.\n\nഓട്ടോ ഫ്രെയിം റേറ്റ് നിങ്ങൾ കാണുമ്പോൾ ടിവിയെ <xliff:g id="target_hz">%3$d</xliff:g> Hz-ലേക്ക് മാറ്റുകയും പിന്നീട് തിരികെ മാറ്റുകയും ചെയ്യും. ചില ടിവികൾ റേറ്റ് മാറുമ്പോൾ ഒരു നിമിഷം ബ്ലാങ്ക് ആകും; ക്രമീകരണങ്ങൾ → വീഡിയോ പ്ലെയറിൽ ചെന്ന് നിങ്ങൾക്ക് അത് വീണ്ടും ഓഫ് ചെയ്യാം.</string>
     <string name="player_frame_rate_turn_on">ഓണാക്കുക</string>
+    <string name="player_reason_live_fallback">ലൈവ് പ്ലേബാക്ക് ഒരു ഫോൾബാക്കിലേക്ക് മാറി</string>
+    <string name="player_reason_live_no_fallback">ലൈവ് പ്ലേബാക്ക് പരാജയപ്പെട്ടു — ഫോൾബാക്ക് ശേഷിക്കുന്നില്ല</string>
 </resources>

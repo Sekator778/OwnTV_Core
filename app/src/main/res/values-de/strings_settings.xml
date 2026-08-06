@@ -879,4 +879,9 @@
     <string name="settings_language_contribution_copied">Link kopiert</string>
     <string name="settings_language_contribution_open_failed">Der Link konnte nicht geöffnet werden. Kopieren Sie ihn stattdessen.</string>
     <string name="settings_language_contribution_copy_failed">Der Link konnte nicht kopiert werden. Lesen Sie die oben angezeigte URL ab oder geben Sie sie ein.</string>
+    <string name="settings_auto_frame_rate_warning_suffix">Auf diesem Fernseher nicht empfohlen: Vor Android 12 lässt sich die Bildwiederholrate nicht fließend ändern.</string>
+    <string name="settings_auto_frame_rate_warning_title">Auf diesem Fernseher nicht empfohlen</string>
+    <string name="settings_auto_frame_rate_warning_description">Auf diesem Gerät läuft Android <xliff:g id="android_version">%1$s</xliff:g>. Vor Android 12 kann der Fernseher OwnTV nicht mitteilen, zu welchen Bildwiederholraten er fließend wechseln kann. Daher kann der Bildschirm beim Wechsel der Bildwiederholrate für ein oder zwei Sekunden schwarz werden – manchmal mehr als einmal während einer Sendung.\n\nWir empfehlen, die automatische Bildwiederholrate hier deaktiviert zu lassen. Wenn Ihr Fernseher sauber umschaltet, aktivieren Sie sie und sehen Sie selbst: Sie können die Einstellung jederzeit wieder ändern.</string>
+    <string name="settings_auto_frame_rate_keep_off">Deaktiviert lassen</string>
+    <string name="settings_auto_frame_rate_turn_on_anyway">Trotzdem aktivieren</string>
 </resources>

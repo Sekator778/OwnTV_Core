@@ -863,4 +863,9 @@
     <string name="settings_language_contribution_copied">링크가 복사되었습니다</string>
     <string name="settings_language_contribution_open_failed">링크를 열 수 없습니다. 대신 링크를 복사하세요.</string>
     <string name="settings_language_contribution_copy_failed">링크를 복사할 수 없습니다. 위에 표시된 URL을 읽거나 직접 입력하세요.</string>
+    <string name="settings_auto_frame_rate_warning_suffix">이 TV에서는 권장되지 않음: Android 12 미만에서는 프레임 레이트를 부드럽게 변경할 수 없습니다.</string>
+    <string name="settings_auto_frame_rate_warning_title">이 TV에서는 권장되지 않음</string>
+    <string name="settings_auto_frame_rate_warning_description">이 기기는 Android <xliff:g id="android_version">%1$s</xliff:g>을 실행 중입니다. Android 12 미만에서는 TV가 OwnTV에 매끄럽게 전환할 수 있는 주사율을 알려줄 수 없으므로, 프레임 레이트를 변경하면 화면이 1~2초간 꺼질 수 있습니다. 때로는 프로그램 중에 두 번 이상 꺼질 수도 있습니다.\n\n여기서는 자동 프레임 레이트를 끈 상태로 두는 것을 권장합니다. TV가 깔끔하게 전환된다면 켜서 확인해 보세요. 언제든 다시 끌 수 있습니다.</string>
+    <string name="settings_auto_frame_rate_keep_off">끈 상태 유지</string>
+    <string name="settings_auto_frame_rate_turn_on_anyway">그래도 켜기</string>
 </resources>

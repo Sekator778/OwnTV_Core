@@ -879,4 +879,9 @@
     <string name="settings_language_contribution_copied">ലിങ്ക് പകർത്തി</string>
     <string name="settings_language_contribution_open_failed">ലിങ്ക് തുറക്കാൻ കഴിഞ്ഞില്ല. പകരം അത് പകർത്തുക.</string>
     <string name="settings_language_contribution_copy_failed">ലിങ്ക് പകർത്താൻ കഴിഞ്ഞില്ല. മുകളിൽ കാണിച്ചിരിക്കുന്ന URL വായിക്കുക അല്ലെങ്കിൽ ടൈപ്പ് ചെയ്യുക.</string>
+    <string name="settings_auto_frame_rate_warning_suffix">ഈ ടിവിയിൽ ശുപാർശ ചെയ്യുന്നില്ല: Android 12-ന് താഴെ ഫ്രെയിം റേറ്റ് സുഗമമായി മാറ്റാനാകില്ല.</string>
+    <string name="settings_auto_frame_rate_warning_title">ഈ ടിവിയിൽ ശുപാർശ ചെയ്യുന്നില്ല</string>
+    <string name="settings_auto_frame_rate_warning_description">ഈ ഉപകരണം Android <xliff:g id="android_version">%1$s</xliff:g> ആണ് പ്രവർത്തിപ്പിക്കുന്നത്. Android 12-ന് താഴെ, ഏത് റിഫ്രഷ് റേറ്റുകളിലേക്ക് സുഗമമായി മാറാനാകുമെന്ന് ടിവിക്ക് OwnTV-യോട് പറയാൻ കഴിയില്ല. അതിനാൽ ഫ്രെയിം റേറ്റ് മാറ്റുമ്പോൾ സ്ക്രീൻ ഒരു സെക്കൻഡോ രണ്ടോ ഇരുണ്ടുപോയേക്കാം — ചിലപ്പോൾ ഒരു പ്രോഗ്രാമിനിടെ ഒന്നിലധികം തവണ.\n\nഓട്ടോ ഫ്രെയിം റേറ്റ് ഇവിടെ ഓഫ് ആക്കി വയ്ക്കാൻ ഞങ്ങൾ ശുപാർശ ചെയ്യുന്നു. നിങ്ങളുടെ ടിവി വൃത്തിയായി മാറുന്നുണ്ടെങ്കിൽ, അത് ഓൺ ചെയ്ത് നോക്കൂ: എപ്പോൾ വേണമെങ്കിലും നിങ്ങൾക്ക് തിരികെ മാറ്റാം.</string>
+    <string name="settings_auto_frame_rate_keep_off">ഓഫ് ആക്കി വയ്ക്കുക</string>
+    <string name="settings_auto_frame_rate_turn_on_anyway">എന്തായാലും ഓൺ ചെയ്യുക</string>
 </resources>

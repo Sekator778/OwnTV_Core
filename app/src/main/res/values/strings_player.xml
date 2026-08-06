@@ -419,6 +419,10 @@
     <string name="player_reason_one_session_provider">Provider allows one session at a time</string>
     <!-- Translators: Playback-log event headline when ExoPlayer hands a channel to mpv. -->
     <string name="player_reason_mpv_handoff">Handed this channel to mpv</string>
+    <!-- Translators: Playback-log event headline when Live TV switches to another playback fallback. -->
+    <string name="player_reason_live_fallback">Live playback switched to a fallback</string>
+    <!-- Translators: Playback-log event headline when Live TV has exhausted every playback fallback. -->
+    <string name="player_reason_live_no_fallback">Live playback failed — no fallback remains</string>
     <!-- Translators: Playback-log headline for a diagnostic report explicitly saved by the user. -->
     <string name="player_reason_stream_report">Stream report</string>
     <!-- Translators: Row label describing what the audio engine sends to the TV or receiver. -->

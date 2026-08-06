@@ -895,4 +895,9 @@
     <string name="settings_language_contribution_copied">Link copiato</string>
     <string name="settings_language_contribution_open_failed">Impossibile aprire il link. Copialo invece.</string>
     <string name="settings_language_contribution_copy_failed">Impossibile copiare il link. Leggi o digita l\'URL mostrato qui sopra.</string>
+    <string name="settings_auto_frame_rate_warning_suffix">Sconsigliato su questo TV: sotto Android 12 la frequenza non può essere modificata in modo fluido.</string>
+    <string name="settings_auto_frame_rate_warning_title">Sconsigliato su questo TV</string>
+    <string name="settings_auto_frame_rate_warning_description">Questo dispositivo esegue Android <xliff:g id="android_version">%1$s</xliff:g>. Sotto Android 12 il TV non può comunicare a OwnTV a quali frequenze di aggiornamento può passare senza problemi, quindi cambiare la frequenza potrebbe far andare in nero lo schermo per un secondo o due — a volte più di una volta durante un programma.\n\nTi consigliamo di lasciare disattivata qui la frequenza di aggiornamento automatica. Se il tuo TV cambia frequenza senza intoppi, attivala e prova: puoi disattivarla di nuovo in qualsiasi momento.</string>
+    <string name="settings_auto_frame_rate_keep_off">Lascia disattivato</string>
+    <string name="settings_auto_frame_rate_turn_on_anyway">Attiva comunque</string>
 </resources>

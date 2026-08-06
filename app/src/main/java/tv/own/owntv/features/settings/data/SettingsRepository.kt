@@ -145,6 +145,10 @@ class SettingsRepository(private val context: Context, private val localeStore: 
         // v4.1.6 one-shot: AFR caused visible HDMI re-handshakes on some TVs. Existing installs are
         // forced Off once; subsequent user changes are preserved across every later update.
         val AUTO_FRAME_RATE_RESET_416 = booleanPreferencesKey("auto_frame_rate_reset_416")
+        // v4.2.0 one-shot: below Android 12 the app cannot tell a seamless refresh-rate switch from one
+        // that blanks the panel, so AFR is forced Off once on those devices. Set on every device (so the
+        // migration and the [autoFrameRate] gate below both settle), but only clears AFR on pre-12.
+        val AUTO_FRAME_RATE_RESET_PRE12 = booleanPreferencesKey("auto_frame_rate_reset_pre12")
 
         /** The one-time "this stream judders at your TV's refresh rate" suggestion has been answered. */
         val AUTO_FRAME_RATE_PROMPTED = booleanPreferencesKey("auto_frame_rate_prompted")
@@ -1135,9 +1139,11 @@ class SettingsRepository(private val context: Context, private val localeStore: 
      * VOD. Default off; users whose display switches cleanly can opt in.
      */
     val autoFrameRate: Flow<Boolean> = prefsFlow { prefs ->
-        // Also report Off before the startup migration coroutine completes, so an auto-resumed channel
-        // cannot briefly request a display-mode switch on the first 4.1.6 launch.
-        if (prefs[Keys.AUTO_FRAME_RATE_RESET_416] == true) prefs[Keys.AUTO_FRAME_RATE] ?: false else false
+        // Also report Off before the startup migration coroutines complete, so an auto-resumed channel
+        // cannot briefly request a display-mode switch on the first launch after either safety reset.
+        val migrated = prefs[Keys.AUTO_FRAME_RATE_RESET_416] == true &&
+            prefs[Keys.AUTO_FRAME_RATE_RESET_PRE12] == true
+        if (migrated) prefs[Keys.AUTO_FRAME_RATE] ?: false else false
     }
 
     /**
@@ -1158,6 +1164,7 @@ class SettingsRepository(private val context: Context, private val localeStore: 
         context.dataStore.edit {
             it[Keys.AUTO_FRAME_RATE] = enabled
             it[Keys.AUTO_FRAME_RATE_RESET_416] = true
+            it[Keys.AUTO_FRAME_RATE_RESET_PRE12] = true
             // Someone who has found the setting doesn't need to be told it exists.
             if (enabled) it[Keys.AUTO_FRAME_RATE_PROMPTED] = true
         }
@@ -1169,6 +1176,31 @@ class SettingsRepository(private val context: Context, private val localeStore: 
             if (prefs[Keys.AUTO_FRAME_RATE_RESET_416] == true) return@edit
             prefs[Keys.AUTO_FRAME_RATE] = false
             prefs[Keys.AUTO_FRAME_RATE_RESET_416] = true
+        }
+    }
+
+    /**
+     * v4.2.0 one-shot: force AFR Off exactly once on devices below Android 12.
+     *
+     * Only from API 31 does a display report [android.view.Display.Mode.getAlternativeRefreshRates] —
+     * the set of rates it can switch to *without* blanking. Below that the app is switching blind, so
+     * every mode change risks an HDMI re-handshake that blacks the picture out mid-programme; this is
+     * what users on older TV boxes report as "the stream pauses when the frame rate changes". Frame-rate
+     * snapping and the change cooldown in [tv.own.owntv.player.FrameRateController] make it rarer, but
+     * nothing in the platform can make it seamless there.
+     *
+     * So the default is corrected once, silently, rather than left on from an earlier install. Turning it
+     * back on afterwards is a deliberate choice (Settings warns first on these devices) and is never
+     * overridden again — the flag is written on every device, including Android 12+ where nothing is
+     * reset, so this can only ever run once.
+     */
+    suspend fun migrateAutoFrameRatePre12() {
+        context.dataStore.edit { prefs ->
+            if (prefs[Keys.AUTO_FRAME_RATE_RESET_PRE12] == true) return@edit
+            if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.S) {
+                prefs[Keys.AUTO_FRAME_RATE] = false
+            }
+            prefs[Keys.AUTO_FRAME_RATE_RESET_PRE12] = true
         }
     }
 

@@ -879,4 +879,9 @@
     <string name="settings_language_contribution_copied">Bağlantı kopyalandı</string>
     <string name="settings_language_contribution_open_failed">Bağlantı açılamadı. Bunun yerine kopyalayın.</string>
     <string name="settings_language_contribution_copy_failed">Bağlantı kopyalanamadı. Yukarıda gösterilen URL\'yi okuyun veya yazın.</string>
+    <string name="settings_auto_frame_rate_warning_suffix">Bu TV\'de önerilmez: Android 12 altında hız sorunsuz değiştirilemez.</string>
+    <string name="settings_auto_frame_rate_warning_title">Bu TV\'de önerilmez</string>
+    <string name="settings_auto_frame_rate_warning_description">Bu cihaz Android <xliff:g id="android_version">%1$s</xliff:g> sürümüyle çalışıyor. Android 12\'den önceki sürümlerde TV, OwnTV\'ye hangi yenileme hızlarına sorunsuz geçebileceğini bildiremez; bu yüzden hızı değiştirmek ekranın bir iki saniyeliğine kararmasına neden olabilir — bazen bir program sırasında birden fazla kez.\n\nBurada otomatik yenileme hızını kapalı bırakmanızı öneririz. TV\'niz sorunsuz geçiş yapıyorsa açıp deneyin: istediğiniz zaman geri değiştirebilirsiniz.</string>
+    <string name="settings_auto_frame_rate_keep_off">Kapalı bırak</string>
+    <string name="settings_auto_frame_rate_turn_on_anyway">Yine de aç</string>
 </resources>
