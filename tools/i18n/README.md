@@ -84,6 +84,25 @@ review, audit history, and rollback especially important; it is an explicit prod
 not a repository secret or a reason to block code implementation. Never commit Hosted Weblate admin
 credentials, API tokens, webhook secrets, or operational secrets.
 
+## Maintainer missing-key refresh
+
+Use the existing durable seed pipeline when source English gains keys after a locale was seeded.
+`prepare-translations --missing-only` compares each locale resource directory with the current source, records an exact hash of the existing translations, and prepares requests only for absent keys.
+Successful responses and retries remain persisted under `runs/seed/<run-id>/`; promotion copies the existing locale into staging, appends only validated missing entries, validates the complete locale offline, and replaces it only if the recorded base hash still matches.
+
+```sh
+python3 tools/i18n/seed_translations.py --backend pi prepare-glossary --run-id <run-id> --locales <tags>
+python3 tools/i18n/seed_translations.py --backend pi submit --run-id <run-id> --stage glossary
+python3 tools/i18n/seed_translations.py --backend pi collect --run-id <run-id> --stage glossary
+python3 tools/i18n/seed_translations.py --backend pi prepare-translations --run-id <run-id> --locales <tags> --missing-only --dry-run
+python3 tools/i18n/seed_translations.py --backend pi submit --run-id <run-id> --stage translation
+python3 tools/i18n/seed_translations.py --backend pi collect --run-id <run-id> --stage translation
+python3 tools/i18n/seed_translations.py --backend pi validate-and-promote --run-id <run-id> --locale <tag>
+```
+
+Repeat `submit` and `collect` when the collector queues scoped retries; already persisted successful responses are never resubmitted.
+Do not use `--missing-only` for a locale without an existing resource directory, and do not bypass a base-hash refusal after translations change during a run.
+
 ## Validation
 
 ```sh

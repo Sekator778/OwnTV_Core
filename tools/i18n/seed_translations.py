@@ -401,19 +401,58 @@ def build_and_register_glossary_requests(manifest: dict, run_id: str, locales: l
     return built
 
 
+def _locale_existing_keys(locale_dir: Path) -> set[str]:
+    keys: set[str] = set()
+    for path in sorted(locale_dir.glob("strings*.xml")):
+        if path.name != "donottranslate.xml":
+            keys.update(st._keys_in_file(path))
+    return keys
+
+
 def build_and_register_translation_requests(manifest: dict, run_id: str, locales: list[str],
                                              catalogue: dict[str, dict],
-                                             glossary_by_locale: dict[str, dict[str, str]]) -> dict[str, dict]:
+                                             glossary_by_locale: dict[str, dict[str, str]],
+                                             *, missing_only: bool = False) -> dict[str, dict]:
     units, order = st.extract_source()
-    chunks_by_file = st.chunk_by_file(units, order, MAX_KEYS_PER_CHUNK)
     try:
         from tools.i18n import validate_strings as vs
     except ModuleNotFoundError:
         import validate_strings as vs
 
+    mode = "missing-only" if missing_only else "complete"
+    existing_mode = manifest.get("translationMode")
+    existing_requests = manifest["stages"]["translation"]["requests"]
+    recorded_mode = existing_mode or ("complete" if existing_requests else None)
+    if recorded_mode is not None and recorded_mode != mode:
+        sys.exit(
+            f"error: run {run_id} already contains {recorded_mode} translation requests; "
+            f"cannot add {mode} requests"
+        )
+    manifest["translationMode"] = mode
+    if missing_only:
+        manifest.setdefault("localeBases", {})
+
     built = {}
     for tag in locales:
         entry = catalogue[tag]
+        locale_order = order
+        if missing_only:
+            locale_dir = RES / entry["resourceDirectory"]
+            if not locale_dir.is_dir():
+                sys.exit(
+                    f"error: {tag}: --missing-only requires an existing localized resource "
+                    f"directory at {locale_dir}"
+                )
+            existing_keys = _locale_existing_keys(locale_dir)
+            locale_order = [key for key in order if key not in existing_keys]
+            manifest["localeBases"][tag] = {
+                "resourceDirectory": entry["resourceDirectory"],
+                "inventoryHash": st.resource_directory_hash(locale_dir),
+                "existingKeyCount": len(existing_keys),
+                "requestedKeys": locale_order,
+            }
+
+        chunks_by_file = st.chunk_by_file(units, locale_order, MAX_KEYS_PER_CHUNK)
         plural_rule = vs._PLURAL_RULES.get(tag, ["one", "other"])
         system = _locale_system_prompt(entry, glossary_by_locale.get(tag))
         for filename, file_chunks in chunks_by_file.items():
@@ -671,9 +710,16 @@ def cmd_prepare_translations(args: argparse.Namespace) -> int:
 
     run_id = args.run_id or new_run_id()
     manifest = load_manifest(run_id) if _manifest_path(run_id).is_file() else new_manifest(run_id, backend=args.backend)
-    built = build_and_register_translation_requests(manifest, run_id, locales, catalogue, glossary_by_locale)
+    built = build_and_register_translation_requests(
+        manifest, run_id, locales, catalogue, glossary_by_locale,
+        missing_only=args.missing_only,
+    )
     save_manifest(run_id, manifest)
     print(f"run-id: {run_id}")
+    if args.missing_only:
+        for tag in locales:
+            requested = manifest["localeBases"][tag]["requestedKeys"]
+            print(f"{tag}: {len(requested)} missing source key(s) prepared")
     if placeholder_used:
         print("note: no collected glossary found for these locales in this run; the preview "
               "below uses each glossary term as its own placeholder translation so the size "
@@ -1342,6 +1388,15 @@ def cmd_validate_and_promote(args: argparse.Namespace) -> int:
 
     units, order = st.extract_source()
     stage = manifest["stages"]["translation"]
+    missing_only = manifest.get("translationMode") == "missing-only"
+    base = manifest.get("localeBases", {}).get(tag) if missing_only else None
+    if missing_only and base is None:
+        sys.exit(f"error: {tag}: missing-only run has no recorded locale base")
+    requested_keys = base["requestedKeys"] if missing_only else order
+    if missing_only and not requested_keys:
+        print(f"{tag}: already complete; no promotion needed")
+        return 0
+
     locale_cids = [cid for cid, meta in stage["requests"].items() if meta["locale"] == tag]
     if not locale_cids:
         sys.exit(f"error: no translation requests found for locale '{tag}' in run {args.run_id}")
@@ -1359,14 +1414,30 @@ def cmd_validate_and_promote(args: argparse.Namespace) -> int:
             translated[key] = value
 
     by_file: dict[str, list[str]] = {}
-    for key in order:
+    for key in requested_keys:
         by_file.setdefault(units[key].filename, []).append(key)
 
     staged = _work_dir(args.run_id, tag)
     if staged.exists():
         import shutil
         shutil.rmtree(staged)
-    staged.mkdir(parents=True)
+
+    final_dir = RES / entry["resourceDirectory"]
+    if missing_only:
+        if base["resourceDirectory"] != entry["resourceDirectory"]:
+            sys.exit(f"error: {tag}: resource directory changed since missing-only preparation")
+        if not final_dir.is_dir():
+            sys.exit(f"error: {tag}: existing localized resource directory is missing: {final_dir}")
+        current_hash = st.resource_directory_hash(final_dir)
+        if current_hash != base["inventoryHash"]:
+            sys.exit(
+                f"error: {tag}: localized resources changed since missing-only preparation; "
+                "prepare a fresh run instead of overwriting them"
+            )
+        import shutil
+        shutil.copytree(final_dir, staged)
+    else:
+        staged.mkdir(parents=True)
 
     missing: list[str] = []
     for filename, keys in by_file.items():
@@ -1386,21 +1457,28 @@ def cmd_validate_and_promote(args: argparse.Namespace) -> int:
                     _, tokens = st.plural_source_text_for_quantity(unit, q)
                     payload[q] = st.finalize_translation(text, list(tokens), unit.key)
                 entries.append(("plurals", unit.key, payload))
-        (staged / filename).write_text(st.emit_locale_file(entries), encoding="utf-8")
+        if missing_only:
+            st.append_locale_entries(staged / filename, entries)
+        else:
+            (staged / filename).write_text(st.emit_locale_file(entries), encoding="utf-8")
 
     if missing:
         sys.exit(f"error: {tag}: {len(missing)} key(s) missing from collected results, first few: {missing[:10]}")
 
-    final_dir = RES / entry["resourceDirectory"]
     try:
-        st.promote_locale(tag, staged, final_dir, force=args.force_recovery)
+        st.promote_locale(
+            tag, staged, final_dir, force=args.force_recovery,
+            replace_existing=missing_only,
+            expected_existing_hash=base["inventoryHash"] if missing_only else None,
+        )
     except (st.SeedValidationError, FileExistsError) as e:
         print(f"error: {e}")
         if isinstance(e, st.SeedValidationError):
             for err in e.errors[:30]:
                 print("  " + err)
         return 1
-    print(f"{tag}: promoted to {final_dir}")
+    action = "updated" if missing_only else "promoted"
+    print(f"{tag}: {action} at {final_dir}")
     return 0
 
 
@@ -1443,6 +1521,10 @@ def main() -> int:
     p.add_argument("--locales", required=True)
     p.add_argument("--run-id", default=None)
     p.add_argument("--dry-run", action="store_true", help="also print one full sample request for review")
+    p.add_argument(
+        "--missing-only", action="store_true",
+        help="prepare only source keys absent from each locale's existing resource files",
+    )
     p.set_defaults(func=cmd_prepare_translations)
 
     p = sub.add_parser("submit", help="MAINTAINER ONLY: submit every pending request in a stage (spends credit; claude backend runs one-shot completions)")

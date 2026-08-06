@@ -1497,6 +1497,58 @@ class TestSeedText(unittest.TestCase):
             self.assertFalse(final_dir.exists())
             self.assertTrue(staged.exists())
 
+    def test_missing_entries_append_without_rewriting_existing_xml(self):
+        with tempfile.TemporaryDirectory() as d:
+            path = Path(d) / "strings.xml"
+            original = (
+                '<?xml version="1.0" encoding="utf-8"?>\n'
+                '<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">\n'
+                '    <string name="existing">Übersetzt</string>\n'
+                '</resources>\n'
+            )
+            path.write_text(original, encoding="utf-8")
+            self.st.append_locale_entries(path, [("string", "new_key", "Neu")])
+            updated = path.read_text(encoding="utf-8")
+            self.assertIn('    <string name="existing">Übersetzt</string>', updated)
+            self.assertIn('    <string name="new_key">Neu</string>', updated)
+            with self.assertRaises(self.st.SeedTextError):
+                self.st.append_locale_entries(path, [("string", "existing", "Ersetzt")])
+
+    def test_missing_only_replacement_is_bound_to_existing_directory_hash(self):
+        with tempfile.TemporaryDirectory() as d:
+            source_dir = Path(d) / "values"
+            source_dir.mkdir()
+            (source_dir / "strings.xml").write_text(
+                '<resources><string name="a">A</string><string name="b">B</string></resources>')
+            final_dir = Path(d) / "values-de"
+            final_dir.mkdir()
+            (final_dir / "strings.xml").write_text(
+                '<resources><string name="a">Alt</string><string name="b">Alt B</string></resources>')
+            expected_hash = self.st.resource_directory_hash(final_dir)
+            staged = Path(d) / "work" / "values-de"
+            staged.mkdir(parents=True)
+            (staged / "strings.xml").write_text(
+                '<resources><string name="a">Alt</string><string name="b">Neu</string></resources>')
+
+            self.st.promote_locale(
+                "de", staged, final_dir, source_dir,
+                replace_existing=True, expected_existing_hash=expected_hash,
+            )
+            self.assertIn("Neu", (final_dir / "strings.xml").read_text())
+            self.assertFalse((Path(d) / ".values-de.seed-backup").exists())
+
+            stale_staged = Path(d) / "work" / "stale-de"
+            stale_staged.mkdir(parents=True)
+            (stale_staged / "strings.xml").write_text(
+                '<resources><string name="a">Alt</string><string name="b">Noch neuer</string></resources>')
+            with self.assertRaises(FileExistsError):
+                self.st.promote_locale(
+                    "de", stale_staged, final_dir, source_dir,
+                    replace_existing=True, expected_existing_hash=expected_hash,
+                )
+            self.assertIn("Neu", (final_dir / "strings.xml").read_text())
+            self.assertTrue(stale_staged.exists())
+
     def test_chunking_covers_the_current_source_inventory(self):
         """Every current source key is assigned once and every chunk respects the size limit."""
         units, order = self.st.extract_source()
@@ -1706,6 +1758,38 @@ class TestSeedTranslations(unittest.TestCase):
             self.stx._queue_retry(manifest, "run5", "translation", retry_cid, retry_req, errors, catalogue, units)
             unresolved = Path(d) / "run5" / f"{req_meta['locale']}-unresolved.json"
             self.assertTrue(unresolved.is_file())
+
+    def test_missing_only_prepares_only_absent_keys_and_records_base_snapshot(self):
+        with tempfile.TemporaryDirectory() as d:
+            root = Path(d)
+            self.stx.RUNS_DIR = root / "runs"
+            self.stx.RES = root / "res"
+            locale_dir = self.stx.RES / "values-de"
+            locale_dir.mkdir(parents=True)
+            (locale_dir / "strings.xml").write_text(
+                '<?xml version="1.0" encoding="utf-8"?><resources></resources>',
+                encoding="utf-8",
+            )
+            units, order = self.stx.st.extract_source()
+            absent = [order[0], order[-1]]
+            self.stx._locale_existing_keys = lambda _: set(order) - set(absent)
+            manifest = self.stx.new_manifest("missing-run")
+            built = self.stx.build_and_register_translation_requests(
+                manifest, "missing-run", ["de"], self.stx.load_catalogue(), {"de": {}},
+                missing_only=True,
+            )
+
+            requested = [
+                key
+                for request in built.values()
+                for key in request["keys"]
+            ]
+            self.assertEqual(requested, absent)
+            self.assertEqual(manifest["translationMode"], "missing-only")
+            base = manifest["localeBases"]["de"]
+            self.assertEqual(base["requestedKeys"], absent)
+            self.assertEqual(base["existingKeyCount"], len(order) - len(absent))
+            self.assertEqual(base["inventoryHash"], self.stx.st.resource_directory_hash(locale_dir))
 
     def test_hash_drift_blocks_submit_and_promote_unless_forced(self):
         with tempfile.TemporaryDirectory() as d:

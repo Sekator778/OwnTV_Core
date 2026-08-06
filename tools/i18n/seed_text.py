@@ -19,6 +19,7 @@ installed, and by ``seed_translations.py`` for everything except the actual API 
 """
 from __future__ import annotations
 
+import hashlib
 import re
 import shutil
 import xml.etree.ElementTree as ET
@@ -354,6 +355,46 @@ def _keys_in_file(path: Path) -> set[str]:
     return keys
 
 
+def resource_directory_hash(path: Path) -> str:
+    """Bind a missing-only run to the exact localized resource snapshot it extends."""
+    if not path.is_dir():
+        raise FileNotFoundError(f"localized resource directory does not exist: {path}")
+    digest = hashlib.sha256()
+    for child in sorted(candidate for candidate in path.rglob("*") if candidate.is_file()):
+        digest.update(child.relative_to(path).as_posix().encode("utf-8"))
+        digest.update(b"\0")
+        digest.update(child.read_bytes())
+        digest.update(b"\0")
+    return "sha256:" + digest.hexdigest()
+
+
+def append_locale_entries(path: Path, entries: list[tuple[str, str, object]]) -> None:
+    """Append validated missing entries without rewriting existing translator-authored XML."""
+    if not entries:
+        return
+    if not path.exists():
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(emit_locale_file(entries), encoding="utf-8")
+        return
+
+    existing_keys = _keys_in_file(path)
+    duplicate_keys = [name + ("#" if kind == "plurals" else "")
+                      for kind, name, _ in entries
+                      if name + ("#" if kind == "plurals" else "") in existing_keys]
+    if duplicate_keys:
+        raise SeedTextError(f"refusing to append existing key(s) to {path}: {duplicate_keys[:5]}")
+
+    rendered_lines = emit_locale_file(entries).splitlines()
+    body = "\n".join(rendered_lines[2:-1])
+    current = path.read_text(encoding="utf-8")
+    closing = "</resources>"
+    closing_at = current.rfind(closing)
+    if closing_at < 0:
+        raise SeedTextError(f"{path}: missing </resources> closing tag")
+    updated = current[:closing_at].rstrip() + "\n" + body + "\n" + current[closing_at:]
+    path.write_text(updated, encoding="utf-8")
+
+
 # --- offline validation ------------------------------------------------------------
 
 def validate_staged_locale(locale_tag: str, staged_dir: Path, source_dir: Path = RES / "values") -> list[str]:
@@ -452,15 +493,39 @@ def validate_staged_locale(locale_tag: str, staged_dir: Path, source_dir: Path =
 
 
 def promote_locale(locale_tag: str, staged_dir: Path, final_dir: Path,
-                    source_dir: Path = RES / "values", *, force: bool = False) -> None:
-    """Validate a staged locale and, only if it passes completely, rename it into
-    app/src/main/res/<resourceDirectory>/ as one same-filesystem move.
+                    source_dir: Path = RES / "values", *, force: bool = False,
+                    replace_existing: bool = False,
+                    expected_existing_hash: str | None = None) -> None:
+    """Validate a staged locale and promote it with a same-filesystem directory swap.
 
-    A failed locale leaves the staged directory untouched and never touches final_dir.
+    A failed validation leaves the staged and final directories untouched. Missing-only updates
+    additionally bind replacement to the exact existing-directory hash captured at preparation.
     """
     errors = validate_staged_locale(locale_tag, staged_dir, source_dir)
     if errors:
         raise SeedValidationError(f"{locale_tag}: {len(errors)} validation error(s)", errors)
+    if final_dir.exists() and replace_existing:
+        if not expected_existing_hash:
+            raise FileExistsError("replace_existing requires expected_existing_hash")
+        actual_hash = resource_directory_hash(final_dir)
+        if actual_hash != expected_existing_hash:
+            raise FileExistsError(
+                f"{final_dir} changed since missing-only preparation; expected "
+                f"{expected_existing_hash}, found {actual_hash}"
+            )
+        backup = final_dir.with_name(f".{final_dir.name}.seed-backup")
+        if backup.exists():
+            raise FileExistsError(
+                f"recovery backup already exists at {backup}; inspect it before retrying"
+            )
+        final_dir.rename(backup)
+        try:
+            staged_dir.rename(final_dir)
+        except BaseException:
+            backup.rename(final_dir)
+            raise
+        shutil.rmtree(backup)
+        return
     if final_dir.exists():
         if not force:
             raise FileExistsError(
