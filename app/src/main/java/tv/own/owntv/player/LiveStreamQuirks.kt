@@ -85,11 +85,21 @@ object LiveStreamQuirks {
     fun isKnownHlsHost(url: String): Boolean = hostKey(url) in hlsRedirectHosts
 
     /**
+     * True when [url] itself asks for HLS — it ends in `.m3u8` — ignoring anything learned about its
+     * panel.
+     *
+     * The distinction from [isHlsUrl] matters when deciding whether an HLS *discovery* is worth
+     * remembering: a URL we deliberately requested as `.m3u8` proves nothing about what the panel does
+     * with the `.ts` endpoint, and recording it as a redirect poisons every other channel there.
+     */
+    fun isExplicitHlsUrl(url: String): Boolean =
+        url.substringBefore('?').endsWith(".m3u8", ignoreCase = true)
+
+    /**
      * True when [url] should be treated as HLS regardless of its extension: either it already ends in
      * `.m3u8`, or its panel has been caught redirecting `.ts` to a manifest.
      */
-    fun isHlsUrl(url: String): Boolean =
-        url.substringBefore('?').endsWith(".m3u8", ignoreCase = true) || isKnownHlsHost(url)
+    fun isHlsUrl(url: String): Boolean = isExplicitHlsUrl(url) || isKnownHlsHost(url)
 
     /** Rewrite an Xtream-style `.ts` live URL to its `.m3u8` sibling; other URLs are returned as-is. */
     fun toHlsUrl(url: String): String {

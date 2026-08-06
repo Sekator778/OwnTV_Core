@@ -29,6 +29,28 @@ class LiveStreamQuirksTest {
         assertTrue(LiveStreamQuirks.isHlsUrl(sibling))
     }
 
+    /**
+     * The guard behind "Prefer HLS off played nothing on ExoPlayer": a channel tuned as `.m3u8` because
+     * the user asked for HLS must never be mistaken for a panel that redirects its `.ts` to a manifest.
+     * Learning that lesson is host-wide, so one such channel used to force every plain `.ts` on the panel
+     * into the HLS parser, which fails on the first bytes.
+     */
+    @Test
+    fun `an explicitly requested m3u8 is not evidence that the panel redirects its ts`() {
+        val hls = "http://panel.example:80/live/user/pass/136875.m3u8"
+        assertTrue(LiveStreamQuirks.isExplicitHlsUrl(hls))
+        assertTrue(LiveStreamQuirks.isExplicitHlsUrl("$hls?token=abc"))
+        assertFalse(LiveStreamQuirks.isExplicitHlsUrl("http://panel.example:80/live/user/pass/136875.ts"))
+    }
+
+    @Test
+    fun `a learned host does not make a ts URL count as explicitly HLS`() {
+        val ts = "http://panel.example:80/live/user/pass/136875.ts"
+        LiveStreamQuirks.rememberHlsRedirect(ts)
+        assertTrue(LiveStreamQuirks.isHlsUrl(ts))
+        assertFalse(LiveStreamQuirks.isExplicitHlsUrl(ts))
+    }
+
     @Test
     fun `a different provider is unaffected by what one panel taught us`() {
         LiveStreamQuirks.rememberHlsRedirect("http://panel.example:80/live/u/p/1.ts")
