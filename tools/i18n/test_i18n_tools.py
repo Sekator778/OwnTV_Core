@@ -1791,6 +1791,39 @@ class TestSeedTranslations(unittest.TestCase):
             self.assertEqual(base["existingKeyCount"], len(order) - len(absent))
             self.assertEqual(base["inventoryHash"], self.stx.st.resource_directory_hash(locale_dir))
 
+    def test_prepare_translations_reuses_compatible_durable_glossary(self):
+        with tempfile.TemporaryDirectory() as d:
+            self.stx.RUNS_DIR = Path(d)
+            terms = self.stx.load_glossary()["consistentTerms"]
+            prior = self.stx.new_manifest("prior")
+            cid = self.stx.st.glossary_custom_id("de")
+            prior["stages"]["glossary"]["requests"][cid] = {
+                "locale": "de", "terms": terms, "batchId": "old", "payloadHash": "x",
+            }
+            prior["stages"]["glossary"]["results"][cid] = {
+                "status": "succeeded",
+                "valid": {term: f"translated-{term}" for term in terms},
+            }
+            self.stx.save_manifest("prior", prior)
+            self.stx.MAX_KEYS_PER_CHUNK = 10000
+            rc = self.stx.cmd_prepare_translations(argparse.Namespace(
+                locales="de",
+                run_id="current",
+                glossary_run_id="prior",
+                dry_run=False,
+                backend="pi",
+                missing_only=False,
+            ))
+            self.assertEqual(rc, 0)
+            current = self.stx.load_manifest("current")
+            request = next(iter(current["stages"]["translation"]["requests"].values()))
+            payload = json.loads(
+                (Path(d) / "current" / "requests" / "translation" /
+                 f"{next(iter(current['stages']['translation']['requests']))}.json").read_text()
+            )
+            self.assertIn(f"{terms[0]} -> translated-{terms[0]}", payload["params"]["system"][0]["text"])
+            self.assertEqual(request["locale"], "de")
+
     def test_hash_drift_blocks_submit_and_promote_unless_forced(self):
         with tempfile.TemporaryDirectory() as d:
             self.stx.RUNS_DIR = Path(d)

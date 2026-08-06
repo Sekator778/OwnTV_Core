@@ -686,11 +686,32 @@ def cmd_prepare_translations(args: argparse.Namespace) -> int:
 
     glossary_by_locale: dict[str, dict[str, str]] = {}
     placeholder_used = False
+    glossary_run_ids = []
     if args.run_id and _manifest_path(args.run_id).is_file():
-        manifest = load_manifest(args.run_id)
-        glossary_stage = manifest["stages"]["glossary"]
-        expected_terms = set(load_glossary()["consistentTerms"])
+        glossary_run_ids.append(args.run_id)
+    glossary_run_id = getattr(args, "glossary_run_id", None)
+    if glossary_run_id and glossary_run_id not in glossary_run_ids:
+        if not _manifest_path(glossary_run_id).is_file():
+            sys.exit(f"error: no glossary manifest at {_manifest_path(glossary_run_id)}")
+        glossary_run_ids.append(glossary_run_id)
+
+    expected_terms = set(load_glossary()["consistentTerms"])
+    for glossary_source_id in glossary_run_ids:
+        glossary_manifest = load_manifest(glossary_source_id)
+        if glossary_manifest["localesJsonHash"] != locales_json_hash():
+            sys.exit(
+                f"error: glossary run {glossary_source_id} uses a different locales.json; "
+                "collect a fresh glossary instead"
+            )
+        if glossary_manifest["glossaryHash"] != glossary_hash():
+            sys.exit(
+                f"error: glossary run {glossary_source_id} uses a different glossary.json; "
+                "collect a fresh glossary instead"
+            )
+        glossary_stage = glossary_manifest["stages"]["glossary"]
         for tag in locales:
+            if tag in glossary_by_locale:
+                continue
             combined: dict[str, str] = {}
             for cid, request in glossary_stage["requests"].items():
                 if request["locale"] != tag:
@@ -1520,6 +1541,10 @@ def main() -> int:
     p = sub.add_parser("prepare-translations", help="build translation batch requests from a collected glossary")
     p.add_argument("--locales", required=True)
     p.add_argument("--run-id", default=None)
+    p.add_argument(
+        "--glossary-run-id", default=None,
+        help="reuse complete collected glossaries from another compatible durable run",
+    )
     p.add_argument("--dry-run", action="store_true", help="also print one full sample request for review")
     p.add_argument(
         "--missing-only", action="store_true",

@@ -95,6 +95,7 @@ python3 tools/i18n/seed_translations.py --backend pi prepare-glossary --run-id <
 python3 tools/i18n/seed_translations.py --backend pi submit --run-id <run-id> --stage glossary
 python3 tools/i18n/seed_translations.py --backend pi collect --run-id <run-id> --stage glossary
 python3 tools/i18n/seed_translations.py --backend pi prepare-translations --run-id <run-id> --locales <tags> --missing-only --dry-run
+# A later source refresh may add: --glossary-run-id <compatible-prior-run>
 python3 tools/i18n/seed_translations.py --backend pi submit --run-id <run-id> --stage translation
 python3 tools/i18n/seed_translations.py --backend pi collect --run-id <run-id> --stage translation
 python3 tools/i18n/seed_translations.py --backend pi validate-and-promote --run-id <run-id> --locale <tag>
