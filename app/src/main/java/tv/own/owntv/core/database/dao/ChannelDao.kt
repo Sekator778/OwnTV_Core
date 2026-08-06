@@ -129,6 +129,11 @@ interface ChannelDao {
     @Query("SELECT remoteId FROM channels WHERE sourceId = :sourceId AND remoteId IS NOT NULL")
     suspend fun remoteIdsForSource(sourceId: Long): List<String>
 
+    /** Any one stream id from this source — the "Test HLS support" probe needs a channel to ask about,
+     *  and an already-synced playlist can supply one without a network round-trip. */
+    @Query("SELECT remoteId FROM channels WHERE sourceId = :sourceId AND remoteId IS NOT NULL LIMIT 1")
+    suspend fun anyRemoteId(sourceId: Long): String?
+
     /** Prune scope for the per-category sync fallback — see [MovieDao.remoteIdsInCategories]. */
     @Query("SELECT remoteId FROM channels WHERE sourceId = :sourceId AND categoryId IN (:categoryIds) AND remoteId IS NOT NULL")
     suspend fun remoteIdsInCategories(sourceId: Long, categoryIds: List<Long>): List<String>

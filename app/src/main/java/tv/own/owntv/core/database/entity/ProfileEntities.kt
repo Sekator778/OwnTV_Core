@@ -4,6 +4,7 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
+import tv.own.owntv.core.model.HlsSupport
 import tv.own.owntv.core.model.SourceType
 
 /**
@@ -50,10 +51,20 @@ data class SourceEntity(
     val syncLive: Boolean = true,
     val syncMovies: Boolean = true,
     val syncSeries: Boolean = true,
-    /** Whether the provider explicitly lists m3u8 in user_info.allowed_output_formats (v23). Detection
-     *  hint only — it refines the Settings wording, it does NOT gate [preferHls]. */
-    val hlsSupported: Boolean = false,
-    /** User preference (v23): prioritize .m3u8 streams over .ts for Live TV and catch-up. */
+    /**
+     * Whether the provider explicitly lists m3u8 in user_info.allowed_output_formats (v23), read at the
+     * start of every Xtream sync. Detection hint only — it refines the playlist wording, it does NOT
+     * gate [preferHls]: a panel that under-reports its formats must not stop the user asking for HLS.
+     *
+     * Tri-state ([HlsSupport]) since the answer is unknown until the first sync, and "unknown" must not
+     * read as "unsupported". Stored in the same INTEGER column the old boolean used — see [HlsSupport].
+     */
+    val hlsSupported: HlsSupport = HlsSupport.UNKNOWN,
+    /**
+     * User preference (v23): prioritize .m3u8 streams over .ts for **Live TV only**. Catch-up is
+     * deliberately excluded — the timeshift server serves recordings off disk with no HLS repackager
+     * in front of it, so asking it for `.m3u8` breaks archives on accounts whose live TV is fine.
+     */
     val preferHls: Boolean = false,
     /**
      * Per-playlist "Pre-buffer" override in seconds (v25). `-1` = follow the global

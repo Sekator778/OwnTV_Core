@@ -225,8 +225,6 @@
     <string name="companion_error_missing_fields">Chybí povinná pole.</string>
     <string name="setup_invalid_locale">Tato záloha obsahovala nepodporovaný jazyk aplikace. Obnovení proběhlo úspěšně, ale váš aktuální jazyk zůstal zachován.</string>
     <string name="setup_prefer_hls_live_tv">Upřednostnit HLS pro živé vysílání</string>
-    <string name="setup_prefer_hls_description">Upřednostní HLS (.m3u8) před MPEG-TS pro živé vysílání a TV archiv. Pokud HLS selže, použije se MPEG-TS.</string>
-    <string name="setup_prefer_hls_description_supported">Upřednostní HLS (.m3u8) před MPEG-TS pro živé vysílání a TV archiv. Pokud HLS selže, použije se MPEG-TS. Váš poskytovatel uvádí podporu HLS.</string>
     <string name="setup_hide_new_categories">Ve výchozím nastavení skrývat nové kategorie</string>
     <string name="setup_hide_new_categories_description">V celém profilu: kategorie, které se objeví při budoucích synchronizacích, budou zpočátku skryté. Kdykoli je zobrazíte v části Přizpůsobení.</string>
 </resources>

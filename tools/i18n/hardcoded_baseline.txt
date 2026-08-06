@@ -122,7 +122,6 @@
 1	app/src/main/java/tv/own/owntv/core/database/dao/CustomCategoryDao.kt	WHERE profileId = :profileId AND mediaType = :type AND contextKey IN (:contextKeys) AND (
 2	app/src/main/java/tv/own/owntv/core/database/dao/CustomCategoryDao.kt	WHERE s.sourceId IN (:sourceIds)
 1	app/src/main/java/tv/own/owntv/core/database/dao/CustomCategoryDao.kt	WHERE s.sourceId IN (:sourceIds) AND s.name LIKE '%' || :query || '%'
-1	app/src/main/java/tv/own/owntv/core/database/dao/SourceDao.kt	UPDATE sources SET hlsSupported = :hlsSupported WHERE id = :id
 1	app/src/main/java/tv/own/owntv/core/database/dao/SourceDao.kt	UPDATE sources SET preferHls = :preferHls WHERE id = :id
 1	app/src/main/java/tv/own/owntv/core/database/entity/ContentEntities.kt	.m3u8
 1	app/src/main/java/tv/own/owntv/core/database/entity/ContentEntities.kt	.ts
@@ -181,7 +180,6 @@
 2	app/src/main/java/tv/own/owntv/features/live/LiveViewModel.kt	CUSTOM:
 1	app/src/main/java/tv/own/owntv/features/live/LiveViewModel.kt	CUSTOM:$id
 1	app/src/main/java/tv/own/owntv/features/live/LiveViewModel.kt	ExoPlayer error before first frame: ${info?.raw ?: previewEngine.error.value}
-1	app/src/main/java/tv/own/owntv/features/live/LiveViewModel.kt	m3u8
 1	app/src/main/java/tv/own/owntv/features/live/LiveViewModel.kt	starting mpv for '${channel.name}' — reason=$reason
 1	app/src/main/java/tv/own/owntv/features/live/LiveViewModel.kt	ts
 8	app/src/main/java/tv/own/owntv/features/settings/DnsSettingsScreen.kt	\0
@@ -244,7 +242,6 @@
 1	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	file-format
 2	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	force
 1	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	hls
-1	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	live stream didn't start ($from) — trying format fallback ($from -> $to)
 1	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	mpegts
 2	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	sub-align-x
 2	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	sub-ass-override

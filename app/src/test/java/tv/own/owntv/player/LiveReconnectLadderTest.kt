@@ -137,22 +137,29 @@ class LiveReconnectLadderTest {
         // asked for staler signed segment URLs. Live HLS must carry no demuxer option at all.
         assertEquals(
             "",
-            OwnTVPlayer.demuxerLavfOptionsFor(
-                "http://panel/live/7.m3u8?token=x", live = true, trimmedRawTsProbe = false, hls = true,
-            ),
+            OwnTVPlayer.demuxerLavfOptionsFor(trimmedRawTsProbe = false, tolerant = false),
         )
         assertEquals(
             "fflags=+nobuffer+genpts,seekable=1",
-            OwnTVPlayer.demuxerLavfOptionsFor(
-                "http://panel/live/7.ts", live = true, trimmedRawTsProbe = true, hls = false,
-            ),
+            OwnTVPlayer.demuxerLavfOptionsFor(trimmedRawTsProbe = true, tolerant = false),
         )
+    }
+
+    @Test
+    fun `tolerant demuxing is a retry rung, never the first attempt`() {
+        // The tolerance flags are what lets mpv finish a stream with corrupt packets or missing
+        // timestamps (the "VLC plays it" class). They cost accuracy, so they only ever appear on a
+        // retry — the first open of any stream must stay strict.
         assertEquals(
-            "",
-            OwnTVPlayer.demuxerLavfOptionsFor(
-                "http://panel/movie/7.m3u8", live = false, trimmedRawTsProbe = false, hls = true,
-            ),
+            "fflags=+discardcorrupt+genpts,err_detect=ignore_err",
+            OwnTVPlayer.demuxerLavfOptionsFor(trimmedRawTsProbe = false, tolerant = true),
         )
+        // Combined with the fast-zap trimmed probe: one fflags list, both option sets kept.
+        assertEquals(
+            "fflags=+nobuffer+genpts+discardcorrupt,seekable=1,err_detect=ignore_err",
+            OwnTVPlayer.demuxerLavfOptionsFor(trimmedRawTsProbe = true, tolerant = true),
+        )
+        assertEquals(3, OwnTVPlayer.TOLERANT_DEMUX_AFTER_RECONNECTS)
     }
 
     @Test

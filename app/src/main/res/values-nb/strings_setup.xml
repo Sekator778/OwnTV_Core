@@ -217,8 +217,6 @@
     <string name="companion_error_missing_fields">Obligatoriske felt mangler.</string>
     <string name="setup_invalid_locale">Denne sikkerhetskopien inneholdt et appspråk som ikke støttes. Gjenopprettingen lyktes, men det nåværende språket ditt ble beholdt.</string>
     <string name="setup_prefer_hls_live_tv">Foretrekk HLS for Direkte-TV</string>
-    <string name="setup_prefer_hls_description">Prioriter HLS (.m3u8) fremfor MPEG-TS for Direkte-TV og arkiv. Bytter til MPEG-TS hvis HLS mislykkes.</string>
-    <string name="setup_prefer_hls_description_supported">Prioriter HLS (.m3u8) fremfor MPEG-TS for Direkte-TV og arkiv. Bytter til MPEG-TS hvis HLS mislykkes. Leverandøren din oppgir støtte for HLS.</string>
     <string name="setup_hide_new_categories">Skjul nye kategorier som standard</string>
     <string name="setup_hide_new_categories_description">For hele profilen: Kategorier som dukker opp ved fremtidige synkroniseringer, er skjult fra start. Du finner dem når som helst under Tilpasning.</string>
 </resources>
