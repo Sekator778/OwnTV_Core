@@ -316,4 +316,13 @@
     <string name="content_epg_player_choice_description">Imposta una scelta permanente in Impostazioni › Visione in differita.</string>
     <string name="content_epg_own_player">Player OwnTV</string>
     <string name="content_epg_external_player">Player esterno</string>
+    <string name="content_epg_time_offset">Offset orario EPG</string>
+    <string name="content_epg_shift_minutes"><xliff:g id="sign">%1$s</xliff:g><xliff:g id="minutes">%2$s</xliff:g>min</string>
+    <string name="content_epg_shift_hours"><xliff:g id="sign">%1$s</xliff:g><xliff:g id="hours">%2$s</xliff:g>h</string>
+    <string name="content_epg_shift_hours_minutes"><xliff:g id="sign">%1$s</xliff:g><xliff:g id="hours">%2$s</xliff:g>h <xliff:g id="minutes">%3$s</xliff:g>min</string>
+    <string name="content_epg_offset_channel_description">Sposta la guida per “<xliff:g id="channel">%1$s</xliff:g>”. Usalo quando un feed Est/Ovest condivide la sua guida con l’altra versione — un offset negativo anticipa la guida.</string>
+    <string name="content_epg_offset_following_global">Segue l’offset globale (<xliff:g id="offset">%1$s</xliff:g>)</string>
+    <string name="content_epg_offset_channel_only">Solo questo canale · l’offset globale è <xliff:g id="offset">%1$s</xliff:g></string>
+    <string name="content_epg_offset_use_global">Usa offset globale</string>
+    <string name="content_preview_single_stream">Anteprima disattivata — il tuo provider consente un solo stream alla volta.</string>
 </resources>

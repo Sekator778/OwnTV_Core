@@ -209,4 +209,36 @@
     <string name="player_subtitles_invalid_credentials">Aanmelden bij OpenSubtitles met deze accountgegevens is mislukt.</string>
     <string name="player_subtitles_sign_in_network_error">Kan OpenSubtitles niet bereiken. Controleer je internetverbinding en probeer het opnieuw.</string>
     <string name="player_subtitles_refresh_network_error">Kan OpenSubtitles niet vernieuwen. Controleer je internetverbinding.</string>
+    <string name="player_subtitles_no_matches_all_languages">Er zijn geen overeenkomende ondertitels gevonden. Probeer de zoektitel te bewerken.</string>
+    <string name="player_subtitles_no_matches_chosen_language">Er zijn geen overeenkomende ondertitels gevonden in je gekozen taal.</string>
+    <string name="player_subtitles_search_language">Zoektaal</string>
+    <string name="player_reason_software_fallback">Teruggevallen op softwaredecodering</string>
+    <string name="player_reason_copy_mode_fallback">Teruggevallen op copy-mode-decodering</string>
+    <string name="player_reason_archive_software_fallback">Archief voor uitgesteld kijken heropend in softwaredecodering</string>
+    <string name="player_reason_stereo_fallback">Overgeschakeld naar stereo-audio</string>
+    <string name="player_reason_vod_engine_session_fallback">Films en series overgeschakeld naar mpv voor deze sessie</string>
+    <string name="player_reason_one_session_provider">Provider staat slechts één sessie tegelijk toe</string>
+    <string name="player_reason_mpv_handoff">Deze zender overgedragen aan mpv</string>
+    <string name="player_reason_stream_report">Streamrapport</string>
+    <string name="player_stream_audio_output">Audio-uit</string>
+    <string name="player_stream_live_buffer">Live-buffer</string>
+    <string name="player_stream_audio_passthrough">passthrough (tv/receiver decodeert)</string>
+    <string name="player_stream_audio_decoded_in_app">gedecodeerd in de app</string>
+    <string name="player_stream_audio_pcm"><xliff:g id="channels">%1$s</xliff:g> PCM</string>
+    <string name="player_stream_multichannel_allowed">meerkanaals toegestaan</string>
+    <string name="player_stream_fell_back">teruggevallen: <xliff:g id="reason">%1$s</xliff:g></string>
+    <string name="player_stream_preroll_video">pre-buffer <xliff:g id="seconds">%1$s</xliff:g>s video</string>
+    <string name="player_stream_preroll_off">pre-buffer uit</string>
+    <string name="player_stream_depth">diepte <xliff:g id="seconds">%1$s</xliff:g>s</string>
+    <string name="player_stream_readahead">readahead <xliff:g id="seconds">%1$s</xliff:g>s</string>
+    <string name="player_stream_playlist_override">afspeellijst-override</string>
+    <string name="player_error_hardware_format">De videohardware van deze tv kan <xliff:g id="resolution">%1$s</xliff:g> <xliff:g id="codec">%2$s</xliff:g> niet decoderen. Het bestand is prima, maar de tv kan dit formaat op deze resolutie niet afspelen.</string>
+    <string name="player_report_saved">Streamrapport opgeslagen in het weergavelog</string>
+    <string name="player_subtitles_filter_title">Filteren op taal</string>
+    <string name="player_subtitles_filter_description">Uit toont elke taal die OpenSubtitles voor een titel heeft, zodat je uit de volledige lijst kunt kiezen. Aan toont alleen je gekozen taal.</string>
+    <string name="player_subtitles_search_language_description">Alleen ondertitels in deze taal verschijnen in de zoekresultaten. Je kunt in de resultaten nog steeds op “Alle talen” drukken om alles voor één zoekopdracht te zien.</string>
+    <string name="player_subtitles_language_not_set">Niet ingesteld</string>
+    <string name="player_frame_rate_prompt_title">Deze zender kan haperen</string>
+    <string name="player_frame_rate_prompt_description">Het speelt af met <xliff:g id="fps">%1$d</xliff:g> fps terwijl je tv op <xliff:g id="current_hz">%2$d</xliff:g> Hz draait, waardoor die frames niet gelijkmatig kunnen worden weergegeven — beweging ziet er iets schokkerig uit.\n\nAutomatische framerate schakelt de tv tijdens het kijken naar <xliff:g id="target_hz">%3$d</xliff:g> Hz en zet hem daarna terug. Sommige tv\'s worden even zwart wanneer de frequentie verandert; je kunt dit weer uitzetten in Instellingen → Videospeler.</string>
+    <string name="player_frame_rate_turn_on">Inschakelen</string>
 </resources>

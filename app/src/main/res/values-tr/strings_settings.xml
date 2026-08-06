@@ -829,4 +829,54 @@
     <string name="settings_subtitle_color_cyan">Camgöbeği</string>
     <string name="settings_subtitle_color_green">Yeşil</string>
     <string name="settings_subtitle_color_grey">Gri</string>
+    <string name="settings_live_preroll">Canlı yayınları ön arabelleğe al</string>
+    <string name="settings_live_preroll_description">Bir canlı kanal oynamaya başlamadan önce ve bir takılma sonrasında bu kadar video biriktirilir. Bu bir video miktarıdır, geri sayım değil. Kapalı, mümkün olan en hızlı başlangıcı sağlar.</string>
+    <string name="settings_live_preroll_per_playlist">Yayın listesi başına ön arabellek</string>
+    <string name="settings_live_preroll_per_playlist_description">Üstteki ayarı bir yayın listesi için geçersiz kılarken diğer yayın listelerinizin hızlı kalmasını sağlar.</string>
+    <plurals name="settings_live_preroll_overrides">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> ayar</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> ayar</item>
+    </plurals>
+    <string name="settings_surround_stereo">Yalnızca stereo</string>
+    <string name="settings_surround_auto_description">Otomatik — Dolby/DTS surround\'u dener; TV ya da soundbar çalamazsa otomatik olarak stereoya geri döner. Önerilir.</string>
+    <string name="settings_surround_stereo_description">Yalnızca stereo — her zaman uygulamada kod çözün ve düz 2.0 ses gönderin. Bunu TV hoparlörlerinde veya stereo soundbar\'da, ya da ses görüntünün gerisinde kalıyorsa kullanın.</string>
+    <string name="settings_surround_forced_description">Surround — Dolby/DTS\'yi gerçek bir 5.1/7.1 alıcıya gönderin. Ses kesilirse veya takılırsa OwnTV yine de stereoya geri döner ve size bildirir.</string>
+    <string name="settings_panel_width">Panel genişliği ayarı</string>
+    <string name="settings_panel_width_description">Canlı TV, Filmler ve Diziler bölümlerindeki kategori, liste ve önizleme panellerini yeniden boyutlandırın.</string>
+    <string name="settings_search_keywords_epg_offset">epg program rehberi zaman farkı kaydırma saat dilimi doğu batı saatler</string>
+    <string name="settings_search_keywords_panel_width">panel genişliği boyut yeniden boyutlandır kategori liste önizleme afiş sütun düzen canlı tv filmler diziler</string>
+    <string name="settings_search_keywords_live_preroll">ön arabellek ön kayıt ön yükleme arabelleğe alma arabellek oynatmadan önce yeniden arabelleğe alma takılma donma yayın listesi başına</string>
+    <string name="settings_detailed_playback_logging">Ayrıntılı oynatma günlüğü</string>
+    <string name="settings_search_keywords_detailed_logging">tanılama ayrıntılı iz logcat hata ayıklama rapor hata canlı yayın motoru</string>
+    <string name="settings_playback_kind_error">Hata</string>
+    <string name="settings_playback_kind_event">Olay</string>
+    <string name="settings_playback_kind_report">Rapor</string>
+    <string name="settings_playback_entry_with_kind"><xliff:g id="date">%1$s</xliff:g>  ·  <xliff:g id="kind">%2$s</xliff:g>  ·  <xliff:g id="engine">%3$s</xliff:g>  ·  <xliff:g id="stream_type">%4$s</xliff:g></string>
+    <string name="settings_export">Dışa aktar</string>
+    <string name="settings_detailed_playback_logging_description">Canlı yayın motorunun yaptığı her şeyin tam izini — her kanal seçimini, yedek akışa geçişi ve yeniden bağlanmayı — Logcat\'te ve dışa aktarılan raporda tutar. Bir sorunu araştırmıyorsanız kapalı bırakın; oynatmayı asla değiştirmez, yalnızca ne kadar yazıldığını etkiler.</string>
+    <string name="settings_live_preroll_playlist_picker">Hangi yayın listesi?</string>
+    <string name="settings_live_preroll_follow">Genel ayarı kullan</string>
+    <string name="settings_video_seconds"><xliff:g id="seconds">%1$d</xliff:g> saniyelik video</string>
+    <string name="settings_epg_offset_root_description">Bir yayının saatleri gerçekte yayınlananla uyuşmadığında tüm rehberi kaydırır. Tek bir kanal, kendi uzun basma menüsünden (Canlı TV veya Rehber) ayrıca kaydırılabilir — ortak bir rehber kullanan Doğu/Batı sürümleri için olan budur.</string>
+    <string name="settings_epg_offset_dialog_description">Rehberdeki her programı taşır. Tüm akış yanlış saatteyse bunu kullanın; tek bir kanal için (ortak bir rehber kullanan Doğu/Batı sürümü) Canlı TV veya Rehber\'de kanala uzun basın ve kendi kaydırma değerini orada ayarlayın.</string>
+    <string name="settings_panel_width_screen_description">Her panelin ekranın ne kadarını kaplayacağını ayarlayın — kategoriler, öğe listesi ve önizleme.</string>
+    <string name="settings_panel_width_summary">Kategori <xliff:g id="category">%1$d</xliff:g>%% · Liste <xliff:g id="list">%2$d</xliff:g>%% · <xliff:g id="preview_label">%3$s</xliff:g> <xliff:g id="preview">%4$d</xliff:g>%%</string>
+    <string name="settings_panel_width_help">• Üç panel tek bir satırı paylaşır, bu yüzden yüzdelerinin toplamı %%100 olmalıdır.\n• Bir paneli genişletirseniz kaydetmeden önce aynı miktarı başka bir panelden kısmanız gerekir.\n• Sıfırla, bir bölümü bu ekranın başladığı standart genişliklere döndürür.\n• Bir bölümü kapatmak, değerlerinizi kaybetmeden standart düzenine döndürür.\n• Film ve dizi afişleri otomatik olarak yeniden yerleşir; bu nedenle daha dar bir liste satır başına daha az afiş gösterir.</string>
+    <string name="settings_panel_width_preview">Önizleme</string>
+    <string name="settings_panel_width_poster">Afiş</string>
+    <string name="settings_panel_width_dialog_title"><xliff:g id="section">%1$s</xliff:g> panel genişlikleri</string>
+    <string name="settings_panel_width_customize">Paneli kişiselleştir</string>
+    <string name="settings_panel_width_category">Kategori paneli</string>
+    <string name="settings_panel_width_list">Liste paneli</string>
+    <string name="settings_panel_width_preview_panel"><xliff:g id="label">%1$s</xliff:g> paneli</string>
+    <string name="settings_panel_width_total">Toplam boyut</string>
+    <string name="settings_panel_width_invalid_total">Toplam boyut <xliff:g id="total">%1$d</xliff:g>%%. %%100 olması gerekiyor — lütfen ayarlayın.</string>
+    <string name="settings_language_help_translate">OwnTV\'yi kendi dilinize çevirmeye yardım edin</string>
+    <string name="settings_language_contribution_description">QR kodu okutun veya bağlantıyı açın; dilediğiniz dili seçin ve OwnTV çevirisinin altı bileşeninin tamamına katkıda bulunun.</string>
+    <string name="settings_language_contribution_qr_description">OwnTV çeviri projesi genel bakışı için QR kodu</string>
+    <string name="settings_language_contribution_qr_failed">QR kod oluşturulamadı. Bunun yerine aşağıda gösterilen bağlantıyı kullanın.</string>
+    <string name="settings_language_contribution_copy">Bağlantıyı kopyala</string>
+    <string name="settings_language_contribution_copied">Bağlantı kopyalandı</string>
+    <string name="settings_language_contribution_open_failed">Bağlantı açılamadı. Bunun yerine kopyalayın.</string>
+    <string name="settings_language_contribution_copy_failed">Bağlantı kopyalanamadı. Yukarıda gösterilen URL\'yi okuyun veya yazın.</string>
 </resources>

@@ -316,4 +316,13 @@
     <string name="content_epg_player_choice_description">Establece una opción permanente en Ajustes › En diferido.</string>
     <string name="content_epg_own_player">Reproductor de OwnTV</string>
     <string name="content_epg_external_player">Reproductor externo</string>
+    <string name="content_epg_time_offset">Desfase horario de la EPG</string>
+    <string name="content_epg_shift_minutes"><xliff:g id="sign">%1$s</xliff:g><xliff:g id="minutes">%2$s</xliff:g>min</string>
+    <string name="content_epg_shift_hours"><xliff:g id="sign">%1$s</xliff:g><xliff:g id="hours">%2$s</xliff:g>h</string>
+    <string name="content_epg_shift_hours_minutes"><xliff:g id="sign">%1$s</xliff:g><xliff:g id="hours">%2$s</xliff:g>h <xliff:g id="minutes">%3$s</xliff:g>min</string>
+    <string name="content_epg_offset_channel_description">Desplaza la guía de «<xliff:g id="channel">%1$s</xliff:g>». Usa esto cuando una señal Este/Oeste comparta su guía con la otra versión — un desfase negativo adelanta la guía.</string>
+    <string name="content_epg_offset_following_global">Siguiendo el desfase global (<xliff:g id="offset">%1$s</xliff:g>)</string>
+    <string name="content_epg_offset_channel_only">Solo este canal · el desfase global es <xliff:g id="offset">%1$s</xliff:g></string>
+    <string name="content_epg_offset_use_global">Usar el desfase global</string>
+    <string name="content_preview_single_stream">Vista previa desactivada — tu proveedor solo permite una transmisión a la vez.</string>
 </resources>

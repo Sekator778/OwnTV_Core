@@ -85,7 +85,7 @@ object SupportedLocales {
             tier = 1,
             packaged = true,
             pickerVisible = true,
-            coverage = 95,
+            coverage = 100,
         ),
         SupportedLocale(
             id = "pt-BR",
@@ -99,7 +99,7 @@ object SupportedLocales {
             tier = 1,
             packaged = true,
             pickerVisible = true,
-            coverage = 95,
+            coverage = 100,
         ),
         SupportedLocale(
             id = "pt-PT",
@@ -113,7 +113,7 @@ object SupportedLocales {
             tier = 1,
             packaged = true,
             pickerVisible = true,
-            coverage = 95,
+            coverage = 100,
         ),
         SupportedLocale(
             id = "zh-CN",
@@ -127,7 +127,7 @@ object SupportedLocales {
             tier = 1,
             packaged = true,
             pickerVisible = true,
-            coverage = 95,
+            coverage = 100,
         ),
         SupportedLocale(
             id = "zh-TW",
@@ -141,7 +141,7 @@ object SupportedLocales {
             tier = 1,
             packaged = true,
             pickerVisible = true,
-            coverage = 95,
+            coverage = 100,
         ),
         SupportedLocale(
             id = "cs",
@@ -155,7 +155,7 @@ object SupportedLocales {
             tier = 1,
             packaged = true,
             pickerVisible = true,
-            coverage = 95,
+            coverage = 100,
         ),
         SupportedLocale(
             id = "da",
@@ -169,7 +169,7 @@ object SupportedLocales {
             tier = 1,
             packaged = true,
             pickerVisible = true,
-            coverage = 95,
+            coverage = 100,
         ),
         SupportedLocale(
             id = "nl",
@@ -183,7 +183,7 @@ object SupportedLocales {
             tier = 1,
             packaged = true,
             pickerVisible = true,
-            coverage = 95,
+            coverage = 100,
         ),
         SupportedLocale(
             id = "fr",
@@ -197,7 +197,7 @@ object SupportedLocales {
             tier = 1,
             packaged = true,
             pickerVisible = true,
-            coverage = 95,
+            coverage = 100,
         ),
         SupportedLocale(
             id = "de",
@@ -211,7 +211,7 @@ object SupportedLocales {
             tier = 1,
             packaged = true,
             pickerVisible = true,
-            coverage = 95,
+            coverage = 100,
         ),
         SupportedLocale(
             id = "it",
@@ -225,7 +225,7 @@ object SupportedLocales {
             tier = 1,
             packaged = true,
             pickerVisible = true,
-            coverage = 95,
+            coverage = 100,
         ),
         SupportedLocale(
             id = "ja",
@@ -239,7 +239,7 @@ object SupportedLocales {
             tier = 1,
             packaged = true,
             pickerVisible = true,
-            coverage = 95,
+            coverage = 100,
         ),
         SupportedLocale(
             id = "ko",
@@ -253,7 +253,7 @@ object SupportedLocales {
             tier = 1,
             packaged = true,
             pickerVisible = true,
-            coverage = 95,
+            coverage = 100,
         ),
         SupportedLocale(
             id = "nb",
@@ -267,7 +267,7 @@ object SupportedLocales {
             tier = 1,
             packaged = true,
             pickerVisible = true,
-            coverage = 95,
+            coverage = 100,
         ),
         SupportedLocale(
             id = "pl",
@@ -281,7 +281,7 @@ object SupportedLocales {
             tier = 1,
             packaged = true,
             pickerVisible = true,
-            coverage = 95,
+            coverage = 100,
         ),
         SupportedLocale(
             id = "ru",
@@ -295,7 +295,7 @@ object SupportedLocales {
             tier = 1,
             packaged = true,
             pickerVisible = true,
-            coverage = 95,
+            coverage = 100,
         ),
         SupportedLocale(
             id = "es-US",
@@ -309,7 +309,7 @@ object SupportedLocales {
             tier = 1,
             packaged = true,
             pickerVisible = true,
-            coverage = 95,
+            coverage = 100,
         ),
         SupportedLocale(
             id = "es-ES",
@@ -323,7 +323,7 @@ object SupportedLocales {
             tier = 1,
             packaged = true,
             pickerVisible = true,
-            coverage = 95,
+            coverage = 100,
         ),
         SupportedLocale(
             id = "sv",
@@ -337,7 +337,7 @@ object SupportedLocales {
             tier = 1,
             packaged = true,
             pickerVisible = true,
-            coverage = 95,
+            coverage = 100,
         ),
         SupportedLocale(
             id = "tr",
@@ -351,7 +351,7 @@ object SupportedLocales {
             tier = 1,
             packaged = true,
             pickerVisible = true,
-            coverage = 95,
+            coverage = 100,
         ),
         SupportedLocale(
             id = "ml",
@@ -365,7 +365,7 @@ object SupportedLocales {
             tier = 1,
             packaged = true,
             pickerVisible = true,
-            coverage = 95,
+            coverage = 100,
         ),
         SupportedLocale(
             id = "hi",
@@ -379,7 +379,7 @@ object SupportedLocales {
             tier = 1,
             packaged = true,
             pickerVisible = true,
-            coverage = 95,
+            coverage = 100,
         ),
         SupportedLocale(
             id = "bn",
@@ -393,7 +393,7 @@ object SupportedLocales {
             tier = 1,
             packaged = true,
             pickerVisible = true,
-            coverage = 95,
+            coverage = 100,
         ),
         SupportedLocale(
             id = "bg",

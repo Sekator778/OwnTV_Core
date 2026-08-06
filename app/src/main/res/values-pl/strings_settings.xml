@@ -859,4 +859,56 @@
     <string name="settings_subtitle_color_cyan">Cyjanowy</string>
     <string name="settings_subtitle_color_green">Zielony</string>
     <string name="settings_subtitle_color_grey">Szary</string>
+    <string name="settings_live_preroll">Wstępne buforowanie kanałów na żywo</string>
+    <string name="settings_live_preroll_description">Pobiera taką ilość wideo, zanim kanał na żywo zacznie grać, i ponownie po zacięciu. To ilość wideo, a nie odliczanie. Wyłączone zapewnia najszybszy możliwy start.</string>
+    <string name="settings_live_preroll_per_playlist">Wstępne buforowanie na playlistę</string>
+    <string name="settings_live_preroll_per_playlist_description">Nadpisz powyższe ustawienie dla jednej playlisty, zachowując szybkość pozostałych playlist.</string>
+    <plurals name="settings_live_preroll_overrides">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> nadpisane ustawienie</item>
+        <item quantity="few"><xliff:g id="count">%1$d</xliff:g> nadpisane ustawienia</item>
+        <item quantity="many"><xliff:g id="count">%1$d</xliff:g> nadpisanych ustawień</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> nadpisanego ustawienia</item>
+    </plurals>
+    <string name="settings_surround_stereo">Tylko stereo</string>
+    <string name="settings_surround_auto_description">Auto — próbuj dźwięku przestrzennego Dolby/DTS i automatycznie wracaj do stereo, jeśli telewizor lub soundbar go nie obsługuje. Zalecane.</string>
+    <string name="settings_surround_stereo_description">Tylko stereo — zawsze dekoduj w aplikacji i wysyłaj zwykły dźwięk 2.0. Używaj tego w głośnikach telewizora lub soundbarze stereo albo gdy dźwięk opóźnia się względem obrazu.</string>
+    <string name="settings_surround_forced_description">Dźwięk przestrzenny — wysyłaj Dolby/DTS do prawdziwego amplitunera 5.1/7.1. Jeśli zrobi się cicho albo zacznie się zacinać, OwnTV i tak wróci do stereo i poinformuje o tym.</string>
+    <string name="settings_panel_width">Regulacja szerokości paneli</string>
+    <string name="settings_panel_width_description">Zmieniaj rozmiar paneli kategorii, listy i podglądu w telewizji na żywo, filmach i serialach.</string>
+    <string name="settings_search_keywords_epg_offset">epg przewodnik czas przesunięcie zmiana strefa czasowa wschód zachód godziny</string>
+    <string name="settings_search_keywords_panel_width">panel szerokość rozmiar zmień rozmiar kategoria lista podgląd plakat kolumna układ telewizja na żywo filmy seriale</string>
+    <string name="settings_search_keywords_live_preroll">prebuffer preroll pre-roll buforowanie bufor przed odtworzeniem ponowne buforowanie zacinanie zamrożenie na playlistę</string>
+    <string name="settings_detailed_playback_logging">Szczegółowe rejestrowanie odtwarzania</string>
+    <string name="settings_search_keywords_detailed_logging">diagnostyka szczegółowy ślad logcat debug raport błąd silnik telewizji na żywo</string>
+    <string name="settings_playback_kind_error">Błąd</string>
+    <string name="settings_playback_kind_event">Zdarzenie</string>
+    <string name="settings_playback_kind_report">Raport</string>
+    <string name="settings_playback_entry_with_kind"><xliff:g id="date">%1$s</xliff:g>  ·  <xliff:g id="kind">%2$s</xliff:g>  ·  <xliff:g id="engine">%3$s</xliff:g>  ·  <xliff:g id="stream_type">%4$s</xliff:g></string>
+    <string name="settings_export">Eksportuj</string>
+    <string name="settings_detailed_playback_logging_description">Zapisuje pełny ślad działań silnika telewizji na żywo — każde przełączenie kanału, każde przejście na źródło zapasowe i każde ponowne połączenie — w Logcat i w eksportowanym raporcie. Pozostaw wyłączone, chyba że diagnozujesz problem; to nigdy nie zmienia odtwarzania, a jedynie ilość zapisywanych informacji.</string>
+    <string name="settings_live_preroll_playlist_picker">Którą playlistę?</string>
+    <string name="settings_live_preroll_follow">Zgodnie z ustawieniem</string>
+    <string name="settings_video_seconds"><xliff:g id="seconds">%1$d</xliff:g> s wideo</string>
+    <string name="settings_epg_offset_root_description">Przesuń cały przewodnik, gdy czasy kanału nie zgadzają się z tym, co jest faktycznie nadawane. Pojedynczy kanał można przesunąć osobno z menu po długim naciśnięciu (telewizja na żywo lub przewodnik) — ta opcja jest właśnie dla wersji Wschód/Zachód współdzielących jeden przewodnik.</string>
+    <string name="settings_epg_offset_dialog_description">Przesuwa każdy program w przewodniku. Użyj tego, gdy całe źródło ma nieprawidłowy czas; w przypadku pojedynczego kanału (wersja Wschód/Zachód współdzieląca jeden przewodnik) naciśnij i przytrzymaj kanał w telewizji na żywo lub w przewodniku i ustaw tam jego własne przesunięcie.</string>
+    <string name="settings_panel_width_screen_description">Ustaw, ile miejsca na ekranie zajmuje każdy panel — kategorie, listę i podgląd.</string>
+    <string name="settings_panel_width_summary">Kategoria <xliff:g id="category">%1$d</xliff:g>%% · Lista <xliff:g id="list">%2$d</xliff:g>%% · <xliff:g id="preview_label">%3$s</xliff:g> <xliff:g id="preview">%4$d</xliff:g>%%</string>
+    <string name="settings_panel_width_help">• Trzy panele zajmują jeden wiersz, więc ich wartości procentowe muszą sumować się do 100%%.\n• Poszerzenie jednego panelu oznacza, że przed zapisaniem musisz tyle samo odjąć od innego.\n• Reset przywraca sekcji standardowe szerokości, z którymi otwarto ten ekran.\n• Wyłączenie sekcji przywraca jej standardowy układ bez utraty Twoich wartości.\n• Plakaty filmów i seriali przestawiają się automatycznie, więc węższa lista po prostu pokazuje mniej plakatów w wierszu.</string>
+    <string name="settings_panel_width_preview">Podgląd</string>
+    <string name="settings_panel_width_poster">Plakat</string>
+    <string name="settings_panel_width_dialog_title"><xliff:g id="section">%1$s</xliff:g> — szerokości paneli</string>
+    <string name="settings_panel_width_customize">Dostosuj panel</string>
+    <string name="settings_panel_width_category">Panel kategorii</string>
+    <string name="settings_panel_width_list">Panel listy</string>
+    <string name="settings_panel_width_preview_panel">Panel <xliff:g id="label">%1$s</xliff:g></string>
+    <string name="settings_panel_width_total">Całkowity rozmiar</string>
+    <string name="settings_panel_width_invalid_total">Całkowity rozmiar to <xliff:g id="total">%1$d</xliff:g>%%. Musi wynosić 100%% — dostosuj go.</string>
+    <string name="settings_language_help_translate">Pomóż przetłumaczyć OwnTV na swój język</string>
+    <string name="settings_language_contribution_description">Zeskanuj kod QR lub otwórz link, aby wybrać dowolny dostępny język i wnieść wkład we wszystkich sześciu komponentach tłumaczeń OwnTV.</string>
+    <string name="settings_language_contribution_qr_description">Kod QR do przeglądu projektu tłumaczeń OwnTV</string>
+    <string name="settings_language_contribution_qr_failed">Nie udało się wygenerować kodu QR. Zamiast tego użyj linku pokazanego poniżej.</string>
+    <string name="settings_language_contribution_copy">Kopiuj link</string>
+    <string name="settings_language_contribution_copied">Skopiowano link</string>
+    <string name="settings_language_contribution_open_failed">Nie udało się otworzyć linku. Zamiast tego skopiuj go.</string>
+    <string name="settings_language_contribution_copy_failed">Nie udało się skopiować linku. Odczytaj lub wpisz adres URL pokazany powyżej.</string>
 </resources>

@@ -288,4 +288,13 @@
     <string name="content_epg_player_choice_description">설정 › 다시보기에서 항상 사용할 플레이어를 선택할 수 있습니다.</string>
     <string name="content_epg_own_player">OwnTV 플레이어</string>
     <string name="content_epg_external_player">외부 플레이어</string>
+    <string name="content_epg_time_offset">EPG 시간 오프셋</string>
+    <string name="content_epg_shift_minutes"><xliff:g id="sign">%1$s</xliff:g><xliff:g id="minutes">%2$s</xliff:g>분</string>
+    <string name="content_epg_shift_hours"><xliff:g id="sign">%1$s</xliff:g><xliff:g id="hours">%2$s</xliff:g>시간</string>
+    <string name="content_epg_shift_hours_minutes"><xliff:g id="sign">%1$s</xliff:g><xliff:g id="hours">%2$s</xliff:g>시간 <xliff:g id="minutes">%3$s</xliff:g>분</string>
+    <string name="content_epg_offset_channel_description">“<xliff:g id="channel">%1$s</xliff:g>”의 가이드를 이동합니다. 동부/서부 피드가 다른 버전과 가이드를 공유하는 경우 사용하세요 — 음수 오프셋은 가이드를 더 앞당깁니다.</string>
+    <string name="content_epg_offset_following_global">글로벌 오프셋을 따름 (<xliff:g id="offset">%1$s</xliff:g>)</string>
+    <string name="content_epg_offset_channel_only">이 채널만 · 글로벌 오프셋은 <xliff:g id="offset">%1$s</xliff:g></string>
+    <string name="content_epg_offset_use_global">글로벌 오프셋 사용</string>
+    <string name="content_preview_single_stream">미리보기 꺼짐 — 제공자가 한 번에 하나의 스트림만 허용합니다.</string>
 </resources>

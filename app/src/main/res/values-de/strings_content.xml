@@ -302,4 +302,13 @@
     <string name="content_epg_player_choice_description">Lege unter Einstellungen › Catch-up eine dauerhafte Auswahl fest.</string>
     <string name="content_epg_own_player">OwnTV-Player</string>
     <string name="content_epg_external_player">Externer Player</string>
+    <string name="content_epg_time_offset">EPG-Zeitversatz</string>
+    <string name="content_epg_shift_minutes"><xliff:g id="sign">%1$s</xliff:g><xliff:g id="minutes">%2$s</xliff:g>m</string>
+    <string name="content_epg_shift_hours"><xliff:g id="sign">%1$s</xliff:g><xliff:g id="hours">%2$s</xliff:g>h</string>
+    <string name="content_epg_shift_hours_minutes"><xliff:g id="sign">%1$s</xliff:g><xliff:g id="hours">%2$s</xliff:g>h <xliff:g id="minutes">%3$s</xliff:g>m</string>
+    <string name="content_epg_offset_channel_description">Verschiebe den EPG für „<xliff:g id="channel">%1$s</xliff:g>“. Verwende diese Option, wenn ein Ost-/West-Feed seinen EPG mit der jeweils anderen Version teilt – ein negativer Versatz zieht den EPG zeitlich vor.</string>
+    <string name="content_epg_offset_following_global">Dem globalen Versatz folgen (<xliff:g id="offset">%1$s</xliff:g>)</string>
+    <string name="content_epg_offset_channel_only">Nur dieser Sender · global ist <xliff:g id="offset">%1$s</xliff:g></string>
+    <string name="content_epg_offset_use_global">Globalen Versatz verwenden</string>
+    <string name="content_preview_single_stream">Vorschau deaktiviert – dein Anbieter erlaubt nur einen Stream gleichzeitig</string>
 </resources>

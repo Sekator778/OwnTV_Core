@@ -829,4 +829,54 @@
     <string name="settings_subtitle_color_cyan">Cyan</string>
     <string name="settings_subtitle_color_green">Grønn</string>
     <string name="settings_subtitle_color_grey">Grå</string>
+    <string name="settings_live_preroll">Forhåndsbufre direktestrømmer</string>
+    <string name="settings_live_preroll_description">Samle inn så mye video før en direktesendt kanal begynner å spille, og igjen etter en hakking. Dette er en videomengde, ikke en nedtelling. Av gir raskest mulig start.</string>
+    <string name="settings_live_preroll_per_playlist">Forhåndsbufring per spilleliste</string>
+    <string name="settings_live_preroll_per_playlist_description">Overstyr den ovennevnte innstillingen for én spilleliste mens du holder de andre spillelistene dine raske.</string>
+    <plurals name="settings_live_preroll_overrides">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> sett</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> sett</item>
+    </plurals>
+    <string name="settings_surround_stereo">Kun stereo</string>
+    <string name="settings_surround_auto_description">Auto – prøv Dolby/DTS-surround, og bytt automatisk tilbake til stereo hvis TV-en eller soundbaren ikke spiller det. Anbefales.</string>
+    <string name="settings_surround_stereo_description">Kun stereo – dekod alltid i appen og send vanlig 2.0-lyd. Bruk dette på TV-høyttalere eller en stereosoundbar, eller hvis lyden henger etter bildet.</string>
+    <string name="settings_surround_forced_description">Surround – send Dolby/DTS til en ekte 5.1/7.1-mottaker. Hvis det blir stille eller hakker, faller OwnTV fortsatt tilbake til stereo og gir beskjed.</string>
+    <string name="settings_panel_width">Panelbreddejustering</string>
+    <string name="settings_panel_width_description">Endre størrelsen på kategori-, liste- og forhåndsvisningspanelene i Direkte-TV, filmer og serier.</string>
+    <string name="settings_search_keywords_epg_offset">epg programguide tid forskyvning skift tidssone øst vest timer</string>
+    <string name="settings_search_keywords_panel_width">panel bredde størrelse endre størrelse kategori liste forhåndsvisning plakat kolonne oppsett live direkte filmer serier</string>
+    <string name="settings_search_keywords_live_preroll">forhåndsbufring preroll pre-roll bufring buffer før spilling ny bufring rebuffer hakking fryse per spilleliste</string>
+    <string name="settings_detailed_playback_logging">Detaljert avspillingslogging</string>
+    <string name="settings_search_keywords_detailed_logging">diagnostikk detaljert spor logcat feilsøk rapport bug live direktemotor</string>
+    <string name="settings_playback_kind_error">Feil</string>
+    <string name="settings_playback_kind_event">Hendelse</string>
+    <string name="settings_playback_kind_report">Rapport</string>
+    <string name="settings_playback_entry_with_kind"><xliff:g id="date">%1$s</xliff:g>  ·  <xliff:g id="kind">%2$s</xliff:g>  ·  <xliff:g id="engine">%3$s</xliff:g>  ·  <xliff:g id="stream_type">%4$s</xliff:g></string>
+    <string name="settings_export">Eksporter</string>
+    <string name="settings_detailed_playback_logging_description">Behold et fullstendig spor av hva direktemotoren gjør – hver tuning, fallback og gjentilkobling – i Logcat og i den eksporterte rapporten. La den være av med mindre du jakter på et problem; den endrer aldri avspillingen, bare hvor mye som skrives ned.</string>
+    <string name="settings_live_preroll_playlist_picker">Hvilken spilleliste?</string>
+    <string name="settings_live_preroll_follow">Følg innstillingen</string>
+    <string name="settings_video_seconds"><xliff:g id="seconds">%1$d</xliff:g> s video</string>
+    <string name="settings_epg_offset_root_description">Flytt hele programguiden når en kildes tider ikke stemmer med det som faktisk sendes. En enkelt kanal kan flyttes for seg selv fra langtrykk-menyen (Direkte-TV eller Programguide) – det er den for øst/vest-versjoner som deler en guide.</string>
+    <string name="settings_epg_offset_dialog_description">Flytter alle programmene i programguiden. Bruk det når hele kilden viser feil tid; for en enkelt kanal (en øst/vest-versjon som deler én guide) holder du nede kanalen i Direkte-TV eller programguiden og setter dens egen forskyvning der.</string>
+    <string name="settings_panel_width_screen_description">Angi hvor mye av skjermen hvert panel tar – kategorier, elementlisten og forhåndsvisningen.</string>
+    <string name="settings_panel_width_summary">Kategori <xliff:g id="category">%1$d</xliff:g>%% · Liste <xliff:g id="list">%2$d</xliff:g>%% · <xliff:g id="preview_label">%3$s</xliff:g> <xliff:g id="preview">%4$d</xliff:g>%%</string>
+    <string name="settings_panel_width_help">• De tre panelene deler én rad, så prosentene deres må bli 100 %% til sammen.\n• Gjør du ett panel bredere, må du ta like mye fra et annet før du lagrer.\n• Tilbakestill-knappen setter en seksjon tilbake til standardbreddene denne skjermen startet med.\n• Slår du av en seksjon, gjenopprettes standardoppsettet uten at verdiene dine går tapt.\n• Film- og serieplakater flyter om automatisk, så en smalere liste bare viser færre per rad.</string>
+    <string name="settings_panel_width_preview">Forhåndsvisning</string>
+    <string name="settings_panel_width_poster">Plakat</string>
+    <string name="settings_panel_width_dialog_title">Panelbredder for <xliff:g id="section">%1$s</xliff:g></string>
+    <string name="settings_panel_width_customize">Tilpass panel</string>
+    <string name="settings_panel_width_category">Kategoripanel</string>
+    <string name="settings_panel_width_list">Listepanel</string>
+    <string name="settings_panel_width_preview_panel">Panel for <xliff:g id="label">%1$s</xliff:g></string>
+    <string name="settings_panel_width_total">Total størrelse</string>
+    <string name="settings_panel_width_invalid_total">Total størrelse er <xliff:g id="total">%1$d</xliff:g>%%. Den må være 100 %% – vennligst juster.</string>
+    <string name="settings_language_help_translate">Hjelp med å oversette OwnTV til ditt språk</string>
+    <string name="settings_language_contribution_description">Skann QR-koden eller åpne lenken for å velge et hvilket som helst tilgjengelig språk og bidra på tvers av alle seks OwnTV-oversettelseskomponentene.</string>
+    <string name="settings_language_contribution_qr_description">QR-kode for oversikten over OwnTV-oversettelsesprosjektet</string>
+    <string name="settings_language_contribution_qr_failed">QR-koden kunne ikke genereres. Bruk lenken som vises nedenfor i stedet.</string>
+    <string name="settings_language_contribution_copy">Kopier lenke</string>
+    <string name="settings_language_contribution_copied">Lenke kopiert</string>
+    <string name="settings_language_contribution_open_failed">Lenken kunne ikke åpnes. Kopier den i stedet.</string>
+    <string name="settings_language_contribution_copy_failed">Lenken kunne ikke kopieres. Les eller skriv inn URL-en som vises ovenfor.</string>
 </resources>

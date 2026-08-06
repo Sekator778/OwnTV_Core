@@ -859,4 +859,56 @@
     <string name="settings_subtitle_color_cyan">Azurová</string>
     <string name="settings_subtitle_color_green">Zelená</string>
     <string name="settings_subtitle_color_grey">Šedá</string>
+    <string name="settings_live_preroll">Přednačítání živých streamů</string>
+    <string name="settings_live_preroll_description">Kolik videa se má načíst, než začne hrát živý kanál, a znovu po zadrhnutí. Jde o množství videa, ne o odpočet. Vypnuto zajistí nejrychlejší možné spuštění.</string>
+    <string name="settings_live_preroll_per_playlist">Přednačítání podle playlistu</string>
+    <string name="settings_live_preroll_per_playlist_description">Přepíše výše uvedené nastavení pro jeden playlist, zatímco ostatní playlisty zůstanou rychlé.</string>
+    <plurals name="settings_live_preroll_overrides">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> nastavení</item>
+        <item quantity="few"><xliff:g id="count">%1$d</xliff:g> nastavení</item>
+        <item quantity="many"><xliff:g id="count">%1$d</xliff:g> nastavení</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> nastavení</item>
+    </plurals>
+    <string name="settings_surround_stereo">Pouze stereo</string>
+    <string name="settings_surround_auto_description">Auto – zkusí prostorový zvuk Dolby/DTS a automaticky přepne zpět na stereo, pokud ho televize nebo soundbar nepřehraje. Doporučeno.</string>
+    <string name="settings_surround_stereo_description">Pouze stereo – vždy dekódujte v aplikaci a posílejte čistý zvuk 2.0. Použijte to u reproduktorů televize nebo stereo soundbaru, případně pokud zvuk zaostává za obrazem.</string>
+    <string name="settings_surround_forced_description">Prostorový zvuk – posílejte Dolby/DTS do skutečného přijímače 5.1/7.1. Pokud ztichne nebo se zadrhává, OwnTV se i tak vrátí ke stereu a dá vám vědět.</string>
+    <string name="settings_panel_width">Úprava šířky panelů</string>
+    <string name="settings_panel_width_description">Změňte velikost panelů kategorií, seznamu a náhledu v Živé TV, filmech a seriálech.</string>
+    <string name="settings_search_keywords_epg_offset">epg průvodce časový posun posun časové pásmo východ západ hodiny</string>
+    <string name="settings_search_keywords_panel_width">panel šířka velikost změna velikosti kategorie seznam náhled plakát sloupcové rozložení živá filmy seriály</string>
+    <string name="settings_search_keywords_live_preroll">přednačítání přednačíst načítání načítat před přehráváním opětovné načítání zadrhávání zamrznutí podle playlistu</string>
+    <string name="settings_detailed_playback_logging">Podrobné protokolování přehrávání</string>
+    <string name="settings_search_keywords_detailed_logging">diagnostika podrobný trasování logcat ladění hlášení chyba živé vysílání engine</string>
+    <string name="settings_playback_kind_error">Chyba</string>
+    <string name="settings_playback_kind_event">Událost</string>
+    <string name="settings_playback_kind_report">Hlášení</string>
+    <string name="settings_playback_entry_with_kind"><xliff:g id="date">%1$s</xliff:g>  ·  <xliff:g id="kind">%2$s</xliff:g>  ·  <xliff:g id="engine">%3$s</xliff:g>  ·  <xliff:g id="stream_type">%4$s</xliff:g></string>
+    <string name="settings_export">Exportovat</string>
+    <string name="settings_detailed_playback_logging_description">Ukládá úplný záznam činnosti enginu živého vysílání – každé naladění, přepnutí na záložní zdroj a opětovné připojení – do Logcatu a do exportovaného hlášení. Nechte ho vypnuté, pokud zrovna neřešíte problém; nikdy nemění přehrávání, jen to, kolik se toho zapíše.</string>
+    <string name="settings_live_preroll_playlist_picker">Který playlist?</string>
+    <string name="settings_live_preroll_follow">Řídit se nastavením</string>
+    <string name="settings_video_seconds"><xliff:g id="seconds">%1$d</xliff:g> s videa</string>
+    <string name="settings_epg_offset_root_description">Posune celého průvodce, když časy zdroje neodpovídají tomu, co se skutečně vysílá. Jednotlivý kanál lze posunout samostatně z nabídky po dlouhém stisknutí (Živá TV nebo Průvodce) – to je určeno pro východní/západní verze sdílející jednoho průvodce.</string>
+    <string name="settings_epg_offset_dialog_description">Posune každý pořad v průvodci. Použijte, když má celý zdroj špatně nastavený čas; pro jednotlivý kanál (východní/západní verze sdílející jednoho průvodce) podržte kanál v Živé TV nebo v Průvodci a nastavte mu tam vlastní posun.</string>
+    <string name="settings_panel_width_screen_description">Nastavte, jak velkou část obrazovky každý panel zabírá – kategorie, seznam položek a náhled.</string>
+    <string name="settings_panel_width_summary">Kategorie <xliff:g id="category">%1$d</xliff:g>%% · Seznam <xliff:g id="list">%2$d</xliff:g>%% · <xliff:g id="preview_label">%3$s</xliff:g> <xliff:g id="preview">%4$d</xliff:g>%%</string>
+    <string name="settings_panel_width_help">• Tři panely sdílejí jeden řádek, takže jejich procenta musí dohromady činit 100 %%.\n• Rozšíříte-li jeden panel, musíte před uložením stejnou část odebrat jinému panelu.\n• Reset vrátí sekci na standardní šířky, se kterými tato obrazovka začínala.\n• Vypnutí sekce obnoví její standardní rozložení, aniž byste přišli o své hodnoty.\n• Plakáty filmů a seriálů se automaticky přeskupí, takže užší seznam prostě zobrazí méně položek na řádek.</string>
+    <string name="settings_panel_width_preview">Náhled</string>
+    <string name="settings_panel_width_poster">Plakát</string>
+    <string name="settings_panel_width_dialog_title">Šířky panelů – <xliff:g id="section">%1$s</xliff:g></string>
+    <string name="settings_panel_width_customize">Přizpůsobit panel</string>
+    <string name="settings_panel_width_category">Panel kategorií</string>
+    <string name="settings_panel_width_list">Panel seznamu</string>
+    <string name="settings_panel_width_preview_panel">Panel <xliff:g id="label">%1$s</xliff:g></string>
+    <string name="settings_panel_width_total">Celková velikost</string>
+    <string name="settings_panel_width_invalid_total">Celková velikost je <xliff:g id="total">%1$d</xliff:g>%%. Musí být 100 %% – upravte ji prosím.</string>
+    <string name="settings_language_help_translate">Pomozte přeložit OwnTV do vašeho jazyka</string>
+    <string name="settings_language_contribution_description">Naskenujte QR kód nebo otevřete odkaz, zvolte libovolný dostupný jazyk a přispějte ve všech šesti překladových komponentách OwnTV.</string>
+    <string name="settings_language_contribution_qr_description">QR kód pro přehled překladatelského projektu OwnTV</string>
+    <string name="settings_language_contribution_qr_failed">QR kód se nepodařilo vygenerovat. Místo toho použijte odkaz níže.</string>
+    <string name="settings_language_contribution_copy">Kopírovat odkaz</string>
+    <string name="settings_language_contribution_copied">Odkaz zkopírován</string>
+    <string name="settings_language_contribution_open_failed">Odkaz se nepodařilo otevřít. Místo toho ho zkopírujte.</string>
+    <string name="settings_language_contribution_copy_failed">Odkaz se nepodařilo zkopírovat. Přečtěte si nebo zadejte výše uvedenou adresu URL.</string>
 </resources>

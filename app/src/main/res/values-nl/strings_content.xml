@@ -302,4 +302,13 @@
     <string name="content_epg_player_choice_description">Stel een permanente keuze in via Instellingen › Terugkijken.</string>
     <string name="content_epg_own_player">OwnTV-speler</string>
     <string name="content_epg_external_player">Externe speler</string>
+    <string name="content_epg_time_offset">EPG-tijdverschuiving</string>
+    <string name="content_epg_shift_minutes"><xliff:g id="sign">%1$s</xliff:g><xliff:g id="minutes">%2$s</xliff:g>m</string>
+    <string name="content_epg_shift_hours"><xliff:g id="sign">%1$s</xliff:g><xliff:g id="hours">%2$s</xliff:g>h</string>
+    <string name="content_epg_shift_hours_minutes"><xliff:g id="sign">%1$s</xliff:g><xliff:g id="hours">%2$s</xliff:g>h <xliff:g id="minutes">%3$s</xliff:g>m</string>
+    <string name="content_epg_offset_channel_description">Verplaats de gids voor “<xliff:g id="channel">%1$s</xliff:g>”. Gebruik dit wanneer een oost/west-feed de gids deelt met de andere versie — een negatieve verschuiving zet de gids vroeger.</string>
+    <string name="content_epg_offset_following_global">Volgt de globale verschuiving (<xliff:g id="offset">%1$s</xliff:g>)</string>
+    <string name="content_epg_offset_channel_only">Alleen deze zender · globale verschuiving is <xliff:g id="offset">%1$s</xliff:g></string>
+    <string name="content_epg_offset_use_global">Gebruik globale verschuiving</string>
+    <string name="content_preview_single_stream">Voorbeeld uit — je provider staat slechts één stream tegelijk toe.</string>
 </resources>

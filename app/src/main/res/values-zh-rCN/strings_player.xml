@@ -202,4 +202,36 @@
     <string name="player_subtitles_invalid_credentials">OpenSubtitles 无法使用这些账户信息登录。</string>
     <string name="player_subtitles_sign_in_network_error">无法连接 OpenSubtitles。请检查互联网连接并重试。</string>
     <string name="player_subtitles_refresh_network_error">无法刷新 OpenSubtitles。请检查互联网连接。</string>
+    <string name="player_subtitles_no_matches_all_languages">未找到匹配的字幕。请尝试修改搜索标题。</string>
+    <string name="player_subtitles_no_matches_chosen_language">在你选择的语言中未找到匹配的字幕。</string>
+    <string name="player_subtitles_search_language">搜索语言</string>
+    <string name="player_reason_software_fallback">已回退到软件解码</string>
+    <string name="player_reason_copy_mode_fallback">已回退到复制模式解码</string>
+    <string name="player_reason_archive_software_fallback">已使用软件解码重新打开回看存档</string>
+    <string name="player_reason_stereo_fallback">已切换到立体声音频</string>
+    <string name="player_reason_vod_engine_session_fallback">本会话已将电影和剧集切换到 mpv</string>
+    <string name="player_reason_one_session_provider">提供商一次只允许一个会话</string>
+    <string name="player_reason_mpv_handoff">已将此频道移交给 mpv</string>
+    <string name="player_reason_stream_report">流报告</string>
+    <string name="player_stream_audio_output">音频输出</string>
+    <string name="player_stream_live_buffer">直播缓冲</string>
+    <string name="player_stream_audio_passthrough">直通（电视/接收器解码）</string>
+    <string name="player_stream_audio_decoded_in_app">在应用内解码</string>
+    <string name="player_stream_audio_pcm"><xliff:g id="channels">%1$s</xliff:g> PCM</string>
+    <string name="player_stream_multichannel_allowed">允许多声道</string>
+    <string name="player_stream_fell_back">已回退：<xliff:g id="reason">%1$s</xliff:g></string>
+    <string name="player_stream_preroll_video">预缓冲 <xliff:g id="seconds">%1$s</xliff:g> 秒视频</string>
+    <string name="player_stream_preroll_off">预缓冲已关闭</string>
+    <string name="player_stream_depth">深度 <xliff:g id="seconds">%1$s</xliff:g> 秒</string>
+    <string name="player_stream_readahead">预读 <xliff:g id="seconds">%1$s</xliff:g> 秒</string>
+    <string name="player_stream_playlist_override">播放列表覆盖</string>
+    <string name="player_error_hardware_format">此电视的视频硬件无法解码 <xliff:g id="resolution">%1$s</xliff:g> <xliff:g id="codec">%2$s</xliff:g>。文件本身没有问题，但电视无法在此分辨率下播放该格式。</string>
+    <string name="player_report_saved">流报告已保存到播放日志</string>
+    <string name="player_subtitles_filter_title">按语言筛选</string>
+    <string name="player_subtitles_filter_description">关闭时会显示 OpenSubtitles 中该标题的所有语言，因此你可以从完整列表中选择。开启时只显示你选择的语言。</string>
+    <string name="player_subtitles_search_language_description">搜索结果中只会显示该语言的字幕。你仍然可以在结果中按“所有语言”，查看一次搜索的所有内容。</string>
+    <string name="player_subtitles_language_not_set">未设置</string>
+    <string name="player_frame_rate_prompt_title">此频道可能出现画面抖动</string>
+    <string name="player_frame_rate_prompt_description">它以 <xliff:g id="fps">%1$d</xliff:g> fps 播放，而你的电视以 <xliff:g id="current_hz">%2$d</xliff:g> Hz 运行，无法均匀显示这些帧——画面动起来会有些卡顿。\n\n自动帧率会在你观看时将电视切换到 <xliff:g id="target_hz">%3$d</xliff:g> Hz，并在之后恢复原状。部分电视在切换帧率时会短暂黑屏；你也可以在设置 → 视频播放器中再次关闭它。</string>
+    <string name="player_frame_rate_turn_on">开启</string>
 </resources>

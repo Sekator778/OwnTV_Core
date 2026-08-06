@@ -302,4 +302,13 @@
     <string name="content_epg_player_choice_description">সেটিংস › ক্যাচ-আপ-এ একটি স্থায়ী পছন্দ সেট করুন।</string>
     <string name="content_epg_own_player">OwnTV প্লেয়ার</string>
     <string name="content_epg_external_player">বাহ্যিক প্লেয়ার</string>
+    <string name="content_epg_time_offset">ইপিজি সময় অফসেট</string>
+    <string name="content_epg_shift_minutes"><xliff:g id="sign">%1$s</xliff:g><xliff:g id="minutes">%2$s</xliff:g>মি.</string>
+    <string name="content_epg_shift_hours"><xliff:g id="sign">%1$s</xliff:g><xliff:g id="hours">%2$s</xliff:g>ঘ.</string>
+    <string name="content_epg_shift_hours_minutes"><xliff:g id="sign">%1$s</xliff:g><xliff:g id="hours">%2$s</xliff:g>ঘ. <xliff:g id="minutes">%3$s</xliff:g>মি.</string>
+    <string name="content_epg_offset_channel_description">“<xliff:g id="channel">%1$s</xliff:g>”-এর জন্য সূচি সরান। যখন কোনো ইস্ট/ওয়েস্ট ফিড তার সূচি অন্য সংস্করণের সাথে ভাগ করে, তখন এটি ব্যবহার করুন — একটি নেতিবাচক অফসেট সূচিকে আগে টেনে আনে।</string>
+    <string name="content_epg_offset_following_global">গ্লোবাল অফসেট অনুসরণ করছে (<xliff:g id="offset">%1$s</xliff:g>)</string>
+    <string name="content_epg_offset_channel_only">শুধু এই চ্যানেল · গ্লোবাল হলো <xliff:g id="offset">%1$s</xliff:g></string>
+    <string name="content_epg_offset_use_global">গ্লোবাল ব্যবহার করুন</string>
+    <string name="content_preview_single_stream">প্রিভিউ বন্ধ — আপনার প্রদানকারী এক সময়ে একটি স্ট্রিমের অনুমতি দেয়</string>
 </resources>

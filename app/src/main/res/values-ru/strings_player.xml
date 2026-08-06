@@ -223,4 +223,36 @@
     <string name="player_subtitles_invalid_credentials">OpenSubtitles не удалось выполнить вход с указанными данными учётной записи.</string>
     <string name="player_subtitles_sign_in_network_error">Не удалось подключиться к OpenSubtitles. Проверьте подключение к интернету и повторите попытку.</string>
     <string name="player_subtitles_refresh_network_error">Не удалось обновить OpenSubtitles. Проверьте подключение к интернету.</string>
+    <string name="player_subtitles_no_matches_all_languages">Подходящих субтитров не найдено. Попробуйте изменить название для поиска.</string>
+    <string name="player_subtitles_no_matches_chosen_language">Подходящих субтитров на выбранном языке не найдено.</string>
+    <string name="player_subtitles_search_language">Язык поиска</string>
+    <string name="player_reason_software_fallback">Переключено на программное декодирование</string>
+    <string name="player_reason_copy_mode_fallback">Переключено на декодирование в режиме копирования</string>
+    <string name="player_reason_archive_software_fallback">Архив отложенного просмотра перезапущен в режиме программного декодирования</string>
+    <string name="player_reason_stereo_fallback">Переключено на стереозвук</string>
+    <string name="player_reason_vod_engine_session_fallback">В разделе «Фильмы и сериалы» выполнен переход на mpv на время этой сессии</string>
+    <string name="player_reason_one_session_provider">Провайдер разрешает только одну сессию одновременно</string>
+    <string name="player_reason_mpv_handoff">Этот канал передан плееру mpv</string>
+    <string name="player_reason_stream_report">Отчёт о потоке</string>
+    <string name="player_stream_audio_output">Аудиовыход</string>
+    <string name="player_stream_live_buffer">Буфер прямого эфира</string>
+    <string name="player_stream_audio_passthrough">сквозная передача (декодирует телевизор/ресивер)</string>
+    <string name="player_stream_audio_decoded_in_app">декодируется в приложении</string>
+    <string name="player_stream_audio_pcm"><xliff:g id="channels">%1$s</xliff:g> PCM</string>
+    <string name="player_stream_multichannel_allowed">многоканальный режим разрешён</string>
+    <string name="player_stream_fell_back">переход на запасной вариант: <xliff:g id="reason">%1$s</xliff:g></string>
+    <string name="player_stream_preroll_video">предбуферизация <xliff:g id="seconds">%1$s</xliff:g> сек. видео</string>
+    <string name="player_stream_preroll_off">предбуферизация отключена</string>
+    <string name="player_stream_depth">глубина <xliff:g id="seconds">%1$s</xliff:g> сек.</string>
+    <string name="player_stream_readahead">упреждающее чтение <xliff:g id="seconds">%1$s</xliff:g> сек.</string>
+    <string name="player_stream_playlist_override">переопределение плейлистом</string>
+    <string name="player_error_hardware_format">Аппаратный видеодекодер этого телевизора не может декодировать <xliff:g id="resolution">%1$s</xliff:g> <xliff:g id="codec">%2$s</xliff:g>. С файлом всё в порядке, но телевизор не может воспроизвести этот формат в таком разрешении.</string>
+    <string name="player_report_saved">Отчёт о потоке сохранён в журнале воспроизведения</string>
+    <string name="player_subtitles_filter_title">Фильтр по языку</string>
+    <string name="player_subtitles_filter_description">Выкл. — показывает все языки, на которых у OpenSubtitles есть субтитры для этого названия, чтобы вы могли выбрать из полного списка. Вкл. — показывает только выбранный вами язык.</string>
+    <string name="player_subtitles_search_language_description">В результатах поиска будут только субтитры на этом языке. Вы по-прежнему можете нажать «Все языки» в результатах, чтобы увидеть всё для одного поиска.</string>
+    <string name="player_subtitles_language_not_set">Не выбран</string>
+    <string name="player_frame_rate_prompt_title">На этом канале возможны рывки изображения</string>
+    <string name="player_frame_rate_prompt_description">Канал воспроизводится со скоростью <xliff:g id="fps">%1$d</xliff:g> fps, а ваш телевизор работает с частотой <xliff:g id="current_hz">%2$d</xliff:g> Гц, поэтому не может показывать эти кадры равномерно — движение выглядит слегка прерывистым.\n\nАвтопереключение частоты кадров переводит телевизор на <xliff:g id="target_hz">%3$d</xliff:g> Гц, пока вы смотрите, а затем возвращает обратно. Некоторые телевизоры на мгновение гаснут при смене частоты; вы можете снова отключить эту функцию в разделе «Настройки» → «Видеоплеер».</string>
+    <string name="player_frame_rate_turn_on">Включить</string>
 </resources>

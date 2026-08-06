@@ -859,4 +859,56 @@
     <string name="settings_subtitle_color_cyan">Голубой</string>
     <string name="settings_subtitle_color_green">Зелёный</string>
     <string name="settings_subtitle_color_grey">Серый</string>
+    <string name="settings_live_preroll">Предварительная буферизация прямых эфиров</string>
+    <string name="settings_live_preroll_description">Собирает такой объём видео перед началом воспроизведения канала прямого эфира и ещё раз после прерывания. Это объём видео, а не обратный отсчёт. Режим «Выкл.» обеспечивает максимально быстрый запуск.</string>
+    <string name="settings_live_preroll_per_playlist">Предварительная буферизация для плейлиста</string>
+    <string name="settings_live_preroll_per_playlist_description">Переопределяет указанную выше настройку для одного плейлиста, сохраняя быстрый запуск остальных плейлистов.</string>
+    <plurals name="settings_live_preroll_overrides">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> набор</item>
+        <item quantity="few"><xliff:g id="count">%1$d</xliff:g> набора</item>
+        <item quantity="many"><xliff:g id="count">%1$d</xliff:g> наборов</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> набора</item>
+    </plurals>
+    <string name="settings_surround_stereo">Только стерео</string>
+    <string name="settings_surround_auto_description">Авто — пробовать объёмный звук Dolby/DTS и автоматически возвращаться к стерео, если телевизор или саундбар его не воспроизводит. Рекомендуется.</string>
+    <string name="settings_surround_stereo_description">Только стерео — всегда декодировать в приложении и передавать обычный звук 2.0. Используйте на встроенных динамиках телевизора или стерео-саундбаре, а также если звук отстаёт от картинки.</string>
+    <string name="settings_surround_forced_description">Объёмный звук — передавать Dolby/DTS на настоящий ресивер 5.1/7.1. Если звук пропадает или прерывается, OwnTV всё равно переключится на стерео и сообщит вам.</string>
+    <string name="settings_panel_width">Настройка ширины панелей</string>
+    <string name="settings_panel_width_description">Изменение размера панелей категорий, списка и предпросмотра в разделах «Прямой эфир», «Фильмы» и «Сериалы».</string>
+    <string name="settings_search_keywords_epg_offset">epg программа передач время смещение сдвиг часовой пояс восток запад часы</string>
+    <string name="settings_search_keywords_panel_width">панель ширина размер изменить размер категория список предпросмотр постер колонка раскладка прямой эфир фильмы сериалы</string>
+    <string name="settings_search_keywords_live_preroll">предбуферизация преролл пре-ролл буферизация буфер перед воспроизведением повторная буферизация прерывание зависание для плейлиста</string>
+    <string name="settings_detailed_playback_logging">Подробный журнал воспроизведения</string>
+    <string name="settings_search_keywords_detailed_logging">диагностика подробный трассировка logcat отладка отчёт об ошибке прямой эфир движок</string>
+    <string name="settings_playback_kind_error">Ошибка</string>
+    <string name="settings_playback_kind_event">Событие</string>
+    <string name="settings_playback_kind_report">Отчёт</string>
+    <string name="settings_playback_entry_with_kind"><xliff:g id="date">%1$s</xliff:g>  ·  <xliff:g id="kind">%2$s</xliff:g>  ·  <xliff:g id="engine">%3$s</xliff:g>  ·  <xliff:g id="stream_type">%4$s</xliff:g></string>
+    <string name="settings_export">Экспорт</string>
+    <string name="settings_detailed_playback_logging_description">Ведёт полную трассировку действий движка прямого эфира — каждое переключение, откат и переподключение — в Logcat и в экспортируемом отчёте. Оставляйте выключенным, если вы не ищете причину проблемы: эта опция не влияет на воспроизведение, а только увеличивает объём записываемых данных.</string>
+    <string name="settings_live_preroll_playlist_picker">Какой плейлист?</string>
+    <string name="settings_live_preroll_follow">Как в настройках</string>
+    <string name="settings_video_seconds"><xliff:g id="seconds">%1$d</xliff:g> сек. видео</string>
+    <string name="settings_epg_offset_root_description">Сдвигает всю программу передач, если время в источнике не совпадает с тем, что реально идёт в эфире. Отдельный канал можно сдвинуть самостоятельно через меню долгого нажатия (в «Прямом эфире» или в «Программе передач») — это вариант для восточных/западных версий, использующих общую программу.</string>
+    <string name="settings_epg_offset_dialog_description">Сдвигает каждую передачу в программе передач. Используйте, когда весь источник показывает не то время; для отдельного канала (восточной/западной версии, использующей общую программу) удерживайте канал в «Прямом эфире» или «Программе передач» и задайте ему собственное смещение там.</string>
+    <string name="settings_panel_width_screen_description">Задаёт, какую часть экрана занимает каждая панель: категории, список элементов и предпросмотр.</string>
+    <string name="settings_panel_width_summary">Категории <xliff:g id="category">%1$d</xliff:g>%% · Список <xliff:g id="list">%2$d</xliff:g>%% · <xliff:g id="preview_label">%3$s</xliff:g> <xliff:g id="preview">%4$d</xliff:g>%%</string>
+    <string name="settings_panel_width_help">• Три панели занимают один ряд, поэтому их проценты должны в сумме давать 100%%.\n• При расширении одной панели нужно убрать столько же с другой перед сохранением.\n• Сброс возвращает разделу стандартную ширину, с которой этот экран начинал работу.\n• Отключение раздела восстанавливает его стандартную раскладку без потери ваших значений.\n• Постеры фильмов и сериалов автоматически перестраиваются, поэтому в более узком списке просто отображается меньше постеров в ряду.</string>
+    <string name="settings_panel_width_preview">Предпросмотр</string>
+    <string name="settings_panel_width_poster">Постер</string>
+    <string name="settings_panel_width_dialog_title"><xliff:g id="section">%1$s</xliff:g> — ширина панелей</string>
+    <string name="settings_panel_width_customize">Настроить панель</string>
+    <string name="settings_panel_width_category">Панель категорий</string>
+    <string name="settings_panel_width_list">Панель списка</string>
+    <string name="settings_panel_width_preview_panel">Панель <xliff:g id="label">%1$s</xliff:g></string>
+    <string name="settings_panel_width_total">Общий размер</string>
+    <string name="settings_panel_width_invalid_total">Общий размер составляет <xliff:g id="total">%1$d</xliff:g>%%. Он должен составлять 100%% — пожалуйста, измените значения.</string>
+    <string name="settings_language_help_translate">Помогите перевести OwnTV на ваш язык</string>
+    <string name="settings_language_contribution_description">Отсканируйте QR-код или откройте ссылку, чтобы выбрать любой доступный язык и внести вклад во все шесть компонентов перевода OwnTV.</string>
+    <string name="settings_language_contribution_qr_description">QR-код для обзора проекта перевода OwnTV</string>
+    <string name="settings_language_contribution_qr_failed">Не удалось создать QR-код. Воспользуйтесь ссылкой ниже.</string>
+    <string name="settings_language_contribution_copy">Скопировать ссылку</string>
+    <string name="settings_language_contribution_copied">Ссылка скопирована</string>
+    <string name="settings_language_contribution_open_failed">Не удалось открыть ссылку. Скопируйте её.</string>
+    <string name="settings_language_contribution_copy_failed">Не удалось скопировать ссылку. Прочитайте или введите URL, указанный выше.</string>
 </resources>

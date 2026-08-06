@@ -302,4 +302,13 @@
     <string name="content_epg_player_choice_description">Ange ett permanent val i Inställningar › Tv-arkiv.</string>
     <string name="content_epg_own_player">OwnTV-spelare</string>
     <string name="content_epg_external_player">Extern spelare</string>
+    <string name="content_epg_time_offset">EPG-tidsförskjutning</string>
+    <string name="content_epg_shift_minutes"><xliff:g id="sign">%1$s</xliff:g><xliff:g id="minutes">%2$s</xliff:g>m</string>
+    <string name="content_epg_shift_hours"><xliff:g id="sign">%1$s</xliff:g><xliff:g id="hours">%2$s</xliff:g>h</string>
+    <string name="content_epg_shift_hours_minutes"><xliff:g id="sign">%1$s</xliff:g><xliff:g id="hours">%2$s</xliff:g>h <xliff:g id="minutes">%3$s</xliff:g>m</string>
+    <string name="content_epg_offset_channel_description">Flytta guiden för ”<xliff:g id="channel">%1$s</xliff:g>”. Använd detta när en East/West-feed delar sin guide med den andra versionen — en negativ förskjutning drar guiden tidigare.</string>
+    <string name="content_epg_offset_following_global">Följer den globala förskjutningen (<xliff:g id="offset">%1$s</xliff:g>)</string>
+    <string name="content_epg_offset_channel_only">Bara den här kanalen · global är <xliff:g id="offset">%1$s</xliff:g></string>
+    <string name="content_epg_offset_use_global">Använd global</string>
+    <string name="content_preview_single_stream">Förhandsvisning av — din leverantör tillåter bara en ström i taget.</string>
 </resources>

@@ -302,4 +302,13 @@
     <string name="content_epg_player_choice_description">ക്രമീകരണങ്ങൾ › ക്യാച്ച്-അപ്പ് എന്നതിൽ സ്ഥിരമായൊരു തിരഞ്ഞെടുപ്പ് സജ്ജമാക്കുക.</string>
     <string name="content_epg_own_player">OwnTV പ്ലെയർ</string>
     <string name="content_epg_external_player">ബാഹ്യ പ്ലെയർ</string>
+    <string name="content_epg_time_offset">ഇപിജി സമയ ഓഫ്സെറ്റ്</string>
+    <string name="content_epg_shift_minutes"><xliff:g id="sign">%1$s</xliff:g><xliff:g id="minutes">%2$s</xliff:g>മി</string>
+    <string name="content_epg_shift_hours"><xliff:g id="sign">%1$s</xliff:g><xliff:g id="hours">%2$s</xliff:g>മ</string>
+    <string name="content_epg_shift_hours_minutes"><xliff:g id="sign">%1$s</xliff:g><xliff:g id="hours">%2$s</xliff:g>മ <xliff:g id="minutes">%3$s</xliff:g>മി</string>
+    <string name="content_epg_offset_channel_description">“<xliff:g id="channel">%1$s</xliff:g>” എന്ന ചാനലിന്റെ ഗൈഡ് മാറ്റുക. ഒരു ഈസ്റ്റ്/വെസ്റ്റ് ഫീഡ് അതിന്റെ ഗൈഡ് മറ്റ് പതിപ്പുമായി പങ്കിടുമ്പോൾ ഇത് ഉപയോഗിക്കുക — ഒരു നെഗറ്റീവ് ഓഫ്സെറ്റ് ഗൈഡിനെ നേരത്തേയാക്കുന്നു.</string>
+    <string name="content_epg_offset_following_global">ആഗോള ഓഫ്സെറ്റ് പിന്തുടരുന്നു (<xliff:g id="offset">%1$s</xliff:g>)</string>
+    <string name="content_epg_offset_channel_only">ഈ ചാനൽ മാത്രം · ആഗോള ഓഫ്സെറ്റ് <xliff:g id="offset">%1$s</xliff:g></string>
+    <string name="content_epg_offset_use_global">ആഗോള ഓഫ്സെറ്റ് ഉപയോഗിക്കുക</string>
+    <string name="content_preview_single_stream">പ്രിവ്യൂ ഓഫ് — നിങ്ങളുടെ പ്രൊവൈഡർ ഒരു സമയം ഒരു സ്ട്രീം മാത്രമേ അനുവദിക്കൂ</string>
 </resources>

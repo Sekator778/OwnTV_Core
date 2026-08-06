@@ -209,4 +209,36 @@
     <string name="player_subtitles_invalid_credentials">OpenSubtitles konnte dich mit diesen Kontodaten nicht anmelden.</string>
     <string name="player_subtitles_sign_in_network_error">OpenSubtitles konnte nicht erreicht werden. Prüfe deine Internetverbindung und versuche es erneut.</string>
     <string name="player_subtitles_refresh_network_error">OpenSubtitles konnte nicht aktualisiert werden. Prüfe deine Internetverbindung.</string>
+    <string name="player_subtitles_no_matches_all_languages">Keine passenden Untertitel gefunden. Versuche, den Suchtitel zu bearbeiten.</string>
+    <string name="player_subtitles_no_matches_chosen_language">Keine passenden Untertitel in der gewählten Sprache gefunden.</string>
+    <string name="player_subtitles_search_language">Suchsprache</string>
+    <string name="player_reason_software_fallback">Auf Softwaredekodierung zurückgefallen</string>
+    <string name="player_reason_copy_mode_fallback">Auf Dekodierung im Copy-Modus zurückgefallen</string>
+    <string name="player_reason_archive_software_fallback">Catch-up-Archiv mit Softwaredekodierung erneut geöffnet</string>
+    <string name="player_reason_stereo_fallback">Auf Stereo-Ton umgeschaltet</string>
+    <string name="player_reason_vod_engine_session_fallback">Filme &amp; Serien für diese Sitzung auf mpv umgeschaltet</string>
+    <string name="player_reason_one_session_provider">Der Anbieter erlaubt jeweils nur eine Sitzung</string>
+    <string name="player_reason_mpv_handoff">Diesen Sender an mpv übergeben</string>
+    <string name="player_reason_stream_report">Streambericht</string>
+    <string name="player_stream_audio_output">Audioausgabe</string>
+    <string name="player_stream_live_buffer">Live-Puffer</string>
+    <string name="player_stream_audio_passthrough">Passthrough (TV/Receiver dekodiert)</string>
+    <string name="player_stream_audio_decoded_in_app">in der App dekodiert</string>
+    <string name="player_stream_audio_pcm"><xliff:g id="channels">%1$s</xliff:g> PCM</string>
+    <string name="player_stream_multichannel_allowed">Mehrkanalton erlaubt</string>
+    <string name="player_stream_fell_back">zurückgefallen: <xliff:g id="reason">%1$s</xliff:g></string>
+    <string name="player_stream_preroll_video">Video für <xliff:g id="seconds">%1$s</xliff:g> s vorab gepuffert</string>
+    <string name="player_stream_preroll_off">Vorabpuffer aus</string>
+    <string name="player_stream_depth">Puffertiefe <xliff:g id="seconds">%1$s</xliff:g> s</string>
+    <string name="player_stream_readahead">Readahead <xliff:g id="seconds">%1$s</xliff:g> s</string>
+    <string name="player_stream_playlist_override">Playlist-Override</string>
+    <string name="player_error_hardware_format">Die Videohardware dieses Fernsehers kann <xliff:g id="resolution">%1$s</xliff:g> <xliff:g id="codec">%2$s</xliff:g> nicht dekodieren. Die Datei ist in Ordnung, aber der Fernseher kann dieses Format bei dieser Auflösung nicht wiedergeben.</string>
+    <string name="player_report_saved">Streambericht im Wiedergabeprotokoll gespeichert</string>
+    <string name="player_subtitles_filter_title">Nach Sprache filtern</string>
+    <string name="player_subtitles_filter_description">Bei „Aus“ werden alle Sprachen angezeigt, die OpenSubtitles für einen Titel anbietet, sodass du aus der vollständigen Liste auswählen kannst. Bei „Ein“ wird nur deine gewählte Sprache angezeigt.</string>
+    <string name="player_subtitles_search_language_description">In den Suchergebnissen werden nur Untertitel in dieser Sprache angezeigt. Du kannst in den Ergebnissen weiterhin „Alle Sprachen“ drücken, um alle Ergebnisse dieser Suche zu sehen.</string>
+    <string name="player_subtitles_language_not_set">Nicht festgelegt</string>
+    <string name="player_frame_rate_prompt_title">Bei diesem Sender kann das Bild ruckeln</string>
+    <string name="player_frame_rate_prompt_description">Die Wiedergabe läuft mit <xliff:g id="fps">%1$d</xliff:g> fps, während dein Fernseher mit <xliff:g id="current_hz">%2$d</xliff:g> Hz läuft, wodurch dein Fernseher diese Bilder nicht gleichmäßig darstellen kann – Bewegungen wirken leicht ruckelig.\n\nDie automatische Bildrate schaltet deinen Fernseher während der Wiedergabe auf <xliff:g id="target_hz">%3$d</xliff:g> Hz und danach wieder zurück. Bei manchen Fernsehern wird der Bildschirm beim Ändern der Bildrate kurz schwarz; du kannst die Funktion unter Einstellungen → Videoplayer wieder deaktivieren.</string>
+    <string name="player_frame_rate_turn_on">Einschalten</string>
 </resources>

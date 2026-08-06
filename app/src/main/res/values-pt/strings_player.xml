@@ -216,4 +216,36 @@
     <string name="player_subtitles_invalid_credentials">O OpenSubtitles não conseguiu entrar com esses dados da conta.</string>
     <string name="player_subtitles_sign_in_network_error">Não foi possível acessar o OpenSubtitles. Verifique sua conexão com a internet e tente novamente.</string>
     <string name="player_subtitles_refresh_network_error">Não foi possível renovar a sessão do OpenSubtitles. Verifique sua conexão com a internet.</string>
+    <string name="player_subtitles_no_matches_all_languages">Nenhuma legenda correspondente foi encontrada. Tente editar o título da busca.</string>
+    <string name="player_subtitles_no_matches_chosen_language">Nenhuma legenda correspondente foi encontrada no seu idioma escolhido.</string>
+    <string name="player_subtitles_search_language">Idioma da busca</string>
+    <string name="player_reason_software_fallback">Recorreu à decodificação por software</string>
+    <string name="player_reason_copy_mode_fallback">Recorreu à decodificação no modo de cópia</string>
+    <string name="player_reason_archive_software_fallback">Arquivo de catch-up reaberto com decodificação por software</string>
+    <string name="player_reason_stereo_fallback">Mudou para áudio estéreo</string>
+    <string name="player_reason_vod_engine_session_fallback">Mudou Filmes e Séries para o mpv nesta sessão</string>
+    <string name="player_reason_one_session_provider">O provedor permite apenas uma sessão por vez</string>
+    <string name="player_reason_mpv_handoff">Transferiu este canal para o mpv</string>
+    <string name="player_reason_stream_report">Relatório de stream</string>
+    <string name="player_stream_audio_output">Saída de áudio</string>
+    <string name="player_stream_live_buffer">Buffer ao vivo</string>
+    <string name="player_stream_audio_passthrough">passthrough (a TV/o receptor decodifica)</string>
+    <string name="player_stream_audio_decoded_in_app">decodificado no app</string>
+    <string name="player_stream_audio_pcm"><xliff:g id="channels">%1$s</xliff:g> PCM</string>
+    <string name="player_stream_multichannel_allowed">multicanal permitido</string>
+    <string name="player_stream_fell_back">fallback: <xliff:g id="reason">%1$s</xliff:g></string>
+    <string name="player_stream_preroll_video">pré-buffer de <xliff:g id="seconds">%1$s</xliff:g>s de vídeo</string>
+    <string name="player_stream_preroll_off">pré-buffer desativado</string>
+    <string name="player_stream_depth">profundidade de <xliff:g id="seconds">%1$s</xliff:g>s</string>
+    <string name="player_stream_readahead">leitura antecipada de <xliff:g id="seconds">%1$s</xliff:g>s</string>
+    <string name="player_stream_playlist_override">sobrescrita de playlist</string>
+    <string name="player_error_hardware_format">O hardware de vídeo desta TV não consegue decodificar <xliff:g id="resolution">%1$s</xliff:g> <xliff:g id="codec">%2$s</xliff:g>. O arquivo está ok, mas a TV não consegue reproduzir esse formato nessa resolução.</string>
+    <string name="player_report_saved">Relatório de stream salvo no log de reprodução</string>
+    <string name="player_subtitles_filter_title">Filtrar por idioma</string>
+    <string name="player_subtitles_filter_description">Desativado mostra todos os idiomas que o OpenSubtitles tem para um título, assim você pode escolher na lista completa. Ativado mostra apenas o seu idioma escolhido.</string>
+    <string name="player_subtitles_search_language_description">Apenas legendas nesse idioma aparecem nos resultados da busca. Você ainda pode pressionar “Todos os idiomas” nos resultados para ver tudo em uma busca.</string>
+    <string name="player_subtitles_language_not_set">Não definido</string>
+    <string name="player_frame_rate_prompt_title">Este canal pode apresentar trepidação</string>
+    <string name="player_frame_rate_prompt_description">Ele é reproduzido a <xliff:g id="fps">%1$d</xliff:g> fps enquanto sua TV opera a <xliff:g id="current_hz">%2$d</xliff:g> Hz, o que não consegue mostrar esses quadros de forma uniforme — o movimento parece um pouco irregular.\n\nA taxa de quadros automática muda a TV para <xliff:g id="target_hz">%3$d</xliff:g> Hz enquanto você assiste e a restaura depois. Algumas TVs ficam com a tela preta por um instante quando a taxa muda; você pode desativá-la novamente em Configurações → Player de Vídeo.</string>
+    <string name="player_frame_rate_turn_on">Ativar</string>
 </resources>

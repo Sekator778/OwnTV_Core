@@ -288,4 +288,13 @@
     <string name="content_epg_player_choice_description">前往「設定 › 回看」設定永久選項。</string>
     <string name="content_epg_own_player">OwnTV 播放器</string>
     <string name="content_epg_external_player">外部播放器</string>
+    <string name="content_epg_time_offset">電子節目表時間偏移</string>
+    <string name="content_epg_shift_minutes"><xliff:g id="sign">%1$s</xliff:g><xliff:g id="minutes">%2$s</xliff:g>分</string>
+    <string name="content_epg_shift_hours"><xliff:g id="sign">%1$s</xliff:g><xliff:g id="hours">%2$s</xliff:g>小時</string>
+    <string name="content_epg_shift_hours_minutes"><xliff:g id="sign">%1$s</xliff:g><xliff:g id="hours">%2$s</xliff:g>小時 <xliff:g id="minutes">%3$s</xliff:g>分</string>
+    <string name="content_epg_offset_channel_description">平移「<xliff:g id="channel">%1$s</xliff:g>」的節目表。當東岸／西岸訊號與另一個版本共用節目表時，請使用此功能——負偏移會讓節目表提前。</string>
+    <string name="content_epg_offset_following_global">跟隨全域偏移（<xliff:g id="offset">%1$s</xliff:g>）</string>
+    <string name="content_epg_offset_channel_only">僅此頻道 · 全域為 <xliff:g id="offset">%1$s</xliff:g></string>
+    <string name="content_epg_offset_use_global">使用全域</string>
+    <string name="content_preview_single_stream">預覽已關閉——您的提供者一次僅允許一個串流</string>
 </resources>

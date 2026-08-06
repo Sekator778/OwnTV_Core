@@ -316,4 +316,13 @@
     <string name="content_epg_player_choice_description">Définissez un choix permanent dans Paramètres › Rattrapage.</string>
     <string name="content_epg_own_player">Lecteur OwnTV</string>
     <string name="content_epg_external_player">Lecteur externe</string>
+    <string name="content_epg_time_offset">Décalage horaire de l\'EPG</string>
+    <string name="content_epg_shift_minutes"><xliff:g id="sign">%1$s</xliff:g><xliff:g id="minutes">%2$s</xliff:g>m</string>
+    <string name="content_epg_shift_hours"><xliff:g id="sign">%1$s</xliff:g><xliff:g id="hours">%2$s</xliff:g>h</string>
+    <string name="content_epg_shift_hours_minutes"><xliff:g id="sign">%1$s</xliff:g><xliff:g id="hours">%2$s</xliff:g>h <xliff:g id="minutes">%3$s</xliff:g>m</string>
+    <string name="content_epg_offset_channel_description">Déplacez le guide pour « <xliff:g id="channel">%1$s</xliff:g> ». Utilisez cette option lorsqu\'un flux Est/Ouest partage son guide avec l\'autre version — un décalage négatif avance le guide.</string>
+    <string name="content_epg_offset_following_global">Suivre le décalage global (<xliff:g id="offset">%1$s</xliff:g>)</string>
+    <string name="content_epg_offset_channel_only">Cette chaîne uniquement · le décalage global est <xliff:g id="offset">%1$s</xliff:g></string>
+    <string name="content_epg_offset_use_global">Utiliser le décalage global</string>
+    <string name="content_preview_single_stream">Aperçu désactivé — votre fournisseur n\'autorise qu\'un flux à la fois.</string>
 </resources>

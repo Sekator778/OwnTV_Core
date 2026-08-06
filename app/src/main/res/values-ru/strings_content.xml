@@ -330,4 +330,13 @@
     <string name="content_epg_player_choice_description">Выберите постоянный вариант в разделе «Настройки › Архив».</string>
     <string name="content_epg_own_player">Плеер OwnTV</string>
     <string name="content_epg_external_player">Внешний плеер</string>
+    <string name="content_epg_time_offset">Смещение времени EPG</string>
+    <string name="content_epg_shift_minutes"><xliff:g id="sign">%1$s</xliff:g><xliff:g id="minutes">%2$s</xliff:g>мин</string>
+    <string name="content_epg_shift_hours"><xliff:g id="sign">%1$s</xliff:g><xliff:g id="hours">%2$s</xliff:g>ч</string>
+    <string name="content_epg_shift_hours_minutes"><xliff:g id="sign">%1$s</xliff:g><xliff:g id="hours">%2$s</xliff:g>ч <xliff:g id="minutes">%3$s</xliff:g>мин</string>
+    <string name="content_epg_offset_channel_description">Сдвиньте программу передач для «<xliff:g id="channel">%1$s</xliff:g>». Используйте это, когда восточная и западная версии канала используют общую программу передач — отрицательное смещение сдвигает программу на более раннее время.</string>
+    <string name="content_epg_offset_following_global">Следует глобальному смещению (<xliff:g id="offset">%1$s</xliff:g>)</string>
+    <string name="content_epg_offset_channel_only">Только этот канал · глобальное: <xliff:g id="offset">%1$s</xliff:g></string>
+    <string name="content_epg_offset_use_global">Использовать глобальное смещение</string>
+    <string name="content_preview_single_stream">Предпросмотр отключён — ваш провайдер позволяет одновременно только один поток.</string>
 </resources>

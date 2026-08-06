@@ -814,4 +814,53 @@
     <string name="settings_subtitle_color_cyan">청록색</string>
     <string name="settings_subtitle_color_green">녹색</string>
     <string name="settings_subtitle_color_grey">회색</string>
+    <string name="settings_live_preroll">실시간 스트림 미리 버퍼링</string>
+    <string name="settings_live_preroll_description">실시간 채널이 재생을 시작하기 전에 이만큼의 영상을 모으고, 끊긴 후에도 다시 모읍니다. 이는 영상 분량이지 카운트다운이 아닙니다. 끄면 가장 빨리 시작할 수 있습니다.</string>
+    <string name="settings_live_preroll_per_playlist">재생목록별 미리 버퍼링</string>
+    <string name="settings_live_preroll_per_playlist_description">한 재생목록에 대해서만 위 설정을 재정의하고, 다른 재생목록은 빠르게 유지합니다.</string>
+    <plurals name="settings_live_preroll_overrides">
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g>개 설정됨</item>
+    </plurals>
+    <string name="settings_surround_stereo">스테레오만</string>
+    <string name="settings_surround_auto_description">자동 — Dolby/DTS 서라운드를 시도하고, TV나 사운드바가 재생하지 못하면 자동으로 스테레오로 전환합니다. 권장합니다.</string>
+    <string name="settings_surround_stereo_description">스테레오만 — 항상 앱에서 디코딩하고 일반 2.0 사운드를 보냅니다. TV 스피커나 스테레오 사운드바에서 사용하거나, 오디오가 화면보다 늦어질 때 사용하세요.</string>
+    <string name="settings_surround_forced_description">서라운드 — Dolby/DTS를 실제 5.1/7.1 리시버로 보냅니다. 소리가 나지 않거나 끊기면 OwnTV가 그래도 스테레오로 전환하고 알려 줍니다.</string>
+    <string name="settings_panel_width">패널 너비 조정</string>
+    <string name="settings_panel_width_description">실시간 TV, 영화 및 시리즈에서 카테고리, 목록, 미리보기 패널의 크기를 조정합니다.</string>
+    <string name="settings_search_keywords_epg_offset">EPG 가이드 시간 오프셋 이동 시간대 동쪽 서쪽 시간</string>
+    <string name="settings_search_keywords_panel_width">패널 너비 크기 크기 조정 카테고리 목록 미리보기 포스터 열 레이아웃 실시간 영화 시리즈</string>
+    <string name="settings_search_keywords_live_preroll">미리 버퍼링 프리롤 버퍼링 버퍼 재생 전 재버퍼링 끊김 멈춤 재생목록별</string>
+    <string name="settings_detailed_playback_logging">상세 재생 로깅</string>
+    <string name="settings_search_keywords_detailed_logging">진단 상세 추적 Logcat 디버그 보고서 버그 실시간 엔진</string>
+    <string name="settings_playback_kind_error">오류</string>
+    <string name="settings_playback_kind_event">이벤트</string>
+    <string name="settings_playback_kind_report">보고서</string>
+    <string name="settings_playback_entry_with_kind"><xliff:g id="date">%1$s</xliff:g>  ·  <xliff:g id="kind">%2$s</xliff:g>  ·  <xliff:g id="engine">%3$s</xliff:g>  ·  <xliff:g id="stream_type">%4$s</xliff:g></string>
+    <string name="settings_export">내보내기</string>
+    <string name="settings_detailed_playback_logging_description">실시간 엔진이 수행하는 모든 채널 튜닝, 대체, 재연결에 대한 전체 추적을 Logcat과 내보낸 보고서에 남깁니다. 문제를 추적할 때가 아니면 꺼 두세요. 이 기능은 재생을 변경하지 않으며 기록되는 양만 달라집니다.</string>
+    <string name="settings_live_preroll_playlist_picker">어느 재생목록?</string>
+    <string name="settings_live_preroll_follow">설정 따르기</string>
+    <string name="settings_video_seconds"><xliff:g id="seconds">%1$d</xliff:g>초 분량의 영상</string>
+    <string name="settings_epg_offset_root_description">피드의 시간이 실제 방영 시간과 맞지 않을 때 가이드 전체를 이동합니다. 단일 채널은 길게 누르기 메뉴(실시간 TV 또는 가이드)에서 개별적으로 이동할 수 있습니다. 하나의 가이드를 공유하는 동부/서부 버전에는 채널별 설정을 사용하세요.</string>
+    <string name="settings_epg_offset_dialog_description">가이드의 모든 프로그램을 이동합니다. 전체 피드의 시간대가 잘못되었을 때 사용하세요. 단일 채널(하나의 가이드를 공유하는 동부/서부 버전)의 경우 실시간 TV 또는 가이드에서 채널을 길게 누르고 해당 채널의 오프셋을 설정하세요.</string>
+    <string name="settings_panel_width_screen_description">카테고리, 항목 목록, 미리보기 패널이 각각 화면에서 차지하는 크기를 설정합니다.</string>
+    <string name="settings_panel_width_summary">카테고리 <xliff:g id="category">%1$d</xliff:g>%% · 목록 <xliff:g id="list">%2$d</xliff:g>%% · <xliff:g id="preview_label">%3$s</xliff:g> <xliff:g id="preview">%4$d</xliff:g>%%</string>
+    <string name="settings_panel_width_help">• 세 패널은 한 행을 공유하므로 백분율 합계가 100%%가 되어야 합니다.\n• 패널 하나를 넓히면 저장 전에 다른 패널에서 같은 만큼 줄여야 합니다.\n• 재설정을 누르면 해당 섹션이 이 화면을 처음 열었을 때의 표준 너비로 돌아갑니다.\n• 섹션을 끄면 설정값을 잃지 않고 표준 레이아웃으로 복원됩니다.\n• 영화 및 시리즈 포스터는 자동으로 다시 배치되므로 목록이 좁아지면 행당 표시 수만 줄어듭니다.</string>
+    <string name="settings_panel_width_preview">미리보기</string>
+    <string name="settings_panel_width_poster">포스터</string>
+    <string name="settings_panel_width_dialog_title"><xliff:g id="section">%1$s</xliff:g> 패널 너비</string>
+    <string name="settings_panel_width_customize">패널 맞춤 설정</string>
+    <string name="settings_panel_width_category">카테고리 패널</string>
+    <string name="settings_panel_width_list">목록 패널</string>
+    <string name="settings_panel_width_preview_panel"><xliff:g id="label">%1$s</xliff:g> 패널</string>
+    <string name="settings_panel_width_total">전체 크기</string>
+    <string name="settings_panel_width_invalid_total">전체 크기가 <xliff:g id="total">%1$d</xliff:g>%%입니다. 100%%가 되어야 하므로 조정해 주세요.</string>
+    <string name="settings_language_help_translate">OwnTV를 여러분의 언어로 번역하는 데 도움을 주세요</string>
+    <string name="settings_language_contribution_description">QR 코드를 스캔하거나 링크를 열어 사용 가능한 언어를 선택하고 OwnTV 번역 구성 요소 6개 전체에 기여할 수 있습니다.</string>
+    <string name="settings_language_contribution_qr_description">OwnTV 번역 프로젝트 개요 QR 코드</string>
+    <string name="settings_language_contribution_qr_failed">QR 코드를 생성할 수 없습니다. 대신 아래에 표시된 링크를 사용하세요.</string>
+    <string name="settings_language_contribution_copy">링크 복사</string>
+    <string name="settings_language_contribution_copied">링크가 복사되었습니다</string>
+    <string name="settings_language_contribution_open_failed">링크를 열 수 없습니다. 대신 링크를 복사하세요.</string>
+    <string name="settings_language_contribution_copy_failed">링크를 복사할 수 없습니다. 위에 표시된 URL을 읽거나 직접 입력하세요.</string>
 </resources>

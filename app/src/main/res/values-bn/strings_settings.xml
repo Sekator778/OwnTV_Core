@@ -829,4 +829,54 @@
     <string name="settings_subtitle_color_cyan">সায়ান</string>
     <string name="settings_subtitle_color_green">সবুজ</string>
     <string name="settings_subtitle_color_grey">ধূসর</string>
+    <string name="settings_live_preroll">লাইভ স্ট্রিম প্রি-বাফার করুন</string>
+    <string name="settings_live_preroll_description">একটি লাইভ চ্যানেল বাজানো শুরু করার আগে এতটুকু ভিডিও সংগ্রহ করা হয়, এবং প্লেব্যাক থেমে গেলে আবারও ততটুকু সংগ্রহ করা হয়। এটি ভিডিওর পরিমাণ, কোনো কাউন্টডাউন নয়। বন্ধ থাকলে সবচেয়ে দ্রুত সম্ভব শুরু হয়।</string>
+    <string name="settings_live_preroll_per_playlist">প্রতি প্লেলিস্টে প্রি-বাফার</string>
+    <string name="settings_live_preroll_per_playlist_description">একটি প্লেলিস্টের জন্য উপরের সেটিংটি ওভাররাইড করুন, আর অন্য প্লেলিস্টগুলো দ্রুতই থাকবে।</string>
+    <plurals name="settings_live_preroll_overrides">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> সেট</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> সেট</item>
+    </plurals>
+    <string name="settings_surround_stereo">শুধুমাত্র স্টেরিও</string>
+    <string name="settings_surround_auto_description">অটো — Dolby/DTS সারাউন্ড ব্যবহার করার চেষ্টা করে, আর টিভি বা সাউন্ডবার তা চালাতে না পারলে স্বয়ংক্রিয়ভাবে স্টেরিওতে ফিরে যায়। প্রস্তাবিত।</string>
+    <string name="settings_surround_stereo_description">শুধুমাত্র স্টেরিও — সবসময় অ্যাপের ভেতরেই ডিকোড করে সাধারণ 2.0 সাউন্ড পাঠায়। টিভির স্পিকার বা স্টেরিও সাউন্ডবারে এটি ব্যবহার করুন, অথবা অডিও ছবির পেছনে পড়ে গেলে।</string>
+    <string name="settings_surround_forced_description">সারাউন্ড — Dolby/DTS একটি সত্যিকারের 5.1/7.1 রিসিভারে পাঠায়। যদি শব্দ নিঃশব্দ হয়ে যায় বা ঝিমিয়ে পড়ে, OwnTV তবুও স্টেরিওতে ফিরে আসে এবং আপনাকে জানায়।</string>
+    <string name="settings_panel_width">প্যানেল প্রস্থ সামঞ্জস্য</string>
+    <string name="settings_panel_width_description">লাইভ টিভি, সিনেমা ও সিরিজে ক্যাটাগরি, তালিকা এবং প্রিভিউ প্যানেলের আকার বদলান।</string>
+    <string name="settings_search_keywords_epg_offset">ইপিজি অনুষ্ঠান সূচি সময় অফসেট শিফট টাইমজোন পূর্ব পশ্চিম ঘণ্টা</string>
+    <string name="settings_search_keywords_panel_width">প্যানেল প্রস্থ আকার রিসাইজ ক্যাটাগরি তালিকা প্রিভিউ পোস্টার কলাম লেআউট লাইভ সিনেমা সিরিজ</string>
+    <string name="settings_search_keywords_live_preroll">প্রি-বাফার প্রি-রোল প্রি-রোল বাফারিং বাফার বাজানোর আগে রি-বাফার স্টাটার ফ্রিজ প্রতি প্লেলিস্ট</string>
+    <string name="settings_detailed_playback_logging">বিস্তারিত প্লেব্যাক লগিং</string>
+    <string name="settings_search_keywords_detailed_logging">ডায়াগনস্টিকস ভার্বোজ ট্রেস logcat ডিবাগ রিপোর্ট বাগ লাইভ ইঞ্জিন</string>
+    <string name="settings_playback_kind_error">ত্রুটি</string>
+    <string name="settings_playback_kind_event">ইভেন্ট</string>
+    <string name="settings_playback_kind_report">রিপোর্ট</string>
+    <string name="settings_playback_entry_with_kind"><xliff:g id="date">%1$s</xliff:g>  ·  <xliff:g id="kind">%2$s</xliff:g>  ·  <xliff:g id="engine">%3$s</xliff:g>  ·  <xliff:g id="stream_type">%4$s</xliff:g></string>
+    <string name="settings_export">এক্সপোর্ট</string>
+    <string name="settings_detailed_playback_logging_description">লাইভ ইঞ্জিন যা কিছু করে — প্রতিটি টিউন, ফলব্যাক ও পুনঃসংযোগ — তার সম্পূর্ণ ট্রেস Logcat এবং এক্সপোর্ট করা রিপোর্টে রাখে। কোনো সমস্যা খোঁজার চেষ্টা না করা পর্যন্ত এটি বন্ধ রাখুন; এটি প্লেব্যাক কখনো পরিবর্তন করে না, শুধু কতটুকু লেখা হয় তা-ই নির্ধারণ করে।</string>
+    <string name="settings_live_preroll_playlist_picker">কোন প্লেলিস্ট?</string>
+    <string name="settings_live_preroll_follow">সেটিং অনুসরণ করুন</string>
+    <string name="settings_video_seconds"><xliff:g id="seconds">%1$d</xliff:g> সেকেন্ডের ভিডিও</string>
+    <string name="settings_epg_offset_root_description">কোনো ফিডের সময় বাস্তবে যা চলছে তার সাথে মেলে না, তখন পুরো অনুষ্ঠান সূচিটি সরান। একটি একক চ্যানেলকে তার লং-প্রেস মেনু থেকে আলাদাভাবে সরানো যায় (লাইভ টিভি বা অনুষ্ঠান সূচি) — একটি সূচি ভাগ করে এমন ইস্ট/ওয়েস্ট সংস্করণগুলোর জন্য সেটিই সঠিক।</string>
+    <string name="settings_epg_offset_dialog_description">অনুষ্ঠান সূচির প্রতিটি অনুষ্ঠানের সময় সরিয়ে দেয়। পুরো ফিডটাই ভুল সময় দেখালে এটি ব্যবহার করুন; একটি নির্দিষ্ট চ্যানেলের জন্য (একটি সূচি ভাগ করে এমন ইস্ট/ওয়েস্ট সংস্করণ), লাইভ টিভি বা অনুষ্ঠান সূচিতে চ্যানেলটি লং-প্রেস করে সেখানেই তার নিজস্ব অফসেট সেট করুন।</string>
+    <string name="settings_panel_width_screen_description">প্রতিটি প্যানেল স্ক্রিনের কতটুকু জায়গা নেবে তা নির্ধারণ করুন — ক্যাটাগরি, আইটেমের তালিকা এবং প্রিভিউ।</string>
+    <string name="settings_panel_width_summary">ক্যাটাগরি <xliff:g id="category">%1$d</xliff:g>%% · তালিকা <xliff:g id="list">%2$d</xliff:g>%% · <xliff:g id="preview_label">%3$s</xliff:g> <xliff:g id="preview">%4$d</xliff:g>%%</string>
+    <string name="settings_panel_width_help">• তিনটি প্যানেল একটি সারি ভাগ করে, তাই তাদের শতাংশ মিলে ১০০%% হতে হবে।\n• একটি প্যানেল চওড়া করলে সেভ করার আগে অন্য একটি প্যানেল থেকে একই পরিমাণ কমাতে হবে।\n• রিসেট একটি সেকশনকে এই স্ক্রিনে শুরুতে থাকা মানসম্মত প্রস্থগুলোতে ফিরিয়ে নেয়।\n• কোনো সেকশন বন্ধ করলে তার মানসম্মত লেআউট ফিরে আসে, কিন্তু আপনার মানগুলো হারায় না।\n• সিনেমা ও সিরিজের পোস্টার স্বয়ংক্রিয়ভাবে পুনর্বিন্যস্ত হয়, তাই সরু তালিকায় প্রতি সারিতে কম পোস্টার দেখা যায়।</string>
+    <string name="settings_panel_width_preview">প্রিভিউ</string>
+    <string name="settings_panel_width_poster">পোস্টার</string>
+    <string name="settings_panel_width_dialog_title"><xliff:g id="section">%1$s</xliff:g> প্যানেলের প্রস্থ</string>
+    <string name="settings_panel_width_customize">প্যানেল কাস্টমাইজ করুন</string>
+    <string name="settings_panel_width_category">ক্যাটাগরি প্যানেল</string>
+    <string name="settings_panel_width_list">তালিকা প্যানেল</string>
+    <string name="settings_panel_width_preview_panel"><xliff:g id="label">%1$s</xliff:g> প্যানেল</string>
+    <string name="settings_panel_width_total">মোট আকার</string>
+    <string name="settings_panel_width_invalid_total">মোট আকার <xliff:g id="total">%1$d</xliff:g>%%। এটি অবশ্যই ১০০%% হতে হবে — অনুগ্রহ করে ঠিক করুন।</string>
+    <string name="settings_language_help_translate">OwnTV-কে আপনার ভাষায় অনুবাদ করতে সাহায্য করুন</string>
+    <string name="settings_language_contribution_description">QR কোড স্ক্যান করুন বা লিঙ্কটি খুলে যেকোনো উপলব্ধ ভাষা বেছে নিন এবং OwnTV-এর সব ছয়টি অনুবাদ কম্পোনেন্ট জুড়ে অবদান রাখুন।</string>
+    <string name="settings_language_contribution_qr_description">OwnTV অনুবাদ প্রকল্পের ওভারভিউর QR কোড</string>
+    <string name="settings_language_contribution_qr_failed">QR কোড তৈরি করা যায়নি। পরিবর্তে নিচে দেখানো লিঙ্কটি ব্যবহার করুন।</string>
+    <string name="settings_language_contribution_copy">লিঙ্ক কপি করুন</string>
+    <string name="settings_language_contribution_copied">লিঙ্ক কপি হয়েছে</string>
+    <string name="settings_language_contribution_open_failed">লিঙ্কটি খোলা যায়নি। পরিবর্তে এটি কপি করুন।</string>
+    <string name="settings_language_contribution_copy_failed">লিঙ্কটি কপি করা যায়নি। উপরে দেখানো URL পড়ুন বা টাইপ করুন।</string>
 </resources>

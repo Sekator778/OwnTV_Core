@@ -223,4 +223,36 @@
     <string name="player_subtitles_invalid_credentials">OpenSubtitles nie mógł zalogować się przy użyciu tych danych konta.</string>
     <string name="player_subtitles_sign_in_network_error">Nie udało się połączyć z OpenSubtitles. Sprawdź połączenie z internetem i spróbuj ponownie.</string>
     <string name="player_subtitles_refresh_network_error">Nie udało się odświeżyć OpenSubtitles. Sprawdź połączenie z internetem.</string>
+    <string name="player_subtitles_no_matches_all_languages">Nie znaleziono pasujących napisów. Spróbuj zmienić tytuł wyszukiwania.</string>
+    <string name="player_subtitles_no_matches_chosen_language">Nie znaleziono pasujących napisów w wybranym języku.</string>
+    <string name="player_subtitles_search_language">Język wyszukiwania</string>
+    <string name="player_reason_software_fallback">Przełączono na dekodowanie programowe</string>
+    <string name="player_reason_copy_mode_fallback">Przełączono na dekodowanie w trybie copy-mode</string>
+    <string name="player_reason_archive_software_fallback">Ponownie otwarto archiwum catch-up w trybie dekodowania programowego</string>
+    <string name="player_reason_stereo_fallback">Przełączono na dźwięk stereo</string>
+    <string name="player_reason_vod_engine_session_fallback">Przełączono filmy i seriale na mpv na tę sesję</string>
+    <string name="player_reason_one_session_provider">Dostawca pozwala na jedną sesję naraz</string>
+    <string name="player_reason_mpv_handoff">Przekazano ten kanał do mpv</string>
+    <string name="player_reason_stream_report">Raport strumienia</string>
+    <string name="player_stream_audio_output">Wyjście audio</string>
+    <string name="player_stream_live_buffer">Bufor na żywo</string>
+    <string name="player_stream_audio_passthrough">passthrough (telewizor/amplituner dekoduje)</string>
+    <string name="player_stream_audio_decoded_in_app">dekodowane w aplikacji</string>
+    <string name="player_stream_audio_pcm"><xliff:g id="channels">%1$s</xliff:g> PCM</string>
+    <string name="player_stream_multichannel_allowed">dozwolony dźwięk wielokanałowy</string>
+    <string name="player_stream_fell_back">przełączenie na: <xliff:g id="reason">%1$s</xliff:g></string>
+    <string name="player_stream_preroll_video">wstępne buforowanie <xliff:g id="seconds">%1$s</xliff:g> s wideo</string>
+    <string name="player_stream_preroll_off">wstępne buforowanie wyłączone</string>
+    <string name="player_stream_depth">głębokość <xliff:g id="seconds">%1$s</xliff:g> s</string>
+    <string name="player_stream_readahead">odczyt z wyprzedzeniem <xliff:g id="seconds">%1$s</xliff:g> s</string>
+    <string name="player_stream_playlist_override">nadpisanie playlisty</string>
+    <string name="player_error_hardware_format">Sprzęt wideo tego telewizora nie może zdekodować <xliff:g id="resolution">%1$s</xliff:g> <xliff:g id="codec">%2$s</xliff:g>. Plik jest w porządku, ale telewizor nie może odtworzyć tego formatu w tej rozdzielczości.</string>
+    <string name="player_report_saved">Raport strumienia zapisano w dzienniku odtwarzania</string>
+    <string name="player_subtitles_filter_title">Filtruj według języka</string>
+    <string name="player_subtitles_filter_description">Wyłączone pokazuje wszystkie języki, jakie OpenSubtitles ma dla danego tytułu, więc możesz wybierać z pełnej listy. Włączone pokazuje tylko wybrany język.</string>
+    <string name="player_subtitles_search_language_description">W wynikach wyszukiwania pojawiają się tylko napisy w tym języku. Nadal możesz nacisnąć „Wszystkie języki” w wynikach, aby zobaczyć wszystko dla jednego wyszukiwania.</string>
+    <string name="player_subtitles_language_not_set">Nie ustawiono</string>
+    <string name="player_frame_rate_prompt_title">Ten kanał może mieć niepłynny ruch</string>
+    <string name="player_frame_rate_prompt_description">Odtwarza z prędkością <xliff:g id="fps">%1$d</xliff:g> fps, podczas gdy telewizor pracuje z częstotliwością <xliff:g id="current_hz">%2$d</xliff:g> Hz, co uniemożliwia równomierne wyświetlanie tych klatek — ruch wygląda na lekko szarpany.\n\nAutomatyczne dopasowanie częstotliwości odświeżania przełącza telewizor na <xliff:g id="target_hz">%3$d</xliff:g> Hz podczas oglądania, a po zakończeniu przywraca poprzednie ustawienie. Niektóre telewizory na chwilę wygaszają obraz przy zmianie częstotliwości; możesz ją ponownie wyłączyć w Ustawieniach → Odtwarzacz wideo.</string>
+    <string name="player_frame_rate_turn_on">Włącz</string>
 </resources>

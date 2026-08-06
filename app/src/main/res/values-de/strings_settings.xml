@@ -829,4 +829,54 @@
     <string name="settings_subtitle_color_cyan">Cyan</string>
     <string name="settings_subtitle_color_green">Grün</string>
     <string name="settings_subtitle_color_grey">Grau</string>
+    <string name="settings_live_preroll">Live-Streams vorpuffern</string>
+    <string name="settings_live_preroll_description">Legt fest, wie viel Videomaterial vor dem Start eines Live-Senders und nach einem Ruckler erneut vorgepuffert wird. Es handelt sich um eine Menge an Videomaterial, nicht um einen Countdown. Bei „Aus“ startet die Wiedergabe so schnell wie möglich.</string>
+    <string name="settings_live_preroll_per_playlist">Pro Playlist vorpuffern</string>
+    <string name="settings_live_preroll_per_playlist_description">Überschreibt die obige Einstellung für eine Playlist, während die anderen Playlists schnell starten.</string>
+    <plurals name="settings_live_preroll_overrides">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> Playlist angepasst</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> Playlists angepasst</item>
+    </plurals>
+    <string name="settings_surround_stereo">Nur Stereo</string>
+    <string name="settings_surround_auto_description">Auto — Dolby/DTS-Surround ausprobieren und automatisch wieder zu Stereo wechseln, wenn der Fernseher oder die Soundbar den Ton nicht wiedergeben kann. Empfohlen.</string>
+    <string name="settings_surround_stereo_description">Nur Stereo — immer in der App dekodieren und reinen 2.0-Ton ausgeben. Verwende diese Option bei TV-Lautsprechern oder einer Stereo-Soundbar oder wenn der Ton dem Bild hinterherhinkt.</string>
+    <string name="settings_surround_forced_description">Surround — Dolby/DTS an einen echten 5.1/7.1-Receiver ausgeben. Wenn der Ton ausfällt oder ruckelt, wechselt OwnTV trotzdem zu Stereo und informiert dich.</string>
+    <string name="settings_panel_width">Panelbreite anpassen</string>
+    <string name="settings_panel_width_description">Die Kategorie-, Listen- und Vorschau-Panels für Live-TV sowie Filme &amp; Serien in der Größe ändern.</string>
+    <string name="settings_search_keywords_epg_offset">epg programmführer zeitversatz verschieben zeitzone ost west stunden</string>
+    <string name="settings_search_keywords_panel_width">panelbreite größe ändern anpassen kategorie liste vorschau poster spalte layout live-tv filme serien</string>
+    <string name="settings_search_keywords_live_preroll">vorpuffern vorpuffer vorabpuffer pufferung puffer vor der wiedergabe nachpuffern ruckler einfrieren pro playlist</string>
+    <string name="settings_detailed_playback_logging">Detaillierte Wiedergabeprotokollierung</string>
+    <string name="settings_search_keywords_detailed_logging">diagnose ausführlich trace logcat debug bericht fehler live-engine</string>
+    <string name="settings_playback_kind_error">Fehler</string>
+    <string name="settings_playback_kind_event">Ereignis</string>
+    <string name="settings_playback_kind_report">Bericht</string>
+    <string name="settings_playback_entry_with_kind"><xliff:g id="date">%1$s</xliff:g>  ·  <xliff:g id="kind">%2$s</xliff:g>  ·  <xliff:g id="engine">%3$s</xliff:g>  ·  <xliff:g id="stream_type">%4$s</xliff:g></string>
+    <string name="settings_export">Exportieren</string>
+    <string name="settings_detailed_playback_logging_description">In Logcat und im exportierten Bericht eine vollständige Aufzeichnung der Aktivitäten der Live-Engine führen – einschließlich jedes Senderwechsels, jedes Fallbacks und jeder Wiederverbindung. Deaktiviert lassen, außer wenn du einem Problem nachgehst; die Funktion verändert nie die Wiedergabe, sondern nur, wie viel protokolliert wird.</string>
+    <string name="settings_live_preroll_playlist_picker">Welche Playlist?</string>
+    <string name="settings_live_preroll_follow">Einstellung übernehmen</string>
+    <string name="settings_video_seconds"><xliff:g id="seconds">%1$d</xliff:g> s Videomaterial</string>
+    <string name="settings_epg_offset_root_description">Den gesamten Programmführer verschieben, wenn die Zeiten eines Feeds nicht mit dem tatsächlich laufenden Programm übereinstimmen. Ein einzelner Sender kann über sein Menü, das sich durch langes Drücken öffnet (Live-TV oder Programmführer), separat verschoben werden – das ist die Einstellung für Ost-/West-Versionen, die einen Programmführer gemeinsam nutzen.</string>
+    <string name="settings_epg_offset_dialog_description">Verschiebt jede Sendung im Programmführer. Verwende die Option, wenn der gesamte Feed eine falsche Uhrzeit verwendet; bei einem einzelnen Sender (einer Ost-/West-Version mit gemeinsamem Programmführer) halte den Sender in Live-TV oder im Programmführer lange gedrückt und stelle dort seinen eigenen Zeitversatz ein.</string>
+    <string name="settings_panel_width_screen_description">Festlegen, wie viel Platz jedes Panel auf dem Bildschirm einnimmt – Kategorien, Elementliste und Vorschau.</string>
+    <string name="settings_panel_width_summary">Kategorie <xliff:g id="category">%1$d</xliff:g> %% · Liste <xliff:g id="list">%2$d</xliff:g> %% · <xliff:g id="preview_label">%3$s</xliff:g> <xliff:g id="preview">%4$d</xliff:g> %%</string>
+    <string name="settings_panel_width_help">• Die drei Panels teilen sich eine Zeile, daher müssen ihre Prozentwerte zusammen 100 %% ergeben.\n• Wenn du ein Panel verbreiterst, musst du vor dem Speichern denselben Betrag von einem anderen Panel abziehen.\n• Mit „Zurücksetzen“ wird ein Bereich auf die ursprünglichen Standardbreiten dieses Bildschirms zurückgesetzt.\n• Wenn du einen Bereich deaktivierst, wird das Standardlayout wiederhergestellt, ohne dass deine Werte verloren gehen.\n• Die Poster von Filmen und Serien werden automatisch neu angeordnet, sodass eine schmalere Liste einfach weniger Poster pro Zeile anzeigt.</string>
+    <string name="settings_panel_width_preview">Vorschau</string>
+    <string name="settings_panel_width_poster">Poster</string>
+    <string name="settings_panel_width_dialog_title"><xliff:g id="section">%1$s</xliff:g> Panelbreiten</string>
+    <string name="settings_panel_width_customize">Panel anpassen</string>
+    <string name="settings_panel_width_category">Kategorie-Panel</string>
+    <string name="settings_panel_width_list">Listen-Panel</string>
+    <string name="settings_panel_width_preview_panel"><xliff:g id="label">%1$s</xliff:g> Panel</string>
+    <string name="settings_panel_width_total">Gesamtgröße</string>
+    <string name="settings_panel_width_invalid_total">Die Gesamtgröße beträgt <xliff:g id="total">%1$d</xliff:g> %%. Sie muss 100 %% betragen – bitte anpassen.</string>
+    <string name="settings_language_help_translate">Hilf mit, OwnTV in deine Sprache zu übersetzen</string>
+    <string name="settings_language_contribution_description">Scannen Sie den QR-Code oder öffnen Sie den Link, um eine beliebige verfügbare Sprache auszuwählen und in allen sechs Übersetzungsbereichen von OwnTV mitzuwirken.</string>
+    <string name="settings_language_contribution_qr_description">QR-Code für die Übersicht des OwnTV-Übersetzungsprojekts</string>
+    <string name="settings_language_contribution_qr_failed">Der QR-Code konnte nicht generiert werden. Verwenden Sie stattdessen den unten angezeigten Link.</string>
+    <string name="settings_language_contribution_copy">Link kopieren</string>
+    <string name="settings_language_contribution_copied">Link kopiert</string>
+    <string name="settings_language_contribution_open_failed">Der Link konnte nicht geöffnet werden. Kopieren Sie ihn stattdessen.</string>
+    <string name="settings_language_contribution_copy_failed">Der Link konnte nicht kopiert werden. Lesen Sie die oben angezeigte URL ab oder geben Sie sie ein.</string>
 </resources>

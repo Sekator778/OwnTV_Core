@@ -302,4 +302,13 @@
     <string name="content_epg_player_choice_description">Angi et permanent valg under Innstillinger › Arkiv.</string>
     <string name="content_epg_own_player">OwnTV-avspiller</string>
     <string name="content_epg_external_player">Ekstern avspiller</string>
+    <string name="content_epg_time_offset">EPG-tidsforskyvning</string>
+    <string name="content_epg_shift_minutes"><xliff:g id="sign">%1$s</xliff:g><xliff:g id="minutes">%2$s</xliff:g>min</string>
+    <string name="content_epg_shift_hours"><xliff:g id="sign">%1$s</xliff:g><xliff:g id="hours">%2$s</xliff:g>t</string>
+    <string name="content_epg_shift_hours_minutes"><xliff:g id="sign">%1$s</xliff:g><xliff:g id="hours">%2$s</xliff:g>t <xliff:g id="minutes">%3$s</xliff:g>min</string>
+    <string name="content_epg_offset_channel_description">Flytt programguiden for «<xliff:g id="channel">%1$s</xliff:g>». Bruk dette når en øst-/vest-strøm deler programguiden sin med den andre versjonen — en negativ forskyvning flytter guiden tidligere.</string>
+    <string name="content_epg_offset_following_global">Følger den globale forskyvningen (<xliff:g id="offset">%1$s</xliff:g>)</string>
+    <string name="content_epg_offset_channel_only">Bare denne kanalen · den globale er <xliff:g id="offset">%1$s</xliff:g></string>
+    <string name="content_epg_offset_use_global">Bruk global</string>
+    <string name="content_preview_single_stream">Forhåndsvisning er av — leverandøren din tillater bare én strøm om gangen</string>
 </resources>

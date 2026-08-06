@@ -209,4 +209,36 @@
     <string name="player_subtitles_invalid_credentials">OpenSubtitles kunne ikke logge på med disse kontoopplysningene.</string>
     <string name="player_subtitles_sign_in_network_error">Kunne ikke nå OpenSubtitles. Kontroller internettilkoblingen og prøv igjen.</string>
     <string name="player_subtitles_refresh_network_error">Kunne ikke oppdatere OpenSubtitles. Kontroller internettilkoblingen.</string>
+    <string name="player_subtitles_no_matches_all_languages">Fant ingen samsvarende undertekster. Prøv å endre søketittelen.</string>
+    <string name="player_subtitles_no_matches_chosen_language">Fant ingen samsvarende undertekster på språket du valgte.</string>
+    <string name="player_subtitles_search_language">Søkespråk</string>
+    <string name="player_reason_software_fallback">Falt tilbake til programvaredekoding</string>
+    <string name="player_reason_copy_mode_fallback">Falt tilbake til kopimodus-dekoding</string>
+    <string name="player_reason_archive_software_fallback">Catch-up-arkivet ble åpnet på nytt med programvaredekoding</string>
+    <string name="player_reason_stereo_fallback">Byttet til stereolyd</string>
+    <string name="player_reason_vod_engine_session_fallback">Byttet filmer og serier til mpv for denne økten</string>
+    <string name="player_reason_one_session_provider">Leverandøren tillater bare én sesjon om gangen</string>
+    <string name="player_reason_mpv_handoff">Overleverte denne kanalen til mpv</string>
+    <string name="player_reason_stream_report">Strømrapport</string>
+    <string name="player_stream_audio_output">Lydutgang</string>
+    <string name="player_stream_live_buffer">Direktebuffer</string>
+    <string name="player_stream_audio_passthrough">passthrough (TV-en/mottakeren dekoder)</string>
+    <string name="player_stream_audio_decoded_in_app">dekodet i appen</string>
+    <string name="player_stream_audio_pcm"><xliff:g id="channels">%1$s</xliff:g> PCM</string>
+    <string name="player_stream_multichannel_allowed">flerkanalslyd tillatt</string>
+    <string name="player_stream_fell_back">falt tilbake: <xliff:g id="reason">%1$s</xliff:g></string>
+    <string name="player_stream_preroll_video">forhåndsbuffer <xliff:g id="seconds">%1$s</xliff:g>s med video</string>
+    <string name="player_stream_preroll_off">forhåndsbuffer av</string>
+    <string name="player_stream_depth">dybde <xliff:g id="seconds">%1$s</xliff:g>s</string>
+    <string name="player_stream_readahead">forhåndslesing <xliff:g id="seconds">%1$s</xliff:g>s</string>
+    <string name="player_stream_playlist_override">spilleliste-overstyring</string>
+    <string name="player_error_hardware_format">TV-ens videomaskinvare kan ikke dekode <xliff:g id="resolution">%1$s</xliff:g> <xliff:g id="codec">%2$s</xliff:g>. Filen er i orden, men TV-en kan ikke spille av dette formatet i denne oppløsningen.</string>
+    <string name="player_report_saved">Strømrapporten ble lagret i avspillingsloggen</string>
+    <string name="player_subtitles_filter_title">Filtrer etter språk</string>
+    <string name="player_subtitles_filter_description">Av viser alle språkene OpenSubtitles har for en tittel, så du kan velge fra hele listen. På viser bare språket du har valgt.</string>
+    <string name="player_subtitles_search_language_description">Bare undertekster på dette språket vises i søkeresultatene. Du kan likevel trykke på «Alle språk» i resultatene for å se alt for ett søk.</string>
+    <string name="player_subtitles_language_not_set">Ikke angitt</string>
+    <string name="player_frame_rate_prompt_title">Denne kanalen kan hakke</string>
+    <string name="player_frame_rate_prompt_description">Den spilles av i <xliff:g id="fps">%1$d</xliff:g> fps mens TV-en kjører i <xliff:g id="current_hz">%2$d</xliff:g> Hz, som ikke kan vise disse bildene jevnt – bevegelser ser litt hakkete ut.\n\nAutomatisk bildefrekvens bytter TV-en til <xliff:g id="target_hz">%3$d</xliff:g> Hz mens du ser på, og setter den tilbake etterpå. Noen TV-er blir svarte et øyeblikk når frekvensen endres; du kan slå den av igjen i Innstillinger → Videoavspiller.</string>
+    <string name="player_frame_rate_turn_on">Slå på</string>
 </resources>

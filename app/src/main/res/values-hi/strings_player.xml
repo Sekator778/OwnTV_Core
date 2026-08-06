@@ -209,4 +209,36 @@
     <string name="player_subtitles_invalid_credentials">इन खाता विवरणों से OpenSubtitles में साइन इन नहीं हो सका।</string>
     <string name="player_subtitles_sign_in_network_error">OpenSubtitles से संपर्क नहीं हो सका। अपना इंटरनेट कनेक्शन जाँचें और फिर से कोशिश करें।</string>
     <string name="player_subtitles_refresh_network_error">OpenSubtitles रीफ़्रेश नहीं हो सका। अपना इंटरनेट कनेक्शन जाँचें।</string>
+    <string name="player_subtitles_no_matches_all_languages">कोई मेल खाते उपशीर्षक नहीं मिले। खोज शीर्षक संपादित करके देखें।</string>
+    <string name="player_subtitles_no_matches_chosen_language">आपकी चुनी हुई भाषा में कोई मेल खाता उपशीर्षक नहीं मिला।</string>
+    <string name="player_subtitles_search_language">खोज भाषा</string>
+    <string name="player_reason_software_fallback">सॉफ़्टवेयर डिकोडिंग पर वापस आ गया</string>
+    <string name="player_reason_copy_mode_fallback">कॉपी-मोड डिकोडिंग पर वापस आ गया</string>
+    <string name="player_reason_archive_software_fallback">कैच-अप आर्काइव सॉफ़्टवेयर डिकोडिंग में फिर से खोला गया</string>
+    <string name="player_reason_stereo_fallback">स्टीरियो ऑडियो पर स्विच कर दिया गया</string>
+    <string name="player_reason_vod_engine_session_fallback">इस सत्र के लिए फ़िल्में और सीरीज़ mpv पर स्विच कर दी गईं</string>
+    <string name="player_reason_one_session_provider">प्रदाता एक समय में केवल एक सत्र की अनुमति देता है</string>
+    <string name="player_reason_mpv_handoff">यह चैनल mpv को सौंप दिया गया</string>
+    <string name="player_reason_stream_report">स्ट्रीम रिपोर्ट</string>
+    <string name="player_stream_audio_output">ऑडियो आउट</string>
+    <string name="player_stream_live_buffer">लाइव बफ़र</string>
+    <string name="player_stream_audio_passthrough">पासथ्रू (टीवी/रिसीवर डिकोड करता है)</string>
+    <string name="player_stream_audio_decoded_in_app">ऐप में डिकोड किया गया</string>
+    <string name="player_stream_audio_pcm"><xliff:g id="channels">%1$s</xliff:g> PCM</string>
+    <string name="player_stream_multichannel_allowed">मल्टीचैनल अनुमत है</string>
+    <string name="player_stream_fell_back">फ़ॉलबैक: <xliff:g id="reason">%1$s</xliff:g></string>
+    <string name="player_stream_preroll_video">प्री-बफ़र: <xliff:g id="seconds">%1$s</xliff:g> सेकंड का वीडियो</string>
+    <string name="player_stream_preroll_off">प्री-बफ़र बंद</string>
+    <string name="player_stream_depth">गहराई: <xliff:g id="seconds">%1$s</xliff:g> सेकंड</string>
+    <string name="player_stream_readahead">रीडअहेड: <xliff:g id="seconds">%1$s</xliff:g> सेकंड</string>
+    <string name="player_stream_playlist_override">प्लेलिस्ट ओवरराइड</string>
+    <string name="player_error_hardware_format">इस टीवी का वीडियो हार्डवेयर <xliff:g id="resolution">%1$s</xliff:g> <xliff:g id="codec">%2$s</xliff:g> डिकोड नहीं कर सकता। फ़ाइल ठीक है, लेकिन टीवी इस रेज़ोल्यूशन पर यह फ़ॉर्मैट नहीं चला सकता।</string>
+    <string name="player_report_saved">स्ट्रीम रिपोर्ट प्लेबैक लॉग में सहेज दी गई</string>
+    <string name="player_subtitles_filter_title">भाषा के अनुसार फ़िल्टर करें</string>
+    <string name="player_subtitles_filter_description">बंद होने पर OpenSubtitles के पास किसी शीर्षक के लिए मौजूद सभी भाषाएँ दिखती हैं, ताकि आप पूरी सूची में से चुन सकें। चालू होने पर केवल आपकी चुनी हुई भाषा दिखती है।</string>
+    <string name="player_subtitles_search_language_description">खोज परिणामों में केवल इसी भाषा के उपशीर्षक दिखते हैं। आप परिणामों में “सभी भाषाएँ” दबाकर भी एक खोज के लिए सब कुछ देख सकते हैं।</string>
+    <string name="player_subtitles_language_not_set">सेट नहीं है</string>
+    <string name="player_frame_rate_prompt_title">इस चैनल में झटके लग सकते हैं</string>
+    <string name="player_frame_rate_prompt_description">यह <xliff:g id="fps">%1$d</xliff:g> fps पर चलता है जबकि आपका टीवी <xliff:g id="current_hz">%2$d</xliff:g> Hz पर चल रहा है, जो उन फ़्रेमों को समान रूप से नहीं दिखा सकता — गति थोड़ी झटकेदार लगती है।\n\nऑटो फ़्रेम रेट देखते समय टीवी को <xliff:g id="target_hz">%3$d</xliff:g> Hz पर स्विच कर देता है और बाद में वापस कर देता है। कुछ टीवी रेट बदलने पर एक पल के लिए ब्लैंक हो जाते हैं; आप इसे सेटिंग्स → वीडियो प्लेयर में फिर से बंद कर सकते हैं।</string>
+    <string name="player_frame_rate_turn_on">चालू करें</string>
 </resources>

@@ -209,4 +209,36 @@
     <string name="player_subtitles_invalid_credentials">ആ അക്കൗണ്ട് വിവരങ്ങൾ ഉപയോഗിച്ച് OpenSubtitles-ലേക്ക് സൈൻ ഇൻ ചെയ്യാനായില്ല.</string>
     <string name="player_subtitles_sign_in_network_error">OpenSubtitles-നെ ബന്ധപ്പെടാനായില്ല. ഇന്റർനെറ്റ് കണക്ഷൻ പരിശോധിച്ച് വീണ്ടും ശ്രമിക്കുക.</string>
     <string name="player_subtitles_refresh_network_error">OpenSubtitles പുതുക്കാനായില്ല. ഇന്റർനെറ്റ് കണക്ഷൻ പരിശോധിക്കുക.</string>
+    <string name="player_subtitles_no_matches_all_languages">പൊരുത്തപ്പെടുന്ന സബ്ടൈറ്റിലുകൾ ഒന്നും കണ്ടെത്തിയില്ല. തിരയൽ ശീർഷകം എഡിറ്റ് ചെയ്ത് ശ്രമിക്കുക.</string>
+    <string name="player_subtitles_no_matches_chosen_language">നിങ്ങൾ തിരഞ്ഞെടുത്ത ഭാഷയിൽ പൊരുത്തപ്പെടുന്ന സബ്ടൈറ്റിലുകൾ ഒന്നും കണ്ടെത്തിയില്ല.</string>
+    <string name="player_subtitles_search_language">തിരയൽ ഭാഷ</string>
+    <string name="player_reason_software_fallback">സോഫ്റ്റ്വെയർ ഡീകോഡിംഗിലേക്ക് ഫാൾബാക്ക് ചെയ്തു</string>
+    <string name="player_reason_copy_mode_fallback">കോപ്പി-മോഡ് ഡീകോഡിംഗിലേക്ക് ഫാൾബാക്ക് ചെയ്തു</string>
+    <string name="player_reason_archive_software_fallback">ക്യാച്ച്-അപ്പ് ആർക്കൈവ് സോഫ്റ്റ്വെയർ ഡീകോഡിംഗിൽ വീണ്ടും തുറന്നു</string>
+    <string name="player_reason_stereo_fallback">സ്റ്റീരിയോ ഓഡിയോയിലേക്ക് മാറി</string>
+    <string name="player_reason_vod_engine_session_fallback">ഈ സെഷനിൽ സിനിമകളും സീരീസുകളും mpv-യിലേക്ക് മാറ്റി</string>
+    <string name="player_reason_one_session_provider">പ്രൊവൈഡർ ഒരു സമയം ഒരു സെഷൻ മാത്രമേ അനുവദിക്കൂ</string>
+    <string name="player_reason_mpv_handoff">ഈ ചാനൽ mpv-യ്ക്ക് കൈമാറി</string>
+    <string name="player_reason_stream_report">സ്ട്രീം റിപ്പോർട്ട്</string>
+    <string name="player_stream_audio_output">ഓഡിയോ ഔട്ട്</string>
+    <string name="player_stream_live_buffer">ലൈവ് ബഫർ</string>
+    <string name="player_stream_audio_passthrough">പാസ്ത്രൂ (ടിവി/റിസീവർ ഡീകോഡ് ചെയ്യുന്നു)</string>
+    <string name="player_stream_audio_decoded_in_app">ആപ്പിൽ ഡീകോഡ് ചെയ്തത്</string>
+    <string name="player_stream_audio_pcm"><xliff:g id="channels">%1$s</xliff:g> PCM</string>
+    <string name="player_stream_multichannel_allowed">മൾട്ടിചാനൽ അനുവദിച്ചിരിക്കുന്നു</string>
+    <string name="player_stream_fell_back">ഫാൾബാക്ക് ചെയ്തു: <xliff:g id="reason">%1$s</xliff:g></string>
+    <string name="player_stream_preroll_video"><xliff:g id="seconds">%1$s</xliff:g> സെക്കൻഡ് വീഡിയോ പ്രീ-ബഫർ</string>
+    <string name="player_stream_preroll_off">പ്രീ-ബഫർ ഓഫ്</string>
+    <string name="player_stream_depth">ഡെപ്ത് <xliff:g id="seconds">%1$s</xliff:g> സെക്കൻഡ്</string>
+    <string name="player_stream_readahead">റീഡ്അഹെഡ് <xliff:g id="seconds">%1$s</xliff:g> സെക്കൻഡ്</string>
+    <string name="player_stream_playlist_override">പ്ലേലിസ്റ്റ് ഓവർറൈഡ്</string>
+    <string name="player_error_hardware_format">ഈ ടിവിയുടെ വീഡിയോ ഹാർഡ്വെയറിന് <xliff:g id="resolution">%1$s</xliff:g> <xliff:g id="codec">%2$s</xliff:g> ഡീകോഡ് ചെയ്യാൻ കഴിയില്ല. ഫയൽ ശരിയാണ്, പക്ഷേ ഈ റെസലൂഷനിൽ ഈ ഫോർമാറ്റ് ടിവിക്ക് പ്ലേ ചെയ്യാൻ കഴിയില്ല.</string>
+    <string name="player_report_saved">സ്ട്രീം റിപ്പോർട്ട് പ്ലേബാക്ക് ലോഗിൽ സേവ് ചെയ്തു</string>
+    <string name="player_subtitles_filter_title">ഭാഷ അനുസരിച്ച് ഫിൽട്ടർ ചെയ്യുക</string>
+    <string name="player_subtitles_filter_description">ഒരു ടൈറ്റിലിനായി OpenSubtitles-ൽ ഉള്ള എല്ലാ ഭാഷകളും ഓഫ് കാണിക്കും, അതിനാൽ പൂർണ്ണ പട്ടികയിൽ നിന്ന് നിങ്ങൾക്ക് തിരഞ്ഞെടുക്കാം. ഓൺ നിങ്ങൾ തിരഞ്ഞെടുത്ത ഭാഷ മാത്രം കാണിക്കും.</string>
+    <string name="player_subtitles_search_language_description">ഈ ഭാഷയിലെ സബ്ടൈറ്റിലുകൾ മാത്രമേ തിരയൽ ഫലങ്ങളിൽ ദൃശ്യമാകൂ. ഒരു തിരയലിനായി എല്ലാം കാണാൻ ഫലങ്ങളിൽ “എല്ലാ ഭാഷകളും” അമർത്താം.</string>
+    <string name="player_subtitles_language_not_set">സജ്ജീകരിച്ചിട്ടില്ല</string>
+    <string name="player_frame_rate_prompt_title">ഈ ചാനലിന് ജട്ടർ ഉണ്ടാകാം</string>
+    <string name="player_frame_rate_prompt_description">ഇത് <xliff:g id="fps">%1$d</xliff:g> fps-ൽ പ്ലേ ചെയ്യുമ്പോൾ നിങ്ങളുടെ ടിവി <xliff:g id="current_hz">%2$d</xliff:g> Hz-ൽ പ്രവർത്തിക്കുന്നു, അതിനാൽ ആ ഫ്രെയിമുകൾ ഒരേപോലെ കാണിക്കാൻ കഴിയില്ല — ചലനം ചെറുതായി ജെർക്കി ആയിരിക്കും.\n\nഓട്ടോ ഫ്രെയിം റേറ്റ് നിങ്ങൾ കാണുമ്പോൾ ടിവിയെ <xliff:g id="target_hz">%3$d</xliff:g> Hz-ലേക്ക് മാറ്റുകയും പിന്നീട് തിരികെ മാറ്റുകയും ചെയ്യും. ചില ടിവികൾ റേറ്റ് മാറുമ്പോൾ ഒരു നിമിഷം ബ്ലാങ്ക് ആകും; ക്രമീകരണങ്ങൾ → വീഡിയോ പ്ലെയറിൽ ചെന്ന് നിങ്ങൾക്ക് അത് വീണ്ടും ഓഫ് ചെയ്യാം.</string>
+    <string name="player_frame_rate_turn_on">ഓണാക്കുക</string>
 </resources>

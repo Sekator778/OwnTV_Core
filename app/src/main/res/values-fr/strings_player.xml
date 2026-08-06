@@ -216,4 +216,36 @@
     <string name="player_subtitles_invalid_credentials">OpenSubtitles n’a pas pu se connecter avec ces informations de compte.</string>
     <string name="player_subtitles_sign_in_network_error">Impossible de joindre OpenSubtitles. Vérifiez votre connexion Internet et réessayez.</string>
     <string name="player_subtitles_refresh_network_error">Impossible d’actualiser OpenSubtitles. Vérifiez votre connexion Internet.</string>
+    <string name="player_subtitles_no_matches_all_languages">Aucun sous-titre correspondant n\'a été trouvé. Essayez de modifier le titre de la recherche.</string>
+    <string name="player_subtitles_no_matches_chosen_language">Aucun sous-titre correspondant n\'a été trouvé dans la langue choisie.</string>
+    <string name="player_subtitles_search_language">Langue de recherche</string>
+    <string name="player_reason_software_fallback">Bascule vers le décodage logiciel</string>
+    <string name="player_reason_copy_mode_fallback">Bascule vers le décodage en mode copie</string>
+    <string name="player_reason_archive_software_fallback">Archive de rattrapage rouverte en décodage logiciel</string>
+    <string name="player_reason_stereo_fallback">Bascule en audio stéréo</string>
+    <string name="player_reason_vod_engine_session_fallback">Films et séries basculés vers mpv pour cette session</string>
+    <string name="player_reason_one_session_provider">Le fournisseur autorise une seule session à la fois</string>
+    <string name="player_reason_mpv_handoff">Chaîne transférée à mpv</string>
+    <string name="player_reason_stream_report">Rapport du flux</string>
+    <string name="player_stream_audio_output">Sortie audio</string>
+    <string name="player_stream_live_buffer">Mémoire tampon du direct</string>
+    <string name="player_stream_audio_passthrough">passthrough (la TV/le récepteur décode)</string>
+    <string name="player_stream_audio_decoded_in_app">décodé dans l\'application</string>
+    <string name="player_stream_audio_pcm"><xliff:g id="channels">%1$s</xliff:g> PCM</string>
+    <string name="player_stream_multichannel_allowed">multicanal autorisé</string>
+    <string name="player_stream_fell_back">repli : <xliff:g id="reason">%1$s</xliff:g></string>
+    <string name="player_stream_preroll_video">préchargement de <xliff:g id="seconds">%1$s</xliff:g> s de vidéo</string>
+    <string name="player_stream_preroll_off">préchargement désactivé</string>
+    <string name="player_stream_depth">profondeur <xliff:g id="seconds">%1$s</xliff:g> s</string>
+    <string name="player_stream_readahead">lecture anticipée <xliff:g id="seconds">%1$s</xliff:g> s</string>
+    <string name="player_stream_playlist_override">remplacement de la liste de lecture</string>
+    <string name="player_error_hardware_format">Le matériel vidéo de ce téléviseur ne peut pas décoder <xliff:g id="resolution">%1$s</xliff:g> <xliff:g id="codec">%2$s</xliff:g>. Le fichier n\'est pas en cause, mais le téléviseur ne peut pas lire ce format à cette résolution.</string>
+    <string name="player_report_saved">Rapport du flux enregistré dans le journal de lecture</string>
+    <string name="player_subtitles_filter_title">Filtrer par langue</string>
+    <string name="player_subtitles_filter_description">Désactivé : affiche toutes les langues qu\'OpenSubtitles propose pour un titre, afin que vous puissiez choisir dans la liste complète. Activé : n\'affiche que la langue que vous avez choisie.</string>
+    <string name="player_subtitles_search_language_description">Seuls les sous-titres dans cette langue apparaissent dans les résultats de recherche. Vous pouvez toujours appuyer sur « Toutes les langues » dans les résultats pour tout voir pour une recherche.</string>
+    <string name="player_subtitles_language_not_set">Non défini</string>
+    <string name="player_frame_rate_prompt_title">Cette chaîne peut saccader</string>
+    <string name="player_frame_rate_prompt_description">Elle diffuse à <xliff:g id="fps">%1$d</xliff:g> images/s alors que votre téléviseur fonctionne à <xliff:g id="current_hz">%2$d</xliff:g> Hz, ce qui ne permet pas d\'afficher ces images de manière uniforme — le mouvement semble légèrement saccadé.\n\nLa fréquence d\'images automatique fait passer le téléviseur à <xliff:g id="target_hz">%3$d</xliff:g> Hz pendant le visionnage, puis le rétablit ensuite. Certains téléviseurs noircissent un instant lorsque la fréquence change ; vous pouvez la désactiver à nouveau dans Paramètres → Lecteur vidéo.</string>
+    <string name="player_frame_rate_turn_on">Activer</string>
 </resources>

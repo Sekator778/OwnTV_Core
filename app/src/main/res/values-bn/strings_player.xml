@@ -209,4 +209,36 @@
     <string name="player_subtitles_invalid_credentials">অ্যাকাউন্টের ওই তথ্য দিয়ে OpenSubtitles-এ সাইন ইন করা যায়নি।</string>
     <string name="player_subtitles_sign_in_network_error">OpenSubtitles-এর সঙ্গে যোগাযোগ করা যায়নি। আপনার ইন্টারনেট সংযোগ পরীক্ষা করে আবার চেষ্টা করুন।</string>
     <string name="player_subtitles_refresh_network_error">OpenSubtitles রিফ্রেশ করা যায়নি। আপনার ইন্টারনেট সংযোগ পরীক্ষা করুন।</string>
+    <string name="player_subtitles_no_matches_all_languages">কোনো মিলে যাওয়া সাবটাইটেল পাওয়া যায়নি। অনুসন্ধানের শিরোনামটি সম্পাদনা করে দেখুন।</string>
+    <string name="player_subtitles_no_matches_chosen_language">আপনার নির্বাচিত ভাষায় কোনো মিলে যাওয়া সাবটাইটেল পাওয়া যায়নি।</string>
+    <string name="player_subtitles_search_language">অনুসন্ধানের ভাষা</string>
+    <string name="player_reason_software_fallback">সফটওয়্যার ডিকোডিং-এ ফিরে গিয়েছে</string>
+    <string name="player_reason_copy_mode_fallback">কপি-মোড ডিকোডিং-এ ফিরে গিয়েছে</string>
+    <string name="player_reason_archive_software_fallback">ক্যাচ-আপ আর্কাইভটি সফটওয়্যার ডিকোডিং-এ পুনরায় খোলা হয়েছে</string>
+    <string name="player_reason_stereo_fallback">স্টিরিও অডিওতে স্যুইচ করা হয়েছে</string>
+    <string name="player_reason_vod_engine_session_fallback">এই সেশনের জন্য সিনেমা ও সিরিজ mpv-তে স্যুইচ করা হয়েছে</string>
+    <string name="player_reason_one_session_provider">প্রদানকারী একসাথে একটি সেশন অনুমতি দেয়</string>
+    <string name="player_reason_mpv_handoff">এই চ্যানেলটি mpv-কে হস্তান্তর করা হয়েছে</string>
+    <string name="player_reason_stream_report">স্ট্রিম রিপোর্ট</string>
+    <string name="player_stream_audio_output">অডিও আউটপুট</string>
+    <string name="player_stream_live_buffer">লাইভ বাফার</string>
+    <string name="player_stream_audio_passthrough">পাসথ্রু (টিভি/রিসিভার ডিকোড করে)</string>
+    <string name="player_stream_audio_decoded_in_app">অ্যাপে ডিকোড করা</string>
+    <string name="player_stream_audio_pcm"><xliff:g id="channels">%1$s</xliff:g> PCM</string>
+    <string name="player_stream_multichannel_allowed">মাল্টিচ্যানেল অনুমোদিত</string>
+    <string name="player_stream_fell_back">ফিরে গিয়েছে: <xliff:g id="reason">%1$s</xliff:g></string>
+    <string name="player_stream_preroll_video">প্রি-বাফার <xliff:g id="seconds">%1$s</xliff:g> সেকেন্ডের ভিডিও</string>
+    <string name="player_stream_preroll_off">প্রি-বাফার বন্ধ</string>
+    <string name="player_stream_depth">গভীরতা <xliff:g id="seconds">%1$s</xliff:g> সেকেন্ড</string>
+    <string name="player_stream_readahead">রিডহেড <xliff:g id="seconds">%1$s</xliff:g> সেকেন্ড</string>
+    <string name="player_stream_playlist_override">প্লেলিস্ট ওভাররাইড</string>
+    <string name="player_error_hardware_format">এই টিভির ভিডিও হার্ডওয়্যার <xliff:g id="resolution">%1$s</xliff:g> <xliff:g id="codec">%2$s</xliff:g> ডিকোড করতে পারে না। ফাইলটি ঠিক আছে, কিন্তু টিভিটি এই রেজোলিউশনে এই ফরম্যাটটি চালাতে পারে না।</string>
+    <string name="player_report_saved">স্ট্রিম রিপোর্টটি প্লেব্যাক লগে সংরক্ষিত হয়েছে।</string>
+    <string name="player_subtitles_filter_title">ভাষা অনুযায়ী ফিল্টার</string>
+    <string name="player_subtitles_filter_description">বন্ধ থাকলে OpenSubtitles-এ একটি শিরোনামের জন্য যত ভাষা আছে সবগুলো দেখায়, তাই আপনি সম্পূর্ণ তালিকা থেকে বেছে নিতে পারেন। চালু থাকলে কেবল আপনার নির্বাচিত ভাষা দেখায়।</string>
+    <string name="player_subtitles_search_language_description">অনুসন্ধান ফলাফলে কেবল এই ভাষার সাবটাইটেল দেখা যায়। একটি অনুসন্ধানের সবকিছু দেখতে আপনি এখনও ফলাফলে “সব ভাষা” চাপতে পারেন।</string>
+    <string name="player_subtitles_language_not_set">সেট করা নেই</string>
+    <string name="player_frame_rate_prompt_title">এই চ্যানেলে ছবি ঝাঁকুনি দিতে পারে</string>
+    <string name="player_frame_rate_prompt_description">এটি <xliff:g id="fps">%1$d</xliff:g> fps-এ চলে, যখন আপনার টিভি <xliff:g id="current_hz">%2$d</xliff:g> Hz-এ চলছে, যা সেই ফ্রেমগুলো সমানভাবে দেখাতে পারে না — গতি কিছুটা ঝাঁকুনিপূর্ণ দেখায়।\n\nআপনি দেখার সময় অটো ফ্রেম রেট টিভিটিকে <xliff:g id="target_hz">%3$d</xliff:g> Hz-এ স্যুইচ করে এবং পরে আবার আগের অবস্থায় ফিরিয়ে দেয়। রেট পরিবর্তনের সময় কিছু টিভির স্ক্রিন এক মুহূর্তের জন্য ফাঁকা হয়ে যায়; আপনি সেটিংস → ভিডিও প্লেয়ার থেকে এটি আবার বন্ধ করতে পারেন।</string>
+    <string name="player_frame_rate_turn_on">চালু করুন</string>
 </resources>

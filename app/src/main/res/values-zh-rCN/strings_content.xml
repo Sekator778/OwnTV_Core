@@ -288,4 +288,13 @@
     <string name="content_epg_player_choice_description">前往设置 › 回看以设置永久选项。</string>
     <string name="content_epg_own_player">OwnTV 播放器</string>
     <string name="content_epg_external_player">外部播放器</string>
+    <string name="content_epg_time_offset">电子节目指南时间偏移</string>
+    <string name="content_epg_shift_minutes"><xliff:g id="sign">%1$s</xliff:g><xliff:g id="minutes">%2$s</xliff:g>分钟</string>
+    <string name="content_epg_shift_hours"><xliff:g id="sign">%1$s</xliff:g><xliff:g id="hours">%2$s</xliff:g>小时</string>
+    <string name="content_epg_shift_hours_minutes"><xliff:g id="sign">%1$s</xliff:g><xliff:g id="hours">%2$s</xliff:g>小时 <xliff:g id="minutes">%3$s</xliff:g>分钟</string>
+    <string name="content_epg_offset_channel_description">移动“<xliff:g id="channel">%1$s</xliff:g>”的节目指南。当东部/西部信号源与另一版本共用节目指南时，可使用此功能——负偏移会将节目指南提前。</string>
+    <string name="content_epg_offset_following_global">跟随全局偏移（<xliff:g id="offset">%1$s</xliff:g>）</string>
+    <string name="content_epg_offset_channel_only">仅此频道 · 全局为 <xliff:g id="offset">%1$s</xliff:g></string>
+    <string name="content_epg_offset_use_global">使用全局</string>
+    <string name="content_preview_single_stream">预览已关闭——你的提供商一次只允许一个流。</string>
 </resources>

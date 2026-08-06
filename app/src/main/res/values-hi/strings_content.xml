@@ -302,4 +302,13 @@
     <string name="content_epg_player_choice_description">सेटिंग › कैच-अप में स्थायी विकल्प सेट करें।</string>
     <string name="content_epg_own_player">OwnTV प्लेयर</string>
     <string name="content_epg_external_player">बाहरी प्लेयर</string>
+    <string name="content_epg_time_offset">EPG समय ऑफ़सेट</string>
+    <string name="content_epg_shift_minutes"><xliff:g id="sign">%1$s</xliff:g><xliff:g id="minutes">%2$s</xliff:g> मिनट</string>
+    <string name="content_epg_shift_hours"><xliff:g id="sign">%1$s</xliff:g><xliff:g id="hours">%2$s</xliff:g> घंटे</string>
+    <string name="content_epg_shift_hours_minutes"><xliff:g id="sign">%1$s</xliff:g><xliff:g id="hours">%2$s</xliff:g> घंटे <xliff:g id="minutes">%3$s</xliff:g> मिनट</string>
+    <string name="content_epg_offset_channel_description">“<xliff:g id="channel">%1$s</xliff:g>” के लिए कार्यक्रम सूची खिसकाएँ। इसका उपयोग तब करें जब कोई ईस्ट/वेस्ट फ़ीड अपनी कार्यक्रम सूची दूसरे संस्करण के साथ साझा करता है — नकारात्मक ऑफ़सेट कार्यक्रम सूची को पहले खिसका देता है।</string>
+    <string name="content_epg_offset_following_global">ग्लोबल ऑफ़सेट के अनुसार (<xliff:g id="offset">%1$s</xliff:g>)</string>
+    <string name="content_epg_offset_channel_only">केवल यह चैनल · ग्लोबल ऑफ़सेट <xliff:g id="offset">%1$s</xliff:g> है</string>
+    <string name="content_epg_offset_use_global">ग्लोबल का उपयोग करें</string>
+    <string name="content_preview_single_stream">प्रीव्यू बंद है — आपका प्रदाता एक समय में केवल एक स्ट्रीम की अनुमति देता है</string>
 </resources>

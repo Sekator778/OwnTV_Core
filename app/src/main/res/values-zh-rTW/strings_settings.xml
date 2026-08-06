@@ -814,4 +814,53 @@
     <string name="settings_subtitle_color_cyan">青色</string>
     <string name="settings_subtitle_color_green">綠色</string>
     <string name="settings_subtitle_color_grey">灰色</string>
+    <string name="settings_live_preroll">直播串流預先緩衝</string>
+    <string name="settings_live_preroll_description">在直播頻道開始播放前先緩衝這個數量的影片，發生卡頓後也會再緩衝一次。這是影片量，不是倒數計時。關閉可保持最快的啟動速度。</string>
+    <string name="settings_live_preroll_per_playlist">各播放清單的預先緩衝</string>
+    <string name="settings_live_preroll_per_playlist_description">為某個播放清單覆寫上述設定，同時讓其他播放清單保持快速啟動。</string>
+    <plurals name="settings_live_preroll_overrides">
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> 個播放清單</item>
+    </plurals>
+    <string name="settings_surround_stereo">僅立體聲</string>
+    <string name="settings_surround_auto_description">自動 — 嘗試播放 Dolby/DTS 環繞音效，如果電視或 Soundbar 無法播放，就會自動切回立體聲。建議使用。</string>
+    <string name="settings_surround_stereo_description">僅立體聲 — 一律在應用程式內解碼，並傳送純 2.0 音效。電視喇叭或立體聲 Soundbar 請使用此選項；若聲音比畫面慢，也請使用此選項。</string>
+    <string name="settings_surround_forced_description">環繞音效 — 將 Dolby/DTS 傳送至實體的 5.1/7.1 環繞擴大機。如果出現無聲或卡頓，OwnTV 仍會自動切回立體聲並通知你。</string>
+    <string name="settings_panel_width">面板寬度調整</string>
+    <string name="settings_panel_width_description">在直播電視、電影與影集中調整分類、清單和預覽面板的大小。</string>
+    <string name="settings_search_keywords_epg_offset">電子節目表 節目表 時間 偏移 平移 時區 東 西 小時</string>
+    <string name="settings_search_keywords_panel_width">面板 寬度 大小 調整大小 分類 清單 預覽 海報 欄 版面配置 直播 電影 影集</string>
+    <string name="settings_search_keywords_live_preroll">預先緩衝 預載 播放前 緩衝 重新緩衝 卡頓 凍結 每個播放清單</string>
+    <string name="settings_detailed_playback_logging">詳細播放記錄</string>
+    <string name="settings_search_keywords_detailed_logging">診斷 詳細 追蹤 logcat 偵錯 報告 錯誤 直播引擎</string>
+    <string name="settings_playback_kind_error">錯誤</string>
+    <string name="settings_playback_kind_event">事件</string>
+    <string name="settings_playback_kind_report">報告</string>
+    <string name="settings_playback_entry_with_kind"><xliff:g id="date">%1$s</xliff:g>  ·  <xliff:g id="kind">%2$s</xliff:g>  ·  <xliff:g id="engine">%3$s</xliff:g>  ·  <xliff:g id="stream_type">%4$s</xliff:g></string>
+    <string name="settings_export">匯出</string>
+    <string name="settings_detailed_playback_logging_description">在 Logcat 和匯出的報告中，完整記錄直播引擎的所做所為——包括每一次轉台、備援與重新連線。除非你在追查問題，否則請保持關閉；它絕不會改變播放，只會影響記錄下來的內容多寡。</string>
+    <string name="settings_live_preroll_playlist_picker">哪個播放清單？</string>
+    <string name="settings_live_preroll_follow">沿用設定</string>
+    <string name="settings_video_seconds"><xliff:g id="seconds">%1$d</xliff:g> 秒的影片</string>
+    <string name="settings_epg_offset_root_description">當節目表來源的時間與實際播出內容不符時，可平移整個節目表。單一頻道可從其長按選單（直播電視或節目表）單獨平移——這正是共用節目表的東部／西部版本適用的選項。</string>
+    <string name="settings_epg_offset_dialog_description">會移動節目表中的每個節目。當整個來源的時間都不正確時使用；若是單一頻道（共用同一個節目表的東部／西部版本），請在直播電視或節目表中長按該頻道，並在該處設定它自己的偏移量。</string>
+    <string name="settings_panel_width_screen_description">設定每個面板（分類、項目清單與預覽）佔用多少畫面。</string>
+    <string name="settings_panel_width_summary">分類 <xliff:g id="category">%1$d</xliff:g>%% · 清單 <xliff:g id="list">%2$d</xliff:g>%% · <xliff:g id="preview_label">%3$s</xliff:g> <xliff:g id="preview">%4$d</xliff:g>%%</string>
+    <string name="settings_panel_width_help">• 三個面板共用同一列，因此它們的百分比加總必須是 100%%。\n• 加寬某個面板時，必須先從另一個面板減少相同的量，才能儲存。\n• 重設會將某個區塊恢復為此畫面開始時的標準寬度。\n• 關閉某個區塊會恢復其標準版面，但不會遺失你的數值。\n• 電影與影集的海報會自動重新排列，因此較窄的清單只會讓每列顯示較少的海報。</string>
+    <string name="settings_panel_width_preview">預覽</string>
+    <string name="settings_panel_width_poster">海報</string>
+    <string name="settings_panel_width_dialog_title"><xliff:g id="section">%1$s</xliff:g> 面板寬度</string>
+    <string name="settings_panel_width_customize">自訂面板</string>
+    <string name="settings_panel_width_category">分類面板</string>
+    <string name="settings_panel_width_list">清單面板</string>
+    <string name="settings_panel_width_preview_panel"><xliff:g id="label">%1$s</xliff:g> 面板</string>
+    <string name="settings_panel_width_total">總大小</string>
+    <string name="settings_panel_width_invalid_total">總大小為 <xliff:g id="total">%1$d</xliff:g>%%。必須是 100%%，請調整。</string>
+    <string name="settings_language_help_translate">協助將 OwnTV 翻譯成你的語言</string>
+    <string name="settings_language_contribution_description">掃描 QR Code 或開啟連結，即可選擇任何可用語言，並在 OwnTV 全部六個翻譯元件中貢獻翻譯。</string>
+    <string name="settings_language_contribution_qr_description">OwnTV 翻譯專案總覽的 QR Code</string>
+    <string name="settings_language_contribution_qr_failed">無法產生 QR Code。請改用下方顯示的連結。</string>
+    <string name="settings_language_contribution_copy">複製連結</string>
+    <string name="settings_language_contribution_copied">已複製連結</string>
+    <string name="settings_language_contribution_open_failed">無法開啟連結。請改為複製。</string>
+    <string name="settings_language_contribution_copy_failed">無法複製連結。請閱讀或輸入上方顯示的網址。</string>
 </resources>

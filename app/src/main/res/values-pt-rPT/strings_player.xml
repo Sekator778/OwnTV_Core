@@ -216,4 +216,36 @@
     <string name="player_subtitles_invalid_credentials">O OpenSubtitles não conseguiu iniciar sessão com esses dados da conta.</string>
     <string name="player_subtitles_sign_in_network_error">Não foi possível contactar o OpenSubtitles. Verifique a ligação à Internet e tente novamente.</string>
     <string name="player_subtitles_refresh_network_error">Não foi possível atualizar o OpenSubtitles. Verifique a ligação à Internet.</string>
+    <string name="player_subtitles_no_matches_all_languages">Não foram encontradas legendas correspondentes. Tente editar o título da pesquisa.</string>
+    <string name="player_subtitles_no_matches_chosen_language">Não foram encontradas legendas correspondentes no idioma que escolheu.</string>
+    <string name="player_subtitles_search_language">Idioma de pesquisa</string>
+    <string name="player_reason_software_fallback">Passou para descodificação por software</string>
+    <string name="player_reason_copy_mode_fallback">Passou para descodificação em modo de cópia</string>
+    <string name="player_reason_archive_software_fallback">Arquivo em diferido reaberto com descodificação por software</string>
+    <string name="player_reason_stereo_fallback">Passou para áudio estéreo</string>
+    <string name="player_reason_vod_engine_session_fallback">Passou Filmes e Séries para o mpv nesta sessão</string>
+    <string name="player_reason_one_session_provider">O fornecedor permite apenas uma sessão de cada vez</string>
+    <string name="player_reason_mpv_handoff">Entregou este canal ao mpv</string>
+    <string name="player_reason_stream_report">Relatório de transmissão</string>
+    <string name="player_stream_audio_output">Saída de áudio</string>
+    <string name="player_stream_live_buffer">Buffer do direto</string>
+    <string name="player_stream_audio_passthrough">pass-through (a TV ou o recetor descodifica)</string>
+    <string name="player_stream_audio_decoded_in_app">descodificado na aplicação</string>
+    <string name="player_stream_audio_pcm"><xliff:g id="channels">%1$s</xliff:g> PCM</string>
+    <string name="player_stream_multichannel_allowed">multicanal permitido</string>
+    <string name="player_stream_fell_back">fallback: <xliff:g id="reason">%1$s</xliff:g></string>
+    <string name="player_stream_preroll_video">pré-buffer de <xliff:g id="seconds">%1$s</xliff:g>s de vídeo</string>
+    <string name="player_stream_preroll_off">pré-buffer desligado</string>
+    <string name="player_stream_depth">profundidade <xliff:g id="seconds">%1$s</xliff:g>s</string>
+    <string name="player_stream_readahead">leitura antecipada <xliff:g id="seconds">%1$s</xliff:g>s</string>
+    <string name="player_stream_playlist_override">sobreposição da lista de reprodução</string>
+    <string name="player_error_hardware_format">O hardware de vídeo desta TV não consegue descodificar <xliff:g id="resolution">%1$s</xliff:g> <xliff:g id="codec">%2$s</xliff:g>. O ficheiro está bom, mas a TV não consegue reproduzir este formato nesta resolução.</string>
+    <string name="player_report_saved">Relatório de transmissão guardado no registo de reprodução</string>
+    <string name="player_subtitles_filter_title">Filtrar por idioma</string>
+    <string name="player_subtitles_filter_description">Desligado mostra todos os idiomas que o OpenSubtitles tem para um título, para poder escolher da lista completa. Ligado mostra apenas o idioma que escolheu.</string>
+    <string name="player_subtitles_search_language_description">Apenas legendas neste idioma aparecem nos resultados de pesquisa. Ainda pode carregar em “Todos os idiomas” nos resultados para ver tudo numa pesquisa.</string>
+    <string name="player_subtitles_language_not_set">Não definido</string>
+    <string name="player_frame_rate_prompt_title">Este canal pode apresentar movimentos irregulares</string>
+    <string name="player_frame_rate_prompt_description">É reproduzido a <xliff:g id="fps">%1$d</xliff:g> fps enquanto a sua TV está a funcionar a <xliff:g id="current_hz">%2$d</xliff:g> Hz, e essa combinação não consegue mostrar esses fotogramas de forma uniforme — o movimento parece ligeiramente entrecortado.\n\nA taxa de fotogramas automática muda a TV para <xliff:g id="target_hz">%3$d</xliff:g> Hz enquanto está a ver e repõe-na depois. Algumas TVs ficam sem imagem por um momento quando a taxa muda; pode desligá-la novamente em Definições → Leitor de vídeo.</string>
+    <string name="player_frame_rate_turn_on">Ativar</string>
 </resources>

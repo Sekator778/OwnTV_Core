@@ -202,4 +202,36 @@
     <string name="player_subtitles_invalid_credentials">入力したアカウント情報ではOpenSubtitlesにログインできませんでした。</string>
     <string name="player_subtitles_sign_in_network_error">OpenSubtitlesに接続できませんでした。インターネット接続を確認して、もう一度お試しください。</string>
     <string name="player_subtitles_refresh_network_error">OpenSubtitlesを更新できませんでした。インターネット接続を確認してください。</string>
+    <string name="player_subtitles_no_matches_all_languages">一致する字幕が見つかりませんでした。検索タイトルを編集してみてください。</string>
+    <string name="player_subtitles_no_matches_chosen_language">選択した言語の一致する字幕が見つかりませんでした。</string>
+    <string name="player_subtitles_search_language">検索言語</string>
+    <string name="player_reason_software_fallback">ソフトウェアデコーディングにフォールバックしました</string>
+    <string name="player_reason_copy_mode_fallback">コピーモードデコーディングにフォールバックしました</string>
+    <string name="player_reason_archive_software_fallback">キャッチアップアーカイブをソフトウェアデコーディングで開き直しました</string>
+    <string name="player_reason_stereo_fallback">ステレオオーディオに切り替えました</string>
+    <string name="player_reason_vod_engine_session_fallback">映画とシリーズをこのセッションではmpvに切り替えました</string>
+    <string name="player_reason_one_session_provider">プロバイダーは同時に1つのセッションのみ許可しています</string>
+    <string name="player_reason_mpv_handoff">このチャンネルをmpvに引き継ぎました</string>
+    <string name="player_reason_stream_report">ストリームレポート</string>
+    <string name="player_stream_audio_output">音声出力</string>
+    <string name="player_stream_live_buffer">ライブバッファ</string>
+    <string name="player_stream_audio_passthrough">パススルー（TV/レシーバーでデコード）</string>
+    <string name="player_stream_audio_decoded_in_app">アプリ内でデコード</string>
+    <string name="player_stream_audio_pcm"><xliff:g id="channels">%1$s</xliff:g> PCM</string>
+    <string name="player_stream_multichannel_allowed">マルチチャンネル許可</string>
+    <string name="player_stream_fell_back">フォールバック: <xliff:g id="reason">%1$s</xliff:g></string>
+    <string name="player_stream_preroll_video">プリバッファ <xliff:g id="seconds">%1$s</xliff:g>秒のビデオ</string>
+    <string name="player_stream_preroll_off">プリバッファオフ</string>
+    <string name="player_stream_depth">深度 <xliff:g id="seconds">%1$s</xliff:g>秒</string>
+    <string name="player_stream_readahead">先読み <xliff:g id="seconds">%1$s</xliff:g>秒</string>
+    <string name="player_stream_playlist_override">プレイリストオーバーライド</string>
+    <string name="player_error_hardware_format">このTVのビデオハードウェアは <xliff:g id="resolution">%1$s</xliff:g> <xliff:g id="codec">%2$s</xliff:g> をデコードできません。ファイル自体は正常ですが、この解像度ではこのTVはこの形式を再生できません。</string>
+    <string name="player_report_saved">ストリームレポートを再生ログに保存しました</string>
+    <string name="player_subtitles_filter_title">言語でフィルタ</string>
+    <string name="player_subtitles_filter_description">オフにすると、タイトルにOpenSubtitlesが持つすべての言語が表示され、全リストから選べます。オンにすると、選択した言語のみが表示されます。</string>
+    <string name="player_subtitles_search_language_description">検索結果にはこの言語の字幕のみが表示されます。結果内の「すべての言語」を押せば、1回の検索で全言語を確認できます。</string>
+    <string name="player_subtitles_language_not_set">未設定</string>
+    <string name="player_frame_rate_prompt_title">このチャンネルはカクつく可能性があります</string>
+    <string name="player_frame_rate_prompt_description">このチャンネルは <xliff:g id="fps">%1$d</xliff:g> fps で再生されますが、TVは <xliff:g id="current_hz">%2$d</xliff:g> Hz で動作しているため、フレームを均等に表示できず、動きがややカクついて見えます。\n\n自動フレームレートは、視聴中にTVを <xliff:g id="target_hz">%3$d</xliff:g> Hz に切り替え、終了後に元に戻します。レート変更時に一瞬画面が暗くなるTVもあります。設定 → ビデオプレーヤー で再度オフにできます。</string>
+    <string name="player_frame_rate_turn_on">オンにする</string>
 </resources>

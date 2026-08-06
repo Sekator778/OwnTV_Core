@@ -844,4 +844,55 @@
     <string name="settings_subtitle_color_cyan">Ciano</string>
     <string name="settings_subtitle_color_green">Verde</string>
     <string name="settings_subtitle_color_grey">Cinzento</string>
+    <string name="settings_live_preroll">Pré-buffer de transmissões em direto</string>
+    <string name="settings_live_preroll_description">Guarda esta quantidade de vídeo antes de um canal em direto começar a reproduzir e novamente após um gaguejo. É uma quantidade de vídeo, não uma contagem decrescente. Desligado mantém o início mais rápido possível.</string>
+    <string name="settings_live_preroll_per_playlist">Pré-buffer por lista de reprodução</string>
+    <string name="settings_live_preroll_per_playlist_description">Substitua a definição acima para uma lista de reprodução, mantendo as suas outras listas de reprodução rápidas.</string>
+    <plurals name="settings_live_preroll_overrides">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> definição</item>
+        <item quantity="many"><xliff:g id="count">%1$d</xliff:g> definições</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> definições</item>
+    </plurals>
+    <string name="settings_surround_stereo">Apenas estéreo</string>
+    <string name="settings_surround_auto_description">Automático — experimente o surround Dolby/DTS e volte ao estéreo automaticamente se a TV ou a soundbar não o reproduzir. Recomendado.</string>
+    <string name="settings_surround_stereo_description">Apenas estéreo — descodifica sempre na aplicação e envia som 2.0 simples. Utilize isto em altifalantes da TV ou numa soundbar estéreo, ou se o áudio estiver atrasado em relação à imagem.</string>
+    <string name="settings_surround_forced_description">Surround — envia Dolby/DTS para um recetor 5.1/7.1 verdadeiro. Se ficar em silêncio ou gaguejar, a OwnTV volta ao estéreo e avisa-o.</string>
+    <string name="settings_panel_width">Ajuste da largura dos painéis</string>
+    <string name="settings_panel_width_description">Redimensione os painéis de categoria, lista e pré-visualização na TV em direto, Filmes e Séries.</string>
+    <string name="settings_search_keywords_epg_offset">epg guia offset tempo deslocamento horário mudar fuso horário este oeste horas</string>
+    <string name="settings_search_keywords_panel_width">painel largura tamanho redimensionar categoria lista pré-visualização cartaz coluna layout tv em direto filmes séries</string>
+    <string name="settings_search_keywords_live_preroll">pré-buffer pré-roll buffer em buffer antes de reproduzir re-buffer gaguejo congelar por lista de reprodução</string>
+    <string name="settings_detailed_playback_logging">Registo detalhado de reprodução</string>
+    <string name="settings_search_keywords_detailed_logging">diagnóstico verboso rastreio logcat depuração relatório bug motor de tv em direto</string>
+    <string name="settings_playback_kind_error">Erro</string>
+    <string name="settings_playback_kind_event">Evento</string>
+    <string name="settings_playback_kind_report">Relatório</string>
+    <string name="settings_playback_entry_with_kind"><xliff:g id="date">%1$s</xliff:g>  ·  <xliff:g id="kind">%2$s</xliff:g>  ·  <xliff:g id="engine">%3$s</xliff:g>  ·  <xliff:g id="stream_type">%4$s</xliff:g></string>
+    <string name="settings_export">Exportar</string>
+    <string name="settings_detailed_playback_logging_description">Mantenha um rasto completo do que o motor de TV em direto faz — cada sintonização, fallback e religação — no Logcat e no relatório exportado. Deixe-o desligado, a menos que esteja a investigar um problema; nunca altera a reprodução, apenas a quantidade de informação que é registada.</string>
+    <string name="settings_live_preroll_playlist_picker">Qual é a lista de reprodução?</string>
+    <string name="settings_live_preroll_follow">Seguir a definição</string>
+    <string name="settings_video_seconds"><xliff:g id="seconds">%1$d</xliff:g>s de vídeo</string>
+    <string name="settings_epg_offset_root_description">Desloque todo o guia quando os horários de um feed não correspondem ao que está efetivamente a dar. Um único canal pode ser deslocado individualmente a partir do menu de pressão prolongada (TV em direto ou Guia) — é essa a opção para versões Este/Oeste que partilham um guia.</string>
+    <string name="settings_epg_offset_dialog_description">Move todos os programas no guia. Use-o quando todo o feed estiver com o relógio errado; para um único canal (uma versão Este/Oeste que partilha um guia), mantenha o canal premido na TV em direto ou no Guia e defina aí o respetivo deslocamento.</string>
+    <string name="settings_panel_width_screen_description">Defina quanto do ecrã cada painel ocupa — as categorias, a lista de itens e a pré-visualização.</string>
+    <string name="settings_panel_width_summary">Categoria <xliff:g id="category">%1$d</xliff:g>%% · Lista <xliff:g id="list">%2$d</xliff:g>%% · <xliff:g id="preview_label">%3$s</xliff:g> <xliff:g id="preview">%4$d</xliff:g>%%</string>
+    <string name="settings_panel_width_help">• Os três painéis partilham a mesma linha, por isso as percentagens têm de somar 100%%.\n• Ao alargar um painel, tem de retirar a mesma quantidade a outro antes de guardar.\n• Repor devolve uma secção às larguras padrão com que este ecrã começou.\n• Desligar uma secção restaura a disposição padrão sem perder os seus valores.\n• Os cartazes de filmes e séries são reorganizados automaticamente, por isso uma lista mais estreita mostra apenas menos por linha.</string>
+    <string name="settings_panel_width_preview">Pré-visualização</string>
+    <string name="settings_panel_width_poster">Cartaz</string>
+    <string name="settings_panel_width_dialog_title">Larguras dos painéis de <xliff:g id="section">%1$s</xliff:g></string>
+    <string name="settings_panel_width_customize">Personalizar painel</string>
+    <string name="settings_panel_width_category">Painel de categoria</string>
+    <string name="settings_panel_width_list">Painel de lista</string>
+    <string name="settings_panel_width_preview_panel">Painel de <xliff:g id="label">%1$s</xliff:g></string>
+    <string name="settings_panel_width_total">Tamanho total</string>
+    <string name="settings_panel_width_invalid_total">O tamanho total é <xliff:g id="total">%1$d</xliff:g>%%. Tem de perfazer 100%% — ajuste, por favor.</string>
+    <string name="settings_language_help_translate">Ajude a traduzir a OwnTV para o seu idioma</string>
+    <string name="settings_language_contribution_description">Leia o código QR ou abra a ligação para escolher qualquer idioma disponível e contribua nos seis componentes de tradução da OwnTV.</string>
+    <string name="settings_language_contribution_qr_description">Código QR para a visão geral do projeto de tradução da OwnTV</string>
+    <string name="settings_language_contribution_qr_failed">Não foi possível gerar o código QR. Utilize antes a ligação apresentada abaixo.</string>
+    <string name="settings_language_contribution_copy">Copiar ligação</string>
+    <string name="settings_language_contribution_copied">Ligação copiada</string>
+    <string name="settings_language_contribution_open_failed">Não foi possível abrir a ligação. Copie-a em vez disso.</string>
+    <string name="settings_language_contribution_copy_failed">Não foi possível copiar a ligação. Leia ou escreva o URL apresentado acima.</string>
 </resources>

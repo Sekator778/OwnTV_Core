@@ -288,4 +288,13 @@
     <string name="content_epg_player_choice_description">設定 › 見逃し配信で常に使用するプレーヤーを設定できます。</string>
     <string name="content_epg_own_player">OwnTVプレーヤー</string>
     <string name="content_epg_external_player">外部プレーヤー</string>
+    <string name="content_epg_time_offset">EPG時間オフセット</string>
+    <string name="content_epg_shift_minutes"><xliff:g id="sign">%1$s</xliff:g><xliff:g id="minutes">%2$s</xliff:g>分</string>
+    <string name="content_epg_shift_hours"><xliff:g id="sign">%1$s</xliff:g><xliff:g id="hours">%2$s</xliff:g>時間</string>
+    <string name="content_epg_shift_hours_minutes"><xliff:g id="sign">%1$s</xliff:g><xliff:g id="hours">%2$s</xliff:g>時間<xliff:g id="minutes">%3$s</xliff:g>分</string>
+    <string name="content_epg_offset_channel_description">「<xliff:g id="channel">%1$s</xliff:g>」の番組表をずらします。East/Westフィードがもう一方のバージョンと番組表を共有している場合に使用します。マイナスのオフセットは番組表の時間を早めます。</string>
+    <string name="content_epg_offset_following_global">グローバルオフセットに従う（<xliff:g id="offset">%1$s</xliff:g>）</string>
+    <string name="content_epg_offset_channel_only">このチャンネルのみ・グローバルオフセットは<xliff:g id="offset">%1$s</xliff:g></string>
+    <string name="content_epg_offset_use_global">グローバルを使用</string>
+    <string name="content_preview_single_stream">プレビューはオフ — お使いのプロバイダーは一度に1つのストリームしか許可していません</string>
 </resources>

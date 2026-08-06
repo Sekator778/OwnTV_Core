@@ -223,4 +223,36 @@
     <string name="player_subtitles_invalid_credentials">OpenSubtitles se pomocí těchto údajů účtu nepodařilo přihlásit.</string>
     <string name="player_subtitles_sign_in_network_error">Ke službě OpenSubtitles se nepodařilo připojit. Zkontrolujte připojení k internetu a zkuste to znovu.</string>
     <string name="player_subtitles_refresh_network_error">Relaci OpenSubtitles se nepodařilo obnovit. Zkontrolujte připojení k internetu.</string>
+    <string name="player_subtitles_no_matches_all_languages">Nebyly nalezeny žádné odpovídající titulky. Zkuste upravit hledaný název.</string>
+    <string name="player_subtitles_no_matches_chosen_language">V zvoleném jazyce nebyly nalezeny žádné odpovídající titulky.</string>
+    <string name="player_subtitles_search_language">Jazyk vyhledávání</string>
+    <string name="player_reason_software_fallback">Přepnuto na softwarové dekódování</string>
+    <string name="player_reason_copy_mode_fallback">Přepnuto na dekódování v režimu copy</string>
+    <string name="player_reason_archive_software_fallback">Archiv zpětného zhlédnutí byl znovu otevřen se softwarovým dekódováním</string>
+    <string name="player_reason_stereo_fallback">Přepnuto na stereo zvuk</string>
+    <string name="player_reason_vod_engine_session_fallback">Filmy a seriály byly pro tuto relaci přepnuty na mpv</string>
+    <string name="player_reason_one_session_provider">Poskytovatel umožňuje pouze jedno připojení najednou</string>
+    <string name="player_reason_mpv_handoff">Tento kanál byl předán mpv</string>
+    <string name="player_reason_stream_report">Diagnostika streamu</string>
+    <string name="player_stream_audio_output">Zvukový výstup</string>
+    <string name="player_stream_live_buffer">Buffer živého vysílání</string>
+    <string name="player_stream_audio_passthrough">passthrough (dekóduje TV/přijímač)</string>
+    <string name="player_stream_audio_decoded_in_app">dekódováno v aplikaci</string>
+    <string name="player_stream_audio_pcm"><xliff:g id="channels">%1$s</xliff:g> PCM</string>
+    <string name="player_stream_multichannel_allowed">multikanál povolen</string>
+    <string name="player_stream_fell_back">přepnuto: <xliff:g id="reason">%1$s</xliff:g></string>
+    <string name="player_stream_preroll_video">předběžné načítání <xliff:g id="seconds">%1$s</xliff:g>s videa</string>
+    <string name="player_stream_preroll_off">předběžné načítání vypnuto</string>
+    <string name="player_stream_depth">hloubka <xliff:g id="seconds">%1$s</xliff:g>s</string>
+    <string name="player_stream_readahead">readahead <xliff:g id="seconds">%1$s</xliff:g>s</string>
+    <string name="player_stream_playlist_override">přepsání playlistu</string>
+    <string name="player_error_hardware_format">Video hardware této televize nedokáže dekódovat <xliff:g id="resolution">%1$s</xliff:g> <xliff:g id="codec">%2$s</xliff:g>. Soubor je v pořádku, ale televize tento formát v tomto rozlišení nedokáže přehrát.</string>
+    <string name="player_report_saved">Diagnostika streamu byla uložena do protokolu přehrávání</string>
+    <string name="player_subtitles_filter_title">Filtrovat podle jazyka</string>
+    <string name="player_subtitles_filter_description">Vypnuto zobrazí všechny jazyky, které OpenSubtitles pro daný titul nabízí, takže si můžete vybrat z celého seznamu. Zapnuto zobrazí pouze vámi zvolený jazyk.</string>
+    <string name="player_subtitles_search_language_description">Ve výsledcích vyhledávání se zobrazí pouze titulky v tomto jazyce. Ve výsledcích můžete stále stisknout „Všechny jazyky“, abyste viděli vše pro jedno vyhledávání.</string>
+    <string name="player_subtitles_language_not_set">Nenastaveno</string>
+    <string name="player_frame_rate_prompt_title">U tohoto kanálu se může obraz trhat</string>
+    <string name="player_frame_rate_prompt_description">Vysílání běží rychlostí <xliff:g id="fps">%1$d</xliff:g> fps, zatímco vaše televize pracuje na <xliff:g id="current_hz">%2$d</xliff:g> Hz, a proto nemůže tyto snímky zobrazovat rovnoměrně – pohyb vypadá mírně trhaně.\n\nAutomatické přepínání snímkové frekvence přepne televizi na <xliff:g id="target_hz">%3$d</xliff:g> Hz, dokud se díváte, a poté ji vrátí zpět. U některých televizí se při změně frekvence obraz na chvíli zčerná; můžete to znovu vypnout v Nastavení → Přehrávač videa.</string>
+    <string name="player_frame_rate_turn_on">Zapnout</string>
 </resources>

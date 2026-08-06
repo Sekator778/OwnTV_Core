@@ -814,4 +814,53 @@
     <string name="settings_subtitle_color_cyan">青色</string>
     <string name="settings_subtitle_color_green">绿色</string>
     <string name="settings_subtitle_color_grey">灰色</string>
+    <string name="settings_live_preroll">预缓冲直播流</string>
+    <string name="settings_live_preroll_description">在直播频道开始播放前以及出现卡顿后，先缓冲这么多视频。这是视频数据量，不是倒计时。关闭可获得最快的启动速度。</string>
+    <string name="settings_live_preroll_per_playlist">按播放列表预缓冲</string>
+    <string name="settings_live_preroll_per_playlist_description">可为单个播放列表覆盖上述设置，同时保持其他播放列表快速启动。</string>
+    <plurals name="settings_live_preroll_overrides">
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> 项设置</item>
+    </plurals>
+    <string name="settings_surround_stereo">仅立体声</string>
+    <string name="settings_surround_auto_description">自动 — 尝试 Dolby/DTS 环绕声，如果电视或条形音箱无法播放，则自动切换回立体声。推荐使用。</string>
+    <string name="settings_surround_stereo_description">仅立体声 — 始终在应用内解码并输出普通 2.0 声音。适用于电视扬声器或立体声条形音箱，或音频落后于画面时使用。</string>
+    <string name="settings_surround_forced_description">环绕声 — 将 Dolby/DTS 发送到真正的 5.1/7.1 接收器。如果声音消失或出现卡顿，OwnTV 仍会回退到立体声并通知你。</string>
+    <string name="settings_panel_width">面板宽度调整</string>
+    <string name="settings_panel_width_description">调整电视直播、电影和剧集中的分类、列表和预览面板大小。</string>
+    <string name="settings_search_keywords_epg_offset">EPG 电子节目指南 节目指南 时间 偏移 平移 时区 东 西 小时</string>
+    <string name="settings_search_keywords_panel_width">面板 宽度 大小 尺寸 调整 分类 列表 预览 海报 列 布局 直播 电影 剧集</string>
+    <string name="settings_search_keywords_live_preroll">预缓冲 预加载 缓冲 缓冲区 播放前 重新缓冲 卡顿 冻结 按播放列表</string>
+    <string name="settings_detailed_playback_logging">详细播放日志</string>
+    <string name="settings_search_keywords_detailed_logging">诊断 详细 跟踪 Logcat 调试 报告 错误 直播引擎</string>
+    <string name="settings_playback_kind_error">错误</string>
+    <string name="settings_playback_kind_event">事件</string>
+    <string name="settings_playback_kind_report">报告</string>
+    <string name="settings_playback_entry_with_kind"><xliff:g id="date">%1$s</xliff:g>  ·  <xliff:g id="kind">%2$s</xliff:g>  ·  <xliff:g id="engine">%3$s</xliff:g>  ·  <xliff:g id="stream_type">%4$s</xliff:g></string>
+    <string name="settings_export">导出</string>
+    <string name="settings_detailed_playback_logging_description">完整记录直播引擎的所有操作——每一次调谐、回退和重新连接——并保存到 Logcat 和导出的报告中。除非你在排查问题，否则请保持关闭；它绝不会改变播放行为，只会影响记录量。</string>
+    <string name="settings_live_preroll_playlist_picker">哪个播放列表？</string>
+    <string name="settings_live_preroll_follow">跟随全局设置</string>
+    <string name="settings_video_seconds"><xliff:g id="seconds">%1$d</xliff:g>秒的视频</string>
+    <string name="settings_epg_offset_root_description">当数据源的时间与实际播出内容不符时，整体平移节目指南。单个频道可在电视直播或节目指南中通过长按菜单单独平移——这适用于共享同一节目指南的东/西版本频道。</string>
+    <string name="settings_epg_offset_dialog_description">移动节目指南中的每一个节目。当整个数据源的时间都不对时使用；对于单个频道（共享同一指南的东/西版本），请在电视直播或节目指南中长按该频道，并在那里设置其自身的偏移。</string>
+    <string name="settings_panel_width_screen_description">设置每个面板占用屏幕的多少空间——分类、条目列表和预览。</string>
+    <string name="settings_panel_width_summary">分类 <xliff:g id="category">%1$d</xliff:g>%% · 列表 <xliff:g id="list">%2$d</xliff:g>%% · <xliff:g id="preview_label">%3$s</xliff:g> <xliff:g id="preview">%4$d</xliff:g>%%</string>
+    <string name="settings_panel_width_help">• 三个面板共用一行，因此它们的百分比加起来必须等于 100%%。\n• 加宽一个面板时，必须先从另一个面板减去相同的量，才能保存。\n• 重置会将某个分区恢复到本屏幕最初的标准宽度。\n• 关闭某个分区会恢复其标准布局，但不会丢失你的数值。\n• 电影和剧集海报会自动重新排列，因此更窄的列表只是每行显示更少。</string>
+    <string name="settings_panel_width_preview">预览</string>
+    <string name="settings_panel_width_poster">海报</string>
+    <string name="settings_panel_width_dialog_title"><xliff:g id="section">%1$s</xliff:g>面板宽度</string>
+    <string name="settings_panel_width_customize">自定义面板</string>
+    <string name="settings_panel_width_category">分类面板</string>
+    <string name="settings_panel_width_list">列表面板</string>
+    <string name="settings_panel_width_preview_panel"><xliff:g id="label">%1$s</xliff:g>面板</string>
+    <string name="settings_panel_width_total">总大小</string>
+    <string name="settings_panel_width_invalid_total">总大小为 <xliff:g id="total">%1$d</xliff:g>%%。必须为 100%%，请调整。</string>
+    <string name="settings_language_help_translate">帮助将 OwnTV 翻译成你的语言</string>
+    <string name="settings_language_contribution_description">扫描二维码或打开链接，即可选择任何可用语言，并参与 OwnTV 全部六个翻译组件的翻译。</string>
+    <string name="settings_language_contribution_qr_description">OwnTV 翻译项目概览的二维码</string>
+    <string name="settings_language_contribution_qr_failed">无法生成二维码。请改用下方显示的链接。</string>
+    <string name="settings_language_contribution_copy">复制链接</string>
+    <string name="settings_language_contribution_copied">链接已复制</string>
+    <string name="settings_language_contribution_open_failed">无法打开链接。请改为复制链接。</string>
+    <string name="settings_language_contribution_copy_failed">无法复制链接。请阅读或输入上面显示的网址。</string>
 </resources>

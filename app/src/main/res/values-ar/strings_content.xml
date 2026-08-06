@@ -358,4 +358,13 @@
     <string name="content_epg_player_choice_description">عيّن اختيارًا دائمًا من الإعدادات › مشاهدة البث الفائت.</string>
     <string name="content_epg_own_player">مشغّل OwnTV</string>
     <string name="content_epg_external_player">مشغّل خارجي</string>
+    <string name="content_epg_time_offset">إزاحة توقيت دليل البرامج الإلكتروني</string>
+    <string name="content_epg_shift_minutes"><xliff:g id="sign">%1$s</xliff:g><xliff:g id="minutes">%2$s</xliff:g>د</string>
+    <string name="content_epg_shift_hours"><xliff:g id="sign">%1$s</xliff:g><xliff:g id="hours">%2$s</xliff:g>س</string>
+    <string name="content_epg_shift_hours_minutes"><xliff:g id="sign">%1$s</xliff:g><xliff:g id="hours">%2$s</xliff:g>س <xliff:g id="minutes">%3$s</xliff:g>د</string>
+    <string name="content_epg_offset_channel_description">حرّك دليل «<xliff:g id="channel">%1$s</xliff:g>». استخدم هذا عندما يتشارك البث الشرقي/الغربي دليله مع النسخة الأخرى — الإزاحة السالبة تجعل مواعيد الدليل أبكر.</string>
+    <string name="content_epg_offset_following_global">يتبع الإزاحة العامة (<xliff:g id="offset">%1$s</xliff:g>)</string>
+    <string name="content_epg_offset_channel_only">هذه القناة فقط · الإزاحة العامة هي <xliff:g id="offset">%1$s</xliff:g></string>
+    <string name="content_epg_offset_use_global">استخدم الإزاحة العامة</string>
+    <string name="content_preview_single_stream">المعاينة متوقفة — مزود الخدمة لديك يسمح ببث واحد فقط في كل مرة</string>
 </resources>

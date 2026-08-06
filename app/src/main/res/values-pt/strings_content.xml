@@ -316,4 +316,13 @@
     <string name="content_epg_player_choice_description">Defina uma escolha permanente em Configurações › Programação retroativa.</string>
     <string name="content_epg_own_player">Reprodutor do OwnTV</string>
     <string name="content_epg_external_player">Reprodutor externo</string>
+    <string name="content_epg_time_offset">Deslocamento de horário do EPG</string>
+    <string name="content_epg_shift_minutes"><xliff:g id="sign">%1$s</xliff:g><xliff:g id="minutes">%2$s</xliff:g>min</string>
+    <string name="content_epg_shift_hours"><xliff:g id="sign">%1$s</xliff:g><xliff:g id="hours">%2$s</xliff:g>h</string>
+    <string name="content_epg_shift_hours_minutes"><xliff:g id="sign">%1$s</xliff:g><xliff:g id="hours">%2$s</xliff:g>h <xliff:g id="minutes">%3$s</xliff:g>min</string>
+    <string name="content_epg_offset_channel_description">Desloque o guia de “<xliff:g id="channel">%1$s</xliff:g>”. Use isso quando um feed Leste/Oeste compartilha o guia com a outra versão — um deslocamento negativo adianta o guia.</string>
+    <string name="content_epg_offset_following_global">Seguindo o deslocamento global (<xliff:g id="offset">%1$s</xliff:g>)</string>
+    <string name="content_epg_offset_channel_only">Somente este canal · o global é <xliff:g id="offset">%1$s</xliff:g></string>
+    <string name="content_epg_offset_use_global">Usar global</string>
+    <string name="content_preview_single_stream">Pré-visualização desativada — seu provedor permite apenas um stream por vez</string>
 </resources>

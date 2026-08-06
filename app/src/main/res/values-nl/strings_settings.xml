@@ -829,4 +829,54 @@
     <string name="settings_subtitle_color_cyan">Cyaan</string>
     <string name="settings_subtitle_color_green">Groen</string>
     <string name="settings_subtitle_color_grey">Grijs</string>
+    <string name="settings_live_preroll">Livestreams vooraf bufferen</string>
+    <string name="settings_live_preroll_description">Buffer zoveel video voordat een live zender begint met afspelen, en opnieuw na een hapering. Dit is een hoeveelheid video, geen aftelling. Uit zorgt voor de snelst mogelijke start.</string>
+    <string name="settings_live_preroll_per_playlist">Vooraf bufferen per afspeellijst</string>
+    <string name="settings_live_preroll_per_playlist_description">Overschrijf de bovenstaande instelling voor één afspeellijst terwijl je andere afspeellijsten snel blijven.</string>
+    <plurals name="settings_live_preroll_overrides">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> set</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> sets</item>
+    </plurals>
+    <string name="settings_surround_stereo">Alleen stereo</string>
+    <string name="settings_surround_auto_description">Auto — probeer Dolby/DTS-surround en schakel automatisch terug naar stereo als de tv of soundbar het niet afspeelt. Aanbevolen.</string>
+    <string name="settings_surround_stereo_description">Alleen stereo — decodeer altijd in de app en stuur gewoon 2.0-geluid. Gebruik dit op tv-luidsprekers of een stereo-soundbar, of als audio achterloopt op het beeld.</string>
+    <string name="settings_surround_forced_description">Surround — stuur Dolby/DTS naar een echte 5.1/7.1-receiver. Als het stil wordt of hapert, valt OwnTV alsnog terug op stereo en meldt je dat.</string>
+    <string name="settings_panel_width">Paneelbreedte aanpassen</string>
+    <string name="settings_panel_width_description">Pas de categorie-, lijst- en voorbeeldpanelen aan in Live-tv, films en series.</string>
+    <string name="settings_search_keywords_epg_offset">epg gids tijd offset verschuiving tijdzone oost west uren</string>
+    <string name="settings_search_keywords_panel_width">paneel breedte grootte aanpassen categorie lijst voorbeeld poster kolom indeling live films series</string>
+    <string name="settings_search_keywords_live_preroll">prebuffer preroll pre-roll bufferen buffer voor het afspelen opnieuw bufferen hapering vastlopen per afspeellijst</string>
+    <string name="settings_detailed_playback_logging">Gedetailleerde weergavelogging</string>
+    <string name="settings_search_keywords_detailed_logging">diagnostiek uitgebreid trace logcat debug rapport bug live engine</string>
+    <string name="settings_playback_kind_error">Fout</string>
+    <string name="settings_playback_kind_event">Gebeurtenis</string>
+    <string name="settings_playback_kind_report">Rapport</string>
+    <string name="settings_playback_entry_with_kind"><xliff:g id="date">%1$s</xliff:g>  ·  <xliff:g id="kind">%2$s</xliff:g>  ·  <xliff:g id="engine">%3$s</xliff:g>  ·  <xliff:g id="stream_type">%4$s</xliff:g></string>
+    <string name="settings_export">Exporteren</string>
+    <string name="settings_detailed_playback_logging_description">Leg een volledig spoor vast van wat de live-engine doet — elke afstemming, fallback en herverbinding — in Logcat en in het geëxporteerde rapport. Laat het uit staan tenzij je een probleem opspoort; het verandert nooit de weergave, alleen hoeveel er wordt vastgelegd.</string>
+    <string name="settings_live_preroll_playlist_picker">Welke afspeellijst?</string>
+    <string name="settings_live_preroll_follow">Instelling volgen</string>
+    <string name="settings_video_seconds"><xliff:g id="seconds">%1$d</xliff:g>s video</string>
+    <string name="settings_epg_offset_root_description">Verschuif de hele gids wanneer de tijden van een feed niet overeenkomen met wat er werkelijk wordt uitgezonden. Een enkele zender kan afzonderlijk worden verschoven via het lang-druk-menu (Live-tv of Gids) — dat is de optie voor Oost/West-versies die één gids delen.</string>
+    <string name="settings_epg_offset_dialog_description">Verplaatst elk programma in de gids. Gebruik het wanneer de hele feed op de verkeerde klok staat; houd voor een enkele zender (een Oost/West-versie die één gids deelt) de zender lang ingedrukt in Live-tv of de Gids en stel daar de eigen offset in.</string>
+    <string name="settings_panel_width_screen_description">Stel in hoeveel van het scherm elk paneel inneemt — categorieën, de lijst en het voorbeeld.</string>
+    <string name="settings_panel_width_summary">Categorie <xliff:g id="category">%1$d</xliff:g>%% · Lijst <xliff:g id="list">%2$d</xliff:g>%% · <xliff:g id="preview_label">%3$s</xliff:g> <xliff:g id="preview">%4$d</xliff:g>%%</string>
+    <string name="settings_panel_width_help">• De drie panelen delen één rij, dus hun percentages moeten bij elkaar 100%% zijn.\n• Als je een paneel breder maakt, moet je dezelfde hoeveelheid van een ander afhalen voordat je opslaat.\n• Reset zet een sectie terug naar de standaardbreedtes waarmee dit scherm begon.\n• Als je een sectie uitschakelt, wordt de standaardindeling hersteld zonder dat je waarden verloren gaan.\n• Film- en serieposters worden automatisch opnieuw ingedeeld, dus een smallere lijst toont gewoon minder per rij.</string>
+    <string name="settings_panel_width_preview">Voorbeeld</string>
+    <string name="settings_panel_width_poster">Poster</string>
+    <string name="settings_panel_width_dialog_title"><xliff:g id="section">%1$s</xliff:g> paneelbreedtes</string>
+    <string name="settings_panel_width_customize">Paneel aanpassen</string>
+    <string name="settings_panel_width_category">Categoriepaneel</string>
+    <string name="settings_panel_width_list">Lijstpaneel</string>
+    <string name="settings_panel_width_preview_panel"><xliff:g id="label">%1$s</xliff:g> paneel</string>
+    <string name="settings_panel_width_total">Totale grootte</string>
+    <string name="settings_panel_width_invalid_total">De totale grootte is <xliff:g id="total">%1$d</xliff:g>%%. Die moet 100%% zijn — pas het aan.</string>
+    <string name="settings_language_help_translate">Help OwnTV in jouw taal te vertalen</string>
+    <string name="settings_language_contribution_description">Scan de QR-code of open de link om elke beschikbare taal te kiezen en bij te dragen aan alle zes OwnTV-vertaalcomponenten.</string>
+    <string name="settings_language_contribution_qr_description">QR-code voor het overzicht van het OwnTV-vertaalproject.</string>
+    <string name="settings_language_contribution_qr_failed">De QR-code kon niet worden gegenereerd. Gebruik in plaats daarvan de onderstaande link.</string>
+    <string name="settings_language_contribution_copy">Link kopiëren</string>
+    <string name="settings_language_contribution_copied">Link gekopieerd</string>
+    <string name="settings_language_contribution_open_failed">De link kon niet worden geopend. Kopieer hem in plaats daarvan.</string>
+    <string name="settings_language_contribution_copy_failed">De link kon niet worden gekopieerd. Lees of typ de hierboven getoonde URL.</string>
 </resources>

@@ -202,4 +202,36 @@
     <string name="player_subtitles_invalid_credentials">해당 계정 정보로 OpenSubtitles에 로그인하지 못했습니다.</string>
     <string name="player_subtitles_sign_in_network_error">OpenSubtitles에 연결하지 못했습니다. 인터넷 연결을 확인하고 다시 시도하세요.</string>
     <string name="player_subtitles_refresh_network_error">OpenSubtitles를 새로고침하지 못했습니다. 인터넷 연결을 확인하세요.</string>
+    <string name="player_subtitles_no_matches_all_languages">일치하는 자막을 찾지 못했습니다. 검색 제목을 수정해 보세요.</string>
+    <string name="player_subtitles_no_matches_chosen_language">선택한 언어로 된 일치하는 자막을 찾지 못했습니다.</string>
+    <string name="player_subtitles_search_language">검색 언어</string>
+    <string name="player_reason_software_fallback">소프트웨어 디코딩으로 대체됨</string>
+    <string name="player_reason_copy_mode_fallback">복사 모드 디코딩으로 대체됨</string>
+    <string name="player_reason_archive_software_fallback">다시보기 아카이브가 소프트웨어 디코딩으로 다시 열렸습니다.</string>
+    <string name="player_reason_stereo_fallback">스테레오 오디오로 전환됨</string>
+    <string name="player_reason_vod_engine_session_fallback">영화 및 시리즈 재생을 이번 세션에서 mpv로 전환했습니다.</string>
+    <string name="player_reason_one_session_provider">제공자는 한 번에 하나의 세션만 허용합니다.</string>
+    <string name="player_reason_mpv_handoff">이 채널을 mpv로 넘겼습니다.</string>
+    <string name="player_reason_stream_report">스트림 보고서</string>
+    <string name="player_stream_audio_output">오디오 출력</string>
+    <string name="player_stream_live_buffer">실시간 버퍼</string>
+    <string name="player_stream_audio_passthrough">패스스루 (TV/리시버가 디코딩)</string>
+    <string name="player_stream_audio_decoded_in_app">앱에서 디코딩됨</string>
+    <string name="player_stream_audio_pcm"><xliff:g id="channels">%1$s</xliff:g> PCM</string>
+    <string name="player_stream_multichannel_allowed">멀티채널 허용됨</string>
+    <string name="player_stream_fell_back">대체됨: <xliff:g id="reason">%1$s</xliff:g></string>
+    <string name="player_stream_preroll_video">비디오 <xliff:g id="seconds">%1$s</xliff:g>초 사전 버퍼</string>
+    <string name="player_stream_preroll_off">사전 버퍼 꺼짐</string>
+    <string name="player_stream_depth">깊이 <xliff:g id="seconds">%1$s</xliff:g>초</string>
+    <string name="player_stream_readahead">리드어헤드 <xliff:g id="seconds">%1$s</xliff:g>초</string>
+    <string name="player_stream_playlist_override">재생목록 재정의</string>
+    <string name="player_error_hardware_format">이 TV의 비디오 하드웨어는 <xliff:g id="resolution">%1$s</xliff:g> <xliff:g id="codec">%2$s</xliff:g> 디코딩을 지원하지 않습니다. 파일은 문제없지만, 이 TV는 이 해상도에서 이 형식을 재생할 수 없습니다.</string>
+    <string name="player_report_saved">스트림 보고서가 재생 로그에 저장되었습니다.</string>
+    <string name="player_subtitles_filter_title">언어별 필터</string>
+    <string name="player_subtitles_filter_description">끄면 해당 타이틀에 대해 OpenSubtitles가 제공하는 모든 언어가 표시되어 전체 목록에서 선택할 수 있습니다. 켜면 선택한 언어만 표시됩니다.</string>
+    <string name="player_subtitles_search_language_description">이 언어의 자막만 검색 결과에 표시됩니다. 검색 결과에서 “모든 언어”를 누르면 한 번의 검색에 대한 모든 결과를 계속 볼 수 있습니다.</string>
+    <string name="player_subtitles_language_not_set">설정되지 않음</string>
+    <string name="player_frame_rate_prompt_title">이 채널은 화면이 버벅일 수 있습니다.</string>
+    <string name="player_frame_rate_prompt_description">이 채널은 <xliff:g id="fps">%1$d</xliff:g>fps로 재생되는데, TV가 <xliff:g id="current_hz">%2$d</xliff:g>Hz로 동작 중이라 이 프레임들을 고르게 표시할 수 없습니다. 그래서 움직임이 약간 버벅거려 보입니다.\n\n자동 프레임 레이트는 시청하는 동안 TV를 <xliff:g id="target_hz">%3$d</xliff:g>Hz로 전환했다가 시청이 끝나면 다시 되돌립니다. 일부 TV는 레이트가 변경될 때 잠시 화면이 꺼질 수 있습니다. 설정 → 비디오 플레이어에서 다시 끌 수 있습니다.</string>
+    <string name="player_frame_rate_turn_on">켜기</string>
 </resources>

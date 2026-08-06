@@ -829,4 +829,54 @@
     <string name="settings_subtitle_color_cyan">സയാൻ</string>
     <string name="settings_subtitle_color_green">പച്ച</string>
     <string name="settings_subtitle_color_grey">ചാരനിറം</string>
+    <string name="settings_live_preroll">ലൈവ് സ്ട്രീമുകൾ പ്രീ-ബഫർ ചെയ്യുക</string>
+    <string name="settings_live_preroll_description">ഒരു ലൈവ് ചാനൽ പ്ലേ ചെയ്യാൻ തുടങ്ങുന്നതിന് മുമ്പ് ഇത്രയും വീഡിയോ ബഫർ ചെയ്യുക, സ്റ്റട്ടറിന് ശേഷവും വീണ്ടും. ഇത് വീഡിയോയുടെ അളവാണ്, കൗണ്ട്ഡൗൺ അല്ല. ഓഫ് ആണെങ്കിൽ ഏറ്റവും വേഗത്തിൽ പ്ലേ ആരംഭിക്കും.</string>
+    <string name="settings_live_preroll_per_playlist">ഓരോ പ്ലേലിസ്റ്റിനും പ്രീ-ബഫർ</string>
+    <string name="settings_live_preroll_per_playlist_description">മുകളിലെ ക്രമീകരണം ഒരു പ്ലേലിസ്റ്റിനായി ഓവർറൈഡ് ചെയ്യുക, മറ്റ് പ്ലേലിസ്റ്റുകൾ വേഗത്തിൽ തന്നെ നിലനിർത്തുക.</string>
+    <plurals name="settings_live_preroll_overrides">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> സെറ്റ്</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> സെറ്റ്</item>
+    </plurals>
+    <string name="settings_surround_stereo">സ്റ്റീരിയോ മാത്രം</string>
+    <string name="settings_surround_auto_description">ഓട്ടോ — ഡോൾബി/DTS സറൗണ്ട് പരീക്ഷിക്കുക, ടിവിയോ സൗണ്ട്ബാറോ അത് പ്ലേ ചെയ്യുന്നില്ലെങ്കിൽ ഓട്ടോമാറ്റിക്കായി സ്റ്റീരിയോയിലേക്ക് തിരികെ മാറുക. ശുപാർശ ചെയ്യുന്നു.</string>
+    <string name="settings_surround_stereo_description">സ്റ്റീരിയോ മാത്രം — എപ്പോഴും ആപ്പിനുള്ളിൽ ഡീകോഡ് ചെയ്ത് സാധാരണ 2.0 ശബ്ദം അയയ്ക്കുക. ടിവി സ്പീക്കറുകളിലോ സ്റ്റീരിയോ സൗണ്ട്ബാറിലോ, അല്ലെങ്കിൽ ഓഡിയോ ചിത്രത്തിന് പിന്നിൽ വൈകുന്നുവെങ്കിൽ ഇത് ഉപയോഗിക്കുക.</string>
+    <string name="settings_surround_forced_description">സറൗണ്ട് — ഡോൾബി/DTS ഒരു യഥാർത്ഥ 5.1/7.1 റിസീവറിലേക്ക് അയയ്ക്കുക. അത് നിശ്ശബ്ദമാകുകയോ സ്റ്റട്ടർ ചെയ്യുകയോ ചെയ്താൽ, OwnTV ഇപ്പോഴും സ്റ്റീരിയോയിലേക്ക് മടങ്ങുകയും നിങ്ങളെ അറിയിക്കുകയും ചെയ്യും.</string>
+    <string name="settings_panel_width">പാനൽ വീതി ക്രമീകരണം</string>
+    <string name="settings_panel_width_description">ലൈവ് ടിവി, സിനിമകൾ &amp; സീരീസുകൾ എന്നിവയിലെ വിഭാഗം, പട്ടിക, പ്രിവ്യൂ പാനലുകളുടെ വലിപ്പം മാറ്റുക.</string>
+    <string name="settings_search_keywords_epg_offset">ഇപിജി ഗൈഡ് സമയം ഓഫ്സെറ്റ് മാറ്റുക ടൈംസോൺ കിഴക്ക് പടിഞ്ഞാറ് മണിക്കൂറുകൾ</string>
+    <string name="settings_search_keywords_panel_width">പാനൽ വീതി വലിപ്പം വലിപ്പം മാറ്റുക വിഭാഗം പട്ടിക പ്രിവ്യൂ പോസ്റ്റർ കോളം ലേഔട്ട് ലൈവ് സിനിമകൾ സീരീസുകൾ</string>
+    <string name="settings_search_keywords_live_preroll">പ്രീബഫർ പ്രീറോൾ പ്രീ-റോൾ ബഫറിംഗ് ബഫർ പ്ലേ ചെയ്യുന്നതിന് മുമ്പ് റീബഫർ സ്റ്റട്ടർ ഫ്രീസ് ഓരോ പ്ലേലിസ്റ്റിനും</string>
+    <string name="settings_detailed_playback_logging">വിശദമായ പ്ലേബാക്ക് ലോഗിംഗ്</string>
+    <string name="settings_search_keywords_detailed_logging">ഡയഗ്നോസ്റ്റിക്സ് വെർബോസ് ട്രേസ് ലോഗ്കാറ്റ് ഡീബഗ് റിപ്പോർട്ട് ബഗ് ലൈവ് എഞ്ചിൻ</string>
+    <string name="settings_playback_kind_error">പിശക്</string>
+    <string name="settings_playback_kind_event">ഇവന്റ്</string>
+    <string name="settings_playback_kind_report">റിപ്പോർട്ട്</string>
+    <string name="settings_playback_entry_with_kind"><xliff:g id="date">%1$s</xliff:g>  ·  <xliff:g id="kind">%2$s</xliff:g>  ·  <xliff:g id="engine">%3$s</xliff:g>  ·  <xliff:g id="stream_type">%4$s</xliff:g></string>
+    <string name="settings_export">എക്സ്പോർട്ട്</string>
+    <string name="settings_detailed_playback_logging_description">ലൈവ് എഞ്ചിൻ ചെയ്യുന്നതിന്റെ പൂർണ്ണ ട്രേസ് Logcat-ലും എക്സ്പോർട്ട് ചെയ്ത റിപ്പോർട്ടിലും സൂക്ഷിക്കുക — ഓരോ ട്യൂൺ, ഫാൾബാക്ക്, റീകണക്ട് എന്നിവ ഉൾപ്പെടെ. നിങ്ങൾ ഒരു പ്രശ്നം അന്വേഷിക്കുന്നില്ലെങ്കിൽ ഇത് ഓഫ് ആയി വയ്ക്കുക; ഇത് പ്ലേബാക്കിനെ ഒരിക്കലും മാറ്റില്ല, എത്രത്തോളം രേഖപ്പെടുത്തുന്നു എന്നതിനെ മാത്രമേ ബാധിക്കുകയുള്ളൂ.</string>
+    <string name="settings_live_preroll_playlist_picker">ഏത് പ്ലേലിസ്റ്റ്?</string>
+    <string name="settings_live_preroll_follow">ക്രമീകരണം പിന്തുടരുക</string>
+    <string name="settings_video_seconds"><xliff:g id="seconds">%1$d</xliff:g> സെക്കൻഡ് വീഡിയോ</string>
+    <string name="settings_epg_offset_root_description">ഒരു ഫീഡിന്റെ സമയങ്ങൾ യഥാർത്ഥത്തിൽ കാണിക്കുന്നതുമായി പൊരുത്തപ്പെടുന്നില്ലെങ്കിൽ മുഴുവൻ ഗൈഡും മാറ്റുക. ഒരൊറ്റ ചാനൽ സ്വന്തമായി അതിന്റെ ദീർഘനേരം അമർത്തുന്ന മെനുവിൽ നിന്ന് (ലൈവ് ടിവി അല്ലെങ്കിൽ ഗൈഡ്) മാറ്റാം — ഒരു ഗൈഡ് പങ്കിടുന്ന ഈസ്റ്റ്/വെസ്റ്റ് പതിപ്പുകൾക്കുള്ളത് അതാണ്.</string>
+    <string name="settings_epg_offset_dialog_description">ഗൈഡിലെ എല്ലാ പ്രോഗ്രാമുകളുടെയും സമയം മാറ്റുന്നു. മുഴുവൻ ഫീഡും തെറ്റായ സമയക്രമത്തിലാണെങ്കിൽ ഇത് ഉപയോഗിക്കുക; ഒരൊറ്റ ചാനലിനായി (ഒരു ഗൈഡ് പങ്കിടുന്ന ഈസ്റ്റ്/വെസ്റ്റ് പതിപ്പ്), ലൈവ് ടിവിയിലോ ഗൈഡിലോ ചാനൽ ദീർഘനേരം അമർത്തി അതിന്റെ സ്വന്തം ഓഫ്സെറ്റ് അവിടെ സജ്ജമാക്കുക.</string>
+    <string name="settings_panel_width_screen_description">ഓരോ പാനലും സ്ക്രീനിന്റെ എത്ര ഭാഗം എടുക്കുന്നുവെന്ന് സജ്ജമാക്കുക — വിഭാഗങ്ങൾ, ഇനങ്ങളുടെ പട്ടിക, പ്രിവ്യൂ.</string>
+    <string name="settings_panel_width_summary">വിഭാഗം <xliff:g id="category">%1$d</xliff:g>%% · പട്ടിക <xliff:g id="list">%2$d</xliff:g>%% · <xliff:g id="preview_label">%3$s</xliff:g> <xliff:g id="preview">%4$d</xliff:g>%%</string>
+    <string name="settings_panel_width_help">• മൂന്ന് പാനലുകൾ ഒരു വരി പങ്കിടുന്നു, അതിനാൽ അവയുടെ ശതമാനങ്ങൾ കൂട്ടിയാൽ 100%% ആകണം.\n• ഒരു പാനൽ വീതികൂട്ടിയാൽ സേവ് ചെയ്യുന്നതിന് മുമ്പ് മറ്റൊരു പാനലിൽ നിന്ന് അതേ അളവ് കുറയ്ക്കണം.\n• റീസെറ്റ് ഒരു വിഭാഗത്തെ ഈ സ്ക്രീൻ ആരംഭിച്ചപ്പോൾ ഉണ്ടായിരുന്ന സ്റ്റാൻഡേർഡ് വീതികളിലേക്ക് തിരികെ കൊണ്ടുപോകുന്നു.\n• ഒരു വിഭാഗം ഓഫ് ചെയ്യുന്നത് നിങ്ങളുടെ മൂല്യങ്ങൾ നഷ്ടപ്പെടുത്താതെ അതിന്റെ സ്റ്റാൻഡേർഡ് ലേഔട്ട് പുനഃസ്ഥാപിക്കുന്നു.\n• സിനിമ, സീരീസ് പോസ്റ്ററുകൾ യാന്ത്രികമായി പുനഃക്രമീകരിക്കപ്പെടും, അതിനാൽ ഇടുങ്ങിയ പട്ടികയിൽ ഒരു വരിയിൽ കുറച്ച് പോസ്റ്ററുകളേ കാണൂ.</string>
+    <string name="settings_panel_width_preview">പ്രിവ്യൂ</string>
+    <string name="settings_panel_width_poster">പോസ്റ്റർ</string>
+    <string name="settings_panel_width_dialog_title"><xliff:g id="section">%1$s</xliff:g> പാനൽ വീതികൾ</string>
+    <string name="settings_panel_width_customize">പാനൽ ഇഷ്ടാനുസൃതമാക്കുക</string>
+    <string name="settings_panel_width_category">വിഭാഗം പാനൽ</string>
+    <string name="settings_panel_width_list">പട്ടിക പാനൽ</string>
+    <string name="settings_panel_width_preview_panel"><xliff:g id="label">%1$s</xliff:g> പാനൽ</string>
+    <string name="settings_panel_width_total">ആകെ വലിപ്പം</string>
+    <string name="settings_panel_width_invalid_total">ആകെ വലിപ്പം <xliff:g id="total">%1$d</xliff:g>%% ആണ്. അത് 100%% ആകണം — ദയവായി ക്രമീകരിക്കുക.</string>
+    <string name="settings_language_help_translate">OwnTV നിങ്ങളുടെ ഭാഷയിലേക്ക് വിവർത്തനം ചെയ്യാൻ സഹായിക്കുക</string>
+    <string name="settings_language_contribution_description">QR കോഡ് സ്കാൻ ചെയ്യുക അല്ലെങ്കിൽ ലിങ്ക് തുറന്ന് ലഭ്യമായ ഏത് ഭാഷയും തിരഞ്ഞെടുത്ത് OwnTV-യുടെ ആറ് വിവർത്തന ഘടകങ്ങളിലും സംഭാവന നൽകുക.</string>
+    <string name="settings_language_contribution_qr_description">OwnTV വിവർത്തന പ്രോജക്റ്റ് അവലോകനത്തിനുള്ള QR കോഡ്</string>
+    <string name="settings_language_contribution_qr_failed">QR കോഡ് സൃഷ്ടിക്കാൻ കഴിഞ്ഞില്ല. പകരം താഴെ കാണിച്ചിരിക്കുന്ന ലിങ്ക് ഉപയോഗിക്കുക.</string>
+    <string name="settings_language_contribution_copy">ലിങ്ക് പകർത്തുക</string>
+    <string name="settings_language_contribution_copied">ലിങ്ക് പകർത്തി</string>
+    <string name="settings_language_contribution_open_failed">ലിങ്ക് തുറക്കാൻ കഴിഞ്ഞില്ല. പകരം അത് പകർത്തുക.</string>
+    <string name="settings_language_contribution_copy_failed">ലിങ്ക് പകർത്താൻ കഴിഞ്ഞില്ല. മുകളിൽ കാണിച്ചിരിക്കുന്ന URL വായിക്കുക അല്ലെങ്കിൽ ടൈപ്പ് ചെയ്യുക.</string>
 </resources>
