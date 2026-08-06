@@ -15,8 +15,19 @@ Spanish is `es` (there is no `es_ES` definition), while Latin America is `es_419
 <!-- canonical-weblate:start -->
 **Canonical project overview:** <https://hosted.weblate.org/projects/owntv/>
 
-The app, README, and this guide all use this value from `community.json`; replace that single source when the project route changes.
+**New-language request form:** <https://github.com/ahXN00/OwnTV/issues/new?template=feature_request.yml&title=%5BLanguage%5D%20Add%20>
+
+The app, README, and this guide use these values from `community.json`; update that single source when either route changes.
 <!-- canonical-weblate:end -->
+
+## Requesting a new language
+
+If the language is not available on Hosted Weblate, open a language request ticket before translating.
+A maintainer will verify its BCP-47 tag, Android qualifier, Weblate language code, native name, script, and text direction; register it in `locales.json`; and prepare the language across OwnTV's six Weblate components.
+The requester can then contribute normally through Hosted Weblate.
+
+Registration does not package an empty language in the app.
+Empty Android `values-*` directories remain forbidden; translated resources are imported and the language becomes eligible for explicit packaging only after it reaches the readiness threshold and passes validation and review.
 
 ## Supported, selectable, and catalogue-only
 

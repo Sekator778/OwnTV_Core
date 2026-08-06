@@ -884,4 +884,6 @@
     <string name="settings_auto_frame_rate_warning_description">Bu cihaz Android <xliff:g id="android_version">%1$s</xliff:g> sürümüyle çalışıyor. Android 12\'den önceki sürümlerde TV, OwnTV\'ye hangi yenileme hızlarına sorunsuz geçebileceğini bildiremez; bu yüzden hızı değiştirmek ekranın bir iki saniyeliğine kararmasına neden olabilir — bazen bir program sırasında birden fazla kez.\n\nBurada otomatik yenileme hızını kapalı bırakmanızı öneririz. TV\'niz sorunsuz geçiş yapıyorsa açıp deneyin: istediğiniz zaman geri değiştirebilirsiniz.</string>
     <string name="settings_auto_frame_rate_keep_off">Kapalı bırak</string>
     <string name="settings_auto_frame_rate_turn_on_anyway">Yine de aç</string>
+    <string name="settings_language_request_workflow">Listede olmayan bir dil mi eklemek istiyorsunuz? Önce bir dil talebi açın. Bir proje yöneticisi dili kaydeder ve temel çeviri dosyalarını hazırlar; Hosted Weblate üzerinde göründüğünde katkıda bulunmaya başlayabilirsiniz.</string>
+    <string name="settings_language_request_new">Yeni dil talebinde bulun</string>
 </resources>

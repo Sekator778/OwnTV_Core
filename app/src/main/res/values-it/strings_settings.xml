@@ -900,4 +900,6 @@
     <string name="settings_auto_frame_rate_warning_description">Questo dispositivo esegue Android <xliff:g id="android_version">%1$s</xliff:g>. Sotto Android 12 il TV non può comunicare a OwnTV a quali frequenze di aggiornamento può passare senza problemi, quindi cambiare la frequenza potrebbe far andare in nero lo schermo per un secondo o due — a volte più di una volta durante un programma.\n\nTi consigliamo di lasciare disattivata qui la frequenza di aggiornamento automatica. Se il tuo TV cambia frequenza senza intoppi, attivala e prova: puoi disattivarla di nuovo in qualsiasi momento.</string>
     <string name="settings_auto_frame_rate_keep_off">Lascia disattivato</string>
     <string name="settings_auto_frame_rate_turn_on_anyway">Attiva comunque</string>
+    <string name="settings_language_request_workflow">Vuoi aggiungere una lingua che non è elencata? Apri prima una richiesta di lingua. Un maintainer la registrerà e preparerà i file di traduzione di base; una volta che appare su Hosted Weblate, puoi iniziare a contribuire.</string>
+    <string name="settings_language_request_new">Richiedi una nuova lingua</string>
 </resources>

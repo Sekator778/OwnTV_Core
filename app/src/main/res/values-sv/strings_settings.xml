@@ -884,4 +884,6 @@
     <string name="settings_auto_frame_rate_warning_description">Den här enheten kör Android <xliff:g id="android_version">%1$s</xliff:g>. På Android-versioner lägre än 12 kan TV:n inte tala om för OwnTV vilka uppdateringsfrekvenser den kan växla till smidigt, så kan en ändring av bildfrekvensen göra att skärmen blir svart i en eller två sekunder — ibland mer än en gång under ett program.\n\nVi rekommenderar att du låter automatisk bildfrekvens vara av här. Om din TV växlar utan problem kan du slå på den och se: du kan när som helst ändra tillbaka.</string>
     <string name="settings_auto_frame_rate_keep_off">Behåll av</string>
     <string name="settings_auto_frame_rate_turn_on_anyway">Slå på ändå</string>
+    <string name="settings_language_request_workflow">Vill du lägga till ett språk som inte är listat? Öppna en språkförfrågan först. En underhållare registrerar det och förbereder basöversättningsfilerna; när det dyker upp på Hosted Weblate kan du börja bidra.</string>
+    <string name="settings_language_request_new">Begär ett nytt språk</string>
 </resources>

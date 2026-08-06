@@ -42,6 +42,7 @@ def _community_config() -> dict:
 
 def _readme_contribution(config: dict) -> str:
     url = config["projectUrl"]
+    request_url = config["languageRequestUrl"]
     warning = (
         "> **Captain-configured rehearsal endpoint:** this URL is intentionally recorded without an "
         "independent production-route verification.\n\n"
@@ -49,19 +50,25 @@ def _readme_contribution(config: dict) -> str:
     )
     return (
         f"{README_START}\n## Help translate OwnTV\n\n{warning}"
-        "Contribute interface translations across OwnTV's six Android resource components on "
-        f"[Hosted Weblate]({url}). See the [language contributor guide](tools/i18n/README.md) for "
-        f"the workflow, identifiers, validation, and promotion policy.\n{README_END}"
+        "If your language is already available, contribute interface translations across OwnTV's six "
+        f"Android resource components on [Hosted Weblate]({url}). If it is not listed, "
+        f"[open a language request ticket]({request_url}) first. A maintainer will review the request, "
+        "register the locale, and prepare its base translation files on Hosted Weblate. Once the "
+        "language appears on Hosted Weblate, you can start translating it there. See the "
+        "[language contributor guide](tools/i18n/README.md) for identifiers, validation, and promotion "
+        f"policy.\n{README_END}"
     )
 
 
 def _guide_contribution(config: dict) -> str:
     url = config["projectUrl"]
+    request_url = config["languageRequestUrl"]
     return (
         f"{GUIDE_START}\n"
         f"**Canonical project overview:** <{url}>\n\n"
-        "The app, README, and this guide all use this value from `community.json`; replace that "
-        "single source when the project route changes.\n"
+        f"**New-language request form:** <{request_url}>\n\n"
+        "The app, README, and this guide use these values from `community.json`; update that single "
+        "source when either route changes.\n"
         f"{GUIDE_END}"
     )
 
@@ -153,6 +160,7 @@ def _generate() -> tuple[str, int, int]:
     config = _community_config()
     threshold = config["translationReadinessThresholdPercent"]
     project_url = config["projectUrl"]
+    language_request_url = config["languageRequestUrl"]
     source_keys = _string_keys(RES / "values")
 
     entries: list[dict] = []
@@ -210,6 +218,9 @@ def _generate() -> tuple[str, int, int]:
     L.append("")
     L.append("    /** Canonical Hosted Weblate project overview used by the app and generated documentation. */")
     L.append("    const val CONTRIBUTION_PROJECT_URL: String = " + _kt_string(project_url))
+    L.append("")
+    L.append("    /** Canonical issue form for requesting a locale before its base files exist. */")
+    L.append("    const val LANGUAGE_REQUEST_URL: String = " + _kt_string(language_request_url))
     L.append("")
     L.append("    /** Tag meaning \"follow the current device locale list\" (see ``LocaleStore``). */")
     L.append('    const val SYSTEM_DEFAULT_TAG: String = ""')

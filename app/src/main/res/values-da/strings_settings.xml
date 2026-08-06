@@ -884,4 +884,6 @@
     <string name="settings_auto_frame_rate_warning_description">Denne enhed kører Android <xliff:g id="android_version">%1$s</xliff:g>. Under Android 12 kan TV\'et ikke fortælle OwnTV, hvilke opdateringshastigheder det kan skifte problemfrit imellem, så en ændring af hastigheden kan få skærmen til at blive sort i et sekund eller to — sommetider mere end én gang under et program.\n\nVi anbefaler at lade Auto-billedhastighed være slået fra her. Hvis dit TV skifter problemfrit, kan du slå det til og se: du kan altid skifte tilbage.</string>
     <string name="settings_auto_frame_rate_keep_off">Hold slået fra</string>
     <string name="settings_auto_frame_rate_turn_on_anyway">Slå til alligevel</string>
+    <string name="settings_language_request_workflow">Vil du tilføje et sprog, der ikke er på listen? Åbn først en sprogforespørgsel. En vedligeholder registrerer det og forbereder de grundlæggende oversættelsesfiler; når det dukker op på Hosted Weblate, kan du begynde at bidrage.</string>
+    <string name="settings_language_request_new">Anmod om et nyt sprog</string>
 </resources>

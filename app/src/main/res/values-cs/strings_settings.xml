@@ -916,4 +916,6 @@
     <string name="settings_auto_frame_rate_warning_description">Toto zařízení běží na Androidu <xliff:g id="android_version">%1$s</xliff:g>. Na Androidu nižším než 12 televizor nedokáže OwnTV sdělit, které obnovovací frekvence umí plynule přepínat, takže změna frekvence může na vteřinu nebo dvě zhasnout obrazovku – někdy i vícekrát během jednoho pořadu.\n\nDoporučujeme zde nechat automatickou snímkovou frekvenci vypnutou. Pokud váš televizor přepíná bez problémů, zapněte ji a uvidíte: můžete to kdykoli změnit zpět.</string>
     <string name="settings_auto_frame_rate_keep_off">Ponechat vypnuté</string>
     <string name="settings_auto_frame_rate_turn_on_anyway">Přesto zapnout</string>
+    <string name="settings_language_request_workflow">Chcete přidat jazyk, který není v seznamu? Nejprve otevřete žádost o jazyk. Správce jej zaregistruje a připraví základní soubory překladů; jakmile se objeví na Hosted Weblate, můžete začít přispívat.</string>
+    <string name="settings_language_request_new">Požádat o nový jazyk</string>
 </resources>

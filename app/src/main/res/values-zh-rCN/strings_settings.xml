@@ -868,4 +868,6 @@
     <string name="settings_auto_frame_rate_warning_description">此设备运行的是 Android <xliff:g id="android_version">%1$s</xliff:g>。低于 Android 12 时，电视无法告知 OwnTV 它能平滑切换哪些刷新率，因此更改刷新率可能会导致屏幕黑屏一两秒——有时在播放一个节目期间还不止一次。\n\n我们建议在此设备上保持自动帧率关闭。如果您的电视切换得很顺畅，可以打开试试：您随时都可以改回来。</string>
     <string name="settings_auto_frame_rate_keep_off">保持关闭</string>
     <string name="settings_auto_frame_rate_turn_on_anyway">仍然开启</string>
+    <string name="settings_language_request_workflow">想添加未列出的语言？请先提出语言请求。维护者会注册该语言并准备基础翻译文件；一旦它出现在 Hosted Weblate 上，你就可以开始贡献了。</string>
+    <string name="settings_language_request_new">请求添加新语言</string>
 </resources>

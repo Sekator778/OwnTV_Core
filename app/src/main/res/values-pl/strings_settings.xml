@@ -916,4 +916,6 @@
     <string name="settings_auto_frame_rate_warning_description">To urządzenie działa na Androidzie <xliff:g id="android_version">%1$s</xliff:g>. Na Androidzie poniżej 12 telewizor nie może przekazać OwnTV, na które częstotliwości odświeżania może płynnie przełączać, więc zmiana częstotliwości może sprawić, że ekran zgaśnie na sekundę lub dwie — czasem więcej niż raz podczas programu.\n\nZalecamy pozostawienie tutaj automatycznej częstotliwości odświeżania wyłączonej. Jeśli telewizor przełącza ją bez zakłóceń, włącz ją i zobacz: w każdej chwili możesz ją z powrotem wyłączyć.</string>
     <string name="settings_auto_frame_rate_keep_off">Pozostaw wyłączone</string>
     <string name="settings_auto_frame_rate_turn_on_anyway">Włącz mimo to</string>
+    <string name="settings_language_request_workflow">Chcesz dodać język, którego nie ma na liście? Najpierw złóż prośbę o dodanie języka. Opiekun zarejestruje język i przygotuje podstawowe pliki tłumaczeń; gdy pojawi się na Hosted Weblate, możesz zacząć wnosić swój wkład.</string>
+    <string name="settings_language_request_new">Poproś o nowy język</string>
 </resources>

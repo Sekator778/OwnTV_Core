@@ -948,4 +948,6 @@
     <string name="settings_auto_frame_rate_warning_description">يعمل هذا الجهاز بنظام Android <xliff:g id="android_version">%1$s</xliff:g>. على الإصدارات الأقدم من Android 12، لا يستطيع التلفزيون إخبار OwnTV بمعدلات التحديث التي يمكنه التبديل إليها بسلاسة، لذا قد يؤدي تغيير معدل الإطارات إلى اسوداد الشاشة لثانية أو ثانيتين — وأحيانًا أكثر من مرة أثناء البرنامج.\n\nنوصي بترك معدل الإطارات التلقائي معطّلًا هنا. إذا كان تلفزيونك ينتقل بين معدلات التحديث بسلاسة، فعّله وجرّب: يمكنك تغييره مرة أخرى في أي وقت.</string>
     <string name="settings_auto_frame_rate_keep_off">إبقاؤه معطّلًا</string>
     <string name="settings_auto_frame_rate_turn_on_anyway">تفعيله على أي حال</string>
+    <string name="settings_language_request_workflow">هل تريد إضافة لغة غير مدرجة؟ قدّم طلب لغة أولاً. سيقوم أحد المشرفين بتسجيلها وتجهيز ملفات الترجمة الأساسية؛ وبمجرد ظهورها على Hosted Weblate، يمكنك البدء في المساهمة.</string>
+    <string name="settings_language_request_new">طلب لغة جديدة</string>
 </resources>

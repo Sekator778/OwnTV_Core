@@ -1690,6 +1690,10 @@ Resync and remove missing titles also allows removing titles the provider no lon
     <string name="settings_language_help_translate">Help translate OwnTV into your language</string>
     <!-- Translators: Explains that the QR/link opens the whole translation project, where any language and all app sections are available. -->
     <string name="settings_language_contribution_description">Scan the QR code or open the link to choose any available language and contribute across all six OwnTV translation components.</string>
+    <!-- Translators: Workflow for adding a language that is not yet listed. Hosted Weblate is a product name. -->
+    <string name="settings_language_request_workflow">Want to add a language that isn\'t listed? Open a language request first. A maintainer will register it and prepare the base translation files; once it appears on Hosted Weblate, you can start contributing.</string>
+    <!-- Translators: Button opening the issue form used to request a language that is not yet listed. -->
+    <string name="settings_language_request_new">Request a new language</string>
     <!-- Translators: Accessibility description for the QR image linking to the OwnTV translation project. -->
     <string name="settings_language_contribution_qr_description">QR code for the OwnTV translation project overview</string>
     <!-- Translators: Graceful fallback shown when the app cannot generate the translation QR code. -->

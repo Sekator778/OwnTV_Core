@@ -542,11 +542,14 @@ class TestValidateStrings(unittest.TestCase):
         self.assertIn("trapAllFocusExit", screen)
         self.assertIn("BackHandler { onDismiss() }", screen)
         self.assertIn("openContributionLink(context, url)", screen)
-        self.assertIn("copyContributionLink(context, url)", screen)
+        self.assertIn("openContributionLink(context, requestUrl)", screen)
+        self.assertIn("copyContributionLink(context, copyUrl)", screen)
         dialog = screen.split("private fun TranslationContributionDialog", 1)[1]
         self.assertIn("color = colors.primary", dialog)
         for resource in (
             "settings_language_contribution_description",
+            "settings_language_request_workflow",
+            "settings_language_request_new",
             "settings_language_contribution_qr_description",
             "settings_language_contribution_qr_failed",
             "settings_language_contribution_copy",
@@ -576,18 +579,28 @@ class TestValidateStrings(unittest.TestCase):
     def test_canonical_url_and_qr_payload_artifacts_are_consistent(self):
         config = json.loads((ROOT / "tools/i18n/community.json").read_text())
         url = config["projectUrl"]
+        request_url = config["languageRequestUrl"]
         self.assertEqual("https://hosted.weblate.org/projects/owntv/", url)
+        self.assertEqual(
+            "https://github.com/ahXN00/OwnTV/issues/new?template=feature_request.yml&title=%5BLanguage%5D%20Add%20",
+            request_url,
+        )
         self.assertEqual(70, config["translationReadinessThresholdPercent"])
         generated = (ROOT / "app/src/main/java/tv/own/owntv/core/i18n/SupportedLocales.kt").read_text()
         readme = (ROOT / "README.md").read_text()
         guide = (ROOT / "tools/i18n/README.md").read_text()
         self.assertIn(f'CONTRIBUTION_PROJECT_URL: String = "{url}"', generated)
+        self.assertIn(f'LANGUAGE_REQUEST_URL: String = "{request_url}"', generated)
         self.assertIn(f"[Hosted Weblate]({url})", readme)
+        self.assertIn(f"[open a language request ticket]({request_url})", readme)
         self.assertNotIn("owntv-weblate-qr.svg", readme)
         self.assertNotIn("Accessible plain link:", readme)
         self.assertIn(f"<{url}>", guide)
+        self.assertIn(f"<{request_url}>", guide)
         self.assertEqual(1, readme.count(url))  # One clickable Hosted Weblate link
+        self.assertEqual(1, readme.count(request_url))
         self.assertEqual(1, guide.count(url))
+        self.assertEqual(1, guide.count(request_url))
 
     def test_packaging_readiness_boundary_69_rejected_70_accepted(self):
         source_items = "".join(f'<string name="k{i}">K{i}</string>' for i in range(100))

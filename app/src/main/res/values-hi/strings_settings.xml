@@ -884,4 +884,6 @@
     <string name="settings_auto_frame_rate_warning_description">यह डिवाइस Android <xliff:g id="android_version">%1$s</xliff:g> पर चलता है। Android 12 से नीचे टीवी OwnTV को यह नहीं बता सकता कि वह किन रिफ़्रेश रेटों पर सुचारू रूप से स्विच कर सकता है, इसलिए रेट बदलने पर स्क्रीन एक-दो सेकंड के लिए काली हो सकती है — कभी-कभी कार्यक्रम के दौरान एक से अधिक बार।\n\nहम यहाँ Auto frame rate बंद रखने की अनुशंसा करते हैं। अगर आपका टीवी बिना किसी समस्या के स्विच करता है, तो इसे चालू करके देखें: आप इसे कभी भी वापस बदल सकते हैं।</string>
     <string name="settings_auto_frame_rate_keep_off">बंद रखें</string>
     <string name="settings_auto_frame_rate_turn_on_anyway">फिर भी चालू करें</string>
+    <string name="settings_language_request_workflow">क्या आप कोई ऐसी भाषा जोड़ना चाहते हैं जो सूचीबद्ध नहीं है? पहले भाषा अनुरोध खोलें। एक मेंटेनर इसे पंजीकृत करेगा और आधार अनुवाद फ़ाइलें तैयार करेगा; एक बार यह Hosted Weblate पर दिखाई दे, तो आप योगदान देना शुरू कर सकते हैं।</string>
+    <string name="settings_language_request_new">नई भाषा का अनुरोध करें</string>
 </resources>
