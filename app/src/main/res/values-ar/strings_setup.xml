@@ -235,4 +235,24 @@
     <string name="setup_prefer_hls_live_tv">تفضيل HLS للبث التلفزيوني المباشر</string>
     <string name="setup_hide_new_categories">إخفاء الفئات الجديدة افتراضيًا</string>
     <string name="setup_hide_new_categories_description">على مستوى الملف الشخصي: تبدأ الفئات التي تظهر في عمليات المزامنة المستقبلية مخفية. يمكنك رؤيتها في أي وقت في شاشة التخصيص.</string>
+    <string name="setup_prefer_hls_description">أعطِ الأولوية لـ HLS (.m3u8) على MPEG-TS في تلفزيون مباشر. يتراجع إلى MPEG-TS إذا فشل HLS. تستخدم المشاهدة المتأخرة MPEG-TS دائمًا.</string>
+    <string name="setup_prefer_hls_description_supported">أعطِ الأولوية لـ HLS (.m3u8) على MPEG-TS في تلفزيون مباشر. يتراجع إلى MPEG-TS إذا فشل HLS. تستخدم المشاهدة المتأخرة MPEG-TS دائمًا. يُبلغ مزود الخدمة لديك عن دعم HLS.</string>
+    <string name="setup_prefer_hls_description_unsupported">أعطِ الأولوية لـ HLS (.m3u8) على MPEG-TS في تلفزيون مباشر. يتراجع إلى MPEG-TS إذا فشل HLS. تستخدم المشاهدة المتأخرة MPEG-TS دائمًا. لا يُبلغ مزود الخدمة لديك عن دعم HLS — يمكنك تجربته على أي حال.</string>
+    <string name="setup_hls_test_support">اختبر دعم HLS</string>
+    <string name="setup_hls_testing">جارٍ اختبار HLS…</string>
+    <string name="setup_hls_test_failed">فشل الاختبار: <xliff:g id="reason">%1$s</xliff:g></string>
+    <string name="setup_hls_test_provider_unreachable">تعذّر الوصول إلى مزود الخدمة — تحقق من عنوان URL للخادم واسم المستخدم وكلمة المرور.</string>
+    <string name="setup_hls_test_works">✓ يعمل HLS — أعاد مزود الخدمة قائمة تشغيل.</string>
+    <string name="setup_hls_test_works_unadvertised">✓ يعمل HLS — أعاد مزود الخدمة قائمة تشغيل رغم أنه لا يُعلن عن دعم HLS.</string>
+    <string name="setup_hls_test_busy">تعذّر إكمال الاختبار — نفدت اتصالات الحساب الآن (HTTP <xliff:g id="status">%1$d</xliff:g>). أوقف أي شيء آخر يبث حاليًا وجرّب الاختبار مرة أخرى.</string>
+    <string name="setup_hls_test_not_served">لم يعمل HLS — <xliff:g id="reason">%1$s</xliff:g>. اترك هذا الخيار معطّلًا وسيستخدم تلفزيون مباشر MPEG-TS.</string>
+    <string name="setup_hls_test_reason_not_playlist">استجاب الخادم، لكن ليس بقائمة تشغيل</string>
+    <string name="setup_hls_test_reason_no_endpoint">لا توجد نقطة وصول HLS لهذه القناة (HTTP <xliff:g id="status">%1$d</xliff:g>)</string>
+    <string name="setup_hls_test_inconclusive">تعذّر التحقق (<xliff:g id="reason">%1$s</xliff:g>). <xliff:g id="provider_claim">%2$s</xliff:g></string>
+    <string name="setup_hls_test_reason_http">HTTP <xliff:g id="status">%1$d</xliff:g></string>
+    <string name="setup_hls_test_reason_no_answer">لا استجابة</string>
+    <string name="setup_hls_test_reason_no_live_channels">لا تحتوي قائمة التشغيل هذه على قنوات مباشرة لاختبارها</string>
+    <string name="setup_hls_test_reason_dead_channel">قناة الاختبار لم تعمل عبر MPEG-TS أيضًا، لذا قد تكون معطّلة ببساطة</string>
+    <string name="setup_hls_provider_advertises">يُعلن مزود الخدمة لديك بالفعل عن دعم HLS.</string>
+    <string name="setup_hls_provider_does_not_advertise">لا يُعلن مزود الخدمة لديك عن دعم HLS.</string>
 </resources>

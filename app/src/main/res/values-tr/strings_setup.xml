@@ -219,4 +219,24 @@
     <string name="setup_prefer_hls_live_tv">Canlı TV için HLS\'yi tercih et</string>
     <string name="setup_hide_new_categories">Yeni kategorileri varsayılan olarak gizle</string>
     <string name="setup_hide_new_categories_description">Profil genelinde: gelecekteki eşitlemelerde görünen kategoriler başlangıçta gizli olur. Bunları istediğiniz zaman Özelleştirme ekranında görebilirsiniz.</string>
+    <string name="setup_prefer_hls_description">Canlı TV için HLS\'yi (.m3u8) MPEG-TS\'ye tercih et. HLS başarısız olursa MPEG-TS\'ye geri döner. Geri izleme her zaman MPEG-TS kullanır.</string>
+    <string name="setup_prefer_hls_description_supported">Canlı TV için HLS\'yi (.m3u8) MPEG-TS\'ye tercih et. HLS başarısız olursa MPEG-TS\'ye geri döner. Geri izleme her zaman MPEG-TS kullanır. Sağlayıcın HLS desteklediğini bildiriyor.</string>
+    <string name="setup_prefer_hls_description_unsupported">Canlı TV için HLS\'yi (.m3u8) MPEG-TS\'ye tercih et. HLS başarısız olursa MPEG-TS\'ye geri döner. Geri izleme her zaman MPEG-TS kullanır. Sağlayıcın HLS desteklediğini bildirmiyor — yine de deneyebilirsin.</string>
+    <string name="setup_hls_test_support">HLS desteğini test et</string>
+    <string name="setup_hls_testing">HLS test ediliyor…</string>
+    <string name="setup_hls_test_failed">Test başarısız oldu: <xliff:g id="reason">%1$s</xliff:g></string>
+    <string name="setup_hls_test_provider_unreachable">Sağlayıcıya ulaşılamadı — sunucu URL\'sini, kullanıcı adını ve şifreyi kontrol et.</string>
+    <string name="setup_hls_test_works">✓ HLS çalışıyor — sağlayıcın bir yayın listesi döndürdü.</string>
+    <string name="setup_hls_test_works_unadvertised">✓ HLS çalışıyor — sağlayıcın HLS\'yi duyurmasa da bir yayın listesi döndürdü.</string>
+    <string name="setup_hls_test_busy">Tamamlanamadı — hesabın şu an kullanılabilir bağlantısı kalmadı (HTTP <xliff:g id="status">%1$d</xliff:g>). Yayın yapan başka bir şeyi durdur ve tekrar dene.</string>
+    <string name="setup_hls_test_not_served">HLS çalışmadı — <xliff:g id="reason">%1$s</xliff:g>. Bunu kapalı bırakırsan Canlı TV MPEG-TS kullanır.</string>
+    <string name="setup_hls_test_reason_not_playlist">sunucu yanıt verdi, ancak bir yayın listesiyle değil</string>
+    <string name="setup_hls_test_reason_no_endpoint">bu kanal için HLS uç noktası yok (HTTP <xliff:g id="status">%1$d</xliff:g>)</string>
+    <string name="setup_hls_test_inconclusive">Doğrulanamadı (<xliff:g id="reason">%1$s</xliff:g>). <xliff:g id="provider_claim">%2$s</xliff:g></string>
+    <string name="setup_hls_test_reason_http">HTTP <xliff:g id="status">%1$d</xliff:g></string>
+    <string name="setup_hls_test_reason_no_answer">yanıt yok</string>
+    <string name="setup_hls_test_reason_no_live_channels">bu yayın listesinde test edilecek canlı kanal yok</string>
+    <string name="setup_hls_test_reason_dead_channel">test kanalı MPEG-TS ile de oynatılmadı, bu yüzden kanal çalışmıyor olabilir</string>
+    <string name="setup_hls_provider_advertises">Sağlayıcın HLS desteğini duyuruyor.</string>
+    <string name="setup_hls_provider_does_not_advertise">Sağlayıcın HLS desteğini duyurmuyor.</string>
 </resources>

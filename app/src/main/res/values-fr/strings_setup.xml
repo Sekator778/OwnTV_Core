@@ -223,4 +223,24 @@
     <string name="setup_prefer_hls_live_tv">Préférer HLS pour la TV en direct</string>
     <string name="setup_hide_new_categories">Masquer les nouvelles catégories par défaut</string>
     <string name="setup_hide_new_categories_description">À l’échelle du profil : les catégories qui apparaissent lors des prochaines synchronisations sont initialement masquées. Retrouvez-les à tout moment dans Personnalisation.</string>
+    <string name="setup_prefer_hls_description">HLS (.m3u8) est prioritaire sur MPEG-TS pour la TV en direct. MPEG-TS sert de secours si HLS échoue. Le rattrapage utilise toujours MPEG-TS.</string>
+    <string name="setup_prefer_hls_description_supported">HLS (.m3u8) est prioritaire sur MPEG-TS pour la TV en direct. MPEG-TS sert de secours si HLS échoue. Le rattrapage utilise toujours MPEG-TS. Votre fournisseur indique prendre en charge HLS.</string>
+    <string name="setup_prefer_hls_description_unsupported">HLS (.m3u8) est prioritaire sur MPEG-TS pour la TV en direct. MPEG-TS sert de secours si HLS échoue. Le rattrapage utilise toujours MPEG-TS. Votre fournisseur n’indique pas prendre en charge HLS — vous pouvez toujours l’essayer.</string>
+    <string name="setup_hls_test_support">Tester la prise en charge HLS</string>
+    <string name="setup_hls_testing">Test de HLS en cours…</string>
+    <string name="setup_hls_test_failed">Échec du test : <xliff:g id="reason">%1$s</xliff:g></string>
+    <string name="setup_hls_test_provider_unreachable">Impossible de joindre le fournisseur — vérifiez l’URL du serveur, le nom d’utilisateur et le mot de passe.</string>
+    <string name="setup_hls_test_works">✓ HLS fonctionne — votre fournisseur a renvoyé une liste de lecture.</string>
+    <string name="setup_hls_test_works_unadvertised">✓ HLS fonctionne — votre fournisseur a renvoyé une liste de lecture même s’il n’annonce pas HLS.</string>
+    <string name="setup_hls_test_busy">Impossible de terminer — le compte n’a plus de connexions disponibles pour le moment (HTTP <xliff:g id="status">%1$d</xliff:g>). Arrêtez toute autre diffusion en cours et réessayez.</string>
+    <string name="setup_hls_test_not_served">HLS n’a pas fonctionné — <xliff:g id="reason">%1$s</xliff:g>. Laissez cette option désactivée et la TV en direct utilisera MPEG-TS.</string>
+    <string name="setup_hls_test_reason_not_playlist">le serveur a répondu, mais sans liste de lecture</string>
+    <string name="setup_hls_test_reason_no_endpoint">aucun point de terminaison HLS pour cette chaîne (HTTP <xliff:g id="status">%1$d</xliff:g>)</string>
+    <string name="setup_hls_test_inconclusive">Impossible de vérifier (<xliff:g id="reason">%1$s</xliff:g>). <xliff:g id="provider_claim">%2$s</xliff:g></string>
+    <string name="setup_hls_test_reason_http">HTTP <xliff:g id="status">%1$d</xliff:g></string>
+    <string name="setup_hls_test_reason_no_answer">aucune réponse</string>
+    <string name="setup_hls_test_reason_no_live_channels">cette liste de lecture n’a aucune chaîne en direct à tester</string>
+    <string name="setup_hls_test_reason_dead_channel">la chaîne de test ne s’est pas non plus lancée en MPEG-TS ; elle est donc peut-être tout simplement morte</string>
+    <string name="setup_hls_provider_advertises">Votre fournisseur annonce bien HLS.</string>
+    <string name="setup_hls_provider_does_not_advertise">Votre fournisseur n’annonce pas HLS.</string>
 </resources>

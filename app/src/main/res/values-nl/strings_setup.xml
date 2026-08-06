@@ -219,4 +219,24 @@
     <string name="setup_prefer_hls_live_tv">Voorkeur geven aan HLS voor live-tv</string>
     <string name="setup_hide_new_categories">Nieuwe categorieën standaard verbergen</string>
     <string name="setup_hide_new_categories_description">Voor het hele profiel: categorieën die bij toekomstige synchronisaties verschijnen, zijn aanvankelijk verborgen. Je kunt ze op elk moment bekijken onder Aanpassen.</string>
+    <string name="setup_prefer_hls_description">HLS (.m3u8) krijgt voorrang op MPEG-TS voor Live-tv. Als HLS mislukt, valt het terug op MPEG-TS. Uitgesteld kijken gebruikt altijd MPEG-TS.</string>
+    <string name="setup_prefer_hls_description_supported">HLS (.m3u8) krijgt voorrang op MPEG-TS voor Live-tv. Als HLS mislukt, valt het terug op MPEG-TS. Uitgesteld kijken gebruikt altijd MPEG-TS. Je provider geeft aan HLS te ondersteunen.</string>
+    <string name="setup_prefer_hls_description_unsupported">HLS (.m3u8) krijgt voorrang op MPEG-TS voor Live-tv. Als HLS mislukt, valt het terug op MPEG-TS. Uitgesteld kijken gebruikt altijd MPEG-TS. Je provider geeft niet aan HLS te ondersteunen — je kunt het toch proberen.</string>
+    <string name="setup_hls_test_support">Test HLS-ondersteuning</string>
+    <string name="setup_hls_testing">HLS testen…</string>
+    <string name="setup_hls_test_failed">Test mislukt: <xliff:g id="reason">%1$s</xliff:g></string>
+    <string name="setup_hls_test_provider_unreachable">De provider was niet bereikbaar — controleer de server-URL, gebruikersnaam en het wachtwoord.</string>
+    <string name="setup_hls_test_works">✓ HLS werkt — je provider gaf een afspeellijst terug.</string>
+    <string name="setup_hls_test_works_unadvertised">✓ HLS werkt — je provider gaf een afspeellijst terug, ook al geeft hij niet aan HLS te ondersteunen.</string>
+    <string name="setup_hls_test_busy">Kan niet worden afgerond — het account heeft op dit moment geen vrije verbindingen (HTTP <xliff:g id="status">%1$d</xliff:g>). Stop alles wat nog streamt en test opnieuw.</string>
+    <string name="setup_hls_test_not_served">HLS werkte niet — <xliff:g id="reason">%1$s</xliff:g>. Laat dit uit en Live-tv gebruikt MPEG-TS.</string>
+    <string name="setup_hls_test_reason_not_playlist">de server antwoordde, maar niet met een afspeellijst</string>
+    <string name="setup_hls_test_reason_no_endpoint">geen HLS-endpoint voor deze zender (HTTP <xliff:g id="status">%1$d</xliff:g>)</string>
+    <string name="setup_hls_test_inconclusive">Niet te verifiëren (<xliff:g id="reason">%1$s</xliff:g>). <xliff:g id="provider_claim">%2$s</xliff:g></string>
+    <string name="setup_hls_test_reason_http">HTTP <xliff:g id="status">%1$d</xliff:g></string>
+    <string name="setup_hls_test_reason_no_answer">geen antwoord</string>
+    <string name="setup_hls_test_reason_no_live_channels">deze afspeellijst bevat geen livezenders om te testen</string>
+    <string name="setup_hls_test_reason_dead_channel">de testzender speelde ook niet via MPEG-TS, dus misschien is hij gewoon kapot</string>
+    <string name="setup_hls_provider_advertises">Je provider geeft wél aan HLS te ondersteunen.</string>
+    <string name="setup_hls_provider_does_not_advertise">Je provider geeft niet aan HLS te ondersteunen.</string>
 </resources>

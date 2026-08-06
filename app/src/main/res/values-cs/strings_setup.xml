@@ -227,4 +227,24 @@
     <string name="setup_prefer_hls_live_tv">Upřednostnit HLS pro živé vysílání</string>
     <string name="setup_hide_new_categories">Ve výchozím nastavení skrývat nové kategorie</string>
     <string name="setup_hide_new_categories_description">V celém profilu: kategorie, které se objeví při budoucích synchronizacích, budou zpočátku skryté. Kdykoli je zobrazíte v části Přizpůsobení.</string>
+    <string name="setup_prefer_hls_description">Upřednostnit HLS (.m3u8) před MPEG-TS pro Živou TV. Pokud HLS selže, použije se MPEG-TS. Zpětné zhlédnutí vždy používá MPEG-TS.</string>
+    <string name="setup_prefer_hls_description_supported">Upřednostnit HLS (.m3u8) před MPEG-TS pro Živou TV. Pokud HLS selže, použije se MPEG-TS. Zpětné zhlédnutí vždy používá MPEG-TS. Váš poskytovatel hlásí podporu HLS.</string>
+    <string name="setup_prefer_hls_description_unsupported">Upřednostnit HLS (.m3u8) před MPEG-TS pro Živou TV. Pokud HLS selže, použije se MPEG-TS. Zpětné zhlédnutí vždy používá MPEG-TS. Váš poskytovatel nehlásí podporu HLS – i tak to můžete vyzkoušet.</string>
+    <string name="setup_hls_test_support">Otestovat podporu HLS</string>
+    <string name="setup_hls_testing">Testování HLS…</string>
+    <string name="setup_hls_test_failed">Test selhal: <xliff:g id="reason">%1$s</xliff:g></string>
+    <string name="setup_hls_test_provider_unreachable">Nepodařilo se spojit s poskytovatelem – zkontrolujte adresu serveru, uživatelské jméno a heslo.</string>
+    <string name="setup_hls_test_works">✓ HLS funguje – váš poskytovatel vrátil playlist.</string>
+    <string name="setup_hls_test_works_unadvertised">✓ HLS funguje – váš poskytovatel vrátil playlist, i když podporu HLS nehlásí.</string>
+    <string name="setup_hls_test_busy">Test se nepodařilo dokončit – účet má právě všechna připojení obsazená (HTTP <xliff:g id="status">%1$d</xliff:g>). Zastavte vše ostatní, co právě streamuje, a zkuste to znovu.</string>
+    <string name="setup_hls_test_not_served">HLS nefungovalo – <xliff:g id="reason">%1$s</xliff:g>. Nechte tuto volbu vypnutou a Živá TV bude používat MPEG-TS.</string>
+    <string name="setup_hls_test_reason_not_playlist">server odpověděl, ale ne playlistem</string>
+    <string name="setup_hls_test_reason_no_endpoint">pro tento kanál neexistuje žádný HLS endpoint (HTTP <xliff:g id="status">%1$d</xliff:g>)</string>
+    <string name="setup_hls_test_inconclusive">Nepodařilo se ověřit (<xliff:g id="reason">%1$s</xliff:g>). <xliff:g id="provider_claim">%2$s</xliff:g></string>
+    <string name="setup_hls_test_reason_http">HTTP <xliff:g id="status">%1$d</xliff:g></string>
+    <string name="setup_hls_test_reason_no_answer">bez odpovědi</string>
+    <string name="setup_hls_test_reason_no_live_channels">tento playlist nemá žádné živé kanály k otestování</string>
+    <string name="setup_hls_test_reason_dead_channel">testovací kanál nehrál ani přes MPEG-TS, takže může být prostě mrtvý</string>
+    <string name="setup_hls_provider_advertises">Váš poskytovatel podporu HLS hlásí.</string>
+    <string name="setup_hls_provider_does_not_advertise">Váš poskytovatel podporu HLS nehlásí.</string>
 </resources>

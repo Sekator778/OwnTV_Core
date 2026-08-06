@@ -215,4 +215,24 @@
     <string name="setup_prefer_hls_live_tv">電視直播優先使用 HLS</string>
     <string name="setup_hide_new_categories">預設隱藏新分類</string>
     <string name="setup_hide_new_categories_description">套用至整個使用者檔案：日後同步時出現的新分類一律先設為隱藏。您可隨時在「自訂」中查看。</string>
+    <string name="setup_prefer_hls_description">直播電視優先使用 HLS (.m3u8) 而非 MPEG-TS。若 HLS 失敗則退回 MPEG-TS。回看一律使用 MPEG-TS。</string>
+    <string name="setup_prefer_hls_description_supported">直播電視優先使用 HLS (.m3u8) 而非 MPEG-TS。若 HLS 失敗則退回 MPEG-TS。回看一律使用 MPEG-TS。您的提供者回報支援 HLS。</string>
+    <string name="setup_prefer_hls_description_unsupported">直播電視優先使用 HLS (.m3u8) 而非 MPEG-TS。若 HLS 失敗則退回 MPEG-TS。回看一律使用 MPEG-TS。您的提供者未回報支援 HLS — 您還是可以試試看。</string>
+    <string name="setup_hls_test_support">測試 HLS 支援</string>
+    <string name="setup_hls_testing">正在測試 HLS…</string>
+    <string name="setup_hls_test_failed">測試失敗：<xliff:g id="reason">%1$s</xliff:g></string>
+    <string name="setup_hls_test_provider_unreachable">無法連上提供者 — 請檢查伺服器網址、使用者名稱和密碼。</string>
+    <string name="setup_hls_test_works">✓ HLS 可用 — 您的提供者已回傳播放清單。</string>
+    <string name="setup_hls_test_works_unadvertised">✓ HLS 可用 — 您的提供者已回傳播放清單，即使它未宣稱支援 HLS。</string>
+    <string name="setup_hls_test_busy">無法完成 — 帳號目前連線數已滿（HTTP <xliff:g id="status">%1$d</xliff:g>）。請停止其他正在串流的內容，然後再試一次。</string>
+    <string name="setup_hls_test_not_served">HLS 無法運作 — <xliff:g id="reason">%1$s</xliff:g>。請保持此選項關閉，直播電視將使用 MPEG-TS。</string>
+    <string name="setup_hls_test_reason_not_playlist">伺服器有回應，但回傳的不是播放清單</string>
+    <string name="setup_hls_test_reason_no_endpoint">此頻道沒有 HLS 端點（HTTP <xliff:g id="status">%1$d</xliff:g>）</string>
+    <string name="setup_hls_test_inconclusive">無法驗證（<xliff:g id="reason">%1$s</xliff:g>）。<xliff:g id="provider_claim">%2$s</xliff:g></string>
+    <string name="setup_hls_test_reason_http">HTTP <xliff:g id="status">%1$d</xliff:g></string>
+    <string name="setup_hls_test_reason_no_answer">沒有回應</string>
+    <string name="setup_hls_test_reason_no_live_channels">此播放清單沒有可測試的直播頻道。</string>
+    <string name="setup_hls_test_reason_dead_channel">測試頻道以 MPEG-TS 也無法播放，所以可能只是該頻道已失效。</string>
+    <string name="setup_hls_provider_advertises">您的提供者確實宣稱支援 HLS。</string>
+    <string name="setup_hls_provider_does_not_advertise">您的提供者未宣稱支援 HLS。</string>
 </resources>

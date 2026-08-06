@@ -219,4 +219,24 @@
     <string name="setup_prefer_hls_live_tv">Foretrekk HLS for Direkte-TV</string>
     <string name="setup_hide_new_categories">Skjul nye kategorier som standard</string>
     <string name="setup_hide_new_categories_description">For hele profilen: Kategorier som dukker opp ved fremtidige synkroniseringer, er skjult fra start. Du finner dem når som helst under Tilpasning.</string>
+    <string name="setup_prefer_hls_description">Prioriter HLS (.m3u8) fremfor MPEG-TS for Direkte-TV. Faller tilbake til MPEG-TS hvis HLS feiler. Catch-up bruker alltid MPEG-TS.</string>
+    <string name="setup_prefer_hls_description_supported">Prioriter HLS (.m3u8) fremfor MPEG-TS for Direkte-TV. Faller tilbake til MPEG-TS hvis HLS feiler. Catch-up bruker alltid MPEG-TS. Leverandøren din rapporterer HLS-støtte.</string>
+    <string name="setup_prefer_hls_description_unsupported">Prioriter HLS (.m3u8) fremfor MPEG-TS for Direkte-TV. Faller tilbake til MPEG-TS hvis HLS feiler. Catch-up bruker alltid MPEG-TS. Leverandøren din rapporterer ikke HLS-støtte – du kan likevel prøve det.</string>
+    <string name="setup_hls_test_support">Test HLS-støtte</string>
+    <string name="setup_hls_testing">Tester HLS…</string>
+    <string name="setup_hls_test_failed">Testen feilet: <xliff:g id="reason">%1$s</xliff:g></string>
+    <string name="setup_hls_test_provider_unreachable">Kunne ikke nå leverandøren – sjekk serverens URL, brukernavn og passord.</string>
+    <string name="setup_hls_test_works">✓ HLS fungerer – leverandøren din returnerte en spilleliste.</string>
+    <string name="setup_hls_test_works_unadvertised">✓ HLS fungerer – leverandøren din returnerte en spilleliste selv om den ikke annonserer HLS.</string>
+    <string name="setup_hls_test_busy">Kunne ikke fullføre – kontoen er tom for tilkoblinger akkurat nå (HTTP <xliff:g id="status">%1$d</xliff:g>). Stopp alt annet som strømmer, og test på nytt.</string>
+    <string name="setup_hls_test_not_served">HLS fungerte ikke – <xliff:g id="reason">%1$s</xliff:g>. La denne stå av, så vil Direkte-TV bruke MPEG-TS.</string>
+    <string name="setup_hls_test_reason_not_playlist">serveren svarte, men ikke med en spilleliste</string>
+    <string name="setup_hls_test_reason_no_endpoint">ikke noe HLS-endepunkt for denne kanalen (HTTP <xliff:g id="status">%1$d</xliff:g>)</string>
+    <string name="setup_hls_test_inconclusive">Kunne ikke verifisere (<xliff:g id="reason">%1$s</xliff:g>). <xliff:g id="provider_claim">%2$s</xliff:g></string>
+    <string name="setup_hls_test_reason_http">HTTP <xliff:g id="status">%1$d</xliff:g></string>
+    <string name="setup_hls_test_reason_no_answer">ikke noe svar</string>
+    <string name="setup_hls_test_reason_no_live_channels">denne spillelisten har ingen direktekanaler å teste</string>
+    <string name="setup_hls_test_reason_dead_channel">testkanalen spilte ikke via MPEG-TS heller, så den er kanskje bare død</string>
+    <string name="setup_hls_provider_advertises">Leverandøren din annonserer faktisk HLS.</string>
+    <string name="setup_hls_provider_does_not_advertise">Leverandøren din annonserer ikke HLS.</string>
 </resources>

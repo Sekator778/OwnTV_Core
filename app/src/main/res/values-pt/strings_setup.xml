@@ -223,4 +223,24 @@
     <string name="setup_prefer_hls_live_tv">Preferir HLS para TV ao vivo</string>
     <string name="setup_hide_new_categories">Ocultar novas categorias por padrão</string>
     <string name="setup_hide_new_categories_description">Em todo o perfil: as categorias que aparecerem em futuras sincronizações começarão ocultas. Veja-as a qualquer momento em Personalização.</string>
+    <string name="setup_prefer_hls_description">Priorize HLS (.m3u8) em vez de MPEG-TS para TV ao vivo. Volta para MPEG-TS se o HLS falhar. O catch-up sempre usa MPEG-TS.</string>
+    <string name="setup_prefer_hls_description_supported">Priorize HLS (.m3u8) em vez de MPEG-TS para TV ao vivo. Volta para MPEG-TS se o HLS falhar. O catch-up sempre usa MPEG-TS. Seu provedor informa suporte a HLS.</string>
+    <string name="setup_prefer_hls_description_unsupported">Priorize HLS (.m3u8) em vez de MPEG-TS para TV ao vivo. Volta para MPEG-TS se o HLS falhar. O catch-up sempre usa MPEG-TS. Seu provedor não informa suporte a HLS — você ainda pode tentar.</string>
+    <string name="setup_hls_test_support">Testar suporte a HLS</string>
+    <string name="setup_hls_testing">Testando HLS…</string>
+    <string name="setup_hls_test_failed">Teste falhou: <xliff:g id="reason">%1$s</xliff:g></string>
+    <string name="setup_hls_test_provider_unreachable">Não foi possível acessar o provedor — verifique a URL do servidor, o nome de usuário e a senha.</string>
+    <string name="setup_hls_test_works">✓ HLS funciona — seu provedor retornou uma playlist.</string>
+    <string name="setup_hls_test_works_unadvertised">✓ HLS funciona — seu provedor retornou uma playlist mesmo sem anunciar HLS.</string>
+    <string name="setup_hls_test_busy">Não foi possível concluir — a conta está sem conexões disponíveis no momento (HTTP <xliff:g id="status">%1$d</xliff:g>). Pare qualquer outra transmissão em andamento e teste novamente.</string>
+    <string name="setup_hls_test_not_served">O HLS não funcionou — <xliff:g id="reason">%1$s</xliff:g>. Deixe essa opção desativada e a TV ao vivo usará MPEG-TS.</string>
+    <string name="setup_hls_test_reason_not_playlist">o servidor respondeu, mas não com uma playlist</string>
+    <string name="setup_hls_test_reason_no_endpoint">sem endpoint HLS para este canal (HTTP <xliff:g id="status">%1$d</xliff:g>)</string>
+    <string name="setup_hls_test_inconclusive">Não foi possível verificar (<xliff:g id="reason">%1$s</xliff:g>). <xliff:g id="provider_claim">%2$s</xliff:g></string>
+    <string name="setup_hls_test_reason_http">HTTP <xliff:g id="status">%1$d</xliff:g></string>
+    <string name="setup_hls_test_reason_no_answer">sem resposta</string>
+    <string name="setup_hls_test_reason_no_live_channels">esta playlist não tem canais ao vivo para testar</string>
+    <string name="setup_hls_test_reason_dead_channel">o canal de teste também não reproduziu via MPEG-TS, então talvez esteja apenas fora do ar</string>
+    <string name="setup_hls_provider_advertises">Seu provedor anuncia HLS.</string>
+    <string name="setup_hls_provider_does_not_advertise">Seu provedor não anuncia HLS.</string>
 </resources>

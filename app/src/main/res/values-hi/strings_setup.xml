@@ -219,4 +219,24 @@
     <string name="setup_prefer_hls_live_tv">लाइव टीवी के लिए HLS को प्राथमिकता दें</string>
     <string name="setup_hide_new_categories">नई श्रेणियाँ डिफ़ॉल्ट रूप से छिपाएँ</string>
     <string name="setup_hide_new_categories_description">पूरी प्रोफ़ाइल के लिए: भविष्य के सिंक में दिखाई देने वाली श्रेणियाँ शुरुआत में छिपी रहेंगी। उन्हें कस्टमाइज़ करें में कभी भी देखें।</string>
+    <string name="setup_prefer_hls_description">लाइव टीवी के लिए MPEG-TS के मुकाबले HLS (.m3u8) को प्राथमिकता दें। HLS विफल होने पर MPEG-TS पर वापस आ जाता है। कैच-अप हमेशा MPEG-TS का उपयोग करता है।</string>
+    <string name="setup_prefer_hls_description_supported">लाइव टीवी के लिए MPEG-TS के मुकाबले HLS (.m3u8) को प्राथमिकता दें। HLS विफल होने पर MPEG-TS पर वापस आ जाता है। कैच-अप हमेशा MPEG-TS का उपयोग करता है। आपका प्रदाता HLS समर्थन बताता है।</string>
+    <string name="setup_prefer_hls_description_unsupported">लाइव टीवी के लिए MPEG-TS के मुकाबले HLS (.m3u8) को प्राथमिकता दें। HLS विफल होने पर MPEG-TS पर वापस आ जाता है। कैच-अप हमेशा MPEG-TS का उपयोग करता है। आपका प्रदाता HLS समर्थन नहीं बताता — आप फिर भी इसे आज़मा सकते हैं।</string>
+    <string name="setup_hls_test_support">HLS समर्थन जाँचें</string>
+    <string name="setup_hls_testing">HLS जाँच हो रही है…</string>
+    <string name="setup_hls_test_failed">जाँच विफल रही: <xliff:g id="reason">%1$s</xliff:g></string>
+    <string name="setup_hls_test_provider_unreachable">प्रदाता से संपर्क नहीं हो सका — सर्वर URL, उपयोगकर्ता नाम और पासवर्ड जाँचें।</string>
+    <string name="setup_hls_test_works">✓ HLS काम करता है — आपके प्रदाता ने प्लेलिस्ट लौटाई।</string>
+    <string name="setup_hls_test_works_unadvertised">✓ HLS काम करता है — आपके प्रदाता ने प्लेलिस्ट लौटाई, भले ही वह HLS समर्थन का दावा नहीं करता।</string>
+    <string name="setup_hls_test_busy">जाँच पूरी नहीं हो सकी — इस समय खाते के सारे कनेक्शन व्यस्त हैं (HTTP <xliff:g id="status">%1$d</xliff:g>)। जो भी अन्य स्ट्रीमिंग चल रही हो उसे बंद करें और फिर से जाँचें।</string>
+    <string name="setup_hls_test_not_served">HLS काम नहीं किया — <xliff:g id="reason">%1$s</xliff:g>। इसे बंद रखें और लाइव टीवी MPEG-TS का उपयोग करेगा।</string>
+    <string name="setup_hls_test_reason_not_playlist">सर्वर ने जवाब तो दिया, लेकिन प्लेलिस्ट के रूप में नहीं</string>
+    <string name="setup_hls_test_reason_no_endpoint">इस चैनल के लिए कोई HLS एंडपॉइंट नहीं है (HTTP <xliff:g id="status">%1$d</xliff:g>)</string>
+    <string name="setup_hls_test_inconclusive">पुष्टि नहीं हो सकी (<xliff:g id="reason">%1$s</xliff:g>)। <xliff:g id="provider_claim">%2$s</xliff:g></string>
+    <string name="setup_hls_test_reason_http">HTTP <xliff:g id="status">%1$d</xliff:g></string>
+    <string name="setup_hls_test_reason_no_answer">कोई जवाब नहीं</string>
+    <string name="setup_hls_test_reason_no_live_channels">इस प्लेलिस्ट में जाँचने के लिए कोई लाइव चैनल नहीं है</string>
+    <string name="setup_hls_test_reason_dead_channel">जाँच वाला चैनल MPEG-TS पर भी नहीं चला, इसलिए हो सकता है कि वह खराब ही हो</string>
+    <string name="setup_hls_provider_advertises">आपका प्रदाता HLS समर्थन का दावा करता है।</string>
+    <string name="setup_hls_provider_does_not_advertise">आपका प्रदाता HLS समर्थन का दावा नहीं करता।</string>
 </resources>

@@ -219,4 +219,24 @@
     <string name="setup_prefer_hls_live_tv">Föredra HLS för live-tv</string>
     <string name="setup_hide_new_categories">Dölj nya kategorier som standard</string>
     <string name="setup_hide_new_categories_description">För hela profilen: kategorier som visas vid framtida synkroniseringar är dolda från början. Du kan när som helst se dem under Anpassning.</string>
+    <string name="setup_prefer_hls_description">Prioritera HLS (.m3u8) framför MPEG-TS för Live-TV. Faller tillbaka på MPEG-TS om HLS misslyckas. Catch-up använder alltid MPEG-TS.</string>
+    <string name="setup_prefer_hls_description_supported">Prioritera HLS (.m3u8) framför MPEG-TS för Live-TV. Faller tillbaka på MPEG-TS om HLS misslyckas. Catch-up använder alltid MPEG-TS. Din leverantör rapporterar HLS-stöd.</string>
+    <string name="setup_prefer_hls_description_unsupported">Prioritera HLS (.m3u8) framför MPEG-TS för Live-TV. Faller tillbaka på MPEG-TS om HLS misslyckas. Catch-up använder alltid MPEG-TS. Din leverantör rapporterar inte HLS-stöd — du kan fortfarande prova det.</string>
+    <string name="setup_hls_test_support">Testa HLS-stöd</string>
+    <string name="setup_hls_testing">Testar HLS…</string>
+    <string name="setup_hls_test_failed">Testet misslyckades: <xliff:g id="reason">%1$s</xliff:g></string>
+    <string name="setup_hls_test_provider_unreachable">Kunde inte nå leverantören — kontrollera server-URL:en, användarnamnet och lösenordet.</string>
+    <string name="setup_hls_test_works">✓ HLS fungerar — din leverantör returnerade en spellista.</string>
+    <string name="setup_hls_test_works_unadvertised">✓ HLS fungerar — din leverantör returnerade en spellista trots att den inte annonserar HLS.</string>
+    <string name="setup_hls_test_busy">Kunde inte slutföra — kontot har inga lediga anslutningar just nu (HTTP <xliff:g id="status">%1$d</xliff:g>). Stoppa allt annat som strömmar och testa igen.</string>
+    <string name="setup_hls_test_not_served">HLS fungerade inte — <xliff:g id="reason">%1$s</xliff:g>. Lämna den avstängd så använder Live-TV MPEG-TS.</string>
+    <string name="setup_hls_test_reason_not_playlist">servern svarade, men inte med en spellista</string>
+    <string name="setup_hls_test_reason_no_endpoint">ingen HLS-slutpunkt för den här kanalen (HTTP <xliff:g id="status">%1$d</xliff:g>)</string>
+    <string name="setup_hls_test_inconclusive">Kunde inte verifiera (<xliff:g id="reason">%1$s</xliff:g>). <xliff:g id="provider_claim">%2$s</xliff:g></string>
+    <string name="setup_hls_test_reason_http">HTTP <xliff:g id="status">%1$d</xliff:g></string>
+    <string name="setup_hls_test_reason_no_answer">inget svar</string>
+    <string name="setup_hls_test_reason_no_live_channels">den här spellistan har inga livekanaler att testa</string>
+    <string name="setup_hls_test_reason_dead_channel">testkanalen spelades inte upp via MPEG-TS heller, så den kan helt enkelt vara död</string>
+    <string name="setup_hls_provider_advertises">Din leverantör annonserar faktiskt HLS.</string>
+    <string name="setup_hls_provider_does_not_advertise">Din leverantör annonserar inte HLS.</string>
 </resources>

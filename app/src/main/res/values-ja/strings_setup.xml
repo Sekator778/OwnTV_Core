@@ -215,4 +215,24 @@
     <string name="setup_prefer_hls_live_tv">ライブTVでHLSを優先</string>
     <string name="setup_hide_new_categories">新しいカテゴリをデフォルトで非表示</string>
     <string name="setup_hide_new_categories_description">プロフィール全体の設定です。今後の同期で追加されたカテゴリは、最初は非表示になります。［カスタマイズ］でいつでも確認できます。</string>
+    <string name="setup_prefer_hls_description">ライブTVでは、MPEG-TSよりHLS（.m3u8）を優先します。HLSが失敗した場合はMPEG-TSにフォールバックします。キャッチアップは常にMPEG-TSを使用します。</string>
+    <string name="setup_prefer_hls_description_supported">ライブTVでは、MPEG-TSよりHLS（.m3u8）を優先します。HLSが失敗した場合はMPEG-TSにフォールバックします。キャッチアップは常にMPEG-TSを使用します。プロバイダーはHLSサポートを報告しています。</string>
+    <string name="setup_prefer_hls_description_unsupported">ライブTVでは、MPEG-TSよりHLS（.m3u8）を優先します。HLSが失敗した場合はMPEG-TSにフォールバックします。キャッチアップは常にMPEG-TSを使用します。プロバイダーはHLSサポートを報告していませんが、試すことはできます。</string>
+    <string name="setup_hls_test_support">HLSサポートをテスト</string>
+    <string name="setup_hls_testing">HLSをテスト中…</string>
+    <string name="setup_hls_test_failed">テストに失敗しました: <xliff:g id="reason">%1$s</xliff:g></string>
+    <string name="setup_hls_test_provider_unreachable">プロバイダーに接続できませんでした — サーバーURL、ユーザー名、パスワードを確認してください。</string>
+    <string name="setup_hls_test_works">✓ HLSは動作します — プロバイダーがプレイリストを返しました。</string>
+    <string name="setup_hls_test_works_unadvertised">✓ HLSは動作します — プロバイダーはHLSサポートを公表していませんが、プレイリストは返しました。</string>
+    <string name="setup_hls_test_busy">完了できませんでした — 現在、アカウントの接続はすべて使用中です（HTTP <xliff:g id="status">%1$d</xliff:g>）。他でストリーミング中のものをすべて停止して、もう一度テストしてください。</string>
+    <string name="setup_hls_test_not_served">HLSは動作しませんでした — <xliff:g id="reason">%1$s</xliff:g>。この設定をオフのままにすると、ライブTVはMPEG-TSを使用します。</string>
+    <string name="setup_hls_test_reason_not_playlist">サーバーは応答したものの、プレイリストではありませんでした</string>
+    <string name="setup_hls_test_reason_no_endpoint">このチャンネルにはHLSエンドポイントがありません（HTTP <xliff:g id="status">%1$d</xliff:g>）</string>
+    <string name="setup_hls_test_inconclusive">検証できませんでした（<xliff:g id="reason">%1$s</xliff:g>）。<xliff:g id="provider_claim">%2$s</xliff:g></string>
+    <string name="setup_hls_test_reason_http">HTTP <xliff:g id="status">%1$d</xliff:g></string>
+    <string name="setup_hls_test_reason_no_answer">応答なし</string>
+    <string name="setup_hls_test_reason_no_live_channels">このプレイリストにはテストできるライブチャンネルがありません</string>
+    <string name="setup_hls_test_reason_dead_channel">テストチャンネルはMPEG-TSでも再生できなかったため、単にそのチャンネルが停止している可能性があります</string>
+    <string name="setup_hls_provider_advertises">プロバイダーはHLSサポートを公表しています。</string>
+    <string name="setup_hls_provider_does_not_advertise">プロバイダーはHLSサポートを公表していません。</string>
 </resources>

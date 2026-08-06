@@ -219,4 +219,24 @@
     <string name="setup_prefer_hls_live_tv">തത്സമയ ടിവിക്ക് HLS മുൻഗണന നൽകുക</string>
     <string name="setup_hide_new_categories">പുതിയ വിഭാഗങ്ങൾ ഡിഫോൾട്ടായി മറയ്ക്കുക</string>
     <string name="setup_hide_new_categories_description">പ്രൊഫൈൽ മുഴുവനും: ഭാവിയിലെ സമന്വയിപ്പിക്കലുകളിൽ പ്രത്യക്ഷപ്പെടുന്ന വിഭാഗങ്ങൾ ആദ്യം മറഞ്ഞിരിക്കും. ഇഷ്ടാനുസൃതമാക്കൽ സ്ക്രീനിൽ അവ എപ്പോൾ വേണമെങ്കിലും കാണാം.</string>
+    <string name="setup_prefer_hls_description">ലൈവ് ടിവിക്കായി MPEG-TS-നെക്കാൾ HLS (.m3u8) ന് മുൻഗണന നൽകുക. HLS പരാജയപ്പെട്ടാൽ MPEG-TS-ലേക്ക് മടങ്ങും. ക്യാച്ച്-അപ്പ് എല്ലായ്പ്പോഴും MPEG-TS ഉപയോഗിക്കുന്നു.</string>
+    <string name="setup_prefer_hls_description_supported">ലൈവ് ടിവിക്കായി MPEG-TS-നെക്കാൾ HLS (.m3u8) ന് മുൻഗണന നൽകുക. HLS പരാജയപ്പെട്ടാൽ MPEG-TS-ലേക്ക് മടങ്ങും. ക്യാച്ച്-അപ്പ് എല്ലായ്പ്പോഴും MPEG-TS ഉപയോഗിക്കുന്നു. നിങ്ങളുടെ പ്രൊവൈഡർ HLS പിന്തുണയുണ്ടെന്ന് റിപ്പോർട്ട് ചെയ്യുന്നു.</string>
+    <string name="setup_prefer_hls_description_unsupported">ലൈവ് ടിവിക്കായി MPEG-TS-നെക്കാൾ HLS (.m3u8) ന് മുൻഗണന നൽകുക. HLS പരാജയപ്പെട്ടാൽ MPEG-TS-ലേക്ക് മടങ്ങും. ക്യാച്ച്-അപ്പ് എല്ലായ്പ്പോഴും MPEG-TS ഉപയോഗിക്കുന്നു. നിങ്ങളുടെ പ്രൊവൈഡർ HLS പിന്തുണയുണ്ടെന്ന് റിപ്പോർട്ട് ചെയ്യുന്നില്ല — നിങ്ങൾക്ക് ഇപ്പോഴും ഇത് പരീക്ഷിച്ച് നോക്കാം.</string>
+    <string name="setup_hls_test_support">HLS പിന്തുണ പരീക്ഷിക്കുക</string>
+    <string name="setup_hls_testing">HLS പരീക്ഷിക്കുന്നു…</string>
+    <string name="setup_hls_test_failed">പരീക്ഷണം പരാജയപ്പെട്ടു: <xliff:g id="reason">%1$s</xliff:g></string>
+    <string name="setup_hls_test_provider_unreachable">പ്രൊവൈഡറിലേക്ക് എത്താനായില്ല — സെർവർ URL, ഉപയോക്തൃനാമം, പാസ്വേഡ് എന്നിവ പരിശോധിക്കുക.</string>
+    <string name="setup_hls_test_works">✓ HLS പ്രവർത്തിക്കുന്നു — നിങ്ങളുടെ പ്രൊവൈഡർ ഒരു പ്ലേലിസ്റ്റ് തിരികെ നൽകി.</string>
+    <string name="setup_hls_test_works_unadvertised">✓ HLS പ്രവർത്തിക്കുന്നു — നിങ്ങളുടെ പ്രൊവൈഡർ HLS പരസ്യപ്പെടുത്തുന്നില്ലെങ്കിലും ഒരു പ്ലേലിസ്റ്റ് തിരികെ നൽകി.</string>
+    <string name="setup_hls_test_busy">പൂർത്തിയാക്കാനായില്ല — അക്കൗണ്ടിന് ഇപ്പോൾ കണക്ഷനുകൾ തീർന്നു (HTTP <xliff:g id="status">%1$d</xliff:g>). മറ്റെന്തെങ്കിലും സ്ട്രീം ചെയ്യുന്നുണ്ടെങ്കിൽ അത് നിർത്തിയിട്ട് വീണ്ടും പരീക്ഷിക്കുക.</string>
+    <string name="setup_hls_test_not_served">HLS പ്രവർത്തിച്ചില്ല — <xliff:g id="reason">%1$s</xliff:g>. ഇത് ഓഫായി തന്നെ വയ്ക്കുക, ലൈവ് ടിവി MPEG-TS ഉപയോഗിക്കും.</string>
+    <string name="setup_hls_test_reason_not_playlist">സെർവർ മറുപടി നൽകിയെങ്കിലും പ്ലേലിസ്റ്റായിട്ടല്ല</string>
+    <string name="setup_hls_test_reason_no_endpoint">ഈ ചാനലിന് HLS എൻഡ്പോയിന്റ് ഇല്ല (HTTP <xliff:g id="status">%1$d</xliff:g>)</string>
+    <string name="setup_hls_test_inconclusive">സ്ഥിരീകരിക്കാനായില്ല (<xliff:g id="reason">%1$s</xliff:g>). <xliff:g id="provider_claim">%2$s</xliff:g></string>
+    <string name="setup_hls_test_reason_http">HTTP <xliff:g id="status">%1$d</xliff:g></string>
+    <string name="setup_hls_test_reason_no_answer">മറുപടി ഇല്ല</string>
+    <string name="setup_hls_test_reason_no_live_channels">ഈ പ്ലേലിസ്റ്റിൽ പരീക്ഷിക്കാൻ ലൈവ് ചാനലുകളൊന്നുമില്ല</string>
+    <string name="setup_hls_test_reason_dead_channel">ടെസ്റ്റ് ചാനൽ MPEG-TS-ലും പ്ലേ ചെയ്തില്ല, അതിനാൽ അത് പ്രവർത്തനരഹിതമായിരിക്കാം</string>
+    <string name="setup_hls_provider_advertises">നിങ്ങളുടെ പ്രൊവൈഡർ HLS പരസ്യപ്പെടുത്തുന്നുണ്ട്.</string>
+    <string name="setup_hls_provider_does_not_advertise">നിങ്ങളുടെ പ്രൊവൈഡർ HLS പരസ്യപ്പെടുത്തുന്നില്ല.</string>
 </resources>
