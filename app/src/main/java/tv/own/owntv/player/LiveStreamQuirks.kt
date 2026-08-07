@@ -12,7 +12,7 @@ import java.util.concurrent.ConcurrentHashMap
  * lesson learned on one channel applies immediately to every other channel of the same panel
  * (these faults are panel-wide, not per-channel).
  *
- * Two quirks are tracked:
+ * Three quirks are tracked:
  *
  *  1. **`.ts` that is really HLS.** Some Xtream panels advertise `/live/user/pass/ID.ts` but
  *     HTTP-redirect it to an `.m3u8` manifest. ExoPlayer picks its media source from the URL
@@ -30,6 +30,15 @@ import java.util.concurrent.ConcurrentHashMap
  *     re-reads the playlist and fetches with a fresh token, which is why the same channel plays there,
  *     lagging but alive. There is nothing to tune — the fix is to recognise the pattern quickly and
  *     hand the panel to mpv, rather than grinding ExoPlayer's reconnect ladder on a dead channel.
+ *
+ *  3. **A panel that blocklists the default User-Agent.** Some hosts sit behind a WAF that refuses
+ *     player identities by name. Traced on a Cloudflare-fronted panel that answers every request
+ *     carrying `VLC/3.0.20 LibVLC/3.0.20` with a `403` challenge page ("Just a moment…") and serves the
+ *     identical URL `200` to a neutral UA. Both engines send the VLC identity, so such a channel fails
+ *     on ExoPlayer, walks the whole fallback ladder, and fails on mpv too — indistinguishable from a
+ *     dead provider. Once either engine has been refused this way we remember it here, so every other
+ *     channel on the panel opens under [tv.own.owntv.core.network.HttpClient.FALLBACK_USER_AGENT]
+ *     first time instead of repeating the failure.
  */
 object LiveStreamQuirks {
 
@@ -58,6 +67,17 @@ object LiveStreamQuirks {
      */
     fun isSessionLimit(responseCode: Int): Boolean = responseCode == 458
 
+    /**
+     * Statuses a WAF uses to refuse a request on *who is asking* rather than what was asked for — worth
+     * one retry under a different identity before the stream is written off.
+     *
+     * `403` is the Cloudflare managed-challenge answer traced on the panel in the quirk-3 note above;
+     * `503` is the same product's "checking your browser" variant. Only ever consulted **before the
+     * first frame** (see the caller): once a channel has played, a mid-stream `403` is a stale segment
+     * token, which is [isEdgeRefusal]'s business and a new UA cannot help it.
+     */
+    fun isIdentityRefusal(responseCode: Int): Boolean = responseCode == 403 || responseCode == 503
+
     /** `host:port` of [url], lowercased; the whole URL when it can't be parsed (still a stable key). */
     fun hostKey(url: String): String {
         val afterScheme = url.substringAfter("://", url)
@@ -78,6 +98,8 @@ object LiveStreamQuirks {
     private val tolerantDemuxStreams = ConcurrentHashMap.newKeySet<String>()
     private val prerollDefeatedStreams = ConcurrentHashMap.newKeySet<String>()
     private val softwareArchiveHosts = ConcurrentHashMap.newKeySet<String>()
+    private val uaBlockingHosts = ConcurrentHashMap.newKeySet<String>()
+    private val providerMessages = ConcurrentHashMap<String, Pair<Int, String>>()
 
     /** Record that [url]'s host serves HLS even when its advertised URL says `.ts`. */
     fun rememberHlsRedirect(url: String) { hlsRedirectHosts += hostKey(url) }
@@ -109,6 +131,42 @@ object LiveStreamQuirks {
         val rewritten = path.dropLast(3) + ".m3u8"
         return if (query.isEmpty()) rewritten else "$rewritten?$query"
     }
+
+    /**
+     * The `.ts` ⇄ `.m3u8` sibling of [url], or null when there is no extension to swap.
+     *
+     * The extension is tested on the PATH only, and any query/fragment is carried over untouched. An
+     * M3U live URL like `…/stream-output.m3u8?mode=hls` ends in a *parameter* rather than an extension,
+     * so testing the whole string skips the swap entirely; and the provider's own `mode` is usually
+     * required, so dropping it yields a 400 instead of the sibling.
+     *
+     * Shared by both engines, so a channel gets the same alternate whichever one is asking.
+     */
+    fun alternateFormatUrl(url: String): String? {
+        val cut = url.indexOfFirst { it == '?' || it == '#' }.takeIf { it >= 0 } ?: url.length
+        val path = url.substring(0, cut)
+        val suffix = url.substring(cut)
+        val from = when {
+            path.endsWith(".m3u8", ignoreCase = true) -> ".m3u8"
+            path.endsWith(".ts", ignoreCase = true) -> ".ts"
+            else -> return null
+        }
+        val to = if (from == ".m3u8") ".ts" else ".m3u8"
+        return path.dropLast(from.length) + to + suffix
+    }
+
+    /**
+     * Statuses where the provider is refusing the *request* rather than describing a broken stream.
+     *
+     * Guards the format swap above, which can only ever fix a *container* problem. Traced on a panel
+     * that answers `429 "Channel limit has been reached"`: the ladder read that as a format failure,
+     * went off to an invented `.ts` URL that 404s, retried the invented URL six times over ~45 s and
+     * ended on an error screen blaming the channel — while the original URL worked the moment the
+     * account's other stream closed. A different file extension cannot answer any of these.
+     */
+    fun isRequestRefusal(responseCode: Int): Boolean =
+        responseCode == 401 || responseCode == 402 || responseCode == 403 || responseCode == 429 ||
+            responseCode == 503 || responseCode == 509 || isSessionLimit(responseCode)
 
     /**
      * Record that this panel refuses its own signed segment URLs, so the *next* channel on it opens
@@ -285,11 +343,47 @@ object LiveStreamQuirks {
 
     fun archiveNeedsSoftware(url: String): Boolean = hostKey(url) in softwareArchiveHosts
 
+    /**
+     * Record that this panel refuses [tv.own.owntv.core.network.HttpClient.DEFAULT_USER_AGENT], so every
+     * later request to it — either engine, any channel — starts on the fallback identity.
+     *
+     * Panel-wide, because a WAF rule is configured for the site, not per stream. Session-only like the
+     * rest: a provider that drops the rule is back to the default identity after the next app start,
+     * which matters because the default is the one most panels actually want.
+     *
+     * Only ever recorded when the user has NOT configured a User-Agent for the source. An explicit
+     * setting is the user's decision and is never second-guessed or overwritten.
+     */
+    fun rememberBlocksDefaultUserAgent(url: String) { uaBlockingHosts += hostKey(url) }
+
+    fun blocksDefaultUserAgent(url: String): Boolean = hostKey(url) in uaBlockingHosts
+
+    /**
+     * Keep the panel's own explanation of a refusal, so an error screen can quote it verbatim.
+     *
+     * "Channel limit has been reached. Stop one of your active streams before opening a new channel."
+     * says in one line what a status code can only hint at, and it is the difference between the user
+     * closing the TV in the other room and the user assuming the channel is dead. Only ExoPlayer can
+     * capture it — mpv/FFmpeg never exposes a response body, it just reports "HTTP error 429" — so it
+     * is kept panel-wide here and mpv's error screen reads it back.
+     *
+     * Stored with the status it explained: a stale "channel limit" line quoted under a later 404 would
+     * be worse than no message at all.
+     */
+    fun rememberProviderMessage(url: String, responseCode: Int, message: String) {
+        providerMessages[hostKey(url)] = responseCode to message
+    }
+
+    /** The panel's own words for [responseCode], if it gave any this session; null otherwise. */
+    fun providerMessage(url: String, responseCode: Int): String? =
+        providerMessages[hostKey(url)]?.takeIf { it.first == responseCode }?.second
+
     /** Test hook — the session cache is never cleared in production. */
     internal fun clearForTest() {
         hlsRedirectHosts.clear(); segmentRefusingHosts.clear(); singleSessionHosts.clear()
         brokenTimestampStreams.clear(); softwareArchiveHosts.clear(); archivePersistence = null
         noHlsVariantStreams.clear(); noHlsVariantMpvStreams.clear(); prerollDefeatedStreams.clear()
         noHlsVariantHosts.clear(); noHlsChannelsPerHost.clear(); tolerantDemuxStreams.clear()
+        uaBlockingHosts.clear(); providerMessages.clear()
     }
 }

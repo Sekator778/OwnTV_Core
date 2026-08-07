@@ -1643,7 +1643,7 @@ Resync and remove missing titles also allows removing titles the provider no lon
     <!-- Translators: Subtitle color preset name. -->
     <string name="settings_subtitle_color_grey">Grey</string>
     <string name="settings_live_preroll">Pre-buffer live streams</string>
-    <string name="settings_live_preroll_description">Collect this much video before a live channel starts playing, and again after a stutter. This is an amount of video, not a countdown. Off keeps the fastest possible start.</string>
+    <string name="settings_live_preroll_description">Collect this much video before a live channel starts playing, and again after a stutter. This is an amount of video, not a countdown. Off keeps the fastest possible start and is right for most providers. Raise it only if playback actually stutters: many providers publish only a few seconds ahead of live, and asking for more video than they send can make stuttering worse.</string>
     <string name="settings_live_preroll_per_playlist">Pre-buffer per playlist</string>
     <string name="settings_live_preroll_per_playlist_description">Override the setting above for one playlist while keeping your other playlists fast.</string>
     <!-- Translators: Number of playlists with a custom pre-buffer override. -->

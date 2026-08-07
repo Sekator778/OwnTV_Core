@@ -171,6 +171,28 @@ object PlayerErrors {
      *  unsigned hex instead ("err 0xfffffff4"), so accept that spelling too. */
     private val ENOMEM_RX = Regex("""\b(?:err(?:or)?|status|code)\s*[:=]?\s*(?:-12|0xfffffff4)\b""")
 
+    /** The HTTP status named in a raw error string, or null if it doesn't name one. */
+    fun httpStatusIn(raw: String): Int? =
+        HTTP_STATUS_RX.find(raw.lowercase())?.groupValues?.get(1)?.toIntOrNull()
+
+    /**
+     * The provider's own short refusal text, when one was captured for this status and panel.
+     *
+     * A panel that answers "Channel limit has been reached. Stop one of your active streams before
+     * opening a new channel." has already said the useful thing. Fixed OwnTV wording stays semantic
+     * and localized; only genuine provider-authored text is returned raw.
+     */
+    fun providerMessageFor(raw: String, url: String?): String? {
+        val code = url?.let { httpStatusIn(raw) }
+        return if (code != null) LiveStreamQuirks.providerMessage(url, code) else null
+    }
+
+    /** Prefer genuine provider text, otherwise keep the caller's localized semantic failure. */
+    fun visibleFailure(raw: String?, url: String?, fallback: PlaybackFailure): PlaybackFailure {
+        val providerText = raw?.let { providerMessageFor(it, url) }
+        return providerText?.let(PlaybackFailure::Raw) ?: fallback
+    }
+
     fun classify(raw: String): PlayerFailureReason? {
         val l = raw.lowercase()
         val httpCode = HTTP_STATUS_RX.find(l)?.groupValues?.get(1)
@@ -182,6 +204,7 @@ object PlayerErrors {
                 "0xfffffff4" in l || ENOMEM_RX.containsMatchIn(l) -> PlayerFailureReason.DECODER_MEMORY
             "error_key" in l || "cryptoinfo" in l || "0x80001100" in l || ("drm" in l && "error" in l) -> PlayerFailureReason.DRM
             httpCode == "509" -> PlayerFailureReason.HTTP_509
+            httpCode == "429" || httpCode == "458" -> PlayerFailureReason.ONE_SESSION_PROVIDER
             httpCode == "403" -> PlayerFailureReason.HTTP_403
             httpCode == "401" -> PlayerFailureReason.HTTP_401
             httpCode == "404" -> PlayerFailureReason.HTTP_404
@@ -196,4 +219,7 @@ object PlayerErrors {
     }
 
     fun reasonFor(raw: String): PlayerFailureReason? = classify(raw)
+
+    /** URL-aware overload retained for playback call sites; provider text is handled by [visibleFailure]. */
+    fun reasonFor(raw: String, @Suppress("UNUSED_PARAMETER") url: String?): PlayerFailureReason? = classify(raw)
 }
