@@ -26,6 +26,7 @@
     <string name="setup_folder_example">مثلاً: تلفازي</string>
     <string name="setup_from_current_folder">..</string>
     <string name="setup_move_indicator">↕</string>
+    <string name="setup_welcome_to">مرحبًا بك في</string>
     <string name="setup_welcome_tagline">مشغّل IPTV الخاص بك.</string>
     <string name="setup_get_started">البدء</string>
     <string name="setup_before_you_start">قبل البدء</string>

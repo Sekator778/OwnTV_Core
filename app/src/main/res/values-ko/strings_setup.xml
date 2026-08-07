@@ -26,6 +26,7 @@
     <string name="setup_folder_example">예: 나의 TV</string>
     <string name="setup_from_current_folder">..</string>
     <string name="setup_move_indicator">↕</string>
+    <string name="setup_welcome_to">환영합니다</string>
     <string name="setup_welcome_tagline">나만의 IPTV 플레이어.</string>
     <string name="setup_get_started">시작하기</string>
     <string name="setup_before_you_start">시작하기 전에</string>

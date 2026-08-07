@@ -149,6 +149,7 @@
 1	app/src/main/java/tv/own/owntv/core/network/DnsConfig.kt	https://cloudflare-dns.com/dns-query
 1	app/src/main/java/tv/own/owntv/core/network/DnsConfig.kt	https://dns.google/dns-query
 1	app/src/main/java/tv/own/owntv/core/network/DnsConfig.kt	https://dns.quad9.net/dns-query
+1	app/src/main/java/tv/own/owntv/core/network/HttpClient.kt	Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0 Safari/537.36
 1	app/src/main/java/tv/own/owntv/core/parser/XtreamClient.kt	${base(s)}/timeshift/${s.username}/${s.password}/$durationMinutes/${fmt.format(java.util.Date(startMs))}/$streamId.$ext
 1	app/src/main/java/tv/own/owntv/core/parser/XtreamClient.kt	allowed_output_formats
 1	app/src/main/java/tv/own/owntv/core/parser/XtreamClient.kt	fetchAccountDetails failed for source ${s.id}
@@ -180,6 +181,7 @@
 2	app/src/main/java/tv/own/owntv/features/live/LiveViewModel.kt	CUSTOM:
 1	app/src/main/java/tv/own/owntv/features/live/LiveViewModel.kt	CUSTOM:$id
 1	app/src/main/java/tv/own/owntv/features/live/LiveViewModel.kt	ExoPlayer error before first frame: ${info?.raw ?: previewEngine.error.value}
+1	app/src/main/java/tv/own/owntv/features/live/LiveViewModel.kt	mpv handoff for '${channel.name}' abandoned — the channel changed while ExoPlayer released
 1	app/src/main/java/tv/own/owntv/features/live/LiveViewModel.kt	starting mpv for '${channel.name}' — reason=$reason
 1	app/src/main/java/tv/own/owntv/features/live/LiveViewModel.kt	ts
 8	app/src/main/java/tv/own/owntv/features/settings/DnsSettingsScreen.kt	\0
@@ -226,16 +228,23 @@
 1	app/src/main/java/tv/own/owntv/features/settings/data/SubtitleStyle.kt	top_center
 1	app/src/main/java/tv/own/owntv/features/settings/data/SubtitleStyle.kt	top_left
 1	app/src/main/java/tv/own/owntv/features/settings/data/SubtitleStyle.kt	top_right
-2	app/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	\0
+3	app/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	\0
+1	app/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	Content-Type
 1	app/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	HLS
 1	app/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	MPEG-TS
+1	app/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	body="$failureText"
 1	app/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	decoder failed before first frame (${error.errorCodeName}) — rebuilding the decoder and retrying once
 1	app/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	decoder rebuild failed: ${it.message}
+1	app/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	default User-Agent refused — retrying once as ${HttpClient.FALLBACK_USER_AGENT}
+1	app/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	html
+1	app/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	provider refused the default User-Agent — retrying as ${HttpClient.FALLBACK_USER_AGENT}
+1	app/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	stream didn't open — trying the ${alt.substringBefore('?').substringAfterLast('.')} form of this channel
+1	app/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	trying alternate format: ${HttpClient.redactUrl(alt)}
+4	app/src/main/java/tv/own/owntv/player/LiveStreamQuirks.kt	.m3u8
+3	app/src/main/java/tv/own/owntv/player/LiveStreamQuirks.kt	.ts
 1	app/src/main/java/tv/own/owntv/player/MpvVideoSurface.kt	DEPRECATION
 1	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	#00000000
 1	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	#FFFFFFFF
-3	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	.m3u8
-2	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	.ts
 1	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	HLS
 1	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	MPEG-TS
 1	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	demuxer
@@ -243,12 +252,16 @@
 2	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	force
 1	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	hls
 1	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	mpegts
+1	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	playback failed — retrying once as ${HttpClient.FALLBACK_USER_AGENT}
 2	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	sub-align-x
 2	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	sub-ass-override
 2	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	sub-back-color
 2	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	sub-color
 2	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	sub-pos
 1	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	yes
+1	app/src/main/java/tv/own/owntv/player/PlayerDiagnostics.kt	429
+1	app/src/main/java/tv/own/owntv/player/PlayerDiagnostics.kt	458
+1	app/src/main/java/tv/own/owntv/player/PlayerDiagnostics.kt	UNUSED_PARAMETER
 1	app/src/main/java/tv/own/owntv/ui/components/ColorPicker.kt	#%06X
 1	app/src/main/java/tv/own/owntv/ui/components/TextInputDialog.kt	\0
 1	app/src/main/java/tv/own/owntv/ui/components/TvImeMetrics.kt	$trigger visible=${next.visible} source=${next.source} displayH=$displayHeight

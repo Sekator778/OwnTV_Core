@@ -3113,7 +3113,6 @@
 1	log	app/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	audioWatchdog: $reason — forcing stereo for this session
 1	technical	app/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	av01
 1	technical	app/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	avc
-1	technical	app/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	body="${textPrefix(prefix, requested)}"
 1	technical	app/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	buffer stopped growing at ${buffered}ms
 1	technical	app/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	buffered but never started playing ($detail)
 1	technical	app/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	buffering stalled
@@ -3263,8 +3262,8 @@
 1	technical	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	+nobuffer+genpts
 1	technical	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	+nobuffer+genpts+discardcorrupt
 1	technical	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	,
-2	technical	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	.m3u8
-3	technical	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	.ts
+1	technical	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	.m3u8
+2	technical	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	.ts
 1	technical	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	/sdk_
 1	technical	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	/timeshift/
 4	technical	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	0
@@ -3515,7 +3514,6 @@
 1	log	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	playback didn't start — auto-retry $autoRetries/${maxRetries()} (full probe)
 1	log	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	playback didn't start — decoder failure
 1	log	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	playback didn't start — offline, skipping retries
-1	log	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	playback failed — retrying once with short vlc User-Agent
 1	log	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	playback stats: container-fps=${getPropertyString("container-fps")}
 1	technical	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	pq
 1	technical	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	profile
@@ -3589,7 +3587,6 @@
 1	mime	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	video/wvc1
 1	mime	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	video/x-vnd.on2.vp8
 1	mime	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	video/x-vnd.on2.vp9
-1	technical	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	vlc
 11	technical	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	vo
 1	technical	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	vo-delayed-frame-count
 1	log	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	vo-delayed=${getPropertyString("vo-delayed-frame-count")}

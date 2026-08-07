@@ -26,6 +26,7 @@
     <string name="setup_folder_example">Ex.: Minha TV</string>
     <string name="setup_from_current_folder">..</string>
     <string name="setup_move_indicator">↕</string>
+    <string name="setup_welcome_to">BEM-VINDO AO</string>
     <string name="setup_welcome_tagline">Seu próprio reprodutor de IPTV.</string>
     <string name="setup_get_started">Começar</string>
     <string name="setup_before_you_start">Antes de começar</string>

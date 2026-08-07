@@ -26,6 +26,7 @@
     <string name="setup_folder_example">např. Moje TV</string>
     <string name="setup_from_current_folder">..</string>
     <string name="setup_move_indicator">↕</string>
+    <string name="setup_welcome_to">VÍTEJTE V</string>
     <string name="setup_welcome_tagline">Váš vlastní přehrávač IPTV.</string>
     <string name="setup_get_started">Začít</string>
     <string name="setup_before_you_start">Než začnete</string>

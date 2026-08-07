@@ -26,6 +26,7 @@
     <string name="setup_folder_example">যেমন: My TV</string>
     <string name="setup_from_current_folder">..</string>
     <string name="setup_move_indicator">↕</string>
+    <string name="setup_welcome_to">স্বাগতম</string>
     <string name="setup_welcome_tagline">আপনার নিজস্ব IPTV প্লেয়ার।</string>
     <string name="setup_get_started">শুরু করুন</string>
     <string name="setup_before_you_start">শুরু করার আগে</string>
