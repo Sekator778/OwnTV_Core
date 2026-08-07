@@ -1676,7 +1676,7 @@ Resync and remove missing titles also allows removing titles the provider no lon
     <string name="settings_epg_offset_dialog_description">Moves every programme in the guide. Use it when the whole feed is on the wrong clock; for a single channel (an East/West version sharing one guide), long-press the channel in Live TV or the Guide and set its own offset there.</string>
     <string name="settings_panel_width_screen_description">Set how much of the screen each panel takes — categories, the item list, and the preview.</string>
     <string name="settings_panel_width_summary">Category <xliff:g id="category">%1$d</xliff:g>%% · List <xliff:g id="list">%2$d</xliff:g>%% · <xliff:g id="preview_label">%3$s</xliff:g> <xliff:g id="preview">%4$d</xliff:g>%%</string>
-    <string name="settings_panel_width_help">• The three panels share one row, so their percentages must add up to 100%%.\n• Widen one panel and you have to take the same amount off another before saving.\n• Reset puts a section back to the standard widths this screen started with.\n• Turning a section off restores its standard layout without losing your values.\n• Movie and series posters re-flow automatically, so a narrower list just shows fewer per row.</string>
+    <string name="settings_panel_width_help">• The panels share one row, so their percentages must add up to 100%%.\n• Set the Preview or Poster panel to 0%% to hide it; Category and List stay at 10%% or more.\n• Widen one panel and you have to take the same amount off another before saving.\n• Reset puts a section back to the standard widths this screen started with.\n• Turning a section off restores its standard layout without losing your values.\n• Movie and series posters re-flow automatically, so a narrower list just shows fewer per row.</string>
     <string name="settings_panel_width_preview">Preview</string>
     <string name="settings_panel_width_poster">Poster</string>
     <string name="settings_panel_width_dialog_title"><xliff:g id="section">%1$s</xliff:g> panel widths</string>
@@ -1686,6 +1686,10 @@ Resync and remove missing titles also allows removing titles the provider no lon
     <string name="settings_panel_width_preview_panel"><xliff:g id="label">%1$s</xliff:g> panel</string>
     <string name="settings_panel_width_total">Total size</string>
     <string name="settings_panel_width_invalid_total">Total size is <xliff:g id="total">%1$d</xliff:g>%%. It has to be 100%% — please adjust.</string>
+    <string name="settings_panel_width_disable_preview_title">Turn off Live Preview video?</string>
+    <string name="settings_panel_width_disable_preview_description">Live Preview video is currently on. Hiding the Preview panel will turn the video off, and it cannot be turned on again until you give the Preview panel a width in Panel Width Adjustment.</string>
+    <string name="settings_live_preview_panel_hidden_title">Live Preview video is unavailable</string>
+    <string name="settings_live_preview_panel_hidden_description">The Live TV Preview panel is hidden. Give it a width above 0%% in Panel Width Adjustment before turning Preview video on.</string>
     <!-- Translators: Global call to action on Language settings for helping translate the app. -->
     <string name="settings_language_help_translate">Help translate OwnTV into your language</string>
     <!-- Translators: Explains that the QR/link opens the whole translation project, where any language and all app sections are available. -->

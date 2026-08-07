@@ -1,7 +1,11 @@
 package tv.own.owntv.player
 
+import android.content.ContentUris
+import android.content.ContentValues
 import android.content.Context
 import android.os.Build
+import android.os.Environment
+import android.provider.MediaStore
 import org.json.JSONArray
 import org.json.JSONObject
 import tv.own.owntv.core.network.HttpClient
@@ -257,22 +261,13 @@ object PlaybackErrorLog {
     }
 
     /**
-     * Write the whole log — plus the live diagnostics ring, when it has anything — as plain text to the
-     * app's **external** files dir, and return the file. That directory needs no permission and no root
-     * to read back:
-     *
-     * ```
-     * adb pull /sdcard/Android/data/tv.own.owntv/files/owntv-playback-report.txt
-     * ```
-     *
-     * A TV has nowhere to "share" to and no clipboard worth the name, so a pullable file plus the path
-     * on screen is the export that actually works. Runs synchronously — the caller is a dialog button
-     * on a background dispatcher, and the file is a few kB.
+     * Write the whole log — plus the live diagnostics ring, when it has anything — to the public
+     * **Download** folder and return its user-visible path. Android 10+ goes through MediaStore, which
+     * needs no storage permission and creates the standard folder when necessary; Android 8–9 creates
+     * the directory directly. Runs synchronously on the caller's IO dispatcher; the file is a few kB.
      */
-    fun export(context: Context): File? = runCatching {
+    fun export(context: Context): String? = runCatching {
         val appContext = context.applicationContext
-        val dir = appContext.getExternalFilesDir(null) ?: appContext.filesDir
-        val out = File(dir, EXPORT_NAME)
         val stamp = java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss", java.util.Locale.US)
         val text = buildString {
             appendLine("OwnTV playback report")
@@ -292,9 +287,73 @@ object PlaybackErrorLog {
                 appendLine(live)
             }
         }
-        out.writeText(text)
-        out
+        writeToDownloads(appContext, text)
     }.getOrNull()
+
+    private fun writeToDownloads(context: Context, text: String): String {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            runCatching { return writeToMediaStoreDownloads(context, text) }
+        }
+        val downloads = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
+        check(downloads.exists() || downloads.mkdirs()) { "Could not create the Download folder" }
+        File(downloads, EXPORT_NAME).writeText(text)
+        return "${Environment.DIRECTORY_DOWNLOADS}/$EXPORT_NAME"
+    }
+
+    /** Scoped-storage writer. Reuses OwnTV's existing report instead of creating `(1)`, `(2)`, … files. */
+    @android.annotation.SuppressLint("InlinedApi")
+    private fun writeToMediaStoreDownloads(context: Context, text: String): String {
+        val resolver = context.contentResolver
+        val collection = MediaStore.Downloads.getContentUri(MediaStore.VOLUME_EXTERNAL_PRIMARY)
+        val relativePath = "${Environment.DIRECTORY_DOWNLOADS}/"
+        val projection = arrayOf(MediaStore.MediaColumns._ID)
+        val selection = "${MediaStore.MediaColumns.DISPLAY_NAME}=? AND ${MediaStore.MediaColumns.RELATIVE_PATH}=?"
+        val existing = runCatching {
+            resolver.query(
+                collection,
+                projection,
+                selection,
+                arrayOf(EXPORT_NAME, relativePath),
+                "${MediaStore.MediaColumns._ID} DESC",
+            )?.use { cursor ->
+                if (cursor.moveToFirst()) {
+                    ContentUris.withAppendedId(collection, cursor.getLong(0))
+                } else {
+                    null
+                }
+            }
+        }.getOrNull()
+
+        if (existing != null) {
+            val replaced = runCatching {
+                resolver.openOutputStream(existing, "wt")?.use { it.write(text.toByteArray()) }
+                    ?: error("Could not open the existing playback report")
+            }.isSuccess
+            if (replaced) return "$relativePath$EXPORT_NAME"
+        }
+
+        val values = ContentValues().apply {
+            put(MediaStore.MediaColumns.DISPLAY_NAME, EXPORT_NAME)
+            put(MediaStore.MediaColumns.MIME_TYPE, "text/plain")
+            put(MediaStore.MediaColumns.RELATIVE_PATH, relativePath)
+            put(MediaStore.MediaColumns.IS_PENDING, 1)
+        }
+        val uri = resolver.insert(collection, values) ?: error("Could not create the playback report")
+        try {
+            resolver.openOutputStream(uri, "w")?.use { it.write(text.toByteArray()) }
+                ?: error("Could not open the playback report")
+            resolver.update(
+                uri,
+                ContentValues().apply { put(MediaStore.MediaColumns.IS_PENDING, 0) },
+                null,
+                null,
+            )
+        } catch (t: Throwable) {
+            runCatching { resolver.delete(uri, null, null) }
+            throw t
+        }
+        return "$relativePath$EXPORT_NAME"
+    }
 }
 
 private val DecoderSpec.storageKind: String

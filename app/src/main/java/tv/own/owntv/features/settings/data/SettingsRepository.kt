@@ -915,6 +915,12 @@ class SettingsRepository(private val context: Context, private val localeStore: 
         PanelSection.SERIES -> Keys.PANEL_W_SERIES_PREVIEW
     }
 
+    private fun livePreviewPanelHidden(p: Preferences): Boolean =
+        (p[Keys.PANEL_W_LIVE_ON] ?: false) &&
+            (p[Keys.PANEL_W_LIVE_CAT] ?: 0) > 0 &&
+            (p[Keys.PANEL_W_LIVE_LIST] ?: 0) > 0 &&
+            p[Keys.PANEL_W_LIVE_PREVIEW] == 0
+
     fun panelWidthEnabled(s: PanelSection): Flow<Boolean> = prefsFlow { it[panelOnKey(s)] ?: false }
 
     /**
@@ -923,17 +929,17 @@ class SettingsRepository(private val context: Context, private val localeStore: 
      * different build can never leave the row over- or under-filled.
      */
     fun panelShares(s: PanelSection): Flow<PanelShares?> = prefsFlow { p ->
-        val category = p[panelCategoryKey(s)] ?: 0
-        val list = p[panelListKey(s)] ?: 0
-        val preview = p[panelPreviewKey(s)] ?: 0
-        if (category <= 0 || list <= 0 || preview <= 0) {
+        val category = p[panelCategoryKey(s)]
+        val list = p[panelListKey(s)]
+        val preview = p[panelPreviewKey(s)]
+        if (category == null || list == null || preview == null || category <= 0 || list <= 0 || preview < 0) {
             null
         } else {
             balanceToTotal(
                 PanelShares(
                     PanelWidthLimits.snap(category),
                     PanelWidthLimits.snap(list),
-                    PanelWidthLimits.snap(preview),
+                    PanelWidthLimits.snapPreview(preview),
                 ),
             )
         }
@@ -947,6 +953,9 @@ class SettingsRepository(private val context: Context, private val localeStore: 
             it[panelCategoryKey(s)] = safe.category
             it[panelListKey(s)] = safe.list
             it[panelPreviewKey(s)] = safe.preview
+            if (s == PanelSection.LIVE && enabled && safe.preview == 0) {
+                it[Keys.LIVE_PREVIEW] = false
+            }
         }
     }
 
@@ -1115,8 +1124,13 @@ class SettingsRepository(private val context: Context, private val localeStore: 
     /** Whether focusing a channel auto-plays it in the Live preview pane. */
     val livePreviewEnabled: Flow<Boolean> = prefsFlow { it[Keys.LIVE_PREVIEW] ?: true }
 
+    /** False only while a saved, enabled Live layout has intentionally hidden its preview panel. */
+    val livePreviewPanelActive: Flow<Boolean> = prefsFlow { !livePreviewPanelHidden(it) }
+
     suspend fun setLivePreviewEnabled(enabled: Boolean) {
-        context.dataStore.edit { it[Keys.LIVE_PREVIEW] = enabled }
+        context.dataStore.edit {
+            if (!enabled || !livePreviewPanelHidden(it)) it[Keys.LIVE_PREVIEW] = enabled
+        }
     }
 
     /** Whether the Live preview plays audio (off by default so browsing stays quiet). */
@@ -1496,6 +1510,9 @@ class SettingsRepository(private val context: Context, private val localeStore: 
             backupIntKeys.forEach { k -> if (o.has(k.name)) prefs[k] = o.getInt(k.name) }
             backupBoolKeys.forEach { k -> if (o.has(k.name)) prefs[k] = o.getBoolean(k.name) }
             backupFloatKeys.forEach { k -> if (o.has(k.name)) prefs[k] = o.getDouble(k.name).toFloat() }
+            if (livePreviewPanelHidden(prefs)) {
+                prefs[Keys.LIVE_PREVIEW] = false
+            }
         }
         // Do not publish a locale while the restore is still applying database/DataStore sections.
         // The caller applies this validated value after the restore marker is cleared. Invalid data
