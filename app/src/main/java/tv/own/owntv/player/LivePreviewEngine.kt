@@ -385,6 +385,13 @@ class LivePreviewEngine(
      *  single wait-and-retry that answers it has already been spent. */
     private var sessionLimitSeen = false
     private var sessionLimitRetryDone = false
+    /** The tuned channel carries a User-Agent the user configured (per-source or per-channel). An explicit
+     *  setting is a decision, so it is never swapped out for the fallback identity below. */
+    private var uaIsCustom = false
+    /** Whether this load has already spent its one retry under [HttpClient.FALLBACK_USER_AGENT]. */
+    private var uaRetryDone = false
+    /** Whether this load has already tried the channel's `.ts`⇄`.m3u8` sibling (see [retryAlternateFormat]). */
+    private var altFormatRetryDone = false
     /** The playlist shape is logged once per prepare (and again whenever we back off). */
     private var playlistLogged = false
 
@@ -825,7 +832,7 @@ class LivePreviewEngine(
         gaveUp = true
         _isPlaying.value = false; _buffering.value = false
         _error.value = userMessage
-        _errorInfo.value = ErrorInfo(PlayerErrors.reasonFor(reason), exoSpec(), reason)
+        _errorInfo.value = ErrorInfo(PlayerErrors.reasonFor(reason, currentUrl), exoSpec(), reason)
         _state.value = State.ERROR
     }
 
@@ -971,10 +978,22 @@ class LivePreviewEngine(
             // Refused only because the previous engine's session hasn't been released yet — wait it out
             // once instead of failing the channel or handing it back to mpv (see [noteSessionLimit]).
             if (sessionLimitSeen && !sessionLimitRetryDone) { retryAfterSessionRelease(); return }
+            // Refused on *who is asking* rather than on what was asked for: some panels blocklist player
+            // User-Agents by name. Retry once under a neutral identity before conceding the channel to
+            // mpv, which sends the very same default UA and can only reproduce this.
+            if (!uaRetryDone && !uaIsCustom && currentUa != HttpClient.FALLBACK_USER_AGENT &&
+                httpStatusOf(error)?.let { LiveStreamQuirks.isIdentityRefusal(it) } == true
+            ) {
+                retryWithFallbackUserAgent()
+                return
+            }
             // A hardware decoder that died before the first frame is usually recoverable on a FRESH
             // MediaCodec, so rebuild and try once more before conceding the channel to mpv (see
             // [rebuildDecoderAndRetry]).
             if (!decoderRetryDone && isDecoderFailure(error)) { rebuildDecoderAndRetry(error); return }
+            // The endpoint we were given is the wrong shape for this channel — try its sibling before
+            // conceding (see [retryAlternateFormat]).
+            if (!altFormatRetryDone && isFormatFailure(error)) { retryAlternateFormat(); return }
             // Never opened → a stream ExoPlayer can't handle; the VM falls back to mpv on this ERROR.
             _state.value = State.ERROR
             _isPlaying.value = false
@@ -982,7 +1001,7 @@ class LivePreviewEngine(
             _error.value = "Couldn't play this channel."
             val raw = lastCodecError ?: diagnostics.recentError()
                 ?: error.errorCodeName + ((error.cause?.message ?: error.message)?.let { ": $it" } ?: "")
-            _errorInfo.value = ErrorInfo(PlayerErrors.reasonFor(raw), exoSpec(), raw)
+            _errorInfo.value = ErrorInfo(PlayerErrors.reasonFor(raw, currentUrl), exoSpec(), raw)
         }
     }
 
@@ -1070,8 +1089,12 @@ class LivePreviewEngine(
         stoppingIntentionally = false
         currentHeaders = StreamHeaders.decode(httpHeaders)
         // A channel's own User-Agent is more specific than the playlist-wide one, so it wins (F16).
-        currentUa = StreamHeaders.userAgentOf(currentHeaders)
-            ?: userAgent?.takeIf { it.isNotBlank() }
+        val configuredUa = StreamHeaders.userAgentOf(currentHeaders) ?: userAgent?.takeIf { it.isNotBlank() }
+        uaIsCustom = configuredUa != null
+        // A panel already caught refusing the default identity starts on the fallback one, so only the
+        // channel that discovered the block ever pays for the retry (see [LiveStreamQuirks], quirk 3).
+        currentUa = configuredUa
+            ?: HttpClient.FALLBACK_USER_AGENT.takeIf { LiveStreamQuirks.blocksDefaultUserAgent(url) }
             ?: HttpClient.DEFAULT_USER_AGENT
         diagnostics.start(); diagnostics.markLoad()
         lastCodecError = null; lastVideoDecoder = null
@@ -1081,7 +1104,8 @@ class LivePreviewEngine(
         flapWindowStartMs = 0L; flapCount = 0; flapWindowStartPos = 0L; prerollRetunePending = false
         responseWasHls = false; forceHlsForCurrentLoad = false; redirectedHlsRetryDone = false
         refusedSegments.clear(); _segmentsRefused.value = false; playlistLogged = false
-        sessionLimitSeen = false; sessionLimitRetryDone = false
+        sessionLimitSeen = false; sessionLimitRetryDone = false; uaRetryDone = false
+        altFormatRetryDone = false
         mainHandler.removeCallbacks(stallWatchdog); mainHandler.removeCallbacks(progressWatchdog); mainHandler.removeCallbacks(fpsFastRefresh)
         mainHandler.removeCallbacks(openWatchdog)
         mainHandler.removeCallbacks(healthyReset)
@@ -1137,7 +1161,7 @@ class LivePreviewEngine(
             _state.value = State.ERROR
             _error.value = "Couldn't play this channel."
             val raw = lastCodecError ?: diagnostics.recentError() ?: it.message
-            _errorInfo.value = raw?.let { r -> ErrorInfo(PlayerErrors.reasonFor(r), exoSpec(), r) }
+            _errorInfo.value = raw?.let { r -> ErrorInfo(PlayerErrors.reasonFor(r, url), exoSpec(), r) }
         }
     }
 
@@ -1298,7 +1322,7 @@ class LivePreviewEngine(
             _state.value = State.ERROR; _isPlaying.value = false; _buffering.value = false
             _error.value = "Lost connection to this channel."
             val raw = lastCodecError ?: diagnostics.recentError() ?: reason
-            _errorInfo.value = ErrorInfo(PlayerErrors.reasonFor(raw), exoSpec(), raw)
+            _errorInfo.value = ErrorInfo(PlayerErrors.reasonFor(raw, currentUrl), exoSpec(), raw)
             return
         }
         retryCount++
@@ -1484,6 +1508,104 @@ class LivePreviewEngine(
             "videos=${mv.videos.size} muxedAudio=${mv.muxedAudioFormat != null} " +
             "muxedCaptions=${mv.muxedCaptionFormats?.size ?: 0} " +
             "discontinuitySeq=${manifest.mediaPlaylist.discontinuitySequence}"
+    }
+
+    /**
+     * Whether this failure is about the *shape* of the stream, i.e. the only kind a `.ts`⇄`.m3u8` swap
+     * could possibly fix.
+     *
+     * The guard matters more than the retry. A refusal — 403, 429, a session limit — is the panel
+     * answering the *account*, and the identical answer waits at every other URL on it, so swapping the
+     * extension there just invents a URL that 404s. Traced on a panel that returns 429 "Channel limit
+     * has been reached": the ladder read it as a format problem, chased an invented `.ts` endpoint for
+     * ~45 s and ended on a screen blaming the channel, while the original URL worked the moment the
+     * account's other stream closed.
+     */
+    private fun isFormatFailure(error: PlaybackException): Boolean {
+        val http = httpStatusOf(error)
+        if (http != null && LiveStreamQuirks.isRequestRefusal(http)) return false
+        return when (error.errorCode) {
+            PlaybackException.ERROR_CODE_PARSING_CONTAINER_UNSUPPORTED,
+            PlaybackException.ERROR_CODE_PARSING_CONTAINER_MALFORMED,
+            PlaybackException.ERROR_CODE_PARSING_MANIFEST_UNSUPPORTED,
+            PlaybackException.ERROR_CODE_PARSING_MANIFEST_MALFORMED,
+            PlaybackException.ERROR_CODE_IO_FILE_NOT_FOUND,
+            -> true
+            // The endpoint simply isn't there / isn't served in this form at this address.
+            PlaybackException.ERROR_CODE_IO_BAD_HTTP_STATUS -> http == 404 || http == 415
+            else -> false
+        }
+    }
+
+    /**
+     * Try the channel's other endpoint form once: `…/ch.m3u8` ⇄ `…/ch.ts`, query kept intact.
+     *
+     * mpv has had this rung for a long time; ExoPlayer had none, so a panel that publishes one form in
+     * the playlist and serves the other could only be rescued by handing the whole channel over — a
+     * visible engine swap for what is one character of URL. Once per load, and only for a genuine
+     * format failure ([isFormatFailure]); if the sibling fails too, the normal ERROR path runs and the
+     * fallback ladder continues exactly as before.
+     */
+    private fun retryAlternateFormat() {
+        val p = player ?: return
+        val url = currentUrl ?: return
+        altFormatRetryDone = true
+        val alt = LiveStreamQuirks.alternateFormatUrl(url)?.takeIf { it != url } ?: return
+        // A channel already known to have no HLS sibling shouldn't be asked for one again this session.
+        if (LiveStreamQuirks.isExplicitHlsUrl(alt) && LiveStreamQuirks.lacksHlsVariant(url)) return
+        currentUrl = alt
+        forceHlsForCurrentLoad = false
+        responseWasHls = false
+        _state.value = State.LOADING; _buffering.value = true
+        _error.value = null; _errorInfo.value = null
+        LiveDiagnosticsLog.event("stream didn't open — trying the ${alt.substringBefore('?').substringAfterLast('.')} form of this channel")
+        android.util.Log.w(LiveDiagnosticsLog.TAG, "trying alternate format: ${HttpClient.redactUrl(alt)}")
+        mainHandler.post {
+            if (currentUrl != alt) return@post
+            runCatching {
+                p.setMediaSource(mediaSourceFor(alt))
+                p.prepare()
+                p.playWhenReady = true
+            }.onFailure {
+                _state.value = State.ERROR
+                _buffering.value = false
+                _error.value = "Couldn't play this channel."
+                _errorInfo.value = ErrorInfo(PlayerErrors.reasonFor(it.message.orEmpty(), alt), exoSpec(), it.message)
+            }
+        }
+    }
+
+    /**
+     * Try the same channel once more under [HttpClient.FALLBACK_USER_AGENT].
+     *
+     * For the WAF that refuses the default player identity outright (quirk 3 in [LiveStreamQuirks]).
+     * Worth answering here rather than leaving it to the fallback ladder: mpv sends the same default UA,
+     * so without this the channel walks the entire ladder and dies at the far end looking exactly like a
+     * dead provider. The lesson is remembered panel-wide, so the rest of the playlist opens first time.
+     */
+    private fun retryWithFallbackUserAgent() {
+        val p = player ?: return
+        val url = currentUrl ?: return
+        uaRetryDone = true
+        currentUa = HttpClient.FALLBACK_USER_AGENT
+        LiveStreamQuirks.rememberBlocksDefaultUserAgent(url)
+        _state.value = State.LOADING; _buffering.value = true
+        _error.value = null; _errorInfo.value = null
+        LiveDiagnosticsLog.event("provider refused the default User-Agent — retrying as ${HttpClient.FALLBACK_USER_AGENT}")
+        android.util.Log.w(LiveDiagnosticsLog.TAG, "default User-Agent refused — retrying once as ${HttpClient.FALLBACK_USER_AGENT}")
+        mainHandler.post {
+            if (currentUrl != url) return@post
+            runCatching {
+                p.setMediaSource(mediaSourceFor(url))
+                p.prepare()
+                p.playWhenReady = true
+            }.onFailure {
+                _state.value = State.ERROR
+                _buffering.value = false
+                _error.value = "Couldn't play this channel."
+                _errorInfo.value = ErrorInfo(PlayerErrors.reasonFor(it.message.orEmpty()), exoSpec(), it.message)
+            }
+        }
     }
 
     private fun retryRedirectedStreamAsHls() {
@@ -1750,9 +1872,21 @@ class LivePreviewEngine(
                             LiveStreamQuirks.rememberHlsRedirect(request.url.toString())
                         }
                     }
+                    // A failed body is peeked even with diagnostics off — it carries the one sentence the
+                    // error screen can actually show the user ("Channel limit has been reached…"), and a
+                    // user hitting that wall has no reason to have turned logging on first.
+                    val requested = request.url.toString()
+                    val failed = !response.isSuccessful
+                    val prefix = if (failed || LiveDiagnosticsLog.enabled) {
+                        runCatching { response.peekBody(564).bytes() }.getOrDefault(byteArrayOf())
+                    } else {
+                        byteArrayOf()
+                    }
+                    val failureText = if (failed) textPrefix(prefix, requested) else ""
+                    if (failed) {
+                        noteProviderMessage(requested, response.code, response.header("Content-Type"), failureText)
+                    }
                     if (LiveDiagnosticsLog.enabled) {
-                        val prefix = runCatching { response.peekBody(564).bytes() }.getOrDefault(byteArrayOf())
-                        val requested = request.url.toString()
                         // A redirect is invisible in the final URL alone, and it is exactly what decides
                         // whether a segment came from the panel's origin or its CDN.
                         val via = if (requested != finalUrl) {
@@ -1762,11 +1896,7 @@ class LivePreviewEngine(
                         }
                         // For an error the body IS the diagnosis ("token expired", "max connections", a
                         // hotlink-protection page…). Metadata-only for success responses, as before.
-                        val body = if (!response.isSuccessful) {
-                            " body=\"${textPrefix(prefix, requested)}\""
-                        } else {
-                            ""
-                        }
+                        val body = if (failed) " body=\"$failureText\"" else ""
                         LiveDiagnosticsLog.event(
                             "http_response role=${requestRole(requested)} code=${response.code} " +
                                 "type=${response.header("Content-Type").orEmpty()} " +
@@ -1793,6 +1923,24 @@ class LivePreviewEngine(
                 }
             }
             .build()
+    }
+
+    /**
+     * Keep a refusal body that reads like a message to a human, so the error screen can quote it.
+     *
+     * Deliberately picky about what qualifies — a wrong quote is worse than none:
+     * - **HTML is skipped.** That body is a WAF challenge or a hosting landing page ("Just a moment…
+     *   Enable JavaScript and cookies to continue"), written for a browser, not for this user.
+     * - **Binary is skipped.** A refused *segment* often still carries media bytes, which [textPrefix]
+     *   would hand back as punctuation soup; a body has to be mostly letters and spaces to count.
+     * - **Very short bodies are skipped**, since "0" or "error" explains nothing the status didn't.
+     */
+    private fun noteProviderMessage(url: String, code: Int, contentType: String?, text: String) {
+        if (contentType?.contains("html", ignoreCase = true) == true) return
+        val clean = text.trim()
+        if (clean.length < 12) return
+        if (clean.count { it.isLetter() || it.isWhitespace() } < clean.length * 3 / 4) return
+        LiveStreamQuirks.rememberProviderMessage(url, code, clean)
     }
 
     /**

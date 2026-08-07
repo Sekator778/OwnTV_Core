@@ -106,6 +106,22 @@ class HttpClient(private val client: OkHttpClient) {
 
         /** Player-style UA that IPTV panels broadly accept. Overridable per-source in Phase 12. */
         const val DEFAULT_USER_AGENT = "VLC/3.0.20 LibVLC/3.0.20"
+
+        /**
+         * The identity to fall back on when a provider refuses [DEFAULT_USER_AGENT] outright.
+         *
+         * Some hosts sit behind a WAF that blocklists player User-Agents by name: measured on a
+         * Cloudflare-fronted panel that answers `VLC/3.0.20 LibVLC/3.0.20` — and `vlc`, and `okhttp/…`,
+         * and a blank UA — with a 403 "Just a moment…" challenge page, while serving the identical URL
+         * 200 to anything else. A bare `Mozilla/5.0` was enough to clear that particular panel, but the
+         * full desktop-browser string is what such rules are actually written around, so it is the safer
+         * bet against the next WAF that scores UA *completeness* rather than matching a blocklist.
+         *
+         * Never the default — plenty of panels expect (and some require) the VLC identity, so this is
+         * only ever reached after the default has actually been refused.
+         */
+        const val FALLBACK_USER_AGENT =
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0 Safari/537.36"
         private const val RETRY_DELAY_MS = 750L
         private const val MAX_RETRY_DELAY_MS = 3_000L
 

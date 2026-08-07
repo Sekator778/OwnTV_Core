@@ -492,13 +492,16 @@ class OwnTVPlayer(
     // strict demuxer defaults reject. Per-item; `triedTolerantDemux` keeps it to a single attempt.
     @Volatile private var tolerantDemuxThisLoad = false
     @Volatile private var triedTolerantDemux = false
-    // If the source has no custom User-Agent and playback fails with a demuxer/access error, we retry
-    // once with the short "vlc" UA — some panels block the full "VLC/3.0.20 LibVLC/3.0.20" string but
-    // accept the short form. Per-item; reset on each genuinely-new item. Never runs when the user
-    // already set a custom UA (currentUserAgent != null).
-    @Volatile private var triedVlcUaFallback = false
+    // If the source has no custom User-Agent and playback fails, we retry once under the neutral
+    // FALLBACK_USER_AGENT — some panels sit behind a WAF that blocklists player identities by name and
+    // answers the default with a challenge page. Per-item; reset on each genuinely-new item. Never runs
+    // when the user already set a custom UA (currentUserAgent != null).
+    @Volatile private var triedUaFallback = false
+    // That retry is in flight: if it loads, the panel really was refusing the default identity, and the
+    // lesson is recorded panel-wide in LiveStreamQuirks so no other channel here repeats the failure.
+    @Volatile private var uaFallbackPending = false
     // The raw custom User-Agent from the source settings, or null if the user left it blank.
-    // null = use DEFAULT_USER_AGENT on first attempt, "vlc" fallback on suspicious failure.
+    // null = use DEFAULT_USER_AGENT on first attempt, FALLBACK_USER_AGENT on suspicious failure.
     // non-null = always use the given UA, no automatic fallback.
     private var currentUserAgent: String? = null
     // Per-channel HTTP headers for the item being played (M3U `#EXTVLCOPT`/`#EXTHTTP`/`#KODIPROP`,
@@ -1432,7 +1435,7 @@ class OwnTVPlayer(
             return "This TV's video hardware can't decode $res $codec. The file is fine — the TV isn't " +
                 "able to play this format at this resolution."
         }
-        val reason = raw?.let { PlayerErrors.reasonFor(it) }
+        val reason = raw?.let { PlayerErrors.reasonFor(it, currentUrl) }
         return reason?.let { "$it." }
             ?: "This TV's video decoder couldn't start this stream."
     }
@@ -2226,17 +2229,19 @@ class OwnTVPlayer(
      *
      * Derived from [altFormatBaseUrl] rather than `currentUrl` on purpose: by the time this runs the
      * loaded URL may be the extensionless `timeshift.php` alternate, which has no extension to flip.
+     *
+     * The swap itself lives in [LiveStreamQuirks.alternateFormatUrl], shared with the ExoPlayer rung so
+     * a channel gets the same sibling whichever engine asks for it.
      */
     private fun alternateFormatUrl(): String? {
         val base = altFormatBaseUrl ?: return null
-        val from = when {
-            base.endsWith(".m3u8", ignoreCase = true) -> ".m3u8"
-            base.endsWith(".ts", ignoreCase = true) -> ".ts"
-            else -> return null
-        }
-        val to = if (from == ".m3u8") ".ts" else ".m3u8"
-        val alt = base.dropLast(from.length) + to
-        return alt.takeIf { it != currentUrl }
+        // A refusal — 403, 429, a session limit — is the panel answering the *account*, and the same
+        // answer waits at every URL on it. Swapping the extension can only invent a URL that 404s, so
+        // this rung stays out of the way and lets the real refusal reach the user's screen.
+        val refused = lastMpvError?.let { PlayerErrors.httpStatusIn(it) }
+            ?.let { LiveStreamQuirks.isRequestRefusal(it) } == true
+        if (refused) return null
+        return LiveStreamQuirks.alternateFormatUrl(base)?.takeIf { it != currentUrl }
     }
 
     /**
@@ -2312,7 +2317,8 @@ class OwnTVPlayer(
             tolerantDemuxThisLoad = false
             triedTolerantDemux = false
             triedSoftwareForVideo = false
-            triedVlcUaFallback = false
+            triedUaFallback = false
+            uaFallbackPending = false
             triedOpenReset = false
             triedExoVodFallback = false // genuinely new item → the ExoPlayer engine fallback is armed again
             pendingSelectSid = null // stale handoff leftovers must not apply to the new item
@@ -2514,7 +2520,7 @@ class OwnTVPlayer(
                             expectingPlayback = false; _buffering.value = false
                             if (!isLiveContent && fallbackToExoVod("mpv couldn't decode this video", mpvStuck = false)) return@launch
                             _error.value = vodErrorMessage(decodeFailureMessage(decoderErr))
-                            _errorInfo.value = ErrorInfo(decoderErr?.let { PlayerErrors.reasonFor(it) }, mediaSpec(), decoderErr)
+                            _errorInfo.value = ErrorInfo(decoderErr?.let { PlayerErrors.reasonFor(it, currentUrl) }, mediaSpec(), decoderErr)
                             return@launch
                         }
                         // An archive gets the software rescue even with no decoder text to go on: the
@@ -2575,7 +2581,7 @@ class OwnTVPlayer(
                             _buffering.value = false
                             val raw = lastMpvError ?: "No playable data received before timeout"
                             _error.value = "Couldn't start this channel."
-                            _errorInfo.value = ErrorInfo(PlayerErrors.reasonFor(raw), mediaSpec(), raw)
+                            _errorInfo.value = ErrorInfo(PlayerErrors.reasonFor(raw, currentUrl), mediaSpec(), raw)
                             mpvAsync { stopWithStopClassification("live open timeout") }
                             return@launch
                         }
@@ -2681,9 +2687,16 @@ class OwnTVPlayer(
                 _directRender.value = useDirect()
             }
             applyProbeProfile(url) // trim the demuxer probe for live (faster zap); full probe for VOD
-            // Apply the effective User-Agent for this stream. Per-load so a vlc-fallback retry or a
-            // newly-configured source UA takes effect without restarting the player.
-            setPropertyString("user-agent", currentUserAgent ?: HttpClient.DEFAULT_USER_AGENT)
+            // Apply the effective User-Agent for this stream. Per-load so a fallback-UA retry or a
+            // newly-configured source UA takes effect without restarting the player. With no user
+            // setting, a panel already caught refusing the default identity starts on the fallback one,
+            // so only the channel that discovered the block ever pays for the retry.
+            setPropertyString(
+                "user-agent",
+                currentUserAgent
+                    ?: HttpClient.FALLBACK_USER_AGENT.takeIf { LiveStreamQuirks.blocksDefaultUserAgent(url) }
+                    ?: HttpClient.DEFAULT_USER_AGENT,
+            )
             // Per-channel headers (F16). Always written, so a channel that carries none clears whatever
             // the previous item set — mpv keeps the property across loads otherwise.
             setPropertyString("http-header-fields", StreamHeaders.toMpvHeaderFields(currentHeaders))
@@ -3574,6 +3587,13 @@ class OwnTVPlayer(
                 errorCheckJob?.cancel()
                 _error.value = null
                 _buffering.value = false // a reconnect's spinner ends when the new file loads
+                // A load that only succeeded once the fallback identity was tried is the proof that this
+                // panel blocklists the default User-Agent. Record it panel-wide (session-only) so every
+                // other channel here — either engine — opens first time instead of repeating the failure.
+                if (uaFallbackPending) {
+                    uaFallbackPending = false
+                    currentUrl?.let { LiveStreamQuirks.rememberBlocksDefaultUserAgent(it) }
+                }
                 _audioTrackList.value = queryTracks("audio")
                 _subTrackList.value = queryTracks("sub")
                 _audioCount.value = _audioTrackList.value.size
@@ -3966,14 +3986,19 @@ class OwnTVPlayer(
                                     isLiveContent, if (isLiveContent) 0L else _position.value, resetRetries = false,
                                 )
                             }
-                        } else if (currentUserAgent == null && !triedVlcUaFallback && currentUrl != null) {
+                        } else if (currentUserAgent == null && !triedUaFallback && currentUrl != null &&
+                            !LiveStreamQuirks.blocksDefaultUserAgent(currentUrl!!)
+                        ) {
                             // All standard retries exhausted. If the user left the source User-Agent blank,
-                            // retry once with the short "vlc" UA — some providers block the full
-                            // "VLC/3.0.20 LibVLC/3.0.20" header but accept the short form.
-                            triedVlcUaFallback = true
-                            currentUserAgent = "vlc"
+                            // retry once under a neutral identity — some panels sit behind a WAF that
+                            // blocklists player User-Agents by name and answers them with a challenge page
+                            // regardless of the URL. Skipped when this load already started on the fallback
+                            // because the panel is a known offender: that attempt has just been made.
+                            triedUaFallback = true
+                            currentUserAgent = HttpClient.FALLBACK_USER_AGENT
+                            uaFallbackPending = true
                             forceFullProbe = true
-                            android.util.Log.w(TAG, "playback failed — retrying once with short vlc User-Agent")
+                            android.util.Log.w(TAG, "playback failed — retrying once as ${HttpClient.FALLBACK_USER_AGENT}")
                             _buffering.value = true
                             delay(FALLBACK_RETRY_DELAY_MS)
                             if (gen == loadGeneration && currentUrl != null) {
@@ -3987,7 +4012,7 @@ class OwnTVPlayer(
                             // before erroring — it may play what mpv can't on this device/provider.
                             if (!isLiveContent && fallbackToExoVod("stream never started on mpv (retries exhausted)", mpvStuck = false)) return@launch
                             _buffering.value = false
-                            val hint = if (triedVlcUaFallback)
+                            val hint = if (triedUaFallback)
                                 " This provider may require a custom User-Agent in source settings."
                             else ""
                             _error.value = vodErrorMessage("Couldn't play this stream. The source may be offline or use an unsupported format.$hint")

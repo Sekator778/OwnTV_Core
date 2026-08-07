@@ -108,6 +108,24 @@ object PlayerErrors {
      *  unsigned hex instead ("err 0xfffffff4"), so accept that spelling too. */
     private val ENOMEM_RX = Regex("""\b(?:err(?:or)?|status|code)\s*[:=]?\s*(?:-12|0xfffffff4)\b""")
 
+    /** The HTTP status named in a raw error string, or null if it doesn't name one. */
+    fun httpStatusIn(raw: String): Int? =
+        HTTP_STATUS_RX.find(raw.lowercase())?.groupValues?.get(1)?.toIntOrNull()
+
+    /**
+     * [reasonFor], but preferring the provider's OWN explanation when it gave one for this status.
+     *
+     * A panel that answers "Channel limit has been reached. Stop one of your active streams before
+     * opening a new channel." has already said the useful thing; our generic line can only paraphrase
+     * it worse. Falls back to the table below whenever nothing was captured (see
+     * [LiveStreamQuirks.rememberProviderMessage]).
+     */
+    fun reasonFor(raw: String, url: String?): String? {
+        val code = url?.let { httpStatusIn(raw) }
+        val quoted = if (code != null) LiveStreamQuirks.providerMessage(url, code) else null
+        return quoted?.let { "Provider says: $it" } ?: reasonFor(raw)
+    }
+
     /** Plain-English reason for a raw error string, or null if we don't recognize it. */
     fun reasonFor(raw: String): String? {
         val l = raw.lowercase()
@@ -123,6 +141,11 @@ object PlayerErrors {
             "error_key" in l || "cryptoinfo" in l || "0x80001100" in l || ("drm" in l && "error" in l) ->
                 "DRM / secure-decoder error"
             httpCode == "509" -> "Provider blocked the connection — too many streams at once (HTTP 509)"
+            // 429/458 are the other two spellings of the same "you already have a stream open" answer:
+            // 429 is the standard rate-limit code, 458 the one Xtream panels invent for max-connections.
+            // Distinct from 509 only in wording — all three mean the channel is fine and the account isn't.
+            httpCode == "429" -> "Provider limit reached — close another channel and try again (HTTP 429)"
+            httpCode == "458" -> "Provider allows one stream at a time — close the other one (HTTP 458)"
             httpCode == "403" -> "Provider denied access (HTTP 403) — credentials, subscription, or IP block"
             httpCode == "401" -> "Provider rejected your login (HTTP 401)"
             httpCode == "404" -> "Stream not found on the provider (HTTP 404)"
