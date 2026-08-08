@@ -119,6 +119,10 @@ class OwnTVDatabaseMigrationTest {
             assertColumnExists(sqlite, "channels", "httpHeaders")
             // v27: Xtream session limit read at sync.
             assertColumnExists(sqlite, "sources", "maxConnections")
+            assertColumnExists(sqlite, "sources", "stalkerSerialNumber")
+            assertColumnExists(sqlite, "sources", "stalkerDeviceId")
+            assertColumnExists(sqlite, "sources", "stalkerDeviceId2")
+            assertColumnExists(sqlite, "sources", "stalkerSignature")
             assertIndexExists(sqlite, "index_movies_sourceId_rating_name")
             // v20: direct-tune index on (sourceId, number).
             assertIndexExists(sqlite, "index_channels_sourceId_number")
@@ -367,6 +371,10 @@ class OwnTVDatabaseMigrationTest {
             OwnTVDatabase.MIGRATION_22_23,
             OwnTVDatabase.MIGRATION_23_24,
             OwnTVDatabase.MIGRATION_24_25,
+            OwnTVDatabase.MIGRATION_25_26,
+            OwnTVDatabase.MIGRATION_26_27,
+            OwnTVDatabase.MIGRATION_27_28,
+            OwnTVDatabase.MIGRATION_28_29,
         )
         .allowMainThreadQueries()
         .build()
@@ -532,7 +540,7 @@ class OwnTVDatabaseMigrationTest {
         private const val DB_NAME = "owntv-migration-test.db"
 
         /** Must match `@Database(version = …)` on [OwnTVDatabase]. */
-        private const val CURRENT_VERSION = 27
+        private const val CURRENT_VERSION = 29
 
         /**
          * Every version with an exported schema that a real database can be sitting at.

@@ -12,6 +12,7 @@ import tv.own.owntv.core.parser.XtreamClient
 import tv.own.owntv.core.stalker.StalkerAuthManager
 import tv.own.owntv.core.stalker.StalkerClient
 import tv.own.owntv.core.stalker.StalkerCredentials
+import tv.own.owntv.core.stalker.stalkerCredentials
 
 /** Loads a series' seasons/episodes on demand (Xtream `get_series_info`; Stalker paged
  *  `get_ordered_list&movie_id=` season rows, plan D-2). Episodes carry their season number
@@ -111,7 +112,7 @@ class SeriesRepository(
      */
     private suspend fun fetchStalkerEpisodes(series: SeriesEntity, source: SourceEntity, remoteId: String): List<EpisodeEntity>? = try {
         val mac = source.mac?.let { StalkerClient.canonicalizeMac(it) } ?: return null
-        val creds = StalkerCredentials(source.id, source.url, mac, source.userAgent)
+        val creds = source.stalkerCredentials(mac)
         val seasons = ArrayList<StalkerClient.SeasonItem>()
         var page = 1
         while (page <= MAX_SEASON_PAGES) {

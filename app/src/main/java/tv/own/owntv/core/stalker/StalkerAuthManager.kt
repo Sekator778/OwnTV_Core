@@ -11,12 +11,24 @@ import java.util.concurrent.ConcurrentHashMap
  * (portal URL from `url`, MAC from the new `mac` column, per-source User-Agent override) — keeping
  * this type free of DB dependencies lets Phase A compile and be tested standalone.
  */
+data class StalkerDeviceIdentity(
+    val serialNumber: String? = null,
+    val deviceId: String? = null,
+    val deviceId2: String? = null,
+    val signature: String? = null,
+) {
+    val hasAny: Boolean
+        get() = !serialNumber.isNullOrBlank() || !deviceId.isNullOrBlank() ||
+            !deviceId2.isNullOrBlank() || !signature.isNullOrBlank()
+}
+
 data class StalkerCredentials(
     val sourceId: Long,
     val portalUrl: String,
     /** Canonical `AA:BB:CC:DD:EE:FF` (see [StalkerClient.canonicalizeMac]). */
     val mac: String,
     val userAgent: String? = null,
+    val deviceIdentity: StalkerDeviceIdentity = StalkerDeviceIdentity(),
 )
 
 /** One live portal session. Tokens live in memory only — never persisted (plan key decision #3). */
@@ -81,7 +93,9 @@ open class StalkerAuthManager(private val client: StalkerClient) {
     private suspend fun openSession(creds: StalkerCredentials): StalkerSession {
         val startedAt = SystemClock.elapsedRealtime()
         val handshake = client.resolveHandshake(creds.portalUrl, creds.mac, creds.userAgent)
-        val profile = client.getProfile(handshake.apiBase, creds.mac, handshake.token, creds.userAgent)
+        val profile = client.getProfile(
+            handshake.apiBase, creds.mac, handshake.token, creds.userAgent, creds.deviceIdentity,
+        )
         Log.i(
             TAG,
             "session open sourceId=${creds.sourceId} apiBase=${handshake.apiBase} " +

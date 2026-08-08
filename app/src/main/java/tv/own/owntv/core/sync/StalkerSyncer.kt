@@ -23,6 +23,7 @@ import tv.own.owntv.core.stalker.StalkerAuthManager
 import tv.own.owntv.core.stalker.StalkerClient
 import tv.own.owntv.core.stalker.StalkerCredentials
 import tv.own.owntv.core.stalker.StalkerSession
+import tv.own.owntv.core.stalker.stalkerCredentials
 import java.io.IOException
 
 /**
@@ -163,7 +164,7 @@ internal class StalkerSyncer(
                 } else 0
                 val bulkComplete = bulk != null && bulk.isNotEmpty() && bulk.size >= declaredTotal
                 if (bulkComplete) {
-                    Log.i(TAG, "$label get_all_channels ok count=${bulk!!.size} declaredTotal=$declaredTotal ms=${SystemClock.elapsedRealtime() - bulkStart}")
+                    Log.i(TAG, "$label get_all_channels ok count=${bulk.size} declaredTotal=$declaredTotal ms=${SystemClock.elapsedRealtime() - bulkStart}")
                     bulk.forEach { emit(it, null) }
                 } else {
                     if (bulk != null && bulk.isNotEmpty()) {
@@ -564,7 +565,7 @@ internal class StalkerSyncer(
     private fun credentialsFor(s: SourceEntity): StalkerCredentials {
         val mac = s.mac?.let { StalkerClient.canonicalizeMac(it) }
             ?: throw IOException("Stalker source ${s.id} has no valid MAC address")
-        return StalkerCredentials(sourceId = s.id, portalUrl = s.url, mac = mac, userAgent = s.userAgent)
+        return s.stalkerCredentials(mac)
     }
 
     /**

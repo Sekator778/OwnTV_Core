@@ -28,7 +28,9 @@ class StalkerAuthManagerTest {
             return Handshake(apiBase = "http://portal/portal.php", token = "t$handshakes")
         }
 
-        override suspend fun getProfile(apiBase: String, mac: String, token: String, userAgent: String?): Map<String, String> =
+        override suspend fun getProfile(
+            apiBase: String, mac: String, token: String, userAgent: String?, identity: StalkerDeviceIdentity,
+        ): Map<String, String> =
             mapOf("status" to "1")
     }
 

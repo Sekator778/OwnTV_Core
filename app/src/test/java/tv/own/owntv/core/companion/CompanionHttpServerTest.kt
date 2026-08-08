@@ -105,10 +105,19 @@ class CompanionHttpServerTest {
 
     @Test
     fun `stalker form needs portal and mac`() {
-        val p = protocol.parsePayload(form, "type=stalker&portalUrl=http://h/c/&mac=00:1A:79:AA:BB:CC", SourceType.STALKER)!!
+        val p = protocol.parsePayload(
+            form,
+            "type=stalker&portalUrl=http://h/c/&mac=00:1A:79:AA:BB:CC&sn=SERIAL-1" +
+                "&device_id=DEVICE-1&deviceId2=DEVICE-2&signature=SIG-1",
+            SourceType.STALKER,
+        )!!
         assertEquals(SourceType.STALKER, p.type)
         assertEquals("http://h/c/", p.portalUrl)
         assertEquals("00:1A:79:AA:BB:CC", p.mac)
+        assertEquals("SERIAL-1", p.serialNumber)
+        assertEquals("DEVICE-1", p.deviceId)
+        assertEquals("DEVICE-2", p.deviceId2)
+        assertEquals("SIG-1", p.signature)
     }
 
     @Test

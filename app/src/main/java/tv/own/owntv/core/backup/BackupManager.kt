@@ -94,7 +94,7 @@ class BackupManager(
             val seal: ((String) -> JSONObject)? = key?.let { k -> { plain -> BackupCrypto.encrypt(k, plain) } }
 
             val root = JSONObject().apply {
-                put("version", 15) // v15: custom category membership (issue #87) rides userData as kind "member"; customCategories blobs pass through unremapped. v14: .own container (wallpaper rides along). v13: sources.syncLive/Movies/Series. v12: per-profile OpenSubtitles login (encrypted-only). v11: profile-scoped export. v10: sources.mac. v9: custom TMDB names, encrypted TMDB key
+                put("version", 16) // v16: optional Stalker serial/device IDs/signature. v15: custom category membership (issue #87) rides userData as kind "member"; customCategories blobs pass through unremapped. v14: .own container (wallpaper rides along). v13: sources.syncLive/Movies/Series. v12: per-profile OpenSubtitles login (encrypted-only). v11: profile-scoped export. v10: sources.mac. v9: custom TMDB names, encrypted TMDB key
                 put("sections", JSONArray().apply { sections.forEach { put(it.name) } })
                 if (salt != null) put("crypto", BackupCrypto.cryptoBlock(salt))
                 // Ticked profiles always ride (backup is profile-based); restore needs SOURCES to apply them.
@@ -442,6 +442,10 @@ class BackupManager(
                                     existing.copy(
                                         password = incoming.password ?: existing.password,
                                         mac = incoming.mac ?: existing.mac,
+                                        stalkerSerialNumber = incoming.stalkerSerialNumber ?: existing.stalkerSerialNumber,
+                                        stalkerDeviceId = incoming.stalkerDeviceId ?: existing.stalkerDeviceId,
+                                        stalkerDeviceId2 = incoming.stalkerDeviceId2 ?: existing.stalkerDeviceId2,
+                                        stalkerSignature = incoming.stalkerSignature ?: existing.stalkerSignature,
                                         userAgent = incoming.userAgent ?: existing.userAgent,
                                         epgUrl = incoming.epgUrl ?: existing.epgUrl,
                                     ),
@@ -639,8 +643,10 @@ class BackupManager(
                 if (BackupCrypto.isEncrypted(pw)) return pw as JSONObject
                 // A Stalker source's MAC is its only secret (password is null), so probe it too —
                 // otherwise an all-Stalker backup couldn't validate the passphrase.
-                val mac = src.opt("mac")
-                if (BackupCrypto.isEncrypted(mac)) return mac as JSONObject
+                listOf("mac", "stalkerSerialNumber", "stalkerDeviceId", "stalkerDeviceId2", "stalkerSignature").forEach { key ->
+                    val value = src.opt(key)
+                    if (BackupCrypto.isEncrypted(value)) return value as JSONObject
+                }
             }
         }
         root.optJSONObject("settings")?.opt("proxy_pass_enc")?.let { if (BackupCrypto.isEncrypted(it)) return it as JSONObject }
@@ -686,6 +692,14 @@ class BackupManager(
         // Stalker MAC: same secret policy as the password — encrypted with a passphrase, else omitted.
         val macVal = s.mac?.takeIf { it.isNotEmpty() }
         put("mac", if (macVal != null && seal != null) seal(macVal) else JSONObject.NULL)
+        val serialNumber = s.stalkerSerialNumber?.takeIf { it.isNotEmpty() }
+        put("stalkerSerialNumber", if (serialNumber != null && seal != null) seal(serialNumber) else JSONObject.NULL)
+        val deviceId = s.stalkerDeviceId?.takeIf { it.isNotEmpty() }
+        put("stalkerDeviceId", if (deviceId != null && seal != null) seal(deviceId) else JSONObject.NULL)
+        val deviceId2 = s.stalkerDeviceId2?.takeIf { it.isNotEmpty() }
+        put("stalkerDeviceId2", if (deviceId2 != null && seal != null) seal(deviceId2) else JSONObject.NULL)
+        val signature = s.stalkerSignature?.takeIf { it.isNotEmpty() }
+        put("stalkerSignature", if (signature != null && seal != null) seal(signature) else JSONObject.NULL)
         put("userAgent", s.userAgent ?: JSONObject.NULL); put("epgUrl", s.epgUrl ?: JSONObject.NULL)
         put("syncLive", s.syncLive); put("syncMovies", s.syncMovies); put("syncSeries", s.syncSeries)
         put("createdAt", s.createdAt); put("lastSyncAt", s.lastSyncAt ?: JSONObject.NULL)
@@ -711,6 +725,10 @@ class BackupManager(
             // Stalker MAC: restored from its encrypted block when a passphrase was given; null on backups
             // older than v10 (no "mac" key) or when the MAC was omitted (no passphrase).
             mac = if (o.isNull("mac")) null else unseal(o.opt("mac")),
+            stalkerSerialNumber = if (o.isNull("stalkerSerialNumber")) null else unseal(o.opt("stalkerSerialNumber")),
+            stalkerDeviceId = if (o.isNull("stalkerDeviceId")) null else unseal(o.opt("stalkerDeviceId")),
+            stalkerDeviceId2 = if (o.isNull("stalkerDeviceId2")) null else unseal(o.opt("stalkerDeviceId2")),
+            stalkerSignature = if (o.isNull("stalkerSignature")) null else unseal(o.opt("stalkerSignature")),
             userAgent = o.optStringOrNull("userAgent"), epgUrl = o.optStringOrNull("epgUrl"),
             // Pre-v13 backups omit the flags — default On so restore matches today's behaviour.
             syncLive = if (o.has("syncLive")) o.optBoolean("syncLive", true) else true,

@@ -41,6 +41,11 @@ data class SourceEntity(
     val password: String? = null,
     /** Stalker portal MAC in canonical `AA:BB:CC:DD:EE:FF` form; null for M3U/Xtream. */
     val mac: String? = null,
+    /** Optional Stalker/Ministra second-step device identity fields; null for other source types. */
+    val stalkerSerialNumber: String? = null,
+    val stalkerDeviceId: String? = null,
+    val stalkerDeviceId2: String? = null,
+    val stalkerSignature: String? = null,
     val userAgent: String? = null,
     /** XMLTV guide URL (M3U `url-tvg` or manually entered); Xtream EPG comes from the API. */
     val epgUrl: String? = null,

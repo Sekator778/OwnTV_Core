@@ -54,12 +54,16 @@ class SourceRepository(
     )
 
     suspend fun addStalkerSource(
-        profileId: Long, name: String, portalUrl: String, mac: String, userAgent: String? = null,
+        profileId: Long, name: String, portalUrl: String, mac: String,
+        serialNumber: String? = null, deviceId: String? = null, deviceId2: String? = null,
+        signature: String? = null, userAgent: String? = null,
         syncLive: Boolean = true, syncMovies: Boolean = true, syncSeries: Boolean = true,
     ): SourceEntity = addAndLink(
         profileId,
         SourceEntity(
-            name = name, type = SourceType.STALKER, url = portalUrl, mac = mac, userAgent = userAgent,
+            name = name, type = SourceType.STALKER, url = portalUrl, mac = mac,
+            stalkerSerialNumber = serialNumber, stalkerDeviceId = deviceId,
+            stalkerDeviceId2 = deviceId2, stalkerSignature = signature, userAgent = userAgent,
             syncLive = syncLive, syncMovies = syncMovies, syncSeries = syncSeries,
         ),
     )

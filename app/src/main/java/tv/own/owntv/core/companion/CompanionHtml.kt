@@ -252,6 +252,13 @@ internal object CompanionHtml {
                 </div>
                 <label>${c.portalUrl.h()} <input name="portalUrl" placeholder="${c.portalExample.h()}" required></label>
                 <label>${context.getString(R.string.setup_mac_address).h()} <input name="mac" placeholder="${context.getString(R.string.setup_mac_example).h()}" required></label>
+                <h3>${context.getString(R.string.setup_stalker_advanced_identity).h()}</h3>
+                <div class="grid">
+                  <label>${context.getString(R.string.setup_stalker_serial_number_optional).h()} <input name="serialNumber"></label>
+                  <label>${context.getString(R.string.setup_stalker_device_id_optional).h()} <input name="deviceId"></label>
+                  <label>${context.getString(R.string.setup_stalker_device_id2_optional).h()} <input name="deviceId2"></label>
+                  <label>${context.getString(R.string.setup_stalker_signature_optional).h()} <input name="signature"></label>
+                </div>
                 <label>${c.userAgent.h()} <input name="userAgent" placeholder="${c.optional.h()}"></label>
                 <p class="hint">${c.syncStalkerHint.h()}</p>
                 <div class="grid">

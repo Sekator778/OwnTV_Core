@@ -128,12 +128,17 @@ open class StalkerClient(private val client: OkHttpClient) {
 
     /**
      * `?type=stb&action=get_profile` (with the Bearer token) — confirms the MAC is authorized and
-     * returns the STB profile (scalar fields only; nested payloads are skipped). Stricter portals
-     * that demand MAC-derived `sn`/`device_id`/`signature` fields are out of scope until a real
-     * portal rejects this plain call (plan §7 "device-id derivation").
+     * returns the STB profile (scalar fields only; nested payloads are skipped). Optional second-step
+     * device identity is sent only when supplied; MAC-only sources retain the original request shape.
      */
-    open suspend fun getProfile(apiBase: String, mac: String, token: String, userAgent: String? = null): Map<String, String> {
-        val url = "$apiBase?type=stb&action=get_profile&hd=1&auth_second_step=0&JsHttpRequest=1-xml"
+    open suspend fun getProfile(
+        apiBase: String,
+        mac: String,
+        token: String,
+        userAgent: String? = null,
+        identity: StalkerDeviceIdentity = StalkerDeviceIdentity(),
+    ): Map<String, String> {
+        val url = profileUrl(apiBase, identity)
         val profile = request(url, mac, token, userAgent) { readScalarFields(it) }
         if (profile.isEmpty()) throw StalkerAuthException("Portal accepted the handshake but returned an empty profile — the MAC may not be authorized")
         return profile
@@ -628,6 +633,17 @@ open class StalkerClient(private val client: OkHttpClient) {
         /** Classic MAG-box UA most portals accept (§1.1); overridable per source (MAG254/270/420 presets in Phase B). */
         const val DEFAULT_MAG_USER_AGENT =
             "Mozilla/5.0 (QtEmbedded; U; Linux; C) AppleWebKit/533.3 (KHTML, like Gecko) MAG200 stbapp ver: 4 rev: 2721 Safari/533.3"
+
+        internal fun profileUrl(apiBase: String, identity: StalkerDeviceIdentity): String = buildString {
+            append(apiBase)
+            append("?type=stb&action=get_profile&hd=1&auth_second_step=")
+            append(if (identity.hasAny) '1' else '0')
+            identity.serialNumber?.takeIf { it.isNotBlank() }?.let { append("&sn=${URLEncoder.encode(it, "UTF-8")}") }
+            identity.deviceId?.takeIf { it.isNotBlank() }?.let { append("&device_id=${URLEncoder.encode(it, "UTF-8")}") }
+            identity.deviceId2?.takeIf { it.isNotBlank() }?.let { append("&device_id2=${URLEncoder.encode(it, "UTF-8")}") }
+            identity.signature?.takeIf { it.isNotBlank() }?.let { append("&signature=${URLEncoder.encode(it, "UTF-8")}") }
+            append("&JsHttpRequest=1-xml")
+        }
 
         /** Play-command prefixes minted by `create_link` (§1.4) — everything after them is the playable URL. */
         private val CMD_PREFIXES = listOf("ffmpeg ", "ffrt2 ", "ffrt3 ", "ffrt ", "auto ")

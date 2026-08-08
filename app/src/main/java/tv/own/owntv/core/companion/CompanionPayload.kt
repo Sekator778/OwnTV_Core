@@ -20,6 +20,10 @@ data class CompanionPayload(
     val pass: String = "",
     val portalUrl: String = "",
     val mac: String = "",
+    val serialNumber: String = "",
+    val deviceId: String = "",
+    val deviceId2: String = "",
+    val signature: String = "",
     val userAgent: String = "",
     val epgUrl: String = "",
     /** Name of a [tv.own.owntv.features.settings.data.PlaylistAutoRefresh] entry; defaults to OFF. */

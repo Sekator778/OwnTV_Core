@@ -249,6 +249,11 @@
     <string name="setup_mac_example">00:1A:79:AA:BB:CC</string>
     <!-- Translators: Error text shown when the Stalker MAC address does not match the expected format. "00:1A:79:AA:BB:CC" is an example. -->
     <string name="setup_mac_invalid">Enter 12 characters, e.g. 00:1A:79:AA:BB:CC</string>
+    <string name="setup_stalker_advanced_identity">Advanced device identification</string>
+    <string name="setup_stalker_serial_number_optional">Serial Number (optional)</string>
+    <string name="setup_stalker_device_id_optional">Device ID (optional)</string>
+    <string name="setup_stalker_device_id2_optional">Device ID2 (optional)</string>
+    <string name="setup_stalker_signature_optional">Signature (optional)</string>
     <!-- Translators: Button label to open a device-model preset picker for the Stalker User-Agent. -->
     <string name="setup_device_model_preset">Device model preset (User-Agent)\u2026</string>
     <!-- Translators: Loading status shown while the source connection is being tested. -->

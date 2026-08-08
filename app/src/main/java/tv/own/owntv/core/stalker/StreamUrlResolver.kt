@@ -40,7 +40,7 @@ class StreamUrlResolver(
         val direct = StalkerClient.stripCmdPrefix(storedUrl)
         if (episode == null && StalkerClient.isDirectPlayUrl(direct)) return direct
         val mac = source.mac?.let { StalkerClient.canonicalizeMac(it) } ?: return direct
-        val creds = StalkerCredentials(source.id, source.url, mac, source.userAgent)
+        val creds = source.stalkerCredentials(mac)
         return stalkerAuth.withAuthRetry(creds) { session ->
             stalkerClient.createLink(
                 session.apiBase, mac, session.token, creds.userAgent, storedUrl,
@@ -63,7 +63,7 @@ class StreamUrlResolver(
         val startS = startMs / 1000
         val durationS = ((endMs - startMs) / 1000).coerceAtLeast(60)
         val cmd = "auto /media/${channelRemoteId}_${startS}_${durationS}.mpg"
-        val creds = StalkerCredentials(source.id, source.url, mac, source.userAgent)
+        val creds = source.stalkerCredentials(mac)
         return stalkerAuth.withAuthRetry(creds) { session ->
             stalkerClient.createLink(session.apiBase, mac, session.token, creds.userAgent, cmd, type = "tv_archive")
         }
@@ -78,7 +78,7 @@ class StreamUrlResolver(
         require(source.type == SourceType.STALKER) { "shortEpg is Stalker-only" }
         val mac = source.mac?.let { StalkerClient.canonicalizeMac(it) }
             ?: throw java.io.IOException("Stalker source ${source.id} has no valid MAC")
-        val creds = StalkerCredentials(source.id, source.url, mac, source.userAgent)
+        val creds = source.stalkerCredentials(mac)
         return stalkerAuth.withAuthRetry(creds) { session ->
             stalkerClient.getShortEpg(session.apiBase, mac, session.token, creds.userAgent, channelRemoteId, size)
         }

@@ -74,6 +74,32 @@ class StalkerClientTest {
         assertFalse(StalkerClient.isValidPortalUrl(""))
     }
 
+    @Test
+    fun profileUrl_macOnlyKeepsLegacySecondStepOff() {
+        assertEquals(
+            "http://host/portal.php?type=stb&action=get_profile&hd=1&auth_second_step=0&JsHttpRequest=1-xml",
+            StalkerClient.profileUrl("http://host/portal.php", StalkerDeviceIdentity()),
+        )
+    }
+
+    @Test
+    fun profileUrl_advancedIdentityIsEncodedAndEnablesSecondStep() {
+        val url = StalkerClient.profileUrl(
+            "http://host/portal.php",
+            StalkerDeviceIdentity(
+                serialNumber = "SN 12/34",
+                deviceId = "device+one",
+                deviceId2 = "device two",
+                signature = "sig=&value",
+            ),
+        )
+        assertTrue(url.contains("auth_second_step=1"))
+        assertTrue(url.contains("sn=SN+12%2F34"))
+        assertTrue(url.contains("device_id=device%2Bone"))
+        assertTrue(url.contains("device_id2=device+two"))
+        assertTrue(url.contains("signature=sig%3D%26value"))
+    }
+
     // ---- create_link cmd prefix stripping ----
 
     @Test
