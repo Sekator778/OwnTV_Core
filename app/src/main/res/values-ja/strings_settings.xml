@@ -874,4 +874,14 @@
     <string name="settings_panel_width_disable_preview_description">現在、ライブプレビュー映像はオンになっています。プレビューパネルを非表示にすると映像がオフになり、［パネル幅の調整］でプレビューパネルに幅を設定するまで再びオンにできません。</string>
     <string name="settings_live_preview_panel_hidden_title">ライブプレビュー映像は利用できません</string>
     <string name="settings_live_preview_panel_hidden_description">ライブTVのプレビューパネルは非表示になっています。プレビュー映像をオンにする前に、［パネル幅の調整］で幅を0%%より大きい値に設定してください。</string>
+    <string name="settings_font_customization">フォントのカスタマイズ</string>
+    <string name="settings_font_customization_description">メイン画面とポップアップの文字サイズとフォント</string>
+    <string name="settings_font_size">フォントサイズ</string>
+    <string name="settings_main_interface_font">メイン画面のフォント</string>
+    <string name="settings_popup_font">ポップアップのフォント</string>
+    <string name="settings_choose_font">フォントを選択</string>
+    <string name="settings_font_size_range">アプリの文字を <xliff:g id="min">%1$d</xliff:g>%%～<xliff:g id="max">%2$d</xliff:g>%% の範囲で調整します。字幕のサイズは変わりません。</string>
+    <string name="settings_font_preview">エンターテインメントを、もっとシンプルに。</string>
+    <string name="settings_search_keywords_fonts">フォント 文字 サイズ 書体 ポップアップ 読みやすさ アクセシビリティ</string>
+    <string name="settings_font_system_sans">システムサンセリフ</string>
 </resources>

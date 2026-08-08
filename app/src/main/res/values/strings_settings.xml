@@ -340,6 +340,21 @@
     <string name="settings_ui_zoom">UI Zoom</string>
     <!-- Translators: Description of the UI Zoom setting. -->
     <string name="settings_ui_zoom_description">Scale the whole interface</string>
+    <!-- Translators: Opens one dialog for app text size and the independently selected main/popup fonts. -->
+    <string name="settings_font_customization">Font customization</string>
+    <string name="settings_font_customization_description">Text size and fonts for the main interface and popups</string>
+    <string name="settings_font_size">Font size</string>
+    <string name="settings_main_interface_font">Main interface font</string>
+    <string name="settings_popup_font">Popups font</string>
+    <string name="settings_choose_font">Choose font</string>
+    <string name="settings_font_size_range">Adjust app text from <xliff:g id="min">%1$d</xliff:g>%% to <xliff:g id="max">%2$d</xliff:g>%%. Subtitles keep their own size.</string>
+    <string name="settings_font_preview">Entertainment, made simple.</string>
+    <string name="settings_search_keywords_fonts">font text size typeface typography popup reading accessibility</string>
+    <string name="settings_font_system_sans">System Sans</string>
+    <string name="settings_font_lora" translatable="false">Lora</string>
+    <string name="settings_font_playfair_display" translatable="false">Playfair Display</string>
+    <string name="settings_font_dancing_script" translatable="false">Dancing Script</string>
+    <string name="settings_font_poppins" translatable="false">Poppins</string>
     <!-- Translators: Settings navigation label for the Animations setting. -->
     <string name="settings_animations">Animations</string>
     <!-- Translators: Description of the Animations setting. -->

@@ -890,4 +890,14 @@
     <string name="settings_panel_width_disable_preview_description">Das Video der Live-Vorschau ist derzeit eingeschaltet. Wenn Sie das Vorschau-Panel ausblenden, wird das Video ausgeschaltet. Es kann erst wieder eingeschaltet werden, nachdem Sie dem Vorschau-Panel unter „Anpassung der Panelbreite“ eine Breite zugewiesen haben.</string>
     <string name="settings_live_preview_panel_hidden_title">Video der Live-Vorschau ist nicht verfügbar</string>
     <string name="settings_live_preview_panel_hidden_description">Das Vorschau-Panel für Live-TV ist ausgeblendet. Weisen Sie ihm unter „Anpassung der Panelbreite“ eine Breite von mehr als 0%% zu, bevor Sie das Vorschauvideo einschalten.</string>
+    <string name="settings_font_customization">Schrift anpassen</string>
+    <string name="settings_font_customization_description">Textgröße und Schriften für Hauptoberfläche und Pop-ups</string>
+    <string name="settings_font_size">Schriftgröße</string>
+    <string name="settings_main_interface_font">Schrift der Hauptoberfläche</string>
+    <string name="settings_popup_font">Schrift der Pop-ups</string>
+    <string name="settings_choose_font">Schrift auswählen</string>
+    <string name="settings_font_size_range">App-Text von <xliff:g id="min">%1$d</xliff:g>%% bis <xliff:g id="max">%2$d</xliff:g>%% anpassen. Untertitel behalten ihre eigene Größe.</string>
+    <string name="settings_font_preview">Unterhaltung, ganz einfach.</string>
+    <string name="settings_search_keywords_fonts">Schrift Text Größe Typografie Popup Lesen Barrierefreiheit</string>
+    <string name="settings_font_system_sans">System Sans</string>
 </resources>

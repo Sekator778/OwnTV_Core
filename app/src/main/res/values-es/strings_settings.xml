@@ -906,4 +906,14 @@
     <string name="settings_panel_width_disable_preview_description">El vídeo de la vista previa en directo está activado actualmente. Al ocultar el panel de vista previa, se desactivará el vídeo y no se podrá volver a activar hasta que asignes un ancho al panel de vista previa en Ajuste del ancho de los paneles.</string>
     <string name="settings_live_preview_panel_hidden_title">El vídeo de la vista previa en directo no está disponible</string>
     <string name="settings_live_preview_panel_hidden_description">El panel de vista previa de la televisión en directo está oculto. Asígnale un ancho superior al 0%% en Ajuste del ancho de los paneles antes de activar el vídeo de vista previa.</string>
+    <string name="settings_font_customization">Personalización de fuentes</string>
+    <string name="settings_font_customization_description">Tamaño del texto y fuentes de la interfaz principal y las ventanas emergentes</string>
+    <string name="settings_font_size">Tamaño de fuente</string>
+    <string name="settings_main_interface_font">Fuente de la interfaz principal</string>
+    <string name="settings_popup_font">Fuente de las ventanas emergentes</string>
+    <string name="settings_choose_font">Elegir fuente</string>
+    <string name="settings_font_size_range">Ajusta el texto de la aplicación entre <xliff:g id="min">%1$d</xliff:g>%% y <xliff:g id="max">%2$d</xliff:g>%%. Los subtítulos conservan su propio tamaño.</string>
+    <string name="settings_font_preview">Entretenimiento, así de sencillo.</string>
+    <string name="settings_search_keywords_fonts">fuente texto tamaño tipografía ventana lectura accesibilidad</string>
+    <string name="settings_font_system_sans">Sans del sistema</string>
 </resources>

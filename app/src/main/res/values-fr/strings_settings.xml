@@ -906,4 +906,14 @@
     <string name="settings_panel_width_disable_preview_description">La vidéo de l’aperçu en direct est actuellement activée. Masquer le panneau d’aperçu désactivera la vidéo, qui ne pourra être réactivée qu’après avoir attribué une largeur au panneau d’aperçu dans le réglage de la largeur des panneaux.</string>
     <string name="settings_live_preview_panel_hidden_title">La vidéo de l’aperçu en direct n’est pas disponible</string>
     <string name="settings_live_preview_panel_hidden_description">Le panneau d’aperçu de la télévision en direct est masqué. Attribuez-lui une largeur supérieure à 0%% dans le réglage de la largeur des panneaux avant d’activer la vidéo d’aperçu.</string>
+    <string name="settings_font_customization">Personnalisation des polices</string>
+    <string name="settings_font_customization_description">Taille du texte et polices de l’interface principale et des fenêtres contextuelles</string>
+    <string name="settings_font_size">Taille de police</string>
+    <string name="settings_main_interface_font">Police de l’interface principale</string>
+    <string name="settings_popup_font">Police des fenêtres contextuelles</string>
+    <string name="settings_choose_font">Choisir une police</string>
+    <string name="settings_font_size_range">Réglez le texte de l’application de <xliff:g id="min">%1$d</xliff:g>%% à <xliff:g id="max">%2$d</xliff:g>%%. Les sous-titres gardent leur propre taille.</string>
+    <string name="settings_font_preview">Le divertissement en toute simplicité.</string>
+    <string name="settings_search_keywords_fonts">police texte taille typographie fenêtre lecture accessibilité</string>
+    <string name="settings_font_system_sans">Sans système</string>
 </resources>

@@ -890,4 +890,14 @@
     <string name="settings_panel_width_disable_preview_description">തത്സമയ പ്രിവ്യൂ വീഡിയോ നിലവിൽ ഓണാണ്. പ്രിവ്യൂ പാനൽ മറയ്ക്കുന്നത് വീഡിയോ ഓഫാക്കും; പാനൽ വീതി ക്രമീകരിക്കലിൽ പ്രിവ്യൂ പാനലിന് ഒരു വീതി നൽകുന്നതുവരെ അത് വീണ്ടും ഓണാക്കാനാകില്ല.</string>
     <string name="settings_live_preview_panel_hidden_title">തത്സമയ പ്രിവ്യൂ വീഡിയോ ലഭ്യമല്ല</string>
     <string name="settings_live_preview_panel_hidden_description">തത്സമയ TV പ്രിവ്യൂ പാനൽ മറച്ചിരിക്കുന്നു. പ്രിവ്യൂ വീഡിയോ ഓണാക്കുന്നതിന് മുമ്പ് പാനൽ വീതി ക്രമീകരിക്കലിൽ അതിന് 0%%-ൽ കൂടുതലുള്ള വീതി നൽകുക.</string>
+    <string name="settings_font_customization">ഫോണ്ട് ഇഷ്ടാനുസൃതമാക്കൽ</string>
+    <string name="settings_font_customization_description">പ്രധാന ഇന്റർഫേസിലെയും പോപ്പപ്പുകളിലെയും അക്ഷര വലുപ്പവും ഫോണ്ടുകളും</string>
+    <string name="settings_font_size">ഫോണ്ട് വലുപ്പം</string>
+    <string name="settings_main_interface_font">പ്രധാന ഇന്റർഫേസ് ഫോണ്ട്</string>
+    <string name="settings_popup_font">പോപ്പപ്പ് ഫോണ്ട്</string>
+    <string name="settings_choose_font">ഫോണ്ട് തിരഞ്ഞെടുക്കുക</string>
+    <string name="settings_font_size_range">ആപ്പിലെ അക്ഷരങ്ങൾ <xliff:g id="min">%1$d</xliff:g>%% മുതൽ <xliff:g id="max">%2$d</xliff:g>%% വരെ ക്രമീകരിക്കുക. സബ്‌ടൈറ്റിലുകൾക്ക് സ്വന്തം വലുപ്പം തുടരും.</string>
+    <string name="settings_font_preview">വിനോദം കൂടുതൽ ലളിതം.</string>
+    <string name="settings_search_keywords_fonts">ഫോണ്ട് ടെക്സ്റ്റ് വലുപ്പം ടൈപ്പ്ഫേസ് പോപ്പപ്പ് വായന ആക്സസിബിലിറ്റി</string>
+    <string name="settings_font_system_sans">സിസ്റ്റം സാൻസ്</string>
 </resources>

@@ -890,4 +890,14 @@
     <string name="settings_panel_width_disable_preview_description">लाइव प्रीव्यू वीडियो अभी चालू है। प्रीव्यू पैनल छिपाने से वीडियो बंद हो जाएगा, और पैनल की चौड़ाई का समायोजन में प्रीव्यू पैनल को चौड़ाई दिए जाने तक इसे फिर से चालू नहीं किया जा सकेगा।</string>
     <string name="settings_live_preview_panel_hidden_title">लाइव प्रीव्यू वीडियो उपलब्ध नहीं है</string>
     <string name="settings_live_preview_panel_hidden_description">लाइव टीवी प्रीव्यू पैनल छिपा हुआ है। प्रीव्यू वीडियो चालू करने से पहले पैनल की चौड़ाई का समायोजन में इसे 0%% से अधिक चौड़ाई दें।</string>
+    <string name="settings_font_customization">फ़ॉन्ट अनुकूलन</string>
+    <string name="settings_font_customization_description">मुख्य इंटरफ़ेस और पॉपअप के लिए टेक्स्ट का आकार और फ़ॉन्ट</string>
+    <string name="settings_font_size">फ़ॉन्ट का आकार</string>
+    <string name="settings_main_interface_font">मुख्य इंटरफ़ेस फ़ॉन्ट</string>
+    <string name="settings_popup_font">पॉपअप फ़ॉन्ट</string>
+    <string name="settings_choose_font">फ़ॉन्ट चुनें</string>
+    <string name="settings_font_size_range">ऐप टेक्स्ट को <xliff:g id="min">%1$d</xliff:g>%% से <xliff:g id="max">%2$d</xliff:g>%% तक समायोजित करें। उपशीर्षक का अपना आकार रहेगा।</string>
+    <string name="settings_font_preview">मनोरंजन, अब और भी आसान।</string>
+    <string name="settings_search_keywords_fonts">फ़ॉन्ट टेक्स्ट आकार टाइपफ़ेस पॉपअप पढ़ना सुगम्यता</string>
+    <string name="settings_font_system_sans">सिस्टम सैन्स</string>
 </resources>

@@ -890,4 +890,14 @@
     <string name="settings_panel_width_disable_preview_description">Canlı Önizleme videosu şu anda açık. Önizleme panelini gizlemek videoyu kapatır ve Panel Genişliği Ayarı\'nda Önizleme paneline bir genişlik verene kadar video yeniden açılamaz.</string>
     <string name="settings_live_preview_panel_hidden_title">Canlı Önizleme videosu kullanılamıyor</string>
     <string name="settings_live_preview_panel_hidden_description">Canlı TV Önizleme paneli gizli. Önizleme videosunu açmadan önce Panel Genişliği Ayarı\'nda bu panele %%0\'ın üzerinde bir genişlik verin.</string>
+    <string name="settings_font_customization">Yazı tipi özelleştirme</string>
+    <string name="settings_font_customization_description">Ana arayüz ve açılır pencereler için metin boyutu ve yazı tipleri</string>
+    <string name="settings_font_size">Yazı tipi boyutu</string>
+    <string name="settings_main_interface_font">Ana arayüz yazı tipi</string>
+    <string name="settings_popup_font">Açılır pencere yazı tipi</string>
+    <string name="settings_choose_font">Yazı tipi seçin</string>
+    <string name="settings_font_size_range">Uygulama metnini <xliff:g id="min">%1$d</xliff:g>%% ile <xliff:g id="max">%2$d</xliff:g>%% arasında ayarlayın. Altyazılar kendi boyutunu korur.</string>
+    <string name="settings_font_preview">Eğlence artık daha basit.</string>
+    <string name="settings_search_keywords_fonts">yazı tipi metin boyut tipografi pencere okuma erişilebilirlik</string>
+    <string name="settings_font_system_sans">Sistem Sans</string>
 </resources>

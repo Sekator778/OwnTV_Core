@@ -954,4 +954,14 @@
     <string name="settings_panel_width_disable_preview_description">فيديو المعاينة المباشرة قيد التشغيل حاليًا. سيؤدي إخفاء لوحة المعاينة إلى إيقاف الفيديو، ولن يمكن تشغيله مرة أخرى حتى تحدد عرضًا للوحة المعاينة في ضبط عرض اللوحة.</string>
     <string name="settings_live_preview_panel_hidden_title">فيديو المعاينة المباشرة غير متاح</string>
     <string name="settings_live_preview_panel_hidden_description">لوحة معاينة البث التلفزيوني المباشر مخفية. حدّد لها عرضًا أكبر من 0%% في ضبط عرض اللوحة قبل تشغيل فيديو المعاينة.</string>
+    <string name="settings_font_customization">تخصيص الخط</string>
+    <string name="settings_font_customization_description">حجم النص وخطوط الواجهة الرئيسية والنوافذ المنبثقة</string>
+    <string name="settings_font_size">حجم الخط</string>
+    <string name="settings_main_interface_font">خط الواجهة الرئيسية</string>
+    <string name="settings_popup_font">خط النوافذ المنبثقة</string>
+    <string name="settings_choose_font">اختر الخط</string>
+    <string name="settings_font_size_range">اضبط نص التطبيق من <xliff:g id="min">%1$d</xliff:g>%% إلى <xliff:g id="max">%2$d</xliff:g>%%. تحتفظ الترجمة بحجمها الخاص.</string>
+    <string name="settings_font_preview">ترفيه أبسط وأكثر متعة.</string>
+    <string name="settings_search_keywords_fonts">خط نص حجم كتابة نوافذ قراءة وصول</string>
+    <string name="settings_font_system_sans">خط النظام بلا زوائد</string>
 </resources>

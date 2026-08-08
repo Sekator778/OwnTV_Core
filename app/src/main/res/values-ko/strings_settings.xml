@@ -874,4 +874,14 @@
     <string name="settings_panel_width_disable_preview_description">현재 실시간 미리보기 영상이 켜져 있습니다. 미리보기 패널을 숨기면 영상이 꺼지며, 패널 너비 조정에서 미리보기 패널의 너비를 지정하기 전까지는 다시 켤 수 없습니다.</string>
     <string name="settings_live_preview_panel_hidden_title">실시간 미리보기 영상을 사용할 수 없음</string>
     <string name="settings_live_preview_panel_hidden_description">실시간 TV 미리보기 패널이 숨겨져 있습니다. 미리보기 영상을 켜기 전에 패널 너비 조정에서 너비를 0%%보다 크게 지정하세요.</string>
+    <string name="settings_font_customization">글꼴 맞춤 설정</string>
+    <string name="settings_font_customization_description">기본 인터페이스와 팝업의 글자 크기 및 글꼴</string>
+    <string name="settings_font_size">글꼴 크기</string>
+    <string name="settings_main_interface_font">기본 인터페이스 글꼴</string>
+    <string name="settings_popup_font">팝업 글꼴</string>
+    <string name="settings_choose_font">글꼴 선택</string>
+    <string name="settings_font_size_range">앱 글자를 <xliff:g id="min">%1$d</xliff:g>%%에서 <xliff:g id="max">%2$d</xliff:g>%%까지 조절합니다. 자막 크기는 그대로 유지됩니다.</string>
+    <string name="settings_font_preview">엔터테인먼트를 더 간단하게.</string>
+    <string name="settings_search_keywords_fonts">글꼴 텍스트 크기 서체 팝업 읽기 접근성</string>
+    <string name="settings_font_system_sans">시스템 산세리프</string>
 </resources>

@@ -874,4 +874,14 @@
     <string name="settings_panel_width_disable_preview_description">直播預覽影片目前已開啟。隱藏預覽面板將會關閉影片，而且必須先在「面板寬度調整」中設定預覽面板的寬度，才能再次開啟影片。</string>
     <string name="settings_live_preview_panel_hidden_title">無法使用直播預覽影片</string>
     <string name="settings_live_preview_panel_hidden_description">直播電視預覽面板已隱藏。請先在「面板寬度調整」中將其寬度設為大於 0%%，再開啟預覽影片。</string>
+    <string name="settings_font_customization">字型自訂</string>
+    <string name="settings_font_customization_description">主介面和彈出視窗的文字大小與字型</string>
+    <string name="settings_font_size">字型大小</string>
+    <string name="settings_main_interface_font">主介面字型</string>
+    <string name="settings_popup_font">彈出視窗字型</string>
+    <string name="settings_choose_font">選擇字型</string>
+    <string name="settings_font_size_range">將應用程式文字調整為 <xliff:g id="min">%1$d</xliff:g>%%～<xliff:g id="max">%2$d</xliff:g>%%。字幕保留獨立的大小設定。</string>
+    <string name="settings_font_preview">娛樂，從此更簡單。</string>
+    <string name="settings_search_keywords_fonts">字型 文字 大小 字體 彈窗 閱讀 無障礙</string>
+    <string name="settings_font_system_sans">系統無襯線字型</string>
 </resources>

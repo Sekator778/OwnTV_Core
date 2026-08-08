@@ -21,7 +21,10 @@ import tv.own.owntv.features.home.HomeConfig
 import tv.own.owntv.player.SurroundMode
 import tv.own.owntv.core.util.Pin
 import tv.own.owntv.ui.theme.AccentColor
+import tv.own.owntv.ui.theme.AppFontFamily
+import tv.own.owntv.ui.theme.FontCustomization
 import tv.own.owntv.ui.theme.ThemeMode
+import tv.own.owntv.ui.theme.UiFontScale
 import tv.own.owntv.ui.theme.UiZoom
 
 /** Per-profile startup landing (Phase 3 / v4.0.0). LAST_CHANNEL also covers "auto-play my channel" since
@@ -109,6 +112,9 @@ class SettingsRepository(private val context: Context, private val localeStore: 
     private object Keys {
         val THEME_MODE = stringPreferencesKey("theme_mode")
         val UI_ZOOM_PCT = intPreferencesKey("ui_zoom_percent")
+        val FONT_SIZE_PCT = intPreferencesKey("font_size_percent")
+        val MAIN_FONT_FAMILY = stringPreferencesKey("main_font_family")
+        val POPUP_FONT_FAMILY = stringPreferencesKey("popup_font_family")
         val ACCENT = stringPreferencesKey("accent_color")
         val ACCENT_CUSTOM = stringPreferencesKey("accent_custom")
         val AVATAR_ID = intPreferencesKey("avatar_id")
@@ -1256,6 +1262,29 @@ class SettingsRepository(private val context: Context, private val localeStore: 
         context.dataStore.edit { it[Keys.UI_ZOOM_PCT] = UiZoom.clamp(percent) }
     }
 
+    val fontCustomization: Flow<FontCustomization> = prefsFlow { prefs ->
+        FontCustomization(
+            sizePercent = UiFontScale.clamp(prefs[Keys.FONT_SIZE_PCT] ?: UiFontScale.DEFAULT),
+            mainFamily = AppFontFamily.fromStored(
+                prefs[Keys.MAIN_FONT_FAMILY],
+                AppFontFamily.SYSTEM_SANS,
+            ),
+            popupFamily = AppFontFamily.fromStored(
+                prefs[Keys.POPUP_FONT_FAMILY],
+                AppFontFamily.LORA,
+            ),
+        )
+    }
+
+    /** Saves the staged font dialog in one DataStore transaction, so the app never sees half a preset. */
+    suspend fun setFontCustomization(value: FontCustomization) {
+        context.dataStore.edit { prefs ->
+            prefs[Keys.FONT_SIZE_PCT] = UiFontScale.clamp(value.sizePercent)
+            prefs[Keys.MAIN_FONT_FAMILY] = value.mainFamily.name
+            prefs[Keys.POPUP_FONT_FAMILY] = value.popupFamily.name
+        }
+    }
+
     /** Docked mini-player size as a percentage of screen width (clamped to the allowed range). */
     val miniPlayerSizePct: Flow<Int> = prefsFlow { prefs ->
         tv.own.owntv.player.MiniPlayerSize.clamp(prefs[Keys.MINI_PLAYER_SIZE_PCT] ?: tv.own.owntv.player.MiniPlayerSize.DEFAULT)
@@ -1432,6 +1461,7 @@ class SettingsRepository(private val context: Context, private val localeStore: 
 
     private val backupStringKeys = listOf(
         Keys.THEME_MODE, Keys.ACCENT, Keys.ACCENT_CUSTOM, Keys.DEFAULT_ZOOM,
+        Keys.MAIN_FONT_FAMILY, Keys.POPUP_FONT_FAMILY,
         Keys.PREF_AUDIO_LANG, Keys.PREF_SUB_LANG, Keys.SUB_SEARCH_LANGS, Keys.SORT_LIVE, Keys.SORT_GUIDE, Keys.SORT_MOVIES,
         Keys.SORT_SERIES, Keys.RESUME_MODE, Keys.CATCHUP_TZ, Keys.CATCHUP_PLAYER, Keys.ANIMATION_LEVEL, Keys.VOD_VIEW_MODE,
         Keys.WEATHER_LOCATION, Keys.RECENT_SEARCHES,
@@ -1469,7 +1499,7 @@ class SettingsRepository(private val context: Context, private val localeStore: 
         // The STATIC-mode hidden set rides with backup so a reinstall keeps the user's hidden icons.
         Keys.NAV_MENU_HIDDEN,
     )
-    private val backupIntKeys = listOf(Keys.UI_ZOOM_PCT, Keys.AUDIO_DELAY_MS, Keys.CATCHUP_OFFSET_MIN, Keys.EPG_OFFSET_MIN, Keys.PROXY_PORT, Keys.DNS_PORT, Keys.CH_NAV_UP_SKIP, Keys.CH_NAV_DOWN_SKIP, Keys.MINI_PLAYER_SIZE_PCT, Keys.LIVE_LATENCY_CUSTOM_SECS, Keys.LIVE_PREROLL_SECS, Keys.GLASS_SCOPE, Keys.GLASS_ALPHA, Keys.GLASS_BLUR, Keys.SUB_BG_OPACITY,
+    private val backupIntKeys = listOf(Keys.UI_ZOOM_PCT, Keys.FONT_SIZE_PCT, Keys.AUDIO_DELAY_MS, Keys.CATCHUP_OFFSET_MIN, Keys.EPG_OFFSET_MIN, Keys.PROXY_PORT, Keys.DNS_PORT, Keys.CH_NAV_UP_SKIP, Keys.CH_NAV_DOWN_SKIP, Keys.MINI_PLAYER_SIZE_PCT, Keys.LIVE_LATENCY_CUSTOM_SECS, Keys.LIVE_PREROLL_SECS, Keys.GLASS_SCOPE, Keys.GLASS_ALPHA, Keys.GLASS_BLUR, Keys.SUB_BG_OPACITY,
         Keys.PANEL_W_LIVE_CAT, Keys.PANEL_W_LIVE_LIST, Keys.PANEL_W_LIVE_PREVIEW,
         Keys.PANEL_W_MOVIES_CAT, Keys.PANEL_W_MOVIES_LIST, Keys.PANEL_W_MOVIES_PREVIEW,
         Keys.PANEL_W_SERIES_CAT, Keys.PANEL_W_SERIES_LIST, Keys.PANEL_W_SERIES_PREVIEW)

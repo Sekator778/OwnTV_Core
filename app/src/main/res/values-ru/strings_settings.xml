@@ -922,4 +922,14 @@
     <string name="settings_panel_width_disable_preview_description">Сейчас видео предпросмотра прямого эфира включено. Если скрыть панель предпросмотра, видео отключится, и его нельзя будет включить снова, пока вы не зададите ширину панели предпросмотра в разделе «Настройка ширины панелей».</string>
     <string name="settings_live_preview_panel_hidden_title">Видео предпросмотра прямого эфира недоступно</string>
     <string name="settings_live_preview_panel_hidden_description">Панель предпросмотра прямого эфира скрыта. Прежде чем включать видео предпросмотра, задайте для неё ширину больше 0%% в разделе «Настройка ширины панелей».</string>
+    <string name="settings_font_customization">Настройка шрифта</string>
+    <string name="settings_font_customization_description">Размер текста и шрифты основного интерфейса и всплывающих окон</string>
+    <string name="settings_font_size">Размер шрифта</string>
+    <string name="settings_main_interface_font">Шрифт основного интерфейса</string>
+    <string name="settings_popup_font">Шрифт всплывающих окон</string>
+    <string name="settings_choose_font">Выберите шрифт</string>
+    <string name="settings_font_size_range">Настройте текст приложения от <xliff:g id="min">%1$d</xliff:g>%% до <xliff:g id="max">%2$d</xliff:g>%%. Размер субтитров настраивается отдельно.</string>
+    <string name="settings_font_preview">Развлечения — это просто.</string>
+    <string name="settings_search_keywords_fonts">шрифт текст размер типографика окно чтение доступность</string>
+    <string name="settings_font_system_sans">Системный шрифт без засечек</string>
 </resources>

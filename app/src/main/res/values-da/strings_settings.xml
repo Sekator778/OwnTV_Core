@@ -890,4 +890,14 @@
     <string name="settings_panel_width_disable_preview_description">Video i direkte forhåndsvisning er slået til i øjeblikket. Hvis du skjuler forhåndsvisningspanelet, slås videoen fra, og den kan ikke slås til igen, før du angiver en bredde for forhåndsvisningspanelet under Justering af panelbredde.</string>
     <string name="settings_live_preview_panel_hidden_title">Video i direkte forhåndsvisning er ikke tilgængelig</string>
     <string name="settings_live_preview_panel_hidden_description">Forhåndsvisningspanelet for Direkte TV er skjult. Angiv en bredde på over 0%% under Justering af panelbredde, før du slår video i forhåndsvisningen til.</string>
+    <string name="settings_font_customization">Tilpasning af skrifttype</string>
+    <string name="settings_font_customization_description">Tekststørrelse og skrifttyper til hovedfladen og pop op-vinduer</string>
+    <string name="settings_font_size">Skriftstørrelse</string>
+    <string name="settings_main_interface_font">Skrifttype på hovedfladen</string>
+    <string name="settings_popup_font">Skrifttype i pop op-vinduer</string>
+    <string name="settings_choose_font">Vælg skrifttype</string>
+    <string name="settings_font_size_range">Juster appteksten fra <xliff:g id="min">%1$d</xliff:g>%% til <xliff:g id="max">%2$d</xliff:g>%%. Undertekster har deres egen størrelse.</string>
+    <string name="settings_font_preview">Underholdning gjort enkelt.</string>
+    <string name="settings_search_keywords_fonts">skrifttype tekst størrelse typografi popup læsning tilgængelighed</string>
+    <string name="settings_font_system_sans">System Sans</string>
 </resources>

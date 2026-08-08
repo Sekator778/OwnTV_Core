@@ -922,4 +922,14 @@
     <string name="settings_panel_width_disable_preview_description">Podgląd wideo na żywo jest obecnie włączony. Ukrycie panelu podglądu wyłączy wideo, którego nie będzie można ponownie włączyć, dopóki nie ustawisz szerokości panelu podglądu w sekcji Dostosowanie szerokości paneli.</string>
     <string name="settings_live_preview_panel_hidden_title">Podgląd wideo na żywo jest niedostępny</string>
     <string name="settings_live_preview_panel_hidden_description">Panel podglądu telewizji na żywo jest ukryty. Przed włączeniem podglądu wideo ustaw jego szerokość powyżej 0%% w sekcji Dostosowanie szerokości paneli.</string>
+    <string name="settings_font_customization">Dostosowanie czcionki</string>
+    <string name="settings_font_customization_description">Rozmiar tekstu i czcionki głównego interfejsu oraz wyskakujących okien</string>
+    <string name="settings_font_size">Rozmiar czcionki</string>
+    <string name="settings_main_interface_font">Czcionka głównego interfejsu</string>
+    <string name="settings_popup_font">Czcionka wyskakujących okien</string>
+    <string name="settings_choose_font">Wybierz czcionkę</string>
+    <string name="settings_font_size_range">Dostosuj tekst aplikacji od <xliff:g id="min">%1$d</xliff:g>%% do <xliff:g id="max">%2$d</xliff:g>%%. Napisy zachowują własny rozmiar.</string>
+    <string name="settings_font_preview">Rozrywka w prostym wydaniu.</string>
+    <string name="settings_search_keywords_fonts">czcionka tekst rozmiar typografia okno czytanie dostępność</string>
+    <string name="settings_font_system_sans">Systemowa bezszeryfowa</string>
 </resources>

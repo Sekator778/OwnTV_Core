@@ -922,4 +922,14 @@
     <string name="settings_panel_width_disable_preview_description">Video živého náhledu je momentálně zapnuté. Skrytím panelu náhledu se video vypne a nebude možné je znovu zapnout, dokud panelu náhledu nenastavíte šířku v části Úprava šířky panelu.</string>
     <string name="settings_live_preview_panel_hidden_title">Video živého náhledu není k dispozici</string>
     <string name="settings_live_preview_panel_hidden_description">Panel náhledu živého vysílání je skrytý. Než zapnete video náhledu, nastavte mu v části Úprava šířky panelu šířku větší než 0 %%.</string>
+    <string name="settings_font_customization">Přizpůsobení písma</string>
+    <string name="settings_font_customization_description">Velikost textu a písma hlavního rozhraní a vyskakovacích oken</string>
+    <string name="settings_font_size">Velikost písma</string>
+    <string name="settings_main_interface_font">Písmo hlavního rozhraní</string>
+    <string name="settings_popup_font">Písmo vyskakovacích oken</string>
+    <string name="settings_choose_font">Vyberte písmo</string>
+    <string name="settings_font_size_range">Upravte text aplikace od <xliff:g id="min">%1$d</xliff:g>%% do <xliff:g id="max">%2$d</xliff:g>%%. Titulky mají vlastní velikost.</string>
+    <string name="settings_font_preview">Zábava jednoduše.</string>
+    <string name="settings_search_keywords_fonts">písmo text velikost typografie okno čtení přístupnost</string>
+    <string name="settings_font_system_sans">Systémové bezpatkové</string>
 </resources>

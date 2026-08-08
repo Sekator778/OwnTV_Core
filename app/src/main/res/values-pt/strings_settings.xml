@@ -906,4 +906,14 @@
     <string name="settings_panel_width_disable_preview_description">O vídeo da prévia ao vivo está ativado no momento. Ocultar o painel de prévia desativará o vídeo, e ele só poderá ser ativado novamente quando você definir uma largura para o painel de prévia em Ajuste da largura dos painéis.</string>
     <string name="settings_live_preview_panel_hidden_title">O vídeo da prévia ao vivo está indisponível</string>
     <string name="settings_live_preview_panel_hidden_description">O painel de prévia da TV ao vivo está oculto. Defina uma largura acima de 0%% para ele em Ajuste da largura dos painéis antes de ativar o vídeo da prévia.</string>
+    <string name="settings_font_customization">Personalização de fontes</string>
+    <string name="settings_font_customization_description">Tamanho do texto e fontes da interface principal e dos pop-ups</string>
+    <string name="settings_font_size">Tamanho da fonte</string>
+    <string name="settings_main_interface_font">Fonte da interface principal</string>
+    <string name="settings_popup_font">Fonte dos pop-ups</string>
+    <string name="settings_choose_font">Escolher fonte</string>
+    <string name="settings_font_size_range">Ajuste o texto do aplicativo de <xliff:g id="min">%1$d</xliff:g>%% a <xliff:g id="max">%2$d</xliff:g>%%. As legendas mantêm seu próprio tamanho.</string>
+    <string name="settings_font_preview">Entretenimento de um jeito simples.</string>
+    <string name="settings_search_keywords_fonts">fonte texto tamanho tipografia popup leitura acessibilidade</string>
+    <string name="settings_font_system_sans">Sans do sistema</string>
 </resources>

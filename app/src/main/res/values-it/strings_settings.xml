@@ -906,4 +906,14 @@
     <string name="settings_panel_width_disable_preview_description">Il video di anteprima in diretta è attualmente attivo. Nascondendo il pannello Anteprima, il video verrà disattivato e non potrà essere riattivato finché non assegnerai una larghezza al pannello Anteprima in Regolazione larghezza pannelli.</string>
     <string name="settings_live_preview_panel_hidden_title">Il video di anteprima in diretta non è disponibile</string>
     <string name="settings_live_preview_panel_hidden_description">Il pannello di anteprima della TV in diretta è nascosto. Assegnagli una larghezza superiore allo 0%% in Regolazione larghezza pannelli prima di attivare il video di anteprima.</string>
+    <string name="settings_font_customization">Personalizzazione dei caratteri</string>
+    <string name="settings_font_customization_description">Dimensione del testo e caratteri dell’interfaccia principale e dei popup</string>
+    <string name="settings_font_size">Dimensione carattere</string>
+    <string name="settings_main_interface_font">Carattere dell’interfaccia principale</string>
+    <string name="settings_popup_font">Carattere dei popup</string>
+    <string name="settings_choose_font">Scegli carattere</string>
+    <string name="settings_font_size_range">Regola il testo dell’app dal <xliff:g id="min">%1$d</xliff:g>%% al <xliff:g id="max">%2$d</xliff:g>%%. I sottotitoli mantengono la propria dimensione.</string>
+    <string name="settings_font_preview">Intrattenimento, in modo semplice.</string>
+    <string name="settings_search_keywords_fonts">carattere testo dimensione tipografia popup lettura accessibilità</string>
+    <string name="settings_font_system_sans">Sans di sistema</string>
 </resources>

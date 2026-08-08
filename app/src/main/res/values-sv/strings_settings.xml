@@ -890,4 +890,14 @@
     <string name="settings_panel_width_disable_preview_description">Videon i förhandsvisningen av direktsänd TV är på för närvarande. Om du döljer förhandsvisningspanelen stängs videon av, och den kan inte slås på igen förrän du ger förhandsvisningspanelen en bredd under Justering av panelbredd.</string>
     <string name="settings_live_preview_panel_hidden_title">Videon i förhandsvisningen av direktsänd TV är inte tillgänglig</string>
     <string name="settings_live_preview_panel_hidden_description">Förhandsvisningspanelen för direktsänd TV är dold. Ge den en bredd över 0%% under Justering av panelbredd innan du slår på förhandsvisningsvideon.</string>
+    <string name="settings_font_customization">Anpassa teckensnitt</string>
+    <string name="settings_font_customization_description">Textstorlek och teckensnitt för huvudgränssnittet och popupfönster</string>
+    <string name="settings_font_size">Teckenstorlek</string>
+    <string name="settings_main_interface_font">Teckensnitt i huvudgränssnittet</string>
+    <string name="settings_popup_font">Teckensnitt i popupfönster</string>
+    <string name="settings_choose_font">Välj teckensnitt</string>
+    <string name="settings_font_size_range">Justera apptexten från <xliff:g id="min">%1$d</xliff:g>%% till <xliff:g id="max">%2$d</xliff:g>%%. Undertexter behåller sin egen storlek.</string>
+    <string name="settings_font_preview">Underhållning på ett enklare sätt.</string>
+    <string name="settings_search_keywords_fonts">teckensnitt text storlek typografi popup läsning tillgänglighet</string>
+    <string name="settings_font_system_sans">System Sans</string>
 </resources>

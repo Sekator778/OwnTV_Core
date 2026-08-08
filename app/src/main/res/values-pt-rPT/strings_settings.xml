@@ -906,4 +906,14 @@
     <string name="settings_panel_width_disable_preview_description">O vídeo de pré-visualização em direto está atualmente ativado. Ocultar o painel de pré-visualização desativará o vídeo, que só poderá ser novamente ativado depois de atribuir uma largura ao painel de pré-visualização em Ajuste da largura dos painéis.</string>
     <string name="settings_live_preview_panel_hidden_title">O vídeo de pré-visualização em direto não está disponível</string>
     <string name="settings_live_preview_panel_hidden_description">O painel de pré-visualização da TV em direto está oculto. Atribua-lhe uma largura superior a 0%% em Ajuste da largura dos painéis antes de ativar o vídeo de pré-visualização.</string>
+    <string name="settings_font_customization">Personalização de tipos de letra</string>
+    <string name="settings_font_customization_description">Tamanho do texto e tipos de letra da interface principal e das janelas de contexto</string>
+    <string name="settings_font_size">Tamanho do tipo de letra</string>
+    <string name="settings_main_interface_font">Tipo de letra da interface principal</string>
+    <string name="settings_popup_font">Tipo de letra das janelas de contexto</string>
+    <string name="settings_choose_font">Escolher tipo de letra</string>
+    <string name="settings_font_size_range">Ajuste o texto da aplicação de <xliff:g id="min">%1$d</xliff:g>%% a <xliff:g id="max">%2$d</xliff:g>%%. As legendas mantêm o seu próprio tamanho.</string>
+    <string name="settings_font_preview">Entretenimento de forma simples.</string>
+    <string name="settings_search_keywords_fonts">tipo de letra texto tamanho tipografia janela leitura acessibilidade</string>
+    <string name="settings_font_system_sans">Sans do sistema</string>
 </resources>

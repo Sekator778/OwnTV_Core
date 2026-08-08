@@ -890,4 +890,14 @@
     <string name="settings_panel_width_disable_preview_description">লাইভ প্রিভিউ ভিডিও বর্তমানে চালু আছে। প্রিভিউ প্যানেল লুকিয়ে রাখলে ভিডিওটি বন্ধ হয়ে যাবে এবং প্যানেলের প্রস্থ সমন্বয়ে প্রিভিউ প্যানেলের জন্য একটি প্রস্থ নির্ধারণ না করা পর্যন্ত এটি আবার চালু করা যাবে না।</string>
     <string name="settings_live_preview_panel_hidden_title">লাইভ প্রিভিউ ভিডিও উপলভ্য নয়</string>
     <string name="settings_live_preview_panel_hidden_description">লাইভ টিভির প্রিভিউ প্যানেলটি লুকানো আছে। প্রিভিউ ভিডিও চালু করার আগে প্যানেলের প্রস্থ সমন্বয়ে এটির প্রস্থ 0%%-এর বেশি নির্ধারণ করুন।</string>
+    <string name="settings_font_customization">ফন্ট কাস্টমাইজেশন</string>
+    <string name="settings_font_customization_description">মূল ইন্টারফেস ও পপআপের লেখার আকার এবং ফন্ট</string>
+    <string name="settings_font_size">ফন্টের আকার</string>
+    <string name="settings_main_interface_font">মূল ইন্টারফেসের ফন্ট</string>
+    <string name="settings_popup_font">পপআপের ফন্ট</string>
+    <string name="settings_choose_font">ফন্ট বেছে নিন</string>
+    <string name="settings_font_size_range">অ্যাপের লেখা <xliff:g id="min">%1$d</xliff:g>%% থেকে <xliff:g id="max">%2$d</xliff:g>%% পর্যন্ত সমন্বয় করুন। সাবটাইটেলের নিজস্ব আকার থাকবে।</string>
+    <string name="settings_font_preview">বিনোদন এখন আরও সহজ।</string>
+    <string name="settings_search_keywords_fonts">ফন্ট লেখা আকার টাইপফেস পপআপ পড়া অ্যাক্সেসিবিলিটি</string>
+    <string name="settings_font_system_sans">সিস্টেম স্যান্স</string>
 </resources>
