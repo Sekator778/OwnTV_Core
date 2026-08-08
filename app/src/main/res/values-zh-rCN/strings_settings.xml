@@ -870,4 +870,8 @@
     <string name="settings_auto_frame_rate_turn_on_anyway">仍然开启</string>
     <string name="settings_language_request_workflow">想添加未列出的语言？请先提出语言请求。维护者会注册该语言并准备基础翻译文件；一旦它出现在 Hosted Weblate 上，你就可以开始贡献了。</string>
     <string name="settings_language_request_new">请求添加新语言</string>
+    <string name="settings_panel_width_disable_preview_title">要关闭实时预览视频吗？</string>
+    <string name="settings_panel_width_disable_preview_description">实时预览视频目前已开启。隐藏预览面板将关闭视频，而且在“面板宽度调整”中为预览面板设置宽度之前，无法再次开启视频。</string>
+    <string name="settings_live_preview_panel_hidden_title">实时预览视频不可用</string>
+    <string name="settings_live_preview_panel_hidden_description">直播电视预览面板已隐藏。请先在“面板宽度调整”中将其宽度设置为大于 0%%，然后再开启预览视频。</string>
 </resources>

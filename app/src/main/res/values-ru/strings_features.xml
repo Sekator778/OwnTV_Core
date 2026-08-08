@@ -139,4 +139,61 @@
     <string name="recovery_backup_hint">Если у вас есть файл резервной копии, можно сбросить данные приложения, а затем восстановить их. При сбросе удаляется всё, что хранится на этом устройстве.</string>
     <string name="recovery_confirm_reset">Подтверждение: удалить все данные приложения</string>
     <string name="recovery_reset">Сбросить данные приложения (крайняя мера)</string>
+    <string name="home_row_now_trending">Сейчас в тренде</string>
+    <string name="home_row_trending_description">Тренды TMDB, доступные для просмотра в ваших плейлистах</string>
+    <string name="settings_trending_status_off">Раздел «Сейчас в тренде» отключён.</string>
+    <string name="settings_trending_status_building">Раздел «Сейчас в тренде» формируется после синхронизации с провайдером.</string>
+    <string name="settings_trending_status_metadata_disabled">Для раздела «Сейчас в тренде» нужны метаданные TMDB. Выберите «Только TMDB» или «Провайдер + TMDB».</string>
+    <string name="settings_trending_status_no_vod">Раздел «Сейчас в тренде» скрыт, поскольку у этого провайдера не включены фильмы или сериалы.</string>
+    <string name="settings_trending_status_no_matches">Раздел «Сейчас в тренде» скрыт, поскольку названия провайдера не совпали с трендами.</string>
+    <string name="settings_trending_status_failed">Не удалось обновить раздел «Сейчас в тренде». Попробуйте снова синхронизировать данные провайдера.</string>
+    <string name="settings_trending_status_waiting">Завершите синхронизацию с провайдером, чтобы сформировать раздел «Сейчас в тренде».</string>
+    <plurals name="settings_trending_status_below_threshold">
+        <item quantity="one">Раздел «Сейчас в тренде» скрыт, поскольку совпало только <xliff:g id="count">%1$d</xliff:g> название провайдера. Требуется не менее 4.</item>
+        <item quantity="few">Раздел «Сейчас в тренде» скрыт, поскольку совпало только <xliff:g id="count">%1$d</xliff:g> названия провайдера. Требуется не менее 4.</item>
+        <item quantity="many">Раздел «Сейчас в тренде» скрыт, поскольку совпало только <xliff:g id="count">%1$d</xliff:g> названий провайдера. Требуется не менее 4.</item>
+        <item quantity="other">Раздел «Сейчас в тренде» скрыт, поскольку совпало только <xliff:g id="count">%1$d</xliff:g> названия провайдера. Требуется не менее 4.</item>
+    </plurals>
+    <plurals name="settings_trending_status_showing">
+        <item quantity="one">В разделе «Сейчас в тренде» показано <xliff:g id="count">%1$d</xliff:g> совпавшее название.</item>
+        <item quantity="few">В разделе «Сейчас в тренде» показано <xliff:g id="count">%1$d</xliff:g> совпавших названия.</item>
+        <item quantity="many">В разделе «Сейчас в тренде» показано <xliff:g id="count">%1$d</xliff:g> совпавших названий.</item>
+        <item quantity="other">В разделе «Сейчас в тренде» показано <xliff:g id="count">%1$d</xliff:g> совпавшего названия.</item>
+    </plurals>
+    <plurals name="settings_trending_status_showing_refresh_failed">
+        <item quantity="one">В разделе «Сейчас в тренде» показано <xliff:g id="count">%1$d</xliff:g> название из последнего успешного обновления.</item>
+        <item quantity="few">В разделе «Сейчас в тренде» показано <xliff:g id="count">%1$d</xliff:g> названия из последнего успешного обновления.</item>
+        <item quantity="many">В разделе «Сейчас в тренде» показано <xliff:g id="count">%1$d</xliff:g> названий из последнего успешного обновления.</item>
+        <item quantity="other">В разделе «Сейчас в тренде» показано <xliff:g id="count">%1$d</xliff:g> названия из последнего успешного обновления.</item>
+    </plurals>
+    <string name="home_trending_movie">Фильм</string>
+    <string name="home_trending_series">Сериал</string>
+    <string name="home_trending_section_label">СЕЙЧАС В ТРЕНДЕ · СНИМОК СИНХРОНИЗАЦИИ</string>
+    <string name="home_trending_provider_match">Совпадение у провайдера</string>
+    <string name="home_trending_language_choice"><xliff:g id="language">%1$s</xliff:g> — выбранный язык</string>
+    <string name="home_trending_english_fallback">Запасной вариант на английском</string>
+    <string name="home_trending_untagged_fallback">Запасной вариант без языковой метки</string>
+    <string name="home_trending_other_fallback"><xliff:g id="language">%1$s</xliff:g> — запасной вариант</string>
+    <string name="home_trending_why_label">ПОЧЕМУ ЭТОТ МАТЕРИАЛ ПОКАЗАН</string>
+    <string name="home_trending_reason_title">Позиция в рейтинге TMDB: №<xliff:g id="rank">%1$d</xliff:g> <xliff:g id="media_type">%2$s</xliff:g> + совпадение у провайдера</string>
+    <string name="home_trending_reason_preferred">Выбранная версия провайдера на языке <xliff:g id="language">%1$s</xliff:g> имеет приоритет перед версиями на других языках.</string>
+    <string name="home_trending_reason_english">Подходящей версии провайдера на языке <xliff:g id="language">%1$s</xliff:g> не найдено, поэтому выбрана версия на английском.</string>
+    <string name="home_trending_reason_untagged">Подходящей языковой метки <xliff:g id="language">%1$s</xliff:g> или английского языка не найдено, поэтому выбрана версия провайдера без языковой метки.</string>
+    <string name="home_trending_reason_other">Выбрана наиболее подходящая доступная для просмотра версия провайдера, поскольку версии на предпочитаемом и английском языках недоступны.</string>
+    <plurals name="home_trending_seasons">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> сезон</item>
+        <item quantity="few"><xliff:g id="count">%1$d</xliff:g> сезона</item>
+        <item quantity="many"><xliff:g id="count">%1$d</xliff:g> сезонов</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> сезона</item>
+    </plurals>
+    <string name="home_trending_play">Смотреть</string>
+    <string name="home_trending_open_episodes">Открыть серии</string>
+    <string name="home_trending_trailer">Трейлер</string>
+    <string name="home_trending_more_details">Подробнее</string>
+    <string name="home_trending_all_versions">Все версии</string>
+    <string name="home_trending_previous">Предыдущий</string>
+    <string name="home_trending_pause">Пауза</string>
+    <string name="home_trending_resume">Продолжить</string>
+    <string name="home_trending_next">Следующий</string>
+    <string name="home_trending_unavailable">Эта версия больше недоступна</string>
 </resources>

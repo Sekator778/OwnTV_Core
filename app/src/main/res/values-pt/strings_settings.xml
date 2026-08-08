@@ -902,4 +902,8 @@
     <string name="settings_auto_frame_rate_turn_on_anyway">Ativar mesmo assim</string>
     <string name="settings_language_request_workflow">Quer adicionar um idioma que não está listado? Abra uma solicitação de idioma primeiro. Um mantenedor fará o registro e preparará os arquivos de tradução base; quando ele aparecer no Hosted Weblate, você poderá começar a contribuir.</string>
     <string name="settings_language_request_new">Solicitar um novo idioma</string>
+    <string name="settings_panel_width_disable_preview_title">Desativar o vídeo da prévia ao vivo?</string>
+    <string name="settings_panel_width_disable_preview_description">O vídeo da prévia ao vivo está ativado no momento. Ocultar o painel de prévia desativará o vídeo, e ele só poderá ser ativado novamente quando você definir uma largura para o painel de prévia em Ajuste da largura dos painéis.</string>
+    <string name="settings_live_preview_panel_hidden_title">O vídeo da prévia ao vivo está indisponível</string>
+    <string name="settings_live_preview_panel_hidden_description">O painel de prévia da TV ao vivo está oculto. Defina uma largura acima de 0%% para ele em Ajuste da largura dos painéis antes de ativar o vídeo da prévia.</string>
 </resources>

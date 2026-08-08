@@ -152,6 +152,45 @@
     <string name="sync_status_failed">Sync failed \u00b7 <xliff:g id="source">%1$s</xliff:g>: <xliff:g id="reason">%2$s</xliff:g></string>
     <!-- Translators: Sync cancellation status. "source" is the source name. -->
     <string name="sync_status_cancelled">Sync cancelled \u00b7 <xliff:g id="source">%1$s</xliff:g></string>
+    <string name="sync_status_trending_starting">Sync complete \u00b7 <xliff:g id="source">%1$s</xliff:g> \u00b7 Building Now Trending</string>
+    <string name="sync_status_trending_matching">Matching Trending items with your playlist</string>
+    <string name="sync_status_trending_detail_waiting">Waiting for TMDB candidate response</string>
+    <string name="sync_status_trending_detail_received">TMDB candidates · Movies: <xliff:g id="movies">%1$d</xliff:g> · Series: <xliff:g id="series">%2$d</xliff:g></string>
+    <string name="sync_status_trending_detail_preparing">Provider title index · <xliff:g id="processed">%1$d</xliff:g> / <xliff:g id="total">%2$d</xliff:g></string>
+    <string name="sync_status_trending_detail_movies">Movie check: <xliff:g id="checked">%1$d</xliff:g>/<xliff:g id="candidates">%2$d</xliff:g> · matches: <xliff:g id="matched">%3$d</xliff:g>/<xliff:g id="target">%4$d</xliff:g></string>
+    <string name="sync_status_trending_detail_series">Series check: <xliff:g id="checked">%1$d</xliff:g>/<xliff:g id="candidates">%2$d</xliff:g> · matches: <xliff:g id="matched">%3$d</xliff:g>/<xliff:g id="target">%4$d</xliff:g></string>
+    <string name="sync_status_trending_detail_selected">Selected · Movies: <xliff:g id="movies">%1$d</xliff:g> · Series: <xliff:g id="series">%2$d</xliff:g> · Home: <xliff:g id="home">%3$d</xliff:g></string>
+    <string name="sync_status_trending_detail_completed">Matched · Movies: <xliff:g id="movie_matches">%1$d</xliff:g>/<xliff:g id="movie_candidates">%2$d</xliff:g> · Series: <xliff:g id="series_matches">%3$d</xliff:g>/<xliff:g id="series_candidates">%4$d</xliff:g></string>
+    <string name="sync_status_trending_preparing">Preparing provider titles for fast matching</string>
+    <string name="sync_status_trending_matching_movies">Matching Trending movies with your provider</string>
+    <string name="sync_status_trending_matching_series">Matching Trending series with your provider</string>
+    <string name="sync_status_trending_loading_seasons">Loading provider seasons</string>
+    <string name="sync_status_trending_detail_loading_seasons">Series checked: <xliff:g id="processed">%1$d</xliff:g>/<xliff:g id="total">%2$d</xliff:g></string>
+    <string name="sync_status_trending_preserved">Trending refresh unavailable \u00b7 previous results kept</string>
+    <plurals name="sync_status_trending_received">
+        <item quantity="one">Received latest <xliff:g id="count">%1$d</xliff:g> Trending item</item>
+        <item quantity="other">Received latest <xliff:g id="count">%1$d</xliff:g> Trending items</item>
+    </plurals>
+    <plurals name="sync_status_trending_matched">
+        <item quantity="one">Matched <xliff:g id="total">%1$d</xliff:g> \u00b7 <xliff:g id="movies">%2$s</xliff:g> \u00b7 <xliff:g id="series">%3$s</xliff:g></item>
+        <item quantity="other">Matched <xliff:g id="total">%1$d</xliff:g> \u00b7 <xliff:g id="movies">%2$s</xliff:g> \u00b7 <xliff:g id="series">%3$s</xliff:g></item>
+    </plurals>
+    <plurals name="sync_status_trending_building">
+        <item quantity="one">Building Now Trending \u00b7 <xliff:g id="count">%1$d</xliff:g> match</item>
+        <item quantity="other">Building Now Trending \u00b7 <xliff:g id="count">%1$d</xliff:g> matches</item>
+    </plurals>
+    <plurals name="sync_status_trending_publishing">
+        <item quantity="one">Publishing Now Trending \u00b7 <xliff:g id="count">%1$d</xliff:g> item</item>
+        <item quantity="other">Publishing Now Trending \u00b7 <xliff:g id="count">%1$d</xliff:g> items</item>
+    </plurals>
+    <plurals name="sync_status_trending_ready">
+        <item quantity="one">Now Trending ready \u00b7 <xliff:g id="count">%1$d</xliff:g> match</item>
+        <item quantity="other">Now Trending ready \u00b7 <xliff:g id="count">%1$d</xliff:g> matches</item>
+    </plurals>
+    <plurals name="sync_status_trending_below_minimum">
+        <item quantity="one">Now Trending hidden \u00b7 only <xliff:g id="count">%1$d</xliff:g> match</item>
+        <item quantity="other">Now Trending hidden \u00b7 only <xliff:g id="count">%1$d</xliff:g> matches</item>
+    </plurals>
     <!-- Translators: Phase label for the Live TV sync phase. -->
     <string name="sync_phase_live">Live TV</string>
     <!-- Translators: Phase label for the Movies sync phase. -->

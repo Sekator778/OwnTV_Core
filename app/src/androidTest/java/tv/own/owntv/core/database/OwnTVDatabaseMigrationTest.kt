@@ -7,6 +7,7 @@ import androidx.sqlite.db.SimpleSQLiteQuery
 import androidx.sqlite.db.SupportSQLiteDatabase
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
+import kotlinx.coroutines.runBlocking
 import org.json.JSONObject
 import org.junit.After
 import org.junit.Assert.assertEquals
@@ -14,6 +15,9 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import tv.own.owntv.core.model.MediaType
 import tv.own.owntv.core.model.SourceType
+import tv.own.owntv.core.database.entity.TrendingItemEntity
+import tv.own.owntv.core.database.entity.TrendingSnapshotEntity
+import tv.own.owntv.core.database.entity.TrendingSnapshotStatus
 
 @RunWith(AndroidJUnit4::class)
 class OwnTVDatabaseMigrationTest {
@@ -123,6 +127,8 @@ class OwnTVDatabaseMigrationTest {
             assertColumnExists(sqlite, "sources", "stalkerDeviceId")
             assertColumnExists(sqlite, "sources", "stalkerDeviceId2")
             assertColumnExists(sqlite, "sources", "stalkerSignature")
+            assertTableExists(sqlite, "trending_snapshots")
+            assertTableExists(sqlite, "trending_items")
             assertIndexExists(sqlite, "index_movies_sourceId_rating_name")
             // v20: direct-tune index on (sourceId, number).
             assertIndexExists(sqlite, "index_channels_sourceId_number")
@@ -138,6 +144,59 @@ class OwnTVDatabaseMigrationTest {
             assertCount(sqlite, "series", 1)
             assertCount(sqlite, "favorites", 3)
             assertCount(sqlite, "playback_progress", 2)
+        } finally {
+            db.close()
+        }
+    }
+
+    @Test
+    fun migrateVersion29ToCurrent_addsIndependentTrendingSnapshots_andCascadesSourceDelete() {
+        context.deleteDatabase(DB_NAME)
+        bootstrapVersion29Database()
+
+        val db = openWithAllMigrations()
+        try {
+            val sqlite = db.openHelper.writableDatabase
+            assertTableExists(sqlite, "trending_snapshots")
+            assertTableExists(sqlite, "trending_items")
+            assertIndexExists(sqlite, "index_trending_items_sourceId_mediaType_providerItemId")
+            assertIndexExists(sqlite, "index_trending_items_mediaType_tmdbId")
+            assertCount(sqlite, "sources", 2)
+
+            runBlocking {
+                val dao = db.trendingDao()
+                dao.replaceSnapshot(
+                    trendingState(sourceId = 10, generationId = "source-a-1"),
+                    trendingItems(sourceId = 10, generationId = "source-a-1", titlePrefix = "A"),
+                )
+                dao.replaceSnapshot(
+                    trendingState(sourceId = 11, generationId = "source-b-1"),
+                    trendingItems(sourceId = 11, generationId = "source-b-1", titlePrefix = "B"),
+                )
+
+                val sourceB = dao.getSnapshot(11) ?: error("Source B snapshot missing")
+                assertEquals(5, sourceB.items.size)
+                assertEquals("B 1", sourceB.items.first().localizedTitle)
+
+                dao.writeBelowThreshold(
+                    TrendingSnapshotEntity(
+                        sourceId = 10,
+                        status = TrendingSnapshotStatus.BELOW_THRESHOLD,
+                        metadataLanguage = "de-DE",
+                        refreshedAt = 2_000,
+                        candidateFetchedAt = 1_900,
+                        generationId = "source-a-2",
+                        itemCount = 0,
+                    ),
+                )
+
+                assertEquals(0, dao.getSnapshot(10)?.items?.size)
+                assertEquals("source-b-1", dao.getSnapshot(11)?.state?.generationId)
+            }
+
+            sqlite.execSQL("DELETE FROM sources WHERE id = 11")
+            assertCount(sqlite, "trending_snapshots", 1)
+            assertCount(sqlite, "trending_items", 0)
         } finally {
             db.close()
         }
@@ -375,6 +434,8 @@ class OwnTVDatabaseMigrationTest {
             OwnTVDatabase.MIGRATION_26_27,
             OwnTVDatabase.MIGRATION_27_28,
             OwnTVDatabase.MIGRATION_28_29,
+            OwnTVDatabase.MIGRATION_29_30,
+            OwnTVDatabase.MIGRATION_30_31,
         )
         .allowMainThreadQueries()
         .build()
@@ -400,6 +461,66 @@ class OwnTVDatabaseMigrationTest {
             db.close()
         }
     }
+
+    private fun bootstrapVersion29Database() {
+        val db = context.openOrCreateDatabase(DB_NAME, Context.MODE_PRIVATE, null)
+        try {
+            executeSchemaQueries(db, "tv.own.owntv.core.database.OwnTVDatabase/29.json")
+            db.execSQL(
+                "INSERT INTO sources (id, name, type, url, username, password, mac, " +
+                    "stalkerSerialNumber, stalkerDeviceId, stalkerDeviceId2, stalkerSignature, " +
+                    "userAgent, epgUrl, syncLive, syncMovies, syncSeries, hlsSupported, preferHls, " +
+                    "livePrerollSecs, maxConnections, createdAt, lastSyncAt) VALUES " +
+                    "(10, 'Source A', '${SourceType.XTREAM.name}', 'https://a.example', NULL, NULL, NULL, " +
+                    "NULL, NULL, NULL, NULL, NULL, NULL, 1, 1, 1, 0, 0, -1, 0, 1, NULL), " +
+                    "(11, 'Source B', '${SourceType.XTREAM.name}', 'https://b.example', NULL, NULL, NULL, " +
+                    "NULL, NULL, NULL, NULL, NULL, NULL, 1, 1, 1, 0, 0, -1, 0, 1, NULL)",
+            )
+            db.version = 29
+        } finally {
+            db.close()
+        }
+    }
+
+    private fun trendingState(sourceId: Long, generationId: String) = TrendingSnapshotEntity(
+        sourceId = sourceId,
+        status = TrendingSnapshotStatus.ELIGIBLE,
+        metadataLanguage = "de-DE",
+        refreshedAt = 1_000,
+        candidateFetchedAt = 900,
+        generationId = generationId,
+        itemCount = 5,
+    )
+
+    private fun trendingItems(sourceId: Long, generationId: String, titlePrefix: String) =
+        (0 until 5).map { position ->
+            val mediaType = if (position % 2 == 0) MediaType.MOVIE else MediaType.SERIES
+            TrendingItemEntity(
+                sourceId = sourceId,
+                position = position,
+                tmdbId = 1_000 + position,
+                mediaType = mediaType,
+                trendingRank = position + 1,
+                providerItemId = 2_000L + position,
+                providerRemoteId = "remote-$position",
+                providerStableKey = "remote-$position",
+                providerRawName = "$titlePrefix ${position + 1}",
+                canonicalTitle = "$titlePrefix ${position + 1}",
+                providerLanguage = "DE",
+                advertisedQuality = "FHD",
+                advertisedCapabilities = null,
+                localizedTitle = "$titlePrefix ${position + 1}",
+                originalTitle = null,
+                year = 2026,
+                overview = null,
+                posterPath = null,
+                backdropPath = null,
+                rating = 8.0,
+                trailerKey = null,
+                generationId = generationId,
+                refreshedAt = 1_000,
+            )
+        }
 
     private fun bootstrapVersion3Database() {
         val db = context.openOrCreateDatabase(DB_NAME, Context.MODE_PRIVATE, null)
@@ -540,7 +661,7 @@ class OwnTVDatabaseMigrationTest {
         private const val DB_NAME = "owntv-migration-test.db"
 
         /** Must match `@Database(version = …)` on [OwnTVDatabase]. */
-        private const val CURRENT_VERSION = 29
+        private const val CURRENT_VERSION = 31
 
         /**
          * Every version with an exported schema that a real database can be sitting at.

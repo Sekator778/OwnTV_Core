@@ -131,4 +131,53 @@
     <string name="recovery_backup_hint">अगर आपके पास बैकअप फ़ाइल है, तो आप ऐप को रीसेट करके बाद में उसे रीस्टोर कर सकते हैं। रीसेट करने से इस डिवाइस पर सेव की गई हर चीज़ मिट जाती है।</string>
     <string name="recovery_confirm_reset">पुष्टि करें: ऐप का सारा डेटा मिटाएँ</string>
     <string name="recovery_reset">ऐप डेटा रीसेट करें (अंतिम उपाय)</string>
+    <string name="home_row_now_trending">अभी ट्रेंड में</string>
+    <string name="home_row_trending_description">आपकी प्लेलिस्ट में मिले, चलाए जा सकने वाले TMDB ट्रेंड</string>
+    <string name="settings_trending_status_off">अभी ट्रेंड में बंद है।</string>
+    <string name="settings_trending_status_building">प्रदाता सिंक के बाद अभी ट्रेंड में को तैयार किया जा रहा है।</string>
+    <string name="settings_trending_status_metadata_disabled">अभी ट्रेंड में के लिए TMDB मेटाडेटा आवश्यक है। केवल TMDB या प्रदाता + TMDB चुनें।</string>
+    <string name="settings_trending_status_no_vod">अभी ट्रेंड में छिपा हुआ है क्योंकि इस प्रदाता के लिए फ़िल्में या सीरीज़ सक्षम नहीं हैं।</string>
+    <string name="settings_trending_status_no_matches">अभी ट्रेंड में छिपा हुआ है क्योंकि प्रदाता का कोई शीर्षक मेल नहीं खाया।</string>
+    <string name="settings_trending_status_failed">अभी ट्रेंड में को रीफ़्रेश नहीं किया जा सका। प्रदाता को फिर से सिंक करने की कोशिश करें।</string>
+    <string name="settings_trending_status_waiting">अभी ट्रेंड में तैयार करने के लिए प्रदाता सिंक पूरा करें।</string>
+    <plurals name="settings_trending_status_below_threshold">
+        <item quantity="one">अभी ट्रेंड में छिपा हुआ है क्योंकि प्रदाता का केवल <xliff:g id="count">%1$d</xliff:g> शीर्षक मेल खाया। कम से कम 4 शीर्षक आवश्यक हैं।</item>
+        <item quantity="other">अभी ट्रेंड में छिपा हुआ है क्योंकि प्रदाता के केवल <xliff:g id="count">%1$d</xliff:g> शीर्षक मेल खाए। कम से कम 4 शीर्षक आवश्यक हैं।</item>
+    </plurals>
+    <plurals name="settings_trending_status_showing">
+        <item quantity="one">अभी ट्रेंड में <xliff:g id="count">%1$d</xliff:g> मेल खाता शीर्षक दिखा रहा है।</item>
+        <item quantity="other">अभी ट्रेंड में <xliff:g id="count">%1$d</xliff:g> मेल खाते शीर्षक दिखा रहा है।</item>
+    </plurals>
+    <plurals name="settings_trending_status_showing_refresh_failed">
+        <item quantity="one">अभी ट्रेंड में पिछली सफल रीफ़्रेश प्रक्रिया का <xliff:g id="count">%1$d</xliff:g> शीर्षक दिखा रहा है।</item>
+        <item quantity="other">अभी ट्रेंड में पिछली सफल रीफ़्रेश प्रक्रिया के <xliff:g id="count">%1$d</xliff:g> शीर्षक दिखा रहा है।</item>
+    </plurals>
+    <string name="home_trending_movie">फ़िल्म</string>
+    <string name="home_trending_series">सीरीज़</string>
+    <string name="home_trending_section_label">अभी ट्रेंड में · सिंक स्नैपशॉट</string>
+    <string name="home_trending_provider_match">प्रदाता से मेल</string>
+    <string name="home_trending_language_choice"><xliff:g id="language">%1$s</xliff:g> भाषा का विकल्प</string>
+    <string name="home_trending_english_fallback">अंग्रेज़ी फ़ॉलबैक विकल्प</string>
+    <string name="home_trending_untagged_fallback">बिना भाषा टैग वाला फ़ॉलबैक विकल्प</string>
+    <string name="home_trending_other_fallback"><xliff:g id="language">%1$s</xliff:g> फ़ॉलबैक विकल्प</string>
+    <string name="home_trending_why_label">यह आइटम क्यों दिखाई दे रहा है</string>
+    <string name="home_trending_reason_title">TMDB रैंक #<xliff:g id="rank">%1$d</xliff:g> <xliff:g id="media_type">%2$s</xliff:g> + प्रदाता से मेल</string>
+    <string name="home_trending_reason_preferred">चुना गया <xliff:g id="language">%1$s</xliff:g> प्रदाता संस्करण दूसरी भाषा की प्रविष्टियों पर प्राथमिकता पाता है।</string>
+    <string name="home_trending_reason_english">कोई <xliff:g id="language">%1$s</xliff:g> प्रदाता संस्करण मेल नहीं खाया, इसलिए प्रदाता की अंग्रेज़ी प्रविष्टि चुनी गई।</string>
+    <string name="home_trending_reason_untagged">कोई <xliff:g id="language">%1$s</xliff:g> या अंग्रेज़ी भाषा टैग मेल नहीं खाया, इसलिए प्रदाता की बिना भाषा टैग वाली प्रविष्टि चुनी गई।</string>
+    <string name="home_trending_reason_other">पसंदीदा भाषा और अंग्रेज़ी की प्रविष्टियाँ उपलब्ध न होने पर प्रदाता का सबसे निकटतम चलाया जा सकने वाला संस्करण चुना गया।</string>
+    <plurals name="home_trending_seasons">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> सीज़न</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> सीज़न</item>
+    </plurals>
+    <string name="home_trending_play">चलाएँ</string>
+    <string name="home_trending_open_episodes">एपिसोड खोलें</string>
+    <string name="home_trending_trailer">ट्रेलर</string>
+    <string name="home_trending_more_details">अधिक जानकारी</string>
+    <string name="home_trending_all_versions">सभी संस्करण</string>
+    <string name="home_trending_previous">पिछला</string>
+    <string name="home_trending_pause">रोकें</string>
+    <string name="home_trending_resume">फिर से शुरू करें</string>
+    <string name="home_trending_next">अगला</string>
+    <string name="home_trending_unavailable">यह संस्करण अब उपलब्ध नहीं है</string>
 </resources>

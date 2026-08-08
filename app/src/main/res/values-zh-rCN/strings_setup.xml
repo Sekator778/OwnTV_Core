@@ -236,4 +236,9 @@
     <string name="setup_hls_test_reason_dead_channel">测试频道通过 MPEG-TS 也无法播放，因此它可能已失效</string>
     <string name="setup_hls_provider_advertises">你的提供商确实声明支持 HLS。</string>
     <string name="setup_hls_provider_does_not_advertise">你的提供商未声明支持 HLS。</string>
+    <string name="setup_stalker_advanced_identity">高级设备标识</string>
+    <string name="setup_stalker_serial_number_optional">序列号（可选）</string>
+    <string name="setup_stalker_device_id_optional">设备 ID（可选）</string>
+    <string name="setup_stalker_device_id2_optional">设备 ID2（可选）</string>
+    <string name="setup_stalker_signature_optional">签名（可选）</string>
 </resources>

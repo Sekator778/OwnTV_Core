@@ -131,4 +131,53 @@
     <string name="recovery_backup_hint">Bir yedekleme dosyanız varsa uygulamayı sıfırlayıp ardından bu dosyadan geri yükleyebilirsiniz. Sıfırlama işlemi bu cihazda depolanan her şeyi siler.</string>
     <string name="recovery_confirm_reset">Onay: tüm uygulama verilerini sil</string>
     <string name="recovery_reset">Uygulama verilerini sıfırla (son çare)</string>
+    <string name="home_row_now_trending">Şu Anda Popüler</string>
+    <string name="home_row_trending_description">Oynatma listelerinizde bulunan oynatılabilir TMDB trendleri</string>
+    <string name="settings_trending_status_off">Şu Anda Popüler kapalı.</string>
+    <string name="settings_trending_status_building">Şu Anda Popüler, sağlayıcı eşitlemesinden sonra hazırlanıyor.</string>
+    <string name="settings_trending_status_metadata_disabled">Şu Anda Popüler için TMDB meta verisi gereklidir. Yalnızca TMDB veya Sağlayıcı + TMDB seçeneğini belirleyin.</string>
+    <string name="settings_trending_status_no_vod">Bu sağlayıcıda Filmler veya Diziler etkin olmadığı için Şu Anda Popüler gizlendi.</string>
+    <string name="settings_trending_status_no_matches">Hiçbir sağlayıcı başlığı eşleşmediği için Şu Anda Popüler gizlendi.</string>
+    <string name="settings_trending_status_failed">Şu Anda Popüler yenilenemedi. Sağlayıcıyı yeniden eşitlemeyi deneyin.</string>
+    <string name="settings_trending_status_waiting">Şu Anda Popüler\'i oluşturmak için bir sağlayıcı eşitlemesini tamamlayın.</string>
+    <plurals name="settings_trending_status_below_threshold">
+        <item quantity="one">Yalnızca <xliff:g id="count">%1$d</xliff:g> sağlayıcı başlığı eşleştiği için Şu Anda Popüler gizlendi. En az 4 başlık gereklidir.</item>
+        <item quantity="other">Yalnızca <xliff:g id="count">%1$d</xliff:g> sağlayıcı başlığı eşleştiği için Şu Anda Popüler gizlendi. En az 4 başlık gereklidir.</item>
+    </plurals>
+    <plurals name="settings_trending_status_showing">
+        <item quantity="one">Şu Anda Popüler, eşleşen <xliff:g id="count">%1$d</xliff:g> başlık gösteriyor.</item>
+        <item quantity="other">Şu Anda Popüler, eşleşen <xliff:g id="count">%1$d</xliff:g> başlık gösteriyor.</item>
+    </plurals>
+    <plurals name="settings_trending_status_showing_refresh_failed">
+        <item quantity="one">Şu Anda Popüler, son başarılı yenilemeden <xliff:g id="count">%1$d</xliff:g> başlık gösteriyor.</item>
+        <item quantity="other">Şu Anda Popüler, son başarılı yenilemeden <xliff:g id="count">%1$d</xliff:g> başlık gösteriyor.</item>
+    </plurals>
+    <string name="home_trending_movie">Film</string>
+    <string name="home_trending_series">Dizi</string>
+    <string name="home_trending_section_label">ŞU ANDA POPÜLER · EŞİTLEME ANLIK GÖRÜNTÜSÜ</string>
+    <string name="home_trending_provider_match">Sağlayıcı eşleşmesi</string>
+    <string name="home_trending_language_choice"><xliff:g id="language">%1$s</xliff:g> dil seçimi</string>
+    <string name="home_trending_english_fallback">EN geri dönüş seçimi</string>
+    <string name="home_trending_untagged_fallback">Etiketsiz geri dönüş seçimi</string>
+    <string name="home_trending_other_fallback"><xliff:g id="language">%1$s</xliff:g> geri dönüş seçimi</string>
+    <string name="home_trending_why_label">BU ÖĞE NEDEN GÖSTERİLİYOR</string>
+    <string name="home_trending_reason_title">TMDB sıralaması #<xliff:g id="rank">%1$d</xliff:g> <xliff:g id="media_type">%2$s</xliff:g> + sağlayıcı eşleşmesi</string>
+    <string name="home_trending_reason_preferred">Seçilen <xliff:g id="language">%1$s</xliff:g> sağlayıcı sürümü, başka bir dildeki girdilerden önce tercih edilir.</string>
+    <string name="home_trending_reason_english">Hiçbir <xliff:g id="language">%1$s</xliff:g> sağlayıcı sürümü eşleşmediği için İngilizce sağlayıcı girdisi seçildi.</string>
+    <string name="home_trending_reason_untagged">Hiçbir <xliff:g id="language">%1$s</xliff:g> veya İngilizce dil etiketi eşleşmediği için etiketsiz sağlayıcı girdisi seçildi.</string>
+    <string name="home_trending_reason_other">Tercih edilen dildeki ve İngilizce girdiler kullanılamadığı için oynatılabilir en yakın sağlayıcı sürümü seçildi.</string>
+    <plurals name="home_trending_seasons">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> sezon</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> sezon</item>
+    </plurals>
+    <string name="home_trending_play">Oynat</string>
+    <string name="home_trending_open_episodes">Bölümleri aç</string>
+    <string name="home_trending_trailer">Fragman</string>
+    <string name="home_trending_more_details">Daha Fazla Ayrıntı</string>
+    <string name="home_trending_all_versions">Tüm Sürümler</string>
+    <string name="home_trending_previous">Önceki</string>
+    <string name="home_trending_pause">Duraklat</string>
+    <string name="home_trending_resume">Devam Et</string>
+    <string name="home_trending_next">Sonraki</string>
+    <string name="home_trending_unavailable">Bu sürüm artık kullanılamıyor</string>
 </resources>

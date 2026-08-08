@@ -240,4 +240,9 @@
     <string name="setup_hls_test_reason_dead_channel">जाँच वाला चैनल MPEG-TS पर भी नहीं चला, इसलिए हो सकता है कि वह खराब ही हो</string>
     <string name="setup_hls_provider_advertises">आपका प्रदाता HLS समर्थन का दावा करता है।</string>
     <string name="setup_hls_provider_does_not_advertise">आपका प्रदाता HLS समर्थन का दावा नहीं करता।</string>
+    <string name="setup_stalker_advanced_identity">उन्नत डिवाइस पहचान</string>
+    <string name="setup_stalker_serial_number_optional">सीरियल नंबर (वैकल्पिक)</string>
+    <string name="setup_stalker_device_id_optional">डिवाइस ID (वैकल्पिक)</string>
+    <string name="setup_stalker_device_id2_optional">डिवाइस ID2 (वैकल्पिक)</string>
+    <string name="setup_stalker_signature_optional">हस्ताक्षर (वैकल्पिक)</string>
 </resources>

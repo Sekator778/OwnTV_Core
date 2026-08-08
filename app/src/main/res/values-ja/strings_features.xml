@@ -127,4 +127,49 @@
     <string name="recovery_backup_hint">バックアップファイルがある場合は、アプリをリセットしてから復元できます。リセットすると、このデバイスに保存されているすべてのデータが削除されます。</string>
     <string name="recovery_confirm_reset">確認：アプリの全データを消去</string>
     <string name="recovery_reset">アプリのデータをリセット（最終手段）</string>
+    <string name="home_row_now_trending">現在のトレンド</string>
+    <string name="home_row_trending_description">プレイリスト内で再生できるTMDBのトレンド作品</string>
+    <string name="settings_trending_status_off">現在のトレンドはオフになっています。</string>
+    <string name="settings_trending_status_building">プロバイダーの同期後に現在のトレンドを準備しています。</string>
+    <string name="settings_trending_status_metadata_disabled">現在のトレンドにはTMDBのメタデータが必要です。「TMDBのみ」または「プロバイダー + TMDB」を選択してください。</string>
+    <string name="settings_trending_status_no_vod">このプロバイダーでは映画もシリーズも有効になっていないため、現在のトレンドは非表示になっています。</string>
+    <string name="settings_trending_status_no_matches">一致するプロバイダーのタイトルがないため、現在のトレンドは非表示になっています。</string>
+    <string name="settings_trending_status_failed">現在のトレンドを更新できませんでした。プロバイダーをもう一度同期してください。</string>
+    <string name="settings_trending_status_waiting">プロバイダーの同期を完了して、現在のトレンドを作成してください。</string>
+    <plurals name="settings_trending_status_below_threshold">
+        <item quantity="other">一致するプロバイダーのタイトルが<xliff:g id="count">%1$d</xliff:g>件しかないため、現在のトレンドは非表示になっています。4件以上必要です。</item>
+    </plurals>
+    <plurals name="settings_trending_status_showing">
+        <item quantity="other">現在のトレンドには、一致したタイトルが<xliff:g id="count">%1$d</xliff:g>件表示されています。</item>
+    </plurals>
+    <plurals name="settings_trending_status_showing_refresh_failed">
+        <item quantity="other">現在のトレンドには、前回正常に更新されたタイトルが<xliff:g id="count">%1$d</xliff:g>件表示されています。</item>
+    </plurals>
+    <string name="home_trending_movie">映画</string>
+    <string name="home_trending_series">シリーズ</string>
+    <string name="home_trending_section_label">現在のトレンド · 同期時のスナップショット</string>
+    <string name="home_trending_provider_match">プロバイダーとの一致</string>
+    <string name="home_trending_language_choice"><xliff:g id="language">%1$s</xliff:g>言語を選択</string>
+    <string name="home_trending_english_fallback">英語のフォールバックを選択</string>
+    <string name="home_trending_untagged_fallback">言語タグなしのフォールバックを選択</string>
+    <string name="home_trending_other_fallback"><xliff:g id="language">%1$s</xliff:g>フォールバックを選択</string>
+    <string name="home_trending_why_label">この作品が表示される理由</string>
+    <string name="home_trending_reason_title">TMDBランキング #<xliff:g id="rank">%1$d</xliff:g> <xliff:g id="media_type">%2$s</xliff:g> + プロバイダーとの一致</string>
+    <string name="home_trending_reason_preferred">選択した<xliff:g id="language">%1$s</xliff:g>のプロバイダー版が、別の言語の項目より優先されます。</string>
+    <string name="home_trending_reason_english">一致する<xliff:g id="language">%1$s</xliff:g>のプロバイダー版がなかったため、英語のプロバイダー項目が選択されました。</string>
+    <string name="home_trending_reason_untagged"><xliff:g id="language">%1$s</xliff:g>または英語の言語タグに一致するものがなかったため、言語タグのないプロバイダー項目が選択されました。</string>
+    <string name="home_trending_reason_other">優先言語と英語の項目が利用できなかったため、再生可能なプロバイダー版のうち最も近いものが選択されました。</string>
+    <plurals name="home_trending_seasons">
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g>シーズン</item>
+    </plurals>
+    <string name="home_trending_play">再生</string>
+    <string name="home_trending_open_episodes">エピソードを開く</string>
+    <string name="home_trending_trailer">予告編</string>
+    <string name="home_trending_more_details">詳細を見る</string>
+    <string name="home_trending_all_versions">すべてのバージョン</string>
+    <string name="home_trending_previous">前へ</string>
+    <string name="home_trending_pause">一時停止</string>
+    <string name="home_trending_resume">再開</string>
+    <string name="home_trending_next">次へ</string>
+    <string name="home_trending_unavailable">このバージョンは利用できなくなりました</string>
 </resources>

@@ -950,4 +950,8 @@
     <string name="settings_auto_frame_rate_turn_on_anyway">تفعيله على أي حال</string>
     <string name="settings_language_request_workflow">هل تريد إضافة لغة غير مدرجة؟ قدّم طلب لغة أولاً. سيقوم أحد المشرفين بتسجيلها وتجهيز ملفات الترجمة الأساسية؛ وبمجرد ظهورها على Hosted Weblate، يمكنك البدء في المساهمة.</string>
     <string name="settings_language_request_new">طلب لغة جديدة</string>
+    <string name="settings_panel_width_disable_preview_title">هل تريد إيقاف فيديو المعاينة المباشرة؟</string>
+    <string name="settings_panel_width_disable_preview_description">فيديو المعاينة المباشرة قيد التشغيل حاليًا. سيؤدي إخفاء لوحة المعاينة إلى إيقاف الفيديو، ولن يمكن تشغيله مرة أخرى حتى تحدد عرضًا للوحة المعاينة في ضبط عرض اللوحة.</string>
+    <string name="settings_live_preview_panel_hidden_title">فيديو المعاينة المباشرة غير متاح</string>
+    <string name="settings_live_preview_panel_hidden_description">لوحة معاينة البث التلفزيوني المباشر مخفية. حدّد لها عرضًا أكبر من 0%% في ضبط عرض اللوحة قبل تشغيل فيديو المعاينة.</string>
 </resources>

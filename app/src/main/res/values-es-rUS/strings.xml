@@ -131,4 +131,49 @@
     <string name="common_hide">Ocultar</string>
     <string name="common_show">Mostrar</string>
     <string name="common_qr_code_companion_url">Código QR para la URL complementaria</string>
+    <string name="sync_status_trending_starting">Sincronización completada · <xliff:g id="source">%1$s</xliff:g> · Creando Tendencias del momento</string>
+    <string name="sync_status_trending_matching">Buscando coincidencias entre los elementos en tendencia y tu lista de reproducción</string>
+    <string name="sync_status_trending_detail_waiting">Esperando la respuesta de candidatos de TMDB</string>
+    <string name="sync_status_trending_detail_received">Candidatos de TMDB · Películas: <xliff:g id="movies">%1$d</xliff:g> · Series: <xliff:g id="series">%2$d</xliff:g></string>
+    <string name="sync_status_trending_detail_preparing">Índice de títulos del proveedor · <xliff:g id="processed">%1$d</xliff:g> / <xliff:g id="total">%2$d</xliff:g></string>
+    <string name="sync_status_trending_detail_movies">Comprobación de películas: <xliff:g id="checked">%1$d</xliff:g>/<xliff:g id="candidates">%2$d</xliff:g> · coincidencias: <xliff:g id="matched">%3$d</xliff:g>/<xliff:g id="target">%4$d</xliff:g></string>
+    <string name="sync_status_trending_detail_series">Comprobación de series: <xliff:g id="checked">%1$d</xliff:g>/<xliff:g id="candidates">%2$d</xliff:g> · coincidencias: <xliff:g id="matched">%3$d</xliff:g>/<xliff:g id="target">%4$d</xliff:g></string>
+    <string name="sync_status_trending_detail_selected">Seleccionados · Películas: <xliff:g id="movies">%1$d</xliff:g> · Series: <xliff:g id="series">%2$d</xliff:g> · Inicio: <xliff:g id="home">%3$d</xliff:g></string>
+    <string name="sync_status_trending_detail_completed">Coincidencias · Películas: <xliff:g id="movie_matches">%1$d</xliff:g>/<xliff:g id="movie_candidates">%2$d</xliff:g> · Series: <xliff:g id="series_matches">%3$d</xliff:g>/<xliff:g id="series_candidates">%4$d</xliff:g></string>
+    <string name="sync_status_trending_preparing">Preparando los títulos del proveedor para buscar coincidencias rápidamente</string>
+    <string name="sync_status_trending_matching_movies">Buscando coincidencias entre las películas en tendencia y tu proveedor</string>
+    <string name="sync_status_trending_matching_series">Buscando coincidencias entre las series en tendencia y tu proveedor</string>
+    <string name="sync_status_trending_loading_seasons">Cargando las temporadas del proveedor</string>
+    <string name="sync_status_trending_detail_loading_seasons">Series comprobadas: <xliff:g id="processed">%1$d</xliff:g>/<xliff:g id="total">%2$d</xliff:g></string>
+    <string name="sync_status_trending_preserved">No se pudo actualizar Tendencias del momento · se conservaron los resultados anteriores</string>
+    <plurals name="sync_status_trending_received">
+        <item quantity="one">Se recibió el último elemento en tendencia · <xliff:g id="count">%1$d</xliff:g></item>
+        <item quantity="many">Se recibieron los últimos elementos en tendencia · <xliff:g id="count">%1$d</xliff:g></item>
+        <item quantity="other">Se recibieron los últimos elementos en tendencia · <xliff:g id="count">%1$d</xliff:g></item>
+    </plurals>
+    <plurals name="sync_status_trending_matched">
+        <item quantity="one">Coincidencia encontrada · <xliff:g id="total">%1$d</xliff:g> · <xliff:g id="movies">%2$s</xliff:g> · <xliff:g id="series">%3$s</xliff:g></item>
+        <item quantity="many">Coincidencias encontradas · <xliff:g id="total">%1$d</xliff:g> · <xliff:g id="movies">%2$s</xliff:g> · <xliff:g id="series">%3$s</xliff:g></item>
+        <item quantity="other">Coincidencias encontradas · <xliff:g id="total">%1$d</xliff:g> · <xliff:g id="movies">%2$s</xliff:g> · <xliff:g id="series">%3$s</xliff:g></item>
+    </plurals>
+    <plurals name="sync_status_trending_building">
+        <item quantity="one">Creando Tendencias del momento · <xliff:g id="count">%1$d</xliff:g> coincidencia</item>
+        <item quantity="many">Creando Tendencias del momento · <xliff:g id="count">%1$d</xliff:g> coincidencias</item>
+        <item quantity="other">Creando Tendencias del momento · <xliff:g id="count">%1$d</xliff:g> coincidencias</item>
+    </plurals>
+    <plurals name="sync_status_trending_publishing">
+        <item quantity="one">Publicando Tendencias del momento · <xliff:g id="count">%1$d</xliff:g> elemento</item>
+        <item quantity="many">Publicando Tendencias del momento · <xliff:g id="count">%1$d</xliff:g> elementos</item>
+        <item quantity="other">Publicando Tendencias del momento · <xliff:g id="count">%1$d</xliff:g> elementos</item>
+    </plurals>
+    <plurals name="sync_status_trending_ready">
+        <item quantity="one">Tendencias del momento listas · <xliff:g id="count">%1$d</xliff:g> coincidencia</item>
+        <item quantity="many">Tendencias del momento listas · <xliff:g id="count">%1$d</xliff:g> coincidencias</item>
+        <item quantity="other">Tendencias del momento listas · <xliff:g id="count">%1$d</xliff:g> coincidencias</item>
+    </plurals>
+    <plurals name="sync_status_trending_below_minimum">
+        <item quantity="one">Tendencias del momento ocultas · solo <xliff:g id="count">%1$d</xliff:g> coincidencia</item>
+        <item quantity="many">Tendencias del momento ocultas · solo <xliff:g id="count">%1$d</xliff:g> coincidencias</item>
+        <item quantity="other">Tendencias del momento ocultas · solo <xliff:g id="count">%1$d</xliff:g> coincidencias</item>
+    </plurals>
 </resources>

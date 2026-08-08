@@ -250,4 +250,6 @@
     <string name="player_frame_rate_turn_on">Activer</string>
     <string name="player_reason_live_fallback">La lecture en direct a basculé vers une solution de repli</string>
     <string name="player_reason_live_no_fallback">La lecture en direct a échoué — plus aucune solution de repli disponible</string>
+    <string name="player_provider_retry_after">HTTP <xliff:g id="code">%1$d</xliff:g> : <xliff:g id="reason">%2$s</xliff:g> Nouvelle tentative dans <xliff:g id="seconds">%3$d</xliff:g> s.</string>
+    <string name="player_provider_busy">Le fournisseur est occupé.</string>
 </resources>

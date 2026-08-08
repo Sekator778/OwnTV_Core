@@ -902,4 +902,8 @@
     <string name="settings_auto_frame_rate_turn_on_anyway">Ativar na mesma</string>
     <string name="settings_language_request_workflow">Queres adicionar um idioma que não está listado? Abre primeiro um pedido de idioma. Um mantenedor irá registá-lo e preparar os ficheiros de tradução base; assim que aparecer no Hosted Weblate, podes começar a contribuir.</string>
     <string name="settings_language_request_new">Pedir um novo idioma</string>
+    <string name="settings_panel_width_disable_preview_title">Desativar o vídeo de pré-visualização em direto?</string>
+    <string name="settings_panel_width_disable_preview_description">O vídeo de pré-visualização em direto está atualmente ativado. Ocultar o painel de pré-visualização desativará o vídeo, que só poderá ser novamente ativado depois de atribuir uma largura ao painel de pré-visualização em Ajuste da largura dos painéis.</string>
+    <string name="settings_live_preview_panel_hidden_title">O vídeo de pré-visualização em direto não está disponível</string>
+    <string name="settings_live_preview_panel_hidden_description">O painel de pré-visualização da TV em direto está oculto. Atribua-lhe uma largura superior a 0%% em Ajuste da largura dos painéis antes de ativar o vídeo de pré-visualização.</string>
 </resources>

@@ -154,6 +154,7 @@
     <string name="home_episode">E<xliff:g id="episode">%1$02d</xliff:g></string>
     <!-- Translators: Home row type label for the card-style row. -->
     <string name="home_row_cards">Cards</string>
+    <string name="home_row_now_trending">Now Trending</string>
     <!-- Translators: Home row name in Settings for the "Keep Watching" row. -->
     <string name="home_row_keep_watching">Keep Watching</string>
     <!-- Translators: Home row name in Settings for the "Continue Watching Movies" row. -->
@@ -168,6 +169,54 @@
     <string name="home_row_on_now">On Now</string>
     <!-- Translators: Home row description in Settings for the hero row. -->
     <string name="home_row_hero_description">The large preview row at the top</string>
+    <string name="home_row_trending_description">Playable TMDB trends found in your playlists</string>
+    <string name="settings_trending_status_off">Now Trending is turned off.</string>
+    <string name="settings_trending_status_building">Now Trending is being prepared after provider sync.</string>
+    <string name="settings_trending_status_metadata_disabled">Now Trending needs TMDB metadata. Choose TMDB only or Provider + TMDB.</string>
+    <string name="settings_trending_status_no_vod">Now Trending is hidden because this provider has no Movies or Series enabled.</string>
+    <string name="settings_trending_status_no_matches">Now Trending is hidden because no provider titles matched.</string>
+    <string name="settings_trending_status_failed">Now Trending could not be refreshed. Try syncing the provider again.</string>
+    <string name="settings_trending_status_waiting">Complete a provider sync to build Now Trending.</string>
+    <plurals name="settings_trending_status_below_threshold">
+        <item quantity="one">Now Trending is hidden because only <xliff:g id="count">%1$d</xliff:g> provider title matched. At least 4 are needed.</item>
+        <item quantity="other">Now Trending is hidden because only <xliff:g id="count">%1$d</xliff:g> provider titles matched. At least 4 are needed.</item>
+    </plurals>
+    <plurals name="settings_trending_status_showing">
+        <item quantity="one">Now Trending is showing <xliff:g id="count">%1$d</xliff:g> matched title.</item>
+        <item quantity="other">Now Trending is showing <xliff:g id="count">%1$d</xliff:g> matched titles.</item>
+    </plurals>
+    <plurals name="settings_trending_status_showing_refresh_failed">
+        <item quantity="one">Now Trending is showing <xliff:g id="count">%1$d</xliff:g> title from the last successful refresh.</item>
+        <item quantity="other">Now Trending is showing <xliff:g id="count">%1$d</xliff:g> titles from the last successful refresh.</item>
+    </plurals>
+    <string name="home_trending_movie">Movie</string>
+    <string name="home_trending_series">Series</string>
+    <string name="home_trending_section_label">NOW TRENDING · SYNC SNAPSHOT</string>
+    <string name="home_trending_provider_match">Provider match</string>
+    <string name="home_trending_language_choice"><xliff:g id="language">%1$s</xliff:g> language choice</string>
+    <string name="home_trending_english_fallback">EN fallback choice</string>
+    <string name="home_trending_untagged_fallback">Untagged fallback choice</string>
+    <string name="home_trending_other_fallback"><xliff:g id="language">%1$s</xliff:g> fallback choice</string>
+    <string name="home_trending_why_label">WHY THIS ITEM APPEARS</string>
+    <string name="home_trending_reason_title">TMDB rank #<xliff:g id="rank">%1$d</xliff:g> <xliff:g id="media_type">%2$s</xliff:g> + provider match</string>
+    <string name="home_trending_reason_preferred">The selected <xliff:g id="language">%1$s</xliff:g> provider version wins before entries in another language.</string>
+    <string name="home_trending_reason_english">No <xliff:g id="language">%1$s</xliff:g> provider version matched, so the English provider entry was selected.</string>
+    <string name="home_trending_reason_untagged">No <xliff:g id="language">%1$s</xliff:g> or English language tag matched, so the untagged provider entry was selected.</string>
+    <string name="home_trending_reason_other">The closest playable provider version was selected after preferred-language and English entries were unavailable.</string>
+    <plurals name="home_trending_seasons">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> season</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> seasons</item>
+    </plurals>
+    <string name="home_trending_play">Play</string>
+    <string name="home_trending_open_episodes">Open episodes</string>
+    <string name="home_trending_trailer">Trailer</string>
+    <string name="home_trending_more_details">More Details</string>
+    <string name="home_trending_all_versions">All Versions</string>
+    <string name="home_trending_previous">Previous</string>
+    <string name="home_trending_pause">Pause</string>
+    <string name="home_trending_resume">Resume</string>
+    <string name="home_trending_next">Next</string>
+    <string name="home_trending_unavailable">This version is no longer available</string>
     <!-- Translators: Home row description in Settings for "Continue Watching Movies". -->
     <string name="home_row_continue_movies_description">Movies with a saved position</string>
     <!-- Translators: Home row description in Settings for "Continue Watching Series". -->

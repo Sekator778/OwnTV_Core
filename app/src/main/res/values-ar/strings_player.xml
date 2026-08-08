@@ -271,4 +271,6 @@
     <string name="player_frame_rate_turn_on">تشغيل</string>
     <string name="player_reason_live_fallback">تم تحويل التشغيل المباشر إلى خيار بديل</string>
     <string name="player_reason_live_no_fallback">فشل التشغيل المباشر — لا يوجد أي خيار بديل متبقٍ</string>
+    <string name="player_provider_retry_after">HTTP <xliff:g id="code">%1$d</xliff:g>: <xliff:g id="reason">%2$s</xliff:g> ستُعاد المحاولة خلال <xliff:g id="seconds">%3$d</xliff:g> ث.</string>
+    <string name="player_provider_busy">المزوّد مشغول.</string>
 </resources>

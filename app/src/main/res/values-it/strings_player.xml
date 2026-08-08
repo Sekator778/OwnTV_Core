@@ -250,4 +250,6 @@
     <string name="player_frame_rate_turn_on">Attiva</string>
     <string name="player_reason_live_fallback">La riproduzione in diretta è passata a un fallback</string>
     <string name="player_reason_live_no_fallback">Riproduzione in diretta non riuscita — non rimane alcun fallback</string>
+    <string name="player_provider_retry_after">HTTP <xliff:g id="code">%1$d</xliff:g>: <xliff:g id="reason">%2$s</xliff:g> Nuovo tentativo tra <xliff:g id="seconds">%3$d</xliff:g> s.</string>
+    <string name="player_provider_busy">Il fornitore è occupato.</string>
 </resources>

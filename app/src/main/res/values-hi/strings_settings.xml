@@ -886,4 +886,8 @@
     <string name="settings_auto_frame_rate_turn_on_anyway">फिर भी चालू करें</string>
     <string name="settings_language_request_workflow">क्या आप कोई ऐसी भाषा जोड़ना चाहते हैं जो सूचीबद्ध नहीं है? पहले भाषा अनुरोध खोलें। एक मेंटेनर इसे पंजीकृत करेगा और आधार अनुवाद फ़ाइलें तैयार करेगा; एक बार यह Hosted Weblate पर दिखाई दे, तो आप योगदान देना शुरू कर सकते हैं।</string>
     <string name="settings_language_request_new">नई भाषा का अनुरोध करें</string>
+    <string name="settings_panel_width_disable_preview_title">लाइव प्रीव्यू वीडियो बंद करें?</string>
+    <string name="settings_panel_width_disable_preview_description">लाइव प्रीव्यू वीडियो अभी चालू है। प्रीव्यू पैनल छिपाने से वीडियो बंद हो जाएगा, और पैनल की चौड़ाई का समायोजन में प्रीव्यू पैनल को चौड़ाई दिए जाने तक इसे फिर से चालू नहीं किया जा सकेगा।</string>
+    <string name="settings_live_preview_panel_hidden_title">लाइव प्रीव्यू वीडियो उपलब्ध नहीं है</string>
+    <string name="settings_live_preview_panel_hidden_description">लाइव टीवी प्रीव्यू पैनल छिपा हुआ है। प्रीव्यू वीडियो चालू करने से पहले पैनल की चौड़ाई का समायोजन में इसे 0%% से अधिक चौड़ाई दें।</string>
 </resources>

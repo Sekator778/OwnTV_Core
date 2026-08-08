@@ -135,4 +135,57 @@
     <string name="recovery_backup_hint">Se disponi di un file di backup, puoi reimpostare l\'app e ripristinarlo in seguito. La reimpostazione elimina tutto ciò che è memorizzato su questo dispositivo.</string>
     <string name="recovery_confirm_reset">Conferma: cancella tutti i dati dell\'app</string>
     <string name="recovery_reset">Reimposta i dati dell\'app (ultima risorsa)</string>
+    <string name="home_row_now_trending">Di tendenza ora</string>
+    <string name="home_row_trending_description">Tendenze TMDB riproducibili trovate nelle tue playlist</string>
+    <string name="settings_trending_status_off">Di tendenza ora è disattivato.</string>
+    <string name="settings_trending_status_building">Di tendenza ora è in preparazione dopo la sincronizzazione del fornitore.</string>
+    <string name="settings_trending_status_metadata_disabled">Di tendenza ora richiede i metadati TMDB. Scegli Solo TMDB o Fornitore + TMDB.</string>
+    <string name="settings_trending_status_no_vod">Di tendenza ora è nascosto perché per questo fornitore non sono abilitati film o serie.</string>
+    <string name="settings_trending_status_no_matches">Di tendenza ora è nascosto perché nessun titolo del fornitore ha trovato corrispondenza.</string>
+    <string name="settings_trending_status_failed">Non è stato possibile aggiornare Di tendenza ora. Prova a sincronizzare di nuovo il fornitore.</string>
+    <string name="settings_trending_status_waiting">Completa una sincronizzazione del fornitore per creare Di tendenza ora.</string>
+    <plurals name="settings_trending_status_below_threshold">
+        <item quantity="one">Di tendenza ora è nascosto perché solo <xliff:g id="count">%1$d</xliff:g> titolo del fornitore ha trovato corrispondenza. Ne servono almeno 4.</item>
+        <item quantity="many">Di tendenza ora è nascosto perché solo <xliff:g id="count">%1$d</xliff:g> titoli del fornitore hanno trovato corrispondenza. Ne servono almeno 4.</item>
+        <item quantity="other">Di tendenza ora è nascosto perché solo <xliff:g id="count">%1$d</xliff:g> titoli del fornitore hanno trovato corrispondenza. Ne servono almeno 4.</item>
+    </plurals>
+    <plurals name="settings_trending_status_showing">
+        <item quantity="one">Di tendenza ora mostra <xliff:g id="count">%1$d</xliff:g> titolo corrispondente.</item>
+        <item quantity="many">Di tendenza ora mostra <xliff:g id="count">%1$d</xliff:g> titoli corrispondenti.</item>
+        <item quantity="other">Di tendenza ora mostra <xliff:g id="count">%1$d</xliff:g> titoli corrispondenti.</item>
+    </plurals>
+    <plurals name="settings_trending_status_showing_refresh_failed">
+        <item quantity="one">Di tendenza ora mostra <xliff:g id="count">%1$d</xliff:g> titolo dell\'ultimo aggiornamento riuscito.</item>
+        <item quantity="many">Di tendenza ora mostra <xliff:g id="count">%1$d</xliff:g> titoli dell\'ultimo aggiornamento riuscito.</item>
+        <item quantity="other">Di tendenza ora mostra <xliff:g id="count">%1$d</xliff:g> titoli dell\'ultimo aggiornamento riuscito.</item>
+    </plurals>
+    <string name="home_trending_movie">Film</string>
+    <string name="home_trending_series">Serie</string>
+    <string name="home_trending_section_label">DI TENDENZA ORA · ISTANTANEA DELLA SINCRONIZZAZIONE</string>
+    <string name="home_trending_provider_match">Corrispondenza del fornitore</string>
+    <string name="home_trending_language_choice">Scelta della lingua <xliff:g id="language">%1$s</xliff:g></string>
+    <string name="home_trending_english_fallback">Scelta alternativa in inglese</string>
+    <string name="home_trending_untagged_fallback">Scelta alternativa senza etichetta</string>
+    <string name="home_trending_other_fallback">Scelta alternativa <xliff:g id="language">%1$s</xliff:g></string>
+    <string name="home_trending_why_label">PERCHÉ APPARE QUESTO ELEMENTO</string>
+    <string name="home_trending_reason_title">Posizione TMDB n. <xliff:g id="rank">%1$d</xliff:g> <xliff:g id="media_type">%2$s</xliff:g> + corrispondenza del fornitore</string>
+    <string name="home_trending_reason_preferred">La versione <xliff:g id="language">%1$s</xliff:g> selezionata del fornitore ha la precedenza sulle voci in un\'altra lingua.</string>
+    <string name="home_trending_reason_english">Nessuna versione <xliff:g id="language">%1$s</xliff:g> del fornitore ha trovato corrispondenza, quindi è stata selezionata la voce in inglese del fornitore.</string>
+    <string name="home_trending_reason_untagged">Nessuna etichetta della lingua <xliff:g id="language">%1$s</xliff:g> o inglese ha trovato corrispondenza, quindi è stata selezionata la voce senza etichetta del fornitore.</string>
+    <string name="home_trending_reason_other">È stata selezionata la versione riproducibile più simile del fornitore perché non erano disponibili voci nella lingua preferita o in inglese.</string>
+    <plurals name="home_trending_seasons">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> stagione</item>
+        <item quantity="many"><xliff:g id="count">%1$d</xliff:g> stagioni</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> stagioni</item>
+    </plurals>
+    <string name="home_trending_play">Riproduci</string>
+    <string name="home_trending_open_episodes">Apri episodi</string>
+    <string name="home_trending_trailer">Trailer</string>
+    <string name="home_trending_more_details">Altri dettagli</string>
+    <string name="home_trending_all_versions">Tutte le versioni</string>
+    <string name="home_trending_previous">Precedente</string>
+    <string name="home_trending_pause">Pausa</string>
+    <string name="home_trending_resume">Riprendi</string>
+    <string name="home_trending_next">Successivo</string>
+    <string name="home_trending_unavailable">Questa versione non è più disponibile</string>
 </resources>

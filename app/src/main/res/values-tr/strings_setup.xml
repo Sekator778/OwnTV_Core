@@ -240,4 +240,9 @@
     <string name="setup_hls_test_reason_dead_channel">test kanalı MPEG-TS ile de oynatılmadı, bu yüzden kanal çalışmıyor olabilir</string>
     <string name="setup_hls_provider_advertises">Sağlayıcın HLS desteğini duyuruyor.</string>
     <string name="setup_hls_provider_does_not_advertise">Sağlayıcın HLS desteğini duyurmuyor.</string>
+    <string name="setup_stalker_advanced_identity">Gelişmiş cihaz tanımlama</string>
+    <string name="setup_stalker_serial_number_optional">Seri Numarası (isteğe bağlı)</string>
+    <string name="setup_stalker_device_id_optional">Cihaz Kimliği (isteğe bağlı)</string>
+    <string name="setup_stalker_device_id2_optional">Cihaz Kimliği 2 (isteğe bağlı)</string>
+    <string name="setup_stalker_signature_optional">İmza (isteğe bağlı)</string>
 </resources>

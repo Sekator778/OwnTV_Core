@@ -886,4 +886,8 @@
     <string name="settings_auto_frame_rate_turn_on_anyway">Yine de aç</string>
     <string name="settings_language_request_workflow">Listede olmayan bir dil mi eklemek istiyorsunuz? Önce bir dil talebi açın. Bir proje yöneticisi dili kaydeder ve temel çeviri dosyalarını hazırlar; Hosted Weblate üzerinde göründüğünde katkıda bulunmaya başlayabilirsiniz.</string>
     <string name="settings_language_request_new">Yeni dil talebinde bulun</string>
+    <string name="settings_panel_width_disable_preview_title">Canlı Önizleme videosu kapatılsın mı?</string>
+    <string name="settings_panel_width_disable_preview_description">Canlı Önizleme videosu şu anda açık. Önizleme panelini gizlemek videoyu kapatır ve Panel Genişliği Ayarı\'nda Önizleme paneline bir genişlik verene kadar video yeniden açılamaz.</string>
+    <string name="settings_live_preview_panel_hidden_title">Canlı Önizleme videosu kullanılamıyor</string>
+    <string name="settings_live_preview_panel_hidden_description">Canlı TV Önizleme paneli gizli. Önizleme videosunu açmadan önce Panel Genişliği Ayarı\'nda bu panele %%0\'ın üzerinde bir genişlik verin.</string>
 </resources>

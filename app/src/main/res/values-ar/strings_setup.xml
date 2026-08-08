@@ -256,4 +256,9 @@
     <string name="setup_hls_test_reason_dead_channel">قناة الاختبار لم تعمل عبر MPEG-TS أيضًا، لذا قد تكون معطّلة ببساطة</string>
     <string name="setup_hls_provider_advertises">يُعلن مزود الخدمة لديك بالفعل عن دعم HLS.</string>
     <string name="setup_hls_provider_does_not_advertise">لا يُعلن مزود الخدمة لديك عن دعم HLS.</string>
+    <string name="setup_stalker_advanced_identity">التعريف المتقدم بالجهاز</string>
+    <string name="setup_stalker_serial_number_optional">الرقم التسلسلي (اختياري)</string>
+    <string name="setup_stalker_device_id_optional">معرّف الجهاز (اختياري)</string>
+    <string name="setup_stalker_device_id2_optional">معرّف الجهاز 2 (اختياري)</string>
+    <string name="setup_stalker_signature_optional">التوقيع (اختياري)</string>
 </resources>

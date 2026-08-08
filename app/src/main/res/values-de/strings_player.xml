@@ -243,4 +243,6 @@
     <string name="player_frame_rate_turn_on">Einschalten</string>
     <string name="player_reason_live_fallback">Live-Wiedergabe auf einen Fallback umgeschaltet</string>
     <string name="player_reason_live_no_fallback">Live-Wiedergabe fehlgeschlagen – kein Fallback mehr übrig</string>
+    <string name="player_provider_retry_after">HTTP <xliff:g id="code">%1$d</xliff:g>: <xliff:g id="reason">%2$s</xliff:g> Erneuter Versuch in <xliff:g id="seconds">%3$d</xliff:g> s.</string>
+    <string name="player_provider_busy">Der Anbieter ist ausgelastet.</string>
 </resources>

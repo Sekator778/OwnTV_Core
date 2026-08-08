@@ -243,4 +243,6 @@
     <string name="player_frame_rate_turn_on">চালু করুন</string>
     <string name="player_reason_live_fallback">লাইভ প্লেব্যাক একটি ফলব্যাকে স্যুইচ করা হয়েছে</string>
     <string name="player_reason_live_no_fallback">লাইভ প্লেব্যাক ব্যর্থ হয়েছে — আর কোনো ফলব্যাক অবশিষ্ট নেই</string>
+    <string name="player_provider_retry_after">HTTP <xliff:g id="code">%1$d</xliff:g>: <xliff:g id="reason">%2$s</xliff:g> <xliff:g id="seconds">%3$d</xliff:g> সেকেন্ডের মধ্যে আবার চেষ্টা করা হবে।</string>
+    <string name="player_provider_busy">প্রদানকারী ব্যস্ত।</string>
 </resources>

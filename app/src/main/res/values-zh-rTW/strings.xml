@@ -113,4 +113,37 @@
     <string name="common_hide">隱藏</string>
     <string name="common_show">顯示</string>
     <string name="common_qr_code_companion_url">輔助工具網址的 QR 碼</string>
+    <string name="sync_status_trending_starting">同步完成 · <xliff:g id="source">%1$s</xliff:g> · 正在建立「目前熱門」</string>
+    <string name="sync_status_trending_matching">正在將熱門項目與您的播放清單進行比對</string>
+    <string name="sync_status_trending_detail_waiting">正在等待 TMDB 候選項目回應</string>
+    <string name="sync_status_trending_detail_received">TMDB 候選項目 · 電影：<xliff:g id="movies">%1$d</xliff:g> · 影集：<xliff:g id="series">%2$d</xliff:g></string>
+    <string name="sync_status_trending_detail_preparing">供應商標題索引 · <xliff:g id="processed">%1$d</xliff:g> / <xliff:g id="total">%2$d</xliff:g></string>
+    <string name="sync_status_trending_detail_movies">電影檢查：<xliff:g id="checked">%1$d</xliff:g>/<xliff:g id="candidates">%2$d</xliff:g> · 相符項目：<xliff:g id="matched">%3$d</xliff:g>/<xliff:g id="target">%4$d</xliff:g></string>
+    <string name="sync_status_trending_detail_series">影集檢查：<xliff:g id="checked">%1$d</xliff:g>/<xliff:g id="candidates">%2$d</xliff:g> · 相符項目：<xliff:g id="matched">%3$d</xliff:g>/<xliff:g id="target">%4$d</xliff:g></string>
+    <string name="sync_status_trending_detail_selected">已選取 · 電影：<xliff:g id="movies">%1$d</xliff:g> · 影集：<xliff:g id="series">%2$d</xliff:g> · 主畫面：<xliff:g id="home">%3$d</xliff:g></string>
+    <string name="sync_status_trending_detail_completed">已比對 · 電影：<xliff:g id="movie_matches">%1$d</xliff:g>/<xliff:g id="movie_candidates">%2$d</xliff:g> · 影集：<xliff:g id="series_matches">%3$d</xliff:g>/<xliff:g id="series_candidates">%4$d</xliff:g></string>
+    <string name="sync_status_trending_preparing">正在準備供應商標題，以便快速比對</string>
+    <string name="sync_status_trending_matching_movies">正在將熱門電影與您的供應商進行比對</string>
+    <string name="sync_status_trending_matching_series">正在將熱門影集與您的供應商進行比對</string>
+    <string name="sync_status_trending_loading_seasons">正在載入供應商的季資料</string>
+    <string name="sync_status_trending_detail_loading_seasons">已檢查影集：<xliff:g id="processed">%1$d</xliff:g>/<xliff:g id="total">%2$d</xliff:g></string>
+    <string name="sync_status_trending_preserved">無法重新整理熱門趨勢 · 已保留先前的結果</string>
+    <plurals name="sync_status_trending_received">
+        <item quantity="other">已收到最新的 <xliff:g id="count">%1$d</xliff:g> 個熱門項目</item>
+    </plurals>
+    <plurals name="sync_status_trending_matched">
+        <item quantity="other">已比對 <xliff:g id="total">%1$d</xliff:g> · <xliff:g id="movies">%2$s</xliff:g> · <xliff:g id="series">%3$s</xliff:g></item>
+    </plurals>
+    <plurals name="sync_status_trending_building">
+        <item quantity="other">正在建立「目前熱門」· <xliff:g id="count">%1$d</xliff:g> 個相符項目</item>
+    </plurals>
+    <plurals name="sync_status_trending_publishing">
+        <item quantity="other">正在發佈「目前熱門」· <xliff:g id="count">%1$d</xliff:g> 個項目</item>
+    </plurals>
+    <plurals name="sync_status_trending_ready">
+        <item quantity="other">「目前熱門」已就緒 · <xliff:g id="count">%1$d</xliff:g> 個相符項目</item>
+    </plurals>
+    <plurals name="sync_status_trending_below_minimum">
+        <item quantity="other">已隱藏「目前熱門」· 僅有 <xliff:g id="count">%1$d</xliff:g> 個相符項目</item>
+    </plurals>
 </resources>

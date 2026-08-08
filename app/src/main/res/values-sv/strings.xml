@@ -122,4 +122,43 @@
     <string name="common_hide">Dölj</string>
     <string name="common_show">Visa</string>
     <string name="common_qr_code_companion_url">QR-kod för URL:en till komplementet</string>
+    <string name="sync_status_trending_starting">Synkroniseringen är klar · <xliff:g id="source">%1$s</xliff:g> · Skapar Trendigt just nu</string>
+    <string name="sync_status_trending_matching">Matchar trendande objekt mot din spellista</string>
+    <string name="sync_status_trending_detail_waiting">Väntar på svar med kandidater från TMDB</string>
+    <string name="sync_status_trending_detail_received">TMDB-kandidater · Filmer: <xliff:g id="movies">%1$d</xliff:g> · Serier: <xliff:g id="series">%2$d</xliff:g></string>
+    <string name="sync_status_trending_detail_preparing">Index över leverantörens titlar · <xliff:g id="processed">%1$d</xliff:g> / <xliff:g id="total">%2$d</xliff:g></string>
+    <string name="sync_status_trending_detail_movies">Filmkontroll: <xliff:g id="checked">%1$d</xliff:g>/<xliff:g id="candidates">%2$d</xliff:g> · träffar: <xliff:g id="matched">%3$d</xliff:g>/<xliff:g id="target">%4$d</xliff:g></string>
+    <string name="sync_status_trending_detail_series">Seriekontroll: <xliff:g id="checked">%1$d</xliff:g>/<xliff:g id="candidates">%2$d</xliff:g> · träffar: <xliff:g id="matched">%3$d</xliff:g>/<xliff:g id="target">%4$d</xliff:g></string>
+    <string name="sync_status_trending_detail_selected">Valda · Filmer: <xliff:g id="movies">%1$d</xliff:g> · Serier: <xliff:g id="series">%2$d</xliff:g> · Startskärm: <xliff:g id="home">%3$d</xliff:g></string>
+    <string name="sync_status_trending_detail_completed">Matchade · Filmer: <xliff:g id="movie_matches">%1$d</xliff:g>/<xliff:g id="movie_candidates">%2$d</xliff:g> · Serier: <xliff:g id="series_matches">%3$d</xliff:g>/<xliff:g id="series_candidates">%4$d</xliff:g></string>
+    <string name="sync_status_trending_preparing">Förbereder leverantörens titlar för snabb matchning</string>
+    <string name="sync_status_trending_matching_movies">Matchar trendande filmer mot din leverantör</string>
+    <string name="sync_status_trending_matching_series">Matchar trendande serier mot din leverantör</string>
+    <string name="sync_status_trending_loading_seasons">Läser in säsonger från leverantören</string>
+    <string name="sync_status_trending_detail_loading_seasons">Kontrollerade serier: <xliff:g id="processed">%1$d</xliff:g>/<xliff:g id="total">%2$d</xliff:g></string>
+    <string name="sync_status_trending_preserved">Trenduppdateringen är inte tillgänglig · tidigare resultat behålls</string>
+    <plurals name="sync_status_trending_received">
+        <item quantity="one">Tog emot det senaste trendande objektet <xliff:g id="count">%1$d</xliff:g></item>
+        <item quantity="other">Tog emot de senaste <xliff:g id="count">%1$d</xliff:g> trendande objekten</item>
+    </plurals>
+    <plurals name="sync_status_trending_matched">
+        <item quantity="one">Matchade <xliff:g id="total">%1$d</xliff:g> · <xliff:g id="movies">%2$s</xliff:g> · <xliff:g id="series">%3$s</xliff:g></item>
+        <item quantity="other">Matchade <xliff:g id="total">%1$d</xliff:g> · <xliff:g id="movies">%2$s</xliff:g> · <xliff:g id="series">%3$s</xliff:g></item>
+    </plurals>
+    <plurals name="sync_status_trending_building">
+        <item quantity="one">Skapar Trendigt just nu · <xliff:g id="count">%1$d</xliff:g> träff</item>
+        <item quantity="other">Skapar Trendigt just nu · <xliff:g id="count">%1$d</xliff:g> träffar</item>
+    </plurals>
+    <plurals name="sync_status_trending_publishing">
+        <item quantity="one">Publicerar Trendigt just nu · <xliff:g id="count">%1$d</xliff:g> objekt</item>
+        <item quantity="other">Publicerar Trendigt just nu · <xliff:g id="count">%1$d</xliff:g> objekt</item>
+    </plurals>
+    <plurals name="sync_status_trending_ready">
+        <item quantity="one">Trendigt just nu är klart · <xliff:g id="count">%1$d</xliff:g> träff</item>
+        <item quantity="other">Trendigt just nu är klart · <xliff:g id="count">%1$d</xliff:g> träffar</item>
+    </plurals>
+    <plurals name="sync_status_trending_below_minimum">
+        <item quantity="one">Trendigt just nu är dolt · endast <xliff:g id="count">%1$d</xliff:g> träff</item>
+        <item quantity="other">Trendigt just nu är dolt · endast <xliff:g id="count">%1$d</xliff:g> träffar</item>
+    </plurals>
 </resources>

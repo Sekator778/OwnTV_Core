@@ -131,4 +131,53 @@
     <string name="recovery_backup_hint">നിങ്ങളുടെ പക്കൽ ഒരു ബാക്കപ്പ് ഫയൽ ഉണ്ടെങ്കിൽ, ആപ്പ് റീസെറ്റ് ചെയ്ത് പിന്നീട് അത് പുനഃസ്ഥാപിക്കാം. റീസെറ്റ് ചെയ്യുന്നത് ഈ ഉപകരണത്തിൽ സംഭരിച്ചിരിക്കുന്ന എല്ലാം ഇല്ലാതാക്കും.</string>
     <string name="recovery_confirm_reset">സ്ഥിരീകരിക്കുക: ആപ്പിന്റെ എല്ലാ ഡാറ്റയും മായ്ക്കുക</string>
     <string name="recovery_reset">ആപ്പ് ഡാറ്റ റീസെറ്റ് ചെയ്യുക (അവസാന മാർഗം)</string>
+    <string name="home_row_now_trending">ഇപ്പോൾ ട്രെൻഡാകുന്നവ</string>
+    <string name="home_row_trending_description">നിങ്ങളുടെ playlists-ൽ കണ്ടെത്തിയ, പ്ലേ ചെയ്യാനാകുന്ന TMDB ട്രെൻഡുകൾ</string>
+    <string name="settings_trending_status_off">ഇപ്പോൾ ട്രെൻഡാകുന്നവ ഓഫാക്കിയിരിക്കുന്നു.</string>
+    <string name="settings_trending_status_building">provider sync-ന് ശേഷം ഇപ്പോൾ ട്രെൻഡാകുന്നവ തയ്യാറാക്കുകയാണ്.</string>
+    <string name="settings_trending_status_metadata_disabled">ഇപ്പോൾ ട്രെൻഡാകുന്നവയ്ക്ക് TMDB metadata ആവശ്യമാണ്. TMDB മാത്രം അല്ലെങ്കിൽ Provider + TMDB തിരഞ്ഞെടുക്കുക.</string>
+    <string name="settings_trending_status_no_vod">ഈ provider-ൽ movies അല്ലെങ്കിൽ series പ്രവർത്തനക്ഷമമാക്കിയിട്ടില്ലാത്തതിനാൽ ഇപ്പോൾ ട്രെൻഡാകുന്നവ മറച്ചിരിക്കുന്നു.</string>
+    <string name="settings_trending_status_no_matches">provider ശീർഷകങ്ങളൊന്നും പൊരുത്തപ്പെടാത്തതിനാൽ ഇപ്പോൾ ട്രെൻഡാകുന്നവ മറച്ചിരിക്കുന്നു.</string>
+    <string name="settings_trending_status_failed">ഇപ്പോൾ ട്രെൻഡാകുന്നവ പുതുക്കാനായില്ല. provider വീണ്ടും sync ചെയ്യാൻ ശ്രമിക്കുക.</string>
+    <string name="settings_trending_status_waiting">ഇപ്പോൾ ട്രെൻഡാകുന്നവ തയ്യാറാക്കാൻ provider sync പൂർത്തിയാക്കുക.</string>
+    <plurals name="settings_trending_status_below_threshold">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> provider ശീർഷകം മാത്രം പൊരുത്തപ്പെട്ടതിനാൽ ഇപ്പോൾ ട്രെൻഡാകുന്നവ മറച്ചിരിക്കുന്നു. കുറഞ്ഞത് 4 എണ്ണം ആവശ്യമാണ്.</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> provider ശീർഷകങ്ങൾ മാത്രം പൊരുത്തപ്പെട്ടതിനാൽ ഇപ്പോൾ ട്രെൻഡാകുന്നവ മറച്ചിരിക്കുന്നു. കുറഞ്ഞത് 4 എണ്ണം ആവശ്യമാണ്.</item>
+    </plurals>
+    <plurals name="settings_trending_status_showing">
+        <item quantity="one">ഇപ്പോൾ ട്രെൻഡാകുന്നവയിൽ പൊരുത്തപ്പെട്ട <xliff:g id="count">%1$d</xliff:g> ശീർഷകം കാണിക്കുന്നു.</item>
+        <item quantity="other">ഇപ്പോൾ ട്രെൻഡാകുന്നവയിൽ പൊരുത്തപ്പെട്ട <xliff:g id="count">%1$d</xliff:g> ശീർഷകങ്ങൾ കാണിക്കുന്നു.</item>
+    </plurals>
+    <plurals name="settings_trending_status_showing_refresh_failed">
+        <item quantity="one">അവസാനമായി വിജയിച്ച പുതുക്കലിൽനിന്നുള്ള <xliff:g id="count">%1$d</xliff:g> ശീർഷകം ഇപ്പോൾ ട്രെൻഡാകുന്നവയിൽ കാണിക്കുന്നു.</item>
+        <item quantity="other">അവസാനമായി വിജയിച്ച പുതുക്കലിൽനിന്നുള്ള <xliff:g id="count">%1$d</xliff:g> ശീർഷകങ്ങൾ ഇപ്പോൾ ട്രെൻഡാകുന്നവയിൽ കാണിക്കുന്നു.</item>
+    </plurals>
+    <string name="home_trending_movie">സിനിമ</string>
+    <string name="home_trending_series">series</string>
+    <string name="home_trending_section_label">ഇപ്പോൾ ട്രെൻഡാകുന്നവ · SYNC സ്നാപ്പ്ഷോട്ട്</string>
+    <string name="home_trending_provider_match">provider പൊരുത്തം</string>
+    <string name="home_trending_language_choice"><xliff:g id="language">%1$s</xliff:g> language തിരഞ്ഞെടുപ്പ്</string>
+    <string name="home_trending_english_fallback">EN പകരം തിരഞ്ഞെടുപ്പ്</string>
+    <string name="home_trending_untagged_fallback">ടാഗില്ലാത്ത പകരം തിരഞ്ഞെടുപ്പ്</string>
+    <string name="home_trending_other_fallback"><xliff:g id="language">%1$s</xliff:g> പകരം തിരഞ്ഞെടുപ്പ്</string>
+    <string name="home_trending_why_label">ഈ ഇനം പ്രത്യക്ഷപ്പെടാനുള്ള കാരണം</string>
+    <string name="home_trending_reason_title">TMDB സ്ഥാനം #<xliff:g id="rank">%1$d</xliff:g> <xliff:g id="media_type">%2$s</xliff:g> + provider പൊരുത്തം</string>
+    <string name="home_trending_reason_preferred">മറ്റൊരു language-ലുള്ള എൻട്രികൾക്കു മുമ്പായി തിരഞ്ഞെടുത്ത <xliff:g id="language">%1$s</xliff:g> provider version പരിഗണിക്കപ്പെടുന്നു.</string>
+    <string name="home_trending_reason_english"><xliff:g id="language">%1$s</xliff:g> provider version പൊരുത്തപ്പെടാത്തതിനാൽ ഇംഗ്ലീഷ് provider എൻട്രി തിരഞ്ഞെടുത്തു.</string>
+    <string name="home_trending_reason_untagged"><xliff:g id="language">%1$s</xliff:g> അല്ലെങ്കിൽ ഇംഗ്ലീഷ് language ടാഗ് പൊരുത്തപ്പെടാത്തതിനാൽ ടാഗില്ലാത്ത provider എൻട്രി തിരഞ്ഞെടുത്തു.</string>
+    <string name="home_trending_reason_other">മുൻഗണനാ language-ലെയും ഇംഗ്ലീഷിലെയും എൻട്രികൾ ലഭ്യമല്ലാത്തതിനാൽ പ്ലേ ചെയ്യാനാകുന്ന ഏറ്റവും അടുത്ത provider version തിരഞ്ഞെടുത്തു.</string>
+    <plurals name="home_trending_seasons">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> season</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> seasons</item>
+    </plurals>
+    <string name="home_trending_play">പ്ലേ ചെയ്യുക</string>
+    <string name="home_trending_open_episodes">episodes തുറക്കുക</string>
+    <string name="home_trending_trailer">trailer</string>
+    <string name="home_trending_more_details">കൂടുതൽ വിവരങ്ങൾ</string>
+    <string name="home_trending_all_versions">എല്ലാ versions-ഉം</string>
+    <string name="home_trending_previous">മുമ്പത്തേത്</string>
+    <string name="home_trending_pause">താൽക്കാലികമായി നിർത്തുക</string>
+    <string name="home_trending_resume">resume</string>
+    <string name="home_trending_next">അടുത്തത്</string>
+    <string name="home_trending_unavailable">ഈ version ഇനി ലഭ്യമല്ല</string>
 </resources>

@@ -113,4 +113,37 @@
     <string name="common_hide">숨기기</string>
     <string name="common_show">표시</string>
     <string name="common_qr_code_companion_url">연동 URL의 QR 코드</string>
+    <string name="sync_status_trending_starting">동기화 완료 · <xliff:g id="source">%1$s</xliff:g> · 지금 인기 급상승 항목 구성 중</string>
+    <string name="sync_status_trending_matching">인기 급상승 항목을 재생목록과 일치시키는 중</string>
+    <string name="sync_status_trending_detail_waiting">TMDB 후보 응답을 기다리는 중</string>
+    <string name="sync_status_trending_detail_received">TMDB 후보 · 영화: <xliff:g id="movies">%1$d</xliff:g> · 시리즈: <xliff:g id="series">%2$d</xliff:g></string>
+    <string name="sync_status_trending_detail_preparing">제공업체 제목 인덱스 · <xliff:g id="processed">%1$d</xliff:g> / <xliff:g id="total">%2$d</xliff:g></string>
+    <string name="sync_status_trending_detail_movies">영화 확인: <xliff:g id="checked">%1$d</xliff:g>/<xliff:g id="candidates">%2$d</xliff:g> · 일치: <xliff:g id="matched">%3$d</xliff:g>/<xliff:g id="target">%4$d</xliff:g></string>
+    <string name="sync_status_trending_detail_series">시리즈 확인: <xliff:g id="checked">%1$d</xliff:g>/<xliff:g id="candidates">%2$d</xliff:g> · 일치: <xliff:g id="matched">%3$d</xliff:g>/<xliff:g id="target">%4$d</xliff:g></string>
+    <string name="sync_status_trending_detail_selected">선택됨 · 영화: <xliff:g id="movies">%1$d</xliff:g> · 시리즈: <xliff:g id="series">%2$d</xliff:g> · 홈: <xliff:g id="home">%3$d</xliff:g></string>
+    <string name="sync_status_trending_detail_completed">일치 · 영화: <xliff:g id="movie_matches">%1$d</xliff:g>/<xliff:g id="movie_candidates">%2$d</xliff:g> · 시리즈: <xliff:g id="series_matches">%3$d</xliff:g>/<xliff:g id="series_candidates">%4$d</xliff:g></string>
+    <string name="sync_status_trending_preparing">빠른 일치 확인을 위해 제공업체 제목을 준비하는 중</string>
+    <string name="sync_status_trending_matching_movies">인기 급상승 영화를 제공업체 항목과 일치시키는 중</string>
+    <string name="sync_status_trending_matching_series">인기 급상승 시리즈를 제공업체 항목과 일치시키는 중</string>
+    <string name="sync_status_trending_loading_seasons">제공업체 시즌을 불러오는 중</string>
+    <string name="sync_status_trending_detail_loading_seasons">확인한 시리즈: <xliff:g id="processed">%1$d</xliff:g>/<xliff:g id="total">%2$d</xliff:g></string>
+    <string name="sync_status_trending_preserved">인기 급상승 항목을 새로 고칠 수 없음 · 이전 결과 유지됨</string>
+    <plurals name="sync_status_trending_received">
+        <item quantity="other">최신 인기 급상승 항목 <xliff:g id="count">%1$d</xliff:g>개 수신됨</item>
+    </plurals>
+    <plurals name="sync_status_trending_matched">
+        <item quantity="other">일치 · <xliff:g id="total">%1$d</xliff:g> · <xliff:g id="movies">%2$s</xliff:g> · <xliff:g id="series">%3$s</xliff:g></item>
+    </plurals>
+    <plurals name="sync_status_trending_building">
+        <item quantity="other">지금 인기 급상승 항목 구성 중 · <xliff:g id="count">%1$d</xliff:g>개 일치</item>
+    </plurals>
+    <plurals name="sync_status_trending_publishing">
+        <item quantity="other">지금 인기 급상승 항목 게시 중 · <xliff:g id="count">%1$d</xliff:g>개 항목</item>
+    </plurals>
+    <plurals name="sync_status_trending_ready">
+        <item quantity="other">지금 인기 급상승 항목 준비 완료 · <xliff:g id="count">%1$d</xliff:g>개 일치</item>
+    </plurals>
+    <plurals name="sync_status_trending_below_minimum">
+        <item quantity="other">지금 인기 급상승 항목 숨김 · 일치 항목이 <xliff:g id="count">%1$d</xliff:g>개뿐임</item>
+    </plurals>
 </resources>

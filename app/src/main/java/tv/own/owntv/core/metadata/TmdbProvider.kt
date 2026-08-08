@@ -50,6 +50,41 @@ class TmdbProvider(
         return "&include_image_language=" + (if (base != null) "$base,en,null" else "en,null")
     }
 
+    override suspend fun trendingMovies(): List<TrendingCandidate>? = trending(MetadataType.MOVIE)
+
+    override suspend fun trendingTv(): List<TrendingCandidate>? = trending(MetadataType.TV)
+
+    private suspend fun trending(type: MetadataType): List<TrendingCandidate>? {
+        require(type == MetadataType.MOVIE || type == MetadataType.TV)
+        val endpoint = resolveEndpoint()
+        val first = fetchTrendingPage(endpoint, type, page = 1) ?: return null
+        val pages = ArrayList<TmdbTrendingParser.Page>(2)
+        pages += first
+
+        // TMDB v3 pages contain 20 rows, so only page 2 can contribute to ranks 21–25.
+        if (
+            first.totalPages >= 2 &&
+            TmdbTrendingParser.merge(pages).size < TmdbTrendingParser.TRENDING_CANDIDATE_LIMIT
+        ) {
+            pages += fetchTrendingPage(endpoint, type, page = 2) ?: return null
+        }
+        return TmdbTrendingParser.merge(pages)
+    }
+
+    private suspend fun fetchTrendingPage(
+        endpoint: Endpoint,
+        type: MetadataType,
+        page: Int,
+    ): TmdbTrendingParser.Page? {
+        val url = buildTrendingUrl(endpoint.baseUrl, endpoint.apiKey, endpoint.language, type, page)
+        val body = runCatching { http.getText(url) }
+            .onFailure { Log.w(TAG, "TMDB Trending failed type=$type page=$page: ${it.message}") }
+            .getOrNull() ?: return null
+        return TmdbTrendingParser.parsePage(type, page, body).also {
+            if (it == null) Log.w(TAG, "TMDB Trending parse failed type=$type page=$page")
+        }
+    }
+
     override suspend fun searchMovie(title: String, year: Int?): List<MetadataSearchResult>? =
         search(MetadataType.MOVIE, title, year)
 
@@ -294,5 +329,24 @@ class TmdbProvider(
 
         /** TMDB image CDN — poster/backdrop paths render straight from here, no key. */
         const val IMAGE_BASE = "https://image.tmdb.org/t/p"
+
+        internal fun buildTrendingUrl(
+            baseUrl: String,
+            apiKey: String?,
+            language: String,
+            type: MetadataType,
+            page: Int,
+        ): String {
+            require(type == MetadataType.MOVIE || type == MetadataType.TV)
+            require(page > 0)
+            val mediaPath = if (type == MetadataType.TV) "tv" else "movie"
+            return buildString {
+                append(baseUrl.trimEnd('/')).append("/3/trending/").append(mediaPath).append("/day")
+                append("?page=").append(page)
+                if (language.isNotBlank()) append("&language=").append(URLEncoder.encode(language, "UTF-8"))
+                apiKey?.takeIf { it.isNotBlank() }
+                    ?.let { append("&api_key=").append(URLEncoder.encode(it, "UTF-8")) }
+            }
+        }
     }
 }

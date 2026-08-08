@@ -918,4 +918,8 @@
     <string name="settings_auto_frame_rate_turn_on_anyway">Přesto zapnout</string>
     <string name="settings_language_request_workflow">Chcete přidat jazyk, který není v seznamu? Nejprve otevřete žádost o jazyk. Správce jej zaregistruje a připraví základní soubory překladů; jakmile se objeví na Hosted Weblate, můžete začít přispívat.</string>
     <string name="settings_language_request_new">Požádat o nový jazyk</string>
+    <string name="settings_panel_width_disable_preview_title">Vypnout video živého náhledu?</string>
+    <string name="settings_panel_width_disable_preview_description">Video živého náhledu je momentálně zapnuté. Skrytím panelu náhledu se video vypne a nebude možné je znovu zapnout, dokud panelu náhledu nenastavíte šířku v části Úprava šířky panelu.</string>
+    <string name="settings_live_preview_panel_hidden_title">Video živého náhledu není k dispozici</string>
+    <string name="settings_live_preview_panel_hidden_description">Panel náhledu živého vysílání je skrytý. Než zapnete video náhledu, nastavte mu v části Úprava šířky panelu šířku větší než 0 %%.</string>
 </resources>

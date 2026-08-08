@@ -122,4 +122,43 @@
     <string name="common_hide">Ausblenden</string>
     <string name="common_show">Einblenden</string>
     <string name="common_qr_code_companion_url">QR-Code für die Begleit-URL</string>
+    <string name="sync_status_trending_starting">Synchronisierung abgeschlossen · <xliff:g id="source">%1$s</xliff:g> · „Jetzt im Trend“ wird erstellt</string>
+    <string name="sync_status_trending_matching">Trend-Titel werden mit deiner Wiedergabeliste abgeglichen</string>
+    <string name="sync_status_trending_detail_waiting">Warten auf Antwort mit TMDB-Kandidaten</string>
+    <string name="sync_status_trending_detail_received">TMDB-Kandidaten · Filme: <xliff:g id="movies">%1$d</xliff:g> · Serien: <xliff:g id="series">%2$d</xliff:g></string>
+    <string name="sync_status_trending_detail_preparing">Titelindex des Anbieters · <xliff:g id="processed">%1$d</xliff:g> / <xliff:g id="total">%2$d</xliff:g></string>
+    <string name="sync_status_trending_detail_movies">Filmprüfung: <xliff:g id="checked">%1$d</xliff:g>/<xliff:g id="candidates">%2$d</xliff:g> · Treffer: <xliff:g id="matched">%3$d</xliff:g>/<xliff:g id="target">%4$d</xliff:g></string>
+    <string name="sync_status_trending_detail_series">Serienprüfung: <xliff:g id="checked">%1$d</xliff:g>/<xliff:g id="candidates">%2$d</xliff:g> · Treffer: <xliff:g id="matched">%3$d</xliff:g>/<xliff:g id="target">%4$d</xliff:g></string>
+    <string name="sync_status_trending_detail_selected">Ausgewählt · Filme: <xliff:g id="movies">%1$d</xliff:g> · Serien: <xliff:g id="series">%2$d</xliff:g> · Startseite: <xliff:g id="home">%3$d</xliff:g></string>
+    <string name="sync_status_trending_detail_completed">Abgeglichen · Filme: <xliff:g id="movie_matches">%1$d</xliff:g>/<xliff:g id="movie_candidates">%2$d</xliff:g> · Serien: <xliff:g id="series_matches">%3$d</xliff:g>/<xliff:g id="series_candidates">%4$d</xliff:g></string>
+    <string name="sync_status_trending_preparing">Anbietertitel werden für einen schnellen Abgleich vorbereitet</string>
+    <string name="sync_status_trending_matching_movies">Trend-Filme werden mit deinem Anbieter abgeglichen</string>
+    <string name="sync_status_trending_matching_series">Trend-Serien werden mit deinem Anbieter abgeglichen</string>
+    <string name="sync_status_trending_loading_seasons">Staffeln des Anbieters werden geladen</string>
+    <string name="sync_status_trending_detail_loading_seasons">Geprüfte Serien: <xliff:g id="processed">%1$d</xliff:g>/<xliff:g id="total">%2$d</xliff:g></string>
+    <string name="sync_status_trending_preserved">Trend-Aktualisierung nicht verfügbar · bisherige Ergebnisse beibehalten</string>
+    <plurals name="sync_status_trending_received">
+        <item quantity="one">Neuesten <xliff:g id="count">%1$d</xliff:g> Trend-Titel empfangen</item>
+        <item quantity="other">Neueste <xliff:g id="count">%1$d</xliff:g> Trend-Titel empfangen</item>
+    </plurals>
+    <plurals name="sync_status_trending_matched">
+        <item quantity="one">Abgeglichen: <xliff:g id="total">%1$d</xliff:g> · <xliff:g id="movies">%2$s</xliff:g> · <xliff:g id="series">%3$s</xliff:g></item>
+        <item quantity="other">Abgeglichen: <xliff:g id="total">%1$d</xliff:g> · <xliff:g id="movies">%2$s</xliff:g> · <xliff:g id="series">%3$s</xliff:g></item>
+    </plurals>
+    <plurals name="sync_status_trending_building">
+        <item quantity="one">„Jetzt im Trend“ wird erstellt · <xliff:g id="count">%1$d</xliff:g> Treffer</item>
+        <item quantity="other">„Jetzt im Trend“ wird erstellt · <xliff:g id="count">%1$d</xliff:g> Treffer</item>
+    </plurals>
+    <plurals name="sync_status_trending_publishing">
+        <item quantity="one">„Jetzt im Trend“ wird veröffentlicht · <xliff:g id="count">%1$d</xliff:g> Eintrag</item>
+        <item quantity="other">„Jetzt im Trend“ wird veröffentlicht · <xliff:g id="count">%1$d</xliff:g> Einträge</item>
+    </plurals>
+    <plurals name="sync_status_trending_ready">
+        <item quantity="one">„Jetzt im Trend“ ist bereit · <xliff:g id="count">%1$d</xliff:g> Treffer</item>
+        <item quantity="other">„Jetzt im Trend“ ist bereit · <xliff:g id="count">%1$d</xliff:g> Treffer</item>
+    </plurals>
+    <plurals name="sync_status_trending_below_minimum">
+        <item quantity="one">„Jetzt im Trend“ ausgeblendet · nur <xliff:g id="count">%1$d</xliff:g> Treffer</item>
+        <item quantity="other">„Jetzt im Trend“ ausgeblendet · nur <xliff:g id="count">%1$d</xliff:g> Treffer</item>
+    </plurals>
 </resources>

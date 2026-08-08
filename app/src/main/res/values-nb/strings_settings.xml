@@ -886,4 +886,8 @@
     <string name="settings_auto_frame_rate_turn_on_anyway">Slå på likevel</string>
     <string name="settings_language_request_workflow">Vil du legge til et språk som ikke er oppført? Åpne en språkforespørsel først. En vedlikeholder registrerer det og forbereder de grunnleggende oversettelsesfilene; når det dukker opp på Hosted Weblate, kan du begynne å bidra.</string>
     <string name="settings_language_request_new">Be om et nytt språk</string>
+    <string name="settings_panel_width_disable_preview_title">Slå av video i direkteforhåndsvisningen?</string>
+    <string name="settings_panel_width_disable_preview_description">Video i direkteforhåndsvisningen er på nå. Hvis du skjuler forhåndsvisningspanelet, slås videoen av, og den kan ikke slås på igjen før du gir forhåndsvisningspanelet en bredde under Justering av panelbredde.</string>
+    <string name="settings_live_preview_panel_hidden_title">Video i direkteforhåndsvisningen er utilgjengelig</string>
+    <string name="settings_live_preview_panel_hidden_description">Forhåndsvisningspanelet for direkte-TV er skjult. Gi det en bredde over 0%% under Justering av panelbredde før du slår på video i forhåndsvisningen.</string>
 </resources>

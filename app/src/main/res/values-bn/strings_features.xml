@@ -131,4 +131,53 @@
     <string name="recovery_backup_hint">আপনার কাছে ব্যাকআপ ফাইল থাকলে অ্যাপটি রিসেট করে পরে সেটি পুনরুদ্ধার করতে পারেন। রিসেট করলে এই ডিভাইসে সংরক্ষিত সবকিছু মুছে যাবে।</string>
     <string name="recovery_confirm_reset">নিশ্চিত করুন: অ্যাপের সব ডেটা মুছুন</string>
     <string name="recovery_reset">অ্যাপের ডেটা রিসেট করুন (শেষ উপায়)</string>
+    <string name="home_row_now_trending">এখন ট্রেন্ডিং</string>
+    <string name="home_row_trending_description">আপনার প্লেলিস্টে পাওয়া চালানো যায় এমন TMDB ট্রেন্ড</string>
+    <string name="settings_trending_status_off">এখন ট্রেন্ডিং বন্ধ আছে।</string>
+    <string name="settings_trending_status_building">প্রোভাইডার সিঙ্কের পর এখন ট্রেন্ডিং প্রস্তুত করা হচ্ছে।</string>
+    <string name="settings_trending_status_metadata_disabled">এখন ট্রেন্ডিংয়ের জন্য TMDB মেটাডেটা প্রয়োজন। শুধু TMDB অথবা প্রোভাইডার + TMDB বেছে নিন।</string>
+    <string name="settings_trending_status_no_vod">এই প্রোভাইডারে চলচ্চিত্র বা সিরিজ চালু নেই বলে এখন ট্রেন্ডিং লুকানো আছে।</string>
+    <string name="settings_trending_status_no_matches">প্রোভাইডারের কোনো শিরোনাম মেলেনি বলে এখন ট্রেন্ডিং লুকানো আছে।</string>
+    <string name="settings_trending_status_failed">এখন ট্রেন্ডিং রিফ্রেশ করা যায়নি। প্রোভাইডারটি আবার সিঙ্ক করুন।</string>
+    <string name="settings_trending_status_waiting">এখন ট্রেন্ডিং তৈরি করতে প্রোভাইডার সিঙ্ক সম্পন্ন করুন।</string>
+    <plurals name="settings_trending_status_below_threshold">
+        <item quantity="one">প্রোভাইডারের মাত্র <xliff:g id="count">%1$d</xliff:g>টি শিরোনাম মিলেছে বলে এখন ট্রেন্ডিং লুকানো আছে। অন্তত ৪টি প্রয়োজন।</item>
+        <item quantity="other">প্রোভাইডারের মাত্র <xliff:g id="count">%1$d</xliff:g>টি শিরোনাম মিলেছে বলে এখন ট্রেন্ডিং লুকানো আছে। অন্তত ৪টি প্রয়োজন।</item>
+    </plurals>
+    <plurals name="settings_trending_status_showing">
+        <item quantity="one">এখন ট্রেন্ডিংয়ে <xliff:g id="count">%1$d</xliff:g>টি মিলে যাওয়া শিরোনাম দেখানো হচ্ছে।</item>
+        <item quantity="other">এখন ট্রেন্ডিংয়ে <xliff:g id="count">%1$d</xliff:g>টি মিলে যাওয়া শিরোনাম দেখানো হচ্ছে।</item>
+    </plurals>
+    <plurals name="settings_trending_status_showing_refresh_failed">
+        <item quantity="one">সর্বশেষ সফল রিফ্রেশের <xliff:g id="count">%1$d</xliff:g>টি শিরোনাম এখন ট্রেন্ডিংয়ে দেখানো হচ্ছে।</item>
+        <item quantity="other">সর্বশেষ সফল রিফ্রেশের <xliff:g id="count">%1$d</xliff:g>টি শিরোনাম এখন ট্রেন্ডিংয়ে দেখানো হচ্ছে।</item>
+    </plurals>
+    <string name="home_trending_movie">চলচ্চিত্র</string>
+    <string name="home_trending_series">সিরিজ</string>
+    <string name="home_trending_section_label">এখন ট্রেন্ডিং · সিঙ্ক স্ন্যাপশট</string>
+    <string name="home_trending_provider_match">প্রোভাইডারের সঙ্গে মিল</string>
+    <string name="home_trending_language_choice"><xliff:g id="language">%1$s</xliff:g> ভাষার পছন্দ</string>
+    <string name="home_trending_english_fallback">ইংরেজি ফলব্যাক পছন্দ</string>
+    <string name="home_trending_untagged_fallback">ভাষা-ট্যাগবিহীন ফলব্যাক পছন্দ</string>
+    <string name="home_trending_other_fallback"><xliff:g id="language">%1$s</xliff:g> ফলব্যাক পছন্দ</string>
+    <string name="home_trending_why_label">এই আইটেমটি কেন দেখানো হচ্ছে</string>
+    <string name="home_trending_reason_title">TMDB র‍্যাঙ্ক #<xliff:g id="rank">%1$d</xliff:g> <xliff:g id="media_type">%2$s</xliff:g> + প্রোভাইডারের সঙ্গে মিল</string>
+    <string name="home_trending_reason_preferred">অন্য ভাষার এন্ট্রির আগে নির্বাচিত <xliff:g id="language">%1$s</xliff:g> প্রোভাইডার সংস্করণটি বেছে নেওয়া হয়েছে।</string>
+    <string name="home_trending_reason_english">কোনো <xliff:g id="language">%1$s</xliff:g> প্রোভাইডার সংস্করণ মেলেনি, তাই ইংরেজি প্রোভাইডার এন্ট্রিটি বেছে নেওয়া হয়েছে।</string>
+    <string name="home_trending_reason_untagged">কোনো <xliff:g id="language">%1$s</xliff:g> বা ইংরেজি ভাষার ট্যাগ মেলেনি, তাই ভাষা-ট্যাগবিহীন প্রোভাইডার এন্ট্রিটি বেছে নেওয়া হয়েছে।</string>
+    <string name="home_trending_reason_other">পছন্দের ভাষা ও ইংরেজি এন্ট্রি না থাকায় সবচেয়ে কাছাকাছি চালানো যায় এমন প্রোভাইডার সংস্করণটি বেছে নেওয়া হয়েছে।</string>
+    <plurals name="home_trending_seasons">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> সিজন</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> সিজন</item>
+    </plurals>
+    <string name="home_trending_play">চালান</string>
+    <string name="home_trending_open_episodes">পর্ব খুলুন</string>
+    <string name="home_trending_trailer">ট্রেলার</string>
+    <string name="home_trending_more_details">আরও বিস্তারিত</string>
+    <string name="home_trending_all_versions">সব সংস্করণ</string>
+    <string name="home_trending_previous">আগেরটি</string>
+    <string name="home_trending_pause">বিরতি</string>
+    <string name="home_trending_resume">আবার চালান</string>
+    <string name="home_trending_next">পরেরটি</string>
+    <string name="home_trending_unavailable">এই সংস্করণটি আর পাওয়া যাচ্ছে না</string>
 </resources>

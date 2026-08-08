@@ -122,4 +122,43 @@
     <string name="common_hide">മറയ്ക്കുക</string>
     <string name="common_show">കാണിക്കുക</string>
     <string name="common_qr_code_companion_url">സഹായി URL-നുള്ള QR കോഡ്</string>
+    <string name="sync_status_trending_starting">സമന്വയം പൂർത്തിയായി · <xliff:g id="source">%1$s</xliff:g> · ഇപ്പോൾ ട്രെൻഡിങ് തയ്യാറാക്കുന്നു</string>
+    <string name="sync_status_trending_matching">ട്രെൻഡിങ് ഇനങ്ങൾ നിങ്ങളുടെ പ്ലേലിസ്റ്റുമായി പൊരുത്തപ്പെടുത്തുന്നു</string>
+    <string name="sync_status_trending_detail_waiting">TMDB സ്ഥാനാർഥികളുടെ പ്രതികരണത്തിനായി കാത്തിരിക്കുന്നു</string>
+    <string name="sync_status_trending_detail_received">TMDB സ്ഥാനാർഥികൾ · സിനിമകൾ: <xliff:g id="movies">%1$d</xliff:g> · സീരീസുകൾ: <xliff:g id="series">%2$d</xliff:g></string>
+    <string name="sync_status_trending_detail_preparing">ദാതാവിന്റെ ശീർഷക സൂചിക · <xliff:g id="processed">%1$d</xliff:g> / <xliff:g id="total">%2$d</xliff:g></string>
+    <string name="sync_status_trending_detail_movies">സിനിമാ പരിശോധന: <xliff:g id="checked">%1$d</xliff:g>/<xliff:g id="candidates">%2$d</xliff:g> · പൊരുത്തങ്ങൾ: <xliff:g id="matched">%3$d</xliff:g>/<xliff:g id="target">%4$d</xliff:g></string>
+    <string name="sync_status_trending_detail_series">സീരീസ് പരിശോധന: <xliff:g id="checked">%1$d</xliff:g>/<xliff:g id="candidates">%2$d</xliff:g> · പൊരുത്തങ്ങൾ: <xliff:g id="matched">%3$d</xliff:g>/<xliff:g id="target">%4$d</xliff:g></string>
+    <string name="sync_status_trending_detail_selected">തിരഞ്ഞെടുത്തവ · സിനിമകൾ: <xliff:g id="movies">%1$d</xliff:g> · സീരീസുകൾ: <xliff:g id="series">%2$d</xliff:g> · ഹോം: <xliff:g id="home">%3$d</xliff:g></string>
+    <string name="sync_status_trending_detail_completed">പൊരുത്തപ്പെട്ടവ · സിനിമകൾ: <xliff:g id="movie_matches">%1$d</xliff:g>/<xliff:g id="movie_candidates">%2$d</xliff:g> · സീരീസുകൾ: <xliff:g id="series_matches">%3$d</xliff:g>/<xliff:g id="series_candidates">%4$d</xliff:g></string>
+    <string name="sync_status_trending_preparing">വേഗത്തിൽ പൊരുത്തപ്പെടുത്തുന്നതിനായി ദാതാവിന്റെ ശീർഷകങ്ങൾ തയ്യാറാക്കുന്നു</string>
+    <string name="sync_status_trending_matching_movies">ട്രെൻഡിങ് സിനിമകൾ നിങ്ങളുടെ ദാതാവുമായി പൊരുത്തപ്പെടുത്തുന്നു</string>
+    <string name="sync_status_trending_matching_series">ട്രെൻഡിങ് സീരീസുകൾ നിങ്ങളുടെ ദാതാവുമായി പൊരുത്തപ്പെടുത്തുന്നു</string>
+    <string name="sync_status_trending_loading_seasons">ദാതാവിന്റെ സീസണുകൾ ലോഡ് ചെയ്യുന്നു</string>
+    <string name="sync_status_trending_detail_loading_seasons">പരിശോധിച്ച സീരീസുകൾ: <xliff:g id="processed">%1$d</xliff:g>/<xliff:g id="total">%2$d</xliff:g></string>
+    <string name="sync_status_trending_preserved">ട്രെൻഡിങ് പുതുക്കൽ ലഭ്യമല്ല · മുമ്പത്തെ ഫലങ്ങൾ നിലനിർത്തി</string>
+    <plurals name="sync_status_trending_received">
+        <item quantity="one">ഏറ്റവും പുതിയ <xliff:g id="count">%1$d</xliff:g> ട്രെൻഡിങ് ഇനം ലഭിച്ചു</item>
+        <item quantity="other">ഏറ്റവും പുതിയ <xliff:g id="count">%1$d</xliff:g> ട്രെൻഡിങ് ഇനങ്ങൾ ലഭിച്ചു</item>
+    </plurals>
+    <plurals name="sync_status_trending_matched">
+        <item quantity="one">പൊരുത്തപ്പെട്ടു <xliff:g id="total">%1$d</xliff:g> · <xliff:g id="movies">%2$s</xliff:g> · <xliff:g id="series">%3$s</xliff:g></item>
+        <item quantity="other">പൊരുത്തപ്പെട്ടു <xliff:g id="total">%1$d</xliff:g> · <xliff:g id="movies">%2$s</xliff:g> · <xliff:g id="series">%3$s</xliff:g></item>
+    </plurals>
+    <plurals name="sync_status_trending_building">
+        <item quantity="one">ഇപ്പോൾ ട്രെൻഡിങ് തയ്യാറാക്കുന്നു · <xliff:g id="count">%1$d</xliff:g> പൊരുത്തം</item>
+        <item quantity="other">ഇപ്പോൾ ട്രെൻഡിങ് തയ്യാറാക്കുന്നു · <xliff:g id="count">%1$d</xliff:g> പൊരുത്തങ്ങൾ</item>
+    </plurals>
+    <plurals name="sync_status_trending_publishing">
+        <item quantity="one">ഇപ്പോൾ ട്രെൻഡിങ് പ്രസിദ്ധീകരിക്കുന്നു · <xliff:g id="count">%1$d</xliff:g> ഇനം</item>
+        <item quantity="other">ഇപ്പോൾ ട്രെൻഡിങ് പ്രസിദ്ധീകരിക്കുന്നു · <xliff:g id="count">%1$d</xliff:g> ഇനങ്ങൾ</item>
+    </plurals>
+    <plurals name="sync_status_trending_ready">
+        <item quantity="one">ഇപ്പോൾ ട്രെൻഡിങ് തയ്യാറാണ് · <xliff:g id="count">%1$d</xliff:g> പൊരുത്തം</item>
+        <item quantity="other">ഇപ്പോൾ ട്രെൻഡിങ് തയ്യാറാണ് · <xliff:g id="count">%1$d</xliff:g> പൊരുത്തങ്ങൾ</item>
+    </plurals>
+    <plurals name="sync_status_trending_below_minimum">
+        <item quantity="one">ഇപ്പോൾ ട്രെൻഡിങ് മറച്ചിരിക്കുന്നു · <xliff:g id="count">%1$d</xliff:g> പൊരുത്തം മാത്രം</item>
+        <item quantity="other">ഇപ്പോൾ ട്രെൻഡിങ് മറച്ചിരിക്കുന്നു · <xliff:g id="count">%1$d</xliff:g> പൊരുത്തങ്ങൾ മാത്രം</item>
+    </plurals>
 </resources>

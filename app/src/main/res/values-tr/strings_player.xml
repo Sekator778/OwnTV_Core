@@ -243,4 +243,6 @@
     <string name="player_frame_rate_turn_on">Aç</string>
     <string name="player_reason_live_fallback">Canlı oynatma bir yedeğe geçti</string>
     <string name="player_reason_live_no_fallback">Canlı oynatma başarısız oldu — kalan yedek yok</string>
+    <string name="player_provider_retry_after">HTTP <xliff:g id="code">%1$d</xliff:g>: <xliff:g id="reason">%2$s</xliff:g> <xliff:g id="seconds">%3$d</xliff:g> sn. içinde yeniden denenecek.</string>
+    <string name="player_provider_busy">Sağlayıcı meşgul.</string>
 </resources>

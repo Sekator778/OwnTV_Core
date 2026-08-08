@@ -244,4 +244,9 @@
     <string name="setup_hls_test_reason_dead_channel">el canal de prueba tampoco se reprodujo con MPEG-TS, así que puede que esté caído</string>
     <string name="setup_hls_provider_advertises">Tu proveedor sí indica compatibilidad con HLS.</string>
     <string name="setup_hls_provider_does_not_advertise">Tu proveedor no indica compatibilidad con HLS.</string>
+    <string name="setup_stalker_advanced_identity">Identificación avanzada del dispositivo</string>
+    <string name="setup_stalker_serial_number_optional">Número de serie (opcional)</string>
+    <string name="setup_stalker_device_id_optional">Device ID (opcional)</string>
+    <string name="setup_stalker_device_id2_optional">Device ID2 (opcional)</string>
+    <string name="setup_stalker_signature_optional">Firma (opcional)</string>
 </resources>

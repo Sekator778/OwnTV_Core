@@ -248,4 +248,9 @@
     <string name="setup_hls_test_reason_dead_channel">kanał testowy nie działał również w MPEG-TS, więc może być po prostu martwy</string>
     <string name="setup_hls_provider_advertises">Twój dostawca deklaruje obsługę HLS.</string>
     <string name="setup_hls_provider_does_not_advertise">Twój dostawca nie deklaruje obsługi HLS.</string>
+    <string name="setup_stalker_advanced_identity">Zaawansowana identyfikacja urządzenia</string>
+    <string name="setup_stalker_serial_number_optional">Numer seryjny (opcjonalnie)</string>
+    <string name="setup_stalker_device_id_optional">Identyfikator urządzenia (opcjonalnie)</string>
+    <string name="setup_stalker_device_id2_optional">Identyfikator urządzenia 2 (opcjonalnie)</string>
+    <string name="setup_stalker_signature_optional">Podpis (opcjonalnie)</string>
 </resources>

@@ -240,4 +240,9 @@
     <string name="setup_hls_test_reason_dead_channel">টেস্ট চ্যানেলটি MPEG-TS-এও বাজেনি, তাই এটি হয়তো অচল</string>
     <string name="setup_hls_provider_advertises">আপনার প্রদানকারী HLS সমর্থন করে বলে জানায়।</string>
     <string name="setup_hls_provider_does_not_advertise">আপনার প্রদানকারী HLS সমর্থন করে বলে জানায় না।</string>
+    <string name="setup_stalker_advanced_identity">উন্নত ডিভাইস শনাক্তকরণ</string>
+    <string name="setup_stalker_serial_number_optional">সিরিয়াল নম্বর (ঐচ্ছিক)</string>
+    <string name="setup_stalker_device_id_optional">ডিভাইস আইডি (ঐচ্ছিক)</string>
+    <string name="setup_stalker_device_id2_optional">ডিভাইস আইডি2 (ঐচ্ছিক)</string>
+    <string name="setup_stalker_signature_optional">স্বাক্ষর (ঐচ্ছিক)</string>
 </resources>

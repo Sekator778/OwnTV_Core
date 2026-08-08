@@ -886,4 +886,8 @@
     <string name="settings_auto_frame_rate_turn_on_anyway">എന്തായാലും ഓൺ ചെയ്യുക</string>
     <string name="settings_language_request_workflow">ലിസ്റ്റ് ചെയ്തിട്ടില്ലാത്ത ഒരു ഭാഷ ചേർക്കണോ? ആദ്യം ഒരു ഭാഷാ അഭ്യർത്ഥന തുറക്കുക. ഒരു മെയിന്റെയ്നർ അത് രജിസ്റ്റർ ചെയ്ത് അടിസ്ഥാന വിവർത്തന ഫയലുകൾ തയ്യാറാക്കും; അത് Hosted Weblate-ൽ ദൃശ്യമായിക്കഴിഞ്ഞാൽ, നിങ്ങൾക്ക് സംഭാവന ചെയ്യാൻ തുടങ്ങാം.</string>
     <string name="settings_language_request_new">പുതിയ ഭാഷ അഭ്യർത്ഥിക്കുക</string>
+    <string name="settings_panel_width_disable_preview_title">തത്സമയ പ്രിവ്യൂ വീഡിയോ ഓഫാക്കണോ?</string>
+    <string name="settings_panel_width_disable_preview_description">തത്സമയ പ്രിവ്യൂ വീഡിയോ നിലവിൽ ഓണാണ്. പ്രിവ്യൂ പാനൽ മറയ്ക്കുന്നത് വീഡിയോ ഓഫാക്കും; പാനൽ വീതി ക്രമീകരിക്കലിൽ പ്രിവ്യൂ പാനലിന് ഒരു വീതി നൽകുന്നതുവരെ അത് വീണ്ടും ഓണാക്കാനാകില്ല.</string>
+    <string name="settings_live_preview_panel_hidden_title">തത്സമയ പ്രിവ്യൂ വീഡിയോ ലഭ്യമല്ല</string>
+    <string name="settings_live_preview_panel_hidden_description">തത്സമയ TV പ്രിവ്യൂ പാനൽ മറച്ചിരിക്കുന്നു. പ്രിവ്യൂ വീഡിയോ ഓണാക്കുന്നതിന് മുമ്പ് പാനൽ വീതി ക്രമീകരിക്കലിൽ അതിന് 0%%-ൽ കൂടുതലുള്ള വീതി നൽകുക.</string>
 </resources>

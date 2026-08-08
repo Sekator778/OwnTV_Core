@@ -95,6 +95,7 @@ val dataModule = module {
     }
     // provider, metadataDao, settings, overrideStore — the on-demand resolve + cache orchestrator (plan §7, §11.2 U5b).
     single { tv.own.owntv.core.metadata.MetadataRepository(get(), get(), get(), get()) }
+    single { tv.own.owntv.core.trending.TrendingRepository(get(), get(), get(), get(), get(), get(), get()) }
     // Per-content TMDB name overrides (plan §11.2 U5b): DataStore side-store, no Room schema change.
     single { tv.own.owntv.core.metadata.MetadataOverrideStore(androidContext()) }
     // OpenSubtitles (subtitle plan Phase 1): Worker-proxied REST client + Keystore-sealed
@@ -147,6 +148,7 @@ val dataModule = module {
     // Same idea for EPG: EpgSyncWorker reports started/progress/finished here so the pill also reflects
     // guide/EPG downloads (manual resync from Settings, auto startup refresh, …).
     single { tv.own.owntv.core.sync.EpgActivityTracker() }
+    single { tv.own.owntv.core.sync.TrendingActivityTracker() }
     // epgDao, httpClient, xtreamClient, channelDao, customize, settings, context, db, bulkInsertHelper
     single {
         EpgRepository(

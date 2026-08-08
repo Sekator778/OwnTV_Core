@@ -147,4 +147,69 @@
     <string name="recovery_backup_hint">إذا كان لديك ملف نسخة احتياطية، فيمكنك إعادة ضبط التطبيق ثم الاستعادة منه بعد ذلك. تؤدي إعادة الضبط إلى حذف كل ما هو مخزّن على هذا الجهاز.</string>
     <string name="recovery_confirm_reset">تأكيد: محو جميع بيانات التطبيق</string>
     <string name="recovery_reset">إعادة ضبط بيانات التطبيق (كحل أخير)</string>
+    <string name="home_row_now_trending">الرائج الآن</string>
+    <string name="home_row_trending_description">محتوى TMDB الرائج القابل للتشغيل والموجود في قوائم التشغيل لديك</string>
+    <string name="settings_trending_status_off">ميزة «الرائج الآن» متوقفة.</string>
+    <string name="settings_trending_status_building">يجري إعداد «الرائج الآن» بعد مزامنة المزوّد.</string>
+    <string name="settings_trending_status_metadata_disabled">تتطلب ميزة «الرائج الآن» بيانات TMDB الوصفية. اختر TMDB فقط أو المزوّد + TMDB.</string>
+    <string name="settings_trending_status_no_vod">ميزة «الرائج الآن» مخفية لأن الأفلام أو المسلسلات غير مفعّلة لدى هذا المزوّد.</string>
+    <string name="settings_trending_status_no_matches">ميزة «الرائج الآن» مخفية لعدم تطابق أي عناوين لدى المزوّد.</string>
+    <string name="settings_trending_status_failed">تعذّر تحديث «الرائج الآن». حاول مزامنة المزوّد مجددًا.</string>
+    <string name="settings_trending_status_waiting">أكمل مزامنة المزوّد لإنشاء «الرائج الآن».</string>
+    <plurals name="settings_trending_status_below_threshold">
+        <item quantity="zero">ميزة «الرائج الآن» مخفية لأنه لم يتطابق سوى <xliff:g id="count">%1$d</xliff:g> من عناوين المزوّد. يلزم 4 عناوين على الأقل.</item>
+        <item quantity="one">ميزة «الرائج الآن» مخفية لأنه لم يتطابق سوى عنوان واحد لدى المزوّد (<xliff:g id="count">%1$d</xliff:g>). يلزم 4 عناوين على الأقل.</item>
+        <item quantity="two">ميزة «الرائج الآن» مخفية لأنه لم يتطابق سوى عنوانين لدى المزوّد (<xliff:g id="count">%1$d</xliff:g>). يلزم 4 عناوين على الأقل.</item>
+        <item quantity="few">ميزة «الرائج الآن» مخفية لأنه لم يتطابق سوى <xliff:g id="count">%1$d</xliff:g> عناوين لدى المزوّد. يلزم 4 عناوين على الأقل.</item>
+        <item quantity="many">ميزة «الرائج الآن» مخفية لأنه لم يتطابق سوى <xliff:g id="count">%1$d</xliff:g> عنوانًا لدى المزوّد. يلزم 4 عناوين على الأقل.</item>
+        <item quantity="other">ميزة «الرائج الآن» مخفية لأنه لم يتطابق سوى <xliff:g id="count">%1$d</xliff:g> عنوان لدى المزوّد. يلزم 4 عناوين على الأقل.</item>
+    </plurals>
+    <plurals name="settings_trending_status_showing">
+        <item quantity="zero">تعرض ميزة «الرائج الآن» <xliff:g id="count">%1$d</xliff:g> من العناوين المتطابقة.</item>
+        <item quantity="one">تعرض ميزة «الرائج الآن» عنوانًا واحدًا متطابقًا (<xliff:g id="count">%1$d</xliff:g>).</item>
+        <item quantity="two">تعرض ميزة «الرائج الآن» عنوانين متطابقين (<xliff:g id="count">%1$d</xliff:g>).</item>
+        <item quantity="few">تعرض ميزة «الرائج الآن» <xliff:g id="count">%1$d</xliff:g> عناوين متطابقة.</item>
+        <item quantity="many">تعرض ميزة «الرائج الآن» <xliff:g id="count">%1$d</xliff:g> عنوانًا متطابقًا.</item>
+        <item quantity="other">تعرض ميزة «الرائج الآن» <xliff:g id="count">%1$d</xliff:g> عنوان متطابق.</item>
+    </plurals>
+    <plurals name="settings_trending_status_showing_refresh_failed">
+        <item quantity="zero">تعرض ميزة «الرائج الآن» <xliff:g id="count">%1$d</xliff:g> من العناوين من آخر تحديث ناجح.</item>
+        <item quantity="one">تعرض ميزة «الرائج الآن» عنوانًا واحدًا من آخر تحديث ناجح (<xliff:g id="count">%1$d</xliff:g>).</item>
+        <item quantity="two">تعرض ميزة «الرائج الآن» عنوانين من آخر تحديث ناجح (<xliff:g id="count">%1$d</xliff:g>).</item>
+        <item quantity="few">تعرض ميزة «الرائج الآن» <xliff:g id="count">%1$d</xliff:g> عناوين من آخر تحديث ناجح.</item>
+        <item quantity="many">تعرض ميزة «الرائج الآن» <xliff:g id="count">%1$d</xliff:g> عنوانًا من آخر تحديث ناجح.</item>
+        <item quantity="other">تعرض ميزة «الرائج الآن» <xliff:g id="count">%1$d</xliff:g> عنوان من آخر تحديث ناجح.</item>
+    </plurals>
+    <string name="home_trending_movie">فيلم</string>
+    <string name="home_trending_series">مسلسل</string>
+    <string name="home_trending_section_label">الرائج الآن · لقطة المزامنة</string>
+    <string name="home_trending_provider_match">تطابق لدى المزوّد</string>
+    <string name="home_trending_language_choice">اختيار اللغة <xliff:g id="language">%1$s</xliff:g></string>
+    <string name="home_trending_english_fallback">اختيار الإنجليزية الاحتياطي</string>
+    <string name="home_trending_untagged_fallback">اختيار غير الموسوم الاحتياطي</string>
+    <string name="home_trending_other_fallback">اختيار <xliff:g id="language">%1$s</xliff:g> الاحتياطي</string>
+    <string name="home_trending_why_label">سبب ظهور هذا العنصر</string>
+    <string name="home_trending_reason_title">ترتيب TMDB رقم <xliff:g id="rank">%1$d</xliff:g> <xliff:g id="media_type">%2$s</xliff:g> + تطابق لدى المزوّد</string>
+    <string name="home_trending_reason_preferred">يُفضَّل إصدار المزوّد المحدّد باللغة <xliff:g id="language">%1$s</xliff:g> على الإدخالات بلغة أخرى.</string>
+    <string name="home_trending_reason_english">لم يتطابق أي إصدار لدى المزوّد باللغة <xliff:g id="language">%1$s</xliff:g>، لذا تم اختيار إدخال المزوّد باللغة الإنجليزية.</string>
+    <string name="home_trending_reason_untagged">لم تتطابق أي علامة للغة <xliff:g id="language">%1$s</xliff:g> أو الإنجليزية، لذا تم اختيار إدخال المزوّد غير الموسوم.</string>
+    <string name="home_trending_reason_other">تم اختيار أقرب إصدار قابل للتشغيل لدى المزوّد بعد تعذّر توفر الإدخالات باللغة المفضلة والإنجليزية.</string>
+    <plurals name="home_trending_seasons">
+        <item quantity="zero"><xliff:g id="count">%1$d</xliff:g> من المواسم</item>
+        <item quantity="one">موسم واحد (<xliff:g id="count">%1$d</xliff:g>)</item>
+        <item quantity="two">موسمان (<xliff:g id="count">%1$d</xliff:g>)</item>
+        <item quantity="few"><xliff:g id="count">%1$d</xliff:g> مواسم</item>
+        <item quantity="many"><xliff:g id="count">%1$d</xliff:g> موسمًا</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> موسم</item>
+    </plurals>
+    <string name="home_trending_play">تشغيل</string>
+    <string name="home_trending_open_episodes">فتح الحلقات</string>
+    <string name="home_trending_trailer">الإعلان التشويقي</string>
+    <string name="home_trending_more_details">مزيد من التفاصيل</string>
+    <string name="home_trending_all_versions">جميع الإصدارات</string>
+    <string name="home_trending_previous">السابق</string>
+    <string name="home_trending_pause">إيقاف مؤقت</string>
+    <string name="home_trending_resume">متابعة</string>
+    <string name="home_trending_next">التالي</string>
+    <string name="home_trending_unavailable">لم يعد هذا الإصدار متاحًا</string>
 </resources>

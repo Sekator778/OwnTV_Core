@@ -240,4 +240,9 @@
     <string name="setup_hls_test_reason_dead_channel">testkanalen kunne heller ikke afspilles over MPEG-TS, så den er måske bare død</string>
     <string name="setup_hls_provider_advertises">Din udbyder annoncerer faktisk for HLS.</string>
     <string name="setup_hls_provider_does_not_advertise">Din udbyder annoncerer ikke for HLS.</string>
+    <string name="setup_stalker_advanced_identity">Avanceret enhedsidentifikation</string>
+    <string name="setup_stalker_serial_number_optional">Serienummer (valgfrit)</string>
+    <string name="setup_stalker_device_id_optional">Enheds-id (valgfrit)</string>
+    <string name="setup_stalker_device_id2_optional">Enheds-id2 (valgfrit)</string>
+    <string name="setup_stalker_signature_optional">Signatur (valgfrit)</string>
 </resources>

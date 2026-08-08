@@ -248,4 +248,9 @@
     <string name="setup_hls_test_reason_dead_channel">тестовый канал не воспроизводился и через MPEG-TS, так что он, возможно, просто нерабочий</string>
     <string name="setup_hls_provider_advertises">Ваш провайдер действительно сообщает о поддержке HLS.</string>
     <string name="setup_hls_provider_does_not_advertise">Ваш провайдер не сообщает о поддержке HLS.</string>
+    <string name="setup_stalker_advanced_identity">Расширенная идентификация устройства</string>
+    <string name="setup_stalker_serial_number_optional">Серийный номер (необязательно)</string>
+    <string name="setup_stalker_device_id_optional">Идентификатор устройства (необязательно)</string>
+    <string name="setup_stalker_device_id2_optional">Идентификатор устройства 2 (необязательно)</string>
+    <string name="setup_stalker_signature_optional">Подпись (необязательно)</string>
 </resources>

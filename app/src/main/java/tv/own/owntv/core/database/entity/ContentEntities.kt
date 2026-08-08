@@ -129,6 +129,7 @@ fun resolveStreamUrl(url: String, source: SourceEntity?): String {
         // Date added sort (v21): same shape as the rating pair, for "ORDER BY addedAt DESC, sortOrder DESC".
         Index(value = ["sourceId", "addedAt", "sortOrder"]),
         Index(value = ["categoryId", "addedAt", "sortOrder"]),
+        Index(value = ["sourceId", "titleSignature", "parsedYear"]),
     ],
 )
 @Immutable
@@ -154,6 +155,12 @@ data class MovieEntity(
      *  and a restream that answers 403 without them does so for files exactly as for live (v28). */
     val httpHeaders: String? = null,
     @ColumnInfo(defaultValue = "0") val contentHash: Int = 0,
+    @ColumnInfo(defaultValue = "''") val canonicalTitle: String = "",
+    @ColumnInfo(defaultValue = "''") val titleSignature: String = "",
+    val parsedYear: Int? = null,
+    val providerLanguage: String? = null,
+    @ColumnInfo(defaultValue = "0") val qualityRank: Int = 0,
+    val advertisedCapabilities: String? = null,
 )
 
 @Entity(
@@ -179,6 +186,7 @@ data class MovieEntity(
         // Date added sort (v21): same shape as the rating pair, for "ORDER BY addedAt DESC, sortOrder DESC".
         Index(value = ["sourceId", "addedAt", "sortOrder"]),
         Index(value = ["categoryId", "addedAt", "sortOrder"]),
+        Index(value = ["sourceId", "titleSignature", "parsedYear"]),
     ],
 )
 @Immutable
@@ -204,6 +212,12 @@ data class SeriesEntity(
      * bookkeeping, not provider content.
      */
     @ColumnInfo(defaultValue = "0") val episodesSyncedAt: Long = 0,
+    @ColumnInfo(defaultValue = "''") val canonicalTitle: String = "",
+    @ColumnInfo(defaultValue = "''") val titleSignature: String = "",
+    val parsedYear: Int? = null,
+    val providerLanguage: String? = null,
+    @ColumnInfo(defaultValue = "0") val qualityRank: Int = 0,
+    val advertisedCapabilities: String? = null,
 )
 
 @Entity(

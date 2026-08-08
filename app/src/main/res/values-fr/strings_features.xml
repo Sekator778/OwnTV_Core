@@ -135,4 +135,57 @@
     <string name="recovery_backup_hint">Si vous avez un fichier de sauvegarde, vous pouvez réinitialiser l’application, puis restaurer vos données à partir de ce fichier. La réinitialisation supprime tout ce qui est stocké sur cet appareil.</string>
     <string name="recovery_confirm_reset">Confirmer : effacer toutes les données de l’application</string>
     <string name="recovery_reset">Réinitialiser les données de l’application (en dernier recours)</string>
+    <string name="home_row_now_trending">Tendances du moment</string>
+    <string name="home_row_trending_description">Tendances TMDB disponibles à la lecture dans vos listes de lecture</string>
+    <string name="settings_trending_status_off">Les tendances du moment sont désactivées.</string>
+    <string name="settings_trending_status_building">Les tendances du moment sont en cours de préparation après la synchronisation du fournisseur.</string>
+    <string name="settings_trending_status_metadata_disabled">Les tendances du moment nécessitent les métadonnées TMDB. Choisissez TMDB uniquement ou Fournisseur + TMDB.</string>
+    <string name="settings_trending_status_no_vod">Les tendances du moment sont masquées, car aucun film ni aucune série n’est activé pour ce fournisseur.</string>
+    <string name="settings_trending_status_no_matches">Les tendances du moment sont masquées, car aucun titre du fournisseur ne correspond.</string>
+    <string name="settings_trending_status_failed">Impossible d’actualiser les tendances du moment. Essayez de synchroniser à nouveau le fournisseur.</string>
+    <string name="settings_trending_status_waiting">Effectuez une synchronisation du fournisseur pour créer les tendances du moment.</string>
+    <plurals name="settings_trending_status_below_threshold">
+        <item quantity="one">Les tendances du moment sont masquées, car seul <xliff:g id="count">%1$d</xliff:g> titre du fournisseur correspond. Il en faut au moins 4.</item>
+        <item quantity="many">Les tendances du moment sont masquées, car seuls <xliff:g id="count">%1$d</xliff:g> titres du fournisseur correspondent. Il en faut au moins 4.</item>
+        <item quantity="other">Les tendances du moment sont masquées, car seuls <xliff:g id="count">%1$d</xliff:g> titres du fournisseur correspondent. Il en faut au moins 4.</item>
+    </plurals>
+    <plurals name="settings_trending_status_showing">
+        <item quantity="one">Les tendances du moment affichent <xliff:g id="count">%1$d</xliff:g> titre correspondant.</item>
+        <item quantity="many">Les tendances du moment affichent <xliff:g id="count">%1$d</xliff:g> titres correspondants.</item>
+        <item quantity="other">Les tendances du moment affichent <xliff:g id="count">%1$d</xliff:g> titres correspondants.</item>
+    </plurals>
+    <plurals name="settings_trending_status_showing_refresh_failed">
+        <item quantity="one">Les tendances du moment affichent <xliff:g id="count">%1$d</xliff:g> titre issu de la dernière actualisation réussie.</item>
+        <item quantity="many">Les tendances du moment affichent <xliff:g id="count">%1$d</xliff:g> titres issus de la dernière actualisation réussie.</item>
+        <item quantity="other">Les tendances du moment affichent <xliff:g id="count">%1$d</xliff:g> titres issus de la dernière actualisation réussie.</item>
+    </plurals>
+    <string name="home_trending_movie">Film</string>
+    <string name="home_trending_series">Série</string>
+    <string name="home_trending_section_label">TENDANCES DU MOMENT · INSTANTANÉ DE SYNCHRONISATION</string>
+    <string name="home_trending_provider_match">Correspondance avec le fournisseur</string>
+    <string name="home_trending_language_choice"><xliff:g id="language">%1$s</xliff:g> choisi comme langue</string>
+    <string name="home_trending_english_fallback">Choix de repli en anglais</string>
+    <string name="home_trending_untagged_fallback">Choix de repli sans étiquette de langue</string>
+    <string name="home_trending_other_fallback"><xliff:g id="language">%1$s</xliff:g> choisi comme langue de repli</string>
+    <string name="home_trending_why_label">POURQUOI CET ÉLÉMENT APPARAÎT</string>
+    <string name="home_trending_reason_title">Classement TMDB n°<xliff:g id="rank">%1$d</xliff:g> <xliff:g id="media_type">%2$s</xliff:g> + correspondance avec le fournisseur</string>
+    <string name="home_trending_reason_preferred">La version <xliff:g id="language">%1$s</xliff:g> sélectionnée du fournisseur est prioritaire sur les entrées dans une autre langue.</string>
+    <string name="home_trending_reason_english">Aucune version <xliff:g id="language">%1$s</xliff:g> du fournisseur ne correspondait, l’entrée en anglais du fournisseur a donc été sélectionnée.</string>
+    <string name="home_trending_reason_untagged">Aucune étiquette de langue <xliff:g id="language">%1$s</xliff:g> ou anglaise ne correspondait, l’entrée sans étiquette du fournisseur a donc été sélectionnée.</string>
+    <string name="home_trending_reason_other">La version lisible la plus proche du fournisseur a été sélectionnée, car aucune entrée dans la langue préférée ni en anglais n’était disponible.</string>
+    <plurals name="home_trending_seasons">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> saison</item>
+        <item quantity="many"><xliff:g id="count">%1$d</xliff:g> saisons</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> saisons</item>
+    </plurals>
+    <string name="home_trending_play">Lire</string>
+    <string name="home_trending_open_episodes">Ouvrir les épisodes</string>
+    <string name="home_trending_trailer">Bande-annonce</string>
+    <string name="home_trending_more_details">Plus de détails</string>
+    <string name="home_trending_all_versions">Toutes les versions</string>
+    <string name="home_trending_previous">Précédent</string>
+    <string name="home_trending_pause">Pause</string>
+    <string name="home_trending_resume">Reprendre</string>
+    <string name="home_trending_next">Suivant</string>
+    <string name="home_trending_unavailable">Cette version n’est plus disponible</string>
 </resources>

@@ -127,4 +127,49 @@
     <string name="recovery_backup_hint">백업 파일이 있다면 앱을 초기화한 후 복원할 수 있습니다. 초기화하면 이 기기에 저장된 모든 항목이 삭제됩니다.</string>
     <string name="recovery_confirm_reset">확인: 모든 앱 데이터 삭제</string>
     <string name="recovery_reset">앱 데이터 초기화(최후의 수단)</string>
+    <string name="home_row_now_trending">지금 인기 급상승</string>
+    <string name="home_row_trending_description">재생목록에서 찾은 재생 가능한 TMDB 인기 콘텐츠</string>
+    <string name="settings_trending_status_off">지금 인기 급상승이 꺼져 있습니다.</string>
+    <string name="settings_trending_status_building">제공업체 동기화 후 지금 인기 급상승을 준비하고 있습니다.</string>
+    <string name="settings_trending_status_metadata_disabled">지금 인기 급상승에는 TMDB 메타데이터가 필요합니다. TMDB만 또는 제공업체 + TMDB를 선택하세요.</string>
+    <string name="settings_trending_status_no_vod">이 제공업체에서 영화 또는 시리즈를 사용하도록 설정하지 않아 지금 인기 급상승이 숨겨져 있습니다.</string>
+    <string name="settings_trending_status_no_matches">일치하는 제공업체 콘텐츠 제목이 없어 지금 인기 급상승이 숨겨져 있습니다.</string>
+    <string name="settings_trending_status_failed">지금 인기 급상승을 새로 고치지 못했습니다. 제공업체를 다시 동기화해 보세요.</string>
+    <string name="settings_trending_status_waiting">지금 인기 급상승을 구성하려면 제공업체 동기화를 완료하세요.</string>
+    <plurals name="settings_trending_status_below_threshold">
+        <item quantity="other">일치하는 제공업체 콘텐츠 제목이 <xliff:g id="count">%1$d</xliff:g>개뿐이어서 지금 인기 급상승이 숨겨져 있습니다. 최소 4개가 필요합니다.</item>
+    </plurals>
+    <plurals name="settings_trending_status_showing">
+        <item quantity="other">지금 인기 급상승에 일치하는 콘텐츠 제목 <xliff:g id="count">%1$d</xliff:g>개가 표시되고 있습니다.</item>
+    </plurals>
+    <plurals name="settings_trending_status_showing_refresh_failed">
+        <item quantity="other">지금 인기 급상승에 마지막으로 새로 고침에 성공했을 때의 콘텐츠 제목 <xliff:g id="count">%1$d</xliff:g>개가 표시되고 있습니다.</item>
+    </plurals>
+    <string name="home_trending_movie">영화</string>
+    <string name="home_trending_series">시리즈</string>
+    <string name="home_trending_section_label">지금 인기 급상승 · 동기화 스냅샷</string>
+    <string name="home_trending_provider_match">제공업체 일치 항목</string>
+    <string name="home_trending_language_choice"><xliff:g id="language">%1$s</xliff:g> 언어 선택 항목</string>
+    <string name="home_trending_english_fallback">영어 대체 선택 항목</string>
+    <string name="home_trending_untagged_fallback">언어 태그 없는 대체 선택 항목</string>
+    <string name="home_trending_other_fallback"><xliff:g id="language">%1$s</xliff:g> 대체 선택 항목</string>
+    <string name="home_trending_why_label">이 항목이 표시되는 이유</string>
+    <string name="home_trending_reason_title">TMDB 순위 #<xliff:g id="rank">%1$d</xliff:g> <xliff:g id="media_type">%2$s</xliff:g> + 제공업체 일치</string>
+    <string name="home_trending_reason_preferred">선택한 <xliff:g id="language">%1$s</xliff:g> 제공업체 버전이 다른 언어의 항목보다 우선합니다.</string>
+    <string name="home_trending_reason_english">일치하는 <xliff:g id="language">%1$s</xliff:g> 제공업체 버전이 없어 영어 제공업체 항목을 선택했습니다.</string>
+    <string name="home_trending_reason_untagged">일치하는 <xliff:g id="language">%1$s</xliff:g> 또는 영어 언어 태그가 없어 언어 태그가 없는 제공업체 항목을 선택했습니다.</string>
+    <string name="home_trending_reason_other">선호 언어 및 영어 항목을 사용할 수 없어 가장 유사한 재생 가능 제공업체 버전을 선택했습니다.</string>
+    <plurals name="home_trending_seasons">
+        <item quantity="other">시즌 <xliff:g id="count">%1$d</xliff:g>개</item>
+    </plurals>
+    <string name="home_trending_play">재생</string>
+    <string name="home_trending_open_episodes">에피소드 열기</string>
+    <string name="home_trending_trailer">예고편</string>
+    <string name="home_trending_more_details">상세 정보 더 보기</string>
+    <string name="home_trending_all_versions">모든 버전</string>
+    <string name="home_trending_previous">이전</string>
+    <string name="home_trending_pause">일시중지</string>
+    <string name="home_trending_resume">이어보기</string>
+    <string name="home_trending_next">다음</string>
+    <string name="home_trending_unavailable">이 버전은 더 이상 사용할 수 없습니다</string>
 </resources>

@@ -139,4 +139,61 @@
     <string name="recovery_backup_hint">Jeśli masz plik kopii zapasowej, możesz zresetować aplikację, a następnie przywrócić z niego dane. Zresetowanie spowoduje usunięcie wszystkiego, co jest zapisane na tym urządzeniu.</string>
     <string name="recovery_confirm_reset">Potwierdź: usuń wszystkie dane aplikacji</string>
     <string name="recovery_reset">Zresetuj dane aplikacji (ostateczność)</string>
+    <string name="home_row_now_trending">Teraz popularne</string>
+    <string name="home_row_trending_description">Popularne pozycje z TMDB dostępne do odtworzenia na Twoich listach odtwarzania</string>
+    <string name="settings_trending_status_off">Sekcja „Teraz popularne” jest wyłączona.</string>
+    <string name="settings_trending_status_building">Sekcja „Teraz popularne” jest przygotowywana po synchronizacji dostawcy.</string>
+    <string name="settings_trending_status_metadata_disabled">Sekcja „Teraz popularne” wymaga metadanych TMDB. Wybierz opcję „Tylko TMDB” lub „Dostawca + TMDB”.</string>
+    <string name="settings_trending_status_no_vod">Sekcja „Teraz popularne” jest ukryta, ponieważ dla tego dostawcy nie włączono filmów ani seriali.</string>
+    <string name="settings_trending_status_no_matches">Sekcja „Teraz popularne” jest ukryta, ponieważ nie dopasowano żadnych tytułów dostawcy.</string>
+    <string name="settings_trending_status_failed">Nie udało się odświeżyć sekcji „Teraz popularne”. Spróbuj ponownie zsynchronizować dostawcę.</string>
+    <string name="settings_trending_status_waiting">Zsynchronizuj dostawcę, aby utworzyć sekcję „Teraz popularne”.</string>
+    <plurals name="settings_trending_status_below_threshold">
+        <item quantity="one">Sekcja „Teraz popularne” jest ukryta, ponieważ dopasowano tylko <xliff:g id="count">%1$d</xliff:g> tytuł dostawcy. Wymagane są co najmniej 4.</item>
+        <item quantity="few">Sekcja „Teraz popularne” jest ukryta, ponieważ dopasowano tylko <xliff:g id="count">%1$d</xliff:g> tytuły dostawcy. Wymagane są co najmniej 4.</item>
+        <item quantity="many">Sekcja „Teraz popularne” jest ukryta, ponieważ dopasowano tylko <xliff:g id="count">%1$d</xliff:g> tytułów dostawcy. Wymagane są co najmniej 4.</item>
+        <item quantity="other">Sekcja „Teraz popularne” jest ukryta, ponieważ dopasowano tylko <xliff:g id="count">%1$d</xliff:g> tytułu dostawcy. Wymagane są co najmniej 4.</item>
+    </plurals>
+    <plurals name="settings_trending_status_showing">
+        <item quantity="one">Sekcja „Teraz popularne” wyświetla <xliff:g id="count">%1$d</xliff:g> dopasowany tytuł.</item>
+        <item quantity="few">Sekcja „Teraz popularne” wyświetla <xliff:g id="count">%1$d</xliff:g> dopasowane tytuły.</item>
+        <item quantity="many">Sekcja „Teraz popularne” wyświetla <xliff:g id="count">%1$d</xliff:g> dopasowanych tytułów.</item>
+        <item quantity="other">Sekcja „Teraz popularne” wyświetla <xliff:g id="count">%1$d</xliff:g> dopasowanego tytułu.</item>
+    </plurals>
+    <plurals name="settings_trending_status_showing_refresh_failed">
+        <item quantity="one">Sekcja „Teraz popularne” wyświetla <xliff:g id="count">%1$d</xliff:g> tytuł z ostatniego pomyślnego odświeżenia.</item>
+        <item quantity="few">Sekcja „Teraz popularne” wyświetla <xliff:g id="count">%1$d</xliff:g> tytuły z ostatniego pomyślnego odświeżenia.</item>
+        <item quantity="many">Sekcja „Teraz popularne” wyświetla <xliff:g id="count">%1$d</xliff:g> tytułów z ostatniego pomyślnego odświeżenia.</item>
+        <item quantity="other">Sekcja „Teraz popularne” wyświetla <xliff:g id="count">%1$d</xliff:g> tytułu z ostatniego pomyślnego odświeżenia.</item>
+    </plurals>
+    <string name="home_trending_movie">Film</string>
+    <string name="home_trending_series">Serial</string>
+    <string name="home_trending_section_label">TERAZ POPULARNE · MIGAWKA SYNCHRONIZACJI</string>
+    <string name="home_trending_provider_match">Dopasowanie do dostawcy</string>
+    <string name="home_trending_language_choice">Wybór języka: <xliff:g id="language">%1$s</xliff:g></string>
+    <string name="home_trending_english_fallback">Wybór zastępczy: EN</string>
+    <string name="home_trending_untagged_fallback">Wybór zastępczy bez oznaczenia języka</string>
+    <string name="home_trending_other_fallback">Wybór zastępczy: <xliff:g id="language">%1$s</xliff:g></string>
+    <string name="home_trending_why_label">DLACZEGO TA POZYCJA JEST WYŚWIETLANA</string>
+    <string name="home_trending_reason_title">Pozycja #<xliff:g id="rank">%1$d</xliff:g> w rankingu TMDB <xliff:g id="media_type">%2$s</xliff:g> + dopasowanie do dostawcy</string>
+    <string name="home_trending_reason_preferred">Wybrana wersja dostawcy w języku <xliff:g id="language">%1$s</xliff:g> ma pierwszeństwo przed pozycjami w innym języku.</string>
+    <string name="home_trending_reason_english">Nie dopasowano wersji dostawcy w języku <xliff:g id="language">%1$s</xliff:g>, dlatego wybrano angielską pozycję dostawcy.</string>
+    <string name="home_trending_reason_untagged">Nie dopasowano oznaczenia języka <xliff:g id="language">%1$s</xliff:g> ani języka angielskiego, dlatego wybrano pozycję dostawcy bez oznaczenia języka.</string>
+    <string name="home_trending_reason_other">Wybrano najbardziej zbliżoną wersję dostawcy dostępną do odtworzenia, ponieważ pozycje w preferowanym języku i w języku angielskim były niedostępne.</string>
+    <plurals name="home_trending_seasons">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> sezon</item>
+        <item quantity="few"><xliff:g id="count">%1$d</xliff:g> sezony</item>
+        <item quantity="many"><xliff:g id="count">%1$d</xliff:g> sezonów</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> sezonu</item>
+    </plurals>
+    <string name="home_trending_play">Odtwórz</string>
+    <string name="home_trending_open_episodes">Otwórz odcinki</string>
+    <string name="home_trending_trailer">Zwiastun</string>
+    <string name="home_trending_more_details">Więcej szczegółów</string>
+    <string name="home_trending_all_versions">Wszystkie wersje</string>
+    <string name="home_trending_previous">Poprzedni</string>
+    <string name="home_trending_pause">Wstrzymaj</string>
+    <string name="home_trending_resume">Wznów</string>
+    <string name="home_trending_next">Następny</string>
+    <string name="home_trending_unavailable">Ta wersja nie jest już dostępna</string>
 </resources>

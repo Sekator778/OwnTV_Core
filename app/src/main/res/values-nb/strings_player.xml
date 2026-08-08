@@ -243,4 +243,6 @@
     <string name="player_frame_rate_turn_on">Slå på</string>
     <string name="player_reason_live_fallback">Direkteavspillingen byttet til en fallback</string>
     <string name="player_reason_live_no_fallback">Direkteavspillingen feilet — ingen fallback gjenstår</string>
+    <string name="player_provider_retry_after">HTTP <xliff:g id="code">%1$d</xliff:g>: <xliff:g id="reason">%2$s</xliff:g> Prøver på nytt om <xliff:g id="seconds">%3$d</xliff:g> s.</string>
+    <string name="player_provider_busy">Leverandøren er opptatt.</string>
 </resources>

@@ -236,4 +236,6 @@
     <string name="player_frame_rate_turn_on">開啟</string>
     <string name="player_reason_live_fallback">直播播放已切換至備援方案</string>
     <string name="player_reason_live_no_fallback">直播播放失敗—已無備援方案</string>
+    <string name="player_provider_retry_after">HTTP <xliff:g id="code">%1$d</xliff:g>：<xliff:g id="reason">%2$s</xliff:g> 將於 <xliff:g id="seconds">%3$d</xliff:g> 秒後重試。</string>
+    <string name="player_provider_busy">供應商忙碌中。</string>
 </resources>

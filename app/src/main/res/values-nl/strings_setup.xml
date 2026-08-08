@@ -240,4 +240,9 @@
     <string name="setup_hls_test_reason_dead_channel">de testzender speelde ook niet via MPEG-TS, dus misschien is hij gewoon kapot</string>
     <string name="setup_hls_provider_advertises">Je provider geeft wél aan HLS te ondersteunen.</string>
     <string name="setup_hls_provider_does_not_advertise">Je provider geeft niet aan HLS te ondersteunen.</string>
+    <string name="setup_stalker_advanced_identity">Geavanceerde apparaatidentificatie</string>
+    <string name="setup_stalker_serial_number_optional">Serienummer (optioneel)</string>
+    <string name="setup_stalker_device_id_optional">Apparaat-ID (optioneel)</string>
+    <string name="setup_stalker_device_id2_optional">Apparaat-ID2 (optioneel)</string>
+    <string name="setup_stalker_signature_optional">Handtekening (optioneel)</string>
 </resources>

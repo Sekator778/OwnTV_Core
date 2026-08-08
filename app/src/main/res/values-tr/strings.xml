@@ -122,4 +122,43 @@
     <string name="common_hide">Gizle</string>
     <string name="common_show">Göster</string>
     <string name="common_qr_code_companion_url">Yardımcı URL için QR kodu</string>
+    <string name="sync_status_trending_starting">Eşitleme tamamlandı · <xliff:g id="source">%1$s</xliff:g> · Şu Anda Trend Olanlar oluşturuluyor</string>
+    <string name="sync_status_trending_matching">Trend içerikleri oynatma listenizle eşleştiriliyor</string>
+    <string name="sync_status_trending_detail_waiting">TMDB aday yanıtı bekleniyor</string>
+    <string name="sync_status_trending_detail_received">TMDB adayları · Filmler: <xliff:g id="movies">%1$d</xliff:g> · Diziler: <xliff:g id="series">%2$d</xliff:g></string>
+    <string name="sync_status_trending_detail_preparing">Sağlayıcı başlık dizini · <xliff:g id="processed">%1$d</xliff:g> / <xliff:g id="total">%2$d</xliff:g></string>
+    <string name="sync_status_trending_detail_movies">Film kontrolü: <xliff:g id="checked">%1$d</xliff:g>/<xliff:g id="candidates">%2$d</xliff:g> · eşleşmeler: <xliff:g id="matched">%3$d</xliff:g>/<xliff:g id="target">%4$d</xliff:g></string>
+    <string name="sync_status_trending_detail_series">Dizi kontrolü: <xliff:g id="checked">%1$d</xliff:g>/<xliff:g id="candidates">%2$d</xliff:g> · eşleşmeler: <xliff:g id="matched">%3$d</xliff:g>/<xliff:g id="target">%4$d</xliff:g></string>
+    <string name="sync_status_trending_detail_selected">Seçilenler · Filmler: <xliff:g id="movies">%1$d</xliff:g> · Diziler: <xliff:g id="series">%2$d</xliff:g> · Ana ekran: <xliff:g id="home">%3$d</xliff:g></string>
+    <string name="sync_status_trending_detail_completed">Eşleştirilenler · Filmler: <xliff:g id="movie_matches">%1$d</xliff:g>/<xliff:g id="movie_candidates">%2$d</xliff:g> · Diziler: <xliff:g id="series_matches">%3$d</xliff:g>/<xliff:g id="series_candidates">%4$d</xliff:g></string>
+    <string name="sync_status_trending_preparing">Hızlı eşleştirme için sağlayıcı başlıkları hazırlanıyor</string>
+    <string name="sync_status_trending_matching_movies">Trend filmler sağlayıcınızla eşleştiriliyor</string>
+    <string name="sync_status_trending_matching_series">Trend diziler sağlayıcınızla eşleştiriliyor</string>
+    <string name="sync_status_trending_loading_seasons">Sağlayıcı sezonları yükleniyor</string>
+    <string name="sync_status_trending_detail_loading_seasons">Kontrol edilen diziler: <xliff:g id="processed">%1$d</xliff:g>/<xliff:g id="total">%2$d</xliff:g></string>
+    <string name="sync_status_trending_preserved">Trend içerikleri yenilenemiyor · önceki sonuçlar korundu</string>
+    <plurals name="sync_status_trending_received">
+        <item quantity="one">En yeni <xliff:g id="count">%1$d</xliff:g> trend içeriği alındı</item>
+        <item quantity="other">En yeni <xliff:g id="count">%1$d</xliff:g> trend içeriği alındı</item>
+    </plurals>
+    <plurals name="sync_status_trending_matched">
+        <item quantity="one">Eşleştirildi <xliff:g id="total">%1$d</xliff:g> · <xliff:g id="movies">%2$s</xliff:g> · <xliff:g id="series">%3$s</xliff:g></item>
+        <item quantity="other">Eşleştirildi <xliff:g id="total">%1$d</xliff:g> · <xliff:g id="movies">%2$s</xliff:g> · <xliff:g id="series">%3$s</xliff:g></item>
+    </plurals>
+    <plurals name="sync_status_trending_building">
+        <item quantity="one">Şu Anda Trend Olanlar oluşturuluyor · <xliff:g id="count">%1$d</xliff:g> eşleşme</item>
+        <item quantity="other">Şu Anda Trend Olanlar oluşturuluyor · <xliff:g id="count">%1$d</xliff:g> eşleşme</item>
+    </plurals>
+    <plurals name="sync_status_trending_publishing">
+        <item quantity="one">Şu Anda Trend Olanlar yayımlanıyor · <xliff:g id="count">%1$d</xliff:g> içerik</item>
+        <item quantity="other">Şu Anda Trend Olanlar yayımlanıyor · <xliff:g id="count">%1$d</xliff:g> içerik</item>
+    </plurals>
+    <plurals name="sync_status_trending_ready">
+        <item quantity="one">Şu Anda Trend Olanlar hazır · <xliff:g id="count">%1$d</xliff:g> eşleşme</item>
+        <item quantity="other">Şu Anda Trend Olanlar hazır · <xliff:g id="count">%1$d</xliff:g> eşleşme</item>
+    </plurals>
+    <plurals name="sync_status_trending_below_minimum">
+        <item quantity="one">Şu Anda Trend Olanlar gizlendi · yalnızca <xliff:g id="count">%1$d</xliff:g> eşleşme</item>
+        <item quantity="other">Şu Anda Trend Olanlar gizlendi · yalnızca <xliff:g id="count">%1$d</xliff:g> eşleşme</item>
+    </plurals>
 </resources>

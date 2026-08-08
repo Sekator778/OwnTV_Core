@@ -139,4 +139,61 @@
     <string name="recovery_backup_hint">Pokud máte soubor zálohy, můžete vymazat data aplikace a poté zálohu obnovit. Vymazáním dat se odstraní vše uložené v tomto zařízení.</string>
     <string name="recovery_confirm_reset">Potvrzení: vymazat všechna data aplikace</string>
     <string name="recovery_reset">Vymazat data aplikace (krajní řešení)</string>
+    <string name="home_row_now_trending">Právě populární</string>
+    <string name="home_row_trending_description">Přehrávatelné trendy TMDB nalezené ve vašich seznamech skladeb</string>
+    <string name="settings_trending_status_off">Funkce Právě populární je vypnutá.</string>
+    <string name="settings_trending_status_building">Funkce Právě populární se připravuje po synchronizaci poskytovatele.</string>
+    <string name="settings_trending_status_metadata_disabled">Funkce Právě populární vyžaduje metadata TMDB. Vyberte Pouze TMDB nebo Poskytovatel + TMDB.</string>
+    <string name="settings_trending_status_no_vod">Funkce Právě populární je skrytá, protože tento poskytovatel nemá povolené filmy ani seriály.</string>
+    <string name="settings_trending_status_no_matches">Funkce Právě populární je skrytá, protože nebyla nalezena shoda s žádným titulem poskytovatele.</string>
+    <string name="settings_trending_status_failed">Funkci Právě populární se nepodařilo aktualizovat. Zkuste poskytovatele znovu synchronizovat.</string>
+    <string name="settings_trending_status_waiting">Dokončete synchronizaci poskytovatele, aby bylo možné sestavit přehled Právě populární.</string>
+    <plurals name="settings_trending_status_below_threshold">
+        <item quantity="one">Funkce Právě populární je skrytá, protože byla nalezena shoda pouze s <xliff:g id="count">%1$d</xliff:g> titulem poskytovatele. Jsou potřeba alespoň 4.</item>
+        <item quantity="few">Funkce Právě populární je skrytá, protože byla nalezena shoda pouze s <xliff:g id="count">%1$d</xliff:g> tituly poskytovatele. Jsou potřeba alespoň 4.</item>
+        <item quantity="many">Funkce Právě populární je skrytá, protože byla nalezena shoda pouze s <xliff:g id="count">%1$d</xliff:g> titulu poskytovatele. Jsou potřeba alespoň 4.</item>
+        <item quantity="other">Funkce Právě populární je skrytá, protože byla nalezena shoda pouze s <xliff:g id="count">%1$d</xliff:g> tituly poskytovatele. Jsou potřeba alespoň 4.</item>
+    </plurals>
+    <plurals name="settings_trending_status_showing">
+        <item quantity="one">Funkce Právě populární zobrazuje <xliff:g id="count">%1$d</xliff:g> odpovídající titul.</item>
+        <item quantity="few">Funkce Právě populární zobrazuje <xliff:g id="count">%1$d</xliff:g> odpovídající tituly.</item>
+        <item quantity="many">Funkce Právě populární zobrazuje <xliff:g id="count">%1$d</xliff:g> odpovídajícího titulu.</item>
+        <item quantity="other">Funkce Právě populární zobrazuje <xliff:g id="count">%1$d</xliff:g> odpovídajících titulů.</item>
+    </plurals>
+    <plurals name="settings_trending_status_showing_refresh_failed">
+        <item quantity="one">Funkce Právě populární zobrazuje <xliff:g id="count">%1$d</xliff:g> titul z poslední úspěšné aktualizace.</item>
+        <item quantity="few">Funkce Právě populární zobrazuje <xliff:g id="count">%1$d</xliff:g> tituly z poslední úspěšné aktualizace.</item>
+        <item quantity="many">Funkce Právě populární zobrazuje <xliff:g id="count">%1$d</xliff:g> titulu z poslední úspěšné aktualizace.</item>
+        <item quantity="other">Funkce Právě populární zobrazuje <xliff:g id="count">%1$d</xliff:g> titulů z poslední úspěšné aktualizace.</item>
+    </plurals>
+    <string name="home_trending_movie">Film</string>
+    <string name="home_trending_series">Seriál</string>
+    <string name="home_trending_section_label">PRÁVĚ POPULÁRNÍ · SNÍMEK SYNCHRONIZACE</string>
+    <string name="home_trending_provider_match">Shoda s poskytovatelem</string>
+    <string name="home_trending_language_choice">Volba jazyka <xliff:g id="language">%1$s</xliff:g></string>
+    <string name="home_trending_english_fallback">Náhradní volba v angličtině</string>
+    <string name="home_trending_untagged_fallback">Náhradní volba bez jazykového označení</string>
+    <string name="home_trending_other_fallback">Náhradní volba <xliff:g id="language">%1$s</xliff:g></string>
+    <string name="home_trending_why_label">PROČ SE TATO POLOŽKA ZOBRAZUJE</string>
+    <string name="home_trending_reason_title">Pořadí TMDB #<xliff:g id="rank">%1$d</xliff:g> <xliff:g id="media_type">%2$s</xliff:g> + shoda s poskytovatelem</string>
+    <string name="home_trending_reason_preferred">Vybraná verze poskytovatele v jazyce <xliff:g id="language">%1$s</xliff:g> má přednost před položkami v jiném jazyce.</string>
+    <string name="home_trending_reason_english">Nebyla nalezena shoda s verzí poskytovatele v jazyce <xliff:g id="language">%1$s</xliff:g>, proto byla vybrána anglická položka poskytovatele.</string>
+    <string name="home_trending_reason_untagged">Nebyla nalezena shoda s jazykovým označením <xliff:g id="language">%1$s</xliff:g> ani s angličtinou, proto byla vybrána položka poskytovatele bez jazykového označení.</string>
+    <string name="home_trending_reason_other">Nejbližší přehrávatelná verze poskytovatele byla vybrána poté, co nebyly dostupné položky v upřednostňovaném jazyce ani v angličtině.</string>
+    <plurals name="home_trending_seasons">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> řada</item>
+        <item quantity="few"><xliff:g id="count">%1$d</xliff:g> řady</item>
+        <item quantity="many"><xliff:g id="count">%1$d</xliff:g> řady</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> řad</item>
+    </plurals>
+    <string name="home_trending_play">Přehrát</string>
+    <string name="home_trending_open_episodes">Otevřít epizody</string>
+    <string name="home_trending_trailer">Upoutávka</string>
+    <string name="home_trending_more_details">Další podrobnosti</string>
+    <string name="home_trending_all_versions">Všechny verze</string>
+    <string name="home_trending_previous">Předchozí</string>
+    <string name="home_trending_pause">Pozastavit</string>
+    <string name="home_trending_resume">Pokračovat</string>
+    <string name="home_trending_next">Další</string>
+    <string name="home_trending_unavailable">Tato verze již není dostupná</string>
 </resources>

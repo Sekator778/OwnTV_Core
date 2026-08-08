@@ -113,4 +113,37 @@
     <string name="common_hide">非表示にする</string>
     <string name="common_show">表示する</string>
     <string name="common_qr_code_companion_url">コンパニオンURL用のQRコード</string>
+    <string name="sync_status_trending_starting">同期完了 · <xliff:g id="source">%1$s</xliff:g> · 「現在のトレンド」を構築中</string>
+    <string name="sync_status_trending_matching">トレンド項目をプレイリストと照合中</string>
+    <string name="sync_status_trending_detail_waiting">TMDBの候補応答を待機中</string>
+    <string name="sync_status_trending_detail_received">TMDBの候補 · 映画: <xliff:g id="movies">%1$d</xliff:g> · シリーズ: <xliff:g id="series">%2$d</xliff:g></string>
+    <string name="sync_status_trending_detail_preparing">プロバイダーのタイトルインデックス · <xliff:g id="processed">%1$d</xliff:g> / <xliff:g id="total">%2$d</xliff:g></string>
+    <string name="sync_status_trending_detail_movies">映画の確認: <xliff:g id="checked">%1$d</xliff:g>/<xliff:g id="candidates">%2$d</xliff:g> · 一致: <xliff:g id="matched">%3$d</xliff:g>/<xliff:g id="target">%4$d</xliff:g></string>
+    <string name="sync_status_trending_detail_series">シリーズの確認: <xliff:g id="checked">%1$d</xliff:g>/<xliff:g id="candidates">%2$d</xliff:g> · 一致: <xliff:g id="matched">%3$d</xliff:g>/<xliff:g id="target">%4$d</xliff:g></string>
+    <string name="sync_status_trending_detail_selected">選択済み · 映画: <xliff:g id="movies">%1$d</xliff:g> · シリーズ: <xliff:g id="series">%2$d</xliff:g> · ホーム: <xliff:g id="home">%3$d</xliff:g></string>
+    <string name="sync_status_trending_detail_completed">照合済み · 映画: <xliff:g id="movie_matches">%1$d</xliff:g>/<xliff:g id="movie_candidates">%2$d</xliff:g> · シリーズ: <xliff:g id="series_matches">%3$d</xliff:g>/<xliff:g id="series_candidates">%4$d</xliff:g></string>
+    <string name="sync_status_trending_preparing">高速照合用にプロバイダーのタイトルを準備中</string>
+    <string name="sync_status_trending_matching_movies">トレンド映画をプロバイダーと照合中</string>
+    <string name="sync_status_trending_matching_series">トレンドシリーズをプロバイダーと照合中</string>
+    <string name="sync_status_trending_loading_seasons">プロバイダーのシーズンを読み込み中</string>
+    <string name="sync_status_trending_detail_loading_seasons">確認済みシリーズ: <xliff:g id="processed">%1$d</xliff:g>/<xliff:g id="total">%2$d</xliff:g></string>
+    <string name="sync_status_trending_preserved">トレンドを更新できません · 前回の結果を保持しました</string>
+    <plurals name="sync_status_trending_received">
+        <item quantity="other">最新のトレンド項目を<xliff:g id="count">%1$d</xliff:g>件受信しました</item>
+    </plurals>
+    <plurals name="sync_status_trending_matched">
+        <item quantity="other">照合済み <xliff:g id="total">%1$d</xliff:g> · <xliff:g id="movies">%2$s</xliff:g> · <xliff:g id="series">%3$s</xliff:g></item>
+    </plurals>
+    <plurals name="sync_status_trending_building">
+        <item quantity="other">「現在のトレンド」を構築中 · <xliff:g id="count">%1$d</xliff:g>件一致</item>
+    </plurals>
+    <plurals name="sync_status_trending_publishing">
+        <item quantity="other">「現在のトレンド」を公開中 · <xliff:g id="count">%1$d</xliff:g>項目</item>
+    </plurals>
+    <plurals name="sync_status_trending_ready">
+        <item quantity="other">「現在のトレンド」の準備完了 · <xliff:g id="count">%1$d</xliff:g>件一致</item>
+    </plurals>
+    <plurals name="sync_status_trending_below_minimum">
+        <item quantity="other">「現在のトレンド」を非表示 · 一致は<xliff:g id="count">%1$d</xliff:g>件のみ</item>
+    </plurals>
 </resources>

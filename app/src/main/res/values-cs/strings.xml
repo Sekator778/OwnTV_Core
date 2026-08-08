@@ -140,4 +140,55 @@
     <string name="common_hide">Skrýt</string>
     <string name="common_show">Zobrazit</string>
     <string name="common_qr_code_companion_url">QR kód pro URL doprovodného nástroje</string>
+    <string name="sync_status_trending_starting">Synchronizace dokončena · <xliff:g id="source">%1$s</xliff:g> · Vytváření sekce Právě populární</string>
+    <string name="sync_status_trending_matching">Porovnávání populárních položek s vaším seznamem skladeb</string>
+    <string name="sync_status_trending_detail_waiting">Čekání na odpověď s kandidáty z TMDB</string>
+    <string name="sync_status_trending_detail_received">Kandidáti z TMDB · Filmy: <xliff:g id="movies">%1$d</xliff:g> · Seriály: <xliff:g id="series">%2$d</xliff:g></string>
+    <string name="sync_status_trending_detail_preparing">Rejstřík názvů poskytovatele · <xliff:g id="processed">%1$d</xliff:g> / <xliff:g id="total">%2$d</xliff:g></string>
+    <string name="sync_status_trending_detail_movies">Kontrola filmů: <xliff:g id="checked">%1$d</xliff:g>/<xliff:g id="candidates">%2$d</xliff:g> · shody: <xliff:g id="matched">%3$d</xliff:g>/<xliff:g id="target">%4$d</xliff:g></string>
+    <string name="sync_status_trending_detail_series">Kontrola seriálů: <xliff:g id="checked">%1$d</xliff:g>/<xliff:g id="candidates">%2$d</xliff:g> · shody: <xliff:g id="matched">%3$d</xliff:g>/<xliff:g id="target">%4$d</xliff:g></string>
+    <string name="sync_status_trending_detail_selected">Vybráno · Filmy: <xliff:g id="movies">%1$d</xliff:g> · Seriály: <xliff:g id="series">%2$d</xliff:g> · Domovská obrazovka: <xliff:g id="home">%3$d</xliff:g></string>
+    <string name="sync_status_trending_detail_completed">Nalezené shody · Filmy: <xliff:g id="movie_matches">%1$d</xliff:g>/<xliff:g id="movie_candidates">%2$d</xliff:g> · Seriály: <xliff:g id="series_matches">%3$d</xliff:g>/<xliff:g id="series_candidates">%4$d</xliff:g></string>
+    <string name="sync_status_trending_preparing">Příprava názvů od poskytovatele pro rychlé porovnávání</string>
+    <string name="sync_status_trending_matching_movies">Porovnávání populárních filmů s nabídkou vašeho poskytovatele</string>
+    <string name="sync_status_trending_matching_series">Porovnávání populárních seriálů s nabídkou vašeho poskytovatele</string>
+    <string name="sync_status_trending_loading_seasons">Načítání řad od poskytovatele</string>
+    <string name="sync_status_trending_detail_loading_seasons">Zkontrolované seriály: <xliff:g id="processed">%1$d</xliff:g>/<xliff:g id="total">%2$d</xliff:g></string>
+    <string name="sync_status_trending_preserved">Aktualizace populárního obsahu není k dispozici · předchozí výsledky byly zachovány</string>
+    <plurals name="sync_status_trending_received">
+        <item quantity="one">Přijata nejnovější <xliff:g id="count">%1$d</xliff:g> populární položka</item>
+        <item quantity="few">Přijaty nejnovější <xliff:g id="count">%1$d</xliff:g> populární položky</item>
+        <item quantity="many">Přijato nejnovějších <xliff:g id="count">%1$d</xliff:g> populární položky</item>
+        <item quantity="other">Přijato nejnovějších <xliff:g id="count">%1$d</xliff:g> populárních položek</item>
+    </plurals>
+    <plurals name="sync_status_trending_matched">
+        <item quantity="one">Nalezena shoda <xliff:g id="total">%1$d</xliff:g> · <xliff:g id="movies">%2$s</xliff:g> · <xliff:g id="series">%3$s</xliff:g></item>
+        <item quantity="few">Nalezeny shody <xliff:g id="total">%1$d</xliff:g> · <xliff:g id="movies">%2$s</xliff:g> · <xliff:g id="series">%3$s</xliff:g></item>
+        <item quantity="many">Nalezeno shod <xliff:g id="total">%1$d</xliff:g> · <xliff:g id="movies">%2$s</xliff:g> · <xliff:g id="series">%3$s</xliff:g></item>
+        <item quantity="other">Nalezeno shod <xliff:g id="total">%1$d</xliff:g> · <xliff:g id="movies">%2$s</xliff:g> · <xliff:g id="series">%3$s</xliff:g></item>
+    </plurals>
+    <plurals name="sync_status_trending_building">
+        <item quantity="one">Vytváření sekce Právě populární · <xliff:g id="count">%1$d</xliff:g> shoda</item>
+        <item quantity="few">Vytváření sekce Právě populární · <xliff:g id="count">%1$d</xliff:g> shody</item>
+        <item quantity="many">Vytváření sekce Právě populární · <xliff:g id="count">%1$d</xliff:g> shody</item>
+        <item quantity="other">Vytváření sekce Právě populární · <xliff:g id="count">%1$d</xliff:g> shod</item>
+    </plurals>
+    <plurals name="sync_status_trending_publishing">
+        <item quantity="one">Zveřejňování sekce Právě populární · <xliff:g id="count">%1$d</xliff:g> položka</item>
+        <item quantity="few">Zveřejňování sekce Právě populární · <xliff:g id="count">%1$d</xliff:g> položky</item>
+        <item quantity="many">Zveřejňování sekce Právě populární · <xliff:g id="count">%1$d</xliff:g> položky</item>
+        <item quantity="other">Zveřejňování sekce Právě populární · <xliff:g id="count">%1$d</xliff:g> položek</item>
+    </plurals>
+    <plurals name="sync_status_trending_ready">
+        <item quantity="one">Sekce Právě populární je připravena · <xliff:g id="count">%1$d</xliff:g> shoda</item>
+        <item quantity="few">Sekce Právě populární je připravena · <xliff:g id="count">%1$d</xliff:g> shody</item>
+        <item quantity="many">Sekce Právě populární je připravena · <xliff:g id="count">%1$d</xliff:g> shody</item>
+        <item quantity="other">Sekce Právě populární je připravena · <xliff:g id="count">%1$d</xliff:g> shod</item>
+    </plurals>
+    <plurals name="sync_status_trending_below_minimum">
+        <item quantity="one">Sekce Právě populární je skryta · pouze <xliff:g id="count">%1$d</xliff:g> shoda</item>
+        <item quantity="few">Sekce Právě populární je skryta · pouze <xliff:g id="count">%1$d</xliff:g> shody</item>
+        <item quantity="many">Sekce Právě populární je skryta · pouze <xliff:g id="count">%1$d</xliff:g> shody</item>
+        <item quantity="other">Sekce Právě populární je skryta · pouze <xliff:g id="count">%1$d</xliff:g> shod</item>
+    </plurals>
 </resources>

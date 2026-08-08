@@ -902,4 +902,8 @@
     <string name="settings_auto_frame_rate_turn_on_anyway">Attiva comunque</string>
     <string name="settings_language_request_workflow">Vuoi aggiungere una lingua che non è elencata? Apri prima una richiesta di lingua. Un maintainer la registrerà e preparerà i file di traduzione di base; una volta che appare su Hosted Weblate, puoi iniziare a contribuire.</string>
     <string name="settings_language_request_new">Richiedi una nuova lingua</string>
+    <string name="settings_panel_width_disable_preview_title">Disattivare il video di anteprima in diretta?</string>
+    <string name="settings_panel_width_disable_preview_description">Il video di anteprima in diretta è attualmente attivo. Nascondendo il pannello Anteprima, il video verrà disattivato e non potrà essere riattivato finché non assegnerai una larghezza al pannello Anteprima in Regolazione larghezza pannelli.</string>
+    <string name="settings_live_preview_panel_hidden_title">Il video di anteprima in diretta non è disponibile</string>
+    <string name="settings_live_preview_panel_hidden_description">Il pannello di anteprima della TV in diretta è nascosto. Assegnagli una larghezza superiore allo 0%% in Regolazione larghezza pannelli prima di attivare il video di anteprima.</string>
 </resources>

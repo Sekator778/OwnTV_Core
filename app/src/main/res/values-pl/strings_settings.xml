@@ -918,4 +918,8 @@
     <string name="settings_auto_frame_rate_turn_on_anyway">Włącz mimo to</string>
     <string name="settings_language_request_workflow">Chcesz dodać język, którego nie ma na liście? Najpierw złóż prośbę o dodanie języka. Opiekun zarejestruje język i przygotuje podstawowe pliki tłumaczeń; gdy pojawi się na Hosted Weblate, możesz zacząć wnosić swój wkład.</string>
     <string name="settings_language_request_new">Poproś o nowy język</string>
+    <string name="settings_panel_width_disable_preview_title">Wyłączyć podgląd wideo na żywo?</string>
+    <string name="settings_panel_width_disable_preview_description">Podgląd wideo na żywo jest obecnie włączony. Ukrycie panelu podglądu wyłączy wideo, którego nie będzie można ponownie włączyć, dopóki nie ustawisz szerokości panelu podglądu w sekcji Dostosowanie szerokości paneli.</string>
+    <string name="settings_live_preview_panel_hidden_title">Podgląd wideo na żywo jest niedostępny</string>
+    <string name="settings_live_preview_panel_hidden_description">Panel podglądu telewizji na żywo jest ukryty. Przed włączeniem podglądu wideo ustaw jego szerokość powyżej 0%% w sekcji Dostosowanie szerokości paneli.</string>
 </resources>

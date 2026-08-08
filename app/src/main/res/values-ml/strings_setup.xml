@@ -240,4 +240,9 @@
     <string name="setup_hls_test_reason_dead_channel">ടെസ്റ്റ് ചാനൽ MPEG-TS-ലും പ്ലേ ചെയ്തില്ല, അതിനാൽ അത് പ്രവർത്തനരഹിതമായിരിക്കാം</string>
     <string name="setup_hls_provider_advertises">നിങ്ങളുടെ പ്രൊവൈഡർ HLS പരസ്യപ്പെടുത്തുന്നുണ്ട്.</string>
     <string name="setup_hls_provider_does_not_advertise">നിങ്ങളുടെ പ്രൊവൈഡർ HLS പരസ്യപ്പെടുത്തുന്നില്ല.</string>
+    <string name="setup_stalker_advanced_identity">വിപുലമായ ഉപകരണ തിരിച്ചറിയൽ</string>
+    <string name="setup_stalker_serial_number_optional">സീരിയൽ നമ്പർ (ഐച്ഛികം)</string>
+    <string name="setup_stalker_device_id_optional">ഉപകരണ ID (ഐച്ഛികം)</string>
+    <string name="setup_stalker_device_id2_optional">ഉപകരണ ID2 (ഐച്ഛികം)</string>
+    <string name="setup_stalker_signature_optional">ഒപ്പ് (ഐച്ഛികം)</string>
 </resources>

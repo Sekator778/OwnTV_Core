@@ -240,4 +240,9 @@
     <string name="setup_hls_test_reason_dead_channel">der Testsender ließ sich auch über MPEG-TS nicht abspielen, er ist also möglicherweise einfach defekt</string>
     <string name="setup_hls_provider_advertises">Dein Anbieter gibt HLS-Unterstützung an.</string>
     <string name="setup_hls_provider_does_not_advertise">Dein Anbieter gibt keine HLS-Unterstützung an.</string>
+    <string name="setup_stalker_advanced_identity">Erweiterte Geräteidentifikation</string>
+    <string name="setup_stalker_serial_number_optional">Seriennummer (optional)</string>
+    <string name="setup_stalker_device_id_optional">Geräte-ID (optional)</string>
+    <string name="setup_stalker_device_id2_optional">Geräte-ID 2 (optional)</string>
+    <string name="setup_stalker_signature_optional">Signatur (optional)</string>
 </resources>

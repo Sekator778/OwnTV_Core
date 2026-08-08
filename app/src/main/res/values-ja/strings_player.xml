@@ -236,4 +236,6 @@
     <string name="player_frame_rate_turn_on">オンにする</string>
     <string name="player_reason_live_fallback">ライブ再生はフォールバックに切り替わりました</string>
     <string name="player_reason_live_no_fallback">ライブ再生に失敗しました — フォールバックは残っていません</string>
+    <string name="player_provider_retry_after">HTTP <xliff:g id="code">%1$d</xliff:g>: <xliff:g id="reason">%2$s</xliff:g> <xliff:g id="seconds">%3$d</xliff:g>秒後に再試行します。</string>
+    <string name="player_provider_busy">プロバイダーが混み合っています。</string>
 </resources>

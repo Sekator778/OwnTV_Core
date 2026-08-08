@@ -131,4 +131,49 @@
     <string name="common_hide">Masquer</string>
     <string name="common_show">Afficher</string>
     <string name="common_qr_code_companion_url">Code QR de l’URL associée</string>
+    <string name="sync_status_trending_starting">Synchronisation terminée · <xliff:g id="source">%1$s</xliff:g> · Création de Tendances actuelles</string>
+    <string name="sync_status_trending_matching">Recherche de correspondances entre les éléments tendance et votre liste de lecture</string>
+    <string name="sync_status_trending_detail_waiting">En attente de la réponse de TMDB concernant les candidats</string>
+    <string name="sync_status_trending_detail_received">Candidats TMDB · Films : <xliff:g id="movies">%1$d</xliff:g> · Séries : <xliff:g id="series">%2$d</xliff:g></string>
+    <string name="sync_status_trending_detail_preparing">Index des titres du fournisseur · <xliff:g id="processed">%1$d</xliff:g> / <xliff:g id="total">%2$d</xliff:g></string>
+    <string name="sync_status_trending_detail_movies">Vérification des films : <xliff:g id="checked">%1$d</xliff:g>/<xliff:g id="candidates">%2$d</xliff:g> · correspondances : <xliff:g id="matched">%3$d</xliff:g>/<xliff:g id="target">%4$d</xliff:g></string>
+    <string name="sync_status_trending_detail_series">Vérification des séries : <xliff:g id="checked">%1$d</xliff:g>/<xliff:g id="candidates">%2$d</xliff:g> · correspondances : <xliff:g id="matched">%3$d</xliff:g>/<xliff:g id="target">%4$d</xliff:g></string>
+    <string name="sync_status_trending_detail_selected">Sélection · Films : <xliff:g id="movies">%1$d</xliff:g> · Séries : <xliff:g id="series">%2$d</xliff:g> · Accueil : <xliff:g id="home">%3$d</xliff:g></string>
+    <string name="sync_status_trending_detail_completed">Correspondances · Films : <xliff:g id="movie_matches">%1$d</xliff:g>/<xliff:g id="movie_candidates">%2$d</xliff:g> · Séries : <xliff:g id="series_matches">%3$d</xliff:g>/<xliff:g id="series_candidates">%4$d</xliff:g></string>
+    <string name="sync_status_trending_preparing">Préparation des titres du fournisseur pour une recherche rapide des correspondances</string>
+    <string name="sync_status_trending_matching_movies">Recherche de correspondances entre les films tendance et votre fournisseur</string>
+    <string name="sync_status_trending_matching_series">Recherche de correspondances entre les séries tendance et votre fournisseur</string>
+    <string name="sync_status_trending_loading_seasons">Chargement des saisons du fournisseur</string>
+    <string name="sync_status_trending_detail_loading_seasons">Séries vérifiées : <xliff:g id="processed">%1$d</xliff:g>/<xliff:g id="total">%2$d</xliff:g></string>
+    <string name="sync_status_trending_preserved">Actualisation des tendances indisponible · résultats précédents conservés</string>
+    <plurals name="sync_status_trending_received">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> dernier élément tendance reçu</item>
+        <item quantity="many"><xliff:g id="count">%1$d</xliff:g> derniers éléments tendance reçus</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> derniers éléments tendance reçus</item>
+    </plurals>
+    <plurals name="sync_status_trending_matched">
+        <item quantity="one">Correspondance trouvée · <xliff:g id="total">%1$d</xliff:g> · <xliff:g id="movies">%2$s</xliff:g> · <xliff:g id="series">%3$s</xliff:g></item>
+        <item quantity="many">Correspondances trouvées · <xliff:g id="total">%1$d</xliff:g> · <xliff:g id="movies">%2$s</xliff:g> · <xliff:g id="series">%3$s</xliff:g></item>
+        <item quantity="other">Correspondances trouvées · <xliff:g id="total">%1$d</xliff:g> · <xliff:g id="movies">%2$s</xliff:g> · <xliff:g id="series">%3$s</xliff:g></item>
+    </plurals>
+    <plurals name="sync_status_trending_building">
+        <item quantity="one">Création de Tendances actuelles · <xliff:g id="count">%1$d</xliff:g> correspondance</item>
+        <item quantity="many">Création de Tendances actuelles · <xliff:g id="count">%1$d</xliff:g> correspondances</item>
+        <item quantity="other">Création de Tendances actuelles · <xliff:g id="count">%1$d</xliff:g> correspondances</item>
+    </plurals>
+    <plurals name="sync_status_trending_publishing">
+        <item quantity="one">Publication de Tendances actuelles · <xliff:g id="count">%1$d</xliff:g> élément</item>
+        <item quantity="many">Publication de Tendances actuelles · <xliff:g id="count">%1$d</xliff:g> éléments</item>
+        <item quantity="other">Publication de Tendances actuelles · <xliff:g id="count">%1$d</xliff:g> éléments</item>
+    </plurals>
+    <plurals name="sync_status_trending_ready">
+        <item quantity="one">Tendances actuelles prêtes · <xliff:g id="count">%1$d</xliff:g> correspondance</item>
+        <item quantity="many">Tendances actuelles prêtes · <xliff:g id="count">%1$d</xliff:g> correspondances</item>
+        <item quantity="other">Tendances actuelles prêtes · <xliff:g id="count">%1$d</xliff:g> correspondances</item>
+    </plurals>
+    <plurals name="sync_status_trending_below_minimum">
+        <item quantity="one">Tendances actuelles masquées · seulement <xliff:g id="count">%1$d</xliff:g> correspondance</item>
+        <item quantity="many">Tendances actuelles masquées · seulement <xliff:g id="count">%1$d</xliff:g> correspondances</item>
+        <item quantity="other">Tendances actuelles masquées · seulement <xliff:g id="count">%1$d</xliff:g> correspondances</item>
+    </plurals>
 </resources>

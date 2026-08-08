@@ -122,4 +122,43 @@
     <string name="common_hide">Skjul</string>
     <string name="common_show">Vis</string>
     <string name="common_qr_code_companion_url">QR-kode til ledsager-URL\'en</string>
+    <string name="sync_status_trending_starting">Synkronisering fuldført · <xliff:g id="source">%1$s</xliff:g> · Opbygger Populært lige nu</string>
+    <string name="sync_status_trending_matching">Matcher populære elementer med din afspilningsliste</string>
+    <string name="sync_status_trending_detail_waiting">Venter på svar med kandidater fra TMDB</string>
+    <string name="sync_status_trending_detail_received">TMDB-kandidater · Film: <xliff:g id="movies">%1$d</xliff:g> · Serier: <xliff:g id="series">%2$d</xliff:g></string>
+    <string name="sync_status_trending_detail_preparing">Indeks over titler fra udbyderen · <xliff:g id="processed">%1$d</xliff:g> / <xliff:g id="total">%2$d</xliff:g></string>
+    <string name="sync_status_trending_detail_movies">Filmkontrol: <xliff:g id="checked">%1$d</xliff:g>/<xliff:g id="candidates">%2$d</xliff:g> · match: <xliff:g id="matched">%3$d</xliff:g>/<xliff:g id="target">%4$d</xliff:g></string>
+    <string name="sync_status_trending_detail_series">Seriekontrol: <xliff:g id="checked">%1$d</xliff:g>/<xliff:g id="candidates">%2$d</xliff:g> · match: <xliff:g id="matched">%3$d</xliff:g>/<xliff:g id="target">%4$d</xliff:g></string>
+    <string name="sync_status_trending_detail_selected">Valgt · Film: <xliff:g id="movies">%1$d</xliff:g> · Serier: <xliff:g id="series">%2$d</xliff:g> · Startskærm: <xliff:g id="home">%3$d</xliff:g></string>
+    <string name="sync_status_trending_detail_completed">Matchet · Film: <xliff:g id="movie_matches">%1$d</xliff:g>/<xliff:g id="movie_candidates">%2$d</xliff:g> · Serier: <xliff:g id="series_matches">%3$d</xliff:g>/<xliff:g id="series_candidates">%4$d</xliff:g></string>
+    <string name="sync_status_trending_preparing">Forbereder titler fra udbyderen til hurtig matchning</string>
+    <string name="sync_status_trending_matching_movies">Matcher populære film med din udbyder</string>
+    <string name="sync_status_trending_matching_series">Matcher populære serier med din udbyder</string>
+    <string name="sync_status_trending_loading_seasons">Indlæser sæsoner fra udbyderen</string>
+    <string name="sync_status_trending_detail_loading_seasons">Kontrollerede serier: <xliff:g id="processed">%1$d</xliff:g>/<xliff:g id="total">%2$d</xliff:g></string>
+    <string name="sync_status_trending_preserved">Populært lige nu kunne ikke opdateres · tidligere resultater er bevaret</string>
+    <plurals name="sync_status_trending_received">
+        <item quantity="one">Modtog det seneste <xliff:g id="count">%1$d</xliff:g> populære element</item>
+        <item quantity="other">Modtog de seneste <xliff:g id="count">%1$d</xliff:g> populære elementer</item>
+    </plurals>
+    <plurals name="sync_status_trending_matched">
+        <item quantity="one">Matchet <xliff:g id="total">%1$d</xliff:g> · <xliff:g id="movies">%2$s</xliff:g> · <xliff:g id="series">%3$s</xliff:g></item>
+        <item quantity="other">Matchet <xliff:g id="total">%1$d</xliff:g> · <xliff:g id="movies">%2$s</xliff:g> · <xliff:g id="series">%3$s</xliff:g></item>
+    </plurals>
+    <plurals name="sync_status_trending_building">
+        <item quantity="one">Opbygger Populært lige nu · <xliff:g id="count">%1$d</xliff:g> match</item>
+        <item quantity="other">Opbygger Populært lige nu · <xliff:g id="count">%1$d</xliff:g> match</item>
+    </plurals>
+    <plurals name="sync_status_trending_publishing">
+        <item quantity="one">Udgiver Populært lige nu · <xliff:g id="count">%1$d</xliff:g> element</item>
+        <item quantity="other">Udgiver Populært lige nu · <xliff:g id="count">%1$d</xliff:g> elementer</item>
+    </plurals>
+    <plurals name="sync_status_trending_ready">
+        <item quantity="one">Populært lige nu er klar · <xliff:g id="count">%1$d</xliff:g> match</item>
+        <item quantity="other">Populært lige nu er klar · <xliff:g id="count">%1$d</xliff:g> match</item>
+    </plurals>
+    <plurals name="sync_status_trending_below_minimum">
+        <item quantity="one">Populært lige nu er skjult · kun <xliff:g id="count">%1$d</xliff:g> match</item>
+        <item quantity="other">Populært lige nu er skjult · kun <xliff:g id="count">%1$d</xliff:g> match</item>
+    </plurals>
 </resources>

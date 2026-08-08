@@ -122,4 +122,43 @@
     <string name="common_hide">छिपाएँ</string>
     <string name="common_show">दिखाएँ</string>
     <string name="common_qr_code_companion_url">सहायक URL के लिए QR कोड</string>
+    <string name="sync_status_trending_starting">सिंक पूरा हुआ · <xliff:g id="source">%1$s</xliff:g> · अभी लोकप्रिय सूची बनाई जा रही है</string>
+    <string name="sync_status_trending_matching">लोकप्रिय आइटम का आपकी प्लेलिस्ट से मिलान किया जा रहा है</string>
+    <string name="sync_status_trending_detail_waiting">TMDB के संभावित परिणामों की प्रतिक्रिया की प्रतीक्षा है</string>
+    <string name="sync_status_trending_detail_received">TMDB के संभावित परिणाम · फ़िल्में: <xliff:g id="movies">%1$d</xliff:g> · सीरीज़: <xliff:g id="series">%2$d</xliff:g></string>
+    <string name="sync_status_trending_detail_preparing">प्रदाता शीर्षक इंडेक्स · <xliff:g id="processed">%1$d</xliff:g> / <xliff:g id="total">%2$d</xliff:g></string>
+    <string name="sync_status_trending_detail_movies">फ़िल्म जाँच: <xliff:g id="checked">%1$d</xliff:g>/<xliff:g id="candidates">%2$d</xliff:g> · मिलान: <xliff:g id="matched">%3$d</xliff:g>/<xliff:g id="target">%4$d</xliff:g></string>
+    <string name="sync_status_trending_detail_series">सीरीज़ जाँच: <xliff:g id="checked">%1$d</xliff:g>/<xliff:g id="candidates">%2$d</xliff:g> · मिलान: <xliff:g id="matched">%3$d</xliff:g>/<xliff:g id="target">%4$d</xliff:g></string>
+    <string name="sync_status_trending_detail_selected">चयनित · फ़िल्में: <xliff:g id="movies">%1$d</xliff:g> · सीरीज़: <xliff:g id="series">%2$d</xliff:g> · होम: <xliff:g id="home">%3$d</xliff:g></string>
+    <string name="sync_status_trending_detail_completed">मिलान हुआ · फ़िल्में: <xliff:g id="movie_matches">%1$d</xliff:g>/<xliff:g id="movie_candidates">%2$d</xliff:g> · सीरीज़: <xliff:g id="series_matches">%3$d</xliff:g>/<xliff:g id="series_candidates">%4$d</xliff:g></string>
+    <string name="sync_status_trending_preparing">तेज़ मिलान के लिए प्रदाता के शीर्षक तैयार किए जा रहे हैं</string>
+    <string name="sync_status_trending_matching_movies">लोकप्रिय फ़िल्मों का आपके प्रदाता से मिलान किया जा रहा है</string>
+    <string name="sync_status_trending_matching_series">लोकप्रिय सीरीज़ का आपके प्रदाता से मिलान किया जा रहा है</string>
+    <string name="sync_status_trending_loading_seasons">प्रदाता के सीज़न लोड किए जा रहे हैं</string>
+    <string name="sync_status_trending_detail_loading_seasons">जाँची गई सीरीज़: <xliff:g id="processed">%1$d</xliff:g>/<xliff:g id="total">%2$d</xliff:g></string>
+    <string name="sync_status_trending_preserved">लोकप्रिय सामग्री रीफ़्रेश करना उपलब्ध नहीं · पिछले परिणाम रखे गए</string>
+    <plurals name="sync_status_trending_received">
+        <item quantity="one">नवीनतम <xliff:g id="count">%1$d</xliff:g> लोकप्रिय आइटम मिला</item>
+        <item quantity="other">नवीनतम <xliff:g id="count">%1$d</xliff:g> लोकप्रिय आइटम मिले</item>
+    </plurals>
+    <plurals name="sync_status_trending_matched">
+        <item quantity="one">मिलान हुआ <xliff:g id="total">%1$d</xliff:g> · <xliff:g id="movies">%2$s</xliff:g> · <xliff:g id="series">%3$s</xliff:g></item>
+        <item quantity="other">मिलान हुए <xliff:g id="total">%1$d</xliff:g> · <xliff:g id="movies">%2$s</xliff:g> · <xliff:g id="series">%3$s</xliff:g></item>
+    </plurals>
+    <plurals name="sync_status_trending_building">
+        <item quantity="one">अभी लोकप्रिय सूची बनाई जा रही है · <xliff:g id="count">%1$d</xliff:g> मिलान</item>
+        <item quantity="other">अभी लोकप्रिय सूची बनाई जा रही है · <xliff:g id="count">%1$d</xliff:g> मिलान</item>
+    </plurals>
+    <plurals name="sync_status_trending_publishing">
+        <item quantity="one">अभी लोकप्रिय सूची प्रकाशित की जा रही है · <xliff:g id="count">%1$d</xliff:g> आइटम</item>
+        <item quantity="other">अभी लोकप्रिय सूची प्रकाशित की जा रही है · <xliff:g id="count">%1$d</xliff:g> आइटम</item>
+    </plurals>
+    <plurals name="sync_status_trending_ready">
+        <item quantity="one">अभी लोकप्रिय सूची तैयार है · <xliff:g id="count">%1$d</xliff:g> मिलान</item>
+        <item quantity="other">अभी लोकप्रिय सूची तैयार है · <xliff:g id="count">%1$d</xliff:g> मिलान</item>
+    </plurals>
+    <plurals name="sync_status_trending_below_minimum">
+        <item quantity="one">अभी लोकप्रिय सूची छिपी हुई है · केवल <xliff:g id="count">%1$d</xliff:g> मिलान</item>
+        <item quantity="other">अभी लोकप्रिय सूची छिपी हुई है · केवल <xliff:g id="count">%1$d</xliff:g> मिलान</item>
+    </plurals>
 </resources>

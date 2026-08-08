@@ -902,4 +902,8 @@
     <string name="settings_auto_frame_rate_turn_on_anyway">Activer quand même</string>
     <string name="settings_language_request_workflow">Vous voulez ajouter une langue qui n\'est pas listée ? Faites d\'abord une demande de langue. Un mainteneur l\'enregistrera et préparera les fichiers de traduction de base ; une fois qu\'elle apparaîtra sur Hosted Weblate, vous pourrez commencer à contribuer.</string>
     <string name="settings_language_request_new">Demander une nouvelle langue</string>
+    <string name="settings_panel_width_disable_preview_title">Désactiver la vidéo de l’aperçu en direct ?</string>
+    <string name="settings_panel_width_disable_preview_description">La vidéo de l’aperçu en direct est actuellement activée. Masquer le panneau d’aperçu désactivera la vidéo, qui ne pourra être réactivée qu’après avoir attribué une largeur au panneau d’aperçu dans le réglage de la largeur des panneaux.</string>
+    <string name="settings_live_preview_panel_hidden_title">La vidéo de l’aperçu en direct n’est pas disponible</string>
+    <string name="settings_live_preview_panel_hidden_description">Le panneau d’aperçu de la télévision en direct est masqué. Attribuez-lui une largeur supérieure à 0%% dans le réglage de la largeur des panneaux avant d’activer la vidéo d’aperçu.</string>
 </resources>

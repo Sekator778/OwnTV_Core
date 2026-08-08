@@ -113,4 +113,37 @@
     <string name="common_hide">隐藏</string>
     <string name="common_show">显示</string>
     <string name="common_qr_code_companion_url">配套服务 URL 的二维码</string>
+    <string name="sync_status_trending_starting">同步完成 · <xliff:g id="source">%1$s</xliff:g> · 正在生成“当下热门”</string>
+    <string name="sync_status_trending_matching">正在将热门内容与您的播放列表进行匹配</string>
+    <string name="sync_status_trending_detail_waiting">正在等待 TMDB 候选内容响应</string>
+    <string name="sync_status_trending_detail_received">TMDB 候选内容 · 电影：<xliff:g id="movies">%1$d</xliff:g> · 剧集：<xliff:g id="series">%2$d</xliff:g></string>
+    <string name="sync_status_trending_detail_preparing">服务提供商标题索引 · <xliff:g id="processed">%1$d</xliff:g> / <xliff:g id="total">%2$d</xliff:g></string>
+    <string name="sync_status_trending_detail_movies">电影检查：<xliff:g id="checked">%1$d</xliff:g>/<xliff:g id="candidates">%2$d</xliff:g> · 匹配：<xliff:g id="matched">%3$d</xliff:g>/<xliff:g id="target">%4$d</xliff:g></string>
+    <string name="sync_status_trending_detail_series">剧集检查：<xliff:g id="checked">%1$d</xliff:g>/<xliff:g id="candidates">%2$d</xliff:g> · 匹配：<xliff:g id="matched">%3$d</xliff:g>/<xliff:g id="target">%4$d</xliff:g></string>
+    <string name="sync_status_trending_detail_selected">已选择 · 电影：<xliff:g id="movies">%1$d</xliff:g> · 剧集：<xliff:g id="series">%2$d</xliff:g> · 首页：<xliff:g id="home">%3$d</xliff:g></string>
+    <string name="sync_status_trending_detail_completed">已匹配 · 电影：<xliff:g id="movie_matches">%1$d</xliff:g>/<xliff:g id="movie_candidates">%2$d</xliff:g> · 剧集：<xliff:g id="series_matches">%3$d</xliff:g>/<xliff:g id="series_candidates">%4$d</xliff:g></string>
+    <string name="sync_status_trending_preparing">正在准备服务提供商标题以便快速匹配</string>
+    <string name="sync_status_trending_matching_movies">正在将热门电影与您的服务提供商进行匹配</string>
+    <string name="sync_status_trending_matching_series">正在将热门剧集与您的服务提供商进行匹配</string>
+    <string name="sync_status_trending_loading_seasons">正在加载服务提供商的季信息</string>
+    <string name="sync_status_trending_detail_loading_seasons">已检查剧集：<xliff:g id="processed">%1$d</xliff:g>/<xliff:g id="total">%2$d</xliff:g></string>
+    <string name="sync_status_trending_preserved">无法刷新热门内容 · 已保留先前结果</string>
+    <plurals name="sync_status_trending_received">
+        <item quantity="other">已收到最新的 <xliff:g id="count">%1$d</xliff:g> 个热门内容</item>
+    </plurals>
+    <plurals name="sync_status_trending_matched">
+        <item quantity="other">已匹配 <xliff:g id="total">%1$d</xliff:g> · <xliff:g id="movies">%2$s</xliff:g> · <xliff:g id="series">%3$s</xliff:g></item>
+    </plurals>
+    <plurals name="sync_status_trending_building">
+        <item quantity="other">正在生成“当下热门” · <xliff:g id="count">%1$d</xliff:g> 个匹配项</item>
+    </plurals>
+    <plurals name="sync_status_trending_publishing">
+        <item quantity="other">正在发布“当下热门” · <xliff:g id="count">%1$d</xliff:g> 个内容</item>
+    </plurals>
+    <plurals name="sync_status_trending_ready">
+        <item quantity="other">“当下热门”已就绪 · <xliff:g id="count">%1$d</xliff:g> 个匹配项</item>
+    </plurals>
+    <plurals name="sync_status_trending_below_minimum">
+        <item quantity="other">已隐藏“当下热门” · 仅有 <xliff:g id="count">%1$d</xliff:g> 个匹配项</item>
+    </plurals>
 </resources>

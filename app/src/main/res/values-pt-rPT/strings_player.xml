@@ -250,4 +250,6 @@
     <string name="player_frame_rate_turn_on">Ativar</string>
     <string name="player_reason_live_fallback">A reprodução em direto mudou para uma alternativa</string>
     <string name="player_reason_live_no_fallback">A reprodução em direto falhou — não resta nenhuma alternativa</string>
+    <string name="player_provider_retry_after">HTTP <xliff:g id="code">%1$d</xliff:g>: <xliff:g id="reason">%2$s</xliff:g> Nova tentativa dentro de <xliff:g id="seconds">%3$d</xliff:g> s.</string>
+    <string name="player_provider_busy">O fornecedor está ocupado.</string>
 </resources>

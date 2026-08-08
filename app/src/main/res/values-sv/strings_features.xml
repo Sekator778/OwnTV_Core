@@ -131,4 +131,53 @@
     <string name="recovery_backup_hint">Om du har en säkerhetskopieringsfil kan du nollställa appen och återställa säkerhetskopian efteråt. Nollställning raderar allt som lagras på den här enheten.</string>
     <string name="recovery_confirm_reset">Bekräfta: radera alla appdata</string>
     <string name="recovery_reset">Nollställ appdata (sista utvägen)</string>
+    <string name="home_row_now_trending">Trendar just nu</string>
+    <string name="home_row_trending_description">Spelbara TMDB-trender som hittats i dina spellistor</string>
+    <string name="settings_trending_status_off">Trendar just nu är inaktiverat.</string>
+    <string name="settings_trending_status_building">Trendar just nu förbereds efter synkronisering med leverantören.</string>
+    <string name="settings_trending_status_metadata_disabled">Trendar just nu kräver metadata från TMDB. Välj Endast TMDB eller Leverantör + TMDB.</string>
+    <string name="settings_trending_status_no_vod">Trendar just nu är dolt eftersom varken Filmer eller Serier har aktiverats för den här leverantören.</string>
+    <string name="settings_trending_status_no_matches">Trendar just nu är dolt eftersom inga titlar från leverantören matchade.</string>
+    <string name="settings_trending_status_failed">Det gick inte att uppdatera Trendar just nu. Försök att synkronisera leverantören igen.</string>
+    <string name="settings_trending_status_waiting">Slutför en synkronisering med leverantören för att skapa Trendar just nu.</string>
+    <plurals name="settings_trending_status_below_threshold">
+        <item quantity="one">Trendar just nu är dolt eftersom endast <xliff:g id="count">%1$d</xliff:g> titel från leverantören matchade. Minst 4 krävs.</item>
+        <item quantity="other">Trendar just nu är dolt eftersom endast <xliff:g id="count">%1$d</xliff:g> titlar från leverantören matchade. Minst 4 krävs.</item>
+    </plurals>
+    <plurals name="settings_trending_status_showing">
+        <item quantity="one">Trendar just nu visar <xliff:g id="count">%1$d</xliff:g> matchande titel.</item>
+        <item quantity="other">Trendar just nu visar <xliff:g id="count">%1$d</xliff:g> matchande titlar.</item>
+    </plurals>
+    <plurals name="settings_trending_status_showing_refresh_failed">
+        <item quantity="one">Trendar just nu visar <xliff:g id="count">%1$d</xliff:g> titel från den senaste lyckade uppdateringen.</item>
+        <item quantity="other">Trendar just nu visar <xliff:g id="count">%1$d</xliff:g> titlar från den senaste lyckade uppdateringen.</item>
+    </plurals>
+    <string name="home_trending_movie">Film</string>
+    <string name="home_trending_series">Serie</string>
+    <string name="home_trending_section_label">TRENDAR JUST NU · ÖGONBLICKSBILD FRÅN SYNKRONISERING</string>
+    <string name="home_trending_provider_match">Leverantörsmatchning</string>
+    <string name="home_trending_language_choice"><xliff:g id="language">%1$s</xliff:g> språkval</string>
+    <string name="home_trending_english_fallback">Engelska som reservval</string>
+    <string name="home_trending_untagged_fallback">Otaggat reservval</string>
+    <string name="home_trending_other_fallback"><xliff:g id="language">%1$s</xliff:g> som reservval</string>
+    <string name="home_trending_why_label">VARFÖR DET HÄR OBJEKTET VISAS</string>
+    <string name="home_trending_reason_title">TMDB-placering nr <xliff:g id="rank">%1$d</xliff:g> <xliff:g id="media_type">%2$s</xliff:g> + leverantörsmatchning</string>
+    <string name="home_trending_reason_preferred">Den valda leverantörsversionen på <xliff:g id="language">%1$s</xliff:g> prioriteras framför poster på andra språk.</string>
+    <string name="home_trending_reason_english">Ingen leverantörsversion på <xliff:g id="language">%1$s</xliff:g> matchade, så den engelska leverantörsposten valdes.</string>
+    <string name="home_trending_reason_untagged">Ingen språkmarkering för <xliff:g id="language">%1$s</xliff:g> eller engelska matchade, så den omärkta leverantörsposten valdes.</string>
+    <string name="home_trending_reason_other">Den närmaste spelbara leverantörsversionen valdes eftersom poster på det föredragna språket och engelska saknades.</string>
+    <plurals name="home_trending_seasons">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> säsong</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> säsonger</item>
+    </plurals>
+    <string name="home_trending_play">Spela upp</string>
+    <string name="home_trending_open_episodes">Öppna avsnitt</string>
+    <string name="home_trending_trailer">Trailer</string>
+    <string name="home_trending_more_details">Mer information</string>
+    <string name="home_trending_all_versions">Alla versioner</string>
+    <string name="home_trending_previous">Föregående</string>
+    <string name="home_trending_pause">Pausa</string>
+    <string name="home_trending_resume">Fortsätt</string>
+    <string name="home_trending_next">Nästa</string>
+    <string name="home_trending_unavailable">Den här versionen är inte längre tillgänglig</string>
 </resources>

@@ -140,4 +140,55 @@
     <string name="common_hide">Ukryj</string>
     <string name="common_show">Pokaż</string>
     <string name="common_qr_code_companion_url">Kod QR adresu URL aplikacji towarzyszącej</string>
+    <string name="sync_status_trending_starting">Synchronizacja zakończona · <xliff:g id="source">%1$s</xliff:g> · Tworzenie sekcji Teraz popularne</string>
+    <string name="sync_status_trending_matching">Dopasowywanie popularnych pozycji do Twojej listy odtwarzania</string>
+    <string name="sync_status_trending_detail_waiting">Oczekiwanie na odpowiedź z propozycjami TMDB</string>
+    <string name="sync_status_trending_detail_received">Propozycje TMDB · Filmy: <xliff:g id="movies">%1$d</xliff:g> · Seriale: <xliff:g id="series">%2$d</xliff:g></string>
+    <string name="sync_status_trending_detail_preparing">Indeks tytułów dostawcy · <xliff:g id="processed">%1$d</xliff:g> / <xliff:g id="total">%2$d</xliff:g></string>
+    <string name="sync_status_trending_detail_movies">Sprawdzanie filmów: <xliff:g id="checked">%1$d</xliff:g>/<xliff:g id="candidates">%2$d</xliff:g> · dopasowania: <xliff:g id="matched">%3$d</xliff:g>/<xliff:g id="target">%4$d</xliff:g></string>
+    <string name="sync_status_trending_detail_series">Sprawdzanie seriali: <xliff:g id="checked">%1$d</xliff:g>/<xliff:g id="candidates">%2$d</xliff:g> · dopasowania: <xliff:g id="matched">%3$d</xliff:g>/<xliff:g id="target">%4$d</xliff:g></string>
+    <string name="sync_status_trending_detail_selected">Wybrano · Filmy: <xliff:g id="movies">%1$d</xliff:g> · Seriale: <xliff:g id="series">%2$d</xliff:g> · Ekran główny: <xliff:g id="home">%3$d</xliff:g></string>
+    <string name="sync_status_trending_detail_completed">Dopasowano · Filmy: <xliff:g id="movie_matches">%1$d</xliff:g>/<xliff:g id="movie_candidates">%2$d</xliff:g> · Seriale: <xliff:g id="series_matches">%3$d</xliff:g>/<xliff:g id="series_candidates">%4$d</xliff:g></string>
+    <string name="sync_status_trending_preparing">Przygotowywanie tytułów dostawcy do szybkiego dopasowywania</string>
+    <string name="sync_status_trending_matching_movies">Dopasowywanie popularnych filmów do oferty Twojego dostawcy</string>
+    <string name="sync_status_trending_matching_series">Dopasowywanie popularnych seriali do oferty Twojego dostawcy</string>
+    <string name="sync_status_trending_loading_seasons">Wczytywanie sezonów od dostawcy</string>
+    <string name="sync_status_trending_detail_loading_seasons">Sprawdzone seriale: <xliff:g id="processed">%1$d</xliff:g>/<xliff:g id="total">%2$d</xliff:g></string>
+    <string name="sync_status_trending_preserved">Odświeżanie sekcji Teraz popularne jest niedostępne · zachowano poprzednie wyniki</string>
+    <plurals name="sync_status_trending_received">
+        <item quantity="one">Odebrano <xliff:g id="count">%1$d</xliff:g> najnowszą popularną pozycję</item>
+        <item quantity="few">Odebrano <xliff:g id="count">%1$d</xliff:g> najnowsze popularne pozycje</item>
+        <item quantity="many">Odebrano <xliff:g id="count">%1$d</xliff:g> najnowszych popularnych pozycji</item>
+        <item quantity="other">Odebrano <xliff:g id="count">%1$d</xliff:g> najnowszej popularnej pozycji</item>
+    </plurals>
+    <plurals name="sync_status_trending_matched">
+        <item quantity="one">Dopasowano <xliff:g id="total">%1$d</xliff:g> · <xliff:g id="movies">%2$s</xliff:g> · <xliff:g id="series">%3$s</xliff:g></item>
+        <item quantity="few">Dopasowano <xliff:g id="total">%1$d</xliff:g> · <xliff:g id="movies">%2$s</xliff:g> · <xliff:g id="series">%3$s</xliff:g></item>
+        <item quantity="many">Dopasowano <xliff:g id="total">%1$d</xliff:g> · <xliff:g id="movies">%2$s</xliff:g> · <xliff:g id="series">%3$s</xliff:g></item>
+        <item quantity="other">Dopasowano <xliff:g id="total">%1$d</xliff:g> · <xliff:g id="movies">%2$s</xliff:g> · <xliff:g id="series">%3$s</xliff:g></item>
+    </plurals>
+    <plurals name="sync_status_trending_building">
+        <item quantity="one">Tworzenie sekcji Teraz popularne · <xliff:g id="count">%1$d</xliff:g> dopasowanie</item>
+        <item quantity="few">Tworzenie sekcji Teraz popularne · <xliff:g id="count">%1$d</xliff:g> dopasowania</item>
+        <item quantity="many">Tworzenie sekcji Teraz popularne · <xliff:g id="count">%1$d</xliff:g> dopasowań</item>
+        <item quantity="other">Tworzenie sekcji Teraz popularne · <xliff:g id="count">%1$d</xliff:g> dopasowania</item>
+    </plurals>
+    <plurals name="sync_status_trending_publishing">
+        <item quantity="one">Publikowanie sekcji Teraz popularne · <xliff:g id="count">%1$d</xliff:g> pozycja</item>
+        <item quantity="few">Publikowanie sekcji Teraz popularne · <xliff:g id="count">%1$d</xliff:g> pozycje</item>
+        <item quantity="many">Publikowanie sekcji Teraz popularne · <xliff:g id="count">%1$d</xliff:g> pozycji</item>
+        <item quantity="other">Publikowanie sekcji Teraz popularne · <xliff:g id="count">%1$d</xliff:g> pozycji</item>
+    </plurals>
+    <plurals name="sync_status_trending_ready">
+        <item quantity="one">Sekcja Teraz popularne jest gotowa · <xliff:g id="count">%1$d</xliff:g> dopasowanie</item>
+        <item quantity="few">Sekcja Teraz popularne jest gotowa · <xliff:g id="count">%1$d</xliff:g> dopasowania</item>
+        <item quantity="many">Sekcja Teraz popularne jest gotowa · <xliff:g id="count">%1$d</xliff:g> dopasowań</item>
+        <item quantity="other">Sekcja Teraz popularne jest gotowa · <xliff:g id="count">%1$d</xliff:g> dopasowania</item>
+    </plurals>
+    <plurals name="sync_status_trending_below_minimum">
+        <item quantity="one">Sekcja Teraz popularne jest ukryta · tylko <xliff:g id="count">%1$d</xliff:g> dopasowanie</item>
+        <item quantity="few">Sekcja Teraz popularne jest ukryta · tylko <xliff:g id="count">%1$d</xliff:g> dopasowania</item>
+        <item quantity="many">Sekcja Teraz popularne jest ukryta · tylko <xliff:g id="count">%1$d</xliff:g> dopasowań</item>
+        <item quantity="other">Sekcja Teraz popularne jest ukryta · tylko <xliff:g id="count">%1$d</xliff:g> dopasowania</item>
+    </plurals>
 </resources>

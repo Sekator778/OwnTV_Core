@@ -886,4 +886,8 @@
     <string name="settings_auto_frame_rate_turn_on_anyway">তা সত্ত্বেও চালু করুন</string>
     <string name="settings_language_request_workflow">তালিকায় নেই এমন একটি ভাষা যোগ করতে চান? প্রথমে একটি ভাষার অনুরোধ খুলুন। একজন মেন্টেইনার এটি নিবন্ধন করবেন এবং বেস অনুবাদ ফাইলগুলো প্রস্তুত করবেন; এটি Hosted Weblate-এ দেখা গেলে, আপনি অবদান রাখা শুরু করতে পারেন।</string>
     <string name="settings_language_request_new">নতুন ভাষা অনুরোধ করুন</string>
+    <string name="settings_panel_width_disable_preview_title">লাইভ প্রিভিউ ভিডিও বন্ধ করবেন?</string>
+    <string name="settings_panel_width_disable_preview_description">লাইভ প্রিভিউ ভিডিও বর্তমানে চালু আছে। প্রিভিউ প্যানেল লুকিয়ে রাখলে ভিডিওটি বন্ধ হয়ে যাবে এবং প্যানেলের প্রস্থ সমন্বয়ে প্রিভিউ প্যানেলের জন্য একটি প্রস্থ নির্ধারণ না করা পর্যন্ত এটি আবার চালু করা যাবে না।</string>
+    <string name="settings_live_preview_panel_hidden_title">লাইভ প্রিভিউ ভিডিও উপলভ্য নয়</string>
+    <string name="settings_live_preview_panel_hidden_description">লাইভ টিভির প্রিভিউ প্যানেলটি লুকানো আছে। প্রিভিউ ভিডিও চালু করার আগে প্যানেলের প্রস্থ সমন্বয়ে এটির প্রস্থ 0%%-এর বেশি নির্ধারণ করুন।</string>
 </resources>

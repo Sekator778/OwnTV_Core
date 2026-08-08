@@ -1,6 +1,8 @@
 package tv.own.owntv.core.database
 
 import androidx.room.TypeConverter
+import tv.own.owntv.core.database.entity.TrendingSnapshotStatus
+import tv.own.owntv.core.database.entity.TrendingAttemptStatus
 import tv.own.owntv.core.model.DownloadStatus
 import tv.own.owntv.core.model.HlsSupport
 import tv.own.owntv.core.model.MediaType
@@ -20,6 +22,12 @@ class Converters {
 
     @TypeConverter fun tvProviderSurfaceToString(v: TvProviderSurface): String = v.name
     @TypeConverter fun stringToTvProviderSurface(v: String): TvProviderSurface = TvProviderSurface.valueOf(v)
+
+    @TypeConverter fun trendingSnapshotStatusToString(v: TrendingSnapshotStatus): String = v.name
+    @TypeConverter fun stringToTrendingSnapshotStatus(v: String): TrendingSnapshotStatus = TrendingSnapshotStatus.valueOf(v)
+
+    @TypeConverter fun trendingAttemptStatusToString(v: TrendingAttemptStatus): String = v.name
+    @TypeConverter fun stringToTrendingAttemptStatus(v: String): TrendingAttemptStatus = TrendingAttemptStatus.valueOf(v)
 
     // The one enum stored as an INTEGER rather than its name: `sources.hlsSupported` was a boolean
     // column before, and keeping the same affinity with the same 0/1 meanings is what lets it gain a

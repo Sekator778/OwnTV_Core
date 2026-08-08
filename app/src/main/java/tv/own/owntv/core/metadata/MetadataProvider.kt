@@ -35,6 +35,26 @@ data class MetadataSearchResult(
 )
 
 /**
+ * One ranked result from TMDB's current daily Trending feed. This deliberately carries only the fields
+ * needed for local provider matching and the Home showcase; full details/trailers are fetched later for
+ * at most the ten final provider-playable matches.
+ */
+data class TrendingCandidate(
+    val tmdbId: Int,
+    val type: MetadataType,
+    val localizedTitle: String,
+    val originalTitle: String?,
+    val year: Int?,
+    val overview: String?,
+    val posterPath: String?,
+    val backdropPath: String?,
+    val rating: Double?,
+    val popularity: Double,
+    /** One-based position in TMDB's media-specific Trending response before local filtering. */
+    val trendingRank: Int,
+)
+
+/**
  * Metadata source mode (plan §4.1). Replaces the old on/off master toggle and also selects the render-time
  * field precedence for the merge (§7.1).
  */
@@ -140,6 +160,12 @@ data class EpisodeDetails(
 
 /** Enrichment source abstraction. Only [TmdbProvider] exists today; fanart.tv could be added later. */
 interface MetadataProvider {
+
+    /** First 25 current daily Trending movies, or null when transport/auth/parsing fails. */
+    suspend fun trendingMovies(): List<TrendingCandidate>?
+
+    /** First 25 current daily Trending TV shows, with the same failure contract as [trendingMovies]. */
+    suspend fun trendingTv(): List<TrendingCandidate>?
 
     /**
      * Search movies by cleaned [title] (+ optional [year]). Best matches first.

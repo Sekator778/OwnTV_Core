@@ -236,4 +236,9 @@
     <string name="setup_hls_test_reason_dead_channel">테스트 채널이 MPEG-TS로도 재생되지 않았으므로 그냥 죽은 채널일 수 있습니다</string>
     <string name="setup_hls_provider_advertises">제공자는 HLS 지원을 명시합니다.</string>
     <string name="setup_hls_provider_does_not_advertise">제공자는 HLS 지원을 명시하지 않습니다.</string>
+    <string name="setup_stalker_advanced_identity">고급 기기 식별</string>
+    <string name="setup_stalker_serial_number_optional">일련번호(선택 사항)</string>
+    <string name="setup_stalker_device_id_optional">기기 ID(선택 사항)</string>
+    <string name="setup_stalker_device_id2_optional">기기 ID2(선택 사항)</string>
+    <string name="setup_stalker_signature_optional">서명(선택 사항)</string>
 </resources>

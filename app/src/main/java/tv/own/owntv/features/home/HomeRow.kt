@@ -6,6 +6,7 @@ import org.json.JSONArray
 import org.json.JSONObject
 
 enum class HomeRow {
+    TRENDING,
     HERO,
     RECENT_CHANNELS,
     FAVORITE_CHANNELS,

@@ -7,6 +7,7 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
 import kotlinx.coroutines.flow.Flow
+import tv.own.owntv.core.catalog.withProviderCatalogMetadata
 import tv.own.owntv.core.database.entity.ContentHashProjection
 import tv.own.owntv.core.database.entity.EpisodeEntity
 import tv.own.owntv.core.database.entity.SeasonEntity
@@ -17,27 +18,42 @@ import tv.own.owntv.core.database.entity.SeriesEntity
 interface SeriesDao {
     // --- Series ---
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun upsertSeries(series: List<SeriesEntity>)
+    suspend fun upsertSeriesNormalized(series: List<SeriesEntity>)
+
+    suspend fun upsertSeries(series: List<SeriesEntity>) =
+        upsertSeriesNormalized(series.map(SeriesEntity::withProviderCatalogMetadata))
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun insertSeries(series: List<SeriesEntity>)
+    suspend fun insertSeriesNormalized(series: List<SeriesEntity>)
+
+    suspend fun insertSeries(series: List<SeriesEntity>) =
+        insertSeriesNormalized(series.map(SeriesEntity::withProviderCatalogMetadata))
 
     /** Like [upsertSeries] but returns the row ids — the M3U series import needs them for episodes. */
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun upsertSeriesReturnIds(series: List<SeriesEntity>): List<Long>
+    suspend fun upsertSeriesReturnIdsNormalized(series: List<SeriesEntity>): List<Long>
+
+    suspend fun upsertSeriesReturnIds(series: List<SeriesEntity>): List<Long> =
+        upsertSeriesReturnIdsNormalized(series.map(SeriesEntity::withProviderCatalogMetadata))
 
     /** Like [upsertSeasons] but returns the row ids — the M3U series import needs them for episodes. */
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun upsertSeasonsReturnIds(seasons: List<SeasonEntity>): List<Long>
 
     @Update
-    suspend fun updateSeries(series: List<SeriesEntity>)
+    suspend fun updateSeriesNormalized(series: List<SeriesEntity>)
+
+    suspend fun updateSeries(series: List<SeriesEntity>) =
+        updateSeriesNormalized(series.map(SeriesEntity::withProviderCatalogMetadata))
 
     @Query("DELETE FROM series WHERE sourceId = :sourceId")
     suspend fun clearSource(sourceId: Long)
 
     @Query("SELECT * FROM series WHERE id = :id")
     suspend fun getSeriesById(id: Long): SeriesEntity?
+
+    @Query("SELECT * FROM series WHERE id IN (:ids)")
+    suspend fun getSeriesByIds(ids: List<Long>): List<SeriesEntity>
 
     // --- Stable-key lookups (Backup & Restore resolution: content ids change on re-sync) ---
     @Query("SELECT * FROM series WHERE sourceId = :sourceId AND remoteId = :remoteId LIMIT 1")
@@ -160,6 +176,29 @@ interface SeriesDao {
     @Query("SELECT COUNT(*) FROM series WHERE sourceId = :sourceId")
     suspend fun countForSourceOnce(sourceId: Long): Int
 
+    @Query("SELECT * FROM series WHERE sourceId = :sourceId AND titleSignature = '' LIMIT :limit")
+    suspend fun trendingMetadataBackfill(sourceId: Long, limit: Int): List<SeriesEntity>
+
+    @Query("SELECT COUNT(*) FROM series WHERE sourceId = :sourceId AND titleSignature = ''")
+    suspend fun trendingMetadataBackfillCount(sourceId: Long): Int
+
+    @Query(
+        "SELECT id, sourceId, categoryId, name, year, remoteId, sortOrder, canonicalTitle, " +
+            "titleSignature, parsedYear, providerLanguage, qualityRank, advertisedCapabilities FROM series " +
+            "WHERE sourceId = :sourceId AND titleSignature IN (:titleSignatures) " +
+            "ORDER BY sortOrder ASC, name ASC, id ASC",
+    )
+    suspend fun trendingExact(sourceId: Long, titleSignatures: List<String>): List<TrendingCatalogRow>
+
+    @Query(
+        "SELECT id, sourceId, categoryId, name, year, remoteId, sortOrder, canonicalTitle, " +
+            "titleSignature, parsedYear, providerLanguage, qualityRank, advertisedCapabilities FROM series " +
+            "WHERE sourceId = :sourceId AND id IN " +
+            "(SELECT rowid FROM series_fts WHERE series_fts MATCH :ftsQuery) " +
+            "ORDER BY sortOrder ASC, name ASC, id ASC LIMIT :limit",
+    )
+    suspend fun trendingFts(sourceId: Long, ftsQuery: String, limit: Int): List<TrendingCatalogRow>
+
     @Query(
         "SELECT * FROM series WHERE sourceId IN (:sourceIds) " +
             "AND id IN (SELECT rowid FROM series_fts WHERE series_fts MATCH :query) ORDER BY name ASC",
@@ -260,6 +299,16 @@ interface SeriesDao {
 
     @Query("SELECT COUNT(*) FROM episodes WHERE seriesId = :seriesId")
     suspend fun episodeCount(seriesId: Long): Int
+
+    /** Provider seasons OwnTV has actually stored; specials (season 0) are not advertised as a season. */
+    @Query("SELECT COUNT(DISTINCT seasonNumber) FROM episodes WHERE seriesId = :seriesId AND seasonNumber > 0")
+    suspend fun storedSeasonCount(seriesId: Long): Int
+
+    @Query(
+        "SELECT seriesId, COUNT(DISTINCT seasonNumber) AS seasonCount FROM episodes " +
+            "WHERE seriesId IN (:seriesIds) AND seasonNumber > 0 GROUP BY seriesId",
+    )
+    suspend fun storedSeasonCounts(seriesIds: List<Long>): List<SeriesSeasonCountRow>
 
     @Query("DELETE FROM episodes WHERE seriesId = :seriesId")
     suspend fun deleteEpisodes(seriesId: Long)

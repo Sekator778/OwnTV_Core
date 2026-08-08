@@ -108,6 +108,33 @@ class MetadataRepository(
         return fetchAndCacheTv(best.result.tmdbId, best.result)
     }
 
+    /** Resolve a provider movie against the exact TMDB id already confirmed by Trending. */
+    suspend fun resolveKnownMovie(movie: MovieEntity, tmdbId: Int): MetadataCacheEntity? {
+        if (!settings.metadataConfig().enabled) return null
+        val localKey = movieLocalKey(movie)
+        val now = System.currentTimeMillis()
+        dao.upsertMatch(MetadataMatchEntity(localKey, TYPE_MOVIE, tmdbId, confidence = 1.0, updatedAt = now))
+        dao.getCache(cacheKey(tmdbId))?.let { cached ->
+            if (now - cached.updatedAt < POSITIVE_TTL_MS) return cached
+        }
+        return fetchAndCache(tmdbId, localKey, confidence = 1.0)
+    }
+
+    /** Series counterpart to [resolveKnownMovie], using the exact Trending TV id. */
+    suspend fun resolveKnownSeries(
+        series: tv.own.owntv.core.database.entity.SeriesEntity,
+        tmdbId: Int,
+    ): MetadataCacheEntity? {
+        if (!settings.metadataConfig().enabled) return null
+        val localKey = seriesLocalKey(series)
+        val now = System.currentTimeMillis()
+        dao.upsertMatch(MetadataMatchEntity(localKey, TYPE_TV, tmdbId, confidence = 1.0, updatedAt = now))
+        dao.getCache(tvCacheKey(tmdbId))?.let { cached ->
+            if (now - cached.updatedAt < POSITIVE_TTL_MS) return cached
+        }
+        return fetchAndCacheTv(tmdbId, fallback = null)
+    }
+
     private suspend fun fetchAndCacheTv(tmdbId: Int, fallback: MetadataSearchResult?): MetadataCacheEntity? {
         val now = System.currentTimeMillis()
         val details = provider.tvDetails(tmdbId)
@@ -354,40 +381,7 @@ class MetadataRepository(
      * broke the OpenSubtitles tmdb_id lookup for 7 days. `original_title` is language-independent.
      */
     private fun score(query: String, year: Int?, r: MetadataSearchResult): Double {
-        val q = query.lowercase().trim()
-        var s = maxOf(
-            titleSimilarity(q, r.title),
-            r.originalTitle?.let { titleSimilarity(q, it) } ?: 0.0,
-        )
-        if (year != null && r.year != null) {
-            val diff = kotlin.math.abs(year - r.year)
-            s += when {
-                diff == 0 -> 0.15
-                diff == 1 -> 0.0
-                else -> -0.35
-            }
-        }
-        return s.coerceIn(0.0, 1.0)
-    }
-
-    /** Similarity of an already-lowercased query against one candidate title. */
-    private fun titleSimilarity(q: String, candidate: String): Double {
-        val t = candidate.lowercase().trim()
-        if (t.isBlank()) return 0.0
-        return when {
-            q == t -> 1.0
-            t.contains(q) || q.contains(t) -> 0.75
-            else -> tokenOverlap(q, t)
-        }
-    }
-
-    /** Jaccard overlap of word tokens — a cheap similarity for near-miss titles. */
-    private fun tokenOverlap(a: String, b: String): Double {
-        val sa = a.split(WORD_SPLIT).filter { it.isNotBlank() }.toSet()
-        val sb = b.split(WORD_SPLIT).filter { it.isNotBlank() }.toSet()
-        if (sa.isEmpty() || sb.isEmpty()) return 0.0
-        val inter = sa.intersect(sb).size.toDouble()
-        return inter / (sa.size + sb.size - inter)
+        return TitleMatchScorer.score(query, year, r.title, r.originalTitle, r.year)
     }
 
     companion object {
@@ -407,8 +401,6 @@ class MetadataRepository(
 
         private const val POSITIVE_TTL_MS = 60L * 24 * 3600 * 1000  // 60 days
         private const val NEGATIVE_TTL_MS = 7L * 24 * 3600 * 1000   // 7 days
-
-        private val WORD_SPLIT = Regex("""\s+""")
 
         /** Stable, re-sync-proof local key (mirrors CustomizeKeys): sourceId + remoteId, or name fallback. */
         fun movieLocalKey(movie: MovieEntity): String = "$TYPE_MOVIE:${movie.sourceId}:${movie.remoteId ?: movie.name}"

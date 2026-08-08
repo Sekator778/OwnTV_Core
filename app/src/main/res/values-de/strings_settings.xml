@@ -886,4 +886,8 @@
     <string name="settings_auto_frame_rate_turn_on_anyway">Trotzdem aktivieren</string>
     <string name="settings_language_request_workflow">Möchtest du eine Sprache hinzufügen, die nicht aufgeführt ist? Stelle zuerst eine Sprachanfrage. Ein Maintainer registriert sie und bereitet die Basis-Übersetzungsdateien vor; sobald sie auf Hosted Weblate erscheint, kannst du mit dem Übersetzen beginnen.</string>
     <string name="settings_language_request_new">Neue Sprache anfordern</string>
+    <string name="settings_panel_width_disable_preview_title">Video der Live-Vorschau ausschalten?</string>
+    <string name="settings_panel_width_disable_preview_description">Das Video der Live-Vorschau ist derzeit eingeschaltet. Wenn Sie das Vorschau-Panel ausblenden, wird das Video ausgeschaltet. Es kann erst wieder eingeschaltet werden, nachdem Sie dem Vorschau-Panel unter „Anpassung der Panelbreite“ eine Breite zugewiesen haben.</string>
+    <string name="settings_live_preview_panel_hidden_title">Video der Live-Vorschau ist nicht verfügbar</string>
+    <string name="settings_live_preview_panel_hidden_description">Das Vorschau-Panel für Live-TV ist ausgeblendet. Weisen Sie ihm unter „Anpassung der Panelbreite“ eine Breite von mehr als 0%% zu, bevor Sie das Vorschauvideo einschalten.</string>
 </resources>

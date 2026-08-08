@@ -122,4 +122,43 @@
     <string name="common_hide">লুকান</string>
     <string name="common_show">দেখান</string>
     <string name="common_qr_code_companion_url">সহযোগী URL-এর QR কোড</string>
+    <string name="sync_status_trending_starting">সিঙ্ক সম্পন্ন · <xliff:g id="source">%1$s</xliff:g> · এখন ট্রেন্ডিং তৈরি হচ্ছে</string>
+    <string name="sync_status_trending_matching">ট্রেন্ডিং আইটেম আপনার প্লেলিস্টের সঙ্গে মেলানো হচ্ছে</string>
+    <string name="sync_status_trending_detail_waiting">TMDB প্রার্থীর উত্তরের অপেক্ষা করা হচ্ছে</string>
+    <string name="sync_status_trending_detail_received">TMDB প্রার্থী · চলচ্চিত্র: <xliff:g id="movies">%1$d</xliff:g> · সিরিজ: <xliff:g id="series">%2$d</xliff:g></string>
+    <string name="sync_status_trending_detail_preparing">প্রোভাইডার শিরোনাম সূচি · <xliff:g id="processed">%1$d</xliff:g> / <xliff:g id="total">%2$d</xliff:g></string>
+    <string name="sync_status_trending_detail_movies">চলচ্চিত্র পরীক্ষা: <xliff:g id="checked">%1$d</xliff:g>/<xliff:g id="candidates">%2$d</xliff:g> · মিল: <xliff:g id="matched">%3$d</xliff:g>/<xliff:g id="target">%4$d</xliff:g></string>
+    <string name="sync_status_trending_detail_series">সিরিজ পরীক্ষা: <xliff:g id="checked">%1$d</xliff:g>/<xliff:g id="candidates">%2$d</xliff:g> · মিল: <xliff:g id="matched">%3$d</xliff:g>/<xliff:g id="target">%4$d</xliff:g></string>
+    <string name="sync_status_trending_detail_selected">নির্বাচিত · চলচ্চিত্র: <xliff:g id="movies">%1$d</xliff:g> · সিরিজ: <xliff:g id="series">%2$d</xliff:g> · হোম: <xliff:g id="home">%3$d</xliff:g></string>
+    <string name="sync_status_trending_detail_completed">মিলেছে · চলচ্চিত্র: <xliff:g id="movie_matches">%1$d</xliff:g>/<xliff:g id="movie_candidates">%2$d</xliff:g> · সিরিজ: <xliff:g id="series_matches">%3$d</xliff:g>/<xliff:g id="series_candidates">%4$d</xliff:g></string>
+    <string name="sync_status_trending_preparing">দ্রুত মেলানোর জন্য প্রোভাইডার শিরোনাম প্রস্তুত হচ্ছে</string>
+    <string name="sync_status_trending_matching_movies">ট্রেন্ডিং চলচ্চিত্র প্রোভাইডারের সঙ্গে মেলানো হচ্ছে</string>
+    <string name="sync_status_trending_matching_series">ট্রেন্ডিং সিরিজ প্রোভাইডারের সঙ্গে মেলানো হচ্ছে</string>
+    <string name="sync_status_trending_loading_seasons">প্রোভাইডারের সিজন লোড হচ্ছে</string>
+    <string name="sync_status_trending_detail_loading_seasons">সিরিজ পরীক্ষা: <xliff:g id="processed">%1$d</xliff:g>/<xliff:g id="total">%2$d</xliff:g></string>
+    <string name="sync_status_trending_preserved">ট্রেন্ডিং রিফ্রেশ পাওয়া যায়নি · আগের ফল রাখা হয়েছে</string>
+    <plurals name="sync_status_trending_received">
+        <item quantity="one">সর্বশেষ <xliff:g id="count">%1$d</xliff:g>টি ট্রেন্ডিং আইটেম পাওয়া গেছে</item>
+        <item quantity="other">সর্বশেষ <xliff:g id="count">%1$d</xliff:g>টি ট্রেন্ডিং আইটেম পাওয়া গেছে</item>
+    </plurals>
+    <plurals name="sync_status_trending_matched">
+        <item quantity="one">মিলেছে <xliff:g id="total">%1$d</xliff:g> · <xliff:g id="movies">%2$s</xliff:g> · <xliff:g id="series">%3$s</xliff:g></item>
+        <item quantity="other">মিলেছে <xliff:g id="total">%1$d</xliff:g> · <xliff:g id="movies">%2$s</xliff:g> · <xliff:g id="series">%3$s</xliff:g></item>
+    </plurals>
+    <plurals name="sync_status_trending_building">
+        <item quantity="one">এখন ট্রেন্ডিং তৈরি হচ্ছে · <xliff:g id="count">%1$d</xliff:g>টি মিল</item>
+        <item quantity="other">এখন ট্রেন্ডিং তৈরি হচ্ছে · <xliff:g id="count">%1$d</xliff:g>টি মিল</item>
+    </plurals>
+    <plurals name="sync_status_trending_publishing">
+        <item quantity="one">এখন ট্রেন্ডিং প্রকাশ হচ্ছে · <xliff:g id="count">%1$d</xliff:g>টি আইটেম</item>
+        <item quantity="other">এখন ট্রেন্ডিং প্রকাশ হচ্ছে · <xliff:g id="count">%1$d</xliff:g>টি আইটেম</item>
+    </plurals>
+    <plurals name="sync_status_trending_ready">
+        <item quantity="one">এখন ট্রেন্ডিং প্রস্তুত · <xliff:g id="count">%1$d</xliff:g>টি মিল</item>
+        <item quantity="other">এখন ট্রেন্ডিং প্রস্তুত · <xliff:g id="count">%1$d</xliff:g>টি মিল</item>
+    </plurals>
+    <plurals name="sync_status_trending_below_minimum">
+        <item quantity="one">এখন ট্রেন্ডিং লুকানো · মাত্র <xliff:g id="count">%1$d</xliff:g>টি মিল</item>
+        <item quantity="other">এখন ট্রেন্ডিং লুকানো · মাত্র <xliff:g id="count">%1$d</xliff:g>টি মিল</item>
+    </plurals>
 </resources>

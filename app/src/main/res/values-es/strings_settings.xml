@@ -902,4 +902,8 @@
     <string name="settings_auto_frame_rate_turn_on_anyway">Activar de todos modos</string>
     <string name="settings_language_request_workflow">¿Quieres añadir un idioma que no está en la lista? Abre primero una solicitud de idioma. Un mantenedor lo registrará y preparará los archivos de traducción base; cuando aparezca en Hosted Weblate, podrás empezar a contribuir.</string>
     <string name="settings_language_request_new">Solicitar un nuevo idioma</string>
+    <string name="settings_panel_width_disable_preview_title">¿Desactivar el vídeo de la vista previa en directo?</string>
+    <string name="settings_panel_width_disable_preview_description">El vídeo de la vista previa en directo está activado actualmente. Al ocultar el panel de vista previa, se desactivará el vídeo y no se podrá volver a activar hasta que asignes un ancho al panel de vista previa en Ajuste del ancho de los paneles.</string>
+    <string name="settings_live_preview_panel_hidden_title">El vídeo de la vista previa en directo no está disponible</string>
+    <string name="settings_live_preview_panel_hidden_description">El panel de vista previa de la televisión en directo está oculto. Asígnale un ancho superior al 0%% en Ajuste del ancho de los paneles antes de activar el vídeo de vista previa.</string>
 </resources>

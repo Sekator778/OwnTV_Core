@@ -886,4 +886,8 @@
     <string name="settings_auto_frame_rate_turn_on_anyway">Toch inschakelen</string>
     <string name="settings_language_request_workflow">Wil je een taal toevoegen die niet in de lijst staat? Dien dan eerst een taalverzoek in. Een beheerder registreert de taal en bereidt de basisvertalingsbestanden voor; zodra deze op Hosted Weblate verschijnt, kun je beginnen met bijdragen.</string>
     <string name="settings_language_request_new">Nieuwe taal aanvragen</string>
+    <string name="settings_panel_width_disable_preview_title">Live Preview-video uitschakelen?</string>
+    <string name="settings_panel_width_disable_preview_description">Live Preview-video staat momenteel aan. Als u het Preview-paneel verbergt, wordt de video uitgeschakeld. U kunt deze pas weer inschakelen nadat u het Preview-paneel een breedte hebt gegeven bij Paneelbreedte aanpassen.</string>
+    <string name="settings_live_preview_panel_hidden_title">Live Preview-video is niet beschikbaar</string>
+    <string name="settings_live_preview_panel_hidden_description">Het Live-tv Preview-paneel is verborgen. Geef het bij Paneelbreedte aanpassen een breedte van meer dan 0%% voordat u Preview-video inschakelt.</string>
 </resources>

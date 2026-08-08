@@ -131,4 +131,53 @@
     <string name="recovery_backup_hint">Als je een back-upbestand hebt, kun je de app resetten en de back-up daarna herstellen. Bij het resetten wordt alles verwijderd wat op dit apparaat is opgeslagen.</string>
     <string name="recovery_confirm_reset">Bevestigen: alle appgegevens wissen</string>
     <string name="recovery_reset">Appgegevens resetten (laatste redmiddel)</string>
+    <string name="home_row_now_trending">Nu populair</string>
+    <string name="home_row_trending_description">Afspeelbare TMDB-trends in je afspeellijsten</string>
+    <string name="settings_trending_status_off">Nu populair is uitgeschakeld.</string>
+    <string name="settings_trending_status_building">Nu populair wordt voorbereid nadat de aanbieder is gesynchroniseerd.</string>
+    <string name="settings_trending_status_metadata_disabled">Voor Nu populair zijn TMDB-metagegevens nodig. Kies Alleen TMDB of Aanbieder + TMDB.</string>
+    <string name="settings_trending_status_no_vod">Nu populair is verborgen omdat voor deze aanbieder geen films of series zijn ingeschakeld.</string>
+    <string name="settings_trending_status_no_matches">Nu populair is verborgen omdat geen titels van de aanbieder overeenkwamen.</string>
+    <string name="settings_trending_status_failed">Nu populair kon niet worden vernieuwd. Probeer de aanbieder opnieuw te synchroniseren.</string>
+    <string name="settings_trending_status_waiting">Synchroniseer de aanbieder om Nu populair samen te stellen.</string>
+    <plurals name="settings_trending_status_below_threshold">
+        <item quantity="one">Nu populair is verborgen omdat slechts <xliff:g id="count">%1$d</xliff:g> titel van de aanbieder overeenkwam. Er zijn er minstens 4 nodig.</item>
+        <item quantity="other">Nu populair is verborgen omdat slechts <xliff:g id="count">%1$d</xliff:g> titels van de aanbieder overeenkwamen. Er zijn er minstens 4 nodig.</item>
+    </plurals>
+    <plurals name="settings_trending_status_showing">
+        <item quantity="one">Nu populair toont <xliff:g id="count">%1$d</xliff:g> overeenkomende titel.</item>
+        <item quantity="other">Nu populair toont <xliff:g id="count">%1$d</xliff:g> overeenkomende titels.</item>
+    </plurals>
+    <plurals name="settings_trending_status_showing_refresh_failed">
+        <item quantity="one">Nu populair toont <xliff:g id="count">%1$d</xliff:g> titel van de laatste geslaagde vernieuwing.</item>
+        <item quantity="other">Nu populair toont <xliff:g id="count">%1$d</xliff:g> titels van de laatste geslaagde vernieuwing.</item>
+    </plurals>
+    <string name="home_trending_movie">Film</string>
+    <string name="home_trending_series">Serie</string>
+    <string name="home_trending_section_label">NU POPULAIR · MOMENTOPNAME VAN SYNCHRONISATIE</string>
+    <string name="home_trending_provider_match">Overeenkomst met aanbieder</string>
+    <string name="home_trending_language_choice"><xliff:g id="language">%1$s</xliff:g> taalkeuze</string>
+    <string name="home_trending_english_fallback">Engelse terugvaloptie</string>
+    <string name="home_trending_untagged_fallback">Ongelabelde terugvaloptie</string>
+    <string name="home_trending_other_fallback"><xliff:g id="language">%1$s</xliff:g> terugvaloptie</string>
+    <string name="home_trending_why_label">WAAROM DIT ITEM WORDT WEERGEGEVEN</string>
+    <string name="home_trending_reason_title">TMDB-positie #<xliff:g id="rank">%1$d</xliff:g> <xliff:g id="media_type">%2$s</xliff:g> + overeenkomst met aanbieder</string>
+    <string name="home_trending_reason_preferred">De geselecteerde <xliff:g id="language">%1$s</xliff:g> versie van de aanbieder krijgt voorrang op items in een andere taal.</string>
+    <string name="home_trending_reason_english">Er kwam geen <xliff:g id="language">%1$s</xliff:g> versie van de aanbieder overeen, dus is het Engelse item van de aanbieder geselecteerd.</string>
+    <string name="home_trending_reason_untagged">Er kwam geen <xliff:g id="language">%1$s</xliff:g> of Engelstalig taallabel overeen, dus is het ongelabelde item van de aanbieder geselecteerd.</string>
+    <string name="home_trending_reason_other">De meest overeenkomende afspeelbare versie van de aanbieder is geselecteerd omdat items in de voorkeurstaal en het Engels niet beschikbaar waren.</string>
+    <plurals name="home_trending_seasons">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> seizoen</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> seizoenen</item>
+    </plurals>
+    <string name="home_trending_play">Afspelen</string>
+    <string name="home_trending_open_episodes">Afleveringen openen</string>
+    <string name="home_trending_trailer">Trailer</string>
+    <string name="home_trending_more_details">Meer details</string>
+    <string name="home_trending_all_versions">Alle versies</string>
+    <string name="home_trending_previous">Vorige</string>
+    <string name="home_trending_pause">Pauzeren</string>
+    <string name="home_trending_resume">Hervatten</string>
+    <string name="home_trending_next">Volgende</string>
+    <string name="home_trending_unavailable">Deze versie is niet meer beschikbaar</string>
 </resources>

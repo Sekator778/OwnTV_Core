@@ -244,4 +244,9 @@
     <string name="setup_hls_test_reason_dead_channel">o canal de teste também não reproduziu via MPEG-TS, então talvez esteja apenas fora do ar</string>
     <string name="setup_hls_provider_advertises">Seu provedor anuncia HLS.</string>
     <string name="setup_hls_provider_does_not_advertise">Seu provedor não anuncia HLS.</string>
+    <string name="setup_stalker_advanced_identity">Identificação avançada do dispositivo</string>
+    <string name="setup_stalker_serial_number_optional">Número de série (opcional)</string>
+    <string name="setup_stalker_device_id_optional">ID do dispositivo (opcional)</string>
+    <string name="setup_stalker_device_id2_optional">ID2 do dispositivo (opcional)</string>
+    <string name="setup_stalker_signature_optional">Assinatura (opcional)</string>
 </resources>

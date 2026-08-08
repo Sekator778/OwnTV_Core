@@ -243,4 +243,6 @@
     <string name="player_frame_rate_turn_on">Inschakelen</string>
     <string name="player_reason_live_fallback">Live-weergave overgeschakeld naar een fallback</string>
     <string name="player_reason_live_no_fallback">Live-weergave mislukt — er is geen fallback meer over</string>
+    <string name="player_provider_retry_after">HTTP <xliff:g id="code">%1$d</xliff:g>: <xliff:g id="reason">%2$s</xliff:g> Over <xliff:g id="seconds">%3$d</xliff:g> s opnieuw proberen.</string>
+    <string name="player_provider_busy">De aanbieder is bezet.</string>
 </resources>

@@ -127,4 +127,49 @@
     <string name="recovery_backup_hint">如果您有備份檔案，可以重設應用程式，之後再進行還原。重設會刪除此裝置上儲存的所有內容。</string>
     <string name="recovery_confirm_reset">確認：清除所有應用程式資料</string>
     <string name="recovery_reset">重設應用程式資料（最後手段）</string>
+    <string name="home_row_now_trending">現正熱門</string>
+    <string name="home_row_trending_description">在您的播放清單中找到可播放的 TMDB 熱門趨勢內容</string>
+    <string name="settings_trending_status_off">「現正熱門」已關閉。</string>
+    <string name="settings_trending_status_building">供應商同步後，正在準備「現正熱門」。</string>
+    <string name="settings_trending_status_metadata_disabled">「現正熱門」需要 TMDB 中繼資料。請選擇「僅 TMDB」或「供應商 + TMDB」。</string>
+    <string name="settings_trending_status_no_vod">此供應商未啟用電影或影集，因此已隱藏「現正熱門」。</string>
+    <string name="settings_trending_status_no_matches">沒有相符的供應商片名，因此已隱藏「現正熱門」。</string>
+    <string name="settings_trending_status_failed">無法重新整理「現正熱門」。請嘗試再次同步供應商。</string>
+    <string name="settings_trending_status_waiting">請完成供應商同步，以建立「現正熱門」。</string>
+    <plurals name="settings_trending_status_below_threshold">
+        <item quantity="other">只有 <xliff:g id="count">%1$d</xliff:g> 個供應商片名相符，因此已隱藏「現正熱門」。至少需要 4 個。</item>
+    </plurals>
+    <plurals name="settings_trending_status_showing">
+        <item quantity="other">「現正熱門」正在顯示 <xliff:g id="count">%1$d</xliff:g> 個相符片名。</item>
+    </plurals>
+    <plurals name="settings_trending_status_showing_refresh_failed">
+        <item quantity="other">「現正熱門」正在顯示上次成功重新整理的 <xliff:g id="count">%1$d</xliff:g> 個片名。</item>
+    </plurals>
+    <string name="home_trending_movie">電影</string>
+    <string name="home_trending_series">影集</string>
+    <string name="home_trending_section_label">現正熱門 · 同步快照</string>
+    <string name="home_trending_provider_match">供應商相符項目</string>
+    <string name="home_trending_language_choice"><xliff:g id="language">%1$s</xliff:g> 語言選擇</string>
+    <string name="home_trending_english_fallback">英文備用選擇</string>
+    <string name="home_trending_untagged_fallback">無標籤備用選擇</string>
+    <string name="home_trending_other_fallback"><xliff:g id="language">%1$s</xliff:g> 備用選擇</string>
+    <string name="home_trending_why_label">此項目出現的原因</string>
+    <string name="home_trending_reason_title">TMDB 排名第 <xliff:g id="rank">%1$d</xliff:g> 名 <xliff:g id="media_type">%2$s</xliff:g> + 供應商相符項目</string>
+    <string name="home_trending_reason_preferred">所選的 <xliff:g id="language">%1$s</xliff:g> 供應商版本優先於其他語言的項目。</string>
+    <string name="home_trending_reason_english">沒有相符的 <xliff:g id="language">%1$s</xliff:g> 供應商版本，因此選擇了供應商的英文項目。</string>
+    <string name="home_trending_reason_untagged">沒有相符的 <xliff:g id="language">%1$s</xliff:g> 或英文語言標籤，因此選擇了供應商的無標籤項目。</string>
+    <string name="home_trending_reason_other">偏好語言及英文項目均無法使用，因此選擇了最接近且可播放的供應商版本。</string>
+    <plurals name="home_trending_seasons">
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> 季</item>
+    </plurals>
+    <string name="home_trending_play">播放</string>
+    <string name="home_trending_open_episodes">開啟集數</string>
+    <string name="home_trending_trailer">預告片</string>
+    <string name="home_trending_more_details">更多詳細資料</string>
+    <string name="home_trending_all_versions">所有版本</string>
+    <string name="home_trending_previous">上一個</string>
+    <string name="home_trending_pause">暫停</string>
+    <string name="home_trending_resume">繼續</string>
+    <string name="home_trending_next">下一個</string>
+    <string name="home_trending_unavailable">此版本已無法使用</string>
 </resources>

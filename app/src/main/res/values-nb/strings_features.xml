@@ -131,4 +131,53 @@
     <string name="recovery_backup_hint">Hvis du har en sikkerhetskopifil, kan du tilbakestille appen og gjenopprette den etterpå. Tilbakestilling sletter alt som er lagret på denne enheten.</string>
     <string name="recovery_confirm_reset">Bekreft: slett alle appdata</string>
     <string name="recovery_reset">Tilbakestill appdata (siste utvei)</string>
+    <string name="home_row_now_trending">Populært nå</string>
+    <string name="home_row_trending_description">Spillbare TMDB-trender funnet i spillelistene dine</string>
+    <string name="settings_trending_status_off">Populært nå er slått av.</string>
+    <string name="settings_trending_status_building">Populært nå klargjøres etter synkronisering av leverandøren.</string>
+    <string name="settings_trending_status_metadata_disabled">Populært nå krever metadata fra TMDB. Velg Bare TMDB eller Leverandør + TMDB.</string>
+    <string name="settings_trending_status_no_vod">Populært nå er skjult fordi filmer eller serier ikke er aktivert for denne leverandøren.</string>
+    <string name="settings_trending_status_no_matches">Populært nå er skjult fordi ingen titler fra leverandøren ga treff.</string>
+    <string name="settings_trending_status_failed">Populært nå kunne ikke oppdateres. Prøv å synkronisere leverandøren på nytt.</string>
+    <string name="settings_trending_status_waiting">Fullfør en synkronisering av leverandøren for å bygge Populært nå.</string>
+    <plurals name="settings_trending_status_below_threshold">
+        <item quantity="one">Populært nå er skjult fordi bare <xliff:g id="count">%1$d</xliff:g> tittel fra leverandøren ga treff. Minst 4 kreves.</item>
+        <item quantity="other">Populært nå er skjult fordi bare <xliff:g id="count">%1$d</xliff:g> titler fra leverandøren ga treff. Minst 4 kreves.</item>
+    </plurals>
+    <plurals name="settings_trending_status_showing">
+        <item quantity="one">Populært nå viser <xliff:g id="count">%1$d</xliff:g> tittel med treff.</item>
+        <item quantity="other">Populært nå viser <xliff:g id="count">%1$d</xliff:g> titler med treff.</item>
+    </plurals>
+    <plurals name="settings_trending_status_showing_refresh_failed">
+        <item quantity="one">Populært nå viser <xliff:g id="count">%1$d</xliff:g> tittel fra den siste vellykkede oppdateringen.</item>
+        <item quantity="other">Populært nå viser <xliff:g id="count">%1$d</xliff:g> titler fra den siste vellykkede oppdateringen.</item>
+    </plurals>
+    <string name="home_trending_movie">Film</string>
+    <string name="home_trending_series">Serier</string>
+    <string name="home_trending_section_label">POPULÆRT NÅ · ØYEBLIKKSBILDE FRA SYNKRONISERING</string>
+    <string name="home_trending_provider_match">Leverandørtreff</string>
+    <string name="home_trending_language_choice"><xliff:g id="language">%1$s</xliff:g> språkvalg</string>
+    <string name="home_trending_english_fallback">Reservevalg på engelsk</string>
+    <string name="home_trending_untagged_fallback">Reservevalg uten språkkode</string>
+    <string name="home_trending_other_fallback"><xliff:g id="language">%1$s</xliff:g> reservevalg</string>
+    <string name="home_trending_why_label">HVORFOR DETTE ELEMENTET VISES</string>
+    <string name="home_trending_reason_title">TMDB-plassering #<xliff:g id="rank">%1$d</xliff:g> <xliff:g id="media_type">%2$s</xliff:g> + leverandørtreff</string>
+    <string name="home_trending_reason_preferred">Den valgte leverandørversjonen på <xliff:g id="language">%1$s</xliff:g> prioriteres foran oppføringer på andre språk.</string>
+    <string name="home_trending_reason_english">Ingen leverandørversjon på <xliff:g id="language">%1$s</xliff:g> ga treff, så den engelske leverandøroppføringen ble valgt.</string>
+    <string name="home_trending_reason_untagged">Ingen språkkode for <xliff:g id="language">%1$s</xliff:g> eller engelsk ga treff, så leverandøroppføringen uten språkkode ble valgt.</string>
+    <string name="home_trending_reason_other">Den nærmeste spillbare leverandørversjonen ble valgt fordi oppføringer på det foretrukne språket og engelsk ikke var tilgjengelige.</string>
+    <plurals name="home_trending_seasons">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> sesong</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> sesonger</item>
+    </plurals>
+    <string name="home_trending_play">Spill av</string>
+    <string name="home_trending_open_episodes">Åpne episoder</string>
+    <string name="home_trending_trailer">Trailer</string>
+    <string name="home_trending_more_details">Flere detaljer</string>
+    <string name="home_trending_all_versions">Alle versjoner</string>
+    <string name="home_trending_previous">Forrige</string>
+    <string name="home_trending_pause">Pause</string>
+    <string name="home_trending_resume">Fortsett</string>
+    <string name="home_trending_next">Neste</string>
+    <string name="home_trending_unavailable">Denne versjonen er ikke lenger tilgjengelig</string>
 </resources>

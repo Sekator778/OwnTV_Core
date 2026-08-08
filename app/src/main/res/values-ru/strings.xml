@@ -140,4 +140,55 @@
     <string name="common_hide">Скрыть</string>
     <string name="common_show">Показать</string>
     <string name="common_qr_code_companion_url">QR-код для URL страницы-компаньона</string>
+    <string name="sync_status_trending_starting">Синхронизация завершена · <xliff:g id="source">%1$s</xliff:g> · Создание раздела «Сейчас в тренде»</string>
+    <string name="sync_status_trending_matching">Сопоставление позиций из раздела «В тренде» с вашим плейлистом</string>
+    <string name="sync_status_trending_detail_waiting">Ожидание ответа со списком кандидатов от TMDB</string>
+    <string name="sync_status_trending_detail_received">Кандидаты от TMDB · Фильмы: <xliff:g id="movies">%1$d</xliff:g> · Сериалы: <xliff:g id="series">%2$d</xliff:g></string>
+    <string name="sync_status_trending_detail_preparing">Индекс названий провайдера · <xliff:g id="processed">%1$d</xliff:g> / <xliff:g id="total">%2$d</xliff:g></string>
+    <string name="sync_status_trending_detail_movies">Проверка фильмов: <xliff:g id="checked">%1$d</xliff:g>/<xliff:g id="candidates">%2$d</xliff:g> · совпадения: <xliff:g id="matched">%3$d</xliff:g>/<xliff:g id="target">%4$d</xliff:g></string>
+    <string name="sync_status_trending_detail_series">Проверка сериалов: <xliff:g id="checked">%1$d</xliff:g>/<xliff:g id="candidates">%2$d</xliff:g> · совпадения: <xliff:g id="matched">%3$d</xliff:g>/<xliff:g id="target">%4$d</xliff:g></string>
+    <string name="sync_status_trending_detail_selected">Выбрано · Фильмы: <xliff:g id="movies">%1$d</xliff:g> · Сериалы: <xliff:g id="series">%2$d</xliff:g> · Главный экран: <xliff:g id="home">%3$d</xliff:g></string>
+    <string name="sync_status_trending_detail_completed">Сопоставлено · Фильмы: <xliff:g id="movie_matches">%1$d</xliff:g>/<xliff:g id="movie_candidates">%2$d</xliff:g> · Сериалы: <xliff:g id="series_matches">%3$d</xliff:g>/<xliff:g id="series_candidates">%4$d</xliff:g></string>
+    <string name="sync_status_trending_preparing">Подготовка названий провайдера для быстрого сопоставления</string>
+    <string name="sync_status_trending_matching_movies">Сопоставление фильмов из раздела «В тренде» с каталогом вашего провайдера</string>
+    <string name="sync_status_trending_matching_series">Сопоставление сериалов из раздела «В тренде» с каталогом вашего провайдера</string>
+    <string name="sync_status_trending_loading_seasons">Загрузка сезонов от провайдера</string>
+    <string name="sync_status_trending_detail_loading_seasons">Проверено сериалов: <xliff:g id="processed">%1$d</xliff:g>/<xliff:g id="total">%2$d</xliff:g></string>
+    <string name="sync_status_trending_preserved">Не удалось обновить раздел «В тренде» · предыдущие результаты сохранены</string>
+    <plurals name="sync_status_trending_received">
+        <item quantity="one">Получена <xliff:g id="count">%1$d</xliff:g> актуальная позиция из раздела «В тренде»</item>
+        <item quantity="few">Получены <xliff:g id="count">%1$d</xliff:g> актуальные позиции из раздела «В тренде»</item>
+        <item quantity="many">Получено <xliff:g id="count">%1$d</xliff:g> актуальных позиций из раздела «В тренде»</item>
+        <item quantity="other">Получено <xliff:g id="count">%1$d</xliff:g> актуальной позиции из раздела «В тренде»</item>
+    </plurals>
+    <plurals name="sync_status_trending_matched">
+        <item quantity="one">Сопоставлено <xliff:g id="total">%1$d</xliff:g> · <xliff:g id="movies">%2$s</xliff:g> · <xliff:g id="series">%3$s</xliff:g></item>
+        <item quantity="few">Сопоставлено <xliff:g id="total">%1$d</xliff:g> · <xliff:g id="movies">%2$s</xliff:g> · <xliff:g id="series">%3$s</xliff:g></item>
+        <item quantity="many">Сопоставлено <xliff:g id="total">%1$d</xliff:g> · <xliff:g id="movies">%2$s</xliff:g> · <xliff:g id="series">%3$s</xliff:g></item>
+        <item quantity="other">Сопоставлено <xliff:g id="total">%1$d</xliff:g> · <xliff:g id="movies">%2$s</xliff:g> · <xliff:g id="series">%3$s</xliff:g></item>
+    </plurals>
+    <plurals name="sync_status_trending_building">
+        <item quantity="one">Создание раздела «Сейчас в тренде» · <xliff:g id="count">%1$d</xliff:g> совпадение</item>
+        <item quantity="few">Создание раздела «Сейчас в тренде» · <xliff:g id="count">%1$d</xliff:g> совпадения</item>
+        <item quantity="many">Создание раздела «Сейчас в тренде» · <xliff:g id="count">%1$d</xliff:g> совпадений</item>
+        <item quantity="other">Создание раздела «Сейчас в тренде» · <xliff:g id="count">%1$d</xliff:g> совпадения</item>
+    </plurals>
+    <plurals name="sync_status_trending_publishing">
+        <item quantity="one">Публикация раздела «Сейчас в тренде» · <xliff:g id="count">%1$d</xliff:g> позиция</item>
+        <item quantity="few">Публикация раздела «Сейчас в тренде» · <xliff:g id="count">%1$d</xliff:g> позиции</item>
+        <item quantity="many">Публикация раздела «Сейчас в тренде» · <xliff:g id="count">%1$d</xliff:g> позиций</item>
+        <item quantity="other">Публикация раздела «Сейчас в тренде» · <xliff:g id="count">%1$d</xliff:g> позиции</item>
+    </plurals>
+    <plurals name="sync_status_trending_ready">
+        <item quantity="one">Раздел «Сейчас в тренде» готов · <xliff:g id="count">%1$d</xliff:g> совпадение</item>
+        <item quantity="few">Раздел «Сейчас в тренде» готов · <xliff:g id="count">%1$d</xliff:g> совпадения</item>
+        <item quantity="many">Раздел «Сейчас в тренде» готов · <xliff:g id="count">%1$d</xliff:g> совпадений</item>
+        <item quantity="other">Раздел «Сейчас в тренде» готов · <xliff:g id="count">%1$d</xliff:g> совпадения</item>
+    </plurals>
+    <plurals name="sync_status_trending_below_minimum">
+        <item quantity="one">Раздел «Сейчас в тренде» скрыт · только <xliff:g id="count">%1$d</xliff:g> совпадение</item>
+        <item quantity="few">Раздел «Сейчас в тренде» скрыт · только <xliff:g id="count">%1$d</xliff:g> совпадения</item>
+        <item quantity="many">Раздел «Сейчас в тренде» скрыт · только <xliff:g id="count">%1$d</xliff:g> совпадений</item>
+        <item quantity="other">Раздел «Сейчас в тренде» скрыт · только <xliff:g id="count">%1$d</xliff:g> совпадения</item>
+    </plurals>
 </resources>

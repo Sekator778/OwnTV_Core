@@ -122,4 +122,43 @@
     <string name="common_hide">Verbergen</string>
     <string name="common_show">Tonen</string>
     <string name="common_qr_code_companion_url">QR-code voor de companion-URL</string>
+    <string name="sync_status_trending_starting">Synchronisatie voltooid · <xliff:g id="source">%1$s</xliff:g> · Nu populair wordt samengesteld</string>
+    <string name="sync_status_trending_matching">Populaire items worden vergeleken met je afspeellijst</string>
+    <string name="sync_status_trending_detail_waiting">Wachten op antwoord met TMDB-kandidaten</string>
+    <string name="sync_status_trending_detail_received">TMDB-kandidaten · Films: <xliff:g id="movies">%1$d</xliff:g> · Series: <xliff:g id="series">%2$d</xliff:g></string>
+    <string name="sync_status_trending_detail_preparing">Titelindex van aanbieder · <xliff:g id="processed">%1$d</xliff:g> / <xliff:g id="total">%2$d</xliff:g></string>
+    <string name="sync_status_trending_detail_movies">Filmcontrole: <xliff:g id="checked">%1$d</xliff:g>/<xliff:g id="candidates">%2$d</xliff:g> · overeenkomsten: <xliff:g id="matched">%3$d</xliff:g>/<xliff:g id="target">%4$d</xliff:g></string>
+    <string name="sync_status_trending_detail_series">Seriecontrole: <xliff:g id="checked">%1$d</xliff:g>/<xliff:g id="candidates">%2$d</xliff:g> · overeenkomsten: <xliff:g id="matched">%3$d</xliff:g>/<xliff:g id="target">%4$d</xliff:g></string>
+    <string name="sync_status_trending_detail_selected">Geselecteerd · Films: <xliff:g id="movies">%1$d</xliff:g> · Series: <xliff:g id="series">%2$d</xliff:g> · Startscherm: <xliff:g id="home">%3$d</xliff:g></string>
+    <string name="sync_status_trending_detail_completed">Gekoppeld · Films: <xliff:g id="movie_matches">%1$d</xliff:g>/<xliff:g id="movie_candidates">%2$d</xliff:g> · Series: <xliff:g id="series_matches">%3$d</xliff:g>/<xliff:g id="series_candidates">%4$d</xliff:g></string>
+    <string name="sync_status_trending_preparing">Titels van aanbieder worden voorbereid voor snelle vergelijking</string>
+    <string name="sync_status_trending_matching_movies">Populaire films worden vergeleken met je aanbieder</string>
+    <string name="sync_status_trending_matching_series">Populaire series worden vergeleken met je aanbieder</string>
+    <string name="sync_status_trending_loading_seasons">Seizoenen van aanbieder worden geladen</string>
+    <string name="sync_status_trending_detail_loading_seasons">Series gecontroleerd: <xliff:g id="processed">%1$d</xliff:g>/<xliff:g id="total">%2$d</xliff:g></string>
+    <string name="sync_status_trending_preserved">Vernieuwen van Nu populair niet beschikbaar · eerdere resultaten behouden</string>
+    <plurals name="sync_status_trending_received">
+        <item quantity="one">Nieuwste <xliff:g id="count">%1$d</xliff:g> populaire item ontvangen</item>
+        <item quantity="other">Nieuwste <xliff:g id="count">%1$d</xliff:g> populaire items ontvangen</item>
+    </plurals>
+    <plurals name="sync_status_trending_matched">
+        <item quantity="one">Gekoppeld: <xliff:g id="total">%1$d</xliff:g> · <xliff:g id="movies">%2$s</xliff:g> · <xliff:g id="series">%3$s</xliff:g></item>
+        <item quantity="other">Gekoppeld: <xliff:g id="total">%1$d</xliff:g> · <xliff:g id="movies">%2$s</xliff:g> · <xliff:g id="series">%3$s</xliff:g></item>
+    </plurals>
+    <plurals name="sync_status_trending_building">
+        <item quantity="one">Nu populair wordt samengesteld · <xliff:g id="count">%1$d</xliff:g> overeenkomst</item>
+        <item quantity="other">Nu populair wordt samengesteld · <xliff:g id="count">%1$d</xliff:g> overeenkomsten</item>
+    </plurals>
+    <plurals name="sync_status_trending_publishing">
+        <item quantity="one">Nu populair wordt gepubliceerd · <xliff:g id="count">%1$d</xliff:g> item</item>
+        <item quantity="other">Nu populair wordt gepubliceerd · <xliff:g id="count">%1$d</xliff:g> items</item>
+    </plurals>
+    <plurals name="sync_status_trending_ready">
+        <item quantity="one">Nu populair is gereed · <xliff:g id="count">%1$d</xliff:g> overeenkomst</item>
+        <item quantity="other">Nu populair is gereed · <xliff:g id="count">%1$d</xliff:g> overeenkomsten</item>
+    </plurals>
+    <plurals name="sync_status_trending_below_minimum">
+        <item quantity="one">Nu populair verborgen · slechts <xliff:g id="count">%1$d</xliff:g> overeenkomst</item>
+        <item quantity="other">Nu populair verborgen · slechts <xliff:g id="count">%1$d</xliff:g> overeenkomsten</item>
+    </plurals>
 </resources>

@@ -17,6 +17,7 @@ import tv.own.owntv.core.database.dao.ProgressDao
 import tv.own.owntv.core.database.dao.SeriesDao
 import tv.own.owntv.core.database.dao.SeriesSortOrderDao
 import tv.own.owntv.core.database.dao.TvProviderProgramDao
+import tv.own.owntv.core.database.dao.TrendingDao
 import tv.own.owntv.core.database.dao.SourceDao
 import tv.own.owntv.core.database.entity.CategoryEntity
 import tv.own.owntv.core.database.entity.ChannelEntity
@@ -47,6 +48,8 @@ import tv.own.owntv.core.database.entity.SubtitleSelectionEntity
 import tv.own.owntv.core.database.entity.SubtitleTimingEntity
 import tv.own.owntv.core.database.entity.WatchHistoryEntity
 import tv.own.owntv.core.database.entity.TvProviderProgramEntity
+import tv.own.owntv.core.database.entity.TrendingItemEntity
+import tv.own.owntv.core.database.entity.TrendingSnapshotEntity
 import tv.own.owntv.core.database.dao.CustomCategoryDao
 import tv.own.owntv.core.database.dao.SubtitleDao
 
@@ -79,6 +82,9 @@ import tv.own.owntv.core.database.dao.SubtitleDao
         // TMDB metadata enrichment cache (plan §7)
         MetadataCacheEntity::class,
         MetadataMatchEntity::class,
+        // Source-scoped, locally matched TMDB Trending showcase cache (v30).
+        TrendingSnapshotEntity::class,
+        TrendingItemEntity::class,
         // External subtitles (OpenSubtitles / local files) — subtitle plan Phase 2
         SubtitleCacheEntity::class,
         SubtitleSelectionEntity::class,
@@ -90,11 +96,12 @@ import tv.own.owntv.core.database.dao.SubtitleDao
         SeriesFtsEntity::class,
         EpisodeFtsEntity::class,
     ],
-    version = 29, // v7: content_order (Move). v8: contentHash + browse/unique indexes. v9: EPG contentHash + natural key. v10: TMDB metadata cache. v11: movies/series rating-sort indexes. v12: metadata_cache trailerKey. v13: metadata_cache logoPath. v14: sources.mac (Stalker portal). v15: external-subtitle cache/selection/timing tables. v16: subtitle_link (downloaded-sub ↔ content). v17: sources.syncLive/Movies/Series (skip-sync enabledScope). v18: series.episodesSyncedAt (episode-cache freshness, S8). v19: epg_channels.iconUrl (XMLTV channel logos). v20: channels (sourceId, number) index for direct tune. v21: series.addedAt + date-added sort indexes. v22: series_sort_order (per-series season/episode order). v23: sources.hlsSupported and sources.preferHls. v24: custom_category_members (user custom categories, #87). v25: sources.livePrerollSecs (per-playlist "Pre-buffer"). v26: channels.catchupType + channels.httpHeaders (M3U catch-up styles + per-channel HTTP headers). v27: sources.maxConnections (Xtream session limit read at sync). v28: movies.httpHeaders + episodes.httpHeaders (per-item M3U HTTP headers). v29: optional Stalker serial/device IDs/signature.
+    version = 31, // v7: content_order (Move). v8: contentHash + browse/unique indexes. v9: EPG contentHash + natural key. v10: TMDB metadata cache. v11: movies/series rating-sort indexes. v12: metadata_cache trailerKey. v13: metadata_cache logoPath. v14: sources.mac (Stalker portal). v15: external-subtitle cache/selection/timing tables. v16: subtitle_link (downloaded-sub ↔ content). v17: sources.syncLive/Movies/Series (skip-sync enabledScope). v18: series.episodesSyncedAt (episode-cache freshness, S8). v19: epg_channels.iconUrl (XMLTV channel logos). v20: channels (sourceId, number) index for direct tune. v21: series.addedAt + date-added sort indexes. v22: series_sort_order (per-series season/episode order). v23: sources.hlsSupported and sources.preferHls. v24: custom_category_members (user custom categories, #87). v25: sources.livePrerollSecs (per-playlist "Pre-buffer"). v26: channels.catchupType + channels.httpHeaders (M3U catch-up styles + per-channel HTTP headers). v27: sources.maxConnections (Xtream session limit read at sync). v28: movies.httpHeaders + episodes.httpHeaders (per-item M3U HTTP headers). v29: optional Stalker serial/device IDs/signature. v30: source-scoped Now Trending snapshots. v31: indexed provider-title metadata and persistent Trending attempt state.
 
     exportSchema = true,
 )
 @TypeConverters(Converters::class)
+/** Room entry point; its generated `_Impl` is loaded by name and retained by release keep rules. */
 abstract class OwnTVDatabase : RoomDatabase() {
     abstract fun profileDao(): ProfileDao
     abstract fun sourceDao(): SourceDao
@@ -112,6 +119,7 @@ abstract class OwnTVDatabase : RoomDatabase() {
     abstract fun downloadDao(): DownloadDao
     abstract fun epgDao(): EpgDao
     abstract fun metadataDao(): tv.own.owntv.core.database.dao.MetadataDao
+    abstract fun trendingDao(): TrendingDao
     abstract fun subtitleDao(): SubtitleDao
 
     companion object {
@@ -737,6 +745,90 @@ abstract class OwnTVDatabase : RoomDatabase() {
         }
 
         /**
+         * v29 → v30: source-scoped Now Trending snapshot cache. The item table intentionally has
+         * no movie/series foreign key because provider rows may be replaced during synchronization.
+         * Deleting a source cascades through its snapshot state and items.
+         */
+        val MIGRATION_29_30 = object : androidx.room.migration.Migration(29, 30) {
+            override fun migrate(db: androidx.sqlite.db.SupportSQLiteDatabase) {
+                db.execSQL(
+                    "CREATE TABLE IF NOT EXISTS `trending_snapshots` (" +
+                        "`sourceId` INTEGER NOT NULL, " +
+                        "`status` TEXT NOT NULL, " +
+                        "`metadataLanguage` TEXT NOT NULL, " +
+                        "`refreshedAt` INTEGER NOT NULL, " +
+                        "`candidateFetchedAt` INTEGER NOT NULL, " +
+                        "`generationId` TEXT NOT NULL, " +
+                        "`itemCount` INTEGER NOT NULL, " +
+                        "PRIMARY KEY(`sourceId`), " +
+                        "FOREIGN KEY(`sourceId`) REFERENCES `sources`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE" +
+                        ")",
+                )
+                db.execSQL(
+                    "CREATE TABLE IF NOT EXISTS `trending_items` (" +
+                        "`sourceId` INTEGER NOT NULL, " +
+                        "`position` INTEGER NOT NULL, " +
+                        "`tmdbId` INTEGER NOT NULL, " +
+                        "`mediaType` TEXT NOT NULL, " +
+                        "`trendingRank` INTEGER NOT NULL, " +
+                        "`providerItemId` INTEGER NOT NULL, " +
+                        "`providerRemoteId` TEXT, " +
+                        "`providerStableKey` TEXT NOT NULL, " +
+                        "`providerRawName` TEXT NOT NULL, " +
+                        "`canonicalTitle` TEXT NOT NULL, " +
+                        "`providerLanguage` TEXT, " +
+                        "`advertisedQuality` TEXT, " +
+                        "`advertisedCapabilities` TEXT, " +
+                        "`localizedTitle` TEXT NOT NULL, " +
+                        "`originalTitle` TEXT, " +
+                        "`year` INTEGER, " +
+                        "`overview` TEXT, " +
+                        "`posterPath` TEXT, " +
+                        "`backdropPath` TEXT, " +
+                        "`rating` REAL, " +
+                        "`trailerKey` TEXT, " +
+                        "`generationId` TEXT NOT NULL, " +
+                        "`refreshedAt` INTEGER NOT NULL, " +
+                        "PRIMARY KEY(`sourceId`, `position`), " +
+                        "FOREIGN KEY(`sourceId`) REFERENCES `trending_snapshots`(`sourceId`) ON UPDATE NO ACTION ON DELETE CASCADE" +
+                        ")",
+                )
+                db.execSQL(
+                    "CREATE INDEX IF NOT EXISTS `index_trending_items_sourceId_mediaType_providerItemId` " +
+                        "ON `trending_items` (`sourceId`, `mediaType`, `providerItemId`)",
+                )
+                db.execSQL(
+                    "CREATE INDEX IF NOT EXISTS `index_trending_items_mediaType_tmdbId` " +
+                        "ON `trending_items` (`mediaType`, `tmdbId`)",
+                )
+                healSchema(db)
+            }
+        }
+
+        /** v30 → v31: additive provider-title search metadata and refresh-result diagnostics. */
+        val MIGRATION_30_31 = object : androidx.room.migration.Migration(30, 31) {
+            override fun migrate(db: androidx.sqlite.db.SupportSQLiteDatabase) {
+                for (table in listOf("movies", "series")) {
+                    db.execSQL("ALTER TABLE `$table` ADD COLUMN `canonicalTitle` TEXT NOT NULL DEFAULT ''")
+                    db.execSQL("ALTER TABLE `$table` ADD COLUMN `titleSignature` TEXT NOT NULL DEFAULT ''")
+                    db.execSQL("ALTER TABLE `$table` ADD COLUMN `parsedYear` INTEGER")
+                    db.execSQL("ALTER TABLE `$table` ADD COLUMN `providerLanguage` TEXT")
+                    db.execSQL("ALTER TABLE `$table` ADD COLUMN `qualityRank` INTEGER NOT NULL DEFAULT 0")
+                    db.execSQL("ALTER TABLE `$table` ADD COLUMN `advertisedCapabilities` TEXT")
+                    db.execSQL(
+                        "CREATE INDEX IF NOT EXISTS `index_${table}_sourceId_titleSignature_parsedYear` " +
+                            "ON `$table` (`sourceId`, `titleSignature`, `parsedYear`)",
+                    )
+                }
+                db.execSQL("ALTER TABLE `trending_snapshots` ADD COLUMN `matchedItemCount` INTEGER NOT NULL DEFAULT 0")
+                db.execSQL("ALTER TABLE `trending_snapshots` ADD COLUMN `lastAttemptAt` INTEGER NOT NULL DEFAULT 0")
+                db.execSQL("ALTER TABLE `trending_snapshots` ADD COLUMN `lastAttemptStatus` TEXT NOT NULL DEFAULT 'NEVER'")
+                db.execSQL("ALTER TABLE `trending_snapshots` ADD COLUMN `failureStage` TEXT")
+                healSchema(db)
+            }
+        }
+
+        /**
          * Canonical CREATE statements for every NON-unique index Room expects on the four
          * bulk-synced tables, keyed by table (must stay in sync with the current schema JSON).
          * BulkInsertHelper drops exactly these during eligible fresh imports; restore, the
@@ -768,6 +860,7 @@ abstract class OwnTVDatabase : RoomDatabase() {
                 "CREATE INDEX IF NOT EXISTS `index_movies_categoryId_rating_name` ON `movies` (`categoryId`, `rating`, `name`)",
                 "CREATE INDEX IF NOT EXISTS `index_movies_sourceId_addedAt_sortOrder` ON `movies` (`sourceId`, `addedAt`, `sortOrder`)",
                 "CREATE INDEX IF NOT EXISTS `index_movies_categoryId_addedAt_sortOrder` ON `movies` (`categoryId`, `addedAt`, `sortOrder`)",
+                "CREATE INDEX IF NOT EXISTS `index_movies_sourceId_titleSignature_parsedYear` ON `movies` (`sourceId`, `titleSignature`, `parsedYear`)",
             ),
             "series" to listOf(
                 "CREATE INDEX IF NOT EXISTS `index_series_sourceId` ON `series` (`sourceId`)",
@@ -781,6 +874,7 @@ abstract class OwnTVDatabase : RoomDatabase() {
                 "CREATE INDEX IF NOT EXISTS `index_series_categoryId_rating_name` ON `series` (`categoryId`, `rating`, `name`)",
                 "CREATE INDEX IF NOT EXISTS `index_series_sourceId_addedAt_sortOrder` ON `series` (`sourceId`, `addedAt`, `sortOrder`)",
                 "CREATE INDEX IF NOT EXISTS `index_series_categoryId_addedAt_sortOrder` ON `series` (`categoryId`, `addedAt`, `sortOrder`)",
+                "CREATE INDEX IF NOT EXISTS `index_series_sourceId_titleSignature_parsedYear` ON `series` (`sourceId`, `titleSignature`, `parsedYear`)",
             ),
             "epg_programmes" to listOf(
                 "CREATE INDEX IF NOT EXISTS `index_epg_programmes_epgChannelId_startMs` ON `epg_programmes` (`epgChannelId`, `startMs`)",

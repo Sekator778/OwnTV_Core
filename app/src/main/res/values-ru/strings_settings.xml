@@ -918,4 +918,8 @@
     <string name="settings_auto_frame_rate_turn_on_anyway">Включить всё равно</string>
     <string name="settings_language_request_workflow">Хотите добавить язык, которого нет в списке? Сначала отправьте заявку на язык. Сопровождающий зарегистрирует его и подготовит базовые файлы перевода; как только язык появится на Hosted Weblate, вы сможете начать вносить свой вклад.</string>
     <string name="settings_language_request_new">Запросить новый язык</string>
+    <string name="settings_panel_width_disable_preview_title">Отключить видео предпросмотра прямого эфира?</string>
+    <string name="settings_panel_width_disable_preview_description">Сейчас видео предпросмотра прямого эфира включено. Если скрыть панель предпросмотра, видео отключится, и его нельзя будет включить снова, пока вы не зададите ширину панели предпросмотра в разделе «Настройка ширины панелей».</string>
+    <string name="settings_live_preview_panel_hidden_title">Видео предпросмотра прямого эфира недоступно</string>
+    <string name="settings_live_preview_panel_hidden_description">Панель предпросмотра прямого эфира скрыта. Прежде чем включать видео предпросмотра, задайте для неё ширину больше 0%% в разделе «Настройка ширины панелей».</string>
 </resources>

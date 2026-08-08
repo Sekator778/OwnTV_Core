@@ -7,6 +7,7 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
 import kotlinx.coroutines.flow.Flow
+import tv.own.owntv.core.catalog.withProviderCatalogMetadata
 import tv.own.owntv.core.database.entity.ContentHashProjection
 import tv.own.owntv.core.database.entity.MovieEntity
 
@@ -16,19 +17,31 @@ data class CategoryItemCount(val categoryId: Long, val itemCount: Int)
 @Dao
 interface MovieDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun upsertAll(movies: List<MovieEntity>)
+    suspend fun upsertAllNormalized(movies: List<MovieEntity>)
+
+    suspend fun upsertAll(movies: List<MovieEntity>) =
+        upsertAllNormalized(movies.map(MovieEntity::withProviderCatalogMetadata))
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun insertAll(movies: List<MovieEntity>)
+    suspend fun insertAllNormalized(movies: List<MovieEntity>)
+
+    suspend fun insertAll(movies: List<MovieEntity>) =
+        insertAllNormalized(movies.map(MovieEntity::withProviderCatalogMetadata))
 
     @Update
-    suspend fun updateAll(movies: List<MovieEntity>)
+    suspend fun updateAllNormalized(movies: List<MovieEntity>)
+
+    suspend fun updateAll(movies: List<MovieEntity>) =
+        updateAllNormalized(movies.map(MovieEntity::withProviderCatalogMetadata))
 
     @Query("DELETE FROM movies WHERE sourceId = :sourceId")
     suspend fun clearSource(sourceId: Long)
 
     @Query("SELECT * FROM movies WHERE id = :id")
     suspend fun getById(id: Long): MovieEntity?
+
+    @Query("SELECT * FROM movies WHERE id IN (:ids)")
+    suspend fun getByIds(ids: List<Long>): List<MovieEntity>
 
     // --- Stable-key lookups (Backup & Restore resolution: content ids change on re-sync) ---
     @Query("SELECT * FROM movies WHERE sourceId = :sourceId AND remoteId = :remoteId LIMIT 1")
@@ -150,6 +163,29 @@ interface MovieDao {
 
     @Query("SELECT COUNT(*) FROM movies WHERE sourceId = :sourceId")
     suspend fun countForSourceOnce(sourceId: Long): Int
+
+    @Query("SELECT * FROM movies WHERE sourceId = :sourceId AND titleSignature = '' LIMIT :limit")
+    suspend fun trendingMetadataBackfill(sourceId: Long, limit: Int): List<MovieEntity>
+
+    @Query("SELECT COUNT(*) FROM movies WHERE sourceId = :sourceId AND titleSignature = ''")
+    suspend fun trendingMetadataBackfillCount(sourceId: Long): Int
+
+    @Query(
+        "SELECT id, sourceId, categoryId, name, year, remoteId, sortOrder, canonicalTitle, " +
+            "titleSignature, parsedYear, providerLanguage, qualityRank, advertisedCapabilities FROM movies " +
+            "WHERE sourceId = :sourceId AND titleSignature IN (:titleSignatures) " +
+            "ORDER BY sortOrder ASC, name ASC, id ASC",
+    )
+    suspend fun trendingExact(sourceId: Long, titleSignatures: List<String>): List<TrendingCatalogRow>
+
+    @Query(
+        "SELECT id, sourceId, categoryId, name, year, remoteId, sortOrder, canonicalTitle, " +
+            "titleSignature, parsedYear, providerLanguage, qualityRank, advertisedCapabilities FROM movies " +
+            "WHERE sourceId = :sourceId AND id IN " +
+            "(SELECT rowid FROM movies_fts WHERE movies_fts MATCH :ftsQuery) " +
+            "ORDER BY sortOrder ASC, name ASC, id ASC LIMIT :limit",
+    )
+    suspend fun trendingFts(sourceId: Long, ftsQuery: String, limit: Int): List<TrendingCatalogRow>
 
     @Query(
         "SELECT * FROM movies WHERE sourceId IN (:sourceIds) " +

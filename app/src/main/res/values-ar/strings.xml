@@ -158,4 +158,67 @@
     <string name="common_hide">إخفاء</string>
     <string name="common_show">إظهار</string>
     <string name="common_qr_code_companion_url">رمز QR لعنوان URL المرافق</string>
+    <string name="sync_status_trending_starting">اكتملت المزامنة · <xliff:g id="source">%1$s</xliff:g> · جارٍ إنشاء «الرائج الآن»</string>
+    <string name="sync_status_trending_matching">جارٍ مطابقة العناصر الرائجة مع قائمة التشغيل الخاصة بك</string>
+    <string name="sync_status_trending_detail_waiting">في انتظار استجابة العناصر المرشحة من TMDB</string>
+    <string name="sync_status_trending_detail_received">العناصر المرشحة من TMDB · الأفلام: <xliff:g id="movies">%1$d</xliff:g> · المسلسلات: <xliff:g id="series">%2$d</xliff:g></string>
+    <string name="sync_status_trending_detail_preparing">فهرس عناوين المزوّد · <xliff:g id="processed">%1$d</xliff:g> / <xliff:g id="total">%2$d</xliff:g></string>
+    <string name="sync_status_trending_detail_movies">فحص الأفلام: <xliff:g id="checked">%1$d</xliff:g>/<xliff:g id="candidates">%2$d</xliff:g> · المطابقات: <xliff:g id="matched">%3$d</xliff:g>/<xliff:g id="target">%4$d</xliff:g></string>
+    <string name="sync_status_trending_detail_series">فحص المسلسلات: <xliff:g id="checked">%1$d</xliff:g>/<xliff:g id="candidates">%2$d</xliff:g> · المطابقات: <xliff:g id="matched">%3$d</xliff:g>/<xliff:g id="target">%4$d</xliff:g></string>
+    <string name="sync_status_trending_detail_selected">المحدّد · الأفلام: <xliff:g id="movies">%1$d</xliff:g> · المسلسلات: <xliff:g id="series">%2$d</xliff:g> · الشاشة الرئيسية: <xliff:g id="home">%3$d</xliff:g></string>
+    <string name="sync_status_trending_detail_completed">تمت المطابقة · الأفلام: <xliff:g id="movie_matches">%1$d</xliff:g>/<xliff:g id="movie_candidates">%2$d</xliff:g> · المسلسلات: <xliff:g id="series_matches">%3$d</xliff:g>/<xliff:g id="series_candidates">%4$d</xliff:g></string>
+    <string name="sync_status_trending_preparing">جارٍ إعداد عناوين المزوّد للمطابقة السريعة</string>
+    <string name="sync_status_trending_matching_movies">جارٍ مطابقة الأفلام الرائجة مع المزوّد الخاص بك</string>
+    <string name="sync_status_trending_matching_series">جارٍ مطابقة المسلسلات الرائجة مع المزوّد الخاص بك</string>
+    <string name="sync_status_trending_loading_seasons">جارٍ تحميل مواسم المزوّد</string>
+    <string name="sync_status_trending_detail_loading_seasons">المسلسلات التي تم فحصها: <xliff:g id="processed">%1$d</xliff:g>/<xliff:g id="total">%2$d</xliff:g></string>
+    <string name="sync_status_trending_preserved">تعذّر تحديث العناصر الرائجة · تم الاحتفاظ بالنتائج السابقة</string>
+    <plurals name="sync_status_trending_received">
+        <item quantity="zero">تم استلام أحدث <xliff:g id="count">%1$d</xliff:g> عنصر رائج</item>
+        <item quantity="one">تم استلام أحدث <xliff:g id="count">%1$d</xliff:g> عنصر رائج</item>
+        <item quantity="two">تم استلام أحدث <xliff:g id="count">%1$d</xliff:g> عنصرين رائجين</item>
+        <item quantity="few">تم استلام أحدث <xliff:g id="count">%1$d</xliff:g> عناصر رائجة</item>
+        <item quantity="many">تم استلام أحدث <xliff:g id="count">%1$d</xliff:g> عنصرًا رائجًا</item>
+        <item quantity="other">تم استلام أحدث <xliff:g id="count">%1$d</xliff:g> عنصر رائج</item>
+    </plurals>
+    <plurals name="sync_status_trending_matched">
+        <item quantity="zero">تمت مطابقة <xliff:g id="total">%1$d</xliff:g> · <xliff:g id="movies">%2$s</xliff:g> · <xliff:g id="series">%3$s</xliff:g></item>
+        <item quantity="one">تمت مطابقة <xliff:g id="total">%1$d</xliff:g> · <xliff:g id="movies">%2$s</xliff:g> · <xliff:g id="series">%3$s</xliff:g></item>
+        <item quantity="two">تمت مطابقة <xliff:g id="total">%1$d</xliff:g> · <xliff:g id="movies">%2$s</xliff:g> · <xliff:g id="series">%3$s</xliff:g></item>
+        <item quantity="few">تمت مطابقة <xliff:g id="total">%1$d</xliff:g> · <xliff:g id="movies">%2$s</xliff:g> · <xliff:g id="series">%3$s</xliff:g></item>
+        <item quantity="many">تمت مطابقة <xliff:g id="total">%1$d</xliff:g> · <xliff:g id="movies">%2$s</xliff:g> · <xliff:g id="series">%3$s</xliff:g></item>
+        <item quantity="other">تمت مطابقة <xliff:g id="total">%1$d</xliff:g> · <xliff:g id="movies">%2$s</xliff:g> · <xliff:g id="series">%3$s</xliff:g></item>
+    </plurals>
+    <plurals name="sync_status_trending_building">
+        <item quantity="zero">جارٍ إنشاء «الرائج الآن» · <xliff:g id="count">%1$d</xliff:g> مطابقة</item>
+        <item quantity="one">جارٍ إنشاء «الرائج الآن» · مطابقة واحدة: <xliff:g id="count">%1$d</xliff:g></item>
+        <item quantity="two">جارٍ إنشاء «الرائج الآن» · مطابقتان: <xliff:g id="count">%1$d</xliff:g></item>
+        <item quantity="few">جارٍ إنشاء «الرائج الآن» · <xliff:g id="count">%1$d</xliff:g> مطابقات</item>
+        <item quantity="many">جارٍ إنشاء «الرائج الآن» · <xliff:g id="count">%1$d</xliff:g> مطابقةً</item>
+        <item quantity="other">جارٍ إنشاء «الرائج الآن» · <xliff:g id="count">%1$d</xliff:g> مطابقة</item>
+    </plurals>
+    <plurals name="sync_status_trending_publishing">
+        <item quantity="zero">جارٍ نشر «الرائج الآن» · <xliff:g id="count">%1$d</xliff:g> عنصر</item>
+        <item quantity="one">جارٍ نشر «الرائج الآن» · عنصر واحد: <xliff:g id="count">%1$d</xliff:g></item>
+        <item quantity="two">جارٍ نشر «الرائج الآن» · عنصران: <xliff:g id="count">%1$d</xliff:g></item>
+        <item quantity="few">جارٍ نشر «الرائج الآن» · <xliff:g id="count">%1$d</xliff:g> عناصر</item>
+        <item quantity="many">جارٍ نشر «الرائج الآن» · <xliff:g id="count">%1$d</xliff:g> عنصرًا</item>
+        <item quantity="other">جارٍ نشر «الرائج الآن» · <xliff:g id="count">%1$d</xliff:g> عنصر</item>
+    </plurals>
+    <plurals name="sync_status_trending_ready">
+        <item quantity="zero">«الرائج الآن» جاهز · <xliff:g id="count">%1$d</xliff:g> مطابقة</item>
+        <item quantity="one">«الرائج الآن» جاهز · مطابقة واحدة: <xliff:g id="count">%1$d</xliff:g></item>
+        <item quantity="two">«الرائج الآن» جاهز · مطابقتان: <xliff:g id="count">%1$d</xliff:g></item>
+        <item quantity="few">«الرائج الآن» جاهز · <xliff:g id="count">%1$d</xliff:g> مطابقات</item>
+        <item quantity="many">«الرائج الآن» جاهز · <xliff:g id="count">%1$d</xliff:g> مطابقةً</item>
+        <item quantity="other">«الرائج الآن» جاهز · <xliff:g id="count">%1$d</xliff:g> مطابقة</item>
+    </plurals>
+    <plurals name="sync_status_trending_below_minimum">
+        <item quantity="zero">«الرائج الآن» مخفي · <xliff:g id="count">%1$d</xliff:g> مطابقة فقط</item>
+        <item quantity="one">«الرائج الآن» مخفي · مطابقة واحدة فقط: <xliff:g id="count">%1$d</xliff:g></item>
+        <item quantity="two">«الرائج الآن» مخفي · مطابقتان فقط: <xliff:g id="count">%1$d</xliff:g></item>
+        <item quantity="few">«الرائج الآن» مخفي · <xliff:g id="count">%1$d</xliff:g> مطابقات فقط</item>
+        <item quantity="many">«الرائج الآن» مخفي · <xliff:g id="count">%1$d</xliff:g> مطابقةً فقط</item>
+        <item quantity="other">«الرائج الآن» مخفي · <xliff:g id="count">%1$d</xliff:g> مطابقة فقط</item>
+    </plurals>
 </resources>
