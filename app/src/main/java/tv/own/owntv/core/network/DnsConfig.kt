@@ -70,10 +70,14 @@ object DohPresets {
  * DNS-over-HTTPS bootstraps itself: the DoH requests go through a separate bootstrap
  * OkHttpClient that uses system DNS so there is no infinite loop.
  */
-class DnsConfigHolder(configFlow: Flow<DnsConfig>) {
+class DnsConfigHolder(
+    configFlow: Flow<DnsConfig>,
+    initialConfig: DnsConfig = DnsConfig(),
+    private val fallbackToSystem: Boolean = true,
+) {
 
     @Volatile
-    private var current: DnsConfig = DnsConfig()
+    private var current: DnsConfig = initialConfig
 
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
 
@@ -120,10 +124,12 @@ class DnsConfigHolder(configFlow: Flow<DnsConfig>) {
                 Log.d(TAG, "DoH lookup $hostname → ${results.map { it.hostAddress }} (server=$dohUrl)")
                 results
             } else {
+                if (!fallbackToSystem) return emptyList()
                 Log.w(TAG, "DoH lookup returned no addresses for $hostname, falling back to system DNS")
                 Dns.SYSTEM.lookup(hostname)
             }
         } catch (e: Exception) {
+            if (!fallbackToSystem) throw e
             Log.w(TAG, "DoH lookup failed for $hostname, falling back to system DNS", e)
             Dns.SYSTEM.lookup(hostname)
         }
@@ -172,11 +178,13 @@ class DnsConfigHolder(configFlow: Flow<DnsConfig>) {
             val response = sendUdpQuery(query, server, port)
             val result = parseDnsResponse(response)
             Log.d(TAG, "UDP DNS lookup $hostname → ${result.map { it.hostAddress }} (server=$server:$port)")
-            return result.ifEmpty { Dns.SYSTEM.lookup(hostname) }
+            return if (result.isNotEmpty() || !fallbackToSystem) result else Dns.SYSTEM.lookup(hostname)
         } catch (e: SocketTimeoutException) {
+            if (!fallbackToSystem) throw e
             Log.w(TAG, "UDP DNS timeout for $hostname via $server:$port, falling back to system DNS")
             return Dns.SYSTEM.lookup(hostname)
         } catch (e: Exception) {
+            if (!fallbackToSystem) throw e
             Log.w(TAG, "UDP DNS lookup failed for $hostname via $server:$port, falling back to system DNS", e)
             return Dns.SYSTEM.lookup(hostname)
         }
