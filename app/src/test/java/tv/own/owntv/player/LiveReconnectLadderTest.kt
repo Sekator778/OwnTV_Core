@@ -105,6 +105,23 @@ class LiveReconnectLadderTest {
     }
 
     @Test
+    fun `a numeric Retry-After becomes the wait, anything else becomes no wait at all`() {
+        // The panel counts the seconds down across successive refusals ("13", "12", "10"), and each one
+        // replaces the pending countdown — see LivePreviewEngine.maybeBackOffForProvider.
+        assertEquals(13, LivePreviewEngine.retryAfterSecs("13"))
+        assertEquals(10, LivePreviewEngine.retryAfterSecs(" 10 "))
+        // "come back now" still costs one tick, so the countdown always has something to show.
+        assertEquals(1, LivePreviewEngine.retryAfterSecs("0"))
+        // Longer than the ceiling reads as a hang behind a spinner — wait the ceiling, then let the user decide.
+        assertEquals(LivePreviewEngine.MAX_RETRY_AFTER_SECS, LivePreviewEngine.retryAfterSecs("3600"))
+        // The HTTP-date form and junk name no deadline we can honestly count down, so there is no wait.
+        assertNull(LivePreviewEngine.retryAfterSecs("Wed, 21 Oct 2015 07:28:00 GMT"))
+        assertNull(LivePreviewEngine.retryAfterSecs("-5"))
+        assertNull(LivePreviewEngine.retryAfterSecs(""))
+        assertNull(LivePreviewEngine.retryAfterSecs(null))
+    }
+
+    @Test
     fun `an HTTP refusal stops the identical-request retries but leaves the fallbacks armed`() {
         // A panel that refuses outright cannot be talked round by the same request, so only one repeat
         // is allowed — enough for the format/User-Agent fallbacks, which need autoRetries >= 1, to

@@ -388,6 +388,17 @@ class LivePreviewEngine(
      *  single wait-and-retry that answers it has already been spent. */
     private var sessionLimitSeen = false
     private var sessionLimitRetryDone = false
+    /** Seconds asked for by the most recent `Retry-After` on this load. Captured by the diagnostic
+     *  interceptor because response headers never reach [onPlayerError]. */
+    @Volatile private var providerRetryAfterSecs: Int? = null
+    /** Automatic 429 waits already spent on this tune (see [maybeBackOffForProvider]). */
+    private var providerBackOffs = 0
+    /** How many of those waits this tune has been through. The ViewModel's open deadline restarts while
+     *  this moves, so the attempt made *after* a wait gets a full deadline of its own instead of
+     *  inheriting the seconds left over from the refused one. */
+    val providerBackOffsSpent: Int get() = providerBackOffs
+    private val _providerBackOff = MutableStateFlow<ProviderBackOff?>(null)
+    override val providerBackOff: StateFlow<ProviderBackOff?> = _providerBackOff.asStateFlow()
     /** The tuned channel carries a User-Agent the user configured (per-source or per-channel). An explicit
      *  setting is a decision, so it is never swapped out for the fallback identity below. */
     private var uaIsCustom = false
@@ -793,6 +804,16 @@ class LivePreviewEngine(
         }
     }
 
+    /** Start the open deadline for the load that was just prepared. Every attempt gets its own — a retry
+     *  after a provider wait is as entitled to the "buffered but never started" check as the first try. */
+    private fun armOpenWatchdog() {
+        openStartMs = android.os.SystemClock.elapsedRealtime()
+        openStuckPolls = 0; prerollBufferedMs = 0L; prerollStuckPolls = 0
+        rendererReady.clear()
+        mainHandler.removeCallbacks(openWatchdog)
+        mainHandler.postDelayed(openWatchdog, PREROLL_POLL_MS)
+    }
+
     /** Remember that [url] can't hold a pre-roll and reopen it without one. Posted rather than run inline:
      *  the reopen releases the player, and a caller may be inside that player's own listener callback. */
     private fun dropPrerollAndReopen(url: String) {
@@ -934,7 +955,10 @@ class LivePreviewEngine(
                             stoppingIntentionally = false
                             _buffering.value = false
                         }
-                        reconnectPending || gaveUp -> _buffering.value = true
+                        // A pending provider back-off is a wait, not a stop: ExoPlayer goes IDLE the moment
+                        // the 429 becomes fatal, and clearing the spinner here would leave the countdown
+                        // standing on a dead-looking screen.
+                        reconnectPending || gaveUp || _providerBackOff.value != null -> _buffering.value = true
                         hasPlayed -> {
                             // Unexpected IDLE while we still intend to be on a live channel — same
                             // dead-end this fix targets, just via STATE_IDLE instead of STATE_ENDED.
@@ -1000,6 +1024,10 @@ class LivePreviewEngine(
             // Refused only because the previous engine's session hasn't been released yet — wait it out
             // once instead of failing the channel or handing it back to mpv (see [noteSessionLimit]).
             if (sessionLimitSeen && !sessionLimitRetryDone) { retryAfterSessionRelease(); return }
+            // Refused with a deadline rather than a verdict: the panel answered 429 and said how many
+            // seconds until this channel is free again. Sit out its own countdown and ask again for the
+            // identical stream (see [maybeBackOffForProvider]).
+            if (maybeBackOffForProvider(error)) return
             // Refused on *who is asking* rather than on what was asked for: some panels blocklist player
             // User-Agents by name. Retry once under a neutral identity before conceding the channel to
             // mpv, which sends the very same default UA and can only reproduce this.
@@ -1128,6 +1156,8 @@ class LivePreviewEngine(
         refusedSegments.clear(); _segmentsRefused.value = false; playlistLogged = false
         sessionLimitSeen = false; sessionLimitRetryDone = false; uaRetryDone = false
         altFormatRetryDone = false
+        // A new tune supersedes any wait the previous channel was serving (the user zapped away).
+        cancelProviderBackOff(); providerBackOffs = 0
         mainHandler.removeCallbacks(stallWatchdog); mainHandler.removeCallbacks(progressWatchdog); mainHandler.removeCallbacks(fpsFastRefresh)
         mainHandler.removeCallbacks(openWatchdog)
         mainHandler.removeCallbacks(healthyReset)
@@ -1173,10 +1203,7 @@ class LivePreviewEngine(
             p.playWhenReady = true
             // An open that buffers but never starts would otherwise hold the spinner forever — see
             // [openWatchdog]. Armed for every tune, pre-roll or not: branch (1) doesn't need one.
-            openStartMs = android.os.SystemClock.elapsedRealtime()
-            openStuckPolls = 0; prerollBufferedMs = 0L; prerollStuckPolls = 0
-            rendererReady.clear()
-            mainHandler.postDelayed(openWatchdog, PREROLL_POLL_MS)
+            armOpenWatchdog()
         }.onFailure {
             android.util.Log.w(LiveDiagnosticsLog.TAG, "preview play() failed for ${HttpClient.redactUrl(url)}", it)
             LiveDiagnosticsLog.event("play() failed: ${it.message}")
@@ -1272,6 +1299,7 @@ class LivePreviewEngine(
         stoppingIntentionally = true
         currentUrl = null
         hasPlayed = false; retryCount = 0; reconnectPending = false; gaveUp = false; decoderRetryDone = false
+        cancelProviderBackOff(); providerBackOffs = 0
         mainHandler.removeCallbacks(stallWatchdog); mainHandler.removeCallbacks(progressWatchdog); mainHandler.removeCallbacks(fpsFastRefresh)
         mainHandler.removeCallbacks(openWatchdog)
         mainHandler.removeCallbacks(healthyReset)
@@ -1312,6 +1340,7 @@ class LivePreviewEngine(
         LiveDiagnosticsLog.event("release() — intentional")
         releaseLoudness()
         stoppingIntentionally = true
+        cancelProviderBackOff(); providerBackOffs = 0
         mainHandler.removeCallbacks(stallWatchdog)
         mainHandler.removeCallbacks(progressWatchdog)
         mainHandler.removeCallbacks(openWatchdog)
@@ -1485,6 +1514,102 @@ class LivePreviewEngine(
                 _errorInfo.value = ErrorInfo(PlayerErrors.reasonFor(it.message.orEmpty()), exoSpec(), it.message)
             }
         }, SESSION_RELEASE_MS)
+    }
+
+    /**
+     * The panel refused this tune with `429` **and told us when to come back** (`Retry-After: 13`).
+     *
+     * That is not a verdict on the channel: it is the account still holding the stream the user just left,
+     * counted down in seconds. Nothing about the request is wrong, so nothing about it changes — same
+     * engine, same format, same URL, same identity, same headers. The channel keeps its spinner, shows the
+     * panel's own words with a live countdown, and re-asks the instant the panel said to; a further 429
+     * simply restarts the countdown with the newer value. Pressing Retry twice by hand — which is what the
+     * user had to do — is exactly this, done manually and with worse timing.
+     *
+     * Bounded by [MAX_PROVIDER_BACKOFFS] so a panel whose slot never frees still ends on the honest error
+     * screen instead of re-asking for the rest of the evening.
+     */
+    private fun maybeBackOffForProvider(error: PlaybackException): Boolean {
+        if (httpStatusOf(error) != HTTP_TOO_MANY_REQUESTS) return false
+        val secs = providerRetryAfterSecs ?: return false // no deadline named → nothing to wait for
+        val url = currentUrl ?: return false
+        if (player == null) return false
+        if (providerBackOffs >= MAX_PROVIDER_BACKOFFS) {
+            LiveDiagnosticsLog.event("provider still refusing after $providerBackOffs waits — letting the failure through")
+            return false
+        }
+        providerBackOffs++
+        providerRetryAfterSecs = null // the next refusal brings its own deadline
+        _isPlaying.value = false
+        _error.value = null; _errorInfo.value = null
+        _state.value = State.LOADING; _buffering.value = true
+        // The open watchdog is still polling this load's empty buffer; left standing, its "pre-buffer
+        // unreachable" branch would reopen the stream in the middle of the countdown.
+        mainHandler.removeCallbacks(openWatchdog)
+        mainHandler.removeCallbacks(backOffTick)
+        _providerBackOff.value = ProviderBackOff(HTTP_TOO_MANY_REQUESTS, providerBackOffMessage(url), secs)
+        LiveDiagnosticsLog.event(
+            "provider asked for ${secs}s (HTTP $HTTP_TOO_MANY_REQUESTS Retry-After) — waiting, then retrying the " +
+                "same URL on the same engine ($providerBackOffs/$MAX_PROVIDER_BACKOFFS)",
+        )
+        // Once per tune: the user-visible log should say the channel was queued, not spam a line a second.
+        if (providerBackOffs == 1) {
+            PlaybackErrorLog.event(
+                context, "ExoPlayer", live = true,
+                reason = PlayerFailureReason.ONE_SESSION_PROVIDER,
+                detail = "HTTP $HTTP_TOO_MANY_REQUESTS with Retry-After ${secs}s — waiting it out and retrying automatically",
+            )
+        }
+        mainHandler.postDelayed(backOffTick, 1_000L)
+        return true
+    }
+
+    /** The panel's own explanation of the refusal, shortened to its first sentence — the countdown line
+     *  has to stay readable across a room, and "Channel limit has been reached." already says it. */
+    private fun providerBackOffMessage(url: String): String? {
+        val full = LiveStreamQuirks.providerMessage(url, HTTP_TOO_MANY_REQUESTS) ?: return null
+        val end = full.indexOf(". ")
+        return if (end >= MIN_PROVIDER_SENTENCE) full.substring(0, end + 1) else full
+    }
+
+    /** One tick of the visible countdown; the last one performs the retry. */
+    private val backOffTick = object : Runnable {
+        override fun run() {
+            val pending = _providerBackOff.value ?: return
+            val left = pending.secondsLeft - 1
+            if (left > 0) {
+                _providerBackOff.value = pending.copy(secondsLeft = left)
+                mainHandler.postDelayed(this, 1_000L)
+                return
+            }
+            _providerBackOff.value = null
+            retryAfterProviderBackOff()
+        }
+    }
+
+    /** Re-ask for the channel the panel deferred. Deliberately identical to the load that was refused. */
+    private fun retryAfterProviderBackOff() {
+        val p = player ?: return
+        val url = currentUrl ?: return
+        LiveDiagnosticsLog.event("provider back-off elapsed — retrying the same URL on the same engine")
+        runCatching {
+            p.setMediaSource(mediaSourceFor(url))
+            p.prepare()
+            p.playWhenReady = true
+            armOpenWatchdog()
+        }.onFailure {
+            _state.value = State.ERROR
+            _buffering.value = false
+            _error.value = PlaybackFailure.Channel
+            _errorInfo.value = ErrorInfo(PlayerErrors.reasonFor(it.message.orEmpty()), exoSpec(), it.message)
+        }
+    }
+
+    /** Drop a pending provider wait — a new tune, a stop, a release or the user zapping away supersedes it. */
+    private fun cancelProviderBackOff() {
+        mainHandler.removeCallbacks(backOffTick)
+        _providerBackOff.value = null
+        providerRetryAfterSecs = null
     }
 
     /**
@@ -1928,6 +2053,11 @@ class LivePreviewEngine(
                     val failureText = if (failed) textPrefix(prefix, requested) else ""
                     if (failed) {
                         noteProviderMessage(requested, response.code, response.header("Content-Type"), failureText)
+                        // The header that says WHEN to come back is only ever on the response — by the time
+                        // the failure reaches [onPlayerError] there is nothing left to read it from.
+                        if (response.code == HTTP_TOO_MANY_REQUESTS) {
+                            retryAfterSecs(response.header("Retry-After"))?.let { providerRetryAfterSecs = it }
+                        }
                     }
                     if (LiveDiagnosticsLog.enabled) {
                         // A redirect is invisible in the final URL alone, and it is exactly what decides
@@ -2299,6 +2429,30 @@ class LivePreviewEngine(
 
         private const val HLS_HTTP_RECONNECT_MAX_MS = 1_500L
         internal const val EDGE_REFUSAL_RETRY_MS = 500L
+
+        /** "Too many requests" — a panel deferring the channel, not refusing it (see
+         *  [maybeBackOffForProvider]). */
+        internal const val HTTP_TOO_MANY_REQUESTS = 429
+
+        /** Ceiling on a `Retry-After` we will actually sit through. Past a minute a countdown reads as a
+         *  hang, and the honest error screen (with its Retry button) serves the user better. */
+        internal const val MAX_RETRY_AFTER_SECS = 60
+
+        /** Automatic 429 waits per tune, so a panel whose slot never frees can't keep the channel spinning
+         *  indefinitely. Five covers the real case — one stream released a few seconds late — many times over. */
+        internal const val MAX_PROVIDER_BACKOFFS = 5
+
+        /** Below this a provider's "first sentence" is a fragment ("Sorry.", "Error."), not an explanation,
+         *  so the whole message is kept instead. */
+        private const val MIN_PROVIDER_SENTENCE = 12
+
+        /**
+         * Seconds named by a numeric `Retry-After`, or null when the header is absent, an HTTP-date, or
+         * nonsense. `0` means "ask again now", which is one tick of the countdown here. Pure, so the rule
+         * is unit-testable.
+         */
+        internal fun retryAfterSecs(header: String?): Int? =
+            header?.trim()?.toIntOrNull()?.takeIf { it >= 0 }?.coerceIn(1, MAX_RETRY_AFTER_SECS)
 
         /** How long to wait for a single-session panel to notice the other engine's socket is gone.
          *  Measured on the traced panel: the handoff's own ~500 ms was never enough, and the refusal

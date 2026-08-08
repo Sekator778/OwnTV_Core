@@ -130,6 +130,16 @@ sealed interface PlaybackFailure {
     data class Raw(val message: String) : PlaybackFailure
 }
 
+/**
+ * A wait the provider itself asked for: it answered `429` with a numeric `Retry-After`, naming the second
+ * at which the channel becomes available again. This is not a failure — the engine re-asks by itself when
+ * the countdown ends — so it is carried separately from [PlaybackFailure].
+ *
+ * [message] is the panel's own words (raw provider text, never translated; null when it gave none). The
+ * sentence around it and the countdown wording belong to the presentation layer.
+ */
+data class ProviderBackOff(val httpCode: Int, val message: String?, val secondsLeft: Int)
+
 /** A playback failure broken into semantic reason, technical media details, and raw engine text. */
 data class ErrorInfo(val reason: PlayerFailureReason?, val spec: MediaSpec?, val raw: String?)
 

@@ -46,6 +46,10 @@
     <string name="player_playback_error">Playback error</string>
     <!-- Translators: Technical detail text below the structured error in the player error overlay. "error" is the raw engine error string, shown for debugging/bug reports. -->
     <string name="player_raw_error">err: <xliff:g id="error">%1$s</xliff:g></string>
+    <!-- Translators: Shown under the loading spinner while the app waits out a delay the IPTV provider asked for, then retries the channel by itself. "code" is the HTTP status (429), "reason" is the provider\'s own message and is not translated, "seconds" counts down to the automatic retry. -->
+    <string name="player_provider_retry_after">HTTP <xliff:g id="code">%1$d</xliff:g>: <xliff:g id="reason">%2$s</xliff:g> Retrying in <xliff:g id="seconds">%3$d</xliff:g>s.</string>
+    <!-- Translators: Substituted as the reason in player_provider_retry_after when the provider gave no message of its own. -->
+    <string name="player_provider_busy">The provider is busy.</string>
     <!-- Translators: Dialog title for the audio track selection dialog in the player HUD. -->
     <string name="player_audio_track">Audio Track</string>
     <!-- Translators: Dialog title for the subtitle track selection dialog in the player HUD. -->

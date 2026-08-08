@@ -16,6 +16,10 @@ interface PlaybackEngine {
     /** The structured underlying failure (plain reason • media spec • raw engine text), shown under the
      *  friendly message so users can report the real cause without adb/logcat. Null when none. */
     val errorInfo: StateFlow<ErrorInfo?> get() = NULL_ERROR
+    /** Set while the engine is sitting out a wait the provider asked for (HTTP 429 + `Retry-After`) and
+     *  will re-ask for the identical stream by itself. The HUD shows it as a spinner with a live countdown
+     *  instead of an error screen. Null when nothing is pending. */
+    val providerBackOff: StateFlow<ProviderBackOff?> get() = NO_BACKOFF
     val videoRes: StateFlow<String?>
     /** Up-to-4 mini stream chips (aspect · resolution · fps · audio) for the player top bar. */
     val streamChips: StateFlow<List<String>> get() = NO_CHIPS
@@ -93,6 +97,7 @@ interface PlaybackEngine {
         private val ONE_DOUBLE: StateFlow<Double> = MutableStateFlow(1.0)
         private val NO_NAV: StateFlow<NavState> = MutableStateFlow(NavState(hasPrev = false, hasNext = false))
         private val NULL_ERROR: StateFlow<ErrorInfo?> = MutableStateFlow(null)
+        private val NO_BACKOFF: StateFlow<ProviderBackOff?> = MutableStateFlow(null)
         private val NO_CHIPS: StateFlow<List<String>> = MutableStateFlow(emptyList())
         private val NULL_STRING: StateFlow<String?> = MutableStateFlow(null)
         private val FALSE_FLOW: StateFlow<Boolean> = MutableStateFlow(false)
