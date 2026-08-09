@@ -53,7 +53,7 @@ class WeatherRepository(
             "&current=temperature_2m,weather_code,is_day" +
             "&timezone=auto"
         val weatherReq = Request.Builder().url(weatherUrl).build()
-        val weatherJson = http.newCall(weatherReq).execute().use { it.body?.string() ?: return error("no weather") }
+        val weatherJson = http.newCall(weatherReq).execute().use { it.body.string() }
         val w = JSONObject(weatherJson).getJSONObject("current")
         val temp = w.getDouble("temperature_2m").toFloat()
         val code = w.getInt("weather_code")
@@ -75,7 +75,7 @@ class WeatherRepository(
                 .url("https://ipapi.co/json/")
                 .header("User-Agent", "OwnTV/1.0")
                 .build()
-            val locJson = http.newCall(locReq).execute().use { it.body?.string() ?: return error("no loc") }
+            val locJson = http.newCall(locReq).execute().use { it.body.string() }
             val loc = JSONObject(locJson)
             return Triple(
                 loc.getDouble("latitude"),
@@ -90,7 +90,7 @@ class WeatherRepository(
         val name = java.net.URLEncoder.encode(m, "UTF-8")
         val url = "https://geocoding-api.open-meteo.com/v1/search?name=$name&count=1&language=en&format=json"
         val req = Request.Builder().url(url).build()
-        val json = http.newCall(req).execute().use { it.body?.string() ?: return error("no geo") }
+        val json = http.newCall(req).execute().use { it.body.string() }
         val hit = JSONObject(json).optJSONArray("results")?.optJSONObject(0) ?: return error("geo no match")
         return Triple(hit.getDouble("latitude"), hit.getDouble("longitude"), hit.optString("name", m))
     }

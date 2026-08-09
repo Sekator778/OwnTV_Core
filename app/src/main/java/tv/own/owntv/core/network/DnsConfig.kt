@@ -143,7 +143,7 @@ class DnsConfigHolder(
         val response = bootstrapClient.newCall(request).execute()
         return response.use { resp ->
             if (!resp.isSuccessful) throw java.io.IOException("DoH HTTP ${resp.code}")
-            val body = resp.body?.string() ?: throw java.io.IOException("DoH empty body")
+            val body = resp.body.string()
             parseDohJson(body)
         }
     }

@@ -166,7 +166,7 @@ class DownloadEngine(
                 return true
             }
             val body = resp.body
-            if (!resp.isSuccessful || body == null) return false
+            if (!resp.isSuccessful) return false
             val append = resp.code == 206 && existing > 0 // server honoured the Range
             val total = DownloadResume.expectedTotal(append, existing, body.contentLength())
             var done = if (append) existing else 0L

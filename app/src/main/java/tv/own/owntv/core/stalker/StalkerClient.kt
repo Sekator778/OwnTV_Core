@@ -562,7 +562,7 @@ open class StalkerClient(private val client: OkHttpClient) {
                     throw StalkerAuthException("Portal rejected the request (HTTP ${response.code})")
                 }
                 if (!response.isSuccessful) throw StalkerHttpException(response.code, "HTTP ${response.code} for $safeUrl")
-                val body = response.body ?: throw IOException("Empty response body for $safeUrl")
+                val body = response.body
                 body.byteStream().use { input ->
                     parseEnvelope(input, parseJs).also {
                         Log.d(TAG, "GET done url=$safeUrl action=$action totalMs=${SystemClock.elapsedRealtime() - startedAt}")

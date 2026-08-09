@@ -672,9 +672,33 @@ class ExoSubtitleEngine(
     fun selectAudio(id: Int) {
         val p = player ?: return
         val sel = audioSelections.firstOrNull { it.id == id } ?: return
+        // Logged because a track switch is otherwise invisible in a log: the sink/decoder churn it
+        // causes shows up as bare AudioTrack/DefaultAudioSink lines with nothing marking what asked
+        // for them. Format details identify a switch that changes encoding, channel count or rate —
+        // the three things that force the sink to be torn down and re-created rather than reused.
+        val f = runCatching { sel.group.getFormat(sel.trackIndex) }.getOrNull()
+        android.util.Log.i(
+            TAG,
+            "audio track -> id=$id lang=${f?.language} " +
+                "codec=${f?.sampleMimeType} ch=${f?.channelCount} rate=${f?.sampleRate}",
+        )
         p.trackSelectionParameters = p.trackSelectionParameters.buildUpon()
             .setOverrideForType(TrackSelectionOverride(sel.group, listOf(sel.trackIndex)))
             .build()
+        // Bitstreamed audio (Dolby/DTS decoded by the TV) does not survive being re-selected in place.
+        // Changing the override tears the output down and rebuilds it three times inside 40ms, and the
+        // TV's decoder never recovers: sound breaks up continuously afterwards while ExoPlayer reports
+        // a perfectly healthy sink — no underruns, no errors, position advancing — so the AUTO stereo
+        // watchdog cannot see it either. Picking the very same track at startup plays flawlessly, which
+        // is what identifies the in-place switch, not the track or passthrough itself, as the fault.
+        //
+        // Seeking to where we already are re-primes the sink once, from a stopped state, the way a
+        // fresh start does. It costs a brief re-buffer, so it is spent only on the path that needs it —
+        // when the app decodes the audio itself the plain override above is already correct.
+        if (audioWatchdog.passthrough) {
+            android.util.Log.i(TAG, "passthrough audio: re-priming the output after the track change")
+            runCatching { p.seekTo(p.currentPosition) }
+        }
     }
 
     /** X1: audio-only media is a valid state, not a device fault — cancel the no-video watchdog for

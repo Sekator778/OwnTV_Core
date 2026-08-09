@@ -106,7 +106,7 @@ class OpenSubtitlesClient(private val okHttpClient: OkHttpClient) {
         builder.method(method, requestBody)
 
         okHttpClient.newCall(builder.build()).execute().use { resp ->
-            val text = resp.body?.string().orEmpty()
+            val text = resp.body.string()
             if (!resp.isSuccessful) {
                 // The body may echo credentials on auth endpoints — log only code + path.
                 Log.w(TAG, "$method $pathAndQuery -> HTTP ${resp.code}")

@@ -528,23 +528,52 @@ internal class StalkerSyncer(
     }
 
     /**
-     * Retry transient portal errors (429/5xx) with a short backoff. The portal occasionally 503s
-     * under concurrent paging; without a retry a failed page 1 silently drops its WHOLE category,
-     * and on the next re-sync those items are pruned as stale — real data loss, not just a gap.
+     * Retry transient portal errors (429/5xx **and broken connections**) with a short backoff. The
+     * portal occasionally 503s under concurrent paging; without a retry a failed page 1 silently
+     * drops its WHOLE category, and on the next re-sync those items are pruned as stale — real data
+     * loss, not just a gap.
+     *
+     * An overloaded portal does not always answer 503: just as often it resets the connection or
+     * closes it mid-response, which surfaces as a socket-level [IOException] rather than a status
+     * code. That is the same condition with the same cost, so it retries the same way.
      */
     private suspend fun <T> retryTransient(what: String, block: suspend () -> T): T {
         var attempt = 1
         while (true) {
             try {
                 return block()
-            } catch (e: StalkerClient.StalkerHttpException) {
-                val transient = e.code in 500..599 || e.code == 429
+            } catch (e: IOException) {
+                val transient = when (e) {
+                    is StalkerClient.StalkerHttpException -> e.code in 500..599 || e.code == 429
+                    else -> isTransientNetwork(e)
+                }
                 if (!transient || attempt >= PAGE_ATTEMPTS) throw e
-                Log.w(TAG, "$what transient HTTP ${e.code} — retrying (attempt $attempt/${PAGE_ATTEMPTS - 1})")
+                val reason = (e as? StalkerClient.StalkerHttpException)?.let { "HTTP ${it.code}" }
+                    ?: "${e.javaClass.simpleName}: ${e.message}"
+                Log.w(TAG, "$what transient $reason — retrying (attempt $attempt/${PAGE_ATTEMPTS - 1})")
                 delay(PAGE_RETRY_DELAY_MS * attempt)
                 attempt++
             }
         }
+    }
+
+    /**
+     * Connection-level faults worth a second attempt — "the link broke", not "the portal said no".
+     *
+     * Deliberately narrow rather than a blanket `IOException`: a [StalkerClient.StalkerAuthException]
+     * has already been re-handshaked one level down by [StalkerAuthManager], and a malformed payload
+     * is deterministic, so repeating either only costs the portal two more pointless requests.
+     */
+    private fun isTransientNetwork(e: IOException): Boolean = when {
+        e is StalkerClient.StalkerAuthException -> false
+        e is java.net.SocketException -> true          // "Connection reset", "Broken pipe"
+        e is java.io.InterruptedIOException -> true    // includes SocketTimeoutException
+        e is javax.net.ssl.SSLException -> true
+        e is java.net.UnknownHostException -> true     // DNS blip part-way through a long sync
+        // A connection closed mid-response reaches us as a plain IOException ("unexpected end of
+        // stream on …"), so the type alone cannot identify it — the wrapped EOFException can.
+        else -> generateSequence(e as Throwable) { it.cause }.take(CAUSE_CHAIN_LIMIT)
+            .any { it is java.io.EOFException }
     }
 
     /** Throttle signals that shrink the adaptive budget: rate-limit/overload HTTP codes + timeouts. */
@@ -605,6 +634,9 @@ internal class StalkerSyncer(
 
         /** Backoff base between page retries (×attempt: 750ms, then 1.5s). */
         private const val PAGE_RETRY_DELAY_MS = 750L
+
+        /** Guard against a self-referential `cause` chain while classifying a network failure. */
+        private const val CAUSE_CHAIN_LIMIT = 5
 
         /** Safety cap: ignore an absurd total_items from a portal that mis-reports or ignores `p=`. */
         private const val MAX_PAGES_PER_GENRE = 5_000

@@ -1913,6 +1913,18 @@ class LivePreviewEngine(
             .setOverrideForType(androidx.media3.common.TrackSelectionOverride(sel.group, listOf(sel.trackIndex)))
             .build()
         audioTrackList = audioTrackList.map { it.copy(selected = it.mpvId == id) }
+        // Same defect, same fix as the VOD engine: a bitstreamed Dolby/DTS track re-selected in place
+        // leaves the TV's decoder producing broken sound, with nothing in the sink reporting a fault.
+        // Re-priming from the current position rebuilds the output once, the way tuning in does.
+        //
+        // Guarded on seekability, which VOD does not need: plenty of channels are unseekable streams
+        // where a seek is not a cheap in-buffer re-prime but a full reconnect — the very thing the
+        // reconnect watchdog exists to avoid. On those the plain override stands, exactly as before,
+        // so this can only ever improve a channel and never destabilise one.
+        if (audioWatchdog.passthrough && p.isCurrentMediaItemSeekable) {
+            LiveDiagnosticsLog.event("passthrough audio: re-priming the output after the track change")
+            runCatching { p.seekTo(p.currentPosition) }
+        }
     }
 
     override fun selectSubtitle(id: Int) {
@@ -2073,7 +2085,7 @@ class LivePreviewEngine(
                         LiveDiagnosticsLog.event(
                             "http_response role=${requestRole(requested)} code=${response.code} " +
                                 "type=${response.header("Content-Type").orEmpty()} " +
-                                "length=${response.body?.contentLength() ?: -1} signature=${mediaSignature(prefix)} " +
+                                "length=${response.body.contentLength()} signature=${mediaSignature(prefix)} " +
                                 "server=${response.header("Server").orEmpty()} xcache=${response.header("X-Cache").orEmpty()} " +
                                 "age=${response.header("Age").orEmpty()} retryAfter=${response.header("Retry-After").orEmpty()} " +
                                 "setCookie=${response.headers("Set-Cookie").size} " +

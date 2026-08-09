@@ -86,7 +86,7 @@ class UpdateManager(
                     .build()
                 client.newCall(request).execute().use { resp ->
                     if (!resp.isSuccessful) throw CheckHttpException(resp.code)
-                    val body = resp.body?.string().orEmpty()
+                    val body = resp.body.string()
                     if (body.isBlank()) throw InvalidReleaseResponseException()
                     val o = runCatching { JSONObject(body) }.getOrElse { throw InvalidReleaseResponseException() }
                     val version = o.optString("tag_name").removePrefix("v").takeIf { it.isNotBlank() }
@@ -130,7 +130,7 @@ class UpdateManager(
                 val request = Request.Builder().url(info.apkUrl).header("User-Agent", "OwnTV").build()
                 client.newCall(request).execute().use { resp ->
                     if (!resp.isSuccessful) throw DownloadHttpException(resp.code)
-                    val body = resp.body ?: throw EmptyDownloadException()
+                    val body = resp.body
                     val total = body.contentLength()
                     var copied = 0L
                     body.byteStream().use { input ->

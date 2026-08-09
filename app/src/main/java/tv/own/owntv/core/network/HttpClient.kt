@@ -56,7 +56,7 @@ class HttpClient(private val client: OkHttpClient) {
                     responseReceived = true
                     val headersAt = SystemClock.elapsedRealtime()
                     if (!response.isSuccessful) throw HttpStatusException(response.code, "HTTP ${response.code} for ${redact(url)}")
-                    val body = response.body ?: throw IOException("Empty response body for ${redact(url)}")
+                    val body = response.body
                     val totalBytes = body.contentLength().takeIf { it >= 0 }
                     Log.d(
                         TAG,

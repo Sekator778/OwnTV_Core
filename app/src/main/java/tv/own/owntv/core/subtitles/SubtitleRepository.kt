@@ -244,7 +244,7 @@ class SubtitleRepository(
         val request = Request.Builder().url(url).build()
         okHttpClient.newCall(request).execute().use { resp ->
             if (!resp.isSuccessful) throw IOException()
-            return resp.body?.bytes() ?: throw IOException()
+            return resp.body.bytes()
         }
     }
 

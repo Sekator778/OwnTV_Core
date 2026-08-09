@@ -185,6 +185,8 @@ class AudioWatchdog : AnalyticsListener {
     /** True when the renderer chose passthrough (the TV/receiver decodes) rather than in-app decode. */
     @Volatile var passthrough = false
         private set
+    /** Whether a decoder was initialised for the current audio format. See [onAudioPositionAdvancing]. */
+    @Volatile private var decoderInitialized = false
 
     /** Call when a new load starts. */
     fun reset() {
@@ -192,7 +194,7 @@ class AudioWatchdog : AnalyticsListener {
         armed = false; advancing = false
         playingSinceArmMs = 0L; lastTickMs = 0L
         synchronized(underrunTimes) { underrunTimes.clear() }
-        audioFormat = null; passthrough = false
+        audioFormat = null; passthrough = false; decoderInitialized = false
     }
 
     override fun onAudioInputFormatChanged(
@@ -200,9 +202,18 @@ class AudioWatchdog : AnalyticsListener {
         format: Format,
         decoderReuseEvaluation: androidx.media3.exoplayer.DecoderReuseEvaluation?,
     ) {
+        // The format actually reaching the sink, including the one chosen at startup — without this a
+        // log only ever showed what the user switched *to*, never what they switched *from*, so a
+        // stereo→5.1 change was indistinguishable from a change between two identical formats.
+        android.util.Log.i(
+            "AudioOutputPolicy",
+            "audio format -> ${format.sampleMimeType} ${format.channelCount}ch ${format.sampleRate}Hz " +
+                "lang=${format.language} reuse=${decoderReuseEvaluation?.result}",
+        )
         audioFormat = format
         armed = true
         advancing = false
+        decoderInitialized = false
         playingSinceArmMs = 0L
         lastTickMs = 0L
     }
@@ -213,10 +224,18 @@ class AudioWatchdog : AnalyticsListener {
         initializedTimestampMs: Long,
         initializationDurationMs: Long,
     ) {
+        decoderInitialized = true
         // Media3 names the pass-through "decoder" after the encoding it is bitstreaming, and never
-        // after a real codec. That is the only signal available for what the renderer actually chose.
+        // after a real codec. This catches the path where a codec *is* created; the other path is
+        // caught in [onAudioPositionAdvancing].
         passthrough = decoderName.startsWith("audio.raw", ignoreCase = true) ||
             decoderName.startsWith("audio.passthrough", ignoreCase = true)
+        // Whether the TV is decoding the bitstream or we are is the single most useful fact about an
+        // audio problem, and it was only ever visible in the stream-info overlay, never in a log.
+        android.util.Log.i(
+            "AudioOutputPolicy",
+            "audio decoder: $decoderName (init ${initializationDurationMs}ms, passthrough=$passthrough)",
+        )
     }
 
     override fun onAudioPositionAdvancing(
@@ -224,6 +243,17 @@ class AudioWatchdog : AnalyticsListener {
         playoutStartSystemTimeMs: Long,
     ) {
         advancing = true
+        // The renderer has committed to a path by the time sound actually leaves the device, so this
+        // is the safe moment to conclude what it chose. **No decoder at all** means MediaCodec was
+        // bypassed and the encoded stream is going straight to the TV — Media3 reports no decoder
+        // whatsoever on that path, so the decoder *name* checked above never arrives and passthrough
+        // read `false` for every bitstreamed E-AC3/AC3/DTS track. Deferring to here rather than
+        // deciding in onAudioInputFormatChanged avoids the window where the decoder simply has not
+        // been created yet.
+        if (!decoderInitialized && !passthrough) {
+            passthrough = true
+            android.util.Log.i("AudioOutputPolicy", "audio path: passthrough — the TV is decoding this stream")
+        }
     }
 
     override fun onAudioUnderrun(
@@ -233,6 +263,13 @@ class AudioWatchdog : AnalyticsListener {
         elapsedSinceLastFeedMs: Long,
     ) {
         val now = android.os.SystemClock.elapsedRealtime()
+        // Individual underruns were silent until the limit tripped, which made "sound keeps cutting
+        // out" impossible to confirm from a log: below the limit there was no evidence at all, and at
+        // the limit only a verdict. One line each is cheap — healthy playback produces none.
+        android.util.Log.w(
+            "AudioOutputPolicy",
+            "audio underrun: buffer=${bufferSize}B/${bufferSizeMs}ms, ${elapsedSinceLastFeedMs}ms since last feed",
+        )
         val hit = synchronized(underrunTimes) {
             underrunTimes.addLast(now)
             while (underrunTimes.isNotEmpty() && now - underrunTimes.first() > AudioOutputPolicy.UNDERRUN_WINDOW_MS) {
