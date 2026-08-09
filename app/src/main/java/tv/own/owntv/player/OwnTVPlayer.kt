@@ -148,6 +148,8 @@ class OwnTVPlayer(
     private val localeStore: LocaleStore,
 ) : MPVLib.EventObserver {
     private val toastRenderer = PlayerToastRenderer(context, localeStore)
+    private val toastEpoch = AtomicInteger(0)
+    private var activeToast: android.widget.Toast? = null
 
     /** How mpv's last HTTP status should be treated when deciding whether to repeat a request. */
     internal enum class HttpRefusal {
@@ -1990,7 +1992,24 @@ class OwnTVPlayer(
     }
 
     private fun toast(message: String) {
-        scope.launch { android.widget.Toast.makeText(context, message, android.widget.Toast.LENGTH_LONG).show() }
+        val epoch = toastEpoch.get()
+        scope.launch {
+            // A previous item's worker callback may arrive after the user has already opened something
+            // else. Never let that stale notice appear over the new video, and replace rather than queue
+            // repeated notices from the current item.
+            if (epoch != toastEpoch.get()) return@launch
+            activeToast?.cancel()
+            activeToast = android.widget.Toast.makeText(context, message, android.widget.Toast.LENGTH_LONG)
+                .also { it.show() }
+        }
+    }
+
+    private fun clearToast() {
+        toastEpoch.incrementAndGet()
+        scope.launch {
+            activeToast?.cancel()
+            activeToast = null
+        }
     }
 
     private fun ensureInit() {
@@ -2304,6 +2323,8 @@ class OwnTVPlayer(
         isArchive: Boolean = false,
         startPaused: Boolean = false,
     ) {
+        // Internal retries keep the current item's notice; a new item must never inherit it.
+        if (resetRetries) clearToast()
         ensureInit()
         fileLoaded = false
         loadStartTime = System.currentTimeMillis()
@@ -2949,6 +2970,7 @@ class OwnTVPlayer(
     }
 
     fun stop() {
+        clearToast()
         deactivateExo() // give the surface back to mpv before tearing down
         pendingExoStart = false
         loadGeneration++ // cancels any queued-but-not-yet-executed load
@@ -3096,6 +3118,7 @@ class OwnTVPlayer(
     }
 
     fun release() {
+        clearToast()
         // Queued freeze-frame/PixelCopy callbacks must never fire after teardown (released surface/bitmap).
         freezeHandler.removeCallbacksAndMessages(null)
         errorCheckJob?.cancel()
