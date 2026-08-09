@@ -793,7 +793,7 @@
     <string name="settings_dns_test">DNS जाँचें</string>
     <string name="settings_dns_explanation">कस्टम DNS, ISP-स्तर पर डोमेन ब्लॉकिंग को बायपास करने या SmartDNS सेवाओं के माध्यम से भौगोलिक प्रतिबंध हटाने में मदद कर सकता है। DNS-over-HTTPS (DoH) का सुझाव दिया जाता है — यह आपके लुकअप एन्क्रिप्ट करता है।</string>
     <string name="settings_dns_limitations">यह सेटिंग केवल OkHttp-आधारित ट्रैफ़िक (प्लेलिस्ट सिंक, EPG, API कॉल, चित्र, ExoPlayer स्ट्रीम) को प्रभावित करती है। mpv सिस्टम रिज़ॉल्वर का इस्तेमाल करता है और इससे प्रभावित नहीं होता।</string>
-    <string name="settings_dns_resolved">रिज़ॉल्व हुआ ✓ (<xliff:g id="millis">%1$d</xliff:g> ms) → <xliff:g id="addresses">%2$s</xliff:g></string>
+    <string name="settings_dns_resolved">रिज़ॉल्व हुआ ✓ (<xliff:g id="millis">%1$d</xliff:g> ms)</string>
     <string name="settings_dns_enter_server">DNS सर्वर होस्ट या DoH URL दर्ज करें।</string>
     <string name="settings_dns_not_reachable">DNS सर्वर तक नहीं पहुँचा जा सका।</string>
     <string name="settings_dns_timed_out">DNS अनुरोध टाइमआउट हो गया।</string>

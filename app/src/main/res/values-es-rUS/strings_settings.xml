@@ -808,7 +808,7 @@
     <string name="settings_dns_test">Probar DNS</string>
     <string name="settings_dns_explanation">El DNS personalizado puede ayudar a evitar el bloqueo de dominios por parte del proveedor de internet o permitir el desbloqueo geográfico mediante servicios SmartDNS. Se recomienda DNS-over-HTTPS (DoH) — cifra tus consultas.</string>
     <string name="settings_dns_limitations">Esta configuración solo afecta al tráfico basado en OkHttp (sincronización de listas de reproducción, EPG, llamadas a la API, imágenes y transmisiones de ExoPlayer). mpv usa el servicio de resolución del sistema y no se ve afectado.</string>
-    <string name="settings_dns_resolved">Resuelto ✓ (<xliff:g id="millis">%1$d</xliff:g> ms) → <xliff:g id="addresses">%2$s</xliff:g></string>
+    <string name="settings_dns_resolved">Resuelto ✓ (<xliff:g id="millis">%1$d</xliff:g> ms)</string>
     <string name="settings_dns_enter_server">Ingresa el host de un servidor DNS o una URL de DoH.</string>
     <string name="settings_dns_not_reachable">No se puede acceder al servidor DNS.</string>
     <string name="settings_dns_timed_out">Se agotó el tiempo de espera de la solicitud DNS.</string>

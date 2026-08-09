@@ -793,7 +793,7 @@
     <string name="settings_dns_test">DNS testen</string>
     <string name="settings_dns_explanation">Benutzerdefiniertes DNS kann dabei helfen, Domain-Sperren durch den Internetanbieter oder Geoblocking mithilfe von SmartDNS-Diensten zu umgehen. DNS-over-HTTPS (DoH) wird empfohlen – dabei werden Ihre Abfragen verschlüsselt.</string>
     <string name="settings_dns_limitations">Diese Einstellung betrifft nur OkHttp-basierten Datenverkehr (Synchronisieren von Wiedergabelisten, EPG, API-Aufrufe, Bilder, ExoPlayer-Streams). mpv verwendet den Systemresolver und ist nicht betroffen.</string>
-    <string name="settings_dns_resolved">Aufgelöst ✓ (<xliff:g id="millis">%1$d</xliff:g> ms) → <xliff:g id="addresses">%2$s</xliff:g></string>
+    <string name="settings_dns_resolved">Aufgelöst ✓ (<xliff:g id="millis">%1$d</xliff:g> ms)</string>
     <string name="settings_dns_enter_server">Geben Sie den Host eines DNS-Servers oder eine DoH-URL ein.</string>
     <string name="settings_dns_not_reachable">DNS-Server nicht erreichbar.</string>
     <string name="settings_dns_timed_out">Zeitüberschreitung bei der DNS-Anfrage.</string>

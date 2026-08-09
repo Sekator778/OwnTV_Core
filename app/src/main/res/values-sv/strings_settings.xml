@@ -793,7 +793,7 @@
     <string name="settings_dns_test">Testa DNS</string>
     <string name="settings_dns_explanation">Anpassad DNS kan hjälpa till att kringgå domänblockering på internetleverantörsnivå eller möjliggöra geografisk avblockering via SmartDNS-tjänster. DNS-over-HTTPS (DoH) rekommenderas – det krypterar dina uppslagningar.</string>
     <string name="settings_dns_limitations">Den här inställningen påverkar endast OkHttp-baserad trafik (synkronisering av spellistor, EPG, API-anrop, bilder, ExoPlayer-strömmar). mpv använder systemets resolver och påverkas inte.</string>
-    <string name="settings_dns_resolved">Uppslagning klar ✓ (<xliff:g id="millis">%1$d</xliff:g> ms) → <xliff:g id="addresses">%2$s</xliff:g></string>
+    <string name="settings_dns_resolved">Uppslagning klar ✓ (<xliff:g id="millis">%1$d</xliff:g> ms)</string>
     <string name="settings_dns_enter_server">Ange ett värdnamn för en DNS-server eller en DoH-URL.</string>
     <string name="settings_dns_not_reachable">Det går inte att nå DNS-servern.</string>
     <string name="settings_dns_timed_out">Tidsgränsen för DNS-begäran överskreds.</string>

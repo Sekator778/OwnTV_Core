@@ -778,7 +778,7 @@
     <string name="settings_dns_test">DNSをテスト</string>
     <string name="settings_dns_explanation">カスタムDNSを使用すると、ISPレベルのドメインブロックを回避したり、SmartDNSサービスを介して地域制限を解除したりできます。DNS-over-HTTPS (DoH)を推奨します — 名前解決が暗号化されます。</string>
     <string name="settings_dns_limitations">この設定が影響するのは、OkHttpベースの通信（プレイリストの同期、EPG、API呼び出し、画像、ExoPlayerストリーム）のみです。mpvはシステムのリゾルバーを使用するため、影響を受けません。</string>
-    <string name="settings_dns_resolved">名前解決済み ✓ (<xliff:g id="millis">%1$d</xliff:g> ms) → <xliff:g id="addresses">%2$s</xliff:g></string>
+    <string name="settings_dns_resolved">名前解決済み ✓ (<xliff:g id="millis">%1$d</xliff:g> ms)</string>
     <string name="settings_dns_enter_server">DNSサーバーのホストまたはDoH URLを入力してください。</string>
     <string name="settings_dns_not_reachable">DNSサーバーに到達できません。</string>
     <string name="settings_dns_timed_out">DNSリクエストがタイムアウトしました。</string>

@@ -778,7 +778,7 @@
     <string name="settings_dns_test">测试 DNS</string>
     <string name="settings_dns_explanation">自定义 DNS 可帮助绕过 ISP 级域名封锁，也可通过 SmartDNS 服务启用地理解锁。建议使用 DNS-over-HTTPS (DoH)——它会加密您的查询。</string>
     <string name="settings_dns_limitations">此设置仅影响基于 OkHttp 的流量（播放列表同步、EPG、API 调用、图像和 ExoPlayer 流）。mpv 使用系统解析器，不受此设置影响。</string>
-    <string name="settings_dns_resolved">已解析 ✓（<xliff:g id="millis">%1$d</xliff:g> 毫秒）→ <xliff:g id="addresses">%2$s</xliff:g></string>
+    <string name="settings_dns_resolved">已解析 ✓（<xliff:g id="millis">%1$d</xliff:g> 毫秒）</string>
     <string name="settings_dns_enter_server">请输入 DNS 服务器主机或 DoH URL。</string>
     <string name="settings_dns_not_reachable">无法访问 DNS 服务器。</string>
     <string name="settings_dns_timed_out">DNS 请求超时。</string>

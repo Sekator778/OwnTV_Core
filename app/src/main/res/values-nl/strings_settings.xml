@@ -793,7 +793,7 @@
     <string name="settings_dns_test">DNS testen</string>
     <string name="settings_dns_explanation">Aangepaste DNS kan helpen om domeinblokkades door je internetprovider te omzeilen of geografische blokkades via SmartDNS-services op te heffen. DNS-over-HTTPS (DoH) wordt aanbevolen — hiermee worden je zoekopdrachten versleuteld.</string>
     <string name="settings_dns_limitations">Deze instelling is alleen van invloed op verkeer op basis van OkHttp (afspeellijsten synchroniseren, EPG, API-aanroepen, afbeeldingen en ExoPlayer-streams). mpv gebruikt de systeemresolver en wordt niet beïnvloed.</string>
-    <string name="settings_dns_resolved">Omgezet ✓ (<xliff:g id="millis">%1$d</xliff:g> ms) → <xliff:g id="addresses">%2$s</xliff:g></string>
+    <string name="settings_dns_resolved">Omgezet ✓ (<xliff:g id="millis">%1$d</xliff:g> ms)</string>
     <string name="settings_dns_enter_server">Voer de host van een DNS-server of een DoH-URL in.</string>
     <string name="settings_dns_not_reachable">DNS-server is niet bereikbaar.</string>
     <string name="settings_dns_timed_out">Er is een time-out opgetreden bij het DNS-verzoek.</string>

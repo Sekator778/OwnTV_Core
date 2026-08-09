@@ -793,7 +793,7 @@
     <string name="settings_dns_test">DNS പരിശോധിക്കുക</string>
     <string name="settings_dns_explanation">ഇഷ്ടാനുസൃത DNS ഉപയോഗിച്ച് ISP തലത്തിലുള്ള ഡൊമെയ്ൻ തടയൽ മറികടക്കാനോ SmartDNS സേവനങ്ങളിലൂടെ ഭൗമപ്രദേശ നിയന്ത്രണം നീക്കാനോ കഴിയും. DNS-over-HTTPS (DoH) ശുപാർശ ചെയ്യുന്നു — ഇത് നിങ്ങളുടെ ലുക്കപ്പുകൾ എൻക്രിപ്റ്റ് ചെയ്യുന്നു.</string>
     <string name="settings_dns_limitations">ഈ ക്രമീകരണം OkHttp അടിസ്ഥാനമാക്കിയുള്ള ട്രാഫിക്കിനെ മാത്രമേ ബാധിക്കൂ (പ്ലേലിസ്റ്റ് സമന്വയിപ്പിക്കൽ, EPG, API കോളുകൾ, ചിത്രങ്ങൾ, ExoPlayer സ്ട്രീമുകൾ). mpv സിസ്റ്റം റിസോൾവർ ഉപയോഗിക്കുന്നു, അതിനാൽ ഈ ക്രമീകരണം അതിനെ ബാധിക്കില്ല.</string>
-    <string name="settings_dns_resolved">പരിഹരിച്ചു ✓ (<xliff:g id="millis">%1$d</xliff:g> മി.സെ.) → <xliff:g id="addresses">%2$s</xliff:g></string>
+    <string name="settings_dns_resolved">പരിഹരിച്ചു ✓ (<xliff:g id="millis">%1$d</xliff:g> മി.സെ.)</string>
     <string name="settings_dns_enter_server">ഒരു DNS സെർവർ ഹോസ്റ്റോ DoH URL-ഓ നൽകുക.</string>
     <string name="settings_dns_not_reachable">DNS സെർവറിൽ എത്തിച്ചേരാനാകുന്നില്ല.</string>
     <string name="settings_dns_timed_out">DNS അഭ്യർത്ഥന ടൈംഔട്ട് ആയി.</string>

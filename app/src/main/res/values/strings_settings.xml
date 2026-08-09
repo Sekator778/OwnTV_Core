@@ -1584,8 +1584,8 @@ Resync and remove missing titles also allows removing titles the provider no lon
     <string name="settings_dns_explanation">Custom DNS can help bypass ISP-level domain blocking or enable geo-unblocking via SmartDNS services. DNS-over-HTTPS (DoH) is recommended — it encrypts your lookups.</string>
     <!-- Translators: Technical limitation of custom DNS. Keep OkHttp, EPG, API, ExoPlayer and mpv unchanged. -->
     <string name="settings_dns_limitations">This setting only affects OkHttp-based traffic (playlist sync, EPG, API calls, images, ExoPlayer streams). mpv uses the system resolver and is not affected.</string>
-    <!-- Translators: DNS test success result. 'millis' is latency in milliseconds and 'addresses' is a comma-separated technical address list. -->
-    <string name="settings_dns_resolved">Resolved ✓ (<xliff:g id="millis">%1$d</xliff:g> ms) → <xliff:g id="addresses">%2$s</xliff:g></string>
+    <!-- Translators: DNS test success result. 'millis' is latency in milliseconds. -->
+    <string name="settings_dns_resolved">Test passed ✓ (<xliff:g id="millis">%1$d</xliff:g> ms)</string>
     <!-- Translators: Validation error when custom DNS has no server host or DoH URL. DoH stays unchanged. -->
     <string name="settings_dns_enter_server">Enter a DNS server host or a DoH URL.</string>
     <!-- Translators: Friendly DNS-test failure when the server cannot be reached. -->

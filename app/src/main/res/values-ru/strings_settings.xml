@@ -823,7 +823,7 @@
     <string name="settings_dns_test">Проверить DNS</string>
     <string name="settings_dns_explanation">Пользовательский DNS может помочь обойти блокировку доменов на уровне интернет-провайдера или разблокировать контент по географическому признаку с помощью сервисов SmartDNS. Рекомендуется DNS-over-HTTPS (DoH) — он шифрует ваши запросы.</string>
     <string name="settings_dns_limitations">Эта настройка влияет только на трафик на основе OkHttp (синхронизация плейлистов, EPG, вызовы API, изображения, потоки ExoPlayer). mpv использует системный резолвер, поэтому настройка на него не влияет.</string>
-    <string name="settings_dns_resolved">Разрешено ✓ (<xliff:g id="millis">%1$d</xliff:g> мс) → <xliff:g id="addresses">%2$s</xliff:g></string>
+    <string name="settings_dns_resolved">Разрешено ✓ (<xliff:g id="millis">%1$d</xliff:g> мс)</string>
     <string name="settings_dns_enter_server">Введите адрес DNS-сервера или URL-адрес DoH.</string>
     <string name="settings_dns_not_reachable">DNS-сервер недоступен.</string>
     <string name="settings_dns_timed_out">Время ожидания DNS-запроса истекло.</string>

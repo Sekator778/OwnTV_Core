@@ -853,7 +853,7 @@
     <string name="settings_dns_test">اختبار DNS</string>
     <string name="settings_dns_explanation">يمكن أن يساعد DNS المخصص في تجاوز حظر النطاقات على مستوى مزوّد خدمة الإنترنت أو تمكين إلغاء الحظر الجغرافي عبر خدمات SmartDNS. يوصى باستخدام DNS-over-HTTPS (DoH) — فهو يشفّر استعلاماتك.</string>
     <string name="settings_dns_limitations">لا يؤثر هذا الإعداد إلا في حركة البيانات المستندة إلى OkHttp (مزامنة قائمة التشغيل، ودليل البرامج الإلكتروني، واستدعاءات API، والصور، وعمليات بث ExoPlayer). يستخدم mpv محلل النظام ولا يتأثر بهذا الإعداد.</string>
-    <string name="settings_dns_resolved">تم الحلّ ✓ (<xliff:g id="millis">%1$d</xliff:g> مللي ثانية) → <xliff:g id="addresses">%2$s</xliff:g></string>
+    <string name="settings_dns_resolved">تم الحلّ ✓ (<xliff:g id="millis">%1$d</xliff:g> مللي ثانية)</string>
     <string name="settings_dns_enter_server">أدخل مضيف خادم DNS أو عنوان URL لـ DoH.</string>
     <string name="settings_dns_not_reachable">يتعذّر الوصول إلى خادم DNS.</string>
     <string name="settings_dns_timed_out">انتهت مهلة طلب DNS.</string>

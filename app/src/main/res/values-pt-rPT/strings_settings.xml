@@ -808,7 +808,7 @@
     <string name="settings_dns_test">Testar DNS</string>
     <string name="settings_dns_explanation">O DNS personalizado pode ajudar a contornar o bloqueio de domínios pelo fornecedor de Internet ou permitir o desbloqueio geográfico através de serviços SmartDNS. Recomenda-se DNS-over-HTTPS (DoH) — encripta os pedidos de resolução.</string>
     <string name="settings_dns_limitations">Esta definição afeta apenas o tráfego baseado em OkHttp (sincronização da lista de reprodução, EPG, chamadas de API, imagens e transmissões do ExoPlayer). O mpv utiliza o mecanismo de resolução do sistema e não é afetado.</string>
-    <string name="settings_dns_resolved">Resolvido ✓ (<xliff:g id="millis">%1$d</xliff:g> ms) → <xliff:g id="addresses">%2$s</xliff:g></string>
+    <string name="settings_dns_resolved">Resolvido ✓ (<xliff:g id="millis">%1$d</xliff:g> ms)</string>
     <string name="settings_dns_enter_server">Introduza o nome de anfitrião de um servidor DNS ou um URL DoH.</string>
     <string name="settings_dns_not_reachable">O servidor DNS não está acessível.</string>
     <string name="settings_dns_timed_out">O pedido DNS excedeu o tempo limite.</string>

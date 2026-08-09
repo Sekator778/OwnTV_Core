@@ -793,7 +793,7 @@
     <string name="settings_dns_test">DNS’yi test et</string>
     <string name="settings_dns_explanation">Özel DNS, internet servis sağlayıcısı düzeyindeki alan adı engellemelerini aşmaya veya SmartDNS hizmetleri aracılığıyla coğrafi engelleri kaldırmaya yardımcı olabilir. DNS-over-HTTPS (DoH) önerilir — sorgularınızı şifreler.</string>
     <string name="settings_dns_limitations">Bu ayar yalnızca OkHttp tabanlı trafiği etkiler (oynatma listesi eşitlemesi, EPG, API çağrıları, görseller, ExoPlayer akışları). mpv sistem çözümleyicisini kullanır ve bu ayardan etkilenmez.</string>
-    <string name="settings_dns_resolved">Çözümlendi ✓ (<xliff:g id="millis">%1$d</xliff:g> ms) → <xliff:g id="addresses">%2$s</xliff:g></string>
+    <string name="settings_dns_resolved">Çözümlendi ✓ (<xliff:g id="millis">%1$d</xliff:g> ms)</string>
     <string name="settings_dns_enter_server">Bir DNS sunucusu ana bilgisayar adı veya DoH URL’si girin.</string>
     <string name="settings_dns_not_reachable">DNS sunucusuna ulaşılamıyor.</string>
     <string name="settings_dns_timed_out">DNS isteği zaman aşımına uğradı.</string>

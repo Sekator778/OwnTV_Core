@@ -793,7 +793,7 @@
     <string name="settings_dns_test">Test DNS</string>
     <string name="settings_dns_explanation">Egendefinert DNS kan bidra til å omgå blokkering av domener hos internettleverandøren eller oppheve geografisk blokkering via SmartDNS-tjenester. DNS-over-HTTPS (DoH) anbefales – det krypterer oppslagene dine.</string>
     <string name="settings_dns_limitations">Denne innstillingen påvirker bare OkHttp-basert trafikk (synkronisering av spillelister, EPG, API-kall, bilder og ExoPlayer-strømmer). mpv bruker systemets navneoppløser og påvirkes ikke.</string>
-    <string name="settings_dns_resolved">Slått opp ✓ (<xliff:g id="millis">%1$d</xliff:g> ms) → <xliff:g id="addresses">%2$s</xliff:g></string>
+    <string name="settings_dns_resolved">Slått opp ✓ (<xliff:g id="millis">%1$d</xliff:g> ms)</string>
     <string name="settings_dns_enter_server">Angi et vertsnavn for en DNS-server eller en DoH-URL.</string>
     <string name="settings_dns_not_reachable">DNS-serveren kan ikke nås.</string>
     <string name="settings_dns_timed_out">DNS-forespørselen fikk tidsavbrudd.</string>

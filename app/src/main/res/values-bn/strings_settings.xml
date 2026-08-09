@@ -793,7 +793,7 @@
     <string name="settings_dns_test">DNS পরীক্ষা করুন</string>
     <string name="settings_dns_explanation">কাস্টম DNS ISP-স্তরের ডোমেইন ব্লকিং এড়াতে বা SmartDNS পরিষেবার মাধ্যমে ভৌগোলিক বাধা কাটাতে সাহায্য করতে পারে। DNS-over-HTTPS (DoH) ব্যবহারের পরামর্শ দেওয়া হয়—এটি আপনার লুকআপগুলো এনক্রিপ্ট করে।</string>
     <string name="settings_dns_limitations">এই সেটিংসটি শুধু OkHttp-ভিত্তিক ট্রাফিকে প্রভাব ফেলে (প্লেলিস্ট সিঙ্ক, EPG, API কল, ছবি, ExoPlayer স্ট্রিম)। mpv সিস্টেম রিজলভার ব্যবহার করে এবং এতে প্রভাবিত হয় না।</string>
-    <string name="settings_dns_resolved">রিজলভ হয়েছে ✓ (<xliff:g id="millis">%1$d</xliff:g> ms) → <xliff:g id="addresses">%2$s</xliff:g></string>
+    <string name="settings_dns_resolved">রিজলভ হয়েছে ✓ (<xliff:g id="millis">%1$d</xliff:g> ms)</string>
     <string name="settings_dns_enter_server">একটি DNS সার্ভার হোস্ট বা DoH URL লিখুন।</string>
     <string name="settings_dns_not_reachable">DNS সার্ভারে পৌঁছানো যাচ্ছে না।</string>
     <string name="settings_dns_timed_out">DNS অনুরোধের সময়সীমা উত্তীর্ণ হয়েছে।</string>

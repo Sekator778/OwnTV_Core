@@ -823,7 +823,7 @@
     <string name="settings_dns_test">Testuj DNS</string>
     <string name="settings_dns_explanation">Niestandardowy DNS może pomóc ominąć blokowanie domen przez dostawcę internetu lub umożliwić obchodzenie blokad regionalnych za pomocą usług SmartDNS. Zalecany jest DNS-over-HTTPS (DoH) — szyfruje on zapytania DNS.</string>
     <string name="settings_dns_limitations">To ustawienie wpływa tylko na ruch oparty na OkHttp (synchronizacja listy odtwarzania, EPG, wywołania API, obrazy i strumienie ExoPlayer). mpv korzysta z systemowego mechanizmu rozpoznawania nazw i to ustawienie nie ma na niego wpływu.</string>
-    <string name="settings_dns_resolved">Rozpoznano ✓ (<xliff:g id="millis">%1$d</xliff:g> ms) → <xliff:g id="addresses">%2$s</xliff:g></string>
+    <string name="settings_dns_resolved">Rozpoznano ✓ (<xliff:g id="millis">%1$d</xliff:g> ms)</string>
     <string name="settings_dns_enter_server">Wpisz nazwę hosta serwera DNS lub adres URL DoH.</string>
     <string name="settings_dns_not_reachable">Serwer DNS jest nieosiągalny.</string>
     <string name="settings_dns_timed_out">Przekroczono limit czasu żądania DNS.</string>

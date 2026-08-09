@@ -823,7 +823,7 @@
     <string name="settings_dns_test">Otestovat DNS</string>
     <string name="settings_dns_explanation">Vlastní DNS může pomoci obejít blokování domén poskytovatelem internetového připojení nebo zpřístupnit obsah omezený podle polohy pomocí služeb SmartDNS. Doporučujeme DNS-over-HTTPS (DoH) – šifruje vaše dotazy.</string>
     <string name="settings_dns_limitations">Toto nastavení má vliv pouze na provoz využívající OkHttp (synchronizaci playlistu, EPG, volání API, obrázky a streamy ExoPlayer). mpv používá systémový resolver a toto nastavení se ho netýká.</string>
-    <string name="settings_dns_resolved">Přeloženo ✓ (<xliff:g id="millis">%1$d</xliff:g> ms) → <xliff:g id="addresses">%2$s</xliff:g></string>
+    <string name="settings_dns_resolved">Přeloženo ✓ (<xliff:g id="millis">%1$d</xliff:g> ms)</string>
     <string name="settings_dns_enter_server">Zadejte název hostitele serveru DNS nebo adresu URL DoH.</string>
     <string name="settings_dns_not_reachable">Server DNS není dostupný.</string>
     <string name="settings_dns_timed_out">Vypršel časový limit požadavku DNS.</string>
