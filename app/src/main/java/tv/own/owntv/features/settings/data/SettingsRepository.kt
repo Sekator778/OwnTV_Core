@@ -106,8 +106,8 @@ class SettingsRepository(private val context: Context, private val localeStore: 
     // unchanged until the user enables it in Settings → Glass Effect. Alpha/blur defaults are the
     // "nice preset" applied once glass is turned on.
     private val GLASS_SCOPE_DEFAULT_BITS: Int = 0
-    private val GLASS_ALPHA_DEFAULT_PCT: Int = 75
-    private val GLASS_BLUR_DEFAULT_PCT: Int = 80
+    private val GLASS_ALPHA_DEFAULT_PCT: Int = 56
+    private val GLASS_BLUR_DEFAULT_PCT: Int = 78
 
     private object Keys {
         val THEME_MODE = stringPreferencesKey("theme_mode")
@@ -287,6 +287,7 @@ class SettingsRepository(private val context: Context, private val localeStore: 
         val GLASS_SCOPE = intPreferencesKey("glass_scope")
         val GLASS_ALPHA = intPreferencesKey("glass_alpha")
         val GLASS_BLUR = intPreferencesKey("glass_blur")
+        val GLASS_PRESET = stringPreferencesKey("glass_preset")
     }
 
     // --- Live TV: remember the last focused channel so reopening lands focus back on it ---
@@ -1386,7 +1387,17 @@ class SettingsRepository(private val context: Context, private val localeStore: 
         val bits = p[Keys.GLASS_SCOPE] ?: GLASS_SCOPE_DEFAULT_BITS
         val alphaPct = p[Keys.GLASS_ALPHA] ?: GLASS_ALPHA_DEFAULT_PCT
         val blurPct = p[Keys.GLASS_BLUR] ?: GLASS_BLUR_DEFAULT_PCT
-        tv.own.owntv.ui.theme.GlassConfig.fromBitmask(bits, alpha = alphaPct / 100f, blurStrength = blurPct / 100f)
+        val preset = tv.own.owntv.ui.theme.GlassPreset.fromStored(
+            name = p[Keys.GLASS_PRESET],
+            customAlpha = alphaPct / 100f,
+            customBlur = blurPct / 100f,
+        )
+        tv.own.owntv.ui.theme.GlassConfig.fromBitmask(
+            bits,
+            alpha = alphaPct / 100f,
+            blurStrength = blurPct / 100f,
+            preset = preset,
+        )
     }
 
     /** Persist the background image path. Pass "" to clear (turn glass off). */
@@ -1399,14 +1410,25 @@ class SettingsRepository(private val context: Context, private val localeStore: 
         context.dataStore.edit { it[Keys.GLASS_SCOPE] = bits }
     }
 
+    /** Select a tuned preset. Custom values remain stored so returning to CUSTOM restores them. */
+    suspend fun setGlassPreset(preset: tv.own.owntv.ui.theme.GlassPreset) {
+        context.dataStore.edit { it[Keys.GLASS_PRESET] = preset.name }
+    }
+
     /** Persist glass alpha as an integer 0..100. */
     suspend fun setGlassAlphaPercent(pct: Int) {
-        context.dataStore.edit { it[Keys.GLASS_ALPHA] = pct.coerceIn(0, 100) }
+        context.dataStore.edit {
+            it[Keys.GLASS_ALPHA] = pct.coerceIn(0, 100)
+            it[Keys.GLASS_PRESET] = tv.own.owntv.ui.theme.GlassPreset.CUSTOM.name
+        }
     }
 
     /** Persist the backdrop blur ("frost") strength as an integer 0..100. 0 = Tier-1 translucency only. */
     suspend fun setGlassBlurPercent(pct: Int) {
-        context.dataStore.edit { it[Keys.GLASS_BLUR] = pct.coerceIn(0, 100) }
+        context.dataStore.edit {
+            it[Keys.GLASS_BLUR] = pct.coerceIn(0, 100)
+            it[Keys.GLASS_PRESET] = tv.own.owntv.ui.theme.GlassPreset.CUSTOM.name
+        }
     }
 
     /** Avatar for the current (placeholder) profile until real profiles arrive in the wizard. */
@@ -1485,6 +1507,7 @@ class SettingsRepository(private val context: Context, private val localeStore: 
         // NOTE: only the path string travels — the image bytes live in app-private storage which is
         // wiped on uninstall, so on a new device a stale path is ignored gracefully (falls back to none).
         Keys.BG_IMAGE_PATH,
+        Keys.GLASS_PRESET,
         // Subtitle appearance: text color and screen position (toggle is a bool key, size a float
         // key, background transparency an int key).
         Keys.SUB_COLOR,

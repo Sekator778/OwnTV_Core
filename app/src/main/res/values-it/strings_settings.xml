@@ -916,4 +916,13 @@
     <string name="settings_font_preview">Intrattenimento, in modo semplice.</string>
     <string name="settings_search_keywords_fonts">carattere testo dimensione tipografia popup lettura accessibilità</string>
     <string name="settings_font_system_sans">Sans di sistema</string>
+    <string name="settings_glass_preset_title">Preimpostazione aspetto</string>
+    <string name="settings_glass_preset_clear">Nitido</string>
+    <string name="settings_glass_preset_balanced">Bilanciato</string>
+    <string name="settings_glass_preset_tinted">Colorato</string>
+    <string name="settings_glass_preset_custom">Personalizzato</string>
+    <string name="settings_glass_preset_clear_description">Più colore dello sfondo con sfocatura moderata.</string>
+    <string name="settings_glass_preset_balanced_description">Chiarezza, profondità e leggibilità consigliate.</string>
+    <string name="settings_glass_preset_tinted_description">Colore della superficie più intenso per sfondi vivaci o luminosi.</string>
+    <string name="settings_glass_preset_custom_description">Usa i valori salvati di trasparenza e sfocatura.</string>
 </resources>

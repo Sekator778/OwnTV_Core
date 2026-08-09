@@ -900,4 +900,13 @@
     <string name="settings_font_preview">Eğlence artık daha basit.</string>
     <string name="settings_search_keywords_fonts">yazı tipi metin boyut tipografi pencere okuma erişilebilirlik</string>
     <string name="settings_font_system_sans">Sistem Sans</string>
+    <string name="settings_glass_preset_title">Görünüm ön ayarı</string>
+    <string name="settings_glass_preset_clear">Şeffaf</string>
+    <string name="settings_glass_preset_balanced">Dengeli</string>
+    <string name="settings_glass_preset_tinted">Renkli</string>
+    <string name="settings_glass_preset_custom">Özel</string>
+    <string name="settings_glass_preset_clear_description">Orta düzey bulanıklıkla daha fazla duvar kâğıdı rengi.</string>
+    <string name="settings_glass_preset_balanced_description">Önerilen netlik, derinlik ve okunabilirlik.</string>
+    <string name="settings_glass_preset_tinted_description">Yoğun veya parlak arka planlar için daha güçlü yüzey rengi.</string>
+    <string name="settings_glass_preset_custom_description">Kayıtlı şeffaflık ve bulanıklık değerlerinizi kullanın.</string>
 </resources>

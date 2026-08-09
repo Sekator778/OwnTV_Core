@@ -964,4 +964,13 @@
     <string name="settings_font_preview">ترفيه أبسط وأكثر متعة.</string>
     <string name="settings_search_keywords_fonts">خط نص حجم كتابة نوافذ قراءة وصول</string>
     <string name="settings_font_system_sans">خط النظام بلا زوائد</string>
+    <string name="settings_glass_preset_title">إعداد مسبق للمظهر</string>
+    <string name="settings_glass_preset_clear">شفاف</string>
+    <string name="settings_glass_preset_balanced">متوازن</string>
+    <string name="settings_glass_preset_tinted">ملوّن</string>
+    <string name="settings_glass_preset_custom">مخصص</string>
+    <string name="settings_glass_preset_clear_description">ألوان أكثر من الخلفية مع تمويه متوسط.</string>
+    <string name="settings_glass_preset_balanced_description">وضوح وعمق وسهولة قراءة موصى بها.</string>
+    <string name="settings_glass_preset_tinted_description">لون سطح أقوى للخلفيات المزدحمة أو الساطعة.</string>
+    <string name="settings_glass_preset_custom_description">استخدم قيم الشفافية والتمويه المحفوظة.</string>
 </resources>

@@ -932,4 +932,13 @@
     <string name="settings_font_preview">Zábava jednoduše.</string>
     <string name="settings_search_keywords_fonts">písmo text velikost typografie okno čtení přístupnost</string>
     <string name="settings_font_system_sans">Systémové bezpatkové</string>
+    <string name="settings_glass_preset_title">Předvolba vzhledu</string>
+    <string name="settings_glass_preset_clear">Čiré</string>
+    <string name="settings_glass_preset_balanced">Vyvážené</string>
+    <string name="settings_glass_preset_tinted">Tónované</string>
+    <string name="settings_glass_preset_custom">Vlastní</string>
+    <string name="settings_glass_preset_clear_description">Více barev tapety se středním rozostřením.</string>
+    <string name="settings_glass_preset_balanced_description">Doporučená čistota, hloubka a čitelnost.</string>
+    <string name="settings_glass_preset_tinted_description">Výraznější barva povrchu pro rušné nebo světlé pozadí.</string>
+    <string name="settings_glass_preset_custom_description">Použít uložené hodnoty průhlednosti a rozostření.</string>
 </resources>

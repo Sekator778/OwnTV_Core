@@ -900,4 +900,13 @@
     <string name="settings_font_preview">വിനോദം കൂടുതൽ ലളിതം.</string>
     <string name="settings_search_keywords_fonts">ഫോണ്ട് ടെക്സ്റ്റ് വലുപ്പം ടൈപ്പ്ഫേസ് പോപ്പപ്പ് വായന ആക്സസിബിലിറ്റി</string>
     <string name="settings_font_system_sans">സിസ്റ്റം സാൻസ്</string>
+    <string name="settings_glass_preset_title">രൂപഭാവ പ്രീസെറ്റ്</string>
+    <string name="settings_glass_preset_clear">വ്യക്തം</string>
+    <string name="settings_glass_preset_balanced">സമതുലിതം</string>
+    <string name="settings_glass_preset_tinted">നിറമുള്ളത്</string>
+    <string name="settings_glass_preset_custom">ഇഷ്ടാനുസൃതം</string>
+    <string name="settings_glass_preset_clear_description">മിതമായ മങ്ങലോടെ വാൾപേപ്പറിന്റെ കൂടുതൽ നിറം.</string>
+    <string name="settings_glass_preset_balanced_description">ശുപാർശ ചെയ്യുന്ന വ്യക്തത, ആഴം, വായനാസൗകര്യം.</string>
+    <string name="settings_glass_preset_tinted_description">തിരക്കേറിയതോ തെളിച്ചമുള്ളതോ ആയ പശ്ചാത്തലങ്ങൾക്ക് ശക്തമായ ഉപരിതല നിറം.</string>
+    <string name="settings_glass_preset_custom_description">സംരക്ഷിച്ച സുതാര്യത, ബ്ലർ മൂല്യങ്ങൾ ഉപയോഗിക്കുക.</string>
 </resources>

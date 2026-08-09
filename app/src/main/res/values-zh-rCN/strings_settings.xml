@@ -884,4 +884,13 @@
     <string name="settings_font_preview">娱乐，从此更简单。</string>
     <string name="settings_search_keywords_fonts">字体 文字 大小 字型 弹窗 阅读 无障碍</string>
     <string name="settings_font_system_sans">系统无衬线字体</string>
+    <string name="settings_glass_preset_title">外观预设</string>
+    <string name="settings_glass_preset_clear">清透</string>
+    <string name="settings_glass_preset_balanced">平衡</string>
+    <string name="settings_glass_preset_tinted">着色</string>
+    <string name="settings_glass_preset_custom">自定义</string>
+    <string name="settings_glass_preset_clear_description">使用适度磨砂，显示更多壁纸色彩。</string>
+    <string name="settings_glass_preset_balanced_description">推荐的清晰度、层次感和可读性。</string>
+    <string name="settings_glass_preset_tinted_description">为复杂或明亮背景提供更强的表面色彩。</string>
+    <string name="settings_glass_preset_custom_description">使用已保存的透明度和模糊值。</string>
 </resources>

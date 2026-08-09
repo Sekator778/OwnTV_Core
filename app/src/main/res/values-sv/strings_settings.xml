@@ -900,4 +900,13 @@
     <string name="settings_font_preview">Underhållning på ett enklare sätt.</string>
     <string name="settings_search_keywords_fonts">teckensnitt text storlek typografi popup läsning tillgänglighet</string>
     <string name="settings_font_system_sans">System Sans</string>
+    <string name="settings_glass_preset_title">Utseendeförval</string>
+    <string name="settings_glass_preset_clear">Klar</string>
+    <string name="settings_glass_preset_balanced">Balanserad</string>
+    <string name="settings_glass_preset_tinted">Tonad</string>
+    <string name="settings_glass_preset_custom">Anpassad</string>
+    <string name="settings_glass_preset_clear_description">Mer färg från bakgrunden med måttlig oskärpa.</string>
+    <string name="settings_glass_preset_balanced_description">Rekommenderad tydlighet, djup och läsbarhet.</string>
+    <string name="settings_glass_preset_tinted_description">Starkare ytfärg för detaljrika eller ljusa bakgrunder.</string>
+    <string name="settings_glass_preset_custom_description">Använd dina sparade värden för genomskinlighet och oskärpa.</string>
 </resources>

@@ -932,4 +932,13 @@
     <string name="settings_font_preview">Развлечения — это просто.</string>
     <string name="settings_search_keywords_fonts">шрифт текст размер типографика окно чтение доступность</string>
     <string name="settings_font_system_sans">Системный шрифт без засечек</string>
+    <string name="settings_glass_preset_title">Предустановка оформления</string>
+    <string name="settings_glass_preset_clear">Прозрачное</string>
+    <string name="settings_glass_preset_balanced">Сбалансированное</string>
+    <string name="settings_glass_preset_tinted">Тонированное</string>
+    <string name="settings_glass_preset_custom">Своё</string>
+    <string name="settings_glass_preset_clear_description">Больше цветов обоев при умеренном размытии.</string>
+    <string name="settings_glass_preset_balanced_description">Рекомендуемый баланс чёткости, глубины и читаемости.</string>
+    <string name="settings_glass_preset_tinted_description">Более насыщенный цвет поверхности для яркого или сложного фона.</string>
+    <string name="settings_glass_preset_custom_description">Использовать сохранённые значения прозрачности и размытия.</string>
 </resources>

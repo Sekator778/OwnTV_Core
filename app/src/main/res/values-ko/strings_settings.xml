@@ -884,4 +884,13 @@
     <string name="settings_font_preview">엔터테인먼트를 더 간단하게.</string>
     <string name="settings_search_keywords_fonts">글꼴 텍스트 크기 서체 팝업 읽기 접근성</string>
     <string name="settings_font_system_sans">시스템 산세리프</string>
+    <string name="settings_glass_preset_title">모양 프리셋</string>
+    <string name="settings_glass_preset_clear">투명</string>
+    <string name="settings_glass_preset_balanced">균형</string>
+    <string name="settings_glass_preset_tinted">색조</string>
+    <string name="settings_glass_preset_custom">사용자 지정</string>
+    <string name="settings_glass_preset_clear_description">적당한 흐림과 함께 배경화면 색상을 더 많이 표시합니다.</string>
+    <string name="settings_glass_preset_balanced_description">선명도, 깊이감 및 가독성 권장 설정입니다.</string>
+    <string name="settings_glass_preset_tinted_description">복잡하거나 밝은 배경에 더 강한 표면 색상을 적용합니다.</string>
+    <string name="settings_glass_preset_custom_description">저장된 투명도와 블러 값을 사용합니다.</string>
 </resources>

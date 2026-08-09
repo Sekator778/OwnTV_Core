@@ -932,4 +932,13 @@
     <string name="settings_font_preview">Rozrywka w prostym wydaniu.</string>
     <string name="settings_search_keywords_fonts">czcionka tekst rozmiar typografia okno czytanie dostępność</string>
     <string name="settings_font_system_sans">Systemowa bezszeryfowa</string>
+    <string name="settings_glass_preset_title">Ustawienie wyglądu</string>
+    <string name="settings_glass_preset_clear">Przejrzyste</string>
+    <string name="settings_glass_preset_balanced">Zrównoważone</string>
+    <string name="settings_glass_preset_tinted">Barwione</string>
+    <string name="settings_glass_preset_custom">Niestandardowe</string>
+    <string name="settings_glass_preset_clear_description">Więcej kolorów tapety z umiarkowanym rozmyciem.</string>
+    <string name="settings_glass_preset_balanced_description">Zalecana przejrzystość, głębia i czytelność.</string>
+    <string name="settings_glass_preset_tinted_description">Mocniejszy kolor powierzchni dla złożonych lub jasnych teł.</string>
+    <string name="settings_glass_preset_custom_description">Użyj zapisanych wartości przezroczystości i rozmycia.</string>
 </resources>

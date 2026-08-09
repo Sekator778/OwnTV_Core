@@ -900,4 +900,13 @@
     <string name="settings_font_preview">বিনোদন এখন আরও সহজ।</string>
     <string name="settings_search_keywords_fonts">ফন্ট লেখা আকার টাইপফেস পপআপ পড়া অ্যাক্সেসিবিলিটি</string>
     <string name="settings_font_system_sans">সিস্টেম স্যান্স</string>
+    <string name="settings_glass_preset_title">রূপের প্রিসেট</string>
+    <string name="settings_glass_preset_clear">স্বচ্ছ</string>
+    <string name="settings_glass_preset_balanced">ভারসাম্যপূর্ণ</string>
+    <string name="settings_glass_preset_tinted">রঙিন</string>
+    <string name="settings_glass_preset_custom">কাস্টম</string>
+    <string name="settings_glass_preset_clear_description">মাঝারি ফ্রস্টসহ ওয়ালপেপারের আরও বেশি রং।</string>
+    <string name="settings_glass_preset_balanced_description">প্রস্তাবিত স্বচ্ছতা, গভীরতা ও পাঠযোগ্যতা।</string>
+    <string name="settings_glass_preset_tinted_description">ব্যস্ত বা উজ্জ্বল পটভূমির জন্য আরও গাঢ় সারফেস রং।</string>
+    <string name="settings_glass_preset_custom_description">আপনার সংরক্ষিত স্বচ্ছতা ও ব্লার / ফ্রস্ট মান ব্যবহার করুন।</string>
 </resources>

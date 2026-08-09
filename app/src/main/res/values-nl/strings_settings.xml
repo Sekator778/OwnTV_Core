@@ -900,4 +900,13 @@
     <string name="settings_font_preview">Entertainment, eenvoudig gemaakt.</string>
     <string name="settings_search_keywords_fonts">lettertype tekst grootte typografie popup lezen toegankelijkheid</string>
     <string name="settings_font_system_sans">Systeem Sans</string>
+    <string name="settings_glass_preset_title">Voorinstelling voor uiterlijk</string>
+    <string name="settings_glass_preset_clear">Helder</string>
+    <string name="settings_glass_preset_balanced">Gebalanceerd</string>
+    <string name="settings_glass_preset_tinted">Getint</string>
+    <string name="settings_glass_preset_custom">Aangepast</string>
+    <string name="settings_glass_preset_clear_description">Meer kleur van de achtergrond met matige vervaging.</string>
+    <string name="settings_glass_preset_balanced_description">Aanbevolen helderheid, diepte en leesbaarheid.</string>
+    <string name="settings_glass_preset_tinted_description">Sterkere oppervlakkleur voor drukke of heldere achtergronden.</string>
+    <string name="settings_glass_preset_custom_description">Gebruik je opgeslagen waarden voor transparantie en vervaging.</string>
 </resources>

@@ -884,4 +884,13 @@
     <string name="settings_font_preview">エンターテインメントを、もっとシンプルに。</string>
     <string name="settings_search_keywords_fonts">フォント 文字 サイズ 書体 ポップアップ 読みやすさ アクセシビリティ</string>
     <string name="settings_font_system_sans">システムサンセリフ</string>
+    <string name="settings_glass_preset_title">外観プリセット</string>
+    <string name="settings_glass_preset_clear">クリア</string>
+    <string name="settings_glass_preset_balanced">バランス</string>
+    <string name="settings_glass_preset_tinted">色付き</string>
+    <string name="settings_glass_preset_custom">カスタム</string>
+    <string name="settings_glass_preset_clear_description">中程度のぼかしで壁紙の色をより多く表示します。</string>
+    <string name="settings_glass_preset_balanced_description">見やすさ、奥行き、読みやすさの推奨設定です。</string>
+    <string name="settings_glass_preset_tinted_description">明るい背景や情報量の多い背景向けに表面色を強くします。</string>
+    <string name="settings_glass_preset_custom_description">保存済みの透明度とぼかし値を使用します。</string>
 </resources>

@@ -900,4 +900,13 @@
     <string name="settings_font_preview">मनोरंजन, अब और भी आसान।</string>
     <string name="settings_search_keywords_fonts">फ़ॉन्ट टेक्स्ट आकार टाइपफ़ेस पॉपअप पढ़ना सुगम्यता</string>
     <string name="settings_font_system_sans">सिस्टम सैन्स</string>
+    <string name="settings_glass_preset_title">दिखावट प्रीसेट</string>
+    <string name="settings_glass_preset_clear">स्पष्ट</string>
+    <string name="settings_glass_preset_balanced">संतुलित</string>
+    <string name="settings_glass_preset_tinted">रंगा हुआ</string>
+    <string name="settings_glass_preset_custom">कस्टम</string>
+    <string name="settings_glass_preset_clear_description">मध्यम धुंध के साथ वॉलपेपर के अधिक रंग।</string>
+    <string name="settings_glass_preset_balanced_description">अनुशंसित स्पष्टता, गहराई और पठनीयता।</string>
+    <string name="settings_glass_preset_tinted_description">व्यस्त या चमकीली पृष्ठभूमि के लिए अधिक गहरा सतह रंग।</string>
+    <string name="settings_glass_preset_custom_description">अपने सहेजे गए पारदर्शिता और ब्लर मान इस्तेमाल करें।</string>
 </resources>

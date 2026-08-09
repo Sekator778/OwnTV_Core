@@ -916,4 +916,13 @@
     <string name="settings_font_preview">Le divertissement en toute simplicité.</string>
     <string name="settings_search_keywords_fonts">police texte taille typographie fenêtre lecture accessibilité</string>
     <string name="settings_font_system_sans">Sans système</string>
+    <string name="settings_glass_preset_title">Préréglage d’apparence</string>
+    <string name="settings_glass_preset_clear">Clair</string>
+    <string name="settings_glass_preset_balanced">Équilibré</string>
+    <string name="settings_glass_preset_tinted">Teinté</string>
+    <string name="settings_glass_preset_custom">Personnalisé</string>
+    <string name="settings_glass_preset_clear_description">Plus de couleurs du fond avec un flou modéré.</string>
+    <string name="settings_glass_preset_balanced_description">Clarté, profondeur et lisibilité recommandées.</string>
+    <string name="settings_glass_preset_tinted_description">Couleur de surface renforcée pour les arrière-plans chargés ou lumineux.</string>
+    <string name="settings_glass_preset_custom_description">Utilisez vos valeurs enregistrées de transparence et de flou.</string>
 </resources>

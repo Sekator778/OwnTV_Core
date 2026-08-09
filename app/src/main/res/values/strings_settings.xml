@@ -965,6 +965,16 @@ Choose Balanced if a channel becomes unreliable.</string>
     <string name="settings_glass_effect_title">Glass Effect</string>
     <!-- Translators: Description of the Glass Effect settings. -->
     <string name="settings_glass_effect_description">Translucent frosted panels over a background photo, or over the app\'s own background.</string>
+    <!-- Translators: Heading for the four glass appearance presets. -->
+    <string name="settings_glass_preset_title">Appearance preset</string>
+    <string name="settings_glass_preset_clear">Clear</string>
+    <string name="settings_glass_preset_balanced">Balanced</string>
+    <string name="settings_glass_preset_tinted">Tinted</string>
+    <string name="settings_glass_preset_custom">Custom</string>
+    <string name="settings_glass_preset_clear_description">More wallpaper colour with moderate frost.</string>
+    <string name="settings_glass_preset_balanced_description">Recommended clarity, depth and readability.</string>
+    <string name="settings_glass_preset_tinted_description">Stronger surface colour for busy or bright backgrounds.</string>
+    <string name="settings_glass_preset_custom_description">Use your saved transparency and blur / frost values.</string>
     <!-- Translators: Setting label for the glass transparency level. -->
     <string name="settings_transparency_title">Transparency</string>
     <!-- Translators: Setting label for the glass blur/frost level. -->

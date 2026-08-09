@@ -900,4 +900,13 @@
     <string name="settings_font_preview">Underholdning gjort enkelt.</string>
     <string name="settings_search_keywords_fonts">skrifttype tekst størrelse typografi popup lesing tilgjengelighet</string>
     <string name="settings_font_system_sans">System Sans</string>
+    <string name="settings_glass_preset_title">Utseendeforvalg</string>
+    <string name="settings_glass_preset_clear">Klar</string>
+    <string name="settings_glass_preset_balanced">Balansert</string>
+    <string name="settings_glass_preset_tinted">Tonet</string>
+    <string name="settings_glass_preset_custom">Egendefinert</string>
+    <string name="settings_glass_preset_clear_description">Mer farge fra bakgrunnen med moderat sløring.</string>
+    <string name="settings_glass_preset_balanced_description">Anbefalt klarhet, dybde og lesbarhet.</string>
+    <string name="settings_glass_preset_tinted_description">Sterkere overflatefarge for travle eller lyse bakgrunner.</string>
+    <string name="settings_glass_preset_custom_description">Bruk lagrede verdier for gjennomsiktighet og sløring.</string>
 </resources>

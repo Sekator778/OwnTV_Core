@@ -28,4 +28,13 @@ Resync and remove missing titles also allows removing titles the provider no lon
     <string name="settings_subtitle_customize_description">Turn this on, then change only what you want — anything left on Default keeps the stock look, including the colours and placement broadcasters embed in Live TV subtitles.</string>
     <string name="settings_subtitle_color_short">Colour</string>
     <string name="settings_subtitle_color_description">Text colour — a preset, the picker, or a hex code.</string>
+    <string name="settings_glass_preset_title">Appearance preset</string>
+    <string name="settings_glass_preset_clear">Clear</string>
+    <string name="settings_glass_preset_balanced">Balanced</string>
+    <string name="settings_glass_preset_tinted">Tinted</string>
+    <string name="settings_glass_preset_custom">Custom</string>
+    <string name="settings_glass_preset_clear_description">More wallpaper colour with moderate frost.</string>
+    <string name="settings_glass_preset_balanced_description">Recommended clarity, depth and readability.</string>
+    <string name="settings_glass_preset_tinted_description">Stronger surface colour for busy or bright backgrounds.</string>
+    <string name="settings_glass_preset_custom_description">Use your saved transparency and blur / frost values.</string>
 </resources>

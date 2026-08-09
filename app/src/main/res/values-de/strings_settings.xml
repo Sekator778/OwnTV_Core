@@ -900,4 +900,13 @@
     <string name="settings_font_preview">Unterhaltung, ganz einfach.</string>
     <string name="settings_search_keywords_fonts">Schrift Text Größe Typografie Popup Lesen Barrierefreiheit</string>
     <string name="settings_font_system_sans">System Sans</string>
+    <string name="settings_glass_preset_title">Darstellungsvoreinstellung</string>
+    <string name="settings_glass_preset_clear">Klar</string>
+    <string name="settings_glass_preset_balanced">Ausgewogen</string>
+    <string name="settings_glass_preset_tinted">Getönt</string>
+    <string name="settings_glass_preset_custom">Benutzerdefiniert</string>
+    <string name="settings_glass_preset_clear_description">Mehr Farbe vom Hintergrund mit mittlerem Milchglaseffekt.</string>
+    <string name="settings_glass_preset_balanced_description">Empfohlene Klarheit, Tiefe und Lesbarkeit.</string>
+    <string name="settings_glass_preset_tinted_description">Stärkere Oberflächenfarbe für unruhige oder helle Hintergründe.</string>
+    <string name="settings_glass_preset_custom_description">Gespeicherte Werte für Transparenz und Weichzeichnung verwenden.</string>
 </resources>

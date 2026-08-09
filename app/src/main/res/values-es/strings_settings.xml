@@ -916,4 +916,13 @@
     <string name="settings_font_preview">Entretenimiento, así de sencillo.</string>
     <string name="settings_search_keywords_fonts">fuente texto tamaño tipografía ventana lectura accesibilidad</string>
     <string name="settings_font_system_sans">Sans del sistema</string>
+    <string name="settings_glass_preset_title">Preajuste de apariencia</string>
+    <string name="settings_glass_preset_clear">Claro</string>
+    <string name="settings_glass_preset_balanced">Equilibrado</string>
+    <string name="settings_glass_preset_tinted">Teñido</string>
+    <string name="settings_glass_preset_custom">Personalizado</string>
+    <string name="settings_glass_preset_clear_description">Más color del fondo con desenfoque moderado.</string>
+    <string name="settings_glass_preset_balanced_description">Claridad, profundidad y legibilidad recomendadas.</string>
+    <string name="settings_glass_preset_tinted_description">Color de superficie más intenso para fondos cargados o brillantes.</string>
+    <string name="settings_glass_preset_custom_description">Usa tus valores guardados de transparencia y desenfoque.</string>
 </resources>

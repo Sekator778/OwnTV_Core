@@ -104,7 +104,7 @@ data class PlaylistItem(
 data class NavState(val hasPrev: Boolean, val hasNext: Boolean)
 
 /** Video scaling modes exposed in the player's zoom menu. */
-enum class ZoomMode(@androidx.annotation.StringRes val labelRes: Int) {
+enum class ZoomMode(@param:androidx.annotation.StringRes val labelRes: Int) {
     FIT(tv.own.owntv.R.string.player_zoom_fit_screen), FILL(tv.own.owntv.R.string.player_zoom_fill_crop), STRETCH(tv.own.owntv.R.string.player_zoom_stretch),
     ORIGINAL(tv.own.owntv.R.string.player_zoom_original), FORCE_16_9(tv.own.owntv.R.string.player_zoom_force_16_9), FORCE_4_3(tv.own.owntv.R.string.player_zoom_force_4_3),
 }
