@@ -437,8 +437,8 @@
     <string name="settings_download_remote_title">التنزيل على جهاز آخر</string>
     <string name="settings_download_remote_description">على هاتف أو حاسوب محمول متصل بشبكة Wi-Fi نفسها، امسح رمز QR ضوئيًا (أو افتح عنوان URL)، وأدخل رمز PIN هذا، ثم نزّل ملف النسخة الاحتياطية واحتفظ به في مكان آمن.</string>
     <string name="settings_preparing_backup">جارٍ إعداد النسخة الاحتياطية…</string>
-    <string name="settings_liquid_glass_on">الزجاج السائل: مفعّل</string>
-    <string name="settings_liquid_glass_off">الزجاج السائل: متوقف</string>
+    <string name="settings_glass_effect_on">التأثير الزجاجي: مفعّل</string>
+    <string name="settings_glass_effect_off">التأثير الزجاجي: متوقف</string>
     <string name="settings_background_on">صورة الخلفية: مفعّلة</string>
     <string name="settings_background_off">صورة الخلفية: متوقفة</string>
     <string name="settings_ui_zoom_range">تغيير حجم الواجهة بالكامل (<xliff:g id="min">%1$d</xliff:g>%%–<xliff:g id="max">%2$d</xliff:g>%%).</string>

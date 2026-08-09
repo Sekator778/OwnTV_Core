@@ -434,8 +434,8 @@
     <string name="settings_download_remote_title">Transferir noutro dispositivo</string>
     <string name="settings_download_remote_description">Num telemóvel ou computador portátil ligado à mesma rede Wi-Fi, leia o código QR (ou abra o URL), introduza este PIN e transfira o ficheiro da cópia de segurança para o guardar em segurança.</string>
     <string name="settings_preparing_backup">A preparar a cópia de segurança…</string>
-    <string name="settings_liquid_glass_on">Vidro líquido: ativado</string>
-    <string name="settings_liquid_glass_off">Vidro líquido: desativado</string>
+    <string name="settings_glass_effect_on">Efeito de vidro: ativado</string>
+    <string name="settings_glass_effect_off">Efeito de vidro: desativado</string>
     <string name="settings_background_on">Imagem de fundo: ativada</string>
     <string name="settings_background_off">Imagem de fundo: desativada</string>
     <string name="settings_ui_zoom_range">Dimensionar toda a interface (<xliff:g id="min">%1$d</xliff:g>%%–<xliff:g id="max">%2$d</xliff:g>%%).</string>

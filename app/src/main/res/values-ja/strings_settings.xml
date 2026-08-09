@@ -432,8 +432,8 @@
     <string name="settings_download_remote_title">別のデバイスにダウンロード</string>
     <string name="settings_download_remote_description">同じWi-Fi上のスマートフォンまたはノートパソコンでQRコードをスキャンするかURLを開き、このPINを入力して、保管用にバックアップファイルをダウンロードします。</string>
     <string name="settings_preparing_backup">バックアップを準備中…</string>
-    <string name="settings_liquid_glass_on">リキッドグラス：オン</string>
-    <string name="settings_liquid_glass_off">リキッドグラス：オフ</string>
+    <string name="settings_glass_effect_on">ガラス効果：オン</string>
+    <string name="settings_glass_effect_off">ガラス効果：オフ</string>
     <string name="settings_background_on">背景画像：オン</string>
     <string name="settings_background_off">背景画像：オフ</string>
     <string name="settings_ui_zoom_range">インターフェース全体を拡大縮小します（<xliff:g id="min">%1$d</xliff:g>%%～<xliff:g id="max">%2$d</xliff:g>%%）。</string>

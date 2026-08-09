@@ -434,8 +434,8 @@
     <string name="settings_download_remote_title">Descargar en otro dispositivo</string>
     <string name="settings_download_remote_description">En un teléfono u ordenador portátil conectado a la misma Wi-Fi, escanea el código QR (o abre la URL), introduce este PIN y descarga el archivo de copia de seguridad para guardarlo en un lugar seguro.</string>
     <string name="settings_preparing_backup">Preparando la copia de seguridad…</string>
-    <string name="settings_liquid_glass_on">Cristal líquido: Activado</string>
-    <string name="settings_liquid_glass_off">Cristal líquido: Desactivado</string>
+    <string name="settings_glass_effect_on">Efecto cristal: Activado</string>
+    <string name="settings_glass_effect_off">Efecto cristal: Desactivado</string>
     <string name="settings_background_on">Imagen de fondo: Activada</string>
     <string name="settings_background_off">Imagen de fondo: Desactivada</string>
     <string name="settings_ui_zoom_range">Ajusta la escala de toda la interfaz (<xliff:g id="min">%1$d</xliff:g>%%–<xliff:g id="max">%2$d</xliff:g>%%).</string>

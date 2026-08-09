@@ -433,8 +433,8 @@
     <string name="settings_download_remote_title">Download på en anden enhed</string>
     <string name="settings_download_remote_description">Scan QR-koden på en telefon eller bærbar computer på samme Wi-Fi (eller åbn URL\'en), indtast denne PIN, og download din sikkerhedskopifil for at opbevare den sikkert.</string>
     <string name="settings_preparing_backup">Forbereder sikkerhedskopi…</string>
-    <string name="settings_liquid_glass_on">Flydende glas: Til</string>
-    <string name="settings_liquid_glass_off">Flydende glas: Fra</string>
+    <string name="settings_glass_effect_on">Glaseffekt: Til</string>
+    <string name="settings_glass_effect_off">Glaseffekt: Fra</string>
     <string name="settings_background_on">Baggrundsbillede: Til</string>
     <string name="settings_background_off">Baggrundsbillede: Fra</string>
     <string name="settings_ui_zoom_range">Skaler hele brugerfladen (<xliff:g id="min">%1$d</xliff:g>%%–<xliff:g id="max">%2$d</xliff:g>%%).</string>

@@ -181,6 +181,10 @@ class LivePreviewEngine(
     // (e.g. 0x80001000); AudioSink errors name the audio failure. Reset per load, preferred when present.
     @Volatile private var lastCodecError: String? = null
     @Volatile private var lastVideoDecoder: String? = null // e.g. "OMX.realtek.video.decoder", for the spec line
+    // Whether that decoder is hardware, per [DecoderNames] — null until one initialises, or when the name
+    // can't be classified. NOT the same thing as the Hardware decoding setting: renderer decoder fallback
+    // can quietly land a channel on software while the setting still reads on.
+    @Volatile private var lastVideoDecoderHardware: Boolean? = null
     private val throughputTracker = ThroughputTracker()
     private val fpsSample = FpsSample()
     private var dropsBaseline = 0
@@ -299,6 +303,24 @@ class LivePreviewEngine(
         }
         override fun onVideoDecoderInitialized(eventTime: androidx.media3.exoplayer.analytics.AnalyticsListener.EventTime, decoderName: String, initializedTimestampMs: Long, initializationDurationMs: Long) {
             lastVideoDecoder = decoderName
+            val hardware = DecoderNames.isHardware(decoderName)
+            lastVideoDecoderHardware = hardware
+            LiveDiagnosticsLog.event(
+                "video decoder: $decoderName (" +
+                    (when (hardware) { true -> "hardware"; false -> "software"; null -> "kind unknown" }) +
+                    ", init ${initializationDurationMs}ms)",
+            )
+            // The silent-fallback signature. `setEnableDecoderFallback` keeps a channel playing when the
+            // vendor decoder fails, so this is a rescue working as intended — but on TV silicon software
+            // decode is what a viewer reports as a blocky or stuttering picture, with no error anywhere to
+            // tie it to. Recorded unconditionally (the ring buffer is exported even with detailed logging
+            // off), because a support report that already names it saves a whole round of guessing.
+            if (hardware == false && hwDecodingEnabled) {
+                val message = "hardware decoding is ON but '$decoderName' is a software decoder — " +
+                    "the renderer fell back after the hardware one failed"
+                android.util.Log.w(LiveDiagnosticsLog.TAG, message)
+                LiveDiagnosticsLog.event(message)
+            }
             dropsBaseline = currentDroppedFrames(player) // a new decoder session may start its own counters
         }
 
@@ -357,7 +379,7 @@ class LivePreviewEngine(
         val f = player?.videoFormat
         val codec = f?.sampleMimeType?.substringAfterLast('/')?.let { mimeName(it) }
         val resolution = if (f != null && f.width > 0 && f.height > 0) "${f.width}x${f.height}" else null
-        val decoder = lastVideoDecoder?.let { DecoderSpec.Named(it, hardware = true) }
+        val decoder = lastVideoDecoder?.let { DecoderSpec.Named(it, hardware = lastVideoDecoderHardware == true) }
             ?: if (f != null) DecoderSpec.Hardware() else null
         return MediaSpec(codec = codec, resolution = resolution, decoder = decoder)
             .takeIf { it.codec != null || it.resolution != null || it.decoder != null }
@@ -434,8 +456,15 @@ class LivePreviewEngine(
         }
         out += StreamInfoRow(
             StreamInfoLabel.DECODER,
+            // What is decoding, not what was asked for: with decoder fallback in play these can differ,
+            // and the setting was the only thing this row ever reported.
             lastVideoDecoder?.let { name ->
-                StreamInfoValue.Decoder(DecoderKind.NAMED, name = name, hardware = hwDecodingEnabled)
+                StreamInfoValue.Decoder(
+                    DecoderKind.NAMED,
+                    name = name,
+                    hardware = lastVideoDecoderHardware == true,
+                    software = lastVideoDecoderHardware == false,
+                )
             } ?: StreamInfoValue.Decoder(
                 if (hwDecodingEnabled) DecoderKind.HARDWARE else DecoderKind.SOFTWARE,
                 name = "ExoPlayer",
@@ -1147,7 +1176,7 @@ class LivePreviewEngine(
             ?: HttpClient.FALLBACK_USER_AGENT.takeIf { LiveStreamQuirks.blocksDefaultUserAgent(url) }
             ?: HttpClient.DEFAULT_USER_AGENT
         diagnostics.start(); diagnostics.markLoad()
-        lastCodecError = null; lastVideoDecoder = null
+        lastCodecError = null; lastVideoDecoder = null; lastVideoDecoderHardware = null
         this.muted = muted
         currentUrl = url
         hasPlayed = false; retryCount = 0; reconnectPending = false; gaveUp = false; decoderRetryDone = false

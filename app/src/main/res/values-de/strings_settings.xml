@@ -433,8 +433,8 @@
     <string name="settings_download_remote_title">Auf einem anderen Gerät herunterladen</string>
     <string name="settings_download_remote_description">Scanne auf einem Smartphone oder Laptop im selben Wi-Fi den QR-Code (oder öffne die URL), gib diese PIN ein und lade deine Sicherungsdatei herunter, um sie sicher aufzubewahren.</string>
     <string name="settings_preparing_backup">Sicherung wird vorbereitet…</string>
-    <string name="settings_liquid_glass_on">Flüssigglas: Ein</string>
-    <string name="settings_liquid_glass_off">Flüssigglas: Aus</string>
+    <string name="settings_glass_effect_on">Glaseffekt: Ein</string>
+    <string name="settings_glass_effect_off">Glaseffekt: Aus</string>
     <string name="settings_background_on">Hintergrundbild: Ein</string>
     <string name="settings_background_off">Hintergrundbild: Aus</string>
     <string name="settings_ui_zoom_range">Die gesamte Benutzeroberfläche skalieren (<xliff:g id="min">%1$d</xliff:g>%%–<xliff:g id="max">%2$d</xliff:g>%%).</string>

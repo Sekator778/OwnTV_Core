@@ -435,8 +435,8 @@
     <string name="settings_download_remote_title">Pobieranie na innym urządzeniu</string>
     <string name="settings_download_remote_description">Na telefonie lub laptopie połączonym z tą samą siecią Wi-Fi zeskanuj kod QR (lub otwórz adres URL), wprowadź ten PIN i pobierz plik kopii zapasowej, aby zachować go w bezpiecznym miejscu.</string>
     <string name="settings_preparing_backup">Przygotowywanie kopii zapasowej…</string>
-    <string name="settings_liquid_glass_on">Płynne szkło: włączone</string>
-    <string name="settings_liquid_glass_off">Płynne szkło: wyłączone</string>
+    <string name="settings_glass_effect_on">Efekt szkła: włączone</string>
+    <string name="settings_glass_effect_off">Efekt szkła: wyłączone</string>
     <string name="settings_background_on">Obraz tła: włączony</string>
     <string name="settings_background_off">Obraz tła: wyłączony</string>
     <string name="settings_ui_zoom_range">Skaluj cały interfejs (<xliff:g id="min">%1$d</xliff:g>%%–<xliff:g id="max">%2$d</xliff:g>%%).</string>

@@ -434,8 +434,8 @@
     <string name="settings_download_remote_title">Télécharger sur un autre appareil</string>
     <string name="settings_download_remote_description">Sur un téléphone ou un ordinateur portable connecté au même Wi-Fi, scannez le code QR (ou ouvrez l’URL), saisissez ce PIN, puis téléchargez votre fichier de sauvegarde afin de le conserver en lieu sûr.</string>
     <string name="settings_preparing_backup">Préparation de la sauvegarde…</string>
-    <string name="settings_liquid_glass_on">Verre liquide : activé</string>
-    <string name="settings_liquid_glass_off">Verre liquide : désactivé</string>
+    <string name="settings_glass_effect_on">Effet de verre : activé</string>
+    <string name="settings_glass_effect_off">Effet de verre : désactivé</string>
     <string name="settings_background_on">Image d’arrière-plan : activée</string>
     <string name="settings_background_off">Image d’arrière-plan : désactivée</string>
     <string name="settings_ui_zoom_range">Mettre toute l’interface à l’échelle (<xliff:g id="min">%1$d</xliff:g>%%–<xliff:g id="max">%2$d</xliff:g>%%).</string>

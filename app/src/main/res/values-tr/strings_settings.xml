@@ -433,8 +433,8 @@
     <string name="settings_download_remote_title">Başka bir cihaza indir</string>
     <string name="settings_download_remote_description">Aynı Wi-Fi ağına bağlı bir telefon veya dizüstü bilgisayarda QR kodunu tarayın (ya da URL\'yi açın), bu PIN\'i girin ve güvenli bir yerde saklamak için yedekleme dosyanızı indirin.</string>
     <string name="settings_preparing_backup">Yedekleme hazırlanıyor…</string>
-    <string name="settings_liquid_glass_on">Sıvı cam: Açık</string>
-    <string name="settings_liquid_glass_off">Sıvı cam: Kapalı</string>
+    <string name="settings_glass_effect_on">Cam Efekti: Açık</string>
+    <string name="settings_glass_effect_off">Cam Efekti: Kapalı</string>
     <string name="settings_background_on">Arka plan görseli: Açık</string>
     <string name="settings_background_off">Arka plan görseli: Kapalı</string>
     <string name="settings_ui_zoom_range">Tüm arayüzü ölçeklendirin (<xliff:g id="min">%1$d</xliff:g>%%–<xliff:g id="max">%2$d</xliff:g>%%).</string>

@@ -34,6 +34,12 @@ sealed interface StreamInfoValue {
         val gpu: Boolean = false,
         /** True only when [kind] is NAMED and the engine identified a hardware decoder. */
         val hardware: Boolean = false,
+        /**
+         * True only when [kind] is NAMED and the engine identified a *software* decoder. Both flags stay
+         * false when the decoder's kind could not be established, so an unknown name reads as the bare
+         * name rather than as a guess.
+         */
+        val software: Boolean = false,
     ) : StreamInfoValue
     data class Audio(
         val codec: String? = null,

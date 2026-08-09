@@ -435,8 +435,8 @@
     <string name="settings_download_remote_title">Stáhnout na jiném zařízení</string>
     <string name="settings_download_remote_description">Na telefonu nebo notebooku připojeném ke stejné síti Wi-Fi naskenujte QR kód (nebo otevřete adresu URL), zadejte tento PIN a stáhněte si soubor zálohy, abyste jej mohli bezpečně uchovat.</string>
     <string name="settings_preparing_backup">Příprava zálohy…</string>
-    <string name="settings_liquid_glass_on">Tekuté sklo: Zapnuto</string>
-    <string name="settings_liquid_glass_off">Tekuté sklo: Vypnuto</string>
+    <string name="settings_glass_effect_on">Efekt skla: Zapnuto</string>
+    <string name="settings_glass_effect_off">Efekt skla: Vypnuto</string>
     <string name="settings_background_on">Obrázek na pozadí: Zapnuto</string>
     <string name="settings_background_off">Obrázek na pozadí: Vypnuto</string>
     <string name="settings_ui_zoom_range">Změnit měřítko celého rozhraní (<xliff:g id="min">%1$d</xliff:g>%%–<xliff:g id="max">%2$d</xliff:g>%%).</string>

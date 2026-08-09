@@ -12,7 +12,7 @@ import java.util.zip.ZipOutputStream
  *
  * A backup is no longer a bare `owntv-backup.json`. Two reasons:
  *
- * 1. **It has to carry files, not just text.** The Liquid Glass background image lives in app-private
+ * 1. **It has to carry files, not just text.** The Glass effect background image lives in app-private
  *    storage as an absolute path (`filesDir/backgrounds/background_<ts>.jpg`). Backing that *path* up
  *    was useless — it does not exist on the device being restored, so the wallpaper silently came back
  *    blank. The image bytes now ride inside the container.

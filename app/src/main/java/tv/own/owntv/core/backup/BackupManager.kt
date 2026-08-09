@@ -40,7 +40,7 @@ class BackupManager(
     private val tmdbOverrides: tv.own.owntv.core.metadata.MetadataOverrideStore,
     private val metadataDao: tv.own.owntv.core.database.dao.MetadataDao,
     private val openSubAuth: tv.own.owntv.core.subtitles.OpenSubtitlesAuthStore,
-    /** `filesDir/backgrounds` — where the Liquid Glass wallpaper lives, so a backup can carry it. */
+    /** `filesDir/backgrounds` — where the Glass effect wallpaper lives, so a backup can carry it. */
     private val backgroundsDir: File,
 ) {
     /** What a backup can contain; the user multi-selects these for export and restore. Profiles are
@@ -61,7 +61,7 @@ class BackupManager(
      * Writes the chosen [sections] into [folder] as `owntv-backup.own`; returns the file path.
      *
      * The output is a [BackupContainer]: the same backup JSON this class has always produced, plus
-     * the Liquid Glass wallpaper's actual bytes when one is set. Exporting bare `.json` is gone (the
+     * the Glass effect wallpaper's actual bytes when one is set. Exporting bare `.json` is gone (the
      * path in it was device-local and its contents were readable to anyone) — restore still accepts
      * old `.json` files, and always will.
      *
@@ -185,7 +185,7 @@ class BackupManager(
         }
     }
 
-    /** The current Liquid Glass background as a container asset, or null when unset/missing/oversized. */
+    /** The current Glass effect background as a container asset, or null when unset/missing/oversized. */
     private suspend fun currentWallpaper(): BackupContainer.Asset? {
         val path = settings.bgImagePath.first().trim()
         if (path.isEmpty()) return null

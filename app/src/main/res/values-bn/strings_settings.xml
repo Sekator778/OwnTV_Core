@@ -433,8 +433,8 @@
     <string name="settings_download_remote_title">অন্য ডিভাইসে ডাউনলোড করুন</string>
     <string name="settings_download_remote_description">একই Wi-Fi-এ থাকা ফোন বা ল্যাপটপে QR স্ক্যান করুন (অথবা URL খুলুন), এই PIN লিখুন এবং নিরাপদে রাখার জন্য আপনার ব্যাকআপ ফাইল ডাউনলোড করুন।</string>
     <string name="settings_preparing_backup">ব্যাকআপ প্রস্তুত করা হচ্ছে…</string>
-    <string name="settings_liquid_glass_on">তরল কাচ: চালু</string>
-    <string name="settings_liquid_glass_off">তরল কাচ: বন্ধ</string>
+    <string name="settings_glass_effect_on">গ্লাস ইফেক্ট: চালু</string>
+    <string name="settings_glass_effect_off">গ্লাস ইফেক্ট: বন্ধ</string>
     <string name="settings_background_on">পটভূমির ছবি: চালু</string>
     <string name="settings_background_off">পটভূমির ছবি: বন্ধ</string>
     <string name="settings_ui_zoom_range">পুরো ইন্টারফেসের আকার পরিবর্তন করুন (<xliff:g id="min">%1$d</xliff:g>%%–<xliff:g id="max">%2$d</xliff:g>%%)।</string>

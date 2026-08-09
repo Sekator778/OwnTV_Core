@@ -102,7 +102,7 @@ class SettingsRepository(private val context: Context, private val localeStore: 
     private fun <T> prefsFlow(transform: (Preferences) -> T): Flow<T> =
         context.dataStore.data.map(transform).distinctUntilChanged()
 
-    // Liquid Glass defaults: OFF (empty scope) — the glass look is strictly opt-in, the app looks
+    // Glass effect defaults: OFF (empty scope) — the glass look is strictly opt-in, the app looks
     // unchanged until the user enables it in Settings → Glass Effect. Alpha/blur defaults are the
     // "nice preset" applied once glass is turned on.
     private val GLASS_SCOPE_DEFAULT_BITS: Int = 0
@@ -277,7 +277,7 @@ class SettingsRepository(private val context: Context, private val localeStore: 
         val REMEMBER_CAT_SERIES = booleanPreferencesKey("remember_cat_series")
         val LAST_MOVIES_CATEGORY = stringPreferencesKey("last_movies_category")
         val LAST_SERIES_CATEGORY = stringPreferencesKey("last_series_category")
-        // Background image (Liquid Glass). bg_image_path holds the absolute path of the image we
+        // Background image (Glass effect). bg_image_path holds the absolute path of the image we
         // COPIED into app-private storage (so a USB unplug or source-folder delete never blanks it);
         // blank = no background (feature off, panels stay solid). glass_scope is the bitmask of which
         // surfaces go translucent (GlassConfig.fromBitmask); glass_alpha is the fill alpha in 0..100;
@@ -1378,7 +1378,7 @@ class SettingsRepository(private val context: Context, private val localeStore: 
         context.dataStore.edit { it[Keys.ACCENT_CUSTOM] = hex.trim() }
     }
 
-    // --- Liquid Glass: background image + which surfaces go translucent + how translucent ---
+    // --- Glass effect: background image + which surfaces go translucent + how translucent ---
     /** Absolute path to the user's background image (copied into app-private storage); blank = off. */
     val bgImagePath: Flow<String> = prefsFlow { it[Keys.BG_IMAGE_PATH] ?: "" }
 
@@ -1503,7 +1503,7 @@ class SettingsRepository(private val context: Context, private val localeStore: 
         Keys.MINI_PLAYER_POSITION,
         // Live TV latency preset (custom seconds is an int key, see backupIntKeys).
         Keys.LIVE_LATENCY_MODE,
-        // Liquid Glass: the background image path + scope/alpha so a reinstall keeps the look.
+        // Glass effect: the background image path + scope/alpha so a reinstall keeps the look.
         // NOTE: only the path string travels — the image bytes live in app-private storage which is
         // wiped on uninstall, so on a new device a stale path is ignored gracefully (falls back to none).
         Keys.BG_IMAGE_PATH,

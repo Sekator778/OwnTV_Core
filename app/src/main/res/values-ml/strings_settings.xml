@@ -433,8 +433,8 @@
     <string name="settings_download_remote_title">മറ്റൊരു ഉപകരണത്തിൽ ഡൗൺലോഡ് ചെയ്യുക</string>
     <string name="settings_download_remote_description">അതേ Wi-Fi-യിലുള്ള ഫോണിലോ ലാപ്‌ടോപ്പിലോ QR സ്കാൻ ചെയ്യുക (അല്ലെങ്കിൽ URL തുറക്കുക), ഈ PIN നൽകുക, സുരക്ഷിതമായി സൂക്ഷിക്കാൻ നിങ്ങളുടെ ബാക്കപ്പ് ഫയൽ ഡൗൺലോഡ് ചെയ്യുക.</string>
     <string name="settings_preparing_backup">ബാക്കപ്പ് തയ്യാറാക്കുന്നു…</string>
-    <string name="settings_liquid_glass_on">ലിക്വിഡ് ഗ്ലാസ്: ഓൺ</string>
-    <string name="settings_liquid_glass_off">ലിക്വിഡ് ഗ്ലാസ്: ഓഫ്</string>
+    <string name="settings_glass_effect_on">ഗ്ലാസ് ഇഫക്റ്റ്: ഓൺ</string>
+    <string name="settings_glass_effect_off">ഗ്ലാസ് ഇഫക്റ്റ്: ഓഫ്</string>
     <string name="settings_background_on">പശ്ചാത്തല ചിത്രം: ഓൺ</string>
     <string name="settings_background_off">പശ്ചാത്തല ചിത്രം: ഓഫ്</string>
     <string name="settings_ui_zoom_range">മുഴുവൻ ഇന്റർഫേസിന്റെയും വലുപ്പം ക്രമീകരിക്കുക (<xliff:g id="min">%1$d</xliff:g>%%–<xliff:g id="max">%2$d</xliff:g>%%).</string>

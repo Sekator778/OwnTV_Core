@@ -183,7 +183,15 @@ class ExoSubtitleEngine(
             // Which decoder actually won the selector, and how long it took to come up. The name is the
             // only reliable way to tell a software decoder (c2.android.* / OMX.google.*) from the vendor
             // hardware one, and mid-GOP archives hinge on getting the former.
-            android.util.Log.i(TAG, "video decoder: $decoderName (init ${initializationDurationMs}ms, software=${softwarePreferred})")
+            // `softwarePreferred` is what this engine ASKED for; [DecoderNames] is what it got. Decoder
+            // fallback can put a software decoder behind a hardware request without reporting anything.
+            val hardware = DecoderNames.isHardware(decoderName)
+            android.util.Log.i(
+                TAG,
+                "video decoder: $decoderName (init ${initializationDurationMs}ms, " +
+                    "${when (hardware) { true -> "hardware"; false -> "software"; null -> "kind unknown" }}" +
+                    ", requested=${if (softwarePreferred) "software" else "hardware"})",
+            )
             dropsBaseline = currentDroppedFrames(player) // a new decoder session may start its own counters
         }
 

@@ -151,7 +151,9 @@ class OwnTVRenderersFactory(
  *
  * Detection, in order of confidence:
  *
- *  1. **`onAudioSinkError`** — the sink told us outright. Immediate.
+ *  1. **`onAudioSinkError`** — the sink told us outright. Immediate. Excludes
+ *     `UnexpectedDiscontinuityException`, which reports a gap in the *stream's* timestamps and is
+ *     self-healing; see [onAudioSinkError].
  *  2. **Armed but never advancing.** `onAudioInputFormatChanged` proves an audio track was selected
  *     and handed to a decoder; `onAudioPositionAdvancing` fires when the AudioTrack's playback head
  *     actually starts moving, i.e. when sound genuinely leaves the device. If the first happens and
@@ -281,6 +283,22 @@ class AudioWatchdog : AnalyticsListener {
     }
 
     override fun onAudioSinkError(eventTime: AnalyticsListener.EventTime, audioSinkError: Exception) {
+        // A timestamp discontinuity is a statement about the *stream*, not about the output. Media3
+        // raises it whenever a buffer's presentation time lands more than 200ms from where the running
+        // frame count says it should (DefaultAudioSink), then re-anchors its own clock and carries on
+        // playing — a routine event on files whose container timestamps jump. Treating it as sink
+        // failure latched a whole session to stereo over one imperfect file, and since forcing a stereo
+        // sink cannot repair a gap that lives in the file, the rebuilt player hit the same spot and
+        // tripped again: repeated mid-film restarts on a device whose audio was never in trouble.
+        // If the output really is dead, the no-advance tier catches it seconds later anyway.
+        if (audioSinkError is AudioSink.UnexpectedDiscontinuityException) {
+            android.util.Log.i(
+                "AudioOutputPolicy",
+                "audio timestamp discontinuity: ${audioSinkError.actualPresentationTimeUs - audioSinkError.expectedPresentationTimeUs}us " +
+                    "off expected — the sink resyncs itself, not treating this as an output failure",
+            )
+            return
+        }
         raise("audio sink error: ${audioSinkError.message ?: audioSinkError.javaClass.simpleName}")
     }
 

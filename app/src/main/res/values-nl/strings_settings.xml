@@ -433,8 +433,8 @@
     <string name="settings_download_remote_title">Downloaden op een ander apparaat</string>
     <string name="settings_download_remote_description">Scan op een telefoon of laptop die met dezelfde Wi-Fi is verbonden de QR-code (of open de URL), voer deze PIN in en download uw back-upbestand om het veilig te bewaren.</string>
     <string name="settings_preparing_backup">Back-up voorbereiden…</string>
-    <string name="settings_liquid_glass_on">Vloeibaar glas: aan</string>
-    <string name="settings_liquid_glass_off">Vloeibaar glas: uit</string>
+    <string name="settings_glass_effect_on">Glaseffect: aan</string>
+    <string name="settings_glass_effect_off">Glaseffect: uit</string>
     <string name="settings_background_on">Achtergrondafbeelding: aan</string>
     <string name="settings_background_off">Achtergrondafbeelding: uit</string>
     <string name="settings_ui_zoom_range">Schaal de volledige interface (<xliff:g id="min">%1$d</xliff:g>%%–<xliff:g id="max">%2$d</xliff:g>%%).</string>

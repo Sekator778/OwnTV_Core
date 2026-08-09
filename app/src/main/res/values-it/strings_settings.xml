@@ -434,8 +434,8 @@
     <string name="settings_download_remote_title">Scarica su un altro dispositivo</string>
     <string name="settings_download_remote_description">Da un telefono o un computer portatile connesso alla stessa rete Wi-Fi, scansiona il codice QR (oppure apri l\'URL), inserisci questo PIN e scarica il file di backup per conservarlo al sicuro.</string>
     <string name="settings_preparing_backup">Preparazione del backup…</string>
-    <string name="settings_liquid_glass_on">Vetro liquido: attivo</string>
-    <string name="settings_liquid_glass_off">Vetro liquido: disattivato</string>
+    <string name="settings_glass_effect_on">Effetto vetro: attivo</string>
+    <string name="settings_glass_effect_off">Effetto vetro: disattivato</string>
     <string name="settings_background_on">Immagine di sfondo: attiva</string>
     <string name="settings_background_off">Immagine di sfondo: disattivata</string>
     <string name="settings_ui_zoom_range">Ridimensiona l\'intera interfaccia (<xliff:g id="min">%1$d</xliff:g>%%–<xliff:g id="max">%2$d</xliff:g>%%).</string>

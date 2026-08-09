@@ -432,8 +432,8 @@
     <string name="settings_download_remote_title">다른 기기에서 다운로드</string>
     <string name="settings_download_remote_description">동일한 Wi-Fi에 연결된 휴대전화나 노트북에서 QR을 스캔하거나 URL을 열고 이 PIN을 입력한 다음, 안전하게 보관할 백업 파일을 다운로드하세요.</string>
     <string name="settings_preparing_backup">백업 준비 중…</string>
-    <string name="settings_liquid_glass_on">리퀴드 글라스: 켜짐</string>
-    <string name="settings_liquid_glass_off">리퀴드 글라스: 꺼짐</string>
+    <string name="settings_glass_effect_on">글래스 효과: 켜짐</string>
+    <string name="settings_glass_effect_off">글래스 효과: 꺼짐</string>
     <string name="settings_background_on">배경 이미지: 켜짐</string>
     <string name="settings_background_off">배경 이미지: 꺼짐</string>
     <string name="settings_ui_zoom_range">전체 인터페이스 크기를 조절합니다(<xliff:g id="min">%1$d</xliff:g>%%–<xliff:g id="max">%2$d</xliff:g>%%).</string>

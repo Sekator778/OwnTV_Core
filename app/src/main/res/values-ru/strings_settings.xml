@@ -435,8 +435,8 @@
     <string name="settings_download_remote_title">Загрузка на другое устройство</string>
     <string name="settings_download_remote_description">На телефоне или ноутбуке, подключённом к той же сети Wi-Fi, отсканируйте QR-код (или откройте URL), введите этот PIN и загрузите файл резервной копии, чтобы сохранить его в надёжном месте.</string>
     <string name="settings_preparing_backup">Подготовка резервной копии…</string>
-    <string name="settings_liquid_glass_on">Жидкое стекло: вкл.</string>
-    <string name="settings_liquid_glass_off">Жидкое стекло: выкл.</string>
+    <string name="settings_glass_effect_on">Эффект стекла: вкл.</string>
+    <string name="settings_glass_effect_off">Эффект стекла: выкл.</string>
     <string name="settings_background_on">Фоновое изображение: вкл.</string>
     <string name="settings_background_off">Фоновое изображение: выкл.</string>
     <string name="settings_ui_zoom_range">Масштаб всего интерфейса (<xliff:g id="min">%1$d</xliff:g>%%–<xliff:g id="max">%2$d</xliff:g>%%).</string>

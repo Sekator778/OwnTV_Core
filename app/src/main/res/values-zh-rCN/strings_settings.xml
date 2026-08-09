@@ -432,8 +432,8 @@
     <string name="settings_download_remote_title">在其他设备上下载</string>
     <string name="settings_download_remote_description">在连接到同一 Wi-Fi 的手机或笔记本电脑上，扫描二维码（或打开 URL），输入此 PIN，然后下载并妥善保存您的备份文件。</string>
     <string name="settings_preparing_backup">正在准备备份…</string>
-    <string name="settings_liquid_glass_on">液态玻璃：开</string>
-    <string name="settings_liquid_glass_off">液态玻璃：关</string>
+    <string name="settings_glass_effect_on">玻璃效果：开</string>
+    <string name="settings_glass_effect_off">玻璃效果：关</string>
     <string name="settings_background_on">背景图：开</string>
     <string name="settings_background_off">背景图：关</string>
     <string name="settings_ui_zoom_range">缩放整个界面（<xliff:g id="min">%1$d</xliff:g>%%–<xliff:g id="max">%2$d</xliff:g>%%）。</string>

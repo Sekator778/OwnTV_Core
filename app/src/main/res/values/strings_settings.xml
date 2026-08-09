@@ -351,10 +351,7 @@
     <string name="settings_font_preview">Entertainment, made simple.</string>
     <string name="settings_search_keywords_fonts">font text size typeface typography popup reading accessibility</string>
     <string name="settings_font_system_sans">System Sans</string>
-    <string name="settings_font_lora" translatable="false">Lora</string>
-    <string name="settings_font_playfair_display" translatable="false">Playfair Display</string>
-    <string name="settings_font_dancing_script" translatable="false">Dancing Script</string>
-    <string name="settings_font_poppins" translatable="false">Poppins</string>
+    <!-- The four typeface names themselves are proper nouns and live in donottranslate.xml. -->
     <!-- Translators: Settings navigation label for the Animations setting. -->
     <string name="settings_animations">Animations</string>
     <!-- Translators: Description of the Animations setting. -->
@@ -894,10 +891,10 @@ Choose Balanced if a channel becomes unreliable.</string>
     <string name="settings_download_remote_description">On a phone or laptop on the same Wi-Fi, scan the QR (or open the URL), enter this PIN, and download your backup file to keep it safe.</string>
     <!-- Translators: Loading status shown while preparing a backup file. -->
     <string name="settings_preparing_backup">Preparing backup…</string>
-    <!-- Translators: Status label when liquid glass effect is enabled. -->
-    <string name="settings_liquid_glass_on">Liquid glass: On</string>
-    <!-- Translators: Status label when liquid glass effect is disabled. -->
-    <string name="settings_liquid_glass_off">Liquid glass: Off</string>
+    <!-- Translators: Status label when the glass effect is enabled. -->
+    <string name="settings_glass_effect_on">Glass Effect: On</string>
+    <!-- Translators: Status label when the glass effect is disabled. -->
+    <string name="settings_glass_effect_off">Glass Effect: Off</string>
     <!-- Translators: Status label when a background image is set. -->
     <string name="settings_background_on">Background image: On</string>
     <!-- Translators: Status label when no background image is set. -->
