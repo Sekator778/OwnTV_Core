@@ -164,6 +164,37 @@ class MetadataRepository(
     }
 
     /**
+     * Cached details for a TMDB id the caller has ALREADY resolved — Now Trending confirms the id while
+     * matching, so no search is needed. A hit inside [POSITIVE_TTL_MS] costs nothing, which is the point:
+     * a Trending rebuild and the Home detail path ([resolveKnownMovie] / [resolveKnownSeries]) now share
+     * one copy of the payload instead of each downloading it.
+     *
+     * [allowNetwork] false means cache or nothing. Now Trending re-matches on every sync but only
+     * downloads on its own multi-day schedule, and a cold cache (a metadata language change wipes it)
+     * would otherwise turn one of those free rebuilds into ten detail calls per playlist.
+     *
+     * Writes no `metadata_match` row — the caller owns the local item → tmdbId link. Returns null for
+     * [MetadataType.EPISODE] (use [resolveEpisode]) and when the fetch fails with nothing cached.
+     */
+    suspend fun cachedDetails(tmdbId: Int, type: MetadataType, allowNetwork: Boolean): MetadataCacheEntity? {
+        if (tmdbId <= 0) return null
+        val key = when (type) {
+            MetadataType.MOVIE -> cacheKey(tmdbId)
+            MetadataType.TV -> tvCacheKey(tmdbId)
+            MetadataType.EPISODE -> return null
+        }
+        dao.getCache(key)?.let {
+            if (System.currentTimeMillis() - it.updatedAt < POSITIVE_TTL_MS) return it
+        }
+        if (!allowNetwork) return null
+        return when (type) {
+            MetadataType.MOVIE -> fetchAndCache(tmdbId)
+            MetadataType.TV -> fetchAndCacheTv(tmdbId, fallback = null)
+            MetadataType.EPISODE -> null
+        }
+    }
+
+    /**
      * Resolve per-episode TMDB metadata (still, plot, air date, rating). First resolves the show (cached)
      * to get its TMDB id, then fetches the episode lazily and caches it under `tv:<id>:s<n>e<m>`. Returns
      * null when enrichment is off, the show has no match, or that episode isn't on TMDB.
@@ -325,8 +356,8 @@ class MetadataRepository(
     /** Fetch full details for [tmdbId] and cache them; falls back to the search hit if details fail. */
     private suspend fun fetchAndCache(
         tmdbId: Int,
-        localKey: String,
-        confidence: Double,
+        localKey: String = cacheKey(tmdbId),
+        confidence: Double = 1.0,
         fallback: MetadataSearchResult? = null,
     ): MetadataCacheEntity? {
         val now = System.currentTimeMillis()

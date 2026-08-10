@@ -21,11 +21,12 @@ class TrendingRefreshWorker(
     override suspend fun doWork(): Result {
         val sourceId = inputData.getLong(KEY_SOURCE_ID, -1L)
         if (sourceId < 0) return Result.success()
+        val force = inputData.getBoolean(KEY_FORCE, false)
         val sourceName = sourceDao.getById(sourceId)?.name ?: "Playlist"
         activityTracker.started(sourceId, sourceName)
-        Log.i(TAG, "sourceId=$sourceId catalog sync finished; building Now Trending")
+        Log.i(TAG, "sourceId=$sourceId catalog sync finished; building Now Trending force=$force")
         val outcome = runCatching {
-            repository.refresh(sourceId) { progress -> reportProgress(sourceId, progress) }
+            repository.refresh(sourceId, force = force) { progress -> reportProgress(sourceId, progress) }
         }
             .onFailure { Log.w(TAG, "Unexpected refresh failure sourceId=$sourceId; preserving snapshot", it) }
             .getOrElse { repository.recordUnexpectedFailure(sourceId) }
@@ -105,6 +106,8 @@ class TrendingRefreshWorker(
     companion object {
         private const val TAG = "TrendingRefreshWorker"
         const val KEY_SOURCE_ID = "sourceId"
+        /** Maintainer-only: bypass the multi-day fetch timer (see `BuildConfig.DEV_TOOLS`). */
+        const val KEY_FORCE = "force"
         const val WORK_TAG = "trending-refresh"
         fun workName(sourceId: Long) = "trending-refresh-source-$sourceId"
     }

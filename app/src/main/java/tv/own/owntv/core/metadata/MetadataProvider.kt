@@ -55,6 +55,40 @@ data class TrendingCandidate(
 )
 
 /**
+ * One page of a provider's daily Trending feed (20 rows on TMDB).
+ *
+ * Deliberately page-aware rather than pre-merged: matching walks candidates in rank order, so once it has
+ * selected its full quota from page 1 no later page could change the outcome. Callers fetch page 1, run
+ * the match, and only pay for page 2 when slots are still open — which on a large catalog is almost never.
+ */
+data class TrendingFeedPage(
+    val page: Int,
+    val totalPages: Int,
+    val candidates: List<TrendingCandidate>,
+) {
+    companion object {
+        /** How many candidates a full merge keeps — more than the ten finalists, to survive local misses. */
+        const val TRENDING_CANDIDATE_LIMIT = 25
+
+        /** Keeps provider rank order, removes duplicate ids across pages, and caps at [limit]. */
+        fun merge(
+            pages: List<TrendingFeedPage>,
+            limit: Int = TRENDING_CANDIDATE_LIMIT,
+        ): List<TrendingCandidate> {
+            require(limit > 0)
+            val seen = HashSet<Pair<MetadataType, Int>>()
+            return pages
+                .asSequence()
+                .flatMap { it.candidates.asSequence() }
+                .sortedBy { it.trendingRank }
+                .filter { seen.add(it.type to it.tmdbId) }
+                .take(limit)
+                .toList()
+        }
+    }
+}
+
+/**
  * Metadata source mode (plan §4.1). Replaces the old on/off master toggle and also selects the render-time
  * field precedence for the merge (§7.1).
  */
@@ -161,11 +195,11 @@ data class EpisodeDetails(
 /** Enrichment source abstraction. Only [TmdbProvider] exists today; fanart.tv could be added later. */
 interface MetadataProvider {
 
-    /** First 25 current daily Trending movies, or null when transport/auth/parsing fails. */
-    suspend fun trendingMovies(): List<TrendingCandidate>?
-
-    /** First 25 current daily Trending TV shows, with the same failure contract as [trendingMovies]. */
-    suspend fun trendingTv(): List<TrendingCandidate>?
+    /**
+     * One page of the current daily Trending feed for [type] (MOVIE or TV), or null when
+     * transport/auth/parsing fails. Pages are one-based; merge them with [TrendingFeedPage.merge].
+     */
+    suspend fun trendingPage(type: MetadataType, page: Int): TrendingFeedPage?
 
     /**
      * Search movies by cleaned [title] (+ optional [year]). Best matches first.

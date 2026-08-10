@@ -78,7 +78,7 @@ class TmdbTrendingParserTest {
             rankedPage(page = 2, ids = listOf(20) + (21..39)),
         )!!
 
-        val merged = TmdbTrendingParser.merge(listOf(pageOne, pageTwo))
+        val merged = TrendingFeedPage.merge(listOf(pageOne, pageTwo))
         assertEquals(25, merged.size)
         assertEquals(25, merged.map { it.tmdbId }.distinct().size)
         assertEquals(1, merged.first().trendingRank)

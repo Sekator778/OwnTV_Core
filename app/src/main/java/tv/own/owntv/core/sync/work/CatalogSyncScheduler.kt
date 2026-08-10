@@ -65,9 +65,14 @@ class CatalogSyncScheduler(private val context: Context) {
             .enqueueUniqueWork(ContentIndexWorker.workName(), ExistingWorkPolicy.KEEP, request)
     }
 
-    fun enqueueTrendingRefresh(sourceId: Long) {
+    fun enqueueTrendingRefresh(sourceId: Long, force: Boolean = false) {
         val request = OneTimeWorkRequestBuilder<TrendingRefreshWorker>()
-            .setInputData(workDataOf(TrendingRefreshWorker.KEY_SOURCE_ID to sourceId))
+            .setInputData(
+                workDataOf(
+                    TrendingRefreshWorker.KEY_SOURCE_ID to sourceId,
+                    TrendingRefreshWorker.KEY_FORCE to force,
+                ),
+            )
             .setConstraints(
                 Constraints.Builder()
                     .setRequiredNetworkType(NetworkType.CONNECTED)

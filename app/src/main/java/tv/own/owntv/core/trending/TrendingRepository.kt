@@ -17,9 +17,12 @@ import tv.own.owntv.core.database.entity.TrendingAttemptStatus
 import tv.own.owntv.core.database.entity.TrendingItemEntity
 import tv.own.owntv.core.database.entity.TrendingSnapshotEntity
 import tv.own.owntv.core.database.entity.TrendingSnapshotStatus
+import tv.own.owntv.core.database.entity.MetadataCacheEntity
 import tv.own.owntv.core.metadata.MetadataProvider
+import tv.own.owntv.core.metadata.MetadataRepository
 import tv.own.owntv.core.metadata.MetadataType
-import tv.own.owntv.core.metadata.MovieDetails
+import tv.own.owntv.core.metadata.TrendingCandidate
+import tv.own.owntv.core.metadata.TrendingFeedPage
 import tv.own.owntv.core.model.MediaType
 import tv.own.owntv.core.repository.SeriesRepository
 import tv.own.owntv.core.sync.SyncContentTypes
@@ -32,8 +35,10 @@ class TrendingRepository(
     private val seriesDao: SeriesDao,
     private val trendingDao: TrendingDao,
     private val metadataProvider: MetadataProvider,
+    private val metadataRepository: MetadataRepository,
     private val settings: SettingsRepository,
     private val seriesRepository: SeriesRepository,
+    private val schedule: TrendingScheduleStore,
 ) {
     suspend fun recordUnexpectedFailure(sourceId: Long): TrendingRefreshOutcome.PreservedFailure =
         preserveFailure(
@@ -43,8 +48,17 @@ class TrendingRepository(
             startedAt = SystemClock.elapsedRealtime(),
         )
 
+    /**
+     * Rebuilds the Now Trending row for one playlist.
+     *
+     * Runs after every catalog sync, but only the *matching* stage runs every time — the TMDB fetch is
+     * gated by [TrendingScheduleStore]. Adding 500 films therefore shows up in the row the same day,
+     * while the trending list itself is re-downloaded once every few days. [force] is the
+     * maintainer-only override behind `BuildConfig.DEV_TOOLS`.
+     */
     suspend fun refresh(
         sourceId: Long,
+        force: Boolean = false,
         onProgress: (TrendingRefreshProgress) -> Unit = {},
     ): TrendingRefreshOutcome {
         val totalStarted = SystemClock.elapsedRealtime()
@@ -76,18 +90,94 @@ class TrendingRepository(
             return TrendingRefreshOutcome.NoVodScope
         }
 
+        val language = config.resolvedLanguage
+        val now = System.currentTimeMillis()
+        // Deliberately NOT filtered by metadata language. Candidates fetched under another language
+        // still match perfectly well (matching scores mostly against original titles, and the provider
+        // catalog is in the provider's language either way), so a language change is not worth an
+        // out-of-turn round of calls. The row picks the new language up at the next scheduled fetch.
+        val storedRaw = schedule.candidates()
+        // An empty list for a type this playlist actually carries cannot be matched against, so it
+        // counts as "nothing stored" rather than quietly producing a row with no films in it.
+        val stored = storedRaw?.takeIf {
+            (!enabled.movies || it.movies.isNotEmpty()) && (!enabled.series || it.series.isNotEmpty())
+        }
+        val state = trendingDao.getState(sourceId)
+        // Deliberately the snapshot status, not the last attempt: a failed attempt leaves the working
+        // snapshot in place, so it must not re-open the gate on every sync and retry the same broken
+        // call ten times a day. It waits for the normal deadline and re-matches from disk meanwhile.
+        val alreadyBuilt = state != null && state.status != TrendingSnapshotStatus.NEVER_BUILT
+        val dueAt = schedule.schedule(sourceId)?.dueAt ?: 0L
+        // The gate guards the network, not the rebuild. A playlist that has never produced a row, or
+        // whose stored candidates are missing, is built immediately — waiting days for a first
+        // Trending row would just look broken.
+        val gateOpen = force || stored == null || !alreadyBuilt || now >= dueAt
+        // ...and even then, a sibling playlist that already downloaded today's list covers this one.
+        val useNetwork = gateOpen &&
+            (force || stored == null || now - stored.fetchedAt >= TrendingScheduleStore.SAME_DAY_WINDOW_MS)
+
+        Log.i(
+            TAG,
+            "sourceId=$sourceId gate open=$gateOpen network=$useNetwork force=$force built=$alreadyBuilt " +
+                "dueInHours=${if (dueAt == 0L) "never" else "${(dueAt - now) / 3_600_000}"} " +
+                "storedAgeHours=${stored?.let { (now - it.fetchedAt) / 3_600_000 } ?: -1} " +
+                // A mismatch here is expected, not a fault: it just means the metadata language moved
+                // and the row is still on the candidates from before, waiting for its deadline.
+                "lang='$language' storedLang='${storedRaw?.language ?: "-"}' snapLang='${state?.metadataLanguage ?: "-"}'",
+        )
+
         onProgress(TrendingRefreshProgress.Fetching)
         val fetchStarted = SystemClock.elapsedRealtime()
-        val (movieCandidates, seriesCandidates) = coroutineScope {
-            val movies = async { if (enabled.movies) metadataProvider.trendingMovies() else emptyList() }
-            val series = async { if (enabled.series) metadataProvider.trendingTv() else emptyList() }
-            movies.await() to series.await()
+        val movieFeed = TrendingFeed()
+        val seriesFeed = TrendingFeed()
+        val candidateFetchedAt: Long
+        // The language the candidate titles are actually in, which after a metadata language change is
+        // not the same as the one now configured. Recorded rather than assumed so a mixed-language row
+        // is obvious in the log instead of looking like a bug.
+        val candidateLanguage: String
+        var storeDirty = false
+        if (useNetwork) {
+            // Page 1 only. Matching walks candidates in rank order, so page 2 can only matter when
+            // page 1 leaves slots open — it is fetched below, on demand.
+            //
+            // Both media types are fetched even when this playlist carries only one of them: the
+            // stored list is shared with every other playlist, and a half-filled store would send the
+            // next one straight back to the network. Only a type this source needs can fail the build.
+            val (moviePageOne, seriesPageOne) = coroutineScope {
+                val movies = async { metadataProvider.trendingPage(MetadataType.MOVIE, 1) }
+                val series = async { metadataProvider.trendingPage(MetadataType.TV, 1) }
+                movies.await() to series.await()
+            }
+            if (enabled.movies && moviePageOne == null) return preserveFailure(sourceId, "movie candidates", language, totalStarted)
+            if (enabled.series && seriesPageOne == null) return preserveFailure(sourceId, "TV candidates", language, totalStarted)
+            // An optional type whose fetch failed keeps whatever was already on disk.
+            moviePageOne?.let { movieFeed.add(it) } ?: storedRaw?.let { movieFeed.restoreMovies(it) }
+            seriesPageOne?.let { seriesFeed.add(it) } ?: storedRaw?.let { seriesFeed.restoreSeries(it) }
+            candidateFetchedAt = now
+            candidateLanguage = language
+            storeDirty = true
+        } else {
+            val cached = checkNotNull(stored)
+            movieFeed.restoreMovies(cached)
+            seriesFeed.restoreSeries(cached)
+            candidateFetchedAt = cached.fetchedAt
+            candidateLanguage = cached.language
         }
-        val fetchMs = SystemClock.elapsedRealtime() - fetchStarted
-        if (movieCandidates == null) return preserveFailure(sourceId, "movie candidates", config.resolvedLanguage, totalStarted)
-        if (seriesCandidates == null) return preserveFailure(sourceId, "TV candidates", config.resolvedLanguage, totalStarted)
+        var fetchMs = SystemClock.elapsedRealtime() - fetchStarted
+        var movieCandidates = movieFeed.candidates
+        var seriesCandidates = seriesFeed.candidates
         onProgress(TrendingRefreshProgress.CandidatesReceived(movieCandidates.size, seriesCandidates.size))
-        val candidateFetchedAt = System.currentTimeMillis()
+
+        /** Downloads the one page beyond what is held, for a type whose matching came up short. */
+        suspend fun loadNextPage(feed: TrendingFeed, type: MetadataType): Boolean {
+            val started = SystemClock.elapsedRealtime()
+            val page = metadataProvider.trendingPage(type, feed.pagesLoaded + 1)
+            fetchMs += SystemClock.elapsedRealtime() - started
+            if (page == null) return false
+            feed.add(page)
+            storeDirty = true
+            return true
+        }
 
         val movieBackfillTotal = if (enabled.movies) movieDao.trendingMetadataBackfillCount(sourceId) else 0
         val seriesBackfillTotal = if (enabled.series) seriesDao.trendingMetadataBackfillCount(sourceId) else 0
@@ -107,12 +197,14 @@ class TrendingRepository(
             Log.i(TAG, "sourceId=$sourceId provider metadata backfilled movies=$backfilledMovies series=$backfilledSeries ms=$preparationMs")
         }
 
-        onProgress(TrendingRefreshProgress.MatchingMovies(0, 0, movieCandidates.size, TrendingMatcher.MAX_PER_MEDIA_TYPE))
         var movieMatchCount = 0
         var seriesMatchCount = 0
-        val movieResult = if (enabled.movies) {
-            TrendingMatcher.matchMedia(
-                candidates = movieCandidates,
+
+        suspend fun matchMovies(candidates: List<TrendingCandidate>): TrendingMatchResult {
+            movieMatchCount = 0
+            onProgress(TrendingRefreshProgress.MatchingMovies(0, 0, candidates.size, TrendingMatcher.MAX_PER_MEDIA_TYPE))
+            return TrendingMatcher.matchMedia(
+                candidates = candidates,
                 mediaType = MediaType.MOVIE,
                 preferredLanguage = config.resolvedLanguage,
                 limit = TrendingMatcher.MAX_PER_MEDIA_TYPE,
@@ -124,25 +216,21 @@ class TrendingRepository(
                     TrendingRefreshProgress.MatchingMovies(
                         checked = checked,
                         matched = movieMatchCount,
-                        candidates = movieCandidates.size,
+                        candidates = candidates.size,
                         target = TrendingMatcher.MAX_PER_MEDIA_TYPE,
                     ),
                 )
             }
-        } else TrendingMatchResult(emptyList(), 0, 0, 0)
-
-        val seriesTarget = if (movieResult.selections.size >= BALANCED_TARGET) {
-            BALANCED_TARGET
-        } else {
-            TrendingMatcher.MAX_TOTAL - movieResult.selections.size
         }
-        onProgress(TrendingRefreshProgress.MatchingSeries(0, 0, seriesCandidates.size, seriesTarget))
-        val seriesResult = if (enabled.series && seriesTarget > 0) {
-            TrendingMatcher.matchMedia(
-                candidates = seriesCandidates,
+
+        suspend fun matchSeries(candidates: List<TrendingCandidate>, target: Int): TrendingMatchResult {
+            seriesMatchCount = 0
+            onProgress(TrendingRefreshProgress.MatchingSeries(0, 0, candidates.size, target))
+            return TrendingMatcher.matchMedia(
+                candidates = candidates,
                 mediaType = MediaType.SERIES,
                 preferredLanguage = config.resolvedLanguage,
-                limit = seriesTarget,
+                limit = target,
                 exactLookup = { seriesDao.trendingExact(sourceId, it) },
                 ftsLookup = { query, limit -> seriesDao.trendingFts(sourceId, query, limit) },
             ) { checked, match ->
@@ -151,12 +239,66 @@ class TrendingRepository(
                     TrendingRefreshProgress.MatchingSeries(
                         checked = checked,
                         matched = seriesMatchCount,
-                        candidates = seriesCandidates.size,
-                        target = seriesTarget,
+                        candidates = candidates.size,
+                        target = target,
                     ),
                 )
             }
+        }
+
+        var movieResult =
+            if (enabled.movies) matchMovies(movieCandidates) else TrendingMatchResult(emptyList(), 0, 0, 0)
+        // Page 2 holds strictly lower-ranked candidates, so it can only add selections the quota left room
+        // for. Once the limit is reached the extra call would change nothing and is skipped.
+        if (
+            enabled.movies &&
+            movieResult.selections.size < TrendingMatcher.MAX_PER_MEDIA_TYPE &&
+            movieFeed.hasUnloadedPage
+        ) {
+            if (!loadNextPage(movieFeed, MetadataType.MOVIE)) {
+                return preserveFailure(sourceId, "movie candidates", language, totalStarted)
+            }
+            movieCandidates = movieFeed.candidates
+            movieResult = matchMovies(movieCandidates)
+        }
+
+        val seriesTarget = if (movieResult.selections.size >= BALANCED_TARGET) {
+            BALANCED_TARGET
+        } else {
+            TrendingMatcher.MAX_TOTAL - movieResult.selections.size
+        }
+        var seriesResult = if (enabled.series && seriesTarget > 0) {
+            matchSeries(seriesCandidates, seriesTarget)
         } else TrendingMatchResult(emptyList(), 0, 0, 0)
+        if (
+            enabled.series &&
+            seriesTarget > 0 &&
+            seriesResult.selections.size < seriesTarget &&
+            seriesFeed.hasUnloadedPage
+        ) {
+            if (!loadNextPage(seriesFeed, MetadataType.TV)) {
+                return preserveFailure(sourceId, "TV candidates", language, totalStarted)
+            }
+            seriesCandidates = seriesFeed.candidates
+            seriesResult = matchSeries(seriesCandidates, seriesTarget)
+        }
+
+        // Persisted before the below-threshold exit: the download happened either way, and the next
+        // playlist to come due should reuse it rather than repeat it.
+        if (storeDirty) {
+            schedule.storeCandidates(
+                TrendingScheduleStore.Candidates(
+                    language = candidateLanguage,
+                    fetchedAt = candidateFetchedAt,
+                    movies = movieFeed.candidates,
+                    series = seriesFeed.candidates,
+                    movieTotalPages = movieFeed.totalPages,
+                    seriesTotalPages = seriesFeed.totalPages,
+                    moviePagesLoaded = movieFeed.pagesLoaded,
+                    seriesPagesLoaded = seriesFeed.pagesLoaded,
+                ),
+            )
+        }
 
         val selections = TrendingMatcher.assemble(movieResult.selections, seriesResult.selections)
         val completedAt = System.currentTimeMillis()
@@ -167,7 +309,7 @@ class TrendingRepository(
                 TrendingSnapshotEntity(
                     sourceId = sourceId,
                     status = TrendingSnapshotStatus.BELOW_THRESHOLD,
-                    metadataLanguage = config.resolvedLanguage,
+                    metadataLanguage = candidateLanguage,
                     refreshedAt = completedAt,
                     candidateFetchedAt = candidateFetchedAt,
                     generationId = generationId,
@@ -177,6 +319,9 @@ class TrendingRepository(
                     lastAttemptStatus = TrendingAttemptStatus.BELOW_THRESHOLD,
                 ),
             )
+            // Short retry rather than a full span: too few matches usually means the catalog is still
+            // filling in, and matching re-runs for free on every sync in between anyway.
+            if (gateOpen) schedule.setRetry(sourceId, completedAt + BELOW_THRESHOLD_RETRY_MS)
             logResult(sourceId, movieCandidates.size, seriesCandidates.size, movieResult, seriesResult, selections.size, "below-threshold", fetchMs, preparationMs, 0, SystemClock.elapsedRealtime() - writeStarted, totalStarted)
             return TrendingRefreshOutcome.Replaced(itemCount = selections.size, eligible = false)
         }
@@ -205,22 +350,32 @@ class TrendingRepository(
         onProgress(TrendingRefreshProgress.Enriching(selections.size))
         val enrichmentStarted = SystemClock.elapsedRealtime()
         val semaphore = Semaphore(ENRICHMENT_CONCURRENCY)
-        val details: List<Pair<TrendingSelection, MovieDetails?>> = coroutineScope {
+        // Goes through the metadata cache, not straight to the provider: these ids are re-selected on
+        // most rebuilds, and the detail screen caches the same rows, so a warm cache makes this step
+        // free instead of ten calls every time.
+        //
+        // A cache miss may only reach the network on a run the gate already let through. The free
+        // re-match that happens on every other sync must stay at zero calls end to end — otherwise
+        // anything that empties the cache (changing the metadata language does exactly that) would
+        // hand the next resync a fresh round of detail downloads through the back door.
+        val details: List<Pair<TrendingSelection, MetadataCacheEntity?>> = coroutineScope {
             selections.map { selection ->
                 async {
                     selection to semaphore.withPermit {
-                        when (selection.candidate.type) {
-                            MetadataType.MOVIE -> metadataProvider.movieDetails(selection.candidate.tmdbId)
-                            MetadataType.TV -> metadataProvider.tvDetails(selection.candidate.tmdbId)
-                            MetadataType.EPISODE -> null
-                        }
+                        metadataRepository.cachedDetails(
+                            selection.candidate.tmdbId,
+                            selection.candidate.type,
+                            allowNetwork = gateOpen,
+                        )
                     }
                 }
             }.awaitAll()
         }
         val enrichmentMs = SystemClock.elapsedRealtime() - enrichmentStarted
         val detailFailures = details.count { it.second == null }
-        if (detailFailures > 0) Log.w(TAG, "sourceId=$sourceId detail fallback count=$detailFailures")
+        // Expected, not a fault, when the gate is shut: a cache miss simply falls back to the fields the
+        // trending feed already carried. Only a miss on a network-allowed run means a call went wrong.
+        if (detailFailures > 0) Log.w(TAG, "sourceId=$sourceId detail fallback count=$detailFailures networkAllowed=$gateOpen")
 
         val items = details.mapIndexed { position, (selection, detail) ->
             val candidate = selection.candidate
@@ -257,7 +412,7 @@ class TrendingRepository(
             TrendingSnapshotEntity(
                 sourceId = sourceId,
                 status = TrendingSnapshotStatus.ELIGIBLE,
-                metadataLanguage = config.resolvedLanguage,
+                metadataLanguage = candidateLanguage,
                 refreshedAt = completedAt,
                 candidateFetchedAt = candidateFetchedAt,
                 generationId = generationId,
@@ -269,7 +424,11 @@ class TrendingRepository(
             items,
         )
         val writeMs = SystemClock.elapsedRealtime() - writeStarted
+        // Only a run that was allowed through the gate books the next one; the free re-match runs in
+        // between must not keep pushing the deadline away.
+        val nextFetchAt = if (gateOpen) schedule.rollDeadline(sourceId, completedAt) else dueAt
         logResult(sourceId, movieCandidates.size, seriesCandidates.size, movieResult, seriesResult, items.size, "published", fetchMs, preparationMs, enrichmentMs, writeMs, totalStarted)
+        Log.i(TAG, "sourceId=$sourceId nextFetchInDays=${((nextFetchAt - completedAt).coerceAtLeast(0)) / TrendingScheduleStore.DAY_MS}")
         return TrendingRefreshOutcome.Replaced(itemCount = items.size, eligible = true)
     }
 
@@ -339,6 +498,51 @@ class TrendingRepository(
         private const val BALANCED_TARGET = 5
         private const val BACKFILL_BATCH = 1_000
         private const val ENRICHMENT_CONCURRENCY = 3
+        /** How long a below-threshold playlist waits before trying a fresh trending list. */
+        private const val BELOW_THRESHOLD_RETRY_MS = 12L * 60 * 60 * 1000
+    }
+}
+
+/**
+ * The Trending pages held for one media type during a refresh, whichever way they arrived — restored
+ * from [TrendingScheduleStore], downloaded, or both (a stored page 1 topped up with a fresh page 2).
+ */
+private class TrendingFeed {
+    private val pages = mutableListOf<TrendingFeedPage>()
+
+    var candidates: List<TrendingCandidate> = emptyList()
+        private set
+    var totalPages: Int = 0
+        private set
+    var pagesLoaded: Int = 0
+        private set
+
+    fun add(page: TrendingFeedPage, loaded: Int = page.page) {
+        pages += page
+        totalPages = maxOf(totalPages, page.totalPages)
+        pagesLoaded = maxOf(pagesLoaded, loaded)
+        candidates = TrendingFeedPage.merge(pages)
+    }
+
+    fun restoreMovies(stored: TrendingScheduleStore.Candidates) =
+        restore(stored.movies, stored.movieTotalPages, stored.moviePagesLoaded)
+
+    fun restoreSeries(stored: TrendingScheduleStore.Candidates) =
+        restore(stored.series, stored.seriesTotalPages, stored.seriesPagesLoaded)
+
+    /** True when the provider has a page this refresh has not downloaded, within [MAX_PAGES]. */
+    val hasUnloadedPage: Boolean get() = pagesLoaded in 1 until minOf(totalPages, MAX_PAGES)
+
+    private fun restore(saved: List<TrendingCandidate>, total: Int, loaded: Int) {
+        if (saved.isEmpty()) return
+        // Rank order survives the round trip, so the stored list re-enters as a single synthetic page
+        // and merges correctly with a later real page.
+        add(TrendingFeedPage(page = 1, totalPages = maxOf(total, 1), candidates = saved), loaded = maxOf(loaded, 1))
+    }
+
+    private companion object {
+        /** Beyond two pages the candidates rank far below anything the ten showcase slots can use. */
+        const val MAX_PAGES = 2
     }
 }
 

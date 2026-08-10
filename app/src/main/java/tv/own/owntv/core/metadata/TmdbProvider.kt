@@ -50,32 +50,10 @@ class TmdbProvider(
         return "&include_image_language=" + (if (base != null) "$base,en,null" else "en,null")
     }
 
-    override suspend fun trendingMovies(): List<TrendingCandidate>? = trending(MetadataType.MOVIE)
-
-    override suspend fun trendingTv(): List<TrendingCandidate>? = trending(MetadataType.TV)
-
-    private suspend fun trending(type: MetadataType): List<TrendingCandidate>? {
+    override suspend fun trendingPage(type: MetadataType, page: Int): TrendingFeedPage? {
         require(type == MetadataType.MOVIE || type == MetadataType.TV)
+        require(page > 0)
         val endpoint = resolveEndpoint()
-        val first = fetchTrendingPage(endpoint, type, page = 1) ?: return null
-        val pages = ArrayList<TmdbTrendingParser.Page>(2)
-        pages += first
-
-        // TMDB v3 pages contain 20 rows, so only page 2 can contribute to ranks 21–25.
-        if (
-            first.totalPages >= 2 &&
-            TmdbTrendingParser.merge(pages).size < TmdbTrendingParser.TRENDING_CANDIDATE_LIMIT
-        ) {
-            pages += fetchTrendingPage(endpoint, type, page = 2) ?: return null
-        }
-        return TmdbTrendingParser.merge(pages)
-    }
-
-    private suspend fun fetchTrendingPage(
-        endpoint: Endpoint,
-        type: MetadataType,
-        page: Int,
-    ): TmdbTrendingParser.Page? {
         val url = buildTrendingUrl(endpoint.baseUrl, endpoint.apiKey, endpoint.language, type, page)
         val body = runCatching { http.getText(url) }
             .onFailure { Log.w(TAG, "TMDB Trending failed type=$type page=$page: ${it.message}") }

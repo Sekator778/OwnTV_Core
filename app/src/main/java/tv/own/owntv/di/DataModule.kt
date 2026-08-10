@@ -95,7 +95,10 @@ val dataModule = module {
     }
     // provider, metadataDao, settings, overrideStore — the on-demand resolve + cache orchestrator (plan §7, §11.2 U5b).
     single { tv.own.owntv.core.metadata.MetadataRepository(get(), get(), get(), get()) }
-    single { tv.own.owntv.core.trending.TrendingRepository(get(), get(), get(), get(), get(), get(), get()) }
+    // Gates the TMDB Trending download to once every 5–8 days per playlist and holds the shared
+    // candidate list; deliberately DataStore, not Room (derived state, no migration, no backup).
+    single { tv.own.owntv.core.trending.TrendingScheduleStore(androidContext()) }
+    single { tv.own.owntv.core.trending.TrendingRepository(get(), get(), get(), get(), get(), get(), get(), get(), get()) }
     // Per-content TMDB name overrides (plan §11.2 U5b): DataStore side-store, no Room schema change.
     single { tv.own.owntv.core.metadata.MetadataOverrideStore(androidContext()) }
     // OpenSubtitles (subtitle plan Phase 1): Worker-proxied REST client + Keystore-sealed

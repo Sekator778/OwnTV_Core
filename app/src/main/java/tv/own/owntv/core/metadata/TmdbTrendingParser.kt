@@ -4,14 +4,8 @@ import org.json.JSONObject
 
 /** Pure parser/merger for TMDB's media-specific `/trending/{type}/day` pages. */
 internal object TmdbTrendingParser {
-    data class Page(
-        val pageNumber: Int,
-        val totalPages: Int,
-        val rawResultCount: Int,
-        val candidates: List<TrendingCandidate>,
-    )
 
-    fun parsePage(type: MetadataType, requestedPage: Int, body: String): Page? = runCatching {
+    fun parsePage(type: MetadataType, requestedPage: Int, body: String): TrendingFeedPage? = runCatching {
         require(type == MetadataType.MOVIE || type == MetadataType.TV)
         require(requestedPage > 0)
         val root = JSONObject(body)
@@ -47,29 +41,14 @@ internal object TmdbTrendingParser {
             )
         }
 
-        Page(
-            pageNumber = responsePage,
+        TrendingFeedPage(
+            page = responsePage,
             totalPages = totalPages,
-            rawResultCount = results.length(),
             candidates = candidates,
         )
     }.getOrNull()
 
-    /** Keeps TMDB order, removes duplicate IDs, and returns at most the requested candidate count. */
-    fun merge(pages: List<Page>, limit: Int = TRENDING_CANDIDATE_LIMIT): List<TrendingCandidate> {
-        require(limit > 0)
-        val seen = HashSet<Pair<MetadataType, Int>>()
-        return pages
-            .asSequence()
-            .flatMap { it.candidates.asSequence() }
-            .sortedBy { it.trendingRank }
-            .filter { seen.add(it.type to it.tmdbId) }
-            .take(limit)
-            .toList()
-    }
-
     private fun String.nullUnlessValue(): String? = takeIf { it.isNotBlank() && it != "null" }
 
-    const val TRENDING_CANDIDATE_LIMIT = 25
     private const val TMDB_PAGE_SIZE = 20
 }
