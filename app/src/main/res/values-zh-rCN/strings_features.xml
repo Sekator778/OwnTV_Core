@@ -128,7 +128,7 @@
     <string name="recovery_confirm_reset">确认：清除所有应用数据</string>
     <string name="recovery_reset">重置应用数据（最后手段）</string>
     <string name="home_row_now_trending">当前热门</string>
-    <string name="home_row_trending_description">播放列表中可播放的 TMDB 热门内容</string>
+    <string name="home_row_trending_description">仅当 TMDB 热门作品与您的提供商目录中的电影或剧集匹配时，才会显示 4–10 个项目。</string>
     <string name="settings_trending_status_off">“当前热门”已关闭。</string>
     <string name="settings_trending_status_building">服务提供商同步后，正在准备“当前热门”。</string>
     <string name="settings_trending_status_metadata_disabled">“当前热门”需要 TMDB 元数据。请选择“仅 TMDB”或“服务提供商 + TMDB”。</string>

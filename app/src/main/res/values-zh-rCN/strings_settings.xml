@@ -893,4 +893,20 @@
     <string name="settings_glass_preset_balanced_description">推荐的清晰度、层次感和可读性。</string>
     <string name="settings_glass_preset_tinted_description">为复杂或明亮背景提供更强的表面色彩。</string>
     <string name="settings_glass_preset_custom_description">使用已保存的透明度和模糊值。</string>
+    <string name="settings_ambient_glow">环境光晕</string>
+    <string name="settings_ambient_glow_description">为纯色界面添加设置向导风格的光晕</string>
+    <string name="settings_ambient_glow_dialog_description">为非玻璃界面添加柔和的强调色光晕。启用动画时，慢速脉动会轻柔地呼吸。</string>
+    <string name="settings_ambient_glow_effect">光晕</string>
+    <string name="settings_ambient_glow_pulse">慢速脉动</string>
+    <string name="settings_glass_preset_ultra_clear">超清透</string>
+    <string name="settings_glass_preset_opaque">不透明</string>
+    <string name="settings_glass_preset_ultra_clear_description">以轻微磨砂显示最多壁纸细节。</string>
+    <string name="settings_glass_preset_opaque_description">以最强磨砂实现最高面板密度。</string>
+    <string name="settings_glass_highlight_title">高光强度</string>
+    <string name="settings_glass_highlight_description">调整聚焦玻璃的光线和边缘。</string>
+    <string name="settings_glass_live_preview">实时预览</string>
+    <string name="settings_glass_full_transparency_title">允许完全透明</string>
+    <string name="settings_glass_full_transparency_description">关闭自动可读性下限，以获得最通透的玻璃效果。</string>
+    <string name="settings_glass_depth_title">深度与阴影</string>
+    <string name="settings_glass_depth_description">启用焦点移动光效、轻微视差和深度运动。</string>
 </resources>

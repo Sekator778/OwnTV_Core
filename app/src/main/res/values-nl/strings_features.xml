@@ -132,7 +132,7 @@
     <string name="recovery_confirm_reset">Bevestigen: alle appgegevens wissen</string>
     <string name="recovery_reset">Appgegevens resetten (laatste redmiddel)</string>
     <string name="home_row_now_trending">Nu populair</string>
-    <string name="home_row_trending_description">Afspeelbare TMDB-trends in je afspeellijsten</string>
+    <string name="home_row_trending_description">Toont alleen 4–10 items wanneer populaire TMDB-titels overeenkomen met films of series in de catalogus van je provider.</string>
     <string name="settings_trending_status_off">Nu populair is uitgeschakeld.</string>
     <string name="settings_trending_status_building">Nu populair wordt voorbereid nadat de aanbieder is gesynchroniseerd.</string>
     <string name="settings_trending_status_metadata_disabled">Voor Nu populair zijn TMDB-metagegevens nodig. Kies Alleen TMDB of Aanbieder + TMDB.</string>

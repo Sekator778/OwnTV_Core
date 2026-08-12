@@ -909,4 +909,20 @@
     <string name="settings_glass_preset_balanced_description">ശുപാർശ ചെയ്യുന്ന വ്യക്തത, ആഴം, വായനാസൗകര്യം.</string>
     <string name="settings_glass_preset_tinted_description">തിരക്കേറിയതോ തെളിച്ചമുള്ളതോ ആയ പശ്ചാത്തലങ്ങൾക്ക് ശക്തമായ ഉപരിതല നിറം.</string>
     <string name="settings_glass_preset_custom_description">സംരക്ഷിച്ച സുതാര്യത, ബ്ലർ മൂല്യങ്ങൾ ഉപയോഗിക്കുക.</string>
+    <string name="settings_ambient_glow">പരിസര തിളക്കം</string>
+    <string name="settings_ambient_glow_description">സോളിഡ് ഇന്റർഫേസിൽ സജ്ജീകരണ ശൈലിയിലുള്ള തിളക്കം ചേർക്കുന്നു</string>
+    <string name="settings_ambient_glow_dialog_description">ഗ്ലാസ് അല്ലാത്ത ഇന്റർഫേസിൽ മൃദുവായ ആക്സന്റ് പ്രകാശം ചേർക്കുന്നു. ആനിമേഷനുകൾ പ്രവർത്തിക്കുമ്പോൾ മന്ദമായ പൾസ് സാവധാനം സ്പന്ദിക്കുന്നു.</string>
+    <string name="settings_ambient_glow_effect">തിളക്കം</string>
+    <string name="settings_ambient_glow_pulse">മന്ദമായ പൾസ്</string>
+    <string name="settings_glass_preset_ultra_clear">അതി സുതാര്യം</string>
+    <string name="settings_glass_preset_opaque">അതാര്യം</string>
+    <string name="settings_glass_preset_ultra_clear_description">നേരിയ മങ്ങലോടെ വാൾപേപ്പറിന്റെ പരമാവധി വിശദാംശങ്ങൾ.</string>
+    <string name="settings_glass_preset_opaque_description">ഏറ്റവും ശക്തമായ മങ്ങലോടെ പരമാവധി പാനൽ സാന്ദ്രത.</string>
+    <string name="settings_glass_highlight_title">ഹൈലൈറ്റ് ശക്തി</string>
+    <string name="settings_glass_highlight_description">ഫോക്കസ് ചെയ്ത ഗ്ലാസിന്റെ വെളിച്ചവും അരികും ക്രമീകരിക്കുക.</string>
+    <string name="settings_glass_live_preview">തത്സമയ പ്രിവ്യൂ</string>
+    <string name="settings_glass_full_transparency_title">പൂർണ്ണ സുതാര്യത അനുവദിക്കുക</string>
+    <string name="settings_glass_full_transparency_description">ഏറ്റവും സുതാര്യമായ ഗ്ലാസിനായി സ്വയമേവയുള്ള വായനാക്ഷമത പരിധി ഓഫാക്കുന്നു.</string>
+    <string name="settings_glass_depth_title">ആഴവും നിഴലുകളും</string>
+    <string name="settings_glass_depth_description">ഫോക്കസ് സഞ്ചാര വെളിച്ചം, സൂക്ഷ്മ പാരലാക്സ്, ആഴ ചലനം എന്നിവ പ്രവർത്തനക്ഷമമാക്കുന്നു.</string>
 </resources>

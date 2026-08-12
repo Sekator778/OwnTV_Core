@@ -148,7 +148,7 @@
     <string name="recovery_confirm_reset">تأكيد: محو جميع بيانات التطبيق</string>
     <string name="recovery_reset">إعادة ضبط بيانات التطبيق (كحل أخير)</string>
     <string name="home_row_now_trending">الرائج الآن</string>
-    <string name="home_row_trending_description">محتوى TMDB الرائج القابل للتشغيل والموجود في قوائم التشغيل لديك</string>
+    <string name="home_row_trending_description">يعرض من 4 إلى 10 عناصر فقط عندما تتطابق عناوين TMDB الرائجة مع أفلام أو مسلسلات في كتالوج مزود الخدمة.</string>
     <string name="settings_trending_status_off">ميزة «الرائج الآن» متوقفة.</string>
     <string name="settings_trending_status_building">يجري إعداد «الرائج الآن» بعد مزامنة المزوّد.</string>
     <string name="settings_trending_status_metadata_disabled">تتطلب ميزة «الرائج الآن» بيانات TMDB الوصفية. اختر TMDB فقط أو المزوّد + TMDB.</string>

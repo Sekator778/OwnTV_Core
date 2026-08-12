@@ -132,7 +132,7 @@
     <string name="recovery_confirm_reset">पुष्टि करें: ऐप का सारा डेटा मिटाएँ</string>
     <string name="recovery_reset">ऐप डेटा रीसेट करें (अंतिम उपाय)</string>
     <string name="home_row_now_trending">अभी ट्रेंड में</string>
-    <string name="home_row_trending_description">आपकी प्लेलिस्ट में मिले, चलाए जा सकने वाले TMDB ट्रेंड</string>
+    <string name="home_row_trending_description">केवल तभी 4–10 आइटम दिखाता है जब TMDB ट्रेंडिंग शीर्षक आपके प्रदाता कैटलॉग की फ़िल्मों या सीरीज़ से मेल खाते हैं।</string>
     <string name="settings_trending_status_off">अभी ट्रेंड में बंद है।</string>
     <string name="settings_trending_status_building">प्रदाता सिंक के बाद अभी ट्रेंड में को तैयार किया जा रहा है।</string>
     <string name="settings_trending_status_metadata_disabled">अभी ट्रेंड में के लिए TMDB मेटाडेटा आवश्यक है। केवल TMDB या प्रदाता + TMDB चुनें।</string>

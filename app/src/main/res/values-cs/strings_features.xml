@@ -140,7 +140,7 @@
     <string name="recovery_confirm_reset">Potvrzení: vymazat všechna data aplikace</string>
     <string name="recovery_reset">Vymazat data aplikace (krajní řešení)</string>
     <string name="home_row_now_trending">Právě populární</string>
-    <string name="home_row_trending_description">Přehrávatelné trendy TMDB nalezené ve vašich seznamech skladeb</string>
+    <string name="home_row_trending_description">Zobrazí 4–10 položek pouze tehdy, když se populární tituly TMDB shodují s filmy nebo seriály v katalogu poskytovatele.</string>
     <string name="settings_trending_status_off">Funkce Právě populární je vypnutá.</string>
     <string name="settings_trending_status_building">Funkce Právě populární se připravuje po synchronizaci poskytovatele.</string>
     <string name="settings_trending_status_metadata_disabled">Funkce Právě populární vyžaduje metadata TMDB. Vyberte Pouze TMDB nebo Poskytovatel + TMDB.</string>

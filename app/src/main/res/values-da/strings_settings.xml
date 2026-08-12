@@ -909,4 +909,20 @@
     <string name="settings_glass_preset_balanced_description">Anbefalet klarhed, dybde og læsbarhed.</string>
     <string name="settings_glass_preset_tinted_description">Stærkere overfladefarve til urolige eller lyse baggrunde.</string>
     <string name="settings_glass_preset_custom_description">Brug dine gemte værdier for gennemsigtighed og sløring.</string>
+    <string name="settings_ambient_glow">Omgivende glød</string>
+    <string name="settings_ambient_glow_description">Tilføjer glød som i opsætningen til den solide brugerflade</string>
+    <string name="settings_ambient_glow_dialog_description">Tilføjer en blød accentglød til brugerfladen uden glas. Langsom puls ånder blidt, når animationer er slået til.</string>
+    <string name="settings_ambient_glow_effect">Glød</string>
+    <string name="settings_ambient_glow_pulse">Langsom puls</string>
+    <string name="settings_glass_preset_ultra_clear">Ultraklar</string>
+    <string name="settings_glass_preset_opaque">Uigennemsigtig</string>
+    <string name="settings_glass_preset_ultra_clear_description">Maksimale detaljer i baggrunden med let sløring.</string>
+    <string name="settings_glass_preset_opaque_description">Maksimal paneltæthed med den kraftigste sløring.</string>
+    <string name="settings_glass_highlight_title">Fremhævningsstyrke</string>
+    <string name="settings_glass_highlight_description">Juster lyset og kanten på glas i fokus.</string>
+    <string name="settings_glass_live_preview">Direkte forhåndsvisning</string>
+    <string name="settings_glass_full_transparency_title">Tillad fuld gennemsigtighed</string>
+    <string name="settings_glass_full_transparency_description">Slår den automatiske læsbarhedsgrænse fra for det klarest mulige glas.</string>
+    <string name="settings_glass_depth_title">Dybde og skygger</string>
+    <string name="settings_glass_depth_description">Aktiverer fokuslys, diskret parallakse og dybdebevægelse.</string>
 </resources>

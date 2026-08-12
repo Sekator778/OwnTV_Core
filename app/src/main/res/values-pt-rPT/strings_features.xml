@@ -136,7 +136,7 @@
     <string name="recovery_confirm_reset">Confirmar: apagar todos os dados da aplicação</string>
     <string name="recovery_reset">Repor dados da aplicação (último recurso)</string>
     <string name="home_row_now_trending">Tendências do momento</string>
-    <string name="home_row_trending_description">Tendências do TMDB disponíveis para reprodução nas suas listas de reprodução</string>
+    <string name="home_row_trending_description">Mostra 4–10 itens apenas quando os títulos em destaque no TMDB correspondem a filmes ou séries no catálogo do seu fornecedor.</string>
     <string name="settings_trending_status_off">As tendências do momento estão desativadas.</string>
     <string name="settings_trending_status_building">As tendências do momento estão a ser preparadas após a sincronização do fornecedor.</string>
     <string name="settings_trending_status_metadata_disabled">As tendências do momento requerem metadados do TMDB. Escolha Apenas TMDB ou Fornecedor + TMDB.</string>

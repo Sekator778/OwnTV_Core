@@ -925,4 +925,20 @@
     <string name="settings_glass_preset_balanced_description">Chiarezza, profondità e leggibilità consigliate.</string>
     <string name="settings_glass_preset_tinted_description">Colore della superficie più intenso per sfondi vivaci o luminosi.</string>
     <string name="settings_glass_preset_custom_description">Usa i valori salvati di trasparenza e sfocatura.</string>
+    <string name="settings_ambient_glow">Bagliore ambientale</string>
+    <string name="settings_ambient_glow_description">Aggiunge all’interfaccia solida il bagliore della configurazione</string>
+    <string name="settings_ambient_glow_dialog_description">Aggiunge un tenue alone del colore principale all’interfaccia senza vetro. La pulsazione lenta respira delicatamente quando le animazioni sono attive.</string>
+    <string name="settings_ambient_glow_effect">Bagliore</string>
+    <string name="settings_ambient_glow_pulse">Pulsazione lenta</string>
+    <string name="settings_glass_preset_ultra_clear">Ultranitido</string>
+    <string name="settings_glass_preset_opaque">Opaco</string>
+    <string name="settings_glass_preset_ultra_clear_description">Massimo dettaglio dello sfondo con sfocatura leggera.</string>
+    <string name="settings_glass_preset_opaque_description">Massima densità del pannello con la sfocatura più intensa.</string>
+    <string name="settings_glass_highlight_title">Intensità del riflesso</string>
+    <string name="settings_glass_highlight_description">Regola la luce e il bordo del vetro selezionato.</string>
+    <string name="settings_glass_live_preview">Anteprima dal vivo</string>
+    <string name="settings_glass_full_transparency_title">Consenti trasparenza completa</string>
+    <string name="settings_glass_full_transparency_description">Disattiva il limite automatico di leggibilità per un vetro più trasparente possibile.</string>
+    <string name="settings_glass_depth_title">Profondità e ombre</string>
+    <string name="settings_glass_depth_description">Attiva la luce che segue il focus, la parallasse delicata e il movimento di profondità.</string>
 </resources>

@@ -909,4 +909,20 @@
     <string name="settings_glass_preset_balanced_description">Rekommenderad tydlighet, djup och läsbarhet.</string>
     <string name="settings_glass_preset_tinted_description">Starkare ytfärg för detaljrika eller ljusa bakgrunder.</string>
     <string name="settings_glass_preset_custom_description">Använd dina sparade värden för genomskinlighet och oskärpa.</string>
+    <string name="settings_ambient_glow">Omgivande sken</string>
+    <string name="settings_ambient_glow_description">Lägger till skenet från konfigurationen i det solida gränssnittet</string>
+    <string name="settings_ambient_glow_dialog_description">Lägger till ett mjukt accentsken i gränssnittet utan glas. Den långsamma pulsen andas mjukt när animationer är aktiverade.</string>
+    <string name="settings_ambient_glow_effect">Sken</string>
+    <string name="settings_ambient_glow_pulse">Långsam puls</string>
+    <string name="settings_glass_preset_ultra_clear">Ultraklar</string>
+    <string name="settings_glass_preset_opaque">Ogenomskinlig</string>
+    <string name="settings_glass_preset_ultra_clear_description">Maximala bakgrundsdetaljer med lätt oskärpa.</string>
+    <string name="settings_glass_preset_opaque_description">Maximal paneltäthet med den starkaste oskärpan.</string>
+    <string name="settings_glass_highlight_title">Markeringsstyrka</string>
+    <string name="settings_glass_highlight_description">Justera ljuset och kanten på glas i fokus.</string>
+    <string name="settings_glass_live_preview">Direkt förhandsvisning</string>
+    <string name="settings_glass_full_transparency_title">Tillåt full genomskinlighet</string>
+    <string name="settings_glass_full_transparency_description">Stänger av den automatiska läsbarhetsgränsen för klarast möjliga glas.</string>
+    <string name="settings_glass_depth_title">Djup och skuggor</string>
+    <string name="settings_glass_depth_description">Aktiverar fokusljus, subtil parallax och djuprörelse.</string>
 </resources>

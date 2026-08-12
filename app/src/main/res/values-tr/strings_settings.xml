@@ -909,4 +909,20 @@
     <string name="settings_glass_preset_balanced_description">Önerilen netlik, derinlik ve okunabilirlik.</string>
     <string name="settings_glass_preset_tinted_description">Yoğun veya parlak arka planlar için daha güçlü yüzey rengi.</string>
     <string name="settings_glass_preset_custom_description">Kayıtlı şeffaflık ve bulanıklık değerlerinizi kullanın.</string>
+    <string name="settings_ambient_glow">Ortam ışıması</string>
+    <string name="settings_ambient_glow_description">Düz arayüze kurulum tarzı bir ışıma ekler</string>
+    <string name="settings_ambient_glow_dialog_description">Cam olmayan arayüze yumuşak bir vurgu ışıması ekler. Animasyonlar açıkken yavaş nabız hafifçe nefes alır.</string>
+    <string name="settings_ambient_glow_effect">Işıma</string>
+    <string name="settings_ambient_glow_pulse">Yavaş nabız</string>
+    <string name="settings_glass_preset_ultra_clear">Ultra Net</string>
+    <string name="settings_glass_preset_opaque">Opak</string>
+    <string name="settings_glass_preset_ultra_clear_description">Hafif bulanıklıkla en yüksek duvar kâğıdı ayrıntısı.</string>
+    <string name="settings_glass_preset_opaque_description">En güçlü bulanıklıkla en yüksek panel yoğunluğu.</string>
+    <string name="settings_glass_highlight_title">Vurgu gücü</string>
+    <string name="settings_glass_highlight_description">Odaktaki camın ışığını ve kenarını ayarlayın.</string>
+    <string name="settings_glass_live_preview">Canlı önizleme</string>
+    <string name="settings_glass_full_transparency_title">Tam şeffaflığa izin ver</string>
+    <string name="settings_glass_full_transparency_description">Mümkün olan en şeffaf cam için otomatik okunabilirlik sınırını kapatır.</string>
+    <string name="settings_glass_depth_title">Derinlik ve gölgeler</string>
+    <string name="settings_glass_depth_description">Odak geçişi ışığını, hafif paralaksı ve derinlik hareketini açar.</string>
 </resources>

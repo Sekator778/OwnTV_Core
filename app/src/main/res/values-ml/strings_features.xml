@@ -132,7 +132,7 @@
     <string name="recovery_confirm_reset">സ്ഥിരീകരിക്കുക: ആപ്പിന്റെ എല്ലാ ഡാറ്റയും മായ്ക്കുക</string>
     <string name="recovery_reset">ആപ്പ് ഡാറ്റ റീസെറ്റ് ചെയ്യുക (അവസാന മാർഗം)</string>
     <string name="home_row_now_trending">ഇപ്പോൾ ട്രെൻഡാകുന്നവ</string>
-    <string name="home_row_trending_description">നിങ്ങളുടെ playlists-ൽ കണ്ടെത്തിയ, പ്ലേ ചെയ്യാനാകുന്ന TMDB ട്രെൻഡുകൾ</string>
+    <string name="home_row_trending_description">TMDB ട്രെൻഡിംഗ് ശീർഷകങ്ങൾ നിങ്ങളുടെ ദാതാവിന്റെ കാറ്റലോഗിലെ സിനിമകളുമായോ സീരീസുകളുമായോ പൊരുത്തപ്പെടുമ്പോൾ മാത്രം 4–10 ഇനങ്ങൾ കാണിക്കുന്നു.</string>
     <string name="settings_trending_status_off">ഇപ്പോൾ ട്രെൻഡാകുന്നവ ഓഫാക്കിയിരിക്കുന്നു.</string>
     <string name="settings_trending_status_building">provider sync-ന് ശേഷം ഇപ്പോൾ ട്രെൻഡാകുന്നവ തയ്യാറാക്കുകയാണ്.</string>
     <string name="settings_trending_status_metadata_disabled">ഇപ്പോൾ ട്രെൻഡാകുന്നവയ്ക്ക് TMDB metadata ആവശ്യമാണ്. TMDB മാത്രം അല്ലെങ്കിൽ Provider + TMDB തിരഞ്ഞെടുക്കുക.</string>

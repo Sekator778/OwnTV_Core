@@ -136,7 +136,7 @@
     <string name="recovery_confirm_reset">Confirmar: apagar todos os dados do aplicativo</string>
     <string name="recovery_reset">Redefinir dados do aplicativo (último recurso)</string>
     <string name="home_row_now_trending">Em alta agora</string>
-    <string name="home_row_trending_description">Tendências do TMDB disponíveis para reprodução encontradas nas suas listas de reprodução</string>
+    <string name="home_row_trending_description">Mostra de 4 a 10 itens apenas quando os títulos em alta no TMDB correspondem a filmes ou séries no catálogo do seu provedor.</string>
     <string name="settings_trending_status_off">Em alta agora está desativado.</string>
     <string name="settings_trending_status_building">Em alta agora está sendo preparado após a sincronização do provedor.</string>
     <string name="settings_trending_status_metadata_disabled">Em alta agora precisa dos metadados do TMDB. Escolha Somente TMDB ou Provedor + TMDB.</string>

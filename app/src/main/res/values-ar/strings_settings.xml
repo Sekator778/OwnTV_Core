@@ -973,4 +973,20 @@
     <string name="settings_glass_preset_balanced_description">وضوح وعمق وسهولة قراءة موصى بها.</string>
     <string name="settings_glass_preset_tinted_description">لون سطح أقوى للخلفيات المزدحمة أو الساطعة.</string>
     <string name="settings_glass_preset_custom_description">استخدم قيم الشفافية والتمويه المحفوظة.</string>
+    <string name="settings_ambient_glow">التوهج المحيطي</string>
+    <string name="settings_ambient_glow_description">يضيف إشراقًا مستوحى من شاشة الإعداد إلى الواجهة المصمتة</string>
+    <string name="settings_ambient_glow_dialog_description">يضيف هالة ناعمة بلون التمييز إلى الواجهة غير الزجاجية. ينبض التوهج ببطء عند تفعيل الرسوم المتحركة.</string>
+    <string name="settings_ambient_glow_effect">التوهج</string>
+    <string name="settings_ambient_glow_pulse">نبض بطيء</string>
+    <string name="settings_glass_preset_ultra_clear">شفاف جدًا</string>
+    <string name="settings_glass_preset_opaque">معتم</string>
+    <string name="settings_glass_preset_ultra_clear_description">أقصى تفاصيل للخلفية مع تمويه خفيف.</string>
+    <string name="settings_glass_preset_opaque_description">أقصى كثافة للألواح مع أقوى تمويه.</string>
+    <string name="settings_glass_highlight_title">قوة الإضاءة</string>
+    <string name="settings_glass_highlight_description">اضبط إضاءة الزجاج وحدوده عند التركيز.</string>
+    <string name="settings_glass_live_preview">معاينة مباشرة</string>
+    <string name="settings_glass_full_transparency_title">السماح بالشفافية الكاملة</string>
+    <string name="settings_glass_full_transparency_description">يعطّل الحد التلقائي للوضوح للحصول على أكثر زجاج شفافية.</string>
+    <string name="settings_glass_depth_title">العمق والظلال</string>
+    <string name="settings_glass_depth_description">يفعّل إضاءة انتقال التركيز والمنظور الخفيف وحركة العمق.</string>
 </resources>

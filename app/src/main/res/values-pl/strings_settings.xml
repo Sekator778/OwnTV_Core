@@ -941,4 +941,20 @@
     <string name="settings_glass_preset_balanced_description">Zalecana przejrzystość, głębia i czytelność.</string>
     <string name="settings_glass_preset_tinted_description">Mocniejszy kolor powierzchni dla złożonych lub jasnych teł.</string>
     <string name="settings_glass_preset_custom_description">Użyj zapisanych wartości przezroczystości i rozmycia.</string>
+    <string name="settings_ambient_glow">Poświata otoczenia</string>
+    <string name="settings_ambient_glow_description">Dodaje do pełnego interfejsu poświatę w stylu konfiguracji</string>
+    <string name="settings_ambient_glow_dialog_description">Dodaje delikatną poświatę koloru akcentu do interfejsu bez szkła. Powolne pulsowanie łagodnie oddycha, gdy animacje są włączone.</string>
+    <string name="settings_ambient_glow_effect">Poświata</string>
+    <string name="settings_ambient_glow_pulse">Powolne pulsowanie</string>
+    <string name="settings_glass_preset_ultra_clear">Ultraprzejrzyste</string>
+    <string name="settings_glass_preset_opaque">Nieprzezroczyste</string>
+    <string name="settings_glass_preset_ultra_clear_description">Maksimum szczegółów tapety z lekkim rozmyciem.</string>
+    <string name="settings_glass_preset_opaque_description">Maksymalna gęstość panelu z najsilniejszym rozmyciem.</string>
+    <string name="settings_glass_highlight_title">Siła podświetlenia</string>
+    <string name="settings_glass_highlight_description">Dostosuj światło i obramowanie szkła z fokusem.</string>
+    <string name="settings_glass_live_preview">Podgląd na żywo</string>
+    <string name="settings_glass_full_transparency_title">Zezwól na pełną przezroczystość</string>
+    <string name="settings_glass_full_transparency_description">Wyłącza automatyczny próg czytelności, zapewniając najczystsze szkło.</string>
+    <string name="settings_glass_depth_title">Głębia i cienie</string>
+    <string name="settings_glass_depth_description">Włącza światło podążające za fokusem, subtelną paralaksę i ruch głębi.</string>
 </resources>

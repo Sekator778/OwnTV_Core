@@ -128,7 +128,7 @@
     <string name="recovery_confirm_reset">確認：アプリの全データを消去</string>
     <string name="recovery_reset">アプリのデータをリセット（最終手段）</string>
     <string name="home_row_now_trending">現在のトレンド</string>
-    <string name="home_row_trending_description">プレイリスト内で再生できるTMDBのトレンド作品</string>
+    <string name="home_row_trending_description">TMDBのトレンド作品がプロバイダーのカタログ内の映画またはシリーズと一致した場合のみ、4～10件を表示します。</string>
     <string name="settings_trending_status_off">現在のトレンドはオフになっています。</string>
     <string name="settings_trending_status_building">プロバイダーの同期後に現在のトレンドを準備しています。</string>
     <string name="settings_trending_status_metadata_disabled">現在のトレンドにはTMDBのメタデータが必要です。「TMDBのみ」または「プロバイダー + TMDB」を選択してください。</string>

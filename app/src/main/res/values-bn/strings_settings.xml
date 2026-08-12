@@ -909,4 +909,20 @@
     <string name="settings_glass_preset_balanced_description">প্রস্তাবিত স্বচ্ছতা, গভীরতা ও পাঠযোগ্যতা।</string>
     <string name="settings_glass_preset_tinted_description">ব্যস্ত বা উজ্জ্বল পটভূমির জন্য আরও গাঢ় সারফেস রং।</string>
     <string name="settings_glass_preset_custom_description">আপনার সংরক্ষিত স্বচ্ছতা ও ব্লার / ফ্রস্ট মান ব্যবহার করুন।</string>
+    <string name="settings_ambient_glow">পরিবেষ্টিত আভা</string>
+    <string name="settings_ambient_glow_description">সলিড ইন্টারফেসে সেটআপ-ধাঁচের দীপ্তি যোগ করে</string>
+    <string name="settings_ambient_glow_dialog_description">নন-গ্লাস ইন্টারফেসে একটি মৃদু অ্যাকসেন্ট আভা যোগ করে। অ্যানিমেশন চালু থাকলে ধীর স্পন্দনটি আলতোভাবে ওঠানামা করে।</string>
+    <string name="settings_ambient_glow_effect">আভা</string>
+    <string name="settings_ambient_glow_pulse">ধীর স্পন্দন</string>
+    <string name="settings_glass_preset_ultra_clear">অতি স্বচ্ছ</string>
+    <string name="settings_glass_preset_opaque">অস্বচ্ছ</string>
+    <string name="settings_glass_preset_ultra_clear_description">হালকা ফ্রস্টে ওয়ালপেপারের সর্বাধিক বিস্তারিত।</string>
+    <string name="settings_glass_preset_opaque_description">সবচেয়ে শক্তিশালী ফ্রস্টে সর্বাধিক প্যানেল ঘনত্ব।</string>
+    <string name="settings_glass_highlight_title">হাইলাইটের শক্তি</string>
+    <string name="settings_glass_highlight_description">ফোকাস করা কাচের আলো ও প্রান্ত সামঞ্জস্য করুন।</string>
+    <string name="settings_glass_live_preview">লাইভ প্রিভিউ</string>
+    <string name="settings_glass_full_transparency_title">সম্পূর্ণ স্বচ্ছতার অনুমতি দিন</string>
+    <string name="settings_glass_full_transparency_description">সবচেয়ে স্বচ্ছ কাচের জন্য স্বয়ংক্রিয় পাঠযোগ্যতার সীমা বন্ধ করে।</string>
+    <string name="settings_glass_depth_title">গভীরতা ও ছায়া</string>
+    <string name="settings_glass_depth_description">ফোকাস-ভ্রমণ আলো, সূক্ষ্ম প্যারালাক্স ও গভীরতার গতি চালু করে।</string>
 </resources>

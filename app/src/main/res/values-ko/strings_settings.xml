@@ -893,4 +893,20 @@
     <string name="settings_glass_preset_balanced_description">선명도, 깊이감 및 가독성 권장 설정입니다.</string>
     <string name="settings_glass_preset_tinted_description">복잡하거나 밝은 배경에 더 강한 표면 색상을 적용합니다.</string>
     <string name="settings_glass_preset_custom_description">저장된 투명도와 블러 값을 사용합니다.</string>
+    <string name="settings_ambient_glow">주변 광원</string>
+    <string name="settings_ambient_glow_description">단색 인터페이스에 설정 화면 스타일의 빛을 더합니다</string>
+    <string name="settings_ambient_glow_dialog_description">비글래스 인터페이스에 부드러운 강조색 광원을 추가합니다. 애니메이션이 켜져 있으면 천천히 은은하게 맥동합니다.</string>
+    <string name="settings_ambient_glow_effect">광원</string>
+    <string name="settings_ambient_glow_pulse">느린 맥동</string>
+    <string name="settings_glass_preset_ultra_clear">매우 투명</string>
+    <string name="settings_glass_preset_opaque">불투명</string>
+    <string name="settings_glass_preset_ultra_clear_description">가벼운 흐림으로 배경화면의 디테일을 최대한 표시합니다.</string>
+    <string name="settings_glass_preset_opaque_description">가장 강한 흐림으로 패널 밀도를 최대로 높입니다.</string>
+    <string name="settings_glass_highlight_title">하이라이트 강도</string>
+    <string name="settings_glass_highlight_description">포커스된 유리의 빛과 테두리를 조절합니다.</string>
+    <string name="settings_glass_live_preview">실시간 미리보기</string>
+    <string name="settings_glass_full_transparency_title">완전한 투명도 허용</string>
+    <string name="settings_glass_full_transparency_description">가장 투명한 유리를 위해 자동 가독성 제한을 끕니다.</string>
+    <string name="settings_glass_depth_title">깊이와 그림자</string>
+    <string name="settings_glass_depth_description">포커스 이동 조명, 은은한 시차 및 깊이 움직임을 켭니다.</string>
 </resources>

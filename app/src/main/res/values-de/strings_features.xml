@@ -132,7 +132,7 @@
     <string name="recovery_confirm_reset">Bestätigen: alle App-Daten löschen</string>
     <string name="recovery_reset">App-Daten zurücksetzen (letzter Ausweg)</string>
     <string name="home_row_now_trending">Aktuell im Trend</string>
-    <string name="home_row_trending_description">Abspielbare TMDB-Trends in deinen Wiedergabelisten</string>
+    <string name="home_row_trending_description">Zeigt nur 4–10 Einträge, wenn TMDB-Trendtitel mit Filmen oder Serien im Katalog deines Anbieters übereinstimmen.</string>
     <string name="settings_trending_status_off">„Aktuell im Trend“ ist deaktiviert.</string>
     <string name="settings_trending_status_building">„Aktuell im Trend“ wird nach der Synchronisierung mit dem Anbieter vorbereitet.</string>
     <string name="settings_trending_status_metadata_disabled">„Aktuell im Trend“ benötigt TMDB-Metadaten. Wähle „Nur TMDB“ oder „Anbieter + TMDB“.</string>

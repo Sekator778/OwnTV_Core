@@ -136,7 +136,7 @@
     <string name="recovery_confirm_reset">Conferma: cancella tutti i dati dell\'app</string>
     <string name="recovery_reset">Reimposta i dati dell\'app (ultima risorsa)</string>
     <string name="home_row_now_trending">Di tendenza ora</string>
-    <string name="home_row_trending_description">Tendenze TMDB riproducibili trovate nelle tue playlist</string>
+    <string name="home_row_trending_description">Mostra da 4 a 10 elementi solo quando i titoli di tendenza TMDB corrispondono a film o serie nel catalogo del tuo provider.</string>
     <string name="settings_trending_status_off">Di tendenza ora è disattivato.</string>
     <string name="settings_trending_status_building">Di tendenza ora è in preparazione dopo la sincronizzazione del fornitore.</string>
     <string name="settings_trending_status_metadata_disabled">Di tendenza ora richiede i metadati TMDB. Scegli Solo TMDB o Fornitore + TMDB.</string>

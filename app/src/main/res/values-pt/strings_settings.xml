@@ -925,4 +925,20 @@
     <string name="settings_glass_preset_balanced_description">Nitidez, profundidade e legibilidade recomendadas.</string>
     <string name="settings_glass_preset_tinted_description">Cor de superfície mais forte para fundos carregados ou claros.</string>
     <string name="settings_glass_preset_custom_description">Use os valores salvos de transparência e desfoque.</string>
+    <string name="settings_ambient_glow">Brilho ambiente</string>
+    <string name="settings_ambient_glow_description">Adiciona à interface sólida o brilho do assistente de configuração</string>
+    <string name="settings_ambient_glow_dialog_description">Adiciona um brilho suave da cor de destaque à interface sem vidro. A pulsação lenta respira suavemente quando as animações estão ativadas.</string>
+    <string name="settings_ambient_glow_effect">Brilho</string>
+    <string name="settings_ambient_glow_pulse">Pulsação lenta</string>
+    <string name="settings_glass_preset_ultra_clear">Ultranítido</string>
+    <string name="settings_glass_preset_opaque">Opaco</string>
+    <string name="settings_glass_preset_ultra_clear_description">Máximo detalhe do fundo com desfoque leve.</string>
+    <string name="settings_glass_preset_opaque_description">Máxima densidade do painel com o desfoque mais intenso.</string>
+    <string name="settings_glass_highlight_title">Intensidade do brilho</string>
+    <string name="settings_glass_highlight_description">Ajuste a luz e o contorno do vidro em foco.</string>
+    <string name="settings_glass_live_preview">Pré-visualização ao vivo</string>
+    <string name="settings_glass_full_transparency_title">Permitir transparência total</string>
+    <string name="settings_glass_full_transparency_description">Desativa o limite automático de legibilidade para obter o vidro mais transparente.</string>
+    <string name="settings_glass_depth_title">Profundidade e sombras</string>
+    <string name="settings_glass_depth_description">Ativa a luz que acompanha o foco, a paralaxe subtil e o movimento de profundidade.</string>
 </resources>

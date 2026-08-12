@@ -909,4 +909,20 @@
     <string name="settings_glass_preset_balanced_description">अनुशंसित स्पष्टता, गहराई और पठनीयता।</string>
     <string name="settings_glass_preset_tinted_description">व्यस्त या चमकीली पृष्ठभूमि के लिए अधिक गहरा सतह रंग।</string>
     <string name="settings_glass_preset_custom_description">अपने सहेजे गए पारदर्शिता और ब्लर मान इस्तेमाल करें।</string>
+    <string name="settings_ambient_glow">परिवेशी चमक</string>
+    <string name="settings_ambient_glow_description">ठोस इंटरफ़ेस में सेटअप जैसी चमक जोड़ता है</string>
+    <string name="settings_ambient_glow_dialog_description">नॉन-ग्लास इंटरफ़ेस में हल्की एक्सेंट आभा जोड़ता है। ऐनिमेशन चालू होने पर धीमी पल्स धीरे-धीरे धड़कती है।</string>
+    <string name="settings_ambient_glow_effect">चमक</string>
+    <string name="settings_ambient_glow_pulse">धीमी पल्स</string>
+    <string name="settings_glass_preset_ultra_clear">अति स्पष्ट</string>
+    <string name="settings_glass_preset_opaque">अपारदर्शी</string>
+    <string name="settings_glass_preset_ultra_clear_description">हल्की धुंध के साथ वॉलपेपर का अधिकतम विवरण।</string>
+    <string name="settings_glass_preset_opaque_description">सबसे मजबूत धुंध के साथ अधिकतम पैनल घनत्व।</string>
+    <string name="settings_glass_highlight_title">हाइलाइट की तीव्रता</string>
+    <string name="settings_glass_highlight_description">फ़ोकस किए गए ग्लास की रोशनी और किनारा समायोजित करें।</string>
+    <string name="settings_glass_live_preview">लाइव पूर्वावलोकन</string>
+    <string name="settings_glass_full_transparency_title">पूरी पारदर्शिता की अनुमति दें</string>
+    <string name="settings_glass_full_transparency_description">सबसे स्पष्ट ग्लास के लिए स्वचालित पठनीयता सीमा बंद करता है।</string>
+    <string name="settings_glass_depth_title">गहराई और छाया</string>
+    <string name="settings_glass_depth_description">फ़ोकस-यात्रा प्रकाश, हल्का पैरालैक्स और गहराई की गति चालू करता है।</string>
 </resources>

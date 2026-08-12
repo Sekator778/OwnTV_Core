@@ -108,6 +108,7 @@ class SettingsRepository(private val context: Context, private val localeStore: 
     private val GLASS_SCOPE_DEFAULT_BITS: Int = 0
     private val GLASS_ALPHA_DEFAULT_PCT: Int = 56
     private val GLASS_BLUR_DEFAULT_PCT: Int = 78
+    private val GLASS_HIGHLIGHT_DEFAULT_PCT: Int = 55
 
     private object Keys {
         val THEME_MODE = stringPreferencesKey("theme_mode")
@@ -201,6 +202,8 @@ class SettingsRepository(private val context: Context, private val localeStore: 
         val CATCHUP_OFFSET_MIN = intPreferencesKey("catchup_offset_minutes")
         val EPG_OFFSET_MIN = intPreferencesKey("epg_offset_minutes")
         val ANIMATION_LEVEL = stringPreferencesKey("animation_level")
+        val AMBIENT_GLOW_ENABLED = booleanPreferencesKey("ambient_glow_enabled")
+        val AMBIENT_GLOW_PULSE = booleanPreferencesKey("ambient_glow_pulse")
         val RESUME_LAST_CHANNEL = booleanPreferencesKey("resume_last_channel")
         val LAST_LIVE_CATEGORY = stringPreferencesKey("last_live_category")
         val RECENT_SEARCHES = stringPreferencesKey("recent_searches")
@@ -287,6 +290,9 @@ class SettingsRepository(private val context: Context, private val localeStore: 
         val GLASS_SCOPE = intPreferencesKey("glass_scope")
         val GLASS_ALPHA = intPreferencesKey("glass_alpha")
         val GLASS_BLUR = intPreferencesKey("glass_blur")
+        val GLASS_HIGHLIGHT = intPreferencesKey("glass_highlight")
+        val GLASS_ALLOW_FULL_TRANSPARENCY = booleanPreferencesKey("glass_allow_full_transparency")
+        val GLASS_DEPTH_EFFECTS = booleanPreferencesKey("glass_depth_effects")
         val GLASS_PRESET = stringPreferencesKey("glass_preset")
     }
 
@@ -428,6 +434,20 @@ class SettingsRepository(private val context: Context, private val localeStore: 
 
     suspend fun setAnimationLevel(level: tv.own.owntv.ui.theme.AnimationLevel) {
         context.dataStore.edit { it[Keys.ANIMATION_LEVEL] = level.name }
+    }
+
+    // --- Solid UI ambient radiance (the setup-wizard-style aura) ---
+    // Opt-in: upgrading users keep the familiar solid appearance until they choose this effect.
+    val ambientGlowEnabled: Flow<Boolean> = prefsFlow { it[Keys.AMBIENT_GLOW_ENABLED] ?: false }
+
+    suspend fun setAmbientGlowEnabled(enabled: Boolean) {
+        context.dataStore.edit { it[Keys.AMBIENT_GLOW_ENABLED] = enabled }
+    }
+
+    val ambientGlowPulse: Flow<Boolean> = prefsFlow { it[Keys.AMBIENT_GLOW_PULSE] ?: true }
+
+    suspend fun setAmbientGlowPulse(enabled: Boolean) {
+        context.dataStore.edit { it[Keys.AMBIENT_GLOW_PULSE] = enabled }
     }
 
     // --- Weather chip (top bar): show/hide + manual location override for VPN users ---
@@ -1387,6 +1407,9 @@ class SettingsRepository(private val context: Context, private val localeStore: 
         val bits = p[Keys.GLASS_SCOPE] ?: GLASS_SCOPE_DEFAULT_BITS
         val alphaPct = p[Keys.GLASS_ALPHA] ?: GLASS_ALPHA_DEFAULT_PCT
         val blurPct = p[Keys.GLASS_BLUR] ?: GLASS_BLUR_DEFAULT_PCT
+        val highlightPct = p[Keys.GLASS_HIGHLIGHT] ?: GLASS_HIGHLIGHT_DEFAULT_PCT
+        val allowFullTransparency = p[Keys.GLASS_ALLOW_FULL_TRANSPARENCY] ?: false
+        val depthEffects = p[Keys.GLASS_DEPTH_EFFECTS] ?: true
         val preset = tv.own.owntv.ui.theme.GlassPreset.fromStored(
             name = p[Keys.GLASS_PRESET],
             customAlpha = alphaPct / 100f,
@@ -1397,6 +1420,9 @@ class SettingsRepository(private val context: Context, private val localeStore: 
             alpha = alphaPct / 100f,
             blurStrength = blurPct / 100f,
             preset = preset,
+            highlightStrength = highlightPct / 100f,
+            allowFullTransparency = allowFullTransparency,
+            depthEffects = depthEffects,
         )
     }
 
@@ -1416,19 +1442,34 @@ class SettingsRepository(private val context: Context, private val localeStore: 
     }
 
     /** Persist glass alpha as an integer 0..100. */
-    suspend fun setGlassAlphaPercent(pct: Int) {
+    suspend fun setGlassAlphaPercent(pct: Int, currentBlurPct: Int) {
         context.dataStore.edit {
             it[Keys.GLASS_ALPHA] = pct.coerceIn(0, 100)
+            it[Keys.GLASS_BLUR] = currentBlurPct.coerceIn(0, 100)
             it[Keys.GLASS_PRESET] = tv.own.owntv.ui.theme.GlassPreset.CUSTOM.name
         }
     }
 
     /** Persist the backdrop blur ("frost") strength as an integer 0..100. 0 = Tier-1 translucency only. */
-    suspend fun setGlassBlurPercent(pct: Int) {
+    suspend fun setGlassBlurPercent(pct: Int, currentAlphaPct: Int) {
         context.dataStore.edit {
+            it[Keys.GLASS_ALPHA] = currentAlphaPct.coerceIn(0, 100)
             it[Keys.GLASS_BLUR] = pct.coerceIn(0, 100)
             it[Keys.GLASS_PRESET] = tv.own.owntv.ui.theme.GlassPreset.CUSTOM.name
         }
+    }
+
+    /** Focused lens/rim light strength. 55% preserves the original tuned appearance exactly. */
+    suspend fun setGlassHighlightPercent(pct: Int) {
+        context.dataStore.edit { it[Keys.GLASS_HIGHLIGHT] = pct.coerceIn(0, 100) }
+    }
+
+    suspend fun setGlassAllowFullTransparency(enabled: Boolean) {
+        context.dataStore.edit { it[Keys.GLASS_ALLOW_FULL_TRANSPARENCY] = enabled }
+    }
+
+    suspend fun setGlassDepthEffects(enabled: Boolean) {
+        context.dataStore.edit { it[Keys.GLASS_DEPTH_EFFECTS] = enabled }
     }
 
     /** Avatar for the current (placeholder) profile until real profiles arrive in the wizard. */
@@ -1522,7 +1563,7 @@ class SettingsRepository(private val context: Context, private val localeStore: 
         // The STATIC-mode hidden set rides with backup so a reinstall keeps the user's hidden icons.
         Keys.NAV_MENU_HIDDEN,
     )
-    private val backupIntKeys = listOf(Keys.UI_ZOOM_PCT, Keys.FONT_SIZE_PCT, Keys.AUDIO_DELAY_MS, Keys.CATCHUP_OFFSET_MIN, Keys.EPG_OFFSET_MIN, Keys.PROXY_PORT, Keys.DNS_PORT, Keys.CH_NAV_UP_SKIP, Keys.CH_NAV_DOWN_SKIP, Keys.MINI_PLAYER_SIZE_PCT, Keys.LIVE_LATENCY_CUSTOM_SECS, Keys.LIVE_PREROLL_SECS, Keys.GLASS_SCOPE, Keys.GLASS_ALPHA, Keys.GLASS_BLUR, Keys.SUB_BG_OPACITY,
+    private val backupIntKeys = listOf(Keys.UI_ZOOM_PCT, Keys.FONT_SIZE_PCT, Keys.AUDIO_DELAY_MS, Keys.CATCHUP_OFFSET_MIN, Keys.EPG_OFFSET_MIN, Keys.PROXY_PORT, Keys.DNS_PORT, Keys.CH_NAV_UP_SKIP, Keys.CH_NAV_DOWN_SKIP, Keys.MINI_PLAYER_SIZE_PCT, Keys.LIVE_LATENCY_CUSTOM_SECS, Keys.LIVE_PREROLL_SECS, Keys.GLASS_SCOPE, Keys.GLASS_ALPHA, Keys.GLASS_BLUR, Keys.GLASS_HIGHLIGHT, Keys.SUB_BG_OPACITY,
         Keys.PANEL_W_LIVE_CAT, Keys.PANEL_W_LIVE_LIST, Keys.PANEL_W_LIVE_PREVIEW,
         Keys.PANEL_W_MOVIES_CAT, Keys.PANEL_W_MOVIES_LIST, Keys.PANEL_W_MOVIES_PREVIEW,
         Keys.PANEL_W_SERIES_CAT, Keys.PANEL_W_SERIES_LIST, Keys.PANEL_W_SERIES_PREVIEW)
@@ -1536,6 +1577,8 @@ class SettingsRepository(private val context: Context, private val localeStore: 
         Keys.REMEMBER_CAT_LIVE, Keys.REMEMBER_CAT_MOVIES, Keys.REMEMBER_CAT_SERIES,
         Keys.SUB_STYLE_ENABLED, Keys.SUB_SEARCH_FILTER,
         Keys.PANEL_W_LIVE_ON, Keys.PANEL_W_MOVIES_ON, Keys.PANEL_W_SERIES_ON,
+        Keys.AMBIENT_GLOW_ENABLED, Keys.AMBIENT_GLOW_PULSE,
+        Keys.GLASS_ALLOW_FULL_TRANSPARENCY, Keys.GLASS_DEPTH_EFFECTS,
     )
     private val backupFloatKeys = listOf(Keys.SUB_SCALE)
 

@@ -37,4 +37,20 @@ Resync and remove missing titles also allows removing titles the provider no lon
     <string name="settings_glass_preset_balanced_description">Recommended clarity, depth and readability.</string>
     <string name="settings_glass_preset_tinted_description">Stronger surface colour for busy or bright backgrounds.</string>
     <string name="settings_glass_preset_custom_description">Use your saved transparency and blur / frost values.</string>
+    <string name="settings_ambient_glow">Ambient glow</string>
+    <string name="settings_ambient_glow_description">Adds setup-style radiance to the solid interface</string>
+    <string name="settings_ambient_glow_dialog_description">Adds a soft accent aura to the non-glass interface. Slow pulse gently breathes when animations are enabled.</string>
+    <string name="settings_ambient_glow_effect">Glow</string>
+    <string name="settings_ambient_glow_pulse">Slow pulse</string>
+    <string name="settings_glass_preset_ultra_clear">Ultra Clear</string>
+    <string name="settings_glass_preset_opaque">Opaque</string>
+    <string name="settings_glass_preset_ultra_clear_description">Maximum wallpaper detail with light frost.</string>
+    <string name="settings_glass_preset_opaque_description">Maximum panel density with the strongest frost.</string>
+    <string name="settings_glass_highlight_title">Highlight strength</string>
+    <string name="settings_glass_highlight_description">Adjust the focused glass light and rim.</string>
+    <string name="settings_glass_live_preview">Live preview</string>
+    <string name="settings_glass_full_transparency_title">Allow full transparency</string>
+    <string name="settings_glass_full_transparency_description">Disables the automatic readability floor for the clearest possible glass.</string>
+    <string name="settings_glass_depth_title">Depth &amp; shadows</string>
+    <string name="settings_glass_depth_description">Enables focus-travel lighting, subtle parallax and depth movement.</string>
 </resources>

@@ -893,4 +893,20 @@
     <string name="settings_glass_preset_balanced_description">見やすさ、奥行き、読みやすさの推奨設定です。</string>
     <string name="settings_glass_preset_tinted_description">明るい背景や情報量の多い背景向けに表面色を強くします。</string>
     <string name="settings_glass_preset_custom_description">保存済みの透明度とぼかし値を使用します。</string>
+    <string name="settings_ambient_glow">アンビエントグロー</string>
+    <string name="settings_ambient_glow_description">ソリッドUIにセットアップ画面風の輝きを追加します</string>
+    <string name="settings_ambient_glow_dialog_description">非ガラスUIに柔らかなアクセントの光を追加します。アニメーションが有効な場合、ゆっくりと穏やかに脈動します。</string>
+    <string name="settings_ambient_glow_effect">グロー</string>
+    <string name="settings_ambient_glow_pulse">ゆっくりした脈動</string>
+    <string name="settings_glass_preset_ultra_clear">超クリア</string>
+    <string name="settings_glass_preset_opaque">不透明</string>
+    <string name="settings_glass_preset_ultra_clear_description">軽いぼかしで壁紙の細部を最大限に表示します。</string>
+    <string name="settings_glass_preset_opaque_description">最も強いぼかしでパネルの密度を最大にします。</string>
+    <string name="settings_glass_highlight_title">ハイライトの強さ</string>
+    <string name="settings_glass_highlight_description">フォーカスしたガラスの光と縁を調整します。</string>
+    <string name="settings_glass_live_preview">ライブプレビュー</string>
+    <string name="settings_glass_full_transparency_title">完全な透明度を許可</string>
+    <string name="settings_glass_full_transparency_description">最も透明なガラスにするため、自動の読みやすさ制限を無効にします。</string>
+    <string name="settings_glass_depth_title">奥行きと影</string>
+    <string name="settings_glass_depth_description">フォーカス移動ライト、控えめな視差、奥行きの動きを有効にします。</string>
 </resources>

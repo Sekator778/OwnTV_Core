@@ -925,4 +925,20 @@
     <string name="settings_glass_preset_balanced_description">Clarté, profondeur et lisibilité recommandées.</string>
     <string name="settings_glass_preset_tinted_description">Couleur de surface renforcée pour les arrière-plans chargés ou lumineux.</string>
     <string name="settings_glass_preset_custom_description">Utilisez vos valeurs enregistrées de transparence et de flou.</string>
+    <string name="settings_ambient_glow">Halo ambiant</string>
+    <string name="settings_ambient_glow_description">Ajoute à l’interface opaque le halo de l’assistant de configuration</string>
+    <string name="settings_ambient_glow_dialog_description">Ajoute un doux halo d’accentuation à l’interface sans verre. La pulsation lente respire doucement lorsque les animations sont activées.</string>
+    <string name="settings_ambient_glow_effect">Halo</string>
+    <string name="settings_ambient_glow_pulse">Pulsation lente</string>
+    <string name="settings_glass_preset_ultra_clear">Ultra-clair</string>
+    <string name="settings_glass_preset_opaque">Opaque</string>
+    <string name="settings_glass_preset_ultra_clear_description">Détails maximum du fond avec un flou léger.</string>
+    <string name="settings_glass_preset_opaque_description">Densité maximale des panneaux avec le flou le plus intense.</string>
+    <string name="settings_glass_highlight_title">Intensité du reflet</string>
+    <string name="settings_glass_highlight_description">Ajustez la lumière et le contour du verre sélectionné.</string>
+    <string name="settings_glass_live_preview">Aperçu en direct</string>
+    <string name="settings_glass_full_transparency_title">Autoriser la transparence totale</string>
+    <string name="settings_glass_full_transparency_description">Désactive le seuil automatique de lisibilité pour un verre aussi clair que possible.</string>
+    <string name="settings_glass_depth_title">Profondeur et ombres</string>
+    <string name="settings_glass_depth_description">Active la lumière suivant le focus, la parallaxe subtile et le mouvement de profondeur.</string>
 </resources>

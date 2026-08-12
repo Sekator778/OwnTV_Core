@@ -909,4 +909,20 @@
     <string name="settings_glass_preset_balanced_description">Empfohlene Klarheit, Tiefe und Lesbarkeit.</string>
     <string name="settings_glass_preset_tinted_description">Stärkere Oberflächenfarbe für unruhige oder helle Hintergründe.</string>
     <string name="settings_glass_preset_custom_description">Gespeicherte Werte für Transparenz und Weichzeichnung verwenden.</string>
+    <string name="settings_ambient_glow">Umgebungsleuchten</string>
+    <string name="settings_ambient_glow_description">Fügt der einfarbigen Oberfläche den Leuchteffekt der Einrichtung hinzu</string>
+    <string name="settings_ambient_glow_dialog_description">Fügt der Oberfläche ohne Glaseffekt einen sanften Akzentschein hinzu. Der langsame Puls atmet dezent, wenn Animationen aktiviert sind.</string>
+    <string name="settings_ambient_glow_effect">Leuchten</string>
+    <string name="settings_ambient_glow_pulse">Langsamer Puls</string>
+    <string name="settings_glass_preset_ultra_clear">Ultraklar</string>
+    <string name="settings_glass_preset_opaque">Undurchsichtig</string>
+    <string name="settings_glass_preset_ultra_clear_description">Maximale Hintergrunddetails mit leichtem Milchglaseffekt.</string>
+    <string name="settings_glass_preset_opaque_description">Maximale Paneldichte mit stärkstem Milchglaseffekt.</string>
+    <string name="settings_glass_highlight_title">Leuchtstärke</string>
+    <string name="settings_glass_highlight_description">Licht und Rand des fokussierten Glases anpassen.</string>
+    <string name="settings_glass_live_preview">Live-Vorschau</string>
+    <string name="settings_glass_full_transparency_title">Volle Transparenz erlauben</string>
+    <string name="settings_glass_full_transparency_description">Deaktiviert die automatische Lesbarkeitsgrenze für maximal klares Glas.</string>
+    <string name="settings_glass_depth_title">Tiefe und Schatten</string>
+    <string name="settings_glass_depth_description">Aktiviert Fokuslicht, dezente Parallaxe und Tiefenbewegung.</string>
 </resources>

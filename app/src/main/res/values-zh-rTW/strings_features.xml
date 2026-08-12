@@ -128,7 +128,7 @@
     <string name="recovery_confirm_reset">確認：清除所有應用程式資料</string>
     <string name="recovery_reset">重設應用程式資料（最後手段）</string>
     <string name="home_row_now_trending">現正熱門</string>
-    <string name="home_row_trending_description">在您的播放清單中找到可播放的 TMDB 熱門趨勢內容</string>
+    <string name="home_row_trending_description">僅當 TMDB 熱門作品與您的供應商目錄中的電影或影集相符時，才會顯示 4–10 個項目。</string>
     <string name="settings_trending_status_off">「現正熱門」已關閉。</string>
     <string name="settings_trending_status_building">供應商同步後，正在準備「現正熱門」。</string>
     <string name="settings_trending_status_metadata_disabled">「現正熱門」需要 TMDB 中繼資料。請選擇「僅 TMDB」或「供應商 + TMDB」。</string>

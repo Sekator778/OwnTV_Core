@@ -132,7 +132,7 @@
     <string name="recovery_confirm_reset">Bekräfta: radera alla appdata</string>
     <string name="recovery_reset">Nollställ appdata (sista utvägen)</string>
     <string name="home_row_now_trending">Trendar just nu</string>
-    <string name="home_row_trending_description">Spelbara TMDB-trender som hittats i dina spellistor</string>
+    <string name="home_row_trending_description">Visar endast 4–10 objekt när populära TMDB-titlar matchar filmer eller serier i leverantörens katalog.</string>
     <string name="settings_trending_status_off">Trendar just nu är inaktiverat.</string>
     <string name="settings_trending_status_building">Trendar just nu förbereds efter synkronisering med leverantören.</string>
     <string name="settings_trending_status_metadata_disabled">Trendar just nu kräver metadata från TMDB. Välj Endast TMDB eller Leverantör + TMDB.</string>

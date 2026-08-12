@@ -909,4 +909,20 @@
     <string name="settings_glass_preset_balanced_description">Aanbevolen helderheid, diepte en leesbaarheid.</string>
     <string name="settings_glass_preset_tinted_description">Sterkere oppervlakkleur voor drukke of heldere achtergronden.</string>
     <string name="settings_glass_preset_custom_description">Gebruik je opgeslagen waarden voor transparantie en vervaging.</string>
+    <string name="settings_ambient_glow">Omgevingsgloed</string>
+    <string name="settings_ambient_glow_description">Voegt de gloed van de configuratie toe aan de effen interface</string>
+    <string name="settings_ambient_glow_dialog_description">Voegt een zachte accentgloed toe aan de interface zonder glas. De langzame puls ademt rustig wanneer animaties zijn ingeschakeld.</string>
+    <string name="settings_ambient_glow_effect">Gloed</string>
+    <string name="settings_ambient_glow_pulse">Langzame puls</string>
+    <string name="settings_glass_preset_ultra_clear">Ultr helder</string>
+    <string name="settings_glass_preset_opaque">Ondoorzichtig</string>
+    <string name="settings_glass_preset_ultra_clear_description">Maximale achtergronddetails met lichte vervaging.</string>
+    <string name="settings_glass_preset_opaque_description">Maximale paneeldichtheid met de sterkste vervaging.</string>
+    <string name="settings_glass_highlight_title">Sterkte van lichtaccent</string>
+    <string name="settings_glass_highlight_description">Pas het licht en de rand van het geselecteerde glas aan.</string>
+    <string name="settings_glass_live_preview">Livevoorbeeld</string>
+    <string name="settings_glass_full_transparency_title">Volledige transparantie toestaan</string>
+    <string name="settings_glass_full_transparency_description">Schakelt de automatische leesbaarheidsgrens uit voor het helderst mogelijke glas.</string>
+    <string name="settings_glass_depth_title">Diepte en schaduwen</string>
+    <string name="settings_glass_depth_description">Schakelt focuslicht, subtiele parallax en dieptebeweging in.</string>
 </resources>

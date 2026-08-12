@@ -140,7 +140,7 @@
     <string name="recovery_confirm_reset">Potwierdź: usuń wszystkie dane aplikacji</string>
     <string name="recovery_reset">Zresetuj dane aplikacji (ostateczność)</string>
     <string name="home_row_now_trending">Teraz popularne</string>
-    <string name="home_row_trending_description">Popularne pozycje z TMDB dostępne do odtworzenia na Twoich listach odtwarzania</string>
+    <string name="home_row_trending_description">Wyświetla 4–10 pozycji tylko wtedy, gdy popularne tytuły TMDB pasują do filmów lub seriali w katalogu dostawcy.</string>
     <string name="settings_trending_status_off">Sekcja „Teraz popularne” jest wyłączona.</string>
     <string name="settings_trending_status_building">Sekcja „Teraz popularne” jest przygotowywana po synchronizacji dostawcy.</string>
     <string name="settings_trending_status_metadata_disabled">Sekcja „Teraz popularne” wymaga metadanych TMDB. Wybierz opcję „Tylko TMDB” lub „Dostawca + TMDB”.</string>

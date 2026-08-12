@@ -941,4 +941,20 @@
     <string name="settings_glass_preset_balanced_description">Рекомендуемый баланс чёткости, глубины и читаемости.</string>
     <string name="settings_glass_preset_tinted_description">Более насыщенный цвет поверхности для яркого или сложного фона.</string>
     <string name="settings_glass_preset_custom_description">Использовать сохранённые значения прозрачности и размытия.</string>
+    <string name="settings_ambient_glow">Фоновое свечение</string>
+    <string name="settings_ambient_glow_description">Добавляет сплошному интерфейсу свечение в стиле мастера настройки</string>
+    <string name="settings_ambient_glow_dialog_description">Добавляет мягкое акцентное свечение в интерфейс без стекла. Медленная пульсация плавно меняется, когда анимация включена.</string>
+    <string name="settings_ambient_glow_effect">Свечение</string>
+    <string name="settings_ambient_glow_pulse">Медленная пульсация</string>
+    <string name="settings_glass_preset_ultra_clear">Ультрапрозрачный</string>
+    <string name="settings_glass_preset_opaque">Непрозрачный</string>
+    <string name="settings_glass_preset_ultra_clear_description">Максимум деталей фона с лёгким размытием.</string>
+    <string name="settings_glass_preset_opaque_description">Максимальная плотность панелей с самым сильным размытием.</string>
+    <string name="settings_glass_highlight_title">Яркость блика</string>
+    <string name="settings_glass_highlight_description">Настройте свет и контур стекла в фокусе.</string>
+    <string name="settings_glass_live_preview">Предпросмотр</string>
+    <string name="settings_glass_full_transparency_title">Разрешить полную прозрачность</string>
+    <string name="settings_glass_full_transparency_description">Отключает автоматический порог читаемости для максимально прозрачного стекла.</string>
+    <string name="settings_glass_depth_title">Глубина и тени</string>
+    <string name="settings_glass_depth_description">Включает свет при перемещении фокуса, лёгкий параллакс и движение глубины.</string>
 </resources>

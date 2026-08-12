@@ -140,7 +140,7 @@
     <string name="recovery_confirm_reset">Подтверждение: удалить все данные приложения</string>
     <string name="recovery_reset">Сбросить данные приложения (крайняя мера)</string>
     <string name="home_row_now_trending">Сейчас в тренде</string>
-    <string name="home_row_trending_description">Тренды TMDB, доступные для просмотра в ваших плейлистах</string>
+    <string name="home_row_trending_description">Показывает 4–10 позиций, только если тренды TMDB совпадают с фильмами или сериалами в каталоге вашего провайдера.</string>
     <string name="settings_trending_status_off">Раздел «Сейчас в тренде» отключён.</string>
     <string name="settings_trending_status_building">Раздел «Сейчас в тренде» формируется после синхронизации с провайдером.</string>
     <string name="settings_trending_status_metadata_disabled">Для раздела «Сейчас в тренде» нужны метаданные TMDB. Выберите «Только TMDB» или «Провайдер + TMDB».</string>

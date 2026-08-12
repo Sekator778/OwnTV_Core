@@ -941,4 +941,20 @@
     <string name="settings_glass_preset_balanced_description">Doporučená čistota, hloubka a čitelnost.</string>
     <string name="settings_glass_preset_tinted_description">Výraznější barva povrchu pro rušné nebo světlé pozadí.</string>
     <string name="settings_glass_preset_custom_description">Použít uložené hodnoty průhlednosti a rozostření.</string>
+    <string name="settings_ambient_glow">Okolní záře</string>
+    <string name="settings_ambient_glow_description">Přidá do plného rozhraní záři ve stylu úvodního nastavení</string>
+    <string name="settings_ambient_glow_dialog_description">Přidá do rozhraní bez skla jemnou záři v barvě motivu. Pomalé pulzování se lehce mění, když jsou zapnuté animace.</string>
+    <string name="settings_ambient_glow_effect">Záře</string>
+    <string name="settings_ambient_glow_pulse">Pomalé pulzování</string>
+    <string name="settings_glass_preset_ultra_clear">Velmi čiré</string>
+    <string name="settings_glass_preset_opaque">Neprůhledné</string>
+    <string name="settings_glass_preset_ultra_clear_description">Maximum detailů tapety s lehkým rozostřením.</string>
+    <string name="settings_glass_preset_opaque_description">Nejvyšší hutnost panelu s nejsilnějším rozostřením.</string>
+    <string name="settings_glass_highlight_title">Síla zvýraznění</string>
+    <string name="settings_glass_highlight_description">Upravte světlo a okraj skla při zaměření.</string>
+    <string name="settings_glass_live_preview">Živý náhled</string>
+    <string name="settings_glass_full_transparency_title">Povolit plnou průhlednost</string>
+    <string name="settings_glass_full_transparency_description">Vypne automatickou hranici čitelnosti pro nejčistší možné sklo.</string>
+    <string name="settings_glass_depth_title">Hloubka a stíny</string>
+    <string name="settings_glass_depth_description">Zapne světlo sledující zaměření, jemnou paralaxu a pohyb hloubky.</string>
 </resources>

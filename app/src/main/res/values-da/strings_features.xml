@@ -132,7 +132,7 @@
     <string name="recovery_confirm_reset">Bekræft: slet alle appdata</string>
     <string name="recovery_reset">Nulstil appdata (sidste udvej)</string>
     <string name="home_row_now_trending">Populært lige nu</string>
-    <string name="home_row_trending_description">Afspillelige TMDB-tendenser fundet i dine afspilningslister</string>
+    <string name="home_row_trending_description">Viser kun 4–10 elementer, når populære TMDB-titler matcher film eller serier i din udbyders katalog.</string>
     <string name="settings_trending_status_off">Populært lige nu er slået fra.</string>
     <string name="settings_trending_status_building">Populært lige nu klargøres efter synkronisering med udbyderen.</string>
     <string name="settings_trending_status_metadata_disabled">Populært lige nu kræver metadata fra TMDB. Vælg Kun TMDB eller Udbyder + TMDB.</string>

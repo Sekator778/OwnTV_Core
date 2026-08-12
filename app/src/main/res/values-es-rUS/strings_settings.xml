@@ -925,4 +925,20 @@
     <string name="settings_glass_preset_balanced_description">Claridad, profundidad y legibilidad recomendadas.</string>
     <string name="settings_glass_preset_tinted_description">Color de superficie más intenso para fondos cargados o brillantes.</string>
     <string name="settings_glass_preset_custom_description">Usa tus valores guardados de transparencia y desenfoque.</string>
+    <string name="settings_ambient_glow">Resplandor ambiental</string>
+    <string name="settings_ambient_glow_description">Añade a la interfaz sólida el resplandor del asistente de configuración</string>
+    <string name="settings_ambient_glow_dialog_description">Añade un suave resplandor de acento a la interfaz sin cristal. El pulso lento respira suavemente cuando las animaciones están activadas.</string>
+    <string name="settings_ambient_glow_effect">Resplandor</string>
+    <string name="settings_ambient_glow_pulse">Pulso lento</string>
+    <string name="settings_glass_preset_ultra_clear">Ultraclaro</string>
+    <string name="settings_glass_preset_opaque">Opaco</string>
+    <string name="settings_glass_preset_ultra_clear_description">Máximo detalle del fondo con desenfoque ligero.</string>
+    <string name="settings_glass_preset_opaque_description">Máxima densidad del panel con el desenfoque más intenso.</string>
+    <string name="settings_glass_highlight_title">Intensidad del brillo</string>
+    <string name="settings_glass_highlight_description">Ajusta la luz y el borde del cristal enfocado.</string>
+    <string name="settings_glass_live_preview">Vista previa en vivo</string>
+    <string name="settings_glass_full_transparency_title">Permitir transparencia total</string>
+    <string name="settings_glass_full_transparency_description">Desactiva el límite automático de legibilidad para obtener el cristal más claro.</string>
+    <string name="settings_glass_depth_title">Profundidad y sombras</string>
+    <string name="settings_glass_depth_description">Activa la luz de recorrido del foco, el paralaje sutil y el movimiento de profundidad.</string>
 </resources>

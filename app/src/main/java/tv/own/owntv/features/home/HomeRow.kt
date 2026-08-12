@@ -41,10 +41,15 @@ data class HomeConfig(
     val favoriteLiveMode: HomeLiveRowMode = HomeLiveRowMode.ON_NOW,
 ) {
     val visibleOrder: List<HomeRow>
-        get() = order.filter { it.implemented && it !in hidden }
+        get() = buildList {
+            // Trending is a fixed, optional Home feature rather than a reorderable content row.
+            // When enabled it always owns the top position, regardless of any previously saved order.
+            if (HomeRow.TRENDING !in hidden) add(HomeRow.TRENDING)
+            addAll(order.filter { it != HomeRow.TRENDING && it.implemented && it !in hidden })
+        }
 
     val settingsRows: List<HomeRow>
-        get() = order.filter { it.implemented }
+        get() = order.filter { it != HomeRow.TRENDING && it.implemented }
 
     fun toJson(): JSONObject = JSONObject().apply {
         put("order", JSONArray(order.map { it.name }))
