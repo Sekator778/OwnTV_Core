@@ -209,7 +209,6 @@
     <string name="player_reason_copy_mode_fallback">已改用 copy-mode 解碼</string>
     <string name="player_reason_archive_software_fallback">回看存檔已改以軟體解碼重新開啟</string>
     <string name="player_reason_stereo_fallback">已切換為立體聲音訊</string>
-    <string name="player_reason_vod_engine_session_fallback">電影與影集已在此工作階段改用 mpv 播放</string>
     <string name="player_reason_one_session_provider">提供者一次僅允許一個連線</string>
     <string name="player_reason_mpv_handoff">已將此頻道移交給 mpv</string>
     <string name="player_reason_stream_report">串流報告</string>

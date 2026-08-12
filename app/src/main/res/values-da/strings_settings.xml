@@ -352,6 +352,7 @@
     <string name="settings_hardware_decoding">Hardwareafkodning</string>
     <string name="settings_hardware_decoding_description">Brug tv\'ets hardwaredekoder. Slå dette fra, hvis nogle streams hakker eller viser billedfejl.</string>
     <string name="settings_movies_series_player">Afspiller til film og serier</string>
+    <string name="settings_reset_player_choices">Nulstil gemte afspillervalg</string>
     <string name="settings_external_player">Ekstern afspiller</string>
     <string name="settings_default_zoom">Standardzoom</string>
     <string name="settings_default_zoom_description">Billedformat/zoom, der anvendes, når afspilningen starter.</string>
@@ -398,6 +399,14 @@
     <string name="settings_external_player_description">Vælg, hvilke sektioner der skal åbnes i en ekstern app.</string>
     <string name="settings_audio_delay_value"><xliff:g id="delay">%1$d</xliff:g> ms</string>
     <string name="settings_movies_player_description">mpv (anbefales) understøtter flest formater — DTS/TrueHD-lyd og usædvanlige filer — og har desuden en løsning til A/V-synkronisering. Skift kun til ExoPlayer, hvis film eller afsnit ikke kan starte: Den kan afspille visse streams, som mpv ikke kan på bestemte tv\'er, men kan ikke afkode DTS/TrueHD-lyd og har ingen løsning til A/V-synkronisering. Uanset hvad du vælger, prøves den anden automatisk, hvis den valgte ikke virker.</string>
+    <string name="settings_reset_player_choices_description">Når du i afspilleren skifter en enkelt film eller episode mellem mpv og ExoPlayer, gemmes det valg til næste gang. Nulstilling får alt til at følge indstillingen ovenfor igen. Gemte valg for live-kanaler bevares.</string>
+    <string name="settings_reset_player_choices_none">Ingen gemt</string>
+    <plurals name="settings_reset_player_choices_count">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> gemt</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> gemt</item>
+    </plurals>
+    <string name="settings_reset_player_choices_confirm">Nulstil gemte afspillervalg?</string>
+    <string name="settings_reset_player_choices_confirm_description">Alle film og episoder følger igen indstillingen “Afspiller til film og serier”. Du kan altid skifte en enkelt af dem igen fra afspilleren.</string>
     <string name="settings_external_player_row_description">Åbn streams i en ekstern app (VLC, MX Player) i stedet for den indbyggede afspiller, og vælg dette særskilt for hver sektion. Nyttigt til streams, som denne app ikke kan afkode, eller hvis du foretrækker en anden afspiller. Positionen for fortsat afspilning og forrige/næste er ikke tilgængelige under ekstern afspilning; streams, der kræver en brugerdefineret User-Agent eller referer, kan muligvis ikke afspilles.</string>
     <string name="settings_resume_always">Fortsæt altid</string>
     <string name="settings_resume_ask">Spørg, om afspilningen skal fortsættes</string>

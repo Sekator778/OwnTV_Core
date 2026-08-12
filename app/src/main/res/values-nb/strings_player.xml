@@ -216,7 +216,6 @@
     <string name="player_reason_copy_mode_fallback">Falt tilbake til kopimodus-dekoding</string>
     <string name="player_reason_archive_software_fallback">Catch-up-arkivet ble åpnet på nytt med programvaredekoding</string>
     <string name="player_reason_stereo_fallback">Byttet til stereolyd</string>
-    <string name="player_reason_vod_engine_session_fallback">Byttet filmer og serier til mpv for denne økten</string>
     <string name="player_reason_one_session_provider">Leverandøren tillater bare én sesjon om gangen</string>
     <string name="player_reason_mpv_handoff">Overleverte denne kanalen til mpv</string>
     <string name="player_reason_stream_report">Strømrapport</string>

@@ -354,6 +354,7 @@
     <string name="settings_hardware_decoding">Dekodowanie sprzętowe</string>
     <string name="settings_hardware_decoding_description">Używaj dekodera sprzętowego telewizora. Wyłącz, jeśli niektóre strumienie się zacinają lub wyświetlają artefakty.</string>
     <string name="settings_movies_series_player">Odtwarzacz filmów i seriali</string>
+    <string name="settings_reset_player_choices">Resetuj zapisane wybory odtwarzacza</string>
     <string name="settings_external_player">Odtwarzacz zewnętrzny</string>
     <string name="settings_default_zoom">Domyślne powiększenie</string>
     <string name="settings_default_zoom_description">Proporcje obrazu/powiększenie stosowane po rozpoczęciu odtwarzania.</string>
@@ -400,6 +401,16 @@
     <string name="settings_external_player_description">Wybierz sekcje, które mają być otwierane w aplikacji zewnętrznej.</string>
     <string name="settings_audio_delay_value"><xliff:g id="delay">%1$d</xliff:g> ms</string>
     <string name="settings_movies_player_description">mpv (zalecany) obsługuje najwięcej formatów — dźwięk DTS/TrueHD, nietypowe pliki — oraz umożliwia korektę synchronizacji dźwięku i obrazu. Przełącz na ExoPlayer tylko wtedy, gdy nie można uruchomić filmu lub odcinka: na niektórych telewizorach odtwarza on strumienie, których mpv nie obsługuje, ale nie dekoduje dźwięku DTS/TrueHD i nie umożliwia korekty synchronizacji dźwięku i obrazu. Niezależnie od wyboru w razie błędu automatycznie zostanie wypróbowany drugi odtwarzacz.</string>
+    <string name="settings_reset_player_choices_description">Przełączenie pojedynczego filmu lub odcinka między mpv a ExoPlayerem w odtwarzaczu zapisuje ten wybór na następny raz. Reset sprawia, że wszystko znów stosuje ustawienie powyżej. Zapisane wybory dla kanałów na żywo zostają zachowane.</string>
+    <string name="settings_reset_player_choices_none">Nic nie zapisano</string>
+    <plurals name="settings_reset_player_choices_count">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> zapisany</item>
+        <item quantity="few"><xliff:g id="count">%1$d</xliff:g> zapisane</item>
+        <item quantity="many"><xliff:g id="count">%1$d</xliff:g> zapisanych</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> zapisanych</item>
+    </plurals>
+    <string name="settings_reset_player_choices_confirm">Zresetować zapisane wybory odtwarzacza?</string>
+    <string name="settings_reset_player_choices_confirm_description">Każdy film i odcinek wróci do ustawienia „Odtwarzacz filmów i seriali”. Pojedynczą pozycję zawsze możesz przełączyć ponownie w odtwarzaczu.</string>
     <string name="settings_external_player_row_description">Otwieraj strumienie w odtwarzaczu zewnętrznym (VLC, MX Player) zamiast we wbudowanym, wybierając go osobno dla każdej sekcji. Przydatne w przypadku strumieni, których ta aplikacja nie może zdekodować, lub gdy wolisz inny odtwarzacz. Podczas odtwarzania zewnętrznego miejsce wznowienia oraz funkcje „poprzedni” i „następny” są niedostępne; strumienie wymagające niestandardowego nagłówka User-Agent lub Referer mogą się nie odtwarzać.</string>
     <string name="settings_resume_always">Zawsze wznawiaj</string>
     <string name="settings_resume_ask">Pytaj o wznowienie</string>

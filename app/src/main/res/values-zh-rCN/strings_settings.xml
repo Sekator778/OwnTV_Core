@@ -351,6 +351,7 @@
     <string name="settings_hardware_decoding">硬件解码</string>
     <string name="settings_hardware_decoding_description">使用电视的硬件解码器。如果部分流媒体出现卡顿或画面伪影，请关闭此功能。</string>
     <string name="settings_movies_series_player">电影和剧集播放器</string>
+    <string name="settings_reset_player_choices">重置已保存的播放器选择</string>
     <string name="settings_external_player">外部播放器</string>
     <string name="settings_default_zoom">默认缩放</string>
     <string name="settings_default_zoom_description">播放开始时应用的宽高比/缩放设置。</string>
@@ -397,6 +398,13 @@
     <string name="settings_external_player_description">选择要在外部应用中打开的内容板块。</string>
     <string name="settings_audio_delay_value"><xliff:g id="delay">%1$d</xliff:g> 毫秒</string>
     <string name="settings_movies_player_description">mpv（推荐）支持的格式最广，包括 DTS/TrueHD 音频和少见文件，并提供音视频同步修正。仅当电影或剧集无法开始播放时才切换到 ExoPlayer：在某些电视上，它可以播放部分 mpv 无法播放的流，但无法解码 DTS/TrueHD 音频，也不提供音视频同步修正。无论选择哪一个，如果播放失败，系统都会自动尝试另一个。</string>
+    <string name="settings_reset_player_choices_description">在播放器中将单个电影或剧集在 mpv 与 ExoPlayer 之间切换后，该选择会保存下来供下次使用。重置后，所有内容将重新遵循上面的设置。直播频道已保存的选择会保留。</string>
+    <string name="settings_reset_player_choices_none">未保存任何选择</string>
+    <plurals name="settings_reset_player_choices_count">
+        <item quantity="other">已保存 <xliff:g id="count">%1$d</xliff:g> 项</item>
+    </plurals>
+    <string name="settings_reset_player_choices_confirm">要重置已保存的播放器选择吗？</string>
+    <string name="settings_reset_player_choices_confirm_description">所有电影和剧集将重新遵循“电影和剧集播放器”设置。你随时可以在播放器中再次单独切换某一项。</string>
     <string name="settings_external_player_row_description">按版块选择使用外部应用（VLC、MX Player）而非内置播放器打开流媒体。对于本应用无法解码的流媒体，或者您更喜欢其他播放器时，此功能很有用。使用外部应用播放时，无法使用继续播放位置及上一个/下一个功能；需要自定义 User-Agent 或 Referer 的流媒体可能无法播放。</string>
     <string name="settings_resume_always">总是继续播放</string>
     <string name="settings_resume_ask">询问是否继续播放</string>

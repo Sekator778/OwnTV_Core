@@ -353,6 +353,7 @@
     <string name="settings_hardware_decoding">Decodificação por hardware</string>
     <string name="settings_hardware_decoding_description">Use o decodificador por hardware da TV. Desative se algumas transmissões engasgarem ou exibirem artefatos.</string>
     <string name="settings_movies_series_player">Reprodutor de filmes e séries</string>
+    <string name="settings_reset_player_choices">Redefinir as opções de reprodutor salvas</string>
     <string name="settings_external_player">Reprodutor externo</string>
     <string name="settings_default_zoom">Zoom padrão</string>
     <string name="settings_default_zoom_description">Proporção da imagem/zoom aplicado ao iniciar a reprodução.</string>
@@ -399,6 +400,15 @@
     <string name="settings_external_player_description">Escolha quais seções serão abertas em um aplicativo externo.</string>
     <string name="settings_audio_delay_value"><xliff:g id="delay">%1$d</xliff:g> ms</string>
     <string name="settings_movies_player_description">O mpv (recomendado) oferece a maior compatibilidade com formatos — áudio DTS/TrueHD, arquivos incomuns — além da correção de sincronização A/V. Mude para o ExoPlayer apenas se filmes ou episódios não iniciarem: ele reproduz em certas TVs algumas transmissões que o mpv não consegue, mas não decodifica áudio DTS/TrueHD e não oferece correção de sincronização A/V. Independentemente da sua escolha, o outro será testado automaticamente em caso de falha.</string>
+    <string name="settings_reset_player_choices_description">Alternar um filme ou episódio específico entre mpv e ExoPlayer no reprodutor salva essa opção para a próxima vez. Redefinir faz tudo seguir novamente a configuração acima. As opções salvas dos canais ao vivo são mantidas.</string>
+    <string name="settings_reset_player_choices_none">Nenhuma salva</string>
+    <plurals name="settings_reset_player_choices_count">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> salva</item>
+        <item quantity="many"><xliff:g id="count">%1$d</xliff:g> salvas</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> salvas</item>
+    </plurals>
+    <string name="settings_reset_player_choices_confirm">Redefinir as opções de reprodutor salvas?</string>
+    <string name="settings_reset_player_choices_confirm_description">Todos os filmes e episódios voltam a seguir a configuração “Reprodutor de filmes e séries”. Você sempre pode alternar um item específico novamente pelo reprodutor.</string>
     <string name="settings_external_player_row_description">Abra as transmissões em um aplicativo externo (VLC, MX Player), em vez de usar o reprodutor integrado, com a opção escolhida por seção. Útil para transmissões que este aplicativo não consegue decodificar ou se você prefere outro reprodutor. A posição para continuar a reprodução e os comandos anterior/próximo ficam indisponíveis durante a reprodução externa; transmissões que exigem um User-Agent ou referer personalizado podem não ser reproduzidas.</string>
     <string name="settings_resume_always">Sempre continuar</string>
     <string name="settings_resume_ask">Perguntar se deseja continuar</string>

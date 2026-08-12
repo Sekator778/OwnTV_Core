@@ -354,6 +354,7 @@
     <string name="settings_hardware_decoding">Аппаратное декодирование</string>
     <string name="settings_hardware_decoding_description">Использовать аппаратный декодер телевизора. Отключите, если некоторые потоки воспроизводятся с рывками или артефактами.</string>
     <string name="settings_movies_series_player">Плеер фильмов и сериалов</string>
+    <string name="settings_reset_player_choices">Сбросить сохранённый выбор плеера</string>
     <string name="settings_external_player">Внешний плеер</string>
     <string name="settings_default_zoom">Масштаб по умолчанию</string>
     <string name="settings_default_zoom_description">Соотношение сторон и масштаб, применяемые при запуске воспроизведения.</string>
@@ -400,6 +401,16 @@
     <string name="settings_external_player_description">Выберите разделы, которые будут открываться во внешнем приложении.</string>
     <string name="settings_audio_delay_value"><xliff:g id="delay">%1$d</xliff:g> мс</string>
     <string name="settings_movies_player_description">mpv (рекомендуется) поддерживает больше всего форматов — звук DTS/TrueHD, нестандартные файлы — и позволяет исправлять рассинхронизацию звука и видео. Переключайтесь на ExoPlayer, только если фильмы или серии не запускаются: на некоторых телевизорах он воспроизводит отдельные потоки, с которыми не справляется mpv, но не может декодировать звук DTS/TrueHD и не позволяет исправить рассинхронизацию звука и видео. Независимо от выбора, при сбое автоматически будет опробован другой плеер.</string>
+    <string name="settings_reset_player_choices_description">Если переключить отдельный фильм или серию между mpv и ExoPlayer прямо в плеере, этот выбор сохраняется на следующий раз. Сброс возвращает всё к настройке выше. Сохранённый выбор для каналов прямого эфира остаётся.</string>
+    <string name="settings_reset_player_choices_none">Ничего не сохранено</string>
+    <plurals name="settings_reset_player_choices_count">
+        <item quantity="one">Сохранено: <xliff:g id="count">%1$d</xliff:g></item>
+        <item quantity="few">Сохранено: <xliff:g id="count">%1$d</xliff:g></item>
+        <item quantity="many">Сохранено: <xliff:g id="count">%1$d</xliff:g></item>
+        <item quantity="other">Сохранено: <xliff:g id="count">%1$d</xliff:g></item>
+    </plurals>
+    <string name="settings_reset_player_choices_confirm">Сбросить сохранённый выбор плеера?</string>
+    <string name="settings_reset_player_choices_confirm_description">Все фильмы и серии снова следуют настройке «Плеер фильмов и сериалов». Отдельный элемент всегда можно переключить заново прямо в плеере.</string>
     <string name="settings_external_player_row_description">Открывать потоки во внешнем приложении (VLC, MX Player), а не во встроенном плеере; выбор задаётся отдельно для каждого раздела. Полезно для потоков, которые это приложение не может декодировать, или если вы предпочитаете другой плеер. При воспроизведении во внешнем плеере продолжение с места остановки и переход к предыдущему или следующему недоступны; потоки, для которых требуется особый User-Agent или источник перехода, могут не воспроизводиться.</string>
     <string name="settings_resume_always">Всегда продолжать</string>
     <string name="settings_resume_ask">Спрашивать о продолжении</string>

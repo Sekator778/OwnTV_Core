@@ -209,7 +209,6 @@
     <string name="player_reason_copy_mode_fallback">已回退到复制模式解码</string>
     <string name="player_reason_archive_software_fallback">已使用软件解码重新打开回看存档</string>
     <string name="player_reason_stereo_fallback">已切换到立体声音频</string>
-    <string name="player_reason_vod_engine_session_fallback">本会话已将电影和剧集切换到 mpv</string>
     <string name="player_reason_one_session_provider">提供商一次只允许一个会话</string>
     <string name="player_reason_mpv_handoff">已将此频道移交给 mpv</string>
     <string name="player_reason_stream_report">流报告</string>

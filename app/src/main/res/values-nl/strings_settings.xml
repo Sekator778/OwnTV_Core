@@ -352,6 +352,7 @@
     <string name="settings_hardware_decoding">Hardwaredecodering</string>
     <string name="settings_hardware_decoding_description">Gebruik de hardwaredecoder van de tv. Schakel dit uit als sommige streams haperen of beeldfouten vertonen.</string>
     <string name="settings_movies_series_player">Speler voor films en series</string>
+    <string name="settings_reset_player_choices">Opgeslagen spelerkeuzes opnieuw instellen</string>
     <string name="settings_external_player">Externe speler</string>
     <string name="settings_default_zoom">Standaardzoom</string>
     <string name="settings_default_zoom_description">Beeldverhouding/zoom die wordt toegepast wanneer het afspelen begint.</string>
@@ -398,6 +399,14 @@
     <string name="settings_external_player_description">Kies welke onderdelen in een externe app worden geopend.</string>
     <string name="settings_audio_delay_value"><xliff:g id="delay">%1$d</xliff:g> ms</string>
     <string name="settings_movies_player_description">mpv (aanbevolen) ondersteunt de meeste formaten — DTS/TrueHD-audio en ongebruikelijke bestanden — en biedt ook een oplossing voor A/V-synchronisatie. Schakel alleen over naar ExoPlayer als films of afleveringen niet starten: deze speelt op bepaalde tv\'s sommige streams af die mpv niet kan afspelen, maar kan DTS/TrueHD-audio niet decoderen en biedt geen oplossing voor A/V-synchronisatie. Welke u ook kiest, de andere wordt automatisch geprobeerd als het afspelen mislukt.</string>
+    <string name="settings_reset_player_choices_description">Als je een afzonderlijke film of aflevering in de speler tussen mpv en ExoPlayer wisselt, wordt die keuze bewaard voor de volgende keer. Na opnieuw instellen volgt alles weer de instelling hierboven. Opgeslagen keuzes voor livekanalen blijven behouden.</string>
+    <string name="settings_reset_player_choices_none">Niets opgeslagen</string>
+    <plurals name="settings_reset_player_choices_count">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> opgeslagen</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> opgeslagen</item>
+    </plurals>
+    <string name="settings_reset_player_choices_confirm">Opgeslagen spelerkeuzes opnieuw instellen?</string>
+    <string name="settings_reset_player_choices_confirm_description">Elke film en aflevering volgt weer de instelling “Speler voor films en series”. Je kunt een afzonderlijke titel altijd opnieuw wisselen vanuit de speler.</string>
     <string name="settings_external_player_row_description">Open streams in een externe app (VLC, MX Player) in plaats van met de ingebouwde speler; dit wordt per sectie ingesteld. Handig voor streams die deze app niet kan decoderen, of als je liever een andere speler gebruikt. De hervatpositie en vorige/volgende zijn niet beschikbaar bij extern afspelen; streams waarvoor een aangepaste User-Agent of Referer-header nodig is, worden mogelijk niet afgespeeld.</string>
     <string name="settings_resume_always">Altijd hervatten</string>
     <string name="settings_resume_ask">Vragen om te hervatten</string>

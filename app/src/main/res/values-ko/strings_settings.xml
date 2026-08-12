@@ -351,6 +351,7 @@
     <string name="settings_hardware_decoding">하드웨어 디코딩</string>
     <string name="settings_hardware_decoding_description">TV의 하드웨어 디코더를 사용합니다. 일부 스트림이 끊기거나 화면에 이상이 나타나면 끄세요.</string>
     <string name="settings_movies_series_player">영화 및 시리즈 플레이어</string>
+    <string name="settings_reset_player_choices">저장된 플레이어 선택 초기화</string>
     <string name="settings_external_player">외부 플레이어</string>
     <string name="settings_default_zoom">기본 화면 확대</string>
     <string name="settings_default_zoom_description">재생이 시작될 때 적용할 화면 비율/확대 방식입니다.</string>
@@ -397,6 +398,13 @@
     <string name="settings_external_player_description">외부 앱에서 열 섹션을 선택합니다.</string>
     <string name="settings_audio_delay_value"><xliff:g id="delay">%1$d</xliff:g> ms</string>
     <string name="settings_movies_player_description">mpv(권장)는 DTS/TrueHD 오디오와 특수한 파일을 비롯해 가장 다양한 형식을 지원하며 A/V 동기화 보정 기능도 제공합니다. 영화나 에피소드가 시작되지 않을 때만 ExoPlayer로 전환하세요. 일부 TV에서는 mpv로 재생할 수 없는 스트림을 재생하지만 DTS/TrueHD 오디오를 디코딩할 수 없고 A/V 동기화 보정 기능도 없습니다. 어느 쪽을 선택하든 실패하면 다른 플레이어가 자동으로 시도됩니다.</string>
+    <string name="settings_reset_player_choices_description">플레이어에서 개별 영화나 에피소드를 mpv와 ExoPlayer 간에 전환하면 그 선택이 다음을 위해 저장됩니다. 초기화하면 모두 다시 위 설정을 따릅니다. 라이브 채널의 저장된 선택은 유지됩니다.</string>
+    <string name="settings_reset_player_choices_none">저장된 항목 없음</string>
+    <plurals name="settings_reset_player_choices_count">
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g>개 저장됨</item>
+    </plurals>
+    <string name="settings_reset_player_choices_confirm">저장된 플레이어 선택을 초기화할까요?</string>
+    <string name="settings_reset_player_choices_confirm_description">모든 영화와 에피소드가 다시 “영화 및 시리즈 플레이어” 설정을 따릅니다. 개별 항목은 언제든지 플레이어에서 다시 전환할 수 있습니다.</string>
     <string name="settings_external_player_row_description">스트림을 내장 플레이어 대신 섹션별로 선택한 외부 앱(VLC, MX Player)에서 엽니다. 이 앱에서 디코딩할 수 없는 스트림을 재생하거나 다른 플레이어를 선호할 때 유용합니다. 외부에서 재생하는 동안에는 이어보기 위치와 이전/다음 기능을 사용할 수 없으며, 맞춤 User-Agent 또는 리퍼러가 필요한 스트림은 재생되지 않을 수 있습니다.</string>
     <string name="settings_resume_always">항상 이어보기</string>
     <string name="settings_resume_ask">이어볼지 묻기</string>

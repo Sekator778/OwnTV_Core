@@ -353,6 +353,7 @@
     <string name="settings_hardware_decoding">Decodifica hardware</string>
     <string name="settings_hardware_decoding_description">Usa il decoder hardware della TV. Disattiva l\'opzione se alcuni flussi vanno a scatti o mostrano artefatti.</string>
     <string name="settings_movies_series_player">Player per film e serie</string>
+    <string name="settings_reset_player_choices">Reimposta le scelte del player salvate</string>
     <string name="settings_external_player">Player esterno</string>
     <string name="settings_default_zoom">Zoom predefinito</string>
     <string name="settings_default_zoom_description">Rapporto d\'aspetto/zoom applicato all\'avvio della riproduzione.</string>
@@ -399,6 +400,15 @@
     <string name="settings_external_player_description">Scegli quali sezioni aprire in un\'app esterna.</string>
     <string name="settings_audio_delay_value"><xliff:g id="delay">%1$d</xliff:g> ms</string>
     <string name="settings_movies_player_description">mpv (consigliato) offre il supporto più ampio per i formati, inclusi l\'audio DTS/TrueHD e i file meno comuni, oltre alla correzione della sincronizzazione A/V. Passa a ExoPlayer solo se film o episodi non si avviano: su alcuni televisori riproduce determinati flussi che mpv non riesce a gestire, ma non può decodificare l\'audio DTS/TrueHD e non dispone della correzione della sincronizzazione A/V. Qualunque sia la scelta, in caso di errore viene provato automaticamente anche l\'altro player.</string>
+    <string name="settings_reset_player_choices_description">Se nel player passi un singolo film o episodio da mpv a ExoPlayer, quella scelta viene salvata per la volta successiva. Reimpostando, tutto torna a seguire l’impostazione qui sopra. Le scelte salvate per i canali live vengono mantenute.</string>
+    <string name="settings_reset_player_choices_none">Nessuna salvata</string>
+    <plurals name="settings_reset_player_choices_count">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> salvata</item>
+        <item quantity="many"><xliff:g id="count">%1$d</xliff:g> salvate</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> salvate</item>
+    </plurals>
+    <string name="settings_reset_player_choices_confirm">Reimpostare le scelte del player salvate?</string>
+    <string name="settings_reset_player_choices_confirm_description">Ogni film ed episodio torna a seguire l’impostazione “Player per film e serie”. Puoi sempre cambiare di nuovo un singolo titolo dal player.</string>
     <string name="settings_external_player_row_description">Apri i flussi in un\'app esterna (VLC, MX Player) anziché nel player integrato, con una scelta specifica per ogni sezione. È utile per i flussi che questa app non riesce a decodificare o se preferisci un altro player. Durante la riproduzione esterna, la posizione di ripresa e i comandi precedente/successivo non sono disponibili; i flussi che richiedono uno User-Agent personalizzato o un referer potrebbero non essere riprodotti.</string>
     <string name="settings_resume_always">Riprendi sempre</string>
     <string name="settings_resume_ask">Chiedi se riprendere</string>

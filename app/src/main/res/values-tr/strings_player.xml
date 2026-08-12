@@ -216,7 +216,6 @@
     <string name="player_reason_copy_mode_fallback">Kopyalama modunda kod çözmeye geri dönüldü</string>
     <string name="player_reason_archive_software_fallback">Geri izleme arşivi yazılımla kod çözmeyle yeniden açıldı</string>
     <string name="player_reason_stereo_fallback">Stereo sese geçildi</string>
-    <string name="player_reason_vod_engine_session_fallback">Filmler ve Diziler bu oturum için mpv\'ye geçirildi</string>
     <string name="player_reason_one_session_provider">Sağlayıcı aynı anda yalnızca bir oturuma izin veriyor</string>
     <string name="player_reason_mpv_handoff">Bu kanal mpv\'ye devredildi</string>
     <string name="player_reason_stream_report">Yayın raporu</string>

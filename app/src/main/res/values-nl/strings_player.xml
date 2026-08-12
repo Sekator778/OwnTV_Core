@@ -216,7 +216,6 @@
     <string name="player_reason_copy_mode_fallback">Teruggevallen op copy-mode-decodering</string>
     <string name="player_reason_archive_software_fallback">Archief voor uitgesteld kijken heropend in softwaredecodering</string>
     <string name="player_reason_stereo_fallback">Overgeschakeld naar stereo-audio</string>
-    <string name="player_reason_vod_engine_session_fallback">Films en series overgeschakeld naar mpv voor deze sessie</string>
     <string name="player_reason_one_session_provider">Provider staat slechts één sessie tegelijk toe</string>
     <string name="player_reason_mpv_handoff">Deze zender overgedragen aan mpv</string>
     <string name="player_reason_stream_report">Streamrapport</string>

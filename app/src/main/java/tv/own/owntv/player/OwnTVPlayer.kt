@@ -173,10 +173,6 @@ class OwnTVPlayer(
 
         // mpv's stock subtitle values, restored verbatim for every option of the custom look (#96)
         // that is left on "Default" — or whenever the master toggle is off.
-        /** Consecutive automatic Exo→mpv VOD fallbacks that arm the session latch — see
-         *  [noteExoVodFallback]. Three is "not a coincidence" without punishing a bad run of files. */
-        private const val EXO_VOD_LATCH_AFTER = 3
-
         private const val MPV_DEFAULT_SUB_COLOR = "#FFFFFFFF"
         private const val MPV_DEFAULT_SUB_BACK_COLOR = "#00000000"
         private const val MPV_DEFAULT_SUB_SCALE = 1.0
@@ -905,13 +901,8 @@ class OwnTVPlayer(
             }
         }.launchIn(scope)
         settings.autoPlayNext.onEach { autoPlayNext = it }.launchIn(scope)
-        // Applies from the next VOD load. Touching the setting is an explicit "try it again" from the
-        // user, so it also clears the session latch armed by repeated ExoPlayer failures.
-        settings.vodPreferExo.onEach {
-            vodPreferExo = it
-            exoVodSessionLatched = false
-            exoVodFallbacksThisSession = 0
-        }.launchIn(scope)
+        // Applies from the next VOD load.
+        settings.vodPreferExo.onEach { vodPreferExo = it }.launchIn(scope)
         settings.measuredStreamStats.onEach { on ->
             measuredStreamStats = on
             if (!on) exoEngine?.setBitrateTrackingEnabled(false) // turning it off stops any in-flight measuring now
@@ -1246,10 +1237,6 @@ class OwnTVPlayer(
     // falls back to mpv (the reverse chain); a later terminal mpv failure shows the combined error.
     @Volatile private var exoPrimaryThisItem = false
     @Volatile private var exoFailureBeforeMpv: PlaybackFailure? = null
-    // Consecutive automatic Exo→mpv VOD fallbacks this session, and the latch they arm — see
-    // [noteExoVodFallback]. Reset by a VOD that actually renders on Exo, and by a setting change.
-    @Volatile private var exoVodFallbacksThisSession = 0
-    @Volatile private var exoVodSessionLatched = false
     // A VOD load that wants to start on ExoPlayer but arrived before the surface exists (first open):
     // attachSurface flushes pendingUrl into startExo instead of mpv's startLoad.
     @Volatile private var pendingExoStart = false
@@ -1318,9 +1305,6 @@ class OwnTVPlayer(
         }
         override fun onFirstFrame() {
             _buffering.value = false; _freezeFrame.value = null
-            // A VOD that actually renders on Exo clears the consecutive-failure run: the session latch
-            // is meant for a device where Exo never works, not for one awkward file among good ones.
-            if (exoPrimaryThisItem) exoVodFallbacksThisSession = 0
             // Exo owns this VOD as an engine (fallback/preferred): re-list previously downloaded subs
             // (§9), same as mpv's FILE_LOADED hook. Re-fires after each side-load re-prepare, but the
             // restore path no-ops when there's nothing new to attach.
@@ -1340,12 +1324,12 @@ class OwnTVPlayer(
             _subCount.value = tracks.size
         }
         override fun onVideoFps(fps: Float) { _videoFps.value = fps; updateStreamChips() }
-        override fun onError(failure: PlaybackFailure, decodeFailure: Boolean) {
+        override fun onError(failure: PlaybackFailure) {
             // Image-sub handoff → give playback back to mpv. Engine chains: Exo-as-primary falls back to
             // mpv; Exo-as-fallback means mpv already failed this item, so reloading it there would just
             // loop — surface the combined both-engines error.
             when {
-                exoVodFallback && exoPrimaryThisItem -> scope.launch { fallbackToMpvVod(failure, decodeFailure) }
+                exoVodFallback && exoPrimaryThisItem -> scope.launch { fallbackToMpvVod(failure) }
                 exoVodFallback -> scope.launch { failBothEngines(failure) }
                 else -> scope.launch { revertToMpv(error = failure) }
             }
@@ -1720,56 +1704,14 @@ class OwnTVPlayer(
         return true
     }
 
-    /**
-     * Book-keeping for an automatic ExoPlayer → mpv VOD fallback, so the user stops paying for the
-     * same discovery twice.
-     *
-     * Two independent memories, both deliberately conservative:
-     *
-     * 1. **Per item (persisted, decode failures only).** ExoPlayer proved it cannot decode THIS file
-     *    on this TV — on hardware and on software, since the software rung ran first. That verdict is
-     *    about the file and the device, so it is pinned and the next play starts on mpv immediately.
-     *    A network/source error is never pinned: it says nothing about the file. The user can always
-     *    override with the HUD engine toggle, which writes the opposite pin.
-     *
-     * 2. **Per session (not persisted, any cause).** [EXO_VOD_LATCH_AFTER] consecutive items falling
-     *    back means the problem is the device, not the files — every further movie would open on Exo,
-     *    stumble, and switch. So Exo stops being the preferred VOD engine for the rest of the session.
-     *    Mirrors [AudioOutputPolicy]'s stereo latch, and like it, clears on restart and whenever the
-     *    user changes the setting — so it can never permanently strand anyone on the wrong engine.
-     */
-    private fun noteExoVodFallback(decodeFailure: Boolean) {
-        if (decodeFailure) {
-            val key = currentContentKey ?: currentUrl
-            if (key != null) {
-                android.util.Log.w(TAG, "pinning this item to mpv — ExoPlayer can't decode it on this device")
-                scope.launch { vodEngineStore.pin(key, tv.own.owntv.core.player.VodEnginePin.MPV) }
-            }
-        }
-        exoVodFallbacksThisSession++
-        if (exoVodFallbacksThisSession >= EXO_VOD_LATCH_AFTER && !exoVodSessionLatched) {
-            exoVodSessionLatched = true
-            android.util.Log.w(
-                TAG,
-                "ExoPlayer failed $exoVodFallbacksThisSession VOD items in a row — preferring mpv for the rest of this session",
-            )
-            PlaybackErrorLog.event(
-                context, "exoplayer", live = false,
-                reason = PlayerFailureReason.VOD_ENGINE_SESSION_FALLBACK,
-                detail = "ExoPlayer failed $exoVodFallbacksThisSession items in a row",
-            )
-        }
-    }
-
     /** ExoPlayer-preferred mode: the item started on Exo and Exo failed — retry it on mpv (the reverse
      *  of [fallbackToExoVod]). mpv gets its full retry ladder; a terminal mpv failure after this shows
      *  the combined both-engines error via [vodErrorMessage]. */
-    private fun fallbackToMpvVod(exoError: PlaybackFailure, decodeFailure: Boolean = false) {
+    private fun fallbackToMpvVod(exoError: PlaybackFailure) {
         if (!exoActive) return
         val url = currentUrl ?: return
         android.util.Log.w(TAG, "VOD terminally failed on ExoPlayer ($exoError) — falling back to mpv")
         val pos = engineSwitchResumePos()
-        noteExoVodFallback(decodeFailure)
         exoFailureBeforeMpv = exoError
         exoPrimaryThisItem = false
         triedExoVodFallback = true // never bounce this item back to Exo
@@ -2431,14 +2373,19 @@ class OwnTVPlayer(
         val needsFreshSurface = (lastVideoHeightPx > 1080 || forceSurfaceReset) && surfaceAttached
         // P6 — read the stable key first, then the legacy URL key that older builds wrote; a legacy
         // hit is rewritten under the stable key so it survives the next re-sync/Stalker resolve.
+        //
+        // Only a pin the USER made with the HUD engine toggle may override the setting. Nothing the
+        // player learns by itself does: the setting means "start here every time", so a run of failures
+        // — which on a public playlist is usually dead links, not this TV — can never quietly retire the
+        // chosen engine. The cost is that a genuinely undecodable file pays its fallback on every open;
+        // the user's remedy is the toggle, which is one click and visible.
         val pinKey = meta.contentKey
         val startOnExo = when {
             pinKey != null && pinKey in vodPinnedMpv -> false
             pinKey != null && pinKey in vodPinnedExo -> true
             url in vodPinnedMpv -> { migrateVodPin(url, pinKey); false }
             url in vodPinnedExo -> { migrateVodPin(url, pinKey); true }
-            // The session latch loses to an explicit per-item pin (handled above) but beats the setting.
-            else -> vodPreferExo && !exoVodSessionLatched
+            else -> vodPreferExo
         }
         if (!isLive && startOnExo && resetRetries && !isArchive) {
             exoPrimaryThisItem = true

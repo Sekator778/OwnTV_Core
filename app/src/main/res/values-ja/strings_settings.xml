@@ -351,6 +351,7 @@
     <string name="settings_hardware_decoding">ハードウェアデコード</string>
     <string name="settings_hardware_decoding_description">TVのハードウェアデコーダーを使用します。一部のストリームで映像が途切れたり、表示が乱れたりする場合はオフにしてください。</string>
     <string name="settings_movies_series_player">映画とシリーズのプレーヤー</string>
+    <string name="settings_reset_player_choices">保存したプレーヤーの選択をリセット</string>
     <string name="settings_external_player">外部プレーヤー</string>
     <string name="settings_default_zoom">デフォルトのズーム</string>
     <string name="settings_default_zoom_description">再生開始時に適用するアスペクト比／ズームです。</string>
@@ -397,6 +398,13 @@
     <string name="settings_external_player_description">外部アプリで開くセクションを選択します。</string>
     <string name="settings_audio_delay_value"><xliff:g id="delay">%1$d</xliff:g> ms</string>
     <string name="settings_movies_player_description">mpv（推奨）は、DTS/TrueHD音声や一般的でないファイルなど、最も幅広い形式に対応し、A/V同期補正も利用できます。映画やエピソードが開始できない場合にのみExoPlayerへ切り替えてください。一部のテレビではmpvで再生できないストリームを再生できますが、DTS/TrueHD音声をデコードできず、A/V同期補正もありません。どちらを選んでも、失敗した場合はもう一方が自動的に試されます。</string>
+    <string name="settings_reset_player_choices_description">プレーヤーで個々の映画やエピソードをmpvとExoPlayerで切り替えると、その選択が次回のために保存されます。リセットすると、すべてが再び上記の設定に従います。ライブチャンネルの保存済みの選択はそのまま残ります。</string>
+    <string name="settings_reset_player_choices_none">保存なし</string>
+    <plurals name="settings_reset_player_choices_count">
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g>件保存済み</item>
+    </plurals>
+    <string name="settings_reset_player_choices_confirm">保存したプレーヤーの選択をリセットしますか？</string>
+    <string name="settings_reset_player_choices_confirm_description">すべての映画とエピソードが「映画とシリーズのプレーヤー」設定に戻ります。個別の切り替えは、いつでもプレーヤーから行えます。</string>
     <string name="settings_external_player_row_description">セクションごとに選択し、内蔵プレーヤーではなく外部アプリ（VLC、MX Player）でストリームを開きます。このアプリでデコードできないストリームを再生する場合や、別のプレーヤーを使用したい場合に便利です。外部での再生中は再開位置と前へ／次へは利用できません。また、カスタムUser-Agentまたはリファラーが必要なストリームは再生できない場合があります。</string>
     <string name="settings_resume_always">常に再開</string>
     <string name="settings_resume_ask">再開するか確認</string>

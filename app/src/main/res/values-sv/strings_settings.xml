@@ -352,6 +352,7 @@
     <string name="settings_hardware_decoding">Maskinvaruavkodning</string>
     <string name="settings_hardware_decoding_description">Använd tv:ns maskinvaruavkodare. Stäng av om vissa strömmar hackar eller visar bildfel.</string>
     <string name="settings_movies_series_player">Spelare för filmer och serier</string>
+    <string name="settings_reset_player_choices">Återställ sparade spelarval</string>
     <string name="settings_external_player">Extern spelare</string>
     <string name="settings_default_zoom">Standardzoom</string>
     <string name="settings_default_zoom_description">Bildformat/zoom som används när uppspelningen startar.</string>
@@ -398,6 +399,14 @@
     <string name="settings_external_player_description">Välj vilka avsnitt som ska öppnas i en extern app.</string>
     <string name="settings_audio_delay_value"><xliff:g id="delay">%1$d</xliff:g> ms</string>
     <string name="settings_movies_player_description">mpv (rekommenderas) har det bredaste formatstödet – DTS/TrueHD-ljud, ovanliga filer – samt korrigering av ljud-/bildsynkronisering. Byt endast till ExoPlayer om filmer eller avsnitt inte startar: den kan spela upp vissa strömmar som mpv inte klarar på vissa tv-apparater, men kan inte avkoda DTS/TrueHD-ljud och saknar korrigering av ljud-/bildsynkronisering. Oavsett vilken du väljer provas den andra automatiskt om den första misslyckas.</string>
+    <string name="settings_reset_player_choices_description">När du växlar en enskild film eller ett avsnitt mellan mpv och ExoPlayer i spelaren sparas det valet till nästa gång. Återställning gör att allt följer inställningen ovan igen. Sparade val för livekanaler behålls.</string>
+    <string name="settings_reset_player_choices_none">Inga sparade</string>
+    <plurals name="settings_reset_player_choices_count">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> sparat</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> sparade</item>
+    </plurals>
+    <string name="settings_reset_player_choices_confirm">Återställa sparade spelarval?</string>
+    <string name="settings_reset_player_choices_confirm_description">Alla filmer och avsnitt följer inställningen ”Spelare för filmer och serier” igen. Du kan alltid växla en enskild titel igen från spelaren.</string>
     <string name="settings_external_player_row_description">Öppna strömmar i en extern app (VLC, MX Player) i stället för den inbyggda spelaren; valet görs per sektion. Det är användbart för strömmar som den här appen inte kan avkoda eller om du föredrar en annan spelare. Det går inte att återuppta från den senaste positionen eller använda föregående/nästa vid extern uppspelning; strömmar som kräver en anpassad User-Agent eller referer kanske inte kan spelas upp.</string>
     <string name="settings_resume_always">Återuppta alltid</string>
     <string name="settings_resume_ask">Fråga om uppspelningen ska återupptas</string>

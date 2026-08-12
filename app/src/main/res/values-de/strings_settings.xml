@@ -352,6 +352,7 @@
     <string name="settings_hardware_decoding">Hardwaredecodierung</string>
     <string name="settings_hardware_decoding_description">Den Hardwaredecoder des Fernsehers verwenden. Deaktivieren Sie diese Option, wenn einige Streams ruckeln oder Bildfehler zeigen.</string>
     <string name="settings_movies_series_player">Player für Filme und Serien</string>
+    <string name="settings_reset_player_choices">Gespeicherte Player-Auswahl zurücksetzen</string>
     <string name="settings_external_player">Externer Player</string>
     <string name="settings_default_zoom">Standardzoom</string>
     <string name="settings_default_zoom_description">Seitenverhältnis/Zoom, das bzw. der beim Start der Wiedergabe angewendet wird.</string>
@@ -398,6 +399,14 @@
     <string name="settings_external_player_description">Auswählen, welche Bereiche in einer externen App geöffnet werden.</string>
     <string name="settings_audio_delay_value"><xliff:g id="delay">%1$d</xliff:g> ms</string>
     <string name="settings_movies_player_description">mpv (empfohlen) bietet die umfassendste Formatunterstützung – DTS/TrueHD-Audio, ungewöhnliche Dateien – sowie die Korrektur der A/V-Synchronisierung. Wechsle nur zu ExoPlayer, wenn Filme oder Folgen nicht starten: Auf bestimmten Fernsehern kann er einige Streams wiedergeben, die mpv nicht wiedergeben kann, er kann jedoch kein DTS/TrueHD-Audio decodieren und bietet keine Korrektur der A/V-Synchronisierung. Unabhängig von deiner Auswahl wird bei einem Fehler automatisch der jeweils andere Player ausprobiert.</string>
+    <string name="settings_reset_player_choices_description">Wenn du einen einzelnen Film oder eine Folge im Player zwischen mpv und ExoPlayer umschaltest, wird diese Auswahl für das nächste Mal gespeichert. Beim Zurücksetzen folgt wieder alles der Einstellung oben. Gespeicherte Auswahlen für Live-Kanäle bleiben erhalten.</string>
+    <string name="settings_reset_player_choices_none">Nichts gespeichert</string>
+    <plurals name="settings_reset_player_choices_count">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> gespeichert</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> gespeichert</item>
+    </plurals>
+    <string name="settings_reset_player_choices_confirm">Gespeicherte Player-Auswahl zurücksetzen?</string>
+    <string name="settings_reset_player_choices_confirm_description">Jeder Film und jede Folge folgt wieder der Einstellung „Player für Filme und Serien“. Du kannst einzelne Titel jederzeit erneut im Player umschalten.</string>
     <string name="settings_external_player_row_description">Streams in einer externen App (VLC, MX Player) statt im integrierten Player öffnen, separat für jeden Bereich auswählbar. Nützlich für Streams, die diese App nicht decodieren kann, oder wenn du einen anderen Player bevorzugst. Die Fortsetzungsposition und „Zurück/Weiter“ sind bei externer Wiedergabe nicht verfügbar; Streams, die einen benutzerdefinierten User-Agent oder Referer benötigen, werden möglicherweise nicht wiedergegeben.</string>
     <string name="settings_resume_always">Immer fortsetzen</string>
     <string name="settings_resume_ask">Vor dem Fortsetzen fragen</string>

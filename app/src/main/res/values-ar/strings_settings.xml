@@ -356,6 +356,7 @@
     <string name="settings_hardware_decoding">فك الترميز بالأجهزة</string>
     <string name="settings_hardware_decoding_description">استخدام وحدة فك الترميز بالأجهزة في التلفزيون. عطّل هذا الخيار إذا تقطعت بعض عمليات البث أو ظهرت بها عيوب مرئية.</string>
     <string name="settings_movies_series_player">مشغّل الأفلام والمسلسلات</string>
+    <string name="settings_reset_player_choices">إعادة ضبط خيارات المشغّل المحفوظة</string>
     <string name="settings_external_player">مشغّل خارجي</string>
     <string name="settings_default_zoom">التكبير الافتراضي</string>
     <string name="settings_default_zoom_description">نسبة العرض إلى الارتفاع/التكبير المطبّقة عند بدء التشغيل.</string>
@@ -402,6 +403,18 @@
     <string name="settings_external_player_description">اختر الأقسام التي تُفتح في تطبيق خارجي.</string>
     <string name="settings_audio_delay_value"><xliff:g id="delay">%1$d</xliff:g> مللي ثانية</string>
     <string name="settings_movies_player_description">يتمتع mpv (موصى به) بأوسع دعم للتنسيقات — بما في ذلك صوت DTS/TrueHD والملفات غير المعتادة — بالإضافة إلى إصلاح مزامنة الصوت/الفيديو. انتقل إلى ExoPlayer فقط إذا تعذر بدء الأفلام أو الحلقات: فهو يشغّل بعض عمليات البث التي لا يستطيع mpv تشغيلها على بعض أجهزة التلفزيون، لكنه لا يستطيع فك ترميز صوت DTS/TrueHD ولا يتضمن إصلاحًا لمزامنة الصوت/الفيديو. أيًا كان اختيارك، ستتم تجربة الآخر تلقائيًا إذا فشل.</string>
+    <string name="settings_reset_player_choices_description">عند تبديل فيلم أو حلقة واحدة بين mpv وExoPlayer داخل المشغّل، يُحفظ هذا الخيار للمرة التالية. تعيد إعادة الضبط كل شيء إلى الإعداد أعلاه. أما الخيارات المحفوظة لقنوات البث المباشر فتبقى كما هي.</string>
+    <string name="settings_reset_player_choices_none">لا شيء محفوظ</string>
+    <plurals name="settings_reset_player_choices_count">
+        <item quantity="zero"><xliff:g id="count">%1$d</xliff:g> خيار محفوظ</item>
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> خيار محفوظ</item>
+        <item quantity="two"><xliff:g id="count">%1$d</xliff:g> خياران محفوظان</item>
+        <item quantity="few"><xliff:g id="count">%1$d</xliff:g> خيارات محفوظة</item>
+        <item quantity="many"><xliff:g id="count">%1$d</xliff:g> خيارًا محفوظًا</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> خيار محفوظ</item>
+    </plurals>
+    <string name="settings_reset_player_choices_confirm">إعادة ضبط خيارات المشغّل المحفوظة؟</string>
+    <string name="settings_reset_player_choices_confirm_description">يعود كل فيلم وحلقة إلى إعداد «مشغّل الأفلام والمسلسلات». يمكنك دائمًا تبديل عنصر واحد مرة أخرى من المشغّل.</string>
     <string name="settings_external_player_row_description">افتح عمليات البث في تطبيق خارجي (VLC أو MX Player) بدلًا من المشغّل المدمج، مع تحديد ذلك لكل قسم. يفيد هذا مع عمليات البث التي لا يستطيع هذا التطبيق فك ترميزها، أو إذا كنت تفضّل مشغّلًا آخر. لا يتوفر موضع الاستئناف ولا السابق/التالي أثناء التشغيل خارجيًا؛ وقد لا تعمل عمليات البث التي تحتاج إلى User-Agent مخصّص أو مُحيل.</string>
     <string name="settings_resume_always">الاستئناف دائمًا</string>
     <string name="settings_resume_ask">السؤال قبل الاستئناف</string>

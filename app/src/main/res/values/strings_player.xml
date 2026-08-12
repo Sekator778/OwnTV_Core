@@ -418,7 +418,6 @@
     <!-- Translators: Playback-log event headline after surround output fails. -->
     <string name="player_reason_stereo_fallback">Switched to stereo audio</string>
     <!-- Translators: Playback-log event headline after repeated ExoPlayer failures. mpv is a player name. -->
-    <string name="player_reason_vod_engine_session_fallback">Switched Movies &amp; Series to mpv for this session</string>
     <!-- Translators: Playback-log event headline for IPTV providers that permit only one active connection. -->
     <string name="player_reason_one_session_provider">Provider allows one session at a time</string>
     <!-- Translators: Playback-log event headline when ExoPlayer hands a channel to mpv. -->

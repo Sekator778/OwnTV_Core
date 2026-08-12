@@ -352,6 +352,7 @@
     <string name="settings_hardware_decoding">ഹാർഡ്‌വെയർ ഡീകോഡിംഗ്</string>
     <string name="settings_hardware_decoding_description">ടിവിയുടെ ഹാർഡ്‌വെയർ ഡീകോഡർ ഉപയോഗിക്കുക. ചില സ്ട്രീമുകൾ തടസ്സപ്പെടുകയോ ദൃശ്യവൈകല്യങ്ങൾ കാണിക്കുകയോ ചെയ്താൽ ഇത് പ്രവർത്തനരഹിതമാക്കുക.</string>
     <string name="settings_movies_series_player">സിനിമകളുടെയും സീരീസിന്റെയും പ്ലെയർ</string>
+    <string name="settings_reset_player_choices">സേവ് ചെയ്ത പ്ലെയർ തിരഞ്ഞെടുപ്പുകൾ പുനഃസജ്ജമാക്കുക</string>
     <string name="settings_external_player">ബാഹ്യ പ്ലെയർ</string>
     <string name="settings_default_zoom">ഡിഫോൾട്ട് സൂം</string>
     <string name="settings_default_zoom_description">പ്ലേബാക്ക് ആരംഭിക്കുമ്പോൾ പ്രയോഗിക്കുന്ന ദൃശ്യാനുപാതം/സൂം.</string>
@@ -398,6 +399,14 @@
     <string name="settings_external_player_description">ഏതൊക്കെ വിഭാഗങ്ങൾ ബാഹ്യ ആപ്പിൽ തുറക്കണമെന്ന് തിരഞ്ഞെടുക്കുക.</string>
     <string name="settings_audio_delay_value"><xliff:g id="delay">%1$d</xliff:g> ms</string>
     <string name="settings_movies_player_description">mpv-യ്ക്ക് (ശുപാർശ ചെയ്യുന്നത്) ഏറ്റവും വിപുലമായ ഫോർമാറ്റ് പിന്തുണയുണ്ട് — DTS/TrueHD ഓഡിയോ, സാധാരണമല്ലാത്ത ഫയലുകൾ — കൂടാതെ A/V സമന്വയിപ്പിക്കൽ പരിഹാരവും. സിനിമകളോ എപ്പിസോഡുകളോ ആരംഭിക്കുന്നില്ലെങ്കിൽ മാത്രം ExoPlayer-ലേക്ക് മാറുക: ചില ടിവികളിൽ mpv-യ്ക്ക് പ്ലേ ചെയ്യാനാകാത്ത ചില സ്ട്രീമുകൾ ഇതിന് പ്ലേ ചെയ്യാനാകും, എന്നാൽ DTS/TrueHD ഓഡിയോ ഡീകോഡ് ചെയ്യാനാകില്ല, A/V സമന്വയിപ്പിക്കൽ പരിഹാരവുമില്ല. നിങ്ങൾ ഏതെടുത്താലും അത് പരാജയപ്പെട്ടാൽ മറ്റേത് സ്വയമേവ പരീക്ഷിക്കും.</string>
+    <string name="settings_reset_player_choices_description">പ്ലെയറിൽ ഒരു സിനിമയോ എപ്പിസോഡോ mpv-യ്ക്കും ExoPlayer-നും ഇടയിൽ മാറ്റിയാൽ ആ തിരഞ്ഞെടുപ്പ് അടുത്ത തവണത്തേക്ക് സേവ് ചെയ്യപ്പെടും. പുനഃസജ്ജമാക്കിയാൽ എല്ലാം വീണ്ടും മുകളിലുള്ള ക്രമീകരണം പിന്തുടരും. ലൈവ് ചാനലുകളുടെ സേവ് ചെയ്ത തിരഞ്ഞെടുപ്പുകൾ നിലനിർത്തും.</string>
+    <string name="settings_reset_player_choices_none">ഒന്നും സേവ് ചെയ്തിട്ടില്ല</string>
+    <plurals name="settings_reset_player_choices_count">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> എണ്ണം സേവ് ചെയ്തു</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> എണ്ണം സേവ് ചെയ്തു</item>
+    </plurals>
+    <string name="settings_reset_player_choices_confirm">സേവ് ചെയ്ത പ്ലെയർ തിരഞ്ഞെടുപ്പുകൾ പുനഃസജ്ജമാക്കണോ?</string>
+    <string name="settings_reset_player_choices_confirm_description">എല്ലാ സിനിമകളും എപ്പിസോഡുകളും വീണ്ടും “സിനിമകളുടെയും സീരീസിന്റെയും പ്ലെയർ” ക്രമീകരണം പിന്തുടരും. ഒറ്റ ഇനം എപ്പോൾ വേണമെങ്കിലും പ്ലെയറിൽ നിന്ന് വീണ്ടും മാറ്റാം.</string>
     <string name="settings_external_player_row_description">ഓരോ വിഭാഗത്തിനും പ്രത്യേകം തിരഞ്ഞെടുത്തതനുസരിച്ച്, സ്ട്രീമുകൾ അന്തർനിർമ്മിത പ്ലെയറിന് പകരം ഒരു ബാഹ്യ ആപ്പിൽ (VLC, MX പ്ലെയർ) തുറക്കുക. ഈ ആപ്പിന് ഡീകോഡ് ചെയ്യാനാകാത്ത സ്ട്രീമുകൾക്കോ നിങ്ങൾ മറ്റൊരു പ്ലെയർ ഇഷ്ടപ്പെടുന്നെങ്കിലോ ഇത് ഉപകാരപ്പെടും. ബാഹ്യമായി പ്ലേ ചെയ്യുമ്പോൾ തുടരേണ്ട സ്ഥാനവും മുമ്പത്തേത്/അടുത്തത് എന്നീ നിയന്ത്രണങ്ങളും ലഭ്യമല്ല; ഇഷ്ടാനുസൃത യൂസർ-ഏജന്റോ റെഫററോ ആവശ്യമായ സ്ട്രീമുകൾ പ്ലേ ആയേക്കില്ല.</string>
     <string name="settings_resume_always">എപ്പോഴും തുടരുക</string>
     <string name="settings_resume_ask">തുടരണോ എന്ന് ചോദിക്കുക</string>

@@ -354,6 +354,7 @@
     <string name="settings_hardware_decoding">Hardwarové dekódování</string>
     <string name="settings_hardware_decoding_description">Používat hardwarový dekodér televizoru. Vypněte, pokud se některé streamy sekají nebo zobrazují obrazové vady.</string>
     <string name="settings_movies_series_player">Přehrávač filmů a seriálů</string>
+    <string name="settings_reset_player_choices">Resetovat uložené volby přehrávače</string>
     <string name="settings_external_player">Externí přehrávač</string>
     <string name="settings_default_zoom">Výchozí přiblížení</string>
     <string name="settings_default_zoom_description">Poměr stran a přiblížení použité při zahájení přehrávání.</string>
@@ -400,6 +401,16 @@
     <string name="settings_external_player_description">Vyberte, které sekce se mají otevírat v externí aplikaci.</string>
     <string name="settings_audio_delay_value"><xliff:g id="delay">%1$d</xliff:g> ms</string>
     <string name="settings_movies_player_description">mpv (doporučeno) podporuje nejširší škálu formátů — zvuk DTS/TrueHD, neobvyklé soubory — a také nabízí opravu synchronizace A/V. Na ExoPlayer přepněte pouze tehdy, pokud se filmy nebo epizody nespustí: na některých televizorech přehraje určité streamy, které mpv přehrát nedokáže, ale neumí dekódovat zvuk DTS/TrueHD a nenabízí opravu synchronizace A/V. Ať zvolíte kterýkoli, při selhání se automaticky vyzkouší druhý.</string>
+    <string name="settings_reset_player_choices_description">Když v přehrávači přepnete jednotlivý film nebo epizodu mezi mpv a ExoPlayerem, tato volba se uloží pro příště. Reset vrátí vše zpět k nastavení výše. Uložené volby pro živé kanály zůstávají zachovány.</string>
+    <string name="settings_reset_player_choices_none">Nic uloženo</string>
+    <plurals name="settings_reset_player_choices_count">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> uložená volba</item>
+        <item quantity="few"><xliff:g id="count">%1$d</xliff:g> uložené volby</item>
+        <item quantity="many"><xliff:g id="count">%1$d</xliff:g> uložené volby</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> uložených voleb</item>
+    </plurals>
+    <string name="settings_reset_player_choices_confirm">Resetovat uložené volby přehrávače?</string>
+    <string name="settings_reset_player_choices_confirm_description">Každý film i epizoda se vrátí k nastavení „Přehrávač filmů a seriálů“. Jednotlivou položku můžete kdykoli znovu přepnout přímo v přehrávači.</string>
     <string name="settings_external_player_row_description">Otevírat streamy v externí aplikaci (VLC, MX Player) namísto vestavěného přehrávače, s volbou pro každou sekci. Užitečné pro streamy, které tato aplikace nedokáže dekódovat, nebo pokud dáváte přednost jinému přehrávači. Při externím přehrávání není k dispozici pokračování v přehrávání od poslední pozice ani předchozí/další; streamy vyžadující vlastní User-Agent nebo referer se nemusí přehrát.</string>
     <string name="settings_resume_always">Vždy pokračovat</string>
     <string name="settings_resume_ask">Zeptat se na pokračování</string>

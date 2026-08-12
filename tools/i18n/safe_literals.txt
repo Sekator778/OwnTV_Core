@@ -3615,8 +3615,6 @@
 1	technical	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	Emulator
 1	log	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	Exo codec gate: audio codec='$codec' mime=$mime deviceDecoder=$ok
 1	log	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	Exo codec gate: audio codec='$codec' → safe (allowlist)
-1	log	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	ExoPlayer failed $exoVodFallbacksThisSession VOD items in a row — preferring mpv for the rest of this session
-1	log	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	ExoPlayer failed $exoVodFallbacksThisSession items in a row
 1	log	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	FILE_LOADED with pendingStopEndFiles=$pendingStops generation=$loadGeneration
 1	technical	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	Genymotion
 1	technical	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	HTTP error (4\\d\\d)
@@ -3732,7 +3730,7 @@
 3	technical	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	estimated-vf-fps
 1	technical	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	exo primary vod
 1	technical	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	exo vod fallback
-3	technical	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	exoplayer
+2	technical	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	exoplayer
 1	regex	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	failed to open|opening failed|could not open|loading failed|was aborted|finished playback
 1	technical	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	false
 1	technical	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	fast
@@ -3830,7 +3828,6 @@
 1	technical	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	pcm
 1	log	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	pendingStopEndFiles at cap $MAX_PENDING_STOP_CREDITS ($reason)
 1	technical	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	pgssub
-1	technical	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	pinning this item to mpv — ExoPlayer can't decode it on this device
 1	log	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	playback didn't start after retries
 1	log	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	playback didn't start on hardware — falling back to software decode
 1	log	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	playback didn't start — auto-retry $autoRetries/${maxRetries()} (full probe)

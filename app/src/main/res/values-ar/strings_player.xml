@@ -244,7 +244,6 @@
     <string name="player_reason_copy_mode_fallback">تم الرجوع إلى فك الترميز بوضع النسخ</string>
     <string name="player_reason_archive_software_fallback">تمت إعادة فتح أرشيف المشاهدة المتأخرة باستخدام فك الترميز البرمجي</string>
     <string name="player_reason_stereo_fallback">تم التبديل إلى صوت ستيريو</string>
-    <string name="player_reason_vod_engine_session_fallback">تم التبديل إلى mpv للأفلام والمسلسلات لهذه الجلسة</string>
     <string name="player_reason_one_session_provider">مزود الخدمة يسمح بجلسة واحدة في كل مرة</string>
     <string name="player_reason_mpv_handoff">تم تسليم هذه القناة إلى mpv</string>
     <string name="player_reason_stream_report">تقرير البث</string>

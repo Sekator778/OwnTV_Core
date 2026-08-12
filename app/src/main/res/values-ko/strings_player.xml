@@ -209,7 +209,6 @@
     <string name="player_reason_copy_mode_fallback">복사 모드 디코딩으로 대체됨</string>
     <string name="player_reason_archive_software_fallback">다시보기 아카이브가 소프트웨어 디코딩으로 다시 열렸습니다.</string>
     <string name="player_reason_stereo_fallback">스테레오 오디오로 전환됨</string>
-    <string name="player_reason_vod_engine_session_fallback">영화 및 시리즈 재생을 이번 세션에서 mpv로 전환했습니다.</string>
     <string name="player_reason_one_session_provider">제공자는 한 번에 하나의 세션만 허용합니다.</string>
     <string name="player_reason_mpv_handoff">이 채널을 mpv로 넘겼습니다.</string>
     <string name="player_reason_stream_report">스트림 보고서</string>

@@ -223,7 +223,6 @@
     <string name="player_reason_copy_mode_fallback">Bascule vers le décodage en mode copie</string>
     <string name="player_reason_archive_software_fallback">Archive de rattrapage rouverte en décodage logiciel</string>
     <string name="player_reason_stereo_fallback">Bascule en audio stéréo</string>
-    <string name="player_reason_vod_engine_session_fallback">Films et séries basculés vers mpv pour cette session</string>
     <string name="player_reason_one_session_provider">Le fournisseur autorise une seule session à la fois</string>
     <string name="player_reason_mpv_handoff">Chaîne transférée à mpv</string>
     <string name="player_reason_stream_report">Rapport du flux</string>

@@ -216,7 +216,6 @@
     <string name="player_reason_copy_mode_fallback">കോപ്പി-മോഡ് ഡീകോഡിംഗിലേക്ക് ഫാൾബാക്ക് ചെയ്തു</string>
     <string name="player_reason_archive_software_fallback">ക്യാച്ച്-അപ്പ് ആർക്കൈവ് സോഫ്റ്റ്വെയർ ഡീകോഡിംഗിൽ വീണ്ടും തുറന്നു</string>
     <string name="player_reason_stereo_fallback">സ്റ്റീരിയോ ഓഡിയോയിലേക്ക് മാറി</string>
-    <string name="player_reason_vod_engine_session_fallback">ഈ സെഷനിൽ സിനിമകളും സീരീസുകളും mpv-യിലേക്ക് മാറ്റി</string>
     <string name="player_reason_one_session_provider">പ്രൊവൈഡർ ഒരു സമയം ഒരു സെഷൻ മാത്രമേ അനുവദിക്കൂ</string>
     <string name="player_reason_mpv_handoff">ഈ ചാനൽ mpv-യ്ക്ക് കൈമാറി</string>
     <string name="player_reason_stream_report">സ്ട്രീം റിപ്പോർട്ട്</string>

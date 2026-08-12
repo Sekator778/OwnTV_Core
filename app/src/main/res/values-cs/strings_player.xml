@@ -230,7 +230,6 @@
     <string name="player_reason_copy_mode_fallback">Přepnuto na dekódování v režimu copy</string>
     <string name="player_reason_archive_software_fallback">Archiv zpětného zhlédnutí byl znovu otevřen se softwarovým dekódováním</string>
     <string name="player_reason_stereo_fallback">Přepnuto na stereo zvuk</string>
-    <string name="player_reason_vod_engine_session_fallback">Filmy a seriály byly pro tuto relaci přepnuty na mpv</string>
     <string name="player_reason_one_session_provider">Poskytovatel umožňuje pouze jedno připojení najednou</string>
     <string name="player_reason_mpv_handoff">Tento kanál byl předán mpv</string>
     <string name="player_reason_stream_report">Diagnostika streamu</string>

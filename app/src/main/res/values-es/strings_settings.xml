@@ -353,6 +353,7 @@
     <string name="settings_hardware_decoding">Descodificación por hardware</string>
     <string name="settings_hardware_decoding_description">Usa el descodificador por hardware del televisor. Desactívalo si algunas transmisiones se entrecortan o muestran artefactos.</string>
     <string name="settings_movies_series_player">Reproductor para películas y series</string>
+    <string name="settings_reset_player_choices">Restablecer las opciones de reproductor guardadas</string>
     <string name="settings_external_player">Reproductor externo</string>
     <string name="settings_default_zoom">Zoom predeterminado</string>
     <string name="settings_default_zoom_description">Relación de aspecto y zoom aplicados al iniciar la reproducción.</string>
@@ -399,6 +400,15 @@
     <string name="settings_external_player_description">Elige qué secciones se abren en una aplicación externa.</string>
     <string name="settings_audio_delay_value"><xliff:g id="delay">%1$d</xliff:g> ms</string>
     <string name="settings_movies_player_description">mpv (recomendado) ofrece la mayor compatibilidad de formatos —audio DTS/TrueHD y archivos poco habituales—, además de la corrección de sincronización A/V. Cambia a ExoPlayer solo si las películas o los episodios no se inician: puede reproducir en determinados televisores algunas transmisiones que mpv no admite, pero no puede descodificar audio DTS/TrueHD ni incluye la corrección de sincronización A/V. Elijas el que elijas, si falla se prueba automáticamente el otro.</string>
+    <string name="settings_reset_player_choices_description">Si cambias una película o un episodio concretos entre mpv y ExoPlayer desde el reproductor, esa opción se guarda para la próxima vez. Al restablecer, todo vuelve a seguir el ajuste de arriba. Las opciones guardadas de los canales en directo se mantienen.</string>
+    <string name="settings_reset_player_choices_none">Ninguna guardada</string>
+    <plurals name="settings_reset_player_choices_count">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> guardada</item>
+        <item quantity="many"><xliff:g id="count">%1$d</xliff:g> guardadas</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> guardadas</item>
+    </plurals>
+    <string name="settings_reset_player_choices_confirm">¿Restablecer las opciones de reproductor guardadas?</string>
+    <string name="settings_reset_player_choices_confirm_description">Todas las películas y episodios vuelven al ajuste «Reproductor para películas y series». Siempre puedes volver a cambiar uno concreto desde el reproductor.</string>
     <string name="settings_external_player_row_description">Abre las transmisiones en una aplicación externa (VLC o MX Player), en lugar de usar el reproductor integrado, con una opción distinta para cada sección. Resulta útil para transmisiones que esta aplicación no puede descodificar o si prefieres otro reproductor. La posición de reanudación y los controles anterior/siguiente no están disponibles durante la reproducción externa; es posible que no se reproduzcan las transmisiones que requieran un User-Agent o un referer personalizados.</string>
     <string name="settings_resume_always">Reanudar siempre</string>
     <string name="settings_resume_ask">Preguntar si se reanuda</string>

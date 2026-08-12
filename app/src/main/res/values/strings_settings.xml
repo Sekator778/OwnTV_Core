@@ -727,6 +727,8 @@
     <string name="settings_hardware_decoding_description">Use the TV\'s hardware decoder. Turn off if some streams stutter or show artifacts.</string>
     <!-- Translators: Video Player settings-row title for Movies & Series. -->
     <string name="settings_movies_series_player">Movies &amp; Series player</string>
+    <!-- Translators: Settings-row title for forgetting per-movie/per-episode player choices. -->
+    <string name="settings_reset_player_choices">Reset saved player choices</string>
     <!-- Translators: Setting label for external player configuration. -->
     <string name="settings_external_player">External player</string>
     <!-- Translators: Setting label for the default zoom/aspect ratio. -->
@@ -821,6 +823,19 @@ Choose Balanced if a channel becomes unreliable.</string>
     <string name="settings_audio_delay_value"><xliff:g id="delay">%1$d</xliff:g> ms</string>
     <!-- Translators: Description of the Movies & Series player engine choice. 'mpv' and 'ExoPlayer' are engine brand names. -->
     <string name="settings_movies_player_description">mpv (recommended) has the widest format support — DTS/TrueHD audio, unusual files — plus the A/V sync fix. Switch to ExoPlayer only if movies or episodes fail to start: it plays some streams mpv can\'t on certain TVs, but can\'t decode DTS/TrueHD audio and has no A/V sync fix. Whichever you pick, the other is tried automatically if it fails.</string>
+    <!-- Translators: Description of the row that forgets per-movie/per-episode player choices. 'mpv' and 'ExoPlayer' are engine brand names. -->
+    <string name="settings_reset_player_choices_description">Switching a single movie or episode between mpv and ExoPlayer in the player saves that choice for next time. Reset makes everything follow the setting above again. Saved choices for live channels are kept.</string>
+    <!-- Translators: Chip on the reset row when no movie or episode has its own saved player. -->
+    <string name="settings_reset_player_choices_none">None saved</string>
+    <!-- Translators: Chip on the reset row showing how many movies/episodes have their own saved player. -->
+    <plurals name="settings_reset_player_choices_count">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> saved</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> saved</item>
+    </plurals>
+    <!-- Translators: Confirmation dialog title before forgetting the saved per-item player choices. -->
+    <string name="settings_reset_player_choices_confirm">Reset saved player choices?</string>
+    <!-- Translators: Confirmation dialog body before forgetting the saved per-item player choices. -->
+    <string name="settings_reset_player_choices_confirm_description">Every movie and episode goes back to the “Movies &amp; Series player” setting. You can always switch an individual one again from the player.</string>
     <!-- Translators: Description of the external player row setting. -->
     <string name="settings_external_player_row_description">Open streams in an external app (VLC, MX Player) instead of the built-in player, chosen per section. Useful for streams this app can\'t decode, or if you prefer another player. Resume position and prev/next are unavailable while playing externally; streams needing a custom User-Agent or referer may not play.</string>
     <!-- Translators: Resume playback option: always resume from saved position. -->

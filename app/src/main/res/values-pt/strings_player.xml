@@ -223,7 +223,6 @@
     <string name="player_reason_copy_mode_fallback">Recorreu à decodificação no modo de cópia</string>
     <string name="player_reason_archive_software_fallback">Arquivo de catch-up reaberto com decodificação por software</string>
     <string name="player_reason_stereo_fallback">Mudou para áudio estéreo</string>
-    <string name="player_reason_vod_engine_session_fallback">Mudou Filmes e Séries para o mpv nesta sessão</string>
     <string name="player_reason_one_session_provider">O provedor permite apenas uma sessão por vez</string>
     <string name="player_reason_mpv_handoff">Transferiu este canal para o mpv</string>
     <string name="player_reason_stream_report">Relatório de stream</string>

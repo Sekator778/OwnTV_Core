@@ -60,10 +60,7 @@ class ExoSubtitleEngine(
          *  this engine owns playback as a VOD engine (mpv never probed the file, so its list is empty). */
         fun onTextTracks(tracks: List<TrackOption>)
         fun onVideoFps(fps: Float)
-        /** [decodeFailure] = this device could not decode the video, on hardware OR software (the
-         *  software rung was already spent or refused). A verdict about the file+device, not about the
-         *  network — so the owner may remember it, unlike a transient load error. */
-        fun onError(failure: PlaybackFailure, decodeFailure: Boolean = false)
+        fun onError(failure: PlaybackFailure)
         /** Playback reached the end of the file (drives VOD auto-play-next while this engine is active). */
         fun onEnded()
     }
@@ -135,10 +132,7 @@ class ExoSubtitleEngine(
                 onSoftwareRescue?.invoke(url, isArchiveItem)
                 return@Runnable
             }
-            callbacks.onError(
-                PlaybackFailure.AudioNoVideo,
-                decodeFailure = true,
-            )
+            callbacks.onError(PlaybackFailure.AudioNoVideo)
         }
     }
 
@@ -266,7 +260,7 @@ class ExoSubtitleEngine(
                 onSoftwareRescue?.invoke(url, isArchiveItem)
                 return
             }
-            callbacks.onError(friendlyFailure(error), decodeFailure = error.errorCode in DECODE_ERROR_CODES)
+            callbacks.onError(friendlyFailure(error))
         }
     }
 

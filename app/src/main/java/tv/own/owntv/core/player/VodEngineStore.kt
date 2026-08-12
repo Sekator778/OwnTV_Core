@@ -17,9 +17,14 @@ enum class VodEnginePin { MPV, EXO }
 
 /**
  * Movies/episodes the user manually switched to a specific engine with the player's gear toggle —
- * the VOD counterpart of [ForceMpvStore] (Live's "compatibility mode"). Self-learning: flip an item
- * once and it opens on that engine forever after, regardless of the global "Movies & Series player"
- * setting. Items never toggled keep following the setting.
+ * the VOD counterpart of [ForceMpvStore] (Live's "compatibility mode"). Flip an item once and it
+ * opens on that engine forever after, regardless of the global "Movies & Series player" setting.
+ * Items never toggled keep following the setting.
+ *
+ * Every pin here is a deliberate user action. The player used to write pins by itself after a decode
+ * failure, which silently retired the chosen engine for that item with no way to undo it; it no
+ * longer does. Pins those builds already wrote are indistinguishable from manual ones, so
+ * [clearAll] (Settings → Video Player) is how a user gets back to a clean slate.
  *
  * Keyed by [enginePinKey] — sourceId + media type + provider remoteId — which survives playlist
  * re-syncs on all three source types (Room ids don't, and a Stalker stream URL is minted fresh per
@@ -40,6 +45,15 @@ class VodEngineStore(private val context: Context) {
             val exo = prefs[exoKey] ?: emptySet()
             prefs[mpvKey] = if (engine == VodEnginePin.MPV) mpv + url else mpv - url
             prefs[exoKey] = if (engine == VodEnginePin.EXO) exo + url else exo - url
+        }
+    }
+
+    /** Forget every per-item pin, so all movies/episodes follow the "Movies & Series player" setting
+     *  again. Live's per-channel compatibility pins ([ForceMpvStore]) are a separate list. */
+    suspend fun clearAll() {
+        context.vodEngineStore.edit { prefs ->
+            prefs[mpvKey] = emptySet()
+            prefs[exoKey] = emptySet()
         }
     }
 

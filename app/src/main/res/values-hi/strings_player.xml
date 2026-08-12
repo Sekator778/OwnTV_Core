@@ -216,7 +216,6 @@
     <string name="player_reason_copy_mode_fallback">कॉपी-मोड डिकोडिंग पर वापस आ गया</string>
     <string name="player_reason_archive_software_fallback">कैच-अप आर्काइव सॉफ़्टवेयर डिकोडिंग में फिर से खोला गया</string>
     <string name="player_reason_stereo_fallback">स्टीरियो ऑडियो पर स्विच कर दिया गया</string>
-    <string name="player_reason_vod_engine_session_fallback">इस सत्र के लिए फ़िल्में और सीरीज़ mpv पर स्विच कर दी गईं</string>
     <string name="player_reason_one_session_provider">प्रदाता एक समय में केवल एक सत्र की अनुमति देता है</string>
     <string name="player_reason_mpv_handoff">यह चैनल mpv को सौंप दिया गया</string>
     <string name="player_reason_stream_report">स्ट्रीम रिपोर्ट</string>

@@ -216,7 +216,6 @@
     <string name="player_reason_copy_mode_fallback">Auf Dekodierung im Copy-Modus zurückgefallen</string>
     <string name="player_reason_archive_software_fallback">Catch-up-Archiv mit Softwaredekodierung erneut geöffnet</string>
     <string name="player_reason_stereo_fallback">Auf Stereo-Ton umgeschaltet</string>
-    <string name="player_reason_vod_engine_session_fallback">Filme &amp; Serien für diese Sitzung auf mpv umgeschaltet</string>
     <string name="player_reason_one_session_provider">Der Anbieter erlaubt jeweils nur eine Sitzung</string>
     <string name="player_reason_mpv_handoff">Diesen Sender an mpv übergeben</string>
     <string name="player_reason_stream_report">Streambericht</string>

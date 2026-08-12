@@ -352,6 +352,7 @@
     <string name="settings_hardware_decoding">हार्डवेयर डिकोडिंग</string>
     <string name="settings_hardware_decoding_description">TV के हार्डवेयर डिकोडर का उपयोग करें। यदि कुछ स्ट्रीम अटकती हैं या उनमें दृश्य विकृतियाँ दिखाई देती हैं, तो इसे बंद कर दें।</string>
     <string name="settings_movies_series_player">फ़िल्मों और सीरीज़ का प्लेयर</string>
+    <string name="settings_reset_player_choices">सहेजे गए प्लेयर विकल्प रीसेट करें</string>
     <string name="settings_external_player">बाहरी प्लेयर</string>
     <string name="settings_default_zoom">डिफ़ॉल्ट ज़ूम</string>
     <string name="settings_default_zoom_description">प्लेबैक शुरू होने पर लागू होने वाला आस्पेक्ट रेशियो/ज़ूम।</string>
@@ -398,6 +399,14 @@
     <string name="settings_external_player_description">चुनें कि कौन-से अनुभाग बाहरी ऐप में खुलेंगे।</string>
     <string name="settings_audio_delay_value"><xliff:g id="delay">%1$d</xliff:g> मि.से.</string>
     <string name="settings_movies_player_description">mpv (अनुशंसित) सबसे अधिक फ़ॉर्मेट का समर्थन करता है—DTS/TrueHD ऑडियो, असामान्य फ़ाइलें—और इसमें A/V सिंक सुधार भी है। केवल तभी ExoPlayer पर जाएँ जब फ़िल्में या एपिसोड शुरू न हों: कुछ टीवी पर यह ऐसी स्ट्रीम चला सकता है जिन्हें mpv नहीं चला पाता, लेकिन यह DTS/TrueHD ऑडियो डिकोड नहीं कर सकता और इसमें A/V सिंक सुधार नहीं है। आप जो भी चुनें, उसके विफल होने पर दूसरे को अपने-आप आज़माया जाएगा।</string>
+    <string name="settings_reset_player_choices_description">प्लेयर में किसी एक फ़िल्म या एपिसोड को mpv और ExoPlayer के बीच बदलने पर वह विकल्प अगली बार के लिए सहेज लिया जाता है। रीसेट करने पर सब कुछ फिर से ऊपर दी गई सेटिंग का पालन करेगा। लाइव चैनलों के सहेजे गए विकल्प बने रहते हैं।</string>
+    <string name="settings_reset_player_choices_none">कोई सहेजा नहीं गया</string>
+    <plurals name="settings_reset_player_choices_count">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> सहेजा गया</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> सहेजे गए</item>
+    </plurals>
+    <string name="settings_reset_player_choices_confirm">सहेजे गए प्लेयर विकल्प रीसेट करें?</string>
+    <string name="settings_reset_player_choices_confirm_description">हर फ़िल्म और एपिसोड फिर से “फ़िल्मों और सीरीज़ का प्लेयर” सेटिंग का पालन करेगा। आप किसी एक को प्लेयर से कभी भी दोबारा बदल सकते हैं।</string>
     <string name="settings_external_player_row_description">स्ट्रीम को अंतर्निहित प्लेयर के बजाय हर अनुभाग के लिए चुने गए बाहरी ऐप (VLC, MX प्लेयर) में खोलें। यह उन स्ट्रीम के लिए उपयोगी है जिन्हें यह ऐप डिकोड नहीं कर सकता, या यदि आप किसी दूसरे प्लेयर को पसंद करते हैं। बाहरी रूप से चलाते समय प्लेबैक जारी रखने की स्थिति और पिछला/अगला उपलब्ध नहीं होते; जिन स्ट्रीम के लिए कस्टम User-Agent या रेफ़रर आवश्यक है, वे शायद न चलें।</string>
     <string name="settings_resume_always">हमेशा जारी रखें</string>
     <string name="settings_resume_ask">जारी रखने से पहले पूछें</string>

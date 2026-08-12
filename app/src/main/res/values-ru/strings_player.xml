@@ -230,7 +230,6 @@
     <string name="player_reason_copy_mode_fallback">Переключено на декодирование в режиме копирования</string>
     <string name="player_reason_archive_software_fallback">Архив отложенного просмотра перезапущен в режиме программного декодирования</string>
     <string name="player_reason_stereo_fallback">Переключено на стереозвук</string>
-    <string name="player_reason_vod_engine_session_fallback">В разделе «Фильмы и сериалы» выполнен переход на mpv на время этой сессии</string>
     <string name="player_reason_one_session_provider">Провайдер разрешает только одну сессию одновременно</string>
     <string name="player_reason_mpv_handoff">Этот канал передан плееру mpv</string>
     <string name="player_reason_stream_report">Отчёт о потоке</string>

@@ -230,7 +230,6 @@
     <string name="player_reason_copy_mode_fallback">Przełączono na dekodowanie w trybie copy-mode</string>
     <string name="player_reason_archive_software_fallback">Ponownie otwarto archiwum catch-up w trybie dekodowania programowego</string>
     <string name="player_reason_stereo_fallback">Przełączono na dźwięk stereo</string>
-    <string name="player_reason_vod_engine_session_fallback">Przełączono filmy i seriale na mpv na tę sesję</string>
     <string name="player_reason_one_session_provider">Dostawca pozwala na jedną sesję naraz</string>
     <string name="player_reason_mpv_handoff">Przekazano ten kanał do mpv</string>
     <string name="player_reason_stream_report">Raport strumienia</string>

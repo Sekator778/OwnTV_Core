@@ -209,7 +209,6 @@
     <string name="player_reason_copy_mode_fallback">コピーモードデコーディングにフォールバックしました</string>
     <string name="player_reason_archive_software_fallback">キャッチアップアーカイブをソフトウェアデコーディングで開き直しました</string>
     <string name="player_reason_stereo_fallback">ステレオオーディオに切り替えました</string>
-    <string name="player_reason_vod_engine_session_fallback">映画とシリーズをこのセッションではmpvに切り替えました</string>
     <string name="player_reason_one_session_provider">プロバイダーは同時に1つのセッションのみ許可しています</string>
     <string name="player_reason_mpv_handoff">このチャンネルをmpvに引き継ぎました</string>
     <string name="player_reason_stream_report">ストリームレポート</string>
