@@ -19,6 +19,9 @@
 1	app/src/main/java/tv/own/owntv/core/backup/UserDataResolver.kt	rid
 1	app/src/main/java/tv/own/owntv/core/backup/UserDataResolver.kt	src
 1	app/src/main/java/tv/own/owntv/core/backup/UserDataResolver.kt	t
+1	app/src/main/java/tv/own/owntv/core/catalog/ProviderCatalogMetadata.kt	2.0 Audio
+1	app/src/main/java/tv/own/owntv/core/catalog/ProviderCatalogMetadata.kt	5.1 Audio
+1	app/src/main/java/tv/own/owntv/core/catalog/ProviderCatalogMetadata.kt	7.1 Audio
 1	app/src/main/java/tv/own/owntv/core/customize/CustomizationStore.kt	${CustomizeKeys.CUSTOM_PREFIX}${UUID.randomUUID()}
 1	app/src/main/java/tv/own/owntv/core/customize/CustomizationStore.kt	custom:
 2	app/src/main/java/tv/own/owntv/core/customize/CustomizationStore.kt	customCats
@@ -156,6 +159,7 @@
 2	app/src/main/java/tv/own/owntv/core/parser/XtreamClient.kt	m3u8
 1	app/src/main/java/tv/own/owntv/core/parser/XtreamClient.kt	ts
 1	app/src/main/java/tv/own/owntv/core/parser/XtreamClient.kt	user_output_formats
+1	app/src/main/java/tv/own/owntv/core/sync/work/TrendingRefreshWorker.kt	Playlist
 2	app/src/main/java/tv/own/owntv/features/customize/BulkRenameDialogs.kt	\0
 1	app/src/main/java/tv/own/owntv/features/customize/BulkRenameDialogs.kt	ADD
 1	app/src/main/java/tv/own/owntv/features/customize/BulkRenameDialogs.kt	PREFIX
@@ -186,10 +190,8 @@
 1	app/src/main/java/tv/own/owntv/features/live/LiveViewModel.kt	ts
 8	app/src/main/java/tv/own/owntv/features/settings/DnsSettingsScreen.kt	\0
 1	app/src/main/java/tv/own/owntv/features/settings/DnsSettingsScreen.kt	${cfg.host}$p
-1	app/src/main/java/tv/own/owntv/features/settings/DnsSettingsScreen.kt	,
 1	app/src/main/java/tv/own/owntv/features/settings/DnsSettingsScreen.kt	:${cfg.port}
 2	app/src/main/java/tv/own/owntv/features/settings/DnsSettingsScreen.kt	https://
-1	app/src/main/java/tv/own/owntv/features/settings/SettingsViewModel.kt	?
 1	app/src/main/java/tv/own/owntv/features/settings/SettingsViewModel.kt	UnknownHostException
 1	app/src/main/java/tv/own/owntv/features/settings/SettingsViewModel.kt	dns.google
 1	app/src/main/java/tv/own/owntv/features/settings/SettingsViewModel.kt	refused

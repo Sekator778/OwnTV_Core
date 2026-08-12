@@ -130,3 +130,24 @@ python3 tools/i18n/check_text_overflow.py
 Never hand-edit generated `app/src/main/java/tv/own/owntv/core/i18n/SupportedLocales.kt`; run
 `python3 tools/i18n/gen_supported_locales.py`. That command updates the generated locale catalogue and
 README contribution link from the canonical source.
+
+### Clearing a literal-inventory failure
+
+`verify` only reports; no flag makes it write, `--bootstrap` included — that flag drops the
+merge-base comparison and nothing else. Two failure kinds, two fixes:
+
+```sh
+# UNCLASSIFIED — a literal exists in code but in neither reviewed file.
+python3 tools/i18n/check_hardcoded_strings.py classify-safe \
+    --path app/src/main/java/tv/own/owntv/example.kt --text 'SELECT 1' --category sql
+
+# STALE CLASSIFICATION — a classified literal was edited or deleted in code.
+python3 tools/i18n/check_hardcoded_strings.py prune-safe
+```
+
+Both rewrite `safe_literals.txt` and regenerate `hardcoded_baseline.txt`. Classify a literal only when
+no user can ever read it; categories and their reasons are listed at the top of `safe_literals.txt`.
+Text a user *can* read stays unclassified so it lands in `hardcoded_baseline.txt` as declared debt —
+that file may only shrink against a pull request's merge base. Never file real UI copy as technical to
+make CI green; extract it to `strings.xml` instead, or leave it in the baseline for a later pass when
+the fix is bigger than the string (persisted values, for example).

@@ -131,6 +131,10 @@
 2	json	app/src/main/java/tv/own/owntv/core/backup/BackupManager.kt	sourceId
 5	json	app/src/main/java/tv/own/owntv/core/backup/BackupManager.kt	sources
 2	json	app/src/main/java/tv/own/owntv/core/backup/BackupManager.kt	src
+4	json	app/src/main/java/tv/own/owntv/core/backup/BackupManager.kt	stalkerDeviceId
+4	json	app/src/main/java/tv/own/owntv/core/backup/BackupManager.kt	stalkerDeviceId2
+4	json	app/src/main/java/tv/own/owntv/core/backup/BackupManager.kt	stalkerSerialNumber
+4	json	app/src/main/java/tv/own/owntv/core/backup/BackupManager.kt	stalkerSignature
 2	json	app/src/main/java/tv/own/owntv/core/backup/BackupManager.kt	startupModes
 3	json	app/src/main/java/tv/own/owntv/core/backup/BackupManager.kt	syncLive
 3	json	app/src/main/java/tv/own/owntv/core/backup/BackupManager.kt	syncMovies
@@ -170,6 +174,34 @@
 9	json	app/src/main/java/tv/own/owntv/core/backup/UserDataResolver.kt	src
 3	json	app/src/main/java/tv/own/owntv/core/backup/UserDataResolver.kt	srid
 10	json	app/src/main/java/tv/own/owntv/core/backup/UserDataResolver.kt	t
+7	empty	app/src/main/java/tv/own/owntv/core/catalog/ProviderCatalogMetadata.kt	\0
+1	regex	app/src/main/java/tv/own/owntv/core/catalog/ProviderCatalogMetadata.kt	(?i)(?:\\b5[._ ]1\\b|\\bDDP?\\s*5[._ ]1\\b|\\bAC-?3\\s*5[._ ]1\\b)
+1	regex	app/src/main/java/tv/own/owntv/core/catalog/ProviderCatalogMetadata.kt	(?i)(?:\\b7[._ ]1\\b|\\bDDP?\\s*7[._ ]1\\b)
+1	regex	app/src/main/java/tv/own/owntv/core/catalog/ProviderCatalogMetadata.kt	(?i)[|\\[({]\\s*($LANGUAGE_CODES)\\s*[|\\])}]
+1	regex	app/src/main/java/tv/own/owntv/core/catalog/ProviderCatalogMetadata.kt	(?i)\\b(?:(?:DOLBY\\s*)?ATMOS|DDP?\\s*[57][._ ]1|AC-?3\\s*5[._ ]1|[257][._ ]0|[57][._ ]1)\\b
+1	regex	app/src/main/java/tv/own/owntv/core/catalog/ProviderCatalogMetadata.kt	(?i)\\b(?:4K|UHD|2160P|3840P)\\b
+1	regex	app/src/main/java/tv/own/owntv/core/catalog/ProviderCatalogMetadata.kt	(?i)\\b(?:8K|4K|UHD|2160P|3840P|FHD|1080P|HD|720P|SD)\\b
+1	regex	app/src/main/java/tv/own/owntv/core/catalog/ProviderCatalogMetadata.kt	(?i)\\b(?:DOLBY\\s*)?ATMOS\\b
+1	regex	app/src/main/java/tv/own/owntv/core/catalog/ProviderCatalogMetadata.kt	(?i)\\b(?:DOLBY\\s*VISION|DOVI|DV)\\b
+1	regex	app/src/main/java/tv/own/owntv/core/catalog/ProviderCatalogMetadata.kt	(?i)\\b(?:DOLBY\\s*VISION|DOVI|DV|HDR10\\+?|HDR)\\b
+1	regex	app/src/main/java/tv/own/owntv/core/catalog/ProviderCatalogMetadata.kt	(?i)\\b(?:FHD|1080P)\\b
+1	regex	app/src/main/java/tv/own/owntv/core/catalog/ProviderCatalogMetadata.kt	(?i)\\b(?:HD|720P)\\b
+1	regex	app/src/main/java/tv/own/owntv/core/catalog/ProviderCatalogMetadata.kt	(?i)\\b2[._ ]0\\b
+1	regex	app/src/main/java/tv/own/owntv/core/catalog/ProviderCatalogMetadata.kt	(?i)\\b8K\\b
+1	regex	app/src/main/java/tv/own/owntv/core/catalog/ProviderCatalogMetadata.kt	(?i)\\bHDR10\\+(?!\\w)
+1	regex	app/src/main/java/tv/own/owntv/core/catalog/ProviderCatalogMetadata.kt	(?i)\\bHDR10\\b
+1	regex	app/src/main/java/tv/own/owntv/core/catalog/ProviderCatalogMetadata.kt	(?i)\\bHDR\\b
+1	regex	app/src/main/java/tv/own/owntv/core/catalog/ProviderCatalogMetadata.kt	(?i)\\bSD\\b
+1	regex	app/src/main/java/tv/own/owntv/core/catalog/ProviderCatalogMetadata.kt	DE|EN|FR|ES|PT|AR|NL|PL|TR|RU|BG|ZH|HR|CS|DA|ET|FI|EL|HE|HI|HU|ID|JA|KO|LV|LT|MS|NO|FA|RO|SR|SK|SL|SV|TH|UK|VI
+1	technical	app/src/main/java/tv/own/owntv/core/catalog/ProviderCatalogMetadata.kt	Dolby Atmos
+1	technical	app/src/main/java/tv/own/owntv/core/catalog/ProviderCatalogMetadata.kt	Dolby Vision
+1	technical	app/src/main/java/tv/own/owntv/core/catalog/ProviderCatalogMetadata.kt	HDR
+1	technical	app/src/main/java/tv/own/owntv/core/catalog/ProviderCatalogMetadata.kt	HDR10
+1	technical	app/src/main/java/tv/own/owntv/core/catalog/ProviderCatalogMetadata.kt	HDR10+
+1	regex	app/src/main/java/tv/own/owntv/core/catalog/ProviderCatalogMetadata.kt	\\s($LANGUAGE_CODES)\\s*$
+1	regex	app/src/main/java/tv/own/owntv/core/catalog/ProviderCatalogMetadata.kt	^\\s*($LANGUAGE_CODES)(?=\\s*[|:_-])
+1	technical	app/src/main/java/tv/own/owntv/core/catalog/ProviderCatalogMetadata.kt	__unmatchable_${rawName.hashCode().toUInt().toString(16)}
+1	technical	app/src/main/java/tv/own/owntv/core/catalog/ProviderCatalogMetadata.kt	•
 4	empty	app/src/main/java/tv/own/owntv/core/companion/CompanionController.kt	\0
 1	technical	app/src/main/java/tv/own/owntv/core/companion/CompanionController.kt	(unnamed)
 1	technical	app/src/main/java/tv/own/owntv/core/companion/CompanionController.kt	.$extension
@@ -204,7 +236,7 @@
 1	technical	app/src/main/java/tv/own/owntv/core/companion/CompanionHtml.kt	:root{ color-scheme: dark; --bg:#040E0B; --panel:#12191700; --card:#1B211F; --card-2:#252B29; --line:#3F4945; --text:#DEE4E1; --muted:#BFC9C4; --accent:#8CEE2B; --accent-ink:#123A06; --danger:#FFB4AB; } @font-face{ font-family:'Lora'; font-style:normal; font-weight:400 700; src:url('/lora.ttf') format('truetype'); font-display:swap; } *{box-sizing:border-box} body{ margin:0; color:var(--text); font-family:system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif; background: radial-gradient(1200px 520px at 12% -12%, rgba(140,238,43,0.10) 0%, transparent 60%), radial-gradient(900px 460px at 100% 0%, rgba(140,238,43,0.06) 0%, transparent 62%), var(--bg); min-height:100vh; } h1,h2,.brand{font-family:'Lora',Georgia,'Noto Sans',system-ui,sans-serif; font-weight:700; letter-spacing:.2px} main{max-width:760px; margin:0 auto; padding:28px 20px 56px} .brandrow{display:flex; align-items:center; gap:12px; margin-bottom:22px} .dot{width:34px; height:34px; border-radius:10px; background:#52DBC8; display:grid; place-items:center; color:#003730} .dot svg{width:18px; height:18px} .brand{font-size:20px; color:var(--text)} .card{background:var(--card); border:1px solid var(--line); border-radius:20px; padding:26px 22px; box-shadow:0 24px 60px rgba(0,0,0,.45)} h1{margin:0 0 8px; font-size:24px} p{line-height:1.55; color:var(--muted); margin:0 0 16px} form{display:grid; gap:14px} label{display:grid; gap:6px; font-size:14px; color:var(--text)} input,select{border:1px solid var(--line); border-radius:12px; padding:13px 14px; background:#0C1311; color:var(--text); font-size:16px; width:100%} input:focus,select:focus{outline:none; border-color:var(--accent); box-shadow:0 0 0 3px rgba(140,238,43,.20)} .grid{display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:14px} .checks{display:grid; gap:10px; grid-template-columns:repeat(2,minmax(0,1fr)); margin-top:2px} .check{display:flex; align-items:center; gap:9px; color:var(--muted)} .check input{width:18px; height:18px} .tabs{display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:10px; margin-bottom:18px} .tab{border:1px solid var(--line); border-radius:12px; padding:12px 10px; background:var(--card-2); color:var(--muted); font-weight:600; font-size:15px; cursor:pointer; font-family:inherit} .tab.active{border-color:var(--accent); background:#1E2E0C; color:#EAFFD0} .panel{display:none} .panel.active{display:grid; gap:14px} button.go{border:0; border-radius:12px; padding:15px 16px; background:var(--accent); color:var(--accent-ink); font-weight:700; font-size:16px; cursor:pointer; margin-top:4px} .pin{font-family:'Lora',Georgia,'Noto Sans',system-ui,sans-serif; font-size:34px; letter-spacing:12px; text-align:center; padding:16px; caret-color:var(--accent)} .err{color:var(--danger); font-size:14px; margin:0 0 12px} .hint{font-size:13px; color:var(--muted); margin-top:6px} a{color:var(--accent)} @media (max-width:640px){.grid,.checks,.tabs{grid-template-columns:1fr}}
 1	technical	app/src/main/java/tv/own/owntv/core/companion/CompanionHtml.kt	<
 1	technical	app/src/main/java/tv/own/owntv/core/companion/CompanionHtml.kt	<!doctype html><html lang="${lang.h()}" dir="$dir"><head> <meta charset="utf-8"> <meta name="viewport" content="width=device-width, initial-scale=1"> <title>${title.h()}</title><style>$CSS</style> </head><body><main> <div class="brandrow"><span class="dot">$LOGO_SVG</span><span class="brand">${c.app.h()}</span></div> $inner </main></body></html>
-1	technical	app/src/main/java/tv/own/owntv/core/companion/CompanionHtml.kt	<div class="card"> <h1>${c.addHeading.h()}</h1> <p>${c.addDescription.h()}</p> <div class="tabs"> <button type="button" class="tab active" data-k="xtream">${c.xtream.h()}</button> <button type="button" class="tab" data-k="m3u">${c.m3u.h()}</button> <button type="button" class="tab" data-k="stalker">${c.stalker.h()}</button> </div> <form class="panel active" data-k="xtream" method="post" action="/xtream?pin=$pin"> <input type="hidden" name="type" value="xtream"> <div class="grid"> <label>${c.name.h()} <input name="name" placeholder="${c.defaultIptv.h()}"></label> ${autoRefreshSelect(c)} </div> <label>${c.serverUrl.h()} <input name="server" placeholder="${c.serverExample.h()}" required></label> <div class="grid"> <label>${c.username.h()} <input name="user" autocomplete="username" required></label> <label>${c.password.h()} <input name="pass" type="password" autocomplete="current-password" required></label> </div> <label>${c.userAgent.h()} <input name="userAgent" placeholder="${c.optional.h()}"></label> <label>${c.epgUrl.h()} <input name="epgUrl" placeholder="${c.optional.h()}"></label> <p class="hint">${c.syncXtreamHint.h()}</p> <div class="grid"> ${scopeSelect(c, "syncLive", c.live)} ${scopeSelect(c, "syncMovies", c.movies)} ${scopeSelect(c, "syncSeries", c.series)} </div> <input type="hidden" name="isDefault" value="false"> <label class="check"><input type="checkbox" name="isDefault" value="true"> ${c.defaultPlaylistLabel.h()}</label> <button class="go" type="submit">${c.sendToTv.h()}</button> </form> <form class="panel" data-k="m3u" method="post" action="/m3u?pin=$pin"> <input type="hidden" name="type" value="m3u"> <div class="grid"> <label>${c.name.h()} <input name="name" placeholder="${c.defaultPlaylist.h()}"></label> ${autoRefreshSelect(c)} </div> <label>${c.playlistUrl.h()} <input name="server" placeholder="${c.playlistExample.h()}" required></label> <label>${c.userAgent.h()} <input name="userAgent" placeholder="${c.optional.h()}"></label> <label>${c.epgUrl.h()} <input name="epgUrl" placeholder="${c.optional.h()}"></label> <input type="hidden" name="isDefault" value="false"> <label class="check"><input type="checkbox" name="isDefault" value="true"> ${c.defaultPlaylistLabel.h()}</label> <button class="go" type="submit">${c.sendToTv.h()}</button> </form> <form class="panel" data-k="stalker" method="post" action="/stalker?pin=$pin"> <input type="hidden" name="type" value="stalker"> <div class="grid"> <label>${c.name.h()} <input name="name" placeholder="${c.defaultPortal.h()}"></label> ${autoRefreshSelect(c)} </div> <label>${c.portalUrl.h()} <input name="portalUrl" placeholder="${c.portalExample.h()}" required></label> <label>${context.getString(R.string.setup_mac_address).h()} <input name="mac" placeholder="${context.getString(R.string.setup_mac_example).h()}" required></label> <label>${c.userAgent.h()} <input name="userAgent" placeholder="${c.optional.h()}"></label> <p class="hint">${c.syncStalkerHint.h()}</p> <div class="grid"> ${scopeSelect(c, "syncLive", c.live, "now")} ${scopeSelect(c, "syncMovies", c.movies, "later")} ${scopeSelect(c, "syncSeries", c.series, "later")} </div> <input type="hidden" name="isDefault" value="false"> <label class="check"><input type="checkbox" name="isDefault" value="true"> ${c.defaultPlaylistLabel.h()}</label> <button class="go" type="submit">${c.sendToTv.h()}</button> </form> </div> <script> var tabs=document.querySelectorAll('.tab'), panels=document.querySelectorAll('.panel'); tabs.forEach(function(t){t.addEventListener('click',function(){ var k=t.getAttribute('data-k'); tabs.forEach(function(x){x.classList.toggle('active',x===t)}); panels.forEach(function(p){p.classList.toggle('active',p.getAttribute('data-k')===k)}); });}); </script>
+1	technical	app/src/main/java/tv/own/owntv/core/companion/CompanionHtml.kt	<div class="card"> <h1>${c.addHeading.h()}</h1> <p>${c.addDescription.h()}</p> <div class="tabs"> <button type="button" class="tab active" data-k="xtream">${c.xtream.h()}</button> <button type="button" class="tab" data-k="m3u">${c.m3u.h()}</button> <button type="button" class="tab" data-k="stalker">${c.stalker.h()}</button> </div> <form class="panel active" data-k="xtream" method="post" action="/xtream?pin=$pin"> <input type="hidden" name="type" value="xtream"> <div class="grid"> <label>${c.name.h()} <input name="name" placeholder="${c.defaultIptv.h()}"></label> ${autoRefreshSelect(c)} </div> <label>${c.serverUrl.h()} <input name="server" placeholder="${c.serverExample.h()}" required></label> <div class="grid"> <label>${c.username.h()} <input name="user" autocomplete="username" required></label> <label>${c.password.h()} <input name="pass" type="password" autocomplete="current-password" required></label> </div> <label>${c.userAgent.h()} <input name="userAgent" placeholder="${c.optional.h()}"></label> <label>${c.epgUrl.h()} <input name="epgUrl" placeholder="${c.optional.h()}"></label> <p class="hint">${c.syncXtreamHint.h()}</p> <div class="grid"> ${scopeSelect(c, "syncLive", c.live)} ${scopeSelect(c, "syncMovies", c.movies)} ${scopeSelect(c, "syncSeries", c.series)} </div> <input type="hidden" name="isDefault" value="false"> <label class="check"><input type="checkbox" name="isDefault" value="true"> ${c.defaultPlaylistLabel.h()}</label> <button class="go" type="submit">${c.sendToTv.h()}</button> </form> <form class="panel" data-k="m3u" method="post" action="/m3u?pin=$pin"> <input type="hidden" name="type" value="m3u"> <div class="grid"> <label>${c.name.h()} <input name="name" placeholder="${c.defaultPlaylist.h()}"></label> ${autoRefreshSelect(c)} </div> <label>${c.playlistUrl.h()} <input name="server" placeholder="${c.playlistExample.h()}" required></label> <label>${c.userAgent.h()} <input name="userAgent" placeholder="${c.optional.h()}"></label> <label>${c.epgUrl.h()} <input name="epgUrl" placeholder="${c.optional.h()}"></label> <input type="hidden" name="isDefault" value="false"> <label class="check"><input type="checkbox" name="isDefault" value="true"> ${c.defaultPlaylistLabel.h()}</label> <button class="go" type="submit">${c.sendToTv.h()}</button> </form> <form class="panel" data-k="stalker" method="post" action="/stalker?pin=$pin"> <input type="hidden" name="type" value="stalker"> <div class="grid"> <label>${c.name.h()} <input name="name" placeholder="${c.defaultPortal.h()}"></label> ${autoRefreshSelect(c)} </div> <label>${c.portalUrl.h()} <input name="portalUrl" placeholder="${c.portalExample.h()}" required></label> <label>${context.getString(R.string.setup_mac_address).h()} <input name="mac" placeholder="${context.getString(R.string.setup_mac_example).h()}" required></label> <h3>${context.getString(R.string.setup_stalker_advanced_identity).h()}</h3> <div class="grid"> <label>${context.getString(R.string.setup_stalker_serial_number_optional).h()} <input name="serialNumber"></label> <label>${context.getString(R.string.setup_stalker_device_id_optional).h()} <input name="deviceId"></label> <label>${context.getString(R.string.setup_stalker_device_id2_optional).h()} <input name="deviceId2"></label> <label>${context.getString(R.string.setup_stalker_signature_optional).h()} <input name="signature"></label> </div> <label>${c.userAgent.h()} <input name="userAgent" placeholder="${c.optional.h()}"></label> <p class="hint">${c.syncStalkerHint.h()}</p> <div class="grid"> ${scopeSelect(c, "syncLive", c.live, "now")} ${scopeSelect(c, "syncMovies", c.movies, "later")} ${scopeSelect(c, "syncSeries", c.series, "later")} </div> <input type="hidden" name="isDefault" value="false"> <label class="check"><input type="checkbox" name="isDefault" value="true"> ${c.defaultPlaylistLabel.h()}</label> <button class="go" type="submit">${c.sendToTv.h()}</button> </form> </div> <script> var tabs=document.querySelectorAll('.tab'), panels=document.querySelectorAll('.panel'); tabs.forEach(function(t){t.addEventListener('click',function(){ var k=t.getAttribute('data-k'); tabs.forEach(function(x){x.classList.toggle('active',x===t)}); panels.forEach(function(p){p.classList.toggle('active',p.getAttribute('data-k')===k)}); });}); </script>
 1	technical	app/src/main/java/tv/own/owntv/core/companion/CompanionHtml.kt	<div class="card"> <h1>${c.pinHeading.h()}</h1> <p>${c.pinDescription.h()}</p> ${if (error != null) "<p class=\\"err\\">${error.h()}</p>" else ""} <form method="post" action="/"> <input class="pin" name="pin" inputmode="numeric" pattern="[0-9]*" maxlength="6" autofocus placeholder="${c.pinPlaceholder.h()}" aria-label="${c.pinAria.h()}" required> <button class="go" type="submit">${c.continueLabel.h()}</button> </form> </div>
 1	technical	app/src/main/java/tv/own/owntv/core/companion/CompanionHtml.kt	<div class="card"> <h1>${c.savedHeading.h()}</h1> <p>${body.h()}</p> <p><a href="/?pin=$pin">${c.savedSendAnother.h()}</a></p> </div>
 1	technical	app/src/main/java/tv/own/owntv/core/companion/CompanionHtml.kt	<div class="card"> <h1>${heading.h()}</h1> <p>${description.h()}</p> <form id="f" onsubmit="return false"> <label>${fileLabel.h()} <input id="file" type="file" accept="$accept" required></label> <button class="go" id="send" type="submit">${c.sendToTv.h()}</button> </form> <p id="status" class="hint"></p> </div> <script> var f=document.getElementById('file'), b=document.getElementById('send'), s=document.getElementById('status'); document.getElementById('f').addEventListener('submit',function(){ var file=f.files&&f.files[0]; if(!file){s.textContent=${choose.js()};return false;} ${if (!backup) "if(file.size>25*1024*1024){s.textContent=${c.imageTooLarge.js()};return false;}" else ""} b.disabled=true; s.textContent=${c.sending.js()}; var r=new FileReader(); r.onload=function(){ fetch('$endpoint?pin=$pin',{method:'POST',headers:{'Content-Type':'$contentType'},body:r.result}) .then(function(res){ if(res.ok){document.open();res.text().then(function(t){document.write(t);document.close();});} else{b.disabled=false;s.textContent=${c.uploadFailed.js()}.replace('__STATUS__',String(res.status));} }) .catch(function(){b.disabled=false;s.textContent=${c.couldNotReach.js()};}); }; r.onerror=function(){b.disabled=false;s.textContent=${c.couldNotRead.js()};}; r.readAsDataURL(file); return false; }); </script>
@@ -241,6 +273,10 @@
 1	protocol	app/src/main/java/tv/own/owntv/core/companion/CompanionHttpProtocol.kt	autoRefresh
 1	protocol	app/src/main/java/tv/own/owntv/core/companion/CompanionHttpProtocol.kt	auto_refresh
 1	protocol	app/src/main/java/tv/own/owntv/core/companion/CompanionHttpProtocol.kt	content-length
+1	protocol	app/src/main/java/tv/own/owntv/core/companion/CompanionHttpProtocol.kt	deviceId
+1	protocol	app/src/main/java/tv/own/owntv/core/companion/CompanionHttpProtocol.kt	deviceId2
+1	protocol	app/src/main/java/tv/own/owntv/core/companion/CompanionHttpProtocol.kt	device_id
+1	protocol	app/src/main/java/tv/own/owntv/core/companion/CompanionHttpProtocol.kt	device_id2
 1	protocol	app/src/main/java/tv/own/owntv/core/companion/CompanionHttpProtocol.kt	epgUrl
 1	protocol	app/src/main/java/tv/own/owntv/core/companion/CompanionHttpProtocol.kt	epg_url
 1	protocol	app/src/main/java/tv/own/owntv/core/companion/CompanionHttpProtocol.kt	isDefault
@@ -256,7 +292,11 @@
 1	protocol	app/src/main/java/tv/own/owntv/core/companion/CompanionHttpProtocol.kt	password
 1	protocol	app/src/main/java/tv/own/owntv/core/companion/CompanionHttpProtocol.kt	portalUrl
 1	protocol	app/src/main/java/tv/own/owntv/core/companion/CompanionHttpProtocol.kt	portal_url
+1	protocol	app/src/main/java/tv/own/owntv/core/companion/CompanionHttpProtocol.kt	serialNumber
+1	protocol	app/src/main/java/tv/own/owntv/core/companion/CompanionHttpProtocol.kt	serial_number
 1	protocol	app/src/main/java/tv/own/owntv/core/companion/CompanionHttpProtocol.kt	server
+1	protocol	app/src/main/java/tv/own/owntv/core/companion/CompanionHttpProtocol.kt	signature
+1	protocol	app/src/main/java/tv/own/owntv/core/companion/CompanionHttpProtocol.kt	sn
 1	protocol	app/src/main/java/tv/own/owntv/core/companion/CompanionHttpProtocol.kt	sourceType
 1	protocol	app/src/main/java/tv/own/owntv/core/companion/CompanionHttpProtocol.kt	source_type
 1	protocol	app/src/main/java/tv/own/owntv/core/companion/CompanionHttpProtocol.kt	stalker
@@ -324,7 +364,7 @@
 1	technical	app/src/main/java/tv/own/owntv/core/companion/CompanionLink.kt	192.168.
 1	url	app/src/main/java/tv/own/owntv/core/companion/CompanionLink.kt	http://$host:$port/
 1	url	app/src/main/java/tv/own/owntv/core/companion/CompanionLink.kt	http://$it:$port/
-8	empty	app/src/main/java/tv/own/owntv/core/companion/CompanionPayload.kt	\0
+12	empty	app/src/main/java/tv/own/owntv/core/companion/CompanionPayload.kt	\0
 1	technical	app/src/main/java/tv/own/owntv/core/companion/CompanionPayload.kt	OFF
 1	technical	app/src/main/java/tv/own/owntv/core/customize/CustomizationStore.kt	${c.sourceId}:${c.remoteId ?: c.name}
 1	technical	app/src/main/java/tv/own/owntv/core/customize/CustomizationStore.kt	${ch.sourceId}:${ch.remoteId ?: ch.name}
@@ -363,9 +403,15 @@
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/BulkInsertHelper.kt	movies_fts
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/BulkInsertHelper.kt	room_fts_content_sync_${it}_AFTER_INSERT
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/BulkInsertHelper.kt	series_fts
-9	room-schema	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	)
+11	room-schema	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	)
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	,
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	?
+1	room-schema	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	ALTER TABLE `$table` ADD COLUMN `advertisedCapabilities` TEXT
+1	room-schema	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	ALTER TABLE `$table` ADD COLUMN `canonicalTitle` TEXT NOT NULL DEFAULT ''
+1	room-schema	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	ALTER TABLE `$table` ADD COLUMN `parsedYear` INTEGER
+1	room-schema	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	ALTER TABLE `$table` ADD COLUMN `providerLanguage` TEXT
+1	room-schema	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	ALTER TABLE `$table` ADD COLUMN `qualityRank` INTEGER NOT NULL DEFAULT 0
+1	room-schema	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	ALTER TABLE `$table` ADD COLUMN `titleSignature` TEXT NOT NULL DEFAULT ''
 2	room-schema	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	ALTER TABLE `channels` ADD COLUMN `catchupDays` INTEGER NOT NULL DEFAULT 0
 2	room-schema	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	ALTER TABLE `channels` ADD COLUMN `catchupSource` TEXT
 1	sql	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	ALTER TABLE `channels` ADD COLUMN `catchupType` TEXT
@@ -385,9 +431,18 @@
 1	sql	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	ALTER TABLE `sources` ADD COLUMN `livePrerollSecs` INTEGER NOT NULL DEFAULT -1
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	ALTER TABLE `sources` ADD COLUMN `mac` TEXT
 1	sql	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	ALTER TABLE `sources` ADD COLUMN `maxConnections` INTEGER NOT NULL DEFAULT 0
+1	room-schema	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	ALTER TABLE `sources` ADD COLUMN `stalkerDeviceId2` TEXT
+1	room-schema	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	ALTER TABLE `sources` ADD COLUMN `stalkerDeviceId` TEXT
+1	room-schema	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	ALTER TABLE `sources` ADD COLUMN `stalkerSerialNumber` TEXT
+1	room-schema	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	ALTER TABLE `sources` ADD COLUMN `stalkerSignature` TEXT
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	ALTER TABLE `sources` ADD COLUMN `syncLive` INTEGER NOT NULL DEFAULT 1
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	ALTER TABLE `sources` ADD COLUMN `syncMovies` INTEGER NOT NULL DEFAULT 1
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	ALTER TABLE `sources` ADD COLUMN `syncSeries` INTEGER NOT NULL DEFAULT 1
+1	room-schema	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	ALTER TABLE `trending_snapshots` ADD COLUMN `failureStage` TEXT
+1	room-schema	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	ALTER TABLE `trending_snapshots` ADD COLUMN `lastAttemptAt` INTEGER NOT NULL DEFAULT 0
+1	room-schema	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	ALTER TABLE `trending_snapshots` ADD COLUMN `lastAttemptStatus` TEXT NOT NULL DEFAULT 'NEVER'
+1	room-schema	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	ALTER TABLE `trending_snapshots` ADD COLUMN `matchedItemCount` INTEGER NOT NULL DEFAULT 0
+1	room-schema	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	CREATE INDEX IF NOT EXISTS `index_${table}_sourceId_titleSignature_parsedYear`
 2	room-schema	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	CREATE INDEX IF NOT EXISTS `index_channels_categoryId_name` ON `channels` (`categoryId`, `name`)
 2	room-schema	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	CREATE INDEX IF NOT EXISTS `index_channels_categoryId_sortOrder_name` ON `channels` (`categoryId`, `sortOrder`, `name`)
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	CREATE INDEX IF NOT EXISTS `index_channels_categoryId` ON `channels` (`categoryId`)
@@ -417,6 +472,7 @@
 2	room-schema	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	CREATE INDEX IF NOT EXISTS `index_movies_sourceId_name` ON `movies` (`sourceId`, `name`)
 2	room-schema	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	CREATE INDEX IF NOT EXISTS `index_movies_sourceId_rating_name` ON `movies` (`sourceId`, `rating`, `name`)
 2	room-schema	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	CREATE INDEX IF NOT EXISTS `index_movies_sourceId_sortOrder_name` ON `movies` (`sourceId`, `sortOrder`, `name`)
+1	room-schema	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	CREATE INDEX IF NOT EXISTS `index_movies_sourceId_titleSignature_parsedYear` ON `movies` (`sourceId`, `titleSignature`, `parsedYear`)
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	CREATE INDEX IF NOT EXISTS `index_movies_sourceId` ON `movies` (`sourceId`)
 2	room-schema	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	CREATE INDEX IF NOT EXISTS `index_series_categoryId_addedAt_sortOrder` ON `series` (`categoryId`, `addedAt`, `sortOrder`)
 2	room-schema	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	CREATE INDEX IF NOT EXISTS `index_series_categoryId_name` ON `series` (`categoryId`, `name`)
@@ -429,6 +485,7 @@
 2	room-schema	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	CREATE INDEX IF NOT EXISTS `index_series_sourceId_name` ON `series` (`sourceId`, `name`)
 2	room-schema	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	CREATE INDEX IF NOT EXISTS `index_series_sourceId_rating_name` ON `series` (`sourceId`, `rating`, `name`)
 2	room-schema	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	CREATE INDEX IF NOT EXISTS `index_series_sourceId_sortOrder_name` ON `series` (`sourceId`, `sortOrder`, `name`)
+1	room-schema	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	CREATE INDEX IF NOT EXISTS `index_series_sourceId_titleSignature_parsedYear` ON `series` (`sourceId`, `titleSignature`, `parsedYear`)
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	CREATE INDEX IF NOT EXISTS `index_series_sourceId` ON `series` (`sourceId`)
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	CREATE INDEX IF NOT EXISTS `index_subtitle_cache_lastUsedAt` ON `subtitle_cache` (`lastUsedAt`)
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	CREATE INDEX IF NOT EXISTS `index_subtitle_link_cacheId` ON `subtitle_link` (`cacheId`)
@@ -437,6 +494,8 @@
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	CREATE INDEX IF NOT EXISTS `index_subtitle_selection_cacheId` ON `subtitle_selection` (`cacheId`)
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	CREATE INDEX IF NOT EXISTS `index_subtitle_selection_profileId` ON `subtitle_selection` (`profileId`)
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	CREATE INDEX IF NOT EXISTS `index_subtitle_timing_profileId` ON `subtitle_timing` (`profileId`)
+1	room-schema	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	CREATE INDEX IF NOT EXISTS `index_trending_items_mediaType_tmdbId`
+1	room-schema	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	CREATE INDEX IF NOT EXISTS `index_trending_items_sourceId_mediaType_providerItemId`
 2	room-schema	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	CREATE INDEX IF NOT EXISTS `index_tv_provider_programs_profileId` ON `tv_provider_programs` (`profileId`)
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	CREATE TABLE IF NOT EXISTS `content_order` (
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	CREATE TABLE IF NOT EXISTS `epg_channels` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `sourceId` INTEGER NOT NULL, `epgChannelId` TEXT NOT NULL, `displayName` TEXT)
@@ -448,6 +507,8 @@
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	CREATE TABLE IF NOT EXISTS `subtitle_link` (
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	CREATE TABLE IF NOT EXISTS `subtitle_selection` (
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	CREATE TABLE IF NOT EXISTS `subtitle_timing` (
+1	room-schema	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	CREATE TABLE IF NOT EXISTS `trending_items` (
+1	room-schema	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	CREATE TABLE IF NOT EXISTS `trending_snapshots` (
 2	room-schema	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	CREATE TABLE IF NOT EXISTS `tv_provider_programs` (
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	CREATE UNIQUE INDEX IF NOT EXISTS `index_content_order_profileId_mediaType_contextKey_itemId` ON `content_order` (`profileId`, `mediaType`, `contextKey`, `itemId`)
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	CREATE UNIQUE INDEX IF NOT EXISTS `index_epg_channels_sourceId_epgChannelId` ON `epg_channels` (`sourceId`, `epgChannelId`)
@@ -469,9 +530,14 @@
 4	room-schema	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	FOREIGN KEY(`profileId`) REFERENCES `profiles`(`id`) ON DELETE CASCADE
 2	room-schema	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	FOREIGN KEY(`profileId`) REFERENCES `profiles`(`id`) ON DELETE CASCADE,
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	FOREIGN KEY(`profileId`) REFERENCES `profiles`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )
+1	room-schema	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	FOREIGN KEY(`sourceId`) REFERENCES `sources`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE
+1	room-schema	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	FOREIGN KEY(`sourceId`) REFERENCES `trending_snapshots`(`sourceId`) ON UPDATE NO ACTION ON DELETE CASCADE
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	IF NOT EXISTS `
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	INSERT INTO `$name`(`$name`) VALUES('rebuild')
+1	room-schema	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	ON `$table` (`sourceId`, `titleSignature`, `parsedYear`)
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	ON `epg_programmes` (`sourceId`, `epgChannelId`, `startMs`)
+1	room-schema	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	ON `trending_items` (`mediaType`, `tmdbId`)
+1	room-schema	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	ON `trending_items` (`sourceId`, `mediaType`, `providerItemId`)
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	ON\\s+`([^`]+)`\\s*\\(([^)]*)\\)
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	PRAGMA table_info(`$table`)
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	PRIMARY KEY(`key`)
@@ -479,15 +545,21 @@
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	PRIMARY KEY(`profileId`, `contentKey`),
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	PRIMARY KEY(`profileId`, `contentKey`, `cacheId`),
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	PRIMARY KEY(`profileId`, `contentKey`, `subtitleKey`),
+1	room-schema	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	PRIMARY KEY(`sourceId`),
+1	room-schema	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	PRIMARY KEY(`sourceId`, `position`),
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	SELECT 1 FROM sqlite_master WHERE type='table' AND name='$name'
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	SELECT COUNT(*) FROM sqlite_master WHERE name IN ($placeholders)
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	UPDATE `movies` SET `addedAt` = `addedAt` * 1000
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	WHERE `addedAt` IS NOT NULL AND `addedAt` > 0 AND `addedAt` < 10000000000
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	`addedAt` INTEGER NOT NULL,
-1	room-schema	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	`backdropPath` TEXT,
+1	room-schema	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	`advertisedCapabilities` TEXT,
+1	room-schema	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	`advertisedQuality` TEXT,
+2	room-schema	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	`backdropPath` TEXT,
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	`cacheId` INTEGER NOT NULL,
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	`cacheId` INTEGER,
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	`cachedPath` TEXT NOT NULL,
+1	room-schema	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	`candidateFetchedAt` INTEGER NOT NULL,
+1	room-schema	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	`canonicalTitle` TEXT NOT NULL,
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	`castJson` TEXT,
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	`confidence` REAL NOT NULL,
 3	room-schema	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	`contentKey` TEXT NOT NULL,
@@ -497,11 +569,13 @@
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	`episodesDescending` INTEGER NOT NULL,
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	`fileName` TEXT NOT NULL,
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	`format` TEXT,
+2	room-schema	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	`generationId` TEXT NOT NULL,
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	`genresJson` TEXT,
 2	room-schema	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	`groupId` INTEGER NOT NULL,
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	`hearingImpaired` INTEGER NOT NULL DEFAULT 0,
 5	room-schema	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	`imdbId` TEXT,
+1	room-schema	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	`itemCount` INTEGER NOT NULL,
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	`itemId` INTEGER NOT NULL,
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	`key` TEXT NOT NULL,
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	`languageName` TEXT,
@@ -511,29 +585,42 @@
 2	room-schema	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	`lastPublishedAt` INTEGER NOT NULL,
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	`lastUsedAt` INTEGER NOT NULL
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	`localKey` TEXT NOT NULL,
-4	room-schema	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	`mediaType` TEXT NOT NULL,
+1	room-schema	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	`localizedTitle` TEXT NOT NULL,
+5	room-schema	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	`mediaType` TEXT NOT NULL,
+1	room-schema	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	`metadataLanguage` TEXT NOT NULL,
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	`off` INTEGER NOT NULL DEFAULT 0,
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	`offsetMs` INTEGER NOT NULL,
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	`openSubFileId` INTEGER,
-1	room-schema	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	`overview` TEXT,
-1	room-schema	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	`position` INTEGER NOT NULL,
-1	room-schema	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	`posterPath` TEXT,
+1	room-schema	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	`originalTitle` TEXT,
+2	room-schema	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	`overview` TEXT,
+2	room-schema	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	`position` INTEGER NOT NULL,
+2	room-schema	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	`posterPath` TEXT,
 7	room-schema	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	`profileId` INTEGER NOT NULL,
+1	room-schema	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	`providerItemId` INTEGER NOT NULL,
+1	room-schema	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	`providerLanguage` TEXT,
 2	room-schema	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	`providerProgramId` INTEGER,
-1	room-schema	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	`rating` REAL,
+1	room-schema	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	`providerRawName` TEXT NOT NULL,
+1	room-schema	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	`providerRemoteId` TEXT,
+1	room-schema	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	`providerStableKey` TEXT NOT NULL,
+2	room-schema	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	`rating` REAL,
+2	room-schema	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	`refreshedAt` INTEGER NOT NULL,
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	`releaseName` TEXT,
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	`seasonsDescending` INTEGER NOT NULL,
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	`seriesId` INTEGER NOT NULL,
+2	room-schema	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	`sourceId` INTEGER NOT NULL,
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	`source` TEXT NOT NULL,
+1	room-schema	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	`status` TEXT NOT NULL,
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	`subtitleKey` TEXT NOT NULL,
 2	room-schema	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	`surface` TEXT NOT NULL,
 2	room-schema	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	`targetItemId` INTEGER NOT NULL,
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	`title` TEXT NOT NULL,
-1	room-schema	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	`tmdbId` INTEGER NOT NULL,
+2	room-schema	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	`tmdbId` INTEGER NOT NULL,
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	`tmdbId` INTEGER,
+1	room-schema	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	`trailerKey` TEXT,
+1	room-schema	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	`trendingRank` INTEGER NOT NULL,
 2	room-schema	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	`type` TEXT NOT NULL,
 4	room-schema	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	`updatedAt` INTEGER NOT NULL,
-1	room-schema	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	`year` INTEGER,
+2	room-schema	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	`year` INTEGER,
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	addedAt
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	catchup
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	catchupDays
@@ -552,13 +639,17 @@
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	livePrerollSecs
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	mac
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	maxConnections
-3	room-schema	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	movies
+4	room-schema	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	movies
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	movies_fts
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	name
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	owntv.db
-4	room-schema	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	series
+5	room-schema	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	series
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	series_fts
-6	room-schema	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	sources
+10	room-schema	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	sources
+1	room-schema	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	stalkerDeviceId
+1	room-schema	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	stalkerDeviceId2
+1	room-schema	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	stalkerSerialNumber
+1	room-schema	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	stalkerSignature
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	syncLive
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	syncMovies
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	syncSeries
@@ -776,6 +867,7 @@
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/dao/MetadataDao.kt	DELETE FROM metadata_match WHERE updatedAt < :cutoff
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/dao/MetadataDao.kt	SELECT * FROM metadata_cache WHERE key = :key LIMIT 1
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/dao/MetadataDao.kt	SELECT * FROM metadata_match WHERE localKey = :localKey LIMIT 1
+1	sql	app/src/main/java/tv/own/owntv/core/database/dao/MovieDao.kt	(SELECT rowid FROM movies_fts WHERE movies_fts MATCH :ftsQuery)
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/dao/MovieDao.kt	AND (categoryId IS NULL OR categoryId NOT IN (:excludedCategoryIds))
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/dao/MovieDao.kt	AND id IN (SELECT rowid FROM movies_fts WHERE movies_fts MATCH :ftsQuery) ORDER BY name ASC LIMIT :limit
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/dao/MovieDao.kt	AND id IN (SELECT rowid FROM movies_fts WHERE movies_fts MATCH :query) ORDER BY name ASC
@@ -791,6 +883,8 @@
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/dao/MovieDao.kt	ORDER BY (CASE WHEN o.position IS NULL THEN 1 ELSE 0 END), o.position, f.addedAt DESC LIMIT :limit
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/dao/MovieDao.kt	ORDER BY (CASE WHEN o.position IS NULL THEN 1 ELSE 0 END), o.position, m.sortOrder, m.name
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/dao/MovieDao.kt	ORDER BY (CASE WHEN o.position IS NULL THEN 1 ELSE 0 END), o.position, m.sortOrder, m.name LIMIT :limit
+1	sql	app/src/main/java/tv/own/owntv/core/database/dao/MovieDao.kt	ORDER BY sortOrder ASC, name ASC, id ASC
+1	sql	app/src/main/java/tv/own/owntv/core/database/dao/MovieDao.kt	ORDER BY sortOrder ASC, name ASC, id ASC LIMIT :limit
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/dao/MovieDao.kt	SELECT * FROM movies WHERE categoryId = :categoryId AND name LIKE '%' || :query || '%' ORDER BY addedAt DESC, sortOrder DESC, id DESC
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/dao/MovieDao.kt	SELECT * FROM movies WHERE categoryId = :categoryId AND name LIKE '%' || :query || '%' ORDER BY sortOrder ASC, name ASC
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/dao/MovieDao.kt	SELECT * FROM movies WHERE categoryId = :categoryId ORDER BY addedAt DESC, sortOrder DESC, id DESC
@@ -798,9 +892,11 @@
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/dao/MovieDao.kt	SELECT * FROM movies WHERE categoryId = :categoryId ORDER BY rating DESC, name ASC
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/dao/MovieDao.kt	SELECT * FROM movies WHERE categoryId = :categoryId ORDER BY sortOrder ASC, name ASC
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/dao/MovieDao.kt	SELECT * FROM movies WHERE id = :id
+1	sql	app/src/main/java/tv/own/owntv/core/database/dao/MovieDao.kt	SELECT * FROM movies WHERE id IN (:ids)
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/dao/MovieDao.kt	SELECT * FROM movies WHERE sourceId = :sourceId AND name = :name LIMIT 1
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/dao/MovieDao.kt	SELECT * FROM movies WHERE sourceId = :sourceId AND remoteId = :remoteId LIMIT 1
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/dao/MovieDao.kt	SELECT * FROM movies WHERE sourceId = :sourceId AND remoteId IN (:remoteIds)
+1	sql	app/src/main/java/tv/own/owntv/core/database/dao/MovieDao.kt	SELECT * FROM movies WHERE sourceId = :sourceId AND titleSignature = '' LIMIT :limit
 2	room-schema	app/src/main/java/tv/own/owntv/core/database/dao/MovieDao.kt	SELECT * FROM movies WHERE sourceId IN (:sourceIds)
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/dao/MovieDao.kt	SELECT * FROM movies WHERE sourceId IN (:sourceIds) AND name LIKE '%' || :query || '%' ORDER BY addedAt DESC, sortOrder DESC, id DESC
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/dao/MovieDao.kt	SELECT * FROM movies WHERE sourceId IN (:sourceIds) AND name LIKE '%' || :query || '%' ORDER BY name ASC
@@ -812,9 +908,11 @@
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/dao/MovieDao.kt	SELECT COUNT(*) FROM favorites f INNER JOIN movies m ON m.id = f.itemId
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/dao/MovieDao.kt	SELECT COUNT(*) FROM movies WHERE categoryId = :categoryId
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/dao/MovieDao.kt	SELECT COUNT(*) FROM movies WHERE sourceId = :sourceId
+1	sql	app/src/main/java/tv/own/owntv/core/database/dao/MovieDao.kt	SELECT COUNT(*) FROM movies WHERE sourceId = :sourceId AND titleSignature = ''
 2	room-schema	app/src/main/java/tv/own/owntv/core/database/dao/MovieDao.kt	SELECT COUNT(*) FROM movies WHERE sourceId IN (:sourceIds)
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/dao/MovieDao.kt	SELECT COUNT(*) FROM watch_history h INNER JOIN movies m ON m.id = h.itemId
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/dao/MovieDao.kt	SELECT categoryId, COUNT(*) AS itemCount FROM movies WHERE sourceId = :sourceId AND categoryId IS NOT NULL GROUP BY categoryId
+2	sql	app/src/main/java/tv/own/owntv/core/database/dao/MovieDao.kt	SELECT id, sourceId, categoryId, name, year, remoteId, sortOrder, canonicalTitle,
 9	room-schema	app/src/main/java/tv/own/owntv/core/database/dao/MovieDao.kt	SELECT m.* FROM movies m
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/dao/MovieDao.kt	SELECT m.* FROM movies m INNER JOIN favorites f ON f.itemId = m.id AND f.mediaType = 'MOVIE'
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/dao/MovieDao.kt	SELECT m.* FROM movies m INNER JOIN watch_history h ON h.itemId = m.id AND h.mediaType = 'MOVIE'
@@ -833,6 +931,9 @@
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/dao/MovieDao.kt	WHERE h.profileId = :profileId ORDER BY h.watchedAt DESC LIMIT :limit
 2	room-schema	app/src/main/java/tv/own/owntv/core/database/dao/MovieDao.kt	WHERE m.categoryId = :categoryId
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/dao/MovieDao.kt	WHERE m.sourceId IN (:sourceIds) AND h.itemId IS NULL ORDER BY f.addedAt DESC LIMIT :limit
+1	sql	app/src/main/java/tv/own/owntv/core/database/dao/MovieDao.kt	WHERE sourceId = :sourceId AND id IN
+1	sql	app/src/main/java/tv/own/owntv/core/database/dao/MovieDao.kt	WHERE sourceId = :sourceId AND titleSignature IN (:titleSignatures)
+2	sql	app/src/main/java/tv/own/owntv/core/database/dao/MovieDao.kt	titleSignature, parsedYear, providerLanguage, qualityRank, advertisedCapabilities FROM movies
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/dao/ProfileDao.kt	DELETE FROM profiles
 2	room-schema	app/src/main/java/tv/own/owntv/core/database/dao/ProfileDao.kt	SELECT * FROM profiles ORDER BY createdAt ASC
 2	room-schema	app/src/main/java/tv/own/owntv/core/database/dao/ProfileDao.kt	SELECT * FROM profiles WHERE id = :id
@@ -873,6 +974,7 @@
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/dao/ProgressDao.kt	e.seasonNumber AS seasonNumber, e.episodeNumber AS episodeNumber,
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/dao/ProgressDao.kt	episodeSeries.remoteId AS seriesRemoteId, episodeSeries.name AS seriesName,
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/dao/ProgressDao.kt	p.updatedAt AS at, p.positionMs AS positionMs, p.durationMs AS durationMs
+1	sql	app/src/main/java/tv/own/owntv/core/database/dao/SeriesDao.kt	(SELECT rowid FROM series_fts WHERE series_fts MATCH :ftsQuery)
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/dao/SeriesDao.kt	AND (categoryId IS NULL OR categoryId NOT IN (:excludedCategoryIds))
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/dao/SeriesDao.kt	AND id IN (SELECT rowid FROM series_fts WHERE series_fts MATCH :ftsQuery) ORDER BY name ASC LIMIT :limit
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/dao/SeriesDao.kt	AND id IN (SELECT rowid FROM series_fts WHERE series_fts MATCH :query) ORDER BY name ASC
@@ -890,6 +992,8 @@
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/dao/SeriesDao.kt	ORDER BY (CASE WHEN o.position IS NULL THEN 1 ELSE 0 END), o.position, f.addedAt DESC LIMIT :limit
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/dao/SeriesDao.kt	ORDER BY (CASE WHEN o.position IS NULL THEN 1 ELSE 0 END), o.position, s.sortOrder, s.name
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/dao/SeriesDao.kt	ORDER BY (CASE WHEN o.position IS NULL THEN 1 ELSE 0 END), o.position, s.sortOrder, s.name LIMIT :limit
+1	sql	app/src/main/java/tv/own/owntv/core/database/dao/SeriesDao.kt	ORDER BY sortOrder ASC, name ASC, id ASC
+1	sql	app/src/main/java/tv/own/owntv/core/database/dao/SeriesDao.kt	ORDER BY sortOrder ASC, name ASC, id ASC LIMIT :limit
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/dao/SeriesDao.kt	SELECT * FROM episodes WHERE id = :id
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/dao/SeriesDao.kt	SELECT * FROM episodes WHERE seasonId = :seasonId ORDER BY episodeNumber ASC
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/dao/SeriesDao.kt	SELECT * FROM episodes WHERE seriesId = :seriesId AND remoteId = :remoteId LIMIT 1
@@ -903,9 +1007,11 @@
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/dao/SeriesDao.kt	SELECT * FROM series WHERE categoryId = :categoryId ORDER BY rating DESC, name ASC
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/dao/SeriesDao.kt	SELECT * FROM series WHERE categoryId = :categoryId ORDER BY sortOrder ASC, name ASC
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/dao/SeriesDao.kt	SELECT * FROM series WHERE id = :id
+1	sql	app/src/main/java/tv/own/owntv/core/database/dao/SeriesDao.kt	SELECT * FROM series WHERE id IN (:ids)
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/dao/SeriesDao.kt	SELECT * FROM series WHERE sourceId = :sourceId AND name = :name LIMIT 1
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/dao/SeriesDao.kt	SELECT * FROM series WHERE sourceId = :sourceId AND remoteId = :remoteId LIMIT 1
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/dao/SeriesDao.kt	SELECT * FROM series WHERE sourceId = :sourceId AND remoteId IN (:remoteIds)
+1	sql	app/src/main/java/tv/own/owntv/core/database/dao/SeriesDao.kt	SELECT * FROM series WHERE sourceId = :sourceId AND titleSignature = '' LIMIT :limit
 2	room-schema	app/src/main/java/tv/own/owntv/core/database/dao/SeriesDao.kt	SELECT * FROM series WHERE sourceId IN (:sourceIds)
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/dao/SeriesDao.kt	SELECT * FROM series WHERE sourceId IN (:sourceIds) AND name LIKE '%' || :query || '%' ORDER BY addedAt DESC, sortOrder DESC, id DESC
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/dao/SeriesDao.kt	SELECT * FROM series WHERE sourceId IN (:sourceIds) AND name LIKE '%' || :query || '%' ORDER BY name ASC
@@ -918,9 +1024,12 @@
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/dao/SeriesDao.kt	SELECT COUNT(*) FROM favorites f INNER JOIN series s ON s.id = f.itemId
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/dao/SeriesDao.kt	SELECT COUNT(*) FROM series WHERE categoryId = :categoryId
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/dao/SeriesDao.kt	SELECT COUNT(*) FROM series WHERE sourceId = :sourceId
+1	sql	app/src/main/java/tv/own/owntv/core/database/dao/SeriesDao.kt	SELECT COUNT(*) FROM series WHERE sourceId = :sourceId AND titleSignature = ''
 2	room-schema	app/src/main/java/tv/own/owntv/core/database/dao/SeriesDao.kt	SELECT COUNT(*) FROM series WHERE sourceId IN (:sourceIds)
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/dao/SeriesDao.kt	SELECT COUNT(*) FROM watch_history h INNER JOIN series s ON s.id = h.itemId
+1	sql	app/src/main/java/tv/own/owntv/core/database/dao/SeriesDao.kt	SELECT COUNT(DISTINCT seasonNumber) FROM episodes WHERE seriesId = :seriesId AND seasonNumber > 0
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/dao/SeriesDao.kt	SELECT categoryId, COUNT(*) AS itemCount FROM series WHERE sourceId = :sourceId AND categoryId IS NOT NULL GROUP BY categoryId
+2	sql	app/src/main/java/tv/own/owntv/core/database/dao/SeriesDao.kt	SELECT id, sourceId, categoryId, name, year, remoteId, sortOrder, canonicalTitle,
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/dao/SeriesDao.kt	SELECT remoteId FROM series WHERE sourceId = :sourceId AND categoryId = :categoryId AND remoteId IS NOT NULL
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/dao/SeriesDao.kt	SELECT remoteId FROM series WHERE sourceId = :sourceId AND categoryId IN (:categoryIds) AND remoteId IS NOT NULL
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/dao/SeriesDao.kt	SELECT remoteId FROM series WHERE sourceId = :sourceId AND remoteId IS NOT NULL
@@ -928,6 +1037,7 @@
 6	room-schema	app/src/main/java/tv/own/owntv/core/database/dao/SeriesDao.kt	SELECT s.* FROM series s
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/dao/SeriesDao.kt	SELECT s.* FROM series s INNER JOIN favorites f ON f.itemId = s.id AND f.mediaType = 'SERIES'
 3	room-schema	app/src/main/java/tv/own/owntv/core/database/dao/SeriesDao.kt	SELECT s.* FROM series s INNER JOIN watch_history h ON h.itemId = s.id AND h.mediaType = 'SERIES'
+1	sql	app/src/main/java/tv/own/owntv/core/database/dao/SeriesDao.kt	SELECT seriesId, COUNT(DISTINCT seasonNumber) AS seasonCount FROM episodes
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/dao/SeriesDao.kt	UPDATE series SET episodesSyncedAt = 0 WHERE sourceId = :sourceId AND episodesSyncedAt != 0
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/dao/SeriesDao.kt	UPDATE series SET episodesSyncedAt = :at WHERE id = :seriesId
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/dao/SeriesDao.kt	WHERE f.profileId = :profileId AND f.mediaType = 'SERIES' AND s.sourceId IN (:sourceIds)
@@ -940,6 +1050,10 @@
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/dao/SeriesDao.kt	WHERE h.profileId = :profileId AND s.sourceId IN (:sourceIds) ORDER BY h.watchedAt DESC LIMIT :limit
 2	room-schema	app/src/main/java/tv/own/owntv/core/database/dao/SeriesDao.kt	WHERE s.categoryId = :categoryId
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/dao/SeriesDao.kt	WHERE s.sourceId IN (:sourceIds) AND h.itemId IS NULL ORDER BY f.addedAt DESC LIMIT :limit
+1	sql	app/src/main/java/tv/own/owntv/core/database/dao/SeriesDao.kt	WHERE seriesId IN (:seriesIds) AND seasonNumber > 0 GROUP BY seriesId
+1	sql	app/src/main/java/tv/own/owntv/core/database/dao/SeriesDao.kt	WHERE sourceId = :sourceId AND id IN
+1	sql	app/src/main/java/tv/own/owntv/core/database/dao/SeriesDao.kt	WHERE sourceId = :sourceId AND titleSignature IN (:titleSignatures)
+2	sql	app/src/main/java/tv/own/owntv/core/database/dao/SeriesDao.kt	titleSignature, parsedYear, providerLanguage, qualityRank, advertisedCapabilities FROM series
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/dao/SeriesSortOrderDao.kt	AND seriesId NOT IN (SELECT id FROM series)
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/dao/SeriesSortOrderDao.kt	DELETE FROM series_sort_order WHERE profileId = :profileId AND seriesId = :seriesId
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/dao/SeriesSortOrderDao.kt	DELETE FROM series_sort_order WHERE seriesId NOT IN (SELECT id FROM series)
@@ -986,12 +1100,23 @@
 2	room-schema	app/src/main/java/tv/own/owntv/core/database/dao/SubtitleDao.kt	c.cachedPath AS cachedPath, c.openSubFileId AS openSubFileId, l.addedAt AS addedAt
 2	room-schema	app/src/main/java/tv/own/owntv/core/database/dao/SubtitleDao.kt	c.releaseName AS releaseName, c.format AS format, c.fileName AS fileName,
 2	room-schema	app/src/main/java/tv/own/owntv/core/database/dao/SubtitleDao.kt	l.mediaType AS mediaType, c.language AS language, c.languageName AS languageName,
+1	sql	app/src/main/java/tv/own/owntv/core/database/dao/TrendingDao.kt	DELETE FROM trending_items WHERE sourceId = :sourceId
+1	sql	app/src/main/java/tv/own/owntv/core/database/dao/TrendingDao.kt	DELETE FROM trending_snapshots WHERE sourceId = :sourceId
+1	sql	app/src/main/java/tv/own/owntv/core/database/dao/TrendingDao.kt	SELECT * FROM trending_items ORDER BY sourceId, position
+1	sql	app/src/main/java/tv/own/owntv/core/database/dao/TrendingDao.kt	SELECT * FROM trending_items WHERE sourceId = :sourceId ORDER BY position
+2	sql	app/src/main/java/tv/own/owntv/core/database/dao/TrendingDao.kt	SELECT * FROM trending_items WHERE sourceId IN (:sourceIds) ORDER BY sourceId, position
+1	sql	app/src/main/java/tv/own/owntv/core/database/dao/TrendingDao.kt	SELECT * FROM trending_snapshots WHERE sourceId = :sourceId LIMIT 1
+1	sql	app/src/main/java/tv/own/owntv/core/database/dao/TrendingDao.kt	SELECT * FROM trending_snapshots WHERE sourceId IN (:sourceIds) ORDER BY sourceId
+1	sql	app/src/main/java/tv/own/owntv/core/database/dao/TrendingDao.kt	UPDATE trending_snapshots SET lastAttemptAt = :attemptAt, lastAttemptStatus = 'FAILED',
+1	sql	app/src/main/java/tv/own/owntv/core/database/dao/TrendingDao.kt	failureStage = :stage WHERE sourceId = :sourceId
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/dao/TvProviderProgramDao.kt	AND mediaType = :mediaType AND groupId = :groupId LIMIT 1
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/dao/TvProviderProgramDao.kt	DELETE FROM tv_provider_programs WHERE profileId = :profileId
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/dao/TvProviderProgramDao.kt	DELETE FROM tv_provider_programs WHERE profileId = :profileId AND surface = :surface AND mediaType = :mediaType AND groupId = :groupId
 2	room-schema	app/src/main/java/tv/own/owntv/core/database/dao/TvProviderProgramDao.kt	SELECT * FROM tv_provider_programs WHERE profileId = :profileId AND surface = :surface
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/dao/TvProviderProgramDao.kt	SELECT * FROM tv_provider_programs WHERE profileId = :profileId ORDER BY surface ASC, lastPublishedAt DESC
-4	room-schema	app/src/main/java/tv/own/owntv/core/database/entity/ContentEntities.kt	0
+4	empty	app/src/main/java/tv/own/owntv/core/database/entity/ContentEntities.kt	\0
+4	room-schema	app/src/main/java/tv/own/owntv/core/database/entity/ContentEntities.kt	''
+6	room-schema	app/src/main/java/tv/own/owntv/core/database/entity/ContentEntities.kt	0
 4	room-schema	app/src/main/java/tv/own/owntv/core/database/entity/ContentEntities.kt	addedAt
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/entity/ContentEntities.kt	categories
 16	room-schema	app/src/main/java/tv/own/owntv/core/database/entity/ContentEntities.kt	categoryId
@@ -1003,6 +1128,7 @@
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/entity/ContentEntities.kt	movies
 20	room-schema	app/src/main/java/tv/own/owntv/core/database/entity/ContentEntities.kt	name
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/entity/ContentEntities.kt	number
+2	room-schema	app/src/main/java/tv/own/owntv/core/database/entity/ContentEntities.kt	parsedYear
 4	room-schema	app/src/main/java/tv/own/owntv/core/database/entity/ContentEntities.kt	rating
 5	room-schema	app/src/main/java/tv/own/owntv/core/database/entity/ContentEntities.kt	remoteId
 2	room-schema	app/src/main/java/tv/own/owntv/core/database/entity/ContentEntities.kt	seasonId
@@ -1010,7 +1136,8 @@
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/entity/ContentEntities.kt	series
 5	room-schema	app/src/main/java/tv/own/owntv/core/database/entity/ContentEntities.kt	seriesId
 10	room-schema	app/src/main/java/tv/own/owntv/core/database/entity/ContentEntities.kt	sortOrder
-24	room-schema	app/src/main/java/tv/own/owntv/core/database/entity/ContentEntities.kt	sourceId
+26	room-schema	app/src/main/java/tv/own/owntv/core/database/entity/ContentEntities.kt	sourceId
+2	room-schema	app/src/main/java/tv/own/owntv/core/database/entity/ContentEntities.kt	titleSignature
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/entity/EpgEntities.kt	0
 4	room-schema	app/src/main/java/tv/own/owntv/core/database/entity/EpgEntities.kt	epgChannelId
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/entity/EpgEntities.kt	epg_channels
@@ -1047,6 +1174,16 @@
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/entity/SubtitleEntities.kt	subtitle_link
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/entity/SubtitleEntities.kt	subtitle_selection
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/entity/SubtitleEntities.kt	subtitle_timing
+1	room-schema	app/src/main/java/tv/own/owntv/core/database/entity/TrendingEntities.kt	'NEVER'
+2	room-schema	app/src/main/java/tv/own/owntv/core/database/entity/TrendingEntities.kt	0
+1	room-schema	app/src/main/java/tv/own/owntv/core/database/entity/TrendingEntities.kt	id
+2	room-schema	app/src/main/java/tv/own/owntv/core/database/entity/TrendingEntities.kt	mediaType
+1	room-schema	app/src/main/java/tv/own/owntv/core/database/entity/TrendingEntities.kt	position
+1	room-schema	app/src/main/java/tv/own/owntv/core/database/entity/TrendingEntities.kt	providerItemId
+6	room-schema	app/src/main/java/tv/own/owntv/core/database/entity/TrendingEntities.kt	sourceId
+1	room-schema	app/src/main/java/tv/own/owntv/core/database/entity/TrendingEntities.kt	tmdbId
+1	room-schema	app/src/main/java/tv/own/owntv/core/database/entity/TrendingEntities.kt	trending_items
+1	room-schema	app/src/main/java/tv/own/owntv/core/database/entity/TrendingEntities.kt	trending_snapshots
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/entity/TvProviderEntities.kt	groupId
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/entity/TvProviderEntities.kt	id
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/entity/TvProviderEntities.kt	mediaType
@@ -1349,13 +1486,13 @@
 1	protocol	app/src/main/java/tv/own/owntv/core/metadata/MetadataRepository.kt	$TYPE_TV:$tvId:s${season}e$episode
 1	protocol	app/src/main/java/tv/own/owntv/core/metadata/MetadataRepository.kt	$TYPE_TV:${series.sourceId}:${series.remoteId ?: series.name}
 1	protocol	app/src/main/java/tv/own/owntv/core/metadata/MetadataRepository.kt	MetadataRepository
-1	protocol	app/src/main/java/tv/own/owntv/core/metadata/MetadataRepository.kt	\\s+
 1	protocol	app/src/main/java/tv/own/owntv/core/metadata/MetadataRepository.kt	episode
 1	protocol	app/src/main/java/tv/own/owntv/core/metadata/MetadataRepository.kt	movie
 1	log	app/src/main/java/tv/own/owntv/core/metadata/MetadataRepository.kt	negative-match heal failed: ${it.message}
 1	protocol	app/src/main/java/tv/own/owntv/core/metadata/MetadataRepository.kt	resolveMovie search failed: ${it.message}
 1	protocol	app/src/main/java/tv/own/owntv/core/metadata/MetadataRepository.kt	resolveSeries search failed: ${it.message}
 1	protocol	app/src/main/java/tv/own/owntv/core/metadata/MetadataRepository.kt	tv
+1	regex	app/src/main/java/tv/own/owntv/core/metadata/TitleMatchScorer.kt	\\s+
 10	empty	app/src/main/java/tv/own/owntv/core/metadata/TitleNormalizer.kt	\0
 1	technical	app/src/main/java/tv/own/owntv/core/metadata/TitleNormalizer.kt	(?:\\s*(?:e|ep|episode|x)\\s*\\d{1,4})?\\s*$
 1	regex	app/src/main/java/tv/own/owntv/core/metadata/TitleNormalizer.kt	(?i)[\\s\\-–—:._]*(?:(?:season|saison|temporada|staffel)\\s*\\d{1,2}|s\\d{1,2})
@@ -1375,22 +1512,27 @@
 2	empty	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	\0
 1	protocol	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	$base,en,null
 1	protocol	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	&
-3	protocol	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	&api_key=
+4	protocol	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	&api_key=
 1	protocol	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	&first_air_date_year=$year
 1	protocol	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	&include_adult=false
 1	protocol	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	&include_image_language=
-1	protocol	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	&language=
+2	protocol	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	&language=
 1	protocol	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	&year=$year
 1	protocol	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	.svg
 1	protocol	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	/3/movie/
 1	protocol	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	/3/search/movie
 1	protocol	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	/3/search/tv
+1	url	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	/3/trending/
 2	protocol	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	/3/tv/
+1	url	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	/day
 1	protocol	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	/episode/
 1	protocol	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	/season/
 4	protocol	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	?
 2	protocol	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	?append_to_response=credits,external_ids,videos,images
+1	url	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	?page=
 1	protocol	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	?query=
+1	log	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	TMDB Trending failed type=$type page=$page: ${it.message}
+1	log	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	TMDB Trending parse failed type=$type page=$page
 1	log	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	TMDB episode details failed tv=$tvId s$season e$episode: ${it.message}
 1	log	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	TMDB movie details failed id=$tmdbId: ${it.message}
 1	log	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	TMDB search failed type=$type: ${it.message}
@@ -1398,7 +1540,7 @@
 1	protocol	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	Teaser
 1	log	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	TmdbProvider
 1	protocol	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	Trailer
-1	protocol	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	UTF-8
+3	protocol	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	UTF-8
 1	protocol	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	YouTube
 1	json	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	air_date
 1	protocol	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	api_key=
@@ -1421,6 +1563,7 @@
 1	json	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	key
 1	protocol	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	language=
 1	json	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	logos
+1	protocol	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	movie
 7	json	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	name
 13	protocol	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	null
 1	json	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	official
@@ -1434,11 +1577,27 @@
 1	json	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	site
 1	json	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	still_path
 2	json	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	title
+1	protocol	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	tv
 1	json	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	type
 1	json	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	videos
 3	json	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	vote_average
 1	json	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	width
-1	technical	app/src/main/java/tv/own/owntv/core/network/DnsConfig.kt	DoH empty body
+1	json	app/src/main/java/tv/own/owntv/core/metadata/TmdbTrendingParser.kt	backdrop_path
+1	json	app/src/main/java/tv/own/owntv/core/metadata/TmdbTrendingParser.kt	first_air_date
+1	json	app/src/main/java/tv/own/owntv/core/metadata/TmdbTrendingParser.kt	id
+1	json	app/src/main/java/tv/own/owntv/core/metadata/TmdbTrendingParser.kt	name
+1	json	app/src/main/java/tv/own/owntv/core/metadata/TmdbTrendingParser.kt	null
+1	json	app/src/main/java/tv/own/owntv/core/metadata/TmdbTrendingParser.kt	original_name
+1	json	app/src/main/java/tv/own/owntv/core/metadata/TmdbTrendingParser.kt	original_title
+1	json	app/src/main/java/tv/own/owntv/core/metadata/TmdbTrendingParser.kt	overview
+1	json	app/src/main/java/tv/own/owntv/core/metadata/TmdbTrendingParser.kt	page
+1	json	app/src/main/java/tv/own/owntv/core/metadata/TmdbTrendingParser.kt	popularity
+1	json	app/src/main/java/tv/own/owntv/core/metadata/TmdbTrendingParser.kt	poster_path
+1	json	app/src/main/java/tv/own/owntv/core/metadata/TmdbTrendingParser.kt	release_date
+1	json	app/src/main/java/tv/own/owntv/core/metadata/TmdbTrendingParser.kt	results
+1	json	app/src/main/java/tv/own/owntv/core/metadata/TmdbTrendingParser.kt	title
+1	json	app/src/main/java/tv/own/owntv/core/metadata/TmdbTrendingParser.kt	total_pages
+1	json	app/src/main/java/tv/own/owntv/core/metadata/TmdbTrendingParser.kt	vote_average
 1	log	app/src/main/java/tv/own/owntv/core/network/DnsConfig.kt	DoH lookup failed for $hostname, falling back to system DNS
 1	log	app/src/main/java/tv/own/owntv/core/network/DnsConfig.kt	DoH lookup returned no addresses for $hostname, falling back to system DNS
 1	log	app/src/main/java/tv/own/owntv/core/network/DnsConfig.kt	UDP DNS lookup failed for $hostname via $server:$port, falling back to system DNS
@@ -1452,7 +1611,6 @@
 1	log	app/src/main/java/tv/own/owntv/core/network/HttpClient.kt	(?i)(username|password|user|pass|token)=[^&]*
 1	technical	app/src/main/java/tv/own/owntv/core/network/HttpClient.kt	(?i)(username|password|user|pass|token|data|auth|signature|sig|key)=[^&]*
 1	log	app/src/main/java/tv/own/owntv/core/network/HttpClient.kt	Content-Encoding
-1	log	app/src/main/java/tv/own/owntv/core/network/HttpClient.kt	Empty response body for ${redact(url)}
 1	log	app/src/main/java/tv/own/owntv/core/network/HttpClient.kt	GET body done url=$safeUrl totalMs=${SystemClock.elapsedRealtime() - startedAt}
 1	log	app/src/main/java/tv/own/owntv/core/network/HttpClient.kt	GET body progress url=$label bytes=$bytesRead total=${totalBytes ?: -1}
 1	log	app/src/main/java/tv/own/owntv/core/network/HttpClient.kt	GET failed for $safeUrl
@@ -1742,7 +1900,6 @@
 1	protocol	app/src/main/java/tv/own/owntv/core/stalker/StalkerClient.kt	$apiBase?type=series&action=get_categories&JsHttpRequest=1-xml
 1	protocol	app/src/main/java/tv/own/owntv/core/stalker/StalkerClient.kt	$apiBase?type=series&action=get_ordered_list$cat&movie_id=${enc(movieId)}&p=$page&JsHttpRequest=1-xml
 1	protocol	app/src/main/java/tv/own/owntv/core/stalker/StalkerClient.kt	$apiBase?type=series&action=get_ordered_list&category=${enc(categoryId)}&sortby=added&p=$page&JsHttpRequest=1-xml
-1	protocol	app/src/main/java/tv/own/owntv/core/stalker/StalkerClient.kt	$apiBase?type=stb&action=get_profile&hd=1&auth_second_step=0&JsHttpRequest=1-xml
 1	protocol	app/src/main/java/tv/own/owntv/core/stalker/StalkerClient.kt	$apiBase?type=stb&action=handshake&token=&JsHttpRequest=1-xml
 1	protocol	app/src/main/java/tv/own/owntv/core/stalker/StalkerClient.kt	$apiBase?type=vod&action=get_categories&JsHttpRequest=1-xml
 1	protocol	app/src/main/java/tv/own/owntv/core/stalker/StalkerClient.kt	$apiBase?type=vod&action=get_ordered_list&category=${enc(categoryId)}&sortby=added&p=$page&JsHttpRequest=1-xml
@@ -1750,8 +1907,13 @@
 1	protocol	app/src/main/java/tv/own/owntv/core/stalker/StalkerClient.kt	$root/server/load.php
 1	protocol	app/src/main/java/tv/own/owntv/core/stalker/StalkerClient.kt	$root/stalker_portal/server/load.php
 1	protocol	app/src/main/java/tv/own/owntv/core/stalker/StalkerClient.kt	${portalRoot(url.substringBefore('?'))}/c/
+1	url	app/src/main/java/tv/own/owntv/core/stalker/StalkerClient.kt	&JsHttpRequest=1-xml
 1	protocol	app/src/main/java/tv/own/owntv/core/stalker/StalkerClient.kt	&category=${enc(it)}
+1	url	app/src/main/java/tv/own/owntv/core/stalker/StalkerClient.kt	&device_id2=${URLEncoder.encode(it, "UTF-8")}
+1	url	app/src/main/java/tv/own/owntv/core/stalker/StalkerClient.kt	&device_id=${URLEncoder.encode(it, "UTF-8")}
 1	protocol	app/src/main/java/tv/own/owntv/core/stalker/StalkerClient.kt	&series=$it
+1	url	app/src/main/java/tv/own/owntv/core/stalker/StalkerClient.kt	&signature=${URLEncoder.encode(it, "UTF-8")}
+1	url	app/src/main/java/tv/own/owntv/core/stalker/StalkerClient.kt	&sn=${URLEncoder.encode(it, "UTF-8")}
 1	protocol	app/src/main/java/tv/own/owntv/core/stalker/StalkerClient.kt	(?i)(token|password|pass)=[^&]*
 1	protocol	app/src/main/java/tv/own/owntv/core/stalker/StalkerClient.kt	(\\d+)\\s*$
 1	protocol	app/src/main/java/tv/own/owntv/core/stalker/StalkerClient.kt	(\\d{4})-(\\d{2})-(\\d{2})(?:[ T](\\d{2}):(\\d{2})(?::(\\d{2}))?)?
@@ -1762,10 +1924,10 @@
 2	protocol	app/src/main/java/tv/own/owntv/core/stalker/StalkerClient.kt	0
 1	protocol	app/src/main/java/tv/own/owntv/core/stalker/StalkerClient.kt	127.0.0.1
 1	protocol	app/src/main/java/tv/own/owntv/core/stalker/StalkerClient.kt	:
+1	url	app/src/main/java/tv/own/owntv/core/stalker/StalkerClient.kt	?type=stb&action=get_profile&hd=1&auth_second_step=
 1	protocol	app/src/main/java/tv/own/owntv/core/stalker/StalkerClient.kt	Authorization
 1	protocol	app/src/main/java/tv/own/owntv/core/stalker/StalkerClient.kt	Bearer $token
 1	protocol	app/src/main/java/tv/own/owntv/core/stalker/StalkerClient.kt	Cookie
-1	protocol	app/src/main/java/tv/own/owntv/core/stalker/StalkerClient.kt	Empty response body for $safeUrl
 1	protocol	app/src/main/java/tv/own/owntv/core/stalker/StalkerClient.kt	GET done url=$safeUrl action=$action totalMs=${SystemClock.elapsedRealtime() - startedAt}
 1	protocol	app/src/main/java/tv/own/owntv/core/stalker/StalkerClient.kt	GET start url=$safeUrl action=$action
 1	protocol	app/src/main/java/tv/own/owntv/core/stalker/StalkerClient.kt	HTTP ${response.code} for $safeUrl
@@ -1782,7 +1944,7 @@
 1	protocol	app/src/main/java/tv/own/owntv/core/stalker/StalkerClient.kt	Referer
 1	protocol	app/src/main/java/tv/own/owntv/core/stalker/StalkerClient.kt	StalkerClient
 1	protocol	app/src/main/java/tv/own/owntv/core/stalker/StalkerClient.kt	UNCHECKED_CAST
-2	protocol	app/src/main/java/tv/own/owntv/core/stalker/StalkerClient.kt	UTF-8
+6	protocol	app/src/main/java/tv/own/owntv/core/stalker/StalkerClient.kt	UTF-8
 1	protocol	app/src/main/java/tv/own/owntv/core/stalker/StalkerClient.kt	User-Agent
 1	protocol	app/src/main/java/tv/own/owntv/core/stalker/StalkerClient.kt	X-User-Agent
 1	protocol	app/src/main/java/tv/own/owntv/core/stalker/StalkerClient.kt	[:\\-. ]
@@ -2044,7 +2206,7 @@
 1	log	app/src/main/java/tv/own/owntv/core/sync/StalkerSyncer.kt	$label genre=${genre.id} page=$p failed (${e.message})
 1	log	app/src/main/java/tv/own/owntv/core/sync/StalkerSyncer.kt	$label genres sourceId=${s.id} count=${genres.size}
 1	log	app/src/main/java/tv/own/owntv/core/sync/StalkerSyncer.kt	$label get_all_channels failed (${e.message}) — falling back to per-genre paging
-1	log	app/src/main/java/tv/own/owntv/core/sync/StalkerSyncer.kt	$label get_all_channels ok count=${bulk!!.size} declaredTotal=$declaredTotal ms=${SystemClock.elapsedRealtime() - bulkStart}
+1	log	app/src/main/java/tv/own/owntv/core/sync/StalkerSyncer.kt	$label get_all_channels ok count=${bulk.size} declaredTotal=$declaredTotal ms=${SystemClock.elapsedRealtime() - bulkStart}
 1	log	app/src/main/java/tv/own/owntv/core/sync/StalkerSyncer.kt	$label get_all_channels truncated count=${bulk.size} declaredTotal=$declaredTotal — falling back to per-genre paging
 1	log	app/src/main/java/tv/own/owntv/core/sync/StalkerSyncer.kt	$label page-plan sourceId=${s.id} cats=${cats.size} itemsPerPage~=$maxPerSeen extraPages=${pageTasks.size} concurrency=adaptive(${budget.currentLimit}..${budget.max})
 1	log	app/src/main/java/tv/own/owntv/core/sync/StalkerSyncer.kt	$label per-genre fallback begin genres=${genres.size}
@@ -2052,9 +2214,11 @@
 2	log	app/src/main/java/tv/own/owntv/core/sync/StalkerSyncer.kt	$label phase start sourceId=${s.id} fresh=$freshSource
 2	log	app/src/main/java/tv/own/owntv/core/sync/StalkerSyncer.kt	$label prune skipped sourceId=${s.id} reason=page_failures failures=${pageFailures.get()}
 1	log	app/src/main/java/tv/own/owntv/core/sync/StalkerSyncer.kt	$phase import failed — keeping the rest of the import
-1	log	app/src/main/java/tv/own/owntv/core/sync/StalkerSyncer.kt	$what transient HTTP ${e.code} — retrying (attempt $attempt/${PAGE_ATTEMPTS - 1})
+1	log	app/src/main/java/tv/own/owntv/core/sync/StalkerSyncer.kt	$what transient $reason — retrying (attempt $attempt/${PAGE_ATTEMPTS - 1})
 1	technical	app/src/main/java/tv/own/owntv/core/sync/StalkerSyncer.kt	${SyncPhase.LIVE.name} genre=$genreId page=$page
+1	log	app/src/main/java/tv/own/owntv/core/sync/StalkerSyncer.kt	${e.javaClass.simpleName}: ${e.message}
 4	technical	app/src/main/java/tv/own/owntv/core/sync/StalkerSyncer.kt	*
+1	log	app/src/main/java/tv/own/owntv/core/sync/StalkerSyncer.kt	HTTP ${it.code}
 1	technical	app/src/main/java/tv/own/owntv/core/sync/StalkerSyncer.kt	Stalker source ${s.id} has no valid MAC address
 1	log	app/src/main/java/tv/own/owntv/core/sync/StalkerSyncer.kt	adopting portal-advertised XMLTV url for sourceId=${s.id}
 1	log	app/src/main/java/tv/own/owntv/core/sync/StalkerSyncer.kt	catchupSource=${c.catchupSource.hashCode()} sortOrder=${c.sortOrder}
@@ -2165,6 +2329,7 @@
 1	technical	app/src/main/java/tv/own/owntv/core/sync/work/CatalogSyncScheduler.kt	fresh_sync
 1	technical	app/src/main/java/tv/own/owntv/core/sync/work/CatalogSyncScheduler.kt	manual
 1	technical	app/src/main/java/tv/own/owntv/core/sync/work/CatalogSyncScheduler.kt	source-$sourceId
+1	protocol	app/src/main/java/tv/own/owntv/core/sync/work/CatalogSyncScheduler.kt	trending-source-$sourceId
 1	technical	app/src/main/java/tv/own/owntv/core/sync/work/CatalogSyncWorker.kt	Cancelled
 1	log	app/src/main/java/tv/own/owntv/core/sync/work/CatalogSyncWorker.kt	CatalogSyncWorker
 1	technical	app/src/main/java/tv/own/owntv/core/sync/work/CatalogSyncWorker.kt	Failed
@@ -2184,6 +2349,9 @@
 1	log	app/src/main/java/tv/own/owntv/core/sync/work/CatalogSyncWorker.kt	Sync failed transiently for source ${source.id} attempt=$runAttemptCount — will retry: ${result.message}
 1	log	app/src/main/java/tv/own/owntv/core/sync/work/CatalogSyncWorker.kt	Sync no-op empty effective sourceId=${source.id} reason=$reason
 1	log	app/src/main/java/tv/own/owntv/core/sync/work/CatalogSyncWorker.kt	Sync succeeded for source ${source.id} (${source.name}) warnings=$warningText
+1	log	app/src/main/java/tv/own/owntv/core/sync/work/CatalogSyncWorker.kt	Trending Home visibility read failed sourceId=${source.id}; skip enqueue
+1	log	app/src/main/java/tv/own/owntv/core/sync/work/CatalogSyncWorker.kt	Trending refresh enqueued sourceId=${source.id}
+1	log	app/src/main/java/tv/own/owntv/core/sync/work/CatalogSyncWorker.kt	Trending settings read failed sourceId=${source.id}; skip enqueue
 1	preference-key	app/src/main/java/tv/own/owntv/core/sync/work/CatalogSyncWorker.kt	baseItemCount
 1	preference-key	app/src/main/java/tv/own/owntv/core/sync/work/CatalogSyncWorker.kt	completesInitialSync
 1	log	app/src/main/java/tv/own/owntv/core/sync/work/CatalogSyncWorker.kt	contentTypes=$contentTypes effective=$effective baseItemCount=$baseItemCount forcePrune=$forcePrune
@@ -2225,6 +2393,89 @@
 1	preference-key	app/src/main/java/tv/own/owntv/core/sync/work/EpgSyncWorker.kt	reason
 1	preference-key	app/src/main/java/tv/own/owntv/core/sync/work/EpgSyncWorker.kt	sourceId
 1	technical	app/src/main/java/tv/own/owntv/core/sync/work/EpgSyncWorker.kt	unknown
+1	log	app/src/main/java/tv/own/owntv/core/sync/work/TrendingRefreshWorker.kt	Finished sourceId=$sourceId outcome=${outcome.diagnosticName()}
+1	log	app/src/main/java/tv/own/owntv/core/sync/work/TrendingRefreshWorker.kt	TrendingRefreshWorker
+1	log	app/src/main/java/tv/own/owntv/core/sync/work/TrendingRefreshWorker.kt	Unexpected refresh failure sourceId=$sourceId; preserving snapshot
+1	log	app/src/main/java/tv/own/owntv/core/sync/work/TrendingRefreshWorker.kt	enriching final Now Trending itemCount=$itemCount
+1	log	app/src/main/java/tv/own/owntv/core/sync/work/TrendingRefreshWorker.kt	fetching latest Trending candidates
+1	protocol	app/src/main/java/tv/own/owntv/core/sync/work/TrendingRefreshWorker.kt	force
+1	log	app/src/main/java/tv/own/owntv/core/sync/work/TrendingRefreshWorker.kt	home-row-hidden
+1	log	app/src/main/java/tv/own/owntv/core/sync/work/TrendingRefreshWorker.kt	loading provider seasons processed=$processed/$total
+1	log	app/src/main/java/tv/own/owntv/core/sync/work/TrendingRefreshWorker.kt	movie candidate checked=$checked/$candidates matched=$matched/$target
+1	log	app/src/main/java/tv/own/owntv/core/sync/work/TrendingRefreshWorker.kt	no-vod
+1	log	app/src/main/java/tv/own/owntv/core/sync/work/TrendingRefreshWorker.kt	preparing indexed provider titles processed=$processed/$total
+1	log	app/src/main/java/tv/own/owntv/core/sync/work/TrendingRefreshWorker.kt	preserved-$stage
+1	log	app/src/main/java/tv/own/owntv/core/sync/work/TrendingRefreshWorker.kt	provider-mode
+1	log	app/src/main/java/tv/own/owntv/core/sync/work/TrendingRefreshWorker.kt	publishing complete Now Trending itemCount=$itemCount
+1	log	app/src/main/java/tv/own/owntv/core/sync/work/TrendingRefreshWorker.kt	received candidates total=$total movies=$movies series=$series
+1	log	app/src/main/java/tv/own/owntv/core/sync/work/TrendingRefreshWorker.kt	replaced-$itemCount
+1	log	app/src/main/java/tv/own/owntv/core/sync/work/TrendingRefreshWorker.kt	series candidate checked=$checked/$candidates matched=$matched/$target
+1	log	app/src/main/java/tv/own/owntv/core/sync/work/TrendingRefreshWorker.kt	source-missing
+1	protocol	app/src/main/java/tv/own/owntv/core/sync/work/TrendingRefreshWorker.kt	sourceId
+1	log	app/src/main/java/tv/own/owntv/core/sync/work/TrendingRefreshWorker.kt	sourceId=$sourceId ${progress.diagnosticText()}
+1	log	app/src/main/java/tv/own/owntv/core/sync/work/TrendingRefreshWorker.kt	sourceId=$sourceId catalog sync finished; building Now Trending force=$force
+1	protocol	app/src/main/java/tv/own/owntv/core/sync/work/TrendingRefreshWorker.kt	trending-refresh
+1	protocol	app/src/main/java/tv/own/owntv/core/sync/work/TrendingRefreshWorker.kt	trending-refresh-source-$sourceId
+1	empty	app/src/main/java/tv/own/owntv/core/trending/TrendingMatcher.kt	\0
+1	sql	app/src/main/java/tv/own/owntv/core/trending/TrendingMatcher.kt	$it*
+1	technical	app/src/main/java/tv/own/owntv/core/trending/TrendingMatcher.kt	1080p FHD
+1	technical	app/src/main/java/tv/own/owntv/core/trending/TrendingMatcher.kt	4K UHD
+1	technical	app/src/main/java/tv/own/owntv/core/trending/TrendingMatcher.kt	720p HD
+1	technical	app/src/main/java/tv/own/owntv/core/trending/TrendingMatcher.kt	8K
+1	locale	app/src/main/java/tv/own/owntv/core/trending/TrendingMatcher.kt	EN
+1	technical	app/src/main/java/tv/own/owntv/core/trending/TrendingMatcher.kt	SD
+1	regex	app/src/main/java/tv/own/owntv/core/trending/TrendingMatcher.kt	\\s+
+1	locale	app/src/main/java/tv/own/owntv/core/trending/TrendingMatcher.kt	en
+2	technical	app/src/main/java/tv/own/owntv/core/trending/TrendingMatcher.kt	•
+1	empty	app/src/main/java/tv/own/owntv/core/trending/TrendingRepository.kt	\0
+1	log	app/src/main/java/tv/own/owntv/core/trending/TrendingRepository.kt	${(dueAt - now) / 3_600_000}
+2	log	app/src/main/java/tv/own/owntv/core/trending/TrendingRepository.kt	-
+1	log	app/src/main/java/tv/own/owntv/core/trending/TrendingRepository.kt	Preserve old snapshot sourceId=$sourceId failedStage=$stage totalMs=${SystemClock.elapsedRealtime() - startedAt}
+2	log	app/src/main/java/tv/own/owntv/core/trending/TrendingRepository.kt	TV candidates
+1	log	app/src/main/java/tv/own/owntv/core/trending/TrendingRepository.kt	TrendingRepository
+1	protocol	app/src/main/java/tv/own/owntv/core/trending/TrendingRepository.kt	below-threshold
+1	log	app/src/main/java/tv/own/owntv/core/trending/TrendingRepository.kt	dueInHours=${if (dueAt == 0L) "never" else "${(dueAt - now) / 3_600_000}"}
+1	log	app/src/main/java/tv/own/owntv/core/trending/TrendingRepository.kt	lang='$language' storedLang='${storedRaw?.language ?: "-"}' snapLang='${state?.metadataLanguage ?: "-"}'
+2	log	app/src/main/java/tv/own/owntv/core/trending/TrendingRepository.kt	movie candidates
+1	log	app/src/main/java/tv/own/owntv/core/trending/TrendingRepository.kt	never
+1	protocol	app/src/main/java/tv/own/owntv/core/trending/TrendingRepository.kt	no VOD content
+1	protocol	app/src/main/java/tv/own/owntv/core/trending/TrendingRepository.kt	published
+1	log	app/src/main/java/tv/own/owntv/core/trending/TrendingRepository.kt	seriesId=$seriesId loaded=$loaded seasons=$seasonCount
+1	log	app/src/main/java/tv/own/owntv/core/trending/TrendingRepository.kt	sourceId=$sourceId candidates=$movieCandidates/$seriesCandidates matches=${movies.selections.size}/${series.selections.size} final=$finalCount decision=$decision
+1	log	app/src/main/java/tv/own/owntv/core/trending/TrendingRepository.kt	sourceId=$sourceId detail fallback count=$detailFailures networkAllowed=$gateOpen
+1	log	app/src/main/java/tv/own/owntv/core/trending/TrendingRepository.kt	sourceId=$sourceId gate open=$gateOpen network=$useNetwork force=$force built=$alreadyBuilt
+1	log	app/src/main/java/tv/own/owntv/core/trending/TrendingRepository.kt	sourceId=$sourceId nextFetchInDays=${((nextFetchAt - completedAt).coerceAtLeast(0)) / TrendingScheduleStore.DAY_MS}
+1	log	app/src/main/java/tv/own/owntv/core/trending/TrendingRepository.kt	sourceId=$sourceId provider metadata backfilled movies=$backfilledMovies series=$backfilledSeries ms=$preparationMs
+1	log	app/src/main/java/tv/own/owntv/core/trending/TrendingRepository.kt	sourceId=$sourceId provider season load failed seriesId=$seriesId
+1	log	app/src/main/java/tv/own/owntv/core/trending/TrendingRepository.kt	sourceId=$sourceId provider seasons checked=${index + 1}/${selectedSeries.size}
+1	log	app/src/main/java/tv/own/owntv/core/trending/TrendingRepository.kt	sourceId=$sourceId timing fetchMs=$fetchMs preparationMs=$preparationMs exactMs=${movies.exactLookupMs + series.exactLookupMs} ftsMs=${movies.ftsLookupMs + series.ftsLookupMs} ftsFallbacks=${movies.ftsFallbacks + series.ftsFallbacks} enrichmentMs=$enrichmentMs snapshotWriteMs=$writeMs totalMs=${SystemClock.elapsedRealtime() - startedAt}
+1	log	app/src/main/java/tv/own/owntv/core/trending/TrendingRepository.kt	storedAgeHours=${stored?.let { (now - it.fetchedAt) / 3_600_000 } ?: -1}
+1	protocol	app/src/main/java/tv/own/owntv/core/trending/TrendingRepository.kt	unexpected error
+1	technical	app/src/main/java/tv/own/owntv/core/trending/TrendingRepository.kt	•
+2	json	app/src/main/java/tv/own/owntv/core/trending/TrendingScheduleStore.kt	at
+2	json	app/src/main/java/tv/own/owntv/core/trending/TrendingScheduleStore.kt	b
+2	json	app/src/main/java/tv/own/owntv/core/trending/TrendingScheduleStore.kt	d
+2	json	app/src/main/java/tv/own/owntv/core/trending/TrendingScheduleStore.kt	days
+1	preference-key	app/src/main/java/tv/own/owntv/core/trending/TrendingScheduleStore.kt	fetch_deadlines
+2	json	app/src/main/java/tv/own/owntv/core/trending/TrendingScheduleStore.kt	fetchedAt
+2	json	app/src/main/java/tv/own/owntv/core/trending/TrendingScheduleStore.kt	id
+2	json	app/src/main/java/tv/own/owntv/core/trending/TrendingScheduleStore.kt	language
+2	json	app/src/main/java/tv/own/owntv/core/trending/TrendingScheduleStore.kt	moviePagesLoaded
+2	json	app/src/main/java/tv/own/owntv/core/trending/TrendingScheduleStore.kt	movieTotalPages
+2	json	app/src/main/java/tv/own/owntv/core/trending/TrendingScheduleStore.kt	movies
+2	json	app/src/main/java/tv/own/owntv/core/trending/TrendingScheduleStore.kt	o
+1	preference-key	app/src/main/java/tv/own/owntv/core/trending/TrendingScheduleStore.kt	owntv_trending_schedule
+2	json	app/src/main/java/tv/own/owntv/core/trending/TrendingScheduleStore.kt	p
+2	json	app/src/main/java/tv/own/owntv/core/trending/TrendingScheduleStore.kt	pop
+3	json	app/src/main/java/tv/own/owntv/core/trending/TrendingScheduleStore.kt	r
+2	json	app/src/main/java/tv/own/owntv/core/trending/TrendingScheduleStore.kt	rank
+2	json	app/src/main/java/tv/own/owntv/core/trending/TrendingScheduleStore.kt	series
+2	json	app/src/main/java/tv/own/owntv/core/trending/TrendingScheduleStore.kt	seriesPagesLoaded
+2	json	app/src/main/java/tv/own/owntv/core/trending/TrendingScheduleStore.kt	seriesTotalPages
+1	preference-key	app/src/main/java/tv/own/owntv/core/trending/TrendingScheduleStore.kt	shared_candidates
+2	json	app/src/main/java/tv/own/owntv/core/trending/TrendingScheduleStore.kt	t
+3	json	app/src/main/java/tv/own/owntv/core/trending/TrendingScheduleStore.kt	y
+1	json	app/src/main/java/tv/own/owntv/core/trending/TrendingScheduleStore.kt	{}
 1	technical	app/src/main/java/tv/own/owntv/core/tv/TvHomeDeepLink.kt	Use tv.own.owntv.core.launcher.LauncherDeepLink
 1	technical	app/src/main/java/tv/own/owntv/core/tv/TvHomeDeepLink.kt	Use tv.own.owntv.core.launcher.LauncherLaunch
 1	empty	app/src/main/java/tv/own/owntv/core/tv/TvHomeRepository.kt	\0
@@ -2387,9 +2638,6 @@
 2	log	app/src/main/java/tv/own/owntv/core/weather/WeatherRepository.kt	latitude
 2	log	app/src/main/java/tv/own/owntv/core/weather/WeatherRepository.kt	longitude
 1	log	app/src/main/java/tv/own/owntv/core/weather/WeatherRepository.kt	name
-1	log	app/src/main/java/tv/own/owntv/core/weather/WeatherRepository.kt	no geo
-1	log	app/src/main/java/tv/own/owntv/core/weather/WeatherRepository.kt	no loc
-1	log	app/src/main/java/tv/own/owntv/core/weather/WeatherRepository.kt	no weather
 1	log	app/src/main/java/tv/own/owntv/core/weather/WeatherRepository.kt	region
 1	log	app/src/main/java/tv/own/owntv/core/weather/WeatherRepository.kt	results
 1	log	app/src/main/java/tv/own/owntv/core/weather/WeatherRepository.kt	temperature_2m
@@ -2431,11 +2679,29 @@
 3	json	app/src/main/java/tv/own/owntv/features/home/HomeRow.kt	hidden
 2	json	app/src/main/java/tv/own/owntv/features/home/HomeRow.kt	order
 2	preference-key	app/src/main/java/tv/own/owntv/features/home/HomeRow.kt	recentLiveMode
+1	technical	app/src/main/java/tv/own/owntv/features/home/HomeScreen.kt	#${activeIndex + 1}
+2	locale	app/src/main/java/tv/own/owntv/features/home/HomeScreen.kt	EN
 1	technical	app/src/main/java/tv/own/owntv/features/home/HomeScreen.kt	episode:${episode.id}
 1	technical	app/src/main/java/tv/own/owntv/features/home/HomeScreen.kt	heroCardWidth
 1	technical	app/src/main/java/tv/own/owntv/features/home/HomeScreen.kt	live:${channel.id}
 1	technical	app/src/main/java/tv/own/owntv/features/home/HomeScreen.kt	movie:${movie.id}
+2	url	app/src/main/java/tv/own/owntv/features/home/HomeScreen.kt	w1280
+3	url	app/src/main/java/tv/own/owntv/features/home/HomeScreen.kt	w500
 1	technical	app/src/main/java/tv/own/owntv/features/home/HomeScreen.kt	|
+1	technical	app/src/main/java/tv/own/owntv/features/home/HomeScreen.kt	·
+1	technical	app/src/main/java/tv/own/owntv/features/home/HomeScreen.kt	•
+1	technical	app/src/main/java/tv/own/owntv/features/home/HomeScreen.kt	✓ $providerMatchLabel
+1	protocol	app/src/main/java/tv/own/owntv/features/home/HomeViewModel.kt	${snapshot.mediaType.name}:${snapshot.tmdbId}
+1	protocol	app/src/main/java/tv/own/owntv/features/home/HomeViewModel.kt	1080p FHD
+1	protocol	app/src/main/java/tv/own/owntv/features/home/HomeViewModel.kt	4K
+1	protocol	app/src/main/java/tv/own/owntv/features/home/HomeViewModel.kt	4K UHD
+1	protocol	app/src/main/java/tv/own/owntv/features/home/HomeViewModel.kt	720p HD
+1	protocol	app/src/main/java/tv/own/owntv/features/home/HomeViewModel.kt	8K
+2	locale	app/src/main/java/tv/own/owntv/features/home/HomeViewModel.kt	EN
+1	protocol	app/src/main/java/tv/own/owntv/features/home/HomeViewModel.kt	FHD
+1	protocol	app/src/main/java/tv/own/owntv/features/home/HomeViewModel.kt	HD
+1	protocol	app/src/main/java/tv/own/owntv/features/home/HomeViewModel.kt	SD
+1	locale	app/src/main/java/tv/own/owntv/features/home/HomeViewModel.kt	en
 1	technical	app/src/main/java/tv/own/owntv/features/home/HomeViewModel.kt	episode:${item.episode.id}
 1	performance	app/src/main/java/tv/own/owntv/features/home/HomeViewModel.kt	home-data
 1	technical	app/src/main/java/tv/own/owntv/features/home/HomeViewModel.kt	live:${item.channel.id}
@@ -2570,10 +2836,15 @@
 1	technical	app/src/main/java/tv/own/owntv/features/settings/EpgSourcesViewModel.kt	add
 1	technical	app/src/main/java/tv/own/owntv/features/settings/EpgSourcesViewModel.kt	manual_resync
 1	technical	app/src/main/java/tv/own/owntv/features/settings/EpgSourcesViewModel.kt	update
+1	technical	app/src/main/java/tv/own/owntv/features/settings/HomeSettingsScreen.kt	$trendingDescription $trendingStatus
+1	technical	app/src/main/java/tv/own/owntv/features/settings/HomeSettingsScreen.kt	Developer
+1	technical	app/src/main/java/tv/own/owntv/features/settings/HomeSettingsScreen.kt	Forces a fresh TMDB trending download for every playlist, ignoring the multi-day fetch timer.
+1	technical	app/src/main/java/tv/own/owntv/features/settings/HomeSettingsScreen.kt	Rebuild Now Trending
 1	technical	app/src/main/java/tv/own/owntv/features/settings/HomeSettingsScreen.kt	↑
 1	technical	app/src/main/java/tv/own/owntv/features/settings/HomeSettingsScreen.kt	↓
 1	technical	app/src/main/java/tv/own/owntv/features/settings/HomeSettingsScreen.kt	⤒
 1	technical	app/src/main/java/tv/own/owntv/features/settings/HomeSettingsScreen.kt	⤓
+1	protocol	app/src/main/java/tv/own/owntv/features/settings/HomeSettingsViewModel.kt	no VOD content
 1	empty	app/src/main/java/tv/own/owntv/features/settings/LanguageSettingsScreen.kt	\0
 1	technical	app/src/main/java/tv/own/owntv/features/settings/ManageProfilesScreen.kt	•
 5	empty	app/src/main/java/tv/own/owntv/features/settings/ManageSourcesScreen.kt	\0
@@ -2667,7 +2938,7 @@
 1	log	app/src/main/java/tv/own/owntv/features/settings/OpenSubtitlesViewModel.kt	user-info refresh failed: ${it.message}
 1	technical	app/src/main/java/tv/own/owntv/features/settings/PanelWidthSettingsScreen.kt	+
 1	technical	app/src/main/java/tv/own/owntv/features/settings/PanelWidthSettingsScreen.kt	–
-17	empty	app/src/main/java/tv/own/owntv/features/settings/SettingsViewModel.kt	\0
+29	empty	app/src/main/java/tv/own/owntv/features/settings/SettingsViewModel.kt	\0
 1	technical	app/src/main/java/tv/own/owntv/features/settings/SettingsViewModel.kt	/
 1	technical	app/src/main/java/tv/own/owntv/features/settings/SettingsViewModel.kt	0
 1	technical	app/src/main/java/tv/own/owntv/features/settings/SettingsViewModel.kt	0000
@@ -2730,6 +3001,8 @@
 1	preference-key	app/src/main/java/tv/own/owntv/features/settings/data/SettingsRepository.kt	accent_color
 1	preference-key	app/src/main/java/tv/own/owntv/features/settings/data/SettingsRepository.kt	accent_custom
 1	preference-key	app/src/main/java/tv/own/owntv/features/settings/data/SettingsRepository.kt	active_profile_id
+1	preference-key	app/src/main/java/tv/own/owntv/features/settings/data/SettingsRepository.kt	ambient_glow_enabled
+1	preference-key	app/src/main/java/tv/own/owntv/features/settings/data/SettingsRepository.kt	ambient_glow_pulse
 1	preference-key	app/src/main/java/tv/own/owntv/features/settings/data/SettingsRepository.kt	android_tv_home
 1	preference-key	app/src/main/java/tv/own/owntv/features/settings/data/SettingsRepository.kt	animation_level
 1	preference-key	app/src/main/java/tv/own/owntv/features/settings/data/SettingsRepository.kt	audio_delay_ms
@@ -2762,8 +3035,13 @@
 1	preference-key	app/src/main/java/tv/own/owntv/features/settings/data/SettingsRepository.kt	external_player_live
 1	preference-key	app/src/main/java/tv/own/owntv/features/settings/data/SettingsRepository.kt	external_player_movies
 1	preference-key	app/src/main/java/tv/own/owntv/features/settings/data/SettingsRepository.kt	external_player_series
+1	preference-key	app/src/main/java/tv/own/owntv/features/settings/data/SettingsRepository.kt	font_size_percent
+1	preference-key	app/src/main/java/tv/own/owntv/features/settings/data/SettingsRepository.kt	glass_allow_full_transparency
 1	preference-key	app/src/main/java/tv/own/owntv/features/settings/data/SettingsRepository.kt	glass_alpha
 1	preference-key	app/src/main/java/tv/own/owntv/features/settings/data/SettingsRepository.kt	glass_blur
+1	preference-key	app/src/main/java/tv/own/owntv/features/settings/data/SettingsRepository.kt	glass_depth_effects
+1	preference-key	app/src/main/java/tv/own/owntv/features/settings/data/SettingsRepository.kt	glass_highlight
+1	preference-key	app/src/main/java/tv/own/owntv/features/settings/data/SettingsRepository.kt	glass_preset
 1	preference-key	app/src/main/java/tv/own/owntv/features/settings/data/SettingsRepository.kt	glass_scope
 1	preference-key	app/src/main/java/tv/own/owntv/features/settings/data/SettingsRepository.kt	hdr_enabled
 1	technical	app/src/main/java/tv/own/owntv/features/settings/data/SettingsRepository.kt	hide_new_categories_
@@ -2781,6 +3059,7 @@
 1	preference-key	app/src/main/java/tv/own/owntv/features/settings/data/SettingsRepository.kt	live_preroll_secs
 1	preference-key	app/src/main/java/tv/own/owntv/features/settings/data/SettingsRepository.kt	live_preview
 1	preference-key	app/src/main/java/tv/own/owntv/features/settings/data/SettingsRepository.kt	live_preview_audio
+1	preference-key	app/src/main/java/tv/own/owntv/features/settings/data/SettingsRepository.kt	main_font_family
 1	preference-key	app/src/main/java/tv/own/owntv/features/settings/data/SettingsRepository.kt	measured_stream_stats
 1	preference-key	app/src/main/java/tv/own/owntv/features/settings/data/SettingsRepository.kt	metadata_enabled
 1	preference-key	app/src/main/java/tv/own/owntv/features/settings/data/SettingsRepository.kt	metadata_language
@@ -2805,6 +3084,7 @@
 1	preference-key	app/src/main/java/tv/own/owntv/features/settings/data/SettingsRepository.kt	panel_w_series_on
 1	preference-key	app/src/main/java/tv/own/owntv/features/settings/data/SettingsRepository.kt	panel_w_series_preview
 1	preference-key	app/src/main/java/tv/own/owntv/features/settings/data/SettingsRepository.kt	playlist_auto_refresh
+1	preference-key	app/src/main/java/tv/own/owntv/features/settings/data/SettingsRepository.kt	popup_font_family
 1	preference-key	app/src/main/java/tv/own/owntv/features/settings/data/SettingsRepository.kt	pref_audio_lang
 1	preference-key	app/src/main/java/tv/own/owntv/features/settings/data/SettingsRepository.kt	pref_sub_lang
 1	preference-key	app/src/main/java/tv/own/owntv/features/settings/data/SettingsRepository.kt	proxy_enabled
@@ -2846,7 +3126,7 @@
 1	preference-key	app/src/main/java/tv/own/owntv/features/settings/data/SettingsRepository.kt	weather_enabled
 1	preference-key	app/src/main/java/tv/own/owntv/features/settings/data/SettingsRepository.kt	weather_fahrenheit
 1	preference-key	app/src/main/java/tv/own/owntv/features/settings/data/SettingsRepository.kt	weather_location
-10	empty	app/src/main/java/tv/own/owntv/features/setup/AddSourceScreen.kt	\0
+14	empty	app/src/main/java/tv/own/owntv/features/setup/AddSourceScreen.kt	\0
 1	technical	app/src/main/java/tv/own/owntv/features/setup/AddSourceScreen.kt	/
 1	technical	app/src/main/java/tv/own/owntv/features/setup/AddSourceScreen.kt	Mozilla/5.0 (QtEmbedded; U; Linux; C) AppleWebKit/533.3 (KHTML, like Gecko) MAG250 stbapp ver: 2 rev: 250 Safari/533.3
 1	technical	app/src/main/java/tv/own/owntv/features/setup/AddSourceScreen.kt	Mozilla/5.0 (QtEmbedded; U; Linux; C) AppleWebKit/533.3 (KHTML, like Gecko) MAG254 stbapp ver: 2 rev: 250 Safari/533.3
@@ -2854,14 +3134,14 @@
 1	technical	app/src/main/java/tv/own/owntv/features/setup/AddSourceScreen.kt	Mozilla/5.0 (QtEmbedded; U; Linux; C) AppleWebKit/601.1 (KHTML, like Gecko) MAG420 stbapp ver: 4 rev: 2721 Safari/601.1
 1	technical	app/src/main/java/tv/own/owntv/features/setup/AddSourceScreen.kt	m3u
 1	technical	app/src/main/java/tv/own/owntv/features/setup/AddSourceScreen.kt	m3u8
-6	empty	app/src/main/java/tv/own/owntv/features/setup/SetupViewModel.kt	\0
+10	empty	app/src/main/java/tv/own/owntv/features/setup/SetupViewModel.kt	\0
 1	technical	app/src/main/java/tv/own/owntv/features/setup/SetupViewModel.kt	/
 1	technical	app/src/main/java/tv/own/owntv/features/setup/SetupViewModel.kt	add_remainder
 1	url	app/src/main/java/tv/own/owntv/features/setup/SetupViewModel.kt	content://
 1	url	app/src/main/java/tv/own/owntv/features/setup/SetupViewModel.kt	file://
 1	technical	app/src/main/java/tv/own/owntv/features/setup/SetupViewModel.kt	fresh_add
 1	empty	app/src/main/java/tv/own/owntv/features/setup/SetupWizard.kt	\0
-1	empty	app/src/main/java/tv/own/owntv/features/shell/OwnTVShell.kt	\0
+3	empty	app/src/main/java/tv/own/owntv/features/shell/OwnTVShell.kt	\0
 2	protocol	app/src/main/java/tv/own/owntv/features/shell/OwnTVShell.kt	Action
 1	protocol	app/src/main/java/tv/own/owntv/features/shell/OwnTVShell.kt	All Channels
 1	protocol	app/src/main/java/tv/own/owntv/features/shell/OwnTVShell.kt	All Downloads
@@ -2904,6 +3184,8 @@
 6	empty	app/src/main/java/tv/own/owntv/features/shell/components/SettingsScreen.kt	\0
 5	technical	app/src/main/java/tv/own/owntv/features/shell/components/SettingsScreen.kt	#
 1	technical	app/src/main/java/tv/own/owntv/features/shell/components/SettingsScreen.kt	$group $title $keywords
+1	technical	app/src/main/java/tv/own/owntv/features/shell/components/SettingsScreen.kt	${stringResource(R.string.settings_glass_depth_title)}: ${stringResource(if (depthEffects) R.string.common_on else R.string.common_off)}
+1	technical	app/src/main/java/tv/own/owntv/features/shell/components/SettingsScreen.kt	${stringResource(R.string.settings_glass_full_transparency_title)}: ${stringResource(if (allowFullTransparency) R.string.common_on else R.string.common_off)}
 3	technical	app/src/main/java/tv/own/owntv/features/shell/components/SettingsScreen.kt	+
 1	technical	app/src/main/java/tv/own/owntv/features/shell/components/SettingsScreen.kt	-
 1	technical	app/src/main/java/tv/own/owntv/features/shell/components/SettingsScreen.kt	52DBC8
@@ -2923,7 +3205,11 @@
 2	technical	app/src/main/java/tv/own/owntv/features/shell/components/SettingsScreen.kt	v${tv.own.owntv.BuildConfig.VERSION_NAME}
 1	technical	app/src/main/java/tv/own/owntv/features/shell/components/SettingsScreen.kt	webp
 1	technical	app/src/main/java/tv/own/owntv/features/shell/components/SettingsScreen.kt	–
+1	technical	app/src/main/java/tv/own/owntv/features/shell/components/SettingsScreen.kt	›
 1	technical	app/src/main/java/tv/own/owntv/features/shell/components/SettingsScreen.kt	−
+1	technical	app/src/main/java/tv/own/owntv/features/shell/components/SolidAmbientBackdrop.kt	solidAmbientPulse
+1	technical	app/src/main/java/tv/own/owntv/features/shell/components/SolidAmbientBackdrop.kt	solidAmbientRingPresence
+1	technical	app/src/main/java/tv/own/owntv/features/shell/components/SolidAmbientBackdrop.kt	solidAmbientRingScale
 1	technical	app/src/main/java/tv/own/owntv/features/shell/components/TopBar.kt	clearNight
 1	technical	app/src/main/java/tv/own/owntv/features/shell/components/TopBar.kt	cloudy
 1	technical	app/src/main/java/tv/own/owntv/features/shell/components/TopBar.kt	continueChipAlpha
@@ -2965,22 +3251,39 @@
 1	technical	app/src/main/java/tv/own/owntv/player/AudioOutputPolicy.kt	${f.channelCount}ch
 1	technical	app/src/main/java/tv/own/owntv/player/AudioOutputPolicy.kt	${f.sampleRate / 1000}kHz
 1	technical	app/src/main/java/tv/own/owntv/player/AudioOutputPolicy.kt	?
-2	technical	app/src/main/java/tv/own/owntv/player/AudioOutputPolicy.kt	AudioOutputPolicy
+7	technical	app/src/main/java/tv/own/owntv/player/AudioOutputPolicy.kt	AudioOutputPolicy
 1	compiler	app/src/main/java/tv/own/owntv/player/AudioOutputPolicy.kt	DEPRECATION
 1	technical	app/src/main/java/tv/own/owntv/player/AudioOutputPolicy.kt	audio
+1	log	app/src/main/java/tv/own/owntv/player/AudioOutputPolicy.kt	audio decoder: $decoderName (init ${initializationDurationMs}ms, passthrough=$passthrough)
+1	log	app/src/main/java/tv/own/owntv/player/AudioOutputPolicy.kt	audio format -> ${format.sampleMimeType} ${format.channelCount}ch ${format.sampleRate}Hz
 1	technical	app/src/main/java/tv/own/owntv/player/AudioOutputPolicy.kt	audio output underran ${AudioOutputPolicy.UNDERRUN_LIMIT}× in ${AudioOutputPolicy.UNDERRUN_WINDOW_MS / 1000}s
+1	log	app/src/main/java/tv/own/owntv/player/AudioOutputPolicy.kt	audio path: passthrough — the TV is decoding this stream
 1	technical	app/src/main/java/tv/own/owntv/player/AudioOutputPolicy.kt	audio sink error: ${audioSinkError.message ?: audioSinkError.javaClass.simpleName}
+1	log	app/src/main/java/tv/own/owntv/player/AudioOutputPolicy.kt	audio timestamp discontinuity: ${audioSinkError.actualPresentationTimeUs - audioSinkError.expectedPresentationTimeUs}us
+1	log	app/src/main/java/tv/own/owntv/player/AudioOutputPolicy.kt	audio underrun: buffer=${bufferSize}B/${bufferSizeMs}ms, ${elapsedSinceLastFeedMs}ms since last feed
 1	technical	app/src/main/java/tv/own/owntv/player/AudioOutputPolicy.kt	audio.passthrough
 1	technical	app/src/main/java/tv/own/owntv/player/AudioOutputPolicy.kt	audio.raw
 1	technical	app/src/main/java/tv/own/owntv/player/AudioOutputPolicy.kt	decoded
 1	log	app/src/main/java/tv/own/owntv/player/AudioOutputPolicy.kt	forcing stereo for this session: $reason
+1	log	app/src/main/java/tv/own/owntv/player/AudioOutputPolicy.kt	lang=${format.language} reuse=${decoderReuseEvaluation?.result}
 1	technical	app/src/main/java/tv/own/owntv/player/AudioOutputPolicy.kt	no sound from the audio output after ${AudioOutputPolicy.NO_AUDIO_GRACE_MS / 1000}s ($what)
+1	log	app/src/main/java/tv/own/owntv/player/AudioOutputPolicy.kt	off expected — the sink resyncs itself, not treating this as an output failure
 1	technical	app/src/main/java/tv/own/owntv/player/AudioOutputPolicy.kt	passthrough
 1	log	app/src/main/java/tv/own/owntv/player/AudioOutputPolicy.kt	stereo-only sink unavailable, using device capabilities
 1	technical	app/src/main/java/tv/own/owntv/player/AudioOutputPolicy.kt	·
+1	protocol	app/src/main/java/tv/own/owntv/player/DecoderNames.kt	.sw.
+1	protocol	app/src/main/java/tv/own/owntv/player/DecoderNames.kt	arc.
+1	protocol	app/src/main/java/tv/own/owntv/player/DecoderNames.kt	c2.
+1	protocol	app/src/main/java/tv/own/owntv/player/DecoderNames.kt	c2.android.
+1	protocol	app/src/main/java/tv/own/owntv/player/DecoderNames.kt	c2.google.
+1	protocol	app/src/main/java/tv/own/owntv/player/DecoderNames.kt	omx.
+1	protocol	app/src/main/java/tv/own/owntv/player/DecoderNames.kt	omx.ffmpeg.
+1	protocol	app/src/main/java/tv/own/owntv/player/DecoderNames.kt	omx.google.
 2	empty	app/src/main/java/tv/own/owntv/player/ExoSubtitleEngine.kt	\0
 1	technical	app/src/main/java/tv/own/owntv/player/ExoSubtitleEngine.kt	$path|$offsetMs
+1	log	app/src/main/java/tv/own/owntv/player/ExoSubtitleEngine.kt	${when (hardware) { true -> "hardware"; false -> "software"; null -> "kind unknown" }}
 1	log	app/src/main/java/tv/own/owntv/player/ExoSubtitleEngine.kt	(decodedDrops=${currentDroppedFrames(player) - dropsBaseline} format=${player?.videoFormat?.sampleMimeType})
+1	log	app/src/main/java/tv/own/owntv/player/ExoSubtitleEngine.kt	, requested=${if (softwarePreferred) "software" else "hardware"})
 1	technical	app/src/main/java/tv/own/owntv/player/ExoSubtitleEngine.kt	AV1
 1	technical	app/src/main/java/tv/own/owntv/player/ExoSubtitleEngine.kt	ExoPlayer
 1	log	app/src/main/java/tv/own/owntv/player/ExoSubtitleEngine.kt	ExoPlayer error: ${error.errorCodeName}
@@ -2993,28 +3296,32 @@
 1	technical	app/src/main/java/tv/own/owntv/player/ExoSubtitleEngine.kt	VP9
 1	technical	app/src/main/java/tv/own/owntv/player/ExoSubtitleEngine.kt	ass
 1	technical	app/src/main/java/tv/own/owntv/player/ExoSubtitleEngine.kt	audio mode: video track ${if (disabled) "off" else "back on"}
+1	log	app/src/main/java/tv/own/owntv/player/ExoSubtitleEngine.kt	audio track -> id=$id lang=${f?.language}
 1	log	app/src/main/java/tv/own/owntv/player/ExoSubtitleEngine.kt	audio watchdog: $reason — forcing stereo for this session
 1	technical	app/src/main/java/tv/own/owntv/player/ExoSubtitleEngine.kt	av01
 1	technical	app/src/main/java/tv/own/owntv/player/ExoSubtitleEngine.kt	avc
 1	technical	app/src/main/java/tv/own/owntv/player/ExoSubtitleEngine.kt	back on
+1	log	app/src/main/java/tv/own/owntv/player/ExoSubtitleEngine.kt	codec=${f?.sampleMimeType} ch=${f?.channelCount} rate=${f?.sampleRate}
 1	technical	app/src/main/java/tv/own/owntv/player/ExoSubtitleEngine.kt	device
 1	technical	app/src/main/java/tv/own/owntv/player/ExoSubtitleEngine.kt	exo/vod: $reason
-1	technical	app/src/main/java/tv/own/owntv/player/ExoSubtitleEngine.kt	hardware
+3	technical	app/src/main/java/tv/own/owntv/player/ExoSubtitleEngine.kt	hardware
 1	technical	app/src/main/java/tv/own/owntv/player/ExoSubtitleEngine.kt	hevc
+1	technical	app/src/main/java/tv/own/owntv/player/ExoSubtitleEngine.kt	kind unknown
 1	technical	app/src/main/java/tv/own/owntv/player/ExoSubtitleEngine.kt	mp4v-es
 1	technical	app/src/main/java/tv/own/owntv/player/ExoSubtitleEngine.kt	mpeg2
 1	log	app/src/main/java/tv/own/owntv/player/ExoSubtitleEngine.kt	no video frame after ${noVideoTimeoutMs()}ms — falling back
 1	log	app/src/main/java/tv/own/owntv/player/ExoSubtitleEngine.kt	no video track in this file — audio-only, no-video watchdog disarmed
 1	technical	app/src/main/java/tv/own/owntv/player/ExoSubtitleEngine.kt	off
+1	log	app/src/main/java/tv/own/owntv/player/ExoSubtitleEngine.kt	passthrough audio: re-priming the output after the track change
 1	log	app/src/main/java/tv/own/owntv/player/ExoSubtitleEngine.kt	rebuilding ExoPlayer for ${if (softwarePreferred) "software" else "hardware"} decode, ${if (wantStereo) "stereo" else "device"} audio
-1	technical	app/src/main/java/tv/own/owntv/player/ExoSubtitleEngine.kt	software
+3	technical	app/src/main/java/tv/own/owntv/player/ExoSubtitleEngine.kt	software
 1	technical	app/src/main/java/tv/own/owntv/player/ExoSubtitleEngine.kt	software rescue declined: ${height}p is above the software-decode ceiling
 1	technical	app/src/main/java/tv/own/owntv/player/ExoSubtitleEngine.kt	software rescue: ${error.errorCodeName} on the hardware decoder, restarting in software decode
 1	technical	app/src/main/java/tv/own/owntv/player/ExoSubtitleEngine.kt	software rescue: no frame on the hardware decoder, restarting in software decode
 1	technical	app/src/main/java/tv/own/owntv/player/ExoSubtitleEngine.kt	ssa
 1	technical	app/src/main/java/tv/own/owntv/player/ExoSubtitleEngine.kt	stereo
 1	technical	app/src/main/java/tv/own/owntv/player/ExoSubtitleEngine.kt	subshift_
-1	log	app/src/main/java/tv/own/owntv/player/ExoSubtitleEngine.kt	video decoder: $decoderName (init ${initializationDurationMs}ms, software=${softwarePreferred})
+1	log	app/src/main/java/tv/own/owntv/player/ExoSubtitleEngine.kt	video decoder: $decoderName (init ${initializationDurationMs}ms,
 1	log	app/src/main/java/tv/own/owntv/player/ExoSubtitleEngine.kt	video input format: ${format.sampleMimeType} ${format.width}x${format.height} fps=${format.frameRate}
 1	technical	app/src/main/java/tv/own/owntv/player/ExoSubtitleEngine.kt	vp9
 1	technical	app/src/main/java/tv/own/owntv/player/ExoSubtitleEngine.kt	vtt
@@ -3025,6 +3332,7 @@
 1	log	app/src/main/java/tv/own/owntv/player/FrameRateController.kt	AFR: ${fps}fps -> mode ${target.modeId} deferred ${waitMs}ms (cooldown)
 1	log	app/src/main/java/tv/own/owntv/player/FrameRateController.kt	AFR: display mode released
 1	log	app/src/main/java/tv/own/owntv/player/FrameRateController.kt	AFR: video ${fps}fps -> display mode ${target.modeId} (${target.refreshRate}Hz)
+1	compiler	app/src/main/java/tv/own/owntv/player/FrameRateController.kt	DEPRECATION
 1	log	app/src/main/java/tv/own/owntv/player/FrameRateController.kt	FrameRate
 1	log	app/src/main/java/tv/own/owntv/player/HeroPreviewEngine.kt	Hero preview error: ${error.errorCodeName}
 1	log	app/src/main/java/tv/own/owntv/player/HeroPreviewEngine.kt	Hero preview play failed for ${HttpClient.redactUrl(url)}
@@ -3053,6 +3361,8 @@
 1	technical	app/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	(?i)/(?:live|movie|series|vod|timeshift)/([^/]+)/([^/]+)/
 1	technical	app/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	***
 1	technical	app/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	, $it
+1	log	app/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	, init ${initializationDurationMs}ms)
+1	technical	app/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	.
 1	technical	app/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	.key
 3	technical	app/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	.m3u8
 1	technical	app/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	.m4s
@@ -3077,10 +3387,11 @@
 1	technical	app/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	Cookie
 1	technical	app/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	ENDED
 1	technical	app/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	EXO
-4	technical	app/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	ExoPlayer
+5	technical	app/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	ExoPlayer
 1	log	app/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	ExoPlayer error: ${error.errorCodeName}
 1	technical	app/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	H.264
 1	technical	app/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	HEVC
+1	log	app/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	HTTP $HTTP_TOO_MANY_REQUESTS with Retry-After ${secs}s — waiting it out and retrying automatically
 1	log	app/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	HTTP 458 while the previous engine's session was still open — waiting and retrying once
 1	technical	app/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	IDLE
 1	technical	app/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	MONO
@@ -3088,7 +3399,7 @@
 1	technical	app/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	MPEG-4
 1	technical	app/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	READY
 1	technical	app/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	Range
-1	log	app/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	Retry-After
+2	log	app/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	Retry-After
 1	technical	app/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	STATE_ENDED before first play — no action
 1	technical	app/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	STATE_ENDED mid-live — treating as stall, reconnecting
 1	technical	app/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	STATE_IDLE before first play — no action
@@ -3130,6 +3441,8 @@
 1	log	app/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	frame hook send FAILED (${it.message}) — picture-freeze detection falls back to the no-progress backstop
 1	technical	app/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	frames=$frames dropped=$dropped isPlaying=${p.isPlaying}
 1	technical	app/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	ftyp
+1	technical	app/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	hardware
+1	log	app/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	hardware decoding is ON but '$decoderName' is a software decoder —
 1	technical	app/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	health posMs=$pos bufferMs=${p.totalBufferedDuration} liveOffsetMs=${liveOffset ?: -1}
 1	technical	app/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	hevc
 1	technical	app/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	hls
@@ -3145,8 +3458,9 @@
 1	technical	app/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	isLiveContent=$isLiveContent buffering=${_buffering.value} reconnect=$retryCount/$MAX_RECONNECTS
 1	technical	app/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	json
 1	technical	app/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	key
+1	technical	app/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	kind unknown
 1	technical	app/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	latencySec=${liveBufferSecs ?: -1}
-1	technical	app/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	length=${response.body?.contentLength() ?: -1} signature=${mediaSignature(prefix)}
+1	log	app/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	length=${response.body.contentLength()} signature=${mediaSignature(prefix)}
 1	technical	app/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	liveOffsetMs=${p.currentLiveOffset.takeUnless { it == C.TIME_UNSET } ?: -1}
 1	technical	app/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	live_buffer preroll=${effectivePrerollSecs()}s start=${lc.bufferForPlaybackMs}ms
 1	technical	app/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	load_control min=${lc.minBufferMs} max=${lc.maxBufferMs} start=${lc.bufferForPlaybackMs}
@@ -3167,6 +3481,7 @@
 1	log	app/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	open stalled — $detail
 1	log	app/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	open stalled: $detail — the stream is buffered but unplayable here
 1	technical	app/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	panel to mpv
+1	log	app/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	passthrough audio: re-priming the output after the track change
 1	technical	app/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	pdt=${playlist.hasProgramDateTime} startOffsetUs=${playlist.startOffsetUs}
 1	technical	app/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	picture frozen
 1	technical	app/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	play() failed: ${it.message}
@@ -3185,9 +3500,12 @@
 1	technical	app/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	progressWatchdog: no-progress detected for ${noProgressMs}ms (pos=$pos, state=READY, frameHook=$everRendered)
 1	technical	app/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	progressWatchdog: picture frozen, frames stuck at $frames for $frozenChecks polls (pos still advancing)
 1	technical	app/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	progressive
+1	log	app/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	provider asked for ${secs}s (HTTP $HTTP_TOO_MANY_REQUESTS Retry-After) — waiting, then retrying the
+1	log	app/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	provider back-off elapsed — retrying the same URL on the same engine
 1	technical	app/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	provider refused $status on ${refusedSegments.size} signed segment URLs
 1	technical	app/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	provider refused with HTTP 458 (account session still in use) uri=${HttpClient.redactUrl(uri)}
 1	technical	app/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	provider refuses its own signed segment URLs — ExoPlayer cannot re-sign them; handing this
+1	log	app/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	provider still refusing after $providerBackOffs waits — letting the failure through
 1	technical	app/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	re-buffer flap ($detail) with no pre-buffer — giving up on ExoPlayer for this stream
 1	technical	app/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	re-buffer flap ($detail) — this stream can't reach its pre-buffer, reopening without one
 1	technical	app/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	ready
@@ -3204,11 +3522,13 @@
 1	technical	app/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	requested=${HttpClient.redactUrl(requested)}
 1	technical	app/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	restart=${lc.bufferForPlaybackAfterRebufferMs} preroll=${effectivePrerollSecs()}s
 1	technical	app/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	retry fresh-url failed: ${it.message}
+1	log	app/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	same URL on the same engine ($providerBackOffs/$MAX_PROVIDER_BACKOFFS)
 1	technical	app/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	segment
 1	technical	app/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	segment HTTP $status
 1	technical	app/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	segment refused (HTTP $status) ${refusedSegments.size}/${LiveStreamQuirks.REFUSALS_BEFORE_HANDOFF}
 1	technical	app/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	server=${response.header("Server").orEmpty()} xcache=${response.header("X-Cache").orEmpty()}
 1	technical	app/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	setCookie=${response.headers("Set-Cookie").size}
+1	technical	app/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	software
 1	technical	app/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	stallWatchdog armed (${STALL_MS}ms)
 1	technical	app/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	state_changed state=$name playWhenReady=${p?.playWhenReady} isPlaying=${p?.isPlaying}
 1	technical	app/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	still ${buffered}ms after ${waitedMs}ms
@@ -3218,6 +3538,7 @@
 1	technical	app/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	targetDurSec=${playlist.targetDurationUs / 1_000_000.0} windowSec=${playlist.durationUs / 1_000_000.0}
 1	technical	app/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	targetOffsetSec=${targetOffsetSecs ?: -1}
 1	technical	app/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	text
+1	log	app/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	the renderer fell back after the hardware one failed
 1	technical	app/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	tracks: audio=${audio.size} text=${text.size}
 1	technical	app/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	type${v.first}
 1	technical	app/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	type=${response.header("Content-Type").orEmpty()}
@@ -3229,6 +3550,7 @@
 1	technical	app/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	url=${HttpClient.redactUrl(url)}
 1	technical	app/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	variants=${mv.variants.size} audios=${mv.audios.size} subs=${mv.subtitles.size}
 2	technical	app/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	video
+1	log	app/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	video decoder: $decoderName (
 1	technical	app/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	videos=${mv.videos.size} muxedAudio=${mv.muxedAudioFormat != null}
 1	technical	app/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	vp9
 1	log	app/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	waiting ${SESSION_RELEASE_MS}ms for the provider to free the account session, then retrying
@@ -3612,19 +3934,29 @@
 20	technical	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	yes
 1	technical	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	ytdl
 6	empty	app/src/main/java/tv/own/owntv/player/PlaybackErrorLog.kt	\0
+2	file-path	app/src/main/java/tv/own/owntv/player/PlaybackErrorLog.kt	$relativePath$EXPORT_NAME
 1	technical	app/src/main/java/tv/own/owntv/player/PlaybackErrorLog.kt	${Build.MANUFACTURER} ${Build.MODEL}
 1	technical	app/src/main/java/tv/own/owntv/player/PlaybackErrorLog.kt	${Build.MANUFACTURER} ${Build.MODEL} · Android ${Build.VERSION.RELEASE} (API ${Build.VERSION.SDK_INT})
+1	file-path	app/src/main/java/tv/own/owntv/player/PlaybackErrorLog.kt	${Environment.DIRECTORY_DOWNLOADS}/
+1	file-path	app/src/main/java/tv/own/owntv/player/PlaybackErrorLog.kt	${Environment.DIRECTORY_DOWNLOADS}/$EXPORT_NAME
+1	sql	app/src/main/java/tv/own/owntv/player/PlaybackErrorLog.kt	${MediaStore.MediaColumns.DISPLAY_NAME}=? AND ${MediaStore.MediaColumns.RELATIVE_PATH}=?
+1	sql	app/src/main/java/tv/own/owntv/player/PlaybackErrorLog.kt	${MediaStore.MediaColumns._ID} DESC
 1	technical	app/src/main/java/tv/own/owntv/player/PlaybackErrorLog.kt	--- live diagnostics (most recent) ---
 1	protocol	app/src/main/java/tv/own/owntv/player/PlaybackErrorLog.kt	:direct
 1	protocol	app/src/main/java/tv/own/owntv/player/PlaybackErrorLog.kt	:gpu
 2	protocol	app/src/main/java/tv/own/owntv/player/PlaybackErrorLog.kt	:hardware
 1	technical	app/src/main/java/tv/own/owntv/player/PlaybackErrorLog.kt	Android ${Build.VERSION.RELEASE} (API ${Build.VERSION.SDK_INT})
 1	protocol	app/src/main/java/tv/own/owntv/player/PlaybackErrorLog.kt	Audio output error — the device couldn't play this audio format
+1	assertion	app/src/main/java/tv/own/owntv/player/PlaybackErrorLog.kt	Could not create the Download folder
+1	assertion	app/src/main/java/tv/own/owntv/player/PlaybackErrorLog.kt	Could not create the playback report
+1	assertion	app/src/main/java/tv/own/owntv/player/PlaybackErrorLog.kt	Could not open the existing playback report
+1	assertion	app/src/main/java/tv/own/owntv/player/PlaybackErrorLog.kt	Could not open the playback report
 1	protocol	app/src/main/java/tv/own/owntv/player/PlaybackErrorLog.kt	DRM / secure-decoder error
 1	protocol	app/src/main/java/tv/own/owntv/player/PlaybackErrorLog.kt	Device ran out of memory for the decoder — try closing other apps
 1	technical	app/src/main/java/tv/own/owntv/player/PlaybackErrorLog.kt	Exported ${stamp.format(java.util.Date())}
 1	protocol	app/src/main/java/tv/own/owntv/player/PlaybackErrorLog.kt	Hardware video decoder error — transient, try again
 1	protocol	app/src/main/java/tv/own/owntv/player/PlaybackErrorLog.kt	Hardware video decoder is busy or can't handle this stream
+1	compiler	app/src/main/java/tv/own/owntv/player/PlaybackErrorLog.kt	InlinedApi
 1	protocol	app/src/main/java/tv/own/owntv/player/PlaybackErrorLog.kt	Network problem reaching the provider
 1	technical	app/src/main/java/tv/own/owntv/player/PlaybackErrorLog.kt	OwnTV playback report
 1	protocol	app/src/main/java/tv/own/owntv/player/PlaybackErrorLog.kt	Provider blocked the connection — too many streams at once (HTTP 509)
@@ -3661,7 +3993,10 @@
 1	protocol	app/src/main/java/tv/own/owntv/player/PlaybackErrorLog.kt	software:gpu
 2	json	app/src/main/java/tv/own/owntv/player/PlaybackErrorLog.kt	spec
 1	technical	app/src/main/java/tv/own/owntv/player/PlaybackErrorLog.kt	spec : $it
+1	mime	app/src/main/java/tv/own/owntv/player/PlaybackErrorLog.kt	text/plain
 1	technical	app/src/main/java/tv/own/owntv/player/PlaybackErrorLog.kt	vod
+1	protocol	app/src/main/java/tv/own/owntv/player/PlaybackErrorLog.kt	w
+1	protocol	app/src/main/java/tv/own/owntv/player/PlaybackErrorLog.kt	wt
 1	file-path	app/src/main/java/tv/own/owntv/player/PlaybackErrorLog.kt	yyyy-MM-dd HH:mm:ss
 1	technical	app/src/main/java/tv/own/owntv/player/PlaybackErrorLog.kt	•
 1	technical	app/src/main/java/tv/own/owntv/player/PlaybackSession.kt	OwnTV
@@ -4210,6 +4545,8 @@
 1	log	app/src/main/java/tv/own/owntv/ui/components/TvImeMetrics.kt	frame=$rect imeBottom=$imeBottom
 1	technical	app/src/main/java/tv/own/owntv/ui/format/TimeFormat.kt	Hm
 1	technical	app/src/main/java/tv/own/owntv/ui/format/TimeFormat.kt	hm
+1	technical	app/src/main/java/tv/own/owntv/ui/theme/Glass.kt	chromeCondense
+1	technical	app/src/main/java/tv/own/owntv/ui/theme/Glass.kt	glassPosition
 1	empty	app/src/main/java/tv/own/owntv/ui/theme/OwnTVColors.kt	\0
 1	technical	app/src/main/java/tv/own/owntv/ui/theme/OwnTVColors.kt	#
 1	empty	app/src/main/java/tv/own/owntv/ui/theme/Theme.kt	\0

@@ -74,7 +74,7 @@ object SupportedLocales {
             tier = 0,
             packaged = true,
             pickerVisible = false,
-            coverage = 3,
+            coverage = 4,
         ),
         SupportedLocale(
             id = "ar",
