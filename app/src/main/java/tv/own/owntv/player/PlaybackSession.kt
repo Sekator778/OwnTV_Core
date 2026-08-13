@@ -50,6 +50,9 @@ class PlaybackSession(private val context: Context) {
     private var hasFocus = false
     /** Volume the user had set before we ducked, or null when not ducked. */
     private var preDuckVolume: Int? = null
+    /** The level the duck actually set, so [unduck] can tell "still where we left it" from "the user
+     *  changed the volume while ducked". */
+    private var duckedTo: Int? = null
 
     /**
      * Make [engine] the one this session represents, or `null` when nothing is playing any more (the
@@ -87,7 +90,9 @@ class PlaybackSession(private val context: Context) {
     )
 
     private fun publish(state: State) {
-        if (state.playing) requestFocus()
+        // Focus is held only while we are actually making sound. Keeping it through a pause left every
+        // other app on the TV ducked (or locked out) for as long as the user left the player paused.
+        if (state.playing) requestFocus() else abandonFocus()
         val s = session ?: return
         runCatching {
             s.setMetadata(
@@ -195,13 +200,22 @@ class PlaybackSession(private val context: Context) {
         val current = e.volume.value
         preDuckVolume = current
         val target = (current * DUCK_PERCENT / 100).coerceAtLeast(0)
+        duckedTo = target
         withEngine { it.adjustVolume(target - current) }
     }
 
     private fun unduck() {
         val previous = preDuckVolume ?: return
+        val ducked = duckedTo
         preDuckVolume = null
-        withEngine { it.adjustVolume(previous - it.volume.value) }
+        duckedTo = null
+        withEngine { e ->
+            // If the volume is no longer where the duck left it, the user changed it while we were
+            // ducked. That is a newer decision than the level saved before ducking, so restoring the old
+            // one would silently undo it.
+            if (ducked != null && e.volume.value != ducked) return@withEngine
+            e.adjustVolume(previous - e.volume.value)
+        }
     }
 
     private companion object {

@@ -435,9 +435,24 @@ class OwnTVPlayer(
     // error is shown. Covers auto-play advancing while the provider still holds the previous episode's
     // connection slot — the reset aborts the stuck request and the retry then opens cleanly.
     private var triedOpenReset = false
+    // A VOD that dies mid-stream (the provider drops the connection halfway through a film) gets ONE
+    // silent reload from the current position before an error is shown. Without it the picture simply
+    // froze and nothing ever said why.
+    private var triedMidStreamReload = false
     // Snapshot of a non-live item taken when the app backgrounds (screensaver / Home), so it can be restored
     // paused at its position on return — otherwise the stream is freed and Play does nothing until a reload.
-    private data class BackgroundRestore(val url: String, val meta: MediaMeta, val positionMs: Long, val wasPlaying: Boolean)
+    /** A URL and a position are not enough to reopen an item: the request identity ([userAgent],
+     *  [httpHeaders]) and, for an expiring-URL source, its [reconnectProvider] have to come back with it,
+     *  or the restore 403s a movie that had just been playing. */
+    private data class BackgroundRestore(
+        val url: String,
+        val meta: MediaMeta,
+        val positionMs: Long,
+        val wasPlaying: Boolean,
+        val userAgent: String?,
+        val httpHeaders: String?,
+        val reconnectProvider: tv.own.owntv.core.stalker.ReconnectUrlProvider?,
+    )
     @Volatile private var backgroundRestore: BackgroundRestore? = null
     private var playlist: List<PlaylistItem> = emptyList()
     private var playlistIndex = 0
@@ -528,6 +543,11 @@ class OwnTVPlayer(
     // The source-level UA for the queue currently loaded (playEpisodes). Each item re-derives
     // currentUserAgent from its own headers and falls back to this.
     private var queueUserAgent: String? = null
+    // The request identity of the loaded item, kept exactly as the caller supplied it, so a background
+    // restore replays the same request instead of re-opening with the URL alone — an item needing a
+    // Referer or a custom UA came back from the screensaver with neither and 403'd.
+    @Volatile private var tunedUserAgent: String? = null
+    @Volatile private var tunedHttpHeaders: String? = null
     // Diagnostics for the "smooth on the first mpv channel, slightly juddery from the second onward"
     // report: how many loads this (reused) mpv core has served, and whether the last one recreated the
     // SurfaceView. Read back in the one-shot "display timing" log.
@@ -950,13 +970,17 @@ class OwnTVPlayer(
             baseAudioDelayMs = ms // the Settings default each new file resets to
             applyAudioDelay(ms)
         }.launchIn(scope)
+        // Clearing a preferred language has to be written through too. The property is already set on the
+        // running core, so skipping the write on a blank value left the old preference in force — turning
+        // "Preferred audio language" back to none did nothing until the app restarted. Empty is mpv's own
+        // "no preference", which is exactly what a cleared setting means.
         settings.preferredAudioLang.onEach { lang ->
             prefAudioLang = lang
-            if (initialized && lang.isNotBlank()) mpvAsync { setPropertyString("alang", lang) }
+            if (initialized) mpvAsync { setPropertyString("alang", lang) }
         }.launchIn(scope)
         settings.preferredSubLang.onEach { lang ->
             prefSubLang = lang
-            if (initialized && lang.isNotBlank()) mpvAsync { setPropertyString("slang", lang) }
+            if (initialized) mpvAsync { setPropertyString("slang", lang) }
         }.launchIn(scope)
         settings.defaultZoom.onEach { name ->
             defaultZoom = runCatching { ZoomMode.valueOf(name) }.getOrDefault(ZoomMode.FIT)
@@ -1120,6 +1144,12 @@ class OwnTVPlayer(
     // released). Toggled by enterAudioOnly()/exitAudioOnly(); the shell drives it from PlayerMode.AUDIO.
     private val _audioOnly = MutableStateFlow(false)
     val audioOnly: StateFlow<Boolean> = _audioOnly.asStateFlow()
+
+    private val _audioOnlyMedia = MutableStateFlow(false)
+    /** The loaded item has no video track of its own — see [PlaybackEngine.audioOnlyMedia]. Set once the
+     *  file is open and audio is genuinely progressing, so a stream that is merely slow to show its first
+     *  frame is never labelled audio-only. Cleared by every new load. */
+    val audioOnlyMedia: StateFlow<Boolean> = _audioOnlyMedia.asStateFlow()
     private val _videoRes = MutableStateFlow<String?>(null)
     val videoRes: StateFlow<String?> = _videoRes.asStateFlow()
 
@@ -1217,6 +1247,16 @@ class OwnTVPlayer(
     val speed: StateFlow<Double> = _speed.asStateFlow()
 
     val currentMediaUrl: String? get() = currentUrl
+
+    /**
+     * Stable identity of the loaded item ([MediaMeta.contentKey]); null when nothing is loaded or the
+     * item has no stable key (a row with no `remoteId` — see [tv.own.owntv.core.player.enginePinKey]).
+     *
+     * Resume-progress owners compare against THIS, not [currentMediaUrl]: a Stalker playback URL is
+     * minted per play and never equals the stored cmd, so a URL comparison meant those items never
+     * saved a position at all.
+     */
+    val currentMediaContentKey: String? get() = if (currentUrl != null) currentContentKey else null
 
     // --- ExoPlayer image-subtitle handoff -----------------------------------------------------
     // ExoPlayer takes over playback ONLY for a VOD with an image subtitle selected. mpv is stopped first
@@ -1324,6 +1364,9 @@ class OwnTVPlayer(
             _subCount.value = tracks.size
         }
         override fun onVideoFps(fps: Float) { _videoFps.value = fps; updateStreamChips() }
+        // ExoPlayer knows this straight from the track list, so a music-only VOD played on the Exo engine
+        // (preferred-for-VOD, or an mpv fallback) is labelled as fast as one played on mpv.
+        override fun onAudioOnlyMedia(audioOnly: Boolean) { if (!_audioOnly.value) _audioOnlyMedia.value = audioOnly }
         override fun onError(failure: PlaybackFailure) {
             // Image-sub handoff → give playback back to mpv. Engine chains: Exo-as-primary falls back to
             // mpv; Exo-as-fallback means mpv already failed this item, so reloading it there would just
@@ -1530,7 +1573,9 @@ class OwnTVPlayer(
         val url = currentUrl ?: return
         if (!audioCodecSafeForExo()) {
             toast(toastRenderer.render(PlaybackFailure.ImageSubtitleAudio))
-            _subTrackList.value = _subTrackList.value.map { it.copy(selected = false) }
+            // The selection is deliberately left alone. The handoff was refused, so mpv keeps playing with
+            // whatever subtitle was already on — blanking the list claimed the user's working text subtitle
+            // had been switched off while it carried on rendering.
             return
         }
         val pos = _position.value
@@ -2117,6 +2162,8 @@ class OwnTVPlayer(
         // The channel's own UA wins over the playlist-wide one (F16): a playlist sets one UA for the
         // whole provider, an EXTVLCOPT line sets it for the one restream that needs it.
         currentUserAgent = StreamHeaders.userAgentOf(currentHeaders) ?: userAgent?.takeIf { it.isNotBlank() }
+        tunedUserAgent = userAgent?.takeIf { it.isNotBlank() }
+        tunedHttpHeaders = httpHeaders
         prerollOverrideSecs = livePrerollSecsOverride
         playlist = emptyList()
         playlistIndex = 0
@@ -2177,6 +2224,8 @@ class OwnTVPlayer(
         // header-carrying and plain episodes can't leak one item's Referer onto the next.
         currentHeaders = StreamHeaders.decode(item.httpHeaders)
         currentUserAgent = StreamHeaders.userAgentOf(currentHeaders) ?: queueUserAgent
+        tunedUserAgent = queueUserAgent
+        tunedHttpHeaders = item.httpHeaders
         // F12 — a queue item that mints its URL (Stalker episode) reuses that same resolver as its
         // reconnect provider, so a retry after the short-lived link expires asks the portal again
         // instead of replaying a dead URL. An item with a stable URL clears the previous item's
@@ -2299,6 +2348,7 @@ class OwnTVPlayer(
         diagnostics.markLoad() // scope captured codec/audio errors to this stream
         _videoRes.value = null
         _videoFps.value = null
+        _audioOnlyMedia.value = false // re-decided per load, once this item's tracks are known
         expectingPlayback = true
         pendingSeekMs = startPositionMs
         applyAudioDelay(baseAudioDelayMs) // new item starts at the Settings default — drop any per-file nudge
@@ -2317,6 +2367,7 @@ class OwnTVPlayer(
             triedUaFallback = false
             uaFallbackPending = false
             triedOpenReset = false
+            triedMidStreamReload = false
             triedExoVodFallback = false // genuinely new item → the ExoPlayer engine fallback is armed again
             pendingSelectSid = null // stale handoff leftovers must not apply to the new item
             pendingExternalAdd = null
@@ -2479,6 +2530,22 @@ class OwnTVPlayer(
                     if (gen != loadGeneration || isLiveContent) return@launch
                     if (currentHeightPx > 0) return@launch // playing normally — cancel watchdog
                     val elapsed = System.currentTimeMillis() - loadStartTime
+                    // Nothing below can judge an item that has no video track at all. An audio-only VOD
+                    // (a radio station filed under Movies, a music-only MP4) loads with no height and no
+                    // video bitrate — precisely stage 2's and stage 3's signature — so healthy audio was
+                    // declared broken at ~6s. mpv sets `video-codec` as soon as track selection happens,
+                    // so this is the same test the live no-video watchdog uses one branch down, with
+                    // Audio Mode exempt for the same reason: `vid=no` is the app turning the picture off
+                    // on purpose. Only stand down once audio is demonstrably progressing.
+                    if (fileLoaded && elapsed > 5_000 && _position.value > 0 &&
+                        (_audioOnly.value || currentVideoCodec == null)
+                    ) {
+                        android.util.Log.d(TAG, "watchdog — item has no video track and audio is playing; standing down")
+                        // Tell the UI, so the black screen carries an explanation instead of looking broken.
+                        // Audio Mode is the user's own doing and already has its own presentation.
+                        if (!_audioOnly.value) _audioOnlyMedia.value = true
+                        return@launch
+                    }
                     if (!fileLoaded && elapsed > 10_000) {
                         // Stage 1: demuxer hung during probe — stuck, not just slow.
                         // First strike: reset silently and reload the same item once. The common
@@ -2930,6 +2997,7 @@ class OwnTVPlayer(
         pendingUrl = null
         _isPlaying.value = false
         _buffering.value = false
+        _audioOnlyMedia.value = false
     }
 
     /** True while mpv owns a stream (loaded or loading) — i.e. while it may still hold a provider session. */
@@ -3021,7 +3089,10 @@ class OwnTVPlayer(
             // Remember a non-live item so the screensaver/Home → return can restore it paused at its
             // position. (Live just re-tunes; the archive/VOD stream is freed for memory while invisible.)
             backgroundRestore = if (!isLiveContent) {
-                BackgroundRestore(url, currentMetaSnapshot(), _position.value, _isPlaying.value)
+                BackgroundRestore(
+                    url, currentMetaSnapshot(), _position.value, _isPlaying.value,
+                    tunedUserAgent, tunedHttpHeaders, reconnectUrlProvider,
+                )
             } else null
             stop()
         }
@@ -3042,10 +3113,15 @@ class OwnTVPlayer(
             isLive = false,
             startPositionMs = r.positionMs,
             startPaused = !r.wasPlaying,
+            userAgent = r.userAgent,
+            httpHeaders = r.httpHeaders,
             contentKey = r.meta.contentKey,
             seasonNumber = r.meta.seasonNumber,
             episodeNumber = r.meta.episodeNumber,
             rewindStartMs = r.meta.rewindStartMs,
+            // Stalker VOD: without its provider the restore replays a create_link URL that has very
+            // likely expired, with no way to mint a fresh one.
+            reconnectProvider = r.reconnectProvider,
         )
     }
 
@@ -3350,10 +3426,15 @@ class OwnTVPlayer(
             return
         }
         // Image subtitle on a VOD → hand playback to ExoPlayer (it draws bitmap subs on its own layer).
-        // Live image subs aren't supported (no handoff) — selecting one just shows nothing.
         if (track?.image == true) {
-            if (!isLiveContent) handoffToExo(track)
-            else _subTrackList.value = _subTrackList.value.map { it.copy(selected = it.mpvId == mpvId) }
+            if (!isLiveContent) {
+                handoffToExo(track)
+            } else {
+                // Live has no ExoPlayer handoff, so a bitmap subtitle cannot be drawn at all. Marking it
+                // selected told the user it was on while nothing ever appeared on screen; say so instead
+                // and leave whatever was selected before in place.
+                toast(toastRenderer.render(PlaybackFailure.ImageFormat))
+            }
             return
         }
         // Text subtitle: mpv's direct path + app overlay. If we're mid-handoff, return to mpv first and
@@ -3889,7 +3970,14 @@ class OwnTVPlayer(
                             return@mpvAsync
                         }
                         currentHwdec = hw.ifEmpty { null }
-                        if (h > 0) currentHeightPx = h
+                        if (h > 0) {
+                            currentHeightPx = h
+                            // A frame decoded on mpv is as much proof the core is healthy as one decoded on
+                            // ExoPlayer, which is the only place this counter was ever cleared. Left
+                            // uncleared, three resets spread across an evening's zapping eventually tripped
+                            // the thrash guard on a channel that was playing perfectly.
+                            consecutiveHardResets = 0
+                        }
                         enforceDecodeGuard()
                     }
                 }
@@ -4083,7 +4171,22 @@ class OwnTVPlayer(
                     if (!connectivity.isOnlineNow()) {
                         _buffering.value = false
                         _error.value = PlaybackFailure.NoInternet
+                    } else if (liveStallReconnects >= MAX_LIVE_RECONNECTS) {
+                        // Bounded, like every other live recovery path. This one used to call retry(),
+                        // which reloads with resetRetries = true — so a channel dying immediately after
+                        // each reconnect reset its own budget and looped forever behind a spinner, with
+                        // no message and no way out but Back. The stall watchdog clears the counter as
+                        // soon as the picture is genuinely progressing again, so this only ever fires on
+                        // consecutive failures.
+                        android.util.Log.w(TAG, "live died mid-play — reconnect budget exhausted after $MAX_LIVE_RECONNECTS attempts, surfacing error")
+                        LiveDiagnosticsLog.event("mpv live mid-play reconnects exhausted ($MAX_LIVE_RECONNECTS) — surfacing error")
+                        expectingPlayback = false
+                        _isPlaying.value = false
+                        _buffering.value = false
+                        _error.value = PlaybackFailure.LostConnection
                     } else {
+                        liveStallReconnects++
+                        android.util.Log.w(TAG, "live died mid-play — reconnect attempt $liveStallReconnects/$MAX_LIVE_RECONNECTS")
                         _buffering.value = true
                         val gen = loadGeneration
                         scope.launch {
@@ -4107,6 +4210,35 @@ class OwnTVPlayer(
                             scope.launch { delay(DECODER_RELEASE_MS); if (gen == loadGeneration) next() } // next ep, same season
                         } else {
                             scope.launch { delay(DECODER_RELEASE_MS); if (gen == loadGeneration) _queueEnded.tryEmit(Unit) } // → next season
+                        }
+                    } else if (!reachedEnd) {
+                        // The item did NOT reach its end: the provider dropped the connection mid-film.
+                        // Nothing used to handle this — mpv went idle, the last frame stayed on screen and
+                        // the app said nothing, so a cut-off movie was indistinguishable from a frozen one.
+                        // One silent reload from the current position (the common cause is a transient
+                        // drop), then an honest error. Live's equivalent is the branch above.
+                        // A catch-up archive is exempt from the reload: the panel serves it with no Range
+                        // support, so reopening at an offset fails outright ("not formatted for streaming")
+                        // — the very trap [resumePositionForHandoff] exists for. It goes straight to the
+                        // error, which is still better than the silent freeze it used to get.
+                        if (!triedMidStreamReload && !archiveThisItem && currentUrl != null) {
+                            triedMidStreamReload = true
+                            android.util.Log.w(TAG, "VOD ended mid-stream at ${pos}ms of ${dur}ms — reloading once from position")
+                            _buffering.value = true
+                            val gen = loadGeneration
+                            scope.launch {
+                                delay(DECODER_RELEASE_MS)
+                                if (gen == loadGeneration && currentUrl != null) {
+                                    reload(currentUrl!!, isLive = false, resetRetries = false)
+                                } else {
+                                    _buffering.value = false
+                                }
+                            }
+                        } else {
+                            android.util.Log.w(TAG, "VOD ended mid-stream again at ${pos}ms of ${dur}ms — surfacing error")
+                            _isPlaying.value = false
+                            _buffering.value = false
+                            _error.value = vodErrorMessage(PlaybackFailure.LostConnection)
                         }
                     }
                 }

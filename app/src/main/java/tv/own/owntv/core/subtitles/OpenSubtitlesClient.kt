@@ -108,8 +108,10 @@ class OpenSubtitlesClient(private val okHttpClient: OkHttpClient) {
         okHttpClient.newCall(builder.build()).execute().use { resp ->
             val text = resp.body.string()
             if (!resp.isSuccessful) {
-                // The body may echo credentials on auth endpoints — log only code + path.
-                Log.w(TAG, "$method $pathAndQuery -> HTTP ${resp.code}")
+                // The body may echo credentials on auth endpoints — log only code + path. The QUERY is
+                // dropped too: on a search it carries the movie title and the file's moviehash, which is
+                // the user's viewing history written into logcat.
+                Log.w(TAG, "$method ${pathAndQuery.substringBefore('?')} -> HTTP ${resp.code}")
                 throw ApiException(resp.code, "OpenSubtitles HTTP ${resp.code}")
             }
             return runCatching { JSONObject(text) }.getOrElse {

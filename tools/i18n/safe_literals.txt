@@ -1082,6 +1082,7 @@
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/dao/SourceDao.kt	WHERE ps.profileId = :profileId ORDER BY s.createdAt ASC
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/dao/SubtitleDao.kt	DELETE FROM subtitle_cache WHERE id = :id
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/dao/SubtitleDao.kt	DELETE FROM subtitle_link WHERE profileId = :profileId AND cacheId = :cacheId
+1	sql	app/src/main/java/tv/own/owntv/core/database/dao/SubtitleDao.kt	DELETE FROM subtitle_link WHERE profileId = :profileId AND cacheId = :cacheId AND mediaType = :mediaType
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/dao/SubtitleDao.kt	DELETE FROM subtitle_selection WHERE profileId = :profileId AND contentKey = :contentKey
 2	room-schema	app/src/main/java/tv/own/owntv/core/database/dao/SubtitleDao.kt	FROM subtitle_link l JOIN subtitle_cache c ON c.id = l.cacheId
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/dao/SubtitleDao.kt	SELECT * FROM subtitle_cache WHERE id = :id LIMIT 1
@@ -1089,6 +1090,7 @@
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/dao/SubtitleDao.kt	SELECT * FROM subtitle_cache WHERE source = 'LOCAL' AND fileName = :fileName LIMIT 1
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/dao/SubtitleDao.kt	SELECT * FROM subtitle_selection WHERE profileId = :profileId AND contentKey = :contentKey LIMIT 1
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/dao/SubtitleDao.kt	SELECT COUNT(*) FROM subtitle_link WHERE cacheId = :cacheId AND profileId != :profileId
+1	sql	app/src/main/java/tv/own/owntv/core/database/dao/SubtitleDao.kt	SELECT COUNT(*) FROM subtitle_link WHERE cacheId = :cacheId AND profileId = :profileId
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/dao/SubtitleDao.kt	SELECT COUNT(*) FROM subtitle_link WHERE profileId = :profileId AND contentKey = :contentKey
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/dao/SubtitleDao.kt	SELECT DISTINCT cacheId FROM subtitle_link WHERE profileId = :profileId AND mediaType = :mediaType
 2	room-schema	app/src/main/java/tv/own/owntv/core/database/dao/SubtitleDao.kt	SELECT c.id AS cacheId, l.contentKey AS contentKey, l.contentTitle AS contentTitle,
@@ -1215,6 +1217,8 @@
 1	technical	app/src/main/java/tv/own/owntv/core/download/DownloadNotifications.kt	owntv_downloads
 1	log	app/src/main/java/tv/own/owntv/core/download/DownloadWorker.kt	owntv-downloads
 2	empty	app/src/main/java/tv/own/owntv/core/epg/CatchupUrl.kt	\0
+1	uri	app/src/main/java/tv/own/owntv/core/epg/CatchupUrl.kt	$base&$body
+1	uri	app/src/main/java/tv/own/owntv/core/epg/CatchupUrl.kt	$base?$body
 1	protocol	app/src/main/java/tv/own/owntv/core/epg/CatchupUrl.kt	${g[1]}/streaming/timeshift.php?username=${g[2]}&password=${g[3]}&stream=${g[4]}
 1	protocol	app/src/main/java/tv/own/owntv/core/epg/CatchupUrl.kt	${g[1]}/streaming/timeshift.php?username=${g[2]}&password=${g[3]}&stream=${g[6]}&start=${g[5]}&duration=${g[4]}
 1	protocol	app/src/main/java/tv/own/owntv/core/epg/CatchupUrl.kt	${prefix}archive-$startS-$durationS.ts$query
@@ -1223,7 +1227,7 @@
 1	protocol	app/src/main/java/tv/own/owntv/core/epg/CatchupUrl.kt	&start=$start&duration=$durationMin
 1	protocol	app/src/main/java/tv/own/owntv/core/epg/CatchupUrl.kt	.m3u8
 1	protocol	app/src/main/java/tv/own/owntv/core/epg/CatchupUrl.kt	.ts
-2	protocol	app/src/main/java/tv/own/owntv/core/epg/CatchupUrl.kt	?
+1	uri	app/src/main/java/tv/own/owntv/core/epg/CatchupUrl.kt	?
 1	protocol	app/src/main/java/tv/own/owntv/core/epg/CatchupUrl.kt	?$it
 1	protocol	app/src/main/java/tv/own/owntv/core/epg/CatchupUrl.kt	?utc={utc}&lutc={lutc}
 1	protocol	app/src/main/java/tv/own/owntv/core/epg/CatchupUrl.kt	H
@@ -2034,7 +2038,7 @@
 2	json	app/src/main/java/tv/own/owntv/core/subtitles/OpenSubtitlesAuthStore.kt	u
 2	json	app/src/main/java/tv/own/owntv/core/subtitles/OpenSubtitlesAuthStore.kt	vip
 1	protocol	app/src/main/java/tv/own/owntv/core/subtitles/OpenSubtitlesClient.kt	$WORKER_BASE/api/v1$pathAndQuery
-1	protocol	app/src/main/java/tv/own/owntv/core/subtitles/OpenSubtitlesClient.kt	$method $pathAndQuery -> HTTP ${resp.code}
+1	log	app/src/main/java/tv/own/owntv/core/subtitles/OpenSubtitlesClient.kt	$method ${pathAndQuery.substringBefore('?')} -> HTTP ${resp.code}
 1	protocol	app/src/main/java/tv/own/owntv/core/subtitles/OpenSubtitlesClient.kt	${it.key}=${java.net.URLEncoder.encode(it.value, "UTF-8")}
 1	protocol	app/src/main/java/tv/own/owntv/core/subtitles/OpenSubtitlesClient.kt	&
 1	protocol	app/src/main/java/tv/own/owntv/core/subtitles/OpenSubtitlesClient.kt	/download
@@ -2079,6 +2083,7 @@
 1	technical	app/src/main/java/tv/own/owntv/core/subtitles/SubtitleCharset.kt	windows-1252
 1	technical	app/src/main/java/tv/own/owntv/core/subtitles/SubtitleController.kt	,
 2	technical	app/src/main/java/tv/own/owntv/core/subtitles/SubtitleController.kt	MOVIE
+1	log	app/src/main/java/tv/own/owntv/core/subtitles/SubtitleController.kt	OpenSubtitles
 2	technical	app/src/main/java/tv/own/owntv/core/subtitles/SubtitleController.kt	SERIES
 1	technical	app/src/main/java/tv/own/owntv/core/subtitles/SubtitleController.kt	[a-z]{2}-[a-z]{2}
 1	locale	app/src/main/java/tv/own/owntv/core/subtitles/SubtitleController.kt	ar
@@ -2121,6 +2126,7 @@
 1	technical	app/src/main/java/tv/own/owntv/core/subtitles/SubtitleController.kt	rus
 1	technical	app/src/main/java/tv/own/owntv/core/subtitles/SubtitleController.kt	season_number
 1	technical	app/src/main/java/tv/own/owntv/core/subtitles/SubtitleController.kt	spa
+1	log	app/src/main/java/tv/own/owntv/core/subtitles/SubtitleController.kt	subtitle search by TMDB id failed — retrying by title
 1	technical	app/src/main/java/tv/own/owntv/core/subtitles/SubtitleController.kt	tmdb_id
 1	locale	app/src/main/java/tv/own/owntv/core/subtitles/SubtitleController.kt	tr
 1	technical	app/src/main/java/tv/own/owntv/core/subtitles/SubtitleController.kt	tur
@@ -2133,6 +2139,7 @@
 1	log	app/src/main/java/tv/own/owntv/core/subtitles/SubtitleRepository.kt	OpenSubtitles
 1	technical	app/src/main/java/tv/own/owntv/core/subtitles/SubtitleRepository.kt	ass
 1	log	app/src/main/java/tv/own/owntv/core/subtitles/SubtitleRepository.kt	cached subtitle file missing for file_id=$fileId — re-downloading
+1	log	app/src/main/java/tv/own/owntv/core/subtitles/SubtitleRepository.kt	download token expired — attempting the silent re-login
 1	json	app/src/main/java/tv/own/owntv/core/subtitles/SubtitleRepository.kt	file_name
 1	json	app/src/main/java/tv/own/owntv/core/subtitles/SubtitleRepository.kt	link
 1	technical	app/src/main/java/tv/own/owntv/core/subtitles/SubtitleRepository.kt	local:$cacheId
@@ -2143,6 +2150,8 @@
 1	json	app/src/main/java/tv/own/owntv/core/subtitles/SubtitleRepository.kt	reset_time
 3	technical	app/src/main/java/tv/own/owntv/core/subtitles/SubtitleRepository.kt	srt
 1	technical	app/src/main/java/tv/own/owntv/core/subtitles/SubtitleRepository.kt	ssa
+1	assertion	app/src/main/java/tv/own/owntv/core/subtitles/SubtitleRepository.kt	subtitle exceeded $MAX_SUBTITLE_BYTES bytes
+1	assertion	app/src/main/java/tv/own/owntv/core/subtitles/SubtitleRepository.kt	subtitle too large: ${body.contentLength()} bytes
 1	file-path	app/src/main/java/tv/own/owntv/core/subtitles/SubtitleRepository.kt	subtitles
 2	technical	app/src/main/java/tv/own/owntv/core/subtitles/SubtitleRepository.kt	vtt
 1	technical	app/src/main/java/tv/own/owntv/core/subtitles/SubtitleRepository.kt	webvtt
@@ -2803,7 +2812,7 @@
 2	empty	app/src/main/java/tv/own/owntv/features/series/SeriesViewModel.kt	\0
 1	technical	app/src/main/java/tv/own/owntv/features/series/SeriesViewModel.kt	${StorageAccess.sanitize(ep.name.ifBlank { "episode-${ep.episodeNumber}" })}.$ext
 1	technical	app/src/main/java/tv/own/owntv/features/series/SeriesViewModel.kt	${StorageAccess.sanitize(episode.name.ifBlank { "episode-${episode.episodeNumber}" })}.$ext
-1	technical	app/src/main/java/tv/own/owntv/features/series/SeriesViewModel.kt	EPISODE
+3	technical	app/src/main/java/tv/own/owntv/features/series/SeriesViewModel.kt	EPISODE
 1	log	app/src/main/java/tv/own/owntv/features/series/SeriesViewModel.kt	OwnTVHome
 1	technical	app/src/main/java/tv/own/owntv/features/series/SeriesViewModel.kt	Series
 1	technical	app/src/main/java/tv/own/owntv/features/series/SeriesViewModel.kt	Series/$showDir/Season ${ep.seasonNumber}
@@ -3309,6 +3318,7 @@
 1	technical	app/src/main/java/tv/own/owntv/player/ExoSubtitleEngine.kt	kind unknown
 1	technical	app/src/main/java/tv/own/owntv/player/ExoSubtitleEngine.kt	mp4v-es
 1	technical	app/src/main/java/tv/own/owntv/player/ExoSubtitleEngine.kt	mpeg2
+1	log	app/src/main/java/tv/own/owntv/player/ExoSubtitleEngine.kt	no text track matches the picked subtitle (index=$pendingSubTypeIndex lang=$pendingSubLang) — leaving subtitles off
 1	log	app/src/main/java/tv/own/owntv/player/ExoSubtitleEngine.kt	no video frame after ${noVideoTimeoutMs()}ms — falling back
 1	log	app/src/main/java/tv/own/owntv/player/ExoSubtitleEngine.kt	no video track in this file — audio-only, no-video watchdog disarmed
 1	technical	app/src/main/java/tv/own/owntv/player/ExoSubtitleEngine.kt	off
@@ -3629,6 +3639,8 @@
 1	log	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	OwnTVPlayer
 1	log	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	PlayerBudget: $budget
 1	technical	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	STEREO
+1	log	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	VOD ended mid-stream again at ${pos}ms of ${dur}ms — surfacing error
+1	log	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	VOD ended mid-stream at ${pos}ms of ${dur}ms — reloading once from position
 1	log	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	VOD failed on BOTH engines — exo first: '$exoErr' / mpv: '$mpvMsg'
 1	log	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	VOD failed on BOTH engines — mpv: '$mpvFailureBeforeFallback' / exo: '$exoError'
 1	log	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	VOD failed on mpv but audio codec unsafe for ExoPlayer — no fallback
@@ -3771,6 +3783,8 @@
 1	technical	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	idle
 1	technical	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	invalid video timestamp|non-monotonic|desynchroni
 1	technical	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	keepaspect
+1	log	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	live died mid-play — reconnect attempt $liveStallReconnects/$MAX_LIVE_RECONNECTS
+1	log	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	live died mid-play — reconnect budget exhausted after $MAX_LIVE_RECONNECTS attempts, surfacing error
 1	log	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	live open timeout
 1	log	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	live playback resumed (mpv, Live) after stall/reconnect
 1	log	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	live stall (mpv, Live) — frozen ~${frozenMs}ms but offline; showing spinner, waiting for network
@@ -3798,6 +3812,7 @@
 5	technical	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	mpv
 1	log	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	mpv $why — reopening with tolerant demuxing (discardcorrupt/genpts/ignore_err)
 1	technical	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	mpv level=$level $safe
+1	log	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	mpv live mid-play reconnects exhausted ($MAX_LIVE_RECONNECTS) — surfacing error
 1	log	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	mpv live open timed out after ${openingMs}ms — surfacing error
 1	log	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	mpv ready: lowSpec=${budget.lowSpec} direct=${useDirect()} hwdec=${getPropertyString("hwdec")}
 1	technical	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	mpv reported $brokenPtsHits broken video timestamps — switching to free-running video timing
@@ -3924,6 +3939,7 @@
 1	log	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	watchdog T_DECODE — archive produced no frame after ${elapsed}ms
 1	log	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	watchdog T_OPEN — no FILE_LOADED after ${elapsed}ms, HARD-RESETTING mpv
 1	log	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	watchdog T_OPEN — no FILE_LOADED after ${elapsed}ms, silent hard-reset + retry
+1	log	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	watchdog — item has no video track and audio is playing; standing down
 1	log	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	watchdog: archive decoder failed ('$decoderErr')
 1	log	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	watchdog: archive loaded but produced no video
 4	technical	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	width
@@ -3956,6 +3972,7 @@
 1	compiler	app/src/main/java/tv/own/owntv/player/PlaybackErrorLog.kt	InlinedApi
 1	protocol	app/src/main/java/tv/own/owntv/player/PlaybackErrorLog.kt	Network problem reaching the provider
 1	technical	app/src/main/java/tv/own/owntv/player/PlaybackErrorLog.kt	OwnTV playback report
+1	log	app/src/main/java/tv/own/owntv/player/PlaybackErrorLog.kt	PlaybackErrorLog
 1	protocol	app/src/main/java/tv/own/owntv/player/PlaybackErrorLog.kt	Provider blocked the connection — too many streams at once (HTTP 509)
 1	protocol	app/src/main/java/tv/own/owntv/player/PlaybackErrorLog.kt	Provider denied access (HTTP 403) — credentials, subscription, or IP block
 1	protocol	app/src/main/java/tv/own/owntv/player/PlaybackErrorLog.kt	Provider rejected the request (HTTP 400) — bad or expired link
@@ -3980,6 +3997,7 @@
 2	json	app/src/main/java/tv/own/owntv/player/PlaybackErrorLog.kt	model
 1	technical	app/src/main/java/tv/own/owntv/player/PlaybackErrorLog.kt	owntv-errorlog
 1	file-path	app/src/main/java/tv/own/owntv/player/PlaybackErrorLog.kt	owntv-playback-report.txt
+1	log	app/src/main/java/tv/own/owntv/player/PlaybackErrorLog.kt	playback error log unreadable — starting a new one
 1	technical	app/src/main/java/tv/own/owntv/player/PlaybackErrorLog.kt	playback_errors.json
 2	json	app/src/main/java/tv/own/owntv/player/PlaybackErrorLog.kt	raw
 1	technical	app/src/main/java/tv/own/owntv/player/PlaybackErrorLog.kt	raw : $it

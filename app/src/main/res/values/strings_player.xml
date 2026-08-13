@@ -262,6 +262,10 @@
     <string name="player_stream_kbps"><xliff:g id="value">%1$s</xliff:g> kbps</string>
     <!-- Translators: Buffer duration display in the stream info overlay. "value" is a number. "s" means seconds. -->
     <string name="player_stream_seconds"><xliff:g id="value">%1$s</xliff:g> s buffered</string>
+    <!-- Translators: Heading of the plate shown over the black video area when the item being played has no video track at all (a radio channel, a music-only file). This is NOT an error - playback is working. -->
+    <string name="player_audio_only_title">Audio only</string>
+    <!-- Translators: Body of the "Audio only" plate. Reassures the user that nothing is broken: the item simply contains no picture. -->
+    <string name="player_audio_only_body">This one has sound but no picture. Nothing is wrong — it\'s playing normally.</string>
     <!-- Translators: Audio channel label for mono audio in the stream info overlay. Lowercase is intentional for this technical label. -->
     <string name="player_audio_mono">mono</string>
     <!-- Translators: Audio channel label for stereo audio in the stream info overlay. -->

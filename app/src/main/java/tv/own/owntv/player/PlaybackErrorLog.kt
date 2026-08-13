@@ -109,6 +109,8 @@ object PlaybackErrorLog {
         }
     }
 
+    private const val TAG = "PlaybackErrorLog"
+
     private val io = Executors.newSingleThreadExecutor { r -> Thread(r, "owntv-errorlog").apply { isDaemon = true } }
 
     private fun file(context: Context) = File(context.filesDir, FILE_NAME)
@@ -184,7 +186,13 @@ object PlaybackErrorLog {
         val appContext = context.applicationContext
         io.execute {
             runCatching {
-                val entries = readSync(appContext).toMutableList()
+                // A truncated or corrupt file must not silence logging for good: the read used to throw
+                // inside the same runCatching as the write, so every later error was swallowed too and the
+                // Settings log stayed frozen on whatever it held. Start a fresh log instead.
+                val entries = runCatching { readSync(appContext) }.getOrElse {
+                    android.util.Log.w(TAG, "playback error log unreadable — starting a new one", it)
+                    emptyList()
+                }.toMutableList()
                 entries.add(entry)
                 writeSync(appContext, entries.takeLast(MAX))
             }
@@ -198,9 +206,25 @@ object PlaybackErrorLog {
     /** Newest-first list for the Settings viewer. Safe to call from a coroutine on Dispatchers.IO. */
     fun read(context: Context): List<Entry> = runCatching { readSync(context).reversed() }.getOrDefault(emptyList())
 
-    /** Synchronous (tiny file delete) so a viewer re-read right after can't race a queued delete. */
+    /**
+     * Clear the log. Queued on the same single thread the appends use, so an append that had already read
+     * the entries cannot write them straight back after the delete — then waited for, so a viewer
+     * re-reading immediately afterwards still sees an empty log.
+     */
     fun clear(context: Context) {
-        runCatching { file(context.applicationContext).delete() }
+        val appContext = context.applicationContext
+        val done = java.util.concurrent.CountDownLatch(1)
+        val queued = runCatching {
+            io.execute {
+                runCatching { file(appContext).delete() }
+                done.countDown()
+            }
+        }.isSuccess
+        if (!queued) { // executor gone — nothing is appending either
+            runCatching { file(appContext).delete() }
+            return
+        }
+        runCatching { done.await(2, java.util.concurrent.TimeUnit.SECONDS) }
     }
 
     private fun readSync(context: Context): List<Entry> {
@@ -294,10 +318,20 @@ object PlaybackErrorLog {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             runCatching { return writeToMediaStoreDownloads(context, text) }
         }
-        val downloads = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
-        check(downloads.exists() || downloads.mkdirs()) { "Could not create the Download folder" }
-        File(downloads, EXPORT_NAME).writeText(text)
-        return "${Environment.DIRECTORY_DOWNLOADS}/$EXPORT_NAME"
+        runCatching {
+            val downloads = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
+            check(downloads.exists() || downloads.mkdirs()) { "Could not create the Download folder" }
+            File(downloads, EXPORT_NAME).writeText(text)
+            return "${Environment.DIRECTORY_DOWNLOADS}/$EXPORT_NAME"
+        }
+        // Android 8–9 without the legacy storage permission: the public Download folder simply isn't
+        // writable, and the export failed with nothing to show for it. The app's own external files
+        // directory needs no permission and is still reachable over USB / a file manager, so the report
+        // lands there and the returned path names where it actually is.
+        val fallbackDir = context.getExternalFilesDir(null) ?: context.filesDir
+        val fallback = File(fallbackDir, EXPORT_NAME)
+        fallback.writeText(text)
+        return fallback.absolutePath
     }
 
     /** Scoped-storage writer. Reuses OwnTV's existing report instead of creating `(1)`, `(2)`, … files. */

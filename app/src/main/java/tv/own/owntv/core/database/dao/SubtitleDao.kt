@@ -116,4 +116,13 @@ interface SubtitleDao {
     /** cacheIds linked to a media type — used to delete their files before clearing the rows. */
     @Query("SELECT DISTINCT cacheId FROM subtitle_link WHERE profileId = :profileId AND mediaType = :mediaType")
     suspend fun cacheIdsForType(profileId: Long, mediaType: String): List<Long>
+
+    /** Drop only this profile's links of ONE media type. "Delete all movie subtitles" must not take a
+     *  file's series links with it — the same cached file can be linked to both. */
+    @Query("DELETE FROM subtitle_link WHERE profileId = :profileId AND cacheId = :cacheId AND mediaType = :mediaType")
+    suspend fun deleteLinksForProfileAndType(profileId: Long, cacheId: Long, mediaType: String)
+
+    /** This profile's remaining links to a cached file, across every media type. */
+    @Query("SELECT COUNT(*) FROM subtitle_link WHERE cacheId = :cacheId AND profileId = :profileId")
+    suspend fun linkCountForCache(cacheId: Long, profileId: Long): Int
 }

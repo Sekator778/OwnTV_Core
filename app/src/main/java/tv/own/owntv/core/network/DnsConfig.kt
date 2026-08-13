@@ -174,9 +174,10 @@ class DnsConfigHolder(
 
     private fun resolveViaUdp(hostname: String, server: String, port: Int): List<InetAddress> {
         try {
-            val query = buildDnsQuery(hostname)
-            val response = sendUdpQuery(query, server, port)
-            val result = parseDnsResponse(response)
+            // Both families, like the DoH path: asking only for A left an AAAA-only host unresolvable
+            // whenever custom plain DNS was in use. A failure of the AAAA half never costs the A answers.
+            val result = askUdp(hostname, DNS_TYPE_A, server, port) +
+                runCatching { askUdp(hostname, DNS_TYPE_AAAA, server, port) }.getOrDefault(emptyList())
             Log.d(TAG, "UDP DNS lookup $hostname → ${result.map { it.hostAddress }} (server=$server:$port)")
             return if (result.isNotEmpty() || !fallbackToSystem) result else Dns.SYSTEM.lookup(hostname)
         } catch (e: SocketTimeoutException) {
@@ -188,6 +189,14 @@ class DnsConfigHolder(
             Log.w(TAG, "UDP DNS lookup failed for $hostname via $server:$port, falling back to system DNS", e)
             return Dns.SYSTEM.lookup(hostname)
         }
+    }
+
+    /** One question of [qtype], with its own random ID checked against the answer. */
+    @Throws(Exception::class)
+    private fun askUdp(hostname: String, qtype: Int, server: String, port: Int): List<InetAddress> {
+        val id = randomQueryId()
+        val response = sendUdpQuery(buildDnsQuery(hostname, qtype, id), server, port)
+        return parseDnsResponse(response, id)
     }
 
     @Throws(Exception::class)
@@ -221,14 +230,23 @@ class DnsConfigHolder(
         private const val DNS_TYPE_AAAA = 28
         private const val DNS_CLASS_IN = 1
 
-        fun buildDnsQuery(hostname: String): ByteArray {
+        /**
+         * One DNS question for [hostname].
+         *
+         * [qtype] is [DNS_TYPE_A] or [DNS_TYPE_AAAA] — the UDP resolver asks for both, because DoH always
+         * did and a host that publishes only AAAA was unreachable through the plain-DNS path alone.
+         *
+         * [id] is random per query and checked on the way back. It used to be the constant 1, which makes
+         * an off-path forged answer trivial to accept: anything arriving on the socket in time matched.
+         */
+        fun buildDnsQuery(hostname: String, qtype: Int = DNS_TYPE_A, id: Int = randomQueryId()): ByteArray {
             val labels = hostname.split('.')
             // Header (12) + labels + null terminator + QTYPE (2) + QCLASS (2)
             var size = DNS_HEADER_LEN + 1 + 4 // minimum
             for (label in labels) size += label.length + 1
             val buf = ByteBuffer.allocate(size).order(ByteOrder.BIG_ENDIAN)
             // Header
-            buf.putShort(0x0001) // ID = 1
+            buf.putShort(id.toShort()) // ID — random, verified in parseDnsResponse
             buf.putShort(0x0100) // Flags: standard query, recursion desired
             buf.putShort(0x0001) // QDCOUNT = 1
             buf.putShort(0x0000) // ANCOUNT = 0
@@ -240,17 +258,20 @@ class DnsConfigHolder(
                 buf.put(label.encodeToByteArray())
             }
             buf.put(0x00.toByte()) // null terminator
-            buf.putShort(DNS_TYPE_A.toShort())
+            buf.putShort(qtype.toShort())
             buf.putShort(DNS_CLASS_IN.toShort())
             return buf.array()
         }
 
-        fun parseDnsResponse(data: ByteArray): List<InetAddress> {
+        /** A query ID in 1..65535 from a cryptographically strong source. */
+        fun randomQueryId(): Int = java.security.SecureRandom().nextInt(0xFFFF) + 1
+
+        fun parseDnsResponse(data: ByteArray, expectedId: Int? = null): List<InetAddress> {
             if (data.size < DNS_HEADER_LEN) return emptyList()
             val buf = ByteBuffer.wrap(data).order(ByteOrder.BIG_ENDIAN)
             val id = buf.getShort()
             val flags = buf.getShort()
-            if (id != 0x0001.toShort()) return emptyList()
+            if (expectedId != null && id != expectedId.toShort()) return emptyList()
             // Check QR (response), no error, standard query
             val qr = (flags.toInt() and DNS_FLAG_QR_MASK) != 0
             val rcode = flags.toInt() and DNS_FLAG_RCODE_MASK

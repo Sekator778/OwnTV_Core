@@ -129,6 +129,10 @@
     <string name="player_stream_khz"><xliff:g id="value">%1$s</xliff:g> kHz</string>
     <string name="player_stream_kbps"><xliff:g id="value">%1$s</xliff:g> kbps</string>
     <string name="player_stream_seconds">已缓冲 <xliff:g id="value">%1$s</xliff:g> 秒</string>
+    <!-- Translators: Heading of the plate shown over the black video area when the item being played has no video track at all (a radio channel, a music-only file). This is NOT an error - playback is working. -->
+    <string name="player_audio_only_title">仅音频</string>
+    <!-- Translators: Body of the "Audio only" plate. Reassures the user that nothing is broken: the item simply contains no picture. -->
+    <string name="player_audio_only_body">此内容只有声音，没有画面。这不是故障，正在正常播放。</string>
     <string name="player_audio_mono">单声道</string>
     <string name="player_audio_stereo">立体声</string>
     <plurals name="player_audio_channels">

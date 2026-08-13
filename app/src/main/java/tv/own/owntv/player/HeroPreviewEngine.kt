@@ -58,7 +58,12 @@ class HeroPreviewEngine(
     // it shares ExoPlayer's application thread and can hold nothing alive past [release].
     private val watchdog = Handler(Looper.getMainLooper())
     private val noFrameTimeout = Runnable {
-        if (currentUrl == null || hasStarted) return@Runnable
+        // Deliberately NOT gated on [hasStarted]: that flag is set on STATE_READY, which a stream that
+        // buffers fine and never renders a frame reaches — and the preview only leaves LOADING on the
+        // first frame, so the guard disarmed the watchdog for exactly the case it exists for and left a
+        // permanent spinner over the poster. The callback is removed on first frame, error, stop and
+        // release, so reaching here means no frame arrived.
+        if (currentUrl == null) return@Runnable
         android.util.Log.w(TAG, "Hero preview produced no frame in ${NO_FRAME_TIMEOUT_MS}ms — falling back to the poster")
         stop()
         _state.value = State.ERROR

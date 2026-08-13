@@ -129,6 +129,10 @@
     <string name="player_stream_khz"><xliff:g id="value">%1$s</xliff:g> kHz</string>
     <string name="player_stream_kbps"><xliff:g id="value">%1$s</xliff:g> kbps</string>
     <string name="player_stream_seconds"><xliff:g id="value">%1$s</xliff:g> s em buffer</string>
+    <!-- Translators: Heading of the plate shown over the black video area when the item being played has no video track at all (a radio channel, a music-only file). This is NOT an error - playback is working. -->
+    <string name="player_audio_only_title">Somente áudio</string>
+    <!-- Translators: Body of the "Audio only" plate. Reassures the user that nothing is broken: the item simply contains no picture. -->
+    <string name="player_audio_only_body">Este item tem som, mas não tem imagem. Não há nada de errado — está sendo reproduzido normalmente.</string>
     <string name="player_audio_mono">mono</string>
     <string name="player_audio_stereo">estéreo</string>
     <plurals name="player_audio_channels">

@@ -39,6 +39,16 @@ interface PlaybackEngine {
 
     /** True while the engine decodes audio only (video output stopped to save power) — Audio Mode. */
     val audioOnly: StateFlow<Boolean> get() = FALSE_FLOW
+
+    /**
+     * True when the ITEM itself carries no video track at all — a radio channel in a TV playlist, a
+     * music-only file filed under Movies.
+     *
+     * Distinct from [audioOnly], which is the app switching video off because the user asked. This one is
+     * a property of the stream, and the UI needs it: sound over a black screen is indistinguishable from
+     * a broken player, so the player says so on screen instead of leaving the user to guess.
+     */
+    val audioOnlyMedia: StateFlow<Boolean> get() = FALSE_FLOW
     /** Stop the video decoder/output but keep audio playing at position (Audio Mode enter). No-op if
      *  already audio-only. Audio is uninterrupted — mpv drops the video track (`vid=no`), ExoPlayer
      *  releases its surface. */
@@ -120,6 +130,7 @@ class MpvPlaybackEngine(private val p: OwnTVPlayer) : PlaybackEngine {
     override val currentMeta get() = p.currentMeta
     override val isLiveContent get() = p.isLiveContent
     override val audioOnly get() = p.audioOnly
+    override val audioOnlyMedia get() = p.audioOnlyMedia
     override fun enterAudioOnly() = p.enterAudioOnly()
     override fun exitAudioOnly() = p.exitAudioOnly()
     override val position get() = p.position

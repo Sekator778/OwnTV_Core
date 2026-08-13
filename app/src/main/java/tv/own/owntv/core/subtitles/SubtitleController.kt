@@ -184,8 +184,17 @@ class SubtitleController(
         }
 
         val byTmdbId = useQuery == null && ctx.tmdbId != null
-        val first = repository.search(buildQuery(ctx, languages, useQuery, byTmdbId, moviehash))
-        if (!byTmdbId || first.resultCount() > 0) return first
+        // A FAILED id search falls back exactly like an empty one. Only the empty case used to, so a
+        // network blip or a 5xx on the id attempt surfaced as "no subtitles" for a title OpenSubtitles
+        // has — the very outcome the fallback exists to prevent.
+        val first = try {
+            repository.search(buildQuery(ctx, languages, useQuery, byTmdbId, moviehash))
+        } catch (e: java.io.IOException) {
+            if (!byTmdbId) throw e
+            android.util.Log.w("OpenSubtitles", "subtitle search by TMDB id failed — retrying by title", e)
+            null
+        }
+        if (first != null && (!byTmdbId || first.resultCount() > 0)) return first
         return repository.search(buildQuery(ctx, languages, useQuery = null, byTmdbId = false, moviehash))
     }
 

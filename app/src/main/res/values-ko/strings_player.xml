@@ -129,6 +129,10 @@
     <string name="player_stream_khz"><xliff:g id="value">%1$s</xliff:g> kHz</string>
     <string name="player_stream_kbps"><xliff:g id="value">%1$s</xliff:g> kbps</string>
     <string name="player_stream_seconds"><xliff:g id="value">%1$s</xliff:g>초 버퍼링됨</string>
+    <!-- Translators: Heading of the plate shown over the black video area when the item being played has no video track at all (a radio channel, a music-only file). This is NOT an error - playback is working. -->
+    <string name="player_audio_only_title">오디오 전용</string>
+    <!-- Translators: Body of the "Audio only" plate. Reassures the user that nothing is broken: the item simply contains no picture. -->
+    <string name="player_audio_only_body">이 항목에는 소리만 있고 영상은 없습니다. 문제가 아니라 정상적으로 재생되고 있습니다.</string>
     <string name="player_audio_mono">모노</string>
     <string name="player_audio_stereo">스테레오</string>
     <plurals name="player_audio_channels">

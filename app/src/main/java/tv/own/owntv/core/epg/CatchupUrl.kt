@@ -168,9 +168,13 @@ object CatchupUrl {
      * token, say) would otherwise get a second `?` and be rejected outright, so the separator is
      * corrected — everything else is appended verbatim, as the convention expects.
      */
-    private fun joinQuery(base: String, fragment: String): String = when {
-        fragment.startsWith("?") && base.contains('?') -> base + "&" + fragment.removePrefix("?")
-        else -> base + fragment
+    private fun joinQuery(base: String, fragment: String): String {
+        if (fragment.isEmpty()) return base
+        // Playlists write the fragment three ways — "?utc=…", "&utc=…" and a bare "utc=…" — and only the
+        // first was handled. A bare fragment concatenated onto a URL that already carried a query produced
+        // "…?token=abcutc=1700000000", which the archive answers with a 404.
+        val body = fragment.removePrefix("?").removePrefix("&")
+        return if (base.contains('?')) "$base&$body" else "$base?$body"
     }
 
     /**

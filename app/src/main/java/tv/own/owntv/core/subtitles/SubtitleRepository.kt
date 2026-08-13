@@ -83,7 +83,17 @@ class SubtitleRepository(
 
         val session = accounts.session(profileId)
             ?: throw IllegalStateException()
-        val response = client.requestDownload(session.token, session.apiHost, fileId)
+        val response = try {
+            client.requestDownload(session.token, session.apiHost, fileId)
+        } catch (e: OpenSubtitlesClient.ApiException) {
+            if (e.code != 401) throw e
+            // "Stay signed in" covered searches but never downloads: an expired token failed the download
+            // outright with "session expired", even with a stored password that could renew it. One
+            // attempt, through the same silent re-login the account screen uses.
+            Log.i(TAG, "download token expired — attempting the silent re-login")
+            val renewed = accounts.refreshUserInfo(profileId) ?: throw e
+            client.requestDownload(renewed.token, renewed.apiHost, fileId)
+        }
         val link = response.optString("link").takeIf { it.isNotBlank() }
             ?: throw IOException()
         onQuota(
@@ -226,9 +236,26 @@ class SubtitleRepository(
         }
     }
 
-    /** Delete every subtitle this profile downloaded for a media type (delete-all-movies / -series). */
+    /**
+     * Delete every subtitle this profile downloaded for a media type (delete-all-movies / -series).
+     *
+     * Scoped to that media type on purpose. Reusing the per-subtitle delete dropped ALL of this
+     * profile's links to each file, so a subtitle linked to both a movie and an episode disappeared from
+     * the series list too — and the shared file was deleted underneath it.
+     */
     suspend fun deleteAllForType(profileId: Long, mediaType: String) = withContext(Dispatchers.IO) {
-        dao.cacheIdsForType(profileId, mediaType).forEach { deleteCached(profileId, it) }
+        dao.cacheIdsForType(profileId, mediaType).forEach { cacheId ->
+            dao.deleteLinksForProfileAndType(profileId, cacheId, mediaType)
+            // Only once this profile holds no link of any type, and no other profile does either, is the
+            // shared file/row actually gone.
+            if (dao.linkCountForCache(cacheId, profileId) == 0) {
+                dao.clearSelectionsForCache(profileId, cacheId)
+                if (dao.linkCountForCacheOtherProfiles(cacheId, profileId) == 0) {
+                    dao.cacheById(cacheId)?.let { runCatching { File(it.cachedPath).delete() } }
+                    dao.deleteCache(cacheId)
+                }
+            }
+        }
     }
 
     // --- timing (§8.4) ---
@@ -244,7 +271,18 @@ class SubtitleRepository(
         val request = Request.Builder().url(url).build()
         okHttpClient.newCall(request).execute().use { resp ->
             if (!resp.isSuccessful) throw IOException()
-            return resp.body.bytes()
+            val body = resp.body
+            if (body.contentLength() > MAX_SUBTITLE_BYTES) {
+                throw IOException("subtitle too large: ${body.contentLength()} bytes")
+            }
+            // Read with a ceiling rather than whole: a chunked response declares no length at all.
+            val sink = okio.Buffer()
+            val source = body.source()
+            while (sink.size <= MAX_SUBTITLE_BYTES) {
+                if (source.read(sink, MAX_SUBTITLE_BYTES + 1 - sink.size) == -1L) break
+            }
+            if (sink.size > MAX_SUBTITLE_BYTES) throw IOException("subtitle exceeded $MAX_SUBTITLE_BYTES bytes")
+            return sink.readByteArray()
         }
     }
 
@@ -284,5 +322,9 @@ class SubtitleRepository(
         private const val TAG = "OpenSubtitles"
         const val SOURCE_OPENSUB = "OPENSUB"
         const val SOURCE_LOCAL = "LOCAL"
+        /** Ceiling for a downloaded subtitle. Subtitles are tens of kilobytes; the body used to be read
+         *  whole with no limit, so a wrong or hostile link could pull an arbitrary file into memory on a
+         *  2 GB TV. Generous enough for the largest real SRT/ASS. */
+        private const val MAX_SUBTITLE_BYTES = 8L * 1024 * 1024
     }
 }

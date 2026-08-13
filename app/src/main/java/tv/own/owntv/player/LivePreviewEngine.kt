@@ -424,6 +424,19 @@ class LivePreviewEngine(
     /** The tuned channel carries a User-Agent the user configured (per-source or per-channel). An explicit
      *  setting is a decision, so it is never swapped out for the fallback identity below. */
     private var uaIsCustom = false
+    /**
+     * The identity the current channel was tuned with, exactly as the caller supplied it, so recovery
+     * (HUD Retry, background restore) replays the same request instead of re-opening with the URL alone.
+     *
+     * Kept RAW on purpose. Handing the resolved [currentUa] back would read as a user-configured
+     * per-channel UA ([uaIsCustom]) and silently disable the fallback-User-Agent retry rung.
+     */
+    /** The URL of the previous tune, so [play] can tell a genuine zap from the same channel re-opening
+     *  (retry, decoder rebuild, background restore) and keep that channel's volume boost. */
+    private var lastTunedUrl: String? = null
+    @Volatile private var tunedUserAgent: String? = null
+    @Volatile private var tunedPrerollSecs: Int? = null
+    @Volatile private var tunedHttpHeaders: String? = null
     /** Whether this load has already spent its one retry under [HttpClient.FALLBACK_USER_AGENT]. */
     private var uaRetryDone = false
     /** Whether this load has already tried the channel's `.ts`⇄`.m3u8` sibling (see [retryAlternateFormat]). */
@@ -1166,6 +1179,8 @@ class LivePreviewEngine(
         // Read BEFORE the player is (re)built below — the load control is fixed at construction.
         prerollOverrideSecs = prerollSecsOverride
         stoppingIntentionally = false
+        // Remember the request identity for the recovery paths (see [tunedUserAgent]).
+        tunedUserAgent = userAgent; tunedPrerollSecs = prerollSecsOverride; tunedHttpHeaders = httpHeaders
         currentHeaders = StreamHeaders.decode(httpHeaders)
         // A channel's own User-Agent is more specific than the playlist-wide one, so it wins (F16).
         val configuredUa = StreamHeaders.userAgentOf(currentHeaders) ?: userAgent?.takeIf { it.isNotBlank() }
@@ -1194,6 +1209,7 @@ class LivePreviewEngine(
         textTrackList = emptyList(); textSelections = emptyList(); _subCount.value = 0
         _subtitleOn.value = false; _cues.value = emptyList(); _audioUnsupported.value = false
         _noVideoDetected.value = false; noVideoTriggered = false; readySinceMs = 0L
+        _audioOnlyMedia.value = false // re-decided from this stream's own track list
         _videoHeight.value = null; _videoAspect.value = null; _videoSize.value = null; _streamChips.value = emptyList(); _videoFps.value = null
         _videoRes.value = null
         _error.value = null
@@ -1203,7 +1219,16 @@ class LivePreviewEngine(
         audioWatchdog.reset()
         _currentMeta.value = meta
         _zoomMode.value = defaultZoom // start new content at the user's default zoom, same as mpv/VOD
-        _volume.value = if (muted) 0 else 100
+        // A different channel starts at normal volume. Re-opening the SAME one does not: a retry, a
+        // decoder rebuild or a screensaver restore is the same channel continuing, and dropping the
+        // boost there made a quiet channel go quiet again every time the stream hiccuped.
+        val sameChannelReopen = url == lastTunedUrl
+        lastTunedUrl = url
+        _volume.value = when {
+            muted -> 0
+            sameChannelReopen -> _volume.value.coerceAtLeast(100)
+            else -> 100
+        }
         _state.value = State.LOADING
         _buffering.value = true
         runCatching {
@@ -1299,13 +1324,31 @@ class LivePreviewEngine(
 
     // Snapshot of the live channel taken when the app backgrounds (screensaver / Home), so it can be restored
     // on return — otherwise onStop frees the stream and a paused live channel never resumes (even on Play).
-    private data class LiveRestore(val url: String, val muted: Boolean, val meta: MediaMeta)
+    /**
+     * A URL alone is not a channel. The tune carries a User-Agent, per-channel request headers and the
+     * playlist's pre-buffer override, and a channel that needs a Referer or a custom UA to open needs
+     * them on the way back too — restoring with the URL only 403s a channel that had just been playing.
+     * The values are the ones the tune came in with (see [tunedUserAgent]), so the restore goes down
+     * exactly the same path as a fresh tune, including the per-channel UA precedence.
+     */
+    private data class LiveRestore(
+        val url: String,
+        val muted: Boolean,
+        val meta: MediaMeta,
+        val userAgent: String?,
+        val prerollSecs: Int?,
+        val httpHeaders: String?,
+    )
     @Volatile private var backgroundRestore: LiveRestore? = null
 
     /** Backgrounded (screensaver / Home): remember what's playing, then free the stream. Paired with
      *  [onAppForegrounded]. */
     fun onAppBackgrounded() {
-        currentUrl?.let { backgroundRestore = LiveRestore(it, muted, _currentMeta.value) }
+        currentUrl?.let {
+            backgroundRestore = LiveRestore(
+                it, muted, _currentMeta.value, tunedUserAgent, tunedPrerollSecs, tunedHttpHeaders,
+            )
+        }
         stop()
     }
 
@@ -1315,7 +1358,7 @@ class LivePreviewEngine(
         val r = backgroundRestore ?: return
         backgroundRestore = null
         if (currentUrl != null) return
-        play(r.url, muted = r.muted, meta = r.meta)
+        play(r.url, muted = r.muted, meta = r.meta, userAgent = r.userAgent, prerollSecsOverride = r.prerollSecs, httpHeaders = r.httpHeaders)
     }
 
     /** Drop any pending restore (e.g. on profile switch — don't bring back the previous user's channel). */
@@ -1337,7 +1380,9 @@ class LivePreviewEngine(
         textTrackList = emptyList(); textSelections = emptyList(); _subCount.value = 0
         _subtitleOn.value = false; _cues.value = emptyList(); _audioUnsupported.value = false
         _noVideoDetected.value = false; noVideoTriggered = false; readySinceMs = 0L
+        _audioOnlyMedia.value = false // re-decided from this stream's own track list
         _videoHeight.value = null; _videoAspect.value = null; _videoSize.value = null; _streamChips.value = emptyList(); _videoFps.value = null
+        _videoRes.value = null // else the next channel's HUD opens showing the previous one's resolution badge
         _state.value = State.IDLE
         player?.run { stop(); clearMediaItems() }
         releaseHttpConnections()
@@ -1536,6 +1581,7 @@ class LivePreviewEngine(
                 p.setMediaSource(mediaSourceFor(url))
                 p.prepare()
                 p.playWhenReady = true
+                armOpenWatchdog() // every attempt gets its own open deadline (see [armOpenWatchdog])
             }.onFailure {
                 _state.value = State.ERROR
                 _buffering.value = false
@@ -1742,6 +1788,7 @@ class LivePreviewEngine(
                 p.setMediaSource(mediaSourceFor(alt))
                 p.prepare()
                 p.playWhenReady = true
+                armOpenWatchdog() // every attempt gets its own open deadline (see [armOpenWatchdog])
             }.onFailure {
                 _state.value = State.ERROR
                 _buffering.value = false
@@ -1776,6 +1823,7 @@ class LivePreviewEngine(
                 p.setMediaSource(mediaSourceFor(url))
                 p.prepare()
                 p.playWhenReady = true
+                armOpenWatchdog() // every attempt gets its own open deadline (see [armOpenWatchdog])
             }.onFailure {
                 _state.value = State.ERROR
                 _buffering.value = false
@@ -1803,6 +1851,7 @@ class LivePreviewEngine(
                 p.setMediaSource(mediaSourceFor(url))
                 p.prepare()
                 p.playWhenReady = true
+                armOpenWatchdog() // every attempt gets its own open deadline (see [armOpenWatchdog])
             }.onFailure {
                 _state.value = State.ERROR
                 _buffering.value = false
@@ -1850,9 +1899,17 @@ class LivePreviewEngine(
                 val p = build().also { player = it }
                 surface?.let { p.setVideoSurface(it) }
                 applyMute(force = true)
+                // A rebuilt player is a blank player: it knows nothing of the user's audio/subtitle
+                // language preferences, and nothing of Audio Mode being on. Without these two the retry
+                // came back in the wrong language, and with the video track re-enabled behind an
+                // Audio Mode session that had deliberately released the surface — exactly what a fresh
+                // tune re-applies at the same point in play().
+                applyLanguagePrefs()
+                setVideoTrackDisabled(_audioOnly.value)
                 p.setMediaSource(mediaSourceFor(url))
                 p.prepare()
                 p.playWhenReady = true
+                armOpenWatchdog() // every attempt gets its own open deadline (see [armOpenWatchdog])
             }.onFailure {
                 LiveDiagnosticsLog.event("decoder rebuild failed: ${it.message}")
                 _state.value = State.ERROR
@@ -1865,6 +1922,10 @@ class LivePreviewEngine(
     // --- Audio Mode (Audio Mode plan §5): keep audio playing, release the video surface ---
     private val _audioOnly = MutableStateFlow(false)
     override val audioOnly: StateFlow<Boolean> = _audioOnly.asStateFlow()
+
+    private val _audioOnlyMedia = MutableStateFlow(false)
+    /** This channel carries no video track — a radio station. See [PlaybackEngine.audioOnlyMedia]. */
+    override val audioOnlyMedia: StateFlow<Boolean> = _audioOnlyMedia.asStateFlow()
     override fun enterAudioOnly() {
         if (_audioOnly.value) return
         _audioOnly.value = true
@@ -1923,8 +1984,13 @@ class LivePreviewEngine(
     override fun toggleMute() = setMuted(!muted)
     override fun retry() {
         val url = currentUrl ?: return
+        // Replay the identity this channel was tuned with — HUD Retry used to re-open with the URL only,
+        // so a channel needing a Referer/UA played on first open and 403'd the moment you pressed Retry.
+        val ua = tunedUserAgent
+        val preroll = tunedPrerollSecs
+        val headers = tunedHttpHeaders
         val provider = reconnectUrlProvider
-        if (provider == null) { play(url, muted, _currentMeta.value); return }
+        if (provider == null) { play(url, muted, _currentMeta.value, ua, preroll, headers); return }
         // Expiring-URL source (Stalker): re-resolve before retrying, then reload on the main thread.
         scope.launch {
             val fresh = withContext(Dispatchers.IO) {
@@ -1932,7 +1998,7 @@ class LivePreviewEngine(
                     .onFailure { LiveDiagnosticsLog.event("retry fresh-url failed: ${it.message}") }
                     .getOrNull()
             }
-            play(fresh ?: url, muted, _currentMeta.value)
+            play(fresh ?: url, muted, _currentMeta.value, ua, preroll, headers)
         }
     }
     override fun selectAudio(id: Int) {
@@ -2032,6 +2098,9 @@ class LivePreviewEngine(
         // Audio-only (radio) streams must keep their audio renderer even when muted — deselecting it would
         // leave nothing to render and the progress watchdog would read that as a dead feed.
         hasVideoTrack = tracks.groups.any { it.type == androidx.media3.common.C.TRACK_TYPE_VIDEO }
+        // A radio channel in a TV playlist is the commonest audio-only case of all. Say so on screen —
+        // Audio Mode excepted, where the app is the one that turned the picture off.
+        _audioOnlyMedia.value = !hasVideoTrack && !_audioOnly.value
         applyMute()
         audioTrackList = audio; audioSelections = aSel; _audioCount.value = audio.size
         textTrackList = text; textSelections = tSel; _subCount.value = text.size
