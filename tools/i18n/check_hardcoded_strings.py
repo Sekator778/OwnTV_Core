@@ -21,6 +21,7 @@ import argparse
 import json
 import re
 import subprocess
+import sys
 import tempfile
 from collections import Counter
 from pathlib import Path
@@ -370,6 +371,92 @@ def _subset(actual: dict, allowed: dict) -> list[str]:
     return reasons
 
 
+# --- developer-facing failure report ------------------------------------------
+#
+# The inventory itself is occurrence-counted and line-agnostic, which is right for the ratchet but
+# useless to somebody who just hit a red build. These helpers re-walk the sources only when a run is
+# already failing, so the happy path pays nothing for them.
+
+_REPORT_LIMIT = 40
+
+
+def _excess(actual: dict, allowed: dict) -> list[tuple[str, str]]:
+    """Keys in ``actual`` that exceed their allowance in ``allowed``, in source order."""
+    return sorted(key for key, count in actual.items() if count > allowed.get(key, 0))
+
+
+def _locations() -> dict[tuple[str, str], list[int]]:
+    """Map every inventory key to the 1-based lines it occurs on."""
+    found: dict[tuple[str, str], list[int]] = {}
+    if not SRC.is_dir():
+        return found
+    for kotlin_file in sorted(SRC.rglob("*.kt")):
+        text = kotlin_file.read_text(encoding="utf-8")
+        if _GENERATED_MARKER in text[:120]:
+            continue
+        relative = kotlin_file.relative_to(ROOT).as_posix()
+        for start, _, raw in _iter_literals(text):
+            key = (relative, _normalize(_decode(raw)))
+            found.setdefault(key, []).append(text.count("\n", 0, start) + 1)
+    return found
+
+
+def _render_unclassified(keys: list[tuple[str, str]]) -> list[str]:
+    """A red build should name the file, the line and the exact text, then say what to do."""
+    locations = _locations()
+    lines = [
+        "",
+        "Hardcoded text found. Every literal must be reachable by translators or declared technical.",
+        "",
+    ]
+    for relative, content in keys[:_REPORT_LIMIT]:
+        where = locations.get((relative, content)) or []
+        anchor = f"{relative}:{where[0]}" if where else relative
+        extra = f"  (and {len(where) - 1} more occurrence(s) in this file)" if len(where) > 1 else ""
+        lines.append(f"  {anchor}{extra}")
+        lines.append(f"      {content[:120]!r}")
+    if len(keys) > _REPORT_LIMIT:
+        lines.append(f"  ... and {len(keys) - _REPORT_LIMIT} more")
+    lines += [
+        "",
+        "  How to fix each one:",
+        "",
+        "  * A user can read it -> add it to app/src/main/res/values/strings_*.xml, then reference it:",
+        "        stringResource(R.string.your_key)          // Compose",
+        "        context.getString(R.string.your_key)       // everywhere else",
+        "    Add the English string only. Translations arrive from Weblate after the merge, and a",
+        "    missing translation never fails a build.",
+        "",
+        "  * No user can read it (log line, SQL, JSON key, regex, preference key) -> declare it:",
+        "        python tools/i18n/check_hardcoded_strings.py classify-safe \\",
+        "            --path <file> --text '<exact text>' --category <sql|log|json|regex|...>",
+        "    Categories and their meanings are listed at the top of tools/i18n/safe_literals.txt.",
+        "",
+    ]
+    return lines
+
+
+def _render_stale(keys: list[tuple[str, str]]) -> list[str]:
+    lines = [
+        "",
+        "Stale classification. These literals are on record but no longer exist in the code, usually",
+        "because the line was edited or deleted:",
+        "",
+    ]
+    for relative, content in keys[:_REPORT_LIMIT]:
+        lines.append(f"  {relative}")
+        lines.append(f"      {content[:120]!r}")
+    if len(keys) > _REPORT_LIMIT:
+        lines.append(f"  ... and {len(keys) - _REPORT_LIMIT} more")
+    lines += [
+        "",
+        "  Refresh the records:",
+        "        python tools/i18n/check_hardcoded_strings.py prune-safe",
+        "",
+    ]
+    return lines
+
+
 def _scan() -> dict[tuple[str, str], int]:
     """Compatibility helper: current inventory minus explicitly safe entries."""
     safe, _, _ = _safe_entries()
@@ -449,6 +536,8 @@ def cmd_verify(args) -> int:
             f"baseline scanner-version {_scanner_version(baseline_text)!r} does not match {SCANNER_VERSION}"
         )
     failures.extend(safe_errors)
+    unclassified = _excess(current, classified)
+    stale = _excess(classified, current)
     failures.extend("UNCLASSIFIED — " + reason for reason in _subset(current, classified))
     failures.extend("STALE CLASSIFICATION — " + reason for reason in _subset(classified, current))
 
@@ -461,11 +550,21 @@ def cmd_verify(args) -> int:
             failures.extend("REGRESSION — " + reason for reason in _subset(baseline, base))
 
     if failures:
+        # Unclassified and stale entries are what a developer actually hits, so they get the
+        # located, actionable report; anything else stays in the terse diagnostic list.
+        other = [
+            reason for reason in failures
+            if not reason.startswith(("UNCLASSIFIED — ", "STALE CLASSIFICATION — "))
+        ]
         print("i18n literal inventory failed:")
-        for reason in failures[:50]:
+        if unclassified:
+            print("\n".join(_render_unclassified(unclassified)))
+        if stale:
+            print("\n".join(_render_stale(stale)))
+        for reason in other[:_REPORT_LIMIT]:
             print("  " + reason)
-        if len(failures) > 50:
-            print(f"  ... and {len(failures) - 50} more")
+        if len(other) > _REPORT_LIMIT:
+            print(f"  ... and {len(other) - _REPORT_LIMIT} more")
         return 1
     mode = "bootstrap" if getattr(args, "bootstrap", False) else "merge-base ratchet"
     print(f"i18n literal inventory OK ({mode}): {len(baseline)} baseline + {len(safe)} safe entries")
@@ -520,6 +619,12 @@ def cmd_verify_ci(args) -> int:
 
 
 def main() -> int:
+    # Literal content is echoed back on failure and the inventory contains non-ASCII (bullets,
+    # dashes, CJK). Windows consoles and piped stdout default to cp1252, where printing those raises
+    # UnicodeEncodeError and the real message is lost behind a traceback. Only the CLI entry point
+    # reconfigures; importers (the test suite) keep their own stream setup.
+    if hasattr(sys.stdout, "reconfigure"):
+        sys.stdout.reconfigure(encoding="utf-8", errors="replace")
     parser = argparse.ArgumentParser(description=__doc__)
     sub = parser.add_subparsers(dest="command")
     sub.add_parser("generate", help="regenerate the shrinking hardcoded baseline")
