@@ -80,6 +80,8 @@ val dataModule = module {
     single { tv.own.owntv.core.epg.EpgSourceStore(androidContext()) }
     single { tv.own.owntv.core.player.ForceMpvStore(androidContext()) }
     single { tv.own.owntv.core.player.ArchiveDecodeStore(androidContext()) }
+    // Per-item zoom/volume the player remembers (playbackPrefsDao, settings).
+    single { tv.own.owntv.core.player.PlaybackPrefsStore(get(), get()) }
     single { tv.own.owntv.core.player.ExternalPlayerLauncher(androidContext()) }
     // store, sourceDao, epgRepository
     single { tv.own.owntv.core.epg.EpgMigration(get(), get(), get()) }

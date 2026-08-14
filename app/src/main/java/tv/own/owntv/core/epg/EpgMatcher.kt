@@ -1,5 +1,10 @@
 package tv.own.owntv.core.epg
 
+import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
+
 /**
  * Smart EPG matching (#13): pairs a channel with a guide channel by *name* when the provider's
  * tvg-id is missing or doesn't line up with the EPG feed's ids.
@@ -67,7 +72,29 @@ object EpgMatcher {
      * separators flattened to spaces, cosmetic/quality words dropped, non-alphanumerics stripped.
      * e.g. "DE| FUSS-TV 3 [HD]" -> "fuss 3", "FussTV3.de" -> "fusstv3 de" ... then noise filtered.
      */
+    /**
+     * Memo for [normalizeForEpg]. Normalising is four regex passes plus a token walk, and the picker
+     * re-normalises the *same* channel names on every keystroke — measured at 1.9 s to rank 3,958 rows,
+     * of which the normalisation is the bulk (`C-F15`). The candidate set repeats heavily across
+     * keystrokes, so a bounded cache removes almost all of the repeat cost.
+     *
+     * Bounded and LRU because the auto-matcher runs this over whole catalogues during sync; an unbounded
+     * map would quietly hold every channel name in the app.
+     */
+    private const val NORMALIZE_CACHE_MAX = 4_096
+    private val normalizeCache = object : LinkedHashMap<String, String>(512, 0.75f, true) {
+        override fun removeEldestEntry(eldest: MutableMap.MutableEntry<String, String>?): Boolean =
+            size > NORMALIZE_CACHE_MAX
+    }
+
     fun normalizeForEpg(raw: String): String {
+        synchronized(normalizeCache) { normalizeCache[raw] }?.let { return it }
+        val computed = normalizeUncached(raw)
+        synchronized(normalizeCache) { normalizeCache[raw] = computed }
+        return computed
+    }
+
+    private fun normalizeUncached(raw: String): String {
         var s = raw.lowercase()
         s = s.replace(BRACKETS, " ")
         s = s.replace(SEPARATORS, " ")
@@ -229,12 +256,59 @@ object EpgMatcher {
     ): List<T> {
         val target = normalizeForEpg(channelName)
         if (target.isEmpty() || items.isEmpty()) return items
-        val scored = items.map { item ->
-            val byName = displayName(item)?.let { scoreNormalized(target, normalizeForEpg(it)) } ?: 0.0
-            val byId = scoreNormalized(target, normalizeForEpg(epgChannelId(item)))
-            item to maxOf(byName, byId)
+        return order(items, items.map { scoreOne(target, it, displayName, epgChannelId) })
+    }
+
+    /**
+     * [rankForPicker], scored across all cores.
+     *
+     * Measured on the owner's TV (`C-F15`): 3,958 candidates took 1.9 s to rank on one thread, which is
+     * two seconds of nothing happening after a keystroke. The work is pure CPU over independent rows, so
+     * splitting it is free of behaviour change — the scores, the threshold partition and the final order
+     * are identical, only the wall clock differs.
+     *
+     * Below [PARALLEL_MIN_ITEMS] the coroutine overhead outweighs the win, so it stays sequential.
+     */
+    suspend fun <T> rankForPickerParallel(
+        channelName: String,
+        items: List<T>,
+        displayName: (T) -> String?,
+        epgChannelId: (T) -> String,
+    ): List<T> {
+        val target = normalizeForEpg(channelName)
+        if (target.isEmpty() || items.isEmpty()) return items
+        if (items.size < PARALLEL_MIN_ITEMS) return rankForPicker(channelName, items, displayName, epgChannelId)
+        val workers = kotlin.math.max(2, Runtime.getRuntime().availableProcessors())
+        val chunkSize = (items.size + workers - 1) / workers
+        val scores = coroutineScope {
+            val parts = ArrayList<Deferred<List<Double>>>()
+            for (chunk in items.chunked(chunkSize)) {
+                parts += async(Dispatchers.Default) {
+                    chunk.map { item -> scoreOne(target, item, displayName, epgChannelId) }
+                }
+            }
+            parts.flatMap { it.await() }
         }
+        return order(items, scores)
+    }
+
+    private fun <T> scoreOne(
+        target: String,
+        item: T,
+        displayName: (T) -> String?,
+        epgChannelId: (T) -> String,
+    ): Double {
+        val byName = displayName(item)?.let { scoreNormalized(target, normalizeForEpg(it)) } ?: 0.0
+        val byId = scoreNormalized(target, normalizeForEpg(epgChannelId(item)))
+        return maxOf(byName, byId)
+    }
+
+    /** Suggested entries (best first), then everything else in its incoming order. */
+    private fun <T> order(items: List<T>, scores: List<Double>): List<T> {
+        val scored = items.zip(scores)
         val (suggested, rest) = scored.partition { it.second >= PICKER_SUGGEST_THRESHOLD }
         return suggested.sortedByDescending { it.second }.map { it.first } + rest.map { it.first }
     }
+
+    private const val PARALLEL_MIN_ITEMS = 400
 }

@@ -61,6 +61,9 @@ class PlaybackSession(private val context: Context) {
     fun attach(engine: PlaybackEngine?) {
         if (this.engine === engine) return
         collectJob?.cancel()
+        // A different engine (or none) starts a fresh session as far as controllers are concerned, so the
+        // next publish must send the metadata even if the title happens to match.
+        lastMetaKey = null
         this.engine = engine
         if (engine == null) {
             unduck()
@@ -81,6 +84,11 @@ class PlaybackSession(private val context: Context) {
             .launchIn(scope)
     }
 
+    /** The parts of [State] that actually reach `MediaMetadata`; see [publish]. */
+    private data class MetaKey(val title: String, val subtitle: String, val durationMs: Long)
+
+    private var lastMetaKey: MetaKey? = null
+
     private data class State(
         val playing: Boolean,
         val meta: MediaMeta,
@@ -95,14 +103,27 @@ class PlaybackSession(private val context: Context) {
         if (state.playing) requestFocus() else abandonFocus()
         val s = session ?: return
         runCatching {
-            s.setMetadata(
-                MediaMetadata.Builder()
-                    .putString(MediaMetadata.METADATA_KEY_TITLE, state.meta.title.orEmpty())
-                    .putString(MediaMetadata.METADATA_KEY_ARTIST, state.meta.subtitle.orEmpty())
-                    // Live has no meaningful duration; -1 tells a controller "not seekable/unknown".
-                    .putLong(MediaMetadata.METADATA_KEY_DURATION, if (state.live) -1L else state.durationMs)
-                    .build(),
+            // Metadata only when it actually changed (A-F10/F-F9). This is driven by a combine() that also
+            // carries the position, so it fires on every position tick — but the title, subtitle and
+            // duration only change when the ITEM does. Rebuilding and re-publishing MediaMetadata dozens
+            // of times a second was pure waste, and every controller on the TV had to process each one.
+            // The playback state below still updates every tick: a controller needs the moving position.
+            val metaKey = MetaKey(
+                title = state.meta.title.orEmpty(),
+                subtitle = state.meta.subtitle.orEmpty(),
+                // Live has no meaningful duration; -1 tells a controller "not seekable/unknown".
+                durationMs = if (state.live) -1L else state.durationMs,
             )
+            if (metaKey != lastMetaKey) {
+                lastMetaKey = metaKey
+                s.setMetadata(
+                    MediaMetadata.Builder()
+                        .putString(MediaMetadata.METADATA_KEY_TITLE, metaKey.title)
+                        .putString(MediaMetadata.METADATA_KEY_ARTIST, metaKey.subtitle)
+                        .putLong(MediaMetadata.METADATA_KEY_DURATION, metaKey.durationMs)
+                        .build(),
+                )
+            }
             var actions = PlaybackState.ACTION_PLAY or PlaybackState.ACTION_PAUSE or
                 PlaybackState.ACTION_PLAY_PAUSE or PlaybackState.ACTION_STOP or
                 PlaybackState.ACTION_SKIP_TO_NEXT or PlaybackState.ACTION_SKIP_TO_PREVIOUS

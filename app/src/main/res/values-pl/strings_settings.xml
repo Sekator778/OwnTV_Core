@@ -353,11 +353,43 @@
     <string name="settings_decoding">Dekodowanie</string>
     <string name="settings_hardware_decoding">Dekodowanie sprzętowe</string>
     <string name="settings_hardware_decoding_description">Używaj dekodera sprzętowego telewizora. Wyłącz, jeśli niektóre strumienie się zacinają lub wyświetlają artefakty.</string>
+    <!-- Translators: Setting label for deinterlacing of interlaced broadcast video. -->
+    <string name="settings_deinterlace">Usuwanie przeplotu</string>
+    <!-- Translators: Description of the deinterlacing setting. -->
+    <string name="settings_deinterlace_description">Wygładza grzebieniowe linie, które niektóre stare kanały SD pokazują przy ruchu. Dotyczy silnika mpv, gdy sam rysuje obraz — jeśli nic się nie zmienia, wyłącz dekodowanie sprzętowe.</string>
     <string name="settings_movies_series_player">Odtwarzacz filmów i seriali</string>
     <string name="settings_reset_player_choices">Resetuj zapisane wybory odtwarzacza</string>
     <string name="settings_external_player">Odtwarzacz zewnętrzny</string>
     <string name="settings_default_zoom">Domyślne powiększenie</string>
     <string name="settings_default_zoom_description">Proporcje obrazu/powiększenie stosowane po rozpoczęciu odtwarzania.</string>
+    <!-- Translators: Setting label for the volume level playback starts at. -->
+    <string name="settings_default_volume">Domyślna głośność</string>
+    <!-- Translators: Description of the default volume setting. -->
+    <string name="settings_default_volume_description">Głośność stosowana po rozpoczęciu odtwarzania. Powyżej 100%% ciche transmisje są wzmacniane.</string>
+    <!-- Translators: Settings-row title for forgetting the zoom saved for individual items. -->
+    <string name="settings_reset_saved_zoom">Resetuj zapisane powiększenie</string>
+    <!-- Translators: Description of the reset-saved-zoom setting row. -->
+    <string name="settings_reset_saved_zoom_description">Zmiana powiększenia w odtwarzaczu zapisuje je dla danego kanału, filmu lub odcinka. Reset sprawia, że wszystko znów stosuje domyślne powiększenie.</string>
+    <!-- Translators: Confirmation dialog title before forgetting the saved per-item zoom. -->
+    <string name="settings_reset_saved_zoom_confirm">Zresetować zapisane powiększenie?</string>
+    <!-- Translators: Confirmation dialog body before forgetting the saved per-item zoom. -->
+    <string name="settings_reset_saved_zoom_confirm_description">Każdy kanał, film i odcinek wróci do domyślnego powiększenia. Zapisane poziomy głośności zostaną zachowane. Pojedynczą pozycję zawsze możesz ustawić ponownie w odtwarzaczu.</string>
+    <!-- Translators: Settings-row title for forgetting the volume saved for individual items. -->
+    <string name="settings_reset_saved_volume">Resetuj zapisaną głośność</string>
+    <!-- Translators: Description of the reset-saved-volume setting row. -->
+    <string name="settings_reset_saved_volume_description">Zmiana głośności w odtwarzaczu zapisuje ją dla danego kanału, filmu lub odcinka. Reset sprawia, że wszystko znów stosuje domyślną głośność.</string>
+    <!-- Translators: Confirmation dialog title before forgetting the saved per-item volume. -->
+    <string name="settings_reset_saved_volume_confirm">Zresetować zapisaną głośność?</string>
+    <!-- Translators: Confirmation dialog body before forgetting the saved per-item volume. -->
+    <string name="settings_reset_saved_volume_confirm_description">Każdy kanał, film i odcinek wróci do domyślnej głośności. Zapisane ustawienia powiększenia zostaną zachowane. Pojedynczą pozycję zawsze możesz ustawić ponownie w odtwarzaczu.</string>
+    <!-- Translators: Setting label for how far rewind/forward jumps in a movie or episode. -->
+    <string name="settings_seek_step">Krok przewijania</string>
+    <!-- Translators: Description of the seek step setting. -->
+    <string name="settings_seek_step_description">O ile przewijanie do tyłu i do przodu przeskakuje w filmie lub odcinku.</string>
+    <!-- Translators: Setting label for how far rewind/forward jumps inside a live channel's archive. -->
+    <string name="settings_live_rewind_step">Krok przewijania na żywo</string>
+    <!-- Translators: Description of the live rewind step setting. -->
+    <string name="settings_live_rewind_step_description">O ile przewijanie do tyłu i do przodu przesuwa się w archiwum kanału na żywo.</string>
     <string name="settings_resume_playback">Wznów odtwarzanie</string>
     <string name="settings_resume_playback_description">Działanie, gdy film lub odcinek ma zapisaną pozycję.</string>
     <string name="settings_subtitles">Napisy</string>
@@ -372,7 +404,7 @@
     <string name="settings_audio">Dźwięk</string>
     <string name="settings_preferred_audio_language">Preferowany język dźwięku</string>
     <string name="settings_audio_sync">Synchronizacja dźwięku</string>
-    <string name="settings_audio_sync_description">Przesuń dźwięk wcześniej lub później, aby dopasować go do obrazu.</string>
+    <string name="settings_audio_sync_description">Przesuń dźwięk wcześniej lub później, aby dopasować go do obrazu. Dotyczy tylko silnika mpv.</string>
     <string name="settings_live_tv">Telewizja na żywo</string>
     <string name="settings_live_latency_description">Określa, jak blisko bieżącego punktu transmisji ma odbywać się odtwarzanie. Niższa wartość oznacza mniejsze opóźnienie, ale też mniejszy bufor, dlatego niestabilne strumienie mogą częściej się zacinać lub ponownie łączyć. Zmiana zostanie zastosowana do następnego otwartego kanału.</string>
     <string name="settings_channel_numbers">Numery kanałów</string>

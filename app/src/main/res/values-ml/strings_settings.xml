@@ -351,11 +351,43 @@
     <string name="settings_decoding">ഡീകോഡിംഗ്</string>
     <string name="settings_hardware_decoding">ഹാർഡ്‌വെയർ ഡീകോഡിംഗ്</string>
     <string name="settings_hardware_decoding_description">ടിവിയുടെ ഹാർഡ്‌വെയർ ഡീകോഡർ ഉപയോഗിക്കുക. ചില സ്ട്രീമുകൾ തടസ്സപ്പെടുകയോ ദൃശ്യവൈകല്യങ്ങൾ കാണിക്കുകയോ ചെയ്താൽ ഇത് പ്രവർത്തനരഹിതമാക്കുക.</string>
+    <!-- Translators: Setting label for deinterlacing of interlaced broadcast video. -->
+    <string name="settings_deinterlace">ഡീഇന്റർലേസിംഗ്</string>
+    <!-- Translators: Description of the deinterlacing setting. -->
+    <string name="settings_deinterlace_description">ചില പഴയ SD ചാനലുകൾ ചലനത്തിൽ കാണിക്കുന്ന ചീർപ്പുപോലുള്ള വരകൾ മയപ്പെടുത്തുന്നു. mpv സ്വയം ചിത്രം വരയ്ക്കുമ്പോൾ മാത്രമേ ഇത് ബാധകമാകൂ, അതിനാൽ വ്യത്യാസമില്ലെങ്കിൽ ഹാർഡ്‌വെയർ ഡീകോഡിംഗ് ഓഫാക്കുക.</string>
     <string name="settings_movies_series_player">സിനിമകളുടെയും സീരീസിന്റെയും പ്ലെയർ</string>
     <string name="settings_reset_player_choices">സേവ് ചെയ്ത പ്ലെയർ തിരഞ്ഞെടുപ്പുകൾ പുനഃസജ്ജമാക്കുക</string>
     <string name="settings_external_player">ബാഹ്യ പ്ലെയർ</string>
     <string name="settings_default_zoom">ഡിഫോൾട്ട് സൂം</string>
     <string name="settings_default_zoom_description">പ്ലേബാക്ക് ആരംഭിക്കുമ്പോൾ പ്രയോഗിക്കുന്ന ദൃശ്യാനുപാതം/സൂം.</string>
+    <!-- Translators: Setting label for the volume level playback starts at. -->
+    <string name="settings_default_volume">ഡിഫോൾട്ട് വോളിയം</string>
+    <!-- Translators: Description of the default volume setting. -->
+    <string name="settings_default_volume_description">പ്ലേബാക്ക് ആരംഭിക്കുമ്പോൾ പ്രയോഗിക്കുന്ന വോളിയം. 100%%-ന് മുകളിൽ ശബ്ദം കുറഞ്ഞ സ്ട്രീമുകൾ വർധിപ്പിക്കപ്പെടും.</string>
+    <!-- Translators: Settings-row title for forgetting the zoom saved for individual items. -->
+    <string name="settings_reset_saved_zoom">സേവ് ചെയ്ത സൂം പുനഃസജ്ജമാക്കുക</string>
+    <!-- Translators: Description of the reset-saved-zoom setting row. -->
+    <string name="settings_reset_saved_zoom_description">പ്ലെയറിൽ സൂം മാറ്റിയാൽ ആ ചാനലിനോ സിനിമയ്ക്കോ എപ്പിസോഡിനോ വേണ്ടി അത് സേവ് ചെയ്യപ്പെടും. പുനഃസജ്ജമാക്കിയാൽ എല്ലാം വീണ്ടും ഡിഫോൾട്ട് സൂം പിന്തുടരും.</string>
+    <!-- Translators: Confirmation dialog title before forgetting the saved per-item zoom. -->
+    <string name="settings_reset_saved_zoom_confirm">സേവ് ചെയ്ത സൂം പുനഃസജ്ജമാക്കണോ?</string>
+    <!-- Translators: Confirmation dialog body before forgetting the saved per-item zoom. -->
+    <string name="settings_reset_saved_zoom_confirm_description">എല്ലാ ചാനലുകളും സിനിമകളും എപ്പിസോഡുകളും ഡിഫോൾട്ട് സൂമിലേക്ക് മടങ്ങും. സേവ് ചെയ്ത വോളിയങ്ങൾ നിലനിർത്തും. ഒറ്റ ഇനം എപ്പോൾ വേണമെങ്കിലും പ്ലെയറിൽ നിന്ന് വീണ്ടും സജ്ജമാക്കാം.</string>
+    <!-- Translators: Settings-row title for forgetting the volume saved for individual items. -->
+    <string name="settings_reset_saved_volume">സേവ് ചെയ്ത വോളിയം പുനഃസജ്ജമാക്കുക</string>
+    <!-- Translators: Description of the reset-saved-volume setting row. -->
+    <string name="settings_reset_saved_volume_description">പ്ലെയറിൽ വോളിയം മാറ്റിയാൽ ആ ചാനലിനോ സിനിമയ്ക്കോ എപ്പിസോഡിനോ വേണ്ടി അത് സേവ് ചെയ്യപ്പെടും. പുനഃസജ്ജമാക്കിയാൽ എല്ലാം വീണ്ടും ഡിഫോൾട്ട് വോളിയം പിന്തുടരും.</string>
+    <!-- Translators: Confirmation dialog title before forgetting the saved per-item volume. -->
+    <string name="settings_reset_saved_volume_confirm">സേവ് ചെയ്ത വോളിയം പുനഃസജ്ജമാക്കണോ?</string>
+    <!-- Translators: Confirmation dialog body before forgetting the saved per-item volume. -->
+    <string name="settings_reset_saved_volume_confirm_description">എല്ലാ ചാനലുകളും സിനിമകളും എപ്പിസോഡുകളും ഡിഫോൾട്ട് വോളിയത്തിലേക്ക് മടങ്ങും. സേവ് ചെയ്ത സൂം ക്രമീകരണങ്ങൾ നിലനിർത്തും. ഒറ്റ ഇനം എപ്പോൾ വേണമെങ്കിലും പ്ലെയറിൽ നിന്ന് വീണ്ടും സജ്ജമാക്കാം.</string>
+    <!-- Translators: Setting label for how far rewind/forward jumps in a movie or episode. -->
+    <string name="settings_seek_step">സീക്ക് സ്റ്റെപ്പ്</string>
+    <!-- Translators: Description of the seek step setting. -->
+    <string name="settings_seek_step_description">ഒരു സിനിമയിലോ എപ്പിസോഡിലോ റിവൈൻഡും ഫോർവേഡും എത്ര ദൂരം നീങ്ങും.</string>
+    <!-- Translators: Setting label for how far rewind/forward jumps inside a live channel's archive. -->
+    <string name="settings_live_rewind_step">ലൈവ് റിവൈൻഡ് സ്റ്റെപ്പ്</string>
+    <!-- Translators: Description of the live rewind step setting. -->
+    <string name="settings_live_rewind_step_description">ലൈവ് ചാനലിന്റെ ക്യാച്ച്-അപ്പ് ആർക്കൈവിൽ റിവൈൻഡും ഫോർവേഡും എത്ര ദൂരം നീങ്ങും.</string>
     <string name="settings_resume_playback">പ്ലേബാക്ക് തുടരുക</string>
     <string name="settings_resume_playback_description">ഒരു സിനിമയ്‌ക്കോ എപ്പിസോഡിനോ സംരക്ഷിച്ച സ്ഥാനം ഉണ്ടെങ്കിൽ എന്ത് ചെയ്യണം.</string>
     <string name="settings_subtitles">സബ്‌ടൈറ്റിലുകൾ</string>
@@ -370,7 +402,7 @@
     <string name="settings_audio">ഓഡിയോ</string>
     <string name="settings_preferred_audio_language">മുൻഗണനയുള്ള ഓഡിയോ ഭാഷ</string>
     <string name="settings_audio_sync">ഓഡിയോ സമന്വയിപ്പിക്കൽ</string>
-    <string name="settings_audio_sync_description">വീഡിയോയുമായി പൊരുത്തപ്പെടുത്താൻ ഓഡിയോ നേരത്തെയോ വൈകിയോ ആക്കുക.</string>
+    <string name="settings_audio_sync_description">വീഡിയോയുമായി പൊരുത്തപ്പെടുത്താൻ ഓഡിയോ നേരത്തെയോ വൈകിയോ ആക്കുക. mpv എൻജിനിൽ മാത്രം ബാധകം.</string>
     <string name="settings_live_tv">തത്സമയ ടിവി</string>
     <string name="settings_live_latency_description">തത്സമയ പ്രക്ഷേപണത്തോട് എത്ര അടുത്തായി പ്ലേ ചെയ്യണം. കുറഞ്ഞ മൂല്യം തത്സമയത്തോട് കൂടുതൽ അടുത്തായിരിക്കും, എന്നാൽ ബഫർ ചെറുതായതിനാൽ ദുർബലമായ സ്ട്രീമുകൾ തടസ്സപ്പെടുകയോ കൂടുതൽ തവണ വീണ്ടും കണക്റ്റ് ചെയ്യുകയോ ചെയ്‌തേക്കാം. അടുത്തതായി തുറക്കുന്ന ചാനലിന് ഇത് ബാധകമാകും.</string>
     <string name="settings_channel_numbers">ചാനൽ നമ്പറുകൾ</string>

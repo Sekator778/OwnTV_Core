@@ -351,11 +351,43 @@
     <string name="settings_decoding">Afkodning</string>
     <string name="settings_hardware_decoding">Hardwareafkodning</string>
     <string name="settings_hardware_decoding_description">Brug tv\'ets hardwaredekoder. Slå dette fra, hvis nogle streams hakker eller viser billedfejl.</string>
+    <!-- Translators: Setting label for deinterlacing of interlaced broadcast video. -->
+    <string name="settings_deinterlace">Deinterlacing</string>
+    <!-- Translators: Description of the deinterlacing setting. -->
+    <string name="settings_deinterlace_description">Udjævner de kamlignende linjer, som nogle gamle SD-kanaler viser ved bevægelse. Gælder mpv-motoren, mens den selv tegner billedet, så slå hardwareafkodning fra, hvis det ikke gør nogen forskel.</string>
     <string name="settings_movies_series_player">Afspiller til film og serier</string>
     <string name="settings_reset_player_choices">Nulstil gemte afspillervalg</string>
     <string name="settings_external_player">Ekstern afspiller</string>
     <string name="settings_default_zoom">Standardzoom</string>
     <string name="settings_default_zoom_description">Billedformat/zoom, der anvendes, når afspilningen starter.</string>
+    <!-- Translators: Setting label for the volume level playback starts at. -->
+    <string name="settings_default_volume">Standardlydstyrke</string>
+    <!-- Translators: Description of the default volume setting. -->
+    <string name="settings_default_volume_description">Lydstyrke, der anvendes, når afspilningen starter. Over 100 %% forstærkes lavtlydende streams.</string>
+    <!-- Translators: Settings-row title for forgetting the zoom saved for individual items. -->
+    <string name="settings_reset_saved_zoom">Nulstil gemt zoom</string>
+    <!-- Translators: Description of the reset-saved-zoom setting row. -->
+    <string name="settings_reset_saved_zoom_description">Når du ændrer zoom i afspilleren, gemmes det for den kanal, film eller episode. Nulstilling får alt til at følge standardzoom igen.</string>
+    <!-- Translators: Confirmation dialog title before forgetting the saved per-item zoom. -->
+    <string name="settings_reset_saved_zoom_confirm">Nulstil gemt zoom?</string>
+    <!-- Translators: Confirmation dialog body before forgetting the saved per-item zoom. -->
+    <string name="settings_reset_saved_zoom_confirm_description">Alle kanaler, film og episoder vender tilbage til standardzoom. Gemte lydstyrker bevares. Du kan altid indstille en enkelt af dem igen fra afspilleren.</string>
+    <!-- Translators: Settings-row title for forgetting the volume saved for individual items. -->
+    <string name="settings_reset_saved_volume">Nulstil gemt lydstyrke</string>
+    <!-- Translators: Description of the reset-saved-volume setting row. -->
+    <string name="settings_reset_saved_volume_description">Når du ændrer lydstyrken i afspilleren, gemmes den for den kanal, film eller episode. Nulstilling får alt til at følge standardlydstyrken igen.</string>
+    <!-- Translators: Confirmation dialog title before forgetting the saved per-item volume. -->
+    <string name="settings_reset_saved_volume_confirm">Nulstil gemt lydstyrke?</string>
+    <!-- Translators: Confirmation dialog body before forgetting the saved per-item volume. -->
+    <string name="settings_reset_saved_volume_confirm_description">Alle kanaler, film og episoder vender tilbage til standardlydstyrken. Gemte zoomindstillinger bevares. Du kan altid indstille en enkelt af dem igen fra afspilleren.</string>
+    <!-- Translators: Setting label for how far rewind/forward jumps in a movie or episode. -->
+    <string name="settings_seek_step">Spolingstrin</string>
+    <!-- Translators: Description of the seek step setting. -->
+    <string name="settings_seek_step_description">Hvor langt spol tilbage og frem springer i en film eller episode.</string>
+    <!-- Translators: Setting label for how far rewind/forward jumps inside a live channel's archive. -->
+    <string name="settings_live_rewind_step">Live-spolingstrin</string>
+    <!-- Translators: Description of the live rewind step setting. -->
+    <string name="settings_live_rewind_step_description">Hvor langt spol tilbage og frem flytter sig i en live-kanals catch-up-arkiv.</string>
     <string name="settings_resume_playback">Fortsæt afspilningen</string>
     <string name="settings_resume_playback_description">Hvad der skal ske, når en film eller et afsnit har en gemt position.</string>
     <string name="settings_subtitles">Undertekster</string>
@@ -370,7 +402,7 @@
     <string name="settings_audio">Lyd</string>
     <string name="settings_preferred_audio_language">Foretrukket lydsprog</string>
     <string name="settings_audio_sync">Lydsynkronisering</string>
-    <string name="settings_audio_sync_description">Forskyd lyden frem eller tilbage, så den passer til videoen.</string>
+    <string name="settings_audio_sync_description">Forskyd lyden frem eller tilbage, så den passer til videoen. Gælder kun for mpv-motoren.</string>
     <string name="settings_live_tv">Live-tv</string>
     <string name="settings_live_latency_description">Hvor tæt på liveudsendelsen der skal afspilles. En lavere værdi betyder tættere på live, men en mindre buffer, så svage streams kan hakke eller genoprette forbindelsen oftere. Gælder for den næste kanal, du åbner.</string>
     <string name="settings_channel_numbers">Kanalnumre</string>

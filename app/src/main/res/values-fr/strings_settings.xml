@@ -352,11 +352,43 @@
     <string name="settings_decoding">Décodage</string>
     <string name="settings_hardware_decoding">Décodage matériel</string>
     <string name="settings_hardware_decoding_description">Utiliser le décodeur matériel du téléviseur. Désactivez cette option si certains flux saccadent ou présentent des artefacts.</string>
+    <!-- Translators: Setting label for deinterlacing of interlaced broadcast video. -->
+    <string name="settings_deinterlace">Désentrelacement</string>
+    <!-- Translators: Description of the deinterlacing setting. -->
+    <string name="settings_deinterlace_description">Lisse les lignes en peigne que certaines vieilles chaînes SD affichent lors des mouvements. S’applique au moteur mpv lorsqu’il dessine lui-même l’image ; si rien ne change, désactivez le décodage matériel.</string>
     <string name="settings_movies_series_player">Lecteur pour les films et les séries</string>
     <string name="settings_reset_player_choices">Réinitialiser les choix de lecteur enregistrés</string>
     <string name="settings_external_player">Lecteur externe</string>
     <string name="settings_default_zoom">Zoom par défaut</string>
     <string name="settings_default_zoom_description">Format d’image/zoom appliqué au démarrage de la lecture.</string>
+    <!-- Translators: Setting label for the volume level playback starts at. -->
+    <string name="settings_default_volume">Volume par défaut</string>
+    <!-- Translators: Description of the default volume setting. -->
+    <string name="settings_default_volume_description">Volume appliqué au démarrage de la lecture. Au-delà de 100 %%, les flux peu sonores sont amplifiés.</string>
+    <!-- Translators: Settings-row title for forgetting the zoom saved for individual items. -->
+    <string name="settings_reset_saved_zoom">Réinitialiser le zoom enregistré</string>
+    <!-- Translators: Description of the reset-saved-zoom setting row. -->
+    <string name="settings_reset_saved_zoom_description">Modifier le zoom dans le lecteur l’enregistre pour cette chaîne, ce film ou cet épisode. La réinitialisation fait de nouveau suivre le zoom par défaut.</string>
+    <!-- Translators: Confirmation dialog title before forgetting the saved per-item zoom. -->
+    <string name="settings_reset_saved_zoom_confirm">Réinitialiser le zoom enregistré ?</string>
+    <!-- Translators: Confirmation dialog body before forgetting the saved per-item zoom. -->
+    <string name="settings_reset_saved_zoom_confirm_description">Chaque chaîne, film et épisode revient au zoom par défaut. Les volumes enregistrés sont conservés. Vous pouvez à tout moment régler un élément précis depuis le lecteur.</string>
+    <!-- Translators: Settings-row title for forgetting the volume saved for individual items. -->
+    <string name="settings_reset_saved_volume">Réinitialiser le volume enregistré</string>
+    <!-- Translators: Description of the reset-saved-volume setting row. -->
+    <string name="settings_reset_saved_volume_description">Modifier le volume dans le lecteur l’enregistre pour cette chaîne, ce film ou cet épisode. La réinitialisation fait de nouveau suivre le volume par défaut.</string>
+    <!-- Translators: Confirmation dialog title before forgetting the saved per-item volume. -->
+    <string name="settings_reset_saved_volume_confirm">Réinitialiser le volume enregistré ?</string>
+    <!-- Translators: Confirmation dialog body before forgetting the saved per-item volume. -->
+    <string name="settings_reset_saved_volume_confirm_description">Chaque chaîne, film et épisode revient au volume par défaut. Les réglages de zoom enregistrés sont conservés. Vous pouvez à tout moment régler un élément précis depuis le lecteur.</string>
+    <!-- Translators: Setting label for how far rewind/forward jumps in a movie or episode. -->
+    <string name="settings_seek_step">Pas d’avance</string>
+    <!-- Translators: Description of the seek step setting. -->
+    <string name="settings_seek_step_description">De combien le retour et l’avance sautent dans un film ou un épisode.</string>
+    <!-- Translators: Setting label for how far rewind/forward jumps inside a live channel's archive. -->
+    <string name="settings_live_rewind_step">Pas de retour en direct</string>
+    <!-- Translators: Description of the live rewind step setting. -->
+    <string name="settings_live_rewind_step_description">De combien le retour et l’avance se déplacent dans l’archive d’une chaîne en direct.</string>
     <string name="settings_resume_playback">Reprendre la lecture</string>
     <string name="settings_resume_playback_description">Que faire lorsqu’une position est enregistrée pour un film ou un épisode.</string>
     <string name="settings_subtitles">Sous-titres</string>
@@ -371,7 +403,7 @@
     <string name="settings_audio">Audio</string>
     <string name="settings_preferred_audio_language">Langue audio préférée</string>
     <string name="settings_audio_sync">Synchronisation audio</string>
-    <string name="settings_audio_sync_description">Avancer ou retarder l’audio pour le synchroniser avec la vidéo.</string>
+    <string name="settings_audio_sync_description">Avancer ou retarder l’audio pour le synchroniser avec la vidéo. S’applique uniquement au moteur mpv.</string>
     <string name="settings_live_tv">TV en direct</string>
     <string name="settings_live_latency_description">Détermine la proximité de la lecture avec la diffusion en direct. Une valeur plus faible rapproche du direct, mais réduit la mémoire tampon : les flux instables peuvent donc s’interrompre ou se reconnecter plus souvent. S’applique à la prochaine chaîne que vous ouvrez.</string>
     <string name="settings_channel_numbers">Numéros des chaînes</string>

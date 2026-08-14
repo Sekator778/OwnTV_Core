@@ -13,6 +13,7 @@ import tv.own.owntv.core.database.dao.HistoryDao
 import tv.own.owntv.core.database.dao.MetadataDao
 import tv.own.owntv.core.database.dao.MovieDao
 import tv.own.owntv.core.database.dao.ProfileDao
+import tv.own.owntv.core.database.dao.PlaybackPrefsDao
 import tv.own.owntv.core.database.dao.ProgressDao
 import tv.own.owntv.core.database.dao.SeriesDao
 import tv.own.owntv.core.database.dao.SeriesSortOrderDao
@@ -34,6 +35,7 @@ import tv.own.owntv.core.database.entity.MetadataCacheEntity
 import tv.own.owntv.core.database.entity.MetadataMatchEntity
 import tv.own.owntv.core.database.entity.MovieEntity
 import tv.own.owntv.core.database.entity.MovieFtsEntity
+import tv.own.owntv.core.database.entity.PlaybackPrefsEntity
 import tv.own.owntv.core.database.entity.PlaybackProgressEntity
 import tv.own.owntv.core.database.entity.ProfileEntity
 import tv.own.owntv.core.database.entity.ProfileSourceCrossRef
@@ -72,6 +74,7 @@ import tv.own.owntv.core.database.dao.SubtitleDao
         PlaybackProgressEntity::class,
         ContentOrderEntity::class,
         CustomCategoryMemberEntity::class,
+        PlaybackPrefsEntity::class,
         SeriesSortOrderEntity::class,
         DownloadEntity::class,
         // Android TV home-screen bookkeeping
@@ -96,7 +99,7 @@ import tv.own.owntv.core.database.dao.SubtitleDao
         SeriesFtsEntity::class,
         EpisodeFtsEntity::class,
     ],
-    version = 31, // v7: content_order (Move). v8: contentHash + browse/unique indexes. v9: EPG contentHash + natural key. v10: TMDB metadata cache. v11: movies/series rating-sort indexes. v12: metadata_cache trailerKey. v13: metadata_cache logoPath. v14: sources.mac (Stalker portal). v15: external-subtitle cache/selection/timing tables. v16: subtitle_link (downloaded-sub ↔ content). v17: sources.syncLive/Movies/Series (skip-sync enabledScope). v18: series.episodesSyncedAt (episode-cache freshness, S8). v19: epg_channels.iconUrl (XMLTV channel logos). v20: channels (sourceId, number) index for direct tune. v21: series.addedAt + date-added sort indexes. v22: series_sort_order (per-series season/episode order). v23: sources.hlsSupported and sources.preferHls. v24: custom_category_members (user custom categories, #87). v25: sources.livePrerollSecs (per-playlist "Pre-buffer"). v26: channels.catchupType + channels.httpHeaders (M3U catch-up styles + per-channel HTTP headers). v27: sources.maxConnections (Xtream session limit read at sync). v28: movies.httpHeaders + episodes.httpHeaders (per-item M3U HTTP headers). v29: optional Stalker serial/device IDs/signature. v30: source-scoped Now Trending snapshots. v31: indexed provider-title metadata and persistent Trending attempt state.
+    version = 32, // v7: content_order (Move). v8: contentHash + browse/unique indexes. v9: EPG contentHash + natural key. v10: TMDB metadata cache. v11: movies/series rating-sort indexes. v12: metadata_cache trailerKey. v13: metadata_cache logoPath. v14: sources.mac (Stalker portal). v15: external-subtitle cache/selection/timing tables. v16: subtitle_link (downloaded-sub ↔ content). v17: sources.syncLive/Movies/Series (skip-sync enabledScope). v18: series.episodesSyncedAt (episode-cache freshness, S8). v19: epg_channels.iconUrl (XMLTV channel logos). v20: channels (sourceId, number) index for direct tune. v21: series.addedAt + date-added sort indexes. v22: series_sort_order (per-series season/episode order). v23: sources.hlsSupported and sources.preferHls. v24: custom_category_members (user custom categories, #87). v25: sources.livePrerollSecs (per-playlist "Pre-buffer"). v26: channels.catchupType + channels.httpHeaders (M3U catch-up styles + per-channel HTTP headers). v27: sources.maxConnections (Xtream session limit read at sync). v28: movies.httpHeaders + episodes.httpHeaders (per-item M3U HTTP headers). v29: optional Stalker serial/device IDs/signature. v30: source-scoped Now Trending snapshots. v31: indexed provider-title metadata and persistent Trending attempt state. v32: playback_prefs (per-item zoom + volume, keyed by the P6 stable content key).
 
     exportSchema = true,
 )
@@ -113,6 +116,7 @@ abstract class OwnTVDatabase : RoomDatabase() {
     abstract fun historyDao(): HistoryDao
     abstract fun progressDao(): ProgressDao
     abstract fun contentOrderDao(): ContentOrderDao
+    abstract fun playbackPrefsDao(): PlaybackPrefsDao
     abstract fun customCategoryDao(): CustomCategoryDao
     abstract fun seriesSortOrderDao(): SeriesSortOrderDao
     abstract fun tvProviderProgramDao(): TvProviderProgramDao
@@ -824,6 +828,30 @@ abstract class OwnTVDatabase : RoomDatabase() {
                 db.execSQL("ALTER TABLE `trending_snapshots` ADD COLUMN `lastAttemptAt` INTEGER NOT NULL DEFAULT 0")
                 db.execSQL("ALTER TABLE `trending_snapshots` ADD COLUMN `lastAttemptStatus` TEXT NOT NULL DEFAULT 'NEVER'")
                 db.execSQL("ALTER TABLE `trending_snapshots` ADD COLUMN `failureStage` TEXT")
+                healSchema(db)
+            }
+        }
+
+        /**
+         * v31 → v32: `playback_prefs` — the per-item zoom and volume the player now remembers.
+         * A new empty table only; nothing existing is touched, and an absent row means "follow the
+         * global default", so an upgraded install behaves exactly as before until the user changes
+         * something in the player.
+         */
+        val MIGRATION_31_32 = object : androidx.room.migration.Migration(31, 32) {
+            override fun migrate(db: androidx.sqlite.db.SupportSQLiteDatabase) {
+                db.execSQL(
+                    "CREATE TABLE IF NOT EXISTS `playback_prefs` (" +
+                        "`profileId` INTEGER NOT NULL, " +
+                        "`contentKey` TEXT NOT NULL, " +
+                        "`zoomMode` TEXT, " +
+                        "`volumeBoost` INTEGER, " +
+                        "`updatedAt` INTEGER NOT NULL, " +
+                        "PRIMARY KEY(`profileId`, `contentKey`), " +
+                        "FOREIGN KEY(`profileId`) REFERENCES `profiles`(`id`) ON DELETE CASCADE" +
+                        ")",
+                )
+                db.execSQL("CREATE INDEX IF NOT EXISTS `index_playback_prefs_profileId` ON `playback_prefs` (`profileId`)")
                 healSchema(db)
             }
         }

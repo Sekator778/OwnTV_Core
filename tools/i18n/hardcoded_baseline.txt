@@ -42,20 +42,17 @@
 1	app/src/main/java/tv/own/owntv/core/customize/RenameRules.kt	^$wrapped(?![\\p{L}\\p{N}])
 1	app/src/main/java/tv/own/owntv/core/customize/RenameRules.kt	^(?:\\|?[A-Za-z]{2,4}\\s*\\||\\[[A-Za-z]{2,4}]|\\([A-Za-z]{2,4}\\))
 1	app/src/main/java/tv/own/owntv/core/customize/RenameRules.kt	{2,}
-1	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	)
 1	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	ALTER TABLE `sources` ADD COLUMN `hlsSupported` INTEGER NOT NULL DEFAULT 0
 1	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	ALTER TABLE `sources` ADD COLUMN `preferHls` INTEGER NOT NULL DEFAULT 0
 1	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	CREATE INDEX IF NOT EXISTS `index_custom_category_members_profileId_mediaType_contextKey` ON `custom_category_members` (`profileId`, `mediaType`, `contextKey`)
 1	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	CREATE INDEX IF NOT EXISTS `index_custom_category_members_profileId` ON `custom_category_members` (`profileId`)
 1	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	CREATE TABLE IF NOT EXISTS `custom_category_members` (
 1	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	CREATE UNIQUE INDEX IF NOT EXISTS `index_custom_category_members_profileId_mediaType_contextKey_itemId` ON `custom_category_members` (`profileId`, `mediaType`, `contextKey`, `itemId`)
-1	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	FOREIGN KEY(`profileId`) REFERENCES `profiles`(`id`) ON DELETE CASCADE
 1	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	`contextKey` TEXT NOT NULL,
 1	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
 1	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	`itemId` INTEGER NOT NULL,
 1	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	`mediaType` TEXT NOT NULL,
 1	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	`position` INTEGER NOT NULL,
-1	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	`profileId` INTEGER NOT NULL,
 1	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	hlsSupported
 1	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	preferHls
 2	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	sources
@@ -130,10 +127,8 @@
 1	app/src/main/java/tv/own/owntv/core/database/entity/ContentEntities.kt	.ts
 2	app/src/main/java/tv/own/owntv/core/database/entity/UserDataEntities.kt	contextKey
 1	app/src/main/java/tv/own/owntv/core/database/entity/UserDataEntities.kt	custom_category_members
-1	app/src/main/java/tv/own/owntv/core/database/entity/UserDataEntities.kt	id
 1	app/src/main/java/tv/own/owntv/core/database/entity/UserDataEntities.kt	itemId
 2	app/src/main/java/tv/own/owntv/core/database/entity/UserDataEntities.kt	mediaType
-4	app/src/main/java/tv/own/owntv/core/database/entity/UserDataEntities.kt	profileId
 3	app/src/main/java/tv/own/owntv/core/network/DnsConfig.kt	\0
 1	app/src/main/java/tv/own/owntv/core/network/DnsConfig.kt	${dohUrl.trimEnd('/')}?name=$hostname&type=$type
 1	app/src/main/java/tv/own/owntv/core/network/DnsConfig.kt	A
@@ -187,7 +182,6 @@
 1	app/src/main/java/tv/own/owntv/features/live/LiveViewModel.kt	ExoPlayer error before first frame: ${info?.raw ?: previewEngine.error.value}
 1	app/src/main/java/tv/own/owntv/features/live/LiveViewModel.kt	mpv handoff for '${channel.name}' abandoned — the channel changed while ExoPlayer released
 1	app/src/main/java/tv/own/owntv/features/live/LiveViewModel.kt	starting mpv for '${channel.name}' — reason=$reason
-1	app/src/main/java/tv/own/owntv/features/live/LiveViewModel.kt	ts
 8	app/src/main/java/tv/own/owntv/features/settings/DnsSettingsScreen.kt	\0
 1	app/src/main/java/tv/own/owntv/features/settings/DnsSettingsScreen.kt	${cfg.host}$p
 1	app/src/main/java/tv/own/owntv/features/settings/DnsSettingsScreen.kt	:${cfg.port}
@@ -260,10 +254,9 @@
 2	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	sub-back-color
 2	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	sub-color
 2	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	sub-pos
-1	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	yes
+1	app/src/main/java/tv/own/owntv/player/PlayerDiagnostics.kt	\0
 1	app/src/main/java/tv/own/owntv/player/PlayerDiagnostics.kt	429
 1	app/src/main/java/tv/own/owntv/player/PlayerDiagnostics.kt	458
-1	app/src/main/java/tv/own/owntv/player/PlayerDiagnostics.kt	UNUSED_PARAMETER
 1	app/src/main/java/tv/own/owntv/ui/components/ColorPicker.kt	#%06X
 1	app/src/main/java/tv/own/owntv/ui/components/TextInputDialog.kt	\0
 1	app/src/main/java/tv/own/owntv/ui/components/TvImeMetrics.kt	$trigger visible=${next.visible} source=${next.source} displayH=$displayHeight

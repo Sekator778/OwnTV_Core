@@ -350,11 +350,43 @@
     <string name="settings_decoding">디코딩</string>
     <string name="settings_hardware_decoding">하드웨어 디코딩</string>
     <string name="settings_hardware_decoding_description">TV의 하드웨어 디코더를 사용합니다. 일부 스트림이 끊기거나 화면에 이상이 나타나면 끄세요.</string>
+    <!-- Translators: Setting label for deinterlacing of interlaced broadcast video. -->
+    <string name="settings_deinterlace">디인터레이스</string>
+    <!-- Translators: Description of the deinterlacing setting. -->
+    <string name="settings_deinterlace_description">일부 오래된 SD 채널에서 움직일 때 나타나는 빗살 같은 줄을 부드럽게 합니다. mpv가 직접 화면을 그릴 때 적용되므로 차이가 없으면 하드웨어 디코딩을 꺼 보세요.</string>
     <string name="settings_movies_series_player">영화 및 시리즈 플레이어</string>
     <string name="settings_reset_player_choices">저장된 플레이어 선택 초기화</string>
     <string name="settings_external_player">외부 플레이어</string>
     <string name="settings_default_zoom">기본 화면 확대</string>
     <string name="settings_default_zoom_description">재생이 시작될 때 적용할 화면 비율/확대 방식입니다.</string>
+    <!-- Translators: Setting label for the volume level playback starts at. -->
+    <string name="settings_default_volume">기본 음량</string>
+    <!-- Translators: Description of the default volume setting. -->
+    <string name="settings_default_volume_description">재생이 시작될 때 적용할 음량입니다. 100%%를 넘으면 소리가 작은 스트림이 증폭됩니다.</string>
+    <!-- Translators: Settings-row title for forgetting the zoom saved for individual items. -->
+    <string name="settings_reset_saved_zoom">저장된 화면 확대 초기화</string>
+    <!-- Translators: Description of the reset-saved-zoom setting row. -->
+    <string name="settings_reset_saved_zoom_description">플레이어에서 화면 확대를 바꾸면 해당 채널, 영화 또는 에피소드에 저장됩니다. 초기화하면 모두 다시 기본 화면 확대를 따릅니다.</string>
+    <!-- Translators: Confirmation dialog title before forgetting the saved per-item zoom. -->
+    <string name="settings_reset_saved_zoom_confirm">저장된 화면 확대를 초기화할까요?</string>
+    <!-- Translators: Confirmation dialog body before forgetting the saved per-item zoom. -->
+    <string name="settings_reset_saved_zoom_confirm_description">모든 채널, 영화, 에피소드가 기본 화면 확대로 돌아갑니다. 저장된 음량은 유지됩니다. 개별 항목은 언제든지 플레이어에서 다시 설정할 수 있습니다.</string>
+    <!-- Translators: Settings-row title for forgetting the volume saved for individual items. -->
+    <string name="settings_reset_saved_volume">저장된 음량 초기화</string>
+    <!-- Translators: Description of the reset-saved-volume setting row. -->
+    <string name="settings_reset_saved_volume_description">플레이어에서 음량을 바꾸면 해당 채널, 영화 또는 에피소드에 저장됩니다. 초기화하면 모두 다시 기본 음량을 따릅니다.</string>
+    <!-- Translators: Confirmation dialog title before forgetting the saved per-item volume. -->
+    <string name="settings_reset_saved_volume_confirm">저장된 음량을 초기화할까요?</string>
+    <!-- Translators: Confirmation dialog body before forgetting the saved per-item volume. -->
+    <string name="settings_reset_saved_volume_confirm_description">모든 채널, 영화, 에피소드가 기본 음량으로 돌아갑니다. 저장된 화면 확대 설정은 유지됩니다. 개별 항목은 언제든지 플레이어에서 다시 설정할 수 있습니다.</string>
+    <!-- Translators: Setting label for how far rewind/forward jumps in a movie or episode. -->
+    <string name="settings_seek_step">탐색 간격</string>
+    <!-- Translators: Description of the seek step setting. -->
+    <string name="settings_seek_step_description">영화나 에피소드에서 되감기와 빨리 감기가 이동하는 거리입니다.</string>
+    <!-- Translators: Setting label for how far rewind/forward jumps inside a live channel's archive. -->
+    <string name="settings_live_rewind_step">라이브 되감기 간격</string>
+    <!-- Translators: Description of the live rewind step setting. -->
+    <string name="settings_live_rewind_step_description">라이브 채널의 다시보기 보관분에서 되감기와 빨리 감기가 이동하는 거리입니다.</string>
     <string name="settings_resume_playback">이어서 재생</string>
     <string name="settings_resume_playback_description">영화 또는 에피소드에 저장된 재생 위치가 있을 때 수행할 작업입니다.</string>
     <string name="settings_subtitles">자막</string>
@@ -369,7 +401,7 @@
     <string name="settings_audio">오디오</string>
     <string name="settings_preferred_audio_language">선호 오디오 언어</string>
     <string name="settings_audio_sync">오디오 동기화</string>
-    <string name="settings_audio_sync_description">영상에 맞도록 오디오를 앞이나 뒤로 이동합니다.</string>
+    <string name="settings_audio_sync_description">영상에 맞도록 오디오를 앞이나 뒤로 이동합니다. mpv 엔진에만 적용됩니다.</string>
     <string name="settings_live_tv">실시간 TV</string>
     <string name="settings_live_latency_description">실시간 방송과 얼마나 가깝게 재생할지 설정합니다. 낮을수록 실시간에 가까워지지만 버퍼가 작아지므로 불안정한 스트림에서는 끊김이나 재연결이 더 자주 발생할 수 있습니다. 다음에 여는 채널부터 적용됩니다.</string>
     <string name="settings_channel_numbers">채널 번호</string>

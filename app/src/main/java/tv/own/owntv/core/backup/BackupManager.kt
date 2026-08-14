@@ -157,6 +157,26 @@ class BackupManager(
                         put("vodMpvUrls", JSONArray(vodEngineStore.exportMpvUrls().toList()))
                         put("vodExoUrls", JSONArray(vodEngineStore.exportExoUrls().toList()))
                     })
+                    // Per-item zoom / volume (DB v32). Same idea as compatMode and keyed on the same
+                    // stable content key, so no id remapping is needed for the KEY — but these rows are
+                    // per profile, so the profile id rides along and is remapped on restore (as with the
+                    // OpenSubtitles block below). Ticked profiles only. Optional: older readers skip it.
+                    run {
+                        val ticked = profiles.map { it.id }.toSet()
+                        val rows = runCatching { db.playbackPrefsDao().getAllOnce() }.getOrDefault(emptyList())
+                        put("playbackPrefs", JSONArray().apply {
+                            rows.filter { it.profileId in ticked }.forEach { row ->
+                                put(
+                                    JSONObject().apply {
+                                        put("p", row.profileId)
+                                        put("k", row.contentKey)
+                                        row.zoomMode?.let { put("z", it) }
+                                        row.volumeBoost?.let { put("v", it) }
+                                    },
+                                )
+                            }
+                        })
+                    }
                     // Per-profile OpenSubtitles login (username + password/token). A secret: the whole
                     // session blob is encrypted with the backup passphrase, so it rides ONLY when one is
                     // set — omitted otherwise, exactly like the source/proxy/TMDB secrets. Ticked profiles only.
@@ -596,6 +616,27 @@ class BackupManager(
                             jsonStrings(c.optJSONArray("vodExoUrls")),
                         )
                     }
+                }
+                // Per-item zoom / volume. Merged in (REPLACE on the same profile+key), so a restore
+                // never drops what this device already remembers for other items. Rows whose profile
+                // isn't on this device are skipped — a foreign key would reject them anyway.
+                root.optJSONArray("playbackPrefs")?.let { arr ->
+                    val deviceProfileIds = profileDao.getAllOnce().map { it.id }.toSet()
+                    val rows = ArrayList<tv.own.owntv.core.database.entity.PlaybackPrefsEntity>()
+                    for (i in 0 until arr.length()) {
+                        val e = arr.optJSONObject(i) ?: continue
+                        val filePid = e.optLong("p", -1)
+                        val pid = profileIdMap[filePid] ?: filePid
+                        if (pid !in deviceProfileIds) continue
+                        val key = e.optString("k").takeIf { it.isNotBlank() } ?: continue
+                        val zoom = e.optString("z").takeIf { it.isNotBlank() }
+                        val volume = if (e.has("v")) e.optInt("v").coerceIn(0, 150) else null
+                        if (zoom == null && volume == null) continue
+                        rows += tv.own.owntv.core.database.entity.PlaybackPrefsEntity(
+                            profileId = pid, contentKey = key, zoomMode = zoom, volumeBoost = volume,
+                        )
+                    }
+                    if (rows.isNotEmpty()) runCatching { db.playbackPrefsDao().insertAll(rows) }
                 }
                 // Per-profile OpenSubtitles login: decrypt each blob and store it under the remapped
                 // device profile id. Encrypted-only, so it's skipped when there's no key (no passphrase).

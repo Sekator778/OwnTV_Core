@@ -54,6 +54,7 @@ class LivePreviewEngine(
     private val diagnostics: PlayerDiagnostics,
     settings: tv.own.owntv.features.settings.data.SettingsRepository,
     connectivity: tv.own.owntv.core.network.ConnectivityObserver,
+    private val playbackPrefs: tv.own.owntv.core.player.PlaybackPrefsStore,
 ) : PlaybackEngine {
 
     // Escape-hatch toggle (Settings → Video player → Diagnostics). When off, no live fps/bitrate
@@ -240,6 +241,7 @@ class LivePreviewEngine(
         settings.defaultZoom.onEach { name ->
             defaultZoom = runCatching { ZoomMode.valueOf(name) }.getOrDefault(ZoomMode.FIT)
         }.launchIn(settingsScope)
+        settings.defaultVolume.onEach { defaultVolume = it }.launchIn(settingsScope)
     }
 
     /** Mirrors Settings → Video player → Hardware decoding. Read at [build] time. */
@@ -251,6 +253,9 @@ class LivePreviewEngine(
 
     /** Settings → Video player → Default zoom, applied to every new tune. */
     @Volatile private var defaultZoom: ZoomMode = ZoomMode.FIT
+
+    /** Settings → Video player → Default volume, the level a newly tuned channel starts at. */
+    @Volatile private var defaultVolume: Int = 100
 
     /**
      * Push the preferred-language settings into the live player's track selector.
@@ -364,15 +369,8 @@ class LivePreviewEngine(
     }
 
     /** The HTTP status behind a load failure, following the cause chain Media3 wraps it in. */
-    private fun httpStatusOf(error: Throwable?): Int? {
-        var t = error
-        var hops = 0
-        while (t != null && hops++ < 8) {
-            (t as? androidx.media3.datasource.HttpDataSource.InvalidResponseCodeException)?.let { return it.responseCode }
-            t = t.cause
-        }
-        return null
-    }
+    /** The HTTP status behind a load failure — shared with the other ExoPlayer engines. */
+    private fun httpStatusOf(error: Throwable?): Int? = PlayerErrors.httpStatusOf(error)
 
     /** Semantic media details for the playback error renderer. */
     private fun exoSpec(): MediaSpec? {
@@ -445,7 +443,7 @@ class LivePreviewEngine(
     private var playlistLogged = false
 
     /** Technical readout for the stream-info overlay, from the active ExoPlayer formats. */
-    override fun streamInfo(): List<StreamInfoRow> {
+    override suspend fun streamInfo(): List<StreamInfoRow> {
         val p = player ?: return emptyList()
         val out = ArrayList<StreamInfoRow>()
         out += StreamInfoRow(StreamInfoLabel.ENGINE, StreamInfoValue.Engine(StreamEngine.EXOPLAYER))
@@ -856,6 +854,27 @@ class LivePreviewEngine(
         mainHandler.postDelayed(openWatchdog, PREROLL_POLL_MS)
     }
 
+    /**
+     * The one way this engine puts a URL into the live player — the first tune and every retry alike.
+     *
+     * There were eight copies of these four lines, and [armOpenWatchdog] was the line that kept getting
+     * left off a new retry path: v4.2.1 had to add it back to four of them by hand. Routing every load
+     * through here makes the watchdog's own promise — *every* attempt gets an open deadline — true by
+     * construction rather than by review.
+     *
+     * Always via [mediaSourceFor], never `setMediaItem`: a bare MediaItem drops the TS caption-descriptor
+     * override (#57 CC1) and the live target offset, so a channel silently lost its captions on reload.
+     *
+     * Callers keep their own `runCatching`, because what a failure *means* differs per path (a refused
+     * retry is a channel error, a failed reconnect is a lost connection).
+     */
+    private fun reprepare(p: ExoPlayer, url: String) {
+        p.setMediaSource(mediaSourceFor(url))
+        p.prepare()
+        p.playWhenReady = true
+        armOpenWatchdog()
+    }
+
     /** Remember that [url] can't hold a pre-roll and reopen it without one. Posted rather than run inline:
      *  the reopen releases the player, and a caller may be inside that player's own listener callback. */
     private fun dropPrerollAndReopen(url: String) {
@@ -917,7 +936,7 @@ class LivePreviewEngine(
         gaveUp = true
         _isPlaying.value = false; _buffering.value = false
         _error.value = PlayerErrors.visibleFailure(reason, currentUrl, PlaybackFailure.Channel)
-        _errorInfo.value = ErrorInfo(PlayerErrors.reasonFor(reason, currentUrl), exoSpec(), reason)
+        _errorInfo.value = ErrorInfo(PlayerErrors.reasonFor(reason), exoSpec(), reason)
         _state.value = State.ERROR
     }
 
@@ -1093,7 +1112,7 @@ class LivePreviewEngine(
             val raw = lastCodecError ?: diagnostics.recentError()
                 ?: error.errorCodeName + ((error.cause?.message ?: error.message)?.let { ": $it" } ?: "")
             _error.value = PlayerErrors.visibleFailure(raw, currentUrl, PlaybackFailure.Channel)
-            _errorInfo.value = ErrorInfo(PlayerErrors.reasonFor(raw, currentUrl), exoSpec(), raw)
+            _errorInfo.value = ErrorInfo(PlayerErrors.reasonFor(raw), exoSpec(), raw)
         }
     }
 
@@ -1226,9 +1245,10 @@ class LivePreviewEngine(
         lastTunedUrl = url
         _volume.value = when {
             muted -> 0
-            sameChannelReopen -> _volume.value.coerceAtLeast(100)
-            else -> 100
+            sameChannelReopen -> _volume.value.coerceAtLeast(defaultVolume)
+            else -> defaultVolume
         }
+        applyRememberedPrefs(meta.contentKey ?: url)
         _state.value = State.LOADING
         _buffering.value = true
         runCatching {
@@ -1252,19 +1272,16 @@ class LivePreviewEngine(
             applyMute(force = true)
             applyLanguagePrefs() // survives a player rebuild, and seeds a player built before the setting arrived
             setVideoTrackDisabled(_audioOnly.value) // survives a player rebuild while Audio Mode is on (F19c)
-            p.setMediaSource(mediaSourceFor(url))
-            p.prepare()
-            p.playWhenReady = true
             // An open that buffers but never starts would otherwise hold the spinner forever — see
             // [openWatchdog]. Armed for every tune, pre-roll or not: branch (1) doesn't need one.
-            armOpenWatchdog()
+            reprepare(p, url)
         }.onFailure {
             android.util.Log.w(LiveDiagnosticsLog.TAG, "preview play() failed for ${HttpClient.redactUrl(url)}", it)
             LiveDiagnosticsLog.event("play() failed: ${it.message}")
             _state.value = State.ERROR
             val raw = lastCodecError ?: diagnostics.recentError() ?: it.message
             _error.value = PlayerErrors.visibleFailure(raw, url, PlaybackFailure.Channel)
-            _errorInfo.value = raw?.let { r -> ErrorInfo(PlayerErrors.reasonFor(r, url), exoSpec(), r) }
+            _errorInfo.value = raw?.let { r -> ErrorInfo(PlayerErrors.reasonFor(r), exoSpec(), r) }
         }
     }
 
@@ -1404,10 +1421,13 @@ class LivePreviewEngine(
      */
     private fun releaseHttpConnections() {
         // Off the main thread: closing sockets is quick but still I/O, and stop() runs on a UI transition.
-        Thread {
+        // Its own thread rather than a shared executor, and named so it is identifiable in a trace: this
+        // must not queue behind other work, because the whole point is to free the provider's session
+        // before the next engine asks for the same channel.
+        Thread({
             runCatching { streamingHttp.evictAll() }
                 .onFailure { LiveDiagnosticsLog.event("connection pool evict failed: ${it.javaClass.simpleName}") }
-        }.start()
+        }, "owntv-http-evict").start()
     }
 
     fun release() {
@@ -1447,7 +1467,7 @@ class LivePreviewEngine(
             _state.value = State.ERROR; _isPlaying.value = false; _buffering.value = false
             val raw = lastCodecError ?: diagnostics.recentError() ?: reason
             _error.value = PlayerErrors.visibleFailure(raw, currentUrl, PlaybackFailure.LostConnection)
-            _errorInfo.value = ErrorInfo(PlayerErrors.reasonFor(raw, currentUrl), exoSpec(), raw)
+            _errorInfo.value = ErrorInfo(PlayerErrors.reasonFor(raw), exoSpec(), raw)
             return
         }
         retryCount++
@@ -1480,12 +1500,7 @@ class LivePreviewEngine(
                     LiveDiagnosticsLog.event("reconnect re-resolved expiring URL (${HttpClient.redactUrl(fresh)})")
                 }
                 runCatching {
-                    // Via mediaSourceFor(), not setMediaItem(): a bare MediaItem would drop the TS
-                    // caption-descriptor override (#57 CC1) and the live target offset, so a channel
-                    // silently lost its captions after the first reconnect.
-                    p.setMediaSource(mediaSourceFor(loadUrl)) // fresh fetch (live edge)
-                    p.prepare()
-                    p.playWhenReady = true
+                    reprepare(p, loadUrl) // fresh fetch (live edge)
                 }.onFailure { _state.value = State.ERROR; _error.value = PlaybackFailure.LostConnection }
             }, delayMs)
         }
@@ -1578,10 +1593,7 @@ class LivePreviewEngine(
         mainHandler.postDelayed({
             if (currentUrl != url) return@postDelayed
             runCatching {
-                p.setMediaSource(mediaSourceFor(url))
-                p.prepare()
-                p.playWhenReady = true
-                armOpenWatchdog() // every attempt gets its own open deadline (see [armOpenWatchdog])
+                reprepare(p, url)
             }.onFailure {
                 _state.value = State.ERROR
                 _buffering.value = false
@@ -1668,10 +1680,7 @@ class LivePreviewEngine(
         val url = currentUrl ?: return
         LiveDiagnosticsLog.event("provider back-off elapsed — retrying the same URL on the same engine")
         runCatching {
-            p.setMediaSource(mediaSourceFor(url))
-            p.prepare()
-            p.playWhenReady = true
-            armOpenWatchdog()
+            reprepare(p, url)
         }.onFailure {
             _state.value = State.ERROR
             _buffering.value = false
@@ -1785,16 +1794,13 @@ class LivePreviewEngine(
         mainHandler.post {
             if (currentUrl != alt) return@post
             runCatching {
-                p.setMediaSource(mediaSourceFor(alt))
-                p.prepare()
-                p.playWhenReady = true
-                armOpenWatchdog() // every attempt gets its own open deadline (see [armOpenWatchdog])
+                reprepare(p, alt)
             }.onFailure {
                 _state.value = State.ERROR
                 _buffering.value = false
                 val raw = it.message.orEmpty()
                 _error.value = PlayerErrors.visibleFailure(raw, alt, PlaybackFailure.Channel)
-                _errorInfo.value = ErrorInfo(PlayerErrors.reasonFor(raw, alt), exoSpec(), it.message)
+                _errorInfo.value = ErrorInfo(PlayerErrors.reasonFor(raw), exoSpec(), it.message)
             }
         }
     }
@@ -1820,16 +1826,13 @@ class LivePreviewEngine(
         mainHandler.post {
             if (currentUrl != url) return@post
             runCatching {
-                p.setMediaSource(mediaSourceFor(url))
-                p.prepare()
-                p.playWhenReady = true
-                armOpenWatchdog() // every attempt gets its own open deadline (see [armOpenWatchdog])
+                reprepare(p, url)
             }.onFailure {
                 _state.value = State.ERROR
                 _buffering.value = false
                 val raw = it.message.orEmpty()
                 _error.value = PlayerErrors.visibleFailure(raw, url, PlaybackFailure.Channel)
-                _errorInfo.value = ErrorInfo(PlayerErrors.reasonFor(raw, url), exoSpec(), it.message)
+                _errorInfo.value = ErrorInfo(PlayerErrors.reasonFor(raw), exoSpec(), it.message)
             }
         }
     }
@@ -1848,16 +1851,13 @@ class LivePreviewEngine(
         mainHandler.post {
             if (currentUrl != url) return@post
             runCatching {
-                p.setMediaSource(mediaSourceFor(url))
-                p.prepare()
-                p.playWhenReady = true
-                armOpenWatchdog() // every attempt gets its own open deadline (see [armOpenWatchdog])
+                reprepare(p, url)
             }.onFailure {
                 _state.value = State.ERROR
                 _buffering.value = false
                 val raw = it.message.orEmpty()
                 _error.value = PlayerErrors.visibleFailure(raw, url, PlaybackFailure.Channel)
-                _errorInfo.value = ErrorInfo(PlayerErrors.reasonFor(raw, url), exoSpec(), it.message)
+                _errorInfo.value = ErrorInfo(PlayerErrors.reasonFor(raw), exoSpec(), it.message)
             }
         }
     }
@@ -1906,10 +1906,7 @@ class LivePreviewEngine(
                 // tune re-applies at the same point in play().
                 applyLanguagePrefs()
                 setVideoTrackDisabled(_audioOnly.value)
-                p.setMediaSource(mediaSourceFor(url))
-                p.prepare()
-                p.playWhenReady = true
-                armOpenWatchdog() // every attempt gets its own open deadline (see [armOpenWatchdog])
+                reprepare(p, url)
             }.onFailure {
                 LiveDiagnosticsLog.event("decoder rebuild failed: ${it.message}")
                 _state.value = State.ERROR
@@ -1969,6 +1966,36 @@ class LivePreviewEngine(
         applyMute() // re-enables/deselects the audio track when crossing 0 (passthrough-safe mute)
         player?.volume = v.coerceAtMost(100) / 100f
         applyVolumeBoost(v)
+    }
+
+    // --- Per-item zoom / volume the user asked us to remember (playback_prefs, DB v32) ---
+
+    /** Apply this channel's remembered zoom/volume over the defaults just set by the tune. The read
+     *  can't hold up the tune, so a late answer is dropped if the user has already zapped away. */
+    private fun applyRememberedPrefs(key: String) {
+        val tunedUrl = lastTunedUrl
+        scope.launch {
+            val row = playbackPrefs.prefsFor(key) ?: return@launch
+            if (tunedUrl != lastTunedUrl) return@launch
+            row.zoomMode?.let { name ->
+                runCatching { ZoomMode.valueOf(name) }.getOrNull()?.let { _zoomMode.value = it }
+            }
+            // Never un-mute the browse preview pane by restoring a level the user set in fullscreen.
+            if (!muted) row.volumeBoost?.let { adjustVolume(it - _volume.value) }
+        }
+    }
+
+    override fun setZoomModeByUser(mode: ZoomMode) {
+        setZoomMode(mode)
+        val key = _currentMeta.value.contentKey ?: lastTunedUrl ?: return
+        scope.launch { playbackPrefs.rememberZoom(key, mode.name) }
+    }
+
+    override fun adjustVolumeByUser(delta: Int) {
+        adjustVolume(delta)
+        val key = _currentMeta.value.contentKey ?: lastTunedUrl ?: return
+        val level = _volume.value
+        scope.launch { playbackPrefs.rememberVolume(key, level) }
     }
 
     // --- Volume boost above 100% (F19a). Shared with the VOD ExoPlayer engine — see [VolumeBoost]. ---

@@ -77,6 +77,17 @@ object ChNavLimits {
     const val DEFAULT_SKIP = 10
 }
 
+/** Seek/rewind step choices. Top-level so the settings UI and the defaults share one list. */
+object SeekSteps {
+    /** Rewind/forward inside a movie or episode — the player's long-standing 10 s. */
+    const val DEFAULT_SEEK_STEP_SEC = 10
+    val SEEK_CHOICES = listOf(5, 10, 15, 30, 60)
+
+    /** Stepping through a live channel's catch-up archive — the long-standing 30 s. */
+    const val DEFAULT_LIVE_REWIND_STEP_SEC = 30
+    val LIVE_REWIND_CHOICES = listOf(10, 15, 30, 60, 120)
+}
+
 /**
  * Persists app-level preferences. Phase 1 only needs the theme selection; this will grow to hold
  * UI zoom, custom user-agent, refresh-on-start, etc. in later phases.
@@ -176,6 +187,10 @@ class SettingsRepository(private val context: Context, private val localeStore: 
         val EXTERNAL_PLAYER_MOVIES = booleanPreferencesKey("external_player_movies")
         val EXTERNAL_PLAYER_SERIES = booleanPreferencesKey("external_player_series")
         val DEFAULT_ZOOM = stringPreferencesKey("default_zoom")
+        val DEFAULT_VOLUME = intPreferencesKey("default_volume")
+        val DEINTERLACE = booleanPreferencesKey("deinterlace")
+        val SEEK_STEP_SEC = intPreferencesKey("seek_step_sec")
+        val LIVE_REWIND_STEP_SEC = intPreferencesKey("live_rewind_step_sec")
         val SUB_SCALE = floatPreferencesKey("sub_scale")
         // Subtitle appearance (#96): off by default so every renderer keeps its stock look —
         // notably the embedded broadcaster styling of Live TV CEA-608/teletext cues.
@@ -794,9 +809,6 @@ class SettingsRepository(private val context: Context, private val localeStore: 
      *  (lip-sync drift) on VODs. Stereo's small, well-reported buffer stays locked. Hence: default OFF. */
     val surroundSound: Flow<Boolean> = prefsFlow { it[Keys.SURROUND_SOUND] ?: false }
 
-    suspend fun setSurroundSound(enabled: Boolean) {
-        context.dataStore.edit { it[Keys.SURROUND_SOUND] = enabled }
-    }
 
     /**
      * The three-state replacement for [surroundSound] (Auto / Stereo only / Surround).
@@ -836,6 +848,52 @@ class SettingsRepository(private val context: Context, private val localeStore: 
 
     suspend fun setDefaultZoom(name: String) {
         context.dataStore.edit { it[Keys.DEFAULT_ZOOM] = name }
+    }
+
+    /**
+     * Volume percent every item starts at (100 = untouched, up to the 150 boost ceiling). A film the
+     * user has individually turned up overrides this — see
+     * [tv.own.owntv.core.player.PlaybackPrefsStore].
+     */
+    val defaultVolume: Flow<Int> = prefsFlow { (it[Keys.DEFAULT_VOLUME] ?: 100).coerceIn(0, 150) }
+
+    suspend fun setDefaultVolume(percent: Int) {
+        context.dataStore.edit { it[Keys.DEFAULT_VOLUME] = percent.coerceIn(0, 150) }
+    }
+
+    /**
+     * How far the player's rewind/forward buttons and the seek bar's ◀/▶ jump in a movie or episode.
+     *
+     * Separate from [liveRewindStepSec] on purpose: skipping an ad break in a film and stepping back
+     * through a live channel's archive are different journeys, and one number can't be right for both
+     * — which is why the two have always had different hardcoded values (10 s and 30 s).
+     */
+    val seekStepSec: Flow<Int> = prefsFlow { it[Keys.SEEK_STEP_SEC] ?: SeekSteps.DEFAULT_SEEK_STEP_SEC }
+
+    suspend fun setSeekStepSec(seconds: Int) {
+        context.dataStore.edit { it[Keys.SEEK_STEP_SEC] = seconds }
+    }
+
+    /**
+     * Deinterlacing for interlaced broadcast material (old SD channels that show combing on movement).
+     * Off by default, because the TV's own panel processing usually handles it and a filter that isn't
+     * needed only costs frames.
+     *
+     * mpv only, and only while mpv is doing its own rendering — on the direct decoder-to-surface path
+     * ([OwnTVPlayer] `vo=mediacodec_embed`) no video filter runs at all, so nothing is inserted there.
+     * The setting's description says so rather than pretending otherwise.
+     */
+    val deinterlace: Flow<Boolean> = prefsFlow { it[Keys.DEINTERLACE] ?: false }
+
+    suspend fun setDeinterlace(enabled: Boolean) {
+        context.dataStore.edit { it[Keys.DEINTERLACE] = enabled }
+    }
+
+    /** How far one press of Rewind/Forward moves inside a live channel's catch-up archive. */
+    val liveRewindStepSec: Flow<Int> = prefsFlow { it[Keys.LIVE_REWIND_STEP_SEC] ?: SeekSteps.DEFAULT_LIVE_REWIND_STEP_SEC }
+
+    suspend fun setLiveRewindStepSec(seconds: Int) {
+        context.dataStore.edit { it[Keys.LIVE_REWIND_STEP_SEC] = seconds }
     }
 
     // --- Subtitle appearance (#96): size, text color, screen position, background transparency ---
@@ -1563,7 +1621,7 @@ class SettingsRepository(private val context: Context, private val localeStore: 
         // The STATIC-mode hidden set rides with backup so a reinstall keeps the user's hidden icons.
         Keys.NAV_MENU_HIDDEN,
     )
-    private val backupIntKeys = listOf(Keys.UI_ZOOM_PCT, Keys.FONT_SIZE_PCT, Keys.AUDIO_DELAY_MS, Keys.CATCHUP_OFFSET_MIN, Keys.EPG_OFFSET_MIN, Keys.PROXY_PORT, Keys.DNS_PORT, Keys.CH_NAV_UP_SKIP, Keys.CH_NAV_DOWN_SKIP, Keys.MINI_PLAYER_SIZE_PCT, Keys.LIVE_LATENCY_CUSTOM_SECS, Keys.LIVE_PREROLL_SECS, Keys.GLASS_SCOPE, Keys.GLASS_ALPHA, Keys.GLASS_BLUR, Keys.GLASS_HIGHLIGHT, Keys.SUB_BG_OPACITY,
+    private val backupIntKeys = listOf(Keys.DEFAULT_VOLUME, Keys.SEEK_STEP_SEC, Keys.LIVE_REWIND_STEP_SEC, Keys.UI_ZOOM_PCT, Keys.FONT_SIZE_PCT, Keys.AUDIO_DELAY_MS, Keys.CATCHUP_OFFSET_MIN, Keys.EPG_OFFSET_MIN, Keys.PROXY_PORT, Keys.DNS_PORT, Keys.CH_NAV_UP_SKIP, Keys.CH_NAV_DOWN_SKIP, Keys.MINI_PLAYER_SIZE_PCT, Keys.LIVE_LATENCY_CUSTOM_SECS, Keys.LIVE_PREROLL_SECS, Keys.GLASS_SCOPE, Keys.GLASS_ALPHA, Keys.GLASS_BLUR, Keys.GLASS_HIGHLIGHT, Keys.SUB_BG_OPACITY,
         Keys.PANEL_W_LIVE_CAT, Keys.PANEL_W_LIVE_LIST, Keys.PANEL_W_LIVE_PREVIEW,
         Keys.PANEL_W_MOVIES_CAT, Keys.PANEL_W_MOVIES_LIST, Keys.PANEL_W_MOVIES_PREVIEW,
         Keys.PANEL_W_SERIES_CAT, Keys.PANEL_W_SERIES_LIST, Keys.PANEL_W_SERIES_PREVIEW)
@@ -1575,7 +1633,7 @@ class SettingsRepository(private val context: Context, private val localeStore: 
         Keys.DNS_ENABLED,
         Keys.REMEMBER_LAST_LIVE, Keys.REMEMBER_LAST_MOVIES, Keys.REMEMBER_LAST_SERIES,
         Keys.REMEMBER_CAT_LIVE, Keys.REMEMBER_CAT_MOVIES, Keys.REMEMBER_CAT_SERIES,
-        Keys.SUB_STYLE_ENABLED, Keys.SUB_SEARCH_FILTER,
+        Keys.SUB_STYLE_ENABLED, Keys.SUB_SEARCH_FILTER, Keys.DEINTERLACE,
         Keys.PANEL_W_LIVE_ON, Keys.PANEL_W_MOVIES_ON, Keys.PANEL_W_SERIES_ON,
         Keys.AMBIENT_GLOW_ENABLED, Keys.AMBIENT_GLOW_PULSE,
         Keys.GLASS_ALLOW_FULL_TRANSPARENCY, Keys.GLASS_DEPTH_EFFECTS,

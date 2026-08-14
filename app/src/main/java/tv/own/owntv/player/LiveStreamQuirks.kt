@@ -93,8 +93,6 @@ object LiveStreamQuirks {
     private val brokenTimestampStreams = ConcurrentHashMap.newKeySet<String>()
     private val noHlsVariantStreams = ConcurrentHashMap.newKeySet<String>()
     private val noHlsVariantMpvStreams = ConcurrentHashMap.newKeySet<String>()
-    private val noHlsVariantHosts = ConcurrentHashMap.newKeySet<String>()
-    private val noHlsChannelsPerHost = ConcurrentHashMap<String, MutableSet<String>>()
     private val tolerantDemuxStreams = ConcurrentHashMap.newKeySet<String>()
     private val prerollDefeatedStreams = ConcurrentHashMap.newKeySet<String>()
     private val softwareArchiveHosts = ConcurrentHashMap.newKeySet<String>()
@@ -218,57 +216,28 @@ object LiveStreamQuirks {
      * each engine only ever learns its own failures, and the fallback ladder gives the other engine the
      * HLS variant a fair try before giving up on it.
      *
-     * Keyed by the **channel's own `.ts` URL**, not the panel: on the very same provider all the other
-     * channels keep their HLS variant, which is the reason the user turned the setting on. Session-only,
-     * so a panel that finishes remuxing is back to HLS after the next app start.
+     * Keyed by the **channel's own `.ts` URL**, and never widened to the panel: on the very same provider
+     * all the other channels keep their HLS variant, which is the reason the user turned the setting on.
+     * Session-only, so a panel that finishes remuxing is back to HLS after the next app start.
+     *
+     * **A panel-wide verdict used to exist here and was removed deliberately.** Three channels failing
+     * their `.m3u8` wrote off the whole provider for the session, and the failures that reached this
+     * function were not necessarily about format at all — an account-busy lockout (HTTP 458) walked three
+     * channels onto their `.ts` rung in under two minutes and cost every remaining channel its HLS start
+     * for the rest of the session. One channel's evidence now only ever condemns that channel.
      */
     fun rememberNoHlsVariant(tsUrl: String) {
         noHlsVariantStreams += tsUrl
-        notePanelHlsFailure(tsUrl)
     }
 
-    fun lacksHlsVariant(tsUrl: String): Boolean = tsUrl in noHlsVariantStreams || panelLacksHls(tsUrl)
+    fun lacksHlsVariant(tsUrl: String): Boolean = tsUrl in noHlsVariantStreams
 
     /** As [rememberNoHlsVariant], for mpv. */
     fun rememberNoHlsVariantMpv(tsUrl: String) {
         noHlsVariantMpvStreams += tsUrl
-        notePanelHlsFailure(tsUrl)
     }
 
-    fun lacksHlsVariantMpv(tsUrl: String): Boolean = tsUrl in noHlsVariantMpvStreams || panelLacksHls(tsUrl)
-
-    /**
-     * Distinct channels that must fail their `.m3u8` before the *panel* is written off as HLS-less.
-     *
-     * The per-channel scope above is right for the odd unremuxed channel, but it is the wrong shape when
-     * a panel's HLS is broken account-wide — which is the common case, because `allowed_output_formats`
-     * advertises `m3u8` from the account record while the edge serving it 404s. There, every channel pays
-     * two dead opens (ExoPlayer's HLS rung, then mpv's) for the whole session, and the lesson is thrown
-     * away at every app start. Three channels is enough to tell "this one channel isn't remuxed" from
-     * "this panel doesn't do HLS" without one unlucky channel condemning a working panel.
-     */
-    const val NO_HLS_CHANNELS_BEFORE_PANEL_WIDE = 3
-
-    /**
-     * True once [NO_HLS_CHANNELS_BEFORE_PANEL_WIDE] different channels on this panel have failed HLS.
-     *
-     * Deliberately NOT per engine, unlike the per-channel records: a panel that doesn't serve HLS at all
-     * doesn't serve it to either engine, and the count only reaches the threshold when the failures were
-     * spread across channels rather than repeated on one.
-     */
-    fun panelLacksHls(url: String): Boolean = hostKey(url) in noHlsVariantHosts
-
-    private fun notePanelHlsFailure(tsUrl: String) {
-        val host = hostKey(tsUrl)
-        if (host in noHlsVariantHosts) return
-        // Keyed by the channel URL, so the same channel failing on both engines still counts once.
-        val channels = noHlsChannelsPerHost.computeIfAbsent(host) { ConcurrentHashMap.newKeySet() }
-        channels += tsUrl
-        if (channels.size >= NO_HLS_CHANNELS_BEFORE_PANEL_WIDE) {
-            noHlsVariantHosts += host
-            noHlsChannelsPerHost.remove(host)
-        }
-    }
+    fun lacksHlsVariantMpv(tsUrl: String): Boolean = tsUrl in noHlsVariantMpvStreams
 
     /**
      * Record that this stream only opens with FFmpeg's error tolerance turned on.
@@ -383,7 +352,7 @@ object LiveStreamQuirks {
         hlsRedirectHosts.clear(); segmentRefusingHosts.clear(); singleSessionHosts.clear()
         brokenTimestampStreams.clear(); softwareArchiveHosts.clear(); archivePersistence = null
         noHlsVariantStreams.clear(); noHlsVariantMpvStreams.clear(); prerollDefeatedStreams.clear()
-        noHlsVariantHosts.clear(); noHlsChannelsPerHost.clear(); tolerantDemuxStreams.clear()
+        tolerantDemuxStreams.clear()
         uaBlockingHosts.clear(); providerMessages.clear()
     }
 }

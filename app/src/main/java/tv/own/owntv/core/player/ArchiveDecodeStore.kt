@@ -42,9 +42,4 @@ class ArchiveDecodeStore(private val context: Context) {
         }
     }
 
-    suspend fun forget(host: String) {
-        context.archiveDecodeStore.edit { prefs ->
-            prefs[key] = (prefs[key] ?: emptySet()) - host
-        }
-    }
 }

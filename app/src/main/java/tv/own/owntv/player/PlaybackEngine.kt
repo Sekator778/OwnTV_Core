@@ -59,6 +59,16 @@ interface PlaybackEngine {
     fun togglePlayPause()
     fun setZoomMode(mode: ZoomMode)
     fun adjustVolume(delta: Int)
+
+    /**
+     * The two above, but as a DELIBERATE user choice: the engine applies the change and remembers it
+     * for the item currently playing (`playback_prefs`), so the same film/channel comes back at that
+     * zoom and volume. Everything else that moves zoom or volume — audio-focus ducking, an engine
+     * handoff carrying the level across, re-applying zoom on a new video track — must keep calling
+     * the plain setters, or the player would teach itself preferences the user never expressed.
+     */
+    fun setZoomModeByUser(mode: ZoomMode) = setZoomMode(mode)
+    fun adjustVolumeByUser(delta: Int) = adjustVolume(delta)
     fun toggleMute()
     fun retry()
     fun selectAudio(id: Int)
@@ -71,8 +81,12 @@ interface PlaybackEngine {
     fun textTracks(): List<TrackOption>
 
     /** Live technical readout (label → value) for the stream-info overlay — codec, resolution, fps, HDR,
-     *  bitrate, decoder, audio, buffer, source. A snapshot; the overlay re-reads it periodically. */
-    fun streamInfo(): List<StreamInfoRow> = emptyList()
+     *  bitrate, decoder, audio, buffer, source. A snapshot; the overlay re-reads it periodically.
+     *
+     *  Suspending because the mpv implementation reads ~25 properties and does so on its own executor
+     *  rather than on the caller's thread; the ExoPlayer implementations stay on the main thread, which
+     *  is what Media3 requires, and simply never suspend. */
+    suspend fun streamInfo(): List<StreamInfoRow> = emptyList()
 
     // VOD-only — sensible no-op / empty defaults for a live engine.
     val position: StateFlow<Long> get() = ZERO_LONG
@@ -89,6 +103,9 @@ interface PlaybackEngine {
     fun audioDelayAvailable(): Boolean = false
     /** Subtitle-timing offset (ms) for the ACTIVE subtitle — VOD only (subtitle plan §8). */
     val subDelayMs: StateFlow<Int> get() = ZERO_INT
+    /** Settings → Seek step: how far one press of rewind/forward moves. VOD only; a live engine never
+     *  seeks (stepping through a live archive is Live TV's own rewind, with its own setting). */
+    val seekStepMs: StateFlow<Long> get() = DEFAULT_SEEK_STEP
     fun setSpeed(speed: Double) {}
     fun adjustAudioDelay(deltaMs: Int) {}
     fun adjustSubtitleDelay(deltaMs: Int) {}
@@ -111,6 +128,8 @@ interface PlaybackEngine {
         private val NO_CHIPS: StateFlow<List<String>> = MutableStateFlow(emptyList())
         private val NULL_STRING: StateFlow<String?> = MutableStateFlow(null)
         private val FALSE_FLOW: StateFlow<Boolean> = MutableStateFlow(false)
+        private val DEFAULT_SEEK_STEP: StateFlow<Long> =
+            MutableStateFlow(tv.own.owntv.features.settings.data.SeekSteps.DEFAULT_SEEK_STEP_SEC * 1000L)
     }
 }
 
@@ -147,6 +166,8 @@ class MpvPlaybackEngine(private val p: OwnTVPlayer) : PlaybackEngine {
     override fun togglePlayPause() = p.togglePlayPause()
     override fun setZoomMode(mode: ZoomMode) = p.setZoomMode(mode)
     override fun adjustVolume(delta: Int) = p.adjustVolume(delta)
+    override fun setZoomModeByUser(mode: ZoomMode) = p.setZoomModeByUser(mode)
+    override fun adjustVolumeByUser(delta: Int) = p.adjustVolumeByUser(delta)
     override fun toggleMute() = p.toggleMute()
     override fun retry() = p.retry()
     override fun selectAudio(id: Int) = p.selectAudio(id)
@@ -155,7 +176,7 @@ class MpvPlaybackEngine(private val p: OwnTVPlayer) : PlaybackEngine {
     override fun addExternalSubtitle(path: String, title: String, lang: String?) = p.addExternalSubtitle(path, title, lang)
     override fun audioTracks() = p.audioTracks()
     override fun textTracks() = p.textTracks()
-    override fun streamInfo() = p.streamInfo()
+    override suspend fun streamInfo() = p.streamInfo()
     override fun setBitrateTrackingEnabled(enabled: Boolean) = p.setBitrateTrackingEnabled(enabled)
     override fun refreshStreamChips() = p.refreshStreamChips()
     override fun setSpeed(speed: Double) = p.setSpeed(speed)
@@ -163,5 +184,6 @@ class MpvPlaybackEngine(private val p: OwnTVPlayer) : PlaybackEngine {
     override fun previous() = p.previous()
     override fun next() = p.next()
     override fun seekBy(deltaMs: Long) = p.seekBy(deltaMs)
+    override val seekStepMs get() = p.seekStepMs
     override fun cancelAutoNext() = p.cancelAutoNext()
 }

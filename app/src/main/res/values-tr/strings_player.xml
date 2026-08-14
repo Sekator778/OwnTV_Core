@@ -57,8 +57,6 @@
     <string name="player_subtitle_delay_zero">0.0 sn</string>
     <string name="player_subtitle_delay_positive">+<xliff:g id="seconds">%1$.1f</xliff:g> sn</string>
     <string name="player_subtitle_delay_negative">−<xliff:g id="seconds">%1$.1f</xliff:g> sn</string>
-    <string name="player_track_seconds"><xliff:g id="minutes">%1$d</xliff:g>:<xliff:g id="seconds">%2$02d</xliff:g></string>
-    <string name="player_track_hours"><xliff:g id="hours">%1$d</xliff:g>:<xliff:g id="minutes">%2$02d</xliff:g>:<xliff:g id="seconds">%3$02d</xliff:g></string>
     <string name="player_time_progress"><xliff:g id="position">%1$s</xliff:g> / <xliff:g id="duration">%2$s</xliff:g></string>
     <string name="player_time_remaining">−<xliff:g id="time">%1$s</xliff:g></string>
     <string name="player_switch_exo">ExoPlayer\'a geçildi</string>

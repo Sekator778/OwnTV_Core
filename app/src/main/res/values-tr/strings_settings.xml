@@ -351,11 +351,43 @@
     <string name="settings_decoding">Kod çözme</string>
     <string name="settings_hardware_decoding">Donanımla kod çözme</string>
     <string name="settings_hardware_decoding_description">TV\'nin donanım kod çözücüsünü kullanın. Bazı akışlar takılıyor veya görüntü bozuklukları gösteriyorsa kapatın.</string>
+    <!-- Translators: Setting label for deinterlacing of interlaced broadcast video. -->
+    <string name="settings_deinterlace">Taramasızlaştırma</string>
+    <!-- Translators: Description of the deinterlacing setting. -->
+    <string name="settings_deinterlace_description">Bazı eski SD kanalların harekette gösterdiği tarak benzeri çizgileri yumuşatır. mpv motoru görüntüyü kendisi çizerken geçerlidir; fark etmiyorsa donanım kod çözmeyi kapatın.</string>
     <string name="settings_movies_series_player">Film ve Dizi oynatıcısı</string>
     <string name="settings_reset_player_choices">Kaydedilen oynatıcı seçimlerini sıfırla</string>
     <string name="settings_external_player">Harici oynatıcı</string>
     <string name="settings_default_zoom">Varsayılan yakınlaştırma</string>
     <string name="settings_default_zoom_description">Oynatma başladığında uygulanacak en-boy oranı/yakınlaştırma.</string>
+    <!-- Translators: Setting label for the volume level playback starts at. -->
+    <string name="settings_default_volume">Varsayılan ses düzeyi</string>
+    <!-- Translators: Description of the default volume setting. -->
+    <string name="settings_default_volume_description">Oynatma başladığında uygulanacak ses düzeyi. %%100\'ün üzerinde sesi düşük yayınlar yükseltilir.</string>
+    <!-- Translators: Settings-row title for forgetting the zoom saved for individual items. -->
+    <string name="settings_reset_saved_zoom">Kaydedilen yakınlaştırmayı sıfırla</string>
+    <!-- Translators: Description of the reset-saved-zoom setting row. -->
+    <string name="settings_reset_saved_zoom_description">Oynatıcıda yakınlaştırmayı değiştirmek, bunu ilgili kanal, film ya da bölüm için kaydeder. Sıfırlama her şeyin yeniden varsayılan yakınlaştırmayı izlemesini sağlar.</string>
+    <!-- Translators: Confirmation dialog title before forgetting the saved per-item zoom. -->
+    <string name="settings_reset_saved_zoom_confirm">Kaydedilen yakınlaştırma sıfırlansın mı?</string>
+    <!-- Translators: Confirmation dialog body before forgetting the saved per-item zoom. -->
+    <string name="settings_reset_saved_zoom_confirm_description">Her kanal, film ve bölüm varsayılan yakınlaştırmaya döner. Kaydedilen ses düzeyleri korunur. Tek bir öğeyi istediğiniz zaman oynatıcıdan yeniden ayarlayabilirsiniz.</string>
+    <!-- Translators: Settings-row title for forgetting the volume saved for individual items. -->
+    <string name="settings_reset_saved_volume">Kaydedilen ses düzeyini sıfırla</string>
+    <!-- Translators: Description of the reset-saved-volume setting row. -->
+    <string name="settings_reset_saved_volume_description">Oynatıcıda ses düzeyini değiştirmek, bunu ilgili kanal, film ya da bölüm için kaydeder. Sıfırlama her şeyin yeniden varsayılan ses düzeyini izlemesini sağlar.</string>
+    <!-- Translators: Confirmation dialog title before forgetting the saved per-item volume. -->
+    <string name="settings_reset_saved_volume_confirm">Kaydedilen ses düzeyi sıfırlansın mı?</string>
+    <!-- Translators: Confirmation dialog body before forgetting the saved per-item volume. -->
+    <string name="settings_reset_saved_volume_confirm_description">Her kanal, film ve bölüm varsayılan ses düzeyine döner. Kaydedilen yakınlaştırma ayarları korunur. Tek bir öğeyi istediğiniz zaman oynatıcıdan yeniden ayarlayabilirsiniz.</string>
+    <!-- Translators: Setting label for how far rewind/forward jumps in a movie or episode. -->
+    <string name="settings_seek_step">Atlama adımı</string>
+    <!-- Translators: Description of the seek step setting. -->
+    <string name="settings_seek_step_description">Bir filmde veya bölümde geri ve ileri sarmanın ne kadar atladığı.</string>
+    <!-- Translators: Setting label for how far rewind/forward jumps inside a live channel's archive. -->
+    <string name="settings_live_rewind_step">Canlı geri sarma adımı</string>
+    <!-- Translators: Description of the live rewind step setting. -->
+    <string name="settings_live_rewind_step_description">Canlı bir kanalın arşivinde geri ve ileri sarmanın ne kadar ilerlediği.</string>
     <string name="settings_resume_playback">Oynatmaya devam et</string>
     <string name="settings_resume_playback_description">Bir filmin veya bölümün kayıtlı oynatma konumu olduğunda ne yapılacağı.</string>
     <string name="settings_subtitles">Altyazılar</string>
@@ -370,7 +402,7 @@
     <string name="settings_audio">Ses</string>
     <string name="settings_preferred_audio_language">Tercih edilen ses dili</string>
     <string name="settings_audio_sync">Ses eşitleme</string>
-    <string name="settings_audio_sync_description">Görüntüyle eşleşmesi için sesi öne veya geriye kaydırın.</string>
+    <string name="settings_audio_sync_description">Görüntüyle eşleşmesi için sesi öne veya geriye kaydırın. Yalnızca mpv motoru için geçerlidir.</string>
     <string name="settings_live_tv">Canlı TV</string>
     <string name="settings_live_latency_description">Yayının canlı yayın noktasına ne kadar yakın oynatılacağı. Daha düşük değer canlı yayına daha yakın ancak daha küçük bir arabellek anlamına gelir; bu nedenle zayıf akışlar daha sık takılabilir veya yeniden bağlanabilir. Açacağınız bir sonraki kanalda uygulanır.</string>
     <string name="settings_channel_numbers">Kanal numaraları</string>

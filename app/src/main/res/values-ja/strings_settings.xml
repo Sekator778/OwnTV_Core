@@ -350,11 +350,43 @@
     <string name="settings_decoding">デコード</string>
     <string name="settings_hardware_decoding">ハードウェアデコード</string>
     <string name="settings_hardware_decoding_description">TVのハードウェアデコーダーを使用します。一部のストリームで映像が途切れたり、表示が乱れたりする場合はオフにしてください。</string>
+    <!-- Translators: Setting label for deinterlacing of interlaced broadcast video. -->
+    <string name="settings_deinterlace">インターレース解除</string>
+    <!-- Translators: Description of the deinterlacing setting. -->
+    <string name="settings_deinterlace_description">一部の古いSDチャンネルで動きのある場面に出る櫛状の線をなめらかにします。mpvが自分で映像を描画しているときに適用されるため、変化がない場合はハードウェアデコードをオフにしてください。</string>
     <string name="settings_movies_series_player">映画とシリーズのプレーヤー</string>
     <string name="settings_reset_player_choices">保存したプレーヤーの選択をリセット</string>
     <string name="settings_external_player">外部プレーヤー</string>
     <string name="settings_default_zoom">デフォルトのズーム</string>
     <string name="settings_default_zoom_description">再生開始時に適用するアスペクト比／ズームです。</string>
+    <!-- Translators: Setting label for the volume level playback starts at. -->
+    <string name="settings_default_volume">デフォルトの音量</string>
+    <!-- Translators: Description of the default volume setting. -->
+    <string name="settings_default_volume_description">再生開始時に適用する音量です。100%%を超えると、音の小さいストリームが増幅されます。</string>
+    <!-- Translators: Settings-row title for forgetting the zoom saved for individual items. -->
+    <string name="settings_reset_saved_zoom">保存したズームをリセット</string>
+    <!-- Translators: Description of the reset-saved-zoom setting row. -->
+    <string name="settings_reset_saved_zoom_description">プレーヤーでズームを変更すると、そのチャンネル・映画・エピソード用に保存されます。リセットすると、すべてが再びデフォルトのズームに従います。</string>
+    <!-- Translators: Confirmation dialog title before forgetting the saved per-item zoom. -->
+    <string name="settings_reset_saved_zoom_confirm">保存したズームをリセットしますか？</string>
+    <!-- Translators: Confirmation dialog body before forgetting the saved per-item zoom. -->
+    <string name="settings_reset_saved_zoom_confirm_description">すべてのチャンネル、映画、エピソードがデフォルトのズームに戻ります。保存済みの音量はそのまま残ります。個別の設定は、いつでもプレーヤーから行えます。</string>
+    <!-- Translators: Settings-row title for forgetting the volume saved for individual items. -->
+    <string name="settings_reset_saved_volume">保存した音量をリセット</string>
+    <!-- Translators: Description of the reset-saved-volume setting row. -->
+    <string name="settings_reset_saved_volume_description">プレーヤーで音量を変更すると、そのチャンネル・映画・エピソード用に保存されます。リセットすると、すべてが再びデフォルトの音量に従います。</string>
+    <!-- Translators: Confirmation dialog title before forgetting the saved per-item volume. -->
+    <string name="settings_reset_saved_volume_confirm">保存した音量をリセットしますか？</string>
+    <!-- Translators: Confirmation dialog body before forgetting the saved per-item volume. -->
+    <string name="settings_reset_saved_volume_confirm_description">すべてのチャンネル、映画、エピソードがデフォルトの音量に戻ります。保存済みのズーム設定はそのまま残ります。個別の設定は、いつでもプレーヤーから行えます。</string>
+    <!-- Translators: Setting label for how far rewind/forward jumps in a movie or episode. -->
+    <string name="settings_seek_step">シークの幅</string>
+    <!-- Translators: Description of the seek step setting. -->
+    <string name="settings_seek_step_description">映画やエピソードで巻き戻し・早送りが動く長さです。</string>
+    <!-- Translators: Setting label for how far rewind/forward jumps inside a live channel's archive. -->
+    <string name="settings_live_rewind_step">ライブ巻き戻しの幅</string>
+    <!-- Translators: Description of the live rewind step setting. -->
+    <string name="settings_live_rewind_step_description">ライブチャンネルの見逃し配信内で巻き戻し・早送りが動く長さです。</string>
     <string name="settings_resume_playback">再生を再開</string>
     <string name="settings_resume_playback_description">映画またはエピソードに保存済みの再生位置がある場合の動作です。</string>
     <string name="settings_subtitles">字幕</string>
@@ -369,7 +401,7 @@
     <string name="settings_audio">音声</string>
     <string name="settings_preferred_audio_language">優先する音声言語</string>
     <string name="settings_audio_sync">音声同期</string>
-    <string name="settings_audio_sync_description">映像に合うように音声を早めたり遅らせたりします。</string>
+    <string name="settings_audio_sync_description">映像に合うように音声を早めたり遅らせたりします。mpv エンジンにのみ適用されます。</string>
     <string name="settings_live_tv">ライブTV</string>
     <string name="settings_live_latency_description">ライブ放送にどの程度近い位置を再生するかを設定します。低くするとライブに近づきますが、バッファが小さくなるため、不安定なストリームでは途切れや再接続が増えることがあります。次に開くチャンネルから適用されます。</string>
     <string name="settings_channel_numbers">チャンネル番号</string>

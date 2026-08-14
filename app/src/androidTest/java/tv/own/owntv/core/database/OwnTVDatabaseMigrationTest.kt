@@ -239,6 +239,47 @@ class OwnTVDatabaseMigrationTest {
     }
 
     /**
+     * The v31 → v32 hop: `playback_prefs`, the per-item zoom/volume the player remembers. The table
+     * is new and starts empty, so the point of this test is that an upgrade from the current public
+     * schema loses nothing and that a profile delete still cascades — a row keyed on a stable
+     * content key is never orphaned by a re-sync, but it must not outlive its profile.
+     */
+    @Test
+    fun migrateVersion31ToCurrent_addsPlaybackPrefs_andCascadesProfileDelete() {
+        context.deleteDatabase(DB_NAME)
+        val db31 = context.openOrCreateDatabase(DB_NAME, Context.MODE_PRIVATE, null)
+        try {
+            executeSchemaQueries(db31, "tv.own.owntv.core.database.OwnTVDatabase/31.json")
+            db31.execSQL("INSERT INTO profiles (id, name, avatarColor, avatarId, isKids, pinHash, createdAt) VALUES (1, 'Primary', 1122867, 7, 0, NULL, 1)")
+            db31.execSQL("INSERT INTO content_order (profileId, mediaType, contextKey, itemId, position) VALUES (1, '${MediaType.LIVE.name}', '10:cat-live', 30, 0)")
+            db31.version = 31
+        } finally {
+            db31.close()
+        }
+
+        val db = openWithAllMigrations()
+        try {
+            val sqlite = db.openHelper.readableDatabase
+            assertTableExists(sqlite, "playback_prefs")
+            assertIndexExists(sqlite, "index_playback_prefs_profileId")
+            assertCount(sqlite, "profiles", 1)
+            assertCount(sqlite, "content_order", 1)
+            assertCount(sqlite, "playback_prefs", 0)
+
+            sqlite.execSQL("PRAGMA foreign_keys = ON")
+            sqlite.execSQL(
+                "INSERT INTO playback_prefs (profileId, contentKey, zoomMode, volumeBoost, updatedAt) " +
+                    "VALUES (1, '10:MOVIE:art-42', 'FILL', 130, 5)",
+            )
+            assertCount(sqlite, "playback_prefs", 1)
+            sqlite.execSQL("DELETE FROM profiles WHERE id = 1")
+            assertCount(sqlite, "playback_prefs", 0)
+        } finally {
+            db.close()
+        }
+    }
+
+    /**
      * Regression for the 4.0.x → 4.1.0 upgrade crash: an interrupted bulk import leaves
      * BulkInsertHelper's dropped non-unique indexes missing. That drift is invisible while the DB
      * version doesn't change, but the next migration triggers Room's full-schema validation, which
@@ -436,6 +477,7 @@ class OwnTVDatabaseMigrationTest {
             OwnTVDatabase.MIGRATION_28_29,
             OwnTVDatabase.MIGRATION_29_30,
             OwnTVDatabase.MIGRATION_30_31,
+            OwnTVDatabase.MIGRATION_31_32,
         )
         .allowMainThreadQueries()
         .build()
@@ -661,7 +703,7 @@ class OwnTVDatabaseMigrationTest {
         private const val DB_NAME = "owntv-migration-test.db"
 
         /** Must match `@Database(version = …)` on [OwnTVDatabase]. */
-        private const val CURRENT_VERSION = 31
+        private const val CURRENT_VERSION = 32
 
         /**
          * Every version with an exported schema that a real database can be sitting at.

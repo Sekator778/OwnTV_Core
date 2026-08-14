@@ -351,11 +351,43 @@
     <string name="settings_decoding">ডিকোডিং</string>
     <string name="settings_hardware_decoding">হার্ডওয়্যার ডিকোডিং</string>
     <string name="settings_hardware_decoding_description">TV-এর হার্ডওয়্যার ডিকোডার ব্যবহার করুন। কিছু স্ট্রিম আটকে গেলে বা বিকৃত ছবি দেখালে এটি বন্ধ করুন।</string>
+    <!-- Translators: Setting label for deinterlacing of interlaced broadcast video. -->
+    <string name="settings_deinterlace">ডিইন্টারলেসিং</string>
+    <!-- Translators: Description of the deinterlacing setting. -->
+    <string name="settings_deinterlace_description">কিছু পুরোনো SD চ্যানেলে নড়াচড়ার সময় দেখা চিরুনির মতো দাগ মসৃণ করে। mpv ইঞ্জিন নিজে ছবি আঁকার সময় এটি প্রযোজ্য, তাই কোনো পার্থক্য না হলে হার্ডওয়্যার ডিকোডিং বন্ধ করুন।</string>
     <string name="settings_movies_series_player">সিনেমা ও সিরিজের প্লেয়ার</string>
     <string name="settings_reset_player_choices">সংরক্ষিত প্লেয়ার পছন্দ রিসেট করুন</string>
     <string name="settings_external_player">বাহ্যিক প্লেয়ার</string>
     <string name="settings_default_zoom">ডিফল্ট জুম</string>
     <string name="settings_default_zoom_description">প্লেব্যাক শুরু হলে প্রয়োগ করা অ্যাসপেক্ট/জুম।</string>
+    <!-- Translators: Setting label for the volume level playback starts at. -->
+    <string name="settings_default_volume">ডিফল্ট ভলিউম</string>
+    <!-- Translators: Description of the default volume setting. -->
+    <string name="settings_default_volume_description">প্লেব্যাক শুরু হলে প্রয়োগ করা ভলিউম। ১০০%%-এর উপরে কম শব্দের স্ট্রিম বাড়িয়ে দেওয়া হয়।</string>
+    <!-- Translators: Settings-row title for forgetting the zoom saved for individual items. -->
+    <string name="settings_reset_saved_zoom">সংরক্ষিত জুম রিসেট করুন</string>
+    <!-- Translators: Description of the reset-saved-zoom setting row. -->
+    <string name="settings_reset_saved_zoom_description">প্লেয়ারে জুম বদলালে তা সেই চ্যানেল, সিনেমা বা পর্বের জন্য সংরক্ষিত হয়। রিসেট করলে সবকিছু আবার ডিফল্ট জুম অনুসরণ করবে।</string>
+    <!-- Translators: Confirmation dialog title before forgetting the saved per-item zoom. -->
+    <string name="settings_reset_saved_zoom_confirm">সংরক্ষিত জুম রিসেট করবেন?</string>
+    <!-- Translators: Confirmation dialog body before forgetting the saved per-item zoom. -->
+    <string name="settings_reset_saved_zoom_confirm_description">প্রতিটি চ্যানেল, সিনেমা ও পর্ব আবার ডিফল্ট জুমে ফিরে যাবে। সংরক্ষিত ভলিউমগুলি অপরিবর্তিত থাকবে। প্লেয়ার থেকে যেকোনো সময় আলাদা একটি আইটেম আবার সেট করতে পারবেন।</string>
+    <!-- Translators: Settings-row title for forgetting the volume saved for individual items. -->
+    <string name="settings_reset_saved_volume">সংরক্ষিত ভলিউম রিসেট করুন</string>
+    <!-- Translators: Description of the reset-saved-volume setting row. -->
+    <string name="settings_reset_saved_volume_description">প্লেয়ারে ভলিউম বদলালে তা সেই চ্যানেল, সিনেমা বা পর্বের জন্য সংরক্ষিত হয়। রিসেট করলে সবকিছু আবার ডিফল্ট ভলিউম অনুসরণ করবে।</string>
+    <!-- Translators: Confirmation dialog title before forgetting the saved per-item volume. -->
+    <string name="settings_reset_saved_volume_confirm">সংরক্ষিত ভলিউম রিসেট করবেন?</string>
+    <!-- Translators: Confirmation dialog body before forgetting the saved per-item volume. -->
+    <string name="settings_reset_saved_volume_confirm_description">প্রতিটি চ্যানেল, সিনেমা ও পর্ব আবার ডিফল্ট ভলিউমে ফিরে যাবে। সংরক্ষিত জুম সেটিংগুলি অপরিবর্তিত থাকবে। প্লেয়ার থেকে যেকোনো সময় আলাদা একটি আইটেম আবার সেট করতে পারবেন।</string>
+    <!-- Translators: Setting label for how far rewind/forward jumps in a movie or episode. -->
+    <string name="settings_seek_step">সিক ধাপ</string>
+    <!-- Translators: Description of the seek step setting. -->
+    <string name="settings_seek_step_description">সিনেমা বা পর্বে রিওয়াইন্ড ও ফরওয়ার্ড কতটা লাফ দেবে।</string>
+    <!-- Translators: Setting label for how far rewind/forward jumps inside a live channel's archive. -->
+    <string name="settings_live_rewind_step">লাইভ রিওয়াইন্ড ধাপ</string>
+    <!-- Translators: Description of the live rewind step setting. -->
+    <string name="settings_live_rewind_step_description">লাইভ চ্যানেলের ক্যাচ-আপ আর্কাইভে রিওয়াইন্ড ও ফরওয়ার্ড কতটা সরবে।</string>
     <string name="settings_resume_playback">প্লেব্যাক চালিয়ে যান</string>
     <string name="settings_resume_playback_description">কোনো সিনেমা বা পর্বের সংরক্ষিত অবস্থান থাকলে কী করা হবে।</string>
     <string name="settings_subtitles">সাবটাইটেল</string>
@@ -370,7 +402,7 @@
     <string name="settings_audio">অডিও</string>
     <string name="settings_preferred_audio_language">পছন্দের অডিও ভাষা</string>
     <string name="settings_audio_sync">অডিও সিঙ্ক</string>
-    <string name="settings_audio_sync_description">ভিডিওর সঙ্গে মেলাতে অডিও আগে বা পরে সরান।</string>
+    <string name="settings_audio_sync_description">ভিডিওর সঙ্গে মেলাতে অডিও আগে বা পরে সরান। শুধুমাত্র mpv ইঞ্জিনে প্রযোজ্য।</string>
     <string name="settings_live_tv">লাইভ টিভি</string>
     <string name="settings_live_latency_description">লাইভ সম্প্রচারের কত কাছাকাছি চালানো হবে। মান কম হলে লাইভের কাছাকাছি থাকবে, তবে বাফার ছোট হবে—তাই দুর্বল স্ট্রিমে বেশি আটকে যেতে বা পুনরায় সংযোগ হতে পারে। পরবর্তী যে চ্যানেলটি খুলবেন, সেটিতে এটি প্রযোজ্য হবে।</string>
     <string name="settings_channel_numbers">চ্যানেল নম্বর</string>

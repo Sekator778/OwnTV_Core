@@ -725,6 +725,10 @@
     <string name="settings_hardware_decoding">Hardware decoding</string>
     <!-- Translators: Description of the hardware decoding setting. -->
     <string name="settings_hardware_decoding_description">Use the TV\'s hardware decoder. Turn off if some streams stutter or show artifacts.</string>
+    <!-- Translators: Setting label for deinterlacing of interlaced broadcast video. -->
+    <string name="settings_deinterlace">Deinterlacing</string>
+    <!-- Translators: Description of the deinterlacing setting. -->
+    <string name="settings_deinterlace_description">Smooth out the comb-like lines some old SD channels show on movement. Applies to the mpv engine while it renders the picture itself, so turn hardware decoding off if it makes no difference.</string>
     <!-- Translators: Video Player settings-row title for Movies & Series. -->
     <string name="settings_movies_series_player">Movies &amp; Series player</string>
     <!-- Translators: Settings-row title for forgetting per-movie/per-episode player choices. -->
@@ -735,6 +739,34 @@
     <string name="settings_default_zoom">Default zoom</string>
     <!-- Translators: Description of the default zoom setting. -->
     <string name="settings_default_zoom_description">Aspect/zoom applied when playback starts.</string>
+    <!-- Translators: Setting label for the volume level playback starts at. -->
+    <string name="settings_default_volume">Default volume</string>
+    <!-- Translators: Description of the default volume setting. -->
+    <string name="settings_default_volume_description">Volume applied when playback starts. Above 100%% quiet streams are amplified.</string>
+    <!-- Translators: Settings-row title for forgetting the zoom saved for individual items. -->
+    <string name="settings_reset_saved_zoom">Reset saved zoom</string>
+    <!-- Translators: Description of the reset-saved-zoom setting row. -->
+    <string name="settings_reset_saved_zoom_description">Changing zoom in the player saves it for that channel, movie or episode. Reset makes everything follow the default zoom again.</string>
+    <!-- Translators: Confirmation dialog title before forgetting the saved per-item zoom. -->
+    <string name="settings_reset_saved_zoom_confirm">Reset saved zoom?</string>
+    <!-- Translators: Confirmation dialog body before forgetting the saved per-item zoom. -->
+    <string name="settings_reset_saved_zoom_confirm_description">Every channel, movie and episode goes back to the default zoom. Saved volumes are kept. You can always set an individual one again from the player.</string>
+    <!-- Translators: Settings-row title for forgetting the volume saved for individual items. -->
+    <string name="settings_reset_saved_volume">Reset saved volume</string>
+    <!-- Translators: Description of the reset-saved-volume setting row. -->
+    <string name="settings_reset_saved_volume_description">Changing volume in the player saves it for that channel, movie or episode. Reset makes everything follow the default volume again.</string>
+    <!-- Translators: Confirmation dialog title before forgetting the saved per-item volume. -->
+    <string name="settings_reset_saved_volume_confirm">Reset saved volume?</string>
+    <!-- Translators: Confirmation dialog body before forgetting the saved per-item volume. -->
+    <string name="settings_reset_saved_volume_confirm_description">Every channel, movie and episode goes back to the default volume. Saved zoom settings are kept. You can always set an individual one again from the player.</string>
+    <!-- Translators: Setting label for how far rewind/forward jumps in a movie or episode. -->
+    <string name="settings_seek_step">Seek step</string>
+    <!-- Translators: Description of the seek step setting. -->
+    <string name="settings_seek_step_description">How far rewind and forward jump in a movie or episode.</string>
+    <!-- Translators: Setting label for how far rewind/forward jumps inside a live channel's archive. -->
+    <string name="settings_live_rewind_step">Live rewind step</string>
+    <!-- Translators: Description of the live rewind step setting. -->
+    <string name="settings_live_rewind_step_description">How far rewind and forward move inside a live channel\'s catch-up archive.</string>
     <!-- Translators: Setting label for the resume playback behavior. -->
     <string name="settings_resume_playback">Resume playback</string>
     <!-- Translators: Description of the resume playback setting. -->
@@ -764,7 +796,7 @@
     <!-- Translators: Setting label for audio/video synchronization. -->
     <string name="settings_audio_sync">Audio sync</string>
     <!-- Translators: Description of the audio sync setting. -->
-    <string name="settings_audio_sync_description">Shift audio earlier or later to match the video.</string>
+    <string name="settings_audio_sync_description">Shift audio earlier or later to match the video. Applies to the mpv engine only.</string>
     <!-- Translators: Used as both a Video Player settings group heading and a Customize-screen section chip. -->
     <string name="settings_live_tv">Live TV</string>
     <!-- Translators: Description of the live latency setting. -->

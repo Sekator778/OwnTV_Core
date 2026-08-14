@@ -106,6 +106,39 @@ data class ContentOrderEntity(
 }
 
 /**
+ * Per-profile, per-item playback preferences: the zoom/aspect mode and the volume level the user
+ * last chose while watching one specific channel, film or episode. Both are nullable and a null
+ * means "no per-item choice — follow the global default in Settings", which is also why there is no
+ * row at all until the user changes something in the player.
+ *
+ * [contentKey] is deliberately NOT the volatile Room `itemId` that favorites/history use. It is the
+ * P6 stable identity — `sourceId:mediaType:remoteId` from
+ * [tv.own.owntv.core.player.enginePinKey], falling back to the stream URL for rows with no provider
+ * id — exactly like the engine pins ([tv.own.owntv.core.player.VodEngineStore],
+ * `ForceMpvStore`) and the subtitle tables. That key survives the clear-then-insert of a re-sync on
+ * its own, so unlike `content_order` these rows need no snapshot/relink pass: after a re-sync the
+ * same film computes the same key and finds its own row again.
+ */
+@Entity(
+    tableName = "playback_prefs",
+    primaryKeys = ["profileId", "contentKey"],
+    foreignKeys = [
+        ForeignKey(entity = ProfileEntity::class, parentColumns = ["id"], childColumns = ["profileId"], onDelete = ForeignKey.CASCADE),
+    ],
+    indices = [Index("profileId")],
+)
+data class PlaybackPrefsEntity(
+    val profileId: Long,
+    /** [tv.own.owntv.core.player.enginePinKey] result, or the stream URL when the row has none. */
+    val contentKey: String,
+    /** A [tv.own.owntv.player.ZoomMode] name; null = follow the global default zoom. */
+    val zoomMode: String? = null,
+    /** Volume percent (0–150, the shared boost ceiling); null = follow the global default volume. */
+    val volumeBoost: Int? = null,
+    val updatedAt: Long = System.currentTimeMillis(),
+)
+
+/**
  * Membership rows of the user's custom combined categories (issue #87). One row pins one content
  * item (channel/movie/series) to a [position] inside a custom category, identified by its stable
  * DataStore key — `CustomizeKeys` with the `"custom:"` prefix, e.g. `"custom:1b2f…"` — in

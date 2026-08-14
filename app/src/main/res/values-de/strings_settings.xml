@@ -351,11 +351,43 @@
     <string name="settings_decoding">Decodierung</string>
     <string name="settings_hardware_decoding">Hardwaredecodierung</string>
     <string name="settings_hardware_decoding_description">Den Hardwaredecoder des Fernsehers verwenden. Deaktivieren Sie diese Option, wenn einige Streams ruckeln oder Bildfehler zeigen.</string>
+    <!-- Translators: Setting label for deinterlacing of interlaced broadcast video. -->
+    <string name="settings_deinterlace">Deinterlacing</string>
+    <!-- Translators: Description of the deinterlacing setting. -->
+    <string name="settings_deinterlace_description">Glättet die kammartigen Linien, die manche alten SD-Sender bei Bewegung zeigen. Gilt für die mpv-Engine, solange sie das Bild selbst zeichnet — ändert sich nichts, schalte die Hardware-Dekodierung aus.</string>
     <string name="settings_movies_series_player">Player für Filme und Serien</string>
     <string name="settings_reset_player_choices">Gespeicherte Player-Auswahl zurücksetzen</string>
     <string name="settings_external_player">Externer Player</string>
     <string name="settings_default_zoom">Standardzoom</string>
     <string name="settings_default_zoom_description">Seitenverhältnis/Zoom, das bzw. der beim Start der Wiedergabe angewendet wird.</string>
+    <!-- Translators: Setting label for the volume level playback starts at. -->
+    <string name="settings_default_volume">Standardlautstärke</string>
+    <!-- Translators: Description of the default volume setting. -->
+    <string name="settings_default_volume_description">Lautstärke, die beim Start der Wiedergabe angewendet wird. Über 100 %% werden leise Streams verstärkt.</string>
+    <!-- Translators: Settings-row title for forgetting the zoom saved for individual items. -->
+    <string name="settings_reset_saved_zoom">Gespeicherten Zoom zurücksetzen</string>
+    <!-- Translators: Description of the reset-saved-zoom setting row. -->
+    <string name="settings_reset_saved_zoom_description">Wenn du den Zoom im Player änderst, wird er für diesen Kanal, Film oder diese Folge gespeichert. Beim Zurücksetzen folgt wieder alles dem Standardzoom.</string>
+    <!-- Translators: Confirmation dialog title before forgetting the saved per-item zoom. -->
+    <string name="settings_reset_saved_zoom_confirm">Gespeicherten Zoom zurücksetzen?</string>
+    <!-- Translators: Confirmation dialog body before forgetting the saved per-item zoom. -->
+    <string name="settings_reset_saved_zoom_confirm_description">Jeder Kanal, jeder Film und jede Folge kehrt zum Standardzoom zurück. Gespeicherte Lautstärken bleiben erhalten. Du kannst einzelne Titel jederzeit erneut im Player einstellen.</string>
+    <!-- Translators: Settings-row title for forgetting the volume saved for individual items. -->
+    <string name="settings_reset_saved_volume">Gespeicherte Lautstärke zurücksetzen</string>
+    <!-- Translators: Description of the reset-saved-volume setting row. -->
+    <string name="settings_reset_saved_volume_description">Wenn du die Lautstärke im Player änderst, wird sie für diesen Kanal, Film oder diese Folge gespeichert. Beim Zurücksetzen folgt wieder alles der Standardlautstärke.</string>
+    <!-- Translators: Confirmation dialog title before forgetting the saved per-item volume. -->
+    <string name="settings_reset_saved_volume_confirm">Gespeicherte Lautstärke zurücksetzen?</string>
+    <!-- Translators: Confirmation dialog body before forgetting the saved per-item volume. -->
+    <string name="settings_reset_saved_volume_confirm_description">Jeder Kanal, jeder Film und jede Folge kehrt zur Standardlautstärke zurück. Gespeicherte Zoom-Einstellungen bleiben erhalten. Du kannst einzelne Titel jederzeit erneut im Player einstellen.</string>
+    <!-- Translators: Setting label for how far rewind/forward jumps in a movie or episode. -->
+    <string name="settings_seek_step">Sprungweite</string>
+    <!-- Translators: Description of the seek step setting. -->
+    <string name="settings_seek_step_description">Wie weit Rück- und Vorlauf in einem Film oder einer Folge springen.</string>
+    <!-- Translators: Setting label for how far rewind/forward jumps inside a live channel's archive. -->
+    <string name="settings_live_rewind_step">Live-Rücklaufschritt</string>
+    <!-- Translators: Description of the live rewind step setting. -->
+    <string name="settings_live_rewind_step_description">Wie weit sich Rück- und Vorlauf im Catch-up-Archiv eines Live-Kanals bewegen.</string>
     <string name="settings_resume_playback">Wiedergabe fortsetzen</string>
     <string name="settings_resume_playback_description">Legt fest, was geschieht, wenn für einen Film oder eine Folge eine Position gespeichert ist.</string>
     <string name="settings_subtitles">Untertitel</string>
@@ -370,7 +402,7 @@
     <string name="settings_audio">Audio</string>
     <string name="settings_preferred_audio_language">Bevorzugte Audiosprache</string>
     <string name="settings_audio_sync">Audio-Synchronisierung</string>
-    <string name="settings_audio_sync_description">Audio zeitlich vor- oder zurückversetzen, um es an das Video anzupassen.</string>
+    <string name="settings_audio_sync_description">Audio zeitlich vor- oder zurückversetzen, um es an das Video anzupassen. Gilt nur für die mpv-Engine.</string>
     <string name="settings_live_tv">Live-TV</string>
     <string name="settings_live_latency_description">Legt fest, wie nah an der Live-Übertragung die Wiedergabe erfolgt. Ein niedrigerer Wert bedeutet eine geringere Verzögerung zur Live-Übertragung, aber auch einen kleineren Puffer, sodass schwache Streams häufiger stocken oder die Verbindung erneut herstellen können. Gilt für den nächsten Sender, den du öffnest.</string>
     <string name="settings_channel_numbers">Sendernummern</string>

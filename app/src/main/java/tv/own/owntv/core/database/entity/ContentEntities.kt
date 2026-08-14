@@ -90,11 +90,22 @@ data class ChannelEntity(
     @ColumnInfo(defaultValue = "0") val contentHash: Int = 0,
 )
 
-/** Returns the stream URL to tune, swapping .ts to .m3u8 if preferHls & hlsSupported are active for Xtream. */
+/**
+ * The stream URL to tune: the channel's own `.ts`, swapped to `.m3u8` when the playlist's "Prefer HLS"
+ * is on for an Xtream source.
+ *
+ * **Deliberately NOT gated on `hlsSupported`** — this KDoc used to claim it was, and two earlier audits
+ * recommended adding that gate on the strength of the comment. It would be wrong. Panels lie about
+ * `allowed_output_formats`: gating here breaks HLS for every user on an under-reporting panel, and for
+ * every source that has not finished syncing yet. The authoritative note is on the field itself in
+ * `ProfileEntities.kt`. A channel whose `.m3u8` genuinely doesn't work is handled after the fact, per
+ * channel and per engine, by `LiveStreamQuirks.rememberNoHlsVariant`.
+ */
 fun ChannelEntity.playStreamUrl(source: SourceEntity?): String =
     resolveStreamUrl(streamUrl, source)
 
-/** Swaps .ts to .m3u8 if preferHls is active for an Xtream source. */
+/** Swaps .ts to .m3u8 if preferHls is active for an Xtream source. See [playStreamUrl] for why this is
+ *  not gated on `hlsSupported`. */
 fun resolveStreamUrl(url: String, source: SourceEntity?): String {
     if (source != null && source.type == tv.own.owntv.core.model.SourceType.XTREAM && source.preferHls) {
         if (url.endsWith(".ts", ignoreCase = true)) {

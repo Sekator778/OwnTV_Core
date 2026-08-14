@@ -353,11 +353,43 @@
     <string name="settings_decoding">Dekódování</string>
     <string name="settings_hardware_decoding">Hardwarové dekódování</string>
     <string name="settings_hardware_decoding_description">Používat hardwarový dekodér televizoru. Vypněte, pokud se některé streamy sekají nebo zobrazují obrazové vady.</string>
+    <!-- Translators: Setting label for deinterlacing of interlaced broadcast video. -->
+    <string name="settings_deinterlace">Odstranění prokládání</string>
+    <!-- Translators: Description of the deinterlacing setting. -->
+    <string name="settings_deinterlace_description">Vyhladí hřebenovité čáry, které některé staré SD kanály ukazují při pohybu. Platí pro přehrávač mpv, když sám vykresluje obraz — pokud to nic nezmění, vypněte hardwarové dekódování.</string>
     <string name="settings_movies_series_player">Přehrávač filmů a seriálů</string>
     <string name="settings_reset_player_choices">Resetovat uložené volby přehrávače</string>
     <string name="settings_external_player">Externí přehrávač</string>
     <string name="settings_default_zoom">Výchozí přiblížení</string>
     <string name="settings_default_zoom_description">Poměr stran a přiblížení použité při zahájení přehrávání.</string>
+    <!-- Translators: Setting label for the volume level playback starts at. -->
+    <string name="settings_default_volume">Výchozí hlasitost</string>
+    <!-- Translators: Description of the default volume setting. -->
+    <string name="settings_default_volume_description">Hlasitost použitá při zahájení přehrávání. Nad 100 %% se tiché streamy zesilují.</string>
+    <!-- Translators: Settings-row title for forgetting the zoom saved for individual items. -->
+    <string name="settings_reset_saved_zoom">Resetovat uložené přiblížení</string>
+    <!-- Translators: Description of the reset-saved-zoom setting row. -->
+    <string name="settings_reset_saved_zoom_description">Změna přiblížení v přehrávači se uloží pro daný kanál, film nebo epizodu. Reset vrátí vše zpět k výchozímu přiblížení.</string>
+    <!-- Translators: Confirmation dialog title before forgetting the saved per-item zoom. -->
+    <string name="settings_reset_saved_zoom_confirm">Resetovat uložené přiblížení?</string>
+    <!-- Translators: Confirmation dialog body before forgetting the saved per-item zoom. -->
+    <string name="settings_reset_saved_zoom_confirm_description">Každý kanál, film i epizoda se vrátí k výchozímu přiblížení. Uložené hlasitosti zůstanou zachovány. Jednotlivou položku můžete kdykoli znovu nastavit přímo v přehrávači.</string>
+    <!-- Translators: Settings-row title for forgetting the volume saved for individual items. -->
+    <string name="settings_reset_saved_volume">Resetovat uloženou hlasitost</string>
+    <!-- Translators: Description of the reset-saved-volume setting row. -->
+    <string name="settings_reset_saved_volume_description">Změna hlasitosti v přehrávači se uloží pro daný kanál, film nebo epizodu. Reset vrátí vše zpět k výchozí hlasitosti.</string>
+    <!-- Translators: Confirmation dialog title before forgetting the saved per-item volume. -->
+    <string name="settings_reset_saved_volume_confirm">Resetovat uloženou hlasitost?</string>
+    <!-- Translators: Confirmation dialog body before forgetting the saved per-item volume. -->
+    <string name="settings_reset_saved_volume_confirm_description">Každý kanál, film i epizoda se vrátí k výchozí hlasitosti. Uložená nastavení přiblížení zůstanou zachována. Jednotlivou položku můžete kdykoli znovu nastavit přímo v přehrávači.</string>
+    <!-- Translators: Setting label for how far rewind/forward jumps in a movie or episode. -->
+    <string name="settings_seek_step">Krok převíjení</string>
+    <!-- Translators: Description of the seek step setting. -->
+    <string name="settings_seek_step_description">O kolik posune převíjení vzad a vpřed ve filmu nebo epizodě.</string>
+    <!-- Translators: Setting label for how far rewind/forward jumps inside a live channel's archive. -->
+    <string name="settings_live_rewind_step">Krok převíjení živého vysílání</string>
+    <!-- Translators: Description of the live rewind step setting. -->
+    <string name="settings_live_rewind_step_description">O kolik se převíjení vzad a vpřed pohybuje v archivu živého kanálu.</string>
     <string name="settings_resume_playback">Pokračovat v přehrávání</string>
     <string name="settings_resume_playback_description">Co udělat, když má film nebo epizoda uloženou pozici.</string>
     <string name="settings_subtitles">Titulky</string>
@@ -372,7 +404,7 @@
     <string name="settings_audio">Zvuk</string>
     <string name="settings_preferred_audio_language">Preferovaný jazyk zvuku</string>
     <string name="settings_audio_sync">Synchronizace zvuku</string>
-    <string name="settings_audio_sync_description">Posuňte zvuk dopředu nebo dozadu, aby odpovídal obrazu.</string>
+    <string name="settings_audio_sync_description">Posuňte zvuk dopředu nebo dozadu, aby odpovídal obrazu. Platí pouze pro přehrávač mpv.</string>
     <string name="settings_live_tv">Živé vysílání</string>
     <string name="settings_live_latency_description">Určuje, jak blízko aktuálnímu vysílání se má přehrávat. Nižší hodnota znamená menší zpoždění oproti živému vysílání, ale také menší vyrovnávací paměť, takže slabé streamy se mohou častěji zadrhávat nebo znovu připojovat. Použije se u dalšího kanálu, který otevřete.</string>
     <string name="settings_channel_numbers">Čísla kanálů</string>

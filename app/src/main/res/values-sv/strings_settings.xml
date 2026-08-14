@@ -351,11 +351,43 @@
     <string name="settings_decoding">Avkodning</string>
     <string name="settings_hardware_decoding">Maskinvaruavkodning</string>
     <string name="settings_hardware_decoding_description">Använd tv:ns maskinvaruavkodare. Stäng av om vissa strömmar hackar eller visar bildfel.</string>
+    <!-- Translators: Setting label for deinterlacing of interlaced broadcast video. -->
+    <string name="settings_deinterlace">Avflätning</string>
+    <!-- Translators: Description of the deinterlacing setting. -->
+    <string name="settings_deinterlace_description">Jämnar ut de kamliknande linjer som vissa gamla SD-kanaler visar vid rörelse. Gäller mpv-spelaren medan den ritar bilden själv, så stäng av maskinvaruavkodning om det inte gör någon skillnad.</string>
     <string name="settings_movies_series_player">Spelare för filmer och serier</string>
     <string name="settings_reset_player_choices">Återställ sparade spelarval</string>
     <string name="settings_external_player">Extern spelare</string>
     <string name="settings_default_zoom">Standardzoom</string>
     <string name="settings_default_zoom_description">Bildformat/zoom som används när uppspelningen startar.</string>
+    <!-- Translators: Setting label for the volume level playback starts at. -->
+    <string name="settings_default_volume">Standardvolym</string>
+    <!-- Translators: Description of the default volume setting. -->
+    <string name="settings_default_volume_description">Volym som används när uppspelningen startar. Över 100 %% förstärks strömmar med lågt ljud.</string>
+    <!-- Translators: Settings-row title for forgetting the zoom saved for individual items. -->
+    <string name="settings_reset_saved_zoom">Återställ sparad zoom</string>
+    <!-- Translators: Description of the reset-saved-zoom setting row. -->
+    <string name="settings_reset_saved_zoom_description">När du ändrar zoom i spelaren sparas det för den kanalen, filmen eller det avsnittet. Återställning gör att allt följer standardzoomen igen.</string>
+    <!-- Translators: Confirmation dialog title before forgetting the saved per-item zoom. -->
+    <string name="settings_reset_saved_zoom_confirm">Återställa sparad zoom?</string>
+    <!-- Translators: Confirmation dialog body before forgetting the saved per-item zoom. -->
+    <string name="settings_reset_saved_zoom_confirm_description">Alla kanaler, filmer och avsnitt återgår till standardzoomen. Sparade volymer behålls. Du kan alltid ställa in en enskild titel igen från spelaren.</string>
+    <!-- Translators: Settings-row title for forgetting the volume saved for individual items. -->
+    <string name="settings_reset_saved_volume">Återställ sparad volym</string>
+    <!-- Translators: Description of the reset-saved-volume setting row. -->
+    <string name="settings_reset_saved_volume_description">När du ändrar volymen i spelaren sparas den för den kanalen, filmen eller det avsnittet. Återställning gör att allt följer standardvolymen igen.</string>
+    <!-- Translators: Confirmation dialog title before forgetting the saved per-item volume. -->
+    <string name="settings_reset_saved_volume_confirm">Återställa sparad volym?</string>
+    <!-- Translators: Confirmation dialog body before forgetting the saved per-item volume. -->
+    <string name="settings_reset_saved_volume_confirm_description">Alla kanaler, filmer och avsnitt återgår till standardvolymen. Sparade zoominställningar behålls. Du kan alltid ställa in en enskild titel igen från spelaren.</string>
+    <!-- Translators: Setting label for how far rewind/forward jumps in a movie or episode. -->
+    <string name="settings_seek_step">Spolsteg</string>
+    <!-- Translators: Description of the seek step setting. -->
+    <string name="settings_seek_step_description">Hur långt spola bakåt och framåt hoppar i en film eller ett avsnitt.</string>
+    <!-- Translators: Setting label for how far rewind/forward jumps inside a live channel's archive. -->
+    <string name="settings_live_rewind_step">Spolsteg för direktsändning</string>
+    <!-- Translators: Description of the live rewind step setting. -->
+    <string name="settings_live_rewind_step_description">Hur långt spola bakåt och framåt flyttar sig i en livekanals arkiv.</string>
     <string name="settings_resume_playback">Återuppta uppspelningen</string>
     <string name="settings_resume_playback_description">Vad som ska göras när en film eller ett avsnitt har en sparad position.</string>
     <string name="settings_subtitles">Undertexter</string>
@@ -370,7 +402,7 @@
     <string name="settings_audio">Ljud</string>
     <string name="settings_preferred_audio_language">Föredraget ljudspråk</string>
     <string name="settings_audio_sync">Ljudsynkronisering</string>
-    <string name="settings_audio_sync_description">Flytta ljudet framåt eller bakåt för att matcha videon.</string>
+    <string name="settings_audio_sync_description">Flytta ljudet framåt eller bakåt för att matcha videon. Gäller endast mpv-motorn.</string>
     <string name="settings_live_tv">Live-tv</string>
     <string name="settings_live_latency_description">Hur nära livesändningen uppspelningen ska ligga. Lägre innebär närmare livepunkten men en mindre buffert, så svaga strömmar kan hacka eller återansluta oftare. Gäller nästa kanal du öppnar.</string>
     <string name="settings_channel_numbers">Kanalnummer</string>

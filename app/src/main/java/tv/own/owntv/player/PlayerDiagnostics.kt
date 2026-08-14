@@ -4,6 +4,7 @@ import android.os.SystemClock
 import java.io.BufferedReader
 import java.io.InputStreamReader
 import java.util.concurrent.ConcurrentLinkedDeque
+import tv.own.owntv.R
 
 /**
  * Tails the app's OWN logcat for the below-the-engine playback failures the player objects can't expose:
@@ -131,6 +132,53 @@ sealed interface PlaybackFailure {
 }
 
 /**
+ * The one place a [PlaybackFailure] becomes words.
+ *
+ * This mapping existed twice — once in the Compose HUD via `stringResource`, once in the toast renderer
+ * via `context.getString` — with the same two dozen cases in a different order. The compiler catches a
+ * *missing* case in either copy, but nothing catches the two copies naming *different strings* for the
+ * same failure, which is the mistake worth designing out.
+ *
+ * [resolve] is how the caller turns a string resource into text: the HUD resolves through Compose's
+ * locale-aware resources, the toast renderer through a [tv.own.owntv.core.i18n.LocaleStore]-wrapped
+ * context, because a process-wide player can outlive an in-session language switch. The nested cases
+ * recurse with the same resolver, so a wrapped failure is rendered in the same locale as its wrapper.
+ */
+fun PlaybackFailure.describe(resolve: (Int, List<Any>) -> String): String {
+    fun str(id: Int, vararg args: Any) = resolve(id, args.toList())
+    return when (this) {
+        PlaybackFailure.Channel -> str(R.string.player_error_channel)
+        PlaybackFailure.LostConnection -> str(R.string.player_error_lost_connection)
+        PlaybackFailure.StreamLink -> str(R.string.player_error_stream_link)
+        PlaybackFailure.NotStreaming -> str(R.string.player_error_not_streaming)
+        PlaybackFailure.AudioNoVideo -> str(R.string.player_error_audio_no_video)
+        PlaybackFailure.FileCorrupt -> str(R.string.player_error_file_corrupt)
+        PlaybackFailure.MultipleVideos -> str(R.string.player_error_multiple_videos)
+        PlaybackFailure.DecoderBusy -> str(R.string.player_error_decoder_busy)
+        PlaybackFailure.NoInternet -> str(R.string.player_error_no_internet)
+        PlaybackFailure.Surround -> str(R.string.player_error_surround)
+        PlaybackFailure.ImageSubtitleAudio -> str(R.string.player_error_image_subtitle_audio)
+        PlaybackFailure.ImageFormat -> str(R.string.player_error_image_format)
+        PlaybackFailure.ImageShow -> str(R.string.player_error_image_show)
+        PlaybackFailure.BothEnginesExoFirst -> str(R.string.player_error_both_engines_exo_first)
+        is PlaybackFailure.BothEnginesMpvFirst ->
+            str(R.string.player_error_both_engines_mpv_first, exoError.describe(resolve))
+        is PlaybackFailure.ExoDecode -> str(R.string.player_error_exo_decode, code)
+        is PlaybackFailure.ExoPlay -> str(R.string.player_error_exo_play, code)
+        is PlaybackFailure.HardwareFallback -> str(R.string.player_error_hardware_fallback, resolution)
+        is PlaybackFailure.HardwareDisabled -> str(R.string.player_error_hardware_disabled, resolution)
+        is PlaybackFailure.HardwareFormat -> str(R.string.player_error_hardware_format, resolution, codec)
+        is PlaybackFailure.StreamUnavailable -> str(
+            R.string.player_error_stream_unavailable,
+            if (customUserAgentHint) str(R.string.player_error_custom_user_agent) else "",
+        )
+        PlaybackFailure.MpvOpenDecode -> str(R.string.player_error_mpv_open_decode)
+        PlaybackFailure.MpvStreamNeverStarted -> str(R.string.player_error_mpv_stream_never_started)
+        is PlaybackFailure.Raw -> message
+    }
+}
+
+/**
  * A wait the provider itself asked for: it answered `429` with a numeric `Retry-After`, naming the second
  * at which the channel becomes available again. This is not a failure — the engine re-asks by itself when
  * the countdown ends — so it is carried separately from [PlaybackFailure].
@@ -185,6 +233,27 @@ object PlayerErrors {
         HTTP_STATUS_RX.find(raw.lowercase())?.groupValues?.get(1)?.toIntOrNull()
 
     /**
+     * The HTTP status behind an ExoPlayer load failure, following the cause chain Media3 wraps it in.
+     *
+     * The counterpart to [httpStatusIn] for the engines that get a real exception rather than a line of
+     * log text: mpv only ever hands us a string, Media3 hands us a typed cause chain. Both live here so
+     * "what status was this?" has one answer per input shape instead of a copy per engine.
+     *
+     * Hop-capped because a cause chain can be cyclic.
+     */
+    fun httpStatusOf(error: Throwable?): Int? {
+        var t = error
+        var hops = 0
+        while (t != null && hops++ < CAUSE_CHAIN_MAX_HOPS) {
+            (t as? androidx.media3.datasource.HttpDataSource.InvalidResponseCodeException)?.let { return it.responseCode }
+            t = t.cause
+        }
+        return null
+    }
+
+    private const val CAUSE_CHAIN_MAX_HOPS = 8
+
+    /**
      * The provider's own short refusal text, when one was captured for this status and panel.
      *
      * A panel that answers "Channel limit has been reached. Stop one of your active streams before
@@ -228,7 +297,4 @@ object PlayerErrors {
     }
 
     fun reasonFor(raw: String): PlayerFailureReason? = classify(raw)
-
-    /** URL-aware overload retained for playback call sites; provider text is handled by [visibleFailure]. */
-    fun reasonFor(raw: String, @Suppress("UNUSED_PARAMETER") url: String?): PlayerFailureReason? = classify(raw)
 }

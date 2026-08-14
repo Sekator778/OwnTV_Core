@@ -118,10 +118,6 @@
     <string name="player_subtitle_delay_positive">+<xliff:g id="seconds">%1$.1f</xliff:g> s</string>
     <!-- Translators: Formatted subtitle delay display when delay is negative. Also used for the -0.5s and -0.1s step buttons. "s" means seconds. -->
     <string name="player_subtitle_delay_negative">\u2212<xliff:g id="seconds">%1$.1f</xliff:g> s</string>
-    <!-- Translators: Time format for durations under one hour (mm:ss). "minutes" and "seconds" are integers. Used in the seek bar, live timeline, and audio mode. -->
-    <string name="player_track_seconds"><xliff:g id="minutes">%1$d</xliff:g>:<xliff:g id="seconds">%2$02d</xliff:g></string>
-    <!-- Translators: Time format for durations of one hour or more (h:mm:ss). "hours", "minutes", and "seconds" are integers. -->
-    <string name="player_track_hours"><xliff:g id="hours">%1$d</xliff:g>:<xliff:g id="minutes">%2$02d</xliff:g>:<xliff:g id="seconds">%3$02d</xliff:g></string>
     <!-- Translators: Time progress display in the audio now-playing bar. "position" is the current time and "duration" is the total length. -->
     <string name="player_time_progress"><xliff:g id="position">%1$s</xliff:g> / <xliff:g id="duration">%2$s</xliff:g></string>
     <!-- Translators: Floating tooltip on the VOD seek bar showing remaining time. "time" is a formatted duration. The leading minus sign is intentional. -->

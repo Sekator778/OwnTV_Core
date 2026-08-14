@@ -113,16 +113,8 @@ class HeroPreviewEngine(
         }
     }
 
-    /** The HTTP status behind a load failure, following the cause chain Media3 wraps it in. */
-    private fun httpStatusOf(error: Throwable?): Int? {
-        var t = error
-        var hops = 0
-        while (t != null && hops++ < 8) {
-            (t as? androidx.media3.datasource.HttpDataSource.InvalidResponseCodeException)?.let { return it.responseCode }
-            t = t.cause
-        }
-        return null
-    }
+    /** The HTTP status behind a load failure — shared with the other ExoPlayer engines. */
+    private fun httpStatusOf(error: Throwable?): Int? = PlayerErrors.httpStatusOf(error)
 
     fun setSurface(s: Surface?) {
         surface = s
