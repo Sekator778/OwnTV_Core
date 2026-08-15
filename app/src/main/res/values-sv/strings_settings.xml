@@ -682,7 +682,7 @@
     <string name="settings_backup_what_backup">Vad som ska säkerhetskopieras</string>
     <string name="settings_backup_what_restore">Vad som ska återställas</string>
     <string name="settings_backup_encrypt_title">Kryptera den här säkerhetskopian?</string>
-    <string name="settings_backup_encrypt_message">Med ett lösenord för säkerhetskopian krypteras hela filen – inklusive spellistor, profiler och sparade lösenord – och ingenting i den kan läsas utan lösenordet. Förvara det säkert: om du förlorar det går säkerhetskopian inte att öppna alls. Utan lösenord krypteras inte filen och sparade lösenord utelämnas.</string>
+    <string name="settings_backup_encrypt_message">Med ett lösenord för säkerhetskopian krypteras hela filen – inklusive spellistor, profiler och sparade lösenord – och ingenting i den kan läsas utan lösenordet. Förvara det säkert: om du förlorar det går säkerhetskopian inte att öppna alls. Utan lösenord krypteras inte filen och sparade lösenord och PIN-koder utelämnas.</string>
     <string name="settings_backup_export_title">Exportera en säkerhetskopia</string>
     <string name="settings_backup_export_message">Skicka säkerhetskopian till en annan enhet (telefon eller bärbar dator) på samma Wi-Fi eller spara den som en fil på den här enheten.</string>
     <string name="settings_backup_restore_title">Återställ en säkerhetskopia</string>
@@ -731,13 +731,13 @@
     <string name="settings_backup_section_settings">Appinställningar</string>
     <string name="settings_backup_section_settings_desc">Inställningar för tema, accentfärg, spelare och layout</string>
     <string name="settings_backup_saved_to">Sparad i <xliff:g id="path">%1$s</xliff:g>.</string>
-    <string name="settings_backup_saved_to_without_passwords">Sparad i <xliff:g id="path">%1$s</xliff:g>. Lösenord inkluderades inte.</string>
+    <string name="settings_backup_saved_to_without_passwords">Sparad i <xliff:g id="path">%1$s</xliff:g>. Lösenord och PIN-koder inkluderades inte.</string>
     <plurals name="settings_backup_restored">
         <item quantity="one"><xliff:g id="items">%1$d</xliff:g> objekt återställt.</item>
         <item quantity="other"><xliff:g id="items">%1$d</xliff:g> objekt återställda.</item>
     </plurals>
     <string name="settings_backup_restore_resync">Omsynkronisera dina källor för att läsa in innehåll.</string>
-    <string name="settings_backup_restore_password_note">Ange sparade lösenord igen under Källor/Proxy.</string>
+    <string name="settings_backup_restore_password_note">Ange sparade lösenord och eventuella profil-PIN-koder igen under Källor/Proxy.</string>
     <plurals name="settings_backup_skipped_sources">
         <item quantity="one"><xliff:g id="count">%1$d</xliff:g> källa hoppades över eftersom dess spellistetyp inte stöds.</item>
         <item quantity="other"><xliff:g id="count">%1$d</xliff:g> källor hoppades över eftersom deras spellistetyper inte stöds.</item>

@@ -1652,10 +1652,29 @@ class SettingsRepository(private val context: Context, private val localeStore: 
     )
     private val backupFloatKeys = listOf(Keys.SUB_SCALE)
 
+    /**
+     * "Remember last category" values (see the REMEMBER_CAT_* toggles, which are backed up as plain
+     * booleans above). These need a filter rather than a straight whitelist entry, so they live apart:
+     * a provider folder is stored as "FOLDER:<Room category id>", and Room content ids are recreated
+     * by every sync (the catalog is clear-then-insert), so that value means nothing on another device
+     * — restoring it would land the user in an arbitrary category. The stable forms travel:
+     * "ALL" / "FAV" / "HIST" and "CUSTOM:<uuid>", a user-created category whose id really is portable.
+     *
+     * `last_live_channel` is deliberately absent for the same reason and has no stable form at all:
+     * it is a Room channel id, so there is nothing here worth carrying.
+     */
+    private val backupLastCategoryKeys = listOf(
+        Keys.LAST_LIVE_CATEGORY, Keys.LAST_MOVIES_CATEGORY, Keys.LAST_SERIES_CATEGORY,
+    )
+
+    private fun isPortableCategoryKey(value: String): Boolean =
+        value == "ALL" || value == "FAV" || value == "HIST" || value.startsWith("CUSTOM:")
+
     suspend fun exportSettings(): org.json.JSONObject {
         val p = context.dataStore.data.first()
         return org.json.JSONObject().apply {
             backupStringKeys.forEach { k -> p[k]?.let { put(k.name, it) } }
+            backupLastCategoryKeys.forEach { k -> p[k]?.takeIf(::isPortableCategoryKey)?.let { put(k.name, it) } }
             backupStringSetKeys.forEach { k -> p[k]?.let { put(k.name, org.json.JSONArray(it)) } }
             backupIntKeys.forEach { k -> p[k]?.let { put(k.name, it) } }
             backupBoolKeys.forEach { k -> p[k]?.let { put(k.name, it) } }
@@ -1670,6 +1689,12 @@ class SettingsRepository(private val context: Context, private val localeStore: 
     suspend fun importSettings(o: org.json.JSONObject): SettingsImportResult {
         context.dataStore.edit { prefs ->
             backupStringKeys.forEach { k -> if (o.has(k.name)) prefs[k] = o.getString(k.name) }
+            // Guarded on read as well as on write: a file written by another build (or edited by hand)
+            // must not be able to restore a "FOLDER:<id>" that points at whatever this device's sync
+            // happens to have put behind that number.
+            backupLastCategoryKeys.forEach { k ->
+                if (o.has(k.name)) o.getString(k.name).takeIf(::isPortableCategoryKey)?.let { prefs[k] = it }
+            }
             backupStringSetKeys.forEach { k ->
                 if (o.has(k.name)) prefs[k] = o.getJSONArray(k.name).let { arr -> buildSet { for (i in 0 until arr.length()) add(arr.getString(i)) } }
             }

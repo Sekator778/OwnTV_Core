@@ -674,7 +674,7 @@
     <string name="settings_backup_what_backup">要备份的内容</string>
     <string name="settings_backup_what_restore">要恢复的内容</string>
     <string name="settings_backup_encrypt_title">加密此备份？</string>
-    <string name="settings_backup_encrypt_message">设置备份密码后，整个文件都会被加密，包括播放列表、用户档案和已保存的密码；没有该密码将无法读取其中任何内容。请妥善保管：如果丢失密码，将完全无法打开此备份。不设置密码时，文件不会加密，且不会包含已保存的密码。</string>
+    <string name="settings_backup_encrypt_message">设置备份密码后，整个文件都会被加密，包括播放列表、用户档案和已保存的密码；没有该密码将无法读取其中任何内容。请妥善保管：如果丢失密码，将完全无法打开此备份。不设置密码时，文件不会加密，且不会包含已保存的密码和 PIN 码。</string>
     <string name="settings_backup_export_title">导出备份</string>
     <string name="settings_backup_export_message">将备份发送到连接同一 Wi-Fi 的其他设备（手机或笔记本电脑），或将其保存为此设备上的文件。</string>
     <string name="settings_backup_restore_title">恢复备份</string>
@@ -723,12 +723,12 @@
     <string name="settings_backup_section_settings">应用设置</string>
     <string name="settings_backup_section_settings_desc">主题、强调色、播放器和布局偏好设置</string>
     <string name="settings_backup_saved_to">已保存到 <xliff:g id="path">%1$s</xliff:g>。</string>
-    <string name="settings_backup_saved_to_without_passwords">已保存到 <xliff:g id="path">%1$s</xliff:g>。未包含密码。</string>
+    <string name="settings_backup_saved_to_without_passwords">已保存到 <xliff:g id="path">%1$s</xliff:g>。未包含密码和 PIN 码。</string>
     <plurals name="settings_backup_restored">
         <item quantity="other">已恢复 <xliff:g id="items">%1$d</xliff:g> 个项目。</item>
     </plurals>
     <string name="settings_backup_restore_resync">请重新同步您的源以加载内容。</string>
-    <string name="settings_backup_restore_password_note">请在“源/代理”中重新输入所有已保存的密码。</string>
+    <string name="settings_backup_restore_password_note">请在“源/代理”中重新输入所有已保存的密码，以及各用户档案的 PIN 码。</string>
     <plurals name="settings_backup_skipped_sources">
         <item quantity="other">由于播放列表类型不受支持，已跳过 <xliff:g id="count">%1$d</xliff:g> 个源。</item>
     </plurals>

@@ -682,7 +682,7 @@
     <string name="settings_backup_what_backup">Hva som skal sikkerhetskopieres</string>
     <string name="settings_backup_what_restore">Hva som skal gjenopprettes</string>
     <string name="settings_backup_encrypt_title">Kryptere denne sikkerhetskopien?</string>
-    <string name="settings_backup_encrypt_message">Med et passord for sikkerhetskopien krypteres hele filen – inkludert spillelister, profiler og lagrede passord – og ingenting i den kan leses uten dette passordet. Oppbevar det trygt: Hvis du mister det, kan sikkerhetskopien ikke åpnes i det hele tatt. Uten et passord krypteres ikke filen, og lagrede passord utelates.</string>
+    <string name="settings_backup_encrypt_message">Med et passord for sikkerhetskopien krypteres hele filen – inkludert spillelister, profiler og lagrede passord – og ingenting i den kan leses uten dette passordet. Oppbevar det trygt: Hvis du mister det, kan sikkerhetskopien ikke åpnes i det hele tatt. Uten et passord krypteres ikke filen, og lagrede passord og PIN-koder utelates.</string>
     <string name="settings_backup_export_title">Eksporter en sikkerhetskopi</string>
     <string name="settings_backup_export_message">Send sikkerhetskopien til en annen enhet (telefon eller bærbar PC) på samme Wi-Fi, eller lagre den som en fil på denne enheten.</string>
     <string name="settings_backup_restore_title">Gjenopprett en sikkerhetskopi</string>
@@ -731,13 +731,13 @@
     <string name="settings_backup_section_settings">Appinnstillinger</string>
     <string name="settings_backup_section_settings_desc">Innstillinger for tema, aksentfarge, avspiller og oppsett</string>
     <string name="settings_backup_saved_to">Lagret i <xliff:g id="path">%1$s</xliff:g>.</string>
-    <string name="settings_backup_saved_to_without_passwords">Lagret i <xliff:g id="path">%1$s</xliff:g>. Passord ble ikke tatt med.</string>
+    <string name="settings_backup_saved_to_without_passwords">Lagret i <xliff:g id="path">%1$s</xliff:g>. Passord og PIN-koder ble ikke tatt med.</string>
     <plurals name="settings_backup_restored">
         <item quantity="one"><xliff:g id="items">%1$d</xliff:g> element gjenopprettet.</item>
         <item quantity="other"><xliff:g id="items">%1$d</xliff:g> elementer gjenopprettet.</item>
     </plurals>
     <string name="settings_backup_restore_resync">Synkroniser kildene dine på nytt for å laste inn innhold.</string>
-    <string name="settings_backup_restore_password_note">Skriv inn eventuelle lagrede passord på nytt under Kilder/proxy.</string>
+    <string name="settings_backup_restore_password_note">Skriv inn eventuelle lagrede passord og profil-PIN-koder på nytt under Kilder/proxy.</string>
     <plurals name="settings_backup_skipped_sources">
         <item quantity="one"><xliff:g id="count">%1$d</xliff:g> kilde ble hoppet over fordi spillelistetypen ikke støttes.</item>
         <item quantity="other"><xliff:g id="count">%1$d</xliff:g> kilder ble hoppet over fordi spillelistetypene ikke støttes.</item>

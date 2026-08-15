@@ -682,7 +682,7 @@
     <string name="settings_backup_what_backup">Zu sichernde Inhalte</string>
     <string name="settings_backup_what_restore">Wiederherzustellende Inhalte</string>
     <string name="settings_backup_encrypt_title">Diese Sicherung verschlüsseln?</string>
-    <string name="settings_backup_encrypt_message">Mit einem Sicherungskennwort wird die gesamte Datei verschlüsselt – einschließlich Wiedergabelisten, Profilen und gespeicherten Kennwörtern – und ohne dieses Kennwort kann nichts darin gelesen werden. Bewahre es sicher auf: Wenn du es verlierst, kann die Sicherung überhaupt nicht mehr geöffnet werden. Ohne Kennwort wird die Datei nicht verschlüsselt, und gespeicherte Kennwörter werden nicht aufgenommen.</string>
+    <string name="settings_backup_encrypt_message">Mit einem Sicherungskennwort wird die gesamte Datei verschlüsselt – einschließlich Wiedergabelisten, Profilen und gespeicherten Kennwörtern – und ohne dieses Kennwort kann nichts darin gelesen werden. Bewahre es sicher auf: Wenn du es verlierst, kann die Sicherung überhaupt nicht mehr geöffnet werden. Ohne Kennwort wird die Datei nicht verschlüsselt, und gespeicherte Kennwörter und PINs werden nicht aufgenommen.</string>
     <string name="settings_backup_export_title">Sicherung exportieren</string>
     <string name="settings_backup_export_message">Sende die Sicherung an ein anderes Gerät (Smartphone oder Laptop) im selben Wi-Fi oder speichere sie als Datei auf diesem Gerät.</string>
     <string name="settings_backup_restore_title">Sicherung wiederherstellen</string>
@@ -731,13 +731,13 @@
     <string name="settings_backup_section_settings">App-Einstellungen</string>
     <string name="settings_backup_section_settings_desc">Einstellungen für Design, Akzentfarbe, Player und Layout</string>
     <string name="settings_backup_saved_to">Unter <xliff:g id="path">%1$s</xliff:g> gespeichert.</string>
-    <string name="settings_backup_saved_to_without_passwords">Unter <xliff:g id="path">%1$s</xliff:g> gespeichert. Kennwörter wurden nicht aufgenommen.</string>
+    <string name="settings_backup_saved_to_without_passwords">Unter <xliff:g id="path">%1$s</xliff:g> gespeichert. Kennwörter und PINs wurden nicht aufgenommen.</string>
     <plurals name="settings_backup_restored">
         <item quantity="one"><xliff:g id="items">%1$d</xliff:g> Element wiederhergestellt.</item>
         <item quantity="other"><xliff:g id="items">%1$d</xliff:g> Elemente wiederhergestellt.</item>
     </plurals>
     <string name="settings_backup_restore_resync">Synchronisiere deine Quellen erneut, um Inhalte zu laden.</string>
-    <string name="settings_backup_restore_password_note">Gib alle gespeicherten Kennwörter unter „Quellen/Proxy“ erneut ein.</string>
+    <string name="settings_backup_restore_password_note">Gib alle gespeicherten Kennwörter unter „Quellen/Proxy“ und alle Profil-PINs erneut ein.</string>
     <plurals name="settings_backup_skipped_sources">
         <item quantity="one"><xliff:g id="count">%1$d</xliff:g> Quelle wurde übersprungen, weil ihr Wiedergabelistentyp nicht unterstützt wird.</item>
         <item quantity="other"><xliff:g id="count">%1$d</xliff:g> Quellen wurden übersprungen, weil ihre Wiedergabelistentypen nicht unterstützt werden.</item>

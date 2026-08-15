@@ -682,7 +682,7 @@
     <string name="settings_backup_what_backup">बैकअप में क्या रखना है</string>
     <string name="settings_backup_what_restore">क्या रीस्टोर करना है</string>
     <string name="settings_backup_encrypt_title">इस बैकअप को एन्क्रिप्ट करें?</string>
-    <string name="settings_backup_encrypt_message">बैकअप पासवर्ड के साथ पूरी फ़ाइल एन्क्रिप्ट हो जाती है—प्लेलिस्ट, प्रोफ़ाइलें और सहेजे गए पासवर्ड भी—और उस पासवर्ड के बिना इसमें कुछ भी पढ़ा नहीं जा सकता। इसे सुरक्षित रखें: यदि आप इसे खो देते हैं, तो बैकअप बिल्कुल नहीं खोला जा सकेगा। पासवर्ड के बिना फ़ाइल एन्क्रिप्ट नहीं होती और सहेजे गए पासवर्ड इसमें शामिल नहीं किए जाते।</string>
+    <string name="settings_backup_encrypt_message">बैकअप पासवर्ड के साथ पूरी फ़ाइल एन्क्रिप्ट हो जाती है—प्लेलिस्ट, प्रोफ़ाइलें और सहेजे गए पासवर्ड भी—और उस पासवर्ड के बिना इसमें कुछ भी पढ़ा नहीं जा सकता। इसे सुरक्षित रखें: यदि आप इसे खो देते हैं, तो बैकअप बिल्कुल नहीं खोला जा सकेगा। पासवर्ड के बिना फ़ाइल एन्क्रिप्ट नहीं होती और सहेजे गए पासवर्ड व पिन इसमें शामिल नहीं किए जाते।</string>
     <string name="settings_backup_export_title">बैकअप एक्सपोर्ट करें</string>
     <string name="settings_backup_export_message">बैकअप को उसी Wi-Fi से जुड़े दूसरे डिवाइस (फ़ोन या लैपटॉप) पर भेजें या इस डिवाइस पर फ़ाइल के रूप में सहेजें।</string>
     <string name="settings_backup_restore_title">बैकअप रीस्टोर करें</string>
@@ -731,13 +731,13 @@
     <string name="settings_backup_section_settings">ऐप सेटिंग</string>
     <string name="settings_backup_section_settings_desc">थीम, एक्सेंट, प्लेयर और लेआउट प्राथमिकताएँ</string>
     <string name="settings_backup_saved_to"><xliff:g id="path">%1$s</xliff:g> में सहेजा गया।</string>
-    <string name="settings_backup_saved_to_without_passwords"><xliff:g id="path">%1$s</xliff:g> में सहेजा गया। पासवर्ड शामिल नहीं किए गए।</string>
+    <string name="settings_backup_saved_to_without_passwords"><xliff:g id="path">%1$s</xliff:g> में सहेजा गया। पासवर्ड और पिन शामिल नहीं किए गए।</string>
     <plurals name="settings_backup_restored">
         <item quantity="one"><xliff:g id="items">%1$d</xliff:g> आइटम रीस्टोर किया गया।</item>
         <item quantity="other"><xliff:g id="items">%1$d</xliff:g> आइटम रीस्टोर किए गए।</item>
     </plurals>
     <string name="settings_backup_restore_resync">सामग्री लोड करने के लिए अपने स्रोत रीसिंक करें।</string>
-    <string name="settings_backup_restore_password_note">स्रोत/प्रॉक्सी में सभी सहेजे गए पासवर्ड दोबारा दर्ज करें।</string>
+    <string name="settings_backup_restore_password_note">स्रोत/प्रॉक्सी में सभी सहेजे गए पासवर्ड और प्रोफ़ाइल पिन दोबारा दर्ज करें।</string>
     <plurals name="settings_backup_skipped_sources">
         <item quantity="one"><xliff:g id="count">%1$d</xliff:g> स्रोत छोड़ दिया गया क्योंकि उसकी प्लेलिस्ट का प्रकार समर्थित नहीं है।</item>
         <item quantity="other"><xliff:g id="count">%1$d</xliff:g> स्रोत छोड़ दिए गए क्योंकि उनकी प्लेलिस्ट के प्रकार समर्थित नहीं हैं।</item>

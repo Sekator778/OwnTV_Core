@@ -674,7 +674,7 @@
     <string name="settings_backup_what_backup">要備份的內容</string>
     <string name="settings_backup_what_restore">要還原的內容</string>
     <string name="settings_backup_encrypt_title">要加密此備份嗎？</string>
-    <string name="settings_backup_encrypt_message">使用備份密碼後，整個檔案都會加密，包括播放清單、使用者檔案及已儲存的密碼；沒有該密碼就無法讀取其中任何內容。請妥善保管：若遺失密碼，將完全無法開啟備份。若不使用密碼，檔案不會加密，且不會包含已儲存的密碼。</string>
+    <string name="settings_backup_encrypt_message">使用備份密碼後，整個檔案都會加密，包括播放清單、使用者檔案及已儲存的密碼；沒有該密碼就無法讀取其中任何內容。請妥善保管：若遺失密碼，將完全無法開啟備份。若不使用密碼，檔案不會加密，且不會包含已儲存的密碼與 PIN 碼。</string>
     <string name="settings_backup_export_title">匯出備份</string>
     <string name="settings_backup_export_message">將備份傳送至連接相同 Wi-Fi 的其他裝置（手機或筆記型電腦），或將其儲存為此裝置上的檔案。</string>
     <string name="settings_backup_restore_title">還原備份</string>
@@ -723,12 +723,12 @@
     <string name="settings_backup_section_settings">應用程式設定</string>
     <string name="settings_backup_section_settings_desc">主題、強調色、播放器和版面配置偏好設定</string>
     <string name="settings_backup_saved_to">已儲存至 <xliff:g id="path">%1$s</xliff:g>。</string>
-    <string name="settings_backup_saved_to_without_passwords">已儲存至 <xliff:g id="path">%1$s</xliff:g>。未包含密碼。</string>
+    <string name="settings_backup_saved_to_without_passwords">已儲存至 <xliff:g id="path">%1$s</xliff:g>。未包含密碼與 PIN 碼。</string>
     <plurals name="settings_backup_restored">
         <item quantity="other">已還原 <xliff:g id="items">%1$d</xliff:g> 個項目。</item>
     </plurals>
     <string name="settings_backup_restore_resync">請重新同步來源以載入內容。</string>
-    <string name="settings_backup_restore_password_note">請在「來源／Proxy」中重新輸入所有已儲存的密碼。</string>
+    <string name="settings_backup_restore_password_note">請在「來源／Proxy」中重新輸入所有已儲存的密碼，以及各使用者檔案的 PIN 碼。</string>
     <plurals name="settings_backup_skipped_sources">
         <item quantity="other">已略過 <xliff:g id="count">%1$d</xliff:g> 個來源，因為不支援其播放清單類型。</item>
     </plurals>

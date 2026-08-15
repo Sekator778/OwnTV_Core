@@ -682,7 +682,7 @@
     <string name="settings_backup_what_backup">Waarvan een back-up maken</string>
     <string name="settings_backup_what_restore">Wat herstellen</string>
     <string name="settings_backup_encrypt_title">Deze back-up versleutelen?</string>
-    <string name="settings_backup_encrypt_message">Met een back-upwachtwoord wordt het hele bestand versleuteld — inclusief afspeellijsten, profielen en opgeslagen wachtwoorden — en kan niets erin zonder dat wachtwoord worden gelezen. Bewaar het goed: als u het kwijtraakt, kan de back-up helemaal niet meer worden geopend. Zonder wachtwoord wordt het bestand niet versleuteld en worden opgeslagen wachtwoorden niet opgenomen.</string>
+    <string name="settings_backup_encrypt_message">Met een back-upwachtwoord wordt het hele bestand versleuteld — inclusief afspeellijsten, profielen en opgeslagen wachtwoorden — en kan niets erin zonder dat wachtwoord worden gelezen. Bewaar het goed: als u het kwijtraakt, kan de back-up helemaal niet meer worden geopend. Zonder wachtwoord wordt het bestand niet versleuteld en worden opgeslagen wachtwoorden en pincodes niet opgenomen.</string>
     <string name="settings_backup_export_title">Een back-up exporteren</string>
     <string name="settings_backup_export_message">Stuur de back-up naar een ander apparaat (telefoon of laptop) dat met dezelfde Wi-Fi is verbonden, of sla deze op als bestand op dit apparaat.</string>
     <string name="settings_backup_restore_title">Een back-up herstellen</string>
@@ -731,13 +731,13 @@
     <string name="settings_backup_section_settings">App-instellingen</string>
     <string name="settings_backup_section_settings_desc">Voorkeuren voor thema, accentkleur, speler en indeling</string>
     <string name="settings_backup_saved_to">Opgeslagen in <xliff:g id="path">%1$s</xliff:g>.</string>
-    <string name="settings_backup_saved_to_without_passwords">Opgeslagen in <xliff:g id="path">%1$s</xliff:g>. Wachtwoorden zijn niet opgenomen.</string>
+    <string name="settings_backup_saved_to_without_passwords">Opgeslagen in <xliff:g id="path">%1$s</xliff:g>. Wachtwoorden en pincodes zijn niet opgenomen.</string>
     <plurals name="settings_backup_restored">
         <item quantity="one"><xliff:g id="items">%1$d</xliff:g> item hersteld.</item>
         <item quantity="other"><xliff:g id="items">%1$d</xliff:g> items hersteld.</item>
     </plurals>
     <string name="settings_backup_restore_resync">Synchroniseer uw bronnen opnieuw om inhoud te laden.</string>
-    <string name="settings_backup_restore_password_note">Voer opgeslagen wachtwoorden opnieuw in bij Bronnen/Proxy.</string>
+    <string name="settings_backup_restore_password_note">Voer opgeslagen wachtwoorden en eventuele profielpincodes opnieuw in bij Bronnen/Proxy.</string>
     <plurals name="settings_backup_skipped_sources">
         <item quantity="one"><xliff:g id="count">%1$d</xliff:g> bron is overgeslagen omdat het type afspeellijst niet wordt ondersteund.</item>
         <item quantity="other"><xliff:g id="count">%1$d</xliff:g> bronnen zijn overgeslagen omdat de typen afspeellijsten niet worden ondersteund.</item>

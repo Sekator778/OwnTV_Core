@@ -125,4 +125,22 @@ interface SubtitleDao {
     /** This profile's remaining links to a cached file, across every media type. */
     @Query("SELECT COUNT(*) FROM subtitle_link WHERE cacheId = :cacheId AND profileId = :profileId")
     suspend fun linkCountForCache(cacheId: Long, profileId: Long): Int
+
+    // --- backup & restore (BackupManager) ---
+    //
+    // Whole-table reads, used only when writing a backup file. They are deliberately unfiltered: the
+    // manager scopes rows to the ticked profiles and their sources, because it is the only place that
+    // knows which those are.
+
+    @Query("SELECT * FROM subtitle_cache")
+    suspend fun allCacheOnce(): List<SubtitleCacheEntity>
+
+    @Query("SELECT * FROM subtitle_selection")
+    suspend fun allSelectionsOnce(): List<SubtitleSelectionEntity>
+
+    @Query("SELECT * FROM subtitle_timing")
+    suspend fun allTimingsOnce(): List<SubtitleTimingEntity>
+
+    @Query("SELECT * FROM subtitle_link")
+    suspend fun allLinksOnce(): List<SubtitleLinkEntity>
 }

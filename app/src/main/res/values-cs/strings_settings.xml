@@ -698,7 +698,7 @@
     <string name="settings_backup_what_backup">Co zálohovat</string>
     <string name="settings_backup_what_restore">Co obnovit</string>
     <string name="settings_backup_encrypt_title">Zašifrovat tuto zálohu?</string>
-    <string name="settings_backup_encrypt_message">Pokud nastavíte heslo zálohy, bude zašifrován celý soubor — včetně playlistů, profilů a uložených hesel — a bez tohoto hesla z něj nebude možné nic přečíst. Heslo bezpečně uschovejte: pokud jej ztratíte, zálohu nebude možné vůbec otevřít. Bez hesla nebude soubor zašifrován a uložená hesla v něm nebudou zahrnuta.</string>
+    <string name="settings_backup_encrypt_message">Pokud nastavíte heslo zálohy, bude zašifrován celý soubor — včetně playlistů, profilů a uložených hesel — a bez tohoto hesla z něj nebude možné nic přečíst. Heslo bezpečně uschovejte: pokud jej ztratíte, zálohu nebude možné vůbec otevřít. Bez hesla nebude soubor zašifrován a uložená hesla ani PINy v něm nebudou zahrnuty.</string>
     <string name="settings_backup_export_title">Exportovat zálohu</string>
     <string name="settings_backup_export_message">Odešlete zálohu do jiného zařízení (telefonu nebo notebooku) připojeného ke stejné síti Wi-Fi nebo ji uložte do souboru v tomto zařízení.</string>
     <string name="settings_backup_restore_title">Obnovit zálohu</string>
@@ -747,7 +747,7 @@
     <string name="settings_backup_section_settings">Nastavení aplikace</string>
     <string name="settings_backup_section_settings_desc">Předvolby motivu, barvy zvýraznění, přehrávače a rozvržení</string>
     <string name="settings_backup_saved_to">Uloženo do <xliff:g id="path">%1$s</xliff:g>.</string>
-    <string name="settings_backup_saved_to_without_passwords">Uloženo do <xliff:g id="path">%1$s</xliff:g>. Hesla nebyla zahrnuta.</string>
+    <string name="settings_backup_saved_to_without_passwords">Uloženo do <xliff:g id="path">%1$s</xliff:g>. Hesla ani PINy nebyly zahrnuty.</string>
     <plurals name="settings_backup_restored">
         <item quantity="one">Obnovena <xliff:g id="items">%1$d</xliff:g> položka.</item>
         <item quantity="few">Obnoveny <xliff:g id="items">%1$d</xliff:g> položky.</item>
@@ -755,7 +755,7 @@
         <item quantity="other">Obnoveno <xliff:g id="items">%1$d</xliff:g> položek.</item>
     </plurals>
     <string name="settings_backup_restore_resync">Opětovnou synchronizací zdrojů načtěte obsah.</string>
-    <string name="settings_backup_restore_password_note">V části Zdroje/Proxy znovu zadejte všechna uložená hesla.</string>
+    <string name="settings_backup_restore_password_note">V části Zdroje/Proxy znovu zadejte všechna uložená hesla a případné PINy profilů.</string>
     <plurals name="settings_backup_skipped_sources">
         <item quantity="one"><xliff:g id="count">%1$d</xliff:g> zdroj byl přeskočen, protože jeho typ playlistu není podporován.</item>
         <item quantity="few"><xliff:g id="count">%1$d</xliff:g> zdroje byly přeskočeny, protože jejich typy playlistů nejsou podporovány.</item>

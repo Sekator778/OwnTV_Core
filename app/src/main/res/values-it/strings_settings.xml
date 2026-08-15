@@ -690,7 +690,7 @@
     <string name="settings_backup_what_backup">Cosa includere nel backup</string>
     <string name="settings_backup_what_restore">Cosa ripristinare</string>
     <string name="settings_backup_encrypt_title">Crittografare questo backup?</string>
-    <string name="settings_backup_encrypt_message">Con una password di backup, l\'intero file viene crittografato, incluse playlist, profili e password salvate, e nessun dato può essere letto senza tale password. Conservala al sicuro: se la perdi, sarà impossibile aprire il backup. Senza una password, il file non viene crittografato e le password salvate non vengono incluse.</string>
+    <string name="settings_backup_encrypt_message">Con una password di backup, l\'intero file viene crittografato, incluse playlist, profili e password salvate, e nessun dato può essere letto senza tale password. Conservala al sicuro: se la perdi, sarà impossibile aprire il backup. Senza una password, il file non viene crittografato e le password e i PIN salvati non vengono inclusi.</string>
     <string name="settings_backup_export_title">Esporta un backup</string>
     <string name="settings_backup_export_message">Invia il backup a un altro dispositivo (telefono o computer portatile) connesso alla stessa rete Wi-Fi oppure salvalo in un file su questo dispositivo.</string>
     <string name="settings_backup_restore_title">Ripristina un backup</string>
@@ -739,14 +739,14 @@
     <string name="settings_backup_section_settings">Impostazioni dell\'app</string>
     <string name="settings_backup_section_settings_desc">Preferenze per tema, colore di accento, player e layout</string>
     <string name="settings_backup_saved_to">Salvato in <xliff:g id="path">%1$s</xliff:g>.</string>
-    <string name="settings_backup_saved_to_without_passwords">Salvato in <xliff:g id="path">%1$s</xliff:g>. Le password non sono state incluse.</string>
+    <string name="settings_backup_saved_to_without_passwords">Salvato in <xliff:g id="path">%1$s</xliff:g>. Le password e i PIN non sono stati inclusi.</string>
     <plurals name="settings_backup_restored">
         <item quantity="one"><xliff:g id="items">%1$d</xliff:g> elemento ripristinato.</item>
         <item quantity="many"><xliff:g id="items">%1$d</xliff:g> elementi ripristinati.</item>
         <item quantity="other"><xliff:g id="items">%1$d</xliff:g> elementi ripristinati.</item>
     </plurals>
     <string name="settings_backup_restore_resync">Risincronizza le fonti per caricare i contenuti.</string>
-    <string name="settings_backup_restore_password_note">Reinserisci le eventuali password salvate in Fonti/Proxy.</string>
+    <string name="settings_backup_restore_password_note">Reinserisci le eventuali password salvate in Fonti/Proxy e i PIN dei profili.</string>
     <plurals name="settings_backup_skipped_sources">
         <item quantity="one"><xliff:g id="count">%1$d</xliff:g> fonte è stata ignorata perché il relativo tipo di playlist non è supportato.</item>
         <item quantity="many"><xliff:g id="count">%1$d</xliff:g> fonti sono state ignorate perché i relativi tipi di playlist non sono supportati.</item>

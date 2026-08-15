@@ -682,7 +682,7 @@
     <string name="settings_backup_what_backup">Yedeklenecekler</string>
     <string name="settings_backup_what_restore">Geri yüklenecekler</string>
     <string name="settings_backup_encrypt_title">Bu yedekleme şifrelensin mi?</string>
-    <string name="settings_backup_encrypt_message">Bir yedekleme parolası kullanıldığında oynatma listeleri, profiller ve kayıtlı parolalar dâhil tüm dosya şifrelenir ve parola olmadan içindeki hiçbir veri okunamaz. Parolayı güvenli bir yerde saklayın: Kaybederseniz yedekleme hiçbir şekilde açılamaz. Parola kullanılmadığında dosya şifrelenmez ve kayıtlı parolalar dosyaya eklenmez.</string>
+    <string name="settings_backup_encrypt_message">Bir yedekleme parolası kullanıldığında oynatma listeleri, profiller ve kayıtlı parolalar dâhil tüm dosya şifrelenir ve parola olmadan içindeki hiçbir veri okunamaz. Parolayı güvenli bir yerde saklayın: Kaybederseniz yedekleme hiçbir şekilde açılamaz. Parola kullanılmadığında dosya şifrelenmez ve kayıtlı parolalar ile PIN kodları dosyaya eklenmez.</string>
     <string name="settings_backup_export_title">Yedeklemeyi dışa aktar</string>
     <string name="settings_backup_export_message">Yedeklemeyi aynı Wi-Fi ağındaki başka bir cihaza (telefon veya dizüstü bilgisayar) gönderin ya da bu cihazda bir dosyaya kaydedin.</string>
     <string name="settings_backup_restore_title">Yedeklemeyi geri yükle</string>
@@ -731,13 +731,13 @@
     <string name="settings_backup_section_settings">Uygulama ayarları</string>
     <string name="settings_backup_section_settings_desc">Tema, vurgu rengi, oynatıcı ve düzen tercihleri</string>
     <string name="settings_backup_saved_to"><xliff:g id="path">%1$s</xliff:g> konumuna kaydedildi.</string>
-    <string name="settings_backup_saved_to_without_passwords"><xliff:g id="path">%1$s</xliff:g> konumuna kaydedildi. Parolalar dâhil edilmedi.</string>
+    <string name="settings_backup_saved_to_without_passwords"><xliff:g id="path">%1$s</xliff:g> konumuna kaydedildi. Parolalar ve PIN kodları dâhil edilmedi.</string>
     <plurals name="settings_backup_restored">
         <item quantity="one"><xliff:g id="items">%1$d</xliff:g> öğe geri yüklendi.</item>
         <item quantity="other"><xliff:g id="items">%1$d</xliff:g> öğe geri yüklendi.</item>
     </plurals>
     <string name="settings_backup_restore_resync">İçeriği yüklemek için kaynaklarınızı yeniden eşitleyin.</string>
-    <string name="settings_backup_restore_password_note">Kayıtlı parolaları Kaynaklar/Proxy bölümünde yeniden girin.</string>
+    <string name="settings_backup_restore_password_note">Kayıtlı parolaları ve profil PIN kodlarını Kaynaklar/Proxy bölümünde yeniden girin.</string>
     <plurals name="settings_backup_skipped_sources">
         <item quantity="one">Oynatma listesi türü desteklenmediği için <xliff:g id="count">%1$d</xliff:g> kaynak atlandı.</item>
         <item quantity="other">Oynatma listesi türleri desteklenmediği için <xliff:g id="count">%1$d</xliff:g> kaynak atlandı.</item>

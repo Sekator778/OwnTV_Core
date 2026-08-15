@@ -698,7 +698,7 @@
     <string name="settings_backup_what_backup">Dane do zapisania w kopii zapasowej</string>
     <string name="settings_backup_what_restore">Dane do przywrócenia</string>
     <string name="settings_backup_encrypt_title">Zaszyfrować tę kopię zapasową?</string>
-    <string name="settings_backup_encrypt_message">Jeśli ustawisz hasło kopii zapasowej, cały plik zostanie zaszyfrowany — łącznie z listami odtwarzania, profilami i zapisanymi hasłami — i bez tego hasła nie będzie można odczytać żadnych zawartych w nim danych. Przechowuj je bezpiecznie: jeśli je utracisz, kopii zapasowej nie będzie można w ogóle otworzyć. Bez hasła plik nie będzie szyfrowany, a zapisane hasła nie zostaną w nim uwzględnione.</string>
+    <string name="settings_backup_encrypt_message">Jeśli ustawisz hasło kopii zapasowej, cały plik zostanie zaszyfrowany — łącznie z listami odtwarzania, profilami i zapisanymi hasłami — i bez tego hasła nie będzie można odczytać żadnych zawartych w nim danych. Przechowuj je bezpiecznie: jeśli je utracisz, kopii zapasowej nie będzie można w ogóle otworzyć. Bez hasła plik nie będzie szyfrowany, a zapisane hasła i kody PIN nie zostaną w nim uwzględnione.</string>
     <string name="settings_backup_export_title">Eksport kopii zapasowej</string>
     <string name="settings_backup_export_message">Wyślij kopię zapasową na inne urządzenie (telefon lub laptop) połączone z tą samą siecią Wi-Fi albo zapisz ją w pliku na tym urządzeniu.</string>
     <string name="settings_backup_restore_title">Przywracanie kopii zapasowej</string>
@@ -747,7 +747,7 @@
     <string name="settings_backup_section_settings">Ustawienia aplikacji</string>
     <string name="settings_backup_section_settings_desc">Preferencje motywu, koloru akcentu, odtwarzacza i układu</string>
     <string name="settings_backup_saved_to">Zapisano w <xliff:g id="path">%1$s</xliff:g>.</string>
-    <string name="settings_backup_saved_to_without_passwords">Zapisano w <xliff:g id="path">%1$s</xliff:g>. Hasła nie zostały uwzględnione.</string>
+    <string name="settings_backup_saved_to_without_passwords">Zapisano w <xliff:g id="path">%1$s</xliff:g>. Hasła i kody PIN nie zostały uwzględnione.</string>
     <plurals name="settings_backup_restored">
         <item quantity="one">Przywrócono <xliff:g id="items">%1$d</xliff:g> element.</item>
         <item quantity="few">Przywrócono <xliff:g id="items">%1$d</xliff:g> elementy.</item>
@@ -755,7 +755,7 @@
         <item quantity="other">Przywrócono <xliff:g id="items">%1$d</xliff:g> elementu.</item>
     </plurals>
     <string name="settings_backup_restore_resync">Ponownie zsynchronizuj źródła, aby wczytać treści.</string>
-    <string name="settings_backup_restore_password_note">Ponownie wprowadź zapisane hasła w sekcji Źródła/Proxy.</string>
+    <string name="settings_backup_restore_password_note">Ponownie wprowadź zapisane hasła oraz kody PIN profili w sekcji Źródła/Proxy.</string>
     <plurals name="settings_backup_skipped_sources">
         <item quantity="one">Pominięto <xliff:g id="count">%1$d</xliff:g> źródło, ponieważ typ jego listy odtwarzania nie jest obsługiwany.</item>
         <item quantity="few">Pominięto <xliff:g id="count">%1$d</xliff:g> źródła, ponieważ typy ich list odtwarzania nie są obsługiwane.</item>

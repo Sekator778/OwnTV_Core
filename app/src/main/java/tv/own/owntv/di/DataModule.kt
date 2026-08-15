@@ -191,11 +191,13 @@ val dataModule = module {
     single { DownloadManager(androidContext(), get(), get(), get()) }
     // profileDao, sourceDao, settings, customizationStore, userDataResolver, epgSourceStore,
     // forceMpvStore, vodEngineStore, db, metadataOverrideStore, metadataDao, openSubtitlesAuthStore,
-    // backgroundsDir (same folder ingestBackgroundImage writes to — the .own container carries the wallpaper)
+    // backgroundsDir (same folder ingestBackgroundImage writes to — the .own container carries the wallpaper),
+    // subtitlesDir (SubtitleRepository's shared cache — the container carries the subtitle files too)
     single {
         BackupManager(
             get(), get(), get(), get(), get(), get(), get(), get(), get(), get(), get(), get(),
             java.io.File(androidContext().filesDir, "backgrounds"),
+            java.io.File(androidContext().filesDir, "subtitles"),
         )
     }
     // context, okHttpClient — in-app updates from GitHub Releases

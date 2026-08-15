@@ -682,7 +682,7 @@
     <string name="settings_backup_what_backup">কী ব্যাকআপ করবেন</string>
     <string name="settings_backup_what_restore">কী পুনরুদ্ধার করবেন</string>
     <string name="settings_backup_encrypt_title">এই ব্যাকআপ এনক্রিপ্ট করবেন?</string>
-    <string name="settings_backup_encrypt_message">ব্যাকআপ পাসওয়ার্ড ব্যবহার করলে পুরো ফাইলটি এনক্রিপ্ট করা হবে—প্লেলিস্ট, প্রোফাইল ও সংরক্ষিত পাসওয়ার্ডসহ—এবং ওই পাসওয়ার্ড ছাড়া এর কিছুই পড়া যাবে না। এটি নিরাপদে রাখুন: হারিয়ে ফেললে ব্যাকআপটি কোনোভাবেই খোলা যাবে না। পাসওয়ার্ড ছাড়া ফাইলটি এনক্রিপ্ট করা হবে না এবং সংরক্ষিত পাসওয়ার্ড এতে অন্তর্ভুক্ত হবে না।</string>
+    <string name="settings_backup_encrypt_message">ব্যাকআপ পাসওয়ার্ড ব্যবহার করলে পুরো ফাইলটি এনক্রিপ্ট করা হবে—প্লেলিস্ট, প্রোফাইল ও সংরক্ষিত পাসওয়ার্ডসহ—এবং ওই পাসওয়ার্ড ছাড়া এর কিছুই পড়া যাবে না। এটি নিরাপদে রাখুন: হারিয়ে ফেললে ব্যাকআপটি কোনোভাবেই খোলা যাবে না। পাসওয়ার্ড ছাড়া ফাইলটি এনক্রিপ্ট করা হবে না এবং সংরক্ষিত পাসওয়ার্ড ও পিন এতে অন্তর্ভুক্ত হবে না।</string>
     <string name="settings_backup_export_title">একটি ব্যাকআপ এক্সপোর্ট করুন</string>
     <string name="settings_backup_export_message">একই Wi-Fi-এ থাকা অন্য ডিভাইসে (ফোন বা ল্যাপটপ) ব্যাকআপটি পাঠান, অথবা এই ডিভাইসে ফাইল হিসেবে সংরক্ষণ করুন।</string>
     <string name="settings_backup_restore_title">একটি ব্যাকআপ পুনরুদ্ধার করুন</string>
@@ -731,13 +731,13 @@
     <string name="settings_backup_section_settings">অ্যাপ সেটিংস</string>
     <string name="settings_backup_section_settings_desc">থিম, অ্যাকসেন্ট, প্লেয়ার ও বিন্যাসের পছন্দ</string>
     <string name="settings_backup_saved_to"><xliff:g id="path">%1$s</xliff:g>-এ সংরক্ষিত হয়েছে।</string>
-    <string name="settings_backup_saved_to_without_passwords"><xliff:g id="path">%1$s</xliff:g>-এ সংরক্ষিত হয়েছে। পাসওয়ার্ড অন্তর্ভুক্ত করা হয়নি।</string>
+    <string name="settings_backup_saved_to_without_passwords"><xliff:g id="path">%1$s</xliff:g>-এ সংরক্ষিত হয়েছে। পাসওয়ার্ড ও পিন অন্তর্ভুক্ত করা হয়নি।</string>
     <plurals name="settings_backup_restored">
         <item quantity="one"><xliff:g id="items">%1$d</xliff:g>টি আইটেম পুনরুদ্ধার করা হয়েছে।</item>
         <item quantity="other"><xliff:g id="items">%1$d</xliff:g>টি আইটেম পুনরুদ্ধার করা হয়েছে।</item>
     </plurals>
     <string name="settings_backup_restore_resync">কনটেন্ট লোড করতে আপনার উৎসগুলো পুনরায় সিঙ্ক করুন।</string>
-    <string name="settings_backup_restore_password_note">উৎস/প্রক্সিতে সংরক্ষিত পাসওয়ার্ডগুলো আবার লিখুন।</string>
+    <string name="settings_backup_restore_password_note">উৎস/প্রক্সিতে সংরক্ষিত পাসওয়ার্ডগুলো এবং প্রোফাইলের পিন আবার লিখুন।</string>
     <plurals name="settings_backup_skipped_sources">
         <item quantity="one">প্লেলিস্টের ধরন সমর্থিত নয় বলে <xliff:g id="count">%1$d</xliff:g>টি উৎস এড়িয়ে যাওয়া হয়েছে।</item>
         <item quantity="other">প্লেলিস্টের ধরন সমর্থিত নয় বলে <xliff:g id="count">%1$d</xliff:g>টি উৎস এড়িয়ে যাওয়া হয়েছে।</item>

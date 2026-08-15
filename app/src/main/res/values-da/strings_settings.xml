@@ -682,7 +682,7 @@
     <string name="settings_backup_what_backup">Hvad der skal sikkerhedskopieres</string>
     <string name="settings_backup_what_restore">Hvad der skal gendannes</string>
     <string name="settings_backup_encrypt_title">Kryptér denne sikkerhedskopi?</string>
-    <string name="settings_backup_encrypt_message">Med en adgangskode til sikkerhedskopien krypteres hele filen — inklusive afspilningslister, profiler og gemte adgangskoder — og intet i den kan læses uden denne adgangskode. Opbevar den sikkert: Hvis du mister den, kan sikkerhedskopien slet ikke åbnes. Uden en adgangskode krypteres filen ikke, og gemte adgangskoder udelades.</string>
+    <string name="settings_backup_encrypt_message">Med en adgangskode til sikkerhedskopien krypteres hele filen — inklusive afspilningslister, profiler og gemte adgangskoder — og intet i den kan læses uden denne adgangskode. Opbevar den sikkert: Hvis du mister den, kan sikkerhedskopien slet ikke åbnes. Uden en adgangskode krypteres filen ikke, og gemte adgangskoder og PIN-koder udelades.</string>
     <string name="settings_backup_export_title">Eksportér en sikkerhedskopi</string>
     <string name="settings_backup_export_message">Send sikkerhedskopien til en anden enhed (telefon eller bærbar computer) på samme Wi-Fi, eller gem den som en fil på denne enhed.</string>
     <string name="settings_backup_restore_title">Gendan en sikkerhedskopi</string>
@@ -731,13 +731,13 @@
     <string name="settings_backup_section_settings">Appindstillinger</string>
     <string name="settings_backup_section_settings_desc">Indstillinger for tema, accentfarve, afspiller og layout</string>
     <string name="settings_backup_saved_to">Gemt i <xliff:g id="path">%1$s</xliff:g>.</string>
-    <string name="settings_backup_saved_to_without_passwords">Gemt i <xliff:g id="path">%1$s</xliff:g>. Adgangskoder blev ikke medtaget.</string>
+    <string name="settings_backup_saved_to_without_passwords">Gemt i <xliff:g id="path">%1$s</xliff:g>. Adgangskoder og PIN-koder blev ikke medtaget.</string>
     <plurals name="settings_backup_restored">
         <item quantity="one"><xliff:g id="items">%1$d</xliff:g> element gendannet.</item>
         <item quantity="other"><xliff:g id="items">%1$d</xliff:g> elementer gendannet.</item>
     </plurals>
     <string name="settings_backup_restore_resync">Synkroniser dine kilder igen for at indlæse indhold.</string>
-    <string name="settings_backup_restore_password_note">Indtast eventuelle gemte adgangskoder igen under Kilder/Proxy.</string>
+    <string name="settings_backup_restore_password_note">Indtast eventuelle gemte adgangskoder og profil-PIN-koder igen under Kilder/Proxy.</string>
     <plurals name="settings_backup_skipped_sources">
         <item quantity="one"><xliff:g id="count">%1$d</xliff:g> kilde blev sprunget over, fordi dens type afspilningsliste ikke understøttes.</item>
         <item quantity="other"><xliff:g id="count">%1$d</xliff:g> kilder blev sprunget over, fordi deres typer afspilningslister ikke understøttes.</item>

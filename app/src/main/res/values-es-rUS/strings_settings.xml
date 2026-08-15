@@ -690,7 +690,7 @@
     <string name="settings_backup_what_backup">Qué incluir en la copia de seguridad</string>
     <string name="settings_backup_what_restore">Qué restaurar</string>
     <string name="settings_backup_encrypt_title">¿Cifrar esta copia de seguridad?</string>
-    <string name="settings_backup_encrypt_message">Con una contraseña para la copia de seguridad, se cifra todo el archivo —incluidas las listas de reproducción, los perfiles y las contraseñas guardadas— y no se puede leer nada sin esa contraseña. Guárdala de forma segura: si la pierdes, la copia de seguridad no podrá abrirse. Sin contraseña, el archivo no se cifra y no se incluyen las contraseñas guardadas.</string>
+    <string name="settings_backup_encrypt_message">Con una contraseña para la copia de seguridad, se cifra todo el archivo —incluidas las listas de reproducción, los perfiles y las contraseñas guardadas— y no se puede leer nada sin esa contraseña. Guárdala de forma segura: si la pierdes, la copia de seguridad no podrá abrirse. Sin contraseña, el archivo no se cifra y no se incluyen las contraseñas guardadas ni los PIN.</string>
     <string name="settings_backup_export_title">Exportar una copia de seguridad</string>
     <string name="settings_backup_export_message">Envía la copia de seguridad a otro dispositivo (teléfono o laptop) conectado a la misma red Wi-Fi, o guárdala en un archivo de este dispositivo.</string>
     <string name="settings_backup_restore_title">Restaurar una copia de seguridad</string>
@@ -739,14 +739,14 @@
     <string name="settings_backup_section_settings">Configuración de la aplicación</string>
     <string name="settings_backup_section_settings_desc">Preferencias de tema, color de énfasis, reproductor y diseño</string>
     <string name="settings_backup_saved_to">Se guardó en <xliff:g id="path">%1$s</xliff:g>.</string>
-    <string name="settings_backup_saved_to_without_passwords">Se guardó en <xliff:g id="path">%1$s</xliff:g>. No se incluyeron las contraseñas.</string>
+    <string name="settings_backup_saved_to_without_passwords">Se guardó en <xliff:g id="path">%1$s</xliff:g>. No se incluyeron las contraseñas ni los PIN.</string>
     <plurals name="settings_backup_restored">
         <item quantity="one">Se restauró <xliff:g id="items">%1$d</xliff:g> elemento.</item>
         <item quantity="many">Se restauraron <xliff:g id="items">%1$d</xliff:g> elementos.</item>
         <item quantity="other">Se restauraron <xliff:g id="items">%1$d</xliff:g> elementos.</item>
     </plurals>
     <string name="settings_backup_restore_resync">Vuelve a sincronizar tus fuentes para cargar el contenido.</string>
-    <string name="settings_backup_restore_password_note">Vuelve a ingresar las contraseñas guardadas en Fuentes/Proxy.</string>
+    <string name="settings_backup_restore_password_note">Vuelve a ingresar las contraseñas guardadas en Fuentes/Proxy y los PIN de los perfiles.</string>
     <plurals name="settings_backup_skipped_sources">
         <item quantity="one">Se omitió <xliff:g id="count">%1$d</xliff:g> fuente porque su tipo de lista de reproducción no es compatible.</item>
         <item quantity="many">Se omitieron <xliff:g id="count">%1$d</xliff:g> fuentes porque sus tipos de lista de reproducción no son compatibles.</item>

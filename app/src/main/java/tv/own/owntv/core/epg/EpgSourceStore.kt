@@ -121,6 +121,12 @@ class EpgSourceStore(private val context: Context) {
             incoming.forEach { src ->
                 val match = existing.firstOrNull { it.url.trim() == src.url.trim() }
                 if (match != null) {
+                    // Same feed already here: adopt the backup's name and user agent. Matching is by
+                    // URL alone, so keeping the device's copy meant a restore silently discarded a
+                    // renamed feed and any custom user agent it needed to fetch at all. Sync state
+                    // (lastSyncAt/lastError) stays local — it describes THIS device.
+                    existing[existing.indexOf(match)] =
+                        match.copy(name = src.name, userAgent = src.userAgent ?: match.userAgent)
                     idMap[src.id] = match.id
                 } else {
                     val added = src.copy(id = nextId, lastSyncAt = null, lastError = null)

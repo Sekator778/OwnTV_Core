@@ -47,6 +47,15 @@ object BackupContainer {
     const val JSON_ENTRY = "backup.json"
     const val WALLPAPER_DIR = "wallpaper/"
 
+    /**
+     * Downloaded/imported subtitle files (v17). Like the wallpaper, these are real files the JSON can
+     * only *point* at: `subtitle_cache.cachedPath` is an absolute path into this device's private
+     * storage, so restoring the row alone gave the next device a remembered subtitle selection whose
+     * file did not exist. Entry names are `<cacheId>_<fileName>`, matched back to their row by the
+     * `file` field the manager writes alongside each exported cache row.
+     */
+    const val SUBTITLE_DIR = "subtitles/"
+
     /** A file riding inside the container alongside the JSON (today: the background image). */
     data class Asset(val name: String, val bytes: ByteArray) {
         // ByteArray gives identity equals/hashCode, which makes this data class quietly wrong in any
@@ -58,7 +67,12 @@ object BackupContainer {
     }
 
     /** The unpacked contents of a backup file, whatever format it arrived in. */
-    data class Payload(val json: String, val wallpaper: Asset?)
+    data class Payload(
+        val json: String,
+        val wallpaper: Asset?,
+        /** Subtitle files, keyed by their container entry name (see [SUBTITLE_DIR]). */
+        val subtitles: Map<String, ByteArray> = emptyMap(),
+    )
 
     /** What a file on disk turns out to be. */
     enum class Kind {
@@ -107,6 +121,11 @@ object BackupContainer {
                     zos.write(asset.bytes)
                     zos.closeEntry()
                 }
+                payload.subtitles.forEach { (name, bytes) ->
+                    zos.putNextEntry(ZipEntry(SUBTITLE_DIR + name))
+                    zos.write(bytes)
+                    zos.closeEntry()
+                }
             }
         }.toByteArray()
 
@@ -150,6 +169,7 @@ object BackupContainer {
     private fun unzip(bytes: ByteArray): Payload {
         var json: String? = null
         var wallpaper: Asset? = null
+        val subtitles = LinkedHashMap<String, ByteArray>()
         ZipInputStream(bytes.inputStream()).use { zis ->
             while (true) {
                 val entry = zis.nextEntry ?: break
@@ -160,11 +180,17 @@ object BackupContainer {
                     // path, but reject traversal outright so a hand-made container can't get creative.
                     name.startsWith(WALLPAPER_DIR) && !entry.isDirectory && !name.contains("..") ->
                         wallpaper = Asset(File(name).name, zis.readBytes())
+                    name.startsWith(SUBTITLE_DIR) && !entry.isDirectory && !name.contains("..") ->
+                        subtitles[File(name).name] = zis.readBytes()
                 }
                 zis.closeEntry()
             }
         }
-        return Payload(json = json ?: error("Not an OwnTV backup file"), wallpaper = wallpaper)
+        return Payload(
+            json = json ?: error("Not an OwnTV backup file"),
+            wallpaper = wallpaper,
+            subtitles = subtitles,
+        )
     }
 
     private fun intToBytes(v: Int) = byteArrayOf(

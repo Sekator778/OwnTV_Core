@@ -1383,7 +1383,7 @@ Resync and remove missing titles also allows removing titles the provider no lon
     <!-- Translators: Dialog title for the backup encryption prompt. -->
     <string name="settings_backup_encrypt_title">Encrypt this backup?</string>
     <!-- Translators: Description explaining backup encryption options. -->
-    <string name="settings_backup_encrypt_message">With a backup password, the whole file is encrypted — playlists, profiles and saved passwords included — and nothing in it can be read without that password. Keep it safe: if you lose it, the backup cannot be opened at all. Without a password the file is not encrypted and saved passwords are left out of it.</string>
+    <string name="settings_backup_encrypt_message">With a backup password, the whole file is encrypted — playlists, profiles and saved passwords included — and nothing in it can be read without that password. Keep it safe: if you lose it, the backup cannot be opened at all. Without a password the file is not encrypted, and saved passwords and PINs are left out of it.</string>
     <!-- Translators: Section header for the backup export flow. -->
     <string name="settings_backup_export_title">Export a backup</string>
     <!-- Translators: Description of the backup export process. -->
@@ -1481,7 +1481,7 @@ Resync and remove missing titles also allows removing titles the provider no lon
     <!-- Translators: Status text when backup is saved. 'path' is the file path. -->
     <string name="settings_backup_saved_to">Saved to <xliff:g id="path">%1$s</xliff:g>.</string>
     <!-- Translators: Status text when backup is saved without passwords. 'path' is the file path. -->
-    <string name="settings_backup_saved_to_without_passwords">Saved to <xliff:g id="path">%1$s</xliff:g>. Passwords were not included.</string>
+    <string name="settings_backup_saved_to_without_passwords">Saved to <xliff:g id="path">%1$s</xliff:g>. Passwords and PINs were not included.</string>
     <!-- Translators: Plural text when restore completes. 'items' is the number of restored items. -->
     <plurals name="settings_backup_restored">
         <item quantity="one"><xliff:g id="items">%1$d</xliff:g> item restored.</item>
@@ -1490,7 +1490,7 @@ Resync and remove missing titles also allows removing titles the provider no lon
     <!-- Translators: Instruction after restore to re-sync sources. -->
     <string name="settings_backup_restore_resync">Re-sync your sources to load content.</string>
     <!-- Translators: Note after restore about re-entering passwords. -->
-    <string name="settings_backup_restore_password_note">Re-enter any saved passwords in Sources/Proxy.</string>
+    <string name="settings_backup_restore_password_note">Re-enter any saved passwords in Sources/Proxy, and any profile PINs.</string>
     <!-- Translators: Plural warning when sources are skipped due to unsupported types. 'count' is the number. -->
     <plurals name="settings_backup_skipped_sources">
         <item quantity="one"><xliff:g id="count">%1$d</xliff:g> source was skipped because its playlist type is not supported.</item>

@@ -11,6 +11,8 @@ import java.io.File
 import tv.own.owntv.core.customize.CustomizationStore
 import tv.own.owntv.core.database.dao.ProfileDao
 import tv.own.owntv.core.database.dao.SourceDao
+import tv.own.owntv.core.database.entity.FOLLOW_GLOBAL_PREROLL
+import tv.own.owntv.core.model.HlsSupport
 import tv.own.owntv.core.database.entity.ProfileEntity
 import tv.own.owntv.core.database.entity.ProfileSourceCrossRef
 import tv.own.owntv.core.database.entity.SourceEntity
@@ -42,6 +44,8 @@ class BackupManager(
     private val openSubAuth: tv.own.owntv.core.subtitles.OpenSubtitlesAuthStore,
     /** `filesDir/backgrounds` — where the Glass effect wallpaper lives, so a backup can carry it. */
     private val backgroundsDir: File,
+    /** `filesDir/subtitles` — the shared subtitle file cache (see SubtitleRepository), carried too. */
+    private val subtitlesDir: File,
 ) {
     /** What a backup can contain; the user multi-selects these for export and restore. Profiles are
      *  NOT a section: every backup is inherently profile-based — the export flow's first step picks
@@ -94,23 +98,28 @@ class BackupManager(
             val seal: ((String) -> JSONObject)? = key?.let { k -> { plain -> BackupCrypto.encrypt(k, plain) } }
 
             val root = JSONObject().apply {
-                put("version", 16) // v16: optional Stalker serial/device IDs/signature. v15: custom category membership (issue #87) rides userData as kind "member"; customCategories blobs pass through unremapped. v14: .own container (wallpaper rides along). v13: sources.syncLive/Movies/Series. v12: per-profile OpenSubtitles login (encrypted-only). v11: profile-scoped export. v10: sources.mac. v9: custom TMDB names, encrypted TMDB key
+                put("version", 17) // v17: startupModes/customizePins moved SOURCES→SETTINGS (readers accept both); PIN hashes and legacy URL-shaped player keys are encrypted-only; sources carry preferHls/livePrerollSecs/hlsSupported; source-keyed blocks scoped to the ticked profiles' sources. v16: optional Stalker serial/device IDs/signature. v15: custom category membership (issue #87) rides userData as kind "member"; customCategories blobs pass through unremapped. v14: .own container (wallpaper rides along). v13: sources.syncLive/Movies/Series. v12: per-profile OpenSubtitles login (encrypted-only). v11: profile-scoped export. v10: sources.mac. v9: custom TMDB names, encrypted TMDB key
                 put("sections", JSONArray().apply { sections.forEach { put(it.name) } })
                 if (salt != null) put("crypto", BackupCrypto.cryptoBlock(salt))
                 // Ticked profiles always ride (backup is profile-based); restore needs SOURCES to apply them.
-                put("profiles", JSONArray().apply { profiles.forEach { put(profileJson(it)) } })
+                put("profiles", JSONArray().apply { profiles.forEach { put(profileJson(it, seal)) } })
+                // Which of them was in use. A fresh device used to adopt whichever profile happened to
+                // come first out of the id map, so a two-profile household could land on the kids
+                // profile after a restore. Only recorded when that profile is actually in the file.
+                settings.activeProfileId.first().takeIf { it in pids }?.let { put("activeProfileId", it) }
                 if (Section.SOURCES in sections) {
                     // Only sources at least one ticked profile uses, and only ticked profiles' links.
                     put("sources", JSONArray().apply { sourceDao.getAllOnce().filter { it.id in linkedSourceIds }.forEach { put(sourceJson(it, seal)) } })
                     put("links", JSONArray().apply { allLinks.forEach { put(JSONObject().put("profileId", it.profileId).put("sourceId", it.sourceId)) } })
                     put("epgSources", epgSources.exportJson()) // standalone EPG feeds ride with sources
-                    put("startupModes", filterByProfile(settings.exportStartupModes(), pidKeys)) // per-profile landing
-                    put("customizePins", filterByProfile(settings.exportCustomizePins(), pidKeys)) // per-profile Customize PIN lock
                     // Per-source auto-refresh selections + default source, keyed by the preserved ids.
-                    put("playlistAutoRefresh", settings.exportPlaylistAutoRefresh())
+                    // Scoped to the ticked profiles' sources: an id belonging to a source that is NOT in
+                    // this file cannot be remapped on restore, and an unmapped numeric id silently
+                    // matches whatever unrelated source happens to hold it on the target device.
+                    put("playlistAutoRefresh", filterBySourceId(settings.exportPlaylistAutoRefresh(), linkedSourceIds))
                     put("epgAutoRefresh", settings.exportEpgAutoRefresh())
                     put("epgUseLogos", settings.exportEpgUseLogos())
-                    settings.currentDefaultSourceId()?.let { put("defaultSourceId", it) }
+                    settings.currentDefaultSourceId()?.takeIf { it in linkedSourceIds }?.let { put("defaultSourceId", it) }
                 }
                 if (Section.CUSTOMIZE in sections) {
                     // Customization entries are keyed "cust_<profileId>_<TYPE>" — keep ticked profiles only.
@@ -124,9 +133,11 @@ class BackupManager(
                     )
                     put("homeConfigs", filterByProfile(settings.exportHomeConfigs(), pidKeys))
                     put("hideNewCategories", filterByProfile(settings.exportHideNewCategories(), pidKeys))
-                    // User-corrected TMDB titles/years. Keyed by "type:sourceId:remoteId|name" — source ids
-                    // are preserved on restore, so the map rides verbatim. Optional block; older readers ignore it.
-                    tmdbOverrides.exportJson().takeIf { it.isNotBlank() }?.let { put("tmdbOverrides", it) }
+                    // User-corrected TMDB titles/years. Keyed by "type:sourceId:remoteId|name", remapped
+                    // on restore — so, like every other source-keyed block, only the ticked profiles'
+                    // sources ride: an entry whose source is absent from the file has no id to remap to.
+                    filterTmdbOverridesBySourceId(tmdbOverrides.exportJson(), linkedSourceIds)
+                        .takeIf { it.isNotBlank() }?.let { put("tmdbOverrides", it) }
                 }
                 // Favorites / history / resume positions, exported with stable keys (see UserDataResolver),
                 // filtered to the ticked profiles (each record carries its owner in "p").
@@ -152,22 +163,44 @@ class BackupManager(
             val openSubtitlesKey = settings.currentOpenSubtitlesApiKey()
             if (seal != null && openSubtitlesKey.isNotEmpty()) s.put("opensub_api_key_enc", seal(openSubtitlesKey))
                     put("settings", s)
-                    // Per-item "compatibility mode" engine pins (Live + VOD). Keyed by stream URL, so no
-                    // id remapping needed on restore. Optional block — older readers just ignore it.
+                    // Per-profile landing screen + the Customize PIN lock. These moved out of the
+                    // SOURCES block in v17: neither is a playlist or a credential, so a user who
+                    // deselected "Sources" was silently dropping them. Readers accept both places.
+                    put("startupModes", filterByProfile(settings.exportStartupModes(), pidKeys))
+                    // The Customize PIN is stored as a salted hash, but a 4-digit PIN behind one SHA-256
+                    // pass is seconds of offline brute force — so it follows the same rule as every other
+                    // secret: encrypted with the backup passphrase, or left out entirely.
+                    if (seal != null) {
+                        put("customizePins", sealValues(filterByProfile(settings.exportCustomizePins(), pidKeys), seal))
+                    }
+                    // Per-item "compatibility mode" engine pins (Live + VOD).
+                    //
+                    // These are keyed by [enginePinKey] — "<sourceId>:<MEDIA_TYPE>:<remoteId>" — so the
+                    // source id DOES have to be remapped on restore (the older comment here claimed they
+                    // were stream-URL keyed; that stopped being true when P6 introduced the stable key,
+                    // and an unremapped id silently pinned the wrong source's items). Rows are scoped to
+                    // the ticked profiles' sources for the same reason. Keys still in the legacy
+                    // stream-URL shape carry no source id and frequently embed the account's username
+                    // and password, so they ride only when there is a passphrase.
+                    val urlKeysAllowed = seal != null
                     put("compatMode", JSONObject().apply {
-                        put("liveMpvUrls", JSONArray(forceMpvStore.exportUrls().toList()))
-                        put("vodMpvUrls", JSONArray(vodEngineStore.exportMpvUrls().toList()))
-                        put("vodExoUrls", JSONArray(vodEngineStore.exportExoUrls().toList()))
+                        put("liveMpvUrls", JSONArray(filterEnginePinKeys(forceMpvStore.exportUrls(), linkedSourceIds, urlKeysAllowed)))
+                        put("vodMpvUrls", JSONArray(filterEnginePinKeys(vodEngineStore.exportMpvUrls(), linkedSourceIds, urlKeysAllowed)))
+                        put("vodExoUrls", JSONArray(filterEnginePinKeys(vodEngineStore.exportExoUrls(), linkedSourceIds, urlKeysAllowed)))
                     })
-                    // Per-item zoom / volume (DB v32). Same idea as compatMode and keyed on the same
-                    // stable content key, so no id remapping is needed for the KEY — but these rows are
-                    // per profile, so the profile id rides along and is remapped on restore (as with the
-                    // OpenSubtitles block below). Ticked profiles only. Optional: older readers skip it.
+                    // Per-item zoom / volume (DB v32). Same key shape as compatMode — [enginePinKey] —
+                    // so BOTH ids travel and both are remapped on restore: the profile id (these rows
+                    // are per profile) and the source id inside `contentKey`. Scoped to the ticked
+                    // profiles and their sources; legacy stream-URL keys need a passphrase, exactly as
+                    // in compatMode above. Optional block: older readers skip it.
                     run {
                         val ticked = profiles.map { it.id }.toSet()
                         val rows = runCatching { db.playbackPrefsDao().getAllOnce() }.getOrDefault(emptyList())
                         put("playbackPrefs", JSONArray().apply {
-                            rows.filter { it.profileId in ticked }.forEach { row ->
+                            rows.filter { row ->
+                                row.profileId in ticked &&
+                                    filterEnginePinKeys(listOf(row.contentKey), linkedSourceIds, urlKeysAllowed).isNotEmpty()
+                            }.forEach { row ->
                                 put(
                                     JSONObject().apply {
                                         put("p", row.profileId)
@@ -199,12 +232,143 @@ class BackupManager(
             val wallpaper = if (Section.SETTINGS in sections) currentWallpaper() else null
             wallpaper?.let { root.put("wallpaper", it.name) }
 
+            // External subtitles: the remembered selection, the saved timing offsets, the per-title
+            // links AND the files themselves. Same reasoning as the wallpaper — `cachedPath` is an
+            // absolute path into this device's private storage, so the rows alone restore a selection
+            // whose file does not exist. Files ride as container entries; see [exportSubtitles].
+            val subtitleFiles =
+                if (Section.SETTINGS in sections) exportSubtitles(root, pids, linkedSourceIds) else emptyMap()
+
             if (!folder.exists()) folder.mkdirs()
             writeAtomically(
                 File(folder, BACKUP_FILENAME),
-                BackupContainer.pack(BackupContainer.Payload(root.toString(2), wallpaper), backupPassword),
+                BackupContainer.pack(
+                    BackupContainer.Payload(root.toString(2), wallpaper, subtitleFiles),
+                    backupPassword,
+                ),
             )
         }
+    }
+
+    /**
+     * Writes the `subtitles` block into [root] and returns the subtitle files to pack alongside it.
+     *
+     * What rides: the per-profile remembered selection, the saved timing offsets, the per-title links,
+     * and the cached files those rows point at. Scoped like every other per-item block — [pids] for
+     * the ticked profiles, [linkedSourceIds] for their sources (the content keys are
+     * "movie:<sourceId>:…" / "episode:<sourceId>:…", so an unscoped row could not be remapped).
+     *
+     * Bounded on purpose. A heavy user's subtitle cache is unbounded, and a backup must stay under the
+     * companion link's upload limit alongside an 8 MB wallpaper — so files are taken most-recently-used
+     * first up to [MAX_SUBTITLE_BYTES], and any row whose file is missing or did not fit is dropped
+     * along with the selections/links that reference it. A restore is then simply missing that
+     * subtitle, never holding a selection pointing at a file that was never packed.
+     */
+    private suspend fun exportSubtitles(
+        root: JSONObject,
+        pids: Set<Long>,
+        linkedSourceIds: Set<Long>,
+    ): Map<String, ByteArray> {
+        val dao = db.subtitleDao()
+        fun inScope(profileId: Long, contentKey: String): Boolean =
+            profileId in pids && contentKey.split(':').getOrNull(1)?.toLongOrNull() in linkedSourceIds
+
+        val selections = runCatching { dao.allSelectionsOnce() }.getOrDefault(emptyList())
+            .filter { inScope(it.profileId, it.contentKey) }
+        val timings = runCatching { dao.allTimingsOnce() }.getOrDefault(emptyList())
+            .filter { inScope(it.profileId, it.contentKey) }
+        val links = runCatching { dao.allLinksOnce() }.getOrDefault(emptyList())
+            .filter { inScope(it.profileId, it.contentKey) }
+        if (selections.isEmpty() && timings.isEmpty() && links.isEmpty()) return emptyMap()
+
+        // Only the cache rows those in-scope rows actually reference. A timing key of
+        // "local:<cacheId>" names one too — an imported local file with a saved offset.
+        val wanted = buildSet {
+            selections.forEach { s -> s.cacheId?.let { add(it) } }
+            links.forEach { add(it.cacheId) }
+            timings.forEach { t -> t.subtitleKey.removePrefix(LOCAL_SUB_PREFIX)
+                .takeIf { t.subtitleKey.startsWith(LOCAL_SUB_PREFIX) }?.toLongOrNull()?.let { add(it) } }
+        }
+        if (wanted.isEmpty()) return emptyMap()
+
+        val files = LinkedHashMap<String, ByteArray>()
+        val packed = HashMap<Long, String>() // cacheId → container entry name
+        var budget = MAX_SUBTITLE_BYTES
+        val cacheRows = runCatching { dao.allCacheOnce() }.getOrDefault(emptyList())
+            .filter { it.id in wanted }
+            .sortedByDescending { it.lastUsedAt }
+        val exportedCache = JSONArray()
+        for (row in cacheRows) {
+            val file = File(row.cachedPath)
+            if (!file.isFile) continue
+            val length = file.length()
+            if (length !in 1..budget) continue
+            val bytes = runCatching { file.readBytes() }.getOrNull() ?: continue
+            // Entry name carries the row id so two titles' "movie.srt" never collide. Leaf name only —
+            // BackupContainer rejects traversal, but never hand it a separator in the first place.
+            val entry = "${row.id}_${File(row.fileName).name}"
+            files[entry] = bytes
+            packed[row.id] = entry
+            budget -= length
+            exportedCache.put(
+                JSONObject().apply {
+                    put("id", row.id); put("source", row.source)
+                    row.openSubFileId?.let { put("openSubFileId", it) }
+                    row.language?.let { put("language", it) }
+                    row.languageName?.let { put("languageName", it) }
+                    row.releaseName?.let { put("releaseName", it) }
+                    row.format?.let { put("format", it) }
+                    put("hearingImpaired", row.hearingImpaired)
+                    put("fileName", row.fileName); put("lastUsedAt", row.lastUsedAt)
+                    put("file", entry)
+                },
+            )
+        }
+        if (exportedCache.length() == 0) return emptyMap()
+
+        root.put(
+            "subtitles",
+            JSONObject().apply {
+                put("cache", exportedCache)
+                // An "Off" selection is meaningful with no file behind it; a selection naming a file we
+                // could not pack is not, so it is dropped rather than restored as a dangling reference.
+                put("selections", JSONArray().apply {
+                    selections.filter { it.cacheId == null || it.cacheId in packed }.forEach { s ->
+                        put(
+                            JSONObject().apply {
+                                put("p", s.profileId); put("k", s.contentKey)
+                                s.cacheId?.let { put("c", it) }
+                                put("off", s.off); put("u", s.updatedAt)
+                            },
+                        )
+                    }
+                })
+                put("timings", JSONArray().apply {
+                    timings.filter { t ->
+                        !t.subtitleKey.startsWith(LOCAL_SUB_PREFIX) ||
+                            t.subtitleKey.removePrefix(LOCAL_SUB_PREFIX).toLongOrNull() in packed
+                    }.forEach { t ->
+                        put(
+                            JSONObject().apply {
+                                put("p", t.profileId); put("k", t.contentKey); put("s", t.subtitleKey)
+                                put("o", t.offsetMs); put("u", t.updatedAt)
+                            },
+                        )
+                    }
+                })
+                put("links", JSONArray().apply {
+                    links.filter { it.cacheId in packed }.forEach { l ->
+                        put(
+                            JSONObject().apply {
+                                put("p", l.profileId); put("k", l.contentKey); put("c", l.cacheId)
+                                put("t", l.mediaType); put("n", l.contentTitle); put("a", l.addedAt)
+                            },
+                        )
+                    }
+                })
+            },
+        )
+        return files
     }
 
     /** The current Glass effect background as a container asset, or null when unset/missing/oversized. */
@@ -249,9 +413,9 @@ class BackupManager(
      * to leave behind. A [WrongPasswordException] from a sealed container is rethrown as-is rather
      * than triggering the `.bak` fallback: the file is fine, the password isn't.
      */
-    private fun readBackup(file: File, password: String?): Pair<JSONObject, BackupContainer.Asset?> {
-        fun read(f: File): Pair<JSONObject, BackupContainer.Asset?> =
-            BackupContainer.open(f, password).let { JSONObject(it.json) to it.wallpaper }
+    private fun readBackup(file: File, password: String?): Pair<JSONObject, BackupContainer.Payload> {
+        fun read(f: File): Pair<JSONObject, BackupContainer.Payload> =
+            BackupContainer.open(f, password).let { JSONObject(it.json) to it }
 
         val primary = runCatching { read(file) }
         primary.getOrNull()?.let { return it }
@@ -353,7 +517,13 @@ class BackupManager(
         backupPassword: String? = null,
     ): Result<ImportSummary> = withContext(Dispatchers.IO) {
         runCatching {
-            val (root, wallpaper) = readBackup(file, backupPassword)
+            val (root, payload) = readBackup(file, backupPassword)
+            val wallpaper = payload.wallpaper
+            // Schema version of the FILE (not of this build). Only needed where a block moved between
+            // sections: up to v16 the per-profile startup mode and Customize PIN lock rode with
+            // SOURCES, from v17 they ride with SETTINGS. Both places are read, so either file restores
+            // whichever section the user ticks — see the `startupModes` handling below.
+            val fileVersion = root.optInt("version", 0)
             val crypto = root.optJSONObject("crypto")
             val pass = backupPassword?.takeIf { it.isNotBlank() }
             var existingProfileIds = profileDao.getAllOnce().map { it.id }.toSet()
@@ -419,7 +589,7 @@ class BackupManager(
                 val byName = deviceProfiles.associateBy { profileMatchKey(it.name) }
                 val takenProfileIds = deviceProfiles.map { it.id }.toMutableSet()
                 for (i in 0 until fileProfiles.length()) {
-                    val incoming = profileFrom(fileProfiles.getJSONObject(i))
+                    val incoming = profileFrom(fileProfiles.getJSONObject(i), unseal)
                     val existing = byName[profileMatchKey(incoming.name)]
                     when {
                         existing != null -> {
@@ -427,7 +597,11 @@ class BackupManager(
                                 profileDao.update(
                                     existing.copy(
                                         avatarColor = incoming.avatarColor, avatarId = incoming.avatarId,
-                                        isKids = incoming.isKids, pinHash = incoming.pinHash,
+                                        isKids = incoming.isKids,
+                                        // A passwordless backup omits PIN hashes (v17), so `null` here
+                                        // means "not carried", not "this profile has no lock" — keep the
+                                        // device's own PIN rather than silently unlocking the profile.
+                                        pinHash = incoming.pinHash ?: existing.pinHash,
                                     ),
                                 )
                             }
@@ -451,7 +625,8 @@ class BackupManager(
                 val byKey = deviceSources.associateBy { sourceMatchKey(it.type.name, it.url, it.username) }
                 val takenSourceIds = deviceSources.map { it.id }.toMutableSet()
                 for (i in 0 until fileSources.length()) {
-                    val incoming = sourceFrom(fileSources.getJSONObject(i), unseal)
+                    val srcJson = fileSources.getJSONObject(i)
+                    val incoming = sourceFrom(srcJson, unseal)
                     if (incoming == null) {
                         skippedSources++
                         continue
@@ -460,8 +635,15 @@ class BackupManager(
                     when {
                         existing != null -> {
                             if (applySources) {
+                                // Non-secret playlist settings are applied from the FILE when it carries
+                                // them. They used to be skipped, so restoring onto an install that
+                                // already had the playlist kept the device's values and silently lost
+                                // the backup's name, per-section sync scope, Prefer HLS and per-playlist
+                                // Pre-buffer. `has()` rather than a value check, so a backup written by
+                                // an older build (no such key) still leaves the device's value alone.
                                 sourceDao.update(
                                     existing.copy(
+                                        name = if (srcJson.has("name")) incoming.name else existing.name,
                                         password = incoming.password ?: existing.password,
                                         mac = incoming.mac ?: existing.mac,
                                         stalkerSerialNumber = incoming.stalkerSerialNumber ?: existing.stalkerSerialNumber,
@@ -470,6 +652,15 @@ class BackupManager(
                                         stalkerSignature = incoming.stalkerSignature ?: existing.stalkerSignature,
                                         userAgent = incoming.userAgent ?: existing.userAgent,
                                         epgUrl = incoming.epgUrl ?: existing.epgUrl,
+                                        syncLive = if (srcJson.has("syncLive")) incoming.syncLive else existing.syncLive,
+                                        syncMovies = if (srcJson.has("syncMovies")) incoming.syncMovies else existing.syncMovies,
+                                        syncSeries = if (srcJson.has("syncSeries")) incoming.syncSeries else existing.syncSeries,
+                                        preferHls = if (srcJson.has("preferHls")) incoming.preferHls else existing.preferHls,
+                                        livePrerollSecs = if (srcJson.has("livePrerollSecs")) incoming.livePrerollSecs else existing.livePrerollSecs,
+                                        // hlsSupported is a sync-time detection hint, not a user choice:
+                                        // the device's own last answer wins, and UNKNOWN adopts the
+                                        // file's so a fresh row is not left blank until the next sync.
+                                        hlsSupported = if (existing.hlsSupported == HlsSupport.UNKNOWN) incoming.hlsSupported else existing.hlsSupported,
                                     ),
                                 )
                             }
@@ -504,12 +695,21 @@ class BackupManager(
                 epgIdMap = epgSources.mergeJson(root.optString("epgSources").takeIf { it.isNotBlank() })
 
                 val profileIds = profileDao.getAllOnce().map { it.id }.toSet()
-                // Only a device with no usable active profile (fresh install) adopts a restored one.
+                // Only a device with no usable active profile (fresh install) adopts a restored one —
+                // a merge restore must not switch the profile out from under someone mid-session.
+                // Which one it adopts now comes from the file (v17) instead of being whichever id the
+                // map happened to yield first; older files fall back to that same arbitrary pick.
                 if (settings.activeProfileId.first() !in profileIds) {
-                    profileIdMap.values.firstOrNull()?.let { settings.setActiveProfile(it) }
+                    val preferred = root.optLong("activeProfileId", -1L)
+                        .takeIf { it > 0 }?.let { profileIdMap[it] }
+                    (preferred ?: profileIdMap.values.firstOrNull())?.let { settings.setActiveProfile(it) }
                 }
-                root.optJSONObject("startupModes")?.let { settings.importStartupModes(remapKeys(it, profileIdMap), profileIds) }
-                root.optJSONObject("customizePins")?.let { settings.importCustomizePins(remapKeys(it, profileIdMap), profileIds) }
+                // Pre-v17 files carried these in the SOURCES block, so keep honouring that for them.
+                // v17+ files are handled in the SETTINGS block, where they now belong.
+                if (fileVersion < 17) {
+                    root.optJSONObject("startupModes")?.let { settings.importStartupModes(remapKeys(it, profileIdMap), profileIds) }
+                    root.optJSONObject("customizePins")?.let { settings.importCustomizePins(remapKeys(it, profileIdMap), profileIds) }
+                }
                 existingProfileIds = profileIds
                 // Auto-refresh maps + default source, remapped to device ids; entries whose ids didn't
                 // survive the merge are dropped; the device's other choices are kept (merge).
@@ -518,8 +718,11 @@ class BackupManager(
                 root.optJSONObject("epgAutoRefresh")?.let { settings.importEpgAutoRefresh(remapKeys(it, epgIdMap), epgSources.getAll().map { s -> s.id }.toSet()) }
                 root.optJSONObject("epgUseLogos")?.let { settings.importEpgUseLogos(remapKeys(it, epgIdMap), epgSources.getAll().map { s -> s.id }.toSet()) }
                 if (root.has("defaultSourceId")) {
-                    val mapped = sourceIdMap[root.getLong("defaultSourceId")] ?: root.getLong("defaultSourceId")
-                    settings.importDefaultSource(mapped, sourceIds)
+                    // Only a source that actually took part in this restore may become the default.
+                    // Falling back to the file's raw id was an id-collision bug: an unmapped id still
+                    // passed the `in sourceIds` check whenever some unrelated device source happened
+                    // to hold that number, silently repointing the user's default playlist.
+                    sourceIdMap[root.getLong("defaultSourceId")]?.let { settings.importDefaultSource(it, sourceIds) }
                 }
                 count += fileProfiles.length() + fileSources.length() - skippedSources
             }
@@ -611,16 +814,28 @@ class BackupManager(
                 }
                 // After importSettings, because that is what wrote the file's (device-local) bg path.
                 applyWallpaper(wallpaper)
+                // Per-profile landing screen + Customize PIN lock (v17: moved here from SOURCES).
+                if (fileVersion >= 17) {
+                    val pids = profileDao.getAllOnce().map { it.id }.toSet()
+                    root.optJSONObject("startupModes")?.let { settings.importStartupModes(remapKeys(it, profileIdMap), pids) }
+                    // Encrypted-only since v17, so this restores the lock exactly when the passphrase
+                    // is available and otherwise leaves the device's own Customize PIN untouched.
+                    root.optJSONObject("customizePins")?.let { o ->
+                        settings.importCustomizePins(remapKeys(unsealValues(o, unseal), profileIdMap), pids)
+                    }
+                }
                 // Per-item compatibility-mode engine pins. Optional; merged (union) into the current
                 // pins so a restore never drops locally-set pins. Corrupt/non-string entries ignored.
+                //
+                // The keys are [enginePinKey] ("<sourceId>:<MEDIA_TYPE>:<remoteId>"), so the source id
+                // has to be remapped to its device id first. Without this a merge restore either did
+                // nothing (the file's id is free on this device, so the pin named a source that does
+                // not exist) or, worse, pinned the items of whatever unrelated source already held
+                // that id. Legacy stream-URL keys carry no id and pass through untouched.
                 root.optJSONObject("compatMode")?.let { c ->
-                    runCatching { forceMpvStore.importUrls(jsonStrings(c.optJSONArray("liveMpvUrls"))) }
-                    runCatching {
-                        vodEngineStore.importUrls(
-                            jsonStrings(c.optJSONArray("vodMpvUrls")),
-                            jsonStrings(c.optJSONArray("vodExoUrls")),
-                        )
-                    }
+                    fun keys(name: String) = jsonStrings(c.optJSONArray(name)).map { remapEnginePinKey(it, sourceIdMap) }
+                    runCatching { forceMpvStore.importUrls(keys("liveMpvUrls")) }
+                    runCatching { vodEngineStore.importUrls(keys("vodMpvUrls"), keys("vodExoUrls")) }
                 }
                 // Per-item zoom / volume. Merged in (REPLACE on the same profile+key), so a restore
                 // never drops what this device already remembers for other items. Rows whose profile
@@ -633,7 +848,10 @@ class BackupManager(
                         val filePid = e.optLong("p", -1)
                         val pid = profileIdMap[filePid] ?: filePid
                         if (pid !in deviceProfileIds) continue
-                        val key = e.optString("k").takeIf { it.isNotBlank() } ?: continue
+                        // Same [enginePinKey] shape as compatMode above — remap the source id, or the
+                        // restored zoom/volume lands on the wrong item (or on nothing at all).
+                        val key = e.optString("k").takeIf { it.isNotBlank() }
+                            ?.let { remapEnginePinKey(it, sourceIdMap) } ?: continue
                         val zoom = e.optString("z").takeIf { it.isNotBlank() }
                         val volume = if (e.has("v")) e.optInt("v").coerceIn(0, 150) else null
                         if (zoom == null && volume == null) continue
@@ -659,6 +877,12 @@ class BackupManager(
                         }
                     }
                 }
+                // Subtitle files + the selection / timing / link rows that point at them.
+                root.optJSONObject("subtitles")?.let { block ->
+                    count += runCatching {
+                        importSubtitles(block, payload.subtitles, profileIdMap, sourceIdMap)
+                    }.getOrDefault(0)
+                }
             }
             settings.clearRestoreMarker()
             // Locale writes are last by design: all restore work and the interrupted-restore marker
@@ -672,6 +896,154 @@ class BackupManager(
         }
     }
 
+    /**
+     * Restores the subtitle block: writes any file this device does not already have into the shared
+     * cache dir, then re-attaches the selections, timing offsets and links to the merged ids.
+     *
+     * Three id spaces have to line up, which is why this is a merge rather than a bulk insert:
+     *  - **profile** ids come from [profileIdMap]; a row whose profile has no home here is skipped.
+     *  - **source** ids are embedded in every content key ("movie:<sourceId>:…"), remapped through
+     *    [sourceIdMap] exactly as the TMDB overrides are.
+     *  - **cache** ids are per-device auto-increments, so the file's id is meaningless here. Rows are
+     *    deduped the same way the app itself does (OpenSubtitles file id, else a local file name), and
+     *    everything downstream goes through the resulting file→device id map.
+     *
+     * Returns how many rows were applied.
+     */
+    private suspend fun importSubtitles(
+        block: JSONObject,
+        files: Map<String, ByteArray>,
+        profileIdMap: Map<Long, Long>,
+        sourceIdMap: Map<Long, Long>,
+    ): Int {
+        val dao = db.subtitleDao()
+        val deviceProfileIds = profileDao.getAllOnce().map { it.id }.toSet()
+        var applied = 0
+
+        // --- cache rows + their files ---
+        val cacheIdMap = HashMap<Long, Long>()
+        val cache = block.optJSONArray("cache") ?: JSONArray()
+        for (i in 0 until cache.length()) {
+            val e = cache.optJSONObject(i) ?: continue
+            val fileId = e.optLong("id", -1).takeIf { it > 0 } ?: continue
+            val openSubFileId = if (e.has("openSubFileId")) e.optLong("openSubFileId") else null
+            val fileName = e.optString("fileName").takeIf { it.isNotBlank() } ?: continue
+            // Already here? Reuse it — the file cache is device-level and shared across profiles, so a
+            // second copy of the same download would only waste space and split the dedupe.
+            val existing = runCatching {
+                if (openSubFileId != null) dao.findByOpenSubFileId(openSubFileId) else dao.findLocalByFileName(fileName)
+            }.getOrNull()
+            if (existing != null) {
+                cacheIdMap[fileId] = existing.id
+                continue
+            }
+            val bytes = e.optString("file").takeIf { it.isNotBlank() }?.let { files[it] } ?: continue
+            val written = runCatching {
+                if (!subtitlesDir.exists()) subtitlesDir.mkdirs()
+                // Never reuse the backup's own file name verbatim: it came from another device and may
+                // collide with a file already here for a different subtitle.
+                File(subtitlesDir, "restored_${System.currentTimeMillis()}_${File(fileName).name}")
+                    .also { it.writeBytes(bytes) }
+            }.getOrNull() ?: continue
+            val newId = runCatching {
+                dao.insertCache(
+                    tv.own.owntv.core.database.entity.SubtitleCacheEntity(
+                        source = e.optString("source").ifBlank { "LOCAL" },
+                        openSubFileId = openSubFileId,
+                        language = e.optStringOrNull("language"),
+                        languageName = e.optStringOrNull("languageName"),
+                        releaseName = e.optStringOrNull("releaseName"),
+                        format = e.optStringOrNull("format"),
+                        hearingImpaired = e.optBoolean("hearingImpaired", false),
+                        fileName = fileName,
+                        cachedPath = written.absolutePath,
+                        lastUsedAt = e.optLong("lastUsedAt", System.currentTimeMillis()),
+                    ),
+                )
+            }.getOrNull()
+            if (newId == null) {
+                written.delete() // the row failed, so the orphaned file must not linger
+                continue
+            }
+            cacheIdMap[fileId] = newId
+            applied++
+        }
+
+        /** Profile + content key remapped to this device, or null when the row cannot be attached. */
+        fun target(e: JSONObject): Pair<Long, String>? {
+            val filePid = e.optLong("p", -1)
+            val pid = profileIdMap[filePid] ?: filePid
+            if (pid !in deviceProfileIds) return null
+            val key = e.optString("k").takeIf { it.isNotBlank() } ?: return null
+            return pid to remapTypedContentKey(key, sourceIdMap)
+        }
+
+        block.optJSONArray("selections")?.let { arr ->
+            for (i in 0 until arr.length()) {
+                val e = arr.optJSONObject(i) ?: continue
+                val (pid, key) = target(e) ?: continue
+                // A selection naming a file we could not place is dropped: a dangling cacheId would
+                // read back as "a subtitle is selected" and then silently fail to load.
+                val cacheId = if (e.has("c")) cacheIdMap[e.optLong("c")] ?: continue else null
+                runCatching {
+                    dao.upsertSelection(
+                        tv.own.owntv.core.database.entity.SubtitleSelectionEntity(
+                            profileId = pid, contentKey = key, cacheId = cacheId,
+                            off = e.optBoolean("off", false),
+                            updatedAt = e.optLong("u", System.currentTimeMillis()),
+                        ),
+                    )
+                }.onSuccess { applied++ }
+            }
+        }
+
+        block.optJSONArray("timings")?.let { arr ->
+            for (i in 0 until arr.length()) {
+                val e = arr.optJSONObject(i) ?: continue
+                val (pid, key) = target(e) ?: continue
+                val rawSubKey = e.optString("s").takeIf { it.isNotBlank() } ?: continue
+                // "opensub:<file_id>" is a global OpenSubtitles id and travels as-is — that is what
+                // makes a hand-tuned offset portable at all. "local:<cacheId>" names a device row, so
+                // it has to follow the file to its new id.
+                val subKey = if (rawSubKey.startsWith(LOCAL_SUB_PREFIX)) {
+                    val mapped = rawSubKey.removePrefix(LOCAL_SUB_PREFIX).toLongOrNull()
+                        ?.let { cacheIdMap[it] } ?: continue
+                    "$LOCAL_SUB_PREFIX$mapped"
+                } else {
+                    rawSubKey
+                }
+                runCatching {
+                    dao.upsertTiming(
+                        tv.own.owntv.core.database.entity.SubtitleTimingEntity(
+                            profileId = pid, contentKey = key, subtitleKey = subKey,
+                            offsetMs = e.optInt("o", 0),
+                            updatedAt = e.optLong("u", System.currentTimeMillis()),
+                        ),
+                    )
+                }.onSuccess { applied++ }
+            }
+        }
+
+        block.optJSONArray("links")?.let { arr ->
+            for (i in 0 until arr.length()) {
+                val e = arr.optJSONObject(i) ?: continue
+                val (pid, key) = target(e) ?: continue
+                val cacheId = cacheIdMap[e.optLong("c", -1)] ?: continue
+                runCatching {
+                    dao.insertLink(
+                        tv.own.owntv.core.database.entity.SubtitleLinkEntity(
+                            profileId = pid, contentKey = key, cacheId = cacheId,
+                            mediaType = e.optString("t").ifBlank { "MOVIE" },
+                            contentTitle = e.optString("n"),
+                            addedAt = e.optLong("a", System.currentTimeMillis()),
+                        ),
+                    )
+                }.onSuccess { applied++ }
+            }
+        }
+        return applied
+    }
+
     /** Confirms the derived key opens at least one encrypted secret in the file (GCM tag check). */
     private fun validatePassphrase(root: JSONObject, key: javax.crypto.SecretKey): Boolean {
         firstEncryptedSecret(root)?.let { sealed ->
@@ -682,6 +1054,20 @@ class BackupManager(
 
     /** Finds the first encrypted secret object in the file (a source password, a Stalker MAC, or the proxy/TMDB key). */
     private fun firstEncryptedSecret(root: JSONObject): JSONObject? {
+        // Profile PIN hashes are sealed from v17 on — probe them first, because a settings-only or
+        // profiles-only backup may have no source password to validate the passphrase against.
+        root.optJSONArray("profiles")?.let { arr ->
+            for (i in 0 until arr.length()) {
+                val pin = arr.getJSONObject(i).opt("pinHash")
+                if (BackupCrypto.isEncrypted(pin)) return pin as JSONObject
+            }
+        }
+        root.optJSONObject("customizePins")?.let { pins ->
+            pins.keys().forEach { k ->
+                val sealed = pins.opt(k)
+                if (BackupCrypto.isEncrypted(sealed)) return sealed as JSONObject
+            }
+        }
         root.optJSONArray("sources")?.let { arr ->
             for (i in 0 until arr.length()) {
                 val src = arr.getJSONObject(i)
@@ -719,15 +1105,27 @@ class BackupManager(
     }
 
     // --- mapping ---
-    private fun profileJson(p: ProfileEntity) = JSONObject().apply {
+    /**
+     * One profile row. The PIN hash is a **secret** (v17): `Pin.hash` is a single salted SHA-256
+     * pass, and a 4-digit PIN is only 10 000 candidates, so a hash sitting in an unencrypted backup
+     * is recovered in well under a second. It therefore follows the same rule as every other secret —
+     * sealed when there is a passphrase, omitted entirely when there is not. `pinLocked` still says
+     * the profile *had* a lock, so restore can tell "no PIN carried" from "no PIN set".
+     */
+    private fun profileJson(p: ProfileEntity, seal: ((String) -> JSONObject)?) = JSONObject().apply {
         put("id", p.id); put("name", p.name); put("avatarColor", p.avatarColor); put("avatarId", p.avatarId)
-        put("isKids", p.isKids); put("pinHash", p.pinHash ?: JSONObject.NULL); put("createdAt", p.createdAt)
+        put("isKids", p.isKids); put("createdAt", p.createdAt)
+        val pin = p.pinHash?.takeIf { it.isNotEmpty() }
+        put("pinHash", if (pin != null && seal != null) seal(pin) else JSONObject.NULL)
+        if (pin != null) put("pinLocked", true)
     }
 
-    private fun profileFrom(o: JSONObject) = ProfileEntity(
+    private fun profileFrom(o: JSONObject, unseal: (Any?) -> String?) = ProfileEntity(
         id = o.getLong("id"), name = o.getString("name"), avatarColor = o.getInt("avatarColor"),
         avatarId = o.optInt("avatarId", 0), isKids = o.optBoolean("isKids", false),
-        pinHash = o.optStringOrNull("pinHash"), createdAt = o.optLong("createdAt", System.currentTimeMillis()),
+        // Pre-v17 backups stored the hash as a plain string; `unseal` returns those unchanged.
+        pinHash = if (o.isNull("pinHash")) null else unseal(o.opt("pinHash")),
+        createdAt = o.optLong("createdAt", System.currentTimeMillis()),
     )
 
     private fun sourceJson(s: SourceEntity, seal: ((String) -> JSONObject)?) = JSONObject().apply {
@@ -749,6 +1147,13 @@ class BackupManager(
         put("stalkerSignature", if (signature != null && seal != null) seal(signature) else JSONObject.NULL)
         put("userAgent", s.userAgent ?: JSONObject.NULL); put("epgUrl", s.epgUrl ?: JSONObject.NULL)
         put("syncLive", s.syncLive); put("syncMovies", s.syncMovies); put("syncSeries", s.syncSeries)
+        // v17: the two per-playlist player settings. Both are deliberate user choices made in the
+        // playlist editor and neither can be re-derived from the provider, so losing them on restore
+        // silently reintroduced whatever streaming problem the user had already fixed. `hlsSupported`
+        // rides too — it is only a detection hint, but carrying it spares a restored playlist the
+        // "unknown until the next sync" gap.
+        put("preferHls", s.preferHls); put("livePrerollSecs", s.livePrerollSecs)
+        put("hlsSupported", s.hlsSupported.code)
         put("createdAt", s.createdAt); put("lastSyncAt", s.lastSyncAt ?: JSONObject.NULL)
     }
 
@@ -781,6 +1186,11 @@ class BackupManager(
             syncLive = if (o.has("syncLive")) o.optBoolean("syncLive", true) else true,
             syncMovies = if (o.has("syncMovies")) o.optBoolean("syncMovies", true) else true,
             syncSeries = if (o.has("syncSeries")) o.optBoolean("syncSeries", true) else true,
+            // Pre-v17 backups omit these — fall back to the entity defaults (Prefer HLS off, follow
+            // the global Pre-buffer, HLS support not yet known), which is what those installs had.
+            preferHls = o.optBoolean("preferHls", false),
+            livePrerollSecs = o.optInt("livePrerollSecs", FOLLOW_GLOBAL_PREROLL),
+            hlsSupported = HlsSupport.fromCode(o.optInt("hlsSupported", HlsSupport.UNKNOWN.code)),
             createdAt = o.optLong("createdAt", System.currentTimeMillis()),
             lastSyncAt = if (o.isNull("lastSyncAt")) null else o.optLong("lastSyncAt"),
         )
@@ -812,6 +1222,22 @@ class BackupManager(
          * ~33% inflation, so a backup that exports fine can always be sent back over the phone link.
          */
         private const val MAX_WALLPAPER_BYTES = 8L * 1024 * 1024
+
+        /**
+         * Total subtitle bytes a backup will carry. Sized so a worst-case file — 8 MB of wallpaper
+         * plus this — still clears the companion upload cap (`CompanionHttpServer.UPLOAD_BODY_LIMIT`,
+         * 16 MB) with room for base64 inflation. Subtitles are a few tens of KB each, so this holds
+         * hundreds of them; beyond that the least recently used simply do not ride.
+         */
+        private const val MAX_SUBTITLE_BYTES = 4L * 1024 * 1024
+
+        /**
+         * `subtitle_timing.subtitleKey` prefix for an imported local file (see
+         * `SubtitleRepository`: `openSubFileId?.let { "opensub:$it" } ?: "local:$cacheId"`). The
+         * `opensub:` form is a global OpenSubtitles id and needs no remapping; this one names a
+         * device-local cache row and does.
+         */
+        private const val LOCAL_SUB_PREFIX = "local:"
 
         internal const val TMP_SUFFIX = ".tmp"
         internal const val BAK_SUFFIX = ".bak"
@@ -962,6 +1388,86 @@ internal fun remapTmdbOverrideKeys(raw: String, sourceIdMap: Map<Long, Long>): S
 internal fun filterByProfile(map: JSONObject, pidKeys: Set<String>): JSONObject {
     val out = JSONObject()
     map.keys().forEach { k -> if (k in pidKeys) out.put(k, map.get(k)) }
+    return out
+}
+
+/**
+ * Remaps the source id of a "<type>:<sourceId>:<rest>" content key — the shape the subtitle tables
+ * and the TMDB overrides both use ("movie:7:1234", "episode:7:1234:S1E2"). Unlike [remapEnginePinKey]
+ * the id is the SECOND segment, because the media type leads.
+ */
+internal fun remapTypedContentKey(key: String, sourceIdMap: Map<Long, Long>): String {
+    if (sourceIdMap.isEmpty()) return key
+    val parts = key.split(':', limit = 3)
+    if (parts.size < 3) return key
+    val mapped = parts[1].toLongOrNull()?.let { sourceIdMap[it] } ?: return key
+    return "${parts[0]}:$mapped:${parts[2]}"
+}
+
+/** Keeps only the entries of a source-id-keyed JSON map whose source rides in this backup. */
+internal fun filterBySourceId(map: JSONObject, sourceIds: Set<Long>): JSONObject {
+    val out = JSONObject()
+    map.keys().forEach { k -> if (k.toLongOrNull() in sourceIds) out.put(k, map.get(k)) }
+    return out
+}
+
+/**
+ * Remaps the leading source id of a per-item player key — [tv.own.owntv.core.player.enginePinKey]'s
+ * "<sourceId>:<MEDIA_TYPE>:<remoteId>". Used for the compatibility-mode pins and the per-item
+ * zoom/volume rows, both of which embed the id of the source the item came from.
+ *
+ * A key in the older stream-URL shape has no source id to remap ("http" never parses as a Long), and
+ * an id with no entry in [sourceIdMap] took no part in this restore — both pass through unchanged.
+ */
+internal fun remapEnginePinKey(key: String, sourceIdMap: Map<Long, Long>): String {
+    if (sourceIdMap.isEmpty()) return key
+    val sourceId = key.substringBefore(':').toLongOrNull() ?: return key
+    val mapped = sourceIdMap[sourceId] ?: return key
+    return "$mapped:${key.substringAfter(':')}"
+}
+
+/**
+ * Scopes per-item player keys to the sources riding in this backup.
+ *
+ * [allowUrlKeys] admits the legacy stream-URL keys, and is true only when a passphrase was given:
+ * an IPTV stream URL routinely carries the account's username and password in its path or query, so
+ * in an unencrypted backup those keys are exactly the credential leak the secret policy exists to
+ * prevent. A stable key is only ever "<sourceId>:<TYPE>:<remoteId>" and leaks nothing.
+ */
+internal fun filterEnginePinKeys(
+    keys: Collection<String>,
+    sourceIds: Set<Long>,
+    allowUrlKeys: Boolean,
+): List<String> = keys.filter { key ->
+    val sourceId = key.substringBefore(':').toLongOrNull()
+    if (sourceId == null) allowUrlKeys else sourceId in sourceIds
+}
+
+/** Keeps the "type:<sourceId>:<rest>"-keyed TMDB overrides whose source rides in this backup. */
+internal fun filterTmdbOverridesBySourceId(raw: String, sourceIds: Set<Long>): String {
+    if (raw.isBlank()) return raw
+    return runCatching {
+        val o = JSONObject(raw)
+        val out = JSONObject()
+        o.keys().forEach { k ->
+            val parts = k.split(':', limit = 3)
+            if (parts.size == 3 && parts[1].toLongOrNull() in sourceIds) out.put(k, o.get(k))
+        }
+        if (out.length() == 0) "" else out.toString()
+    }.getOrDefault(raw)
+}
+
+/** Seals every string value of a flat JSON map, leaving the keys readable. */
+internal fun sealValues(map: JSONObject, seal: (String) -> JSONObject): JSONObject {
+    val out = JSONObject()
+    map.keys().forEach { k -> (map.opt(k) as? String)?.let { out.put(k, seal(it)) } }
+    return out
+}
+
+/** Opens a [sealValues] map. Entries that cannot be decrypted (no key / wrong key) are dropped. */
+internal fun unsealValues(map: JSONObject, unseal: (Any?) -> String?): JSONObject {
+    val out = JSONObject()
+    map.keys().forEach { k -> unseal(map.opt(k))?.let { out.put(k, it) } }
     return out
 }
 

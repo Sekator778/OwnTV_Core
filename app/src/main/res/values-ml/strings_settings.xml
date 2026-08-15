@@ -682,7 +682,7 @@
     <string name="settings_backup_what_backup">ബാക്കപ്പിൽ ഉൾപ്പെടുത്തേണ്ടവ</string>
     <string name="settings_backup_what_restore">പുനഃസ്ഥാപിക്കേണ്ടവ</string>
     <string name="settings_backup_encrypt_title">ഈ ബാക്കപ്പ് എൻക്രിപ്റ്റ് ചെയ്യണോ?</string>
-    <string name="settings_backup_encrypt_message">ഒരു ബാക്കപ്പ് പാസ്‌വേഡ് ഉപയോഗിച്ചാൽ, പ്ലേലിസ്റ്റുകൾ, പ്രൊഫൈലുകൾ, സംരക്ഷിച്ച പാസ്‌വേഡുകൾ എന്നിവ ഉൾപ്പെടെ മുഴുവൻ ഫയലും എൻക്രിപ്റ്റ് ചെയ്യും — ആ പാസ്‌വേഡ് ഇല്ലാതെ അതിലെ ഒന്നും വായിക്കാനാകില്ല. അത് സുരക്ഷിതമായി സൂക്ഷിക്കുക: നഷ്ടപ്പെട്ടാൽ ബാക്കപ്പ് ഒരിക്കലും തുറക്കാനാകില്ല. പാസ്‌വേഡ് ഇല്ലെങ്കിൽ ഫയൽ എൻക്രിപ്റ്റ് ചെയ്യില്ല, സംരക്ഷിച്ച പാസ്‌വേഡുകൾ അതിൽ ഉൾപ്പെടുത്തുകയുമില്ല.</string>
+    <string name="settings_backup_encrypt_message">ഒരു ബാക്കപ്പ് പാസ്‌വേഡ് ഉപയോഗിച്ചാൽ, പ്ലേലിസ്റ്റുകൾ, പ്രൊഫൈലുകൾ, സംരക്ഷിച്ച പാസ്‌വേഡുകൾ എന്നിവ ഉൾപ്പെടെ മുഴുവൻ ഫയലും എൻക്രിപ്റ്റ് ചെയ്യും — ആ പാസ്‌വേഡ് ഇല്ലാതെ അതിലെ ഒന്നും വായിക്കാനാകില്ല. അത് സുരക്ഷിതമായി സൂക്ഷിക്കുക: നഷ്ടപ്പെട്ടാൽ ബാക്കപ്പ് ഒരിക്കലും തുറക്കാനാകില്ല. പാസ്‌വേഡ് ഇല്ലെങ്കിൽ ഫയൽ എൻക്രിപ്റ്റ് ചെയ്യില്ല, സംരക്ഷിച്ച പാസ്‌വേഡുകളും പിന്നുകളും അതിൽ ഉൾപ്പെടുത്തുകയുമില്ല.</string>
     <string name="settings_backup_export_title">ഒരു ബാക്കപ്പ് എക്സ്പോർട്ട് ചെയ്യുക</string>
     <string name="settings_backup_export_message">അതേ Wi-Fi-യിലുള്ള മറ്റൊരു ഉപകരണത്തിലേക്ക് (ഫോൺ അല്ലെങ്കിൽ ലാപ്‌ടോപ്പ്) ബാക്കപ്പ് അയയ്ക്കുക, അല്ലെങ്കിൽ ഈ ഉപകരണത്തിലെ ഒരു ഫയലായി സംരക്ഷിക്കുക.</string>
     <string name="settings_backup_restore_title">ഒരു ബാക്കപ്പ് പുനഃസ്ഥാപിക്കുക</string>
@@ -731,13 +731,13 @@
     <string name="settings_backup_section_settings">ആപ്പ് ക്രമീകരണങ്ങൾ</string>
     <string name="settings_backup_section_settings_desc">തീം, ആക്സന്റ്, പ്ലെയർ, ലേഔട്ട് മുൻഗണനകൾ</string>
     <string name="settings_backup_saved_to"><xliff:g id="path">%1$s</xliff:g>-ൽ സംരക്ഷിച്ചു.</string>
-    <string name="settings_backup_saved_to_without_passwords"><xliff:g id="path">%1$s</xliff:g>-ൽ സംരക്ഷിച്ചു. പാസ്‌വേഡുകൾ ഉൾപ്പെടുത്തിയിട്ടില്ല.</string>
+    <string name="settings_backup_saved_to_without_passwords"><xliff:g id="path">%1$s</xliff:g>-ൽ സംരക്ഷിച്ചു. പാസ്‌വേഡുകളും പിന്നുകളും ഉൾപ്പെടുത്തിയിട്ടില്ല.</string>
     <plurals name="settings_backup_restored">
         <item quantity="one"><xliff:g id="items">%1$d</xliff:g> ഇനം പുനഃസ്ഥാപിച്ചു.</item>
         <item quantity="other"><xliff:g id="items">%1$d</xliff:g> ഇനങ്ങൾ പുനഃസ്ഥാപിച്ചു.</item>
     </plurals>
     <string name="settings_backup_restore_resync">ഉള്ളടക്കം ലോഡ് ചെയ്യാൻ നിങ്ങളുടെ ഉറവിടങ്ങൾ വീണ്ടും സമന്വയിപ്പിക്കുക.</string>
-    <string name="settings_backup_restore_password_note">ഉറവിടങ്ങൾ/പ്രോക്സി എന്നതിൽ സംരക്ഷിച്ചിട്ടുള്ള പാസ്‌വേഡുകൾ വീണ്ടും നൽകുക.</string>
+    <string name="settings_backup_restore_password_note">ഉറവിടങ്ങൾ/പ്രോക്സി എന്നതിൽ സംരക്ഷിച്ചിട്ടുള്ള പാസ്‌വേഡുകളും പ്രൊഫൈൽ പിന്നുകളും വീണ്ടും നൽകുക.</string>
     <plurals name="settings_backup_skipped_sources">
         <item quantity="one">പ്ലേലിസ്റ്റ് തരം പിന്തുണയ്‌ക്കാത്തതിനാൽ <xliff:g id="count">%1$d</xliff:g> ഉറവിടം ഒഴിവാക്കി.</item>
         <item quantity="other">പ്ലേലിസ്റ്റ് തരങ്ങൾ പിന്തുണയ്‌ക്കാത്തതിനാൽ <xliff:g id="count">%1$d</xliff:g> ഉറവിടങ്ങൾ ഒഴിവാക്കി.</item>

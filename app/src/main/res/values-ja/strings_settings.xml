@@ -674,7 +674,7 @@
     <string name="settings_backup_what_backup">バックアップする項目</string>
     <string name="settings_backup_what_restore">復元する項目</string>
     <string name="settings_backup_encrypt_title">このバックアップを暗号化しますか？</string>
-    <string name="settings_backup_encrypt_message">バックアップパスワードを設定すると、プレイリスト、プロフィール、保存済みパスワードを含むファイル全体が暗号化され、そのパスワードなしでは内容を一切読み取れません。パスワードは安全に保管してください。紛失すると、バックアップを開けなくなります。パスワードを設定しない場合、ファイルは暗号化されず、保存済みパスワードは含まれません。</string>
+    <string name="settings_backup_encrypt_message">バックアップパスワードを設定すると、プレイリスト、プロフィール、保存済みパスワードを含むファイル全体が暗号化され、そのパスワードなしでは内容を一切読み取れません。パスワードは安全に保管してください。紛失すると、バックアップを開けなくなります。パスワードを設定しない場合、ファイルは暗号化されず、保存済みパスワードとPINは含まれません。</string>
     <string name="settings_backup_export_title">バックアップをエクスポート</string>
     <string name="settings_backup_export_message">同じWi-Fi上の別のデバイス（スマートフォンまたはノートパソコン）にバックアップを送信するか、このデバイスのファイルに保存します。</string>
     <string name="settings_backup_restore_title">バックアップを復元</string>
@@ -723,12 +723,12 @@
     <string name="settings_backup_section_settings">アプリ設定</string>
     <string name="settings_backup_section_settings_desc">テーマ、アクセントカラー、プレーヤー、レイアウトの設定</string>
     <string name="settings_backup_saved_to"><xliff:g id="path">%1$s</xliff:g>に保存しました。</string>
-    <string name="settings_backup_saved_to_without_passwords"><xliff:g id="path">%1$s</xliff:g>に保存しました。パスワードは含まれていません。</string>
+    <string name="settings_backup_saved_to_without_passwords"><xliff:g id="path">%1$s</xliff:g>に保存しました。パスワードとPINは含まれていません。</string>
     <plurals name="settings_backup_restored">
         <item quantity="other"><xliff:g id="items">%1$d</xliff:g>件の項目を復元しました。</item>
     </plurals>
     <string name="settings_backup_restore_resync">コンテンツを読み込むには、ソースを再同期してください。</string>
-    <string name="settings_backup_restore_password_note">保存済みのパスワードは「ソース／プロキシ」で再入力してください。</string>
+    <string name="settings_backup_restore_password_note">保存済みのパスワードは「ソース／プロキシ」で、プロフィールのPINと併せて再入力してください。</string>
     <plurals name="settings_backup_skipped_sources">
         <item quantity="other">プレイリストの種類がサポートされていないため、<xliff:g id="count">%1$d</xliff:g>件のソースをスキップしました。</item>
     </plurals>

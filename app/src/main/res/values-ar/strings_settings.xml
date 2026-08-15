@@ -714,7 +714,7 @@
     <string name="settings_backup_what_backup">ما تريد نسخه احتياطيًا</string>
     <string name="settings_backup_what_restore">ما تريد استعادته</string>
     <string name="settings_backup_encrypt_title">هل تريد تشفير هذه النسخة الاحتياطية؟</string>
-    <string name="settings_backup_encrypt_message">عند استخدام كلمة مرور للنسخة الاحتياطية، يُشفّر الملف بالكامل — بما في ذلك قوائم التشغيل والملفات الشخصية وكلمات المرور المحفوظة — ولا يمكن قراءة أي شيء فيه دون كلمة المرور تلك. احتفظ بها في مكان آمن: إذا فقدتها، فلن يمكن فتح النسخة الاحتياطية مطلقًا. ودون كلمة مرور، لا يكون الملف مشفّرًا وتُستبعد منه كلمات المرور المحفوظة.</string>
+    <string name="settings_backup_encrypt_message">عند استخدام كلمة مرور للنسخة الاحتياطية، يُشفّر الملف بالكامل — بما في ذلك قوائم التشغيل والملفات الشخصية وكلمات المرور المحفوظة — ولا يمكن قراءة أي شيء فيه دون كلمة المرور تلك. احتفظ بها في مكان آمن: إذا فقدتها، فلن يمكن فتح النسخة الاحتياطية مطلقًا. ودون كلمة مرور، لا يكون الملف مشفّرًا وتُستبعد منه كلمات المرور المحفوظة ورموز PIN.</string>
     <string name="settings_backup_export_title">تصدير نسخة احتياطية</string>
     <string name="settings_backup_export_message">أرسل النسخة الاحتياطية إلى جهاز آخر (هاتف أو حاسوب محمول) على شبكة Wi-Fi نفسها، أو احفظها في ملف على هذا الجهاز.</string>
     <string name="settings_backup_restore_title">استعادة نسخة احتياطية</string>
@@ -763,7 +763,7 @@
     <string name="settings_backup_section_settings">إعدادات التطبيق</string>
     <string name="settings_backup_section_settings_desc">تفضيلات السمة واللون المميّز والمشغّل والتخطيط</string>
     <string name="settings_backup_saved_to">تم الحفظ في <xliff:g id="path">%1$s</xliff:g>.</string>
-    <string name="settings_backup_saved_to_without_passwords">تم الحفظ في <xliff:g id="path">%1$s</xliff:g>. لم تُضمّن كلمات المرور.</string>
+    <string name="settings_backup_saved_to_without_passwords">تم الحفظ في <xliff:g id="path">%1$s</xliff:g>. لم تُضمّن كلمات المرور ورموز PIN.</string>
     <plurals name="settings_backup_restored">
         <item quantity="zero">تمت استعادة <xliff:g id="items">%1$d</xliff:g> عنصر.</item>
         <item quantity="one">تمت استعادة <xliff:g id="items">%1$d</xliff:g> عنصر.</item>
@@ -773,7 +773,7 @@
         <item quantity="other">تمت استعادة <xliff:g id="items">%1$d</xliff:g> عنصر.</item>
     </plurals>
     <string name="settings_backup_restore_resync">أعد مزامنة مصادرك لتحميل المحتوى.</string>
-    <string name="settings_backup_restore_password_note">أعد إدخال أي كلمات مرور محفوظة في المصادر/الوكيل.</string>
+    <string name="settings_backup_restore_password_note">أعد إدخال أي كلمات مرور محفوظة في المصادر/الوكيل، وأي رموز PIN للملفات الشخصية.</string>
     <plurals name="settings_backup_skipped_sources">
         <item quantity="zero">تم تخطي <xliff:g id="count">%1$d</xliff:g> مصدر لأن أنواع قوائم التشغيل الخاصة بها غير مدعومة.</item>
         <item quantity="one">تم تخطي <xliff:g id="count">%1$d</xliff:g> مصدر لأن نوع قائمة التشغيل الخاص به غير مدعوم.</item>

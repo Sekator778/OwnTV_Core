@@ -690,7 +690,7 @@
     <string name="settings_backup_what_backup">Éléments à sauvegarder</string>
     <string name="settings_backup_what_restore">Éléments à restaurer</string>
     <string name="settings_backup_encrypt_title">Chiffrer cette sauvegarde ?</string>
-    <string name="settings_backup_encrypt_message">Avec un mot de passe de sauvegarde, l’intégralité du fichier est chiffrée — listes de lecture, profils et mots de passe enregistrés compris — et rien ne peut y être lu sans ce mot de passe. Conservez-le en lieu sûr : si vous le perdez, la sauvegarde ne pourra plus du tout être ouverte. Sans mot de passe, le fichier n’est pas chiffré et les mots de passe enregistrés n’y sont pas inclus.</string>
+    <string name="settings_backup_encrypt_message">Avec un mot de passe de sauvegarde, l’intégralité du fichier est chiffrée — listes de lecture, profils et mots de passe enregistrés compris — et rien ne peut y être lu sans ce mot de passe. Conservez-le en lieu sûr : si vous le perdez, la sauvegarde ne pourra plus du tout être ouverte. Sans mot de passe, le fichier n’est pas chiffré et les mots de passe et codes PIN enregistrés n’y sont pas inclus.</string>
     <string name="settings_backup_export_title">Exporter une sauvegarde</string>
     <string name="settings_backup_export_message">Envoyez la sauvegarde vers un autre appareil (téléphone ou ordinateur portable) connecté au même Wi-Fi, ou enregistrez-la dans un fichier sur cet appareil.</string>
     <string name="settings_backup_restore_title">Restaurer une sauvegarde</string>
@@ -739,14 +739,14 @@
     <string name="settings_backup_section_settings">Paramètres de l’application</string>
     <string name="settings_backup_section_settings_desc">Préférences de thème, de couleur d’accentuation, de lecteur et de disposition</string>
     <string name="settings_backup_saved_to">Enregistrée dans <xliff:g id="path">%1$s</xliff:g>.</string>
-    <string name="settings_backup_saved_to_without_passwords">Enregistrée dans <xliff:g id="path">%1$s</xliff:g>. Les mots de passe n’ont pas été inclus.</string>
+    <string name="settings_backup_saved_to_without_passwords">Enregistrée dans <xliff:g id="path">%1$s</xliff:g>. Les mots de passe et les codes PIN n’ont pas été inclus.</string>
     <plurals name="settings_backup_restored">
         <item quantity="one"><xliff:g id="items">%1$d</xliff:g> élément restauré.</item>
         <item quantity="many"><xliff:g id="items">%1$d</xliff:g> éléments restaurés.</item>
         <item quantity="other"><xliff:g id="items">%1$d</xliff:g> éléments restaurés.</item>
     </plurals>
     <string name="settings_backup_restore_resync">Resynchronisez vos sources pour charger le contenu.</string>
-    <string name="settings_backup_restore_password_note">Saisissez à nouveau les mots de passe enregistrés dans Sources/Proxy.</string>
+    <string name="settings_backup_restore_password_note">Saisissez à nouveau les mots de passe enregistrés dans Sources/Proxy, ainsi que les codes PIN des profils.</string>
     <plurals name="settings_backup_skipped_sources">
         <item quantity="one"><xliff:g id="count">%1$d</xliff:g> source a été ignorée, car son type de liste de lecture n’est pas pris en charge.</item>
         <item quantity="many"><xliff:g id="count">%1$d</xliff:g> sources ont été ignorées, car leurs types de listes de lecture ne sont pas pris en charge.</item>
