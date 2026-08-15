@@ -95,8 +95,24 @@
     <string name="settings_metadata_tmdb_only_description">فضّل TMDB لكل حقل؛ ولا تستخدم قائمة التشغيل إلا عندما لا يحتوي TMDB على أي معلومات.</string>
     <string name="settings_selected">محدد</string>
     <string name="settings_active_tmdb_source">مصدر TMDB النشط: <xliff:g id="tier">%1$s</xliff:g></string>
+    <string name="settings_metadata_allowance">حصتك اليومية</string>
+    <string name="settings_metadata_allowance_row"><xliff:g id="window">%1$s</xliff:g>: بقي <xliff:g id="remaining">%2$d</xliff:g> من <xliff:g id="total">%3$d</xliff:g></string>
+    <string name="settings_metadata_window_minute">في الدقيقة</string>
+    <string name="settings_metadata_window_hour">في الساعة</string>
+    <string name="settings_metadata_window_day">اليوم</string>
+    <plurals name="settings_metadata_allowance_left">
+        <item quantity="zero">بقي <xliff:g id="remaining">%1$d</xliff:g> من <xliff:g id="total">%2$d</xliff:g> عملية بحث اليوم</item>
+        <item quantity="one">بقي <xliff:g id="remaining">%1$d</xliff:g> من <xliff:g id="total">%2$d</xliff:g> عملية بحث اليوم</item>
+        <item quantity="two">بقيت <xliff:g id="remaining">%1$d</xliff:g> من <xliff:g id="total">%2$d</xliff:g> عمليتا بحث اليوم</item>
+        <item quantity="few">بقيت <xliff:g id="remaining">%1$d</xliff:g> من <xliff:g id="total">%2$d</xliff:g> عمليات بحث اليوم</item>
+        <item quantity="many">بقيت <xliff:g id="remaining">%1$d</xliff:g> من <xliff:g id="total">%2$d</xliff:g> عملية بحث اليوم</item>
+        <item quantity="other">بقي <xliff:g id="remaining">%1$d</xliff:g> من <xliff:g id="total">%2$d</xliff:g> عملية بحث اليوم</item>
+    </plurals>
+    <string name="settings_metadata_allowance_resets">تتجدد في <xliff:g id="time">%1$s</xliff:g></string>
+    <string name="settings_metadata_fair_share">خدمة البيانات الوصفية المدمجة يشترك فيها جميع مستخدمي OwnTV، لذا يحصل كل جهاز على حصته الخاصة كل يوم. إذا استنفدت حصتك، تتوقف الملصقات والأوصاف مؤقتًا حتى تتجدد — وتظل معلومات قائمة التشغيل الخاصة بك تعمل كالمعتاد. إضافة مفتاح TMDB API الخاص بك أو خادمك تلغي هذا الحد: فهو مجاني، والمفتاح الشخصي لا حد له عمليًا.</string>
+    <string name="settings_metadata_limit_reached">نفدت حصتك اليومية من البيانات الوصفية — أضف مفتاح TMDB الخاص بك من الإعدادات → البيانات الوصفية لإلغاء هذا الحد.</string>
     <string name="settings_metadata_language">لغة البيانات الوصفية</string>
-    <string name="settings_metadata_language_description">لغة الملخصات والأنواع والعناوين من TMDB. تظل الحقول التي لم يترجمها TMDB باللغة الإنجليزية. يؤدي تغيير هذا الخيار إلى مسح التفاصيل المخزّنة مؤقتًا لإعادة جلبها.</string>
+    <string name="settings_metadata_language_description">لغة الملخصات والأنواع والعناوين من TMDB. الحقول التي لم يترجمها TMDB تبقى بالإنجليزية. يتم تخزين التفاصيل مؤقتًا لكل لغة، لذا فإن التبديل مرة أخرى فوري.</string>
     <string name="settings_advanced_options">خيارات متقدمة</string>
     <string name="settings_advanced_metadata_description">استخدم مفتاح TMDB API الخاص بك أو خادمًا مستضافًا ذاتيًا بدلًا من الإعداد الافتراضي المشترك.</string>
     <string name="settings_metadata_server_description">اترك الحقلين فارغين لاستخدام الخادم المشترك المضمّن (بلا إعداد). أدخل مفتاح TMDB API الخاص بك للاتصال بـ TMDB مباشرةً، أو عنوان URL لخادم مستضاف ذاتيًا لاستخدام الوكيل/النسخة المتطابقة الخاصة بك. تكون الأولوية لعنوان URL على المفتاح.</string>

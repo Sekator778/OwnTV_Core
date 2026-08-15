@@ -95,8 +95,21 @@
     <string name="settings_metadata_tmdb_only_description">Preferisci TMDB per ogni campo; usa la tua playlist come alternativa solo quando TMDB non contiene dati.</string>
     <string name="settings_selected">Selezionato</string>
     <string name="settings_active_tmdb_source">Fonte TMDB attiva: <xliff:g id="tier">%1$s</xliff:g></string>
+    <string name="settings_metadata_allowance">La tua quota giornaliera</string>
+    <string name="settings_metadata_allowance_row"><xliff:g id="window">%1$s</xliff:g>: restano <xliff:g id="remaining">%2$d</xliff:g> su <xliff:g id="total">%3$d</xliff:g></string>
+    <string name="settings_metadata_window_minute">Al minuto</string>
+    <string name="settings_metadata_window_hour">All’ora</string>
+    <string name="settings_metadata_window_day">Oggi</string>
+    <plurals name="settings_metadata_allowance_left">
+        <item quantity="one">Ti resta <xliff:g id="remaining">%1$d</xliff:g> ricerca su <xliff:g id="total">%2$d</xliff:g> oggi</item>
+        <item quantity="many">Ti restano <xliff:g id="remaining">%1$d</xliff:g> ricerche su <xliff:g id="total">%2$d</xliff:g> oggi</item>
+        <item quantity="other">Ti restano <xliff:g id="remaining">%1$d</xliff:g> ricerche su <xliff:g id="total">%2$d</xliff:g> oggi</item>
+    </plurals>
+    <string name="settings_metadata_allowance_resets">Si rinnova alle <xliff:g id="time">%1$s</xliff:g></string>
+    <string name="settings_metadata_fair_share">Il servizio di metadati integrato è condiviso da tutti gli utenti di OwnTV, quindi ogni dispositivo riceve ogni giorno la propria quota. Se esaurisci la tua quota, locandine e descrizioni si interrompono finché non viene rinnovata: le informazioni della tua playlist continuano a funzionare normalmente. Aggiungere una tua chiave API TMDB o un tuo server elimina il limite: è gratuito e una chiave personale non ha praticamente alcun limite.</string>
+    <string name="settings_metadata_limit_reached">Quota giornaliera di metadati esaurita: aggiungi la tua chiave TMDB in Impostazioni → Metadati per eliminare questo limite.</string>
     <string name="settings_metadata_language">Lingua dei metadati</string>
-    <string name="settings_metadata_language_description">Lingua di trame, generi e titoli provenienti da TMDB. I campi non tradotti da TMDB restano in inglese. Modificando questa opzione, i dettagli memorizzati nella cache vengono cancellati e scaricati di nuovo.</string>
+    <string name="settings_metadata_language_description">Lingua di trame, generi e titoli da TMDB. I campi che TMDB non ha tradotto restano in inglese. I dettagli vengono memorizzati nella cache per lingua, quindi tornare indietro è immediato.</string>
     <string name="settings_advanced_options">Opzioni avanzate</string>
     <string name="settings_advanced_metadata_description">Usa la tua chiave API TMDB o un server autogestito al posto dell\'impostazione predefinita condivisa.</string>
     <string name="settings_metadata_server_description">Lascia entrambi i campi vuoti per usare il server condiviso integrato (senza configurazione). Inserisci la tua chiave API TMDB per contattare direttamente TMDB oppure l\'URL di un server autogestito per usare un proxy/mirror personale. L\'URL ha la priorità sulla chiave.</string>

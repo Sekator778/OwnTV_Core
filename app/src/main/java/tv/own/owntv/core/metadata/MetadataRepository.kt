@@ -25,6 +25,16 @@ class MetadataRepository(
     /** Guards [healNegativeMatchesOnce] so the DataStore read happens once per process, not per resolve. */
     private val healNeeded = java.util.concurrent.atomic.AtomicBoolean(true)
 
+    /** The metadata language the cache keys are scoped by; blank keeps the pre-language key format. */
+    private suspend fun currentLang(): String = settings.metadataConfig().resolvedLanguage
+
+    /**
+     * A cached row is only usable if its cast is in the current format. Rows written before cast photos
+     * existed hold names only and can never render a photo, so they are treated as stale and re-fetched
+     * the next time that title is opened — once each, spread across normal browsing.
+     */
+    private fun MetadataCacheEntity.isUsable(): Boolean = !MetadataCast.isLegacyFormat(castJson)
+
     /**
      * Resolve TMDB metadata for a movie. Returns the cached row (fresh or freshly fetched), or null when
      * enrichment is off, no confident match exists, or the network failed. Cheap on repeat calls.
@@ -34,6 +44,7 @@ class MetadataRepository(
         healNegativeMatchesOnce()
 
         val localKey = movieLocalKey(movie)
+        val lang = currentLang()
         val now = System.currentTimeMillis()
 
         // 1. Consult the local→tmdb mapping (incl. negative cache) before hitting the network.
@@ -41,9 +52,9 @@ class MetadataRepository(
             val ttl = if (match.tmdbId == null) NEGATIVE_TTL_MS else POSITIVE_TTL_MS
             if (now - match.updatedAt < ttl) {
                 val tmdbId = match.tmdbId ?: return null // fresh negative cache
-                dao.getCache(cacheKey(tmdbId))?.let { return it } // fresh positive cache
+                dao.getCache(cacheKey(tmdbId, lang))?.takeIf { it.isUsable() }?.let { return it }
                 // Match known but cache row missing/evicted → re-fetch details below.
-                return fetchAndCache(tmdbId, localKey, match.confidence)
+                return fetchAndCache(tmdbId, lang, localKey, match.confidence)
             }
         }
 
@@ -67,7 +78,7 @@ class MetadataRepository(
         }
 
         dao.upsertMatch(MetadataMatchEntity(localKey, TYPE_MOVIE, tmdbId = best.result.tmdbId, confidence = best.score, updatedAt = now))
-        return fetchAndCache(best.result.tmdbId, localKey, best.score, fallback = best.result)
+        return fetchAndCache(best.result.tmdbId, lang, localKey, best.score, fallback = best.result)
     }
 
     /**
@@ -79,14 +90,15 @@ class MetadataRepository(
         healNegativeMatchesOnce()
 
         val localKey = seriesLocalKey(series)
+        val lang = currentLang()
         val now = System.currentTimeMillis()
 
         dao.getMatch(localKey)?.let { match ->
             val ttl = if (match.tmdbId == null) NEGATIVE_TTL_MS else POSITIVE_TTL_MS
             if (now - match.updatedAt < ttl) {
                 val tmdbId = match.tmdbId ?: return null
-                dao.getCache(tvCacheKey(tmdbId))?.let { return it }
-                return fetchAndCacheTv(tmdbId, null)
+                dao.getCache(tvCacheKey(tmdbId, lang))?.takeIf { it.isUsable() }?.let { return it }
+                return fetchAndCacheTv(tmdbId, lang, null)
             }
         }
 
@@ -105,19 +117,20 @@ class MetadataRepository(
             return null
         }
         dao.upsertMatch(MetadataMatchEntity(localKey, TYPE_TV, tmdbId = best.result.tmdbId, confidence = best.score, updatedAt = now))
-        return fetchAndCacheTv(best.result.tmdbId, best.result)
+        return fetchAndCacheTv(best.result.tmdbId, lang, best.result)
     }
 
     /** Resolve a provider movie against the exact TMDB id already confirmed by Trending. */
     suspend fun resolveKnownMovie(movie: MovieEntity, tmdbId: Int): MetadataCacheEntity? {
         if (!settings.metadataConfig().enabled) return null
         val localKey = movieLocalKey(movie)
+        val lang = currentLang()
         val now = System.currentTimeMillis()
         dao.upsertMatch(MetadataMatchEntity(localKey, TYPE_MOVIE, tmdbId, confidence = 1.0, updatedAt = now))
-        dao.getCache(cacheKey(tmdbId))?.let { cached ->
-            if (now - cached.updatedAt < POSITIVE_TTL_MS) return cached
+        dao.getCache(cacheKey(tmdbId, lang))?.let { cached ->
+            if (now - cached.updatedAt < POSITIVE_TTL_MS && cached.isUsable()) return cached
         }
-        return fetchAndCache(tmdbId, localKey, confidence = 1.0)
+        return fetchAndCache(tmdbId, lang, localKey, confidence = 1.0)
     }
 
     /** Series counterpart to [resolveKnownMovie], using the exact Trending TV id. */
@@ -127,37 +140,38 @@ class MetadataRepository(
     ): MetadataCacheEntity? {
         if (!settings.metadataConfig().enabled) return null
         val localKey = seriesLocalKey(series)
+        val lang = currentLang()
         val now = System.currentTimeMillis()
         dao.upsertMatch(MetadataMatchEntity(localKey, TYPE_TV, tmdbId, confidence = 1.0, updatedAt = now))
-        dao.getCache(tvCacheKey(tmdbId))?.let { cached ->
-            if (now - cached.updatedAt < POSITIVE_TTL_MS) return cached
+        dao.getCache(tvCacheKey(tmdbId, lang))?.let { cached ->
+            if (now - cached.updatedAt < POSITIVE_TTL_MS && cached.isUsable()) return cached
         }
-        return fetchAndCacheTv(tmdbId, fallback = null)
+        return fetchAndCacheTv(tmdbId, lang, fallback = null)
     }
 
-    private suspend fun fetchAndCacheTv(tmdbId: Int, fallback: MetadataSearchResult?): MetadataCacheEntity? {
+    private suspend fun fetchAndCacheTv(tmdbId: Int, lang: String, fallback: MetadataSearchResult?): MetadataCacheEntity? {
         val now = System.currentTimeMillis()
         val details = provider.tvDetails(tmdbId)
         val entity = when {
             details != null -> MetadataCacheEntity(
-                key = tvCacheKey(tmdbId), tmdbId = tmdbId, imdbId = details.imdbId, type = TYPE_TV,
+                key = tvCacheKey(tmdbId, lang), tmdbId = tmdbId, imdbId = details.imdbId, type = TYPE_TV,
                 title = details.title, year = details.year ?: fallback?.year,
                 overview = details.overview ?: fallback?.overview,
                 posterPath = details.posterPath ?: fallback?.posterPath,
                 backdropPath = details.backdropPath, rating = details.rating,
                 genresJson = details.genres.takeIf { it.isNotEmpty() }?.let { JSONArray(it).toString() },
-                castJson = details.cast.takeIf { it.isNotEmpty() }?.let { JSONArray(it).toString() },
+                castJson = details.cast.takeIf { it.isNotEmpty() }?.let { MetadataCast.serialize(it) },
                 trailerKey = details.trailerKey,
                 logoPath = details.logoPath,
                 updatedAt = now,
             )
             fallback != null -> MetadataCacheEntity(
-                key = tvCacheKey(tmdbId), tmdbId = tmdbId, imdbId = null, type = TYPE_TV,
+                key = tvCacheKey(tmdbId, lang), tmdbId = tmdbId, imdbId = null, type = TYPE_TV,
                 title = fallback.title, year = fallback.year, overview = fallback.overview,
                 posterPath = fallback.posterPath, backdropPath = null, rating = null,
                 genresJson = null, castJson = null, trailerKey = null, logoPath = null, updatedAt = now,
             )
-            else -> return dao.getCache(tvCacheKey(tmdbId))
+            else -> return dao.getCache(tvCacheKey(tmdbId, lang))
         }
         dao.upsertCache(entity)
         return entity
@@ -178,18 +192,19 @@ class MetadataRepository(
      */
     suspend fun cachedDetails(tmdbId: Int, type: MetadataType, allowNetwork: Boolean): MetadataCacheEntity? {
         if (tmdbId <= 0) return null
+        val lang = currentLang()
         val key = when (type) {
-            MetadataType.MOVIE -> cacheKey(tmdbId)
-            MetadataType.TV -> tvCacheKey(tmdbId)
+            MetadataType.MOVIE -> cacheKey(tmdbId, lang)
+            MetadataType.TV -> tvCacheKey(tmdbId, lang)
             MetadataType.EPISODE -> return null
         }
         dao.getCache(key)?.let {
-            if (System.currentTimeMillis() - it.updatedAt < POSITIVE_TTL_MS) return it
+            if (System.currentTimeMillis() - it.updatedAt < POSITIVE_TTL_MS && it.isUsable()) return it
         }
         if (!allowNetwork) return null
         return when (type) {
-            MetadataType.MOVIE -> fetchAndCache(tmdbId)
-            MetadataType.TV -> fetchAndCacheTv(tmdbId, fallback = null)
+            MetadataType.MOVIE -> fetchAndCache(tmdbId, lang)
+            MetadataType.TV -> fetchAndCacheTv(tmdbId, lang, fallback = null)
             MetadataType.EPISODE -> null
         }
     }
@@ -208,7 +223,7 @@ class MetadataRepository(
         val tvId = show.tmdbId
         val season = episode.seasonNumber
         val ep = episode.episodeNumber
-        val key = episodeCacheKey(tvId, season, ep)
+        val key = episodeCacheKey(tvId, season, ep, currentLang())
         val now = System.currentTimeMillis()
 
         dao.getCache(key)?.let { if (now - it.updatedAt < POSITIVE_TTL_MS) return it }
@@ -260,8 +275,19 @@ class MetadataRepository(
             .onFailure { Log.w(TAG, "negative-match heal failed: ${it.message}") }
     }
 
+    /**
+     * Called when the metadata language changes.
+     *
+     * Deliberately does NOT wipe the details cache any more. Cache keys now carry the language
+     * ([cacheKey]), so rows for the old language stop being read on their own and age out — the new
+     * language simply misses and fetches. The old `dao.clearCache()` here was the direct cause of a
+     * traffic spike on every language change: it re-downloaded details for every title the user had
+     * ever opened, with no search calls, because the positive matches were (correctly) kept.
+     *
+     * Negative matches still go: a miss can be an artefact of the language the search ran under, and
+     * leaving them meant a bad language choice kept metadata dead for 7 days even after switching back.
+     */
     suspend fun clearCacheForLanguageChange() {
-        dao.clearCache()
         dao.clearNegativeMatches()
     }
 
@@ -272,7 +298,11 @@ class MetadataRepository(
      */
     suspend fun clearMovie(movie: MovieEntity) {
         val localKey = movieLocalKey(movie)
-        dao.getMatch(localKey)?.tmdbId?.let { dao.deleteCache(cacheKey(it)) }
+        val lang = currentLang()
+        dao.getMatch(localKey)?.tmdbId?.let {
+            dao.deleteCache(cacheKey(it, lang))
+            if (lang.isNotBlank()) dao.deleteCache(cacheKey(it)) // pre-language row
+        }
         dao.deleteMatch(localKey)
     }
 
@@ -283,7 +313,11 @@ class MetadataRepository(
      */
     suspend fun clearSeries(series: tv.own.owntv.core.database.entity.SeriesEntity) {
         val localKey = seriesLocalKey(series)
-        dao.getMatch(localKey)?.tmdbId?.let { dao.deleteCache(tvCacheKey(it)) }
+        val lang = currentLang()
+        dao.getMatch(localKey)?.tmdbId?.let {
+            dao.deleteCache(tvCacheKey(it, lang))
+            if (lang.isNotBlank()) dao.deleteCache(tvCacheKey(it)) // pre-language row
+        }
         dao.deleteMatch(localKey)
     }
 
@@ -297,9 +331,14 @@ class MetadataRepository(
         episode: tv.own.owntv.core.database.entity.EpisodeEntity,
     ) {
         val localKey = seriesLocalKey(series)
+        val lang = currentLang()
         dao.getMatch(localKey)?.tmdbId?.let { tid ->
-            dao.deleteCache(tvCacheKey(tid)) // show details
-            dao.deleteCache(episodeCacheKey(tid, episode.seasonNumber, episode.episodeNumber)) // this episode
+            dao.deleteCache(tvCacheKey(tid, lang)) // show details
+            dao.deleteCache(episodeCacheKey(tid, episode.seasonNumber, episode.episodeNumber, lang))
+            if (lang.isNotBlank()) { // pre-language rows
+                dao.deleteCache(tvCacheKey(tid))
+                dao.deleteCache(episodeCacheKey(tid, episode.seasonNumber, episode.episodeNumber))
+            }
         }
         dao.deleteMatch(localKey) // show match (negative OR positive)
     }
@@ -356,7 +395,8 @@ class MetadataRepository(
     /** Fetch full details for [tmdbId] and cache them; falls back to the search hit if details fail. */
     private suspend fun fetchAndCache(
         tmdbId: Int,
-        localKey: String = cacheKey(tmdbId),
+        lang: String,
+        localKey: String = cacheKey(tmdbId, lang),
         confidence: Double = 1.0,
         fallback: MetadataSearchResult? = null,
     ): MetadataCacheEntity? {
@@ -364,7 +404,7 @@ class MetadataRepository(
         val details = provider.movieDetails(tmdbId)
         val entity = when {
             details != null -> MetadataCacheEntity(
-                key = cacheKey(tmdbId),
+                key = cacheKey(tmdbId, lang),
                 tmdbId = tmdbId,
                 imdbId = details.imdbId,
                 type = TYPE_MOVIE,
@@ -375,18 +415,18 @@ class MetadataRepository(
                 backdropPath = details.backdropPath,
                 rating = details.rating,
                 genresJson = details.genres.takeIf { it.isNotEmpty() }?.let { JSONArray(it).toString() },
-                castJson = details.cast.takeIf { it.isNotEmpty() }?.let { JSONArray(it).toString() },
+                castJson = details.cast.takeIf { it.isNotEmpty() }?.let { MetadataCast.serialize(it) },
                 trailerKey = details.trailerKey,
                 logoPath = details.logoPath,
                 updatedAt = now,
             )
             fallback != null -> MetadataCacheEntity(
-                key = cacheKey(tmdbId), tmdbId = tmdbId, imdbId = null, type = TYPE_MOVIE,
+                key = cacheKey(tmdbId, lang), tmdbId = tmdbId, imdbId = null, type = TYPE_MOVIE,
                 title = fallback.title, year = fallback.year, overview = fallback.overview,
                 posterPath = fallback.posterPath, backdropPath = null, rating = null,
                 genresJson = null, castJson = null, trailerKey = null, logoPath = null, updatedAt = now,
             )
-            else -> return dao.getCache(cacheKey(tmdbId)) // nothing to write; return existing if any
+            else -> return dao.getCache(cacheKey(tmdbId, lang)) // nothing to write; return existing if any
         }
         dao.upsertCache(entity)
         return entity
@@ -430,19 +470,49 @@ class MetadataRepository(
          */
         private const val MATCH_HEURISTICS_VERSION = 1
 
-        private const val POSITIVE_TTL_MS = 60L * 24 * 3600 * 1000  // 60 days
+        /**
+         * Focus debounce for on-demand metadata resolves, shared by the movie / series / episode panes.
+         *
+         * 700 ms rather than the original 350: at 350 ms a sustained D-pad scroll fired a lookup for
+         * almost every card it passed over, which made browsing the single largest source of metadata
+         * traffic. At 700 ms a scroll costs nothing and only settling on a title resolves it.
+         */
+        const val FOCUS_DEBOUNCE_MS = 700L
+
+        // 180 days, not 60: TMDB details for a released title barely change, and a shorter TTL just buys
+        // a re-download of identical JSON. Negative stays at 7 days — a miss is worth retrying sooner.
+        private const val POSITIVE_TTL_MS = 180L * 24 * 3600 * 1000 // 180 days
         private const val NEGATIVE_TTL_MS = 7L * 24 * 3600 * 1000   // 7 days
 
         /** Stable, re-sync-proof local key (mirrors CustomizeKeys): sourceId + remoteId, or name fallback. */
         fun movieLocalKey(movie: MovieEntity): String = "$TYPE_MOVIE:${movie.sourceId}:${movie.remoteId ?: movie.name}"
 
-        fun cacheKey(tmdbId: Int): String = "$TYPE_MOVIE:$tmdbId"
+        /**
+         * Cache keys carry the metadata language.
+         *
+         * Cached rows hold language-specific text (title, overview, genres), so the key must distinguish
+         * them — otherwise switching language means either showing stale text or wiping the whole cache.
+         * Wiping is what used to happen, and it re-downloaded details for every title the user had ever
+         * opened, with no search calls: a large, entirely avoidable traffic spike on every language change.
+         *
+         * With the language in the key, rows for the old language simply stop being read and age out on
+         * their own, while remaining available as a fallback. Deliberately a key-format change and NOT a
+         * schema change — no `language` column, no Room migration, no DB version bump.
+         *
+         * [lang] blank (no language configured) keeps the original `<type>:<id>` form, so every row cached
+         * before this change stays readable for the default-language user.
+         */
+        fun cacheKey(tmdbId: Int, lang: String = ""): String =
+            if (lang.isBlank()) "$TYPE_MOVIE:$tmdbId" else "$TYPE_MOVIE:$lang:$tmdbId"
 
         fun seriesLocalKey(series: tv.own.owntv.core.database.entity.SeriesEntity): String =
             "$TYPE_TV:${series.sourceId}:${series.remoteId ?: series.name}"
 
-        fun tvCacheKey(tmdbId: Int): String = "$TYPE_TV:$tmdbId"
+        fun tvCacheKey(tmdbId: Int, lang: String = ""): String =
+            if (lang.isBlank()) "$TYPE_TV:$tmdbId" else "$TYPE_TV:$lang:$tmdbId"
 
-        fun episodeCacheKey(tvId: Int, season: Int, episode: Int): String = "$TYPE_TV:$tvId:s${season}e$episode"
+        fun episodeCacheKey(tvId: Int, season: Int, episode: Int, lang: String = ""): String =
+            if (lang.isBlank()) "$TYPE_TV:$tvId:s${season}e$episode"
+            else "$TYPE_TV:$lang:$tvId:s${season}e$episode"
     }
 }

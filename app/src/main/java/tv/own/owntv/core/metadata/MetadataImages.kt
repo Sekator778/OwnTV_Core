@@ -14,6 +14,10 @@ object MetadataImages {
     fun backdrop(path: String?, size: String = "w780"): String? =
         path?.takeIf { it.isNotBlank() }?.let { "${TmdbProvider.IMAGE_BASE}/$size${it.ensureLeadingSlash()}" }
 
+    /** Cast profile photo (default w185 — TMDB's portrait size, ample for a small card on a TV). */
+    fun profile(path: String?, size: String = "w185"): String? =
+        path?.takeIf { it.isNotBlank() }?.let { "${TmdbProvider.IMAGE_BASE}/$size${it.ensureLeadingSlash()}" }
+
     /** Title/logo URL (default w500). */
     fun logo(path: String?, size: String = "w500"): String? =
         path?.takeIf { it.isNotBlank() }?.let { "${TmdbProvider.IMAGE_BASE}/$size${it.ensureLeadingSlash()}" }

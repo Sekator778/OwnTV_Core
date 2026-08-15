@@ -95,8 +95,22 @@
     <string name="settings_metadata_tmdb_only_description">Preferuj TMDB dla każdego pola; używaj listy odtwarzania tylko wtedy, gdy TMDB nie zawiera żadnych danych.</string>
     <string name="settings_selected">Wybrano</string>
     <string name="settings_active_tmdb_source">Aktywne źródło TMDB: <xliff:g id="tier">%1$s</xliff:g></string>
+    <string name="settings_metadata_allowance">Twój dzienny przydział</string>
+    <string name="settings_metadata_allowance_row"><xliff:g id="window">%1$s</xliff:g>: pozostało <xliff:g id="remaining">%2$d</xliff:g> z <xliff:g id="total">%3$d</xliff:g></string>
+    <string name="settings_metadata_window_minute">Na minutę</string>
+    <string name="settings_metadata_window_hour">Na godzinę</string>
+    <string name="settings_metadata_window_day">Dzisiaj</string>
+    <plurals name="settings_metadata_allowance_left">
+        <item quantity="one">Dziś pozostało <xliff:g id="remaining">%1$d</xliff:g> z <xliff:g id="total">%2$d</xliff:g> zapytania</item>
+        <item quantity="few">Dziś pozostały <xliff:g id="remaining">%1$d</xliff:g> z <xliff:g id="total">%2$d</xliff:g> zapytania</item>
+        <item quantity="many">Dziś pozostało <xliff:g id="remaining">%1$d</xliff:g> z <xliff:g id="total">%2$d</xliff:g> zapytań</item>
+        <item quantity="other">Dziś pozostało <xliff:g id="remaining">%1$d</xliff:g> z <xliff:g id="total">%2$d</xliff:g> zapytania</item>
+    </plurals>
+    <string name="settings_metadata_allowance_resets">Odnowi się o <xliff:g id="time">%1$s</xliff:g></string>
+    <string name="settings_metadata_fair_share">Wbudowana usługa metadanych jest współdzielona przez wszystkich użytkowników OwnTV, więc każde urządzenie otrzymuje każdego dnia własny przydział. Po jego wyczerpaniu plakaty i opisy zostają wstrzymane do czasu odnowienia — informacje z Twojej własnej playlisty działają normalnie. Dodanie własnego klucza API TMDB lub serwera usuwa ten limit: jest bezpłatny, a klucz osobisty praktycznie nie ma limitu.</string>
+    <string name="settings_metadata_limit_reached">Dzienny przydział metadanych wyczerpany — dodaj własny klucz TMDB w Ustawieniach → Metadane, aby usunąć ten limit.</string>
     <string name="settings_metadata_language">Język metadanych</string>
-    <string name="settings_metadata_language_description">Język opisów fabuły, gatunków i tytułów z TMDB. Pola nieprzetłumaczone przez TMDB pozostają w języku angielskim. Zmiana tego ustawienia usuwa szczegóły z pamięci podręcznej, aby pobrać je ponownie.</string>
+    <string name="settings_metadata_language_description">Język opisów, gatunków i tytułów z TMDB. Pola, których TMDB nie przetłumaczyło, pozostają po angielsku. Szczegóły są zapisywane w pamięci podręcznej dla każdego języka, więc powrót jest natychmiastowy.</string>
     <string name="settings_advanced_options">Opcje zaawansowane</string>
     <string name="settings_advanced_metadata_description">Używaj własnego klucza API TMDB lub samodzielnie hostowanego serwera zamiast domyślnego serwera współdzielonego.</string>
     <string name="settings_metadata_server_description">Pozostaw oba pola puste, aby używać wbudowanego serwera współdzielonego (bez konfiguracji). Wprowadź własny klucz API TMDB, aby łączyć się bezpośrednio z TMDB, albo adres URL samodzielnie hostowanego serwera, aby używać własnego serwera proxy lub kopii lustrzanej. Adres URL ma pierwszeństwo przed kluczem.</string>

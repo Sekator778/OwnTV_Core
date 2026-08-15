@@ -176,7 +176,7 @@ data class MovieDetails(
     val backdropPath: String?,
     val rating: Double?,
     val genres: List<String>,
-    val cast: List<String>,
+    val cast: List<CastMember>,
     /** Best YouTube trailer video key from `videos` (official Trailer > Trailer > Teaser); null if none. */
     val trailerKey: String?,
     /** Best title/logo image path from TMDB images; null when no usable logo exists. */

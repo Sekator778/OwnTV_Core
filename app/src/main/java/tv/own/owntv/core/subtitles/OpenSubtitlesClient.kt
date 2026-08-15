@@ -19,7 +19,10 @@ import java.io.IOException
  *
  * Logging rule: never log usernames, passwords, tokens, or full auth responses (plan §12).
  */
-class OpenSubtitlesClient(private val okHttpClient: OkHttpClient) {
+class OpenSubtitlesClient(
+    private val okHttpClient: OkHttpClient,
+    private val clientId: tv.own.owntv.core.metadata.OwnTVClientId,
+) {
 
     /** Non-2xx from OpenSubtitles. 401 drives the one-shot silent re-login upstream. */
     class ApiException(val code: Int, message: String) : IOException(message)
@@ -102,6 +105,14 @@ class OpenSubtitlesClient(private val okHttpClient: OkHttpClient) {
             .header("Accept", "application/json")
             .header("User-Agent", USER_AGENT)
         if (token != null) builder.header("Authorization", "Bearer $token")
+        // Same identity the metadata Worker requires. This Worker sits on *.workers.dev with no WAF
+        // in front of it, so the shared secret it checks internally is its only protection — without
+        // these headers every subtitle call would come back 403 once the Worker is deployed.
+        // Blank on a build with no key (fork/fresh clone); the Worker degrades open for those.
+        if (tv.own.owntv.BuildConfig.TMDB_EDGE_KEY.isNotBlank()) {
+            builder.header("x-owntv-key", tv.own.owntv.BuildConfig.TMDB_EDGE_KEY)
+            edgeClientId()?.let { builder.header("x-owntv-client", it) }
+        }
         val requestBody = body?.toString()?.toRequestBody(JSON_MEDIA_TYPE)
         builder.method(method, requestBody)
 
@@ -119,6 +130,11 @@ class OpenSubtitlesClient(private val okHttpClient: OkHttpClient) {
             }
         }
     }
+
+    /** Blocking read of the per-install id; [call] already runs on the IO dispatcher. */
+    private fun edgeClientId(): String? = runCatching {
+        kotlinx.coroutines.runBlocking { clientId.get() }
+    }.getOrNull()
 
     private fun parseUser(user: JSONObject?, fallbackUsername: String?): UserInfo = UserInfo(
         username = user?.optString("username")?.takeIf { it.isNotBlank() } ?: fallbackUsername,

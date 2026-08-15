@@ -95,8 +95,20 @@
     <string name="settings_metadata_tmdb_only_description">हर फ़ील्ड के लिए TMDB को प्राथमिकता दें; TMDB पर कुछ न मिलने पर ही अपनी प्लेलिस्ट का उपयोग करें।</string>
     <string name="settings_selected">चयनित</string>
     <string name="settings_active_tmdb_source">सक्रिय TMDB स्रोत: <xliff:g id="tier">%1$s</xliff:g></string>
+    <string name="settings_metadata_allowance">आपका दैनिक हिस्सा</string>
+    <string name="settings_metadata_allowance_row"><xliff:g id="window">%1$s</xliff:g>: <xliff:g id="total">%3$d</xliff:g> में से <xliff:g id="remaining">%2$d</xliff:g> बाकी</string>
+    <string name="settings_metadata_window_minute">प्रति मिनट</string>
+    <string name="settings_metadata_window_hour">प्रति घंटा</string>
+    <string name="settings_metadata_window_day">आज</string>
+    <plurals name="settings_metadata_allowance_left">
+        <item quantity="one">आज <xliff:g id="total">%2$d</xliff:g> में से <xliff:g id="remaining">%1$d</xliff:g> लुकअप बाकी</item>
+        <item quantity="other">आज <xliff:g id="total">%2$d</xliff:g> में से <xliff:g id="remaining">%1$d</xliff:g> लुकअप बाकी</item>
+    </plurals>
+    <string name="settings_metadata_allowance_resets"><xliff:g id="time">%1$s</xliff:g> बजे फिर से भरेगा</string>
+    <string name="settings_metadata_fair_share">अंतर्निहित मेटाडेटा सेवा OwnTV का उपयोग करने वाले सभी लोगों के बीच साझा है, इसलिए हर डिवाइस को हर दिन अपना हिस्सा मिलता है। हिस्सा खत्म होने पर पोस्टर और विवरण तब तक रुक जाते हैं जब तक वह फिर से न भर जाए — आपकी अपनी प्लेलिस्ट की जानकारी सामान्य रूप से काम करती रहती है। अपनी TMDB API कुंजी या सर्वर जोड़ने पर यह सीमा हट जाती है: यह मुफ़्त है, और निजी कुंजी पर व्यावहारिक रूप से कोई सीमा नहीं है।</string>
+    <string name="settings_metadata_limit_reached">आज का मेटाडेटा हिस्सा खत्म हो गया — यह सीमा हटाने के लिए सेटिंग्स → मेटाडेटा में अपनी TMDB कुंजी जोड़ें।</string>
     <string name="settings_metadata_language">मेटाडेटा की भाषा</string>
-    <string name="settings_metadata_language_description">TMDB से मिलने वाले कथानक, शैलियों और शीर्षकों की भाषा। जिन फ़ील्ड का TMDB ने अनुवाद नहीं किया है, वे अंग्रेज़ी में रहते हैं। इसे बदलने पर कैश किए गए विवरण मिट जाते हैं, ताकि उन्हें फिर से प्राप्त किया जा सके।</string>
+    <string name="settings_metadata_language_description">TMDB से आने वाले कथानक, शैली और शीर्षक की भाषा। जिन फ़ील्ड का TMDB ने अनुवाद नहीं किया है वे अंग्रेज़ी में रहेंगे। विवरण हर भाषा के लिए अलग कैश होते हैं, इसलिए वापस बदलना तुरंत होता है।</string>
     <string name="settings_advanced_options">उन्नत विकल्प</string>
     <string name="settings_advanced_metadata_description">साझा डिफ़ॉल्ट के बजाय अपनी TMDB API कुंजी या स्वयं होस्ट किए गए सर्वर का उपयोग करें।</string>
     <string name="settings_metadata_server_description">पहले से मौजूद साझा सर्वर का उपयोग करने के लिए दोनों को खाली छोड़ें (किसी सेटअप की आवश्यकता नहीं)। TMDB को सीधे कॉल करने के लिए अपनी TMDB API कुंजी दर्ज करें या अपना प्रॉक्सी/मिरर उपयोग करने के लिए स्वयं होस्ट किए गए सर्वर का URL दर्ज करें। URL को कुंजी से अधिक प्राथमिकता मिलती है।</string>

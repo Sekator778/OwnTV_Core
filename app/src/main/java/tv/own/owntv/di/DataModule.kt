@@ -92,8 +92,14 @@ val dataModule = module {
     single { tv.own.owntv.core.stalker.StalkerAuthManager(get()) }
     single { tv.own.owntv.core.stalker.StreamUrlResolver(get(), get()) }
     // TMDB metadata enrichment (plan §4): one provider, three tiers resolved from SettingsRepository.
+    // Opaque per-install id sent to the default Worker only, so one abusive install can be capped
+    // without blocking the IP address a whole household/carrier NAT shares.
+    single { tv.own.owntv.core.metadata.OwnTVClientId(androidContext()) }
+    // Per-install allowance for the shared default Worker (40/min, 150/hr, 400/day). Own key and
+    // self-hosted server are never metered.
+    single { tv.own.owntv.core.metadata.MetadataBudget(androidContext()) }
     single<tv.own.owntv.core.metadata.MetadataProvider> {
-        tv.own.owntv.core.metadata.TmdbProvider(get(), get())
+        tv.own.owntv.core.metadata.TmdbProvider(get(), get(), get(), get())
     }
     // provider, metadataDao, settings, overrideStore — the on-demand resolve + cache orchestrator (plan §7, §11.2 U5b).
     single { tv.own.owntv.core.metadata.MetadataRepository(get(), get(), get(), get()) }
@@ -105,7 +111,7 @@ val dataModule = module {
     single { tv.own.owntv.core.metadata.MetadataOverrideStore(androidContext()) }
     // OpenSubtitles (subtitle plan Phase 1): Worker-proxied REST client + Keystore-sealed
     // per-profile sessions + the sign-in/out orchestrator with one-shot silent re-login.
-    single { tv.own.owntv.core.subtitles.OpenSubtitlesClient(get()) }
+    single { tv.own.owntv.core.subtitles.OpenSubtitlesClient(get(), get()) }
     single { tv.own.owntv.core.subtitles.OpenSubtitlesAuthStore(androidContext()) }
     single { tv.own.owntv.core.subtitles.OpenSubtitlesAccountManager(get(), get()) }
     // context, client, accountManager, okHttpClient, subtitleDao — search/download/cache orchestration

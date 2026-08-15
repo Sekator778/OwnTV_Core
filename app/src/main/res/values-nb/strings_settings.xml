@@ -95,8 +95,20 @@
     <string name="settings_metadata_tmdb_only_description">Foretrekk TMDB for alle felt. Bruk bare spillelisten når TMDB ikke har noe.</string>
     <string name="settings_selected">Valgt</string>
     <string name="settings_active_tmdb_source">Aktiv TMDB-kilde: <xliff:g id="tier">%1$s</xliff:g></string>
+    <string name="settings_metadata_allowance">Din daglige andel</string>
+    <string name="settings_metadata_allowance_row"><xliff:g id="window">%1$s</xliff:g>: <xliff:g id="remaining">%2$d</xliff:g> av <xliff:g id="total">%3$d</xliff:g> igjen</string>
+    <string name="settings_metadata_window_minute">Per minutt</string>
+    <string name="settings_metadata_window_hour">Per time</string>
+    <string name="settings_metadata_window_day">I dag</string>
+    <plurals name="settings_metadata_allowance_left">
+        <item quantity="one"><xliff:g id="remaining">%1$d</xliff:g> av <xliff:g id="total">%2$d</xliff:g> oppslag igjen i dag</item>
+        <item quantity="other"><xliff:g id="remaining">%1$d</xliff:g> av <xliff:g id="total">%2$d</xliff:g> oppslag igjen i dag</item>
+    </plurals>
+    <string name="settings_metadata_allowance_resets">Fylles på kl. <xliff:g id="time">%1$s</xliff:g></string>
+    <string name="settings_metadata_fair_share">Den innebygde metadatatjenesten deles av alle som bruker OwnTV, så hver enhet får sin egen andel hver dag. Hvis du bruker opp andelen din, settes plakater og beskrivelser på pause til den fylles på igjen — informasjonen fra din egen spilleliste fungerer som normalt. Å legge til din egen TMDB API-nøkkel eller server fjerner grensen: det er gratis, og en personlig nøkkel har praktisk talt ingen grense.</string>
+    <string name="settings_metadata_limit_reached">Den daglige metadataandelen din er brukt opp — legg til din egen TMDB-nøkkel under Innstillinger → Metadata for å fjerne denne grensen.</string>
     <string name="settings_metadata_language">Metadataspråk</string>
-    <string name="settings_metadata_language_description">Språk for handlingsbeskrivelser, sjangre og titler fra TMDB. Felt som TMDB ikke har oversatt, forblir på engelsk. Når du endrer dette, tømmes de hurtigbufrede detaljene slik at de hentes på nytt.</string>
+    <string name="settings_metadata_language_description">Språk for handling, sjangere og titler fra TMDB. Felt som TMDB ikke har oversatt, forblir på engelsk. Detaljer bufres per språk, så det går umiddelbart å bytte tilbake.</string>
     <string name="settings_advanced_options">Avanserte alternativer</string>
     <string name="settings_advanced_metadata_description">Bruk din egen TMDB API-nøkkel eller en egenvertsbasert server i stedet for den delte standardløsningen.</string>
     <string name="settings_metadata_server_description">La begge feltene stå tomme for å bruke den innebygde delte serveren (krever ikke oppsett). Angi din egen TMDB API-nøkkel for å kontakte TMDB direkte, eller en URL til en egenvertsbasert server for å bruke din egen proxy eller speilserver. En URL prioriteres over en nøkkel.</string>

@@ -30,12 +30,16 @@ class HttpClient(private val client: OkHttpClient) {
         userAgent: String? = null,
         onProgress: ((Long, Long?) -> Unit)? = null,
         maxAttempts: Int = 1,
+        headers: Map<String, String> = emptyMap(),
         block: suspend (InputStream) -> T,
     ): T = withContext(Dispatchers.IO) {
         val ua = userAgent?.takeIf { it.isNotBlank() } ?: DEFAULT_USER_AGENT
         val request = Request.Builder()
             .url(url)
             .header("User-Agent", ua)
+            // Caller-supplied identity headers (today: the metadata Worker's x-owntv-key / x-owntv-client).
+            // Blank values are dropped so an unconfigured build never sends an empty header.
+            .apply { headers.forEach { (name, value) -> if (value.isNotBlank()) header(name, value) } }
             .build()
 
         val coroutineContext = currentCoroutineContext()
@@ -98,8 +102,11 @@ class HttpClient(private val client: OkHttpClient) {
         url.replace(Regex("(?i)(username|password|user|pass|token)=[^&]*"), "$1=***")
 
     /** Convenience for small responses (e.g. Xtream category lists). */
-    suspend fun getText(url: String, userAgent: String? = null): String =
-        get(url, userAgent) { it.readBytes().decodeToString() }
+    suspend fun getText(
+        url: String,
+        userAgent: String? = null,
+        headers: Map<String, String> = emptyMap(),
+    ): String = get(url, userAgent, headers = headers) { it.readBytes().decodeToString() }
 
     companion object {
         private const val TAG = "HttpClient"

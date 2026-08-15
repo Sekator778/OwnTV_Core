@@ -95,8 +95,19 @@
     <string name="settings_metadata_tmdb_only_description">모든 필드에서 TMDB를 우선 사용하며 TMDB에 정보가 없을 때만 플레이리스트를 사용합니다.</string>
     <string name="settings_selected">선택됨</string>
     <string name="settings_active_tmdb_source">활성 TMDB 소스: <xliff:g id="tier">%1$s</xliff:g></string>
+    <string name="settings_metadata_allowance">일일 사용량</string>
+    <string name="settings_metadata_allowance_row"><xliff:g id="window">%1$s</xliff:g>: <xliff:g id="total">%3$d</xliff:g>회 중 <xliff:g id="remaining">%2$d</xliff:g>회 남음</string>
+    <string name="settings_metadata_window_minute">분당</string>
+    <string name="settings_metadata_window_hour">시간당</string>
+    <string name="settings_metadata_window_day">오늘</string>
+    <plurals name="settings_metadata_allowance_left">
+        <item quantity="other">오늘 <xliff:g id="total">%2$d</xliff:g>회 중 <xliff:g id="remaining">%1$d</xliff:g>회 남음</item>
+    </plurals>
+    <string name="settings_metadata_allowance_resets"><xliff:g id="time">%1$s</xliff:g>에 충전됩니다</string>
+    <string name="settings_metadata_fair_share">내장 메타데이터 서비스는 OwnTV를 사용하는 모든 사용자가 함께 쓰기 때문에 기기마다 하루 사용량이 정해져 있습니다. 사용량을 모두 쓰면 포스터와 설명은 충전될 때까지 일시 중지됩니다. 재생목록 자체의 정보는 평소대로 표시됩니다. 개인 TMDB API 키나 서버를 추가하면 이 제한이 사라집니다. 무료이며 개인 키에는 사실상 제한이 없습니다.</string>
+    <string name="settings_metadata_limit_reached">오늘의 메타데이터 사용량을 모두 사용했습니다. 설정 → 메타데이터에서 개인 TMDB 키를 추가하면 이 제한이 사라집니다.</string>
     <string name="settings_metadata_language">메타데이터 언어</string>
-    <string name="settings_metadata_language_description">TMDB에서 가져오는 줄거리, 장르 및 제목의 언어입니다. TMDB에서 번역하지 않은 필드는 영어로 유지됩니다. 이 설정을 변경하면 캐시된 상세 정보가 삭제되고 다시 가져옵니다.</string>
+    <string name="settings_metadata_language_description">TMDB에서 가져오는 줄거리, 장르, 제목의 언어입니다. TMDB가 번역하지 않은 항목은 영어로 표시됩니다. 세부 정보는 언어별로 캐시되므로 되돌리면 바로 표시됩니다.</string>
     <string name="settings_advanced_options">고급 옵션</string>
     <string name="settings_advanced_metadata_description">공유 기본값 대신 자체 TMDB API 키 또는 직접 호스팅하는 서버를 사용합니다.</string>
     <string name="settings_metadata_server_description">기본 제공 공유 서버를 사용하려면 두 항목을 모두 비워 두세요(별도 설정 불필요). TMDB를 직접 호출하려면 자체 TMDB API 키를 입력하고, 자체 프록시/미러를 사용하려면 직접 호스팅하는 서버 URL을 입력하세요. URL이 키보다 우선합니다.</string>

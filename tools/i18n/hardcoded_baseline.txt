@@ -129,6 +129,33 @@
 1	app/src/main/java/tv/own/owntv/core/database/entity/UserDataEntities.kt	custom_category_members
 1	app/src/main/java/tv/own/owntv/core/database/entity/UserDataEntities.kt	itemId
 2	app/src/main/java/tv/own/owntv/core/database/entity/UserDataEntities.kt	mediaType
+1	app/src/main/java/tv/own/owntv/core/metadata/MetadataBudget.kt	day_count
+1	app/src/main/java/tv/own/owntv/core/metadata/MetadataBudget.kt	day_start
+1	app/src/main/java/tv/own/owntv/core/metadata/MetadataBudget.kt	hour_count
+1	app/src/main/java/tv/own/owntv/core/metadata/MetadataBudget.kt	hour_start
+1	app/src/main/java/tv/own/owntv/core/metadata/MetadataBudget.kt	minute_count
+1	app/src/main/java/tv/own/owntv/core/metadata/MetadataBudget.kt	minute_start
+1	app/src/main/java/tv/own/owntv/core/metadata/MetadataBudget.kt	owntv_metadata_budget
+1	app/src/main/java/tv/own/owntv/core/metadata/MetadataCast.kt	n
+1	app/src/main/java/tv/own/owntv/core/metadata/MetadataCast.kt	null
+1	app/src/main/java/tv/own/owntv/core/metadata/MetadataCast.kt	p
+1	app/src/main/java/tv/own/owntv/core/metadata/MetadataImages.kt	${TmdbProvider.IMAGE_BASE}/$size${it.ensureLeadingSlash()}
+1	app/src/main/java/tv/own/owntv/core/metadata/MetadataImages.kt	w185
+3	app/src/main/java/tv/own/owntv/core/metadata/MetadataRepository.kt	\0
+1	app/src/main/java/tv/own/owntv/core/metadata/MetadataRepository.kt	$TYPE_MOVIE:$lang:$tmdbId
+1	app/src/main/java/tv/own/owntv/core/metadata/MetadataRepository.kt	$TYPE_TV:$lang:$tmdbId
+1	app/src/main/java/tv/own/owntv/core/metadata/MetadataRepository.kt	$TYPE_TV:$lang:$tvId:s${season}e$episode
+1	app/src/main/java/tv/own/owntv/core/metadata/OwnTVClientId.kt	\0
+1	app/src/main/java/tv/own/owntv/core/metadata/OwnTVClientId.kt	%02x
+1	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	TMDB $label failed: ${it.message}
+1	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	Trending type=$type page=$page
+1	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	episode details tv=$tvId s${season}e$episode
+1	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	metadata allowance spent, skipping $label
+1	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	movie details id=$tmdbId
+1	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	null
+1	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	profile_path
+1	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	search type=$type
+1	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	tv details id=$tmdbId
 3	app/src/main/java/tv/own/owntv/core/network/DnsConfig.kt	\0
 1	app/src/main/java/tv/own/owntv/core/network/DnsConfig.kt	${dohUrl.trimEnd('/')}?name=$hostname&type=$type
 1	app/src/main/java/tv/own/owntv/core/network/DnsConfig.kt	A
@@ -224,6 +251,7 @@
 1	app/src/main/java/tv/own/owntv/features/settings/data/SubtitleStyle.kt	top_center
 1	app/src/main/java/tv/own/owntv/features/settings/data/SubtitleStyle.kt	top_left
 1	app/src/main/java/tv/own/owntv/features/settings/data/SubtitleStyle.kt	top_right
+1	app/src/main/java/tv/own/owntv/features/shell/components/MediaDetailsScreen.kt	\0
 3	app/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	\0
 1	app/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	Content-Type
 1	app/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	HLS

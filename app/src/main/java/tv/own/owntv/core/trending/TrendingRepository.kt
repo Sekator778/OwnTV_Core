@@ -6,6 +6,7 @@ import java.util.UUID
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.sync.Semaphore
 import kotlinx.coroutines.sync.withPermit
@@ -358,18 +359,39 @@ class TrendingRepository(
         // re-match that happens on every other sync must stay at zero calls end to end — otherwise
         // anything that empties the cache (changing the metadata language does exactly that) would
         // hand the next resync a fresh round of detail downloads through the back door.
-        val details: List<Pair<TrendingSelection, MetadataCacheEntity?>> = coroutineScope {
+        //
+        // When the gate is OPEN these can reach the network, and up to MAX_TOTAL of them fired
+        // three-at-a-time lands ~10 requests inside a couple of seconds — enough to trip the edge
+        // rate-limit rule, which counts per IP over a 10 s window. So a network-allowed run is paced
+        // one call at a time with a gap between them; the whole step then spreads over ~12 s instead
+        // of ~2 s. This runs in a background worker once every 5-8 days, so the extra seconds are
+        // invisible, and staying under the edge limit is worth far more than finishing sooner.
+        //
+        // A gate-shut run touches only the cache, so it keeps the original fast concurrent path.
+        val details: List<Pair<TrendingSelection, MetadataCacheEntity?>> = if (gateOpen) {
             selections.map { selection ->
-                async {
-                    selection to semaphore.withPermit {
-                        metadataRepository.cachedDetails(
-                            selection.candidate.tmdbId,
-                            selection.candidate.type,
-                            allowNetwork = gateOpen,
-                        )
+                val detail = metadataRepository.cachedDetails(
+                    selection.candidate.tmdbId,
+                    selection.candidate.type,
+                    allowNetwork = true,
+                )
+                delay(ENRICHMENT_PACING_MS)
+                selection to detail
+            }
+        } else {
+            coroutineScope {
+                selections.map { selection ->
+                    async {
+                        selection to semaphore.withPermit {
+                            metadataRepository.cachedDetails(
+                                selection.candidate.tmdbId,
+                                selection.candidate.type,
+                                allowNetwork = false,
+                            )
+                        }
                     }
-                }
-            }.awaitAll()
+                }.awaitAll()
+            }
         }
         val enrichmentMs = SystemClock.elapsedRealtime() - enrichmentStarted
         val detailFailures = details.count { it.second == null }
@@ -498,6 +520,13 @@ class TrendingRepository(
         private const val BALANCED_TARGET = 5
         private const val BACKFILL_BATCH = 1_000
         private const val ENRICHMENT_CONCURRENCY = 3
+
+        /**
+         * Gap between network-allowed detail calls in the enrichment step, so a Trending rebuild
+         * cannot burst past the edge rate-limit rule (counted per IP over a 10 s window). At
+         * MAX_TOTAL = 10 items this spreads the step across roughly 12 seconds.
+         */
+        private const val ENRICHMENT_PACING_MS = 1_200L
         /** How long a below-threshold playlist waits before trying a fresh trending list. */
         private const val BELOW_THRESHOLD_RETRY_MS = 12L * 60 * 60 * 1000
     }

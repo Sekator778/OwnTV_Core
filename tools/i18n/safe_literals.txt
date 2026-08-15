@@ -1513,6 +1513,8 @@
 1	protocol	app/src/main/java/tv/own/owntv/core/metadata/MetadataRepository.kt	resolveMovie search failed: ${it.message}
 1	protocol	app/src/main/java/tv/own/owntv/core/metadata/MetadataRepository.kt	resolveSeries search failed: ${it.message}
 1	protocol	app/src/main/java/tv/own/owntv/core/metadata/MetadataRepository.kt	tv
+1	preference-key	app/src/main/java/tv/own/owntv/core/metadata/OwnTVClientId.kt	client_id
+1	preference-key	app/src/main/java/tv/own/owntv/core/metadata/OwnTVClientId.kt	owntv_client_id
 1	regex	app/src/main/java/tv/own/owntv/core/metadata/TitleMatchScorer.kt	\\s+
 10	empty	app/src/main/java/tv/own/owntv/core/metadata/TitleNormalizer.kt	\0
 1	technical	app/src/main/java/tv/own/owntv/core/metadata/TitleNormalizer.kt	(?:\\s*(?:e|ep|episode|x)\\s*\\d{1,4})?\\s*$
@@ -1530,7 +1532,7 @@
 1	technical	app/src/main/java/tv/own/owntv/core/metadata/TitleNormalizer.kt	imax|extended|uncut|remastered|vip|
 1	technical	app/src/main/java/tv/own/owntv/core/metadata/TitleNormalizer.kt	multi[- ]?sub|multisub|dual[- ]?audio|remux|web[- ]?dl|webrip|bluray|bdrip|dvdrip|hdrip|
 1	technical	app/src/main/java/tv/own/owntv/core/metadata/TitleNormalizer.kt	vostfr|vost|vf|subbed|dubbed|dublado|legendado|castellano|truefrench|hdlight|
-2	empty	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	\0
+3	empty	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	\0
 1	protocol	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	$base,en,null
 1	protocol	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	&
 4	protocol	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	&api_key=
@@ -1552,12 +1554,7 @@
 2	protocol	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	?append_to_response=credits,external_ids,videos,images
 1	url	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	?page=
 1	protocol	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	?query=
-1	log	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	TMDB Trending failed type=$type page=$page: ${it.message}
 1	log	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	TMDB Trending parse failed type=$type page=$page
-1	log	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	TMDB episode details failed tv=$tvId s$season e$episode: ${it.message}
-1	log	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	TMDB movie details failed id=$tmdbId: ${it.message}
-1	log	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	TMDB search failed type=$type: ${it.message}
-1	log	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	TMDB tv details failed id=$tmdbId: ${it.message}
 1	protocol	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	Teaser
 1	log	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	TmdbProvider
 1	protocol	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	Trailer
@@ -1566,8 +1563,8 @@
 1	json	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	air_date
 1	protocol	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	api_key=
 2	json	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	backdrop_path
-2	json	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	cast
-2	json	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	credits
+1	json	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	cast
+1	json	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	credits
 3	locale	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	en
 1	protocol	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	en,null
 2	json	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	external_ids
@@ -1577,6 +1574,7 @@
 1	url	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	https://api.themoviedb.org
 1	url	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	https://image.tmdb.org/t/p
 1	url	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	https://owntv-tmdb-meta.xiannero.workers.dev
+1	url	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	https://tmdb.owntv.me
 4	json	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	id
 1	json	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	images
 3	json	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	imdb_id
@@ -1585,7 +1583,7 @@
 1	protocol	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	language=
 1	json	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	logos
 1	protocol	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	movie
-7	json	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	name
+6	json	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	name
 13	protocol	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	null
 1	json	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	official
 1	technical	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	original_name
@@ -1603,6 +1601,8 @@
 1	json	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	videos
 3	json	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	vote_average
 1	json	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	width
+1	protocol	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	x-owntv-client
+1	protocol	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	x-owntv-key
 1	json	app/src/main/java/tv/own/owntv/core/metadata/TmdbTrendingParser.kt	backdrop_path
 1	json	app/src/main/java/tv/own/owntv/core/metadata/TmdbTrendingParser.kt	first_air_date
 1	json	app/src/main/java/tv/own/owntv/core/metadata/TmdbTrendingParser.kt	id
@@ -2096,6 +2096,8 @@
 1	protocol	app/src/main/java/tv/own/owntv/core/subtitles/OpenSubtitlesClient.kt	user
 2	protocol	app/src/main/java/tv/own/owntv/core/subtitles/OpenSubtitlesClient.kt	username
 1	protocol	app/src/main/java/tv/own/owntv/core/subtitles/OpenSubtitlesClient.kt	vip
+1	protocol	app/src/main/java/tv/own/owntv/core/subtitles/OpenSubtitlesClient.kt	x-owntv-client
+1	protocol	app/src/main/java/tv/own/owntv/core/subtitles/OpenSubtitlesClient.kt	x-owntv-key
 1	empty	app/src/main/java/tv/own/owntv/core/subtitles/SubtitleCharset.kt	\0
 1	technical	app/src/main/java/tv/own/owntv/core/subtitles/SubtitleCharset.kt	windows-1252
 1	technical	app/src/main/java/tv/own/owntv/core/subtitles/SubtitleController.kt	,
@@ -3209,7 +3211,6 @@
 2	empty	app/src/main/java/tv/own/owntv/features/shell/components/CategoryRail.kt	\0
 1	technical	app/src/main/java/tv/own/owntv/features/shell/components/CategoryRail.kt	__rail_search__
 1	empty	app/src/main/java/tv/own/owntv/features/shell/components/MediaDetailsScreen.kt	\0
-1	technical	app/src/main/java/tv/own/owntv/features/shell/components/MediaDetailsScreen.kt	,
 1	technical	app/src/main/java/tv/own/owntv/features/shell/components/MediaDetailsScreen.kt	·
 6	empty	app/src/main/java/tv/own/owntv/features/shell/components/SettingsScreen.kt	\0
 5	technical	app/src/main/java/tv/own/owntv/features/shell/components/SettingsScreen.kt	#

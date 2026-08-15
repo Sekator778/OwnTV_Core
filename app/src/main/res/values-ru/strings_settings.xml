@@ -95,8 +95,22 @@
     <string name="settings_metadata_tmdb_only_description">Предпочитать TMDB для каждого поля; использовать данные из плейлиста, только если в TMDB ничего нет.</string>
     <string name="settings_selected">Выбрано</string>
     <string name="settings_active_tmdb_source">Активный источник TMDB: <xliff:g id="tier">%1$s</xliff:g></string>
+    <string name="settings_metadata_allowance">Ваша дневная доля</string>
+    <string name="settings_metadata_allowance_row"><xliff:g id="window">%1$s</xliff:g>: осталось <xliff:g id="remaining">%2$d</xliff:g> из <xliff:g id="total">%3$d</xliff:g></string>
+    <string name="settings_metadata_window_minute">В минуту</string>
+    <string name="settings_metadata_window_hour">В час</string>
+    <string name="settings_metadata_window_day">Сегодня</string>
+    <plurals name="settings_metadata_allowance_left">
+        <item quantity="one">Сегодня остался <xliff:g id="remaining">%1$d</xliff:g> из <xliff:g id="total">%2$d</xliff:g> запрос</item>
+        <item quantity="few">Сегодня осталось <xliff:g id="remaining">%1$d</xliff:g> из <xliff:g id="total">%2$d</xliff:g> запроса</item>
+        <item quantity="many">Сегодня осталось <xliff:g id="remaining">%1$d</xliff:g> из <xliff:g id="total">%2$d</xliff:g> запросов</item>
+        <item quantity="other">Сегодня осталось <xliff:g id="remaining">%1$d</xliff:g> из <xliff:g id="total">%2$d</xliff:g> запроса</item>
+    </plurals>
+    <string name="settings_metadata_allowance_resets">Обновится в <xliff:g id="time">%1$s</xliff:g></string>
+    <string name="settings_metadata_fair_share">Встроенный сервис метаданных используется всеми пользователями OwnTV, поэтому каждое устройство получает собственную дневную долю. Если вы израсходуете свою долю, постеры и описания приостановятся до её обновления — информация из вашего собственного плейлиста продолжит работать как обычно. Собственный ключ API TMDB или сервер снимает это ограничение: он бесплатный, а у личного ключа практически нет лимита.</string>
+    <string name="settings_metadata_limit_reached">Дневная доля метаданных израсходована — добавьте собственный ключ TMDB в разделе «Настройки → Метаданные», чтобы снять это ограничение.</string>
     <string name="settings_metadata_language">Язык метаданных</string>
-    <string name="settings_metadata_language_description">Язык описаний, жанров и названий из TMDB. Поля, которые TMDB не перевёл, останутся на английском языке. При изменении этого параметра кэшированные сведения удаляются и загружаются заново.</string>
+    <string name="settings_metadata_language_description">Язык описаний, жанров и названий из TMDB. Поля, которые TMDB не перевёл, останутся на английском. Подробности кэшируются для каждого языка, поэтому переключение обратно происходит мгновенно.</string>
     <string name="settings_advanced_options">Дополнительные параметры</string>
     <string name="settings_advanced_metadata_description">Используйте собственный ключ API TMDB или самостоятельно размещённый сервер вместо общего сервера по умолчанию.</string>
     <string name="settings_metadata_server_description">Оставьте оба поля пустыми, чтобы использовать встроенный общий сервер без дополнительной настройки. Введите собственный ключ API TMDB для прямых запросов к TMDB или URL самостоятельно размещённого сервера, чтобы использовать собственный прокси или зеркало. URL имеет приоритет над ключом.</string>

@@ -95,8 +95,20 @@
     <string name="settings_metadata_tmdb_only_description">Her alanda TMDB bilgilerini tercih edin; yalnızca TMDB hiçbir bilgi sunmadığında oynatma listenize başvurun.</string>
     <string name="settings_selected">Seçili</string>
     <string name="settings_active_tmdb_source">Etkin TMDB kaynağı: <xliff:g id="tier">%1$s</xliff:g></string>
+    <string name="settings_metadata_allowance">Günlük payınız</string>
+    <string name="settings_metadata_allowance_row"><xliff:g id="window">%1$s</xliff:g>: <xliff:g id="total">%3$d</xliff:g> işlemden <xliff:g id="remaining">%2$d</xliff:g> tanesi kaldı</string>
+    <string name="settings_metadata_window_minute">Dakika başına</string>
+    <string name="settings_metadata_window_hour">Saat başına</string>
+    <string name="settings_metadata_window_day">Bugün</string>
+    <plurals name="settings_metadata_allowance_left">
+        <item quantity="one">Bugün <xliff:g id="total">%2$d</xliff:g> aramadan <xliff:g id="remaining">%1$d</xliff:g> tanesi kaldı</item>
+        <item quantity="other">Bugün <xliff:g id="total">%2$d</xliff:g> aramadan <xliff:g id="remaining">%1$d</xliff:g> tanesi kaldı</item>
+    </plurals>
+    <string name="settings_metadata_allowance_resets"><xliff:g id="time">%1$s</xliff:g> saatinde yenilenir</string>
+    <string name="settings_metadata_fair_share">Yerleşik meta veri hizmeti OwnTV kullanan herkes tarafından paylaşılır; bu nedenle her cihaz her gün kendi payını alır. Payınızı tüketirseniz posterler ve açıklamalar yenilenene kadar duraklar — kendi oynatma listenizdeki bilgiler normal şekilde çalışmaya devam eder. Kendi TMDB API anahtarınızı veya sunucunuzu eklemek bu sınırı kaldırır: ücretsizdir ve kişisel bir anahtarın neredeyse hiç sınırı yoktur.</string>
+    <string name="settings_metadata_limit_reached">Günlük meta veri payınız tükendi — bu sınırı kaldırmak için Ayarlar → Meta Veri bölümünden kendi TMDB anahtarınızı ekleyin.</string>
     <string name="settings_metadata_language">Meta veri dili</string>
-    <string name="settings_metadata_language_description">TMDB\'den alınan özetlerin, türlerin ve başlıkların dili. TMDB\'nin çevirmediği alanlar İngilizce kalır. Bu ayarın değiştirilmesi önbelleğe alınmış ayrıntıları temizler ve yeniden alınmalarını sağlar.</string>
+    <string name="settings_metadata_language_description">TMDB’den gelen konu, tür ve başlıkların dili. TMDB’nin çevirmediği alanlar İngilizce kalır. Ayrıntılar dile göre önbelleğe alınır, bu yüzden geri dönmek anlıktır.</string>
     <string name="settings_advanced_options">Gelişmiş seçenekler</string>
     <string name="settings_advanced_metadata_description">Paylaşılan varsayılan yerine kendi TMDB API anahtarınızı veya kendi barındırdığınız sunucuyu kullanın.</string>
     <string name="settings_metadata_server_description">Yerleşik paylaşımlı sunucuyu kullanmak için ikisini de boş bırakın (kurulum gerekmez). Doğrudan TMDB\'ye bağlanmak için kendi TMDB API anahtarınızı veya kendi proxy/yansınızı kullanmak için kendi barındırdığınız sunucunun URL\'sini girin. URL, anahtardan önceliklidir.</string>

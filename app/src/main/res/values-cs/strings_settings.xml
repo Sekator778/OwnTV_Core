@@ -95,8 +95,22 @@
     <string name="settings_metadata_tmdb_only_description">U všech polí upřednostnit TMDB; údaje z playlistu použít pouze v případě, že TMDB nic nenajde.</string>
     <string name="settings_selected">Vybrané</string>
     <string name="settings_active_tmdb_source">Aktivní zdroj TMDB: <xliff:g id="tier">%1$s</xliff:g></string>
+    <string name="settings_metadata_allowance">Váš denní podíl</string>
+    <string name="settings_metadata_allowance_row"><xliff:g id="window">%1$s</xliff:g>: zbývá <xliff:g id="remaining">%2$d</xliff:g> z <xliff:g id="total">%3$d</xliff:g></string>
+    <string name="settings_metadata_window_minute">Za minutu</string>
+    <string name="settings_metadata_window_hour">Za hodinu</string>
+    <string name="settings_metadata_window_day">Dnes</string>
+    <plurals name="settings_metadata_allowance_left">
+        <item quantity="one">Dnes zbývá <xliff:g id="remaining">%1$d</xliff:g> z <xliff:g id="total">%2$d</xliff:g> vyhledávání</item>
+        <item quantity="few">Dnes zbývají <xliff:g id="remaining">%1$d</xliff:g> z <xliff:g id="total">%2$d</xliff:g> vyhledávání</item>
+        <item quantity="many">Dnes zbývá <xliff:g id="remaining">%1$d</xliff:g> z <xliff:g id="total">%2$d</xliff:g> vyhledávání</item>
+        <item quantity="other">Dnes zbývá <xliff:g id="remaining">%1$d</xliff:g> z <xliff:g id="total">%2$d</xliff:g> vyhledávání</item>
+    </plurals>
+    <string name="settings_metadata_allowance_resets">Obnoví se v <xliff:g id="time">%1$s</xliff:g></string>
+    <string name="settings_metadata_fair_share">Vestavěnou službu metadat sdílejí všichni uživatelé OwnTV, takže každé zařízení dostává každý den vlastní podíl. Pokud svůj podíl vyčerpáte, plakáty a popisy se pozastaví, dokud se podíl neobnoví — informace z vaší vlastní playlistu fungují dál normálně. Přidání vlastního klíče API TMDB nebo serveru toto omezení odstraní: je zdarma a osobní klíč prakticky žádný limit nemá.</string>
+    <string name="settings_metadata_limit_reached">Denní podíl metadat je vyčerpán — přidejte v Nastavení → Metadata vlastní klíč TMDB a toto omezení zmizí.</string>
     <string name="settings_metadata_language">Jazyk metadat</string>
-    <string name="settings_metadata_language_description">Jazyk popisů děje, žánrů a názvů z TMDB. Pole, která TMDB nepřeložilo, zůstanou v angličtině. Při změně se vymažou podrobnosti z mezipaměti, aby se načetly znovu.</string>
+    <string name="settings_metadata_language_description">Jazyk popisů, žánrů a názvů z TMDB. Pole, která TMDB nepřeložilo, zůstanou anglicky. Podrobnosti se ukládají do mezipaměti pro každý jazyk, takže přepnutí zpět je okamžité.</string>
     <string name="settings_advanced_options">Pokročilé možnosti</string>
     <string name="settings_advanced_metadata_description">Používejte místo výchozího sdíleného nastavení vlastní klíč API TMDB nebo vlastní server.</string>
     <string name="settings_metadata_server_description">Chcete-li použít integrovaný sdílený server bez dalšího nastavení, ponechte obě pole prázdná. Chcete-li volat TMDB přímo, zadejte vlastní klíč API TMDB. Případně zadejte URL vlastního serveru a používejte vlastní proxy či zrcadlo. URL má přednost před klíčem.</string>

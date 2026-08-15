@@ -2,6 +2,7 @@ package tv.own.owntv.core.metadata
 
 import android.util.Log
 import org.json.JSONObject
+import tv.own.owntv.BuildConfig
 import tv.own.owntv.core.network.HttpClient
 import tv.own.owntv.features.settings.data.SettingsRepository
 import java.net.URLEncoder
@@ -17,13 +18,23 @@ import java.net.URLEncoder
 class TmdbProvider(
     private val http: HttpClient,
     private val settings: SettingsRepository,
+    private val clientId: OwnTVClientId,
+    private val budget: MetadataBudget,
 ) : MetadataProvider {
 
     /**
      * Resolved base URL + auth + content language for one call. [apiKey] is null for Worker / self-host
      * tiers; [language] is blank when the user hasn't chosen one (TMDB then defaults to en-US).
+     * [headers] carries the default Worker's identity headers and is empty on every other tier.
      */
-    private data class Endpoint(val baseUrl: String, val apiKey: String?, val language: String)
+    private data class Endpoint(
+        val baseUrl: String,
+        val apiKey: String?,
+        val language: String,
+        val headers: Map<String, String> = emptyMap(),
+        /** True only for the shared default Worker — the one tier whose usage is rationed. */
+        val metered: Boolean = false,
+    )
 
     /** Precedence per plan §4: self-host URL > user key > default Worker. */
     private suspend fun resolveEndpoint(): Endpoint {
@@ -32,8 +43,49 @@ class TmdbProvider(
         return when (cfg.tier) {
             MetadataConfig.Tier.SELF_HOST -> Endpoint(cfg.customServerUrl.trimEnd('/'), apiKey = null, language = lang)
             MetadataConfig.Tier.OWN_KEY -> Endpoint(TMDB_DIRECT_BASE, apiKey = cfg.tmdbApiKey.trim(), language = lang)
-            MetadataConfig.Tier.DEFAULT_WORKER -> Endpoint(DEFAULT_WORKER_BASE, apiKey = null, language = lang)
+            // Identity headers are sent on THIS TIER ONLY. A self-hoster's Worker has no such rule and a
+            // user calling TMDB with their own key must never carry the maintainer's shared secret.
+            MetadataConfig.Tier.DEFAULT_WORKER -> Endpoint(
+                baseUrl = defaultWorkerBase(),
+                apiKey = null,
+                language = lang,
+                headers = defaultWorkerHeaders(),
+                metered = true,
+            )
         }
+    }
+
+    /**
+     * Identity for the maintainer's Worker: the shared edge-rule secret plus an opaque per-install id.
+     * Empty when the build carries no key (fork CI, fresh clone) — that build talks to the unprotected
+     * legacy address instead, so sending a bare client id there would be pointless.
+     */
+    private suspend fun defaultWorkerHeaders(): Map<String, String> {
+        val key = BuildConfig.TMDB_EDGE_KEY
+        if (key.isBlank()) return emptyMap()
+        return mapOf(
+            "x-owntv-key" to key,
+            "x-owntv-client" to runCatching { clientId.get() }.getOrDefault(""),
+        )
+    }
+
+    /**
+     * Every TMDB call goes through here so the per-install allowance is impossible to bypass by adding
+     * a new endpoint later.
+     *
+     * Returns null both when the allowance is spent and when the request fails. That is deliberate:
+     * callers already treat null as a transport failure and skip negative-caching, so a refused call
+     * behaves exactly like being offline — provider data still shows, and nothing is poisoned for the
+     * next 7 days. Only the shared default Worker is metered; a user's own key or server is not.
+     */
+    private suspend fun fetch(ep: Endpoint, url: String, label: String): String? {
+        if (ep.metered && !budget.tryConsume()) {
+            Log.w(TAG, "metadata allowance spent, skipping $label")
+            return null
+        }
+        return runCatching { http.getText(url, headers = ep.headers) }
+            .onFailure { Log.w(TAG, "TMDB $label failed: ${it.message}") }
+            .getOrNull()
     }
 
     /** `&language=<code>`, or "" when no language is configured (TMDB falls back to en-US). */
@@ -55,9 +107,7 @@ class TmdbProvider(
         require(page > 0)
         val endpoint = resolveEndpoint()
         val url = buildTrendingUrl(endpoint.baseUrl, endpoint.apiKey, endpoint.language, type, page)
-        val body = runCatching { http.getText(url) }
-            .onFailure { Log.w(TAG, "TMDB Trending failed type=$type page=$page: ${it.message}") }
-            .getOrNull() ?: return null
+        val body = fetch(endpoint, url, "Trending type=$type page=$page") ?: return null
         return TmdbTrendingParser.parsePage(type, page, body).also {
             if (it == null) Log.w(TAG, "TMDB Trending parse failed type=$type page=$page")
         }
@@ -89,9 +139,7 @@ class TmdbProvider(
         }
         // Transport failure (network down, HTTP 429 rate limit, proxy/Worker error) → null, NOT empty:
         // an empty list means "TMDB said no results" and gets negative-cached for 7 days upstream.
-        val json = runCatching { http.getText(url) }
-            .onFailure { Log.w(TAG, "TMDB search failed type=$type: ${it.message}") }
-            .getOrNull() ?: return null
+        val json = fetch(ep, url, "search type=$type") ?: return null
 
         return parseResults(type, json)
     }
@@ -106,9 +154,7 @@ class TmdbProvider(
             append(ep.langParam())
             ep.apiKey?.takeIf { it.isNotBlank() }?.let { append("&api_key=").append(enc(it)) }
         }
-        val json = runCatching { http.getText(url) }
-            .onFailure { Log.w(TAG, "TMDB movie details failed id=$tmdbId: ${it.message}") }
-            .getOrNull() ?: return null
+        val json = fetch(ep, url, "movie details id=$tmdbId") ?: return null
         return runCatching { parseMovieDetails(json, ep.language.substringBefore('-')) }.getOrNull()
     }
 
@@ -122,9 +168,7 @@ class TmdbProvider(
             append(ep.langParam())
             ep.apiKey?.takeIf { it.isNotBlank() }?.let { append("&api_key=").append(enc(it)) }
         }
-        val json = runCatching { http.getText(url) }
-            .onFailure { Log.w(TAG, "TMDB tv details failed id=$tmdbId: ${it.message}") }
-            .getOrNull() ?: return null
+        val json = fetch(ep, url, "tv details id=$tmdbId") ?: return null
         return runCatching { parseTvDetails(json, ep.language.substringBefore('-')) }.getOrNull()
     }
 
@@ -142,9 +186,7 @@ class TmdbProvider(
             }
             if (params.isNotEmpty()) append("?").append(params.joinToString("&"))
         }
-        val json = runCatching { http.getText(url) }
-            .onFailure { Log.w(TAG, "TMDB episode details failed tv=$tvId s$season e$episode: ${it.message}") }
-            .getOrNull() ?: return null
+        val json = fetch(ep, url, "episode details tv=$tvId s${season}e$episode") ?: return null
         return runCatching {
             val o = JSONObject(json)
             if (o.optInt("id", 0) == 0) return@runCatching null
@@ -165,10 +207,7 @@ class TmdbProvider(
         val genres = o.optJSONArray("genres")?.let { arr ->
             (0 until arr.length()).mapNotNull { arr.optJSONObject(it)?.optString("name")?.takeIf { n -> n.isNotBlank() } }
         }.orEmpty()
-        val cast = o.optJSONObject("credits")?.optJSONArray("cast")?.let { arr ->
-            (0 until minOf(arr.length(), CAST_LIMIT))
-                .mapNotNull { arr.optJSONObject(it)?.optString("name")?.takeIf { n -> n.isNotBlank() } }
-        }.orEmpty()
+        val cast = parseCast(o)
         val imdb = o.optJSONObject("external_ids")?.optString("imdb_id")?.takeIf { it.isNotBlank() && it != "null" }
         return MovieDetails(
             tmdbId = id,
@@ -193,10 +232,7 @@ class TmdbProvider(
         val genres = o.optJSONArray("genres")?.let { arr ->
             (0 until arr.length()).mapNotNull { arr.optJSONObject(it)?.optString("name")?.takeIf { n -> n.isNotBlank() } }
         }.orEmpty()
-        val cast = o.optJSONObject("credits")?.optJSONArray("cast")?.let { arr ->
-            (0 until minOf(arr.length(), CAST_LIMIT))
-                .mapNotNull { arr.optJSONObject(it)?.optString("name")?.takeIf { n -> n.isNotBlank() } }
-        }.orEmpty()
+        val cast = parseCast(o)
         val imdb = o.optJSONObject("external_ids")?.optString("imdb_id")?.takeIf { it.isNotBlank() && it != "null" }
             ?: o.optString("imdb_id").takeIf { it.isNotBlank() && it != "null" }
         return MovieDetails(
@@ -238,6 +274,22 @@ class TmdbProvider(
             }
         }
         return officialTrailer ?: trailer ?: teaser
+    }
+
+    /**
+     * Top-billed cast with their profile photo paths. `credits` is already part of the details request,
+     * so the photo path costs nothing extra — it was previously parsed and dropped.
+     */
+    private fun parseCast(details: JSONObject): List<CastMember> {
+        val arr = details.optJSONObject("credits")?.optJSONArray("cast") ?: return emptyList()
+        val out = ArrayList<CastMember>(minOf(arr.length(), CAST_LIMIT))
+        for (i in 0 until minOf(arr.length(), CAST_LIMIT)) {
+            val c = arr.optJSONObject(i) ?: continue
+            val name = c.optString("name").takeIf { it.isNotBlank() } ?: continue
+            val path = c.optString("profile_path").takeIf { it.isNotBlank() && it != "null" }
+            out += CastMember(name, path)
+        }
+        return out
     }
 
     private data class LogoCandidate(val path: String, val languageRank: Int, val width: Int)
@@ -302,8 +354,19 @@ class TmdbProvider(
         const val TMDB_DIRECT_BASE = "https://api.themoviedb.org"
 
         /** Tier 0 default caching Worker (plan §0.5) — maintainer's key lives in the Worker secret,
-         *  never in the APK. The app never sends api_key on this tier; the Worker injects it. */
-        const val DEFAULT_WORKER_BASE = "https://owntv-tmdb-meta.xiannero.workers.dev"
+         *  never in the APK. The app never sends api_key on this tier; the Worker injects it.
+         *
+         *  Behind a Cloudflare edge rule that refuses anything without the right `x-owntv-key`, so only
+         *  a build that carries the key can use it. */
+        const val DEFAULT_WORKER_BASE = "https://tmdb.owntv.me"
+
+        /** The original, unprotected address. Kept as the fallback for builds with no edge key — fork CI
+         *  and fresh clones have no secret and would otherwise get a 403 for every lookup. */
+        const val LEGACY_WORKER_BASE = "https://owntv-tmdb-meta.xiannero.workers.dev"
+
+        /** Protected base when this build carries the edge key, the open legacy one when it does not. */
+        fun defaultWorkerBase(): String =
+            if (BuildConfig.TMDB_EDGE_KEY.isBlank()) LEGACY_WORKER_BASE else DEFAULT_WORKER_BASE
 
         /** TMDB image CDN — poster/backdrop paths render straight from here, no key. */
         const val IMAGE_BASE = "https://image.tmdb.org/t/p"

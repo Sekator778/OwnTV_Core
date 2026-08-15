@@ -194,10 +194,31 @@
     <string name="settings_selected">Selected</string>
     <!-- Translators: Status display showing the active TMDB tier. 'tier' is one of the tier option labels. -->
     <string name="settings_active_tmdb_source">Active TMDB source: <xliff:g id="tier">%1$s</xliff:g></string>
+    <!-- Translators: Label for the shared metadata service's remaining daily allowance. -->
+    <string name="settings_metadata_allowance">Your daily share</string>
+    <!-- Translators: Row showing remaining metadata lookups for one time window. "window" is Per minute/Per hour/Today; "remaining" is the count left; "total" is the allowance. -->
+    <string name="settings_metadata_allowance_row"><xliff:g id="window">%1$s</xliff:g>: <xliff:g id="remaining">%2$d</xliff:g> of <xliff:g id="total">%3$d</xliff:g></string>
+    <!-- Translators: Time-window label in the metadata allowance list. -->
+    <string name="settings_metadata_window_minute">Per minute</string>
+    <!-- Translators: Time-window label in the metadata allowance list. -->
+    <string name="settings_metadata_window_hour">Per hour</string>
+    <!-- Translators: Time-window label in the metadata allowance list, meaning the current day. -->
+    <string name="settings_metadata_window_day">Today</string>
+    <!-- Translators: Plural showing how many metadata lookups are left today. "remaining" is the count left; "total" is the daily allowance. -->
+    <plurals name="settings_metadata_allowance_left">
+        <item quantity="one"><xliff:g id="remaining">%1$d</xliff:g> of <xliff:g id="total">%2$d</xliff:g> lookup left today</item>
+        <item quantity="other"><xliff:g id="remaining">%1$d</xliff:g> of <xliff:g id="total">%2$d</xliff:g> lookups left today</item>
+    </plurals>
+    <!-- Translators: Shows the clock time when the daily metadata allowance refills. 'time' is a local time like 14:32. -->
+    <string name="settings_metadata_allowance_resets">Refills at <xliff:g id="time">%1$s</xliff:g></string>
+    <!-- Translators: Explains why the shared metadata service has a per-device limit. -->
+    <string name="settings_metadata_fair_share">The built-in metadata service is shared by everyone using OwnTV, so each device gets its own share of it each day. If you use up your share, posters and descriptions pause until it refills — the info from your own playlist keeps working as normal. Adding your own TMDB API key or server removes the limit: it is free, and a personal key has practically no limit.</string>
+    <!-- Translators: Shown once per app start when the device's daily metadata share is used up. -->
+    <string name="settings_metadata_limit_reached">Daily metadata share used up — add your own TMDB key in Settings → Metadata to remove this limit.</string>
     <!-- Translators: Setting label for the metadata language. -->
     <string name="settings_metadata_language">Metadata language</string>
     <!-- Translators: Description of the metadata language setting. 'TMDB' is a brand name. -->
-    <string name="settings_metadata_language_description">Language for plots, genres &amp; titles from TMDB. Fields TMDB hasn\'t translated stay in English. Changing this clears the cached details so they refetch.</string>
+    <string name="settings_metadata_language_description">Language for plots, genres &amp; titles from TMDB. Fields TMDB hasn\'t translated stay in English. Details are cached per language, so switching back is instant.</string>
     <!-- Translators: Collapsible section header for advanced TMDB settings. -->
     <string name="settings_advanced_options">Advanced options</string>
     <!-- Translators: Description of the advanced metadata options. -->
