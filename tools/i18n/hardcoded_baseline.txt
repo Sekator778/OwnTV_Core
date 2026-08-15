@@ -8,6 +8,8 @@
 3	app/src/main/java/tv/own/owntv/core/backup/BackupManager.kt	ctx
 2	app/src/main/java/tv/own/owntv/core/backup/BackupManager.kt	member
 1	app/src/main/java/tv/own/owntv/core/backup/BackupManager.kt	movedFrom
+4	app/src/main/java/tv/own/owntv/core/backup/BackupManager.kt	opensub_api_key_enc
+1	app/src/main/java/tv/own/owntv/core/backup/BackupManager.kt	settings
 1	app/src/main/java/tv/own/owntv/core/backup/BackupManager.kt	sort
 3	app/src/main/java/tv/own/owntv/core/backup/UserDataResolver.kt	ctx
 2	app/src/main/java/tv/own/owntv/core/backup/UserDataResolver.kt	kind
@@ -22,11 +24,20 @@
 1	app/src/main/java/tv/own/owntv/core/catalog/ProviderCatalogMetadata.kt	2.0 Audio
 1	app/src/main/java/tv/own/owntv/core/catalog/ProviderCatalogMetadata.kt	5.1 Audio
 1	app/src/main/java/tv/own/owntv/core/catalog/ProviderCatalogMetadata.kt	7.1 Audio
+1	app/src/main/java/tv/own/owntv/core/companion/CompanionHtml.kt	%1$d
 1	app/src/main/java/tv/own/owntv/core/companion/CompanionHtml.kt	<div class="card"> <h1>${c.tmdbHeading.h()}</h1> <p>${c.tmdbDescription.h()}</p> <p><a href="https://www.themoviedb.org/settings/api" target="_blank" rel="noopener">${c.tmdbGetKey.h()}</a></p> <form id="f" onsubmit="return false"> <label>${c.tmdbKeyLabel.h()} <input id="key" type="text" autocomplete="off" autocapitalize="off" spellcheck="false" required></label> <button class="go" id="send" type="submit">${c.sendToTv.h()}</button> </form> <p id="status" class="hint"></p> </div> <script> var k=document.getElementById('key'), b=document.getElementById('send'), s=document.getElementById('status'); document.getElementById('f').addEventListener('submit',function(){ var v=(k.value||'').trim(); // Mirror of the server-side check, purely so a typo is caught before a round trip. if(!/^[A-Za-z0-9._-]{16,128}$/.test(v)){s.textContent=${c.tmdbInvalid.js()};return false;} b.disabled=true; s.textContent=${c.sending.js()}; fetch('/tmdbkey?pin=$pin',{method:'POST',headers:{'Content-Type':'text/plain'},body:v}) .then(function(res){ if(res.ok){document.open();res.text().then(function(t){document.write(t);document.close();});} else{b.disabled=false;s.textContent=${c.uploadFailed.js()}.replace('__STATUS__',String(res.status));} }) .catch(function(){b.disabled=false;s.textContent=${c.couldNotReach.js()};}); return false; }); </script>
+1	app/src/main/java/tv/own/owntv/core/companion/CompanionHtml.kt	<div class="card"> <h1>${title.h()}</h1><p>${description.h()}</p> <form id="f" onsubmit="return false"> <label>${keyLabel.h()} <input id="key" type="text" autocomplete="off" autocapitalize="off" spellcheck="false"></label> <label>${urlLabel.h()} <input id="url" type="url" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="https://"></label> <button class="go" id="send" type="submit">${send.h()}</button> </form><p id="status" class="hint"></p> </div> <script> var k=document.getElementById('key'),u=document.getElementById('url'),b=document.getElementById('send'),s=document.getElementById('status'); document.getElementById('f').addEventListener('submit',function(){ var body=new URLSearchParams({apiKey:(k.value||'').trim(),serverUrl:(u.value||'').trim()}).toString(); b.disabled=true;s.textContent=${sending.js()}; fetch('/serviceconfig?pin=$pin',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:body}) .then(function(res){if(res.ok){return res.text().then(function(t){document.open();document.write(t);document.close();});}b.disabled=false;s.textContent=${failed.js()}.replace('__STATUS__',String(res.status));}) .catch(function(){b.disabled=false;s.textContent=${unreachable.js()};});return false; }); </script>
 1	app/src/main/java/tv/own/owntv/core/companion/CompanionHtml.kt	<div class="card"><h1>${c.savedHeading.h()}</h1> <p>${c.tmdbSentBody.h()}</p><p><a href="/?pin=$pin">${c.tmdbSentLink.h()}</a></p> </div>
+1	app/src/main/java/tv/own/owntv/core/companion/CompanionHtml.kt	<div class="card"><h1>${c.savedHeading.h()}</h1> <p>${context.getString(R.string.companion_service_config_sent).h()}</p> <p><a href="/?pin=$pin">${context.getString(R.string.companion_service_config_again).h()}</a></p> </div>
+1	app/src/main/java/tv/own/owntv/core/companion/CompanionHtml.kt	__STATUS__
+1	app/src/main/java/tv/own/owntv/core/companion/CompanionHttpServer.kt	/serviceconfig
 1	app/src/main/java/tv/own/owntv/core/companion/CompanionHttpServer.kt	/tmdbkey
-1	app/src/main/java/tv/own/owntv/core/companion/CompanionHttpServer.kt	POST
-1	app/src/main/java/tv/own/owntv/core/companion/CompanionHttpServer.kt	x-companion-pin
+2	app/src/main/java/tv/own/owntv/core/companion/CompanionHttpServer.kt	POST
+1	app/src/main/java/tv/own/owntv/core/companion/CompanionHttpServer.kt	^[A-Za-z0-9._-]{8,256}$
+1	app/src/main/java/tv/own/owntv/core/companion/CompanionHttpServer.kt	apiKey
+1	app/src/main/java/tv/own/owntv/core/companion/CompanionHttpServer.kt	https
+1	app/src/main/java/tv/own/owntv/core/companion/CompanionHttpServer.kt	serverUrl
+2	app/src/main/java/tv/own/owntv/core/companion/CompanionHttpServer.kt	x-companion-pin
 1	app/src/main/java/tv/own/owntv/core/customize/CustomizationStore.kt	${CustomizeKeys.CUSTOM_PREFIX}${UUID.randomUUID()}
 1	app/src/main/java/tv/own/owntv/core/customize/CustomizationStore.kt	custom:
 2	app/src/main/java/tv/own/owntv/core/customize/CustomizationStore.kt	customCats
@@ -218,7 +229,10 @@
 1	app/src/main/java/tv/own/owntv/features/settings/DnsSettingsScreen.kt	${cfg.host}$p
 1	app/src/main/java/tv/own/owntv/features/settings/DnsSettingsScreen.kt	:${cfg.port}
 2	app/src/main/java/tv/own/owntv/features/settings/DnsSettingsScreen.kt	https://
-5	app/src/main/java/tv/own/owntv/features/settings/MetadataSettingsScreen.kt	\0
+4	app/src/main/java/tv/own/owntv/features/settings/MetadataSettingsScreen.kt	\0
+1	app/src/main/java/tv/own/owntv/features/settings/MetadataSettingsScreen.kt	https://your-worker.example.workers.dev
+4	app/src/main/java/tv/own/owntv/features/settings/OpenSubtitlesAccountScreen.kt	\0
+2	app/src/main/java/tv/own/owntv/features/settings/SettingsViewModel.kt	\0
 1	app/src/main/java/tv/own/owntv/features/settings/SettingsViewModel.kt	UnknownHostException
 1	app/src/main/java/tv/own/owntv/features/settings/SettingsViewModel.kt	dns.google
 1	app/src/main/java/tv/own/owntv/features/settings/SettingsViewModel.kt	refused
@@ -233,7 +247,7 @@
 1	app/src/main/java/tv/own/owntv/features/settings/VideoPlayerSettingsScreen.kt	+
 1	app/src/main/java/tv/own/owntv/features/settings/VideoPlayerSettingsScreen.kt	FFFFFF
 1	app/src/main/java/tv/own/owntv/features/settings/VideoPlayerSettingsScreen.kt	–
-2	app/src/main/java/tv/own/owntv/features/settings/data/SettingsRepository.kt	\0
+6	app/src/main/java/tv/own/owntv/features/settings/data/SettingsRepository.kt	\0
 1	app/src/main/java/tv/own/owntv/features/settings/data/SettingsRepository.kt	auto_frame_rate_reset_416
 1	app/src/main/java/tv/own/owntv/features/settings/data/SettingsRepository.kt	dns_doh_url
 1	app/src/main/java/tv/own/owntv/features/settings/data/SettingsRepository.kt	dns_enabled

@@ -147,8 +147,10 @@ class BackupManager(
                     val proxyPass = settings.currentProxyPassword()
                     if (seal != null && proxyPass.isNotEmpty()) s.put("proxy_pass_enc", seal(proxyPass))
                     // The user's own TMDB API key: same secret policy — encrypted with a passphrase, else omitted.
-                    val tmdbKey = settings.currentTmdbApiKey()
-                    if (seal != null && tmdbKey.isNotEmpty()) s.put("tmdb_key_enc", seal(tmdbKey))
+            val tmdbKey = settings.currentTmdbApiKey()
+            if (seal != null && tmdbKey.isNotEmpty()) s.put("tmdb_key_enc", seal(tmdbKey))
+            val openSubtitlesKey = settings.currentOpenSubtitlesApiKey()
+            if (seal != null && openSubtitlesKey.isNotEmpty()) s.put("opensub_api_key_enc", seal(openSubtitlesKey))
                     put("settings", s)
                     // Per-item "compatibility mode" engine pins (Live + VOD). Keyed by stream URL, so no
                     // id remapping needed on restore. Optional block — older readers just ignore it.
@@ -599,9 +601,12 @@ class BackupManager(
                     if (s.has("proxy_pass_enc")) {
                         unseal(s.opt("proxy_pass_enc"))?.let { settings.setProxyPassword(it) }
                     }
-                    if (s.has("tmdb_key_enc")) {
-                        unseal(s.opt("tmdb_key_enc"))?.let { settings.setTmdbApiKey(it) }
-                    }
+            if (s.has("tmdb_key_enc")) {
+                unseal(s.opt("tmdb_key_enc"))?.let { settings.setTmdbApiKey(it) }
+            }
+            if (s.has("opensub_api_key_enc")) {
+                unseal(s.opt("opensub_api_key_enc"))?.let { settings.setOpenSubtitlesApiKey(it) }
+            }
                     count += s.length()
                 }
                 // After importSettings, because that is what wrote the file's (device-local) bg path.
@@ -692,6 +697,7 @@ class BackupManager(
         }
         root.optJSONObject("settings")?.opt("proxy_pass_enc")?.let { if (BackupCrypto.isEncrypted(it)) return it as JSONObject }
         root.optJSONObject("settings")?.opt("tmdb_key_enc")?.let { if (BackupCrypto.isEncrypted(it)) return it as JSONObject }
+        root.optJSONObject("settings")?.opt("opensub_api_key_enc")?.let { if (BackupCrypto.isEncrypted(it)) return it as JSONObject }
         // A per-profile OpenSubtitles login is encrypted too — probe it so an all-OpenSubtitles backup validates.
         root.optJSONArray("openSubtitles")?.let { arr ->
             for (i in 0 until arr.length()) {

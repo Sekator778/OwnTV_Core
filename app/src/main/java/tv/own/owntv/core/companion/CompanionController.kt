@@ -55,6 +55,10 @@ class CompanionController(context: Context, localeStore: LocaleStore) {
     /** TMDB API keys handed over from a phone in [startForTmdbKey] mode. */
     private val _tmdbKeys = MutableSharedFlow<String>(extraBufferCapacity = 4)
     val tmdbKeys: SharedFlow<String> = _tmdbKeys.asSharedFlow()
+    private val _tmdbConfigs = MutableSharedFlow<CompanionServiceConfig>(extraBufferCapacity = 4)
+    val tmdbConfigs: SharedFlow<CompanionServiceConfig> = _tmdbConfigs.asSharedFlow()
+    private val _openSubtitlesConfigs = MutableSharedFlow<CompanionServiceConfig>(extraBufferCapacity = 4)
+    val openSubtitlesConfigs: SharedFlow<CompanionServiceConfig> = _openSubtitlesConfigs.asSharedFlow()
 
     /** A fresh 6-digit PIN per [start], so a leaked code is short-lived. */
     @Volatile private var currentPin: String = ""
@@ -84,6 +88,8 @@ class CompanionController(context: Context, localeStore: LocaleStore) {
 
     /** Starts the companion server in TMDB-key mode: the phone sends an API key, emitted on [tmdbKeys]. */
     fun startForTmdbKey(port: Int) = startInternal(port, CompanionMode.TMDB_KEY)
+    fun startForTmdbConfig(port: Int) = startInternal(port, CompanionMode.TMDB_CONFIG)
+    fun startForOpenSubtitlesConfig(port: Int) = startInternal(port, CompanionMode.OPEN_SUBTITLES_CONFIG)
 
     private fun startInternal(port: Int, mode: CompanionMode, downloadFile: File? = null) {
         if (port !in 1..65535) {
@@ -108,6 +114,13 @@ class CompanionController(context: Context, localeStore: LocaleStore) {
                 onImage = ::onImageUploaded,
                 // Never logged, at any level: it is the user's own credential.
                 onTmdbKey = { key -> _tmdbKeys.tryEmit(key) },
+                onServiceConfig = { config ->
+                    when (mode) {
+                        CompanionMode.TMDB_CONFIG -> _tmdbConfigs.tryEmit(config)
+                        CompanionMode.OPEN_SUBTITLES_CONFIG -> _openSubtitlesConfigs.tryEmit(config)
+                        else -> Unit
+                    }
+                },
                 downloadFile = downloadFile,
                 onLocked = {
                     // The server has already stopped itself; just reflect it on the TV so the user

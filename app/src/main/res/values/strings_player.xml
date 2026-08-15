@@ -389,6 +389,7 @@
     <string name="player_subtitles_search">Search</string>
     <!-- Translators: Label in the OpenSubtitles account screen showing the connected username. -->
     <string name="player_subtitles_connected_as">Connected as</string>
+    <string name="player_subtitles_connected_user">Connected as <xliff:g id="username">%1$s</xliff:g></string>
     <!-- Translators: Label in the OpenSubtitles account screen for the session reset time. -->
     <string name="player_subtitles_resets">Resets</string>
     <!-- Translators: Account level badge for free OpenSubtitles accounts. -->

@@ -10,4 +10,6 @@ package tv.own.owntv.core.companion
  *
  * One server, one PIN gate; the mode only changes which page is served and which endpoint is accepted.
  */
-enum class CompanionMode { ADD_SOURCE, BACKUP_RESTORE, BACKUP_DOWNLOAD, IMAGE_UPLOAD, TMDB_KEY }
+enum class CompanionMode { ADD_SOURCE, BACKUP_RESTORE, BACKUP_DOWNLOAD, IMAGE_UPLOAD, TMDB_KEY, TMDB_CONFIG, OPEN_SUBTITLES_CONFIG }
+
+data class CompanionServiceConfig(val apiKey: String, val serverUrl: String)

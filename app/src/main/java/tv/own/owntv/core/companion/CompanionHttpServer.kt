@@ -82,6 +82,7 @@ class CompanionHttpServer(
     @Volatile private var onBackup: (String) -> Unit = {}
     @Volatile private var onImage: (bytes: ByteArray, extension: String) -> Unit = { _, _ -> }
     @Volatile private var onTmdbKey: (String) -> Unit = {}
+    @Volatile private var onServiceConfig: (CompanionServiceConfig) -> Unit = {}
 
     /** The backup file served at `/backup.json` in [CompanionMode.BACKUP_DOWNLOAD] mode. */
     @Volatile private var downloadFile: File? = null
@@ -102,6 +103,7 @@ class CompanionHttpServer(
         onBackup: (String) -> Unit = {},
         onImage: (bytes: ByteArray, extension: String) -> Unit = { _, _ -> },
         onTmdbKey: (String) -> Unit = {},
+        onServiceConfig: (CompanionServiceConfig) -> Unit = {},
         downloadFile: File? = null,
         onLocked: () -> Unit = {},
     ): List<String> {
@@ -115,6 +117,7 @@ class CompanionHttpServer(
         this.onBackup = onBackup
         this.onImage = onImage
         this.onTmdbKey = onTmdbKey
+        this.onServiceConfig = onServiceConfig
         this.downloadFile = downloadFile
         val socket = ServerSocket()
         socket.reuseAddress = true
@@ -289,6 +292,21 @@ class CompanionHttpServer(
                 return sendHtml(socket, 200, CompanionHtml.tmdbKeySentPage(pageContext, pin))
             }
 
+            if (method == "POST" && path == "/serviceconfig") {
+                val headerPin = headers["x-companion-pin"].orEmpty()
+                if (!requirePin(queryPin.ifBlank { headerPin })) return sendText(socket, 401, localized(R.string.companion_error_unauthorized))
+                val body = CompanionHttpProtocol.readBody(input, headers, CompanionHttpProtocol.maxBodyBytes(path))
+                    ?: return sendText(socket, 413, localized(R.string.companion_error_body_too_large))
+                val fields = CompanionHttpProtocol.parseQuery(body)
+                val key = fields["apiKey"].orEmpty().trim()
+                val url = fields["serverUrl"].orEmpty().trim()
+                if (key.isBlank() && url.isBlank()) return sendText(socket, 400, localized(R.string.companion_service_config_empty))
+                if (key.isNotBlank() && !Regex("^[A-Za-z0-9._-]{8,256}$").matches(key)) return sendText(socket, 400, localized(R.string.companion_service_config_invalid_key))
+                if (url.isNotBlank() && runCatching { java.net.URI(url).let { it.scheme == "https" && !it.host.isNullOrBlank() } }.getOrDefault(false).not()) return sendText(socket, 400, localized(R.string.companion_service_config_invalid_url))
+                onServiceConfig(CompanionServiceConfig(key, url))
+                return sendHtml(socket, 200, CompanionHtml.serviceConfigSentPage(pageContext, pin))
+            }
+
             // Source submissions — PIN required (query or header), else 401.
             if (method == "POST" && (path == "/xtream" || path == "/m3u" || path == "/stalker")) {
                 val headerPin = headers["x-companion-pin"].orEmpty()
@@ -355,6 +373,8 @@ class CompanionHttpServer(
         CompanionMode.BACKUP_DOWNLOAD -> CompanionHtml.backupDownloadPage(context, pin)
         CompanionMode.IMAGE_UPLOAD -> CompanionHtml.imageUploadPage(context, pin)
         CompanionMode.TMDB_KEY -> CompanionHtml.tmdbKeyPage(context, pin)
+        CompanionMode.TMDB_CONFIG -> CompanionHtml.serviceConfigPage(context, pin, openSubtitles = false)
+        CompanionMode.OPEN_SUBTITLES_CONFIG -> CompanionHtml.serviceConfigPage(context, pin, openSubtitles = true)
     }
 
     /**

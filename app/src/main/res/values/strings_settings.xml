@@ -194,7 +194,31 @@
     <!-- Translators: Status label for the currently selected option. This is a state, not a command. -->
     <string name="settings_selected">Selected</string>
     <!-- Translators: Label for the shared metadata service's remaining daily allowance. -->
-    <string name="settings_metadata_allowance">Your daily share</string>
+    <string name="settings_metadata_allowance">Your shared allowance</string>
+    <string name="settings_metadata_reset_automatic">Resets automatically</string>
+    <string name="settings_metadata_library_details">Library details</string>
+    <string name="settings_metadata_test_connection">Test current connection</string>
+    <string name="settings_allowance_available">Available</string>
+    <string name="settings_allowance_refills">Refills <xliff:g id="time">%1$s</xliff:g></string>
+    <string name="settings_allowance_minute">Minute</string>
+    <string name="settings_allowance_hour">Hour</string>
+    <string name="settings_allowance_day">Day</string>
+    <plurals name="settings_allowance_value">
+        <item quantity="one"><xliff:g id="remaining">%1$d</xliff:g> / <xliff:g id="limit">%2$d</xliff:g> left</item>
+        <item quantity="other"><xliff:g id="remaining">%1$d</xliff:g> / <xliff:g id="limit">%2$d</xliff:g> left</item>
+    </plurals>
+    <string name="settings_metadata_active_source">Active source</string>
+    <string name="settings_metadata_shared_worker_description">OwnTV Worker · no setup</string>
+    <string name="settings_metadata_connection">Connection</string>
+    <string name="settings_metadata_remote_advanced">Get advanced TMDB info via remote</string>
+    <string name="settings_metadata_remote_advanced_description">Use your own TMDB API key or self-hosted Worker instead of the shared default.</string>
+    <string name="settings_open_subtitles_advanced">Advanced OpenSubtitles access via remote</string>
+    <string name="settings_open_subtitles_advanced_description">Use your own application API key or self-hosted OpenSubtitles Worker.</string>
+    <string name="settings_open_subtitles_api_key">OpenSubtitles application API key</string>
+    <string name="settings_worker_server_url">Worker / server URL</string>
+    <string name="settings_shared">Shared</string>
+    <string name="settings_open_subtitles_access_priority">Leave both blank for OwnTV’s shared Worker. A custom Worker URL takes priority over a direct API key. Account sessions remain profile-specific.</string>
+    <string name="settings_remove_custom_access">Remove custom access</string>
     <!-- Translators: InfoRow label for which TMDB source is in use. -->
     <!-- Translators: InfoRow label for how much of the daily share has been used. -->
     <string name="settings_metadata_usage_label">Usage</string>
@@ -214,7 +238,7 @@
     <!-- Translators: Body of that dialog. Explains the saved key and server address are deleted. -->
     <string name="settings_metadata_clear_advanced_message">Your TMDB API key and self-hosted server address will be deleted from this device, and OwnTV will go back to the built-in shared service with its daily share.</string>
     <!-- Translators: Explains why the shared metadata service has a per-device limit. -->
-    <string name="settings_metadata_fair_share">The built-in metadata service is shared by everyone using OwnTV, so each device gets its own share of it each day. If you use up your share, posters and descriptions pause until it refills — the info from your own playlist keeps working as normal. Adding your own TMDB API key or server removes the limit: it is free, and a personal key has practically no limit.</string>
+    <string name="settings_metadata_fair_share">The built-in service is shared by everyone using OwnTV. If any minute, hourly or daily allowance is used up, TMDB details pause until that window resets; playlist information keeps working. Your own key or Worker removes this allowance.</string>
     <!-- Translators: Shown once per app start when the device's daily metadata share is used up. -->
     <string name="settings_metadata_limit_reached">Daily metadata share used up — add your own TMDB key in Settings → Metadata to remove this limit.</string>
     <!-- Translators: Setting label for the metadata language. -->
@@ -266,7 +290,7 @@
     <!-- Translators: Metadata source option: prefer TMDB for all metadata. -->
     <string name="settings_metadata_tmdb_only">TMDB only</string>
     <!-- Translators: TMDB tier option: the built-in shared API key. -->
-    <string name="settings_tier_default">Default (shared)</string>
+    <string name="settings_tier_default">Default shared service</string>
     <!-- Translators: TMDB tier option: user's own TMDB API key. -->
     <string name="settings_tier_key">Your TMDB key</string>
     <!-- Translators: TMDB tier option: user's self-hosted TMDB proxy. -->
@@ -338,7 +362,7 @@
     <!-- Translators: Description of the Home screen settings. -->
     <string name="settings_home_root_description">Choose, reorder &amp; filter the rows on Home</string>
     <!-- Translators: Description of the Metadata (TMDB) settings group. -->
-    <string name="settings_metadata_root_description">Posters, plots, cast &amp; ratings for Movies and Series</string>
+    <string name="settings_metadata_root_description">Posters, plots, cast, genres, ratings and backdrops for Movies and Series.</string>
     <!-- Translators: Settings navigation label for the download folder setting. -->
     <string name="settings_download_folder">Download folder</string>
     <!-- Translators: Settings navigation label for app storage information. -->
@@ -816,6 +840,8 @@
     <string name="settings_preferred_language_description">Auto-select this subtitle track when available.</string>
     <!-- Translators: Settings heading/row and external subtitle-source label. 'OpenSubtitles' is a brand name. -->
     <string name="settings_open_subtitles">OpenSubtitles</string>
+    <string name="settings_open_subtitles_connected">Connected</string>
+    <string name="settings_open_subtitles_reset_in">In <xliff:g id="hours">%1$d</xliff:g>h <xliff:g id="minutes">%2$d</xliff:g>m</string>
     <!-- Translators: Description of the OpenSubtitles setting. 'opensubtitles.com' is a website. -->
     <string name="settings_open_subtitles_description">Sign in to search and download subtitles, and manage downloaded subtitles. Per profile; a free opensubtitles.com account is required.</string>
     <!-- Translators: Section header for audio settings. -->

@@ -111,7 +111,7 @@ val dataModule = module {
     single { tv.own.owntv.core.metadata.MetadataOverrideStore(androidContext()) }
     // OpenSubtitles (subtitle plan Phase 1): Worker-proxied REST client + Keystore-sealed
     // per-profile sessions + the sign-in/out orchestrator with one-shot silent re-login.
-    single { tv.own.owntv.core.subtitles.OpenSubtitlesClient(get(), get()) }
+    single { tv.own.owntv.core.subtitles.OpenSubtitlesClient(get(), get(), get()) }
     single { tv.own.owntv.core.subtitles.OpenSubtitlesAuthStore(androidContext()) }
     single { tv.own.owntv.core.subtitles.OpenSubtitlesAccountManager(get(), get()) }
     // context, client, accountManager, okHttpClient, subtitleDao — search/download/cache orchestration

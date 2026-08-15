@@ -359,6 +359,11 @@
     <string name="companion_tmdb_sent_body">Your TMDB key is now on the TV. Press Save there to start using it.</string>
     <!-- Translators: Link back to the form to send another key. -->
     <string name="companion_tmdb_sent_link">Send a different key</string>
+    <string name="companion_service_config_empty">Enter an API key, a Worker URL, or both.</string>
+    <string name="companion_service_config_invalid_key">That API key does not look valid.</string>
+    <string name="companion_service_config_invalid_url">Enter a valid HTTPS Worker URL.</string>
+    <string name="companion_service_config_sent">The connection details are now waiting on your TV. Review and save them there.</string>
+    <string name="companion_service_config_again">Send different connection details</string>
     <string name="companion_add_page_title">OwnTV \u2014 Add source</string>
     <!-- Translators: Heading on the companion add-source page. -->
     <string name="companion_add_heading">Add a source</string>

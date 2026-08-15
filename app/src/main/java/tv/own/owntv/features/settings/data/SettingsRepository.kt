@@ -245,6 +245,8 @@ class SettingsRepository(private val context: Context, private val localeStore: 
         val METADATA_MODE = stringPreferencesKey("metadata_mode")
         val TMDB_API_KEY = stringPreferencesKey("tmdb_api_key")
         val METADATA_SERVER_URL = stringPreferencesKey("metadata_server_url")
+        val OPEN_SUBTITLES_API_KEY = stringPreferencesKey("open_subtitles_api_key")
+        val OPEN_SUBTITLES_SERVER_URL = stringPreferencesKey("open_subtitles_server_url")
         // TMDB content language (ISO 639-1, optionally with region — e.g. "el", "pt-BR"). Blank = the
         // TMDB default (en-US), which is what every install used before this setting existed, so leaving
         // it blank keeps existing users' metadata exactly as it was. "auto" = follow the device locale.
@@ -531,6 +533,15 @@ class SettingsRepository(private val context: Context, private val localeStore: 
     suspend fun setMetadataServerUrl(url: String) {
         context.dataStore.edit { it[Keys.METADATA_SERVER_URL] = url.trim() }
     }
+
+    val openSubtitlesApiKey: Flow<String> = prefsFlow { it[Keys.OPEN_SUBTITLES_API_KEY] ?: "" }
+    suspend fun setOpenSubtitlesApiKey(key: String) { context.dataStore.edit { it[Keys.OPEN_SUBTITLES_API_KEY] = key.trim() } }
+
+    val openSubtitlesServerUrl: Flow<String> = prefsFlow { it[Keys.OPEN_SUBTITLES_SERVER_URL] ?: "" }
+    suspend fun setOpenSubtitlesServerUrl(url: String) { context.dataStore.edit { it[Keys.OPEN_SUBTITLES_SERVER_URL] = url.trim() } }
+
+    suspend fun currentOpenSubtitlesApiKey(): String = context.dataStore.data.first()[Keys.OPEN_SUBTITLES_API_KEY] ?: ""
+    suspend fun currentOpenSubtitlesServerUrl(): String = context.dataStore.data.first()[Keys.OPEN_SUBTITLES_SERVER_URL] ?: ""
 
     /**
      * TMDB content language. Blank = TMDB's own default (en-US) — the pre-existing behaviour, so an
@@ -1592,6 +1603,7 @@ class SettingsRepository(private val context: Context, private val localeStore: 
         // TMDB metadata: source mode + self-host URL. The user's own TMDB API key (Keys.TMDB_API_KEY) is a
         // secret and is deliberately NOT backed up in plaintext (same policy as the proxy password).
         Keys.METADATA_SERVER_URL, Keys.METADATA_MODE, Keys.METADATA_LANGUAGE,
+        Keys.OPEN_SUBTITLES_SERVER_URL,
         // Download folder. Backed up so a same-device reinstall keeps the chosen folder; on a different
         // device a path that no longer exists is harmless — StorageAccess.resolveRoot falls back to app
         // storage, so a stale restore never breaks downloads.

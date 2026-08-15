@@ -410,6 +410,47 @@ internal object CompanionHtml {
         """.trimIndent())
     }
 
+    fun serviceConfigPage(context: Context, pin: String, openSubtitles: Boolean): String {
+        val title = context.getString(if (openSubtitles) R.string.settings_open_subtitles_advanced else R.string.settings_metadata_remote_advanced)
+        val description = context.getString(if (openSubtitles) R.string.settings_open_subtitles_advanced_description else R.string.settings_metadata_remote_advanced_description)
+        val keyLabel = context.getString(if (openSubtitles) R.string.settings_open_subtitles_api_key else R.string.settings_tmdb_api_key)
+        val urlLabel = context.getString(R.string.settings_worker_server_url)
+        val send = context.getString(R.string.companion_send_to_tv)
+        val sending = context.getString(R.string.companion_sending)
+        val failed = context.getString(R.string.companion_upload_failed).replace("%1\$d", "__STATUS__")
+        val unreachable = context.getString(R.string.companion_could_not_reach)
+        return page(context, title, """
+            <div class="card">
+              <h1>${title.h()}</h1><p>${description.h()}</p>
+              <form id="f" onsubmit="return false">
+                <label>${keyLabel.h()} <input id="key" type="text" autocomplete="off" autocapitalize="off" spellcheck="false"></label>
+                <label>${urlLabel.h()} <input id="url" type="url" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="https://"></label>
+                <button class="go" id="send" type="submit">${send.h()}</button>
+              </form><p id="status" class="hint"></p>
+            </div>
+            <script>
+              var k=document.getElementById('key'),u=document.getElementById('url'),b=document.getElementById('send'),s=document.getElementById('status');
+              document.getElementById('f').addEventListener('submit',function(){
+                var body=new URLSearchParams({apiKey:(k.value||'').trim(),serverUrl:(u.value||'').trim()}).toString();
+                b.disabled=true;s.textContent=${sending.js()};
+                fetch('/serviceconfig?pin=$pin',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:body})
+                  .then(function(res){if(res.ok){return res.text().then(function(t){document.open();document.write(t);document.close();});}b.disabled=false;s.textContent=${failed.js()}.replace('__STATUS__',String(res.status));})
+                  .catch(function(){b.disabled=false;s.textContent=${unreachable.js()};});return false;
+              });
+            </script>
+        """.trimIndent())
+    }
+
+    fun serviceConfigSentPage(context: Context, pin: String): String {
+        val c = Copy(context)
+        return page(context, c.savedTitle, """
+            <div class="card"><h1>${c.savedHeading.h()}</h1>
+              <p>${context.getString(R.string.companion_service_config_sent).h()}</p>
+              <p><a href="/?pin=$pin">${context.getString(R.string.companion_service_config_again).h()}</a></p>
+            </div>
+        """.trimIndent())
+    }
+
     fun imageSentPage(context: Context, pin: String): String {
         val c = Copy(context)
         return page(context, c.savedTitle, """
