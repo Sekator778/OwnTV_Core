@@ -168,6 +168,13 @@
     <string name="companion_pin_aria">PIN</string>
     <string name="companion_continue">続行</string>
     <string name="companion_pin_mismatch">PINが一致しません。もう一度試してください。</string>
+    <string name="companion_tmdb_page_title">TMDBキーを送信</string>
+    <string name="companion_tmdb_heading">TMDBキーを送信</string>
+    <string name="companion_tmdb_description">下からTMDBにログインし、APIキー（v3 auth）をコピーしてここに貼り付け、テレビへ送信してください。個人キーは無料で、1日の制限も実質ありません。</string>
+    <string name="companion_tmdb_get_key">TMDBのAPI設定を開く</string>
+    <string name="companion_tmdb_invalid">TMDB APIキーではないようです。「API Key (v3 auth)」の値をコピーしてください。</string>
+    <string name="companion_tmdb_sent_body">TMDBキーがテレビに届きました。テレビで「保存」を押すと使えます。</string>
+    <string name="companion_tmdb_sent_link">別のキーを送信</string>
     <string name="companion_add_page_title">OwnTV — ソースを追加</string>
     <string name="companion_add_heading">ソースを追加</string>
     <string name="companion_add_description">1つのソースの情報を入力して［送信］を押してください。TVに表示されたら、準備ができた時点でリモコンを手に取り、TV側で［インポートを開始］を押してください。</string>

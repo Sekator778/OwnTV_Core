@@ -85,6 +85,15 @@ internal object CompanionHtml {
         val continueLabel = s(R.string.companion_continue)
         val pinMismatch = s(R.string.companion_pin_mismatch)
 
+        val tmdbTitle = s(R.string.companion_tmdb_page_title)
+        val tmdbHeading = s(R.string.companion_tmdb_heading)
+        val tmdbDescription = s(R.string.companion_tmdb_description)
+        val tmdbGetKey = s(R.string.companion_tmdb_get_key)
+        val tmdbKeyLabel = s(R.string.settings_tmdb_api_key)
+        val tmdbInvalid = s(R.string.companion_tmdb_invalid)
+        val tmdbSentBody = s(R.string.companion_tmdb_sent_body)
+        val tmdbSentLink = s(R.string.companion_tmdb_sent_link)
+
         val addTitle = s(R.string.companion_add_page_title)
         val addHeading = s(R.string.companion_add_heading)
         val addDescription = s(R.string.companion_add_description)
@@ -350,6 +359,55 @@ internal object CompanionHtml {
               });
             </script>
         """.trimIndent()
+    }
+
+    /**
+     * One-field page: paste a TMDB API key and send it to the TV.
+     *
+     * The whole point is that a 32-character key is miserable to type on a remote, which is why
+     * almost nobody switches to their own key. TMDB's own signup is not mobile-optimised either, so
+     * the page links straight to the API settings page rather than making the user find it.
+     */
+    fun tmdbKeyPage(context: Context, pin: String): String {
+        val c = Copy(context)
+        return page(context, c.tmdbTitle, """
+            <div class="card">
+              <h1>${c.tmdbHeading.h()}</h1>
+              <p>${c.tmdbDescription.h()}</p>
+              <p><a href="https://www.themoviedb.org/settings/api" target="_blank" rel="noopener">${c.tmdbGetKey.h()}</a></p>
+              <form id="f" onsubmit="return false">
+                <label>${c.tmdbKeyLabel.h()} <input id="key" type="text" autocomplete="off"
+                  autocapitalize="off" spellcheck="false" required></label>
+                <button class="go" id="send" type="submit">${c.sendToTv.h()}</button>
+              </form>
+              <p id="status" class="hint"></p>
+            </div>
+            <script>
+              var k=document.getElementById('key'), b=document.getElementById('send'), s=document.getElementById('status');
+              document.getElementById('f').addEventListener('submit',function(){
+                var v=(k.value||'').trim();
+                // Mirror of the server-side check, purely so a typo is caught before a round trip.
+                if(!/^[A-Za-z0-9._-]{16,128}$/.test(v)){s.textContent=${c.tmdbInvalid.js()};return false;}
+                b.disabled=true; s.textContent=${c.sending.js()};
+                fetch('/tmdbkey?pin=$pin',{method:'POST',headers:{'Content-Type':'text/plain'},body:v})
+                  .then(function(res){
+                    if(res.ok){document.open();res.text().then(function(t){document.write(t);document.close();});}
+                    else{b.disabled=false;s.textContent=${c.uploadFailed.js()}.replace('__STATUS__',String(res.status));}
+                  })
+                  .catch(function(){b.disabled=false;s.textContent=${c.couldNotReach.js()};});
+                return false;
+              });
+            </script>
+        """.trimIndent())
+    }
+
+    fun tmdbKeySentPage(context: Context, pin: String): String {
+        val c = Copy(context)
+        return page(context, c.savedTitle, """
+            <div class="card"><h1>${c.savedHeading.h()}</h1>
+              <p>${c.tmdbSentBody.h()}</p><p><a href="/?pin=$pin">${c.tmdbSentLink.h()}</a></p>
+            </div>
+        """.trimIndent())
     }
 
     fun imageSentPage(context: Context, pin: String): String {

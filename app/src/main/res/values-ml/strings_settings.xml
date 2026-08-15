@@ -94,17 +94,15 @@
     <string name="settings_metadata_provider_tmdb_description">നിങ്ങളുടെ പ്ലേലിസ്റ്റിലെ വിവരങ്ങൾക്ക് മുൻഗണന നൽകും; ഒഴിവുകൾ TMDB നികത്തുകയും അഭിനേതാക്കൾ, ശൈലികൾ, പശ്ചാത്തല ചിത്രങ്ങൾ എന്നിവ ചേർക്കുകയും ചെയ്യും.</string>
     <string name="settings_metadata_tmdb_only_description">എല്ലാ ഫീൽഡുകൾക്കും TMDB-യ്ക്ക് മുൻഗണന നൽകുക; TMDB-യിൽ ഒന്നുമില്ലെങ്കിൽ മാത്രം നിങ്ങളുടെ പ്ലേലിസ്റ്റ് ഉപയോഗിക്കുക.</string>
     <string name="settings_selected">തിരഞ്ഞെടുത്തത്</string>
-    <string name="settings_active_tmdb_source">സജീവ TMDB ഉറവിടം: <xliff:g id="tier">%1$s</xliff:g></string>
     <string name="settings_metadata_allowance">നിങ്ങളുടെ ദൈനംദിന വിഹിതം</string>
-    <string name="settings_metadata_allowance_row"><xliff:g id="window">%1$s</xliff:g>: <xliff:g id="total">%3$d</xliff:g>-ൽ <xliff:g id="remaining">%2$d</xliff:g> ബാക്കി</string>
-    <string name="settings_metadata_window_minute">മിനിറ്റിൽ</string>
-    <string name="settings_metadata_window_hour">മണിക്കൂറിൽ</string>
-    <string name="settings_metadata_window_day">ഇന്ന്</string>
-    <plurals name="settings_metadata_allowance_left">
-        <item quantity="one">ഇന്ന് <xliff:g id="total">%2$d</xliff:g>-ൽ <xliff:g id="remaining">%1$d</xliff:g> ബാക്കി</item>
-        <item quantity="other">ഇന്ന് <xliff:g id="total">%2$d</xliff:g>-ൽ <xliff:g id="remaining">%1$d</xliff:g> ബാക്കി</item>
-    </plurals>
-    <string name="settings_metadata_allowance_resets"><xliff:g id="time">%1$s</xliff:g>-ന് വീണ്ടും നിറയും</string>
+    <string name="settings_metadata_usage_label">ഉപയോഗം</string>
+    <string name="settings_metadata_usage_value"><xliff:g id="min_used">%1$d</xliff:g>/<xliff:g id="min_total">%2$d</xliff:g> മിനിറ്റ് · <xliff:g id="hr_used">%3$d</xliff:g>/<xliff:g id="hr_total">%4$d</xliff:g> മണിക്കൂർ · <xliff:g id="day_used">%5$d</xliff:g>/<xliff:g id="day_total">%6$d</xliff:g> ദിവസം</string>
+    <string name="settings_metadata_source_label">ഉറവിടം</string>
+    <string name="settings_metadata_key_label">കീ</string>
+    <string name="settings_metadata_server_label">സെർവർ</string>
+    <string name="settings_metadata_refills_label">വീണ്ടും നിറയും</string>
+    <string name="settings_metadata_clear_advanced_title">സ്വന്തം കീ ഉപയോഗിക്കുന്നത് നിർത്തണോ?</string>
+    <string name="settings_metadata_clear_advanced_message">നിങ്ങളുടെ TMDB API കീയും സെർവർ വിലാസവും ഈ ഉപകരണത്തിൽ നിന്ന് ഇല്ലാതാക്കും, കൂടാതെ OwnTV ദൈനംദിന വിഹിതമുള്ള അന്തർനിർമ്മിത പങ്കിട്ട സേവനത്തിലേക്ക് മടങ്ങും.</string>
     <string name="settings_metadata_fair_share">അന്തർനിർമ്മിത മെറ്റാഡാറ്റ സേവനം OwnTV ഉപയോഗിക്കുന്ന എല്ലാവരും പങ്കിടുന്നു, അതിനാൽ ഓരോ ഉപകരണത്തിനും ഓരോ ദിവസവും സ്വന്തം വിഹിതം ലഭിക്കും. വിഹിതം തീർന്നാൽ പോസ്റ്ററുകളും വിവരണങ്ങളും അത് വീണ്ടും നിറയുന്നതുവരെ താൽക്കാലികമായി നിർത്തും — നിങ്ങളുടെ പ്ലേലിസ്റ്റിലെ വിവരങ്ങൾ പതിവുപോലെ പ്രവർത്തിക്കും. സ്വന്തം TMDB API കീയോ സെർവറോ ചേർത്താൽ ഈ പരിധി ഇല്ലാതാകും: അത് സൗജന്യമാണ്, വ്യക്തിഗത കീയ്ക്ക് പ്രായോഗികമായി പരിധിയില്ല.</string>
     <string name="settings_metadata_limit_reached">ഇന്നത്തെ മെറ്റാഡാറ്റ വിഹിതം തീർന്നു — ഈ പരിധി നീക്കാൻ ക്രമീകരണങ്ങൾ → മെറ്റാഡാറ്റയിൽ സ്വന്തം TMDB കീ ചേർക്കുക.</string>
     <string name="settings_metadata_language">മെറ്റാഡാറ്റ ഭാഷ</string>
@@ -112,6 +110,9 @@
     <string name="settings_advanced_options">വിപുലമായ ഓപ്ഷനുകൾ</string>
     <string name="settings_advanced_metadata_description">പങ്കിട്ട ഡിഫോൾട്ടിന് പകരം നിങ്ങളുടെ സ്വന്തം TMDB API കീയോ സ്വയം ഹോസ്റ്റ് ചെയ്ത സെർവറോ ഉപയോഗിക്കുക.</string>
     <string name="settings_metadata_server_description">അന്തർനിർമ്മിത പങ്കിട്ട സെർവർ ഉപയോഗിക്കാൻ രണ്ടും ശൂന്യമായി വിടുക (സജ്ജീകരണം ആവശ്യമില്ല). TMDB-യെ നേരിട്ട് വിളിക്കാൻ നിങ്ങളുടെ സ്വന്തം TMDB API കീ നൽകുക, അല്ലെങ്കിൽ സ്വന്തം പ്രോക്സി/മിറർ ഉപയോഗിക്കാൻ സ്വയം ഹോസ്റ്റ് ചെയ്ത സെർവർ URL നൽകുക. കീയേക്കാൾ URL-ന് മുൻഗണന ലഭിക്കും.</string>
+    <string name="settings_metadata_key_from_phone">ഫോണിൽ നിന്ന് കീ നേടുക</string>
+    <string name="settings_metadata_key_from_phone_desc">ഫോൺ ഉപയോഗിച്ച് കോഡ് സ്കാൻ ചെയ്ത്, അവിടെ TMDB-യിൽ സൈൻ ഇൻ ചെയ്ത് കീ അയയ്ക്കുക. റിമോട്ടിൽ ഒന്നും ടൈപ്പ് ചെയ്യേണ്ട.</string>
+    <string name="settings_metadata_key_received">നിങ്ങളുടെ ഫോണിൽ നിന്ന് TMDB കീ ലഭിച്ചു</string>
     <string name="settings_tmdb_api_key">TMDB API കീ (v3)</string>
     <string name="settings_self_host_url">സ്വയം ഹോസ്റ്റ് ചെയ്ത സെർവർ URL</string>
     <string name="settings_test">പരിശോധന</string>

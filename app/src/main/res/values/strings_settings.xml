@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2"
+           xmlns:tools="http://schemas.android.com/tools">
     <!-- Translators: Fallback label for the playlist sort mode in the SortChip toggle. -->
     <string name="settings_sort_playlist">Playlist</string>
     <!-- Translators: Sort option for alphabetical order. -->
@@ -192,25 +193,26 @@
     <string name="settings_metadata_tmdb_only_description">Prefer TMDB for every field; fall back to your playlist only when TMDB has nothing.</string>
     <!-- Translators: Status label for the currently selected option. This is a state, not a command. -->
     <string name="settings_selected">Selected</string>
-    <!-- Translators: Status display showing the active TMDB tier. 'tier' is one of the tier option labels. -->
-    <string name="settings_active_tmdb_source">Active TMDB source: <xliff:g id="tier">%1$s</xliff:g></string>
     <!-- Translators: Label for the shared metadata service's remaining daily allowance. -->
     <string name="settings_metadata_allowance">Your daily share</string>
-    <!-- Translators: Row showing remaining metadata lookups for one time window. "window" is Per minute/Per hour/Today; "remaining" is the count left; "total" is the allowance. -->
-    <string name="settings_metadata_allowance_row"><xliff:g id="window">%1$s</xliff:g>: <xliff:g id="remaining">%2$d</xliff:g> of <xliff:g id="total">%3$d</xliff:g></string>
-    <!-- Translators: Time-window label in the metadata allowance list. -->
-    <string name="settings_metadata_window_minute">Per minute</string>
-    <!-- Translators: Time-window label in the metadata allowance list. -->
-    <string name="settings_metadata_window_hour">Per hour</string>
-    <!-- Translators: Time-window label in the metadata allowance list, meaning the current day. -->
-    <string name="settings_metadata_window_day">Today</string>
-    <!-- Translators: Plural showing how many metadata lookups are left today. "remaining" is the count left; "total" is the daily allowance. -->
-    <plurals name="settings_metadata_allowance_left">
-        <item quantity="one"><xliff:g id="remaining">%1$d</xliff:g> of <xliff:g id="total">%2$d</xliff:g> lookup left today</item>
-        <item quantity="other"><xliff:g id="remaining">%1$d</xliff:g> of <xliff:g id="total">%2$d</xliff:g> lookups left today</item>
-    </plurals>
-    <!-- Translators: Shows the clock time when the daily metadata allowance refills. 'time' is a local time like 14:32. -->
-    <string name="settings_metadata_allowance_resets">Refills at <xliff:g id="time">%1$s</xliff:g></string>
+    <!-- Translators: InfoRow label for which TMDB source is in use. -->
+    <!-- Translators: InfoRow label for how much of the daily share has been used. -->
+    <string name="settings_metadata_usage_label">Usage</string>
+    <!-- Translators: All three allowance windows on ONE line, e.g. "3/40 min - 150/150 hr - 399/400 day".
+         Keep it short: it shares a row with its label on a TV screen. Not a plural - the numbers are
+         ratios, and every locale shows the same three fixed windows. -->
+    <string name="settings_metadata_usage_value" tools:ignore="PluralsCandidate"><xliff:g id="min_used">%1$d</xliff:g>/<xliff:g id="min_total">%2$d</xliff:g> min · <xliff:g id="hr_used">%3$d</xliff:g>/<xliff:g id="hr_total">%4$d</xliff:g> hr · <xliff:g id="day_used">%5$d</xliff:g>/<xliff:g id="day_total">%6$d</xliff:g> day</string>
+    <string name="settings_metadata_source_label">Source</string>
+    <!-- Translators: InfoRow label for the user's own TMDB API key, shown masked. -->
+    <string name="settings_metadata_key_label">Key</string>
+    <!-- Translators: InfoRow label for the self-hosted metadata server address. -->
+    <string name="settings_metadata_server_label">Server</string>
+    <!-- Translators: InfoRow label for when the daily allowance refills. -->
+    <string name="settings_metadata_refills_label">Refills at</string>
+    <!-- Translators: Title of the dialog shown when switching off Advanced options while a key is saved. -->
+    <string name="settings_metadata_clear_advanced_title">Stop using your own key?</string>
+    <!-- Translators: Body of that dialog. Explains the saved key and server address are deleted. -->
+    <string name="settings_metadata_clear_advanced_message">Your TMDB API key and self-hosted server address will be deleted from this device, and OwnTV will go back to the built-in shared service with its daily share.</string>
     <!-- Translators: Explains why the shared metadata service has a per-device limit. -->
     <string name="settings_metadata_fair_share">The built-in metadata service is shared by everyone using OwnTV, so each device gets its own share of it each day. If you use up your share, posters and descriptions pause until it refills — the info from your own playlist keeps working as normal. Adding your own TMDB API key or server removes the limit: it is free, and a personal key has practically no limit.</string>
     <!-- Translators: Shown once per app start when the device's daily metadata share is used up. -->
@@ -226,6 +228,12 @@
     <!-- Translators: Description of the TMDB server configuration options. -->
     <string name="settings_metadata_server_description">Leave both blank to use the built-in shared server (no setup). Enter your own TMDB API key to call TMDB directly, or a self-hosted server URL to use your own proxy/mirror. A URL takes priority over a key.</string>
     <!-- Translators: Text-field label for the TMDB API key. 'TMDB' is a brand name. -->
+    <!-- Translators: Row that opens the phone handover, so the key need not be typed on a remote. -->
+    <string name="settings_metadata_key_from_phone">Get key from your phone</string>
+    <!-- Translators: Description of that row. -->
+    <string name="settings_metadata_key_from_phone_desc">Scan a code with your phone, sign in to TMDB there, and send the key across. Nothing to type on the remote.</string>
+    <!-- Translators: Toast shown on the TV when a key arrives from the phone. -->
+    <string name="settings_metadata_key_received">TMDB key received from your phone</string>
     <string name="settings_tmdb_api_key">TMDB API key (v3)</string>
     <!-- Translators: Text-field label for a self-hosted TMDB proxy URL. -->
     <string name="settings_self_host_url">Self-host server URL</string>

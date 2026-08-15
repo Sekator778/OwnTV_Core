@@ -172,6 +172,13 @@
     <string name="companion_pin_aria">PIN</string>
     <string name="companion_continue">চালিয়ে যান</string>
     <string name="companion_pin_mismatch">PINটি মেলেনি — আবার চেষ্টা করুন।</string>
+    <string name="companion_tmdb_page_title">TMDB কী পাঠান</string>
+    <string name="companion_tmdb_heading">আপনার TMDB কী পাঠান</string>
+    <string name="companion_tmdb_description">নিচে TMDB-তে সাইন ইন করুন, আপনার API কী (v3 auth) কপি করুন, এখানে পেস্ট করে টিভিতে পাঠান। ব্যক্তিগত কী বিনামূল্যে এবং এতে কার্যত কোনো দৈনিক সীমা নেই।</string>
+    <string name="companion_tmdb_get_key">TMDB API সেটিংস খুলুন</string>
+    <string name="companion_tmdb_invalid">এটি TMDB API কী বলে মনে হচ্ছে না। "API Key (v3 auth)" মানটি কপি করুন।</string>
+    <string name="companion_tmdb_sent_body">আপনার TMDB কী এখন টিভিতে আছে। ব্যবহার শুরু করতে সেখানে সংরক্ষণ চাপুন।</string>
+    <string name="companion_tmdb_sent_link">অন্য একটি কী পাঠান</string>
     <string name="companion_add_page_title">OwnTV — উৎস যোগ করুন</string>
     <string name="companion_add_heading">একটি উৎস যোগ করুন</string>
     <string name="companion_add_description">একটি উৎসের তথ্য পূরণ করে পাঠান চাপুন। সেটি TV-তে দেখা যাবে — প্রস্তুত হলে রিমোট হাতে নিয়ে সেখানে ইমপোর্ট শুরু করুন চাপুন।</string>

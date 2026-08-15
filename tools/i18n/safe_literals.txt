@@ -350,6 +350,7 @@
 4	protocol	app/src/main/java/tv/own/owntv/core/companion/CompanionHttpServer.kt	POST
 1	protocol	app/src/main/java/tv/own/owntv/core/companion/CompanionHttpServer.kt	Payload Too Large
 1	protocol	app/src/main/java/tv/own/owntv/core/companion/CompanionHttpServer.kt	Unauthorized
+1	regex	app/src/main/java/tv/own/owntv/core/companion/CompanionHttpServer.kt	^[A-Za-z0-9._-]{16,128}$
 1	regex	app/src/main/java/tv/own/owntv/core/companion/CompanionHttpServer.kt	^data:image/([a-zA-Z0-9.+-]+);base64,
 2	protocol	app/src/main/java/tv/own/owntv/core/companion/CompanionHttpServer.kt	bmp
 1	protocol	app/src/main/java/tv/own/owntv/core/companion/CompanionHttpServer.kt	content-type
@@ -2918,6 +2919,7 @@
 2	locale	app/src/main/java/tv/own/owntv/features/settings/MetadataSettingsScreen.kt	uk
 2	locale	app/src/main/java/tv/own/owntv/features/settings/MetadataSettingsScreen.kt	vi
 2	locale	app/src/main/java/tv/own/owntv/features/settings/MetadataSettingsScreen.kt	zh
+2	technical	app/src/main/java/tv/own/owntv/features/settings/MetadataSettingsScreen.kt	•
 7	empty	app/src/main/java/tv/own/owntv/features/settings/NetworkSettingsScreen.kt	\0
 2	empty	app/src/main/java/tv/own/owntv/features/settings/OpenSubtitlesAccountScreen.kt	\0
 1	locale	app/src/main/java/tv/own/owntv/features/settings/OpenSubtitlesAccountScreen.kt	${locale.language}-${locale.country}

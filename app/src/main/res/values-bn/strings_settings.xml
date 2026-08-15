@@ -94,17 +94,15 @@
     <string name="settings_metadata_provider_tmdb_description">আপনার প্লেলিস্টের তথ্য অগ্রাধিকার পাবে; TMDB ঘাটতি পূরণ করবে এবং অভিনয়শিল্পী, ধরন ও পটভূমির ছবি যোগ করবে।</string>
     <string name="settings_metadata_tmdb_only_description">প্রতিটি ক্ষেত্রের জন্য TMDB-কে অগ্রাধিকার দিন; TMDB-তে কিছু না থাকলেই শুধু প্লেলিস্টের তথ্য ব্যবহার করুন।</string>
     <string name="settings_selected">নির্বাচিত</string>
-    <string name="settings_active_tmdb_source">সক্রিয় TMDB উৎস: <xliff:g id="tier">%1$s</xliff:g></string>
     <string name="settings_metadata_allowance">আপনার দৈনিক ভাগ</string>
-    <string name="settings_metadata_allowance_row"><xliff:g id="window">%1$s</xliff:g>: <xliff:g id="total">%3$d</xliff:g>-এর মধ্যে <xliff:g id="remaining">%2$d</xliff:g> বাকি</string>
-    <string name="settings_metadata_window_minute">প্রতি মিনিটে</string>
-    <string name="settings_metadata_window_hour">প্রতি ঘণ্টায়</string>
-    <string name="settings_metadata_window_day">আজ</string>
-    <plurals name="settings_metadata_allowance_left">
-        <item quantity="one">আজ <xliff:g id="total">%2$d</xliff:g>-এর মধ্যে <xliff:g id="remaining">%1$d</xliff:g>টি বাকি</item>
-        <item quantity="other">আজ <xliff:g id="total">%2$d</xliff:g>-এর মধ্যে <xliff:g id="remaining">%1$d</xliff:g>টি বাকি</item>
-    </plurals>
-    <string name="settings_metadata_allowance_resets"><xliff:g id="time">%1$s</xliff:g>-এ আবার ভরবে</string>
+    <string name="settings_metadata_usage_label">ব্যবহার</string>
+    <string name="settings_metadata_usage_value"><xliff:g id="min_used">%1$d</xliff:g>/<xliff:g id="min_total">%2$d</xliff:g> মিনিট · <xliff:g id="hr_used">%3$d</xliff:g>/<xliff:g id="hr_total">%4$d</xliff:g> ঘণ্টা · <xliff:g id="day_used">%5$d</xliff:g>/<xliff:g id="day_total">%6$d</xliff:g> দিন</string>
+    <string name="settings_metadata_source_label">উৎস</string>
+    <string name="settings_metadata_key_label">কী</string>
+    <string name="settings_metadata_server_label">সার্ভার</string>
+    <string name="settings_metadata_refills_label">আবার ভরবে</string>
+    <string name="settings_metadata_clear_advanced_title">নিজের কী ব্যবহার বন্ধ করবেন?</string>
+    <string name="settings_metadata_clear_advanced_message">আপনার TMDB API কী এবং আপনার সার্ভারের ঠিকানা এই ডিভাইস থেকে মুছে ফেলা হবে, এবং OwnTV দৈনিক ভাগসহ অন্তর্নির্মিত শেয়ার্ড পরিষেবায় ফিরে যাবে।</string>
     <string name="settings_metadata_fair_share">অন্তর্নির্মিত মেটাডেটা পরিষেবাটি OwnTV ব্যবহারকারী সবাই ভাগ করে নেন, তাই প্রতিটি ডিভাইস প্রতিদিন নিজের ভাগ পায়। ভাগ শেষ হয়ে গেলে পোস্টার ও বিবরণ আবার ভরা পর্যন্ত থেমে থাকে — আপনার নিজের প্লেলিস্টের তথ্য স্বাভাবিকভাবেই চলতে থাকে। নিজের TMDB API কী বা সার্ভার যোগ করলে এই সীমা উঠে যায়: এটি বিনামূল্যে, আর ব্যক্তিগত কী-তে কার্যত কোনো সীমা নেই।</string>
     <string name="settings_metadata_limit_reached">আজকের মেটাডেটার ভাগ শেষ — এই সীমা তুলতে সেটিংস → মেটাডেটা-তে নিজের TMDB কী যোগ করুন।</string>
     <string name="settings_metadata_language">মেটাডেটার ভাষা</string>
@@ -112,6 +110,9 @@
     <string name="settings_advanced_options">উন্নত বিকল্প</string>
     <string name="settings_advanced_metadata_description">শেয়ার করা ডিফল্টের বদলে নিজের TMDB API কী বা স্ব-হোস্ট করা সার্ভার ব্যবহার করুন।</string>
     <string name="settings_metadata_server_description">বিল্ট-ইন শেয়ার করা সার্ভার ব্যবহার করতে দুটিই ফাঁকা রাখুন (সেটআপের প্রয়োজন নেই)। সরাসরি TMDB-তে কল করতে নিজের TMDB API কী লিখুন, অথবা নিজের প্রক্সি/মিরর ব্যবহার করতে স্ব-হোস্ট করা সার্ভারের URL লিখুন। কী-এর চেয়ে URL অগ্রাধিকার পাবে।</string>
+    <string name="settings_metadata_key_from_phone">আপনার ফোন থেকে কী নিন</string>
+    <string name="settings_metadata_key_from_phone_desc">ফোন দিয়ে একটি কোড স্ক্যান করুন, সেখানে TMDB-তে সাইন ইন করুন এবং কী পাঠান। রিমোটে কিছু টাইপ করার নেই।</string>
+    <string name="settings_metadata_key_received">আপনার ফোন থেকে TMDB কী পাওয়া গেছে</string>
     <string name="settings_tmdb_api_key">TMDB API কী (v3)</string>
     <string name="settings_self_host_url">স্ব-হোস্ট করা সার্ভারের URL</string>
     <string name="settings_test">পরীক্ষা</string>

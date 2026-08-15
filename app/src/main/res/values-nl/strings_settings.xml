@@ -94,17 +94,15 @@
     <string name="settings_metadata_provider_tmdb_description">De informatie uit je afspeellijst heeft voorrang; TMDB vult ontbrekende gegevens aan en voegt cast, genres en achtergrondafbeeldingen toe.</string>
     <string name="settings_metadata_tmdb_only_description">Geef voor elk veld de voorkeur aan TMDB; val alleen terug op je afspeellijst als TMDB niets heeft.</string>
     <string name="settings_selected">Geselecteerd</string>
-    <string name="settings_active_tmdb_source">Actieve TMDB-bron: <xliff:g id="tier">%1$s</xliff:g></string>
     <string name="settings_metadata_allowance">Je dagelijkse deel</string>
-    <string name="settings_metadata_allowance_row"><xliff:g id="window">%1$s</xliff:g>: nog <xliff:g id="remaining">%2$d</xliff:g> van <xliff:g id="total">%3$d</xliff:g></string>
-    <string name="settings_metadata_window_minute">Per minuut</string>
-    <string name="settings_metadata_window_hour">Per uur</string>
-    <string name="settings_metadata_window_day">Vandaag</string>
-    <plurals name="settings_metadata_allowance_left">
-        <item quantity="one">Nog <xliff:g id="remaining">%1$d</xliff:g> van <xliff:g id="total">%2$d</xliff:g> opzoeking over vandaag</item>
-        <item quantity="other">Nog <xliff:g id="remaining">%1$d</xliff:g> van <xliff:g id="total">%2$d</xliff:g> opzoekingen over vandaag</item>
-    </plurals>
-    <string name="settings_metadata_allowance_resets">Wordt aangevuld om <xliff:g id="time">%1$s</xliff:g></string>
+    <string name="settings_metadata_usage_label">Gebruik</string>
+    <string name="settings_metadata_usage_value"><xliff:g id="min_used">%1$d</xliff:g>/<xliff:g id="min_total">%2$d</xliff:g> min · <xliff:g id="hr_used">%3$d</xliff:g>/<xliff:g id="hr_total">%4$d</xliff:g> uur · <xliff:g id="day_used">%5$d</xliff:g>/<xliff:g id="day_total">%6$d</xliff:g> dag</string>
+    <string name="settings_metadata_source_label">Bron</string>
+    <string name="settings_metadata_key_label">Sleutel</string>
+    <string name="settings_metadata_server_label">Server</string>
+    <string name="settings_metadata_refills_label">Aangevuld om</string>
+    <string name="settings_metadata_clear_advanced_title">Je eigen sleutel niet meer gebruiken?</string>
+    <string name="settings_metadata_clear_advanced_message">Je TMDB-API-sleutel en het adres van je eigen server worden van dit apparaat verwijderd, en OwnTV keert terug naar de ingebouwde gedeelde dienst met het dagelijkse deel.</string>
     <string name="settings_metadata_fair_share">De ingebouwde metadatadienst wordt gedeeld door iedereen die OwnTV gebruikt, dus elk apparaat krijgt elke dag zijn eigen deel. Als je jouw deel opmaakt, pauzeren posters en beschrijvingen tot het weer wordt aangevuld — de informatie uit je eigen afspeellijst blijft gewoon werken. Je eigen TMDB-API-sleutel of server toevoegen heft de limiet op: het is gratis en een persoonlijke sleutel heeft praktisch geen limiet.</string>
     <string name="settings_metadata_limit_reached">Dagelijks metadatadeel op — voeg je eigen TMDB-sleutel toe via Instellingen → Metadata om deze limiet op te heffen.</string>
     <string name="settings_metadata_language">Taal van metagegevens</string>
@@ -112,6 +110,9 @@
     <string name="settings_advanced_options">Geavanceerde opties</string>
     <string name="settings_advanced_metadata_description">Gebruik je eigen TMDB-API-sleutel of een zelfgehoste server in plaats van de gedeelde standaard.</string>
     <string name="settings_metadata_server_description">Laat beide leeg om de ingebouwde gedeelde server te gebruiken (geen configuratie nodig). Voer je eigen TMDB-API-sleutel in om TMDB rechtstreeks aan te roepen, of een URL van een zelfgehoste server om je eigen proxy/mirror te gebruiken. Een URL heeft voorrang op een sleutel.</string>
+    <string name="settings_metadata_key_from_phone">Sleutel ophalen via je telefoon</string>
+    <string name="settings_metadata_key_from_phone_desc">Scan een code met je telefoon, meld je daar aan bij TMDB en stuur de sleutel door. Niets te typen op de afstandsbediening.</string>
+    <string name="settings_metadata_key_received">TMDB-sleutel ontvangen van je telefoon</string>
     <string name="settings_tmdb_api_key">TMDB-API-sleutel (v3)</string>
     <string name="settings_self_host_url">URL van zelfgehoste server</string>
     <string name="settings_test">Test</string>

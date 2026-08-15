@@ -94,19 +94,15 @@
     <string name="settings_metadata_provider_tmdb_description">Данные из вашего плейлиста имеют приоритет; TMDB заполняет пробелы и добавляет актёрский состав, жанры и фоновые изображения.</string>
     <string name="settings_metadata_tmdb_only_description">Предпочитать TMDB для каждого поля; использовать данные из плейлиста, только если в TMDB ничего нет.</string>
     <string name="settings_selected">Выбрано</string>
-    <string name="settings_active_tmdb_source">Активный источник TMDB: <xliff:g id="tier">%1$s</xliff:g></string>
     <string name="settings_metadata_allowance">Ваша дневная доля</string>
-    <string name="settings_metadata_allowance_row"><xliff:g id="window">%1$s</xliff:g>: осталось <xliff:g id="remaining">%2$d</xliff:g> из <xliff:g id="total">%3$d</xliff:g></string>
-    <string name="settings_metadata_window_minute">В минуту</string>
-    <string name="settings_metadata_window_hour">В час</string>
-    <string name="settings_metadata_window_day">Сегодня</string>
-    <plurals name="settings_metadata_allowance_left">
-        <item quantity="one">Сегодня остался <xliff:g id="remaining">%1$d</xliff:g> из <xliff:g id="total">%2$d</xliff:g> запрос</item>
-        <item quantity="few">Сегодня осталось <xliff:g id="remaining">%1$d</xliff:g> из <xliff:g id="total">%2$d</xliff:g> запроса</item>
-        <item quantity="many">Сегодня осталось <xliff:g id="remaining">%1$d</xliff:g> из <xliff:g id="total">%2$d</xliff:g> запросов</item>
-        <item quantity="other">Сегодня осталось <xliff:g id="remaining">%1$d</xliff:g> из <xliff:g id="total">%2$d</xliff:g> запроса</item>
-    </plurals>
-    <string name="settings_metadata_allowance_resets">Обновится в <xliff:g id="time">%1$s</xliff:g></string>
+    <string name="settings_metadata_usage_label">Использование</string>
+    <string name="settings_metadata_usage_value"><xliff:g id="min_used">%1$d</xliff:g>/<xliff:g id="min_total">%2$d</xliff:g> мин · <xliff:g id="hr_used">%3$d</xliff:g>/<xliff:g id="hr_total">%4$d</xliff:g> ч · <xliff:g id="day_used">%5$d</xliff:g>/<xliff:g id="day_total">%6$d</xliff:g> день</string>
+    <string name="settings_metadata_source_label">Источник</string>
+    <string name="settings_metadata_key_label">Ключ</string>
+    <string name="settings_metadata_server_label">Сервер</string>
+    <string name="settings_metadata_refills_label">Обновится в</string>
+    <string name="settings_metadata_clear_advanced_title">Перестать использовать свой ключ?</string>
+    <string name="settings_metadata_clear_advanced_message">Ваш ключ API TMDB и адрес вашего сервера будут удалены с этого устройства, а OwnTV вернётся к встроенному общему сервису с его дневной долей.</string>
     <string name="settings_metadata_fair_share">Встроенный сервис метаданных используется всеми пользователями OwnTV, поэтому каждое устройство получает собственную дневную долю. Если вы израсходуете свою долю, постеры и описания приостановятся до её обновления — информация из вашего собственного плейлиста продолжит работать как обычно. Собственный ключ API TMDB или сервер снимает это ограничение: он бесплатный, а у личного ключа практически нет лимита.</string>
     <string name="settings_metadata_limit_reached">Дневная доля метаданных израсходована — добавьте собственный ключ TMDB в разделе «Настройки → Метаданные», чтобы снять это ограничение.</string>
     <string name="settings_metadata_language">Язык метаданных</string>
@@ -114,6 +110,9 @@
     <string name="settings_advanced_options">Дополнительные параметры</string>
     <string name="settings_advanced_metadata_description">Используйте собственный ключ API TMDB или самостоятельно размещённый сервер вместо общего сервера по умолчанию.</string>
     <string name="settings_metadata_server_description">Оставьте оба поля пустыми, чтобы использовать встроенный общий сервер без дополнительной настройки. Введите собственный ключ API TMDB для прямых запросов к TMDB или URL самостоятельно размещённого сервера, чтобы использовать собственный прокси или зеркало. URL имеет приоритет над ключом.</string>
+    <string name="settings_metadata_key_from_phone">Получить ключ с телефона</string>
+    <string name="settings_metadata_key_from_phone_desc">Отсканируйте код телефоном, войдите там в TMDB и отправьте ключ. На пульте ничего вводить не нужно.</string>
+    <string name="settings_metadata_key_received">Ключ TMDB получен с телефона</string>
     <string name="settings_tmdb_api_key">Ключ API TMDB (v3)</string>
     <string name="settings_self_host_url">URL самостоятельно размещённого сервера</string>
     <string name="settings_test">Проверка</string>

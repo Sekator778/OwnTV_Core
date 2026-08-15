@@ -172,6 +172,13 @@
     <string name="companion_pin_aria">PIN</string>
     <string name="companion_continue">Fortsätt</string>
     <string name="companion_pin_mismatch">PIN-koden stämde inte – försök igen.</string>
+    <string name="companion_tmdb_page_title">Skicka TMDB-nyckel</string>
+    <string name="companion_tmdb_heading">Skicka din TMDB-nyckel</string>
+    <string name="companion_tmdb_description">Logga in på TMDB nedan, kopiera din API-nyckel (v3 auth), klistra in den här och skicka den till tv:n. En personlig nyckel är gratis och har praktiskt taget ingen daglig gräns.</string>
+    <string name="companion_tmdb_get_key">Öppna TMDB:s API-inställningar</string>
+    <string name="companion_tmdb_invalid">Det ser inte ut som en TMDB API-nyckel. Kopiera värdet ”API Key (v3 auth)”.</string>
+    <string name="companion_tmdb_sent_body">Din TMDB-nyckel finns nu på tv:n. Tryck på Spara där för att börja använda den.</string>
+    <string name="companion_tmdb_sent_link">Skicka en annan nyckel</string>
     <string name="companion_add_page_title">OwnTV – Lägg till källa</string>
     <string name="companion_add_heading">Lägg till en källa</string>
     <string name="companion_add_description">Fyll i en källa och tryck på Skicka. Den visas på tv:n – ta fjärrkontrollen och tryck på Starta import där när du är redo.</string>

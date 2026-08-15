@@ -94,16 +94,15 @@
     <string name="settings_metadata_provider_tmdb_description">プレイリストの情報を優先し、不足部分をTMDBで補完して、出演者、ジャンル、背景画像を追加します。</string>
     <string name="settings_metadata_tmdb_only_description">すべての項目でTMDBを優先し、TMDBに情報がない場合のみプレイリストを使用します。</string>
     <string name="settings_selected">選択中</string>
-    <string name="settings_active_tmdb_source">有効なTMDBソース：<xliff:g id="tier">%1$s</xliff:g></string>
     <string name="settings_metadata_allowance">1日の利用枠</string>
-    <string name="settings_metadata_allowance_row"><xliff:g id="window">%1$s</xliff:g>: 残り <xliff:g id="remaining">%2$d</xliff:g>／<xliff:g id="total">%3$d</xliff:g></string>
-    <string name="settings_metadata_window_minute">1分あたり</string>
-    <string name="settings_metadata_window_hour">1時間あたり</string>
-    <string name="settings_metadata_window_day">本日</string>
-    <plurals name="settings_metadata_allowance_left">
-        <item quantity="other">本日の残り <xliff:g id="remaining">%1$d</xliff:g>／<xliff:g id="total">%2$d</xliff:g> 回</item>
-    </plurals>
-    <string name="settings_metadata_allowance_resets"><xliff:g id="time">%1$s</xliff:g> に回復します</string>
+    <string name="settings_metadata_usage_label">使用量</string>
+    <string name="settings_metadata_usage_value"><xliff:g id="min_used">%1$d</xliff:g>/<xliff:g id="min_total">%2$d</xliff:g> 分 · <xliff:g id="hr_used">%3$d</xliff:g>/<xliff:g id="hr_total">%4$d</xliff:g> 時間 · <xliff:g id="day_used">%5$d</xliff:g>/<xliff:g id="day_total">%6$d</xliff:g> 日</string>
+    <string name="settings_metadata_source_label">ソース</string>
+    <string name="settings_metadata_key_label">キー</string>
+    <string name="settings_metadata_server_label">サーバー</string>
+    <string name="settings_metadata_refills_label">回復時刻</string>
+    <string name="settings_metadata_clear_advanced_title">独自のキーの使用をやめますか？</string>
+    <string name="settings_metadata_clear_advanced_message">TMDB APIキーと独自サーバーのアドレスがこの端末から削除され、OwnTVは1日の利用枠がある内蔵の共有サービスに戻ります。</string>
     <string name="settings_metadata_fair_share">内蔵のメタデータサービスはOwnTVを使うすべてのユーザーで共有しているため、各デバイスには1日ごとの利用枠があります。枠を使い切ると、ポスターと説明は回復するまで一時停止します。お使いのプレイリスト自身の情報はこれまでどおり表示されます。独自のTMDB APIキーまたはサーバーを追加すると、この制限はなくなります。無料で、個人キーには実質的に制限がありません。</string>
     <string name="settings_metadata_limit_reached">1日のメタデータ利用枠を使い切りました。設定 → メタデータで独自のTMDBキーを追加すると、この制限がなくなります。</string>
     <string name="settings_metadata_language">メタデータの言語</string>
@@ -111,6 +110,9 @@
     <string name="settings_advanced_options">詳細オプション</string>
     <string name="settings_advanced_metadata_description">共有のデフォルト設定の代わりに、独自のTMDB APIキーまたはセルフホストサーバーを使用します。</string>
     <string name="settings_metadata_server_description">内蔵の共有サーバーを使用する場合は両方を空欄にしてください（セットアップ不要）。TMDBを直接呼び出すには独自のTMDB APIキーを入力し、独自のプロキシ／ミラーを使用するにはセルフホストサーバーのURLを入力します。URLはキーより優先されます。</string>
+    <string name="settings_metadata_key_from_phone">スマホからキーを取得</string>
+    <string name="settings_metadata_key_from_phone_desc">スマホでコードを読み取り、そこでTMDBにログインしてキーを送信します。リモコンでの入力は不要です。</string>
+    <string name="settings_metadata_key_received">スマホからTMDBキーを受信しました</string>
     <string name="settings_tmdb_api_key">TMDB APIキー（v3）</string>
     <string name="settings_self_host_url">セルフホストサーバーのURL</string>
     <string name="settings_test">テスト</string>

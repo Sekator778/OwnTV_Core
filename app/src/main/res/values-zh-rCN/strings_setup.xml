@@ -168,6 +168,13 @@
     <string name="companion_pin_aria">PIN</string>
     <string name="companion_continue">继续</string>
     <string name="companion_pin_mismatch">该 PIN 不匹配——请重试。</string>
+    <string name="companion_tmdb_page_title">发送 TMDB 密钥</string>
+    <string name="companion_tmdb_heading">发送你的 TMDB 密钥</string>
+    <string name="companion_tmdb_description">在下方登录 TMDB，复制你的 API 密钥（v3 auth），粘贴到这里并发送到电视。个人密钥免费，而且几乎没有每日限制。</string>
+    <string name="companion_tmdb_get_key">打开 TMDB API 设置</string>
+    <string name="companion_tmdb_invalid">这看起来不像 TMDB API 密钥。请复制“API Key (v3 auth)”的值。</string>
+    <string name="companion_tmdb_sent_body">你的 TMDB 密钥已发送到电视。在电视上按保存即可开始使用。</string>
+    <string name="companion_tmdb_sent_link">发送其他密钥</string>
     <string name="companion_add_page_title">OwnTV — 添加源</string>
     <string name="companion_add_heading">添加源</string>
     <string name="companion_add_description">填写一个源并按下“发送”。源会显示在电视上——准备就绪后，拿起遥控器并在电视上按下“开始导入”。</string>

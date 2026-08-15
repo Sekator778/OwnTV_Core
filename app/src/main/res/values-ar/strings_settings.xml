@@ -94,21 +94,15 @@
     <string name="settings_metadata_provider_tmdb_description">تكون الأولوية لمعلومات قائمة التشغيل؛ ويملأ TMDB الفجوات ويضيف طاقم التمثيل والأنواع والصور الخلفية.</string>
     <string name="settings_metadata_tmdb_only_description">فضّل TMDB لكل حقل؛ ولا تستخدم قائمة التشغيل إلا عندما لا يحتوي TMDB على أي معلومات.</string>
     <string name="settings_selected">محدد</string>
-    <string name="settings_active_tmdb_source">مصدر TMDB النشط: <xliff:g id="tier">%1$s</xliff:g></string>
     <string name="settings_metadata_allowance">حصتك اليومية</string>
-    <string name="settings_metadata_allowance_row"><xliff:g id="window">%1$s</xliff:g>: بقي <xliff:g id="remaining">%2$d</xliff:g> من <xliff:g id="total">%3$d</xliff:g></string>
-    <string name="settings_metadata_window_minute">في الدقيقة</string>
-    <string name="settings_metadata_window_hour">في الساعة</string>
-    <string name="settings_metadata_window_day">اليوم</string>
-    <plurals name="settings_metadata_allowance_left">
-        <item quantity="zero">بقي <xliff:g id="remaining">%1$d</xliff:g> من <xliff:g id="total">%2$d</xliff:g> عملية بحث اليوم</item>
-        <item quantity="one">بقي <xliff:g id="remaining">%1$d</xliff:g> من <xliff:g id="total">%2$d</xliff:g> عملية بحث اليوم</item>
-        <item quantity="two">بقيت <xliff:g id="remaining">%1$d</xliff:g> من <xliff:g id="total">%2$d</xliff:g> عمليتا بحث اليوم</item>
-        <item quantity="few">بقيت <xliff:g id="remaining">%1$d</xliff:g> من <xliff:g id="total">%2$d</xliff:g> عمليات بحث اليوم</item>
-        <item quantity="many">بقيت <xliff:g id="remaining">%1$d</xliff:g> من <xliff:g id="total">%2$d</xliff:g> عملية بحث اليوم</item>
-        <item quantity="other">بقي <xliff:g id="remaining">%1$d</xliff:g> من <xliff:g id="total">%2$d</xliff:g> عملية بحث اليوم</item>
-    </plurals>
-    <string name="settings_metadata_allowance_resets">تتجدد في <xliff:g id="time">%1$s</xliff:g></string>
+    <string name="settings_metadata_usage_label">الاستخدام</string>
+    <string name="settings_metadata_usage_value"><xliff:g id="min_used">%1$d</xliff:g>/<xliff:g id="min_total">%2$d</xliff:g> دقيقة · <xliff:g id="hr_used">%3$d</xliff:g>/<xliff:g id="hr_total">%4$d</xliff:g> ساعة · <xliff:g id="day_used">%5$d</xliff:g>/<xliff:g id="day_total">%6$d</xliff:g> يوم</string>
+    <string name="settings_metadata_source_label">المصدر</string>
+    <string name="settings_metadata_key_label">المفتاح</string>
+    <string name="settings_metadata_server_label">الخادم</string>
+    <string name="settings_metadata_refills_label">يتجدد في</string>
+    <string name="settings_metadata_clear_advanced_title">هل تريد التوقف عن استخدام مفتاحك؟</string>
+    <string name="settings_metadata_clear_advanced_message">سيتم حذف مفتاح TMDB API وعنوان خادمك من هذا الجهاز، وسيعود OwnTV إلى الخدمة المشتركة المدمجة بحصتها اليومية.</string>
     <string name="settings_metadata_fair_share">خدمة البيانات الوصفية المدمجة يشترك فيها جميع مستخدمي OwnTV، لذا يحصل كل جهاز على حصته الخاصة كل يوم. إذا استنفدت حصتك، تتوقف الملصقات والأوصاف مؤقتًا حتى تتجدد — وتظل معلومات قائمة التشغيل الخاصة بك تعمل كالمعتاد. إضافة مفتاح TMDB API الخاص بك أو خادمك تلغي هذا الحد: فهو مجاني، والمفتاح الشخصي لا حد له عمليًا.</string>
     <string name="settings_metadata_limit_reached">نفدت حصتك اليومية من البيانات الوصفية — أضف مفتاح TMDB الخاص بك من الإعدادات → البيانات الوصفية لإلغاء هذا الحد.</string>
     <string name="settings_metadata_language">لغة البيانات الوصفية</string>
@@ -116,6 +110,9 @@
     <string name="settings_advanced_options">خيارات متقدمة</string>
     <string name="settings_advanced_metadata_description">استخدم مفتاح TMDB API الخاص بك أو خادمًا مستضافًا ذاتيًا بدلًا من الإعداد الافتراضي المشترك.</string>
     <string name="settings_metadata_server_description">اترك الحقلين فارغين لاستخدام الخادم المشترك المضمّن (بلا إعداد). أدخل مفتاح TMDB API الخاص بك للاتصال بـ TMDB مباشرةً، أو عنوان URL لخادم مستضاف ذاتيًا لاستخدام الوكيل/النسخة المتطابقة الخاصة بك. تكون الأولوية لعنوان URL على المفتاح.</string>
+    <string name="settings_metadata_key_from_phone">احصل على المفتاح من هاتفك</string>
+    <string name="settings_metadata_key_from_phone_desc">امسح رمزًا بهاتفك، وسجّل الدخول إلى TMDB هناك، ثم أرسل المفتاح. لا شيء تكتبه بجهاز التحكم.</string>
+    <string name="settings_metadata_key_received">تم استلام مفتاح TMDB من هاتفك</string>
     <string name="settings_tmdb_api_key">مفتاح TMDB API ‏(v3)</string>
     <string name="settings_self_host_url">عنوان URL للخادم المستضاف ذاتيًا</string>
     <string name="settings_test">اختبار</string>

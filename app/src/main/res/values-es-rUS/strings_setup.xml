@@ -176,6 +176,13 @@
     <string name="companion_pin_aria">PIN</string>
     <string name="companion_continue">Continuar</string>
     <string name="companion_pin_mismatch">El PIN no coincidió; inténtalo de nuevo.</string>
+    <string name="companion_tmdb_page_title">Enviar clave de TMDB</string>
+    <string name="companion_tmdb_heading">Envía tu clave de TMDB</string>
+    <string name="companion_tmdb_description">Inicia sesión en TMDB abajo, copia tu clave de API (v3 auth), pégala aquí y envíala al televisor. Una clave personal es gratis y prácticamente no tiene límite diario.</string>
+    <string name="companion_tmdb_get_key">Abrir los ajustes de API de TMDB</string>
+    <string name="companion_tmdb_invalid">Eso no parece una clave de API de TMDB. Copia el valor «API Key (v3 auth)».</string>
+    <string name="companion_tmdb_sent_body">Tu clave de TMDB ya está en el televisor. Pulsa Guardar allí para empezar a usarla.</string>
+    <string name="companion_tmdb_sent_link">Enviar otra clave</string>
     <string name="companion_add_page_title">OwnTV — Agregar fuente</string>
     <string name="companion_add_heading">Agregar una fuente</string>
     <string name="companion_add_description">Completa los datos de una fuente y presiona Enviar. Aparecerá en el TV; toma el control remoto y presiona Iniciar importación allí cuando estés listo.</string>

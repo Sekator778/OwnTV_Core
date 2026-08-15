@@ -94,17 +94,15 @@
     <string name="settings_metadata_provider_tmdb_description">Informationen från din spellista prioriteras. TMDB fyller i luckorna och lägger till skådespelare, genrer och bakgrundsbilder.</string>
     <string name="settings_metadata_tmdb_only_description">Föredra TMDB för varje fält. Använd endast spellistan som reserv när TMDB saknar information.</string>
     <string name="settings_selected">Vald</string>
-    <string name="settings_active_tmdb_source">Aktiv TMDB-källa: <xliff:g id="tier">%1$s</xliff:g></string>
     <string name="settings_metadata_allowance">Din dagliga andel</string>
-    <string name="settings_metadata_allowance_row"><xliff:g id="window">%1$s</xliff:g>: <xliff:g id="remaining">%2$d</xliff:g> av <xliff:g id="total">%3$d</xliff:g> kvar</string>
-    <string name="settings_metadata_window_minute">Per minut</string>
-    <string name="settings_metadata_window_hour">Per timme</string>
-    <string name="settings_metadata_window_day">I dag</string>
-    <plurals name="settings_metadata_allowance_left">
-        <item quantity="one"><xliff:g id="remaining">%1$d</xliff:g> av <xliff:g id="total">%2$d</xliff:g> sökning kvar i dag</item>
-        <item quantity="other"><xliff:g id="remaining">%1$d</xliff:g> av <xliff:g id="total">%2$d</xliff:g> sökningar kvar i dag</item>
-    </plurals>
-    <string name="settings_metadata_allowance_resets">Fylls på <xliff:g id="time">%1$s</xliff:g></string>
+    <string name="settings_metadata_usage_label">Användning</string>
+    <string name="settings_metadata_usage_value"><xliff:g id="min_used">%1$d</xliff:g>/<xliff:g id="min_total">%2$d</xliff:g> min · <xliff:g id="hr_used">%3$d</xliff:g>/<xliff:g id="hr_total">%4$d</xliff:g> tim · <xliff:g id="day_used">%5$d</xliff:g>/<xliff:g id="day_total">%6$d</xliff:g> dag</string>
+    <string name="settings_metadata_source_label">Källa</string>
+    <string name="settings_metadata_key_label">Nyckel</string>
+    <string name="settings_metadata_server_label">Server</string>
+    <string name="settings_metadata_refills_label">Fylls på</string>
+    <string name="settings_metadata_clear_advanced_title">Sluta använda din egen nyckel?</string>
+    <string name="settings_metadata_clear_advanced_message">Din TMDB API-nyckel och adressen till din egen server tas bort från den här enheten, och OwnTV går tillbaka till den inbyggda delade tjänsten med dess dagliga andel.</string>
     <string name="settings_metadata_fair_share">Den inbyggda metadatatjänsten delas av alla som använder OwnTV, så varje enhet får sin egen andel varje dag. Om du gör slut på din andel pausas omslag och beskrivningar tills den fylls på igen — informationen från din egen spellista fungerar som vanligt. Att lägga till en egen TMDB API-nyckel eller server tar bort gränsen: det är gratis, och en personlig nyckel har praktiskt taget ingen gräns.</string>
     <string name="settings_metadata_limit_reached">Din dagliga metadataandel är slut — lägg till en egen TMDB-nyckel under Inställningar → Metadata för att ta bort gränsen.</string>
     <string name="settings_metadata_language">Metadataspråk</string>
@@ -112,6 +110,9 @@
     <string name="settings_advanced_options">Avancerade alternativ</string>
     <string name="settings_advanced_metadata_description">Använd din egen TMDB API-nyckel eller en egen server i stället för den delade standardservern.</string>
     <string name="settings_metadata_server_description">Lämna båda tomma för att använda den inbyggda delade servern (ingen konfiguration behövs). Ange din egen TMDB API-nyckel för att anropa TMDB direkt eller webbadressen till en egen server för att använda din egen proxy/spegel. En webbadress prioriteras framför en nyckel.</string>
+    <string name="settings_metadata_key_from_phone">Hämta nyckeln från din telefon</string>
+    <string name="settings_metadata_key_from_phone_desc">Skanna en kod med telefonen, logga in på TMDB där och skicka nyckeln. Inget att skriva med fjärrkontrollen.</string>
+    <string name="settings_metadata_key_received">TMDB-nyckel mottagen från din telefon</string>
     <string name="settings_tmdb_api_key">TMDB API-nyckel (v3)</string>
     <string name="settings_self_host_url">Webbadress till egen server</string>
     <string name="settings_test">Test</string>

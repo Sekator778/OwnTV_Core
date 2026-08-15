@@ -180,6 +180,13 @@
     <string name="companion_pin_aria">PIN</string>
     <string name="companion_continue">Kontynuuj</string>
     <string name="companion_pin_mismatch">Ten PIN jest nieprawidłowy — spróbuj ponownie.</string>
+    <string name="companion_tmdb_page_title">Wyślij klucz TMDB</string>
+    <string name="companion_tmdb_heading">Wyślij swój klucz TMDB</string>
+    <string name="companion_tmdb_description">Zaloguj się poniżej do TMDB, skopiuj swój klucz API (v3 auth), wklej go tutaj i wyślij do telewizora. Klucz osobisty jest bezpłatny i praktycznie nie ma dziennego limitu.</string>
+    <string name="companion_tmdb_get_key">Otwórz ustawienia API TMDB</string>
+    <string name="companion_tmdb_invalid">To nie wygląda na klucz API TMDB. Skopiuj wartość „API Key (v3 auth)”.</string>
+    <string name="companion_tmdb_sent_body">Twój klucz TMDB jest już w telewizorze. Naciśnij tam Zapisz, aby zacząć go używać.</string>
+    <string name="companion_tmdb_sent_link">Wyślij inny klucz</string>
     <string name="companion_add_page_title">OwnTV — dodaj źródło</string>
     <string name="companion_add_heading">Dodaj źródło</string>
     <string name="companion_add_description">Uzupełnij dane jednego źródła i wybierz opcję Wyślij. Pojawi się ono na telewizorze — gdy wszystko będzie gotowe, weź pilot i wybierz tam opcję Rozpocznij import.</string>

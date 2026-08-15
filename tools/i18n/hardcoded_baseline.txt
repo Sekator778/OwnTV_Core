@@ -22,6 +22,11 @@
 1	app/src/main/java/tv/own/owntv/core/catalog/ProviderCatalogMetadata.kt	2.0 Audio
 1	app/src/main/java/tv/own/owntv/core/catalog/ProviderCatalogMetadata.kt	5.1 Audio
 1	app/src/main/java/tv/own/owntv/core/catalog/ProviderCatalogMetadata.kt	7.1 Audio
+1	app/src/main/java/tv/own/owntv/core/companion/CompanionHtml.kt	<div class="card"> <h1>${c.tmdbHeading.h()}</h1> <p>${c.tmdbDescription.h()}</p> <p><a href="https://www.themoviedb.org/settings/api" target="_blank" rel="noopener">${c.tmdbGetKey.h()}</a></p> <form id="f" onsubmit="return false"> <label>${c.tmdbKeyLabel.h()} <input id="key" type="text" autocomplete="off" autocapitalize="off" spellcheck="false" required></label> <button class="go" id="send" type="submit">${c.sendToTv.h()}</button> </form> <p id="status" class="hint"></p> </div> <script> var k=document.getElementById('key'), b=document.getElementById('send'), s=document.getElementById('status'); document.getElementById('f').addEventListener('submit',function(){ var v=(k.value||'').trim(); // Mirror of the server-side check, purely so a typo is caught before a round trip. if(!/^[A-Za-z0-9._-]{16,128}$/.test(v)){s.textContent=${c.tmdbInvalid.js()};return false;} b.disabled=true; s.textContent=${c.sending.js()}; fetch('/tmdbkey?pin=$pin',{method:'POST',headers:{'Content-Type':'text/plain'},body:v}) .then(function(res){ if(res.ok){document.open();res.text().then(function(t){document.write(t);document.close();});} else{b.disabled=false;s.textContent=${c.uploadFailed.js()}.replace('__STATUS__',String(res.status));} }) .catch(function(){b.disabled=false;s.textContent=${c.couldNotReach.js()};}); return false; }); </script>
+1	app/src/main/java/tv/own/owntv/core/companion/CompanionHtml.kt	<div class="card"><h1>${c.savedHeading.h()}</h1> <p>${c.tmdbSentBody.h()}</p><p><a href="/?pin=$pin">${c.tmdbSentLink.h()}</a></p> </div>
+1	app/src/main/java/tv/own/owntv/core/companion/CompanionHttpServer.kt	/tmdbkey
+1	app/src/main/java/tv/own/owntv/core/companion/CompanionHttpServer.kt	POST
+1	app/src/main/java/tv/own/owntv/core/companion/CompanionHttpServer.kt	x-companion-pin
 1	app/src/main/java/tv/own/owntv/core/customize/CustomizationStore.kt	${CustomizeKeys.CUSTOM_PREFIX}${UUID.randomUUID()}
 1	app/src/main/java/tv/own/owntv/core/customize/CustomizationStore.kt	custom:
 2	app/src/main/java/tv/own/owntv/core/customize/CustomizationStore.kt	customCats
@@ -213,6 +218,7 @@
 1	app/src/main/java/tv/own/owntv/features/settings/DnsSettingsScreen.kt	${cfg.host}$p
 1	app/src/main/java/tv/own/owntv/features/settings/DnsSettingsScreen.kt	:${cfg.port}
 2	app/src/main/java/tv/own/owntv/features/settings/DnsSettingsScreen.kt	https://
+5	app/src/main/java/tv/own/owntv/features/settings/MetadataSettingsScreen.kt	\0
 1	app/src/main/java/tv/own/owntv/features/settings/SettingsViewModel.kt	UnknownHostException
 1	app/src/main/java/tv/own/owntv/features/settings/SettingsViewModel.kt	dns.google
 1	app/src/main/java/tv/own/owntv/features/settings/SettingsViewModel.kt	refused

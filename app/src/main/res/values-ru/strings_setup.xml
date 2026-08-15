@@ -180,6 +180,13 @@
     <string name="companion_pin_aria">PIN</string>
     <string name="companion_continue">Продолжить</string>
     <string name="companion_pin_mismatch">PIN не совпадает — повторите попытку.</string>
+    <string name="companion_tmdb_page_title">Отправить ключ TMDB</string>
+    <string name="companion_tmdb_heading">Отправьте свой ключ TMDB</string>
+    <string name="companion_tmdb_description">Войдите в TMDB ниже, скопируйте свой ключ API (v3 auth), вставьте его сюда и отправьте на телевизор. Личный ключ бесплатен и практически не имеет дневного лимита.</string>
+    <string name="companion_tmdb_get_key">Открыть настройки API TMDB</string>
+    <string name="companion_tmdb_invalid">Это не похоже на ключ API TMDB. Скопируйте значение «API Key (v3 auth)».</string>
+    <string name="companion_tmdb_sent_body">Ваш ключ TMDB уже на телевизоре. Нажмите там «Сохранить», чтобы начать им пользоваться.</string>
+    <string name="companion_tmdb_sent_link">Отправить другой ключ</string>
     <string name="companion_add_page_title">OwnTV — добавить источник</string>
     <string name="companion_add_heading">Добавить источник</string>
     <string name="companion_add_description">Заполните данные одного источника и нажмите «Отправить». Он появится на телевизоре — когда будете готовы, возьмите пульт ДУ и нажмите там «Начать импорт».</string>

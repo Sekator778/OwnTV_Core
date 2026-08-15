@@ -172,6 +172,13 @@
     <string name="companion_pin_aria">PIN</string>
     <string name="companion_continue">Doorgaan</string>
     <string name="companion_pin_mismatch">Die PIN kwam niet overeen — probeer het opnieuw.</string>
+    <string name="companion_tmdb_page_title">TMDB-sleutel verzenden</string>
+    <string name="companion_tmdb_heading">Verstuur je TMDB-sleutel</string>
+    <string name="companion_tmdb_description">Meld je hieronder aan bij TMDB, kopieer je API-sleutel (v3 auth), plak die hier en stuur hem naar de tv. Een persoonlijke sleutel is gratis en heeft praktisch geen daglimiet.</string>
+    <string name="companion_tmdb_get_key">TMDB API-instellingen openen</string>
+    <string name="companion_tmdb_invalid">Dat lijkt geen TMDB-API-sleutel. Kopieer de waarde ‘API Key (v3 auth)’.</string>
+    <string name="companion_tmdb_sent_body">Je TMDB-sleutel staat nu op de tv. Druk daar op Opslaan om hem te gebruiken.</string>
+    <string name="companion_tmdb_sent_link">Een andere sleutel sturen</string>
     <string name="companion_add_page_title">OwnTV — Bron toevoegen</string>
     <string name="companion_add_heading">Een bron toevoegen</string>
     <string name="companion_add_description">Vul één bron in en druk op Verzenden. Deze verschijnt op de tv — pak de afstandsbediening en druk daar op Importeren starten wanneer je klaar bent.</string>

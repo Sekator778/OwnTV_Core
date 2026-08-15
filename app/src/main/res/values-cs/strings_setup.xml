@@ -180,6 +180,13 @@
     <string name="companion_pin_aria">PIN</string>
     <string name="companion_continue">Pokračovat</string>
     <string name="companion_pin_mismatch">Tento PIN se neshoduje — zkuste to znovu.</string>
+    <string name="companion_tmdb_page_title">Odeslat klíč TMDB</string>
+    <string name="companion_tmdb_heading">Odešlete svůj klíč TMDB</string>
+    <string name="companion_tmdb_description">Přihlaste se níže k TMDB, zkopírujte svůj klíč API (v3 auth), vložte jej sem a odešlete do televize. Osobní klíč je zdarma a prakticky nemá denní limit.</string>
+    <string name="companion_tmdb_get_key">Otevřít nastavení API TMDB</string>
+    <string name="companion_tmdb_invalid">Tohle nevypadá jako klíč API TMDB. Zkopírujte hodnotu „API Key (v3 auth)“.</string>
+    <string name="companion_tmdb_sent_body">Váš klíč TMDB je nyní v televizi. Stiskněte tam Uložit a začněte jej používat.</string>
+    <string name="companion_tmdb_sent_link">Odeslat jiný klíč</string>
     <string name="companion_add_page_title">OwnTV — Přidat zdroj</string>
     <string name="companion_add_heading">Přidat zdroj</string>
     <string name="companion_add_description">Vyplňte jeden zdroj a stiskněte Odeslat. Zobrazí se na televizoru — až budete připraveni, vezměte dálkový ovladač a stiskněte tam Spustit import.</string>

@@ -168,6 +168,13 @@
     <string name="companion_pin_aria">PIN</string>
     <string name="companion_continue">繼續</string>
     <string name="companion_pin_mismatch">該 PIN 不符，請再試一次。</string>
+    <string name="companion_tmdb_page_title">傳送 TMDB 金鑰</string>
+    <string name="companion_tmdb_heading">傳送你的 TMDB 金鑰</string>
+    <string name="companion_tmdb_description">在下方登入 TMDB，複製你的 API 金鑰（v3 auth），貼到這裡並傳送到電視。個人金鑰免費，而且幾乎沒有每日限制。</string>
+    <string name="companion_tmdb_get_key">開啟 TMDB API 設定</string>
+    <string name="companion_tmdb_invalid">這看起來不像 TMDB API 金鑰。請複製「API Key (v3 auth)」的值。</string>
+    <string name="companion_tmdb_sent_body">你的 TMDB 金鑰已傳送到電視。在電視上按儲存即可開始使用。</string>
+    <string name="companion_tmdb_sent_link">傳送其他金鑰</string>
     <string name="companion_add_page_title">OwnTV — 新增來源</string>
     <string name="companion_add_heading">新增來源</string>
     <string name="companion_add_description">填寫一個來源並按下「傳送」。來源會顯示在電視上，準備好後，拿起遙控器並在電視上按下「開始匯入」。</string>

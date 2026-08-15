@@ -52,6 +52,10 @@ class CompanionController(context: Context, localeStore: LocaleStore) {
     private val _images = MutableSharedFlow<File>(extraBufferCapacity = 4)
     val images: SharedFlow<File> = _images.asSharedFlow()
 
+    /** TMDB API keys handed over from a phone in [startForTmdbKey] mode. */
+    private val _tmdbKeys = MutableSharedFlow<String>(extraBufferCapacity = 4)
+    val tmdbKeys: SharedFlow<String> = _tmdbKeys.asSharedFlow()
+
     /** A fresh 6-digit PIN per [start], so a leaked code is short-lived. */
     @Volatile private var currentPin: String = ""
 
@@ -78,6 +82,9 @@ class CompanionController(context: Context, localeStore: LocaleStore) {
     /** Starts the companion server in image-upload mode: the phone sends a background image, emitted on [images]. */
     fun startForImageUpload(port: Int) = startInternal(port, CompanionMode.IMAGE_UPLOAD)
 
+    /** Starts the companion server in TMDB-key mode: the phone sends an API key, emitted on [tmdbKeys]. */
+    fun startForTmdbKey(port: Int) = startInternal(port, CompanionMode.TMDB_KEY)
+
     private fun startInternal(port: Int, mode: CompanionMode, downloadFile: File? = null) {
         if (port !in 1..65535) {
             _state.value = CompanionServerState.Failed(CompanionFailure.InvalidPort)
@@ -99,6 +106,8 @@ class CompanionController(context: Context, localeStore: LocaleStore) {
                 },
                 onBackup = ::onBackupUploaded,
                 onImage = ::onImageUploaded,
+                // Never logged, at any level: it is the user's own credential.
+                onTmdbKey = { key -> _tmdbKeys.tryEmit(key) },
                 downloadFile = downloadFile,
                 onLocked = {
                     // The server has already stopped itself; just reflect it on the TV so the user

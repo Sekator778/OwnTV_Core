@@ -172,6 +172,13 @@
     <string name="companion_pin_aria">PIN</string>
     <string name="companion_continue">തുടരുക</string>
     <string name="companion_pin_mismatch">ആ PIN പൊരുത്തപ്പെട്ടില്ല — വീണ്ടും ശ്രമിക്കുക.</string>
+    <string name="companion_tmdb_page_title">TMDB കീ അയയ്ക്കുക</string>
+    <string name="companion_tmdb_heading">നിങ്ങളുടെ TMDB കീ അയയ്ക്കുക</string>
+    <string name="companion_tmdb_description">താഴെ TMDB-യിൽ സൈൻ ഇൻ ചെയ്ത്, നിങ്ങളുടെ API കീ (v3 auth) പകർത്തി ഇവിടെ ഒട്ടിച്ച് ടിവിയിലേക്ക് അയയ്ക്കുക. വ്യക്തിഗത കീ സൗജന്യമാണ്, പ്രായോഗികമായി ദൈനംദിന പരിധിയുമില്ല.</string>
+    <string name="companion_tmdb_get_key">TMDB API ക്രമീകരണങ്ങൾ തുറക്കുക</string>
+    <string name="companion_tmdb_invalid">ഇത് TMDB API കീ പോലെ തോന്നുന്നില്ല. "API Key (v3 auth)" മൂല്യം പകർത്തുക.</string>
+    <string name="companion_tmdb_sent_body">നിങ്ങളുടെ TMDB കീ ഇപ്പോൾ ടിവിയിലുണ്ട്. ഉപയോഗിച്ചു തുടങ്ങാൻ അവിടെ സേവ് അമർത്തുക.</string>
+    <string name="companion_tmdb_sent_link">മറ്റൊരു കീ അയയ്ക്കുക</string>
     <string name="companion_add_page_title">OwnTV — ഉറവിടം ചേർക്കുക</string>
     <string name="companion_add_heading">ഒരു ഉറവിടം ചേർക്കുക</string>
     <string name="companion_add_description">ഒരു ഉറവിടത്തിന്റെ വിവരങ്ങൾ പൂരിപ്പിച്ച് അയയ്ക്കുക അമർത്തുക. അത് ടിവിയിൽ ദൃശ്യമാകും — തയ്യാറാകുമ്പോൾ റിമോട്ട് കൺട്രോൾ എടുത്ത് അവിടെ ഇമ്പോർട്ട് ആരംഭിക്കുക അമർത്തുക.</string>

@@ -94,17 +94,15 @@
     <string name="settings_metadata_provider_tmdb_description">Informasjonen fra spillelisten prioriteres. TMDB fyller ut mangler og legger til skuespillere, sjangre og bakgrunnsbilder.</string>
     <string name="settings_metadata_tmdb_only_description">Foretrekk TMDB for alle felt. Bruk bare spillelisten når TMDB ikke har noe.</string>
     <string name="settings_selected">Valgt</string>
-    <string name="settings_active_tmdb_source">Aktiv TMDB-kilde: <xliff:g id="tier">%1$s</xliff:g></string>
     <string name="settings_metadata_allowance">Din daglige andel</string>
-    <string name="settings_metadata_allowance_row"><xliff:g id="window">%1$s</xliff:g>: <xliff:g id="remaining">%2$d</xliff:g> av <xliff:g id="total">%3$d</xliff:g> igjen</string>
-    <string name="settings_metadata_window_minute">Per minutt</string>
-    <string name="settings_metadata_window_hour">Per time</string>
-    <string name="settings_metadata_window_day">I dag</string>
-    <plurals name="settings_metadata_allowance_left">
-        <item quantity="one"><xliff:g id="remaining">%1$d</xliff:g> av <xliff:g id="total">%2$d</xliff:g> oppslag igjen i dag</item>
-        <item quantity="other"><xliff:g id="remaining">%1$d</xliff:g> av <xliff:g id="total">%2$d</xliff:g> oppslag igjen i dag</item>
-    </plurals>
-    <string name="settings_metadata_allowance_resets">Fylles på kl. <xliff:g id="time">%1$s</xliff:g></string>
+    <string name="settings_metadata_usage_label">Bruk</string>
+    <string name="settings_metadata_usage_value"><xliff:g id="min_used">%1$d</xliff:g>/<xliff:g id="min_total">%2$d</xliff:g> min · <xliff:g id="hr_used">%3$d</xliff:g>/<xliff:g id="hr_total">%4$d</xliff:g> time · <xliff:g id="day_used">%5$d</xliff:g>/<xliff:g id="day_total">%6$d</xliff:g> dag</string>
+    <string name="settings_metadata_source_label">Kilde</string>
+    <string name="settings_metadata_key_label">Nøkkel</string>
+    <string name="settings_metadata_server_label">Server</string>
+    <string name="settings_metadata_refills_label">Fylles på kl.</string>
+    <string name="settings_metadata_clear_advanced_title">Vil du slutte å bruke din egen nøkkel?</string>
+    <string name="settings_metadata_clear_advanced_message">TMDB API-nøkkelen din og adressen til din egen server slettes fra denne enheten, og OwnTV går tilbake til den innebygde delte tjenesten med den daglige andelen.</string>
     <string name="settings_metadata_fair_share">Den innebygde metadatatjenesten deles av alle som bruker OwnTV, så hver enhet får sin egen andel hver dag. Hvis du bruker opp andelen din, settes plakater og beskrivelser på pause til den fylles på igjen — informasjonen fra din egen spilleliste fungerer som normalt. Å legge til din egen TMDB API-nøkkel eller server fjerner grensen: det er gratis, og en personlig nøkkel har praktisk talt ingen grense.</string>
     <string name="settings_metadata_limit_reached">Den daglige metadataandelen din er brukt opp — legg til din egen TMDB-nøkkel under Innstillinger → Metadata for å fjerne denne grensen.</string>
     <string name="settings_metadata_language">Metadataspråk</string>
@@ -112,6 +110,9 @@
     <string name="settings_advanced_options">Avanserte alternativer</string>
     <string name="settings_advanced_metadata_description">Bruk din egen TMDB API-nøkkel eller en egenvertsbasert server i stedet for den delte standardløsningen.</string>
     <string name="settings_metadata_server_description">La begge feltene stå tomme for å bruke den innebygde delte serveren (krever ikke oppsett). Angi din egen TMDB API-nøkkel for å kontakte TMDB direkte, eller en URL til en egenvertsbasert server for å bruke din egen proxy eller speilserver. En URL prioriteres over en nøkkel.</string>
+    <string name="settings_metadata_key_from_phone">Hent nøkkelen fra telefonen</string>
+    <string name="settings_metadata_key_from_phone_desc">Skann en kode med telefonen, logg inn på TMDB der, og send nøkkelen over. Ingenting å skrive på fjernkontrollen.</string>
+    <string name="settings_metadata_key_received">TMDB-nøkkel mottatt fra telefonen</string>
     <string name="settings_tmdb_api_key">TMDB API-nøkkel (v3)</string>
     <string name="settings_self_host_url">URL til egenvertsbasert server</string>
     <string name="settings_test">Test</string>

@@ -94,19 +94,15 @@
     <string name="settings_metadata_provider_tmdb_description">Pierwszeństwo mają informacje z listy odtwarzania; TMDB uzupełnia braki oraz dodaje obsadę, gatunki i tła.</string>
     <string name="settings_metadata_tmdb_only_description">Preferuj TMDB dla każdego pola; używaj listy odtwarzania tylko wtedy, gdy TMDB nie zawiera żadnych danych.</string>
     <string name="settings_selected">Wybrano</string>
-    <string name="settings_active_tmdb_source">Aktywne źródło TMDB: <xliff:g id="tier">%1$s</xliff:g></string>
     <string name="settings_metadata_allowance">Twój dzienny przydział</string>
-    <string name="settings_metadata_allowance_row"><xliff:g id="window">%1$s</xliff:g>: pozostało <xliff:g id="remaining">%2$d</xliff:g> z <xliff:g id="total">%3$d</xliff:g></string>
-    <string name="settings_metadata_window_minute">Na minutę</string>
-    <string name="settings_metadata_window_hour">Na godzinę</string>
-    <string name="settings_metadata_window_day">Dzisiaj</string>
-    <plurals name="settings_metadata_allowance_left">
-        <item quantity="one">Dziś pozostało <xliff:g id="remaining">%1$d</xliff:g> z <xliff:g id="total">%2$d</xliff:g> zapytania</item>
-        <item quantity="few">Dziś pozostały <xliff:g id="remaining">%1$d</xliff:g> z <xliff:g id="total">%2$d</xliff:g> zapytania</item>
-        <item quantity="many">Dziś pozostało <xliff:g id="remaining">%1$d</xliff:g> z <xliff:g id="total">%2$d</xliff:g> zapytań</item>
-        <item quantity="other">Dziś pozostało <xliff:g id="remaining">%1$d</xliff:g> z <xliff:g id="total">%2$d</xliff:g> zapytania</item>
-    </plurals>
-    <string name="settings_metadata_allowance_resets">Odnowi się o <xliff:g id="time">%1$s</xliff:g></string>
+    <string name="settings_metadata_usage_label">Zużycie</string>
+    <string name="settings_metadata_usage_value"><xliff:g id="min_used">%1$d</xliff:g>/<xliff:g id="min_total">%2$d</xliff:g> min · <xliff:g id="hr_used">%3$d</xliff:g>/<xliff:g id="hr_total">%4$d</xliff:g> godz. · <xliff:g id="day_used">%5$d</xliff:g>/<xliff:g id="day_total">%6$d</xliff:g> dzień</string>
+    <string name="settings_metadata_source_label">Źródło</string>
+    <string name="settings_metadata_key_label">Klucz</string>
+    <string name="settings_metadata_server_label">Serwer</string>
+    <string name="settings_metadata_refills_label">Odnowi się o</string>
+    <string name="settings_metadata_clear_advanced_title">Przestać używać własnego klucza?</string>
+    <string name="settings_metadata_clear_advanced_message">Twój klucz API TMDB i adres własnego serwera zostaną usunięte z tego urządzenia, a OwnTV wróci do wbudowanej usługi współdzielonej z jej dziennym przydziałem.</string>
     <string name="settings_metadata_fair_share">Wbudowana usługa metadanych jest współdzielona przez wszystkich użytkowników OwnTV, więc każde urządzenie otrzymuje każdego dnia własny przydział. Po jego wyczerpaniu plakaty i opisy zostają wstrzymane do czasu odnowienia — informacje z Twojej własnej playlisty działają normalnie. Dodanie własnego klucza API TMDB lub serwera usuwa ten limit: jest bezpłatny, a klucz osobisty praktycznie nie ma limitu.</string>
     <string name="settings_metadata_limit_reached">Dzienny przydział metadanych wyczerpany — dodaj własny klucz TMDB w Ustawieniach → Metadane, aby usunąć ten limit.</string>
     <string name="settings_metadata_language">Język metadanych</string>
@@ -114,6 +110,9 @@
     <string name="settings_advanced_options">Opcje zaawansowane</string>
     <string name="settings_advanced_metadata_description">Używaj własnego klucza API TMDB lub samodzielnie hostowanego serwera zamiast domyślnego serwera współdzielonego.</string>
     <string name="settings_metadata_server_description">Pozostaw oba pola puste, aby używać wbudowanego serwera współdzielonego (bez konfiguracji). Wprowadź własny klucz API TMDB, aby łączyć się bezpośrednio z TMDB, albo adres URL samodzielnie hostowanego serwera, aby używać własnego serwera proxy lub kopii lustrzanej. Adres URL ma pierwszeństwo przed kluczem.</string>
+    <string name="settings_metadata_key_from_phone">Pobierz klucz z telefonu</string>
+    <string name="settings_metadata_key_from_phone_desc">Zeskanuj kod telefonem, zaloguj się tam do TMDB i wyślij klucz. Nic nie trzeba wpisywać pilotem.</string>
+    <string name="settings_metadata_key_received">Odebrano klucz TMDB z telefonu</string>
     <string name="settings_tmdb_api_key">Klucz API TMDB (v3)</string>
     <string name="settings_self_host_url">Adres URL własnego serwera</string>
     <string name="settings_test">Test</string>

@@ -176,6 +176,13 @@
     <string name="companion_pin_aria">PIN</string>
     <string name="companion_continue">Continua</string>
     <string name="companion_pin_mismatch">Il PIN non corrisponde: riprova.</string>
+    <string name="companion_tmdb_page_title">Invia chiave TMDB</string>
+    <string name="companion_tmdb_heading">Invia la tua chiave TMDB</string>
+    <string name="companion_tmdb_description">Accedi a TMDB qui sotto, copia la tua chiave API (v3 auth), incollala qui e inviala alla TV. Una chiave personale è gratuita e non ha praticamente alcun limite giornaliero.</string>
+    <string name="companion_tmdb_get_key">Apri le impostazioni API di TMDB</string>
+    <string name="companion_tmdb_invalid">Non sembra una chiave API TMDB. Copia il valore «API Key (v3 auth)».</string>
+    <string name="companion_tmdb_sent_body">La tua chiave TMDB è ora sulla TV. Premi Salva per iniziare a usarla.</string>
+    <string name="companion_tmdb_sent_link">Invia un’altra chiave</string>
     <string name="companion_add_page_title">OwnTV — Aggiungi fonte</string>
     <string name="companion_add_heading">Aggiungi una fonte</string>
     <string name="companion_add_description">Inserisci i dati di una fonte e premi Invia. Apparirà sulla TV: quando sei pronto, prendi il telecomando e premi Avvia importazione sulla TV.</string>

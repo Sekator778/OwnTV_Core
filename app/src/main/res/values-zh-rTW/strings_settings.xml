@@ -94,16 +94,15 @@
     <string name="settings_metadata_provider_tmdb_description">以播放清單的資訊為準；TMDB 會補齊缺漏，並新增演員、類型和背景圖。</string>
     <string name="settings_metadata_tmdb_only_description">所有欄位優先使用 TMDB；只有 TMDB 沒有資料時才改用播放清單。</string>
     <string name="settings_selected">已選取</string>
-    <string name="settings_active_tmdb_source">使用中的 TMDB 來源：<xliff:g id="tier">%1$s</xliff:g></string>
     <string name="settings_metadata_allowance">每日額度</string>
-    <string name="settings_metadata_allowance_row"><xliff:g id="window">%1$s</xliff:g>：剩餘 <xliff:g id="remaining">%2$d</xliff:g>/<xliff:g id="total">%3$d</xliff:g></string>
-    <string name="settings_metadata_window_minute">每分鐘</string>
-    <string name="settings_metadata_window_hour">每小時</string>
-    <string name="settings_metadata_window_day">今日</string>
-    <plurals name="settings_metadata_allowance_left">
-        <item quantity="other">今日剩餘 <xliff:g id="remaining">%1$d</xliff:g>/<xliff:g id="total">%2$d</xliff:g> 次</item>
-    </plurals>
-    <string name="settings_metadata_allowance_resets">將於 <xliff:g id="time">%1$s</xliff:g> 恢復</string>
+    <string name="settings_metadata_usage_label">用量</string>
+    <string name="settings_metadata_usage_value"><xliff:g id="min_used">%1$d</xliff:g>/<xliff:g id="min_total">%2$d</xliff:g> 分鐘 · <xliff:g id="hr_used">%3$d</xliff:g>/<xliff:g id="hr_total">%4$d</xliff:g> 小時 · <xliff:g id="day_used">%5$d</xliff:g>/<xliff:g id="day_total">%6$d</xliff:g> 天</string>
+    <string name="settings_metadata_source_label">來源</string>
+    <string name="settings_metadata_key_label">金鑰</string>
+    <string name="settings_metadata_server_label">伺服器</string>
+    <string name="settings_metadata_refills_label">恢復時間</string>
+    <string name="settings_metadata_clear_advanced_title">不再使用你自己的金鑰？</string>
+    <string name="settings_metadata_clear_advanced_message">你的 TMDB API 金鑰與自有伺服器位址將從此裝置刪除，OwnTV 將回到帶有每日額度的內建共用服務。</string>
     <string name="settings_metadata_fair_share">內建中繼資料服務由所有 OwnTV 使用者共用，因此每部裝置每天都有自己的額度。用完額度後，海報與簡介會暫停顯示，直到額度恢復；播放清單自帶的資訊不受影響。加入你自己的 TMDB API 金鑰或伺服器即可解除此限制：它是免費的，而且個人金鑰幾乎沒有限制。</string>
     <string name="settings_metadata_limit_reached">今日中繼資料額度已用完 — 在「設定 → 中繼資料」中加入你自己的 TMDB 金鑰即可解除此限制。</string>
     <string name="settings_metadata_language">中繼資料語言</string>
@@ -111,6 +110,9 @@
     <string name="settings_advanced_options">進階選項</string>
     <string name="settings_advanced_metadata_description">使用您自己的 TMDB API 金鑰或自行架設的伺服器，而不使用共用預設值。</string>
     <string name="settings_metadata_server_description">兩者皆留空即可使用內建的共用伺服器（無須設定）。輸入您自己的 TMDB API 金鑰可直接呼叫 TMDB，或輸入自行架設的伺服器 URL 以使用自己的代理伺服器／鏡像。URL 的優先順序高於金鑰。</string>
+    <string name="settings_metadata_key_from_phone">用手機取得金鑰</string>
+    <string name="settings_metadata_key_from_phone_desc">用手機掃描 QR 碼，在手機上登入 TMDB 並傳送金鑰。不需要用遙控器輸入。</string>
+    <string name="settings_metadata_key_received">已從手機接收 TMDB 金鑰</string>
     <string name="settings_tmdb_api_key">TMDB API 金鑰 (v3)</string>
     <string name="settings_self_host_url">自行架設的伺服器 URL</string>
     <string name="settings_test">測試</string>

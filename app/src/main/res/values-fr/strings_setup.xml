@@ -176,6 +176,13 @@
     <string name="companion_pin_aria">PIN</string>
     <string name="companion_continue">Continuer</string>
     <string name="companion_pin_mismatch">Ce PIN ne correspond pas — réessayez.</string>
+    <string name="companion_tmdb_page_title">Envoyer la clé TMDB</string>
+    <string name="companion_tmdb_heading">Envoyez votre clé TMDB</string>
+    <string name="companion_tmdb_description">Connectez-vous à TMDB ci-dessous, copiez votre clé API (v3 auth), collez-la ici et envoyez-la au téléviseur. Une clé personnelle est gratuite et n’a pratiquement aucune limite quotidienne.</string>
+    <string name="companion_tmdb_get_key">Ouvrir les paramètres API de TMDB</string>
+    <string name="companion_tmdb_invalid">Cela ne ressemble pas à une clé API TMDB. Copiez la valeur « API Key (v3 auth) ».</string>
+    <string name="companion_tmdb_sent_body">Votre clé TMDB est maintenant sur le téléviseur. Appuyez sur Enregistrer pour l’utiliser.</string>
+    <string name="companion_tmdb_sent_link">Envoyer une autre clé</string>
     <string name="companion_add_page_title">OwnTV — Ajouter une source</string>
     <string name="companion_add_heading">Ajouter une source</string>
     <string name="companion_add_description">Renseignez une source et appuyez sur Envoyer. Elle apparaît sur la TV — prenez la télécommande et appuyez sur Démarrer l’importation lorsque vous êtes prêt.</string>
