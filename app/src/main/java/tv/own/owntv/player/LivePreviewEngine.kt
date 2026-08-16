@@ -105,6 +105,7 @@ class LivePreviewEngine(
     // would stall the freeze watchdog — those keep the volume-0 path, which works for their PCM/stereo audio.
     private var audioTrackDisabled = false
     private var hasVideoTrack = true
+    private var hasAudioTrack = false
 
     private val _state = MutableStateFlow(State.IDLE)
     val state: StateFlow<State> = _state.asStateFlow()
@@ -598,6 +599,13 @@ class LivePreviewEngine(
     // re-fetches from the live edge instead of dead-ending. A channel that NEVER opened keeps the old
     // ERROR (so the VM falls back to mpv). retryCount resets whenever playback goes healthy again.
     private val mainHandler = android.os.Handler(android.os.Looper.getMainLooper())
+    private val audioOnlyConfirmation = Runnable {
+        if (currentUrl != null && hasAudioTrack && !hasVideoTrack && !_audioOnly.value &&
+            player?.playbackState == Player.STATE_READY
+        ) {
+            _audioOnlyMedia.value = true
+        }
+    }
     /** Scope for the reconnect URL-provider (awaiting its suspend freshUrl() off-main, then reloading on main). */
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
     private var hasPlayed = false
@@ -972,9 +980,10 @@ class LivePreviewEngine(
                 }
                 Player.STATE_READY -> {
                     val resumed = hasPlayed // a READY after first play == recovered from a buffer/stall
-                    _state.value = State.PLAYING; _buffering.value = false
-                    hasPlayed = true; mainHandler.removeCallbacks(stallWatchdog)
-                    if (activeIsHls && !playlistLogged) { playlistLogged = true; logHlsPlaylist("ready") }
+                _state.value = State.PLAYING; _buffering.value = false
+                hasPlayed = true; mainHandler.removeCallbacks(stallWatchdog)
+                updateAudioOnlyClassification()
+                if (activeIsHls && !playlistLogged) { playlistLogged = true; logHlsPlaylist("ready") }
                     // Recovery is measured, not assumed: arm the ladder reset and let it fire only if this
                     // READY actually holds (see [healthyReset]).
                     mainHandler.removeCallbacks(healthyReset); mainHandler.postDelayed(healthyReset, HEALTHY_MS)
@@ -1224,11 +1233,14 @@ class LivePreviewEngine(
         mainHandler.removeCallbacks(stallWatchdog); mainHandler.removeCallbacks(progressWatchdog); mainHandler.removeCallbacks(fpsFastRefresh)
         mainHandler.removeCallbacks(openWatchdog)
         mainHandler.removeCallbacks(healthyReset)
+        mainHandler.removeCallbacks(audioOnlyConfirmation)
         audioTrackList = emptyList(); audioSelections = emptyList(); _audioCount.value = 0
         textTrackList = emptyList(); textSelections = emptyList(); _subCount.value = 0
         _subtitleOn.value = false; _cues.value = emptyList(); _audioUnsupported.value = false
         _noVideoDetected.value = false; noVideoTriggered = false; readySinceMs = 0L
         _audioOnlyMedia.value = false // re-decided from this stream's own track list
+        hasAudioTrack = false
+        hasVideoTrack = true
         _videoHeight.value = null; _videoAspect.value = null; _videoSize.value = null; _streamChips.value = emptyList(); _videoFps.value = null
         _videoRes.value = null
         _error.value = null
@@ -1398,6 +1410,9 @@ class LivePreviewEngine(
         _subtitleOn.value = false; _cues.value = emptyList(); _audioUnsupported.value = false
         _noVideoDetected.value = false; noVideoTriggered = false; readySinceMs = 0L
         _audioOnlyMedia.value = false // re-decided from this stream's own track list
+        mainHandler.removeCallbacks(audioOnlyConfirmation)
+        hasAudioTrack = false
+        hasVideoTrack = true
         _videoHeight.value = null; _videoAspect.value = null; _videoSize.value = null; _streamChips.value = emptyList(); _videoFps.value = null
         _videoRes.value = null // else the next channel's HUD opens showing the previous one's resolution badge
         _state.value = State.IDLE
@@ -1439,6 +1454,7 @@ class LivePreviewEngine(
         mainHandler.removeCallbacks(progressWatchdog)
         mainHandler.removeCallbacks(openWatchdog)
         mainHandler.removeCallbacks(healthyReset)
+        mainHandler.removeCallbacks(audioOnlyConfirmation)
         player?.run { removeListener(listener); release() }
         player = null
         videoRenderer = null
@@ -2125,9 +2141,10 @@ class LivePreviewEngine(
         // Audio-only (radio) streams must keep their audio renderer even when muted — deselecting it would
         // leave nothing to render and the progress watchdog would read that as a dead feed.
         hasVideoTrack = tracks.groups.any { it.type == androidx.media3.common.C.TRACK_TYPE_VIDEO }
+        hasAudioTrack = audio.isNotEmpty()
         // A radio channel in a TV playlist is the commonest audio-only case of all. Say so on screen —
         // Audio Mode excepted, where the app is the one that turned the picture off.
-        _audioOnlyMedia.value = !hasVideoTrack && !_audioOnly.value
+        updateAudioOnlyClassification()
         applyMute()
         audioTrackList = audio; audioSelections = aSel; _audioCount.value = audio.size
         textTrackList = text; textSelections = tSel; _subCount.value = text.size
@@ -2142,6 +2159,20 @@ class LivePreviewEngine(
             g.type == androidx.media3.common.C.TRACK_TYPE_AUDIO && (0 until g.length).any { g.isTrackSupported(it) }
         }
         _audioUnsupported.value = audio.isNotEmpty() && !anySupportedAudio
+    }
+
+    /**
+     * Track discovery is incremental for some providers: audio can be announced before video.
+     * Confirm a stable, playing audio-only stream instead of flashing the radio badge on every tune.
+     */
+    private fun updateAudioOnlyClassification() {
+        mainHandler.removeCallbacks(audioOnlyConfirmation)
+        _audioOnlyMedia.value = false
+        if (hasAudioTrack && !hasVideoTrack && !_audioOnly.value &&
+            player?.playbackState == Player.STATE_READY
+        ) {
+            mainHandler.postDelayed(audioOnlyConfirmation, AUDIO_ONLY_CONFIRM_MS)
+        }
     }
 
     // Effective User-Agent for the current stream; updated per play() call.
@@ -2616,6 +2647,7 @@ class LivePreviewEngine(
         private const val FROZEN_LIMIT = 3          // picture frozen this many polls (~7.5s) == a dropped feed
         private const val FREEZE_TIMEOUT_MS = 8_000L // zero forward progress this long while READY == dead feed
         private const val NO_VIDEO_TIMEOUT_MS = 8_000L // video track present, zero frames rendered this long == "audio plays, no picture"
+        private const val AUDIO_ONLY_CONFIRM_MS = 5_000L // allow late video-track discovery before showing radio badge
         // Re-buffer flap (see [noteRebufferFlap]): this many re-buffers inside the window while the
         // position crawls == the stream is oscillating, not playing. The traced case managed ~8 per
         // second, so it trips about two seconds in; a merely choppy channel re-buffers a handful of
