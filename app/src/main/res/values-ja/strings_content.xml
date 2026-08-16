@@ -39,8 +39,16 @@
     <string name="content_avatar_picker_title">アバターを選択</string>
     <string name="content_category_browser_title">カテゴリ</string>
     <string name="content_channel_overlay_title">チャンネル</string>
-    <string name="content_live_now">現在</string>
-    <string name="content_live_next">次</string>
+    <string name="content_live_now">ライブ 現在</string>
+    <string name="content_live_next">ライブ 次</string>
+    <!-- Translators: Slot label for the archived programme currently being replayed (catch-up), beside the live card. -->
+    <string name="content_archive_playing">再生中</string>
+    <!-- Translators: Slot label for the programme that aired immediately after the one being replayed. Reads as "and then this was on". -->
+    <string name="content_archive_then">その後</string>
+    <!-- Translators: Label above the player clock showing the date and time the programme being replayed originally aired, as opposed to the real time now. Keep it short: it sits above a large clock. -->
+    <string name="content_clock_programme">番組の時刻</string>
+    <!-- Translators: Label above the player clock showing the real time and date now. Keep it short: it sits above a large clock. -->
+    <string name="content_clock_current">現在時刻</string>
     <string name="content_media_overview">概要</string>
     <string name="content_media_cast">出演者</string>
     <string name="content_media_press_back">戻るボタンを押すと閉じます</string>
@@ -131,6 +139,14 @@
     <string name="content_rewind_at">巻き戻し · <xliff:g id="time">%1$s</xliff:g></string>
     <string name="content_catchup_prompt">最近の番組を選択して最初から再生してください。</string>
     <string name="content_catchup_empty">このチャンネルには最近の番組表データがまだありません — EPGが照合されていることを確認してください（チャンネルを長押しするか、「EPGを照合」を使用してください）。</string>
+    <!-- Translators: Title of the list that jumps a live channel back to a chosen time in its catch-up archive. Also the label of the player button that opens it. Keep it short: it is a button label on a TV remote UI. -->
+    <string name="content_catchup_jump">戻る位置…</string>
+    <!-- Translators: Instructional text above the list of times to jump back to in a live channel's catch-up archive. -->
+    <string name="content_catchup_jump_prompt">視聴を開始する時刻を選んでください。番組表は不要です。</string>
+    <!-- Translators: Last row of the catch-up time list, and the title of the picker it opens, where the user enters any day and time within the archive instead of picking a suggested one. -->
+    <string name="content_catchup_jump_exact">時刻を指定…</string>
+    <!-- Translators: TV remote instructions in the exact-time picker. "OK" is the select/enter button on the remote; keep whatever name that button is given elsewhere in this app. -->
+    <string name="content_catchup_jump_hint">日付・時・分で OK を押し、上下で変更してから、もう一度 OK を押します。</string>
     <string name="content_epg_match_prompt">「<xliff:g id="channel">%1$s</xliff:g>」に対応する番組表チャンネルを選択してください。</string>
     <string name="content_epg_match_prompt_current">「<xliff:g id="channel">%1$s</xliff:g>」に対応する番組表チャンネルを選択してください。現在：<xliff:g id="match">%2$s</xliff:g></string>
     <string name="content_search_guide_channels">番組表チャンネルを検索…</string>

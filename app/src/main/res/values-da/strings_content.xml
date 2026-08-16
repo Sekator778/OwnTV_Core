@@ -43,8 +43,16 @@
     <string name="content_avatar_picker_title">Vælg din avatar</string>
     <string name="content_category_browser_title">Kategorier</string>
     <string name="content_channel_overlay_title">Kanaler</string>
-    <string name="content_live_now">Nu</string>
-    <string name="content_live_next">Næste</string>
+    <string name="content_live_now">Live nu</string>
+    <string name="content_live_next">Live næste</string>
+    <!-- Translators: Slot label for the archived programme currently being replayed (catch-up), beside the live card. -->
+    <string name="content_archive_playing">Afspiller</string>
+    <!-- Translators: Slot label for the programme that aired immediately after the one being replayed. Reads as "and then this was on". -->
+    <string name="content_archive_then">Derefter</string>
+    <!-- Translators: Label above the player clock showing the date and time the programme being replayed originally aired, as opposed to the real time now. Keep it short: it sits above a large clock. -->
+    <string name="content_clock_programme">Programtid</string>
+    <!-- Translators: Label above the player clock showing the real time and date now. Keep it short: it sits above a large clock. -->
+    <string name="content_clock_current">Aktuel tid</string>
     <string name="content_media_overview">Oversigt</string>
     <string name="content_media_cast">Medvirkende</string>
     <string name="content_media_press_back">Tryk på Tilbage for at lukke</string>
@@ -138,6 +146,14 @@
     <string name="content_rewind_at">Spol tilbage · <xliff:g id="time">%1$s</xliff:g></string>
     <string name="content_catchup_prompt">Vælg et nyligt program, som skal afspilles igen fra begyndelsen.</string>
     <string name="content_catchup_empty">Der er endnu ingen nyere programguidedata for denne kanal — sørg for, at dens EPG er matchet (hold den nede, eller brug Match EPG).</string>
+    <!-- Translators: Title of the list that jumps a live channel back to a chosen time in its catch-up archive. Also the label of the player button that opens it. Keep it short: it is a button label on a TV remote UI. -->
+    <string name="content_catchup_jump">Gå tilbage til…</string>
+    <!-- Translators: Instructional text above the list of times to jump back to in a live channel's catch-up archive. -->
+    <string name="content_catchup_jump_prompt">Vælg et tidspunkt at starte fra. Der kræves ingen programoversigt.</string>
+    <!-- Translators: Last row of the catch-up time list, and the title of the picker it opens, where the user enters any day and time within the archive instead of picking a suggested one. -->
+    <string name="content_catchup_jump_exact">Vælg præcist tidspunkt…</string>
+    <!-- Translators: TV remote instructions in the exact-time picker. "OK" is the select/enter button on the remote; keep whatever name that button is given elsewhere in this app. -->
+    <string name="content_catchup_jump_hint">Tryk på OK på dagen, timen eller minuttet, skift værdien med op og ned, og tryk på OK igen.</string>
     <string name="content_epg_match_prompt">Vælg kanalen i programguiden for “<xliff:g id="channel">%1$s</xliff:g>”.</string>
     <string name="content_epg_match_prompt_current">Vælg kanalen i programguiden for “<xliff:g id="channel">%1$s</xliff:g>”. Nuværende: <xliff:g id="match">%2$s</xliff:g></string>
     <string name="content_search_guide_channels">Søg efter kanaler i programguiden…</string>

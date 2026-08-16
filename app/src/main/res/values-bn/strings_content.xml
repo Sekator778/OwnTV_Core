@@ -43,8 +43,16 @@
     <string name="content_avatar_picker_title">আপনার অবতার বেছে নিন</string>
     <string name="content_category_browser_title">বিভাগগুলো</string>
     <string name="content_channel_overlay_title">চ্যানেলগুলো</string>
-    <string name="content_live_now">এখন</string>
-    <string name="content_live_next">পরবর্তী</string>
+    <string name="content_live_now">লাইভ এখন</string>
+    <string name="content_live_next">লাইভ পরবর্তী</string>
+    <!-- Translators: Slot label for the archived programme currently being replayed (catch-up), beside the live card. -->
+    <string name="content_archive_playing">চলছে</string>
+    <!-- Translators: Slot label for the programme that aired immediately after the one being replayed. Reads as "and then this was on". -->
+    <string name="content_archive_then">তারপর</string>
+    <!-- Translators: Label above the player clock showing the date and time the programme being replayed originally aired, as opposed to the real time now. Keep it short: it sits above a large clock. -->
+    <string name="content_clock_programme">অনুষ্ঠানের সময়</string>
+    <!-- Translators: Label above the player clock showing the real time and date now. Keep it short: it sits above a large clock. -->
+    <string name="content_clock_current">বর্তমান সময়</string>
     <string name="content_media_overview">সংক্ষিপ্ত বিবরণ</string>
     <string name="content_media_cast">অভিনয়শিল্পী</string>
     <string name="content_media_press_back">বন্ধ করতে Back চাপুন</string>
@@ -138,6 +146,14 @@
     <string name="content_rewind_at">পেছনে যান · <xliff:g id="time">%1$s</xliff:g></string>
     <string name="content_catchup_prompt">শুরু থেকে আবার চালাতে সাম্প্রতিক একটি অনুষ্ঠান বেছে নিন।</string>
     <string name="content_catchup_empty">এই চ্যানেলের জন্য এখনো সাম্প্রতিক অনুষ্ঠান নির্দেশিকার ডেটা নেই — এর EPG মেলানো আছে কি না নিশ্চিত করুন (চ্যানেলটি চেপে ধরে রাখুন অথবা EPG মেলান ব্যবহার করুন)।</string>
+    <!-- Translators: Title of the list that jumps a live channel back to a chosen time in its catch-up archive. Also the label of the player button that opens it. Keep it short: it is a button label on a TV remote UI. -->
+    <string name="content_catchup_jump">ফিরে যান…</string>
+    <!-- Translators: Instructional text above the list of times to jump back to in a live channel's catch-up archive. -->
+    <string name="content_catchup_jump_prompt">কোন সময় থেকে দেখতে চান তা বেছে নিন। গাইড লাগবে না।</string>
+    <!-- Translators: Last row of the catch-up time list, and the title of the picker it opens, where the user enters any day and time within the archive instead of picking a suggested one. -->
+    <string name="content_catchup_jump_exact">নির্দিষ্ট সময় বাছুন…</string>
+    <!-- Translators: TV remote instructions in the exact-time picker. "OK" is the select/enter button on the remote; keep whatever name that button is given elsewhere in this app. -->
+    <string name="content_catchup_jump_hint">দিন, ঘণ্টা বা মিনিটে OK চাপুন, উপর-নিচ দিয়ে বদলান, তারপর আবার OK চাপুন।</string>
     <string name="content_epg_match_prompt">“<xliff:g id="channel">%1$s</xliff:g>”-এর জন্য অনুষ্ঠান নির্দেশিকার চ্যানেল বেছে নিন।</string>
     <string name="content_epg_match_prompt_current">“<xliff:g id="channel">%1$s</xliff:g>”-এর জন্য অনুষ্ঠান নির্দেশিকার চ্যানেল বেছে নিন। বর্তমানে: <xliff:g id="match">%2$s</xliff:g></string>
     <string name="content_search_guide_channels">অনুষ্ঠান নির্দেশিকার চ্যানেল অনুসন্ধান করুন…</string>

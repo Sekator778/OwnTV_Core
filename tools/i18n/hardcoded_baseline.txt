@@ -72,6 +72,7 @@
 1	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	hlsSupported
 1	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	preferHls
 2	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	sources
+1	app/src/main/java/tv/own/owntv/core/database/dao/ChannelDao.kt	SELECT COUNT(*) FROM channels WHERE sourceId IN (:sourceIds) AND catchup = 1
 1	app/src/main/java/tv/own/owntv/core/database/dao/CustomCategoryDao.kt	(:type = 'LIVE' AND itemId IN (SELECT id FROM channels WHERE sourceId IN (:sourceIds))) OR
 1	app/src/main/java/tv/own/owntv/core/database/dao/CustomCategoryDao.kt	(:type = 'LIVE' AND itemId NOT IN (SELECT id FROM channels)) OR
 1	app/src/main/java/tv/own/owntv/core/database/dao/CustomCategoryDao.kt	(:type = 'MOVIE' AND itemId IN (SELECT id FROM movies WHERE sourceId IN (:sourceIds))) OR

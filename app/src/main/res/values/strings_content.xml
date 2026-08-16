@@ -75,10 +75,18 @@
     <string name="content_category_browser_title">Categories</string>
     <!-- Translators: Overlay title for the channel list overlay on the Live TV screen. -->
     <string name="content_channel_overlay_title">Channels</string>
-    <!-- Translators: Slot label inside LiveEpgCard for the current programme. -->
-    <string name="content_live_now">Now</string>
-    <!-- Translators: Slot label inside LiveEpgCard for the upcoming programme. -->
-    <string name="content_live_next">Next</string>
+    <!-- Translators: Slot label inside LiveEpgCard for the programme on air now. Says "Live" because a second card sits beside it during catch-up showing an archived programme; the two must not be confusable. -->
+    <string name="content_live_now">Live now</string>
+    <!-- Translators: Slot label inside LiveEpgCard for the next programme on air. See content_live_now. -->
+    <string name="content_live_next">Live next</string>
+    <!-- Translators: Slot label for the archived programme currently being replayed (catch-up), beside the live card. -->
+    <string name="content_archive_playing">Playing</string>
+    <!-- Translators: Slot label for the programme that aired immediately after the one being replayed. Reads as "and then this was on". -->
+    <string name="content_archive_then">Then</string>
+    <!-- Translators: Label above the player clock showing the date and time the programme being replayed originally aired, as opposed to the real time now. Keep it short: it sits above a large clock. -->
+    <string name="content_clock_programme">Programme time</string>
+    <!-- Translators: Label above the player clock showing the real time and date now. Keep it short: it sits above a large clock. -->
+    <string name="content_clock_current">Current time</string>
     <!-- Translators: Section heading in media details for the overview. -->
     <string name="content_media_overview">Overview</string>
     <!-- Translators: Section heading in media details for the cast. -->
@@ -256,6 +264,14 @@
     <string name="content_catchup_prompt">Pick a recent program to replay from the start.</string>
     <!-- Translators: Empty-state message in the catch-up screen when no EPG data is available. Directs the user to match EPG. -->
     <string name="content_catchup_empty">No recent guide data for this channel yet \u2014 make sure its EPG is matched (long-press it, or use Match EPG).</string>
+    <!-- Translators: Title of the list that jumps a live channel back to a chosen time in its catch-up archive. Also the label of the player button that opens it. Keep it short: it is a button label on a TV remote UI. -->
+    <string name="content_catchup_jump">Go back to\u2026</string>
+    <!-- Translators: Instructional text above the list of times to jump back to in a live channel's catch-up archive. -->
+    <string name="content_catchup_jump_prompt">Pick a time to start watching from. No guide needed.</string>
+    <!-- Translators: Last row of the catch-up time list, and the title of the picker it opens, where the user enters any day and time within the archive instead of picking a suggested one. -->
+    <string name="content_catchup_jump_exact">Choose exact time…</string>
+    <!-- Translators: TV remote instructions in the exact-time picker. "OK" is the select/enter button on the remote; keep whatever name that button is given elsewhere in this app. -->
+    <string name="content_catchup_jump_hint">Press OK on the day, hour or minute, change it with up and down, then press OK again.</string>
     <!-- Translators: Prompt in the EPG match dialog. "channel" is the channel name to match. -->
     <string name="content_epg_match_prompt">Pick the guide channel for \u201c<xliff:g id="channel">%1$s</xliff:g>\u201d.</string>
     <!-- Translators: Prompt in the EPG match dialog showing the current match. "match" is the current guide channel name. -->

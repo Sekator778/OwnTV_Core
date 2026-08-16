@@ -59,8 +59,16 @@
     <string name="content_avatar_picker_title">اختر صورتك الرمزية</string>
     <string name="content_category_browser_title">الفئات</string>
     <string name="content_channel_overlay_title">القنوات</string>
-    <string name="content_live_now">الآن</string>
-    <string name="content_live_next">التالي</string>
+    <string name="content_live_now">مباشر الآن</string>
+    <string name="content_live_next">مباشر التالي</string>
+    <!-- Translators: Slot label for the archived programme currently being replayed (catch-up), beside the live card. -->
+    <string name="content_archive_playing">قيد التشغيل</string>
+    <!-- Translators: Slot label for the programme that aired immediately after the one being replayed. Reads as "and then this was on". -->
+    <string name="content_archive_then">ثم</string>
+    <!-- Translators: Label above the player clock showing the date and time the programme being replayed originally aired, as opposed to the real time now. Keep it short: it sits above a large clock. -->
+    <string name="content_clock_programme">وقت البرنامج</string>
+    <!-- Translators: Label above the player clock showing the real time and date now. Keep it short: it sits above a large clock. -->
+    <string name="content_clock_current">الوقت الحالي</string>
     <string name="content_media_overview">نظرة عامة</string>
     <string name="content_media_cast">طاقم التمثيل</string>
     <string name="content_media_press_back">اضغط على رجوع للإغلاق</string>
@@ -166,6 +174,14 @@
     <string name="content_rewind_at">إرجاع · <xliff:g id="time">%1$s</xliff:g></string>
     <string name="content_catchup_prompt">اختر برنامجًا حديثًا لإعادة تشغيله من البداية.</string>
     <string name="content_catchup_empty">لا تتوفر حتى الآن بيانات حديثة من دليل البرامج لهذه القناة — تأكد من مطابقة دليل البرامج الإلكتروني الخاص بها (اضغط عليها مطولًا، أو استخدم «مطابقة دليل البرامج الإلكتروني»).</string>
+    <!-- Translators: Title of the list that jumps a live channel back to a chosen time in its catch-up archive. Also the label of the player button that opens it. Keep it short: it is a button label on a TV remote UI. -->
+    <string name="content_catchup_jump">العودة إلى…</string>
+    <!-- Translators: Instructional text above the list of times to jump back to in a live channel's catch-up archive. -->
+    <string name="content_catchup_jump_prompt">اختر وقتًا لبدء المشاهدة منه. لا حاجة إلى دليل.</string>
+    <!-- Translators: Last row of the catch-up time list, and the title of the picker it opens, where the user enters any day and time within the archive instead of picking a suggested one. -->
+    <string name="content_catchup_jump_exact">اختيار وقت محدد…</string>
+    <!-- Translators: TV remote instructions in the exact-time picker. "OK" is the select/enter button on the remote; keep whatever name that button is given elsewhere in this app. -->
+    <string name="content_catchup_jump_hint">اضغط OK على اليوم أو الساعة أو الدقيقة، وغيّرها بالأعلى والأسفل، ثم اضغط OK مرة أخرى.</string>
     <string name="content_epg_match_prompt">اختر قناة دليل البرامج المطابقة لـ «<xliff:g id="channel">%1$s</xliff:g>».</string>
     <string name="content_epg_match_prompt_current">اختر قناة دليل البرامج المطابقة لـ «<xliff:g id="channel">%1$s</xliff:g>». المطابقة الحالية: <xliff:g id="match">%2$s</xliff:g></string>
     <string name="content_search_guide_channels">بحث في قنوات دليل البرامج…</string>

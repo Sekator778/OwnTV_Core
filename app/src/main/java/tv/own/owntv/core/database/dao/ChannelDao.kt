@@ -181,6 +181,16 @@ interface ChannelDao {
     @Query("SELECT * FROM channels WHERE sourceId IN (:sourceIds) ORDER BY sourceId ASC, sortOrder ASC, name ASC")
     fun pagingAllOriginal(sourceIds: List<Long>): PagingSource<Int, ChannelEntity>
 
+    // --- Catch-up rail: every channel whose provider advertises an archive. A filter over the same
+    //     rows as ALL, so it needs no sync work and stays correct after every re-sync. Deliberately
+    //     independent of the guide: `catchup` comes from the playlist, so these lists are populated
+    //     even for a user with no EPG at all (who is exactly the person looking for them).
+    @Query("SELECT * FROM channels WHERE sourceId IN (:sourceIds) AND catchup = 1 ORDER BY name ASC")
+    fun pagingCatchup(sourceIds: List<Long>): PagingSource<Int, ChannelEntity>
+
+    @Query("SELECT * FROM channels WHERE sourceId IN (:sourceIds) AND catchup = 1 ORDER BY sourceId ASC, sortOrder ASC, name ASC")
+    fun pagingCatchupOriginal(sourceIds: List<Long>): PagingSource<Int, ChannelEntity>
+
     // --- Manual order (Move) — LEFT JOIN content_order; items with a row come first in their saved
     //     position, the rest fall back to provider/playlist order. ---
     @Query(
@@ -241,6 +251,11 @@ interface ChannelDao {
     @Query("SELECT COUNT(*) FROM channels WHERE sourceId = :sourceId")
     suspend fun countForSourceOnce(sourceId: Long): Int
 
+    /** Observed catch-up channel count — drives the Live TV list count AND whether the Catch-up rail
+     *  entry is offered at all (a provider with no archive must not get a permanently empty folder). */
+    @Query("SELECT COUNT(*) FROM channels WHERE sourceId IN (:sourceIds) AND catchup = 1")
+    fun observeCatchupCount(sourceIds: List<Long>): Flow<Int>
+
     // --- Search (FTS4) ---
     @Query(
         "SELECT * FROM channels WHERE sourceId IN (:sourceIds) " +
@@ -254,6 +269,9 @@ interface ChannelDao {
 
     @Query("SELECT * FROM channels WHERE categoryId = :categoryId AND name LIKE '%' || :query || '%' ORDER BY sortOrder ASC, name ASC")
     fun searchInCategory(query: String, categoryId: Long): PagingSource<Int, ChannelEntity>
+
+    @Query("SELECT * FROM channels WHERE sourceId IN (:sourceIds) AND catchup = 1 AND name LIKE '%' || :query || '%' ORDER BY name ASC")
+    fun searchCatchup(query: String, sourceIds: List<Long>): PagingSource<Int, ChannelEntity>
 
     /** Bounded list for global search (across all of a profile's sources). */
     @Query("SELECT * FROM channels WHERE sourceId IN (:sourceIds) AND name LIKE '%' || :query || '%' ORDER BY name ASC LIMIT :limit")

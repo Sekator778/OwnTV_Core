@@ -47,8 +47,16 @@
     <string name="content_avatar_picker_title">Choisissez votre avatar</string>
     <string name="content_category_browser_title">Catégories</string>
     <string name="content_channel_overlay_title">Chaînes</string>
-    <string name="content_live_now">Maintenant</string>
-    <string name="content_live_next">À suivre</string>
+    <string name="content_live_now">En direct</string>
+    <string name="content_live_next">En direct ensuite</string>
+    <!-- Translators: Slot label for the archived programme currently being replayed (catch-up), beside the live card. -->
+    <string name="content_archive_playing">Lecture</string>
+    <!-- Translators: Slot label for the programme that aired immediately after the one being replayed. Reads as "and then this was on". -->
+    <string name="content_archive_then">Ensuite</string>
+    <!-- Translators: Label above the player clock showing the date and time the programme being replayed originally aired, as opposed to the real time now. Keep it short: it sits above a large clock. -->
+    <string name="content_clock_programme">Heure du programme</string>
+    <!-- Translators: Label above the player clock showing the real time and date now. Keep it short: it sits above a large clock. -->
+    <string name="content_clock_current">Heure actuelle</string>
     <string name="content_media_overview">Synopsis</string>
     <string name="content_media_cast">Distribution</string>
     <string name="content_media_press_back">Appuyez sur Retour pour fermer</string>
@@ -145,6 +153,14 @@
     <string name="content_rewind_at">Retour en arrière · <xliff:g id="time">%1$s</xliff:g></string>
     <string name="content_catchup_prompt">Choisissez un programme récent à revoir depuis le début.</string>
     <string name="content_catchup_empty">Aucune donnée récente du guide pour cette chaîne — vérifiez que son EPG est associé (faites un appui long dessus ou utilisez Associer l’EPG).</string>
+    <!-- Translators: Title of the list that jumps a live channel back to a chosen time in its catch-up archive. Also the label of the player button that opens it. Keep it short: it is a button label on a TV remote UI. -->
+    <string name="content_catchup_jump">Revenir à…</string>
+    <!-- Translators: Instructional text above the list of times to jump back to in a live channel's catch-up archive. -->
+    <string name="content_catchup_jump_prompt">Choisissez une heure à partir de laquelle regarder. Aucun guide n’est nécessaire.</string>
+    <!-- Translators: Last row of the catch-up time list, and the title of the picker it opens, where the user enters any day and time within the archive instead of picking a suggested one. -->
+    <string name="content_catchup_jump_exact">Choisir l’heure exacte…</string>
+    <!-- Translators: TV remote instructions in the exact-time picker. "OK" is the select/enter button on the remote; keep whatever name that button is given elsewhere in this app. -->
+    <string name="content_catchup_jump_hint">Appuyez sur OK sur le jour, l’heure ou la minute, modifiez avec haut et bas, puis appuyez de nouveau sur OK.</string>
     <string name="content_epg_match_prompt">Choisissez la chaîne du guide pour « <xliff:g id="channel">%1$s</xliff:g> ».</string>
     <string name="content_epg_match_prompt_current">Choisissez la chaîne du guide pour « <xliff:g id="channel">%1$s</xliff:g> ». Association actuelle : <xliff:g id="match">%2$s</xliff:g></string>
     <string name="content_search_guide_channels">Rechercher des chaînes du guide…</string>

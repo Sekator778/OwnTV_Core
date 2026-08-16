@@ -51,8 +51,16 @@
     <string name="content_avatar_picker_title">Выберите аватар</string>
     <string name="content_category_browser_title">Категории</string>
     <string name="content_channel_overlay_title">Каналы</string>
-    <string name="content_live_now">Сейчас</string>
-    <string name="content_live_next">Далее</string>
+    <string name="content_live_now">В эфире сейчас</string>
+    <string name="content_live_next">В эфире далее</string>
+    <!-- Translators: Slot label for the archived programme currently being replayed (catch-up), beside the live card. -->
+    <string name="content_archive_playing">Воспроизводится</string>
+    <!-- Translators: Slot label for the programme that aired immediately after the one being replayed. Reads as "and then this was on". -->
+    <string name="content_archive_then">Затем</string>
+    <!-- Translators: Label above the player clock showing the date and time the programme being replayed originally aired, as opposed to the real time now. Keep it short: it sits above a large clock. -->
+    <string name="content_clock_programme">Время передачи</string>
+    <!-- Translators: Label above the player clock showing the real time and date now. Keep it short: it sits above a large clock. -->
+    <string name="content_clock_current">Текущее время</string>
     <string name="content_media_overview">Описание</string>
     <string name="content_media_cast">В ролях</string>
     <string name="content_media_press_back">Нажмите «Назад», чтобы закрыть</string>
@@ -152,6 +160,14 @@
     <string name="content_rewind_at">Перемотка · <xliff:g id="time">%1$s</xliff:g></string>
     <string name="content_catchup_prompt">Выберите недавнюю телепередачу, чтобы посмотреть её с начала.</string>
     <string name="content_catchup_empty">Пока нет недавних данных программы передач для этого канала — убедитесь, что его EPG сопоставлен (нажмите и удерживайте канал или выберите «Сопоставить EPG»).</string>
+    <!-- Translators: Title of the list that jumps a live channel back to a chosen time in its catch-up archive. Also the label of the player button that opens it. Keep it short: it is a button label on a TV remote UI. -->
+    <string name="content_catchup_jump">Вернуться к…</string>
+    <!-- Translators: Instructional text above the list of times to jump back to in a live channel's catch-up archive. -->
+    <string name="content_catchup_jump_prompt">Выберите время, с которого начать просмотр. Телепрограмма не нужна.</string>
+    <!-- Translators: Last row of the catch-up time list, and the title of the picker it opens, where the user enters any day and time within the archive instead of picking a suggested one. -->
+    <string name="content_catchup_jump_exact">Выбрать точное время…</string>
+    <!-- Translators: TV remote instructions in the exact-time picker. "OK" is the select/enter button on the remote; keep whatever name that button is given elsewhere in this app. -->
+    <string name="content_catchup_jump_hint">Нажмите OK на дне, часе или минуте, измените значение стрелками вверх и вниз, затем нажмите OK ещё раз.</string>
     <string name="content_epg_match_prompt">Выберите канал программы передач для «<xliff:g id="channel">%1$s</xliff:g>».</string>
     <string name="content_epg_match_prompt_current">Выберите канал программы передач для «<xliff:g id="channel">%1$s</xliff:g>». Текущее сопоставление: <xliff:g id="match">%2$s</xliff:g></string>
     <string name="content_search_guide_channels">Поиск каналов программы передач…</string>

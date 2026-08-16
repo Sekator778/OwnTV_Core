@@ -43,8 +43,16 @@
     <string name="content_avatar_picker_title">Avatarınızı seçin</string>
     <string name="content_category_browser_title">Kategoriler</string>
     <string name="content_channel_overlay_title">Kanallar</string>
-    <string name="content_live_now">Şimdi</string>
-    <string name="content_live_next">Sırada</string>
+    <string name="content_live_now">Canlı şimdi</string>
+    <string name="content_live_next">Canlı sonraki</string>
+    <!-- Translators: Slot label for the archived programme currently being replayed (catch-up), beside the live card. -->
+    <string name="content_archive_playing">Oynatılıyor</string>
+    <!-- Translators: Slot label for the programme that aired immediately after the one being replayed. Reads as "and then this was on". -->
+    <string name="content_archive_then">Sonra</string>
+    <!-- Translators: Label above the player clock showing the date and time the programme being replayed originally aired, as opposed to the real time now. Keep it short: it sits above a large clock. -->
+    <string name="content_clock_programme">Program saati</string>
+    <!-- Translators: Label above the player clock showing the real time and date now. Keep it short: it sits above a large clock. -->
+    <string name="content_clock_current">Geçerli saat</string>
     <string name="content_media_overview">Genel Bakış</string>
     <string name="content_media_cast">Oyuncular</string>
     <string name="content_media_press_back">Kapatmak için Geri\'ye basın</string>
@@ -138,6 +146,14 @@
     <string name="content_rewind_at">Geri sar · <xliff:g id="time">%1$s</xliff:g></string>
     <string name="content_catchup_prompt">Baştan yeniden oynatmak için yakın tarihli bir program seçin.</string>
     <string name="content_catchup_empty">Bu kanal için henüz yakın tarihli rehber verisi yok — EPG\'sinin eşleştirildiğinden emin olun (kanalı basılı tutun veya EPG\'yi Eşleştir\'i kullanın).</string>
+    <!-- Translators: Title of the list that jumps a live channel back to a chosen time in its catch-up archive. Also the label of the player button that opens it. Keep it short: it is a button label on a TV remote UI. -->
+    <string name="content_catchup_jump">Şuraya dön…</string>
+    <!-- Translators: Instructional text above the list of times to jump back to in a live channel's catch-up archive. -->
+    <string name="content_catchup_jump_prompt">İzlemeye başlamak istediğiniz saati seçin. Yayın akışı gerekmez.</string>
+    <!-- Translators: Last row of the catch-up time list, and the title of the picker it opens, where the user enters any day and time within the archive instead of picking a suggested one. -->
+    <string name="content_catchup_jump_exact">Tam saat seç…</string>
+    <!-- Translators: TV remote instructions in the exact-time picker. "OK" is the select/enter button on the remote; keep whatever name that button is given elsewhere in this app. -->
+    <string name="content_catchup_jump_hint">Gün, saat veya dakikada OK tuşuna basın, yukarı ve aşağı ile değiştirin, sonra tekrar OK tuşuna basın.</string>
     <string name="content_epg_match_prompt">“<xliff:g id="channel">%1$s</xliff:g>” için rehber kanalını seçin.</string>
     <string name="content_epg_match_prompt_current">“<xliff:g id="channel">%1$s</xliff:g>” için rehber kanalını seçin. Geçerli: <xliff:g id="match">%2$s</xliff:g></string>
     <string name="content_search_guide_channels">Rehber kanallarında ara…</string>

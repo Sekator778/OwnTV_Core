@@ -39,8 +39,16 @@
     <string name="content_avatar_picker_title">아바타 선택</string>
     <string name="content_category_browser_title">카테고리</string>
     <string name="content_channel_overlay_title">채널</string>
-    <string name="content_live_now">현재</string>
-    <string name="content_live_next">다음</string>
+    <string name="content_live_now">라이브 현재</string>
+    <string name="content_live_next">라이브 다음</string>
+    <!-- Translators: Slot label for the archived programme currently being replayed (catch-up), beside the live card. -->
+    <string name="content_archive_playing">재생 중</string>
+    <!-- Translators: Slot label for the programme that aired immediately after the one being replayed. Reads as "and then this was on". -->
+    <string name="content_archive_then">그다음</string>
+    <!-- Translators: Label above the player clock showing the date and time the programme being replayed originally aired, as opposed to the real time now. Keep it short: it sits above a large clock. -->
+    <string name="content_clock_programme">프로그램 시간</string>
+    <!-- Translators: Label above the player clock showing the real time and date now. Keep it short: it sits above a large clock. -->
+    <string name="content_clock_current">현재 시간</string>
     <string name="content_media_overview">개요</string>
     <string name="content_media_cast">출연진</string>
     <string name="content_media_press_back">닫으려면 뒤로 버튼을 누르세요</string>
@@ -131,6 +139,14 @@
     <string name="content_rewind_at">되감기 · <xliff:g id="time">%1$s</xliff:g></string>
     <string name="content_catchup_prompt">최근 프로그램을 선택하여 처음부터 다시 재생하세요.</string>
     <string name="content_catchup_empty">이 채널의 최근 편성표 데이터가 아직 없습니다. EPG가 연결되어 있는지 확인하세요. 채널을 길게 누르거나 EPG 연결을 사용하면 됩니다.</string>
+    <!-- Translators: Title of the list that jumps a live channel back to a chosen time in its catch-up archive. Also the label of the player button that opens it. Keep it short: it is a button label on a TV remote UI. -->
+    <string name="content_catchup_jump">되돌아가기…</string>
+    <!-- Translators: Instructional text above the list of times to jump back to in a live channel's catch-up archive. -->
+    <string name="content_catchup_jump_prompt">시청을 시작할 시간을 선택하세요. 편성표가 필요 없습니다.</string>
+    <!-- Translators: Last row of the catch-up time list, and the title of the picker it opens, where the user enters any day and time within the archive instead of picking a suggested one. -->
+    <string name="content_catchup_jump_exact">정확한 시간 선택…</string>
+    <!-- Translators: TV remote instructions in the exact-time picker. "OK" is the select/enter button on the remote; keep whatever name that button is given elsewhere in this app. -->
+    <string name="content_catchup_jump_hint">날짜, 시 또는 분에서 OK를 누르고 위아래로 바꾼 다음 OK를 다시 누르세요.</string>
     <string name="content_epg_match_prompt">“<xliff:g id="channel">%1$s</xliff:g>”에 연결할 편성표 채널을 선택하세요.</string>
     <string name="content_epg_match_prompt_current">“<xliff:g id="channel">%1$s</xliff:g>”에 연결할 편성표 채널을 선택하세요. 현재: <xliff:g id="match">%2$s</xliff:g></string>
     <string name="content_search_guide_channels">편성표 채널 검색…</string>

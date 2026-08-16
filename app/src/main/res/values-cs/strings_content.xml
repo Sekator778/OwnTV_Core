@@ -51,8 +51,16 @@
     <string name="content_avatar_picker_title">Vyberte si avatara</string>
     <string name="content_category_browser_title">Kategorie</string>
     <string name="content_channel_overlay_title">Kanály</string>
-    <string name="content_live_now">Nyní</string>
-    <string name="content_live_next">Další</string>
+    <string name="content_live_now">Živě nyní</string>
+    <string name="content_live_next">Živě další</string>
+    <!-- Translators: Slot label for the archived programme currently being replayed (catch-up), beside the live card. -->
+    <string name="content_archive_playing">Přehrává se</string>
+    <!-- Translators: Slot label for the programme that aired immediately after the one being replayed. Reads as "and then this was on". -->
+    <string name="content_archive_then">Poté</string>
+    <!-- Translators: Label above the player clock showing the date and time the programme being replayed originally aired, as opposed to the real time now. Keep it short: it sits above a large clock. -->
+    <string name="content_clock_programme">Čas pořadu</string>
+    <!-- Translators: Label above the player clock showing the real time and date now. Keep it short: it sits above a large clock. -->
+    <string name="content_clock_current">Aktuální čas</string>
     <string name="content_media_overview">Přehled</string>
     <string name="content_media_cast">Obsazení</string>
     <string name="content_media_press_back">Stisknutím tlačítka Zpět zavřete</string>
@@ -152,6 +160,14 @@
     <string name="content_rewind_at">Přetočit zpět · <xliff:g id="time">%1$s</xliff:g></string>
     <string name="content_catchup_prompt">Vyberte nedávný pořad a přehrajte ho od začátku.</string>
     <string name="content_catchup_empty">Pro tento kanál zatím nejsou k dispozici žádná nedávná data TV programu — zkontrolujte, že má správně spárované EPG (podržte jej nebo použijte Spárovat EPG).</string>
+    <!-- Translators: Title of the list that jumps a live channel back to a chosen time in its catch-up archive. Also the label of the player button that opens it. Keep it short: it is a button label on a TV remote UI. -->
+    <string name="content_catchup_jump">Přejít zpět na…</string>
+    <!-- Translators: Instructional text above the list of times to jump back to in a live channel's catch-up archive. -->
+    <string name="content_catchup_jump_prompt">Vyberte čas, od kterého chcete začít sledovat. Programý průvodce není potřeba.</string>
+    <!-- Translators: Last row of the catch-up time list, and the title of the picker it opens, where the user enters any day and time within the archive instead of picking a suggested one. -->
+    <string name="content_catchup_jump_exact">Zvolit přesný čas…</string>
+    <!-- Translators: TV remote instructions in the exact-time picker. "OK" is the select/enter button on the remote; keep whatever name that button is given elsewhere in this app. -->
+    <string name="content_catchup_jump_hint">Stiskněte OK na dni, hodině nebo minutě, změňte hodnotu šipkami nahoru a dolů a stiskněte OK znovu.</string>
     <string name="content_epg_match_prompt">Vyberte kanál EPG pro „<xliff:g id="channel">%1$s</xliff:g>“.</string>
     <string name="content_epg_match_prompt_current">Vyberte kanál EPG pro „<xliff:g id="channel">%1$s</xliff:g>“. Aktuální: <xliff:g id="match">%2$s</xliff:g></string>
     <string name="content_search_guide_channels">Hledat kanály EPG…</string>

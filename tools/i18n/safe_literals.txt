@@ -741,6 +741,9 @@
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/dao/ChannelDao.kt	SELECT * FROM channels WHERE sourceId = :sourceId AND remoteId = :remoteId LIMIT 1
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/dao/ChannelDao.kt	SELECT * FROM channels WHERE sourceId = :sourceId AND remoteId IN (:remoteIds)
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/dao/ChannelDao.kt	SELECT * FROM channels WHERE sourceId IN (:sourceIds)
+1	room-schema	app/src/main/java/tv/own/owntv/core/database/dao/ChannelDao.kt	SELECT * FROM channels WHERE sourceId IN (:sourceIds) AND catchup = 1 AND name LIKE '%' || :query || '%' ORDER BY name ASC
+1	room-schema	app/src/main/java/tv/own/owntv/core/database/dao/ChannelDao.kt	SELECT * FROM channels WHERE sourceId IN (:sourceIds) AND catchup = 1 ORDER BY name ASC
+1	room-schema	app/src/main/java/tv/own/owntv/core/database/dao/ChannelDao.kt	SELECT * FROM channels WHERE sourceId IN (:sourceIds) AND catchup = 1 ORDER BY sourceId ASC, sortOrder ASC, name ASC
 2	room-schema	app/src/main/java/tv/own/owntv/core/database/dao/ChannelDao.kt	SELECT * FROM channels WHERE sourceId IN (:sourceIds) AND epgChannelId IS NOT NULL AND epgChannelId != ''
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/dao/ChannelDao.kt	SELECT * FROM channels WHERE sourceId IN (:sourceIds) AND name LIKE '%' || :query || '%' ORDER BY name ASC
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/dao/ChannelDao.kt	SELECT * FROM channels WHERE sourceId IN (:sourceIds) AND name LIKE '%' || :query || '%' ORDER BY name ASC LIMIT :limit
@@ -2779,6 +2782,13 @@
 1	technical	app/src/main/java/tv/own/owntv/features/home/HomeViewModel.kt	movie:${item.movie.id}
 3	technical	app/src/main/java/tv/own/owntv/features/home/HomeViewModel.kt	w1280
 2	technical	app/src/main/java/tv/own/owntv/features/home/HomeViewModel.kt	w780
+1	technical	app/src/main/java/tv/own/owntv/features/live/CatchupJumpDialog.kt	EEEHm
+1	technical	app/src/main/java/tv/own/owntv/features/live/CatchupJumpDialog.kt	Hm
+1	technical	app/src/main/java/tv/own/owntv/features/live/CatchupJumpDialog.kt	exact
+1	technical	app/src/main/java/tv/own/owntv/features/live/CatchupManualTimeDialog.kt	:
+1	technical	app/src/main/java/tv/own/owntv/features/live/CatchupManualTimeDialog.kt	EEEMMMd
+1	technical	app/src/main/java/tv/own/owntv/features/live/CatchupManualTimeDialog.kt	▲
+1	technical	app/src/main/java/tv/own/owntv/features/live/CatchupManualTimeDialog.kt	▼
 1	log	app/src/main/java/tv/own/owntv/features/live/LiveEpgReader.kt	OwnTVHome
 1	log	app/src/main/java/tv/own/owntv/features/live/LiveEpgReader.kt	OwnTVPerf
 1	log	app/src/main/java/tv/own/owntv/features/live/LiveEpgReader.kt	Stalker catch-up resolve failed channelId=${ch.id}
@@ -2804,6 +2814,7 @@
 1	log	app/src/main/java/tv/own/owntv/features/live/LiveViewModel.kt	'${channel.name}' — no fallback left ($reason)
 1	technical	app/src/main/java/tv/own/owntv/features/live/LiveViewModel.kt	'${channel.name}': $detail
 2	technical	app/src/main/java/tv/own/owntv/features/live/LiveViewModel.kt	ALL
+2	technical	app/src/main/java/tv/own/owntv/features/live/LiveViewModel.kt	CATCHUP
 1	technical	app/src/main/java/tv/own/owntv/features/live/LiveViewModel.kt	ExoPlayer
 1	log	app/src/main/java/tv/own/owntv/features/live/LiveViewModel.kt	ExoPlayer gave up mid-stream: ${previewEngine.errorInfo.value?.raw ?: previewEngine.error.value}
 1	log	app/src/main/java/tv/own/owntv/features/live/LiveViewModel.kt	ExoPlayer never opened it (${openBudgetMs / 1000}s, no frame and no error)
@@ -4106,6 +4117,7 @@
 1	technical	app/src/main/java/tv/own/owntv/player/PlayerBudget.kt	48MiB
 2	technical	app/src/main/java/tv/own/owntv/player/PlayerBudget.kt	60
 1	technical	app/src/main/java/tv/own/owntv/player/PlayerBudget.kt	64MiB
+1	technical	app/src/main/java/tv/own/owntv/player/PlayerClock.kt	EEEdMMM
 1	log	app/src/main/java/tv/own/owntv/player/PlayerDiagnostics.kt	${e.tag}: ${e.text}
 1	regex	app/src/main/java/tv/own/owntv/player/PlayerDiagnostics.kt	(?:\\bhttp(?: error)? |\\bresponse code[:= ]+|\\bstatus(?: code)?[:= ]+)(\\d{3})\\b
 1	log	app/src/main/java/tv/own/owntv/player/PlayerDiagnostics.kt	*:S

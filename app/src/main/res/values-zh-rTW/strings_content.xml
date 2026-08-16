@@ -39,8 +39,16 @@
     <string name="content_avatar_picker_title">選擇您的頭像</string>
     <string name="content_category_browser_title">分類</string>
     <string name="content_channel_overlay_title">頻道</string>
-    <string name="content_live_now">目前</string>
-    <string name="content_live_next">接下來</string>
+    <string name="content_live_now">直播 現正播出</string>
+    <string name="content_live_next">直播 接下來</string>
+    <!-- Translators: Slot label for the archived programme currently being replayed (catch-up), beside the live card. -->
+    <string name="content_archive_playing">正在播放</string>
+    <!-- Translators: Slot label for the programme that aired immediately after the one being replayed. Reads as "and then this was on". -->
+    <string name="content_archive_then">隨後</string>
+    <!-- Translators: Label above the player clock showing the date and time the programme being replayed originally aired, as opposed to the real time now. Keep it short: it sits above a large clock. -->
+    <string name="content_clock_programme">節目時間</string>
+    <!-- Translators: Label above the player clock showing the real time and date now. Keep it short: it sits above a large clock. -->
+    <string name="content_clock_current">目前時間</string>
     <string name="content_media_overview">簡介</string>
     <string name="content_media_cast">演員陣容</string>
     <string name="content_media_press_back">按下返回鍵以關閉</string>
@@ -131,6 +139,14 @@
     <string name="content_rewind_at">倒轉 · <xliff:g id="time">%1$s</xliff:g></string>
     <string name="content_catchup_prompt">選擇最近的節目，從頭重播。</string>
     <string name="content_catchup_empty">此頻道目前沒有最近的節目表資料——請確認其電子節目表已配對（長按該頻道，或使用「配對電子節目表」）。</string>
+    <!-- Translators: Title of the list that jumps a live channel back to a chosen time in its catch-up archive. Also the label of the player button that opens it. Keep it short: it is a button label on a TV remote UI. -->
+    <string name="content_catchup_jump">回到…</string>
+    <!-- Translators: Instructional text above the list of times to jump back to in a live channel's catch-up archive. -->
+    <string name="content_catchup_jump_prompt">選擇開始觀看的時間。不需要節目表。</string>
+    <!-- Translators: Last row of the catch-up time list, and the title of the picker it opens, where the user enters any day and time within the archive instead of picking a suggested one. -->
+    <string name="content_catchup_jump_exact">選擇確切時間…</string>
+    <!-- Translators: TV remote instructions in the exact-time picker. "OK" is the select/enter button on the remote; keep whatever name that button is given elsewhere in this app. -->
+    <string name="content_catchup_jump_hint">在日期、小時或分鐘上按 OK，用上下鍵調整，然後再按一次 OK。</string>
     <string name="content_epg_match_prompt">選擇「<xliff:g id="channel">%1$s</xliff:g>」對應的節目表頻道。</string>
     <string name="content_epg_match_prompt_current">選擇「<xliff:g id="channel">%1$s</xliff:g>」對應的節目表頻道。目前：<xliff:g id="match">%2$s</xliff:g></string>
     <string name="content_search_guide_channels">搜尋節目表頻道…</string>
