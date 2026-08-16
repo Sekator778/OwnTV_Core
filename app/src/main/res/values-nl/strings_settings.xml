@@ -954,6 +954,8 @@
     <string name="settings_font_preview">Entertainment, eenvoudig gemaakt.</string>
     <string name="settings_search_keywords_fonts">lettertype tekst grootte typografie popup lezen toegankelijkheid</string>
     <string name="settings_font_system_sans">Systeem Sans</string>
+    <string name="settings_font_monospace">Monospace</string>
+    <string name="settings_subtitle_font">Lettertype voor ondertitels</string>
     <string name="settings_glass_preset_title">Voorinstelling voor uiterlijk</string>
     <string name="settings_glass_preset_clear">Helder</string>
     <string name="settings_glass_preset_balanced">Gebalanceerd</string>

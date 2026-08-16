@@ -954,6 +954,8 @@
     <string name="settings_font_preview">বিনোদন এখন আরও সহজ।</string>
     <string name="settings_search_keywords_fonts">ফন্ট লেখা আকার টাইপফেস পপআপ পড়া অ্যাক্সেসিবিলিটি</string>
     <string name="settings_font_system_sans">সিস্টেম স্যান্স</string>
+    <string name="settings_font_monospace">মনোস্পেস</string>
+    <string name="settings_subtitle_font">সাবটাইটেল ফন্ট</string>
     <string name="settings_glass_preset_title">রূপের প্রিসেট</string>
     <string name="settings_glass_preset_clear">স্বচ্ছ</string>
     <string name="settings_glass_preset_balanced">ভারসাম্যপূর্ণ</string>

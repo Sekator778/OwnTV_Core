@@ -954,6 +954,8 @@
     <string name="settings_font_preview">Unterhaltung, ganz einfach.</string>
     <string name="settings_search_keywords_fonts">Schrift Text Größe Typografie Popup Lesen Barrierefreiheit</string>
     <string name="settings_font_system_sans">System Sans</string>
+    <string name="settings_font_monospace">Nichtproportional</string>
+    <string name="settings_subtitle_font">Untertitelschrift</string>
     <string name="settings_glass_preset_title">Darstellungsvoreinstellung</string>
     <string name="settings_glass_preset_clear">Klar</string>
     <string name="settings_glass_preset_balanced">Ausgewogen</string>

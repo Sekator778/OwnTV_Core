@@ -971,6 +971,8 @@
     <string name="settings_font_preview">Le divertissement en toute simplicité.</string>
     <string name="settings_search_keywords_fonts">police texte taille typographie fenêtre lecture accessibilité</string>
     <string name="settings_font_system_sans">Sans système</string>
+    <string name="settings_font_monospace">Chasse fixe</string>
+    <string name="settings_subtitle_font">Police des sous-titres</string>
     <string name="settings_glass_preset_title">Préréglage d’apparence</string>
     <string name="settings_glass_preset_clear">Clair</string>
     <string name="settings_glass_preset_balanced">Équilibré</string>

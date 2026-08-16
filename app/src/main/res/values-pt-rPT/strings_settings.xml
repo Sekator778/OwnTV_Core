@@ -971,6 +971,8 @@
     <string name="settings_font_preview">Entretenimento de forma simples.</string>
     <string name="settings_search_keywords_fonts">tipo de letra texto tamanho tipografia janela leitura acessibilidade</string>
     <string name="settings_font_system_sans">Sans do sistema</string>
+    <string name="settings_font_monospace">Monoespaçada</string>
+    <string name="settings_subtitle_font">Tipo de letra das legendas</string>
     <string name="settings_glass_preset_title">Predefinição de aspeto</string>
     <string name="settings_glass_preset_clear">Claro</string>
     <string name="settings_glass_preset_balanced">Equilibrado</string>

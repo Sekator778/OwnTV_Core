@@ -238,7 +238,6 @@
 1	app/src/main/java/tv/own/owntv/features/settings/SettingsViewModel.kt	dns.google
 1	app/src/main/java/tv/own/owntv/features/settings/SettingsViewModel.kt	refused
 1	app/src/main/java/tv/own/owntv/features/settings/SettingsViewModel.kt	timeout
-1	app/src/main/java/tv/own/owntv/features/settings/VideoPlayerSettingsScreen.kt	\0
 5	app/src/main/java/tv/own/owntv/features/settings/VideoPlayerSettingsScreen.kt	#
 1	app/src/main/java/tv/own/owntv/features/settings/VideoPlayerSettingsScreen.kt	#4FC3F7
 1	app/src/main/java/tv/own/owntv/features/settings/VideoPlayerSettingsScreen.kt	#8BC34A

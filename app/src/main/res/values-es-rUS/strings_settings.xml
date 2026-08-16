@@ -971,6 +971,8 @@
     <string name="settings_font_preview">Entretenimiento, así de sencillo.</string>
     <string name="settings_search_keywords_fonts">fuente texto tamaño tipografía ventana lectura accesibilidad</string>
     <string name="settings_font_system_sans">Sans del sistema</string>
+    <string name="settings_font_monospace">Monoespaciada</string>
+    <string name="settings_subtitle_font">Fuente de subtítulos</string>
     <string name="settings_glass_preset_title">Preajuste de apariencia</string>
     <string name="settings_glass_preset_clear">Claro</string>
     <string name="settings_glass_preset_balanced">Equilibrado</string>

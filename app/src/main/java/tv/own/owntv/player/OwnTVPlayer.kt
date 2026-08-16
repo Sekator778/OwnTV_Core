@@ -24,6 +24,9 @@ import tv.own.owntv.core.network.HttpClient
 import tv.own.owntv.core.network.StreamHeaders
 import tv.own.owntv.features.settings.data.SettingsRepository
 import tv.own.owntv.features.settings.data.SubtitleStyle
+import tv.own.owntv.ui.theme.AppFontFamily
+import tv.own.owntv.ui.theme.mpvFamilyName
+import tv.own.owntv.ui.theme.subtitleFontResource
 import java.util.Locale
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
@@ -177,6 +180,7 @@ class OwnTVPlayer(
         private const val MPV_DEFAULT_SUB_COLOR = "#FFFFFFFF"
         private const val MPV_DEFAULT_SUB_BACK_COLOR = "#00000000"
         private const val MPV_DEFAULT_SUB_SCALE = 1.0
+        private const val MPV_DEFAULT_SUB_FONT = "sans-serif"
 
         /**
          * Routing for an END_FILE that arrives before FILE_LOADED ever did. For a VOD that means the
@@ -829,6 +833,7 @@ class OwnTVPlayer(
     // left on its own "Default" value is likewise never pushed.
     private var subStyleOn = false
     private var subScale = SubtitleStyle.SCALE_DEFAULT.toDouble()
+    private var subFont: AppFontFamily? = null
     private var subColorHex = SubtitleStyle.COLOR_DEFAULT
     private var subPosition = SubtitleStyle.Position.DEFAULT
     private var subBgOpacity = SubtitleStyle.OPACITY_DEFAULT
@@ -994,6 +999,10 @@ class OwnTVPlayer(
             subScale = s.toDouble()
             if (initialized) mpvAsync { applySubtitleStyle() }
         }.launchIn(scope)
+        settings.subtitleFont.onEach { font ->
+            subFont = font
+            if (initialized) mpvAsync { applySubtitleStyle() }
+        }.launchIn(scope)
         settings.subtitleColor.onEach { hex ->
             subColorHex = hex
             if (initialized) mpvAsync { applySubtitleStyle() }
@@ -1020,7 +1029,10 @@ class OwnTVPlayer(
         }.launchIn(scope)
         settings.preferredSubLang.onEach { lang ->
             prefSubLang = lang
-            if (initialized) mpvAsync { setPropertyString("slang", lang) }
+            if (initialized) mpvAsync {
+                setPropertyString("slang", lang)
+                setPropertyString("subs-with-matching-audio", if (lang.isBlank()) "no" else "yes")
+            }
         }.launchIn(scope)
         settings.defaultZoom.onEach { name ->
             defaultZoom = runCatching { ZoomMode.valueOf(name) }.getOrDefault(ZoomMode.FIT)
@@ -2098,12 +2110,32 @@ class OwnTVPlayer(
         }
     }
 
+    /** Expose bundled UI fonts to libass/fontconfig without shipping duplicate assets. */
+    private fun prepareSubtitleFontsDir(): java.io.File? = runCatching {
+        val dir = java.io.File(context.cacheDir, "subtitle-fonts").apply { mkdirs() }
+        AppFontFamily.entries.forEach { font ->
+            val resource = font.subtitleFontResource
+            if (resource == 0) return@forEach
+            val target = java.io.File(dir, "${font.name.lowercase(Locale.US)}.ttf")
+            if (!target.isFile) {
+                context.resources.openRawResource(resource).use { input ->
+                    target.outputStream().use { output -> input.copyTo(output) }
+                }
+            }
+        }
+        dir
+    }.onFailure {
+        android.util.Log.w(TAG, "Could not prepare subtitle fonts: ${it.message}")
+    }.getOrNull()
+
     private fun ensureInit() {
         if (initialized) return
         val budget = PlayerBudget.of(context)
         playerBudget = budget
         android.util.Log.i(TAG, "PlayerBudget: $budget")
+        val subtitleFontsDir = prepareSubtitleFontsDir()
         mpv = MPVLib.create(context)?.apply {
+            subtitleFontsDir?.let { setOptionString("sub-fonts-dir", it.absolutePath) }
             setOptionString("vo", if (useDirect()) "mediacodec_embed" else "gpu")
             setOptionString("gpu-context", "android")
             setOptionString("hwdec", if (useDirect()) "mediacodec" else "no")
@@ -2166,6 +2198,7 @@ class OwnTVPlayer(
             // is on "Default", leaving mpv's own value in place.
             if (subStyleOn) {
                 if (SubtitleStyle.hasScale(subScale.toFloat())) setOptionString("sub-scale", subScale.toString())
+                subFont?.let { setOptionString("sub-font", it.mpvFamilyName) }
                 if (SubtitleStyle.hasColor(subColorHex)) setOptionString("sub-color", SubtitleStyle.mpvColor(subColorHex))
                 if (SubtitleStyle.hasOpacity(subBgOpacity)) setOptionString("sub-back-color", SubtitleStyle.mpvBackColor(subBgOpacity))
                 if (subPosition != SubtitleStyle.Position.DEFAULT) {
@@ -2177,6 +2210,7 @@ class OwnTVPlayer(
             setOptionString("audio-delay", audioDelaySec.toString())
             if (prefAudioLang.isNotBlank()) setOptionString("alang", prefAudioLang)
             if (prefSubLang.isNotBlank()) setOptionString("slang", prefSubLang)
+            setOptionString("subs-with-matching-audio", if (prefSubLang.isBlank()) "no" else "yes")
             // HDR passthrough: signal the source colorspace (incl. HDR10/HLG) to the display surface.
             setOptionString("target-colorspace-hint", if (hdrHint) "yes" else "no")
             init()
@@ -2935,6 +2969,7 @@ class OwnTVPlayer(
      * A file left entirely on "Default" options keeps its authored styling untouched.
      */
     private fun subStyleOverridesAss(): Boolean = subStyleOn && (
+        subFont != null ||
         SubtitleStyle.hasColor(subColorHex) ||
             SubtitleStyle.hasOpacity(subBgOpacity) ||
             subPosition != SubtitleStyle.Position.DEFAULT
@@ -2955,6 +2990,7 @@ class OwnTVPlayer(
             "sub-scale",
             if (on && SubtitleStyle.hasScale(subScale.toFloat())) subScale else MPV_DEFAULT_SUB_SCALE,
         )
+        setPropertyString("sub-font", if (on) subFont?.mpvFamilyName ?: MPV_DEFAULT_SUB_FONT else MPV_DEFAULT_SUB_FONT)
         setPropertyString(
             "sub-color",
             if (on && SubtitleStyle.hasColor(subColorHex)) SubtitleStyle.mpvColor(subColorHex) else MPV_DEFAULT_SUB_COLOR,

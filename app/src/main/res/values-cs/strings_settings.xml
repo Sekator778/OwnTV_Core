@@ -988,6 +988,8 @@
     <string name="settings_font_preview">Zábava jednoduše.</string>
     <string name="settings_search_keywords_fonts">písmo text velikost typografie okno čtení přístupnost</string>
     <string name="settings_font_system_sans">Systémové bezpatkové</string>
+    <string name="settings_font_monospace">Neproporcionální</string>
+    <string name="settings_subtitle_font">Písmo titulků</string>
     <string name="settings_glass_preset_title">Předvolba vzhledu</string>
     <string name="settings_glass_preset_clear">Čiré</string>
     <string name="settings_glass_preset_balanced">Vyvážené</string>

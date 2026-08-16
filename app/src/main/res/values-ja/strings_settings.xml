@@ -937,6 +937,8 @@
     <string name="settings_font_preview">エンターテインメントを、もっとシンプルに。</string>
     <string name="settings_search_keywords_fonts">フォント 文字 サイズ 書体 ポップアップ 読みやすさ アクセシビリティ</string>
     <string name="settings_font_system_sans">システムサンセリフ</string>
+    <string name="settings_font_monospace">等幅フォント</string>
+    <string name="settings_subtitle_font">字幕フォント</string>
     <string name="settings_glass_preset_title">外観プリセット</string>
     <string name="settings_glass_preset_clear">クリア</string>
     <string name="settings_glass_preset_balanced">バランス</string>

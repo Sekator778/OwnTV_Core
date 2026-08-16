@@ -404,6 +404,10 @@
     <string name="settings_font_preview">Entertainment, made simple.</string>
     <string name="settings_search_keywords_fonts">font text size typeface typography popup reading accessibility</string>
     <string name="settings_font_system_sans">System Sans</string>
+    <!-- Translators: Name of the generic fixed-width font family. -->
+    <string name="settings_font_monospace">Monospace</string>
+    <!-- Translators: Settings row for choosing the typeface used to draw subtitles. -->
+    <string name="settings_subtitle_font">Subtitle font</string>
     <!-- The four typeface names themselves are proper nouns and live in donottranslate.xml. -->
     <!-- Translators: Settings navigation label for the Animations setting. -->
     <string name="settings_animations">Animations</string>

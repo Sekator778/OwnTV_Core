@@ -195,6 +195,7 @@ class SettingsRepository(private val context: Context, private val localeStore: 
         // Subtitle appearance (#96): off by default so every renderer keeps its stock look —
         // notably the embedded broadcaster styling of Live TV CEA-608/teletext cues.
         val SUB_STYLE_ENABLED = booleanPreferencesKey("sub_style_enabled")
+        val SUB_FONT = stringPreferencesKey("sub_font")
         val SUB_COLOR = stringPreferencesKey("sub_color")
         val SUB_POSITION = stringPreferencesKey("sub_position")
         val SUB_BG_OPACITY = intPreferencesKey("sub_bg_opacity")
@@ -936,6 +937,17 @@ class SettingsRepository(private val context: Context, private val localeStore: 
         context.dataStore.edit { it[Keys.SUB_STYLE_ENABLED] = enabled }
     }
 
+    /** Null leaves the renderer's own or embedded subtitle font untouched. */
+    val subtitleFont: Flow<AppFontFamily?> = prefsFlow { prefs ->
+        prefs[Keys.SUB_FONT]?.let { stored -> AppFontFamily.entries.firstOrNull { it.name == stored } }
+    }
+
+    suspend fun setSubtitleFont(font: AppFontFamily?) {
+        context.dataStore.edit { prefs ->
+            if (font == null) prefs.remove(Keys.SUB_FONT) else prefs[Keys.SUB_FONT] = font.name
+        }
+    }
+
     /** Subtitle text color as "#RRGGBB"; blank ([SubtitleStyle.COLOR_DEFAULT]) = untouched. */
     val subtitleColor: Flow<String> = prefsFlow { it[Keys.SUB_COLOR] ?: SubtitleStyle.COLOR_DEFAULT }
 
@@ -1622,6 +1634,7 @@ class SettingsRepository(private val context: Context, private val localeStore: 
         // Subtitle appearance: text color and screen position (toggle is a bool key, size a float
         // key, background transparency an int key).
         Keys.SUB_COLOR,
+        Keys.SUB_FONT,
         Keys.SUB_POSITION,
         // Custom DNS — not secret, backed up alongside proxy
         Keys.DNS_HOST, Keys.DNS_DOH_URL,

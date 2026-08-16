@@ -102,7 +102,8 @@ class ExoSubtitleEngine(
     private var shiftJob: kotlinx.coroutines.Job? = null
 
     private fun shiftKey(path: String, offsetMs: Int) = "$path|$offsetMs"
-    // Engine-fallback playback (mpv terminally failed this VOD): no auto subtitle, engine-worded errors.
+    // Engine-fallback playback (mpv terminally failed this VOD): no arbitrary subtitle; a configured
+    // preferred language is still honoured. Errors remain engine-worded.
     private var fallbackMode = false
     // First-frame watchdog: this handoff only exists to show an image subtitle over otherwise-healthy
     // video, so if ExoPlayer never renders a frame (a format/decoder combo mpv handled fine but this
@@ -804,15 +805,6 @@ class ExoSubtitleEngine(
             }
             return // its track hasn't appeared in this update yet — wait for the next onTracksChanged
         }
-        // Engine-fallback playback with no subtitle picked: keep text tracks OFF rather than letting the
-        // "?: textTracks.first()" recovery below auto-select one the user never asked for.
-        if (pendingSubTypeIndex < 0 && pendingSubLang == null) {
-            p.trackSelectionParameters = p.trackSelectionParameters.buildUpon()
-                .setTrackTypeDisabled(C.TRACK_TYPE_TEXT, true)
-                .build()
-            subtitleApplied = true
-            return
-        }
         // Flatten text tracks in declaration order so the mpv sub ordinal lines up with ExoPlayer's.
         data class TextTrack(val group: TrackGroup, val index: Int, val lang: String?)
         val textTracks = ArrayList<TextTrack>()
@@ -823,6 +815,25 @@ class ExoSubtitleEngine(
             }
         }
         if (textTracks.isEmpty()) return
+        // A fresh item has no manual carry-over. Honour the configured language explicitly:
+        // this handoff path used to disable the text renderer after Media3 selected it.
+        // Blank preference or no matching track leaves subtitles off rather than choosing randomly.
+        if (pendingSubTypeIndex < 0 && pendingSubLang == null) {
+            val preferred = prefSubLang.takeIf { it.isNotBlank() }?.let { wanted ->
+                textTracks.firstOrNull { subtitleLanguageMatches(wanted, it.lang) }
+            }
+            val builder = p.trackSelectionParameters.buildUpon()
+            if (preferred == null) {
+                builder.setTrackTypeDisabled(C.TRACK_TYPE_TEXT, true)
+            } else {
+                builder
+                    .setOverrideForType(TrackSelectionOverride(preferred.group, listOf(preferred.index)))
+                    .setTrackTypeDisabled(C.TRACK_TYPE_TEXT, false)
+            }
+            p.trackSelectionParameters = builder.build()
+            subtitleApplied = true
+            return
+        }
         // The ordinal is a cross-engine guess — mpv's track order need not survive into ExoPlayer's — so
         // it only stands when the track it lands on also carries the language the user picked. Failing
         // that, match by language; and force a track only when there is exactly one it could be. The old

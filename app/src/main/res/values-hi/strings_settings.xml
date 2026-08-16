@@ -954,6 +954,8 @@
     <string name="settings_font_preview">मनोरंजन, अब और भी आसान।</string>
     <string name="settings_search_keywords_fonts">फ़ॉन्ट टेक्स्ट आकार टाइपफ़ेस पॉपअप पढ़ना सुगम्यता</string>
     <string name="settings_font_system_sans">सिस्टम सैन्स</string>
+    <string name="settings_font_monospace">मोनोस्पेस</string>
+    <string name="settings_subtitle_font">सबटाइटल फ़ॉन्ट</string>
     <string name="settings_glass_preset_title">दिखावट प्रीसेट</string>
     <string name="settings_glass_preset_clear">स्पष्ट</string>
     <string name="settings_glass_preset_balanced">संतुलित</string>

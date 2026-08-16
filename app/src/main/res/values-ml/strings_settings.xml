@@ -954,6 +954,8 @@
     <string name="settings_font_preview">വിനോദം കൂടുതൽ ലളിതം.</string>
     <string name="settings_search_keywords_fonts">ഫോണ്ട് ടെക്സ്റ്റ് വലുപ്പം ടൈപ്പ്ഫേസ് പോപ്പപ്പ് വായന ആക്സസിബിലിറ്റി</string>
     <string name="settings_font_system_sans">സിസ്റ്റം സാൻസ്</string>
+    <string name="settings_font_monospace">മോണോസ്പേസ്</string>
+    <string name="settings_subtitle_font">സബ്‌ടൈറ്റിൽ ഫോണ്ട്</string>
     <string name="settings_glass_preset_title">രൂപഭാവ പ്രീസെറ്റ്</string>
     <string name="settings_glass_preset_clear">വ്യക്തം</string>
     <string name="settings_glass_preset_balanced">സമതുലിതം</string>

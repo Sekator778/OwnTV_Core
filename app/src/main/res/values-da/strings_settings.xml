@@ -954,6 +954,8 @@
     <string name="settings_font_preview">Underholdning gjort enkelt.</string>
     <string name="settings_search_keywords_fonts">skrifttype tekst størrelse typografi popup læsning tilgængelighed</string>
     <string name="settings_font_system_sans">System Sans</string>
+    <string name="settings_font_monospace">Fast bredde</string>
+    <string name="settings_subtitle_font">Undertekstskrifttype</string>
     <string name="settings_glass_preset_title">Udseendeprofil</string>
     <string name="settings_glass_preset_clear">Klar</string>
     <string name="settings_glass_preset_balanced">Balanceret</string>

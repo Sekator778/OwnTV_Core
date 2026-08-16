@@ -988,6 +988,8 @@
     <string name="settings_font_preview">Rozrywka w prostym wydaniu.</string>
     <string name="settings_search_keywords_fonts">czcionka tekst rozmiar typografia okno czytanie dostępność</string>
     <string name="settings_font_system_sans">Systemowa bezszeryfowa</string>
+    <string name="settings_font_monospace">Stała szerokość</string>
+    <string name="settings_subtitle_font">Czcionka napisów</string>
     <string name="settings_glass_preset_title">Ustawienie wyglądu</string>
     <string name="settings_glass_preset_clear">Przejrzyste</string>
     <string name="settings_glass_preset_balanced">Zrównoważone</string>

@@ -988,6 +988,8 @@
     <string name="settings_font_preview">Развлечения — это просто.</string>
     <string name="settings_search_keywords_fonts">шрифт текст размер типографика окно чтение доступность</string>
     <string name="settings_font_system_sans">Системный шрифт без засечек</string>
+    <string name="settings_font_monospace">Моноширинный</string>
+    <string name="settings_subtitle_font">Шрифт субтитров</string>
     <string name="settings_glass_preset_title">Предустановка оформления</string>
     <string name="settings_glass_preset_clear">Прозрачное</string>
     <string name="settings_glass_preset_balanced">Сбалансированное</string>

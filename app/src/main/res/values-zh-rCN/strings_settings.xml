@@ -937,6 +937,8 @@
     <string name="settings_font_preview">娱乐，从此更简单。</string>
     <string name="settings_search_keywords_fonts">字体 文字 大小 字型 弹窗 阅读 无障碍</string>
     <string name="settings_font_system_sans">系统无衬线字体</string>
+    <string name="settings_font_monospace">等宽字体</string>
+    <string name="settings_subtitle_font">字幕字体</string>
     <string name="settings_glass_preset_title">外观预设</string>
     <string name="settings_glass_preset_clear">清透</string>
     <string name="settings_glass_preset_balanced">平衡</string>

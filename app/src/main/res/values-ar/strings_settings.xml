@@ -1022,6 +1022,8 @@
     <string name="settings_font_preview">ترفيه أبسط وأكثر متعة.</string>
     <string name="settings_search_keywords_fonts">خط نص حجم كتابة نوافذ قراءة وصول</string>
     <string name="settings_font_system_sans">خط النظام بلا زوائد</string>
+    <string name="settings_font_monospace">خط أحادي المسافة</string>
+    <string name="settings_subtitle_font">خط الترجمة</string>
     <string name="settings_glass_preset_title">إعداد مسبق للمظهر</string>
     <string name="settings_glass_preset_clear">شفاف</string>
     <string name="settings_glass_preset_balanced">متوازن</string>

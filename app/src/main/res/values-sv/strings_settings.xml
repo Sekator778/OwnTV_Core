@@ -954,6 +954,8 @@
     <string name="settings_font_preview">Underhållning på ett enklare sätt.</string>
     <string name="settings_search_keywords_fonts">teckensnitt text storlek typografi popup läsning tillgänglighet</string>
     <string name="settings_font_system_sans">System Sans</string>
+    <string name="settings_font_monospace">Fast bredd</string>
+    <string name="settings_subtitle_font">Undertextteckensnitt</string>
     <string name="settings_glass_preset_title">Utseendeförval</string>
     <string name="settings_glass_preset_clear">Klar</string>
     <string name="settings_glass_preset_balanced">Balanserad</string>

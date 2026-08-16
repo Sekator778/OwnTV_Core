@@ -954,6 +954,8 @@
     <string name="settings_font_preview">Eğlence artık daha basit.</string>
     <string name="settings_search_keywords_fonts">yazı tipi metin boyut tipografi pencere okuma erişilebilirlik</string>
     <string name="settings_font_system_sans">Sistem Sans</string>
+    <string name="settings_font_monospace">Eş aralıklı</string>
+    <string name="settings_subtitle_font">Altyazı yazı tipi</string>
     <string name="settings_glass_preset_title">Görünüm ön ayarı</string>
     <string name="settings_glass_preset_clear">Şeffaf</string>
     <string name="settings_glass_preset_balanced">Dengeli</string>
