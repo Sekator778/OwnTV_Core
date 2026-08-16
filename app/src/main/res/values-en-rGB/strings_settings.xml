@@ -16,6 +16,8 @@ Resync and remove missing titles also allows removing titles the provider no lon
     <string name="settings_backup_save_description">Save your profiles, sources, customizations, favourites, history and resume positions to a file — or restore them on a new device. You choose what to include each time.</string>
     <string name="settings_accent">Accent colour</string>
     <string name="settings_startup_favorites">Live · Favourites</string>
+    <string name="settings_startup_specific_channel">Specific channel</string>
+    <string name="settings_startup_channel_unavailable">The startup channel is unavailable. Home was opened.</string>
     <string name="settings_choose_history">Choose what to remove for this profile. Playlists, favourites and downloads are not affected.</string>
     <string name="settings_accent_dialog">Accent colour</string>
     <string name="settings_color_picker">Colour picker</string>

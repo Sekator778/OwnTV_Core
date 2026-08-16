@@ -245,7 +245,6 @@
 4	app/src/main/java/tv/own/owntv/features/settings/MetadataSettingsScreen.kt	\0
 1	app/src/main/java/tv/own/owntv/features/settings/MetadataSettingsScreen.kt	https://your-worker.example.workers.dev
 4	app/src/main/java/tv/own/owntv/features/settings/OpenSubtitlesAccountScreen.kt	\0
-2	app/src/main/java/tv/own/owntv/features/settings/SettingsViewModel.kt	\0
 1	app/src/main/java/tv/own/owntv/features/settings/SettingsViewModel.kt	UnknownHostException
 1	app/src/main/java/tv/own/owntv/features/settings/SettingsViewModel.kt	dns.google
 1	app/src/main/java/tv/own/owntv/features/settings/SettingsViewModel.kt	refused

@@ -228,6 +228,8 @@
     <string name="settings_startup_home">Главный экран</string>
     <string name="settings_startup_last_channel">Последний канал</string>
     <string name="settings_startup_favorites">Прямой эфир · Избранное</string>
+    <string name="settings_startup_specific_channel">Выбранный канал</string>
+    <string name="settings_startup_channel_unavailable">Стартовый канал недоступен. Открыт главный экран.</string>
     <string name="settings_all_history">Вся история</string>
     <string name="settings_choose_history">Выберите, что удалить для этого профиля. Плейлисты, избранное и загрузки затронуты не будут.</string>
     <string name="settings_clear_history_confirm">Очистить историю «<xliff:g id="scope">%1$s</xliff:g>»?</string>

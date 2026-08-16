@@ -227,6 +227,8 @@
     <string name="settings_startup_home">Accueil</string>
     <string name="settings_startup_last_channel">Dernière chaîne</string>
     <string name="settings_startup_favorites">TV en direct · Favoris</string>
+    <string name="settings_startup_specific_channel">Chaîne spécifique</string>
+    <string name="settings_startup_channel_unavailable">La chaîne de démarrage est indisponible. L’accueil a été ouvert.</string>
     <string name="settings_all_history">Tout l’historique</string>
     <string name="settings_choose_history">Choisissez ce qui doit être supprimé pour ce profil. Les listes de lecture, les favoris et les téléchargements ne seront pas affectés.</string>
     <string name="settings_clear_history_confirm">Effacer l’historique « <xliff:g id="scope">%1$s</xliff:g> » ?</string>

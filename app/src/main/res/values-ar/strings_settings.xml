@@ -230,6 +230,8 @@
     <string name="settings_startup_home">الشاشة الرئيسية</string>
     <string name="settings_startup_last_channel">آخر قناة</string>
     <string name="settings_startup_favorites">البث المباشر · المفضّلة</string>
+    <string name="settings_startup_specific_channel">قناة محددة</string>
+    <string name="settings_startup_channel_unavailable">قناة بدء التشغيل غير متاحة. تم فتح الصفحة الرئيسية.</string>
     <string name="settings_all_history">السجل بالكامل</string>
     <string name="settings_choose_history">اختر ما تريد إزالته لهذا الملف الشخصي. لن تتأثر قوائم التشغيل والمفضّلة والتنزيلات.</string>
     <string name="settings_clear_history_confirm">هل تريد مسح سجل <xliff:g id="scope">%1$s</xliff:g>؟</string>

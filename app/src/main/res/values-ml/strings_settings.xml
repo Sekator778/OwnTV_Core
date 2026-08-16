@@ -226,6 +226,8 @@
     <string name="settings_startup_home">ഹോം</string>
     <string name="settings_startup_last_channel">അവസാന ചാനൽ</string>
     <string name="settings_startup_favorites">തത്സമയം · പ്രിയപ്പെട്ടവ</string>
+    <string name="settings_startup_specific_channel">നിർദ്ദിഷ്ട ചാനൽ</string>
+    <string name="settings_startup_channel_unavailable">സ്റ്റാർട്ടപ്പ് ചാനൽ ലഭ്യമല്ല. ഹോം തുറന്നു.</string>
     <string name="settings_all_history">മുഴുവൻ ചരിത്രവും</string>
     <string name="settings_choose_history">ഈ പ്രൊഫൈലിൽ നിന്ന് നീക്കം ചെയ്യേണ്ടവ തിരഞ്ഞെടുക്കുക. പ്ലേലിസ്റ്റുകൾ, പ്രിയപ്പെട്ടവ, ഡൗൺലോഡുകൾ എന്നിവയെ ഇത് ബാധിക്കില്ല.</string>
     <string name="settings_clear_history_confirm"><xliff:g id="scope">%1$s</xliff:g> ചരിത്രം മായ്ക്കണോ?</string>

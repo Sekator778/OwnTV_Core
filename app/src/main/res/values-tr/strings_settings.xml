@@ -226,6 +226,8 @@
     <string name="settings_startup_home">Ana ekran</string>
     <string name="settings_startup_last_channel">Son kanal</string>
     <string name="settings_startup_favorites">Canlı · Favoriler</string>
+    <string name="settings_startup_specific_channel">Belirli kanal</string>
+    <string name="settings_startup_channel_unavailable">Başlangıç kanalı kullanılamıyor. Ana sayfa açıldı.</string>
     <string name="settings_all_history">Tüm geçmiş</string>
     <string name="settings_choose_history">Bu profilden nelerin kaldırılacağını seçin. Oynatma listeleri, favoriler ve indirilenler etkilenmez.</string>
     <string name="settings_clear_history_confirm"><xliff:g id="scope">%1$s</xliff:g> geçmişi temizlensin mi?</string>

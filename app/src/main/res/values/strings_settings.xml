@@ -506,6 +506,10 @@
     <string name="settings_startup_last_channel">Last channel</string>
     <!-- Translators: App startup option: open to Live TV favorites. -->
     <string name="settings_startup_favorites">Live · Favorites</string>
+    <!-- Translators: App startup option that automatically plays one channel selected by the user. -->
+    <string name="settings_startup_specific_channel">Specific channel</string>
+    <!-- Translators: Brief message shown when the channel selected for automatic startup no longer exists or cannot be accessed. -->
+    <string name="settings_startup_channel_unavailable">The startup channel is unavailable. Home was opened.</string>
     <!-- Translators: History scope option to clear all history. -->
     <string name="settings_all_history">All history</string>
     <!-- Translators: Description of what clearing history affects. -->

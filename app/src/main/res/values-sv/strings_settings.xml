@@ -226,6 +226,8 @@
     <string name="settings_startup_home">Start</string>
     <string name="settings_startup_last_channel">Senaste kanalen</string>
     <string name="settings_startup_favorites">Live · Favoriter</string>
+    <string name="settings_startup_specific_channel">Specifik kanal</string>
+    <string name="settings_startup_channel_unavailable">Startkanalen är inte tillgänglig. Hem öppnades.</string>
     <string name="settings_all_history">All historik</string>
     <string name="settings_choose_history">Välj vad som ska tas bort för den här profilen. Spellistor, favoriter och nedladdningar påverkas inte.</string>
     <string name="settings_clear_history_confirm">Rensa historiken för <xliff:g id="scope">%1$s</xliff:g>?</string>

@@ -8,6 +8,8 @@ import tv.own.owntv.core.database.dao.MovieDao
 import tv.own.owntv.core.database.dao.ProgressDao
 import tv.own.owntv.core.database.dao.SeriesDao
 import tv.own.owntv.core.database.dao.SourceDao
+import tv.own.owntv.core.database.dao.CategoryDao
+import tv.own.owntv.core.database.dao.ProfileDao
 import tv.own.owntv.core.database.entity.EpisodeEntity
 import tv.own.owntv.core.database.entity.SeriesEntity
 import tv.own.owntv.core.model.MediaType
@@ -18,6 +20,8 @@ class LauncherLaunchResolver(
     private val movieDao: MovieDao,
     private val seriesDao: SeriesDao,
     private val progressDao: ProgressDao,
+    private val categoryDao: CategoryDao,
+    private val profileDao: ProfileDao,
 ) {
     suspend fun resolveLaunch(profileId: Long, deepLink: LauncherDeepLink): LauncherLaunch? = withContext(Dispatchers.IO) {
         val sources = sourceDao.observeForProfile(profileId).first()
@@ -28,7 +32,7 @@ class LauncherLaunchResolver(
 
         when (deepLink) {
             is LauncherDeepLink.Movie -> resolveMovie(profileId, deepLink, movieIds)
-            is LauncherDeepLink.Live -> resolveLiveChannel(deepLink, liveIds)
+            is LauncherDeepLink.Live -> resolveLiveChannel(profileId, deepLink, liveIds)
             LauncherDeepLink.OpenLiveSection -> null
             is LauncherDeepLink.Episode -> resolveEpisode(profileId, deepLink, seriesIds)
         }
@@ -46,10 +50,11 @@ class LauncherLaunchResolver(
         } ?: return null
         if (sourceId != null && movie.sourceId != sourceId) return null
         if (movie.sourceId !in sourceIds) return null
+        if (!tv.own.owntv.core.content.AdultCategoryClassifier.allows(profileId, movie.categoryId, profileDao, categoryDao)) return null
         return LauncherLaunch.Movie(movie, progressDao.get(profileId, MediaType.MOVIE, movie.id)?.positionMs ?: 0L)
     }
 
-    private suspend fun resolveLiveChannel(deepLink: LauncherDeepLink.Live, sourceIds: Set<Long>): LauncherLaunch.Live? {
+    private suspend fun resolveLiveChannel(profileId: Long, deepLink: LauncherDeepLink.Live, sourceIds: Set<Long>): LauncherLaunch.Live? {
         val sourceId = deepLink.sourceId
         val remoteId = deepLink.remoteId
         val name = deepLink.name
@@ -61,6 +66,7 @@ class LauncherLaunchResolver(
         } ?: return null
         if (sourceId != null && channel.sourceId != sourceId) return null
         if (channel.sourceId !in sourceIds) return null
+        if (!tv.own.owntv.core.content.AdultCategoryClassifier.allows(profileId, channel.categoryId, profileDao, categoryDao)) return null
         return LauncherLaunch.Live(channel)
     }
 
@@ -70,6 +76,7 @@ class LauncherLaunchResolver(
         sourceIds: Set<Long>,
     ): LauncherLaunch? {
         val show = resolveSeries(deepLink, sourceIds) ?: return null
+        if (!tv.own.owntv.core.content.AdultCategoryClassifier.allows(profileId, show.categoryId, profileDao, categoryDao)) return null
         val episodes = orderedEpisodes(show.id)
         if (episodes.isEmpty()) return LauncherLaunch.Series(show)
 

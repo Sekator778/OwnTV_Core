@@ -226,6 +226,8 @@
     <string name="settings_startup_home">হোম</string>
     <string name="settings_startup_last_channel">সর্বশেষ চ্যানেল</string>
     <string name="settings_startup_favorites">লাইভ · পছন্দেরগুলো</string>
+    <string name="settings_startup_specific_channel">নির্দিষ্ট চ্যানেল</string>
+    <string name="settings_startup_channel_unavailable">স্টার্টআপ চ্যানেলটি পাওয়া যাচ্ছে না। হোম খোলা হয়েছে।</string>
     <string name="settings_all_history">সব ইতিহাস</string>
     <string name="settings_choose_history">এই প্রোফাইল থেকে কী সরাবেন তা বেছে নিন। প্লেলিস্ট, পছন্দেরগুলো ও ডাউনলোড প্রভাবিত হবে না।</string>
     <string name="settings_clear_history_confirm"><xliff:g id="scope">%1$s</xliff:g> ইতিহাস মুছবেন?</string>

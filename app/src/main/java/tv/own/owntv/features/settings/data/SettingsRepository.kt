@@ -30,7 +30,32 @@ import tv.own.owntv.ui.theme.UiZoom
 /** Per-profile startup landing (Phase 3 / v4.0.0). LAST_CHANNEL also covers "auto-play my channel" since
  *  it's always the one you last watched. */
 enum class StartupMode {
-    HOME, LAST_CHANNEL, FAVORITES
+    HOME, LAST_CHANNEL, FAVORITES, SPECIFIC_CHANNEL
+}
+
+data class StartupChannelRef(
+    val sourceId: Long,
+    val remoteId: String?,
+    val name: String,
+    val itemId: Long,
+) {
+    fun toJson(): org.json.JSONObject = org.json.JSONObject()
+        .put("sourceId", sourceId)
+        .putOpt("remoteId", remoteId)
+        .put("name", name)
+        .put("itemId", itemId)
+
+    companion object {
+        fun fromJson(raw: String?): StartupChannelRef? = runCatching {
+            val o = org.json.JSONObject(raw ?: return null)
+            StartupChannelRef(
+                sourceId = o.getLong("sourceId").takeIf { it > 0L } ?: return null,
+                remoteId = o.optString("remoteId").takeIf { it.isNotBlank() },
+                name = o.getString("name").takeIf { it.isNotBlank() } ?: return null,
+                itemId = o.optLong("itemId", -1L),
+            )
+        }.getOrNull()
+    }
 }
 
 /**
@@ -330,6 +355,24 @@ class SettingsRepository(private val context: Context, private val localeStore: 
     }
     suspend fun setStartupMode(profileId: Long, mode: StartupMode) {
         context.dataStore.edit { it[stringPreferencesKey("startup_mode_$profileId")] = mode.name }
+    }
+
+    fun startupChannel(profileId: Long): Flow<StartupChannelRef?> = prefsFlow { prefs ->
+        StartupChannelRef.fromJson(prefs[stringPreferencesKey("startup_channel_$profileId")])
+    }
+
+    suspend fun setStartupChannel(profileId: Long, channel: StartupChannelRef?) {
+        context.dataStore.edit { prefs ->
+            val key = stringPreferencesKey("startup_channel_$profileId")
+            if (channel == null) prefs.remove(key) else prefs[key] = channel.toJson().toString()
+        }
+    }
+
+    suspend fun setSpecificStartupChannel(profileId: Long, channel: StartupChannelRef) {
+        context.dataStore.edit { prefs ->
+            prefs[stringPreferencesKey("startup_channel_$profileId")] = channel.toJson().toString()
+            prefs[stringPreferencesKey("startup_mode_$profileId")] = StartupMode.SPECIFIC_CHANNEL.name
+        }
     }
 
     // --- Customize Categories & Items: optional per-profile PIN lock on the screen (so hidden items can't
@@ -1835,6 +1878,18 @@ class SettingsRepository(private val context: Context, private val localeStore: 
         return out
     }
 
+    /** Exports stable per-profile Live channel startup targets. */
+    suspend fun exportStartupChannels(): org.json.JSONObject {
+        val prefix = "startup_channel_"
+        val out = org.json.JSONObject()
+        context.dataStore.data.first().asMap().forEach { (k, v) ->
+            if (k.name.startsWith(prefix) && v is String) {
+                StartupChannelRef.fromJson(v)?.let { out.put(k.name.removePrefix(prefix), it.toJson()) }
+            }
+        }
+        return out
+    }
+
     /** Exports all per-profile Home config blobs as { "<profileId>": { ... } }. */
     suspend fun exportHomeConfigs(): org.json.JSONObject {
         val prefix = "home_config_"
@@ -1857,6 +1912,38 @@ class SettingsRepository(private val context: Context, private val localeStore: 
                 val mode = o.optString(key).takeIf { it.isNotEmpty() } ?: return@forEach
                 if (runCatching { StartupMode.valueOf(mode) }.isSuccess) {
                     prefs[stringPreferencesKey("startup_mode_$pid")] = mode
+                }
+            }
+        }
+    }
+
+    /** Restores startup targets after profile/source ids have been remapped by backup import. */
+    suspend fun importStartupChannels(
+        o: org.json.JSONObject,
+        existingProfileIds: Set<Long>,
+        sourceIdMap: Map<Long, Long>,
+    ) {
+        context.dataStore.edit { prefs ->
+            o.keys().forEach { key ->
+                val pid = key.toLongOrNull() ?: return@forEach
+                if (pid !in existingProfileIds) return@forEach
+                val raw = o.optJSONObject(key)?.toString() ?: return@forEach
+                val ref = StartupChannelRef.fromJson(raw) ?: return@forEach
+                val mappedSourceId = sourceIdMap[ref.sourceId] ?: return@forEach
+                prefs[stringPreferencesKey("startup_channel_$pid")] =
+                    ref.copy(sourceId = mappedSourceId, itemId = -1L).toJson().toString()
+            }
+        }
+    }
+
+    /** A restored specific-channel mode must never point at an absent or unmapped source target. */
+    suspend fun repairSpecificStartupModes(profileIds: Set<Long>) {
+        context.dataStore.edit { prefs ->
+            profileIds.forEach { profileId ->
+                val modeKey = stringPreferencesKey("startup_mode_$profileId")
+                if (prefs[modeKey] == StartupMode.SPECIFIC_CHANNEL.name) {
+                    val channel = StartupChannelRef.fromJson(prefs[stringPreferencesKey("startup_channel_$profileId")])
+                    if (channel == null) prefs[modeKey] = StartupMode.HOME.name
                 }
             }
         }

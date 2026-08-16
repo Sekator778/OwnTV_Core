@@ -225,6 +225,8 @@
     <string name="settings_startup_home">主屏幕</string>
     <string name="settings_startup_last_channel">上次观看的频道</string>
     <string name="settings_startup_favorites">直播 · 收藏夹</string>
+    <string name="settings_startup_specific_channel">指定频道</string>
+    <string name="settings_startup_channel_unavailable">启动频道不可用，已打开首页。</string>
     <string name="settings_all_history">所有观看记录</string>
     <string name="settings_choose_history">选择要为此用户档案移除的内容。播放列表、收藏夹和下载内容不受影响。</string>
     <string name="settings_clear_history_confirm">清除<xliff:g id="scope">%1$s</xliff:g>观看记录？</string>

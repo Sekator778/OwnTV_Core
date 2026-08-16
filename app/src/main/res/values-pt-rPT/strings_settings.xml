@@ -227,6 +227,8 @@
     <string name="settings_startup_home">Ecrã principal</string>
     <string name="settings_startup_last_channel">Último canal</string>
     <string name="settings_startup_favorites">Em direto · Favoritos</string>
+    <string name="settings_startup_specific_channel">Canal específico</string>
+    <string name="settings_startup_channel_unavailable">O canal de arranque não está disponível. Foi aberto o ecrã inicial.</string>
     <string name="settings_all_history">Todo o histórico</string>
     <string name="settings_choose_history">Escolha o que pretende remover para este perfil. As listas de reprodução, os favoritos e as transferências não são afetados.</string>
     <string name="settings_clear_history_confirm">Limpar o histórico de <xliff:g id="scope">%1$s</xliff:g>?</string>

@@ -225,6 +225,8 @@
     <string name="settings_startup_home">ホーム</string>
     <string name="settings_startup_last_channel">最後のチャンネル</string>
     <string name="settings_startup_favorites">ライブ · お気に入り</string>
+    <string name="settings_startup_specific_channel">指定したチャンネル</string>
+    <string name="settings_startup_channel_unavailable">起動チャンネルを利用できません。ホームを開きました。</string>
     <string name="settings_all_history">すべての履歴</string>
     <string name="settings_choose_history">このプロフィールから削除する項目を選択します。プレイリスト、お気に入り、ダウンロードには影響しません。</string>
     <string name="settings_clear_history_confirm"><xliff:g id="scope">%1$s</xliff:g>の履歴を消去しますか？</string>

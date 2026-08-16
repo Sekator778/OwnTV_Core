@@ -228,6 +228,8 @@
     <string name="settings_startup_home">Ekran główny</string>
     <string name="settings_startup_last_channel">Ostatni kanał</string>
     <string name="settings_startup_favorites">Na żywo · Ulubione</string>
+    <string name="settings_startup_specific_channel">Wybrany kanał</string>
+    <string name="settings_startup_channel_unavailable">Kanał startowy jest niedostępny. Otwarto ekran główny.</string>
     <string name="settings_all_history">Cała historia</string>
     <string name="settings_choose_history">Wybierz, co usunąć dla tego profilu. Nie wpłynie to na listy odtwarzania, ulubione ani pobrane.</string>
     <string name="settings_clear_history_confirm">Wyczyścić historię <xliff:g id="scope">%1$s</xliff:g>?</string>

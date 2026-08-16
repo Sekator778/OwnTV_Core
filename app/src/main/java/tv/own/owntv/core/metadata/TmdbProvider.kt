@@ -113,13 +113,13 @@ class TmdbProvider(
         }
     }
 
-    override suspend fun searchMovie(title: String, year: Int?): List<MetadataSearchResult>? =
-        search(MetadataType.MOVIE, title, year)
+    override suspend fun searchMovie(title: String, year: Int?, includeAdult: Boolean): List<MetadataSearchResult>? =
+        search(MetadataType.MOVIE, title, year, includeAdult)
 
-    override suspend fun searchTv(title: String, year: Int?): List<MetadataSearchResult>? =
-        search(MetadataType.TV, title, year)
+    override suspend fun searchTv(title: String, year: Int?, includeAdult: Boolean): List<MetadataSearchResult>? =
+        search(MetadataType.TV, title, year, includeAdult)
 
-    private suspend fun search(type: MetadataType, title: String, year: Int?): List<MetadataSearchResult>? {
+    private suspend fun search(type: MetadataType, title: String, year: Int?, includeAdult: Boolean): List<MetadataSearchResult>? {
         val query = title.trim()
         if (query.isEmpty()) return emptyList()
         val ep = resolveEndpoint()
@@ -133,7 +133,7 @@ class TmdbProvider(
             append(ep.baseUrl).append(path)
             append("?query=").append(enc(query))
             append(yearParam)
-            append("&include_adult=false")
+            append("&include_adult=").append(includeAdult)
             append(ep.langParam())
             ep.apiKey?.takeIf { it.isNotBlank() }?.let { append("&api_key=").append(enc(it)) }
         }
@@ -141,7 +141,7 @@ class TmdbProvider(
         // an empty list means "TMDB said no results" and gets negative-cached for 7 days upstream.
         val json = fetch(ep, url, "search type=$type") ?: return null
 
-        return parseResults(type, json)
+        return parseResults(type, json, includeAdult)
     }
 
     override suspend fun movieDetails(tmdbId: Int): MovieDetails? {
@@ -316,11 +316,12 @@ class TmdbProvider(
         return candidates.minWithOrNull(compareBy<LogoCandidate> { it.languageRank }.thenByDescending { it.width })?.path
     }
 
-    private fun parseResults(type: MetadataType, body: String): List<MetadataSearchResult> {
+    private fun parseResults(type: MetadataType, body: String, includeAdult: Boolean): List<MetadataSearchResult> {
         val results = runCatching { JSONObject(body).optJSONArray("results") }.getOrNull() ?: return emptyList()
         val out = ArrayList<MetadataSearchResult>(results.length())
         for (i in 0 until results.length()) {
             val o = results.optJSONObject(i) ?: continue
+            if (!includeAdult && o.optBoolean("adult", false)) continue
             val id = o.optInt("id", 0)
             if (id == 0) continue
             val name = if (type == MetadataType.TV) o.optString("name") else o.optString("title")

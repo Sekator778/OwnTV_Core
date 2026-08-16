@@ -227,6 +227,8 @@
     <string name="settings_startup_home">Home</string>
     <string name="settings_startup_last_channel">Ultimo canale</string>
     <string name="settings_startup_favorites">Diretta · Preferiti</string>
+    <string name="settings_startup_specific_channel">Canale specifico</string>
+    <string name="settings_startup_channel_unavailable">Il canale di avvio non è disponibile. È stata aperta la Home.</string>
     <string name="settings_all_history">Tutta la cronologia</string>
     <string name="settings_choose_history">Scegli cosa rimuovere per questo profilo. Playlist, preferiti e download non subiranno modifiche.</string>
     <string name="settings_clear_history_confirm">Cancellare la cronologia <xliff:g id="scope">%1$s</xliff:g>?</string>

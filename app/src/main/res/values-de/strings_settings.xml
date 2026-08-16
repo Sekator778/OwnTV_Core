@@ -226,6 +226,8 @@
     <string name="settings_startup_home">Startseite</string>
     <string name="settings_startup_last_channel">Letzter Sender</string>
     <string name="settings_startup_favorites">Live · Favoriten</string>
+    <string name="settings_startup_specific_channel">Bestimmter Sender</string>
+    <string name="settings_startup_channel_unavailable">Der Startsender ist nicht verfügbar. Die Startseite wurde geöffnet.</string>
     <string name="settings_all_history">Gesamter Verlauf</string>
     <string name="settings_choose_history">Wählen Sie aus, was für dieses Profil entfernt werden soll. Wiedergabelisten, Favoriten und Downloads sind nicht betroffen.</string>
     <string name="settings_clear_history_confirm">Verlauf „<xliff:g id="scope">%1$s</xliff:g>“ löschen?</string>

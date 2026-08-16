@@ -8,6 +8,8 @@ import tv.own.owntv.core.database.dao.MovieDao
 import tv.own.owntv.core.database.dao.ProgressDao
 import tv.own.owntv.core.database.dao.SeriesDao
 import tv.own.owntv.core.database.dao.SourceDao
+import tv.own.owntv.core.database.dao.CategoryDao
+import tv.own.owntv.core.database.dao.ProfileDao
 import tv.own.owntv.core.database.entity.ChannelEntity
 import tv.own.owntv.core.database.entity.EpisodeEntity
 import tv.own.owntv.core.database.entity.MovieEntity
@@ -22,6 +24,8 @@ class LauncherRecommendationPlanner(
     private val movieDao: MovieDao,
     private val seriesDao: SeriesDao,
     private val progressDao: ProgressDao,
+    private val categoryDao: CategoryDao,
+    private val profileDao: ProfileDao,
 ) {
     companion object {
         private const val WATCH_NEXT_MIN_POSITION_MS = 10_000L
@@ -48,6 +52,7 @@ class LauncherRecommendationPlanner(
                 MediaType.MOVIE -> {
                     val movie = movieDao.getById(progress.itemId) ?: continue
                     if (movie.sourceId !in movieSourceIds) continue
+                    if (!isCategoryVisibleToProfile(profileId, movie.categoryId)) continue
                     if (!eligibleForWatchNext(progress.positionMs, progress.durationMs)) continue
                     out += movieItem(movie, progress)
                 }
@@ -63,6 +68,7 @@ class LauncherRecommendationPlanner(
             val episode = seriesDao.getEpisodeById(progress.itemId) ?: continue
             val show = seriesDao.getSeriesById(episode.seriesId) ?: continue
             if (show.sourceId !in seriesSourceIds) continue
+            if (!isCategoryVisibleToProfile(profileId, show.categoryId)) continue
             val current = latestBySeries[episode.seriesId]
             if (current == null || progress.updatedAt >= current.updatedAt) {
                 latestBySeries[episode.seriesId] = progress
@@ -99,6 +105,9 @@ class LauncherRecommendationPlanner(
             MediaType.SERIES, MediaType.EPISODE -> source.syncSeries
         }
     }
+
+    suspend fun isCategoryVisibleToProfile(profileId: Long, categoryId: Long?): Boolean =
+        tv.own.owntv.core.content.AdultCategoryClassifier.allows(profileId, categoryId, profileDao, categoryDao)
 
     suspend fun orderedEpisodes(seriesId: Long): List<EpisodeEntity> =
         seriesDao.episodesBySeries(seriesId).first().sortedWith(compareBy<EpisodeEntity> { it.seasonNumber }.thenBy { it.episodeNumber })

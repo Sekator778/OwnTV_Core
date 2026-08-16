@@ -225,6 +225,8 @@
     <string name="settings_startup_home">主畫面</string>
     <string name="settings_startup_last_channel">上一個頻道</string>
     <string name="settings_startup_favorites">直播 · 我的最愛</string>
+    <string name="settings_startup_specific_channel">指定頻道</string>
+    <string name="settings_startup_channel_unavailable">啟動頻道無法使用，已開啟首頁。</string>
     <string name="settings_all_history">所有記錄</string>
     <string name="settings_choose_history">選擇要為此使用者檔案移除的內容。播放清單、我的最愛和下載內容不受影響。</string>
     <string name="settings_clear_history_confirm">要清除<xliff:g id="scope">%1$s</xliff:g>記錄嗎？</string>

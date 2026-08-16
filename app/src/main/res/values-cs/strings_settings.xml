@@ -228,6 +228,8 @@
     <string name="settings_startup_home">Domů</string>
     <string name="settings_startup_last_channel">Poslední kanál</string>
     <string name="settings_startup_favorites">Živé vysílání · Oblíbené</string>
+    <string name="settings_startup_specific_channel">Konkrétní kanál</string>
+    <string name="settings_startup_channel_unavailable">Spouštěcí kanál není dostupný. Byla otevřena domovská obrazovka.</string>
     <string name="settings_all_history">Celou historii</string>
     <string name="settings_choose_history">Zvolte, co se má pro tento profil odstranit. Playlisty, oblíbené ani stahování nebudou ovlivněny.</string>
     <string name="settings_clear_history_confirm">Vymazat historii <xliff:g id="scope">%1$s</xliff:g>?</string>

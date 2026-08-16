@@ -226,6 +226,8 @@
     <string name="settings_startup_home">Startscherm</string>
     <string name="settings_startup_last_channel">Laatste zender</string>
     <string name="settings_startup_favorites">Live · Favorieten</string>
+    <string name="settings_startup_specific_channel">Specifiek kanaal</string>
+    <string name="settings_startup_channel_unavailable">Het startkanaal is niet beschikbaar. Home is geopend.</string>
     <string name="settings_all_history">Volledige geschiedenis</string>
     <string name="settings_choose_history">Kies wat je voor dit profiel wilt verwijderen. Afspeellijsten, favorieten en downloads blijven behouden.</string>
     <string name="settings_clear_history_confirm">Geschiedenis voor <xliff:g id="scope">%1$s</xliff:g> wissen?</string>

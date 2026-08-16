@@ -207,10 +207,10 @@ interface MetadataProvider {
      * **null = transport failure** (network down, rate-limited, proxy error) — callers must NOT
      * negative-cache, so the lookup retries on the next open instead of being wrong for 7 days.
      */
-    suspend fun searchMovie(title: String, year: Int? = null): List<MetadataSearchResult>?
+    suspend fun searchMovie(title: String, year: Int? = null, includeAdult: Boolean = false): List<MetadataSearchResult>?
 
     /** Search TV shows by cleaned [title] (+ optional first-air [year]). Same null-vs-empty contract as [searchMovie]. */
-    suspend fun searchTv(title: String, year: Int? = null): List<MetadataSearchResult>?
+    suspend fun searchTv(title: String, year: Int? = null, includeAdult: Boolean = false): List<MetadataSearchResult>?
 
     /** Full details for a resolved movie id; null on network/parse failure. */
     suspend fun movieDetails(tmdbId: Int): MovieDetails?

@@ -1,12 +1,16 @@
 package tv.own.owntv.core.metadata
 
 import android.util.Log
+import kotlinx.coroutines.flow.first
 import org.json.JSONArray
 import tv.own.owntv.core.database.dao.MetadataDao
+import tv.own.owntv.core.database.dao.ProfileDao
 import tv.own.owntv.core.database.entity.MetadataCacheEntity
 import tv.own.owntv.core.database.entity.MetadataMatchEntity
 import tv.own.owntv.core.database.entity.MovieEntity
 import tv.own.owntv.features.settings.data.SettingsRepository
+
+internal fun profileAllowsAdultMetadata(isKids: Boolean?): Boolean = isKids != true
 
 /**
  * On-demand TMDB enrichment orchestrator (plan §3, §7). Resolves a local content item → TMDB metadata,
@@ -21,12 +25,19 @@ class MetadataRepository(
     private val dao: MetadataDao,
     private val settings: SettingsRepository,
     private val overrideStore: MetadataOverrideStore,
+    private val profileDao: ProfileDao,
 ) {
     /** Guards [healNegativeMatchesOnce] so the DataStore read happens once per process, not per resolve. */
     private val healNeeded = java.util.concurrent.atomic.AtomicBoolean(true)
 
     /** The metadata language the cache keys are scoped by; blank keeps the pre-language key format. */
     private suspend fun currentLang(): String = settings.metadataConfig().resolvedLanguage
+
+    /** Search complete TMDB unless the active profile is explicitly marked as Kids. */
+    private suspend fun currentProfileAllowsAdult(): Boolean {
+        val profileId = settings.activeProfileId.first()
+        return profileAllowsAdultMetadata(profileDao.getById(profileId)?.isKids)
+    }
 
     /**
      * A cached row is only usable if its cast is in the current format. Rows written before cast photos
@@ -44,17 +55,19 @@ class MetadataRepository(
         healNegativeMatchesOnce()
 
         val localKey = movieLocalKey(movie)
+        val includeAdult = currentProfileAllowsAdult()
+        val matchKey = maturityMatchKey(localKey, includeAdult)
         val lang = currentLang()
         val now = System.currentTimeMillis()
 
         // 1. Consult the local→tmdb mapping (incl. negative cache) before hitting the network.
-        dao.getMatch(localKey)?.let { match ->
+        dao.getMatch(matchKey)?.let { match ->
             val ttl = if (match.tmdbId == null) NEGATIVE_TTL_MS else POSITIVE_TTL_MS
             if (now - match.updatedAt < ttl) {
                 val tmdbId = match.tmdbId ?: return null // fresh negative cache
                 dao.getCache(cacheKey(tmdbId, lang))?.takeIf { it.isUsable() }?.let { return it }
                 // Match known but cache row missing/evicted → re-fetch details below.
-                return fetchAndCache(tmdbId, lang, localKey, match.confidence)
+                return fetchAndCache(tmdbId, lang, matchKey, match.confidence)
             }
         }
 
@@ -64,7 +77,7 @@ class MetadataRepository(
 
         // null = transport failure (offline / rate-limited / proxy down): bail WITHOUT negative-caching,
         // so the title retries next time instead of showing no metadata for 7 days.
-        val hits = runCatching { provider.searchMovie(q.query, q.year) }
+        val hits = runCatching { provider.searchMovie(q.query, q.year, includeAdult) }
             .onFailure { Log.w(TAG, "resolveMovie search failed: ${it.message}") }
             .getOrNull() ?: return null
 
@@ -73,12 +86,12 @@ class MetadataRepository(
         val best: Scored? = if (q.isOverride) hits.firstOrNull()?.let { Scored(it, 1.0) } else pickBest(q.query, q.year, hits)
         if (best == null) {
             // Negative cache: remember "searched, no confident match" so we don't re-hammer on scroll.
-            dao.upsertMatch(MetadataMatchEntity(localKey, TYPE_MOVIE, tmdbId = null, confidence = 0.0, updatedAt = now))
+            dao.upsertMatch(MetadataMatchEntity(matchKey, TYPE_MOVIE, tmdbId = null, confidence = 0.0, updatedAt = now))
             return null
         }
 
-        dao.upsertMatch(MetadataMatchEntity(localKey, TYPE_MOVIE, tmdbId = best.result.tmdbId, confidence = best.score, updatedAt = now))
-        return fetchAndCache(best.result.tmdbId, lang, localKey, best.score, fallback = best.result)
+        dao.upsertMatch(MetadataMatchEntity(matchKey, TYPE_MOVIE, tmdbId = best.result.tmdbId, confidence = best.score, updatedAt = now))
+        return fetchAndCache(best.result.tmdbId, lang, matchKey, best.score, fallback = best.result)
     }
 
     /**
@@ -90,10 +103,12 @@ class MetadataRepository(
         healNegativeMatchesOnce()
 
         val localKey = seriesLocalKey(series)
+        val includeAdult = currentProfileAllowsAdult()
+        val matchKey = maturityMatchKey(localKey, includeAdult)
         val lang = currentLang()
         val now = System.currentTimeMillis()
 
-        dao.getMatch(localKey)?.let { match ->
+        dao.getMatch(matchKey)?.let { match ->
             val ttl = if (match.tmdbId == null) NEGATIVE_TTL_MS else POSITIVE_TTL_MS
             if (now - match.updatedAt < ttl) {
                 val tmdbId = match.tmdbId ?: return null
@@ -106,17 +121,17 @@ class MetadataRepository(
         if (q.query.isBlank()) return null
 
         // Same as resolveMovie: null = transport failure → no negative-cache, retry next open.
-        val hits = runCatching { provider.searchTv(q.query, q.year) }
+        val hits = runCatching { provider.searchTv(q.query, q.year, includeAdult) }
             .onFailure { Log.w(TAG, "resolveSeries search failed: ${it.message}") }
             .getOrNull() ?: return null
 
         // An override is the user telling us the exact name → trust TMDB's top relevance hit directly.
         val best: Scored? = if (q.isOverride) hits.firstOrNull()?.let { Scored(it, 1.0) } else pickBest(q.query, q.year, hits)
         if (best == null) {
-            dao.upsertMatch(MetadataMatchEntity(localKey, TYPE_TV, tmdbId = null, confidence = 0.0, updatedAt = now))
+            dao.upsertMatch(MetadataMatchEntity(matchKey, TYPE_TV, tmdbId = null, confidence = 0.0, updatedAt = now))
             return null
         }
-        dao.upsertMatch(MetadataMatchEntity(localKey, TYPE_TV, tmdbId = best.result.tmdbId, confidence = best.score, updatedAt = now))
+        dao.upsertMatch(MetadataMatchEntity(matchKey, TYPE_TV, tmdbId = best.result.tmdbId, confidence = best.score, updatedAt = now))
         return fetchAndCacheTv(best.result.tmdbId, lang, best.result)
     }
 
@@ -124,13 +139,14 @@ class MetadataRepository(
     suspend fun resolveKnownMovie(movie: MovieEntity, tmdbId: Int): MetadataCacheEntity? {
         if (!settings.metadataConfig().enabled) return null
         val localKey = movieLocalKey(movie)
+        val matchKey = maturityMatchKey(localKey, currentProfileAllowsAdult())
         val lang = currentLang()
         val now = System.currentTimeMillis()
-        dao.upsertMatch(MetadataMatchEntity(localKey, TYPE_MOVIE, tmdbId, confidence = 1.0, updatedAt = now))
+        dao.upsertMatch(MetadataMatchEntity(matchKey, TYPE_MOVIE, tmdbId, confidence = 1.0, updatedAt = now))
         dao.getCache(cacheKey(tmdbId, lang))?.let { cached ->
             if (now - cached.updatedAt < POSITIVE_TTL_MS && cached.isUsable()) return cached
         }
-        return fetchAndCache(tmdbId, lang, localKey, confidence = 1.0)
+        return fetchAndCache(tmdbId, lang, matchKey, confidence = 1.0)
     }
 
     /** Series counterpart to [resolveKnownMovie], using the exact Trending TV id. */
@@ -140,9 +156,10 @@ class MetadataRepository(
     ): MetadataCacheEntity? {
         if (!settings.metadataConfig().enabled) return null
         val localKey = seriesLocalKey(series)
+        val matchKey = maturityMatchKey(localKey, currentProfileAllowsAdult())
         val lang = currentLang()
         val now = System.currentTimeMillis()
-        dao.upsertMatch(MetadataMatchEntity(localKey, TYPE_TV, tmdbId, confidence = 1.0, updatedAt = now))
+        dao.upsertMatch(MetadataMatchEntity(matchKey, TYPE_TV, tmdbId, confidence = 1.0, updatedAt = now))
         dao.getCache(tvCacheKey(tmdbId, lang))?.let { cached ->
             if (now - cached.updatedAt < POSITIVE_TTL_MS && cached.isUsable()) return cached
         }
@@ -299,11 +316,12 @@ class MetadataRepository(
     suspend fun clearMovie(movie: MovieEntity) {
         val localKey = movieLocalKey(movie)
         val lang = currentLang()
-        dao.getMatch(localKey)?.tmdbId?.let {
+        val matchKeys = listOf(localKey, maturityMatchKey(localKey, includeAdult = false))
+        matchKeys.mapNotNull { dao.getMatch(it)?.tmdbId }.distinct().forEach {
             dao.deleteCache(cacheKey(it, lang))
             if (lang.isNotBlank()) dao.deleteCache(cacheKey(it)) // pre-language row
         }
-        dao.deleteMatch(localKey)
+        matchKeys.forEach { dao.deleteMatch(it) }
     }
 
     /**
@@ -314,11 +332,12 @@ class MetadataRepository(
     suspend fun clearSeries(series: tv.own.owntv.core.database.entity.SeriesEntity) {
         val localKey = seriesLocalKey(series)
         val lang = currentLang()
-        dao.getMatch(localKey)?.tmdbId?.let {
+        val matchKeys = listOf(localKey, maturityMatchKey(localKey, includeAdult = false))
+        matchKeys.mapNotNull { dao.getMatch(it)?.tmdbId }.distinct().forEach {
             dao.deleteCache(tvCacheKey(it, lang))
             if (lang.isNotBlank()) dao.deleteCache(tvCacheKey(it)) // pre-language row
         }
-        dao.deleteMatch(localKey)
+        matchKeys.forEach { dao.deleteMatch(it) }
     }
 
     /**
@@ -332,7 +351,8 @@ class MetadataRepository(
     ) {
         val localKey = seriesLocalKey(series)
         val lang = currentLang()
-        dao.getMatch(localKey)?.tmdbId?.let { tid ->
+        val matchKeys = listOf(localKey, maturityMatchKey(localKey, includeAdult = false))
+        matchKeys.mapNotNull { dao.getMatch(it)?.tmdbId }.distinct().forEach { tid ->
             dao.deleteCache(tvCacheKey(tid, lang)) // show details
             dao.deleteCache(episodeCacheKey(tid, episode.seasonNumber, episode.episodeNumber, lang))
             if (lang.isNotBlank()) { // pre-language rows
@@ -340,7 +360,7 @@ class MetadataRepository(
                 dao.deleteCache(episodeCacheKey(tid, episode.seasonNumber, episode.episodeNumber))
             }
         }
-        dao.deleteMatch(localKey) // show match (negative OR positive)
+        matchKeys.forEach { dao.deleteMatch(it) } // show match (negative OR positive)
     }
 
     // --- TMDB name overrides (plan §11.2 U5b) ---
@@ -514,5 +534,8 @@ class MetadataRepository(
         fun episodeCacheKey(tvId: Int, season: Int, episode: Int, lang: String = ""): String =
             if (lang.isBlank()) "$TYPE_TV:$tvId:s${season}e$episode"
             else "$TYPE_TV:$lang:$tvId:s${season}e$episode"
+
+        internal fun maturityMatchKey(localKey: String, includeAdult: Boolean): String =
+            if (includeAdult) localKey else "$localKey:kids"
     }
 }

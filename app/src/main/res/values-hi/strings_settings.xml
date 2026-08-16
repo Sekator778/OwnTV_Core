@@ -226,6 +226,8 @@
     <string name="settings_startup_home">होम</string>
     <string name="settings_startup_last_channel">पिछला चैनल</string>
     <string name="settings_startup_favorites">लाइव · पसंदीदा</string>
+    <string name="settings_startup_specific_channel">विशिष्ट चैनल</string>
+    <string name="settings_startup_channel_unavailable">स्टार्टअप चैनल उपलब्ध नहीं है। होम खोला गया।</string>
     <string name="settings_all_history">पूरा इतिहास</string>
     <string name="settings_choose_history">इस प्रोफ़ाइल से क्या हटाना है, चुनें। प्लेलिस्ट, पसंदीदा और डाउनलोड प्रभावित नहीं होंगे।</string>
     <string name="settings_clear_history_confirm"><xliff:g id="scope">%1$s</xliff:g> इतिहास मिटाएँ?</string>

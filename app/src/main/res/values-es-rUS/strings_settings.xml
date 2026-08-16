@@ -227,6 +227,8 @@
     <string name="settings_startup_home">Inicio</string>
     <string name="settings_startup_last_channel">Último canal</string>
     <string name="settings_startup_favorites">TV en vivo · Favoritos</string>
+    <string name="settings_startup_specific_channel">Canal específico</string>
+    <string name="settings_startup_channel_unavailable">El canal de inicio no está disponible. Se abrió Inicio.</string>
     <string name="settings_all_history">Todo el historial</string>
     <string name="settings_choose_history">Elige qué eliminar de este perfil. Las listas de reproducción, los favoritos y las descargas no se verán afectados.</string>
     <string name="settings_clear_history_confirm">¿Borrar el historial de <xliff:g id="scope">%1$s</xliff:g>?</string>

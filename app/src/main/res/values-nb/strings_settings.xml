@@ -226,6 +226,8 @@
     <string name="settings_startup_home">Startskjerm</string>
     <string name="settings_startup_last_channel">Siste kanal</string>
     <string name="settings_startup_favorites">Direkte · Favoritter</string>
+    <string name="settings_startup_specific_channel">Bestemt kanal</string>
+    <string name="settings_startup_channel_unavailable">Oppstartskanalen er ikke tilgjengelig. Hjem ble åpnet.</string>
     <string name="settings_all_history">All historikk</string>
     <string name="settings_choose_history">Velg hva som skal fjernes fra denne profilen. Spillelister, favoritter og nedlastinger påvirkes ikke.</string>
     <string name="settings_clear_history_confirm">Tømme <xliff:g id="scope">%1$s</xliff:g>-historikken?</string>
