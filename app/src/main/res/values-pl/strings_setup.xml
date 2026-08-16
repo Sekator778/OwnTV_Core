@@ -207,6 +207,8 @@
     <string name="companion_backup_description">Wybierz plik kopii zapasowej OwnTV (.own lub starszy .json) i naciśnij Wyślij. Zostanie przesłany do telewizora — weź pilot i wybierz tam elementy, które chcesz przywrócić.</string>
     <string name="companion_backup_file">Plik kopii zapasowej</string>
     <string name="companion_choose_backup">Najpierw wybierz plik kopii zapasowej.</string>
+    <string name="companion_playlist_file">Albo prześlij plik playlisty</string>
+    <string name="companion_playlist_url_or_file">Podaj adres URL playlisty lub wybierz plik.</string>
     <string name="companion_sending">Wysyłanie…</string>
     <string name="companion_upload_failed">Przesyłanie nie powiodło się (HTTP <xliff:g id="status">%1$d</xliff:g>). Sprawdź PIN i spróbuj ponownie.</string>
     <string name="companion_could_not_reach">Nie udało się połączyć z telewizorem. Pozostań w tej samej sieci Wi-Fi i spróbuj ponownie.</string>

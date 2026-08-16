@@ -199,6 +199,8 @@
     <string name="companion_backup_description">Velg en OwnTV-sikkerhetskopifil (.own eller en eldre .json), og trykk på Send. Den overføres til TV-en – ta fjernkontrollen og velg hva som skal gjenopprettes der.</string>
     <string name="companion_backup_file">Sikkerhetskopifil</string>
     <string name="companion_choose_backup">Velg en sikkerhetskopifil først.</string>
+    <string name="companion_playlist_file">Eller last opp en spillelistefil</string>
+    <string name="companion_playlist_url_or_file">Skriv inn en spilleliste-URL, eller velg en fil.</string>
     <string name="companion_sending">Sender…</string>
     <string name="companion_upload_failed">Opplastingen mislyktes (HTTP <xliff:g id="status">%1$d</xliff:g>). Kontroller PIN-koden og prøv igjen.</string>
     <string name="companion_could_not_reach">Kunne ikke nå TV-en. Hold deg på samme Wi-Fi og prøv igjen.</string>

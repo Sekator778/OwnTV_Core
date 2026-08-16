@@ -199,6 +199,8 @@
     <string name="companion_backup_description">कोई OwnTV बैकअप फ़ाइल (.own या पुरानी .json) चुनें और भेजें दबाएँ। उसे टीवी पर भेज दिया जाएगा — रिमोट कंट्रोल उठाएँ और वहाँ चुनें कि क्या रीस्टोर करना है।</string>
     <string name="companion_backup_file">बैकअप फ़ाइल</string>
     <string name="companion_choose_backup">कृपया पहले कोई बैकअप फ़ाइल चुनें।</string>
+    <string name="companion_playlist_file">या कोई प्लेलिस्ट फ़ाइल अपलोड करें</string>
+    <string name="companion_playlist_url_or_file">प्लेलिस्ट URL डालें या कोई फ़ाइल चुनें।</string>
     <string name="companion_sending">भेजा जा रहा है…</string>
     <string name="companion_upload_failed">अपलोड नहीं हो सका (HTTP <xliff:g id="status">%1$d</xliff:g>)। PIN जाँचें और फिर से कोशिश करें।</string>
     <string name="companion_could_not_reach">टीवी से संपर्क नहीं हो सका। उसी Wi-Fi से जुड़े रहें और फिर से कोशिश करें।</string>

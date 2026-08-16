@@ -17,6 +17,7 @@ import tv.own.owntv.core.database.entity.ProfileEntity
 import tv.own.owntv.core.database.entity.ProfileSourceCrossRef
 import tv.own.owntv.core.database.entity.SourceEntity
 import tv.own.owntv.core.model.SourceType
+import tv.own.owntv.core.stalker.StalkerClient
 import tv.own.owntv.features.settings.data.SettingsRepository
 
 /**
@@ -500,8 +501,10 @@ class BackupManager(
      *   kids flag, PIN); a new name is added (with a fresh id if the file's id is taken). Device
      *   profiles not in the file are untouched. Ids can't be the match key — they're per-device
      *   auto-increments, so "id 1" on two devices is usually two different people.
-     * - Sources are matched by type+URL+username: matches keep the device row (secrets updated when
-     *   the file carries them); unknown sources are added. Nothing is wiped.
+     * - Sources are matched by type+URL+username (plus the MAC for Stalker, whose playlists share a
+     *   portal URL and have no username): matches keep the device row (secrets updated when the file
+     *   carries them); unknown sources are added, and each device row is claimed at most once.
+     *   Nothing is wiped.
      * - Every id in the file (profile/source/EPG-source) is remapped to its device id before any
      *   per-profile or per-source data (links, favorites/history/resume, customizations, custom TMDB
      *   names, auto-refresh, startup modes, Customize PINs, home configs) is applied.
@@ -620,10 +623,13 @@ class BackupManager(
                     }
                 }
 
-                // --- sources: match by type+URL+username. Match → keep the device row (refresh the
-                // secrets/extras the file carries); unknown → insert. Nothing is wiped.
+                // --- sources: match by type+URL+username, plus the MAC for Stalker. Match → keep the
+                // device row (refresh the secrets/extras the file carries); unknown → insert.
+                // Nothing is wiped.
                 val deviceSources = sourceDao.getAllOnce()
-                val byKey = deviceSources.associateBy { sourceMatchKey(it.type.name, it.url, it.username) }
+                // Claim-once: a device row leaves this list as soon as an incoming source merges onto
+                // it, so two playlists in the file can never land on the same row (#114).
+                val unclaimedSources = deviceSources.toMutableList()
                 val takenSourceIds = deviceSources.map { it.id }.toMutableSet()
                 for (i in 0 until fileSources.length()) {
                     val srcJson = fileSources.getJSONObject(i)
@@ -632,7 +638,8 @@ class BackupManager(
                         skippedSources++
                         continue
                     }
-                    val existing = byKey[sourceMatchKey(incoming.type.name, incoming.url, incoming.username)]
+                    val existing = matchSourceForRestore(unclaimedSources, incoming)
+                        ?.also { unclaimedSources.remove(it) }
                     when {
                         existing != null -> {
                             if (applySources) {
@@ -1296,9 +1303,43 @@ internal fun profileMatchKey(name: String) = name.trim().lowercase()
  * Identity a restored source is merged onto. Username is part of the key because one portal commonly
  * serves several accounts; the password is not, so a re-exported backup with a rotated password
  * still updates the existing row instead of duplicating it.
+ *
+ * The MAC joins the key for **Stalker only** (#114). A Stalker source has no username, and several
+ * playlists routinely share one portal URL, so type+url+username made every Stalker playlist in a
+ * backup the same source: they all merged onto one device row, each one overwriting its MAC, and
+ * every playlist's favorites/history/customizations collapsed onto that single row. Other source
+ * types ignore the argument, so their keys are unchanged.
  */
-internal fun sourceMatchKey(type: String, url: String, username: String?) =
-    "$type|${url.trim()}|${username.orEmpty()}"
+internal fun sourceMatchKey(type: String, url: String, username: String?, mac: String? = null): String {
+    val base = "$type|${url.trim()}|${username.orEmpty()}"
+    return if (type == SourceType.STALKER.name) "$base|${normalizeMacForMatch(mac)}" else base
+}
+
+/** Compare MACs by value, not by punctuation: `aabb…` and `AA:BB:…` are the same portal login. */
+private fun normalizeMacForMatch(mac: String?): String =
+    mac?.takeIf { it.isNotBlank() }
+        ?.let { StalkerClient.canonicalizeMac(it) ?: it.trim().uppercase() }
+        .orEmpty()
+
+/**
+ * The device row [incoming] merges onto, or null to insert it as a new source. [candidates] holds
+ * only rows no earlier incoming source has already claimed — a device row must never be claimed
+ * twice, which is what let several Stalker playlists pile onto one row (#114).
+ *
+ * Exact key first. A Stalker source then falls back to portal+username when the MAC is unknown on
+ * either side: a backup written WITHOUT a passphrase omits the MAC entirely (it is a secret), and
+ * such a restore has to keep merging onto the existing playlist rather than duplicating it.
+ */
+internal fun matchSourceForRestore(candidates: List<SourceEntity>, incoming: SourceEntity): SourceEntity? {
+    val key = sourceMatchKey(incoming.type.name, incoming.url, incoming.username, incoming.mac)
+    candidates.firstOrNull { sourceMatchKey(it.type.name, it.url, it.username, it.mac) == key }?.let { return it }
+    if (incoming.type != SourceType.STALKER) return null
+    val portalKey = sourceMatchKey(incoming.type.name, incoming.url, incoming.username)
+    return candidates.firstOrNull {
+        (incoming.mac.isNullOrBlank() || it.mac.isNullOrBlank()) &&
+            sourceMatchKey(it.type.name, it.url, it.username) == portalKey
+    }
+}
 
 /** Rewrites an id-keyed JSON map ({"<fileId>": …}) to device ids; unmapped keys pass through. */
 internal fun remapKeys(o: JSONObject, idMap: Map<Long, Long>): JSONObject {

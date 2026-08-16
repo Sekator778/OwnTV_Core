@@ -105,7 +105,10 @@ class CompanionController(context: Context, localeStore: LocaleStore) {
                 pin = currentPin,
                 fontBytes = loraBytes,
                 mode = mode,
-                onPayload = { payload ->
+                onPayload = { raw ->
+                    // An uploaded playlist becomes a real file on the TV before the payload goes any
+                    // further, so what the Add Source form receives is an ordinary local path.
+                    val payload = savePlaylistUpload(raw)
                     Log.d(TAG, "Received ${payload.type} payload '${payload.name.ifBlank { "(unnamed)" }}' — forwarding to UI")
                     _lastPayload.value = payload
                     _payloads.tryEmit(payload)
@@ -169,6 +172,48 @@ class CompanionController(context: Context, localeStore: LocaleStore) {
             .onFailure { Log.w(TAG, "Failed to persist uploaded backup", it) }
     }
 
+    /**
+     * Writes a playlist uploaded through the companion page into the app's own storage and returns
+     * the payload with `server` pointing at it. Anything else passes through untouched.
+     *
+     * `filesDir`, not `cacheDir`: the phone only *fills* the form — the TV user presses Start Import
+     * later, possibly much later, and the system may evict a cache file in between. The saved path is
+     * absolute, which is exactly what `M3uSyncer` already recognises as a local playlist.
+     *
+     * On a write failure the payload is returned unchanged, so the TV shows an empty URL box rather
+     * than a path to a file that is not there.
+     */
+    private fun savePlaylistUpload(payload: CompanionPayload): CompanionPayload {
+        if (payload.playlistContent.isBlank()) return payload
+        return runCatching {
+            val dir = File(appContext.filesDir, PLAYLIST_UPLOAD_DIR).apply { mkdirs() }
+            // Keep only the newest few: a playlist can be megabytes, and every upload that was never
+            // imported would otherwise sit here forever.
+            dir.listFiles().orEmpty().sortedByDescending { it.lastModified() }
+                .drop(MAX_KEPT_UPLOADS - 1).forEach { it.delete() }
+            val file = File(dir, safePlaylistName(payload.playlistFileName))
+            file.writeText(payload.playlistContent)
+            Log.d(TAG, "Saved uploaded playlist (${file.length()} bytes) → ${file.name}")
+            payload.copy(server = file.absolutePath, playlistContent = "")
+        }.getOrElse {
+            Log.w(TAG, "Failed to save uploaded playlist", it)
+            payload.copy(playlistContent = "")
+        }
+    }
+
+    /**
+     * A filename safe to write: the upload names the file, and the name arrives from a browser. Only
+     * the last path segment is kept and only safe characters survive it, so `../../databases/owntv`
+     * cannot escape the upload directory.
+     */
+    private fun safePlaylistName(raw: String): String {
+        val base = raw.substringAfterLast('/').substringAfterLast('\\')
+            .filter { it.isLetterOrDigit() || it == '.' || it == '-' || it == '_' }
+            .trimStart('.')
+            .takeLast(64)
+        return if (base.length > 4 && base.contains('.')) base else "playlist-${System.currentTimeMillis()}.m3u"
+    }
+
     /** Persists an uploaded background image to a cache file and emits it for the settings UI to ingest. */
     private fun onImageUploaded(bytes: ByteArray, extension: String) {
         runCatching {
@@ -206,5 +251,9 @@ class CompanionController(context: Context, localeStore: LocaleStore) {
 
     private companion object {
         const val TAG = "CompanionController"
+
+        /** Under `filesDir`, so an upload survives until the TV user actually imports it. */
+        const val PLAYLIST_UPLOAD_DIR = "companion-playlists"
+        const val MAX_KEPT_UPLOADS = 5
     }
 }

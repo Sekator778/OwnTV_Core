@@ -100,6 +100,8 @@ data class PlaylistItem(
     /** Per-item HTTP headers (M3U `#EXTVLCOPT`/`#EXTHTTP`/`#KODIPROP`), stored `Key: Value` per line.
      *  Applied to whichever engine loads this item; null = the source's own UA/headers only. */
     val httpHeaders: String? = null,
+    /** Widevine/ClearKey licence details (#115); non-null pins this item to ExoPlayer. */
+    val drmConfig: String? = null,
 )
 
 /** Whether prev/next are available in the current queue. */
@@ -560,6 +562,10 @@ class OwnTVPlayer(
     // Per-channel HTTP headers for the item being played (M3U `#EXTVLCOPT`/`#EXTHTTP`/`#KODIPROP`,
     // F16). A `User-Agent` in here overrides the per-source one — it is the more specific setting.
     private var currentHeaders: Map<String, String> = emptyMap()
+    /** This item's DRM licence details (#115), decoded once per load. Non-null means ExoPlayer is the
+     *  only engine that can play it: libmpv has no CDM, so it cannot fetch a key from a licence
+     *  server, and the ladder must never offer mpv. */
+    private var currentDrm: tv.own.owntv.core.drm.DrmConfig? = null
     // The source-level UA for the queue currently loaded (playEpisodes). Each item re-derives
     // currentUserAgent from its own headers and falls back to this.
     private var queueUserAgent: String? = null
@@ -1754,6 +1760,7 @@ class OwnTVPlayer(
         // UA/Referer on mpv needs exactly the same on ExoPlayer.
         engine.userAgent = currentUserAgent
         engine.httpHeaders = currentHeaders
+        engine.drmConfig = currentDrm
         val restartGen = loadGeneration
         engine.onAudioFallback = {
             toast(toastRenderer.render(PlaybackFailure.Surround))
@@ -2308,6 +2315,8 @@ class OwnTVPlayer(
         userAgent: String? = null,
         /** Per-channel HTTP headers serialized as `Key: Value` per line (M3U, F16); null for none. */
         httpHeaders: String? = null,
+        /** Widevine/ClearKey licence details (#115); non-null pins the item to ExoPlayer. */
+        drmConfig: String? = null,
         /** P6 — stable engine-pin identity; null keeps the legacy stream-URL key. */
         contentKey: String? = null,
         seasonNumber: Int? = null,
@@ -2323,6 +2332,7 @@ class OwnTVPlayer(
         // installs the live provider on BOTH engines just before calling this.
         if (reconnectProvider != null || !isLive) reconnectUrlProvider = reconnectProvider
         currentHeaders = StreamHeaders.decode(httpHeaders)
+        currentDrm = tv.own.owntv.core.drm.DrmConfig.decode(drmConfig)
         // The channel's own UA wins over the playlist-wide one (F16): a playlist sets one UA for the
         // whole provider, an EXTVLCOPT line sets it for the one restream that needs it.
         currentUserAgent = StreamHeaders.userAgentOf(currentHeaders) ?: userAgent?.takeIf { it.isNotBlank() }
@@ -2389,6 +2399,7 @@ class OwnTVPlayer(
         // Per-item headers replace (never merge with) the previous item's, so a queue that mixes
         // header-carrying and plain episodes can't leak one item's Referer onto the next.
         currentHeaders = StreamHeaders.decode(item.httpHeaders)
+        currentDrm = tv.own.owntv.core.drm.DrmConfig.decode(item.drmConfig)
         currentUserAgent = StreamHeaders.userAgentOf(currentHeaders) ?: queueUserAgent
         tunedUserAgent = queueUserAgent
         tunedHttpHeaders = item.httpHeaders
@@ -2605,15 +2616,20 @@ class OwnTVPlayer(
             url in vodPinnedExo -> { migrateVodPin(url, pinKey); true }
             else -> null
         }
-        val startOnExo = pinnedToExo ?: !vodEngine.startsOnMpv
+        // #115 — a protected item can only play on ExoPlayer, which has the CDM; mpv has none. That
+        // outranks both the setting and a per-item pin, because the alternative is not a slower route
+        // but no route at all.
+        val drmProtected = currentDrm != null
+        val startOnExo = if (drmProtected) true else pinnedToExo ?: !vodEngine.startsOnMpv
         // A pin that contradicts an "only" setting re-opens the handover for this one item: the user
         // named an engine for it *against* the global rule, so locking that item to the engine they
         // overrode would leave it with no way to reach the one that plays it. Everything else keeps the
         // setting's own rules, including its refusal to hand over at all.
-        itemEngine = if (vodEngine.allowsHandover || startOnExo == vodEngine.startsOnMpv) {
-            tv.own.owntv.player.EnginePreference.firstOn(onMpv = !startOnExo)
-        } else {
-            vodEngine
+        itemEngine = when {
+            drmProtected -> tv.own.owntv.player.EnginePreference.EXO_ONLY
+            vodEngine.allowsHandover || startOnExo == vodEngine.startsOnMpv ->
+                tv.own.owntv.player.EnginePreference.firstOn(onMpv = !startOnExo)
+            else -> vodEngine
         }
         if (!isLive && startOnExo && resetRetries && !isArchive) {
             exoPrimaryThisItem = true

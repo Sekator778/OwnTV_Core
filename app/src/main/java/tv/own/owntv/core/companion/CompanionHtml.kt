@@ -108,6 +108,8 @@ internal object CompanionHtml {
         val serverExample = s(R.string.setup_server_example)
         val playlistUrl = s(R.string.setup_playlist_url_local_file)
         val playlistExample = s(R.string.setup_playlist_example)
+        val playlistFile = s(R.string.companion_playlist_file)
+        val playlistUrlOrFile = s(R.string.companion_playlist_url_or_file)
         val portalUrl = s(R.string.setup_portal_url)
         val portalExample = s(R.string.setup_portal_example)
         val username = s(R.string.setup_username)
@@ -239,18 +241,20 @@ internal object CompanionHtml {
                 <button class="go" type="submit">${c.sendToTv.h()}</button>
               </form>
 
-              <form class="panel" data-k="m3u" method="post" action="/m3u?pin=$pin">
+              <form class="panel" id="m3uForm" data-k="m3u" method="post" action="/m3u?pin=$pin">
                 <input type="hidden" name="type" value="m3u">
                 <div class="grid">
                   <label>${c.name.h()} <input name="name" placeholder="${c.defaultPlaylist.h()}"></label>
                   ${autoRefreshSelect(c)}
                 </div>
-                <label>${c.playlistUrl.h()} <input name="server" placeholder="${c.playlistExample.h()}" required></label>
+                <label>${c.playlistUrl.h()} <input id="m3uUrl" name="server" placeholder="${c.playlistExample.h()}"></label>
+                <label>${c.playlistFile.h()} <input id="m3uFile" type="file" accept=".m3u,.m3u8,audio/x-mpegurl,application/vnd.apple.mpegurl,text/plain"></label>
                 <label>${c.userAgent.h()} <input name="userAgent" placeholder="${c.optional.h()}"></label>
                 <label>${c.epgUrl.h()} <input name="epgUrl" placeholder="${c.optional.h()}"></label>
                 <input type="hidden" name="isDefault" value="false">
                 <label class="check"><input type="checkbox" name="isDefault" value="true"> ${c.defaultPlaylistLabel.h()}</label>
-                <button class="go" type="submit">${c.sendToTv.h()}</button>
+                <button class="go" id="m3uSend" type="submit">${c.sendToTv.h()}</button>
+                <p id="m3uStatus" class="hint"></p>
               </form>
 
               <form class="panel" data-k="stalker" method="post" action="/stalker?pin=$pin">
@@ -287,6 +291,35 @@ internal object CompanionHtml {
                 tabs.forEach(function(x){x.classList.toggle('active',x===t)});
                 panels.forEach(function(p){p.classList.toggle('active',p.getAttribute('data-k')===k)});
               });});
+              // M3U panel only. With no file chosen this stays a plain form post, exactly as before.
+              // With a file chosen the browser reads it as text and posts it as JSON, because a file
+              // input cannot travel in a normal urlencoded body and the TV has no multipart parser.
+              var mf=document.getElementById('m3uFile'), mu=document.getElementById('m3uUrl'),
+                  mb=document.getElementById('m3uSend'), ms=document.getElementById('m3uStatus');
+              document.getElementById('m3uForm').addEventListener('submit',function(ev){
+                var file=mf.files&&mf.files[0];
+                if(!file){
+                  if(!(mu.value||'').trim()){ms.textContent=${c.playlistUrlOrFile.js()};ev.preventDefault();return false;}
+                  return true; // URL only — let the browser submit the form the old way.
+                }
+                ev.preventDefault();
+                mb.disabled=true; ms.textContent=${c.sending.js()};
+                var body={};
+                new FormData(document.getElementById('m3uForm')).forEach(function(v,k){body[k]=v;});
+                var r=new FileReader();
+                r.onload=function(){
+                  body.playlistFile=r.result; body.playlistFileName=file.name;
+                  fetch('/m3u?pin=$pin',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)})
+                    .then(function(res){
+                      if(res.ok){document.open();res.text().then(function(t){document.write(t);document.close();});}
+                      else{mb.disabled=false;ms.textContent=${c.uploadFailed.js()}.replace('__STATUS__',String(res.status));}
+                    })
+                    .catch(function(){mb.disabled=false;ms.textContent=${c.couldNotReach.js()};});
+                };
+                r.onerror=function(){mb.disabled=false;ms.textContent=${c.couldNotRead.js()};};
+                r.readAsText(file);
+                return false;
+              });
             </script>
         """.trimIndent())
     }

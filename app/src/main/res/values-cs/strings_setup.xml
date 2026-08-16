@@ -207,6 +207,8 @@
     <string name="companion_backup_description">Vyberte soubor zálohy OwnTV (.own nebo starší .json) a stiskněte Odeslat. Přenese se do televizoru — vezměte dálkový ovladač a vyberte tam, co chcete obnovit.</string>
     <string name="companion_backup_file">Soubor zálohy</string>
     <string name="companion_choose_backup">Nejprve vyberte soubor zálohy.</string>
+    <string name="companion_playlist_file">Nebo nahrajte soubor se seznamem</string>
+    <string name="companion_playlist_url_or_file">Zadejte URL seznamu stanic nebo vyberte soubor.</string>
     <string name="companion_sending">Odesílání…</string>
     <string name="companion_upload_failed">Nahrávání se nezdařilo (HTTP <xliff:g id="status">%1$d</xliff:g>). Zkontrolujte PIN a zkuste to znovu.</string>
     <string name="companion_could_not_reach">K televizoru se nepodařilo připojit. Zůstaňte připojeni ke stejné Wi-Fi a zkuste to znovu.</string>

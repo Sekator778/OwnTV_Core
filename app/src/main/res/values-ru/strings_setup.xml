@@ -207,6 +207,8 @@
     <string name="companion_backup_description">Выберите файл резервной копии OwnTV (.own или более старый .json) и нажмите «Отправить». Он будет передан на телевизор — возьмите пульт ДУ и выберите там, какие данные восстановить.</string>
     <string name="companion_backup_file">Файл резервной копии</string>
     <string name="companion_choose_backup">Сначала выберите файл резервной копии.</string>
+    <string name="companion_playlist_file">Или загрузите файл плейлиста</string>
+    <string name="companion_playlist_url_or_file">Введите URL плейлиста или выберите файл.</string>
     <string name="companion_sending">Отправка…</string>
     <string name="companion_upload_failed">Не удалось загрузить файл (HTTP <xliff:g id="status">%1$d</xliff:g>). Проверьте PIN и повторите попытку.</string>
     <string name="companion_could_not_reach">Не удалось подключиться к телевизору. Оставайтесь в той же сети Wi-Fi и повторите попытку.</string>

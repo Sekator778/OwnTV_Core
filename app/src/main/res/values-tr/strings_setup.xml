@@ -199,6 +199,8 @@
     <string name="companion_backup_description">Bir OwnTV yedekleme dosyası (.own veya eski bir .json dosyası) seçip Gönder düğmesine basın. Dosya TV\'ye aktarılır — uzaktan kumandayı alın ve orada nelerin geri yükleneceğini seçin.</string>
     <string name="companion_backup_file">Yedekleme dosyası</string>
     <string name="companion_choose_backup">Lütfen önce bir yedekleme dosyası seçin.</string>
+    <string name="companion_playlist_file">Ya da bir oynatma listesi dosyası yükleyin</string>
+    <string name="companion_playlist_url_or_file">Bir oynatma listesi URL’si girin veya bir dosya seçin.</string>
     <string name="companion_sending">Gönderiliyor…</string>
     <string name="companion_upload_failed">Yükleme başarısız oldu (HTTP <xliff:g id="status">%1$d</xliff:g>). PIN\'i kontrol edip tekrar deneyin.</string>
     <string name="companion_could_not_reach">TV\'ye ulaşılamadı. Aynı Wi-Fi ağında kalıp tekrar deneyin.</string>

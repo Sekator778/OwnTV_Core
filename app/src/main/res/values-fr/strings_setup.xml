@@ -203,6 +203,8 @@
     <string name="companion_backup_description">Choisissez un fichier de sauvegarde OwnTV (.own ou un ancien fichier .json) et appuyez sur Envoyer. Il est transféré vers la TV — prenez la télécommande et choisissez-y les éléments à restaurer.</string>
     <string name="companion_backup_file">Fichier de sauvegarde</string>
     <string name="companion_choose_backup">Choisissez d’abord un fichier de sauvegarde.</string>
+    <string name="companion_playlist_file">Ou importez un fichier de playlist</string>
+    <string name="companion_playlist_url_or_file">Saisissez une URL de playlist ou choisissez un fichier.</string>
     <string name="companion_sending">Envoi en cours…</string>
     <string name="companion_upload_failed">Échec du téléversement (HTTP <xliff:g id="status">%1$d</xliff:g>). Vérifiez le PIN et réessayez.</string>
     <string name="companion_could_not_reach">Impossible de joindre la TV. Restez connecté au même Wi-Fi et réessayez.</string>

@@ -195,6 +195,8 @@
     <string name="companion_backup_description">OwnTVのバックアップファイル（.ownまたは旧形式の.json）を選択し、［送信］を押してください。TVに転送されたら、リモコンを手に取り、TV側で復元する項目を選択してください。</string>
     <string name="companion_backup_file">バックアップファイル</string>
     <string name="companion_choose_backup">先にバックアップファイルを選択してください。</string>
+    <string name="companion_playlist_file">またはプレイリストファイルをアップロード</string>
+    <string name="companion_playlist_url_or_file">プレイリストの URL を入力するか、ファイルを選択してください。</string>
     <string name="companion_sending">送信中…</string>
     <string name="companion_upload_failed">アップロードに失敗しました（HTTP <xliff:g id="status">%1$d</xliff:g>）。PINを確認して、もう一度試してください。</string>
     <string name="companion_could_not_reach">TVに接続できませんでした。同じWi-Fiに接続したまま、もう一度試してください。</string>

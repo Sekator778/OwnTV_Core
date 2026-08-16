@@ -203,6 +203,8 @@
     <string name="companion_backup_description">Escolha um arquivo de cópia de segurança do OwnTV (.own ou um .json antigo) e pressione Enviar. Ele será transferido para a TV — pegue o controle remoto e escolha o que deseja restaurar.</string>
     <string name="companion_backup_file">Arquivo de cópia de segurança</string>
     <string name="companion_choose_backup">Primeiro, escolha um arquivo de cópia de segurança.</string>
+    <string name="companion_playlist_file">Ou envie um arquivo de lista</string>
+    <string name="companion_playlist_url_or_file">Informe uma URL de lista ou escolha um arquivo.</string>
     <string name="companion_sending">Enviando…</string>
     <string name="companion_upload_failed">Falha no envio (HTTP <xliff:g id="status">%1$d</xliff:g>). Verifique o PIN e tente novamente.</string>
     <string name="companion_could_not_reach">Não foi possível acessar a TV. Permaneça na mesma rede Wi-Fi e tente novamente.</string>

@@ -478,6 +478,7 @@ class OwnTVDatabaseMigrationTest {
             OwnTVDatabase.MIGRATION_29_30,
             OwnTVDatabase.MIGRATION_30_31,
             OwnTVDatabase.MIGRATION_31_32,
+            OwnTVDatabase.MIGRATION_32_33,
         )
         .allowMainThreadQueries()
         .build()

@@ -199,6 +199,8 @@
     <string name="companion_backup_description">Wähle eine OwnTV-Sicherungsdatei (.own oder eine ältere .json-Datei) aus und drücke auf „Senden“. Sie wird auf den TV übertragen — nimm die Fernbedienung und wähle dort aus, was wiederhergestellt werden soll.</string>
     <string name="companion_backup_file">Sicherungsdatei</string>
     <string name="companion_choose_backup">Wähle zuerst eine Sicherungsdatei aus.</string>
+    <string name="companion_playlist_file">Oder eine Playlist-Datei hochladen</string>
+    <string name="companion_playlist_url_or_file">Gib eine Playlist-URL ein oder wähle eine Datei aus.</string>
     <string name="companion_sending">Wird gesendet…</string>
     <string name="companion_upload_failed">Upload fehlgeschlagen (HTTP <xliff:g id="status">%1$d</xliff:g>). Prüfe die PIN und versuche es erneut.</string>
     <string name="companion_could_not_reach">Der TV konnte nicht erreicht werden. Bleibe im selben Wi-Fi und versuche es erneut.</string>

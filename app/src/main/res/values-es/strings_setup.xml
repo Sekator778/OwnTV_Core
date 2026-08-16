@@ -203,6 +203,8 @@
     <string name="companion_backup_description">Elige un archivo de copia de seguridad de OwnTV (.own o un .json antiguo) y pulsa Enviar. Se transferirá al televisor; coge el mando y elige allí qué quieres restaurar.</string>
     <string name="companion_backup_file">Archivo de copia de seguridad</string>
     <string name="companion_choose_backup">Elige primero un archivo de copia de seguridad.</string>
+    <string name="companion_playlist_file">O sube un archivo de lista</string>
+    <string name="companion_playlist_url_or_file">Introduce una URL de lista o elige un archivo.</string>
     <string name="companion_sending">Enviando…</string>
     <string name="companion_upload_failed">Error al subir el archivo (HTTP <xliff:g id="status">%1$d</xliff:g>). Comprueba el PIN y vuelve a intentarlo.</string>
     <string name="companion_could_not_reach">No se ha podido conectar con el televisor. Mantén ambos dispositivos en la misma Wi-Fi y vuelve a intentarlo.</string>

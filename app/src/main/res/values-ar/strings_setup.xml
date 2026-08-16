@@ -215,6 +215,8 @@
     <string name="companion_backup_description">اختر ملف نسخة احتياطية من OwnTV (بامتداد .own أو ملف .json أقدم) واضغط على «إرسال». سيُنقل إلى التلفاز — أمسك جهاز التحكم عن بُعد واختر هناك ما تريد استعادته.</string>
     <string name="companion_backup_file">ملف النسخة الاحتياطية</string>
     <string name="companion_choose_backup">يُرجى اختيار ملف نسخة احتياطية أولًا.</string>
+    <string name="companion_playlist_file">أو حمِّل ملف قائمة تشغيل</string>
+    <string name="companion_playlist_url_or_file">أدخل رابط قائمة تشغيل أو اختر ملفًا.</string>
     <string name="companion_sending">جارٍ الإرسال…</string>
     <string name="companion_upload_failed">فشل التحميل (HTTP <xliff:g id="status">%1$d</xliff:g>). تحقّق من PIN وحاول مجددًا.</string>
     <string name="companion_could_not_reach">تعذّر الوصول إلى التلفاز. ابقَ متصلًا بشبكة Wi-Fi نفسها وحاول مجددًا.</string>

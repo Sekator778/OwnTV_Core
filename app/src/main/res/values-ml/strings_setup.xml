@@ -199,6 +199,8 @@
     <string name="companion_backup_description">ഒരു OwnTV ബാക്കപ്പ് ഫയൽ (.own, അല്ലെങ്കിൽ പഴയ .json) തിരഞ്ഞെടുത്ത് അയയ്ക്കുക അമർത്തുക. അത് ടിവിയിലേക്ക് കൈമാറും — റിമോട്ട് കൺട്രോൾ എടുത്ത് അവിടെ എന്തെല്ലാം പുനഃസ്ഥാപിക്കണമെന്ന് തിരഞ്ഞെടുക്കുക.</string>
     <string name="companion_backup_file">ബാക്കപ്പ് ഫയൽ</string>
     <string name="companion_choose_backup">ആദ്യം ഒരു ബാക്കപ്പ് ഫയൽ തിരഞ്ഞെടുക്കുക.</string>
+    <string name="companion_playlist_file">അല്ലെങ്കിൽ ഒരു പ്ലേലിസ്റ്റ് ഫയൽ അപ്‌ലോഡ് ചെയ്യുക</string>
+    <string name="companion_playlist_url_or_file">ഒരു പ്ലേലിസ്റ്റ് URL നൽകുക അല്ലെങ്കിൽ ഒരു ഫയൽ തിരഞ്ഞെടുക്കുക.</string>
     <string name="companion_sending">അയയ്ക്കുന്നു…</string>
     <string name="companion_upload_failed">അപ്‌ലോഡ് പരാജയപ്പെട്ടു (HTTP <xliff:g id="status">%1$d</xliff:g>). PIN പരിശോധിച്ച് വീണ്ടും ശ്രമിക്കുക.</string>
     <string name="companion_could_not_reach">ടിവിയുമായി ബന്ധപ്പെടാനായില്ല. അതേ Wi-Fi-യിൽ തുടരുകയും വീണ്ടും ശ്രമിക്കുകയും ചെയ്യുക.</string>

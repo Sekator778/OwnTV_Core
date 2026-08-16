@@ -101,6 +101,43 @@ class CompanionHttpServerTest {
         assertNull(protocol.parsePayload(form, "type=m3u&name=P", SourceType.M3U))
     }
 
+    /**
+     * Uploading a playlist from the companion page: the browser reads the file and posts its text as
+     * JSON, because a file input cannot ride in a urlencoded body and the TV has no multipart parser.
+     * The URL is then legitimately absent — a submission with neither is still rejected below.
+     */
+    @Test
+    fun `m3u accepts an uploaded playlist instead of a url`() {
+        // Built with JSONObject rather than hand-written: the playlist text contains newlines, which
+        // must be escaped, and that is exactly what the browser's JSON.stringify does.
+        val playlist = "#EXTM3U\n#EXTINF:-1,A\nhttp://h/a.ts\n"
+        val body = org.json.JSONObject()
+            .put("type", "m3u").put("name", "Jio")
+            .put("playlistFileName", "drm-test.m3u")
+            .put("playlistFile", playlist)
+            .toString()
+        val p = protocol.parsePayload("application/json", body, SourceType.M3U)!!
+        assertEquals(playlist, p.playlistContent)
+        assertEquals(SourceType.M3U, p.type)
+        assertEquals("drm-test.m3u", p.playlistFileName)
+        assertTrue(p.playlistContent.startsWith("#EXTM3U"))
+        // The controller fills this in once the file is on disk; the protocol leaves it blank.
+        assertEquals("", p.server)
+    }
+
+    @Test
+    fun `m3u with neither a url nor a file is still rejected`() {
+        assertNull(protocol.parsePayload("application/json", """{"type":"m3u","name":"P"}""", SourceType.M3U))
+        assertNull(protocol.parsePayload("application/json", """{"type":"m3u","playlistFile":"  "}""", SourceType.M3U))
+    }
+
+    /** A playlist is far larger than a form field, so `/m3u` must get the upload-sized body limit. */
+    @Test
+    fun `the m3u endpoint accepts an upload-sized body`() {
+        assertEquals(CompanionHttpProtocol.UPLOAD_BODY_LIMIT, protocol.maxBodyBytes("/m3u"))
+        assertEquals(CompanionHttpProtocol.FORM_BODY_LIMIT, protocol.maxBodyBytes("/xtream"))
+    }
+
     // ---- Stalker ----
 
     @Test

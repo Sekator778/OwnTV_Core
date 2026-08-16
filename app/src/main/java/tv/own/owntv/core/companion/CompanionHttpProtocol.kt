@@ -45,7 +45,9 @@ internal object CompanionHttpProtocol {
 
     /** Return the finite body cap for an endpoint. */
     fun maxBodyBytes(path: String): Int = when {
-        path == "/backup" || path == "/background" -> UPLOAD_BODY_LIMIT
+        // `/m3u` joins the upload group: the M3U panel can carry a whole playlist file inline, and a
+        // real playlist is far past the 64 KB a form field needs.
+        path == "/backup" || path == "/background" || path == "/m3u" -> UPLOAD_BODY_LIMIT
         else -> FORM_BODY_LIMIT
     }
 
@@ -93,6 +95,10 @@ internal object CompanionHttpProtocol {
         }
 
         val server = pick(fields, "server", "url").trim()
+        // An uploaded playlist: the file's text arrives inline and the TV saves it locally, so there
+        // is no URL to give. Deliberately NOT trimmed — leading whitespace is the file's own content.
+        val playlistContent = pick(fields, "playlistFile", "playlist_file")
+        val playlistFileName = pick(fields, "playlistFileName", "playlist_file_name").trim()
         val user = pick(fields, "user", "username").trim()
         val pass = pick(fields, "pass", "password").trim()
         val portalUrl = pick(fields, "portalUrl", "portal_url").trim()
@@ -100,7 +106,8 @@ internal object CompanionHttpProtocol {
 
         when (type) {
             SourceType.STALKER -> if (portalUrl.isBlank() || mac.isBlank()) return null
-            SourceType.M3U -> if (server.isBlank()) return null
+            // One of the two is required, not both: a URL to fetch, or a file to save.
+            SourceType.M3U -> if (server.isBlank() && playlistContent.isBlank()) return null
             SourceType.XTREAM, SourceType.LOCAL_BACKUP -> if (server.isBlank() || user.isBlank() || pass.isBlank()) return null
         }
 
@@ -108,6 +115,8 @@ internal object CompanionHttpProtocol {
             type = type,
             name = pick(fields, "name").trim(),
             server = server,
+            playlistFileName = playlistFileName,
+            playlistContent = playlistContent,
             user = user,
             pass = pass,
             portalUrl = portalUrl,

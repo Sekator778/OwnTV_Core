@@ -203,6 +203,8 @@
     <string name="companion_backup_description">Escolha um ficheiro de cópia de segurança do OwnTV (.own ou um .json mais antigo) e prima Enviar. Este é transferido para a TV — pegue no comando e escolha aí o que pretende restaurar.</string>
     <string name="companion_backup_file">Ficheiro de cópia de segurança</string>
     <string name="companion_choose_backup">Escolha primeiro um ficheiro de cópia de segurança.</string>
+    <string name="companion_playlist_file">Ou carregue um ficheiro de lista</string>
+    <string name="companion_playlist_url_or_file">Introduza um URL de lista ou escolha um ficheiro.</string>
     <string name="companion_sending">A enviar…</string>
     <string name="companion_upload_failed">Falha ao carregar (HTTP <xliff:g id="status">%1$d</xliff:g>). Verifique o PIN e tente novamente.</string>
     <string name="companion_could_not_reach">Não foi possível estabelecer ligação à TV. Mantenha-se na mesma rede Wi-Fi e tente novamente.</string>

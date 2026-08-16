@@ -30,6 +30,9 @@ data class M3uEntry(
     /** Per-channel HTTP request headers (F16) — from `#EXTVLCOPT` / `#EXTHTTP` / `#KODIPROP` or the
      *  `url|Key=Value` pipe suffix. Empty when the entry carries none. */
     val headers: Map<String, String> = emptyMap(),
+    /** Widevine/ClearKey licence details from the entry's `#KODIPROP:inputstream.adaptive.license_*`
+     *  lines (#115); null for the overwhelming majority of entries, which carry no DRM. */
+    val drm: tv.own.owntv.core.drm.DrmConfig? = null,
 ) {
     /** Tagged as series content — per-episode entries like "Show S01E05" grouped into shows. */
     val isSeries: Boolean get() = type == "series" || tvgType == "series"
@@ -67,6 +70,9 @@ class M3uParser {
         // Per-channel HTTP options arrive on their own lines BETWEEN the #EXTINF and the URL, so they
         // are collected separately and consumed by the URL line (F16).
         var pendingHeaders: MutableMap<String, String>? = null
+        // Same story for the DRM properties (#115): several `#KODIPROP` lines describe one entry's
+        // licence, and only the URL line knows the entry is complete.
+        var pendingDrm: MutableMap<String, String>? = null
         if (debug) Log.d(TAG, "parse start")
 
         input.bufferedReader().forEachLineSafe { raw ->
@@ -84,6 +90,7 @@ class M3uParser {
                 line.startsWith("#EXTINF") -> {
                     val attrs = parseAttrs(line)
                     pendingHeaders = null // a new entry starts; drop anything the previous one left
+                    pendingDrm = null
                     pending = PendingExtInf(
                         name = line.substringAfterLast(',').trim(),
                         logo = attrs.attr("tvg-logo"),
@@ -105,6 +112,10 @@ class M3uParser {
                     parseHttpDirective(line)?.let { parsed ->
                         val map = pendingHeaders ?: LinkedHashMap<String, String>(4).also { pendingHeaders = it }
                         map.putAll(parsed)
+                    }
+                    parseDrmDirective(line)?.let { (key, value) ->
+                        val map = pendingDrm ?: LinkedHashMap<String, String>(2).also { pendingDrm = it }
+                        map[key] = value
                     }
                 }
 
@@ -140,6 +151,7 @@ class M3uParser {
                                     catchupSource = p.catchupSource,
                                     catchupDays = p.catchupDays,
                                     headers = pendingHeaders ?: emptyMap(),
+                                    drm = pendingDrm?.let { tv.own.owntv.core.drm.DrmConfig.fromKodiProps(it) },
                                 ),
                             )
                         } finally {
@@ -150,6 +162,7 @@ class M3uParser {
                     }
                     pending = null
                     pendingHeaders = null
+                    pendingDrm = null
                 }
             }
 
@@ -271,6 +284,26 @@ class M3uParser {
         }
 
         else -> null
+    }
+
+    /**
+     * The `license_type` / `license_key` half of a `#KODIPROP` line (#115), as a short key and its raw
+     * value; null for every other line, which is nearly all of them. Kept separate from
+     * [parseHttpDirective] because these describe the licence request, not the stream request, and
+     * because only [tv.own.owntv.core.drm.DrmConfig] decides whether the pair is usable.
+     *
+     * The key is matched by suffix so both the `inputstream.adaptive.` and the older bare
+     * `inputstream.` spellings work — playlists in the wild mix them.
+     */
+    private fun parseDrmDirective(line: String): Pair<String, String>? {
+        if (!line.startsWith(KODIPROP)) return null
+        val prop = line.substring(KODIPROP.length).trim()
+        val eq = prop.indexOf('=')
+        if (eq <= 0) return null
+        val key = prop.substring(0, eq).trim().lowercase().substringAfterLast('.')
+        if (!tv.own.owntv.core.drm.DrmConfig.isDrmProp(key)) return null
+        val value = prop.substring(eq + 1).trim()
+        return if (value.isEmpty()) null else key to value
     }
 
     /** `User-Agent=Foo&Referer=Bar` (percent-encoded values) → header map. Shared by the KODIPROP

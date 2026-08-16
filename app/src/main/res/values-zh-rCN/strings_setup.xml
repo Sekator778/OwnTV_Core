@@ -195,6 +195,8 @@
     <string name="companion_backup_description">选择 OwnTV 备份文件（.own 或较旧的 .json 文件），然后按下“发送”。文件将传输到电视——拿起遥控器并在电视上选择要恢复的内容。</string>
     <string name="companion_backup_file">备份文件</string>
     <string name="companion_choose_backup">请先选择备份文件。</string>
+    <string name="companion_playlist_file">或上传播放列表文件</string>
+    <string name="companion_playlist_url_or_file">请输入播放列表网址或选择文件。</string>
     <string name="companion_sending">正在发送…</string>
     <string name="companion_upload_failed">上传失败（HTTP <xliff:g id="status">%1$d</xliff:g>）。请检查 PIN 后重试。</string>
     <string name="companion_could_not_reach">无法连接到电视。请确保设备连接到同一 Wi-Fi 后重试。</string>

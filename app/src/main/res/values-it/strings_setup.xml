@@ -203,6 +203,8 @@
     <string name="companion_backup_description">Scegli un file di backup di OwnTV (.own oppure un precedente .json) e premi Invia. Verrà trasferito alla TV: prendi il telecomando e scegli lì cosa ripristinare.</string>
     <string name="companion_backup_file">File di backup</string>
     <string name="companion_choose_backup">Prima scegli un file di backup.</string>
+    <string name="companion_playlist_file">Oppure carica un file di playlist</string>
+    <string name="companion_playlist_url_or_file">Inserisci un URL della playlist o scegli un file.</string>
     <string name="companion_sending">Invio in corso…</string>
     <string name="companion_upload_failed">Caricamento non riuscito (HTTP <xliff:g id="status">%1$d</xliff:g>). Controlla il PIN e riprova.</string>
     <string name="companion_could_not_reach">Impossibile raggiungere la TV. Rimani connesso alla stessa Wi-Fi e riprova.</string>

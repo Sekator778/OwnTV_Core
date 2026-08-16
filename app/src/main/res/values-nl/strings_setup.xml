@@ -199,6 +199,8 @@
     <string name="companion_backup_description">Kies een OwnTV-back-upbestand (.own of een ouder .json-bestand) en druk op Verzenden. Het wordt naar de tv overgebracht — pak de afstandsbediening en kies daar wat je wilt herstellen.</string>
     <string name="companion_backup_file">Back-upbestand</string>
     <string name="companion_choose_backup">Kies eerst een back-upbestand.</string>
+    <string name="companion_playlist_file">Of upload een afspeellijstbestand</string>
+    <string name="companion_playlist_url_or_file">Voer een afspeellijst-URL in of kies een bestand.</string>
     <string name="companion_sending">Verzenden…</string>
     <string name="companion_upload_failed">Uploaden mislukt (HTTP <xliff:g id="status">%1$d</xliff:g>). Controleer de PIN en probeer het opnieuw.</string>
     <string name="companion_could_not_reach">Kan de tv niet bereiken. Blijf verbonden met hetzelfde Wi-Fi-netwerk en probeer het opnieuw.</string>

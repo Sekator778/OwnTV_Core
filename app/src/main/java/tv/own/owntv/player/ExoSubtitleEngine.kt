@@ -21,6 +21,7 @@ import androidx.media3.exoplayer.trackselection.DefaultTrackSelector
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import tv.own.owntv.core.network.HttpClient
+import tv.own.owntv.core.drm.toMediaDrmConfiguration
 import tv.own.owntv.core.network.StreamHeaders
 import java.util.Locale
 
@@ -343,6 +344,9 @@ class ExoSubtitleEngine(
 
     private fun buildMediaItem(url: String): MediaItem {
         val builder = MediaItem.Builder().setUri(url)
+        // #115 — a protected item. Single-session: a film's content key does not rotate, unlike a live
+        // channel's, so there is nothing to renew mid-playback.
+        drmConfig?.let { builder.setDrmConfiguration(it.toMediaDrmConfiguration(multiSession = false)) }
         if (externalSubs.isNotEmpty()) {
             builder.setSubtitleConfigurations(externalSubs.map { s ->
                 // Timing offset for the active external sub: side-load a timestamp-shifted copy (§8).
@@ -465,6 +469,9 @@ class ExoSubtitleEngine(
      *  fail the moment the engine fallback took over. */
     @Volatile var userAgent: String? = null
     @Volatile var httpHeaders: Map<String, String> = emptyMap()
+    /** This item's Widevine/ClearKey licence details (#115), pushed in by [OwnTVPlayer]; null for the
+     *  unprotected majority. Only this engine can honour it — mpv has no CDM to license the stream. */
+    @Volatile var drmConfig: tv.own.owntv.core.drm.DrmConfig? = null
     private var httpFactory: OkHttpDataSource.Factory? = null
 
     private fun applyRequestHeaders() {

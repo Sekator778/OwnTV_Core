@@ -8,6 +8,8 @@ import org.junit.Assert.assertNull
 import org.junit.Assert.assertSame
 import org.junit.Assert.assertTrue
 import org.junit.Test
+import tv.own.owntv.core.database.entity.SourceEntity
+import tv.own.owntv.core.model.SourceType
 
 /**
  * T2 — a merge-restore never trusts the ids in the backup file: profiles are matched by name and
@@ -41,6 +43,77 @@ class BackupMergeRemappingTest {
             sourceMatchKey("M3U", "https://list.test", null),
             sourceMatchKey("M3U", "https://list.test", ""),
         )
+    }
+
+    /**
+     * #114 — a Stalker source has no username and several playlists routinely share one portal URL,
+     * so type+url+username made every one of them the same source. On restore they all merged onto a
+     * single device row, each overwriting its MAC, and the user was left with playlists that all
+     * carried the same MAC and could not log in.
+     */
+    @Test
+    fun `stalker sources on one portal are told apart by their MAC`() {
+        val a = sourceMatchKey("STALKER", "http://portal.test", null, "00:1A:79:AA:BB:01")
+        val b = sourceMatchKey("STALKER", "http://portal.test", null, "00:1A:79:AA:BB:02")
+        assertTrue("two MACs on one portal are two playlists", a != b)
+        // Punctuation and case are formatting, not identity — the same login must still merge.
+        assertEquals(a, sourceMatchKey("STALKER", "http://portal.test ", null, "001a79aabb01"))
+        // A backup written without a passphrase carries no MAC at all; that is its own key, and the
+        // portal-only fallback in matchSourceForRestore is what stops it duplicating the playlist.
+        assertTrue(a != sourceMatchKey("STALKER", "http://portal.test", null, null))
+    }
+
+    @Test
+    fun `non-stalker keys ignore the mac argument entirely`() {
+        assertEquals(
+            sourceMatchKey("XTREAM", "https://portal.test", "user"),
+            sourceMatchKey("XTREAM", "https://portal.test", "user", "00:1A:79:AA:BB:01"),
+        )
+    }
+
+    // --- matchSourceForRestore: which device row an incoming source is allowed to claim ---
+
+    private fun stalker(id: Long, mac: String?, url: String = "http://portal.test") =
+        SourceEntity(id = id, name = "P$id", type = SourceType.STALKER, url = url, mac = mac)
+
+    @Test
+    fun `each stalker playlist claims its own device row instead of piling onto one`() {
+        val device = mutableListOf(stalker(1, "00:1A:79:AA:BB:01"), stalker(2, "00:1A:79:AA:BB:02"))
+        val first = matchSourceForRestore(device, stalker(9, "00:1A:79:AA:BB:02"))
+        assertEquals(2L, first?.id)
+        device.remove(first)
+        assertEquals(1L, matchSourceForRestore(device, stalker(8, "00:1A:79:AA:BB:01"))?.id)
+    }
+
+    @Test
+    fun `a new MAC on a known portal is a new playlist, not a merge`() {
+        val device = listOf(stalker(1, "00:1A:79:AA:BB:01"))
+        assertNull(matchSourceForRestore(device, stalker(9, "00:1A:79:AA:BB:99")))
+    }
+
+    @Test
+    fun `a MAC missing on either side still merges on the portal rather than duplicating`() {
+        val device = listOf(stalker(1, "00:1A:79:AA:BB:01"))
+        // Passphrase-less backup: the file carries no MAC, so the device's own MAC is kept.
+        assertEquals(1L, matchSourceForRestore(device, stalker(9, null))?.id)
+        // The reverse — a device row left MAC-less by an earlier passphrase-less restore — adopts
+        // the MAC this backup does carry instead of becoming a second playlist.
+        assertEquals(
+            1L,
+            matchSourceForRestore(listOf(stalker(1, null)), stalker(9, "00:1A:79:AA:BB:01"))?.id,
+        )
+        // A different portal is never a fallback match.
+        assertNull(matchSourceForRestore(device, stalker(9, null, url = "http://other.test")))
+    }
+
+    @Test
+    fun `non-stalker sources merge on type, url and username with no fallback`() {
+        val device = listOf(
+            SourceEntity(id = 1, name = "X", type = SourceType.XTREAM, url = "https://p.test", username = "u", password = "old"),
+        )
+        val incoming = SourceEntity(id = 9, name = "X", type = SourceType.XTREAM, url = "https://p.test ", username = "u", password = "new")
+        assertEquals("a rotated password still merges", 1L, matchSourceForRestore(device, incoming)?.id)
+        assertNull(matchSourceForRestore(device, incoming.copy(username = "other")))
     }
 
     // --- remapKeys: profile-id-keyed and source-id-keyed settings maps ---

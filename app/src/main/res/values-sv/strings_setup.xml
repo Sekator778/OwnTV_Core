@@ -199,6 +199,8 @@
     <string name="companion_backup_description">Välj en säkerhetskopia från OwnTV (.own eller en äldre .json-fil) och tryck på Skicka. Den överförs till tv:n – ta fjärrkontrollen och välj vad som ska återställas där.</string>
     <string name="companion_backup_file">Säkerhetskopia</string>
     <string name="companion_choose_backup">Välj först en säkerhetskopia.</string>
+    <string name="companion_playlist_file">Eller ladda upp en spellistefil</string>
+    <string name="companion_playlist_url_or_file">Ange en spellistes URL eller välj en fil.</string>
     <string name="companion_sending">Skickar…</string>
     <string name="companion_upload_failed">Uppladdningen misslyckades (HTTP <xliff:g id="status">%1$d</xliff:g>). Kontrollera PIN-koden och försök igen.</string>
     <string name="companion_could_not_reach">Det gick inte att nå tv:n. Se till att enheterna är anslutna till samma Wi-Fi och försök igen.</string>

@@ -403,6 +403,10 @@
     <string name="companion_backup_file">Backup file</string>
     <!-- Translators: Error text on the companion backup restore page when no file has been selected. -->
     <string name="companion_choose_backup">Please choose a backup file first.</string>
+    <!-- Translators: Label for the optional playlist-file input on the companion Add a source page (M3U tab). Lets the user upload a playlist from the computer instead of typing a URL. -->
+    <string name="companion_playlist_file">Or upload a playlist file</string>
+    <!-- Translators: Error text on the companion Add a source page (M3U tab) when neither a playlist URL was typed nor a file chosen. -->
+    <string name="companion_playlist_url_or_file">Enter a playlist URL or choose a file.</string>
     <!-- Translators: Loading status shown on the companion page while a file is being uploaded to the TV. -->
     <string name="companion_sending">Sending\u2026</string>
     <!-- Translators: Error shown in the companion browser page when an upload to the TV fails. "status" is a numeric HTTP response such as 403. -->
