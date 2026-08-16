@@ -368,6 +368,10 @@
     <!-- Translators: Description of the deinterlacing setting. -->
     <string name="settings_deinterlace_description">平滑某些老舊標清頻道在畫面移動時出現的梳狀條紋。僅在 mpv 自行繪製畫面時生效，因此若沒有變化，請關閉硬體解碼。</string>
     <string name="settings_movies_series_player">電影與影集播放器</string>
+    <string name="settings_live_tv_player">電視直播播放器</string>
+    <string name="settings_engine_order">先 <xliff:g id="first">%1$s</xliff:g>，後 <xliff:g id="second">%2$s</xliff:g></string>
+    <string name="settings_engine_only">僅 <xliff:g id="engine">%1$s</xliff:g></string>
+    <string name="settings_engine_default"><xliff:g id="option">%1$s</xliff:g>（預設）</string>
     <string name="settings_reset_player_choices">重設已儲存的播放器選擇</string>
     <string name="settings_external_player">外部播放器</string>
     <string name="settings_default_zoom">預設縮放</string>
@@ -442,7 +446,8 @@
     <string name="settings_audio_delay"><xliff:g id="delay">%1$d</xliff:g> 毫秒</string>
     <string name="settings_external_player_description">選擇要在哪些區段中使用外部應用程式開啟內容。</string>
     <string name="settings_audio_delay_value"><xliff:g id="delay">%1$d</xliff:g> 毫秒</string>
-    <string name="settings_movies_player_description">mpv（建議使用）支援最廣泛的格式，包括 DTS/TrueHD 音訊和特殊檔案，並提供音訊／視訊同步修正。只有電影或集數無法開始播放時才切換至 ExoPlayer：在特定電視上，它能播放部分 mpv 無法播放的串流，但無法解碼 DTS/TrueHD 音訊，也不提供音訊／視訊同步修正。無論選擇哪一個，若播放失敗，都會自動嘗試另一個播放器。</string>
+    <string name="settings_movies_player_description">mpv（建議）支援的格式最廣——DTS/TrueHD 音訊、少見的檔案——還帶有音畫同步修正。在某些電視上，ExoPlayer 能播放 mpv 開不了的串流，但它無法解碼 DTS/TrueHD 音訊，也沒有音畫同步修正。組合選項會在第一個播放器失敗時自動改試另一個；單一播放器選項則從不改試，若另一個播放器在你的電視上本來就用不了，這樣可省下幾秒鐘黑畫面。</string>
+    <string name="settings_live_player_description">ExoPlayer（建議）開啟頻道快得多，也是唯一支援直播字幕的播放器。mpv 能播放 ExoPlayer 開不了的頻道，包括一些音訊格式少見的頻道。組合選項會在第一個播放器失敗時自動改試另一個；單一播放器選項則從不改試，若另一個播放器在你的電視上本來就用不了，這樣可省下幾秒鐘黑畫面。在播放器中手動切換過的頻道，兩種情況下都會保留你的選擇。</string>
     <string name="settings_reset_player_choices_description">在播放器中將單一電影或影集在 mpv 與 ExoPlayer 之間切換後，該選擇會儲存下來供下次使用。重設後，所有內容會重新依照上方的設定。直播頻道已儲存的選擇會保留。</string>
     <string name="settings_reset_player_choices_none">未儲存任何選擇</string>
     <plurals name="settings_reset_player_choices_count">

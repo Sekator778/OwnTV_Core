@@ -373,6 +373,10 @@
     <!-- Translators: Description of the deinterlacing setting. -->
     <string name="settings_deinterlace_description">تنعيم الخطوط المتداخلة التي تظهرها بعض قنوات SD القديمة عند الحركة. يسري على محرّك mpv أثناء رسمه للصورة بنفسه، لذا أوقف فك التشفير العتادي إذا لم يُحدث فرقًا.</string>
     <string name="settings_movies_series_player">مشغّل الأفلام والمسلسلات</string>
+    <string name="settings_live_tv_player">مشغّل البث المباشر</string>
+    <string name="settings_engine_order"><xliff:g id="first">%1$s</xliff:g>، ثم <xliff:g id="second">%2$s</xliff:g></string>
+    <string name="settings_engine_only"><xliff:g id="engine">%1$s</xliff:g> فقط</string>
+    <string name="settings_engine_default"><xliff:g id="option">%1$s</xliff:g> (افتراضي)</string>
     <string name="settings_reset_player_choices">إعادة ضبط خيارات المشغّل المحفوظة</string>
     <string name="settings_external_player">مشغّل خارجي</string>
     <string name="settings_default_zoom">التكبير الافتراضي</string>
@@ -447,7 +451,8 @@
     <string name="settings_audio_delay"><xliff:g id="delay">%1$d</xliff:g> مللي ثانية</string>
     <string name="settings_external_player_description">اختر الأقسام التي تُفتح في تطبيق خارجي.</string>
     <string name="settings_audio_delay_value"><xliff:g id="delay">%1$d</xliff:g> مللي ثانية</string>
-    <string name="settings_movies_player_description">يتمتع mpv (موصى به) بأوسع دعم للتنسيقات — بما في ذلك صوت DTS/TrueHD والملفات غير المعتادة — بالإضافة إلى إصلاح مزامنة الصوت/الفيديو. انتقل إلى ExoPlayer فقط إذا تعذر بدء الأفلام أو الحلقات: فهو يشغّل بعض عمليات البث التي لا يستطيع mpv تشغيلها على بعض أجهزة التلفزيون، لكنه لا يستطيع فك ترميز صوت DTS/TrueHD ولا يتضمن إصلاحًا لمزامنة الصوت/الفيديو. أيًا كان اختيارك، ستتم تجربة الآخر تلقائيًا إذا فشل.</string>
+    <string name="settings_movies_player_description">يوفّر mpv (موصى به) أوسع دعم للصيغ — صوت DTS/TrueHD والملفات غير المألوفة — إضافة إلى إصلاح مزامنة الصوت والصورة. ويشغّل ExoPlayer بعض المقاطع التي لا يستطيع mpv تشغيلها على تلفازات معيّنة، لكنه لا يفك ترميز صوت DTS/TrueHD ولا يوفّر إصلاح المزامنة. تجرّب الخيارات المزدوجة المشغّل الآخر تلقائيًا عند فشل الأول، أما خيارات المشغّل الواحد فلا تفعل ذلك أبدًا، ما يوفّر بضع ثوانٍ من الشاشة السوداء إذا كان المشغّل الثاني لا يعمل أبدًا على تلفازك.</string>
+    <string name="settings_live_player_description">يفتح ExoPlayer (موصى به) القنوات أسرع بكثير وهو الوحيد الذي يدعم الترجمة أثناء البث المباشر. ويشغّل mpv قنوات لا يستطيع ExoPlayer تشغيلها، بما فيها بعض القنوات ذات الصوت غير المألوف. تجرّب الخيارات المزدوجة المشغّل الآخر تلقائيًا عند فشل الأول، أما خيارات المشغّل الواحد فلا تفعل ذلك أبدًا، ما يوفّر بضع ثوانٍ من الشاشة السوداء إذا كان المشغّل الثاني لا يعمل أبدًا على تلفازك. وتحتفظ أي قناة تبدّلها يدويًا في المشغّل باختيارك في الحالتين.</string>
     <string name="settings_reset_player_choices_description">عند تبديل فيلم أو حلقة واحدة بين mpv وExoPlayer داخل المشغّل، يُحفظ هذا الخيار للمرة التالية. تعيد إعادة الضبط كل شيء إلى الإعداد أعلاه. أما الخيارات المحفوظة لقنوات البث المباشر فتبقى كما هي.</string>
     <string name="settings_reset_player_choices_none">لا شيء محفوظ</string>
     <plurals name="settings_reset_player_choices_count">

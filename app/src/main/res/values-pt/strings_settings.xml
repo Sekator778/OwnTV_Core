@@ -370,6 +370,10 @@
     <!-- Translators: Description of the deinterlacing setting. -->
     <string name="settings_deinterlace_description">Suaviza as linhas em forma de pente que alguns canais SD antigos mostram em movimento. Aplica-se ao mecanismo mpv enquanto ele desenha a imagem, então desative a decodificação por hardware se não notar diferença.</string>
     <string name="settings_movies_series_player">Reprodutor de filmes e séries</string>
+    <string name="settings_live_tv_player">Reprodutor de TV ao vivo</string>
+    <string name="settings_engine_order"><xliff:g id="first">%1$s</xliff:g>, depois <xliff:g id="second">%2$s</xliff:g></string>
+    <string name="settings_engine_only">Somente <xliff:g id="engine">%1$s</xliff:g></string>
+    <string name="settings_engine_default"><xliff:g id="option">%1$s</xliff:g> (padrão)</string>
     <string name="settings_reset_player_choices">Redefinir as opções de reprodutor salvas</string>
     <string name="settings_external_player">Reprodutor externo</string>
     <string name="settings_default_zoom">Zoom padrão</string>
@@ -444,7 +448,8 @@
     <string name="settings_audio_delay"><xliff:g id="delay">%1$d</xliff:g> ms</string>
     <string name="settings_external_player_description">Escolha quais seções serão abertas em um aplicativo externo.</string>
     <string name="settings_audio_delay_value"><xliff:g id="delay">%1$d</xliff:g> ms</string>
-    <string name="settings_movies_player_description">O mpv (recomendado) oferece a maior compatibilidade com formatos — áudio DTS/TrueHD, arquivos incomuns — além da correção de sincronização A/V. Mude para o ExoPlayer apenas se filmes ou episódios não iniciarem: ele reproduz em certas TVs algumas transmissões que o mpv não consegue, mas não decodifica áudio DTS/TrueHD e não oferece correção de sincronização A/V. Independentemente da sua escolha, o outro será testado automaticamente em caso de falha.</string>
+    <string name="settings_movies_player_description">O mpv (recomendado) tem o maior suporte a formatos — áudio DTS/TrueHD, arquivos incomuns — além da correção de sincronia de áudio e vídeo. Em certas TVs o ExoPlayer reproduz transmissões que o mpv não consegue, mas não decodifica áudio DTS/TrueHD e não corrige a sincronia. As opções combinadas tentam o outro reprodutor automaticamente quando o primeiro falha; as opções de um único reprodutor nunca fazem isso, o que poupa alguns segundos de tela preta se o segundo reprodutor não funcionar mesmo na sua TV.</string>
+    <string name="settings_live_player_description">O ExoPlayer (recomendado) abre os canais bem mais rápido e é o único com legendas ao vivo. O mpv reproduz canais que o ExoPlayer não consegue, incluindo alguns com áudio incomum. As opções combinadas tentam o outro reprodutor automaticamente quando o primeiro falha; as opções de um único reprodutor nunca fazem isso, o que poupa alguns segundos de tela preta se o segundo reprodutor não funcionar mesmo na sua TV. Num canal que você troca à mão no reprodutor, sua escolha é mantida de qualquer forma.</string>
     <string name="settings_reset_player_choices_description">Alternar um filme ou episódio específico entre mpv e ExoPlayer no reprodutor salva essa opção para a próxima vez. Redefinir faz tudo seguir novamente a configuração acima. As opções salvas dos canais ao vivo são mantidas.</string>
     <string name="settings_reset_player_choices_none">Nenhuma salva</string>
     <plurals name="settings_reset_player_choices_count">

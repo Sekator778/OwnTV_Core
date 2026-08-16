@@ -370,6 +370,10 @@
     <!-- Translators: Description of the deinterlacing setting. -->
     <string name="settings_deinterlace_description">Lisse les lignes en peigne que certaines vieilles chaînes SD affichent lors des mouvements. S’applique au moteur mpv lorsqu’il dessine lui-même l’image ; si rien ne change, désactivez le décodage matériel.</string>
     <string name="settings_movies_series_player">Lecteur pour les films et les séries</string>
+    <string name="settings_live_tv_player">Lecteur pour la TV en direct</string>
+    <string name="settings_engine_order"><xliff:g id="first">%1$s</xliff:g>, puis <xliff:g id="second">%2$s</xliff:g></string>
+    <string name="settings_engine_only"><xliff:g id="engine">%1$s</xliff:g> uniquement</string>
+    <string name="settings_engine_default"><xliff:g id="option">%1$s</xliff:g> (par défaut)</string>
     <string name="settings_reset_player_choices">Réinitialiser les choix de lecteur enregistrés</string>
     <string name="settings_external_player">Lecteur externe</string>
     <string name="settings_default_zoom">Zoom par défaut</string>
@@ -444,7 +448,8 @@
     <string name="settings_audio_delay"><xliff:g id="delay">%1$d</xliff:g> ms</string>
     <string name="settings_external_player_description">Choisissez les sections à ouvrir dans une application externe.</string>
     <string name="settings_audio_delay_value"><xliff:g id="delay">%1$d</xliff:g> ms</string>
-    <string name="settings_movies_player_description">mpv (recommandé) offre la compatibilité la plus étendue avec les formats — audio DTS/TrueHD, fichiers inhabituels — ainsi qu’une correction de la synchronisation A/V. Passez à ExoPlayer uniquement si des films ou des épisodes ne démarrent pas : sur certains téléviseurs, il lit des flux que mpv ne peut pas lire, mais ne peut pas décoder l’audio DTS/TrueHD et ne dispose d’aucune correction de la synchronisation A/V. Quel que soit votre choix, l’autre lecteur est essayé automatiquement en cas d’échec.</string>
+    <string name="settings_movies_player_description">mpv (recommandé) offre la plus large prise en charge des formats — audio DTS/TrueHD, fichiers inhabituels — ainsi que la correction de synchronisation audio/vidéo. Sur certains téléviseurs, ExoPlayer lit des flux que mpv ne parvient pas à lire, mais il ne décode pas l’audio DTS/TrueHD et n’a pas de correction de synchronisation. Les options combinées essaient automatiquement l’autre lecteur lorsque le premier échoue ; les options à un seul lecteur ne le font jamais, ce qui évite quelques secondes d’écran noir si le second lecteur ne fonctionne de toute façon pas sur votre téléviseur.</string>
+    <string name="settings_live_player_description">ExoPlayer (recommandé) ouvre les chaînes beaucoup plus vite et il est le seul à gérer les sous-titres en direct. mpv lit des chaînes qu’ExoPlayer ne parvient pas à lire, dont certaines à l’audio inhabituel. Les options combinées essaient automatiquement l’autre lecteur lorsque le premier échoue ; les options à un seul lecteur ne le font jamais, ce qui évite quelques secondes d’écran noir si le second lecteur ne fonctionne de toute façon pas sur votre téléviseur. Une chaîne que vous basculez à la main dans le lecteur conserve votre choix dans les deux cas.</string>
     <string name="settings_reset_player_choices_description">Lorsque vous basculez un film ou un épisode précis entre mpv et ExoPlayer depuis le lecteur, ce choix est enregistré pour la prochaine fois. La réinitialisation fait de nouveau suivre le réglage ci-dessus à tout le contenu. Les choix enregistrés pour les chaînes en direct sont conservés.</string>
     <string name="settings_reset_player_choices_none">Aucun enregistré</string>
     <plurals name="settings_reset_player_choices_count">

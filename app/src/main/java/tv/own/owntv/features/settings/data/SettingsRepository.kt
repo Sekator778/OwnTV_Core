@@ -173,7 +173,9 @@ class SettingsRepository(private val context: Context, private val localeStore: 
         val ANDROID_TV_HOME = booleanPreferencesKey("android_tv_home")
         // Video Player Settings
         val HW_DECODING = booleanPreferencesKey("hw_decoding")
-        val VOD_PREFER_EXO = booleanPreferencesKey("vod_prefer_exo")
+        val VOD_PREFER_EXO = booleanPreferencesKey("vod_prefer_exo") // legacy; read for migration only
+        val LIVE_ENGINE = stringPreferencesKey("live_engine")
+        val VOD_ENGINE = stringPreferencesKey("vod_engine")
         val MEASURED_STREAM_STATS = booleanPreferencesKey("measured_stream_stats")
         val DETAILED_DIAGNOSTICS = booleanPreferencesKey("detailed_diagnostics")
         val DIRECT_TUNE = booleanPreferencesKey("direct_tune")
@@ -738,14 +740,57 @@ class SettingsRepository(private val context: Context, private val localeStore: 
         context.dataStore.edit { it[Keys.HW_DECODING] = enabled }
     }
 
-    /** Preferred engine for Movies & Series (VOD). Off (default) = mpv first with an automatic ExoPlayer
-     *  fallback; on = ExoPlayer first with an automatic mpv fallback. mpv is the default because it has
-     *  the wider codec support (DTS/TrueHD audio, odd containers) and the A/V-sync nudge; ExoPlayer-first
-     *  is for devices/providers where mpv's path can't open streams that ExoPlayer plays fine. */
-    val vodPreferExo: Flow<Boolean> = prefsFlow { it[Keys.VOD_PREFER_EXO] ?: false }
+    /**
+     * Which engine Live TV starts a channel on, and whether it may hand over to the other one.
+     *
+     * Default is [EnginePreference.EXO_FIRST] — ExoPlayer opens far faster, which is what channel
+     * surfing is made of, and it is the only engine with live closed captions; mpv catches what it
+     * cannot play. The other three exist because that automatic handover is not always wanted:
+     *
+     *  - **mpv first** for a panel or a TV where ExoPlayer is the one that usually loses.
+     *  - **The two "only" modes** for anyone who has established that the second engine never works for
+     *    them. A handover costs a stop, a surface release and a re-open — several seconds of black on
+     *    every unplayable channel — so paying it for an engine that was never going to help is pure loss.
+     *    "Only" still keeps that engine's own `.m3u8` → `.ts` step; what it drops is the other engine.
+     *
+     * A channel pinned with the HUD "compatibility mode" toggle ignores this setting — see [ForceMpvStore].
+     */
+    val liveEnginePreference: Flow<tv.own.owntv.player.EnginePreference> = prefsFlow { prefs ->
+        prefs[Keys.LIVE_ENGINE]?.let { runCatching { tv.own.owntv.player.EnginePreference.valueOf(it) }.getOrNull() }
+            ?: tv.own.owntv.player.EnginePreference.EXO_FIRST
+    }
 
-    suspend fun setVodPreferExo(enabled: Boolean) {
-        context.dataStore.edit { it[Keys.VOD_PREFER_EXO] = enabled }
+    suspend fun setLiveEnginePreference(preference: tv.own.owntv.player.EnginePreference) {
+        context.dataStore.edit { it[Keys.LIVE_ENGINE] = preference.name }
+    }
+
+    /**
+     * Which engine Movies & Series start on, and whether it may hand over to the other one.
+     *
+     * Default is [EnginePreference.MPV_FIRST] — the opposite of Live TV's, deliberately: a film is one
+     * long open where breadth of codec support beats speed of opening, and mpv has the wider set
+     * (DTS/TrueHD audio, odd containers) plus the A/V-sync nudge. ExoPlayer-first is for devices and
+     * providers where mpv's path can't open files ExoPlayer plays fine.
+     *
+     * The two "only" modes drop the automatic handover for anyone whose second engine never works —
+     * see [liveEnginePreference] for the reasoning, which is identical. Two caveats specific to VOD:
+     * ExoPlayer cannot decode DTS/TrueHD at all (the handoff is refused rather than attempted, so
+     * "only ExoPlayer" means those files simply don't play), and the image-subtitle handoff to
+     * ExoPlayer is not a fallback — it stays available in both "only" modes, since it is the only way
+     * PGS/VOBSUB subtitles are ever rendered.
+     *
+     * Migrated in place from the older `vod_prefer_exo` switch, which is still read when the new key
+     * has never been written: on → [EnginePreference.EXO_FIRST], off → [EnginePreference.MPV_FIRST].
+     * Nobody's playback changes on upgrade.
+     */
+    val vodEnginePreference: Flow<tv.own.owntv.player.EnginePreference> = prefsFlow { prefs ->
+        prefs[Keys.VOD_ENGINE]?.let { runCatching { tv.own.owntv.player.EnginePreference.valueOf(it) }.getOrNull() }
+            ?: if (prefs[Keys.VOD_PREFER_EXO] == true) tv.own.owntv.player.EnginePreference.EXO_FIRST
+            else tv.own.owntv.player.EnginePreference.MPV_FIRST
+    }
+
+    suspend fun setVodEnginePreference(preference: tv.own.owntv.player.EnginePreference) {
+        context.dataStore.edit { it[Keys.VOD_ENGINE] = preference.name }
     }
 
     /** Measure live fps / bitrate / dropped frames for the stream-info overlay. On (default) = the

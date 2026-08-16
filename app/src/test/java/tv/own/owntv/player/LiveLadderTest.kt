@@ -29,7 +29,8 @@ class LiveLadderTest {
         url: String,
         startsOnMpv: Boolean = false,
         hasHls: Boolean = true,
-    ): LiveLadder = LiveLadder().also { runBlocking { it.arm(url, startsOnMpv) { hasHls } } }
+        preference: EnginePreference = EnginePreference.firstOn(startsOnMpv),
+    ): LiveLadder = LiveLadder().also { runBlocking { it.arm(url, preference) { hasHls } } }
 
     @Test
     fun `a tune that started on ExoPlayer tries both ExoPlayer formats before mpv is considered`() {
@@ -49,6 +50,63 @@ class LiveLadderTest {
             listOf(Rung.MPV_HLS, Rung.MPV_TS, Rung.EXO_HLS, Rung.EXO_TS),
             ladder.plan,
         )
+    }
+
+    @Test
+    fun `an only-ExoPlayer preference keeps both ExoPlayer formats and drops the handover`() {
+        // The point of the mode: a user who has established that mpv never works on their box and panel
+        // stops paying for its turn — several seconds of black on every unplayable channel — but does
+        // NOT lose the `.m3u8` → `.ts` step, which is what rescues most channels in practice.
+        val ladder = ladderFor("http://u.test/live/1.ts", preference = EnginePreference.EXO_ONLY)
+        assertEquals(listOf(Rung.EXO_HLS, Rung.EXO_TS), ladder.plan)
+        assertEquals(Rung.EXO_TS, ladder.advance())
+        assertNull(ladder.advance()) // never mpv, however it fails
+    }
+
+    @Test
+    fun `an only-mpv preference is the same promise mirrored`() {
+        val ladder = ladderFor("http://v.test/live/1.ts", preference = EnginePreference.MPV_ONLY)
+        assertEquals(listOf(Rung.MPV_HLS, Rung.MPV_TS), ladder.plan)
+        assertEquals(Rung.MPV_TS, ladder.advance())
+        assertNull(ladder.advance())
+    }
+
+    @Test
+    fun `an only mode with no HLS alternative is a single rung, and it still terminates`() {
+        // Both filters compose: one engine, one format. Nothing left to try is a legitimate outcome —
+        // the caller leaves the failure on screen rather than bouncing.
+        val ladder = ladderFor("http://w.test/live/1.m3u8", hasHls = false, preference = EnginePreference.EXO_ONLY)
+        assertEquals(listOf(Rung.EXO_TS), ladder.plan)
+        assertNull(ladder.advance())
+    }
+
+    @Test
+    fun `a refusal in an only mode cannot escape to the other engine either`() {
+        // [advance] prefers the OTHER engine when a panel refused the request, because a handover releases
+        // the session a one-session panel was blocking. In an only mode that rung does not exist, so the
+        // fallback-of-the-fallback applies: the same engine's other format, then the end.
+        val url = "http://x.test/live/1.ts"
+        val ladder = ladderFor(url, preference = EnginePreference.MPV_ONLY)
+        assertEquals(Rung.MPV_TS, ladder.advance(failureWasAboutFormat = false))
+        assertNull(ladder.advance(failureWasAboutFormat = false))
+    }
+
+    @Test
+    fun `the preference decides both where a tune starts and whether it may hand over`() {
+        assertFalse(EnginePreference.EXO_FIRST.startsOnMpv)
+        assertTrue(EnginePreference.MPV_FIRST.startsOnMpv)
+        assertFalse(EnginePreference.EXO_ONLY.startsOnMpv)
+        assertTrue(EnginePreference.MPV_ONLY.startsOnMpv)
+
+        assertTrue(EnginePreference.EXO_FIRST.allowsHandover)
+        assertTrue(EnginePreference.MPV_FIRST.allowsHandover)
+        assertFalse(EnginePreference.EXO_ONLY.allowsHandover)
+        assertFalse(EnginePreference.MPV_ONLY.allowsHandover)
+
+        assertEquals(EnginePreference.MPV_FIRST, EnginePreference.firstOn(onMpv = true))
+        assertEquals(EnginePreference.EXO_FIRST, EnginePreference.firstOn(onMpv = false))
+        assertEquals(EnginePreference.MPV_ONLY, EnginePreference.onlyOn(onMpv = true))
+        assertEquals(EnginePreference.EXO_ONLY, EnginePreference.onlyOn(onMpv = false))
     }
 
     @Test
@@ -153,7 +211,7 @@ class LiveLadderTest {
         assertFalse(LiveStreamQuirks.lacksHlsVariant(url))
         assertFalse(LiveStreamQuirks.lacksHlsVariantMpv(url))
         // The next tune therefore still gets both HLS rungs — nothing was written off.
-        runBlocking { ladder.arm(url, startsOnMpv = false) { true } }
+        runBlocking { ladder.arm(url, EnginePreference.EXO_FIRST) { true } }
         assertEquals(listOf(Rung.EXO_HLS, Rung.EXO_TS, Rung.MPV_HLS, Rung.MPV_TS), ladder.plan)
     }
 
@@ -163,17 +221,17 @@ class LiveLadderTest {
         // attempt against an account-level refusal, but handing over to the other engine takes a few
         // seconds AND releases the session the previous engine was holding — which is often exactly what
         // the channel needed to open. So the ladder skips the format rung and keeps the engine change.
-        val ladder = ladderFor("http://q.test/live/1.ts")
+        val ladder = ladderFor("http://v.test/live/1.ts")
         assertEquals(Rung.MPV_HLS, ladder.advance(failureWasAboutFormat = false))
 
-        val fromMpv = ladderFor("http://r.test/live/1.ts", startsOnMpv = true)
+        val fromMpv = ladderFor("http://w.test/live/1.ts", startsOnMpv = true)
         assertEquals(Rung.EXO_HLS, fromMpv.advance(failureWasAboutFormat = false))
     }
 
     @Test
     fun `a skipped format rung is not spent, so a later format failure can still use it`() {
         // Skipping is "not worth trying against a refusal", not "proven dead" — the rung stays available.
-        val ladder = ladderFor("http://s.test/live/1.ts")
+        val ladder = ladderFor("http://x.test/live/1.ts")
         assertEquals(Rung.MPV_HLS, ladder.advance(failureWasAboutFormat = false))
         assertFalse(ladder.isSpent(Rung.EXO_TS))
         assertEquals(Rung.EXO_TS, ladder.advance(failureWasAboutFormat = true))
@@ -200,10 +258,10 @@ class LiveLadderTest {
         val first = "http://l.test/live/1.ts"
         val second = "http://l.test/live/2.ts"
         val ladder = LiveLadder()
-        runBlocking { ladder.arm(first, startsOnMpv = false) { true } }
+        runBlocking { ladder.arm(first, EnginePreference.EXO_FIRST) { true } }
         assertTrue(ladder.owns(first))
 
-        runBlocking { ladder.arm(second, startsOnMpv = false) { true } }
+        runBlocking { ladder.arm(second, EnginePreference.EXO_FIRST) { true } }
         assertFalse(ladder.owns(first))
         assertTrue(ladder.owns(second))
     }
@@ -218,7 +276,7 @@ class LiveLadderTest {
         assertEquals(Rung.MPV_TS, ladder.advance())
         assertNull(ladder.advance())
 
-        runBlocking { ladder.arm(url, startsOnMpv = false) { false } }
+        runBlocking { ladder.arm(url, EnginePreference.EXO_FIRST) { false } }
         assertFalse(ladder.isSpent(Rung.MPV_TS))
         assertEquals(Rung.MPV_TS, ladder.advance())
     }
@@ -231,7 +289,7 @@ class LiveLadderTest {
         val ladder = ladderFor(url)
         while (ladder.advance() != null) Unit
 
-        runBlocking { ladder.arm(url, startsOnMpv = false) { true } }
+        runBlocking { ladder.arm(url, EnginePreference.EXO_FIRST) { true } }
         assertEquals(listOf(Rung.EXO_TS, Rung.MPV_TS), ladder.plan)
         assertFalse(ladder.isSpent(Rung.MPV_TS))
         assertEquals(Rung.MPV_TS, ladder.advance())

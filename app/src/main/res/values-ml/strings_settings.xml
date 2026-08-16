@@ -369,6 +369,10 @@
     <!-- Translators: Description of the deinterlacing setting. -->
     <string name="settings_deinterlace_description">ചില പഴയ SD ചാനലുകൾ ചലനത്തിൽ കാണിക്കുന്ന ചീർപ്പുപോലുള്ള വരകൾ മയപ്പെടുത്തുന്നു. mpv സ്വയം ചിത്രം വരയ്ക്കുമ്പോൾ മാത്രമേ ഇത് ബാധകമാകൂ, അതിനാൽ വ്യത്യാസമില്ലെങ്കിൽ ഹാർഡ്‌വെയർ ഡീകോഡിംഗ് ഓഫാക്കുക.</string>
     <string name="settings_movies_series_player">സിനിമകളുടെയും സീരീസിന്റെയും പ്ലെയർ</string>
+    <string name="settings_live_tv_player">തത്സമയ ടിവിയുടെ പ്ലെയർ</string>
+    <string name="settings_engine_order"><xliff:g id="first">%1$s</xliff:g>, പിന്നെ <xliff:g id="second">%2$s</xliff:g></string>
+    <string name="settings_engine_only"><xliff:g id="engine">%1$s</xliff:g> മാത്രം</string>
+    <string name="settings_engine_default"><xliff:g id="option">%1$s</xliff:g> (ഡിഫോൾട്ട്)</string>
     <string name="settings_reset_player_choices">സേവ് ചെയ്ത പ്ലെയർ തിരഞ്ഞെടുപ്പുകൾ പുനഃസജ്ജമാക്കുക</string>
     <string name="settings_external_player">ബാഹ്യ പ്ലെയർ</string>
     <string name="settings_default_zoom">ഡിഫോൾട്ട് സൂം</string>
@@ -443,7 +447,8 @@
     <string name="settings_audio_delay"><xliff:g id="delay">%1$d</xliff:g> ms</string>
     <string name="settings_external_player_description">ഏതൊക്കെ വിഭാഗങ്ങൾ ബാഹ്യ ആപ്പിൽ തുറക്കണമെന്ന് തിരഞ്ഞെടുക്കുക.</string>
     <string name="settings_audio_delay_value"><xliff:g id="delay">%1$d</xliff:g> ms</string>
-    <string name="settings_movies_player_description">mpv-യ്ക്ക് (ശുപാർശ ചെയ്യുന്നത്) ഏറ്റവും വിപുലമായ ഫോർമാറ്റ് പിന്തുണയുണ്ട് — DTS/TrueHD ഓഡിയോ, സാധാരണമല്ലാത്ത ഫയലുകൾ — കൂടാതെ A/V സമന്വയിപ്പിക്കൽ പരിഹാരവും. സിനിമകളോ എപ്പിസോഡുകളോ ആരംഭിക്കുന്നില്ലെങ്കിൽ മാത്രം ExoPlayer-ലേക്ക് മാറുക: ചില ടിവികളിൽ mpv-യ്ക്ക് പ്ലേ ചെയ്യാനാകാത്ത ചില സ്ട്രീമുകൾ ഇതിന് പ്ലേ ചെയ്യാനാകും, എന്നാൽ DTS/TrueHD ഓഡിയോ ഡീകോഡ് ചെയ്യാനാകില്ല, A/V സമന്വയിപ്പിക്കൽ പരിഹാരവുമില്ല. നിങ്ങൾ ഏതെടുത്താലും അത് പരാജയപ്പെട്ടാൽ മറ്റേത് സ്വയമേവ പരീക്ഷിക്കും.</string>
+    <string name="settings_movies_player_description">mpv (ശുപാർശ ചെയ്യുന്നു) ഏറ്റവും വിശാലമായ ഫോർമാറ്റ് പിന്തുണ നൽകുന്നു — DTS/TrueHD ഓഡിയോ, അസാധാരണ ഫയലുകൾ — കൂടാതെ A/V സിങ്ക് തിരുത്തലും. ചില ടിവികളിൽ mpv-ക്ക് തുറക്കാനാകാത്ത സ്ട്രീമുകൾ ExoPlayer പ്ലേ ചെയ്യും, എന്നാൽ അതിന് DTS/TrueHD ഓഡിയോ ഡീകോഡ് ചെയ്യാനാകില്ല, A/V സിങ്ക് തിരുത്തലുമില്ല. സംയുക്ത ഓപ്ഷനുകളിൽ ആദ്യത്തേത് പരാജയപ്പെട്ടാൽ മറ്റേ പ്ലെയർ സ്വയമേവ പരീക്ഷിക്കും; ഒറ്റ പ്ലെയർ ഓപ്ഷനുകളിൽ അത് ഒരിക്കലും സംഭവിക്കില്ല, രണ്ടാമത്തെ പ്ലെയർ നിങ്ങളുടെ ടിവിയിൽ എന്തായാലും പ്രവർത്തിക്കുന്നില്ലെങ്കിൽ ഏതാനും സെക്കൻഡ് കറുത്ത സ്ക്രീൻ ഒഴിവാകും.</string>
+    <string name="settings_live_player_description">ExoPlayer (ശുപാർശ ചെയ്യുന്നു) ചാനലുകൾ വളരെ വേഗത്തിൽ തുറക്കുന്നു, തത്സമയ സബ്ടൈറ്റിലുകൾ ഇതിൽ മാത്രമേയുള്ളൂ. ExoPlayer-ന് പ്ലേ ചെയ്യാനാകാത്ത ചാനലുകൾ, അസാധാരണ ഓഡിയോയുള്ള ചിലത് ഉൾപ്പെടെ, mpv പ്ലേ ചെയ്യും. സംയുക്ത ഓപ്ഷനുകളിൽ ആദ്യത്തേത് പരാജയപ്പെട്ടാൽ മറ്റേ പ്ലെയർ സ്വയമേവ പരീക്ഷിക്കും; ഒറ്റ പ്ലെയർ ഓപ്ഷനുകളിൽ അത് ഒരിക്കലും സംഭവിക്കില്ല, രണ്ടാമത്തെ പ്ലെയർ നിങ്ങളുടെ ടിവിയിൽ എന്തായാലും പ്രവർത്തിക്കുന്നില്ലെങ്കിൽ ഏതാനും സെക്കൻഡ് കറുത്ത സ്ക്രീൻ ഒഴിവാകും. പ്ലെയറിൽ സ്വയം മാറ്റിയ ചാനലിൽ നിങ്ങളുടെ തിരഞ്ഞെടുപ്പ് രണ്ട് സാഹചര്യത്തിലും നിലനിൽക്കും.</string>
     <string name="settings_reset_player_choices_description">പ്ലെയറിൽ ഒരു സിനിമയോ എപ്പിസോഡോ mpv-യ്ക്കും ExoPlayer-നും ഇടയിൽ മാറ്റിയാൽ ആ തിരഞ്ഞെടുപ്പ് അടുത്ത തവണത്തേക്ക് സേവ് ചെയ്യപ്പെടും. പുനഃസജ്ജമാക്കിയാൽ എല്ലാം വീണ്ടും മുകളിലുള്ള ക്രമീകരണം പിന്തുടരും. ലൈവ് ചാനലുകളുടെ സേവ് ചെയ്ത തിരഞ്ഞെടുപ്പുകൾ നിലനിർത്തും.</string>
     <string name="settings_reset_player_choices_none">ഒന്നും സേവ് ചെയ്തിട്ടില്ല</string>
     <plurals name="settings_reset_player_choices_count">

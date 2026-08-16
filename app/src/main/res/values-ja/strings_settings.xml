@@ -368,6 +368,10 @@
     <!-- Translators: Description of the deinterlacing setting. -->
     <string name="settings_deinterlace_description">一部の古いSDチャンネルで動きのある場面に出る櫛状の線をなめらかにします。mpvが自分で映像を描画しているときに適用されるため、変化がない場合はハードウェアデコードをオフにしてください。</string>
     <string name="settings_movies_series_player">映画とシリーズのプレーヤー</string>
+    <string name="settings_live_tv_player">ライブTVのプレーヤー</string>
+    <string name="settings_engine_order"><xliff:g id="first">%1$s</xliff:g>、次に <xliff:g id="second">%2$s</xliff:g></string>
+    <string name="settings_engine_only"><xliff:g id="engine">%1$s</xliff:g> のみ</string>
+    <string name="settings_engine_default"><xliff:g id="option">%1$s</xliff:g>（デフォルト）</string>
     <string name="settings_reset_player_choices">保存したプレーヤーの選択をリセット</string>
     <string name="settings_external_player">外部プレーヤー</string>
     <string name="settings_default_zoom">デフォルトのズーム</string>
@@ -442,7 +446,8 @@
     <string name="settings_audio_delay"><xliff:g id="delay">%1$d</xliff:g> ms</string>
     <string name="settings_external_player_description">外部アプリで開くセクションを選択します。</string>
     <string name="settings_audio_delay_value"><xliff:g id="delay">%1$d</xliff:g> ms</string>
-    <string name="settings_movies_player_description">mpv（推奨）は、DTS/TrueHD音声や一般的でないファイルなど、最も幅広い形式に対応し、A/V同期補正も利用できます。映画やエピソードが開始できない場合にのみExoPlayerへ切り替えてください。一部のテレビではmpvで再生できないストリームを再生できますが、DTS/TrueHD音声をデコードできず、A/V同期補正もありません。どちらを選んでも、失敗した場合はもう一方が自動的に試されます。</string>
+    <string name="settings_movies_player_description">mpv（推奨）は対応形式が最も広く、DTS/TrueHD 音声や珍しいファイルに加えて音ズレの補正も備えています。ExoPlayer は一部のテレビで mpv が再生できないストリームを再生できますが、DTS/TrueHD 音声はデコードできず、音ズレの補正もありません。組み合わせの選択肢では、最初のプレーヤーが失敗すると自動的にもう一方を試します。単独のプレーヤーの選択肢では決して試さないため、もう一方がお使いのテレビでどのみち動作しない場合に数秒の黒画面を省けます。</string>
+    <string name="settings_live_player_description">ExoPlayer（推奨）はチャンネルを開くのがはるかに速く、ライブ字幕に対応する唯一のプレーヤーです。mpv は ExoPlayer で再生できないチャンネル、たとえば珍しい音声を含むチャンネルも再生できます。組み合わせの選択肢では、最初のプレーヤーが失敗すると自動的にもう一方を試します。単独のプレーヤーの選択肢では決して試さないため、もう一方がお使いのテレビでどのみち動作しない場合に数秒の黒画面を省けます。プレーヤーで手動で切り替えたチャンネルでは、いずれの場合も選択が保持されます。</string>
     <string name="settings_reset_player_choices_description">プレーヤーで個々の映画やエピソードをmpvとExoPlayerで切り替えると、その選択が次回のために保存されます。リセットすると、すべてが再び上記の設定に従います。ライブチャンネルの保存済みの選択はそのまま残ります。</string>
     <string name="settings_reset_player_choices_none">保存なし</string>
     <plurals name="settings_reset_player_choices_count">

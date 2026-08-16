@@ -369,6 +369,10 @@
     <!-- Translators: Description of the deinterlacing setting. -->
     <string name="settings_deinterlace_description">Bazı eski SD kanalların harekette gösterdiği tarak benzeri çizgileri yumuşatır. mpv motoru görüntüyü kendisi çizerken geçerlidir; fark etmiyorsa donanım kod çözmeyi kapatın.</string>
     <string name="settings_movies_series_player">Film ve Dizi oynatıcısı</string>
+    <string name="settings_live_tv_player">Canlı TV oynatıcısı</string>
+    <string name="settings_engine_order"><xliff:g id="first">%1$s</xliff:g>, sonra <xliff:g id="second">%2$s</xliff:g></string>
+    <string name="settings_engine_only">Yalnızca <xliff:g id="engine">%1$s</xliff:g></string>
+    <string name="settings_engine_default"><xliff:g id="option">%1$s</xliff:g> (varsayılan)</string>
     <string name="settings_reset_player_choices">Kaydedilen oynatıcı seçimlerini sıfırla</string>
     <string name="settings_external_player">Harici oynatıcı</string>
     <string name="settings_default_zoom">Varsayılan yakınlaştırma</string>
@@ -443,7 +447,8 @@
     <string name="settings_audio_delay"><xliff:g id="delay">%1$d</xliff:g> ms</string>
     <string name="settings_external_player_description">Hangi bölümlerin harici bir uygulamada açılacağını seçin.</string>
     <string name="settings_audio_delay_value"><xliff:g id="delay">%1$d</xliff:g> ms</string>
-    <string name="settings_movies_player_description">mpv (önerilen) en geniş biçim desteğine sahiptir — DTS/TrueHD ses, sıra dışı dosyalar — ayrıca ses/görüntü eşitleme düzeltmesi sunar. Yalnızca filmler veya bölümler başlamazsa ExoPlayer\'a geçin: Belirli TV\'lerde mpv\'nin oynatamadığı bazı akışları oynatabilir ancak DTS/TrueHD sesin kodunu çözemez ve ses/görüntü eşitleme düzeltmesi yoktur. Hangisini seçerseniz seçin, başarısız olursa diğeri otomatik olarak denenir.</string>
+    <string name="settings_movies_player_description">mpv (önerilir) en geniş biçim desteğine sahiptir — DTS/TrueHD ses, alışılmadık dosyalar — ayrıca A/V eşitleme düzeltmesi de vardır. Bazı televizyonlarda ExoPlayer, mpv’nin açamadığı yayınları oynatır; ancak DTS/TrueHD sesi çözemez ve A/V eşitleme düzeltmesi yoktur. Birleşik seçenekler ilki başarısız olduğunda diğer oynatıcıyı otomatik dener; tek oynatıcılı seçenekler bunu hiç yapmaz; ikinci oynatıcı televizyonunuzda zaten çalışmıyorsa bu, birkaç saniyelik siyah ekrandan kurtarır.</string>
+    <string name="settings_live_player_description">ExoPlayer (önerilir) kanalları çok daha hızlı açar ve canlı altyazıyı destekleyen tek oynatıcıdır. mpv, ExoPlayer’ın açamadığı kanalları, alışılmadık sese sahip bazıları dahil, oynatır. Birleşik seçenekler ilki başarısız olduğunda diğer oynatıcıyı otomatik dener; tek oynatıcılı seçenekler bunu hiç yapmaz; ikinci oynatıcı televizyonunuzda zaten çalışmıyorsa bu, birkaç saniyelik siyah ekrandan kurtarır. Oynatıcıda elle değiştirdiğiniz bir kanalda seçiminiz her iki durumda da korunur.</string>
     <string name="settings_reset_player_choices_description">Oynatıcıda tek bir filmi veya bölümü mpv ile ExoPlayer arasında değiştirmek, bu seçimi bir sonraki sefer için kaydeder. Sıfırlama her şeyin yeniden yukarıdaki ayarı izlemesini sağlar. Canlı kanallar için kaydedilen seçimler korunur.</string>
     <string name="settings_reset_player_choices_none">Kayıtlı seçim yok</string>
     <plurals name="settings_reset_player_choices_count">

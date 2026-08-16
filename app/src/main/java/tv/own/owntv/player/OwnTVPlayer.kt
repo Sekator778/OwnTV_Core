@@ -821,7 +821,14 @@ class OwnTVPlayer(
     @Volatile private var livePrerollSecs: Int = 0
     @Volatile private var prerollOverrideSecs: Int? = null
     private fun effectivePrerollSecs(): Int = prerollOverrideSecs ?: livePrerollSecs
-    private var vodPreferExo = false // Movies & Series start on ExoPlayer (mpv becomes the fallback)
+    // The global "Movies & Series player" setting: which engine an item starts on and whether the other
+    // may rescue it. Default mpv-first — see SettingsRepository.vodEnginePreference.
+    @Volatile private var vodEngine = tv.own.owntv.player.EnginePreference.MPV_FIRST
+    // The preference in force for the item currently loaded, after a per-item pin and the HUD toggle
+    // have had their say. Read by the two auto-fallback paths, which is why it is resolved once at load
+    // time rather than recomputed from the setting: the setting can change mid-film, and an item that
+    // started under the old one must keep the fallback rules it started with.
+    @Volatile private var itemEngine = tv.own.owntv.player.EnginePreference.MPV_FIRST
     // Per-item engine pins from the gear toggle (VOD counterpart of Live's compatibility mode) —
     // eagerly mirrored so loadUrl can consult them synchronously.
     @Volatile private var vodPinnedMpv: Set<String> = emptySet()
@@ -967,7 +974,7 @@ class OwnTVPlayer(
         }.launchIn(scope)
         settings.autoPlayNext.onEach { autoPlayNext = it }.launchIn(scope)
         // Applies from the next VOD load.
-        settings.vodPreferExo.onEach { vodPreferExo = it }.launchIn(scope)
+        settings.vodEnginePreference.onEach { vodEngine = it }.launchIn(scope)
         settings.measuredStreamStats.onEach { on ->
             measuredStreamStats = on
             if (!on) exoEngine?.setBitrateTrackingEnabled(false) // turning it off stops any in-flight measuring now
@@ -1462,6 +1469,10 @@ class OwnTVPlayer(
             // mpv; Exo-as-fallback means mpv already failed this item, so reloading it there would just
             // loop — surface the combined both-engines error.
             when {
+                // "Only ExoPlayer": the user ruled mpv out, so a terminal Exo failure is the answer —
+                // surface it as the single-engine error it is rather than the both-engines one.
+                exoVodFallback && exoPrimaryThisItem && !itemEngine.allowsHandover ->
+                    scope.launch { failExoOnly(failure) }
                 exoVodFallback && exoPrimaryThisItem -> scope.launch { fallbackToMpvVod(failure) }
                 exoVodFallback -> scope.launch { failBothEngines(failure) }
                 else -> scope.launch { revertToMpv(error = failure) }
@@ -1803,6 +1814,10 @@ class OwnTVPlayer(
      */
     private fun fallbackToExoVod(mpvError: PlaybackFailure, mpvStuck: Boolean): Boolean {
         if (isLiveContent || exoActive || triedExoVodFallback) return false
+        if (!itemEngine.allowsHandover) {
+            android.util.Log.w(TAG, "VOD failed on mpv but the engine setting is mpv-only — no fallback")
+            return false
+        }
         val url = currentUrl ?: return false
         if (attachedSurface == null) return false
         if (!audioCodecSafeForExo()) {
@@ -1909,6 +1924,10 @@ class OwnTVPlayer(
             exoFailureBeforeMpv = null
             deactivateExo() // releases Exo's codec
             triedExoVodFallback = false // re-arm the auto-fallback for the manual choice
+            // The click is a per-item exception to the global setting, so it also re-opens the handover
+            // an "only" mode would otherwise forbid — the user is switching engines by hand precisely
+            // because the one the setting names is not working for this item.
+            itemEngine = tv.own.owntv.player.EnginePreference.MPV_FIRST
             _buffering.value = true
             // Remember the choice for THIS item (like Live's compatibility mode remembers the channel).
             scope.launch { vodEngineStore.pin(currentContentKey ?: url, tv.own.owntv.core.player.VodEnginePin.MPV) }
@@ -1934,6 +1953,7 @@ class OwnTVPlayer(
             exoVodFallback = true
             mpvFailureBeforeFallback = null
             triedExoVodFallback = false
+            itemEngine = tv.own.owntv.player.EnginePreference.EXO_FIRST // see the mpv branch above
             loadGeneration++ // supersede mpv retry/watchdog work for this item
             val gen = loadGeneration
             errorCheckJob?.cancel(); videoCheckJob?.cancel()
@@ -1987,6 +2007,17 @@ class OwnTVPlayer(
         else pendingSeekMs
 
     /** The engine fallback ALSO failed: stop ExoPlayer and surface one combined error. */
+    /** "Only ExoPlayer" and ExoPlayer gave up: mpv is not allowed a turn, so this is the final word.
+     *  Reported as ExoPlayer's own error — telling the user both engines failed would be a lie, and it
+     *  would hide the fact that the engine setting is what stopped the second attempt. */
+    private fun failExoOnly(exoError: PlaybackFailure) {
+        android.util.Log.w(TAG, "VOD failed on ExoPlayer ($exoError) and the engine setting is ExoPlayer-only")
+        deactivateExo()
+        _isPlaying.value = false
+        _buffering.value = false
+        _error.value = exoError
+    }
+
     private fun failBothEngines(exoError: PlaybackFailure) {
         android.util.Log.w(TAG, "VOD failed on BOTH engines — mpv: '$mpvFailureBeforeFallback' / exo: '$exoError'")
         deactivateExo()
@@ -2567,12 +2598,22 @@ class OwnTVPlayer(
         // chosen engine. The cost is that a genuinely undecodable file pays its fallback on every open;
         // the user's remedy is the toggle, which is one click and visible.
         val pinKey = meta.contentKey
-        val startOnExo = when {
+        val pinnedToExo: Boolean? = when {
             pinKey != null && pinKey in vodPinnedMpv -> false
             pinKey != null && pinKey in vodPinnedExo -> true
             url in vodPinnedMpv -> { migrateVodPin(url, pinKey); false }
             url in vodPinnedExo -> { migrateVodPin(url, pinKey); true }
-            else -> vodPreferExo
+            else -> null
+        }
+        val startOnExo = pinnedToExo ?: !vodEngine.startsOnMpv
+        // A pin that contradicts an "only" setting re-opens the handover for this one item: the user
+        // named an engine for it *against* the global rule, so locking that item to the engine they
+        // overrode would leave it with no way to reach the one that plays it. Everything else keeps the
+        // setting's own rules, including its refusal to hand over at all.
+        itemEngine = if (vodEngine.allowsHandover || startOnExo == vodEngine.startsOnMpv) {
+            tv.own.owntv.player.EnginePreference.firstOn(onMpv = !startOnExo)
+        } else {
+            vodEngine
         }
         if (!isLive && startOnExo && resetRetries && !isArchive) {
             exoPrimaryThisItem = true

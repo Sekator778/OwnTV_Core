@@ -52,6 +52,11 @@ class LiveLadder {
      *  - started on ExoPlayer → `exo HLS → exo TS → mpv HLS → mpv TS`
      *  - started on mpv       → `mpv HLS → mpv TS → exo HLS → exo TS`
      *
+     * An "only" [preference] keeps the first pair and drops the second: the chosen engine still gets both
+     * of its formats — that step rescues most channels — but a stream it cannot play stays as a visible
+     * failure instead of paying for a handover the user has said will not help. That is the whole
+     * difference between the "first" and "only" modes here; see [EnginePreference].
+     *
      * The HLS rungs are dropped entirely when this channel has no HLS/TS distinction — "Prefer HLS" off
      * for the playlist, a Stalker cmd, or a URL that is natively `.m3u8` — leaving the plain
      * `exo → mpv` (or `mpv → exo`) pair, which is what happened before any of this existed. A rung is
@@ -66,14 +71,18 @@ class LiveLadder {
      * [hasHlsAlternative] is suspended deliberately: resolving it hits the source row, and it must run
      * at the same point in the sequence it always did — after this ladder has claimed [streamUrl].
      */
-    suspend fun arm(streamUrl: String, startsOnMpv: Boolean, hasHlsAlternative: suspend () -> Boolean) {
+    suspend fun arm(
+        streamUrl: String,
+        preference: EnginePreference,
+        hasHlsAlternative: suspend () -> Boolean,
+    ) {
         url = streamUrl
         spent.clear()
-        val base = if (startsOnMpv) {
+        val base = if (preference.startsOnMpv) {
             listOf(Rung.MPV_HLS, Rung.MPV_TS, Rung.EXO_HLS, Rung.EXO_TS)
         } else {
             listOf(Rung.EXO_HLS, Rung.EXO_TS, Rung.MPV_HLS, Rung.MPV_TS)
-        }
+        }.filter { preference.allowsHandover || it.onMpv == preference.startsOnMpv }
         // Drop the HLS rungs this channel has no use for: no swap happened at all, or that engine has
         // already learned in this session that its `.m3u8` doesn't work. Keeping the ladder honest
         // matters — a rung the tune code would silently turn into the `.ts` one anyway would otherwise

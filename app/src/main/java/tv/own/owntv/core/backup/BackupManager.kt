@@ -158,10 +158,10 @@ class BackupManager(
                     val proxyPass = settings.currentProxyPassword()
                     if (seal != null && proxyPass.isNotEmpty()) s.put("proxy_pass_enc", seal(proxyPass))
                     // The user's own TMDB API key: same secret policy — encrypted with a passphrase, else omitted.
-            val tmdbKey = settings.currentTmdbApiKey()
-            if (seal != null && tmdbKey.isNotEmpty()) s.put("tmdb_key_enc", seal(tmdbKey))
-            val openSubtitlesKey = settings.currentOpenSubtitlesApiKey()
-            if (seal != null && openSubtitlesKey.isNotEmpty()) s.put("opensub_api_key_enc", seal(openSubtitlesKey))
+                    val tmdbKey = settings.currentTmdbApiKey()
+                    if (seal != null && tmdbKey.isNotEmpty()) s.put("tmdb_key_enc", seal(tmdbKey))
+                    val openSubtitlesKey = settings.currentOpenSubtitlesApiKey()
+                    if (seal != null && openSubtitlesKey.isNotEmpty()) s.put("opensub_api_key_enc", seal(openSubtitlesKey))
                     put("settings", s)
                     // Per-profile landing screen + the Customize PIN lock. These moved out of the
                     // SOURCES block in v17: neither is a playlist or a credential, so a user who
@@ -185,6 +185,7 @@ class BackupManager(
                     val urlKeysAllowed = seal != null
                     put("compatMode", JSONObject().apply {
                         put("liveMpvUrls", JSONArray(filterEnginePinKeys(forceMpvStore.exportUrls(), linkedSourceIds, urlKeysAllowed)))
+                        put("liveExoUrls", JSONArray(filterEnginePinKeys(forceMpvStore.exportExoUrls(), linkedSourceIds, urlKeysAllowed)))
                         put("vodMpvUrls", JSONArray(filterEnginePinKeys(vodEngineStore.exportMpvUrls(), linkedSourceIds, urlKeysAllowed)))
                         put("vodExoUrls", JSONArray(filterEnginePinKeys(vodEngineStore.exportExoUrls(), linkedSourceIds, urlKeysAllowed)))
                     })
@@ -834,7 +835,7 @@ class BackupManager(
                 // that id. Legacy stream-URL keys carry no id and pass through untouched.
                 root.optJSONObject("compatMode")?.let { c ->
                     fun keys(name: String) = jsonStrings(c.optJSONArray(name)).map { remapEnginePinKey(it, sourceIdMap) }
-                    runCatching { forceMpvStore.importUrls(keys("liveMpvUrls")) }
+                    runCatching { forceMpvStore.importUrls(keys("liveMpvUrls"), keys("liveExoUrls")) }
                     runCatching { vodEngineStore.importUrls(keys("vodMpvUrls"), keys("vodExoUrls")) }
                 }
                 // Per-item zoom / volume. Merged in (REPLACE on the same profile+key), so a restore

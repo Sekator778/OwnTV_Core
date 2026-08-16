@@ -369,6 +369,10 @@
     <!-- Translators: Description of the deinterlacing setting. -->
     <string name="settings_deinterlace_description">कुछ पुराने SD चैनल हलचल पर जो कंघी जैसी लकीरें दिखाते हैं, उन्हें चिकना करता है। यह mpv इंजन पर तब लागू होता है जब वह खुद तस्वीर बनाता है, इसलिए फ़र्क न दिखे तो हार्डवेयर डिकोडिंग बंद करें।</string>
     <string name="settings_movies_series_player">फ़िल्मों और सीरीज़ का प्लेयर</string>
+    <string name="settings_live_tv_player">लाइव टीवी का प्लेयर</string>
+    <string name="settings_engine_order"><xliff:g id="first">%1$s</xliff:g>, फिर <xliff:g id="second">%2$s</xliff:g></string>
+    <string name="settings_engine_only">केवल <xliff:g id="engine">%1$s</xliff:g></string>
+    <string name="settings_engine_default"><xliff:g id="option">%1$s</xliff:g> (डिफ़ॉल्ट)</string>
     <string name="settings_reset_player_choices">सहेजे गए प्लेयर विकल्प रीसेट करें</string>
     <string name="settings_external_player">बाहरी प्लेयर</string>
     <string name="settings_default_zoom">डिफ़ॉल्ट ज़ूम</string>
@@ -443,7 +447,8 @@
     <string name="settings_audio_delay"><xliff:g id="delay">%1$d</xliff:g> मि.से.</string>
     <string name="settings_external_player_description">चुनें कि कौन-से अनुभाग बाहरी ऐप में खुलेंगे।</string>
     <string name="settings_audio_delay_value"><xliff:g id="delay">%1$d</xliff:g> मि.से.</string>
-    <string name="settings_movies_player_description">mpv (अनुशंसित) सबसे अधिक फ़ॉर्मेट का समर्थन करता है—DTS/TrueHD ऑडियो, असामान्य फ़ाइलें—और इसमें A/V सिंक सुधार भी है। केवल तभी ExoPlayer पर जाएँ जब फ़िल्में या एपिसोड शुरू न हों: कुछ टीवी पर यह ऐसी स्ट्रीम चला सकता है जिन्हें mpv नहीं चला पाता, लेकिन यह DTS/TrueHD ऑडियो डिकोड नहीं कर सकता और इसमें A/V सिंक सुधार नहीं है। आप जो भी चुनें, उसके विफल होने पर दूसरे को अपने-आप आज़माया जाएगा।</string>
+    <string name="settings_movies_player_description">mpv (सुझाया गया) सबसे अधिक फ़ॉर्मैट सपोर्ट करता है — DTS/TrueHD ऑडियो, असामान्य फ़ाइलें — साथ ही A/V सिंक सुधार भी। कुछ टीवी पर ExoPlayer ऐसी स्ट्रीम चला देता है जो mpv नहीं चला पाता, लेकिन यह DTS/TrueHD ऑडियो डिकोड नहीं कर सकता और इसमें A/V सिंक सुधार नहीं है। संयुक्त विकल्पों में पहला विफल होने पर दूसरा प्लेयर अपने आप आज़माया जाता है; एकल-प्लेयर विकल्पों में ऐसा कभी नहीं होता, जिससे दूसरा प्लेयर आपके टीवी पर काम न करने की स्थिति में कुछ सेकंड की काली स्क्रीन बच जाती है।</string>
+    <string name="settings_live_player_description">ExoPlayer (सुझाया गया) चैनल बहुत तेज़ी से खोलता है और लाइव सबटाइटल केवल इसी में हैं। mpv ऐसे चैनल भी चलाता है जो ExoPlayer नहीं चला पाता, जिनमें असामान्य ऑडियो वाले कुछ चैनल भी शामिल हैं। संयुक्त विकल्पों में पहला विफल होने पर दूसरा प्लेयर अपने आप आज़माया जाता है; एकल-प्लेयर विकल्पों में ऐसा कभी नहीं होता, जिससे दूसरा प्लेयर आपके टीवी पर काम न करने की स्थिति में कुछ सेकंड की काली स्क्रीन बच जाती है। प्लेयर में हाथ से बदले गए चैनल पर आपकी पसंद दोनों ही स्थितियों में बनी रहती है।</string>
     <string name="settings_reset_player_choices_description">प्लेयर में किसी एक फ़िल्म या एपिसोड को mpv और ExoPlayer के बीच बदलने पर वह विकल्प अगली बार के लिए सहेज लिया जाता है। रीसेट करने पर सब कुछ फिर से ऊपर दी गई सेटिंग का पालन करेगा। लाइव चैनलों के सहेजे गए विकल्प बने रहते हैं।</string>
     <string name="settings_reset_player_choices_none">कोई सहेजा नहीं गया</string>
     <plurals name="settings_reset_player_choices_count">

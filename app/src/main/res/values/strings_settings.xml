@@ -788,6 +788,14 @@
     <string name="settings_deinterlace_description">Smooth out the comb-like lines some old SD channels show on movement. Applies to the mpv engine while it renders the picture itself, so turn hardware decoding off if it makes no difference.</string>
     <!-- Translators: Video Player settings-row title for Movies & Series. -->
     <string name="settings_movies_series_player">Movies &amp; Series player</string>
+    <!-- Translators: Video Player settings-row title for Live TV. -->
+    <string name="settings_live_tv_player">Live TV player</string>
+    <!-- Translators: Player-engine option meaning "start on the first engine, fall back to the second". 'first' and 'second' are engine brand names (mpv, ExoPlayer) and are never translated. -->
+    <string name="settings_engine_order"><xliff:g id="first">%1$s</xliff:g>, then <xliff:g id="second">%2$s</xliff:g></string>
+    <!-- Translators: Player-engine option meaning "use only this engine, never the other one". 'engine' is a brand name (mpv, ExoPlayer) and is never translated. -->
+    <string name="settings_engine_only"><xliff:g id="engine">%1$s</xliff:g> only</string>
+    <!-- Translators: Marks which player-engine option is the app's default. 'option' is one of the options above. -->
+    <string name="settings_engine_default"><xliff:g id="option">%1$s</xliff:g> (Default)</string>
     <!-- Translators: Settings-row title for forgetting per-movie/per-episode player choices. -->
     <string name="settings_reset_player_choices">Reset saved player choices</string>
     <!-- Translators: Setting label for external player configuration. -->
@@ -913,7 +921,9 @@ Choose Balanced if a channel becomes unreliable.</string>
     <!-- Translators: Formatted audio delay value in the settings. 'delay' is the delay in milliseconds. -->
     <string name="settings_audio_delay_value"><xliff:g id="delay">%1$d</xliff:g> ms</string>
     <!-- Translators: Description of the Movies & Series player engine choice. 'mpv' and 'ExoPlayer' are engine brand names. -->
-    <string name="settings_movies_player_description">mpv (recommended) has the widest format support — DTS/TrueHD audio, unusual files — plus the A/V sync fix. Switch to ExoPlayer only if movies or episodes fail to start: it plays some streams mpv can\'t on certain TVs, but can\'t decode DTS/TrueHD audio and has no A/V sync fix. Whichever you pick, the other is tried automatically if it fails.</string>
+    <string name="settings_movies_player_description">mpv (recommended) has the widest format support — DTS/TrueHD audio, unusual files — plus the A/V sync fix. ExoPlayer plays some streams mpv can\'t on certain TVs, but can\'t decode DTS/TrueHD audio and has no A/V sync fix. The combined options try the other player automatically when the first one fails; the single-player options never do, which saves a few seconds of black screen if the second player never works on your TV.</string>
+    <!-- Translators: Description of the Live TV player engine choice. 'mpv' and 'ExoPlayer' are engine brand names. -->
+    <string name="settings_live_player_description">ExoPlayer (recommended) opens channels much faster and is the only one with live subtitles. mpv plays channels ExoPlayer can\'t, including some with unusual audio. The combined options try the other player automatically when the first one fails; the single-player options never do, which saves a few seconds of black screen if the second player never works on your TV. A channel you switch by hand in the player keeps your choice either way.</string>
     <!-- Translators: Description of the row that forgets per-movie/per-episode player choices. 'mpv' and 'ExoPlayer' are engine brand names. -->
     <string name="settings_reset_player_choices_description">Switching a single movie or episode between mpv and ExoPlayer in the player saves that choice for next time. Reset makes everything follow the setting above again. Saved choices for live channels are kept.</string>
     <!-- Translators: Chip on the reset row when no movie or episode has its own saved player. -->

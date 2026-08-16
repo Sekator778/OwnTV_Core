@@ -127,6 +127,7 @@
 3	json	app/src/main/java/tv/own/owntv/core/backup/BackupManager.kt	lastSyncAt
 2	json	app/src/main/java/tv/own/owntv/core/backup/BackupManager.kt	lastUsedAt
 4	json	app/src/main/java/tv/own/owntv/core/backup/BackupManager.kt	links
+2	json	app/src/main/java/tv/own/owntv/core/backup/BackupManager.kt	liveExoUrls
 2	json	app/src/main/java/tv/own/owntv/core/backup/BackupManager.kt	liveMpvUrls
 3	json	app/src/main/java/tv/own/owntv/core/backup/BackupManager.kt	livePrerollSecs
 1	protocol	app/src/main/java/tv/own/owntv/core/backup/BackupManager.kt	local:
@@ -1883,6 +1884,7 @@
 2	protocol	app/src/main/java/tv/own/owntv/core/player/ExternalPlayerLauncher.kt	video/*
 1	mime	app/src/main/java/tv/own/owntv/core/player/ExternalPlayerLauncher.kt	video/mp2t
 2	mime	app/src/main/java/tv/own/owntv/core/player/ExternalPlayerLauncher.kt	video/mp4
+1	preference-key	app/src/main/java/tv/own/owntv/core/player/ForceMpvStore.kt	exo_urls
 1	technical	app/src/main/java/tv/own/owntv/core/player/ForceMpvStore.kt	owntv_force_mpv
 1	preference-key	app/src/main/java/tv/own/owntv/core/player/ForceMpvStore.kt	urls
 1	preference-key	app/src/main/java/tv/own/owntv/core/player/VodEngineStore.kt	exo_urls
@@ -2807,6 +2809,8 @@
 3	empty	app/src/main/java/tv/own/owntv/features/live/LiveViewModel.kt	\0
 1	technical	app/src/main/java/tv/own/owntv/features/live/LiveViewModel.kt	#$it
 1	technical	app/src/main/java/tv/own/owntv/features/live/LiveViewModel.kt	$label — $reason
+1	log	app/src/main/java/tv/own/owntv/features/live/LiveViewModel.kt	${if (onMpv) "mpv" else "exoplayer"} (pinned)
+1	log	app/src/main/java/tv/own/owntv/features/live/LiveViewModel.kt	${if (onMpv) "mpv" else "exoplayer"} (setting)
 1	log	app/src/main/java/tv/own/owntv/features/live/LiveViewModel.kt	'${channel.name}' falling back to $label ($reason)
 1	log	app/src/main/java/tv/own/owntv/features/live/LiveViewModel.kt	'${channel.name}' opened on ExoPlayer
 1	log	app/src/main/java/tv/own/owntv/features/live/LiveViewModel.kt	'${channel.name}' opened on mpv
@@ -2831,15 +2835,13 @@
 1	log	app/src/main/java/tv/own/owntv/features/live/LiveViewModel.kt	engine: $message
 1	log	app/src/main/java/tv/own/owntv/features/live/LiveViewModel.kt	ensurePlaying history profile=$pid channelId=${channel.id}
 1	log	app/src/main/java/tv/own/owntv/features/live/LiveViewModel.kt	ensurePlaying history record failed channelId=${channel.id} profile=$pid
-2	technical	app/src/main/java/tv/own/owntv/features/live/LiveViewModel.kt	exoplayer
-2	technical	app/src/main/java/tv/own/owntv/features/live/LiveViewModel.kt	mpv
+3	log	app/src/main/java/tv/own/owntv/features/live/LiveViewModel.kt	exoplayer
+4	log	app/src/main/java/tv/own/owntv/features/live/LiveViewModel.kt	mpv
 1	log	app/src/main/java/tv/own/owntv/features/live/LiveViewModel.kt	mpv (panel refuses segments)
-1	technical	app/src/main/java/tv/own/owntv/features/live/LiveViewModel.kt	mpv (pinned)
 1	log	app/src/main/java/tv/own/owntv/features/live/LiveViewModel.kt	mpv couldn't play it: ${failure.second}
 1	log	app/src/main/java/tv/own/owntv/features/live/LiveViewModel.kt	mpv never opened it (${MPV_OPEN_TIMEOUT_MS / 1000}s, no picture and no error)
 1	log	app/src/main/java/tv/own/owntv/features/live/LiveViewModel.kt	no decodable audio track
 1	log	app/src/main/java/tv/own/owntv/features/live/LiveViewModel.kt	no video frame rendered (audio plays, no picture)
-1	log	app/src/main/java/tv/own/owntv/features/live/LiveViewModel.kt	pinned to compatibility mode
 1	log	app/src/main/java/tv/own/owntv/features/live/LiveViewModel.kt	played, then stalled for ${EXO_STALL_HANDOFF_MS / 1000}s without recovering
 1	log	app/src/main/java/tv/own/owntv/features/live/LiveViewModel.kt	provider refuses ExoPlayer's signed segment URLs
 1	log	app/src/main/java/tv/own/owntv/features/live/LiveViewModel.kt	stalker fullscreen resolve failed '${channel.name}'
@@ -2847,7 +2849,7 @@
 1	log	app/src/main/java/tv/own/owntv/features/live/LiveViewModel.kt	stalker preview resolve failed '${channel.name}'
 1	log	app/src/main/java/tv/own/owntv/features/live/LiveViewModel.kt	stalker reconnect re-resolve failed '${channel.name}'
 1	log	app/src/main/java/tv/own/owntv/features/live/LiveViewModel.kt	stalker resolve failed channelId=${channel.id}
-1	log	app/src/main/java/tv/own/owntv/features/live/LiveViewModel.kt	tune '${channel.name}' -> $reason
+1	log	app/src/main/java/tv/own/owntv/features/live/LiveViewModel.kt	tune '${channel.name}' -> $reason [${preference.name}]
 1	log	app/src/main/java/tv/own/owntv/features/live/LiveViewModel.kt	tuneByNumber($number) failed
 1	log	app/src/main/java/tv/own/owntv/features/live/LiveViewModel.kt	tuneByNumber: zap rebuild failed
 1	log	app/src/main/java/tv/own/owntv/features/live/LiveViewModel.kt	user chose compatibility mode
@@ -3146,6 +3148,7 @@
 1	preference-key	app/src/main/java/tv/own/owntv/features/settings/data/SettingsRepository.kt	last_live_channel
 1	preference-key	app/src/main/java/tv/own/owntv/features/settings/data/SettingsRepository.kt	last_movies_category
 1	preference-key	app/src/main/java/tv/own/owntv/features/settings/data/SettingsRepository.kt	last_series_category
+1	preference-key	app/src/main/java/tv/own/owntv/features/settings/data/SettingsRepository.kt	live_engine
 1	preference-key	app/src/main/java/tv/own/owntv/features/settings/data/SettingsRepository.kt	live_latency_custom_secs
 1	preference-key	app/src/main/java/tv/own/owntv/features/settings/data/SettingsRepository.kt	live_latency_mode
 1	preference-key	app/src/main/java/tv/own/owntv/features/settings/data/SettingsRepository.kt	live_preroll_secs
@@ -3218,6 +3221,7 @@
 1	technical	app/src/main/java/tv/own/owntv/features/settings/data/SettingsRepository.kt	ui_language
 1	preference-key	app/src/main/java/tv/own/owntv/features/settings/data/SettingsRepository.kt	ui_zoom_percent
 1	preference-key	app/src/main/java/tv/own/owntv/features/settings/data/SettingsRepository.kt	update_check_on_start
+1	preference-key	app/src/main/java/tv/own/owntv/features/settings/data/SettingsRepository.kt	vod_engine
 1	preference-key	app/src/main/java/tv/own/owntv/features/settings/data/SettingsRepository.kt	vod_prefer_exo
 1	preference-key	app/src/main/java/tv/own/owntv/features/settings/data/SettingsRepository.kt	vod_view_mode
 1	preference-key	app/src/main/java/tv/own/owntv/features/settings/data/SettingsRepository.kt	weather_enabled
@@ -3737,7 +3741,9 @@
 1	log	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	VOD ended mid-stream at ${pos}ms of ${dur}ms — reloading once from position
 1	log	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	VOD failed on BOTH engines — exo first: '$exoErr' / mpv: '$mpvMsg'
 1	log	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	VOD failed on BOTH engines — mpv: '$mpvFailureBeforeFallback' / exo: '$exoError'
+1	log	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	VOD failed on ExoPlayer ($exoError) and the engine setting is ExoPlayer-only
 1	log	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	VOD failed on mpv but audio codec unsafe for ExoPlayer — no fallback
+1	log	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	VOD failed on mpv but the engine setting is mpv-only — no fallback
 1	log	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	VOD starting on ExoPlayer (preferred engine setting)
 1	log	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	VOD terminally failed on ExoPlayer ($exoError) — falling back to mpv
 1	log	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	VOD terminally failed on mpv ($mpvError) — falling back to ExoPlayer

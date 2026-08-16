@@ -369,6 +369,10 @@
     <!-- Translators: Description of the deinterlacing setting. -->
     <string name="settings_deinterlace_description">Udjævner de kamlignende linjer, som nogle gamle SD-kanaler viser ved bevægelse. Gælder mpv-motoren, mens den selv tegner billedet, så slå hardwareafkodning fra, hvis det ikke gør nogen forskel.</string>
     <string name="settings_movies_series_player">Afspiller til film og serier</string>
+    <string name="settings_live_tv_player">Afspiller til live-tv</string>
+    <string name="settings_engine_order"><xliff:g id="first">%1$s</xliff:g>, derefter <xliff:g id="second">%2$s</xliff:g></string>
+    <string name="settings_engine_only">Kun <xliff:g id="engine">%1$s</xliff:g></string>
+    <string name="settings_engine_default"><xliff:g id="option">%1$s</xliff:g> (standard)</string>
     <string name="settings_reset_player_choices">Nulstil gemte afspillervalg</string>
     <string name="settings_external_player">Ekstern afspiller</string>
     <string name="settings_default_zoom">Standardzoom</string>
@@ -443,7 +447,8 @@
     <string name="settings_audio_delay"><xliff:g id="delay">%1$d</xliff:g> ms</string>
     <string name="settings_external_player_description">Vælg, hvilke sektioner der skal åbnes i en ekstern app.</string>
     <string name="settings_audio_delay_value"><xliff:g id="delay">%1$d</xliff:g> ms</string>
-    <string name="settings_movies_player_description">mpv (anbefales) understøtter flest formater — DTS/TrueHD-lyd og usædvanlige filer — og har desuden en løsning til A/V-synkronisering. Skift kun til ExoPlayer, hvis film eller afsnit ikke kan starte: Den kan afspille visse streams, som mpv ikke kan på bestemte tv\'er, men kan ikke afkode DTS/TrueHD-lyd og har ingen løsning til A/V-synkronisering. Uanset hvad du vælger, prøves den anden automatisk, hvis den valgte ikke virker.</string>
+    <string name="settings_movies_player_description">mpv (anbefales) har den bredeste formatunderstøttelse — DTS/TrueHD-lyd, usædvanlige filer — plus rettelsen af A/V-synkronisering. ExoPlayer afspiller på visse tv streams, som mpv ikke kan, men den kan ikke afkode DTS/TrueHD-lyd og har ingen A/V-synkroniseringsrettelse. De kombinerede valg prøver automatisk den anden afspiller, når den første fejler; valgene med kun én afspiller gør det aldrig, hvilket sparer et par sekunders sort skærm, hvis den anden afspiller alligevel ikke virker på dit tv.</string>
+    <string name="settings_live_player_description">ExoPlayer (anbefales) åbner kanaler meget hurtigere og er den eneste med undertekster i live-tv. mpv afspiller kanaler, ExoPlayer ikke kan, heriblandt nogle med usædvanlig lyd. De kombinerede valg prøver automatisk den anden afspiller, når den første fejler; valgene med kun én afspiller gør det aldrig, hvilket sparer et par sekunders sort skærm, hvis den anden afspiller alligevel ikke virker på dit tv. En kanal, du skifter manuelt i afspilleren, beholder dit valg under alle omstændigheder.</string>
     <string name="settings_reset_player_choices_description">Når du i afspilleren skifter en enkelt film eller episode mellem mpv og ExoPlayer, gemmes det valg til næste gang. Nulstilling får alt til at følge indstillingen ovenfor igen. Gemte valg for live-kanaler bevares.</string>
     <string name="settings_reset_player_choices_none">Ingen gemt</string>
     <plurals name="settings_reset_player_choices_count">

@@ -369,6 +369,10 @@
     <!-- Translators: Description of the deinterlacing setting. -->
     <string name="settings_deinterlace_description">কিছু পুরোনো SD চ্যানেলে নড়াচড়ার সময় দেখা চিরুনির মতো দাগ মসৃণ করে। mpv ইঞ্জিন নিজে ছবি আঁকার সময় এটি প্রযোজ্য, তাই কোনো পার্থক্য না হলে হার্ডওয়্যার ডিকোডিং বন্ধ করুন।</string>
     <string name="settings_movies_series_player">সিনেমা ও সিরিজের প্লেয়ার</string>
+    <string name="settings_live_tv_player">লাইভ টিভির প্লেয়ার</string>
+    <string name="settings_engine_order"><xliff:g id="first">%1$s</xliff:g>, তারপর <xliff:g id="second">%2$s</xliff:g></string>
+    <string name="settings_engine_only">শুধু <xliff:g id="engine">%1$s</xliff:g></string>
+    <string name="settings_engine_default"><xliff:g id="option">%1$s</xliff:g> (ডিফল্ট)</string>
     <string name="settings_reset_player_choices">সংরক্ষিত প্লেয়ার পছন্দ রিসেট করুন</string>
     <string name="settings_external_player">বাহ্যিক প্লেয়ার</string>
     <string name="settings_default_zoom">ডিফল্ট জুম</string>
@@ -443,7 +447,8 @@
     <string name="settings_audio_delay"><xliff:g id="delay">%1$d</xliff:g> মি.সে.</string>
     <string name="settings_external_player_description">কোন বিভাগগুলো বাহ্যিক অ্যাপে খুলবে তা বেছে নিন।</string>
     <string name="settings_audio_delay_value"><xliff:g id="delay">%1$d</xliff:g> মি.সে.</string>
-    <string name="settings_movies_player_description">mpv-তে (প্রস্তাবিত) সবচেয়ে বেশি ফরম্যাট সমর্থিত—DTS/TrueHD অডিও, অস্বাভাবিক ফাইল—এবং A/V সিঙ্ক ঠিক করার সুবিধাও আছে। সিনেমা বা পর্ব চালু না হলেই শুধু ExoPlayer-এ বদলান: নির্দিষ্ট কিছু টিভিতে mpv যে স্ট্রিম চালাতে পারে না, এটি তার কিছু চালাতে পারে; তবে DTS/TrueHD অডিও ডিকোড করতে পারে না এবং এতে A/V সিঙ্ক ঠিক করার সুবিধা নেই। যেটিই বেছে নিন, সেটি ব্যর্থ হলে অন্যটি স্বয়ংক্রিয়ভাবে চেষ্টা করা হবে।</string>
+    <string name="settings_movies_player_description">mpv (প্রস্তাবিত) সবচেয়ে বেশি ফরম্যাট সমর্থন করে — DTS/TrueHD অডিও, অস্বাভাবিক ফাইল — সঙ্গে A/V সিঙ্ক ঠিক করার সুবিধা। কিছু টিভিতে ExoPlayer এমন স্ট্রিম চালায় যা mpv পারে না, তবে এটি DTS/TrueHD অডিও ডিকোড করতে পারে না এবং এতে A/V সিঙ্ক সংশোধন নেই। যুগ্ম বিকল্পগুলিতে প্রথমটি ব্যর্থ হলে অন্য প্লেয়ার নিজে থেকেই চেষ্টা করা হয়; এক-প্লেয়ার বিকল্পে কখনও হয় না, ফলে দ্বিতীয় প্লেয়ার আপনার টিভিতে কাজ না করলে কয়েক সেকেন্ডের কালো পর্দা বাঁচে।</string>
+    <string name="settings_live_player_description">ExoPlayer (প্রস্তাবিত) চ্যানেল অনেক দ্রুত খোলে এবং লাইভ সাবটাইটেল কেবল এটিতেই আছে। mpv এমন চ্যানেলও চালায় যা ExoPlayer পারে না, অস্বাভাবিক অডিও থাকা কিছু চ্যানেল সহ। যুগ্ম বিকল্পগুলিতে প্রথমটি ব্যর্থ হলে অন্য প্লেয়ার নিজে থেকেই চেষ্টা করা হয়; এক-প্লেয়ার বিকল্পে কখনও হয় না, ফলে দ্বিতীয় প্লেয়ার আপনার টিভিতে কাজ না করলে কয়েক সেকেন্ডের কালো পর্দা বাঁচে। প্লেয়ারে হাতে বদলানো চ্যানেলে আপনার পছন্দ দুই ক্ষেত্রেই থাকে।</string>
     <string name="settings_reset_player_choices_description">প্লেয়ারে কোনো একটি সিনেমা বা পর্বকে mpv ও ExoPlayer-এর মধ্যে বদলালে সেই পছন্দ পরের বারের জন্য সংরক্ষিত হয়। রিসেট করলে সবকিছু আবার উপরের সেটিং অনুসরণ করবে। লাইভ চ্যানেলের সংরক্ষিত পছন্দগুলি অপরিবর্তিত থাকে।</string>
     <string name="settings_reset_player_choices_none">কিছুই সংরক্ষিত নেই</string>
     <plurals name="settings_reset_player_choices_count">
