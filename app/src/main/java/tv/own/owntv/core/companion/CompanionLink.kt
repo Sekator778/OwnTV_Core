@@ -14,10 +14,10 @@ import java.util.Collections
 
 /**
  * Helpers for the Remote (companion) flow: discovering the device's LAN address and rendering the
- * URL a phone opens as a scannable QR code.
+ * URL the remote device opens as a scannable QR code.
  *
  * The QR encodes the **plain URL only** — never the PIN. The PIN is shown on the TV and typed on the
- * phone's gate page, so a photographed/forwarded QR alone can't push a source.
+ * remote device's gate page, so a photographed/forwarded QR alone can't push a source.
  */
 object CompanionLink {
 
@@ -25,7 +25,7 @@ object CompanionLink {
     const val DEFAULT_PORT = 8089
 
     /**
-     * `http://<lan-ip>:<port>/` the phone can open. Prefers an RFC1918 private address (the usual
+     * `http://<lan-ip>:<port>/` the remote device can open. Prefers an RFC1918 private address (the usual
      * home Wi-Fi range); falls back to any other non-loopback IPv4, then to 127.0.0.1 as a last resort.
      */
     fun lanUrl(port: Int): String {

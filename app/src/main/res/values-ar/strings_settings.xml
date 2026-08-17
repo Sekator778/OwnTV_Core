@@ -95,6 +95,27 @@
     <string name="settings_metadata_tmdb_only_description">فضّل TMDB لكل حقل؛ ولا تستخدم قائمة التشغيل إلا عندما لا يحتوي TMDB على أي معلومات.</string>
     <string name="settings_selected">محدد</string>
     <string name="settings_metadata_allowance">حصتك اليومية</string>
+    <string name="settings_metadata_reset_automatic">يُعاد التعيين تلقائيًا</string>
+    <string name="settings_metadata_library_details">تفاصيل المكتبة</string>
+    <string name="settings_metadata_test_connection">اختبار الاتصال الحالي</string>
+    <string name="settings_allowance_available">المتاح</string>
+    <string name="settings_allowance_refills">يُجدَّد <xliff:g id="time">%1$s</xliff:g></string>
+    <string name="settings_allowance_minute">الدقيقة</string>
+    <string name="settings_allowance_hour">الساعة</string>
+    <string name="settings_allowance_day">اليوم</string>
+    <plurals name="settings_allowance_value">
+        <item quantity="zero"><xliff:g id="remaining">%1$d</xliff:g> / <xliff:g id="limit">%2$d</xliff:g> متبقٍ</item>
+        <item quantity="one"><xliff:g id="remaining">%1$d</xliff:g> / <xliff:g id="limit">%2$d</xliff:g> متبقٍ</item>
+        <item quantity="two"><xliff:g id="remaining">%1$d</xliff:g> / <xliff:g id="limit">%2$d</xliff:g> متبقٍ</item>
+        <item quantity="few"><xliff:g id="remaining">%1$d</xliff:g> / <xliff:g id="limit">%2$d</xliff:g> متبقٍ</item>
+        <item quantity="many"><xliff:g id="remaining">%1$d</xliff:g> / <xliff:g id="limit">%2$d</xliff:g> متبقٍ</item>
+        <item quantity="other"><xliff:g id="remaining">%1$d</xliff:g> / <xliff:g id="limit">%2$d</xliff:g> متبقٍ</item>
+    </plurals>
+    <string name="settings_metadata_active_source">المصدر النشط</string>
+    <string name="settings_metadata_shared_worker_description">OwnTV Worker · بدون إعداد</string>
+    <string name="settings_metadata_connection">الاتصال</string>
+    <string name="settings_metadata_remote_advanced">الحصول على بيانات TMDB المتقدمة عن بُعد</string>
+    <string name="settings_metadata_remote_advanced_description">استخدم مفتاح TMDB API الخاص بك أو Worker مستضافًا بنفسك بدلًا من الافتراضي المشترك.</string>
     <string name="settings_metadata_usage_label">الاستخدام</string>
     <string name="settings_metadata_usage_value"><xliff:g id="min_used">%1$d</xliff:g>/<xliff:g id="min_total">%2$d</xliff:g> دقيقة · <xliff:g id="hr_used">%3$d</xliff:g>/<xliff:g id="hr_total">%4$d</xliff:g> ساعة · <xliff:g id="day_used">%5$d</xliff:g>/<xliff:g id="day_total">%6$d</xliff:g> يوم</string>
     <string name="settings_metadata_source_label">المصدر</string>
@@ -110,9 +131,9 @@
     <string name="settings_advanced_options">خيارات متقدمة</string>
     <string name="settings_advanced_metadata_description">استخدم مفتاح TMDB API الخاص بك أو خادمًا مستضافًا ذاتيًا بدلًا من الإعداد الافتراضي المشترك.</string>
     <string name="settings_metadata_server_description">اترك الحقلين فارغين لاستخدام الخادم المشترك المضمّن (بلا إعداد). أدخل مفتاح TMDB API الخاص بك للاتصال بـ TMDB مباشرةً، أو عنوان URL لخادم مستضاف ذاتيًا لاستخدام الوكيل/النسخة المتطابقة الخاصة بك. تكون الأولوية لعنوان URL على المفتاح.</string>
-    <string name="settings_metadata_key_from_phone">احصل على المفتاح من هاتفك</string>
-    <string name="settings_metadata_key_from_phone_desc">امسح رمزًا بهاتفك، وسجّل الدخول إلى TMDB هناك، ثم أرسل المفتاح. لا شيء تكتبه بجهاز التحكم.</string>
-    <string name="settings_metadata_key_received">تم استلام مفتاح TMDB من هاتفك</string>
+    <string name="settings_metadata_key_from_phone">احصل على المفتاح من جهاز آخر</string>
+    <string name="settings_metadata_key_from_phone_desc">امسح الرمز بهاتف أو جهاز لوحي أو حاسوب، وسجّل الدخول إلى TMDB هناك، ثم أرسل المفتاح. لا شيء تكتبه بجهاز التحكم.</string>
+    <string name="settings_metadata_key_received">تم استلام مفتاح TMDB</string>
     <string name="settings_tmdb_api_key">مفتاح TMDB API ‏(v3)</string>
     <string name="settings_self_host_url">عنوان URL للخادم المستضاف ذاتيًا</string>
     <string name="settings_test">اختبار</string>
@@ -421,7 +442,22 @@
     <string name="settings_preferred_subtitle_language">لغة الترجمة المفضّلة</string>
     <string name="settings_preferred_language_description">تحديد مسار الترجمة هذا تلقائيًا عند توفره.</string>
     <string name="settings_open_subtitles">OpenSubtitles</string>
+    <string name="settings_open_subtitles_connected">متصل</string>
+    <string name="settings_open_subtitles_reset_in">بعد <xliff:g id="hours">%1$d</xliff:g> س <xliff:g id="minutes">%2$d</xliff:g> د</string>
     <string name="settings_open_subtitles_description">سجّل الدخول للبحث عن الترجمات وتنزيلها وإدارة الترجمات المنزّلة. الإعداد خاص بكل ملف شخصي؛ ويلزم حساب مجاني على opensubtitles.com.</string>
+    <string name="settings_open_subtitles_advanced">خيارات متقدمة</string>
+    <string name="settings_open_subtitles_advanced_description">استخدم مفتاح API الخاص بتطبيقك أو خادم OpenSubtitles Worker المستضاف بنفسك.</string>
+    <string name="settings_open_subtitles_setup_title">إعداد OpenSubtitles</string>
+    <string name="settings_open_subtitles_setup_description">سجّل الدخول بحساب OpenSubtitles الخاص بك.</string>
+    <string name="settings_open_subtitles_setup_remote">عن بُعد</string>
+    <string name="settings_open_subtitles_setup_remote_description">املأ بياناتك في متصفح على جهاز آخر على نفس شبكة Wi-Fi — هاتف أو جهاز لوحي أو حاسوب.</string>
+    <string name="settings_open_subtitles_setup_local">الإدخال هنا</string>
+    <string name="settings_open_subtitles_setup_local_description">أدخل بياناتك على هذا التلفزيون باستخدام جهاز التحكم.</string>
+    <string name="settings_open_subtitles_api_key">مفتاح API لتطبيق OpenSubtitles</string>
+    <string name="settings_worker_server_url">عنوان Worker / الخادم</string>
+    <string name="settings_shared">مشترك</string>
+    <string name="settings_open_subtitles_access_priority">اترك الحقلين فارغين لاستخدام Worker المشترك من OwnTV. عنوان Worker المخصص له أولوية على مفتاح API المباشر. جلسات الحساب تبقى خاصة بكل ملف شخصي.</string>
+    <string name="settings_remove_custom_access">إزالة الوصول المخصص</string>
     <string name="settings_audio">الصوت</string>
     <string name="settings_preferred_audio_language">لغة الصوت المفضّلة</string>
     <string name="settings_audio_sync">مزامنة الصوت</string>
@@ -492,7 +528,7 @@
     <string name="settings_guide_synced">تمت مزامنة دليل البرامج التلفزيونية</string>
     <string name="settings_guide_sync_failed">فشلت مزامنة دليل البرامج التلفزيونية</string>
     <string name="settings_restore_remote_title">الاستعادة من جهاز آخر</string>
-    <string name="settings_restore_remote_description">على هاتف أو حاسوب محمول متصل بشبكة Wi-Fi نفسها، امسح رمز QR ضوئيًا (أو افتح عنوان URL)، وأدخل رمز PIN هذا، واختر ملف النسخة الاحتياطية لـ OwnTV، ثم اضغط على «إرسال إلى التلفزيون». بعد ذلك تختار هنا ما تريد استعادته.</string>
+    <string name="settings_restore_remote_description">على هاتف أو جهاز لوحي أو حاسوب متصل بشبكة Wi-Fi نفسها، امسح رمز QR ضوئيًا (أو افتح عنوان URL)، وأدخل رمز PIN هذا، واختر ملف النسخة الاحتياطية لـ OwnTV، ثم اضغط على «إرسال إلى التلفزيون». بعد ذلك تختار هنا ما تريد استعادته.</string>
     <string name="settings_opening_server">جارٍ فتح الخادم…</string>
     <string name="settings_enter_pin_browser">أدخل رمز PIN هذا في المتصفح</string>
     <string name="settings_companion_qr">رمز QR لعنوان URL الخاص بالصفحة المرافقة</string>
@@ -500,7 +536,7 @@
     <string name="settings_try_again">إعادة المحاولة</string>
     <string name="settings_new_pin">البدء من جديد باستخدام PIN جديد</string>
     <string name="settings_download_remote_title">التنزيل على جهاز آخر</string>
-    <string name="settings_download_remote_description">على هاتف أو حاسوب محمول متصل بشبكة Wi-Fi نفسها، امسح رمز QR ضوئيًا (أو افتح عنوان URL)، وأدخل رمز PIN هذا، ثم نزّل ملف النسخة الاحتياطية واحتفظ به في مكان آمن.</string>
+    <string name="settings_download_remote_description">على هاتف أو جهاز لوحي أو حاسوب متصل بشبكة Wi-Fi نفسها، امسح رمز QR ضوئيًا (أو افتح عنوان URL)، وأدخل رمز PIN هذا، ثم نزّل ملف النسخة الاحتياطية واحتفظ به في مكان آمن.</string>
     <string name="settings_preparing_backup">جارٍ إعداد النسخة الاحتياطية…</string>
     <string name="settings_glass_effect_on">التأثير الزجاجي: مفعّل</string>
     <string name="settings_glass_effect_off">التأثير الزجاجي: متوقف</string>

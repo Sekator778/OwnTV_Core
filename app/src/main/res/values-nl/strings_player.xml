@@ -204,12 +204,15 @@
     <string name="player_subtitles_tags_separator"> · </string>
     <string name="player_subtitles_search">Zoeken</string>
     <string name="player_subtitles_connected_as">Verbonden als</string>
+    <string name="player_subtitles_connected_user">Verbonden als <xliff:g id="username">%1$s</xliff:g></string>
     <string name="player_subtitles_resets">Wordt opnieuw ingesteld</string>
     <string name="player_subtitles_free_account">Gratis</string>
     <string name="player_subtitles_in"><xliff:g id="value">%1$s</xliff:g></string>
     <string name="player_subtitles_enter_credentials">Voer je gebruikersnaam en wachtwoord voor OpenSubtitles in.</string>
     <string name="player_subtitles_invalid_credentials">Aanmelden bij OpenSubtitles met deze accountgegevens is mislukt.</string>
     <string name="player_subtitles_sign_in_network_error">Kan OpenSubtitles niet bereiken. Controleer je internetverbinding en probeer het opnieuw.</string>
+    <!-- Translators: Error when OpenSubtitles answers the sign-in with an HTTP error code (e.g. 403, 429, 500). The placeholder is that code. -->
+    <string name="player_subtitles_sign_in_server_error">OpenSubtitles heeft het verzoek geweigerd (fout <xliff:g id="code">%1$d</xliff:g>). Je internetverbinding werkt – probeer het later opnieuw en vermeld dit nummer als je het probleem meldt.</string>
     <string name="player_subtitles_refresh_network_error">Kan OpenSubtitles niet vernieuwen. Controleer je internetverbinding.</string>
     <string name="player_subtitles_no_matches_all_languages">Er zijn geen overeenkomende ondertitels gevonden. Probeer de zoektitel te bewerken.</string>
     <string name="player_subtitles_no_matches_chosen_language">Er zijn geen overeenkomende ondertitels gevonden in je gekozen taal.</string>

@@ -211,12 +211,15 @@
     <string name="player_subtitles_tags_separator"> · </string>
     <string name="player_subtitles_search">Rechercher</string>
     <string name="player_subtitles_connected_as">Connecté en tant que</string>
+    <string name="player_subtitles_connected_user">Connecté en tant que <xliff:g id="username">%1$s</xliff:g></string>
     <string name="player_subtitles_resets">Réinitialisation</string>
     <string name="player_subtitles_free_account">Gratuit</string>
     <string name="player_subtitles_in"><xliff:g id="value">%1$s</xliff:g></string>
     <string name="player_subtitles_enter_credentials">Saisissez votre nom d’utilisateur et votre mot de passe OpenSubtitles.</string>
     <string name="player_subtitles_invalid_credentials">OpenSubtitles n’a pas pu se connecter avec ces informations de compte.</string>
     <string name="player_subtitles_sign_in_network_error">Impossible de joindre OpenSubtitles. Vérifiez votre connexion Internet et réessayez.</string>
+    <!-- Translators: Error when OpenSubtitles answers the sign-in with an HTTP error code (e.g. 403, 429, 500). The placeholder is that code. -->
+    <string name="player_subtitles_sign_in_server_error">OpenSubtitles a refusé la requête (erreur <xliff:g id="code">%1$d</xliff:g>). Votre connexion Internet fonctionne : réessayez plus tard et indiquez ce numéro si vous signalez le problème.</string>
     <string name="player_subtitles_refresh_network_error">Impossible d’actualiser OpenSubtitles. Vérifiez votre connexion Internet.</string>
     <string name="player_subtitles_no_matches_all_languages">Aucun sous-titre correspondant n\'a été trouvé. Essayez de modifier le titre de la recherche.</string>
     <string name="player_subtitles_no_matches_chosen_language">Aucun sous-titre correspondant n\'a été trouvé dans la langue choisie.</string>

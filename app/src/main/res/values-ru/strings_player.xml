@@ -218,12 +218,15 @@
     <string name="player_subtitles_tags_separator"> · </string>
     <string name="player_subtitles_search">Искать</string>
     <string name="player_subtitles_connected_as">Выполнен вход как</string>
+    <string name="player_subtitles_connected_user">Выполнен вход как <xliff:g id="username">%1$s</xliff:g></string>
     <string name="player_subtitles_resets">Сброс</string>
     <string name="player_subtitles_free_account">Бесплатная</string>
     <string name="player_subtitles_in"><xliff:g id="value">%1$s</xliff:g></string>
     <string name="player_subtitles_enter_credentials">Введите имя пользователя и пароль OpenSubtitles.</string>
     <string name="player_subtitles_invalid_credentials">OpenSubtitles не удалось выполнить вход с указанными данными учётной записи.</string>
     <string name="player_subtitles_sign_in_network_error">Не удалось подключиться к OpenSubtitles. Проверьте подключение к интернету и повторите попытку.</string>
+    <!-- Translators: Error when OpenSubtitles answers the sign-in with an HTTP error code (e.g. 403, 429, 500). The placeholder is that code. -->
+    <string name="player_subtitles_sign_in_server_error">OpenSubtitles отклонил запрос (ошибка <xliff:g id="code">%1$d</xliff:g>). Подключение к интернету работает — повторите попытку позже и укажите этот номер, если сообщите о проблеме.</string>
     <string name="player_subtitles_refresh_network_error">Не удалось обновить OpenSubtitles. Проверьте подключение к интернету.</string>
     <string name="player_subtitles_no_matches_all_languages">Подходящих субтитров не найдено. Попробуйте изменить название для поиска.</string>
     <string name="player_subtitles_no_matches_chosen_language">Подходящих субтитров на выбранном языке не найдено.</string>

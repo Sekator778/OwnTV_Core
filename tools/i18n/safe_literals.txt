@@ -1678,6 +1678,7 @@
 1	json	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	width
 1	protocol	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	x-owntv-client
 1	protocol	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	x-owntv-key
+1	protocol	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	x-owntv-version
 1	json	app/src/main/java/tv/own/owntv/core/metadata/TmdbTrendingParser.kt	backdrop_path
 1	json	app/src/main/java/tv/own/owntv/core/metadata/TmdbTrendingParser.kt	first_air_date
 1	json	app/src/main/java/tv/own/owntv/core/metadata/TmdbTrendingParser.kt	id
@@ -2131,7 +2132,6 @@
 2	json	app/src/main/java/tv/own/owntv/core/subtitles/OpenSubtitlesAuthStore.kt	u
 2	json	app/src/main/java/tv/own/owntv/core/subtitles/OpenSubtitlesAuthStore.kt	vip
 1	url	app/src/main/java/tv/own/owntv/core/subtitles/OpenSubtitlesClient.kt	$base/api/v1$pathAndQuery
-1	log	app/src/main/java/tv/own/owntv/core/subtitles/OpenSubtitlesClient.kt	$method ${pathAndQuery.substringBefore('?')} -> HTTP ${resp.code}
 1	protocol	app/src/main/java/tv/own/owntv/core/subtitles/OpenSubtitlesClient.kt	${it.key}=${java.net.URLEncoder.encode(it.value, "UTF-8")}
 1	protocol	app/src/main/java/tv/own/owntv/core/subtitles/OpenSubtitlesClient.kt	&
 1	protocol	app/src/main/java/tv/own/owntv/core/subtitles/OpenSubtitlesClient.kt	/download
@@ -2177,6 +2177,7 @@
 1	protocol	app/src/main/java/tv/own/owntv/core/subtitles/OpenSubtitlesClient.kt	vip
 1	protocol	app/src/main/java/tv/own/owntv/core/subtitles/OpenSubtitlesClient.kt	x-owntv-client
 1	protocol	app/src/main/java/tv/own/owntv/core/subtitles/OpenSubtitlesClient.kt	x-owntv-key
+1	protocol	app/src/main/java/tv/own/owntv/core/subtitles/OpenSubtitlesClient.kt	x-owntv-version
 1	empty	app/src/main/java/tv/own/owntv/core/subtitles/SubtitleCharset.kt	\0
 1	technical	app/src/main/java/tv/own/owntv/core/subtitles/SubtitleCharset.kt	windows-1252
 1	technical	app/src/main/java/tv/own/owntv/core/subtitles/SubtitleController.kt	,
@@ -3053,7 +3054,6 @@
 1	locale	app/src/main/java/tv/own/owntv/features/settings/OpenSubtitlesAccountScreen.kt	zh-cn
 1	locale	app/src/main/java/tv/own/owntv/features/settings/OpenSubtitlesAccountScreen.kt	zh-tw
 2	log	app/src/main/java/tv/own/owntv/features/settings/OpenSubtitlesViewModel.kt	OpenSubtitles
-1	log	app/src/main/java/tv/own/owntv/features/settings/OpenSubtitlesViewModel.kt	manual refresh failed: ${it.message}
 1	log	app/src/main/java/tv/own/owntv/features/settings/OpenSubtitlesViewModel.kt	user-info refresh failed: ${it.message}
 1	technical	app/src/main/java/tv/own/owntv/features/settings/PanelWidthSettingsScreen.kt	+
 1	technical	app/src/main/java/tv/own/owntv/features/settings/PanelWidthSettingsScreen.kt	–

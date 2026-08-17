@@ -95,6 +95,25 @@
     <string name="settings_metadata_tmdb_only_description">Preferuj TMDB dla każdego pola; używaj listy odtwarzania tylko wtedy, gdy TMDB nie zawiera żadnych danych.</string>
     <string name="settings_selected">Wybrano</string>
     <string name="settings_metadata_allowance">Twój dzienny przydział</string>
+    <string name="settings_metadata_reset_automatic">Resetuje się automatycznie</string>
+    <string name="settings_metadata_library_details">Szczegóły biblioteki</string>
+    <string name="settings_metadata_test_connection">Przetestuj bieżące połączenie</string>
+    <string name="settings_allowance_available">Dostępne</string>
+    <string name="settings_allowance_refills">Odnowi się <xliff:g id="time">%1$s</xliff:g></string>
+    <string name="settings_allowance_minute">Minuta</string>
+    <string name="settings_allowance_hour">Godzina</string>
+    <string name="settings_allowance_day">Dzień</string>
+    <plurals name="settings_allowance_value">
+        <item quantity="one">pozostało <xliff:g id="remaining">%1$d</xliff:g> / <xliff:g id="limit">%2$d</xliff:g></item>
+        <item quantity="few">pozostało <xliff:g id="remaining">%1$d</xliff:g> / <xliff:g id="limit">%2$d</xliff:g></item>
+        <item quantity="many">pozostało <xliff:g id="remaining">%1$d</xliff:g> / <xliff:g id="limit">%2$d</xliff:g></item>
+        <item quantity="other">pozostało <xliff:g id="remaining">%1$d</xliff:g> / <xliff:g id="limit">%2$d</xliff:g></item>
+    </plurals>
+    <string name="settings_metadata_active_source">Aktywne źródło</string>
+    <string name="settings_metadata_shared_worker_description">OwnTV Worker · bez konfiguracji</string>
+    <string name="settings_metadata_connection">Połączenie</string>
+    <string name="settings_metadata_remote_advanced">Pobierz zaawansowane dane TMDB zdalnie</string>
+    <string name="settings_metadata_remote_advanced_description">Użyj własnego klucza API TMDB lub samodzielnie hostowanego Workera zamiast wspólnej opcji domyślnej.</string>
     <string name="settings_metadata_usage_label">Zużycie</string>
     <string name="settings_metadata_usage_value"><xliff:g id="min_used">%1$d</xliff:g>/<xliff:g id="min_total">%2$d</xliff:g> min · <xliff:g id="hr_used">%3$d</xliff:g>/<xliff:g id="hr_total">%4$d</xliff:g> godz. · <xliff:g id="day_used">%5$d</xliff:g>/<xliff:g id="day_total">%6$d</xliff:g> dzień</string>
     <string name="settings_metadata_source_label">Źródło</string>
@@ -110,9 +129,9 @@
     <string name="settings_advanced_options">Opcje zaawansowane</string>
     <string name="settings_advanced_metadata_description">Używaj własnego klucza API TMDB lub samodzielnie hostowanego serwera zamiast domyślnego serwera współdzielonego.</string>
     <string name="settings_metadata_server_description">Pozostaw oba pola puste, aby używać wbudowanego serwera współdzielonego (bez konfiguracji). Wprowadź własny klucz API TMDB, aby łączyć się bezpośrednio z TMDB, albo adres URL samodzielnie hostowanego serwera, aby używać własnego serwera proxy lub kopii lustrzanej. Adres URL ma pierwszeństwo przed kluczem.</string>
-    <string name="settings_metadata_key_from_phone">Pobierz klucz z telefonu</string>
-    <string name="settings_metadata_key_from_phone_desc">Zeskanuj kod telefonem, zaloguj się tam do TMDB i wyślij klucz. Nic nie trzeba wpisywać pilotem.</string>
-    <string name="settings_metadata_key_received">Odebrano klucz TMDB z telefonu</string>
+    <string name="settings_metadata_key_from_phone">Pobierz klucz z innego urządzenia</string>
+    <string name="settings_metadata_key_from_phone_desc">Zeskanuj kod telefonem, tabletem lub komputerem, zaloguj się tam do TMDB i wyślij klucz. Nic nie trzeba wpisywać pilotem.</string>
+    <string name="settings_metadata_key_received">Odebrano klucz TMDB</string>
     <string name="settings_tmdb_api_key">Klucz API TMDB (v3)</string>
     <string name="settings_self_host_url">Adres URL własnego serwera</string>
     <string name="settings_test">Test</string>
@@ -419,7 +438,22 @@
     <string name="settings_preferred_subtitle_language">Preferowany język napisów</string>
     <string name="settings_preferred_language_description">Automatycznie wybieraj tę ścieżkę napisów, gdy jest dostępna.</string>
     <string name="settings_open_subtitles">OpenSubtitles</string>
+    <string name="settings_open_subtitles_connected">Połączono</string>
+    <string name="settings_open_subtitles_reset_in">Za <xliff:g id="hours">%1$d</xliff:g> godz. <xliff:g id="minutes">%2$d</xliff:g> min</string>
     <string name="settings_open_subtitles_description">Zaloguj się, aby wyszukiwać i pobierać napisy oraz zarządzać pobranymi napisami. Ustawienie osobne dla każdego profilu; wymagane jest bezpłatne konto opensubtitles.com.</string>
+    <string name="settings_open_subtitles_advanced">Opcje zaawansowane</string>
+    <string name="settings_open_subtitles_advanced_description">Użyj własnego klucza API aplikacji lub samodzielnie hostowanego OpenSubtitles Workera.</string>
+    <string name="settings_open_subtitles_setup_title">Skonfiguruj OpenSubtitles</string>
+    <string name="settings_open_subtitles_setup_description">Zaloguj się na swoje konto OpenSubtitles.</string>
+    <string name="settings_open_subtitles_setup_remote">Zdalnie</string>
+    <string name="settings_open_subtitles_setup_remote_description">Wpisz dane w przeglądarce na innym urządzeniu w tej samej sieci Wi-Fi – w telefonie, tablecie lub komputerze.</string>
+    <string name="settings_open_subtitles_setup_local">Wpisz tutaj</string>
+    <string name="settings_open_subtitles_setup_local_description">Wpisz dane na tym telewizorze za pomocą pilota.</string>
+    <string name="settings_open_subtitles_api_key">Klucz API aplikacji OpenSubtitles</string>
+    <string name="settings_worker_server_url">Adres URL Workera / serwera</string>
+    <string name="settings_shared">Wspólne</string>
+    <string name="settings_open_subtitles_access_priority">Pozostaw oba pola puste, aby korzystać ze wspólnego Workera OwnTV. Własny adres URL Workera ma pierwszeństwo przed bezpośrednim kluczem API. Sesje konta pozostają przypisane do profilu.</string>
+    <string name="settings_remove_custom_access">Usuń własny dostęp</string>
     <string name="settings_audio">Dźwięk</string>
     <string name="settings_preferred_audio_language">Preferowany język dźwięku</string>
     <string name="settings_audio_sync">Synchronizacja dźwięku</string>
@@ -488,7 +522,7 @@
     <string name="settings_guide_synced">Zsynchronizowano przewodnik po programach</string>
     <string name="settings_guide_sync_failed">Synchronizacja przewodnika po programach nie powiodła się</string>
     <string name="settings_restore_remote_title">Przywracanie z innego urządzenia</string>
-    <string name="settings_restore_remote_description">Na telefonie lub laptopie połączonym z tą samą siecią Wi-Fi zeskanuj kod QR (lub otwórz adres URL), wprowadź ten PIN, wybierz plik kopii zapasowej OwnTV i naciśnij Wyślij do telewizora. Następnie wybierz tutaj dane do przywrócenia.</string>
+    <string name="settings_restore_remote_description">Na telefonie, tablecie lub komputerze połączonym z tą samą siecią Wi-Fi zeskanuj kod QR (lub otwórz adres URL), wprowadź ten PIN, wybierz plik kopii zapasowej OwnTV i naciśnij Wyślij do telewizora. Następnie wybierz tutaj dane do przywrócenia.</string>
     <string name="settings_opening_server">Uruchamianie serwera…</string>
     <string name="settings_enter_pin_browser">Wprowadź ten PIN w przeglądarce</string>
     <string name="settings_companion_qr">Kod QR adresu URL aplikacji towarzyszącej</string>
@@ -496,7 +530,7 @@
     <string name="settings_try_again">Spróbuj ponownie</string>
     <string name="settings_new_pin">Uruchom ponownie z nowym PIN-em</string>
     <string name="settings_download_remote_title">Pobieranie na innym urządzeniu</string>
-    <string name="settings_download_remote_description">Na telefonie lub laptopie połączonym z tą samą siecią Wi-Fi zeskanuj kod QR (lub otwórz adres URL), wprowadź ten PIN i pobierz plik kopii zapasowej, aby zachować go w bezpiecznym miejscu.</string>
+    <string name="settings_download_remote_description">Na telefonie, tablecie lub komputerze połączonym z tą samą siecią Wi-Fi zeskanuj kod QR (lub otwórz adres URL), wprowadź ten PIN i pobierz plik kopii zapasowej, aby zachować go w bezpiecznym miejscu.</string>
     <string name="settings_preparing_backup">Przygotowywanie kopii zapasowej…</string>
     <string name="settings_glass_effect_on">Efekt szkła: włączone</string>
     <string name="settings_glass_effect_off">Efekt szkła: wyłączone</string>

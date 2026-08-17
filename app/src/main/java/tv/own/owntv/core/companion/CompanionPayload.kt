@@ -8,7 +8,7 @@ import tv.own.owntv.core.sync.SyncScopeChoice
  * source kinds; irrelevant fields stay blank for a given [type] (e.g. Xtream leaves [portalUrl]/[mac]
  * blank, Stalker leaves [server]/[user]/[pass] blank).
  *
- * The phone only *fills* this — it never starts the import. The TV pre-fills its Add Source form from
+ * The remote browser only *fills* this — it never starts the import. The TV pre-fills its Add Source form from
  * the payload and the user presses Start Import.
  */
 data class CompanionPayload(

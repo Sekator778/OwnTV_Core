@@ -95,6 +95,22 @@
     <string name="settings_metadata_tmdb_only_description">모든 필드에서 TMDB를 우선 사용하며 TMDB에 정보가 없을 때만 플레이리스트를 사용합니다.</string>
     <string name="settings_selected">선택됨</string>
     <string name="settings_metadata_allowance">일일 사용량</string>
+    <string name="settings_metadata_reset_automatic">자동으로 초기화됩니다</string>
+    <string name="settings_metadata_library_details">라이브러리 세부정보</string>
+    <string name="settings_metadata_test_connection">현재 연결 테스트</string>
+    <string name="settings_allowance_available">사용 가능</string>
+    <string name="settings_allowance_refills"><xliff:g id="time">%1$s</xliff:g> 충전됨</string>
+    <string name="settings_allowance_minute">분</string>
+    <string name="settings_allowance_hour">시간</string>
+    <string name="settings_allowance_day">일</string>
+    <plurals name="settings_allowance_value">
+        <item quantity="other"><xliff:g id="remaining">%1$d</xliff:g> / <xliff:g id="limit">%2$d</xliff:g> 남음</item>
+    </plurals>
+    <string name="settings_metadata_active_source">사용 중인 소스</string>
+    <string name="settings_metadata_shared_worker_description">OwnTV Worker · 설정 불필요</string>
+    <string name="settings_metadata_connection">연결</string>
+    <string name="settings_metadata_remote_advanced">고급 TMDB 정보를 원격으로 가져오기</string>
+    <string name="settings_metadata_remote_advanced_description">공용 기본 서비스 대신 직접 발급받은 TMDB API 키나 자체 호스팅한 Worker를 사용합니다.</string>
     <string name="settings_metadata_usage_label">사용량</string>
     <string name="settings_metadata_usage_value"><xliff:g id="min_used">%1$d</xliff:g>/<xliff:g id="min_total">%2$d</xliff:g> 분 · <xliff:g id="hr_used">%3$d</xliff:g>/<xliff:g id="hr_total">%4$d</xliff:g> 시간 · <xliff:g id="day_used">%5$d</xliff:g>/<xliff:g id="day_total">%6$d</xliff:g> 일</string>
     <string name="settings_metadata_source_label">소스</string>
@@ -110,9 +126,9 @@
     <string name="settings_advanced_options">고급 옵션</string>
     <string name="settings_advanced_metadata_description">공유 기본값 대신 자체 TMDB API 키 또는 직접 호스팅하는 서버를 사용합니다.</string>
     <string name="settings_metadata_server_description">기본 제공 공유 서버를 사용하려면 두 항목을 모두 비워 두세요(별도 설정 불필요). TMDB를 직접 호출하려면 자체 TMDB API 키를 입력하고, 자체 프록시/미러를 사용하려면 직접 호스팅하는 서버 URL을 입력하세요. URL이 키보다 우선합니다.</string>
-    <string name="settings_metadata_key_from_phone">휴대폰에서 키 가져오기</string>
-    <string name="settings_metadata_key_from_phone_desc">휴대폰으로 코드를 스캔하고 거기서 TMDB에 로그인한 뒤 키를 보내세요. 리모컨으로 입력할 것이 없습니다.</string>
-    <string name="settings_metadata_key_received">휴대폰에서 TMDB 키를 받았습니다</string>
+    <string name="settings_metadata_key_from_phone">다른 기기에서 키 가져오기</string>
+    <string name="settings_metadata_key_from_phone_desc">휴대폰, 태블릿 또는 컴퓨터로 코드를 스캔하고 거기서 TMDB에 로그인한 뒤 키를 보내세요. 리모컨으로 입력할 것이 없습니다.</string>
+    <string name="settings_metadata_key_received">TMDB 키를 받았습니다</string>
     <string name="settings_tmdb_api_key">TMDB API 키(v3)</string>
     <string name="settings_self_host_url">자체 호스팅 서버 URL</string>
     <string name="settings_test">테스트</string>
@@ -416,7 +432,22 @@
     <string name="settings_preferred_subtitle_language">선호 자막 언어</string>
     <string name="settings_preferred_language_description">사용 가능한 경우 이 자막 트랙을 자동으로 선택합니다.</string>
     <string name="settings_open_subtitles">OpenSubtitles</string>
+    <string name="settings_open_subtitles_connected">연결됨</string>
+    <string name="settings_open_subtitles_reset_in"><xliff:g id="hours">%1$d</xliff:g>시간 <xliff:g id="minutes">%2$d</xliff:g>분 후</string>
     <string name="settings_open_subtitles_description">로그인하여 자막을 검색하고 다운로드하며 다운로드한 자막을 관리합니다. 프로필별로 설정되며 무료 opensubtitles.com 계정이 필요합니다.</string>
+    <string name="settings_open_subtitles_advanced">고급 옵션</string>
+    <string name="settings_open_subtitles_advanced_description">직접 발급받은 애플리케이션 API 키 또는 자체 호스팅한 OpenSubtitles Worker를 사용합니다.</string>
+    <string name="settings_open_subtitles_setup_title">OpenSubtitles 설정</string>
+    <string name="settings_open_subtitles_setup_description">OpenSubtitles 계정으로 로그인하세요.</string>
+    <string name="settings_open_subtitles_setup_remote">원격</string>
+    <string name="settings_open_subtitles_setup_remote_description">같은 Wi-Fi에 연결된 다른 기기(휴대폰, 태블릿, 컴퓨터)의 브라우저에서 정보를 입력하세요.</string>
+    <string name="settings_open_subtitles_setup_local">여기서 입력</string>
+    <string name="settings_open_subtitles_setup_local_description">리모컨으로 이 TV에서 직접 입력하세요.</string>
+    <string name="settings_open_subtitles_api_key">OpenSubtitles 애플리케이션 API 키</string>
+    <string name="settings_worker_server_url">Worker/서버 URL</string>
+    <string name="settings_shared">공용</string>
+    <string name="settings_open_subtitles_access_priority">둘 다 비워 두면 OwnTV의 공용 Worker를 사용합니다. 사용자 지정 Worker URL이 직접 입력한 API 키보다 우선합니다. 계정 세션은 프로필별로 유지됩니다.</string>
+    <string name="settings_remove_custom_access">사용자 지정 액세스 제거</string>
     <string name="settings_audio">오디오</string>
     <string name="settings_preferred_audio_language">선호 오디오 언어</string>
     <string name="settings_audio_sync">오디오 동기화</string>
@@ -482,7 +513,7 @@
     <string name="settings_guide_synced">TV 편성표가 동기화됨</string>
     <string name="settings_guide_sync_failed">TV 편성표 동기화 실패</string>
     <string name="settings_restore_remote_title">다른 기기에서 복원</string>
-    <string name="settings_restore_remote_description">동일한 Wi-Fi에 연결된 휴대전화나 노트북에서 QR을 스캔하거나 URL을 열고 이 PIN을 입력한 다음, OwnTV 백업 파일을 선택하고 TV로 보내기를 누르세요. 그런 다음 여기에서 복원할 항목을 선택합니다.</string>
+    <string name="settings_restore_remote_description">동일한 Wi-Fi에 연결된 휴대전화, 태블릿 또는 컴퓨터에서 QR을 스캔하거나 URL을 열고 이 PIN을 입력한 다음, OwnTV 백업 파일을 선택하고 TV로 보내기를 누르세요. 그런 다음 여기에서 복원할 항목을 선택합니다.</string>
     <string name="settings_opening_server">서버 여는 중…</string>
     <string name="settings_enter_pin_browser">브라우저에 이 PIN을 입력하세요</string>
     <string name="settings_companion_qr">연동 URL의 QR 코드</string>
@@ -490,7 +521,7 @@
     <string name="settings_try_again">다시 시도</string>
     <string name="settings_new_pin">새 PIN으로 다시 시작</string>
     <string name="settings_download_remote_title">다른 기기에서 다운로드</string>
-    <string name="settings_download_remote_description">동일한 Wi-Fi에 연결된 휴대전화나 노트북에서 QR을 스캔하거나 URL을 열고 이 PIN을 입력한 다음, 안전하게 보관할 백업 파일을 다운로드하세요.</string>
+    <string name="settings_download_remote_description">동일한 Wi-Fi에 연결된 휴대전화, 태블릿 또는 컴퓨터에서 QR을 스캔하거나 URL을 열고 이 PIN을 입력한 다음, 안전하게 보관할 백업 파일을 다운로드하세요.</string>
     <string name="settings_preparing_backup">백업 준비 중…</string>
     <string name="settings_glass_effect_on">글래스 효과: 켜짐</string>
     <string name="settings_glass_effect_off">글래스 효과: 꺼짐</string>

@@ -95,6 +95,23 @@
     <string name="settings_metadata_tmdb_only_description">Her alanda TMDB bilgilerini tercih edin; yalnızca TMDB hiçbir bilgi sunmadığında oynatma listenize başvurun.</string>
     <string name="settings_selected">Seçili</string>
     <string name="settings_metadata_allowance">Günlük payınız</string>
+    <string name="settings_metadata_reset_automatic">Otomatik olarak sıfırlanır</string>
+    <string name="settings_metadata_library_details">Kitaplık ayrıntıları</string>
+    <string name="settings_metadata_test_connection">Geçerli bağlantıyı test et</string>
+    <string name="settings_allowance_available">Kullanılabilir</string>
+    <string name="settings_allowance_refills"><xliff:g id="time">%1$s</xliff:g> yenilenir</string>
+    <string name="settings_allowance_minute">Dakika</string>
+    <string name="settings_allowance_hour">Saat</string>
+    <string name="settings_allowance_day">Gün</string>
+    <plurals name="settings_allowance_value">
+        <item quantity="one"><xliff:g id="remaining">%1$d</xliff:g> / <xliff:g id="limit">%2$d</xliff:g> kaldı</item>
+        <item quantity="other"><xliff:g id="remaining">%1$d</xliff:g> / <xliff:g id="limit">%2$d</xliff:g> kaldı</item>
+    </plurals>
+    <string name="settings_metadata_active_source">Etkin kaynak</string>
+    <string name="settings_metadata_shared_worker_description">OwnTV Worker · kurulum gerekmez</string>
+    <string name="settings_metadata_connection">Bağlantı</string>
+    <string name="settings_metadata_remote_advanced">Gelişmiş TMDB bilgilerini uzaktan alın</string>
+    <string name="settings_metadata_remote_advanced_description">Paylaşılan varsayılan hizmet yerine kendi TMDB API anahtarınızı ya da kendi barındırdığınız Worker’ı kullanın.</string>
     <string name="settings_metadata_usage_label">Kullanım</string>
     <string name="settings_metadata_usage_value"><xliff:g id="min_used">%1$d</xliff:g>/<xliff:g id="min_total">%2$d</xliff:g> dk · <xliff:g id="hr_used">%3$d</xliff:g>/<xliff:g id="hr_total">%4$d</xliff:g> sa · <xliff:g id="day_used">%5$d</xliff:g>/<xliff:g id="day_total">%6$d</xliff:g> gün</string>
     <string name="settings_metadata_source_label">Kaynak</string>
@@ -110,9 +127,9 @@
     <string name="settings_advanced_options">Gelişmiş seçenekler</string>
     <string name="settings_advanced_metadata_description">Paylaşılan varsayılan yerine kendi TMDB API anahtarınızı veya kendi barındırdığınız sunucuyu kullanın.</string>
     <string name="settings_metadata_server_description">Yerleşik paylaşımlı sunucuyu kullanmak için ikisini de boş bırakın (kurulum gerekmez). Doğrudan TMDB\'ye bağlanmak için kendi TMDB API anahtarınızı veya kendi proxy/yansınızı kullanmak için kendi barındırdığınız sunucunun URL\'sini girin. URL, anahtardan önceliklidir.</string>
-    <string name="settings_metadata_key_from_phone">Anahtarı telefonunuzdan alın</string>
-    <string name="settings_metadata_key_from_phone_desc">Telefonunuzla bir kod tarayın, orada TMDB’ye giriş yapın ve anahtarı gönderin. Kumandayla yazacak bir şey yok.</string>
-    <string name="settings_metadata_key_received">TMDB anahtarı telefonunuzdan alındı</string>
+    <string name="settings_metadata_key_from_phone">Anahtarı başka bir cihazdan alın</string>
+    <string name="settings_metadata_key_from_phone_desc">Kodu bir telefon, tablet veya bilgisayarla tarayın, orada TMDB’ye giriş yapın ve anahtarı gönderin. Kumandayla yazacak bir şey yok.</string>
+    <string name="settings_metadata_key_received">TMDB anahtarı alındı</string>
     <string name="settings_tmdb_api_key">TMDB API anahtarı (v3)</string>
     <string name="settings_self_host_url">Kendi barındırdığınız sunucunun URL\'si</string>
     <string name="settings_test">Test</string>
@@ -417,7 +434,22 @@
     <string name="settings_preferred_subtitle_language">Tercih edilen altyazı dili</string>
     <string name="settings_preferred_language_description">Kullanılabilir olduğunda bu altyazı parçasını otomatik olarak seç.</string>
     <string name="settings_open_subtitles">OpenSubtitles</string>
+    <string name="settings_open_subtitles_connected">Bağlandı</string>
+    <string name="settings_open_subtitles_reset_in"><xliff:g id="hours">%1$d</xliff:g> sa <xliff:g id="minutes">%2$d</xliff:g> dk sonra</string>
     <string name="settings_open_subtitles_description">Altyazıları aramak ve indirmek, ayrıca indirilen altyazıları yönetmek için oturum açın. Her profil için ayrı ayrı geçerlidir; ücretsiz bir opensubtitles.com hesabı gerekir.</string>
+    <string name="settings_open_subtitles_advanced">Gelişmiş seçenekler</string>
+    <string name="settings_open_subtitles_advanced_description">Kendi uygulama API anahtarınızı ya da kendi barındırdığınız OpenSubtitles Worker’ını kullanın.</string>
+    <string name="settings_open_subtitles_setup_title">OpenSubtitles kurulumu</string>
+    <string name="settings_open_subtitles_setup_description">OpenSubtitles hesabınızla oturum açın.</string>
+    <string name="settings_open_subtitles_setup_remote">Uzaktan</string>
+    <string name="settings_open_subtitles_setup_remote_description">Aynı Wi-Fi ağındaki başka bir cihazın (telefon, tablet veya bilgisayar) tarayıcısında bilgilerinizi girin.</string>
+    <string name="settings_open_subtitles_setup_local">Buradan gir</string>
+    <string name="settings_open_subtitles_setup_local_description">Bilgilerinizi kumandayla bu TV’de yazın.</string>
+    <string name="settings_open_subtitles_api_key">OpenSubtitles uygulama API anahtarı</string>
+    <string name="settings_worker_server_url">Worker / sunucu URL’si</string>
+    <string name="settings_shared">Paylaşılan</string>
+    <string name="settings_open_subtitles_access_priority">OwnTV’nin paylaşılan Worker’ını kullanmak için ikisini de boş bırakın. Özel bir Worker URL’si, doğrudan API anahtarına göre önceliklidir. Hesap oturumları profile özel kalır.</string>
+    <string name="settings_remove_custom_access">Özel erişimi kaldır</string>
     <string name="settings_audio">Ses</string>
     <string name="settings_preferred_audio_language">Tercih edilen ses dili</string>
     <string name="settings_audio_sync">Ses eşitleme</string>
@@ -484,7 +516,7 @@
     <string name="settings_guide_synced">Program rehberi eşitlendi</string>
     <string name="settings_guide_sync_failed">Program rehberi eşitlenemedi</string>
     <string name="settings_restore_remote_title">Başka bir cihazdan geri yükle</string>
-    <string name="settings_restore_remote_description">Aynı Wi-Fi ağına bağlı bir telefon veya dizüstü bilgisayarda QR kodunu tarayın (ya da URL\'yi açın), bu PIN\'i girin, OwnTV yedekleme dosyanızı seçin ve TV\'ye Gönder\'e dokunun. Ardından burada nelerin geri yükleneceğini seçin.</string>
+    <string name="settings_restore_remote_description">Aynı Wi-Fi ağına bağlı bir telefon, tablet veya bilgisayarda QR kodunu tarayın (ya da URL\'yi açın), bu PIN\'i girin, OwnTV yedekleme dosyanızı seçin ve TV\'ye Gönder\'e dokunun. Ardından burada nelerin geri yükleneceğini seçin.</string>
     <string name="settings_opening_server">Sunucu açılıyor…</string>
     <string name="settings_enter_pin_browser">Bu PIN\'i tarayıcıya girin</string>
     <string name="settings_companion_qr">Yardımcı URL\'nin QR kodu</string>
@@ -492,7 +524,7 @@
     <string name="settings_try_again">Tekrar dene</string>
     <string name="settings_new_pin">Yeni bir PIN ile yeniden başlat</string>
     <string name="settings_download_remote_title">Başka bir cihaza indir</string>
-    <string name="settings_download_remote_description">Aynı Wi-Fi ağına bağlı bir telefon veya dizüstü bilgisayarda QR kodunu tarayın (ya da URL\'yi açın), bu PIN\'i girin ve güvenli bir yerde saklamak için yedekleme dosyanızı indirin.</string>
+    <string name="settings_download_remote_description">Aynı Wi-Fi ağına bağlı bir telefon, tablet veya bilgisayarda QR kodunu tarayın (ya da URL\'yi açın), bu PIN\'i girin ve güvenli bir yerde saklamak için yedekleme dosyanızı indirin.</string>
     <string name="settings_preparing_backup">Yedekleme hazırlanıyor…</string>
     <string name="settings_glass_effect_on">Cam Efekti: Açık</string>
     <string name="settings_glass_effect_off">Cam Efekti: Kapalı</string>

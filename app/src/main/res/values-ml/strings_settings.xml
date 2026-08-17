@@ -95,6 +95,23 @@
     <string name="settings_metadata_tmdb_only_description">എല്ലാ ഫീൽഡുകൾക്കും TMDB-യ്ക്ക് മുൻഗണന നൽകുക; TMDB-യിൽ ഒന്നുമില്ലെങ്കിൽ മാത്രം നിങ്ങളുടെ പ്ലേലിസ്റ്റ് ഉപയോഗിക്കുക.</string>
     <string name="settings_selected">തിരഞ്ഞെടുത്തത്</string>
     <string name="settings_metadata_allowance">നിങ്ങളുടെ ദൈനംദിന വിഹിതം</string>
+    <string name="settings_metadata_reset_automatic">സ്വയമേവ പുനഃസജ്ജമാകുന്നു</string>
+    <string name="settings_metadata_library_details">ലൈബ്രറി വിവരങ്ങൾ</string>
+    <string name="settings_metadata_test_connection">നിലവിലുള്ള കണക്ഷൻ പരീക്ഷിക്കുക</string>
+    <string name="settings_allowance_available">ലഭ്യം</string>
+    <string name="settings_allowance_refills"><xliff:g id="time">%1$s</xliff:g> റീഫിൽ ചെയ്യും</string>
+    <string name="settings_allowance_minute">മിനിറ്റ്</string>
+    <string name="settings_allowance_hour">മണിക്കൂർ</string>
+    <string name="settings_allowance_day">ദിവസം</string>
+    <plurals name="settings_allowance_value">
+        <item quantity="one"><xliff:g id="remaining">%1$d</xliff:g> / <xliff:g id="limit">%2$d</xliff:g> ശേഷിക്കുന്നു</item>
+        <item quantity="other"><xliff:g id="remaining">%1$d</xliff:g> / <xliff:g id="limit">%2$d</xliff:g> ശേഷിക്കുന്നു</item>
+    </plurals>
+    <string name="settings_metadata_active_source">സജീവ ഉറവിടം</string>
+    <string name="settings_metadata_shared_worker_description">OwnTV Worker · സജ്ജീകരണം വേണ്ട</string>
+    <string name="settings_metadata_connection">കണക്ഷൻ</string>
+    <string name="settings_metadata_remote_advanced">വിപുലമായ TMDB വിവരങ്ങൾ വിദൂരമായി നേടുക</string>
+    <string name="settings_metadata_remote_advanced_description">പങ്കിട്ട ഡിഫോൾട്ടിനു പകരം നിങ്ങളുടെ സ്വന്തം TMDB API കീ അല്ലെങ്കിൽ സ്വയം ഹോസ്റ്റ് ചെയ്ത Worker ഉപയോഗിക്കുക.</string>
     <string name="settings_metadata_usage_label">ഉപയോഗം</string>
     <string name="settings_metadata_usage_value"><xliff:g id="min_used">%1$d</xliff:g>/<xliff:g id="min_total">%2$d</xliff:g> മിനിറ്റ് · <xliff:g id="hr_used">%3$d</xliff:g>/<xliff:g id="hr_total">%4$d</xliff:g> മണിക്കൂർ · <xliff:g id="day_used">%5$d</xliff:g>/<xliff:g id="day_total">%6$d</xliff:g> ദിവസം</string>
     <string name="settings_metadata_source_label">ഉറവിടം</string>
@@ -110,9 +127,9 @@
     <string name="settings_advanced_options">വിപുലമായ ഓപ്ഷനുകൾ</string>
     <string name="settings_advanced_metadata_description">പങ്കിട്ട ഡിഫോൾട്ടിന് പകരം നിങ്ങളുടെ സ്വന്തം TMDB API കീയോ സ്വയം ഹോസ്റ്റ് ചെയ്ത സെർവറോ ഉപയോഗിക്കുക.</string>
     <string name="settings_metadata_server_description">അന്തർനിർമ്മിത പങ്കിട്ട സെർവർ ഉപയോഗിക്കാൻ രണ്ടും ശൂന്യമായി വിടുക (സജ്ജീകരണം ആവശ്യമില്ല). TMDB-യെ നേരിട്ട് വിളിക്കാൻ നിങ്ങളുടെ സ്വന്തം TMDB API കീ നൽകുക, അല്ലെങ്കിൽ സ്വന്തം പ്രോക്സി/മിറർ ഉപയോഗിക്കാൻ സ്വയം ഹോസ്റ്റ് ചെയ്ത സെർവർ URL നൽകുക. കീയേക്കാൾ URL-ന് മുൻഗണന ലഭിക്കും.</string>
-    <string name="settings_metadata_key_from_phone">ഫോണിൽ നിന്ന് കീ നേടുക</string>
-    <string name="settings_metadata_key_from_phone_desc">ഫോൺ ഉപയോഗിച്ച് കോഡ് സ്കാൻ ചെയ്ത്, അവിടെ TMDB-യിൽ സൈൻ ഇൻ ചെയ്ത് കീ അയയ്ക്കുക. റിമോട്ടിൽ ഒന്നും ടൈപ്പ് ചെയ്യേണ്ട.</string>
-    <string name="settings_metadata_key_received">നിങ്ങളുടെ ഫോണിൽ നിന്ന് TMDB കീ ലഭിച്ചു</string>
+    <string name="settings_metadata_key_from_phone">മറ്റൊരു ഉപകരണത്തിൽ നിന്ന് കീ നേടുക</string>
+    <string name="settings_metadata_key_from_phone_desc">ഫോൺ, ടാബ്‌ലെറ്റ് അല്ലെങ്കിൽ കമ്പ്യൂട്ടർ ഉപയോഗിച്ച് കോഡ് സ്കാൻ ചെയ്ത്, അവിടെ TMDB-യിൽ സൈൻ ഇൻ ചെയ്ത് കീ അയയ്ക്കുക. റിമോട്ടിൽ ഒന്നും ടൈപ്പ് ചെയ്യേണ്ട.</string>
+    <string name="settings_metadata_key_received">TMDB കീ ലഭിച്ചു</string>
     <string name="settings_tmdb_api_key">TMDB API കീ (v3)</string>
     <string name="settings_self_host_url">സ്വയം ഹോസ്റ്റ് ചെയ്ത സെർവർ URL</string>
     <string name="settings_test">പരിശോധന</string>
@@ -417,7 +434,22 @@
     <string name="settings_preferred_subtitle_language">മുൻഗണനയുള്ള സബ്‌ടൈറ്റിൽ ഭാഷ</string>
     <string name="settings_preferred_language_description">ലഭ്യമാകുമ്പോൾ ഈ സബ്‌ടൈറ്റിൽ ട്രാക്ക് സ്വയമേവ തിരഞ്ഞെടുക്കുക.</string>
     <string name="settings_open_subtitles">OpenSubtitles</string>
+    <string name="settings_open_subtitles_connected">കണക്റ്റ് ചെയ്തു</string>
+    <string name="settings_open_subtitles_reset_in"><xliff:g id="hours">%1$d</xliff:g> മ <xliff:g id="minutes">%2$d</xliff:g> മി-ൽ</string>
     <string name="settings_open_subtitles_description">സബ്‌ടൈറ്റിലുകൾ തിരയാനും ഡൗൺലോഡ് ചെയ്യാനും ഡൗൺലോഡ് ചെയ്ത സബ്‌ടൈറ്റിലുകൾ നിയന്ത്രിക്കാനും സൈൻ ഇൻ ചെയ്യുക. ഓരോ പ്രൊഫൈലിനും പ്രത്യേകം; സൗജന്യ opensubtitles.com അക്കൗണ്ട് ആവശ്യമാണ്.</string>
+    <string name="settings_open_subtitles_advanced">വിപുലമായ ഓപ്ഷനുകൾ</string>
+    <string name="settings_open_subtitles_advanced_description">നിങ്ങളുടെ സ്വന്തം ആപ്ലിക്കേഷൻ API കീ അല്ലെങ്കിൽ സ്വയം ഹോസ്റ്റ് ചെയ്ത OpenSubtitles Worker ഉപയോഗിക്കുക.</string>
+    <string name="settings_open_subtitles_setup_title">OpenSubtitles സജ്ജീകരിക്കുക</string>
+    <string name="settings_open_subtitles_setup_description">നിങ്ങളുടെ OpenSubtitles അക്കൗണ്ട് ഉപയോഗിച്ച് സൈൻ ഇൻ ചെയ്യുക.</string>
+    <string name="settings_open_subtitles_setup_remote">വിദൂരമായി</string>
+    <string name="settings_open_subtitles_setup_remote_description">ഒരേ Wi-Fi-യിലുള്ള മറ്റൊരു ഉപകരണത്തിന്റെ — ഫോൺ, ടാബ്‌ലെറ്റ് അല്ലെങ്കിൽ കമ്പ്യൂട്ടർ — ബ്രൗസറിൽ നിങ്ങളുടെ വിവരങ്ങൾ നൽകുക.</string>
+    <string name="settings_open_subtitles_setup_local">ഇവിടെ നൽകുക</string>
+    <string name="settings_open_subtitles_setup_local_description">റിമോട്ട് ഉപയോഗിച്ച് ഈ ടിവിയിൽത്തന്നെ നിങ്ങളുടെ വിവരങ്ങൾ നൽകുക.</string>
+    <string name="settings_open_subtitles_api_key">OpenSubtitles ആപ്ലിക്കേഷൻ API കീ</string>
+    <string name="settings_worker_server_url">Worker / സെർവർ URL</string>
+    <string name="settings_shared">പങ്കിട്ടത്</string>
+    <string name="settings_open_subtitles_access_priority">OwnTV-യുടെ പങ്കിട്ട Worker ഉപയോഗിക്കാൻ രണ്ടും ശൂന്യമായി വിടുക. കസ്റ്റം Worker URL-ന് നേരിട്ടുള്ള API കീയേക്കാൾ മുൻഗണനയുണ്ട്. അക്കൗണ്ട് സെഷനുകൾ പ്രൊഫൈൽ പ്രത്യേകമായി തുടരും.</string>
+    <string name="settings_remove_custom_access">കസ്റ്റം ആക്‌സസ് നീക്കുക</string>
     <string name="settings_audio">ഓഡിയോ</string>
     <string name="settings_preferred_audio_language">മുൻഗണനയുള്ള ഓഡിയോ ഭാഷ</string>
     <string name="settings_audio_sync">ഓഡിയോ സമന്വയിപ്പിക്കൽ</string>
@@ -484,7 +516,7 @@
     <string name="settings_guide_synced">ടിവി ഗൈഡ് സമന്വയിപ്പിച്ചു</string>
     <string name="settings_guide_sync_failed">ടിവി ഗൈഡ് സമന്വയിപ്പിക്കൽ പരാജയപ്പെട്ടു</string>
     <string name="settings_restore_remote_title">മറ്റൊരു ഉപകരണത്തിൽ നിന്ന് പുനഃസ്ഥാപിക്കുക</string>
-    <string name="settings_restore_remote_description">അതേ Wi-Fi-യിലുള്ള ഫോണിലോ ലാപ്‌ടോപ്പിലോ QR സ്കാൻ ചെയ്യുക (അല്ലെങ്കിൽ URL തുറക്കുക), ഈ PIN നൽകുക, നിങ്ങളുടെ OwnTV ബാക്കപ്പ് ഫയൽ തിരഞ്ഞെടുത്ത് Send to TV ടാപ്പ് ചെയ്യുക. തുടർന്ന് ഇവിടെ എന്തൊക്കെ പുനഃസ്ഥാപിക്കണമെന്ന് തിരഞ്ഞെടുക്കാം.</string>
+    <string name="settings_restore_remote_description">അതേ Wi-Fi-യിലുള്ള ഫോണിലോ ടാബ്‌ലെറ്റിലോ കമ്പ്യൂട്ടറിലോ QR സ്കാൻ ചെയ്യുക (അല്ലെങ്കിൽ URL തുറക്കുക), ഈ PIN നൽകുക, നിങ്ങളുടെ OwnTV ബാക്കപ്പ് ഫയൽ തിരഞ്ഞെടുത്ത് Send to TV ടാപ്പ് ചെയ്യുക. തുടർന്ന് ഇവിടെ എന്തൊക്കെ പുനഃസ്ഥാപിക്കണമെന്ന് തിരഞ്ഞെടുക്കാം.</string>
     <string name="settings_opening_server">സെർവർ തുറക്കുന്നു…</string>
     <string name="settings_enter_pin_browser">ബ്രൗസറിൽ ഈ PIN നൽകുക</string>
     <string name="settings_companion_qr">സഹായി URL-നുള്ള QR കോഡ്</string>
@@ -492,7 +524,7 @@
     <string name="settings_try_again">വീണ്ടും ശ്രമിക്കുക</string>
     <string name="settings_new_pin">പുതിയ PIN ഉപയോഗിച്ച് വീണ്ടും ആരംഭിക്കുക</string>
     <string name="settings_download_remote_title">മറ്റൊരു ഉപകരണത്തിൽ ഡൗൺലോഡ് ചെയ്യുക</string>
-    <string name="settings_download_remote_description">അതേ Wi-Fi-യിലുള്ള ഫോണിലോ ലാപ്‌ടോപ്പിലോ QR സ്കാൻ ചെയ്യുക (അല്ലെങ്കിൽ URL തുറക്കുക), ഈ PIN നൽകുക, സുരക്ഷിതമായി സൂക്ഷിക്കാൻ നിങ്ങളുടെ ബാക്കപ്പ് ഫയൽ ഡൗൺലോഡ് ചെയ്യുക.</string>
+    <string name="settings_download_remote_description">അതേ Wi-Fi-യിലുള്ള ഫോണിലോ ടാബ്‌ലെറ്റിലോ കമ്പ്യൂട്ടറിലോ QR സ്കാൻ ചെയ്യുക (അല്ലെങ്കിൽ URL തുറക്കുക), ഈ PIN നൽകുക, സുരക്ഷിതമായി സൂക്ഷിക്കാൻ നിങ്ങളുടെ ബാക്കപ്പ് ഫയൽ ഡൗൺലോഡ് ചെയ്യുക.</string>
     <string name="settings_preparing_backup">ബാക്കപ്പ് തയ്യാറാക്കുന്നു…</string>
     <string name="settings_glass_effect_on">ഗ്ലാസ് ഇഫക്റ്റ്: ഓൺ</string>
     <string name="settings_glass_effect_off">ഗ്ലാസ് ഇഫക്റ്റ്: ഓഫ്</string>

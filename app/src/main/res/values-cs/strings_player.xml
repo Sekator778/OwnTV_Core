@@ -218,12 +218,15 @@
     <string name="player_subtitles_tags_separator"> · </string>
     <string name="player_subtitles_search">Vyhledat</string>
     <string name="player_subtitles_connected_as">Připojeno jako</string>
+    <string name="player_subtitles_connected_user">Přihlášen jako <xliff:g id="username">%1$s</xliff:g></string>
     <string name="player_subtitles_resets">Obnovení</string>
     <string name="player_subtitles_free_account">Bezplatný</string>
     <string name="player_subtitles_in"><xliff:g id="value">%1$s</xliff:g></string>
     <string name="player_subtitles_enter_credentials">Zadejte své uživatelské jméno a heslo pro OpenSubtitles.</string>
     <string name="player_subtitles_invalid_credentials">OpenSubtitles se pomocí těchto údajů účtu nepodařilo přihlásit.</string>
     <string name="player_subtitles_sign_in_network_error">Ke službě OpenSubtitles se nepodařilo připojit. Zkontrolujte připojení k internetu a zkuste to znovu.</string>
+    <!-- Translators: Error when OpenSubtitles answers the sign-in with an HTTP error code (e.g. 403, 429, 500). The placeholder is that code. -->
+    <string name="player_subtitles_sign_in_server_error">OpenSubtitles požadavek odmítl (chyba <xliff:g id="code">%1$d</xliff:g>). Vaše internetové připojení funguje – zkuste to znovu později a při hlášení problému uveďte toto číslo.</string>
     <string name="player_subtitles_refresh_network_error">Relaci OpenSubtitles se nepodařilo obnovit. Zkontrolujte připojení k internetu.</string>
     <string name="player_subtitles_no_matches_all_languages">Nebyly nalezeny žádné odpovídající titulky. Zkuste upravit hledaný název.</string>
     <string name="player_subtitles_no_matches_chosen_language">V zvoleném jazyce nebyly nalezeny žádné odpovídající titulky.</string>

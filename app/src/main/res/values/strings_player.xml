@@ -402,6 +402,8 @@
     <string name="player_subtitles_invalid_credentials">OpenSubtitles could not sign in with those account details.</string>
     <!-- Translators: Network error when the OpenSubtitles sign-in request fails. -->
     <string name="player_subtitles_sign_in_network_error">Couldn\'t reach OpenSubtitles. Check your internet connection and try again.</string>
+    <!-- Translators: Error when OpenSubtitles answers the sign-in with an HTTP error code (e.g. 403, 429, 500). The placeholder is that code. -->
+    <string name="player_subtitles_sign_in_server_error">OpenSubtitles refused the request (error <xliff:g id="code">%1$d</xliff:g>). Your internet connection is working — try again later, and quote this number if you report the problem.</string>
     <!-- Translators: Network error when the OpenSubtitles session refresh fails. -->
     <string name="player_subtitles_refresh_network_error">Couldn\'t refresh OpenSubtitles. Check your internet connection.</string>
     <!-- Translators: Empty subtitle-search state after searching every language. -->

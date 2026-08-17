@@ -95,6 +95,23 @@
     <string name="settings_metadata_tmdb_only_description">TMDB für jedes Feld bevorzugen; nur auf Ihre Wiedergabeliste zurückgreifen, wenn TMDB keine Angaben enthält.</string>
     <string name="settings_selected">Ausgewählt</string>
     <string name="settings_metadata_allowance">Ihr Tagesanteil</string>
+    <string name="settings_metadata_reset_automatic">Wird automatisch zurückgesetzt</string>
+    <string name="settings_metadata_library_details">Bibliotheksdetails</string>
+    <string name="settings_metadata_test_connection">Aktuelle Verbindung testen</string>
+    <string name="settings_allowance_available">Verfügbar</string>
+    <string name="settings_allowance_refills">Füllt sich <xliff:g id="time">%1$s</xliff:g> wieder auf</string>
+    <string name="settings_allowance_minute">Minute</string>
+    <string name="settings_allowance_hour">Stunde</string>
+    <string name="settings_allowance_day">Tag</string>
+    <plurals name="settings_allowance_value">
+        <item quantity="one"><xliff:g id="remaining">%1$d</xliff:g> / <xliff:g id="limit">%2$d</xliff:g> übrig</item>
+        <item quantity="other"><xliff:g id="remaining">%1$d</xliff:g> / <xliff:g id="limit">%2$d</xliff:g> übrig</item>
+    </plurals>
+    <string name="settings_metadata_active_source">Aktive Quelle</string>
+    <string name="settings_metadata_shared_worker_description">OwnTV Worker · keine Einrichtung</string>
+    <string name="settings_metadata_connection">Verbindung</string>
+    <string name="settings_metadata_remote_advanced">Erweiterte TMDB-Daten extern abrufen</string>
+    <string name="settings_metadata_remote_advanced_description">Verwende deinen eigenen TMDB-API-Schlüssel oder einen selbst gehosteten Worker statt der gemeinsamen Standardeinstellung.</string>
     <string name="settings_metadata_usage_label">Nutzung</string>
     <string name="settings_metadata_usage_value"><xliff:g id="min_used">%1$d</xliff:g>/<xliff:g id="min_total">%2$d</xliff:g> Min. · <xliff:g id="hr_used">%3$d</xliff:g>/<xliff:g id="hr_total">%4$d</xliff:g> Std. · <xliff:g id="day_used">%5$d</xliff:g>/<xliff:g id="day_total">%6$d</xliff:g> Tag</string>
     <string name="settings_metadata_source_label">Quelle</string>
@@ -110,9 +127,9 @@
     <string name="settings_advanced_options">Erweiterte Optionen</string>
     <string name="settings_advanced_metadata_description">Verwenden Sie anstelle der gemeinsamen Standardkonfiguration Ihren eigenen TMDB-API-Schlüssel oder einen selbst gehosteten Server.</string>
     <string name="settings_metadata_server_description">Lassen Sie beide Felder leer, um den integrierten gemeinsamen Server zu verwenden (keine Einrichtung erforderlich). Geben Sie Ihren eigenen TMDB-API-Schlüssel ein, um TMDB direkt aufzurufen, oder die URL eines selbst gehosteten Servers, um Ihren eigenen Proxy/Spiegelserver zu verwenden. Eine URL hat Vorrang vor einem Schlüssel.</string>
-    <string name="settings_metadata_key_from_phone">Schlüssel vom Telefon holen</string>
-    <string name="settings_metadata_key_from_phone_desc">Scannen Sie einen Code mit Ihrem Telefon, melden Sie sich dort bei TMDB an und senden Sie den Schlüssel herüber. Nichts auf der Fernbedienung zu tippen.</string>
-    <string name="settings_metadata_key_received">TMDB-Schlüssel vom Telefon empfangen</string>
+    <string name="settings_metadata_key_from_phone">Schlüssel von einem anderen Gerät holen</string>
+    <string name="settings_metadata_key_from_phone_desc">Scannen Sie den Code mit einem Telefon, Tablet oder Computer, melden Sie sich dort bei TMDB an und senden Sie den Schlüssel herüber. Nichts auf der Fernbedienung zu tippen.</string>
+    <string name="settings_metadata_key_received">TMDB-Schlüssel empfangen</string>
     <string name="settings_tmdb_api_key">TMDB-API-Schlüssel (v3)</string>
     <string name="settings_self_host_url">URL des selbst gehosteten Servers</string>
     <string name="settings_test">Test</string>
@@ -417,7 +434,22 @@
     <string name="settings_preferred_subtitle_language">Bevorzugte Untertitelsprache</string>
     <string name="settings_preferred_language_description">Diese Untertitelspur automatisch auswählen, wenn sie verfügbar ist.</string>
     <string name="settings_open_subtitles">OpenSubtitles</string>
+    <string name="settings_open_subtitles_connected">Verbunden</string>
+    <string name="settings_open_subtitles_reset_in">In <xliff:g id="hours">%1$d</xliff:g> Std. <xliff:g id="minutes">%2$d</xliff:g> Min.</string>
     <string name="settings_open_subtitles_description">Anmelden, um Untertitel zu suchen, herunterzuladen und heruntergeladene Untertitel zu verwalten. Gilt pro Profil; ein kostenloses Konto bei opensubtitles.com ist erforderlich.</string>
+    <string name="settings_open_subtitles_advanced">Erweiterte Optionen</string>
+    <string name="settings_open_subtitles_advanced_description">Verwende deinen eigenen Anwendungs-API-Schlüssel oder einen selbst gehosteten OpenSubtitles-Worker.</string>
+    <string name="settings_open_subtitles_setup_title">OpenSubtitles einrichten</string>
+    <string name="settings_open_subtitles_setup_description">Melde dich mit deinem OpenSubtitles-Konto an.</string>
+    <string name="settings_open_subtitles_setup_remote">Extern</string>
+    <string name="settings_open_subtitles_setup_remote_description">Gib deine Daten im Browser eines anderen Geräts im selben WLAN ein – Handy, Tablet oder Computer.</string>
+    <string name="settings_open_subtitles_setup_local">Hier eingeben</string>
+    <string name="settings_open_subtitles_setup_local_description">Gib deine Daten mit der Fernbedienung direkt an diesem TV ein.</string>
+    <string name="settings_open_subtitles_api_key">OpenSubtitles-Anwendungs-API-Schlüssel</string>
+    <string name="settings_worker_server_url">Worker-/Server-URL</string>
+    <string name="settings_shared">Gemeinsam</string>
+    <string name="settings_open_subtitles_access_priority">Lasse beide Felder leer, um den gemeinsamen Worker von OwnTV zu nutzen. Eine eigene Worker-URL hat Vorrang vor einem direkten API-Schlüssel. Kontositzungen bleiben profilspezifisch.</string>
+    <string name="settings_remove_custom_access">Eigenen Zugang entfernen</string>
     <string name="settings_audio">Audio</string>
     <string name="settings_preferred_audio_language">Bevorzugte Audiosprache</string>
     <string name="settings_audio_sync">Audio-Synchronisierung</string>
@@ -484,7 +516,7 @@
     <string name="settings_guide_synced">Programmübersicht synchronisiert</string>
     <string name="settings_guide_sync_failed">Synchronisierung der Programmübersicht fehlgeschlagen</string>
     <string name="settings_restore_remote_title">Von einem anderen Gerät wiederherstellen</string>
-    <string name="settings_restore_remote_description">Scanne auf einem Smartphone oder Laptop im selben Wi-Fi den QR-Code (oder öffne die URL), gib diese PIN ein, wähle deine OwnTV-Sicherungsdatei aus und tippe auf „An TV senden“. Anschließend wählst du hier aus, was wiederhergestellt werden soll.</string>
+    <string name="settings_restore_remote_description">Scanne auf einem Telefon, Tablet oder Computer im selben Wi-Fi den QR-Code (oder öffne die URL), gib diese PIN ein, wähle deine OwnTV-Sicherungsdatei aus und tippe auf „An TV senden“. Anschließend wählst du hier aus, was wiederhergestellt werden soll.</string>
     <string name="settings_opening_server">Server wird geöffnet…</string>
     <string name="settings_enter_pin_browser">Diese PIN im Browser eingeben</string>
     <string name="settings_companion_qr">QR-Code für die URL der Begleitseite</string>
@@ -492,7 +524,7 @@
     <string name="settings_try_again">Erneut versuchen</string>
     <string name="settings_new_pin">Mit einer neuen PIN neu starten</string>
     <string name="settings_download_remote_title">Auf einem anderen Gerät herunterladen</string>
-    <string name="settings_download_remote_description">Scanne auf einem Smartphone oder Laptop im selben Wi-Fi den QR-Code (oder öffne die URL), gib diese PIN ein und lade deine Sicherungsdatei herunter, um sie sicher aufzubewahren.</string>
+    <string name="settings_download_remote_description">Scanne auf einem Telefon, Tablet oder Computer im selben Wi-Fi den QR-Code (oder öffne die URL), gib diese PIN ein und lade deine Sicherungsdatei herunter, um sie sicher aufzubewahren.</string>
     <string name="settings_preparing_backup">Sicherung wird vorbereitet…</string>
     <string name="settings_glass_effect_on">Glaseffekt: Ein</string>
     <string name="settings_glass_effect_off">Glaseffekt: Aus</string>

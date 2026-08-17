@@ -197,12 +197,15 @@
     <string name="player_subtitles_tags_separator"> · </string>
     <string name="player_subtitles_search">検索</string>
     <string name="player_subtitles_connected_as">接続中のユーザー</string>
+    <string name="player_subtitles_connected_user"><xliff:g id="username">%1$s</xliff:g> として接続中</string>
     <string name="player_subtitles_resets">リセット</string>
     <string name="player_subtitles_free_account">無料</string>
     <string name="player_subtitles_in"><xliff:g id="value">%1$s</xliff:g></string>
     <string name="player_subtitles_enter_credentials">OpenSubtitlesのユーザー名とパスワードを入力してください。</string>
     <string name="player_subtitles_invalid_credentials">入力したアカウント情報ではOpenSubtitlesにログインできませんでした。</string>
     <string name="player_subtitles_sign_in_network_error">OpenSubtitlesに接続できませんでした。インターネット接続を確認して、もう一度お試しください。</string>
+    <!-- Translators: Error when OpenSubtitles answers the sign-in with an HTTP error code (e.g. 403, 429, 500). The placeholder is that code. -->
+    <string name="player_subtitles_sign_in_server_error">OpenSubtitlesがリクエストを拒否しました（エラー <xliff:g id="code">%1$d</xliff:g>）。インターネット接続は正常です。しばらくしてからもう一度お試しください。問題を報告する際はこの番号をお知らせください。</string>
     <string name="player_subtitles_refresh_network_error">OpenSubtitlesを更新できませんでした。インターネット接続を確認してください。</string>
     <string name="player_subtitles_no_matches_all_languages">一致する字幕が見つかりませんでした。検索タイトルを編集してみてください。</string>
     <string name="player_subtitles_no_matches_chosen_language">選択した言語の一致する字幕が見つかりませんでした。</string>

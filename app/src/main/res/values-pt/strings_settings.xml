@@ -95,6 +95,24 @@
     <string name="settings_metadata_tmdb_only_description">Prefira o TMDB em todos os campos; use sua lista de reprodução somente quando o TMDB não tiver nenhuma informação.</string>
     <string name="settings_selected">Selecionado</string>
     <string name="settings_metadata_allowance">Sua parte diária</string>
+    <string name="settings_metadata_reset_automatic">Redefine automaticamente</string>
+    <string name="settings_metadata_library_details">Detalhes da biblioteca</string>
+    <string name="settings_metadata_test_connection">Testar a conexão atual</string>
+    <string name="settings_allowance_available">Disponível</string>
+    <string name="settings_allowance_refills">Recarrega <xliff:g id="time">%1$s</xliff:g></string>
+    <string name="settings_allowance_minute">Minuto</string>
+    <string name="settings_allowance_hour">Hora</string>
+    <string name="settings_allowance_day">Dia</string>
+    <plurals name="settings_allowance_value">
+        <item quantity="one"><xliff:g id="remaining">%1$d</xliff:g> / <xliff:g id="limit">%2$d</xliff:g> restantes</item>
+        <item quantity="many"><xliff:g id="remaining">%1$d</xliff:g> / <xliff:g id="limit">%2$d</xliff:g> restantes</item>
+        <item quantity="other"><xliff:g id="remaining">%1$d</xliff:g> / <xliff:g id="limit">%2$d</xliff:g> restantes</item>
+    </plurals>
+    <string name="settings_metadata_active_source">Fonte ativa</string>
+    <string name="settings_metadata_shared_worker_description">OwnTV Worker · sem configuração</string>
+    <string name="settings_metadata_connection">Conexão</string>
+    <string name="settings_metadata_remote_advanced">Obter dados avançados do TMDB remotamente</string>
+    <string name="settings_metadata_remote_advanced_description">Use sua própria chave de API do TMDB ou um Worker auto-hospedado em vez do serviço compartilhado padrão.</string>
     <string name="settings_metadata_usage_label">Uso</string>
     <string name="settings_metadata_usage_value"><xliff:g id="min_used">%1$d</xliff:g>/<xliff:g id="min_total">%2$d</xliff:g> min · <xliff:g id="hr_used">%3$d</xliff:g>/<xliff:g id="hr_total">%4$d</xliff:g> h · <xliff:g id="day_used">%5$d</xliff:g>/<xliff:g id="day_total">%6$d</xliff:g> dia</string>
     <string name="settings_metadata_source_label">Origem</string>
@@ -110,9 +128,9 @@
     <string name="settings_advanced_options">Opções avançadas</string>
     <string name="settings_advanced_metadata_description">Use sua própria chave de API do TMDB ou um servidor auto-hospedado em vez do padrão compartilhado.</string>
     <string name="settings_metadata_server_description">Deixe ambos em branco para usar o servidor compartilhado integrado (sem configuração). Insira sua própria chave de API do TMDB para acessar o TMDB diretamente ou a URL de um servidor auto-hospedado para usar seu próprio proxy/espelho. Uma URL tem prioridade sobre uma chave.</string>
-    <string name="settings_metadata_key_from_phone">Obter a chave pelo celular</string>
-    <string name="settings_metadata_key_from_phone_desc">Escaneie um código com o celular, entre no TMDB por lá e envie a chave. Nada para digitar no controle.</string>
-    <string name="settings_metadata_key_received">Chave do TMDB recebida do seu celular</string>
+    <string name="settings_metadata_key_from_phone">Obter a chave por outro dispositivo</string>
+    <string name="settings_metadata_key_from_phone_desc">Escaneie o código com um celular, tablet ou computador, entre no TMDB por lá e envie a chave. Nada para digitar no controle.</string>
+    <string name="settings_metadata_key_received">Chave do TMDB recebida</string>
     <string name="settings_tmdb_api_key">Chave de API do TMDB (v3)</string>
     <string name="settings_self_host_url">URL do servidor auto-hospedado</string>
     <string name="settings_test">Teste</string>
@@ -418,7 +436,22 @@
     <string name="settings_preferred_subtitle_language">Idioma preferido das legendas</string>
     <string name="settings_preferred_language_description">Selecionar automaticamente esta faixa de legendas quando disponível.</string>
     <string name="settings_open_subtitles">OpenSubtitles</string>
+    <string name="settings_open_subtitles_connected">Conectado</string>
+    <string name="settings_open_subtitles_reset_in">Em <xliff:g id="hours">%1$d</xliff:g> h <xliff:g id="minutes">%2$d</xliff:g> min</string>
     <string name="settings_open_subtitles_description">Entre para pesquisar e baixar legendas e gerenciar as legendas baixadas. A configuração é por perfil; é necessário ter uma conta gratuita no opensubtitles.com.</string>
+    <string name="settings_open_subtitles_advanced">Opções avançadas</string>
+    <string name="settings_open_subtitles_advanced_description">Use sua própria chave de API de aplicativo ou um OpenSubtitles Worker auto-hospedado.</string>
+    <string name="settings_open_subtitles_setup_title">Configurar o OpenSubtitles</string>
+    <string name="settings_open_subtitles_setup_description">Faça login com sua conta do OpenSubtitles.</string>
+    <string name="settings_open_subtitles_setup_remote">Remoto</string>
+    <string name="settings_open_subtitles_setup_remote_description">Preencha seus dados em um navegador de outro dispositivo na mesma rede Wi-Fi — celular, tablet ou computador.</string>
+    <string name="settings_open_subtitles_setup_local">Digitar aqui</string>
+    <string name="settings_open_subtitles_setup_local_description">Digite seus dados nesta TV com o controle remoto.</string>
+    <string name="settings_open_subtitles_api_key">Chave de API de aplicativo do OpenSubtitles</string>
+    <string name="settings_worker_server_url">URL do Worker / servidor</string>
+    <string name="settings_shared">Compartilhado</string>
+    <string name="settings_open_subtitles_access_priority">Deixe ambos em branco para usar o Worker compartilhado do OwnTV. Um URL de Worker próprio tem prioridade sobre uma chave de API direta. As sessões da conta continuam específicas de cada perfil.</string>
+    <string name="settings_remove_custom_access">Remover acesso personalizado</string>
     <string name="settings_audio">Áudio</string>
     <string name="settings_preferred_audio_language">Idioma preferido do áudio</string>
     <string name="settings_audio_sync">Sincronização de áudio</string>
@@ -486,7 +519,7 @@
     <string name="settings_guide_synced">Guia de TV sincronizado</string>
     <string name="settings_guide_sync_failed">Falha ao sincronizar o guia de TV</string>
     <string name="settings_restore_remote_title">Restaurar de outro dispositivo</string>
-    <string name="settings_restore_remote_description">Em um celular ou notebook conectado à mesma rede Wi-Fi, escaneie o código QR (ou abra o URL), insira este PIN, escolha o arquivo de cópia de segurança do OwnTV e toque em Enviar para a TV. Depois, escolha aqui o que deseja restaurar.</string>
+    <string name="settings_restore_remote_description">Em um celular, tablet ou computador conectado à mesma rede Wi-Fi, escaneie o código QR (ou abra o URL), insira este PIN, escolha o arquivo de cópia de segurança do OwnTV e toque em Enviar para a TV. Depois, escolha aqui o que deseja restaurar.</string>
     <string name="settings_opening_server">Abrindo servidor…</string>
     <string name="settings_enter_pin_browser">Insira este PIN no navegador</string>
     <string name="settings_companion_qr">Código QR do URL complementar</string>
@@ -494,7 +527,7 @@
     <string name="settings_try_again">Tentar novamente</string>
     <string name="settings_new_pin">Recomeçar com um novo PIN</string>
     <string name="settings_download_remote_title">Baixar em outro dispositivo</string>
-    <string name="settings_download_remote_description">Em um celular ou notebook conectado à mesma rede Wi-Fi, escaneie o código QR (ou abra o URL), insira este PIN e baixe seu arquivo de cópia de segurança para guardá-lo com segurança.</string>
+    <string name="settings_download_remote_description">Em um celular, tablet ou computador conectado à mesma rede Wi-Fi, escaneie o código QR (ou abra o URL), insira este PIN e baixe seu arquivo de cópia de segurança para guardá-lo com segurança.</string>
     <string name="settings_preparing_backup">Preparando cópia de segurança…</string>
     <string name="settings_glass_effect_on">Efeito de vidro: ativado</string>
     <string name="settings_glass_effect_off">Efeito de vidro: desativado</string>

@@ -204,12 +204,15 @@
     <string name="player_subtitles_tags_separator"> · </string>
     <string name="player_subtitles_search">অনুসন্ধান করুন</string>
     <string name="player_subtitles_connected_as">যে নামে সংযুক্ত</string>
+    <string name="player_subtitles_connected_user"><xliff:g id="username">%1$s</xliff:g> হিসেবে সংযুক্ত</string>
     <string name="player_subtitles_resets">পুনরায় শুরু হবে</string>
     <string name="player_subtitles_free_account">বিনামূল্যের</string>
     <string name="player_subtitles_in"><xliff:g id="value">%1$s</xliff:g></string>
     <string name="player_subtitles_enter_credentials">আপনার OpenSubtitles ব্যবহারকারীর নাম ও পাসওয়ার্ড লিখুন।</string>
     <string name="player_subtitles_invalid_credentials">অ্যাকাউন্টের ওই তথ্য দিয়ে OpenSubtitles-এ সাইন ইন করা যায়নি।</string>
     <string name="player_subtitles_sign_in_network_error">OpenSubtitles-এর সঙ্গে যোগাযোগ করা যায়নি। আপনার ইন্টারনেট সংযোগ পরীক্ষা করে আবার চেষ্টা করুন।</string>
+    <!-- Translators: Error when OpenSubtitles answers the sign-in with an HTTP error code (e.g. 403, 429, 500). The placeholder is that code. -->
+    <string name="player_subtitles_sign_in_server_error">OpenSubtitles অনুরোধটি প্রত্যাখ্যান করেছে (ত্রুটি <xliff:g id="code">%1$d</xliff:g>)। আপনার ইন্টারনেট সংযোগ ঠিক আছে — পরে আবার চেষ্টা করুন এবং সমস্যাটি জানালে এই নম্বরটি উল্লেখ করুন।</string>
     <string name="player_subtitles_refresh_network_error">OpenSubtitles রিফ্রেশ করা যায়নি। আপনার ইন্টারনেট সংযোগ পরীক্ষা করুন।</string>
     <string name="player_subtitles_no_matches_all_languages">কোনো মিলে যাওয়া সাবটাইটেল পাওয়া যায়নি। অনুসন্ধানের শিরোনামটি সম্পাদনা করে দেখুন।</string>
     <string name="player_subtitles_no_matches_chosen_language">আপনার নির্বাচিত ভাষায় কোনো মিলে যাওয়া সাবটাইটেল পাওয়া যায়নি।</string>

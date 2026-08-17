@@ -95,6 +95,23 @@
     <string name="settings_metadata_tmdb_only_description">हर फ़ील्ड के लिए TMDB को प्राथमिकता दें; TMDB पर कुछ न मिलने पर ही अपनी प्लेलिस्ट का उपयोग करें।</string>
     <string name="settings_selected">चयनित</string>
     <string name="settings_metadata_allowance">आपका दैनिक हिस्सा</string>
+    <string name="settings_metadata_reset_automatic">स्वतः रीसेट होता है</string>
+    <string name="settings_metadata_library_details">लाइब्रेरी का विवरण</string>
+    <string name="settings_metadata_test_connection">मौजूदा कनेक्शन जाँचें</string>
+    <string name="settings_allowance_available">उपलब्ध</string>
+    <string name="settings_allowance_refills"><xliff:g id="time">%1$s</xliff:g> रिफिल होगा</string>
+    <string name="settings_allowance_minute">मिनट</string>
+    <string name="settings_allowance_hour">घंटा</string>
+    <string name="settings_allowance_day">दिन</string>
+    <plurals name="settings_allowance_value">
+        <item quantity="one"><xliff:g id="remaining">%1$d</xliff:g> / <xliff:g id="limit">%2$d</xliff:g> शेष</item>
+        <item quantity="other"><xliff:g id="remaining">%1$d</xliff:g> / <xliff:g id="limit">%2$d</xliff:g> शेष</item>
+    </plurals>
+    <string name="settings_metadata_active_source">सक्रिय स्रोत</string>
+    <string name="settings_metadata_shared_worker_description">OwnTV Worker · कोई सेटअप नहीं</string>
+    <string name="settings_metadata_connection">कनेक्शन</string>
+    <string name="settings_metadata_remote_advanced">रिमोट से उन्नत TMDB जानकारी लें</string>
+    <string name="settings_metadata_remote_advanced_description">साझा डिफ़ॉल्ट के बजाय अपनी TMDB API कुंजी या स्वयं होस्ट किया गया Worker इस्तेमाल करें।</string>
     <string name="settings_metadata_usage_label">उपयोग</string>
     <string name="settings_metadata_usage_value"><xliff:g id="min_used">%1$d</xliff:g>/<xliff:g id="min_total">%2$d</xliff:g> मिनट · <xliff:g id="hr_used">%3$d</xliff:g>/<xliff:g id="hr_total">%4$d</xliff:g> घंटा · <xliff:g id="day_used">%5$d</xliff:g>/<xliff:g id="day_total">%6$d</xliff:g> दिन</string>
     <string name="settings_metadata_source_label">स्रोत</string>
@@ -110,9 +127,9 @@
     <string name="settings_advanced_options">उन्नत विकल्प</string>
     <string name="settings_advanced_metadata_description">साझा डिफ़ॉल्ट के बजाय अपनी TMDB API कुंजी या स्वयं होस्ट किए गए सर्वर का उपयोग करें।</string>
     <string name="settings_metadata_server_description">पहले से मौजूद साझा सर्वर का उपयोग करने के लिए दोनों को खाली छोड़ें (किसी सेटअप की आवश्यकता नहीं)। TMDB को सीधे कॉल करने के लिए अपनी TMDB API कुंजी दर्ज करें या अपना प्रॉक्सी/मिरर उपयोग करने के लिए स्वयं होस्ट किए गए सर्वर का URL दर्ज करें। URL को कुंजी से अधिक प्राथमिकता मिलती है।</string>
-    <string name="settings_metadata_key_from_phone">अपने फ़ोन से कुंजी लें</string>
-    <string name="settings_metadata_key_from_phone_desc">फ़ोन से कोड स्कैन करें, वहाँ TMDB में साइन इन करें और कुंजी भेजें। रिमोट पर कुछ भी टाइप नहीं करना।</string>
-    <string name="settings_metadata_key_received">आपके फ़ोन से TMDB कुंजी मिली</string>
+    <string name="settings_metadata_key_from_phone">दूसरे डिवाइस से कुंजी लें</string>
+    <string name="settings_metadata_key_from_phone_desc">फ़ोन, टैबलेट या कंप्यूटर से कोड स्कैन करें, वहाँ TMDB में साइन इन करें और कुंजी भेजें। रिमोट पर कुछ भी टाइप नहीं करना।</string>
+    <string name="settings_metadata_key_received">TMDB कुंजी मिली</string>
     <string name="settings_tmdb_api_key">TMDB API कुंजी (v3)</string>
     <string name="settings_self_host_url">स्वयं होस्ट किए गए सर्वर का URL</string>
     <string name="settings_test">जाँच</string>
@@ -417,7 +434,22 @@
     <string name="settings_preferred_subtitle_language">पसंदीदा सबटाइटल भाषा</string>
     <string name="settings_preferred_language_description">उपलब्ध होने पर यह सबटाइटल ट्रैक अपने-आप चुनें।</string>
     <string name="settings_open_subtitles">OpenSubtitles</string>
+    <string name="settings_open_subtitles_connected">कनेक्टेड</string>
+    <string name="settings_open_subtitles_reset_in"><xliff:g id="hours">%1$d</xliff:g> घं <xliff:g id="minutes">%2$d</xliff:g> मि में</string>
     <string name="settings_open_subtitles_description">सबटाइटल खोजने और डाउनलोड करने तथा डाउनलोड किए गए सबटाइटल प्रबंधित करने के लिए साइन इन करें। यह हर प्रोफ़ाइल के लिए अलग है; एक मुफ़्त opensubtitles.com खाता आवश्यक है।</string>
+    <string name="settings_open_subtitles_advanced">उन्नत विकल्प</string>
+    <string name="settings_open_subtitles_advanced_description">अपनी ऐप्लिकेशन API कुंजी या स्वयं होस्ट किया गया OpenSubtitles Worker इस्तेमाल करें।</string>
+    <string name="settings_open_subtitles_setup_title">OpenSubtitles सेट अप करें</string>
+    <string name="settings_open_subtitles_setup_description">अपने OpenSubtitles खाते से साइन इन करें।</string>
+    <string name="settings_open_subtitles_setup_remote">दूर से</string>
+    <string name="settings_open_subtitles_setup_remote_description">उसी Wi-Fi से जुड़े किसी दूसरे डिवाइस — फ़ोन, टैबलेट या कंप्यूटर — के ब्राउज़र में अपनी जानकारी भरें।</string>
+    <string name="settings_open_subtitles_setup_local">यहाँ दर्ज करें</string>
+    <string name="settings_open_subtitles_setup_local_description">रिमोट की मदद से इसी टीवी पर अपनी जानकारी लिखें।</string>
+    <string name="settings_open_subtitles_api_key">OpenSubtitles ऐप्लिकेशन API कुंजी</string>
+    <string name="settings_worker_server_url">Worker / सर्वर URL</string>
+    <string name="settings_shared">साझा</string>
+    <string name="settings_open_subtitles_access_priority">OwnTV की साझा Worker सेवा उपयोग करने के लिए दोनों खाली छोड़ें। कस्टम Worker URL को सीधी API कुंजी पर प्राथमिकता मिलती है। खाता सत्र हर प्रोफ़ाइल के लिए अलग रहते हैं।</string>
+    <string name="settings_remove_custom_access">कस्टम एक्सेस हटाएँ</string>
     <string name="settings_audio">ऑडियो</string>
     <string name="settings_preferred_audio_language">पसंदीदा ऑडियो भाषा</string>
     <string name="settings_audio_sync">ऑडियो सिंक</string>
@@ -484,7 +516,7 @@
     <string name="settings_guide_synced">टीवी गाइड सिंक हो गया</string>
     <string name="settings_guide_sync_failed">टीवी गाइड सिंक नहीं हो सका</string>
     <string name="settings_restore_remote_title">किसी दूसरे डिवाइस से रीस्टोर करें</string>
-    <string name="settings_restore_remote_description">उसी Wi-Fi से जुड़े फ़ोन या लैपटॉप पर QR स्कैन करें (या URL खोलें), यह PIN दर्ज करें, अपनी OwnTV बैकअप फ़ाइल चुनें और टीवी पर भेजें पर टैप करें। फिर यहाँ चुनें कि क्या रीस्टोर करना है।</string>
+    <string name="settings_restore_remote_description">उसी Wi-Fi से जुड़े फ़ोन, टैबलेट या कंप्यूटर पर QR स्कैन करें (या URL खोलें), यह PIN दर्ज करें, अपनी OwnTV बैकअप फ़ाइल चुनें और टीवी पर भेजें पर टैप करें। फिर यहाँ चुनें कि क्या रीस्टोर करना है।</string>
     <string name="settings_opening_server">सर्वर खोला जा रहा है…</string>
     <string name="settings_enter_pin_browser">ब्राउज़र में यह PIN दर्ज करें</string>
     <string name="settings_companion_qr">सहायक URL का QR कोड</string>
@@ -492,7 +524,7 @@
     <string name="settings_try_again">फिर कोशिश करें</string>
     <string name="settings_new_pin">नए PIN के साथ फिर से शुरू करें</string>
     <string name="settings_download_remote_title">किसी दूसरे डिवाइस पर डाउनलोड करें</string>
-    <string name="settings_download_remote_description">उसी Wi-Fi से जुड़े फ़ोन या लैपटॉप पर QR स्कैन करें (या URL खोलें), यह PIN दर्ज करें और अपनी बैकअप फ़ाइल सुरक्षित रखने के लिए डाउनलोड करें।</string>
+    <string name="settings_download_remote_description">उसी Wi-Fi से जुड़े फ़ोन, टैबलेट या कंप्यूटर पर QR स्कैन करें (या URL खोलें), यह PIN दर्ज करें और अपनी बैकअप फ़ाइल सुरक्षित रखने के लिए डाउनलोड करें।</string>
     <string name="settings_preparing_backup">बैकअप तैयार किया जा रहा है…</string>
     <string name="settings_glass_effect_on">ग्लास प्रभाव: चालू</string>
     <string name="settings_glass_effect_off">ग्लास प्रभाव: बंद</string>

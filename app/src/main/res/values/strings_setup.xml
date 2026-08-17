@@ -4,17 +4,17 @@
     <string name="setup_background_image">Background image</string>
     <!-- Translators: Description in the background-image chooser dialog explaining what the setting does. -->
     <string name="setup_background_image_description">Pick a photo to show behind the interface, or clear it to restore solid panels.</string>
-    <!-- Translators: Button in the background-image chooser that selects an image stored on this TV/device. Contrasts with the Remote button, which receives an image from a phone. -->
+    <!-- Translators: Button in the background-image chooser that selects an image stored on this TV/device. Contrasts with the Remote button, which receives an image from another device. -->
     <string name="setup_from_device">Local</string>
-    <!-- Translators: Button label used in three places: (1) Add-source chooser card for the companion-phone flow, (2) Import-backup chooser card for uploading from a phone, (3) Background-image chooser button for the remote companion flow. Always means "use a phone on the same Wi-Fi". Contrasts with Local/Manual. -->
+    <!-- Translators: Button label used in three places: (1) Add-source chooser card for the remote companion flow, (2) Import-backup chooser card for uploading from another device, (3) Background-image chooser button for the remote companion flow. Always means "use a phone, tablet or computer on the same Wi-Fi". Contrasts with Local/Manual. -->
     <string name="setup_from_phone">Remote</string>
-    <!-- Translators: Screen title for the remote-background dialog shown on the TV when sending a background image from a phone. -->
-    <string name="setup_send_from_phone">Send from your phone</string>
-    <!-- Translators: Description in the remote-background dialog explaining how to send an image from a phone. -->
-    <string name="setup_phone_background_description">On a phone on the same Wi-Fi, scan the QR (or open the URL), enter this PIN and send a photo. It becomes the background instantly.</string>
+    <!-- Translators: Screen title for the remote-background dialog shown on the TV when sending a background image from another device. -->
+    <string name="setup_send_from_phone">Send from another device</string>
+    <!-- Translators: Description in the remote-background dialog explaining how to send an image from another device. -->
+    <string name="setup_phone_background_description">On another device on the same Wi-Fi — a phone, tablet or computer — scan the QR (or open the URL), enter this PIN and send a photo. It becomes the background instantly.</string>
     <!-- Translators: Loading status shown while the companion HTTP server is starting. -->
     <string name="setup_opening_server">Opening server\u2026</string>
-    <!-- Translators: Instruction above the PIN display on the TV screen, telling the user to enter it in the phone browser. -->
+    <!-- Translators: Instruction above the PIN display on the TV screen, telling the user to enter it in the browser on the remote device. -->
     <string name="setup_enter_pin_browser">Enter this PIN in the browser</string>
     <!-- Translators: Label above the companion URL shown on the TV, as an alternative to scanning the QR code. -->
     <string name="setup_open_url">Or open this URL</string>
@@ -28,7 +28,7 @@
     <string name="setup_companion_port_in_use">Port <xliff:g id="port">%1$d</xliff:g> is already in use. Try another port.</string>
     <!-- Translators: Error text when the companion HTTP server fails to start for any reason. -->
     <string name="setup_companion_unavailable">Could not open the local server. Try again.</string>
-    <!-- Translators: Error text shown when the companion link is locked after too many incorrect PIN attempts. Also sent as an HTTP response body to the phone browser. -->
+    <!-- Translators: Error text shown when the companion link is locked after too many incorrect PIN attempts. Also sent as an HTTP response body to the remote browser. -->
     <string name="setup_companion_locked">Too many incorrect PIN attempts \u2014 the link was closed for safety.</string>
 
     <!-- Translators: Set-TMDB-name dialog heading. -->
@@ -172,10 +172,10 @@
     <!-- Translators: Button on the import-failure screen to retry the import. Capitalized as a standalone button label. -->
     <string name="setup_try_again_caps">Try Again</string>
 
-    <!-- Translators: Heading on the RemoteSetupScreen for adding a source via phone companion. -->
-    <string name="setup_add_from_phone">Add from your phone</string>
-    <!-- Translators: Description on the RemoteSetupScreen explaining how to use the phone companion. -->
-    <string name="setup_phone_add_description">On a phone or laptop on the same Wi-Fi, scan the QR (or open the URL), enter this PIN, fill in your playlist and tap Send to TV. Its details then appear here, ready to import \u2014 you press Start Import with the remote.</string>
+    <!-- Translators: Heading on the RemoteSetupScreen for adding a source via the remote companion. -->
+    <string name="setup_add_from_phone">Add from another device</string>
+    <!-- Translators: Description on the RemoteSetupScreen explaining how to use the remote companion. -->
+    <string name="setup_phone_add_description">On a phone, tablet or computer on the same Wi-Fi, scan the QR (or open the URL), enter this PIN, fill in your playlist and tap Send to TV. Its details then appear here, ready to import \u2014 you press Start Import with the remote.</string>
     <!-- Translators: Loading label while the companion server is starting. -->
     <string name="setup_opening">Opening\u2026</string>
     <!-- Translators: Button label on the RemoteSetupScreen to start the companion HTTP server. -->
@@ -183,14 +183,14 @@
     <!-- Translators: Button label on the RemoteSetupScreen to stop the companion HTTP server while it is running. -->
     <string name="setup_stop_server">Stop server</string>
 
-    <!-- Translators: Heading on the AddSourceChooserScreen where the user picks between Remote (phone companion) and Manual (on-device form). -->
+    <!-- Translators: Heading on the AddSourceChooserScreen where the user picks between Remote (the remote companion) and Manual (on-device form). -->
     <string name="setup_add_source">Add a source</string>
     <!-- Translators: Description on the AddSourceChooserScreen. -->
-    <string name="setup_add_source_description">Fill the form on your phone, or type the details here with the remote.</string>
+    <string name="setup_add_source_description">Fill the form on another device, or type the details here with the remote.</string>
     <!-- Translators: ChoiceCard title for the manual (on-device) source-entry option. Contrasts with Remote. -->
     <string name="setup_manual">Manual</string>
     <!-- Translators: ChoiceCard subtitle for the "Remote" option on the add-source chooser. -->
-    <string name="setup_use_phone_same_wifi">Use a phone on the same Wi-Fi</string>
+    <string name="setup_use_phone_same_wifi">Use a phone, tablet or computer on the same Wi-Fi</string>
     <!-- Translators: ChoiceCard subtitle for the "Manual" option on the add-source chooser. "Xtream", "M3U", "Stalker" are protocol/brand names that must not be translated. -->
     <string name="setup_type_source_here">Type Xtream / M3U / Stalker here</string>
     <!-- Translators: Heading on the AddSourceScreen when editing an existing source. -->
@@ -345,7 +345,7 @@
     <!-- Translators: Error text on the companion PIN entry page when the entered PIN does not match. -->
     <string name="companion_pin_mismatch">That PIN did not match \u2014 try again.</string>
     <!-- Translators: Page title in the companion browser tab for the add-source page. "OwnTV" is a brand name. -->
-    <!-- Translators: Browser tab title for the page a phone uses to send a TMDB key to the TV. -->
+    <!-- Translators: Browser tab title for the page the remote device uses to send a TMDB key to the TV. -->
     <string name="companion_tmdb_page_title">Send TMDB key</string>
     <!-- Translators: Heading on that page. -->
     <string name="companion_tmdb_heading">Send your TMDB key</string>
@@ -355,13 +355,19 @@
     <string name="companion_tmdb_get_key">Open TMDB API settings</string>
     <!-- Translators: Error when the pasted text does not look like a TMDB API key. -->
     <string name="companion_tmdb_invalid">That does not look like a TMDB API key. Copy the "API Key (v3 auth)" value.</string>
-    <!-- Translators: Confirmation shown on the phone after the key reaches the TV. -->
+    <!-- Translators: Confirmation shown on the remote device after the key reaches the TV. -->
     <string name="companion_tmdb_sent_body">Your TMDB key is now on the TV. Press Save there to start using it.</string>
     <!-- Translators: Link back to the form to send another key. -->
     <string name="companion_tmdb_sent_link">Send a different key</string>
     <string name="companion_service_config_empty">Enter an API key, a Worker URL, or both.</string>
     <string name="companion_service_config_invalid_key">That API key does not look valid.</string>
     <string name="companion_service_config_invalid_url">Enter a valid HTTPS Worker URL.</string>
+    <!-- Translators: Error on the remote page when the OpenSubtitles form was submitted completely empty. -->
+    <string name="companion_service_config_empty_account">Enter your OpenSubtitles username and password, or your own API details.</string>
+    <!-- Translators: Error on the remote page when the submitted account details are too long to be real. -->
+    <string name="companion_service_config_invalid_credentials">Those account details are too long. Check them and try again.</string>
+    <!-- Translators: Description on the remote page used to set up OpenSubtitles from another device's browser. -->
+    <string name="companion_open_subtitles_description">Sign in to OpenSubtitles for your TV. Add your own API details below only if you have them.</string>
     <string name="companion_service_config_sent">The connection details are now waiting on your TV. Review and save them there.</string>
     <string name="companion_service_config_again">Send different connection details</string>
     <string name="companion_add_page_title">OwnTV \u2014 Add source</string>

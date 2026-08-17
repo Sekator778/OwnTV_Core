@@ -95,6 +95,23 @@
     <string name="settings_metadata_tmdb_only_description">Geef voor elk veld de voorkeur aan TMDB; val alleen terug op je afspeellijst als TMDB niets heeft.</string>
     <string name="settings_selected">Geselecteerd</string>
     <string name="settings_metadata_allowance">Je dagelijkse deel</string>
+    <string name="settings_metadata_reset_automatic">Wordt automatisch opnieuw ingesteld</string>
+    <string name="settings_metadata_library_details">Bibliotheekdetails</string>
+    <string name="settings_metadata_test_connection">Huidige verbinding testen</string>
+    <string name="settings_allowance_available">Beschikbaar</string>
+    <string name="settings_allowance_refills">Wordt <xliff:g id="time">%1$s</xliff:g> bijgevuld</string>
+    <string name="settings_allowance_minute">Minuut</string>
+    <string name="settings_allowance_hour">Uur</string>
+    <string name="settings_allowance_day">Dag</string>
+    <plurals name="settings_allowance_value">
+        <item quantity="one"><xliff:g id="remaining">%1$d</xliff:g> / <xliff:g id="limit">%2$d</xliff:g> over</item>
+        <item quantity="other"><xliff:g id="remaining">%1$d</xliff:g> / <xliff:g id="limit">%2$d</xliff:g> over</item>
+    </plurals>
+    <string name="settings_metadata_active_source">Actieve bron</string>
+    <string name="settings_metadata_shared_worker_description">OwnTV Worker · geen installatie</string>
+    <string name="settings_metadata_connection">Verbinding</string>
+    <string name="settings_metadata_remote_advanced">Geavanceerde TMDB-gegevens op afstand ophalen</string>
+    <string name="settings_metadata_remote_advanced_description">Gebruik je eigen TMDB-API-sleutel of een zelfgehoste Worker in plaats van de gedeelde standaard.</string>
     <string name="settings_metadata_usage_label">Gebruik</string>
     <string name="settings_metadata_usage_value"><xliff:g id="min_used">%1$d</xliff:g>/<xliff:g id="min_total">%2$d</xliff:g> min · <xliff:g id="hr_used">%3$d</xliff:g>/<xliff:g id="hr_total">%4$d</xliff:g> uur · <xliff:g id="day_used">%5$d</xliff:g>/<xliff:g id="day_total">%6$d</xliff:g> dag</string>
     <string name="settings_metadata_source_label">Bron</string>
@@ -110,9 +127,9 @@
     <string name="settings_advanced_options">Geavanceerde opties</string>
     <string name="settings_advanced_metadata_description">Gebruik je eigen TMDB-API-sleutel of een zelfgehoste server in plaats van de gedeelde standaard.</string>
     <string name="settings_metadata_server_description">Laat beide leeg om de ingebouwde gedeelde server te gebruiken (geen configuratie nodig). Voer je eigen TMDB-API-sleutel in om TMDB rechtstreeks aan te roepen, of een URL van een zelfgehoste server om je eigen proxy/mirror te gebruiken. Een URL heeft voorrang op een sleutel.</string>
-    <string name="settings_metadata_key_from_phone">Sleutel ophalen via je telefoon</string>
-    <string name="settings_metadata_key_from_phone_desc">Scan een code met je telefoon, meld je daar aan bij TMDB en stuur de sleutel door. Niets te typen op de afstandsbediening.</string>
-    <string name="settings_metadata_key_received">TMDB-sleutel ontvangen van je telefoon</string>
+    <string name="settings_metadata_key_from_phone">Sleutel ophalen via een ander apparaat</string>
+    <string name="settings_metadata_key_from_phone_desc">Scan de code met een telefoon, tablet of computer, meld je daar aan bij TMDB en stuur de sleutel door. Niets te typen op de afstandsbediening.</string>
+    <string name="settings_metadata_key_received">TMDB-sleutel ontvangen</string>
     <string name="settings_tmdb_api_key">TMDB-API-sleutel (v3)</string>
     <string name="settings_self_host_url">URL van zelfgehoste server</string>
     <string name="settings_test">Test</string>
@@ -417,7 +434,22 @@
     <string name="settings_preferred_subtitle_language">Voorkeurstaal voor ondertiteling</string>
     <string name="settings_preferred_language_description">Selecteer dit ondertitelspoor automatisch wanneer het beschikbaar is.</string>
     <string name="settings_open_subtitles">OpenSubtitles</string>
+    <string name="settings_open_subtitles_connected">Verbonden</string>
+    <string name="settings_open_subtitles_reset_in">Over <xliff:g id="hours">%1$d</xliff:g> u <xliff:g id="minutes">%2$d</xliff:g> min</string>
     <string name="settings_open_subtitles_description">Meld u aan om ondertiteling te zoeken en te downloaden en om gedownloade ondertiteling te beheren. Dit geldt per profiel; een gratis account op opensubtitles.com is vereist.</string>
+    <string name="settings_open_subtitles_advanced">Geavanceerde opties</string>
+    <string name="settings_open_subtitles_advanced_description">Gebruik je eigen applicatie-API-sleutel of een zelfgehoste OpenSubtitles Worker.</string>
+    <string name="settings_open_subtitles_setup_title">OpenSubtitles instellen</string>
+    <string name="settings_open_subtitles_setup_description">Meld je aan met je OpenSubtitles-account.</string>
+    <string name="settings_open_subtitles_setup_remote">Op afstand</string>
+    <string name="settings_open_subtitles_setup_remote_description">Vul je gegevens in in een browser op een ander apparaat op hetzelfde wifi-netwerk: telefoon, tablet of computer.</string>
+    <string name="settings_open_subtitles_setup_local">Hier invoeren</string>
+    <string name="settings_open_subtitles_setup_local_description">Voer je gegevens op deze tv in met de afstandsbediening.</string>
+    <string name="settings_open_subtitles_api_key">OpenSubtitles applicatie-API-sleutel</string>
+    <string name="settings_worker_server_url">Worker-/server-URL</string>
+    <string name="settings_shared">Gedeeld</string>
+    <string name="settings_open_subtitles_access_priority">Laat beide leeg om de gedeelde Worker van OwnTV te gebruiken. Een eigen Worker-URL heeft voorrang op een directe API-sleutel. Accountsessies blijven profielspecifiek.</string>
+    <string name="settings_remove_custom_access">Aangepaste toegang verwijderen</string>
     <string name="settings_audio">Audio</string>
     <string name="settings_preferred_audio_language">Voorkeurstaal voor audio</string>
     <string name="settings_audio_sync">Audiosynchronisatie</string>
@@ -484,7 +516,7 @@
     <string name="settings_guide_synced">Programmagids gesynchroniseerd</string>
     <string name="settings_guide_sync_failed">Synchroniseren van programmagids mislukt</string>
     <string name="settings_restore_remote_title">Herstellen vanaf een ander apparaat</string>
-    <string name="settings_restore_remote_description">Scan op een telefoon of laptop die met dezelfde Wi-Fi is verbonden de QR-code (of open de URL), voer deze PIN in, kies uw OwnTV-back-upbestand en tik op Naar tv verzenden. Vervolgens kiest u hier wat u wilt herstellen.</string>
+    <string name="settings_restore_remote_description">Scan op een telefoon, tablet of computer die met dezelfde Wi-Fi is verbonden de QR-code (of open de URL), voer deze PIN in, kies uw OwnTV-back-upbestand en tik op Naar tv verzenden. Vervolgens kiest u hier wat u wilt herstellen.</string>
     <string name="settings_opening_server">Server openen…</string>
     <string name="settings_enter_pin_browser">Voer deze PIN in de browser in</string>
     <string name="settings_companion_qr">QR-code voor de companion-URL</string>
@@ -492,7 +524,7 @@
     <string name="settings_try_again">Opnieuw proberen</string>
     <string name="settings_new_pin">Opnieuw beginnen met een nieuwe PIN</string>
     <string name="settings_download_remote_title">Downloaden op een ander apparaat</string>
-    <string name="settings_download_remote_description">Scan op een telefoon of laptop die met dezelfde Wi-Fi is verbonden de QR-code (of open de URL), voer deze PIN in en download uw back-upbestand om het veilig te bewaren.</string>
+    <string name="settings_download_remote_description">Scan op een telefoon, tablet of computer die met dezelfde Wi-Fi is verbonden de QR-code (of open de URL), voer deze PIN in en download uw back-upbestand om het veilig te bewaren.</string>
     <string name="settings_preparing_backup">Back-up voorbereiden…</string>
     <string name="settings_glass_effect_on">Glaseffect: aan</string>
     <string name="settings_glass_effect_off">Glaseffect: uit</string>

@@ -1236,7 +1236,7 @@ class BackupManager(
         /**
          * Biggest wallpaper we will carry inside a backup (see `currentWallpaper`). Held below the
          * companion upload cap (`CompanionHttpServer.UPLOAD_BODY_LIMIT`, 16 MB) with room for base64's
-         * ~33% inflation, so a backup that exports fine can always be sent back over the phone link.
+         * ~33% inflation, so a backup that exports fine can always be sent back over the remote companion link.
          */
         private const val MAX_WALLPAPER_BYTES = 8L * 1024 * 1024
 

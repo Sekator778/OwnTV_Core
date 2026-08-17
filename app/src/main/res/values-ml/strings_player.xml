@@ -204,12 +204,15 @@
     <string name="player_subtitles_tags_separator"> · </string>
     <string name="player_subtitles_search">തിരയുക</string>
     <string name="player_subtitles_connected_as">ബന്ധിപ്പിച്ചിരിക്കുന്നത്</string>
+    <string name="player_subtitles_connected_user"><xliff:g id="username">%1$s</xliff:g> ആയി കണക്റ്റ് ചെയ്തു</string>
     <string name="player_subtitles_resets">പുനഃസജ്ജമാകുന്നത്</string>
     <string name="player_subtitles_free_account">സൗജന്യം</string>
     <string name="player_subtitles_in"><xliff:g id="value">%1$s</xliff:g></string>
     <string name="player_subtitles_enter_credentials">നിങ്ങളുടെ OpenSubtitles ഉപയോക്തൃനാമവും പാസ്‌വേഡും നൽകുക.</string>
     <string name="player_subtitles_invalid_credentials">ആ അക്കൗണ്ട് വിവരങ്ങൾ ഉപയോഗിച്ച് OpenSubtitles-ലേക്ക് സൈൻ ഇൻ ചെയ്യാനായില്ല.</string>
     <string name="player_subtitles_sign_in_network_error">OpenSubtitles-നെ ബന്ധപ്പെടാനായില്ല. ഇന്റർനെറ്റ് കണക്ഷൻ പരിശോധിച്ച് വീണ്ടും ശ്രമിക്കുക.</string>
+    <!-- Translators: Error when OpenSubtitles answers the sign-in with an HTTP error code (e.g. 403, 429, 500). The placeholder is that code. -->
+    <string name="player_subtitles_sign_in_server_error">OpenSubtitles അഭ്യർത്ഥന നിരസിച്ചു (പിശക് <xliff:g id="code">%1$d</xliff:g>). നിങ്ങളുടെ ഇന്റർനെറ്റ് കണക്ഷൻ പ്രവർത്തിക്കുന്നുണ്ട് — പിന്നീട് വീണ്ടും ശ്രമിക്കുക, പ്രശ്നം അറിയിക്കുമ്പോൾ ഈ നമ്പർ ചേർക്കുക.</string>
     <string name="player_subtitles_refresh_network_error">OpenSubtitles പുതുക്കാനായില്ല. ഇന്റർനെറ്റ് കണക്ഷൻ പരിശോധിക്കുക.</string>
     <string name="player_subtitles_no_matches_all_languages">പൊരുത്തപ്പെടുന്ന സബ്ടൈറ്റിലുകൾ ഒന്നും കണ്ടെത്തിയില്ല. തിരയൽ ശീർഷകം എഡിറ്റ് ചെയ്ത് ശ്രമിക്കുക.</string>
     <string name="player_subtitles_no_matches_chosen_language">നിങ്ങൾ തിരഞ്ഞെടുത്ത ഭാഷയിൽ പൊരുത്തപ്പെടുന്ന സബ്ടൈറ്റിലുകൾ ഒന്നും കണ്ടെത്തിയില്ല.</string>

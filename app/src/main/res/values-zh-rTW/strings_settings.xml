@@ -95,6 +95,22 @@
     <string name="settings_metadata_tmdb_only_description">所有欄位優先使用 TMDB；只有 TMDB 沒有資料時才改用播放清單。</string>
     <string name="settings_selected">已選取</string>
     <string name="settings_metadata_allowance">每日額度</string>
+    <string name="settings_metadata_reset_automatic">自動重設</string>
+    <string name="settings_metadata_library_details">媒體庫詳情</string>
+    <string name="settings_metadata_test_connection">測試目前連線</string>
+    <string name="settings_allowance_available">可用</string>
+    <string name="settings_allowance_refills"><xliff:g id="time">%1$s</xliff:g> 恢復</string>
+    <string name="settings_allowance_minute">分鐘</string>
+    <string name="settings_allowance_hour">小時</string>
+    <string name="settings_allowance_day">天</string>
+    <plurals name="settings_allowance_value">
+        <item quantity="other">剩餘 <xliff:g id="remaining">%1$d</xliff:g> / <xliff:g id="limit">%2$d</xliff:g></item>
+    </plurals>
+    <string name="settings_metadata_active_source">目前來源</string>
+    <string name="settings_metadata_shared_worker_description">OwnTV Worker · 無需設定</string>
+    <string name="settings_metadata_connection">連線</string>
+    <string name="settings_metadata_remote_advanced">遠端取得進階 TMDB 資訊</string>
+    <string name="settings_metadata_remote_advanced_description">使用你自己的 TMDB API 金鑰或自建 Worker，而不是共用的預設服務。</string>
     <string name="settings_metadata_usage_label">用量</string>
     <string name="settings_metadata_usage_value"><xliff:g id="min_used">%1$d</xliff:g>/<xliff:g id="min_total">%2$d</xliff:g> 分鐘 · <xliff:g id="hr_used">%3$d</xliff:g>/<xliff:g id="hr_total">%4$d</xliff:g> 小時 · <xliff:g id="day_used">%5$d</xliff:g>/<xliff:g id="day_total">%6$d</xliff:g> 天</string>
     <string name="settings_metadata_source_label">來源</string>
@@ -110,9 +126,9 @@
     <string name="settings_advanced_options">進階選項</string>
     <string name="settings_advanced_metadata_description">使用您自己的 TMDB API 金鑰或自行架設的伺服器，而不使用共用預設值。</string>
     <string name="settings_metadata_server_description">兩者皆留空即可使用內建的共用伺服器（無須設定）。輸入您自己的 TMDB API 金鑰可直接呼叫 TMDB，或輸入自行架設的伺服器 URL 以使用自己的代理伺服器／鏡像。URL 的優先順序高於金鑰。</string>
-    <string name="settings_metadata_key_from_phone">用手機取得金鑰</string>
-    <string name="settings_metadata_key_from_phone_desc">用手機掃描 QR 碼，在手機上登入 TMDB 並傳送金鑰。不需要用遙控器輸入。</string>
-    <string name="settings_metadata_key_received">已從手機接收 TMDB 金鑰</string>
+    <string name="settings_metadata_key_from_phone">用其他裝置取得金鑰</string>
+    <string name="settings_metadata_key_from_phone_desc">用手機、平板或電腦掃描 QR 碼，在該裝置上登入 TMDB 並傳送金鑰。不需要用遙控器輸入。</string>
+    <string name="settings_metadata_key_received">已接收 TMDB 金鑰</string>
     <string name="settings_tmdb_api_key">TMDB API 金鑰 (v3)</string>
     <string name="settings_self_host_url">自行架設的伺服器 URL</string>
     <string name="settings_test">測試</string>
@@ -416,7 +432,22 @@
     <string name="settings_preferred_subtitle_language">偏好的字幕語言</string>
     <string name="settings_preferred_language_description">有此字幕軌時自動選取。</string>
     <string name="settings_open_subtitles">OpenSubtitles</string>
+    <string name="settings_open_subtitles_connected">已連線</string>
+    <string name="settings_open_subtitles_reset_in"><xliff:g id="hours">%1$d</xliff:g> 小時 <xliff:g id="minutes">%2$d</xliff:g> 分鐘後</string>
     <string name="settings_open_subtitles_description">登入以搜尋和下載字幕，以及管理已下載的字幕。每個使用者檔案各自設定；需要免費的 opensubtitles.com 帳號。</string>
+    <string name="settings_open_subtitles_advanced">進階選項</string>
+    <string name="settings_open_subtitles_advanced_description">使用你自己的應用程式 API 金鑰或自建的 OpenSubtitles Worker。</string>
+    <string name="settings_open_subtitles_setup_title">設定 OpenSubtitles</string>
+    <string name="settings_open_subtitles_setup_description">使用你的 OpenSubtitles 帳號登入。</string>
+    <string name="settings_open_subtitles_setup_remote">遠端</string>
+    <string name="settings_open_subtitles_setup_remote_description">在同一 Wi-Fi 下另一台裝置（手機、平板或電腦）的瀏覽器中填寫你的資訊。</string>
+    <string name="settings_open_subtitles_setup_local">在此輸入</string>
+    <string name="settings_open_subtitles_setup_local_description">用遙控器在這台電視上輸入你的資訊。</string>
+    <string name="settings_open_subtitles_api_key">OpenSubtitles 應用程式 API 金鑰</string>
+    <string name="settings_worker_server_url">Worker / 伺服器網址</string>
+    <string name="settings_shared">共用</string>
+    <string name="settings_open_subtitles_access_priority">兩項都留空即使用 OwnTV 的共用 Worker。自訂 Worker 網址優先於直接填寫的 API 金鑰。帳號登入狀態仍依設定檔分別儲存。</string>
+    <string name="settings_remove_custom_access">移除自訂存取</string>
     <string name="settings_audio">音訊</string>
     <string name="settings_preferred_audio_language">偏好的音訊語言</string>
     <string name="settings_audio_sync">音訊同步</string>
@@ -482,7 +513,7 @@
     <string name="settings_guide_synced">電視節目表已同步</string>
     <string name="settings_guide_sync_failed">電視節目表同步失敗</string>
     <string name="settings_restore_remote_title">從其他裝置還原</string>
-    <string name="settings_restore_remote_description">在連接至相同 Wi-Fi 的手機或筆記型電腦上掃描 QR 圖碼（或開啟網址），輸入此 PIN，選擇您的 OwnTV 備份檔案，然後點選「傳送至電視」。接著您可在此選擇要還原的內容。</string>
+    <string name="settings_restore_remote_description">在連接至相同 Wi-Fi 的手機、平板或電腦上掃描 QR 圖碼（或開啟網址），輸入此 PIN，選擇您的 OwnTV 備份檔案，然後點選「傳送至電視」。接著您可在此選擇要還原的內容。</string>
     <string name="settings_opening_server">正在開啟伺服器…</string>
     <string name="settings_enter_pin_browser">在瀏覽器中輸入此 PIN</string>
     <string name="settings_companion_qr">輔助工具網址的 QR 圖碼</string>
@@ -490,7 +521,7 @@
     <string name="settings_try_again">再試一次</string>
     <string name="settings_new_pin">使用新的 PIN 重新開始</string>
     <string name="settings_download_remote_title">在其他裝置上下載</string>
-    <string name="settings_download_remote_description">在連接至相同 Wi-Fi 的手機或筆記型電腦上掃描 QR 圖碼（或開啟網址），輸入此 PIN，然後下載您的備份檔案並妥善保存。</string>
+    <string name="settings_download_remote_description">在連接至相同 Wi-Fi 的手機、平板或電腦上掃描 QR 圖碼（或開啟網址），輸入此 PIN，然後下載您的備份檔案並妥善保存。</string>
     <string name="settings_preparing_backup">正在準備備份…</string>
     <string name="settings_glass_effect_on">玻璃效果：開啟</string>
     <string name="settings_glass_effect_off">玻璃效果：關閉</string>

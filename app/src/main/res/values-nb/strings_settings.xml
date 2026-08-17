@@ -95,6 +95,23 @@
     <string name="settings_metadata_tmdb_only_description">Foretrekk TMDB for alle felt. Bruk bare spillelisten når TMDB ikke har noe.</string>
     <string name="settings_selected">Valgt</string>
     <string name="settings_metadata_allowance">Din daglige andel</string>
+    <string name="settings_metadata_reset_automatic">Nullstilles automatisk</string>
+    <string name="settings_metadata_library_details">Bibliotekdetaljer</string>
+    <string name="settings_metadata_test_connection">Test gjeldende tilkobling</string>
+    <string name="settings_allowance_available">Tilgjengelig</string>
+    <string name="settings_allowance_refills">Fylles på <xliff:g id="time">%1$s</xliff:g></string>
+    <string name="settings_allowance_minute">Minutt</string>
+    <string name="settings_allowance_hour">Time</string>
+    <string name="settings_allowance_day">Dag</string>
+    <plurals name="settings_allowance_value">
+        <item quantity="one"><xliff:g id="remaining">%1$d</xliff:g> / <xliff:g id="limit">%2$d</xliff:g> igjen</item>
+        <item quantity="other"><xliff:g id="remaining">%1$d</xliff:g> / <xliff:g id="limit">%2$d</xliff:g> igjen</item>
+    </plurals>
+    <string name="settings_metadata_active_source">Aktiv kilde</string>
+    <string name="settings_metadata_shared_worker_description">OwnTV Worker · ingen oppsett</string>
+    <string name="settings_metadata_connection">Tilkobling</string>
+    <string name="settings_metadata_remote_advanced">Hent avanserte TMDB-opplysninger eksternt</string>
+    <string name="settings_metadata_remote_advanced_description">Bruk din egen TMDB-API-nøkkel eller en selvhostet Worker i stedet for den delte standarden.</string>
     <string name="settings_metadata_usage_label">Bruk</string>
     <string name="settings_metadata_usage_value"><xliff:g id="min_used">%1$d</xliff:g>/<xliff:g id="min_total">%2$d</xliff:g> min · <xliff:g id="hr_used">%3$d</xliff:g>/<xliff:g id="hr_total">%4$d</xliff:g> time · <xliff:g id="day_used">%5$d</xliff:g>/<xliff:g id="day_total">%6$d</xliff:g> dag</string>
     <string name="settings_metadata_source_label">Kilde</string>
@@ -110,9 +127,9 @@
     <string name="settings_advanced_options">Avanserte alternativer</string>
     <string name="settings_advanced_metadata_description">Bruk din egen TMDB API-nøkkel eller en egenvertsbasert server i stedet for den delte standardløsningen.</string>
     <string name="settings_metadata_server_description">La begge feltene stå tomme for å bruke den innebygde delte serveren (krever ikke oppsett). Angi din egen TMDB API-nøkkel for å kontakte TMDB direkte, eller en URL til en egenvertsbasert server for å bruke din egen proxy eller speilserver. En URL prioriteres over en nøkkel.</string>
-    <string name="settings_metadata_key_from_phone">Hent nøkkelen fra telefonen</string>
-    <string name="settings_metadata_key_from_phone_desc">Skann en kode med telefonen, logg inn på TMDB der, og send nøkkelen over. Ingenting å skrive på fjernkontrollen.</string>
-    <string name="settings_metadata_key_received">TMDB-nøkkel mottatt fra telefonen</string>
+    <string name="settings_metadata_key_from_phone">Hent nøkkelen fra en annen enhet</string>
+    <string name="settings_metadata_key_from_phone_desc">Skann koden med en telefon, et nettbrett eller en datamaskin, logg inn på TMDB der, og send nøkkelen over. Ingenting å skrive på fjernkontrollen.</string>
+    <string name="settings_metadata_key_received">TMDB-nøkkel mottatt</string>
     <string name="settings_tmdb_api_key">TMDB API-nøkkel (v3)</string>
     <string name="settings_self_host_url">URL til egenvertsbasert server</string>
     <string name="settings_test">Test</string>
@@ -417,7 +434,22 @@
     <string name="settings_preferred_subtitle_language">Foretrukket undertekstspråk</string>
     <string name="settings_preferred_language_description">Velg dette tekstsporet automatisk når det er tilgjengelig.</string>
     <string name="settings_open_subtitles">OpenSubtitles</string>
+    <string name="settings_open_subtitles_connected">Tilkoblet</string>
+    <string name="settings_open_subtitles_reset_in">Om <xliff:g id="hours">%1$d</xliff:g> t <xliff:g id="minutes">%2$d</xliff:g> min</string>
     <string name="settings_open_subtitles_description">Logg på for å søke etter og laste ned undertekster samt administrere nedlastede undertekster. Gjelder per profil. En gratis konto på opensubtitles.com kreves.</string>
+    <string name="settings_open_subtitles_advanced">Avanserte innstillinger</string>
+    <string name="settings_open_subtitles_advanced_description">Bruk din egen applikasjons-API-nøkkel eller en selvhostet OpenSubtitles Worker.</string>
+    <string name="settings_open_subtitles_setup_title">Konfigurer OpenSubtitles</string>
+    <string name="settings_open_subtitles_setup_description">Logg inn med OpenSubtitles-kontoen din.</string>
+    <string name="settings_open_subtitles_setup_remote">Eksternt</string>
+    <string name="settings_open_subtitles_setup_remote_description">Fyll inn opplysningene i en nettleser på en annen enhet på samme Wi-Fi – telefon, nettbrett eller datamaskin.</string>
+    <string name="settings_open_subtitles_setup_local">Skriv inn her</string>
+    <string name="settings_open_subtitles_setup_local_description">Skriv inn opplysningene på denne TV-en med fjernkontrollen.</string>
+    <string name="settings_open_subtitles_api_key">OpenSubtitles applikasjons-API-nøkkel</string>
+    <string name="settings_worker_server_url">Worker-/server-URL</string>
+    <string name="settings_shared">Delt</string>
+    <string name="settings_open_subtitles_access_priority">La begge stå tomme for å bruke OwnTVs delte Worker. En egen Worker-URL har forrang over en direkte API-nøkkel. Kontoøkter er fortsatt profilspesifikke.</string>
+    <string name="settings_remove_custom_access">Fjern egendefinert tilgang</string>
     <string name="settings_audio">Lyd</string>
     <string name="settings_preferred_audio_language">Foretrukket lydspråk</string>
     <string name="settings_audio_sync">Lydsynkronisering</string>
@@ -484,7 +516,7 @@
     <string name="settings_guide_synced">Programoversikten er synkronisert</string>
     <string name="settings_guide_sync_failed">Synkronisering av programoversikten mislyktes</string>
     <string name="settings_restore_remote_title">Gjenopprett fra en annen enhet</string>
-    <string name="settings_restore_remote_description">Skann QR-koden (eller åpne nettadressen) på en telefon eller bærbar PC på samme Wi-Fi, skriv inn denne PIN-koden, velg OwnTV-sikkerhetskopifilen, og trykk på Send til TV. Deretter velger du hva som skal gjenopprettes her.</string>
+    <string name="settings_restore_remote_description">Skann QR-koden (eller åpne nettadressen) på en telefon, et nettbrett eller en datamaskin på samme Wi-Fi, skriv inn denne PIN-koden, velg OwnTV-sikkerhetskopifilen, og trykk på Send til TV. Deretter velger du hva som skal gjenopprettes her.</string>
     <string name="settings_opening_server">Åpner serveren…</string>
     <string name="settings_enter_pin_browser">Skriv inn denne PIN-koden i nettleseren</string>
     <string name="settings_companion_qr">QR-kode for nettadressen til tilleggstjenesten</string>
@@ -492,7 +524,7 @@
     <string name="settings_try_again">Prøv igjen</string>
     <string name="settings_new_pin">Start på nytt med en ny PIN-kode</string>
     <string name="settings_download_remote_title">Last ned på en annen enhet</string>
-    <string name="settings_download_remote_description">Skann QR-koden (eller åpne nettadressen) på en telefon eller bærbar PC på samme Wi-Fi, skriv inn denne PIN-koden, og last ned sikkerhetskopifilen for å oppbevare den trygt.</string>
+    <string name="settings_download_remote_description">Skann QR-koden (eller åpne nettadressen) på en telefon, et nettbrett eller en datamaskin på samme Wi-Fi, skriv inn denne PIN-koden, og last ned sikkerhetskopifilen for å oppbevare den trygt.</string>
     <string name="settings_preparing_backup">Klargjør sikkerhetskopien…</string>
     <string name="settings_glass_effect_on">Glasseffekt: På</string>
     <string name="settings_glass_effect_off">Glasseffekt: Av</string>

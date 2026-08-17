@@ -212,8 +212,20 @@
     <string name="settings_metadata_connection">Connection</string>
     <string name="settings_metadata_remote_advanced">Get advanced TMDB info via remote</string>
     <string name="settings_metadata_remote_advanced_description">Use your own TMDB API key or self-hosted Worker instead of the shared default.</string>
-    <string name="settings_open_subtitles_advanced">Advanced OpenSubtitles access via remote</string>
+    <string name="settings_open_subtitles_advanced">Advanced options</string>
     <string name="settings_open_subtitles_advanced_description">Use your own application API key or self-hosted OpenSubtitles Worker.</string>
+    <!-- Translators: Title of the dialog that offers Remote or Enter here before OpenSubtitles sign-in. -->
+    <string name="settings_open_subtitles_setup_title">Set up OpenSubtitles</string>
+    <!-- Translators: Description under the OpenSubtitles setup title. -->
+    <string name="settings_open_subtitles_setup_description">Sign in with your OpenSubtitles account.</string>
+    <!-- Translators: Option that hands the details over from a browser on another device. Matches the Remote wording used elsewhere in the app. -->
+    <string name="settings_open_subtitles_setup_remote">Remote</string>
+    <!-- Translators: Description of the Remote option. Any browser on the same Wi-Fi works, not only a phone. -->
+    <string name="settings_open_subtitles_setup_remote_description">Fill in your details in a browser on another device on the same Wi-Fi — a phone, tablet or computer.</string>
+    <!-- Translators: Option that types the details on the TV itself. Contrasts with Remote. -->
+    <string name="settings_open_subtitles_setup_local">Enter here</string>
+    <!-- Translators: Description of the Enter here option. "the remote" is the TV remote control. -->
+    <string name="settings_open_subtitles_setup_local_description">Type your details on this TV with the remote.</string>
     <string name="settings_open_subtitles_api_key">OpenSubtitles application API key</string>
     <string name="settings_worker_server_url">Worker / server URL</string>
     <string name="settings_shared">Shared</string>
@@ -252,12 +264,12 @@
     <!-- Translators: Description of the TMDB server configuration options. -->
     <string name="settings_metadata_server_description">Leave both blank to use the built-in shared server (no setup). Enter your own TMDB API key to call TMDB directly, or a self-hosted server URL to use your own proxy/mirror. A URL takes priority over a key.</string>
     <!-- Translators: Text-field label for the TMDB API key. 'TMDB' is a brand name. -->
-    <!-- Translators: Row that opens the phone handover, so the key need not be typed on a remote. -->
-    <string name="settings_metadata_key_from_phone">Get key from your phone</string>
+    <!-- Translators: Row that opens the remote hand-over, so the key need not be typed with the remote. -->
+    <string name="settings_metadata_key_from_phone">Get key from another device</string>
     <!-- Translators: Description of that row. -->
-    <string name="settings_metadata_key_from_phone_desc">Scan a code with your phone, sign in to TMDB there, and send the key across. Nothing to type on the remote.</string>
-    <!-- Translators: Toast shown on the TV when a key arrives from the phone. -->
-    <string name="settings_metadata_key_received">TMDB key received from your phone</string>
+    <string name="settings_metadata_key_from_phone_desc">Scan the code with a phone, tablet or computer, sign in to TMDB there, and send the key across. Nothing to type with the remote.</string>
+    <!-- Translators: Toast shown on the TV when a key arrives from the remote device. -->
+    <string name="settings_metadata_key_received">TMDB key received</string>
     <string name="settings_tmdb_api_key">TMDB API key (v3)</string>
     <!-- Translators: Text-field label for a self-hosted TMDB proxy URL. -->
     <string name="settings_self_host_url">Self-host server URL</string>
@@ -992,7 +1004,7 @@ Choose Balanced if a channel becomes unreliable.</string>
     <!-- Translators: Screen title for the remote restore companion screen. -->
     <string name="settings_restore_remote_title">Restore from another device</string>
     <!-- Translators: Description of the remote restore process. -->
-    <string name="settings_restore_remote_description">On a phone or laptop on the same Wi-Fi, scan the QR (or open the URL), enter this PIN, choose your OwnTV backup file and tap Send to TV. You then pick what to restore here.</string>
+    <string name="settings_restore_remote_description">On a phone, tablet or computer on the same Wi-Fi, scan the QR (or open the URL), enter this PIN, choose your OwnTV backup file and tap Send to TV. You then pick what to restore here.</string>
     <!-- Translators: Loading status shown while the companion HTTP server is starting. -->
     <string name="settings_opening_server">Opening server…</string>
     <!-- Translators: Instruction above the PIN display telling the user to enter it in the browser. -->
@@ -1008,7 +1020,7 @@ Choose Balanced if a channel becomes unreliable.</string>
     <!-- Translators: Screen title for the remote download companion screen. -->
     <string name="settings_download_remote_title">Download on another device</string>
     <!-- Translators: Description of the remote backup download process. -->
-    <string name="settings_download_remote_description">On a phone or laptop on the same Wi-Fi, scan the QR (or open the URL), enter this PIN, and download your backup file to keep it safe.</string>
+    <string name="settings_download_remote_description">On a phone, tablet or computer on the same Wi-Fi, scan the QR (or open the URL), enter this PIN, and download your backup file to keep it safe.</string>
     <!-- Translators: Loading status shown while preparing a backup file. -->
     <string name="settings_preparing_backup">Preparing backup…</string>
     <!-- Translators: Status label when the glass effect is enabled. -->

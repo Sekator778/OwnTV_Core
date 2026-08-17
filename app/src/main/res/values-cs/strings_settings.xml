@@ -95,6 +95,25 @@
     <string name="settings_metadata_tmdb_only_description">U všech polí upřednostnit TMDB; údaje z playlistu použít pouze v případě, že TMDB nic nenajde.</string>
     <string name="settings_selected">Vybrané</string>
     <string name="settings_metadata_allowance">Váš denní podíl</string>
+    <string name="settings_metadata_reset_automatic">Obnovuje se automaticky</string>
+    <string name="settings_metadata_library_details">Podrobnosti knihovny</string>
+    <string name="settings_metadata_test_connection">Otestovat aktuální připojení</string>
+    <string name="settings_allowance_available">Dostupné</string>
+    <string name="settings_allowance_refills">Obnoví se <xliff:g id="time">%1$s</xliff:g></string>
+    <string name="settings_allowance_minute">Minuta</string>
+    <string name="settings_allowance_hour">Hodina</string>
+    <string name="settings_allowance_day">Den</string>
+    <plurals name="settings_allowance_value">
+        <item quantity="one">zbývá <xliff:g id="remaining">%1$d</xliff:g> / <xliff:g id="limit">%2$d</xliff:g></item>
+        <item quantity="few">zbývá <xliff:g id="remaining">%1$d</xliff:g> / <xliff:g id="limit">%2$d</xliff:g></item>
+        <item quantity="many">zbývá <xliff:g id="remaining">%1$d</xliff:g> / <xliff:g id="limit">%2$d</xliff:g></item>
+        <item quantity="other">zbývá <xliff:g id="remaining">%1$d</xliff:g> / <xliff:g id="limit">%2$d</xliff:g></item>
+    </plurals>
+    <string name="settings_metadata_active_source">Aktivní zdroj</string>
+    <string name="settings_metadata_shared_worker_description">OwnTV Worker · bez nastavování</string>
+    <string name="settings_metadata_connection">Připojení</string>
+    <string name="settings_metadata_remote_advanced">Získat pokročilé údaje TMDB vzdáleně</string>
+    <string name="settings_metadata_remote_advanced_description">Použijte vlastní klíč TMDB API nebo vlastní Worker místo společného výchozího.</string>
     <string name="settings_metadata_usage_label">Využití</string>
     <string name="settings_metadata_usage_value"><xliff:g id="min_used">%1$d</xliff:g>/<xliff:g id="min_total">%2$d</xliff:g> min · <xliff:g id="hr_used">%3$d</xliff:g>/<xliff:g id="hr_total">%4$d</xliff:g> hod. · <xliff:g id="day_used">%5$d</xliff:g>/<xliff:g id="day_total">%6$d</xliff:g> den</string>
     <string name="settings_metadata_source_label">Zdroj</string>
@@ -110,9 +129,9 @@
     <string name="settings_advanced_options">Pokročilé možnosti</string>
     <string name="settings_advanced_metadata_description">Používejte místo výchozího sdíleného nastavení vlastní klíč API TMDB nebo vlastní server.</string>
     <string name="settings_metadata_server_description">Chcete-li použít integrovaný sdílený server bez dalšího nastavení, ponechte obě pole prázdná. Chcete-li volat TMDB přímo, zadejte vlastní klíč API TMDB. Případně zadejte URL vlastního serveru a používejte vlastní proxy či zrcadlo. URL má přednost před klíčem.</string>
-    <string name="settings_metadata_key_from_phone">Získat klíč z telefonu</string>
-    <string name="settings_metadata_key_from_phone_desc">Naskenujte telefonem kód, přihlaste se tam k TMDB a odešlete klíč. Na dálkovém ovladači není co psát.</string>
-    <string name="settings_metadata_key_received">Klíč TMDB přijat z telefonu</string>
+    <string name="settings_metadata_key_from_phone">Získat klíč z jiného zařízení</string>
+    <string name="settings_metadata_key_from_phone_desc">Naskenujte kód telefonem, tabletem nebo počítačem, přihlaste se tam k TMDB a odešlete klíč. Na dálkovém ovladači není co psát.</string>
+    <string name="settings_metadata_key_received">Klíč TMDB přijat</string>
     <string name="settings_tmdb_api_key">Klíč API TMDB (v3)</string>
     <string name="settings_self_host_url">URL vlastního serveru</string>
     <string name="settings_test">Test</string>
@@ -419,7 +438,22 @@
     <string name="settings_preferred_subtitle_language">Preferovaný jazyk titulků</string>
     <string name="settings_preferred_language_description">Automaticky vybrat tuto stopu titulků, pokud je dostupná.</string>
     <string name="settings_open_subtitles">OpenSubtitles</string>
+    <string name="settings_open_subtitles_connected">Připojeno</string>
+    <string name="settings_open_subtitles_reset_in">Za <xliff:g id="hours">%1$d</xliff:g> h <xliff:g id="minutes">%2$d</xliff:g> min</string>
     <string name="settings_open_subtitles_description">Přihlaste se, abyste mohli vyhledávat a stahovat titulky a spravovat stažené titulky. Nastavení platí pro každý profil zvlášť a vyžaduje bezplatný účet na opensubtitles.com.</string>
+    <string name="settings_open_subtitles_advanced">Pokročilé možnosti</string>
+    <string name="settings_open_subtitles_advanced_description">Použijte vlastní aplikační klíč API nebo vlastní OpenSubtitles Worker.</string>
+    <string name="settings_open_subtitles_setup_title">Nastavit OpenSubtitles</string>
+    <string name="settings_open_subtitles_setup_description">Přihlaste se svým účtem OpenSubtitles.</string>
+    <string name="settings_open_subtitles_setup_remote">Vzdáleně</string>
+    <string name="settings_open_subtitles_setup_remote_description">Vyplňte údaje v prohlížeči na jiném zařízení ve stejné Wi-Fi – v telefonu, tabletu nebo počítači.</string>
+    <string name="settings_open_subtitles_setup_local">Zadat zde</string>
+    <string name="settings_open_subtitles_setup_local_description">Zadejte údaje přímo na této TV pomocí dálkového ovladače.</string>
+    <string name="settings_open_subtitles_api_key">Aplikační klíč API pro OpenSubtitles</string>
+    <string name="settings_worker_server_url">Adresa Workeru / serveru</string>
+    <string name="settings_shared">Společné</string>
+    <string name="settings_open_subtitles_access_priority">Pro společný Worker OwnTV nechte obojí prázdné. Vlastní adresa Workeru má přednost před přímým klíčem API. Přihlášení k účtu zůstává specifické pro profil.</string>
+    <string name="settings_remove_custom_access">Odebrat vlastní přístup</string>
     <string name="settings_audio">Zvuk</string>
     <string name="settings_preferred_audio_language">Preferovaný jazyk zvuku</string>
     <string name="settings_audio_sync">Synchronizace zvuku</string>
@@ -488,7 +522,7 @@
     <string name="settings_guide_synced">TV program synchronizován</string>
     <string name="settings_guide_sync_failed">Synchronizace TV programu se nezdařila</string>
     <string name="settings_restore_remote_title">Obnovit z jiného zařízení</string>
-    <string name="settings_restore_remote_description">Na telefonu nebo notebooku připojeném ke stejné síti Wi-Fi naskenujte QR kód (nebo otevřete adresu URL), zadejte tento PIN, vyberte soubor zálohy OwnTV a klepněte na Odeslat do TV. Potom zde vyberete, co chcete obnovit.</string>
+    <string name="settings_restore_remote_description">Na telefonu, tabletu nebo počítači připojeném ke stejné síti Wi-Fi naskenujte QR kód (nebo otevřete adresu URL), zadejte tento PIN, vyberte soubor zálohy OwnTV a klepněte na Odeslat do TV. Potom zde vyberete, co chcete obnovit.</string>
     <string name="settings_opening_server">Spouštění serveru…</string>
     <string name="settings_enter_pin_browser">Zadejte tento PIN v prohlížeči</string>
     <string name="settings_companion_qr">QR kód adresy URL doprovodné stránky</string>
@@ -496,7 +530,7 @@
     <string name="settings_try_again">Zkusit znovu</string>
     <string name="settings_new_pin">Spustit znovu s novým PIN</string>
     <string name="settings_download_remote_title">Stáhnout na jiném zařízení</string>
-    <string name="settings_download_remote_description">Na telefonu nebo notebooku připojeném ke stejné síti Wi-Fi naskenujte QR kód (nebo otevřete adresu URL), zadejte tento PIN a stáhněte si soubor zálohy, abyste jej mohli bezpečně uchovat.</string>
+    <string name="settings_download_remote_description">Na telefonu, tabletu nebo počítači připojeném ke stejné síti Wi-Fi naskenujte QR kód (nebo otevřete adresu URL), zadejte tento PIN a stáhněte si soubor zálohy, abyste jej mohli bezpečně uchovat.</string>
     <string name="settings_preparing_backup">Příprava zálohy…</string>
     <string name="settings_glass_effect_on">Efekt skla: Zapnuto</string>
     <string name="settings_glass_effect_off">Efekt skla: Vypnuto</string>

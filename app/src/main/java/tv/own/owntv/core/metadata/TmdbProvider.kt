@@ -65,6 +65,8 @@ class TmdbProvider(
         if (key.isBlank()) return emptyMap()
         return mapOf(
             "x-owntv-key" to key,
+            // The default Worker validates the key per app version, so it needs the version alongside it.
+            "x-owntv-version" to BuildConfig.VERSION_NAME,
             "x-owntv-client" to runCatching { clientId.get() }.getOrDefault(""),
         )
     }

@@ -204,12 +204,15 @@
     <string name="player_subtitles_tags_separator"> · </string>
     <string name="player_subtitles_search">Ara</string>
     <string name="player_subtitles_connected_as">Bağlı hesap</string>
+    <string name="player_subtitles_connected_user"><xliff:g id="username">%1$s</xliff:g> olarak bağlandı</string>
     <string name="player_subtitles_resets">Yenilenme zamanı</string>
     <string name="player_subtitles_free_account">Ücretsiz</string>
     <string name="player_subtitles_in"><xliff:g id="value">%1$s</xliff:g></string>
     <string name="player_subtitles_enter_credentials">OpenSubtitles kullanıcı adınızı ve parolanızı girin.</string>
     <string name="player_subtitles_invalid_credentials">OpenSubtitles bu hesap bilgileriyle oturum açamadı.</string>
     <string name="player_subtitles_sign_in_network_error">OpenSubtitles\'a ulaşılamadı. İnternet bağlantınızı kontrol edip tekrar deneyin.</string>
+    <!-- Translators: Error when OpenSubtitles answers the sign-in with an HTTP error code (e.g. 403, 429, 500). The placeholder is that code. -->
+    <string name="player_subtitles_sign_in_server_error">OpenSubtitles isteği reddetti (hata <xliff:g id="code">%1$d</xliff:g>). İnternet bağlantınız çalışıyor — daha sonra tekrar deneyin ve sorunu bildirirken bu numarayı belirtin.</string>
     <string name="player_subtitles_refresh_network_error">OpenSubtitles yenilenemedi. İnternet bağlantınızı kontrol edin.</string>
     <string name="player_subtitles_no_matches_all_languages">Eşleşen altyazı bulunamadı. Arama başlığını düzenlemeyi deneyin.</string>
     <string name="player_subtitles_no_matches_chosen_language">Seçtiğiniz dilde eşleşen altyazı bulunamadı.</string>

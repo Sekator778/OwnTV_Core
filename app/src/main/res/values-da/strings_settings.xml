@@ -95,6 +95,23 @@
     <string name="settings_metadata_tmdb_only_description">Foretræk TMDB for alle felter. Brug kun din afspilningsliste som reserve, når TMDB ikke har nogen oplysninger.</string>
     <string name="settings_selected">Valgt</string>
     <string name="settings_metadata_allowance">Din daglige andel</string>
+    <string name="settings_metadata_reset_automatic">Nulstilles automatisk</string>
+    <string name="settings_metadata_library_details">Bibliotekdetaljer</string>
+    <string name="settings_metadata_test_connection">Test den aktuelle forbindelse</string>
+    <string name="settings_allowance_available">Tilgængelig</string>
+    <string name="settings_allowance_refills">Genopfyldes <xliff:g id="time">%1$s</xliff:g></string>
+    <string name="settings_allowance_minute">Minut</string>
+    <string name="settings_allowance_hour">Time</string>
+    <string name="settings_allowance_day">Dag</string>
+    <plurals name="settings_allowance_value">
+        <item quantity="one"><xliff:g id="remaining">%1$d</xliff:g> / <xliff:g id="limit">%2$d</xliff:g> tilbage</item>
+        <item quantity="other"><xliff:g id="remaining">%1$d</xliff:g> / <xliff:g id="limit">%2$d</xliff:g> tilbage</item>
+    </plurals>
+    <string name="settings_metadata_active_source">Aktiv kilde</string>
+    <string name="settings_metadata_shared_worker_description">OwnTV Worker · ingen opsætning</string>
+    <string name="settings_metadata_connection">Forbindelse</string>
+    <string name="settings_metadata_remote_advanced">Hent avancerede TMDB-oplysninger eksternt</string>
+    <string name="settings_metadata_remote_advanced_description">Brug din egen TMDB-API-nøgle eller en selvhostet Worker i stedet for den delte standard.</string>
     <string name="settings_metadata_usage_label">Forbrug</string>
     <string name="settings_metadata_usage_value"><xliff:g id="min_used">%1$d</xliff:g>/<xliff:g id="min_total">%2$d</xliff:g> min · <xliff:g id="hr_used">%3$d</xliff:g>/<xliff:g id="hr_total">%4$d</xliff:g> time · <xliff:g id="day_used">%5$d</xliff:g>/<xliff:g id="day_total">%6$d</xliff:g> dag</string>
     <string name="settings_metadata_source_label">Kilde</string>
@@ -110,9 +127,9 @@
     <string name="settings_advanced_options">Avancerede indstillinger</string>
     <string name="settings_advanced_metadata_description">Brug din egen TMDB API-nøgle eller en server med egen hosting i stedet for den fælles standard.</string>
     <string name="settings_metadata_server_description">Lad begge felter stå tomme for at bruge den indbyggede fællesserver (ingen opsætning). Angiv din egen TMDB API-nøgle for at kalde TMDB direkte eller URL\'en til en server med egen hosting for at bruge din egen proxy eller dit eget spejl. En URL har prioritet over en nøgle.</string>
-    <string name="settings_metadata_key_from_phone">Hent nøglen fra din telefon</string>
-    <string name="settings_metadata_key_from_phone_desc">Scan en kode med telefonen, log ind på TMDB der, og send nøglen over. Intet at taste på fjernbetjeningen.</string>
-    <string name="settings_metadata_key_received">TMDB-nøgle modtaget fra din telefon</string>
+    <string name="settings_metadata_key_from_phone">Hent nøglen fra en anden enhed</string>
+    <string name="settings_metadata_key_from_phone_desc">Scan koden med en telefon, tablet eller computer, log ind på TMDB der, og send nøglen over. Intet at taste på fjernbetjeningen.</string>
+    <string name="settings_metadata_key_received">TMDB-nøgle modtaget</string>
     <string name="settings_tmdb_api_key">TMDB API-nøgle (v3)</string>
     <string name="settings_self_host_url">URL til server med egen hosting</string>
     <string name="settings_test">Test</string>
@@ -417,7 +434,22 @@
     <string name="settings_preferred_subtitle_language">Foretrukket undertekstsprog</string>
     <string name="settings_preferred_language_description">Vælg automatisk dette undertekstspor, når det er tilgængeligt.</string>
     <string name="settings_open_subtitles">OpenSubtitles</string>
+    <string name="settings_open_subtitles_connected">Forbundet</string>
+    <string name="settings_open_subtitles_reset_in">Om <xliff:g id="hours">%1$d</xliff:g> t <xliff:g id="minutes">%2$d</xliff:g> min</string>
     <string name="settings_open_subtitles_description">Log ind for at søge efter og downloade undertekster samt administrere downloadede undertekster. Gælder pr. profil; der kræves en gratis konto på opensubtitles.com.</string>
+    <string name="settings_open_subtitles_advanced">Avancerede indstillinger</string>
+    <string name="settings_open_subtitles_advanced_description">Brug din egen applikations-API-nøgle eller en selvhostet OpenSubtitles Worker.</string>
+    <string name="settings_open_subtitles_setup_title">Konfigurer OpenSubtitles</string>
+    <string name="settings_open_subtitles_setup_description">Log ind med din OpenSubtitles-konto.</string>
+    <string name="settings_open_subtitles_setup_remote">Eksternt</string>
+    <string name="settings_open_subtitles_setup_remote_description">Udfyld dine oplysninger i en browser på en anden enhed på samme Wi-Fi – telefon, tablet eller computer.</string>
+    <string name="settings_open_subtitles_setup_local">Indtast her</string>
+    <string name="settings_open_subtitles_setup_local_description">Indtast dine oplysninger på dette tv med fjernbetjeningen.</string>
+    <string name="settings_open_subtitles_api_key">OpenSubtitles applikations-API-nøgle</string>
+    <string name="settings_worker_server_url">Worker-/server-URL</string>
+    <string name="settings_shared">Delt</string>
+    <string name="settings_open_subtitles_access_priority">Lad begge felter være tomme for at bruge OwnTV’s delte Worker. En egen Worker-URL har forrang for en direkte API-nøgle. Kontosessioner er fortsat profilspecifikke.</string>
+    <string name="settings_remove_custom_access">Fjern tilpasset adgang</string>
     <string name="settings_audio">Lyd</string>
     <string name="settings_preferred_audio_language">Foretrukket lydsprog</string>
     <string name="settings_audio_sync">Lydsynkronisering</string>
@@ -484,7 +516,7 @@
     <string name="settings_guide_synced">Tv-guiden er synkroniseret</string>
     <string name="settings_guide_sync_failed">Synkronisering af tv-guiden mislykkedes</string>
     <string name="settings_restore_remote_title">Gendan fra en anden enhed</string>
-    <string name="settings_restore_remote_description">Scan QR-koden på en telefon eller bærbar computer på samme Wi-Fi (eller åbn URL\'en), indtast denne PIN, vælg din OwnTV-sikkerhedskopifil, og tryk på Send til tv. Derefter vælger du her, hvad der skal gendannes.</string>
+    <string name="settings_restore_remote_description">Scan QR-koden på en telefon, tablet eller computer på samme Wi-Fi (eller åbn URL\'en), indtast denne PIN, vælg din OwnTV-sikkerhedskopifil, og tryk på Send til tv. Derefter vælger du her, hvad der skal gendannes.</string>
     <string name="settings_opening_server">Åbner server…</string>
     <string name="settings_enter_pin_browser">Indtast denne PIN i browseren</string>
     <string name="settings_companion_qr">QR-kode til ledsagerens URL</string>
@@ -492,7 +524,7 @@
     <string name="settings_try_again">Prøv igen</string>
     <string name="settings_new_pin">Start igen med en ny PIN</string>
     <string name="settings_download_remote_title">Download på en anden enhed</string>
-    <string name="settings_download_remote_description">Scan QR-koden på en telefon eller bærbar computer på samme Wi-Fi (eller åbn URL\'en), indtast denne PIN, og download din sikkerhedskopifil for at opbevare den sikkert.</string>
+    <string name="settings_download_remote_description">Scan QR-koden på en telefon, tablet eller computer på samme Wi-Fi (eller åbn URL\'en), indtast denne PIN, og download din sikkerhedskopifil for at opbevare den sikkert.</string>
     <string name="settings_preparing_backup">Forbereder sikkerhedskopi…</string>
     <string name="settings_glass_effect_on">Glaseffekt: Til</string>
     <string name="settings_glass_effect_off">Glaseffekt: Fra</string>

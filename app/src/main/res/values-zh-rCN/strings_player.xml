@@ -197,12 +197,15 @@
     <string name="player_subtitles_tags_separator"> · </string>
     <string name="player_subtitles_search">搜索</string>
     <string name="player_subtitles_connected_as">当前登录账户</string>
+    <string name="player_subtitles_connected_user">已以 <xliff:g id="username">%1$s</xliff:g> 连接</string>
     <string name="player_subtitles_resets">重置时间</string>
     <string name="player_subtitles_free_account">免费</string>
     <string name="player_subtitles_in"><xliff:g id="value">%1$s</xliff:g></string>
     <string name="player_subtitles_enter_credentials">请输入您的 OpenSubtitles 用户名和密码。</string>
     <string name="player_subtitles_invalid_credentials">OpenSubtitles 无法使用这些账户信息登录。</string>
     <string name="player_subtitles_sign_in_network_error">无法连接 OpenSubtitles。请检查互联网连接并重试。</string>
+    <!-- Translators: Error when OpenSubtitles answers the sign-in with an HTTP error code (e.g. 403, 429, 500). The placeholder is that code. -->
+    <string name="player_subtitles_sign_in_server_error">OpenSubtitles 拒绝了该请求（错误 <xliff:g id="code">%1$d</xliff:g>）。你的互联网连接正常，请稍后重试；如需反馈问题，请附上此编号。</string>
     <string name="player_subtitles_refresh_network_error">无法刷新 OpenSubtitles。请检查互联网连接。</string>
     <string name="player_subtitles_no_matches_all_languages">未找到匹配的字幕。请尝试修改搜索标题。</string>
     <string name="player_subtitles_no_matches_chosen_language">在你选择的语言中未找到匹配的字幕。</string>

@@ -8,7 +8,7 @@ import tv.own.owntv.core.model.SourceType
 
 /**
  * Localized HTML renderer for the companion web UI. Markup, CSS and protocol identifiers remain
- * here; every sentence or label visible to the phone is resolved from Android resources first.
+ * here; every sentence or label visible to the remote browser is resolved from Android resources first.
  */
 internal object CompanionHtml {
 
@@ -444,10 +444,19 @@ internal object CompanionHtml {
     }
 
     fun serviceConfigPage(context: Context, pin: String, openSubtitles: Boolean): String {
-        val title = context.getString(if (openSubtitles) R.string.settings_open_subtitles_advanced else R.string.settings_metadata_remote_advanced)
-        val description = context.getString(if (openSubtitles) R.string.settings_open_subtitles_advanced_description else R.string.settings_metadata_remote_advanced_description)
+        val title = context.getString(if (openSubtitles) R.string.settings_open_subtitles_setup_title else R.string.settings_metadata_remote_advanced)
+        val description = context.getString(if (openSubtitles) R.string.companion_open_subtitles_description else R.string.settings_metadata_remote_advanced_description)
         val keyLabel = context.getString(if (openSubtitles) R.string.settings_open_subtitles_api_key else R.string.settings_tmdb_api_key)
         val urlLabel = context.getString(R.string.settings_worker_server_url)
+        // OpenSubtitles is an account, not just a key: the credentials are the whole point of doing
+        // this from a browser instead of a remote. TMDB has no account, so it keeps the two fields.
+        val credentialFields = if (!openSubtitles) "" else """
+                <label>${context.getString(R.string.player_subtitles_username).h()} <input id="user" type="text" autocomplete="username" autocapitalize="off" spellcheck="false"></label>
+                <label>${context.getString(R.string.player_subtitles_password).h()} <input id="pass" type="password" autocomplete="current-password"></label>
+        """.trimIndent()
+        // Read back into the POST body only when the fields exist; '' keeps the TMDB body unchanged.
+        val credentialBody = if (!openSubtitles) "" else
+            ",username:(document.getElementById('user').value||''),password:(document.getElementById('pass').value||'')"
         val send = context.getString(R.string.companion_send_to_tv)
         val sending = context.getString(R.string.companion_sending)
         val failed = context.getString(R.string.companion_upload_failed).replace("%1\$d", "__STATUS__")
@@ -456,6 +465,7 @@ internal object CompanionHtml {
             <div class="card">
               <h1>${title.h()}</h1><p>${description.h()}</p>
               <form id="f" onsubmit="return false">
+                $credentialFields
                 <label>${keyLabel.h()} <input id="key" type="text" autocomplete="off" autocapitalize="off" spellcheck="false"></label>
                 <label>${urlLabel.h()} <input id="url" type="url" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="https://"></label>
                 <button class="go" id="send" type="submit">${send.h()}</button>
@@ -464,7 +474,7 @@ internal object CompanionHtml {
             <script>
               var k=document.getElementById('key'),u=document.getElementById('url'),b=document.getElementById('send'),s=document.getElementById('status');
               document.getElementById('f').addEventListener('submit',function(){
-                var body=new URLSearchParams({apiKey:(k.value||'').trim(),serverUrl:(u.value||'').trim()}).toString();
+                var body=new URLSearchParams({apiKey:(k.value||'').trim(),serverUrl:(u.value||'').trim()$credentialBody}).toString();
                 b.disabled=true;s.textContent=${sending.js()};
                 fetch('/serviceconfig?pin=$pin',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:body})
                   .then(function(res){if(res.ok){return res.text().then(function(t){document.open();document.write(t);document.close();});}b.disabled=false;s.textContent=${failed.js()}.replace('__STATUS__',String(res.status));})

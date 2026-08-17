@@ -204,12 +204,15 @@
     <string name="player_subtitles_tags_separator"> · </string>
     <string name="player_subtitles_search">Sök</string>
     <string name="player_subtitles_connected_as">Ansluten som</string>
+    <string name="player_subtitles_connected_user">Ansluten som <xliff:g id="username">%1$s</xliff:g></string>
     <string name="player_subtitles_resets">Återställs</string>
     <string name="player_subtitles_free_account">Gratis</string>
     <string name="player_subtitles_in"><xliff:g id="value">%1$s</xliff:g></string>
     <string name="player_subtitles_enter_credentials">Ange ditt användarnamn och lösenord för OpenSubtitles.</string>
     <string name="player_subtitles_invalid_credentials">OpenSubtitles kunde inte logga in med de kontouppgifterna.</string>
     <string name="player_subtitles_sign_in_network_error">Det gick inte att nå OpenSubtitles. Kontrollera internetanslutningen och försök igen.</string>
+    <!-- Translators: Error when OpenSubtitles answers the sign-in with an HTTP error code (e.g. 403, 429, 500). The placeholder is that code. -->
+    <string name="player_subtitles_sign_in_server_error">OpenSubtitles avvisade begäran (fel <xliff:g id="code">%1$d</xliff:g>). Din internetanslutning fungerar – försök igen senare och ange detta nummer om du rapporterar problemet.</string>
     <string name="player_subtitles_refresh_network_error">Det gick inte att uppdatera OpenSubtitles. Kontrollera internetanslutningen.</string>
     <string name="player_subtitles_no_matches_all_languages">Inga matchande undertexter hittades. Försök att redigera söktiteln.</string>
     <string name="player_subtitles_no_matches_chosen_language">Inga matchande undertexter hittades på ditt valda språk.</string>

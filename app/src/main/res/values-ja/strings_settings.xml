@@ -95,6 +95,22 @@
     <string name="settings_metadata_tmdb_only_description">すべての項目でTMDBを優先し、TMDBに情報がない場合のみプレイリストを使用します。</string>
     <string name="settings_selected">選択中</string>
     <string name="settings_metadata_allowance">1日の利用枠</string>
+    <string name="settings_metadata_reset_automatic">自動的にリセットされます</string>
+    <string name="settings_metadata_library_details">ライブラリの詳細</string>
+    <string name="settings_metadata_test_connection">現在の接続をテスト</string>
+    <string name="settings_allowance_available">利用可能</string>
+    <string name="settings_allowance_refills"><xliff:g id="time">%1$s</xliff:g> に回復</string>
+    <string name="settings_allowance_minute">分</string>
+    <string name="settings_allowance_hour">時間</string>
+    <string name="settings_allowance_day">日</string>
+    <plurals name="settings_allowance_value">
+        <item quantity="other">残り <xliff:g id="remaining">%1$d</xliff:g> / <xliff:g id="limit">%2$d</xliff:g></item>
+    </plurals>
+    <string name="settings_metadata_active_source">使用中のソース</string>
+    <string name="settings_metadata_shared_worker_description">OwnTV Worker · 設定不要</string>
+    <string name="settings_metadata_connection">接続</string>
+    <string name="settings_metadata_remote_advanced">詳細なTMDB情報をリモートで取得</string>
+    <string name="settings_metadata_remote_advanced_description">共有の既定サービスではなく、独自のTMDB APIキーまたは自分でホストしたWorkerを使います。</string>
     <string name="settings_metadata_usage_label">使用量</string>
     <string name="settings_metadata_usage_value"><xliff:g id="min_used">%1$d</xliff:g>/<xliff:g id="min_total">%2$d</xliff:g> 分 · <xliff:g id="hr_used">%3$d</xliff:g>/<xliff:g id="hr_total">%4$d</xliff:g> 時間 · <xliff:g id="day_used">%5$d</xliff:g>/<xliff:g id="day_total">%6$d</xliff:g> 日</string>
     <string name="settings_metadata_source_label">ソース</string>
@@ -110,9 +126,9 @@
     <string name="settings_advanced_options">詳細オプション</string>
     <string name="settings_advanced_metadata_description">共有のデフォルト設定の代わりに、独自のTMDB APIキーまたはセルフホストサーバーを使用します。</string>
     <string name="settings_metadata_server_description">内蔵の共有サーバーを使用する場合は両方を空欄にしてください（セットアップ不要）。TMDBを直接呼び出すには独自のTMDB APIキーを入力し、独自のプロキシ／ミラーを使用するにはセルフホストサーバーのURLを入力します。URLはキーより優先されます。</string>
-    <string name="settings_metadata_key_from_phone">スマホからキーを取得</string>
-    <string name="settings_metadata_key_from_phone_desc">スマホでコードを読み取り、そこでTMDBにログインしてキーを送信します。リモコンでの入力は不要です。</string>
-    <string name="settings_metadata_key_received">スマホからTMDBキーを受信しました</string>
+    <string name="settings_metadata_key_from_phone">別の端末からキーを取得</string>
+    <string name="settings_metadata_key_from_phone_desc">スマートフォン、タブレット、パソコンでコードを読み取り、そこでTMDBにログインしてキーを送信します。リモコンでの入力は不要です。</string>
+    <string name="settings_metadata_key_received">TMDBキーを受信しました</string>
     <string name="settings_tmdb_api_key">TMDB APIキー（v3）</string>
     <string name="settings_self_host_url">セルフホストサーバーのURL</string>
     <string name="settings_test">テスト</string>
@@ -416,7 +432,22 @@
     <string name="settings_preferred_subtitle_language">優先する字幕言語</string>
     <string name="settings_preferred_language_description">利用可能な場合、この字幕トラックを自動選択します。</string>
     <string name="settings_open_subtitles">OpenSubtitles</string>
+    <string name="settings_open_subtitles_connected">接続済み</string>
+    <string name="settings_open_subtitles_reset_in"><xliff:g id="hours">%1$d</xliff:g>時間<xliff:g id="minutes">%2$d</xliff:g>分後</string>
     <string name="settings_open_subtitles_description">サインインすると、字幕の検索とダウンロード、ダウンロード済み字幕の管理ができます。プロフィールごとの設定です。無料のopensubtitles.comアカウントが必要です。</string>
+    <string name="settings_open_subtitles_advanced">詳細オプション</string>
+    <string name="settings_open_subtitles_advanced_description">独自のアプリケーションAPIキー、または自分でホストしたOpenSubtitles Workerを使います。</string>
+    <string name="settings_open_subtitles_setup_title">OpenSubtitlesを設定</string>
+    <string name="settings_open_subtitles_setup_description">OpenSubtitlesのアカウントでサインインします。</string>
+    <string name="settings_open_subtitles_setup_remote">リモート</string>
+    <string name="settings_open_subtitles_setup_remote_description">同じWi-Fiにつながった別の端末（スマートフォン、タブレット、パソコン）のブラウザーで入力します。</string>
+    <string name="settings_open_subtitles_setup_local">ここで入力</string>
+    <string name="settings_open_subtitles_setup_local_description">リモコンを使ってこのテレビで入力します。</string>
+    <string name="settings_open_subtitles_api_key">OpenSubtitlesのアプリケーションAPIキー</string>
+    <string name="settings_worker_server_url">Worker／サーバーのURL</string>
+    <string name="settings_shared">共有</string>
+    <string name="settings_open_subtitles_access_priority">どちらも空欄にするとOwnTVの共有Workerを使います。独自のWorker URLは直接指定したAPIキーより優先されます。アカウントのセッションはプロファイルごとに保持されます。</string>
+    <string name="settings_remove_custom_access">カスタムアクセスを削除</string>
     <string name="settings_audio">音声</string>
     <string name="settings_preferred_audio_language">優先する音声言語</string>
     <string name="settings_audio_sync">音声同期</string>
@@ -482,7 +513,7 @@
     <string name="settings_guide_synced">番組表を同期しました</string>
     <string name="settings_guide_sync_failed">番組表の同期に失敗しました</string>
     <string name="settings_restore_remote_title">別のデバイスから復元</string>
-    <string name="settings_restore_remote_description">同じWi-Fi上のスマートフォンまたはノートパソコンでQRコードをスキャンするかURLを開き、このPINを入力してOwnTVのバックアップファイルを選び、「テレビに送信」をタップします。その後、ここで復元する項目を選択します。</string>
+    <string name="settings_restore_remote_description">同じWi-Fi上のスマートフォン、タブレット、パソコンでQRコードをスキャンするかURLを開き、このPINを入力してOwnTVのバックアップファイルを選び、「テレビに送信」をタップします。その後、ここで復元する項目を選択します。</string>
     <string name="settings_opening_server">サーバーを起動中…</string>
     <string name="settings_enter_pin_browser">ブラウザにこのPINを入力してください</string>
     <string name="settings_companion_qr">コンパニオンURLのQRコード</string>
@@ -490,7 +521,7 @@
     <string name="settings_try_again">再試行</string>
     <string name="settings_new_pin">新しいPINでやり直す</string>
     <string name="settings_download_remote_title">別のデバイスにダウンロード</string>
-    <string name="settings_download_remote_description">同じWi-Fi上のスマートフォンまたはノートパソコンでQRコードをスキャンするかURLを開き、このPINを入力して、保管用にバックアップファイルをダウンロードします。</string>
+    <string name="settings_download_remote_description">同じWi-Fi上のスマートフォン、タブレット、パソコンでQRコードをスキャンするかURLを開き、このPINを入力して、保管用にバックアップファイルをダウンロードします。</string>
     <string name="settings_preparing_backup">バックアップを準備中…</string>
     <string name="settings_glass_effect_on">ガラス効果：オン</string>
     <string name="settings_glass_effect_off">ガラス効果：オフ</string>
