@@ -62,6 +62,10 @@ class SubtitleController(
     private val pathToKey = HashMap<String, String>()
     private var activeSubKey: String? = null
 
+    // The engine label assigned to each attached file, so a re-attach reuses it rather than
+    // generating a fresh (numbered) one — see [rawTrackLabel].
+    private val pathToLabel = HashMap<String, String>()
+
     init {
         // Re-list a title's previously downloaded subtitles whenever its file finishes loading (§9).
         // They're attached but not selected — the user re-picks (per owner decision).
@@ -263,7 +267,7 @@ class SubtitleController(
         pathToKey[resolved.path] = resolved.subtitleKey // timing identity (§8.4), before the attach fires
         player.addExternalSubtitle(
             path = resolved.path,
-            title = rawTrackLabel(resolved),
+            title = rawTrackLabel(resolved, labelsInUse()),
             lang = resolved.language,
             source = resolved.playerSource(),
         )
@@ -283,7 +287,7 @@ class SubtitleController(
         pathToKey[resolved.path] = resolved.subtitleKey // timing identity (§8.4), before the attach fires
         player.addExternalSubtitle(
             path = resolved.path,
-            title = rawTrackLabel(resolved),
+            title = rawTrackLabel(resolved, labelsInUse()),
             lang = resolved.language,
             source = resolved.playerSource(),
         )
@@ -293,11 +297,34 @@ class SubtitleController(
     }
 
     /**
-     * The player engine receives only raw subtitle metadata. The HUD adds the localized source
-     * label at render time, so a locale switch cannot leave a translated label in engine state.
+     * The player engine receives only raw subtitle metadata — no translated words, so a locale
+     * switch cannot strand one in engine state (see [SubtitleTrackLabel]).
+     *
+     * [taken] must hold every label already in the player's track list, the file's own embedded
+     * tracks included, plus the ones handed out earlier in the same batch: the label is the identity
+     * every external-subtitle lookup matches on, so a duplicate silently redirects timing changes and
+     * track selection to the wrong file.
      */
-    private fun rawTrackLabel(s: SubtitleRepository.ResolvedSubtitle): String =
-        (s.languageName ?: s.language ?: s.releaseName).orEmpty().ifBlank { s.subtitleKey }
+    private fun rawTrackLabel(s: SubtitleRepository.ResolvedSubtitle, taken: Set<String>): String =
+        // A file keeps the label it was first given. Without this, an engine-toggle carry-over that
+        // re-attached the sub before the §9 restore ran would see its own label in [taken], get a
+        // numbered variant, and attach the same file a second time under a split identity.
+        pathToLabel.getOrPut(s.path) {
+            SubtitleTrackLabel.build(
+                prefix = if (s.source == SubtitleRepository.SOURCE_LOCAL) {
+                    SubtitleTrackLabel.PREFIX_LOCAL
+                } else {
+                    SubtitleTrackLabel.PREFIX_OPENSUB
+                },
+                language = s.languageName ?: s.language,
+                release = s.releaseName,
+                fallbackKey = s.subtitleKey,
+                taken = taken,
+            )
+        }
+
+    /** Labels already spoken for in the running player — embedded tracks and earlier attachments. */
+    private fun labelsInUse(): MutableSet<String> = player.textTracks().mapTo(HashSet()) { it.label }
 
     private fun SubtitleRepository.ResolvedSubtitle.playerSource(): tv.own.owntv.player.ExternalSubtitleSource =
         if (source == SubtitleRepository.SOURCE_LOCAL) {
@@ -313,11 +340,14 @@ class SubtitleController(
             val subs = runCatching { repository.restoreForContent(ctx.profileId, ctx.contentKey) }.getOrNull().orEmpty()
             if (subs.isEmpty()) return@launch
             subs.forEach { pathToKey[it.path] = it.subtitleKey } // timing identities (§8.4)
+            // Labels accumulate across the batch, not just against the player: these are all attached
+            // in one pass, so the player's list can't yet tell the second Korean sub about the first.
+            val taken = labelsInUse()
             player.restoreExternalSubtitles(
                 subs.map { s ->
                     OwnTVPlayer.ExternalSub(
                         path = s.path,
-                        title = rawTrackLabel(s),
+                        title = rawTrackLabel(s, taken).also(taken::add),
                         lang = s.language,
                         source = s.playerSource(),
                     )

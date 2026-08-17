@@ -2254,6 +2254,12 @@
 1	file-path	app/src/main/java/tv/own/owntv/core/subtitles/SubtitleRepository.kt	subtitles
 2	technical	app/src/main/java/tv/own/owntv/core/subtitles/SubtitleRepository.kt	vtt
 1	technical	app/src/main/java/tv/own/owntv/core/subtitles/SubtitleRepository.kt	webvtt
+2	protocol	app/src/main/java/tv/own/owntv/core/subtitles/SubtitleTrackLabel.kt	$label $n
+1	protocol	app/src/main/java/tv/own/owntv/core/subtitles/SubtitleTrackLabel.kt	${prefix}_$name
+1	protocol	app/src/main/java/tv/own/owntv/core/subtitles/SubtitleTrackLabel.kt	LOCAL
+1	protocol	app/src/main/java/tv/own/owntv/core/subtitles/SubtitleTrackLabel.kt	OS
+1	protocol	app/src/main/java/tv/own/owntv/core/subtitles/SubtitleTrackLabel.kt	·
+1	protocol	app/src/main/java/tv/own/owntv/core/subtitles/SubtitleTrackLabel.kt	…
 1	log	app/src/main/java/tv/own/owntv/core/sync/ImportFinalizer.kt	ImportFinalizer
 1	log	app/src/main/java/tv/own/owntv/core/sync/ImportFinalizer.kt	Metadata eviction: cache=$cache matches=$matches
 1	technical	app/src/main/java/tv/own/owntv/core/sync/ImportFinalizer.kt	categories
@@ -4011,7 +4017,7 @@
 2	technical	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	stop
 3	technical	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	stream-lavf-o
 1	technical	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	streamLavfO="${streamLavfOptionsFor(url, isLiveContent, effectiveHls)}"
-6	protocol	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	sub
+5	protocol	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	sub
 2	technical	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	sub-add
 1	technical	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	sub-create-cc-track
 1	technical	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	sub-delay

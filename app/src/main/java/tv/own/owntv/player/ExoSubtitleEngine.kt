@@ -767,10 +767,9 @@ class ExoSubtitleEngine(
                 val image = mime == androidx.media3.common.MimeTypes.APPLICATION_PGS ||
                     mime == androidx.media3.common.MimeTypes.APPLICATION_VOBSUB ||
                     mime == androidx.media3.common.MimeTypes.APPLICATION_DVBSUBS
-                // Side-loaded external subs keep their raw configured label; the Compose renderer adds
-                // the localized source label. The raw value remains an engine identity for selection and
-                // engine-toggle carry-over, never a translated sentence.
-                val external = format.label?.let { label -> externalSubs.firstOrNull { it.title == label } }
+                // Side-loaded external subs keep their raw configured label, which already carries their
+                // source in its prefix (see SubtitleTrackLabel). The raw value remains an engine identity
+                // for selection and engine-toggle carry-over, never a translated sentence.
                 out.add(
                     TrackOption(
                         label = format.label.orEmpty(),
@@ -780,7 +779,6 @@ class ExoSubtitleEngine(
                         lang = format.language,
                         typeIndex = id,
                         labelKind = TrackLabelKind.SUBTITLE,
-                        externalSource = external?.source,
                     ),
                 )
                 id++
