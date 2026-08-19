@@ -112,7 +112,7 @@
     <string name="settings_metadata_active_source">Aktivní zdroj</string>
     <string name="settings_metadata_shared_worker_description">OwnTV Worker · bez nastavování</string>
     <string name="settings_metadata_connection">Připojení</string>
-    <string name="settings_metadata_remote_advanced">Získat pokročilé údaje TMDB vzdáleně</string>
+    <string name="settings_metadata_remote_advanced">Získat pokročilé údaje TMDB</string>
     <string name="settings_metadata_remote_advanced_description">Použijte vlastní klíč TMDB API nebo vlastní Worker místo společného výchozího.</string>
     <string name="settings_metadata_usage_label">Využití</string>
     <string name="settings_metadata_usage_value"><xliff:g id="min_used">%1$d</xliff:g>/<xliff:g id="min_total">%2$d</xliff:g> min · <xliff:g id="hr_used">%3$d</xliff:g>/<xliff:g id="hr_total">%4$d</xliff:g> hod. · <xliff:g id="day_used">%5$d</xliff:g>/<xliff:g id="day_total">%6$d</xliff:g> den</string>
@@ -196,6 +196,15 @@
     <string name="settings_theme_description">Světlý, tmavý nebo podle systému</string>
     <string name="settings_accent">Barva zvýraznění</string>
     <string name="settings_accent_description">Obarvení rozhraní — předvolby, paleta nebo hexadecimální kód</string>
+    <string name="settings_focus_highlight">Zvýraznění zaměření</string>
+    <string name="settings_focus_highlight_description">Barva a tloušťka rámečku kolem vybrané položky</string>
+    <string name="settings_focus_highlight_chip"><xliff:g id="color">%1$s</xliff:g> · <xliff:g id="thickness">%2$s</xliff:g></string>
+    <string name="settings_focus_thickness">Tloušťka</string>
+    <string name="settings_focus_width_thin">Tenký</string>
+    <string name="settings_focus_width_normal">Normální</string>
+    <string name="settings_focus_width_thick">Silný</string>
+    <string name="settings_focus_width_extra">Velmi silný</string>
+    <string name="settings_focus_highlight_sample">Zaměřeno</string>
     <string name="settings_glass_effect">Efekt skla</string>
     <string name="settings_glass_description">Průsvitné matné panely, obrázek na pozadí a průhlednost</string>
     <string name="settings_ui_zoom">Přiblížení rozhraní</string>
@@ -319,6 +328,7 @@
     <string name="settings_search_keywords_history">nedávno sledované pokračovat odebrat</string>
     <string name="settings_search_keywords_theme">světlý tmavý systém</string>
     <string name="settings_search_keywords_accent">odstín paleta hex předvolba</string>
+    <string name="settings_search_keywords_focus">zaměření rámeček okraj výběr kurzor obrys</string>
     <string name="settings_search_keywords_zoom">měřítko rozhraní velikost</string>
     <string name="settings_search_keywords_animation">pohyb svižnější výkon</string>
     <string name="settings_search_keywords_weather">horní lišta štítek poloha celsius fahrenheit</string>

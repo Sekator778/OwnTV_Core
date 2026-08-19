@@ -110,7 +110,7 @@
     <string name="settings_metadata_active_source">Etkin kaynak</string>
     <string name="settings_metadata_shared_worker_description">OwnTV Worker · kurulum gerekmez</string>
     <string name="settings_metadata_connection">Bağlantı</string>
-    <string name="settings_metadata_remote_advanced">Gelişmiş TMDB bilgilerini uzaktan alın</string>
+    <string name="settings_metadata_remote_advanced">Gelişmiş TMDB bilgilerini alın</string>
     <string name="settings_metadata_remote_advanced_description">Paylaşılan varsayılan hizmet yerine kendi TMDB API anahtarınızı ya da kendi barındırdığınız Worker’ı kullanın.</string>
     <string name="settings_metadata_usage_label">Kullanım</string>
     <string name="settings_metadata_usage_value"><xliff:g id="min_used">%1$d</xliff:g>/<xliff:g id="min_total">%2$d</xliff:g> dk · <xliff:g id="hr_used">%3$d</xliff:g>/<xliff:g id="hr_total">%4$d</xliff:g> sa · <xliff:g id="day_used">%5$d</xliff:g>/<xliff:g id="day_total">%6$d</xliff:g> gün</string>
@@ -194,6 +194,15 @@
     <string name="settings_theme_description">Açık, koyu veya sistemi izle</string>
     <string name="settings_accent">Vurgu rengi</string>
     <string name="settings_accent_description">Arayüzü renklendirin — hazır ayarlar, palet veya onaltılık kod</string>
+    <string name="settings_focus_highlight">Odak vurgusu</string>
+    <string name="settings_focus_highlight_description">Seçili öğenin etrafındaki çerçevenin rengi ve kalınlığı</string>
+    <string name="settings_focus_highlight_chip"><xliff:g id="color">%1$s</xliff:g> · <xliff:g id="thickness">%2$s</xliff:g></string>
+    <string name="settings_focus_thickness">Kalınlık</string>
+    <string name="settings_focus_width_thin">İnce</string>
+    <string name="settings_focus_width_normal">Normal</string>
+    <string name="settings_focus_width_thick">Kalın</string>
+    <string name="settings_focus_width_extra">Çok kalın</string>
+    <string name="settings_focus_highlight_sample">Odakta</string>
     <string name="settings_glass_effect">Cam Efekti</string>
     <string name="settings_glass_description">Yarı saydam buzlu paneller, arka plan görseli ve şeffaflık</string>
     <string name="settings_ui_zoom">Arayüz Yakınlaştırması</string>
@@ -315,6 +324,7 @@
     <string name="settings_search_keywords_history">son izlenenler devam et kaldır</string>
     <string name="settings_search_keywords_theme">açık koyu sistem</string>
     <string name="settings_search_keywords_accent">renk tonu palet onaltılık hazır ayar</string>
+    <string name="settings_search_keywords_focus">odak çerçeve kenarlık seçim imleç dış hat</string>
     <string name="settings_search_keywords_zoom">ölçek arayüz boyut</string>
     <string name="settings_search_keywords_animation">hareket hız performans</string>
     <string name="settings_search_keywords_weather">üst çubuk çip konum Celsius Fahrenheit</string>

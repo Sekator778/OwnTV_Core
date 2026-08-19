@@ -110,7 +110,7 @@
     <string name="settings_metadata_active_source">Aktiv källa</string>
     <string name="settings_metadata_shared_worker_description">OwnTV Worker · ingen konfiguration</string>
     <string name="settings_metadata_connection">Anslutning</string>
-    <string name="settings_metadata_remote_advanced">Hämta avancerade TMDB-uppgifter via fjärrenhet</string>
+    <string name="settings_metadata_remote_advanced">Hämta avancerade TMDB-uppgifter</string>
     <string name="settings_metadata_remote_advanced_description">Använd din egen TMDB-API-nyckel eller en egen Worker i stället för den delade standardtjänsten.</string>
     <string name="settings_metadata_usage_label">Användning</string>
     <string name="settings_metadata_usage_value"><xliff:g id="min_used">%1$d</xliff:g>/<xliff:g id="min_total">%2$d</xliff:g> min · <xliff:g id="hr_used">%3$d</xliff:g>/<xliff:g id="hr_total">%4$d</xliff:g> tim · <xliff:g id="day_used">%5$d</xliff:g>/<xliff:g id="day_total">%6$d</xliff:g> dag</string>
@@ -194,6 +194,15 @@
     <string name="settings_theme_description">Ljust, mörkt eller följ systemet</string>
     <string name="settings_accent">Accentfärg</string>
     <string name="settings_accent_description">Färga gränssnittet — förval, palett eller hexkod</string>
+    <string name="settings_focus_highlight">Fokusmarkering</string>
+    <string name="settings_focus_highlight_description">Färg och tjocklek på ramen runt det valda objektet</string>
+    <string name="settings_focus_highlight_chip"><xliff:g id="color">%1$s</xliff:g> · <xliff:g id="thickness">%2$s</xliff:g></string>
+    <string name="settings_focus_thickness">Tjocklek</string>
+    <string name="settings_focus_width_thin">Tunn</string>
+    <string name="settings_focus_width_normal">Normal</string>
+    <string name="settings_focus_width_thick">Tjock</string>
+    <string name="settings_focus_width_extra">Extra tjock</string>
+    <string name="settings_focus_highlight_sample">Fokuserad</string>
     <string name="settings_glass_effect">Glaseffekt</string>
     <string name="settings_glass_description">Genomskinliga frostade paneler, bakgrundsbild och transparens</string>
     <string name="settings_ui_zoom">Gränssnittszoom</string>
@@ -315,6 +324,7 @@
     <string name="settings_search_keywords_history">nyligen tittat på fortsätt ta bort</string>
     <string name="settings_search_keywords_theme">ljust mörkt system</string>
     <string name="settings_search_keywords_accent">färgton palett hex förval</string>
+    <string name="settings_search_keywords_focus">fokus ram kant markering markör kontur</string>
     <string name="settings_search_keywords_zoom">skala gränssnitt storlek</string>
     <string name="settings_search_keywords_animation">rörelse snabbare prestanda</string>
     <string name="settings_search_keywords_weather">övre fält chip plats celsius fahrenheit</string>

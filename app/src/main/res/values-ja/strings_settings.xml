@@ -109,7 +109,7 @@
     <string name="settings_metadata_active_source">使用中のソース</string>
     <string name="settings_metadata_shared_worker_description">OwnTV Worker · 設定不要</string>
     <string name="settings_metadata_connection">接続</string>
-    <string name="settings_metadata_remote_advanced">詳細なTMDB情報をリモートで取得</string>
+    <string name="settings_metadata_remote_advanced">詳細なTMDB情報を取得</string>
     <string name="settings_metadata_remote_advanced_description">共有の既定サービスではなく、独自のTMDB APIキーまたは自分でホストしたWorkerを使います。</string>
     <string name="settings_metadata_usage_label">使用量</string>
     <string name="settings_metadata_usage_value"><xliff:g id="min_used">%1$d</xliff:g>/<xliff:g id="min_total">%2$d</xliff:g> 分 · <xliff:g id="hr_used">%3$d</xliff:g>/<xliff:g id="hr_total">%4$d</xliff:g> 時間 · <xliff:g id="day_used">%5$d</xliff:g>/<xliff:g id="day_total">%6$d</xliff:g> 日</string>
@@ -193,6 +193,15 @@
     <string name="settings_theme_description">ライト、ダーク、またはシステムに従う</string>
     <string name="settings_accent">アクセントカラー</string>
     <string name="settings_accent_description">プリセット、パレット、16進コードで画面の色調を変更</string>
+    <string name="settings_focus_highlight">フォーカスの強調</string>
+    <string name="settings_focus_highlight_description">選択中の項目を囲む枠の色と太さ</string>
+    <string name="settings_focus_highlight_chip"><xliff:g id="color">%1$s</xliff:g> · <xliff:g id="thickness">%2$s</xliff:g></string>
+    <string name="settings_focus_thickness">太さ</string>
+    <string name="settings_focus_width_thin">細い</string>
+    <string name="settings_focus_width_normal">標準</string>
+    <string name="settings_focus_width_thick">太い</string>
+    <string name="settings_focus_width_extra">極太</string>
+    <string name="settings_focus_highlight_sample">フォーカス中</string>
     <string name="settings_glass_effect">ガラス効果</string>
     <string name="settings_glass_description">半透明のすりガラス風パネル、背景画像、透明度</string>
     <string name="settings_ui_zoom">UIズーム</string>
@@ -313,6 +322,7 @@
     <string name="settings_search_keywords_history">最近視聴したコンテンツ 視聴を続ける 削除</string>
     <string name="settings_search_keywords_theme">ライト ダーク システム</string>
     <string name="settings_search_keywords_accent">色調 パレット 16進数 プリセット</string>
+    <string name="settings_search_keywords_focus">フォーカス 枠 境界線 選択 カーソル 輪郭</string>
     <string name="settings_search_keywords_zoom">拡大縮小 インターフェース サイズ</string>
     <string name="settings_search_keywords_animation">動き 軽快 パフォーマンス</string>
     <string name="settings_search_keywords_weather">トップバー チップ 地点 摂氏 華氏</string>

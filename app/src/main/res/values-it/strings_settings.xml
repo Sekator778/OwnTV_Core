@@ -111,7 +111,7 @@
     <string name="settings_metadata_active_source">Sorgente attiva</string>
     <string name="settings_metadata_shared_worker_description">OwnTV Worker · nessuna configurazione</string>
     <string name="settings_metadata_connection">Connessione</string>
-    <string name="settings_metadata_remote_advanced">Ottieni informazioni TMDB avanzate da remoto</string>
+    <string name="settings_metadata_remote_advanced">Ottieni informazioni TMDB avanzate</string>
     <string name="settings_metadata_remote_advanced_description">Usa la tua chiave API TMDB o un Worker self-hosted invece del servizio condiviso predefinito.</string>
     <string name="settings_metadata_usage_label">Utilizzo</string>
     <string name="settings_metadata_usage_value"><xliff:g id="min_used">%1$d</xliff:g>/<xliff:g id="min_total">%2$d</xliff:g> min · <xliff:g id="hr_used">%3$d</xliff:g>/<xliff:g id="hr_total">%4$d</xliff:g> h · <xliff:g id="day_used">%5$d</xliff:g>/<xliff:g id="day_total">%6$d</xliff:g> giorno</string>
@@ -195,6 +195,15 @@
     <string name="settings_theme_description">Chiaro, scuro o in base al sistema</string>
     <string name="settings_accent">Colore di accento</string>
     <string name="settings_accent_description">Colora l\'interfaccia — preset, tavolozza o codice esadecimale</string>
+    <string name="settings_focus_highlight">Evidenziazione del focus</string>
+    <string name="settings_focus_highlight_description">Colore e spessore del bordo intorno all’elemento selezionato</string>
+    <string name="settings_focus_highlight_chip"><xliff:g id="color">%1$s</xliff:g> · <xliff:g id="thickness">%2$s</xliff:g></string>
+    <string name="settings_focus_thickness">Spessore</string>
+    <string name="settings_focus_width_thin">Sottile</string>
+    <string name="settings_focus_width_normal">Normale</string>
+    <string name="settings_focus_width_thick">Spesso</string>
+    <string name="settings_focus_width_extra">Molto spesso</string>
+    <string name="settings_focus_highlight_sample">Selezionato</string>
     <string name="settings_glass_effect">Effetto vetro</string>
     <string name="settings_glass_description">Pannelli traslucidi satinati, immagine di sfondo e trasparenza</string>
     <string name="settings_ui_zoom">Zoom interfaccia</string>
@@ -317,6 +326,7 @@
     <string name="settings_search_keywords_history">visti di recente continua rimuovi</string>
     <string name="settings_search_keywords_theme">chiaro scuro sistema</string>
     <string name="settings_search_keywords_accent">colore tavolozza esadecimale preset</string>
+    <string name="settings_search_keywords_focus">focus bordo cornice selezione cursore contorno</string>
     <string name="settings_search_keywords_zoom">scala interfaccia dimensione</string>
     <string name="settings_search_keywords_animation">movimento reattività prestazioni</string>
     <string name="settings_search_keywords_weather">barra superiore chip località celsius fahrenheit</string>

@@ -210,7 +210,7 @@
     <string name="settings_metadata_active_source">Active source</string>
     <string name="settings_metadata_shared_worker_description">OwnTV Worker · no setup</string>
     <string name="settings_metadata_connection">Connection</string>
-    <string name="settings_metadata_remote_advanced">Get advanced TMDB info via remote</string>
+    <string name="settings_metadata_remote_advanced">Get advanced TMDB info</string>
     <string name="settings_metadata_remote_advanced_description">Use your own TMDB API key or self-hosted Worker instead of the shared default.</string>
     <string name="settings_open_subtitles_advanced">Advanced options</string>
     <string name="settings_open_subtitles_advanced_description">Use your own application API key or self-hosted OpenSubtitles Worker.</string>
@@ -397,6 +397,24 @@
     <string name="settings_accent">Accent color</string>
     <!-- Translators: Description of the Accent color setting. -->
     <string name="settings_accent_description">Tint the interface — presets, palette or hex code</string>
+    <!-- Translators: Settings navigation label for the Focus highlight setting. The "focus" is the box drawn around whatever the remote is currently pointing at. -->
+    <string name="settings_focus_highlight">Focus highlight</string>
+    <!-- Translators: Description of the Focus highlight setting. -->
+    <string name="settings_focus_highlight_description">Colour and thickness of the ring around the focused item</string>
+    <!-- Translators: Chip on the Focus highlight row, e.g. "Gold · Thick". Keep the separator. -->
+    <string name="settings_focus_highlight_chip"><xliff:g id="color">%1$s</xliff:g> · <xliff:g id="thickness">%2$s</xliff:g></string>
+    <!-- Translators: Section header for how thick the focus ring is drawn. -->
+    <string name="settings_focus_thickness">Thickness</string>
+    <!-- Translators: Thinnest focus ring option. -->
+    <string name="settings_focus_width_thin">Thin</string>
+    <!-- Translators: Default focus ring thickness. -->
+    <string name="settings_focus_width_normal">Normal</string>
+    <!-- Translators: Thick focus ring option. -->
+    <string name="settings_focus_width_thick">Thick</string>
+    <!-- Translators: Thickest focus ring option. -->
+    <string name="settings_focus_width_extra">Extra thick</string>
+    <!-- Translators: Live sample shown inside the Focus highlight dialog. Short label on a mock tile. -->
+    <string name="settings_focus_highlight_sample">Focused</string>
     <!-- Translators: Settings navigation label for the Glass Effect setting. -->
     <string name="settings_glass_effect">Glass Effect</string>
     <!-- Translators: Description of the Glass Effect setting. -->
@@ -662,6 +680,8 @@
     <string name="settings_search_keywords_theme">light dark system</string>
     <!-- Translators: Hidden keyword bag for the Accent color settings. Translate as individual search terms. -->
     <string name="settings_search_keywords_accent">tint palette hex preset</string>
+    <!-- Translators: Hidden keyword bag for the Focus highlight settings. Translate as individual search terms. -->
+    <string name="settings_search_keywords_focus">focus ring border selection cursor outline</string>
     <!-- Translators: Hidden keyword bag for the UI Zoom settings. Translate as individual search terms. -->
     <string name="settings_search_keywords_zoom">scale interface size</string>
     <!-- Translators: Hidden keyword bag for the Animations settings. Translate as individual search terms. -->

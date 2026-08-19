@@ -110,7 +110,7 @@
     <string name="settings_metadata_active_source">सक्रिय स्रोत</string>
     <string name="settings_metadata_shared_worker_description">OwnTV Worker · कोई सेटअप नहीं</string>
     <string name="settings_metadata_connection">कनेक्शन</string>
-    <string name="settings_metadata_remote_advanced">रिमोट से उन्नत TMDB जानकारी लें</string>
+    <string name="settings_metadata_remote_advanced">उन्नत TMDB जानकारी लें</string>
     <string name="settings_metadata_remote_advanced_description">साझा डिफ़ॉल्ट के बजाय अपनी TMDB API कुंजी या स्वयं होस्ट किया गया Worker इस्तेमाल करें।</string>
     <string name="settings_metadata_usage_label">उपयोग</string>
     <string name="settings_metadata_usage_value"><xliff:g id="min_used">%1$d</xliff:g>/<xliff:g id="min_total">%2$d</xliff:g> मिनट · <xliff:g id="hr_used">%3$d</xliff:g>/<xliff:g id="hr_total">%4$d</xliff:g> घंटा · <xliff:g id="day_used">%5$d</xliff:g>/<xliff:g id="day_total">%6$d</xliff:g> दिन</string>
@@ -194,6 +194,15 @@
     <string name="settings_theme_description">हल्की, गहरी या सिस्टम के अनुसार</string>
     <string name="settings_accent">एक्सेंट रंग</string>
     <string name="settings_accent_description">इंटरफ़ेस को रंग दें — प्रीसेट, पैलेट या हेक्स कोड</string>
+    <string name="settings_focus_highlight">फ़ोकस हाइलाइट</string>
+    <string name="settings_focus_highlight_description">चयनित आइटम के चारों ओर के बॉर्डर का रंग और मोटाई</string>
+    <string name="settings_focus_highlight_chip"><xliff:g id="color">%1$s</xliff:g> · <xliff:g id="thickness">%2$s</xliff:g></string>
+    <string name="settings_focus_thickness">मोटाई</string>
+    <string name="settings_focus_width_thin">पतला</string>
+    <string name="settings_focus_width_normal">सामान्य</string>
+    <string name="settings_focus_width_thick">मोटा</string>
+    <string name="settings_focus_width_extra">अतिरिक्त मोटा</string>
+    <string name="settings_focus_highlight_sample">फ़ोकस में</string>
     <string name="settings_glass_effect">ग्लास प्रभाव</string>
     <string name="settings_glass_description">पारदर्शी फ़्रॉस्टेड पैनल, पृष्ठभूमि चित्र और पारदर्शिता</string>
     <string name="settings_ui_zoom">UI ज़ूम</string>
@@ -315,6 +324,7 @@
     <string name="settings_search_keywords_history">हाल में देखे गए जारी रखें हटाएँ</string>
     <string name="settings_search_keywords_theme">हल्की गहरी सिस्टम</string>
     <string name="settings_search_keywords_accent">टिंट पैलेट हेक्स प्रीसेट</string>
+    <string name="settings_search_keywords_focus">फ़ोकस रिंग बॉर्डर चयन कर्सर आउटलाइन</string>
     <string name="settings_search_keywords_zoom">स्केल इंटरफ़ेस आकार</string>
     <string name="settings_search_keywords_animation">गति तेज़ प्रदर्शन</string>
     <string name="settings_search_keywords_weather">शीर्ष बार चिप स्थान सेल्सियस फ़ारेनहाइट</string>

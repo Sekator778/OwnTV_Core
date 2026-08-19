@@ -110,7 +110,7 @@
     <string name="settings_metadata_active_source">സജീവ ഉറവിടം</string>
     <string name="settings_metadata_shared_worker_description">OwnTV Worker · സജ്ജീകരണം വേണ്ട</string>
     <string name="settings_metadata_connection">കണക്ഷൻ</string>
-    <string name="settings_metadata_remote_advanced">വിപുലമായ TMDB വിവരങ്ങൾ വിദൂരമായി നേടുക</string>
+    <string name="settings_metadata_remote_advanced">വിപുലമായ TMDB വിവരങ്ങൾ നേടുക</string>
     <string name="settings_metadata_remote_advanced_description">പങ്കിട്ട ഡിഫോൾട്ടിനു പകരം നിങ്ങളുടെ സ്വന്തം TMDB API കീ അല്ലെങ്കിൽ സ്വയം ഹോസ്റ്റ് ചെയ്ത Worker ഉപയോഗിക്കുക.</string>
     <string name="settings_metadata_usage_label">ഉപയോഗം</string>
     <string name="settings_metadata_usage_value"><xliff:g id="min_used">%1$d</xliff:g>/<xliff:g id="min_total">%2$d</xliff:g> മിനിറ്റ് · <xliff:g id="hr_used">%3$d</xliff:g>/<xliff:g id="hr_total">%4$d</xliff:g> മണിക്കൂർ · <xliff:g id="day_used">%5$d</xliff:g>/<xliff:g id="day_total">%6$d</xliff:g> ദിവസം</string>
@@ -194,6 +194,15 @@
     <string name="settings_theme_description">ലൈറ്റ്, ഡാർക്ക്, അല്ലെങ്കിൽ സിസ്റ്റത്തെ പിന്തുടരുക</string>
     <string name="settings_accent">ആക്സന്റ് നിറം</string>
     <string name="settings_accent_description">ഇന്റർഫേസിന് നിറം നൽകുക — പ്രീസെറ്റുകൾ, പാലറ്റ്, അല്ലെങ്കിൽ ഹെക്സ് കോഡ്</string>
+    <string name="settings_focus_highlight">ഫോക്കസ് ഹൈലൈറ്റ്</string>
+    <string name="settings_focus_highlight_description">തിരഞ്ഞെടുത്ത ഇനത്തിനു ചുറ്റുമുള്ള ബോർഡറിന്റെ നിറവും കനവും</string>
+    <string name="settings_focus_highlight_chip"><xliff:g id="color">%1$s</xliff:g> · <xliff:g id="thickness">%2$s</xliff:g></string>
+    <string name="settings_focus_thickness">കനം</string>
+    <string name="settings_focus_width_thin">നേർത്തത്</string>
+    <string name="settings_focus_width_normal">സാധാരണം</string>
+    <string name="settings_focus_width_thick">കട്ടിയുള്ളത്</string>
+    <string name="settings_focus_width_extra">അധികം കട്ടിയുള്ളത്</string>
+    <string name="settings_focus_highlight_sample">ഫോക്കസിൽ</string>
     <string name="settings_glass_effect">ഗ്ലാസ് ഇഫക്റ്റ്</string>
     <string name="settings_glass_description">അർദ്ധസുതാര്യമായ മങ്ങിയ പാനലുകൾ, പശ്ചാത്തല ചിത്രം, സുതാര്യത</string>
     <string name="settings_ui_zoom">UI സൂം</string>
@@ -315,6 +324,7 @@
     <string name="settings_search_keywords_history">അടുത്തിടെ കണ്ടവ തുടരുക നീക്കംചെയ്യുക</string>
     <string name="settings_search_keywords_theme">ലൈറ്റ് ഡാർക്ക് സിസ്റ്റം</string>
     <string name="settings_search_keywords_accent">നിറം പാലറ്റ് ഹെക്സ് പ്രീസെറ്റ്</string>
+    <string name="settings_search_keywords_focus">ഫോക്കസ് ബോർഡർ അതിർ തിരഞ്ഞെടുപ്പ് കഴ്‌സർ രൂപരേഖ</string>
     <string name="settings_search_keywords_zoom">സ്കെയിൽ ഇന്റർഫേസ് വലുപ്പം</string>
     <string name="settings_search_keywords_animation">ചലനം വേഗത പ്രകടനം</string>
     <string name="settings_search_keywords_weather">മുകളിലെ ബാർ ചിപ്പ് സ്ഥലം സെൽഷ്യസ് ഫാരൻഹീറ്റ്</string>

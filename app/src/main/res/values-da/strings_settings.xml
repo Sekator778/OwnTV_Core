@@ -110,7 +110,7 @@
     <string name="settings_metadata_active_source">Aktiv kilde</string>
     <string name="settings_metadata_shared_worker_description">OwnTV Worker · ingen opsætning</string>
     <string name="settings_metadata_connection">Forbindelse</string>
-    <string name="settings_metadata_remote_advanced">Hent avancerede TMDB-oplysninger eksternt</string>
+    <string name="settings_metadata_remote_advanced">Hent avancerede TMDB-oplysninger</string>
     <string name="settings_metadata_remote_advanced_description">Brug din egen TMDB-API-nøgle eller en selvhostet Worker i stedet for den delte standard.</string>
     <string name="settings_metadata_usage_label">Forbrug</string>
     <string name="settings_metadata_usage_value"><xliff:g id="min_used">%1$d</xliff:g>/<xliff:g id="min_total">%2$d</xliff:g> min · <xliff:g id="hr_used">%3$d</xliff:g>/<xliff:g id="hr_total">%4$d</xliff:g> time · <xliff:g id="day_used">%5$d</xliff:g>/<xliff:g id="day_total">%6$d</xliff:g> dag</string>
@@ -194,6 +194,15 @@
     <string name="settings_theme_description">Lyst, mørkt eller følg systemet</string>
     <string name="settings_accent">Accentfarve</string>
     <string name="settings_accent_description">Farvelæg brugerfladen — forudindstillinger, palet eller hex-kode</string>
+    <string name="settings_focus_highlight">Fokusmarkering</string>
+    <string name="settings_focus_highlight_description">Farve og tykkelse på rammen omkring det valgte element</string>
+    <string name="settings_focus_highlight_chip"><xliff:g id="color">%1$s</xliff:g> · <xliff:g id="thickness">%2$s</xliff:g></string>
+    <string name="settings_focus_thickness">Tykkelse</string>
+    <string name="settings_focus_width_thin">Tynd</string>
+    <string name="settings_focus_width_normal">Normal</string>
+    <string name="settings_focus_width_thick">Tyk</string>
+    <string name="settings_focus_width_extra">Ekstra tyk</string>
+    <string name="settings_focus_highlight_sample">Fokuseret</string>
     <string name="settings_glass_effect">Glaseffekt</string>
     <string name="settings_glass_description">Gennemsigtige, matterede paneler, baggrundsbillede og gennemsigtighed</string>
     <string name="settings_ui_zoom">Zoom af brugerflade</string>
@@ -315,6 +324,7 @@
     <string name="settings_search_keywords_history">senest set fortsæt fjern</string>
     <string name="settings_search_keywords_theme">lyst mørkt system</string>
     <string name="settings_search_keywords_accent">farvetone palet hex forudindstilling</string>
+    <string name="settings_search_keywords_focus">fokus ramme kant markering markør omrids</string>
     <string name="settings_search_keywords_zoom">skaler brugerflade størrelse</string>
     <string name="settings_search_keywords_animation">bevægelse hurtigere ydeevne</string>
     <string name="settings_search_keywords_weather">toplinje chip placering celsius fahrenheit</string>

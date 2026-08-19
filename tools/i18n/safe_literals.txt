@@ -3337,12 +3337,16 @@
 1	technical	app/src/main/java/tv/own/owntv/features/shell/components/MediaDetailsScreen.kt	·
 7	empty	app/src/main/java/tv/own/owntv/features/shell/components/SettingsScreen.kt	\0
 5	technical	app/src/main/java/tv/own/owntv/features/shell/components/SettingsScreen.kt	#
+1	technical	app/src/main/java/tv/own/owntv/features/shell/components/SettingsScreen.kt	#%06X
+1	technical	app/src/main/java/tv/own/owntv/features/shell/components/SettingsScreen.kt	#F5B400
+1	technical	app/src/main/java/tv/own/owntv/features/shell/components/SettingsScreen.kt	#FFFFFF
 1	technical	app/src/main/java/tv/own/owntv/features/shell/components/SettingsScreen.kt	$group $title $keywords
 1	technical	app/src/main/java/tv/own/owntv/features/shell/components/SettingsScreen.kt	${stringResource(R.string.settings_glass_depth_title)}: ${stringResource(if (depthEffects) R.string.common_on else R.string.common_off)}
 1	technical	app/src/main/java/tv/own/owntv/features/shell/components/SettingsScreen.kt	${stringResource(R.string.settings_glass_full_transparency_title)}: ${stringResource(if (allowFullTransparency) R.string.common_on else R.string.common_off)}
 3	technical	app/src/main/java/tv/own/owntv/features/shell/components/SettingsScreen.kt	+
 1	technical	app/src/main/java/tv/own/owntv/features/shell/components/SettingsScreen.kt	-
 1	technical	app/src/main/java/tv/own/owntv/features/shell/components/SettingsScreen.kt	52DBC8
+1	technical	app/src/main/java/tv/own/owntv/features/shell/components/SettingsScreen.kt	F5B400
 1	technical	app/src/main/java/tv/own/owntv/features/shell/components/SettingsScreen.kt	UTC
 1	technical	app/src/main/java/tv/own/owntv/features/shell/components/SettingsScreen.kt	UTC$sign%02d:%02d
 2	file-path	app/src/main/java/tv/own/owntv/features/shell/components/SettingsScreen.kt	backgrounds
@@ -4729,6 +4733,6 @@
 1	technical	app/src/main/java/tv/own/owntv/ui/theme/FontCustomization.kt	sans-serif
 1	technical	app/src/main/java/tv/own/owntv/ui/theme/Glass.kt	chromeCondense
 1	technical	app/src/main/java/tv/own/owntv/ui/theme/Glass.kt	glassPosition
-1	empty	app/src/main/java/tv/own/owntv/ui/theme/OwnTVColors.kt	\0
+2	empty	app/src/main/java/tv/own/owntv/ui/theme/OwnTVColors.kt	\0
 1	technical	app/src/main/java/tv/own/owntv/ui/theme/OwnTVColors.kt	#
-1	empty	app/src/main/java/tv/own/owntv/ui/theme/Theme.kt	\0
+2	empty	app/src/main/java/tv/own/owntv/ui/theme/Theme.kt	\0

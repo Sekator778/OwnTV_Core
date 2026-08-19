@@ -110,7 +110,7 @@
     <string name="settings_metadata_active_source">Aktive Quelle</string>
     <string name="settings_metadata_shared_worker_description">OwnTV Worker · keine Einrichtung</string>
     <string name="settings_metadata_connection">Verbindung</string>
-    <string name="settings_metadata_remote_advanced">Erweiterte TMDB-Daten extern abrufen</string>
+    <string name="settings_metadata_remote_advanced">Erweiterte TMDB-Daten abrufen</string>
     <string name="settings_metadata_remote_advanced_description">Verwende deinen eigenen TMDB-API-Schlüssel oder einen selbst gehosteten Worker statt der gemeinsamen Standardeinstellung.</string>
     <string name="settings_metadata_usage_label">Nutzung</string>
     <string name="settings_metadata_usage_value"><xliff:g id="min_used">%1$d</xliff:g>/<xliff:g id="min_total">%2$d</xliff:g> Min. · <xliff:g id="hr_used">%3$d</xliff:g>/<xliff:g id="hr_total">%4$d</xliff:g> Std. · <xliff:g id="day_used">%5$d</xliff:g>/<xliff:g id="day_total">%6$d</xliff:g> Tag</string>
@@ -194,6 +194,15 @@
     <string name="settings_theme_description">Hell, dunkel oder dem System folgen</string>
     <string name="settings_accent">Akzentfarbe</string>
     <string name="settings_accent_description">Oberfläche einfärben — Voreinstellungen, Palette oder Hexadezimalcode</string>
+    <string name="settings_focus_highlight">Fokus-Hervorhebung</string>
+    <string name="settings_focus_highlight_description">Farbe und Stärke des Rahmens um das ausgewählte Element</string>
+    <string name="settings_focus_highlight_chip"><xliff:g id="color">%1$s</xliff:g> · <xliff:g id="thickness">%2$s</xliff:g></string>
+    <string name="settings_focus_thickness">Stärke</string>
+    <string name="settings_focus_width_thin">Dünn</string>
+    <string name="settings_focus_width_normal">Normal</string>
+    <string name="settings_focus_width_thick">Dick</string>
+    <string name="settings_focus_width_extra">Extra dick</string>
+    <string name="settings_focus_highlight_sample">Fokussiert</string>
     <string name="settings_glass_effect">Glaseffekt</string>
     <string name="settings_glass_description">Durchscheinende Milchglaspaneele, Hintergrundbild und Transparenz</string>
     <string name="settings_ui_zoom">Oberflächenzoom</string>
@@ -315,6 +324,7 @@
     <string name="settings_search_keywords_history">zuletzt angesehen fortsetzen entfernen</string>
     <string name="settings_search_keywords_theme">hell dunkel System</string>
     <string name="settings_search_keywords_accent">Farbton Palette Hex Voreinstellung</string>
+    <string name="settings_search_keywords_focus">Fokus Rahmen Rand Auswahl Cursor Umriss</string>
     <string name="settings_search_keywords_zoom">skalieren Oberfläche Größe</string>
     <string name="settings_search_keywords_animation">Bewegung schneller Leistung</string>
     <string name="settings_search_keywords_weather">obere Leiste Chip Standort Celsius Fahrenheit</string>

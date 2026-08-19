@@ -112,7 +112,7 @@
     <string name="settings_metadata_active_source">Активный источник</string>
     <string name="settings_metadata_shared_worker_description">OwnTV Worker · без настройки</string>
     <string name="settings_metadata_connection">Подключение</string>
-    <string name="settings_metadata_remote_advanced">Получить расширенные данные TMDB удалённо</string>
+    <string name="settings_metadata_remote_advanced">Получить расширенные данные TMDB</string>
     <string name="settings_metadata_remote_advanced_description">Используйте свой ключ API TMDB или собственный Worker вместо общего сервиса по умолчанию.</string>
     <string name="settings_metadata_usage_label">Использование</string>
     <string name="settings_metadata_usage_value"><xliff:g id="min_used">%1$d</xliff:g>/<xliff:g id="min_total">%2$d</xliff:g> мин · <xliff:g id="hr_used">%3$d</xliff:g>/<xliff:g id="hr_total">%4$d</xliff:g> ч · <xliff:g id="day_used">%5$d</xliff:g>/<xliff:g id="day_total">%6$d</xliff:g> день</string>
@@ -196,6 +196,15 @@
     <string name="settings_theme_description">Светлая, тёмная или как в системе</string>
     <string name="settings_accent">Акцентный цвет</string>
     <string name="settings_accent_description">Окраска интерфейса — готовые цвета, палитра или шестнадцатеричный код</string>
+    <string name="settings_focus_highlight">Подсветка фокуса</string>
+    <string name="settings_focus_highlight_description">Цвет и толщина рамки вокруг выбранного элемента</string>
+    <string name="settings_focus_highlight_chip"><xliff:g id="color">%1$s</xliff:g> · <xliff:g id="thickness">%2$s</xliff:g></string>
+    <string name="settings_focus_thickness">Толщина</string>
+    <string name="settings_focus_width_thin">Тонкая</string>
+    <string name="settings_focus_width_normal">Обычная</string>
+    <string name="settings_focus_width_thick">Толстая</string>
+    <string name="settings_focus_width_extra">Очень толстая</string>
+    <string name="settings_focus_highlight_sample">В фокусе</string>
     <string name="settings_glass_effect">Эффект стекла</string>
     <string name="settings_glass_description">Полупрозрачные матовые панели, фоновое изображение и прозрачность</string>
     <string name="settings_ui_zoom">Масштаб интерфейса</string>
@@ -319,6 +328,7 @@
     <string name="settings_search_keywords_history">недавно просмотренные продолжить удалить</string>
     <string name="settings_search_keywords_theme">светлая тёмная система</string>
     <string name="settings_search_keywords_accent">оттенок палитра HEX готовый цвет</string>
+    <string name="settings_search_keywords_focus">фокус рамка граница выделение курсор контур</string>
     <string name="settings_search_keywords_zoom">масштаб интерфейс размер</string>
     <string name="settings_search_keywords_animation">движение быстродействие производительность</string>
     <string name="settings_search_keywords_weather">верхняя панель чип местоположение цельсий фаренгейт</string>

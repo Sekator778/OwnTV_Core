@@ -258,6 +258,7 @@
 1	app/src/main/java/tv/own/owntv/features/settings/OpenSubtitlesViewModel.kt	OpenSubtitles
 1	app/src/main/java/tv/own/owntv/features/settings/OpenSubtitlesViewModel.kt	manual refresh failed: ${it.javaClass.simpleName}: ${it.message}
 1	app/src/main/java/tv/own/owntv/features/settings/OpenSubtitlesViewModel.kt	sign-in failed: ${e.javaClass.simpleName}: ${e.message}
+1	app/src/main/java/tv/own/owntv/features/settings/SettingsViewModel.kt	\0
 1	app/src/main/java/tv/own/owntv/features/settings/SettingsViewModel.kt	UnknownHostException
 1	app/src/main/java/tv/own/owntv/features/settings/SettingsViewModel.kt	dns.google
 1	app/src/main/java/tv/own/owntv/features/settings/SettingsViewModel.kt	refused
@@ -271,12 +272,14 @@
 1	app/src/main/java/tv/own/owntv/features/settings/VideoPlayerSettingsScreen.kt	+
 1	app/src/main/java/tv/own/owntv/features/settings/VideoPlayerSettingsScreen.kt	FFFFFF
 1	app/src/main/java/tv/own/owntv/features/settings/VideoPlayerSettingsScreen.kt	–
-6	app/src/main/java/tv/own/owntv/features/settings/data/SettingsRepository.kt	\0
+7	app/src/main/java/tv/own/owntv/features/settings/data/SettingsRepository.kt	\0
 1	app/src/main/java/tv/own/owntv/features/settings/data/SettingsRepository.kt	auto_frame_rate_reset_416
 1	app/src/main/java/tv/own/owntv/features/settings/data/SettingsRepository.kt	dns_doh_url
 1	app/src/main/java/tv/own/owntv/features/settings/data/SettingsRepository.kt	dns_enabled
 1	app/src/main/java/tv/own/owntv/features/settings/data/SettingsRepository.kt	dns_host
 1	app/src/main/java/tv/own/owntv/features/settings/data/SettingsRepository.kt	dns_port
+1	app/src/main/java/tv/own/owntv/features/settings/data/SettingsRepository.kt	focus_highlight_color
+1	app/src/main/java/tv/own/owntv/features/settings/data/SettingsRepository.kt	focus_highlight_width
 1	app/src/main/java/tv/own/owntv/features/settings/data/SettingsRepository.kt	live_latency_reset_416
 1	app/src/main/java/tv/own/owntv/features/settings/data/SettingsRepository.kt	sub_bg_opacity
 1	app/src/main/java/tv/own/owntv/features/settings/data/SettingsRepository.kt	sub_color
@@ -295,7 +298,10 @@
 1	app/src/main/java/tv/own/owntv/features/settings/data/SubtitleStyle.kt	top_center
 1	app/src/main/java/tv/own/owntv/features/settings/data/SubtitleStyle.kt	top_left
 1	app/src/main/java/tv/own/owntv/features/settings/data/SubtitleStyle.kt	top_right
+1	app/src/main/java/tv/own/owntv/features/shell/ShellViewModel.kt	\0
 1	app/src/main/java/tv/own/owntv/features/shell/components/MediaDetailsScreen.kt	\0
+1	app/src/main/java/tv/own/owntv/features/shell/components/SettingsScreen.kt	\0
+6	app/src/main/java/tv/own/owntv/features/shell/components/SettingsScreen.kt	#
 3	app/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	\0
 1	app/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	Content-Type
 1	app/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	HLS

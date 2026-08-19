@@ -114,7 +114,7 @@
     <string name="settings_metadata_active_source">المصدر النشط</string>
     <string name="settings_metadata_shared_worker_description">OwnTV Worker · بدون إعداد</string>
     <string name="settings_metadata_connection">الاتصال</string>
-    <string name="settings_metadata_remote_advanced">الحصول على بيانات TMDB المتقدمة عن بُعد</string>
+    <string name="settings_metadata_remote_advanced">الحصول على بيانات TMDB المتقدمة</string>
     <string name="settings_metadata_remote_advanced_description">استخدم مفتاح TMDB API الخاص بك أو Worker مستضافًا بنفسك بدلًا من الافتراضي المشترك.</string>
     <string name="settings_metadata_usage_label">الاستخدام</string>
     <string name="settings_metadata_usage_value"><xliff:g id="min_used">%1$d</xliff:g>/<xliff:g id="min_total">%2$d</xliff:g> دقيقة · <xliff:g id="hr_used">%3$d</xliff:g>/<xliff:g id="hr_total">%4$d</xliff:g> ساعة · <xliff:g id="day_used">%5$d</xliff:g>/<xliff:g id="day_total">%6$d</xliff:g> يوم</string>
@@ -198,6 +198,15 @@
     <string name="settings_theme_description">فاتحة أو داكنة أو تتبع النظام</string>
     <string name="settings_accent">اللون المميّز</string>
     <string name="settings_accent_description">تلوين الواجهة — إعدادات مسبقة أو لوحة ألوان أو رمز سداسي عشري</string>
+    <string name="settings_focus_highlight">إبراز التحديد</string>
+    <string name="settings_focus_highlight_description">لون وسُمك الإطار حول العنصر المحدد</string>
+    <string name="settings_focus_highlight_chip"><xliff:g id="color">%1$s</xliff:g> · <xliff:g id="thickness">%2$s</xliff:g></string>
+    <string name="settings_focus_thickness">السُمك</string>
+    <string name="settings_focus_width_thin">رفيع</string>
+    <string name="settings_focus_width_normal">عادي</string>
+    <string name="settings_focus_width_thick">سميك</string>
+    <string name="settings_focus_width_extra">سميك جدًا</string>
+    <string name="settings_focus_highlight_sample">محدَّد</string>
     <string name="settings_glass_effect">التأثير الزجاجي</string>
     <string name="settings_glass_description">لوحات شفافة ضبابية وصورة خلفية ومستوى الشفافية</string>
     <string name="settings_ui_zoom">تكبير الواجهة</string>
@@ -323,6 +332,7 @@
     <string name="settings_search_keywords_history">شوهد مؤخرًا متابعة إزالة</string>
     <string name="settings_search_keywords_theme">فاتح داكن نظام</string>
     <string name="settings_search_keywords_accent">تلوين لوحة ألوان سداسي عشري إعداد مسبق</string>
+    <string name="settings_search_keywords_focus">تركيز إطار حدود تحديد مؤشر مخطط</string>
     <string name="settings_search_keywords_zoom">مقياس واجهة حجم</string>
     <string name="settings_search_keywords_animation">حركة سرعة أداء</string>
     <string name="settings_search_keywords_weather">شريط علوي شريحة موقع مئوية فهرنهايت</string>

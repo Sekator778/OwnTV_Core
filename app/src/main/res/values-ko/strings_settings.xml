@@ -109,7 +109,7 @@
     <string name="settings_metadata_active_source">사용 중인 소스</string>
     <string name="settings_metadata_shared_worker_description">OwnTV Worker · 설정 불필요</string>
     <string name="settings_metadata_connection">연결</string>
-    <string name="settings_metadata_remote_advanced">고급 TMDB 정보를 원격으로 가져오기</string>
+    <string name="settings_metadata_remote_advanced">고급 TMDB 정보 가져오기</string>
     <string name="settings_metadata_remote_advanced_description">공용 기본 서비스 대신 직접 발급받은 TMDB API 키나 자체 호스팅한 Worker를 사용합니다.</string>
     <string name="settings_metadata_usage_label">사용량</string>
     <string name="settings_metadata_usage_value"><xliff:g id="min_used">%1$d</xliff:g>/<xliff:g id="min_total">%2$d</xliff:g> 분 · <xliff:g id="hr_used">%3$d</xliff:g>/<xliff:g id="hr_total">%4$d</xliff:g> 시간 · <xliff:g id="day_used">%5$d</xliff:g>/<xliff:g id="day_total">%6$d</xliff:g> 일</string>
@@ -193,6 +193,15 @@
     <string name="settings_theme_description">밝게, 어둡게 또는 시스템 설정 따르기</string>
     <string name="settings_accent">강조 색상</string>
     <string name="settings_accent_description">프리셋, 팔레트 또는 16진수 코드로 인터페이스 색상 조정</string>
+    <string name="settings_focus_highlight">포커스 강조</string>
+    <string name="settings_focus_highlight_description">선택된 항목을 둘러싼 테두리의 색상과 두께</string>
+    <string name="settings_focus_highlight_chip"><xliff:g id="color">%1$s</xliff:g> · <xliff:g id="thickness">%2$s</xliff:g></string>
+    <string name="settings_focus_thickness">두께</string>
+    <string name="settings_focus_width_thin">얇게</string>
+    <string name="settings_focus_width_normal">보통</string>
+    <string name="settings_focus_width_thick">두껍게</string>
+    <string name="settings_focus_width_extra">아주 두껍게</string>
+    <string name="settings_focus_highlight_sample">포커스됨</string>
     <string name="settings_glass_effect">글래스 효과</string>
     <string name="settings_glass_description">반투명 불투명 유리 패널, 배경 이미지 및 투명도</string>
     <string name="settings_ui_zoom">UI 확대/축소</string>
@@ -313,6 +322,7 @@
     <string name="settings_search_keywords_history">최근 시청 항목 계속 시청 삭제</string>
     <string name="settings_search_keywords_theme">밝게 어둡게 시스템</string>
     <string name="settings_search_keywords_accent">색조 팔레트 16진수 프리셋</string>
+    <string name="settings_search_keywords_focus">포커스 테두리 경계 선택 커서 윤곽</string>
     <string name="settings_search_keywords_zoom">배율 인터페이스 크기</string>
     <string name="settings_search_keywords_animation">움직임 빠른 성능</string>
     <string name="settings_search_keywords_weather">상단 표시줄 칩 위치 섭씨 화씨</string>

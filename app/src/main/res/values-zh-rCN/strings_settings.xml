@@ -109,7 +109,7 @@
     <string name="settings_metadata_active_source">当前来源</string>
     <string name="settings_metadata_shared_worker_description">OwnTV Worker · 无需设置</string>
     <string name="settings_metadata_connection">连接</string>
-    <string name="settings_metadata_remote_advanced">远程获取高级 TMDB 信息</string>
+    <string name="settings_metadata_remote_advanced">获取高级 TMDB 信息</string>
     <string name="settings_metadata_remote_advanced_description">使用你自己的 TMDB API 密钥或自建 Worker，而不是共享的默认服务。</string>
     <string name="settings_metadata_usage_label">用量</string>
     <string name="settings_metadata_usage_value"><xliff:g id="min_used">%1$d</xliff:g>/<xliff:g id="min_total">%2$d</xliff:g> 分钟 · <xliff:g id="hr_used">%3$d</xliff:g>/<xliff:g id="hr_total">%4$d</xliff:g> 小时 · <xliff:g id="day_used">%5$d</xliff:g>/<xliff:g id="day_total">%6$d</xliff:g> 天</string>
@@ -193,6 +193,15 @@
     <string name="settings_theme_description">浅色、深色或跟随系统</string>
     <string name="settings_accent">强调色</string>
     <string name="settings_accent_description">为界面着色 — 可使用预设、调色板或十六进制代码</string>
+    <string name="settings_focus_highlight">焦点高亮</string>
+    <string name="settings_focus_highlight_description">焦点项周围边框的颜色和粗细</string>
+    <string name="settings_focus_highlight_chip"><xliff:g id="color">%1$s</xliff:g> · <xliff:g id="thickness">%2$s</xliff:g></string>
+    <string name="settings_focus_thickness">粗细</string>
+    <string name="settings_focus_width_thin">细</string>
+    <string name="settings_focus_width_normal">标准</string>
+    <string name="settings_focus_width_thick">粗</string>
+    <string name="settings_focus_width_extra">超粗</string>
+    <string name="settings_focus_highlight_sample">已选中</string>
     <string name="settings_glass_effect">玻璃效果</string>
     <string name="settings_glass_description">半透明磨砂面板、背景图和透明度</string>
     <string name="settings_ui_zoom">界面缩放</string>
@@ -313,6 +322,7 @@
     <string name="settings_search_keywords_history">最近观看 继续观看 移除</string>
     <string name="settings_search_keywords_theme">浅色 深色 系统</string>
     <string name="settings_search_keywords_accent">着色 调色板 十六进制 预设</string>
+    <string name="settings_search_keywords_focus">焦点 边框 边界 选中 光标 轮廓</string>
     <string name="settings_search_keywords_zoom">缩放 界面 大小</string>
     <string name="settings_search_keywords_animation">动画 流畅 性能</string>
     <string name="settings_search_keywords_weather">顶部栏 标签 位置 摄氏度 华氏度</string>

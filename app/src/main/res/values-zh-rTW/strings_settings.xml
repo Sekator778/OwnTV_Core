@@ -109,7 +109,7 @@
     <string name="settings_metadata_active_source">目前來源</string>
     <string name="settings_metadata_shared_worker_description">OwnTV Worker · 無需設定</string>
     <string name="settings_metadata_connection">連線</string>
-    <string name="settings_metadata_remote_advanced">遠端取得進階 TMDB 資訊</string>
+    <string name="settings_metadata_remote_advanced">取得進階 TMDB 資訊</string>
     <string name="settings_metadata_remote_advanced_description">使用你自己的 TMDB API 金鑰或自建 Worker，而不是共用的預設服務。</string>
     <string name="settings_metadata_usage_label">用量</string>
     <string name="settings_metadata_usage_value"><xliff:g id="min_used">%1$d</xliff:g>/<xliff:g id="min_total">%2$d</xliff:g> 分鐘 · <xliff:g id="hr_used">%3$d</xliff:g>/<xliff:g id="hr_total">%4$d</xliff:g> 小時 · <xliff:g id="day_used">%5$d</xliff:g>/<xliff:g id="day_total">%6$d</xliff:g> 天</string>
@@ -193,6 +193,15 @@
     <string name="settings_theme_description">淺色、深色或依照系統</string>
     <string name="settings_accent">強調色</string>
     <string name="settings_accent_description">調整介面色調 — 可使用預設色彩、調色盤或十六進位色碼</string>
+    <string name="settings_focus_highlight">焦點強調</string>
+    <string name="settings_focus_highlight_description">焦點項目周圍外框的顏色與粗細</string>
+    <string name="settings_focus_highlight_chip"><xliff:g id="color">%1$s</xliff:g> · <xliff:g id="thickness">%2$s</xliff:g></string>
+    <string name="settings_focus_thickness">粗細</string>
+    <string name="settings_focus_width_thin">細</string>
+    <string name="settings_focus_width_normal">標準</string>
+    <string name="settings_focus_width_thick">粗</string>
+    <string name="settings_focus_width_extra">超粗</string>
+    <string name="settings_focus_highlight_sample">已選取</string>
     <string name="settings_glass_effect">玻璃效果</string>
     <string name="settings_glass_description">半透明毛玻璃面板、背景圖片和透明度</string>
     <string name="settings_ui_zoom">UI 縮放</string>
@@ -313,6 +322,7 @@
     <string name="settings_search_keywords_history">最近觀看 繼續觀看 移除</string>
     <string name="settings_search_keywords_theme">淺色 深色 系統</string>
     <string name="settings_search_keywords_accent">色調 調色盤 十六進位 預設色彩</string>
+    <string name="settings_search_keywords_focus">焦點 外框 邊框 選取 游標 輪廓</string>
     <string name="settings_search_keywords_zoom">縮放 介面 大小</string>
     <string name="settings_search_keywords_animation">動畫 流暢 效能</string>
     <string name="settings_search_keywords_weather">頂端列 資訊方塊 位置 攝氏 華氏</string>

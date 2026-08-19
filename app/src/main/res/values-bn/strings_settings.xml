@@ -110,7 +110,7 @@
     <string name="settings_metadata_active_source">সক্রিয় সোর্স</string>
     <string name="settings_metadata_shared_worker_description">OwnTV Worker · সেটআপ ছাড়াই</string>
     <string name="settings_metadata_connection">সংযোগ</string>
-    <string name="settings_metadata_remote_advanced">রিমোট-এর মাধ্যমে উন্নত TMDB তথ্য নিন</string>
+    <string name="settings_metadata_remote_advanced">উন্নত TMDB তথ্য নিন</string>
     <string name="settings_metadata_remote_advanced_description">শেয়ার করা ডিফল্টের বদলে নিজের TMDB API কী বা নিজে হোস্ট করা Worker ব্যবহার করুন।</string>
     <string name="settings_metadata_usage_label">ব্যবহার</string>
     <string name="settings_metadata_usage_value"><xliff:g id="min_used">%1$d</xliff:g>/<xliff:g id="min_total">%2$d</xliff:g> মিনিট · <xliff:g id="hr_used">%3$d</xliff:g>/<xliff:g id="hr_total">%4$d</xliff:g> ঘণ্টা · <xliff:g id="day_used">%5$d</xliff:g>/<xliff:g id="day_total">%6$d</xliff:g> দিন</string>
@@ -194,6 +194,15 @@
     <string name="settings_theme_description">হালকা, গাঢ় অথবা সিস্টেম অনুসরণ করুন</string>
     <string name="settings_accent">অ্যাকসেন্ট রং</string>
     <string name="settings_accent_description">ইন্টারফেসে রং দিন — প্রিসেট, প্যালেট বা হেক্স কোড</string>
+    <string name="settings_focus_highlight">ফোকাস হাইলাইট</string>
+    <string name="settings_focus_highlight_description">নির্বাচিত আইটেমের চারপাশের বর্ডারের রং ও পুরুত্ব</string>
+    <string name="settings_focus_highlight_chip"><xliff:g id="color">%1$s</xliff:g> · <xliff:g id="thickness">%2$s</xliff:g></string>
+    <string name="settings_focus_thickness">পুরুত্ব</string>
+    <string name="settings_focus_width_thin">পাতলা</string>
+    <string name="settings_focus_width_normal">স্বাভাবিক</string>
+    <string name="settings_focus_width_thick">পুরু</string>
+    <string name="settings_focus_width_extra">অতিরিক্ত পুরু</string>
+    <string name="settings_focus_highlight_sample">নির্বাচিত</string>
     <string name="settings_glass_effect">গ্লাস ইফেক্ট</string>
     <string name="settings_glass_description">অর্ধস্বচ্ছ ফ্রস্টেড প্যানেল, পটভূমির ছবি ও স্বচ্ছতা</string>
     <string name="settings_ui_zoom">UI জুম</string>
@@ -315,6 +324,7 @@
     <string name="settings_search_keywords_history">সম্প্রতি-দেখা চালিয়ে-যান অপসারণ</string>
     <string name="settings_search_keywords_theme">হালকা গাঢ় সিস্টেম</string>
     <string name="settings_search_keywords_accent">আভা প্যালেট হেক্স প্রিসেট</string>
+    <string name="settings_search_keywords_focus">ফোকাস রিং বর্ডার নির্বাচন কার্সার আউটলাইন</string>
     <string name="settings_search_keywords_zoom">স্কেল ইন্টারফেস আকার</string>
     <string name="settings_search_keywords_animation">নড়াচড়া দ্রুত কর্মক্ষমতা</string>
     <string name="settings_search_keywords_weather">শীর্ষ বার চিপ অবস্থান সেলসিয়াস ফারেনহাইট</string>

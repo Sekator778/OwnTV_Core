@@ -110,7 +110,7 @@
     <string name="settings_metadata_active_source">Actieve bron</string>
     <string name="settings_metadata_shared_worker_description">OwnTV Worker · geen installatie</string>
     <string name="settings_metadata_connection">Verbinding</string>
-    <string name="settings_metadata_remote_advanced">Geavanceerde TMDB-gegevens op afstand ophalen</string>
+    <string name="settings_metadata_remote_advanced">Geavanceerde TMDB-gegevens ophalen</string>
     <string name="settings_metadata_remote_advanced_description">Gebruik je eigen TMDB-API-sleutel of een zelfgehoste Worker in plaats van de gedeelde standaard.</string>
     <string name="settings_metadata_usage_label">Gebruik</string>
     <string name="settings_metadata_usage_value"><xliff:g id="min_used">%1$d</xliff:g>/<xliff:g id="min_total">%2$d</xliff:g> min · <xliff:g id="hr_used">%3$d</xliff:g>/<xliff:g id="hr_total">%4$d</xliff:g> uur · <xliff:g id="day_used">%5$d</xliff:g>/<xliff:g id="day_total">%6$d</xliff:g> dag</string>
@@ -194,6 +194,15 @@
     <string name="settings_theme_description">Licht, donker of het systeem volgen</string>
     <string name="settings_accent">Accentkleur</string>
     <string name="settings_accent_description">Geef de interface een tint — voorinstellingen, palet of hexcode</string>
+    <string name="settings_focus_highlight">Focusmarkering</string>
+    <string name="settings_focus_highlight_description">Kleur en dikte van de rand om het geselecteerde item</string>
+    <string name="settings_focus_highlight_chip"><xliff:g id="color">%1$s</xliff:g> · <xliff:g id="thickness">%2$s</xliff:g></string>
+    <string name="settings_focus_thickness">Dikte</string>
+    <string name="settings_focus_width_thin">Dun</string>
+    <string name="settings_focus_width_normal">Normaal</string>
+    <string name="settings_focus_width_thick">Dik</string>
+    <string name="settings_focus_width_extra">Extra dik</string>
+    <string name="settings_focus_highlight_sample">Gefocust</string>
     <string name="settings_glass_effect">Glaseffect</string>
     <string name="settings_glass_description">Doorschijnende panelen met matglaseffect, achtergrondafbeelding en transparantie</string>
     <string name="settings_ui_zoom">UI-zoom</string>
@@ -315,6 +324,7 @@
     <string name="settings_search_keywords_history">onlangs bekeken doorgaan verwijderen</string>
     <string name="settings_search_keywords_theme">licht donker systeem</string>
     <string name="settings_search_keywords_accent">tint palet hex voorinstelling</string>
+    <string name="settings_search_keywords_focus">focus rand kader selectie cursor omtrek</string>
     <string name="settings_search_keywords_zoom">schalen interface grootte</string>
     <string name="settings_search_keywords_animation">beweging sneller prestaties</string>
     <string name="settings_search_keywords_weather">bovenbalk chip locatie celsius fahrenheit</string>
