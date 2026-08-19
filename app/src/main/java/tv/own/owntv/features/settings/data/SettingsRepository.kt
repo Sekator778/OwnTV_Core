@@ -11,11 +11,17 @@ import androidx.datastore.preferences.core.longPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.core.stringSetPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 import tv.own.owntv.core.i18n.LocaleStore
 import tv.own.owntv.features.home.HomeConfig
 import tv.own.owntv.player.SurroundMode
@@ -118,6 +124,12 @@ object SeekSteps {
  * UI zoom, custom user-agent, refresh-on-start, etc. in later phases.
  */
 class SettingsRepository(private val context: Context, private val localeStore: LocaleStore) {
+
+    /**
+     * Scope for the warm settings snapshots below. Lives as long as this singleton — deliberately never
+     * cancelled, because the alternative is paying a DataStore read on every metadata resolve.
+     */
+    private val repoScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
 
     /** Result of importing the optional locale field without allowing bad backup data to abort the restore. */
     data class SettingsImportResult(
@@ -252,6 +264,7 @@ class SettingsRepository(private val context: Context, private val localeStore: 
         val RECENT_SEARCHES = stringPreferencesKey("recent_searches")
         val LAST_LIVE_CHANNEL = androidx.datastore.preferences.core.longPreferencesKey("last_live_channel")
         val VOD_VIEW_MODE = stringPreferencesKey("vod_view_mode")
+        val EPISODE_VIEW_MODE = stringPreferencesKey("episode_view_mode")
         // Global proxy (Approach 1 — one app-wide HTTP proxy). HTTP only; no per-source override yet.
         val PROXY_ENABLED = booleanPreferencesKey("proxy_enabled")
         val PROXY_HOST = stringPreferencesKey("proxy_host")
@@ -618,8 +631,31 @@ class SettingsRepository(private val context: Context, private val localeStore: 
         )
     }
 
-    /** One-shot read of the current metadata config (used by TmdbProvider per call). */
-    suspend fun metadataConfig(): tv.own.owntv.core.metadata.MetadataConfig = metadataConfigFlow.first()
+    /**
+     * Hot snapshot of [metadataConfigFlow], kept warm by one long-lived collector.
+     *
+     * Measured on the owner's TV: a fresh `first()` on a DataStore flow costs **74–128 ms**, and the
+     * metadata layer reads this on every resolve — once per episode focus, once per season switch,
+     * once per browsed title. That dominated everything else in the path, database queries included.
+     * One collector turns each of those into an in-memory field read.
+     */
+    private val metadataConfigState: StateFlow<tv.own.owntv.core.metadata.MetadataConfig?> =
+        metadataConfigFlow.stateIn(repoScope, SharingStarted.Eagerly, null)
+
+    /** Same treatment, for the other value the metadata path reads on every resolve. */
+    private val activeProfileIdState: StateFlow<Long?> =
+        prefsFlow { it[Keys.ACTIVE_PROFILE] ?: -1L }.stateIn(repoScope, SharingStarted.Eagerly, null)
+
+    /**
+     * One-shot read of the current metadata config (used by TmdbProvider per call). Served from the
+     * warm snapshot; falls back to a direct read only before the collector's first emission.
+     */
+    suspend fun metadataConfig(): tv.own.owntv.core.metadata.MetadataConfig =
+        metadataConfigState.value ?: metadataConfigFlow.first()
+
+    /** Cheap counterpart to collecting [activeProfileId], for the same per-resolve hot path. */
+    suspend fun activeProfileIdNow(): Long = activeProfileIdState.value ?: activeProfileId.first()
+
 
     // --- Catch-up (archive) playback ---
 
@@ -764,6 +800,18 @@ class SettingsRepository(private val context: Context, private val localeStore: 
     }
     suspend fun setVodViewMode(mode: VodViewMode) {
         context.dataStore.edit { it[Keys.VOD_VIEW_MODE] = mode.name }
+    }
+
+    /**
+     * How the episode list inside a show is drawn. LIST (default) is the text rows; GRID is a wall of
+     * 16:9 episode stills. Global rather than per-series: a layout preference is about how the user
+     * likes to browse, and storing it per show would mean setting it again for every show they open.
+     */
+    val episodeViewMode: Flow<VodViewMode> = prefsFlow { prefs ->
+        prefs[Keys.EPISODE_VIEW_MODE]?.let { runCatching { VodViewMode.valueOf(it) }.getOrNull() } ?: VodViewMode.LIST
+    }
+    suspend fun setEpisodeViewMode(mode: VodViewMode) {
+        context.dataStore.edit { it[Keys.EPISODE_VIEW_MODE] = mode.name }
     }
 
     val sortGuide: Flow<GuideSort> = prefsFlow { prefs ->
@@ -1696,6 +1744,7 @@ class SettingsRepository(private val context: Context, private val localeStore: 
         Keys.MAIN_FONT_FAMILY, Keys.POPUP_FONT_FAMILY,
         Keys.PREF_AUDIO_LANG, Keys.PREF_SUB_LANG, Keys.SUB_SEARCH_LANGS, Keys.SORT_LIVE, Keys.SORT_GUIDE, Keys.SORT_MOVIES,
         Keys.SORT_SERIES, Keys.RESUME_MODE, Keys.CATCHUP_TZ, Keys.CATCHUP_PLAYER, Keys.ANIMATION_LEVEL, Keys.VOD_VIEW_MODE,
+        Keys.EPISODE_VIEW_MODE,
         Keys.WEATHER_LOCATION, Keys.RECENT_SEARCHES,
         // Global proxy — non-secret fields only. The proxy password (Keys.PROXY_PASS) is NEVER part of
         // this whitelist; it is handled separately by BackupManager (encrypted or omitted).

@@ -1,7 +1,10 @@
 package tv.own.owntv.core.metadata
 
 import android.util.Log
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.sync.withLock
 import org.json.JSONArray
 import tv.own.owntv.core.database.dao.MetadataDao
 import tv.own.owntv.core.database.dao.ProfileDao
@@ -30,12 +33,27 @@ class MetadataRepository(
     /** Guards [healNegativeMatchesOnce] so the DataStore read happens once per process, not per resolve. */
     private val healNeeded = java.util.concurrent.atomic.AtomicBoolean(true)
 
+    /**
+     * Serialises [ensureSeasonBundle] so two callers cannot fetch the same season at once.
+     *
+     * In grid mode two independent flows ask for the same season within ~300 ms of each other — the
+     * focused-episode resolve (700 ms debounce) and the whole-season resolve (1 s). The "already
+     * fetched" marker is only written once the response lands, which measured 150–590 ms, so without
+     * this the second caller sees no marker and fires an identical second request — doubling the cost
+     * of the very thing the bundle exists to avoid. The lock is held across the network call and the
+     * marker is re-checked inside it, so the second caller simply finds the work already done.
+     */
+    private val seasonFetchLock = kotlinx.coroutines.sync.Mutex()
+
     /** The metadata language the cache keys are scoped by; blank keeps the pre-language key format. */
     private suspend fun currentLang(): String = settings.metadataConfig().resolvedLanguage
 
     /** Search complete TMDB unless the active profile is explicitly marked as Kids. */
     private suspend fun currentProfileAllowsAdult(): Boolean {
-        val profileId = settings.activeProfileId.first()
+        // activeProfileIdNow() reads a warm snapshot; collecting the flow here cost 70-120 ms per call,
+        // and this runs on every resolve. The profile row itself stays a live read — the Kids flag must
+        // never be served stale.
+        val profileId = settings.activeProfileIdNow()
         return profileAllowsAdultMetadata(profileDao.getById(profileId)?.isKids)
     }
 
@@ -168,6 +186,13 @@ class MetadataRepository(
 
     private suspend fun fetchAndCacheTv(tmdbId: Int, lang: String, fallback: MetadataSearchResult?): MetadataCacheEntity? {
         val now = System.currentTimeMillis()
+        // Details are keyed by TMDB id, not by the local item, so a second playlist entry for the same
+        // show already has them. IPTV catalogs list the same show in several categories routinely, and
+        // without this each duplicate paid for an identical download. Still bypassed for a row that is
+        // not usable, so the legacy-cast refresh keeps working.
+        dao.getCache(tvCacheKey(tmdbId, lang))?.let {
+            if (now - it.updatedAt < POSITIVE_TTL_MS && it.isUsable()) return it
+        }
         val details = provider.tvDetails(tmdbId)
         val entity = when {
             details != null -> MetadataCacheEntity(
@@ -227,38 +252,131 @@ class MetadataRepository(
     }
 
     /**
-     * Resolve per-episode TMDB metadata (still, plot, air date, rating). First resolves the show (cached)
-     * to get its TMDB id, then fetches the episode lazily and caches it under `tv:<id>:s<n>e<m>`. Returns
-     * null when enrichment is off, the show has no match, or that episode isn't on TMDB.
+     * Resolve per-episode TMDB metadata (still, plot, air date, rating). First resolves the show
+     * (cached) to get its TMDB id, then makes sure the whole season is cached. Returns null when
+     * enrichment is off, the show has no match, or that episode isn't on TMDB.
      */
     suspend fun resolveEpisode(
         series: tv.own.owntv.core.database.entity.SeriesEntity,
         episode: tv.own.owntv.core.database.entity.EpisodeEntity,
-    ): MetadataCacheEntity? {
-        if (!settings.metadataConfig().enabled) return null
-        val show = resolveSeries(series) ?: return null // no confident show match → no episode lookup
-        val tvId = show.tmdbId
-        val season = episode.seasonNumber
-        val ep = episode.episodeNumber
-        val key = episodeCacheKey(tvId, season, ep, currentLang())
+    ): MetadataCacheEntity? = withContext(Dispatchers.IO) {
+        if (!settings.metadataConfig().enabled) return@withContext null
+        // Off the main thread: this runs on every episode focus, and resuming a coroutine on a main
+        // thread that is busy laying out an episode grid added ~100 ms per database round trip. The
+        // queries were never slow — waiting to be resumed was.
+        val show = resolveSeries(series) ?: return@withContext null // no show match → no episode lookup
+        val lang = currentLang()
+        ensureSeasonBundle(show.tmdbId, episode.seasonNumber, lang)
+        dao.getCache(episodeCacheKey(show.tmdbId, episode.seasonNumber, episode.episodeNumber, lang))
+    }
+
+    /**
+     * Guarantee this season's episodes are cached, fetching the season — and the next few, since they
+     * ride along free — in ONE request when they are not.
+     *
+     * The season marker, not the presence of any single episode row, is the authority on whether the
+     * work has been done. Older builds cached episodes one at a time, so a user who scrolled episode 3
+     * in the list has exactly one row: keying off "is this episode cached" would leave the rest of the
+     * grid permanently empty for them. Keying off the marker heals those installs on first open.
+     *
+     * A transport failure writes no marker, so it retries next time rather than caching the failure.
+     */
+    private suspend fun ensureSeasonBundle(tvId: Int, season: Int, lang: String) = seasonFetchLock.withLock {
         val now = System.currentTimeMillis()
+        // Re-checked INSIDE the lock: a caller that queued behind the fetch must see its result.
+        dao.getCache(seasonMarkerKey(tvId, season, lang))?.let {
+            if (now - it.updatedAt < POSITIVE_TTL_MS) return@withLock
+        }
+        // Aligned to fixed blocks (0-9, 10-19, …) rather than starting at the season asked for, so every
+        // install requesting anything in the same block builds the IDENTICAL URL. The Worker caches by
+        // URL, so alignment is what lets one user's fetch serve everyone else's; a window starting
+        // wherever the user happened to open would splinter the edge cache into near-duplicate entries.
+        // Blocks start at 0, which also means opening season 1 pulls the specials along with it.
+        // Over-requesting is safe: seasons that do not exist come back absent, not as an error.
+        val blockStart = (season / TmdbProvider.MAX_BUNDLED_SEASONS) * TmdbProvider.MAX_BUNDLED_SEASONS
+        val window = (blockStart until blockStart + TmdbProvider.MAX_BUNDLED_SEASONS).toList()
+        val bundle = provider.tvSeasonBundle(tvId, window) ?: return@withLock
 
-        dao.getCache(key)?.let { if (now - it.updatedAt < POSITIVE_TTL_MS) return it }
+        // One transaction for the whole season, not ~60 separate inserts.
+        val rows = bundle.map { item ->
+            val d = item.details
+            MetadataCacheEntity(
+                key = episodeCacheKey(tvId, item.seasonNumber, item.episodeNumber, lang),
+                tmdbId = tvId, imdbId = null, type = TYPE_EPISODE,
+                // Blank is fine: every screen falls back to the provider's own episode title.
+                title = d.name?.takeIf { it.isNotBlank() } ?: "",
+                year = d.airDate?.take(4)?.toIntOrNull(),
+                overview = d.overview,
+                posterPath = d.stillPath, // 16:9 still, rendered via MetadataImages.backdrop sizing
+                backdropPath = d.stillPath,
+                rating = d.rating,
+                genresJson = null, castJson = null, trailerKey = null, updatedAt = now,
+                logoPath = null,
+            )
+        }
+        // Mark every season ASKED for, not just those that came back — an absent season is a real answer
+        // ("does not exist") and must not be re-requested on the next episode focus.
+        val markers = window.map { s ->
+            MetadataCacheEntity(
+                key = seasonMarkerKey(tvId, s, lang), tmdbId = tvId, imdbId = null,
+                type = TYPE_SEASON_MARKER, title = "", year = null, overview = null,
+                posterPath = null, backdropPath = null, rating = null, genresJson = null,
+                castJson = null, trailerKey = null, updatedAt = now, logoPath = null,
+            )
+        }
+        dao.upsertCaches(rows + markers)
+    }
 
-        val d = provider.tvEpisodeDetails(tvId, season, ep) ?: return dao.getCache(key)
-        val entity = MetadataCacheEntity(
-            key = key, tmdbId = tvId, imdbId = null, type = TYPE_EPISODE,
-            title = d.name?.takeIf { it.isNotBlank() } ?: episode.name,
-            year = d.airDate?.take(4)?.toIntOrNull(),
-            overview = d.overview,
-            posterPath = d.stillPath, // 16:9 still, rendered via MetadataImages.backdrop sizing
-            backdropPath = d.stillPath,
-            rating = d.rating,
-            genresJson = null, castJson = null, trailerKey = null, updatedAt = now,
-            logoPath = null,
-        )
-        dao.upsertCache(entity)
-        return entity
+    /**
+     * Cache-only counterpart to [resolveSeasonEpisodes]: what is already known, with no network and no
+     * waiting. The grid shows this the instant a season is selected, so switching back to a season you
+     * have already viewed is immediate instead of blanking while a dwell timer runs.
+     *
+     * Reads the match id straight from the DAO rather than via [resolveSeries], which may go to network.
+     */
+    suspend fun cachedSeasonEpisodes(
+        series: tv.own.owntv.core.database.entity.SeriesEntity,
+        episodes: List<tv.own.owntv.core.database.entity.EpisodeEntity>,
+    ): Map<Long, MetadataCacheEntity> = withContext(Dispatchers.IO) {
+        val cfg = settings.metadataConfig() // read once; each call is a DataStore round trip
+        if (!cfg.enabled || episodes.isEmpty()) return@withContext emptyMap()
+        val pid = settings.activeProfileIdNow()
+        val allowsAdult = profileAllowsAdultMetadata(profileDao.getById(pid)?.isKids)
+        val matchKey = maturityMatchKey(seriesLocalKey(series), allowsAdult)
+        val tvId = dao.getMatch(matchKey)?.tmdbId ?: return@withContext emptyMap()
+        episodesByCacheKey(tvId, episodes, cfg.resolvedLanguage)
+    }
+
+    /** One batched query for a season's rows, mapped back onto the local episode ids the UI keys by. */
+    private suspend fun episodesByCacheKey(
+        tvId: Int,
+        episodes: List<tv.own.owntv.core.database.entity.EpisodeEntity>,
+        lang: String,
+    ): Map<Long, MetadataCacheEntity> {
+        val keyToEpisodeId = episodes.associate { episodeCacheKey(tvId, it.seasonNumber, it.episodeNumber, lang) to it.id }
+        return dao.getCaches(keyToEpisodeId.keys.toList())
+            .mapNotNull { row -> keyToEpisodeId[row.key]?.let { it to row } }
+            .toMap()
+    }
+
+    /**
+     * Cached TMDB rows for a whole season, keyed by LOCAL episode id — what the episode grid needs,
+     * since every tile is on screen at once rather than one focused row.
+     *
+     * Costs at most ONE network request: resolving the first episode pulls the season bundle that
+     * covers all the rest, and every other lookup here is a cache read. Returns whatever is known,
+     * so a show TMDB has never heard of yields an empty map rather than failing.
+     */
+    suspend fun resolveSeasonEpisodes(
+        series: tv.own.owntv.core.database.entity.SeriesEntity,
+        episodes: List<tv.own.owntv.core.database.entity.EpisodeEntity>,
+    ): Map<Long, MetadataCacheEntity> = withContext(Dispatchers.IO) {
+        if (!settings.metadataConfig().enabled || episodes.isEmpty()) return@withContext emptyMap()
+        val show = resolveSeries(series) ?: return@withContext emptyMap()
+        val lang = currentLang()
+        // Straight to the bundle rather than via resolveEpisode, which would resolve the show a second time.
+        ensureSeasonBundle(show.tmdbId, episodes.first().seasonNumber, lang)
+        episodesByCacheKey(show.tmdbId, episodes, lang)
     }
 
     /**
@@ -355,9 +473,13 @@ class MetadataRepository(
         matchKeys.mapNotNull { dao.getMatch(it)?.tmdbId }.distinct().forEach { tid ->
             dao.deleteCache(tvCacheKey(tid, lang)) // show details
             dao.deleteCache(episodeCacheKey(tid, episode.seasonNumber, episode.episodeNumber, lang))
+            // The marker outlives the row it guards, so a refresh would otherwise be refused as
+            // "already fetched, TMDB has nothing" and never hit the network again.
+            dao.deleteCache(seasonMarkerKey(tid, episode.seasonNumber, lang))
             if (lang.isNotBlank()) { // pre-language rows
                 dao.deleteCache(tvCacheKey(tid))
                 dao.deleteCache(episodeCacheKey(tid, episode.seasonNumber, episode.episodeNumber))
+                dao.deleteCache(seasonMarkerKey(tid, episode.seasonNumber))
             }
         }
         matchKeys.forEach { dao.deleteMatch(it) } // show match (negative OR positive)
@@ -421,6 +543,10 @@ class MetadataRepository(
         fallback: MetadataSearchResult? = null,
     ): MetadataCacheEntity? {
         val now = System.currentTimeMillis()
+        // Same as fetchAndCacheTv: two local entries for one film share its TMDB details.
+        dao.getCache(cacheKey(tmdbId, lang))?.let {
+            if (now - it.updatedAt < POSITIVE_TTL_MS && it.isUsable()) return it
+        }
         val details = provider.movieDetails(tmdbId)
         val entity = when {
             details != null -> MetadataCacheEntity(
@@ -481,6 +607,10 @@ class MetadataRepository(
         private const val TYPE_TV = "tv"
         private const val TYPE_EPISODE = "episode"
 
+        /** Not real metadata — a "this season has been fetched" flag, so a season TMDB does not have
+         *  (or an episode it is missing) cannot re-trigger the bundle on every focus. */
+        private const val TYPE_SEASON_MARKER = "season_fetched"
+
         /** Accept a match at/above this confidence; below it, prefer no metadata over a wrong one. */
         private const val ACCEPT_THRESHOLD = 0.6
 
@@ -534,6 +664,11 @@ class MetadataRepository(
         fun episodeCacheKey(tvId: Int, season: Int, episode: Int, lang: String = ""): String =
             if (lang.isBlank()) "$TYPE_TV:$tvId:s${season}e$episode"
             else "$TYPE_TV:$lang:$tvId:s${season}e$episode"
+
+        /** Companion flag to [episodeCacheKey]; shares its shape so a language change scopes both. */
+        fun seasonMarkerKey(tvId: Int, season: Int, lang: String = ""): String =
+            if (lang.isBlank()) "$TYPE_TV:$tvId:s$season:fetched"
+            else "$TYPE_TV:$lang:$tvId:s$season:fetched"
 
         internal fun maturityMatchKey(localKey: String, includeAdult: Boolean): String =
             if (includeAdult) localKey else "$localKey:kids"

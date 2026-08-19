@@ -929,6 +929,7 @@
 1	sql	app/src/main/java/tv/own/owntv/core/database/dao/MetadataDao.kt	DELETE FROM metadata_match WHERE tmdbId IS NULL
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/dao/MetadataDao.kt	DELETE FROM metadata_match WHERE updatedAt < :cutoff
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/dao/MetadataDao.kt	SELECT * FROM metadata_cache WHERE key = :key LIMIT 1
+1	sql	app/src/main/java/tv/own/owntv/core/database/dao/MetadataDao.kt	SELECT * FROM metadata_cache WHERE key IN (:keys)
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/dao/MetadataDao.kt	SELECT * FROM metadata_match WHERE localKey = :localKey LIMIT 1
 1	sql	app/src/main/java/tv/own/owntv/core/database/dao/MovieDao.kt	(SELECT rowid FROM movies_fts WHERE movies_fts MATCH :ftsQuery)
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/dao/MovieDao.kt	AND (categoryId IS NULL OR categoryId NOT IN (:excludedCategoryIds))
@@ -1576,7 +1577,9 @@
 1	locale	app/src/main/java/tv/own/owntv/core/metadata/MetadataProvider.kt	auto
 1	protocol	app/src/main/java/tv/own/owntv/core/metadata/MetadataRepository.kt	$TYPE_MOVIE:$tmdbId
 1	protocol	app/src/main/java/tv/own/owntv/core/metadata/MetadataRepository.kt	$TYPE_MOVIE:${movie.sourceId}:${movie.remoteId ?: movie.name}
+1	json	app/src/main/java/tv/own/owntv/core/metadata/MetadataRepository.kt	$TYPE_TV:$lang:$tvId:s$season:fetched
 1	protocol	app/src/main/java/tv/own/owntv/core/metadata/MetadataRepository.kt	$TYPE_TV:$tmdbId
+1	json	app/src/main/java/tv/own/owntv/core/metadata/MetadataRepository.kt	$TYPE_TV:$tvId:s$season:fetched
 1	protocol	app/src/main/java/tv/own/owntv/core/metadata/MetadataRepository.kt	$TYPE_TV:$tvId:s${season}e$episode
 1	protocol	app/src/main/java/tv/own/owntv/core/metadata/MetadataRepository.kt	$TYPE_TV:${series.sourceId}:${series.remoteId ?: series.name}
 1	preference-key	app/src/main/java/tv/own/owntv/core/metadata/MetadataRepository.kt	$localKey:kids
@@ -1586,6 +1589,7 @@
 1	log	app/src/main/java/tv/own/owntv/core/metadata/MetadataRepository.kt	negative-match heal failed: ${it.message}
 1	protocol	app/src/main/java/tv/own/owntv/core/metadata/MetadataRepository.kt	resolveMovie search failed: ${it.message}
 1	protocol	app/src/main/java/tv/own/owntv/core/metadata/MetadataRepository.kt	resolveSeries search failed: ${it.message}
+1	json	app/src/main/java/tv/own/owntv/core/metadata/MetadataRepository.kt	season_fetched
 1	protocol	app/src/main/java/tv/own/owntv/core/metadata/MetadataRepository.kt	tv
 1	preference-key	app/src/main/java/tv/own/owntv/core/metadata/OwnTVClientId.kt	client_id
 1	preference-key	app/src/main/java/tv/own/owntv/core/metadata/OwnTVClientId.kt	owntv_client_id
@@ -1608,7 +1612,6 @@
 1	technical	app/src/main/java/tv/own/owntv/core/metadata/TitleNormalizer.kt	vostfr|vost|vf|subbed|dubbed|dublado|legendado|castellano|truefrench|hdlight|
 3	empty	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	\0
 1	protocol	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	$base,en,null
-1	protocol	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	&
 4	protocol	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	&api_key=
 1	protocol	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	&first_air_date_year=$year
 1	protocol	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	&include_adult=
@@ -1622,12 +1625,12 @@
 1	url	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	/3/trending/
 2	protocol	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	/3/tv/
 1	url	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	/day
-1	protocol	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	/episode/
-1	protocol	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	/season/
-4	protocol	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	?
+3	protocol	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	?
+1	url	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	?append_to_response=
 2	protocol	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	?append_to_response=credits,external_ids,videos,images
 1	url	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	?page=
 1	protocol	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	?query=
+1	log	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	OwnTVSpend
 1	log	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	TMDB Trending parse failed type=$type page=$page
 1	protocol	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	Teaser
 1	log	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	TmdbProvider
@@ -1636,12 +1639,13 @@
 1	protocol	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	YouTube
 1	json	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	adult
 1	json	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	air_date
-1	protocol	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	api_key=
 2	json	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	backdrop_path
 1	json	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	cast
 1	json	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	credits
 3	locale	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	en
 1	protocol	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	en,null
+1	json	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	episode_number
+1	json	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	episodes
 2	json	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	external_ids
 1	json	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	file_path
 2	json	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	first_air_date
@@ -1650,12 +1654,11 @@
 1	url	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	https://image.tmdb.org/t/p
 1	url	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	https://owntv-tmdb-meta.xiannero.workers.dev
 1	url	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	https://tmdb.owntv.me
-4	json	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	id
+3	json	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	id
 1	json	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	images
 3	json	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	imdb_id
 1	json	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	iso_639_1
 1	json	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	key
-1	protocol	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	language=
 1	json	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	logos
 1	protocol	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	movie
 6	json	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	name
@@ -1668,7 +1671,12 @@
 3	json	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	poster_path
 2	json	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	release_date
 2	json	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	results
+1	log	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	season bundle tv=$tvId seasons=${wanted.firstOrNull()}..${wanted.lastOrNull()}
+1	url	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	season/$it
+1	json	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	season/$season
+1	json	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	season_number
 1	json	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	site
+1	log	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	spend: $label
 1	json	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	still_path
 2	json	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	title
 1	protocol	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	tv
@@ -2923,7 +2931,8 @@
 1	log	app/src/main/java/tv/own/owntv/features/search/SearchViewModel.kt	stalker resolve failed movieId=${movie.id}
 1	technical	app/src/main/java/tv/own/owntv/features/series/SeriesScreen.kt	,
 2	technical	app/src/main/java/tv/own/owntv/features/series/SeriesScreen.kt	series
-1	technical	app/src/main/java/tv/own/owntv/features/series/SeriesScreen.kt	✓
+1	technical	app/src/main/java/tv/own/owntv/features/series/SeriesScreen.kt	w300
+2	technical	app/src/main/java/tv/own/owntv/features/series/SeriesScreen.kt	✓
 2	empty	app/src/main/java/tv/own/owntv/features/series/SeriesViewModel.kt	\0
 1	technical	app/src/main/java/tv/own/owntv/features/series/SeriesViewModel.kt	${StorageAccess.sanitize(ep.name.ifBlank { "episode-${ep.episodeNumber}" })}.$ext
 1	technical	app/src/main/java/tv/own/owntv/features/series/SeriesViewModel.kt	${StorageAccess.sanitize(episode.name.ifBlank { "episode-${episode.episodeNumber}" })}.$ext
@@ -3162,6 +3171,7 @@
 1	preference-key	app/src/main/java/tv/own/owntv/features/settings/data/SettingsRepository.kt	epg_offset_minutes
 1	preference-key	app/src/main/java/tv/own/owntv/features/settings/data/SettingsRepository.kt	epg_refill_checked
 1	preference-key	app/src/main/java/tv/own/owntv/features/settings/data/SettingsRepository.kt	epg_use_logos
+1	preference-key	app/src/main/java/tv/own/owntv/features/settings/data/SettingsRepository.kt	episode_view_mode
 1	preference-key	app/src/main/java/tv/own/owntv/features/settings/data/SettingsRepository.kt	external_player
 1	preference-key	app/src/main/java/tv/own/owntv/features/settings/data/SettingsRepository.kt	external_player_live
 1	preference-key	app/src/main/java/tv/own/owntv/features/settings/data/SettingsRepository.kt	external_player_movies

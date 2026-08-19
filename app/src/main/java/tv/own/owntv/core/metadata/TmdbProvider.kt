@@ -85,6 +85,10 @@ class TmdbProvider(
             Log.w(TAG, "metadata allowance spent, skipping $label")
             return null
         }
+        // Dev-only accounting: the allowance counter in Settings shows a total, not what spent it. This
+        // is the single choke point every metered call passes through, so one line here answers "what
+        // actually consumed my allowance". Compiled out of shipping builds.
+        if (BuildConfig.DEV_TOOLS && ep.metered) Log.i(SPEND_TAG, "spend: $label")
         return runCatching { http.getText(url, headers = ep.headers) }
             .onFailure { Log.w(TAG, "TMDB $label failed: ${it.message}") }
             .getOrNull()
@@ -174,33 +178,47 @@ class TmdbProvider(
         return runCatching { parseTvDetails(json, ep.language.substringBefore('-')) }.getOrNull()
     }
 
-    override suspend fun tvEpisodeDetails(tvId: Int, season: Int, episode: Int): EpisodeDetails? {
-        if (tvId <= 0) return null
+    override suspend fun tvSeasonBundle(tvId: Int, seasons: List<Int>): List<SeasonEpisode>? {
+        if (tvId <= 0 || seasons.isEmpty()) return null
         val ep = resolveEndpoint()
+        // TMDB rejects the WHOLE request with status_code 27 past 20 appended parts, so this must clamp
+        // rather than rely on the server to trim. Verified against the Worker: 20 parts pass, 21 fails.
+        val wanted = seasons.distinct().sorted().take(MAX_BUNDLED_SEASONS)
         val url = buildString {
             append(ep.baseUrl).append("/3/tv/").append(tvId)
-            append("/season/").append(season).append("/episode/").append(episode)
-            // Unlike the other endpoints this one has no base query string, so build the params as a list
-            // and join — otherwise whichever of language/api_key comes first has to own the "?".
-            val params = buildList {
-                if (ep.language.isNotBlank()) add("language=" + enc(ep.language))
-                ep.apiKey?.takeIf { it.isNotBlank() }?.let { add("api_key=" + enc(it)) }
-            }
-            if (params.isNotEmpty()) append("?").append(params.joinToString("&"))
+            append("?append_to_response=").append(wanted.joinToString(",") { "season/$it" })
+            append(ep.langParam())
+            ep.apiKey?.takeIf { it.isNotBlank() }?.let { append("&api_key=").append(enc(it)) }
         }
-        val json = fetch(ep, url, "episode details tv=$tvId s${season}e$episode") ?: return null
+        val json = fetch(ep, url, "season bundle tv=$tvId seasons=${wanted.firstOrNull()}..${wanted.lastOrNull()}")
+            ?: return null
         return runCatching {
-            val o = JSONObject(json)
-            if (o.optInt("id", 0) == 0) return@runCatching null
-            EpisodeDetails(
-                name = o.optString("name").takeIf { it.isNotBlank() },
-                overview = o.optString("overview").takeIf { it.isNotBlank() },
-                stillPath = o.optString("still_path").takeIf { it.isNotBlank() && it != "null" },
-                airDate = o.optString("air_date").takeIf { it.isNotBlank() && it != "null" },
-                rating = o.optDouble("vote_average", 0.0).takeIf { it > 0.0 },
-            )
+            val root = JSONObject(json)
+            val out = mutableListOf<SeasonEpisode>()
+            for (season in wanted) {
+                // Absent = that season does not exist. Not an error, and not worth logging per show.
+                val episodes = root.optJSONObject("season/$season")?.optJSONArray("episodes") ?: continue
+                for (i in 0 until episodes.length()) {
+                    val o = episodes.optJSONObject(i) ?: continue
+                    val number = o.optInt("episode_number", -1)
+                    if (number < 0) continue
+                    // season_number is echoed per episode; trust it over the key for specials ordering.
+                    out += SeasonEpisode(o.optInt("season_number", season), number, parseEpisode(o))
+                }
+            }
+            out.takeIf { it.isNotEmpty() }
         }.getOrNull()
     }
+
+    /** Shared by the single-episode endpoint and the bundled season payload — identical field shapes. */
+    private fun parseEpisode(o: JSONObject): EpisodeDetails =
+        EpisodeDetails(
+            name = o.optString("name").takeIf { it.isNotBlank() },
+            overview = o.optString("overview").takeIf { it.isNotBlank() },
+            stillPath = o.optString("still_path").takeIf { it.isNotBlank() && it != "null" },
+            airDate = o.optString("air_date").takeIf { it.isNotBlank() && it != "null" },
+            rating = o.optDouble("vote_average", 0.0).takeIf { it > 0.0 },
+        )
 
     private fun parseTvDetails(body: String, preferredLang: String): MovieDetails? {
         val o = JSONObject(body)
@@ -351,7 +369,19 @@ class TmdbProvider(
 
     companion object {
         private const val TAG = "TmdbProvider"
+
+        /** Own tag so a spend trace can be filtered on its own: `adb logcat -s OwnTVSpend`. */
+        private const val SPEND_TAG = "OwnTVSpend"
         private const val CAST_LIMIT = 15
+
+        /**
+         * Seasons bundled into one `append_to_response`. TMDB's hard ceiling is 20 appended parts in
+         * total and this endpoint spends none of them on anything else, so 16+ would fit — but 16
+         * seasons of a long-running show measured 834 KB, which is a lot to pull before an episode grid
+         * can draw. 10 keeps the worst case near half that while still covering almost every show in one
+         * request; anything longer costs a second request only if the user actually browses that far.
+         */
+        const val MAX_BUNDLED_SEASONS = 10
 
         /** Direct TMDB API base (Tier 2, user's own key). */
         const val TMDB_DIRECT_BASE = "https://api.themoviedb.org"

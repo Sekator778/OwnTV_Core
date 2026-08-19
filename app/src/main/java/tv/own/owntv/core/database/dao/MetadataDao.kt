@@ -27,8 +27,20 @@ interface MetadataDao {
     @Query("SELECT * FROM metadata_cache WHERE key = :key LIMIT 1")
     suspend fun getCache(key: String): MetadataCacheEntity?
 
+    /**
+     * Batch read — one query for a whole season instead of one per episode. The episode grid needs
+     * every tile at once, and doing that as N suspend round trips was visible as the pictures taking a
+     * moment to appear on a switch back to a season already held.
+     */
+    @Query("SELECT * FROM metadata_cache WHERE key IN (:keys)")
+    suspend fun getCaches(keys: List<String>): List<MetadataCacheEntity>
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun upsertCache(entity: MetadataCacheEntity)
+
+    /** Batch write — a season bundle lands ~60 rows; one transaction beats 60. */
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun upsertCaches(entities: List<MetadataCacheEntity>)
 
     @Query("DELETE FROM metadata_cache WHERE key = :key")
     suspend fun deleteCache(key: String)

@@ -177,15 +177,16 @@
 1	app/src/main/java/tv/own/owntv/core/metadata/MetadataCast.kt	p
 1	app/src/main/java/tv/own/owntv/core/metadata/MetadataImages.kt	${TmdbProvider.IMAGE_BASE}/$size${it.ensureLeadingSlash()}
 1	app/src/main/java/tv/own/owntv/core/metadata/MetadataImages.kt	w185
-3	app/src/main/java/tv/own/owntv/core/metadata/MetadataRepository.kt	\0
+6	app/src/main/java/tv/own/owntv/core/metadata/MetadataRepository.kt	\0
 1	app/src/main/java/tv/own/owntv/core/metadata/MetadataRepository.kt	$TYPE_MOVIE:$lang:$tmdbId
 1	app/src/main/java/tv/own/owntv/core/metadata/MetadataRepository.kt	$TYPE_TV:$lang:$tmdbId
 1	app/src/main/java/tv/own/owntv/core/metadata/MetadataRepository.kt	$TYPE_TV:$lang:$tvId:s${season}e$episode
 1	app/src/main/java/tv/own/owntv/core/metadata/OwnTVClientId.kt	\0
 1	app/src/main/java/tv/own/owntv/core/metadata/OwnTVClientId.kt	%02x
+1	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	&api_key=
+1	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	,
 1	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	TMDB $label failed: ${it.message}
 1	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	Trending type=$type page=$page
-1	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	episode details tv=$tvId s${season}e$episode
 1	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	metadata allowance spent, skipping $label
 1	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	movie details id=$tmdbId
 1	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	null

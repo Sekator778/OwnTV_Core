@@ -192,6 +192,12 @@ data class EpisodeDetails(
     val rating: Double?,
 )
 
+/**
+ * One episode from a bundled season fetch, tagged with the numbers needed to cache it. The per-episode
+ * endpoint knows which episode it asked for; a bundle does not, so the numbers travel with the payload.
+ */
+data class SeasonEpisode(val seasonNumber: Int, val episodeNumber: Int, val details: EpisodeDetails)
+
 /** Enrichment source abstraction. Only [TmdbProvider] exists today; fanart.tv could be added later. */
 interface MetadataProvider {
 
@@ -219,5 +225,13 @@ interface MetadataProvider {
     suspend fun tvDetails(tmdbId: Int): MovieDetails?
 
     /** Per-episode details for a resolved show; null on failure or if that episode isn't on TMDB. */
-    suspend fun tvEpisodeDetails(tvId: Int, season: Int, episode: Int): EpisodeDetails?
+    /**
+     * Every episode of [seasons] in ONE request, or null on transport/parse failure.
+     *
+     * Replaces N per-episode calls with one: browsing a whole show used to cost one request per episode
+     * focused (~120 for a five-season show), which no grid of episode stills could ever afford. Seasons
+     * that do not exist are simply absent from the result — verified against the Worker, TMDB omits them
+     * rather than failing — so the caller may over-request without knowing the real season count.
+     */
+    suspend fun tvSeasonBundle(tvId: Int, seasons: List<Int>): List<SeasonEpisode>?
 }
