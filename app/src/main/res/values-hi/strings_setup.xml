@@ -41,7 +41,7 @@
     <string name="setup_add_playlist">प्लेलिस्ट जोड़ें</string>
     <string name="setup_add_playlist_description">इस प्रोफ़ाइल के लिए कोई स्रोत जोड़ें या बाद में सेट अप करें।</string>
     <string name="setup_new">नया</string>
-    <string name="setup_add_m3u_xtream">M3U या Xtream स्रोत जोड़ें</string>
+    <string name="setup_add_m3u_xtream">M3U, Xtream या Stalker स्रोत जोड़ें</string>
     <string name="setup_existing">मौजूदा</string>
     <string name="setup_use_other_profile_playlists">किसी दूसरी प्रोफ़ाइल की प्लेलिस्ट का उपयोग करें</string>
     <string name="setup_import">इंपोर्ट करें</string>

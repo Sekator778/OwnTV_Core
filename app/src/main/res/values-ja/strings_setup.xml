@@ -41,7 +41,7 @@
     <string name="setup_add_playlist">プレイリストを追加</string>
     <string name="setup_add_playlist_description">このプロフィールにソースを追加するか、後でセットアップします。</string>
     <string name="setup_new">新規</string>
-    <string name="setup_add_m3u_xtream">M3UまたはXtreamソースを追加</string>
+    <string name="setup_add_m3u_xtream">M3U、XtreamまたはStalkerソースを追加</string>
     <string name="setup_existing">既存</string>
     <string name="setup_use_other_profile_playlists">別のプロフィールのプレイリストを使用</string>
     <string name="setup_import">インポート</string>

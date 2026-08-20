@@ -120,6 +120,9 @@
     <string name="update_failed_download_http">下載更新時傳回 HTTP <xliff:g id="code">%1$s</xliff:g>。</string>
     <string name="update_empty_download">更新伺服器傳回空白的 APK。</string>
     <string name="update_install_failed">系統安裝程式無法開啟已下載的更新。</string>
+    <string name="update_not_enough_space">儲存空間不足，無法更新。請釋出約 <xliff:g id="size">%1$s</xliff:g> 後再試一次。</string>
+    <string name="update_damaged_download">更新未完整下載。請檢查網路連線後再試一次。</string>
+    <string name="update_install_rejected">系統安裝程式拒絕了此更新：<xliff:g id="reason">%1$s</xliff:g></string>
     <string name="update_ready">OwnTV v<xliff:g id="available">%1$s</xliff:g> 已準備就緒（目前為 v<xliff:g id="current">%2$s</xliff:g>）。</string>
     <string name="recovery_title">OwnTV 無法開啟其資料庫</string>
     <string name="recovery_data_safe_full">您的使用者檔案、播放清單、我的最愛和觀看記錄並未遭到刪除——這是資料庫升級失敗，資料仍保存在此裝置上。\n\n請回報此問題以便修正，並附上以下訊息。</string>

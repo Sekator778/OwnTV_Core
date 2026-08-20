@@ -41,7 +41,7 @@
     <string name="setup_add_playlist">Přidat playlist</string>
     <string name="setup_add_playlist_description">Přidejte zdroj pro tento profil, nebo jej nastavte později.</string>
     <string name="setup_new">Nový</string>
-    <string name="setup_add_m3u_xtream">Přidat zdroj M3U nebo Xtream</string>
+    <string name="setup_add_m3u_xtream">Přidat zdroj M3U, Xtream nebo Stalker</string>
     <string name="setup_existing">Existující</string>
     <string name="setup_use_other_profile_playlists">Použít playlisty z jiného profilu</string>
     <string name="setup_import">Import</string>

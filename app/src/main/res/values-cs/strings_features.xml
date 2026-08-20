@@ -132,6 +132,9 @@
     <string name="update_failed_download_http">Stahování aktualizace vrátilo kód HTTP <xliff:g id="code">%1$s</xliff:g>.</string>
     <string name="update_empty_download">Aktualizační server vrátil prázdný soubor APK.</string>
     <string name="update_install_failed">Systémovému instalačnímu programu se nepodařilo staženou aktualizaci otevřít.</string>
+    <string name="update_not_enough_space">Pro aktualizaci není dost volného místa. Uvolněte přibližně <xliff:g id="size">%1$s</xliff:g> a zkuste to znovu.</string>
+    <string name="update_damaged_download">Aktualizace se nestáhla celá. Zkontrolujte připojení a zkuste to znovu.</string>
+    <string name="update_install_rejected">Instalátor systému aktualizaci odmítl: <xliff:g id="reason">%1$s</xliff:g></string>
     <string name="update_ready">OwnTV v<xliff:g id="available">%1$s</xliff:g> je připravena (máte v<xliff:g id="current">%2$s</xliff:g>).</string>
     <string name="recovery_title">OwnTV nemohla otevřít svou databázi</string>
     <string name="recovery_data_safe_full">Vaše profily, playlisty, oblíbené položky ani historie NEBYLY odstraněny — jde o selhání upgradu databáze a data jsou stále v tomto zařízení.\n\nNahlaste prosím tuto chybu, aby ji bylo možné opravit, a přiložte níže uvedenou zprávu.</string>

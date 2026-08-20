@@ -132,6 +132,9 @@
     <string name="update_failed_download_http">При загрузке обновления получена ошибка HTTP <xliff:g id="code">%1$s</xliff:g>.</string>
     <string name="update_empty_download">Сервер обновлений вернул пустой файл APK.</string>
     <string name="update_install_failed">Системному установщику не удалось открыть загруженное обновление.</string>
+    <string name="update_not_enough_space">Недостаточно свободного места для обновления. Освободите около <xliff:g id="size">%1$s</xliff:g> и повторите попытку.</string>
+    <string name="update_damaged_download">Обновление скачалось не полностью. Проверьте подключение и повторите попытку.</string>
+    <string name="update_install_rejected">Системный установщик отклонил обновление: <xliff:g id="reason">%1$s</xliff:g></string>
     <string name="update_ready">OwnTV v<xliff:g id="available">%1$s</xliff:g> готова к установке (у вас v<xliff:g id="current">%2$s</xliff:g>).</string>
     <string name="recovery_title">OwnTV не удалось открыть базу данных</string>
     <string name="recovery_data_safe_full">Ваши профили, плейлисты, избранное и история НЕ удалены — произошёл сбой обновления базы данных, а данные всё ещё находятся на этом устройстве.\n\nПожалуйста, сообщите об этом, чтобы проблему можно было устранить, и приложите сообщение ниже.</string>

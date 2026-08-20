@@ -41,7 +41,7 @@
     <string name="setup_add_playlist">Tilføj en afspilningsliste</string>
     <string name="setup_add_playlist_description">Tilføj en kilde til denne profil, eller konfigurer en senere.</string>
     <string name="setup_new">Ny</string>
-    <string name="setup_add_m3u_xtream">Tilføj en M3U- eller Xtream-kilde</string>
+    <string name="setup_add_m3u_xtream">Tilføj en M3U-, Xtream- eller Stalker-kilde</string>
     <string name="setup_existing">Eksisterende</string>
     <string name="setup_use_other_profile_playlists">Brug afspilningslister fra en anden profil</string>
     <string name="setup_import">Importér</string>

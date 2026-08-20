@@ -132,6 +132,9 @@
     <string name="update_failed_download_http">Podczas pobierania aktualizacji zwrócono kod HTTP <xliff:g id="code">%1$s</xliff:g>.</string>
     <string name="update_empty_download">Serwer aktualizacji zwrócił pusty plik APK.</string>
     <string name="update_install_failed">Instalator systemowy nie mógł otworzyć pobranej aktualizacji.</string>
+    <string name="update_not_enough_space">Za mało wolnego miejsca na aktualizację. Zwolnij około <xliff:g id="size">%1$s</xliff:g> i spróbuj ponownie.</string>
+    <string name="update_damaged_download">Aktualizacja nie pobrała się w całości. Sprawdź połączenie i spróbuj ponownie.</string>
+    <string name="update_install_rejected">Instalator systemu odrzucił aktualizację: <xliff:g id="reason">%1$s</xliff:g></string>
     <string name="update_ready">OwnTV v<xliff:g id="available">%1$s</xliff:g> jest gotowa (masz v<xliff:g id="current">%2$s</xliff:g>).</string>
     <string name="recovery_title">OwnTV nie mogła otworzyć swojej bazy danych</string>
     <string name="recovery_data_safe_full">Dane Twoich profili, listy odtwarzania, ulubione i historia NIE zostały usunięte — aktualizacja bazy danych nie powiodła się, a dane nadal znajdują się na tym urządzeniu.\n\nZgłoś ten problem, aby można go było naprawić, i dołącz poniższy komunikat.</string>

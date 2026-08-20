@@ -124,6 +124,9 @@
     <string name="update_failed_download_http">Beim Update-Download wurde HTTP <xliff:g id="code">%1$s</xliff:g> zurückgegeben.</string>
     <string name="update_empty_download">Der Update-Server hat eine leere APK-Datei zurückgegeben.</string>
     <string name="update_install_failed">Das heruntergeladene Update konnte vom Installationsprogramm des Systems nicht geöffnet werden.</string>
+    <string name="update_not_enough_space">Nicht genügend freier Speicher für das Update. Gib etwa <xliff:g id="size">%1$s</xliff:g> frei und versuche es erneut.</string>
+    <string name="update_damaged_download">Das Update wurde nicht vollständig heruntergeladen. Prüfe deine Verbindung und versuche es erneut.</string>
+    <string name="update_install_rejected">Das Installationsprogramm des Systems hat das Update abgelehnt: <xliff:g id="reason">%1$s</xliff:g></string>
     <string name="update_ready">OwnTV v<xliff:g id="available">%1$s</xliff:g> ist bereit (du verwendest v<xliff:g id="current">%2$s</xliff:g>).</string>
     <string name="recovery_title">OwnTV konnte seine Datenbank nicht öffnen</string>
     <string name="recovery_data_safe_full">Ihre Profile, Wiedergabelisten, Favoriten und Ihr Wiedergabeverlauf wurden NICHT gelöscht — das Upgrade der Datenbank ist fehlgeschlagen, und die Daten befinden sich weiterhin auf diesem Gerät.\n\nBitte melden Sie dies, damit der Fehler behoben werden kann, und fügen Sie die nachstehende Meldung bei.</string>

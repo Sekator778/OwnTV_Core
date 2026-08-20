@@ -41,7 +41,7 @@
     <string name="setup_add_playlist">플레이리스트 추가</string>
     <string name="setup_add_playlist_description">이 프로필에 소스를 추가하거나 나중에 설정하세요.</string>
     <string name="setup_new">새로 만들기</string>
-    <string name="setup_add_m3u_xtream">M3U 또는 Xtream 소스 추가</string>
+    <string name="setup_add_m3u_xtream">M3U, Xtream 또는 Stalker 소스 추가</string>
     <string name="setup_existing">기존 항목</string>
     <string name="setup_use_other_profile_playlists">다른 프로필의 플레이리스트 사용</string>
     <string name="setup_import">가져오기</string>

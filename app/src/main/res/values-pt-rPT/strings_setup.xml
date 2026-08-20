@@ -41,7 +41,7 @@
     <string name="setup_add_playlist">Adicionar uma lista de reprodução</string>
     <string name="setup_add_playlist_description">Adicione uma origem a este perfil ou configure-a mais tarde.</string>
     <string name="setup_new">Nova</string>
-    <string name="setup_add_m3u_xtream">Adicionar uma origem M3U ou Xtream</string>
+    <string name="setup_add_m3u_xtream">Adicionar uma origem M3U, Xtream ou Stalker</string>
     <string name="setup_existing">Existentes</string>
     <string name="setup_use_other_profile_playlists">Utilizar as listas de reprodução de outro perfil</string>
     <string name="setup_import">Importar</string>

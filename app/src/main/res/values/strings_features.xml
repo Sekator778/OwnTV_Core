@@ -292,6 +292,12 @@
     <string name="update_empty_download">The update server returned an empty APK.</string>
     <!-- Translators: Error when the system installer cannot open the downloaded update. -->
     <string name="update_install_failed">The downloaded update could not be opened by the system installer.</string>
+    <!-- Translators: Error when there is not enough free storage to download the update. "size" is a formatted size such as "114 MB". -->
+    <string name="update_not_enough_space">Not enough free storage for the update. Free up about <xliff:g id="size">%1$s</xliff:g> and try again.</string>
+    <!-- Translators: Error when the downloaded update file is incomplete or corrupted. -->
+    <string name="update_damaged_download">The update didn\'t download completely. Check your connection and try again.</string>
+    <!-- Translators: Error when the system installer refuses the update. "reason" is the installer's own message, which is usually in English. -->
+    <string name="update_install_rejected">The system installer refused the update: <xliff:g id="reason">%1$s</xliff:g></string>
     <!-- Translators: Status text when an update has been downloaded and is ready to install. "available" is the new version, "current" is the installed version. -->
     <string name="update_ready">OwnTV v<xliff:g id="available">%1$s</xliff:g> is ready (you have v<xliff:g id="current">%2$s</xliff:g>).</string>
 

@@ -41,7 +41,7 @@
     <string name="setup_add_playlist">Een afspeellijst toevoegen</string>
     <string name="setup_add_playlist_description">Voeg een bron voor dit profiel toe of configureer er later een.</string>
     <string name="setup_new">Nieuw</string>
-    <string name="setup_add_m3u_xtream">Voeg een M3U- of Xtream-bron toe</string>
+    <string name="setup_add_m3u_xtream">Voeg een M3U-, Xtream- of Stalker-bron toe</string>
     <string name="setup_existing">Bestaand</string>
     <string name="setup_use_other_profile_playlists">Gebruik afspeellijsten van een ander profiel</string>
     <string name="setup_import">Importeren</string>

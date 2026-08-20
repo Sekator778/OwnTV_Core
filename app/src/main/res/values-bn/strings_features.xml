@@ -124,6 +124,9 @@
     <string name="update_failed_download_http">আপডেট ডাউনলোড HTTP <xliff:g id="code">%1$s</xliff:g> ফেরত দিয়েছে।</string>
     <string name="update_empty_download">আপডেট সার্ভার একটি খালি APK ফেরত দিয়েছে।</string>
     <string name="update_install_failed">সিস্টেম ইনস্টলার দিয়ে ডাউনলোড করা আপডেটটি খোলা যায়নি।</string>
+    <string name="update_not_enough_space">আপডেটের জন্য যথেষ্ট স্টোরেজ নেই। প্রায় <xliff:g id="size">%1$s</xliff:g> খালি করে আবার চেষ্টা করুন।</string>
+    <string name="update_damaged_download">আপডেটটি সম্পূর্ণ ডাউনলোড হয়নি। আপনার সংযোগ পরীক্ষা করে আবার চেষ্টা করুন।</string>
+    <string name="update_install_rejected">সিস্টেম ইনস্টলার আপডেটটি প্রত্যাখ্যান করেছে: <xliff:g id="reason">%1$s</xliff:g></string>
     <string name="update_ready">OwnTV v<xliff:g id="available">%1$s</xliff:g> প্রস্তুত (আপনার কাছে v<xliff:g id="current">%2$s</xliff:g> আছে)।</string>
     <string name="recovery_title">OwnTV এর ডেটাবেস খুলতে পারেনি</string>
     <string name="recovery_data_safe_full">আপনার প্রোফাইলগুলো, প্লেলিস্টগুলো, পছন্দেরগুলো ও ইতিহাস মোটেও মোছা হয়নি — এটি ডেটাবেস আপগ্রেড ব্যর্থ হওয়ার ঘটনা, এবং ডেটা এখনও এই ডিভাইসেই রয়েছে।\n\nঅনুগ্রহ করে সমস্যাটি জানান, যাতে এটি ঠিক করা যায়, এবং নিচের বার্তাটি সঙ্গে দিন।</string>

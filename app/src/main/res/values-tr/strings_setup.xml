@@ -41,7 +41,7 @@
     <string name="setup_add_playlist">Oynatma listesi ekle</string>
     <string name="setup_add_playlist_description">Bu profil için bir kaynak ekleyin veya daha sonra kurun.</string>
     <string name="setup_new">Yeni</string>
-    <string name="setup_add_m3u_xtream">Bir M3U veya Xtream kaynağı ekleyin</string>
+    <string name="setup_add_m3u_xtream">M3U, Xtream veya Stalker kaynağı ekleyin</string>
     <string name="setup_existing">Mevcut</string>
     <string name="setup_use_other_profile_playlists">Başka bir profilin oynatma listelerini kullanın</string>
     <string name="setup_import">İçe aktar</string>

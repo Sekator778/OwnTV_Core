@@ -124,6 +124,9 @@
     <string name="update_failed_download_http">Nedladdningen av uppdateringen returnerade HTTP <xliff:g id="code">%1$s</xliff:g>.</string>
     <string name="update_empty_download">Uppdateringsservern returnerade en tom APK.</string>
     <string name="update_install_failed">Den hämtade uppdateringen kunde inte öppnas av systemets installationsprogram.</string>
+    <string name="update_not_enough_space">Inte tillräckligt med ledigt utrymme för uppdateringen. Frigör cirka <xliff:g id="size">%1$s</xliff:g> och försök igen.</string>
+    <string name="update_damaged_download">Uppdateringen hämtades inte helt. Kontrollera anslutningen och försök igen.</string>
+    <string name="update_install_rejected">Systemets installationsprogram avvisade uppdateringen: <xliff:g id="reason">%1$s</xliff:g></string>
     <string name="update_ready">OwnTV v<xliff:g id="available">%1$s</xliff:g> är klar (du har v<xliff:g id="current">%2$s</xliff:g>).</string>
     <string name="recovery_title">OwnTV kunde inte öppna sin databas</string>
     <string name="recovery_data_safe_full">Dina profiler, spellistor, favoriter och din historik har INTE raderats — det här beror på att en databasuppgradering misslyckades, och data finns fortfarande kvar på den här enheten.\n\nRapportera detta så att felet kan åtgärdas och inkludera meddelandet nedan.</string>

@@ -120,6 +120,9 @@
     <string name="update_failed_download_http">更新のダウンロードでHTTP <xliff:g id="code">%1$s</xliff:g>が返されました。</string>
     <string name="update_empty_download">更新サーバーから空のAPKが返されました。</string>
     <string name="update_install_failed">ダウンロードした更新をシステムインストーラーで開けませんでした。</string>
+    <string name="update_not_enough_space">更新用の空き容量が足りません。約 <xliff:g id="size">%1$s</xliff:g> を空けてからもう一度お試しください。</string>
+    <string name="update_damaged_download">更新のダウンロードが完了しませんでした。接続を確認してもう一度お試しください。</string>
+    <string name="update_install_rejected">システムインストーラーが更新を拒否しました: <xliff:g id="reason">%1$s</xliff:g></string>
     <string name="update_ready">OwnTV v<xliff:g id="available">%1$s</xliff:g>のインストール準備ができました（現在のバージョン：v<xliff:g id="current">%2$s</xliff:g>）。</string>
     <string name="recovery_title">OwnTVはデータベースを開けませんでした</string>
     <string name="recovery_data_safe_full">プロフィール、プレイリスト、お気に入り、視聴履歴は削除されていません — これはデータベースのアップグレード失敗によるもので、データはこのデバイスに残っています。\n\n修正できるよう、この問題を報告し、以下のメッセージを添えてください。</string>

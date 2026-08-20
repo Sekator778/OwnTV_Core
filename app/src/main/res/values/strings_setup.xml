@@ -85,7 +85,7 @@
     <!-- Translators: ChoiceCard title for creating a new M3U/Xtream source from scratch. -->
     <string name="setup_new">New</string>
     <!-- Translators: Description beneath the "New" choice card. "M3U" and "Xtream" are protocol/brand names that must not be translated. -->
-    <string name="setup_add_m3u_xtream">Add an M3U or Xtream source</string>
+    <string name="setup_add_m3u_xtream">Add an M3U, Xtream or Stalker source</string>
     <!-- Translators: ChoiceCard title for reusing playlists from another profile. Only shown when other profiles already have sources. -->
     <string name="setup_existing">Existing</string>
     <!-- Translators: Description beneath the "Existing" choice card. Only shown when other profiles have sources. -->

@@ -41,7 +41,7 @@
     <string name="setup_add_playlist">إضافة قائمة تشغيل</string>
     <string name="setup_add_playlist_description">أضف مصدرًا لهذا الملف الشخصي، أو أعدّه لاحقًا.</string>
     <string name="setup_new">جديد</string>
-    <string name="setup_add_m3u_xtream">إضافة مصدر M3U أو Xtream</string>
+    <string name="setup_add_m3u_xtream">إضافة مصدر M3U أو Xtream أو Stalker</string>
     <string name="setup_existing">موجود</string>
     <string name="setup_use_other_profile_playlists">استخدام قوائم تشغيل ملف شخصي آخر</string>
     <string name="setup_import">استيراد</string>

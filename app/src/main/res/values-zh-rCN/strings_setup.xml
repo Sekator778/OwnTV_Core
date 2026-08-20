@@ -41,7 +41,7 @@
     <string name="setup_add_playlist">添加播放列表</string>
     <string name="setup_add_playlist_description">为此用户档案添加源，也可以稍后再设置。</string>
     <string name="setup_new">新建</string>
-    <string name="setup_add_m3u_xtream">添加 M3U 或 Xtream 源</string>
+    <string name="setup_add_m3u_xtream">添加 M3U、Xtream 或 Stalker 源</string>
     <string name="setup_existing">现有</string>
     <string name="setup_use_other_profile_playlists">使用其他用户档案的播放列表</string>
     <string name="setup_import">导入</string>

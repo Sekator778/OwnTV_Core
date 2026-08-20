@@ -124,6 +124,9 @@
     <string name="update_failed_download_http">അപ്‌ഡേറ്റ് ഡൗൺലോഡ് HTTP <xliff:g id="code">%1$s</xliff:g> തിരികെ നൽകി.</string>
     <string name="update_empty_download">അപ്‌ഡേറ്റ് സെർവർ ശൂന്യമായ APK തിരികെ നൽകി.</string>
     <string name="update_install_failed">ഡൗൺലോഡ് ചെയ്ത അപ്‌ഡേറ്റ് സിസ്റ്റം ഇൻസ്റ്റാളറിന് തുറക്കാനായില്ല.</string>
+    <string name="update_not_enough_space">അപ്ഡേറ്റിന് ആവശ്യമായ സ്റ്റോറേജ് ഇല്ല. ഏകദേശം <xliff:g id="size">%1$s</xliff:g> ഒഴിവാക്കി വീണ്ടും ശ്രമിക്കുക.</string>
+    <string name="update_damaged_download">അപ്ഡേറ്റ് പൂർണ്ണമായി ഡൗൺലോഡ് ആയില്ല. കണക്ഷൻ പരിശോധിച്ച് വീണ്ടും ശ്രമിക്കുക.</string>
+    <string name="update_install_rejected">സിസ്റ്റം ഇൻസ്റ്റാളർ അപ്ഡേറ്റ് നിരസിച്ചു: <xliff:g id="reason">%1$s</xliff:g></string>
     <string name="update_ready">OwnTV v<xliff:g id="available">%1$s</xliff:g> തയ്യാറാണ് (നിങ്ങളുടെ പക്കലുള്ളത് v<xliff:g id="current">%2$s</xliff:g> ആണ്).</string>
     <string name="recovery_title">OwnTV-യ്ക്ക് അതിന്റെ ഡാറ്റാബേസ് തുറക്കാനായില്ല</string>
     <string name="recovery_data_safe_full">നിങ്ങളുടെ പ്രൊഫൈലുകൾ, പ്ലേലിസ്റ്റുകൾ, പ്രിയപ്പെട്ടവ, ചരിത്രം എന്നിവ നീക്കം ചെയ്തിട്ടില്ല — ഇത് ഡാറ്റാബേസ് അപ്‌ഗ്രേഡ് പരാജയപ്പെട്ടതാണ്, ഡാറ്റ ഇപ്പോഴും ഈ ഉപകരണത്തിലുണ്ട്.\n\nഇത് പരിഹരിക്കാൻ കഴിയുന്നതിനായി ദയവായി റിപ്പോർട്ട് ചെയ്യുകയും ചുവടെയുള്ള സന്ദേശം ഉൾപ്പെടുത്തുകയും ചെയ്യുക.</string>

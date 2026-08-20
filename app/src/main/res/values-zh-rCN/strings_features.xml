@@ -120,6 +120,9 @@
     <string name="update_failed_download_http">下载更新时返回了 HTTP <xliff:g id="code">%1$s</xliff:g>。</string>
     <string name="update_empty_download">更新服务器返回了空的 APK 文件。</string>
     <string name="update_install_failed">系统安装程序无法打开已下载的更新。</string>
+    <string name="update_not_enough_space">存储空间不足，无法更新。请释放约 <xliff:g id="size">%1$s</xliff:g> 后重试。</string>
+    <string name="update_damaged_download">更新未完整下载。请检查网络连接后重试。</string>
+    <string name="update_install_rejected">系统安装程序拒绝了此更新：<xliff:g id="reason">%1$s</xliff:g></string>
     <string name="update_ready">OwnTV v<xliff:g id="available">%1$s</xliff:g> 已准备就绪（当前版本为 v<xliff:g id="current">%2$s</xliff:g>）。</string>
     <string name="recovery_title">OwnTV 无法打开其数据库</string>
     <string name="recovery_data_safe_full">您的用户档案、播放列表、收藏夹和观看记录并未被删除——这是数据库升级失败，数据仍保存在此设备上。\n\n请报告此问题，以便修复，并附上下方的消息。</string>

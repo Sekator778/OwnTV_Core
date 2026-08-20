@@ -2662,26 +2662,32 @@
 1	log	app/src/main/java/tv/own/owntv/core/tv/TvHomeRepository.kt	syncMovie profile=$profileId movieId=$movieId groupId=$groupId existing=${existing?.providerProgramId ?: -1}
 1	log	app/src/main/java/tv/own/owntv/core/tv/TvHomeRepository.kt	syncMovie skip hidden profile=$profileId movieId=$movieId sourceId=${movie.sourceId}
 1	log	app/src/main/java/tv/own/owntv/core/tv/TvHomeRepository.kt	syncMovie skip user-hidden profile=$profileId movieId=$movieId groupId=$groupId
-1	technical	app/src/main/java/tv/own/owntv/core/update/UpdateManager.kt	${context.packageName}.fileprovider
 1	technical	app/src/main/java/tv/own/owntv/core/update/UpdateManager.kt	.apk
 1	technical	app/src/main/java/tv/own/owntv/core/update/UpdateManager.kt	Accept
 2	technical	app/src/main/java/tv/own/owntv/core/update/UpdateManager.kt	OwnTV
 1	log	app/src/main/java/tv/own/owntv/core/update/UpdateManager.kt	UpdateManager
 2	technical	app/src/main/java/tv/own/owntv/core/update/UpdateManager.kt	User-Agent
 1	technical	app/src/main/java/tv/own/owntv/core/update/UpdateManager.kt	ahXN00/OwnTV
-1	mime	app/src/main/java/tv/own/owntv/core/update/UpdateManager.kt	application/vnd.android.package-archive
 1	mime	app/src/main/java/tv/own/owntv/core/update/UpdateManager.kt	application/vnd.github+json
 1	json	app/src/main/java/tv/own/owntv/core/update/UpdateManager.kt	assets
 1	json	app/src/main/java/tv/own/owntv/core/update/UpdateManager.kt	body
 1	json	app/src/main/java/tv/own/owntv/core/update/UpdateManager.kt	browser_download_url
 1	url	app/src/main/java/tv/own/owntv/core/update/UpdateManager.kt	https://api.github.com/repos/$REPO/releases/latest
+1	log	app/src/main/java/tv/own/owntv/core/update/UpdateManager.kt	install cancelled by user
+1	log	app/src/main/java/tv/own/owntv/core/update/UpdateManager.kt	install refused status=$status message=$message
 1	json	app/src/main/java/tv/own/owntv/core/update/UpdateManager.kt	name
+1	file-path	app/src/main/java/tv/own/owntv/core/update/UpdateManager.kt	owntv-update
 1	file-path	app/src/main/java/tv/own/owntv/core/update/UpdateManager.kt	owntv-update.apk
 1	json	app/src/main/java/tv/own/owntv/core/update/UpdateManager.kt	tag_name
+1	log	app/src/main/java/tv/own/owntv/core/update/UpdateManager.kt	truncated: got $copied of $total bytes
+1	uri	app/src/main/java/tv/own/owntv/core/update/UpdateManager.kt	tv.own.owntv.UPDATE_INSTALL_STATUS
+1	log	app/src/main/java/tv/own/owntv/core/update/UpdateManager.kt	unparseable APK (${apk.length()} bytes)
 1	log	app/src/main/java/tv/own/owntv/core/update/UpdateManager.kt	update check failed: ${error.message}
 1	log	app/src/main/java/tv/own/owntv/core/update/UpdateManager.kt	update download failed: ${error.message}
+1	log	app/src/main/java/tv/own/owntv/core/update/UpdateManager.kt	update installed
 1	file-path	app/src/main/java/tv/own/owntv/core/update/UpdateManager.kt	updates
 1	technical	app/src/main/java/tv/own/owntv/core/update/UpdateManager.kt	v
+1	log	app/src/main/java/tv/own/owntv/core/update/UpdateManager.kt	wrong package ${info.packageName}
 2	technical	app/src/main/java/tv/own/owntv/core/update/UpdateManager.kt	x86_64
 1	protocol	app/src/main/java/tv/own/owntv/core/util/ErrorMessages.kt	CertPath
 1	protocol	app/src/main/java/tv/own/owntv/core/util/ErrorMessages.kt	CertificateException

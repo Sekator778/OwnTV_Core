@@ -120,6 +120,9 @@
     <string name="update_failed_download_http">업데이트 다운로드에서 HTTP <xliff:g id="code">%1$s</xliff:g>을 반환했습니다.</string>
     <string name="update_empty_download">업데이트 서버에서 빈 APK 파일을 반환했습니다.</string>
     <string name="update_install_failed">시스템 설치 프로그램에서 다운로드한 업데이트를 열 수 없습니다.</string>
+    <string name="update_not_enough_space">업데이트를 저장할 공간이 부족합니다. 약 <xliff:g id="size">%1$s</xliff:g>를 확보한 후 다시 시도하세요.</string>
+    <string name="update_damaged_download">업데이트가 완전히 다운로드되지 않았습니다. 연결을 확인한 후 다시 시도하세요.</string>
+    <string name="update_install_rejected">시스템 설치 프로그램이 업데이트를 거부했습니다: <xliff:g id="reason">%1$s</xliff:g></string>
     <string name="update_ready">OwnTV v<xliff:g id="available">%1$s</xliff:g>을 설치할 준비가 되었습니다(현재 v<xliff:g id="current">%2$s</xliff:g>).</string>
     <string name="recovery_title">OwnTV에서 데이터베이스를 열 수 없습니다</string>
     <string name="recovery_data_safe_full">프로필, 플레이리스트, 즐겨찾기 및 시청 기록은 삭제되지 않았습니다 — 이는 데이터베이스 업그레이드 실패이며 데이터는 여전히 이 기기에 있습니다.\n\n문제를 해결할 수 있도록 이를 신고하고 아래 메시지를 포함해 주세요.</string>

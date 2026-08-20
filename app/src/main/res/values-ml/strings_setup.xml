@@ -41,7 +41,7 @@
     <string name="setup_add_playlist">ഒരു പ്ലേലിസ്റ്റ് ചേർക്കുക</string>
     <string name="setup_add_playlist_description">ഈ പ്രൊഫൈലിനായി ഒരു ഉറവിടം ചേർക്കുക, അല്ലെങ്കിൽ പിന്നീട് ഒന്ന് സജ്ജമാക്കുക.</string>
     <string name="setup_new">പുതിയത്</string>
-    <string name="setup_add_m3u_xtream">ഒരു M3U അല്ലെങ്കിൽ Xtream ഉറവിടം ചേർക്കുക</string>
+    <string name="setup_add_m3u_xtream">ഒരു M3U, Xtream അല്ലെങ്കിൽ Stalker ഉറവിടം ചേർക്കുക</string>
     <string name="setup_existing">നിലവിലുള്ളത്</string>
     <string name="setup_use_other_profile_playlists">മറ്റൊരു പ്രൊഫൈലിലെ പ്ലേലിസ്റ്റുകൾ ഉപയോഗിക്കുക</string>
     <string name="setup_import">ഇമ്പോർട്ട്</string>

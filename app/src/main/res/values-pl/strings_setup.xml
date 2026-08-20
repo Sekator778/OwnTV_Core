@@ -41,7 +41,7 @@
     <string name="setup_add_playlist">Dodaj listę odtwarzania</string>
     <string name="setup_add_playlist_description">Dodaj źródło do tego profilu albo skonfiguruj je później.</string>
     <string name="setup_new">Nowe</string>
-    <string name="setup_add_m3u_xtream">Dodaj źródło M3U lub Xtream</string>
+    <string name="setup_add_m3u_xtream">Dodaj źródło M3U, Xtream lub Stalker</string>
     <string name="setup_existing">Istniejące</string>
     <string name="setup_use_other_profile_playlists">Użyj list odtwarzania z innego profilu</string>
     <string name="setup_import">Import</string>

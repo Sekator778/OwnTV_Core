@@ -128,6 +128,9 @@
     <string name="update_failed_download_http">La descarga de la actualización devolvió el código HTTP <xliff:g id="code">%1$s</xliff:g>.</string>
     <string name="update_empty_download">El servidor de actualizaciones devolvió un APK vacío.</string>
     <string name="update_install_failed">El instalador del sistema no pudo abrir la actualización descargada.</string>
+    <string name="update_not_enough_space">No hay espacio suficiente para la actualización. Libera unos <xliff:g id="size">%1$s</xliff:g> e inténtalo de nuevo.</string>
+    <string name="update_damaged_download">La actualización no se descargó por completo. Revisa tu conexión e inténtalo de nuevo.</string>
+    <string name="update_install_rejected">El instalador del sistema rechazó la actualización: <xliff:g id="reason">%1$s</xliff:g></string>
     <string name="update_ready">OwnTV v<xliff:g id="available">%1$s</xliff:g> está lista (tienes la v<xliff:g id="current">%2$s</xliff:g>).</string>
     <string name="recovery_title">OwnTV no pudo abrir su base de datos</string>
     <string name="recovery_data_safe_full">Tus perfiles, listas de reproducción, favoritos y el historial NO se han eliminado — se produjo un error al actualizar la base de datos y los datos siguen en este dispositivo.\n\nInforma sobre este problema para que pueda corregirse e incluye el mensaje de abajo.</string>

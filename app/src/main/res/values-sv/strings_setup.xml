@@ -41,7 +41,7 @@
     <string name="setup_add_playlist">Lägg till en spellista</string>
     <string name="setup_add_playlist_description">Lägg till en källa för den här profilen eller konfigurera en senare.</string>
     <string name="setup_new">Ny</string>
-    <string name="setup_add_m3u_xtream">Lägg till en M3U- eller Xtream-källa</string>
+    <string name="setup_add_m3u_xtream">Lägg till en M3U-, Xtream- eller Stalker-källa</string>
     <string name="setup_existing">Befintliga</string>
     <string name="setup_use_other_profile_playlists">Använd spellistor från en annan profil</string>
     <string name="setup_import">Importera</string>

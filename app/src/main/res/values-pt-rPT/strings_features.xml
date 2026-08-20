@@ -128,6 +128,9 @@
     <string name="update_failed_download_http">A transferência da atualização devolveu HTTP <xliff:g id="code">%1$s</xliff:g>.</string>
     <string name="update_empty_download">O servidor de atualizações devolveu um APK vazio.</string>
     <string name="update_install_failed">A atualização transferida não pôde ser aberta pelo instalador do sistema.</string>
+    <string name="update_not_enough_space">Espaço de armazenamento insuficiente para a atualização. Liberte cerca de <xliff:g id="size">%1$s</xliff:g> e tente novamente.</string>
+    <string name="update_damaged_download">A atualização não foi transferida por completo. Verifique a sua ligação e tente novamente.</string>
+    <string name="update_install_rejected">O instalador do sistema recusou a atualização: <xliff:g id="reason">%1$s</xliff:g></string>
     <string name="update_ready">OwnTV v<xliff:g id="available">%1$s</xliff:g> está pronta (tem a v<xliff:g id="current">%2$s</xliff:g>).</string>
     <string name="recovery_title">OwnTV não conseguiu abrir a respetiva base de dados</string>
     <string name="recovery_data_safe_full">Os seus perfis, listas de reprodução, favoritos e histórico NÃO foram eliminados — trata-se de uma falha na atualização da base de dados e os dados continuam neste dispositivo.\n\nComunique este problema para que possa ser corrigido e inclua a mensagem abaixo.</string>

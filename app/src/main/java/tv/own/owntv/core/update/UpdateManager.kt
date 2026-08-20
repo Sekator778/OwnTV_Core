@@ -1,9 +1,14 @@
 package tv.own.owntv.core.update
 
+import android.app.PendingIntent
+import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
+import android.content.pm.PackageInstaller
 import android.util.Log
-import androidx.core.content.FileProvider
+import androidx.core.content.ContextCompat
+import androidx.core.content.IntentCompat
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -40,6 +45,15 @@ class UpdateManager(
         data object EmptyDownload : Failure
         data object DownloadNetwork : Failure
         data object Install : Failure
+
+        /** Internal storage cannot hold the APK twice (download + install session). */
+        data class NotEnoughSpace(val requiredBytes: Long) : Failure
+
+        /** The file that arrived is truncated or not a readable OwnTV package — never install it. */
+        data object DamagedDownload : Failure
+
+        /** The system installer refused the package; [message] is its own wording when it gave one. */
+        data class InstallRejected(val message: String?) : Failure
     }
 
     sealed interface State {
@@ -61,6 +75,8 @@ class UpdateManager(
     private class NoCompatibleApkException : IOException()
     private class InvalidReleaseResponseException : IOException()
     private class EmptyDownloadException : IOException()
+    private class NotEnoughSpaceException(val requiredBytes: Long) : IOException()
+    private class DamagedDownloadException(reason: String) : IOException(reason)
 
     private fun failureFor(error: Throwable, checking: Boolean): Failure = when (error) {
         is CheckHttpException -> Failure.CheckHttp(error.code)
@@ -68,6 +84,8 @@ class UpdateManager(
         is NoCompatibleApkException -> Failure.NoCompatibleApk
         is InvalidReleaseResponseException -> Failure.InvalidReleaseResponse
         is EmptyDownloadException -> Failure.EmptyDownload
+        is NotEnoughSpaceException -> Failure.NotEnoughSpace(error.requiredBytes)
+        is DamagedDownloadException -> Failure.DamagedDownload
         else -> if (checking) Failure.CheckNetwork else Failure.DownloadNetwork
     }
 
@@ -127,27 +145,41 @@ class UpdateManager(
             runCatching {
                 val dir = File(context.filesDir, "updates").apply { mkdirs() }
                 val out = File(dir, "owntv-update.apk")
+                out.delete() // never build on top of a previous half-download
                 val request = Request.Builder().url(info.apkUrl).header("User-Agent", "OwnTV").build()
-                client.newCall(request).execute().use { resp ->
-                    if (!resp.isSuccessful) throw DownloadHttpException(resp.code)
-                    val body = resp.body
-                    val total = body.contentLength()
-                    var copied = 0L
-                    body.byteStream().use { input ->
-                        out.outputStream().use { output ->
-                            val buf = ByteArray(64 * 1024)
-                            while (true) {
-                                val n = input.read(buf)
-                                if (n < 0) break
-                                output.write(buf, 0, n)
-                                copied += n
-                                if (total > 0) _state.value = State.Downloading((copied * 100 / total).toInt())
+                try {
+                    client.newCall(request).execute().use { resp ->
+                        if (!resp.isSuccessful) throw DownloadHttpException(resp.code)
+                        val body = resp.body
+                        val total = body.contentLength()
+                        // The APK is written once here and copied again into the install session, so
+                        // the download needs room for two of it. Checking up front turns a silent short
+                        // write — which reaches the installer as "App not installed" — into a real message.
+                        if (total > 0 && dir.usableSpace < total * 2) throw NotEnoughSpaceException(total * 2)
+                        var copied = 0L
+                        body.byteStream().use { input ->
+                            out.outputStream().use { output ->
+                                val buf = ByteArray(64 * 1024)
+                                while (true) {
+                                    val n = input.read(buf)
+                                    if (n < 0) break
+                                    output.write(buf, 0, n)
+                                    copied += n
+                                    if (total > 0) _state.value = State.Downloading((copied * 100 / total).toInt())
+                                }
                             }
                         }
+                        if (copied == 0L) throw EmptyDownloadException()
+                        if (total > 0 && copied != total) {
+                            throw DamagedDownloadException("truncated: got $copied of $total bytes")
+                        }
                     }
-                    if (copied == 0L) throw EmptyDownloadException()
+                    verifyApk(out)
+                    install(out)
+                } catch (e: Throwable) {
+                    out.delete() // a bad file must not linger and be retried as-is
+                    throw e
                 }
-                runCatching { install(out) }.getOrElse { throw InstallException(it) }
                 _state.value = State.Available(info) // dialog stays sane if the user cancels install
             }.onFailure { error ->
                 Log.w(TAG, "update download failed: ${error.message}", error)
@@ -157,13 +189,82 @@ class UpdateManager(
         }
     }
 
-    private fun install(apk: File) {
-        val uri = FileProvider.getUriForFile(context, "${context.packageName}.fileprovider", apk)
-        val intent = Intent(Intent.ACTION_VIEW).apply {
-            setDataAndType(uri, "application/vnd.android.package-archive")
-            addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_ACTIVITY_NEW_TASK)
+    /**
+     * Refuses anything the system cannot read back as this app's package. A truncated or corrupted
+     * APK is otherwise only rejected by the installer itself, which reports nothing to us and shows
+     * the user a bare "App not installed" — the failure this whole guard exists to explain.
+     */
+    private fun verifyApk(apk: File) {
+        val info = context.packageManager.getPackageArchiveInfo(apk.absolutePath, 0)
+            ?: throw DamagedDownloadException("unparseable APK (${apk.length()} bytes)")
+        if (info.packageName != context.packageName) {
+            throw DamagedDownloadException("wrong package ${info.packageName}")
         }
-        context.startActivity(intent)
+    }
+
+    /**
+     * Installs through [PackageInstaller] rather than an `ACTION_VIEW` intent on a FileProvider URI.
+     * Two reasons: the session reads the APK from our own storage (no cross-app URI grant to go wrong
+     * on older TV installers), and its status broadcast carries the real reason a package was refused
+     * — insufficient storage, a signature conflict, a bad file — instead of the system's silent
+     * "App not installed".
+     */
+    private fun install(apk: File) {
+        registerInstallReceiver()
+        val installer = context.packageManager.packageInstaller
+        val params = PackageInstaller.SessionParams(PackageInstaller.SessionParams.MODE_FULL_INSTALL)
+        val sessionId = try {
+            installer.createSession(params)
+        } catch (e: IOException) {
+            throw InstallException(e)
+        }
+        installer.openSession(sessionId).use { session ->
+            session.openWrite(SESSION_ENTRY, 0, apk.length()).use { output ->
+                apk.inputStream().use { it.copyTo(output) }
+                session.fsync(output)
+            }
+            val intent = Intent(INSTALL_STATUS_ACTION).setPackage(context.packageName)
+            val flags = PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_MUTABLE
+            session.commit(PendingIntent.getBroadcast(context, 0, intent, flags).intentSender)
+        }
+        apk.delete() // the session owns its own copy now
+    }
+
+    /** Registered once, for the app's lifetime: the confirmation round trip outlives any one call. */
+    private fun registerInstallReceiver() {
+        if (installReceiverRegistered) return
+        installReceiverRegistered = true
+        ContextCompat.registerReceiver(
+            context,
+            installStatusReceiver,
+            IntentFilter(INSTALL_STATUS_ACTION),
+            ContextCompat.RECEIVER_NOT_EXPORTED,
+        )
+    }
+
+    private var installReceiverRegistered = false
+
+    private val installStatusReceiver = object : BroadcastReceiver() {
+        override fun onReceive(ctx: Context, intent: Intent) {
+            val status = intent.getIntExtra(PackageInstaller.EXTRA_STATUS, PackageInstaller.STATUS_FAILURE)
+            val message = intent.getStringExtra(PackageInstaller.EXTRA_STATUS_MESSAGE)
+            when (status) {
+                // The user still has to approve the install — this is the system prompt, not a failure.
+                PackageInstaller.STATUS_PENDING_USER_ACTION -> {
+                    val confirm = IntentCompat.getParcelableExtra(intent, Intent.EXTRA_INTENT, Intent::class.java)
+                    confirm?.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                    runCatching { confirm?.let { context.startActivity(it) } }
+                        .onFailure { _state.value = State.Failed(Failure.Install) }
+                }
+                PackageInstaller.STATUS_SUCCESS -> Log.i(TAG, "update installed")
+                // Declining the system prompt is a choice, not an error — leave the dialog as it was.
+                PackageInstaller.STATUS_FAILURE_ABORTED -> Log.i(TAG, "install cancelled by user")
+                else -> {
+                    Log.w(TAG, "install refused status=$status message=$message")
+                    _state.value = State.Failed(Failure.InstallRejected(message?.takeIf { it.isNotBlank() }))
+                }
+            }
+        }
     }
 
     /** Retries the failed phase without losing a successfully resolved release asset. */
@@ -200,6 +301,8 @@ class UpdateManager(
 
     companion object {
         private const val TAG = "UpdateManager"
+        private const val SESSION_ENTRY = "owntv-update"
+        private const val INSTALL_STATUS_ACTION = "tv.own.owntv.UPDATE_INSTALL_STATUS"
         const val REPO = "ahXN00/OwnTV"
     }
 }

@@ -41,7 +41,7 @@
     <string name="setup_add_playlist">Добавить плейлист</string>
     <string name="setup_add_playlist_description">Добавьте источник для этого профиля или настройте его позже.</string>
     <string name="setup_new">Новый</string>
-    <string name="setup_add_m3u_xtream">Добавить источник M3U или Xtream</string>
+    <string name="setup_add_m3u_xtream">Добавить источник M3U, Xtream или Stalker</string>
     <string name="setup_existing">Существующие</string>
     <string name="setup_use_other_profile_playlists">Использовать плейлисты другого профиля</string>
     <string name="setup_import">Импорт</string>

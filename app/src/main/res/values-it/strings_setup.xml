@@ -41,7 +41,7 @@
     <string name="setup_add_playlist">Aggiungi una playlist</string>
     <string name="setup_add_playlist_description">Aggiungi una fonte per questo profilo oppure configurane una in seguito.</string>
     <string name="setup_new">Nuova</string>
-    <string name="setup_add_m3u_xtream">Aggiungi una fonte M3U o Xtream</string>
+    <string name="setup_add_m3u_xtream">Aggiungi una fonte M3U, Xtream o Stalker</string>
     <string name="setup_existing">Esistenti</string>
     <string name="setup_use_other_profile_playlists">Usa le playlist di un altro profilo</string>
     <string name="setup_import">Importa</string>

@@ -124,6 +124,9 @@
     <string name="update_failed_download_http">De updatedownload retourneerde HTTP <xliff:g id="code">%1$s</xliff:g>.</string>
     <string name="update_empty_download">De updateserver retourneerde een lege APK.</string>
     <string name="update_install_failed">De gedownloade update kon niet door het systeeminstallatieprogramma worden geopend.</string>
+    <string name="update_not_enough_space">Onvoldoende vrije opslag voor de update. Maak ongeveer <xliff:g id="size">%1$s</xliff:g> vrij en probeer het opnieuw.</string>
+    <string name="update_damaged_download">De update is niet volledig gedownload. Controleer je verbinding en probeer het opnieuw.</string>
+    <string name="update_install_rejected">Het installatieprogramma van het systeem heeft de update geweigerd: <xliff:g id="reason">%1$s</xliff:g></string>
     <string name="update_ready">OwnTV v<xliff:g id="available">%1$s</xliff:g> staat klaar (je hebt v<xliff:g id="current">%2$s</xliff:g>).</string>
     <string name="recovery_title">OwnTV kon de database niet openen</string>
     <string name="recovery_data_safe_full">Je profielen, afspeellijsten, favorieten en kijkgeschiedenis zijn NIET verwijderd — dit is een mislukte database-upgrade en de gegevens staan nog steeds op dit apparaat.\n\nMeld dit zodat het kan worden opgelost en voeg het onderstaande bericht toe.</string>

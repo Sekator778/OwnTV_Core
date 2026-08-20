@@ -124,6 +124,9 @@
     <string name="update_failed_download_http">Güncelleme indirmesi HTTP <xliff:g id="code">%1$s</xliff:g> hatası döndürdü.</string>
     <string name="update_empty_download">Güncelleme sunucusu boş bir APK döndürdü.</string>
     <string name="update_install_failed">İndirilen güncelleme sistem yükleyicisi tarafından açılamadı.</string>
+    <string name="update_not_enough_space">Güncelleme için yeterli depolama alanı yok. Yaklaşık <xliff:g id="size">%1$s</xliff:g> yer açıp tekrar deneyin.</string>
+    <string name="update_damaged_download">Güncelleme tam olarak indirilmedi. Bağlantınızı kontrol edip tekrar deneyin.</string>
+    <string name="update_install_rejected">Sistem yükleyicisi güncellemeyi reddetti: <xliff:g id="reason">%1$s</xliff:g></string>
     <string name="update_ready">OwnTV v<xliff:g id="available">%1$s</xliff:g> hazır (sizde v<xliff:g id="current">%2$s</xliff:g> yüklü).</string>
     <string name="recovery_title">OwnTV veritabanını açamadı</string>
     <string name="recovery_data_safe_full">Profilleriniz, oynatma listeleriniz, favorileriniz ve geçmişiniz SİLİNMEDİ — bu bir veritabanı yükseltme hatasıdır ve veriler hâlâ bu cihazdadır.\n\nLütfen düzeltilebilmesi için bu sorunu bildirin ve aşağıdaki mesajı ekleyin.</string>
