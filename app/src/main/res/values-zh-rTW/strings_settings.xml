@@ -464,6 +464,7 @@
     <string name="settings_audio_sync_description">將音訊提前或延後，以配合視訊。僅適用於 mpv 引擎。</string>
     <string name="settings_live_tv">電視直播</string>
     <string name="settings_live_latency_description">播放進度與直播節目的接近程度。數值越低代表越接近直播，但緩衝區也越小，因此不穩定的串流可能更常發生停頓或重新連線。套用至您下一個開啟的頻道。</string>
+    <string name="settings_live_latency_bitrate_note">在位元率非常高的頻道上（尤其是 4K），由於記憶體一次能保存的影片量有限，緩衝的時間可能比你設定的更短。</string>
     <string name="settings_channel_numbers">頻道號碼</string>
     <string name="settings_channel_numbers_description">在電視直播清單、頻道清單疊加層和播放器中，於名稱旁顯示供應商的頻道號碼；在全螢幕播放期間，也可使用遙控器輸入號碼直接跳至該頻道（按「確定」可立即轉台，按「返回」則取消）。關閉後會隱藏所有號碼並忽略數字鍵；不會遺失任何資料，重新開啟即可恢復顯示。</string>
     <string name="settings_diagnostics">診斷</string>

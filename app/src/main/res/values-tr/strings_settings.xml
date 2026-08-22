@@ -466,6 +466,7 @@
     <string name="settings_audio_sync_description">Görüntüyle eşleşmesi için sesi öne veya geriye kaydırın. Yalnızca mpv motoru için geçerlidir.</string>
     <string name="settings_live_tv">Canlı TV</string>
     <string name="settings_live_latency_description">Yayının canlı yayın noktasına ne kadar yakın oynatılacağı. Daha düşük değer canlı yayına daha yakın ancak daha küçük bir arabellek anlamına gelir; bu nedenle zayıf akışlar daha sık takılabilir veya yeniden bağlanabilir. Açacağınız bir sonraki kanalda uygulanır.</string>
+    <string name="settings_live_latency_bitrate_note">Çok yüksek bit hızına sahip bir kanalda (özellikle 4K) arabellek, istediğinden daha kısa bir süreyi tutabilir; çünkü aynı anda bellekte tutulabilecek video miktarı sınırlıdır.</string>
     <string name="settings_channel_numbers">Kanal numaraları</string>
     <string name="settings_channel_numbers_description">Sağlayıcınızın kanal numarasını Canlı TV listesindeki, kanal listesi ekran katmanındaki ve oynatıcıdaki adın yanında gösterin; ayrıca tam ekran oynatma sırasında doğrudan o kanala geçmek için uzaktan kumandadan bir numara girin (OK anında kanala geçer, Geri iptal eder). Kapalıyken tüm numaralar gizlenir ve sayı tuşları yok sayılır; hiçbir veri kaybolmaz ve tekrar açıldığında numaralar geri gelir.</string>
     <string name="settings_diagnostics">Tanılama</string>

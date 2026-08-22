@@ -464,6 +464,7 @@
     <string name="settings_audio_sync_description">영상에 맞도록 오디오를 앞이나 뒤로 이동합니다. mpv 엔진에만 적용됩니다.</string>
     <string name="settings_live_tv">실시간 TV</string>
     <string name="settings_live_latency_description">실시간 방송과 얼마나 가깝게 재생할지 설정합니다. 낮을수록 실시간에 가까워지지만 버퍼가 작아지므로 불안정한 스트림에서는 끊김이나 재연결이 더 자주 발생할 수 있습니다. 다음에 여는 채널부터 적용됩니다.</string>
+    <string name="settings_live_latency_bitrate_note">비트레이트가 매우 높은 채널에서는(특히 4K) 메모리에 한 번에 담을 수 있는 영상의 양에 한계가 있어, 설정한 시간보다 짧게만 버퍼링될 수 있습니다.</string>
     <string name="settings_channel_numbers">채널 번호</string>
     <string name="settings_channel_numbers_description">실시간 TV 목록, 채널 목록 오버레이 및 플레이어에서 이름 옆에 제공업체의 채널 번호를 표시하고, 전체 화면 재생 중 리모컨으로 번호를 입력하여 해당 채널로 바로 이동합니다(확인을 누르면 즉시 채널이 선택되고 뒤로를 누르면 취소됩니다). 끄면 모든 번호가 숨겨지고 숫자 키 입력이 무시되지만 삭제되는 정보는 없으며, 다시 켜면 번호가 복원됩니다.</string>
     <string name="settings_diagnostics">진단</string>

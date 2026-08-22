@@ -464,6 +464,7 @@
     <string name="settings_audio_sync_description">将音频提前或延后，使其与视频匹配。仅适用于 mpv 引擎。</string>
     <string name="settings_live_tv">直播电视</string>
     <string name="settings_live_latency_description">设置播放位置与直播的接近程度。数值越低，越接近直播，但缓冲区也越小，因此信号较弱的流可能更容易卡顿或重新连接。此设置将在您下次打开频道时生效。</string>
+    <string name="settings_live_latency_bitrate_note">在码率非常高的频道上（尤其是 4K），由于内存中一次能保存的视频量有限，缓冲的时长可能比你设置的更短。</string>
     <string name="settings_channel_numbers">频道编号</string>
     <string name="settings_channel_numbers_description">在直播电视列表、频道列表浮层和播放器中，在名称旁显示服务提供商的频道编号；全屏播放时还可用遥控器输入编号直接跳转到对应频道（按“确定”立即调台，按“返回”取消）。关闭后会隐藏所有编号并忽略数字键；不会丢失任何数据，重新开启即可恢复显示。</string>
     <string name="settings_diagnostics">诊断</string>

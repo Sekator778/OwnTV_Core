@@ -466,6 +466,7 @@
     <string name="settings_audio_sync_description">Audio zeitlich vor- oder zurückversetzen, um es an das Video anzupassen. Gilt nur für die mpv-Engine.</string>
     <string name="settings_live_tv">Live-TV</string>
     <string name="settings_live_latency_description">Legt fest, wie nah an der Live-Übertragung die Wiedergabe erfolgt. Ein niedrigerer Wert bedeutet eine geringere Verzögerung zur Live-Übertragung, aber auch einen kleineren Puffer, sodass schwache Streams häufiger stocken oder die Verbindung erneut herstellen können. Gilt für den nächsten Sender, den du öffnest.</string>
+    <string name="settings_live_latency_bitrate_note">Bei einem Sender mit sehr hoher Bitrate – besonders in 4K – kann der Puffer weniger Zeit fassen, als du eingestellt hast, denn es gibt eine Grenze dafür, wie viel Video gleichzeitig im Speicher gehalten werden kann.</string>
     <string name="settings_channel_numbers">Sendernummern</string>
     <string name="settings_channel_numbers_description">Die Sendernummer deines Anbieters neben dem Namen in der Live-TV-Liste, in der Senderlisten-Einblendung und im Player anzeigen – und während der Wiedergabe im Vollbild eine Nummer über die Fernbedienung eingeben, um direkt zu diesem Sender zu wechseln (OK schaltet sofort um, Zurück bricht ab). Wenn diese Option ausgeschaltet ist, werden alle Nummern ausgeblendet und die Zifferntasten ignoriert; es geht nichts verloren, und nach dem erneuten Einschalten werden die Nummern wieder angezeigt.</string>
     <string name="settings_diagnostics">Diagnose</string>

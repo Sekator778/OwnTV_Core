@@ -904,6 +904,8 @@
     <string name="settings_live_tv">Live TV</string>
     <!-- Translators: Description of the live latency setting. -->
     <string name="settings_live_latency_description">How close to the live broadcast to play. Lower means closer to live but a smaller buffer, so weak streams may stutter or reconnect more. Applies to the next channel you open.</string>
+    <!-- Translators: Extra note under the live latency setting, explaining why a very high-bitrate (4K) channel may buffer less time than the user asked for. -->
+    <string name="settings_live_latency_bitrate_note">On a very high-bitrate channel — 4K especially — the buffer may hold less time than you asked for, because there is a limit on how much video can be kept in memory at once.</string>
     <!-- Translators: Setting label for showing channel numbers. -->
     <string name="settings_channel_numbers">Channel numbers</string>
     <!-- Translators: Description of the channel numbers setting. -->

@@ -468,6 +468,7 @@
     <string name="settings_audio_sync_description">Adiante ou atrase o áudio para sincronizá-lo com o vídeo. Aplica-se apenas ao motor mpv.</string>
     <string name="settings_live_tv">TV ao vivo</string>
     <string name="settings_live_latency_description">Define quão próxima da transmissão ao vivo será a reprodução. Uma latência menor deixa a reprodução mais próxima do ao vivo, mas reduz o buffer; por isso, transmissões fracas podem travar ou se reconectar com mais frequência. Aplica-se ao próximo canal que você abrir.</string>
+    <string name="settings_live_latency_bitrate_note">Em um canal com taxa de bits muito alta — especialmente em 4K — o buffer pode guardar menos tempo do que você pediu, porque há um limite de quanto vídeo pode ficar na memória de uma vez.</string>
     <string name="settings_channel_numbers">Números dos canais</string>
     <string name="settings_channel_numbers_description">Mostre o número de canal do seu provedor ao lado do nome na lista da TV ao vivo, na sobreposição da lista de canais e no reprodutor — e digite um número no controle remoto durante a reprodução em tela cheia para ir diretamente a esse canal (OK sintoniza imediatamente; Voltar cancela). Desativar oculta todos os números e ignora as teclas numéricas; nada é perdido e, ao reativar, os números são restaurados.</string>
     <string name="settings_diagnostics">Diagnóstico</string>

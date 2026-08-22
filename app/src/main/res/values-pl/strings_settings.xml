@@ -470,6 +470,7 @@
     <string name="settings_audio_sync_description">Przesuń dźwięk wcześniej lub później, aby dopasować go do obrazu. Dotyczy tylko silnika mpv.</string>
     <string name="settings_live_tv">Telewizja na żywo</string>
     <string name="settings_live_latency_description">Określa, jak blisko bieżącego punktu transmisji ma odbywać się odtwarzanie. Niższa wartość oznacza mniejsze opóźnienie, ale też mniejszy bufor, dlatego niestabilne strumienie mogą częściej się zacinać lub ponownie łączyć. Zmiana zostanie zastosowana do następnego otwartego kanału.</string>
+    <string name="settings_live_latency_bitrate_note">Na kanale o bardzo wysokiej przepływności — zwłaszcza w 4K — bufor może pomieścić mniej czasu, niż ustawiono, ponieważ ilość wideo przechowywanego w pamięci jest ograniczona.</string>
     <string name="settings_channel_numbers">Numery kanałów</string>
     <string name="settings_channel_numbers_description">Pokazuj numer kanału nadany przez dostawcę obok jego nazwy na liście telewizji na żywo, nakładce listy kanałów i w odtwarzaczu. Podczas odtwarzania na pełnym ekranie możesz też wpisać numer na pilocie, aby przejść bezpośrednio do danego kanału (OK przełącza od razu, a Wstecz anuluje). Wyłączenie tej opcji ukrywa wszystkie numery i powoduje ignorowanie klawiszy numerycznych; żadne dane nie zostaną utracone, a ponowne włączenie przywróci numery.</string>
     <string name="settings_diagnostics">Diagnostyka</string>

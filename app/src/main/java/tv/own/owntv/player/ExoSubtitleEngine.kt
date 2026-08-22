@@ -109,7 +109,6 @@ class ExoSubtitleEngine(
     // First-frame watchdog: this handoff only exists to show an image subtitle over otherwise-healthy
     // video, so if ExoPlayer never renders a frame (a format/decoder combo mpv handled fine but this
     // renderer can't), fall back rather than leaving the user on audio with a blank screen.
-    private val mainHandler = android.os.Handler(android.os.Looper.getMainLooper())
     private var firstFrameSeen = false
     // X1: whether this file declares a video track at all. Radio stations filed under Movies, music
     // VOD and audio-only catch-up recordings have none — nothing is broken there and the watchdog
@@ -118,7 +117,7 @@ class ExoSubtitleEngine(
     private var hasVideoTrack = true
     // Audio Mode: the video track is deselected, so no frame can ever arrive — see [setVideoTrackDisabled].
     @Volatile private var audioOnly = false
-    private val noVideoTimeout = Runnable {
+    private val noVideoWatchdog = NoFrameWatchdog {
         if (!firstFrameSeen && hasVideoTrack && !audioOnly) {
             android.util.Log.w(
                 TAG,
@@ -135,7 +134,7 @@ class ExoSubtitleEngine(
                 if (isArchiveItem) LiveStreamQuirks.rememberArchiveNeedsSoftware(url)
                 android.util.Log.w(TAG, "software rescue: no frame on the hardware decoder, restarting in software decode")
                 onSoftwareRescue?.invoke(url, isArchiveItem)
-                return@Runnable
+                return@NoFrameWatchdog
             }
             callbacks.onError(PlaybackFailure.AudioNoVideo)
         }
@@ -236,7 +235,7 @@ class ExoSubtitleEngine(
 
         override fun onRenderedFirstFrame() {
             firstFrameSeen = true
-            mainHandler.removeCallbacks(noVideoTimeout)
+            noVideoWatchdog.disarm()
             callbacks.onFirstFrame()
         }
 
@@ -283,7 +282,7 @@ class ExoSubtitleEngine(
         /** Decode this item on a software decoder — see [ownTVRenderers]. */
         preferSoftware: Boolean = false,
         /** This item is a catch-up / live-rewind archive: mid-GOP, so a blank picture on the hardware
-         *  decoder is rescued in software instead of erroring — see [noVideoTimeout]. */
+         *  decoder is rescued in software instead of erroring — see [noVideoWatchdog]. */
         isArchive: Boolean = false,
     ) {
         // "Hardware decoding = Off" used to reach mpv only, so a user who turned it off to work around a
@@ -300,9 +299,9 @@ class ExoSubtitleEngine(
         hasVideoTrack = true
         throughputTracker.reset(); fpsSample.resetAll(); dropsBaseline = currentDroppedFrames(player)
         audioWatchdog.reset()
-        mainHandler.removeCallbacks(noVideoTimeout)
+        noVideoWatchdog.disarm()
         // Nothing to wait for while Audio Mode is on — the video track is deselected on purpose.
-        if (!audioOnly) mainHandler.postDelayed(noVideoTimeout, noVideoTimeoutMs())
+        if (!audioOnly) noVideoWatchdog.arm(noVideoTimeoutMs())
 
         // Applied per item, before prepare: the factory is created once but each load builds a fresh
         // data source from it, so a changed UA/header set takes effect without rebuilding the player.
@@ -519,7 +518,7 @@ class ExoSubtitleEngine(
         // Software decoding is a rescue, not the default. A catch-up archive starts mid-GOP and SOME
         // TV-class hardware decoders can't recover from that — the Realtek OMX decoder accepts the
         // format, plays the audio, then never emits a video frame ("setPortMode ... DynamicANWBuffer
-        // failed", "BAD CODEC: stride 1920 -> 64") — so [noVideoTimeout] catches that case and restarts
+        // failed", "BAD CODEC: stride 1920 -> 64") — so [noVideoWatchdog] catches that case and restarts
         // the item here with softwarePreferred set, which resyncs at the next keyframe.
         // Stereo pinning mirrors the live engine: "Stereo only", or a session latch tripped by ANY engine,
         // means this player must not be given a sink that can bitstream Dolby/DTS.
@@ -570,7 +569,7 @@ class ExoSubtitleEngine(
      */
     fun setVideoTrackDisabled(disabled: Boolean) {
         audioOnly = disabled
-        if (disabled) mainHandler.removeCallbacks(noVideoTimeout)
+        if (disabled) noVideoWatchdog.disarm()
         // Re-enabling the video track needs a real output surface FIRST. Leaving Audio Mode from the
         // now-playing bar re-enables video while the full-screen SurfaceView is still unmounted, so the
         // renderer would create its decoder against a PlaceholderSurface and then be re-pointed at the
@@ -724,7 +723,7 @@ class ExoSubtitleEngine(
         callbacks.onAudioOnlyMedia(!hasVideo && !audioOnly)
         if (!hasVideo) {
             android.util.Log.i(TAG, "no video track in this file — audio-only, no-video watchdog disarmed")
-            mainHandler.removeCallbacks(noVideoTimeout)
+            noVideoWatchdog.disarm()
         }
     }
 
@@ -950,7 +949,7 @@ class ExoSubtitleEngine(
      *  fully release so we never hold a second decoder/connection while mpv plays. */
     fun stop() {
         surface = null
-        mainHandler.removeCallbacks(noVideoTimeout)
+        noVideoWatchdog.disarm()
         callbacks.onCues(emptyList())
         boost.release() // the effect is bound to this player's audio session
         player?.let { p ->
@@ -983,7 +982,9 @@ class ExoSubtitleEngine(
         const val TARGET_BUFFER_BYTES = 24 * 1024 * 1024
         const val LOW_RAM_TARGET_BYTES = 16 * 1024 * 1024
         const val BASE_BUFFER_MS = 30_000
-        const val NO_VIDEO_TIMEOUT_MS = 8_000L
+        /** Armed at load, so it covers the open as well as the decode — see [NoFrameWatchdog] for why
+         *  this matches the hero preview's budget rather than the live engine's 8 s. */
+        const val NO_VIDEO_TIMEOUT_MS = 12_000L
         /** Mid-GOP + software decode needs a much longer first-frame budget — see [noVideoTimeoutMs]. */
         const val NO_VIDEO_TIMEOUT_SOFTWARE_MS = 25_000L
 

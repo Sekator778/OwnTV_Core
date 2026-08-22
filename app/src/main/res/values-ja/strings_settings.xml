@@ -464,6 +464,7 @@
     <string name="settings_audio_sync_description">映像に合うように音声を早めたり遅らせたりします。mpv エンジンにのみ適用されます。</string>
     <string name="settings_live_tv">ライブTV</string>
     <string name="settings_live_latency_description">ライブ放送にどの程度近い位置を再生するかを設定します。低くするとライブに近づきますが、バッファが小さくなるため、不安定なストリームでは途切れや再接続が増えることがあります。次に開くチャンネルから適用されます。</string>
+    <string name="settings_live_latency_bitrate_note">ビットレートが非常に高いチャンネル（特に4K）では、メモリに保持できる映像の量に上限があるため、指定した長さよりも短いぶんしかバッファできないことがあります。</string>
     <string name="settings_channel_numbers">チャンネル番号</string>
     <string name="settings_channel_numbers_description">ライブTVの一覧、チャンネル一覧オーバーレイ、プレーヤーで、名前の横にプロバイダーのチャンネル番号を表示します。また、全画面再生中にリモコンで番号を入力すると、そのチャンネルへ直接切り替えられます（OKを押すとすぐに切り替え、戻るでキャンセル）。オフにするとすべての番号が非表示になり、数字キーも無視されます。データが失われることはなく、オンに戻すと再び表示されます。</string>
     <string name="settings_diagnostics">診断</string>

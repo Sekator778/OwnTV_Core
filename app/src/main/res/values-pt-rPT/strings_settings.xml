@@ -468,6 +468,7 @@
     <string name="settings_audio_sync_description">Adiantar ou atrasar o áudio para o sincronizar com o vídeo. Aplica-se apenas ao motor mpv.</string>
     <string name="settings_live_tv">TV em direto</string>
     <string name="settings_live_latency_description">Define a proximidade da reprodução à emissão em direto. Um valor mais baixo aproxima-a do direto, mas reduz o buffer, pelo que transmissões fracas poderão apresentar interrupções ou voltar a ligar-se mais vezes. Aplica-se ao próximo canal que abrir.</string>
+    <string name="settings_live_latency_bitrate_note">Num canal com taxa de bits muito elevada — sobretudo em 4K — o buffer pode conter menos tempo do que pediste, porque há um limite para a quantidade de vídeo que pode ficar em memória de uma só vez.</string>
     <string name="settings_channel_numbers">Números dos canais</string>
     <string name="settings_channel_numbers_description">Mostrar o número de canal do fornecedor junto ao nome na lista da TV em direto, na sobreposição da lista de canais e no leitor — e introduzir um número no comando durante a reprodução em ecrã inteiro para ir diretamente para esse canal (OK sintoniza-o de imediato; Voltar cancela). Se desativar, todos os números ficam ocultos e as teclas numéricas são ignoradas; nada se perde e, ao reativar, os números são repostos.</string>
     <string name="settings_diagnostics">Diagnóstico</string>

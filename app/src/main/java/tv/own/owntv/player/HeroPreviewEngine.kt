@@ -1,8 +1,6 @@
 package tv.own.owntv.player
 
 import android.content.Context
-import android.os.Handler
-import android.os.Looper
 import android.view.Surface
 import androidx.media3.common.C
 import androidx.media3.common.MediaItem
@@ -54,19 +52,18 @@ class HeroPreviewEngine(
     // No-frame watchdog. A hero stream that connects but never renders (dead decoder, audio-only
     // remux, a server that accepts the socket and dribbles) used to leave the engine in LOADING
     // forever, which the Home screen draws as a spinner on top of the poster with nothing behind it.
-    // Every other engine bounds this; here it just falls back to the poster. Main-looper Handler, so
-    // it shares ExoPlayer's application thread and can hold nothing alive past [release].
-    private val watchdog = Handler(Looper.getMainLooper())
-    private val noFrameTimeout = Runnable {
+    // Every other engine bounds this; here it just falls back to the poster.
+    private val noFrameWatchdog = NoFrameWatchdog {
         // Deliberately NOT gated on [hasStarted]: that flag is set on STATE_READY, which a stream that
         // buffers fine and never renders a frame reaches — and the preview only leaves LOADING on the
         // first frame, so the guard disarmed the watchdog for exactly the case it exists for and left a
-        // permanent spinner over the poster. The callback is removed on first frame, error, stop and
+        // permanent spinner over the poster. The deadline is dropped on first frame, error, stop and
         // release, so reaching here means no frame arrived.
-        if (currentUrl == null) return@Runnable
-        android.util.Log.w(TAG, "Hero preview produced no frame in ${NO_FRAME_TIMEOUT_MS}ms — falling back to the poster")
-        stop()
-        _state.value = State.ERROR
+        if (currentUrl != null) {
+            android.util.Log.w(TAG, "Hero preview produced no frame in ${NO_FRAME_TIMEOUT_MS}ms — falling back to the poster")
+            stop()
+            _state.value = State.ERROR
+        }
     }
 
     private val _state = MutableStateFlow(State.IDLE)
@@ -93,7 +90,7 @@ class HeroPreviewEngine(
         }
 
         override fun onRenderedFirstFrame() {
-            watchdog.removeCallbacks(noFrameTimeout)
+            noFrameWatchdog.disarm()
             if (currentUrl != null) _state.value = State.PLAYING
         }
 
@@ -102,7 +99,7 @@ class HeroPreviewEngine(
             // HTTP 458 = "account session in use": the provider allows one stream at a time. Remember it
             // so every engine (Live preview included) stops competing for that single session (F19d).
             currentUrl?.let { url -> if (httpStatusOf(error) == 458) LiveStreamQuirks.rememberSessionLimit(url) }
-            watchdog.removeCallbacks(noFrameTimeout)
+            noFrameWatchdog.disarm()
             hasStarted = false
             currentUrl = null
             player?.run {
@@ -165,8 +162,7 @@ class HeroPreviewEngine(
             p.setMediaItem(MediaItem.fromUri(url), startPositionMs)
             p.prepare()
             p.playWhenReady = true
-            watchdog.removeCallbacks(noFrameTimeout)
-            watchdog.postDelayed(noFrameTimeout, NO_FRAME_TIMEOUT_MS)
+            noFrameWatchdog.arm(NO_FRAME_TIMEOUT_MS)
         }.onFailure {
             android.util.Log.w(TAG, "Hero preview play failed for ${HttpClient.redactUrl(url)}", it)
             hasStarted = false
@@ -180,7 +176,7 @@ class HeroPreviewEngine(
     }
 
     fun stop() {
-        watchdog.removeCallbacks(noFrameTimeout)
+        noFrameWatchdog.disarm()
         currentUrl = null
         hasStarted = false
         _state.value = State.IDLE
@@ -191,7 +187,7 @@ class HeroPreviewEngine(
     }
 
     fun release() {
-        watchdog.removeCallbacks(noFrameTimeout)
+        noFrameWatchdog.disarm()
         player?.run {
             removeListener(listener)
             release()
@@ -241,7 +237,8 @@ class HeroPreviewEngine(
     companion object {
         private const val TAG = "HeroPreviewEngine"
 
-        /** No first frame within this window → give up and leave the poster showing. */
+        /** No first frame within this window → give up and leave the poster showing. Armed at load;
+         *  shared with [ExoSubtitleEngine]'s budget — see [NoFrameWatchdog] for the reasoning. */
         private const val NO_FRAME_TIMEOUT_MS = 12_000L
     }
 }

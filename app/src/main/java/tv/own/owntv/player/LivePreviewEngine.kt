@@ -2642,8 +2642,11 @@ class LivePreviewEngine(
             header?.trim()?.toIntOrNull()?.takeIf { it >= 0 }?.coerceIn(1, MAX_RETRY_AFTER_SECS)
 
         /** How long to wait for a single-session panel to notice the other engine's socket is gone.
-         *  Measured on the traced panel: the handoff's own ~500 ms was never enough, and the refusal
-         *  persisted for the whole time mpv stayed connected — so this covers the release, not a poll. */
+         *
+         *  MEASURED on the traced panel: the handoff's own ~500 ms was never enough, and the refusal
+         *  persisted for the whole time mpv stayed connected — so this covers the release, not a poll.
+         *  Unlike the other handoff waits this one is not about local hardware at all; it is about how
+         *  long a *provider* takes to free a session, which is why it is four times the longest of them. */
         internal const val SESSION_RELEASE_MS = 2_000L
 
         // --- LoadControl (see [build]) ----------------------------------------------------------
@@ -2658,7 +2661,11 @@ class LivePreviewEngine(
         /** TV-class/low-RAM devices: still above ExoPlayer's ~13 MB video default. */
         private const val LOW_RAM_TARGET_BYTES = 16 * 1024 * 1024
 
-        /** Grace for the old MediaCodec to tear down before its replacement is built (see [rebuildDecoderAndRetry]). */
+        /** Grace for the old MediaCodec to tear down before its replacement is built (see [rebuildDecoderAndRetry]).
+         *
+         *  ESTIMATED, and deliberately the same beat as `OwnTVPlayer.SURFACE_HANDOFF_MS` — it is the
+         *  same physical event (one decoder releasing before another claims it), just within a single
+         *  engine rather than across two. If the measured value there ever moves, this should follow. */
         private const val DECODER_REBUILD_DELAY_MS = 500L
 
         private const val STALL_MS = 12_000L        // buffering this long after playing == a dropped feed
@@ -2680,7 +2687,10 @@ class LivePreviewEngine(
          */
         internal val DEATH_VERDICT_MS: Long =
             maxOf(STALL_MS, FREEZE_TIMEOUT_MS, FROZEN_LIMIT * PROGRESS_CHECK_MS) + reconnectDelayMs(1)
-        private const val NO_VIDEO_TIMEOUT_MS = 8_000L // video track present, zero frames rendered this long == "audio plays, no picture"
+        // Video track present, zero frames rendered this long == "audio plays, no picture". Measured
+        // from STATE_READY, not from the load, so it is a later starting point than the 12 s the
+        // load-armed engines use — see [NoFrameWatchdog] for the full comparison.
+        private const val NO_VIDEO_TIMEOUT_MS = 8_000L
         private const val AUDIO_ONLY_CONFIRM_MS = 5_000L // allow late video-track discovery before showing radio badge
         // Re-buffer flap (see [noteRebufferFlap]): this many re-buffers inside the window while the
         // position crawls == the stream is oscillating, not playing. The traced case managed ~8 per

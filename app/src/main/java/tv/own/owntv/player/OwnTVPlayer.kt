@@ -357,8 +357,21 @@ class OwnTVPlayer(
         // Hardware assumptions live here, tunable in one place. TV boxes expose ONE hardware decoder:
         // when playback moves between mpv and ExoPlayer the outgoing engine's MediaCodec must finish
         // releasing before the incoming engine claims it, or the claim fails instantly.
+        //
+        // Each wait below is marked MEASURED or ESTIMATED. That distinction matters to anyone tuning
+        // them later: an ESTIMATED value is a round number that has never failed in testing, and can
+        // be moved on evidence. A MEASURED one was set from an actual timing on real hardware, and
+        // lowering it re-opens the fault it was raised to fix.
+        // ESTIMATED. The longest of the release waits because it covers the full engine swap, where
+        // the outgoing decoder is torn down and the incoming one is built immediately after.
         const val DECODER_RELEASE_MS = 600L        // outgoing engine's MediaCodec release (engine swap / next episode)
+        // MEASURED — 508 ms for the surface release to complete on the owner's Realtek box. This is the
+        // one number here with a real observation behind it, and 500 is that observation rounded down
+        // to the beat the rest of the file uses. Do not lower it on the grounds that it "looks like a
+        // guess": the guess would be a shorter wait, and the shorter wait is what produced the black
+        // screen this constant exists to prevent.
         const val SURFACE_HANDOFF_MS = 500L        // shorter release wait on the surface-attach handoff paths
+        // ESTIMATED. A settle beat after the mpv core and the surface are both rebuilt from scratch.
         const val CORE_RESET_SETTLE_MS = 500L      // fresh mpv core + recreated surface settle after a hard reset
         // The Exo position emit (500ms) and the fps-chip recheck (1,500ms) used to live here. Both now
         // ride [PlayerHeartbeat]'s shared 1 Hz beat, so neither has an interval of its own any more.
@@ -376,6 +389,8 @@ class OwnTVPlayer(
         const val LIVE_RECONNECT_DELAY_MS = 3_500L // pause before reconnecting a dropped live stream
         const val EOF_GRACE_MS = 1_500L            // grace for a late FILE_LOADED after an early EOF on live
         const val FALLBACK_RETRY_DELAY_MS = 300L   // brief spinner beat before retrying with a URL/UA variant
+        // ESTIMATED. The shortest wait in the group, and the only one that is not about a decoder
+        // handing hardware to another decoder — just a frame or two for a render-config change to land.
         const val RENDER_RECONFIG_MS = 200L        // let a render-config change apply before resuming
         // Warn-level mpv lines worth keeping as the failure reason (HTTP codes, open/decode failures, …).
         val FAILURE_RX = Regex(

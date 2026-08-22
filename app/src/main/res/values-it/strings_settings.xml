@@ -468,6 +468,7 @@
     <string name="settings_audio_sync_description">Anticipa o ritarda l\'audio per sincronizzarlo con il video. Si applica solo al motore mpv.</string>
     <string name="settings_live_tv">TV in diretta</string>
     <string name="settings_live_latency_description">Quanto avvicinare la riproduzione alla trasmissione in diretta. Un valore più basso avvicina maggiormente alla diretta, ma riduce il buffer; i flussi deboli potrebbero quindi presentare più interruzioni o riconnettersi più spesso. Si applica al prossimo canale che apri.</string>
+    <string name="settings_live_latency_bitrate_note">Su un canale ad altissimo bitrate — soprattutto in 4K — il buffer può contenere meno tempo di quello richiesto, perché la quantità di video che si può tenere in memoria è limitata.</string>
     <string name="settings_channel_numbers">Numeri dei canali</string>
     <string name="settings_channel_numbers_description">Mostra il numero assegnato dal fornitore accanto al nome nell\'elenco della TV in diretta, nella sovrimpressione dell\'elenco dei canali e nel player; durante la riproduzione a schermo intero puoi inoltre digitare un numero sul telecomando per passare direttamente al canale corrispondente (OK lo sintonizza subito, Indietro annulla). Se disattivata, l\'opzione nasconde tutti i numeri e ignora i tasti numerici; non viene perso nulla e, riattivandola, i numeri vengono ripristinati.</string>
     <string name="settings_diagnostics">Diagnostica</string>

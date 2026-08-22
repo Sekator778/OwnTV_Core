@@ -466,6 +466,7 @@
     <string name="settings_audio_sync_description">Verschuif de audio naar voren of achteren zodat deze gelijkloopt met de video. Geldt alleen voor de mpv-engine.</string>
     <string name="settings_live_tv">Live-tv</string>
     <string name="settings_live_latency_description">Hoe dicht bij de live-uitzending wordt afgespeeld. Lager betekent dichter bij live, maar ook een kleinere buffer, waardoor zwakke streams vaker kunnen haperen of opnieuw verbinding kunnen maken. Geldt voor de volgende zender die u opent.</string>
+    <string name="settings_live_latency_bitrate_note">Bij een kanaal met een zeer hoge bitrate — vooral in 4K — kan de buffer minder tijd bevatten dan je hebt ingesteld, omdat er een limiet zit op hoeveel video tegelijk in het geheugen past.</string>
     <string name="settings_channel_numbers">Zendernummers</string>
     <string name="settings_channel_numbers_description">Toon het zendernummer van uw aanbieder naast de naam in de live-tv-lijst, de overlay met de zenderlijst en de speler. U kunt tijdens afspelen op volledig scherm ook een nummer invoeren met de afstandsbediening om direct naar die zender te gaan (OK schakelt meteen over, Terug annuleert). Als dit uitstaat, worden alle nummers verborgen en de cijfertoetsen genegeerd; er gaat niets verloren en als u dit weer aanzet, worden ze hersteld.</string>
     <string name="settings_diagnostics">Diagnostiek</string>

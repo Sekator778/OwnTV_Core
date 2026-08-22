@@ -468,6 +468,7 @@
     <string name="settings_audio_sync_description">Avancer ou retarder l’audio pour le synchroniser avec la vidéo. S’applique uniquement au moteur mpv.</string>
     <string name="settings_live_tv">TV en direct</string>
     <string name="settings_live_latency_description">Détermine la proximité de la lecture avec la diffusion en direct. Une valeur plus faible rapproche du direct, mais réduit la mémoire tampon : les flux instables peuvent donc s’interrompre ou se reconnecter plus souvent. S’applique à la prochaine chaîne que vous ouvrez.</string>
+    <string name="settings_live_latency_bitrate_note">Sur une chaîne à très haut débit — en 4K en particulier — la mémoire tampon peut contenir moins de temps que demandé, car la quantité de vidéo conservée en mémoire est limitée.</string>
     <string name="settings_channel_numbers">Numéros des chaînes</string>
     <string name="settings_channel_numbers_description">Afficher le numéro attribué par votre fournisseur à côté du nom dans la liste de la TV en direct, la superposition de la liste des chaînes et le lecteur. Pendant une lecture en plein écran, saisissez un numéro avec la télécommande pour accéder directement à cette chaîne (OK la sélectionne immédiatement, Retour annule). Lorsque cette option est désactivée, tous les numéros sont masqués et les touches numériques sont ignorées. Rien n’est perdu : réactiver l’option les restaure.</string>
     <string name="settings_diagnostics">Diagnostic</string>

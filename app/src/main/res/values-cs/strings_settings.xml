@@ -470,6 +470,7 @@
     <string name="settings_audio_sync_description">Posuňte zvuk dopředu nebo dozadu, aby odpovídal obrazu. Platí pouze pro přehrávač mpv.</string>
     <string name="settings_live_tv">Živé vysílání</string>
     <string name="settings_live_latency_description">Určuje, jak blízko aktuálnímu vysílání se má přehrávat. Nižší hodnota znamená menší zpoždění oproti živému vysílání, ale také menší vyrovnávací paměť, takže slabé streamy se mohou častěji zadrhávat nebo znovu připojovat. Použije se u dalšího kanálu, který otevřete.</string>
+    <string name="settings_live_latency_bitrate_note">U kanálu s velmi vysokým datovým tokem — zvláště ve 4K — může vyrovnávací paměť pojmout kratší dobu, než jste zadali, protože množství videa uchovávaného v paměti je omezené.</string>
     <string name="settings_channel_numbers">Čísla kanálů</string>
     <string name="settings_channel_numbers_description">Zobrazovat číslo kanálu od poskytovatele vedle jeho názvu v seznamu živého vysílání, překryvu seznamu kanálů a přehrávači. Během přehrávání na celé obrazovce také můžete zadat číslo na dálkovém ovladači a přejít přímo na daný kanál (tlačítko OK přepne okamžitě, tlačítko Zpět zadání zruší). Vypnutím se skryjí všechna čísla a číselná tlačítka se budou ignorovat. Nic se neztratí a po opětovném zapnutí se čísla obnoví.</string>
     <string name="settings_diagnostics">Diagnostika</string>

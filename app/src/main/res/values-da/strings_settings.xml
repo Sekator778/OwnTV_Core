@@ -466,6 +466,7 @@
     <string name="settings_audio_sync_description">Forskyd lyden frem eller tilbage, så den passer til videoen. Gælder kun for mpv-motoren.</string>
     <string name="settings_live_tv">Live-tv</string>
     <string name="settings_live_latency_description">Hvor tæt på liveudsendelsen der skal afspilles. En lavere værdi betyder tættere på live, men en mindre buffer, så svage streams kan hakke eller genoprette forbindelsen oftere. Gælder for den næste kanal, du åbner.</string>
+    <string name="settings_live_latency_bitrate_note">På en kanal med meget høj bitrate — især 4K — kan bufferen rumme kortere tid, end du har bedt om, fordi der er en grænse for, hvor meget video der kan holdes i hukommelsen ad gangen.</string>
     <string name="settings_channel_numbers">Kanalnumre</string>
     <string name="settings_channel_numbers_description">Vis din udbyders kanalnummer ved siden af navnet på Live-tv-listen, i kanallisteoverlejringen og i afspilleren — og indtast et nummer på fjernbetjeningen under afspilning i fuld skærm for at gå direkte til den pågældende kanal (OK skifter med det samme, og Tilbage annullerer). Når funktionen er slået fra, skjules alle numre, og nummertasterne ignoreres; intet går tabt, og numrene gendannes, når funktionen slås til igen.</string>
     <string name="settings_diagnostics">Diagnostik</string>

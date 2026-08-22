@@ -300,7 +300,6 @@
 1	app/src/main/java/tv/own/owntv/features/settings/data/SubtitleStyle.kt	top_right
 1	app/src/main/java/tv/own/owntv/features/shell/ShellViewModel.kt	\0
 1	app/src/main/java/tv/own/owntv/features/shell/components/MediaDetailsScreen.kt	\0
-1	app/src/main/java/tv/own/owntv/features/shell/components/SettingsScreen.kt	\0
 6	app/src/main/java/tv/own/owntv/features/shell/components/SettingsScreen.kt	#
 3	app/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	\0
 1	app/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	Content-Type
