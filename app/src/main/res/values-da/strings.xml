@@ -13,6 +13,7 @@
     <string name="common_ok">OK</string>
     <string name="common_on">Til</string>
     <string name="common_off">Fra</string>
+    <string name="common_never">Aldrig</string>
     <string name="common_exit">Afslut</string>
     <string name="common_resume">Fortsæt</string>
     <string name="common_start_over">Start forfra</string>

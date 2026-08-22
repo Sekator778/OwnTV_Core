@@ -968,6 +968,8 @@
     <string name="settings_subtitle_color_grey">Szary</string>
     <string name="settings_live_preroll">Wstępne buforowanie kanałów na żywo</string>
     <string name="settings_live_preroll_description">Pobiera taką ilość wideo, zanim kanał na żywo zacznie grać, i ponownie po zacięciu. To ilość wideo, a nie odliczanie. Wyłączone zapewnia najszybszy możliwy start.</string>
+    <string name="settings_live_tune_timeout">Zrezygnuj z kanału po</string>
+    <string name="settings_live_tune_timeout_description">Jeśli w tym czasie kanał na żywo nie pokaże obrazu, OwnTV przestanie próbować i powie Ci o tym, zamiast zostawiać czarny ekran, przechodząc po kolei przez wszystkie swoje odtwarzacze. „Nigdy” próbuje dalej, co na kanale usuniętym przez dostawcę może zająć znacznie ponad minutę. Oczekiwanie, o które prosi sam dostawca, nie jest wliczane.</string>
     <string name="settings_live_preroll_per_playlist">Wstępne buforowanie na playlistę</string>
     <string name="settings_live_preroll_per_playlist_description">Nadpisz powyższe ustawienie dla jednej playlisty, zachowując szybkość pozostałych playlist.</string>
     <plurals name="settings_live_preroll_overrides">

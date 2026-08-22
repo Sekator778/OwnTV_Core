@@ -13,6 +13,7 @@
     <string name="common_ok">ঠিক আছে</string>
     <string name="common_on">চালু</string>
     <string name="common_off">বন্ধ</string>
+    <string name="common_never">কখনও নয়</string>
     <string name="common_exit">প্রস্থান করুন</string>
     <string name="common_resume">চালিয়ে যান</string>
     <string name="common_start_over">শুরু থেকে দেখা</string>

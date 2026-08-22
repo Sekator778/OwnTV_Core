@@ -13,6 +13,7 @@
     <string name="common_ok">OK</string>
     <string name="common_on">Ein</string>
     <string name="common_off">Aus</string>
+    <string name="common_never">Nie</string>
     <string name="common_exit">Beenden</string>
     <string name="common_resume">Fortsetzen</string>
     <string name="common_start_over">Von vorn beginnen</string>

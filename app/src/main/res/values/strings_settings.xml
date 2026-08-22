@@ -1818,6 +1818,10 @@ Resync and remove missing titles also allows removing titles the provider no lon
     <string name="settings_subtitle_color_grey">Grey</string>
     <string name="settings_live_preroll">Pre-buffer live streams</string>
     <string name="settings_live_preroll_description">Collect this much video before a live channel starts playing, and again after a stutter. This is an amount of video, not a countdown. Off keeps the fastest possible start and is right for most providers. Raise it only if playback actually stutters: many providers publish only a few seconds ahead of live, and asking for more video than they send can make stuttering worse.</string>
+    <!-- Translators: Settings row title. How long OwnTV keeps trying to open a live channel before it shows an error instead. -->
+    <string name="settings_live_tune_timeout">Give up on a channel after</string>
+    <!-- Translators: Description under the row above. "Never" is the option named common_never. Keep it short and plain. -->
+    <string name="settings_live_tune_timeout_description">If a live channel has shown no picture by this time, OwnTV stops trying and tells you, instead of leaving a black screen while it works through every player it has. Never keeps trying, which can take well over a minute on a channel your provider has removed. Waits your provider asks for are not counted.</string>
     <string name="settings_live_preroll_per_playlist">Pre-buffer per playlist</string>
     <string name="settings_live_preroll_per_playlist_description">Override the setting above for one playlist while keeping your other playlists fast.</string>
     <!-- Translators: Number of playlists with a custom pre-buffer override. -->

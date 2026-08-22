@@ -951,6 +951,8 @@
     <string name="settings_subtitle_color_grey">Grigio</string>
     <string name="settings_live_preroll">Pre-buffer dei canali in diretta</string>
     <string name="settings_live_preroll_description">Accumula questa quantità di video prima che un canale in diretta inizi a riprodursi, e di nuovo dopo un intoppo. È una quantità di video, non un conto alla rovescia. La modalità Off mantiene l\'avvio più rapido possibile.</string>
+    <string name="settings_live_tune_timeout">Rinuncia a un canale dopo</string>
+    <string name="settings_live_tune_timeout_description">Se entro questo tempo un canale in diretta non ha mostrato immagini, OwnTV smette di provare e te lo dice, invece di lasciare uno schermo nero mentre passa in rassegna tutti i suoi lettori. «Mai» continua a provare, cosa che su un canale rimosso dal tuo provider può richiedere ben oltre un minuto. Le attese richieste dal provider non vengono conteggiate.</string>
     <string name="settings_live_preroll_per_playlist">Pre-buffer per playlist</string>
     <string name="settings_live_preroll_per_playlist_description">Sostituisce l\'impostazione qui sopra per una playlist, mantenendo rapide le altre playlist.</string>
     <plurals name="settings_live_preroll_overrides">

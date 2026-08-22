@@ -154,8 +154,14 @@ class PlaybackSession(private val context: Context) {
             override fun onSeekTo(pos: Long) = withEngine {
                 if (!it.isLiveContent) it.seekBy(pos - it.position.value)
             }
-            override fun onFastForward() = withEngine { if (!it.isLiveContent) it.seekBy(SEEK_STEP_MS) }
-            override fun onRewind() = withEngine { if (!it.isLiveContent) it.seekBy(-SEEK_STEP_MS) }
+            // Settings → Seek step, the same value the on-screen buttons use: a Bluetooth remote or the
+            // system media notification must not move by a different amount than the HUD does.
+            override fun onFastForward() = withEngine {
+                if (!it.isLiveContent) it.seekBy(it.seekStepMs.value)
+            }
+            override fun onRewind() = withEngine {
+                if (!it.isLiveContent) it.seekBy(-it.seekStepMs.value)
+            }
             override fun onSkipToNext() = withEngine { it.next() }
             override fun onSkipToPrevious() = withEngine { it.previous() }
         })
@@ -241,7 +247,6 @@ class PlaybackSession(private val context: Context) {
 
     private companion object {
         const val SESSION_TAG = "OwnTV"
-        const val SEEK_STEP_MS = 30_000L
         /** How far down a manual duck goes — quiet enough to talk over, loud enough not to look broken. */
         const val DUCK_PERCENT = 25
     }

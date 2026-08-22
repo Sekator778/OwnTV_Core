@@ -968,6 +968,8 @@
     <string name="settings_subtitle_color_grey">Šedá</string>
     <string name="settings_live_preroll">Přednačítání živých streamů</string>
     <string name="settings_live_preroll_description">Kolik videa se má načíst, než začne hrát živý kanál, a znovu po zadrhnutí. Jde o množství videa, ne o odpočet. Vypnuto zajistí nejrychlejší možné spuštění.</string>
+    <string name="settings_live_tune_timeout">Vzdát kanál po</string>
+    <string name="settings_live_tune_timeout_description">Pokud se u živého kanálu do této doby neobjeví obraz, OwnTV to vzdá a dá vám vědět, místo aby nechal černou obrazovku, zatímco zkouší všechny své přehrávače. Volba „Nikdy“ zkouší dál, což u kanálu, který váš poskytovatel zrušil, může trvat výrazně přes minutu. Čekání, o které si řekne poskytovatel, se nezapočítává.</string>
     <string name="settings_live_preroll_per_playlist">Přednačítání podle playlistu</string>
     <string name="settings_live_preroll_per_playlist_description">Přepíše výše uvedené nastavení pro jeden playlist, zatímco ostatní playlisty zůstanou rychlé.</string>
     <plurals name="settings_live_preroll_overrides">

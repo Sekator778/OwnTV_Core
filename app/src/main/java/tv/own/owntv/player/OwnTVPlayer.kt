@@ -14,6 +14,8 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.drop
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
@@ -215,8 +217,20 @@ class OwnTVPlayer(
         // A live feed can wedge with the socket still open: mpv keeps pause=false / paused-for-cache=false
         // and emits no END_FILE, but time-pos stops advancing — a frozen channel with "nothing happening".
         // Poll time-pos; sustained no-progress while "playing" == a dropped feed → spinner + reconnect.
-        const val LIVE_STALL_POLL_MS = 2_500L   // poll interval for the live no-progress watchdog
-        const val LIVE_STALL_LIMIT = 4           // polls of no progress (~10s) before treating it as a stall
+        // Poll interval and limit for the live no-progress watchdog, device-tiered the way
+        // [PlayerBudget] tiers memory. The pair is chosen so the DETECTION TIME barely moves while the
+        // number of wake-ups drops on the hardware that can least afford them:
+        //
+        //   normal   4 × 2,500ms = 10.0s to a verdict, 24 wake-ups per minute
+        //   lowSpec  3 × 4,000ms = 12.0s to a verdict, 15 wake-ups per minute
+        //
+        // Two extra seconds on a frozen channel is not perceptible next to the reconnect that follows;
+        // a third fewer JNI round-trips on a 2 GB TV is. Read through [liveStallPollMs]/[liveStallLimit],
+        // never directly — the tier is a property of the device, not a compile-time constant.
+        const val LIVE_STALL_POLL_MS = 2_500L
+        const val LIVE_STALL_LIMIT = 4
+        const val LIVE_STALL_POLL_LOW_SPEC_MS = 4_000L
+        const val LIVE_STALL_LIMIT_LOW_SPEC = 3
         const val MAX_LIVE_RECONNECTS = 6        // consecutive stall-reconnects before the error UI takes over
         // Identical reconnects that must fail before a live stall is treated as a damaged mux rather than a
         // flaky network. Halfway through the budget: late enough that a transient blip has had its chances,
@@ -346,9 +360,10 @@ class OwnTVPlayer(
         const val DECODER_RELEASE_MS = 600L        // outgoing engine's MediaCodec release (engine swap / next episode)
         const val SURFACE_HANDOFF_MS = 500L        // shorter release wait on the surface-attach handoff paths
         const val CORE_RESET_SETTLE_MS = 500L      // fresh mpv core + recreated surface settle after a hard reset
-        const val EXO_POSITION_TICK_MS = 500L      // ExoPlayer position/duration emit interval while Exo is active
-        const val EXO_FPS_RECHECK_MS = 1_500L      // retry the fps chip once a measurement window can have elapsed
+        // The Exo position emit (500ms) and the fps-chip recheck (1,500ms) used to live here. Both now
+        // ride [PlayerHeartbeat]'s shared 1 Hz beat, so neither has an interval of its own any more.
         const val EXO_SUB_DELAY_DEBOUNCE_MS = 350L // settle time before a timing change re-prepares on Exo (§8)
+        const val FREEZE_MAX_W = 960               // capture width cap for the engine-swap freeze frame
         const val SURROUND_CHECK_MS = 7_000L       // wait before verifying surround audio actually produces sound
         // Window the audio clock is sampled over for the "sink accepted the format then played silence"
         // check. Long enough that a single stalled packet can't fake a freeze, short enough that a user
@@ -1075,6 +1090,12 @@ class OwnTVPlayer(
     // resets to 0 once playback is healthy again (or on a genuinely new item).
     private var liveStallJob: Job? = null
     private var liveStallReconnects = 0
+
+    /** The live no-progress watchdog's cadence for THIS device — see the companion constants for the
+     *  two tiers and the detection time each produces. `lowSpec` is the same test [PlayerBudget] uses. */
+    private val lowSpecDevice: Boolean get() = playerBudget?.lowSpec == true
+    private val liveStallPollMs: Long get() = if (lowSpecDevice) LIVE_STALL_POLL_LOW_SPEC_MS else LIVE_STALL_POLL_MS
+    private val liveStallLimit: Int get() = if (lowSpecDevice) LIVE_STALL_LIMIT_LOW_SPEC else LIVE_STALL_LIMIT
     // Catch-up/VOD streams that start mid-GOP (no H.264 SPS/PPS yet) can play audio with a blank video.
     // We try a software-decode reload once before surfacing an error, tracked per item.
     @Volatile private var triedSoftwareForVideo = false
@@ -1395,9 +1416,10 @@ class OwnTVPlayer(
     /**
      * Replace the freeze frame, recycling the one it replaces (A-F14).
      *
-     * The bitmap is a full-size `ARGB_8888` — ~33 MB at 4K. It was recycled only on the PixelCopy failure
-     * branch, so every *successful* handoff left the previous one to the garbage collector, and a session
-     * of engine switches on a 4K film walked the heap up in 33 MB steps.
+     * The bitmap is an `ARGB_8888` captured at up to [FREEZE_MAX_W] wide (~2 MB; it used to be captured
+     * full-size, ~33 MB at 4K). It was recycled only on the PixelCopy failure branch, so every
+     * *successful* handoff left the previous one to the garbage collector, and a session of engine
+     * switches on a 4K film walked the heap up a step at a time.
      *
      * Recycling here is safe because the only consumer draws it from `freezeFrame` and is unmounted before
      * the value changes: the swap sets it once, and it is cleared when ExoPlayer renders its first frame
@@ -1438,8 +1460,15 @@ class OwnTVPlayer(
             updateAspect()
             _videoRes.value = resolutionLabel(height, width)
             updateStreamChips() // onVideoFps may never fire; don't wait on it for resolution/measured fps
-            val gen = loadGeneration // a measured fps needs a rendered-frame window, so retry once it can exist
-            scope.launch { delay(EXO_FPS_RECHECK_MS); if (gen == loadGeneration && exoActive) updateStreamChips() }
+            // A measured fps needs a rendered-frame window, so retry once one can have elapsed. Waiting on
+            // the shared beat rather than a timer of its own: while Exo is active that beat is already
+            // running for the position readout, so this costs no wake-up at all (P-F1). Two beats, not
+            // one — the first may arrive immediately from the replay cache.
+            val gen = loadGeneration
+            scope.launch {
+                PlayerHeartbeat.beat.drop(1).first()
+                if (gen == loadGeneration && exoActive) updateStreamChips()
+            }
         }
         override fun onPositionDuration(positionMs: Long, durationMs: Long) {
             _position.value = positionMs
@@ -2058,8 +2087,15 @@ class OwnTVPlayer(
             android.util.Log.w(TAG, "freeze-frame skipped: surface=${surface != null} size=${w}x$h sdk=${android.os.Build.VERSION.SDK_INT}")
             block(); return
         }
-        val bmp = runCatching { android.graphics.Bitmap.createBitmap(w, h, android.graphics.Bitmap.Config.ARGB_8888) }.getOrNull()
-        if (bmp == null) { android.util.Log.w(TAG, "freeze-frame skipped: bitmap alloc failed ${w}x$h"); block(); return }
+        // PixelCopy scales into whatever destination it is given, and the frame is drawn with
+        // FillBounds over the same geometry, so a reduced capture looks the same. At 4K a full-size
+        // ARGB_8888 bitmap is ~33 MB allocated, copied and thrown away for a 250 ms placeholder that
+        // sits behind a decoder switch; capped at FREEZE_MAX_W it is under 4 MB.
+        val scale = minOf(1f, FREEZE_MAX_W.toFloat() / w)
+        val cw = (w * scale).toInt().coerceAtLeast(1)
+        val ch = (h * scale).toInt().coerceAtLeast(1)
+        val bmp = runCatching { android.graphics.Bitmap.createBitmap(cw, ch, android.graphics.Bitmap.Config.ARGB_8888) }.getOrNull()
+        if (bmp == null) { android.util.Log.w(TAG, "freeze-frame skipped: bitmap alloc failed ${cw}x$ch"); block(); return }
         var proceeded = false
         val proceed = { if (!proceeded) { proceeded = true; block() } }
         runCatching {
@@ -2073,10 +2109,24 @@ class OwnTVPlayer(
         freezeHandler.postDelayed({ proceed() }, 250)
     }
 
+    /**
+     * Publish ExoPlayer's position/duration on the shared cosmetic beat. Was its own 500 ms loop; the
+     * readout it feeds is a clock face on a television, where 1 Hz is indistinguishable and the extra
+     * wake-up is not (see [PlayerHeartbeat]).
+     *
+     * **It keeps running while the HUD is hidden, deliberately.** It looks cosmetic and is not: the
+     * resume position written by `saveProgressNow` and the end-of-file check in [onExoEnded] both read
+     * [position], and a film is watched with the HUD hidden almost the whole time. Suspending this
+     * would silently save resume points from wherever the HUD was last open. Only the genuinely
+     * cosmetic readers — the stream-info overlay and the chip refresh — are gated on visibility.
+     */
     private fun startExoTick() {
         exoTickJob?.cancel()
         exoTickJob = scope.launch {
-            while (exoActive) { exoEngine?.emitPositionDuration(); delay(EXO_POSITION_TICK_MS) }
+            PlayerHeartbeat.beat.collect {
+                if (!exoActive) return@collect
+                exoEngine?.emitPositionDuration()
+            }
         }
     }
 
@@ -2846,7 +2896,7 @@ class OwnTVPlayer(
                 // as the freeze watchdog above.
                 var noVideoStalls = 0
                 while (gen == loadGeneration) {
-                    delay(LIVE_STALL_POLL_MS)
+                    delay(liveStallPollMs)
                     if (gen != loadGeneration || !isLiveContent) return@launch
                     if (expectingPlayback) {
                         val openingMs = System.currentTimeMillis() - loadStartTime
@@ -2877,8 +2927,8 @@ class OwnTVPlayer(
                     val pos = _position.value
                     if (pos > 0 && pos == lastPos) {
                         // No progress since the last poll.
-                        if (++stalls < LIVE_STALL_LIMIT) continue
-                        val frozenMs = LIVE_STALL_LIMIT * LIVE_STALL_POLL_MS
+                        if (++stalls < liveStallLimit) continue
+                        val frozenMs = liveStallLimit * liveStallPollMs
                         if (!connectivity.isOnlineNow()) {
                             // Offline: keep the spinner up and wait for the network rather than burning the
                             // reconnect budget on a dead connection (it resumes once connectivity returns).
@@ -2924,8 +2974,8 @@ class OwnTVPlayer(
                         // the picture off, and reporting "no video frame" for it would reconnect a healthy
                         // channel and eventually show a decode error over working audio.
                         if (!_audioOnly.value && currentVideoCodec != null && currentHeightPx == 0) {
-                            if (++noVideoStalls < LIVE_STALL_LIMIT) continue
-                            val elapsedMs = LIVE_STALL_LIMIT * LIVE_STALL_POLL_MS
+                            if (++noVideoStalls < liveStallLimit) continue
+                            val elapsedMs = liveStallLimit * liveStallPollMs
                             LiveDiagnosticsLog.event("no-video (mpv, Live) — audio progressing but no video frame after ~${elapsedMs}ms")
                             if (liveStallReconnects < MAX_LIVE_RECONNECTS) {
                                 liveStallReconnects++
@@ -3250,6 +3300,15 @@ class OwnTVPlayer(
         _isPlaying.value = false
         _buffering.value = false
         _audioOnlyMedia.value = false
+    }
+
+    /** Live TV's fallback ladder has given up on the channel mpv is holding — no rung left, or the whole
+     *  tune ran out of time. Stop the stream and put the failure on screen: mpv can sit on a stream that
+     *  never arrives without ever reporting an error, so the spinner would otherwise never clear. */
+    fun abandonLive(reason: String) {
+        val url = currentUrl
+        stop()
+        _error.value = PlayerErrors.visibleFailure(reason, url, PlaybackFailure.Channel)
     }
 
     /** True while mpv owns a stream (loaded or loading) — i.e. while it may still hold a provider session. */

@@ -13,6 +13,7 @@
     <string name="common_ok">OK</string>
     <string name="common_on">Zapnuto</string>
     <string name="common_off">Vypnuto</string>
+    <string name="common_never">Nikdy</string>
     <string name="common_exit">Ukončit</string>
     <string name="common_resume">Pokračovat</string>
     <string name="common_start_over">Přehrát od začátku</string>

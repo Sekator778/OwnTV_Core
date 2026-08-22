@@ -934,6 +934,8 @@
     <string name="settings_subtitle_color_grey">ধূসর</string>
     <string name="settings_live_preroll">লাইভ স্ট্রিম প্রি-বাফার করুন</string>
     <string name="settings_live_preroll_description">একটি লাইভ চ্যানেল বাজানো শুরু করার আগে এতটুকু ভিডিও সংগ্রহ করা হয়, এবং প্লেব্যাক থেমে গেলে আবারও ততটুকু সংগ্রহ করা হয়। এটি ভিডিওর পরিমাণ, কোনো কাউন্টডাউন নয়। বন্ধ থাকলে সবচেয়ে দ্রুত সম্ভব শুরু হয়।</string>
+    <string name="settings_live_tune_timeout">চ্যানেল ছেড়ে দেওয়ার সময়</string>
+    <string name="settings_live_tune_timeout_description">এই সময়ের মধ্যে কোনও লাইভ চ্যানেলে ছবি না এলে OwnTV চেষ্টা থামিয়ে আপনাকে জানাবে, তার সব প্লেয়ার একে একে চেষ্টা করতে করতে কালো পর্দা দেখিয়ে যাওয়ার বদলে। “কখনও নয়” বেছে নিলে চেষ্টা চলতেই থাকে, আর আপনার প্রদানকারী সরিয়ে ফেলা চ্যানেলে সেটি এক মিনিটেরও বেশি সময় নিতে পারে। প্রদানকারী নিজে যে অপেক্ষা চায়, তা এই সময়ে ধরা হয় না।</string>
     <string name="settings_live_preroll_per_playlist">প্রতি প্লেলিস্টে প্রি-বাফার</string>
     <string name="settings_live_preroll_per_playlist_description">একটি প্লেলিস্টের জন্য উপরের সেটিংটি ওভাররাইড করুন, আর অন্য প্লেলিস্টগুলো দ্রুতই থাকবে।</string>
     <plurals name="settings_live_preroll_overrides">

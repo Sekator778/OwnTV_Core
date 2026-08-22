@@ -13,6 +13,7 @@
     <string name="common_ok">确定</string>
     <string name="common_on">已开启</string>
     <string name="common_off">已关闭</string>
+    <string name="common_never">从不</string>
     <string name="common_exit">退出</string>
     <string name="common_resume">继续</string>
     <string name="common_start_over">从头播放</string>

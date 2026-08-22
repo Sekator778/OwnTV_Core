@@ -24,6 +24,16 @@ class LiveReconnectLadderTest {
     }
 
     @Test
+    fun `the engine's death verdict is its slowest watchdog plus the first reconnect`() {
+        // Live TV's handoff deadline is derived from this, so the two can no longer drift apart the way
+        // they had: a flat 30s handoff against a 12s verdict meant sitting through two of the engine's
+        // own reconnect attempts before the channel was ever offered to the other player.
+        // 12s buffering stall (the slowest of the three checks) + 1.5s before the first retry.
+        assertEquals(13_500L, LivePreviewEngine.DEATH_VERDICT_MS)
+        assertEquals(12_000L + LivePreviewEngine.reconnectDelayMs(1), LivePreviewEngine.DEATH_VERDICT_MS)
+    }
+
+    @Test
     fun `attempts past the ladder hold at the last step`() {
         assertEquals(15_000L, LivePreviewEngine.reconnectDelayMs(6))
         assertEquals(15_000L, LivePreviewEngine.reconnectDelayMs(8))

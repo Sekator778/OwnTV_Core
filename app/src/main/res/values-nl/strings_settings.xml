@@ -934,6 +934,8 @@
     <string name="settings_subtitle_color_grey">Grijs</string>
     <string name="settings_live_preroll">Livestreams vooraf bufferen</string>
     <string name="settings_live_preroll_description">Buffer zoveel video voordat een live zender begint met afspelen, en opnieuw na een hapering. Dit is een hoeveelheid video, geen aftelling. Uit zorgt voor de snelst mogelijke start.</string>
+    <string name="settings_live_tune_timeout">Kanaal opgeven na</string>
+    <string name="settings_live_tune_timeout_description">Als een livekanaal binnen deze tijd geen beeld heeft laten zien, stopt OwnTV met proberen en laat het je weten, in plaats van een zwart scherm te tonen terwijl het alle spelers een voor een afgaat. ‘Nooit’ blijft proberen, wat op een kanaal dat je provider heeft verwijderd ruim een minuut kan duren. Wachttijden waar je provider zelf om vraagt, tellen niet mee.</string>
     <string name="settings_live_preroll_per_playlist">Vooraf bufferen per afspeellijst</string>
     <string name="settings_live_preroll_per_playlist_description">Overschrijf de bovenstaande instelling voor één afspeellijst terwijl je andere afspeellijsten snel blijven.</string>
     <plurals name="settings_live_preroll_overrides">

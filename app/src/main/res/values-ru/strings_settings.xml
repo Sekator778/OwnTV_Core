@@ -968,6 +968,8 @@
     <string name="settings_subtitle_color_grey">Серый</string>
     <string name="settings_live_preroll">Предварительная буферизация прямых эфиров</string>
     <string name="settings_live_preroll_description">Собирает такой объём видео перед началом воспроизведения канала прямого эфира и ещё раз после прерывания. Это объём видео, а не обратный отсчёт. Режим «Выкл.» обеспечивает максимально быстрый запуск.</string>
+    <string name="settings_live_tune_timeout">Прекращать попытки через</string>
+    <string name="settings_live_tune_timeout_description">Если за это время на прямом канале не появилось изображение, OwnTV прекращает попытки и сообщает вам об этом, вместо того чтобы держать чёрный экран, перебирая все свои плееры. «Никогда» продолжает попытки, а на канале, удалённом провайдером, это может занять заметно больше минуты. Ожидание, о котором просит сам провайдер, не учитывается.</string>
     <string name="settings_live_preroll_per_playlist">Предварительная буферизация для плейлиста</string>
     <string name="settings_live_preroll_per_playlist_description">Переопределяет указанную выше настройку для одного плейлиста, сохраняя быстрый запуск остальных плейлистов.</string>
     <plurals name="settings_live_preroll_overrides">

@@ -951,6 +951,8 @@
     <string name="settings_subtitle_color_grey">Gris</string>
     <string name="settings_live_preroll">Precargar transmisiones en vivo</string>
     <string name="settings_live_preroll_description">Acumula esta cantidad de video antes de que un canal en vivo comience a reproducirse, y otra vez después de un tartamudeo. Desactivado mantiene el inicio más rápido posible.</string>
+    <string name="settings_live_tune_timeout">Abandonar un canal después de</string>
+    <string name="settings_live_tune_timeout_description">Si un canal en vivo no ha mostrado imagen para entonces, OwnTV deja de intentarlo y te avisa, en lugar de dejar una pantalla en negro mientras prueba todos sus reproductores. «Nunca» sigue intentándolo, lo que en un canal que tu proveedor eliminó puede tardar bastante más de un minuto. Las esperas que pide tu proveedor no se cuentan.</string>
     <string name="settings_live_preroll_per_playlist">Precargar por lista de reproducción</string>
     <string name="settings_live_preroll_per_playlist_description">Anula el ajuste anterior para una lista de reproducción mientras mantiene rápidas tus demás listas.</string>
     <plurals name="settings_live_preroll_overrides">

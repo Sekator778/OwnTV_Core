@@ -40,6 +40,18 @@ class LiveLadder {
     /** The rungs this tune will walk, after filtering — exposed for tests and diagnostics. */
     val plan: List<Rung> get() = order
 
+    /**
+     * When this tune runs out of time, or null when it has no budget.
+     *
+     * Every rung already had its own timeout, and nothing bounded their sum: four rungs at 20-30 s each
+     * is a minute and a half of black screen on a channel that has been removed from the panel. The
+     * budget is for the WHOLE tune, so however the rungs are spent the user gets an answer at a
+     * predictable moment.
+     *
+     * Time the app deliberately asked the user to wait does not count against it — see [postponeDeadline].
+     */
+    private var deadlineAtMs: Long? = null
+
     fun isSpent(rung: Rung): Boolean = rung in spent
 
     /**
@@ -74,10 +86,15 @@ class LiveLadder {
     suspend fun arm(
         streamUrl: String,
         preference: EnginePreference,
+        /** Whole-tune budget; [NO_BUDGET] (the default) leaves the tune unbounded, as it always was. */
+        budgetMs: Long = NO_BUDGET,
+        /** The caller's clock, passed in so the sequencing stays testable without one. */
+        nowMs: Long = 0L,
         hasHlsAlternative: suspend () -> Boolean,
     ) {
         url = streamUrl
         spent.clear()
+        deadlineAtMs = if (budgetMs <= NO_BUDGET) null else nowMs + budgetMs
         val base = if (preference.startsOnMpv) {
             listOf(Rung.MPV_HLS, Rung.MPV_TS, Rung.EXO_HLS, Rung.EXO_TS)
         } else {
@@ -103,6 +120,25 @@ class LiveLadder {
     /** False once a newer tune owns the ladder, so a late failure from the old one cannot advance it. */
     fun owns(streamUrl: String): Boolean = url == streamUrl
 
+    /** True once this tune has spent its whole budget; [advance] then refuses to climb any further. */
+    fun expired(nowMs: Long): Boolean = deadlineAtMs?.let { nowMs >= it } == true
+
+    /** The moment this tune runs out, on the caller's clock, or null when it is unbounded. Re-read rather
+     *  than cached by the caller's timer, so a [postponeDeadline] moves the alarm with it. */
+    fun deadlineAt(): Long? = deadlineAtMs
+
+    /**
+     * Give the tune [byMs] more time, because the wait that just happened was one OwnTV asked for.
+     *
+     * The case this exists for is a provider back-off: an HTTP 429 with a `Retry-After` is the panel
+     * naming the second at which the channel frees up, and the engine is counting it down behind the
+     * spinner. Charging that wait to the budget would abandon a perfectly good channel over a delay the
+     * app itself agreed to.
+     */
+    fun postponeDeadline(byMs: Long) {
+        deadlineAtMs = deadlineAtMs?.plus(byMs)
+    }
+
     /**
      * The next untried rung, marked spent, or null when the ladder is exhausted (the caller then leaves
      * the failure on screen — there is genuinely nothing left).
@@ -124,8 +160,13 @@ class LiveLadder {
      *     the channel to open. (Owner-observed; the handoff is the fix, not a formality.)
      *
      * If only same-engine rungs remain, one is taken anyway — a doomed attempt beats giving up early.
+     *
+     * A tune that has spent its whole budget stops here whatever rungs are left ([expired]): the point
+     * of the budget is that the total is bounded, which a "one more rung, it's nearly free" exception
+     * would immediately undo.
      */
-    fun advance(failureWasAboutFormat: Boolean = true): Rung? {
+    fun advance(failureWasAboutFormat: Boolean = true, nowMs: Long = 0L): Rung? {
+        if (expired(nowMs)) return null
         val here = current
         val next = when {
             failureWasAboutFormat || here == null -> order.firstOrNull { it !in spent }
@@ -148,5 +189,17 @@ class LiveLadder {
         Rung.EXO_TS -> "ExoPlayer + TS"
         Rung.MPV_HLS -> "mpv + HLS"
         Rung.MPV_TS -> "mpv + TS"
+    }
+
+    companion object {
+        /** An unbounded tune — every rung gets its own timeout and nothing bounds their sum. */
+        const val NO_BUDGET = 0L
+
+        /** Settings → "Give up after", in seconds. Long enough for a 4K channel on a distant panel to
+         *  open, short enough that a removed channel is not ninety seconds of black screen. */
+        const val DEFAULT_BUDGET_SECS = 30
+
+        /** The values offered in Settings; 0 is "Never", the unbounded behaviour that shipped before. */
+        val BUDGET_CHOICES_SECS = listOf(15, 30, 60, 0)
     }
 }

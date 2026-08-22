@@ -27,6 +27,8 @@
     <string name="common_on">On</string>
     <!-- Translators: Compact state label for "disabled" used in settings toggles and chips. This is a state, not a command. -->
     <string name="common_off">Off</string>
+    <!-- Translators: Compact label for an option that switches a time limit off entirely, i.e. "wait forever". Used as a choice alongside durations such as "15 seconds". -->
+    <string name="common_never">Never</string>
     <!-- Translators: Generic exit action or button label. -->
     <string name="common_exit">Exit</string>
     <!-- Translators: Imperative button label to resume playback or resume a paused download. -->

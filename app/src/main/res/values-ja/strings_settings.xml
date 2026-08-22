@@ -917,6 +917,8 @@
     <string name="settings_subtitle_color_grey">グレー</string>
     <string name="settings_live_preroll">ライブストリームを事前バッファリング</string>
     <string name="settings_live_preroll_description">ライブチャンネルの再生開始前に、この量の映像をバッファリングします。また、カクついた後にもう一度バッファリングします。これは映像の量であり、カウントダウンではありません。オフにすると、最も速く再生を開始できます。</string>
+    <string name="settings_live_tune_timeout">チャンネルを諦めるまでの時間</string>
+    <string name="settings_live_tune_timeout_description">この時間までにライブチャンネルの映像が出ない場合、OwnTV はすべてのプレーヤーを順に試して黒い画面を映し続ける代わりに、試行をやめてお知らせします。「しない」を選ぶと試行を続けるため、プロバイダーが削除したチャンネルでは 1 分をゆうに超えることがあります。プロバイダー側から求められた待ち時間は含みません。</string>
     <string name="settings_live_preroll_per_playlist">プレイリストごとの事前バッファリング</string>
     <string name="settings_live_preroll_per_playlist_description">上記の設定を1つのプレイリストだけ上書きし、他のプレイリストは高速なままにできます。</string>
     <plurals name="settings_live_preroll_overrides">

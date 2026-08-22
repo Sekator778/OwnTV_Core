@@ -295,6 +295,68 @@ class LiveLadderTest {
         assertEquals(Rung.MPV_TS, ladder.advance())
     }
 
+    // ---- the whole-tune budget -------------------------------------------------------------------
+
+    private fun budgetedLadder(url: String, budgetMs: Long = 30_000L, armedAtMs: Long = 1_000L) =
+        LiveLadder().also { runBlocking { it.arm(url, EnginePreference.EXO_FIRST, budgetMs, armedAtMs) { true } } }
+
+    @Test
+    fun `a tune that has spent its budget climbs no further, however many rungs are left`() {
+        // The audit item: four rungs at 20-30s each is ~95s of black screen on a removed channel, because
+        // every rung had a timeout and nothing bounded their sum.
+        val ladder = budgetedLadder("http://q.test/live/1.ts")
+        assertEquals(Rung.EXO_TS, ladder.advance(nowMs = 20_000L)) // inside the budget
+        assertTrue(ladder.expired(31_000L))
+        assertNull(ladder.advance(nowMs = 31_000L))
+        // Two rungs were still unspent — the budget, not exhaustion, is what stopped it.
+        assertFalse(ladder.isSpent(Rung.MPV_HLS))
+        assertFalse(ladder.isSpent(Rung.MPV_TS))
+    }
+
+    @Test
+    fun `a tune inside its budget is completely unaffected`() {
+        val ladder = budgetedLadder("http://r.test/live/1.ts")
+        assertFalse(ladder.expired(1_000L))
+        assertEquals(Rung.EXO_TS, ladder.advance(nowMs = 5_000L))
+        assertEquals(Rung.MPV_HLS, ladder.advance(nowMs = 10_000L))
+        assertEquals(Rung.MPV_TS, ladder.advance(nowMs = 20_000L))
+        assertNull(ladder.advance(nowMs = 25_000L)) // exhausted on its own terms, not expired
+        assertFalse(ladder.expired(25_000L))
+    }
+
+    @Test
+    fun `the budget is bounded but the ladder still terminates without one`() {
+        // NO_BUDGET is the old behaviour verbatim, and it is what every other test in this file uses:
+        // the finiteness property has to come from the rungs themselves, never from the clock.
+        val ladder = LiveLadder().also {
+            runBlocking { it.arm("http://s.test/live/1.ts", EnginePreference.EXO_FIRST, LiveLadder.NO_BUDGET, 0L) { true } }
+        }
+        assertFalse(ladder.expired(Long.MAX_VALUE))
+        repeat(3) { assertTrue(ladder.advance(nowMs = Long.MAX_VALUE) != null) }
+        assertNull(ladder.advance(nowMs = Long.MAX_VALUE))
+    }
+
+    @Test
+    fun `a wait the app asked for is given back, so a provider back-off cannot expire the tune`() {
+        // HTTP 429 + Retry-After is the panel naming the second the channel frees up, and the engine is
+        // counting it down behind the spinner. Charging that to the budget would abandon a good channel.
+        val ladder = budgetedLadder("http://y.test/live/1.ts")
+        ladder.postponeDeadline(60_000L)
+        assertFalse(ladder.expired(31_000L))
+        assertEquals(Rung.EXO_TS, ladder.advance(nowMs = 31_000L))
+        assertTrue(ladder.expired(91_001L)) // still bounded, just later
+    }
+
+    @Test
+    fun `re-arming starts a fresh budget — a new tune is a new chance at the clock too`() {
+        val url = "http://z.test/live/1.ts"
+        val ladder = budgetedLadder(url)
+        assertTrue(ladder.expired(40_000L))
+        runBlocking { ladder.arm(url, EnginePreference.EXO_FIRST, 30_000L, 40_000L) { true } }
+        assertFalse(ladder.expired(40_000L))
+        assertEquals(Rung.EXO_TS, ladder.advance(nowMs = 50_000L))
+    }
+
     @Test
     fun `every rung carries an engine and format label for the playback log`() {
         val ladder = LiveLadder()

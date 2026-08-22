@@ -22,7 +22,19 @@ object LiveDiagnosticsLog {
     @Volatile var enabled: Boolean = BuildConfig.DEBUG || BuildConfig.DIAGNOSTIC_BUILD
 
     private const val MAX_EVENTS = 1000
+
+    /**
+     * Rolling-file cap, device-tiered like [PlayerBudget]'s memory budget.
+     *
+     * Rolling the file means reading all of it back and rewriting the half worth keeping, so the cap is
+     * also the size of the read/write burst that happens on whichever thread logged the line that
+     * overflowed it. On a 2 GB TV, halving it halves that burst; on anything larger the extra history is
+     * worth having when a hang has to be diagnosed after the fact.
+     */
     private const val MAX_FILE_BYTES = 256 * 1024L
+    private const val MAX_FILE_BYTES_LOW_SPEC = 128 * 1024L
+
+    @Volatile private var maxFileBytes = MAX_FILE_BYTES
     private val ring = ArrayDeque<String>()
     private val lock = Any()
     private val timeFmt = SimpleDateFormat("MM-dd HH:mm:ss.SSS", Locale.US)
@@ -31,6 +43,7 @@ object LiveDiagnosticsLog {
     /** Call once with an app [Context] so events can be flushed to [file]. Safe to call repeatedly. */
     fun init(context: Context) {
         if (logFile != null) return
+        maxFileBytes = if (PlayerBudget.of(context).lowSpec) MAX_FILE_BYTES_LOW_SPEC else MAX_FILE_BYTES
         runCatching {
             val dir = File(context.filesDir, "diagnostics").apply { mkdirs() }
             logFile = File(dir, "live_diagnostics.log")
@@ -54,7 +67,7 @@ object LiveDiagnosticsLog {
     private fun writeLine(line: String) {
         val f = logFile ?: return
         runCatching {
-            if (f.exists() && f.length() > MAX_FILE_BYTES) {
+            if (f.exists() && f.length() > maxFileBytes) {
                 val kept = f.readLines().takeLast(MAX_EVENTS / 2)
                 f.writeText(kept.joinToString("\n") + "\n")
             }

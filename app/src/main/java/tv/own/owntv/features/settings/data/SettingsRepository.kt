@@ -194,6 +194,8 @@ class SettingsRepository(private val context: Context, private val localeStore: 
         val LIVE_LATENCY_MODE = stringPreferencesKey("live_latency_mode")
         val LIVE_LATENCY_CUSTOM_SECS = intPreferencesKey("live_latency_custom_secs")
         val LIVE_PREROLL_SECS = intPreferencesKey("live_preroll_secs")
+        // How long a live channel may take to produce a picture before it is called dead. 0 = never.
+        val LIVE_TUNE_TIMEOUT_SECS = intPreferencesKey("live_tune_timeout_secs")
         // v4.1.6 one-shot: reset live latency to the safe Balanced preset. Subsequent user changes are
         // preserved across every later update.
         val LIVE_LATENCY_RESET_416 = booleanPreferencesKey("live_latency_reset_416")
@@ -1592,6 +1594,24 @@ class SettingsRepository(private val context: Context, private val localeStore: 
         context.dataStore.edit { it[Keys.LIVE_PREROLL_SECS] = secs.coerceIn(0, 30) }
     }
 
+    /**
+     * "Give up after": how long a live channel may take to produce a picture before OwnTV stops trying
+     * and shows the error, however many engine/format combinations the fallback ladder has left.
+     *
+     * 0 = Never, the behaviour before this setting existed: each rung keeps its own timeout and nothing
+     * bounds their sum, which on a removed channel is about a minute and a half of black screen. Kept as
+     * an escape hatch for a genuinely slow panel. A provider's own `Retry-After` countdown is never
+     * charged against this.
+     */
+    val liveTuneTimeoutSecs: Flow<Int> = prefsFlow { prefs ->
+        (prefs[Keys.LIVE_TUNE_TIMEOUT_SECS] ?: tv.own.owntv.player.LiveLadder.DEFAULT_BUDGET_SECS)
+            .coerceIn(0, 60)
+    }
+
+    suspend fun setLiveTuneTimeoutSecs(secs: Int) {
+        context.dataStore.edit { it[Keys.LIVE_TUNE_TIMEOUT_SECS] = secs.coerceIn(0, 60) }
+    }
+
     /** Effective live buffer in seconds the engines apply (null = keep engine defaults, i.e. Balanced). */
     val liveBufferSeconds: Flow<Int?> = combine(liveLatencyMode, liveLatencyCustomSecs) { mode, custom ->
         LiveBuffer.effectiveSeconds(LiveLatency.fromName(mode), custom)
@@ -1800,7 +1820,7 @@ class SettingsRepository(private val context: Context, private val localeStore: 
         // The STATIC-mode hidden set rides with backup so a reinstall keeps the user's hidden icons.
         Keys.NAV_MENU_HIDDEN,
     )
-    private val backupIntKeys = listOf(Keys.FOCUS_HIGHLIGHT_WIDTH, Keys.DEFAULT_VOLUME, Keys.SEEK_STEP_SEC, Keys.LIVE_REWIND_STEP_SEC, Keys.UI_ZOOM_PCT, Keys.FONT_SIZE_PCT, Keys.AUDIO_DELAY_MS, Keys.CATCHUP_OFFSET_MIN, Keys.EPG_OFFSET_MIN, Keys.PROXY_PORT, Keys.DNS_PORT, Keys.CH_NAV_UP_SKIP, Keys.CH_NAV_DOWN_SKIP, Keys.MINI_PLAYER_SIZE_PCT, Keys.LIVE_LATENCY_CUSTOM_SECS, Keys.LIVE_PREROLL_SECS, Keys.GLASS_SCOPE, Keys.GLASS_ALPHA, Keys.GLASS_BLUR, Keys.GLASS_HIGHLIGHT, Keys.SUB_BG_OPACITY,
+    private val backupIntKeys = listOf(Keys.FOCUS_HIGHLIGHT_WIDTH, Keys.DEFAULT_VOLUME, Keys.SEEK_STEP_SEC, Keys.LIVE_REWIND_STEP_SEC, Keys.UI_ZOOM_PCT, Keys.FONT_SIZE_PCT, Keys.AUDIO_DELAY_MS, Keys.CATCHUP_OFFSET_MIN, Keys.EPG_OFFSET_MIN, Keys.PROXY_PORT, Keys.DNS_PORT, Keys.CH_NAV_UP_SKIP, Keys.CH_NAV_DOWN_SKIP, Keys.MINI_PLAYER_SIZE_PCT, Keys.LIVE_LATENCY_CUSTOM_SECS, Keys.LIVE_PREROLL_SECS, Keys.LIVE_TUNE_TIMEOUT_SECS, Keys.GLASS_SCOPE, Keys.GLASS_ALPHA, Keys.GLASS_BLUR, Keys.GLASS_HIGHLIGHT, Keys.SUB_BG_OPACITY,
         Keys.PANEL_W_LIVE_CAT, Keys.PANEL_W_LIVE_LIST, Keys.PANEL_W_LIVE_PREVIEW,
         Keys.PANEL_W_MOVIES_CAT, Keys.PANEL_W_MOVIES_LIST, Keys.PANEL_W_MOVIES_PREVIEW,
         Keys.PANEL_W_SERIES_CAT, Keys.PANEL_W_SERIES_LIST, Keys.PANEL_W_SERIES_PREVIEW)

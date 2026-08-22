@@ -22,22 +22,33 @@ class ConnectivityObserver(private val context: Context) {
     private val cm: ConnectivityManager?
         get() = context.getSystemService(Context.CONNECTIVITY_SERVICE) as? ConnectivityManager
 
-    /** A best-effort snapshot of whether the active network has validated internet. */
+    /**
+     * A best-effort snapshot of whether the active network has validated internet.
+     *
+     * Both capabilities are required. `NET_CAPABILITY_INTERNET` only says the interface is *meant* to
+     * carry internet — a TV with the Ethernet cable plugged into a dead router reports it forever.
+     * `NET_CAPABILITY_VALIDATED` is the platform's own verdict that traffic actually reached the
+     * outside, which is the thing the offline warning is about.
+     */
     fun isOnlineNow(): Boolean {
         val manager = cm ?: return true
         val network = manager.activeNetwork ?: return false
-        val caps = manager.getNetworkCapabilities(network) ?: return false
-        val online = caps.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
-        return online
+        return manager.getNetworkCapabilities(network)?.hasInternet() == true
     }
+
+    private fun NetworkCapabilities.hasInternet(): Boolean =
+        hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET) &&
+            hasCapability(NetworkCapabilities.NET_CAPABILITY_VALIDATED)
 
     val isOnline: Flow<Boolean> = callbackFlow {
         val callback = object : ConnectivityManager.NetworkCallback() {
-            override fun onAvailable(network: Network) { trySend(true) }
+            // Every branch answers with the same two-capability test as isOnlineNow(): a callback that
+            // reported plain reachability would immediately overwrite the poll's correct verdict.
+            override fun onAvailable(network: Network) { trySend(isOnlineNow()) }
             override fun onLost(network: Network) { trySend(isOnlineNow()) }
             override fun onUnavailable() { trySend(false) }
             override fun onCapabilitiesChanged(network: Network, caps: NetworkCapabilities) {
-                trySend(caps.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET))
+                trySend(caps.hasInternet())
             }
         }
         trySend(isOnlineNow())

@@ -25,7 +25,8 @@ fun ownTVRenderers(
     softwareFirst: Boolean = false,
 ): DefaultRenderersFactory =
     OwnTVRenderersFactory(context, forceStereo = forceStereo)
-        // Media3 runs MediaCodec asynchronously by default on API 31+, which corrupts (macroblocks)
+        // Media3 runs MediaCodec asynchronously by default on API 31+, and on every Fire TV device
+        // (`com.amazon.hardware.tv_screen`) from API 28 up. That async path corrupts (macroblocks)
         // some UHD-HEVC content on Realtek/Amlogic VPUs — the synchronous path is what players like
         // TiviMate use to avoid it. The corruption is a property of the VPU, not of the transport, so
         // a 4K HEVC *file* needs this exactly as much as a 4K HEVC channel does. Content it still

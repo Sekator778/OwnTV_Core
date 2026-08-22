@@ -13,6 +13,7 @@
     <string name="common_ok">OK</string>
     <string name="common_on">オン</string>
     <string name="common_off">オフ</string>
+    <string name="common_never">しない</string>
     <string name="common_exit">終了</string>
     <string name="common_resume">再開</string>
     <string name="common_start_over">最初から再生</string>

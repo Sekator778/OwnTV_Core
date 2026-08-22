@@ -951,6 +951,8 @@
     <string name="settings_subtitle_color_grey">Cinzento</string>
     <string name="settings_live_preroll">Pré-buffer de transmissões em direto</string>
     <string name="settings_live_preroll_description">Guarda esta quantidade de vídeo antes de um canal em direto começar a reproduzir e novamente após um gaguejo. É uma quantidade de vídeo, não uma contagem decrescente. Desligado mantém o início mais rápido possível.</string>
+    <string name="settings_live_tune_timeout">Desistir de um canal após</string>
+    <string name="settings_live_tune_timeout_description">Se um canal em direto não mostrar imagem até esse tempo, o OwnTV deixa de tentar e avisa-o, em vez de deixar um ecrã preto enquanto percorre todos os seus reprodutores. «Nunca» continua a tentar, o que num canal que o seu fornecedor removeu pode demorar bastante mais de um minuto. As esperas pedidas pelo fornecedor não são contadas.</string>
     <string name="settings_live_preroll_per_playlist">Pré-buffer por lista de reprodução</string>
     <string name="settings_live_preroll_per_playlist_description">Substitua a definição acima para uma lista de reprodução, mantendo as suas outras listas de reprodução rápidas.</string>
     <plurals name="settings_live_preroll_overrides">

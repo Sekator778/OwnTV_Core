@@ -407,11 +407,20 @@ class SubtitleController(
     private fun episodeKey(show: SeriesEntity, ep: EpisodeEntity) =
         "episode:${show.sourceId}:${show.remoteId ?: show.name}:S${ep.seasonNumber}E${ep.episodeNumber}"
 
-    /** OwnTV stores ISO-639-2 (e.g. "eng"); OpenSubtitles wants 2-letter codes (e.g. "en"). */
+    /**
+     * OwnTV stores ISO-639-2 (e.g. "eng"); OpenSubtitles wants 2-letter codes (e.g. "en").
+     *
+     * Covers every language OwnTV itself ships in, so a user whose app is in Czech or Swedish gets the
+     * same filtering an English user does. Both the bibliographic and terminological 639-2 forms are
+     * accepted where they differ (`ces`/`cze`, `deu`/`ger`, …) because tracks and playlists use either.
+     * Norwegian Bokmål maps to "no": that is the code OpenSubtitles carries, not "nb".
+     */
     private fun toTwoLetter(code: String): String? = when (val c = code.lowercase()) {
         "eng" -> "en"; "spa" -> "es"; "fra", "fre" -> "fr"; "deu", "ger" -> "de"; "ita" -> "it"
         "por" -> "pt"; "nld", "dut" -> "nl"; "rus" -> "ru"; "ara" -> "ar"; "hin" -> "hi"
         "zho", "chi" -> "zh"; "jpn" -> "ja"; "kor" -> "ko"; "tur" -> "tr"
+        "ben" -> "bn"; "ces", "cze" -> "cs"; "dan" -> "da"; "mal" -> "ml"
+        "nob", "nor" -> "no"; "pol" -> "pl"; "swe" -> "sv"
         // Already an OpenSubtitles code: "el", or a region-qualified one like "pt-br" / "zh-cn".
         else -> c.takeIf { it.length == 2 || REGION_CODE.matches(it) }
     }

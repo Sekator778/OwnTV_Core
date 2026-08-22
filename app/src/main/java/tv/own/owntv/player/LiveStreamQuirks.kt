@@ -87,14 +87,42 @@ object LiveStreamQuirks {
 
     // --- learned state ---------------------------------------------------------------------------
 
+    /**
+     * The most URL-keyed lessons any one of the sets below will hold.
+     *
+     * Host-keyed sets are naturally bounded — a user has a handful of panels — but a URL-keyed one grows
+     * with every channel ever tuned, and nothing here ever evicted. A long zapping session on a big
+     * playlist is the case that matters. 512 is far beyond any real session: reaching it means learning
+     * a format lesson about five hundred DIFFERENT streams without restarting the app, at which point
+     * the oldest are of no further interest anyway.
+     */
+    private const val MAX_URL_LESSONS = 512
+
+    /**
+     * A URL-keyed lesson set that forgets its oldest entries rather than growing without limit.
+     *
+     * Insertion-ordered, so eviction drops the stream longest ago written off. A lesson recorded during
+     * the tune currently on screen is therefore the newest entry in the set and cannot be evicted unless
+     * five hundred further streams are written off before the channel is consulted again — which cannot
+     * happen inside one tune.
+     */
+    private fun urlLessonSet(): MutableSet<String> = java.util.Collections.synchronizedSet(
+        java.util.Collections.newSetFromMap(
+            object : LinkedHashMap<String, Boolean>(64, 0.75f) {
+                override fun removeEldestEntry(eldest: MutableMap.MutableEntry<String, Boolean>) =
+                    size > MAX_URL_LESSONS
+            },
+        ),
+    )
+
     private val hlsRedirectHosts = ConcurrentHashMap.newKeySet<String>()
     private val segmentRefusingHosts = ConcurrentHashMap.newKeySet<String>()
     private val singleSessionHosts = ConcurrentHashMap.newKeySet<String>()
-    private val brokenTimestampStreams = ConcurrentHashMap.newKeySet<String>()
-    private val noHlsVariantStreams = ConcurrentHashMap.newKeySet<String>()
-    private val noHlsVariantMpvStreams = ConcurrentHashMap.newKeySet<String>()
-    private val tolerantDemuxStreams = ConcurrentHashMap.newKeySet<String>()
-    private val prerollDefeatedStreams = ConcurrentHashMap.newKeySet<String>()
+    private val brokenTimestampStreams = urlLessonSet()
+    private val noHlsVariantStreams = urlLessonSet()
+    private val noHlsVariantMpvStreams = urlLessonSet()
+    private val tolerantDemuxStreams = urlLessonSet()
+    private val prerollDefeatedStreams = urlLessonSet()
     private val softwareArchiveHosts = ConcurrentHashMap.newKeySet<String>()
     private val uaBlockingHosts = ConcurrentHashMap.newKeySet<String>()
     private val providerMessages = ConcurrentHashMap<String, Pair<Int, String>>()

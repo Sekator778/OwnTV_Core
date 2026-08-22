@@ -1002,6 +1002,8 @@
     <string name="settings_subtitle_color_grey">رمادي</string>
     <string name="settings_live_preroll">التخزين المسبق للبث المباشر</string>
     <string name="settings_live_preroll_description">اجمع هذا القدر من الفيديو قبل أن تبدأ القناة المباشرة في التشغيل، ومرة أخرى بعد أي توقف مؤقت. هذه كمية فيديو وليست عدًّا تنازليًا. الإيقاف يضمن أسرع بداية ممكنة.</string>
+    <string name="settings_live_tune_timeout">التخلي عن القناة بعد</string>
+    <string name="settings_live_tune_timeout_description">إذا لم تظهر أي صورة على قناة مباشرة خلال هذه المدة، يتوقف OwnTV عن المحاولة ويخبرك بذلك، بدلاً من ترك شاشة سوداء بينما يجرّب كل مشغّل لديه. الخيار «أبدًا» يواصل المحاولة، وقد يستغرق ذلك أكثر من دقيقة على قناة أزالها مزوّدك. لا تُحتسب فترات الانتظار التي يطلبها المزوّد.</string>
     <string name="settings_live_preroll_per_playlist">التخزين المسبق لكل قائمة تشغيل</string>
     <string name="settings_live_preroll_per_playlist_description">تجاوز الإعداد أعلاه لقائمة تشغيل واحدة مع الحفاظ على سرعة بقية قوائم التشغيل.</string>
     <plurals name="settings_live_preroll_overrides">

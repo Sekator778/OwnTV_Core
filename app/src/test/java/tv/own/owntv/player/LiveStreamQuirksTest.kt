@@ -235,6 +235,26 @@ class LiveStreamQuirksTest {
     }
 
     @Test
+    fun `a URL-keyed lesson set forgets its oldest entries instead of growing forever`() {
+        // These five sets are keyed by stream URL, so they grew with every channel ever tuned and never
+        // evicted anything. Host-keyed sets are naturally bounded and are deliberately left alone.
+        val recent = "http://bound.example:80/live/u/p/99999.ts"
+        LiveStreamQuirks.rememberNoHlsVariant(recent)
+        assertTrue(LiveStreamQuirks.lacksHlsVariant(recent))
+
+        // Well past the cap, all on the same host so nothing else about the panel is being tested.
+        repeat(2_000) { LiveStreamQuirks.rememberNoHlsVariant("http://bound.example:80/live/u/p/$it.ts") }
+
+        // The oldest entries are gone…
+        assertFalse(LiveStreamQuirks.lacksHlsVariant(recent))
+        assertFalse(LiveStreamQuirks.lacksHlsVariant("http://bound.example:80/live/u/p/0.ts"))
+        // …and the newest are still answered correctly, which is the only property that matters: a
+        // lesson recorded during the tune on screen is the newest entry there is.
+        assertTrue(LiveStreamQuirks.lacksHlsVariant("http://bound.example:80/live/u/p/1999.ts"))
+        assertTrue(LiveStreamQuirks.lacksHlsVariant("http://bound.example:80/live/u/p/1900.ts"))
+    }
+
+    @Test
     fun `the waits around a handoff are long enough to matter and short enough to feel instant`() {
         // The traced panel needed ~2 s after the other engine's socket closed before it let us back in.
         assertTrue(LivePreviewEngine.SESSION_RELEASE_MS in 1_000L..5_000L)

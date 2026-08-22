@@ -938,6 +938,11 @@ class LivePreviewEngine(
         failLoad("playback kept re-buffering ($detail)")
     }
 
+    /** The fallback ladder has given up on this channel — there is no rung left, or the whole tune ran
+     *  out of time. Same terminal failure as the engine's own, so the HUD shows an error instead of a
+     *  spinner that will never clear. */
+    fun abandon(reason: String) = failLoad(reason)
+
     /** Terminal failure of the current load that is NOT worth another reconnect: stand the watchdogs down
      *  and surface an error so the ViewModel can retry elsewhere (TS variant / mpv) immediately. */
     private fun failLoad(reason: String) {
@@ -2660,6 +2665,21 @@ class LivePreviewEngine(
         private const val PROGRESS_CHECK_MS = 2_500L // poll interval for the silent-freeze watchdog
         private const val FROZEN_LIMIT = 3          // picture frozen this many polls (~7.5s) == a dropped feed
         private const val FREEZE_TIMEOUT_MS = 8_000L // zero forward progress this long while READY == dead feed
+
+        /**
+         * How long this engine takes to decide that a stream which HAS played is gone, and to have made
+         * its first reconnect attempt.
+         *
+         * The buffering stall dominates the two freeze checks (12s against 8s and 3 × 2.5s), and the
+         * first reconnect follows 1.5s after the verdict — so 13.5s in, the engine has already declared
+         * the feed dead once and tried again.
+         *
+         * Public because Live TV's handoff deadline is DERIVED from it rather than guessed: those two
+         * numbers drifted to 30s against 12s, so the ViewModel sat waiting through two of the engine's
+         * own reconnects before offering the channel to the other player.
+         */
+        internal val DEATH_VERDICT_MS: Long =
+            maxOf(STALL_MS, FREEZE_TIMEOUT_MS, FROZEN_LIMIT * PROGRESS_CHECK_MS) + reconnectDelayMs(1)
         private const val NO_VIDEO_TIMEOUT_MS = 8_000L // video track present, zero frames rendered this long == "audio plays, no picture"
         private const val AUDIO_ONLY_CONFIRM_MS = 5_000L // allow late video-track discovery before showing radio badge
         // Re-buffer flap (see [noteRebufferFlap]): this many re-buffers inside the window while the

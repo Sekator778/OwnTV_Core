@@ -13,6 +13,7 @@
     <string name="common_ok">확인</string>
     <string name="common_on">켜짐</string>
     <string name="common_off">꺼짐</string>
+    <string name="common_never">안 함</string>
     <string name="common_exit">종료</string>
     <string name="common_resume">이어보기</string>
     <string name="common_start_over">처음부터 보기</string>

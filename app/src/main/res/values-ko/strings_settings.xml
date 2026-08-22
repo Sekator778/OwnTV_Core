@@ -917,6 +917,8 @@
     <string name="settings_subtitle_color_grey">회색</string>
     <string name="settings_live_preroll">실시간 스트림 미리 버퍼링</string>
     <string name="settings_live_preroll_description">실시간 채널이 재생을 시작하기 전에 이만큼의 영상을 모으고, 끊긴 후에도 다시 모읍니다. 이는 영상 분량이지 카운트다운이 아닙니다. 끄면 가장 빨리 시작할 수 있습니다.</string>
+    <string name="settings_live_tune_timeout">채널 시도를 포기할 시간</string>
+    <string name="settings_live_tune_timeout_description">이 시간까지 실시간 채널에 화면이 나오지 않으면, OwnTV가 가진 재생기를 하나씩 시도하며 검은 화면을 두는 대신 시도를 멈추고 알려 줍니다. ‘안 함’은 계속 시도하므로, 제공업체가 삭제한 채널에서는 1분을 훌쩍 넘길 수 있습니다. 제공업체가 요청한 대기 시간은 포함되지 않습니다.</string>
     <string name="settings_live_preroll_per_playlist">재생목록별 미리 버퍼링</string>
     <string name="settings_live_preroll_per_playlist_description">한 재생목록에 대해서만 위 설정을 재정의하고, 다른 재생목록은 빠르게 유지합니다.</string>
     <plurals name="settings_live_preroll_overrides">

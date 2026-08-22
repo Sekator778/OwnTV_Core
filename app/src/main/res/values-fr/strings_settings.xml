@@ -951,6 +951,8 @@
     <string name="settings_subtitle_color_grey">Gris</string>
     <string name="settings_live_preroll">Précharger les flux en direct</string>
     <string name="settings_live_preroll_description">Mettez de côté cette quantité de vidéo avant qu\'une chaîne en direct ne commence à jouer, puis à nouveau après une saccade. Il s\'agit d\'une quantité de vidéo, pas d\'un compte à rebours. Désactivé garantit le démarrage le plus rapide possible.</string>
+    <string name="settings_live_tune_timeout">Abandonner une chaîne après</string>
+    <string name="settings_live_tune_timeout_description">Si une chaîne en direct n\'a affiché aucune image passé ce délai, OwnTV arrête d\'essayer et vous le dit, au lieu de laisser un écran noir pendant qu\'il passe en revue tous ses lecteurs. « Jamais » continue d\'essayer, ce qui peut prendre bien plus d\'une minute sur une chaîne que votre fournisseur a supprimée. Les attentes demandées par votre fournisseur ne sont pas comptées.</string>
     <string name="settings_live_preroll_per_playlist">Préchargement par liste de lecture</string>
     <string name="settings_live_preroll_per_playlist_description">Remplacez le paramètre ci-dessus pour une liste de lecture tout en gardant vos autres listes de lecture rapides.</string>
     <plurals name="settings_live_preroll_overrides">

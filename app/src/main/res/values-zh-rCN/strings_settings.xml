@@ -917,6 +917,8 @@
     <string name="settings_subtitle_color_grey">灰色</string>
     <string name="settings_live_preroll">预缓冲直播流</string>
     <string name="settings_live_preroll_description">在直播频道开始播放前以及出现卡顿后，先缓冲这么多视频。这是视频数据量，不是倒计时。关闭可获得最快的启动速度。</string>
+    <string name="settings_live_tune_timeout">放弃频道的等待时间</string>
+    <string name="settings_live_tune_timeout_description">如果直播频道在此时间内仍未出画面，OwnTV 会停止尝试并告知你，而不是一边逐个试遍所有播放器一边留着黑屏。选择“从不”会一直尝试，在供应商已下架的频道上可能远超一分钟。供应商自己要求的等待时间不计入其中。</string>
     <string name="settings_live_preroll_per_playlist">按播放列表预缓冲</string>
     <string name="settings_live_preroll_per_playlist_description">可为单个播放列表覆盖上述设置，同时保持其他播放列表快速启动。</string>
     <plurals name="settings_live_preroll_overrides">
