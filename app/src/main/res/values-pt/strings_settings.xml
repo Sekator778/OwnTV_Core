@@ -227,7 +227,7 @@
     <string name="settings_surround_sound">Som surround</string>
     <string name="settings_surround_description">Decodifique Dolby/DTS para som surround (5.1/7.1) com um receiver 5.1/7.1 de verdade. Deixe DESATIVADO para os alto-falantes da TV ou uma soundbar estéreo — o áudio multicanal pode ficar atrasado em relação ao vídeo em algumas TVs/soundbars. Se perder a sincronização, faça um pequeno ajuste em Áudio, no menu do reprodutor → Sincronização A/V.</string>
     <string name="settings_autoplay_next">Reproduzir próximo episódio automaticamente</string>
-    <string name="settings_autoplay_next_description">Quando um episódio terminar, inicie automaticamente o próximo — e continue na temporada seguinte.</string>
+    <string name="settings_autoplay_next_description">Quando um episódio terminar, inicie automaticamente o próximo — e continue na temporada seguinte. A programação retroativa também continua no próximo programa.</string>
     <string name="settings_catchup">Programação retroativa</string>
     <plurals name="settings_catchup_supported">
         <item quantity="one"><xliff:g id="count">%1$d</xliff:g> canal é compatível com programação retroativa · fuso horário e reprodutor para reprodução do arquivo</item>

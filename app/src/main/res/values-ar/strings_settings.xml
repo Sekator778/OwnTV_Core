@@ -230,7 +230,7 @@
     <string name="settings_surround_sound">الصوت المحيطي</string>
     <string name="settings_surround_description">فك ترميز Dolby/DTS إلى صوت محيطي (5.1/7.1) لجهاز استقبال حقيقي يدعم 5.1/7.1. اتركه متوقفًا لسماعات التلفزيون أو مكبّر صوت استريو — قد يتأخر الصوت متعدد القنوات عن الفيديو في بعض أجهزة التلفزيون/مكبّرات الصوت. إذا انحرفت المزامنة، فاضبط قليلًا قائمة الصوت في المشغّل ← مزامنة A/V.</string>
     <string name="settings_autoplay_next">تشغيل الحلقة التالية تلقائيًا</string>
-    <string name="settings_autoplay_next_description">عند انتهاء حلقة، شغّل الحلقة التالية تلقائيًا — وانتقل إلى الموسم التالي.</string>
+    <string name="settings_autoplay_next_description">عند انتهاء حلقة، شغّل الحلقة التالية تلقائيًا — وانتقل إلى الموسم التالي. كما تتابع مشاهدة البث الفائت إلى البرنامج التالي.</string>
     <string name="settings_catchup">مشاهدة البث الفائت</string>
     <plurals name="settings_catchup_supported">
         <item quantity="zero"><xliff:g id="count">%1$d</xliff:g> قناة تدعم مشاهدة البث الفائت · المنطقة الزمنية والمشغّل لتشغيل الأرشيف</item>

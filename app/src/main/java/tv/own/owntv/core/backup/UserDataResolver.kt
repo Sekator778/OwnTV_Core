@@ -24,7 +24,6 @@ import tv.own.owntv.core.database.dao.ProgressDao
 import tv.own.owntv.core.database.dao.ProfileDao
 import tv.own.owntv.core.database.dao.SeriesDao
 import tv.own.owntv.core.database.dao.UserDataExportRow
-import tv.own.owntv.core.database.dao.resolveExistingProfileId
 import tv.own.owntv.core.database.entity.ContentOrderEntity
 import tv.own.owntv.core.database.entity.CustomCategoryMemberEntity
 import tv.own.owntv.core.database.entity.FavoriteEntity
@@ -32,8 +31,18 @@ import tv.own.owntv.core.database.entity.PlaybackProgressEntity
 import tv.own.owntv.core.database.entity.WatchHistoryEntity
 import tv.own.owntv.core.model.MediaType
 
-private val Context.pendingStore: DataStore<Preferences> by preferencesDataStore(name = "owntv_pending_userdata")
-private val PENDING_KEY = stringPreferencesKey("entries")
+/**
+ * Records that could not be attached yet, kept on disk so they outlive the process and heal on a later
+ * sync. Deliberately NOT in the database: the whole point is that the content tables are being
+ * replaced when these are written.
+ *
+ * `internal` rather than private only so the instrumentation test can empty it between cases. A
+ * Preferences DataStore is one instance per file per process, so a test cannot open its own — and
+ * without a way to clear it, one test's unresolved records healed against the next test's fresh
+ * database and every assertion about "how many favorites are there" was counting someone else's.
+ */
+internal val Context.pendingStore: DataStore<Preferences> by preferencesDataStore(name = "owntv_pending_userdata")
+internal val PENDING_KEY = stringPreferencesKey("entries")
 
 /**
  * Backs up and restores the per-profile user data that lives on volatile content ids: favorites,
@@ -298,7 +307,15 @@ class UserDataResolver(
             }
         } ?: return false
 
-        val pid = profileDao.resolveExistingProfileId(e.getLong("p")) ?: return false
+        // The record's own profile or nothing. This used to fall back to whichever profile happened to
+        // be first, which is right for "the active profile was deleted, show me something" but wrong
+        // here: it dumps a deleted profile's favorites, history and resume positions into another
+        // person's account — a Kids profile's content least of all. BackupManager already maps profile
+        // ids itself and skips records with no home on this device; this is the same rule one layer
+        // down. Returns true ("handled") so such a record is dropped rather than retried for ever
+        // against a profile that is never coming back.
+        val pid = e.getLong("p")
+        if (pid < 0 || profileDao.getById(pid) == null) return true
         val at = e.optLong("at", System.currentTimeMillis())
         return runCatching {
             when (e.getString("kind")) {

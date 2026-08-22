@@ -484,7 +484,7 @@
     <!-- Translators: Setting label to auto-play the next episode. -->
     <string name="settings_autoplay_next">Auto-play next episode</string>
     <!-- Translators: Description of the auto-play next episode setting. -->
-    <string name="settings_autoplay_next_description">When an episode ends, automatically start the next one — and roll into the next season.</string>
+    <string name="settings_autoplay_next_description">When an episode ends, automatically start the next one — and roll into the next season. Catch-up plays on to the next programme too.</string>
     <!-- Translators: Section header for catch-up playback settings. -->
     <string name="settings_catchup">Catch-up</string>
     <!-- Translators: Plural text showing how many channels support catch-up. 'count' is the number. -->

@@ -15,6 +15,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import tv.own.owntv.core.model.MediaType
 import tv.own.owntv.core.model.SourceType
+import tv.own.owntv.core.database.entity.TrendingAttemptStatus
 import tv.own.owntv.core.database.entity.TrendingItemEntity
 import tv.own.owntv.core.database.entity.TrendingSnapshotEntity
 import tv.own.owntv.core.database.entity.TrendingSnapshotStatus
@@ -129,6 +130,16 @@ class OwnTVDatabaseMigrationTest {
             assertColumnExists(sqlite, "sources", "stalkerSignature")
             assertTableExists(sqlite, "trending_snapshots")
             assertTableExists(sqlite, "trending_items")
+            // v34: the per-playlist Live TV engine / latency overrides. All three must arrive meaning
+            // "follow the global setting" — nulls for the two modes, the -1 sentinel for the custom
+            // buffer — or an upgrade would silently pin every existing playlist to one engine.
+            assertColumnExists(sqlite, "sources", "liveEnginePreference")
+            assertColumnExists(sqlite, "sources", "liveLatencyMode")
+            assertColumnValue(sqlite, "sources", "liveEnginePreference", 10, null)
+            assertColumnValue(sqlite, "sources", "liveLatencyMode", 10, null)
+            assertColumnValue(sqlite, "sources", "liveLatencyCustomSecs", 10, -1L)
+            // v35: the per-item remembered A/V-sync offset, nullable = "no per-item choice".
+            assertColumnExists(sqlite, "playback_prefs", "audioDelayMs")
             assertIndexExists(sqlite, "index_movies_sourceId_rating_name")
             // v20: direct-tune index on (sourceId, number).
             assertIndexExists(sqlite, "index_channels_sourceId_number")
@@ -187,6 +198,9 @@ class OwnTVDatabaseMigrationTest {
                         candidateFetchedAt = 1_900,
                         generationId = "source-a-2",
                         itemCount = 0,
+                        matchedItemCount = 2,
+                        lastAttemptAt = 2_000,
+                        lastAttemptStatus = TrendingAttemptStatus.BELOW_THRESHOLD,
                     ),
                 )
 
@@ -447,39 +461,7 @@ class OwnTVDatabaseMigrationTest {
     }
 
     private fun openWithAllMigrations() = Room.databaseBuilder(context, OwnTVDatabase::class.java, DB_NAME)
-        .addMigrations(
-            OwnTVDatabase.MIGRATION_1_2,
-            OwnTVDatabase.MIGRATION_2_3,
-            OwnTVDatabase.MIGRATION_3_4,
-            OwnTVDatabase.MIGRATION_4_6,
-            OwnTVDatabase.MIGRATION_6_7,
-            OwnTVDatabase.MIGRATION_7_8,
-            OwnTVDatabase.MIGRATION_8_9,
-            OwnTVDatabase.MIGRATION_9_10,
-            OwnTVDatabase.MIGRATION_10_11,
-            OwnTVDatabase.MIGRATION_11_12,
-            OwnTVDatabase.MIGRATION_12_13,
-            OwnTVDatabase.MIGRATION_13_14,
-            OwnTVDatabase.MIGRATION_14_15,
-            OwnTVDatabase.MIGRATION_15_16,
-            OwnTVDatabase.MIGRATION_16_17,
-            OwnTVDatabase.MIGRATION_17_18,
-            OwnTVDatabase.MIGRATION_18_19,
-            OwnTVDatabase.MIGRATION_19_20,
-            OwnTVDatabase.MIGRATION_20_21,
-            OwnTVDatabase.MIGRATION_21_22,
-            OwnTVDatabase.MIGRATION_22_23,
-            OwnTVDatabase.MIGRATION_23_24,
-            OwnTVDatabase.MIGRATION_24_25,
-            OwnTVDatabase.MIGRATION_25_26,
-            OwnTVDatabase.MIGRATION_26_27,
-            OwnTVDatabase.MIGRATION_27_28,
-            OwnTVDatabase.MIGRATION_28_29,
-            OwnTVDatabase.MIGRATION_29_30,
-            OwnTVDatabase.MIGRATION_30_31,
-            OwnTVDatabase.MIGRATION_31_32,
-            OwnTVDatabase.MIGRATION_32_33,
-        )
+        .addMigrations(*OwnTVDatabase.ALL_MIGRATIONS)
         .allowMainThreadQueries()
         .build()
 
@@ -525,6 +507,8 @@ class OwnTVDatabaseMigrationTest {
         }
     }
 
+    /** A completed, eligible refresh. The attempt fields are explicit because [TrendingDao] rejects a
+     *  replacement that does not describe a successful attempt — they default to "never attempted". */
     private fun trendingState(sourceId: Long, generationId: String) = TrendingSnapshotEntity(
         sourceId = sourceId,
         status = TrendingSnapshotStatus.ELIGIBLE,
@@ -533,6 +517,9 @@ class OwnTVDatabaseMigrationTest {
         candidateFetchedAt = 900,
         generationId = generationId,
         itemCount = 5,
+        matchedItemCount = 5,
+        lastAttemptAt = 1_000,
+        lastAttemptStatus = TrendingAttemptStatus.SUCCESS,
     )
 
     private fun trendingItems(sourceId: Long, generationId: String, titlePrefix: String) =
@@ -703,8 +690,17 @@ class OwnTVDatabaseMigrationTest {
     companion object {
         private const val DB_NAME = "owntv-migration-test.db"
 
-        /** Must match `@Database(version = …)` on [OwnTVDatabase]. */
-        private const val CURRENT_VERSION = 32
+        /**
+         * The end of the migration chain, not a hand-kept number: as a constant this fell three
+         * versions behind, and a stale value here does not fail loudly — it quietly stops testing the
+         * newest hops, which are exactly the ones nobody has upgraded across yet.
+         *
+         * `@Database(version = …)` cannot be read back (Room's annotation is not retained at runtime),
+         * but this is the better source anyway, because it is self-checking: if the chain ever stops
+         * short of the entity version, [everyExportedSchemaVersionMigratesToCurrent] fails on the
+         * version it actually reached instead of silently agreeing with itself.
+         */
+        private val CURRENT_VERSION = OwnTVDatabase.ALL_MIGRATIONS.maxOf { it.endVersion }
 
         /**
          * Every version with an exported schema that a real database can be sitting at.

@@ -227,7 +227,7 @@
     <string name="settings_surround_sound">Son surround</string>
     <string name="settings_surround_description">Décoder Dolby/DTS en son surround (5.1/7.1) pour un véritable récepteur 5.1/7.1. Laissez cette option DÉSACTIVÉE avec les haut-parleurs du téléviseur ou une barre de son stéréo — sur certains téléviseurs et certaines barres de son, le multicanal peut retarder le son par rapport à l’image. En cas de décalage progressif, ajustez le menu Audio du lecteur → Synchronisation A/V.</string>
     <string name="settings_autoplay_next">Lire automatiquement l’épisode suivant</string>
-    <string name="settings_autoplay_next_description">Lorsqu’un épisode se termine, lancer automatiquement le suivant — et passer à la saison suivante.</string>
+    <string name="settings_autoplay_next_description">Lorsqu’un épisode se termine, lancer automatiquement le suivant — et passer à la saison suivante. Le rattrapage enchaîne lui aussi sur le programme suivant.</string>
     <string name="settings_catchup">Rattrapage</string>
     <plurals name="settings_catchup_supported">
         <item quantity="one"><xliff:g id="count">%1$d</xliff:g> chaîne prend en charge le rattrapage · fuseau horaire et lecteur pour la lecture des archives</item>

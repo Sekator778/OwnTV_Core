@@ -226,7 +226,7 @@
     <string name="settings_surround_sound">सराउंड साउंड</string>
     <string name="settings_surround_description">वास्तविक 5.1/7.1 रिसीवर के लिए Dolby/DTS को सराउंड (5.1/7.1) में डिकोड करें। TV स्पीकर या स्टीरियो साउंडबार के लिए इसे बंद रखें — कुछ TV/साउंडबार पर मल्टीचैनल ऑडियो वीडियो से पीछे हो सकता है। यदि सिंक बिगड़ता है, तो प्लेयर के ऑडियो मेन्यू → A/V सिंक को थोड़ा समायोजित करें।</string>
     <string name="settings_autoplay_next">अगला एपिसोड अपने-आप चलाएँ</string>
-    <string name="settings_autoplay_next_description">एपिसोड समाप्त होने पर अगला एपिसोड अपने-आप शुरू करें — और अगला सीज़न भी चलाएँ।</string>
+    <string name="settings_autoplay_next_description">एपिसोड समाप्त होने पर अगला एपिसोड अपने-आप शुरू करें — और अगला सीज़न भी चलाएँ। कैच-अप भी अगले कार्यक्रम पर चलता रहता है।</string>
     <string name="settings_catchup">कैच-अप</string>
     <plurals name="settings_catchup_supported">
         <item quantity="one"><xliff:g id="count">%1$d</xliff:g> चैनल कैच-अप समर्थित करता है · आर्काइव प्लेबैक के लिए समय क्षेत्र और प्लेयर</item>

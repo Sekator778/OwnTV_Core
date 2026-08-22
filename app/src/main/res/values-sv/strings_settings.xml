@@ -226,7 +226,7 @@
     <string name="settings_surround_sound">Surroundljud</string>
     <string name="settings_surround_description">Avkoda Dolby/DTS till surroundljud (5.1/7.1) för en riktig 5.1/7.1-mottagare. Låt vara AV för tv-högtalare eller en soundbar med stereo — flerkanalsljud kan göra att ljudet hamnar efter bilden på vissa tv-apparater/soundbar-högtalare. Om synkroniseringen glider justerar du Spelarens ljudmeny → A/V-synkronisering.</string>
     <string name="settings_autoplay_next">Spela upp nästa avsnitt automatiskt</string>
-    <string name="settings_autoplay_next_description">Starta nästa avsnitt automatiskt när ett avsnitt tar slut — och fortsätt till nästa säsong.</string>
+    <string name="settings_autoplay_next_description">Starta nästa avsnitt automatiskt när ett avsnitt tar slut — och fortsätt till nästa säsong. Tv-arkiv fortsätter också till nästa program.</string>
     <string name="settings_catchup">Tv-arkiv</string>
     <plurals name="settings_catchup_supported">
         <item quantity="one"><xliff:g id="count">%1$d</xliff:g> kanal stöder tv-arkiv · tidszon och spelare för uppspelning från arkivet</item>

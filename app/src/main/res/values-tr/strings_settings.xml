@@ -226,7 +226,7 @@
     <string name="settings_surround_sound">Çevresel ses</string>
     <string name="settings_surround_description">Gerçek bir 5.1/7.1 alıcı için Dolby/DTS sesini çevresel sese (5.1/7.1) dönüştürün. TV hoparlörleri veya stereo soundbar kullanıyorsanız KAPALI bırakın — çok kanallı ses bazı TV\'lerde/soundbar\'larda sesin görüntünün gerisinde kalmasına yol açabilir. Eşitleme kayarsa oynatıcının Ses menüsü → A/V eşitleme ayarını hafifçe değiştirin.</string>
     <string name="settings_autoplay_next">Sonraki bölümü otomatik oynat</string>
-    <string name="settings_autoplay_next_description">Bir bölüm sona erdiğinde sonraki bölümü otomatik olarak başlatın — sezon bitince sonraki sezona geçin.</string>
+    <string name="settings_autoplay_next_description">Bir bölüm sona erdiğinde sonraki bölümü otomatik olarak başlatın — sezon bitince sonraki sezona geçin. Geri izleme de sonraki programla devam eder.</string>
     <string name="settings_catchup">Geri izleme</string>
     <plurals name="settings_catchup_supported">
         <item quantity="one"><xliff:g id="count">%1$d</xliff:g> kanal geri izlemeyi destekliyor · arşiv oynatması için saat dilimi ve oynatıcı</item>

@@ -227,7 +227,7 @@
     <string name="settings_surround_sound">Sonido envolvente</string>
     <string name="settings_surround_description">Descodifica Dolby/DTS como sonido envolvente (5.1/7.1) para un receptor 5.1/7.1 real. Déjalo DESACTIVADO para los altavoces del televisor o una barra de sonido estéreo; en algunos televisores y barras de sonido, el audio multicanal puede retrasarse respecto al vídeo. Si se desincroniza, ajústalo en el menú Audio del reproductor → Sincronización A/V.</string>
     <string name="settings_autoplay_next">Reproducir automáticamente el siguiente episodio</string>
-    <string name="settings_autoplay_next_description">Cuando termine un episodio, inicia automáticamente el siguiente, también al pasar a la siguiente temporada.</string>
+    <string name="settings_autoplay_next_description">Cuando termine un episodio, inicia automáticamente el siguiente, también al pasar a la siguiente temporada. La televisión en diferido también continúa con el siguiente programa.</string>
     <string name="settings_catchup">En diferido</string>
     <plurals name="settings_catchup_supported">
         <item quantity="one"><xliff:g id="count">%1$d</xliff:g> canal admite televisión en diferido · zona horaria y reproductor para contenidos archivados</item>

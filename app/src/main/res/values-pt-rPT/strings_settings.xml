@@ -227,7 +227,7 @@
     <string name="settings_surround_sound">Som surround</string>
     <string name="settings_surround_description">Descodificar Dolby/DTS para som surround (5.1/7.1) num verdadeiro recetor 5.1/7.1. Deixe DESATIVADO para os altifalantes da TV ou uma barra de som estéreo — em alguns televisores/barras de som, o áudio multicanal pode ficar atrasado em relação ao vídeo. Se perder a sincronização, ajuste ligeiramente no menu Áudio do leitor → Sincronização A/V.</string>
     <string name="settings_autoplay_next">Reproduzir automaticamente o episódio seguinte</string>
-    <string name="settings_autoplay_next_description">Quando um episódio terminar, iniciar automaticamente o seguinte — e continuar para a temporada seguinte.</string>
+    <string name="settings_autoplay_next_description">Quando um episódio terminar, iniciar automaticamente o seguinte — e continuar para a temporada seguinte. Os programas em diferido continuam também para o programa seguinte.</string>
     <string name="settings_catchup">Programas em diferido</string>
     <plurals name="settings_catchup_supported">
         <item quantity="one"><xliff:g id="count">%1$d</xliff:g> canal suporta programas em diferido · fuso horário e leitor para reproduzir o arquivo</item>

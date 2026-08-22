@@ -927,6 +927,52 @@ abstract class OwnTVDatabase : RoomDatabase() {
         }
 
         /**
+         * Every migration, in one place, because there are two callers and they must never disagree:
+         * `databaseModule` (the real database) and `OwnTVDatabaseMigrationTest` (the upgrade-path
+         * proof). The test kept its own copy of this list and it silently fell three versions behind,
+         * which left every migration test unable to even open the database — the one check that
+         * guards against wiping a user's profiles and history was red and nobody could see it.
+         *
+         * Declared below the migrations themselves: a companion `val` initialises in source order, so
+         * referencing them from higher up would capture nulls.
+         */
+        val ALL_MIGRATIONS: Array<androidx.room.migration.Migration> = arrayOf(
+            MIGRATION_1_2,
+            MIGRATION_2_3,
+            MIGRATION_3_4,
+            MIGRATION_4_6,
+            MIGRATION_6_7,
+            MIGRATION_7_8,
+            MIGRATION_8_9,
+            MIGRATION_9_10,
+            MIGRATION_10_11,
+            MIGRATION_11_12,
+            MIGRATION_12_13,
+            MIGRATION_13_14,
+            MIGRATION_14_15,
+            MIGRATION_15_16,
+            MIGRATION_16_17,
+            MIGRATION_17_18,
+            MIGRATION_18_19,
+            MIGRATION_19_20,
+            MIGRATION_20_21,
+            MIGRATION_21_22,
+            MIGRATION_22_23,
+            MIGRATION_23_24,
+            MIGRATION_24_25,
+            MIGRATION_25_26,
+            MIGRATION_26_27,
+            MIGRATION_27_28,
+            MIGRATION_28_29,
+            MIGRATION_29_30,
+            MIGRATION_30_31,
+            MIGRATION_31_32,
+            MIGRATION_32_33,
+            MIGRATION_33_34,
+            MIGRATION_34_35,
+        )
+
+        /**
          * Canonical CREATE statements for every NON-unique index Room expects on the four
          * bulk-synced tables, keyed by table (must stay in sync with the current schema JSON).
          * BulkInsertHelper drops exactly these during eligible fresh imports; restore, the

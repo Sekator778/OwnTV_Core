@@ -42,13 +42,18 @@ class ConnectivityObserver(private val context: Context) {
 
     val isOnline: Flow<Boolean> = callbackFlow {
         val callback = object : ConnectivityManager.NetworkCallback() {
-            // Every branch answers with the same two-capability test as isOnlineNow(): a callback that
-            // reported plain reachability would immediately overwrite the poll's correct verdict.
+            // Every branch answers with isOnlineNow(), for two reasons: it applies the same
+            // two-capability test (a callback reporting plain reachability would overwrite the poll's
+            // correct verdict), and it answers for the ACTIVE network. The request below matches every
+            // network with internet, so on a TV with the Ethernet cable in AND Wi-Fi joined, reporting
+            // the callback's own capabilities let the idle interface's state overwrite the one actually
+            // carrying traffic — an offline banner over a working connection until the 20 s poll
+            // corrected it.
             override fun onAvailable(network: Network) { trySend(isOnlineNow()) }
             override fun onLost(network: Network) { trySend(isOnlineNow()) }
             override fun onUnavailable() { trySend(false) }
             override fun onCapabilitiesChanged(network: Network, caps: NetworkCapabilities) {
-                trySend(caps.hasInternet())
+                trySend(isOnlineNow())
             }
         }
         trySend(isOnlineNow())

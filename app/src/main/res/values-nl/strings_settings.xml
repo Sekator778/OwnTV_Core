@@ -226,7 +226,7 @@
     <string name="settings_surround_sound">Surroundsound</string>
     <string name="settings_surround_description">Decodeer Dolby/DTS naar surround (5.1/7.1) voor een echte 5.1/7.1-ontvanger. Laat dit UIT voor tv-luidsprekers of een stereosoundbar — meerkanaalsaudio kan op sommige tv\'s/soundbars achterlopen op het beeld. Als het geluid wegdrijft, pas je dit licht aan via het menu Audio van de speler → A/V-synchronisatie.</string>
     <string name="settings_autoplay_next">Volgende aflevering automatisch afspelen</string>
-    <string name="settings_autoplay_next_description">Wanneer een aflevering eindigt, wordt automatisch de volgende gestart — en daarna het volgende seizoen.</string>
+    <string name="settings_autoplay_next_description">Wanneer een aflevering eindigt, wordt automatisch de volgende gestart — en daarna het volgende seizoen. Ook terugkijken gaat door naar het volgende programma.</string>
     <string name="settings_catchup">Terugkijken</string>
     <plurals name="settings_catchup_supported">
         <item quantity="one"><xliff:g id="count">%1$d</xliff:g> zender ondersteunt terugkijken · tijdzone en speler voor het afspelen van archiefbeelden</item>

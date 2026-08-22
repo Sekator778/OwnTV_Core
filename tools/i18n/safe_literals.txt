@@ -895,9 +895,10 @@
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/dao/FavoriteDao.kt	e.seasonNumber AS seasonNumber, e.episodeNumber AS episodeNumber,
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/dao/FavoriteDao.kt	episodeSeries.remoteId AS seriesRemoteId, episodeSeries.name AS seriesName,
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/dao/FavoriteDao.kt	f.addedAt AS at, 0 AS positionMs, 0 AS durationMs
+1	sql	app/src/main/java/tv/own/owntv/core/database/dao/HistoryDao.kt	(:type = 'EPISODE' AND itemId NOT IN (SELECT id FROM episodes))
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/dao/HistoryDao.kt	(:type = 'LIVE' AND itemId NOT IN (SELECT id FROM channels)) OR
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/dao/HistoryDao.kt	(:type = 'MOVIE' AND itemId NOT IN (SELECT id FROM movies)) OR
-1	room-schema	app/src/main/java/tv/own/owntv/core/database/dao/HistoryDao.kt	(:type = 'SERIES' AND itemId NOT IN (SELECT id FROM series))
+1	sql	app/src/main/java/tv/own/owntv/core/database/dao/HistoryDao.kt	(:type = 'SERIES' AND itemId NOT IN (SELECT id FROM series)) OR
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/dao/HistoryDao.kt	(mediaType = 'LIVE' AND itemId NOT IN (SELECT id FROM channels)) OR
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/dao/HistoryDao.kt	(mediaType = 'MOVIE' AND itemId NOT IN (SELECT id FROM movies)) OR
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/dao/HistoryDao.kt	(mediaType = 'SERIES' AND itemId NOT IN (SELECT id FROM series))
@@ -1013,9 +1014,10 @@
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/dao/ProfileDao.kt	SELECT COUNT(*) FROM profiles
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/dao/ProfileDao.kt	UPDATE profiles SET avatarId = :avatarId WHERE id = :id
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/dao/ProfileDao.kt	UPDATE profiles SET pinHash = :pinHash WHERE id = :id
+1	sql	app/src/main/java/tv/own/owntv/core/database/dao/ProgressDao.kt	(:type = 'EPISODE' AND itemId NOT IN (SELECT id FROM episodes))
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/dao/ProgressDao.kt	(:type = 'LIVE' AND itemId NOT IN (SELECT id FROM channels)) OR
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/dao/ProgressDao.kt	(:type = 'MOVIE' AND itemId NOT IN (SELECT id FROM movies)) OR
-1	room-schema	app/src/main/java/tv/own/owntv/core/database/dao/ProgressDao.kt	(:type = 'SERIES' AND itemId NOT IN (SELECT id FROM series))
+1	sql	app/src/main/java/tv/own/owntv/core/database/dao/ProgressDao.kt	(:type = 'SERIES' AND itemId NOT IN (SELECT id FROM series)) OR
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/dao/ProgressDao.kt	(mediaType = 'LIVE' AND itemId NOT IN (SELECT id FROM channels)) OR
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/dao/ProgressDao.kt	(mediaType = 'MOVIE' AND itemId NOT IN (SELECT id FROM movies)) OR
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/dao/ProgressDao.kt	(mediaType = 'SERIES' AND itemId NOT IN (SELECT id FROM series))

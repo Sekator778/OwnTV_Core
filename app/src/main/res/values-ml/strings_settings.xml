@@ -226,7 +226,7 @@
     <string name="settings_surround_sound">സറൗണ്ട് സൗണ്ട്</string>
     <string name="settings_surround_description">യഥാർഥ 5.1/7.1 റിസീവറിനായി Dolby/DTS സറൗണ്ടിലേക്ക് (5.1/7.1) ഡീകോഡ് ചെയ്യുക. ടിവി സ്പീക്കറുകൾക്കോ സ്റ്റീരിയോ സൗണ്ട്ബാറിനോ ഇത് പ്രവർത്തനരഹിതമായി വിടുക — ചില ടിവികളിലും സൗണ്ട്ബാറുകളിലും മൾട്ടിചാനൽ ശബ്ദം വീഡിയോയെക്കാൾ വൈകാൻ ഇടയാക്കാം. സമന്വയം തെറ്റുകയാണെങ്കിൽ പ്ലെയറിലെ ഓഡിയോ മെനു → A/V സമന്വയം ക്രമീകരിക്കുക.</string>
     <string name="settings_autoplay_next">അടുത്ത എപ്പിസോഡ് സ്വയം പ്ലേ ചെയ്യുക</string>
-    <string name="settings_autoplay_next_description">ഒരു എപ്പിസോഡ് അവസാനിക്കുമ്പോൾ അടുത്തത് സ്വയം ആരംഭിക്കുക — തുടർന്ന് അടുത്ത സീസണിലേക്കും കടക്കുക.</string>
+    <string name="settings_autoplay_next_description">ഒരു എപ്പിസോഡ് അവസാനിക്കുമ്പോൾ അടുത്തത് സ്വയം ആരംഭിക്കുക — തുടർന്ന് അടുത്ത സീസണിലേക്കും കടക്കുക. ക്യാച്ച്-അപ്പും അടുത്ത പ്രോഗ്രാമിലേക്ക് തുടരും.</string>
     <string name="settings_catchup">ക്യാച്ച്-അപ്പ്</string>
     <plurals name="settings_catchup_supported">
         <item quantity="one"><xliff:g id="count">%1$d</xliff:g> ചാനൽ ക്യാച്ച്-അപ്പ് പിന്തുണയ്ക്കുന്നു · ആർക്കൈവ് പ്ലേബാക്കിനുള്ള സമയമേഖലയും പ്ലെയറും</item>

@@ -226,7 +226,7 @@
     <string name="settings_surround_sound">সারাউন্ড সাউন্ড</string>
     <string name="settings_surround_description">প্রকৃত 5.1/7.1 রিসিভারের জন্য Dolby/DTS অডিও সারাউন্ডে (5.1/7.1) ডিকোড করুন। TV স্পিকার বা স্টেরিও সাউন্ডবারের জন্য বন্ধ রাখুন — কিছু TV/সাউন্ডবারে মাল্টিচ্যানেল অডিও ভিডিওর চেয়ে পিছিয়ে যেতে পারে। তাল হারালে প্লেয়ারের অডিও মেনু → A/V সিঙ্ক সামান্য সমন্বয় করুন।</string>
     <string name="settings_autoplay_next">পরের পর্ব স্বয়ংক্রিয়ভাবে চালান</string>
-    <string name="settings_autoplay_next_description">একটি পর্ব শেষ হলে পরেরটি স্বয়ংক্রিয়ভাবে চালান — এবং পরের সিজনেও চলে যান।</string>
+    <string name="settings_autoplay_next_description">একটি পর্ব শেষ হলে পরেরটি স্বয়ংক্রিয়ভাবে চালান — এবং পরের সিজনেও চলে যান। ক্যাচ-আপও পরের অনুষ্ঠানে চলতে থাকে।</string>
     <string name="settings_catchup">ক্যাচ-আপ</string>
     <plurals name="settings_catchup_supported">
         <item quantity="one"><xliff:g id="count">%1$d</xliff:g>টি চ্যানেল ক্যাচ-আপ সমর্থন করে · আর্কাইভ প্লেব্যাকের জন্য সময় অঞ্চল ও প্লেয়ার</item>

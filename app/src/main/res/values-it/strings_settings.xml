@@ -227,7 +227,7 @@
     <string name="settings_surround_sound">Audio surround</string>
     <string name="settings_surround_description">Decodifica Dolby/DTS in surround (5.1/7.1) per un vero ricevitore 5.1/7.1. Lascia l\'opzione DISATTIVATA per gli altoparlanti della TV o una soundbar stereo — su alcuni TV o soundbar, l\'audio multicanale può risultare in ritardo rispetto al video. Se perde la sincronizzazione, regola leggermente Menu Audio del player → Sincronizzazione A/V.</string>
     <string name="settings_autoplay_next">Riproduci automaticamente l\'episodio successivo</string>
-    <string name="settings_autoplay_next_description">Al termine di un episodio, avvia automaticamente quello successivo — passando anche alla stagione seguente.</string>
+    <string name="settings_autoplay_next_description">Al termine di un episodio, avvia automaticamente quello successivo — passando anche alla stagione seguente. Anche la visione in differita prosegue con il programma successivo.</string>
     <string name="settings_catchup">Visione in differita</string>
     <plurals name="settings_catchup_supported">
         <item quantity="one"><xliff:g id="count">%1$d</xliff:g> canale supporta la visione in differita · fuso orario e player per la riproduzione dell\'archivio</item>

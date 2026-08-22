@@ -225,7 +225,7 @@
     <string name="settings_surround_sound">環繞音效</string>
     <string name="settings_surround_description">針對真正的 5.1/7.1 接收器，將 Dolby/DTS 解碼為環繞音效（5.1/7.1）。使用電視揚聲器或立體聲聲霸時請保持關閉 — 多聲道音訊在部分電視／聲霸上可能落後於畫面。如果音訊逐漸不同步，請微調播放器的「音訊」選單 → A/V 同步。</string>
     <string name="settings_autoplay_next">自動播放下一集</string>
-    <string name="settings_autoplay_next_description">一集播放完畢時自動開始播放下一集 — 並在本季結束後接續下一季。</string>
+    <string name="settings_autoplay_next_description">一集播放完畢時自動開始播放下一集 — 並在本季結束後接續下一季。回看也會接續播放下一個節目。</string>
     <string name="settings_catchup">回看</string>
     <plurals name="settings_catchup_supported">
         <item quantity="other"><xliff:g id="count">%1$d</xliff:g> 個頻道支援回看 · 封存播放所使用的時區和播放器</item>

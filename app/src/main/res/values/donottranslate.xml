@@ -14,6 +14,9 @@
     <string name="settings_degree_fahrenheit" translatable="false">°F</string>
     <string name="player_engine_mpv" translatable="false">MPV</string>
     <string name="player_engine_exo" translatable="false">EXO</string>
+    <!-- The −/+ glyphs on every stepper control: mathematical symbols, identical in every language. -->
+    <string name="common_stepper_minus" translatable="false">–</string>
+    <string name="common_stepper_plus" translatable="false">+</string>
     <!-- Typeface names in the font picker: proper nouns, identical in every language. -->
     <string name="settings_font_lora" translatable="false">Lora</string>
     <string name="settings_font_playfair_display" translatable="false">Playfair Display</string>

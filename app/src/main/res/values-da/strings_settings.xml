@@ -226,7 +226,7 @@
     <string name="settings_surround_sound">Surroundsound</string>
     <string name="settings_surround_description">Afkod Dolby/DTS til surround (5.1/7.1) til en rigtig 5.1/7.1-receiver. Lad funktionen være SLÅET FRA ved tv-højttalere eller en stereosoundbar — flerkanalslyd kan på nogle tv\'er og soundbarer få lyden til at halte efter billedet. Hvis synkroniseringen forskydes, skal du finjustere den i afspillerens menu Lyd → A/V-synkronisering.</string>
     <string name="settings_autoplay_next">Afspil næste afsnit automatisk</string>
-    <string name="settings_autoplay_next_description">Når et afsnit slutter, startes det næste automatisk — og afspilningen fortsætter ind i næste sæson.</string>
+    <string name="settings_autoplay_next_description">Når et afsnit slutter, startes det næste automatisk — og afspilningen fortsætter ind i næste sæson. Arkiv fortsætter også til næste program.</string>
     <string name="settings_catchup">Arkiv</string>
     <plurals name="settings_catchup_supported">
         <item quantity="one"><xliff:g id="count">%1$d</xliff:g> kanal understøtter arkiv · tidszone og afspiller til afspilning fra arkivet</item>

@@ -228,7 +228,7 @@
     <string name="settings_surround_sound">Dźwięk przestrzenny</string>
     <string name="settings_surround_description">Dekoduj Dolby/DTS do dźwięku przestrzennego (5.1/7.1) dla prawdziwego amplitunera 5.1/7.1. Pozostaw WYŁĄCZONE w przypadku głośników telewizora lub stereofonicznego soundbara — dźwięk wielokanałowy może być opóźniony względem obrazu na niektórych telewizorach i soundbarach. Jeśli synchronizacja się rozjeżdża, skoryguj ją w menu Dźwięk odtwarzacza → Synchronizacja A/V.</string>
     <string name="settings_autoplay_next">Automatycznie odtwarzaj następny odcinek</string>
-    <string name="settings_autoplay_next_description">Po zakończeniu odcinka automatycznie rozpocznij następny — również z kolejnego sezonu.</string>
+    <string name="settings_autoplay_next_description">Po zakończeniu odcinka automatycznie rozpocznij następny — również z kolejnego sezonu. Oglądanie wstecz również przechodzi do następnej audycji.</string>
     <string name="settings_catchup">Oglądanie wstecz</string>
     <plurals name="settings_catchup_supported">
         <item quantity="one"><xliff:g id="count">%1$d</xliff:g> kanał obsługuje oglądanie wstecz · strefa czasowa i odtwarzacz do odtwarzania z archiwum</item>

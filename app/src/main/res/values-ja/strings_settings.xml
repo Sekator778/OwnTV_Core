@@ -225,7 +225,7 @@
     <string name="settings_surround_sound">サラウンドサウンド</string>
     <string name="settings_surround_description">実際の5.1/7.1対応レシーバー向けにDolby/DTSをサラウンド（5.1/7.1）へデコードします。TVスピーカーまたはステレオサウンドバーではオフのままにしてください。一部のTV／サウンドバーでは、マルチチャンネル音声が映像より遅れることがあります。ずれが生じる場合は、プレーヤーの「音声」メニュー→「A/V同期」で微調整してください。</string>
     <string name="settings_autoplay_next">次のエピソードを自動再生</string>
-    <string name="settings_autoplay_next_description">エピソードの終了時に次のエピソードを自動的に開始し、シーズンの最後では次のシーズンに進みます。</string>
+    <string name="settings_autoplay_next_description">エピソードの終了時に次のエピソードを自動的に開始し、シーズンの最後では次のシーズンに進みます。見逃し配信も次の番組へ続けて再生します。</string>
     <string name="settings_catchup">見逃し配信</string>
     <plurals name="settings_catchup_supported">
         <item quantity="other"><xliff:g id="count">%1$d</xliff:g>件のチャンネルが見逃し配信に対応 · アーカイブ再生のタイムゾーンとプレーヤー</item>

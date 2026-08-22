@@ -1073,6 +1073,13 @@ class OwnTVPlayer(
     private val _queueItemChanged = kotlinx.coroutines.flow.MutableSharedFlow<Int>(extraBufferCapacity = 4)
     val queueItemChanged: kotlinx.coroutines.flow.SharedFlow<Int> = _queueItemChanged
 
+    // Emitted when a catch-up ARCHIVE programme plays to its end with no queue behind it and auto-play
+    // is on. What comes next lives in the guide, which the player knows nothing about, so LiveViewModel
+    // decides. Deliberately NOT [queueEnded]: that one means "a season ran out" and SeriesViewModel acts
+    // on it, so borrowing it here would make a finished catch-up programme start an episode.
+    private val _archiveEnded = kotlinx.coroutines.flow.MutableSharedFlow<Unit>(extraBufferCapacity = 1)
+    val archiveEnded: kotlinx.coroutines.flow.SharedFlow<Unit> = _archiveEnded
+
     var currentTitle: String? = null
         private set
     var currentSubtitle: String? = null
@@ -1976,17 +1983,31 @@ class OwnTVPlayer(
      *  (advance the episode queue, or signal the series VM at the end of a season). */
     private fun onExoEnded() {
         if (!exoActive || isLiveContent) return
-        val dur = _duration.value
-        val pos = _position.value
-        val reachedEnd = reachedEnd(dur, pos)
-        if (reachedEnd && autoPlayNext && !item.autoNextCancelled && playlist.isNotEmpty()) {
-            val gen = loadGeneration
-            if (playlistIndex < playlist.size - 1) {
-                scope.launch { delay(DECODER_RELEASE_MS); if (gen == loadGeneration) next() } // next ep (loadUrl drops Exo)
-            } else {
-                scope.launch { delay(DECODER_RELEASE_MS); if (gen == loadGeneration) _queueEnded.tryEmit(Unit) } // → next season
-            }
+        if (reachedEnd(_duration.value, _position.value)) advanceAfterNaturalEnd()
+    }
+
+    /**
+     * A non-live item played all the way to its end. Continue with whatever follows it, if anything:
+     *
+     *  - the next episode in the queue — the player owns that one;
+     *  - the end of a season queue → [queueEnded], for the series view model to roll into the next;
+     *  - a catch-up archive with no queue → [archiveEnded], for the live view model to look up the next
+     *    programme in the guide. Without this a finished catch-up programme just left a black screen.
+     *
+     * A single movie (no queue, not an archive) stops, as it always has.
+     *
+     * Advancing waits a short settle so the ended item's decoder can release; the fresh Surface in
+     * loadUrl is what actually prevents the back-to-back >1080p 0x80001000.
+     */
+    private fun advanceAfterNaturalEnd() {
+        if (!autoPlayNext || item.autoNextCancelled) return
+        val advance: () -> Unit = when {
+            playlist.isEmpty() -> if (item.archiveThisItem) ({ _archiveEnded.tryEmit(Unit); Unit }) else return
+            playlistIndex < playlist.size - 1 -> ({ next() })
+            else -> ({ _queueEnded.tryEmit(Unit); Unit })
         }
+        val gen = loadGeneration
+        scope.launch { delay(DECODER_RELEASE_MS); if (gen == loadGeneration) advance() }
     }
 
     /** PixelCopy the live surface into a bitmap (shown during the swap), then run [block]. Best-effort:
@@ -2491,17 +2512,17 @@ class OwnTVPlayer(
         _videoRes.value = null
         _videoFps.value = null
         _audioOnlyMedia.value = false // re-decided per load, once this item's tracks are known
-        applyAudioDelay(baseAudioDelayMs) // new item starts at the Settings default — drop any per-file nudge
-        _audioDelayRemembered.value = false // …and unremembered, until applyRememberedPrefs says otherwise
-        // AFTER the per-load defaults above, never before: this reads the item's own remembered zoom /
-        // volume / audio delay and applies them over those defaults, so a reset that ran later would
-        // undo it. It is asynchronous and generation-guarded, so it still cannot delay the load.
-        applyRememberedPrefs(meta.contentKey ?: url)
-        // A genuinely new item resets the failure budget; an auto-retry / software-fallback reload of
-        // the SAME item passes resetRetries=false to keep that state.
         // A genuinely new item resets the failure budget; an auto-retry / software-fallback reload of
         // the SAME item passes resetRetries=false to keep that state — see [ItemState].
         if (resetRetries) {
+            // A/V-sync starts at the Settings default and unremembered, until applyRememberedPrefs
+            // below says otherwise. Inside the new-item branch on purpose: a retry, a software
+            // fallback or a reconnect is the SAME stream, and resetting there dropped a remembered
+            // delay to the global value until the Room read came back (an audible sync jump), and
+            // lost an un-remembered nudge outright. Zoom and volume already survive a retry
+            // untouched; this is the same rule.
+            applyAudioDelay(baseAudioDelayMs)
+            _audioDelayRemembered.value = false
             // Decode path for this item, decided BEFORE the reset because it is a compare-then-set: a
             // catch-up archive starts mid-GOP, which SOME hardware decoders can't recover from (audio
             // plays, no video frame ever arrives) — but most cope, and pinning every archive to software
@@ -2522,6 +2543,10 @@ class OwnTVPlayer(
             applySubtitleDelay(0) // timing never carries onto another item/subtitle (§8.4)
             if (needReconfig) mpvAsync { applyRenderConfig() }
         }
+        // AFTER the per-load defaults above, never before: this reads the item's own remembered zoom /
+        // volume / audio delay and applies them over those defaults, so a reset that ran later would
+        // undo it. It is asynchronous and generation-guarded, so it still cannot delay the load.
+        applyRememberedPrefs(meta.contentKey ?: url)
         // The decode watchdog's own state rode in [LoadState] above; the StateFlows it feeds are here.
         _videoAspect.value = null
         _videoSize.value = null
@@ -4412,22 +4437,13 @@ class OwnTVPlayer(
                     }
                 } else if (!isLiveContent && currentUrl != null) {
                     // A VOD finished. If it reached the end (position is at/near the duration — not a
-                    // mid-stream drop) and auto-play is on, continue an episode queue: advance to the next
-                    // episode in the season, or signal the series VM to roll into the next season when the
-                    // season's last episode ends. Single movies (empty playlist) just stop.
+                    // mid-stream drop), continue with whatever follows it — see [advanceAfterNaturalEnd].
                     val dur = _duration.value
                     val pos = _position.value
                     val reachedEnd = reachedEnd(dur, pos)
-                    if (reachedEnd && autoPlayNext && !item.autoNextCancelled && playlist.isNotEmpty()) {
-                        // Advance after a short settle (let the ended episode's decoder release). The fresh
-                        // Surface in loadUrl is what actually prevents the back-to-back >1080p 0x80001000.
-                        val gen = loadGeneration
-                        if (playlistIndex < playlist.size - 1) {
-                            scope.launch { delay(DECODER_RELEASE_MS); if (gen == loadGeneration) next() } // next ep, same season
-                        } else {
-                            scope.launch { delay(DECODER_RELEASE_MS); if (gen == loadGeneration) _queueEnded.tryEmit(Unit) } // → next season
-                        }
-                    } else if (!reachedEnd) {
+                    if (reachedEnd) {
+                        advanceAfterNaturalEnd()
+                    } else {
                         // The item did NOT reach its end: the provider dropped the connection mid-film.
                         // Nothing used to handle this — mpv went idle, the last frame stayed on screen and
                         // the app said nothing, so a cut-off movie was indistinguishable from a frozen one.

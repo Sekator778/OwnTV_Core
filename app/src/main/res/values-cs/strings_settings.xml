@@ -228,7 +228,7 @@
     <string name="settings_surround_sound">Prostorový zvuk</string>
     <string name="settings_surround_description">Dekódovat Dolby/DTS do prostorového zvuku (5.1/7.1) pro skutečný přijímač 5.1/7.1. U reproduktorů televizoru nebo stereofonního soundbaru ponechte VYPNUTO — na některých televizorech a soundbarech může vícekanálový zvuk zaostávat za obrazem. Pokud se rozchází, upravte v nabídce Zvuk přehrávače → Synchronizace A/V.</string>
     <string name="settings_autoplay_next">Automaticky přehrát další epizodu</string>
-    <string name="settings_autoplay_next_description">Po skončení epizody automaticky spustit další — a pokračovat i do následující řady.</string>
+    <string name="settings_autoplay_next_description">Po skončení epizody automaticky spustit další — a pokračovat i do následující řady. TV archiv rovněž pokračuje na další pořad.</string>
     <string name="settings_catchup">TV archiv</string>
     <plurals name="settings_catchup_supported">
         <item quantity="one"><xliff:g id="count">%1$d</xliff:g> kanál podporuje TV archiv · časové pásmo a přehrávač pro přehrávání TV archivu</item>
