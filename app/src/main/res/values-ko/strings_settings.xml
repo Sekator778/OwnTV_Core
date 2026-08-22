@@ -23,6 +23,10 @@
     <string name="settings_movies_keep_watching_description">히어로 행에 영화 이어보기 카드를 표시합니다.</string>
     <string name="settings_series_keep_watching">계속 시청하기의 시리즈</string>
     <string name="settings_series_keep_watching_description">히어로 행에 에피소드 이어보기 카드를 표시합니다.</string>
+    <!-- Translators: Toggle label for playing the highlighted Home item's video in the hero row. -->
+    <string name="settings_hero_preview">히어로 행에서 동영상 재생</string>
+    <!-- Translators: Description of the hero-row video preview toggle. -->
+    <string name="settings_hero_preview_description">선택한 항목의 동영상 미리보기가 잠시 후 재생됩니다. 홈 화면을 탐색하는 동안 전력과 메모리를 아끼려면 끄세요.</string>
     <string name="settings_android_tv_home">Android TV 홈</string>
     <string name="settings_android_tv_home_description">TV 홈 화면에 계속 시청하기와 최근 실시간 채널을 표시합니다.</string>
     <string name="settings_refresh_now">지금 새로 고침</string>
@@ -424,6 +428,14 @@
     <string name="settings_reset_saved_volume_confirm">저장된 음량을 초기화할까요?</string>
     <!-- Translators: Confirmation dialog body before forgetting the saved per-item volume. -->
     <string name="settings_reset_saved_volume_confirm_description">모든 채널, 영화, 에피소드가 기본 음량으로 돌아갑니다. 저장된 화면 확대 설정은 유지됩니다. 개별 항목은 언제든지 플레이어에서 다시 설정할 수 있습니다.</string>
+    <!-- Translators: Settings row that forgets every per-item audio-sync offset. -->
+    <string name="settings_reset_saved_audio_delay">저장된 A/V 동기화 초기화</string>
+    <!-- Translators: Description of the reset-saved-audio-sync row. -->
+    <string name="settings_reset_saved_audio_delay_description">플레이어에서 ‘이 지연 시간 기억’을 선택하면 해당 채널, 영화 또는 에피소드의 음성 동기화가 저장됩니다. 초기화하면 모두 위 설정을 다시 따릅니다.</string>
+    <!-- Translators: Title of the confirmation dialog for resetting saved audio sync. -->
+    <string name="settings_reset_saved_audio_delay_confirm">저장된 A/V 동기화를 초기화할까요?</string>
+    <!-- Translators: Body of the confirmation dialog for resetting saved audio sync. -->
+    <string name="settings_reset_saved_audio_delay_confirm_description">모든 채널, 영화, 에피소드가 위의 음성 동기화로 돌아갑니다. 저장된 확대/축소와 음량은 유지됩니다. 개별 값은 언제든 플레이어에서 다시 설정할 수 있습니다.</string>
     <!-- Translators: Setting label for how far rewind/forward jumps in a movie or episode. -->
     <string name="settings_seek_step">탐색 간격</string>
     <!-- Translators: Description of the seek step setting. -->
@@ -922,6 +934,14 @@
     <string name="settings_live_tune_timeout_description">이 시간까지 실시간 채널에 화면이 나오지 않으면, OwnTV가 가진 재생기를 하나씩 시도하며 검은 화면을 두는 대신 시도를 멈추고 알려 줍니다. ‘안 함’은 계속 시도하므로, 제공업체가 삭제한 채널에서는 1분을 훌쩍 넘길 수 있습니다. 제공업체가 요청한 대기 시간은 포함되지 않습니다.</string>
     <string name="settings_live_preroll_per_playlist">재생목록별 미리 버퍼링</string>
     <string name="settings_live_preroll_per_playlist_description">한 재생목록에 대해서만 위 설정을 재정의하고, 다른 재생목록은 빠르게 유지합니다.</string>
+    <!-- Translators: Title of the per-playlist Live TV engine override row. -->
+    <string name="settings_live_engine_per_playlist">재생목록별 실시간 TV 플레이어</string>
+    <!-- Translators: Description of the per-playlist Live TV engine override row. -->
+    <string name="settings_live_engine_per_playlist_description">위 설정을 한 재생목록에만 재정의합니다. 채널이 한쪽 플레이어에서만 잘 재생되는 제공업체에 사용하세요.</string>
+    <!-- Translators: Title of the per-playlist Live latency override row. -->
+    <string name="settings_live_latency_per_playlist">재생목록별 실시간 지연 시간</string>
+    <!-- Translators: Description of the per-playlist Live latency override row. -->
+    <string name="settings_live_latency_per_playlist_description">위 설정을 한 재생목록에만 재정의합니다. 다른 곳보다 크거나 작은 버퍼가 필요한 제공업체에 사용하세요.</string>
     <plurals name="settings_live_preroll_overrides">
         <item quantity="other"><xliff:g id="count">%1$d</xliff:g>개 설정됨</item>
     </plurals>

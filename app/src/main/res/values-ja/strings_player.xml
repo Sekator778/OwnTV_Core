@@ -33,6 +33,8 @@
     <string name="player_no_tracks">利用可能なトラックはありません。</string>
     <string name="player_image_track"><xliff:g id="label">%1$s</xliff:g> · 画像形式</string>
     <string name="player_av_sync">A/V同期</string>
+    <!-- Translators: Player audio menu action that stores the current A/V-sync offset for this item. -->
+    <string name="player_av_sync_remember">この遅延を記憶する</string>
     <string name="player_no_offset">ずれなし</string>
     <string name="player_subtitles_later">字幕を遅く表示</string>
     <string name="player_subtitles_earlier">字幕を早く表示</string>

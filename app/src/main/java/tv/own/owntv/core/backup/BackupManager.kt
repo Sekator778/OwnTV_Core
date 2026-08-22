@@ -11,6 +11,7 @@ import java.io.File
 import tv.own.owntv.core.customize.CustomizationStore
 import tv.own.owntv.core.database.dao.ProfileDao
 import tv.own.owntv.core.database.dao.SourceDao
+import tv.own.owntv.core.database.entity.FOLLOW_GLOBAL_LATENCY_SECS
 import tv.own.owntv.core.database.entity.FOLLOW_GLOBAL_PREROLL
 import tv.own.owntv.core.model.HlsSupport
 import tv.own.owntv.core.database.entity.ProfileEntity
@@ -99,7 +100,7 @@ class BackupManager(
             val seal: ((String) -> JSONObject)? = key?.let { k -> { plain -> BackupCrypto.encrypt(k, plain) } }
 
             val root = JSONObject().apply {
-                put("version", 18) // v18: per-profile specific-channel startup targets. v17: startupModes/customizePins moved SOURCES→SETTINGS (readers accept both); PIN hashes and legacy URL-shaped player keys are encrypted-only; sources carry preferHls/livePrerollSecs/hlsSupported; source-keyed blocks scoped to the ticked profiles' sources. v16: optional Stalker serial/device IDs/signature. v15: custom category membership (issue #87) rides userData as kind "member"; customCategories blobs pass through unremapped. v14: .own container (wallpaper rides along). v13: sources.syncLive/Movies/Series. v12: per-profile OpenSubtitles login (encrypted-only). v11: profile-scoped export. v10: sources.mac. v9: custom TMDB names, encrypted TMDB key
+                put("version", 20) // v20: playbackPrefs carry the per-item A/V-sync offset. v19: sources carry the per-playlist Live TV engine and Live latency overrides. v18: per-profile specific-channel startup targets. v17: startupModes/customizePins moved SOURCES→SETTINGS (readers accept both); PIN hashes and legacy URL-shaped player keys are encrypted-only; sources carry preferHls/livePrerollSecs/hlsSupported; source-keyed blocks scoped to the ticked profiles' sources. v16: optional Stalker serial/device IDs/signature. v15: custom category membership (issue #87) rides userData as kind "member"; customCategories blobs pass through unremapped. v14: .own container (wallpaper rides along). v13: sources.syncLive/Movies/Series. v12: per-profile OpenSubtitles login (encrypted-only). v11: profile-scoped export. v10: sources.mac. v9: custom TMDB names, encrypted TMDB key
                 put("sections", JSONArray().apply { sections.forEach { put(it.name) } })
                 if (salt != null) put("crypto", BackupCrypto.cryptoBlock(salt))
                 // Ticked profiles always ride (backup is profile-based); restore needs SOURCES to apply them.
@@ -210,6 +211,7 @@ class BackupManager(
                                         put("k", row.contentKey)
                                         row.zoomMode?.let { put("z", it) }
                                         row.volumeBoost?.let { put("v", it) }
+                                        row.audioDelayMs?.let { put("d", it) }
                                     },
                                 )
                             }
@@ -666,6 +668,9 @@ class BackupManager(
                                         syncSeries = if (srcJson.has("syncSeries")) incoming.syncSeries else existing.syncSeries,
                                         preferHls = if (srcJson.has("preferHls")) incoming.preferHls else existing.preferHls,
                                         livePrerollSecs = if (srcJson.has("livePrerollSecs")) incoming.livePrerollSecs else existing.livePrerollSecs,
+                                        liveEnginePreference = if (srcJson.has("liveEnginePreference")) incoming.liveEnginePreference else existing.liveEnginePreference,
+                                        liveLatencyMode = if (srcJson.has("liveLatencyMode")) incoming.liveLatencyMode else existing.liveLatencyMode,
+                                        liveLatencyCustomSecs = if (srcJson.has("liveLatencyCustomSecs")) incoming.liveLatencyCustomSecs else existing.liveLatencyCustomSecs,
                                         // hlsSupported is a sync-time detection hint, not a user choice:
                                         // the device's own last answer wins, and UNKNOWN adopts the
                                         // file's so a fresh row is not left blank until the next sync.
@@ -854,7 +859,7 @@ class BackupManager(
                     runCatching { forceMpvStore.importUrls(keys("liveMpvUrls"), keys("liveExoUrls")) }
                     runCatching { vodEngineStore.importUrls(keys("vodMpvUrls"), keys("vodExoUrls")) }
                 }
-                // Per-item zoom / volume. Merged in (REPLACE on the same profile+key), so a restore
+                // Per-item zoom / volume / audio delay. Merged in (REPLACE on the same profile+key), so a restore
                 // never drops what this device already remembers for other items. Rows whose profile
                 // isn't on this device are skipped — a foreign key would reject them anyway.
                 root.optJSONArray("playbackPrefs")?.let { arr ->
@@ -871,9 +876,12 @@ class BackupManager(
                             ?.let { remapEnginePinKey(it, sourceIdMap) } ?: continue
                         val zoom = e.optString("z").takeIf { it.isNotBlank() }
                         val volume = if (e.has("v")) e.optInt("v").coerceIn(0, 150) else null
-                        if (zoom == null && volume == null) continue
+                        // Absent on a pre-v20 backup, which is what "no per-item delay" already means.
+                        val delay = if (e.has("d")) e.optInt("d").coerceIn(-5_000, 5_000) else null
+                        if (zoom == null && volume == null && delay == null) continue
                         rows += tv.own.owntv.core.database.entity.PlaybackPrefsEntity(
                             profileId = pid, contentKey = key, zoomMode = zoom, volumeBoost = volume,
+                            audioDelayMs = delay,
                         )
                     }
                     if (rows.isNotEmpty()) runCatching { db.playbackPrefsDao().insertAll(rows) }
@@ -1170,6 +1178,11 @@ class BackupManager(
         // rides too — it is only a detection hint, but carrying it spares a restored playlist the
         // "unknown until the next sync" gap.
         put("preferHls", s.preferHls); put("livePrerollSecs", s.livePrerollSecs)
+        // v19: the per-playlist Live TV engine and Live latency overrides. Same reasoning as the two
+        // above — deliberate user choices in the playlist editor that cannot be re-derived.
+        put("liveEnginePreference", s.liveEnginePreference ?: JSONObject.NULL)
+        put("liveLatencyMode", s.liveLatencyMode ?: JSONObject.NULL)
+        put("liveLatencyCustomSecs", s.liveLatencyCustomSecs)
         put("hlsSupported", s.hlsSupported.code)
         put("createdAt", s.createdAt); put("lastSyncAt", s.lastSyncAt ?: JSONObject.NULL)
     }
@@ -1207,6 +1220,11 @@ class BackupManager(
             // the global Pre-buffer, HLS support not yet known), which is what those installs had.
             preferHls = o.optBoolean("preferHls", false),
             livePrerollSecs = o.optInt("livePrerollSecs", FOLLOW_GLOBAL_PREROLL),
+            // Pre-v19 backups omit these three, so they restore as "follow the global setting" — which
+            // is exactly what those installs did, since the settings did not exist there.
+            liveEnginePreference = o.optStringOrNull("liveEnginePreference"),
+            liveLatencyMode = o.optStringOrNull("liveLatencyMode"),
+            liveLatencyCustomSecs = o.optInt("liveLatencyCustomSecs", FOLLOW_GLOBAL_LATENCY_SECS),
             hlsSupported = HlsSupport.fromCode(o.optInt("hlsSupported", HlsSupport.UNKNOWN.code)),
             createdAt = o.optLong("createdAt", System.currentTimeMillis()),
             lastSyncAt = if (o.isNull("lastSyncAt")) null else o.optLong("lastSyncAt"),

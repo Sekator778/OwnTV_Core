@@ -23,6 +23,10 @@
     <string name="settings_movies_keep_watching_description">হিরো সারিতে সিনেমা চালিয়ে যাওয়ার কার্ড দেখান।</string>
     <string name="settings_series_keep_watching">দেখা চালিয়ে যান সারিতে সিরিজ</string>
     <string name="settings_series_keep_watching_description">হিরো সারিতে পর্ব চালিয়ে যাওয়ার কার্ড দেখান।</string>
+    <!-- Translators: Toggle label for playing the highlighted Home item's video in the hero row. -->
+    <string name="settings_hero_preview">হিরো সারিতে ভিডিও চালান</string>
+    <!-- Translators: Description of the hero-row video preview toggle. -->
+    <string name="settings_hero_preview_description">কিছুক্ষণ পরে নির্বাচিত আইটেমের ভিডিও প্রিভিউ চলে। হোম স্ক্রিন ব্রাউজ করার সময় বিদ্যুৎ ও মেমরি বাঁচাতে বন্ধ করুন।</string>
     <string name="settings_android_tv_home">Android TV হোম</string>
     <string name="settings_android_tv_home_description">TV হোম স্ক্রিনে দেখা চালিয়ে যান এবং সাম্প্রতিক লাইভ চ্যানেলগুলো দেখান।</string>
     <string name="settings_refresh_now">এখনই রিফ্রেশ করুন</string>
@@ -426,6 +430,14 @@
     <string name="settings_reset_saved_volume_confirm">সংরক্ষিত ভলিউম রিসেট করবেন?</string>
     <!-- Translators: Confirmation dialog body before forgetting the saved per-item volume. -->
     <string name="settings_reset_saved_volume_confirm_description">প্রতিটি চ্যানেল, সিনেমা ও পর্ব আবার ডিফল্ট ভলিউমে ফিরে যাবে। সংরক্ষিত জুম সেটিংগুলি অপরিবর্তিত থাকবে। প্লেয়ার থেকে যেকোনো সময় আলাদা একটি আইটেম আবার সেট করতে পারবেন।</string>
+    <!-- Translators: Settings row that forgets every per-item audio-sync offset. -->
+    <string name="settings_reset_saved_audio_delay">সংরক্ষিত A/V সিঙ্ক রিসেট করুন</string>
+    <!-- Translators: Description of the reset-saved-audio-sync row. -->
+    <string name="settings_reset_saved_audio_delay_description">প্লেয়ারে ‘এই বিলম্ব মনে রাখুন’ বেছে নিলে সেই চ্যানেল, সিনেমা বা পর্বের জন্য অডিও সিঙ্ক সংরক্ষিত হয়। রিসেট করলে সবকিছু আবার উপরের সেটিং অনুসরণ করবে।</string>
+    <!-- Translators: Title of the confirmation dialog for resetting saved audio sync. -->
+    <string name="settings_reset_saved_audio_delay_confirm">সংরক্ষিত A/V সিঙ্ক রিসেট করবেন?</string>
+    <!-- Translators: Body of the confirmation dialog for resetting saved audio sync. -->
+    <string name="settings_reset_saved_audio_delay_confirm_description">প্রতিটি চ্যানেল, সিনেমা ও পর্ব উপরের অডিও সিঙ্কে ফিরে যাবে। সংরক্ষিত জুম ও ভলিউম সেটিং থাকবে। প্লেয়ার থেকে আবার আলাদা করে সেট করা যাবে।</string>
     <!-- Translators: Setting label for how far rewind/forward jumps in a movie or episode. -->
     <string name="settings_seek_step">সিক ধাপ</string>
     <!-- Translators: Description of the seek step setting. -->
@@ -939,6 +951,14 @@
     <string name="settings_live_tune_timeout_description">এই সময়ের মধ্যে কোনও লাইভ চ্যানেলে ছবি না এলে OwnTV চেষ্টা থামিয়ে আপনাকে জানাবে, তার সব প্লেয়ার একে একে চেষ্টা করতে করতে কালো পর্দা দেখিয়ে যাওয়ার বদলে। “কখনও নয়” বেছে নিলে চেষ্টা চলতেই থাকে, আর আপনার প্রদানকারী সরিয়ে ফেলা চ্যানেলে সেটি এক মিনিটেরও বেশি সময় নিতে পারে। প্রদানকারী নিজে যে অপেক্ষা চায়, তা এই সময়ে ধরা হয় না।</string>
     <string name="settings_live_preroll_per_playlist">প্রতি প্লেলিস্টে প্রি-বাফার</string>
     <string name="settings_live_preroll_per_playlist_description">একটি প্লেলিস্টের জন্য উপরের সেটিংটি ওভাররাইড করুন, আর অন্য প্লেলিস্টগুলো দ্রুতই থাকবে।</string>
+    <!-- Translators: Title of the per-playlist Live TV engine override row. -->
+    <string name="settings_live_engine_per_playlist">প্রতি প্লেলিস্টে লাইভ টিভির প্লেয়ার</string>
+    <!-- Translators: Description of the per-playlist Live TV engine override row. -->
+    <string name="settings_live_engine_per_playlist_description">একটি প্লেলিস্টের জন্য উপরের সেটিংটি ওভাররাইড করুন — যে সরবরাহকারীর চ্যানেল কেবল একটি প্লেয়ারেই ভালো চলে তার জন্য।</string>
+    <!-- Translators: Title of the per-playlist Live latency override row. -->
+    <string name="settings_live_latency_per_playlist">প্রতি প্লেলিস্টে লাইভ বিলম্ব</string>
+    <!-- Translators: Description of the per-playlist Live latency override row. -->
+    <string name="settings_live_latency_per_playlist_description">একটি প্লেলিস্টের জন্য উপরের সেটিংটি ওভাররাইড করুন — যে সরবরাহকারীর অন্যদের চেয়ে বড় বা ছোট বাফার দরকার তার জন্য।</string>
     <plurals name="settings_live_preroll_overrides">
         <item quantity="one"><xliff:g id="count">%1$d</xliff:g> সেট</item>
         <item quantity="other"><xliff:g id="count">%1$d</xliff:g> সেট</item>

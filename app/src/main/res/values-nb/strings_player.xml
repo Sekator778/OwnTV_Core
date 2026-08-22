@@ -33,6 +33,8 @@
     <string name="player_no_tracks">Ingen tilgjengelige spor.</string>
     <string name="player_image_track"><xliff:g id="label">%1$s</xliff:g> · bilde</string>
     <string name="player_av_sync">A/V-synkronisering</string>
+    <!-- Translators: Player audio menu action that stores the current A/V-sync offset for this item. -->
+    <string name="player_av_sync_remember">Husk denne forsinkelsen</string>
     <string name="player_no_offset">Ingen forskyvning</string>
     <string name="player_subtitles_later">Undertekstene vises senere</string>
     <string name="player_subtitles_earlier">Undertekstene vises tidligere</string>

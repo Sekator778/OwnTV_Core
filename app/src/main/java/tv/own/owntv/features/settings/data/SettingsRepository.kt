@@ -187,6 +187,9 @@ class SettingsRepository(private val context: Context, private val localeStore: 
         val RESTORE_IN_PROGRESS = stringPreferencesKey("restore_in_progress")
         val LIVE_PREVIEW = booleanPreferencesKey("live_preview")
         val LIVE_PREVIEW_AUDIO = booleanPreferencesKey("live_preview_audio")
+        // Whether the expanded Home hero plays its video. Unset means "device default" — see
+        // heroPreviewEnabled.
+        val HERO_PREVIEW = booleanPreferencesKey("hero_preview")
         // Docked mini-player: size (% of screen width) and screen corner/edge.
         val MINI_PLAYER_SIZE_PCT = intPreferencesKey("mini_player_size_pct")
         val MINI_PLAYER_POSITION = stringPreferencesKey("mini_player_position")
@@ -1381,6 +1384,24 @@ class SettingsRepository(private val context: Context, private val localeStore: 
         }
     }
 
+    /**
+     * Whether the expanded Home hero plays its video. The hero preview holds a live decoder for as
+     * long as the user browses Home, which is the one piece of background playback that had no off
+     * switch. Defaults on, but off on a low-RAM device — the same test [PlayerBudget] already uses to
+     * decide the player's memory budget, and the devices where a second video pipeline hurts most.
+     */
+    val heroPreviewEnabled: Flow<Boolean> = prefsFlow { it[Keys.HERO_PREVIEW] ?: heroPreviewDefault }
+
+    /** The value [heroPreviewEnabled] reports until the user picks one; also the settings row's
+     *  initial value, so the chip does not read "On" for a frame on a device where it is off. */
+    val heroPreviewDefault: Boolean get() = !lowSpecDevice
+
+    suspend fun setHeroPreviewEnabled(enabled: Boolean) {
+        context.dataStore.edit { it[Keys.HERO_PREVIEW] = enabled }
+    }
+
+    private val lowSpecDevice: Boolean by lazy { tv.own.owntv.player.PlayerBudget.of(context).lowSpec }
+
     /** Whether the Live preview plays audio (off by default so browsing stays quiet). */
     val livePreviewAudio: Flow<Boolean> = prefsFlow { it[Keys.LIVE_PREVIEW_AUDIO] ?: false }
 
@@ -1825,7 +1846,7 @@ class SettingsRepository(private val context: Context, private val localeStore: 
         Keys.PANEL_W_MOVIES_CAT, Keys.PANEL_W_MOVIES_LIST, Keys.PANEL_W_MOVIES_PREVIEW,
         Keys.PANEL_W_SERIES_CAT, Keys.PANEL_W_SERIES_LIST, Keys.PANEL_W_SERIES_PREVIEW)
     private val backupBoolKeys = listOf(
-        Keys.LIVE_PREVIEW, Keys.LIVE_PREVIEW_AUDIO, Keys.HDR_ENABLED, Keys.AUTO_FRAME_RATE, Keys.AUTO_FRAME_RATE_PROMPTED, Keys.ANDROID_TV_HOME, Keys.HW_DECODING,
+        Keys.LIVE_PREVIEW, Keys.LIVE_PREVIEW_AUDIO, Keys.HERO_PREVIEW, Keys.HDR_ENABLED, Keys.AUTO_FRAME_RATE, Keys.AUTO_FRAME_RATE_PROMPTED, Keys.ANDROID_TV_HOME, Keys.HW_DECODING,
         Keys.VOD_PREFER_EXO, Keys.MEASURED_STREAM_STATS, Keys.DETAILED_DIAGNOSTICS, Keys.DIRECT_TUNE, Keys.EXTERNAL_PLAYER,
         Keys.EXTERNAL_PLAYER_LIVE, Keys.EXTERNAL_PLAYER_MOVIES, Keys.EXTERNAL_PLAYER_SERIES, Keys.UPDATE_CHECK_ON_START, Keys.SURROUND_SOUND, Keys.AUTO_PLAY_NEXT, Keys.PROXY_ENABLED,
         Keys.WEATHER_ENABLED, Keys.WEATHER_FAHRENHEIT, Keys.RESUME_LAST_CHANNEL, Keys.METADATA_ENABLED, Keys.CH_NAV_ENABLED,

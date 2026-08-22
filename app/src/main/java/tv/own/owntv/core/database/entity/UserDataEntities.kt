@@ -135,6 +135,14 @@ data class PlaybackPrefsEntity(
     val zoomMode: String? = null,
     /** Volume percent (0–150, the shared boost ceiling); null = follow the global default volume. */
     val volumeBoost: Int? = null,
+    /**
+     * A/V-sync offset in ms (-5000..5000, positive = audio delayed); null = follow the global default.
+     *
+     * Per item because lip-sync error belongs to the **stream**, not to the user: one badly-muxed film
+     * or one channel whose provider mis-times its audio needs the correction, and carrying that same
+     * correction onto the next, correctly-muxed item would break it.
+     */
+    val audioDelayMs: Int? = null,
     val updatedAt: Long = System.currentTimeMillis(),
 )
 

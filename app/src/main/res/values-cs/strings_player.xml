@@ -33,6 +33,8 @@
     <string name="player_no_tracks">Nejsou dostupné žádné stopy.</string>
     <string name="player_image_track"><xliff:g id="label">%1$s</xliff:g> · obrazové</string>
     <string name="player_av_sync">Synchronizace A/V</string>
+    <!-- Translators: Player audio menu action that stores the current A/V-sync offset for this item. -->
+    <string name="player_av_sync_remember">Zapamatovat toto zpoždění</string>
     <string name="player_no_offset">Bez posunu</string>
     <string name="player_subtitles_later">Titulky zobrazeny později</string>
     <string name="player_subtitles_earlier">Titulky zobrazeny dříve</string>

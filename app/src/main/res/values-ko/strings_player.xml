@@ -33,6 +33,8 @@
     <string name="player_no_tracks">사용 가능한 트랙이 없습니다.</string>
     <string name="player_image_track"><xliff:g id="label">%1$s</xliff:g> · 이미지</string>
     <string name="player_av_sync">A/V 동기화</string>
+    <!-- Translators: Player audio menu action that stores the current A/V-sync offset for this item. -->
+    <string name="player_av_sync_remember">이 지연 시간 기억</string>
     <string name="player_no_offset">지연 없음</string>
     <string name="player_subtitles_later">자막을 나중에 표시</string>
     <string name="player_subtitles_earlier">자막을 더 일찍 표시</string>

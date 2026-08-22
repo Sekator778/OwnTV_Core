@@ -23,6 +23,10 @@
     <string name="settings_movies_keep_watching_description">Filmlere devam etme kartlarını öne çıkanlar satırında gösterin.</string>
     <string name="settings_series_keep_watching">İzlemeye Devam Et satırındaki diziler</string>
     <string name="settings_series_keep_watching_description">Bölümlere devam etme kartlarını öne çıkanlar satırında gösterin.</string>
+    <!-- Translators: Toggle label for playing the highlighted Home item's video in the hero row. -->
+    <string name="settings_hero_preview">Öne çıkanlar satırında videoyu oynat</string>
+    <!-- Translators: Description of the hero-row video preview toggle. -->
+    <string name="settings_hero_preview_description">Seçili öğenin video önizlemesi kısa bir süre sonra oynatılır. Ana ekranda gezinirken güç ve bellekten tasarruf etmek için kapatın.</string>
     <string name="settings_android_tv_home">Android TV ana ekranı</string>
     <string name="settings_android_tv_home_description">İzlemeye Devam Et içeriklerini ve son izlenen canlı kanalları TV ana ekranında gösterin.</string>
     <string name="settings_refresh_now">Şimdi yenile</string>
@@ -426,6 +430,14 @@
     <string name="settings_reset_saved_volume_confirm">Kaydedilen ses düzeyi sıfırlansın mı?</string>
     <!-- Translators: Confirmation dialog body before forgetting the saved per-item volume. -->
     <string name="settings_reset_saved_volume_confirm_description">Her kanal, film ve bölüm varsayılan ses düzeyine döner. Kaydedilen yakınlaştırma ayarları korunur. Tek bir öğeyi istediğiniz zaman oynatıcıdan yeniden ayarlayabilirsiniz.</string>
+    <!-- Translators: Settings row that forgets every per-item audio-sync offset. -->
+    <string name="settings_reset_saved_audio_delay">Kaydedilen ses/görüntü eşitlemesini sıfırla</string>
+    <!-- Translators: Description of the reset-saved-audio-sync row. -->
+    <string name="settings_reset_saved_audio_delay_description">Oynatıcıda “Bu gecikmeyi hatırla” seçildiğinde ses eşitlemesi o kanal, film veya bölüm için kaydedilir. Sıfırlama her şeyin yeniden üstteki ayarı izlemesini sağlar.</string>
+    <!-- Translators: Title of the confirmation dialog for resetting saved audio sync. -->
+    <string name="settings_reset_saved_audio_delay_confirm">Kaydedilen ses/görüntü eşitlemesi sıfırlansın mı?</string>
+    <!-- Translators: Body of the confirmation dialog for resetting saved audio sync. -->
+    <string name="settings_reset_saved_audio_delay_confirm_description">Her kanal, film ve bölüm üstteki ses eşitlemesine döner. Kaydedilen yakınlaştırma ve ses düzeyi korunur. Tek tek olanı istediğiniz zaman oynatıcıdan yeniden ayarlayabilirsiniz.</string>
     <!-- Translators: Setting label for how far rewind/forward jumps in a movie or episode. -->
     <string name="settings_seek_step">Atlama adımı</string>
     <!-- Translators: Description of the seek step setting. -->
@@ -939,6 +951,14 @@
     <string name="settings_live_tune_timeout_description">Bir canlı kanal bu süre içinde görüntü vermediyse, OwnTV tüm oynatıcılarını tek tek denerken siyah ekran bırakmak yerine denemeyi bırakır ve size söyler. “Asla” denemeyi sürdürür; sağlayıcınızın kaldırdığı bir kanalda bu bir dakikayı rahatça aşabilir. Sağlayıcınızın istediği bekleme süreleri sayılmaz.</string>
     <string name="settings_live_preroll_per_playlist">Yayın listesi başına ön arabellek</string>
     <string name="settings_live_preroll_per_playlist_description">Üstteki ayarı bir yayın listesi için geçersiz kılarken diğer yayın listelerinizin hızlı kalmasını sağlar.</string>
+    <!-- Translators: Title of the per-playlist Live TV engine override row. -->
+    <string name="settings_live_engine_per_playlist">Yayın listesi başına canlı TV oynatıcısı</string>
+    <!-- Translators: Description of the per-playlist Live TV engine override row. -->
+    <string name="settings_live_engine_per_playlist_description">Üstteki ayarı bir yayın listesi için geçersiz kılar — kanalları yalnızca oynatıcılardan biriyle düzgün çalışan bir sağlayıcı için.</string>
+    <!-- Translators: Title of the per-playlist Live latency override row. -->
+    <string name="settings_live_latency_per_playlist">Yayın listesi başına canlı yayın gecikmesi</string>
+    <!-- Translators: Description of the per-playlist Live latency override row. -->
+    <string name="settings_live_latency_per_playlist_description">Üstteki ayarı bir yayın listesi için geçersiz kılar — diğerlerinden daha büyük veya daha küçük bir arabellek gereken bir sağlayıcı için.</string>
     <plurals name="settings_live_preroll_overrides">
         <item quantity="one"><xliff:g id="count">%1$d</xliff:g> ayar</item>
         <item quantity="other"><xliff:g id="count">%1$d</xliff:g> ayar</item>

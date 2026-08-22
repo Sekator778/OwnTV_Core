@@ -23,6 +23,10 @@
     <string name="settings_movies_keep_watching_description">Zobrazit v hlavním řádku karty pro pokračování ve sledování filmů.</string>
     <string name="settings_series_keep_watching">Seriály v řádku Pokračovat ve sledování</string>
     <string name="settings_series_keep_watching_description">Zobrazit v hlavním řádku karty pro pokračování ve sledování epizod.</string>
+    <!-- Translators: Toggle label for playing the highlighted Home item's video in the hero row. -->
+    <string name="settings_hero_preview">Přehrávat video v hlavním řádku</string>
+    <!-- Translators: Description of the hero-row video preview toggle. -->
+    <string name="settings_hero_preview_description">Po chvíli se přehraje ukázka videa vybrané položky. Vypněte pro úsporu energie a paměti při procházení domovské obrazovky.</string>
     <string name="settings_android_tv_home">Domovská obrazovka Android TV</string>
     <string name="settings_android_tv_home_description">Zobrazit položky Pokračovat ve sledování a nedávné živé kanály na domovské obrazovce televizoru.</string>
     <string name="settings_refresh_now">Aktualizovat nyní</string>
@@ -430,6 +434,14 @@
     <string name="settings_reset_saved_volume_confirm">Resetovat uloženou hlasitost?</string>
     <!-- Translators: Confirmation dialog body before forgetting the saved per-item volume. -->
     <string name="settings_reset_saved_volume_confirm_description">Každý kanál, film i epizoda se vrátí k výchozí hlasitosti. Uložená nastavení přiblížení zůstanou zachována. Jednotlivou položku můžete kdykoli znovu nastavit přímo v přehrávači.</string>
+    <!-- Translators: Settings row that forgets every per-item audio-sync offset. -->
+    <string name="settings_reset_saved_audio_delay">Resetovat uloženou synchronizaci A/V</string>
+    <!-- Translators: Description of the reset-saved-audio-sync row. -->
+    <string name="settings_reset_saved_audio_delay_description">Volba „Zapamatovat toto zpoždění“ v přehrávači uloží synchronizaci zvuku pro daný kanál, film nebo epizodu. Reset vrátí vše k nastavení výše.</string>
+    <!-- Translators: Title of the confirmation dialog for resetting saved audio sync. -->
+    <string name="settings_reset_saved_audio_delay_confirm">Resetovat uloženou synchronizaci A/V?</string>
+    <!-- Translators: Body of the confirmation dialog for resetting saved audio sync. -->
+    <string name="settings_reset_saved_audio_delay_confirm_description">Každý kanál, film i epizoda se vrátí k synchronizaci zvuku výše. Uložené přiblížení a hlasitost zůstanou zachovány. Jednotlivou hodnotu můžete kdykoli nastavit znovu z přehrávače.</string>
     <!-- Translators: Setting label for how far rewind/forward jumps in a movie or episode. -->
     <string name="settings_seek_step">Krok převíjení</string>
     <!-- Translators: Description of the seek step setting. -->
@@ -973,6 +985,14 @@
     <string name="settings_live_tune_timeout_description">Pokud se u živého kanálu do této doby neobjeví obraz, OwnTV to vzdá a dá vám vědět, místo aby nechal černou obrazovku, zatímco zkouší všechny své přehrávače. Volba „Nikdy“ zkouší dál, což u kanálu, který váš poskytovatel zrušil, může trvat výrazně přes minutu. Čekání, o které si řekne poskytovatel, se nezapočítává.</string>
     <string name="settings_live_preroll_per_playlist">Přednačítání podle playlistu</string>
     <string name="settings_live_preroll_per_playlist_description">Přepíše výše uvedené nastavení pro jeden playlist, zatímco ostatní playlisty zůstanou rychlé.</string>
+    <!-- Translators: Title of the per-playlist Live TV engine override row. -->
+    <string name="settings_live_engine_per_playlist">Přehrávač živého vysílání pro playlist</string>
+    <!-- Translators: Description of the per-playlist Live TV engine override row. -->
+    <string name="settings_live_engine_per_playlist_description">Přepíše výše uvedené nastavení pro jeden playlist — pro poskytovatele, jehož kanály zvládá dobře jen jeden z přehrávačů.</string>
+    <!-- Translators: Title of the per-playlist Live latency override row. -->
+    <string name="settings_live_latency_per_playlist">Zpoždění živého vysílání pro playlist</string>
+    <!-- Translators: Description of the per-playlist Live latency override row. -->
+    <string name="settings_live_latency_per_playlist_description">Přepíše výše uvedené nastavení pro jeden playlist — pro poskytovatele, který potřebuje hlubší nebo mělčí vyrovnávací paměť než ostatní.</string>
     <plurals name="settings_live_preroll_overrides">
         <item quantity="one"><xliff:g id="count">%1$d</xliff:g> nastavení</item>
         <item quantity="few"><xliff:g id="count">%1$d</xliff:g> nastavení</item>

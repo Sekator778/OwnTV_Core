@@ -6,8 +6,9 @@ import tv.own.owntv.core.database.entity.PlaybackPrefsEntity
 import tv.own.owntv.features.settings.data.SettingsRepository
 
 /**
- * Remembers the zoom/aspect mode and the volume the user last chose for one specific item, so a film
- * that needs 130% volume, or a 4:3 channel the user prefers cropped, comes back that way next time.
+ * Remembers the zoom/aspect mode, the volume and the A/V-sync offset the user last chose for one
+ * specific item, so a film that needs 130% volume, a 4:3 channel the user prefers cropped, or a
+ * channel whose audio runs 200 ms early, comes back that way next time.
  *
  * Keyed exactly like the engine pins ([VodEngineStore], [ForceMpvStore]) — [enginePinKey] when the
  * row carries a provider id, the stream URL when it doesn't — which is why a re-sync doesn't lose
@@ -35,6 +36,11 @@ class PlaybackPrefsStore(
         runCatching { dao.setVolume(settings.activeProfileId.first(), contentKey, volume) }
     }
 
+    /** Remember a deliberate A/V-sync offset in ms; null forgets it and returns to the global value. */
+    suspend fun rememberAudioDelay(contentKey: String, audioDelayMs: Int?) {
+        runCatching { dao.setAudioDelay(settings.activeProfileId.first(), contentKey, audioDelayMs) }
+    }
+
     /** Settings escape hatch: forget every item's zoom, on every profile. Volumes are kept. */
     suspend fun clearZoom() {
         runCatching { dao.clearZoom() }
@@ -49,4 +55,11 @@ class PlaybackPrefsStore(
     fun observeZoomCount(): kotlinx.coroutines.flow.Flow<Int> = dao.observeZoomCount()
 
     fun observeVolumeCount(): kotlinx.coroutines.flow.Flow<Int> = dao.observeVolumeCount()
+
+    /** Settings escape hatch: forget every item's audio delay, on every profile. */
+    suspend fun clearAudioDelay() {
+        runCatching { dao.clearAudioDelay() }
+    }
+
+    fun observeAudioDelayCount(): kotlinx.coroutines.flow.Flow<Int> = dao.observeAudioDelayCount()
 }

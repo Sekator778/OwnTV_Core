@@ -23,6 +23,10 @@
     <string name="settings_movies_keep_watching_description">在主打內容列顯示可繼續播放的電影資訊卡。</string>
     <string name="settings_series_keep_watching">在「繼續觀看」中顯示影集</string>
     <string name="settings_series_keep_watching_description">在主打內容列顯示可繼續播放的集數資訊卡。</string>
+    <!-- Translators: Toggle label for playing the highlighted Home item's video in the hero row. -->
+    <string name="settings_hero_preview">在主打內容列播放影片</string>
+    <!-- Translators: Description of the hero-row video preview toggle. -->
+    <string name="settings_hero_preview_description">稍候片刻後播放所選項目的影片預覽。瀏覽主畫面時若要節省電力與記憶體，請關閉。</string>
     <string name="settings_android_tv_home">Android TV 主畫面</string>
     <string name="settings_android_tv_home_description">在電視主畫面顯示「繼續觀看」和最近觀看的直播頻道。</string>
     <string name="settings_refresh_now">立即重新整理</string>
@@ -424,6 +428,14 @@
     <string name="settings_reset_saved_volume_confirm">要重設已儲存的音量嗎？</string>
     <!-- Translators: Confirmation dialog body before forgetting the saved per-item volume. -->
     <string name="settings_reset_saved_volume_confirm_description">所有頻道、電影與影集會恢復為預設音量。已儲存的縮放設定會保留。你隨時可以在播放器中再次個別設定某一項。</string>
+    <!-- Translators: Settings row that forgets every per-item audio-sync offset. -->
+    <string name="settings_reset_saved_audio_delay">重設已儲存的音訊／視訊同步</string>
+    <!-- Translators: Description of the reset-saved-audio-sync row. -->
+    <string name="settings_reset_saved_audio_delay_description">在播放器中選擇「記住此延遲」會為該頻道、電影或集數儲存音訊同步。重設後所有內容將重新依照上方的設定。</string>
+    <!-- Translators: Title of the confirmation dialog for resetting saved audio sync. -->
+    <string name="settings_reset_saved_audio_delay_confirm">要重設已儲存的音訊／視訊同步嗎？</string>
+    <!-- Translators: Body of the confirmation dialog for resetting saved audio sync. -->
+    <string name="settings_reset_saved_audio_delay_confirm_description">每個頻道、電影與集數都會回到上方的音訊同步。已儲存的縮放與音量會保留。你隨時可以在播放器中重新單獨設定。</string>
     <!-- Translators: Setting label for how far rewind/forward jumps in a movie or episode. -->
     <string name="settings_seek_step">快轉間隔</string>
     <!-- Translators: Description of the seek step setting. -->
@@ -922,6 +934,14 @@
     <string name="settings_live_tune_timeout_description">若直播頻道在此時間內仍未出現畫面，OwnTV 會停止嘗試並告知你，而不是一邊逐一試遍所有播放器、一邊留著黑畫面。選擇「永不」會一直嘗試，在供應商已下架的頻道上可能遠超過一分鐘。供應商自己要求的等待時間不計入其中。</string>
     <string name="settings_live_preroll_per_playlist">各播放清單的預先緩衝</string>
     <string name="settings_live_preroll_per_playlist_description">為某個播放清單覆寫上述設定，同時讓其他播放清單保持快速啟動。</string>
+    <!-- Translators: Title of the per-playlist Live TV engine override row. -->
+    <string name="settings_live_engine_per_playlist">依播放清單設定電視直播播放器</string>
+    <!-- Translators: Description of the per-playlist Live TV engine override row. -->
+    <string name="settings_live_engine_per_playlist_description">為某個播放清單覆寫上述設定，適用於頻道只在其中一個播放器上表現良好的供應商。</string>
+    <!-- Translators: Title of the per-playlist Live latency override row. -->
+    <string name="settings_live_latency_per_playlist">依播放清單設定直播延遲</string>
+    <!-- Translators: Description of the per-playlist Live latency override row. -->
+    <string name="settings_live_latency_per_playlist_description">為某個播放清單覆寫上述設定，適用於需要比其他供應商更大或更小緩衝的供應商。</string>
     <plurals name="settings_live_preroll_overrides">
         <item quantity="other"><xliff:g id="count">%1$d</xliff:g> 個播放清單</item>
     </plurals>

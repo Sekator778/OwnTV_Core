@@ -23,6 +23,10 @@
     <string name="settings_movies_keep_watching_description">عرض بطاقات استئناف الأفلام في الصف البارز.</string>
     <string name="settings_series_keep_watching">المسلسلات في متابعة المشاهدة</string>
     <string name="settings_series_keep_watching_description">عرض بطاقات استئناف الحلقات في الصف البارز.</string>
+    <!-- Translators: Toggle label for playing the highlighted Home item's video in the hero row. -->
+    <string name="settings_hero_preview">تشغيل الفيديو في الصف البارز</string>
+    <!-- Translators: Description of the hero-row video preview toggle. -->
+    <string name="settings_hero_preview_description">تشغيل معاينة فيديو العنصر المحدّد بعد لحظة. أوقفه لتوفير الطاقة والذاكرة أثناء تصفّح الشاشة الرئيسية.</string>
     <string name="settings_android_tv_home">الشاشة الرئيسية لـ Android TV</string>
     <string name="settings_android_tv_home_description">عرض متابعة المشاهدة والقنوات المباشرة الحديثة على الشاشة الرئيسية للتلفزيون.</string>
     <string name="settings_refresh_now">التحديث الآن</string>
@@ -434,6 +438,14 @@
     <string name="settings_reset_saved_volume_confirm">إعادة ضبط مستوى الصوت المحفوظ؟</string>
     <!-- Translators: Confirmation dialog body before forgetting the saved per-item volume. -->
     <string name="settings_reset_saved_volume_confirm_description">تعود كل قناة وكل فيلم وكل حلقة إلى مستوى الصوت الافتراضي. أما إعدادات التكبير المحفوظة فتبقى كما هي. يمكنك دائمًا ضبط عنصر واحد مرة أخرى من المشغّل.</string>
+    <!-- Translators: Settings row that forgets every per-item audio-sync offset. -->
+    <string name="settings_reset_saved_audio_delay">إعادة ضبط مزامنة الصوت المحفوظة</string>
+    <!-- Translators: Description of the reset-saved-audio-sync row. -->
+    <string name="settings_reset_saved_audio_delay_description">اختيار «تذكّر هذا التأخير» في المشغّل يحفظ مزامنة الصوت لتلك القناة أو الفيلم أو الحلقة. تعيد إعادة الضبط كل شيء إلى الإعداد أعلاه.</string>
+    <!-- Translators: Title of the confirmation dialog for resetting saved audio sync. -->
+    <string name="settings_reset_saved_audio_delay_confirm">إعادة ضبط مزامنة الصوت المحفوظة؟</string>
+    <!-- Translators: Body of the confirmation dialog for resetting saved audio sync. -->
+    <string name="settings_reset_saved_audio_delay_confirm_description">تعود كل قناة وفيلم وحلقة إلى مزامنة الصوت أعلاه. يتم الاحتفاظ بإعدادات التكبير ومستوى الصوت المحفوظة. يمكنك دائمًا ضبط واحدة منفردة مجددًا من المشغّل.</string>
     <!-- Translators: Setting label for how far rewind/forward jumps in a movie or episode. -->
     <string name="settings_seek_step">خطوة التقديم</string>
     <!-- Translators: Description of the seek step setting. -->
@@ -1007,6 +1019,14 @@
     <string name="settings_live_tune_timeout_description">إذا لم تظهر أي صورة على قناة مباشرة خلال هذه المدة، يتوقف OwnTV عن المحاولة ويخبرك بذلك، بدلاً من ترك شاشة سوداء بينما يجرّب كل مشغّل لديه. الخيار «أبدًا» يواصل المحاولة، وقد يستغرق ذلك أكثر من دقيقة على قناة أزالها مزوّدك. لا تُحتسب فترات الانتظار التي يطلبها المزوّد.</string>
     <string name="settings_live_preroll_per_playlist">التخزين المسبق لكل قائمة تشغيل</string>
     <string name="settings_live_preroll_per_playlist_description">تجاوز الإعداد أعلاه لقائمة تشغيل واحدة مع الحفاظ على سرعة بقية قوائم التشغيل.</string>
+    <!-- Translators: Title of the per-playlist Live TV engine override row. -->
+    <string name="settings_live_engine_per_playlist">مشغّل البث المباشر لكل قائمة تشغيل</string>
+    <!-- Translators: Description of the per-playlist Live TV engine override row. -->
+    <string name="settings_live_engine_per_playlist_description">تجاوز الإعداد أعلاه لقائمة تشغيل واحدة، لمزوّد تعمل قنواته جيدًا مع أحد المشغّلين فقط.</string>
+    <!-- Translators: Title of the per-playlist Live latency override row. -->
+    <string name="settings_live_latency_per_playlist">زمن استجابة البث المباشر لكل قائمة تشغيل</string>
+    <!-- Translators: Description of the per-playlist Live latency override row. -->
+    <string name="settings_live_latency_per_playlist_description">تجاوز الإعداد أعلاه لقائمة تشغيل واحدة، لمزوّد يحتاج إلى مخزن مؤقت أكبر أو أصغر من غيره.</string>
     <plurals name="settings_live_preroll_overrides">
         <item quantity="zero"><xliff:g id="count">%1$d</xliff:g> من قوائم التشغيل</item>
         <item quantity="one"><xliff:g id="count">%1$d</xliff:g> من قوائم التشغيل</item>

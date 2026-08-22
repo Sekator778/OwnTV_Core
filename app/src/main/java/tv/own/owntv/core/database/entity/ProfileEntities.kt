@@ -27,6 +27,9 @@ data class ProfileEntity(
 /** [SourceEntity.livePrerollSecs] sentinel: use the global Settings value rather than a per-playlist one. */
 const val FOLLOW_GLOBAL_PREROLL = -1
 
+/** [SourceEntity.liveLatencyCustomSecs] sentinel: no per-playlist custom latency stored yet. */
+const val FOLLOW_GLOBAL_LATENCY_SECS = -1
+
 /** An IPTV source (M3U file/URL, Xtream account, or Stalker portal). Content rows reference their `sourceId`. */
 @Entity(
     tableName = "sources",
@@ -78,6 +81,23 @@ data class SourceEntity(
      * period — a user with one bad panel and three good ones should not have to slow all four down.
      */
     val livePrerollSecs: Int = FOLLOW_GLOBAL_PREROLL,
+    /**
+     * Per-playlist Live TV engine override (v34), as an [tv.own.owntv.player.EnginePreference] name.
+     * `null` = follow the global Settings choice, which is what every existing row reads as.
+     *
+     * Per-playlist for the same reason as [livePrerollSecs]: which engine copes is a property of the
+     * *provider's* stream format, so a user with one panel that only mpv can play should not have to
+     * move all their playlists onto mpv. It sits **below** a per-channel pin and below the DRM rule —
+     * see the resolution order in `LiveViewModel`.
+     */
+    val liveEnginePreference: String? = null,
+    /**
+     * Per-playlist Live latency override (v34), as a [tv.own.owntv.features.settings.data.LiveLatency]
+     * name; `null` = follow the global setting. [liveLatencyCustomSecs] carries the seconds and is only
+     * read when this is `CUSTOM`, mirroring the global pair exactly.
+     */
+    val liveLatencyMode: String? = null,
+    val liveLatencyCustomSecs: Int = FOLLOW_GLOBAL_LATENCY_SECS,
     /**
      * How many simultaneous streams the provider allows (v27), from Xtream's
      * `user_info.max_connections`. `0` = unknown (M3U/Stalker, an older row, or a panel that doesn't

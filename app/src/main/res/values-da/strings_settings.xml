@@ -23,6 +23,10 @@
     <string name="settings_movies_keep_watching_description">Vis kort til fortsat afspilning af film i hero-rækken.</string>
     <string name="settings_series_keep_watching">Serier i Fortsæt med at se</string>
     <string name="settings_series_keep_watching_description">Vis kort til fortsat afspilning af afsnit i hero-rækken.</string>
+    <!-- Translators: Toggle label for playing the highlighted Home item's video in the hero row. -->
+    <string name="settings_hero_preview">Afspil video i hero-rækken</string>
+    <!-- Translators: Description of the hero-row video preview toggle. -->
+    <string name="settings_hero_preview_description">Videoen for den fremhævede titel afspilles efter et øjeblik. Slå fra for at spare strøm og hukommelse, mens du browser på startskærmen.</string>
     <string name="settings_android_tv_home">Android TV-startskærm</string>
     <string name="settings_android_tv_home_description">Vis Fortsæt med at se og seneste livekanaler på tv\'ets startskærm.</string>
     <string name="settings_refresh_now">Opdater nu</string>
@@ -426,6 +430,14 @@
     <string name="settings_reset_saved_volume_confirm">Nulstil gemt lydstyrke?</string>
     <!-- Translators: Confirmation dialog body before forgetting the saved per-item volume. -->
     <string name="settings_reset_saved_volume_confirm_description">Alle kanaler, film og episoder vender tilbage til standardlydstyrken. Gemte zoomindstillinger bevares. Du kan altid indstille en enkelt af dem igen fra afspilleren.</string>
+    <!-- Translators: Settings row that forgets every per-item audio-sync offset. -->
+    <string name="settings_reset_saved_audio_delay">Nulstil gemt A/V-synkronisering</string>
+    <!-- Translators: Description of the reset-saved-audio-sync row. -->
+    <string name="settings_reset_saved_audio_delay_description">Når du vælger “Husk denne forsinkelse” i afspilleren, gemmes lydsynkroniseringen for den kanal, film eller det afsnit. Nulstil får alt til at følge indstillingen ovenfor igen.</string>
+    <!-- Translators: Title of the confirmation dialog for resetting saved audio sync. -->
+    <string name="settings_reset_saved_audio_delay_confirm">Nulstil gemt A/V-synkronisering?</string>
+    <!-- Translators: Body of the confirmation dialog for resetting saved audio sync. -->
+    <string name="settings_reset_saved_audio_delay_confirm_description">Hver kanal, film og hvert afsnit vender tilbage til lydsynkroniseringen ovenfor. Gemt zoom og lydstyrke bevares. Du kan altid indstille en enkelt igen fra afspilleren.</string>
     <!-- Translators: Setting label for how far rewind/forward jumps in a movie or episode. -->
     <string name="settings_seek_step">Spolingstrin</string>
     <!-- Translators: Description of the seek step setting. -->
@@ -939,6 +951,14 @@
     <string name="settings_live_tune_timeout_description">Hvis en live-kanal ikke har vist billede inden for denne tid, holder OwnTV op med at prøve og siger det til dig i stedet for at efterlade en sort skærm, mens den arbejder sig gennem alle sine afspillere. “Aldrig” bliver ved med at prøve, hvilket kan tage langt over et minut på en kanal, din udbyder har fjernet. Ventetid, som udbyderen selv beder om, tælles ikke med.</string>
     <string name="settings_live_preroll_per_playlist">Forudbuffer pr. playliste</string>
     <string name="settings_live_preroll_per_playlist_description">Overstyr indstillingen ovenfor for én playliste, så dine andre playlister forbliver hurtige.</string>
+    <!-- Translators: Title of the per-playlist Live TV engine override row. -->
+    <string name="settings_live_engine_per_playlist">Afspiller til live-tv pr. playliste</string>
+    <!-- Translators: Description of the per-playlist Live TV engine override row. -->
+    <string name="settings_live_engine_per_playlist_description">Overstyr indstillingen ovenfor for én playliste — til en udbyder, hvis kanaler kun den ene afspiller klarer godt.</string>
+    <!-- Translators: Title of the per-playlist Live latency override row. -->
+    <string name="settings_live_latency_per_playlist">Liveforsinkelse pr. playliste</string>
+    <!-- Translators: Description of the per-playlist Live latency override row. -->
+    <string name="settings_live_latency_per_playlist_description">Overstyr indstillingen ovenfor for én playliste — til en udbyder, der har brug for en større eller mindre buffer end de andre.</string>
     <plurals name="settings_live_preroll_overrides">
         <item quantity="one"><xliff:g id="count">%1$d</xliff:g> overstyring</item>
         <item quantity="other"><xliff:g id="count">%1$d</xliff:g> overstyringer</item>

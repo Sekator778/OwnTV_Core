@@ -133,6 +133,7 @@ class BackupV17ScopingTest {
             "stalkerSerialNumber", "stalkerDeviceId", "stalkerDeviceId2", "stalkerSignature",
             "userAgent", "epgUrl", "syncLive", "syncMovies", "syncSeries",
             "preferHls", "livePrerollSecs", "hlsSupported", "createdAt", "lastSyncAt",
+            "liveEnginePreference", "liveLatencyMode", "liveLatencyCustomSecs",
         )
         // Intentionally re-derived rather than carried. `maxConnections` is the provider's own
         // answer, written only by the Xtream sync (XtreamClient → SourceDao.setMaxConnections), so

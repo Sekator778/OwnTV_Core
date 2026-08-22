@@ -33,6 +33,8 @@
     <string name="player_no_tracks">Нет доступных дорожек.</string>
     <string name="player_image_track"><xliff:g id="label">%1$s</xliff:g> · графические</string>
     <string name="player_av_sync">Синхронизация аудио и видео</string>
+    <!-- Translators: Player audio menu action that stores the current A/V-sync offset for this item. -->
+    <string name="player_av_sync_remember">Запомнить эту задержку</string>
     <string name="player_no_offset">Без задержки</string>
     <string name="player_subtitles_later">Субтитры показываются позже</string>
     <string name="player_subtitles_earlier">Субтитры показываются раньше</string>

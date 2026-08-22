@@ -47,6 +47,10 @@
     <string name="settings_series_keep_watching">Series in Keep Watching</string>
     <!-- Translators: Description of the series-in-Keep-Watching toggle. -->
     <string name="settings_series_keep_watching_description">Show episode resume cards in the hero row.</string>
+    <!-- Translators: Toggle label for playing the highlighted Home item's video in the hero row. -->
+    <string name="settings_hero_preview">Play video in the hero row</string>
+    <!-- Translators: Description of the hero-row video preview toggle. -->
+    <string name="settings_hero_preview_description">Preview the highlighted item\'s video after a moment. Turn off to save power and memory while browsing Home.</string>
     <!-- Translators: Used as both a group heading and toggle-row title for Android TV home integration. -->
     <string name="settings_android_tv_home">Android TV home</string>
     <!-- Translators: Description of the Android TV home screen integration. -->
@@ -860,6 +864,14 @@
     <string name="settings_reset_saved_volume_confirm">Reset saved volume?</string>
     <!-- Translators: Confirmation dialog body before forgetting the saved per-item volume. -->
     <string name="settings_reset_saved_volume_confirm_description">Every channel, movie and episode goes back to the default volume. Saved zoom settings are kept. You can always set an individual one again from the player.</string>
+    <!-- Translators: Settings row that forgets every per-item audio-sync offset. -->
+    <string name="settings_reset_saved_audio_delay">Reset saved audio sync</string>
+    <!-- Translators: Description of the reset-saved-audio-sync row. -->
+    <string name="settings_reset_saved_audio_delay_description">Choosing \'Remember this delay\' in the player saves the audio sync for that channel, movie or episode. Reset makes everything follow the setting above again.</string>
+    <!-- Translators: Title of the confirmation dialog for resetting saved audio sync. -->
+    <string name="settings_reset_saved_audio_delay_confirm">Reset saved audio sync?</string>
+    <!-- Translators: Body of the confirmation dialog for resetting saved audio sync. -->
+    <string name="settings_reset_saved_audio_delay_confirm_description">Every channel, movie and episode goes back to the audio sync above. Saved zoom and volume settings are kept. You can always set an individual one again from the player.</string>
     <!-- Translators: Setting label for how far rewind/forward jumps in a movie or episode. -->
     <string name="settings_seek_step">Seek step</string>
     <!-- Translators: Description of the seek step setting. -->
@@ -1826,6 +1838,14 @@ Resync and remove missing titles also allows removing titles the provider no lon
     <string name="settings_live_tune_timeout_description">If a live channel has shown no picture by this time, OwnTV stops trying and tells you, instead of leaving a black screen while it works through every player it has. Never keeps trying, which can take well over a minute on a channel your provider has removed. Waits your provider asks for are not counted.</string>
     <string name="settings_live_preroll_per_playlist">Pre-buffer per playlist</string>
     <string name="settings_live_preroll_per_playlist_description">Override the setting above for one playlist while keeping your other playlists fast.</string>
+    <!-- Translators: Title of the per-playlist Live TV engine override row. -->
+    <string name="settings_live_engine_per_playlist">Live TV player per playlist</string>
+    <!-- Translators: Description of the per-playlist Live TV engine override row. -->
+    <string name="settings_live_engine_per_playlist_description">Override the setting above for one playlist, for a provider whose channels only one of the players handles well.</string>
+    <!-- Translators: Title of the per-playlist Live latency override row. -->
+    <string name="settings_live_latency_per_playlist">Live latency per playlist</string>
+    <!-- Translators: Description of the per-playlist Live latency override row. -->
+    <string name="settings_live_latency_per_playlist_description">Override the setting above for one playlist, for a provider that needs a deeper or shallower buffer than the others.</string>
     <!-- Translators: Number of playlists with a custom pre-buffer override. -->
     <plurals name="settings_live_preroll_overrides">
         <item quantity="one"><xliff:g id="count">%1$d</xliff:g> set</item>

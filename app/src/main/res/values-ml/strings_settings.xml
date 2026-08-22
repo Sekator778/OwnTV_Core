@@ -23,6 +23,10 @@
     <string name="settings_movies_keep_watching_description">സിനിമകളുടെ തുടരൽ കാർഡുകൾ പ്രധാന നിരയിൽ കാണിക്കുക.</string>
     <string name="settings_series_keep_watching">കണ്ടുകൊണ്ടിരിക്കുക നിരയിലെ സീരീസ്</string>
     <string name="settings_series_keep_watching_description">എപ്പിസോഡുകളുടെ തുടരൽ കാർഡുകൾ പ്രധാന നിരയിൽ കാണിക്കുക.</string>
+    <!-- Translators: Toggle label for playing the highlighted Home item's video in the hero row. -->
+    <string name="settings_hero_preview">പ്രധാന നിരയിൽ വീഡിയോ പ്ലേ ചെയ്യുക</string>
+    <!-- Translators: Description of the hero-row video preview toggle. -->
+    <string name="settings_hero_preview_description">തിരഞ്ഞെടുത്ത ഇനത്തിന്റെ വീഡിയോ പ്രിവ്യൂ അൽപ്പസമയത്തിനു ശേഷം പ്ലേ ചെയ്യും. ഹോം സ്ക്രീൻ ബ്രൗസ് ചെയ്യുമ്പോൾ ഊർജവും മെമ്മറിയും ലാഭിക്കാൻ ഓഫാക്കുക.</string>
     <string name="settings_android_tv_home">Android TV ഹോം</string>
     <string name="settings_android_tv_home_description">ടിവിയുടെ ഹോം സ്ക്രീനിൽ കണ്ടുകൊണ്ടിരിക്കുക നിരയും സമീപകാല തത്സമയ ചാനലുകളും കാണിക്കുക.</string>
     <string name="settings_refresh_now">ഇപ്പോൾ പുതുക്കുക</string>
@@ -426,6 +430,14 @@
     <string name="settings_reset_saved_volume_confirm">സേവ് ചെയ്ത വോളിയം പുനഃസജ്ജമാക്കണോ?</string>
     <!-- Translators: Confirmation dialog body before forgetting the saved per-item volume. -->
     <string name="settings_reset_saved_volume_confirm_description">എല്ലാ ചാനലുകളും സിനിമകളും എപ്പിസോഡുകളും ഡിഫോൾട്ട് വോളിയത്തിലേക്ക് മടങ്ങും. സേവ് ചെയ്ത സൂം ക്രമീകരണങ്ങൾ നിലനിർത്തും. ഒറ്റ ഇനം എപ്പോൾ വേണമെങ്കിലും പ്ലെയറിൽ നിന്ന് വീണ്ടും സജ്ജമാക്കാം.</string>
+    <!-- Translators: Settings row that forgets every per-item audio-sync offset. -->
+    <string name="settings_reset_saved_audio_delay">സേവ് ചെയ്ത A/V സമന്വയം പുനഃസജ്ജമാക്കുക</string>
+    <!-- Translators: Description of the reset-saved-audio-sync row. -->
+    <string name="settings_reset_saved_audio_delay_description">പ്ലെയറിൽ ‘ഈ കാലതാമസം ഓർത്തുവയ്ക്കുക’ തിരഞ്ഞെടുത്താൽ ആ ചാനലിനോ സിനിമയ്ക്കോ എപ്പിസോഡിനോ ഉള്ള ഓഡിയോ സമന്വയം സേവ് ചെയ്യും. പുനഃസജ്ജമാക്കിയാൽ എല്ലാം വീണ്ടും മുകളിലെ ക്രമീകരണം പിന്തുടരും.</string>
+    <!-- Translators: Title of the confirmation dialog for resetting saved audio sync. -->
+    <string name="settings_reset_saved_audio_delay_confirm">സേവ് ചെയ്ത A/V സമന്വയം പുനഃസജ്ജമാക്കണോ?</string>
+    <!-- Translators: Body of the confirmation dialog for resetting saved audio sync. -->
+    <string name="settings_reset_saved_audio_delay_confirm_description">എല്ലാ ചാനലും സിനിമയും എപ്പിസോഡും മുകളിലെ ഓഡിയോ സമന്വയത്തിലേക്ക് മടങ്ങും. സേവ് ചെയ്ത സൂമും വോളിയവും നിലനിർത്തും. ഒറ്റയ്ക്കുള്ളത് എപ്പോൾ വേണമെങ്കിലും പ്ലെയറിൽ നിന്ന് വീണ്ടും സജ്ജമാക്കാം.</string>
     <!-- Translators: Setting label for how far rewind/forward jumps in a movie or episode. -->
     <string name="settings_seek_step">സീക്ക് സ്റ്റെപ്പ്</string>
     <!-- Translators: Description of the seek step setting. -->
@@ -939,6 +951,14 @@
     <string name="settings_live_tune_timeout_description">ഈ സമയത്തിനുള്ളിൽ ഒരു ലൈവ് ചാനലിൽ ചിത്രം വന്നില്ലെങ്കിൽ, തന്റെ എല്ലാ പ്ലേയറുകളും ഓരോന്നായി പരീക്ഷിച്ച് കറുത്ത സ്ക്രീൻ കാണിച്ചുനിൽക്കുന്നതിനു പകരം OwnTV ശ്രമം നിർത്തി നിങ്ങളോട് പറയും. “ഒരിക്കലും വേണ്ട” എന്നത് ശ്രമം തുടരും; നിങ്ങളുടെ ദാതാവ് നീക്കം ചെയ്ത ചാനലിൽ അതിന് ഒരു മിനിറ്റിലേറെ എടുക്കാം. ദാതാവ് തന്നെ ആവശ്യപ്പെടുന്ന കാത്തിരിപ്പ് ഇതിൽ കണക്കാക്കില്ല.</string>
     <string name="settings_live_preroll_per_playlist">ഓരോ പ്ലേലിസ്റ്റിനും പ്രീ-ബഫർ</string>
     <string name="settings_live_preroll_per_playlist_description">മുകളിലെ ക്രമീകരണം ഒരു പ്ലേലിസ്റ്റിനായി ഓവർറൈഡ് ചെയ്യുക, മറ്റ് പ്ലേലിസ്റ്റുകൾ വേഗത്തിൽ തന്നെ നിലനിർത്തുക.</string>
+    <!-- Translators: Title of the per-playlist Live TV engine override row. -->
+    <string name="settings_live_engine_per_playlist">ഓരോ പ്ലേലിസ്റ്റിനും തത്സമയ ടിവി പ്ലെയർ</string>
+    <!-- Translators: Description of the per-playlist Live TV engine override row. -->
+    <string name="settings_live_engine_per_playlist_description">മുകളിലെ ക്രമീകരണം ഒരു പ്ലേലിസ്റ്റിനായി ഓവർറൈഡ് ചെയ്യുക — ഒരു പ്ലെയറിൽ മാത്രം നന്നായി പ്രവർത്തിക്കുന്ന ചാനലുകളുള്ള ദാതാവിനായി.</string>
+    <!-- Translators: Title of the per-playlist Live latency override row. -->
+    <string name="settings_live_latency_per_playlist">ഓരോ പ്ലേലിസ്റ്റിനും തത്സമയ കാലതാമസം</string>
+    <!-- Translators: Description of the per-playlist Live latency override row. -->
+    <string name="settings_live_latency_per_playlist_description">മുകളിലെ ക്രമീകരണം ഒരു പ്ലേലിസ്റ്റിനായി ഓവർറൈഡ് ചെയ്യുക — മറ്റുള്ളവയേക്കാൾ വലുതോ ചെറുതോ ആയ ബഫർ വേണ്ട ദാതാവിനായി.</string>
     <plurals name="settings_live_preroll_overrides">
         <item quantity="one"><xliff:g id="count">%1$d</xliff:g> സെറ്റ്</item>
         <item quantity="other"><xliff:g id="count">%1$d</xliff:g> സെറ്റ്</item>

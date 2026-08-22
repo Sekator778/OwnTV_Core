@@ -37,6 +37,15 @@ object LiveBuffer {
     /** True when [secs] is a real, below-Balanced buffer worth warning the user about. */
     fun isLowLatency(secs: Int?): Boolean = secs != null && secs < WARN_BELOW_SECS
 
+    /**
+     * A per-playlist latency override, carrying an effective depth that is **itself** nullable —
+     * Balanced means "engine defaults, no target offset". A plain `Int?` could not tell "this playlist
+     * says Balanced" from "this playlist says nothing", which is the difference between overriding the
+     * global setting and inheriting it.
+     */
+    @JvmInline
+    value class Override(val secs: Int?)
+
     /** Effective live buffer in seconds for [mode]; null for [LiveLatency.BALANCED] (no override). */
     fun effectiveSeconds(mode: LiveLatency, customSecs: Int): Int? = when (mode) {
         LiveLatency.LOW -> LOW_SECS

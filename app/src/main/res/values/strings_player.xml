@@ -70,6 +70,8 @@
     <string name="player_image_track"><xliff:g id="label">%1$s</xliff:g> \u00b7 image</string>
     <!-- Translators: Section header in the audio dialog for the A/V sync adjustment controls. -->
     <string name="player_av_sync">A/V sync</string>
+    <!-- Translators: Player audio menu action that stores the current A/V-sync offset for this item. -->
+    <string name="player_av_sync_remember">Remember this delay</string>
     <!-- Translators: Status text in the subtitle timing dialog when the delay is exactly 0ms. -->
     <string name="player_no_offset">No offset</string>
     <!-- Translators: Status text in the subtitle timing dialog when the delay is positive (subtitles appear after the audio). -->

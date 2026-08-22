@@ -60,6 +60,15 @@ interface SourceDao {
     @Query("UPDATE sources SET livePrerollSecs = :secs WHERE id = :id")
     suspend fun updateLivePreroll(id: Long, secs: Int)
 
+    /** Per-playlist Live TV engine override (an `EnginePreference` name); `null` follows the global setting. */
+    @Query("UPDATE sources SET liveEnginePreference = :preference WHERE id = :id")
+    suspend fun updateLiveEnginePreference(id: Long, preference: String?)
+
+    /** Per-playlist Live latency override (a `LiveLatency` name); `null` follows the global setting. The
+     *  seconds are written alongside so a CUSTOM choice can never land without its value. */
+    @Query("UPDATE sources SET liveLatencyMode = :mode, liveLatencyCustomSecs = :customSecs WHERE id = :id")
+    suspend fun updateLiveLatency(id: Long, mode: String?, customSecs: Int)
+
     // --- profile <-> source links (hybrid model) ---
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)

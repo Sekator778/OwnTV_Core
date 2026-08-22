@@ -9,11 +9,11 @@ import kotlinx.coroutines.flow.Flow
 import tv.own.owntv.core.database.entity.PlaybackPrefsEntity
 
 /**
- * Per-item zoom / volume the player remembers for one profile. See [PlaybackPrefsEntity] for why the
+ * Per-item zoom / volume / audio delay the player remembers for one profile. See [PlaybackPrefsEntity] for why the
  * key is the stable content key rather than a Room id (no re-sync relink needed).
  *
- * The two values are written independently — changing the zoom must not wipe a remembered volume —
- * so each has its own upsert that preserves the other column.
+ * The three values are written independently — changing the zoom must not wipe a remembered volume —
+ * so each has its own upsert that preserves the other columns.
  */
 @Dao
 interface PlaybackPrefsDao {
@@ -34,6 +34,7 @@ interface PlaybackPrefsDao {
                 contentKey = contentKey,
                 zoomMode = zoomMode,
                 volumeBoost = existing?.volumeBoost,
+                audioDelayMs = existing?.audioDelayMs,
             ),
         )
     }
@@ -49,6 +50,23 @@ interface PlaybackPrefsDao {
                 contentKey = contentKey,
                 zoomMode = existing?.zoomMode,
                 volumeBoost = volumeBoost,
+                audioDelayMs = existing?.audioDelayMs,
+            ),
+        )
+    }
+
+    /** Remember [audioDelayMs] (null = "follow the global default") without touching zoom or volume. */
+    @Transaction
+    suspend fun setAudioDelay(profileId: Long, contentKey: String, audioDelayMs: Int?) {
+        val existing = get(profileId, contentKey)
+        if (existing == null && audioDelayMs == null) return
+        upsert(
+            PlaybackPrefsEntity(
+                profileId = profileId,
+                contentKey = contentKey,
+                zoomMode = existing?.zoomMode,
+                volumeBoost = existing?.volumeBoost,
+                audioDelayMs = audioDelayMs,
             ),
         )
     }
@@ -70,7 +88,10 @@ interface PlaybackPrefsDao {
     @Query("UPDATE playback_prefs SET volumeBoost = NULL")
     suspend fun clearVolumeColumn()
 
-    @Query("DELETE FROM playback_prefs WHERE zoomMode IS NULL AND volumeBoost IS NULL")
+    @Query("UPDATE playback_prefs SET audioDelayMs = NULL")
+    suspend fun clearAudioDelayColumn()
+
+    @Query("DELETE FROM playback_prefs WHERE zoomMode IS NULL AND volumeBoost IS NULL AND audioDelayMs IS NULL")
     suspend fun dropEmptyRows()
 
     /** Forget every per-item zoom, keeping the per-item volumes. */
@@ -87,10 +108,20 @@ interface PlaybackPrefsDao {
         dropEmptyRows()
     }
 
-    /** Live counts for the two Settings rows' chips ("3 saved" / "None saved"). */
+    /** Forget every per-item audio delay, keeping the per-item zoom modes and volumes. */
+    @Transaction
+    suspend fun clearAudioDelay() {
+        clearAudioDelayColumn()
+        dropEmptyRows()
+    }
+
+    /** Live counts for the Settings rows' chips ("3 saved" / "None saved"). */
     @Query("SELECT COUNT(*) FROM playback_prefs WHERE zoomMode IS NOT NULL")
     fun observeZoomCount(): Flow<Int>
 
     @Query("SELECT COUNT(*) FROM playback_prefs WHERE volumeBoost IS NOT NULL")
     fun observeVolumeCount(): Flow<Int>
+
+    @Query("SELECT COUNT(*) FROM playback_prefs WHERE audioDelayMs IS NOT NULL")
+    fun observeAudioDelayCount(): Flow<Int>
 }

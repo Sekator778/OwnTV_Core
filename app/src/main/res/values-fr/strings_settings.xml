@@ -23,6 +23,10 @@
     <string name="settings_movies_keep_watching_description">Afficher les cartes de reprise des films dans la rangée principale.</string>
     <string name="settings_series_keep_watching">Séries dans Continuer à regarder</string>
     <string name="settings_series_keep_watching_description">Afficher les cartes de reprise des épisodes dans la rangée principale.</string>
+    <!-- Translators: Toggle label for playing the highlighted Home item's video in the hero row. -->
+    <string name="settings_hero_preview">Lire la vidéo dans la rangée principale</string>
+    <!-- Translators: Description of the hero-row video preview toggle. -->
+    <string name="settings_hero_preview_description">L’aperçu vidéo de l’élément sélectionné démarre après un instant. Désactivez pour économiser l’énergie et la mémoire lors de la navigation sur l’écran d’accueil.</string>
     <string name="settings_android_tv_home">Accueil Android TV</string>
     <string name="settings_android_tv_home_description">Afficher Continuer à regarder et les chaînes en direct récentes sur l’écran d’accueil du téléviseur.</string>
     <string name="settings_refresh_now">Actualiser maintenant</string>
@@ -428,6 +432,14 @@
     <string name="settings_reset_saved_volume_confirm">Réinitialiser le volume enregistré ?</string>
     <!-- Translators: Confirmation dialog body before forgetting the saved per-item volume. -->
     <string name="settings_reset_saved_volume_confirm_description">Chaque chaîne, film et épisode revient au volume par défaut. Les réglages de zoom enregistrés sont conservés. Vous pouvez à tout moment régler un élément précis depuis le lecteur.</string>
+    <!-- Translators: Settings row that forgets every per-item audio-sync offset. -->
+    <string name="settings_reset_saved_audio_delay">Réinitialiser la synchronisation A/V enregistrée</string>
+    <!-- Translators: Description of the reset-saved-audio-sync row. -->
+    <string name="settings_reset_saved_audio_delay_description">Choisir « Mémoriser ce décalage » dans le lecteur enregistre la synchronisation audio pour cette chaîne, ce film ou cet épisode. La réinitialisation fait de nouveau suivre le paramètre ci-dessus à tout le monde.</string>
+    <!-- Translators: Title of the confirmation dialog for resetting saved audio sync. -->
+    <string name="settings_reset_saved_audio_delay_confirm">Réinitialiser la synchronisation A/V enregistrée ?</string>
+    <!-- Translators: Body of the confirmation dialog for resetting saved audio sync. -->
+    <string name="settings_reset_saved_audio_delay_confirm_description">Chaque chaîne, film et épisode revient à la synchronisation audio ci-dessus. Le zoom et le volume enregistrés sont conservés. Vous pouvez toujours en régler un individuellement depuis le lecteur.</string>
     <!-- Translators: Setting label for how far rewind/forward jumps in a movie or episode. -->
     <string name="settings_seek_step">Pas d’avance</string>
     <!-- Translators: Description of the seek step setting. -->
@@ -956,6 +968,14 @@
     <string name="settings_live_tune_timeout_description">Si une chaîne en direct n\'a affiché aucune image passé ce délai, OwnTV arrête d\'essayer et vous le dit, au lieu de laisser un écran noir pendant qu\'il passe en revue tous ses lecteurs. « Jamais » continue d\'essayer, ce qui peut prendre bien plus d\'une minute sur une chaîne que votre fournisseur a supprimée. Les attentes demandées par votre fournisseur ne sont pas comptées.</string>
     <string name="settings_live_preroll_per_playlist">Préchargement par liste de lecture</string>
     <string name="settings_live_preroll_per_playlist_description">Remplacez le paramètre ci-dessus pour une liste de lecture tout en gardant vos autres listes de lecture rapides.</string>
+    <!-- Translators: Title of the per-playlist Live TV engine override row. -->
+    <string name="settings_live_engine_per_playlist">Lecteur pour la TV en direct par liste de lecture</string>
+    <!-- Translators: Description of the per-playlist Live TV engine override row. -->
+    <string name="settings_live_engine_per_playlist_description">Remplacez le paramètre ci-dessus pour une liste de lecture, pour un fournisseur dont les chaînes ne passent bien que sur l’un des deux lecteurs.</string>
+    <!-- Translators: Title of the per-playlist Live latency override row. -->
+    <string name="settings_live_latency_per_playlist">Latence du direct par liste de lecture</string>
+    <!-- Translators: Description of the per-playlist Live latency override row. -->
+    <string name="settings_live_latency_per_playlist_description">Remplacez le paramètre ci-dessus pour une liste de lecture, pour un fournisseur qui a besoin d’une mémoire tampon plus grande ou plus petite que les autres.</string>
     <plurals name="settings_live_preroll_overrides">
         <item quantity="one"><xliff:g id="count">%1$d</xliff:g> réglage personnalisé</item>
         <item quantity="many"><xliff:g id="count">%1$d</xliff:g> réglages personnalisés</item>

@@ -33,6 +33,8 @@
     <string name="player_no_tracks">No hay pistas disponibles.</string>
     <string name="player_image_track"><xliff:g id="label">%1$s</xliff:g> · imagen</string>
     <string name="player_av_sync">Sincronización A/V</string>
+    <!-- Translators: Player audio menu action that stores the current A/V-sync offset for this item. -->
+    <string name="player_av_sync_remember">Recordar este desfase</string>
     <string name="player_no_offset">Sin desfase</string>
     <string name="player_subtitles_later">Los subtítulos se muestran más tarde</string>
     <string name="player_subtitles_earlier">Los subtítulos se muestran antes</string>

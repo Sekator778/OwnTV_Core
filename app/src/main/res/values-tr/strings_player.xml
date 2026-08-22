@@ -33,6 +33,8 @@
     <string name="player_no_tracks">Kullanılabilir parça yok.</string>
     <string name="player_image_track"><xliff:g id="label">%1$s</xliff:g> · görsel</string>
     <string name="player_av_sync">Ses/görüntü eşitleme</string>
+    <!-- Translators: Player audio menu action that stores the current A/V-sync offset for this item. -->
+    <string name="player_av_sync_remember">Bu gecikmeyi hatırla</string>
     <string name="player_no_offset">Gecikme yok</string>
     <string name="player_subtitles_later">Altyazılar daha sonra gösteriliyor</string>
     <string name="player_subtitles_earlier">Altyazılar daha önce gösteriliyor</string>

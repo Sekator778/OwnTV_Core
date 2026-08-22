@@ -23,6 +23,10 @@
     <string name="settings_movies_keep_watching_description">Показывать в главном ряду карточки фильмов, просмотр которых можно продолжить.</string>
     <string name="settings_series_keep_watching">Сериалы в ряду «Продолжить просмотр»</string>
     <string name="settings_series_keep_watching_description">Показывать в главном ряду карточки серий, просмотр которых можно продолжить.</string>
+    <!-- Translators: Toggle label for playing the highlighted Home item's video in the hero row. -->
+    <string name="settings_hero_preview">Воспроизводить видео в главном ряду</string>
+    <!-- Translators: Description of the hero-row video preview toggle. -->
+    <string name="settings_hero_preview_description">Видео выделенного элемента запускается через мгновение. Отключите, чтобы экономить энергию и память при просмотре главного экрана.</string>
     <string name="settings_android_tv_home">Главный экран Android TV</string>
     <string name="settings_android_tv_home_description">Показывать на главном экране телевизора ряды «Продолжить просмотр» и недавних каналов прямого эфира.</string>
     <string name="settings_refresh_now">Обновить сейчас</string>
@@ -430,6 +434,14 @@
     <string name="settings_reset_saved_volume_confirm">Сбросить сохранённую громкость?</string>
     <!-- Translators: Confirmation dialog body before forgetting the saved per-item volume. -->
     <string name="settings_reset_saved_volume_confirm_description">Все каналы, фильмы и серии вернутся к громкости по умолчанию. Сохранённые настройки масштаба останутся. Отдельный элемент всегда можно настроить заново прямо в плеере.</string>
+    <!-- Translators: Settings row that forgets every per-item audio-sync offset. -->
+    <string name="settings_reset_saved_audio_delay">Сбросить сохранённую синхронизацию звука</string>
+    <!-- Translators: Description of the reset-saved-audio-sync row. -->
+    <string name="settings_reset_saved_audio_delay_description">Выбор «Запомнить эту задержку» в плеере сохраняет синхронизацию звука для этого канала, фильма или серии. Сброс возвращает всё к настройке выше.</string>
+    <!-- Translators: Title of the confirmation dialog for resetting saved audio sync. -->
+    <string name="settings_reset_saved_audio_delay_confirm">Сбросить сохранённую синхронизацию звука?</string>
+    <!-- Translators: Body of the confirmation dialog for resetting saved audio sync. -->
+    <string name="settings_reset_saved_audio_delay_confirm_description">Каждый канал, фильм и серия вернутся к синхронизации звука выше. Сохранённые масштаб и громкость останутся. Отдельное значение всегда можно задать заново из плеера.</string>
     <!-- Translators: Setting label for how far rewind/forward jumps in a movie or episode. -->
     <string name="settings_seek_step">Шаг перемотки</string>
     <!-- Translators: Description of the seek step setting. -->
@@ -973,6 +985,14 @@
     <string name="settings_live_tune_timeout_description">Если за это время на прямом канале не появилось изображение, OwnTV прекращает попытки и сообщает вам об этом, вместо того чтобы держать чёрный экран, перебирая все свои плееры. «Никогда» продолжает попытки, а на канале, удалённом провайдером, это может занять заметно больше минуты. Ожидание, о котором просит сам провайдер, не учитывается.</string>
     <string name="settings_live_preroll_per_playlist">Предварительная буферизация для плейлиста</string>
     <string name="settings_live_preroll_per_playlist_description">Переопределяет указанную выше настройку для одного плейлиста, сохраняя быстрый запуск остальных плейлистов.</string>
+    <!-- Translators: Title of the per-playlist Live TV engine override row. -->
+    <string name="settings_live_engine_per_playlist">Плеер прямого эфира для плейлиста</string>
+    <!-- Translators: Description of the per-playlist Live TV engine override row. -->
+    <string name="settings_live_engine_per_playlist_description">Переопределяет указанную выше настройку для одного плейлиста — для провайдера, каналы которого хорошо воспроизводит только один из плееров.</string>
+    <!-- Translators: Title of the per-playlist Live latency override row. -->
+    <string name="settings_live_latency_per_playlist">Задержка прямого эфира для плейлиста</string>
+    <!-- Translators: Description of the per-playlist Live latency override row. -->
+    <string name="settings_live_latency_per_playlist_description">Переопределяет указанную выше настройку для одного плейлиста — для провайдера, которому нужен больший или меньший буфер, чем остальным.</string>
     <plurals name="settings_live_preroll_overrides">
         <item quantity="one"><xliff:g id="count">%1$d</xliff:g> набор</item>
         <item quantity="few"><xliff:g id="count">%1$d</xliff:g> набора</item>

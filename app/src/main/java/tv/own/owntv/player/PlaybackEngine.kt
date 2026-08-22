@@ -101,6 +101,10 @@ interface PlaybackEngine {
     /** True when this engine can shift audio against video (mpv's `audio-delay`). ExoPlayer cannot, so
      *  the HUD hides the nudge there. mpv supports it on live too — provider A/V drift is real (F19e). */
     fun audioDelayAvailable(): Boolean = false
+    /** Whether the current item has its own remembered A/V-sync offset (mpv only). */
+    val audioDelayRemembered: StateFlow<Boolean> get() = FALSE_FLOW
+    /** Remember the current A/V-sync offset for this item, or forget it again (mpv only). */
+    fun toggleRememberAudioDelay() {}
     /** Subtitle-timing offset (ms) for the ACTIVE subtitle — VOD only (subtitle plan §8). */
     val subDelayMs: StateFlow<Int> get() = ZERO_INT
     /** Settings → Seek step: how far one press of rewind/forward moves. VOD only; a live engine never
@@ -181,6 +185,8 @@ class MpvPlaybackEngine(private val p: OwnTVPlayer) : PlaybackEngine {
     override fun refreshStreamChips() = p.refreshStreamChips()
     override fun setSpeed(speed: Double) = p.setSpeed(speed)
     override fun adjustAudioDelay(deltaMs: Int) = p.adjustAudioDelay(deltaMs)
+    override val audioDelayRemembered get() = p.audioDelayRemembered
+    override fun toggleRememberAudioDelay() = p.toggleRememberAudioDelay()
     override fun previous() = p.previous()
     override fun next() = p.next()
     override fun seekBy(deltaMs: Long) = p.seekBy(deltaMs)

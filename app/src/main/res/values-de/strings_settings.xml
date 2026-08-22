@@ -23,6 +23,10 @@
     <string name="settings_movies_keep_watching_description">Karten zum Fortsetzen von Filmen in der hervorgehobenen Zeile anzeigen.</string>
     <string name="settings_series_keep_watching">Serien unter „Weiterschauen“</string>
     <string name="settings_series_keep_watching_description">Karten zum Fortsetzen von Folgen in der hervorgehobenen Zeile anzeigen.</string>
+    <!-- Translators: Toggle label for playing the highlighted Home item's video in the hero row. -->
+    <string name="settings_hero_preview">Video in der hervorgehobenen Zeile abspielen</string>
+    <!-- Translators: Description of the hero-row video preview toggle. -->
+    <string name="settings_hero_preview_description">Die Videovorschau des markierten Titels startet nach einem Moment. Zum Sparen von Strom und Speicher beim Durchsuchen des Startbildschirms ausschalten.</string>
     <string name="settings_android_tv_home">Android TV-Startbildschirm</string>
     <string name="settings_android_tv_home_description">„Weiterschauen“ und kürzlich angesehene Live-Sender auf dem TV-Startbildschirm anzeigen.</string>
     <string name="settings_refresh_now">Jetzt aktualisieren</string>
@@ -426,6 +430,14 @@
     <string name="settings_reset_saved_volume_confirm">Gespeicherte Lautstärke zurücksetzen?</string>
     <!-- Translators: Confirmation dialog body before forgetting the saved per-item volume. -->
     <string name="settings_reset_saved_volume_confirm_description">Jeder Kanal, jeder Film und jede Folge kehrt zur Standardlautstärke zurück. Gespeicherte Zoom-Einstellungen bleiben erhalten. Du kannst einzelne Titel jederzeit erneut im Player einstellen.</string>
+    <!-- Translators: Settings row that forgets every per-item audio-sync offset. -->
+    <string name="settings_reset_saved_audio_delay">Gespeicherte A/V-Synchronisierung zurücksetzen</string>
+    <!-- Translators: Description of the reset-saved-audio-sync row. -->
+    <string name="settings_reset_saved_audio_delay_description">Mit „Diese Verzögerung merken“ im Player wird die Audiosynchronisierung für diesen Sender, Film oder diese Folge gespeichert. Zurücksetzen lässt wieder alles der Einstellung oben folgen.</string>
+    <!-- Translators: Title of the confirmation dialog for resetting saved audio sync. -->
+    <string name="settings_reset_saved_audio_delay_confirm">Gespeicherte A/V-Synchronisierung zurücksetzen?</string>
+    <!-- Translators: Body of the confirmation dialog for resetting saved audio sync. -->
+    <string name="settings_reset_saved_audio_delay_confirm_description">Jeder Sender, Film und jede Folge kehrt zur Audiosynchronisierung oben zurück. Gespeicherter Zoom und gespeicherte Lautstärke bleiben erhalten. Einzelne Werte lassen sich jederzeit wieder im Player setzen.</string>
     <!-- Translators: Setting label for how far rewind/forward jumps in a movie or episode. -->
     <string name="settings_seek_step">Sprungweite</string>
     <!-- Translators: Description of the seek step setting. -->
@@ -939,6 +951,14 @@
     <string name="settings_live_tune_timeout_description">Zeigt ein Live-Sender bis dahin kein Bild, hört OwnTV auf und sagt Ihnen Bescheid, statt einen schwarzen Bildschirm stehen zu lassen, während nacheinander alle Player durchprobiert werden. „Nie“ probiert weiter, was bei einem vom Anbieter entfernten Sender deutlich über eine Minute dauern kann. Wartezeiten, die Ihr Anbieter selbst verlangt, zählen nicht mit.</string>
     <string name="settings_live_preroll_per_playlist">Pro Playlist vorpuffern</string>
     <string name="settings_live_preroll_per_playlist_description">Überschreibt die obige Einstellung für eine Playlist, während die anderen Playlists schnell starten.</string>
+    <!-- Translators: Title of the per-playlist Live TV engine override row. -->
+    <string name="settings_live_engine_per_playlist">Player für Live-TV pro Playlist</string>
+    <!-- Translators: Description of the per-playlist Live TV engine override row. -->
+    <string name="settings_live_engine_per_playlist_description">Überschreibt die obige Einstellung für eine Playlist — für einen Anbieter, dessen Sender nur einer der beiden Player gut wiedergibt.</string>
+    <!-- Translators: Title of the per-playlist Live latency override row. -->
+    <string name="settings_live_latency_per_playlist">Live-Latenz pro Playlist</string>
+    <!-- Translators: Description of the per-playlist Live latency override row. -->
+    <string name="settings_live_latency_per_playlist_description">Überschreibt die obige Einstellung für eine Playlist — für einen Anbieter, der einen größeren oder kleineren Puffer als die anderen braucht.</string>
     <plurals name="settings_live_preroll_overrides">
         <item quantity="one"><xliff:g id="count">%1$d</xliff:g> Playlist angepasst</item>
         <item quantity="other"><xliff:g id="count">%1$d</xliff:g> Playlists angepasst</item>

@@ -23,6 +23,10 @@
     <string name="settings_movies_keep_watching_description">Mostra nella riga principale le schede per riprendere i film.</string>
     <string name="settings_series_keep_watching">Serie in Continua a guardare</string>
     <string name="settings_series_keep_watching_description">Mostra nella riga principale le schede per riprendere gli episodi.</string>
+    <!-- Translators: Toggle label for playing the highlighted Home item's video in the hero row. -->
+    <string name="settings_hero_preview">Riproduci il video nella riga principale</string>
+    <!-- Translators: Description of the hero-row video preview toggle. -->
+    <string name="settings_hero_preview_description">L\'anteprima video dell\'elemento selezionato parte dopo un istante. Disattivala per risparmiare energia e memoria mentre esplori la schermata Home.</string>
     <string name="settings_android_tv_home">Schermata Home di Android TV</string>
     <string name="settings_android_tv_home_description">Mostra Continua a guardare e i canali in diretta recenti nella schermata Home della TV.</string>
     <string name="settings_refresh_now">Aggiorna ora</string>
@@ -428,6 +432,14 @@
     <string name="settings_reset_saved_volume_confirm">Reimpostare il volume salvato?</string>
     <!-- Translators: Confirmation dialog body before forgetting the saved per-item volume. -->
     <string name="settings_reset_saved_volume_confirm_description">Ogni canale, film ed episodio torna al volume predefinito. Le impostazioni di zoom salvate vengono mantenute. Puoi sempre impostare di nuovo un singolo titolo dal player.</string>
+    <!-- Translators: Settings row that forgets every per-item audio-sync offset. -->
+    <string name="settings_reset_saved_audio_delay">Reimposta la sincronizzazione A/V salvata</string>
+    <!-- Translators: Description of the reset-saved-audio-sync row. -->
+    <string name="settings_reset_saved_audio_delay_description">Scegliendo \'Ricorda questo ritardo\' nel player, la sincronizzazione audio viene salvata per quel canale, film o episodio. Reimposta fa tornare tutto all\'impostazione qui sopra.</string>
+    <!-- Translators: Title of the confirmation dialog for resetting saved audio sync. -->
+    <string name="settings_reset_saved_audio_delay_confirm">Reimpostare la sincronizzazione A/V salvata?</string>
+    <!-- Translators: Body of the confirmation dialog for resetting saved audio sync. -->
+    <string name="settings_reset_saved_audio_delay_confirm_description">Ogni canale, film ed episodio torna alla sincronizzazione audio qui sopra. Lo zoom e il volume salvati vengono mantenuti. Puoi sempre reimpostarne uno singolo dal player.</string>
     <!-- Translators: Setting label for how far rewind/forward jumps in a movie or episode. -->
     <string name="settings_seek_step">Passo di avanzamento</string>
     <!-- Translators: Description of the seek step setting. -->
@@ -956,6 +968,14 @@
     <string name="settings_live_tune_timeout_description">Se entro questo tempo un canale in diretta non ha mostrato immagini, OwnTV smette di provare e te lo dice, invece di lasciare uno schermo nero mentre passa in rassegna tutti i suoi lettori. «Mai» continua a provare, cosa che su un canale rimosso dal tuo provider può richiedere ben oltre un minuto. Le attese richieste dal provider non vengono conteggiate.</string>
     <string name="settings_live_preroll_per_playlist">Pre-buffer per playlist</string>
     <string name="settings_live_preroll_per_playlist_description">Sostituisce l\'impostazione qui sopra per una playlist, mantenendo rapide le altre playlist.</string>
+    <!-- Translators: Title of the per-playlist Live TV engine override row. -->
+    <string name="settings_live_engine_per_playlist">Player per la TV in diretta per playlist</string>
+    <!-- Translators: Description of the per-playlist Live TV engine override row. -->
+    <string name="settings_live_engine_per_playlist_description">Sostituisce l\'impostazione qui sopra per una playlist, per un provider i cui canali funzionano bene solo con uno dei due player.</string>
+    <!-- Translators: Title of the per-playlist Live latency override row. -->
+    <string name="settings_live_latency_per_playlist">Latenza della diretta per playlist</string>
+    <!-- Translators: Description of the per-playlist Live latency override row. -->
+    <string name="settings_live_latency_per_playlist_description">Sostituisce l\'impostazione qui sopra per una playlist, per un provider che richiede un buffer più profondo o più ridotto degli altri.</string>
     <plurals name="settings_live_preroll_overrides">
         <item quantity="one"><xliff:g id="count">%1$d</xliff:g> set</item>
         <item quantity="many"><xliff:g id="count">%1$d</xliff:g> set</item>

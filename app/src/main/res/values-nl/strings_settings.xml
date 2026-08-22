@@ -23,6 +23,10 @@
     <string name="settings_movies_keep_watching_description">Toon kaarten om films te hervatten in de prominente rij.</string>
     <string name="settings_series_keep_watching">Series in Verder kijken</string>
     <string name="settings_series_keep_watching_description">Toon kaarten om afleveringen te hervatten in de prominente rij.</string>
+    <!-- Translators: Toggle label for playing the highlighted Home item's video in the hero row. -->
+    <string name="settings_hero_preview">Video afspelen in de prominente rij</string>
+    <!-- Translators: Description of the hero-row video preview toggle. -->
+    <string name="settings_hero_preview_description">De videovoorbeeldweergave van het gemarkeerde item start na een moment. Schakel uit om stroom en geheugen te sparen tijdens het bladeren op het startscherm.</string>
     <string name="settings_android_tv_home">Startscherm van Android TV</string>
     <string name="settings_android_tv_home_description">Toon Verder kijken en recente live-zenders op het startscherm van de tv.</string>
     <string name="settings_refresh_now">Nu vernieuwen</string>
@@ -426,6 +430,14 @@
     <string name="settings_reset_saved_volume_confirm">Opgeslagen volume opnieuw instellen?</string>
     <!-- Translators: Confirmation dialog body before forgetting the saved per-item volume. -->
     <string name="settings_reset_saved_volume_confirm_description">Elk kanaal, elke film en aflevering keert terug naar het standaardvolume. Opgeslagen zoominstellingen blijven behouden. Je kunt een afzonderlijke titel altijd opnieuw instellen vanuit de speler.</string>
+    <!-- Translators: Settings row that forgets every per-item audio-sync offset. -->
+    <string name="settings_reset_saved_audio_delay">Opgeslagen A/V-synchronisatie opnieuw instellen</string>
+    <!-- Translators: Description of the reset-saved-audio-sync row. -->
+    <string name="settings_reset_saved_audio_delay_description">Als je in de speler ‘Deze vertraging onthouden’ kiest, wordt de audiosynchronisatie voor dat kanaal, die film of die aflevering opgeslagen. Opnieuw instellen laat alles weer de instelling hierboven volgen.</string>
+    <!-- Translators: Title of the confirmation dialog for resetting saved audio sync. -->
+    <string name="settings_reset_saved_audio_delay_confirm">Opgeslagen A/V-synchronisatie opnieuw instellen?</string>
+    <!-- Translators: Body of the confirmation dialog for resetting saved audio sync. -->
+    <string name="settings_reset_saved_audio_delay_confirm_description">Elk kanaal, elke film en elke aflevering keert terug naar de audiosynchronisatie hierboven. Opgeslagen zoom en volume blijven behouden. Je kunt er altijd weer een afzonderlijk instellen vanuit de speler.</string>
     <!-- Translators: Setting label for how far rewind/forward jumps in a movie or episode. -->
     <string name="settings_seek_step">Zoekstap</string>
     <!-- Translators: Description of the seek step setting. -->
@@ -939,6 +951,14 @@
     <string name="settings_live_tune_timeout_description">Als een livekanaal binnen deze tijd geen beeld heeft laten zien, stopt OwnTV met proberen en laat het je weten, in plaats van een zwart scherm te tonen terwijl het alle spelers een voor een afgaat. ‘Nooit’ blijft proberen, wat op een kanaal dat je provider heeft verwijderd ruim een minuut kan duren. Wachttijden waar je provider zelf om vraagt, tellen niet mee.</string>
     <string name="settings_live_preroll_per_playlist">Vooraf bufferen per afspeellijst</string>
     <string name="settings_live_preroll_per_playlist_description">Overschrijf de bovenstaande instelling voor één afspeellijst terwijl je andere afspeellijsten snel blijven.</string>
+    <!-- Translators: Title of the per-playlist Live TV engine override row. -->
+    <string name="settings_live_engine_per_playlist">Speler voor live-tv per afspeellijst</string>
+    <!-- Translators: Description of the per-playlist Live TV engine override row. -->
+    <string name="settings_live_engine_per_playlist_description">Overschrijf de bovenstaande instelling voor één afspeellijst — voor een aanbieder waarvan de kanalen maar met één van de spelers goed werken.</string>
+    <!-- Translators: Title of the per-playlist Live latency override row. -->
+    <string name="settings_live_latency_per_playlist">Livevertraging per afspeellijst</string>
+    <!-- Translators: Description of the per-playlist Live latency override row. -->
+    <string name="settings_live_latency_per_playlist_description">Overschrijf de bovenstaande instelling voor één afspeellijst — voor een aanbieder die een grotere of kleinere buffer nodig heeft dan de andere.</string>
     <plurals name="settings_live_preroll_overrides">
         <item quantity="one"><xliff:g id="count">%1$d</xliff:g> set</item>
         <item quantity="other"><xliff:g id="count">%1$d</xliff:g> sets</item>

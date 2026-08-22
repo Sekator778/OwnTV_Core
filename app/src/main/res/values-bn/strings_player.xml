@@ -33,6 +33,8 @@
     <string name="player_no_tracks">কোনো ট্র্যাক পাওয়া যায়নি।</string>
     <string name="player_image_track"><xliff:g id="label">%1$s</xliff:g> · ছবি</string>
     <string name="player_av_sync">A/V সিঙ্ক</string>
+    <!-- Translators: Player audio menu action that stores the current A/V-sync offset for this item. -->
+    <string name="player_av_sync_remember">এই বিলম্ব মনে রাখুন</string>
     <string name="player_no_offset">কোনো সময়ের ব্যবধান নেই</string>
     <string name="player_subtitles_later">সাবটাইটেল পরে দেখানো হচ্ছে</string>
     <string name="player_subtitles_earlier">সাবটাইটেল আগে দেখানো হচ্ছে</string>

@@ -23,6 +23,10 @@
     <string name="settings_movies_keep_watching_description">मुख्य पंक्ति में फ़िल्म का प्लेबैक जारी रखने वाले कार्ड दिखाएँ।</string>
     <string name="settings_series_keep_watching">‘देखना जारी रखें’ में सीरीज़</string>
     <string name="settings_series_keep_watching_description">मुख्य पंक्ति में एपिसोड का प्लेबैक जारी रखने वाले कार्ड दिखाएँ।</string>
+    <!-- Translators: Toggle label for playing the highlighted Home item's video in the hero row. -->
+    <string name="settings_hero_preview">मुख्य पंक्ति में वीडियो चलाएँ</string>
+    <!-- Translators: Description of the hero-row video preview toggle. -->
+    <string name="settings_hero_preview_description">चयनित आइटम का वीडियो प्रीव्यू कुछ देर बाद चलता है। होम स्क्रीन ब्राउज़ करते समय बिजली और मेमोरी बचाने के लिए इसे बंद करें।</string>
     <string name="settings_android_tv_home">Android TV होम</string>
     <string name="settings_android_tv_home_description">TV की होम स्क्रीन पर ‘देखना जारी रखें’ और हाल के लाइव चैनल दिखाएँ।</string>
     <string name="settings_refresh_now">अभी रीफ़्रेश करें</string>
@@ -426,6 +430,14 @@
     <string name="settings_reset_saved_volume_confirm">सहेजा गया वॉल्यूम रीसेट करें?</string>
     <!-- Translators: Confirmation dialog body before forgetting the saved per-item volume. -->
     <string name="settings_reset_saved_volume_confirm_description">हर चैनल, फ़िल्म और एपिसोड फिर से डिफ़ॉल्ट वॉल्यूम पर लौट जाएगा। सहेजी गई ज़ूम सेटिंग्स बनी रहेंगी। आप किसी एक को प्लेयर से कभी भी दोबारा सेट कर सकते हैं।</string>
+    <!-- Translators: Settings row that forgets every per-item audio-sync offset. -->
+    <string name="settings_reset_saved_audio_delay">सहेजा गया A/V सिंक रीसेट करें</string>
+    <!-- Translators: Description of the reset-saved-audio-sync row. -->
+    <string name="settings_reset_saved_audio_delay_description">प्लेयर में ‘यह विलंब याद रखें’ चुनने पर उस चैनल, फ़िल्म या एपिसोड के लिए ऑडियो सिंक सहेजा जाता है। रीसेट करने पर सब कुछ फिर से ऊपर वाली सेटिंग का पालन करेगा।</string>
+    <!-- Translators: Title of the confirmation dialog for resetting saved audio sync. -->
+    <string name="settings_reset_saved_audio_delay_confirm">सहेजा गया A/V सिंक रीसेट करें?</string>
+    <!-- Translators: Body of the confirmation dialog for resetting saved audio sync. -->
+    <string name="settings_reset_saved_audio_delay_confirm_description">हर चैनल, फ़िल्म और एपिसोड ऊपर वाले ऑडियो सिंक पर लौट आएगा। सहेजे गए ज़ूम और वॉल्यूम बने रहेंगे। आप प्लेयर से किसी एक को फिर से सेट कर सकते हैं।</string>
     <!-- Translators: Setting label for how far rewind/forward jumps in a movie or episode. -->
     <string name="settings_seek_step">सीक स्टेप</string>
     <!-- Translators: Description of the seek step setting. -->
@@ -939,6 +951,14 @@
     <string name="settings_live_tune_timeout_description">अगर इस समय तक किसी लाइव चैनल पर तस्वीर नहीं आई, तो OwnTV कोशिश करना बंद कर देगा और आपको बता देगा — अपने सारे प्लेयर एक-एक करके आज़माते हुए काली स्क्रीन छोड़ने के बजाय। “कभी नहीं” चुनने पर कोशिश चलती रहती है, और आपके प्रदाता द्वारा हटाए गए चैनल पर इसमें एक मिनट से भी ज़्यादा लग सकता है। प्रदाता खुद जो इंतज़ार माँगता है, वह इसमें नहीं गिना जाता।</string>
     <string name="settings_live_preroll_per_playlist">प्रति प्लेलिस्ट पहले से बफ़र करें</string>
     <string name="settings_live_preroll_per_playlist_description">ऊपर वाली सेटिंग को एक प्लेलिस्ट के लिए अलग से सेट करें, जबकि बाकी प्लेलिस्ट तेज़ बनी रहें।</string>
+    <!-- Translators: Title of the per-playlist Live TV engine override row. -->
+    <string name="settings_live_engine_per_playlist">हर प्लेलिस्ट के लिए लाइव टीवी का प्लेयर</string>
+    <!-- Translators: Description of the per-playlist Live TV engine override row. -->
+    <string name="settings_live_engine_per_playlist_description">ऊपर वाली सेटिंग को एक प्लेलिस्ट के लिए अलग से सेट करें — ऐसे प्रदाता के लिए जिसके चैनल सिर्फ़ एक ही प्लेयर पर ठीक चलते हैं।</string>
+    <!-- Translators: Title of the per-playlist Live latency override row. -->
+    <string name="settings_live_latency_per_playlist">हर प्लेलिस्ट के लिए लाइव विलंबता</string>
+    <!-- Translators: Description of the per-playlist Live latency override row. -->
+    <string name="settings_live_latency_per_playlist_description">ऊपर वाली सेटिंग को एक प्लेलिस्ट के लिए अलग से सेट करें — ऐसे प्रदाता के लिए जिसे बाकी से बड़ा या छोटा बफ़र चाहिए।</string>
     <plurals name="settings_live_preroll_overrides">
         <item quantity="one"><xliff:g id="count">%1$d</xliff:g> सेट</item>
         <item quantity="other"><xliff:g id="count">%1$d</xliff:g> सेट</item>
