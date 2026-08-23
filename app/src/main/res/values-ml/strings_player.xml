@@ -47,6 +47,7 @@
     <string name="player_next_episode">അടുത്ത എപ്പിസോഡ് <xliff:g id="seconds">%1$d</xliff:g> സെക്കൻഡിനകം</string>
     <string name="player_play_now">ഇപ്പോൾ പ്ലേ ചെയ്യുക</string>
     <string name="player_volume">ശബ്ദനില</string>
+    <string name="player_control_engine">പ്ലേയർ എൻജിൻ</string>
     <string name="player_unmute">ശബ്ദം ഓണാക്കുക</string>
     <string name="player_mute">നിശ്ശബ്ദമാക്കുക</string>
     <string name="player_percent"><xliff:g id="value">%1$d</xliff:g>%%</string>

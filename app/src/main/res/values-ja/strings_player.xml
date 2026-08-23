@@ -47,6 +47,7 @@
     <string name="player_next_episode">次のエピソードまであと<xliff:g id="seconds">%1$d</xliff:g>秒</string>
     <string name="player_play_now">今すぐ再生</string>
     <string name="player_volume">音量</string>
+    <string name="player_control_engine">再生エンジン</string>
     <string name="player_unmute">ミュート解除</string>
     <string name="player_mute">ミュート</string>
     <string name="player_percent"><xliff:g id="value">%1$d</xliff:g>%%</string>

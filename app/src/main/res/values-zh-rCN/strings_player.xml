@@ -47,6 +47,7 @@
     <string name="player_next_episode"><xliff:g id="seconds">%1$d</xliff:g> 秒后播放下一集</string>
     <string name="player_play_now">立即播放</string>
     <string name="player_volume">音量</string>
+    <string name="player_control_engine">播放引擎</string>
     <string name="player_unmute">取消静音</string>
     <string name="player_mute">静音</string>
     <string name="player_percent"><xliff:g id="value">%1$d</xliff:g>%%</string>

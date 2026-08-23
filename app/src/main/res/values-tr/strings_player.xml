@@ -47,6 +47,7 @@
     <string name="player_next_episode">Sonraki bölüm <xliff:g id="seconds">%1$d</xliff:g> sn sonra</string>
     <string name="player_play_now">Şimdi oynat</string>
     <string name="player_volume">Ses düzeyi</string>
+    <string name="player_control_engine">Oynatıcı motoru</string>
     <string name="player_unmute">Sesi aç</string>
     <string name="player_mute">Sesi kapat</string>
     <string name="player_percent"><xliff:g id="value">%1$d</xliff:g>%%</string>

@@ -47,6 +47,7 @@
     <string name="player_next_episode">الحلقة التالية خلال <xliff:g id="seconds">%1$d</xliff:g> ث</string>
     <string name="player_play_now">تشغيل الآن</string>
     <string name="player_volume">مستوى الصوت</string>
+    <string name="player_control_engine">محرك المشغل</string>
     <string name="player_unmute">إلغاء كتم الصوت</string>
     <string name="player_mute">كتم الصوت</string>
     <string name="player_percent"><xliff:g id="value">%1$d</xliff:g>%%</string>

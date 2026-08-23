@@ -96,6 +96,8 @@
     <string name="player_play_now">Play now</string>
     <!-- Translators: Dialog title for the volume adjustment dialog in the player HUD. -->
     <string name="player_volume">Volume</string>
+    <!-- Translators: Name of the player-engine toggle button in the player control bar, shown while it has focus. It switches playback between the two video engines. -->
+    <string name="player_control_engine">Player engine</string>
     <!-- Translators: Button in the volume dialog to unmute audio. Shown when volume is currently 0. -->
     <string name="player_unmute">Unmute</string>
     <!-- Translators: Button in the volume dialog to mute audio. Shown when volume is currently audible. -->

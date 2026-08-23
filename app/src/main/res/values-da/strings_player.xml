@@ -47,6 +47,7 @@
     <string name="player_next_episode">Næste afsnit om <xliff:g id="seconds">%1$d</xliff:g> sek.</string>
     <string name="player_play_now">Afspil nu</string>
     <string name="player_volume">Lydstyrke</string>
+    <string name="player_control_engine">Afspillermotor</string>
     <string name="player_unmute">Slå lyd til</string>
     <string name="player_mute">Slå lyd fra</string>
     <string name="player_percent"><xliff:g id="value">%1$d</xliff:g>%%</string>

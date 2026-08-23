@@ -47,6 +47,7 @@
     <string name="player_next_episode">Épisode suivant dans <xliff:g id="seconds">%1$d</xliff:g> s</string>
     <string name="player_play_now">Lire maintenant</string>
     <string name="player_volume">Volume</string>
+    <string name="player_control_engine">Moteur du lecteur</string>
     <string name="player_unmute">Rétablir le son</string>
     <string name="player_mute">Couper le son</string>
     <string name="player_percent"><xliff:g id="value">%1$d</xliff:g> %%</string>

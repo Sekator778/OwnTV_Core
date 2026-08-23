@@ -47,6 +47,7 @@
     <string name="player_next_episode">Следующая серия через <xliff:g id="seconds">%1$d</xliff:g> с</string>
     <string name="player_play_now">Смотреть сейчас</string>
     <string name="player_volume">Громкость</string>
+    <string name="player_control_engine">Движок плеера</string>
     <string name="player_unmute">Включить звук</string>
     <string name="player_mute">Выключить звук</string>
     <string name="player_percent"><xliff:g id="value">%1$d</xliff:g>%%</string>

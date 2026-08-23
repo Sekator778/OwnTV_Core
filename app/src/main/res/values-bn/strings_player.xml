@@ -47,6 +47,7 @@
     <string name="player_next_episode">পরবর্তী পর্ব <xliff:g id="seconds">%1$d</xliff:g> সেকেন্ডে</string>
     <string name="player_play_now">এখনই চালান</string>
     <string name="player_volume">ভলিউম</string>
+    <string name="player_control_engine">প্লেয়ার ইঞ্জিন</string>
     <string name="player_unmute">নিঃশব্দ বন্ধ করুন</string>
     <string name="player_mute">নিঃশব্দ করুন</string>
     <string name="player_percent"><xliff:g id="value">%1$d</xliff:g>%%</string>

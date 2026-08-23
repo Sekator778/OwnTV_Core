@@ -47,6 +47,7 @@
     <string name="player_next_episode">다음 에피소드까지 <xliff:g id="seconds">%1$d</xliff:g>초</string>
     <string name="player_play_now">지금 재생</string>
     <string name="player_volume">볼륨</string>
+    <string name="player_control_engine">재생 엔진</string>
     <string name="player_unmute">음소거 해제</string>
     <string name="player_mute">음소거</string>
     <string name="player_percent"><xliff:g id="value">%1$d</xliff:g>%%</string>
