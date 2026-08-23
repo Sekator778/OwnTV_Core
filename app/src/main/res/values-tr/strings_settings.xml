@@ -162,7 +162,6 @@
     <string name="settings_quick_check_update">Güncellemeleri denetle</string>
     <string name="settings_search_label">Ayarlarda ara</string>
     <string name="settings_search_hint">Ayarlarda ara…</string>
-    <string name="settings_group_general">Genel</string>
     <string name="settings_language">Dil</string>
     <string name="settings_language_description">Uygulamanın görüntüleme dili</string>
     <string name="settings_language_system_default">Sistem varsayılanı</string>
@@ -172,7 +171,6 @@
     <string name="settings_language_coverage"><xliff:g id="percent">%1$d</xliff:g>%%</string>
     <string name="settings_profile_group">Profil</string>
     <string name="settings_profiles_description">İzleyicileri, çocuk modunu ve PIN kilitlerini yönetin</string>
-    <string name="settings_content_group">İçerik</string>
     <string name="settings_playlists">Oynatma listeleri</string>
     <string name="settings_playlists_description">M3U / Xtream oynatma listeleri ekleyin, yeniden eşitleyin veya kaldırın</string>
     <string name="settings_epg_sources">EPG Kaynakları</string>
@@ -306,7 +304,10 @@
     <string name="settings_accent_green">Yeşil</string>
     <string name="settings_accent_amber">Kehribar</string>
     <string name="settings_group_profile">Profil</string>
-    <string name="settings_group_content">İçerik</string>
+    <string name="settings_group_sources">Kaynaklar ve rehber</string>
+    <string name="settings_group_layout">Düzen</string>
+    <string name="settings_group_content_metadata">İçerik ve meta veriler</string>
+    <string name="settings_group_data">Veriler</string>
     <string name="settings_group_appearance">Görünüm</string>
     <string name="settings_group_playback">Oynatma</string>
     <string name="settings_group_network">Ağ</string>

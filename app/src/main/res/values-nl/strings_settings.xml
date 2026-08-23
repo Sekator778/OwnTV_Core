@@ -162,7 +162,6 @@
     <string name="settings_quick_check_update">Controleren op update</string>
     <string name="settings_search_label">Instellingen doorzoeken</string>
     <string name="settings_search_hint">Instellingen doorzoeken…</string>
-    <string name="settings_group_general">Algemeen</string>
     <string name="settings_language">Taal</string>
     <string name="settings_language_description">Weergavetaal van de app</string>
     <string name="settings_language_system_default">Systeemstandaard</string>
@@ -172,7 +171,6 @@
     <string name="settings_language_coverage"><xliff:g id="percent">%1$d</xliff:g>%%</string>
     <string name="settings_profile_group">Profiel</string>
     <string name="settings_profiles_description">Beheer kijkers, kindermodus en PIN-vergrendelingen</string>
-    <string name="settings_content_group">Inhoud</string>
     <string name="settings_playlists">Afspeellijsten</string>
     <string name="settings_playlists_description">M3U- / Xtream-afspeellijsten toevoegen, opnieuw synchroniseren of verwijderen</string>
     <string name="settings_epg_sources">EPG-bronnen</string>
@@ -306,7 +304,10 @@
     <string name="settings_accent_green">Groen</string>
     <string name="settings_accent_amber">Amber</string>
     <string name="settings_group_profile">Profiel</string>
-    <string name="settings_group_content">Inhoud</string>
+    <string name="settings_group_sources">Bronnen en gids</string>
+    <string name="settings_group_layout">Indeling</string>
+    <string name="settings_group_content_metadata">Inhoud en metagegevens</string>
+    <string name="settings_group_data">Gegevens</string>
     <string name="settings_group_appearance">Weergave</string>
     <string name="settings_group_playback">Afspelen</string>
     <string name="settings_group_network">Netwerk</string>

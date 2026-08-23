@@ -162,7 +162,6 @@
     <string name="settings_quick_check_update">Sök efter uppdatering</string>
     <string name="settings_search_label">Sök i inställningarna</string>
     <string name="settings_search_hint">Sök i inställningarna…</string>
-    <string name="settings_group_general">Allmänt</string>
     <string name="settings_language">Språk</string>
     <string name="settings_language_description">Appens visningsspråk</string>
     <string name="settings_language_system_default">Systemets standardinställning</string>
@@ -172,7 +171,6 @@
     <string name="settings_language_coverage"><xliff:g id="percent">%1$d</xliff:g>%%</string>
     <string name="settings_profile_group">Profil</string>
     <string name="settings_profiles_description">Hantera tittare, barnläge och PIN-lås</string>
-    <string name="settings_content_group">Innehåll</string>
     <string name="settings_playlists">Spellistor</string>
     <string name="settings_playlists_description">Lägg till, omsynkronisera eller ta bort M3U- / Xtream-spellistor</string>
     <string name="settings_epg_sources">EPG-källor</string>
@@ -306,7 +304,10 @@
     <string name="settings_accent_green">Grön</string>
     <string name="settings_accent_amber">Bärnstensgul</string>
     <string name="settings_group_profile">Profil</string>
-    <string name="settings_group_content">Innehåll</string>
+    <string name="settings_group_sources">Källor och guide</string>
+    <string name="settings_group_layout">Layout</string>
+    <string name="settings_group_content_metadata">Innehåll och metadata</string>
+    <string name="settings_group_data">Data</string>
     <string name="settings_group_appearance">Utseende</string>
     <string name="settings_group_playback">Uppspelning</string>
     <string name="settings_group_network">Nätverk</string>

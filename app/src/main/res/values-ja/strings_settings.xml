@@ -161,7 +161,6 @@
     <string name="settings_quick_check_update">更新を確認</string>
     <string name="settings_search_label">設定を検索</string>
     <string name="settings_search_hint">設定を検索…</string>
-    <string name="settings_group_general">一般</string>
     <string name="settings_language">言語</string>
     <string name="settings_language_description">アプリの表示言語</string>
     <string name="settings_language_system_default">システムのデフォルト</string>
@@ -171,7 +170,6 @@
     <string name="settings_language_coverage"><xliff:g id="percent">%1$d</xliff:g>%%</string>
     <string name="settings_profile_group">プロフィール</string>
     <string name="settings_profiles_description">視聴者、子どもモード、PINロックを管理</string>
-    <string name="settings_content_group">コンテンツ</string>
     <string name="settings_playlists">プレイリスト</string>
     <string name="settings_playlists_description">M3U／Xtreamプレイリストを追加、再同期、削除</string>
     <string name="settings_epg_sources">EPGソース</string>
@@ -304,7 +302,10 @@
     <string name="settings_accent_green">グリーン</string>
     <string name="settings_accent_amber">アンバー</string>
     <string name="settings_group_profile">プロフィール</string>
-    <string name="settings_group_content">コンテンツ</string>
+    <string name="settings_group_sources">ソースと番組表</string>
+    <string name="settings_group_layout">レイアウト</string>
+    <string name="settings_group_content_metadata">コンテンツとメタデータ</string>
+    <string name="settings_group_data">データ</string>
     <string name="settings_group_appearance">外観</string>
     <string name="settings_group_playback">再生</string>
     <string name="settings_group_network">ネットワーク</string>

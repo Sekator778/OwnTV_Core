@@ -166,7 +166,6 @@
     <string name="settings_quick_check_update">التحقق من وجود تحديث</string>
     <string name="settings_search_label">بحث في الإعدادات</string>
     <string name="settings_search_hint">بحث في الإعدادات…</string>
-    <string name="settings_group_general">عام</string>
     <string name="settings_language">اللغة</string>
     <string name="settings_language_description">لغة عرض التطبيق</string>
     <string name="settings_language_system_default">الإعداد الافتراضي للنظام</string>
@@ -176,7 +175,6 @@
     <string name="settings_language_coverage"><xliff:g id="percent">%1$d</xliff:g>%%</string>
     <string name="settings_profile_group">الملف الشخصي</string>
     <string name="settings_profiles_description">إدارة المشاهدين ووضع الأطفال وأقفال PIN</string>
-    <string name="settings_content_group">المحتوى</string>
     <string name="settings_playlists">قوائم التشغيل</string>
     <string name="settings_playlists_description">إضافة قوائم تشغيل M3U / Xtream أو إعادة مزامنتها أو إزالتها</string>
     <string name="settings_epg_sources">مصادر دليل البرامج الإلكتروني</string>
@@ -314,7 +312,10 @@
     <string name="settings_accent_green">أخضر</string>
     <string name="settings_accent_amber">كهرماني</string>
     <string name="settings_group_profile">الملف الشخصي</string>
-    <string name="settings_group_content">المحتوى</string>
+    <string name="settings_group_sources">المصادر ودليل البرامج</string>
+    <string name="settings_group_layout">التخطيط</string>
+    <string name="settings_group_content_metadata">المحتوى والبيانات الوصفية</string>
+    <string name="settings_group_data">البيانات</string>
     <string name="settings_group_appearance">المظهر</string>
     <string name="settings_group_playback">التشغيل</string>
     <string name="settings_group_network">الشبكة</string>

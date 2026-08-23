@@ -164,7 +164,6 @@
     <string name="settings_quick_check_update">Zkontrolovat aktualizaci</string>
     <string name="settings_search_label">Vyhledávání v nastavení</string>
     <string name="settings_search_hint">Vyhledávání v nastavení…</string>
-    <string name="settings_group_general">Obecné</string>
     <string name="settings_language">Jazyk</string>
     <string name="settings_language_description">Jazyk rozhraní aplikace</string>
     <string name="settings_language_system_default">Podle systému</string>
@@ -174,7 +173,6 @@
     <string name="settings_language_coverage"><xliff:g id="percent">%1$d</xliff:g>%%</string>
     <string name="settings_profile_group">Profil</string>
     <string name="settings_profiles_description">Správa diváků, dětského režimu a zámků PIN</string>
-    <string name="settings_content_group">Obsah</string>
     <string name="settings_playlists">Playlisty</string>
     <string name="settings_playlists_description">Přidávejte, opětovně synchronizujte nebo odebírejte playlisty M3U / Xtream</string>
     <string name="settings_epg_sources">Zdroje EPG</string>
@@ -310,7 +308,10 @@
     <string name="settings_accent_green">Zelená</string>
     <string name="settings_accent_amber">Jantarová</string>
     <string name="settings_group_profile">Profil</string>
-    <string name="settings_group_content">Obsah</string>
+    <string name="settings_group_sources">Zdroje a program</string>
+    <string name="settings_group_layout">Rozvržení</string>
+    <string name="settings_group_content_metadata">Obsah a metadata</string>
+    <string name="settings_group_data">Data</string>
     <string name="settings_group_appearance">Vzhled</string>
     <string name="settings_group_playback">Přehrávání</string>
     <string name="settings_group_network">Síť</string>

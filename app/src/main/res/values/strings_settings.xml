@@ -330,7 +330,6 @@
     <!-- Translators: Placeholder text in the settings search field. -->
     <string name="settings_search_hint">Search settings…</string>
     <!-- Translators: Settings navigation group label for General settings (language, etc.). -->
-    <string name="settings_group_general">General</string>
     <!-- Translators: Settings navigation label for the app display language picker. -->
     <string name="settings_language">Language</string>
     <!-- Translators: Description of the app display language setting. -->
@@ -349,8 +348,6 @@
     <string name="settings_profile_group">Profile</string>
     <!-- Translators: Description of the Profile settings group. -->
     <string name="settings_profiles_description">Manage viewers, kids mode &amp; PIN locks</string>
-    <!-- Translators: Settings navigation group label for Content settings. -->
-    <string name="settings_content_group">Content</string>
     <!-- Translators: Settings navigation label for Playlists management. -->
     <string name="settings_playlists">Playlists</string>
     <!-- Translators: Description of the Playlists settings. 'M3U' and 'Xtream' are protocol names. -->
@@ -640,8 +637,14 @@
     <string name="settings_accent_amber">Amber</string>
     <!-- Translators: Settings search-result breadcrumb category for Profile. -->
     <string name="settings_group_profile">Profile</string>
-    <!-- Translators: Settings search-result breadcrumb category for Content. -->
-    <string name="settings_group_content">Content</string>
+    <!-- Translators: Settings navigation group label, and search-result breadcrumb category, for the group holding playlists, EPG sources, the EPG time offset and catch-up. -->
+    <string name="settings_group_sources">Sources &amp; guide</string>
+    <!-- Translators: Settings navigation group label, and search-result breadcrumb category, for the group holding sidebar, panel width, browsing lists, Home screen and channel paging. -->
+    <string name="settings_group_layout">Layout</string>
+    <!-- Translators: Settings navigation group label, and search-result breadcrumb category, for the group holding Customize, Metadata and OpenSubtitles. -->
+    <string name="settings_group_content_metadata">Content &amp; metadata</string>
+    <!-- Translators: Settings navigation group label, and search-result breadcrumb category, for the group holding backup, download folder and clear history. -->
+    <string name="settings_group_data">Data</string>
     <!-- Translators: Settings search-result breadcrumb category for Appearance. -->
     <string name="settings_group_appearance">Appearance</string>
     <!-- Translators: Settings search-result breadcrumb category for Playback. -->

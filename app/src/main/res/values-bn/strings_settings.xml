@@ -162,7 +162,6 @@
     <string name="settings_quick_check_update">আপডেট পরীক্ষা করুন</string>
     <string name="settings_search_label">সেটিংস অনুসন্ধান</string>
     <string name="settings_search_hint">সেটিংস অনুসন্ধান করুন…</string>
-    <string name="settings_group_general">সাধারণ</string>
     <string name="settings_language">ভাষা</string>
     <string name="settings_language_description">অ্যাপ প্রদর্শনের ভাষা</string>
     <string name="settings_language_system_default">সিস্টেমের ডিফল্ট</string>
@@ -172,7 +171,6 @@
     <string name="settings_language_coverage"><xliff:g id="percent">%1$d</xliff:g>%%</string>
     <string name="settings_profile_group">প্রোফাইল</string>
     <string name="settings_profiles_description">দর্শক, শিশু মোড ও PIN লক পরিচালনা করুন</string>
-    <string name="settings_content_group">কনটেন্ট</string>
     <string name="settings_playlists">প্লেলিস্টগুলো</string>
     <string name="settings_playlists_description">M3U / Xtream প্লেলিস্ট যোগ, পুনরায় সিঙ্ক বা অপসারণ করুন</string>
     <string name="settings_epg_sources">EPG উৎসগুলো</string>
@@ -306,7 +304,10 @@
     <string name="settings_accent_green">সবুজ</string>
     <string name="settings_accent_amber">অ্যাম্বার</string>
     <string name="settings_group_profile">প্রোফাইল</string>
-    <string name="settings_group_content">কনটেন্ট</string>
+    <string name="settings_group_sources">উৎস ও গাইড</string>
+    <string name="settings_group_layout">লেআউট</string>
+    <string name="settings_group_content_metadata">কনটেন্ট ও মেটাডেটা</string>
+    <string name="settings_group_data">ডেটা</string>
     <string name="settings_group_appearance">চেহারা</string>
     <string name="settings_group_playback">প্লেব্যাক</string>
     <string name="settings_group_network">নেটওয়ার্ক</string>

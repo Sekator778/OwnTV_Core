@@ -162,7 +162,6 @@
     <string name="settings_quick_check_update">अपडेट जाँचें</string>
     <string name="settings_search_label">सेटिंग खोजें</string>
     <string name="settings_search_hint">सेटिंग खोजें…</string>
-    <string name="settings_group_general">सामान्य</string>
     <string name="settings_language">भाषा</string>
     <string name="settings_language_description">ऐप में दिखाई जाने वाली भाषा</string>
     <string name="settings_language_system_default">सिस्टम डिफ़ॉल्ट</string>
@@ -172,7 +171,6 @@
     <string name="settings_language_coverage"><xliff:g id="percent">%1$d</xliff:g>%%</string>
     <string name="settings_profile_group">प्रोफ़ाइल</string>
     <string name="settings_profiles_description">दर्शक, बच्चों का मोड और PIN लॉक प्रबंधित करें</string>
-    <string name="settings_content_group">सामग्री</string>
     <string name="settings_playlists">प्लेलिस्ट</string>
     <string name="settings_playlists_description">M3U / Xtream प्लेलिस्ट जोड़ें, रीसिंक करें या हटाएँ</string>
     <string name="settings_epg_sources">EPG स्रोत</string>
@@ -306,7 +304,10 @@
     <string name="settings_accent_green">हरा</string>
     <string name="settings_accent_amber">अंबर</string>
     <string name="settings_group_profile">प्रोफ़ाइल</string>
-    <string name="settings_group_content">सामग्री</string>
+    <string name="settings_group_sources">स्रोत और गाइड</string>
+    <string name="settings_group_layout">लेआउट</string>
+    <string name="settings_group_content_metadata">सामग्री और मेटाडेटा</string>
+    <string name="settings_group_data">डेटा</string>
     <string name="settings_group_appearance">दिखावट</string>
     <string name="settings_group_playback">प्लेबैक</string>
     <string name="settings_group_network">नेटवर्क</string>

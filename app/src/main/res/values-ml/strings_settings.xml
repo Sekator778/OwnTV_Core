@@ -162,7 +162,6 @@
     <string name="settings_quick_check_update">അപ്‌ഡേറ്റിനായി പരിശോധിക്കുക</string>
     <string name="settings_search_label">ക്രമീകരണങ്ങൾ തിരയുക</string>
     <string name="settings_search_hint">ക്രമീകരണങ്ങൾ തിരയുക…</string>
-    <string name="settings_group_general">പൊതുവായത്</string>
     <string name="settings_language">ഭാഷ</string>
     <string name="settings_language_description">ആപ്പിൽ പ്രദർശിപ്പിക്കേണ്ട ഭാഷ</string>
     <string name="settings_language_system_default">സിസ്റ്റം ഡിഫോൾട്ട്</string>
@@ -172,7 +171,6 @@
     <string name="settings_language_coverage"><xliff:g id="percent">%1$d</xliff:g>%%</string>
     <string name="settings_profile_group">പ്രൊഫൈൽ</string>
     <string name="settings_profiles_description">കാണുന്നവരെയും കുട്ടികളുടെ മോഡും PIN ലോക്കുകളും നിയന്ത്രിക്കുക</string>
-    <string name="settings_content_group">ഉള്ളടക്കം</string>
     <string name="settings_playlists">പ്ലേലിസ്റ്റുകൾ</string>
     <string name="settings_playlists_description">M3U / Xtream പ്ലേലിസ്റ്റുകൾ ചേർക്കുക, വീണ്ടും സമന്വയിപ്പിക്കുക, അല്ലെങ്കിൽ നീക്കം ചെയ്യുക</string>
     <string name="settings_epg_sources">EPG ഉറവിടങ്ങൾ</string>
@@ -306,7 +304,10 @@
     <string name="settings_accent_green">പച്ച</string>
     <string name="settings_accent_amber">ആംബർ</string>
     <string name="settings_group_profile">പ്രൊഫൈൽ</string>
-    <string name="settings_group_content">ഉള്ളടക്കം</string>
+    <string name="settings_group_sources">ഉറവിടങ്ങളും ഗൈഡും</string>
+    <string name="settings_group_layout">ലേഔട്ട്</string>
+    <string name="settings_group_content_metadata">ഉള്ളടക്കവും മെറ്റാഡാറ്റയും</string>
+    <string name="settings_group_data">ഡാറ്റ</string>
     <string name="settings_group_appearance">രൂപഭാവം</string>
     <string name="settings_group_playback">പ്ലേബാക്ക്</string>
     <string name="settings_group_network">നെറ്റ്‌വർക്ക്</string>

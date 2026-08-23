@@ -161,7 +161,6 @@
     <string name="settings_quick_check_update">检查更新</string>
     <string name="settings_search_label">搜索设置</string>
     <string name="settings_search_hint">搜索设置…</string>
-    <string name="settings_group_general">常规</string>
     <string name="settings_language">语言</string>
     <string name="settings_language_description">应用显示语言</string>
     <string name="settings_language_system_default">系统默认</string>
@@ -171,7 +170,6 @@
     <string name="settings_language_coverage"><xliff:g id="percent">%1$d</xliff:g>%%</string>
     <string name="settings_profile_group">用户档案</string>
     <string name="settings_profiles_description">管理观看者、儿童模式和 PIN 锁</string>
-    <string name="settings_content_group">内容</string>
     <string name="settings_playlists">播放列表</string>
     <string name="settings_playlists_description">添加、重新同步或移除 M3U / Xtream 播放列表</string>
     <string name="settings_epg_sources">电子节目指南（EPG）源</string>
@@ -304,7 +302,10 @@
     <string name="settings_accent_green">绿色</string>
     <string name="settings_accent_amber">琥珀色</string>
     <string name="settings_group_profile">用户档案</string>
-    <string name="settings_group_content">内容</string>
+    <string name="settings_group_sources">来源与节目指南</string>
+    <string name="settings_group_layout">布局</string>
+    <string name="settings_group_content_metadata">内容与元数据</string>
+    <string name="settings_group_data">数据</string>
     <string name="settings_group_appearance">外观</string>
     <string name="settings_group_playback">播放</string>
     <string name="settings_group_network">网络</string>

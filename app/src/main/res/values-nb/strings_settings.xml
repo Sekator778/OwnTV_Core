@@ -162,7 +162,6 @@
     <string name="settings_quick_check_update">Se etter oppdatering</string>
     <string name="settings_search_label">Søk i innstillinger</string>
     <string name="settings_search_hint">Søk i innstillinger…</string>
-    <string name="settings_group_general">Generelt</string>
     <string name="settings_language">Språk</string>
     <string name="settings_language_description">Visningsspråk for appen</string>
     <string name="settings_language_system_default">Systemstandard</string>
@@ -172,7 +171,6 @@
     <string name="settings_language_coverage"><xliff:g id="percent">%1$d</xliff:g>%%</string>
     <string name="settings_profile_group">Profil</string>
     <string name="settings_profiles_description">Administrer seere, barnemodus og PIN-låser</string>
-    <string name="settings_content_group">Innhold</string>
     <string name="settings_playlists">Spillelister</string>
     <string name="settings_playlists_description">Legg til, synkroniser på nytt eller fjern M3U- og Xtream-spillelister</string>
     <string name="settings_epg_sources">EPG-kilder</string>
@@ -306,7 +304,10 @@
     <string name="settings_accent_green">Grønn</string>
     <string name="settings_accent_amber">Ravgul</string>
     <string name="settings_group_profile">Profil</string>
-    <string name="settings_group_content">Innhold</string>
+    <string name="settings_group_sources">Kilder og guide</string>
+    <string name="settings_group_layout">Oppsett</string>
+    <string name="settings_group_content_metadata">Innhold og metadata</string>
+    <string name="settings_group_data">Data</string>
     <string name="settings_group_appearance">Utseende</string>
     <string name="settings_group_playback">Avspilling</string>
     <string name="settings_group_network">Nettverk</string>

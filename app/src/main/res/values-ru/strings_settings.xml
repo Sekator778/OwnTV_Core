@@ -164,7 +164,6 @@
     <string name="settings_quick_check_update">Проверить обновление</string>
     <string name="settings_search_label">Поиск настроек</string>
     <string name="settings_search_hint">Поиск настроек…</string>
-    <string name="settings_group_general">Общие</string>
     <string name="settings_language">Язык</string>
     <string name="settings_language_description">Язык интерфейса приложения</string>
     <string name="settings_language_system_default">Как в системе</string>
@@ -174,7 +173,6 @@
     <string name="settings_language_coverage"><xliff:g id="percent">%1$d</xliff:g>%%</string>
     <string name="settings_profile_group">Профиль</string>
     <string name="settings_profiles_description">Управление зрителями, детским режимом и блокировками с помощью PIN</string>
-    <string name="settings_content_group">Контент</string>
     <string name="settings_playlists">Плейлисты</string>
     <string name="settings_playlists_description">Добавление, повторная синхронизация и удаление плейлистов M3U / Xtream</string>
     <string name="settings_epg_sources">Источники EPG</string>
@@ -310,7 +308,10 @@
     <string name="settings_accent_green">Зелёный</string>
     <string name="settings_accent_amber">Янтарный</string>
     <string name="settings_group_profile">Профиль</string>
-    <string name="settings_group_content">Контент</string>
+    <string name="settings_group_sources">Источники и телепрограмма</string>
+    <string name="settings_group_layout">Расположение</string>
+    <string name="settings_group_content_metadata">Контент и метаданные</string>
+    <string name="settings_group_data">Данные</string>
     <string name="settings_group_appearance">Внешний вид</string>
     <string name="settings_group_playback">Воспроизведение</string>
     <string name="settings_group_network">Сеть</string>

@@ -161,7 +161,6 @@
     <string name="settings_quick_check_update">檢查更新</string>
     <string name="settings_search_label">搜尋設定</string>
     <string name="settings_search_hint">搜尋設定…</string>
-    <string name="settings_group_general">一般</string>
     <string name="settings_language">語言</string>
     <string name="settings_language_description">應用程式顯示語言</string>
     <string name="settings_language_system_default">系統預設</string>
@@ -171,7 +170,6 @@
     <string name="settings_language_coverage"><xliff:g id="percent">%1$d</xliff:g>%%</string>
     <string name="settings_profile_group">使用者檔案</string>
     <string name="settings_profiles_description">管理觀看者、兒童模式和 PIN 鎖定</string>
-    <string name="settings_content_group">內容</string>
     <string name="settings_playlists">播放清單</string>
     <string name="settings_playlists_description">新增、重新同步或移除 M3U／Xtream 播放清單</string>
     <string name="settings_epg_sources">電子節目表來源</string>
@@ -304,7 +302,10 @@
     <string name="settings_accent_green">綠色</string>
     <string name="settings_accent_amber">琥珀色</string>
     <string name="settings_group_profile">使用者檔案</string>
-    <string name="settings_group_content">內容</string>
+    <string name="settings_group_sources">來源與節目表</string>
+    <string name="settings_group_layout">版面配置</string>
+    <string name="settings_group_content_metadata">內容與中繼資料</string>
+    <string name="settings_group_data">資料</string>
     <string name="settings_group_appearance">外觀</string>
     <string name="settings_group_playback">播放</string>
     <string name="settings_group_network">網路</string>

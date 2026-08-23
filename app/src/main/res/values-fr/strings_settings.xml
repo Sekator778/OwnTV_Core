@@ -163,7 +163,6 @@
     <string name="settings_quick_check_update">Rechercher une mise à jour</string>
     <string name="settings_search_label">Rechercher dans les paramètres</string>
     <string name="settings_search_hint">Rechercher dans les paramètres…</string>
-    <string name="settings_group_general">Général</string>
     <string name="settings_language">Langue</string>
     <string name="settings_language_description">Langue d’affichage de l’application</string>
     <string name="settings_language_system_default">Valeur par défaut du système</string>
@@ -173,7 +172,6 @@
     <string name="settings_language_coverage"><xliff:g id="percent">%1$d</xliff:g>%%</string>
     <string name="settings_profile_group">Profil</string>
     <string name="settings_profiles_description">Gérer les utilisateurs, le mode enfant et les verrouillages par PIN</string>
-    <string name="settings_content_group">Contenu</string>
     <string name="settings_playlists">Listes de lecture</string>
     <string name="settings_playlists_description">Ajouter, resynchroniser ou supprimer des listes de lecture M3U / Xtream</string>
     <string name="settings_epg_sources">Sources EPG</string>
@@ -308,7 +306,10 @@
     <string name="settings_accent_green">Vert</string>
     <string name="settings_accent_amber">Ambre</string>
     <string name="settings_group_profile">Profil</string>
-    <string name="settings_group_content">Contenu</string>
+    <string name="settings_group_sources">Sources et guide</string>
+    <string name="settings_group_layout">Disposition</string>
+    <string name="settings_group_content_metadata">Contenu et métadonnées</string>
+    <string name="settings_group_data">Données</string>
     <string name="settings_group_appearance">Apparence</string>
     <string name="settings_group_playback">Lecture</string>
     <string name="settings_group_network">Réseau</string>

@@ -268,7 +268,6 @@
 1	app/src/main/java/tv/own/owntv/features/settings/DnsSettingsScreen.kt	:${cfg.port}
 2	app/src/main/java/tv/own/owntv/features/settings/DnsSettingsScreen.kt	https://
 4	app/src/main/java/tv/own/owntv/features/settings/MetadataSettingsScreen.kt	\0
-1	app/src/main/java/tv/own/owntv/features/settings/MetadataSettingsScreen.kt	https://your-worker.example.workers.dev
 6	app/src/main/java/tv/own/owntv/features/settings/OpenSubtitlesAccountScreen.kt	\0
 1	app/src/main/java/tv/own/owntv/features/settings/OpenSubtitlesViewModel.kt	OpenSubtitles
 1	app/src/main/java/tv/own/owntv/features/settings/OpenSubtitlesViewModel.kt	manual refresh failed: ${it.javaClass.simpleName}: ${it.message}

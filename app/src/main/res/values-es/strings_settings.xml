@@ -163,7 +163,6 @@
     <string name="settings_quick_check_update">Buscar actualizaciones</string>
     <string name="settings_search_label">Buscar en los ajustes</string>
     <string name="settings_search_hint">Buscar en los ajustes…</string>
-    <string name="settings_group_general">General</string>
     <string name="settings_language">Idioma</string>
     <string name="settings_language_description">Idioma de la interfaz de la aplicación</string>
     <string name="settings_language_system_default">Valor predeterminado del sistema</string>
@@ -173,7 +172,6 @@
     <string name="settings_language_coverage"><xliff:g id="percent">%1$d</xliff:g>%%</string>
     <string name="settings_profile_group">Perfil</string>
     <string name="settings_profiles_description">Gestiona los espectadores, el modo infantil y los bloqueos con PIN</string>
-    <string name="settings_content_group">Contenido</string>
     <string name="settings_playlists">Listas de reproducción</string>
     <string name="settings_playlists_description">Añade, vuelve a sincronizar o elimina listas de reproducción M3U / Xtream</string>
     <string name="settings_epg_sources">Fuentes de EPG</string>
@@ -308,7 +306,10 @@
     <string name="settings_accent_green">Verde</string>
     <string name="settings_accent_amber">Ámbar</string>
     <string name="settings_group_profile">Perfil</string>
-    <string name="settings_group_content">Contenido</string>
+    <string name="settings_group_sources">Fuentes y guía</string>
+    <string name="settings_group_layout">Diseño</string>
+    <string name="settings_group_content_metadata">Contenido y metadatos</string>
+    <string name="settings_group_data">Datos</string>
     <string name="settings_group_appearance">Apariencia</string>
     <string name="settings_group_playback">Reproducción</string>
     <string name="settings_group_network">Red</string>

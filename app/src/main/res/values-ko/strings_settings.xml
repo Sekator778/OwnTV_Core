@@ -161,7 +161,6 @@
     <string name="settings_quick_check_update">업데이트 확인</string>
     <string name="settings_search_label">설정 검색</string>
     <string name="settings_search_hint">설정 검색…</string>
-    <string name="settings_group_general">일반</string>
     <string name="settings_language">언어</string>
     <string name="settings_language_description">앱 표시 언어</string>
     <string name="settings_language_system_default">시스템 기본값</string>
@@ -171,7 +170,6 @@
     <string name="settings_language_coverage"><xliff:g id="percent">%1$d</xliff:g>%%</string>
     <string name="settings_profile_group">프로필</string>
     <string name="settings_profiles_description">시청자, 어린이 모드 및 PIN 잠금 관리</string>
-    <string name="settings_content_group">콘텐츠</string>
     <string name="settings_playlists">플레이리스트</string>
     <string name="settings_playlists_description">M3U/Xtream 플레이리스트 추가, 다시 동기화 또는 삭제</string>
     <string name="settings_epg_sources">EPG 소스</string>
@@ -304,7 +302,10 @@
     <string name="settings_accent_green">초록색</string>
     <string name="settings_accent_amber">호박색</string>
     <string name="settings_group_profile">프로필</string>
-    <string name="settings_group_content">콘텐츠</string>
+    <string name="settings_group_sources">소스 및 편성표</string>
+    <string name="settings_group_layout">레이아웃</string>
+    <string name="settings_group_content_metadata">콘텐츠 및 메타데이터</string>
+    <string name="settings_group_data">데이터</string>
     <string name="settings_group_appearance">화면 스타일</string>
     <string name="settings_group_playback">재생</string>
     <string name="settings_group_network">네트워크</string>
