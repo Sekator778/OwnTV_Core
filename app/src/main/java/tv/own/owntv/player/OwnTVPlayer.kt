@@ -964,7 +964,7 @@ class OwnTVPlayer(
             subStyleOn = on
             if (initialized) mpvAsync { applySubtitleStyle() }
         }.launchIn(scope)
-        settings.subtitleScale.onEach { s ->
+        settings.subtitleScaleMpv.onEach { s ->
             subScale = s.toDouble()
             if (initialized) mpvAsync { applySubtitleStyle() }
         }.launchIn(scope)

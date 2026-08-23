@@ -36,6 +36,7 @@
     <string name="common_nav_guide">节目指南</string>
     <string name="common_nav_settings">设置</string>
     <string name="shell_no_source">未配置源</string>
+    <string name="shell_now_playing">正在播放</string>
     <string name="common_something_went_wrong">出了点问题</string>
     <string name="common_move_instructions">按 ▲/▼ 移动 · 按确定保存 · 按返回取消</string>
     <string name="common_number_grouped"><xliff:g id="count">%1$,d</xliff:g></string>

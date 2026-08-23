@@ -321,6 +321,17 @@
     <string name="settings_group_network">الشبكة</string>
     <string name="settings_dns">DNS</string>
     <string name="settings_group_app">التطبيق</string>
+    <string name="settings_group_summary_profile">الملفات الشخصية ومن يمكنه المشاهدة</string>
+    <string name="settings_group_summary_sources">قوائم التشغيل وبيانات الدليل وساعاتها</string>
+    <string name="settings_group_summary_appearance">السمة واللون المميز والزجاج والحركة وحجم النص</string>
+    <string name="settings_group_summary_layout">الشريط الجانبي واللوحات والقوائم وشاشة البداية</string>
+    <string name="settings_group_summary_content_metadata">التسمية والصور وخدمات الترجمة</string>
+    <string name="settings_group_summary_playback">مشغّل الفيديو وسجل أخطائه</string>
+    <string name="settings_group_summary_network">الوكيل وDNS لاتصالات البث</string>
+    <string name="settings_group_summary_data">النسخ الاحتياطي والتنزيلات وسجل المشاهدة</string>
+    <string name="settings_group_summary_app">اللغة وبدء التشغيل والتحديثات ومعلومات التطبيق</string>
+    <string name="settings_group_quick">سريع</string>
+    <string name="settings_group_summary_quick">المفاتيح التي تستخدمها أكثر</string>
     <string name="settings_search_guide_logos">شعارات القنوات في الدليل</string>
     <string name="settings_search_keywords_profiles">مشاهدون أطفال وضع قفل PIN حساب</string>
     <string name="settings_search_keywords_playlists">M3U Xtream مصدر مزامنة إضافة إزالة</string>

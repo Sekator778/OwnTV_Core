@@ -36,6 +36,7 @@
     <string name="common_nav_guide">番組表</string>
     <string name="common_nav_settings">設定</string>
     <string name="shell_no_source">ソースがありません</string>
+    <string name="shell_now_playing">再生中</string>
     <string name="common_something_went_wrong">問題が発生しました</string>
     <string name="common_move_instructions">▲/▼で移動 · OKで保存 · 戻るでキャンセル</string>
     <string name="common_number_grouped"><xliff:g id="count">%1$,d</xliff:g></string>

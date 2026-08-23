@@ -655,6 +655,28 @@
     <string name="settings_dns">DNS</string>
     <!-- Translators: Settings search-result breadcrumb category for App. -->
     <string name="settings_group_app">App</string>
+    <!-- Translators: Settings sheet summary line under the "Profile" group heading. -->
+    <string name="settings_group_summary_profile">Profiles and who can watch what</string>
+    <!-- Translators: Settings sheet summary line under the "Sources &amp; guide" group heading. -->
+    <string name="settings_group_summary_sources">Playlists, guide data and their clocks</string>
+    <!-- Translators: Settings sheet summary line under the "Appearance" group heading. -->
+    <string name="settings_group_summary_appearance">Theme, accent, glass, motion and text size</string>
+    <!-- Translators: Settings sheet summary line under the "Layout" group heading. -->
+    <string name="settings_group_summary_layout">Sidebar, panels, lists and the Home screen</string>
+    <!-- Translators: Settings sheet summary line under the "Content &amp; metadata" group heading. -->
+    <string name="settings_group_summary_content_metadata">Naming, artwork and subtitle services</string>
+    <!-- Translators: Settings sheet summary line under the "Playback" group heading. -->
+    <string name="settings_group_summary_playback">The video player and its error log</string>
+    <!-- Translators: Settings sheet summary line under the "Network" group heading. -->
+    <string name="settings_group_summary_network">Proxy and DNS for stream connections</string>
+    <!-- Translators: Settings sheet summary line under the "Data" group heading. -->
+    <string name="settings_group_summary_data">Backup, downloads and watch history</string>
+    <!-- Translators: Settings sheet summary line under the "App" group heading. -->
+    <string name="settings_group_summary_app">Language, startup, updates and app info</string>
+    <!-- Translators: Settings spine group holding the most-used toggles, pinned above the nine real groups. -->
+    <string name="settings_group_quick">Quick</string>
+    <!-- Translators: Settings sheet summary line under the "Quick" group heading. -->
+    <string name="settings_group_summary_quick">The toggles you reach for most</string>
     <!-- Translators: Settings search result label for the Guide channel logos setting. -->
     <string name="settings_search_guide_logos">Guide channel logos</string>
     <!-- Translators: Hidden keyword bag used by Settings search for the Profiles page. Translate these as individual terms a user might type; this is not a grammatical sentence and is not displayed as prose. -->

@@ -237,7 +237,11 @@ class SettingsRepository(private val context: Context, private val localeStore: 
         val DEINTERLACE = booleanPreferencesKey("deinterlace")
         val SEEK_STEP_SEC = intPreferencesKey("seek_step_sec")
         val LIVE_REWIND_STEP_SEC = intPreferencesKey("live_rewind_step_sec")
+        /** Legacy single subtitle size, superseded by the two per-engine keys below but still read as
+         *  their default so an existing size survives an upgrade — and still written by nothing. */
         val SUB_SCALE = floatPreferencesKey("sub_scale")
+        val SUB_SCALE_MPV = floatPreferencesKey("sub_scale_mpv")
+        val SUB_SCALE_EXO = floatPreferencesKey("sub_scale_exo")
         // Subtitle appearance (#96): off by default so every renderer keeps its stock look —
         // notably the embedded broadcaster styling of Live TV CEA-608/teletext cues.
         val SUB_STYLE_ENABLED = booleanPreferencesKey("sub_style_enabled")
@@ -1058,11 +1062,27 @@ class SettingsRepository(private val context: Context, private val localeStore: 
     // Each option then has its own "Default" value, so turning the toggle ON still changes nothing
     // until the user picks something: only the options actually set reach a renderer.
 
-    /** Subtitle scale multiplier (mpv sub-scale); [SubtitleStyle.SCALE_DEFAULT] = untouched. */
-    val subtitleScale: Flow<Float> = prefsFlow { it[Keys.SUB_SCALE] ?: SubtitleStyle.SCALE_DEFAULT }
+    // Subtitle size is per engine: mpv and ExoPlayer draw the same multiplier at visibly different
+    // sizes, so one shared value cannot be right for both. Each new key falls back to the legacy
+    // single [Keys.SUB_SCALE] until it is set, so an upgrade keeps the size the user already chose on
+    // both engines and nothing changes until they move one of them.
 
-    suspend fun setSubtitleScale(scale: Float) {
-        context.dataStore.edit { it[Keys.SUB_SCALE] = scale }
+    /** Subtitle scale multiplier for mpv (sub-scale); [SubtitleStyle.SCALE_DEFAULT] = untouched. */
+    val subtitleScaleMpv: Flow<Float> = prefsFlow {
+        it[Keys.SUB_SCALE_MPV] ?: it[Keys.SUB_SCALE] ?: SubtitleStyle.SCALE_DEFAULT
+    }
+
+    suspend fun setSubtitleScaleMpv(scale: Float) {
+        context.dataStore.edit { it[Keys.SUB_SCALE_MPV] = scale }
+    }
+
+    /** Subtitle scale multiplier for the Media3 SubtitleView; [SubtitleStyle.SCALE_DEFAULT] = untouched. */
+    val subtitleScaleExo: Flow<Float> = prefsFlow {
+        it[Keys.SUB_SCALE_EXO] ?: it[Keys.SUB_SCALE] ?: SubtitleStyle.SCALE_DEFAULT
+    }
+
+    suspend fun setSubtitleScaleExo(scale: Float) {
+        context.dataStore.edit { it[Keys.SUB_SCALE_EXO] = scale }
     }
 
     /**
@@ -1858,7 +1878,7 @@ class SettingsRepository(private val context: Context, private val localeStore: 
         Keys.AMBIENT_GLOW_ENABLED, Keys.AMBIENT_GLOW_PULSE,
         Keys.GLASS_ALLOW_FULL_TRANSPARENCY, Keys.GLASS_DEPTH_EFFECTS,
     )
-    private val backupFloatKeys = listOf(Keys.SUB_SCALE)
+    private val backupFloatKeys = listOf(Keys.SUB_SCALE, Keys.SUB_SCALE_MPV, Keys.SUB_SCALE_EXO)
 
     /**
      * "Remember last category" values (see the REMEMBER_CAT_* toggles, which are backed up as plain

@@ -36,6 +36,7 @@
     <string name="common_nav_guide">편성표</string>
     <string name="common_nav_settings">설정</string>
     <string name="shell_no_source">소스 없음</string>
+    <string name="shell_now_playing">재생 중</string>
     <string name="common_something_went_wrong">문제가 발생했습니다</string>
     <string name="common_move_instructions">▲/▼로 이동 · 확인을 눌러 저장 · 뒤로를 눌러 취소</string>
     <string name="common_number_grouped"><xliff:g id="count">%1$,d</xliff:g></string>

@@ -73,6 +73,8 @@
     <string name="common_nav_settings">Settings</string>
     <!-- Translators: Status text when no content source is configured. -->
     <string name="shell_no_source">No source</string>
+    <!-- Translators: Label of the sidebar item that jumps to the docked mini player or the audio session. -->
+    <string name="shell_now_playing">Now Playing</string>
     <!-- Translators: Generic error message for unexpected failures. -->
     <string name="common_something_went_wrong">Something went wrong</string>
     <!-- Translators: Instructional text shown during reorder mode. The arrows are visual direction indicators. -->

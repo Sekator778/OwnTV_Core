@@ -313,6 +313,17 @@
     <string name="settings_group_network">Netwerk</string>
     <string name="settings_dns">DNS</string>
     <string name="settings_group_app">App</string>
+    <string name="settings_group_summary_profile">Profielen en wie wat mag kijken</string>
+    <string name="settings_group_summary_sources">Afspeellijsten, gidsgegevens en hun klokken</string>
+    <string name="settings_group_summary_appearance">Thema, accent, glas, beweging en tekstgrootte</string>
+    <string name="settings_group_summary_layout">Zijbalk, panelen, lijsten en het startscherm</string>
+    <string name="settings_group_summary_content_metadata">Namen, afbeeldingen en ondertitelingsdiensten</string>
+    <string name="settings_group_summary_playback">De videospeler en het foutenlogboek</string>
+    <string name="settings_group_summary_network">Proxy en DNS voor streamverbindingen</string>
+    <string name="settings_group_summary_data">Back-up, downloads en kijkgeschiedenis</string>
+    <string name="settings_group_summary_app">Taal, opstarten, updates en app-informatie</string>
+    <string name="settings_group_quick">Snel</string>
+    <string name="settings_group_summary_quick">De schakelaars die je het vaakst gebruikt</string>
     <string name="settings_search_guide_logos">Zenderlogo\'s in de gids</string>
     <string name="settings_search_keywords_profiles">kijkers kinderen kindermodus PIN-vergrendeling account</string>
     <string name="settings_search_keywords_playlists">M3U Xtream bron synchroniseren toevoegen verwijderen</string>

@@ -313,6 +313,17 @@
     <string name="settings_group_network">നെറ്റ്‌വർക്ക്</string>
     <string name="settings_dns">DNS</string>
     <string name="settings_group_app">ആപ്പ്</string>
+    <string name="settings_group_summary_profile">പ്രൊഫൈലുകളും ആർക്ക് എന്ത് കാണാമെന്നും</string>
+    <string name="settings_group_summary_sources">പ്ലേലിസ്റ്റുകൾ, ഗൈഡ് ഡാറ്റ, അവയുടെ സമയം</string>
+    <string name="settings_group_summary_appearance">തീം, ആക്സന്റ്, ഗ്ലാസ്, ചലനം, ടെക്സ്റ്റ് വലുപ്പം</string>
+    <string name="settings_group_summary_layout">സൈഡ്‌ബാർ, പാനലുകൾ, ലിസ്റ്റുകൾ, ഹോം സ്ക്രീൻ</string>
+    <string name="settings_group_summary_content_metadata">പേരിടൽ, ചിത്രങ്ങൾ, സബ്ടൈറ്റിൽ സേവനങ്ങൾ</string>
+    <string name="settings_group_summary_playback">വീഡിയോ പ്ലേയറും അതിന്റെ പിശക് ലോഗും</string>
+    <string name="settings_group_summary_network">സ്ട്രീം കണക്ഷനുകൾക്കുള്ള പ്രോക്സിയും DNS-ഉം</string>
+    <string name="settings_group_summary_data">ബാക്കപ്പ്, ഡൗൺലോഡുകൾ, കണ്ട ചരിത്രം</string>
+    <string name="settings_group_summary_app">ഭാഷ, ആരംഭം, അപ്ഡേറ്റുകൾ, ആപ്പ് വിവരം</string>
+    <string name="settings_group_quick">പെട്ടെന്ന്</string>
+    <string name="settings_group_summary_quick">നിങ്ങൾ ഏറ്റവും കൂടുതൽ ഉപയോഗിക്കുന്ന ടോഗിളുകൾ</string>
     <string name="settings_search_guide_logos">ഗൈഡിലെ ചാനൽ ലോഗോകൾ</string>
     <string name="settings_search_keywords_profiles">കാണുന്നവർ കുട്ടികളുടെ മോഡ് PIN ലോക്ക് അക്കൗണ്ട്</string>
     <string name="settings_search_keywords_playlists">M3U Xtream ഉറവിടം സമന്വയിപ്പിക്കൽ ചേർക്കുക നീക്കംചെയ്യുക</string>

@@ -36,6 +36,7 @@
     <string name="common_nav_guide">دليل البرامج</string>
     <string name="common_nav_settings">الإعدادات</string>
     <string name="shell_no_source">لا يوجد مصدر</string>
+    <string name="shell_now_playing">يُشغَّل الآن</string>
     <string name="common_something_went_wrong">حدث خطأ ما</string>
     <string name="common_move_instructions">▲/▼ للنقل · موافق للحفظ · رجوع للإلغاء</string>
     <string name="common_number_grouped"><xliff:g id="count">%1$,d</xliff:g></string>

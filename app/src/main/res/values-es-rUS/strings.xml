@@ -36,6 +36,7 @@
     <string name="common_nav_guide">Guía</string>
     <string name="common_nav_settings">Configuración</string>
     <string name="shell_no_source">Sin fuente</string>
+    <string name="shell_now_playing">Reproduciendo</string>
     <string name="common_something_went_wrong">Algo salió mal</string>
     <string name="common_move_instructions">▲/▼ para mover · Aceptar para guardar · Atrás para cancelar</string>
     <string name="common_number_grouped"><xliff:g id="count">%1$,d</xliff:g></string>

@@ -311,6 +311,17 @@
     <string name="settings_group_network">네트워크</string>
     <string name="settings_dns">DNS</string>
     <string name="settings_group_app">앱</string>
+    <string name="settings_group_summary_profile">프로필과 시청 권한</string>
+    <string name="settings_group_summary_sources">재생목록, 편성표 데이터와 시간</string>
+    <string name="settings_group_summary_appearance">테마, 강조색, 유리, 모션, 글자 크기</string>
+    <string name="settings_group_summary_layout">사이드바, 패널, 목록, 홈 화면</string>
+    <string name="settings_group_summary_content_metadata">이름, 이미지, 자막 서비스</string>
+    <string name="settings_group_summary_playback">동영상 플레이어와 오류 기록</string>
+    <string name="settings_group_summary_network">스트림 연결용 프록시와 DNS</string>
+    <string name="settings_group_summary_data">백업, 다운로드, 시청 기록</string>
+    <string name="settings_group_summary_app">언어, 시작, 업데이트, 앱 정보</string>
+    <string name="settings_group_quick">빠른 설정</string>
+    <string name="settings_group_summary_quick">가장 자주 쓰는 전환 항목</string>
     <string name="settings_search_guide_logos">편성표 채널 로고</string>
     <string name="settings_search_keywords_profiles">시청자 어린이 모드 PIN 잠금 계정</string>
     <string name="settings_search_keywords_playlists">M3U Xtream 소스 동기화 추가 삭제</string>

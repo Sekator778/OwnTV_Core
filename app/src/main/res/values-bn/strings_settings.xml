@@ -313,6 +313,17 @@
     <string name="settings_group_network">নেটওয়ার্ক</string>
     <string name="settings_dns">DNS</string>
     <string name="settings_group_app">অ্যাপ</string>
+    <string name="settings_group_summary_profile">প্রোফাইল এবং কে দেখতে পারবে</string>
+    <string name="settings_group_summary_sources">প্লেলিস্ট, গাইড ডেটা এবং তাদের ঘড়ি</string>
+    <string name="settings_group_summary_appearance">থিম, অ্যাকসেন্ট, গ্লাস, অ্যানিমেশন ও লেখার আকার</string>
+    <string name="settings_group_summary_layout">সাইডবার, প্যানেল, তালিকা এবং হোম স্ক্রিন</string>
+    <string name="settings_group_summary_content_metadata">নামকরণ, ছবি এবং সাবটাইটেল পরিষেবা</string>
+    <string name="settings_group_summary_playback">ভিডিও প্লেয়ার ও তার ত্রুটির লগ</string>
+    <string name="settings_group_summary_network">স্ট্রিম সংযোগের জন্য প্রক্সি ও DNS</string>
+    <string name="settings_group_summary_data">ব্যাকআপ, ডাউনলোড এবং দেখার ইতিহাস</string>
+    <string name="settings_group_summary_app">ভাষা, চালু হওয়া, আপডেট ও অ্যাপের তথ্য</string>
+    <string name="settings_group_quick">দ্রুত</string>
+    <string name="settings_group_summary_quick">যে সুইচগুলো আপনি সবচেয়ে বেশি ব্যবহার করেন</string>
     <string name="settings_search_guide_logos">নির্দেশিকার চ্যানেল লোগো</string>
     <string name="settings_search_keywords_profiles">দর্শক শিশু মোড PIN লক অ্যাকাউন্ট</string>
     <string name="settings_search_keywords_playlists">m3u xtream উৎস সিঙ্ক যোগ অপসারণ</string>

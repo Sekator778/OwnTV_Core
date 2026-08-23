@@ -311,6 +311,17 @@
     <string name="settings_group_network">网络</string>
     <string name="settings_dns">DNS</string>
     <string name="settings_group_app">应用</string>
+    <string name="settings_group_summary_profile">资料和谁可以观看什么</string>
+    <string name="settings_group_summary_sources">播放列表、节目单数据及其时间</string>
+    <string name="settings_group_summary_appearance">主题、强调色、玻璃、动效和字号</string>
+    <string name="settings_group_summary_layout">侧边栏、面板、列表和主屏幕</string>
+    <string name="settings_group_summary_content_metadata">名称、图片和字幕服务</string>
+    <string name="settings_group_summary_playback">视频播放器及其错误日志</string>
+    <string name="settings_group_summary_network">用于串流连接的代理和 DNS</string>
+    <string name="settings_group_summary_data">备份、下载和观看记录</string>
+    <string name="settings_group_summary_app">语言、启动、更新和应用信息</string>
+    <string name="settings_group_quick">快捷</string>
+    <string name="settings_group_summary_quick">最常用的开关</string>
     <string name="settings_search_guide_logos">节目指南频道台标</string>
     <string name="settings_search_keywords_profiles">观看者 儿童模式 PIN 锁 账户</string>
     <string name="settings_search_keywords_playlists">m3u xtream 源 同步 添加 移除</string>

@@ -317,6 +317,17 @@
     <string name="settings_group_network">Sieć</string>
     <string name="settings_dns">DNS</string>
     <string name="settings_group_app">Aplikacja</string>
+    <string name="settings_group_summary_profile">Profile i kto co może oglądać</string>
+    <string name="settings_group_summary_sources">Playlisty, dane programu i ich zegary</string>
+    <string name="settings_group_summary_appearance">Motyw, akcent, szkło, ruch i rozmiar tekstu</string>
+    <string name="settings_group_summary_layout">Panel boczny, panele, listy i ekran główny</string>
+    <string name="settings_group_summary_content_metadata">Nazwy, grafiki i usługi napisów</string>
+    <string name="settings_group_summary_playback">Odtwarzacz wideo i jego dziennik błędów</string>
+    <string name="settings_group_summary_network">Proxy i DNS dla połączeń ze strumieniami</string>
+    <string name="settings_group_summary_data">Kopie zapasowe, pobrane i historia oglądania</string>
+    <string name="settings_group_summary_app">Język, uruchamianie, aktualizacje i informacje</string>
+    <string name="settings_group_quick">Szybkie</string>
+    <string name="settings_group_summary_quick">Przełączniki, których używasz najczęściej</string>
     <string name="settings_search_guide_logos">Logo kanałów w przewodniku</string>
     <string name="settings_search_keywords_profiles">widzowie dzieci tryb PIN blokada konto</string>
     <string name="settings_search_keywords_playlists">M3U Xtream źródło synchronizacja dodaj usuń</string>

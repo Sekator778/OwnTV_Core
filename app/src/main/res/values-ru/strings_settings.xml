@@ -317,6 +317,17 @@
     <string name="settings_group_network">Сеть</string>
     <string name="settings_dns">DNS</string>
     <string name="settings_group_app">Приложение</string>
+    <string name="settings_group_summary_profile">Профили и кому что можно смотреть</string>
+    <string name="settings_group_summary_sources">Плейлисты, данные телепрограммы и их время</string>
+    <string name="settings_group_summary_appearance">Тема, акцент, стекло, анимация и размер текста</string>
+    <string name="settings_group_summary_layout">Боковая панель, панели, списки и главный экран</string>
+    <string name="settings_group_summary_content_metadata">Названия, обложки и сервисы субтитров</string>
+    <string name="settings_group_summary_playback">Видеоплеер и его журнал ошибок</string>
+    <string name="settings_group_summary_network">Прокси и DNS для подключения к потокам</string>
+    <string name="settings_group_summary_data">Резервные копии, загрузки и история просмотра</string>
+    <string name="settings_group_summary_app">Язык, запуск, обновления и сведения о приложении</string>
+    <string name="settings_group_quick">Быстрые</string>
+    <string name="settings_group_summary_quick">Переключатели, которые нужны чаще всего</string>
     <string name="settings_search_guide_logos">Логотипы каналов в программе передач</string>
     <string name="settings_search_keywords_profiles">зрители дети детский режим PIN блокировка учётная запись</string>
     <string name="settings_search_keywords_playlists">M3U Xtream источник синхронизация добавить удалить</string>

@@ -36,6 +36,7 @@
     <string name="common_nav_guide">कार्यक्रम गाइड</string>
     <string name="common_nav_settings">सेटिंग</string>
     <string name="shell_no_source">कोई स्रोत नहीं</string>
+    <string name="shell_now_playing">अभी चल रहा है</string>
     <string name="common_something_went_wrong">कुछ गड़बड़ हुई</string>
     <string name="common_move_instructions">स्थान बदलने के लिए ▲/▼ · सहेजने के लिए OK · रद्द करने के लिए वापस</string>
     <string name="common_number_grouped"><xliff:g id="count">%1$,d</xliff:g></string>

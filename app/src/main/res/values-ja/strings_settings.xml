@@ -311,6 +311,17 @@
     <string name="settings_group_network">ネットワーク</string>
     <string name="settings_dns">DNS</string>
     <string name="settings_group_app">アプリ</string>
+    <string name="settings_group_summary_profile">プロフィールと視聴できる範囲</string>
+    <string name="settings_group_summary_sources">プレイリスト、番組表データとその時刻</string>
+    <string name="settings_group_summary_appearance">テーマ、アクセント、ガラス、動き、文字サイズ</string>
+    <string name="settings_group_summary_layout">サイドバー、パネル、一覧、ホーム画面</string>
+    <string name="settings_group_summary_content_metadata">名称、画像、字幕サービス</string>
+    <string name="settings_group_summary_playback">動画プレーヤーとエラーログ</string>
+    <string name="settings_group_summary_network">ストリーム接続のプロキシと DNS</string>
+    <string name="settings_group_summary_data">バックアップ、ダウンロード、視聴履歴</string>
+    <string name="settings_group_summary_app">言語、起動、更新、アプリ情報</string>
+    <string name="settings_group_quick">クイック</string>
+    <string name="settings_group_summary_quick">よく使う切り替え</string>
     <string name="settings_search_guide_logos">番組表のチャンネルロゴ</string>
     <string name="settings_search_keywords_profiles">視聴者 子どもモード PINロック アカウント</string>
     <string name="settings_search_keywords_playlists">M3U Xtream ソース 同期 追加 削除</string>

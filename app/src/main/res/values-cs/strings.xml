@@ -36,6 +36,7 @@
     <string name="common_nav_guide">TV program</string>
     <string name="common_nav_settings">Nastavení</string>
     <string name="shell_no_source">Žádný zdroj</string>
+    <string name="shell_now_playing">Právě se přehrává</string>
     <string name="common_something_went_wrong">Něco se pokazilo</string>
     <string name="common_move_instructions">▲/▼ pro přesun · OK pro uložení · Zpět pro zrušení</string>
     <string name="common_number_grouped"><xliff:g id="count">%1$,d</xliff:g></string>

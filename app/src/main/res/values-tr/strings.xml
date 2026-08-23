@@ -36,6 +36,7 @@
     <string name="common_nav_guide">Rehber</string>
     <string name="common_nav_settings">Ayarlar</string>
     <string name="shell_no_source">Kaynak yok</string>
+    <string name="shell_now_playing">Şimdi oynatılıyor</string>
     <string name="common_something_went_wrong">Bir sorun oluştu</string>
     <string name="common_move_instructions">Taşımak için ▲/▼ · Kaydetmek için OK · İptal etmek için Geri</string>
     <string name="common_number_grouped"><xliff:g id="count">%1$,d</xliff:g></string>

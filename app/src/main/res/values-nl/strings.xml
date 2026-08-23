@@ -36,6 +36,7 @@
     <string name="common_nav_guide">Gids</string>
     <string name="common_nav_settings">Instellingen</string>
     <string name="shell_no_source">Geen bron</string>
+    <string name="shell_now_playing">Speelt nu</string>
     <string name="common_something_went_wrong">Er is iets misgegaan</string>
     <string name="common_move_instructions">▲/▼ om te verplaatsen · OK om op te slaan · Terug om te annuleren</string>
     <string name="common_number_grouped"><xliff:g id="count">%1$,d</xliff:g></string>

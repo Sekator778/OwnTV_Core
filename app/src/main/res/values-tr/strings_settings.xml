@@ -313,6 +313,17 @@
     <string name="settings_group_network">Ağ</string>
     <string name="settings_dns">DNS</string>
     <string name="settings_group_app">Uygulama</string>
+    <string name="settings_group_summary_profile">Profiller ve kimin neyi izleyebileceği</string>
+    <string name="settings_group_summary_sources">Oynatma listeleri, rehber verileri ve saatleri</string>
+    <string name="settings_group_summary_appearance">Tema, vurgu, cam, hareket ve yazı boyutu</string>
+    <string name="settings_group_summary_layout">Kenar çubuğu, paneller, listeler ve Ana ekran</string>
+    <string name="settings_group_summary_content_metadata">Adlandırma, görseller ve altyazı hizmetleri</string>
+    <string name="settings_group_summary_playback">Video oynatıcı ve hata kaydı</string>
+    <string name="settings_group_summary_network">Yayın bağlantıları için proxy ve DNS</string>
+    <string name="settings_group_summary_data">Yedekleme, indirmeler ve izleme geçmişi</string>
+    <string name="settings_group_summary_app">Dil, açılış, güncellemeler ve uygulama bilgisi</string>
+    <string name="settings_group_quick">Hızlı</string>
+    <string name="settings_group_summary_quick">En sık kullandığınız anahtarlar</string>
     <string name="settings_search_guide_logos">Rehber kanal logoları</string>
     <string name="settings_search_keywords_profiles">izleyiciler çocuk modu PIN kilidi hesap</string>
     <string name="settings_search_keywords_playlists">M3U Xtream kaynak eşitleme ekle kaldır</string>

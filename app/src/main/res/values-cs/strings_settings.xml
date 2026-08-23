@@ -317,6 +317,17 @@
     <string name="settings_group_network">Síť</string>
     <string name="settings_dns">DNS</string>
     <string name="settings_group_app">Aplikace</string>
+    <string name="settings_group_summary_profile">Profily a kdo se smí dívat</string>
+    <string name="settings_group_summary_sources">Playlisty, data programu a jejich hodiny</string>
+    <string name="settings_group_summary_appearance">Motiv, zvýraznění, sklo, pohyb a velikost písma</string>
+    <string name="settings_group_summary_layout">Postranní panel, panely, seznamy a domovská obrazovka</string>
+    <string name="settings_group_summary_content_metadata">Pojmenování, obrázky a titulkové služby</string>
+    <string name="settings_group_summary_playback">Přehrávač videa a jeho protokol chyb</string>
+    <string name="settings_group_summary_network">Proxy a DNS pro připojení ke streamům</string>
+    <string name="settings_group_summary_data">Zálohy, stahování a historie sledování</string>
+    <string name="settings_group_summary_app">Jazyk, spuštění, aktualizace a informace o aplikaci</string>
+    <string name="settings_group_quick">Rychlé</string>
+    <string name="settings_group_summary_quick">Přepínače, které používáte nejčastěji</string>
     <string name="settings_search_guide_logos">Loga kanálů v TV programu</string>
     <string name="settings_search_keywords_profiles">diváci děti dětský režim PIN zámek účet</string>
     <string name="settings_search_keywords_playlists">M3U Xtream zdroj synchronizace přidat odebrat</string>

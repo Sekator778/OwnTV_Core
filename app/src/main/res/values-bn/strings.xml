@@ -36,6 +36,7 @@
     <string name="common_nav_guide">অনুষ্ঠান নির্দেশিকা</string>
     <string name="common_nav_settings">সেটিংস</string>
     <string name="shell_no_source">কোনো উৎস নেই</string>
+    <string name="shell_now_playing">এখন চলছে</string>
     <string name="common_something_went_wrong">কিছু একটা সমস্যা হয়েছে</string>
     <string name="common_move_instructions">সরাতে ▲/▼ · সংরক্ষণ করতে OK · বাতিল করতে ফিরে যান</string>
     <string name="common_number_grouped"><xliff:g id="count">%1$,d</xliff:g></string>

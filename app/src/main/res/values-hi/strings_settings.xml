@@ -313,6 +313,17 @@
     <string name="settings_group_network">नेटवर्क</string>
     <string name="settings_dns">DNS</string>
     <string name="settings_group_app">ऐप</string>
+    <string name="settings_group_summary_profile">प्रोफ़ाइल और कौन क्या देख सकता है</string>
+    <string name="settings_group_summary_sources">प्लेलिस्ट, गाइड डेटा और उनकी घड़ियाँ</string>
+    <string name="settings_group_summary_appearance">थीम, एक्सेंट, ग्लास, एनिमेशन और टेक्स्ट आकार</string>
+    <string name="settings_group_summary_layout">साइडबार, पैनल, सूचियाँ और होम स्क्रीन</string>
+    <string name="settings_group_summary_content_metadata">नाम, तस्वीरें और सबटाइटल सेवाएँ</string>
+    <string name="settings_group_summary_playback">वीडियो प्लेयर और उसका त्रुटि लॉग</string>
+    <string name="settings_group_summary_network">स्ट्रीम कनेक्शन के लिए प्रॉक्सी और DNS</string>
+    <string name="settings_group_summary_data">बैकअप, डाउनलोड और देखने का इतिहास</string>
+    <string name="settings_group_summary_app">भाषा, स्टार्टअप, अपडेट और ऐप जानकारी</string>
+    <string name="settings_group_quick">त्वरित</string>
+    <string name="settings_group_summary_quick">वे टॉगल जिन्हें आप सबसे ज़्यादा इस्तेमाल करते हैं</string>
     <string name="settings_search_guide_logos">गाइड के चैनल लोगो</string>
     <string name="settings_search_keywords_profiles">दर्शक बच्चे मोड PIN लॉक खाता</string>
     <string name="settings_search_keywords_playlists">M3U Xtream स्रोत सिंक जोड़ें हटाएँ</string>

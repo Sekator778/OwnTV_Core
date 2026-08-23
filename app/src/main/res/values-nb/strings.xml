@@ -36,6 +36,7 @@
     <string name="common_nav_guide">Programoversikt</string>
     <string name="common_nav_settings">Innstillinger</string>
     <string name="shell_no_source">Ingen kilde</string>
+    <string name="shell_now_playing">Spilles nå</string>
     <string name="common_something_went_wrong">Noe gikk galt</string>
     <string name="common_move_instructions">▲/▼ for å flytte · OK for å lagre · Tilbake for å avbryte</string>
     <string name="common_number_grouped"><xliff:g id="count">%1$,d</xliff:g></string>

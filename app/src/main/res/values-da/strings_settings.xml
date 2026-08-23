@@ -313,6 +313,17 @@
     <string name="settings_group_network">Netværk</string>
     <string name="settings_dns">DNS</string>
     <string name="settings_group_app">App</string>
+    <string name="settings_group_summary_profile">Profiler og hvem der må se hvad</string>
+    <string name="settings_group_summary_sources">Afspilningslister, guidedata og deres ure</string>
+    <string name="settings_group_summary_appearance">Tema, accent, glas, bevægelse og tekststørrelse</string>
+    <string name="settings_group_summary_layout">Sidepanel, paneler, lister og startskærmen</string>
+    <string name="settings_group_summary_content_metadata">Navngivning, billeder og underteksttjenester</string>
+    <string name="settings_group_summary_playback">Videoafspilleren og dens fejllog</string>
+    <string name="settings_group_summary_network">Proxy og DNS til streamforbindelser</string>
+    <string name="settings_group_summary_data">Sikkerhedskopi, downloads og seerhistorik</string>
+    <string name="settings_group_summary_app">Sprog, opstart, opdateringer og appinfo</string>
+    <string name="settings_group_quick">Hurtig</string>
+    <string name="settings_group_summary_quick">De kontakter du bruger mest</string>
     <string name="settings_search_guide_logos">Kanallogoer i programguiden</string>
     <string name="settings_search_keywords_profiles">seere børn børnetilstand PIN-lås konto</string>
     <string name="settings_search_keywords_playlists">M3U Xtream kilde synkroniser tilføj fjern</string>

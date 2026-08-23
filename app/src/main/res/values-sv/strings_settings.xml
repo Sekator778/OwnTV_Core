@@ -313,6 +313,17 @@
     <string name="settings_group_network">Nätverk</string>
     <string name="settings_dns">DNS</string>
     <string name="settings_group_app">App</string>
+    <string name="settings_group_summary_profile">Profiler och vem som får se vad</string>
+    <string name="settings_group_summary_sources">Spellistor, tablådata och deras klockor</string>
+    <string name="settings_group_summary_appearance">Tema, accent, glas, rörelse och textstorlek</string>
+    <string name="settings_group_summary_layout">Sidopanel, paneler, listor och startskärmen</string>
+    <string name="settings_group_summary_content_metadata">Namn, bilder och undertexttjänster</string>
+    <string name="settings_group_summary_playback">Videospelaren och dess felloggar</string>
+    <string name="settings_group_summary_network">Proxy och DNS för strömanslutningar</string>
+    <string name="settings_group_summary_data">Säkerhetskopior, nedladdningar och visningshistorik</string>
+    <string name="settings_group_summary_app">Språk, start, uppdateringar och appinfo</string>
+    <string name="settings_group_quick">Snabbval</string>
+    <string name="settings_group_summary_quick">Reglagen du använder mest</string>
     <string name="settings_search_guide_logos">Kanallogotyper i programguiden</string>
     <string name="settings_search_keywords_profiles">tittare barnläge PIN-lås konto</string>
     <string name="settings_search_keywords_playlists">m3u xtream källa synkronisering lägg till ta bort</string>
