@@ -903,11 +903,13 @@
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/dao/HistoryDao.kt	(mediaType = 'MOVIE' AND itemId NOT IN (SELECT id FROM movies)) OR
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/dao/HistoryDao.kt	(mediaType = 'SERIES' AND itemId NOT IN (SELECT id FROM series))
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/dao/HistoryDao.kt	)
+1	sql	app/src/main/java/tv/own/owntv/core/database/dao/HistoryDao.kt	AND itemId IN (SELECT id FROM episodes WHERE seriesId = :seriesId)
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/dao/HistoryDao.kt	COALESCE(c.name, m.name, s.name) AS name,
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/dao/HistoryDao.kt	COALESCE(c.remoteId, m.remoteId, s.remoteId, e.remoteId) AS remoteId,
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/dao/HistoryDao.kt	COALESCE(c.sourceId, m.sourceId, s.sourceId, episodeSeries.sourceId) AS sourceId,
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/dao/HistoryDao.kt	DELETE FROM watch_history WHERE
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/dao/HistoryDao.kt	DELETE FROM watch_history WHERE profileId = :profileId
+1	sql	app/src/main/java/tv/own/owntv/core/database/dao/HistoryDao.kt	DELETE FROM watch_history WHERE profileId = :profileId AND mediaType = 'EPISODE'
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/dao/HistoryDao.kt	DELETE FROM watch_history WHERE profileId = :profileId AND mediaType = :type
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/dao/HistoryDao.kt	DELETE FROM watch_history WHERE profileId = :profileId AND mediaType = :type AND itemId = :itemId
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/dao/HistoryDao.kt	DELETE FROM watch_history WHERE profileId = :profileId AND mediaType = :type AND itemId = :itemId AND (
@@ -1022,12 +1024,13 @@
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/dao/ProgressDao.kt	(mediaType = 'MOVIE' AND itemId NOT IN (SELECT id FROM movies)) OR
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/dao/ProgressDao.kt	(mediaType = 'SERIES' AND itemId NOT IN (SELECT id FROM series))
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/dao/ProgressDao.kt	)
-2	room-schema	app/src/main/java/tv/own/owntv/core/database/dao/ProgressDao.kt	AND itemId IN (SELECT id FROM episodes WHERE seriesId = :seriesId)
+3	sql	app/src/main/java/tv/own/owntv/core/database/dao/ProgressDao.kt	AND itemId IN (SELECT id FROM episodes WHERE seriesId = :seriesId)
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/dao/ProgressDao.kt	COALESCE(c.name, m.name, s.name) AS name,
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/dao/ProgressDao.kt	COALESCE(c.remoteId, m.remoteId, s.remoteId, e.remoteId) AS remoteId,
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/dao/ProgressDao.kt	COALESCE(c.sourceId, m.sourceId, s.sourceId, episodeSeries.sourceId) AS sourceId,
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/dao/ProgressDao.kt	DELETE FROM playback_progress WHERE
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/dao/ProgressDao.kt	DELETE FROM playback_progress WHERE profileId = :profileId
+1	sql	app/src/main/java/tv/own/owntv/core/database/dao/ProgressDao.kt	DELETE FROM playback_progress WHERE profileId = :profileId AND mediaType = 'EPISODE'
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/dao/ProgressDao.kt	DELETE FROM playback_progress WHERE profileId = :profileId AND mediaType = :type
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/dao/ProgressDao.kt	DELETE FROM playback_progress WHERE profileId = :profileId AND mediaType = :type AND itemId = :itemId
 1	room-schema	app/src/main/java/tv/own/owntv/core/database/dao/ProgressDao.kt	DELETE FROM playback_progress WHERE profileId = :profileId AND mediaType = :type AND itemId = :itemId AND (

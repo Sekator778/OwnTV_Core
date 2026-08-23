@@ -18,6 +18,14 @@ interface HistoryDao {
     @Query("DELETE FROM watch_history WHERE profileId = :profileId AND mediaType = :type AND itemId = :itemId")
     suspend fun remove(profileId: Long, type: MediaType, itemId: Long)
 
+    /** The episode rows belonging to one series — removed alongside the show's own row, so the
+     *  top-bar Continue chip stops offering a show the user just removed from history. */
+    @Query(
+        "DELETE FROM watch_history WHERE profileId = :profileId AND mediaType = 'EPISODE' " +
+            "AND itemId IN (SELECT id FROM episodes WHERE seriesId = :seriesId)",
+    )
+    suspend fun removeSeriesEpisodes(profileId: Long, seriesId: Long)
+
     @Query("DELETE FROM watch_history WHERE profileId = :profileId")
     suspend fun clear(profileId: Long)
 

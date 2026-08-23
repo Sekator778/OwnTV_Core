@@ -2515,6 +2515,14 @@ class OwnTVPlayer(
         // A genuinely new item resets the failure budget; an auto-retry / software-fallback reload of
         // the SAME item passes resetRetries=false to keep that state — see [ItemState].
         if (resetRetries) {
+            // Position and duration are pushed by the engines and were never cleared, so a new item
+            // inherited the outgoing one's readout until its own first report arrived. For a second
+            // or two after an auto-advance the HUD therefore still saw "8 seconds from the end" and
+            // popped the next-episode card for the episode AFTER the one just started. Seeding them
+            // from this load's own arguments closes that window. Same-item reloads (retry, engine
+            // switch, reconnect) keep their live values — they pass resetRetries=false.
+            _position.value = startPositionMs
+            _duration.value = 0L
             // A/V-sync starts at the Settings default and unremembered, until applyRememberedPrefs
             // below says otherwise. Inside the new-item branch on purpose: a retry, a software
             // fallback or a reconnect is the SAME stream, and resetting there dropped a remembered
