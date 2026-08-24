@@ -286,7 +286,6 @@
 1	app/src/main/java/tv/own/owntv/features/settings/VideoPlayerSettingsScreen.kt	+
 1	app/src/main/java/tv/own/owntv/features/settings/VideoPlayerSettingsScreen.kt	FFFFFF
 1	app/src/main/java/tv/own/owntv/features/settings/VideoPlayerSettingsScreen.kt	–
-7	app/src/main/java/tv/own/owntv/features/settings/data/SettingsRepository.kt	\0
 1	app/src/main/java/tv/own/owntv/features/settings/data/SettingsRepository.kt	auto_frame_rate_reset_416
 1	app/src/main/java/tv/own/owntv/features/settings/data/SettingsRepository.kt	dns_doh_url
 1	app/src/main/java/tv/own/owntv/features/settings/data/SettingsRepository.kt	dns_enabled

@@ -182,6 +182,12 @@
     <string name="settings_sidebar_description_root">Automaticky přizpůsobovat postranní ikony playlistu nebo skrýt konkrétní ikony</string>
     <string name="settings_ch_paging">Stránkování tlačítky CH+/CH−</string>
     <string name="settings_ch_paging_description">Přeskakujte nahoru a dolů v seznamech kategorií a položek pomocí tlačítek CH+ / CH−</string>
+    <!-- Translators: Settings navigation label for the long-press content menus. -->
+    <string name="settings_content_menus_title">Nabídky po dlouhém stisknutí</string>
+    <!-- Translators: Description of the long-press content menus settings. -->
+    <string name="settings_content_menus_description">Změňte pořadí akcí v nabídkách kanálů, filmů, seriálů a dílů</string>
+    <!-- Translators: Hint shown above the list when arranging a long-press menu. -->
+    <string name="settings_content_menus_hint">Podržením OK akci uchopte, pak ji posouvejte nahoru a dolů. Dalším stiskem OK ji položíte.</string>
     <string name="settings_browsing_lists">Procházení a seznamy</string>
     <string name="settings_browsing_description">Pamatovat si poslední kategorii a poslední položku v živém vysílání, filmech a seriálech</string>
     <string name="settings_home_root">Domovská obrazovka</string>
@@ -323,6 +329,24 @@
     <string name="settings_group_summary_layout">Postranní panel, panely, seznamy a domovská obrazovka</string>
     <string name="settings_group_summary_content_metadata">Pojmenování, obrázky a titulkové služby</string>
     <string name="settings_group_summary_playback">Přehrávač videa a jeho protokol chyb</string>
+    <!-- Translators: Video player settings: name of the section holding decoder, HDR and frame-rate settings. -->
+    <string name="settings_vp_section_engine">Jádro a obraz</string>
+    <!-- Translators: Video player settings: name of the section holding volume, audio language and surround settings. -->
+    <string name="settings_vp_section_sound">Zvuk</string>
+    <!-- Translators: Video player settings: name of the section holding resume, auto-play and mini-player settings. -->
+    <string name="settings_vp_section_episodes">Epizody a mini přehrávač</string>
+    <!-- Translators: Video player settings: one-line summary under the "Engine &amp; picture" section name. -->
+    <string name="settings_vp_section_engine_summary">Dekodér, HDR, snímková frekvence</string>
+    <!-- Translators: Video player settings: one-line summary under the "Live TV" section name. -->
+    <string name="settings_vp_section_live_summary">Náhled, čísla, latence</string>
+    <!-- Translators: Video player settings: one-line summary under the "Sound" section name. -->
+    <string name="settings_vp_section_sound_summary">Hlasitost, jazyk, prostorový zvuk</string>
+    <!-- Translators: Video player settings: one-line summary under the "Subtitles" section name. -->
+    <string name="settings_vp_section_subtitles_summary">Velikost, barva, poloha</string>
+    <!-- Translators: Video player settings: one-line summary under the "Episodes &amp; mini-player" section name. -->
+    <string name="settings_vp_section_episodes_summary">Automatické přehrávání a mini přehrávač</string>
+    <!-- Translators: Video player settings: one-line summary under the "Diagnostics" section name. -->
+    <string name="settings_vp_section_diagnostics_summary">Podrobné protokoly přehrávače</string>
     <string name="settings_group_summary_network">Proxy a DNS pro připojení ke streamům</string>
     <string name="settings_group_summary_data">Zálohy, stahování a historie sledování</string>
     <string name="settings_group_summary_app">Jazyk, spuštění, aktualizace a informace o aplikaci</string>
@@ -1101,4 +1125,35 @@
     <string name="settings_glass_full_transparency_description">Vypne automatickou hranici čitelnosti pro nejčistší možné sklo.</string>
     <string name="settings_glass_depth_title">Hloubka a stíny</string>
     <string name="settings_glass_depth_description">Zapne světlo sledující zaměření, jemnou paralaxu a pohyb hloubky.</string>
+    <string name="settings_header_hint">Vlevo: skupiny · Vpravo: jejich nastavení · Podržením OK řádek připnete do Rychlé</string>
+    <string name="settings_spine_eyebrow">Všechny skupiny</string>
+    <string name="settings_spine_title">Procházet nastavení</string>
+    <string name="settings_spine_hint">Rychlé zůstává nahoře; značka sleduje skupinu, ve které jste.</string>
+    <string name="settings_spine_foot">Zvýraznění sleduje váš výběr</string>
+    <string name="settings_row_menu_pin">Připnout do Rychlé</string>
+    <string name="settings_row_menu_unpin">Odebrat z Rychlé</string>
+    <string name="settings_row_menu_move_up">Posunout nahoru</string>
+    <string name="settings_row_menu_move_down">Posunout dolů</string>
+    <string name="settings_quick_empty_title">Zatím nic připnuto</string>
+    <string name="settings_quick_empty_hint">Podržte OK na libovolném nastavení a zvolte „Připnout do Rychlé“.</string>
+    <string name="settings_results_title">Výsledky</string>
+    <string name="settings_results_summary">Každá shoda, ať leží kdekoli — i s cestou k ní</string>
+    <plurals name="settings_setting_count">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> nastavení</item>
+        <item quantity="few"><xliff:g id="count">%1$d</xliff:g> nastavení</item>
+        <item quantity="many"><xliff:g id="count">%1$d</xliff:g> nastavení</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> nastavení</item>
+    </plurals>
+    <plurals name="settings_pinned_count">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> připnuto</item>
+        <item quantity="few"><xliff:g id="count">%1$d</xliff:g> připnuty</item>
+        <item quantity="many"><xliff:g id="count">%1$d</xliff:g> připnuto</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> připnuto</item>
+    </plurals>
+    <plurals name="settings_match_count">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> shoda</item>
+        <item quantity="few"><xliff:g id="count">%1$d</xliff:g> shody</item>
+        <item quantity="many"><xliff:g id="count">%1$d</xliff:g> shody</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> shod</item>
+    </plurals>
 </resources>

@@ -180,6 +180,12 @@
     <string name="settings_sidebar_description_root">Tilpas automatisk sideikonerne til din afspilningsliste, eller skjul bestemte ikoner</string>
     <string name="settings_ch_paging">Sidevisning med CH+-tasterne</string>
     <string name="settings_ch_paging_description">Spring op/ned i kategori- og elementlisterne med CH+ / CH−-tasterne</string>
+    <!-- Translators: Settings navigation label for the long-press content menus. -->
+    <string name="settings_content_menus_title">Menuer ved langt tryk</string>
+    <!-- Translators: Description of the long-press content menus settings. -->
+    <string name="settings_content_menus_description">Omarrangér handlingerne i menuerne for kanaler, film, serier og afsnit</string>
+    <!-- Translators: Hint shown above the list when arranging a long-press menu. -->
+    <string name="settings_content_menus_hint">Hold OK nede på en handling for at tage den op, og flyt den så op og ned. Tryk på OK igen for at slippe den.</string>
     <string name="settings_browsing_lists">Navigation og lister</string>
     <string name="settings_browsing_description">Husk den seneste kategori og det seneste element i Live-tv, film og serier</string>
     <string name="settings_home_root">Startskærm</string>
@@ -319,6 +325,24 @@
     <string name="settings_group_summary_layout">Sidepanel, paneler, lister og startskærmen</string>
     <string name="settings_group_summary_content_metadata">Navngivning, billeder og underteksttjenester</string>
     <string name="settings_group_summary_playback">Videoafspilleren og dens fejllog</string>
+    <!-- Translators: Video player settings: name of the section holding decoder, HDR and frame-rate settings. -->
+    <string name="settings_vp_section_engine">Motor og billede</string>
+    <!-- Translators: Video player settings: name of the section holding volume, audio language and surround settings. -->
+    <string name="settings_vp_section_sound">Lyd</string>
+    <!-- Translators: Video player settings: name of the section holding resume, auto-play and mini-player settings. -->
+    <string name="settings_vp_section_episodes">Afsnit og miniafspiller</string>
+    <!-- Translators: Video player settings: one-line summary under the "Engine &amp; picture" section name. -->
+    <string name="settings_vp_section_engine_summary">Dekoder, HDR, billedfrekvens</string>
+    <!-- Translators: Video player settings: one-line summary under the "Live TV" section name. -->
+    <string name="settings_vp_section_live_summary">Forhåndsvisning, numre, forsinkelse</string>
+    <!-- Translators: Video player settings: one-line summary under the "Sound" section name. -->
+    <string name="settings_vp_section_sound_summary">Lydstyrke, sprog, surround</string>
+    <!-- Translators: Video player settings: one-line summary under the "Subtitles" section name. -->
+    <string name="settings_vp_section_subtitles_summary">Størrelse, farve, placering</string>
+    <!-- Translators: Video player settings: one-line summary under the "Episodes &amp; mini-player" section name. -->
+    <string name="settings_vp_section_episodes_summary">Automatisk afspilning og miniafspiller</string>
+    <!-- Translators: Video player settings: one-line summary under the "Diagnostics" section name. -->
+    <string name="settings_vp_section_diagnostics_summary">Detaljerede afspillerlogfiler</string>
     <string name="settings_group_summary_network">Proxy og DNS til streamforbindelser</string>
     <string name="settings_group_summary_data">Sikkerhedskopi, downloads og seerhistorik</string>
     <string name="settings_group_summary_app">Sprog, opstart, opdateringer og appinfo</string>
@@ -1065,4 +1089,29 @@
     <string name="settings_glass_full_transparency_description">Slår den automatiske læsbarhedsgrænse fra for det klarest mulige glas.</string>
     <string name="settings_glass_depth_title">Dybde og skygger</string>
     <string name="settings_glass_depth_description">Aktiverer fokuslys, diskret parallakse og dybdebevægelse.</string>
+    <string name="settings_header_hint">Venstre: grupper · Højre: deres indstillinger · Hold OK på en række for at fastgøre den til Hurtig</string>
+    <string name="settings_spine_eyebrow">Alle grupper</string>
+    <string name="settings_spine_title">Gennemse indstillinger</string>
+    <string name="settings_spine_hint">Hurtig bliver øverst; markøren følger den gruppe, du er i.</string>
+    <string name="settings_spine_foot">Accentfarven følger dit fokus</string>
+    <string name="settings_row_menu_pin">Fastgør til Hurtig</string>
+    <string name="settings_row_menu_unpin">Fjern fra Hurtig</string>
+    <string name="settings_row_menu_move_up">Flyt op</string>
+    <string name="settings_row_menu_move_down">Flyt ned</string>
+    <string name="settings_quick_empty_title">Intet fastgjort endnu</string>
+    <string name="settings_quick_empty_hint">Hold OK nede på en indstilling, og vælg “Fastgør til Hurtig”.</string>
+    <string name="settings_results_title">Resultater</string>
+    <string name="settings_results_summary">Alle træffere, uanset hvor de ligger — stien følger med</string>
+    <plurals name="settings_setting_count">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> indstilling</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> indstillinger</item>
+    </plurals>
+    <plurals name="settings_pinned_count">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> fastgjort</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> fastgjort</item>
+    </plurals>
+    <plurals name="settings_match_count">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> træffer</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> træffere</item>
+    </plurals>
 </resources>

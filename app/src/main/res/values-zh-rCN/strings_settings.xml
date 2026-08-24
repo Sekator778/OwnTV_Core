@@ -179,6 +179,12 @@
     <string name="settings_sidebar_description_root">根据播放列表自动调整侧边栏图标，或隐藏指定图标</string>
     <string name="settings_ch_paging">CH+/CH− 按键翻页</string>
     <string name="settings_ch_paging_description">使用 CH+/CH− 按键在分类和项目列表中向上/向下跳转</string>
+    <!-- Translators: Settings navigation label for the long-press content menus. -->
+    <string name="settings_content_menus_title">长按菜单</string>
+    <!-- Translators: Description of the long-press content menus settings. -->
+    <string name="settings_content_menus_description">重新排列频道、电影、剧集和分集菜单中的操作</string>
+    <!-- Translators: Hint shown above the list when arranging a long-press menu. -->
+    <string name="settings_content_menus_hint">长按“确定”拿起某个操作，然后用上下键移动，再次按“确定”放下。</string>
     <string name="settings_browsing_lists">浏览和列表</string>
     <string name="settings_browsing_description">记住直播电视、电影和剧集中的上次分类及上次项目</string>
     <string name="settings_home_root">主屏幕</string>
@@ -317,6 +323,24 @@
     <string name="settings_group_summary_layout">侧边栏、面板、列表和主屏幕</string>
     <string name="settings_group_summary_content_metadata">名称、图片和字幕服务</string>
     <string name="settings_group_summary_playback">视频播放器及其错误日志</string>
+    <!-- Translators: Video player settings: name of the section holding decoder, HDR and frame-rate settings. -->
+    <string name="settings_vp_section_engine">引擎与画面</string>
+    <!-- Translators: Video player settings: name of the section holding volume, audio language and surround settings. -->
+    <string name="settings_vp_section_sound">声音</string>
+    <!-- Translators: Video player settings: name of the section holding resume, auto-play and mini-player settings. -->
+    <string name="settings_vp_section_episodes">剧集与迷你播放器</string>
+    <!-- Translators: Video player settings: one-line summary under the "Engine &amp; picture" section name. -->
+    <string name="settings_vp_section_engine_summary">解码器、HDR、帧率</string>
+    <!-- Translators: Video player settings: one-line summary under the "Live TV" section name. -->
+    <string name="settings_vp_section_live_summary">预览、频道号、延迟</string>
+    <!-- Translators: Video player settings: one-line summary under the "Sound" section name. -->
+    <string name="settings_vp_section_sound_summary">音量、语言、环绕声</string>
+    <!-- Translators: Video player settings: one-line summary under the "Subtitles" section name. -->
+    <string name="settings_vp_section_subtitles_summary">大小、颜色、位置</string>
+    <!-- Translators: Video player settings: one-line summary under the "Episodes &amp; mini-player" section name. -->
+    <string name="settings_vp_section_episodes_summary">自动播放与迷你播放器</string>
+    <!-- Translators: Video player settings: one-line summary under the "Diagnostics" section name. -->
+    <string name="settings_vp_section_diagnostics_summary">详细播放器日志</string>
     <string name="settings_group_summary_network">用于串流连接的代理和 DNS</string>
     <string name="settings_group_summary_data">备份、下载和观看记录</string>
     <string name="settings_group_summary_app">语言、启动、更新和应用信息</string>
@@ -1047,4 +1071,26 @@
     <string name="settings_glass_full_transparency_description">关闭自动可读性下限，以获得最通透的玻璃效果。</string>
     <string name="settings_glass_depth_title">深度与阴影</string>
     <string name="settings_glass_depth_description">启用焦点移动光效、轻微视差和深度运动。</string>
+    <string name="settings_header_hint">左侧：分组 · 右侧：该组设置 · 长按 OK 可将一行固定到快捷</string>
+    <string name="settings_spine_eyebrow">全部分组</string>
+    <string name="settings_spine_title">浏览设置</string>
+    <string name="settings_spine_hint">快捷始终置顶，标记会跟随你所在的分组。</string>
+    <string name="settings_spine_foot">强调色跟随你的焦点</string>
+    <string name="settings_row_menu_pin">固定到快捷</string>
+    <string name="settings_row_menu_unpin">从快捷中移除</string>
+    <string name="settings_row_menu_move_up">上移</string>
+    <string name="settings_row_menu_move_down">下移</string>
+    <string name="settings_quick_empty_title">尚未固定任何设置</string>
+    <string name="settings_quick_empty_hint">在任意设置上长按 OK，然后选择“固定到快捷”。</string>
+    <string name="settings_results_title">搜索结果</string>
+    <string name="settings_results_summary">无论藏在哪里的匹配项，都带着它的路径</string>
+    <plurals name="settings_setting_count">
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> 项设置</item>
+    </plurals>
+    <plurals name="settings_pinned_count">
+        <item quantity="other">已固定 <xliff:g id="count">%1$d</xliff:g> 项</item>
+    </plurals>
+    <plurals name="settings_match_count">
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> 项匹配</item>
+    </plurals>
 </resources>

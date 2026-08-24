@@ -181,6 +181,12 @@
     <string name="settings_sidebar_description_root">Adatta automaticamente le icone laterali alla tua playlist oppure nascondine alcune</string>
     <string name="settings_ch_paging">Scorrimento pagine con i tasti CH+/−</string>
     <string name="settings_ch_paging_description">Salta verso l\'alto o il basso negli elenchi di categorie ed elementi con i tasti CH+ e CH−</string>
+    <!-- Translators: Settings navigation label for the long-press content menus. -->
+    <string name="settings_content_menus_title">Menu con pressione prolungata</string>
+    <!-- Translators: Description of the long-press content menus settings. -->
+    <string name="settings_content_menus_description">Riordina le azioni nei menu di canali, film, serie ed episodi</string>
+    <!-- Translators: Hint shown above the list when arranging a long-press menu. -->
+    <string name="settings_content_menus_hint">Tieni premuto OK su un’azione per prenderla, poi spostala con Su e Giù. Premi di nuovo OK per rilasciarla.</string>
     <string name="settings_browsing_lists">Navigazione ed elenchi</string>
     <string name="settings_browsing_description">Ricorda l\'ultima categoria e l\'ultimo elemento in TV in diretta, Film e Serie</string>
     <string name="settings_home_root">Schermata Home</string>
@@ -321,6 +327,24 @@
     <string name="settings_group_summary_layout">Barra laterale, pannelli, elenchi e schermata Home</string>
     <string name="settings_group_summary_content_metadata">Nomi, immagini e servizi di sottotitoli</string>
     <string name="settings_group_summary_playback">Il lettore video e il suo registro errori</string>
+    <!-- Translators: Video player settings: name of the section holding decoder, HDR and frame-rate settings. -->
+    <string name="settings_vp_section_engine">Motore e immagine</string>
+    <!-- Translators: Video player settings: name of the section holding volume, audio language and surround settings. -->
+    <string name="settings_vp_section_sound">Audio</string>
+    <!-- Translators: Video player settings: name of the section holding resume, auto-play and mini-player settings. -->
+    <string name="settings_vp_section_episodes">Episodi e mini player</string>
+    <!-- Translators: Video player settings: one-line summary under the "Engine &amp; picture" section name. -->
+    <string name="settings_vp_section_engine_summary">Decoder, HDR, frequenza fotogrammi</string>
+    <!-- Translators: Video player settings: one-line summary under the "Live TV" section name. -->
+    <string name="settings_vp_section_live_summary">Anteprima, numeri, latenza</string>
+    <!-- Translators: Video player settings: one-line summary under the "Sound" section name. -->
+    <string name="settings_vp_section_sound_summary">Volume, lingua, surround</string>
+    <!-- Translators: Video player settings: one-line summary under the "Subtitles" section name. -->
+    <string name="settings_vp_section_subtitles_summary">Dimensione, colore, posizione</string>
+    <!-- Translators: Video player settings: one-line summary under the "Episodes &amp; mini-player" section name. -->
+    <string name="settings_vp_section_episodes_summary">Riproduzione automatica e mini player</string>
+    <!-- Translators: Video player settings: one-line summary under the "Diagnostics" section name. -->
+    <string name="settings_vp_section_diagnostics_summary">Log dettagliati del lettore</string>
     <string name="settings_group_summary_network">Proxy e DNS per le connessioni ai flussi</string>
     <string name="settings_group_summary_data">Backup, download e cronologia di visione</string>
     <string name="settings_group_summary_app">Lingua, avvio, aggiornamenti e info sull’app</string>
@@ -1083,4 +1107,32 @@
     <string name="settings_glass_full_transparency_description">Disattiva il limite automatico di leggibilità per un vetro più trasparente possibile.</string>
     <string name="settings_glass_depth_title">Profondità e ombre</string>
     <string name="settings_glass_depth_description">Attiva la luce che segue il focus, la parallasse delicata e il movimento di profondità.</string>
+    <string name="settings_header_hint">A sinistra: i gruppi · A destra: le loro impostazioni · Tieni premuto OK su una riga per aggiungerla a Rapide</string>
+    <string name="settings_spine_eyebrow">Tutti i gruppi</string>
+    <string name="settings_spine_title">Sfoglia le impostazioni</string>
+    <string name="settings_spine_hint">Rapide resta in alto; il segno segue il gruppo in cui ti trovi.</string>
+    <string name="settings_spine_foot">Il colore d’accento segue il tuo fuoco</string>
+    <string name="settings_row_menu_pin">Aggiungi a Rapide</string>
+    <string name="settings_row_menu_unpin">Rimuovi da Rapide</string>
+    <string name="settings_row_menu_move_up">Sposta su</string>
+    <string name="settings_row_menu_move_down">Sposta giù</string>
+    <string name="settings_quick_empty_title">Non hai ancora aggiunto nulla</string>
+    <string name="settings_quick_empty_hint">Tieni premuto OK su un’impostazione e scegli “Aggiungi a Rapide”.</string>
+    <string name="settings_results_title">Risultati</string>
+    <string name="settings_results_summary">Ogni corrispondenza, ovunque si trovi — con il suo percorso</string>
+    <plurals name="settings_setting_count">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> impostazione</item>
+        <item quantity="many"><xliff:g id="count">%1$d</xliff:g> di impostazioni</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> impostazioni</item>
+    </plurals>
+    <plurals name="settings_pinned_count">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> aggiunta</item>
+        <item quantity="many"><xliff:g id="count">%1$d</xliff:g> di aggiunte</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> aggiunte</item>
+    </plurals>
+    <plurals name="settings_match_count">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> corrispondenza</item>
+        <item quantity="many"><xliff:g id="count">%1$d</xliff:g> di corrispondenze</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> corrispondenze</item>
+    </plurals>
 </resources>

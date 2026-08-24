@@ -182,6 +182,12 @@
     <string name="settings_sidebar_description_root">Автоматическая адаптация боковых значков к плейлисту или скрытие отдельных значков</string>
     <string name="settings_ch_paging">Постраничная навигация клавишами CH+/CH−</string>
     <string name="settings_ch_paging_description">Переход вверх и вниз по спискам категорий и элементов клавишами CH+ / CH−</string>
+    <!-- Translators: Settings navigation label for the long-press content menus. -->
+    <string name="settings_content_menus_title">Меню долгого нажатия</string>
+    <!-- Translators: Description of the long-press content menus settings. -->
+    <string name="settings_content_menus_description">Измените порядок действий в меню каналов, фильмов, сериалов и серий</string>
+    <!-- Translators: Hint shown above the list when arranging a long-press menu. -->
+    <string name="settings_content_menus_hint">Удерживайте OK на действии, чтобы взять его, затем перемещайте вверх и вниз. Повторное OK опускает его.</string>
     <string name="settings_browsing_lists">Просмотр и списки</string>
     <string name="settings_browsing_description">Запоминание последней категории и последнего элемента в прямом эфире, фильмах и сериалах</string>
     <string name="settings_home_root">Главный экран</string>
@@ -323,6 +329,24 @@
     <string name="settings_group_summary_layout">Боковая панель, панели, списки и главный экран</string>
     <string name="settings_group_summary_content_metadata">Названия, обложки и сервисы субтитров</string>
     <string name="settings_group_summary_playback">Видеоплеер и его журнал ошибок</string>
+    <!-- Translators: Video player settings: name of the section holding decoder, HDR and frame-rate settings. -->
+    <string name="settings_vp_section_engine">Движок и изображение</string>
+    <!-- Translators: Video player settings: name of the section holding volume, audio language and surround settings. -->
+    <string name="settings_vp_section_sound">Звук</string>
+    <!-- Translators: Video player settings: name of the section holding resume, auto-play and mini-player settings. -->
+    <string name="settings_vp_section_episodes">Серии и мини-плеер</string>
+    <!-- Translators: Video player settings: one-line summary under the "Engine &amp; picture" section name. -->
+    <string name="settings_vp_section_engine_summary">Декодер, HDR, частота кадров</string>
+    <!-- Translators: Video player settings: one-line summary under the "Live TV" section name. -->
+    <string name="settings_vp_section_live_summary">Предпросмотр, номера, задержка</string>
+    <!-- Translators: Video player settings: one-line summary under the "Sound" section name. -->
+    <string name="settings_vp_section_sound_summary">Громкость, язык, объёмный звук</string>
+    <!-- Translators: Video player settings: one-line summary under the "Subtitles" section name. -->
+    <string name="settings_vp_section_subtitles_summary">Размер, цвет, положение</string>
+    <!-- Translators: Video player settings: one-line summary under the "Episodes &amp; mini-player" section name. -->
+    <string name="settings_vp_section_episodes_summary">Автовоспроизведение и мини-плеер</string>
+    <!-- Translators: Video player settings: one-line summary under the "Diagnostics" section name. -->
+    <string name="settings_vp_section_diagnostics_summary">Подробные журналы плеера</string>
     <string name="settings_group_summary_network">Прокси и DNS для подключения к потокам</string>
     <string name="settings_group_summary_data">Резервные копии, загрузки и история просмотра</string>
     <string name="settings_group_summary_app">Язык, запуск, обновления и сведения о приложении</string>
@@ -1101,4 +1125,35 @@
     <string name="settings_glass_full_transparency_description">Отключает автоматический порог читаемости для максимально прозрачного стекла.</string>
     <string name="settings_glass_depth_title">Глубина и тени</string>
     <string name="settings_glass_depth_description">Включает свет при перемещении фокуса, лёгкий параллакс и движение глубины.</string>
+    <string name="settings_header_hint">Слева: группы · Справа: их настройки · Удерживайте OK на строке, чтобы закрепить её в «Быстрые»</string>
+    <string name="settings_spine_eyebrow">Все группы</string>
+    <string name="settings_spine_title">Обзор настроек</string>
+    <string name="settings_spine_hint">«Быстрые» остаётся сверху, а метка следует за текущей группой.</string>
+    <string name="settings_spine_foot">Цвет акцента следует за фокусом</string>
+    <string name="settings_row_menu_pin">Закрепить в «Быстрые»</string>
+    <string name="settings_row_menu_unpin">Убрать из «Быстрые»</string>
+    <string name="settings_row_menu_move_up">Переместить вверх</string>
+    <string name="settings_row_menu_move_down">Переместить вниз</string>
+    <string name="settings_quick_empty_title">Пока ничего не закреплено</string>
+    <string name="settings_quick_empty_hint">Удерживайте OK на любой настройке и выберите «Закрепить в Быстрые».</string>
+    <string name="settings_results_title">Результаты</string>
+    <string name="settings_results_summary">Все совпадения, где бы они ни были, — вместе с путём</string>
+    <plurals name="settings_setting_count">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> настройка</item>
+        <item quantity="few"><xliff:g id="count">%1$d</xliff:g> настройки</item>
+        <item quantity="many"><xliff:g id="count">%1$d</xliff:g> настроек</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> настройки</item>
+    </plurals>
+    <plurals name="settings_pinned_count">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> закреплена</item>
+        <item quantity="few"><xliff:g id="count">%1$d</xliff:g> закреплены</item>
+        <item quantity="many"><xliff:g id="count">%1$d</xliff:g> закреплено</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> закреплено</item>
+    </plurals>
+    <plurals name="settings_match_count">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> совпадение</item>
+        <item quantity="few"><xliff:g id="count">%1$d</xliff:g> совпадения</item>
+        <item quantity="many"><xliff:g id="count">%1$d</xliff:g> совпадений</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> совпадения</item>
+    </plurals>
 </resources>

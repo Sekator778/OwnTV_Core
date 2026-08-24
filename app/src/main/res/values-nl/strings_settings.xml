@@ -180,6 +180,12 @@
     <string name="settings_sidebar_description_root">Pas zijpictogrammen automatisch aan je afspeellijst aan of verberg specifieke pictogrammen</string>
     <string name="settings_ch_paging">Bladeren met CH+/CH−-toetsen</string>
     <string name="settings_ch_paging_description">Spring met de CH+/CH−-toetsen omhoog/omlaag in de categorie- en itemlijsten</string>
+    <!-- Translators: Settings navigation label for the long-press content menus. -->
+    <string name="settings_content_menus_title">Menu’s bij lang indrukken</string>
+    <!-- Translators: Description of the long-press content menus settings. -->
+    <string name="settings_content_menus_description">Wijzig de volgorde van de acties in de menu’s voor zenders, films, series en afleveringen</string>
+    <!-- Translators: Hint shown above the list when arranging a long-press menu. -->
+    <string name="settings_content_menus_hint">Houd OK op een actie ingedrukt om hem op te pakken en verplaats hem met Omhoog en Omlaag. Druk nogmaals op OK om hem neer te zetten.</string>
     <string name="settings_browsing_lists">Bladeren en lijsten</string>
     <string name="settings_browsing_description">Onthoud de laatste categorie en het laatste item in live-tv, Films en Series</string>
     <string name="settings_home_root">Startscherm</string>
@@ -319,6 +325,24 @@
     <string name="settings_group_summary_layout">Zijbalk, panelen, lijsten en het startscherm</string>
     <string name="settings_group_summary_content_metadata">Namen, afbeeldingen en ondertitelingsdiensten</string>
     <string name="settings_group_summary_playback">De videospeler en het foutenlogboek</string>
+    <!-- Translators: Video player settings: name of the section holding decoder, HDR and frame-rate settings. -->
+    <string name="settings_vp_section_engine">Engine en beeld</string>
+    <!-- Translators: Video player settings: name of the section holding volume, audio language and surround settings. -->
+    <string name="settings_vp_section_sound">Geluid</string>
+    <!-- Translators: Video player settings: name of the section holding resume, auto-play and mini-player settings. -->
+    <string name="settings_vp_section_episodes">Afleveringen en mini-speler</string>
+    <!-- Translators: Video player settings: one-line summary under the "Engine &amp; picture" section name. -->
+    <string name="settings_vp_section_engine_summary">Decoder, HDR, beeldsnelheid</string>
+    <!-- Translators: Video player settings: one-line summary under the "Live TV" section name. -->
+    <string name="settings_vp_section_live_summary">Voorbeeld, nummers, latentie</string>
+    <!-- Translators: Video player settings: one-line summary under the "Sound" section name. -->
+    <string name="settings_vp_section_sound_summary">Volume, taal, surround</string>
+    <!-- Translators: Video player settings: one-line summary under the "Subtitles" section name. -->
+    <string name="settings_vp_section_subtitles_summary">Grootte, kleur, positie</string>
+    <!-- Translators: Video player settings: one-line summary under the "Episodes &amp; mini-player" section name. -->
+    <string name="settings_vp_section_episodes_summary">Automatisch afspelen en mini-speler</string>
+    <!-- Translators: Video player settings: one-line summary under the "Diagnostics" section name. -->
+    <string name="settings_vp_section_diagnostics_summary">Uitgebreide spelerlogboeken</string>
     <string name="settings_group_summary_network">Proxy en DNS voor streamverbindingen</string>
     <string name="settings_group_summary_data">Back-up, downloads en kijkgeschiedenis</string>
     <string name="settings_group_summary_app">Taal, opstarten, updates en app-informatie</string>
@@ -1065,4 +1089,29 @@
     <string name="settings_glass_full_transparency_description">Schakelt de automatische leesbaarheidsgrens uit voor het helderst mogelijke glas.</string>
     <string name="settings_glass_depth_title">Diepte en schaduwen</string>
     <string name="settings_glass_depth_description">Schakelt focuslicht, subtiele parallax en dieptebeweging in.</string>
+    <string name="settings_header_hint">Links: groepen · Rechts: hun instellingen · Houd OK op een rij ingedrukt om die in Snel te zetten</string>
+    <string name="settings_spine_eyebrow">Alle groepen</string>
+    <string name="settings_spine_title">Instellingen doorbladeren</string>
+    <string name="settings_spine_hint">Snel blijft bovenaan; de markering volgt de groep waarin je bent.</string>
+    <string name="settings_spine_foot">De accentkleur volgt je focus</string>
+    <string name="settings_row_menu_pin">Vastzetten in Snel</string>
+    <string name="settings_row_menu_unpin">Verwijderen uit Snel</string>
+    <string name="settings_row_menu_move_up">Omhoog</string>
+    <string name="settings_row_menu_move_down">Omlaag</string>
+    <string name="settings_quick_empty_title">Nog niets vastgezet</string>
+    <string name="settings_quick_empty_hint">Houd OK ingedrukt op een instelling en kies “Vastzetten in Snel”.</string>
+    <string name="settings_results_title">Resultaten</string>
+    <string name="settings_results_summary">Elke treffer, waar die ook staat — met het pad erbij</string>
+    <plurals name="settings_setting_count">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> instelling</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> instellingen</item>
+    </plurals>
+    <plurals name="settings_pinned_count">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> vastgezet</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> vastgezet</item>
+    </plurals>
+    <plurals name="settings_match_count">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> treffer</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> treffers</item>
+    </plurals>
 </resources>

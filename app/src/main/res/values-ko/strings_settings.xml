@@ -179,6 +179,12 @@
     <string name="settings_sidebar_description_root">플레이리스트에 맞게 사이드 아이콘을 자동 조정하거나 특정 아이콘 숨기기</string>
     <string name="settings_ch_paging">CH+/CH− 키 페이지 이동</string>
     <string name="settings_ch_paging_description">CH+/CH− 키로 카테고리 및 항목 목록에서 위아래로 건너뛰기</string>
+    <!-- Translators: Settings navigation label for the long-press content menus. -->
+    <string name="settings_content_menus_title">길게 누르기 메뉴</string>
+    <!-- Translators: Description of the long-press content menus settings. -->
+    <string name="settings_content_menus_description">채널·영화·시리즈·에피소드 메뉴의 항목 순서를 바꿉니다</string>
+    <!-- Translators: Hint shown above the list when arranging a long-press menu. -->
+    <string name="settings_content_menus_hint">항목에서 OK를 길게 눌러 집은 뒤 위·아래로 옮기세요. 다시 OK를 누르면 놓입니다.</string>
     <string name="settings_browsing_lists">탐색 및 목록</string>
     <string name="settings_browsing_description">실시간 TV, 영화 및 시리즈에서 마지막 카테고리와 항목 기억</string>
     <string name="settings_home_root">홈 화면</string>
@@ -317,6 +323,24 @@
     <string name="settings_group_summary_layout">사이드바, 패널, 목록, 홈 화면</string>
     <string name="settings_group_summary_content_metadata">이름, 이미지, 자막 서비스</string>
     <string name="settings_group_summary_playback">동영상 플레이어와 오류 기록</string>
+    <!-- Translators: Video player settings: name of the section holding decoder, HDR and frame-rate settings. -->
+    <string name="settings_vp_section_engine">엔진 및 화면</string>
+    <!-- Translators: Video player settings: name of the section holding volume, audio language and surround settings. -->
+    <string name="settings_vp_section_sound">사운드</string>
+    <!-- Translators: Video player settings: name of the section holding resume, auto-play and mini-player settings. -->
+    <string name="settings_vp_section_episodes">에피소드 및 미니 플레이어</string>
+    <!-- Translators: Video player settings: one-line summary under the "Engine &amp; picture" section name. -->
+    <string name="settings_vp_section_engine_summary">디코더, HDR, 프레임 속도</string>
+    <!-- Translators: Video player settings: one-line summary under the "Live TV" section name. -->
+    <string name="settings_vp_section_live_summary">미리보기, 번호, 지연</string>
+    <!-- Translators: Video player settings: one-line summary under the "Sound" section name. -->
+    <string name="settings_vp_section_sound_summary">볼륨, 언어, 서라운드</string>
+    <!-- Translators: Video player settings: one-line summary under the "Subtitles" section name. -->
+    <string name="settings_vp_section_subtitles_summary">크기, 색상, 위치</string>
+    <!-- Translators: Video player settings: one-line summary under the "Episodes &amp; mini-player" section name. -->
+    <string name="settings_vp_section_episodes_summary">자동 재생 및 미니 플레이어</string>
+    <!-- Translators: Video player settings: one-line summary under the "Diagnostics" section name. -->
+    <string name="settings_vp_section_diagnostics_summary">상세 재생 로그</string>
     <string name="settings_group_summary_network">스트림 연결용 프록시와 DNS</string>
     <string name="settings_group_summary_data">백업, 다운로드, 시청 기록</string>
     <string name="settings_group_summary_app">언어, 시작, 업데이트, 앱 정보</string>
@@ -1047,4 +1071,26 @@
     <string name="settings_glass_full_transparency_description">가장 투명한 유리를 위해 자동 가독성 제한을 끕니다.</string>
     <string name="settings_glass_depth_title">깊이와 그림자</string>
     <string name="settings_glass_depth_description">포커스 이동 조명, 은은한 시차 및 깊이 움직임을 켭니다.</string>
+    <string name="settings_header_hint">왼쪽: 그룹 · 오른쪽: 해당 설정 · 행에서 OK를 길게 눌러 빠른 설정에 고정</string>
+    <string name="settings_spine_eyebrow">모든 그룹</string>
+    <string name="settings_spine_title">설정 둘러보기</string>
+    <string name="settings_spine_hint">빠른 설정은 항상 맨 위에 있으며 표시가 현재 그룹을 따라갑니다.</string>
+    <string name="settings_spine_foot">강조 색이 포커스를 따라갑니다</string>
+    <string name="settings_row_menu_pin">빠른 설정에 고정</string>
+    <string name="settings_row_menu_unpin">빠른 설정에서 제거</string>
+    <string name="settings_row_menu_move_up">위로 이동</string>
+    <string name="settings_row_menu_move_down">아래로 이동</string>
+    <string name="settings_quick_empty_title">아직 고정된 항목이 없습니다</string>
+    <string name="settings_quick_empty_hint">설정에서 OK를 길게 누른 뒤 “빠른 설정에 고정”을 선택하세요.</string>
+    <string name="settings_results_title">검색 결과</string>
+    <string name="settings_results_summary">어디에 있든 모든 일치 항목 — 경로까지 함께</string>
+    <plurals name="settings_setting_count">
+        <item quantity="other">설정 <xliff:g id="count">%1$d</xliff:g>개</item>
+    </plurals>
+    <plurals name="settings_pinned_count">
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g>개 고정됨</item>
+    </plurals>
+    <plurals name="settings_match_count">
+        <item quantity="other">일치 <xliff:g id="count">%1$d</xliff:g>개</item>
+    </plurals>
 </resources>

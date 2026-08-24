@@ -180,6 +180,12 @@
     <string name="settings_sidebar_description_root">സൈഡ് ഐക്കണുകൾ നിങ്ങളുടെ പ്ലേലിസ്റ്റിന് അനുസരിച്ച് സ്വയം മാറ്റുക, അല്ലെങ്കിൽ ചിലത് മറയ്ക്കുക</string>
     <string name="settings_ch_paging">CH+- കീ ഉപയോഗിച്ചുള്ള പേജിംഗ്</string>
     <string name="settings_ch_paging_description">CH+ / CH− കീകൾ ഉപയോഗിച്ച് വിഭാഗത്തിന്റെയും ഇനങ്ങളുടെയും പട്ടികകളിൽ മുകളിലേക്കും താഴേക്കും മറികടക്കുക</string>
+    <!-- Translators: Settings navigation label for the long-press content menus. -->
+    <string name="settings_content_menus_title">ലോങ്-പ്രസ് മെനുകൾ</string>
+    <!-- Translators: Description of the long-press content menus settings. -->
+    <string name="settings_content_menus_description">ചാനൽ, സിനിമ, സീരീസ്, എപ്പിസോഡ് മെനുകളിലെ പ്രവർത്തനങ്ങൾ പുനഃക്രമീകരിക്കുക</string>
+    <!-- Translators: Hint shown above the list when arranging a long-press menu. -->
+    <string name="settings_content_menus_hint">ഒരു പ്രവർത്തനത്തിൽ OK അമർത്തിപ്പിടിച്ച് അത് എടുക്കുക, മുകളിലേക്കും താഴേക്കും നീക്കുക. വീണ്ടും OK അമർത്തി വയ്ക്കുക.</string>
     <string name="settings_browsing_lists">ബ്രൗസിംഗും പട്ടികകളും</string>
     <string name="settings_browsing_description">തത്സമയ ടിവി, സിനിമകൾ, സീരീസ് എന്നിവയിലെ അവസാന വിഭാഗവും അവസാന ഇനവും ഓർക്കുക</string>
     <string name="settings_home_root">ഹോം സ്ക്രീൻ</string>
@@ -319,6 +325,24 @@
     <string name="settings_group_summary_layout">സൈഡ്‌ബാർ, പാനലുകൾ, ലിസ്റ്റുകൾ, ഹോം സ്ക്രീൻ</string>
     <string name="settings_group_summary_content_metadata">പേരിടൽ, ചിത്രങ്ങൾ, സബ്ടൈറ്റിൽ സേവനങ്ങൾ</string>
     <string name="settings_group_summary_playback">വീഡിയോ പ്ലേയറും അതിന്റെ പിശക് ലോഗും</string>
+    <!-- Translators: Video player settings: name of the section holding decoder, HDR and frame-rate settings. -->
+    <string name="settings_vp_section_engine">എൻജിനും ചിത്രവും</string>
+    <!-- Translators: Video player settings: name of the section holding volume, audio language and surround settings. -->
+    <string name="settings_vp_section_sound">ശബ്ദം</string>
+    <!-- Translators: Video player settings: name of the section holding resume, auto-play and mini-player settings. -->
+    <string name="settings_vp_section_episodes">എപ്പിസോഡുകളും മിനി പ്ലേയറും</string>
+    <!-- Translators: Video player settings: one-line summary under the "Engine &amp; picture" section name. -->
+    <string name="settings_vp_section_engine_summary">ഡീകോഡർ, HDR, ഫ്രെയിം റേറ്റ്</string>
+    <!-- Translators: Video player settings: one-line summary under the "Live TV" section name. -->
+    <string name="settings_vp_section_live_summary">പ്രിവ്യൂ, നമ്പറുകൾ, ലേറ്റൻസി</string>
+    <!-- Translators: Video player settings: one-line summary under the "Sound" section name. -->
+    <string name="settings_vp_section_sound_summary">വോളിയം, ഭാഷ, സറൗണ്ട്</string>
+    <!-- Translators: Video player settings: one-line summary under the "Subtitles" section name. -->
+    <string name="settings_vp_section_subtitles_summary">വലുപ്പം, നിറം, സ്ഥാനം</string>
+    <!-- Translators: Video player settings: one-line summary under the "Episodes &amp; mini-player" section name. -->
+    <string name="settings_vp_section_episodes_summary">ഓട്ടോ-പ്ലേയും മിനി പ്ലേയറും</string>
+    <!-- Translators: Video player settings: one-line summary under the "Diagnostics" section name. -->
+    <string name="settings_vp_section_diagnostics_summary">വിശദമായ പ്ലേയർ ലോഗുകൾ</string>
     <string name="settings_group_summary_network">സ്ട്രീം കണക്ഷനുകൾക്കുള്ള പ്രോക്സിയും DNS-ഉം</string>
     <string name="settings_group_summary_data">ബാക്കപ്പ്, ഡൗൺലോഡുകൾ, കണ്ട ചരിത്രം</string>
     <string name="settings_group_summary_app">ഭാഷ, ആരംഭം, അപ്ഡേറ്റുകൾ, ആപ്പ് വിവരം</string>
@@ -1065,4 +1089,29 @@
     <string name="settings_glass_full_transparency_description">ഏറ്റവും സുതാര്യമായ ഗ്ലാസിനായി സ്വയമേവയുള്ള വായനാക്ഷമത പരിധി ഓഫാക്കുന്നു.</string>
     <string name="settings_glass_depth_title">ആഴവും നിഴലുകളും</string>
     <string name="settings_glass_depth_description">ഫോക്കസ് സഞ്ചാര വെളിച്ചം, സൂക്ഷ്മ പാരലാക്സ്, ആഴ ചലനം എന്നിവ പ്രവർത്തനക്ഷമമാക്കുന്നു.</string>
+    <string name="settings_header_hint">ഇടത്: ഗ്രൂപ്പുകൾ · വലത്: അവയുടെ ക്രമീകരണങ്ങൾ · ഒരു വരി പെട്ടെന്ന് എന്നതിൽ പിൻ ചെയ്യാൻ OK അമർത്തിപ്പിടിക്കുക</string>
+    <string name="settings_spine_eyebrow">എല്ലാ ഗ്രൂപ്പുകളും</string>
+    <string name="settings_spine_title">ക്രമീകരണങ്ങൾ പരതുക</string>
+    <string name="settings_spine_hint">പെട്ടെന്ന് എപ്പോഴും മുകളിൽ തന്നെ; അടയാളം നിങ്ങൾ നിൽക്കുന്ന ഗ്രൂപ്പിനെ പിന്തുടരും.</string>
+    <string name="settings_spine_foot">ആക്സന്റ് നിറം നിങ്ങളുടെ ഫോക്കസിനെ പിന്തുടരുന്നു</string>
+    <string name="settings_row_menu_pin">പെട്ടെന്ന് എന്നതിൽ പിൻ ചെയ്യുക</string>
+    <string name="settings_row_menu_unpin">പെട്ടെന്ന് എന്നതിൽ നിന്ന് നീക്കുക</string>
+    <string name="settings_row_menu_move_up">മുകളിലേക്ക് നീക്കുക</string>
+    <string name="settings_row_menu_move_down">താഴേക്ക് നീക്കുക</string>
+    <string name="settings_quick_empty_title">ഇതുവരെ ഒന്നും പിൻ ചെയ്തിട്ടില്ല</string>
+    <string name="settings_quick_empty_hint">ഏതെങ്കിലും ക്രമീകരണത്തിൽ OK അമർത്തിപ്പിടിച്ച് “പെട്ടെന്ന് എന്നതിൽ പിൻ ചെയ്യുക” തിരഞ്ഞെടുക്കുക.</string>
+    <string name="settings_results_title">ഫലങ്ങൾ</string>
+    <string name="settings_results_summary">എവിടെയായാലും എല്ലാ പൊരുത്തങ്ങളും — വഴിയോടു കൂടി</string>
+    <plurals name="settings_setting_count">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> ക്രമീകരണം</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> ക്രമീകരണങ്ങൾ</item>
+    </plurals>
+    <plurals name="settings_pinned_count">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> പിൻ ചെയ്തു</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> പിൻ ചെയ്തു</item>
+    </plurals>
+    <plurals name="settings_match_count">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> പൊരുത്തം</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> പൊരുത്തങ്ങൾ</item>
+    </plurals>
 </resources>

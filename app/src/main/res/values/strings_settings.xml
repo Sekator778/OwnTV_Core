@@ -329,6 +329,47 @@
     <string name="settings_search_label">Search settings</string>
     <!-- Translators: Placeholder text in the settings search field. -->
     <string name="settings_search_hint">Search settings…</string>
+    <!-- Translators: One line under the Settings title explaining the two columns and the row menu. -->
+    <string name="settings_header_hint">Left: groups · Right: their settings · Hold OK on a row to pin it to Quick</string>
+    <!-- Translators: Small uppercase heading above the list of settings groups. -->
+    <string name="settings_spine_eyebrow">All groups</string>
+    <!-- Translators: Heading of the settings group column. -->
+    <string name="settings_spine_title">Browse settings</string>
+    <!-- Translators: One line under the group-column heading explaining how the column behaves. -->
+    <string name="settings_spine_hint">Quick stays pinned at the top; the marker follows the group you are in.</string>
+    <!-- Translators: Quiet footnote at the bottom of the settings group column. -->
+    <string name="settings_spine_foot">Accent follows your focus</string>
+    <!-- Translators: Row-menu action that adds the chosen setting to the Quick group. -->
+    <string name="settings_row_menu_pin">Pin to Quick</string>
+    <!-- Translators: Row-menu action that takes the chosen setting back out of the Quick group. -->
+    <string name="settings_row_menu_unpin">Remove from Quick</string>
+    <!-- Translators: Row-menu action that moves the setting one place earlier in the Quick group. -->
+    <string name="settings_row_menu_move_up">Move up</string>
+    <!-- Translators: Row-menu action that moves the setting one place later in the Quick group. -->
+    <string name="settings_row_menu_move_down">Move down</string>
+    <!-- Translators: Shown when the Quick group holds nothing at all. -->
+    <string name="settings_quick_empty_title">Nothing pinned yet</string>
+    <!-- Translators: Hint under "Nothing pinned yet". OK is the remote's select button. -->
+    <string name="settings_quick_empty_hint">Hold OK on any setting and choose “Pin to Quick”.</string>
+    <!-- Translators: Heading shown over settings search results. -->
+    <string name="settings_results_title">Results</string>
+    <!-- Translators: One line under the settings search results heading. -->
+    <string name="settings_results_summary">Every match, wherever it lives — the path comes with it</string>
+    <!-- Translators: Badge counting how many settings a group holds. -->
+    <plurals name="settings_setting_count">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> setting</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> settings</item>
+    </plurals>
+    <!-- Translators: Badge counting how many settings the user has pinned to the Quick group. -->
+    <plurals name="settings_pinned_count">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> pinned</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> pinned</item>
+    </plurals>
+    <!-- Translators: Badge counting how many settings a search matched. -->
+    <plurals name="settings_match_count">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> match</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> matches</item>
+    </plurals>
     <!-- Translators: Settings navigation group label for General settings (language, etc.). -->
     <!-- Translators: Settings navigation label for the app display language picker. -->
     <string name="settings_language">Language</string>
@@ -366,6 +407,12 @@
     <string name="settings_ch_paging">CH+- Key Paging</string>
     <!-- Translators: Description of the CH+ Key Paging settings. -->
     <string name="settings_ch_paging_description">Skip up/down in the category &amp; item lists with the CH+ / CH− keys</string>
+    <!-- Translators: Settings navigation label for the long-press content menus. -->
+    <string name="settings_content_menus_title">Long-press menus</string>
+    <!-- Translators: Description of the long-press content menus settings. -->
+    <string name="settings_content_menus_description">Rearrange the actions in the channel, movie, series &amp; episode menus</string>
+    <!-- Translators: Hint shown above the list when arranging a long-press menu. -->
+    <string name="settings_content_menus_hint">Hold OK on an action to pick it up, then Up and Down to move it. Press OK again to drop it.</string>
     <!-- Translators: Settings navigation label for Browsing & lists. -->
     <string name="settings_browsing_lists">Browsing &amp; lists</string>
     <!-- Translators: Description of the Browsing & lists settings. -->
@@ -667,6 +714,24 @@
     <string name="settings_group_summary_content_metadata">Naming, artwork and subtitle services</string>
     <!-- Translators: Settings sheet summary line under the "Playback" group heading. -->
     <string name="settings_group_summary_playback">The video player and its error log</string>
+    <!-- Translators: Video player settings: name of the section holding decoder, HDR and frame-rate settings. -->
+    <string name="settings_vp_section_engine">Engine &amp; picture</string>
+    <!-- Translators: Video player settings: name of the section holding volume, audio language and surround settings. -->
+    <string name="settings_vp_section_sound">Sound</string>
+    <!-- Translators: Video player settings: name of the section holding resume, auto-play and mini-player settings. -->
+    <string name="settings_vp_section_episodes">Episodes &amp; mini-player</string>
+    <!-- Translators: Video player settings: one-line summary under the "Engine &amp; picture" section name. -->
+    <string name="settings_vp_section_engine_summary">Decoder, HDR, frame rate</string>
+    <!-- Translators: Video player settings: one-line summary under the "Live TV" section name. -->
+    <string name="settings_vp_section_live_summary">Preview, numbers, latency</string>
+    <!-- Translators: Video player settings: one-line summary under the "Sound" section name. -->
+    <string name="settings_vp_section_sound_summary">Volume, language, surround</string>
+    <!-- Translators: Video player settings: one-line summary under the "Subtitles" section name. -->
+    <string name="settings_vp_section_subtitles_summary">Size, colour, position</string>
+    <!-- Translators: Video player settings: one-line summary under the "Episodes &amp; mini-player" section name. -->
+    <string name="settings_vp_section_episodes_summary">Auto-play and mini-player</string>
+    <!-- Translators: Video player settings: one-line summary under the "Diagnostics" section name. -->
+    <string name="settings_vp_section_diagnostics_summary">Verbose player logs</string>
     <!-- Translators: Settings sheet summary line under the "Network" group heading. -->
     <string name="settings_group_summary_network">Proxy and DNS for stream connections</string>
     <!-- Translators: Settings sheet summary line under the "Data" group heading. -->

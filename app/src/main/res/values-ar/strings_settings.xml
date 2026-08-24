@@ -184,6 +184,12 @@
     <string name="settings_sidebar_description_root">تكييف الأيقونات الجانبية تلقائيًا مع قائمة التشغيل أو إخفاء أيقونات محددة</string>
     <string name="settings_ch_paging">التنقل بين الصفحات بمفتاحي CH+-</string>
     <string name="settings_ch_paging_description">التخطي إلى أعلى/أسفل في قوائم الفئات والعناصر باستخدام مفتاحي CH+ / CH−</string>
+    <!-- Translators: Settings navigation label for the long-press content menus. -->
+    <string name="settings_content_menus_title">قوائم الضغط المطوّل</string>
+    <!-- Translators: Description of the long-press content menus settings. -->
+    <string name="settings_content_menus_description">أعد ترتيب الإجراءات في قوائم القنوات والأفلام والمسلسلات والحلقات</string>
+    <!-- Translators: Hint shown above the list when arranging a long-press menu. -->
+    <string name="settings_content_menus_hint">اضغط مطوّلًا على «موافق» فوق إجراء لالتقاطه، ثم استخدم الأعلى والأسفل لتحريكه. اضغط «موافق» مرة أخرى لإفلاته.</string>
     <string name="settings_browsing_lists">التصفح والقوائم</string>
     <string name="settings_browsing_description">تذكّر آخر فئة وآخر عنصر في البث التلفزيوني المباشر والأفلام والمسلسلات</string>
     <string name="settings_home_root">الشاشة الرئيسية</string>
@@ -327,6 +333,24 @@
     <string name="settings_group_summary_layout">الشريط الجانبي واللوحات والقوائم وشاشة البداية</string>
     <string name="settings_group_summary_content_metadata">التسمية والصور وخدمات الترجمة</string>
     <string name="settings_group_summary_playback">مشغّل الفيديو وسجل أخطائه</string>
+    <!-- Translators: Video player settings: name of the section holding decoder, HDR and frame-rate settings. -->
+    <string name="settings_vp_section_engine">المحرك والصورة</string>
+    <!-- Translators: Video player settings: name of the section holding volume, audio language and surround settings. -->
+    <string name="settings_vp_section_sound">الصوت</string>
+    <!-- Translators: Video player settings: name of the section holding resume, auto-play and mini-player settings. -->
+    <string name="settings_vp_section_episodes">الحلقات والمشغّل المصغّر</string>
+    <!-- Translators: Video player settings: one-line summary under the "Engine &amp; picture" section name. -->
+    <string name="settings_vp_section_engine_summary">فك التشفير، HDR، معدل الإطارات</string>
+    <!-- Translators: Video player settings: one-line summary under the "Live TV" section name. -->
+    <string name="settings_vp_section_live_summary">المعاينة، الأرقام، زمن التأخير</string>
+    <!-- Translators: Video player settings: one-line summary under the "Sound" section name. -->
+    <string name="settings_vp_section_sound_summary">مستوى الصوت، اللغة، المحيطي</string>
+    <!-- Translators: Video player settings: one-line summary under the "Subtitles" section name. -->
+    <string name="settings_vp_section_subtitles_summary">الحجم، اللون، الموضع</string>
+    <!-- Translators: Video player settings: one-line summary under the "Episodes &amp; mini-player" section name. -->
+    <string name="settings_vp_section_episodes_summary">التشغيل التلقائي والمشغّل المصغّر</string>
+    <!-- Translators: Video player settings: one-line summary under the "Diagnostics" section name. -->
+    <string name="settings_vp_section_diagnostics_summary">سجلات مفصّلة للمشغّل</string>
     <string name="settings_group_summary_network">الوكيل وDNS لاتصالات البث</string>
     <string name="settings_group_summary_data">النسخ الاحتياطي والتنزيلات وسجل المشاهدة</string>
     <string name="settings_group_summary_app">اللغة وبدء التشغيل والتحديثات ومعلومات التطبيق</string>
@@ -1137,4 +1161,41 @@
     <string name="settings_glass_full_transparency_description">يعطّل الحد التلقائي للوضوح للحصول على أكثر زجاج شفافية.</string>
     <string name="settings_glass_depth_title">العمق والظلال</string>
     <string name="settings_glass_depth_description">يفعّل إضاءة انتقال التركيز والمنظور الخفيف وحركة العمق.</string>
+    <string name="settings_header_hint">يسارًا: المجموعات · يمينًا: إعداداتها · اضغط مطولاً على صف لتثبيته في سريع</string>
+    <string name="settings_spine_eyebrow">كل المجموعات</string>
+    <string name="settings_spine_title">تصفح الإعدادات</string>
+    <string name="settings_spine_hint">تبقى سريع مثبتة في الأعلى؛ والمؤشر يتبع المجموعة التي أنت فيها.</string>
+    <string name="settings_spine_foot">اللون المميز يتبع تركيزك</string>
+    <string name="settings_row_menu_pin">تثبيت في سريع</string>
+    <string name="settings_row_menu_unpin">إزالة من سريع</string>
+    <string name="settings_row_menu_move_up">نقل لأعلى</string>
+    <string name="settings_row_menu_move_down">نقل لأسفل</string>
+    <string name="settings_quick_empty_title">لا شيء مثبت بعد</string>
+    <string name="settings_quick_empty_hint">اضغط مطولاً على زر OK فوق أي إعداد واختر “تثبيت في سريع”.</string>
+    <string name="settings_results_title">النتائج</string>
+    <string name="settings_results_summary">كل تطابق أينما كان — مع مساره</string>
+    <plurals name="settings_setting_count">
+        <item quantity="zero"><xliff:g id="count">%1$d</xliff:g> إعداد</item>
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> إعداد</item>
+        <item quantity="two"><xliff:g id="count">%1$d</xliff:g> إعدادان</item>
+        <item quantity="few"><xliff:g id="count">%1$d</xliff:g> إعدادات</item>
+        <item quantity="many"><xliff:g id="count">%1$d</xliff:g> إعدادًا</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> إعداد</item>
+    </plurals>
+    <plurals name="settings_pinned_count">
+        <item quantity="zero"><xliff:g id="count">%1$d</xliff:g> عنصر مثبت</item>
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> عنصر مثبت</item>
+        <item quantity="two"><xliff:g id="count">%1$d</xliff:g> عنصران مثبتان</item>
+        <item quantity="few"><xliff:g id="count">%1$d</xliff:g> عناصر مثبتة</item>
+        <item quantity="many"><xliff:g id="count">%1$d</xliff:g> عنصرًا مثبتًا</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> عنصر مثبت</item>
+    </plurals>
+    <plurals name="settings_match_count">
+        <item quantity="zero"><xliff:g id="count">%1$d</xliff:g> تطابق</item>
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> تطابق</item>
+        <item quantity="two"><xliff:g id="count">%1$d</xliff:g> تطابقان</item>
+        <item quantity="few"><xliff:g id="count">%1$d</xliff:g> تطابقات</item>
+        <item quantity="many"><xliff:g id="count">%1$d</xliff:g> تطابقًا</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> تطابق</item>
+    </plurals>
 </resources>

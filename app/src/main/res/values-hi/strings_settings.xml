@@ -180,6 +180,12 @@
     <string name="settings_sidebar_description_root">साइड आइकन को अपनी प्लेलिस्ट के अनुसार अपने-आप ढालें या विशेष आइकन छिपाएँ</string>
     <string name="settings_ch_paging">CH+- कुंजी से पेज बदलना</string>
     <string name="settings_ch_paging_description">CH+ / CH− कुंजियों से श्रेणी और आइटम सूचियों में ऊपर/नीचे जाएँ</string>
+    <!-- Translators: Settings navigation label for the long-press content menus. -->
+    <string name="settings_content_menus_title">लॉन्ग-प्रेस मेन्यू</string>
+    <!-- Translators: Description of the long-press content menus settings. -->
+    <string name="settings_content_menus_description">चैनल, मूवी, सीरीज़ और एपिसोड मेन्यू की क्रियाओं का क्रम बदलें</string>
+    <!-- Translators: Hint shown above the list when arranging a long-press menu. -->
+    <string name="settings_content_menus_hint">किसी क्रिया पर OK दबाए रखकर उसे उठाएँ, फिर ऊपर-नीचे से हिलाएँ। छोड़ने के लिए फिर से OK दबाएँ।</string>
     <string name="settings_browsing_lists">ब्राउज़िंग और सूचियाँ</string>
     <string name="settings_browsing_description">लाइव टीवी, फ़िल्मों और सीरीज़ में पिछली श्रेणी और पिछला आइटम याद रखें</string>
     <string name="settings_home_root">होम स्क्रीन</string>
@@ -319,6 +325,24 @@
     <string name="settings_group_summary_layout">साइडबार, पैनल, सूचियाँ और होम स्क्रीन</string>
     <string name="settings_group_summary_content_metadata">नाम, तस्वीरें और सबटाइटल सेवाएँ</string>
     <string name="settings_group_summary_playback">वीडियो प्लेयर और उसका त्रुटि लॉग</string>
+    <!-- Translators: Video player settings: name of the section holding decoder, HDR and frame-rate settings. -->
+    <string name="settings_vp_section_engine">इंजन और चित्र</string>
+    <!-- Translators: Video player settings: name of the section holding volume, audio language and surround settings. -->
+    <string name="settings_vp_section_sound">ध्वनि</string>
+    <!-- Translators: Video player settings: name of the section holding resume, auto-play and mini-player settings. -->
+    <string name="settings_vp_section_episodes">एपिसोड और मिनी प्लेयर</string>
+    <!-- Translators: Video player settings: one-line summary under the "Engine &amp; picture" section name. -->
+    <string name="settings_vp_section_engine_summary">डिकोडर, HDR, फ़्रेम दर</string>
+    <!-- Translators: Video player settings: one-line summary under the "Live TV" section name. -->
+    <string name="settings_vp_section_live_summary">प्रीव्यू, नंबर, लेटेंसी</string>
+    <!-- Translators: Video player settings: one-line summary under the "Sound" section name. -->
+    <string name="settings_vp_section_sound_summary">वॉल्यूम, भाषा, सराउंड</string>
+    <!-- Translators: Video player settings: one-line summary under the "Subtitles" section name. -->
+    <string name="settings_vp_section_subtitles_summary">आकार, रंग, स्थिति</string>
+    <!-- Translators: Video player settings: one-line summary under the "Episodes &amp; mini-player" section name. -->
+    <string name="settings_vp_section_episodes_summary">ऑटो-प्ले और मिनी प्लेयर</string>
+    <!-- Translators: Video player settings: one-line summary under the "Diagnostics" section name. -->
+    <string name="settings_vp_section_diagnostics_summary">विस्तृत प्लेयर लॉग</string>
     <string name="settings_group_summary_network">स्ट्रीम कनेक्शन के लिए प्रॉक्सी और DNS</string>
     <string name="settings_group_summary_data">बैकअप, डाउनलोड और देखने का इतिहास</string>
     <string name="settings_group_summary_app">भाषा, स्टार्टअप, अपडेट और ऐप जानकारी</string>
@@ -1065,4 +1089,29 @@
     <string name="settings_glass_full_transparency_description">सबसे स्पष्ट ग्लास के लिए स्वचालित पठनीयता सीमा बंद करता है।</string>
     <string name="settings_glass_depth_title">गहराई और छाया</string>
     <string name="settings_glass_depth_description">फ़ोकस-यात्रा प्रकाश, हल्का पैरालैक्स और गहराई की गति चालू करता है।</string>
+    <string name="settings_header_hint">बाएँ: समूह · दाएँ: उनकी सेटिंग · किसी पंक्ति को त्वरित में पिन करने के लिए OK दबाए रखें</string>
+    <string name="settings_spine_eyebrow">सभी समूह</string>
+    <string name="settings_spine_title">सेटिंग ब्राउज़ करें</string>
+    <string name="settings_spine_hint">त्वरित हमेशा ऊपर रहता है; चिह्न उस समूह का अनुसरण करता है जिसमें आप हैं।</string>
+    <string name="settings_spine_foot">एक्सेंट रंग आपके फ़ोकस का अनुसरण करता है</string>
+    <string name="settings_row_menu_pin">त्वरित में पिन करें</string>
+    <string name="settings_row_menu_unpin">त्वरित से हटाएँ</string>
+    <string name="settings_row_menu_move_up">ऊपर ले जाएँ</string>
+    <string name="settings_row_menu_move_down">नीचे ले जाएँ</string>
+    <string name="settings_quick_empty_title">अभी कुछ भी पिन नहीं है</string>
+    <string name="settings_quick_empty_hint">किसी भी सेटिंग पर OK दबाए रखें और “त्वरित में पिन करें” चुनें।</string>
+    <string name="settings_results_title">परिणाम</string>
+    <string name="settings_results_summary">हर मिलान, चाहे वह कहीं भी हो — रास्ते के साथ</string>
+    <plurals name="settings_setting_count">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> सेटिंग</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> सेटिंग</item>
+    </plurals>
+    <plurals name="settings_pinned_count">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> पिन किया</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> पिन किए</item>
+    </plurals>
+    <plurals name="settings_match_count">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> मिलान</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> मिलान</item>
+    </plurals>
 </resources>

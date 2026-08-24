@@ -180,6 +180,12 @@
     <string name="settings_sidebar_description_root">Seitensymbole automatisch an Ihre Wiedergabeliste anpassen oder bestimmte Symbole ausblenden</string>
     <string name="settings_ch_paging">Seitenwechsel mit CH+/CH−</string>
     <string name="settings_ch_paging_description">Mit den Tasten CH+ / CH− in den Kategorie- und Elementlisten nach oben/unten springen</string>
+    <!-- Translators: Settings navigation label for the long-press content menus. -->
+    <string name="settings_content_menus_title">Menüs bei langem Druck</string>
+    <!-- Translators: Description of the long-press content menus settings. -->
+    <string name="settings_content_menus_description">Ordne die Aktionen in den Menüs für Sender, Filme, Serien und Folgen neu an</string>
+    <!-- Translators: Hint shown above the list when arranging a long-press menu. -->
+    <string name="settings_content_menus_hint">Halte OK auf einer Aktion gedrückt, um sie aufzunehmen, und verschiebe sie mit Auf und Ab. Erneut OK legt sie ab.</string>
     <string name="settings_browsing_lists">Durchsuchen und Listen</string>
     <string name="settings_browsing_description">Letzte Kategorie und letztes Element in Live-TV, Filmen und Serien merken</string>
     <string name="settings_home_root">Startbildschirm</string>
@@ -319,6 +325,24 @@
     <string name="settings_group_summary_layout">Seitenleiste, Bereiche, Listen und Startbildschirm</string>
     <string name="settings_group_summary_content_metadata">Benennung, Bildmaterial und Untertiteldienste</string>
     <string name="settings_group_summary_playback">Der Videoplayer und sein Fehlerprotokoll</string>
+    <!-- Translators: Video player settings: name of the section holding decoder, HDR and frame-rate settings. -->
+    <string name="settings_vp_section_engine">Engine und Bild</string>
+    <!-- Translators: Video player settings: name of the section holding volume, audio language and surround settings. -->
+    <string name="settings_vp_section_sound">Ton</string>
+    <!-- Translators: Video player settings: name of the section holding resume, auto-play and mini-player settings. -->
+    <string name="settings_vp_section_episodes">Folgen und Mini-Player</string>
+    <!-- Translators: Video player settings: one-line summary under the "Engine &amp; picture" section name. -->
+    <string name="settings_vp_section_engine_summary">Decoder, HDR, Bildrate</string>
+    <!-- Translators: Video player settings: one-line summary under the "Live TV" section name. -->
+    <string name="settings_vp_section_live_summary">Vorschau, Nummern, Latenz</string>
+    <!-- Translators: Video player settings: one-line summary under the "Sound" section name. -->
+    <string name="settings_vp_section_sound_summary">Lautstärke, Sprache, Surround</string>
+    <!-- Translators: Video player settings: one-line summary under the "Subtitles" section name. -->
+    <string name="settings_vp_section_subtitles_summary">Größe, Farbe, Position</string>
+    <!-- Translators: Video player settings: one-line summary under the "Episodes &amp; mini-player" section name. -->
+    <string name="settings_vp_section_episodes_summary">Automatische Wiedergabe und Mini-Player</string>
+    <!-- Translators: Video player settings: one-line summary under the "Diagnostics" section name. -->
+    <string name="settings_vp_section_diagnostics_summary">Ausführliche Player-Protokolle</string>
     <string name="settings_group_summary_network">Proxy und DNS für Stream-Verbindungen</string>
     <string name="settings_group_summary_data">Sicherung, Downloads und Wiedergabeverlauf</string>
     <string name="settings_group_summary_app">Sprache, Start, Updates und App-Infos</string>
@@ -1065,4 +1089,29 @@
     <string name="settings_glass_full_transparency_description">Deaktiviert die automatische Lesbarkeitsgrenze für maximal klares Glas.</string>
     <string name="settings_glass_depth_title">Tiefe und Schatten</string>
     <string name="settings_glass_depth_description">Aktiviert Fokuslicht, dezente Parallaxe und Tiefenbewegung.</string>
+    <string name="settings_header_hint">Links: Gruppen · Rechts: ihre Einstellungen · OK auf einer Zeile halten, um sie an Schnellzugriff anzuheften</string>
+    <string name="settings_spine_eyebrow">Alle Gruppen</string>
+    <string name="settings_spine_title">Einstellungen durchsuchen</string>
+    <string name="settings_spine_hint">Schnellzugriff bleibt oben; die Markierung folgt deiner Gruppe.</string>
+    <string name="settings_spine_foot">Die Akzentfarbe folgt deinem Fokus</string>
+    <string name="settings_row_menu_pin">An Schnellzugriff anheften</string>
+    <string name="settings_row_menu_unpin">Aus Schnellzugriff entfernen</string>
+    <string name="settings_row_menu_move_up">Nach oben</string>
+    <string name="settings_row_menu_move_down">Nach unten</string>
+    <string name="settings_quick_empty_title">Noch nichts angeheftet</string>
+    <string name="settings_quick_empty_hint">Halte OK auf einer Einstellung gedrückt und wähle „An Schnellzugriff anheften“.</string>
+    <string name="settings_results_title">Ergebnisse</string>
+    <string name="settings_results_summary">Jeder Treffer, wo er auch liegt — mit seinem Pfad</string>
+    <plurals name="settings_setting_count">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> Einstellung</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> Einstellungen</item>
+    </plurals>
+    <plurals name="settings_pinned_count">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> angeheftet</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> angeheftet</item>
+    </plurals>
+    <plurals name="settings_match_count">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> Treffer</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> Treffer</item>
+    </plurals>
 </resources>

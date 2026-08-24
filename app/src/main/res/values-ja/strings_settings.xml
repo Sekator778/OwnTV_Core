@@ -179,6 +179,12 @@
     <string name="settings_sidebar_description_root">プレイリストに合わせてサイドアイコンを自動調整するか、特定のアイコンを非表示にします</string>
     <string name="settings_ch_paging">CH+/CH−キーによるページ移動</string>
     <string name="settings_ch_paging_description">CH+／CH−キーでカテゴリと項目の一覧を上下にスキップ</string>
+    <!-- Translators: Settings navigation label for the long-press content menus. -->
+    <string name="settings_content_menus_title">長押しメニュー</string>
+    <!-- Translators: Description of the long-press content menus settings. -->
+    <string name="settings_content_menus_description">チャンネル・映画・シリーズ・エピソードのメニューの項目を並べ替えます</string>
+    <!-- Translators: Hint shown above the list when arranging a long-press menu. -->
+    <string name="settings_content_menus_hint">項目で OK を長押しするとつかめます。上下で移動し、もう一度 OK で置きます。</string>
     <string name="settings_browsing_lists">ブラウズと一覧</string>
     <string name="settings_browsing_description">ライブTV、映画、シリーズで最後のカテゴリと項目を記憶</string>
     <string name="settings_home_root">ホーム画面</string>
@@ -317,6 +323,24 @@
     <string name="settings_group_summary_layout">サイドバー、パネル、一覧、ホーム画面</string>
     <string name="settings_group_summary_content_metadata">名称、画像、字幕サービス</string>
     <string name="settings_group_summary_playback">動画プレーヤーとエラーログ</string>
+    <!-- Translators: Video player settings: name of the section holding decoder, HDR and frame-rate settings. -->
+    <string name="settings_vp_section_engine">エンジンと映像</string>
+    <!-- Translators: Video player settings: name of the section holding volume, audio language and surround settings. -->
+    <string name="settings_vp_section_sound">サウンド</string>
+    <!-- Translators: Video player settings: name of the section holding resume, auto-play and mini-player settings. -->
+    <string name="settings_vp_section_episodes">エピソードとミニプレーヤー</string>
+    <!-- Translators: Video player settings: one-line summary under the "Engine &amp; picture" section name. -->
+    <string name="settings_vp_section_engine_summary">デコーダー、HDR、フレームレート</string>
+    <!-- Translators: Video player settings: one-line summary under the "Live TV" section name. -->
+    <string name="settings_vp_section_live_summary">プレビュー、番号、遅延</string>
+    <!-- Translators: Video player settings: one-line summary under the "Sound" section name. -->
+    <string name="settings_vp_section_sound_summary">音量、言語、サラウンド</string>
+    <!-- Translators: Video player settings: one-line summary under the "Subtitles" section name. -->
+    <string name="settings_vp_section_subtitles_summary">サイズ、色、位置</string>
+    <!-- Translators: Video player settings: one-line summary under the "Episodes &amp; mini-player" section name. -->
+    <string name="settings_vp_section_episodes_summary">自動再生とミニプレーヤー</string>
+    <!-- Translators: Video player settings: one-line summary under the "Diagnostics" section name. -->
+    <string name="settings_vp_section_diagnostics_summary">詳細な再生ログ</string>
     <string name="settings_group_summary_network">ストリーム接続のプロキシと DNS</string>
     <string name="settings_group_summary_data">バックアップ、ダウンロード、視聴履歴</string>
     <string name="settings_group_summary_app">言語、起動、更新、アプリ情報</string>
@@ -1047,4 +1071,26 @@
     <string name="settings_glass_full_transparency_description">最も透明なガラスにするため、自動の読みやすさ制限を無効にします。</string>
     <string name="settings_glass_depth_title">奥行きと影</string>
     <string name="settings_glass_depth_description">フォーカス移動ライト、控えめな視差、奥行きの動きを有効にします。</string>
+    <string name="settings_header_hint">左：グループ · 右：その設定 · 行を OK 長押しでクイックに固定</string>
+    <string name="settings_spine_eyebrow">すべてのグループ</string>
+    <string name="settings_spine_title">設定を見る</string>
+    <string name="settings_spine_hint">クイックは常に先頭に固定され、目印は今いるグループを追います。</string>
+    <string name="settings_spine_foot">アクセント色はフォーカスに従います</string>
+    <string name="settings_row_menu_pin">クイックに固定</string>
+    <string name="settings_row_menu_unpin">クイックから外す</string>
+    <string name="settings_row_menu_move_up">上へ移動</string>
+    <string name="settings_row_menu_move_down">下へ移動</string>
+    <string name="settings_quick_empty_title">まだ何も固定されていません</string>
+    <string name="settings_quick_empty_hint">設定を OK 長押しして「クイックに固定」を選びます。</string>
+    <string name="settings_results_title">検索結果</string>
+    <string name="settings_results_summary">どこにある項目も、その場所ごと表示します</string>
+    <plurals name="settings_setting_count">
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> 件の設定</item>
+    </plurals>
+    <plurals name="settings_pinned_count">
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> 件を固定</item>
+    </plurals>
+    <plurals name="settings_match_count">
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> 件の一致</item>
+    </plurals>
 </resources>

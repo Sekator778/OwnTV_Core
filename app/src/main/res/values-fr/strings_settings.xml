@@ -181,6 +181,12 @@
     <string name="settings_sidebar_description_root">Adapter automatiquement les icônes latérales à votre liste de lecture ou en masquer certaines</string>
     <string name="settings_ch_paging">Navigation par pages avec CH+/−</string>
     <string name="settings_ch_paging_description">Remonter ou descendre dans les listes de catégories et d’éléments avec les touches CH+ / CH−</string>
+    <!-- Translators: Settings navigation label for the long-press content menus. -->
+    <string name="settings_content_menus_title">Menus d’appui long</string>
+    <!-- Translators: Description of the long-press content menus settings. -->
+    <string name="settings_content_menus_description">Réorganisez les actions des menus chaînes, films, séries et épisodes</string>
+    <!-- Translators: Hint shown above the list when arranging a long-press menu. -->
+    <string name="settings_content_menus_hint">Maintenez OK sur une action pour la saisir, puis déplacez-la avec Haut et Bas. Appuyez de nouveau sur OK pour la déposer.</string>
     <string name="settings_browsing_lists">Navigation et listes</string>
     <string name="settings_browsing_description">Mémoriser la dernière catégorie et le dernier élément dans TV en direct, Films et Séries</string>
     <string name="settings_home_root">Écran d’accueil</string>
@@ -321,6 +327,24 @@
     <string name="settings_group_summary_layout">Barre latérale, panneaux, listes et écran d’accueil</string>
     <string name="settings_group_summary_content_metadata">Noms, visuels et services de sous-titres</string>
     <string name="settings_group_summary_playback">Le lecteur vidéo et son journal d’erreurs</string>
+    <!-- Translators: Video player settings: name of the section holding decoder, HDR and frame-rate settings. -->
+    <string name="settings_vp_section_engine">Moteur et image</string>
+    <!-- Translators: Video player settings: name of the section holding volume, audio language and surround settings. -->
+    <string name="settings_vp_section_sound">Son</string>
+    <!-- Translators: Video player settings: name of the section holding resume, auto-play and mini-player settings. -->
+    <string name="settings_vp_section_episodes">Épisodes et mini-lecteur</string>
+    <!-- Translators: Video player settings: one-line summary under the "Engine &amp; picture" section name. -->
+    <string name="settings_vp_section_engine_summary">Décodeur, HDR, fréquence d’images</string>
+    <!-- Translators: Video player settings: one-line summary under the "Live TV" section name. -->
+    <string name="settings_vp_section_live_summary">Aperçu, numéros, latence</string>
+    <!-- Translators: Video player settings: one-line summary under the "Sound" section name. -->
+    <string name="settings_vp_section_sound_summary">Volume, langue, surround</string>
+    <!-- Translators: Video player settings: one-line summary under the "Subtitles" section name. -->
+    <string name="settings_vp_section_subtitles_summary">Taille, couleur, position</string>
+    <!-- Translators: Video player settings: one-line summary under the "Episodes &amp; mini-player" section name. -->
+    <string name="settings_vp_section_episodes_summary">Lecture automatique et mini-lecteur</string>
+    <!-- Translators: Video player settings: one-line summary under the "Diagnostics" section name. -->
+    <string name="settings_vp_section_diagnostics_summary">Journaux détaillés du lecteur</string>
     <string name="settings_group_summary_network">Proxy et DNS pour les connexions aux flux</string>
     <string name="settings_group_summary_data">Sauvegardes, téléchargements et historique</string>
     <string name="settings_group_summary_app">Langue, démarrage, mises à jour et infos de l’appli</string>
@@ -1083,4 +1107,32 @@
     <string name="settings_glass_full_transparency_description">Désactive le seuil automatique de lisibilité pour un verre aussi clair que possible.</string>
     <string name="settings_glass_depth_title">Profondeur et ombres</string>
     <string name="settings_glass_depth_description">Active la lumière suivant le focus, la parallaxe subtile et le mouvement de profondeur.</string>
+    <string name="settings_header_hint">À gauche : les groupes · À droite : leurs réglages · Maintenez OK sur une ligne pour l’épingler à Rapide</string>
+    <string name="settings_spine_eyebrow">Tous les groupes</string>
+    <string name="settings_spine_title">Parcourir les réglages</string>
+    <string name="settings_spine_hint">Rapide reste en haut ; le repère suit le groupe où vous êtes.</string>
+    <string name="settings_spine_foot">La couleur d’accent suit votre sélection</string>
+    <string name="settings_row_menu_pin">Épingler à Rapide</string>
+    <string name="settings_row_menu_unpin">Retirer de Rapide</string>
+    <string name="settings_row_menu_move_up">Monter</string>
+    <string name="settings_row_menu_move_down">Descendre</string>
+    <string name="settings_quick_empty_title">Rien d’épinglé pour l’instant</string>
+    <string name="settings_quick_empty_hint">Maintenez OK sur un réglage et choisissez « Épingler à Rapide ».</string>
+    <string name="settings_results_title">Résultats</string>
+    <string name="settings_results_summary">Chaque résultat, où qu’il soit — avec son chemin</string>
+    <plurals name="settings_setting_count">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> réglage</item>
+        <item quantity="many"><xliff:g id="count">%1$d</xliff:g> de réglages</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> réglages</item>
+    </plurals>
+    <plurals name="settings_pinned_count">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> épinglé</item>
+        <item quantity="many"><xliff:g id="count">%1$d</xliff:g> d’épinglés</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> épinglés</item>
+    </plurals>
+    <plurals name="settings_match_count">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> résultat</item>
+        <item quantity="many"><xliff:g id="count">%1$d</xliff:g> de résultats</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> résultats</item>
+    </plurals>
 </resources>

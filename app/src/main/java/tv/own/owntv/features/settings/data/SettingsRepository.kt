@@ -256,6 +256,8 @@ class SettingsRepository(private val context: Context, private val localeStore: 
         // off by default, so a search returns every language OpenSubtitles has for the title.
         val SUB_SEARCH_FILTER = booleanPreferencesKey("sub_search_filter")
         val SUB_SEARCH_LANGS = stringPreferencesKey("sub_search_langs")
+        // Settings rows pinned to the Quick group, comma-joined, in display order.
+        val QUICK_PINNED = stringPreferencesKey("settings_quick_pinned")
         // Per-section list sorting ("PLAYLIST" or "ALPHA")
         val SORT_LIVE = stringPreferencesKey("sort_live")
         val SORT_GUIDE = stringPreferencesKey("sort_guide")
@@ -1264,6 +1266,36 @@ class SettingsRepository(private val context: Context, private val localeStore: 
         context.dataStore.edit { it[Keys.SUB_SEARCH_LANGS] = codes.trim() }
     }
 
+    /**
+     * The Settings rows the user pinned to the Quick group, in the order they should appear.
+     * Stored as a comma-joined list of row keys. Unknown keys are kept here but ignored when the list
+     * is drawn, so a pin that belongs to a row hidden by the current theme/profile survives.
+     */
+    val quickPinnedKeys: Flow<List<String>> = prefsFlow { prefs ->
+        (prefs[Keys.QUICK_PINNED] ?: DEFAULT_QUICK_PINNED.joinToString(","))
+            .split(',').map { it.trim() }.filter { it.isNotEmpty() }
+    }
+
+    suspend fun setQuickPinnedKeys(keys: List<String>) {
+        context.dataStore.edit { it[Keys.QUICK_PINNED] = keys.joinToString(",") }
+    }
+
+    /**
+     * The order the user arranged one long-press content menu into, as a comma-joined list of action
+     * keys. Empty means "as shipped". Stored per menu — Live, Movies, Series and Episodes are four
+     * independent lists. Keys that no longer exist are ignored on read and actions the list has never
+     * heard of are appended, which is what lets a later release add an action without it vanishing.
+     */
+    fun menuOrder(menu: String): Flow<List<String>> = prefsFlow { prefs ->
+        (prefs[menuOrderKey(menu)] ?: "").split(',').map { it.trim() }.filter { it.isNotEmpty() }
+    }
+
+    suspend fun setMenuOrder(menu: String, keys: List<String>) {
+        context.dataStore.edit { it[menuOrderKey(menu)] = keys.joinToString(",") }
+    }
+
+    private fun menuOrderKey(menu: String) = stringPreferencesKey("settings_menu_order_$menu")
+
     // --- Per-source auto-refresh (Off / Startup / staleness threshold) ---
     // Stored as a JSON map { "<sourceId>": "<EnumName>" } in the owntv_settings DataStore — migration-safe
     // (Room uses destructive migrations, so anything that must survive a schema bump lives here). Reuses the
@@ -1989,6 +2021,12 @@ class SettingsRepository(private val context: Context, private val localeStore: 
 
         /** Backup payload field name for the UI locale tag (read from / written to [LocaleStore]). */
         const val UI_LANGUAGE_KEY = "ui_language"
+
+        /** The six toggles Quick started life with, kept as the out-of-the-box pin list. */
+        val DEFAULT_QUICK_PINNED = listOf(
+            "quick_live_preview", "quick_preview_sound", "quick_channel_numbers",
+            "quick_hdr", "quick_autoplay", "quick_check_update",
+        )
     }
 
     // --- Backup: per-profile startup landing (dynamic "startup_mode_<id>" keys) ---
