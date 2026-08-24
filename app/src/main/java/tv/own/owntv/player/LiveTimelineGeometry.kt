@@ -4,7 +4,7 @@ package tv.own.owntv.player
 internal const val LIVE_WINDOW_SEC = 2 * 3600
 
 /** One guide entry as the timeline needs it: two timestamps and something to call it. */
-internal data class LiveProgramme(val startMs: Long, val stopMs: Long, val title: String)
+data class LiveProgramme(val startMs: Long, val stopMs: Long, val title: String)
 
 /** A programme's span on the bar, 0 = the far (oldest) end, 1 = the live edge. */
 internal data class LiveTick(val title: String, val startFrac: Float, val endFrac: Float)

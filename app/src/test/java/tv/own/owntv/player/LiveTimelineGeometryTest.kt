@@ -99,4 +99,23 @@ class LiveTimelineGeometryTest {
         val programmes = listOf(LiveProgramme(minutesAgo(120), minutesAgo(90), "News"))
         assertNull(programmeAt(programmes, now, offsetSec = 30 * 60))
     }
+    /**
+     * The bar brightens the tick that starts the programme you are watching, and it finds it by
+     * matching that tick's position against the start of the programme [programmeAt] returned. That
+     * only works if the two are computed to the same number, which is what this pins.
+     */
+    @Test
+    fun `the watched programme's own tick is the one that lights up`() {
+        val programmes = listOf(
+            LiveProgramme(minutesAgo(120), minutesAgo(75), "News"),
+            LiveProgramme(minutesAgo(75), minutesAgo(20), "Match"),
+            LiveProgramme(minutesAgo(20), now, "Highlights"),
+        )
+        val ticks = liveTicks(programmes, now)
+        val here = programmeAt(programmes, now, offsetSec = 40 * 60)!!
+        assertEquals("Match", here.title)
+        val lit = ticks.filter { it.startFrac == offsetFrac(((now - here.startMs) / 1000L).toInt()) }
+        assertEquals(1, lit.size)
+        assertEquals("Match", lit.single().title)
+    }
 }

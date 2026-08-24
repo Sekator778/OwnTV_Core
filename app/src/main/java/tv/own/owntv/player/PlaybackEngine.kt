@@ -91,6 +91,9 @@ interface PlaybackEngine {
     // VOD-only — sensible no-op / empty defaults for a live engine.
     val position: StateFlow<Long> get() = ZERO_LONG
     val duration: StateFlow<Long> get() = ZERO_LONG
+    /** How far ahead of [position] the engine has data, for the scrub bar's buffer ghost. 0 = unknown,
+     *  which simply draws no ghost — an engine that cannot report it costs nothing. */
+    val bufferedMs: StateFlow<Long> get() = ZERO_LONG
     val speed: StateFlow<Double> get() = ONE_DOUBLE
     val nav: StateFlow<NavState> get() = NO_NAV
     /** Title of the next queued item (in-season next episode), for the HUD next-episode countdown card.
@@ -158,6 +161,7 @@ class MpvPlaybackEngine(private val p: OwnTVPlayer) : PlaybackEngine {
     override fun exitAudioOnly() = p.exitAudioOnly()
     override val position get() = p.position
     override val duration get() = p.duration
+    override val bufferedMs get() = p.bufferedMs
     override val speed get() = p.speed
     override val nav get() = p.nav
     override val nextUpTitle get() = p.nextUpTitle

@@ -1105,6 +1105,11 @@ class OwnTVPlayer(
     val position: StateFlow<Long> = _position.asStateFlow()
     private val _duration = MutableStateFlow(0L)
     val duration: StateFlow<Long> = _duration.asStateFlow()
+    // How far ahead of the playhead the engine holds data, for the HUD's buffer ghost. mpv reports a
+    // cache DURATION (seconds ahead of the playhead), Exo an absolute buffered position; both are
+    // normalised to an absolute media time here so the bar has one thing to draw.
+    private val _bufferedMs = MutableStateFlow(0L)
+    val bufferedMs: StateFlow<Long> = _bufferedMs.asStateFlow()
     private val _buffering = MutableStateFlow(false)
     val buffering: StateFlow<Boolean> = _buffering.asStateFlow()
     private val _error = MutableStateFlow<PlaybackFailure?>(null)
@@ -1388,9 +1393,10 @@ class OwnTVPlayer(
                 if (gen == loadGeneration && exoActive) updateStreamChips()
             }
         }
-        override fun onPositionDuration(positionMs: Long, durationMs: Long) {
+        override fun onPositionDuration(positionMs: Long, durationMs: Long, bufferedMs: Long) {
             _position.value = positionMs
             if (durationMs > 0) _duration.value = durationMs
+            _bufferedMs.value = bufferedMs
         }
         override fun onFirstFrame() {
             _buffering.value = false; setFreezeFrame(null)
@@ -2249,6 +2255,7 @@ class OwnTVPlayer(
             observeProperty("height", MPVLib.MpvFormat.MPV_FORMAT_INT64)
             observeProperty("speed", MPVLib.MpvFormat.MPV_FORMAT_DOUBLE)
             observeProperty("container-fps", MPVLib.MpvFormat.MPV_FORMAT_DOUBLE)
+            observeProperty("demuxer-cache-duration", MPVLib.MpvFormat.MPV_FORMAT_DOUBLE) // buffer ghost
             // Decode watchdog input: which decoder is actually active ("mediacodec[-copy]" or "no").
             observeProperty("hwdec-current", MPVLib.MpvFormat.MPV_FORMAT_STRING)
             observeProperty("video-codec", MPVLib.MpvFormat.MPV_FORMAT_STRING) // for the error screen spec line
@@ -2523,6 +2530,7 @@ class OwnTVPlayer(
             // switch, reconnect) keep their live values — they pass resetRetries=false.
             _position.value = startPositionMs
             _duration.value = 0L
+            _bufferedMs.value = 0L
             // A/V-sync starts at the Settings default and unremembered, until applyRememberedPrefs
             // below says otherwise. Inside the new-item branch on purpose: a retry, a software
             // fallback or a reconnect is the SAME stream, and resetting there dropped a remembered
@@ -3957,6 +3965,9 @@ class OwnTVPlayer(
         if (exoActive) return
         if (property == "speed") _speed.value = value
         if (property == "container-fps" && value > 0) _videoFps.value = value.toFloat()
+        // Seconds of demuxed data ahead of the playhead → an absolute media time, so the HUD's ghost
+        // means the same thing on both engines.
+        if (property == "demuxer-cache-duration") _bufferedMs.value = _position.value + (value * 1000).toLong()
     }
 
     override fun event(eventId: Int) {

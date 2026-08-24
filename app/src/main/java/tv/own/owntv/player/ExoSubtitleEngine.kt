@@ -53,7 +53,7 @@ class ExoSubtitleEngine(
         fun onPlayingChanged(playing: Boolean)
         fun onBuffering(buffering: Boolean)
         fun onVideoSize(width: Int, height: Int)
-        fun onPositionDuration(positionMs: Long, durationMs: Long)
+        fun onPositionDuration(positionMs: Long, durationMs: Long, bufferedMs: Long)
         fun onFirstFrame()
         fun onCues(cues: List<Cue>)
         fun onAudioTracks(tracks: List<TrackOption>)
@@ -631,7 +631,7 @@ class ExoSubtitleEngine(
     fun emitPositionDuration() {
         val p = player ?: return
         val dur = p.duration.let { if (it == C.TIME_UNSET) 0L else it }
-        callbacks.onPositionDuration(p.currentPosition.coerceAtLeast(0), dur.coerceAtLeast(0))
+        callbacks.onPositionDuration(p.currentPosition.coerceAtLeast(0), dur.coerceAtLeast(0), p.bufferedPosition.coerceAtLeast(0))
         // The audio-output safety net rides the tick that is already running. On a hit the whole session
         // latches to stereo and the owner restarts this item — the sink's capabilities are decided at
         // construction, so nothing short of a rebuild can undo a bad choice.
