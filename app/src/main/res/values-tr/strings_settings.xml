@@ -67,19 +67,19 @@
     <string name="settings_proxy_connection_failed">Proxy\'ye bağlanılamadı (sunucuyu/bağlantı noktasını kontrol edin).</string>
     <string name="settings_proxy_http">Proxy, HTTP <xliff:g id="code">%1$d</xliff:g> kodunu döndürdü</string>
     <string name="settings_proxy_failed">Proxy testi başarısız oldu.</string>
-    <string name="settings_ch_nav_title">CH+/CH− Tuşlarıyla Sayfalama</string>
-    <string name="settings_ch_nav_description">Uzaktan kumandanın CH+ / CH− tuşlarıyla kategori veya öge listesinde sayfalar hâlinde ilerleyin.</string>
-    <string name="settings_ch_nav_enabled">Listelerde sayfalama için CH+/CH− tuşlarını kullan</string>
-    <string name="settings_ch_nav_enabled_description">Açıldığında CH+ ve CH−, odaklanmış panelin içinde atlar (kategori şeridi veya öge listesi ve Kategorileri Özelleştir listesi). Kapatıldığında bu tuşlar söz konusu ekranlarda hiçbir şey yapmaz.</string>
+    <string name="settings_ch_nav_title">CH+/RW · CH−/FF Tuşlarıyla Sayfalama</string>
+    <string name="settings_ch_nav_description">Uzaktan kumandanın CH+/RW / CH−/FF tuşlarıyla kategori veya öge listesinde sayfalar hâlinde ilerleyin.</string>
+    <string name="settings_ch_nav_enabled">Listelerde sayfalama için CH+/RW · CH−/FF tuşlarını kullan</string>
+    <string name="settings_ch_nav_enabled_description">Açıldığında CH+/RW ve CH−/FF, odaklanmış panelin içinde atlar (kategori şeridi veya öge listesi ve Kategorileri Özelleştir listesi). Kapatıldığında bu tuşlar söz konusu ekranlarda hiçbir şey yapmaz.</string>
     <string name="settings_ch_nav_up">CH+ atlama sayısı (başa doğru)</string>
-    <string name="settings_ch_nav_up_description">CH+ tuşuna bir kez basıldığında kaç öge yukarı atlanacağı. Uzun basıldığında her zaman ilk ögeye gidilir.</string>
+    <string name="settings_ch_nav_up_description">CH+/RW tuşuna bir kez basıldığında kaç öge yukarı atlanacağı. Uzun basıldığında her zaman ilk ögeye gidilir.</string>
     <string name="settings_ch_nav_down">CH− atlama sayısı (sona doğru)</string>
-    <string name="settings_ch_nav_down_description">CH− tuşuna bir kez basıldığında kaç öge aşağı atlanacağı. Uzun basıldığında her zaman son ögeye gidilir.</string>
+    <string name="settings_ch_nav_down_description">CH−/FF tuşuna bir kez basıldığında kaç öge aşağı atlanacağı. Uzun basıldığında her zaman son ögeye gidilir.</string>
     <string name="settings_skip_counts">Atlama sayıları</string>
     <string name="settings_how_it_works">Nasıl çalışır?</string>
-    <string name="settings_ch_nav_help">• Atlamalar listenin başında ve sonunda sınırlandırılır; böylece kısa listelerde tek basışta sona ulaşılır.\n• CH+ tuşuna uzun basma = ilk öge, CH− tuşuna uzun basma = son öge.\n• “Tümü” listesinde (tüm kanallar / filmler / diziler) uzun basma devre dışıdır — kısa basarak atlama burada da çalışır.\n• O anda odaklanmış olan panele uygulanır — kategori şeridi veya öge listesi/ızgarası.\n• Ayrıca Ayarlar → Kategorileri ve Ögeleri Özelleştir bölümündeki kategori listesinde sayfalar hâlinde ilerler.</string>
+    <string name="settings_ch_nav_help">• Atlamalar listenin başında ve sonunda sınırlandırılır; böylece kısa listelerde tek basışta sona ulaşılır.\n• CH+/RW tuşuna uzun basma = ilk öge, CH−/FF tuşuna uzun basma = son öge.\n• “Tümü” listesinde (tüm kanallar / filmler / diziler) uzun basma devre dışıdır — kısa basarak atlama burada da çalışır.\n• O anda odaklanmış olan panele uygulanır — kategori şeridi veya öge listesi/ızgarası.\n• Ayrıca Ayarlar → Kategorileri ve Ögeleri Özelleştir bölümündeki kategori listesinde sayfalar hâlinde ilerler.</string>
     <string name="settings_large_skips_warning">Büyük atlama değerleri kısa listelerin sonunu aşar ve düşük donanımlı TV\'lerde geçişlerin fazla sıçramalı hissedilmesine neden olabilir.</string>
-    <string name="settings_ch_nav_picker">CH+/CH− tuşlarıyla sayfalama</string>
+    <string name="settings_ch_nav_picker">CH+/RW · CH−/FF tuşlarıyla sayfalama</string>
     <string name="settings_weather">Hava durumu</string>
     <string name="settings_top_bar_weather">Üst çubukta hava durumu</string>
     <string name="settings_show_weather">Hava durumunu göster</string>
@@ -178,8 +178,8 @@
     <string name="settings_customize">Kategorileri ve Ögeleri Özelleştir</string>
     <string name="settings_customize_nav_description">Ögeleri gizleyin ve gösterin, kategorileri yeniden adlandırın ve sıralayın</string>
     <string name="settings_sidebar_description_root">Kenar simgelerini oynatma listenize göre otomatik uyarlayın veya belirli simgeleri gizleyin</string>
-    <string name="settings_ch_paging">CH+/CH− Tuşlarıyla Sayfalama</string>
-    <string name="settings_ch_paging_description">CH+ / CH− tuşlarıyla kategori ve öge listelerinde yukarı/aşağı atlayın</string>
+    <string name="settings_ch_paging">CH+/RW · CH−/FF Tuşlarıyla Sayfalama</string>
+    <string name="settings_ch_paging_description">CH+/RW / CH−/FF tuşlarıyla kategori ve öge listelerinde yukarı/aşağı atlayın</string>
     <!-- Translators: Settings navigation label for the long-press content menus. -->
     <string name="settings_content_menus_title">Uzun basma menüleri</string>
     <!-- Translators: Description of the long-press content menus settings. -->
@@ -671,6 +671,12 @@
     <string name="settings_customize_rename_or_delete_category">Kategoriyi yeniden adlandır veya sil</string>
     <string name="settings_customize_new_category">＋ Yeni kategori</string>
     <string name="settings_customize_sort_button">Sırala: <xliff:g id="label">%1$s</xliff:g> ▾</string>
+
+    <string name="settings_customize_filter_button">Filtre: <xliff:g id="label">%1$s</xliff:g> ▾</string>
+    <string name="settings_customize_filter_title">Listeyi filtrele</string>
+    <string name="settings_customize_filter_all">Tümü</string>
+    <string name="settings_customize_filter_visible">Görünür</string>
+    <string name="settings_customize_filter_hidden">Gizli</string>
     <string name="settings_customize_new_categories_button">Yeni kategoriler: <xliff:g id="label">%1$s</xliff:g> ▾</string>
     <string name="settings_customize_rename_hint">Yalnızca bu profil için geçerlidir. “<xliff:g id="name">%1$s</xliff:g>” adını geri yüklemek için boş bırakın.</string>
     <string name="settings_customize_remove_pin_title">PIN kilidi kaldırılsın mı?</string>
@@ -1058,7 +1064,12 @@
     <string name="settings_main_interface_font">Ana arayüz yazı tipi</string>
     <string name="settings_popup_font">Açılır pencere yazı tipi</string>
     <string name="settings_choose_font">Yazı tipi seçin</string>
-    <string name="settings_font_size_range">Uygulama metnini <xliff:g id="min">%1$d</xliff:g>%% ile <xliff:g id="max">%2$d</xliff:g>%% arasında ayarlayın. Altyazılar kendi boyutunu korur.</string>
+    <string name="settings_font_size_range">Açılır pencereleri değil, ana uygulama metnini <xliff:g id="min">%1$d</xliff:g>%% ile <xliff:g id="max">%2$d</xliff:g>%% arasında ayarlayın. Altyazılar kendi boyutunu korur.</string>
+    <string name="settings_popup_font_size">Açılır pencere yazı tipi boyutu</string>
+    <string name="settings_popup_font_size_description">Yalnızca iletişim kutuları ve menülerdeki metni değiştirir</string>
+    <string name="settings_popup_size">Açılır pencere boyutu</string>
+    <string name="settings_popup_size_description">Metin boyutunu değiştirmeden iletişim kutularını ve menüleri ölçeklendirin</string>
+    <string name="settings_popup_size_range">İletişim kutularını ve menüleri ölçeklendirin (<xliff:g id="min">%1$d</xliff:g>%%–<xliff:g id="max">%2$d</xliff:g>%%).</string>
     <string name="settings_font_preview">Eğlence artık daha basit.</string>
     <string name="settings_search_keywords_fonts">yazı tipi metin boyut tipografi pencere okuma erişilebilirlik</string>
     <string name="settings_font_system_sans">Sistem Sans</string>
@@ -1085,6 +1096,25 @@
     <string name="settings_glass_highlight_title">Vurgu gücü</string>
     <string name="settings_glass_highlight_description">Odaktaki camın ışığını ve kenarını ayarlayın.</string>
     <string name="settings_glass_live_preview">Canlı önizleme</string>
+    <string name="settings_glass_screen_description">Yarı saydam buzlu paneller, arka plan görseli ve şeffaflık</string>
+    <string name="settings_glass_master_description">Bir arka plan fotoğrafının veya uygulamanın kendi arka planının üzerinde yarı saydam buzlu paneller.</string>
+    <string name="settings_glass_background_image">Bir arka plan görseli seçin</string>
+    <string name="settings_glass_surface_transparency_title">Saydamlık</string>
+    <string name="settings_glass_background_blur_title">Bulanıklık / Buzlanma</string>
+    <string name="settings_glass_section_appearance">Görünüm</string>
+    <string name="settings_glass_section_fine_tuning">Gelişmiş seçenekler</string>
+    <string name="settings_glass_section_behavior">Davranış</string>
+    <string name="settings_glass_apply_to">Cam yüzeyler</string>
+    <string name="settings_glass_surface_all">Tümü</string>
+    <string name="settings_glass_background_action_description">Bir arka plan görseli seçin</string>
+    <string name="settings_glass_transparency_short_description">20–100 · 5</string>
+    <string name="settings_glass_blur_short_description">0–100 · 10</string>
+    <string name="settings_glass_highlight_short_description">Odaktaki camın ışığını ve kenarını ayarlayın.</string>
+    <string name="settings_glass_full_transparency_short">Tam şeffaflığa izin ver</string>
+    <string name="settings_glass_full_transparency_short_description">Mümkün olan en şeffaf cam için otomatik okunabilirlik sınırını kapatır.</string>
+    <string name="settings_glass_depth_effects_short">Derinlik ve gölgeler</string>
+    <string name="settings_glass_depth_effects_short_description">Odak geçişi ışığını, hafif paralaksı ve derinlik hareketini açar.</string>
+    <string name="settings_glass_reset_balanced">Sıfırla: Dengeli</string>
     <string name="settings_glass_full_transparency_title">Tam şeffaflığa izin ver</string>
     <string name="settings_glass_full_transparency_description">Mümkün olan en şeffaf cam için otomatik okunabilirlik sınırını kapatır.</string>
     <string name="settings_glass_depth_title">Derinlik ve gölgeler</string>
@@ -1114,4 +1144,11 @@
         <item quantity="one"><xliff:g id="count">%1$d</xliff:g> eşleşme</item>
         <item quantity="other"><xliff:g id="count">%1$d</xliff:g> eşleşme</item>
     </plurals>
+    <string name="settings_guide_width">Rehber sütun genişlikleri</string>
+    <string name="settings_guide_width_description">TV rehberindeki kanal listesi ve EPG zaman çizelgesinin genişliğini değiştirin.</string>
+    <string name="settings_search_keywords_guide_width">rehber epg kanal liste zaman çizelgesi sütun panel genişlik boyut düzen</string>
+    <string name="settings_guide_width_summary">Kanal listesi %1$d%% · EPG zaman çizelgesi %2$d%%</string>
+    <string name="settings_guide_width_help">• Kanal listesi ve EPG zaman çizelgesi aynı satırı paylaşır; toplamları 100%% olmalıdır.\n• Kanal listesini genişletmek zaman çizelgesinin daha azını gösterir; program süreleri ve zaman ölçeği değişmez.\n• Her iki sütun da en az 10%% genişliğinde kalır.\n• Sıfırla, kanal listesini 10%% ve EPG zaman çizelgesini 90%% yapar.\n• Özelleştirmeyi kapatmak, değerlerinizi silmeden standart düzeni geri yükler.</string>
+    <string name="settings_guide_width_channels">Kanal listesi</string>
+    <string name="settings_guide_width_epg">EPG zaman çizelgesi</string>
 </resources>

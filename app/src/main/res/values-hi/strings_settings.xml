@@ -67,19 +67,19 @@
     <string name="settings_proxy_connection_failed">प्रॉक्सी से कनेक्ट नहीं हो सका (होस्ट/पोर्ट जाँचें)।</string>
     <string name="settings_proxy_http">प्रॉक्सी ने HTTP <xliff:g id="code">%1$d</xliff:g> लौटाया</string>
     <string name="settings_proxy_failed">प्रॉक्सी जाँच विफल रही।</string>
-    <string name="settings_ch_nav_title">CH+- कुंजी से पेज बदलना</string>
-    <string name="settings_ch_nav_description">रिमोट की CH+ / CH− कुंजियों से श्रेणी या आइटम सूची के पेज बदलें।</string>
-    <string name="settings_ch_nav_enabled">सूचियों के पेज बदलने के लिए CH+- कुंजियों का उपयोग करें</string>
-    <string name="settings_ch_nav_enabled_description">चालू होने पर CH+ और CH− फ़ोकस में मौजूद पैनल के भीतर आगे-पीछे जाते हैं (श्रेणी रेल या आइटम सूची और ‘श्रेणियाँ व आइटम कस्टमाइज़ करें’ की श्रेणी सूची)। बंद होने पर उन स्क्रीन में ये कुंजियाँ कुछ नहीं करतीं।</string>
+    <string name="settings_ch_nav_title">CH+/RW · CH−/FF कुंजी से पेज बदलना</string>
+    <string name="settings_ch_nav_description">रिमोट की CH+/RW / CH−/FF कुंजियों से श्रेणी या आइटम सूची के पेज बदलें।</string>
+    <string name="settings_ch_nav_enabled">सूचियों के पेज बदलने के लिए CH+/RW · CH−/FF कुंजियों का उपयोग करें</string>
+    <string name="settings_ch_nav_enabled_description">चालू होने पर CH+/RW और CH−/FF फ़ोकस में मौजूद पैनल के भीतर आगे-पीछे जाते हैं (श्रेणी रेल या आइटम सूची और ‘श्रेणियाँ व आइटम कस्टमाइज़ करें’ की श्रेणी सूची)। बंद होने पर उन स्क्रीन में ये कुंजियाँ कुछ नहीं करतीं।</string>
     <string name="settings_ch_nav_up">CH+ छलाँग (पहले आइटम की ओर)</string>
-    <string name="settings_ch_nav_up_description">CH+ को एक बार दबाने पर कितने आइटम ऊपर जाएँ। देर तक दबाने पर हमेशा पहले आइटम पर जाया जाता है।</string>
+    <string name="settings_ch_nav_up_description">CH+/RW को एक बार दबाने पर कितने आइटम ऊपर जाएँ। देर तक दबाने पर हमेशा पहले आइटम पर जाया जाता है।</string>
     <string name="settings_ch_nav_down">CH− छलाँग (अंतिम आइटम की ओर)</string>
-    <string name="settings_ch_nav_down_description">CH− को एक बार दबाने पर कितने आइटम नीचे जाएँ। देर तक दबाने पर हमेशा अंतिम आइटम पर जाया जाता है।</string>
+    <string name="settings_ch_nav_down_description">CH−/FF को एक बार दबाने पर कितने आइटम नीचे जाएँ। देर तक दबाने पर हमेशा अंतिम आइटम पर जाया जाता है।</string>
     <string name="settings_skip_counts">छलाँग की संख्या</string>
     <string name="settings_how_it_works">यह कैसे काम करता है</string>
-    <string name="settings_ch_nav_help">• छलाँग सूची के सिरों तक सीमित रहती है, इसलिए छोटी सूचियाँ एक बार दबाने पर ही अंत तक पहुँच जाती हैं।\n• CH+ को देर तक दबाना = पहला आइटम, CH− को देर तक दबाना = अंतिम आइटम।\n• \"सभी\" सूची (हर चैनल / फ़िल्म / सीरीज़) पर देर तक दबाना अक्षम है — वहाँ एक बार दबाकर आगे-पीछे जाना फिर भी काम करता है।\n• यह उस पैनल पर लागू होता है जो अभी फ़ोकस में है — श्रेणी रेल या आइटम सूची/ग्रिड।\n• यह सेटिंग → श्रेणियाँ व आइटम कस्टमाइज़ करें में श्रेणी सूची के पेज भी बदलता है।</string>
+    <string name="settings_ch_nav_help">• छलाँग सूची के सिरों तक सीमित रहती है, इसलिए छोटी सूचियाँ एक बार दबाने पर ही अंत तक पहुँच जाती हैं।\n• CH+/RW को देर तक दबाना = पहला आइटम, CH−/FF को देर तक दबाना = अंतिम आइटम।\n• \"सभी\" सूची (हर चैनल / फ़िल्म / सीरीज़) पर देर तक दबाना अक्षम है — वहाँ एक बार दबाकर आगे-पीछे जाना फिर भी काम करता है।\n• यह उस पैनल पर लागू होता है जो अभी फ़ोकस में है — श्रेणी रेल या आइटम सूची/ग्रिड।\n• यह सेटिंग → श्रेणियाँ व आइटम कस्टमाइज़ करें में श्रेणी सूची के पेज भी बदलता है।</string>
     <string name="settings_large_skips_warning">बड़ी छलाँग छोटी सूचियों के अंत से आगे निकल जाती है और कम क्षमता वाले TV पर झटकेदार लग सकती है।</string>
-    <string name="settings_ch_nav_picker">CH+- कुंजी से पेज बदलना</string>
+    <string name="settings_ch_nav_picker">CH+/RW · CH−/FF कुंजी से पेज बदलना</string>
     <string name="settings_weather">मौसम</string>
     <string name="settings_top_bar_weather">शीर्ष बार में मौसम</string>
     <string name="settings_show_weather">मौसम दिखाएँ</string>
@@ -178,8 +178,8 @@
     <string name="settings_customize">श्रेणियाँ और आइटम कस्टमाइज़ करें</string>
     <string name="settings_customize_nav_description">आइटम छिपाएँ व फिर दिखाएँ, श्रेणियों के नाम और क्रम बदलें</string>
     <string name="settings_sidebar_description_root">साइड आइकन को अपनी प्लेलिस्ट के अनुसार अपने-आप ढालें या विशेष आइकन छिपाएँ</string>
-    <string name="settings_ch_paging">CH+- कुंजी से पेज बदलना</string>
-    <string name="settings_ch_paging_description">CH+ / CH− कुंजियों से श्रेणी और आइटम सूचियों में ऊपर/नीचे जाएँ</string>
+    <string name="settings_ch_paging">CH+/RW · CH−/FF कुंजी से पेज बदलना</string>
+    <string name="settings_ch_paging_description">CH+/RW / CH−/FF कुंजियों से श्रेणी और आइटम सूचियों में ऊपर/नीचे जाएँ</string>
     <!-- Translators: Settings navigation label for the long-press content menus. -->
     <string name="settings_content_menus_title">लॉन्ग-प्रेस मेन्यू</string>
     <!-- Translators: Description of the long-press content menus settings. -->
@@ -671,6 +671,12 @@
     <string name="settings_customize_rename_or_delete_category">श्रेणी का नाम बदलें या हटाएँ</string>
     <string name="settings_customize_new_category">＋ नई श्रेणी</string>
     <string name="settings_customize_sort_button">क्रम: <xliff:g id="label">%1$s</xliff:g> ▾</string>
+
+    <string name="settings_customize_filter_button">फ़िल्टर: <xliff:g id="label">%1$s</xliff:g> ▾</string>
+    <string name="settings_customize_filter_title">सूची फ़िल्टर करें</string>
+    <string name="settings_customize_filter_all">सभी</string>
+    <string name="settings_customize_filter_visible">दिखाई देने वाले</string>
+    <string name="settings_customize_filter_hidden">छिपे हुए</string>
     <string name="settings_customize_new_categories_button">नई श्रेणियाँ: <xliff:g id="label">%1$s</xliff:g> ▾</string>
     <string name="settings_customize_rename_hint">केवल इस प्रोफ़ाइल के लिए। “<xliff:g id="name">%1$s</xliff:g>” वापस लाने के लिए खाली छोड़ें।</string>
     <string name="settings_customize_remove_pin_title">PIN लॉक हटाएँ?</string>
@@ -1058,7 +1064,12 @@
     <string name="settings_main_interface_font">मुख्य इंटरफ़ेस फ़ॉन्ट</string>
     <string name="settings_popup_font">पॉपअप फ़ॉन्ट</string>
     <string name="settings_choose_font">फ़ॉन्ट चुनें</string>
-    <string name="settings_font_size_range">ऐप टेक्स्ट को <xliff:g id="min">%1$d</xliff:g>%% से <xliff:g id="max">%2$d</xliff:g>%% तक समायोजित करें। उपशीर्षक का अपना आकार रहेगा।</string>
+    <string name="settings_font_size_range">पॉप-अप नहीं, मुख्य ऐप टेक्स्ट को <xliff:g id="min">%1$d</xliff:g>%% से <xliff:g id="max">%2$d</xliff:g>%% तक समायोजित करें। उपशीर्षक का अपना आकार रहेगा।</string>
+    <string name="settings_popup_font_size">पॉप-अप फ़ॉन्ट आकार</string>
+    <string name="settings_popup_font_size_description">केवल डायलॉग और मेनू का टेक्स्ट बदलता है</string>
+    <string name="settings_popup_size">पॉप-अप आकार</string>
+    <string name="settings_popup_size_description">टेक्स्ट का आकार बदले बिना डायलॉग और मेनू बॉक्स का आकार बदलें</string>
+    <string name="settings_popup_size_range">डायलॉग और मेनू बॉक्स का आकार बदलें (<xliff:g id="min">%1$d</xliff:g>%%–<xliff:g id="max">%2$d</xliff:g>%%)।</string>
     <string name="settings_font_preview">मनोरंजन, अब और भी आसान।</string>
     <string name="settings_search_keywords_fonts">फ़ॉन्ट टेक्स्ट आकार टाइपफ़ेस पॉपअप पढ़ना सुगम्यता</string>
     <string name="settings_font_system_sans">सिस्टम सैन्स</string>
@@ -1085,6 +1096,25 @@
     <string name="settings_glass_highlight_title">हाइलाइट की तीव्रता</string>
     <string name="settings_glass_highlight_description">फ़ोकस किए गए ग्लास की रोशनी और किनारा समायोजित करें।</string>
     <string name="settings_glass_live_preview">लाइव पूर्वावलोकन</string>
+    <string name="settings_glass_screen_description">पारदर्शी फ़्रॉस्टेड पैनल, पृष्ठभूमि चित्र और पारदर्शिता</string>
+    <string name="settings_glass_master_description">पृष्ठभूमि फ़ोटो या ऐप की अपनी पृष्ठभूमि के ऊपर पारभासी फ़्रॉस्टेड पैनल।</string>
+    <string name="settings_glass_background_image">पृष्ठभूमि चित्र चुनें</string>
+    <string name="settings_glass_surface_transparency_title">पारदर्शिता</string>
+    <string name="settings_glass_background_blur_title">धुंधलापन / फ़्रॉस्ट</string>
+    <string name="settings_glass_section_appearance">दिखावट</string>
+    <string name="settings_glass_section_fine_tuning">उन्नत विकल्प</string>
+    <string name="settings_glass_section_behavior">व्यवहार</string>
+    <string name="settings_glass_apply_to">ग्लास सतहें</string>
+    <string name="settings_glass_surface_all">सभी</string>
+    <string name="settings_glass_background_action_description">पृष्ठभूमि चित्र चुनें</string>
+    <string name="settings_glass_transparency_short_description">20–100 · 5</string>
+    <string name="settings_glass_blur_short_description">0–100 · 10</string>
+    <string name="settings_glass_highlight_short_description">फ़ोकस किए गए ग्लास की रोशनी और किनारा समायोजित करें।</string>
+    <string name="settings_glass_full_transparency_short">पूरी पारदर्शिता की अनुमति दें</string>
+    <string name="settings_glass_full_transparency_short_description">सबसे स्पष्ट ग्लास के लिए स्वचालित पठनीयता सीमा बंद करता है।</string>
+    <string name="settings_glass_depth_effects_short">गहराई और छाया</string>
+    <string name="settings_glass_depth_effects_short_description">फ़ोकस-यात्रा प्रकाश, हल्का पैरालैक्स और गहराई की गति चालू करता है।</string>
+    <string name="settings_glass_reset_balanced">रीसेट करें: संतुलित</string>
     <string name="settings_glass_full_transparency_title">पूरी पारदर्शिता की अनुमति दें</string>
     <string name="settings_glass_full_transparency_description">सबसे स्पष्ट ग्लास के लिए स्वचालित पठनीयता सीमा बंद करता है।</string>
     <string name="settings_glass_depth_title">गहराई और छाया</string>
@@ -1114,4 +1144,11 @@
         <item quantity="one"><xliff:g id="count">%1$d</xliff:g> मिलान</item>
         <item quantity="other"><xliff:g id="count">%1$d</xliff:g> मिलान</item>
     </plurals>
+    <string name="settings_guide_width">गाइड कॉलम की चौड़ाई</string>
+    <string name="settings_guide_width_description">टीवी गाइड में चैनल सूची और EPG टाइमलाइन की चौड़ाई बदलें।</string>
+    <string name="settings_search_keywords_guide_width">गाइड epg चैनल सूची टाइमलाइन कॉलम पैनल चौड़ाई आकार लेआउट</string>
+    <string name="settings_guide_width_summary">चैनल सूची %1$d%% · EPG टाइमलाइन %2$d%%</string>
+    <string name="settings_guide_width_help">• चैनल सूची और EPG टाइमलाइन एक पंक्ति साझा करते हैं, इसलिए कुल 100%% होना चाहिए।\n• चैनल सूची चौड़ी करने पर टाइमलाइन का कम हिस्सा दिखता है; कार्यक्रम की अवधि और समय पैमाना नहीं बदलते।\n• दोनों कॉलम कम से कम 10%% रहते हैं।\n• रीसेट चैनल सूची को 10%% और EPG टाइमलाइन को 90%% पर लौटाता है।\n• अनुकूलन बंद करने पर आपके मान खोए बिना मानक गाइड लेआउट लौट आता है।</string>
+    <string name="settings_guide_width_channels">चैनल सूची</string>
+    <string name="settings_guide_width_epg">EPG टाइमलाइन</string>
 </resources>

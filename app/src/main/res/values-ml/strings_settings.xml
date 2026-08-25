@@ -67,19 +67,19 @@
     <string name="settings_proxy_connection_failed">പ്രോക്സിയിലേക്ക് കണക്റ്റ് ചെയ്യാനായില്ല (ഹോസ്റ്റ്/പോർട്ട് പരിശോധിക്കുക).</string>
     <string name="settings_proxy_http">പ്രോക്സി നൽകിയ HTTP നില: <xliff:g id="code">%1$d</xliff:g></string>
     <string name="settings_proxy_failed">പ്രോക്സി പരിശോധന പരാജയപ്പെട്ടു.</string>
-    <string name="settings_ch_nav_title">CH+- കീ ഉപയോഗിച്ചുള്ള പേജിംഗ്</string>
-    <string name="settings_ch_nav_description">റിമോട്ടിലെ CH+ / CH− കീകൾ ഉപയോഗിച്ച് വിഭാഗമോ ഇനങ്ങളുടെ പട്ടികയോ ഓരോ പേജായി നീക്കുക.</string>
-    <string name="settings_ch_nav_enabled">പട്ടികകൾ പേജുകളായി നീക്കാൻ CH+- കീകൾ ഉപയോഗിക്കുക</string>
-    <string name="settings_ch_nav_enabled_description">പ്രവർത്തനക്ഷമമാക്കിയാൽ, ഫോക്കസിലുള്ള പാനലിനുള്ളിൽ CH+ ഉം CH− ഉം ഇനങ്ങൾ മറികടക്കും (വിഭാഗ നിരയോ ഇനങ്ങളുടെ പട്ടികയോ, കൂടാതെ വിഭാഗങ്ങൾ ഇഷ്ടാനുസൃതമാക്കുക പട്ടികയും). പ്രവർത്തനരഹിതമാക്കിയാൽ, ആ സ്ക്രീനുകളിൽ ഈ കീകൾ ഒന്നും ചെയ്യില്ല.</string>
+    <string name="settings_ch_nav_title">CH+/RW · CH−/FF കീ ഉപയോഗിച്ചുള്ള പേജിംഗ്</string>
+    <string name="settings_ch_nav_description">റിമോട്ടിലെ CH+/RW / CH−/FF കീകൾ ഉപയോഗിച്ച് വിഭാഗമോ ഇനങ്ങളുടെ പട്ടികയോ ഓരോ പേജായി നീക്കുക.</string>
+    <string name="settings_ch_nav_enabled">പട്ടികകൾ പേജുകളായി നീക്കാൻ CH+/RW · CH−/FF കീകൾ ഉപയോഗിക്കുക</string>
+    <string name="settings_ch_nav_enabled_description">പ്രവർത്തനക്ഷമമാക്കിയാൽ, ഫോക്കസിലുള്ള പാനലിനുള്ളിൽ CH+/RW ഉം CH−/FF ഉം ഇനങ്ങൾ മറികടക്കും (വിഭാഗ നിരയോ ഇനങ്ങളുടെ പട്ടികയോ, കൂടാതെ വിഭാഗങ്ങൾ ഇഷ്ടാനുസൃതമാക്കുക പട്ടികയും). പ്രവർത്തനരഹിതമാക്കിയാൽ, ആ സ്ക്രീനുകളിൽ ഈ കീകൾ ഒന്നും ചെയ്യില്ല.</string>
     <string name="settings_ch_nav_up">CH+ മറികടക്കൽ (ആദ്യത്തേതിലേക്ക്)</string>
-    <string name="settings_ch_nav_up_description">CH+ ഒരിക്കൽ അമർത്തുമ്പോൾ മുകളിലേക്ക് മറികടക്കേണ്ട ഇനങ്ങളുടെ എണ്ണം. ദീർഘനേരം അമർത്തിയാൽ എപ്പോഴും ആദ്യ ഇനത്തിലേക്ക് പോകും.</string>
+    <string name="settings_ch_nav_up_description">CH+/RW ഒരിക്കൽ അമർത്തുമ്പോൾ മുകളിലേക്ക് മറികടക്കേണ്ട ഇനങ്ങളുടെ എണ്ണം. ദീർഘനേരം അമർത്തിയാൽ എപ്പോഴും ആദ്യ ഇനത്തിലേക്ക് പോകും.</string>
     <string name="settings_ch_nav_down">CH− മറികടക്കൽ (അവസാനത്തേതിലേക്ക്)</string>
-    <string name="settings_ch_nav_down_description">CH− ഒരിക്കൽ അമർത്തുമ്പോൾ താഴേക്ക് മറികടക്കേണ്ട ഇനങ്ങളുടെ എണ്ണം. ദീർഘനേരം അമർത്തിയാൽ എപ്പോഴും അവസാന ഇനത്തിലേക്ക് പോകും.</string>
+    <string name="settings_ch_nav_down_description">CH−/FF ഒരിക്കൽ അമർത്തുമ്പോൾ താഴേക്ക് മറികടക്കേണ്ട ഇനങ്ങളുടെ എണ്ണം. ദീർഘനേരം അമർത്തിയാൽ എപ്പോഴും അവസാന ഇനത്തിലേക്ക് പോകും.</string>
     <string name="settings_skip_counts">മറികടക്കേണ്ട എണ്ണം</string>
     <string name="settings_how_it_works">ഇത് പ്രവർത്തിക്കുന്ന വിധം</string>
-    <string name="settings_ch_nav_help">• അറ്റങ്ങളിൽ മറികടക്കൽ പരിമിതപ്പെടുത്തുന്നതിനാൽ ചെറിയ പട്ടികകളിൽ ഒരൊറ്റ അമർത്തലിൽ അറ്റത്തെത്തും.\n• CH+ ദീർഘനേരം അമർത്തുക = ആദ്യ ഇനം, CH− ദീർഘനേരം അമർത്തുക = അവസാന ഇനം.\n• \"എല്ലാം\" പട്ടികയിൽ (എല്ലാ ചാനലുകളും / സിനിമകളും / സീരീസും) ദീർഘനേരം അമർത്തൽ പ്രവർത്തനരഹിതമാണ് — ഹ്രസ്വമായി അമർത്തിയുള്ള മറികടക്കൽ അവിടെയും പ്രവർത്തിക്കും.\n• നിലവിൽ ഫോക്കസുള്ള പാനലിൽ ഇത് ബാധകമാണ് — വിഭാഗ നിരയിലോ ഇനങ്ങളുടെ പട്ടിക/ഗ്രിഡിലോ.\n• ക്രമീകരണങ്ങൾ → വിഭാഗങ്ങളും ഇനങ്ങളും ഇഷ്ടാനുസൃതമാക്കുക എന്നതിലെ വിഭാഗ പട്ടികയും ഇത് പേജുകളായി നീക്കും.</string>
+    <string name="settings_ch_nav_help">• അറ്റങ്ങളിൽ മറികടക്കൽ പരിമിതപ്പെടുത്തുന്നതിനാൽ ചെറിയ പട്ടികകളിൽ ഒരൊറ്റ അമർത്തലിൽ അറ്റത്തെത്തും.\n• CH+/RW ദീർഘനേരം അമർത്തുക = ആദ്യ ഇനം, CH−/FF ദീർഘനേരം അമർത്തുക = അവസാന ഇനം.\n• \"എല്ലാം\" പട്ടികയിൽ (എല്ലാ ചാനലുകളും / സിനിമകളും / സീരീസും) ദീർഘനേരം അമർത്തൽ പ്രവർത്തനരഹിതമാണ് — ഹ്രസ്വമായി അമർത്തിയുള്ള മറികടക്കൽ അവിടെയും പ്രവർത്തിക്കും.\n• നിലവിൽ ഫോക്കസുള്ള പാനലിൽ ഇത് ബാധകമാണ് — വിഭാഗ നിരയിലോ ഇനങ്ങളുടെ പട്ടിക/ഗ്രിഡിലോ.\n• ക്രമീകരണങ്ങൾ → വിഭാഗങ്ങളും ഇനങ്ങളും ഇഷ്ടാനുസൃതമാക്കുക എന്നതിലെ വിഭാഗ പട്ടികയും ഇത് പേജുകളായി നീക്കും.</string>
     <string name="settings_large_skips_warning">വലിയ മറികടക്കൽ മൂല്യങ്ങൾ ചെറിയ പട്ടികകളുടെ അറ്റം കടക്കുകയും ശേഷി കുറഞ്ഞ ടിവികളിൽ ചലനം അസ്വാഭാവികമായി തോന്നുകയും ചെയ്യാം.</string>
-    <string name="settings_ch_nav_picker">CH+- കീ ഉപയോഗിച്ചുള്ള പേജിംഗ്</string>
+    <string name="settings_ch_nav_picker">CH+/RW · CH−/FF കീ ഉപയോഗിച്ചുള്ള പേജിംഗ്</string>
     <string name="settings_weather">കാലാവസ്ഥ</string>
     <string name="settings_top_bar_weather">മുകളിലെ ബാറിലെ കാലാവസ്ഥ</string>
     <string name="settings_show_weather">കാലാവസ്ഥ കാണിക്കുക</string>
@@ -178,8 +178,8 @@
     <string name="settings_customize">വിഭാഗങ്ങളും ഇനങ്ങളും ഇഷ്ടാനുസൃതമാക്കുക</string>
     <string name="settings_customize_nav_description">ഇനങ്ങൾ മറയ്ക്കുകയും വീണ്ടും കാണിക്കുകയും ചെയ്യുക; വിഭാഗങ്ങളുടെ പേര് മാറ്റുകയും പുനഃക്രമീകരിക്കുകയും ചെയ്യുക</string>
     <string name="settings_sidebar_description_root">സൈഡ് ഐക്കണുകൾ നിങ്ങളുടെ പ്ലേലിസ്റ്റിന് അനുസരിച്ച് സ്വയം മാറ്റുക, അല്ലെങ്കിൽ ചിലത് മറയ്ക്കുക</string>
-    <string name="settings_ch_paging">CH+- കീ ഉപയോഗിച്ചുള്ള പേജിംഗ്</string>
-    <string name="settings_ch_paging_description">CH+ / CH− കീകൾ ഉപയോഗിച്ച് വിഭാഗത്തിന്റെയും ഇനങ്ങളുടെയും പട്ടികകളിൽ മുകളിലേക്കും താഴേക്കും മറികടക്കുക</string>
+    <string name="settings_ch_paging">CH+/RW · CH−/FF കീ ഉപയോഗിച്ചുള്ള പേജിംഗ്</string>
+    <string name="settings_ch_paging_description">CH+/RW / CH−/FF കീകൾ ഉപയോഗിച്ച് വിഭാഗത്തിന്റെയും ഇനങ്ങളുടെയും പട്ടികകളിൽ മുകളിലേക്കും താഴേക്കും മറികടക്കുക</string>
     <!-- Translators: Settings navigation label for the long-press content menus. -->
     <string name="settings_content_menus_title">ലോങ്-പ്രസ് മെനുകൾ</string>
     <!-- Translators: Description of the long-press content menus settings. -->
@@ -671,6 +671,12 @@
     <string name="settings_customize_rename_or_delete_category">വിഭാഗത്തിന്റെ പേര് മാറ്റുക അല്ലെങ്കിൽ ഇല്ലാതാക്കുക</string>
     <string name="settings_customize_new_category">＋ പുതിയ വിഭാഗം</string>
     <string name="settings_customize_sort_button">ക്രമീകരണം: <xliff:g id="label">%1$s</xliff:g> ▾</string>
+
+    <string name="settings_customize_filter_button">ഫിൽട്ടർ: <xliff:g id="label">%1$s</xliff:g> ▾</string>
+    <string name="settings_customize_filter_title">പട്ടിക ഫിൽട്ടർ ചെയ്യുക</string>
+    <string name="settings_customize_filter_all">എല്ലാം</string>
+    <string name="settings_customize_filter_visible">ദൃശ്യം</string>
+    <string name="settings_customize_filter_hidden">മറച്ചത്</string>
     <string name="settings_customize_new_categories_button">പുതിയ വിഭാഗങ്ങൾ: <xliff:g id="label">%1$s</xliff:g> ▾</string>
     <string name="settings_customize_rename_hint">ഈ പ്രൊഫൈലിന് മാത്രം. “<xliff:g id="name">%1$s</xliff:g>” പുനഃസ്ഥാപിക്കാൻ ശൂന്യമായി വിടുക.</string>
     <string name="settings_customize_remove_pin_title">PIN ലോക്ക് നീക്കംചെയ്യണോ?</string>
@@ -1058,7 +1064,12 @@
     <string name="settings_main_interface_font">പ്രധാന ഇന്റർഫേസ് ഫോണ്ട്</string>
     <string name="settings_popup_font">പോപ്പപ്പ് ഫോണ്ട്</string>
     <string name="settings_choose_font">ഫോണ്ട് തിരഞ്ഞെടുക്കുക</string>
-    <string name="settings_font_size_range">ആപ്പിലെ അക്ഷരങ്ങൾ <xliff:g id="min">%1$d</xliff:g>%% മുതൽ <xliff:g id="max">%2$d</xliff:g>%% വരെ ക്രമീകരിക്കുക. സബ്‌ടൈറ്റിലുകൾക്ക് സ്വന്തം വലുപ്പം തുടരും.</string>
+    <string name="settings_font_size_range">പോപ്പപ്പുകളിലേതല്ല, പ്രധാന ആപ്പിലെ അക്ഷരങ്ങൾ <xliff:g id="min">%1$d</xliff:g>%% മുതൽ <xliff:g id="max">%2$d</xliff:g>%% വരെ ക്രമീകരിക്കുക. സബ്‌ടൈറ്റിലുകൾക്ക് സ്വന്തം വലുപ്പം തുടരും.</string>
+    <string name="settings_popup_font_size">പോപ്പപ്പ് ഫോണ്ട് വലുപ്പം</string>
+    <string name="settings_popup_font_size_description">ഡയലോഗുകളിലെയും മെനുകളിലെയും അക്ഷരങ്ങൾ മാത്രം മാറ്റുന്നു</string>
+    <string name="settings_popup_size">പോപ്പപ്പ് വലുപ്പം</string>
+    <string name="settings_popup_size_description">അക്ഷര വലുപ്പം മാറ്റാതെ ഡയലോഗ്, മെനു ബോക്സുകളുടെ വലുപ്പം ക്രമീകരിക്കുക</string>
+    <string name="settings_popup_size_range">ഡയലോഗ്, മെനു ബോക്സുകളുടെ വലുപ്പം ക്രമീകരിക്കുക (<xliff:g id="min">%1$d</xliff:g>%%–<xliff:g id="max">%2$d</xliff:g>%%).</string>
     <string name="settings_font_preview">വിനോദം കൂടുതൽ ലളിതം.</string>
     <string name="settings_search_keywords_fonts">ഫോണ്ട് ടെക്സ്റ്റ് വലുപ്പം ടൈപ്പ്ഫേസ് പോപ്പപ്പ് വായന ആക്സസിബിലിറ്റി</string>
     <string name="settings_font_system_sans">സിസ്റ്റം സാൻസ്</string>
@@ -1085,6 +1096,25 @@
     <string name="settings_glass_highlight_title">ഹൈലൈറ്റ് ശക്തി</string>
     <string name="settings_glass_highlight_description">ഫോക്കസ് ചെയ്ത ഗ്ലാസിന്റെ വെളിച്ചവും അരികും ക്രമീകരിക്കുക.</string>
     <string name="settings_glass_live_preview">തത്സമയ പ്രിവ്യൂ</string>
+    <string name="settings_glass_screen_description">അർദ്ധസുതാര്യമായ മങ്ങിയ പാനലുകൾ, പശ്ചാത്തല ചിത്രം, സുതാര്യത</string>
+    <string name="settings_glass_master_description">ഒരു പശ്ചാത്തല ചിത്രത്തിനോ ആപ്പിന്റെ സ്വന്തം പശ്ചാത്തലത്തിനോ മുകളിലുള്ള അർധസുതാര്യമായ ഫ്രോസ്റ്റഡ് പാനലുകൾ.</string>
+    <string name="settings_glass_background_image">ഒരു പശ്ചാത്തല ചിത്രം തിരഞ്ഞെടുക്കുക</string>
+    <string name="settings_glass_surface_transparency_title">സുതാര്യത</string>
+    <string name="settings_glass_background_blur_title">മങ്ങൽ / ഫ്രോസ്റ്റ്</string>
+    <string name="settings_glass_section_appearance">രൂപഭാവം</string>
+    <string name="settings_glass_section_fine_tuning">വിപുലമായ ഓപ്ഷനുകൾ</string>
+    <string name="settings_glass_section_behavior">പ്രവർത്തനരീതി</string>
+    <string name="settings_glass_apply_to">ഗ്ലാസ് പ്രതലങ്ങൾ</string>
+    <string name="settings_glass_surface_all">എല്ലാം</string>
+    <string name="settings_glass_background_action_description">ഒരു പശ്ചാത്തല ചിത്രം തിരഞ്ഞെടുക്കുക</string>
+    <string name="settings_glass_transparency_short_description">20–100 · 5</string>
+    <string name="settings_glass_blur_short_description">0–100 · 10</string>
+    <string name="settings_glass_highlight_short_description">ഫോക്കസ് ചെയ്ത ഗ്ലാസിന്റെ വെളിച്ചവും അരികും ക്രമീകരിക്കുക.</string>
+    <string name="settings_glass_full_transparency_short">പൂർണ്ണ സുതാര്യത അനുവദിക്കുക</string>
+    <string name="settings_glass_full_transparency_short_description">ഏറ്റവും സുതാര്യമായ ഗ്ലാസിനായി സ്വയമേവയുള്ള വായനാക്ഷമത പരിധി ഓഫാക്കുന്നു.</string>
+    <string name="settings_glass_depth_effects_short">ആഴവും നിഴലുകളും</string>
+    <string name="settings_glass_depth_effects_short_description">ഫോക്കസ് സഞ്ചാര വെളിച്ചം, സൂക്ഷ്മ പാരലാക്സ്, ആഴ ചലനം എന്നിവ പ്രവർത്തനക്ഷമമാക്കുന്നു.</string>
+    <string name="settings_glass_reset_balanced">പുനഃസജ്ജമാക്കുക: സമതുലിതം</string>
     <string name="settings_glass_full_transparency_title">പൂർണ്ണ സുതാര്യത അനുവദിക്കുക</string>
     <string name="settings_glass_full_transparency_description">ഏറ്റവും സുതാര്യമായ ഗ്ലാസിനായി സ്വയമേവയുള്ള വായനാക്ഷമത പരിധി ഓഫാക്കുന്നു.</string>
     <string name="settings_glass_depth_title">ആഴവും നിഴലുകളും</string>
@@ -1114,4 +1144,11 @@
         <item quantity="one"><xliff:g id="count">%1$d</xliff:g> പൊരുത്തം</item>
         <item quantity="other"><xliff:g id="count">%1$d</xliff:g> പൊരുത്തങ്ങൾ</item>
     </plurals>
+    <string name="settings_guide_width">ഗൈഡ് കോളം വീതികൾ</string>
+    <string name="settings_guide_width_description">ടിവി ഗൈഡിലെ ചാനൽ ലിസ്റ്റിന്റെയും EPG ടൈംലൈനിന്റെയും വീതി മാറ്റുക.</string>
+    <string name="settings_search_keywords_guide_width">ഗൈഡ് epg ചാനൽ ലിസ്റ്റ് ടൈംലൈൻ കോളം പാനൽ വീതി വലുപ്പം ലേഔട്ട്</string>
+    <string name="settings_guide_width_summary">ചാനൽ ലിസ്റ്റ് %1$d%% · EPG ടൈംലൈൻ %2$d%%</string>
+    <string name="settings_guide_width_help">• ചാനൽ ലിസ്റ്റും EPG ടൈംലൈനും ഒരേ വരി പങ്കിടുന്നതിനാൽ ആകെ 100%% ആയിരിക്കണം.\n• ചാനൽ ലിസ്റ്റ് വീതിയാക്കുമ്പോൾ ടൈംലൈനിന്റെ കുറവ് ഭാഗം മാത്രമേ ഒരേസമയം കാണൂ; പ്രോഗ്രാം ദൈർഘ്യവും സമയ സ്കെയിലും മാറില്ല.\n• രണ്ട് കോളങ്ങളും കുറഞ്ഞത് 10%% ആയി തുടരും.\n• റീസെറ്റ് ചാനൽ ലിസ്റ്റ് 10%% ആയും EPG ടൈംലൈൻ 90%% ആയും മാറ്റും.\n• ഇഷ്ടാനുസൃതമാക്കൽ ഓഫാക്കിയാൽ മൂല്യങ്ങൾ നഷ്ടപ്പെടാതെ സാധാരണ ലേഔട്ട് തിരികെ വരും.</string>
+    <string name="settings_guide_width_channels">ചാനൽ ലിസ്റ്റ്</string>
+    <string name="settings_guide_width_epg">EPG ടൈംലൈൻ</string>
 </resources>

@@ -67,19 +67,19 @@
     <string name="settings_proxy_connection_failed">No se pudo establecer conexión con el proxy (verifica el host y el puerto).</string>
     <string name="settings_proxy_http">El proxy devolvió HTTP <xliff:g id="code">%1$d</xliff:g></string>
     <string name="settings_proxy_failed">Falló la prueba del proxy.</string>
-    <string name="settings_ch_nav_title">Paginación con las teclas CH+/−</string>
-    <string name="settings_ch_nav_description">Recorre por páginas la lista de categorías o elementos con las teclas CH+ y CH− del control remoto.</string>
-    <string name="settings_ch_nav_enabled">Usar las teclas CH+/− para paginar listas</string>
-    <string name="settings_ch_nav_enabled_description">Cuando está activado, CH+ y CH− avanzan dentro del panel enfocado (la barra de categorías o la lista de elementos, incluida la lista de categorías de Personalizar). Cuando está desactivado, esas teclas no hacen nada en esas pantallas.</string>
+    <string name="settings_ch_nav_title">Paginación con las teclas CH+/RW · CH−/FF</string>
+    <string name="settings_ch_nav_description">Recorre por páginas la lista de categorías o elementos con las teclas CH+/RW y CH−/FF del control remoto.</string>
+    <string name="settings_ch_nav_enabled">Usar las teclas CH+/RW · CH−/FF para paginar listas</string>
+    <string name="settings_ch_nav_enabled_description">Cuando está activado, CH+/RW y CH−/FF avanzan dentro del panel enfocado (la barra de categorías o la lista de elementos, incluida la lista de categorías de Personalizar). Cuando está desactivado, esas teclas no hacen nada en esas pantallas.</string>
     <string name="settings_ch_nav_up">Salto con CH+ (hacia el primero)</string>
-    <string name="settings_ch_nav_up_description">Cuántos elementos se retroceden al presionar CH+ una vez. Una pulsación prolongada siempre va al primer elemento.</string>
+    <string name="settings_ch_nav_up_description">Cuántos elementos se retroceden al presionar CH+/RW una vez. Una pulsación prolongada siempre va al primer elemento.</string>
     <string name="settings_ch_nav_down">Salto con CH− (hacia el último)</string>
-    <string name="settings_ch_nav_down_description">Cuántos elementos se avanzan al presionar CH− una vez. Una pulsación prolongada siempre va al último elemento.</string>
+    <string name="settings_ch_nav_down_description">Cuántos elementos se avanzan al presionar CH−/FF una vez. Una pulsación prolongada siempre va al último elemento.</string>
     <string name="settings_skip_counts">Cantidad de elementos por salto</string>
     <string name="settings_how_it_works">Cómo funciona</string>
-    <string name="settings_ch_nav_help">• Los saltos se limitan en los extremos, por lo que las listas cortas llegan al final con una sola pulsación.\n• Pulsación prolongada de CH+ = primer elemento; pulsación prolongada de CH− = último elemento.\n• La pulsación prolongada está desactivada en la lista \"Todos\" (todos los canales, películas o series); los saltos con pulsaciones breves siguen funcionando allí.\n• Se aplica al panel que tenga el foco en ese momento: la barra de categorías o la lista/cuadrícula de elementos.\n• También recorre por páginas la lista de categorías en Configuración → Personalizar categorías y elementos.</string>
+    <string name="settings_ch_nav_help">• Los saltos se limitan en los extremos, por lo que las listas cortas llegan al final con una sola pulsación.\n• Pulsación prolongada de CH+/RW = primer elemento; pulsación prolongada de CH−/FF = último elemento.\n• La pulsación prolongada está desactivada en la lista \"Todos\" (todos los canales, películas o series); los saltos con pulsaciones breves siguen funcionando allí.\n• Se aplica al panel que tenga el foco en ese momento: la barra de categorías o la lista/cuadrícula de elementos.\n• También recorre por páginas la lista de categorías en Configuración → Personalizar categorías y elementos.</string>
     <string name="settings_large_skips_warning">Los saltos grandes se pasan del final de las listas cortas y pueden sentirse bruscos en televisores de gama baja.</string>
-    <string name="settings_ch_nav_picker">Paginación con las teclas CH+/−</string>
+    <string name="settings_ch_nav_picker">Paginación con las teclas CH+/RW/−</string>
     <string name="settings_weather">Clima</string>
     <string name="settings_top_bar_weather">Clima en la barra superior</string>
     <string name="settings_show_weather">Mostrar el clima</string>
@@ -179,8 +179,8 @@
     <string name="settings_customize">Personalizar categorías y elementos</string>
     <string name="settings_customize_nav_description">Oculta y vuelve a mostrar elementos; cambia el nombre y el orden de las categorías</string>
     <string name="settings_sidebar_description_root">Adapta automáticamente los iconos laterales a tu lista de reproducción u oculta iconos específicos</string>
-    <string name="settings_ch_paging">Paginación con las teclas CH+/−</string>
-    <string name="settings_ch_paging_description">Salta hacia arriba o abajo en las listas de categorías y elementos con las teclas CH+ y CH−</string>
+    <string name="settings_ch_paging">Paginación con las teclas CH+/RW/−</string>
+    <string name="settings_ch_paging_description">Salta hacia arriba o abajo en las listas de categorías y elementos con las teclas CH+/RW y CH−/FF</string>
     <!-- Translators: Settings navigation label for the long-press content menus. -->
     <string name="settings_content_menus_title">Menús de pulsación larga</string>
     <!-- Translators: Description of the long-press content menus settings. -->
@@ -676,6 +676,12 @@
     <string name="settings_customize_rename_or_delete_category">Cambiar nombre o eliminar categoría</string>
     <string name="settings_customize_new_category">＋ Nueva categoría</string>
     <string name="settings_customize_sort_button">Ordenar: <xliff:g id="label">%1$s</xliff:g> ▾</string>
+
+    <string name="settings_customize_filter_button">Filtro: <xliff:g id="label">%1$s</xliff:g> ▾</string>
+    <string name="settings_customize_filter_title">Filtrar lista</string>
+    <string name="settings_customize_filter_all">Todos</string>
+    <string name="settings_customize_filter_visible">Visibles</string>
+    <string name="settings_customize_filter_hidden">Ocultos</string>
     <string name="settings_customize_new_categories_button">Categorías nuevas: <xliff:g id="label">%1$s</xliff:g> ▾</string>
     <string name="settings_customize_rename_hint">Solo para este perfil. Déjalo en blanco para restaurar “<xliff:g id="name">%1$s</xliff:g>”.</string>
     <string name="settings_customize_remove_pin_title">¿Quitar el bloqueo con PIN?</string>
@@ -1076,7 +1082,12 @@
     <string name="settings_main_interface_font">Fuente de la interfaz principal</string>
     <string name="settings_popup_font">Fuente de las ventanas emergentes</string>
     <string name="settings_choose_font">Elegir fuente</string>
-    <string name="settings_font_size_range">Ajusta el texto de la aplicación entre <xliff:g id="min">%1$d</xliff:g>%% y <xliff:g id="max">%2$d</xliff:g>%%. Los subtítulos conservan su propio tamaño.</string>
+    <string name="settings_font_size_range">Ajusta el texto principal de la aplicación, no los elementos emergentes, entre <xliff:g id="min">%1$d</xliff:g>%% y <xliff:g id="max">%2$d</xliff:g>%%. Los subtítulos conservan su propio tamaño.</string>
+    <string name="settings_popup_font_size">Tamaño de fuente emergente</string>
+    <string name="settings_popup_font_size_description">Cambia solo el texto de cuadros de diálogo y menús</string>
+    <string name="settings_popup_size">Tamaño de elementos emergentes</string>
+    <string name="settings_popup_size_description">Escala los cuadros de diálogo y menús sin cambiar el tamaño del texto</string>
+    <string name="settings_popup_size_range">Escala los cuadros de diálogo y menús (<xliff:g id="min">%1$d</xliff:g>%%–<xliff:g id="max">%2$d</xliff:g>%%).</string>
     <string name="settings_font_preview">Entretenimiento, así de sencillo.</string>
     <string name="settings_search_keywords_fonts">fuente texto tamaño tipografía ventana lectura accesibilidad</string>
     <string name="settings_font_system_sans">Sans del sistema</string>
@@ -1103,6 +1114,25 @@
     <string name="settings_glass_highlight_title">Intensidad del brillo</string>
     <string name="settings_glass_highlight_description">Ajusta la luz y el borde del cristal enfocado.</string>
     <string name="settings_glass_live_preview">Vista previa en vivo</string>
+    <string name="settings_glass_screen_description">Paneles translúcidos con efecto esmerilado, imagen de fondo y transparencia</string>
+    <string name="settings_glass_master_description">Paneles translúcidos de vidrio esmerilado sobre una foto de fondo o sobre el fondo propio de la aplicación.</string>
+    <string name="settings_glass_background_image">Elegir una imagen de fondo</string>
+    <string name="settings_glass_surface_transparency_title">Transparencia</string>
+    <string name="settings_glass_background_blur_title">Desenfoque / Esmerilado</string>
+    <string name="settings_glass_section_appearance">Apariencia</string>
+    <string name="settings_glass_section_fine_tuning">Opciones avanzadas</string>
+    <string name="settings_glass_section_behavior">Comportamiento</string>
+    <string name="settings_glass_apply_to">Superficies de vidrio</string>
+    <string name="settings_glass_surface_all">Todos</string>
+    <string name="settings_glass_background_action_description">Elegir una imagen de fondo</string>
+    <string name="settings_glass_transparency_short_description">20–100 · 5</string>
+    <string name="settings_glass_blur_short_description">0–100 · 10</string>
+    <string name="settings_glass_highlight_short_description">Ajusta la luz y el borde del cristal enfocado.</string>
+    <string name="settings_glass_full_transparency_short">Permitir transparencia total</string>
+    <string name="settings_glass_full_transparency_short_description">Desactiva el límite automático de legibilidad para obtener el cristal más claro.</string>
+    <string name="settings_glass_depth_effects_short">Profundidad y sombras</string>
+    <string name="settings_glass_depth_effects_short_description">Activa la luz de recorrido del foco, el paralaje sutil y el movimiento de profundidad.</string>
+    <string name="settings_glass_reset_balanced">Restablecer: Equilibrado</string>
     <string name="settings_glass_full_transparency_title">Permitir transparencia total</string>
     <string name="settings_glass_full_transparency_description">Desactiva el límite automático de legibilidad para obtener el cristal más claro.</string>
     <string name="settings_glass_depth_title">Profundidad y sombras</string>
@@ -1135,4 +1165,11 @@
         <item quantity="many"><xliff:g id="count">%1$d</xliff:g> de coincidencias</item>
         <item quantity="other"><xliff:g id="count">%1$d</xliff:g> coincidencias</item>
     </plurals>
+    <string name="settings_guide_width">Anchos de columna de la guía</string>
+    <string name="settings_guide_width_description">Cambia el ancho de la lista de canales y la línea de tiempo EPG en la guía de TV.</string>
+    <string name="settings_search_keywords_guide_width">guía epg canal lista línea tiempo columna panel ancho tamaño diseño</string>
+    <string name="settings_guide_width_summary">Lista de canales %1$d%% · Línea de tiempo EPG %2$d%%</string>
+    <string name="settings_guide_width_help">• La lista de canales y la línea de tiempo EPG comparten una fila, por lo que deben sumar 100%%.\n• Al ampliar la lista de canales se ve menos de la línea de tiempo; la duración de los programas y la escala temporal no cambian.\n• Ambas columnas conservan un mínimo del 10%%.\n• Restablecer deja la lista de canales en 10%% y la línea de tiempo EPG en 90%%.\n• Desactivar la personalización recupera el diseño estándar sin perder tus valores.</string>
+    <string name="settings_guide_width_channels">Lista de canales</string>
+    <string name="settings_guide_width_epg">Línea de tiempo EPG</string>
 </resources>

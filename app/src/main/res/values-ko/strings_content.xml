@@ -97,6 +97,7 @@
         <item quantity="other"><xliff:g id="category">%1$s</xliff:g>(시리즈 <xliff:g id="count">%2$d</xliff:g>개)</item>
     </plurals>
     <string name="content_provider">제공업체</string>
+    <string name="content_provider_name">제공업체: %1$s</string>
     <string name="content_no_series_found">“<xliff:g id="query">%1$s</xliff:g>”에 대한 시리즈를 찾지 못했습니다</string>
     <string name="content_search_movies"><xliff:g id="category">%1$s</xliff:g>…</string>
     <string name="content_search_series"><xliff:g id="category">%1$s</xliff:g>…</string>

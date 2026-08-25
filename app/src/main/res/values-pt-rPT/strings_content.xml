@@ -109,6 +109,7 @@
         <item quantity="other"><xliff:g id="category">%1$s</xliff:g> (<xliff:g id="count">%2$d</xliff:g> séries)</item>
     </plurals>
     <string name="content_provider">Fornecedor</string>
+    <string name="content_provider_name">Fornecedor: %1$s</string>
     <string name="content_no_series_found">Não foram encontradas séries para “<xliff:g id="query">%1$s</xliff:g>”</string>
     <string name="content_search_movies"><xliff:g id="category">%1$s</xliff:g>…</string>
     <string name="content_search_series"><xliff:g id="category">%1$s</xliff:g>…</string>

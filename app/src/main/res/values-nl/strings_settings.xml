@@ -67,19 +67,19 @@
     <string name="settings_proxy_connection_failed">Kan geen verbinding maken met de proxy (controleer host/poort).</string>
     <string name="settings_proxy_http">Proxy gaf HTTP <xliff:g id="code">%1$d</xliff:g> terug</string>
     <string name="settings_proxy_failed">Proxytest mislukt.</string>
-    <string name="settings_ch_nav_title">Bladeren met CH+/CH−-toetsen</string>
-    <string name="settings_ch_nav_description">Blader met de CH+/CH−-toetsen van de afstandsbediening door de categorie- of itemlijst.</string>
-    <string name="settings_ch_nav_enabled">CH+/CH−-toetsen gebruiken om door lijsten te bladeren</string>
-    <string name="settings_ch_nav_enabled_description">Als dit is ingeschakeld, spring je met CH+ en CH− binnen het gefocuste paneel (categoriebalk of itemlijst, en de categorielijst bij Aanpassen). Als dit is uitgeschakeld, doen deze toetsen niets op die schermen.</string>
+    <string name="settings_ch_nav_title">Bladeren met CH+/RW · CH−/FF-toetsen</string>
+    <string name="settings_ch_nav_description">Blader met de CH+/RW · CH−/FF-toetsen van de afstandsbediening door de categorie- of itemlijst.</string>
+    <string name="settings_ch_nav_enabled">CH+/RW · CH−/FF-toetsen gebruiken om door lijsten te bladeren</string>
+    <string name="settings_ch_nav_enabled_description">Als dit is ingeschakeld, spring je met CH+/RW en CH−/FF binnen het gefocuste paneel (categoriebalk of itemlijst, en de categorielijst bij Aanpassen). Als dit is uitgeschakeld, doen deze toetsen niets op die schermen.</string>
     <string name="settings_ch_nav_up">Aantal overslaan met CH+ (richting eerste)</string>
-    <string name="settings_ch_nav_up_description">Hoeveel items je met één druk op CH+ omhoog springt. Lang indrukken gaat altijd naar het eerste item.</string>
+    <string name="settings_ch_nav_up_description">Hoeveel items je met één druk op CH+/RW omhoog springt. Lang indrukken gaat altijd naar het eerste item.</string>
     <string name="settings_ch_nav_down">Aantal overslaan met CH− (richting laatste)</string>
-    <string name="settings_ch_nav_down_description">Hoeveel items je met één druk op CH− omlaag springt. Lang indrukken gaat altijd naar het laatste item.</string>
+    <string name="settings_ch_nav_down_description">Hoeveel items je met één druk op CH−/FF omlaag springt. Lang indrukken gaat altijd naar het laatste item.</string>
     <string name="settings_skip_counts">Aantallen om over te slaan</string>
     <string name="settings_how_it_works">Hoe het werkt</string>
-    <string name="settings_ch_nav_help">• Sprongen worden bij het begin en einde begrensd, zodat je bij korte lijsten met één druk het einde bereikt.\n• CH+ lang indrukken = eerste item, CH− lang indrukken = laatste item.\n• Lang indrukken is uitgeschakeld in de lijst ‘Alles’ (elke zender / film / serie) — kort indrukken om over te slaan werkt daar nog wel.\n• Geldt voor het paneel dat momenteel focus heeft — de categoriebalk of de itemlijst/het itemraster.\n• Bladert ook door de categorielijst in Instellingen → Categorieën en items aanpassen.</string>
+    <string name="settings_ch_nav_help">• Sprongen worden bij het begin en einde begrensd, zodat je bij korte lijsten met één druk het einde bereikt.\n• CH+/RW lang indrukken = eerste item, CH−/FF lang indrukken = laatste item.\n• Lang indrukken is uitgeschakeld in de lijst ‘Alles’ (elke zender / film / serie) — kort indrukken om over te slaan werkt daar nog wel.\n• Geldt voor het paneel dat momenteel focus heeft — de categoriebalk of de itemlijst/het itemraster.\n• Bladert ook door de categorielijst in Instellingen → Categorieën en items aanpassen.</string>
     <string name="settings_large_skips_warning">Bij grote sprongen schiet je voorbij het einde van korte lijsten en kan de navigatie op minder krachtige tv\'s schokkerig aanvoelen.</string>
-    <string name="settings_ch_nav_picker">Bladeren met CH+/CH−-toetsen</string>
+    <string name="settings_ch_nav_picker">Bladeren met CH+/RW · CH−/FF-toetsen</string>
     <string name="settings_weather">Weer</string>
     <string name="settings_top_bar_weather">Weer in bovenbalk</string>
     <string name="settings_show_weather">Weer tonen</string>
@@ -178,8 +178,8 @@
     <string name="settings_customize">Categorieën en items aanpassen</string>
     <string name="settings_customize_nav_description">Items verbergen en zichtbaar maken, en categorieën hernoemen en herschikken</string>
     <string name="settings_sidebar_description_root">Pas zijpictogrammen automatisch aan je afspeellijst aan of verberg specifieke pictogrammen</string>
-    <string name="settings_ch_paging">Bladeren met CH+/CH−-toetsen</string>
-    <string name="settings_ch_paging_description">Spring met de CH+/CH−-toetsen omhoog/omlaag in de categorie- en itemlijsten</string>
+    <string name="settings_ch_paging">Bladeren met CH+/RW · CH−/FF-toetsen</string>
+    <string name="settings_ch_paging_description">Spring met de CH+/RW · CH−/FF-toetsen omhoog/omlaag in de categorie- en itemlijsten</string>
     <!-- Translators: Settings navigation label for the long-press content menus. -->
     <string name="settings_content_menus_title">Menu’s bij lang indrukken</string>
     <!-- Translators: Description of the long-press content menus settings. -->
@@ -671,6 +671,12 @@
     <string name="settings_customize_rename_or_delete_category">Categorienaam wijzigen of categorie verwijderen</string>
     <string name="settings_customize_new_category">＋ Nieuwe categorie</string>
     <string name="settings_customize_sort_button">Sorteren: <xliff:g id="label">%1$s</xliff:g> ▾</string>
+
+    <string name="settings_customize_filter_button">Filter: <xliff:g id="label">%1$s</xliff:g> ▾</string>
+    <string name="settings_customize_filter_title">Lijst filteren</string>
+    <string name="settings_customize_filter_all">Alles</string>
+    <string name="settings_customize_filter_visible">Zichtbaar</string>
+    <string name="settings_customize_filter_hidden">Verborgen</string>
     <string name="settings_customize_new_categories_button">Nieuwe categorieën: <xliff:g id="label">%1$s</xliff:g> ▾</string>
     <string name="settings_customize_rename_hint">Alleen voor dit profiel. Laat leeg om “<xliff:g id="name">%1$s</xliff:g>” te herstellen.</string>
     <string name="settings_customize_remove_pin_title">PIN-vergrendeling verwijderen?</string>
@@ -1058,7 +1064,12 @@
     <string name="settings_main_interface_font">Lettertype hoofdinterface</string>
     <string name="settings_popup_font">Lettertype pop-ups</string>
     <string name="settings_choose_font">Lettertype kiezen</string>
-    <string name="settings_font_size_range">Pas apptekst aan van <xliff:g id="min">%1$d</xliff:g>%% tot <xliff:g id="max">%2$d</xliff:g>%%. Ondertitels behouden hun eigen grootte.</string>
+    <string name="settings_font_size_range">Pas de tekst van de hoofdapp, niet van pop-ups, aan van <xliff:g id="min">%1$d</xliff:g>%% tot <xliff:g id="max">%2$d</xliff:g>%%. Ondertitels behouden hun eigen grootte.</string>
+    <string name="settings_popup_font_size">Lettergrootte van pop-ups</string>
+    <string name="settings_popup_font_size_description">Wijzigt alleen tekst in dialoogvensters en menu’s</string>
+    <string name="settings_popup_size">Grootte van pop-ups</string>
+    <string name="settings_popup_size_description">Schaal dialoogvensters en menu’s zonder de tekstgrootte te wijzigen</string>
+    <string name="settings_popup_size_range">Schaal dialoogvensters en menu’s (<xliff:g id="min">%1$d</xliff:g>%%–<xliff:g id="max">%2$d</xliff:g>%%).</string>
     <string name="settings_font_preview">Entertainment, eenvoudig gemaakt.</string>
     <string name="settings_search_keywords_fonts">lettertype tekst grootte typografie popup lezen toegankelijkheid</string>
     <string name="settings_font_system_sans">Systeem Sans</string>
@@ -1085,6 +1096,25 @@
     <string name="settings_glass_highlight_title">Sterkte van lichtaccent</string>
     <string name="settings_glass_highlight_description">Pas het licht en de rand van het geselecteerde glas aan.</string>
     <string name="settings_glass_live_preview">Livevoorbeeld</string>
+    <string name="settings_glass_screen_description">Doorschijnende panelen met matglaseffect, achtergrondafbeelding en transparantie</string>
+    <string name="settings_glass_master_description">Doorschijnende, gematteerde panelen over een achtergrondfoto of over de eigen achtergrond van de app.</string>
+    <string name="settings_glass_background_image">Achtergrondafbeelding kiezen</string>
+    <string name="settings_glass_surface_transparency_title">Transparantie</string>
+    <string name="settings_glass_background_blur_title">Vervaging / matglas</string>
+    <string name="settings_glass_section_appearance">Weergave</string>
+    <string name="settings_glass_section_fine_tuning">Geavanceerde opties</string>
+    <string name="settings_glass_section_behavior">Gedrag</string>
+    <string name="settings_glass_apply_to">Glasoppervlakken</string>
+    <string name="settings_glass_surface_all">Alles</string>
+    <string name="settings_glass_background_action_description">Achtergrondafbeelding kiezen</string>
+    <string name="settings_glass_transparency_short_description">20–100 · 5</string>
+    <string name="settings_glass_blur_short_description">0–100 · 10</string>
+    <string name="settings_glass_highlight_short_description">Pas het licht en de rand van het geselecteerde glas aan.</string>
+    <string name="settings_glass_full_transparency_short">Volledige transparantie toestaan</string>
+    <string name="settings_glass_full_transparency_short_description">Schakelt de automatische leesbaarheidsgrens uit voor het helderst mogelijke glas.</string>
+    <string name="settings_glass_depth_effects_short">Diepte en schaduwen</string>
+    <string name="settings_glass_depth_effects_short_description">Schakelt focuslicht, subtiele parallax en dieptebeweging in.</string>
+    <string name="settings_glass_reset_balanced">Opnieuw instellen: Gebalanceerd</string>
     <string name="settings_glass_full_transparency_title">Volledige transparantie toestaan</string>
     <string name="settings_glass_full_transparency_description">Schakelt de automatische leesbaarheidsgrens uit voor het helderst mogelijke glas.</string>
     <string name="settings_glass_depth_title">Diepte en schaduwen</string>
@@ -1114,4 +1144,11 @@
         <item quantity="one"><xliff:g id="count">%1$d</xliff:g> treffer</item>
         <item quantity="other"><xliff:g id="count">%1$d</xliff:g> treffers</item>
     </plurals>
+    <string name="settings_guide_width">Kolombreedtes van de gids</string>
+    <string name="settings_guide_width_description">Pas de breedte van de zenderlijst en EPG-tijdlijn in de tv-gids aan.</string>
+    <string name="settings_search_keywords_guide_width">gids epg zender lijst tijdlijn kolom paneel breedte grootte indeling</string>
+    <string name="settings_guide_width_summary">Zenderlijst %1$d%% · EPG-tijdlijn %2$d%%</string>
+    <string name="settings_guide_width_help">• De zenderlijst en EPG-tijdlijn delen één rij en moeten daarom samen 100%% zijn.\n• Een bredere zenderlijst toont minder van de tijdlijn; programmaduur en tijdschaal blijven gelijk.\n• Beide kolommen blijven minimaal 10%% breed.\n• Herstellen zet de zenderlijst op 10%% en de EPG-tijdlijn op 90%%.\n• Aanpassing uitschakelen herstelt de standaardindeling zonder je waarden te verwijderen.</string>
+    <string name="settings_guide_width_channels">Zenderlijst</string>
+    <string name="settings_guide_width_epg">EPG-tijdlijn</string>
 </resources>

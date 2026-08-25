@@ -67,19 +67,19 @@
     <string name="settings_proxy_connection_failed">프록시에 연결하지 못했습니다(호스트/포트를 확인하세요).</string>
     <string name="settings_proxy_http">프록시에서 HTTP <xliff:g id="code">%1$d</xliff:g> 상태를 반환했습니다</string>
     <string name="settings_proxy_failed">프록시 테스트에 실패했습니다.</string>
-    <string name="settings_ch_nav_title">CH+/CH− 키 페이지 이동</string>
-    <string name="settings_ch_nav_description">리모컨의 CH+/CH− 키로 카테고리 또는 항목 목록을 페이지 단위로 이동합니다.</string>
-    <string name="settings_ch_nav_enabled">CH+/CH− 키로 목록 페이지 이동</string>
-    <string name="settings_ch_nav_enabled_description">켜면 CH+와 CH−로 포커스된 패널(카테고리 레일 또는 항목 목록, 카테고리 맞춤 설정 목록) 안에서 건너뜁니다. 끄면 해당 화면에서 이 키가 아무 동작도 하지 않습니다.</string>
+    <string name="settings_ch_nav_title">CH+/RW · CH−/FF 키 페이지 이동</string>
+    <string name="settings_ch_nav_description">리모컨의 CH+/RW · CH−/FF 키로 카테고리 또는 항목 목록을 페이지 단위로 이동합니다.</string>
+    <string name="settings_ch_nav_enabled">CH+/RW · CH−/FF 키로 목록 페이지 이동</string>
+    <string name="settings_ch_nav_enabled_description">켜면 CH+/RW와 CH−/FF로 포커스된 패널(카테고리 레일 또는 항목 목록, 카테고리 맞춤 설정 목록) 안에서 건너뜁니다. 끄면 해당 화면에서 이 키가 아무 동작도 하지 않습니다.</string>
     <string name="settings_ch_nav_up">CH+ 건너뛰기(첫 항목 방향)</string>
-    <string name="settings_ch_nav_up_description">CH+를 한 번 눌렀을 때 위로 건너뛸 항목 수입니다. 길게 누르면 항상 첫 항목으로 이동합니다.</string>
+    <string name="settings_ch_nav_up_description">CH+/RW를 한 번 눌렀을 때 위로 건너뛸 항목 수입니다. 길게 누르면 항상 첫 항목으로 이동합니다.</string>
     <string name="settings_ch_nav_down">CH− 건너뛰기(마지막 항목 방향)</string>
-    <string name="settings_ch_nav_down_description">CH−를 한 번 눌렀을 때 아래로 건너뛸 항목 수입니다. 길게 누르면 항상 마지막 항목으로 이동합니다.</string>
+    <string name="settings_ch_nav_down_description">CH−/FF를 한 번 눌렀을 때 아래로 건너뛸 항목 수입니다. 길게 누르면 항상 마지막 항목으로 이동합니다.</string>
     <string name="settings_skip_counts">건너뛸 항목 수</string>
     <string name="settings_how_it_works">작동 방식</string>
-    <string name="settings_ch_nav_help">• 목록 끝을 넘지 않도록 제한되므로 짧은 목록에서는 한 번만 눌러도 끝에 도달합니다.\n• CH+ 길게 누르기 = 첫 항목, CH− 길게 누르기 = 마지막 항목입니다.\n• \"전체\" 목록(모든 채널/영화/시리즈)에서는 길게 누르기가 비활성화되지만 짧게 눌러 건너뛰는 기능은 계속 사용할 수 있습니다.\n• 현재 포커스가 있는 패널, 즉 카테고리 레일 또는 항목 목록/격자에 적용됩니다.\n• 설정 → 카테고리 및 항목 맞춤 설정의 카테고리 목록도 페이지 단위로 이동합니다.</string>
+    <string name="settings_ch_nav_help">• 목록 끝을 넘지 않도록 제한되므로 짧은 목록에서는 한 번만 눌러도 끝에 도달합니다.\n• CH+/RW 길게 누르기 = 첫 항목, CH−/FF 길게 누르기 = 마지막 항목입니다.\n• \"전체\" 목록(모든 채널/영화/시리즈)에서는 길게 누르기가 비활성화되지만 짧게 눌러 건너뛰는 기능은 계속 사용할 수 있습니다.\n• 현재 포커스가 있는 패널, 즉 카테고리 레일 또는 항목 목록/격자에 적용됩니다.\n• 설정 → 카테고리 및 항목 맞춤 설정의 카테고리 목록도 페이지 단위로 이동합니다.</string>
     <string name="settings_large_skips_warning">건너뛸 항목 수가 크면 짧은 목록을 지나칠 수 있고 사양이 낮은 TV에서는 움직임이 불안정하게 느껴질 수 있습니다.</string>
-    <string name="settings_ch_nav_picker">CH+/CH− 키 페이지 이동</string>
+    <string name="settings_ch_nav_picker">CH+/RW · CH−/FF 키 페이지 이동</string>
     <string name="settings_weather">날씨</string>
     <string name="settings_top_bar_weather">상단 표시줄 날씨</string>
     <string name="settings_show_weather">날씨 표시</string>
@@ -177,8 +177,8 @@
     <string name="settings_customize">카테고리 및 항목 맞춤 설정</string>
     <string name="settings_customize_nav_description">항목 숨기기/다시 표시, 카테고리 이름 및 순서 변경</string>
     <string name="settings_sidebar_description_root">플레이리스트에 맞게 사이드 아이콘을 자동 조정하거나 특정 아이콘 숨기기</string>
-    <string name="settings_ch_paging">CH+/CH− 키 페이지 이동</string>
-    <string name="settings_ch_paging_description">CH+/CH− 키로 카테고리 및 항목 목록에서 위아래로 건너뛰기</string>
+    <string name="settings_ch_paging">CH+/RW · CH−/FF 키 페이지 이동</string>
+    <string name="settings_ch_paging_description">CH+/RW · CH−/FF 키로 카테고리 및 항목 목록에서 위아래로 건너뛰기</string>
     <!-- Translators: Settings navigation label for the long-press content menus. -->
     <string name="settings_content_menus_title">길게 누르기 메뉴</string>
     <!-- Translators: Description of the long-press content menus settings. -->
@@ -666,6 +666,12 @@
     <string name="settings_customize_rename_or_delete_category">카테고리 이름 변경 또는 삭제</string>
     <string name="settings_customize_new_category">＋ 새 카테고리</string>
     <string name="settings_customize_sort_button">정렬: <xliff:g id="label">%1$s</xliff:g> ▾</string>
+
+    <string name="settings_customize_filter_button">필터: <xliff:g id="label">%1$s</xliff:g> ▾</string>
+    <string name="settings_customize_filter_title">목록 필터</string>
+    <string name="settings_customize_filter_all">전체</string>
+    <string name="settings_customize_filter_visible">표시</string>
+    <string name="settings_customize_filter_hidden">숨김</string>
     <string name="settings_customize_new_categories_button">새 카테고리: <xliff:g id="label">%1$s</xliff:g> ▾</string>
     <string name="settings_customize_rename_hint">이 프로필에만 적용됩니다. 비워 두면 “<xliff:g id="name">%1$s</xliff:g>”(으)로 복원됩니다.</string>
     <string name="settings_customize_remove_pin_title">PIN 잠금을 해제하시겠습니까?</string>
@@ -1040,7 +1046,12 @@
     <string name="settings_main_interface_font">기본 인터페이스 글꼴</string>
     <string name="settings_popup_font">팝업 글꼴</string>
     <string name="settings_choose_font">글꼴 선택</string>
-    <string name="settings_font_size_range">앱 글자를 <xliff:g id="min">%1$d</xliff:g>%%에서 <xliff:g id="max">%2$d</xliff:g>%%까지 조절합니다. 자막 크기는 그대로 유지됩니다.</string>
+    <string name="settings_font_size_range">팝업이 아닌 기본 앱 글자를 <xliff:g id="min">%1$d</xliff:g>%%에서 <xliff:g id="max">%2$d</xliff:g>%%까지 조절합니다. 자막 크기는 그대로 유지됩니다.</string>
+    <string name="settings_popup_font_size">팝업 글꼴 크기</string>
+    <string name="settings_popup_font_size_description">대화상자와 메뉴의 글자만 변경합니다</string>
+    <string name="settings_popup_size">팝업 크기</string>
+    <string name="settings_popup_size_description">글자 크기를 바꾸지 않고 대화상자와 메뉴 상자의 크기를 조절합니다</string>
+    <string name="settings_popup_size_range">대화상자와 메뉴 상자의 크기를 조절합니다(<xliff:g id="min">%1$d</xliff:g>%%–<xliff:g id="max">%2$d</xliff:g>%%).</string>
     <string name="settings_font_preview">엔터테인먼트를 더 간단하게.</string>
     <string name="settings_search_keywords_fonts">글꼴 텍스트 크기 서체 팝업 읽기 접근성</string>
     <string name="settings_font_system_sans">시스템 산세리프</string>
@@ -1067,6 +1078,25 @@
     <string name="settings_glass_highlight_title">하이라이트 강도</string>
     <string name="settings_glass_highlight_description">포커스된 유리의 빛과 테두리를 조절합니다.</string>
     <string name="settings_glass_live_preview">실시간 미리보기</string>
+    <string name="settings_glass_screen_description">반투명 불투명 유리 패널, 배경 이미지 및 투명도</string>
+    <string name="settings_glass_master_description">배경 사진이나 앱 자체 배경 위에 반투명한 불투명 유리 패널을 표시합니다.</string>
+    <string name="settings_glass_background_image">배경 이미지 선택</string>
+    <string name="settings_glass_surface_transparency_title">투명도</string>
+    <string name="settings_glass_background_blur_title">흐림 / 불투명 효과</string>
+    <string name="settings_glass_section_appearance">화면 스타일</string>
+    <string name="settings_glass_section_fine_tuning">고급 옵션</string>
+    <string name="settings_glass_section_behavior">동작</string>
+    <string name="settings_glass_apply_to">글래스 표면</string>
+    <string name="settings_glass_surface_all">전체</string>
+    <string name="settings_glass_background_action_description">배경 이미지 선택</string>
+    <string name="settings_glass_transparency_short_description">20–100 · 5</string>
+    <string name="settings_glass_blur_short_description">0–100 · 10</string>
+    <string name="settings_glass_highlight_short_description">포커스된 유리의 빛과 테두리를 조절합니다.</string>
+    <string name="settings_glass_full_transparency_short">완전한 투명도 허용</string>
+    <string name="settings_glass_full_transparency_short_description">가장 투명한 유리를 위해 자동 가독성 제한을 끕니다.</string>
+    <string name="settings_glass_depth_effects_short">깊이와 그림자</string>
+    <string name="settings_glass_depth_effects_short_description">포커스 이동 조명, 은은한 시차 및 깊이 움직임을 켭니다.</string>
+    <string name="settings_glass_reset_balanced">초기화: 균형</string>
     <string name="settings_glass_full_transparency_title">완전한 투명도 허용</string>
     <string name="settings_glass_full_transparency_description">가장 투명한 유리를 위해 자동 가독성 제한을 끕니다.</string>
     <string name="settings_glass_depth_title">깊이와 그림자</string>
@@ -1093,4 +1123,11 @@
     <plurals name="settings_match_count">
         <item quantity="other">일치 <xliff:g id="count">%1$d</xliff:g>개</item>
     </plurals>
+    <string name="settings_guide_width">가이드 열 너비</string>
+    <string name="settings_guide_width_description">TV 가이드의 채널 목록과 EPG 타임라인 너비를 조절합니다.</string>
+    <string name="settings_search_keywords_guide_width">가이드 epg 채널 목록 타임라인 열 패널 너비 크기 레이아웃</string>
+    <string name="settings_guide_width_summary">채널 목록 %1$d%% · EPG 타임라인 %2$d%%</string>
+    <string name="settings_guide_width_help">• 채널 목록과 EPG 타임라인은 한 행을 공유하므로 합계가 100%%여야 합니다.\n• 채널 목록을 넓히면 한 번에 보이는 타임라인이 줄어들며, 프로그램 길이와 시간 눈금은 바뀌지 않습니다.\n• 두 열은 모두 최소 10%%를 유지합니다.\n• 재설정하면 채널 목록은 10%%, EPG 타임라인은 90%%로 돌아갑니다.\n• 사용자 지정을 끄면 저장한 값을 잃지 않고 표준 가이드 레이아웃으로 돌아갑니다.</string>
+    <string name="settings_guide_width_channels">채널 목록</string>
+    <string name="settings_guide_width_epg">EPG 타임라인</string>
 </resources>

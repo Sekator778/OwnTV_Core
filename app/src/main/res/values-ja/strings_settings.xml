@@ -67,19 +67,19 @@
     <string name="settings_proxy_connection_failed">プロキシに接続できませんでした（ホスト／ポートを確認してください）。</string>
     <string name="settings_proxy_http">プロキシからHTTP <xliff:g id="code">%1$d</xliff:g>が返されました</string>
     <string name="settings_proxy_failed">プロキシのテストに失敗しました。</string>
-    <string name="settings_ch_nav_title">CH+/CH−キーによるページ移動</string>
-    <string name="settings_ch_nav_description">リモコンのCH+／CH−キーでカテゴリまたは項目の一覧をページ移動します。</string>
-    <string name="settings_ch_nav_enabled">CH+/CH−キーで一覧をページ移動</string>
-    <string name="settings_ch_nav_enabled_description">オンにすると、CH+とCH−でフォーカス中のパネル内（カテゴリレール、項目一覧、または「カテゴリをカスタマイズ」の一覧）をスキップ移動します。オフにすると、これらの画面ではキーを押しても何も起こりません。</string>
+    <string name="settings_ch_nav_title">CH+/RW · CH−/FFキーによるページ移動</string>
+    <string name="settings_ch_nav_description">リモコンのCH+/RW／CH−/FFキーでカテゴリまたは項目の一覧をページ移動します。</string>
+    <string name="settings_ch_nav_enabled">CH+/RW · CH−/FFキーで一覧をページ移動</string>
+    <string name="settings_ch_nav_enabled_description">オンにすると、CH+/RWとCH−/FFでフォーカス中のパネル内（カテゴリレール、項目一覧、または「カテゴリをカスタマイズ」の一覧）をスキップ移動します。オフにすると、これらの画面ではキーを押しても何も起こりません。</string>
     <string name="settings_ch_nav_up">CH+のスキップ数（先頭方向）</string>
-    <string name="settings_ch_nav_up_description">CH+を1回押したときに上方向へ移動する項目数です。長押しすると常に先頭の項目へ移動します。</string>
+    <string name="settings_ch_nav_up_description">CH+/RWを1回押したときに上方向へ移動する項目数です。長押しすると常に先頭の項目へ移動します。</string>
     <string name="settings_ch_nav_down">CH−のスキップ数（末尾方向）</string>
-    <string name="settings_ch_nav_down_description">CH−を1回押したときに下方向へ移動する項目数です。長押しすると常に末尾の項目へ移動します。</string>
+    <string name="settings_ch_nav_down_description">CH−/FFを1回押したときに下方向へ移動する項目数です。長押しすると常に末尾の項目へ移動します。</string>
     <string name="settings_skip_counts">スキップ数</string>
     <string name="settings_how_it_works">動作の仕組み</string>
-    <string name="settings_ch_nav_help">• 末端を越えないようにスキップが制限されるため、短い一覧では1回押すだけで末端に到達します。\n• CH+を長押し＝先頭の項目、CH−を長押し＝末尾の項目。\n• 「すべて」の一覧（全チャンネル／映画／シリーズ）では長押しが無効です。短押しによるスキップは引き続き使用できます。\n• 現在フォーカスがあるパネル（カテゴリレールまたは項目の一覧／グリッド）に適用されます。\n• 「設定」→「カテゴリと項目をカスタマイズ」のカテゴリ一覧でもページ移動できます。</string>
+    <string name="settings_ch_nav_help">• 末端を越えないようにスキップが制限されるため、短い一覧では1回押すだけで末端に到達します。\n• CH+/RWを長押し＝先頭の項目、CH−/FFを長押し＝末尾の項目。\n• 「すべて」の一覧（全チャンネル／映画／シリーズ）では長押しが無効です。短押しによるスキップは引き続き使用できます。\n• 現在フォーカスがあるパネル（カテゴリレールまたは項目の一覧／グリッド）に適用されます。\n• 「設定」→「カテゴリと項目をカスタマイズ」のカテゴリ一覧でもページ移動できます。</string>
     <string name="settings_large_skips_warning">スキップ数が大きいと短い一覧を飛び越え、低性能のTVでは動きがぎこちなく感じられることがあります。</string>
-    <string name="settings_ch_nav_picker">CH+/CH−キーによるページ移動</string>
+    <string name="settings_ch_nav_picker">CH+/RW · CH−/FFキーによるページ移動</string>
     <string name="settings_weather">天気</string>
     <string name="settings_top_bar_weather">トップバーの天気</string>
     <string name="settings_show_weather">天気を表示</string>
@@ -177,8 +177,8 @@
     <string name="settings_customize">カテゴリと項目をカスタマイズ</string>
     <string name="settings_customize_nav_description">項目の非表示／再表示、カテゴリ名の変更、並べ替え</string>
     <string name="settings_sidebar_description_root">プレイリストに合わせてサイドアイコンを自動調整するか、特定のアイコンを非表示にします</string>
-    <string name="settings_ch_paging">CH+/CH−キーによるページ移動</string>
-    <string name="settings_ch_paging_description">CH+／CH−キーでカテゴリと項目の一覧を上下にスキップ</string>
+    <string name="settings_ch_paging">CH+/RW · CH−/FFキーによるページ移動</string>
+    <string name="settings_ch_paging_description">CH+/RW／CH−/FFキーでカテゴリと項目の一覧を上下にスキップ</string>
     <!-- Translators: Settings navigation label for the long-press content menus. -->
     <string name="settings_content_menus_title">長押しメニュー</string>
     <!-- Translators: Description of the long-press content menus settings. -->
@@ -666,6 +666,12 @@
     <string name="settings_customize_rename_or_delete_category">カテゴリ名の変更または削除</string>
     <string name="settings_customize_new_category">＋ 新しいカテゴリ</string>
     <string name="settings_customize_sort_button">並べ替え：<xliff:g id="label">%1$s</xliff:g> ▾</string>
+
+    <string name="settings_customize_filter_button">フィルター：<xliff:g id="label">%1$s</xliff:g> ▾</string>
+    <string name="settings_customize_filter_title">一覧を絞り込む</string>
+    <string name="settings_customize_filter_all">すべて</string>
+    <string name="settings_customize_filter_visible">表示</string>
+    <string name="settings_customize_filter_hidden">非表示</string>
     <string name="settings_customize_new_categories_button">新しいカテゴリ：<xliff:g id="label">%1$s</xliff:g> ▾</string>
     <string name="settings_customize_rename_hint">このプロフィールにのみ適用されます。空欄にすると「<xliff:g id="name">%1$s</xliff:g>」に戻ります。</string>
     <string name="settings_customize_remove_pin_title">PINロックを解除しますか？</string>
@@ -1040,7 +1046,12 @@
     <string name="settings_main_interface_font">メイン画面のフォント</string>
     <string name="settings_popup_font">ポップアップのフォント</string>
     <string name="settings_choose_font">フォントを選択</string>
-    <string name="settings_font_size_range">アプリの文字を <xliff:g id="min">%1$d</xliff:g>%%～<xliff:g id="max">%2$d</xliff:g>%% の範囲で調整します。字幕のサイズは変わりません。</string>
+    <string name="settings_font_size_range">ポップアップではなくメイン画面の文字を <xliff:g id="min">%1$d</xliff:g>%%～<xliff:g id="max">%2$d</xliff:g>%% の範囲で調整します。字幕のサイズは変わりません。</string>
+    <string name="settings_popup_font_size">ポップアップのフォントサイズ</string>
+    <string name="settings_popup_font_size_description">ダイアログとメニュー内の文字だけを変更します</string>
+    <string name="settings_popup_size">ポップアップのサイズ</string>
+    <string name="settings_popup_size_description">文字サイズを変えずにダイアログとメニューの枠を拡大・縮小します</string>
+    <string name="settings_popup_size_range">ダイアログとメニューの枠を拡大・縮小します（<xliff:g id="min">%1$d</xliff:g>%%～<xliff:g id="max">%2$d</xliff:g>%%）。</string>
     <string name="settings_font_preview">エンターテインメントを、もっとシンプルに。</string>
     <string name="settings_search_keywords_fonts">フォント 文字 サイズ 書体 ポップアップ 読みやすさ アクセシビリティ</string>
     <string name="settings_font_system_sans">システムサンセリフ</string>
@@ -1067,6 +1078,25 @@
     <string name="settings_glass_highlight_title">ハイライトの強さ</string>
     <string name="settings_glass_highlight_description">フォーカスしたガラスの光と縁を調整します。</string>
     <string name="settings_glass_live_preview">ライブプレビュー</string>
+    <string name="settings_glass_screen_description">半透明のすりガラス風パネル、背景画像、透明度</string>
+    <string name="settings_glass_master_description">背景写真またはアプリ標準の背景の上に、半透明のすりガラス風パネルを表示します。</string>
+    <string name="settings_glass_background_image">背景画像を選択</string>
+    <string name="settings_glass_surface_transparency_title">透明度</string>
+    <string name="settings_glass_background_blur_title">ぼかし／すりガラス</string>
+    <string name="settings_glass_section_appearance">外観</string>
+    <string name="settings_glass_section_fine_tuning">詳細オプション</string>
+    <string name="settings_glass_section_behavior">動作</string>
+    <string name="settings_glass_apply_to">ガラス効果の適用領域</string>
+    <string name="settings_glass_surface_all">すべて</string>
+    <string name="settings_glass_background_action_description">背景画像を選択</string>
+    <string name="settings_glass_transparency_short_description">20–100 · 5</string>
+    <string name="settings_glass_blur_short_description">0–100 · 10</string>
+    <string name="settings_glass_highlight_short_description">フォーカスしたガラスの光と縁を調整します。</string>
+    <string name="settings_glass_full_transparency_short">完全な透明度を許可</string>
+    <string name="settings_glass_full_transparency_short_description">最も透明なガラスにするため、自動の読みやすさ制限を無効にします。</string>
+    <string name="settings_glass_depth_effects_short">奥行きと影</string>
+    <string name="settings_glass_depth_effects_short_description">フォーカス移動ライト、控えめな視差、奥行きの動きを有効にします。</string>
+    <string name="settings_glass_reset_balanced">リセット: バランス</string>
     <string name="settings_glass_full_transparency_title">完全な透明度を許可</string>
     <string name="settings_glass_full_transparency_description">最も透明なガラスにするため、自動の読みやすさ制限を無効にします。</string>
     <string name="settings_glass_depth_title">奥行きと影</string>
@@ -1093,4 +1123,11 @@
     <plurals name="settings_match_count">
         <item quantity="other"><xliff:g id="count">%1$d</xliff:g> 件の一致</item>
     </plurals>
+    <string name="settings_guide_width">番組ガイドの列幅</string>
+    <string name="settings_guide_width_description">番組ガイドのチャンネル一覧とEPGタイムラインの幅を変更します。</string>
+    <string name="settings_search_keywords_guide_width">ガイド epg チャンネル 一覧 タイムライン 列 パネル 幅 サイズ レイアウト</string>
+    <string name="settings_guide_width_summary">チャンネル一覧 %1$d%% · EPGタイムライン %2$d%%</string>
+    <string name="settings_guide_width_help">• チャンネル一覧とEPGタイムラインは1行を共有するため、合計は100%%にする必要があります。\n• チャンネル一覧を広げると一度に見えるタイムラインは少なくなりますが、番組の長さと時間スケールは変わりません。\n• 両方の列は10%%以上に保たれます。\n• リセットするとチャンネル一覧が10%%、EPGタイムラインが90%%に戻ります。\n• カスタマイズをオフにすると、値を失わずに標準レイアウトへ戻ります。</string>
+    <string name="settings_guide_width_channels">チャンネル一覧</string>
+    <string name="settings_guide_width_epg">EPGタイムライン</string>
 </resources>

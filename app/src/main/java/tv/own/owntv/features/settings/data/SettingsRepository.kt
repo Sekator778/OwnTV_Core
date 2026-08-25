@@ -29,6 +29,8 @@ import tv.own.owntv.core.util.Pin
 import tv.own.owntv.ui.theme.AccentColor
 import tv.own.owntv.ui.theme.AppFontFamily
 import tv.own.owntv.ui.theme.FontCustomization
+import tv.own.owntv.ui.theme.PopupFontScale
+import tv.own.owntv.ui.theme.PopupSizeScale
 import tv.own.owntv.ui.theme.ThemeMode
 import tv.own.owntv.ui.theme.UiFontScale
 import tv.own.owntv.ui.theme.UiZoom
@@ -162,6 +164,8 @@ class SettingsRepository(private val context: Context, private val localeStore: 
         val THEME_MODE = stringPreferencesKey("theme_mode")
         val UI_ZOOM_PCT = intPreferencesKey("ui_zoom_percent")
         val FONT_SIZE_PCT = intPreferencesKey("font_size_percent")
+        val POPUP_FONT_SIZE_PCT = intPreferencesKey("popup_font_size_percent")
+        val POPUP_SIZE_PCT = intPreferencesKey("popup_size_percent")
         val MAIN_FONT_FAMILY = stringPreferencesKey("main_font_family")
         val POPUP_FONT_FAMILY = stringPreferencesKey("popup_font_family")
         val ACCENT = stringPreferencesKey("accent_color")
@@ -335,6 +339,10 @@ class SettingsRepository(private val context: Context, private val localeStore: 
         val PANEL_W_SERIES_CAT = intPreferencesKey("panel_w_series_cat")
         val PANEL_W_SERIES_LIST = intPreferencesKey("panel_w_series_list")
         val PANEL_W_SERIES_PREVIEW = intPreferencesKey("panel_w_series_preview")
+        // Guide's two-column split (pinned channels · scrollable EPG timeline).
+        val GUIDE_WIDTH_ON = booleanPreferencesKey("guide_width_on")
+        val GUIDE_WIDTH_CHANNELS = intPreferencesKey("guide_width_channels")
+        val GUIDE_WIDTH_EPG = intPreferencesKey("guide_width_epg")
         // "Browsing & lists" — two independent per-section toggles (Live TV / Movies / Series).
         //
         // REMEMBER_LAST_*  = remember last ITEM. OFF (default) = switching category resets the browse list
@@ -1232,6 +1240,25 @@ class SettingsRepository(private val context: Context, private val localeStore: 
         }
     }
 
+    // --- Guide column widths: toggle + two percentages that must total exactly 100 ---
+    val guideWidthEnabled: Flow<Boolean> = prefsFlow { it[Keys.GUIDE_WIDTH_ON] ?: false }
+
+    val guideWidthShares: Flow<GuideWidthShares?> = prefsFlow { prefs ->
+        val channels = prefs[Keys.GUIDE_WIDTH_CHANNELS]
+        val epg = prefs[Keys.GUIDE_WIDTH_EPG]
+        if (channels == null || epg == null) null
+        else normalizeGuideWidths(GuideWidthShares(channels, epg))
+    }
+
+    suspend fun setGuideWidths(enabled: Boolean, shares: GuideWidthShares) {
+        if (!shares.isValid) return
+        context.dataStore.edit {
+            it[Keys.GUIDE_WIDTH_ON] = enabled
+            it[Keys.GUIDE_WIDTH_CHANNELS] = shares.channels
+            it[Keys.GUIDE_WIDTH_EPG] = shares.epg
+        }
+    }
+
     /** Preferred audio language (ISO code, mpv alang); blank = no preference. */
     val preferredAudioLang: Flow<String> = prefsFlow { it[Keys.PREF_AUDIO_LANG] ?: "" }
 
@@ -1588,6 +1615,12 @@ class SettingsRepository(private val context: Context, private val localeStore: 
                 prefs[Keys.POPUP_FONT_FAMILY],
                 AppFontFamily.LORA,
             ),
+            popupFontSizePercent = PopupFontScale.clamp(
+                prefs[Keys.POPUP_FONT_SIZE_PCT] ?: PopupFontScale.DEFAULT,
+            ),
+            popupSizePercent = PopupSizeScale.clamp(
+                prefs[Keys.POPUP_SIZE_PCT] ?: PopupSizeScale.DEFAULT,
+            ),
         )
     }
 
@@ -1595,6 +1628,8 @@ class SettingsRepository(private val context: Context, private val localeStore: 
     suspend fun setFontCustomization(value: FontCustomization) {
         context.dataStore.edit { prefs ->
             prefs[Keys.FONT_SIZE_PCT] = UiFontScale.clamp(value.sizePercent)
+            prefs[Keys.POPUP_FONT_SIZE_PCT] = PopupFontScale.clamp(value.popupFontSizePercent)
+            prefs[Keys.POPUP_SIZE_PCT] = PopupSizeScale.clamp(value.popupSizePercent)
             prefs[Keys.MAIN_FONT_FAMILY] = value.mainFamily.name
             prefs[Keys.POPUP_FONT_FAMILY] = value.popupFamily.name
         }
@@ -1896,7 +1931,9 @@ class SettingsRepository(private val context: Context, private val localeStore: 
     private val backupIntKeys = listOf(Keys.FOCUS_HIGHLIGHT_WIDTH, Keys.DEFAULT_VOLUME, Keys.SEEK_STEP_SEC, Keys.LIVE_REWIND_STEP_SEC, Keys.UI_ZOOM_PCT, Keys.FONT_SIZE_PCT, Keys.AUDIO_DELAY_MS, Keys.CATCHUP_OFFSET_MIN, Keys.EPG_OFFSET_MIN, Keys.PROXY_PORT, Keys.DNS_PORT, Keys.CH_NAV_UP_SKIP, Keys.CH_NAV_DOWN_SKIP, Keys.MINI_PLAYER_SIZE_PCT, Keys.LIVE_LATENCY_CUSTOM_SECS, Keys.LIVE_PREROLL_SECS, Keys.LIVE_TUNE_TIMEOUT_SECS, Keys.GLASS_SCOPE, Keys.GLASS_ALPHA, Keys.GLASS_BLUR, Keys.GLASS_HIGHLIGHT, Keys.SUB_BG_OPACITY,
         Keys.PANEL_W_LIVE_CAT, Keys.PANEL_W_LIVE_LIST, Keys.PANEL_W_LIVE_PREVIEW,
         Keys.PANEL_W_MOVIES_CAT, Keys.PANEL_W_MOVIES_LIST, Keys.PANEL_W_MOVIES_PREVIEW,
-        Keys.PANEL_W_SERIES_CAT, Keys.PANEL_W_SERIES_LIST, Keys.PANEL_W_SERIES_PREVIEW)
+            Keys.PANEL_W_SERIES_CAT, Keys.PANEL_W_SERIES_LIST, Keys.PANEL_W_SERIES_PREVIEW,
+        Keys.GUIDE_WIDTH_CHANNELS, Keys.GUIDE_WIDTH_EPG,
+        Keys.POPUP_FONT_SIZE_PCT, Keys.POPUP_SIZE_PCT)
     private val backupBoolKeys = listOf(
         Keys.LIVE_PREVIEW, Keys.LIVE_PREVIEW_AUDIO, Keys.HERO_PREVIEW, Keys.HDR_ENABLED, Keys.AUTO_FRAME_RATE, Keys.AUTO_FRAME_RATE_PROMPTED, Keys.ANDROID_TV_HOME, Keys.HW_DECODING,
         Keys.VOD_PREFER_EXO, Keys.MEASURED_STREAM_STATS, Keys.DETAILED_DIAGNOSTICS, Keys.DIRECT_TUNE, Keys.EXTERNAL_PLAYER,
@@ -1906,7 +1943,7 @@ class SettingsRepository(private val context: Context, private val localeStore: 
         Keys.REMEMBER_LAST_LIVE, Keys.REMEMBER_LAST_MOVIES, Keys.REMEMBER_LAST_SERIES,
         Keys.REMEMBER_CAT_LIVE, Keys.REMEMBER_CAT_MOVIES, Keys.REMEMBER_CAT_SERIES,
         Keys.SUB_STYLE_ENABLED, Keys.SUB_SEARCH_FILTER, Keys.DEINTERLACE,
-        Keys.PANEL_W_LIVE_ON, Keys.PANEL_W_MOVIES_ON, Keys.PANEL_W_SERIES_ON,
+            Keys.PANEL_W_LIVE_ON, Keys.PANEL_W_MOVIES_ON, Keys.PANEL_W_SERIES_ON, Keys.GUIDE_WIDTH_ON,
         Keys.AMBIENT_GLOW_ENABLED, Keys.AMBIENT_GLOW_PULSE,
         Keys.GLASS_ALLOW_FULL_TRANSPARENCY, Keys.GLASS_DEPTH_EFFECTS,
     )

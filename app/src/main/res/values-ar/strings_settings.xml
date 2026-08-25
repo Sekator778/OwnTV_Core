@@ -67,19 +67,19 @@
     <string name="settings_proxy_connection_failed">تعذر الاتصال بالوكيل (تحقق من المضيف/المنفذ).</string>
     <string name="settings_proxy_http">أعاد الوكيل حالة HTTP <xliff:g id="code">%1$d</xliff:g></string>
     <string name="settings_proxy_failed">فشل اختبار الوكيل.</string>
-    <string name="settings_ch_nav_title">التنقل بين الصفحات بمفتاحي CH+-</string>
-    <string name="settings_ch_nav_description">تنقّل بين صفحات قائمة الفئات أو العناصر باستخدام مفتاحي CH+ / CH− في جهاز التحكم عن بُعد.</string>
-    <string name="settings_ch_nav_enabled">استخدام مفتاحي CH+- للتنقل بين صفحات القوائم</string>
-    <string name="settings_ch_nav_enabled_description">عند التفعيل، يتخطى مفتاحا CH+ وCH− عناصر داخل اللوحة قيد التركيز (شريط الفئات أو قائمة العناصر، وكذلك قائمة تخصيص الفئات). وعند التعطيل، لا يفعل هذان المفتاحان شيئًا في تلك الشاشات.</string>
+    <string name="settings_ch_nav_title">التنقل بين الصفحات بمفتاحي CH+/RW · CH−/FF</string>
+    <string name="settings_ch_nav_description">تنقّل بين صفحات قائمة الفئات أو العناصر باستخدام مفتاحي CH+/RW / CH−/FF في جهاز التحكم عن بُعد.</string>
+    <string name="settings_ch_nav_enabled">استخدام مفتاحي CH+/RW · CH−/FF للتنقل بين صفحات القوائم</string>
+    <string name="settings_ch_nav_enabled_description">عند التفعيل، يتخطى مفتاحا CH+/RW وCH−/FF عناصر داخل اللوحة قيد التركيز (شريط الفئات أو قائمة العناصر، وكذلك قائمة تخصيص الفئات). وعند التعطيل، لا يفعل هذان المفتاحان شيئًا في تلك الشاشات.</string>
     <string name="settings_ch_nav_up">تخطي CH+ (نحو الأول)</string>
-    <string name="settings_ch_nav_up_description">عدد العناصر التي تتخطاها ضغطة واحدة على CH+ إلى أعلى. يؤدي الضغط المطوّل دائمًا إلى الانتقال إلى العنصر الأول.</string>
+    <string name="settings_ch_nav_up_description">عدد العناصر التي تتخطاها ضغطة واحدة على CH+/RW إلى أعلى. يؤدي الضغط المطوّل دائمًا إلى الانتقال إلى العنصر الأول.</string>
     <string name="settings_ch_nav_down">تخطي CH− (نحو الأخير)</string>
-    <string name="settings_ch_nav_down_description">عدد العناصر التي تتخطاها ضغطة واحدة على CH− إلى أسفل. يؤدي الضغط المطوّل دائمًا إلى الانتقال إلى العنصر الأخير.</string>
+    <string name="settings_ch_nav_down_description">عدد العناصر التي تتخطاها ضغطة واحدة على CH−/FF إلى أسفل. يؤدي الضغط المطوّل دائمًا إلى الانتقال إلى العنصر الأخير.</string>
     <string name="settings_skip_counts">أعداد التخطي</string>
     <string name="settings_how_it_works">كيفية العمل</string>
-    <string name="settings_ch_nav_help">• يُقيّد التخطي عند طرفي القائمة، لذا تصل القوائم القصيرة إلى نهايتها بضغطة واحدة.\n• الضغط المطوّل على CH+ = العنصر الأول، والضغط المطوّل على CH− = العنصر الأخير.\n• يُعطّل الضغط المطوّل في قائمة \"الكل\" (كل قناة / فيلم / مسلسل) — ويظل التخطي بالضغط القصير متاحًا فيها.\n• ينطبق على اللوحة قيد التركيز حاليًا — شريط الفئات أو قائمة/شبكة العناصر.\n• وينقّل أيضًا بين صفحات قائمة الفئات في الإعدادات ← تخصيص الفئات والعناصر.</string>
+    <string name="settings_ch_nav_help">• يُقيّد التخطي عند طرفي القائمة، لذا تصل القوائم القصيرة إلى نهايتها بضغطة واحدة.\n• الضغط المطوّل على CH+/RW = العنصر الأول، والضغط المطوّل على CH−/FF = العنصر الأخير.\n• يُعطّل الضغط المطوّل في قائمة \"الكل\" (كل قناة / فيلم / مسلسل) — ويظل التخطي بالضغط القصير متاحًا فيها.\n• ينطبق على اللوحة قيد التركيز حاليًا — شريط الفئات أو قائمة/شبكة العناصر.\n• وينقّل أيضًا بين صفحات قائمة الفئات في الإعدادات ← تخصيص الفئات والعناصر.</string>
     <string name="settings_large_skips_warning">قد تتجاوز قيم التخطي الكبيرة القوائم القصيرة وقد تبدو الحركة متقطعة على أجهزة التلفزيون منخفضة الإمكانات.</string>
-    <string name="settings_ch_nav_picker">التنقل بين الصفحات بمفتاحي CH+-</string>
+    <string name="settings_ch_nav_picker">التنقل بين الصفحات بمفتاحي CH+/RW · CH−/FF</string>
     <string name="settings_weather">الطقس</string>
     <string name="settings_top_bar_weather">الطقس في الشريط العلوي</string>
     <string name="settings_show_weather">عرض الطقس</string>
@@ -182,8 +182,8 @@
     <string name="settings_customize">تخصيص الفئات والعناصر</string>
     <string name="settings_customize_nav_description">إخفاء العناصر وإظهارها وإعادة تسمية الفئات وترتيبها</string>
     <string name="settings_sidebar_description_root">تكييف الأيقونات الجانبية تلقائيًا مع قائمة التشغيل أو إخفاء أيقونات محددة</string>
-    <string name="settings_ch_paging">التنقل بين الصفحات بمفتاحي CH+-</string>
-    <string name="settings_ch_paging_description">التخطي إلى أعلى/أسفل في قوائم الفئات والعناصر باستخدام مفتاحي CH+ / CH−</string>
+    <string name="settings_ch_paging">التنقل بين الصفحات بمفتاحي CH+/RW · CH−/FF</string>
+    <string name="settings_ch_paging_description">التخطي إلى أعلى/أسفل في قوائم الفئات والعناصر باستخدام مفتاحي CH+/RW / CH−/FF</string>
     <!-- Translators: Settings navigation label for the long-press content menus. -->
     <string name="settings_content_menus_title">قوائم الضغط المطوّل</string>
     <!-- Translators: Description of the long-press content menus settings. -->
@@ -691,6 +691,12 @@
     <string name="settings_customize_rename_or_delete_category">إعادة تسمية الفئة أو حذفها</string>
     <string name="settings_customize_new_category">＋ فئة جديدة</string>
     <string name="settings_customize_sort_button">الترتيب: <xliff:g id="label">%1$s</xliff:g> ▾</string>
+
+    <string name="settings_customize_filter_button">التصفية: <xliff:g id="label">%1$s</xliff:g> ▾</string>
+    <string name="settings_customize_filter_title">تصفية القائمة</string>
+    <string name="settings_customize_filter_all">الكل</string>
+    <string name="settings_customize_filter_visible">الظاهرة</string>
+    <string name="settings_customize_filter_hidden">المخفية</string>
     <string name="settings_customize_new_categories_button">الفئات الجديدة: <xliff:g id="label">%1$s</xliff:g> ▾</string>
     <string name="settings_customize_rename_hint">لهذا الملف الشخصي فقط. اتركه فارغًا لاستعادة «<xliff:g id="name">%1$s</xliff:g>».</string>
     <string name="settings_customize_remove_pin_title">هل تريد إزالة قفل PIN؟</string>
@@ -1130,7 +1136,12 @@
     <string name="settings_main_interface_font">خط الواجهة الرئيسية</string>
     <string name="settings_popup_font">خط النوافذ المنبثقة</string>
     <string name="settings_choose_font">اختر الخط</string>
-    <string name="settings_font_size_range">اضبط نص التطبيق من <xliff:g id="min">%1$d</xliff:g>%% إلى <xliff:g id="max">%2$d</xliff:g>%%. تحتفظ الترجمة بحجمها الخاص.</string>
+    <string name="settings_font_size_range">اضبط نص واجهة التطبيق الرئيسية، وليس النوافذ المنبثقة، من <xliff:g id="min">%1$d</xliff:g>%% إلى <xliff:g id="max">%2$d</xliff:g>%%. تحتفظ الترجمة بحجمها الخاص.</string>
+    <string name="settings_popup_font_size">حجم خط النوافذ المنبثقة</string>
+    <string name="settings_popup_font_size_description">يغيّر النص في مربعات الحوار والقوائم فقط</string>
+    <string name="settings_popup_size">حجم النوافذ المنبثقة</string>
+    <string name="settings_popup_size_description">غيّر حجم مربعات الحوار والقوائم دون تغيير حجم النص</string>
+    <string name="settings_popup_size_range">غيّر حجم مربعات الحوار والقوائم (<xliff:g id="min">%1$d</xliff:g>%%–<xliff:g id="max">%2$d</xliff:g>%%).</string>
     <string name="settings_font_preview">ترفيه أبسط وأكثر متعة.</string>
     <string name="settings_search_keywords_fonts">خط نص حجم كتابة نوافذ قراءة وصول</string>
     <string name="settings_font_system_sans">خط النظام بلا زوائد</string>
@@ -1157,6 +1168,25 @@
     <string name="settings_glass_highlight_title">قوة الإضاءة</string>
     <string name="settings_glass_highlight_description">اضبط إضاءة الزجاج وحدوده عند التركيز.</string>
     <string name="settings_glass_live_preview">معاينة مباشرة</string>
+    <string name="settings_glass_screen_description">لوحات شفافة ضبابية وصورة خلفية ومستوى الشفافية</string>
+    <string name="settings_glass_master_description">ألواح شفافة ضبابية فوق صورة خلفية، أو فوق خلفية التطبيق نفسه.</string>
+    <string name="settings_glass_background_image">اختيار صورة خلفية</string>
+    <string name="settings_glass_surface_transparency_title">الشفافية</string>
+    <string name="settings_glass_background_blur_title">التمويه / الضبابية</string>
+    <string name="settings_glass_section_appearance">المظهر</string>
+    <string name="settings_glass_section_fine_tuning">خيارات متقدمة</string>
+    <string name="settings_glass_section_behavior">السلوك</string>
+    <string name="settings_glass_apply_to">الأسطح الزجاجية</string>
+    <string name="settings_glass_surface_all">الكل</string>
+    <string name="settings_glass_background_action_description">اختيار صورة خلفية</string>
+    <string name="settings_glass_transparency_short_description">20–100 · 5</string>
+    <string name="settings_glass_blur_short_description">0–100 · 10</string>
+    <string name="settings_glass_highlight_short_description">اضبط إضاءة الزجاج وحدوده عند التركيز.</string>
+    <string name="settings_glass_full_transparency_short">السماح بالشفافية الكاملة</string>
+    <string name="settings_glass_full_transparency_short_description">يعطّل الحد التلقائي للوضوح للحصول على أكثر زجاج شفافية.</string>
+    <string name="settings_glass_depth_effects_short">العمق والظلال</string>
+    <string name="settings_glass_depth_effects_short_description">يفعّل إضاءة انتقال التركيز والمنظور الخفيف وحركة العمق.</string>
+    <string name="settings_glass_reset_balanced">إعادة الضبط: متوازن</string>
     <string name="settings_glass_full_transparency_title">السماح بالشفافية الكاملة</string>
     <string name="settings_glass_full_transparency_description">يعطّل الحد التلقائي للوضوح للحصول على أكثر زجاج شفافية.</string>
     <string name="settings_glass_depth_title">العمق والظلال</string>
@@ -1198,4 +1228,11 @@
         <item quantity="many"><xliff:g id="count">%1$d</xliff:g> تطابقًا</item>
         <item quantity="other"><xliff:g id="count">%1$d</xliff:g> تطابق</item>
     </plurals>
+    <string name="settings_guide_width">عرض أعمدة الدليل</string>
+    <string name="settings_guide_width_description">غيّر عرض قائمة القنوات والخط الزمني لـ EPG في دليل التلفزيون.</string>
+    <string name="settings_search_keywords_guide_width">دليل epg قناة قائمة خط زمني عمود لوحة عرض حجم تغيير تخطيط</string>
+    <string name="settings_guide_width_summary">قائمة القنوات %1$d%% · الخط الزمني لـ EPG %2$d%%</string>
+    <string name="settings_guide_width_help">• تتشارك قائمة القنوات والخط الزمني لـ EPG صفًا واحدًا، لذلك يجب أن يكون المجموع 100%%.\n• يعرض توسيع قائمة القنوات جزءًا أقل من الخط الزمني؛ وتبقى مدد البرامج ومقياس الوقت بلا تغيير.\n• يبقى عرض كل عمود 10%% على الأقل.\n• تعيد إعادة الضبط قائمة القنوات إلى 10%% والخط الزمني إلى 90%%.\n• يؤدي إيقاف التخصيص إلى استعادة التخطيط القياسي دون فقدان قيمك.</string>
+    <string name="settings_guide_width_channels">قائمة القنوات</string>
+    <string name="settings_guide_width_epg">الخط الزمني لـ EPG</string>
 </resources>

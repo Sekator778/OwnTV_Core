@@ -115,6 +115,7 @@
         <item quantity="other"><xliff:g id="category">%1$s</xliff:g> (<xliff:g id="count">%2$d</xliff:g> сериала)</item>
     </plurals>
     <string name="content_provider">Поставщик</string>
+    <string name="content_provider_name">Поставщик: %1$s</string>
     <string name="content_no_series_found">По запросу «<xliff:g id="query">%1$s</xliff:g>» сериалы не найдены</string>
     <string name="content_search_movies"><xliff:g id="category">%1$s</xliff:g>…</string>
     <string name="content_search_series"><xliff:g id="category">%1$s</xliff:g>…</string>

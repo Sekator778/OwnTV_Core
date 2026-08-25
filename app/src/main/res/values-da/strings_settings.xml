@@ -67,19 +67,19 @@
     <string name="settings_proxy_connection_failed">Der kunne ikke oprettes forbindelse til proxyen (kontrollér vært/port).</string>
     <string name="settings_proxy_http">Proxyen returnerede HTTP <xliff:g id="code">%1$d</xliff:g></string>
     <string name="settings_proxy_failed">Proxytesten mislykkedes.</string>
-    <string name="settings_ch_nav_title">Sidevisning med CH+-tasterne</string>
-    <string name="settings_ch_nav_description">Gennemse kategori- eller elementlisten sidevis med CH+ / CH−-tasterne på fjernbetjeningen.</string>
-    <string name="settings_ch_nav_enabled">Brug CH+-tasterne til at gennemse lister sidevis</string>
-    <string name="settings_ch_nav_enabled_description">Når dette er slået til, springer CH+ og CH− i det fokuserede panel (kategorilinjen eller elementlisten samt kategorilisten under Tilpas). Når det er slået fra, gør tasterne intet på disse skærme.</string>
+    <string name="settings_ch_nav_title">Sidevisning med CH+/RW · CH−/FF-tasterne</string>
+    <string name="settings_ch_nav_description">Gennemse kategori- eller elementlisten sidevis med CH+/RW / CH−/FF-tasterne på fjernbetjeningen.</string>
+    <string name="settings_ch_nav_enabled">Brug CH+/RW · CH−/FF-tasterne til at gennemse lister sidevis</string>
+    <string name="settings_ch_nav_enabled_description">Når dette er slået til, springer CH+/RW og CH−/FF i det fokuserede panel (kategorilinjen eller elementlisten samt kategorilisten under Tilpas). Når det er slået fra, gør tasterne intet på disse skærme.</string>
     <string name="settings_ch_nav_up">CH+-spring (mod første)</string>
-    <string name="settings_ch_nav_up_description">Hvor mange elementer ét tryk på CH+ springer op. Et langt tryk går altid til det første element.</string>
+    <string name="settings_ch_nav_up_description">Hvor mange elementer ét tryk på CH+/RW springer op. Et langt tryk går altid til det første element.</string>
     <string name="settings_ch_nav_down">CH−-spring (mod sidste)</string>
-    <string name="settings_ch_nav_down_description">Hvor mange elementer ét tryk på CH− springer ned. Et langt tryk går altid til det sidste element.</string>
+    <string name="settings_ch_nav_down_description">Hvor mange elementer ét tryk på CH−/FF springer ned. Et langt tryk går altid til det sidste element.</string>
     <string name="settings_skip_counts">Antal elementer pr. spring</string>
     <string name="settings_how_it_works">Sådan fungerer det</string>
-    <string name="settings_ch_nav_help">• Spring begrænses ved enderne, så korte lister når enden med ét tryk.\n• Langt tryk på CH+ = første element, langt tryk på CH− = sidste element.\n• Lange tryk er deaktiveret på listen \"Alle\" (alle kanaler / film / serier) — korte tryk til at springe virker stadig dér.\n• Gælder det panel, der aktuelt har fokus — kategorilinjen eller elementlisten/gitteret.\n• Gennemser også kategorilisten sidevis under Indstillinger → Tilpas kategorier og elementer.</string>
+    <string name="settings_ch_nav_help">• Spring begrænses ved enderne, så korte lister når enden med ét tryk.\n• Langt tryk på CH+/RW = første element, langt tryk på CH−/FF = sidste element.\n• Lange tryk er deaktiveret på listen \"Alle\" (alle kanaler / film / serier) — korte tryk til at springe virker stadig dér.\n• Gælder det panel, der aktuelt har fokus — kategorilinjen eller elementlisten/gitteret.\n• Gennemser også kategorilisten sidevis under Indstillinger → Tilpas kategorier og elementer.</string>
     <string name="settings_large_skips_warning">Store spring kan gå forbi korte lister og kan føles hakkende på mindre kraftige tv\'er.</string>
-    <string name="settings_ch_nav_picker">Sidevisning med CH+-tasterne</string>
+    <string name="settings_ch_nav_picker">Sidevisning med CH+/RW · CH−/FF-tasterne</string>
     <string name="settings_weather">Vejr</string>
     <string name="settings_top_bar_weather">Vejr på toplinjen</string>
     <string name="settings_show_weather">Vis vejret</string>
@@ -178,8 +178,8 @@
     <string name="settings_customize">Tilpas kategorier og elementer</string>
     <string name="settings_customize_nav_description">Skjul og vis elementer, omdøb og omarranger kategorier</string>
     <string name="settings_sidebar_description_root">Tilpas automatisk sideikonerne til din afspilningsliste, eller skjul bestemte ikoner</string>
-    <string name="settings_ch_paging">Sidevisning med CH+-tasterne</string>
-    <string name="settings_ch_paging_description">Spring op/ned i kategori- og elementlisterne med CH+ / CH−-tasterne</string>
+    <string name="settings_ch_paging">Sidevisning med CH+/RW · CH−/FF-tasterne</string>
+    <string name="settings_ch_paging_description">Spring op/ned i kategori- og elementlisterne med CH+/RW / CH−/FF-tasterne</string>
     <!-- Translators: Settings navigation label for the long-press content menus. -->
     <string name="settings_content_menus_title">Menuer ved langt tryk</string>
     <!-- Translators: Description of the long-press content menus settings. -->
@@ -671,6 +671,12 @@
     <string name="settings_customize_rename_or_delete_category">Omdøb eller slet kategori</string>
     <string name="settings_customize_new_category">＋ Ny kategori</string>
     <string name="settings_customize_sort_button">Sortér: <xliff:g id="label">%1$s</xliff:g> ▾</string>
+
+    <string name="settings_customize_filter_button">Filter: <xliff:g id="label">%1$s</xliff:g> ▾</string>
+    <string name="settings_customize_filter_title">Filtrer liste</string>
+    <string name="settings_customize_filter_all">Alle</string>
+    <string name="settings_customize_filter_visible">Synlige</string>
+    <string name="settings_customize_filter_hidden">Skjulte</string>
     <string name="settings_customize_new_categories_button">Nye kategorier: <xliff:g id="label">%1$s</xliff:g> ▾</string>
     <string name="settings_customize_rename_hint">Kun for denne profil. Lad feltet være tomt for at gendanne “<xliff:g id="name">%1$s</xliff:g>”.</string>
     <string name="settings_customize_remove_pin_title">Fjern PIN-lås?</string>
@@ -1058,7 +1064,12 @@
     <string name="settings_main_interface_font">Skrifttype på hovedfladen</string>
     <string name="settings_popup_font">Skrifttype i pop op-vinduer</string>
     <string name="settings_choose_font">Vælg skrifttype</string>
-    <string name="settings_font_size_range">Juster appteksten fra <xliff:g id="min">%1$d</xliff:g>%% til <xliff:g id="max">%2$d</xliff:g>%%. Undertekster har deres egen størrelse.</string>
+    <string name="settings_font_size_range">Juster teksten i hovedappen, ikke pop op-vinduer, fra <xliff:g id="min">%1$d</xliff:g>%% til <xliff:g id="max">%2$d</xliff:g>%%. Undertekster har deres egen størrelse.</string>
+    <string name="settings_popup_font_size">Skriftstørrelse i pop op-vinduer</string>
+    <string name="settings_popup_font_size_description">Ændrer kun tekst i dialoger og menuer</string>
+    <string name="settings_popup_size">Størrelse på pop op-vinduer</string>
+    <string name="settings_popup_size_description">Skaler dialog- og menubokse uden at ændre tekststørrelsen</string>
+    <string name="settings_popup_size_range">Skaler dialog- og menubokse (<xliff:g id="min">%1$d</xliff:g>%%–<xliff:g id="max">%2$d</xliff:g>%%).</string>
     <string name="settings_font_preview">Underholdning gjort enkelt.</string>
     <string name="settings_search_keywords_fonts">skrifttype tekst størrelse typografi popup læsning tilgængelighed</string>
     <string name="settings_font_system_sans">System Sans</string>
@@ -1085,6 +1096,25 @@
     <string name="settings_glass_highlight_title">Fremhævningsstyrke</string>
     <string name="settings_glass_highlight_description">Juster lyset og kanten på glas i fokus.</string>
     <string name="settings_glass_live_preview">Direkte forhåndsvisning</string>
+    <string name="settings_glass_screen_description">Gennemsigtige, matterede paneler, baggrundsbillede og gennemsigtighed</string>
+    <string name="settings_glass_master_description">Gennemsigtige, matterede paneler over et baggrundsfoto eller over appens egen baggrund.</string>
+    <string name="settings_glass_background_image">Vælg et baggrundsbillede</string>
+    <string name="settings_glass_surface_transparency_title">Gennemsigtighed</string>
+    <string name="settings_glass_background_blur_title">Sløring / mattering</string>
+    <string name="settings_glass_section_appearance">Udseende</string>
+    <string name="settings_glass_section_fine_tuning">Avancerede indstillinger</string>
+    <string name="settings_glass_section_behavior">Funktionsmåde</string>
+    <string name="settings_glass_apply_to">Glasoverflader</string>
+    <string name="settings_glass_surface_all">Alle</string>
+    <string name="settings_glass_background_action_description">Vælg et baggrundsbillede</string>
+    <string name="settings_glass_transparency_short_description">20–100 · 5</string>
+    <string name="settings_glass_blur_short_description">0–100 · 10</string>
+    <string name="settings_glass_highlight_short_description">Juster lyset og kanten på glas i fokus.</string>
+    <string name="settings_glass_full_transparency_short">Tillad fuld gennemsigtighed</string>
+    <string name="settings_glass_full_transparency_short_description">Slår den automatiske læsbarhedsgrænse fra for det klarest mulige glas.</string>
+    <string name="settings_glass_depth_effects_short">Dybde og skygger</string>
+    <string name="settings_glass_depth_effects_short_description">Aktiverer fokuslys, diskret parallakse og dybdebevægelse.</string>
+    <string name="settings_glass_reset_balanced">Nulstil: Balanceret</string>
     <string name="settings_glass_full_transparency_title">Tillad fuld gennemsigtighed</string>
     <string name="settings_glass_full_transparency_description">Slår den automatiske læsbarhedsgrænse fra for det klarest mulige glas.</string>
     <string name="settings_glass_depth_title">Dybde og skygger</string>
@@ -1114,4 +1144,11 @@
         <item quantity="one"><xliff:g id="count">%1$d</xliff:g> træffer</item>
         <item quantity="other"><xliff:g id="count">%1$d</xliff:g> træffere</item>
     </plurals>
+    <string name="settings_guide_width">Guidekolonnebredder</string>
+    <string name="settings_guide_width_description">Tilpas bredden på kanallisten og EPG-tidslinjen i TV-guiden.</string>
+    <string name="settings_search_keywords_guide_width">guide epg kanal liste tidslinje kolonne panel bredde størrelse layout</string>
+    <string name="settings_guide_width_summary">Kanalliste %1$d%% · EPG-tidslinje %2$d%%</string>
+    <string name="settings_guide_width_help">• Kanallisten og EPG-tidslinjen deler én række, så summen skal være 100%%.\n• En bredere kanalliste viser mindre af tidslinjen ad gangen; programlængder og tidsskala ændres ikke.\n• Begge kolonner er mindst 10%% brede.\n• Nulstil sætter kanallisten til 10%% og EPG-tidslinjen til 90%%.\n• Deaktivering af tilpasning gendanner standardlayoutet uden at slette dine værdier.</string>
+    <string name="settings_guide_width_channels">Kanalliste</string>
+    <string name="settings_guide_width_epg">EPG-tidslinje</string>
 </resources>

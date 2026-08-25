@@ -67,19 +67,19 @@
     <string name="settings_proxy_connection_failed">Не удалось подключиться к прокси (проверьте хост и порт).</string>
     <string name="settings_proxy_http">Прокси вернул код HTTP <xliff:g id="code">%1$d</xliff:g></string>
     <string name="settings_proxy_failed">Не удалось проверить прокси.</string>
-    <string name="settings_ch_nav_title">Постраничная навигация клавишами CH+/CH−</string>
-    <string name="settings_ch_nav_description">Перелистывайте категории или список элементов клавишами CH+ / CH− на пульте ДУ.</string>
-    <string name="settings_ch_nav_enabled">Перелистывать списки клавишами CH+/CH−</string>
-    <string name="settings_ch_nav_enabled_description">Если включено, клавиши CH+ и CH− выполняют переходы внутри панели в фокусе (ряда категорий или списка элементов, а также списка категорий на экране настройки). Если выключено, на этих экранах клавиши не выполняют никаких действий.</string>
+    <string name="settings_ch_nav_title">Постраничная навигация клавишами CH+/RW · CH−/FF</string>
+    <string name="settings_ch_nav_description">Перелистывайте категории или список элементов клавишами CH+/RW / CH−/FF на пульте ДУ.</string>
+    <string name="settings_ch_nav_enabled">Перелистывать списки клавишами CH+/RW · CH−/FF</string>
+    <string name="settings_ch_nav_enabled_description">Если включено, клавиши CH+/RW и CH−/FF выполняют переходы внутри панели в фокусе (ряда категорий или списка элементов, а также списка категорий на экране настройки). Если выключено, на этих экранах клавиши не выполняют никаких действий.</string>
     <string name="settings_ch_nav_up">Переход по CH+ (к началу)</string>
-    <string name="settings_ch_nav_up_description">Количество элементов, на которое одно нажатие CH+ перемещает вверх. Долгое нажатие всегда выполняет переход к первому элементу.</string>
+    <string name="settings_ch_nav_up_description">Количество элементов, на которое одно нажатие CH+/RW перемещает вверх. Долгое нажатие всегда выполняет переход к первому элементу.</string>
     <string name="settings_ch_nav_down">Переход по CH− (к концу)</string>
-    <string name="settings_ch_nav_down_description">Количество элементов, на которое одно нажатие CH− перемещает вниз. Долгое нажатие всегда выполняет переход к последнему элементу.</string>
+    <string name="settings_ch_nav_down_description">Количество элементов, на которое одно нажатие CH−/FF перемещает вниз. Долгое нажатие всегда выполняет переход к последнему элементу.</string>
     <string name="settings_skip_counts">Количество пропускаемых элементов</string>
     <string name="settings_how_it_works">Как это работает</string>
-    <string name="settings_ch_nav_help">• Переход ограничивается границами списка, поэтому в коротком списке можно дойти до конца одним нажатием.\n• Долгое нажатие CH+ = первый элемент, долгое нажатие CH− = последний элемент.\n• Долгое нажатие отключено в списке «Все» (все каналы / фильмы / сериалы) — переход короткими нажатиями там по-прежнему работает.\n• Действует на панель, которая сейчас находится в фокусе, — ряд категорий или список/сетка элементов.\n• Также перелистывает список категорий в разделе «Настройки → Настройка категорий и элементов».</string>
+    <string name="settings_ch_nav_help">• Переход ограничивается границами списка, поэтому в коротком списке можно дойти до конца одним нажатием.\n• Долгое нажатие CH+/RW = первый элемент, долгое нажатие CH−/FF = последний элемент.\n• Долгое нажатие отключено в списке «Все» (все каналы / фильмы / сериалы) — переход короткими нажатиями там по-прежнему работает.\n• Действует на панель, которая сейчас находится в фокусе, — ряд категорий или список/сетка элементов.\n• Также перелистывает список категорий в разделе «Настройки → Настройка категорий и элементов».</string>
     <string name="settings_large_skips_warning">При больших значениях короткие списки могут проскакивать слишком быстро, а на маломощных телевизорах навигация может казаться дёрганой.</string>
-    <string name="settings_ch_nav_picker">Постраничная навигация клавишами CH+/CH−</string>
+    <string name="settings_ch_nav_picker">Постраничная навигация клавишами CH+/RW · CH−/FF</string>
     <string name="settings_weather">Погода</string>
     <string name="settings_top_bar_weather">Погода на верхней панели</string>
     <string name="settings_show_weather">Показывать погоду</string>
@@ -180,8 +180,8 @@
     <string name="settings_customize">Настройка категорий и элементов</string>
     <string name="settings_customize_nav_description">Скрытие и отображение элементов, переименование и изменение порядка категорий</string>
     <string name="settings_sidebar_description_root">Автоматическая адаптация боковых значков к плейлисту или скрытие отдельных значков</string>
-    <string name="settings_ch_paging">Постраничная навигация клавишами CH+/CH−</string>
-    <string name="settings_ch_paging_description">Переход вверх и вниз по спискам категорий и элементов клавишами CH+ / CH−</string>
+    <string name="settings_ch_paging">Постраничная навигация клавишами CH+/RW · CH−/FF</string>
+    <string name="settings_ch_paging_description">Переход вверх и вниз по спискам категорий и элементов клавишами CH+/RW / CH−/FF</string>
     <!-- Translators: Settings navigation label for the long-press content menus. -->
     <string name="settings_content_menus_title">Меню долгого нажатия</string>
     <!-- Translators: Description of the long-press content menus settings. -->
@@ -681,6 +681,12 @@
     <string name="settings_customize_rename_or_delete_category">Переименовать или удалить категорию</string>
     <string name="settings_customize_new_category">＋ Новая категория</string>
     <string name="settings_customize_sort_button">Сортировка: <xliff:g id="label">%1$s</xliff:g> ▾</string>
+
+    <string name="settings_customize_filter_button">Фильтр: <xliff:g id="label">%1$s</xliff:g> ▾</string>
+    <string name="settings_customize_filter_title">Фильтр списка</string>
+    <string name="settings_customize_filter_all">Все</string>
+    <string name="settings_customize_filter_visible">Видимые</string>
+    <string name="settings_customize_filter_hidden">Скрытые</string>
     <string name="settings_customize_new_categories_button">Новые категории: <xliff:g id="label">%1$s</xliff:g> ▾</string>
     <string name="settings_customize_rename_hint">Только для этого профиля. Оставьте поле пустым, чтобы восстановить «<xliff:g id="name">%1$s</xliff:g>».</string>
     <string name="settings_customize_remove_pin_title">Снять блокировку с помощью PIN?</string>
@@ -1094,7 +1100,12 @@
     <string name="settings_main_interface_font">Шрифт основного интерфейса</string>
     <string name="settings_popup_font">Шрифт всплывающих окон</string>
     <string name="settings_choose_font">Выберите шрифт</string>
-    <string name="settings_font_size_range">Настройте текст приложения от <xliff:g id="min">%1$d</xliff:g>%% до <xliff:g id="max">%2$d</xliff:g>%%. Размер субтитров настраивается отдельно.</string>
+    <string name="settings_font_size_range">Настройте основной текст приложения, но не всплывающих окон, от <xliff:g id="min">%1$d</xliff:g>%% до <xliff:g id="max">%2$d</xliff:g>%%. Размер субтитров настраивается отдельно.</string>
+    <string name="settings_popup_font_size">Размер шрифта всплывающих окон</string>
+    <string name="settings_popup_font_size_description">Изменяет только текст в диалогах и меню</string>
+    <string name="settings_popup_size">Размер всплывающих окон</string>
+    <string name="settings_popup_size_description">Масштабируйте диалоги и меню без изменения размера текста</string>
+    <string name="settings_popup_size_range">Масштабируйте диалоги и меню (<xliff:g id="min">%1$d</xliff:g>%%–<xliff:g id="max">%2$d</xliff:g>%%).</string>
     <string name="settings_font_preview">Развлечения — это просто.</string>
     <string name="settings_search_keywords_fonts">шрифт текст размер типографика окно чтение доступность</string>
     <string name="settings_font_system_sans">Системный шрифт без засечек</string>
@@ -1121,6 +1132,25 @@
     <string name="settings_glass_highlight_title">Яркость блика</string>
     <string name="settings_glass_highlight_description">Настройте свет и контур стекла в фокусе.</string>
     <string name="settings_glass_live_preview">Предпросмотр</string>
+    <string name="settings_glass_screen_description">Полупрозрачные матовые панели, фоновое изображение и прозрачность</string>
+    <string name="settings_glass_master_description">Полупрозрачные матовые панели поверх фоновой фотографии или собственного фона приложения.</string>
+    <string name="settings_glass_background_image">Выберите фоновое изображение</string>
+    <string name="settings_glass_surface_transparency_title">Прозрачность</string>
+    <string name="settings_glass_background_blur_title">Размытие / матовость</string>
+    <string name="settings_glass_section_appearance">Внешний вид</string>
+    <string name="settings_glass_section_fine_tuning">Дополнительные параметры</string>
+    <string name="settings_glass_section_behavior">Поведение</string>
+    <string name="settings_glass_apply_to">Стеклянные поверхности</string>
+    <string name="settings_glass_surface_all">Все</string>
+    <string name="settings_glass_background_action_description">Выберите фоновое изображение</string>
+    <string name="settings_glass_transparency_short_description">20–100 · 5</string>
+    <string name="settings_glass_blur_short_description">0–100 · 10</string>
+    <string name="settings_glass_highlight_short_description">Настройте свет и контур стекла в фокусе.</string>
+    <string name="settings_glass_full_transparency_short">Разрешить полную прозрачность</string>
+    <string name="settings_glass_full_transparency_short_description">Отключает автоматический порог читаемости для максимально прозрачного стекла.</string>
+    <string name="settings_glass_depth_effects_short">Глубина и тени</string>
+    <string name="settings_glass_depth_effects_short_description">Включает свет при перемещении фокуса, лёгкий параллакс и движение глубины.</string>
+    <string name="settings_glass_reset_balanced">Сбросить: Сбалансированное</string>
     <string name="settings_glass_full_transparency_title">Разрешить полную прозрачность</string>
     <string name="settings_glass_full_transparency_description">Отключает автоматический порог читаемости для максимально прозрачного стекла.</string>
     <string name="settings_glass_depth_title">Глубина и тени</string>
@@ -1156,4 +1186,11 @@
         <item quantity="many"><xliff:g id="count">%1$d</xliff:g> совпадений</item>
         <item quantity="other"><xliff:g id="count">%1$d</xliff:g> совпадения</item>
     </plurals>
+    <string name="settings_guide_width">Ширина столбцов телегида</string>
+    <string name="settings_guide_width_description">Измените ширину списка каналов и временной шкалы EPG в телегиде.</string>
+    <string name="settings_search_keywords_guide_width">телегид epg канал список временная шкала столбец панель ширина размер макет</string>
+    <string name="settings_guide_width_summary">Список каналов %1$d%% · Шкала EPG %2$d%%</string>
+    <string name="settings_guide_width_help">• Список каналов и шкала EPG занимают одну строку, поэтому их сумма должна быть 100%%.\n• При расширении списка каналов видно меньше шкалы; длительность передач и масштаб времени не меняются.\n• Оба столбца остаются не уже 10%%.\n• Сброс устанавливает 10%% для списка каналов и 90%% для шкалы EPG.\n• Отключение настройки возвращает стандартный вид без потери сохранённых значений.</string>
+    <string name="settings_guide_width_channels">Список каналов</string>
+    <string name="settings_guide_width_epg">Шкала EPG</string>
 </resources>

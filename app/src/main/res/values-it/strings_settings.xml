@@ -67,19 +67,19 @@
     <string name="settings_proxy_connection_failed">Impossibile connettersi al proxy (controlla host/porta).</string>
     <string name="settings_proxy_http">Il proxy ha restituito HTTP <xliff:g id="code">%1$d</xliff:g></string>
     <string name="settings_proxy_failed">Verifica del proxy non riuscita.</string>
-    <string name="settings_ch_nav_title">Scorrimento pagine con i tasti CH+/−</string>
-    <string name="settings_ch_nav_description">Scorri per pagina l\'elenco delle categorie o degli elementi con i tasti CH+ e CH− del telecomando.</string>
-    <string name="settings_ch_nav_enabled">Usa i tasti CH+/− per scorrere gli elenchi</string>
-    <string name="settings_ch_nav_enabled_description">Quando l\'opzione è attiva, CH+ e CH− consentono di saltare elementi nel riquadro evidenziato (barra delle categorie o elenco degli elementi, compreso l\'elenco Personalizza categorie). Quando è disattivata, questi tasti non eseguono alcuna azione in tali schermate.</string>
+    <string name="settings_ch_nav_title">Scorrimento pagine con i tasti CH+/RW · CH−/FF</string>
+    <string name="settings_ch_nav_description">Scorri per pagina l\'elenco delle categorie o degli elementi con i tasti CH+/RW e CH−/FF del telecomando.</string>
+    <string name="settings_ch_nav_enabled">Usa i tasti CH+/RW · CH−/FF per scorrere gli elenchi</string>
+    <string name="settings_ch_nav_enabled_description">Quando l\'opzione è attiva, CH+/RW e CH−/FF consentono di saltare elementi nel riquadro evidenziato (barra delle categorie o elenco degli elementi, compreso l\'elenco Personalizza categorie). Quando è disattivata, questi tasti non eseguono alcuna azione in tali schermate.</string>
     <string name="settings_ch_nav_up">Salto CH+ (verso il primo elemento)</string>
-    <string name="settings_ch_nav_up_description">Numero di elementi saltati verso l\'alto premendo una volta CH+. Una pressione prolungata porta sempre al primo elemento.</string>
+    <string name="settings_ch_nav_up_description">Numero di elementi saltati verso l\'alto premendo una volta CH+/RW. Una pressione prolungata porta sempre al primo elemento.</string>
     <string name="settings_ch_nav_down">Salto CH− (verso l\'ultimo elemento)</string>
-    <string name="settings_ch_nav_down_description">Numero di elementi saltati verso il basso premendo una volta CH−. Una pressione prolungata porta sempre all\'ultimo elemento.</string>
+    <string name="settings_ch_nav_down_description">Numero di elementi saltati verso il basso premendo una volta CH−/FF. Una pressione prolungata porta sempre all\'ultimo elemento.</string>
     <string name="settings_skip_counts">Numero di elementi da saltare</string>
     <string name="settings_how_it_works">Come funziona</string>
-    <string name="settings_ch_nav_help">• I salti si fermano alle estremità, quindi negli elenchi brevi basta una pressione per raggiungere la fine.\n• Pressione prolungata di CH+ = primo elemento; pressione prolungata di CH− = ultimo elemento.\n• La pressione prolungata è disattivata nell\'elenco \"Tutti\" (ogni canale/film/serie) — in questo elenco è comunque possibile saltare elementi con una pressione breve.\n• Si applica al riquadro attualmente evidenziato — la barra delle categorie o l\'elenco/griglia degli elementi.\n• Consente inoltre di scorrere per pagina l\'elenco delle categorie in Impostazioni → Personalizza categorie ed elementi.</string>
+    <string name="settings_ch_nav_help">• I salti si fermano alle estremità, quindi negli elenchi brevi basta una pressione per raggiungere la fine.\n• Pressione prolungata di CH+/RW = primo elemento; pressione prolungata di CH−/FF = ultimo elemento.\n• La pressione prolungata è disattivata nell\'elenco \"Tutti\" (ogni canale/film/serie) — in questo elenco è comunque possibile saltare elementi con una pressione breve.\n• Si applica al riquadro attualmente evidenziato — la barra delle categorie o l\'elenco/griglia degli elementi.\n• Consente inoltre di scorrere per pagina l\'elenco delle categorie in Impostazioni → Personalizza categorie ed elementi.</string>
     <string name="settings_large_skips_warning">I salti ampi superano la fine degli elenchi brevi e possono risultare bruschi sui TV meno potenti.</string>
-    <string name="settings_ch_nav_picker">Scorrimento pagine con i tasti CH+/−</string>
+    <string name="settings_ch_nav_picker">Scorrimento pagine con i tasti CH+/RW/−</string>
     <string name="settings_weather">Meteo</string>
     <string name="settings_top_bar_weather">Meteo nella barra superiore</string>
     <string name="settings_show_weather">Mostra meteo</string>
@@ -179,8 +179,8 @@
     <string name="settings_customize">Personalizza categorie ed elementi</string>
     <string name="settings_customize_nav_description">Nascondi e mostra elementi, rinomina e riordina le categorie</string>
     <string name="settings_sidebar_description_root">Adatta automaticamente le icone laterali alla tua playlist oppure nascondine alcune</string>
-    <string name="settings_ch_paging">Scorrimento pagine con i tasti CH+/−</string>
-    <string name="settings_ch_paging_description">Salta verso l\'alto o il basso negli elenchi di categorie ed elementi con i tasti CH+ e CH−</string>
+    <string name="settings_ch_paging">Scorrimento pagine con i tasti CH+/RW/−</string>
+    <string name="settings_ch_paging_description">Salta verso l\'alto o il basso negli elenchi di categorie ed elementi con i tasti CH+/RW e CH−/FF</string>
     <!-- Translators: Settings navigation label for the long-press content menus. -->
     <string name="settings_content_menus_title">Menu con pressione prolungata</string>
     <!-- Translators: Description of the long-press content menus settings. -->
@@ -676,6 +676,12 @@
     <string name="settings_customize_rename_or_delete_category">Rinomina o elimina categoria</string>
     <string name="settings_customize_new_category">＋ Nuova categoria</string>
     <string name="settings_customize_sort_button">Ordina: <xliff:g id="label">%1$s</xliff:g> ▾</string>
+
+    <string name="settings_customize_filter_button">Filtro: <xliff:g id="label">%1$s</xliff:g> ▾</string>
+    <string name="settings_customize_filter_title">Filtra elenco</string>
+    <string name="settings_customize_filter_all">Tutti</string>
+    <string name="settings_customize_filter_visible">Visibili</string>
+    <string name="settings_customize_filter_hidden">Nascosti</string>
     <string name="settings_customize_new_categories_button">Nuove categorie: <xliff:g id="label">%1$s</xliff:g> ▾</string>
     <string name="settings_customize_rename_hint">Solo per questo profilo. Lascia vuoto per ripristinare “<xliff:g id="name">%1$s</xliff:g>”.</string>
     <string name="settings_customize_remove_pin_title">Rimuovere il blocco con PIN?</string>
@@ -1076,7 +1082,12 @@
     <string name="settings_main_interface_font">Carattere dell’interfaccia principale</string>
     <string name="settings_popup_font">Carattere dei popup</string>
     <string name="settings_choose_font">Scegli carattere</string>
-    <string name="settings_font_size_range">Regola il testo dell’app dal <xliff:g id="min">%1$d</xliff:g>%% al <xliff:g id="max">%2$d</xliff:g>%%. I sottotitoli mantengono la propria dimensione.</string>
+    <string name="settings_font_size_range">Regola il testo principale dell’app, non i popup, dal <xliff:g id="min">%1$d</xliff:g>%% al <xliff:g id="max">%2$d</xliff:g>%%. I sottotitoli mantengono la propria dimensione.</string>
+    <string name="settings_popup_font_size">Dimensione carattere popup</string>
+    <string name="settings_popup_font_size_description">Modifica solo il testo nelle finestre di dialogo e nei menu</string>
+    <string name="settings_popup_size">Dimensione popup</string>
+    <string name="settings_popup_size_description">Ridimensiona finestre di dialogo e menu senza cambiare le dimensioni del testo</string>
+    <string name="settings_popup_size_range">Ridimensiona finestre di dialogo e menu (<xliff:g id="min">%1$d</xliff:g>%%–<xliff:g id="max">%2$d</xliff:g>%%).</string>
     <string name="settings_font_preview">Intrattenimento, in modo semplice.</string>
     <string name="settings_search_keywords_fonts">carattere testo dimensione tipografia popup lettura accessibilità</string>
     <string name="settings_font_system_sans">Sans di sistema</string>
@@ -1103,6 +1114,25 @@
     <string name="settings_glass_highlight_title">Intensità del riflesso</string>
     <string name="settings_glass_highlight_description">Regola la luce e il bordo del vetro selezionato.</string>
     <string name="settings_glass_live_preview">Anteprima dal vivo</string>
+    <string name="settings_glass_screen_description">Pannelli traslucidi satinati, immagine di sfondo e trasparenza</string>
+    <string name="settings_glass_master_description">Pannelli traslucidi satinati sopra una foto di sfondo o sopra lo sfondo dell\'app.</string>
+    <string name="settings_glass_background_image">Scegli un\'immagine di sfondo</string>
+    <string name="settings_glass_surface_transparency_title">Trasparenza</string>
+    <string name="settings_glass_background_blur_title">Sfocatura / Satinatura</string>
+    <string name="settings_glass_section_appearance">Aspetto</string>
+    <string name="settings_glass_section_fine_tuning">Opzioni avanzate</string>
+    <string name="settings_glass_section_behavior">Comportamento</string>
+    <string name="settings_glass_apply_to">Superfici con effetto vetro</string>
+    <string name="settings_glass_surface_all">Tutti</string>
+    <string name="settings_glass_background_action_description">Scegli un\'immagine di sfondo</string>
+    <string name="settings_glass_transparency_short_description">20–100 · 5</string>
+    <string name="settings_glass_blur_short_description">0–100 · 10</string>
+    <string name="settings_glass_highlight_short_description">Regola la luce e il bordo del vetro selezionato.</string>
+    <string name="settings_glass_full_transparency_short">Consenti trasparenza completa</string>
+    <string name="settings_glass_full_transparency_short_description">Disattiva il limite automatico di leggibilità per un vetro più trasparente possibile.</string>
+    <string name="settings_glass_depth_effects_short">Profondità e ombre</string>
+    <string name="settings_glass_depth_effects_short_description">Attiva la luce che segue il focus, la parallasse delicata e il movimento di profondità.</string>
+    <string name="settings_glass_reset_balanced">Reimposta: Bilanciato</string>
     <string name="settings_glass_full_transparency_title">Consenti trasparenza completa</string>
     <string name="settings_glass_full_transparency_description">Disattiva il limite automatico di leggibilità per un vetro più trasparente possibile.</string>
     <string name="settings_glass_depth_title">Profondità e ombre</string>
@@ -1135,4 +1165,11 @@
         <item quantity="many"><xliff:g id="count">%1$d</xliff:g> di corrispondenze</item>
         <item quantity="other"><xliff:g id="count">%1$d</xliff:g> corrispondenze</item>
     </plurals>
+    <string name="settings_guide_width">Larghezze colonne guida</string>
+    <string name="settings_guide_width_description">Ridimensiona l’elenco canali e la sequenza temporale EPG nella guida TV.</string>
+    <string name="settings_search_keywords_guide_width">guida epg canale elenco sequenza temporale colonna pannello larghezza dimensione layout</string>
+    <string name="settings_guide_width_summary">Elenco canali %1$d%% · Sequenza temporale EPG %2$d%%</string>
+    <string name="settings_guide_width_help">• L’elenco canali e la sequenza temporale EPG condividono una riga, quindi il totale deve essere 100%%.\n• Allargando l’elenco canali si vede meno della sequenza temporale; durata dei programmi e scala temporale non cambiano.\n• Entrambe le colonne restano almeno al 10%%.\n• Ripristina imposta l’elenco canali al 10%% e la sequenza temporale EPG al 90%%.\n• Disattivando la personalizzazione viene ripristinato il layout standard senza perdere i valori.</string>
+    <string name="settings_guide_width_channels">Elenco canali</string>
+    <string name="settings_guide_width_epg">Sequenza temporale EPG</string>
 </resources>

@@ -132,21 +132,21 @@
     <!-- Translators: Generic proxy test failure message. -->
     <string name="settings_proxy_failed">Proxy test failed.</string>
     <!-- Translators: Section header for the CH+/CH- key paging feature. -->
-    <string name="settings_ch_nav_title">CH+- Key Paging</string>
+    <string name="settings_ch_nav_title">CH+/RW · CH−/FF Key Paging</string>
     <!-- Translators: Description of the CH+/CH- key paging feature. -->
-    <string name="settings_ch_nav_description">Page the category or item list with the remote\'s CH+ / CH− keys.</string>
+    <string name="settings_ch_nav_description">Page the category or item list with the remote\'s CH+/RW / CH−/FF keys.</string>
     <!-- Translators: Toggle label to enable CH+/CH- key paging. -->
-    <string name="settings_ch_nav_enabled">Use CH+- keys to page lists</string>
+    <string name="settings_ch_nav_enabled">Use CH+/RW · CH−/FF keys to page lists</string>
     <!-- Translators: Description of what happens when CH+/CH- paging is enabled. -->
-    <string name="settings_ch_nav_enabled_description">When on, CH+ and CH− skip inside the focused panel (category rail or item list, and the Customize category list). When off, those keys do nothing in those screens.</string>
+    <string name="settings_ch_nav_enabled_description">When on, CH+/RW and CH−/FF skip inside the focused panel (category rail or item list, and the Customize category list). When off, those keys do nothing in those screens.</string>
     <!-- Translators: Setting label for the CH+ skip count (items jumped per press toward the first item). -->
     <string name="settings_ch_nav_up">CH+ skip (toward first)</string>
     <!-- Translators: Description of the CH+ skip count setting. -->
-    <string name="settings_ch_nav_up_description">How many items one CH+ press jumps up. Long-press always goes to the first item.</string>
+    <string name="settings_ch_nav_up_description">How many items one CH+/RW press jumps up. Long-press always goes to the first item.</string>
     <!-- Translators: Setting label for the CH- skip count (items jumped per press toward the last item). -->
     <string name="settings_ch_nav_down">CH− skip (toward last)</string>
     <!-- Translators: Description of the CH- skip count setting. -->
-    <string name="settings_ch_nav_down_description">How many items one CH− press jumps down. Long-press always goes to the last item.</string>
+    <string name="settings_ch_nav_down_description">How many items one CH−/FF press jumps down. Long-press always goes to the last item.</string>
     <!-- Translators: Section header for the skip count settings. -->
     <string name="settings_skip_counts">Skip counts</string>
     <!-- Translators: Collapsible help section header explaining CH+/CH- behavior. -->
@@ -160,7 +160,7 @@
     <!-- Translators: Warning about large skip values on low-end TVs. -->
     <string name="settings_large_skips_warning">Large skips overshoot short lists and may feel jumpy on low-end TVs.</string>
     <!-- Translators: Picker title for the CH+/CH- key paging setting. -->
-    <string name="settings_ch_nav_picker">CH+- key paging</string>
+    <string name="settings_ch_nav_picker">CH+/RW · CH−/FF key paging</string>
     <!-- Translators: Section header for weather settings. -->
     <string name="settings_weather">Weather</string>
     <!-- Translators: Setting label for the top-bar weather chip. -->
@@ -404,9 +404,9 @@
     <!-- Translators: Description of the Sidebar Menu Customization settings. -->
     <string name="settings_sidebar_description_root">Auto-adapt side icons to your playlist, or hide specific ones</string>
     <!-- Translators: Settings navigation label for CH+ Key Paging. -->
-    <string name="settings_ch_paging">CH+- Key Paging</string>
+    <string name="settings_ch_paging">CH+/RW · CH−/FF Key Paging</string>
     <!-- Translators: Description of the CH+ Key Paging settings. -->
-    <string name="settings_ch_paging_description">Skip up/down in the category &amp; item lists with the CH+ / CH− keys</string>
+    <string name="settings_ch_paging_description">Skip up/down in the category &amp; item lists with the CH+/RW / CH−/FF keys</string>
     <!-- Translators: Settings navigation label for the long-press content menus. -->
     <string name="settings_content_menus_title">Long-press menus</string>
     <!-- Translators: Description of the long-press content menus settings. -->
@@ -478,7 +478,17 @@
     <string name="settings_main_interface_font">Main interface font</string>
     <string name="settings_popup_font">Popups font</string>
     <string name="settings_choose_font">Choose font</string>
-    <string name="settings_font_size_range">Adjust app text from <xliff:g id="min">%1$d</xliff:g>%% to <xliff:g id="max">%2$d</xliff:g>%%. Subtitles keep their own size.</string>
+    <string name="settings_font_size_range">Adjust main app text, not popups, from <xliff:g id="min">%1$d</xliff:g>%% to <xliff:g id="max">%2$d</xliff:g>%%. Subtitles keep their own size.</string>
+    <!-- Translators: Font-size control that affects text inside dialogs and popup menus only. -->
+    <string name="settings_popup_font_size">Popup font size</string>
+    <!-- Translators: Clarifies that this font-size control does not affect the main app interface. -->
+    <string name="settings_popup_font_size_description">Changes text in dialogs and menus only</string>
+    <!-- Translators: Settings row controlling the physical size of dialog and popup-menu boxes. -->
+    <string name="settings_popup_size">Popup size</string>
+    <!-- Translators: Description for popup box-size control; font size is controlled separately. -->
+    <string name="settings_popup_size_description">Scale dialog and menu boxes without changing their text size</string>
+    <!-- Translators: Popup box-size picker range. 'min' and 'max' are percentages. -->
+    <string name="settings_popup_size_range">Scale dialog and menu boxes (<xliff:g id="min">%1$d</xliff:g>%%–<xliff:g id="max">%2$d</xliff:g>%%).</string>
     <string name="settings_font_preview">Entertainment, made simple.</string>
     <string name="settings_search_keywords_fonts">font text size typeface typography popup reading accessibility</string>
     <string name="settings_font_system_sans">System Sans</string>
@@ -1325,6 +1335,17 @@ Choose Balanced if a channel becomes unreliable.</string>
     <string name="settings_customize_new_category">＋ New category</string>
     <!-- Translators: Compact sort button. 'label' is the selected sort order. Keep the trailing disclosure symbol. -->
     <string name="settings_customize_sort_button">Sort: <xliff:g id="label">%1$s</xliff:g> ▾</string>
+
+    <!-- Translators: Compact Customize filter button. "label" is All, Visible, or Hidden. Keep the trailing disclosure symbol. -->
+    <string name="settings_customize_filter_button">Filter: <xliff:g id="label">%1$s</xliff:g> ▾</string>
+    <!-- Translators: Title of the picker that filters the Customize list by visibility. -->
+    <string name="settings_customize_filter_title">Filter list</string>
+    <!-- Translators: Show both visible and hidden entries in Customize. -->
+    <string name="settings_customize_filter_all">All</string>
+    <!-- Translators: Show only entries that are currently visible in the app. -->
+    <string name="settings_customize_filter_visible">Visible</string>
+    <!-- Translators: Show only entries the user has hidden. -->
+    <string name="settings_customize_filter_hidden">Hidden</string>
     <!-- Translators: Compact new-category behavior button. 'label' is Show or Hide. Keep the trailing disclosure symbol. -->
     <string name="settings_customize_new_categories_button">New categories: <xliff:g id="label">%1$s</xliff:g> ▾</string>
     <!-- Translators: Hint text in the rename dialog. 'name' is the current category name. -->
@@ -1947,6 +1968,13 @@ Resync and remove missing titles also allows removing titles the provider no lon
     <string name="settings_surround_forced_description">Surround — send Dolby/DTS to a real 5.1/7.1 receiver. If it goes silent or stutters, OwnTV still falls back to stereo and tells you.</string>
     <string name="settings_panel_width">Panel Width Adjustment</string>
     <string name="settings_panel_width_description">Resize the category, list and preview panels in Live TV, Movies &amp; Series.</string>
+    <string name="settings_guide_width">Guide Column Widths</string>
+    <string name="settings_guide_width_description">Resize the channel list and EPG timeline in the TV Guide.</string>
+    <string name="settings_search_keywords_guide_width">guide epg channel list timeline column panel width size resize layout</string>
+    <string name="settings_guide_width_summary">Channel list <xliff:g id="channels">%1$d</xliff:g>%% · EPG timeline <xliff:g id="epg">%2$d</xliff:g>%%</string>
+    <string name="settings_guide_width_help">• The channel list and EPG timeline share one row, so their percentages must add up to 100%%.\n• Widening the channel list shows less of the timeline at once; programme lengths and the time scale stay unchanged.\n• Both columns stay at 10%% or more.\n• Reset returns to 10%% channel list and 90%% EPG timeline.\n• Turning customization off restores the standard Guide layout without losing your values.</string>
+    <string name="settings_guide_width_channels">Channel list</string>
+    <string name="settings_guide_width_epg">EPG timeline</string>
     <string name="settings_search_keywords_epg_offset">epg guide time offset shift timezone east west hours</string>
     <string name="settings_search_keywords_panel_width">panel width size resize category list preview poster column layout live movies series</string>
     <string name="settings_search_keywords_live_preroll">prebuffer preroll pre-roll buffering buffer before playing rebuffer stutter freeze per playlist</string>
@@ -2012,6 +2040,25 @@ Resync and remove missing titles also allows removing titles the provider no lon
     <string name="settings_glass_highlight_title">Highlight strength</string>
     <string name="settings_glass_highlight_description">Adjust the focused glass light and rim.</string>
     <string name="settings_glass_live_preview">Live preview</string>
+    <string name="settings_glass_screen_description">Tune translucent surfaces and see every change immediately.</string>
+    <string name="settings_glass_master_description">Use translucent, frosted surfaces throughout OwnTV.</string>
+    <string name="settings_glass_background_image">Background image</string>
+    <string name="settings_glass_surface_transparency_title">Surface transparency</string>
+    <string name="settings_glass_background_blur_title">Background blur</string>
+    <string name="settings_glass_section_appearance">Appearance</string>
+    <string name="settings_glass_section_fine_tuning">Fine tuning</string>
+    <string name="settings_glass_section_behavior">Behavior</string>
+    <string name="settings_glass_apply_to">Apply glass to</string>
+    <string name="settings_glass_surface_all">All</string>
+    <string name="settings_glass_background_action_description">Choose local, remote, or clear</string>
+    <string name="settings_glass_transparency_short_description">20–100 percent, in steps of 5</string>
+    <string name="settings_glass_blur_short_description">0–100 percent, in steps of 10</string>
+    <string name="settings_glass_highlight_short_description">Focused glass edge and glow</string>
+    <string name="settings_glass_full_transparency_short">Full transparency</string>
+    <string name="settings_glass_full_transparency_short_description">Allow completely clear surfaces.</string>
+    <string name="settings_glass_depth_effects_short">Depth effects</string>
+    <string name="settings_glass_depth_effects_short_description">Use lift, shadow, and focus motion.</string>
+    <string name="settings_glass_reset_balanced">Reset to Balanced</string>
     <string name="settings_glass_full_transparency_title">Allow full transparency</string>
     <string name="settings_glass_full_transparency_description">Disables the automatic readability floor for the clearest possible glass.</string>
     <string name="settings_glass_depth_title">Depth &amp; shadows</string>

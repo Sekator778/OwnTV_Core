@@ -67,19 +67,19 @@
     <string name="settings_proxy_connection_failed">প্রক্সিতে সংযোগ করা যায়নি (হোস্ট/পোর্ট পরীক্ষা করুন)।</string>
     <string name="settings_proxy_http">প্রক্সি HTTP <xliff:g id="code">%1$d</xliff:g> ফেরত দিয়েছে</string>
     <string name="settings_proxy_failed">প্রক্সি পরীক্ষা ব্যর্থ হয়েছে।</string>
-    <string name="settings_ch_nav_title">CH+- বোতামে পৃষ্ঠা বদল</string>
-    <string name="settings_ch_nav_description">রিমোটের CH+ / CH− বোতাম দিয়ে বিভাগ বা আইটেমের তালিকার পৃষ্ঠা বদলান।</string>
-    <string name="settings_ch_nav_enabled">তালিকার পৃষ্ঠা বদলাতে CH+- বোতাম ব্যবহার করুন</string>
-    <string name="settings_ch_nav_enabled_description">চালু থাকলে, CH+ ও CH− ফোকাসে থাকা প্যানেলের ভেতরে এগিয়ে যায় (বিভাগের রেল বা আইটেমের তালিকা এবং বিভাগ নিজের মতো সাজানোর তালিকা)। বন্ধ থাকলে, ওই স্ক্রিনগুলোতে এই বোতামগুলো কিছু করবে না।</string>
+    <string name="settings_ch_nav_title">CH+/RW · CH−/FF বোতামে পৃষ্ঠা বদল</string>
+    <string name="settings_ch_nav_description">রিমোটের CH+/RW / CH−/FF বোতাম দিয়ে বিভাগ বা আইটেমের তালিকার পৃষ্ঠা বদলান।</string>
+    <string name="settings_ch_nav_enabled">তালিকার পৃষ্ঠা বদলাতে CH+/RW · CH−/FF বোতাম ব্যবহার করুন</string>
+    <string name="settings_ch_nav_enabled_description">চালু থাকলে, CH+/RW ও CH−/FF ফোকাসে থাকা প্যানেলের ভেতরে এগিয়ে যায় (বিভাগের রেল বা আইটেমের তালিকা এবং বিভাগ নিজের মতো সাজানোর তালিকা)। বন্ধ থাকলে, ওই স্ক্রিনগুলোতে এই বোতামগুলো কিছু করবে না।</string>
     <string name="settings_ch_nav_up">CH+ এড়িয়ে যাওয়া (প্রথমটির দিকে)</string>
-    <string name="settings_ch_nav_up_description">CH+ একবার চাপলে কতটি আইটেম ওপরের দিকে যাবে। দীর্ঘক্ষণ চাপলে সব সময় প্রথম আইটেমে যাবে।</string>
+    <string name="settings_ch_nav_up_description">CH+/RW একবার চাপলে কতটি আইটেম ওপরের দিকে যাবে। দীর্ঘক্ষণ চাপলে সব সময় প্রথম আইটেমে যাবে।</string>
     <string name="settings_ch_nav_down">CH− এড়িয়ে যাওয়া (শেষটির দিকে)</string>
-    <string name="settings_ch_nav_down_description">CH− একবার চাপলে কতটি আইটেম নিচের দিকে যাবে। দীর্ঘক্ষণ চাপলে সব সময় শেষ আইটেমে যাবে।</string>
+    <string name="settings_ch_nav_down_description">CH−/FF একবার চাপলে কতটি আইটেম নিচের দিকে যাবে। দীর্ঘক্ষণ চাপলে সব সময় শেষ আইটেমে যাবে।</string>
     <string name="settings_skip_counts">এড়িয়ে যাওয়ার সংখ্যা</string>
     <string name="settings_how_it_works">এটি যেভাবে কাজ করে</string>
-    <string name="settings_ch_nav_help">• শেষ প্রান্তে পৌঁছালে এড়িয়ে যাওয়া থেমে যায়, তাই ছোট তালিকা একবার চাপলেই শেষ পর্যন্ত পৌঁছায়।\n• CH+ দীর্ঘক্ষণ চাপা = প্রথম আইটেম, CH− দীর্ঘক্ষণ চাপা = শেষ আইটেম।\n• \"সব\" তালিকায় (প্রতিটি চ্যানেল / সিনেমা / সিরিজ) দীর্ঘক্ষণ চাপা নিষ্ক্রিয় — তবে সেখানে অল্প সময় চাপলে এড়িয়ে যাওয়া কাজ করে।\n• বর্তমানে যে প্যানেলে ফোকাস আছে, সেখানে প্রযোজ্য — বিভাগের রেল অথবা আইটেমের তালিকা/গ্রিড।\n• সেটিংস → বিভাগ ও আইটেম নিজের মতো সাজান-এর বিভাগ তালিকার পৃষ্ঠাও বদলায়।</string>
+    <string name="settings_ch_nav_help">• শেষ প্রান্তে পৌঁছালে এড়িয়ে যাওয়া থেমে যায়, তাই ছোট তালিকা একবার চাপলেই শেষ পর্যন্ত পৌঁছায়।\n• CH+/RW দীর্ঘক্ষণ চাপা = প্রথম আইটেম, CH−/FF দীর্ঘক্ষণ চাপা = শেষ আইটেম।\n• \"সব\" তালিকায় (প্রতিটি চ্যানেল / সিনেমা / সিরিজ) দীর্ঘক্ষণ চাপা নিষ্ক্রিয় — তবে সেখানে অল্প সময় চাপলে এড়িয়ে যাওয়া কাজ করে।\n• বর্তমানে যে প্যানেলে ফোকাস আছে, সেখানে প্রযোজ্য — বিভাগের রেল অথবা আইটেমের তালিকা/গ্রিড।\n• সেটিংস → বিভাগ ও আইটেম নিজের মতো সাজান-এর বিভাগ তালিকার পৃষ্ঠাও বদলায়।</string>
     <string name="settings_large_skips_warning">বেশি সংখ্যক আইটেম এড়িয়ে গেলে ছোট তালিকার শেষ পেরিয়ে যেতে পারে এবং কম ক্ষমতার TV-তে নেভিগেশন ঝাঁকুনিপূর্ণ মনে হতে পারে।</string>
-    <string name="settings_ch_nav_picker">CH+- বোতামে পৃষ্ঠা বদল</string>
+    <string name="settings_ch_nav_picker">CH+/RW · CH−/FF বোতামে পৃষ্ঠা বদল</string>
     <string name="settings_weather">আবহাওয়া</string>
     <string name="settings_top_bar_weather">শীর্ষ বারে আবহাওয়া</string>
     <string name="settings_show_weather">আবহাওয়া দেখান</string>
@@ -178,8 +178,8 @@
     <string name="settings_customize">বিভাগ ও আইটেম নিজের মতো সাজান</string>
     <string name="settings_customize_nav_description">আইটেম লুকান ও আবার দেখান, বিভাগের নাম বদলান ও পুনর্বিন্যাস করুন</string>
     <string name="settings_sidebar_description_root">প্লেলিস্ট অনুযায়ী পাশের আইকনগুলো স্বয়ংক্রিয়ভাবে মানিয়ে নিন অথবা নির্দিষ্টগুলো লুকান</string>
-    <string name="settings_ch_paging">CH+- বোতামে পৃষ্ঠা বদল</string>
-    <string name="settings_ch_paging_description">CH+ / CH− বোতাম দিয়ে বিভাগ ও আইটেমের তালিকায় ওপরে/নিচে এড়িয়ে যান</string>
+    <string name="settings_ch_paging">CH+/RW · CH−/FF বোতামে পৃষ্ঠা বদল</string>
+    <string name="settings_ch_paging_description">CH+/RW / CH−/FF বোতাম দিয়ে বিভাগ ও আইটেমের তালিকায় ওপরে/নিচে এড়িয়ে যান</string>
     <!-- Translators: Settings navigation label for the long-press content menus. -->
     <string name="settings_content_menus_title">লং-প্রেস মেনু</string>
     <!-- Translators: Description of the long-press content menus settings. -->
@@ -671,6 +671,12 @@
     <string name="settings_customize_rename_or_delete_category">বিভাগের নাম পরিবর্তন বা মুছুন</string>
     <string name="settings_customize_new_category">＋ নতুন বিভাগ</string>
     <string name="settings_customize_sort_button">সাজানোর ক্রম: <xliff:g id="label">%1$s</xliff:g> ▾</string>
+
+    <string name="settings_customize_filter_button">ফিল্টার: <xliff:g id="label">%1$s</xliff:g> ▾</string>
+    <string name="settings_customize_filter_title">তালিকা ফিল্টার করুন</string>
+    <string name="settings_customize_filter_all">সব</string>
+    <string name="settings_customize_filter_visible">দৃশ্যমান</string>
+    <string name="settings_customize_filter_hidden">লুকানো</string>
     <string name="settings_customize_new_categories_button">নতুন বিভাগ: <xliff:g id="label">%1$s</xliff:g> ▾</string>
     <string name="settings_customize_rename_hint">শুধু এই প্রোফাইলের জন্য। “<xliff:g id="name">%1$s</xliff:g>” ফিরিয়ে আনতে ফাঁকা রাখুন।</string>
     <string name="settings_customize_remove_pin_title">PIN লক সরাবেন?</string>
@@ -1058,7 +1064,12 @@
     <string name="settings_main_interface_font">মূল ইন্টারফেসের ফন্ট</string>
     <string name="settings_popup_font">পপআপের ফন্ট</string>
     <string name="settings_choose_font">ফন্ট বেছে নিন</string>
-    <string name="settings_font_size_range">অ্যাপের লেখা <xliff:g id="min">%1$d</xliff:g>%% থেকে <xliff:g id="max">%2$d</xliff:g>%% পর্যন্ত সমন্বয় করুন। সাবটাইটেলের নিজস্ব আকার থাকবে।</string>
+    <string name="settings_font_size_range">পপ-আপ নয়, মূল অ্যাপের লেখা <xliff:g id="min">%1$d</xliff:g>%% থেকে <xliff:g id="max">%2$d</xliff:g>%% পর্যন্ত সমন্বয় করুন। সাবটাইটেলের নিজস্ব আকার থাকবে।</string>
+    <string name="settings_popup_font_size">পপ-আপ ফন্টের আকার</string>
+    <string name="settings_popup_font_size_description">শুধু ডায়ালগ ও মেনুর লেখা পরিবর্তন করে</string>
+    <string name="settings_popup_size">পপ-আপের আকার</string>
+    <string name="settings_popup_size_description">লেখার আকার না বদলে ডায়ালগ ও মেনু বক্সের আকার পরিবর্তন করুন</string>
+    <string name="settings_popup_size_range">ডায়ালগ ও মেনু বক্সের আকার পরিবর্তন করুন (<xliff:g id="min">%1$d</xliff:g>%%–<xliff:g id="max">%2$d</xliff:g>%%)।</string>
     <string name="settings_font_preview">বিনোদন এখন আরও সহজ।</string>
     <string name="settings_search_keywords_fonts">ফন্ট লেখা আকার টাইপফেস পপআপ পড়া অ্যাক্সেসিবিলিটি</string>
     <string name="settings_font_system_sans">সিস্টেম স্যান্স</string>
@@ -1085,6 +1096,25 @@
     <string name="settings_glass_highlight_title">হাইলাইটের শক্তি</string>
     <string name="settings_glass_highlight_description">ফোকাস করা কাচের আলো ও প্রান্ত সামঞ্জস্য করুন।</string>
     <string name="settings_glass_live_preview">লাইভ প্রিভিউ</string>
+    <string name="settings_glass_screen_description">অর্ধস্বচ্ছ ফ্রস্টেড প্যানেল, পটভূমির ছবি ও স্বচ্ছতা</string>
+    <string name="settings_glass_master_description">পটভূমির ছবি বা অ্যাপের নিজস্ব পটভূমির ওপর স্বচ্ছ হিমায়িত প্যানেল।</string>
+    <string name="settings_glass_background_image">পটভূমির ছবি বেছে নিন</string>
+    <string name="settings_glass_surface_transparency_title">স্বচ্ছতা</string>
+    <string name="settings_glass_background_blur_title">ঝাপসা / হিমায়িত</string>
+    <string name="settings_glass_section_appearance">চেহারা</string>
+    <string name="settings_glass_section_fine_tuning">উন্নত বিকল্প</string>
+    <string name="settings_glass_section_behavior">আচরণ</string>
+    <string name="settings_glass_apply_to">গ্লাস পৃষ্ঠতল</string>
+    <string name="settings_glass_surface_all">সব</string>
+    <string name="settings_glass_background_action_description">পটভূমির ছবি বেছে নিন</string>
+    <string name="settings_glass_transparency_short_description">20–100 · 5</string>
+    <string name="settings_glass_blur_short_description">0–100 · 10</string>
+    <string name="settings_glass_highlight_short_description">ফোকাস করা কাচের আলো ও প্রান্ত সামঞ্জস্য করুন।</string>
+    <string name="settings_glass_full_transparency_short">সম্পূর্ণ স্বচ্ছতার অনুমতি দিন</string>
+    <string name="settings_glass_full_transparency_short_description">সবচেয়ে স্বচ্ছ কাচের জন্য স্বয়ংক্রিয় পাঠযোগ্যতার সীমা বন্ধ করে।</string>
+    <string name="settings_glass_depth_effects_short">গভীরতা ও ছায়া</string>
+    <string name="settings_glass_depth_effects_short_description">ফোকাস-ভ্রমণ আলো, সূক্ষ্ম প্যারালাক্স ও গভীরতার গতি চালু করে।</string>
+    <string name="settings_glass_reset_balanced">রিসেট করুন: ভারসাম্যপূর্ণ</string>
     <string name="settings_glass_full_transparency_title">সম্পূর্ণ স্বচ্ছতার অনুমতি দিন</string>
     <string name="settings_glass_full_transparency_description">সবচেয়ে স্বচ্ছ কাচের জন্য স্বয়ংক্রিয় পাঠযোগ্যতার সীমা বন্ধ করে।</string>
     <string name="settings_glass_depth_title">গভীরতা ও ছায়া</string>
@@ -1114,4 +1144,11 @@
         <item quantity="one"><xliff:g id="count">%1$d</xliff:g>টি মিল</item>
         <item quantity="other"><xliff:g id="count">%1$d</xliff:g>টি মিল</item>
     </plurals>
+    <string name="settings_guide_width">গাইড কলামের প্রস্থ</string>
+    <string name="settings_guide_width_description">টিভি গাইডে চ্যানেল তালিকা ও EPG টাইমলাইনের প্রস্থ বদলান।</string>
+    <string name="settings_search_keywords_guide_width">গাইড epg চ্যানেল তালিকা টাইমলাইন কলাম প্যানেল প্রস্থ আকার বিন্যাস</string>
+    <string name="settings_guide_width_summary">চ্যানেল তালিকা %1$d%% · EPG টাইমলাইন %2$d%%</string>
+    <string name="settings_guide_width_help">• চ্যানেল তালিকা ও EPG টাইমলাইন একই সারি ভাগ করে, তাই মোট অবশ্যই 100%% হতে হবে।\n• চ্যানেল তালিকা চওড়া করলে একবারে টাইমলাইনের কম অংশ দেখা যাবে; অনুষ্ঠানের দৈর্ঘ্য ও সময়ের স্কেল বদলাবে না।\n• উভয় কলাম কমপক্ষে 10%% থাকবে।\n• রিসেট করলে চ্যানেল তালিকা 10%% এবং EPG টাইমলাইন 90%% হবে।\n• কাস্টমাইজেশন বন্ধ করলে আপনার মান না হারিয়ে সাধারণ গাইড বিন্যাস ফিরে আসবে।</string>
+    <string name="settings_guide_width_channels">চ্যানেল তালিকা</string>
+    <string name="settings_guide_width_epg">EPG টাইমলাইন</string>
 </resources>

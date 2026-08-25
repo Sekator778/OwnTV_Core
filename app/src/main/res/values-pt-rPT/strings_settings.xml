@@ -67,19 +67,19 @@
     <string name="settings_proxy_connection_failed">Não foi possível estabelecer ligação ao proxy (verifique o anfitrião/a porta).</string>
     <string name="settings_proxy_http">O proxy devolveu HTTP <xliff:g id="code">%1$d</xliff:g></string>
     <string name="settings_proxy_failed">O teste do proxy falhou.</string>
-    <string name="settings_ch_nav_title">Paginação com as teclas CH+/CH−</string>
-    <string name="settings_ch_nav_description">Percorra a categoria ou a lista de itens por páginas com as teclas CH+/CH− do comando.</string>
-    <string name="settings_ch_nav_enabled">Utilizar as teclas CH+/CH− para percorrer listas por páginas</string>
-    <string name="settings_ch_nav_enabled_description">Quando esta opção está ativada, CH+ e CH− avançam dentro do painel com foco (faixa de categorias ou lista de itens, bem como a lista de categorias em Personalizar). Quando está desativada, estas teclas não têm qualquer efeito nesses ecrãs.</string>
+    <string name="settings_ch_nav_title">Paginação com as teclas CH+/RW · CH−/FF</string>
+    <string name="settings_ch_nav_description">Percorra a categoria ou a lista de itens por páginas com as teclas CH+/RW · CH−/FF do comando.</string>
+    <string name="settings_ch_nav_enabled">Utilizar as teclas CH+/RW · CH−/FF para percorrer listas por páginas</string>
+    <string name="settings_ch_nav_enabled_description">Quando esta opção está ativada, CH+/RW e CH−/FF avançam dentro do painel com foco (faixa de categorias ou lista de itens, bem como a lista de categorias em Personalizar). Quando está desativada, estas teclas não têm qualquer efeito nesses ecrãs.</string>
     <string name="settings_ch_nav_up">Avanço com CH+ (em direção ao primeiro)</string>
-    <string name="settings_ch_nav_up_description">O número de itens que cada pressão de CH+ faz subir. Uma pressão longa vai sempre para o primeiro item.</string>
+    <string name="settings_ch_nav_up_description">O número de itens que cada pressão de CH+/RW faz subir. Uma pressão longa vai sempre para o primeiro item.</string>
     <string name="settings_ch_nav_down">Avanço com CH− (em direção ao último)</string>
-    <string name="settings_ch_nav_down_description">O número de itens que cada pressão de CH− faz descer. Uma pressão longa vai sempre para o último item.</string>
+    <string name="settings_ch_nav_down_description">O número de itens que cada pressão de CH−/FF faz descer. Uma pressão longa vai sempre para o último item.</string>
     <string name="settings_skip_counts">Número de itens a avançar</string>
     <string name="settings_how_it_works">Como funciona</string>
-    <string name="settings_ch_nav_help">• Os avanços ficam limitados às extremidades, pelo que as listas curtas chegam ao fim com uma só pressão.\n• Pressão longa em CH+ = primeiro item; pressão longa em CH− = último item.\n• A pressão longa está desativada na lista \"Tudo\" (todos os canais/filmes/séries) — os avanços com uma pressão curta continuam a funcionar nessa lista.\n• Aplica-se ao painel que tiver o foco — a faixa de categorias ou a lista/grelha de itens.\n• Também percorre por páginas a lista de categorias em Definições → Personalizar categorias e itens.</string>
+    <string name="settings_ch_nav_help">• Os avanços ficam limitados às extremidades, pelo que as listas curtas chegam ao fim com uma só pressão.\n• Pressão longa em CH+/RW = primeiro item; pressão longa em CH−/FF = último item.\n• A pressão longa está desativada na lista \"Tudo\" (todos os canais/filmes/séries) — os avanços com uma pressão curta continuam a funcionar nessa lista.\n• Aplica-se ao painel que tiver o foco — a faixa de categorias ou a lista/grelha de itens.\n• Também percorre por páginas a lista de categorias em Definições → Personalizar categorias e itens.</string>
     <string name="settings_large_skips_warning">Os avanços grandes ultrapassam listas curtas e podem parecer bruscos em televisores de gama baixa.</string>
-    <string name="settings_ch_nav_picker">Paginação com as teclas CH+/CH−</string>
+    <string name="settings_ch_nav_picker">Paginação com as teclas CH+/RW · CH−/FF</string>
     <string name="settings_weather">Meteorologia</string>
     <string name="settings_top_bar_weather">Meteorologia na barra superior</string>
     <string name="settings_show_weather">Mostrar meteorologia</string>
@@ -179,8 +179,8 @@
     <string name="settings_customize">Personalizar categorias e itens</string>
     <string name="settings_customize_nav_description">Ocultar e voltar a mostrar itens, mudar o nome e reordenar categorias</string>
     <string name="settings_sidebar_description_root">Adaptar automaticamente os ícones laterais à sua lista de reprodução ou ocultar ícones específicos</string>
-    <string name="settings_ch_paging">Paginação com as teclas CH+/CH−</string>
-    <string name="settings_ch_paging_description">Subir/descer nas listas de categorias e itens com as teclas CH+/CH−</string>
+    <string name="settings_ch_paging">Paginação com as teclas CH+/RW · CH−/FF</string>
+    <string name="settings_ch_paging_description">Subir/descer nas listas de categorias e itens com as teclas CH+/RW · CH−/FF</string>
     <!-- Translators: Settings navigation label for the long-press content menus. -->
     <string name="settings_content_menus_title">Menus de toque longo</string>
     <!-- Translators: Description of the long-press content menus settings. -->
@@ -676,6 +676,12 @@
     <string name="settings_customize_rename_or_delete_category">Mudar o nome ou eliminar a categoria</string>
     <string name="settings_customize_new_category">＋ Nova categoria</string>
     <string name="settings_customize_sort_button">Ordenar: <xliff:g id="label">%1$s</xliff:g> ▾</string>
+
+    <string name="settings_customize_filter_button">Filtro: <xliff:g id="label">%1$s</xliff:g> ▾</string>
+    <string name="settings_customize_filter_title">Filtrar lista</string>
+    <string name="settings_customize_filter_all">Todos</string>
+    <string name="settings_customize_filter_visible">Visíveis</string>
+    <string name="settings_customize_filter_hidden">Ocultos</string>
     <string name="settings_customize_new_categories_button">Novas categorias: <xliff:g id="label">%1$s</xliff:g> ▾</string>
     <string name="settings_customize_rename_hint">Apenas para este perfil. Deixe em branco para repor “<xliff:g id="name">%1$s</xliff:g>”.</string>
     <string name="settings_customize_remove_pin_title">Remover o bloqueio por PIN?</string>
@@ -1076,7 +1082,12 @@
     <string name="settings_main_interface_font">Tipo de letra da interface principal</string>
     <string name="settings_popup_font">Tipo de letra das janelas de contexto</string>
     <string name="settings_choose_font">Escolher tipo de letra</string>
-    <string name="settings_font_size_range">Ajuste o texto da aplicação de <xliff:g id="min">%1$d</xliff:g>%% a <xliff:g id="max">%2$d</xliff:g>%%. As legendas mantêm o seu próprio tamanho.</string>
+    <string name="settings_font_size_range">Ajuste o texto principal da aplicação, não os pop-ups, de <xliff:g id="min">%1$d</xliff:g>%% a <xliff:g id="max">%2$d</xliff:g>%%. As legendas mantêm o seu próprio tamanho.</string>
+    <string name="settings_popup_font_size">Tamanho do tipo de letra dos pop-ups</string>
+    <string name="settings_popup_font_size_description">Altera apenas o texto nas caixas de diálogo e nos menus</string>
+    <string name="settings_popup_size">Tamanho dos pop-ups</string>
+    <string name="settings_popup_size_description">Redimensione caixas de diálogo e menus sem alterar o tamanho do texto</string>
+    <string name="settings_popup_size_range">Redimensione caixas de diálogo e menus (<xliff:g id="min">%1$d</xliff:g>%%–<xliff:g id="max">%2$d</xliff:g>%%).</string>
     <string name="settings_font_preview">Entretenimento de forma simples.</string>
     <string name="settings_search_keywords_fonts">tipo de letra texto tamanho tipografia janela leitura acessibilidade</string>
     <string name="settings_font_system_sans">Sans do sistema</string>
@@ -1103,6 +1114,25 @@
     <string name="settings_glass_highlight_title">Intensidade do brilho</string>
     <string name="settings_glass_highlight_description">Ajuste a luz e o contorno do vidro em foco.</string>
     <string name="settings_glass_live_preview">Pré-visualização em direto</string>
+    <string name="settings_glass_screen_description">Painéis translúcidos foscos, imagem de fundo e transparência</string>
+    <string name="settings_glass_master_description">Painéis translúcidos de vidro fosco sobre uma fotografia de fundo ou sobre a imagem de fundo da própria aplicação.</string>
+    <string name="settings_glass_background_image">Escolher uma imagem de fundo</string>
+    <string name="settings_glass_surface_transparency_title">Transparência</string>
+    <string name="settings_glass_background_blur_title">Desfocagem / Fosco</string>
+    <string name="settings_glass_section_appearance">Aspeto</string>
+    <string name="settings_glass_section_fine_tuning">Opções avançadas</string>
+    <string name="settings_glass_section_behavior">Comportamento</string>
+    <string name="settings_glass_apply_to">Superfícies de vidro</string>
+    <string name="settings_glass_surface_all">Todos</string>
+    <string name="settings_glass_background_action_description">Escolher uma imagem de fundo</string>
+    <string name="settings_glass_transparency_short_description">20–100 · 5</string>
+    <string name="settings_glass_blur_short_description">0–100 · 10</string>
+    <string name="settings_glass_highlight_short_description">Ajuste a luz e o contorno do vidro em foco.</string>
+    <string name="settings_glass_full_transparency_short">Permitir transparência total</string>
+    <string name="settings_glass_full_transparency_short_description">Desativa o limite automático de legibilidade para obter o vidro mais transparente.</string>
+    <string name="settings_glass_depth_effects_short">Profundidade e sombras</string>
+    <string name="settings_glass_depth_effects_short_description">Ativa a luz que acompanha o foco, a paralaxe subtil e o movimento de profundidade.</string>
+    <string name="settings_glass_reset_balanced">Repor: Equilibrado</string>
     <string name="settings_glass_full_transparency_title">Permitir transparência total</string>
     <string name="settings_glass_full_transparency_description">Desativa o limite automático de legibilidade para obter o vidro mais transparente.</string>
     <string name="settings_glass_depth_title">Profundidade e sombras</string>
@@ -1135,4 +1165,11 @@
         <item quantity="many"><xliff:g id="count">%1$d</xliff:g> de correspondências</item>
         <item quantity="other"><xliff:g id="count">%1$d</xliff:g> correspondências</item>
     </plurals>
+    <string name="settings_guide_width">Larguras das colunas do guia</string>
+    <string name="settings_guide_width_description">Redimensione a lista de canais e a linha temporal do EPG no guia de TV.</string>
+    <string name="settings_search_keywords_guide_width">guia epg canal lista linha temporal coluna painel largura tamanho disposição</string>
+    <string name="settings_guide_width_summary">Lista de canais %1$d%% · Linha temporal EPG %2$d%%</string>
+    <string name="settings_guide_width_help">• A lista de canais e a linha temporal EPG partilham uma linha, pelo que o total tem de ser 100%%.\n• Alargar a lista de canais mostra menos da linha temporal; a duração dos programas e a escala de tempo não mudam.\n• Ambas as colunas mantêm pelo menos 10%%.\n• Repor define a lista de canais para 10%% e a linha temporal EPG para 90%%.\n• Desativar a personalização restaura a disposição padrão sem apagar os seus valores.</string>
+    <string name="settings_guide_width_channels">Lista de canais</string>
+    <string name="settings_guide_width_epg">Linha temporal EPG</string>
 </resources>

@@ -103,6 +103,7 @@
         <item quantity="other"><xliff:g id="category">%1$s</xliff:g> (<xliff:g id="count">%2$d</xliff:g> സീരീസ്)</item>
     </plurals>
     <string name="content_provider">സേവനദാതാവ്</string>
+    <string name="content_provider_name">സേവനദാതാവ്: %1$s</string>
     <string name="content_no_series_found">“<xliff:g id="query">%1$s</xliff:g>” എന്നതിനായി സീരീസ് ഒന്നും കണ്ടെത്തിയില്ല</string>
     <string name="content_search_movies"><xliff:g id="category">%1$s</xliff:g>…</string>
     <string name="content_search_series"><xliff:g id="category">%1$s</xliff:g>…</string>

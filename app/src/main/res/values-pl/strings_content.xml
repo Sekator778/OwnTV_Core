@@ -115,6 +115,7 @@
         <item quantity="other"><xliff:g id="category">%1$s</xliff:g> (<xliff:g id="count">%2$d</xliff:g> serialu)</item>
     </plurals>
     <string name="content_provider">Dostawca</string>
+    <string name="content_provider_name">Dostawca: %1$s</string>
     <string name="content_no_series_found">Nie znaleziono seriali dla „<xliff:g id="query">%1$s</xliff:g>”</string>
     <string name="content_search_movies"><xliff:g id="category">%1$s</xliff:g>…</string>
     <string name="content_search_series"><xliff:g id="category">%1$s</xliff:g>…</string>

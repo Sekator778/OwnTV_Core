@@ -67,19 +67,19 @@
     <string name="settings_proxy_connection_failed">Impossible de se connecter au proxy (vérifiez l’hôte et le port).</string>
     <string name="settings_proxy_http">Le proxy a renvoyé HTTP <xliff:g id="code">%1$d</xliff:g></string>
     <string name="settings_proxy_failed">Échec du test du proxy.</string>
-    <string name="settings_ch_nav_title">Navigation par pages avec CH+/−</string>
-    <string name="settings_ch_nav_description">Parcourez la liste des catégories ou des éléments par pages avec les touches CH+ / CH− de la télécommande.</string>
-    <string name="settings_ch_nav_enabled">Utiliser les touches CH+/− pour parcourir les listes par pages</string>
-    <string name="settings_ch_nav_enabled_description">Lorsque cette option est activée, CH+ et CH− permettent d’avancer dans le panneau sélectionné (rail des catégories ou liste des éléments, ainsi que la liste des catégories de l’écran Personnaliser). Lorsqu’elle est désactivée, ces touches n’ont aucun effet sur ces écrans.</string>
+    <string name="settings_ch_nav_title">Navigation par pages avec CH+/RW · CH−/FF</string>
+    <string name="settings_ch_nav_description">Parcourez la liste des catégories ou des éléments par pages avec les touches CH+/RW / CH−/FF de la télécommande.</string>
+    <string name="settings_ch_nav_enabled">Utiliser les touches CH+/RW · CH−/FF pour parcourir les listes par pages</string>
+    <string name="settings_ch_nav_enabled_description">Lorsque cette option est activée, CH+/RW et CH−/FF permettent d’avancer dans le panneau sélectionné (rail des catégories ou liste des éléments, ainsi que la liste des catégories de l’écran Personnaliser). Lorsqu’elle est désactivée, ces touches n’ont aucun effet sur ces écrans.</string>
     <string name="settings_ch_nav_up">Saut CH+ (vers le premier élément)</string>
-    <string name="settings_ch_nav_up_description">Nombre d’éléments remontés à chaque pression sur CH+. Un appui prolongé mène toujours au premier élément.</string>
+    <string name="settings_ch_nav_up_description">Nombre d’éléments remontés à chaque pression sur CH+/RW. Un appui prolongé mène toujours au premier élément.</string>
     <string name="settings_ch_nav_down">Saut CH− (vers le dernier élément)</string>
-    <string name="settings_ch_nav_down_description">Nombre d’éléments descendus à chaque pression sur CH−. Un appui prolongé mène toujours au dernier élément.</string>
+    <string name="settings_ch_nav_down_description">Nombre d’éléments descendus à chaque pression sur CH−/FF. Un appui prolongé mène toujours au dernier élément.</string>
     <string name="settings_skip_counts">Nombre d’éléments à sauter</string>
     <string name="settings_how_it_works">Fonctionnement</string>
-    <string name="settings_ch_nav_help">• Les sauts sont limités aux extrémités afin d’atteindre la fin des listes courtes en une seule pression.\n• Appui prolongé sur CH+ = premier élément, appui prolongé sur CH− = dernier élément.\n• L’appui prolongé est désactivé dans la liste « Tout » (toutes les chaînes / tous les films / toutes les séries) — les sauts par pression courte y fonctionnent toujours.\n• S’applique au panneau actuellement sélectionné — le rail des catégories ou la liste/grille des éléments.\n• Permet également de parcourir par pages la liste des catégories dans Paramètres → Personnaliser les catégories et les éléments.</string>
+    <string name="settings_ch_nav_help">• Les sauts sont limités aux extrémités afin d’atteindre la fin des listes courtes en une seule pression.\n• Appui prolongé sur CH+/RW = premier élément, appui prolongé sur CH−/FF = dernier élément.\n• L’appui prolongé est désactivé dans la liste « Tout » (toutes les chaînes / tous les films / toutes les séries) — les sauts par pression courte y fonctionnent toujours.\n• S’applique au panneau actuellement sélectionné — le rail des catégories ou la liste/grille des éléments.\n• Permet également de parcourir par pages la liste des catégories dans Paramètres → Personnaliser les catégories et les éléments.</string>
     <string name="settings_large_skips_warning">Les grands sauts dépassent les listes courtes et peuvent sembler saccadés sur les téléviseurs d’entrée de gamme.</string>
-    <string name="settings_ch_nav_picker">Navigation par pages avec CH+/−</string>
+    <string name="settings_ch_nav_picker">Navigation par pages avec CH+/RW/−</string>
     <string name="settings_weather">Météo</string>
     <string name="settings_top_bar_weather">Météo dans la barre supérieure</string>
     <string name="settings_show_weather">Afficher la météo</string>
@@ -179,8 +179,8 @@
     <string name="settings_customize">Personnaliser les catégories et les éléments</string>
     <string name="settings_customize_nav_description">Masquer et afficher des éléments, renommer et réorganiser les catégories</string>
     <string name="settings_sidebar_description_root">Adapter automatiquement les icônes latérales à votre liste de lecture ou en masquer certaines</string>
-    <string name="settings_ch_paging">Navigation par pages avec CH+/−</string>
-    <string name="settings_ch_paging_description">Remonter ou descendre dans les listes de catégories et d’éléments avec les touches CH+ / CH−</string>
+    <string name="settings_ch_paging">Navigation par pages avec CH+/RW/−</string>
+    <string name="settings_ch_paging_description">Remonter ou descendre dans les listes de catégories et d’éléments avec les touches CH+/RW / CH−/FF</string>
     <!-- Translators: Settings navigation label for the long-press content menus. -->
     <string name="settings_content_menus_title">Menus d’appui long</string>
     <!-- Translators: Description of the long-press content menus settings. -->
@@ -676,6 +676,12 @@
     <string name="settings_customize_rename_or_delete_category">Renommer ou supprimer la catégorie</string>
     <string name="settings_customize_new_category">＋ Nouvelle catégorie</string>
     <string name="settings_customize_sort_button">Tri : <xliff:g id="label">%1$s</xliff:g> ▾</string>
+
+    <string name="settings_customize_filter_button">Filtre : <xliff:g id="label">%1$s</xliff:g> ▾</string>
+    <string name="settings_customize_filter_title">Filtrer la liste</string>
+    <string name="settings_customize_filter_all">Tout</string>
+    <string name="settings_customize_filter_visible">Visibles</string>
+    <string name="settings_customize_filter_hidden">Masqués</string>
     <string name="settings_customize_new_categories_button">Nouvelles catégories : <xliff:g id="label">%1$s</xliff:g> ▾</string>
     <string name="settings_customize_rename_hint">Uniquement pour ce profil. Laissez ce champ vide pour restaurer « <xliff:g id="name">%1$s</xliff:g> ».</string>
     <string name="settings_customize_remove_pin_title">Supprimer le verrouillage par PIN ?</string>
@@ -1076,7 +1082,12 @@
     <string name="settings_main_interface_font">Police de l’interface principale</string>
     <string name="settings_popup_font">Police des fenêtres contextuelles</string>
     <string name="settings_choose_font">Choisir une police</string>
-    <string name="settings_font_size_range">Réglez le texte de l’application de <xliff:g id="min">%1$d</xliff:g>%% à <xliff:g id="max">%2$d</xliff:g>%%. Les sous-titres gardent leur propre taille.</string>
+    <string name="settings_font_size_range">Réglez le texte principal de l’application, pas celui des fenêtres contextuelles, de <xliff:g id="min">%1$d</xliff:g>%% à <xliff:g id="max">%2$d</xliff:g>%%. Les sous-titres gardent leur propre taille.</string>
+    <string name="settings_popup_font_size">Taille de police des fenêtres contextuelles</string>
+    <string name="settings_popup_font_size_description">Modifie uniquement le texte des boîtes de dialogue et menus</string>
+    <string name="settings_popup_size">Taille des fenêtres contextuelles</string>
+    <string name="settings_popup_size_description">Redimensionne les boîtes de dialogue et menus sans changer la taille du texte</string>
+    <string name="settings_popup_size_range">Redimensionnez les boîtes de dialogue et menus (<xliff:g id="min">%1$d</xliff:g>%%–<xliff:g id="max">%2$d</xliff:g>%%).</string>
     <string name="settings_font_preview">Le divertissement en toute simplicité.</string>
     <string name="settings_search_keywords_fonts">police texte taille typographie fenêtre lecture accessibilité</string>
     <string name="settings_font_system_sans">Sans système</string>
@@ -1103,6 +1114,25 @@
     <string name="settings_glass_highlight_title">Intensité du reflet</string>
     <string name="settings_glass_highlight_description">Ajustez la lumière et le contour du verre sélectionné.</string>
     <string name="settings_glass_live_preview">Aperçu en direct</string>
+    <string name="settings_glass_screen_description">Panneaux translucides dépolis, image d’arrière-plan et transparence</string>
+    <string name="settings_glass_master_description">Panneaux translucides dépolis sur une photo d’arrière-plan ou sur l’arrière-plan propre à l’application.</string>
+    <string name="settings_glass_background_image">Choisir une image d’arrière-plan</string>
+    <string name="settings_glass_surface_transparency_title">Transparence</string>
+    <string name="settings_glass_background_blur_title">Flou / Givrage</string>
+    <string name="settings_glass_section_appearance">Apparence</string>
+    <string name="settings_glass_section_fine_tuning">Options avancées</string>
+    <string name="settings_glass_section_behavior">Comportement</string>
+    <string name="settings_glass_apply_to">Surfaces en verre</string>
+    <string name="settings_glass_surface_all">Tout</string>
+    <string name="settings_glass_background_action_description">Choisir une image d’arrière-plan</string>
+    <string name="settings_glass_transparency_short_description">20–100 · 5</string>
+    <string name="settings_glass_blur_short_description">0–100 · 10</string>
+    <string name="settings_glass_highlight_short_description">Ajustez la lumière et le contour du verre sélectionné.</string>
+    <string name="settings_glass_full_transparency_short">Autoriser la transparence totale</string>
+    <string name="settings_glass_full_transparency_short_description">Désactive le seuil automatique de lisibilité pour un verre aussi clair que possible.</string>
+    <string name="settings_glass_depth_effects_short">Profondeur et ombres</string>
+    <string name="settings_glass_depth_effects_short_description">Active la lumière suivant le focus, la parallaxe subtile et le mouvement de profondeur.</string>
+    <string name="settings_glass_reset_balanced">Réinitialiser: Équilibré</string>
     <string name="settings_glass_full_transparency_title">Autoriser la transparence totale</string>
     <string name="settings_glass_full_transparency_description">Désactive le seuil automatique de lisibilité pour un verre aussi clair que possible.</string>
     <string name="settings_glass_depth_title">Profondeur et ombres</string>
@@ -1135,4 +1165,11 @@
         <item quantity="many"><xliff:g id="count">%1$d</xliff:g> de résultats</item>
         <item quantity="other"><xliff:g id="count">%1$d</xliff:g> résultats</item>
     </plurals>
+    <string name="settings_guide_width">Largeur des colonnes du guide</string>
+    <string name="settings_guide_width_description">Redimensionnez la liste des chaînes et la chronologie EPG dans le guide TV.</string>
+    <string name="settings_search_keywords_guide_width">guide epg chaîne liste chronologie colonne panneau largeur taille disposition</string>
+    <string name="settings_guide_width_summary">Liste des chaînes %1$d%% · Chronologie EPG %2$d%%</string>
+    <string name="settings_guide_width_help">• La liste des chaînes et la chronologie EPG partagent une ligne et doivent donc totaliser 100%%.\n• Élargir la liste des chaînes affiche une portion plus petite de la chronologie ; la durée des programmes et l’échelle de temps ne changent pas.\n• Chaque colonne reste large d’au moins 10%%.\n• Réinitialiser règle la liste des chaînes sur 10%% et la chronologie EPG sur 90%%.\n• Désactiver la personnalisation restaure la disposition standard sans effacer vos valeurs.</string>
+    <string name="settings_guide_width_channels">Liste des chaînes</string>
+    <string name="settings_guide_width_epg">Chronologie EPG</string>
 </resources>

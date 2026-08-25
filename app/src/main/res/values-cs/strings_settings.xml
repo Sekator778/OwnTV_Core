@@ -67,19 +67,19 @@
     <string name="settings_proxy_connection_failed">K proxy se nepodařilo připojit (zkontrolujte hostitele a port).</string>
     <string name="settings_proxy_http">Proxy vrátila stav HTTP <xliff:g id="code">%1$d</xliff:g></string>
     <string name="settings_proxy_failed">Test proxy se nezdařil.</string>
-    <string name="settings_ch_nav_title">Stránkování tlačítky CH+/CH−</string>
-    <string name="settings_ch_nav_description">Procházejte seznam kategorií nebo položek po stránkách pomocí tlačítek CH+ / CH− na dálkovém ovladači.</string>
-    <string name="settings_ch_nav_enabled">Používat tlačítka CH+/CH− ke stránkování seznamů</string>
-    <string name="settings_ch_nav_enabled_description">Je-li tato možnost zapnutá, tlačítka CH+ a CH− přeskakují v zaměřeném panelu (lišta kategorií nebo seznam položek a seznam kategorií na obrazovce Přizpůsobit). Je-li vypnutá, nemají tato tlačítka na uvedených obrazovkách žádnou funkci.</string>
+    <string name="settings_ch_nav_title">Stránkování tlačítky CH+/RW · CH−/FF</string>
+    <string name="settings_ch_nav_description">Procházejte seznam kategorií nebo položek po stránkách pomocí tlačítek CH+/RW / CH−/FF na dálkovém ovladači.</string>
+    <string name="settings_ch_nav_enabled">Používat tlačítka CH+/RW · CH−/FF ke stránkování seznamů</string>
+    <string name="settings_ch_nav_enabled_description">Je-li tato možnost zapnutá, tlačítka CH+/RW a CH−/FF přeskakují v zaměřeném panelu (lišta kategorií nebo seznam položek a seznam kategorií na obrazovce Přizpůsobit). Je-li vypnutá, nemají tato tlačítka na uvedených obrazovkách žádnou funkci.</string>
     <string name="settings_ch_nav_up">Přeskok CH+ (směrem k první položce)</string>
-    <string name="settings_ch_nav_up_description">O kolik položek se přeskočí nahoru při jednom stisknutí CH+. Dlouhé stisknutí vždy přejde na první položku.</string>
+    <string name="settings_ch_nav_up_description">O kolik položek se přeskočí nahoru při jednom stisknutí CH+/RW. Dlouhé stisknutí vždy přejde na první položku.</string>
     <string name="settings_ch_nav_down">Přeskok CH− (směrem k poslední položce)</string>
-    <string name="settings_ch_nav_down_description">O kolik položek se přeskočí dolů při jednom stisknutí CH−. Dlouhé stisknutí vždy přejde na poslední položku.</string>
+    <string name="settings_ch_nav_down_description">O kolik položek se přeskočí dolů při jednom stisknutí CH−/FF. Dlouhé stisknutí vždy přejde na poslední položku.</string>
     <string name="settings_skip_counts">Počty přeskakovaných položek</string>
     <string name="settings_how_it_works">Jak to funguje</string>
-    <string name="settings_ch_nav_help">• Přeskoky jsou na koncích omezené, takže u krátkých seznamů stačí k dosažení konce jedno stisknutí.\n• Dlouhé stisknutí CH+ = první položka, dlouhé stisknutí CH− = poslední položka.\n• Dlouhé stisknutí je vypnuté v seznamu „Vše“ (všechny kanály / filmy / seriály) — přeskakování krátkým stisknutím tam nadále funguje.\n• Funkce se použije v panelu, který je právě zaměřený — v liště kategorií nebo v seznamu či mřížce položek.\n• Po stránkách prochází také seznam kategorií v Nastavení → Přizpůsobit kategorie a položky.</string>
+    <string name="settings_ch_nav_help">• Přeskoky jsou na koncích omezené, takže u krátkých seznamů stačí k dosažení konce jedno stisknutí.\n• Dlouhé stisknutí CH+/RW = první položka, dlouhé stisknutí CH−/FF = poslední položka.\n• Dlouhé stisknutí je vypnuté v seznamu „Vše“ (všechny kanály / filmy / seriály) — přeskakování krátkým stisknutím tam nadále funguje.\n• Funkce se použije v panelu, který je právě zaměřený — v liště kategorií nebo v seznamu či mřížce položek.\n• Po stránkách prochází také seznam kategorií v Nastavení → Přizpůsobit kategorie a položky.</string>
     <string name="settings_large_skips_warning">Velké přeskoky mohou přeskočit krátké seznamy a na méně výkonných televizorech působit trhaně.</string>
-    <string name="settings_ch_nav_picker">Stránkování tlačítky CH+/CH−</string>
+    <string name="settings_ch_nav_picker">Stránkování tlačítky CH+/RW · CH−/FF</string>
     <string name="settings_weather">Počasí</string>
     <string name="settings_top_bar_weather">Počasí v horní liště</string>
     <string name="settings_show_weather">Zobrazovat počasí</string>
@@ -180,8 +180,8 @@
     <string name="settings_customize">Přizpůsobit kategorie a položky</string>
     <string name="settings_customize_nav_description">Skrývejte a zobrazujte položky, přejmenovávejte kategorie a měňte jejich pořadí</string>
     <string name="settings_sidebar_description_root">Automaticky přizpůsobovat postranní ikony playlistu nebo skrýt konkrétní ikony</string>
-    <string name="settings_ch_paging">Stránkování tlačítky CH+/CH−</string>
-    <string name="settings_ch_paging_description">Přeskakujte nahoru a dolů v seznamech kategorií a položek pomocí tlačítek CH+ / CH−</string>
+    <string name="settings_ch_paging">Stránkování tlačítky CH+/RW · CH−/FF</string>
+    <string name="settings_ch_paging_description">Přeskakujte nahoru a dolů v seznamech kategorií a položek pomocí tlačítek CH+/RW / CH−/FF</string>
     <!-- Translators: Settings navigation label for the long-press content menus. -->
     <string name="settings_content_menus_title">Nabídky po dlouhém stisknutí</string>
     <!-- Translators: Description of the long-press content menus settings. -->
@@ -681,6 +681,12 @@
     <string name="settings_customize_rename_or_delete_category">Přejmenovat nebo odstranit kategorii</string>
     <string name="settings_customize_new_category">＋ Nová kategorie</string>
     <string name="settings_customize_sort_button">Řazení: <xliff:g id="label">%1$s</xliff:g> ▾</string>
+
+    <string name="settings_customize_filter_button">Filtr: <xliff:g id="label">%1$s</xliff:g> ▾</string>
+    <string name="settings_customize_filter_title">Filtrovat seznam</string>
+    <string name="settings_customize_filter_all">Vše</string>
+    <string name="settings_customize_filter_visible">Viditelné</string>
+    <string name="settings_customize_filter_hidden">Skryté</string>
     <string name="settings_customize_new_categories_button">Nové kategorie: <xliff:g id="label">%1$s</xliff:g> ▾</string>
     <string name="settings_customize_rename_hint">Platí pouze pro tento profil. Ponecháním prázdného pole obnovíte název „<xliff:g id="name">%1$s</xliff:g>“.</string>
     <string name="settings_customize_remove_pin_title">Odstranit zámek PIN?</string>
@@ -1094,7 +1100,12 @@
     <string name="settings_main_interface_font">Písmo hlavního rozhraní</string>
     <string name="settings_popup_font">Písmo vyskakovacích oken</string>
     <string name="settings_choose_font">Vyberte písmo</string>
-    <string name="settings_font_size_range">Upravte text aplikace od <xliff:g id="min">%1$d</xliff:g>%% do <xliff:g id="max">%2$d</xliff:g>%%. Titulky mají vlastní velikost.</string>
+    <string name="settings_font_size_range">Upravte text hlavní aplikace, nikoli vyskakovacích oken, od <xliff:g id="min">%1$d</xliff:g>%% do <xliff:g id="max">%2$d</xliff:g>%%. Titulky mají vlastní velikost.</string>
+    <string name="settings_popup_font_size">Velikost písma ve vyskakovacích oknech</string>
+    <string name="settings_popup_font_size_description">Mění pouze text v dialogových oknech a nabídkách</string>
+    <string name="settings_popup_size">Velikost vyskakovacích oken</string>
+    <string name="settings_popup_size_description">Mění velikost dialogových oken a nabídek beze změny velikosti textu</string>
+    <string name="settings_popup_size_range">Měnit velikost dialogových oken a nabídek (<xliff:g id="min">%1$d</xliff:g>%%–<xliff:g id="max">%2$d</xliff:g>%%).</string>
     <string name="settings_font_preview">Zábava jednoduše.</string>
     <string name="settings_search_keywords_fonts">písmo text velikost typografie okno čtení přístupnost</string>
     <string name="settings_font_system_sans">Systémové bezpatkové</string>
@@ -1121,6 +1132,25 @@
     <string name="settings_glass_highlight_title">Síla zvýraznění</string>
     <string name="settings_glass_highlight_description">Upravte světlo a okraj skla při zaměření.</string>
     <string name="settings_glass_live_preview">Živý náhled</string>
+    <string name="settings_glass_screen_description">Průsvitné matné panely, obrázek na pozadí a průhlednost</string>
+    <string name="settings_glass_master_description">Průsvitné matné panely přes fotografii na pozadí nebo přes vlastní pozadí aplikace.</string>
+    <string name="settings_glass_background_image">Vyberte obrázek na pozadí</string>
+    <string name="settings_glass_surface_transparency_title">Průhlednost</string>
+    <string name="settings_glass_background_blur_title">Rozostření / Matnost</string>
+    <string name="settings_glass_section_appearance">Vzhled</string>
+    <string name="settings_glass_section_fine_tuning">Pokročilé možnosti</string>
+    <string name="settings_glass_section_behavior">Chování</string>
+    <string name="settings_glass_apply_to">Skleněné plochy</string>
+    <string name="settings_glass_surface_all">Vše</string>
+    <string name="settings_glass_background_action_description">Vyberte obrázek na pozadí</string>
+    <string name="settings_glass_transparency_short_description">20–100 · 5</string>
+    <string name="settings_glass_blur_short_description">0–100 · 10</string>
+    <string name="settings_glass_highlight_short_description">Upravte světlo a okraj skla při zaměření.</string>
+    <string name="settings_glass_full_transparency_short">Povolit plnou průhlednost</string>
+    <string name="settings_glass_full_transparency_short_description">Vypne automatickou hranici čitelnosti pro nejčistší možné sklo.</string>
+    <string name="settings_glass_depth_effects_short">Hloubka a stíny</string>
+    <string name="settings_glass_depth_effects_short_description">Zapne světlo sledující zaměření, jemnou paralaxu a pohyb hloubky.</string>
+    <string name="settings_glass_reset_balanced">Obnovit výchozí: Vyvážené</string>
     <string name="settings_glass_full_transparency_title">Povolit plnou průhlednost</string>
     <string name="settings_glass_full_transparency_description">Vypne automatickou hranici čitelnosti pro nejčistší možné sklo.</string>
     <string name="settings_glass_depth_title">Hloubka a stíny</string>
@@ -1156,4 +1186,11 @@
         <item quantity="many"><xliff:g id="count">%1$d</xliff:g> shody</item>
         <item quantity="other"><xliff:g id="count">%1$d</xliff:g> shod</item>
     </plurals>
+    <string name="settings_guide_width">Šířky sloupců programu</string>
+    <string name="settings_guide_width_description">Změňte šířku seznamu kanálů a časové osy EPG v TV programu.</string>
+    <string name="settings_search_keywords_guide_width">program epg kanál seznam časová osa sloupec panel šířka velikost rozvržení</string>
+    <string name="settings_guide_width_summary">Seznam kanálů %1$d%% · Časová osa EPG %2$d%%</string>
+    <string name="settings_guide_width_help">• Seznam kanálů a časová osa EPG sdílejí jeden řádek, takže součet musí být 100%%.\n• Rozšířením seznamu kanálů uvidíte menší část časové osy; délky pořadů ani časové měřítko se nezmění.\n• Oba sloupce zůstávají široké alespoň 10%%.\n• Obnovení nastaví seznam kanálů na 10%% a časovou osu EPG na 90%%.\n• Vypnutí přizpůsobení obnoví standardní rozvržení bez ztráty vašich hodnot.</string>
+    <string name="settings_guide_width_channels">Seznam kanálů</string>
+    <string name="settings_guide_width_epg">Časová osa EPG</string>
 </resources>

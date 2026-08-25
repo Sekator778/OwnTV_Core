@@ -181,6 +181,7 @@
     </plurals>
     <!-- Translators: Current sort-mode label in the SortChip toggle. -->
     <string name="content_provider">Provider</string>
+    <string name="content_provider_name">Provider: %1$s</string>
     <!-- Translators: Empty-state message when a series search returns no results. "query" is the user\'s search text. -->
     <string name="content_no_series_found">No series found for \u201c<xliff:g id="query">%1$s</xliff:g>\u201d</string>
     <!-- Translators: Search hint text in the movie category browser. "category" is the category name. The ellipsis indicates a search action. -->

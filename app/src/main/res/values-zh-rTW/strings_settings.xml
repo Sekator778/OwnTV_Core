@@ -67,19 +67,19 @@
     <string name="settings_proxy_connection_failed">無法連線至代理伺服器（請檢查主機／連接埠）。</string>
     <string name="settings_proxy_http">代理伺服器傳回 HTTP <xliff:g id="code">%1$d</xliff:g></string>
     <string name="settings_proxy_failed">代理伺服器測試失敗。</string>
-    <string name="settings_ch_nav_title">CH+/CH− 按鍵翻頁</string>
-    <string name="settings_ch_nav_description">使用遙控器的 CH+／CH− 按鍵逐頁切換分類或項目清單。</string>
-    <string name="settings_ch_nav_enabled">使用 CH+/CH− 按鍵翻頁</string>
-    <string name="settings_ch_nav_enabled_description">開啟後，CH+ 和 CH− 會在已取得焦點的面板內跳轉（分類列或項目清單，以及「自訂」分類清單）。關閉後，這些按鍵在上述畫面中不會有任何作用。</string>
+    <string name="settings_ch_nav_title">CH+/RW · CH−/FF 按鍵翻頁</string>
+    <string name="settings_ch_nav_description">使用遙控器的 CH+/RW／CH−/FF 按鍵逐頁切換分類或項目清單。</string>
+    <string name="settings_ch_nav_enabled">使用 CH+/RW · CH−/FF 按鍵翻頁</string>
+    <string name="settings_ch_nav_enabled_description">開啟後，CH+/RW 和 CH−/FF 會在已取得焦點的面板內跳轉（分類列或項目清單，以及「自訂」分類清單）。關閉後，這些按鍵在上述畫面中不會有任何作用。</string>
     <string name="settings_ch_nav_up">CH+ 跳轉數（朝第一項）</string>
-    <string name="settings_ch_nav_up_description">按一下 CH+ 向上跳轉的項目數。長按一律跳至第一個項目。</string>
+    <string name="settings_ch_nav_up_description">按一下 CH+/RW 向上跳轉的項目數。長按一律跳至第一個項目。</string>
     <string name="settings_ch_nav_down">CH− 跳轉數（朝最後一項）</string>
-    <string name="settings_ch_nav_down_description">按一下 CH− 向下跳轉的項目數。長按一律跳至最後一個項目。</string>
+    <string name="settings_ch_nav_down_description">按一下 CH−/FF 向下跳轉的項目數。長按一律跳至最後一個項目。</string>
     <string name="settings_skip_counts">跳轉數</string>
     <string name="settings_how_it_works">運作方式</string>
-    <string name="settings_ch_nav_help">• 跳轉會限制在清單兩端，因此短清單只要按一下就能到達末端。\n• 長按 CH+ = 第一個項目，長按 CH− = 最後一個項目。\n• 「全部」清單（所有頻道／電影／影集）會停用長按功能 — 短按跳轉仍可使用。\n• 此功能會套用至目前已取得焦點的面板 — 分類列或項目清單／網格。\n• 也能在「設定 → 自訂分類與項目」中逐頁切換分類清單。</string>
+    <string name="settings_ch_nav_help">• 跳轉會限制在清單兩端，因此短清單只要按一下就能到達末端。\n• 長按 CH+/RW = 第一個項目，長按 CH−/FF = 最後一個項目。\n• 「全部」清單（所有頻道／電影／影集）會停用長按功能 — 短按跳轉仍可使用。\n• 此功能會套用至目前已取得焦點的面板 — 分類列或項目清單／網格。\n• 也能在「設定 → 自訂分類與項目」中逐頁切換分類清單。</string>
     <string name="settings_large_skips_warning">較大的跳轉數會越過短清單中的項目，在低階電視上也可能顯得不夠流暢。</string>
-    <string name="settings_ch_nav_picker">CH+/CH− 按鍵翻頁</string>
+    <string name="settings_ch_nav_picker">CH+/RW · CH−/FF 按鍵翻頁</string>
     <string name="settings_weather">天氣</string>
     <string name="settings_top_bar_weather">頂端列天氣</string>
     <string name="settings_show_weather">顯示天氣</string>
@@ -177,8 +177,8 @@
     <string name="settings_customize">自訂分類與項目</string>
     <string name="settings_customize_nav_description">隱藏及取消隱藏項目、重新命名及排序分類</string>
     <string name="settings_sidebar_description_root">依播放清單自動調整側邊圖示，或隱藏特定圖示</string>
-    <string name="settings_ch_paging">CH+/CH− 按鍵翻頁</string>
-    <string name="settings_ch_paging_description">使用 CH+／CH− 按鍵在分類和項目清單中向上／向下跳轉</string>
+    <string name="settings_ch_paging">CH+/RW · CH−/FF 按鍵翻頁</string>
+    <string name="settings_ch_paging_description">使用 CH+/RW／CH−/FF 按鍵在分類和項目清單中向上／向下跳轉</string>
     <!-- Translators: Settings navigation label for the long-press content menus. -->
     <string name="settings_content_menus_title">長按選單</string>
     <!-- Translators: Description of the long-press content menus settings. -->
@@ -666,6 +666,12 @@
     <string name="settings_customize_rename_or_delete_category">重新命名或刪除分類</string>
     <string name="settings_customize_new_category">＋ 新增分類</string>
     <string name="settings_customize_sort_button">排序：<xliff:g id="label">%1$s</xliff:g> ▾</string>
+
+    <string name="settings_customize_filter_button">篩選：<xliff:g id="label">%1$s</xliff:g> ▾</string>
+    <string name="settings_customize_filter_title">篩選清單</string>
+    <string name="settings_customize_filter_all">全部</string>
+    <string name="settings_customize_filter_visible">可見</string>
+    <string name="settings_customize_filter_hidden">隱藏</string>
     <string name="settings_customize_new_categories_button">新分類：<xliff:g id="label">%1$s</xliff:g> ▾</string>
     <string name="settings_customize_rename_hint">僅適用於此使用者檔案。留白即可還原為「<xliff:g id="name">%1$s</xliff:g>」。</string>
     <string name="settings_customize_remove_pin_title">要移除 PIN 鎖定嗎？</string>
@@ -1040,7 +1046,12 @@
     <string name="settings_main_interface_font">主介面字型</string>
     <string name="settings_popup_font">彈出視窗字型</string>
     <string name="settings_choose_font">選擇字型</string>
-    <string name="settings_font_size_range">將應用程式文字調整為 <xliff:g id="min">%1$d</xliff:g>%%～<xliff:g id="max">%2$d</xliff:g>%%。字幕保留獨立的大小設定。</string>
+    <string name="settings_font_size_range">將主應用程式文字（不包括彈出視窗）調整為 <xliff:g id="min">%1$d</xliff:g>%%～<xliff:g id="max">%2$d</xliff:g>%%。字幕保留獨立的大小設定。</string>
+    <string name="settings_popup_font_size">彈出視窗字型大小</string>
+    <string name="settings_popup_font_size_description">僅變更對話框和選單中的文字</string>
+    <string name="settings_popup_size">彈出視窗大小</string>
+    <string name="settings_popup_size_description">縮放對話框和選單方塊，不變更文字大小</string>
+    <string name="settings_popup_size_range">縮放對話框和選單方塊（<xliff:g id="min">%1$d</xliff:g>%%～<xliff:g id="max">%2$d</xliff:g>%%）。</string>
     <string name="settings_font_preview">娛樂，從此更簡單。</string>
     <string name="settings_search_keywords_fonts">字型 文字 大小 字體 彈窗 閱讀 無障礙</string>
     <string name="settings_font_system_sans">系統無襯線字型</string>
@@ -1067,6 +1078,25 @@
     <string name="settings_glass_highlight_title">高光強度</string>
     <string name="settings_glass_highlight_description">調整聚焦玻璃的光線與邊緣。</string>
     <string name="settings_glass_live_preview">即時預覽</string>
+    <string name="settings_glass_screen_description">半透明毛玻璃面板、背景圖片和透明度</string>
+    <string name="settings_glass_master_description">在背景相片或應用程式本身的背景上顯示半透明霧面面板。</string>
+    <string name="settings_glass_background_image">選擇背景圖片</string>
+    <string name="settings_glass_surface_transparency_title">透明度</string>
+    <string name="settings_glass_background_blur_title">模糊／霧面</string>
+    <string name="settings_glass_section_appearance">外觀</string>
+    <string name="settings_glass_section_fine_tuning">進階選項</string>
+    <string name="settings_glass_section_behavior">行為</string>
+    <string name="settings_glass_apply_to">玻璃效果介面</string>
+    <string name="settings_glass_surface_all">全部</string>
+    <string name="settings_glass_background_action_description">選擇背景圖片</string>
+    <string name="settings_glass_transparency_short_description">20–100 · 5</string>
+    <string name="settings_glass_blur_short_description">0–100 · 10</string>
+    <string name="settings_glass_highlight_short_description">調整聚焦玻璃的光線與邊緣。</string>
+    <string name="settings_glass_full_transparency_short">允許完全透明</string>
+    <string name="settings_glass_full_transparency_short_description">關閉自動可讀性下限，以獲得最通透的玻璃效果。</string>
+    <string name="settings_glass_depth_effects_short">深度與陰影</string>
+    <string name="settings_glass_depth_effects_short_description">啟用焦點移動光效、輕微視差與深度動態。</string>
+    <string name="settings_glass_reset_balanced">重設: 平衡</string>
     <string name="settings_glass_full_transparency_title">允許完全透明</string>
     <string name="settings_glass_full_transparency_description">關閉自動可讀性下限，以獲得最通透的玻璃效果。</string>
     <string name="settings_glass_depth_title">深度與陰影</string>
@@ -1093,4 +1123,11 @@
     <plurals name="settings_match_count">
         <item quantity="other"><xliff:g id="count">%1$d</xliff:g> 項相符</item>
     </plurals>
+    <string name="settings_guide_width">節目指南欄寬</string>
+    <string name="settings_guide_width_description">調整電視節目指南中頻道清單和 EPG 時間軸的寬度。</string>
+    <string name="settings_search_keywords_guide_width">指南 epg 頻道 清單 時間軸 欄 面板 寬度 大小 版面配置</string>
+    <string name="settings_guide_width_summary">頻道清單 %1$d%% · EPG 時間軸 %2$d%%</string>
+    <string name="settings_guide_width_help">• 頻道清單和 EPG 時間軸共用一列，因此總計必須為 100%%。\n• 加寬頻道清單後，一次顯示的時間軸範圍會減少；節目長度和時間比例維持不變。\n• 兩欄寬度都不會低於 10%%。\n• 重設會將頻道清單設為 10%%，EPG 時間軸設為 90%%。\n• 關閉自訂會恢復標準版面配置，但不會遺失已儲存的值。</string>
+    <string name="settings_guide_width_channels">頻道清單</string>
+    <string name="settings_guide_width_epg">EPG 時間軸</string>
 </resources>

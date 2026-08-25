@@ -67,19 +67,19 @@
     <string name="settings_proxy_connection_failed">Det gick inte att ansluta till proxyn (kontrollera värd/port).</string>
     <string name="settings_proxy_http">Proxyn returnerade HTTP <xliff:g id="code">%1$d</xliff:g></string>
     <string name="settings_proxy_failed">Proxytestet misslyckades.</string>
-    <string name="settings_ch_nav_title">Sidbläddring med CH+-knapparna</string>
-    <string name="settings_ch_nav_description">Bläddra en sida i kategori- eller objektlistan med fjärrkontrollens CH+ / CH−-knappar.</string>
-    <string name="settings_ch_nav_enabled">Använd CH+-knapparna för att bläddra i listor</string>
-    <string name="settings_ch_nav_enabled_description">När funktionen är på hoppar CH+ och CH− i den fokuserade panelen (kategorifältet eller objektlistan samt kategorilistan under Anpassa). När den är avstängd gör knapparna ingenting på dessa skärmar.</string>
+    <string name="settings_ch_nav_title">Sidbläddring med CH+/RW · CH−/FF-knapparna</string>
+    <string name="settings_ch_nav_description">Bläddra en sida i kategori- eller objektlistan med fjärrkontrollens CH+/RW / CH−/FF-knappar.</string>
+    <string name="settings_ch_nav_enabled">Använd CH+/RW · CH−/FF-knapparna för att bläddra i listor</string>
+    <string name="settings_ch_nav_enabled_description">När funktionen är på hoppar CH+/RW och CH−/FF i den fokuserade panelen (kategorifältet eller objektlistan samt kategorilistan under Anpassa). När den är avstängd gör knapparna ingenting på dessa skärmar.</string>
     <string name="settings_ch_nav_up">CH+-hopp (mot den första)</string>
-    <string name="settings_ch_nav_up_description">Hur många objekt ett tryck på CH+ hoppar uppåt. Ett långtryck går alltid till det första objektet.</string>
+    <string name="settings_ch_nav_up_description">Hur många objekt ett tryck på CH+/RW hoppar uppåt. Ett långtryck går alltid till det första objektet.</string>
     <string name="settings_ch_nav_down">CH−-hopp (mot den sista)</string>
-    <string name="settings_ch_nav_down_description">Hur många objekt ett tryck på CH− hoppar nedåt. Ett långtryck går alltid till det sista objektet.</string>
+    <string name="settings_ch_nav_down_description">Hur många objekt ett tryck på CH−/FF hoppar nedåt. Ett långtryck går alltid till det sista objektet.</string>
     <string name="settings_skip_counts">Antal objekt per hopp</string>
     <string name="settings_how_it_works">Så fungerar det</string>
-    <string name="settings_ch_nav_help">• Hoppen stannar vid listans ändar, så korta listor når slutet med ett enda tryck.\n• Långtryck på CH+ = första objektet, långtryck på CH− = sista objektet.\n• Långtryck är inaktiverat i listan ”Alla” (alla kanaler / filmer / serier) — korta tryck för att hoppa fungerar fortfarande där.\n• Gäller den panel som har fokus — kategorifältet eller objektlistan/rutnätet.\n• Bläddrar även i kategorilistan under Inställningar → Anpassa kategorier och objekt.</string>
+    <string name="settings_ch_nav_help">• Hoppen stannar vid listans ändar, så korta listor når slutet med ett enda tryck.\n• Långtryck på CH+/RW = första objektet, långtryck på CH−/FF = sista objektet.\n• Långtryck är inaktiverat i listan ”Alla” (alla kanaler / filmer / serier) — korta tryck för att hoppa fungerar fortfarande där.\n• Gäller den panel som har fokus — kategorifältet eller objektlistan/rutnätet.\n• Bläddrar även i kategorilistan under Inställningar → Anpassa kategorier och objekt.</string>
     <string name="settings_large_skips_warning">Stora hopp går förbi korta listor och kan kännas ryckiga på enklare tv-apparater.</string>
-    <string name="settings_ch_nav_picker">Sidbläddring med CH+-knapparna</string>
+    <string name="settings_ch_nav_picker">Sidbläddring med CH+/RW · CH−/FF-knapparna</string>
     <string name="settings_weather">Väder</string>
     <string name="settings_top_bar_weather">Väder i det övre fältet</string>
     <string name="settings_show_weather">Visa väder</string>
@@ -178,8 +178,8 @@
     <string name="settings_customize">Anpassa kategorier och objekt</string>
     <string name="settings_customize_nav_description">Dölj och visa objekt samt byt namn på och ändra ordning på kategorier</string>
     <string name="settings_sidebar_description_root">Anpassa sidoikoner automatiskt efter spellistan eller dölj specifika ikoner</string>
-    <string name="settings_ch_paging">Sidbläddring med CH+-knapparna</string>
-    <string name="settings_ch_paging_description">Hoppa uppåt/nedåt i kategori- och objektlistorna med CH+ / CH−-knapparna</string>
+    <string name="settings_ch_paging">Sidbläddring med CH+/RW · CH−/FF-knapparna</string>
+    <string name="settings_ch_paging_description">Hoppa uppåt/nedåt i kategori- och objektlistorna med CH+/RW / CH−/FF-knapparna</string>
     <!-- Translators: Settings navigation label for the long-press content menus. -->
     <string name="settings_content_menus_title">Menyer vid långt tryck</string>
     <!-- Translators: Description of the long-press content menus settings. -->
@@ -671,6 +671,12 @@
     <string name="settings_customize_rename_or_delete_category">Byt namn på eller ta bort kategori</string>
     <string name="settings_customize_new_category">＋ Ny kategori</string>
     <string name="settings_customize_sort_button">Sortering: <xliff:g id="label">%1$s</xliff:g> ▾</string>
+
+    <string name="settings_customize_filter_button">Filter: <xliff:g id="label">%1$s</xliff:g> ▾</string>
+    <string name="settings_customize_filter_title">Filtrera lista</string>
+    <string name="settings_customize_filter_all">Alla</string>
+    <string name="settings_customize_filter_visible">Synliga</string>
+    <string name="settings_customize_filter_hidden">Dolda</string>
     <string name="settings_customize_new_categories_button">Nya kategorier: <xliff:g id="label">%1$s</xliff:g> ▾</string>
     <string name="settings_customize_rename_hint">Gäller endast den här profilen. Lämna tomt för att återställa ”<xliff:g id="name">%1$s</xliff:g>”.</string>
     <string name="settings_customize_remove_pin_title">Ta bort PIN-låset?</string>
@@ -1058,7 +1064,12 @@
     <string name="settings_main_interface_font">Teckensnitt i huvudgränssnittet</string>
     <string name="settings_popup_font">Teckensnitt i popupfönster</string>
     <string name="settings_choose_font">Välj teckensnitt</string>
-    <string name="settings_font_size_range">Justera apptexten från <xliff:g id="min">%1$d</xliff:g>%% till <xliff:g id="max">%2$d</xliff:g>%%. Undertexter behåller sin egen storlek.</string>
+    <string name="settings_font_size_range">Justera huvudappens text, inte popupfönster, från <xliff:g id="min">%1$d</xliff:g>%% till <xliff:g id="max">%2$d</xliff:g>%%. Undertexter behåller sin egen storlek.</string>
+    <string name="settings_popup_font_size">Teckenstorlek i popupfönster</string>
+    <string name="settings_popup_font_size_description">Ändrar endast text i dialogrutor och menyer</string>
+    <string name="settings_popup_size">Storlek på popupfönster</string>
+    <string name="settings_popup_size_description">Skala dialogrutor och menyer utan att ändra textstorleken</string>
+    <string name="settings_popup_size_range">Skala dialogrutor och menyer (<xliff:g id="min">%1$d</xliff:g>%%–<xliff:g id="max">%2$d</xliff:g>%%).</string>
     <string name="settings_font_preview">Underhållning på ett enklare sätt.</string>
     <string name="settings_search_keywords_fonts">teckensnitt text storlek typografi popup läsning tillgänglighet</string>
     <string name="settings_font_system_sans">System Sans</string>
@@ -1085,6 +1096,25 @@
     <string name="settings_glass_highlight_title">Markeringsstyrka</string>
     <string name="settings_glass_highlight_description">Justera ljuset och kanten på glas i fokus.</string>
     <string name="settings_glass_live_preview">Direkt förhandsvisning</string>
+    <string name="settings_glass_screen_description">Genomskinliga frostade paneler, bakgrundsbild och transparens</string>
+    <string name="settings_glass_master_description">Genomskinliga frostade paneler ovanpå ett bakgrundsfoto eller appens egen bakgrund.</string>
+    <string name="settings_glass_background_image">Välj en bakgrundsbild</string>
+    <string name="settings_glass_surface_transparency_title">Genomskinlighet</string>
+    <string name="settings_glass_background_blur_title">Oskärpa/frostning</string>
+    <string name="settings_glass_section_appearance">Utseende</string>
+    <string name="settings_glass_section_fine_tuning">Avancerade alternativ</string>
+    <string name="settings_glass_section_behavior">Beteende</string>
+    <string name="settings_glass_apply_to">Glasytor</string>
+    <string name="settings_glass_surface_all">Alla</string>
+    <string name="settings_glass_background_action_description">Välj en bakgrundsbild</string>
+    <string name="settings_glass_transparency_short_description">20–100 · 5</string>
+    <string name="settings_glass_blur_short_description">0–100 · 10</string>
+    <string name="settings_glass_highlight_short_description">Justera ljuset och kanten på glas i fokus.</string>
+    <string name="settings_glass_full_transparency_short">Tillåt full genomskinlighet</string>
+    <string name="settings_glass_full_transparency_short_description">Stänger av den automatiska läsbarhetsgränsen för klarast möjliga glas.</string>
+    <string name="settings_glass_depth_effects_short">Djup och skuggor</string>
+    <string name="settings_glass_depth_effects_short_description">Aktiverar fokusljus, subtil parallax och djuprörelse.</string>
+    <string name="settings_glass_reset_balanced">Återställ: Balanserad</string>
     <string name="settings_glass_full_transparency_title">Tillåt full genomskinlighet</string>
     <string name="settings_glass_full_transparency_description">Stänger av den automatiska läsbarhetsgränsen för klarast möjliga glas.</string>
     <string name="settings_glass_depth_title">Djup och skuggor</string>
@@ -1114,4 +1144,11 @@
         <item quantity="one"><xliff:g id="count">%1$d</xliff:g> träff</item>
         <item quantity="other"><xliff:g id="count">%1$d</xliff:g> träffar</item>
     </plurals>
+    <string name="settings_guide_width">Kolumnbredder i guiden</string>
+    <string name="settings_guide_width_description">Ändra bredden på kanallistan och EPG-tidslinjen i TV-guiden.</string>
+    <string name="settings_search_keywords_guide_width">guide epg kanal lista tidslinje kolumn panel bredd storlek layout</string>
+    <string name="settings_guide_width_summary">Kanallista %1$d%% · EPG-tidslinje %2$d%%</string>
+    <string name="settings_guide_width_help">• Kanallistan och EPG-tidslinjen delar en rad, så summan måste vara 100%%.\n• En bredare kanallista visar mindre av tidslinjen åt gången; programlängder och tidsskala ändras inte.\n• Båda kolumnerna är minst 10%% breda.\n• Återställ sätter kanallistan till 10%% och EPG-tidslinjen till 90%%.\n• Om anpassning stängs av återställs standardlayouten utan att dina värden tas bort.</string>
+    <string name="settings_guide_width_channels">Kanallista</string>
+    <string name="settings_guide_width_epg">EPG-tidslinje</string>
 </resources>
