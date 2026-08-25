@@ -71,13 +71,56 @@
     <string name="settings_ch_nav_description">تنقّل بين صفحات قائمة الفئات أو العناصر باستخدام مفتاحي CH+/RW / CH−/FF في جهاز التحكم عن بُعد.</string>
     <string name="settings_ch_nav_enabled">استخدام مفتاحي CH+/RW · CH−/FF للتنقل بين صفحات القوائم</string>
     <string name="settings_ch_nav_enabled_description">عند التفعيل، يتخطى مفتاحا CH+/RW وCH−/FF عناصر داخل اللوحة قيد التركيز (شريط الفئات أو قائمة العناصر، وكذلك قائمة تخصيص الفئات). وعند التعطيل، لا يفعل هذان المفتاحان شيئًا في تلك الشاشات.</string>
-    <string name="settings_ch_nav_up">تخطي CH+ (نحو الأول)</string>
+    <string name="settings_ch_nav_up">تخطي CH+ / الترجيع (نحو الأول)</string>
     <string name="settings_ch_nav_up_description">عدد العناصر التي تتخطاها ضغطة واحدة على CH+/RW إلى أعلى. يؤدي الضغط المطوّل دائمًا إلى الانتقال إلى العنصر الأول.</string>
-    <string name="settings_ch_nav_down">تخطي CH− (نحو الأخير)</string>
+    <string name="settings_ch_nav_down">تخطي CH− / التقديم السريع (نحو الأخير)</string>
     <string name="settings_ch_nav_down_description">عدد العناصر التي تتخطاها ضغطة واحدة على CH−/FF إلى أسفل. يؤدي الضغط المطوّل دائمًا إلى الانتقال إلى العنصر الأخير.</string>
     <string name="settings_skip_counts">أعداد التخطي</string>
     <string name="settings_how_it_works">كيفية العمل</string>
     <string name="settings_ch_nav_help">• يُقيّد التخطي عند طرفي القائمة، لذا تصل القوائم القصيرة إلى نهايتها بضغطة واحدة.\n• الضغط المطوّل على CH+/RW = العنصر الأول، والضغط المطوّل على CH−/FF = العنصر الأخير.\n• يُعطّل الضغط المطوّل في قائمة \"الكل\" (كل قناة / فيلم / مسلسل) — ويظل التخطي بالضغط القصير متاحًا فيها.\n• ينطبق على اللوحة قيد التركيز حاليًا — شريط الفئات أو قائمة/شبكة العناصر.\n• وينقّل أيضًا بين صفحات قائمة الفئات في الإعدادات ← تخصيص الفئات والعناصر.</string>
+    <string name="settings_remote_shortcuts">اختصارات جهاز التحكم</string>
+    <string name="settings_remote_shortcuts_description">عيّن أزرار جهاز التحكم الإضافية لإجراءات التنقل والتشغيل والتصفح. تظل أزرار التنقل الأساسية محمية.</string>
+    <string name="settings_remote_shortcuts_enabled">استخدام اختصارات جهاز التحكم</string>
+    <string name="settings_remote_shortcuts_enabled_description">أوقف كل الاختصارات المخصصة من دون حذف تعيينات الأزرار</string>
+    <string name="settings_remote_shortcuts_assignments">تعيينات الأزرار</string>
+    <string name="settings_remote_shortcuts_add">إضافة اختصار</string>
+    <string name="settings_remote_shortcuts_add_description">اضغط زرًا إضافيًا أو استمر في الضغط عليه، ثم اختر وظيفته</string>
+    <string name="settings_remote_shortcuts_reset">استعادة الاختصارات الافتراضية</string>
+    <string name="settings_remote_shortcuts_reset_description">استعد تنقّل CH+/CH− والترجيع/التقديم السريع واحذف التعيينات الأخرى</string>
+    <string name="settings_remote_shortcuts_capture_title">اضغط زرًا في جهاز التحكم</string>
+    <string name="settings_remote_shortcuts_capture_description">اضغط سريعًا أو استمر حتى تترك الزر. لا يمكن تعيين الرجوع والاتجاهات وموافق والصوت والرئيسية والطاقة.</string>
+    <string name="settings_remote_shortcuts_choose_action">اختيار إجراء</string>
+    <string name="settings_remote_shortcuts_binding"><xliff:g id="press">%1$s</xliff:g> · <xliff:g id="action">%2$s</xliff:g></string>
+    <string name="settings_remote_shortcuts_short_press">ضغطة قصيرة</string>
+    <string name="settings_remote_shortcuts_long_press">ضغطة مطوّلة</string>
+    <string name="settings_remote_shortcuts_unknown_button">زر جهاز التحكم %1$d</string>
+    <string name="settings_remote_shortcuts_help">• افتراضيًا، تتنقل أزرار CH+/CH− والترجيع/التقديم السريع في القوائم، ويؤدي الضغط المطوّل إلى أول عنصر أو آخره.
+• يمكن تعيين الضغط القصير والمطوّل بشكل منفصل.
+• يظل الانتقال إلى الأخير معطّلًا في قوائم «الكل» الكبيرة جدًا.
+• يؤدي الضغط المطوّل على رجوع دائمًا إلى التركيز على قيد التشغيل ولا يمكن تغييره.
+• تشمل الأزرار القابلة للتعيين عادةً الأحمر/الأخضر/الأصفر/الأزرق والأرقام وCH+/CH− والترجيع/التقديم السريع.
+• تظل أزرار الرجوع والاتجاهات وموافق والصوت والرئيسية والطاقة محمية.
+• تعمل اختصارات الأرقام أثناء التصفح؛ وفي ملء الشاشة تكون أولوية إدخال رقم القناة.</string>
+    <string name="settings_remote_button_channel_up">القناة +</string>
+    <string name="settings_remote_button_channel_down">القناة −</string>
+    <string name="settings_remote_button_rewind">ترجيع</string>
+    <string name="settings_remote_button_fast_forward">تقديم سريع</string>
+    <string name="settings_remote_button_previous">السابق</string>
+    <string name="settings_remote_button_next">التالي</string>
+    <string name="settings_remote_button_menu">القائمة</string>
+    <string name="settings_remote_button_red">الزر الأحمر</string>
+    <string name="settings_remote_button_green">الزر الأخضر</string>
+    <string name="settings_remote_button_yellow">الزر الأصفر</string>
+    <string name="settings_remote_button_blue">الزر الأزرق</string>
+    <string name="settings_remote_action_continue">متابعة آخر مشاهدة</string>
+    <string name="settings_remote_action_focus_now_playing">التركيز على قيد التشغيل</string>
+    <string name="settings_remote_action_expand_now_playing">توسيع قيد التشغيل</string>
+    <string name="settings_remote_action_mini_player">النقل إلى المشغّل المصغّر</string>
+    <string name="settings_remote_action_play_pause">تشغيل أو إيقاف مؤقت</string>
+    <string name="settings_remote_action_page_first">التنقل نحو العناصر الأولى</string>
+    <string name="settings_remote_action_page_last">التنقل نحو العناصر الأخيرة</string>
+    <string name="settings_remote_action_jump_first">الانتقال إلى أول عنصر</string>
+    <string name="settings_remote_action_jump_last">الانتقال إلى آخر عنصر</string>
     <string name="settings_large_skips_warning">قد تتجاوز قيم التخطي الكبيرة القوائم القصيرة وقد تبدو الحركة متقطعة على أجهزة التلفزيون منخفضة الإمكانات.</string>
     <string name="settings_ch_nav_picker">التنقل بين الصفحات بمفتاحي CH+/RW · CH−/FF</string>
     <string name="settings_weather">الطقس</string>
@@ -182,8 +225,8 @@
     <string name="settings_customize">تخصيص الفئات والعناصر</string>
     <string name="settings_customize_nav_description">إخفاء العناصر وإظهارها وإعادة تسمية الفئات وترتيبها</string>
     <string name="settings_sidebar_description_root">تكييف الأيقونات الجانبية تلقائيًا مع قائمة التشغيل أو إخفاء أيقونات محددة</string>
-    <string name="settings_ch_paging">التنقل بين الصفحات بمفتاحي CH+/RW · CH−/FF</string>
-    <string name="settings_ch_paging_description">التخطي إلى أعلى/أسفل في قوائم الفئات والعناصر باستخدام مفتاحي CH+/RW / CH−/FF</string>
+    <string name="settings_ch_paging">اختصارات جهاز التحكم</string>
+    <string name="settings_ch_paging_description">عيّن أزرار جهاز التحكم الإضافية لإجراءات التنقل والتشغيل والتصفح. تظل أزرار التنقل الأساسية محمية.</string>
     <!-- Translators: Settings navigation label for the long-press content menus. -->
     <string name="settings_content_menus_title">قوائم الضغط المطوّل</string>
     <!-- Translators: Description of the long-press content menus settings. -->

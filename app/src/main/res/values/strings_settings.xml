@@ -140,11 +140,11 @@
     <!-- Translators: Description of what happens when CH+/CH- paging is enabled. -->
     <string name="settings_ch_nav_enabled_description">When on, CH+/RW and CH−/FF skip inside the focused panel (category rail or item list, and the Customize category list). When off, those keys do nothing in those screens.</string>
     <!-- Translators: Setting label for the CH+ skip count (items jumped per press toward the first item). -->
-    <string name="settings_ch_nav_up">CH+ skip (toward first)</string>
+    <string name="settings_ch_nav_up">CH+ / Rewind skip (toward first)</string>
     <!-- Translators: Description of the CH+ skip count setting. -->
     <string name="settings_ch_nav_up_description">How many items one CH+/RW press jumps up. Long-press always goes to the first item.</string>
     <!-- Translators: Setting label for the CH- skip count (items jumped per press toward the last item). -->
-    <string name="settings_ch_nav_down">CH− skip (toward last)</string>
+    <string name="settings_ch_nav_down">CH− / Fast-forward skip (toward last)</string>
     <!-- Translators: Description of the CH- skip count setting. -->
     <string name="settings_ch_nav_down_description">How many items one CH−/FF press jumps down. Long-press always goes to the last item.</string>
     <!-- Translators: Section header for the skip count settings. -->
@@ -157,6 +157,86 @@
 • Long-press is disabled on the &quot;All&quot; list (every channel / movie / series) — short-press skipping still works there.
 • Applies to whichever panel currently has focus — the category rail or the item list/grid.
 • Also pages the category list in Settings → Customize Categories &amp; Items.</string>
+    <!-- Translators: Title of the settings screen where remote buttons are assigned to app actions. -->
+    <string name="settings_remote_shortcuts">Remote shortcuts</string>
+    <!-- Translators: Description below the Remote shortcuts screen title. -->
+    <string name="settings_remote_shortcuts_description">Assign spare remote buttons to navigation, playback and browsing actions. Essential navigation buttons stay protected.</string>
+    <!-- Translators: Label for the master switch that enables configured remote shortcuts. -->
+    <string name="settings_remote_shortcuts_enabled">Use remote shortcuts</string>
+    <!-- Translators: Description of the master remote-shortcuts switch. -->
+    <string name="settings_remote_shortcuts_enabled_description">Turn off every custom shortcut without deleting your button assignments</string>
+    <!-- Translators: Section heading above the list of assigned remote buttons. -->
+    <string name="settings_remote_shortcuts_assignments">Button assignments</string>
+    <!-- Translators: Row that starts learning a new remote button. -->
+    <string name="settings_remote_shortcuts_add">Add shortcut</string>
+    <!-- Translators: Description of the Add shortcut row. -->
+    <string name="settings_remote_shortcuts_add_description">Press or hold a spare button, then choose what it should do</string>
+    <!-- Translators: Row that restores the original CH+/CH− and rewind/fast-forward paging shortcuts. -->
+    <string name="settings_remote_shortcuts_reset">Restore default shortcuts</string>
+    <!-- Translators: Description of the Restore default shortcuts row. -->
+    <string name="settings_remote_shortcuts_reset_description">Restore CH+/CH− and rewind/fast-forward paging; remove other assignments</string>
+    <!-- Translators: Popup title while OwnTV waits for a remote button. -->
+    <string name="settings_remote_shortcuts_capture_title">Press a remote button</string>
+    <!-- Translators: Popup instruction. Holding a button creates a long-press shortcut. -->
+    <string name="settings_remote_shortcuts_capture_description">Press briefly for a short-press shortcut, or hold until you release for a long-press shortcut. Back, D-pad, OK, volume, Home and power buttons cannot be assigned.</string>
+    <!-- Translators: Title of the popup where an action is chosen for a learned remote button. -->
+    <string name="settings_remote_shortcuts_choose_action">Choose an action</string>
+    <!-- Translators: Summary under an assigned button. First placeholder is Short press/Long press; second is the assigned action. -->
+    <string name="settings_remote_shortcuts_binding"><xliff:g id="press">%1$s</xliff:g> · <xliff:g id="action">%2$s</xliff:g></string>
+    <!-- Translators: Label identifying a normal brief button press. -->
+    <string name="settings_remote_shortcuts_short_press">Short press</string>
+    <!-- Translators: Label identifying a button held down before release. -->
+    <string name="settings_remote_shortcuts_long_press">Long press</string>
+    <!-- Translators: Fallback name for an unusual remote button; number is Android's button identifier. -->
+    <string name="settings_remote_shortcuts_unknown_button">Remote button <xliff:g id="number">%1$d</xliff:g></string>
+    <!-- Translators: Help text explaining defaults and safety rules for configurable remote shortcuts. -->
+    <string name="settings_remote_shortcuts_help">• By default, CH+/CH− and rewind/fast-forward page browsing lists; holding them jumps to the first or last item.
+• Short and long presses can be assigned separately.
+• Jump to last stays disabled on very large &quot;All&quot; lists.
+• Long-press Back always focuses Now Playing and cannot be reassigned.
+• Common assignable buttons are red/green/yellow/blue, numbers, CH+/CH− and rewind/fast-forward.
+• Back, D-pad, OK, volume, Home and power buttons stay protected.
+• Number shortcuts work while browsing; fullscreen number entry keeps channel-navigation priority.</string>
+    <!-- Translators: Remote-control button name. -->
+    <string name="settings_remote_button_channel_up">Channel +</string>
+    <!-- Translators: Remote-control button name. -->
+    <string name="settings_remote_button_channel_down">Channel −</string>
+    <!-- Translators: Remote-control button name. -->
+    <string name="settings_remote_button_rewind">Rewind</string>
+    <!-- Translators: Remote-control button name. -->
+    <string name="settings_remote_button_fast_forward">Fast-forward</string>
+    <!-- Translators: Remote-control button name. -->
+    <string name="settings_remote_button_previous">Previous</string>
+    <!-- Translators: Remote-control button name. -->
+    <string name="settings_remote_button_next">Next</string>
+    <!-- Translators: Remote-control button name. -->
+    <string name="settings_remote_button_menu">Menu</string>
+    <!-- Translators: Remote-control button name. -->
+    <string name="settings_remote_button_red">Red button</string>
+    <!-- Translators: Remote-control button name. -->
+    <string name="settings_remote_button_green">Green button</string>
+    <!-- Translators: Remote-control button name. -->
+    <string name="settings_remote_button_yellow">Yellow button</string>
+    <!-- Translators: Remote-control button name. -->
+    <string name="settings_remote_button_blue">Blue button</string>
+    <!-- Translators: Shortcut action that resumes the most recently watched item. -->
+    <string name="settings_remote_action_continue">Continue last watched</string>
+    <!-- Translators: Shortcut action that moves focus into the mini player or audio-player bar. -->
+    <string name="settings_remote_action_focus_now_playing">Focus Now Playing</string>
+    <!-- Translators: Shortcut action that expands the mini/audio player to fullscreen. -->
+    <string name="settings_remote_action_expand_now_playing">Expand Now Playing</string>
+    <!-- Translators: Shortcut action that docks fullscreen playback in the mini player. -->
+    <string name="settings_remote_action_mini_player">Move to mini player</string>
+    <!-- Translators: Shortcut action that toggles playback between playing and paused. -->
+    <string name="settings_remote_action_play_pause">Play or pause</string>
+    <!-- Translators: Shortcut action that moves backward through a focused browsing list by the configured skip count. -->
+    <string name="settings_remote_action_page_first">Page toward first items</string>
+    <!-- Translators: Shortcut action that moves forward through a focused browsing list by the configured skip count. -->
+    <string name="settings_remote_action_page_last">Page toward last items</string>
+    <!-- Translators: Shortcut action that jumps to the first item in a focused browsing list. -->
+    <string name="settings_remote_action_jump_first">Jump to first item</string>
+    <!-- Translators: Shortcut action that jumps to the final item in a focused browsing list. -->
+    <string name="settings_remote_action_jump_last">Jump to last item</string>
     <!-- Translators: Warning about large skip values on low-end TVs. -->
     <string name="settings_large_skips_warning">Large skips overshoot short lists and may feel jumpy on low-end TVs.</string>
     <!-- Translators: Picker title for the CH+/CH- key paging setting. -->
@@ -404,9 +484,9 @@
     <!-- Translators: Description of the Sidebar Menu Customization settings. -->
     <string name="settings_sidebar_description_root">Auto-adapt side icons to your playlist, or hide specific ones</string>
     <!-- Translators: Settings navigation label for CH+ Key Paging. -->
-    <string name="settings_ch_paging">CH+/RW · CH−/FF Key Paging</string>
+    <string name="settings_ch_paging">Remote shortcuts</string>
     <!-- Translators: Description of the CH+ Key Paging settings. -->
-    <string name="settings_ch_paging_description">Skip up/down in the category &amp; item lists with the CH+/RW / CH−/FF keys</string>
+    <string name="settings_ch_paging_description">Assign spare remote buttons while keeping essential navigation protected</string>
     <!-- Translators: Settings navigation label for the long-press content menus. -->
     <string name="settings_content_menus_title">Long-press menus</string>
     <!-- Translators: Description of the long-press content menus settings. -->

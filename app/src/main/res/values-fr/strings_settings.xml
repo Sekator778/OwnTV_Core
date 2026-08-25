@@ -71,13 +71,56 @@
     <string name="settings_ch_nav_description">Parcourez la liste des catégories ou des éléments par pages avec les touches CH+/RW / CH−/FF de la télécommande.</string>
     <string name="settings_ch_nav_enabled">Utiliser les touches CH+/RW · CH−/FF pour parcourir les listes par pages</string>
     <string name="settings_ch_nav_enabled_description">Lorsque cette option est activée, CH+/RW et CH−/FF permettent d’avancer dans le panneau sélectionné (rail des catégories ou liste des éléments, ainsi que la liste des catégories de l’écran Personnaliser). Lorsqu’elle est désactivée, ces touches n’ont aucun effet sur ces écrans.</string>
-    <string name="settings_ch_nav_up">Saut CH+ (vers le premier élément)</string>
+    <string name="settings_ch_nav_up">Saut CH+ / Retour rapide (vers le premier élément)</string>
     <string name="settings_ch_nav_up_description">Nombre d’éléments remontés à chaque pression sur CH+/RW. Un appui prolongé mène toujours au premier élément.</string>
-    <string name="settings_ch_nav_down">Saut CH− (vers le dernier élément)</string>
+    <string name="settings_ch_nav_down">Saut CH− / Avance rapide (vers le dernier élément)</string>
     <string name="settings_ch_nav_down_description">Nombre d’éléments descendus à chaque pression sur CH−/FF. Un appui prolongé mène toujours au dernier élément.</string>
     <string name="settings_skip_counts">Nombre d’éléments à sauter</string>
     <string name="settings_how_it_works">Fonctionnement</string>
     <string name="settings_ch_nav_help">• Les sauts sont limités aux extrémités afin d’atteindre la fin des listes courtes en une seule pression.\n• Appui prolongé sur CH+/RW = premier élément, appui prolongé sur CH−/FF = dernier élément.\n• L’appui prolongé est désactivé dans la liste « Tout » (toutes les chaînes / tous les films / toutes les séries) — les sauts par pression courte y fonctionnent toujours.\n• S’applique au panneau actuellement sélectionné — le rail des catégories ou la liste/grille des éléments.\n• Permet également de parcourir par pages la liste des catégories dans Paramètres → Personnaliser les catégories et les éléments.</string>
+    <string name="settings_remote_shortcuts">Raccourcis de la télécommande</string>
+    <string name="settings_remote_shortcuts_description">Attribuez les touches libres à la navigation, la lecture et la consultation. Les touches essentielles restent protégées.</string>
+    <string name="settings_remote_shortcuts_enabled">Utiliser les raccourcis de la télécommande</string>
+    <string name="settings_remote_shortcuts_enabled_description">Désactiver tous les raccourcis personnalisés sans effacer les attributions</string>
+    <string name="settings_remote_shortcuts_assignments">Attributions des touches</string>
+    <string name="settings_remote_shortcuts_add">Ajouter un raccourci</string>
+    <string name="settings_remote_shortcuts_add_description">Appuyez ou maintenez une touche libre, puis choisissez son action</string>
+    <string name="settings_remote_shortcuts_reset">Rétablir les raccourcis par défaut</string>
+    <string name="settings_remote_shortcuts_reset_description">Rétablir la navigation CH+/CH− et retour/avance, puis supprimer les autres attributions</string>
+    <string name="settings_remote_shortcuts_capture_title">Appuyez sur une touche</string>
+    <string name="settings_remote_shortcuts_capture_description">Appuyez brièvement ou maintenez jusqu’au relâchement. Retour, pavé directionnel, OK, volume, Accueil et alimentation ne sont pas attribuables.</string>
+    <string name="settings_remote_shortcuts_choose_action">Choisir une action</string>
+    <string name="settings_remote_shortcuts_binding"><xliff:g id="press">%1$s</xliff:g> · <xliff:g id="action">%2$s</xliff:g></string>
+    <string name="settings_remote_shortcuts_short_press">Appui court</string>
+    <string name="settings_remote_shortcuts_long_press">Appui long</string>
+    <string name="settings_remote_shortcuts_unknown_button">Touche de télécommande %1$d</string>
+    <string name="settings_remote_shortcuts_help">• Par défaut, CH+/CH− et retour/avance parcourent les listes ; un appui long va au premier ou au dernier élément.
+• Les appuis courts et longs sont attribuables séparément.
+• Aller au dernier reste désactivé dans les très grandes listes « Tout ».
+• Un appui long sur Retour cible toujours Lecture en cours et ne peut pas être modifié.
+• Les touches couramment attribuables sont rouge/verte/jaune/bleue, chiffres, CH+/CH− et retour/avance rapide.
+• Retour, pavé directionnel, OK, volume, Accueil et alimentation restent protégés.
+• Les raccourcis numériques fonctionnent pendant la navigation ; en plein écran, la saisie de chaîne est prioritaire.</string>
+    <string name="settings_remote_button_channel_up">Chaîne +</string>
+    <string name="settings_remote_button_channel_down">Chaîne −</string>
+    <string name="settings_remote_button_rewind">Retour rapide</string>
+    <string name="settings_remote_button_fast_forward">Avance rapide</string>
+    <string name="settings_remote_button_previous">Précédent</string>
+    <string name="settings_remote_button_next">Suivant</string>
+    <string name="settings_remote_button_menu">Menu</string>
+    <string name="settings_remote_button_red">Touche rouge</string>
+    <string name="settings_remote_button_green">Touche verte</string>
+    <string name="settings_remote_button_yellow">Touche jaune</string>
+    <string name="settings_remote_button_blue">Touche bleue</string>
+    <string name="settings_remote_action_continue">Reprendre le dernier programme</string>
+    <string name="settings_remote_action_focus_now_playing">Cibler Lecture en cours</string>
+    <string name="settings_remote_action_expand_now_playing">Agrandir Lecture en cours</string>
+    <string name="settings_remote_action_mini_player">Déplacer vers le mini-lecteur</string>
+    <string name="settings_remote_action_play_pause">Lire ou mettre en pause</string>
+    <string name="settings_remote_action_page_first">Page vers les premiers éléments</string>
+    <string name="settings_remote_action_page_last">Page vers les derniers éléments</string>
+    <string name="settings_remote_action_jump_first">Aller au premier élément</string>
+    <string name="settings_remote_action_jump_last">Aller au dernier élément</string>
     <string name="settings_large_skips_warning">Les grands sauts dépassent les listes courtes et peuvent sembler saccadés sur les téléviseurs d’entrée de gamme.</string>
     <string name="settings_ch_nav_picker">Navigation par pages avec CH+/RW/−</string>
     <string name="settings_weather">Météo</string>
@@ -179,8 +222,8 @@
     <string name="settings_customize">Personnaliser les catégories et les éléments</string>
     <string name="settings_customize_nav_description">Masquer et afficher des éléments, renommer et réorganiser les catégories</string>
     <string name="settings_sidebar_description_root">Adapter automatiquement les icônes latérales à votre liste de lecture ou en masquer certaines</string>
-    <string name="settings_ch_paging">Navigation par pages avec CH+/RW/−</string>
-    <string name="settings_ch_paging_description">Remonter ou descendre dans les listes de catégories et d’éléments avec les touches CH+/RW / CH−/FF</string>
+    <string name="settings_ch_paging">Raccourcis de la télécommande</string>
+    <string name="settings_ch_paging_description">Attribuez les touches libres à la navigation, la lecture et la consultation. Les touches essentielles restent protégées.</string>
     <!-- Translators: Settings navigation label for the long-press content menus. -->
     <string name="settings_content_menus_title">Menus d’appui long</string>
     <!-- Translators: Description of the long-press content menus settings. -->

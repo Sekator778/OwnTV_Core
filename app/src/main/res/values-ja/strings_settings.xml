@@ -71,13 +71,56 @@
     <string name="settings_ch_nav_description">リモコンのCH+/RW／CH−/FFキーでカテゴリまたは項目の一覧をページ移動します。</string>
     <string name="settings_ch_nav_enabled">CH+/RW · CH−/FFキーで一覧をページ移動</string>
     <string name="settings_ch_nav_enabled_description">オンにすると、CH+/RWとCH−/FFでフォーカス中のパネル内（カテゴリレール、項目一覧、または「カテゴリをカスタマイズ」の一覧）をスキップ移動します。オフにすると、これらの画面ではキーを押しても何も起こりません。</string>
-    <string name="settings_ch_nav_up">CH+のスキップ数（先頭方向）</string>
+    <string name="settings_ch_nav_up">CH+ / 巻き戻しのスキップ数（先頭方向）</string>
     <string name="settings_ch_nav_up_description">CH+/RWを1回押したときに上方向へ移動する項目数です。長押しすると常に先頭の項目へ移動します。</string>
-    <string name="settings_ch_nav_down">CH−のスキップ数（末尾方向）</string>
+    <string name="settings_ch_nav_down">CH− / 早送りのスキップ数（末尾方向）</string>
     <string name="settings_ch_nav_down_description">CH−/FFを1回押したときに下方向へ移動する項目数です。長押しすると常に末尾の項目へ移動します。</string>
     <string name="settings_skip_counts">スキップ数</string>
     <string name="settings_how_it_works">動作の仕組み</string>
     <string name="settings_ch_nav_help">• 末端を越えないようにスキップが制限されるため、短い一覧では1回押すだけで末端に到達します。\n• CH+/RWを長押し＝先頭の項目、CH−/FFを長押し＝末尾の項目。\n• 「すべて」の一覧（全チャンネル／映画／シリーズ）では長押しが無効です。短押しによるスキップは引き続き使用できます。\n• 現在フォーカスがあるパネル（カテゴリレールまたは項目の一覧／グリッド）に適用されます。\n• 「設定」→「カテゴリと項目をカスタマイズ」のカテゴリ一覧でもページ移動できます。</string>
+    <string name="settings_remote_shortcuts">リモコンショートカット</string>
+    <string name="settings_remote_shortcuts_description">リモコンの空きボタンにナビゲーション、再生、一覧操作を割り当てます。重要な操作ボタンは保護されます。</string>
+    <string name="settings_remote_shortcuts_enabled">リモコンショートカットを使用</string>
+    <string name="settings_remote_shortcuts_enabled_description">ボタン割り当てを削除せずにカスタムショートカットをすべて無効にします</string>
+    <string name="settings_remote_shortcuts_assignments">ボタンの割り当て</string>
+    <string name="settings_remote_shortcuts_add">ショートカットを追加</string>
+    <string name="settings_remote_shortcuts_add_description">空きボタンを押すか長押しして、実行する操作を選びます</string>
+    <string name="settings_remote_shortcuts_reset">標準ショートカットを復元</string>
+    <string name="settings_remote_shortcuts_reset_description">CH+/CH−と巻き戻し/早送りのページ操作を復元し、ほかの割り当てを削除します</string>
+    <string name="settings_remote_shortcuts_capture_title">リモコンのボタンを押してください</string>
+    <string name="settings_remote_shortcuts_capture_description">短く押すか、離すまで長押しします。戻る、方向、OK、音量、ホーム、電源ボタンは割り当てできません。</string>
+    <string name="settings_remote_shortcuts_choose_action">操作を選択</string>
+    <string name="settings_remote_shortcuts_binding"><xliff:g id="press">%1$s</xliff:g> · <xliff:g id="action">%2$s</xliff:g></string>
+    <string name="settings_remote_shortcuts_short_press">短押し</string>
+    <string name="settings_remote_shortcuts_long_press">長押し</string>
+    <string name="settings_remote_shortcuts_unknown_button">リモコンボタン %1$d</string>
+    <string name="settings_remote_shortcuts_help">• 標準ではCH+/CH−と巻き戻し/早送りで一覧を移動し、長押しで先頭または末尾へ移動します。
+• 短押しと長押しは別々に割り当てできます。
+• 非常に大きい「すべて」一覧では末尾への移動は無効です。
+• 戻るの長押しは常に再生中へフォーカスし、変更できません。
+• 通常は赤/緑/黄/青、数字、CH+/CH−、巻き戻し/早送りを割り当てできます。
+• 戻る、方向、OK、音量、ホーム、電源ボタンは保護されます。
+• 数字ショートカットは閲覧中に動作し、全画面ではチャンネル番号入力が優先されます。</string>
+    <string name="settings_remote_button_channel_up">チャンネル +</string>
+    <string name="settings_remote_button_channel_down">チャンネル −</string>
+    <string name="settings_remote_button_rewind">巻き戻し</string>
+    <string name="settings_remote_button_fast_forward">早送り</string>
+    <string name="settings_remote_button_previous">前へ</string>
+    <string name="settings_remote_button_next">次へ</string>
+    <string name="settings_remote_button_menu">メニュー</string>
+    <string name="settings_remote_button_red">赤ボタン</string>
+    <string name="settings_remote_button_green">緑ボタン</string>
+    <string name="settings_remote_button_yellow">黄ボタン</string>
+    <string name="settings_remote_button_blue">青ボタン</string>
+    <string name="settings_remote_action_continue">最後に見た項目を続ける</string>
+    <string name="settings_remote_action_focus_now_playing">再生中にフォーカス</string>
+    <string name="settings_remote_action_expand_now_playing">再生中を全画面表示</string>
+    <string name="settings_remote_action_mini_player">ミニプレーヤーへ移動</string>
+    <string name="settings_remote_action_play_pause">再生または一時停止</string>
+    <string name="settings_remote_action_page_first">先頭方向へページ移動</string>
+    <string name="settings_remote_action_page_last">末尾方向へページ移動</string>
+    <string name="settings_remote_action_jump_first">最初の項目へ移動</string>
+    <string name="settings_remote_action_jump_last">最後の項目へ移動</string>
     <string name="settings_large_skips_warning">スキップ数が大きいと短い一覧を飛び越え、低性能のTVでは動きがぎこちなく感じられることがあります。</string>
     <string name="settings_ch_nav_picker">CH+/RW · CH−/FFキーによるページ移動</string>
     <string name="settings_weather">天気</string>
@@ -177,8 +220,8 @@
     <string name="settings_customize">カテゴリと項目をカスタマイズ</string>
     <string name="settings_customize_nav_description">項目の非表示／再表示、カテゴリ名の変更、並べ替え</string>
     <string name="settings_sidebar_description_root">プレイリストに合わせてサイドアイコンを自動調整するか、特定のアイコンを非表示にします</string>
-    <string name="settings_ch_paging">CH+/RW · CH−/FFキーによるページ移動</string>
-    <string name="settings_ch_paging_description">CH+/RW／CH−/FFキーでカテゴリと項目の一覧を上下にスキップ</string>
+    <string name="settings_ch_paging">リモコンショートカット</string>
+    <string name="settings_ch_paging_description">リモコンの空きボタンにナビゲーション、再生、一覧操作を割り当てます。重要な操作ボタンは保護されます。</string>
     <!-- Translators: Settings navigation label for the long-press content menus. -->
     <string name="settings_content_menus_title">長押しメニュー</string>
     <!-- Translators: Description of the long-press content menus settings. -->

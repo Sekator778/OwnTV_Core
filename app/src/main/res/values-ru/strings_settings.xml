@@ -71,13 +71,56 @@
     <string name="settings_ch_nav_description">Перелистывайте категории или список элементов клавишами CH+/RW / CH−/FF на пульте ДУ.</string>
     <string name="settings_ch_nav_enabled">Перелистывать списки клавишами CH+/RW · CH−/FF</string>
     <string name="settings_ch_nav_enabled_description">Если включено, клавиши CH+/RW и CH−/FF выполняют переходы внутри панели в фокусе (ряда категорий или списка элементов, а также списка категорий на экране настройки). Если выключено, на этих экранах клавиши не выполняют никаких действий.</string>
-    <string name="settings_ch_nav_up">Переход по CH+ (к началу)</string>
+    <string name="settings_ch_nav_up">Переход по CH+ / Перемотке назад (к началу)</string>
     <string name="settings_ch_nav_up_description">Количество элементов, на которое одно нажатие CH+/RW перемещает вверх. Долгое нажатие всегда выполняет переход к первому элементу.</string>
-    <string name="settings_ch_nav_down">Переход по CH− (к концу)</string>
+    <string name="settings_ch_nav_down">Переход по CH− / Перемотке вперёд (к концу)</string>
     <string name="settings_ch_nav_down_description">Количество элементов, на которое одно нажатие CH−/FF перемещает вниз. Долгое нажатие всегда выполняет переход к последнему элементу.</string>
     <string name="settings_skip_counts">Количество пропускаемых элементов</string>
     <string name="settings_how_it_works">Как это работает</string>
     <string name="settings_ch_nav_help">• Переход ограничивается границами списка, поэтому в коротком списке можно дойти до конца одним нажатием.\n• Долгое нажатие CH+/RW = первый элемент, долгое нажатие CH−/FF = последний элемент.\n• Долгое нажатие отключено в списке «Все» (все каналы / фильмы / сериалы) — переход короткими нажатиями там по-прежнему работает.\n• Действует на панель, которая сейчас находится в фокусе, — ряд категорий или список/сетка элементов.\n• Также перелистывает список категорий в разделе «Настройки → Настройка категорий и элементов».</string>
+    <string name="settings_remote_shortcuts">Команды пульта</string>
+    <string name="settings_remote_shortcuts_description">Назначьте свободным кнопкам навигацию, воспроизведение и просмотр списков. Основные кнопки навигации останутся защищёнными.</string>
+    <string name="settings_remote_shortcuts_enabled">Использовать команды пульта</string>
+    <string name="settings_remote_shortcuts_enabled_description">Отключить все пользовательские команды, не удаляя назначения</string>
+    <string name="settings_remote_shortcuts_assignments">Назначения кнопок</string>
+    <string name="settings_remote_shortcuts_add">Добавить команду</string>
+    <string name="settings_remote_shortcuts_add_description">Нажмите или удерживайте свободную кнопку, затем выберите действие</string>
+    <string name="settings_remote_shortcuts_reset">Восстановить стандартные команды</string>
+    <string name="settings_remote_shortcuts_reset_description">Восстановить листание CH+/CH− и назад/вперёд; удалить остальные назначения</string>
+    <string name="settings_remote_shortcuts_capture_title">Нажмите кнопку пульта</string>
+    <string name="settings_remote_shortcuts_capture_description">Нажмите быстро или удерживайте до отпускания. Назад, крестовину, OK, громкость, Главную и питание назначать нельзя.</string>
+    <string name="settings_remote_shortcuts_choose_action">Выберите действие</string>
+    <string name="settings_remote_shortcuts_binding"><xliff:g id="press">%1$s</xliff:g> · <xliff:g id="action">%2$s</xliff:g></string>
+    <string name="settings_remote_shortcuts_short_press">Короткое нажатие</string>
+    <string name="settings_remote_shortcuts_long_press">Долгое нажатие</string>
+    <string name="settings_remote_shortcuts_unknown_button">Кнопка пульта %1$d</string>
+    <string name="settings_remote_shortcuts_help">• По умолчанию CH+/CH− и назад/вперёд листают списки; удержание переходит к первому или последнему элементу.
+• Короткое и долгое нажатия назначаются отдельно.
+• Переход к концу отключён в очень больших списках «Все».
+• Долгое нажатие Назад всегда переводит фокус на «Сейчас воспроизводится» и не изменяется.
+• Обычно можно назначить красную/зелёную/жёлтую/синюю, цифры, CH+/CH− и перемотку.
+• Назад, крестовина, OK, громкость, Главная и питание остаются защищёнными.
+• Цифровые сочетания работают при просмотре; в полноэкранном режиме ввод канала имеет приоритет.</string>
+    <string name="settings_remote_button_channel_up">Канал +</string>
+    <string name="settings_remote_button_channel_down">Канал −</string>
+    <string name="settings_remote_button_rewind">Перемотка назад</string>
+    <string name="settings_remote_button_fast_forward">Перемотка вперёд</string>
+    <string name="settings_remote_button_previous">Предыдущий</string>
+    <string name="settings_remote_button_next">Следующий</string>
+    <string name="settings_remote_button_menu">Меню</string>
+    <string name="settings_remote_button_red">Красная кнопка</string>
+    <string name="settings_remote_button_green">Зелёная кнопка</string>
+    <string name="settings_remote_button_yellow">Жёлтая кнопка</string>
+    <string name="settings_remote_button_blue">Синяя кнопка</string>
+    <string name="settings_remote_action_continue">Продолжить последнее</string>
+    <string name="settings_remote_action_focus_now_playing">Фокус на «Сейчас воспроизводится»</string>
+    <string name="settings_remote_action_expand_now_playing">Развернуть «Сейчас воспроизводится»</string>
+    <string name="settings_remote_action_mini_player">Переместить в мини-плеер</string>
+    <string name="settings_remote_action_play_pause">Воспроизвести или приостановить</string>
+    <string name="settings_remote_action_page_first">Листать к началу</string>
+    <string name="settings_remote_action_page_last">Листать к концу</string>
+    <string name="settings_remote_action_jump_first">К первому элементу</string>
+    <string name="settings_remote_action_jump_last">К последнему элементу</string>
     <string name="settings_large_skips_warning">При больших значениях короткие списки могут проскакивать слишком быстро, а на маломощных телевизорах навигация может казаться дёрганой.</string>
     <string name="settings_ch_nav_picker">Постраничная навигация клавишами CH+/RW · CH−/FF</string>
     <string name="settings_weather">Погода</string>
@@ -180,8 +223,8 @@
     <string name="settings_customize">Настройка категорий и элементов</string>
     <string name="settings_customize_nav_description">Скрытие и отображение элементов, переименование и изменение порядка категорий</string>
     <string name="settings_sidebar_description_root">Автоматическая адаптация боковых значков к плейлисту или скрытие отдельных значков</string>
-    <string name="settings_ch_paging">Постраничная навигация клавишами CH+/RW · CH−/FF</string>
-    <string name="settings_ch_paging_description">Переход вверх и вниз по спискам категорий и элементов клавишами CH+/RW / CH−/FF</string>
+    <string name="settings_ch_paging">Команды пульта</string>
+    <string name="settings_ch_paging_description">Назначьте свободным кнопкам навигацию, воспроизведение и просмотр списков. Основные кнопки навигации останутся защищёнными.</string>
     <!-- Translators: Settings navigation label for the long-press content menus. -->
     <string name="settings_content_menus_title">Меню долгого нажатия</string>
     <!-- Translators: Description of the long-press content menus settings. -->

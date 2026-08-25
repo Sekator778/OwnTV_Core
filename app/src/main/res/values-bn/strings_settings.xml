@@ -71,13 +71,56 @@
     <string name="settings_ch_nav_description">রিমোটের CH+/RW / CH−/FF বোতাম দিয়ে বিভাগ বা আইটেমের তালিকার পৃষ্ঠা বদলান।</string>
     <string name="settings_ch_nav_enabled">তালিকার পৃষ্ঠা বদলাতে CH+/RW · CH−/FF বোতাম ব্যবহার করুন</string>
     <string name="settings_ch_nav_enabled_description">চালু থাকলে, CH+/RW ও CH−/FF ফোকাসে থাকা প্যানেলের ভেতরে এগিয়ে যায় (বিভাগের রেল বা আইটেমের তালিকা এবং বিভাগ নিজের মতো সাজানোর তালিকা)। বন্ধ থাকলে, ওই স্ক্রিনগুলোতে এই বোতামগুলো কিছু করবে না।</string>
-    <string name="settings_ch_nav_up">CH+ এড়িয়ে যাওয়া (প্রথমটির দিকে)</string>
+    <string name="settings_ch_nav_up">CH+ / রিওয়াইন্ড এড়িয়ে যাওয়া (প্রথমটির দিকে)</string>
     <string name="settings_ch_nav_up_description">CH+/RW একবার চাপলে কতটি আইটেম ওপরের দিকে যাবে। দীর্ঘক্ষণ চাপলে সব সময় প্রথম আইটেমে যাবে।</string>
-    <string name="settings_ch_nav_down">CH− এড়িয়ে যাওয়া (শেষটির দিকে)</string>
+    <string name="settings_ch_nav_down">CH− / ফাস্ট-ফরোয়ার্ড এড়িয়ে যাওয়া (শেষটির দিকে)</string>
     <string name="settings_ch_nav_down_description">CH−/FF একবার চাপলে কতটি আইটেম নিচের দিকে যাবে। দীর্ঘক্ষণ চাপলে সব সময় শেষ আইটেমে যাবে।</string>
     <string name="settings_skip_counts">এড়িয়ে যাওয়ার সংখ্যা</string>
     <string name="settings_how_it_works">এটি যেভাবে কাজ করে</string>
     <string name="settings_ch_nav_help">• শেষ প্রান্তে পৌঁছালে এড়িয়ে যাওয়া থেমে যায়, তাই ছোট তালিকা একবার চাপলেই শেষ পর্যন্ত পৌঁছায়।\n• CH+/RW দীর্ঘক্ষণ চাপা = প্রথম আইটেম, CH−/FF দীর্ঘক্ষণ চাপা = শেষ আইটেম।\n• \"সব\" তালিকায় (প্রতিটি চ্যানেল / সিনেমা / সিরিজ) দীর্ঘক্ষণ চাপা নিষ্ক্রিয় — তবে সেখানে অল্প সময় চাপলে এড়িয়ে যাওয়া কাজ করে।\n• বর্তমানে যে প্যানেলে ফোকাস আছে, সেখানে প্রযোজ্য — বিভাগের রেল অথবা আইটেমের তালিকা/গ্রিড।\n• সেটিংস → বিভাগ ও আইটেম নিজের মতো সাজান-এর বিভাগ তালিকার পৃষ্ঠাও বদলায়।</string>
+    <string name="settings_remote_shortcuts">রিমোট শর্টকাট</string>
+    <string name="settings_remote_shortcuts_description">নেভিগেশন, প্লেব্যাক ও ব্রাউজিং কাজের জন্য রিমোটের অতিরিক্ত বোতাম নির্ধারণ করুন। জরুরি নেভিগেশন বোতাম সুরক্ষিত থাকবে।</string>
+    <string name="settings_remote_shortcuts_enabled">রিমোট শর্টকাট ব্যবহার করুন</string>
+    <string name="settings_remote_shortcuts_enabled_description">বোতামের নির্ধারণ না মুছে সব কাস্টম শর্টকাট বন্ধ করুন</string>
+    <string name="settings_remote_shortcuts_assignments">বোতাম নির্ধারণ</string>
+    <string name="settings_remote_shortcuts_add">শর্টকাট যোগ করুন</string>
+    <string name="settings_remote_shortcuts_add_description">একটি অতিরিক্ত বোতাম চাপুন বা ধরে রাখুন, তারপর এর কাজ বেছে নিন</string>
+    <string name="settings_remote_shortcuts_reset">ডিফল্ট শর্টকাট ফিরিয়ে আনুন</string>
+    <string name="settings_remote_shortcuts_reset_description">CH+/CH− এবং রিওয়াইন্ড/ফাস্ট-ফরোয়ার্ড পেজিং ফিরিয়ে অন্য নির্ধারণ মুছুন</string>
+    <string name="settings_remote_shortcuts_capture_title">রিমোটের একটি বোতাম চাপুন</string>
+    <string name="settings_remote_shortcuts_capture_description">দ্রুত চাপুন বা ছাড়া পর্যন্ত ধরে রাখুন। ব্যাক, ডি-প্যাড, OK, ভলিউম, হোম ও পাওয়ার নির্ধারণ করা যাবে না।</string>
+    <string name="settings_remote_shortcuts_choose_action">একটি কাজ বেছে নিন</string>
+    <string name="settings_remote_shortcuts_binding"><xliff:g id="press">%1$s</xliff:g> · <xliff:g id="action">%2$s</xliff:g></string>
+    <string name="settings_remote_shortcuts_short_press">ছোট চাপ</string>
+    <string name="settings_remote_shortcuts_long_press">দীর্ঘ চাপ</string>
+    <string name="settings_remote_shortcuts_unknown_button">রিমোট বোতাম %1$d</string>
+    <string name="settings_remote_shortcuts_help">• ডিফল্টভাবে CH+/CH− ও রিওয়াইন্ড/ফাস্ট-ফরোয়ার্ড তালিকায় পেজ করে; ধরে রাখলে প্রথম বা শেষ আইটেমে যায়।
+• ছোট ও দীর্ঘ চাপ আলাদাভাবে নির্ধারণ করা যায়।
+• খুব বড় ‘সব’ তালিকায় শেষে যাওয়া বন্ধ থাকে।
+• ব্যাক দীর্ঘ চাপ সবসময় Now Playing-এ ফোকাস করে এবং বদলানো যায় না।
+• সাধারণত লাল/সবুজ/হলুদ/নীল, নম্বর, CH+/CH− ও রিওয়াইন্ড/ফাস্ট-ফরোয়ার্ড নির্ধারণ করা যায়।
+• ব্যাক, ডি-প্যাড, OK, ভলিউম, হোম ও পাওয়ার সুরক্ষিত থাকে।
+• ব্রাউজ করার সময় নম্বর শর্টকাট কাজ করে; ফুলস্ক্রিনে চ্যানেল নম্বর দেওয়া অগ্রাধিকার পায়।</string>
+    <string name="settings_remote_button_channel_up">চ্যানেল +</string>
+    <string name="settings_remote_button_channel_down">চ্যানেল −</string>
+    <string name="settings_remote_button_rewind">রিওয়াইন্ড</string>
+    <string name="settings_remote_button_fast_forward">ফাস্ট-ফরোয়ার্ড</string>
+    <string name="settings_remote_button_previous">আগের</string>
+    <string name="settings_remote_button_next">পরের</string>
+    <string name="settings_remote_button_menu">মেনু</string>
+    <string name="settings_remote_button_red">লাল বোতাম</string>
+    <string name="settings_remote_button_green">সবুজ বোতাম</string>
+    <string name="settings_remote_button_yellow">হলুদ বোতাম</string>
+    <string name="settings_remote_button_blue">নীল বোতাম</string>
+    <string name="settings_remote_action_continue">সর্বশেষ দেখা চালিয়ে যান</string>
+    <string name="settings_remote_action_focus_now_playing">Now Playing-এ ফোকাস</string>
+    <string name="settings_remote_action_expand_now_playing">Now Playing বড় করুন</string>
+    <string name="settings_remote_action_mini_player">মিনি প্লেয়ারে নিন</string>
+    <string name="settings_remote_action_play_pause">চালান বা বিরতি দিন</string>
+    <string name="settings_remote_action_page_first">প্রথম আইটেমগুলোর দিকে পেজ</string>
+    <string name="settings_remote_action_page_last">শেষ আইটেমগুলোর দিকে পেজ</string>
+    <string name="settings_remote_action_jump_first">প্রথম আইটেমে যান</string>
+    <string name="settings_remote_action_jump_last">শেষ আইটেমে যান</string>
     <string name="settings_large_skips_warning">বেশি সংখ্যক আইটেম এড়িয়ে গেলে ছোট তালিকার শেষ পেরিয়ে যেতে পারে এবং কম ক্ষমতার TV-তে নেভিগেশন ঝাঁকুনিপূর্ণ মনে হতে পারে।</string>
     <string name="settings_ch_nav_picker">CH+/RW · CH−/FF বোতামে পৃষ্ঠা বদল</string>
     <string name="settings_weather">আবহাওয়া</string>
@@ -178,8 +221,8 @@
     <string name="settings_customize">বিভাগ ও আইটেম নিজের মতো সাজান</string>
     <string name="settings_customize_nav_description">আইটেম লুকান ও আবার দেখান, বিভাগের নাম বদলান ও পুনর্বিন্যাস করুন</string>
     <string name="settings_sidebar_description_root">প্লেলিস্ট অনুযায়ী পাশের আইকনগুলো স্বয়ংক্রিয়ভাবে মানিয়ে নিন অথবা নির্দিষ্টগুলো লুকান</string>
-    <string name="settings_ch_paging">CH+/RW · CH−/FF বোতামে পৃষ্ঠা বদল</string>
-    <string name="settings_ch_paging_description">CH+/RW / CH−/FF বোতাম দিয়ে বিভাগ ও আইটেমের তালিকায় ওপরে/নিচে এড়িয়ে যান</string>
+    <string name="settings_ch_paging">রিমোট শর্টকাট</string>
+    <string name="settings_ch_paging_description">নেভিগেশন, প্লেব্যাক ও ব্রাউজিং কাজের জন্য রিমোটের অতিরিক্ত বোতাম নির্ধারণ করুন। জরুরি নেভিগেশন বোতাম সুরক্ষিত থাকবে।</string>
     <!-- Translators: Settings navigation label for the long-press content menus. -->
     <string name="settings_content_menus_title">লং-প্রেস মেনু</string>
     <!-- Translators: Description of the long-press content menus settings. -->

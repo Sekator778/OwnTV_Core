@@ -71,13 +71,56 @@
     <string name="settings_ch_nav_description">使用遙控器的 CH+/RW／CH−/FF 按鍵逐頁切換分類或項目清單。</string>
     <string name="settings_ch_nav_enabled">使用 CH+/RW · CH−/FF 按鍵翻頁</string>
     <string name="settings_ch_nav_enabled_description">開啟後，CH+/RW 和 CH−/FF 會在已取得焦點的面板內跳轉（分類列或項目清單，以及「自訂」分類清單）。關閉後，這些按鍵在上述畫面中不會有任何作用。</string>
-    <string name="settings_ch_nav_up">CH+ 跳轉數（朝第一項）</string>
+    <string name="settings_ch_nav_up">CH+ / 倒轉跳轉數（朝第一項）</string>
     <string name="settings_ch_nav_up_description">按一下 CH+/RW 向上跳轉的項目數。長按一律跳至第一個項目。</string>
-    <string name="settings_ch_nav_down">CH− 跳轉數（朝最後一項）</string>
+    <string name="settings_ch_nav_down">CH− / 快轉跳轉數（朝最後一項）</string>
     <string name="settings_ch_nav_down_description">按一下 CH−/FF 向下跳轉的項目數。長按一律跳至最後一個項目。</string>
     <string name="settings_skip_counts">跳轉數</string>
     <string name="settings_how_it_works">運作方式</string>
     <string name="settings_ch_nav_help">• 跳轉會限制在清單兩端，因此短清單只要按一下就能到達末端。\n• 長按 CH+/RW = 第一個項目，長按 CH−/FF = 最後一個項目。\n• 「全部」清單（所有頻道／電影／影集）會停用長按功能 — 短按跳轉仍可使用。\n• 此功能會套用至目前已取得焦點的面板 — 分類列或項目清單／網格。\n• 也能在「設定 → 自訂分類與項目」中逐頁切換分類清單。</string>
+    <string name="settings_remote_shortcuts">遙控器捷徑</string>
+    <string name="settings_remote_shortcuts_description">將遙控器的空閒按鍵指派給導覽、播放和瀏覽操作。必要的導覽按鍵會保持受保護。</string>
+    <string name="settings_remote_shortcuts_enabled">使用遙控器捷徑</string>
+    <string name="settings_remote_shortcuts_enabled_description">關閉所有自訂捷徑，但不刪除按鍵指派</string>
+    <string name="settings_remote_shortcuts_assignments">按鍵指派</string>
+    <string name="settings_remote_shortcuts_add">新增捷徑</string>
+    <string name="settings_remote_shortcuts_add_description">按下或按住一個空閒按鍵，然後選擇它的操作</string>
+    <string name="settings_remote_shortcuts_reset">還原預設捷徑</string>
+    <string name="settings_remote_shortcuts_reset_description">還原 CH+/CH− 和倒轉/快轉翻頁，並移除其他指派</string>
+    <string name="settings_remote_shortcuts_capture_title">按一個遙控器按鍵</string>
+    <string name="settings_remote_shortcuts_capture_description">快速按下或按住後放開。返回、方向、確定、音量、首頁和電源鍵不能指派。</string>
+    <string name="settings_remote_shortcuts_choose_action">選擇操作</string>
+    <string name="settings_remote_shortcuts_binding"><xliff:g id="press">%1$s</xliff:g> · <xliff:g id="action">%2$s</xliff:g></string>
+    <string name="settings_remote_shortcuts_short_press">短按</string>
+    <string name="settings_remote_shortcuts_long_press">長按</string>
+    <string name="settings_remote_shortcuts_unknown_button">遙控器按鍵 %1$d</string>
+    <string name="settings_remote_shortcuts_help">• 預設情況下，CH+/CH− 和倒轉/快轉用於清單翻頁；長按會跳到第一個或最後一個項目。
+• 短按和長按可以分別指派。
+• 在非常大的「全部」清單中，跳到最後一項仍會停用。
+• 長按返回一律聚焦「正在播放」，且不能重新指派。
+• 通常可指派紅/綠/黃/藍、數字、CH+/CH− 和倒轉/快轉鍵。
+• 返回、方向、確定、音量、首頁和電源鍵會保持受保護。
+• 數字快速鍵在瀏覽時生效；全螢幕時頻道號碼輸入優先。</string>
+    <string name="settings_remote_button_channel_up">頻道 +</string>
+    <string name="settings_remote_button_channel_down">頻道 −</string>
+    <string name="settings_remote_button_rewind">倒轉</string>
+    <string name="settings_remote_button_fast_forward">快轉</string>
+    <string name="settings_remote_button_previous">上一個</string>
+    <string name="settings_remote_button_next">下一個</string>
+    <string name="settings_remote_button_menu">選單</string>
+    <string name="settings_remote_button_red">紅色按鍵</string>
+    <string name="settings_remote_button_green">綠色按鍵</string>
+    <string name="settings_remote_button_yellow">黃色按鍵</string>
+    <string name="settings_remote_button_blue">藍色按鍵</string>
+    <string name="settings_remote_action_continue">繼續上次觀看</string>
+    <string name="settings_remote_action_focus_now_playing">聚焦正在播放</string>
+    <string name="settings_remote_action_expand_now_playing">展開正在播放</string>
+    <string name="settings_remote_action_mini_player">移到迷你播放器</string>
+    <string name="settings_remote_action_play_pause">播放或暫停</string>
+    <string name="settings_remote_action_page_first">向前段項目翻頁</string>
+    <string name="settings_remote_action_page_last">向後段項目翻頁</string>
+    <string name="settings_remote_action_jump_first">跳到第一項</string>
+    <string name="settings_remote_action_jump_last">跳到最後一項</string>
     <string name="settings_large_skips_warning">較大的跳轉數會越過短清單中的項目，在低階電視上也可能顯得不夠流暢。</string>
     <string name="settings_ch_nav_picker">CH+/RW · CH−/FF 按鍵翻頁</string>
     <string name="settings_weather">天氣</string>
@@ -177,8 +220,8 @@
     <string name="settings_customize">自訂分類與項目</string>
     <string name="settings_customize_nav_description">隱藏及取消隱藏項目、重新命名及排序分類</string>
     <string name="settings_sidebar_description_root">依播放清單自動調整側邊圖示，或隱藏特定圖示</string>
-    <string name="settings_ch_paging">CH+/RW · CH−/FF 按鍵翻頁</string>
-    <string name="settings_ch_paging_description">使用 CH+/RW／CH−/FF 按鍵在分類和項目清單中向上／向下跳轉</string>
+    <string name="settings_ch_paging">遙控器捷徑</string>
+    <string name="settings_ch_paging_description">將遙控器的空閒按鍵指派給導覽、播放和瀏覽操作。必要的導覽按鍵會保持受保護。</string>
     <!-- Translators: Settings navigation label for the long-press content menus. -->
     <string name="settings_content_menus_title">長按選單</string>
     <!-- Translators: Description of the long-press content menus settings. -->

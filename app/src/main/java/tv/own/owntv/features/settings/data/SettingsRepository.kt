@@ -324,6 +324,7 @@ class SettingsRepository(private val context: Context, private val localeStore: 
         val CH_NAV_ENABLED = booleanPreferencesKey("ch_nav_enabled")
         val CH_NAV_UP_SKIP = intPreferencesKey("ch_nav_up_skip")
         val CH_NAV_DOWN_SKIP = intPreferencesKey("ch_nav_down_skip")
+        val REMOTE_SHORTCUT_BINDINGS = stringSetPreferencesKey("remote_shortcut_bindings")
         // Manual panel-width adjustment (v4.3.x): per section (Live/Movies/Series) a master toggle plus
         // one percentage per panel (category rail · item list/grid · preview). 100 = stock width; the
         // three are normalized across the row, so they always fill the screen. See PanelWidths.kt.
@@ -1172,6 +1173,43 @@ class SettingsRepository(private val context: Context, private val localeStore: 
         context.dataStore.edit { it[Keys.CH_NAV_DOWN_SKIP] = n.coerceIn(1, ChNavLimits.HARD_MAX) }
     }
 
+    /** Configurable remote shortcuts. An absent key means factory defaults; an empty set means none. */
+    val remoteShortcutBindings: Flow<List<RemoteShortcutBinding>> = prefsFlow { prefs ->
+        if (Keys.REMOTE_SHORTCUT_BINDINGS in prefs) {
+            RemoteShortcutBindings.decode(prefs[Keys.REMOTE_SHORTCUT_BINDINGS].orEmpty())
+        } else {
+            RemoteShortcutBindings.defaults
+        }
+    }
+
+    suspend fun setRemoteShortcutBinding(binding: RemoteShortcutBinding) {
+        context.dataStore.edit { prefs ->
+            val current = if (Keys.REMOTE_SHORTCUT_BINDINGS in prefs) {
+                RemoteShortcutBindings.decode(prefs[Keys.REMOTE_SHORTCUT_BINDINGS].orEmpty())
+            } else {
+                RemoteShortcutBindings.defaults
+            }
+            prefs[Keys.REMOTE_SHORTCUT_BINDINGS] =
+                RemoteShortcutBindings.encode(RemoteShortcutBindings.replace(current, binding))
+        }
+    }
+
+    suspend fun removeRemoteShortcutBinding(keyCode: Int, press: RemoteShortcutPress) {
+        context.dataStore.edit { prefs ->
+            val current = if (Keys.REMOTE_SHORTCUT_BINDINGS in prefs) {
+                RemoteShortcutBindings.decode(prefs[Keys.REMOTE_SHORTCUT_BINDINGS].orEmpty())
+            } else {
+                RemoteShortcutBindings.defaults
+            }
+            prefs[Keys.REMOTE_SHORTCUT_BINDINGS] =
+                RemoteShortcutBindings.encode(current.filterNot { it.keyCode == keyCode && it.press == press })
+        }
+    }
+
+    suspend fun resetRemoteShortcutBindings() {
+        context.dataStore.edit { it.remove(Keys.REMOTE_SHORTCUT_BINDINGS) }
+    }
+
     // --- Manual panel widths: per browse section, a master toggle + one percentage per panel ---
     // While the toggle is off the screens keep their stock layout code path entirely, so the feature
     // can't affect anyone who never opens it. Percentages are clamped on both read and write.
@@ -1927,6 +1965,7 @@ class SettingsRepository(private val context: Context, private val localeStore: 
     private val backupStringSetKeys = listOf(
         // The STATIC-mode hidden set rides with backup so a reinstall keeps the user's hidden icons.
         Keys.NAV_MENU_HIDDEN,
+        Keys.REMOTE_SHORTCUT_BINDINGS,
     )
     private val backupIntKeys = listOf(Keys.FOCUS_HIGHLIGHT_WIDTH, Keys.DEFAULT_VOLUME, Keys.SEEK_STEP_SEC, Keys.LIVE_REWIND_STEP_SEC, Keys.UI_ZOOM_PCT, Keys.FONT_SIZE_PCT, Keys.AUDIO_DELAY_MS, Keys.CATCHUP_OFFSET_MIN, Keys.EPG_OFFSET_MIN, Keys.PROXY_PORT, Keys.DNS_PORT, Keys.CH_NAV_UP_SKIP, Keys.CH_NAV_DOWN_SKIP, Keys.MINI_PLAYER_SIZE_PCT, Keys.LIVE_LATENCY_CUSTOM_SECS, Keys.LIVE_PREROLL_SECS, Keys.LIVE_TUNE_TIMEOUT_SECS, Keys.GLASS_SCOPE, Keys.GLASS_ALPHA, Keys.GLASS_BLUR, Keys.GLASS_HIGHLIGHT, Keys.SUB_BG_OPACITY,
         Keys.PANEL_W_LIVE_CAT, Keys.PANEL_W_LIVE_LIST, Keys.PANEL_W_LIVE_PREVIEW,
