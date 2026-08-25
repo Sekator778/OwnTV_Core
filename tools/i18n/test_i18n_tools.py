@@ -567,11 +567,14 @@ class TestValidateStrings(unittest.TestCase):
             screen.index("if (showSystemDefault)"),
         )
         settings = (ROOT / "app/src/main/java/tv/own/owntv/features/shell/components/SettingsScreen.kt").read_text()
-        appearance = settings.index("GroupLabel(stringResource(R.string.settings_appearance_group))")
+        appearance = settings.index(
+            'RootGroup("group_appearance", stringResource(R.string.settings_appearance_group)'
+        )
+        app = settings.index('RootGroup("group_app", stringResource(R.string.settings_app_group)')
         language = settings.index("title = stringResource(R.string.settings_language),")
         theme = settings.index("title = stringResource(R.string.settings_theme),")
-        self.assertLess(appearance, language)
-        self.assertLess(language, theme)
+        self.assertLess(appearance, theme)
+        self.assertLess(app, language)
         view_model = (ROOT / "app/src/main/java/tv/own/owntv/features/settings/LanguageSettingsViewModel.kt").read_text()
         self.assertIn("sortedBy { it.englishName.lowercase(Locale.ROOT) }", view_model)
         self.assertNotIn("sortedBy { it.endonym.lowercase() }", view_model)
