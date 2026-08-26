@@ -335,9 +335,11 @@ class ExoSubtitleEngine(
         applyLanguagePrefs()
         setVideoTrackDisabled(audioOnly) // survives a player rebuild while Audio Mode is on
         p.setVideoSurface(surface)
-        p.setMediaItem(buildMediaItem(url))
+        // Start a resumed item at its target in the initial prepare. Preparing at zero and seeking
+        // immediately afterwards tears down a just-created passthrough sink on some TCL/Realtek TVs;
+        // the replacement E-AC3 output can then stay silent until the watchdog demotes the session.
+        p.setMediaItem(buildMediaItem(url), positionMs.coerceAtLeast(0))
         p.prepare()
-        if (positionMs > 0) p.seekTo(positionMs)
         p.playWhenReady = true
     }
 
