@@ -26,6 +26,7 @@ import tv.own.owntv.core.i18n.LocaleStore
 import tv.own.owntv.features.home.HomeConfig
 import tv.own.owntv.player.SurroundMode
 import tv.own.owntv.core.util.Pin
+import tv.own.owntv.ui.components.ContentMenu
 import tv.own.owntv.ui.theme.AccentColor
 import tv.own.owntv.ui.theme.AppFontFamily
 import tv.own.owntv.ui.theme.FontCustomization
@@ -1924,6 +1925,9 @@ class SettingsRepository(private val context: Context, private val localeStore: 
 
     private val backupStringKeys = listOf(
         Keys.THEME_MODE, Keys.ACCENT, Keys.ACCENT_CUSTOM, Keys.FOCUS_HIGHLIGHT, Keys.DEFAULT_ZOOM,
+        // Current global engine choices. VOD_PREFER_EXO below is migration-only and cannot represent
+        // all four EnginePreference modes, so the two string values must travel themselves.
+        Keys.LIVE_ENGINE, Keys.VOD_ENGINE,
         Keys.MAIN_FONT_FAMILY, Keys.POPUP_FONT_FAMILY,
         Keys.PREF_AUDIO_LANG, Keys.PREF_SUB_LANG, Keys.SUB_SEARCH_LANGS, Keys.SORT_LIVE, Keys.SORT_GUIDE, Keys.SORT_MOVIES,
         Keys.SORT_SERIES, Keys.RESUME_MODE, Keys.CATCHUP_TZ, Keys.CATCHUP_PLAYER, Keys.ANIMATION_LEVEL, Keys.VOD_VIEW_MODE,
@@ -1961,7 +1965,10 @@ class SettingsRepository(private val context: Context, private val localeStore: 
         // Surround mode (Auto/Stereo only/Surround). The legacy boolean is in backupBoolKeys and stays
         // in sync, but the string is what is read first, so it has to travel too.
         Keys.SURROUND_MODE,
-    )
+        // Settings personalization: Quick pins (including their order) and the independently arranged
+        // action order for each of the four long-press content menus.
+        Keys.QUICK_PINNED,
+    ) + ContentMenu.entries.map { menuOrderKey(it.name.lowercase()) }
     private val backupStringSetKeys = listOf(
         // The STATIC-mode hidden set rides with backup so a reinstall keeps the user's hidden icons.
         Keys.NAV_MENU_HIDDEN,
