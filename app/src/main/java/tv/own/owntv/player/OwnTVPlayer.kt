@@ -1716,10 +1716,10 @@ class OwnTVPlayer(
         val restartGen = loadGeneration
         engine.onAudioFallback = {
             toast(toastRenderer.render(PlaybackFailure.Surround))
-            // Re-enter this same path: the latch is set, so `start` sees the sink mismatch and rebuilds
-            // the player on a stereo-only sink, resuming where the silence began.
+            // Rebuilding immediately on the same Surface leaves some Realtek/TCL decoders alive-but-
+            // blank. Release first, give MediaCodec time to settle, then restart on a fresh Surface.
             if (restartGen == loadGeneration && exoActive) {
-                startExo(url, _position.value, surface, sub)
+                restartExoOnFreshSurface(url, _position.value, sub, restartGen)
             }
         }
         // ExoPlayer's own software rung: this item failed on Exo's hardware decoder in a way a software
@@ -1737,7 +1737,12 @@ class OwnTVPlayer(
                     reason = PlayerFailureReason.SOFTWARE_FALLBACK,
                     detail = "hardware decoder produced no usable video on ExoPlayer",
                 )
-                startExo(url, if (fromStart) 0L else _position.value, surface, sub)
+                restartExoOnFreshSurface(
+                    url = url,
+                    pos = if (fromStart) 0L else _position.value,
+                    sub = sub,
+                    generation = restartGen,
+                )
             }
         }
         val extSelect = item.pendingExoExternalSelect
@@ -1759,6 +1764,41 @@ class OwnTVPlayer(
         else if (sub != null && !sub.image) onActiveSubtitleChanged?.invoke("emb:${sub.typeIndex}:${sub.lang ?: ""}")
         engine.setVolume(_volume.value) // carry the current HUD volume into ExoPlayer
         startExoTick()
+    }
+
+    /**
+     * Rebuild Exo after a renderer configuration change without reusing the outgoing decoder's Surface.
+     *
+     * Both the surround -> stereo fallback and the hardware -> software rescue replace the renderer
+     * factory, which means replacing the whole ExoPlayer and its MediaCodec video decoder. Realtek/TCL
+     * devices can leave that decoder's buffer queue dirty after release; immediately binding the new
+     * decoder to the same Surface then gives audio with a permanently blank picture. Every cross-engine
+     * transition already observes [DECODER_RELEASE_MS] and recreates the Surface for this reason.
+     *
+     * Keep Exo logically active so the UI never exposes or reattaches mpv during the short restart. Once
+     * the fresh Surface arrives, [attachSurface] consumes [LoadState.pendingExoStart] and calls [startExo]
+     * at the captured position with the new stereo/software policy already latched.
+     */
+    private fun restartExoOnFreshSurface(
+        url: String,
+        pos: Long,
+        sub: TrackOption?,
+        generation: Int,
+    ) {
+        if (generation != loadGeneration || !exoActive || currentUrl != url) return
+        _buffering.value = true
+        exoTickJob?.cancel()
+        exoEngine?.stop()
+        scope.launch {
+            delay(DECODER_RELEASE_MS)
+            if (generation != loadGeneration || !exoActive || currentUrl != url) return@launch
+            pendingUrl = url
+            load.pendingSeekMs = pos
+            load.pendingStartPaused = false
+            load.pendingExoSub = sub
+            load.pendingExoStart = true
+            _surfaceResetToken.value++
+        }
     }
 
     /**
@@ -3443,9 +3483,8 @@ class OwnTVPlayer(
         ensureInit()
         attachedSurface = surface
         surfaceAttached = true
-        // ExoPlayer owns playback right now (image-sub handoff) → give it the (re)created surface.
-        if (exoActive) { exoEngine?.setSurface(surface); return }
-        // An ExoPlayer-preferred VOD load was waiting for this surface (first open) — start it there.
+        // A first Exo load, or an Exo renderer rebuild deliberately kept logically active while its old
+        // decoder settled, is waiting for this Surface. Consume it before the ordinary exoActive branch.
         if (load.pendingExoStart) {
             load.pendingExoStart = false
             val url = pendingUrl
@@ -3458,6 +3497,8 @@ class OwnTVPlayer(
             }
             return
         }
+        // ExoPlayer owns playback right now (ordinary Surface recreation) → give it the new surface.
+        if (exoActive) { exoEngine?.setSurface(surface); return }
         mpv?.attachSurface(surface)
         mpv?.setOptionString("force-window", "yes")
         mpv?.setOptionString("vo", targetVo())
