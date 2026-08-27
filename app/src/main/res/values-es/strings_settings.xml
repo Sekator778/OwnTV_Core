@@ -285,10 +285,10 @@
     <string name="settings_device">Dispositivo</string>
     <string name="settings_video_player">Ajustes del reproductor de vídeo</string>
     <string name="settings_video_player_description">Descodificador, subtítulos y sincronización</string>
-    <string name="settings_playback_error_log">Registro de errores de reproducción</string>
+    <string name="settings_playback_error_log">Registro de errores</string>
     <string name="settings_playback_speed">Velocidad de reproducción</string>
     <string name="settings_player_zoom">Zoom del reproductor</string>
-    <string name="settings_playback_error_description">Los últimos fallos de reproducción: detalles para consultar o comunicar</string>
+    <string name="settings_playback_error_description">Fallos de la aplicación y de reproducción: detalles para consultar o comunicar</string>
     <string name="settings_network_group">Red</string>
     <string name="settings_app_group">Aplicación</string>
     <string name="settings_app_startup">Inicio de la aplicación</string>
@@ -328,8 +328,8 @@
     <string name="settings_telegram_qr">Código QR del grupo de Telegram</string>
     <string name="settings_telegram_scan">Escanea el código QR para unirte desde el teléfono o abre el enlace anterior.</string>
     <string name="settings_contributions">Las contribuciones, los informes de errores y las estrellas son bienvenidos en GitHub.</string>
-    <string name="settings_playback_error_title">Registro de errores de reproducción</string>
-    <string name="settings_playback_error_description_full">Los fallos de reproducción más recientes, empezando por el último. Incluye estos detalles al comunicar un problema.</string>
+    <string name="settings_playback_error_title">Registro de errores</string>
+    <string name="settings_playback_error_description_full">El último fallo de la aplicación y los fallos de reproducción más recientes, empezando por el último. Incluye estos detalles al comunicar un problema.</string>
     <string name="settings_loading">Cargando…</string>
     <string name="settings_no_playback_errors">No se ha registrado ningún error de reproducción.</string>
     <string name="settings_live">En directo</string>

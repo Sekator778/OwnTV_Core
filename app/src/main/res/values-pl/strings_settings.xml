@@ -287,10 +287,10 @@
     <string name="settings_device">Urządzenie</string>
     <string name="settings_video_player">Ustawienia odtwarzacza wideo</string>
     <string name="settings_video_player_description">Dekoder, napisy, synchronizacja</string>
-    <string name="settings_playback_error_log">Dziennik błędów odtwarzania</string>
+    <string name="settings_playback_error_log">Dziennik błędów</string>
     <string name="settings_playback_speed">Szybkość odtwarzania</string>
     <string name="settings_player_zoom">Powiększenie odtwarzacza</string>
-    <string name="settings_playback_error_description">Ostatnie błędy odtwarzania — szczegóły do odczytania lub zgłoszenia</string>
+    <string name="settings_playback_error_description">Awarie aplikacji i błędy odtwarzania — szczegóły do odczytania lub zgłoszenia</string>
     <string name="settings_network_group">Sieć</string>
     <string name="settings_app_group">Aplikacja</string>
     <string name="settings_app_startup">Uruchamianie aplikacji</string>
@@ -330,8 +330,8 @@
     <string name="settings_telegram_qr">Kod QR grupy na Telegramie</string>
     <string name="settings_telegram_scan">Zeskanuj kod QR, aby dołączyć za pomocą telefonu, lub otwórz powyższy link.</string>
     <string name="settings_contributions">Wkład w projekt, zgłoszenia błędów i gwiazdki są mile widziane na GitHubie.</string>
-    <string name="settings_playback_error_title">Dziennik błędów odtwarzania</string>
-    <string name="settings_playback_error_description_full">Najnowsze błędy odtwarzania (od najnowszego). Dołącz te szczegóły podczas zgłaszania problemu.</string>
+    <string name="settings_playback_error_title">Dziennik błędów</string>
+    <string name="settings_playback_error_description_full">Ostatnia awaria aplikacji i najnowsze błędy odtwarzania (od najnowszego). Dołącz te szczegóły podczas zgłaszania problemu.</string>
     <string name="settings_loading">Wczytywanie…</string>
     <string name="settings_no_playback_errors">Nie zarejestrowano błędów odtwarzania.</string>
     <string name="settings_live">Na żywo</string>

@@ -68,12 +68,15 @@ class PlaybackSession(private val context: Context) {
         if (engine == null) {
             unduck()
             abandonFocus()
-            session?.apply { isActive = false; release() }
+            runCatching { session?.apply { isActive = false; release() } }
             session = null
             return
         }
-        val s = session ?: createSession().also { session = it }
-        s.isActive = true
+        // A dead or refusing MediaSession must never take the player down with it: the session is a
+        // convenience for other controllers on the TV, the video is the point. Every other system call
+        // in this class is already guarded; these were the last three that were not.
+        val s = runCatching { session ?: createSession().also { session = it } }.getOrNull()
+        runCatching { s?.isActive = true }
         collectJob = combine(
             engine.isPlaying,
             engine.currentMeta,

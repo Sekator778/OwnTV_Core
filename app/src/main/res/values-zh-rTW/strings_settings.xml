@@ -281,10 +281,10 @@
     <string name="settings_device">裝置</string>
     <string name="settings_video_player">影片播放器設定</string>
     <string name="settings_video_player_description">解碼器、字幕、同步</string>
-    <string name="settings_playback_error_log">播放錯誤記錄</string>
+    <string name="settings_playback_error_log">錯誤記錄</string>
     <string name="settings_playback_speed">播放速度</string>
     <string name="settings_player_zoom">播放器縮放</string>
-    <string name="settings_playback_error_description">最近的播放失敗記錄 — 可供查看或回報的詳細資料</string>
+    <string name="settings_playback_error_description">應用程式當機與播放失敗記錄 — 可供查看或回報的詳細資料</string>
     <string name="settings_network_group">網路</string>
     <string name="settings_app_group">應用程式</string>
     <string name="settings_app_startup">應用程式啟動</string>
@@ -324,8 +324,8 @@
     <string name="settings_telegram_qr">Telegram 群組 QR 圖碼</string>
     <string name="settings_telegram_scan">使用手機掃描 QR 圖碼即可加入，或開啟上方連結。</string>
     <string name="settings_contributions">歡迎在 GitHub 貢獻程式碼、回報錯誤或給予星號。</string>
-    <string name="settings_playback_error_title">播放錯誤記錄</string>
-    <string name="settings_playback_error_description_full">最近的播放失敗記錄（最新的列在最前面）。回報問題時請附上這些詳細資料。</string>
+    <string name="settings_playback_error_title">錯誤記錄</string>
+    <string name="settings_playback_error_description_full">最近一次當機與最近的播放失敗記錄（最新的列在最前面）。回報問題時請附上這些詳細資料。</string>
     <string name="settings_loading">載入中…</string>
     <string name="settings_no_playback_errors">沒有已記錄的播放錯誤。</string>
     <string name="settings_live">直播</string>

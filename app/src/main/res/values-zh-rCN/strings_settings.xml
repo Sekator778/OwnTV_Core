@@ -281,10 +281,10 @@
     <string name="settings_device">设备</string>
     <string name="settings_video_player">视频播放器设置</string>
     <string name="settings_video_player_description">解码器、字幕、同步</string>
-    <string name="settings_playback_error_log">播放错误日志</string>
+    <string name="settings_playback_error_log">错误日志</string>
     <string name="settings_playback_speed">播放速度</string>
     <string name="settings_player_zoom">播放器缩放</string>
-    <string name="settings_playback_error_description">最近的播放失败记录 — 可查看或报告的详细信息</string>
+    <string name="settings_playback_error_description">应用崩溃和播放失败记录 — 可查看或报告的详细信息</string>
     <string name="settings_network_group">网络</string>
     <string name="settings_app_group">应用</string>
     <string name="settings_app_startup">应用启动</string>
@@ -324,8 +324,8 @@
     <string name="settings_telegram_qr">Telegram 群组二维码</string>
     <string name="settings_telegram_scan">使用手机扫描二维码加入，或打开上方链接。</string>
     <string name="settings_contributions">欢迎在 GitHub 上贡献代码、报告错误或为项目加星。</string>
-    <string name="settings_playback_error_title">播放错误日志</string>
-    <string name="settings_playback_error_description_full">最近的播放失败记录（最新的在前）。报告问题时，请附上这些详细信息。</string>
+    <string name="settings_playback_error_title">错误日志</string>
+    <string name="settings_playback_error_description_full">最近一次崩溃和最近的播放失败记录（最新的在前）。报告问题时，请附上这些详细信息。</string>
     <string name="settings_loading">正在加载…</string>
     <string name="settings_no_playback_errors">没有记录到播放错误。</string>
     <string name="settings_live">直播</string>

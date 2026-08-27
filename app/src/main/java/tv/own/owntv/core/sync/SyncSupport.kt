@@ -5,8 +5,11 @@ import android.util.Log
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.async
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
 import tv.own.owntv.core.customize.CustomizationStore
 import tv.own.owntv.core.customize.CustomizeKeys
 import tv.own.owntv.core.database.BulkInsertHelper
@@ -285,8 +288,21 @@ internal class SyncSupport(
 
     /**
      * Drives a push-stream [producer] that feeds items into [add]; flushes to the DB via [insert] in
-     * chunks of [BulkInsertHelper.CHUNK], reporting progress. Inserts are awaited to provide sequential back-pressure,
-     * and cancellation is checked each chunk.
+     * chunks of [BulkInsertHelper.CHUNK], reporting progress. Cancellation is checked each chunk.
+     *
+     * The database write runs in its own coroutine, fed batches over a channel, so downloading and
+     * parsing the provider's response OVERLAPS with writing the previous batch instead of the two
+     * taking turns. This used to be strictly sequential: every time the buffer filled, the parse
+     * stopped dead — socket idle — until the insert, the dedupe filter and (on a fresh import) the
+     * content hashing of ten thousand rows had all finished. On a 170k-title first sync that is
+     * seventeen full stop-the-world flushes, and the same again in reverse while the database sits
+     * waiting for the next batch to be parsed.
+     *
+     * A RENDEZVOUS channel, not a buffered one, deliberately. The producer refills its buffer while
+     * the writer works and only the hand-off itself blocks, which is all the overlap that is wanted:
+     * back-pressure survives exactly as before (a slow database still throttles the parse, so a huge
+     * catalog cannot pile up in memory), and peak memory is unchanged at two chunks — the buffer
+     * being refilled, plus the batch being written.
      */
     suspend fun <T, R> chunked(
         ctx: CoroutineContext,
@@ -299,58 +315,71 @@ internal class SyncSupport(
         uniqueKey: ((T) -> String?)? = null,
         chunkSize: Int = BulkInsertHelper.CHUNK,
         producer: suspend (add: suspend (T) -> Unit) -> R,
-    ): R {
-        val buffer = ArrayList<T>(chunkSize)
+    ): R = coroutineScope {
         var chunkIndex = 0
         var skippedDuplicates = 0
         val chunkRunStart = SystemClock.elapsedRealtime()
-        suspend fun flush() {
-            if (buffer.isEmpty()) return
-            ctx.ensureActive()
-            chunkIndex++
-            val rawCount = buffer.size
-            val flushStart = SystemClock.elapsedRealtime()
-            val pendingKeys = ArrayList<String>()
-            val rows = buffer.toList().filterNewItems(seenKeys, uniqueKey, pendingKeys)
-            val filterMs = SystemClock.elapsedRealtime() - flushStart
-            buffer.clear()
-            val skipped = rawCount - rows.size
-            skippedDuplicates += skipped
-            if (rows.isEmpty()) {
-                Log.d(
-                    TAG,
-                    "$label chunk skipped phase=${phase.name} chunk=$chunkIndex raw=$rawCount skipped=$skipped " +
-                        "totalSkipped=$skippedDuplicates totalUnique=${total[0]} filterMs=$filterMs elapsedMs=${SystemClock.elapsedRealtime() - chunkRunStart}",
-                )
-                return
+        val batches = Channel<List<T>>(Channel.RENDEZVOUS)
+        // A single writer, so `seenKeys`, `total` and the counters stay confined to one coroutine and
+        // need no synchronisation; the `writer.join()` below happens-before the caller reads them.
+        val writer = launch {
+            for (batch in batches) {
+                ctx.ensureActive()
+                chunkIndex++
+                val rawCount = batch.size
+                val flushStart = SystemClock.elapsedRealtime()
+                val pendingKeys = ArrayList<String>()
+                val rows = batch.filterNewItems(seenKeys, uniqueKey, pendingKeys)
+                val filterMs = SystemClock.elapsedRealtime() - flushStart
+                val skipped = rawCount - rows.size
+                skippedDuplicates += skipped
+                if (rows.isEmpty()) {
+                    Log.d(
+                        TAG,
+                        "$label chunk skipped phase=${phase.name} chunk=$chunkIndex raw=$rawCount skipped=$skipped " +
+                            "totalSkipped=$skippedDuplicates totalUnique=${total[0]} filterMs=$filterMs elapsedMs=${SystemClock.elapsedRealtime() - chunkRunStart}",
+                    )
+                    continue
+                }
+                val insertStart = SystemClock.elapsedRealtime()
+                val upsertStats = insert(rows)
+                val insertMs = SystemClock.elapsedRealtime() - insertStart
+                seenKeys?.addAll(pendingKeys)
+                total[0] += rows.size
+                if (shouldLogChunk(chunkIndex, insertMs, skipped)) {
+                    Log.d(
+                        TAG,
+                        "$label chunk applied phase=${phase.name} chunk=$chunkIndex raw=$rawCount accepted=${rows.size} " +
+                            "dbInserted=${upsertStats.inserted} dbUpdated=${upsertStats.updated} dbSkipped=${upsertStats.skippedUnchanged} " +
+                            "dedupeSkipped=$skipped totalDedupeSkipped=$skippedDuplicates totalUnique=${total[0]} " +
+                            "filterMs=$filterMs applyMs=$insertMs elapsedMs=${SystemClock.elapsedRealtime() - chunkRunStart}",
+                    )
+                }
+                progress.update(phase, total[0])
             }
-            val insertStart = SystemClock.elapsedRealtime()
-            val upsertStats = insert(rows)
-            val insertMs = SystemClock.elapsedRealtime() - insertStart
-            seenKeys?.addAll(pendingKeys)
-            total[0] += rows.size
-            if (shouldLogChunk(chunkIndex, insertMs, skipped)) {
-                Log.d(
-                    TAG,
-                    "$label chunk applied phase=${phase.name} chunk=$chunkIndex raw=$rawCount accepted=${rows.size} " +
-                        "dbInserted=${upsertStats.inserted} dbUpdated=${upsertStats.updated} dbSkipped=${upsertStats.skippedUnchanged} " +
-                        "dedupeSkipped=$skipped totalDedupeSkipped=$skippedDuplicates totalUnique=${total[0]} " +
-                        "filterMs=$filterMs applyMs=$insertMs elapsedMs=${SystemClock.elapsedRealtime() - chunkRunStart}",
-                )
-            }
-            progress.update(phase, total[0])
         }
+        val buffer = ArrayList<T>(chunkSize)
+        // No try/finally around the producer: a throw here leaves the channel open, but structured
+        // concurrency cancels the writer along with this scope, so nothing is left waiting on it. A
+        // throw from the *writer* (a database failure) cancels the scope the other way round and the
+        // producer's send unblocks — which is what keeps a broken insert surfacing as a failed phase
+        // (and, for Xtream, a drop to the per-category fallback) rather than as a hang.
         val result = producer { item ->
             buffer.add(item)
-            if (buffer.size >= chunkSize) flush()
+            if (buffer.size >= chunkSize) {
+                batches.send(ArrayList(buffer))
+                buffer.clear()
+            }
         }
-        flush()
+        if (buffer.isNotEmpty()) batches.send(buffer)
+        batches.close()
+        writer.join()
         Log.i(
             TAG,
             "$label stream done phase=${phase.name} chunks=$chunkIndex totalUnique=${total[0]} " +
                 "skippedDuplicates=$skippedDuplicates elapsedMs=${SystemClock.elapsedRealtime() - chunkRunStart}",
         )
-        return result
+        result
     }
 
     private fun shouldLogChunk(chunkIndex: Int, insertMs: Long, skipped: Int): Boolean =

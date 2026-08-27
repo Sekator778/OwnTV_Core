@@ -283,10 +283,10 @@
     <string name="settings_device">Enhet</string>
     <string name="settings_video_player">Videospelarinställningar</string>
     <string name="settings_video_player_description">Avkodare, undertexter, synkronisering</string>
-    <string name="settings_playback_error_log">Logg över uppspelningsfel</string>
+    <string name="settings_playback_error_log">Fellogg</string>
     <string name="settings_playback_speed">Uppspelningshastighet</string>
     <string name="settings_player_zoom">Spelarzoom</string>
-    <string name="settings_playback_error_description">De senaste uppspelningsfelen — information att läsa eller rapportera</string>
+    <string name="settings_playback_error_description">Kraschar och uppspelningsfel — information att läsa eller rapportera</string>
     <string name="settings_network_group">Nätverk</string>
     <string name="settings_app_group">App</string>
     <string name="settings_app_startup">Appstart</string>
@@ -326,8 +326,8 @@
     <string name="settings_telegram_qr">QR-kod till Telegram-gruppen</string>
     <string name="settings_telegram_scan">Skanna QR-koden för att gå med från telefonen eller öppna länken ovan.</string>
     <string name="settings_contributions">Bidrag, felrapporter och stjärnor välkomnas på GitHub.</string>
-    <string name="settings_playback_error_title">Logg över uppspelningsfel</string>
-    <string name="settings_playback_error_description_full">De senaste uppspelningsfelen (nyaste först). Inkludera den här informationen när du rapporterar ett problem.</string>
+    <string name="settings_playback_error_title">Fellogg</string>
+    <string name="settings_playback_error_description_full">Den senaste kraschen och de senaste uppspelningsfelen (nyaste först). Inkludera den här informationen när du rapporterar ett problem.</string>
     <string name="settings_loading">Läser in…</string>
     <string name="settings_no_playback_errors">Inga uppspelningsfel har registrerats.</string>
     <string name="settings_live">Live</string>

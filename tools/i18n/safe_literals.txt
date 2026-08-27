@@ -2712,6 +2712,11 @@
 1	technical	app/src/main/java/tv/own/owntv/core/update/UpdateManager.kt	v
 1	log	app/src/main/java/tv/own/owntv/core/update/UpdateManager.kt	wrong package ${info.packageName}
 2	technical	app/src/main/java/tv/own/owntv/core/update/UpdateManager.kt	x86_64
+1	technical	app/src/main/java/tv/own/owntv/core/util/CrashRecorder.kt	Crashed $stamp on thread "${thread.name}"
+1	technical	app/src/main/java/tv/own/owntv/core/util/CrashRecorder.kt	OwnTV ${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE})
+1	file-path	app/src/main/java/tv/own/owntv/core/util/CrashRecorder.kt	diagnostics
+1	file-path	app/src/main/java/tv/own/owntv/core/util/CrashRecorder.kt	last_crash.txt
+1	technical	app/src/main/java/tv/own/owntv/core/util/CrashRecorder.kt	yyyy-MM-dd HH:mm:ss
 1	protocol	app/src/main/java/tv/own/owntv/core/util/ErrorMessages.kt	CertPath
 1	protocol	app/src/main/java/tv/own/owntv/core/util/ErrorMessages.kt	CertificateException
 2	protocol	app/src/main/java/tv/own/owntv/core/util/ErrorMessages.kt	Connection refused
@@ -4300,6 +4305,7 @@
 1	file-path	app/src/main/java/tv/own/owntv/player/PlaybackErrorLog.kt	${Environment.DIRECTORY_DOWNLOADS}/$EXPORT_NAME
 1	sql	app/src/main/java/tv/own/owntv/player/PlaybackErrorLog.kt	${MediaStore.MediaColumns.DISPLAY_NAME}=? AND ${MediaStore.MediaColumns.RELATIVE_PATH}=?
 1	sql	app/src/main/java/tv/own/owntv/player/PlaybackErrorLog.kt	${MediaStore.MediaColumns._ID} DESC
+1	technical	app/src/main/java/tv/own/owntv/player/PlaybackErrorLog.kt	--- last crash ---
 1	technical	app/src/main/java/tv/own/owntv/player/PlaybackErrorLog.kt	--- live diagnostics (most recent) ---
 1	protocol	app/src/main/java/tv/own/owntv/player/PlaybackErrorLog.kt	:direct
 1	protocol	app/src/main/java/tv/own/owntv/player/PlaybackErrorLog.kt	:gpu

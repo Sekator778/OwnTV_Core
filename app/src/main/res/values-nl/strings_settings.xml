@@ -283,10 +283,10 @@
     <string name="settings_device">Apparaat</string>
     <string name="settings_video_player">Instellingen voor videospeler</string>
     <string name="settings_video_player_description">Decoder, ondertiteling, synchronisatie</string>
-    <string name="settings_playback_error_log">Logboek met afspeelfouten</string>
+    <string name="settings_playback_error_log">Foutenlogboek</string>
     <string name="settings_playback_speed">Afspeelsnelheid</string>
     <string name="settings_player_zoom">Zoomniveau van speler</string>
-    <string name="settings_playback_error_description">De laatste afspeelfouten — details om te lezen of te melden</string>
+    <string name="settings_playback_error_description">Crashes en afspeelfouten — details om te lezen of te melden</string>
     <string name="settings_network_group">Netwerk</string>
     <string name="settings_app_group">App</string>
     <string name="settings_app_startup">Opstartgedrag van app</string>
@@ -326,8 +326,8 @@
     <string name="settings_telegram_qr">QR-code van Telegram-groep</string>
     <string name="settings_telegram_scan">Scan de QR-code om via je telefoon deel te nemen, of open de bovenstaande link.</string>
     <string name="settings_contributions">Bijdragen, bugrapporten en sterren zijn welkom op GitHub.</string>
-    <string name="settings_playback_error_title">Logboek met afspeelfouten</string>
-    <string name="settings_playback_error_description_full">De meest recente afspeelfouten (nieuwste eerst). Voeg deze details toe wanneer je een probleem meldt.</string>
+    <string name="settings_playback_error_title">Foutenlogboek</string>
+    <string name="settings_playback_error_description_full">De laatste crash en de meest recente afspeelfouten (nieuwste eerst). Voeg deze details toe wanneer je een probleem meldt.</string>
     <string name="settings_loading">Laden…</string>
     <string name="settings_no_playback_errors">Geen afspeelfouten vastgelegd.</string>
     <string name="settings_live">Live</string>

@@ -283,10 +283,10 @@
     <string name="settings_device">डिवाइस</string>
     <string name="settings_video_player">वीडियो प्लेयर सेटिंग</string>
     <string name="settings_video_player_description">डिकोडर, सबटाइटल, सिंक</string>
-    <string name="settings_playback_error_log">प्लेबैक त्रुटि लॉग</string>
+    <string name="settings_playback_error_log">त्रुटि लॉग</string>
     <string name="settings_playback_speed">प्लेबैक की गति</string>
     <string name="settings_player_zoom">प्लेयर ज़ूम</string>
-    <string name="settings_playback_error_description">प्लेबैक की पिछली विफलताएँ — पढ़ने या रिपोर्ट करने के लिए विवरण</string>
+    <string name="settings_playback_error_description">ऐप क्रैश और प्लेबैक विफलताएँ — पढ़ने या रिपोर्ट करने के लिए विवरण</string>
     <string name="settings_network_group">नेटवर्क</string>
     <string name="settings_app_group">ऐप</string>
     <string name="settings_app_startup">ऐप शुरू होने पर</string>
@@ -326,8 +326,8 @@
     <string name="settings_telegram_qr">Telegram समूह का QR कोड</string>
     <string name="settings_telegram_scan">फ़ोन से जुड़ने के लिए QR स्कैन करें या ऊपर दिया गया लिंक खोलें।</string>
     <string name="settings_contributions">GitHub पर योगदान, बग रिपोर्ट और स्टार का स्वागत है।</string>
-    <string name="settings_playback_error_title">प्लेबैक त्रुटि लॉग</string>
-    <string name="settings_playback_error_description_full">प्लेबैक की सबसे हाल की विफलताएँ (सबसे नई पहले)। समस्या की रिपोर्ट करते समय ये विवरण शामिल करें।</string>
+    <string name="settings_playback_error_title">त्रुटि लॉग</string>
+    <string name="settings_playback_error_description_full">पिछला ऐप क्रैश और प्लेबैक की सबसे हाल की विफलताएँ (सबसे नई पहले)। समस्या की रिपोर्ट करते समय ये विवरण शामिल करें।</string>
     <string name="settings_loading">लोड हो रहा है…</string>
     <string name="settings_no_playback_errors">कोई प्लेबैक त्रुटि दर्ज नहीं है।</string>
     <string name="settings_live">लाइव</string>

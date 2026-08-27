@@ -291,10 +291,10 @@
     <string name="settings_device">الجهاز</string>
     <string name="settings_video_player">إعدادات مشغّل الفيديو</string>
     <string name="settings_video_player_description">وحدة فك الترميز والترجمة والمزامنة</string>
-    <string name="settings_playback_error_log">سجل أخطاء التشغيل</string>
+    <string name="settings_playback_error_log">سجل الأخطاء</string>
     <string name="settings_playback_speed">سرعة التشغيل</string>
     <string name="settings_player_zoom">تكبير المشغّل</string>
-    <string name="settings_playback_error_description">أحدث حالات فشل التشغيل — تفاصيل لقراءتها أو الإبلاغ عنها</string>
+    <string name="settings_playback_error_description">الأعطال وحالات فشل التشغيل — تفاصيل لقراءتها أو الإبلاغ عنها</string>
     <string name="settings_network_group">الشبكة</string>
     <string name="settings_app_group">التطبيق</string>
     <string name="settings_app_startup">بدء تشغيل التطبيق</string>
@@ -334,8 +334,8 @@
     <string name="settings_telegram_qr">رمز QR لمجموعة Telegram</string>
     <string name="settings_telegram_scan">امسح رمز QR للانضمام من هاتفك، أو افتح الرابط أعلاه.</string>
     <string name="settings_contributions">نرحب بالمساهمات وتقارير الأخطاء والنجوم على GitHub.</string>
-    <string name="settings_playback_error_title">سجل أخطاء التشغيل</string>
-    <string name="settings_playback_error_description_full">أحدث حالات فشل التشغيل (الأحدث أولًا). أرفق هذه التفاصيل عند الإبلاغ عن مشكلة.</string>
+    <string name="settings_playback_error_title">سجل الأخطاء</string>
+    <string name="settings_playback_error_description_full">آخر عُطل وأحدث حالات فشل التشغيل (الأحدث أولًا). أرفق هذه التفاصيل عند الإبلاغ عن مشكلة.</string>
     <string name="settings_loading">جارٍ التحميل…</string>
     <string name="settings_no_playback_errors">لم تُسجّل أي أخطاء تشغيل.</string>
     <string name="settings_live">البث المباشر</string>

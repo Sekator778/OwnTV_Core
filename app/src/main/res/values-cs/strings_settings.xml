@@ -287,10 +287,10 @@
     <string name="settings_device">Zařízení</string>
     <string name="settings_video_player">Nastavení přehrávače videa</string>
     <string name="settings_video_player_description">Dekodér, titulky, synchronizace</string>
-    <string name="settings_playback_error_log">Protokol chyb přehrávání</string>
+    <string name="settings_playback_error_log">Protokol chyb</string>
     <string name="settings_playback_speed">Rychlost přehrávání</string>
     <string name="settings_player_zoom">Přiblížení obrazu přehrávače</string>
-    <string name="settings_playback_error_description">Poslední chyby přehrávání — podrobnosti, které si můžete přečíst nebo nahlásit</string>
+    <string name="settings_playback_error_description">Pády aplikace a chyby přehrávání — podrobnosti, které si můžete přečíst nebo nahlásit</string>
     <string name="settings_network_group">Síť</string>
     <string name="settings_app_group">Aplikace</string>
     <string name="settings_app_startup">Spuštění aplikace</string>
@@ -330,8 +330,8 @@
     <string name="settings_telegram_qr">QR kód skupiny na Telegramu</string>
     <string name="settings_telegram_scan">Naskenujte QR kód a připojte se z telefonu nebo otevřete odkaz výše.</string>
     <string name="settings_contributions">Příspěvky, hlášení chyb a hvězdičky jsou na GitHubu vítány.</string>
-    <string name="settings_playback_error_title">Protokol chyb přehrávání</string>
-    <string name="settings_playback_error_description_full">Nejnovější chyby přehrávání (od nejnovějších). Při hlášení problému přiložte tyto podrobnosti.</string>
+    <string name="settings_playback_error_title">Protokol chyb</string>
+    <string name="settings_playback_error_description_full">Poslední pád aplikace a nejnovější chyby přehrávání (od nejnovějších). Při hlášení problému přiložte tyto podrobnosti.</string>
     <string name="settings_loading">Načítání…</string>
     <string name="settings_no_playback_errors">Nebyly zaznamenány žádné chyby přehrávání.</string>
     <string name="settings_live">Živé vysílání</string>

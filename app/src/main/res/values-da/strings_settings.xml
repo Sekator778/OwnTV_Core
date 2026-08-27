@@ -283,10 +283,10 @@
     <string name="settings_device">Enhed</string>
     <string name="settings_video_player">Indstillinger for videoafspiller</string>
     <string name="settings_video_player_description">Dekoder, undertekster, synkronisering</string>
-    <string name="settings_playback_error_log">Log over afspilningsfejl</string>
+    <string name="settings_playback_error_log">Fejllog</string>
     <string name="settings_playback_speed">Afspilningshastighed</string>
     <string name="settings_player_zoom">Afspillerzoom</string>
-    <string name="settings_playback_error_description">De seneste afspilningsfejl — oplysninger, du kan læse eller rapportere</string>
+    <string name="settings_playback_error_description">Nedbrud og afspilningsfejl — oplysninger, du kan læse eller rapportere</string>
     <string name="settings_network_group">Netværk</string>
     <string name="settings_app_group">App</string>
     <string name="settings_app_startup">Start af app</string>
@@ -326,8 +326,8 @@
     <string name="settings_telegram_qr">QR-kode til Telegram-gruppen</string>
     <string name="settings_telegram_scan">Scan QR-koden for at deltage fra din telefon, eller åbn linket ovenfor.</string>
     <string name="settings_contributions">Bidrag, fejlrapporter og stjerner er velkomne på GitHub.</string>
-    <string name="settings_playback_error_title">Log over afspilningsfejl</string>
-    <string name="settings_playback_error_description_full">De seneste afspilningsfejl (nyeste først). Medtag disse oplysninger, når du rapporterer et problem.</string>
+    <string name="settings_playback_error_title">Fejllog</string>
+    <string name="settings_playback_error_description_full">Det seneste nedbrud og de seneste afspilningsfejl (nyeste først). Medtag disse oplysninger, når du rapporterer et problem.</string>
     <string name="settings_loading">Indlæser…</string>
     <string name="settings_no_playback_errors">Der er ikke registreret nogen afspilningsfejl.</string>
     <string name="settings_live">Live</string>

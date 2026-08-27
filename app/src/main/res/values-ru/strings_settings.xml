@@ -287,10 +287,10 @@
     <string name="settings_device">Устройство</string>
     <string name="settings_video_player">Настройки видеоплеера</string>
     <string name="settings_video_player_description">Декодер, субтитры, синхронизация</string>
-    <string name="settings_playback_error_log">Журнал ошибок воспроизведения</string>
+    <string name="settings_playback_error_log">Журнал ошибок</string>
     <string name="settings_playback_speed">Скорость воспроизведения</string>
     <string name="settings_player_zoom">Масштаб плеера</string>
-    <string name="settings_playback_error_description">Последние сбои воспроизведения — сведения для просмотра или отправки</string>
+    <string name="settings_playback_error_description">Сбои приложения и ошибки воспроизведения — сведения для просмотра или отправки</string>
     <string name="settings_network_group">Сеть</string>
     <string name="settings_app_group">Приложение</string>
     <string name="settings_app_startup">Запуск приложения</string>
@@ -330,8 +330,8 @@
     <string name="settings_telegram_qr">QR-код группы Telegram</string>
     <string name="settings_telegram_scan">Отсканируйте QR-код, чтобы присоединиться с телефона, или откройте ссылку выше.</string>
     <string name="settings_contributions">Мы приветствуем вклад в проект, сообщения об ошибках и звёзды на GitHub.</string>
-    <string name="settings_playback_error_title">Журнал ошибок воспроизведения</string>
-    <string name="settings_playback_error_description_full">Последние сбои воспроизведения (сначала самые новые). Приложите эти сведения при сообщении о проблеме.</string>
+    <string name="settings_playback_error_title">Журнал ошибок</string>
+    <string name="settings_playback_error_description_full">Последний сбой приложения и последние ошибки воспроизведения (сначала самые новые). Приложите эти сведения при сообщении о проблеме.</string>
     <string name="settings_loading">Загрузка…</string>
     <string name="settings_no_playback_errors">Ошибки воспроизведения не зарегистрированы.</string>
     <string name="settings_live">Прямой эфир</string>

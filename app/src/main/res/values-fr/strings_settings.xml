@@ -285,10 +285,10 @@
     <string name="settings_device">Appareil</string>
     <string name="settings_video_player">Paramètres du lecteur vidéo</string>
     <string name="settings_video_player_description">Décodeur, sous-titres, synchronisation</string>
-    <string name="settings_playback_error_log">Journal des erreurs de lecture</string>
+    <string name="settings_playback_error_log">Journal des erreurs</string>
     <string name="settings_playback_speed">Vitesse de lecture</string>
     <string name="settings_player_zoom">Zoom du lecteur</string>
-    <string name="settings_playback_error_description">Les derniers échecs de lecture — détails à consulter ou à signaler</string>
+    <string name="settings_playback_error_description">Plantages et échecs de lecture — détails à consulter ou à signaler</string>
     <string name="settings_network_group">Réseau</string>
     <string name="settings_app_group">Application</string>
     <string name="settings_app_startup">Démarrage de l’application</string>
@@ -328,8 +328,8 @@
     <string name="settings_telegram_qr">Code QR du groupe Telegram</string>
     <string name="settings_telegram_scan">Scannez le code QR pour rejoindre le groupe depuis votre téléphone, ou ouvrez le lien ci-dessus.</string>
     <string name="settings_contributions">Les contributions, signalements de bugs et étoiles sont les bienvenus sur GitHub.</string>
-    <string name="settings_playback_error_title">Journal des erreurs de lecture</string>
-    <string name="settings_playback_error_description_full">Les échecs de lecture les plus récents (du plus récent au plus ancien). Incluez ces informations lorsque vous signalez un problème.</string>
+    <string name="settings_playback_error_title">Journal des erreurs</string>
+    <string name="settings_playback_error_description_full">Le dernier plantage et les échecs de lecture les plus récents (du plus récent au plus ancien). Incluez ces informations lorsque vous signalez un problème.</string>
     <string name="settings_loading">Chargement…</string>
     <string name="settings_no_playback_errors">Aucune erreur de lecture enregistrée.</string>
     <string name="settings_live">Direct</string>

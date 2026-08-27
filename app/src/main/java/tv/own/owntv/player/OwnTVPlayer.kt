@@ -4164,8 +4164,9 @@ class OwnTVPlayer(
                             setPropertyString("audio-format", "")
                             setPropertyString("audio-samplerate", "0")
                             toast(toastRenderer.render(PlaybackFailure.Surround))
-                            if (sgen == loadGeneration && currentUrl != null) {
-                                loadUrl(currentUrl!!, currentMetaSnapshot(), isLiveContent, _position.value, resetRetries = false)
+                            val stereoUrl = currentUrl
+                            if (sgen == loadGeneration && stereoUrl != null) {
+                                loadUrl(stereoUrl, currentMetaSnapshot(), isLiveContent, _position.value, resetRetries = false)
                             }
                         }
                     }
@@ -4392,9 +4393,12 @@ class OwnTVPlayer(
                             android.util.Log.w(TAG, "playback didn't start — auto-retry ${item.autoRetries}/${maxRetries()} (full probe)")
                             _buffering.value = true
                             delay(backoffMs(item.autoRetries))
-                            if (gen == loadGeneration && currentUrl != null) {
+                            // Read the url ONCE, after the delay: re-reading the mutable field between the
+                            // null check and the use is how a stop during the backoff becomes an NPE.
+                            val retryUrl = currentUrl
+                            if (gen == loadGeneration && retryUrl != null) {
                                 loadUrl(
-                                    currentUrl!!, currentMetaSnapshot(),
+                                    retryUrl, currentMetaSnapshot(),
                                     isLiveContent, if (isLiveContent) 0L else _position.value, resetRetries = false,
                                 )
                             }
@@ -4404,14 +4408,15 @@ class OwnTVPlayer(
                             // was fine and only the decode failed — give the demuxer one pass with error
                             // tolerance on. A damaged mux is the far likelier cause on a re-streamed feed,
                             // and this is the cheapest rung on the ladder.
-                            noteNeedsTolerantDemux(currentUrl!!, "playback didn't start after retries")
+                            currentUrl?.let { noteNeedsTolerantDemux(it, "playback didn't start after retries") }
                             item.forceFullProbe = true
                             _buffering.value = true
                             delay(FALLBACK_RETRY_DELAY_MS)
-                            if (gen == loadGeneration && currentUrl != null) {
+                            val demuxUrl = currentUrl
+                            if (gen == loadGeneration && demuxUrl != null) {
                                 // resetRetries=false keeps the exhausted budget, so this is exactly one attempt.
                                 loadUrl(
-                                    currentUrl!!, currentMetaSnapshot(),
+                                    demuxUrl, currentMetaSnapshot(),
                                     isLiveContent, if (isLiveContent) 0L else _position.value, resetRetries = false,
                                 )
                             }
@@ -4427,8 +4432,8 @@ class OwnTVPlayer(
                             // that software decoding plays fine, so the ladder's software rung takes one
                             // attempt before we error. The copy rung was already considered above and
                             // declined (this failure doesn't read as a decoder failure).
-                        } else if (currentUserAgent == null && !item.triedUaFallback && currentUrl != null &&
-                            !LiveStreamQuirks.blocksDefaultUserAgent(currentUrl!!)
+                        } else if (currentUserAgent == null && !item.triedUaFallback &&
+                            currentUrl?.let { !LiveStreamQuirks.blocksDefaultUserAgent(it) } == true
                         ) {
                             // All standard retries exhausted. If the user left the source User-Agent blank,
                             // retry once under a neutral identity — some panels sit behind a WAF that
@@ -4442,9 +4447,10 @@ class OwnTVPlayer(
                             android.util.Log.w(TAG, "playback failed — retrying once as ${HttpClient.FALLBACK_USER_AGENT}")
                             _buffering.value = true
                             delay(FALLBACK_RETRY_DELAY_MS)
-                            if (gen == loadGeneration && currentUrl != null) {
+                            val uaUrl = currentUrl
+                            if (gen == loadGeneration && uaUrl != null) {
                                 loadUrl(
-                                    currentUrl!!, currentMetaSnapshot(),
+                                    uaUrl, currentMetaSnapshot(),
                                     isLiveContent, if (isLiveContent) 0L else _position.value, resetRetries = false,
                                 )
                             }
@@ -4520,8 +4526,9 @@ class OwnTVPlayer(
                             val gen = loadGeneration
                             scope.launch {
                                 delay(DECODER_RELEASE_MS)
-                                if (gen == loadGeneration && currentUrl != null) {
-                                    reload(currentUrl!!, isLive = false, resetRetries = false)
+                                val reloadUrl = currentUrl
+                                if (gen == loadGeneration && reloadUrl != null) {
+                                    reload(reloadUrl, isLive = false, resetRetries = false)
                                 } else {
                                     _buffering.value = false
                                 }

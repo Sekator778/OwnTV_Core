@@ -283,10 +283,10 @@
     <string name="settings_device">Gerät</string>
     <string name="settings_video_player">Video-Player-Einstellungen</string>
     <string name="settings_video_player_description">Decoder, Untertitel, Synchronisierung</string>
-    <string name="settings_playback_error_log">Wiedergabefehlerprotokoll</string>
+    <string name="settings_playback_error_log">Fehlerprotokoll</string>
     <string name="settings_playback_speed">Wiedergabegeschwindigkeit</string>
     <string name="settings_player_zoom">Player-Zoom</string>
-    <string name="settings_playback_error_description">Die letzten Wiedergabefehler — Details zum Lesen oder Melden</string>
+    <string name="settings_playback_error_description">Abstürze und Wiedergabefehler — Details zum Lesen oder Melden</string>
     <string name="settings_network_group">Netzwerk</string>
     <string name="settings_app_group">App</string>
     <string name="settings_app_startup">App-Start</string>
@@ -326,8 +326,8 @@
     <string name="settings_telegram_qr">QR-Code der Telegram-Gruppe</string>
     <string name="settings_telegram_scan">Scannen Sie den QR-Code, um der Gruppe über Ihr Smartphone beizutreten, oder öffnen Sie den Link oben.</string>
     <string name="settings_contributions">Beiträge, Fehlerberichte und Sterne sind auf GitHub willkommen.</string>
-    <string name="settings_playback_error_title">Wiedergabefehlerprotokoll</string>
-    <string name="settings_playback_error_description_full">Die neuesten Wiedergabefehler (neueste zuerst). Geben Sie diese Details an, wenn Sie ein Problem melden.</string>
+    <string name="settings_playback_error_title">Fehlerprotokoll</string>
+    <string name="settings_playback_error_description_full">Der letzte Absturz und die neuesten Wiedergabefehler (neueste zuerst). Geben Sie diese Details an, wenn Sie ein Problem melden.</string>
     <string name="settings_loading">Wird geladen…</string>
     <string name="settings_no_playback_errors">Keine Wiedergabefehler aufgezeichnet.</string>
     <string name="settings_live">Live</string>

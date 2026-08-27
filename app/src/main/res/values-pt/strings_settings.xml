@@ -285,10 +285,10 @@
     <string name="settings_device">Dispositivo</string>
     <string name="settings_video_player">Configurações do reprodutor de vídeo</string>
     <string name="settings_video_player_description">Decodificador, legendas, sincronização</string>
-    <string name="settings_playback_error_log">Registro de erros de reprodução</string>
+    <string name="settings_playback_error_log">Registro de erros</string>
     <string name="settings_playback_speed">Velocidade de reprodução</string>
     <string name="settings_player_zoom">Zoom do reprodutor</string>
-    <string name="settings_playback_error_description">As falhas de reprodução mais recentes — detalhes para consultar ou relatar</string>
+    <string name="settings_playback_error_description">Falhas do app e de reprodução — detalhes para consultar ou relatar</string>
     <string name="settings_network_group">Rede</string>
     <string name="settings_app_group">Aplicativo</string>
     <string name="settings_app_startup">Inicialização do aplicativo</string>
@@ -328,8 +328,8 @@
     <string name="settings_telegram_qr">Código QR do grupo no Telegram</string>
     <string name="settings_telegram_scan">Leia o código QR para entrar pelo celular ou abra o link acima.</string>
     <string name="settings_contributions">Contribuições, relatórios de bugs e estrelas são bem-vindos no GitHub.</string>
-    <string name="settings_playback_error_title">Registro de erros de reprodução</string>
-    <string name="settings_playback_error_description_full">As falhas de reprodução mais recentes (da mais nova para a mais antiga). Inclua esses detalhes ao relatar um problema.</string>
+    <string name="settings_playback_error_title">Registro de erros</string>
+    <string name="settings_playback_error_description_full">A última falha do app e as falhas de reprodução mais recentes (da mais nova para a mais antiga). Inclua esses detalhes ao relatar um problema.</string>
     <string name="settings_loading">Carregando…</string>
     <string name="settings_no_playback_errors">Nenhum erro de reprodução registrado.</string>
     <string name="settings_live">Ao vivo</string>

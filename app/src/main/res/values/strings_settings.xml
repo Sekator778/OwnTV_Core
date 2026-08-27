@@ -634,14 +634,14 @@
     <string name="settings_video_player">Video Player Settings</string>
     <!-- Translators: Description of the Video Player settings section. -->
     <string name="settings_video_player_description">Decoder, subtitles, sync</string>
-    <!-- Translators: Setting label for the playback error log. -->
-    <string name="settings_playback_error_log">Playback error log</string>
+    <!-- Translators: Setting label for the app error log (crashes and playback failures). -->
+    <string name="settings_playback_error_log">Error log</string>
     <!-- Translators: Setting label for playback speed control. -->
     <string name="settings_playback_speed">Playback Speed</string>
     <!-- Translators: Setting label for player zoom control. -->
     <string name="settings_player_zoom">Player Zoom</string>
-    <!-- Translators: Description of the playback error log setting. -->
-    <string name="settings_playback_error_description">The last playback failures — details to read or report</string>
+    <!-- Translators: Description of the error log setting. -->
+    <string name="settings_playback_error_description">Crashes and playback failures — details to read or report</string>
     <!-- Translators: Settings navigation group label for Network settings. -->
     <string name="settings_network_group">Network</string>
     <!-- Translators: Settings navigation group label for App settings. -->
@@ -720,10 +720,10 @@
     <string name="settings_telegram_scan">Scan the QR to join from your phone, or open the link above.</string>
     <!-- Translators: Information about contributing to the project. 'GitHub' is a brand name. -->
     <string name="settings_contributions">Contributions, bug reports &amp; stars are welcome on GitHub.</string>
-    <!-- Translators: Screen title for the playback error log. -->
-    <string name="settings_playback_error_title">Playback error log</string>
-    <!-- Translators: Description of the playback error log content. -->
-    <string name="settings_playback_error_description_full">The most recent playback failures (newest first). Include these details when reporting a problem.</string>
+    <!-- Translators: Screen title for the error log. -->
+    <string name="settings_playback_error_title">Error log</string>
+    <!-- Translators: Description of the error log content. -->
+    <string name="settings_playback_error_description_full">The last crash and the most recent playback failures (newest first). Include these details when reporting a problem.</string>
     <!-- Translators: Generic loading status text. -->
     <string name="settings_loading">Loading…</string>
     <!-- Translators: Empty-state message when no playback errors are recorded. -->

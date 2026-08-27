@@ -283,10 +283,10 @@
     <string name="settings_device">Cihaz</string>
     <string name="settings_video_player">Video Oynatıcı Ayarları</string>
     <string name="settings_video_player_description">Kod çözücü, altyazılar, eşitleme</string>
-    <string name="settings_playback_error_log">Oynatma hata günlüğü</string>
+    <string name="settings_playback_error_log">Hata günlüğü</string>
     <string name="settings_playback_speed">Oynatma Hızı</string>
     <string name="settings_player_zoom">Oynatıcı Yakınlaştırması</string>
-    <string name="settings_playback_error_description">Son oynatma hataları — okunacak veya bildirilecek ayrıntılar</string>
+    <string name="settings_playback_error_description">Uygulama çökmeleri ve oynatma hataları — okunacak veya bildirilecek ayrıntılar</string>
     <string name="settings_network_group">Ağ</string>
     <string name="settings_app_group">Uygulama</string>
     <string name="settings_app_startup">Uygulama başlangıcı</string>
@@ -326,8 +326,8 @@
     <string name="settings_telegram_qr">Telegram grubu QR kodu</string>
     <string name="settings_telegram_scan">Telefonunuzdan katılmak için QR kodunu tarayın veya yukarıdaki bağlantıyı açın.</string>
     <string name="settings_contributions">Katkılar, hata bildirimleri ve yıldızlar GitHub\'da memnuniyetle karşılanır.</string>
-    <string name="settings_playback_error_title">Oynatma hata günlüğü</string>
-    <string name="settings_playback_error_description_full">En son oynatma hataları (en yeniden eskiye). Bir sorun bildirirken bu ayrıntıları ekleyin.</string>
+    <string name="settings_playback_error_title">Hata günlüğü</string>
+    <string name="settings_playback_error_description_full">Son çökme ve en son oynatma hataları (en yeniden eskiye). Bir sorun bildirirken bu ayrıntıları ekleyin.</string>
     <string name="settings_loading">Yükleniyor…</string>
     <string name="settings_no_playback_errors">Kaydedilmiş oynatma hatası yok.</string>
     <string name="settings_live">Canlı</string>

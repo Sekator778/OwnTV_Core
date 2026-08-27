@@ -283,10 +283,10 @@
     <string name="settings_device">ডিভাইস</string>
     <string name="settings_video_player">ভিডিও প্লেয়ারের সেটিংস</string>
     <string name="settings_video_player_description">ডিকোডার, সাবটাইটেল, সিঙ্ক</string>
-    <string name="settings_playback_error_log">প্লেব্যাক ত্রুটির লগ</string>
+    <string name="settings_playback_error_log">ত্রুটির লগ</string>
     <string name="settings_playback_speed">প্লেব্যাকের গতি</string>
     <string name="settings_player_zoom">প্লেয়ার জুম</string>
-    <string name="settings_playback_error_description">সর্বশেষ প্লেব্যাক ব্যর্থতাগুলো — পড়া বা জানানোর জন্য বিস্তারিত</string>
+    <string name="settings_playback_error_description">ক্র্যাশ ও প্লেব্যাক ব্যর্থতা — পড়া বা জানানোর জন্য বিস্তারিত</string>
     <string name="settings_network_group">নেটওয়ার্ক</string>
     <string name="settings_app_group">অ্যাপ</string>
     <string name="settings_app_startup">অ্যাপ চালুর সময়</string>
@@ -326,8 +326,8 @@
     <string name="settings_telegram_qr">Telegram গ্রুপের QR কোড</string>
     <string name="settings_telegram_scan">ফোন থেকে যোগ দিতে QR কোড স্ক্যান করুন অথবা ওপরের লিংকটি খুলুন।</string>
     <string name="settings_contributions">GitHub-এ অবদান, বাগ প্রতিবেদন ও স্টারকে স্বাগত জানাই।</string>
-    <string name="settings_playback_error_title">প্লেব্যাক ত্রুটির লগ</string>
-    <string name="settings_playback_error_description_full">সাম্প্রতিক প্লেব্যাক ব্যর্থতাগুলো (সবচেয়ে নতুনটি প্রথমে)। কোনো সমস্যা জানানোর সময় এই বিস্তারিত তথ্য দিন।</string>
+    <string name="settings_playback_error_title">ত্রুটির লগ</string>
+    <string name="settings_playback_error_description_full">সর্বশেষ ক্র্যাশ এবং সাম্প্রতিক প্লেব্যাক ব্যর্থতাগুলো (সবচেয়ে নতুনটি প্রথমে)। কোনো সমস্যা জানানোর সময় এই বিস্তারিত তথ্য দিন।</string>
     <string name="settings_loading">লোড হচ্ছে…</string>
     <string name="settings_no_playback_errors">কোনো প্লেব্যাক ত্রুটি রেকর্ড করা হয়নি।</string>
     <string name="settings_live">লাইভ</string>

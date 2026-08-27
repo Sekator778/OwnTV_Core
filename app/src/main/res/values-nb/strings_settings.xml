@@ -283,10 +283,10 @@
     <string name="settings_device">Enhet</string>
     <string name="settings_video_player">Innstillinger for videoavspiller</string>
     <string name="settings_video_player_description">Dekoder, undertekster, synkronisering</string>
-    <string name="settings_playback_error_log">Logg over avspillingsfeil</string>
+    <string name="settings_playback_error_log">Feillogg</string>
     <string name="settings_playback_speed">Avspillingshastighet</string>
     <string name="settings_player_zoom">Avspillerzoom</string>
-    <string name="settings_playback_error_description">De siste avspillingsfeilene — detaljer du kan lese eller rapportere</string>
+    <string name="settings_playback_error_description">Krasj og avspillingsfeil — detaljer du kan lese eller rapportere</string>
     <string name="settings_network_group">Nettverk</string>
     <string name="settings_app_group">App</string>
     <string name="settings_app_startup">Oppstart av appen</string>
@@ -326,8 +326,8 @@
     <string name="settings_telegram_qr">QR-kode for Telegram-gruppen</string>
     <string name="settings_telegram_scan">Skann QR-koden for å bli med fra telefonen, eller åpne lenken ovenfor.</string>
     <string name="settings_contributions">Bidrag, feilrapporter og stjerner er velkomne på GitHub.</string>
-    <string name="settings_playback_error_title">Logg over avspillingsfeil</string>
-    <string name="settings_playback_error_description_full">De nyeste avspillingsfeilene (nyeste først). Ta med disse detaljene når du rapporterer et problem.</string>
+    <string name="settings_playback_error_title">Feillogg</string>
+    <string name="settings_playback_error_description_full">Det siste krasjet og de nyeste avspillingsfeilene (nyeste først). Ta med disse detaljene når du rapporterer et problem.</string>
     <string name="settings_loading">Laster inn…</string>
     <string name="settings_no_playback_errors">Ingen avspillingsfeil er registrert.</string>
     <string name="settings_live">Direkte</string>

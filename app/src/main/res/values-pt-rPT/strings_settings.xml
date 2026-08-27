@@ -285,10 +285,10 @@
     <string name="settings_device">Dispositivo</string>
     <string name="settings_video_player">Definições do leitor de vídeo</string>
     <string name="settings_video_player_description">Descodificador, legendas, sincronização</string>
-    <string name="settings_playback_error_log">Registo de erros de reprodução</string>
+    <string name="settings_playback_error_log">Registo de erros</string>
     <string name="settings_playback_speed">Velocidade de reprodução</string>
     <string name="settings_player_zoom">Zoom do leitor</string>
-    <string name="settings_playback_error_description">As últimas falhas de reprodução — detalhes para consultar ou comunicar</string>
+    <string name="settings_playback_error_description">Falhas da aplicação e de reprodução — detalhes para consultar ou comunicar</string>
     <string name="settings_network_group">Rede</string>
     <string name="settings_app_group">Aplicação</string>
     <string name="settings_app_startup">Arranque da aplicação</string>
@@ -328,8 +328,8 @@
     <string name="settings_telegram_qr">Código QR do grupo do Telegram</string>
     <string name="settings_telegram_scan">Digitalize o código QR para aderir através do telemóvel ou abra a ligação acima.</string>
     <string name="settings_contributions">Contribuições, relatórios de erros e estrelas são bem-vindos no GitHub.</string>
-    <string name="settings_playback_error_title">Registo de erros de reprodução</string>
-    <string name="settings_playback_error_description_full">As falhas de reprodução mais recentes (da mais recente para a mais antiga). Inclua estes detalhes quando comunicar um problema.</string>
+    <string name="settings_playback_error_title">Registo de erros</string>
+    <string name="settings_playback_error_description_full">A última falha da aplicação e as falhas de reprodução mais recentes (da mais recente para a mais antiga). Inclua estes detalhes quando comunicar um problema.</string>
     <string name="settings_loading">A carregar…</string>
     <string name="settings_no_playback_errors">Não foram registados erros de reprodução.</string>
     <string name="settings_live">Em direto</string>

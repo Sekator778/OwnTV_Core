@@ -298,6 +298,13 @@ object PlaybackErrorLog {
             appendLine("${Build.MANUFACTURER} ${Build.MODEL} · Android ${Build.VERSION.RELEASE} (API ${Build.VERSION.SDK_INT})")
             appendLine("Exported ${stamp.format(java.util.Date())}")
             appendLine()
+            // The crash comes first: it is the only part of this report that survives the process
+            // dying, and it is the reason most people are asked to export at all.
+            tv.own.owntv.core.util.CrashRecorder.read(appContext)?.let {
+                appendLine("--- last crash ---")
+                appendLine(it)
+                appendLine()
+            }
             read(appContext).forEach { e ->
                 appendLine("[${stamp.format(java.util.Date(e.atMs))}] ${e.kind} · ${e.engine} · ${if (e.live) "live" else "vod"}")
                 e.reason?.let { appendLine("  reason: $it") }

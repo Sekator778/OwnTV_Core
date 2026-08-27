@@ -281,10 +281,10 @@
     <string name="settings_device">기기</string>
     <string name="settings_video_player">동영상 플레이어 설정</string>
     <string name="settings_video_player_description">디코더, 자막, 동기화</string>
-    <string name="settings_playback_error_log">재생 오류 로그</string>
+    <string name="settings_playback_error_log">오류 로그</string>
     <string name="settings_playback_speed">재생 속도</string>
     <string name="settings_player_zoom">플레이어 확대/축소</string>
-    <string name="settings_playback_error_description">최근 재생 실패 내역과 확인 또는 신고할 상세 정보</string>
+    <string name="settings_playback_error_description">앱 비정상 종료와 재생 실패 내역, 확인 또는 신고할 상세 정보</string>
     <string name="settings_network_group">네트워크</string>
     <string name="settings_app_group">앱</string>
     <string name="settings_app_startup">앱 시작 화면</string>
@@ -324,8 +324,8 @@
     <string name="settings_telegram_qr">Telegram 그룹 QR 코드</string>
     <string name="settings_telegram_scan">휴대전화로 QR 코드를 스캔하여 참여하거나 위 링크를 여세요.</string>
     <string name="settings_contributions">GitHub에서 기여, 버그 신고 및 별표를 환영합니다.</string>
-    <string name="settings_playback_error_title">재생 오류 로그</string>
-    <string name="settings_playback_error_description_full">가장 최근의 재생 실패 내역입니다(최신순). 문제를 신고할 때 이 상세 정보를 포함하세요.</string>
+    <string name="settings_playback_error_title">오류 로그</string>
+    <string name="settings_playback_error_description_full">가장 최근의 비정상 종료와 재생 실패 내역입니다(최신순). 문제를 신고할 때 이 상세 정보를 포함하세요.</string>
     <string name="settings_loading">불러오는 중…</string>
     <string name="settings_no_playback_errors">기록된 재생 오류가 없습니다.</string>
     <string name="settings_live">실시간</string>

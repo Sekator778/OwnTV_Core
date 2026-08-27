@@ -285,10 +285,10 @@
     <string name="settings_device">Dispositivo</string>
     <string name="settings_video_player">Impostazioni del player video</string>
     <string name="settings_video_player_description">Decoder, sottotitoli, sincronizzazione</string>
-    <string name="settings_playback_error_log">Registro degli errori di riproduzione</string>
+    <string name="settings_playback_error_log">Registro degli errori</string>
     <string name="settings_playback_speed">Velocità di riproduzione</string>
     <string name="settings_player_zoom">Zoom del player</string>
-    <string name="settings_playback_error_description">Gli ultimi errori di riproduzione — dettagli da leggere o segnalare</string>
+    <string name="settings_playback_error_description">Arresti anomali ed errori di riproduzione — dettagli da leggere o segnalare</string>
     <string name="settings_network_group">Rete</string>
     <string name="settings_app_group">App</string>
     <string name="settings_app_startup">Avvio dell\'app</string>
@@ -328,8 +328,8 @@
     <string name="settings_telegram_qr">Codice QR del gruppo Telegram</string>
     <string name="settings_telegram_scan">Scansiona il codice QR per unirti dal telefono oppure apri il link qui sopra.</string>
     <string name="settings_contributions">Contributi, segnalazioni di bug e stelle sono benvenuti su GitHub.</string>
-    <string name="settings_playback_error_title">Registro degli errori di riproduzione</string>
-    <string name="settings_playback_error_description_full">Gli errori di riproduzione più recenti (dal più recente). Includi questi dettagli quando segnali un problema.</string>
+    <string name="settings_playback_error_title">Registro degli errori</string>
+    <string name="settings_playback_error_description_full">L\'ultimo arresto anomalo e gli errori di riproduzione più recenti (dal più recente). Includi questi dettagli quando segnali un problema.</string>
     <string name="settings_loading">Caricamento…</string>
     <string name="settings_no_playback_errors">Nessun errore di riproduzione registrato.</string>
     <string name="settings_live">Diretta</string>

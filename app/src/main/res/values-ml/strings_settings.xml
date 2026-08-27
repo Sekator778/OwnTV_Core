@@ -283,10 +283,10 @@
     <string name="settings_device">ഉപകരണം</string>
     <string name="settings_video_player">വീഡിയോ പ്ലെയർ ക്രമീകരണങ്ങൾ</string>
     <string name="settings_video_player_description">ഡീകോഡർ, സബ്‌ടൈറ്റിലുകൾ, സമന്വയിപ്പിക്കൽ</string>
-    <string name="settings_playback_error_log">പ്ലേബാക്ക് പിശക് ലോഗ്</string>
+    <string name="settings_playback_error_log">പിശക് ലോഗ്</string>
     <string name="settings_playback_speed">പ്ലേബാക്ക് വേഗത</string>
     <string name="settings_player_zoom">പ്ലെയർ സൂം</string>
-    <string name="settings_playback_error_description">ഏറ്റവും ഒടുവിലെ പ്ലേബാക്ക് പരാജയങ്ങൾ — വായിക്കാനോ റിപ്പോർട്ട് ചെയ്യാനോ ഉള്ള വിശദാംശങ്ങൾ</string>
+    <string name="settings_playback_error_description">ആപ്പ് ക്രാഷുകളും പ്ലേബാക്ക് പരാജയങ്ങളും — വായിക്കാനോ റിപ്പോർട്ട് ചെയ്യാനോ ഉള്ള വിശദാംശങ്ങൾ</string>
     <string name="settings_network_group">നെറ്റ്‌വർക്ക്</string>
     <string name="settings_app_group">ആപ്പ്</string>
     <string name="settings_app_startup">ആപ്പ് ആരംഭിക്കൽ</string>
@@ -326,8 +326,8 @@
     <string name="settings_telegram_qr">Telegram ഗ്രൂപ്പിന്റെ QR കോഡ്</string>
     <string name="settings_telegram_scan">ഫോണിൽ നിന്ന് ചേരാൻ QR സ്കാൻ ചെയ്യുക, അല്ലെങ്കിൽ മുകളിലെ ലിങ്ക് തുറക്കുക.</string>
     <string name="settings_contributions">സംഭാവനകളും ബഗ് റിപ്പോർട്ടുകളും സ്റ്റാറുകളും GitHub-ൽ സ്വാഗതം ചെയ്യുന്നു.</string>
-    <string name="settings_playback_error_title">പ്ലേബാക്ക് പിശക് ലോഗ്</string>
-    <string name="settings_playback_error_description_full">ഏറ്റവും പുതിയ പ്ലേബാക്ക് പരാജയങ്ങൾ (പുതിയത് ആദ്യം). പ്രശ്നം റിപ്പോർട്ട് ചെയ്യുമ്പോൾ ഈ വിശദാംശങ്ങൾ ഉൾപ്പെടുത്തുക.</string>
+    <string name="settings_playback_error_title">പിശക് ലോഗ്</string>
+    <string name="settings_playback_error_description_full">ഒടുവിലത്തെ ക്രാഷും ഏറ്റവും പുതിയ പ്ലേബാക്ക് പരാജയങ്ങളും (പുതിയത് ആദ്യം). പ്രശ്നം റിപ്പോർട്ട് ചെയ്യുമ്പോൾ ഈ വിശദാംശങ്ങൾ ഉൾപ്പെടുത്തുക.</string>
     <string name="settings_loading">ലോഡ് ചെയ്യുന്നു…</string>
     <string name="settings_no_playback_errors">പ്ലേബാക്ക് പിശകുകളൊന്നും രേഖപ്പെടുത്തിയിട്ടില്ല.</string>
     <string name="settings_live">തത്സമയം</string>
