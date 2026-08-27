@@ -31,6 +31,23 @@ val databaseModule = module {
                 // heal itself stays in onOpen — moving it off would let a query beat it to a missing
                 // index. The OwnTVPerf timeline reports both the cost and whether it healed.
                 override fun onOpen(db: androidx.sqlite.db.SupportSQLiteDatabase) {
+                    // Connection tuning, applied before anything queries. Both settings are per-open,
+                    // so they belong here rather than in a migration.
+                    //
+                    // synchronous=NORMAL is the documented companion to WAL: FULL fsyncs the WAL on
+                    // every single commit, which on a TV's eMMC is the dominant cost of a sync writing
+                    // tens of thousands of rows. NORMAL still fsyncs at checkpoints, so the durability
+                    // it trades away is only "the last few committed transactions survive a sudden
+                    // power cut" — not database integrity, which WAL still guarantees. A cut power
+                    // cable can cost the tail of a catalogue import, and that re-syncs.
+                    //
+                    // The page cache is per-connection and defaults to ~2MB. Home alone opens a dozen
+                    // profile-scoped queries over the same handful of index pages, and every screen
+                    // after it re-reads them; a negative value is SQLite's "this many KiB" form.
+                    runCatching {
+                        db.query("PRAGMA synchronous=NORMAL").close()
+                        db.query("PRAGMA cache_size=-8000").close()
+                    }
                     val healed = runCatching { OwnTVDatabase.healSchemaIfDrifted(db) }.getOrDefault(false)
                     tv.own.owntv.Perf.stamp(if (healed) "db-heal(repaired)" else "db-heal(clean)")
                 }

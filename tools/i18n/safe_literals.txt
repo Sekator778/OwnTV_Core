@@ -2799,6 +2799,8 @@
 2	technical	app/src/main/java/tv/own/owntv/di/DataModule.kt	User-Agent
 1	file-path	app/src/main/java/tv/own/owntv/di/DataModule.kt	backgrounds
 1	json	app/src/main/java/tv/own/owntv/di/DataModule.kt	subtitles
+1	sql	app/src/main/java/tv/own/owntv/di/DatabaseModule.kt	PRAGMA cache_size=-8000
+1	sql	app/src/main/java/tv/own/owntv/di/DatabaseModule.kt	PRAGMA synchronous=NORMAL
 1	technical	app/src/main/java/tv/own/owntv/di/DatabaseModule.kt	db-heal(clean)
 1	technical	app/src/main/java/tv/own/owntv/di/DatabaseModule.kt	db-heal(repaired)
 1	assertion	app/src/main/java/tv/own/owntv/features/customize/CustomizeItemsViewModel.kt	EPISODE not applicable

@@ -2048,9 +2048,9 @@ class OwnTVPlayer(
     private fun advanceAfterNaturalEnd() {
         if (!autoPlayNext || item.autoNextCancelled) return
         val advance: () -> Unit = when {
-            playlist.isEmpty() -> if (item.archiveThisItem) ({ _archiveEnded.tryEmit(Unit); Unit }) else return
+            playlist.isEmpty() -> if (item.archiveThisItem) ({ _archiveEnded.tryEmit(Unit) }) else return
             playlistIndex < playlist.size - 1 -> ({ next() })
-            else -> ({ _queueEnded.tryEmit(Unit); Unit })
+            else -> ({ _queueEnded.tryEmit(Unit) })
         }
         val gen = loadGeneration
         scope.launch { delay(DECODER_RELEASE_MS); if (gen == loadGeneration) advance() }

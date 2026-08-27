@@ -212,6 +212,20 @@ class CompanionHttpServerTest {
         assertEquals("abc", read("abc", "500", CompanionHttpProtocol.FORM_BODY_LIMIT))
     }
 
+    /** A JSON null must be dropped, not turned into the string "null" — the sender omits optional
+     *  fields that way, and a literal "null" would be stored as the user-agent or EPG URL. */
+    @Test
+    fun `json null values are ignored rather than stringified`() {
+        val p = protocol.parsePayload(
+            "application/json",
+            """{"type":"m3u","name":"P","url":"http://x/p.m3u","userAgent":null,"epgUrl":null}""",
+            SourceType.M3U,
+        )!!
+        assertEquals("", p.userAgent)
+        assertEquals("", p.epgUrl)
+        assertEquals("P", p.name)
+    }
+
     @Test
     fun `malformed json body does not throw and yields null`() {
         // org.json is stubbed in unit tests; parsePayload must swallow it, not crash the accept thread.

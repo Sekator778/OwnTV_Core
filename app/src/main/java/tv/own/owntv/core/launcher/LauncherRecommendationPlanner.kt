@@ -2,6 +2,7 @@ package tv.own.owntv.core.launcher
 
 import androidx.core.net.toUri
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.withContext
 import tv.own.owntv.core.database.dao.MovieDao
@@ -47,12 +48,34 @@ class LauncherRecommendationPlanner(
         val allProgress = progressDao.getAllOnce().filter { it.profileId == profileId }
         val out = ArrayList<LauncherContinuationItem>()
 
+        // Everything below used to re-read the same rows once per progress entry. The visibility check
+        // re-loads the profile on EVERY call, and the episode/series pair for a show is fetched twice —
+        // once to pick the latest progress, then again to build the item. On a long watch history that
+        // repetition, not the work itself, was most of this function's cost (150-590ms on a TCL, the
+        // slowest single step of the Home load). These three caches are scoped to one build, so a
+        // profile edit or a category change still takes effect on the next refresh.
+        val visibleByCategory = HashMap<Long?, Boolean>()
+        suspend fun categoryVisible(categoryId: Long?): Boolean =
+            visibleByCategory.getOrElse(categoryId) {
+                isCategoryVisibleToProfile(profileId, categoryId).also { visibleByCategory[categoryId] = it }
+            }
+
+        val episodeById = HashMap<Long, EpisodeEntity?>()
+        suspend fun episode(id: Long): EpisodeEntity? =
+            if (episodeById.containsKey(id)) episodeById[id]
+            else seriesDao.getEpisodeById(id).also { episodeById[id] = it }
+
+        val showById = HashMap<Long, tv.own.owntv.core.database.entity.SeriesEntity?>()
+        suspend fun show(id: Long): tv.own.owntv.core.database.entity.SeriesEntity? =
+            if (showById.containsKey(id)) showById[id]
+            else seriesDao.getSeriesById(id).also { showById[id] = it }
+
         for (progress in allProgress) {
             when (progress.mediaType) {
                 MediaType.MOVIE -> {
                     val movie = movieDao.getById(progress.itemId) ?: continue
                     if (movie.sourceId !in movieSourceIds) continue
-                    if (!isCategoryVisibleToProfile(profileId, movie.categoryId)) continue
+                    if (!categoryVisible(movie.categoryId)) continue
                     if (!eligibleForWatchNext(progress.positionMs, progress.durationMs)) continue
                     out += movieItem(movie, progress)
                 }
@@ -65,26 +88,32 @@ class LauncherRecommendationPlanner(
         val latestBySeries = LinkedHashMap<Long, PlaybackProgressEntity>()
         for (progress in allProgress) {
             if (progress.mediaType != MediaType.EPISODE) continue
-            val episode = seriesDao.getEpisodeById(progress.itemId) ?: continue
-            val show = seriesDao.getSeriesById(episode.seriesId) ?: continue
+            val episode = episode(progress.itemId) ?: continue
+            val show = show(episode.seriesId) ?: continue
             if (show.sourceId !in seriesSourceIds) continue
-            if (!isCategoryVisibleToProfile(profileId, show.categoryId)) continue
+            if (!categoryVisible(show.categoryId)) continue
             val current = latestBySeries[episode.seriesId]
             if (current == null || progress.updatedAt >= current.updatedAt) {
                 latestBySeries[episode.seriesId] = progress
             }
         }
-        for (progress in latestBySeries.values) {
-            val episode = seriesDao.getEpisodeById(progress.itemId) ?: continue
-            val show = seriesDao.getSeriesById(episode.seriesId) ?: continue
-            val episodes = orderedEpisodes(show.id)
+        // One full episode list per show, and a show with saved progress usually has hundreds of rows.
+        // Fetched in sequence these stacked up into the slowest part of the Home load; fetched together
+        // they overlap, which WAL allows. Order is preserved because the results are re-read in the
+        // original iteration order below.
+        val episodeLists = latestBySeries.map { (seriesId, progress) ->
+            progress to async { orderedEpisodes(seriesId) }
+        }
+        for ((progress, listAsync) in episodeLists) {
+            val episode = episode(progress.itemId) ?: continue
+            val show = show(episode.seriesId) ?: continue
+            val episodes = listAsync.await()
             val currentIndex = episodes.indexOfFirst { it.id == episode.id }
             val complete = isCompleted(progress)
             if (!complete && !eligibleForWatchNext(progress.positionMs, progress.durationMs)) continue
             if (complete && currentIndex == episodes.lastIndex) continue
             out += episodeItem(show, episode, progress, episodes, currentIndex, complete)
         }
-
         out.sortedByDescending { it.lastEngagementAt }.take(CONTINUATION_MAX_ITEMS)
     }
 
@@ -109,8 +138,15 @@ class LauncherRecommendationPlanner(
     suspend fun isCategoryVisibleToProfile(profileId: Long, categoryId: Long?): Boolean =
         tv.own.owntv.core.content.AdultCategoryClassifier.allows(profileId, categoryId, profileDao, categoryDao)
 
+    /**
+     * The one-shot query, not `episodesBySeries(...).first()`. Both run the same SQL with the same
+     * ORDER BY, but the Flow form registers an invalidation observer, waits for the first emission and
+     * tears the observer down again — per series, every time. Home builds this for every show with
+     * saved progress, so that setup cost was paid repeatedly on the launch path for a value nobody
+     * observes afterwards.
+     */
     suspend fun orderedEpisodes(seriesId: Long): List<EpisodeEntity> =
-        seriesDao.episodesBySeries(seriesId).first().sortedWith(compareBy<EpisodeEntity> { it.seasonNumber }.thenBy { it.episodeNumber })
+        seriesDao.episodesBySeriesOnce(seriesId).sortedWith(compareBy<EpisodeEntity> { it.seasonNumber }.thenBy { it.episodeNumber })
 
     fun movieStableKey(movie: MovieEntity): String =
         "movie:${movie.sourceId}:${movie.remoteId ?: movie.name}"

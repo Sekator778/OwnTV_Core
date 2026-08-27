@@ -139,10 +139,8 @@ internal object CompanionHttpProtocol {
         val json = org.json.JSONObject(bodyText)
         val out = LinkedHashMap<String, String>()
         json.keys().forEach { key ->
-            when (val value = json.opt(key)) {
-                null, org.json.JSONObject.NULL -> Unit
-                else -> out[key] = value.toString()
-            }
+            val value = json.opt(key)
+            if (value != null && value != org.json.JSONObject.NULL) out[key] = value.toString()
         }
         return out
     }
