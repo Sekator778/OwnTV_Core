@@ -965,6 +965,10 @@ class TestCheckHardcodedStrings(unittest.TestCase):
         self.tmpdir = Path(tempfile.mkdtemp())
         self.chs.SRC = self.tmpdir / "src"
         self.chs.SRC.mkdir()
+        # The scanner walks SRC_ROOTS, one entry per Gradle module. Redirect it at the sandbox, or
+        # every case here silently inventories the real repository instead of the file it wrote.
+        self.chs.SRC_ROOTS = [self.chs.SRC]
+        self.chs.MODULE_MAIN_DIRS = ["src"]
         self.chs.ROOT = self.tmpdir
         self.chs.BASELINE = self.tmpdir / "baseline.txt"
         self.chs.SAFE_MANIFEST = self.tmpdir / "safe_literals.txt"
