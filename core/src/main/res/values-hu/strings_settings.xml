@@ -1,0 +1,1174 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2"
+           xmlns:tools="http://schemas.android.com/tools">
+    <string name="settings_sort_playlist">Lejátszási lista</string>
+    <string name="settings_sort_alpha">A–Z</string>
+    <string name="settings_sort_rating">Értékelés</string>
+    <string name="settings_sort_date_added">Hozzáadás dátuma</string>
+    <string name="settings_mini_player">Mini lejátszó</string>
+    <string name="settings_mini_player_description">A kis lebegő lejátszó, amit akkor kapsz, ha böngészés közben dokkolsz (PiP) egy csatornát. Itt módosíthatod, vagy menet közben a mini lejátszó átméretezés / mozgatás gombjaival.</string>
+    <string name="settings_size">Méret</string>
+    <string name="settings_mini_player_size_description">Mekkora a mini lejátszó a képernyő szélességéhez képest (<xliff:g id="min">%1$d</xliff:g>%%–<xliff:g id="max">%2$d</xliff:g>%%).</string>
+    <string name="settings_position">Pozíció</string>
+    <string name="settings_mini_player_position_description">Melyik sarokhoz vagy szélhez dokkoljon a mini lejátszó.</string>
+    <string name="settings_mini_player_size">Mini lejátszó mérete</string>
+    <string name="settings_mini_player_position">Mini lejátszó pozíciója</string>
+    <string name="settings_home_screen">Kezdőképernyő</string>
+    <string name="settings_home_description">Sorok elrejtése, átrendezése és szűrése a kezdőképernyőn ehhez a profilhoz.</string>
+    <string name="settings_sections">Szakaszok</string>
+    <string name="settings_hidden_sections">A rejtett szakaszok listázva maradnak, hogy vissza tudd kapcsolni őket.</string>
+    <string name="settings_keep_watching">Folytatás</string>
+    <string name="settings_live_keep_watching">Élő csatornák a Folytatás sorban</string>
+    <string name="settings_live_keep_watching_description">A nemrég nézett élő csatornák megjelenítése a kiemelt sorban.</string>
+    <string name="settings_movies_keep_watching">Filmek a Folytatás sorban</string>
+    <string name="settings_movies_keep_watching_description">Filmfolytatási kártyák megjelenítése a kiemelt sorban.</string>
+    <string name="settings_series_keep_watching">Sorozatok a Folytatás sorban</string>
+    <string name="settings_series_keep_watching_description">Epizódfolytatási kártyák megjelenítése a kiemelt sorban.</string>
+    <string name="settings_hero_preview">Videó lejátszása a kiemelt sorban</string>
+    <string name="settings_hero_preview_description">Rövid idő után előnézetet játszik a kijelölt elem videójából. Kapcsold ki, hogy energiát és memóriát spórolj a kezdőképernyőn böngészve.</string>
+    <string name="settings_android_tv_home">Android TV kezdőképernyő</string>
+    <string name="settings_android_tv_home_description">A Folytatás és a nemrég nézett élő csatornák megjelenítése a TV kezdőképernyőjén.</string>
+    <string name="settings_refresh_now">Frissítés most</string>
+    <string name="settings_refresh_description">A Folytatás / nemrég nézett kártyák újraépítése az Android TV kezdőképernyőjén.</string>
+    <string name="settings_rebuilding">Újraépítés…</string>
+    <string name="settings_done_check">Kész ✓</string>
+    <string name="settings_mode"><xliff:g id="mode">%1$s</xliff:g></string>
+    <string name="settings_hidden">Rejtett</string>
+    <string name="settings_sidebar_customization">Oldalsó menü testreszabása</string>
+    <string name="settings_sidebar_description">Válaszd ki, mely ikonok jelenjenek meg az oldalsó menüben, vagy hagyd, hogy a lejátszási listádhoz igazodjanak.</string>
+    <string name="settings_behavior">Működés</string>
+    <string name="settings_nav_dynamic_description">Dinamikus — az ikonok ahhoz igazodnak, amit az aktív lejátszási listád kínál. A Kezdőlap és a Beállítások mindig látszik.</string>
+    <string name="settings_nav_static_description">Rögzített — alább kézzel választod ki, mely ikonok látszanak.</string>
+    <string name="settings_icons">Ikonok</string>
+    <string name="settings_shown_in_menu">Látszik az oldalsó menüben</string>
+    <string name="settings_hidden_from_menu">Rejtve az oldalsó menüből</string>
+    <string name="settings_shown">Látható</string>
+    <string name="settings_nav_behavior">Navigációs menü működése</string>
+    <string name="settings_static">Rögzített</string>
+    <string name="settings_dynamic">Dinamikus</string>
+    <string name="settings_http_proxy">HTTP-proxy</string>
+    <string name="settings_use_proxy">Proxy használata</string>
+    <string name="settings_proxy_description">Az OwnTV teljes forgalmát és lejátszását HTTP-proxyn keresztül küldi.</string>
+    <string name="settings_host">Kiszolgáló</string>
+    <string name="settings_proxy_host_hint">proxy.example.com</string>
+    <string name="settings_port">Port</string>
+    <string name="settings_proxy_port_hint">8080</string>
+    <string name="settings_username_optional">Felhasználónév (nem kötelező)</string>
+    <string name="settings_password_optional">Jelszó (nem kötelező)</string>
+    <string name="settings_test_proxy">Proxy tesztelése</string>
+    <string name="settings_testing">Tesztelés…</string>
+    <string name="settings_proxy_privacy">A proxyszolgáltatód látja, mely kiszolgálókhoz csatlakozol, és a nem HTTPS-forgalom tartalmát.</string>
+    <string name="settings_proxy_limitations">Egyelőre csak HTTP-proxy — a SOCKS és a lejátszásilistánkénti proxy még nem támogatott.</string>
+    <string name="settings_proxy_connected"><xliff:g id="millis">%1$d</xliff:g> ms</string>
+    <string name="settings_proxy_invalid_address">Adj meg érvényes kiszolgálót és portot (1–65535).</string>
+    <string name="settings_proxy_host_unreachable">A proxykiszolgáló nem érhető el.</string>
+    <string name="settings_proxy_timed_out">A proxyhoz való kapcsolódás időtúllépéssel leállt.</string>
+    <string name="settings_proxy_connection_failed">Nem sikerült csatlakozni a proxyhoz (ellenőrizd a kiszolgálót/portot).</string>
+    <string name="settings_proxy_http">A proxy HTTP <xliff:g id="code">%1$d</xliff:g> választ adott</string>
+    <string name="settings_proxy_failed">A proxyteszt nem sikerült.</string>
+    <string name="settings_ch_nav_title">CH+/RW · CH−/FF gombos lapozás</string>
+    <string name="settings_ch_nav_description">Lapozz a kategória- vagy elemlistában a távirányító CH+/RW és CH−/FF gombjaival.</string>
+    <string name="settings_ch_nav_enabled">CH+/RW · CH−/FF gombok használata lapozáshoz</string>
+    <string name="settings_ch_nav_enabled_description">Bekapcsolva a CH+/RW és a CH−/FF a fókuszban lévő panelen ugrik (kategóriasáv vagy elemlista, illetve a Testreszabás kategórialistája). Kikapcsolva ezek a gombok nem csinálnak semmit ezeken a képernyőkön.</string>
+    <string name="settings_ch_nav_up">CH+ / Visszatekerés ugrás (az első felé)</string>
+    <string name="settings_ch_nav_up_description">Hány elemet ugrik felfelé egy CH+/RW gombnyomás. A hosszú nyomás mindig az első elemre visz.</string>
+    <string name="settings_ch_nav_down">CH− / Előretekerés ugrás (az utolsó felé)</string>
+    <string name="settings_ch_nav_down_description">Hány elemet ugrik lefelé egy CH−/FF gombnyomás. A hosszú nyomás mindig az utolsó elemre visz.</string>
+    <string name="settings_skip_counts">Ugrások mérete</string>
+    <string name="settings_how_it_works">Hogyan működik</string>
+    <string name="settings_ch_nav_help">• Az ugrások a lista végén megállnak, így a rövid listák egyetlen nyomásra a végükre érnek.
+• Hosszú CH+ nyomás = első elem, hosszú CH− nyomás = utolsó elem.
+• A hosszú nyomás ki van kapcsolva az „Összes” listán (minden csatorna / film / sorozat) — a rövid nyomásos ugrás ott is működik.
+• Mindig arra a panelre vonatkozik, amelyik éppen fókuszban van — a kategóriasávra vagy az elemlistára/rácsra.
+• A Beállítások → Kategóriák és elemek testreszabása kategórialistájában is lapoz.</string>
+    <string name="settings_remote_shortcuts">Távirányító-gyorsbillentyűk</string>
+    <string name="settings_remote_shortcuts_description">Rendelj a szabad távirányítógombokhoz navigációs, lejátszási és böngészési műveleteket. A fontos navigációs gombok védettek maradnak.</string>
+    <string name="settings_remote_shortcuts_enabled">Távirányító-gyorsbillentyűk használata</string>
+    <string name="settings_remote_shortcuts_enabled_description">Kapcsold ki az összes egyéni gyorsbillentyűt anélkül, hogy törölnéd a gomb-hozzárendeléseidet</string>
+    <string name="settings_remote_shortcuts_assignments">Gomb-hozzárendelések</string>
+    <string name="settings_remote_shortcuts_add">Gyorsbillentyű hozzáadása</string>
+    <string name="settings_remote_shortcuts_add_description">Nyomj meg vagy tarts lenyomva egy szabad gombot, majd válaszd ki, mit csináljon</string>
+    <string name="settings_remote_shortcuts_reset">Alapértelmezett gyorsbillentyűk visszaállítása</string>
+    <string name="settings_remote_shortcuts_reset_description">Visszaállítja a CH+/CH− és a vissza-/előretekerés lapozást; a többi hozzárendelést törli</string>
+    <string name="settings_remote_shortcuts_capture_title">Nyomj meg egy távirányítógombot</string>
+    <string name="settings_remote_shortcuts_capture_description">Nyomd meg röviden rövid nyomásos gyorsbillentyűhöz, vagy tartsd lenyomva az elengedésig hosszú nyomásoshoz. A Vissza, az iránygombok, az OK, a hangerő, a Kezdőlap és a bekapcsológomb nem rendelhető hozzá.</string>
+    <string name="settings_remote_shortcuts_choose_action">Válassz műveletet</string>
+    <string name="settings_remote_shortcuts_binding"><xliff:g id="press">%1$s</xliff:g> · <xliff:g id="action">%2$s</xliff:g></string>
+    <string name="settings_remote_shortcuts_short_press">Rövid nyomás</string>
+    <string name="settings_remote_shortcuts_long_press">Hosszú nyomás</string>
+    <string name="settings_remote_shortcuts_unknown_button">Távirányítógomb: <xliff:g id="number">%1$d</xliff:g></string>
+    <string name="settings_remote_shortcuts_help">• Alapból a CH+/CH− és a vissza-/előretekerés lapoz a böngészőlistákban; lenyomva tartva az első vagy az utolsó elemre ugrik.
+• A rövid és a hosszú nyomás külön rendelhető hozzá.
+• Az ugrás az utolsóra a nagyon nagy „Összes” listákon kikapcsolva marad.
+• A hosszú Vissza nyomás mindig a Most játszott elemre fókuszál, és nem rendelhető át.
+• A jellemzően hozzárendelhető gombok: piros/zöld/sárga/kék, számok, CH+/CH− és vissza-/előretekerés.
+• A Vissza, az iránygombok, az OK, a hangerő, a Kezdőlap és a bekapcsológomb védett marad.
+• A számgombos gyorsbillentyűk böngészés közben működnek; teljes képernyőn a számbevitel a csatornaváltást élvezi elsőbbségben.</string>
+    <string name="settings_remote_button_channel_up">Csatorna +</string>
+    <string name="settings_remote_button_channel_down">Csatorna −</string>
+    <string name="settings_remote_button_rewind">Visszatekerés</string>
+    <string name="settings_remote_button_fast_forward">Előretekerés</string>
+    <string name="settings_remote_button_previous">Előző</string>
+    <string name="settings_remote_button_next">Következő</string>
+    <string name="settings_remote_button_menu">Menü</string>
+    <string name="settings_remote_button_red">Piros gomb</string>
+    <string name="settings_remote_button_green">Zöld gomb</string>
+    <string name="settings_remote_button_yellow">Sárga gomb</string>
+    <string name="settings_remote_button_blue">Kék gomb</string>
+    <string name="settings_remote_action_continue">Utoljára nézett folytatása</string>
+    <string name="settings_remote_action_focus_now_playing">Fókusz a Most játszottra</string>
+    <string name="settings_remote_action_expand_now_playing">Most játszott teljes képernyőre</string>
+    <string name="settings_remote_action_mini_player">Áthelyezés a mini lejátszóba</string>
+    <string name="settings_remote_action_play_pause">Lejátszás vagy szüneteltetés</string>
+    <string name="settings_remote_action_page_first">Lapozás az első elemek felé</string>
+    <string name="settings_remote_action_page_last">Lapozás az utolsó elemek felé</string>
+    <string name="settings_remote_action_jump_first">Ugrás az első elemre</string>
+    <string name="settings_remote_action_jump_last">Ugrás az utolsó elemre</string>
+    <string name="settings_large_skips_warning">A nagy ugrások túllőnek a rövid listákon, és gyengébb TV-ken akadozónak tűnhetnek.</string>
+    <string name="settings_ch_nav_picker">CH+/RW · CH−/FF gombos lapozás</string>
+    <string name="settings_weather">Időjárás</string>
+    <string name="settings_top_bar_weather">Időjárás a felső sávban</string>
+    <string name="settings_show_weather">Időjárás megjelenítése</string>
+    <string name="settings_show_weather_description">A jelenlegi időjárás megjelenítése a felső sávban.</string>
+    <string name="settings_custom_location">Egyéni helyszín</string>
+    <string name="settings_custom_location_description">Felülírja az időjáráshoz használt várost. Hagyd üresen az automatikus felismeréshez, vagy adj meg egy várost (pl. Budapest) vagy „szél,hossz” értéket (pl. 47.5,19.05). Hasznos VPN esetén, ahol az automatikus felismerés a kiszolgáló városát adja.</string>
+    <string name="settings_temperature_unit">Hőmérséklet mértékegysége</string>
+    <string name="settings_temperature_description">A hőmérséklet megjelenítése Celsiusban vagy Fahrenheitben.</string>
+    <string name="settings_auto">Automatikus</string>
+    <string name="settings_city_latlon">Város vagy szél,hossz</string>
+    <string name="settings_location_hint">Hagyd üresen a nyilvános IP-d alapján történő automatikus felismeréshez. Adj meg egy várost (pl. Budapest) vagy „szél,hossz” értéket (pl. 47.5,19.05).</string>
+    <string name="settings_metadata">Metaadatok (TMDB)</string>
+    <string name="settings_metadata_source">Metaadatok forrása</string>
+    <string name="settings_metadata_source_description">Válaszd ki, honnan érkezzenek a Filmek és Sorozatok részletei.</string>
+    <string name="settings_metadata_provider_description">Csak azt használja, amit a lejátszási listád kínál. Nincs TMDB-lekérdezés.</string>
+    <string name="settings_metadata_provider_tmdb_description">A lejátszási listád adatai az erősebbek; a TMDB kitölti a hiányokat, és hozzáadja a szereplőket, műfajokat és háttérképeket.</string>
+    <string name="settings_metadata_tmdb_only_description">Minden mezőnél a TMDB az elsődleges; a lejátszási listádra csak akkor esik vissza, ha a TMDB-ben nincs adat.</string>
+    <string name="settings_selected">Kiválasztva</string>
+    <string name="settings_metadata_allowance">A közös kereted</string>
+    <string name="settings_metadata_reset_automatic">Automatikusan visszaáll</string>
+    <string name="settings_metadata_library_details">Könyvtár részletei</string>
+    <string name="settings_metadata_test_connection">Jelenlegi kapcsolat tesztelése</string>
+    <string name="settings_allowance_available">Elérhető</string>
+    <string name="settings_allowance_refills">Feltöltődik: <xliff:g id="time">%1$s</xliff:g></string>
+    <string name="settings_allowance_minute">Perc</string>
+    <string name="settings_allowance_hour">Óra</string>
+    <string name="settings_allowance_day">Nap</string>
+    <plurals name="settings_allowance_value">
+        <item quantity="one"><xliff:g id="remaining">%1$d</xliff:g> / <xliff:g id="limit">%2$d</xliff:g> maradt</item>
+        <item quantity="other"><xliff:g id="remaining">%1$d</xliff:g> / <xliff:g id="limit">%2$d</xliff:g> maradt</item>
+    </plurals>
+    <string name="settings_metadata_active_source">Aktív forrás</string>
+    <string name="settings_metadata_shared_worker_description">OwnTV Worker · nincs teendő</string>
+    <string name="settings_metadata_connection">Kapcsolat</string>
+    <string name="settings_metadata_remote_advanced">Speciális TMDB-beállítások</string>
+    <string name="settings_metadata_remote_advanced_description">Használd a saját TMDB API-kulcsodat vagy saját üzemeltetésű Workeredet a közös alapértelmezett helyett.</string>
+    <string name="settings_open_subtitles_advanced">Speciális beállítások</string>
+    <string name="settings_open_subtitles_advanced_description">Használd a saját alkalmazás-API-kulcsodat vagy saját üzemeltetésű OpenSubtitles Workeredet.</string>
+    <string name="settings_open_subtitles_setup_title">Az OpenSubtitles beállítása</string>
+    <string name="settings_open_subtitles_setup_description">Jelentkezz be az OpenSubtitles-fiókoddal.</string>
+    <string name="settings_open_subtitles_setup_remote">Távoli</string>
+    <string name="settings_open_subtitles_setup_remote_description">Töltsd ki az adataidat egy másik eszköz böngészőjében ugyanazon a Wi-Fi-n — telefonon, táblagépen vagy számítógépen.</string>
+    <string name="settings_open_subtitles_setup_local">Beírás itt</string>
+    <string name="settings_open_subtitles_setup_local_description">Írd be az adataidat ezen a TV-n a távirányítóval.</string>
+    <string name="settings_open_subtitles_api_key">OpenSubtitles alkalmazás-API-kulcs</string>
+    <string name="settings_worker_server_url">Worker / kiszolgáló URL-je</string>
+    <string name="settings_shared">Közös</string>
+    <string name="settings_open_subtitles_access_priority">Hagyd mindkettőt üresen az OwnTV közös Workeréhez. Az egyéni Worker URL elsőbbséget élvez a közvetlen API-kulccsal szemben. A fiókmenetek profilonként külön maradnak.</string>
+    <string name="settings_remove_custom_access">Egyéni hozzáférés eltávolítása</string>
+    <string name="settings_metadata_usage_label">Felhasználás</string>
+    <string name="settings_metadata_usage_value" tools:ignore="PluralsCandidate"><xliff:g id="min_used">%1$d</xliff:g>/<xliff:g id="min_total">%2$d</xliff:g> perc · <xliff:g id="hr_used">%3$d</xliff:g>/<xliff:g id="hr_total">%4$d</xliff:g> óra · <xliff:g id="day_used">%5$d</xliff:g>/<xliff:g id="day_total">%6$d</xliff:g> nap</string>
+    <string name="settings_metadata_source_label">Forrás</string>
+    <string name="settings_metadata_key_label">Kulcs</string>
+    <string name="settings_metadata_server_label">Kiszolgáló</string>
+    <string name="settings_metadata_refills_label">Feltöltődik ekkor</string>
+    <string name="settings_metadata_clear_advanced_title">Ne használjuk tovább a saját kulcsodat?</string>
+    <string name="settings_metadata_clear_advanced_message">A TMDB API-kulcsod és a saját üzemeltetésű kiszolgálód címe törlődik erről az eszközről, és az OwnTV visszatér a beépített közös szolgáltatáshoz és annak napi keretéhez.</string>
+    <string name="settings_metadata_fair_share">A beépített szolgáltatáson mindenki osztozik, aki OwnTV-t használ. Ha bármelyik perces, órás vagy napi keret elfogy, a TMDB-részletek szünetelnek, amíg az adott időszak vissza nem áll; a lejátszási lista adatai továbbra is működnek. A saját kulcsod vagy Workered megszünteti ezt a korlátot.</string>
+    <string name="settings_metadata_limit_reached">A napi metaadat-kereted elfogyott — add meg a saját TMDB-kulcsodat a Beállítások → Metaadatok alatt a korlát megszüntetéséhez.</string>
+    <string name="settings_metadata_language">Metaadatok nyelve</string>
+    <string name="settings_metadata_language_description">A TMDB-ből érkező tartalomleírások, műfajok és címek nyelve. Amit a TMDB nem fordított le, angolul marad. A részletek nyelvenként gyorsítótárazódnak, így a visszaváltás azonnali.</string>
+    <string name="settings_advanced_options">Speciális beállítások</string>
+    <string name="settings_advanced_metadata_description">Használd a saját TMDB API-kulcsodat vagy saját üzemeltetésű kiszolgálódat a közös alapértelmezett helyett.</string>
+    <string name="settings_metadata_server_description">Hagyd mindkettőt üresen a beépített közös kiszolgáló használatához (nincs teendő). Adj meg saját TMDB API-kulcsot a TMDB közvetlen eléréséhez, vagy egy saját üzemeltetésű kiszolgáló URL-jét a saját proxyd/tükröd használatához. Az URL elsőbbséget élvez a kulccsal szemben.</string>
+    <string name="settings_metadata_key_from_phone">Kulcs lekérése másik eszközről</string>
+    <string name="settings_metadata_key_from_phone_desc">Olvasd be a kódot telefonnal, táblagéppel vagy számítógéppel, jelentkezz be ott a TMDB-be, és küldd át a kulcsot. Semmit nem kell begépelni a távirányítóval.</string>
+    <string name="settings_metadata_key_received">TMDB-kulcs megérkezett</string>
+    <string name="settings_tmdb_api_key">TMDB API-kulcs (v3)</string>
+    <string name="settings_self_host_url">Saját üzemeltetésű kiszolgáló URL-je</string>
+    <string name="settings_test">Teszt</string>
+    <string name="settings_metadata_empty_title">Adj meg egy címet a kereséshez.</string>
+    <string name="settings_metadata_server_unavailable">A metaadat-kiszolgáló nem érhető el — ellenőrizd a hálózatot / kulcsot / URL-t.</string>
+    <string name="settings_metadata_no_match">Nincs TMDB-találat erre: „<xliff:g id="query">%1$s</xliff:g>”.</string>
+    <string name="settings_metadata_lookup_failed">A keresés nem sikerült.</string>
+    <string name="settings_metadata_match_result"><xliff:g id="title">%1$s</xliff:g><xliff:g id="year">%2$s</xliff:g> · tmdb #<xliff:g id="id">%3$d</xliff:g></string>
+    <string name="settings_metadata_year"> (<xliff:g id="year">%1$d</xliff:g>)</string>
+    <string name="settings_lookup_movie">Filmcím keresése</string>
+    <string name="settings_test_lookup">Teszt-keresés</string>
+    <string name="settings_looking_up">Keresés…</string>
+    <string name="settings_tmdb_attribution">Ez a termék a TMDB API-t használja, de nem a TMDB támogatja vagy tanúsítja.</string>
+    <string name="settings_metadata_provider_only">Csak a szolgáltató</string>
+    <string name="settings_metadata_provider_plus_tmdb">Szolgáltató + TMDB</string>
+    <string name="settings_metadata_tmdb_only">Csak TMDB</string>
+    <string name="settings_tier_default">Alapértelmezett közös szolgáltatás</string>
+    <string name="settings_tier_key">A saját TMDB-kulcsod</string>
+    <string name="settings_tier_self_host">Saját üzemeltetésű</string>
+    <string name="settings_title">Beállítások</string>
+    <string name="settings_quick_live_preview">Élő előnézet</string>
+    <string name="settings_quick_preview_sound">Előnézet hangja</string>
+    <string name="settings_quick_channel_numbers">Csatornaszámok</string>
+    <string name="settings_quick_hdr">HDR</string>
+    <string name="settings_quick_autoplay">Automatikus lejátszás</string>
+    <string name="settings_quick_check_update">Frissítés keresése</string>
+    <string name="settings_search_label">Beállítások keresése</string>
+    <string name="settings_search_hint">Beállítások keresése…</string>
+    <string name="settings_header_hint">Balra: csoportok · Jobbra: a beállításaik · Tartsd lenyomva az OK-t egy soron a Gyors közé tűzéshez</string>
+    <string name="settings_spine_eyebrow">Összes csoport</string>
+    <string name="settings_spine_title">Beállítások böngészése</string>
+    <string name="settings_spine_hint">A Gyors felül rögzítve marad; a jelölő azt a csoportot követi, amelyikben vagy.</string>
+    <string name="settings_spine_foot">A kiemelés a fókuszodat követi</string>
+    <string name="settings_row_menu_pin">Kitűzés a Gyors közé</string>
+    <string name="settings_row_menu_unpin">Eltávolítás a Gyors közül</string>
+    <string name="settings_row_menu_move_up">Mozgatás felfelé</string>
+    <string name="settings_row_menu_move_down">Mozgatás lefelé</string>
+    <string name="settings_quick_empty_title">Még nincs kitűzve semmi</string>
+    <string name="settings_quick_empty_hint">Tartsd lenyomva az OK-t bármelyik beállításon, és válaszd a „Kitűzés a Gyors közé” lehetőséget.</string>
+    <string name="settings_results_title">Találatok</string>
+    <string name="settings_results_summary">Minden találat, bárhol is legyen — az útvonalával együtt</string>
+    <plurals name="settings_setting_count">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> beállítás</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> beállítás</item>
+    </plurals>
+    <plurals name="settings_pinned_count">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> kitűzve</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> kitűzve</item>
+    </plurals>
+    <plurals name="settings_match_count">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> találat</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> találat</item>
+    </plurals>
+    <string name="settings_language">Nyelv</string>
+    <string name="settings_language_description">Az alkalmazás megjelenítési nyelve</string>
+    <string name="settings_language_system_default">Rendszer alapértelmezése</string>
+    <string name="settings_language_system_default_description">Az eszköz nyelvét követi</string>
+    <string name="settings_language_search_hint">Nyelvek keresése…</string>
+    <string name="settings_search_keywords_language">nyelv területi beállítás fordítás nemzetközi i18n</string>
+    <string name="settings_language_coverage"><xliff:g id="percent">%1$d</xliff:g>%%</string>
+    <string name="settings_profile_group">Profil</string>
+    <string name="settings_profiles_description">Nézők, gyerekmód és PIN-zárak kezelése</string>
+    <string name="settings_playlists">Lejátszási listák</string>
+    <string name="settings_playlists_description">M3U / Xtream lejátszási listák hozzáadása, újraszinkronizálása vagy eltávolítása</string>
+    <string name="settings_epg_sources">EPG-források</string>
+    <string name="settings_epg_sources_nav_description">XMLTV-műsorforrások hozzáadása a műsorújsághoz</string>
+    <string name="settings_customize">Kategóriák és elemek testreszabása</string>
+    <string name="settings_customize_nav_description">Elemek elrejtése és megjelenítése, kategóriák átnevezése és átrendezése</string>
+    <string name="settings_sidebar_description_root">Az oldalsó ikonok automatikus igazítása a lejátszási listádhoz, vagy egyesek elrejtése</string>
+    <string name="settings_ch_paging">Távirányító-gyorsbillentyűk</string>
+    <string name="settings_ch_paging_description">Rendelj műveleteket a szabad távirányítógombokhoz, miközben a fontos navigáció védett marad</string>
+    <string name="settings_content_menus_title">Hosszú nyomásos menük</string>
+    <string name="settings_content_menus_description">Rendezd át a műveleteket a csatorna-, film-, sorozat- és epizódmenükben</string>
+    <string name="settings_content_menus_hint">Tartsd lenyomva az OK-t egy műveleten a felvételéhez, majd a Fel és Le gombokkal mozgasd. Az OK ismételt megnyomásával leteszed.</string>
+    <string name="settings_browsing_lists">Böngészés és listák</string>
+    <string name="settings_browsing_description">Az utolsó kategória és az utolsó elem megjegyzése az Élő TV-ben, a Filmekben és a Sorozatokban</string>
+    <string name="settings_home_root">Kezdőképernyő</string>
+    <string name="settings_home_root_description">A kezdőképernyő sorainak kiválasztása, átrendezése és szűrése</string>
+    <string name="settings_metadata_root_description">Poszterek, tartalomleírások, szereplők, műfajok, értékelések és háttérképek a Filmekhez és Sorozatokhoz.</string>
+    <string name="settings_download_folder">Letöltési mappa</string>
+    <string name="settings_app_storage">Alkalmazás tárhelye</string>
+    <string name="settings_backup_restore">Mentés és visszaállítás</string>
+    <string name="settings_backup_restore_description">Profilok és források exportálása vagy visszaállítása</string>
+    <string name="settings_clear_history">Megtekintési előzmények törlése</string>
+    <string name="settings_clear_history_description">Ennek a profilnak a nemrég nézett és folytatás sorainak törlése</string>
+    <string name="settings_appearance_group">Megjelenés</string>
+    <string name="settings_theme">Téma</string>
+    <string name="settings_theme_description">Világos, sötét vagy a rendszert követő</string>
+    <string name="settings_accent">Kiemelőszín</string>
+    <string name="settings_accent_description">Színezd a felületet — előbeállítások, paletta vagy hexakód</string>
+    <string name="settings_focus_highlight">Fókuszkiemelés</string>
+    <string name="settings_focus_highlight_description">A fókuszban lévő elem körüli keret színe és vastagsága</string>
+    <string name="settings_focus_highlight_chip"><xliff:g id="color">%1$s</xliff:g> · <xliff:g id="thickness">%2$s</xliff:g></string>
+    <string name="settings_focus_thickness">Vastagság</string>
+    <string name="settings_focus_width_thin">Vékony</string>
+    <string name="settings_focus_width_normal">Normál</string>
+    <string name="settings_focus_width_thick">Vastag</string>
+    <string name="settings_focus_width_extra">Extra vastag</string>
+    <string name="settings_focus_highlight_sample">Fókuszban</string>
+    <string name="settings_glass_effect">Üveghatás</string>
+    <string name="settings_glass_description">Áttetsző, mattított felületek, háttérkép és átlátszóság</string>
+    <string name="settings_ui_zoom">Felület nagyítása</string>
+    <string name="settings_ui_zoom_description">A teljes felület méretezése</string>
+    <string name="settings_font_customization">Betűtípus testreszabása</string>
+    <string name="settings_font_customization_description">Szövegméret és betűtípusok a fő felülethez és a felugró ablakokhoz</string>
+    <string name="settings_font_size">Betűméret</string>
+    <string name="settings_main_interface_font">Fő felület betűtípusa</string>
+    <string name="settings_popup_font">Felugró ablakok betűtípusa</string>
+    <string name="settings_choose_font">Betűtípus választása</string>
+    <string name="settings_font_size_range">A fő alkalmazásszöveg méretezése (a felugró ablakoké nem) <xliff:g id="min">%1$d</xliff:g>%% és <xliff:g id="max">%2$d</xliff:g>%% között. A feliratok megtartják a saját méretüket.</string>
+    <string name="settings_popup_font_size">Felugró ablakok betűmérete</string>
+    <string name="settings_popup_font_size_description">Csak a párbeszédpanelek és menük szövegét módosítja</string>
+    <string name="settings_popup_size">Felugró ablakok mérete</string>
+    <string name="settings_popup_size_description">A párbeszédpanelek és menük dobozainak méretezése a szövegméret módosítása nélkül</string>
+    <string name="settings_popup_size_range">A párbeszédpanelek és menük dobozainak méretezése (<xliff:g id="min">%1$d</xliff:g>%%–<xliff:g id="max">%2$d</xliff:g>%%).</string>
+    <string name="settings_font_preview">Szórakozás, egyszerűen.</string>
+    <string name="settings_search_keywords_fonts">betűtípus szöveg méret betűkép tipográfia felugró olvasás akadálymentesítés</string>
+    <string name="settings_font_system_sans">Rendszer talpatlan</string>
+    <string name="settings_font_monospace">Rögzített szélességű</string>
+    <string name="settings_subtitle_font">Felirat betűtípusa</string>
+    <string name="settings_animations">Animációk</string>
+    <string name="settings_animations_description">A felület mozgásának be- vagy kikapcsolása — kikapcsolva gyorsabbnak hat a gyengébb TV-boxokon</string>
+    <string name="settings_weather_description_root">Időjárásjelző a felső sávban: megjelenítés vagy elrejtés, egyéni helyszín, Celsius / Fahrenheit.</string>
+    <string name="settings_playback_group">Lejátszás</string>
+    <string name="settings_live_preview_description">Csatorna automatikus lejátszása, amikor ráfókuszálsz</string>
+    <string name="settings_preview_audio">Előnézet hangja</string>
+    <string name="settings_preview_audio_description">Hang lejátszása az élő előnézetben</string>
+    <string name="settings_mini_player_root">Mini lejátszó</string>
+    <string name="settings_mini_player_root_description">A dokkolt mini lejátszó mérete és pozíciója</string>
+    <string name="settings_hdr_description">HDR-kimenet használata, ha a videó és a TV is támogatja</string>
+    <string name="settings_auto_frame_rate">Automatikus képkockasebesség</string>
+    <string name="settings_auto_frame_rate_description">Teljes képernyőn a TV frissítési frekvenciáját a videóhoz igazítja (24/25/50/60 fps) élő TV és VOD esetén is, kilépéskor pedig visszaállítja. Kapcsold ki, ha a TV-d vagy a vevőd minden csatornaváltásnál zajosan újraegyezteti a HDMI-t.</string>
+    <string name="settings_auto_frame_rate_warning_suffix">Ezen a TV-n nem ajánlott: Android 12 alatt a frekvencia nem váltható zökkenőmentesen.</string>
+    <string name="settings_auto_frame_rate_warning_title">Ezen a TV-n nem ajánlott</string>
+    <string name="settings_auto_frame_rate_warning_description">Ezen az eszközön Android <xliff:g id="android_version">%1$s</xliff:g> fut. Android 12 alatt a TV nem tudja megmondani az OwnTV-nek, mely frissítési frekvenciákra tud zökkenőmentesen váltani, ezért a frekvenciaváltás egy-két másodpercre elsötétítheti a képet — néha egy műsor alatt többször is.\n\nAzt javasoljuk, hagyd itt kikapcsolva az automatikus képkockasebességet. Ha a TV-d tisztán vált, kapcsold be, és próbáld ki: bármikor visszaállíthatod.</string>
+    <string name="settings_auto_frame_rate_keep_off">Maradjon ki</string>
+    <string name="settings_auto_frame_rate_turn_on_anyway">Mégis bekapcsolom</string>
+    <string name="settings_surround_sound">Térhatású hang</string>
+    <string name="settings_surround_description">A Dolby/DTS térhangzásra (5.1/7.1) dekódolása igazi 5.1/7.1 vevőhöz. TV-hangszórókhoz vagy sztereó hangprojektorhoz hagyd KI — a többcsatornás hang egyes TV-ken/hangprojektorokon a kép mögé csúszhat. Ha elcsúszik, igazíts a lejátszó Hang menü → A/V szinkron beállításán.</string>
+    <string name="settings_autoplay_next">Következő epizód automatikus lejátszása</string>
+    <string name="settings_autoplay_next_description">Amikor egy epizód véget ér, automatikusan elindítja a következőt — és átvált a következő évadra is. A visszanézés is továbbfut a következő műsorra.</string>
+    <string name="settings_catchup">Visszanézés</string>
+    <plurals name="settings_catchup_supported">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> csatorna támogatja a visszanézést · időzóna és lejátszó az archív lejátszáshoz</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> csatorna támogatja a visszanézést · időzóna és lejátszó az archív lejátszáshoz</item>
+    </plurals>
+    <string name="settings_catchup_unavailable">Ezen a lejátszási listán nincs visszanézhető csatorna</string>
+    <string name="settings_device">Eszköz</string>
+    <string name="settings_video_player">Videolejátszó beállításai</string>
+    <string name="settings_video_player_description">Dekóder, feliratok, szinkron</string>
+    <string name="settings_playback_error_log">Hibanapló</string>
+    <string name="settings_playback_speed">Lejátszási sebesség</string>
+    <string name="settings_player_zoom">Lejátszó nagyítása</string>
+    <string name="settings_playback_error_description">Összeomlások és lejátszási hibák — részletek elolvasáshoz vagy bejelentéshez</string>
+    <string name="settings_network_group">Hálózat</string>
+    <string name="settings_app_group">Alkalmazás</string>
+    <string name="settings_app_startup">Alkalmazás indulása</string>
+    <string name="settings_app_startup_description">Mit nyit meg az OwnTV induláskor</string>
+    <string name="settings_check_updates">Frissítések keresése</string>
+    <string name="settings_check_updates_description">Szerezd meg a legújabb verziót a GitHub Releases oldalról</string>
+    <string name="settings_update_startup">Frissítés keresése induláskor</string>
+    <string name="settings_update_startup_description">Új verzió keresése az alkalmazás megnyitásakor</string>
+    <string name="settings_about">Névjegy</string>
+    <string name="settings_about_description">Verzió, licenc és projektinformációk</string>
+    <string name="settings_live_latency">Élő késleltetés</string>
+    <string name="settings_no_settings_match">Egyetlen beállítás sem egyezik ezzel: „<xliff:g id="query">%1$s</xliff:g>”</string>
+    <string name="settings_breadcrumb"><xliff:g id="group">%1$s</xliff:g> › <xliff:g id="title">%2$s</xliff:g></string>
+    <string name="settings_startup_home">Kezdőlap</string>
+    <string name="settings_startup_last_channel">Utolsó csatorna</string>
+    <string name="settings_startup_favorites">Élő · Kedvencek</string>
+    <string name="settings_startup_specific_channel">Adott csatorna</string>
+    <string name="settings_startup_channel_unavailable">Az indítási csatorna nem érhető el. A kezdőlap nyílt meg.</string>
+    <string name="settings_all_history">Összes előzmény</string>
+    <string name="settings_choose_history">Válaszd ki, mit távolítsunk el ehhez a profilhoz. A lejátszási listákat, kedvenceket és letöltéseket ez nem érinti.</string>
+    <string name="settings_clear_history_confirm">Törlöd ezt az előzményt: <xliff:g id="scope">%1$s</xliff:g>?</string>
+    <string name="settings_cannot_undo">Ez nem vonható vissza.</string>
+    <string name="settings_no">Nem</string>
+    <string name="settings_yes_clear">Igen, törlés</string>
+    <string name="settings_accent_dialog">Kiemelőszín</string>
+    <string name="settings_presets">Előbeállítások</string>
+    <string name="settings_hex_code">Hexakód</string>
+    <string name="settings_hex">Hexa</string>
+    <string name="settings_apply">Alkalmaz</string>
+    <string name="settings_hex_error">Adj meg 6 hexadecimális jegyet, pl. 52DBC8</string>
+    <string name="settings_color_picker">Színválasztó</string>
+    <string name="settings_use_color">Ezt a színt használom</string>
+    <string name="settings_about_version"><xliff:g id="version">%1$s</xliff:g> verzió</string>
+    <string name="settings_about_description_full">A saját IPTV-lejátszód Android TV-hez — ingyenes, nyílt forráskódú, kizárólag lejátszó alkalmazás. Nem kínál csatornákat vagy tartalmat; a saját, legálisan elérhető forrásaidat hozod.</string>
+    <string name="settings_about_license">© 2026 OwnTV · GPLv3 licenc</string>
+    <string name="settings_join_telegram">Csatlakozz hozzánk a Telegramon</string>
+    <string name="settings_telegram_qr">A Telegram-csoport QR-kódja</string>
+    <string name="settings_telegram_scan">Olvasd be a QR-kódot a telefonoddal a csatlakozáshoz, vagy nyisd meg a fenti hivatkozást.</string>
+    <string name="settings_contributions">A hozzájárulásokat, hibabejelentéseket és csillagokat szívesen fogadjuk a GitHubon.</string>
+    <string name="settings_playback_error_title">Hibanapló</string>
+    <string name="settings_playback_error_description_full">A legutóbbi összeomlás és a legfrissebb lejátszási hibák (a legújabbal kezdve). Csatold ezeket a részleteket, amikor problémát jelentesz.</string>
+    <string name="settings_loading">Betöltés…</string>
+    <string name="settings_no_playback_errors">Nincs rögzített lejátszási hiba.</string>
+    <string name="settings_live">Élő</string>
+    <string name="settings_vod">VOD</string>
+    <string name="settings_clear_log">Napló törlése</string>
+    <string name="settings_browsing_title">Böngészés és listák</string>
+    <string name="settings_browsing_description_full">Mihez tér vissza az Élő TV, a Filmek és a Sorozatok, amikor visszalépsz.</string>
+    <string name="settings_section_toggle"><xliff:g id="section">%1$s</xliff:g>: <xliff:g id="state">%2$s</xliff:g></string>
+    <string name="settings_glass_surfaces">Üvegfelületek</string>
+    <string name="settings_glass_surfaces_description">Válaszd ki, az alkalmazás mely részei jelenjenek meg üvegként. Ha minden felületet kikapcsolsz, az üveghatás kikapcsol.</string>
+    <string name="settings_all_surfaces_on">Minden felület: Be</string>
+    <string name="settings_all_surfaces_off">Minden felület: Ki</string>
+    <string name="settings_surface_toggle"><xliff:g id="surface">%1$s</xliff:g>: <xliff:g id="state">%2$s</xliff:g></string>
+    <string name="settings_transparency_description">Mennyi látszik át a felületeken (<xliff:g id="min">%1$d</xliff:g>%%–<xliff:g id="max">%2$d</xliff:g>%%). A magasabb érték tömörebb.</string>
+    <string name="settings_catchup_description">Hogyan küldjük a visszanézési időbélyegeket. Használd az eszközöd időzónáját, vagy add meg az eltolást, amit a szolgáltatód kiszolgálója vár.</string>
+    <string name="settings_manual">Kézi</string>
+    <string name="settings_theme_dark">Sötét</string>
+    <string name="settings_theme_light">Világos</string>
+    <string name="settings_theme_system">Rendszer</string>
+    <string name="settings_accent_teal">Türkiz</string>
+    <string name="settings_accent_blue">Kék</string>
+    <string name="settings_accent_violet">Ibolya</string>
+    <string name="settings_accent_green">Zöld</string>
+    <string name="settings_accent_amber">Borostyán</string>
+    <string name="settings_group_profile">Profil</string>
+    <string name="settings_group_sources">Források és műsorújság</string>
+    <string name="settings_group_layout">Elrendezés</string>
+    <string name="settings_group_content_metadata">Tartalom és metaadatok</string>
+    <string name="settings_group_data">Adatok</string>
+    <string name="settings_group_appearance">Megjelenés</string>
+    <string name="settings_group_playback">Lejátszás</string>
+    <string name="settings_group_network">Hálózat</string>
+    <string name="settings_dns">DNS</string>
+    <string name="settings_group_app">Alkalmazás</string>
+    <string name="settings_group_summary_profile">Profilok, és hogy ki mit nézhet</string>
+    <string name="settings_group_summary_sources">Lejátszási listák, műsoradatok és azok órái</string>
+    <string name="settings_group_summary_appearance">Téma, kiemelőszín, üveg, mozgás és szövegméret</string>
+    <string name="settings_group_summary_layout">Oldalsáv, panelek, listák és a kezdőképernyő</string>
+    <string name="settings_group_summary_content_metadata">Elnevezés, borítók és feliratszolgáltatások</string>
+    <string name="settings_group_summary_playback">A videolejátszó és a hibanaplója</string>
+    <string name="settings_vp_section_engine">Motor és kép</string>
+    <string name="settings_vp_section_sound">Hang</string>
+    <string name="settings_vp_section_episodes">Epizódok és mini lejátszó</string>
+    <string name="settings_vp_section_engine_summary">Dekóder, HDR, képkockasebesség</string>
+    <string name="settings_vp_section_live_summary">Előnézet, számok, késleltetés</string>
+    <string name="settings_vp_section_sound_summary">Hangerő, nyelv, térhatás</string>
+    <string name="settings_vp_section_subtitles_summary">Méret, szín, pozíció</string>
+    <string name="settings_vp_section_episodes_summary">Automatikus lejátszás és mini lejátszó</string>
+    <string name="settings_vp_section_diagnostics_summary">Részletes lejátszónaplók</string>
+    <string name="settings_group_summary_network">Proxy és DNS az adatfolyam-kapcsolatokhoz</string>
+    <string name="settings_group_summary_data">Mentés, letöltések és megtekintési előzmények</string>
+    <string name="settings_group_summary_app">Nyelv, indulás, frissítések és alkalmazásinformációk</string>
+    <string name="settings_group_quick">Gyors</string>
+    <string name="settings_group_summary_quick">A leggyakrabban használt kapcsolóid</string>
+    <string name="settings_search_guide_logos">Műsorújság csatornalogói</string>
+    <string name="settings_search_keywords_profiles">nézők gyerekmód pin zár fiók</string>
+    <string name="settings_search_keywords_playlists">m3u xtream forrás szinkronizálás hozzáadás eltávolítás</string>
+    <string name="settings_search_keywords_epg">xmltv műsorújság forrás program</string>
+    <string name="settings_search_keywords_logos">csatorna logó ikon xmltv műsorújság picon lejátszási lista</string>
+    <string name="settings_search_keywords_customize">elrejtés megjelenítés átnevezés átrendezés kategóriák</string>
+    <string name="settings_search_keywords_sidebar">oldalsáv sáv ikonok dinamikus rögzített elrejtés megjelenítés igazítás lejátszási lista</string>
+    <string name="settings_search_keywords_ch">csatorna fel le ugrás lapozás lista kategória</string>
+    <string name="settings_search_keywords_browsing">megjegyzés pozíció görgetés kategória utolsó elem élő filmek sorozatok visszaállítás eleje</string>
+    <string name="settings_search_keywords_home">sorok kiemelt átrendezés szűrés</string>
+    <string name="settings_search_keywords_metadata">poszterek tartalomleírás szereplők értékelések</string>
+    <string name="settings_search_keywords_download">tárhely útvonal könyvtár</string>
+    <string name="settings_search_keywords_backup">exportálás importálás profilok források</string>
+    <string name="settings_search_keywords_history">nemrég nézett folytatás eltávolítás</string>
+    <string name="settings_search_keywords_theme">világos sötét rendszer</string>
+    <string name="settings_search_keywords_accent">színezés paletta hexa előbeállítás</string>
+    <string name="settings_search_keywords_focus">fókusz keret szegély kijelölés kurzor körvonal</string>
+    <string name="settings_search_keywords_zoom">méretezés felület méret</string>
+    <string name="settings_search_keywords_animation">mozgás gyorsabb teljesítmény</string>
+    <string name="settings_search_keywords_weather">felső sáv jelvény helyszín celsius fahrenheit</string>
+    <string name="settings_search_keywords_live_preview">automatikus lejátszás fókusz csatorna</string>
+    <string name="settings_search_keywords_sound">hang élő előnézet</string>
+    <string name="settings_search_keywords_channel_numbers">csatornaszám közvetlen hangolás számjegyek billentyűzet numerikus zapping lcn</string>
+    <string name="settings_search_keywords_mini">dokkolt pip mini lejátszó méret pozíció méretezés százalék sarok mozgatás</string>
+    <string name="settings_search_keywords_hdr">nagy dinamikatartomány kimenet</string>
+    <string name="settings_search_keywords_afr">afr frissítési frekvencia hz remegés 24fps 25fps 50hz 60hz megjelenítési mód igazítás</string>
+    <string name="settings_search_keywords_surround">dolby dts 5.1 7.1 vevő hang</string>
+    <string name="settings_search_keywords_autoplay">automatikus lejátszás sorozat évad</string>
+    <string name="settings_search_keywords_catchup">archívum időzóna eltolás visszanézés külső lejátszó vlc mx</string>
+    <string name="settings_search_keywords_video">dekóder feliratok szinkron</string>
+    <string name="settings_search_keywords_subtitle_appearance">felirat méret szín pozíció átlátszóság háttér átlátszatlanság</string>
+    <string name="settings_search_keywords_latency">élő puffer késleltetés csúszás alacsony késleltetés másodperc élő adás széle</string>
+    <string name="settings_search_keywords_errors">hiba összeomlás meghibásodás diagnosztika bejelentés</string>
+    <string name="settings_search_keywords_proxy">http forgalom útvonal</string>
+    <string name="settings_search_keywords_dns">domain névfeloldás feloldó doh dns-over-https</string>
+    <string name="settings_search_keywords_startup">indítás megnyitás nyitóképernyő</string>
+    <string name="settings_search_keywords_updates">github kiadás verzió</string>
+    <string name="settings_search_keywords_update_auto">automatikus frissítés új verzió</string>
+    <string name="settings_search_keywords_about">verzió licenc projekt információ</string>
+    <string name="settings_language_default">Alapértelmezett (angol)</string>
+    <string name="settings_language_device">Eszköz nyelve</string>
+    <string name="settings_language_arabic">Arab</string>
+    <string name="settings_language_bulgarian">Bolgár</string>
+    <string name="settings_language_chinese">Kínai</string>
+    <string name="settings_language_croatian">Horvát</string>
+    <string name="settings_language_czech">Cseh</string>
+    <string name="settings_language_danish">Dán</string>
+    <string name="settings_language_dutch">Holland</string>
+    <string name="settings_language_english">Angol</string>
+    <string name="settings_language_estonian">Észt</string>
+    <string name="settings_language_finnish">Finn</string>
+    <string name="settings_language_french">Francia</string>
+    <string name="settings_language_german">Német</string>
+    <string name="settings_language_greek">Görög</string>
+    <string name="settings_language_hebrew">Héber</string>
+    <string name="settings_language_hindi">Hindi</string>
+    <string name="settings_language_hungarian">Magyar</string>
+    <string name="settings_language_indonesian">Indonéz</string>
+    <string name="settings_language_italian">Olasz</string>
+    <string name="settings_language_japanese">Japán</string>
+    <string name="settings_language_korean">Koreai</string>
+    <string name="settings_language_latvian">Lett</string>
+    <string name="settings_language_lithuanian">Litván</string>
+    <string name="settings_language_malay">Maláj</string>
+    <string name="settings_language_norwegian">Norvég</string>
+    <string name="settings_language_persian">Perzsa</string>
+    <string name="settings_language_polish">Lengyel</string>
+    <string name="settings_language_portuguese_brazil">Portugál (Brazília)</string>
+    <string name="settings_language_portuguese_portugal">Portugál (Portugália)</string>
+    <string name="settings_language_romanian">Román</string>
+    <string name="settings_language_russian">Orosz</string>
+    <string name="settings_language_serbian">Szerb</string>
+    <string name="settings_language_slovak">Szlovák</string>
+    <string name="settings_language_slovenian">Szlovén</string>
+    <string name="settings_language_spanish">Spanyol</string>
+    <string name="settings_language_spanish_latam">Spanyol (Latin-Amerika)</string>
+    <string name="settings_language_swedish">Svéd</string>
+    <string name="settings_language_thai">Thai</string>
+    <string name="settings_language_turkish">Török</string>
+    <string name="settings_language_ukrainian">Ukrán</string>
+    <string name="settings_language_vietnamese">Vietnami</string>
+    <string name="settings_video_player_title">Videolejátszó</string>
+    <string name="settings_decoding">Dekódolás</string>
+    <string name="settings_hardware_decoding">Hardveres dekódolás</string>
+    <string name="settings_hardware_decoding_description">A TV hardveres dekóderének használata. Kapcsold ki, ha egyes adatfolyamok akadoznak vagy képhibásak.</string>
+    <string name="settings_deinterlace">Váltottsorosság-mentesítés</string>
+    <string name="settings_deinterlace_description">Elsimítja a fésűszerű vonalakat, amiket egyes régi SD-csatornák mutatnak mozgásnál. Az mpv motorra vonatkozik, amíg az maga rajzolja a képet, ezért kapcsold ki a hardveres dekódolást, ha nincs hatása.</string>
+    <string name="settings_movies_series_player">Filmek és sorozatok lejátszója</string>
+    <string name="settings_live_tv_player">Élő TV lejátszója</string>
+    <string name="settings_engine_order"><xliff:g id="first">%1$s</xliff:g>, majd <xliff:g id="second">%2$s</xliff:g></string>
+    <string name="settings_engine_only">csak <xliff:g id="engine">%1$s</xliff:g></string>
+    <string name="settings_engine_default"><xliff:g id="option">%1$s</xliff:g> (alapértelmezett)</string>
+    <string name="settings_reset_player_choices">Mentett lejátszóválasztások visszaállítása</string>
+    <string name="settings_external_player">Külső lejátszó</string>
+    <string name="settings_default_zoom">Alapértelmezett nagyítás</string>
+    <string name="settings_default_zoom_description">A lejátszás indulásakor alkalmazott képarány/nagyítás.</string>
+    <string name="settings_default_volume">Alapértelmezett hangerő</string>
+    <string name="settings_default_volume_description">A lejátszás indulásakor alkalmazott hangerő. 100%% felett a halk adatfolyamok felerősödnek.</string>
+    <string name="settings_reset_saved_zoom">Mentett nagyítás visszaállítása</string>
+    <string name="settings_reset_saved_zoom_description">Ha a lejátszóban módosítod a nagyítást, az elmentődik az adott csatornához, filmhez vagy epizódhoz. A visszaállítás után minden újra az alapértelmezett nagyítást követi.</string>
+    <string name="settings_reset_saved_zoom_confirm">Visszaállítod a mentett nagyítást?</string>
+    <string name="settings_reset_saved_zoom_confirm_description">Minden csatorna, film és epizód visszatér az alapértelmezett nagyításhoz. A mentett hangerők megmaradnak. Bármikor beállíthatsz újra egyedit a lejátszóból.</string>
+    <string name="settings_reset_saved_volume">Mentett hangerő visszaállítása</string>
+    <string name="settings_reset_saved_volume_description">Ha a lejátszóban módosítod a hangerőt, az elmentődik az adott csatornához, filmhez vagy epizódhoz. A visszaállítás után minden újra az alapértelmezett hangerőt követi.</string>
+    <string name="settings_reset_saved_volume_confirm">Visszaállítod a mentett hangerőt?</string>
+    <string name="settings_reset_saved_volume_confirm_description">Minden csatorna, film és epizód visszatér az alapértelmezett hangerőhöz. A mentett nagyítási beállítások megmaradnak. Bármikor beállíthatsz újra egyedit a lejátszóból.</string>
+    <string name="settings_reset_saved_audio_delay">Mentett hangszinkron visszaállítása</string>
+    <string name="settings_reset_saved_audio_delay_description">Ha a lejátszóban a „Jegyezze meg ezt a késleltetést” lehetőséget választod, a hangszinkron elmentődik az adott csatornához, filmhez vagy epizódhoz. A visszaállítás után minden újra a fenti beállítást követi.</string>
+    <string name="settings_reset_saved_audio_delay_confirm">Visszaállítod a mentett hangszinkront?</string>
+    <string name="settings_reset_saved_audio_delay_confirm_description">Minden csatorna, film és epizód visszatér a fenti hangszinkronhoz. A mentett nagyítási és hangerő-beállítások megmaradnak. Bármikor beállíthatsz újra egyedit a lejátszóból.</string>
+    <string name="settings_seek_step">Tekerés lépésköze</string>
+    <string name="settings_seek_step_description">Mennyit ugrik a vissza- és az előretekerés egy filmben vagy epizódban.</string>
+    <string name="settings_live_rewind_step">Élő visszatekerés lépésköze</string>
+    <string name="settings_live_rewind_step_description">Mennyit mozdul a vissza- és az előretekerés egy élő csatorna visszanézési archívumában.</string>
+    <string name="settings_resume_playback">Lejátszás folytatása</string>
+    <string name="settings_resume_playback_description">Mi történjen, ha egy filmhez vagy epizódhoz mentett pozíció tartozik.</string>
+    <string name="settings_subtitles">Feliratok</string>
+    <string name="settings_subtitle_appearance">Feliratok megjelenése</string>
+    <string name="settings_subtitle_appearance_description">Méret, szövegszín, képernyőn elfoglalt hely és háttér átlátszósága. Kikapcsolva a feliratok megtartják a gyári megjelenésüket — beleértve azt a stílust is, amit a műsorszolgáltatók az élő TV feliratokba ágyaznak.</string>
+    <string name="settings_subtitle_size">Felirat mérete</string>
+    <string name="settings_subtitle_size_description">A feliratszöveg méretezése.</string>
+    <string name="settings_preferred_subtitle_language">Előnyben részesített feliratnyelv</string>
+    <string name="settings_preferred_language_description">Ennek a feliratsávnak az automatikus kiválasztása, ha elérhető.</string>
+    <string name="settings_open_subtitles">OpenSubtitles</string>
+    <string name="settings_open_subtitles_connected">Csatlakoztatva</string>
+    <string name="settings_open_subtitles_reset_in"><xliff:g id="hours">%1$d</xliff:g> ó <xliff:g id="minutes">%2$d</xliff:g> p múlva</string>
+    <string name="settings_open_subtitles_description">Jelentkezz be feliratok kereséséhez és letöltéséhez, valamint a letöltött feliratok kezeléséhez. Profilonként; ingyenes opensubtitles.com-fiók szükséges.</string>
+    <string name="settings_audio">Hang</string>
+    <string name="settings_preferred_audio_language">Előnyben részesített hangnyelv</string>
+    <string name="settings_audio_sync">Hangszinkron</string>
+    <string name="settings_audio_sync_description">A hang előre- vagy hátracsúsztatása a képhez igazításhoz. Csak az mpv motorra vonatkozik.</string>
+    <string name="settings_live_tv">Élő TV</string>
+    <string name="settings_live_latency_description">Milyen közel az élő adáshoz játsszon. Az alacsonyabb közelebb van az élőhöz, de kisebb a puffer, így a gyenge adatfolyamok akadozhatnak vagy többször újracsatlakozhatnak. A legközelebb megnyitott csatornától él.</string>
+    <string name="settings_live_latency_bitrate_note">Nagyon nagy bitsebességű csatornán — különösen 4K esetén — a puffer kevesebb időt tárolhat a kértnél, mert korlátozott, mennyi videó tartható egyszerre a memóriában.</string>
+    <string name="settings_channel_numbers">Csatornaszámok</string>
+    <string name="settings_channel_numbers_description">A szolgáltatód csatornaszámának megjelenítése a név mellett az Élő TV listában, a csatornalista-átfedésben és a lejátszóban — teljes képernyős lejátszás közben pedig beírhatsz egy számot a távirányítón, hogy egyből arra a csatornára ugorj (az OK azonnal hangol, a Vissza megszakít). Kikapcsolva minden szám eltűnik, és a számgombokat is figyelmen kívül hagyja; semmi nem vész el, és visszakapcsolva minden visszatér.</string>
+    <string name="settings_diagnostics">Diagnosztika</string>
+    <string name="settings_measured_stats">Mért adatfolyam-statisztikák</string>
+    <string name="settings_measured_stats_description">Élő fps, bitsebesség és eldobott képkockák megjelenítése az adatfolyam-információs átfedésben (az átfedés nyitva tartása alatt mérve, azokhoz az adatfolyamokhoz, amelyek nem közlik ezeket az értékeket). Csak akkor kapcsold ki, ha egy gyengébb TV akadozik — a tényleges videót sosem befolyásolja, csak a diagnosztikai számokat.</string>
+    <string name="settings_none_auto">Nincs / Automatikus</string>
+    <string name="settings_view_grid">Rács</string>
+    <string name="settings_view_list">Lista</string>
+    <string name="settings_language_portuguese">Portugál</string>
+    <string name="settings_subtitle_small">Kicsi</string>
+    <string name="settings_subtitle_normal">Normál</string>
+    <string name="settings_subtitle_large">Nagy</string>
+    <string name="settings_subtitle_extra_large">Extra nagy</string>
+    <string name="settings_live_latency_low">Alacsony késleltetés</string>
+    <string name="settings_live_latency_balanced">Kiegyensúlyozott</string>
+    <string name="settings_live_latency_stable">Stabil</string>
+    <string name="settings_live_latency_custom">Egyéni</string>
+    <string name="settings_low_latency_warning">⚠️ Alacsony késleltetés</string>
+    <string name="settings_low_latency_warning_description">Ha közelebb játszol az élő adáshoz, kisebb puffer marad. Lassabb kapcsolaton vagy instabil adatfolyamokon ez több pufferelést, akadozást vagy újracsatlakozást okozhat.
+
+Válaszd a Kiegyensúlyozott beállítást, ha egy csatorna megbízhatatlanná válik.</string>
+    <string name="settings_low_latency_understand">Megértettem</string>
+    <string name="settings_custom_live_buffer">Egyéni élő puffer</string>
+    <string name="settings_live_buffer_seconds"><xliff:g id="seconds">%1$d</xliff:g> mp</string>
+    <string name="settings_audio_delay"><xliff:g id="delay">%1$d</xliff:g> ms</string>
+    <string name="settings_external_player_description">Válaszd ki, mely szakaszok nyíljanak külső alkalmazásban.</string>
+    <string name="settings_audio_delay_value"><xliff:g id="delay">%1$d</xliff:g> ms</string>
+    <string name="settings_movies_player_description">Az mpv (ajánlott) támogatja a legtöbb formátumot — DTS/TrueHD hang, szokatlan fájlok —, és van A/V szinkronjavítása. Az ExoPlayer egyes TV-ken lejátszik olyan adatfolyamokat, amiket az mpv nem, viszont nem tud DTS/TrueHD hangot dekódolni, és nincs A/V szinkronjavítása. A kombinált beállítások automatikusan megpróbálják a másik lejátszót, ha az első nem működik; az egy lejátszós beállítások soha, ami néhány másodpernyi fekete képernyőt spórol, ha a másik lejátszó a TV-den sosem működik.</string>
+    <string name="settings_live_player_description">Az ExoPlayer (ajánlott) sokkal gyorsabban nyitja a csatornákat, és egyedül ez tud élő feliratot. Az mpv olyan csatornákat is lejátszik, amiket az ExoPlayer nem, köztük szokatlan hangúakat is. A kombinált beállítások automatikusan megpróbálják a másik lejátszót, ha az első nem működik; az egy lejátszós beállítások soha, ami néhány másodpernyi fekete képernyőt spórol, ha a másik lejátszó a TV-den sosem működik. Ha a lejátszóban kézzel váltasz egy csatornán, az a választásod mindkét esetben megmarad.</string>
+    <string name="settings_reset_player_choices_description">Ha a lejátszóban egyetlen filmnél vagy epizódnál mpv és ExoPlayer között váltasz, a választás elmentődik a következő alkalomra. A visszaállítás után minden újra a fenti beállítást követi. Az élő csatornákhoz mentett választások megmaradnak.</string>
+    <string name="settings_reset_player_choices_none">Nincs mentve</string>
+    <plurals name="settings_reset_player_choices_count">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> mentve</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> mentve</item>
+    </plurals>
+    <string name="settings_reset_player_choices_confirm">Visszaállítod a mentett lejátszóválasztásokat?</string>
+    <string name="settings_reset_player_choices_confirm_description">Minden film és epizód visszatér a „Filmek és sorozatok lejátszója” beállításhoz. Bármikor válthatsz újra egyedileg a lejátszóból.</string>
+    <string name="settings_external_player_row_description">Az adatfolyamok megnyitása külső alkalmazásban (VLC, MX Player) a beépített lejátszó helyett, szakaszonként választva. Hasznos olyan adatfolyamokhoz, amiket ez az alkalmazás nem tud dekódolni, vagy ha másik lejátszót szeretsz. Külső lejátszás közben a folytatási pozíció és az előző/következő nem érhető el; az egyéni User-Agentet vagy hivatkozót igénylő adatfolyamok esetleg nem indulnak el.</string>
+    <string name="settings_resume_always">Mindig folytassa</string>
+    <string name="settings_resume_ask">Kérdezzen rá</string>
+    <string name="settings_resume_never">Soha ne folytassa</string>
+    <string name="settings_delete_subtitles">Feliratok törlése</string>
+    <string name="settings_delete_all">Összes törlése</string>
+    <string name="settings_movies">Filmek</string>
+    <string name="settings_series">Sorozatok</string>
+    <string name="settings_no_downloaded_subtitles">Nincs letöltött felirat ehhez: <xliff:g id="section">%1$s</xliff:g>.</string>
+    <string name="settings_delete_subtitle">Felirat törlése</string>
+    <string name="settings_delete_subtitle_message">Törlöd a(z) <xliff:g id="name">%1$s</xliff:g> feliratot ehhez: „<xliff:g id="title">%2$s</xliff:g>”? Később újra letölthető.</string>
+    <string name="settings_delete_all_subtitles">Összes felirat törlése</string>
+    <string name="settings_delete_all_movies">Összes film törlése</string>
+    <string name="settings_delete_all_series">Összes sorozat törlése</string>
+    <string name="settings_section_count"><xliff:g id="section">%1$s</xliff:g> (<xliff:g id="count">%2$d</xliff:g>)</string>
+    <string name="settings_sync_guide_question">Szinkronizáljuk most a műsorújságot?</string>
+    <string name="settings_sync_guide_description">A műsorújság (EPG) letöltése ehhez: „<xliff:g id="source">%1$s</xliff:g>”. Ezt később is megteheted a Beállítások → EPG alatt.</string>
+    <string name="settings_not_now">Most nem</string>
+    <string name="settings_sync_now">Szinkronizálás most</string>
+    <string name="settings_syncing_guide">Műsorújság szinkronizálása…</string>
+    <string name="settings_connecting">Csatlakozás…</string>
+    <string name="settings_run_background">Futtatás a háttérben</string>
+    <string name="settings_guide_synced">A műsorújság szinkronizálva</string>
+    <string name="settings_guide_sync_failed">A műsorújság szinkronizálása nem sikerült</string>
+    <string name="settings_restore_remote_title">Visszaállítás másik eszközről</string>
+    <string name="settings_restore_remote_description">Egy telefonon, táblagépen vagy számítógépen ugyanazon a Wi-Fi-n olvasd be a QR-kódot (vagy nyisd meg az URL-t), add meg ezt a PIN-kódot, válaszd ki az OwnTV-mentésfájlodat, és koppints a Küldés a TV-re gombra. Utána itt választod ki, mit állítson vissza.</string>
+    <string name="settings_opening_server">Kiszolgáló indítása…</string>
+    <string name="settings_enter_pin_browser">Írd be ezt a PIN-kódot a böngészőbe</string>
+    <string name="settings_companion_qr">QR-kód a kísérő URL-hez</string>
+    <string name="settings_open_url">Vagy nyisd meg ezt az URL-t</string>
+    <string name="settings_try_again">Próbáld újra</string>
+    <string name="settings_new_pin">Kezdés elölről új PIN-kóddal</string>
+    <string name="settings_download_remote_title">Letöltés másik eszközre</string>
+    <string name="settings_download_remote_description">Egy telefonon, táblagépen vagy számítógépen ugyanazon a Wi-Fi-n olvasd be a QR-kódot (vagy nyisd meg az URL-t), add meg ezt a PIN-kódot, és töltsd le a mentésfájlodat, hogy biztonságban legyen.</string>
+    <string name="settings_preparing_backup">Mentés előkészítése…</string>
+    <string name="settings_glass_effect_on">Üveghatás: Be</string>
+    <string name="settings_glass_effect_off">Üveghatás: Ki</string>
+    <string name="settings_background_on">Háttérkép: Be</string>
+    <string name="settings_background_off">Háttérkép: Ki</string>
+    <string name="settings_ui_zoom_range">A teljes felület méretezése (<xliff:g id="min">%1$d</xliff:g>%%–<xliff:g id="max">%2$d</xliff:g>%%).</string>
+    <string name="settings_low_zoom_warning_title">⚠️ Figyelmeztetés alacsony nagyításnál</string>
+    <string name="settings_low_zoom_warning"><xliff:g id="zoom">%1$d</xliff:g>%%-os nagyítás mellett sokkal több elem fér ki egyszerre a képernyőre. Korlátozott memóriájú eszközökön (például 2 GB-os TV-sticken) ettől instabillá válhat vagy összeomolhat az alkalmazás, különösen nagy lejátszási listákkal és EPG-adatokkal.\n\nNyomd meg az OK-t a folytatáshoz, vagy a Vissza gombot, hogy <xliff:g id="safe_zoom">%2$d</xliff:g>%%-on maradj.</string>
+    <string name="settings_low_zoom_accept">Megértettem, és vállalom a kockázatot</string>
+    <string name="settings_surface_transparency"><xliff:g id="percent">%1$d</xliff:g>%%</string>
+    <string name="settings_surface_count_all">Felületek: Mind</string>
+    <plurals name="settings_surface_count">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> / <xliff:g id="total">%2$d</xliff:g> felület</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> / <xliff:g id="total">%2$d</xliff:g> felület</item>
+    </plurals>
+    <string name="settings_catchup_timezone_device">Eszköz</string>
+    <string name="settings_catchup_player_ask">Mindig kérdezzen</string>
+    <string name="settings_catchup_player_internal">OwnTV lejátszó</string>
+    <string name="settings_catchup_player_external">Külső lejátszó</string>
+    <string name="settings_soon">HAMAROSAN</string>
+    <string name="settings_download_folder_title">Válaszd ki a letöltési mappát</string>
+    <string name="settings_pick_background_title">Válassz háttérképet</string>
+    <string name="settings_theme_dialog">Téma</string>
+    <string name="settings_app_startup_dialog">Alkalmazás indulása</string>
+    <string name="settings_animations_dialog">Animációk</string>
+    <string name="settings_close">Bezárás</string>
+    <string name="settings_done">Kész</string>
+    <string name="settings_reset">Visszaállítás</string>
+    <string name="settings_device_details"><xliff:g id="model">%1$s</xliff:g> · <xliff:g id="android">%2$s</xliff:g></string>
+    <string name="settings_playback_entry"><xliff:g id="time">%1$s</xliff:g> · <xliff:g id="engine">%2$s</xliff:g> · <xliff:g id="kind">%3$s</xliff:g></string>
+    <string name="settings_history_live">Élő TV</string>
+    <string name="settings_history_movies">Filmek</string>
+    <string name="settings_history_series">Sorozatok</string>
+    <string name="settings_history_all">összes</string>
+    <string name="settings_decrease">–</string>
+    <string name="settings_increase">+</string>
+    <string name="settings_glass_effect_title">Üveghatás</string>
+    <string name="settings_glass_effect_description">Áttetsző, mattított felületek egy háttérfotó vagy az alkalmazás saját háttere fölött.</string>
+    <string name="settings_glass_preset_title">Megjelenési előbeállítás</string>
+    <string name="settings_glass_preset_clear">Tiszta</string>
+    <string name="settings_glass_preset_balanced">Kiegyensúlyozott</string>
+    <string name="settings_glass_preset_tinted">Színezett</string>
+    <string name="settings_glass_preset_custom">Egyéni</string>
+    <string name="settings_glass_preset_clear_description">Több háttérszín, mérsékelt mattítással.</string>
+    <string name="settings_glass_preset_balanced_description">Ajánlott tisztaság, mélység és olvashatóság.</string>
+    <string name="settings_glass_preset_tinted_description">Erősebb felületszín zsúfolt vagy világos háttérhez.</string>
+    <string name="settings_glass_preset_custom_description">A mentett átlátszóság- és elmosás/mattítás-értékeidet használja.</string>
+    <string name="settings_transparency_title">Átlátszóság</string>
+    <string name="settings_blur_title">Elmosás / mattítás</string>
+    <string name="settings_blur_description_enabled">Mennyire mattított a háttér (<xliff:g id="min">%1$d</xliff:g>%%–<xliff:g id="max">%2$d</xliff:g>%%). Csak háttérkép fölött.</string>
+    <string name="settings_blur_description_disabled">Mennyire mattított a háttér (<xliff:g id="min">%1$d</xliff:g>%%–<xliff:g id="max">%2$d</xliff:g>%%). Csak háttérkép fölött. Állíts be háttérképet az engedélyezéshez.</string>
+    <string name="settings_glass_surface_panels">Tartalompanelek</string>
+    <string name="settings_glass_surface_sidebar">Oldalsáv</string>
+    <string name="settings_glass_surface_preview">Előnézeti panelek</string>
+    <string name="settings_glass_surface_dialogs">Párbeszédpanelek és felugró ablakok</string>
+    <string name="settings_glass_surface_topbar">Felső sáv</string>
+    <string name="settings_glass_surface_cards">Kártyák</string>
+    <string name="settings_glass_surface_miniplayer">Mini lejátszó</string>
+    <string name="settings_browsing_last_category">Utolsó kategória megjegyzése</string>
+    <string name="settings_browsing_last_category_description">A szakasz azon a kategórián nyíljon meg, ahol elhagytad, ne az Összesen.</string>
+    <string name="settings_browsing_last_item">Utolsó elem megjegyzése</string>
+    <string name="settings_browsing_last_item_description">Minden kategória megőrzi a saját görgetési pozícióját ahelyett, hogy a tetejéről indulna. Az Élő TV az utoljára fókuszált csatornát is visszaállítja.</string>
+    <string name="settings_catchup_player">Visszanézés lejátszása ebben</string>
+    <string name="settings_customize_title">Kategóriák és elemek testreszabása</string>
+    <string name="settings_customize_pin_locked">Ez a képernyő PIN-kóddal védett.</string>
+    <string name="settings_customize_wrong_pin">Hibás PIN — próbáld újra</string>
+    <string name="settings_customize_enter_pin">Add meg a PIN-kódot</string>
+    <string name="settings_customize_set_pin">🔒 PIN beállítása</string>
+    <string name="settings_customize_change_pin">🔒 PIN módosítása</string>
+    <string name="settings_customize_remove_lock">Zár eltávolítása</string>
+    <string name="settings_customize_description">Csatornák, filmek és sorozatok elrejtése és megjelenítése, valamint kategóriák átnevezése vagy átrendezése ehhez a profilhoz. Az újraszinkronizálást is túléli.</string>
+    <string name="settings_customize_new_category_behavior">Új kategóriák kezelése</string>
+    <string name="settings_customize_hide_new">Elrejtés — az újraszinkronizáláskor hozzáadott új kategóriák alapból rejtve vannak</string>
+    <string name="settings_customize_show_new">Megjelenítés — az újraszinkronizáláskor hozzáadott új kategóriák alapból látszanak</string>
+    <string name="settings_customize_hide">Elrejtés</string>
+    <string name="settings_customize_show">Megjelenítés</string>
+    <string name="settings_customize_behavior_hide">Elrejtés</string>
+    <string name="settings_customize_behavior_show">Megjelenítés</string>
+    <string name="settings_customize_hidden_channels">Rejtett csatornák</string>
+    <string name="settings_customize_hidden_movies">Rejtett filmek</string>
+    <string name="settings_customize_hidden_series">Rejtett sorozatok</string>
+    <string name="settings_customize_unhide_description">A megjelenítéssel visszahozod az elemet a listákba.</string>
+    <string name="settings_customize_categories">Kategóriák</string>
+    <string name="settings_customize_empty">Ebben a szakaszban még nincs kategória — adj hozzá előbb egy forrást.</string>
+    <string name="settings_customize_range_hide_start">Tartománykijelölés elindítva. Nyomd meg a Megjelenítés/Elrejtés gombot a záró elemen a tartomány kijelöléséhez.</string>
+    <string name="settings_customize_range_rename_start">Átnevezési tartomány elindítva. Nyomd meg az Átnevezés gombot a záró elemen a tartomány kijelöléséhez.</string>
+    <string name="settings_customize_range_move_start">Mozgatási tartomány elindítva. Nyomd meg a ⤒ ↑ ↓ ⤓ gombot a záró elemen az egész tartomány mozgatásához.</string>
+    <plurals name="settings_customize_range_selected">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> kategória kijelölve. Nyomd tovább a ⤒ ↑ ↓ ⤓ gombokat a mozgatásához.</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> kategória kijelölve. Nyomd tovább a ⤒ ↑ ↓ ⤓ gombokat az együttes mozgatásukhoz.</item>
+    </plurals>
+    <string name="settings_customize_rename">Átnevezés</string>
+    <string name="settings_customize_rename_category">Kategória átnevezése</string>
+    <string name="settings_customize_rename_or_delete_category">Kategória átnevezése vagy törlése</string>
+    <string name="settings_customize_new_category">＋ Új kategória</string>
+    <string name="settings_customize_sort_button">Rendezés: <xliff:g id="label">%1$s</xliff:g> ▾</string>
+    <string name="settings_customize_filter_button">Szűrő: <xliff:g id="label">%1$s</xliff:g> ▾</string>
+    <string name="settings_customize_filter_title">Lista szűrése</string>
+    <string name="settings_customize_filter_all">Összes</string>
+    <string name="settings_customize_filter_visible">Látható</string>
+    <string name="settings_customize_filter_hidden">Rejtett</string>
+    <string name="settings_customize_new_categories_button">Új kategóriák: <xliff:g id="label">%1$s</xliff:g> ▾</string>
+    <string name="settings_customize_rename_hint">Csak ehhez a profilhoz. Hagyd üresen a(z) „<xliff:g id="name">%1$s</xliff:g>” visszaállításához.</string>
+    <string name="settings_customize_remove_pin_title">Eltávolítod a PIN-zárat?</string>
+    <string name="settings_customize_remove_pin_message">A Testreszabás képernyő ezután PIN-kód kérése nélkül nyílik meg.</string>
+    <string name="settings_customize_remove">Eltávolítás</string>
+    <string name="settings_customize_confirm_pin">Erősítsd meg az új PIN-kódot</string>
+    <string name="settings_customize_pin_mismatch">A PIN-kódok nem egyeznek — add meg újra</string>
+    <string name="settings_customize_new_pin">Adj meg egy új PIN-kódot</string>
+    <plurals name="settings_customize_selected_categories">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> kategória kijelölve.</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> kategória kijelölve.</item>
+    </plurals>
+    <string name="settings_customize_hide_show_title">Kategóriák elrejtése vagy megjelenítése</string>
+    <string name="settings_customize_was">korábban: „<xliff:g id="name">%1$s</xliff:g>”</string>
+    <string name="settings_customize_hidden">Rejtett</string>
+    <string name="settings_customize_unhide">Megjelenítés</string>
+    <string name="settings_customize_metadata_separator">  ·  </string>
+    <string name="settings_sources_title">Források</string>
+    <string name="settings_sources_description">A források minden profil között megosztottak.</string>
+    <string name="settings_sources_empty">Még nincs forrás. Adj hozzá egy M3U- vagy Xtream-forrást.</string>
+    <string name="settings_sources_add">Forrás hozzáadása</string>
+    <string name="settings_sources_import_failed">Az importálás nem sikerült</string>
+    <string name="settings_sources_importing">Katalógus importálása…</string>
+    <string name="settings_sources_preparing">Katalógus előkészítése</string>
+    <string name="settings_sources_deleting">TÖRLÉS…</string>
+    <string name="settings_sources_resync">Újraszinkronizálás</string>
+    <string name="settings_sources_delete_title">Törlöd ezt: „<xliff:g id="name">%1$s</xliff:g>”?</string>
+    <string name="settings_sources_delete_message">Ez eltávolítja a forrást és annak összes csatornáját, filmjét és sorozatát minden profilból.</string>
+    <string name="settings_sources_type_m3u">M3U · <xliff:g id="url">%1$s</xliff:g></string>
+    <string name="settings_sources_type_xtream">Xtream · <xliff:g id="url">%1$s</xliff:g></string>
+    <string name="settings_sources_type_stalker">Stalker · <xliff:g id="url">%1$s</xliff:g></string>
+    <string name="settings_sources_expiry">Lejár: <xliff:g id="date">%1$s</xliff:g></string>
+    <string name="settings_sources_auto_refresh">⟳ <xliff:g id="mode">%1$s</xliff:g></string>
+    <string name="settings_sources_default">ALAPÉRTELMEZETT</string>
+    <string name="settings_sources_backup">Mentés</string>
+    <string name="settings_sources_details_separator">  •  </string>
+    <string name="settings_sources_preparing_detail">Katalógus előkészítése</string>
+    <string name="settings_sources_removing_detail">Eltávolítás…</string>
+    <string name="settings_sources_edit">Szerkesztés</string>
+    <string name="settings_sources_delete">Törlés</string>
+    <string name="settings_sources_cancel">Mégse</string>
+    <string name="settings_sources_try_again">Próbáld újra</string>
+    <string name="settings_sources_import_title">Az importálás kész</string>
+    <string name="settings_sources_resync_title_full">„<xliff:g id="name">%1$s</xliff:g>” újraszinkronizálása</string>
+    <string name="settings_sources_resync_now_full">Újraszinkronizálás most</string>
+    <string name="settings_sources_resync_remove_full">Újraszinkronizálás és a hiányzó címek eltávolítása</string>
+    <string name="settings_sources_resync_description">Az Újraszinkronizálás most letölti a legfrissebb katalógust, és mindent megtart, ami már mentve van.
+
+Az Újraszinkronizálás és a hiányzó címek eltávolítása azt is lehetővé teszi, hogy eltűnjenek azok a címek, amiket a szolgáltató már nem listáz. A továbbra is listázott címekhez tartozó kedvenceid, előzményeid és folytatási pozícióid megmaradnak.</string>
+    <string name="settings_sources_refresh_off">Ki</string>
+    <string name="settings_sources_refresh_startup">Frissítés induláskor</string>
+    <string name="settings_sources_refresh_6h">6 óra</string>
+    <string name="settings_sources_refresh_12h">12 óra</string>
+    <string name="settings_sources_refresh_24h">24 óra</string>
+    <string name="settings_sources_refresh_48h">48 óra</string>
+    <string name="settings_epg_sources_title">EPG-források</string>
+    <string name="settings_epg_sources_empty">Még nincs EPG-forrás. Adj hozzá egy XMLTV-hivatkozást.</string>
+    <string name="settings_epg_sources_add">EPG-forrás hozzáadása</string>
+    <string name="settings_epg_sources_edit">EPG-forrás szerkesztése</string>
+    <string name="settings_epg_sources_add_sync">Hozzáadás és szinkronizálás</string>
+    <string name="settings_epg_sources_save_sync">Mentés és szinkronizálás</string>
+    <string name="settings_epg_sources_fill_playlist">Kitöltés lejátszási listából</string>
+    <string name="settings_epg_sources_none_playlist">Egyik lejátszási listád sem ad meg EPG-URL-t.</string>
+    <string name="settings_epg_sources_use_logos">Ennek a műsorújságnak a csatornalogói</string>
+    <string name="settings_epg_sources_logos_description">A logók megjelenítése ebből az XMLTV-forrásból a lejátszási listád logói helyett. Azok a csatornák, amikhez ez a forrás nem ad logót, megtartják a lejátszási listáét.</string>
+    <string name="settings_epg_sources_name">Név</string>
+    <string name="settings_epg_sources_url">XMLTV URL</string>
+    <string name="settings_epg_sources_user_agent">User-Agent (nem kötelező)</string>
+    <string name="settings_epg_sources_name_hint">pl. Magyar műsorújság</string>
+    <string name="settings_epg_sources_url_hint">https://…/epg.xml(.gz)</string>
+    <string name="settings_epg_sources_user_agent_hint">Hagyd üresen az alapértelmezetthez</string>
+    <string name="settings_epg_sources_description">XMLTV-műsorforrások, amelyek feltöltik a műsorújságot. Hozzáadáskor automatikusan szinkronizálódnak, és összeolvadnak a lejátszási listáid csatornáival.</string>
+    <string name="settings_epg_sources_delete_title">Törlöd ezt: „<xliff:g id="name">%1$s</xliff:g>”?</string>
+    <string name="settings_epg_sources_delete_message">Eltávolítja ezt az EPG-forrást és a műsoradatait. A csatornáid megmaradnak.</string>
+    <string name="settings_epg_sources_syncing_percent">Szinkronizálás: <xliff:g id="percent">%1$d</xliff:g>%%</string>
+    <plurals name="settings_epg_sources_catchup">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> csatornán érhető el visszanézés.</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> csatornán érhető el visszanézés.</item>
+    </plurals>
+    <string name="settings_epg_sources_error">⚠ <xliff:g id="error">%1$s</xliff:g></string>
+    <string name="settings_epg_sources_auto_refresh_title">Automatikus frissítés</string>
+    <string name="settings_epg_sources_auto_refresh_description">Ki, induláskor, vagy ha az adatok elavultak</string>
+    <string name="settings_epg_sources_on">Be</string>
+    <string name="settings_epg_sources_off">Ki</string>
+    <string name="settings_epg_sources_not_synced">Még nincs szinkronizálva</string>
+    <string name="settings_epg_refresh_1h">1 óra</string>
+    <string name="settings_epg_refresh_3h">3 óra</string>
+    <string name="settings_epg_refresh_6h">6 óra</string>
+    <string name="settings_epg_refresh_12h">12 óra</string>
+    <string name="settings_epg_refresh_24h">24 óra</string>
+    <string name="settings_epg_refresh_48h">48 óra</string>
+    <string name="settings_epg_sources_deleting">Törlés…</string>
+    <string name="settings_epg_sources_syncing_label">Szinkronizálás</string>
+    <string name="settings_epg_sources_connecting">Csatlakozás…</string>
+    <plurals name="settings_epg_sources_status_count_channels">
+        <item quantity="one">A műsorújság <xliff:g id="channels">%1$d</xliff:g> csatornát tartalmaz.</item>
+        <item quantity="other">A műsorújság <xliff:g id="channels">%1$d</xliff:g> csatornát tartalmaz.</item>
+    </plurals>
+    <plurals name="settings_epg_sources_status_count_programmes">
+        <item quantity="one">Ez <xliff:g id="programmes">%1$d</xliff:g> műsort tartalmaz.</item>
+        <item quantity="other">Ez <xliff:g id="programmes">%1$d</xliff:g> műsort tartalmaz.</item>
+    </plurals>
+    <string name="settings_epg_sources_status_count"><xliff:g id="channels">%1$s</xliff:g> <xliff:g id="programmes">%2$s</xliff:g></string>
+    <string name="settings_epg_sources_status_count_with_catchup"><xliff:g id="counts">%1$s</xliff:g> <xliff:g id="catchup">%2$s</xliff:g></string>
+    <string name="settings_epg_sources_status_synced">Szinkronizálva, de nem található műsor az időablakban.</string>
+    <string name="settings_epg_sources_status_synced_with_catchup"><xliff:g id="catchup">%1$s</xliff:g></string>
+
+    <string name="settings_backup_title">Mentés és visszaállítás</string>
+    <string name="settings_backup_working">Feldolgozás…</string>
+    <string name="settings_backup_what_backup">Mit mentsen</string>
+    <string name="settings_backup_what_restore">Mit állítson vissza</string>
+    <string name="settings_backup_encrypt_title">Titkosítod ezt a mentést?</string>
+    <string name="settings_backup_encrypt_message">Mentésjelszóval az egész fájl titkosítva lesz — a lejátszási listákkal, profilokkal és mentett jelszavakkal együtt —, és semmi sem olvasható belőle a jelszó nélkül. Őrizd meg jól: ha elveszíted, a mentés egyáltalán nem nyitható meg. Jelszó nélkül a fájl nincs titkosítva, és a mentett jelszavak és PIN-kódok kimaradnak belőle.</string>
+    <string name="settings_backup_export_title">Mentés exportálása</string>
+    <string name="settings_backup_export_message">Küldd el a mentést egy másik eszközre (telefonra vagy laptopra) ugyanazon a Wi-Fi-n, vagy mentsd fájlba ezen az eszközön.</string>
+    <string name="settings_backup_restore_title">Mentés visszaállítása</string>
+    <string name="settings_backup_restore_message">Küldd el a mentést egy másik eszközről (telefonról vagy laptopról) ugyanazon a Wi-Fi-n, vagy válassz egy már ezen az eszközön lévő mentésfájlt.</string>
+    <string name="settings_backup_password">Mentésjelszó</string>
+    <string name="settings_backup_enter_password">Add meg a mentésjelszót</string>
+    <string name="settings_backup_wrong_password">Hibás mentésjelszó</string>
+    <string name="settings_backup_password_mismatch">Ez a jelszó nem egyezett. Próbáld újra, vagy hagyd ki, és állíts vissza mindent a mentett jelszavakon kívül.</string>
+    <string name="settings_backup_password_encrypted_mismatch">Ez a jelszó nem egyezett. Ez a mentés titkosított — nem nyitható meg a létrehozásakor használt jelszó nélkül.</string>
+    <string name="settings_backup_encrypted_description">Ez a mentés titkosított. Add meg a mentésjelszót a megnyitásához, majd válaszd ki, mit állítson vissza.</string>
+    <string name="settings_backup_saved_passwords_description">Ennek a mentésnek a jelszavai titkosítva vannak. Add meg a mentésjelszót a visszaállításukhoz, vagy hagyd ki, állíts vissza mindent mást, és a jelszavakat add meg később.</string>
+    <string name="settings_backup_choose_folder">Válassz mappát a mentés tárolásához</string>
+    <string name="settings_backup_choose_folder_action">Mappa választása</string>
+    <string name="settings_backup_pick_file">Válassz visszaállítandó mentésfájlt</string>
+    <string name="settings_backup_local_file">Helyi fájl</string>
+    <string name="settings_backup_remote">Távoli</string>
+    <string name="settings_backup_everything">Minden</string>
+    <string name="settings_backup_kids_profile">Gyerekprofil</string>
+    <string name="settings_backup_profile_current">„<xliff:g id="name">%1$s</xliff:g>” (jelenlegi)</string>
+    <string name="settings_backup_profile_locked">A(z) „<xliff:g id="name">%1$s</xliff:g>” zárolva van</string>
+    <string name="settings_backup_profile_pin">Profil PIN-kódja</string>
+    <string name="settings_backup_pin_incorrect">Hibás PIN-kód.</string>
+    <string name="settings_backup_pin_locked">PIN-kóddal zárolva</string>
+    <string name="settings_backup_unlock">Feloldás</string>
+    <string name="settings_backup_export_button">Mentés exportálása</string>
+    <string name="settings_backup_restore_button">Mentés visszaállítása</string>
+    <string name="settings_backup_continue">Tovább</string>
+    <string name="settings_backup_encrypt_export">Titkosítás és exportálás</string>
+    <string name="settings_backup_export_unencrypted">Exportálás titkosítás nélkül</string>
+    <string name="settings_backup_encrypt_prepare">Titkosítás és előkészítés</string>
+    <string name="settings_backup_prepare_unencrypted">Előkészítés titkosítás nélkül</string>
+    <string name="settings_backup_restore_action">Visszaállítás</string>
+    <string name="settings_backup_skip_passwords">Kihagyás (jelszavak nélkül)</string>
+    <string name="settings_backup_section_sources">Források</string>
+    <string name="settings_backup_section_sources_desc">Lejátszási listák, EPG-hírcsatornák és hitelesítő adatok</string>
+    <string name="settings_backup_section_customize">Testreszabások</string>
+    <string name="settings_backup_section_customize_desc">Rejtett/átnevezett/átrendezett kategóriák, csatornák, EPG-párosítások és egyéni TMDB-nevek</string>
+    <string name="settings_backup_section_favorites">Kedvencek</string>
+    <string name="settings_backup_section_favorites_desc">Csillagozott csatornák, filmek és sorozatok</string>
+    <string name="settings_backup_section_history">Megtekintési előzmények</string>
+    <string name="settings_backup_section_history_desc">Nemrég megtekintett listák</string>
+    <string name="settings_backup_section_resume">Folytatási pozíciók</string>
+    <string name="settings_backup_section_resume_desc">Hol hagytad abba a filmeket és epizódokat</string>
+    <string name="settings_backup_section_reorder">Kézi átrendezés</string>
+    <string name="settings_backup_section_reorder_desc">A csatornák, filmek és sorozatok fel/le mozgatott pozíciói</string>
+    <string name="settings_backup_section_settings">Alkalmazásbeállítások</string>
+    <string name="settings_backup_section_settings_desc">Téma, kiemelőszín, lejátszó és elrendezés beállításai</string>
+    <string name="settings_backup_saved_to">Mentve ide: <xliff:g id="path">%1$s</xliff:g>.</string>
+    <string name="settings_backup_saved_to_without_passwords">Mentve ide: <xliff:g id="path">%1$s</xliff:g>. A jelszavak és PIN-kódok nem kerültek bele.</string>
+    <plurals name="settings_backup_restored">
+        <item quantity="one"><xliff:g id="items">%1$d</xliff:g> elem visszaállítva.</item>
+        <item quantity="other"><xliff:g id="items">%1$d</xliff:g> elem visszaállítva.</item>
+    </plurals>
+    <string name="settings_backup_restore_resync">Szinkronizáld újra a forrásaidat a tartalom betöltéséhez.</string>
+    <string name="settings_backup_restore_password_note">Add meg újra a mentett jelszavakat a Forrásoknál/Proxynál, és a profilok PIN-kódjait.</string>
+    <plurals name="settings_backup_skipped_sources">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> forrás kimaradt, mert a lejátszásilista-típusa nem támogatott.</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> forrás kimaradt, mert a lejátszásilista-típusuk nem támogatott.</item>
+    </plurals>
+    <string name="settings_backup_export_error">Az exportálás nem sikerült.</string>
+    <string name="settings_backup_read_error">A mentésfájl nem olvasható.</string>
+    <string name="settings_backup_import_error">Az importálás nem sikerült.</string>
+    <string name="settings_backup_invalid_locale">Ez a mentés nem támogatott alkalmazásnyelvet tartalmazott. A visszaállítás sikerült, de a jelenlegi nyelved megmaradt.</string>
+    <string name="settings_backup_which_profiles">Mely profilokat mentse</string>
+    <string name="settings_backup_selected_profiles">A mentés csak a kijelölt profilokat és azok adatait fogja tartalmazni. A zárolt profilokhoz szükséges a PIN-kódjuk.</string>
+    <string name="settings_backup_profile_pin_description">Ez nem a jelenlegi profilod. Add meg a PIN-kódját, hogy bekerüljön a mentésbe — PIN nélkül az adatai nem lesznek elmentve.</string>
+    <string name="settings_backup_save_description">Mentsd fájlba a profiljaidat, forrásaidat, testreszabásaidat, kedvenceidet, előzményeidet és folytatási pozícióidat — vagy állítsd vissza őket egy új eszközön. Minden alkalommal te választod meg, mi kerüljön bele.</string>
+
+    <string name="settings_metadata_optional">nem kötelező</string>
+    <string name="settings_metadata_test_title">Oppenheimer</string>
+
+    <string name="settings_bulk_rename_title">Tömeges átnevezés</string>
+    <plurals name="settings_bulk_rename_selected">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> név kijelölve. Adj hozzá szabályokat, vagy tisztítsd meg automatikusan.</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> név kijelölve. Adj hozzá szabályokat, vagy tisztítsd meg őket automatikusan.</item>
+    </plurals>
+    <string name="settings_bulk_rename_add_rule">✎ Szabály hozzáadása</string>
+    <string name="settings_bulk_rename_auto_cleanup">✨ Automatikus tisztítás</string>
+    <string name="settings_bulk_rename_restore_original">↺ Eredeti nevek visszaállítása</string>
+    <string name="settings_bulk_rename_rules_title">Tömeges átnevezési szabályok</string>
+    <string name="settings_bulk_rename_rules_description">A szabályok fentről lefelé futnak. Több értéket „;” jellel válassz el — a Hozzáadás pontosan egyet fogad.</string>
+    <string name="settings_bulk_rename_add_single_value_error">A „Hozzáadás” pontosan egy értéket igényel — a pontosvessző az Eltávolítás szabályoké.</string>
+    <string name="settings_bulk_rename_rule_required">Adj hozzá legalább egy szabályt.</string>
+    <string name="settings_bulk_rename_rule_type">Szabálytípus</string>
+    <string name="settings_bulk_rename_action_add">Hozzáadás</string>
+    <string name="settings_bulk_rename_action_remove">Eltávolítás</string>
+    <string name="settings_bulk_rename_where">Hol</string>
+    <string name="settings_bulk_rename_before">Elé (előtag)</string>
+    <string name="settings_bulk_rename_after">Mögé (utótag)</string>
+    <string name="settings_bulk_rename_rule_value">Szabály értéke</string>
+    <string name="settings_bulk_rename_value_hint">Több értéket „;” jellel válassz el — a Hozzáadás pontosan egyet fogad.</string>
+    <string name="settings_bulk_rename_value_example">érték;érték;érték</string>
+    <string name="settings_bulk_rename_add_another_rule">＋ Újabb szabály hozzáadása</string>
+    <string name="settings_bulk_rename_trim_spaces">Fölösleges szóközök levágása</string>
+    <string name="settings_bulk_rename_trim_spaces_selected">✓ Fölösleges szóközök levágása</string>
+    <string name="settings_bulk_rename_ignore_case">Kis- és nagybetűk figyelmen kívül hagyása</string>
+    <string name="settings_bulk_rename_ignore_case_selected">✓ Kis- és nagybetűk figyelmen kívül hagyása</string>
+    <string name="settings_bulk_rename_review">Átnevezések áttekintése</string>
+    <string name="settings_bulk_rename_review_description">Semmi nem íródik ki, amíg nem alkalmazol egy sort — a Kész egy lépésben rögzít mindent, amit alkalmaztál.</string>
+    <string name="settings_bulk_rename_blank_rejected">üres név elutasítva — az eredeti maradt</string>
+    <string name="settings_bulk_rename_unchanged">változatlan — egy szabály sem illeszkedett</string>
+    <string name="settings_bulk_rename_result">→ <xliff:g id="name">%1$s</xliff:g></string>
+    <string name="settings_bulk_rename_duplicate">duplikált név — már egy másik elem használja</string>
+    <string name="settings_bulk_rename_apply">Alkalmaz</string>
+    <string name="settings_bulk_rename_decline">Elutasít</string>
+    <plurals name="settings_bulk_rename_will_change">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> fog megváltozni</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> fog megváltozni</item>
+    </plurals>
+    <plurals name="settings_bulk_rename_unchanged_count">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> változatlan</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> változatlan</item>
+    </plurals>
+    <plurals name="settings_bulk_rename_duplicates_count">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> duplikátum</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> duplikátum</item>
+    </plurals>
+    <string name="settings_bulk_rename_apply_all">Összes alkalmazása</string>
+    <string name="settings_bulk_rename_decline_all">Összes elutasítása</string>
+    <string name="settings_bulk_rename_edit_rules">✎ Szabályok szerkesztése</string>
+    <string name="settings_bulk_rename_restore_title">Visszaállítod az eredeti neveket?</string>
+    <string name="settings_bulk_rename_restore_description">Minden kijelölt név visszaáll a szolgáltató eredetijére. Csak ezt a kijelölést érinti.</string>
+    <string name="settings_bulk_rename_restore">Visszaállítás</string>
+    <string name="settings_bulk_rename_too_many_title">Túl sok elem</string>
+    <string name="settings_bulk_rename_too_many_description">Ebben a kategóriában túl sok elem van egyetlen tömeges átnevezéshez — nevezd át kisebb szakaszokban.</string>
+    <string name="settings_bulk_rename_auto_country_provider">Automatikus: ország-/szolgáltatócímkék</string>
+    <string name="settings_bulk_rename_auto_quality_codec">Automatikus: minőség-/kodekcímkék bárhol</string>
+    <string name="settings_bulk_rename_auto_emoji_symbols">Automatikus: emodzsik és szimbólumok</string>
+
+    <string name="settings_customize_new_category_title">Új kategória</string>
+    <string name="settings_customize_new_category_description">Vegyes kategória ehhez a profilhoz — helyezz bele csatornákat, filmeket vagy sorozatokat.</string>
+    <string name="settings_customize_this_category">ez a kategória</string>
+    <string name="settings_customize_sort_categories">Kategóriák rendezése</string>
+    <string name="settings_customize_delete_category">Törlöd ezt: „<xliff:g id="name">%1$s</xliff:g>”?</string>
+    <string name="settings_customize_delete_category_description">A vegyes kategória eltűnik. Az elemei az eredeti kategóriájukban maradnak.</string>
+    <string name="settings_customize_channels_description">A kategória csatornái — átnevezés, átrendezés, elrejtés vagy megjelenítés.</string>
+    <string name="settings_customize_movies_description">A kategória filmjei — átrendezés, elrejtés vagy megjelenítés.</string>
+    <string name="settings_customize_series_description">A kategória sorozatai — átrendezés, elrejtés vagy megjelenítés.</string>
+    <string name="settings_customize_hide_show_items">Elemek elrejtése vagy megjelenítése</string>
+    <plurals name="settings_customize_selected_items">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> elem kijelölve.</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> elem kijelölve.</item>
+    </plurals>
+    <plurals name="settings_customize_move_items_selected">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> elem kijelölve. Nyomd tovább a ⤒ ↑ ↓ ⤓ gombokat a mozgatásához.</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> elem kijelölve. Nyomd tovább a ⤒ ↑ ↓ ⤓ gombokat az együttes mozgatásukhoz.</item>
+    </plurals>
+    <string name="settings_customize_rename_item_hint">Csak ehhez a profilhoz. Hagyd üresen a(z) „<xliff:g id="name">%1$s</xliff:g>” visszaállításához.</string>
+    <string name="settings_customize_item_was">korábban: „<xliff:g id="name">%1$s</xliff:g>”</string>
+    <string name="settings_customize_rename_items">✎ Elemek átnevezése</string>
+    <string name="settings_customize_move_to">Áthelyezés…</string>
+    <string name="settings_customize_back">← Vissza</string>
+
+    <string name="settings_move_category_title">Áthelyezés kategóriába</string>
+    <string name="settings_move_category_description">Az elem kikerül innen: „<xliff:g id="name">%1$s</xliff:g>”, hacsak nem hagyod ott is.</string>
+    <string name="settings_move_category_new">＋ Új kategória…</string>
+    <string name="settings_move_category_keep">Maradjon a(z) „<xliff:g id="name">%1$s</xliff:g>” kategóriában is</string>
+    <string name="settings_move_category_action">Áthelyezés</string>
+
+    <string name="settings_dns_description">Egyéni DNS-kiszolgáló használata a domainek feloldásához</string>
+    <string name="settings_dns_custom">Egyéni DNS</string>
+    <string name="settings_dns_toggle_description">Az OwnTV összes domainfeloldása egyéni DNS-kiszolgálón keresztül történjen.</string>
+    <string name="settings_dns_use_custom">Egyéni DNS használata</string>
+    <string name="settings_dns_server_missing">Az egyéni DNS be van kapcsolva, de nincs beállítva kiszolgáló. Adj meg egy kiszolgálócímet és válaszd a Mentést, vagy kapcsold ki ezt.</string>
+    <string name="settings_dns_server">DNS-kiszolgáló</string>
+    <string name="settings_dns_server_hint">8.8.8.8 vagy https://dns.google/dns-query</string>
+    <string name="settings_dns_test">DNS tesztelése</string>
+    <string name="settings_dns_explanation">Az egyéni DNS segíthet megkerülni a szolgáltatói domaintiltást, vagy SmartDNS-szolgáltatásokkal földrajzi feloldást tenni lehetővé. A DNS-over-HTTPS (DoH) ajánlott — titkosítja a lekérdezéseidet.</string>
+    <string name="settings_dns_limitations">Ez a beállítás csak az OkHttp-alapú forgalmat érinti (lejátszásilista-szinkron, EPG, API-hívások, képek, ExoPlayer-adatfolyamok). Az mpv a rendszer feloldóját használja, és nem érintett.</string>
+    <string name="settings_dns_resolved">A teszt sikerült ✓ (<xliff:g id="millis">%1$d</xliff:g> ms)</string>
+    <string name="settings_dns_enter_server">Adj meg egy DNS-kiszolgálót vagy egy DoH URL-t.</string>
+    <string name="settings_dns_not_reachable">A DNS-kiszolgáló nem érhető el.</string>
+    <string name="settings_dns_timed_out">A DNS-kérés időtúllépéssel leállt.</string>
+    <string name="settings_dns_network_unreachable">A hálózat nem érhető el — ellenőrizd a kiszolgáló címét.</string>
+    <string name="settings_dns_connection_refused">A kapcsolat elutasítva — ellenőrizd a kiszolgáló címét és portját.</string>
+    <string name="settings_dns_test_failed">A DNS-teszt nem sikerült — ellenőrizd a kiszolgáló címét.</string>
+    <string name="settings_dns_no_addresses">A DNS nem adott vissza címet ehhez: <xliff:g id="host">%1$s</xliff:g>.</string>
+
+    <string name="settings_subtitle_customize">Feliratok testreszabása</string>
+    <string name="settings_subtitle_customize_off">Kikapcsolva a feliratok pontosan úgy jelennek meg, ahogy az adatfolyam és a lejátszó rajzolja őket.</string>
+    <string name="settings_subtitle_preview_stock">Előnézet — gyári megjelenés</string>
+    <string name="settings_subtitle_stock_description">Gyári megjelenés, beleértve azokat a színeket és elhelyezést is, amiket a műsorszórók az élő TV feliratokba ágyaznak.</string>
+    <string name="settings_subtitle_reset_all">Összes visszaállítása</string>
+    <string name="settings_subtitle_color">Felirat színe</string>
+    <string name="settings_subtitle_color_default_description">Az Alapértelmezett a színt az adatfolyamra és a lejátszóra bízza.</string>
+    <string name="settings_subtitle_color_hex_hint">Adj meg 6 hexadecimális jegyet, pl. FFEB3B</string>
+    <string name="settings_subtitle_use_default">Alapértelmezett használata</string>
+    <string name="settings_subtitle_position">Felirat helye</string>
+    <string name="settings_subtitle_background_transparency">Háttér átlátszósága</string>
+    <string name="settings_subtitle_preview_sample">Árvíztűrő tükörfúrógép</string>
+    <string name="settings_subtitle_customize_description">Kapcsold be, majd csak azt módosítsd, amit szeretnél — ami Alapértelmezetten marad, megőrzi a gyári megjelenést, beleértve azokat a színeket és elhelyezést is, amiket a műsorszórók az élő TV feliratokba ágyaznak.</string>
+    <string name="settings_subtitle_default">Alapértelmezett</string>
+    <string name="settings_subtitle_color_short">Szín</string>
+    <string name="settings_subtitle_color_description">Szövegszín — előbeállítás, színválasztó vagy hexakód.</string>
+    <string name="settings_subtitle_position_short">Hely</string>
+    <string name="settings_subtitle_position_description">Hol helyezkedjenek el a feliratok a képernyőn.</string>
+    <string name="settings_subtitle_background_description">Mennyire tömör a szöveg mögötti doboz.</string>
+    <string name="settings_subtitle_hex">Hexa</string>
+    <string name="settings_subtitle_position_default_description">Az Alapértelmezett az elhelyezést az adatfolyamra bízza — beleértve azt is, hova teszi a műsorszóró az élő feliratot. Bármely más választás mindig felülírja.</string>
+    <string name="settings_subtitle_background_none">Nincs</string>
+    <string name="settings_subtitle_background_solid">Tömör</string>
+    <string name="settings_subtitle_color_white">Fehér</string>
+    <string name="settings_subtitle_color_yellow">Sárga</string>
+    <string name="settings_subtitle_color_cyan">Ciánkék</string>
+    <string name="settings_subtitle_color_green">Zöld</string>
+    <string name="settings_subtitle_color_grey">Szürke</string>
+    <string name="settings_live_preroll">Élő adatfolyamok előpufferelése</string>
+    <string name="settings_live_preroll_description">Ennyi videót gyűjtsön össze, mielőtt egy élő csatorna elindul, és minden akadozás után újra. Ez videómennyiség, nem visszaszámlálás. A Ki tartja a lehető leggyorsabb indulást, és a legtöbb szolgáltatóhoz ez a helyes. Csak akkor emeld, ha a lejátszás ténylegesen akadozik: sok szolgáltató csak néhány másodperccel az élő adás előtt tesz közzé, és ha többet kérsz, mint amennyit küldenek, az ronthat az akadozáson.</string>
+    <string name="settings_live_tune_timeout">Csatorna feladása ennyi után</string>
+    <string name="settings_live_tune_timeout_description">Ha egy élő csatorna eddig sem mutatott képet, az OwnTV abbahagyja a próbálkozást és szól, ahelyett hogy fekete képernyőt hagyna, miközben végigmegy az összes lejátszóján. A Soha tovább próbálkozik, ami jóval egy percnél is tovább tarthat egy olyan csatornánál, amit a szolgáltatód eltávolított. A szolgáltatód által kért várakozások nem számítanak bele.</string>
+    <string name="settings_live_preroll_per_playlist">Előpufferelés lejátszási listánként</string>
+    <string name="settings_live_preroll_per_playlist_description">A fenti beállítás felülírása egyetlen lejátszási listára, hogy a többi gyors maradjon.</string>
+    <string name="settings_live_engine_per_playlist">Élő TV lejátszó lejátszási listánként</string>
+    <string name="settings_live_engine_per_playlist_description">A fenti beállítás felülírása egyetlen lejátszási listára, olyan szolgáltatóhoz, amelynek csatornáit csak az egyik lejátszó kezeli jól.</string>
+    <string name="settings_live_latency_per_playlist">Élő késleltetés lejátszási listánként</string>
+    <string name="settings_live_latency_per_playlist_description">A fenti beállítás felülírása egyetlen lejátszási listára, olyan szolgáltatóhoz, amelynek a többinél mélyebb vagy sekélyebb pufferre van szüksége.</string>
+    <plurals name="settings_live_preroll_overrides">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> beállítva</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> beállítva</item>
+    </plurals>
+    <string name="settings_surround_stereo">Csak sztereó</string>
+    <string name="settings_surround_auto_description">Automatikus — próbálja meg a Dolby/DTS térhangzást, és váltson vissza automatikusan sztereóra, ha a TV vagy a hangprojektor nem játssza le. Ajánlott.</string>
+    <string name="settings_surround_stereo_description">Csak sztereó — mindig az alkalmazásban dekódoljon, és sima 2.0 hangot küldjön. Ezt használd TV-hangszórón vagy sztereó hangprojektoron, illetve ha a hang lemarad a képhez képest.</string>
+    <string name="settings_surround_forced_description">Térhangzás — Dolby/DTS küldése valódi 5.1/7.1 erősítőnek. Ha elnémul vagy akadozik, az OwnTV akkor is sztereóra vált, és szól róla.</string>
+    <string name="settings_panel_width">Panelszélesség beállítása</string>
+    <string name="settings_panel_width_description">A kategória-, lista- és előnézeti panelek átméretezése az Élő TV-ben, a Filmekben és a Sorozatokban.</string>
+    <string name="settings_guide_width">Műsorújság oszlopszélességei</string>
+    <string name="settings_guide_width_description">A csatornalista és az EPG-idővonal átméretezése a műsorújságban.</string>
+    <string name="settings_search_keywords_guide_width">műsorújság epg csatornalista idővonal oszlop panel szélesség méret átméretezés elrendezés</string>
+    <string name="settings_guide_width_summary">Csatornalista <xliff:g id="channels">%1$d</xliff:g>%% · EPG-idővonal <xliff:g id="epg">%2$d</xliff:g>%%</string>
+    <string name="settings_guide_width_help">• A csatornalista és az EPG-idővonal egy sorban osztozik, ezért a százalékaiknak 100%%-ot kell kiadniuk.\n• A csatornalista szélesítésével kevesebb látszik egyszerre az idővonalból; a műsorhosszak és az időskála változatlan marad.\n• Mindkét oszlop legalább 10%% marad.\n• A Visszaállítás 10%% csatornalistára és 90%% EPG-idővonalra állít vissza.\n• A testreszabás kikapcsolása visszaadja a szokásos műsorújság-elrendezést az értékeid elvesztése nélkül.</string>
+    <string name="settings_guide_width_channels">Csatornalista</string>
+    <string name="settings_guide_width_epg">EPG-idővonal</string>
+    <string name="settings_search_keywords_epg_offset">epg műsorújság idő eltolás eltolás időzóna kelet nyugat óra</string>
+    <string name="settings_search_keywords_panel_width">panel szélesség méret átméretezés kategória lista előnézet poszter oszlop elrendezés élő filmek sorozatok</string>
+    <string name="settings_search_keywords_live_preroll">előpuffer preroll pufferelés puffer lejátszás előtt újrapufferelés akadozás fagyás lejátszási listánként</string>
+    <string name="settings_detailed_playback_logging">Részletes lejátszásnaplózás</string>
+    <string name="settings_search_keywords_detailed_logging">diagnosztika bőbeszédű nyomkövetés logcat hibakeresés jelentés hiba élő motor</string>
+    <string name="settings_playback_kind_error">Hiba</string>
+    <string name="settings_playback_kind_event">Esemény</string>
+    <string name="settings_playback_kind_report">Jelentés</string>
+    <string name="settings_playback_entry_with_kind"><xliff:g id="date">%1$s</xliff:g>  ·  <xliff:g id="kind">%2$s</xliff:g>  ·  <xliff:g id="engine">%3$s</xliff:g>  ·  <xliff:g id="stream_type">%4$s</xliff:g></string>
+    <string name="settings_export">Exportálás</string>
+    <string name="settings_detailed_playback_logging_description">Teljes nyomvonalat őriz meg arról, mit csinál az élő motor — minden hangolást, tartalékváltást és újracsatlakozást — a Logcatben és az exportált jelentésben. Hagyd kikapcsolva, hacsak nem egy problémát üldözöl; sosem változtat a lejátszáson, csak azon, mennyi kerül feljegyzésre.</string>
+    <string name="settings_live_preroll_playlist_picker">Melyik lejátszási lista?</string>
+    <string name="settings_live_preroll_follow">Beállítás követése</string>
+    <string name="settings_video_seconds"><xliff:g id="seconds">%1$d</xliff:g> mp videó</string>
+    <string name="settings_epg_offset_root_description">Az egész műsorújság eltolása, ha egy hírcsatorna időpontjai nem egyeznek azzal, ami valójában megy. Egyetlen csatorna külön is eltolható a hosszú nyomás menüjéből (Élő TV vagy Műsorújság) — az való a közös műsorújságon osztozó keleti/nyugati változatokhoz.</string>
+    <string name="settings_epg_offset_dialog_description">A műsorújság minden műsorát elmozdítja. Akkor használd, ha az egész hírcsatorna rossz órán jár; egyetlen csatornához (közös műsorújságon osztozó keleti/nyugati változathoz) nyomd hosszan a csatornát az Élő TV-ben vagy a Műsorújságban, és ott állítsd be a saját eltolását.</string>
+    <string name="settings_panel_width_screen_description">Állítsd be, mennyit foglaljon a képernyőből az egyes panelek — a kategóriák, az elemlista és az előnézet.</string>
+    <string name="settings_panel_width_summary">Kategória <xliff:g id="category">%1$d</xliff:g>%% · Lista <xliff:g id="list">%2$d</xliff:g>%% · <xliff:g id="preview_label">%3$s</xliff:g> <xliff:g id="preview">%4$d</xliff:g>%%</string>
+    <string name="settings_panel_width_help">• A panelek egy sorban osztoznak, ezért a százalékaiknak 100%%-ot kell kiadniuk.\n• Állítsd az Előnézeti vagy Poszter panelt 0%%-ra az elrejtéséhez; a Kategória és a Lista legalább 10%% marad.\n• Ha az egyik panelt szélesíted, ugyanannyit el kell venned egy másiktól a mentés előtt.\n• A Visszaállítás egy szakaszt visszatesz arra a szokásos szélességre, amivel ez a képernyő indult.\n• Egy szakasz kikapcsolása visszaadja a szokásos elrendezését az értékeid elvesztése nélkül.\n• A film- és sorozatposzterek automatikusan újratördelődnek, így egy keskenyebb lista egyszerűen kevesebbet mutat soronként.</string>
+    <string name="settings_panel_width_preview">Előnézet</string>
+    <string name="settings_panel_width_poster">Poszter</string>
+    <string name="settings_panel_width_dialog_title"><xliff:g id="section">%1$s</xliff:g> panelszélességei</string>
+    <string name="settings_panel_width_customize">Panel testreszabása</string>
+    <string name="settings_panel_width_category">Kategóriapanel</string>
+    <string name="settings_panel_width_list">Listapanel</string>
+    <string name="settings_panel_width_preview_panel"><xliff:g id="label">%1$s</xliff:g> panel</string>
+    <string name="settings_panel_width_total">Teljes méret</string>
+    <string name="settings_panel_width_invalid_total">A teljes méret <xliff:g id="total">%1$d</xliff:g>%%. 100%%-nak kell lennie — módosítsd.</string>
+    <string name="settings_panel_width_disable_preview_title">Kikapcsolod az élő előnézeti videót?</string>
+    <string name="settings_panel_width_disable_preview_description">Az élő előnézeti videó jelenleg be van kapcsolva. Az Előnézeti panel elrejtése kikapcsolja a videót, és nem lehet újra bekapcsolni, amíg nem adsz az Előnézeti panelnek szélességet a Panelszélesség beállításánál.</string>
+    <string name="settings_live_preview_panel_hidden_title">Az élő előnézeti videó nem érhető el</string>
+    <string name="settings_live_preview_panel_hidden_description">Az Élő TV előnézeti panelje rejtve van. Adj neki 0%% feletti szélességet a Panelszélesség beállításánál, mielőtt bekapcsolod az előnézeti videót.</string>
+    <string name="settings_language_help_translate">Segíts lefordítani az OwnTV-t a nyelvedre</string>
+    <string name="settings_language_contribution_description">Olvasd be a QR-kódot vagy nyisd meg a hivatkozást, hogy bármelyik elérhető nyelvet válaszd, és mind a hat OwnTV-fordítási komponenshez hozzájárulj.</string>
+    <string name="settings_language_request_workflow">Olyan nyelvet szeretnél hozzáadni, ami nem szerepel a listán? Először nyiss egy nyelvkérelmet. Egy karbantartó regisztrálja, és előkészíti az alapfordítási fájlokat; amint megjelenik a Hosted Weblate-en, elkezdhetsz hozzájárulni.</string>
+    <string name="settings_language_request_new">Új nyelv kérése</string>
+    <string name="settings_language_contribution_qr_description">QR-kód az OwnTV-fordítási projekt áttekintéséhez</string>
+    <string name="settings_language_contribution_qr_failed">A QR-kódot nem sikerült létrehozni. Használd helyette az alább látható hivatkozást.</string>
+    <string name="settings_language_contribution_copy">Hivatkozás másolása</string>
+    <string name="settings_language_contribution_copied">Hivatkozás másolva</string>
+    <string name="settings_language_contribution_open_failed">A hivatkozást nem sikerült megnyitni. Másold ki helyette.</string>
+    <string name="settings_language_contribution_copy_failed">A hivatkozást nem sikerült kimásolni. Olvasd le vagy írd be a fent látható URL-t.</string>
+    <string name="settings_ambient_glow">Környezeti fény</string>
+    <string name="settings_ambient_glow_description">Beállítás-stílusú ragyogást ad a tömör felülethez</string>
+    <string name="settings_ambient_glow_dialog_description">Lágy kiemelőszín-aurát ad a nem üveges felülethez. A lassú pulzálás finoman lélegzik, ha az animációk be vannak kapcsolva.</string>
+    <string name="settings_ambient_glow_effect">Ragyogás</string>
+    <string name="settings_ambient_glow_pulse">Lassú pulzálás</string>
+    <string name="settings_glass_preset_ultra_clear">Ultratiszta</string>
+    <string name="settings_glass_preset_opaque">Átlátszatlan</string>
+    <string name="settings_glass_preset_ultra_clear_description">Maximális háttérkép-részletesség enyhe mattítással.</string>
+    <string name="settings_glass_preset_opaque_description">Maximális paneltömörség a legerősebb mattítással.</string>
+    <string name="settings_glass_highlight_title">Kiemelés erőssége</string>
+    <string name="settings_glass_highlight_description">A fókuszált üveg fényének és peremének beállítása.</string>
+    <string name="settings_glass_live_preview">Élő előnézet</string>
+    <string name="settings_glass_screen_description">Hangold az áttetsző felületeket, és lásd azonnal minden változást.</string>
+    <string name="settings_glass_master_description">Áttetsző, mattított felületek használata az egész OwnTV-ben.</string>
+    <string name="settings_glass_background_image">Háttérkép</string>
+    <string name="settings_glass_surface_transparency_title">Felület átlátszósága</string>
+    <string name="settings_glass_background_blur_title">Háttér elmosása</string>
+    <string name="settings_glass_section_appearance">Megjelenés</string>
+    <string name="settings_glass_section_fine_tuning">Finomhangolás</string>
+    <string name="settings_glass_section_behavior">Viselkedés</string>
+    <string name="settings_glass_apply_to">Üveg alkalmazása erre</string>
+    <string name="settings_glass_surface_all">Mind</string>
+    <string name="settings_glass_background_action_description">Válassz helyit, távolit, vagy töröld</string>
+    <string name="settings_glass_transparency_short_description">20–100 százalék, 5-ös lépésekben</string>
+    <string name="settings_glass_blur_short_description">0–100 százalék, 10-es lépésekben</string>
+    <string name="settings_glass_highlight_short_description">A fókuszált üveg pereme és ragyogása</string>
+    <string name="settings_glass_full_transparency_short">Teljes átlátszóság</string>
+    <string name="settings_glass_full_transparency_short_description">Teljesen tiszta felületek engedélyezése.</string>
+    <string name="settings_glass_depth_effects_short">Mélységhatások</string>
+    <string name="settings_glass_depth_effects_short_description">Kiemelkedés, árnyék és fókuszmozgás használata.</string>
+    <string name="settings_glass_reset_balanced">Visszaállítás Kiegyensúlyozottra</string>
+    <string name="settings_glass_full_transparency_title">Teljes átlátszóság engedélyezése</string>
+    <string name="settings_glass_full_transparency_description">Kikapcsolja az automatikus olvashatósági alsó határt a lehető legtisztább üvegért.</string>
+    <string name="settings_glass_depth_title">Mélység és árnyékok</string>
+    <string name="settings_glass_depth_description">Bekapcsolja a fókuszkövető megvilágítást, a finom parallaxist és a mélységi mozgást.</string>
+</resources>

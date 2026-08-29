@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <string name="profiles_pin">PIN-kód</string>
+    <string name="profiles_new">Új profil</string>
+    <string name="profiles_edit">Profil szerkesztése</string>
+    <string name="profiles_name">Név</string>
+    <string name="profiles_name_hint">pl. Anna</string>
+    <string name="profiles_avatar">AVATÁR</string>
+    <string name="profiles_kids">Gyerekprofil</string>
+    <string name="profiles_kids_description">Egyszerűsített, biztonságos böngészés</string>
+    <string name="profiles_remove_pin">PIN-zár eltávolítása</string>
+    <string name="profiles_no_pin">Ez a profil PIN-kód nélkül nyílik meg</string>
+    <string name="profiles_change_pin">PIN módosítása (üresen hagyva marad a régi)</string>
+    <string name="profiles_optional_pin">PIN (nem kötelező)</string>
+    <string name="profiles_pin_digits">4–6 számjegy</string>
+    <string name="profiles_pin_placeholder">····</string>
+    <string name="profiles_name_taken">Ez a név már foglalt — válassz másikat.</string>
+    <string name="profiles_create">Létrehozás</string>
+    <string name="profiles_save">Mentés</string>
+    <string name="profiles_gate_title">Ki néz most?</string>
+    <string name="profiles_wrong_pin">Hibás PIN-kód — próbáld újra</string>
+    <string name="profiles_enter_pin"><xliff:g id="name">%1$s</xliff:g> — add meg a PIN-kódot</string>
+    <string name="profiles_kids_badge">GYEREK</string>
+    <string name="profiles_add">Profil hozzáadása</string>
+    <string name="profiles_title">Profilok</string>
+    <string name="profiles_add_button">Profil hozzáadása</string>
+    <string name="profiles_delete_title">Törlöd ezt: „<xliff:g id="name">%1$s</xliff:g>”?</string>
+    <string name="profiles_delete_message">Eltávolítja ezt a profilt, valamint a hozzá tartozó kedvenceket és előzményeket. A források megmaradnak.</string>
+    <string name="profiles_kids_tag">Gyerek</string>
+    <string name="profiles_locked_tag">PIN-kóddal zárolva</string>
+    <string name="search_title">Keresés</string>
+    <string name="search_continue">Folytatás</string>
+    <string name="search_unwatched">Meg nem tekintett</string>
+    <string name="search_hint">Csatornák, filmek és sorozatok keresése…</string>
+    <string name="search_recent">Legutóbbi keresések</string>
+    <string name="search_recent_empty">A legutóbbi kereséseid itt jelennek meg.</string>
+    <string name="search_minimum_query">Írj be legalább 2 karaktert az összes tartalom kereséséhez.</string>
+    <string name="search_no_results"><xliff:g id="query">%1$s</xliff:g> — nincs találat.</string>
+    <string name="search_nothing_in_list">Még nincs semmi itt: <xliff:g id="list">%1$s</xliff:g>.</string>
+    <string name="search_clear">Törlés</string>
+    <string name="search_jump_to">Ugrás ide</string>
+    <string name="search_watch_live">Élő adás megtekintése</string>
+    <string name="search_play">Lejátszás</string>
+    <string name="search_open_series">Sorozat megnyitása</string>
+    <string name="search_movie">Film</string>
+    <string name="search_series">Sorozatok</string>
+    <string name="search_channels">Csatornák</string>
+    <string name="search_channel_number">#<xliff:g id="number">%1$s</xliff:g></string>
+    <string name="home_keep_watching">Folytatás</string>
+    <string name="home_play_next">Következő rész lejátszása</string>
+    <string name="home_tune_in">Megnézem</string>
+    <string name="home_recent_live">Legutóbb nézett élő adások</string>
+    <string name="profiles_default_name">Profil</string>
+    <string name="launcher_recent_live_title">Legutóbb nézett élő adások</string>
+    <string name="launcher_recent_live_description">Legutóbb nézett élő csatornák</string>
+    <string name="launcher_movie_type">Film</string>
+    <string name="launcher_episode_number"><xliff:g id="episode">%1$d</xliff:g>. rész</string>
+    <string name="home_no_preview">Még nincs mit előnézetben megjeleníteni.</string>
+    <string name="home_no_rows">Minden kezdőlapi sor el van rejtve.</string>
+    <string name="home_enable_rows">A sorokat a Beállítások → Kezdőképernyő menüben kapcsolhatod vissza.</string>
+    <string name="home_start_watching">Nézz meg valamit, hogy itt megjelenjen a tevékenységed.</string>
+    <string name="home_continue_empty">A folytatható tételek itt jelennek meg, amint van lejátszási előzményed.</string>
+    <string name="home_last_watched_now">Utoljára megtekintve: az imént</string>
+    <string name="home_finish_by">Vége ekkor: <xliff:g id="time">%1$s</xliff:g></string>
+    <string name="home_resume">Folytatás</string>
+    <plurals name="home_last_watched_minutes">
+        <item quantity="one">Utoljára <xliff:g id="count">%1$d</xliff:g> perce megtekintve</item>
+        <item quantity="other">Utoljára <xliff:g id="count">%1$d</xliff:g> perce megtekintve</item>
+    </plurals>
+    <plurals name="home_last_watched_hours">
+        <item quantity="one">Utoljára <xliff:g id="count">%1$d</xliff:g> órája megtekintve</item>
+        <item quantity="other">Utoljára <xliff:g id="count">%1$d</xliff:g> órája megtekintve</item>
+    </plurals>
+    <plurals name="home_last_watched_days">
+        <item quantity="one">Utoljára <xliff:g id="count">%1$d</xliff:g> napja megtekintve</item>
+        <item quantity="other">Utoljára <xliff:g id="count">%1$d</xliff:g> napja megtekintve</item>
+    </plurals>
+    <string name="home_season_episode"><xliff:g id="season">%1$02d</xliff:g>. évad <xliff:g id="episode">%2$02d</xliff:g>. rész</string>
+    <string name="home_season"><xliff:g id="season">%1$02d</xliff:g>. évad</string>
+    <string name="home_episode"><xliff:g id="episode">%1$02d</xliff:g>. rész</string>
+    <string name="home_row_cards">Kártyák</string>
+    <string name="home_row_keep_watching">Folytatás</string>
+    <string name="home_row_continue_movies">Filmek folytatása</string>
+    <string name="home_row_continue_series">Sorozatok folytatása</string>
+    <string name="home_row_recent_channels">Legutóbb nézett csatornák</string>
+    <string name="home_row_favorite_channels">Kedvenc csatornák</string>
+    <string name="home_row_on_now">Most megy</string>
+    <string name="home_row_hero_description">A nagy előnézeti sor legfelül</string>
+    <string name="home_row_continue_movies_description">Filmek mentett lejátszási pozícióval</string>
+    <string name="home_row_continue_series_description">Folytatható vagy következő epizódok</string>
+    <string name="home_row_recent_description">Nemrég nézett élő csatornák</string>
+    <string name="home_row_favorite_description">A kedvencekhez adott élő csatornáid</string>
+    <string name="home_on_now_title"><xliff:g id="title">%1$s</xliff:g> · MOST MEGY</string>
+    <string name="home_ok_to_watch">OK a megtekintéshez</string>
+    <string name="home_ok_to_browse">OK a böngészéshez</string>
+    <string name="home_no_programme_details">Nincsenek műsoradatok</string>
+    <string name="home_guide_unavailable">A műsorújság adatai nem érhetők el</string>
+    <string name="home_next">Következik</string>
+    <string name="home_channel_number"><xliff:g id="number">%1$s</xliff:g>  <xliff:g id="name">%2$s</xliff:g></string>
+    <string name="home_time_range"><xliff:g id="start">%1$s</xliff:g>-<xliff:g id="end">%2$s</xliff:g></string>
+    <string name="home_now_time">MOST · <xliff:g id="time">%1$s</xliff:g></string>
+    <string name="home_up_next_time">KÖVETKEZIK · <xliff:g id="time">%1$s</xliff:g></string>
+    <string name="home_upcoming_item"><xliff:g id="time">%1$s</xliff:g> <xliff:g id="title">%2$s</xliff:g></string>
+    <plurals name="home_channel_count">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> csatorna</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> csatorna</item>
+    </plurals>
+    <string name="update_title">Alkalmazásfrissítés</string>
+    <string name="update_checking">Frissítések keresése…</string>
+    <string name="update_whats_new">Újdonságok</string>
+    <string name="update_downloading">Frissítés letöltése… <xliff:g id="percent">%1$d</xliff:g>%%</string>
+    <string name="update_available">Elérhető frissítés</string>
+    <string name="update_latest">A legújabb verziót használod (v<xliff:g id="version">%1$s</xliff:g>).</string>
+    <string name="update_available_version">A(z) <xliff:g id="available">%1$s</xliff:g> verzió elérhető (jelenleg a v<xliff:g id="current">%2$s</xliff:g> fut).</string>
+    <string name="update_installer">A rendszer telepítője megnyílik, amint a letöltés befejeződik.</string>
+    <string name="update_later">Később</string>
+    <string name="update_now">Frissítés most</string>
+    <string name="update_try_again">Újra</string>
+    <string name="update_failed_check">A frissítések keresése nem sikerült.</string>
+    <string name="update_failed_check_http">A frissítési kiszolgáló HTTP <xliff:g id="code">%1$s</xliff:g> hibát adott vissza a keresés során.</string>
+    <string name="update_no_compatible_apk">Ebben a kiadásban nem található ehhez az eszközhöz való frissítési csomag.</string>
+    <string name="update_invalid_release_response">A frissítési kiszolgáló érvénytelen kiadásleírást adott vissza.</string>
+    <string name="update_failed_download">A frissítést nem sikerült letölteni, mert a hálózati kérés meghiúsult.</string>
+    <string name="update_failed_download_http">A frissítés letöltése HTTP <xliff:g id="code">%1$s</xliff:g> hibát adott vissza.</string>
+    <string name="update_empty_download">A frissítési kiszolgáló üres APK-fájlt adott vissza.</string>
+    <string name="update_install_failed">A rendszer telepítője nem tudta megnyitni a letöltött frissítést.</string>
+    <string name="update_not_enough_space">Nincs elég szabad hely a frissítéshez. Szabadíts fel körülbelül <xliff:g id="size">%1$s</xliff:g> helyet, és próbáld újra.</string>
+    <string name="update_damaged_download">A frissítés nem töltődött le teljesen. Ellenőrizd a kapcsolatot, és próbáld újra.</string>
+    <string name="update_install_rejected">A rendszer telepítője elutasította a frissítést: <xliff:g id="reason">%1$s</xliff:g></string>
+    <string name="update_ready">Az OwnTV v<xliff:g id="available">%1$s</xliff:g> készen áll (jelenleg a v<xliff:g id="current">%2$s</xliff:g> fut).</string>
+    <string name="recovery_title">Az OwnTV nem tudta megnyitni az adatbázisát</string>
+    <string name="recovery_data_safe_full">A profiljaid, lejátszási listáid, kedvenceid és előzményeid NEM törlődtek — az adatbázis frissítése hiúsult meg, az adatok továbbra is ezen az eszközön vannak.\n\nKérjük, jelentsd ezt, hogy javíthassuk a hibát, és csatold az alábbi üzenetet.</string>
+    <string name="recovery_retry">Újra</string>
+    <string name="recovery_backup_hint">Ha van biztonsági mentésed, visszaállíthatod az alkalmazást alaphelyzetbe, majd visszatöltheted a mentést. A visszaállítás minden, ezen az eszközön tárolt adatot töröl.</string>
+    <string name="recovery_confirm_reset">Megerősítés: minden alkalmazásadat törlése</string>
+    <string name="recovery_reset">Alkalmazásadatok visszaállítása (végső megoldás)</string>
+    <string name="home_row_now_trending">Most felkapott</string>
+    <string name="home_row_trending_description">Csak 4–10 elemet mutat, ha a TMDB felkapott címei egyeznek a szolgáltatód katalógusában lévő filmekkel vagy sorozatokkal.</string>
+    <string name="settings_trending_status_off">A „Most felkapott” ki van kapcsolva.</string>
+    <string name="settings_trending_status_building">A „Most felkapott” a szolgáltatóval való szinkronizálás után készül el.</string>
+    <string name="settings_trending_status_metadata_disabled">A „Most felkapott” TMDB-metaadatokat igényel. Válaszd a „Csak TMDB” vagy a „Szolgáltató + TMDB” lehetőséget.</string>
+    <string name="settings_trending_status_no_vod">A „Most felkapott” rejtve van, mert ehhez a szolgáltatóhoz sem a filmek, sem a sorozatok nincsenek bekapcsolva.</string>
+    <string name="settings_trending_status_no_matches">A „Most felkapott” rejtve van, mert a szolgáltató egyetlen címe sem egyezik.</string>
+    <string name="settings_trending_status_failed">A „Most felkapott” frissítése nem sikerült. Próbáld újra szinkronizálni a szolgáltatót.</string>
+    <string name="settings_trending_status_waiting">Fejezz be egy szinkronizálást a szolgáltatóval a „Most felkapott” összeállításához.</string>
+    <plurals name="settings_trending_status_below_threshold">
+        <item quantity="one">A „Most felkapott” rejtve van, mert csak <xliff:g id="count">%1$d</xliff:g> szolgáltatói cím egyezik. Legalább 4 szükséges.</item>
+        <item quantity="other">A „Most felkapott” rejtve van, mert csak <xliff:g id="count">%1$d</xliff:g> szolgáltatói cím egyezik. Legalább 4 szükséges.</item>
+    </plurals>
+    <plurals name="settings_trending_status_showing">
+        <item quantity="one">A „Most felkapott” <xliff:g id="count">%1$d</xliff:g> egyező címet mutat.</item>
+        <item quantity="other">A „Most felkapott” <xliff:g id="count">%1$d</xliff:g> egyező címet mutat.</item>
+    </plurals>
+    <plurals name="settings_trending_status_showing_refresh_failed">
+        <item quantity="one">A „Most felkapott” <xliff:g id="count">%1$d</xliff:g> címet mutat a legutóbbi sikeres frissítésből.</item>
+        <item quantity="other">A „Most felkapott” <xliff:g id="count">%1$d</xliff:g> címet mutat a legutóbbi sikeres frissítésből.</item>
+    </plurals>
+    <string name="home_trending_movie">Film</string>
+    <string name="home_trending_series">Sorozat</string>
+    <string name="home_trending_section_label">MOST FELKAPOTT · SZINKRONIZÁLÁS ÁLLAPOTA</string>
+    <string name="home_trending_provider_match">Szolgáltatói egyezés</string>
+    <string name="home_trending_language_choice"><xliff:g id="language">%1$s</xliff:g> nyelvi választás</string>
+    <string name="home_trending_english_fallback">Angol tartalék</string>
+    <string name="home_trending_untagged_fallback">Címkézetlen tartalék</string>
+    <string name="home_trending_other_fallback"><xliff:g id="language">%1$s</xliff:g> tartalék</string>
+    <string name="home_trending_why_label">MIÉRT LÁTOD EZT A CÍMET</string>
+    <string name="home_trending_reason_title">TMDB-helyezés #<xliff:g id="rank">%1$d</xliff:g> <xliff:g id="media_type">%2$s</xliff:g> + szolgáltatói egyezés</string>
+    <string name="home_trending_reason_preferred">A kiválasztott <xliff:g id="language">%1$s</xliff:g> nyelvű szolgáltatói változat elsőbbséget élvez a más nyelvű tételekkel szemben.</string>
+    <string name="home_trending_reason_english">Nem volt egyező <xliff:g id="language">%1$s</xliff:g> nyelvű szolgáltatói változat, ezért az angol nyelvű tétel lett kiválasztva.</string>
+    <string name="home_trending_reason_untagged">Sem a(z) <xliff:g id="language">%1$s</xliff:g>, sem az angol nyelvi címke nem egyezett, ezért a nyelvi címke nélküli szolgáltatói tétel lett kiválasztva.</string>
+    <string name="home_trending_reason_other">A leghasonlóbb lejátszható szolgáltatói változat lett kiválasztva, miután sem a kívánt nyelvű, sem angol tétel nem volt elérhető.</string>
+    <plurals name="home_trending_seasons">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> évad</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> évad</item>
+    </plurals>
+    <string name="home_trending_play">Lejátszás</string>
+    <string name="home_trending_open_episodes">Epizódok megnyitása</string>
+    <string name="home_trending_trailer">Előzetes</string>
+    <string name="home_trending_more_details">További részletek</string>
+    <string name="home_trending_all_versions">Összes változat</string>
+    <string name="home_trending_previous">Előző</string>
+    <string name="home_trending_pause">Szünet</string>
+    <string name="home_trending_resume">Folytatás</string>
+    <string name="home_trending_next">Következő</string>
+    <string name="home_trending_unavailable">Ez a változat már nem érhető el</string>
+</resources>

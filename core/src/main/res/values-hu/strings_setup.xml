@@ -1,0 +1,265 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <string name="setup_background_image">Háttérkép</string>
+    <string name="setup_background_image_description">Válassz egy fotót a felület mögé, vagy töröld, hogy visszatérj az egyszínű felületekhez.</string>
+    <string name="setup_from_device">Helyi</string>
+    <string name="setup_from_phone">Távoli</string>
+    <string name="setup_send_from_phone">Küldés másik eszközről</string>
+    <string name="setup_phone_background_description">Egy másik eszközön ugyanazon a Wi-Fi-n — telefonon, táblagépen vagy számítógépen — olvasd be a QR-kódot (vagy nyisd meg az URL-t), add meg ezt a PIN-kódot, és küldj egy fotót. Azonnal háttérkép lesz belőle.</string>
+    <string name="setup_opening_server">Kiszolgáló indítása…</string>
+    <string name="setup_enter_pin_browser">Írd be ezt a PIN-kódot a böngészőbe</string>
+    <string name="setup_open_url">Vagy nyisd meg ezt az URL-t</string>
+    <string name="setup_try_again">Próbáld újra</string>
+    <string name="setup_start_again_new_pin">Kezdés elölről új PIN-kóddal</string>
+    <string name="setup_companion_invalid_port">Adj meg egy érvényes portot 1 és 65535 között.</string>
+    <string name="setup_companion_port_in_use">A(z) <xliff:g id="port">%1$d</xliff:g> port már használatban van. Próbálj másik portot.</string>
+    <string name="setup_companion_unavailable">A helyi kiszolgálót nem sikerült elindítani. Próbáld újra.</string>
+    <string name="setup_companion_locked">Túl sok hibás PIN-próbálkozás — a kapcsolat biztonsági okból lezárult.</string>
+    <string name="setup_tmdb_name">TMDB-név megadása</string>
+    <string name="setup_tmdb_description">Írd be a pontos TMDB-címet a párosításhoz. Az évszám nem kötelező, de segít, ha több cím is azonos nevű.</string>
+    <string name="setup_year_optional">Év (nem kötelező)</string>
+    <string name="setup_pick_location">Válassz helyet</string>
+    <string name="setup_grant_storage_access">Teljes tárhely-hozzáférés megadása</string>
+    <string name="setup_use_folder">Ezt a mappát használom</string>
+    <string name="setup_new_folder">Új mappa</string>
+    <string name="setup_folder_name">Mappanév</string>
+    <string name="setup_folder_example">pl. Saját TV</string>
+    <string name="setup_from_current_folder">..</string>
+    <string name="setup_move_indicator">↕</string>
+    <string name="setup_welcome_to">ÜDVÖZÖL AZ</string>
+    <string name="setup_welcome_tagline">A saját IPTV-lejátszód.</string>
+    <string name="setup_get_started">Kezdés</string>
+    <string name="setup_before_you_start">Mielőtt elkezdenéd</string>
+    <string name="setup_disclaimer">Az OwnTV kizárólag médialejátszó. Nem tartalmaz csatornákat, lejátszási listákat vagy tartalmat. A saját, legálisan elérhető Xtream-, M3U- vagy Stalker-forrásaid hozzáadása a te felelősséged.</string>
+    <string name="setup_i_understand">Megértettem</string>
+    <string name="setup_set_up_owntv">Az OwnTV beállítása</string>
+    <string name="setup_setup_choice_description">Kezdj tiszta lappal, vagy állítsd vissza a profiljaidat, lejátszási listáidat és kedvenceidet egy biztonsági mentésből.</string>
+    <string name="setup_new_profile">Új profil</string>
+    <string name="setup_create_profile_add_sources">Profil létrehozása és források hozzáadása</string>
+    <string name="setup_restore_backup">Mentés visszaállítása</string>
+    <string name="setup_import_profiles_playlists">Profilok és lejátszási listák importálása fájlból</string>
+    <string name="setup_add_playlist">Lejátszási lista hozzáadása</string>
+    <string name="setup_add_playlist_description">Adj forrást ehhez a profilhoz, vagy állíts be egyet később.</string>
+    <string name="setup_new">Új</string>
+    <string name="setup_add_m3u_xtream">M3U-, Xtream- vagy Stalker-forrás hozzáadása</string>
+    <string name="setup_existing">Meglévő</string>
+    <string name="setup_use_other_profile_playlists">Egy másik profil lejátszási listáinak használata</string>
+    <string name="setup_import">Importálás</string>
+    <string name="setup_restore_backup_file">Visszaállítás biztonsági mentésből</string>
+    <string name="setup_skip_for_now">Kihagyás egyelőre</string>
+    <string name="setup_use_existing_playlists">Meglévő lejátszási listák használata</string>
+    <string name="setup_pick_playlists">Válaszd ki, mely lejátszási listákat add hozzá ehhez a profilhoz.</string>
+    <plurals name="setup_add_selected_playlists">
+        <item quantity="one">Hozzáadás: <xliff:g id="count">%1$d</xliff:g></item>
+        <item quantity="other">Hozzáadás: <xliff:g id="count">%1$d</xliff:g></item>
+    </plurals>
+    <string name="setup_restoring">Visszaállítás…</string>
+    <string name="setup_wrong_backup_password">Hibás mentésjelszó</string>
+    <string name="setup_enter_backup_password">Add meg a mentés jelszavát</string>
+    <string name="setup_password_mismatch_sealed">A jelszó nem egyezett. Ez a mentés titkosított — nem nyitható meg a létrehozásához használt jelszó nélkül.</string>
+    <string name="setup_password_mismatch">A jelszó nem egyezett. Próbáld újra, vagy hagyd ki, és mindent visszaállítunk a mentett jelszavakon kívül.</string>
+    <string name="setup_backup_encrypted_prompt">Ez a mentés titkosított. Add meg a mentés jelszavát a megnyitáshoz és visszaállításhoz.</string>
+    <string name="setup_backup_passwords_encrypted_prompt">Ebben a mentésben a jelszavak titkosítva vannak. Add meg a mentés jelszavát a visszaállításukhoz, vagy hagyd ki, hogy minden mást visszaállíts, és később add meg újra a jelszavakat.</string>
+    <string name="setup_backup_password">Mentés jelszava</string>
+    <string name="setup_skip_no_passwords">Kihagyás (jelszavak nélkül)</string>
+    <string name="setup_restore">Visszaállítás</string>
+    <string name="setup_restore_failed">A visszaállítás nem sikerült</string>
+    <string name="setup_backup_read_failed">A mentésfájlt nem sikerült beolvasni</string>
+    <string name="setup_invalid_mac">Érvénytelen MAC-cím — használd az AA:BB:CC:DD:EE:FF formátumot</string>
+    <string name="setup_pick_backup_file">Válassz visszaállítandó mentésfájlt</string>
+    <string name="setup_restore_a_backup">Mentés visszaállítása</string>
+    <string name="setup_restore_choice_description">Küldd el a mentést egy másik eszközről (telefonról vagy laptopról) ugyanarról a Wi-Fi-ről, vagy válassz egy mentésfájlt, ami már ezen az eszközön van.</string>
+    <string name="setup_upload_from_wifi_device">Feltöltés a Wi-Fi-den lévő eszközről</string>
+    <string name="setup_local_file">Helyi fájl</string>
+    <string name="setup_pick_backup_local">Válassz mentésfájlt ezen az eszközön</string>
+    <string name="setup_run_in_background">Futtatás a háttérben</string>
+    <string name="setup_importing_catalog">Katalógus importálása…</string>
+    <string name="setup_preparing_catalog">Katalógus előkészítése</string>
+    <string name="setup_watching_during_import">Már nézhetsz valamit, amíg a katalógus többi része betöltődik.</string>
+    <string name="setup_all_set">Minden kész!</string>
+    <plurals name="setup_restored_items">
+        <item quantity="one"><xliff:g id="items">%1$d</xliff:g> elem visszaállítva. Szinkronizáld újra a forrásaidat a tartalom betöltéséhez.</item>
+        <item quantity="other"><xliff:g id="items">%1$d</xliff:g> elem visszaállítva. Szinkronizáld újra a forrásaidat a tartalom betöltéséhez.</item>
+    </plurals>
+    <string name="setup_passwords_omitted">Utána add meg újra a mentett jelszavakat.</string>
+    <plurals name="setup_skipped_sources">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> forrás kimaradt, mert ez a verzió nem támogatja a lejátszásilista-típusát.</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> forrás kimaradt, mert ez a verzió nem támogatja a lejátszásilista-típusukat.</item>
+    </plurals>
+    <string name="setup_continue">Tovább</string>
+    <string name="setup_import_failed">Az importálás nem sikerült</string>
+    <string name="setup_try_again_caps">Újrapróbálkozás</string>
+    <string name="setup_add_from_phone">Hozzáadás másik eszközről</string>
+    <string name="setup_phone_add_description">Egy telefonon, táblagépen vagy számítógépen ugyanazon a Wi-Fi-n olvasd be a QR-kódot (vagy nyisd meg az URL-t), add meg ezt a PIN-kódot, töltsd ki a lejátszási listád adatait, és koppints a Küldés a TV-re gombra. Az adatok itt jelennek meg, importálásra készen — az Importálás indítása gombot a távirányítóval nyomod meg.</string>
+    <string name="setup_opening">Indítás…</string>
+    <string name="setup_open_server">Kiszolgáló indítása</string>
+    <string name="setup_stop_server">Kiszolgáló leállítása</string>
+    <string name="setup_add_source">Forrás hozzáadása</string>
+    <string name="setup_add_source_description">Töltsd ki az űrlapot egy másik eszközön, vagy írd be az adatokat itt a távirányítóval.</string>
+    <string name="setup_manual">Kézi</string>
+    <string name="setup_use_phone_same_wifi">Használj telefont, táblagépet vagy számítógépet ugyanazon a Wi-Fi-n</string>
+    <string name="setup_type_source_here">Xtream / M3U / Stalker adatok beírása itt</string>
+    <string name="setup_edit_source">Forrás szerkesztése</string>
+    <string name="setup_add_your_source">Add hozzá a forrásodat</string>
+    <string name="setup_edit_source_description">Frissítsd ennek a forrásnak az adatait, vagy módosítsd az automatikus frissítés beállítását.</string>
+    <string name="setup_byo_source_description">Az OwnTV egy lejátszó — hozd a saját Xtream-, M3U- vagy Stalker-forrásodat.</string>
+    <string name="setup_xtream">Xtream</string>
+    <string name="setup_m3u">M3U / M3U8</string>
+    <string name="setup_stalker_mac">Stalker (MAC)</string>
+    <string name="setup_source_name_optional">Név (nem kötelező)</string>
+    <string name="setup_default_iptv">Saját IPTV</string>
+    <string name="setup_name_default_playlist">Saját lejátszási lista</string>
+    <string name="setup_default_portal">Saját portál</string>
+    <string name="setup_default_profile">Profil</string>
+    <string name="setup_server_url">Kiszolgáló URL-je</string>
+    <string name="setup_server_example">http://host:port</string>
+    <string name="setup_username">Felhasználónév</string>
+    <string name="setup_password">Jelszó</string>
+    <string name="setup_password_keep">Jelszó (hagyd üresen a megtartáshoz)</string>
+    <string name="setup_playlist_url_local_file">Lejátszási lista URL-je vagy helyi fájl</string>
+    <string name="setup_playlist_example">http://…/playlist.m3u</string>
+    <string name="setup_playlist_file_unavailable">A lejátszásilista-fájlt nem sikerült megnyitni. Válaszd ki újra; lehet, hogy áthelyezték.</string>
+    <string name="setup_playlist_path_unsupported">Ez a helyi lejátszásilista-útvonal nem támogatott.</string>
+    <string name="setup_local_file_choose">Válassz helyi .m3u / .m3u8 fájlt…</string>
+    <string name="setup_local_file_prefix">Helyi fájl: <xliff:g id="name">%1$s</xliff:g></string>
+    <string name="setup_portal_url">Portál URL-je</string>
+    <string name="setup_portal_example">http://host:port/c/</string>
+    <string name="setup_mac_address">MAC-cím</string>
+    <string name="setup_mac_example">00:1A:79:AA:BB:CC</string>
+    <string name="setup_mac_invalid">Adj meg 12 karaktert, pl. 00:1A:79:AA:BB:CC</string>
+    <string name="setup_stalker_advanced_identity">Speciális eszközazonosítás</string>
+    <string name="setup_stalker_serial_number_optional">Sorozatszám (nem kötelező)</string>
+    <string name="setup_stalker_device_id_optional">Eszközazonosító (nem kötelező)</string>
+    <string name="setup_stalker_device_id2_optional">Eszközazonosító 2 (nem kötelező)</string>
+    <string name="setup_stalker_signature_optional">Aláírás (nem kötelező)</string>
+    <string name="setup_device_model_preset">Eszközmodell-előbeállítás (User-Agent)…</string>
+    <string name="setup_testing">Tesztelés…</string>
+    <string name="setup_test_connection">Kapcsolat tesztelése</string>
+    <plurals name="setup_stalker_test_connected">
+        <item quantity="one">✓ Csatlakozva ezen keresztül: <xliff:g id="endpoint">%1$s</xliff:g> (<xliff:g id="fields">%2$d</xliff:g> profilmező)</item>
+        <item quantity="other">✓ Csatlakozva ezen keresztül: <xliff:g id="endpoint">%1$s</xliff:g> (<xliff:g id="fields">%2$d</xliff:g> profilmező)</item>
+    </plurals>
+    <string name="setup_stalker_test_expires">Lejár: <xliff:g id="date">%1$s</xliff:g></string>
+    <string name="setup_user_agent_optional">User-Agent (nem kötelező)</string>
+    <string name="setup_user_agent_example">pl. VLC/3.0.20 LibVLC/3.0.20</string>
+    <string name="setup_auto_refresh">Automatikus frissítés</string>
+    <string name="setup_auto_refresh_description">Ki, induláskor, vagy ha az adatok elavultak</string>
+    <string name="setup_default_playlist">Alapértelmezett lejátszási lista</string>
+    <string name="setup_default_playlist_description">Csak ezt a lejátszási listát mutassa az alkalmazás mindenhol. Kapcsold ki az összes listához; a felső sávban bármikor módosíthatod.</string>
+    <string name="setup_what_to_sync">Mit szinkronizáljon</string>
+    <string name="setup_sync_off_editing">A kikapcsolt részek rejtve maradnak, és soha nem töltődnek le. Ha visszakapcsolsz egy részt, a gyorsítótárazott sorok azonnal megjelennek.</string>
+    <string name="setup_sync_choices">A Most először importál · a Később a háttérben szinkronizál · a Ki soha nem tölt le és nem jelenít meg semmit.</string>
+    <string name="setup_live_tv">Élő TV</string>
+    <string name="setup_channels_categories">Csatornák és kategóriák</string>
+    <string name="setup_movies">Filmek</string>
+    <string name="setup_vod_movie_catalog">VOD-filmkatalógus</string>
+    <string name="setup_series">Sorozatok</string>
+    <string name="setup_tv_series_catalog">TV-sorozatok katalógusa</string>
+    <string name="setup_start_import">Importálás indítása</string>
+    <string name="setup_update_source_save">Mentés</string>
+    <string name="setup_pick_playlist_file">Válassz lejátszásilista-fájlt (.m3u / .m3u8)</string>
+    <string name="setup_device_model_preset_title">Eszközmodell-előbeállítás</string>
+    <string name="setup_auto_refresh_title">Automatikus frissítés</string>
+    <string name="setup_on">Be</string>
+    <string name="setup_now">Most</string>
+    <string name="setup_later">Később</string>
+    <string name="setup_off">Ki</string>
+    <string name="setup_scope_value">◀ <xliff:g id="value">%1$s</xliff:g> ▶</string>
+    <string name="setup_default_mag">Alapértelmezett (MAG200)</string>
+    <string name="setup_mag250">MAG250</string>
+    <string name="setup_mag254">MAG254</string>
+    <string name="setup_mag270">MAG270</string>
+    <string name="setup_mag420">MAG420</string>
+    <string name="companion_pin_page_title">OwnTV — PIN-kód megadása</string>
+    <string name="companion_pin_heading">Add meg a PIN-kódot</string>
+    <string name="companion_pin_description">Írd be a TV-n látható 6 jegyű PIN-kódot a folytatáshoz.</string>
+    <string name="companion_pin_placeholder">••••••</string>
+    <string name="companion_pin_aria">PIN-kód</string>
+    <string name="companion_continue">Tovább</string>
+    <string name="companion_pin_mismatch">Ez a PIN-kód nem egyezett — próbáld újra.</string>
+    <string name="companion_tmdb_page_title">TMDB-kulcs küldése</string>
+    <string name="companion_tmdb_heading">Küldd el a TMDB-kulcsodat</string>
+    <string name="companion_tmdb_description">Jelentkezz be lent a TMDB-be, másold ki az API-kulcsodat (v3 auth), illeszd be ide, és küldd el a TV-re. A személyes kulcs ingyenes, és gyakorlatilag nincs napi korlátja.</string>
+    <string name="companion_tmdb_get_key">TMDB API-beállítások megnyitása</string>
+    <string name="companion_tmdb_invalid">Ez nem úgy néz ki, mint egy TMDB API-kulcs. Az „API Key (v3 auth)” értéket másold ki.</string>
+    <string name="companion_tmdb_sent_body">A TMDB-kulcsod most már a TV-n van. Ott nyomd meg a Mentés gombot a használatba vételhez.</string>
+    <string name="companion_tmdb_sent_link">Másik kulcs küldése</string>
+    <string name="companion_service_config_empty">Adj meg egy API-kulcsot, egy Worker URL-t, vagy mindkettőt.</string>
+    <string name="companion_service_config_invalid_key">Ez az API-kulcs nem tűnik érvényesnek.</string>
+    <string name="companion_service_config_invalid_url">Adj meg egy érvényes HTTPS Worker URL-t.</string>
+    <string name="companion_service_config_empty_account">Add meg az OpenSubtitles felhasználóneved és jelszavad, vagy a saját API-adataidat.</string>
+    <string name="companion_service_config_invalid_credentials">Ezek a fiókadatok túl hosszúak. Ellenőrizd őket, és próbáld újra.</string>
+    <string name="companion_open_subtitles_description">Jelentkezz be az OpenSubtitlesbe a TV-d számára. A saját API-adataidat csak akkor add meg lent, ha vannak.</string>
+    <string name="companion_service_config_sent">A kapcsolati adatok már a TV-den várakoznak. Ott ellenőrizd és mentsd el őket.</string>
+    <string name="companion_service_config_again">Másik kapcsolati adatok küldése</string>
+    <string name="companion_add_page_title">OwnTV — Forrás hozzáadása</string>
+    <string name="companion_add_heading">Forrás hozzáadása</string>
+    <string name="companion_add_description">Töltsd ki egy forrás adatait, és nyomd meg a Küldés gombot. Megjelenik a TV-n — vedd kézbe a távirányítót, és ott nyomd meg az Importálás indítása gombot, amikor készen állsz.</string>
+    <string name="companion_default_playlist">Alapértelmezett lejátszási lista</string>
+    <string name="companion_send_to_tv">Küldés a TV-re</string>
+    <string name="companion_sync_xtream_hint">Mit szinkronizáljon — a Most először importál, a Később a háttérben szinkronizál, a Ki pedig soha nem tölt le semmit.</string>
+    <string name="companion_sync_stalker_hint">Mit szinkronizáljon — az Élő alapból Most; a Filmek/Sorozatok alapból Később (a Stalker VOD lassú).</string>
+    <string name="companion_saved_page_title">OwnTV — Elküldve</string>
+    <string name="companion_saved_heading">Elküldve a TV-dre ✓</string>
+    <string name="companion_saved_source_body">A(z) <xliff:g id="name">%1$s</xliff:g> már a TV Forrás hozzáadása képernyőjén van. Ellenőrizd ott az adatokat, és nyomd meg a távirányítón az Importálás indítása gombot.</string>
+    <string name="companion_saved_send_another">Másik forrás küldése</string>
+    <string name="companion_saved_backup_body">A mentésed már a TV-n van. Vedd kézbe a távirányítót, és válaszd ki, mely részeket állítsuk vissza.</string>
+    <string name="companion_saved_backup_link">Másik fájl küldése</string>
+    <string name="companion_saved_image_body">A képed mostantól a TV háttérképe.</string>
+    <string name="companion_saved_image_link">Másik kép küldése</string>
+    <string name="companion_backup_page_title">OwnTV — Mentés visszaállítása</string>
+    <string name="companion_backup_heading">Mentés visszaállítása</string>
+    <string name="companion_backup_description">Válassz egy OwnTV-mentésfájlt (.own, vagy egy régebbi .json fájlt), és nyomd meg a Küldés gombot. Átkerül a TV-re — vedd kézbe a távirányítót, és ott válaszd ki, mit állítson vissza.</string>
+    <string name="companion_backup_file">Mentésfájl</string>
+    <string name="companion_choose_backup">Előbb válassz egy mentésfájlt.</string>
+    <string name="companion_playlist_file">Vagy tölts fel egy lejátszásilista-fájlt</string>
+    <string name="companion_playlist_url_or_file">Adj meg egy lejátszásilista-URL-t, vagy válassz egy fájlt.</string>
+    <string name="companion_sending">Küldés…</string>
+    <string name="companion_upload_failed">A feltöltés nem sikerült (HTTP <xliff:g id="status">%1$d</xliff:g>). Ellenőrizd a PIN-kódot, és próbáld újra.</string>
+    <string name="companion_could_not_reach">A TV nem érhető el. Maradj ugyanazon a Wi-Fi-n, és próbáld újra.</string>
+    <string name="companion_could_not_read">Ezt a fájlt nem sikerült beolvasni.</string>
+    <string name="companion_image_page_title">OwnTV — Háttérkép</string>
+    <string name="companion_image_heading">Háttérkép küldése</string>
+    <string name="companion_image_description">Válassz egy fotót (JPG, PNG vagy WebP), és nyomd meg a Küldés gombot. Ez lesz a háttérkép a TV felülete mögött.</string>
+    <string name="companion_image_file">Képfájl</string>
+    <string name="companion_choose_image">Előbb válassz egy képet.</string>
+    <string name="companion_image_too_large">Ez a kép túl nagy (legfeljebb 25 MB).</string>
+    <string name="companion_download_page_title">OwnTV — Mentés letöltése</string>
+    <string name="companion_download_heading">Töltsd le a mentésedet</string>
+    <string name="companion_download_description">A TV-d elkészített egy OwnTV-mentésfájlt. Koppints a gombra, hogy elmentsd erre az eszközre (owntv-backup.own). Tartsd biztonságos helyen — később visszaállíthatod belőle az adataidat.</string>
+    <string name="companion_download_backup">Mentés letöltése</string>
+    <string name="companion_error_bad_request">Hibás kérés</string>
+    <string name="companion_error_body_too_large">A kérés törzse túl nagy.</string>
+    <string name="companion_error_unauthorized">Nincs jogosultság. Ellenőrizd a PIN-kódot, és próbáld újra.</string>
+    <string name="companion_error_not_found">Nem található.</string>
+    <string name="companion_error_no_backup">Nincs elérhető mentés.</string>
+    <string name="companion_error_backup_too_large">A mentés túl nagy.</string>
+    <string name="companion_error_empty_backup">A mentés üres.</string>
+    <string name="companion_error_image_too_large">A kép túl nagy.</string>
+    <string name="companion_error_invalid_image">A feltöltött fájl nem érvényes kép.</string>
+    <string name="companion_error_missing_fields">Kötelező mezők hiányoznak.</string>
+    <string name="setup_invalid_locale">Ez a mentés nem támogatott alkalmazásnyelvet tartalmazott. A visszaállítás sikerült, de a jelenlegi nyelved megmaradt.</string>
+    <string name="setup_prefer_hls_live_tv">HLS előnyben részesítése az élő TV-hez</string>
+    <string name="setup_prefer_hls_description">Az élő TV-nél a HLS (.m3u8) élvezzen elsőbbséget az MPEG-TS-sel szemben. Ha a HLS nem működik, MPEG-TS-re vált. A visszanézés mindig MPEG-TS-t használ.</string>
+    <string name="setup_prefer_hls_description_supported">Az élő TV-nél a HLS (.m3u8) élvezzen elsőbbséget az MPEG-TS-sel szemben. Ha a HLS nem működik, MPEG-TS-re vált. A visszanézés mindig MPEG-TS-t használ. A szolgáltatód HLS-támogatást jelez.</string>
+    <string name="setup_prefer_hls_description_unsupported">Az élő TV-nél a HLS (.m3u8) élvezzen elsőbbséget az MPEG-TS-sel szemben. Ha a HLS nem működik, MPEG-TS-re vált. A visszanézés mindig MPEG-TS-t használ. A szolgáltatód nem jelez HLS-támogatást — attól még kipróbálhatod.</string>
+    <string name="setup_hls_test_support">HLS-támogatás tesztelése</string>
+    <string name="setup_hls_testing">HLS tesztelése…</string>
+    <string name="setup_hls_test_failed">A teszt nem sikerült: <xliff:g id="reason">%1$s</xliff:g></string>
+    <string name="setup_hls_test_provider_unreachable">A szolgáltató nem érhető el — ellenőrizd a kiszolgáló URL-jét, a felhasználónevet és a jelszót.</string>
+    <string name="setup_hls_test_works">✓ A HLS működik — a szolgáltatód visszaadott egy lejátszási listát.</string>
+    <string name="setup_hls_test_works_unadvertised">✓ A HLS működik — a szolgáltatód visszaadott egy lejátszási listát, pedig nem hirdet HLS-t.</string>
+    <string name="setup_hls_test_busy">Nem sikerült befejezni — a fióknak most nincs szabad kapcsolata (HTTP <xliff:g id="status">%1$d</xliff:g>). Állíts le minden mást, ami éppen streamel, és tesztelj újra.</string>
+    <string name="setup_hls_test_not_served">A HLS nem működött — <xliff:g id="reason">%1$s</xliff:g>. Hagyd kikapcsolva, és az élő TV MPEG-TS-t fog használni.</string>
+    <string name="setup_hls_test_reason_not_playlist">a kiszolgáló válaszolt, de nem lejátszási listával</string>
+    <string name="setup_hls_test_reason_no_endpoint">nincs HLS-végpont ehhez a csatornához (HTTP <xliff:g id="status">%1$d</xliff:g>)</string>
+    <string name="setup_hls_test_inconclusive">Nem sikerült ellenőrizni (<xliff:g id="reason">%1$s</xliff:g>). <xliff:g id="provider_claim">%2$s</xliff:g></string>
+    <string name="setup_hls_test_reason_http">HTTP <xliff:g id="status">%1$d</xliff:g></string>
+    <string name="setup_hls_test_reason_no_answer">nincs válasz</string>
+    <string name="setup_hls_test_reason_no_live_channels">ebben a lejátszási listában nincs tesztelhető élő csatorna</string>
+    <string name="setup_hls_test_reason_dead_channel">a tesztcsatorna MPEG-TS-en sem indult el, szóval lehet, hogy egyszerűen halott</string>
+    <string name="setup_hls_provider_advertises">A szolgáltatód hirdet HLS-támogatást.</string>
+    <string name="setup_hls_provider_does_not_advertise">A szolgáltatód nem hirdet HLS-támogatást.</string>
+    <string name="setup_hide_new_categories">Új kategóriák alapból rejtve</string>
+    <string name="setup_hide_new_categories_description">Profilszintű: a jövőbeli szinkronizálásokkor megjelenő kategóriák kezdetben rejtve lesznek. A Testreszabás alatt bármikor megjelenítheted őket.</string>
+</resources>

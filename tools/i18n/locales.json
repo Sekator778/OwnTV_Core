@@ -458,9 +458,9 @@
     "endonym": "Magyar",
     "script": "Latn",
     "rtl": false,
-    "tier": 2,
-    "packaged": false,
-    "pickerVisible": false
+    "tier": 1,
+    "packaged": true,
+    "pickerVisible": true
   },
   {
     "id": "id",
