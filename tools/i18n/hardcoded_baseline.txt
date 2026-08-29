@@ -4,240 +4,6 @@
 # Phase 1 deletes occurrences until this file is empty; the CI guard then becomes absolute.
 # Format: <count>\t<relative path>\t<content with \t/\n escaped>
 
-1	app/src/main/java/tv/own/owntv/core/backup/BackupManager.kt	$mapped:${contextKey.substringAfter(':')}
-3	app/src/main/java/tv/own/owntv/core/backup/BackupManager.kt	ctx
-3	app/src/main/java/tv/own/owntv/core/backup/BackupManager.kt	d
-2	app/src/main/java/tv/own/owntv/core/backup/BackupManager.kt	member
-1	app/src/main/java/tv/own/owntv/core/backup/BackupManager.kt	movedFrom
-4	app/src/main/java/tv/own/owntv/core/backup/BackupManager.kt	opensub_api_key_enc
-1	app/src/main/java/tv/own/owntv/core/backup/BackupManager.kt	settings
-1	app/src/main/java/tv/own/owntv/core/backup/BackupManager.kt	sort
-3	app/src/main/java/tv/own/owntv/core/backup/UserDataResolver.kt	ctx
-2	app/src/main/java/tv/own/owntv/core/backup/UserDataResolver.kt	kind
-8	app/src/main/java/tv/own/owntv/core/backup/UserDataResolver.kt	member
-1	app/src/main/java/tv/own/owntv/core/backup/UserDataResolver.kt	name
-1	app/src/main/java/tv/own/owntv/core/backup/UserDataResolver.kt	oid
-2	app/src/main/java/tv/own/owntv/core/backup/UserDataResolver.kt	p
-3	app/src/main/java/tv/own/owntv/core/backup/UserDataResolver.kt	pos
-1	app/src/main/java/tv/own/owntv/core/backup/UserDataResolver.kt	rid
-1	app/src/main/java/tv/own/owntv/core/backup/UserDataResolver.kt	src
-1	app/src/main/java/tv/own/owntv/core/backup/UserDataResolver.kt	t
-1	app/src/main/java/tv/own/owntv/core/catalog/ProviderCatalogMetadata.kt	2.0 Audio
-1	app/src/main/java/tv/own/owntv/core/catalog/ProviderCatalogMetadata.kt	5.1 Audio
-1	app/src/main/java/tv/own/owntv/core/catalog/ProviderCatalogMetadata.kt	7.1 Audio
-2	app/src/main/java/tv/own/owntv/core/companion/CompanionController.kt	\0
-1	app/src/main/java/tv/own/owntv/core/companion/CompanionController.kt	Failed to save uploaded playlist
-1	app/src/main/java/tv/own/owntv/core/companion/CompanionController.kt	Saved uploaded playlist (${file.length()} bytes) → ${file.name}
-1	app/src/main/java/tv/own/owntv/core/companion/CompanionController.kt	companion-playlists
-1	app/src/main/java/tv/own/owntv/core/companion/CompanionController.kt	playlist-${System.currentTimeMillis()}.m3u
-2	app/src/main/java/tv/own/owntv/core/companion/CompanionHtml.kt	\0
-1	app/src/main/java/tv/own/owntv/core/companion/CompanionHtml.kt	%1$d
-1	app/src/main/java/tv/own/owntv/core/companion/CompanionHtml.kt	,username:(document.getElementById('user').value||''),password:(document.getElementById('pass').value||'')
-1	app/src/main/java/tv/own/owntv/core/companion/CompanionHtml.kt	<div class="card"> <h1>${c.addHeading.h()}</h1> <p>${c.addDescription.h()}</p> <div class="tabs"> <button type="button" class="tab active" data-k="xtream">${c.xtream.h()}</button> <button type="button" class="tab" data-k="m3u">${c.m3u.h()}</button> <button type="button" class="tab" data-k="stalker">${c.stalker.h()}</button> </div> <form class="panel active" data-k="xtream" method="post" action="/xtream?pin=$pin"> <input type="hidden" name="type" value="xtream"> <div class="grid"> <label>${c.name.h()} <input name="name" placeholder="${c.defaultIptv.h()}"></label> ${autoRefreshSelect(c)} </div> <label>${c.serverUrl.h()} <input name="server" placeholder="${c.serverExample.h()}" required></label> <div class="grid"> <label>${c.username.h()} <input name="user" autocomplete="username" required></label> <label>${c.password.h()} <input name="pass" type="password" autocomplete="current-password" required></label> </div> <label>${c.userAgent.h()} <input name="userAgent" placeholder="${c.optional.h()}"></label> <label>${c.epgUrl.h()} <input name="epgUrl" placeholder="${c.optional.h()}"></label> <p class="hint">${c.syncXtreamHint.h()}</p> <div class="grid"> ${scopeSelect(c, "syncLive", c.live)} ${scopeSelect(c, "syncMovies", c.movies)} ${scopeSelect(c, "syncSeries", c.series)} </div> <input type="hidden" name="isDefault" value="false"> <label class="check"><input type="checkbox" name="isDefault" value="true"> ${c.defaultPlaylistLabel.h()}</label> <button class="go" type="submit">${c.sendToTv.h()}</button> </form> <form class="panel" id="m3uForm" data-k="m3u" method="post" action="/m3u?pin=$pin"> <input type="hidden" name="type" value="m3u"> <div class="grid"> <label>${c.name.h()} <input name="name" placeholder="${c.defaultPlaylist.h()}"></label> ${autoRefreshSelect(c)} </div> <label>${c.playlistUrl.h()} <input id="m3uUrl" name="server" placeholder="${c.playlistExample.h()}"></label> <label>${c.playlistFile.h()} <input id="m3uFile" type="file" accept=".m3u,.m3u8,audio/x-mpegurl,application/vnd.apple.mpegurl,text/plain"></label> <label>${c.userAgent.h()} <input name="userAgent" placeholder="${c.optional.h()}"></label> <label>${c.epgUrl.h()} <input name="epgUrl" placeholder="${c.optional.h()}"></label> <input type="hidden" name="isDefault" value="false"> <label class="check"><input type="checkbox" name="isDefault" value="true"> ${c.defaultPlaylistLabel.h()}</label> <button class="go" id="m3uSend" type="submit">${c.sendToTv.h()}</button> <p id="m3uStatus" class="hint"></p> </form> <form class="panel" data-k="stalker" method="post" action="/stalker?pin=$pin"> <input type="hidden" name="type" value="stalker"> <div class="grid"> <label>${c.name.h()} <input name="name" placeholder="${c.defaultPortal.h()}"></label> ${autoRefreshSelect(c)} </div> <label>${c.portalUrl.h()} <input name="portalUrl" placeholder="${c.portalExample.h()}" required></label> <label>${context.getString(R.string.setup_mac_address).h()} <input name="mac" placeholder="${context.getString(R.string.setup_mac_example).h()}" required></label> <h3>${context.getString(R.string.setup_stalker_advanced_identity).h()}</h3> <div class="grid"> <label>${context.getString(R.string.setup_stalker_serial_number_optional).h()} <input name="serialNumber"></label> <label>${context.getString(R.string.setup_stalker_device_id_optional).h()} <input name="deviceId"></label> <label>${context.getString(R.string.setup_stalker_device_id2_optional).h()} <input name="deviceId2"></label> <label>${context.getString(R.string.setup_stalker_signature_optional).h()} <input name="signature"></label> </div> <label>${c.userAgent.h()} <input name="userAgent" placeholder="${c.optional.h()}"></label> <p class="hint">${c.syncStalkerHint.h()}</p> <div class="grid"> ${scopeSelect(c, "syncLive", c.live, "now")} ${scopeSelect(c, "syncMovies", c.movies, "later")} ${scopeSelect(c, "syncSeries", c.series, "later")} </div> <input type="hidden" name="isDefault" value="false"> <label class="check"><input type="checkbox" name="isDefault" value="true"> ${c.defaultPlaylistLabel.h()}</label> <button class="go" type="submit">${c.sendToTv.h()}</button> </form> </div> <script> var tabs=document.querySelectorAll('.tab'), panels=document.querySelectorAll('.panel'); tabs.forEach(function(t){t.addEventListener('click',function(){ var k=t.getAttribute('data-k'); tabs.forEach(function(x){x.classList.toggle('active',x===t)}); panels.forEach(function(p){p.classList.toggle('active',p.getAttribute('data-k')===k)}); });}); // M3U panel only. With no file chosen this stays a plain form post, exactly as before. // With a file chosen the browser reads it as text and posts it as JSON, because a file // input cannot travel in a normal urlencoded body and the TV has no multipart parser. var mf=document.getElementById('m3uFile'), mu=document.getElementById('m3uUrl'), mb=document.getElementById('m3uSend'), ms=document.getElementById('m3uStatus'); document.getElementById('m3uForm').addEventListener('submit',function(ev){ var file=mf.files&&mf.files[0]; if(!file){ if(!(mu.value||'').trim()){ms.textContent=${c.playlistUrlOrFile.js()};ev.preventDefault();return false;} return true; // URL only — let the browser submit the form the old way. } ev.preventDefault(); mb.disabled=true; ms.textContent=${c.sending.js()}; var body={}; new FormData(document.getElementById('m3uForm')).forEach(function(v,k){body[k]=v;}); var r=new FileReader(); r.onload=function(){ body.playlistFile=r.result; body.playlistFileName=file.name; fetch('/m3u?pin=$pin',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)}) .then(function(res){ if(res.ok){document.open();res.text().then(function(t){document.write(t);document.close();});} else{mb.disabled=false;ms.textContent=${c.uploadFailed.js()}.replace('__STATUS__',String(res.status));} }) .catch(function(){mb.disabled=false;ms.textContent=${c.couldNotReach.js()};}); }; r.onerror=function(){mb.disabled=false;ms.textContent=${c.couldNotRead.js()};}; r.readAsText(file); return false; }); </script>
-1	app/src/main/java/tv/own/owntv/core/companion/CompanionHtml.kt	<div class="card"> <h1>${c.tmdbHeading.h()}</h1> <p>${c.tmdbDescription.h()}</p> <p><a href="https://www.themoviedb.org/settings/api" target="_blank" rel="noopener">${c.tmdbGetKey.h()}</a></p> <form id="f" onsubmit="return false"> <label>${c.tmdbKeyLabel.h()} <input id="key" type="text" autocomplete="off" autocapitalize="off" spellcheck="false" required></label> <button class="go" id="send" type="submit">${c.sendToTv.h()}</button> </form> <p id="status" class="hint"></p> </div> <script> var k=document.getElementById('key'), b=document.getElementById('send'), s=document.getElementById('status'); document.getElementById('f').addEventListener('submit',function(){ var v=(k.value||'').trim(); // Mirror of the server-side check, purely so a typo is caught before a round trip. if(!/^[A-Za-z0-9._-]{16,128}$/.test(v)){s.textContent=${c.tmdbInvalid.js()};return false;} b.disabled=true; s.textContent=${c.sending.js()}; fetch('/tmdbkey?pin=$pin',{method:'POST',headers:{'Content-Type':'text/plain'},body:v}) .then(function(res){ if(res.ok){document.open();res.text().then(function(t){document.write(t);document.close();});} else{b.disabled=false;s.textContent=${c.uploadFailed.js()}.replace('__STATUS__',String(res.status));} }) .catch(function(){b.disabled=false;s.textContent=${c.couldNotReach.js()};}); return false; }); </script>
-1	app/src/main/java/tv/own/owntv/core/companion/CompanionHtml.kt	<div class="card"> <h1>${title.h()}</h1><p>${description.h()}</p> <form id="f" onsubmit="return false"> $credentialFields <label>${keyLabel.h()} <input id="key" type="text" autocomplete="off" autocapitalize="off" spellcheck="false"></label> <label>${urlLabel.h()} <input id="url" type="url" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="https://"></label> <button class="go" id="send" type="submit">${send.h()}</button> </form><p id="status" class="hint"></p> </div> <script> var k=document.getElementById('key'),u=document.getElementById('url'),b=document.getElementById('send'),s=document.getElementById('status'); document.getElementById('f').addEventListener('submit',function(){ var body=new URLSearchParams({apiKey:(k.value||'').trim(),serverUrl:(u.value||'').trim()$credentialBody}).toString(); b.disabled=true;s.textContent=${sending.js()}; fetch('/serviceconfig?pin=$pin',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:body}) .then(function(res){if(res.ok){return res.text().then(function(t){document.open();document.write(t);document.close();});}b.disabled=false;s.textContent=${failed.js()}.replace('__STATUS__',String(res.status));}) .catch(function(){b.disabled=false;s.textContent=${unreachable.js()};});return false; }); </script>
-1	app/src/main/java/tv/own/owntv/core/companion/CompanionHtml.kt	<div class="card"><h1>${c.savedHeading.h()}</h1> <p>${c.tmdbSentBody.h()}</p><p><a href="/?pin=$pin">${c.tmdbSentLink.h()}</a></p> </div>
-1	app/src/main/java/tv/own/owntv/core/companion/CompanionHtml.kt	<div class="card"><h1>${c.savedHeading.h()}</h1> <p>${context.getString(R.string.companion_service_config_sent).h()}</p> <p><a href="/?pin=$pin">${context.getString(R.string.companion_service_config_again).h()}</a></p> </div>
-1	app/src/main/java/tv/own/owntv/core/companion/CompanionHtml.kt	<label>${context.getString(R.string.player_subtitles_username).h()} <input id="user" type="text" autocomplete="username" autocapitalize="off" spellcheck="false"></label> <label>${context.getString(R.string.player_subtitles_password).h()} <input id="pass" type="password" autocomplete="current-password"></label>
-1	app/src/main/java/tv/own/owntv/core/companion/CompanionHtml.kt	__STATUS__
-1	app/src/main/java/tv/own/owntv/core/companion/CompanionHttpProtocol.kt	/m3u
-1	app/src/main/java/tv/own/owntv/core/companion/CompanionHttpProtocol.kt	playlistFile
-1	app/src/main/java/tv/own/owntv/core/companion/CompanionHttpProtocol.kt	playlistFileName
-1	app/src/main/java/tv/own/owntv/core/companion/CompanionHttpProtocol.kt	playlist_file
-1	app/src/main/java/tv/own/owntv/core/companion/CompanionHttpProtocol.kt	playlist_file_name
-2	app/src/main/java/tv/own/owntv/core/companion/CompanionHttpServer.kt	\0
-1	app/src/main/java/tv/own/owntv/core/companion/CompanionHttpServer.kt	/serviceconfig
-1	app/src/main/java/tv/own/owntv/core/companion/CompanionHttpServer.kt	/tmdbkey
-2	app/src/main/java/tv/own/owntv/core/companion/CompanionHttpServer.kt	POST
-1	app/src/main/java/tv/own/owntv/core/companion/CompanionHttpServer.kt	^[A-Za-z0-9._-]{8,256}$
-1	app/src/main/java/tv/own/owntv/core/companion/CompanionHttpServer.kt	apiKey
-1	app/src/main/java/tv/own/owntv/core/companion/CompanionHttpServer.kt	https
-1	app/src/main/java/tv/own/owntv/core/companion/CompanionHttpServer.kt	password
-1	app/src/main/java/tv/own/owntv/core/companion/CompanionHttpServer.kt	serverUrl
-1	app/src/main/java/tv/own/owntv/core/companion/CompanionHttpServer.kt	username
-2	app/src/main/java/tv/own/owntv/core/companion/CompanionHttpServer.kt	x-companion-pin
-2	app/src/main/java/tv/own/owntv/core/companion/CompanionMode.kt	\0
-2	app/src/main/java/tv/own/owntv/core/companion/CompanionPayload.kt	\0
-1	app/src/main/java/tv/own/owntv/core/customize/CustomizationStore.kt	${CustomizeKeys.CUSTOM_PREFIX}${UUID.randomUUID()}
-1	app/src/main/java/tv/own/owntv/core/customize/CustomizationStore.kt	custom:
-2	app/src/main/java/tv/own/owntv/core/customize/CustomizationStore.kt	customCats
-2	app/src/main/java/tv/own/owntv/core/customize/CustomizationStore.kt	icon
-2	app/src/main/java/tv/own/owntv/core/customize/CustomizationStore.kt	id
-2	app/src/main/java/tv/own/owntv/core/customize/CustomizationStore.kt	movedFrom
-2	app/src/main/java/tv/own/owntv/core/customize/CustomizationStore.kt	name
-6	app/src/main/java/tv/own/owntv/core/customize/RenameRules.kt	\0
-1	app/src/main/java/tv/own/owntv/core/customize/RenameRules.kt	${EDGE_SEPARATORS}\\z
-1	app/src/main/java/tv/own/owntv/core/customize/RenameRules.kt	(?:[\\x{2190}-\\x{21FF}\\x{2300}-\\x{23FF}\\x{25A0}-\\x{25FF}\\x{2600}-\\x{27BF}
-1	app/src/main/java/tv/own/owntv/core/customize/RenameRules.kt	(?:\\[$escaped\\]|\\($escaped\\)|$escaped)
-1	app/src/main/java/tv/own/owntv/core/customize/RenameRules.kt	(?:\\[|\\()?\\b(?:4K|8K|UHD|FHD|HD|SD|RAW|VIP|HEVC|H265|H264|DOLBY|MULTI|QHD|2K|HDR|DV|2160P|2160|1080P|1080|720P|720|480P|480)\\b(?:\\]|\\))?
-1	app/src/main/java/tv/own/owntv/core/customize/RenameRules.kt	(?<![\\p{L}\\p{N}])$wrapped$
-1	app/src/main/java/tv/own/owntv/core/customize/RenameRules.kt	;
-1	app/src/main/java/tv/own/owntv/core/customize/RenameRules.kt	[\\s|\\-–—·:._,]+
-1	app/src/main/java/tv/own/owntv/core/customize/RenameRules.kt	\\x{2B00}-\\x{2BFF}\\x{FE0F}\\x{1F000}-\\x{1FAFF}\\x{1F1E6}-\\x{1F1FF}])+
-1	app/src/main/java/tv/own/owntv/core/customize/RenameRules.kt	^$EDGE_SEPARATORS
-1	app/src/main/java/tv/own/owntv/core/customize/RenameRules.kt	^$wrapped(?![\\p{L}\\p{N}])
-1	app/src/main/java/tv/own/owntv/core/customize/RenameRules.kt	^(?:\\|?[A-Za-z]{2,4}\\s*\\||\\[[A-Za-z]{2,4}]|\\([A-Za-z]{2,4}\\))
-1	app/src/main/java/tv/own/owntv/core/customize/RenameRules.kt	{2,}
-1	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	ALTER TABLE `playback_prefs` ADD COLUMN `audioDelayMs` INTEGER
-1	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	ALTER TABLE `sources` ADD COLUMN `hlsSupported` INTEGER NOT NULL DEFAULT 0
-1	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	ALTER TABLE `sources` ADD COLUMN `liveEnginePreference` TEXT
-1	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	ALTER TABLE `sources` ADD COLUMN `liveLatencyCustomSecs` INTEGER NOT NULL DEFAULT -1
-1	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	ALTER TABLE `sources` ADD COLUMN `liveLatencyMode` TEXT
-1	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	ALTER TABLE `sources` ADD COLUMN `preferHls` INTEGER NOT NULL DEFAULT 0
-1	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	CREATE INDEX IF NOT EXISTS `index_custom_category_members_profileId_mediaType_contextKey` ON `custom_category_members` (`profileId`, `mediaType`, `contextKey`)
-1	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	CREATE INDEX IF NOT EXISTS `index_custom_category_members_profileId` ON `custom_category_members` (`profileId`)
-1	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	CREATE TABLE IF NOT EXISTS `custom_category_members` (
-1	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	CREATE UNIQUE INDEX IF NOT EXISTS `index_custom_category_members_profileId_mediaType_contextKey_itemId` ON `custom_category_members` (`profileId`, `mediaType`, `contextKey`, `itemId`)
-1	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	`contextKey` TEXT NOT NULL,
-1	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
-1	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	`itemId` INTEGER NOT NULL,
-1	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	`mediaType` TEXT NOT NULL,
-1	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	`position` INTEGER NOT NULL,
-1	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	audioDelayMs
-1	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	hlsSupported
-1	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	liveEnginePreference
-1	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	liveLatencyCustomSecs
-1	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	liveLatencyMode
-1	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	playback_prefs
-1	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	preferHls
-5	app/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	sources
-1	app/src/main/java/tv/own/owntv/core/database/dao/ChannelDao.kt	SELECT COUNT(*) FROM channels WHERE sourceId IN (:sourceIds) AND catchup = 1
-1	app/src/main/java/tv/own/owntv/core/database/dao/CustomCategoryDao.kt	(:type = 'LIVE' AND itemId IN (SELECT id FROM channels WHERE sourceId IN (:sourceIds))) OR
-1	app/src/main/java/tv/own/owntv/core/database/dao/CustomCategoryDao.kt	(:type = 'LIVE' AND itemId NOT IN (SELECT id FROM channels)) OR
-1	app/src/main/java/tv/own/owntv/core/database/dao/CustomCategoryDao.kt	(:type = 'MOVIE' AND itemId IN (SELECT id FROM movies WHERE sourceId IN (:sourceIds))) OR
-1	app/src/main/java/tv/own/owntv/core/database/dao/CustomCategoryDao.kt	(:type = 'MOVIE' AND itemId NOT IN (SELECT id FROM movies)) OR
-1	app/src/main/java/tv/own/owntv/core/database/dao/CustomCategoryDao.kt	(:type = 'SERIES' AND itemId IN (SELECT id FROM series WHERE sourceId IN (:sourceIds)))
-1	app/src/main/java/tv/own/owntv/core/database/dao/CustomCategoryDao.kt	(:type = 'SERIES' AND itemId NOT IN (SELECT id FROM series))
-1	app/src/main/java/tv/own/owntv/core/database/dao/CustomCategoryDao.kt	(mediaType = 'LIVE' AND itemId NOT IN (SELECT id FROM channels)) OR
-1	app/src/main/java/tv/own/owntv/core/database/dao/CustomCategoryDao.kt	(mediaType = 'MOVIE' AND itemId NOT IN (SELECT id FROM movies)) OR
-1	app/src/main/java/tv/own/owntv/core/database/dao/CustomCategoryDao.kt	(mediaType = 'SERIES' AND itemId NOT IN (SELECT id FROM series))
-1	app/src/main/java/tv/own/owntv/core/database/dao/CustomCategoryDao.kt	)
-1	app/src/main/java/tv/own/owntv/core/database/dao/CustomCategoryDao.kt	) GROUP BY contextKey
-1	app/src/main/java/tv/own/owntv/core/database/dao/CustomCategoryDao.kt	AND COALESCE(c.sourceId, mv.sourceId, s.sourceId) IN (:sourceIds)
-1	app/src/main/java/tv/own/owntv/core/database/dao/CustomCategoryDao.kt	COALESCE(c.name, mv.name, s.name) AS name
-1	app/src/main/java/tv/own/owntv/core/database/dao/CustomCategoryDao.kt	COALESCE(c.remoteId, mv.remoteId, s.remoteId) AS remoteId,
-1	app/src/main/java/tv/own/owntv/core/database/dao/CustomCategoryDao.kt	COALESCE(c.sourceId, mv.sourceId, s.sourceId) AS sourceId,
-1	app/src/main/java/tv/own/owntv/core/database/dao/CustomCategoryDao.kt	DELETE FROM custom_category_members WHERE
-1	app/src/main/java/tv/own/owntv/core/database/dao/CustomCategoryDao.kt	DELETE FROM custom_category_members WHERE profileId = :profileId AND mediaType = :type AND contextKey = :contextKey
-1	app/src/main/java/tv/own/owntv/core/database/dao/CustomCategoryDao.kt	DELETE FROM custom_category_members WHERE profileId = :profileId AND mediaType = :type AND contextKey = :contextKey AND itemId = :itemId
-1	app/src/main/java/tv/own/owntv/core/database/dao/CustomCategoryDao.kt	DELETE FROM custom_category_members WHERE profileId = :profileId AND mediaType = :type AND itemId = :itemId AND (
-1	app/src/main/java/tv/own/owntv/core/database/dao/CustomCategoryDao.kt	FROM custom_category_members m
-1	app/src/main/java/tv/own/owntv/core/database/dao/CustomCategoryDao.kt	FROM custom_category_members m INNER JOIN channels c ON m.mediaType = 'LIVE' AND m.itemId = c.id
-1	app/src/main/java/tv/own/owntv/core/database/dao/CustomCategoryDao.kt	FROM custom_category_members m INNER JOIN movies mv ON m.mediaType = 'MOVIE' AND m.itemId = mv.id
-1	app/src/main/java/tv/own/owntv/core/database/dao/CustomCategoryDao.kt	FROM custom_category_members m INNER JOIN series s ON m.mediaType = 'SERIES' AND m.itemId = s.id
-3	app/src/main/java/tv/own/owntv/core/database/dao/CustomCategoryDao.kt	INNER JOIN custom_category_members m ON m.itemId = c.id AND m.profileId = :profileId AND m.mediaType = 'LIVE' AND m.contextKey = :contextKey
-3	app/src/main/java/tv/own/owntv/core/database/dao/CustomCategoryDao.kt	INNER JOIN custom_category_members m ON m.itemId = mv.id AND m.profileId = :profileId AND m.mediaType = 'MOVIE' AND m.contextKey = :contextKey
-3	app/src/main/java/tv/own/owntv/core/database/dao/CustomCategoryDao.kt	INNER JOIN custom_category_members m ON m.itemId = s.id AND m.profileId = :profileId AND m.mediaType = 'SERIES' AND m.contextKey = :contextKey
-2	app/src/main/java/tv/own/owntv/core/database/dao/CustomCategoryDao.kt	LEFT JOIN channels c ON m.mediaType = 'LIVE' AND m.itemId = c.id
-2	app/src/main/java/tv/own/owntv/core/database/dao/CustomCategoryDao.kt	LEFT JOIN content_order o ON o.itemId = c.id AND o.profileId = :profileId AND o.mediaType = 'LIVE' AND o.contextKey = :contextKey
-2	app/src/main/java/tv/own/owntv/core/database/dao/CustomCategoryDao.kt	LEFT JOIN content_order o ON o.itemId = mv.id AND o.profileId = :profileId AND o.mediaType = 'MOVIE' AND o.contextKey = :contextKey
-2	app/src/main/java/tv/own/owntv/core/database/dao/CustomCategoryDao.kt	LEFT JOIN content_order o ON o.itemId = s.id AND o.profileId = :profileId AND o.mediaType = 'SERIES' AND o.contextKey = :contextKey
-2	app/src/main/java/tv/own/owntv/core/database/dao/CustomCategoryDao.kt	LEFT JOIN movies mv ON m.mediaType = 'MOVIE' AND m.itemId = mv.id
-2	app/src/main/java/tv/own/owntv/core/database/dao/CustomCategoryDao.kt	LEFT JOIN series s ON m.mediaType = 'SERIES' AND m.itemId = s.id
-1	app/src/main/java/tv/own/owntv/core/database/dao/CustomCategoryDao.kt	ORDER BY (CASE WHEN o.position IS NULL THEN 1 ELSE 0 END), o.position, m.position, c.sortOrder, c.name
-1	app/src/main/java/tv/own/owntv/core/database/dao/CustomCategoryDao.kt	ORDER BY (CASE WHEN o.position IS NULL THEN 1 ELSE 0 END), o.position, m.position, c.sortOrder, c.name LIMIT :limit
-1	app/src/main/java/tv/own/owntv/core/database/dao/CustomCategoryDao.kt	ORDER BY (CASE WHEN o.position IS NULL THEN 1 ELSE 0 END), o.position, m.position, mv.sortOrder, mv.name
-1	app/src/main/java/tv/own/owntv/core/database/dao/CustomCategoryDao.kt	ORDER BY (CASE WHEN o.position IS NULL THEN 1 ELSE 0 END), o.position, m.position, mv.sortOrder, mv.name LIMIT :limit
-1	app/src/main/java/tv/own/owntv/core/database/dao/CustomCategoryDao.kt	ORDER BY (CASE WHEN o.position IS NULL THEN 1 ELSE 0 END), o.position, m.position, s.sortOrder, s.name
-1	app/src/main/java/tv/own/owntv/core/database/dao/CustomCategoryDao.kt	ORDER BY (CASE WHEN o.position IS NULL THEN 1 ELSE 0 END), o.position, m.position, s.sortOrder, s.name LIMIT :limit
-1	app/src/main/java/tv/own/owntv/core/database/dao/CustomCategoryDao.kt	ORDER BY m.position, c.sortOrder, c.name
-1	app/src/main/java/tv/own/owntv/core/database/dao/CustomCategoryDao.kt	ORDER BY m.position, mv.sortOrder, mv.name
-1	app/src/main/java/tv/own/owntv/core/database/dao/CustomCategoryDao.kt	ORDER BY m.position, s.sortOrder, s.name
-1	app/src/main/java/tv/own/owntv/core/database/dao/CustomCategoryDao.kt	SELECT * FROM custom_category_members
-1	app/src/main/java/tv/own/owntv/core/database/dao/CustomCategoryDao.kt	SELECT CAST(c.sourceId AS TEXT) || ':' || COALESCE(c.remoteId, c.name)
-1	app/src/main/java/tv/own/owntv/core/database/dao/CustomCategoryDao.kt	SELECT CAST(mv.sourceId AS TEXT) || ':' || COALESCE(mv.remoteId, mv.name)
-1	app/src/main/java/tv/own/owntv/core/database/dao/CustomCategoryDao.kt	SELECT CAST(s.sourceId AS TEXT) || ':' || COALESCE(s.remoteId, s.name)
-1	app/src/main/java/tv/own/owntv/core/database/dao/CustomCategoryDao.kt	SELECT COALESCE(MAX(position), -1) FROM custom_category_members WHERE profileId = :profileId AND mediaType = :type AND contextKey = :contextKey
-1	app/src/main/java/tv/own/owntv/core/database/dao/CustomCategoryDao.kt	SELECT COUNT(*) FROM custom_category_members m
-1	app/src/main/java/tv/own/owntv/core/database/dao/CustomCategoryDao.kt	SELECT DISTINCT contextKey FROM custom_category_members WHERE profileId = :profileId AND mediaType = :type
-3	app/src/main/java/tv/own/owntv/core/database/dao/CustomCategoryDao.kt	SELECT c.* FROM channels c
-1	app/src/main/java/tv/own/owntv/core/database/dao/CustomCategoryDao.kt	SELECT contextKey, COUNT(*) AS count FROM custom_category_members
-1	app/src/main/java/tv/own/owntv/core/database/dao/CustomCategoryDao.kt	SELECT itemId FROM custom_category_members WHERE profileId = :profileId AND mediaType = :type AND contextKey = :contextKey
-1	app/src/main/java/tv/own/owntv/core/database/dao/CustomCategoryDao.kt	SELECT m.profileId AS profileId, m.mediaType AS mediaType, m.itemId AS itemId,
-3	app/src/main/java/tv/own/owntv/core/database/dao/CustomCategoryDao.kt	SELECT mv.* FROM movies mv
-3	app/src/main/java/tv/own/owntv/core/database/dao/CustomCategoryDao.kt	SELECT s.* FROM series s
-1	app/src/main/java/tv/own/owntv/core/database/dao/CustomCategoryDao.kt	WHERE c.sourceId = :sourceId OR mv.sourceId = :sourceId OR s.sourceId = :sourceId
-2	app/src/main/java/tv/own/owntv/core/database/dao/CustomCategoryDao.kt	WHERE c.sourceId IN (:sourceIds)
-1	app/src/main/java/tv/own/owntv/core/database/dao/CustomCategoryDao.kt	WHERE c.sourceId IN (:sourceIds) AND c.name LIKE '%' || :query || '%'
-1	app/src/main/java/tv/own/owntv/core/database/dao/CustomCategoryDao.kt	WHERE m.profileId = :profileId AND m.mediaType = 'LIVE' AND m.contextKey = :contextKey
-1	app/src/main/java/tv/own/owntv/core/database/dao/CustomCategoryDao.kt	WHERE m.profileId = :profileId AND m.mediaType = 'MOVIE' AND m.contextKey = :contextKey
-1	app/src/main/java/tv/own/owntv/core/database/dao/CustomCategoryDao.kt	WHERE m.profileId = :profileId AND m.mediaType = 'SERIES' AND m.contextKey = :contextKey
-1	app/src/main/java/tv/own/owntv/core/database/dao/CustomCategoryDao.kt	WHERE m.profileId = :profileId AND m.mediaType = :type AND m.contextKey = :contextKey
-2	app/src/main/java/tv/own/owntv/core/database/dao/CustomCategoryDao.kt	WHERE mv.sourceId IN (:sourceIds)
-1	app/src/main/java/tv/own/owntv/core/database/dao/CustomCategoryDao.kt	WHERE mv.sourceId IN (:sourceIds) AND mv.name LIKE '%' || :query || '%'
-1	app/src/main/java/tv/own/owntv/core/database/dao/CustomCategoryDao.kt	WHERE profileId = :profileId AND mediaType = :type AND contextKey IN (:contextKeys) AND (
-2	app/src/main/java/tv/own/owntv/core/database/dao/CustomCategoryDao.kt	WHERE s.sourceId IN (:sourceIds)
-1	app/src/main/java/tv/own/owntv/core/database/dao/CustomCategoryDao.kt	WHERE s.sourceId IN (:sourceIds) AND s.name LIKE '%' || :query || '%'
-1	app/src/main/java/tv/own/owntv/core/database/dao/PlaybackPrefsDao.kt	DELETE FROM playback_prefs WHERE zoomMode IS NULL AND volumeBoost IS NULL AND audioDelayMs IS NULL
-1	app/src/main/java/tv/own/owntv/core/database/dao/PlaybackPrefsDao.kt	SELECT COUNT(*) FROM playback_prefs WHERE audioDelayMs IS NOT NULL
-1	app/src/main/java/tv/own/owntv/core/database/dao/PlaybackPrefsDao.kt	UPDATE playback_prefs SET audioDelayMs = NULL
-1	app/src/main/java/tv/own/owntv/core/database/dao/SourceDao.kt	UPDATE sources SET liveEnginePreference = :preference WHERE id = :id
-1	app/src/main/java/tv/own/owntv/core/database/dao/SourceDao.kt	UPDATE sources SET liveLatencyMode = :mode, liveLatencyCustomSecs = :customSecs WHERE id = :id
-1	app/src/main/java/tv/own/owntv/core/database/dao/SourceDao.kt	UPDATE sources SET preferHls = :preferHls WHERE id = :id
-1	app/src/main/java/tv/own/owntv/core/database/entity/ContentEntities.kt	.m3u8
-1	app/src/main/java/tv/own/owntv/core/database/entity/ContentEntities.kt	.ts
-2	app/src/main/java/tv/own/owntv/core/database/entity/UserDataEntities.kt	contextKey
-1	app/src/main/java/tv/own/owntv/core/database/entity/UserDataEntities.kt	custom_category_members
-1	app/src/main/java/tv/own/owntv/core/database/entity/UserDataEntities.kt	itemId
-2	app/src/main/java/tv/own/owntv/core/database/entity/UserDataEntities.kt	mediaType
-1	app/src/main/java/tv/own/owntv/core/metadata/MetadataBudget.kt	day_count
-1	app/src/main/java/tv/own/owntv/core/metadata/MetadataBudget.kt	day_start
-1	app/src/main/java/tv/own/owntv/core/metadata/MetadataBudget.kt	hour_count
-1	app/src/main/java/tv/own/owntv/core/metadata/MetadataBudget.kt	hour_start
-1	app/src/main/java/tv/own/owntv/core/metadata/MetadataBudget.kt	minute_count
-1	app/src/main/java/tv/own/owntv/core/metadata/MetadataBudget.kt	minute_start
-1	app/src/main/java/tv/own/owntv/core/metadata/MetadataBudget.kt	owntv_metadata_budget
-1	app/src/main/java/tv/own/owntv/core/metadata/MetadataCast.kt	n
-1	app/src/main/java/tv/own/owntv/core/metadata/MetadataCast.kt	null
-1	app/src/main/java/tv/own/owntv/core/metadata/MetadataCast.kt	p
-1	app/src/main/java/tv/own/owntv/core/metadata/MetadataImages.kt	${TmdbProvider.IMAGE_BASE}/$size${it.ensureLeadingSlash()}
-1	app/src/main/java/tv/own/owntv/core/metadata/MetadataImages.kt	w185
-6	app/src/main/java/tv/own/owntv/core/metadata/MetadataRepository.kt	\0
-1	app/src/main/java/tv/own/owntv/core/metadata/MetadataRepository.kt	$TYPE_MOVIE:$lang:$tmdbId
-1	app/src/main/java/tv/own/owntv/core/metadata/MetadataRepository.kt	$TYPE_TV:$lang:$tmdbId
-1	app/src/main/java/tv/own/owntv/core/metadata/MetadataRepository.kt	$TYPE_TV:$lang:$tvId:s${season}e$episode
-1	app/src/main/java/tv/own/owntv/core/metadata/OwnTVClientId.kt	\0
-1	app/src/main/java/tv/own/owntv/core/metadata/OwnTVClientId.kt	%02x
-1	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	&api_key=
-1	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	,
-1	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	TMDB $label failed: ${it.message}
-1	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	Trending type=$type page=$page
-1	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	metadata allowance spent, skipping $label
-1	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	movie details id=$tmdbId
-1	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	null
-1	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	profile_path
-1	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	search type=$type
-1	app/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	tv details id=$tmdbId
-3	app/src/main/java/tv/own/owntv/core/network/DnsConfig.kt	\0
-1	app/src/main/java/tv/own/owntv/core/network/DnsConfig.kt	${dohUrl.trimEnd('/')}?name=$hostname&type=$type
-1	app/src/main/java/tv/own/owntv/core/network/DnsConfig.kt	A
-1	app/src/main/java/tv/own/owntv/core/network/DnsConfig.kt	AAAA
-1	app/src/main/java/tv/own/owntv/core/network/DnsConfig.kt	Accept
-1	app/src/main/java/tv/own/owntv/core/network/DnsConfig.kt	Answer
-1	app/src/main/java/tv/own/owntv/core/network/DnsConfig.kt	Cloudflare
-1	app/src/main/java/tv/own/owntv/core/network/DnsConfig.kt	DnsConfig
-1	app/src/main/java/tv/own/owntv/core/network/DnsConfig.kt	DoH HTTP ${resp.code}
-1	app/src/main/java/tv/own/owntv/core/network/DnsConfig.kt	DoH lookup $hostname → ${results.map { it.hostAddress }} (server=$dohUrl)
-1	app/src/main/java/tv/own/owntv/core/network/DnsConfig.kt	Google
-1	app/src/main/java/tv/own/owntv/core/network/DnsConfig.kt	Quad9
-1	app/src/main/java/tv/own/owntv/core/network/DnsConfig.kt	UDP DNS lookup $hostname → ${result.map { it.hostAddress }} (server=$server:$port)
-1	app/src/main/java/tv/own/owntv/core/network/DnsConfig.kt	application/dns-json
-1	app/src/main/java/tv/own/owntv/core/network/DnsConfig.kt	data
-1	app/src/main/java/tv/own/owntv/core/network/DnsConfig.kt	https://cloudflare-dns.com/dns-query
-1	app/src/main/java/tv/own/owntv/core/network/DnsConfig.kt	https://dns.google/dns-query
-1	app/src/main/java/tv/own/owntv/core/network/DnsConfig.kt	https://dns.quad9.net/dns-query
-1	app/src/main/java/tv/own/owntv/core/network/HttpClient.kt	Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0 Safari/537.36
-1	app/src/main/java/tv/own/owntv/core/parser/XtreamClient.kt	${base(s)}/timeshift/${s.username}/${s.password}/$durationMinutes/${fmt.format(java.util.Date(startMs))}/$streamId.$ext
-1	app/src/main/java/tv/own/owntv/core/parser/XtreamClient.kt	allowed_output_formats
-1	app/src/main/java/tv/own/owntv/core/parser/XtreamClient.kt	fetchAccountDetails failed for source ${s.id}
-2	app/src/main/java/tv/own/owntv/core/parser/XtreamClient.kt	m3u8
-1	app/src/main/java/tv/own/owntv/core/parser/XtreamClient.kt	ts
-1	app/src/main/java/tv/own/owntv/core/parser/XtreamClient.kt	user_output_formats
-1	app/src/main/java/tv/own/owntv/core/subtitles/OpenSubtitlesClient.kt	$method ${pathAndQuery.substringBefore('?')} via $base -> ${e.javaClass.simpleName}: ${e.message}
-1	app/src/main/java/tv/own/owntv/core/subtitles/OpenSubtitlesClient.kt	$method ${pathAndQuery.substringBefore('?')} via $base -> HTTP ${resp.code}
-1	app/src/main/java/tv/own/owntv/core/sync/work/TrendingRefreshWorker.kt	Playlist
-1	app/src/main/java/tv/own/owntv/core/util/CrashRecorder.kt	${Build.MANUFACTURER} ${Build.MODEL} · Android ${Build.VERSION.RELEASE} (API ${Build.VERSION.SDK_INT})
-1	app/src/main/java/tv/own/owntv/core/util/CrashRecorder.kt	--- live diagnostics leading up to the crash ---
 2	app/src/main/java/tv/own/owntv/features/customize/BulkRenameDialogs.kt	\0
 1	app/src/main/java/tv/own/owntv/features/customize/BulkRenameDialogs.kt	ADD
 1	app/src/main/java/tv/own/owntv/features/customize/BulkRenameDialogs.kt	PREFIX
@@ -288,68 +54,11 @@
 1	app/src/main/java/tv/own/owntv/features/settings/VideoPlayerSettingsScreen.kt	+
 1	app/src/main/java/tv/own/owntv/features/settings/VideoPlayerSettingsScreen.kt	FFFFFF
 1	app/src/main/java/tv/own/owntv/features/settings/VideoPlayerSettingsScreen.kt	–
-1	app/src/main/java/tv/own/owntv/features/settings/data/SettingsRepository.kt	auto_frame_rate_reset_416
-1	app/src/main/java/tv/own/owntv/features/settings/data/SettingsRepository.kt	dns_doh_url
-1	app/src/main/java/tv/own/owntv/features/settings/data/SettingsRepository.kt	dns_enabled
-1	app/src/main/java/tv/own/owntv/features/settings/data/SettingsRepository.kt	dns_host
-1	app/src/main/java/tv/own/owntv/features/settings/data/SettingsRepository.kt	dns_port
-1	app/src/main/java/tv/own/owntv/features/settings/data/SettingsRepository.kt	focus_highlight_color
-1	app/src/main/java/tv/own/owntv/features/settings/data/SettingsRepository.kt	focus_highlight_width
-1	app/src/main/java/tv/own/owntv/features/settings/data/SettingsRepository.kt	live_latency_reset_416
-1	app/src/main/java/tv/own/owntv/features/settings/data/SettingsRepository.kt	sub_bg_opacity
-1	app/src/main/java/tv/own/owntv/features/settings/data/SettingsRepository.kt	sub_color
-1	app/src/main/java/tv/own/owntv/features/settings/data/SettingsRepository.kt	sub_position
-1	app/src/main/java/tv/own/owntv/features/settings/data/SettingsRepository.kt	sub_style_enabled
-1	app/src/main/java/tv/own/owntv/features/settings/data/SubtitleStyle.kt	\0
-1	app/src/main/java/tv/own/owntv/features/settings/data/SubtitleStyle.kt	#
-2	app/src/main/java/tv/own/owntv/features/settings/data/SubtitleStyle.kt	#%08X
-1	app/src/main/java/tv/own/owntv/features/settings/data/SubtitleStyle.kt	bottom_center
-1	app/src/main/java/tv/own/owntv/features/settings/data/SubtitleStyle.kt	bottom_left
-1	app/src/main/java/tv/own/owntv/features/settings/data/SubtitleStyle.kt	bottom_right
-1	app/src/main/java/tv/own/owntv/features/settings/data/SubtitleStyle.kt	center
-1	app/src/main/java/tv/own/owntv/features/settings/data/SubtitleStyle.kt	default
-1	app/src/main/java/tv/own/owntv/features/settings/data/SubtitleStyle.kt	left
-1	app/src/main/java/tv/own/owntv/features/settings/data/SubtitleStyle.kt	right
-1	app/src/main/java/tv/own/owntv/features/settings/data/SubtitleStyle.kt	top_center
-1	app/src/main/java/tv/own/owntv/features/settings/data/SubtitleStyle.kt	top_left
-1	app/src/main/java/tv/own/owntv/features/settings/data/SubtitleStyle.kt	top_right
 1	app/src/main/java/tv/own/owntv/features/shell/OwnTVShell.kt	\0
 1	app/src/main/java/tv/own/owntv/features/shell/ShellViewModel.kt	\0
 1	app/src/main/java/tv/own/owntv/features/shell/components/MediaDetailsScreen.kt	\0
 6	app/src/main/java/tv/own/owntv/features/shell/components/SettingsScreen.kt	#
-3	app/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	\0
-1	app/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	Content-Type
-1	app/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	HLS
-1	app/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	MPEG-TS
-1	app/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	body="$failureText"
-1	app/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	decoder failed before first frame (${error.errorCodeName}) — rebuilding the decoder and retrying once
-1	app/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	decoder rebuild failed: ${it.message}
-1	app/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	default User-Agent refused — retrying once as ${HttpClient.FALLBACK_USER_AGENT}
-1	app/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	html
-1	app/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	provider refused the default User-Agent — retrying as ${HttpClient.FALLBACK_USER_AGENT}
-1	app/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	stream didn't open — trying the ${alt.substringBefore('?').substringAfterLast('.')} form of this channel
-1	app/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	trying alternate format: ${HttpClient.redactUrl(alt)}
-4	app/src/main/java/tv/own/owntv/player/LiveStreamQuirks.kt	.m3u8
-3	app/src/main/java/tv/own/owntv/player/LiveStreamQuirks.kt	.ts
 1	app/src/main/java/tv/own/owntv/player/MpvVideoSurface.kt	DEPRECATION
-1	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	#00000000
-1	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	#FFFFFFFF
-1	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	HLS
-1	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	MPEG-TS
-1	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	demuxer
-1	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	file-format
-2	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	force
-1	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	hls
-1	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	mpegts
-1	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	playback failed — retrying once as ${HttpClient.FALLBACK_USER_AGENT}
-2	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	sub-align-x
-2	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	sub-ass-override
-2	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	sub-back-color
-2	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	sub-color
-2	app/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	sub-pos
-1	app/src/main/java/tv/own/owntv/player/PlayerDiagnostics.kt	\0
-1	app/src/main/java/tv/own/owntv/player/PlayerDiagnostics.kt	429
-1	app/src/main/java/tv/own/owntv/player/PlayerDiagnostics.kt	458
 1	app/src/main/java/tv/own/owntv/ui/components/ColorPicker.kt	#%06X
 1	app/src/main/java/tv/own/owntv/ui/components/TextInputDialog.kt	\0
 1	app/src/main/java/tv/own/owntv/ui/components/TvImeMetrics.kt	$trigger visible=${next.visible} source=${next.source} displayH=$displayHeight
@@ -364,3 +73,294 @@
 1	app/src/main/java/tv/own/owntv/ui/components/TvImeMetrics.kt	owntv_ime_calibration
 1	app/src/main/java/tv/own/owntv/ui/components/TvImeMetrics.kt	poll
 1	app/src/main/java/tv/own/owntv/ui/components/TvImeMetrics.kt	requested
+1	core/src/main/java/tv/own/owntv/core/backup/BackupManager.kt	$mapped:${contextKey.substringAfter(':')}
+3	core/src/main/java/tv/own/owntv/core/backup/BackupManager.kt	ctx
+3	core/src/main/java/tv/own/owntv/core/backup/BackupManager.kt	d
+2	core/src/main/java/tv/own/owntv/core/backup/BackupManager.kt	member
+1	core/src/main/java/tv/own/owntv/core/backup/BackupManager.kt	movedFrom
+4	core/src/main/java/tv/own/owntv/core/backup/BackupManager.kt	opensub_api_key_enc
+1	core/src/main/java/tv/own/owntv/core/backup/BackupManager.kt	settings
+1	core/src/main/java/tv/own/owntv/core/backup/BackupManager.kt	sort
+3	core/src/main/java/tv/own/owntv/core/backup/UserDataResolver.kt	ctx
+2	core/src/main/java/tv/own/owntv/core/backup/UserDataResolver.kt	kind
+8	core/src/main/java/tv/own/owntv/core/backup/UserDataResolver.kt	member
+1	core/src/main/java/tv/own/owntv/core/backup/UserDataResolver.kt	name
+1	core/src/main/java/tv/own/owntv/core/backup/UserDataResolver.kt	oid
+2	core/src/main/java/tv/own/owntv/core/backup/UserDataResolver.kt	p
+3	core/src/main/java/tv/own/owntv/core/backup/UserDataResolver.kt	pos
+1	core/src/main/java/tv/own/owntv/core/backup/UserDataResolver.kt	rid
+1	core/src/main/java/tv/own/owntv/core/backup/UserDataResolver.kt	src
+1	core/src/main/java/tv/own/owntv/core/backup/UserDataResolver.kt	t
+1	core/src/main/java/tv/own/owntv/core/catalog/ProviderCatalogMetadata.kt	2.0 Audio
+1	core/src/main/java/tv/own/owntv/core/catalog/ProviderCatalogMetadata.kt	5.1 Audio
+1	core/src/main/java/tv/own/owntv/core/catalog/ProviderCatalogMetadata.kt	7.1 Audio
+2	core/src/main/java/tv/own/owntv/core/companion/CompanionController.kt	\0
+1	core/src/main/java/tv/own/owntv/core/companion/CompanionController.kt	Failed to save uploaded playlist
+1	core/src/main/java/tv/own/owntv/core/companion/CompanionController.kt	Saved uploaded playlist (${file.length()} bytes) → ${file.name}
+1	core/src/main/java/tv/own/owntv/core/companion/CompanionController.kt	companion-playlists
+1	core/src/main/java/tv/own/owntv/core/companion/CompanionController.kt	playlist-${System.currentTimeMillis()}.m3u
+2	core/src/main/java/tv/own/owntv/core/companion/CompanionHtml.kt	\0
+1	core/src/main/java/tv/own/owntv/core/companion/CompanionHtml.kt	%1$d
+1	core/src/main/java/tv/own/owntv/core/companion/CompanionHtml.kt	,username:(document.getElementById('user').value||''),password:(document.getElementById('pass').value||'')
+1	core/src/main/java/tv/own/owntv/core/companion/CompanionHtml.kt	<div class="card"> <h1>${c.addHeading.h()}</h1> <p>${c.addDescription.h()}</p> <div class="tabs"> <button type="button" class="tab active" data-k="xtream">${c.xtream.h()}</button> <button type="button" class="tab" data-k="m3u">${c.m3u.h()}</button> <button type="button" class="tab" data-k="stalker">${c.stalker.h()}</button> </div> <form class="panel active" data-k="xtream" method="post" action="/xtream?pin=$pin"> <input type="hidden" name="type" value="xtream"> <div class="grid"> <label>${c.name.h()} <input name="name" placeholder="${c.defaultIptv.h()}"></label> ${autoRefreshSelect(c)} </div> <label>${c.serverUrl.h()} <input name="server" placeholder="${c.serverExample.h()}" required></label> <div class="grid"> <label>${c.username.h()} <input name="user" autocomplete="username" required></label> <label>${c.password.h()} <input name="pass" type="password" autocomplete="current-password" required></label> </div> <label>${c.userAgent.h()} <input name="userAgent" placeholder="${c.optional.h()}"></label> <label>${c.epgUrl.h()} <input name="epgUrl" placeholder="${c.optional.h()}"></label> <p class="hint">${c.syncXtreamHint.h()}</p> <div class="grid"> ${scopeSelect(c, "syncLive", c.live)} ${scopeSelect(c, "syncMovies", c.movies)} ${scopeSelect(c, "syncSeries", c.series)} </div> <input type="hidden" name="isDefault" value="false"> <label class="check"><input type="checkbox" name="isDefault" value="true"> ${c.defaultPlaylistLabel.h()}</label> <button class="go" type="submit">${c.sendToTv.h()}</button> </form> <form class="panel" id="m3uForm" data-k="m3u" method="post" action="/m3u?pin=$pin"> <input type="hidden" name="type" value="m3u"> <div class="grid"> <label>${c.name.h()} <input name="name" placeholder="${c.defaultPlaylist.h()}"></label> ${autoRefreshSelect(c)} </div> <label>${c.playlistUrl.h()} <input id="m3uUrl" name="server" placeholder="${c.playlistExample.h()}"></label> <label>${c.playlistFile.h()} <input id="m3uFile" type="file" accept=".m3u,.m3u8,audio/x-mpegurl,application/vnd.apple.mpegurl,text/plain"></label> <label>${c.userAgent.h()} <input name="userAgent" placeholder="${c.optional.h()}"></label> <label>${c.epgUrl.h()} <input name="epgUrl" placeholder="${c.optional.h()}"></label> <input type="hidden" name="isDefault" value="false"> <label class="check"><input type="checkbox" name="isDefault" value="true"> ${c.defaultPlaylistLabel.h()}</label> <button class="go" id="m3uSend" type="submit">${c.sendToTv.h()}</button> <p id="m3uStatus" class="hint"></p> </form> <form class="panel" data-k="stalker" method="post" action="/stalker?pin=$pin"> <input type="hidden" name="type" value="stalker"> <div class="grid"> <label>${c.name.h()} <input name="name" placeholder="${c.defaultPortal.h()}"></label> ${autoRefreshSelect(c)} </div> <label>${c.portalUrl.h()} <input name="portalUrl" placeholder="${c.portalExample.h()}" required></label> <label>${context.getString(R.string.setup_mac_address).h()} <input name="mac" placeholder="${context.getString(R.string.setup_mac_example).h()}" required></label> <h3>${context.getString(R.string.setup_stalker_advanced_identity).h()}</h3> <div class="grid"> <label>${context.getString(R.string.setup_stalker_serial_number_optional).h()} <input name="serialNumber"></label> <label>${context.getString(R.string.setup_stalker_device_id_optional).h()} <input name="deviceId"></label> <label>${context.getString(R.string.setup_stalker_device_id2_optional).h()} <input name="deviceId2"></label> <label>${context.getString(R.string.setup_stalker_signature_optional).h()} <input name="signature"></label> </div> <label>${c.userAgent.h()} <input name="userAgent" placeholder="${c.optional.h()}"></label> <p class="hint">${c.syncStalkerHint.h()}</p> <div class="grid"> ${scopeSelect(c, "syncLive", c.live, "now")} ${scopeSelect(c, "syncMovies", c.movies, "later")} ${scopeSelect(c, "syncSeries", c.series, "later")} </div> <input type="hidden" name="isDefault" value="false"> <label class="check"><input type="checkbox" name="isDefault" value="true"> ${c.defaultPlaylistLabel.h()}</label> <button class="go" type="submit">${c.sendToTv.h()}</button> </form> </div> <script> var tabs=document.querySelectorAll('.tab'), panels=document.querySelectorAll('.panel'); tabs.forEach(function(t){t.addEventListener('click',function(){ var k=t.getAttribute('data-k'); tabs.forEach(function(x){x.classList.toggle('active',x===t)}); panels.forEach(function(p){p.classList.toggle('active',p.getAttribute('data-k')===k)}); });}); // M3U panel only. With no file chosen this stays a plain form post, exactly as before. // With a file chosen the browser reads it as text and posts it as JSON, because a file // input cannot travel in a normal urlencoded body and the TV has no multipart parser. var mf=document.getElementById('m3uFile'), mu=document.getElementById('m3uUrl'), mb=document.getElementById('m3uSend'), ms=document.getElementById('m3uStatus'); document.getElementById('m3uForm').addEventListener('submit',function(ev){ var file=mf.files&&mf.files[0]; if(!file){ if(!(mu.value||'').trim()){ms.textContent=${c.playlistUrlOrFile.js()};ev.preventDefault();return false;} return true; // URL only — let the browser submit the form the old way. } ev.preventDefault(); mb.disabled=true; ms.textContent=${c.sending.js()}; var body={}; new FormData(document.getElementById('m3uForm')).forEach(function(v,k){body[k]=v;}); var r=new FileReader(); r.onload=function(){ body.playlistFile=r.result; body.playlistFileName=file.name; fetch('/m3u?pin=$pin',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)}) .then(function(res){ if(res.ok){document.open();res.text().then(function(t){document.write(t);document.close();});} else{mb.disabled=false;ms.textContent=${c.uploadFailed.js()}.replace('__STATUS__',String(res.status));} }) .catch(function(){mb.disabled=false;ms.textContent=${c.couldNotReach.js()};}); }; r.onerror=function(){mb.disabled=false;ms.textContent=${c.couldNotRead.js()};}; r.readAsText(file); return false; }); </script>
+1	core/src/main/java/tv/own/owntv/core/companion/CompanionHtml.kt	<div class="card"> <h1>${c.tmdbHeading.h()}</h1> <p>${c.tmdbDescription.h()}</p> <p><a href="https://www.themoviedb.org/settings/api" target="_blank" rel="noopener">${c.tmdbGetKey.h()}</a></p> <form id="f" onsubmit="return false"> <label>${c.tmdbKeyLabel.h()} <input id="key" type="text" autocomplete="off" autocapitalize="off" spellcheck="false" required></label> <button class="go" id="send" type="submit">${c.sendToTv.h()}</button> </form> <p id="status" class="hint"></p> </div> <script> var k=document.getElementById('key'), b=document.getElementById('send'), s=document.getElementById('status'); document.getElementById('f').addEventListener('submit',function(){ var v=(k.value||'').trim(); // Mirror of the server-side check, purely so a typo is caught before a round trip. if(!/^[A-Za-z0-9._-]{16,128}$/.test(v)){s.textContent=${c.tmdbInvalid.js()};return false;} b.disabled=true; s.textContent=${c.sending.js()}; fetch('/tmdbkey?pin=$pin',{method:'POST',headers:{'Content-Type':'text/plain'},body:v}) .then(function(res){ if(res.ok){document.open();res.text().then(function(t){document.write(t);document.close();});} else{b.disabled=false;s.textContent=${c.uploadFailed.js()}.replace('__STATUS__',String(res.status));} }) .catch(function(){b.disabled=false;s.textContent=${c.couldNotReach.js()};}); return false; }); </script>
+1	core/src/main/java/tv/own/owntv/core/companion/CompanionHtml.kt	<div class="card"> <h1>${title.h()}</h1><p>${description.h()}</p> <form id="f" onsubmit="return false"> $credentialFields <label>${keyLabel.h()} <input id="key" type="text" autocomplete="off" autocapitalize="off" spellcheck="false"></label> <label>${urlLabel.h()} <input id="url" type="url" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="https://"></label> <button class="go" id="send" type="submit">${send.h()}</button> </form><p id="status" class="hint"></p> </div> <script> var k=document.getElementById('key'),u=document.getElementById('url'),b=document.getElementById('send'),s=document.getElementById('status'); document.getElementById('f').addEventListener('submit',function(){ var body=new URLSearchParams({apiKey:(k.value||'').trim(),serverUrl:(u.value||'').trim()$credentialBody}).toString(); b.disabled=true;s.textContent=${sending.js()}; fetch('/serviceconfig?pin=$pin',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:body}) .then(function(res){if(res.ok){return res.text().then(function(t){document.open();document.write(t);document.close();});}b.disabled=false;s.textContent=${failed.js()}.replace('__STATUS__',String(res.status));}) .catch(function(){b.disabled=false;s.textContent=${unreachable.js()};});return false; }); </script>
+1	core/src/main/java/tv/own/owntv/core/companion/CompanionHtml.kt	<div class="card"><h1>${c.savedHeading.h()}</h1> <p>${c.tmdbSentBody.h()}</p><p><a href="/?pin=$pin">${c.tmdbSentLink.h()}</a></p> </div>
+1	core/src/main/java/tv/own/owntv/core/companion/CompanionHtml.kt	<div class="card"><h1>${c.savedHeading.h()}</h1> <p>${context.getString(R.string.companion_service_config_sent).h()}</p> <p><a href="/?pin=$pin">${context.getString(R.string.companion_service_config_again).h()}</a></p> </div>
+1	core/src/main/java/tv/own/owntv/core/companion/CompanionHtml.kt	<label>${context.getString(R.string.player_subtitles_username).h()} <input id="user" type="text" autocomplete="username" autocapitalize="off" spellcheck="false"></label> <label>${context.getString(R.string.player_subtitles_password).h()} <input id="pass" type="password" autocomplete="current-password"></label>
+1	core/src/main/java/tv/own/owntv/core/companion/CompanionHtml.kt	__STATUS__
+1	core/src/main/java/tv/own/owntv/core/companion/CompanionHttpProtocol.kt	/m3u
+1	core/src/main/java/tv/own/owntv/core/companion/CompanionHttpProtocol.kt	playlistFile
+1	core/src/main/java/tv/own/owntv/core/companion/CompanionHttpProtocol.kt	playlistFileName
+1	core/src/main/java/tv/own/owntv/core/companion/CompanionHttpProtocol.kt	playlist_file
+1	core/src/main/java/tv/own/owntv/core/companion/CompanionHttpProtocol.kt	playlist_file_name
+2	core/src/main/java/tv/own/owntv/core/companion/CompanionHttpServer.kt	\0
+1	core/src/main/java/tv/own/owntv/core/companion/CompanionHttpServer.kt	/serviceconfig
+1	core/src/main/java/tv/own/owntv/core/companion/CompanionHttpServer.kt	/tmdbkey
+2	core/src/main/java/tv/own/owntv/core/companion/CompanionHttpServer.kt	POST
+1	core/src/main/java/tv/own/owntv/core/companion/CompanionHttpServer.kt	^[A-Za-z0-9._-]{8,256}$
+1	core/src/main/java/tv/own/owntv/core/companion/CompanionHttpServer.kt	apiKey
+1	core/src/main/java/tv/own/owntv/core/companion/CompanionHttpServer.kt	https
+1	core/src/main/java/tv/own/owntv/core/companion/CompanionHttpServer.kt	password
+1	core/src/main/java/tv/own/owntv/core/companion/CompanionHttpServer.kt	serverUrl
+1	core/src/main/java/tv/own/owntv/core/companion/CompanionHttpServer.kt	username
+2	core/src/main/java/tv/own/owntv/core/companion/CompanionHttpServer.kt	x-companion-pin
+2	core/src/main/java/tv/own/owntv/core/companion/CompanionMode.kt	\0
+2	core/src/main/java/tv/own/owntv/core/companion/CompanionPayload.kt	\0
+1	core/src/main/java/tv/own/owntv/core/customize/CustomizationStore.kt	${CustomizeKeys.CUSTOM_PREFIX}${UUID.randomUUID()}
+1	core/src/main/java/tv/own/owntv/core/customize/CustomizationStore.kt	custom:
+2	core/src/main/java/tv/own/owntv/core/customize/CustomizationStore.kt	customCats
+2	core/src/main/java/tv/own/owntv/core/customize/CustomizationStore.kt	icon
+2	core/src/main/java/tv/own/owntv/core/customize/CustomizationStore.kt	id
+2	core/src/main/java/tv/own/owntv/core/customize/CustomizationStore.kt	movedFrom
+2	core/src/main/java/tv/own/owntv/core/customize/CustomizationStore.kt	name
+6	core/src/main/java/tv/own/owntv/core/customize/RenameRules.kt	\0
+1	core/src/main/java/tv/own/owntv/core/customize/RenameRules.kt	${EDGE_SEPARATORS}\\z
+1	core/src/main/java/tv/own/owntv/core/customize/RenameRules.kt	(?:[\\x{2190}-\\x{21FF}\\x{2300}-\\x{23FF}\\x{25A0}-\\x{25FF}\\x{2600}-\\x{27BF}
+1	core/src/main/java/tv/own/owntv/core/customize/RenameRules.kt	(?:\\[$escaped\\]|\\($escaped\\)|$escaped)
+1	core/src/main/java/tv/own/owntv/core/customize/RenameRules.kt	(?:\\[|\\()?\\b(?:4K|8K|UHD|FHD|HD|SD|RAW|VIP|HEVC|H265|H264|DOLBY|MULTI|QHD|2K|HDR|DV|2160P|2160|1080P|1080|720P|720|480P|480)\\b(?:\\]|\\))?
+1	core/src/main/java/tv/own/owntv/core/customize/RenameRules.kt	(?<![\\p{L}\\p{N}])$wrapped$
+1	core/src/main/java/tv/own/owntv/core/customize/RenameRules.kt	;
+1	core/src/main/java/tv/own/owntv/core/customize/RenameRules.kt	[\\s|\\-–—·:._,]+
+1	core/src/main/java/tv/own/owntv/core/customize/RenameRules.kt	\\x{2B00}-\\x{2BFF}\\x{FE0F}\\x{1F000}-\\x{1FAFF}\\x{1F1E6}-\\x{1F1FF}])+
+1	core/src/main/java/tv/own/owntv/core/customize/RenameRules.kt	^$EDGE_SEPARATORS
+1	core/src/main/java/tv/own/owntv/core/customize/RenameRules.kt	^$wrapped(?![\\p{L}\\p{N}])
+1	core/src/main/java/tv/own/owntv/core/customize/RenameRules.kt	^(?:\\|?[A-Za-z]{2,4}\\s*\\||\\[[A-Za-z]{2,4}]|\\([A-Za-z]{2,4}\\))
+1	core/src/main/java/tv/own/owntv/core/customize/RenameRules.kt	{2,}
+1	core/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	ALTER TABLE `playback_prefs` ADD COLUMN `audioDelayMs` INTEGER
+1	core/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	ALTER TABLE `sources` ADD COLUMN `hlsSupported` INTEGER NOT NULL DEFAULT 0
+1	core/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	ALTER TABLE `sources` ADD COLUMN `liveEnginePreference` TEXT
+1	core/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	ALTER TABLE `sources` ADD COLUMN `liveLatencyCustomSecs` INTEGER NOT NULL DEFAULT -1
+1	core/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	ALTER TABLE `sources` ADD COLUMN `liveLatencyMode` TEXT
+1	core/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	ALTER TABLE `sources` ADD COLUMN `preferHls` INTEGER NOT NULL DEFAULT 0
+1	core/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	CREATE INDEX IF NOT EXISTS `index_custom_category_members_profileId_mediaType_contextKey` ON `custom_category_members` (`profileId`, `mediaType`, `contextKey`)
+1	core/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	CREATE INDEX IF NOT EXISTS `index_custom_category_members_profileId` ON `custom_category_members` (`profileId`)
+1	core/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	CREATE TABLE IF NOT EXISTS `custom_category_members` (
+1	core/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	CREATE UNIQUE INDEX IF NOT EXISTS `index_custom_category_members_profileId_mediaType_contextKey_itemId` ON `custom_category_members` (`profileId`, `mediaType`, `contextKey`, `itemId`)
+1	core/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	`contextKey` TEXT NOT NULL,
+1	core/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+1	core/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	`itemId` INTEGER NOT NULL,
+1	core/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	`mediaType` TEXT NOT NULL,
+1	core/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	`position` INTEGER NOT NULL,
+1	core/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	audioDelayMs
+1	core/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	hlsSupported
+1	core/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	liveEnginePreference
+1	core/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	liveLatencyCustomSecs
+1	core/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	liveLatencyMode
+1	core/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	playback_prefs
+1	core/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	preferHls
+5	core/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	sources
+1	core/src/main/java/tv/own/owntv/core/database/dao/ChannelDao.kt	SELECT COUNT(*) FROM channels WHERE sourceId IN (:sourceIds) AND catchup = 1
+1	core/src/main/java/tv/own/owntv/core/database/dao/CustomCategoryDao.kt	(:type = 'LIVE' AND itemId IN (SELECT id FROM channels WHERE sourceId IN (:sourceIds))) OR
+1	core/src/main/java/tv/own/owntv/core/database/dao/CustomCategoryDao.kt	(:type = 'LIVE' AND itemId NOT IN (SELECT id FROM channels)) OR
+1	core/src/main/java/tv/own/owntv/core/database/dao/CustomCategoryDao.kt	(:type = 'MOVIE' AND itemId IN (SELECT id FROM movies WHERE sourceId IN (:sourceIds))) OR
+1	core/src/main/java/tv/own/owntv/core/database/dao/CustomCategoryDao.kt	(:type = 'MOVIE' AND itemId NOT IN (SELECT id FROM movies)) OR
+1	core/src/main/java/tv/own/owntv/core/database/dao/CustomCategoryDao.kt	(:type = 'SERIES' AND itemId IN (SELECT id FROM series WHERE sourceId IN (:sourceIds)))
+1	core/src/main/java/tv/own/owntv/core/database/dao/CustomCategoryDao.kt	(:type = 'SERIES' AND itemId NOT IN (SELECT id FROM series))
+1	core/src/main/java/tv/own/owntv/core/database/dao/CustomCategoryDao.kt	(mediaType = 'LIVE' AND itemId NOT IN (SELECT id FROM channels)) OR
+1	core/src/main/java/tv/own/owntv/core/database/dao/CustomCategoryDao.kt	(mediaType = 'MOVIE' AND itemId NOT IN (SELECT id FROM movies)) OR
+1	core/src/main/java/tv/own/owntv/core/database/dao/CustomCategoryDao.kt	(mediaType = 'SERIES' AND itemId NOT IN (SELECT id FROM series))
+1	core/src/main/java/tv/own/owntv/core/database/dao/CustomCategoryDao.kt	)
+1	core/src/main/java/tv/own/owntv/core/database/dao/CustomCategoryDao.kt	) GROUP BY contextKey
+1	core/src/main/java/tv/own/owntv/core/database/dao/CustomCategoryDao.kt	AND COALESCE(c.sourceId, mv.sourceId, s.sourceId) IN (:sourceIds)
+1	core/src/main/java/tv/own/owntv/core/database/dao/CustomCategoryDao.kt	COALESCE(c.name, mv.name, s.name) AS name
+1	core/src/main/java/tv/own/owntv/core/database/dao/CustomCategoryDao.kt	COALESCE(c.remoteId, mv.remoteId, s.remoteId) AS remoteId,
+1	core/src/main/java/tv/own/owntv/core/database/dao/CustomCategoryDao.kt	COALESCE(c.sourceId, mv.sourceId, s.sourceId) AS sourceId,
+1	core/src/main/java/tv/own/owntv/core/database/dao/CustomCategoryDao.kt	DELETE FROM custom_category_members WHERE
+1	core/src/main/java/tv/own/owntv/core/database/dao/CustomCategoryDao.kt	DELETE FROM custom_category_members WHERE profileId = :profileId AND mediaType = :type AND contextKey = :contextKey
+1	core/src/main/java/tv/own/owntv/core/database/dao/CustomCategoryDao.kt	DELETE FROM custom_category_members WHERE profileId = :profileId AND mediaType = :type AND contextKey = :contextKey AND itemId = :itemId
+1	core/src/main/java/tv/own/owntv/core/database/dao/CustomCategoryDao.kt	DELETE FROM custom_category_members WHERE profileId = :profileId AND mediaType = :type AND itemId = :itemId AND (
+1	core/src/main/java/tv/own/owntv/core/database/dao/CustomCategoryDao.kt	FROM custom_category_members m
+1	core/src/main/java/tv/own/owntv/core/database/dao/CustomCategoryDao.kt	FROM custom_category_members m INNER JOIN channels c ON m.mediaType = 'LIVE' AND m.itemId = c.id
+1	core/src/main/java/tv/own/owntv/core/database/dao/CustomCategoryDao.kt	FROM custom_category_members m INNER JOIN movies mv ON m.mediaType = 'MOVIE' AND m.itemId = mv.id
+1	core/src/main/java/tv/own/owntv/core/database/dao/CustomCategoryDao.kt	FROM custom_category_members m INNER JOIN series s ON m.mediaType = 'SERIES' AND m.itemId = s.id
+3	core/src/main/java/tv/own/owntv/core/database/dao/CustomCategoryDao.kt	INNER JOIN custom_category_members m ON m.itemId = c.id AND m.profileId = :profileId AND m.mediaType = 'LIVE' AND m.contextKey = :contextKey
+3	core/src/main/java/tv/own/owntv/core/database/dao/CustomCategoryDao.kt	INNER JOIN custom_category_members m ON m.itemId = mv.id AND m.profileId = :profileId AND m.mediaType = 'MOVIE' AND m.contextKey = :contextKey
+3	core/src/main/java/tv/own/owntv/core/database/dao/CustomCategoryDao.kt	INNER JOIN custom_category_members m ON m.itemId = s.id AND m.profileId = :profileId AND m.mediaType = 'SERIES' AND m.contextKey = :contextKey
+2	core/src/main/java/tv/own/owntv/core/database/dao/CustomCategoryDao.kt	LEFT JOIN channels c ON m.mediaType = 'LIVE' AND m.itemId = c.id
+2	core/src/main/java/tv/own/owntv/core/database/dao/CustomCategoryDao.kt	LEFT JOIN content_order o ON o.itemId = c.id AND o.profileId = :profileId AND o.mediaType = 'LIVE' AND o.contextKey = :contextKey
+2	core/src/main/java/tv/own/owntv/core/database/dao/CustomCategoryDao.kt	LEFT JOIN content_order o ON o.itemId = mv.id AND o.profileId = :profileId AND o.mediaType = 'MOVIE' AND o.contextKey = :contextKey
+2	core/src/main/java/tv/own/owntv/core/database/dao/CustomCategoryDao.kt	LEFT JOIN content_order o ON o.itemId = s.id AND o.profileId = :profileId AND o.mediaType = 'SERIES' AND o.contextKey = :contextKey
+2	core/src/main/java/tv/own/owntv/core/database/dao/CustomCategoryDao.kt	LEFT JOIN movies mv ON m.mediaType = 'MOVIE' AND m.itemId = mv.id
+2	core/src/main/java/tv/own/owntv/core/database/dao/CustomCategoryDao.kt	LEFT JOIN series s ON m.mediaType = 'SERIES' AND m.itemId = s.id
+1	core/src/main/java/tv/own/owntv/core/database/dao/CustomCategoryDao.kt	ORDER BY (CASE WHEN o.position IS NULL THEN 1 ELSE 0 END), o.position, m.position, c.sortOrder, c.name
+1	core/src/main/java/tv/own/owntv/core/database/dao/CustomCategoryDao.kt	ORDER BY (CASE WHEN o.position IS NULL THEN 1 ELSE 0 END), o.position, m.position, c.sortOrder, c.name LIMIT :limit
+1	core/src/main/java/tv/own/owntv/core/database/dao/CustomCategoryDao.kt	ORDER BY (CASE WHEN o.position IS NULL THEN 1 ELSE 0 END), o.position, m.position, mv.sortOrder, mv.name
+1	core/src/main/java/tv/own/owntv/core/database/dao/CustomCategoryDao.kt	ORDER BY (CASE WHEN o.position IS NULL THEN 1 ELSE 0 END), o.position, m.position, mv.sortOrder, mv.name LIMIT :limit
+1	core/src/main/java/tv/own/owntv/core/database/dao/CustomCategoryDao.kt	ORDER BY (CASE WHEN o.position IS NULL THEN 1 ELSE 0 END), o.position, m.position, s.sortOrder, s.name
+1	core/src/main/java/tv/own/owntv/core/database/dao/CustomCategoryDao.kt	ORDER BY (CASE WHEN o.position IS NULL THEN 1 ELSE 0 END), o.position, m.position, s.sortOrder, s.name LIMIT :limit
+1	core/src/main/java/tv/own/owntv/core/database/dao/CustomCategoryDao.kt	ORDER BY m.position, c.sortOrder, c.name
+1	core/src/main/java/tv/own/owntv/core/database/dao/CustomCategoryDao.kt	ORDER BY m.position, mv.sortOrder, mv.name
+1	core/src/main/java/tv/own/owntv/core/database/dao/CustomCategoryDao.kt	ORDER BY m.position, s.sortOrder, s.name
+1	core/src/main/java/tv/own/owntv/core/database/dao/CustomCategoryDao.kt	SELECT * FROM custom_category_members
+1	core/src/main/java/tv/own/owntv/core/database/dao/CustomCategoryDao.kt	SELECT CAST(c.sourceId AS TEXT) || ':' || COALESCE(c.remoteId, c.name)
+1	core/src/main/java/tv/own/owntv/core/database/dao/CustomCategoryDao.kt	SELECT CAST(mv.sourceId AS TEXT) || ':' || COALESCE(mv.remoteId, mv.name)
+1	core/src/main/java/tv/own/owntv/core/database/dao/CustomCategoryDao.kt	SELECT CAST(s.sourceId AS TEXT) || ':' || COALESCE(s.remoteId, s.name)
+1	core/src/main/java/tv/own/owntv/core/database/dao/CustomCategoryDao.kt	SELECT COALESCE(MAX(position), -1) FROM custom_category_members WHERE profileId = :profileId AND mediaType = :type AND contextKey = :contextKey
+1	core/src/main/java/tv/own/owntv/core/database/dao/CustomCategoryDao.kt	SELECT COUNT(*) FROM custom_category_members m
+1	core/src/main/java/tv/own/owntv/core/database/dao/CustomCategoryDao.kt	SELECT DISTINCT contextKey FROM custom_category_members WHERE profileId = :profileId AND mediaType = :type
+3	core/src/main/java/tv/own/owntv/core/database/dao/CustomCategoryDao.kt	SELECT c.* FROM channels c
+1	core/src/main/java/tv/own/owntv/core/database/dao/CustomCategoryDao.kt	SELECT contextKey, COUNT(*) AS count FROM custom_category_members
+1	core/src/main/java/tv/own/owntv/core/database/dao/CustomCategoryDao.kt	SELECT itemId FROM custom_category_members WHERE profileId = :profileId AND mediaType = :type AND contextKey = :contextKey
+1	core/src/main/java/tv/own/owntv/core/database/dao/CustomCategoryDao.kt	SELECT m.profileId AS profileId, m.mediaType AS mediaType, m.itemId AS itemId,
+3	core/src/main/java/tv/own/owntv/core/database/dao/CustomCategoryDao.kt	SELECT mv.* FROM movies mv
+3	core/src/main/java/tv/own/owntv/core/database/dao/CustomCategoryDao.kt	SELECT s.* FROM series s
+1	core/src/main/java/tv/own/owntv/core/database/dao/CustomCategoryDao.kt	WHERE c.sourceId = :sourceId OR mv.sourceId = :sourceId OR s.sourceId = :sourceId
+2	core/src/main/java/tv/own/owntv/core/database/dao/CustomCategoryDao.kt	WHERE c.sourceId IN (:sourceIds)
+1	core/src/main/java/tv/own/owntv/core/database/dao/CustomCategoryDao.kt	WHERE c.sourceId IN (:sourceIds) AND c.name LIKE '%' || :query || '%'
+1	core/src/main/java/tv/own/owntv/core/database/dao/CustomCategoryDao.kt	WHERE m.profileId = :profileId AND m.mediaType = 'LIVE' AND m.contextKey = :contextKey
+1	core/src/main/java/tv/own/owntv/core/database/dao/CustomCategoryDao.kt	WHERE m.profileId = :profileId AND m.mediaType = 'MOVIE' AND m.contextKey = :contextKey
+1	core/src/main/java/tv/own/owntv/core/database/dao/CustomCategoryDao.kt	WHERE m.profileId = :profileId AND m.mediaType = 'SERIES' AND m.contextKey = :contextKey
+1	core/src/main/java/tv/own/owntv/core/database/dao/CustomCategoryDao.kt	WHERE m.profileId = :profileId AND m.mediaType = :type AND m.contextKey = :contextKey
+2	core/src/main/java/tv/own/owntv/core/database/dao/CustomCategoryDao.kt	WHERE mv.sourceId IN (:sourceIds)
+1	core/src/main/java/tv/own/owntv/core/database/dao/CustomCategoryDao.kt	WHERE mv.sourceId IN (:sourceIds) AND mv.name LIKE '%' || :query || '%'
+1	core/src/main/java/tv/own/owntv/core/database/dao/CustomCategoryDao.kt	WHERE profileId = :profileId AND mediaType = :type AND contextKey IN (:contextKeys) AND (
+2	core/src/main/java/tv/own/owntv/core/database/dao/CustomCategoryDao.kt	WHERE s.sourceId IN (:sourceIds)
+1	core/src/main/java/tv/own/owntv/core/database/dao/CustomCategoryDao.kt	WHERE s.sourceId IN (:sourceIds) AND s.name LIKE '%' || :query || '%'
+1	core/src/main/java/tv/own/owntv/core/database/dao/PlaybackPrefsDao.kt	DELETE FROM playback_prefs WHERE zoomMode IS NULL AND volumeBoost IS NULL AND audioDelayMs IS NULL
+1	core/src/main/java/tv/own/owntv/core/database/dao/PlaybackPrefsDao.kt	SELECT COUNT(*) FROM playback_prefs WHERE audioDelayMs IS NOT NULL
+1	core/src/main/java/tv/own/owntv/core/database/dao/PlaybackPrefsDao.kt	UPDATE playback_prefs SET audioDelayMs = NULL
+1	core/src/main/java/tv/own/owntv/core/database/dao/SourceDao.kt	UPDATE sources SET liveEnginePreference = :preference WHERE id = :id
+1	core/src/main/java/tv/own/owntv/core/database/dao/SourceDao.kt	UPDATE sources SET liveLatencyMode = :mode, liveLatencyCustomSecs = :customSecs WHERE id = :id
+1	core/src/main/java/tv/own/owntv/core/database/dao/SourceDao.kt	UPDATE sources SET preferHls = :preferHls WHERE id = :id
+1	core/src/main/java/tv/own/owntv/core/database/entity/ContentEntities.kt	.m3u8
+1	core/src/main/java/tv/own/owntv/core/database/entity/ContentEntities.kt	.ts
+2	core/src/main/java/tv/own/owntv/core/database/entity/UserDataEntities.kt	contextKey
+1	core/src/main/java/tv/own/owntv/core/database/entity/UserDataEntities.kt	custom_category_members
+1	core/src/main/java/tv/own/owntv/core/database/entity/UserDataEntities.kt	itemId
+2	core/src/main/java/tv/own/owntv/core/database/entity/UserDataEntities.kt	mediaType
+1	core/src/main/java/tv/own/owntv/core/metadata/MetadataBudget.kt	day_count
+1	core/src/main/java/tv/own/owntv/core/metadata/MetadataBudget.kt	day_start
+1	core/src/main/java/tv/own/owntv/core/metadata/MetadataBudget.kt	hour_count
+1	core/src/main/java/tv/own/owntv/core/metadata/MetadataBudget.kt	hour_start
+1	core/src/main/java/tv/own/owntv/core/metadata/MetadataBudget.kt	minute_count
+1	core/src/main/java/tv/own/owntv/core/metadata/MetadataBudget.kt	minute_start
+1	core/src/main/java/tv/own/owntv/core/metadata/MetadataBudget.kt	owntv_metadata_budget
+1	core/src/main/java/tv/own/owntv/core/metadata/MetadataCast.kt	n
+1	core/src/main/java/tv/own/owntv/core/metadata/MetadataCast.kt	null
+1	core/src/main/java/tv/own/owntv/core/metadata/MetadataCast.kt	p
+1	core/src/main/java/tv/own/owntv/core/metadata/MetadataImages.kt	${TmdbProvider.IMAGE_BASE}/$size${it.ensureLeadingSlash()}
+1	core/src/main/java/tv/own/owntv/core/metadata/MetadataImages.kt	w185
+6	core/src/main/java/tv/own/owntv/core/metadata/MetadataRepository.kt	\0
+1	core/src/main/java/tv/own/owntv/core/metadata/MetadataRepository.kt	$TYPE_MOVIE:$lang:$tmdbId
+1	core/src/main/java/tv/own/owntv/core/metadata/MetadataRepository.kt	$TYPE_TV:$lang:$tmdbId
+1	core/src/main/java/tv/own/owntv/core/metadata/MetadataRepository.kt	$TYPE_TV:$lang:$tvId:s${season}e$episode
+1	core/src/main/java/tv/own/owntv/core/metadata/OwnTVClientId.kt	\0
+1	core/src/main/java/tv/own/owntv/core/metadata/OwnTVClientId.kt	%02x
+1	core/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	&api_key=
+1	core/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	,
+1	core/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	TMDB $label failed: ${it.message}
+1	core/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	Trending type=$type page=$page
+1	core/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	metadata allowance spent, skipping $label
+1	core/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	movie details id=$tmdbId
+1	core/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	null
+1	core/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	profile_path
+1	core/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	search type=$type
+1	core/src/main/java/tv/own/owntv/core/metadata/TmdbProvider.kt	tv details id=$tmdbId
+3	core/src/main/java/tv/own/owntv/core/network/DnsConfig.kt	\0
+1	core/src/main/java/tv/own/owntv/core/network/DnsConfig.kt	${dohUrl.trimEnd('/')}?name=$hostname&type=$type
+1	core/src/main/java/tv/own/owntv/core/network/DnsConfig.kt	A
+1	core/src/main/java/tv/own/owntv/core/network/DnsConfig.kt	AAAA
+1	core/src/main/java/tv/own/owntv/core/network/DnsConfig.kt	Accept
+1	core/src/main/java/tv/own/owntv/core/network/DnsConfig.kt	Answer
+1	core/src/main/java/tv/own/owntv/core/network/DnsConfig.kt	Cloudflare
+1	core/src/main/java/tv/own/owntv/core/network/DnsConfig.kt	DnsConfig
+1	core/src/main/java/tv/own/owntv/core/network/DnsConfig.kt	DoH HTTP ${resp.code}
+1	core/src/main/java/tv/own/owntv/core/network/DnsConfig.kt	DoH lookup $hostname → ${results.map { it.hostAddress }} (server=$dohUrl)
+1	core/src/main/java/tv/own/owntv/core/network/DnsConfig.kt	Google
+1	core/src/main/java/tv/own/owntv/core/network/DnsConfig.kt	Quad9
+1	core/src/main/java/tv/own/owntv/core/network/DnsConfig.kt	UDP DNS lookup $hostname → ${result.map { it.hostAddress }} (server=$server:$port)
+1	core/src/main/java/tv/own/owntv/core/network/DnsConfig.kt	application/dns-json
+1	core/src/main/java/tv/own/owntv/core/network/DnsConfig.kt	data
+1	core/src/main/java/tv/own/owntv/core/network/DnsConfig.kt	https://cloudflare-dns.com/dns-query
+1	core/src/main/java/tv/own/owntv/core/network/DnsConfig.kt	https://dns.google/dns-query
+1	core/src/main/java/tv/own/owntv/core/network/DnsConfig.kt	https://dns.quad9.net/dns-query
+1	core/src/main/java/tv/own/owntv/core/network/HttpClient.kt	Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0 Safari/537.36
+1	core/src/main/java/tv/own/owntv/core/parser/XtreamClient.kt	${base(s)}/timeshift/${s.username}/${s.password}/$durationMinutes/${fmt.format(java.util.Date(startMs))}/$streamId.$ext
+1	core/src/main/java/tv/own/owntv/core/parser/XtreamClient.kt	allowed_output_formats
+1	core/src/main/java/tv/own/owntv/core/parser/XtreamClient.kt	fetchAccountDetails failed for source ${s.id}
+2	core/src/main/java/tv/own/owntv/core/parser/XtreamClient.kt	m3u8
+1	core/src/main/java/tv/own/owntv/core/parser/XtreamClient.kt	ts
+1	core/src/main/java/tv/own/owntv/core/parser/XtreamClient.kt	user_output_formats
+1	core/src/main/java/tv/own/owntv/core/settings/SettingsRepository.kt	auto_frame_rate_reset_416
+1	core/src/main/java/tv/own/owntv/core/settings/SettingsRepository.kt	dns_doh_url
+1	core/src/main/java/tv/own/owntv/core/settings/SettingsRepository.kt	dns_enabled
+1	core/src/main/java/tv/own/owntv/core/settings/SettingsRepository.kt	dns_host
+1	core/src/main/java/tv/own/owntv/core/settings/SettingsRepository.kt	dns_port
+1	core/src/main/java/tv/own/owntv/core/settings/SettingsRepository.kt	focus_highlight_color
+1	core/src/main/java/tv/own/owntv/core/settings/SettingsRepository.kt	focus_highlight_width
+1	core/src/main/java/tv/own/owntv/core/settings/SettingsRepository.kt	live_latency_reset_416
+1	core/src/main/java/tv/own/owntv/core/settings/SettingsRepository.kt	sub_bg_opacity
+1	core/src/main/java/tv/own/owntv/core/settings/SettingsRepository.kt	sub_color
+1	core/src/main/java/tv/own/owntv/core/settings/SettingsRepository.kt	sub_position
+1	core/src/main/java/tv/own/owntv/core/settings/SettingsRepository.kt	sub_style_enabled
+1	core/src/main/java/tv/own/owntv/core/settings/SubtitleStyle.kt	\0
+1	core/src/main/java/tv/own/owntv/core/settings/SubtitleStyle.kt	#
+2	core/src/main/java/tv/own/owntv/core/settings/SubtitleStyle.kt	#%08X
+1	core/src/main/java/tv/own/owntv/core/settings/SubtitleStyle.kt	bottom_center
+1	core/src/main/java/tv/own/owntv/core/settings/SubtitleStyle.kt	bottom_left
+1	core/src/main/java/tv/own/owntv/core/settings/SubtitleStyle.kt	bottom_right
+1	core/src/main/java/tv/own/owntv/core/settings/SubtitleStyle.kt	center
+1	core/src/main/java/tv/own/owntv/core/settings/SubtitleStyle.kt	default
+1	core/src/main/java/tv/own/owntv/core/settings/SubtitleStyle.kt	left
+1	core/src/main/java/tv/own/owntv/core/settings/SubtitleStyle.kt	right
+1	core/src/main/java/tv/own/owntv/core/settings/SubtitleStyle.kt	top_center
+1	core/src/main/java/tv/own/owntv/core/settings/SubtitleStyle.kt	top_left
+1	core/src/main/java/tv/own/owntv/core/settings/SubtitleStyle.kt	top_right
+1	core/src/main/java/tv/own/owntv/core/subtitles/OpenSubtitlesClient.kt	$method ${pathAndQuery.substringBefore('?')} via $base -> ${e.javaClass.simpleName}: ${e.message}
+1	core/src/main/java/tv/own/owntv/core/subtitles/OpenSubtitlesClient.kt	$method ${pathAndQuery.substringBefore('?')} via $base -> HTTP ${resp.code}
+1	core/src/main/java/tv/own/owntv/core/sync/work/TrendingRefreshWorker.kt	Playlist
+1	core/src/main/java/tv/own/owntv/core/util/CrashRecorder.kt	${Build.MANUFACTURER} ${Build.MODEL} · Android ${Build.VERSION.RELEASE} (API ${Build.VERSION.SDK_INT})
+1	core/src/main/java/tv/own/owntv/core/util/CrashRecorder.kt	--- live diagnostics leading up to the crash ---
+3	player-core/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	\0
+1	player-core/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	Content-Type
+1	player-core/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	HLS
+1	player-core/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	MPEG-TS
+1	player-core/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	body="$failureText"
+1	player-core/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	decoder failed before first frame (${error.errorCodeName}) — rebuilding the decoder and retrying once
+1	player-core/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	decoder rebuild failed: ${it.message}
+1	player-core/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	default User-Agent refused — retrying once as ${HttpClient.FALLBACK_USER_AGENT}
+1	player-core/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	html
+1	player-core/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	provider refused the default User-Agent — retrying as ${HttpClient.FALLBACK_USER_AGENT}
+1	player-core/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	stream didn't open — trying the ${alt.substringBefore('?').substringAfterLast('.')} form of this channel
+1	player-core/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	trying alternate format: ${HttpClient.redactUrl(alt)}
+4	player-core/src/main/java/tv/own/owntv/player/LiveStreamQuirks.kt	.m3u8
+3	player-core/src/main/java/tv/own/owntv/player/LiveStreamQuirks.kt	.ts
+1	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	#00000000
+1	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	#FFFFFFFF
+1	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	HLS
+1	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	MPEG-TS
+1	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	demuxer
+1	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	file-format
+2	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	force
+1	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	hls
+1	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	mpegts
+1	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	playback failed — retrying once as ${HttpClient.FALLBACK_USER_AGENT}
+2	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	sub-align-x
+2	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	sub-ass-override
+2	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	sub-back-color
+2	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	sub-color
+2	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	sub-pos
+1	player-core/src/main/java/tv/own/owntv/player/PlayerDiagnostics.kt	\0
+1	player-core/src/main/java/tv/own/owntv/player/PlayerDiagnostics.kt	429
+1	player-core/src/main/java/tv/own/owntv/player/PlayerDiagnostics.kt	458

@@ -22,8 +22,11 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
 LOCALES_JSON = ROOT / "tools" / "i18n" / "locales.json"
-RES = ROOT / "app" / "src" / "main" / "res"
-OUT = ROOT / "app" / "src" / "main" / "java" / "tv" / "own" / "owntv" / "core" / "i18n" / "SupportedLocales.kt"
+# Translatable resources live in :core (see validate_strings.py), and so does the generated file.
+RES = ROOT / "core" / "src" / "main" / "res"
+# The generated table lives in :core (every app built on core reads the same locale list); the
+# string resources it is generated FROM are still the TV app's until they move too.
+OUT = ROOT / "core" / "src" / "main" / "java" / "tv" / "own" / "owntv" / "core" / "i18n" / "SupportedLocales.kt"
 CANONICAL_OUT = OUT
 COMMUNITY_CONFIG = ROOT / "tools" / "i18n" / "community.json"
 README = ROOT / "README.md"

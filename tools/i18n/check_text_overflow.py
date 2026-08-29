@@ -8,7 +8,9 @@ import sys
 from typing import NamedTuple
 
 ROOT = Path(__file__).resolve().parents[2]
-SOURCE_ROOT = ROOT / "app/src/main/java"
+# Every module whose Kotlin ships to users, for the same reason check_hardcoded_strings.py scans
+# more than one root: code moves between modules and must not leave the gate by doing so.
+SOURCE_ROOTS = [ROOT / "app/src/main/java", ROOT / "core/src/main/java"]
 ALLOWLIST = ROOT / "tools/i18n/text_overflow_allowlist.txt"
 
 
@@ -223,7 +225,10 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("paths", nargs="*", type=Path)
     parser.add_argument("--allowlist", type=Path, default=ALLOWLIST)
     args = parser.parse_args(argv)
-    paths = args.paths or sorted(SOURCE_ROOT.rglob("*.kt"))
+    paths = args.paths or sorted(
+        (f for root in SOURCE_ROOTS if root.is_dir() for f in root.rglob("*.kt")),
+        key=lambda f: f.relative_to(ROOT).as_posix(),
+    )
     errors, used = check(paths, args.allowlist)
     allowlist, _ = load_allowlist(args.allowlist)
     for key in sorted(set(allowlist) - used):

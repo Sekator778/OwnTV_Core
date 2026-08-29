@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Merged into every consuming app, so the test for each entry is: would the phone app want this?
+     Audio-effect access is the engine's own requirement, not a shell's. -->
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- VolumeBoost attaches a LoudnessEnhancer to the audio session. -->
+    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
+
+</manifest>

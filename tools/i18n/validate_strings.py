@@ -44,7 +44,9 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 LOCALES_JSON = ROOT / "tools" / "i18n" / "locales.json"
 COMMUNITY_CONFIG = ROOT / "tools" / "i18n" / "community.json"
-RES = ROOT / "app" / "src" / "main" / "res"
+# All translatable resources live in :core, so one app shell or another can be built on the same
+# strings. :app keeps only colours and themes, which have nothing to validate.
+RES = ROOT / "core" / "src" / "main" / "res"
 
 # --- resource parsing ---------------------------------------------------------
 
