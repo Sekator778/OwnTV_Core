@@ -519,7 +519,7 @@ class TestValidateStrings(unittest.TestCase):
                 self.assertEqual(entry["tier"], 2)
                 self.assertFalse(entry["packaged"])
                 self.assertFalse(entry["pickerVisible"])
-                self.assertFalse((ROOT / "app/src/main/res" / entry["resourceDirectory"]).exists())
+                self.assertFalse((ROOT / "core/src/main/res" / entry["resourceDirectory"]).exists())
 
     def test_spanish_default_uses_current_weblate_es_definition(self):
         catalogue = json.loads((ROOT / "tools/i18n/locales.json").read_text())
@@ -594,7 +594,7 @@ class TestValidateStrings(unittest.TestCase):
             request_url,
         )
         self.assertEqual(70, config["translationReadinessThresholdPercent"])
-        generated = (ROOT / "app/src/main/java/tv/own/owntv/core/i18n/SupportedLocales.kt").read_text()
+        generated = (ROOT / "core/src/main/java/tv/own/owntv/core/i18n/SupportedLocales.kt").read_text()
         readme = (ROOT / "README.md").read_text()
         guide = (ROOT / "tools/i18n/README.md").read_text()
         self.assertIn(f'CONTRIBUTION_PROJECT_URL: String = "{url}"', generated)
@@ -1102,8 +1102,8 @@ val d = 'x'
         workflow = (ROOT / ".github/workflows/i18n.yml").read_text()
         checker = (ROOT / "tools/i18n/check_hardcoded_strings.py").read_text()
         self.assertIn("verify-ci --base-sha", workflow)
-        self.assertIn('"diff", "--name-only", base_sha, "HEAD", "--", "app/src/main"', checker)
-        self.assertIn("Scanner migrations may not change app/src/main", checker)
+        self.assertIn('"diff", "--name-only", base_sha, "HEAD", "--", *MODULE_MAIN_DIRS', checker)
+        self.assertIn("Scanner migrations may not change module source", checker)
 
 
 # ===========================================================================

@@ -11,7 +11,7 @@ Owns (docs/i18n-phase4a-seed-translations.md, Part 2):
   - emitting Android resource XML by hand, preserving source key order
   - offline validation of a staged locale against the current source tree, stricter than
     ``validate_strings.py``'s CI report because a missing key here is a failure
-  - atomic, same-filesystem promotion of a staged locale into ``app/src/main/res``
+  - atomic, same-filesystem promotion of a staged locale into ``core/src/main/res``
 
 This module must not import ``anthropic`` or perform any network I/O. It is exercised by
 the offline tests in ``test_i18n_tools.py`` in environments where the SDK is not
@@ -27,7 +27,7 @@ from dataclasses import dataclass
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
-RES = ROOT / "app" / "src" / "main" / "res"
+RES = ROOT / "core" / "src" / "main" / "res"
 
 # --- source extraction ---------------------------------------------------------
 

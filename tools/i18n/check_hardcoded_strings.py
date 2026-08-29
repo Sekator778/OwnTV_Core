@@ -35,6 +35,8 @@ SRC_ROOTS = [
     ROOT / "core" / "src" / "main" / "java",
     ROOT / "player-core" / "src" / "main" / "java",
 ]
+# The same modules as git pathspecs, for the scanner-migration guard in verify-ci.
+MODULE_MAIN_DIRS = [root.parent.relative_to(ROOT).as_posix() for root in SRC_ROOTS]
 
 
 def _kotlin_files():
@@ -432,7 +434,7 @@ def _render_unclassified(keys: list[tuple[str, str]]) -> list[str]:
         "",
         "  How to fix each one:",
         "",
-        "  * A user can read it -> add it to app/src/main/res/values/strings_*.xml, then reference it:",
+        "  * A user can read it -> add it to core/src/main/res/values/strings_*.xml, then reference it:",
         "        stringResource(R.string.your_key)          // Compose",
         "        context.getString(R.string.your_key)       // everywhere else",
         "    Add the English string only. Translations arrive from Weblate after the merge, and a",
@@ -618,12 +620,15 @@ def cmd_verify_ci(args) -> int:
     ):
         print(f"baseline_migration.json does not match {base_version} -> {current_version}")
         return 1
+    # Every module's main source set, not just app/'s — the same reason SRC_ROOTS is a list. A
+    # pathspec that matches nothing in this repo simply yields no output, so one list works for both
+    # the app repos and the core repo.
     changed_app = subprocess.run(
-        ["git", "diff", "--name-only", base_sha, "HEAD", "--", "app/src/main"],
+        ["git", "diff", "--name-only", base_sha, "HEAD", "--", *MODULE_MAIN_DIRS],
         cwd=ROOT, text=True, capture_output=True, check=True,
     ).stdout.strip()
     if changed_app:
-        print("Scanner migrations may not change app/src/main; separate scanner and application changes.")
+        print("Scanner migrations may not change module source; separate scanner and application changes.")
         print(changed_app)
         return 1
     return cmd_verify(argparse.Namespace(base=None, bootstrap=True))

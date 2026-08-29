@@ -37,7 +37,7 @@ promotion) lives in ``tools/i18n/seed_text.py``, which stays stdlib-only.
 
 Durable state for a run lives under ``runs/seed/<run-id>/`` (gitignored). Nothing here
 ever writes translation_status entries, generates a localized ``donottranslate.xml``, or
-writes a partial locale into ``app/src/main/res``.
+writes a partial locale into ``core/src/main/res``.
 """
 from __future__ import annotations
 
@@ -52,7 +52,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
-RES = ROOT / "app" / "src" / "main" / "res"
+RES = ROOT / "core" / "src" / "main" / "res"
 LOCALES_JSON = ROOT / "tools" / "i18n" / "locales.json"
 GLOSSARY_JSON = ROOT / "tools" / "i18n" / "glossary.json"
 RUNS_DIR = ROOT / "runs" / "seed"
@@ -1398,7 +1398,7 @@ def cmd_collect(args: argparse.Namespace) -> int:
 def cmd_validate_and_promote(args: argparse.Namespace) -> int:
     """Assemble a locale's collected, validated translation results (across the original
     chunk and any successful retries) into staged Android XML, offline-validate, and
-    atomically promote it into app/src/main/res."""
+    atomically promote it into core/src/main/res."""
     manifest = load_manifest(args.run_id)
     verify_hashes(manifest, force_stale=args.force_stale)
     tag = args.locale
