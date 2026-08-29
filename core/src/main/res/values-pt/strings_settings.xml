@@ -323,7 +323,7 @@
     <string name="settings_use_color">Usar esta cor</string>
     <string name="settings_about_version">Versão <xliff:g id="version">%1$s</xliff:g></string>
     <string name="settings_about_description_full">Seu próprio reprodutor de IPTV para Android TV — um aplicativo gratuito, de código aberto e que funciona somente como reprodutor. Ele não fornece canais nem conteúdo; você usa suas próprias fontes às quais tenha acesso legal.</string>
-    <string name="settings_about_license">© 2026 Ashiq Hasan · Licença GPLv3</string>
+    <string name="settings_about_license">© 2026 OwnTV · Licença GPLv3</string>
     <string name="settings_join_telegram">Participe do nosso grupo no Telegram</string>
     <string name="settings_telegram_qr">Código QR do grupo no Telegram</string>
     <string name="settings_telegram_scan">Leia o código QR para entrar pelo celular ou abra o link acima.</string>

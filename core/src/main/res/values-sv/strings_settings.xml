@@ -321,7 +321,7 @@
     <string name="settings_use_color">Använd den här färgen</string>
     <string name="settings_about_version">Version <xliff:g id="version">%1$s</xliff:g></string>
     <string name="settings_about_description_full">Din egen IPTV-spelare för Android TV — en kostnadsfri app med öppen källkod som endast fungerar som spelare. Den tillhandahåller inga kanaler eller något innehåll. Du använder dina egna källor som du har laglig åtkomst till.</string>
-    <string name="settings_about_license">© 2026 Ashiq Hasan · GPLv3-licens</string>
+    <string name="settings_about_license">© 2026 OwnTV · GPLv3-licens</string>
     <string name="settings_join_telegram">Gå med i vår grupp på Telegram</string>
     <string name="settings_telegram_qr">QR-kod till Telegram-gruppen</string>
     <string name="settings_telegram_scan">Skanna QR-koden för att gå med från telefonen eller öppna länken ovan.</string>

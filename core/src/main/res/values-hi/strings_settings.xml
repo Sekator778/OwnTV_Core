@@ -321,7 +321,7 @@
     <string name="settings_use_color">इस रंग का उपयोग करें</string>
     <string name="settings_about_version">संस्करण <xliff:g id="version">%1$s</xliff:g></string>
     <string name="settings_about_description_full">Android TV के लिए आपका अपना IPTV प्लेयर — एक निःशुल्क, ओपन-सोर्स और केवल प्लेयर वाला ऐप। यह कोई चैनल या सामग्री उपलब्ध नहीं कराता; आप अपने कानूनी रूप से सुलभ स्रोत स्वयं जोड़ते हैं।</string>
-    <string name="settings_about_license">© 2026 Ashiq Hasan · GPLv3 लाइसेंस</string>
+    <string name="settings_about_license">© 2026 OwnTV · GPLv3 लाइसेंस</string>
     <string name="settings_join_telegram">Telegram पर हमसे जुड़ें</string>
     <string name="settings_telegram_qr">Telegram समूह का QR कोड</string>
     <string name="settings_telegram_scan">फ़ोन से जुड़ने के लिए QR स्कैन करें या ऊपर दिया गया लिंक खोलें।</string>

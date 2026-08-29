@@ -329,7 +329,7 @@
     <string name="settings_use_color">استخدام هذا اللون</string>
     <string name="settings_about_version">الإصدار <xliff:g id="version">%1$s</xliff:g></string>
     <string name="settings_about_description_full">مشغّل IPTV خاص بك لـ Android TV — تطبيق مجاني ومفتوح المصدر مخصص للتشغيل فقط. لا يوفر أي قنوات أو محتوى؛ بل تستخدم فيه مصادرك الخاصة المتاحة لك قانونيًا.</string>
-    <string name="settings_about_license">© 2026 Ashiq Hasan · ترخيص GPLv3</string>
+    <string name="settings_about_license">© 2026 OwnTV · ترخيص GPLv3</string>
     <string name="settings_join_telegram">انضم إلينا على Telegram</string>
     <string name="settings_telegram_qr">رمز QR لمجموعة Telegram</string>
     <string name="settings_telegram_scan">امسح رمز QR للانضمام من هاتفك، أو افتح الرابط أعلاه.</string>

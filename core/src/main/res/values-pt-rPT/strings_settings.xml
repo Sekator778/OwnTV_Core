@@ -323,7 +323,7 @@
     <string name="settings_use_color">Utilizar esta cor</string>
     <string name="settings_about_version">Versão <xliff:g id="version">%1$s</xliff:g></string>
     <string name="settings_about_description_full">O seu próprio leitor de IPTV para Android TV — uma aplicação gratuita, de código aberto e exclusivamente de reprodução. Não fornece canais nem conteúdos; cabe-lhe adicionar origens às quais possa aceder legalmente.</string>
-    <string name="settings_about_license">© 2026 Ashiq Hasan · Licença GPLv3</string>
+    <string name="settings_about_license">© 2026 OwnTV · Licença GPLv3</string>
     <string name="settings_join_telegram">Junte-se a nós no Telegram</string>
     <string name="settings_telegram_qr">Código QR do grupo do Telegram</string>
     <string name="settings_telegram_scan">Digitalize o código QR para aderir através do telemóvel ou abra a ligação acima.</string>

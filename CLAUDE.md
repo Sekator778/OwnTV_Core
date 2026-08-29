@@ -146,7 +146,8 @@ modules to GitHub Packages.
 ## Git rules
 
 - Never push, pull, commit or tag unless the owner explicitly asks. He handles git himself.
-- Always use his account: **Ashiq Hasan**. It is set per-repo in `.git/config`, not globally.
+- Always commit as the identity already set in this repo's `.git/config`. Never set it globally and
+  never substitute another name.
 - **Never** add Claude/AI co-author trailers, attribution, or any mention of AI in commit messages,
   notes or git metadata.
 

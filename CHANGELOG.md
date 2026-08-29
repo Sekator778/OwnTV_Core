@@ -3,6 +3,11 @@
 Core is versioned independently of the apps. A core version number never lines up with an OwnTV TV
 app `v4.x` release, and the two must not be confused. Tags here are prefixed `core-`.
 
+## core-1.0.1 — 2026-08-29
+
+- The About screen's copyright line now reads **© 2026 OwnTV** instead of naming the author.
+  Updated in the base locale and all 23 translations.
+
 ## core-1.0.0 — 2026-08-29
 
 First release as a standalone library. No behaviour changed: this is the same code the OwnTV TV app

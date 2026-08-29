@@ -319,7 +319,7 @@
     <string name="settings_use_color">使用此色彩</string>
     <string name="settings_about_version">版本 <xliff:g id="version">%1$s</xliff:g></string>
     <string name="settings_about_description_full">專屬於您的 Android TV IPTV 播放器 — 免費、開放原始碼且僅提供播放功能的應用程式。本應用程式不提供任何頻道或內容；請自行加入您可合法存取的來源。</string>
-    <string name="settings_about_license">© 2026 Ashiq Hasan · GPLv3 授權條款</string>
+    <string name="settings_about_license">© 2026 OwnTV · GPLv3 授權條款</string>
     <string name="settings_join_telegram">加入我們的 Telegram</string>
     <string name="settings_telegram_qr">Telegram 群組 QR 圖碼</string>
     <string name="settings_telegram_scan">使用手機掃描 QR 圖碼即可加入，或開啟上方連結。</string>
