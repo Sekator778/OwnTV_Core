@@ -1,0 +1,63 @@
+name: Publish core
+
+# Publishes tv.own.owntv:core and tv.own.owntv:player-core to GitHub Packages when a core-* tag is
+# pushed. Both modules always go out together on the same version, taken from `coreVersion` in the
+# root build file — the tag must match it, and the job checks that before publishing anything.
+#
+# No PAT is needed here: the built-in GITHUB_TOKEN can write packages for its own repository, which
+# is why `permissions: packages: write` is set below. A PAT with read:packages is still needed by
+# anything that CONSUMES the artifact — see the app repo's CI secrets.
+
+on:
+  push:
+    tags: [ "core-*" ]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  packages: write
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false   # never cancel a half-finished publish
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      # A tag that disagrees with the version in the build file publishes an artifact nobody can
+      # find from the tag it was cut at. Cheaper to fail here than to yank a package later.
+      - name: Tag must match coreVersion
+        if: startsWith(github.ref, 'refs/tags/core-')
+        run: |
+          set -euo pipefail
+          TAG_VERSION="${GITHUB_REF_NAME#core-}"
+          BUILD_VERSION=$(sed -n 's/^extra\["coreVersion"\] *= *"\(.*\)"$/\1/p' build.gradle.kts)
+          echo "tag=$TAG_VERSION  build.gradle.kts=$BUILD_VERSION"
+          [ "$TAG_VERSION" = "$BUILD_VERSION" ]
+
+      - name: Unit tests
+        run: |
+          chmod +x ./gradlew
+          ./gradlew :core:testDebugUnitTest :player-core:testDebugUnitTest --stacktrace
+
+      - name: Publish to GitHub Packages
+        env:
+          GITHUB_ACTOR: ${{ github.actor }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: ./gradlew publishAllPublicationsToGitHubPackagesRepository --stacktrace

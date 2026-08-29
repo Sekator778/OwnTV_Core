@@ -10,7 +10,14 @@ from typing import NamedTuple
 from format_specs import _tokens as format_tokens
 
 ROOT = Path(__file__).resolve().parents[2]
-SOURCE_ROOT = ROOT / "app/src/main/java"
+# Every Gradle module whose Kotlin ships to users, same rule as check_hardcoded_strings.SRC_ROOTS.
+# A single hardcoded "app/src/main/java" silently scanned nothing once the code moved into :core.
+# Roots that do not exist in this repo are skipped, so the same file works in every repo.
+SOURCE_ROOTS = [
+    ROOT / "app" / "src" / "main" / "java",
+    ROOT / "core" / "src" / "main" / "java",
+    ROOT / "player-core" / "src" / "main" / "java",
+]
 ALLOWLIST = ROOT / "tools/i18n/number_format_allowlist.txt"
 LOCALIZED_CONVERSIONS = set("deEfFgGaA")
 ALLOWED_CATEGORIES = {"DISPLAY", "DEVELOPER_DIAGNOSTIC"}
@@ -278,7 +285,9 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("paths", nargs="*", type=Path)
     parser.add_argument("--allowlist", type=Path, default=ALLOWLIST)
     args = parser.parse_args(argv)
-    paths = args.paths or sorted(SOURCE_ROOT.rglob("*.kt"))
+    paths = args.paths or sorted(
+        f for root in SOURCE_ROOTS if root.is_dir() for f in root.rglob("*.kt")
+    )
     errors, used = check(paths, args.allowlist)
     allowlist, _ = load_allowlist(args.allowlist)
     for key in sorted(set(allowlist) - used):

@@ -1,2 +1,4 @@
 # path<TAB>normalized-call-identity<TAB>occurrence<TAB>justification
-app/src/main/java/tv/own/owntv/ui/components/ChannelNumber.kt	Text(number.toString())	1	Fixed-width ASCII channel identifier column intentionally clips instead of scrolling
+#
+# Empty in the core repo. This checker scans Compose UI call sites for text that can overflow, and
+# neither :core nor :player-core renders anything — the app repos keep their own allowlists.

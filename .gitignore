@@ -1,0 +1,44 @@
+*.iml
+.gradle/
+.gradle-cache/
+.idea/
+.kotlin/
+local.properties
+.DS_Store
+**/build/
+/captures
+.externalNativeBuild
+.cxx
+
+# Local tooling / agent state
+.codex-*
+.claude/
+.planning/
+.serena/
+.codegraph/
+.zcode/
+AGENT_HANDOVER.md
+
+# Signing keys & secrets — NEVER commit these. A library has no keystore, but the rule costs
+# nothing and prevents an accident.
+*.keystore
+*.jks
+keystore.properties
+signing.properties
+
+# Migration planning documents — working notes for the three-repo split, not part of the library.
+# They reference private local paths, so they stay out of a repo that goes public later.
+future_work/
+README_START_HERE.md
+
+# i18n seed tool run state (batch inputs, IDs, raw results) — never committed
+/runs/
+
+# Logcat captures and diagnostic dumps written into the repo root while debugging. These routinely
+# contain portal URLs, MAC addresses, stream URLs and tokens, so they must never reach a commit.
+/*.txt
+/*.log
+
+# JVM crash dumps from a Gradle daemon (never worth committing)
+hs_err_pid*.log
+replay_pid*.log

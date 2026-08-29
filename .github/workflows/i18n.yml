@@ -1,0 +1,76 @@
+name: i18n
+
+# Every user-visible string in OwnTV lives in :core, so this is where the translation gate belongs.
+# Two jobs, both gating:
+#   baseline  — the hardcoded-literal ratchet against the pull-request merge base (not HEAD^, which
+#               is bypassable in a multi-commit PR).
+#   validate  — locales.json schema + placeholder/plural parity for every present translation, plus
+#               an informational coverage report. English in values/ is the only guaranteed-complete
+#               language; a missing community key never fails this job, but a present, malformed
+#               one still does.
+#
+# The pseudolocale job from the TV app is deliberately absent: it inspects a built APK, and this
+# repo produces AARs. check_pseudo_locales.py stays an app-repo check.
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  baseline:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout PR head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Fetch base branch
+        if: ${{ github.event_name == 'pull_request' }}
+        run: git fetch --no-tags --depth=1 origin "${GITHUB_BASE_REF}"
+
+      - name: Hardcoded-literal ratchet
+        env:
+          GITHUB_BASE_REF: ${{ github.base_ref }}
+          EVENT_NAME: ${{ github.event_name }}
+        run: |
+          set -euo pipefail
+          if [ "$EVENT_NAME" = "pull_request" ]; then
+            BASE_SHA="$(git merge-base HEAD "origin/${GITHUB_BASE_REF}")"
+            python3 tools/i18n/check_hardcoded_strings.py verify-ci --base-sha "$BASE_SHA"
+          else
+            python3 tools/i18n/check_hardcoded_strings.py verify --bootstrap
+          fi
+
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Validate strings and locales.json, print coverage report
+        run: python3 tools/i18n/validate_strings.py --report text
+      - name: SupportedLocales.kt freshness
+        run: python3 tools/i18n/gen_supported_locales.py check
+      - name: Locale-stable Kotlin number formatting
+        run: python3 tools/i18n/check_number_locale.py
+      - name: Bounded Compose text overflow
+        run: python3 tools/i18n/check_text_overflow.py
+      - name: Python i18n tool regression tests
+        run: python3 tools/i18n/test_i18n_tools.py

@@ -535,7 +535,12 @@ class TestValidateStrings(unittest.TestCase):
         self.assertIn("catalogue-only locale must not have a resource directory", out)
 
     def test_language_page_has_one_global_cta_and_remote_safe_contribution_panel(self):
-        screen = (ROOT / "app/src/main/java/tv/own/owntv/features/settings/LanguageSettingsScreen.kt").read_text()
+        # Asserts on a TV-app screen. This toolkit is shared with the core repo, which has no app
+        # module at all, so skip rather than fail where the screen legitimately does not exist.
+        path = ROOT / "app/src/main/java/tv/own/owntv/features/settings/LanguageSettingsScreen.kt"
+        if not path.is_file():
+            self.skipTest("no app module in this repo — LanguageSettingsScreen is app-side")
+        screen = path.read_text()
         page = screen.split("if (showContribution)", 1)[0]
         self.assertEqual(1, page.count("settings_language_help_translate"))
         self.assertEqual(1, screen.count("CompanionLink.renderQr(url)"))

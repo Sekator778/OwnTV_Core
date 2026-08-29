@@ -1,8 +1,9 @@
 plugins {
     alias(libs.plugins.android.library)
-    // Kotlin is provided by AGP 9's built-in Kotlin support, exactly as in :app and :core. The
-    // library plugin must NOT be applied with a version from here — see :core's Phase 1 note.
+    // Kotlin is provided by AGP 9's built-in Kotlin support, exactly as in :core. The library
+    // plugin must NOT be applied with a version from here — it is declared in the root build file.
     alias(libs.plugins.compose.compiler)
+    `maven-publish`
 }
 
 android {
@@ -32,6 +33,50 @@ android {
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
+    }
+
+    // Same as :core — release only, sources included.
+    publishing {
+        singleVariant("release") {
+            withSourcesJar()
+        }
+    }
+
+    lint {
+        abortOnError = true
+        warningsAsErrors = false
+        checkDependencies = false
+        // Media3's player API surface is almost entirely @UnstableApi; this engine is built on it,
+        // so the check fires across most of the module and carries no signal. Opting in
+        // file-by-file would only move the same acknowledgement into a dozen annotations.
+        disable += "UnsafeOptInUsageError"
+        // See :core — developer-local file, never committed, absent in CI.
+        disable += "PropertyEscape"
+    }
+}
+
+// Same version as :core, deliberately. Two artifacts that must be used together should not have
+// numbers that can disagree — that only creates combinations nobody ever built.
+publishing {
+    publications {
+        register<MavenPublication>("release") {
+            groupId = "tv.own.owntv"
+            artifactId = "player-core"
+            version = rootProject.extra["coreVersion"] as String
+            afterEvaluate { from(components["release"]) }
+        }
+    }
+    repositories {
+        maven {
+            name = "GitHubPackages"
+            url = uri("https://maven.pkg.github.com/ahXN00/OwnTV_Core")
+            credentials {
+                username = providers.gradleProperty("gpr.user")
+                    .orElse(providers.environmentVariable("GITHUB_ACTOR")).orNull
+                password = providers.gradleProperty("gpr.token")
+                    .orElse(providers.environmentVariable("GITHUB_TOKEN")).orNull
+            }
+        }
     }
 }
 

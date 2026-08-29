@@ -1,8 +1,13 @@
+import java.io.ByteArrayOutputStream
+import javax.inject.Inject
+import org.gradle.process.ExecOperations
+
 plugins {
     alias(libs.plugins.android.library)
-    // Kotlin is provided by AGP 9's built-in Kotlin support, exactly as in :app.
+    // Kotlin is provided by AGP 9's built-in Kotlin support, exactly as in the apps.
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.ksp)
+    `maven-publish`
 }
 
 android {
@@ -35,6 +40,31 @@ android {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
     }
+
+    // Only the release variant is published. Sources travel with it: an app developer stepping into
+    // a sync bug should land in core's real source, not in decompiled bytecode.
+    publishing {
+        singleVariant("release") {
+            withSourcesJar()
+        }
+    }
+
+    // Mirrors the TV app's lint block, because the resources it was written for now live here.
+    lint {
+        // CI gates on this, so an error must mean something.
+        abortOnError = true
+        warningsAsErrors = false
+        // A counted sentence must use Android plural resources; keep this invariant fatal so a new
+        // extraction cannot reintroduce English-only quantity wording.
+        fatal += "PluralsCandidate"
+        checkDependencies = false
+        // local.properties is developer-local and never committed (its Windows SDK path can't be
+        // escaped without breaking the local tooling that writes it). CI has no such file at all.
+        disable += "PropertyEscape"
+        // en-rGB is an intentional partial regional override of the canonical en-US source; its
+        // omitted keys fall back to values/ and must not make every default string a lint error.
+        disable += "MissingTranslation"
+    }
 }
 
 // OwnTVDatabaseMigrationTest opens each shipped schema from assets to replay every migration, so
@@ -50,6 +80,118 @@ androidComponents {
 ksp {
     arg("room.schemaLocation", "$projectDir/schemas")
 }
+
+publishing {
+    publications {
+        register<MavenPublication>("release") {
+            groupId = "tv.own.owntv"
+            artifactId = "core"
+            version = rootProject.extra["coreVersion"] as String
+            afterEvaluate { from(components["release"]) }
+        }
+    }
+    repositories {
+        maven {
+            name = "GitHubPackages"
+            url = uri("https://maven.pkg.github.com/ahXN00/OwnTV_Core")
+            // Never in the repo — these live in ~/.gradle/gradle.properties locally, and come from
+            // repository secrets in CI.
+            credentials {
+                username = providers.gradleProperty("gpr.user")
+                    .orElse(providers.environmentVariable("GITHUB_ACTOR")).orNull
+                password = providers.gradleProperty("gpr.token")
+                    .orElse(providers.environmentVariable("GITHUB_TOKEN")).orNull
+            }
+        }
+    }
+}
+
+// The same check CI runs, moved onto the developer's own machine, so the failure arrives seconds
+// after writing the string instead of minutes after pushing it.
+//
+// Deliberately NOT offered: any flag that records the literal and turns the build green. A red build
+// means the string moves to strings_*.xml or is declared technical — those are the only two exits.
+abstract class VerifyI18nLiterals : DefaultTask() {
+    @get:InputFiles
+    @get:PathSensitive(PathSensitivity.RELATIVE)
+    abstract val kotlinSources: ConfigurableFileCollection
+
+    /** The checker and its two reviewed manifests: edit any of them and the verdict may change. */
+    @get:InputFiles
+    @get:PathSensitive(PathSensitivity.RELATIVE)
+    abstract val toolInputs: ConfigurableFileCollection
+
+    @get:Internal
+    abstract val repoRoot: DirectoryProperty
+
+    @get:OutputFile
+    abstract val stamp: RegularFileProperty
+
+    @get:Inject
+    abstract val execOps: ExecOperations
+
+    private fun interpreter(): String? = listOf("python", "python3").firstOrNull { candidate ->
+        runCatching {
+            execOps.exec {
+                commandLine(candidate, "--version")
+                isIgnoreExitValue = true
+                standardOutput = ByteArrayOutputStream()
+                errorOutput = ByteArrayOutputStream()
+            }.exitValue == 0
+        }.getOrDefault(false)
+    }
+
+    @TaskAction
+    fun verify() {
+        val python = interpreter()
+        if (python == null) {
+            // Failing here would block anyone without Python from building at all. Warn loudly
+            // instead — CI still enforces it, so the worst case is a late failure, not a missed one.
+            logger.warn(
+                "\n  WARNING: Python was not found, so the hardcoded-text check did not run." +
+                    "\n  Install Python 3 to catch untranslatable text before pushing; CI will still catch it.\n",
+            )
+            stamp.get().asFile.writeText("skipped: no python interpreter\n")
+            return
+        }
+        val output = ByteArrayOutputStream()
+        val result = execOps.exec {
+            workingDir = repoRoot.get().asFile
+            commandLine(python, "tools/i18n/check_hardcoded_strings.py", "verify", "--bootstrap")
+            environment("PYTHONIOENCODING", "utf-8")
+            isIgnoreExitValue = true
+            standardOutput = output
+            errorOutput = output
+        }
+        if (result.exitValue != 0) {
+            logger.error(output.toString(Charsets.UTF_8))
+            throw GradleException("Hardcoded text check failed — see the report above.")
+        }
+        stamp.get().asFile.writeText("ok\n")
+    }
+}
+
+val verifyI18nLiterals = tasks.register<VerifyI18nLiterals>("verifyI18nLiterals") {
+    group = "verification"
+    description = "Fails the build on user-visible text left hardcoded in Kotlin."
+    // Every module in this repo: the checker scans them all anyway, and declaring each one here is
+    // what makes the task re-run when their Kotlin changes rather than staying wrongly UP-TO-DATE.
+    // A new module needs a line here AND an entry in the checker's SRC_ROOTS AND its own line in
+    // README.md's validator list — three registrations, not one.
+    kotlinSources.from(fileTree("src/main/java") { include("**/*.kt") })
+    kotlinSources.from(rootProject.fileTree("player-core/src/main/java") { include("**/*.kt") })
+    toolInputs.from(
+        rootProject.file("tools/i18n/check_hardcoded_strings.py"),
+        rootProject.file("tools/i18n/hardcoded_baseline.txt"),
+        rootProject.file("tools/i18n/safe_literals.txt"),
+    )
+    repoRoot.set(rootProject.layout.projectDirectory)
+    stamp.set(layout.buildDirectory.file("i18n/literal-inventory.txt"))
+}
+
+// preBuild fronts every variant, so debug compile checks and release assembles are both covered.
+// Inputs are declared above, so an unchanged source tree makes this UP-TO-DATE and free.
+tasks.named("preBuild") { dependsOn(verifyI18nLiterals) }
 
 dependencies {
     implementation(libs.androidx.core.ktx)
