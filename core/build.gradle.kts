@@ -10,6 +10,12 @@ plugins {
     `maven-publish`
 }
 
+// Module identity. The publication below reuses these, but they must be set on the project itself:
+// a consuming app that includes this repo as a composite build substitutes the published artifact
+// for this project by matching group:name, and it can only do that if the project declares them.
+group = "tv.own.owntv"
+version = rootProject.extra["coreVersion"] as String
+
 android {
     namespace = "tv.own.owntv.core"
     compileSdk {
@@ -86,7 +92,7 @@ publishing {
         register<MavenPublication>("release") {
             groupId = "tv.own.owntv"
             artifactId = "core"
-            version = rootProject.extra["coreVersion"] as String
+            version = project.version as String
             afterEvaluate { from(components["release"]) }
         }
     }

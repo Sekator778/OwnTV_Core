@@ -12,7 +12,7 @@ The shared engine behind the OwnTV apps. Two Android library modules, published 
 ## What depends on this
 
 - **OwnTV for Android TV** (`E:\MEGA\CODE\AI\OwnTV`) — shipping.
-- **OwnTV for mobile** — in progress.
+- **OwnTV for mobile** (`E:\MEGA\CODE\AI\OwnTV_Mobile`) — not built yet.
 
 **A change here affects two shipping apps.** Nothing is released from here until the TV app has been
 rebuilt against it, and eventually the mobile app too. There is no such thing as a change that only

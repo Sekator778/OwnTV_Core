@@ -29,7 +29,6 @@ signing.properties
 # Migration planning documents — working notes for the three-repo split, not part of the library.
 # They reference private local paths, so they stay out of a repo that goes public later.
 future_work/
-README_START_HERE.md
 
 # i18n seed tool run state (batch inputs, IDs, raw results) — never committed
 /runs/
