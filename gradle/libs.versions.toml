@@ -83,6 +83,10 @@ androidx-activity-compose = { group = "androidx.activity", name = "activity-comp
 
 # Compose (versions managed by the BOM)
 androidx-compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "composeBom" }
+# Runtime only (state, remember, effects) — no ui/foundation. This is the one Compose artifact
+# :core is allowed to depend on; it carries no screen-shape assumptions, so it stays usable from
+# the mobile app as well as the TV one.
+androidx-compose-runtime = { group = "androidx.compose.runtime", name = "runtime" }
 androidx-compose-ui = { group = "androidx.compose.ui", name = "ui" }
 androidx-compose-ui-graphics = { group = "androidx.compose.ui", name = "ui-graphics" }
 androidx-compose-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling" }
@@ -162,6 +166,8 @@ androidx-test-uiautomator = { group = "androidx.test.uiautomator", name = "uiaut
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
+# :core and :player-core are Android libraries, not applications. Same AGP version as the app.
+android-library = { id = "com.android.library", version.ref = "agp" }
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 # KSP 2.3.6+ supports AGP 9's built-in Kotlin.
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }

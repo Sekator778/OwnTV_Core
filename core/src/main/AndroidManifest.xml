@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Everything declared here merges into BOTH apps, so the test for each entry is: would the phone
+     app want this? Networking and the sync/download foreground service move here because core is
+     what performs them. Storage, installing an APK, the Watch Next provider, audio effects, the
+     launcher activity and the WorkManager auto-init removal stay in :app — those belong to a shell,
+     not to the engine. -->
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <!-- Core does all of the networking: playlist/EPG sync, metadata, subtitles, downloads. -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
+    <!-- Core owns CatalogSyncWorker and DownloadManager, so it owns the foreground service they run
+         in. POST_NOTIFICATIONS is only asked for by the system on API 33+; if it is denied the
+         service still runs, the notification is just not shown. -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+
+    <application>
+        <!-- WorkManager's foreground-service host, typed for the download worker's data sync. -->
+        <service
+            android:name="androidx.work.impl.foreground.SystemForegroundService"
+            android:foregroundServiceType="dataSync"
+            tools:node="merge" />
+    </application>
+
+</manifest>
