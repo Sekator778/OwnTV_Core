@@ -1,0 +1,147 @@
+name: Bump consumers
+
+# After a core version is published, open a pin-bump pull request on every app that consumes core.
+#
+# The apps hold no core code, so the PR is tiny — it moves `owntvCore` in the app's version
+# catalogue to the version just published, and nothing else builds differently as a result. It also
+# copies `tools/i18n/locales.json` across, which is the one file deliberately duplicated between
+# core and each app: Gradle reads `packaged` from the APP's copy at configure time to build
+# localeFilters, so core's copy never reaches it. Left to a human that step is silently skipped and
+# a newly finished language is stripped out of the APK with every check green.
+#
+# Nothing here is merged automatically. The PR runs the app's own CI, and a human merges it — which
+# is the whole point: the maintainer builds against core's SOURCE locally (owntv.corePath), so he
+# has already been running this code for a while. The PR is what makes CI and the released APK
+# agree with him.
+#
+# CONSUMER_BUMP_TOKEN must be a PAT with `repo` scope on the consumer repositories. The built-in
+# GITHUB_TOKEN cannot write to another repository, and — just as important — pull requests opened
+# with GITHUB_TOKEN do not trigger the target repo's workflows, so the PR would sit there with no
+# checks at all.
+
+on:
+  workflow_run:
+    workflows: [ "Publish core" ]
+    types: [ completed ]
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Core version to pin. Defaults to coreVersion in build.gradle.kts."
+        required: false
+
+permissions:
+  contents: read
+
+concurrency:
+  group: bump-consumers
+  cancel-in-progress: false
+
+jobs:
+  bump:
+    # workflow_run fires for failed upstream runs too. Only bump after a publish that succeeded —
+    # pinning a version that was never published breaks CI and every contributor's build.
+    if: github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false          # one consumer failing must not block the others
+      matrix:
+        consumer:
+          - ahXN00/OwnTV
+          # - ahXN00/OwnTV_Mobile    # uncomment when the mobile repo exists
+
+    steps:
+      - name: Checkout core
+        uses: actions/checkout@v4
+
+      - name: Resolve the version to pin
+        id: v
+        run: |
+          set -euo pipefail
+          VERSION="${{ inputs.version }}"
+          if [ -z "$VERSION" ]; then
+            VERSION=$(sed -n 's/^extra\["coreVersion"\] *= *"\(.*\)"$/\1/p' build.gradle.kts)
+          fi
+          if [ -z "$VERSION" ]; then
+            echo "::error::Could not determine the core version to pin."
+            exit 1
+          fi
+          echo "Pinning consumers to core $VERSION"
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+
+      - name: Open the pin-bump pull request
+        env:
+          GH_TOKEN: ${{ secrets.CONSUMER_BUMP_TOKEN }}
+          VERSION: ${{ steps.v.outputs.version }}
+          CONSUMER: ${{ matrix.consumer }}
+        run: |
+          set -euo pipefail
+
+          if [ -z "${GH_TOKEN:-}" ]; then
+            echo "::error::CONSUMER_BUMP_TOKEN is not set on this repository."
+            echo "Add a PAT with 'repo' scope: Settings -> Secrets and variables -> Actions."
+            exit 1
+          fi
+
+          BRANCH="bump/core-${VERSION}"
+
+          if [ -n "$(gh pr list --repo "$CONSUMER" --head "$BRANCH" --state open --json number -q '.[].number')" ]; then
+            echo "A pull request for $BRANCH is already open on $CONSUMER — nothing to do."
+            exit 0
+          fi
+
+          git clone --depth 1 "https://x-access-token:${GH_TOKEN}@github.com/${CONSUMER}.git" consumer
+          cd consumer
+          git switch -c "$BRANCH"
+
+          # The pin. Verified after the edit: a silently unmatched sed would open an empty PR.
+          sed -i -E "s|^owntvCore = \".*\"$|owntvCore = \"${VERSION}\"|" gradle/libs.versions.toml
+          if ! grep -qx "owntvCore = \"${VERSION}\"" gradle/libs.versions.toml; then
+            echo "::error::Could not set owntvCore in gradle/libs.versions.toml on $CONSUMER."
+            exit 1
+          fi
+
+          # The duplicated locale catalogue — see the header.
+          cp ../tools/i18n/locales.json tools/i18n/locales.json
+
+          if git diff --quiet; then
+            echo "$CONSUMER is already on core ${VERSION} with an identical locale catalogue."
+            exit 0
+          fi
+
+          # Written through files: multi-line text is far easier to keep readable here than inline.
+          cat > ../commit-message.txt <<EOF
+          Pin core ${VERSION}
+
+          Core ${VERSION} is published. This moves owntvCore to it so CI and the released APK build
+          against the same core the maintainer already builds against locally, and refreshes the
+          duplicated locale catalogue so a newly packaged language is not stripped out of the APK.
+
+          Opened automatically by the core repository's publish workflow.
+          EOF
+
+          cat > ../pr-body.md <<EOF
+          Core \`${VERSION}\` has been published to GitHub Packages.
+
+          - \`owntvCore\` moved to \`${VERSION}\` in \`gradle/libs.versions.toml\`
+          - \`tools/i18n/locales.json\` refreshed from core
+
+          Local builds resolve core from source via \`owntv.corePath\` and ignore this pin, so this
+          pull request is what makes CI and the released APK agree with what has already been tested
+          locally.
+
+          Merge once the checks are green. See the core changelog for what \`${VERSION}\` contains.
+          EOF
+
+          git config user.name  "OwnTV"
+          git config user.email "xiannero@yahoo.com"
+          git commit -a --file ../commit-message.txt
+
+          git push --force-with-lease origin "$BRANCH"
+
+          gh pr create \
+            --repo "$CONSUMER" \
+            --base main \
+            --head "$BRANCH" \
+            --title "Pin core ${VERSION}" \
+            --body-file ../pr-body.md
