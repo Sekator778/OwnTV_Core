@@ -9,20 +9,32 @@ name: Bump consumers
 # localeFilters, so core's copy never reaches it. Left to a human that step is silently skipped and
 # a newly finished language is stripped out of the APK with every check green.
 #
-# Nothing here is merged automatically. The PR runs the app's own CI, and a human merges it — which
-# is the whole point: the maintainer builds against core's SOURCE locally (owntv.corePath), so he
-# has already been running this code for a while. The PR is what makes CI and the released APK
-# agree with him.
+# This workflow only OPENS the PR; it never merges. Merging is the consumer repo's business, and the
+# TV app decides to do it itself: `automerge-core-bump.yml` in ahXN00/OwnTV merges the PR once every
+# check on it is green, guarded on the branch name, the author, and a diff touching only the two
+# files below. A consumer without that workflow simply gets a PR that waits for a human.
+#
+# Either way the PR is the point: the maintainer builds against core's SOURCE locally
+# (owntv.corePath), so he has already been running this code for a while. The PR is what makes CI
+# and the released APK agree with him.
 #
 # CONSUMER_BUMP_TOKEN must be a PAT with `repo` scope on the consumer repositories. The built-in
 # GITHUB_TOKEN cannot write to another repository, and — just as important — pull requests opened
 # with GITHUB_TOKEN do not trigger the target repo's workflows, so the PR would sit there with no
 # checks at all.
 
+# Triggered by the GitHub RELEASE, not by the tag. The release is created by "Publish core" as its
+# last step, so it exists only if the unit tests passed and both artifacts actually reached GitHub
+# Packages. That makes the release the single visible gate: no release means no pin-bump PR, and the
+# version is there on the Releases page for users to read before any consumer moves to it.
+#
+# For this to fire at all, the release must be created with CONSUMER_BUMP_TOKEN, not GITHUB_TOKEN —
+# GitHub deliberately does not trigger workflows from events raised by the built-in token, so a
+# release published by GITHUB_TOKEN would sit there and nothing would happen. "Publish core" does
+# that correctly; do not "simplify" it back to github.token.
 on:
-  workflow_run:
-    workflows: [ "Publish core" ]
-    types: [ completed ]
+  release:
+    types: [ published ]
   workflow_dispatch:
     inputs:
       version:
@@ -38,9 +50,13 @@ concurrency:
 
 jobs:
   bump:
-    # workflow_run fires for failed upstream runs too. Only bump after a publish that succeeded —
-    # pinning a version that was never published breaks CI and every contributor's build.
-    if: github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success'
+    # A release only exists if "Publish core" got as far as creating it, so reaching here already
+    # means the tests passed and both artifacts are on GitHub Packages. The tag-name guard is the
+    # remaining check: this repo could carry some other release series one day, and pinning
+    # consumers to a version that was never published as core breaks every contributor's build.
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      startsWith(github.event.release.tag_name, 'core-')
     runs-on: ubuntu-latest
 
     strategy:
@@ -51,14 +67,26 @@ jobs:
           # - ahXN00/OwnTV_Mobile    # uncomment when the mobile repo exists
 
     steps:
+      # Check out the RELEASED commit, not whatever main has drifted to. `tools/i18n/locales.json`
+      # is copied from here into the consumer, and it must be the catalogue that belongs to the
+      # version being pinned — main may already carry a locale that is not in this release.
       - name: Checkout core
         uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.release.tag_name || github.ref }}
 
       - name: Resolve the version to pin
         id: v
+        env:
+          # Empty on workflow_dispatch. On a release this is `core-x.y.z`, and it is authoritative:
+          # `coreVersion` in the build file may already have moved on to the next version.
+          RELEASE_TAG: ${{ github.event.release.tag_name }}
         run: |
           set -euo pipefail
           VERSION="${{ inputs.version }}"
+          if [ -z "$VERSION" ] && [ -n "${RELEASE_TAG:-}" ]; then
+            VERSION="${RELEASE_TAG#core-}"
+          fi
           if [ -z "$VERSION" ]; then
             VERSION=$(sed -n 's/^extra\["coreVersion"\] *= *"\(.*\)"$/\1/p' build.gradle.kts)
           fi

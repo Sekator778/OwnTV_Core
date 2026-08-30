@@ -1,12 +1,19 @@
 name: Publish core
 
 # Publishes tv.own.owntv:core and tv.own.owntv:player-core to GitHub Packages when a core-* tag is
-# pushed. Both modules always go out together on the same version, taken from `coreVersion` in the
-# root build file — the tag must match it, and the job checks that before publishing anything.
+# pushed, then publishes the GitHub Release for that tag. Both modules always go out together on the
+# same version, taken from `coreVersion` in the root build file — the tag must match it, and the job
+# checks that before publishing anything.
 #
-# No PAT is needed here: the built-in GITHUB_TOKEN can write packages for its own repository, which
-# is why `permissions: packages: write` is set below. A PAT with read:packages is still needed by
-# anything that CONSUMES the artifact — see the app repo's CI secrets.
+# Order matters: tests, then packages, then the release. The release is therefore proof that the
+# other two succeeded, which is exactly why `bump-consumers.yml` triggers on the release and not on
+# the tag. Push a tag whose tests fail and you get no release, no pin-bump pull request, and a clean
+# chance to fix it and re-tag.
+#
+# GITHUB_TOKEN can write packages for its own repository, which is why `permissions: packages: write`
+# is set below. The RELEASE step is the exception and uses CONSUMER_BUMP_TOKEN — see its comment. A
+# PAT with read:packages is separately needed by anything that CONSUMES the artifact — see the app
+# repo's CI secrets.
 
 on:
   push:
@@ -61,3 +68,58 @@ jobs:
           GITHUB_ACTOR: ${{ github.actor }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: ./gradlew publishAllPublicationsToGitHubPackagesRepository --stacktrace
+
+      # LAST step on purpose. The release is the visible, human-readable record that this version
+      # exists — and it is also the trigger for `bump-consumers.yml`, which opens the pin-bump pull
+      # request on every app. Creating it here, after the tests and the publish, means a release can
+      # only appear for a version that actually built and actually reached GitHub Packages. A failed
+      # run leaves no release, so no consumer is ever pinned to something that does not exist, and
+      # there is a chance to fix the problem and re-tag before anything downstream moves.
+      #
+      # CONSUMER_BUMP_TOKEN, not GITHUB_TOKEN: GitHub does not trigger workflows from events raised
+      # by the built-in token, so a release created with it would never start the bump. Do not
+      # "simplify" this to github.token — it fails silently, with a green run and no pull request.
+      - name: Publish the GitHub Release
+        if: startsWith(github.ref, 'refs/tags/core-')
+        env:
+          GH_TOKEN: ${{ secrets.CONSUMER_BUMP_TOKEN }}
+          TAG: ${{ github.ref_name }}
+        run: |
+          set -euo pipefail
+
+          if [ -z "${GH_TOKEN:-}" ]; then
+            echo "::error::CONSUMER_BUMP_TOKEN is not set on this repository."
+            echo "A release created with GITHUB_TOKEN would not trigger the consumer bump."
+            exit 1
+          fi
+
+          # Body = this version's section of CHANGELOG.md, from "## <tag>" to the next "## core-".
+          # Same shape as the TV app's release-notes workflow.
+          awk -v ver="$TAG" '
+            $0 ~ ("^## " ver "([ \t]|$)") { flag=1; next }
+            /^## core-/ && flag { flag=0 }
+            flag { print }
+          ' CHANGELOG.md > notes.md || true
+          sed -i -e '/./,$!d' notes.md
+          awk 'NF{p=NR} {a[NR]=$0} END{for(i=1;i<=p;i++) print a[i]}' notes.md > notes.trimmed.md
+          mv notes.trimmed.md notes.md
+
+          if [ ! -s notes.md ]; then
+            echo "::warning::No CHANGELOG.md section for $TAG — publishing the release without notes."
+            printf 'Published to GitHub Packages as `tv.own.owntv:core:%s` and `tv.own.owntv:player-core:%s`.\n' \
+              "${TAG#core-}" "${TAG#core-}" > notes.md
+          fi
+
+          echo "----- notes for $TAG -----"
+          cat notes.md
+          echo "--------------------------"
+
+          # Idempotent: re-running the workflow on an existing tag updates the release instead of
+          # failing. `gh release edit` does not re-fire the `published` event, which is correct —
+          # the consumers were already bumped the first time.
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            echo "Release $TAG already exists — updating its notes."
+            gh release edit "$TAG" --title "OwnTV Core $TAG" --notes-file notes.md
+          else
+            gh release create "$TAG" --title "OwnTV Core $TAG" --notes-file notes.md --verify-tag
+          fi

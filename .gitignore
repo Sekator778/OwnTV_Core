@@ -27,9 +27,14 @@ CLAUDE.md
 keystore.properties
 signing.properties
 
-# Migration planning documents — working notes for the three-repo split, not part of the library.
-# They reference private local paths, so they stay out of a repo that goes public later.
+# Internal planning documents — kept local, never committed. `future_work/` holds the three-repo
+# split's working notes; the other two are the names the TV app uses. All three are listed in every
+# repo so the same folder name is safe to use anywhere in the suite, and a name that happens to be
+# unused here can never become a committed leak later. They reference private local paths, so they
+# must stay out of a repo that is public.
 future_work/
+future-plan/
+audit/
 
 # i18n seed tool run state (batch inputs, IDs, raw results) — never committed
 /runs/

@@ -3,6 +3,18 @@
 Core is versioned independently of the apps. A core version number never lines up with an OwnTV TV
 app `v4.x` release, and the two must not be confused. Tags here are prefixed `core-`.
 
+## core-1.0.3 — 2026-08-30
+
+**No library changes.** Same code as `core-1.0.2`; this version exists to exercise the new release
+pipeline end to end.
+
+- **Every core version now gets a GitHub Release**, with its notes taken from this file. Previously
+  a version existed only as a tag and a package, which was hard to read and impossible to link to.
+- **The release is what tells the apps to move.** The publish workflow runs the tests, pushes both
+  artifacts to GitHub Packages, and only then publishes the release — so a release can exist only
+  for a version that actually built and shipped, and it is the release that opens the pin-bump pull
+  request on each app. A tag whose tests fail now stops there.
+
 ## core-1.0.2 — 2026-08-30
 
 - **Hungarian is now a fully translated, packaged language.** All 2132 strings across the six
