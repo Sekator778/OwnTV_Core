@@ -63,7 +63,7 @@ def _locale(id, tag, qualifier, resdir, **kw):
     return base
 
 
-# The established 24 Tier 1 locales used by compact validator fixtures.
+# The established 25 Tier 1 locales used by compact validator fixtures.
 _FULL_TIER1 = [
     _locale("en-US", "en-US", "en", "values", weblateCode="en"),
     _locale("ar", "ar", "ar", "values-ar", weblateCode="ar", script="Arab", rtl=True, packaged=False, pickerVisible=False),
@@ -89,6 +89,7 @@ _FULL_TIER1 = [
     _locale("ml", "ml", "ml", "values-ml", script="Mlym", packaged=False, pickerVisible=False),
     _locale("hi", "hi", "hi", "values-hi", script="Deva", packaged=False, pickerVisible=False),
     _locale("bn", "bn", "bn", "values-bn", script="Beng", packaged=False, pickerVisible=False),
+    _locale("hu", "hu", "hu", "values-hu", packaged=False, pickerVisible=False),
 ]
 _CATALOGUE_ONLY = [
     _locale("bg", "bg", "bg", "values-bg", tier=2, packaged=False, pickerVisible=False),
@@ -98,7 +99,6 @@ _CATALOGUE_ONLY = [
     _locale("fi", "fi", "fi", "values-fi", tier=2, packaged=False, pickerVisible=False),
     _locale("el", "el", "el", "values-el", tier=2, script="Grek", packaged=False, pickerVisible=False),
     _locale("he", "he", "iw", "values-iw", tier=2, weblateCode="he", script="Hebr", rtl=True, packaged=False, pickerVisible=False),
-    _locale("hu", "hu", "hu", "values-hu", tier=2, packaged=False, pickerVisible=False),
     _locale("id", "id", "in", "values-in", tier=2, weblateCode="id", packaged=False, pickerVisible=False),
     _locale("lv", "lv", "lv", "values-lv", tier=2, packaged=False, pickerVisible=False),
     _locale("lt", "lt", "lt", "values-lt", tier=2, packaged=False, pickerVisible=False),
@@ -482,7 +482,7 @@ class TestValidateStrings(unittest.TestCase):
         tags = {row["languageTag"] for row in payload["locales"]}
         self.assertNotIn("en-US", tags)
         self.assertNotIn("en-GB", tags)
-        self.assertEqual(len(tags), 42)  # original 23 plus 19 catalogue-only community targets
+        self.assertEqual(len(tags), 42)  # original 24 plus 18 catalogue-only community targets
 
     def test_requested_catalogue_metadata_and_zero_resource_status(self):
         catalogue = json.loads((ROOT / "tools/i18n/locales.json").read_text())
@@ -494,7 +494,6 @@ class TestValidateStrings(unittest.TestCase):
             "fi": ("fi", "fi", "fi", "Finnish", "Suomi", "Latn", False),
             "el": ("el", "el", "el", "Greek", "Ελληνικά", "Grek", False),
             "he": ("he", "iw", "he", "Hebrew", "עברית", "Hebr", True),
-            "hu": ("hu", "hu", "hu", "Hungarian", "Magyar", "Latn", False),
             "id": ("id", "in", "id", "Indonesian", "Bahasa Indonesia", "Latn", False),
             "lv": ("lv", "lv", "lv", "Latvian", "Latviešu", "Latn", False),
             "lt": ("lt", "lt", "lt", "Lithuanian", "Lietuvių", "Latn", False),

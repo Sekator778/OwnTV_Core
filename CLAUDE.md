@@ -165,8 +165,19 @@ If `check_hardcoded_strings` reports STALE CLASSIFICATION after code was deleted
 `python tools/i18n/check_hardcoded_strings.py prune-safe` and re-verify.
 
 `check_pseudo_locales.py` is an **app-repo** check — it inspects a built APK, and this repo produces
-AARs. On Windows, `test_i18n_tools.py` reports ~20 errors that are a `cp1252` default-encoding
-artifact of the local Python, not real failures; CI runs it on Linux where they pass.
+AARs.
+
+**CI also runs `tools/i18n/test_i18n_tools.py`, and it is not covered by the four gates above.** It
+asserts on the *real* `locales.json`, so any catalogue edit — promoting a locale in particular — can
+break it while all four gates stay green. Run it too whenever `locales.json` changes:
+
+```bash
+PYTHONUTF8=1 python tools/i18n/test_i18n_tools.py 2>&1 | grep -E "^(OK|FAILED|Ran )"
+```
+
+`PYTHONUTF8=1` is required on Windows: without it the local Python defaults to `cp1252` and the run
+reports ~20 encoding errors that are not real failures. With it, the suite passes locally exactly as
+it does on CI's Linux runners.
 
 ## New user-visible text ships translated — never English-only
 
