@@ -752,6 +752,16 @@
     <string name="settings_sources_type_xtream">Xtream · <xliff:g id="url">%1$s</xliff:g></string>
     <string name="settings_sources_type_stalker">Stalker · <xliff:g id="url">%1$s</xliff:g></string>
     <string name="settings_sources_expiry">Udløber <xliff:g id="date">%1$s</xliff:g></string>
+    <string name="settings_sources_test_title">Kildetest</string>
+    <string name="settings_sources_test_ok">Forbindelsen er i orden</string>
+    <string name="settings_sources_test_auth">Udbyderen afviste disse oplysninger. Tjek brugernavn, adgangskode eller MAC-adresse.</string>
+    <string name="settings_sources_test_expired">Dette abonnement er udløbet.</string>
+    <string name="settings_sources_test_unreachable">Kunne ikke nå serveren. Tjek adressen og din internetforbindelse.</string>
+    <string name="settings_sources_test_status">Status: <xliff:g id="status">%1$s</xliff:g></string>
+    <string name="settings_sources_test_connections">Forbindelser: <xliff:g id="used">%1$d</xliff:g> af <xliff:g id="max">%2$d</xliff:g> i brug</string>
+    <string name="settings_sources_test_connections_max">Forbindelser: op til <xliff:g id="max">%1$d</xliff:g> ad gangen</string>
+    <string name="settings_sources_test_trial">Prøvekonto</string>
+    <string name="settings_sources_test_expiry_none">Ingen udløbsdato oplyst</string>
     <string name="settings_sources_auto_refresh">⟳ <xliff:g id="mode">%1$s</xliff:g></string>
     <string name="settings_sources_default">STANDARD</string>
     <string name="settings_sources_backup">Sikkerhedskopi</string>
@@ -771,8 +781,13 @@
     <string name="settings_sources_refresh_startup">Opdater ved opstart</string>
     <string name="settings_sources_refresh_6h">6 timer</string>
     <string name="settings_sources_refresh_12h">12 timer</string>
-    <string name="settings_sources_refresh_24h">24 timer</string>
-    <string name="settings_sources_refresh_48h">48 timer</string>
+    <string name="settings_sources_refresh_manual">Brugerdefineret interval\u2026</string>
+    <plurals name="settings_sources_refresh_days">
+        <item quantity="one">Hver <xliff:g id="count">%1$d</xliff:g>. dag</item>
+        <item quantity="other">Hver <xliff:g id="count">%1$d</xliff:g>. dag</item>
+    </plurals>
+    <string name="settings_sources_refresh_days_title">Opdateringsinterval</string>
+    <string name="settings_sources_refresh_days_hint">Venstre og højre vælger antal dage, fra 1 til 99.</string>
     <string name="settings_epg_sources_title">EPG-kilder</string>
     <string name="settings_epg_sources_empty">Der er endnu ingen EPG-kilder. Tilføj et XMLTV-link.</string>
     <string name="settings_epg_sources_add">Tilføj EPG-kilde</string>

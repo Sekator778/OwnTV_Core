@@ -130,11 +130,6 @@
     <string name="setup_device_model_preset">डिवाइस मॉडल प्रीसेट (User-Agent)…</string>
     <string name="setup_testing">जाँच की जा रही है…</string>
     <string name="setup_test_connection">कनेक्शन की जाँच करें</string>
-    <plurals name="setup_stalker_test_connected">
-        <item quantity="one">✓ <xliff:g id="endpoint">%1$s</xliff:g> के ज़रिए कनेक्ट किया गया (<xliff:g id="fields">%2$d</xliff:g> प्रोफ़ाइल फ़ील्ड)</item>
-        <item quantity="other">✓ <xliff:g id="endpoint">%1$s</xliff:g> के ज़रिए कनेक्ट किया गया (<xliff:g id="fields">%2$d</xliff:g> प्रोफ़ाइल फ़ील्ड)</item>
-    </plurals>
-    <string name="setup_stalker_test_expires">समाप्ति: <xliff:g id="date">%1$s</xliff:g></string>
     <string name="setup_user_agent_optional">User-Agent (वैकल्पिक)</string>
     <string name="setup_user_agent_example">जैसे VLC/3.0.20 LibVLC/3.0.20</string>
     <string name="setup_auto_refresh">ऑटो रीफ़्रेश</string>

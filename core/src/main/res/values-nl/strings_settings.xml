@@ -752,6 +752,16 @@
     <string name="settings_sources_type_xtream">Xtream · <xliff:g id="url">%1$s</xliff:g></string>
     <string name="settings_sources_type_stalker">Stalker · <xliff:g id="url">%1$s</xliff:g></string>
     <string name="settings_sources_expiry">Verloopt op <xliff:g id="date">%1$s</xliff:g></string>
+    <string name="settings_sources_test_title">Brontest</string>
+    <string name="settings_sources_test_ok">Verbinding in orde</string>
+    <string name="settings_sources_test_auth">De provider heeft deze gegevens geweigerd. Controleer de gebruikersnaam, het wachtwoord of het MAC-adres.</string>
+    <string name="settings_sources_test_expired">Dit abonnement is verlopen.</string>
+    <string name="settings_sources_test_unreachable">Kon de server niet bereiken. Controleer het adres en je internetverbinding.</string>
+    <string name="settings_sources_test_status">Status: <xliff:g id="status">%1$s</xliff:g></string>
+    <string name="settings_sources_test_connections">Verbindingen: <xliff:g id="used">%1$d</xliff:g> van <xliff:g id="max">%2$d</xliff:g> in gebruik</string>
+    <string name="settings_sources_test_connections_max">Verbindingen: maximaal <xliff:g id="max">%1$d</xliff:g> tegelijk</string>
+    <string name="settings_sources_test_trial">Proefaccount</string>
+    <string name="settings_sources_test_expiry_none">Geen vervaldatum opgegeven</string>
     <string name="settings_sources_auto_refresh">⟳ <xliff:g id="mode">%1$s</xliff:g></string>
     <string name="settings_sources_default">STANDAARD</string>
     <string name="settings_sources_backup">Back-up</string>
@@ -771,8 +781,13 @@
     <string name="settings_sources_refresh_startup">Vernieuwen bij opstarten</string>
     <string name="settings_sources_refresh_6h">6 uur</string>
     <string name="settings_sources_refresh_12h">12 uur</string>
-    <string name="settings_sources_refresh_24h">24 uur</string>
-    <string name="settings_sources_refresh_48h">48 uur</string>
+    <string name="settings_sources_refresh_manual">Eigen interval\u2026</string>
+    <plurals name="settings_sources_refresh_days">
+        <item quantity="one">Elke <xliff:g id="count">%1$d</xliff:g> dag</item>
+        <item quantity="other">Elke <xliff:g id="count">%1$d</xliff:g> dagen</item>
+    </plurals>
+    <string name="settings_sources_refresh_days_title">Verversingsinterval</string>
+    <string name="settings_sources_refresh_days_hint">Links en rechts kiezen het aantal dagen, van 1 tot 99.</string>
     <string name="settings_epg_sources_title">EPG-bronnen</string>
     <string name="settings_epg_sources_empty">Nog geen EPG-bronnen. Voeg een XMLTV-link toe.</string>
     <string name="settings_epg_sources_add">EPG-bron toevoegen</string>

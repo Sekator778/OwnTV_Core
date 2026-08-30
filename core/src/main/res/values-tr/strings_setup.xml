@@ -130,11 +130,6 @@
     <string name="setup_device_model_preset">Cihaz modeli ön ayarı (User-Agent)…</string>
     <string name="setup_testing">Test ediliyor…</string>
     <string name="setup_test_connection">Bağlantıyı test et</string>
-    <plurals name="setup_stalker_test_connected">
-        <item quantity="one">✓ <xliff:g id="endpoint">%1$s</xliff:g> üzerinden bağlandı (<xliff:g id="fields">%2$d</xliff:g> profil alanı)</item>
-        <item quantity="other">✓ <xliff:g id="endpoint">%1$s</xliff:g> üzerinden bağlandı (<xliff:g id="fields">%2$d</xliff:g> profil alanı)</item>
-    </plurals>
-    <string name="setup_stalker_test_expires">Geçerlilik sonu: <xliff:g id="date">%1$s</xliff:g></string>
     <string name="setup_user_agent_optional">User-Agent (isteğe bağlı)</string>
     <string name="setup_user_agent_example">ör. VLC/3.0.20 LibVLC/3.0.20</string>
     <string name="setup_auto_refresh">Otomatik yenileme</string>

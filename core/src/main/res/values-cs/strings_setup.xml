@@ -136,13 +136,6 @@
     <string name="setup_device_model_preset">Předvolba modelu zařízení (User-Agent)…</string>
     <string name="setup_testing">Testování…</string>
     <string name="setup_test_connection">Otestovat připojení</string>
-    <plurals name="setup_stalker_test_connected">
-        <item quantity="one">✓ Připojeno přes <xliff:g id="endpoint">%1$s</xliff:g> (<xliff:g id="fields">%2$d</xliff:g> pole profilu)</item>
-        <item quantity="few">✓ Připojeno přes <xliff:g id="endpoint">%1$s</xliff:g> (<xliff:g id="fields">%2$d</xliff:g> pole profilu)</item>
-        <item quantity="many">✓ Připojeno přes <xliff:g id="endpoint">%1$s</xliff:g> (<xliff:g id="fields">%2$d</xliff:g> pole profilu)</item>
-        <item quantity="other">✓ Připojeno přes <xliff:g id="endpoint">%1$s</xliff:g> (<xliff:g id="fields">%2$d</xliff:g> polí profilu)</item>
-    </plurals>
-    <string name="setup_stalker_test_expires">Platnost vyprší <xliff:g id="date">%1$s</xliff:g></string>
     <string name="setup_user_agent_optional">User-Agent (volitelný)</string>
     <string name="setup_user_agent_example">např. VLC/3.0.20 LibVLC/3.0.20</string>
     <string name="setup_auto_refresh">Automatická aktualizace</string>

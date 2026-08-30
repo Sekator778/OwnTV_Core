@@ -136,13 +136,6 @@
     <string name="setup_device_model_preset">Предустановка модели устройства (User-Agent)…</string>
     <string name="setup_testing">Проверка…</string>
     <string name="setup_test_connection">Проверить соединение</string>
-    <plurals name="setup_stalker_test_connected">
-        <item quantity="one">✓ Подключено через <xliff:g id="endpoint">%1$s</xliff:g> (<xliff:g id="fields">%2$d</xliff:g> поле профиля)</item>
-        <item quantity="few">✓ Подключено через <xliff:g id="endpoint">%1$s</xliff:g> (<xliff:g id="fields">%2$d</xliff:g> поля профиля)</item>
-        <item quantity="many">✓ Подключено через <xliff:g id="endpoint">%1$s</xliff:g> (<xliff:g id="fields">%2$d</xliff:g> полей профиля)</item>
-        <item quantity="other">✓ Подключено через <xliff:g id="endpoint">%1$s</xliff:g> (<xliff:g id="fields">%2$d</xliff:g> поля профиля)</item>
-    </plurals>
-    <string name="setup_stalker_test_expires">Доступ истекает <xliff:g id="date">%1$s</xliff:g></string>
     <string name="setup_user_agent_optional">User-Agent (необязательно)</string>
     <string name="setup_user_agent_example">Например, VLC/3.0.20 LibVLC/3.0.20</string>
     <string name="setup_auto_refresh">Автообновление</string>

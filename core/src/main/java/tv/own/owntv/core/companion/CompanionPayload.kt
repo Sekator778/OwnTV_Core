@@ -33,7 +33,7 @@ data class CompanionPayload(
     val signature: String = "",
     val userAgent: String = "",
     val epgUrl: String = "",
-    /** Name of a [tv.own.owntv.core.settings.PlaylistAutoRefresh] entry; defaults to OFF. */
+    /** A serialized [tv.own.owntv.core.settings.PlaylistRefresh] (e.g. `HOURS_6`, `MANUAL:14`); defaults to OFF. */
     val autoRefresh: String = "OFF",
     val syncLive: SyncScopeChoice = SyncScopeChoice.Now,
     val syncMovies: SyncScopeChoice = SyncScopeChoice.Now,

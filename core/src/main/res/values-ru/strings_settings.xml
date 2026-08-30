@@ -764,6 +764,16 @@
     <string name="settings_sources_type_xtream">Xtream · <xliff:g id="url">%1$s</xliff:g></string>
     <string name="settings_sources_type_stalker">Stalker · <xliff:g id="url">%1$s</xliff:g></string>
     <string name="settings_sources_expiry">Действует до <xliff:g id="date">%1$s</xliff:g></string>
+    <string name="settings_sources_test_title">Проверка источника</string>
+    <string name="settings_sources_test_ok">Соединение в порядке</string>
+    <string name="settings_sources_test_auth">Провайдер отклонил эти данные. Проверьте имя пользователя, пароль или MAC-адрес.</string>
+    <string name="settings_sources_test_expired">Срок действия подписки истёк.</string>
+    <string name="settings_sources_test_unreachable">Не удалось связаться с сервером. Проверьте адрес и подключение к интернету.</string>
+    <string name="settings_sources_test_status">Статус: <xliff:g id="status">%1$s</xliff:g></string>
+    <string name="settings_sources_test_connections">Подключения: занято <xliff:g id="used">%1$d</xliff:g> из <xliff:g id="max">%2$d</xliff:g></string>
+    <string name="settings_sources_test_connections_max">Подключения: до <xliff:g id="max">%1$d</xliff:g> одновременно</string>
+    <string name="settings_sources_test_trial">Пробная учётная запись</string>
+    <string name="settings_sources_test_expiry_none">Дата окончания не указана</string>
     <string name="settings_sources_auto_refresh">⟳ <xliff:g id="mode">%1$s</xliff:g></string>
     <string name="settings_sources_default">ПО УМОЛЧАНИЮ</string>
     <string name="settings_sources_backup">Резервная копия</string>
@@ -783,8 +793,15 @@
     <string name="settings_sources_refresh_startup">Обновлять при запуске</string>
     <string name="settings_sources_refresh_6h">6 часов</string>
     <string name="settings_sources_refresh_12h">12 часов</string>
-    <string name="settings_sources_refresh_24h">24 часа</string>
-    <string name="settings_sources_refresh_48h">48 часов</string>
+    <string name="settings_sources_refresh_manual">Свой интервал\u2026</string>
+    <plurals name="settings_sources_refresh_days">
+        <item quantity="one">Каждый <xliff:g id="count">%1$d</xliff:g> день</item>
+        <item quantity="few">Каждые <xliff:g id="count">%1$d</xliff:g> дня</item>
+        <item quantity="many">Каждые <xliff:g id="count">%1$d</xliff:g> дней</item>
+        <item quantity="other">Каждые <xliff:g id="count">%1$d</xliff:g> дня</item>
+    </plurals>
+    <string name="settings_sources_refresh_days_title">Интервал обновления</string>
+    <string name="settings_sources_refresh_days_hint">Влево и вправо выбирают число дней, от 1 до 99.</string>
     <string name="settings_epg_sources_title">Источники EPG</string>
     <string name="settings_epg_sources_empty">Источников EPG пока нет. Добавьте ссылку XMLTV.</string>
     <string name="settings_epg_sources_add">Добавить источник EPG</string>

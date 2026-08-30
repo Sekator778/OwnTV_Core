@@ -12,6 +12,9 @@ import tv.own.owntv.core.model.SourceType
  */
 internal object CompanionHtml {
 
+    /** Day intervals the companion page offers; any 1–99 figure can still be set on the TV itself. */
+    private val COMPANION_DAY_PRESETS = listOf(1, 2, 7, 14, 30)
+
     private const val CSS = """
       :root{
         color-scheme: dark;
@@ -130,8 +133,11 @@ internal object CompanionHtml {
         val refreshStartup = s(R.string.settings_sources_refresh_startup)
         val refresh6 = s(R.string.settings_sources_refresh_6h)
         val refresh12 = s(R.string.settings_sources_refresh_12h)
-        val refresh24 = s(R.string.settings_sources_refresh_24h)
-        val refresh48 = s(R.string.settings_sources_refresh_48h)
+        // The TV form lets the user name any number of days; a web <select> cannot, so it offers the
+        // common ones and the exact figure can still be changed on the TV afterwards.
+        val refreshDays = COMPANION_DAY_PRESETS.associateWith {
+            context.resources.getQuantityString(R.plurals.settings_sources_refresh_days, it, it)
+        }
         val defaultPlaylistLabel = s(R.string.companion_default_playlist)
         val sendToTv = s(R.string.companion_send_to_tv)
 
@@ -528,8 +534,9 @@ internal object CompanionHtml {
           <option value="STARTUP">${c.refreshStartup.h()}</option>
           <option value="HOURS_6">${c.refresh6.h()}</option>
           <option value="HOURS_12">${c.refresh12.h()}</option>
-          <option value="HOURS_24">${c.refresh24.h()}</option>
-          <option value="HOURS_48">${c.refresh48.h()}</option>
+          ${c.refreshDays.entries.joinToString("\n          ") { (days, label) ->
+        """<option value="MANUAL:$days">${label.h()}</option>"""
+    }}
         </select></label>
     """.trimIndent()
 

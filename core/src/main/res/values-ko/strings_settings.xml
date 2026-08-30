@@ -746,6 +746,16 @@
     <string name="settings_sources_type_xtream">Xtream · <xliff:g id="url">%1$s</xliff:g></string>
     <string name="settings_sources_type_stalker">Stalker · <xliff:g id="url">%1$s</xliff:g></string>
     <string name="settings_sources_expiry">만료일: <xliff:g id="date">%1$s</xliff:g></string>
+    <string name="settings_sources_test_title">소스 테스트</string>
+    <string name="settings_sources_test_ok">연결 정상</string>
+    <string name="settings_sources_test_auth">제공업체가 이 정보를 거부했습니다. 사용자 이름, 비밀번호 또는 MAC 주소를 확인하세요.</string>
+    <string name="settings_sources_test_expired">이 구독이 만료되었습니다.</string>
+    <string name="settings_sources_test_unreachable">서버에 연결할 수 없습니다. 주소와 인터넷 연결을 확인하세요.</string>
+    <string name="settings_sources_test_status">상태: <xliff:g id="status">%1$s</xliff:g></string>
+    <string name="settings_sources_test_connections">연결: <xliff:g id="max">%2$d</xliff:g>개 중 <xliff:g id="used">%1$d</xliff:g>개 사용 중</string>
+    <string name="settings_sources_test_connections_max">연결: 동시에 최대 <xliff:g id="max">%1$d</xliff:g>개</string>
+    <string name="settings_sources_test_trial">체험 계정</string>
+    <string name="settings_sources_test_expiry_none">만료일이 제공되지 않음</string>
     <string name="settings_sources_auto_refresh">⟳ <xliff:g id="mode">%1$s</xliff:g></string>
     <string name="settings_sources_default">기본값</string>
     <string name="settings_sources_backup">백업</string>
@@ -765,8 +775,12 @@
     <string name="settings_sources_refresh_startup">앱 시작 시 새로 고침</string>
     <string name="settings_sources_refresh_6h">6시간</string>
     <string name="settings_sources_refresh_12h">12시간</string>
-    <string name="settings_sources_refresh_24h">24시간</string>
-    <string name="settings_sources_refresh_48h">48시간</string>
+    <string name="settings_sources_refresh_manual">사용자 지정 주기\u2026</string>
+    <plurals name="settings_sources_refresh_days">
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g>일마다</item>
+    </plurals>
+    <string name="settings_sources_refresh_days_title">새로 고침 주기</string>
+    <string name="settings_sources_refresh_days_hint">좌우로 일수를 선택합니다(1~99).</string>
     <string name="settings_epg_sources_title">EPG 소스</string>
     <string name="settings_epg_sources_empty">아직 EPG 소스가 없습니다. XMLTV 링크를 추가하세요.</string>
     <string name="settings_epg_sources_add">EPG 소스 추가</string>

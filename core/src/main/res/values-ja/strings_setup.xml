@@ -127,10 +127,6 @@
     <string name="setup_device_model_preset">デバイスモデルのプリセット（User-Agent）…</string>
     <string name="setup_testing">テスト中…</string>
     <string name="setup_test_connection">接続をテスト</string>
-    <plurals name="setup_stalker_test_connected">
-        <item quantity="other">✓ <xliff:g id="endpoint">%1$s</xliff:g>経由で接続（プロフィールフィールド：<xliff:g id="fields">%2$d</xliff:g>件）</item>
-    </plurals>
-    <string name="setup_stalker_test_expires">有効期限：<xliff:g id="date">%1$s</xliff:g></string>
     <string name="setup_user_agent_optional">User-Agent（任意）</string>
     <string name="setup_user_agent_example">例：VLC/3.0.20 LibVLC/3.0.20</string>
     <string name="setup_auto_refresh">自動更新</string>

@@ -752,6 +752,16 @@
     <string name="settings_sources_type_xtream">Xtream · <xliff:g id="url">%1$s</xliff:g></string>
     <string name="settings_sources_type_stalker">Stalker · <xliff:g id="url">%1$s</xliff:g></string>
     <string name="settings_sources_expiry">Son kullanma tarihi: <xliff:g id="date">%1$s</xliff:g></string>
+    <string name="settings_sources_test_title">Kaynak testi</string>
+    <string name="settings_sources_test_ok">Bağlantı sorunsuz</string>
+    <string name="settings_sources_test_auth">Sağlayıcı bu bilgileri reddetti. Kullanıcı adını, parolayı veya MAC adresini kontrol edin.</string>
+    <string name="settings_sources_test_expired">Bu abonelik sona erdi.</string>
+    <string name="settings_sources_test_unreachable">Sunucuya ulaşılamadı. Adresi ve internet bağlantınızı kontrol edin.</string>
+    <string name="settings_sources_test_status">Durum: <xliff:g id="status">%1$s</xliff:g></string>
+    <string name="settings_sources_test_connections">Bağlantılar: <xliff:g id="max">%2$d</xliff:g> bağlantıdan <xliff:g id="used">%1$d</xliff:g> tanesi kullanımda</string>
+    <string name="settings_sources_test_connections_max">Bağlantılar: aynı anda en fazla <xliff:g id="max">%1$d</xliff:g></string>
+    <string name="settings_sources_test_trial">Deneme hesabı</string>
+    <string name="settings_sources_test_expiry_none">Bitiş tarihi bildirilmedi</string>
     <string name="settings_sources_auto_refresh">⟳ <xliff:g id="mode">%1$s</xliff:g></string>
     <string name="settings_sources_default">VARSAYILAN</string>
     <string name="settings_sources_backup">Yedekleme</string>
@@ -771,8 +781,13 @@
     <string name="settings_sources_refresh_startup">Başlangıçta yenile</string>
     <string name="settings_sources_refresh_6h">6 saat</string>
     <string name="settings_sources_refresh_12h">12 saat</string>
-    <string name="settings_sources_refresh_24h">24 saat</string>
-    <string name="settings_sources_refresh_48h">48 saat</string>
+    <string name="settings_sources_refresh_manual">Özel aralık\u2026</string>
+    <plurals name="settings_sources_refresh_days">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> günde bir</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> günde bir</item>
+    </plurals>
+    <string name="settings_sources_refresh_days_title">Yenileme aralığı</string>
+    <string name="settings_sources_refresh_days_hint">Sol ve sağ ile gün sayısını seçin, 1 ile 99 arasında.</string>
     <string name="settings_epg_sources_title">EPG Kaynakları</string>
     <string name="settings_epg_sources_empty">Henüz EPG kaynağı yok. Bir XMLTV bağlantısı ekleyin.</string>
     <string name="settings_epg_sources_add">EPG kaynağı ekle</string>

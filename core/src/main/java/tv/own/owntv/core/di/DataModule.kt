@@ -91,6 +91,8 @@ val dataModule = module {
     single { tv.own.owntv.core.stalker.StalkerClient(get()) }
     single { tv.own.owntv.core.stalker.StalkerAuthManager(get()) }
     single { tv.own.owntv.core.stalker.StreamUrlResolver(get(), get()) }
+    // http, xtreamClient, stalkerAuth — the Test button behind each saved playlist row.
+    single { tv.own.owntv.core.repository.SourceTester(get(), get(), get()) }
     // TMDB metadata enrichment (plan §4): one provider, three tiers resolved from SettingsRepository.
     // Opaque per-install id sent to the default Worker only, so one abusive install can be capped
     // without blocking the IP address a whole household/carrier NAT shares.

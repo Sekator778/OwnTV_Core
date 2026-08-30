@@ -127,10 +127,6 @@
     <string name="setup_device_model_preset">裝置型號預設值 (User-Agent)…</string>
     <string name="setup_testing">正在測試…</string>
     <string name="setup_test_connection">測試連線</string>
-    <plurals name="setup_stalker_test_connected">
-        <item quantity="other">✓ 已透過 <xliff:g id="endpoint">%1$s</xliff:g> 連線（<xliff:g id="fields">%2$d</xliff:g> 個使用者檔案欄位）</item>
-    </plurals>
-    <string name="setup_stalker_test_expires">有效期限至 <xliff:g id="date">%1$s</xliff:g></string>
     <string name="setup_user_agent_optional">User-Agent（選填）</string>
     <string name="setup_user_agent_example">例如 VLC/3.0.20 LibVLC/3.0.20</string>
     <string name="setup_auto_refresh">自動重新整理</string>

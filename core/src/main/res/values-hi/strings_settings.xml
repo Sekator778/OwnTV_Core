@@ -752,6 +752,16 @@
     <string name="settings_sources_type_xtream">Xtream · <xliff:g id="url">%1$s</xliff:g></string>
     <string name="settings_sources_type_stalker">Stalker · <xliff:g id="url">%1$s</xliff:g></string>
     <string name="settings_sources_expiry">समाप्ति <xliff:g id="date">%1$s</xliff:g></string>
+    <string name="settings_sources_test_title">स्रोत जाँच</string>
+    <string name="settings_sources_test_ok">कनेक्शन ठीक है</string>
+    <string name="settings_sources_test_auth">प्रदाता ने ये विवरण अस्वीकार कर दिए। यूज़रनेम, पासवर्ड या MAC पता जाँचें।</string>
+    <string name="settings_sources_test_expired">यह सब्सक्रिप्शन समाप्त हो चुका है।</string>
+    <string name="settings_sources_test_unreachable">सर्वर तक नहीं पहुँच सके। पता और अपना इंटरनेट कनेक्शन जाँचें।</string>
+    <string name="settings_sources_test_status">स्थिति: <xliff:g id="status">%1$s</xliff:g></string>
+    <string name="settings_sources_test_connections">कनेक्शन: <xliff:g id="max">%2$d</xliff:g> में से <xliff:g id="used">%1$d</xliff:g> उपयोग में</string>
+    <string name="settings_sources_test_connections_max">कनेक्शन: एक साथ अधिकतम <xliff:g id="max">%1$d</xliff:g></string>
+    <string name="settings_sources_test_trial">ट्रायल खाता</string>
+    <string name="settings_sources_test_expiry_none">कोई समाप्ति तिथि नहीं बताई गई</string>
     <string name="settings_sources_auto_refresh">⟳ <xliff:g id="mode">%1$s</xliff:g></string>
     <string name="settings_sources_default">डिफ़ॉल्ट</string>
     <string name="settings_sources_backup">बैकअप</string>
@@ -771,8 +781,13 @@
     <string name="settings_sources_refresh_startup">स्टार्टअप पर रीफ़्रेश करें</string>
     <string name="settings_sources_refresh_6h">6 घंटे</string>
     <string name="settings_sources_refresh_12h">12 घंटे</string>
-    <string name="settings_sources_refresh_24h">24 घंटे</string>
-    <string name="settings_sources_refresh_48h">48 घंटे</string>
+    <string name="settings_sources_refresh_manual">कस्टम अंतराल\u2026</string>
+    <plurals name="settings_sources_refresh_days">
+        <item quantity="one">हर <xliff:g id="count">%1$d</xliff:g> दिन</item>
+        <item quantity="other">हर <xliff:g id="count">%1$d</xliff:g> दिन</item>
+    </plurals>
+    <string name="settings_sources_refresh_days_title">रीफ़्रेश अंतराल</string>
+    <string name="settings_sources_refresh_days_hint">बाएँ और दाएँ से दिनों की संख्या चुनें, 1 से 99 तक।</string>
     <string name="settings_epg_sources_title">EPG स्रोत</string>
     <string name="settings_epg_sources_empty">अभी कोई EPG स्रोत नहीं है। एक XMLTV लिंक जोड़ें।</string>
     <string name="settings_epg_sources_add">EPG स्रोत जोड़ें</string>

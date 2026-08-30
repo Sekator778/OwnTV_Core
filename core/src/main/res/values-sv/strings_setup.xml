@@ -130,11 +130,6 @@
     <string name="setup_device_model_preset">Förinställd enhetsmodell (User-Agent)…</string>
     <string name="setup_testing">Testar…</string>
     <string name="setup_test_connection">Testa anslutningen</string>
-    <plurals name="setup_stalker_test_connected">
-        <item quantity="one">✓ Ansluten via <xliff:g id="endpoint">%1$s</xliff:g> (<xliff:g id="fields">%2$d</xliff:g> profilfält)</item>
-        <item quantity="other">✓ Ansluten via <xliff:g id="endpoint">%1$s</xliff:g> (<xliff:g id="fields">%2$d</xliff:g> profilfält)</item>
-    </plurals>
-    <string name="setup_stalker_test_expires">Går ut <xliff:g id="date">%1$s</xliff:g></string>
     <string name="setup_user_agent_optional">User-Agent (valfritt)</string>
     <string name="setup_user_agent_example">t.ex. VLC/3.0.20 LibVLC/3.0.20</string>
     <string name="setup_auto_refresh">Automatisk uppdatering</string>

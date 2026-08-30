@@ -746,6 +746,16 @@
     <string name="settings_sources_type_xtream">Xtream · <xliff:g id="url">%1$s</xliff:g></string>
     <string name="settings_sources_type_stalker">Stalker · <xliff:g id="url">%1$s</xliff:g></string>
     <string name="settings_sources_expiry">到期日期：<xliff:g id="date">%1$s</xliff:g></string>
+    <string name="settings_sources_test_title">源测试</string>
+    <string name="settings_sources_test_ok">连接正常</string>
+    <string name="settings_sources_test_auth">服务商拒绝了这些信息。请检查用户名、密码或 MAC 地址。</string>
+    <string name="settings_sources_test_expired">此订阅已到期。</string>
+    <string name="settings_sources_test_unreachable">无法连接到服务器。请检查地址和网络连接。</string>
+    <string name="settings_sources_test_status">状态：<xliff:g id="status">%1$s</xliff:g></string>
+    <string name="settings_sources_test_connections">连接：<xliff:g id="max">%2$d</xliff:g> 中已使用 <xliff:g id="used">%1$d</xliff:g></string>
+    <string name="settings_sources_test_connections_max">连接：最多可同时使用 <xliff:g id="max">%1$d</xliff:g> 个</string>
+    <string name="settings_sources_test_trial">试用账号</string>
+    <string name="settings_sources_test_expiry_none">未提供到期日期</string>
     <string name="settings_sources_auto_refresh">⟳ <xliff:g id="mode">%1$s</xliff:g></string>
     <string name="settings_sources_default">默认</string>
     <string name="settings_sources_backup">备份</string>
@@ -765,8 +775,12 @@
     <string name="settings_sources_refresh_startup">启动时刷新</string>
     <string name="settings_sources_refresh_6h">6 小时</string>
     <string name="settings_sources_refresh_12h">12 小时</string>
-    <string name="settings_sources_refresh_24h">24 小时</string>
-    <string name="settings_sources_refresh_48h">48 小时</string>
+    <string name="settings_sources_refresh_manual">自定义间隔\u2026</string>
+    <plurals name="settings_sources_refresh_days">
+        <item quantity="other">每 <xliff:g id="count">%1$d</xliff:g> 天</item>
+    </plurals>
+    <string name="settings_sources_refresh_days_title">刷新间隔</string>
+    <string name="settings_sources_refresh_days_hint">用左右键选择天数，1 到 99。</string>
     <string name="settings_epg_sources_title">电子节目指南（EPG）源</string>
     <string name="settings_epg_sources_empty">尚无电子节目指南（EPG）源。请添加 XMLTV 链接。</string>
     <string name="settings_epg_sources_add">添加电子节目指南（EPG）源</string>

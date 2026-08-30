@@ -130,11 +130,6 @@
     <string name="setup_device_model_preset">ഉപകരണ മോഡൽ പ്രീസെറ്റ് (User-Agent)…</string>
     <string name="setup_testing">പരിശോധിക്കുന്നു…</string>
     <string name="setup_test_connection">കണക്ഷൻ പരിശോധിക്കുക</string>
-    <plurals name="setup_stalker_test_connected">
-        <item quantity="one">✓ <xliff:g id="endpoint">%1$s</xliff:g> വഴി കണക്റ്റ് ചെയ്തു (<xliff:g id="fields">%2$d</xliff:g> പ്രൊഫൈൽ ഫീൽഡ്)</item>
-        <item quantity="other">✓ <xliff:g id="endpoint">%1$s</xliff:g> വഴി കണക്റ്റ് ചെയ്തു (<xliff:g id="fields">%2$d</xliff:g> പ്രൊഫൈൽ ഫീൽഡുകൾ)</item>
-    </plurals>
-    <string name="setup_stalker_test_expires">കാലാവധി അവസാനിക്കുന്നത് <xliff:g id="date">%1$s</xliff:g></string>
     <string name="setup_user_agent_optional">User-Agent (നിർബന്ധമല്ല)</string>
     <string name="setup_user_agent_example">ഉദാ. VLC/3.0.20 LibVLC/3.0.20</string>
     <string name="setup_auto_refresh">യാന്ത്രിക പുതുക്കൽ</string>

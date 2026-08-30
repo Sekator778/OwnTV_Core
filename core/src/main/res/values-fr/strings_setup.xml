@@ -133,12 +133,6 @@
     <string name="setup_device_model_preset">Préréglage du modèle d’appareil (User-Agent)…</string>
     <string name="setup_testing">Test en cours…</string>
     <string name="setup_test_connection">Tester la connexion</string>
-    <plurals name="setup_stalker_test_connected">
-        <item quantity="one">✓ Connecté via <xliff:g id="endpoint">%1$s</xliff:g> (<xliff:g id="fields">%2$d</xliff:g> champ de profil)</item>
-        <item quantity="many">✓ Connecté via <xliff:g id="endpoint">%1$s</xliff:g> (<xliff:g id="fields">%2$d</xliff:g> champs de profil)</item>
-        <item quantity="other">✓ Connecté via <xliff:g id="endpoint">%1$s</xliff:g> (<xliff:g id="fields">%2$d</xliff:g> champs de profil)</item>
-    </plurals>
-    <string name="setup_stalker_test_expires">Expire le <xliff:g id="date">%1$s</xliff:g></string>
     <string name="setup_user_agent_optional">User-Agent (facultatif)</string>
     <string name="setup_user_agent_example">p. ex. VLC/3.0.20 LibVLC/3.0.20</string>
     <string name="setup_auto_refresh">Actualisation automatique</string>

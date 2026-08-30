@@ -72,17 +72,72 @@ data class StartupChannelRef(
  * timers: a source is refreshed when `now - lastSyncAt >= thresholdMs`. OFF disables auto-refresh;
  * STARTUP refreshes on cold app start only; interval modes are checked on cold start and on resume.
  * [thresholdMs] has a default of null so OFF/STARTUP can be declared without an explicit value.
+ *
+ * Anything longer than 12 hours is [MANUAL], where the user names the number of days — the fixed
+ * 24h/48h/7-day entries it replaced are still understood on read (see [PlaylistRefresh.parse]) so an
+ * existing selection or an old backup keeps working.
  */
 enum class PlaylistAutoRefresh(val thresholdMs: Long? = null) {
     OFF,
     STARTUP,
     HOURS_6(6 * 3600_000L),
     HOURS_12(12 * 3600_000L),
-    HOURS_24(24 * 3600_000L),
-    HOURS_48(48 * 3600_000L);
+
+    /** A whole number of days chosen by the user; the count lives in [PlaylistRefresh.manualDays]. */
+    MANUAL;
 
     /** Interval (staleness-threshold) mode — checked on cold start AND on resume when threshold is exceeded. */
-    val isInterval: Boolean get() = thresholdMs != null && this != STARTUP
+    val isInterval: Boolean get() = this != OFF && this != STARTUP
+}
+
+/**
+ * A playlist's auto-refresh selection: the mode, plus the day count that only [PlaylistAutoRefresh.MANUAL]
+ * uses. Stored as one string per source so nothing else — backup, restore, the companion form — has to
+ * learn about a second value: `"OFF"`, `"HOURS_6"`, or `"MANUAL:14"`.
+ */
+data class PlaylistRefresh(
+    val mode: PlaylistAutoRefresh = PlaylistAutoRefresh.OFF,
+    val manualDays: Int = DEFAULT_MANUAL_DAYS,
+) {
+    /** How stale the source may get before it is refreshed; null when it never auto-refreshes on a timer. */
+    val thresholdMs: Long?
+        get() = if (mode == PlaylistAutoRefresh.MANUAL) {
+            manualDays.coerceIn(MIN_MANUAL_DAYS, MAX_MANUAL_DAYS) * 24 * 3600_000L
+        } else {
+            mode.thresholdMs
+        }
+
+    fun serialize(): String =
+        if (mode == PlaylistAutoRefresh.MANUAL) "${mode.name}$SEPARATOR$manualDays" else mode.name
+
+    companion object {
+        const val MIN_MANUAL_DAYS = 1
+        const val MAX_MANUAL_DAYS = 99
+        const val DEFAULT_MANUAL_DAYS = 7
+        private const val SEPARATOR = ':'
+
+        val OFF = PlaylistRefresh(PlaylistAutoRefresh.OFF)
+
+        /**
+         * Reads a stored value, translating the retired fixed entries into the day counts that mean the
+         * same thing. Nothing rewrites the stored string for them — the translation happens on every read,
+         * so a user who never opens the picker again keeps the schedule they chose, forever.
+         */
+        fun parse(raw: String?): PlaylistRefresh = when (val value = raw?.trim().orEmpty()) {
+            "HOURS_24" -> PlaylistRefresh(PlaylistAutoRefresh.MANUAL, 1)
+            "HOURS_48" -> PlaylistRefresh(PlaylistAutoRefresh.MANUAL, 2)
+            "DAYS_7" -> PlaylistRefresh(PlaylistAutoRefresh.MANUAL, 7)
+            else -> {
+                val mode = runCatching {
+                    PlaylistAutoRefresh.valueOf(value.substringBefore(SEPARATOR))
+                }.getOrDefault(PlaylistAutoRefresh.OFF)
+                val days = value.substringAfter(SEPARATOR, "").toIntOrNull()
+                    ?.coerceIn(MIN_MANUAL_DAYS, MAX_MANUAL_DAYS)
+                    ?: DEFAULT_MANUAL_DAYS
+                PlaylistRefresh(mode, days)
+            }
+        }
+    }
 }
 
 /** Per-EPG-source auto-refresh mode. Same staleness-threshold semantics as [PlaylistAutoRefresh]. */
@@ -1368,9 +1423,13 @@ class SettingsRepository(private val context: Context, private val localeStore: 
     // existing lastSyncAt columns (SourceEntity.lastSyncAt for playlists, EpgSource.lastSyncAt for EPG) as the
     // "last successful sync" timestamp; nothing new is stored for that.
 
-    /** Per-source playlist auto-refresh selection. Missing ids default to [PlaylistAutoRefresh.OFF]. */
-    val playlistAutoRefresh: Flow<Map<Long, PlaylistAutoRefresh>> =
-        prefsFlow { prefs -> parseRefreshMap(prefs[Keys.PLAYLIST_AUTO_REFRESH]) { PlaylistAutoRefresh.valueOf(it) } }
+    /** Per-source playlist auto-refresh selection. Missing ids default to [PlaylistRefresh.OFF]. */
+    val playlistAutoRefresh: Flow<Map<Long, PlaylistRefresh>> =
+        prefsFlow { prefs ->
+            readRefreshMap(prefs[Keys.PLAYLIST_AUTO_REFRESH]).entries.mapNotNull { (key, value) ->
+                key.toLongOrNull()?.let { it to PlaylistRefresh.parse(value) }
+            }.toMap()
+        }
 
     /** Per-source EPG auto-refresh selection. Missing ids default to [EpgAutoRefresh.OFF]. */
     val epgAutoRefresh: Flow<Map<Long, EpgAutoRefresh>> =
@@ -1392,9 +1451,9 @@ class SettingsRepository(private val context: Context, private val localeStore: 
         }
     }
 
-    suspend fun setPlaylistAutoRefresh(sourceId: Long, mode: PlaylistAutoRefresh) {
+    suspend fun setPlaylistAutoRefresh(sourceId: Long, refresh: PlaylistRefresh) {
         context.dataStore.edit { prefs ->
-            prefs[Keys.PLAYLIST_AUTO_REFRESH] = writeRefreshMap(readRefreshMap(prefs[Keys.PLAYLIST_AUTO_REFRESH]), sourceId, mode.name)
+            prefs[Keys.PLAYLIST_AUTO_REFRESH] = writeRefreshMap(readRefreshMap(prefs[Keys.PLAYLIST_AUTO_REFRESH]), sourceId, refresh.serialize())
         }
     }
 
@@ -2254,7 +2313,9 @@ class SettingsRepository(private val context: Context, private val localeStore: 
      * so it can never clobber the restored selections.
      */
     suspend fun importPlaylistAutoRefresh(o: org.json.JSONObject, existingSourceIds: Set<Long>) {
-        val cleaned = sanitizeRefreshMap(o, existingSourceIds) { runCatching { PlaylistAutoRefresh.valueOf(it) }.getOrDefault(PlaylistAutoRefresh.OFF).name }
+        // parse() also carries a backup written before the fixed 24h/48h/7-day entries were replaced
+        // over to the equivalent day count, so restoring an old device does not silently reset it to Off.
+        val cleaned = sanitizeRefreshMap(o, existingSourceIds) { PlaylistRefresh.parse(it).serialize() }
         context.dataStore.edit { prefs ->
             // Merge-restore: keep the device's existing per-source choices, backup entries win per key.
             val merged = parseRefreshMap(prefs[Keys.PLAYLIST_AUTO_REFRESH]) + cleaned

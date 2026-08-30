@@ -130,11 +130,6 @@
     <string name="setup_device_model_preset">ডিভাইস মডেলের প্রিসেট (User-Agent)…</string>
     <string name="setup_testing">পরীক্ষা করা হচ্ছে…</string>
     <string name="setup_test_connection">সংযোগ পরীক্ষা করুন</string>
-    <plurals name="setup_stalker_test_connected">
-        <item quantity="one">✓ <xliff:g id="endpoint">%1$s</xliff:g>-এর মাধ্যমে সংযুক্ত (<xliff:g id="fields">%2$d</xliff:g>টি প্রোফাইল ফিল্ড)</item>
-        <item quantity="other">✓ <xliff:g id="endpoint">%1$s</xliff:g>-এর মাধ্যমে সংযুক্ত (<xliff:g id="fields">%2$d</xliff:g>টি প্রোফাইল ফিল্ড)</item>
-    </plurals>
-    <string name="setup_stalker_test_expires">মেয়াদ শেষ হবে <xliff:g id="date">%1$s</xliff:g></string>
     <string name="setup_user_agent_optional">User-Agent (ঐচ্ছিক)</string>
     <string name="setup_user_agent_example">যেমন: VLC/3.0.20 LibVLC/3.0.20</string>
     <string name="setup_auto_refresh">স্বয়ংক্রিয় রিফ্রেশ</string>

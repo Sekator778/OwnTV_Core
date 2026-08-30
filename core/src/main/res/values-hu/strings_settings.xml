@@ -780,6 +780,16 @@ Válaszd a Kiegyensúlyozott beállítást, ha egy csatorna megbízhatatlanná v
     <string name="settings_sources_type_xtream">Xtream · <xliff:g id="url">%1$s</xliff:g></string>
     <string name="settings_sources_type_stalker">Stalker · <xliff:g id="url">%1$s</xliff:g></string>
     <string name="settings_sources_expiry">Lejár: <xliff:g id="date">%1$s</xliff:g></string>
+    <string name="settings_sources_test_title">Forrás tesztelése</string>
+    <string name="settings_sources_test_ok">A kapcsolat rendben</string>
+    <string name="settings_sources_test_auth">A szolgáltató elutasította ezeket az adatokat. Ellenőrizd a felhasználónevet, a jelszót vagy a MAC-címet.</string>
+    <string name="settings_sources_test_expired">Ez az előfizetés lejárt.</string>
+    <string name="settings_sources_test_unreachable">A kiszolgáló nem érhető el. Ellenőrizd a címet és az internetkapcsolatot.</string>
+    <string name="settings_sources_test_status">Állapot: <xliff:g id="status">%1$s</xliff:g></string>
+    <string name="settings_sources_test_connections">Kapcsolatok: <xliff:g id="max">%2$d</xliff:g> közül <xliff:g id="used">%1$d</xliff:g> használatban</string>
+    <string name="settings_sources_test_connections_max">Kapcsolatok: egyszerre legfeljebb <xliff:g id="max">%1$d</xliff:g></string>
+    <string name="settings_sources_test_trial">Próbafiók</string>
+    <string name="settings_sources_test_expiry_none">Nincs megadva lejárati dátum</string>
     <string name="settings_sources_auto_refresh">⟳ <xliff:g id="mode">%1$s</xliff:g></string>
     <string name="settings_sources_default">ALAPÉRTELMEZETT</string>
     <string name="settings_sources_backup">Mentés</string>
@@ -801,8 +811,13 @@ Az Újraszinkronizálás és a hiányzó címek eltávolítása azt is lehetőv�
     <string name="settings_sources_refresh_startup">Frissítés induláskor</string>
     <string name="settings_sources_refresh_6h">6 óra</string>
     <string name="settings_sources_refresh_12h">12 óra</string>
-    <string name="settings_sources_refresh_24h">24 óra</string>
-    <string name="settings_sources_refresh_48h">48 óra</string>
+    <string name="settings_sources_refresh_manual">Egyéni időköz\u2026</string>
+    <plurals name="settings_sources_refresh_days">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> naponta</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> naponta</item>
+    </plurals>
+    <string name="settings_sources_refresh_days_title">Frissítési időköz</string>
+    <string name="settings_sources_refresh_days_hint">A balra és jobbra gombbal állítható a napok száma, 1-től 99-ig.</string>
     <string name="settings_epg_sources_title">EPG-források</string>
     <string name="settings_epg_sources_empty">Még nincs EPG-forrás. Adj hozzá egy XMLTV-hivatkozást.</string>
     <string name="settings_epg_sources_add">EPG-forrás hozzáadása</string>

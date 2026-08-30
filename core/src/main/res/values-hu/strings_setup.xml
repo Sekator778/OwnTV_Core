@@ -135,11 +135,6 @@
     <string name="setup_device_model_preset">Eszközmodell-előbeállítás (User-Agent)…</string>
     <string name="setup_testing">Tesztelés…</string>
     <string name="setup_test_connection">Kapcsolat tesztelése</string>
-    <plurals name="setup_stalker_test_connected">
-        <item quantity="one">✓ Csatlakozva ezen keresztül: <xliff:g id="endpoint">%1$s</xliff:g> (<xliff:g id="fields">%2$d</xliff:g> profilmező)</item>
-        <item quantity="other">✓ Csatlakozva ezen keresztül: <xliff:g id="endpoint">%1$s</xliff:g> (<xliff:g id="fields">%2$d</xliff:g> profilmező)</item>
-    </plurals>
-    <string name="setup_stalker_test_expires">Lejár: <xliff:g id="date">%1$s</xliff:g></string>
     <string name="setup_user_agent_optional">User-Agent (nem kötelező)</string>
     <string name="setup_user_agent_example">pl. VLC/3.0.20 LibVLC/3.0.20</string>
     <string name="setup_auto_refresh">Automatikus frissítés</string>

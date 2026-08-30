@@ -752,6 +752,16 @@
     <string name="settings_sources_type_xtream">Xtream · <xliff:g id="url">%1$s</xliff:g></string>
     <string name="settings_sources_type_stalker">Stalker · <xliff:g id="url">%1$s</xliff:g></string>
     <string name="settings_sources_expiry">মেয়াদ শেষ <xliff:g id="date">%1$s</xliff:g></string>
+    <string name="settings_sources_test_title">সোর্স পরীক্ষা</string>
+    <string name="settings_sources_test_ok">সংযোগ ঠিক আছে</string>
+    <string name="settings_sources_test_auth">প্রদানকারী এই তথ্য গ্রহণ করেনি। ইউজারনেম, পাসওয়ার্ড বা MAC ঠিকানা যাচাই করুন।</string>
+    <string name="settings_sources_test_expired">এই সাবসক্রিপশনের মেয়াদ শেষ হয়ে গেছে।</string>
+    <string name="settings_sources_test_unreachable">সার্ভারে পৌঁছানো গেল না। ঠিকানা ও ইন্টারনেট সংযোগ যাচাই করুন।</string>
+    <string name="settings_sources_test_status">অবস্থা: <xliff:g id="status">%1$s</xliff:g></string>
+    <string name="settings_sources_test_connections">সংযোগ: <xliff:g id="max">%2$d</xliff:g>-এর মধ্যে <xliff:g id="used">%1$d</xliff:g>টি ব্যবহার হচ্ছে</string>
+    <string name="settings_sources_test_connections_max">সংযোগ: একসাথে সর্বোচ্চ <xliff:g id="max">%1$d</xliff:g>টি</string>
+    <string name="settings_sources_test_trial">ট্রায়াল অ্যাকাউন্ট</string>
+    <string name="settings_sources_test_expiry_none">কোনো মেয়াদ শেষের তারিখ জানানো হয়নি</string>
     <string name="settings_sources_auto_refresh">⟳ <xliff:g id="mode">%1$s</xliff:g></string>
     <string name="settings_sources_default">ডিফল্ট</string>
     <string name="settings_sources_backup">ব্যাকআপ</string>
@@ -771,8 +781,13 @@
     <string name="settings_sources_refresh_startup">অ্যাপ চালু হলে রিফ্রেশ করুন</string>
     <string name="settings_sources_refresh_6h">৬ ঘণ্টা</string>
     <string name="settings_sources_refresh_12h">১২ ঘণ্টা</string>
-    <string name="settings_sources_refresh_24h">২৪ ঘণ্টা</string>
-    <string name="settings_sources_refresh_48h">৪৮ ঘণ্টা</string>
+    <string name="settings_sources_refresh_manual">কাস্টম বিরতি\u2026</string>
+    <plurals name="settings_sources_refresh_days">
+        <item quantity="one">প্রতি <xliff:g id="count">%1$d</xliff:g> দিনে</item>
+        <item quantity="other">প্রতি <xliff:g id="count">%1$d</xliff:g> দিনে</item>
+    </plurals>
+    <string name="settings_sources_refresh_days_title">রিফ্রেশ বিরতি</string>
+    <string name="settings_sources_refresh_days_hint">বাঁ ও ডান দিয়ে দিনের সংখ্যা বাছুন, ১ থেকে ৯৯।</string>
     <string name="settings_epg_sources_title">EPG উৎসগুলো</string>
     <string name="settings_epg_sources_empty">এখনো কোনো EPG উৎস নেই। একটি XMLTV লিংক যোগ করুন।</string>
     <string name="settings_epg_sources_add">EPG উৎস যোগ করুন</string>

@@ -764,6 +764,16 @@
     <string name="settings_sources_type_xtream">Xtream · <xliff:g id="url">%1$s</xliff:g></string>
     <string name="settings_sources_type_stalker">Stalker · <xliff:g id="url">%1$s</xliff:g></string>
     <string name="settings_sources_expiry">Wygasa <xliff:g id="date">%1$s</xliff:g></string>
+    <string name="settings_sources_test_title">Test źródła</string>
+    <string name="settings_sources_test_ok">Połączenie działa</string>
+    <string name="settings_sources_test_auth">Dostawca odrzucił te dane. Sprawdź nazwę użytkownika, hasło lub adres MAC.</string>
+    <string name="settings_sources_test_expired">Ta subskrypcja wygasła.</string>
+    <string name="settings_sources_test_unreachable">Nie udało się połączyć z serwerem. Sprawdź adres i połączenie z internetem.</string>
+    <string name="settings_sources_test_status">Stan: <xliff:g id="status">%1$s</xliff:g></string>
+    <string name="settings_sources_test_connections">Połączenia: używane <xliff:g id="used">%1$d</xliff:g> z <xliff:g id="max">%2$d</xliff:g></string>
+    <string name="settings_sources_test_connections_max">Połączenia: maksymalnie <xliff:g id="max">%1$d</xliff:g> jednocześnie</string>
+    <string name="settings_sources_test_trial">Konto próbne</string>
+    <string name="settings_sources_test_expiry_none">Nie podano daty wygaśnięcia</string>
     <string name="settings_sources_auto_refresh">⟳ <xliff:g id="mode">%1$s</xliff:g></string>
     <string name="settings_sources_default">DOMYŚLNE</string>
     <string name="settings_sources_backup">Kopia zapasowa</string>
@@ -783,8 +793,15 @@
     <string name="settings_sources_refresh_startup">Odświeżaj przy uruchomieniu</string>
     <string name="settings_sources_refresh_6h">6 godzin</string>
     <string name="settings_sources_refresh_12h">12 godzin</string>
-    <string name="settings_sources_refresh_24h">24 godziny</string>
-    <string name="settings_sources_refresh_48h">48 godzin</string>
+    <string name="settings_sources_refresh_manual">Własny odstęp\u2026</string>
+    <plurals name="settings_sources_refresh_days">
+        <item quantity="one">Co <xliff:g id="count">%1$d</xliff:g> dzień</item>
+        <item quantity="few">Co <xliff:g id="count">%1$d</xliff:g> dni</item>
+        <item quantity="many">Co <xliff:g id="count">%1$d</xliff:g> dni</item>
+        <item quantity="other">Co <xliff:g id="count">%1$d</xliff:g> dnia</item>
+    </plurals>
+    <string name="settings_sources_refresh_days_title">Odstęp odświeżania</string>
+    <string name="settings_sources_refresh_days_hint">Lewo i prawo wybierają liczbę dni, od 1 do 99.</string>
     <string name="settings_epg_sources_title">Źródła EPG</string>
     <string name="settings_epg_sources_empty">Nie ma jeszcze źródeł EPG. Dodaj łącze XMLTV.</string>
     <string name="settings_epg_sources_add">Dodaj źródło EPG</string>

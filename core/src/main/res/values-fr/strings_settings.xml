@@ -758,6 +758,16 @@
     <string name="settings_sources_type_xtream">Xtream · <xliff:g id="url">%1$s</xliff:g></string>
     <string name="settings_sources_type_stalker">Stalker · <xliff:g id="url">%1$s</xliff:g></string>
     <string name="settings_sources_expiry">Expire le <xliff:g id="date">%1$s</xliff:g></string>
+    <string name="settings_sources_test_title">Test de la source</string>
+    <string name="settings_sources_test_ok">Connexion correcte</string>
+    <string name="settings_sources_test_auth">Le fournisseur a refusé ces informations. Vérifiez l’identifiant, le mot de passe ou l’adresse MAC.</string>
+    <string name="settings_sources_test_expired">Cet abonnement a expiré.</string>
+    <string name="settings_sources_test_unreachable">Impossible de joindre le serveur. Vérifiez l’adresse et votre connexion internet.</string>
+    <string name="settings_sources_test_status">Statut : <xliff:g id="status">%1$s</xliff:g></string>
+    <string name="settings_sources_test_connections">Connexions : <xliff:g id="used">%1$d</xliff:g> sur <xliff:g id="max">%2$d</xliff:g> utilisées</string>
+    <string name="settings_sources_test_connections_max">Connexions : jusqu’à <xliff:g id="max">%1$d</xliff:g> simultanées</string>
+    <string name="settings_sources_test_trial">Compte d’essai</string>
+    <string name="settings_sources_test_expiry_none">Aucune date d’expiration communiquée</string>
     <string name="settings_sources_auto_refresh">⟳ <xliff:g id="mode">%1$s</xliff:g></string>
     <string name="settings_sources_default">PAR DÉFAUT</string>
     <string name="settings_sources_backup">Sauvegarde</string>
@@ -777,8 +787,14 @@
     <string name="settings_sources_refresh_startup">Actualiser au démarrage</string>
     <string name="settings_sources_refresh_6h">6 heures</string>
     <string name="settings_sources_refresh_12h">12 heures</string>
-    <string name="settings_sources_refresh_24h">24 heures</string>
-    <string name="settings_sources_refresh_48h">48 heures</string>
+    <string name="settings_sources_refresh_manual">Intervalle personnalisé\u2026</string>
+    <plurals name="settings_sources_refresh_days">
+        <item quantity="one">Tous les <xliff:g id="count">%1$d</xliff:g> jour</item>
+        <item quantity="many">Tous les <xliff:g id="count">%1$d</xliff:g> jours</item>
+        <item quantity="other">Tous les <xliff:g id="count">%1$d</xliff:g> jours</item>
+    </plurals>
+    <string name="settings_sources_refresh_days_title">Intervalle d’actualisation</string>
+    <string name="settings_sources_refresh_days_hint">Gauche et droite choisissent le nombre de jours, de 1 à 99.</string>
     <string name="settings_epg_sources_title">Sources EPG</string>
     <string name="settings_epg_sources_empty">Aucune source EPG pour le moment. Ajoutez un lien XMLTV.</string>
     <string name="settings_epg_sources_add">Ajouter une source EPG</string>

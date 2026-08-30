@@ -752,6 +752,16 @@
     <string name="settings_sources_type_xtream">Xtream · <xliff:g id="url">%1$s</xliff:g></string>
     <string name="settings_sources_type_stalker">Stalker · <xliff:g id="url">%1$s</xliff:g></string>
     <string name="settings_sources_expiry">കാലാവധി <xliff:g id="date">%1$s</xliff:g></string>
+    <string name="settings_sources_test_title">ഉറവിട പരിശോധന</string>
+    <string name="settings_sources_test_ok">കണക്ഷന്‍ ശരിയാണ്</string>
+    <string name="settings_sources_test_auth">ദാതാവ് ഈ വിവരങ്ങൾ നിരാകരിച്ചു. ഉപയോക്തൃനാമം, പാസ്‌വേഡ്, MAC വിലാസം എന്നിവ പരിശോധിക്കുക.</string>
+    <string name="settings_sources_test_expired">ഈ സബ്‌സ്ക്രിപ്‌ഷൻ കാലാവധി കഴിഞ്ഞു.</string>
+    <string name="settings_sources_test_unreachable">സെർവറിൽ എത്താനായില്ല. വിലാസവും ഇന്റർനെറ്റ് കണക്ഷനും പരിശോധിക്കുക.</string>
+    <string name="settings_sources_test_status">സ്ഥിതി: <xliff:g id="status">%1$s</xliff:g></string>
+    <string name="settings_sources_test_connections">കണക്ഷനുകൾ: <xliff:g id="max">%2$d</xliff:g>-ൽ <xliff:g id="used">%1$d</xliff:g> എണ്ണം ഉപയോഗത്തിൽ</string>
+    <string name="settings_sources_test_connections_max">കണക്ഷനുകൾ: ഒരേ സമയം പരമാവധി <xliff:g id="max">%1$d</xliff:g></string>
+    <string name="settings_sources_test_trial">ട്രയൽ അക്കൗണ്ട്</string>
+    <string name="settings_sources_test_expiry_none">കാലാവധി തീയതി നൽകിയിട്ടില്ല</string>
     <string name="settings_sources_auto_refresh">⟳ <xliff:g id="mode">%1$s</xliff:g></string>
     <string name="settings_sources_default">ഡിഫോൾട്ട്</string>
     <string name="settings_sources_backup">ബാക്കപ്പ്</string>
@@ -771,8 +781,13 @@
     <string name="settings_sources_refresh_startup">ആരംഭിക്കുമ്പോൾ പുതുക്കുക</string>
     <string name="settings_sources_refresh_6h">6 മണിക്കൂർ</string>
     <string name="settings_sources_refresh_12h">12 മണിക്കൂർ</string>
-    <string name="settings_sources_refresh_24h">24 മണിക്കൂർ</string>
-    <string name="settings_sources_refresh_48h">48 മണിക്കൂർ</string>
+    <string name="settings_sources_refresh_manual">ഇഷ്ട ഇടവേള\u2026</string>
+    <plurals name="settings_sources_refresh_days">
+        <item quantity="one">ഓരോ <xliff:g id="count">%1$d</xliff:g> ദിവസവും</item>
+        <item quantity="other">ഓരോ <xliff:g id="count">%1$d</xliff:g> ദിവസവും</item>
+    </plurals>
+    <string name="settings_sources_refresh_days_title">പുതുക്കൽ ഇടവേള</string>
+    <string name="settings_sources_refresh_days_hint">ഇടത്തും വലത്തും ഉപയോഗിച്ച് ദിവസങ്ങൾ തിരഞ്ഞെടുക്കുക, 1 മുതൽ 99 വരെ.</string>
     <string name="settings_epg_sources_title">EPG ഉറവിടങ്ങൾ</string>
     <string name="settings_epg_sources_empty">ഇതുവരെ EPG ഉറവിടങ്ങളൊന്നുമില്ല. ഒരു XMLTV ലിങ്ക് ചേർക്കുക.</string>
     <string name="settings_epg_sources_add">EPG ഉറവിടം ചേർക്കുക</string>

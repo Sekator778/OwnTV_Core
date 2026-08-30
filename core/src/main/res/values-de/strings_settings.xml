@@ -752,6 +752,16 @@
     <string name="settings_sources_type_xtream">Xtream · <xliff:g id="url">%1$s</xliff:g></string>
     <string name="settings_sources_type_stalker">Stalker · <xliff:g id="url">%1$s</xliff:g></string>
     <string name="settings_sources_expiry">Läuft am <xliff:g id="date">%1$s</xliff:g> ab</string>
+    <string name="settings_sources_test_title">Quellentest</string>
+    <string name="settings_sources_test_ok">Verbindung in Ordnung</string>
+    <string name="settings_sources_test_auth">Der Anbieter hat diese Daten abgelehnt. Prüfe Benutzername, Passwort oder MAC-Adresse.</string>
+    <string name="settings_sources_test_expired">Dieses Abonnement ist abgelaufen.</string>
+    <string name="settings_sources_test_unreachable">Der Server war nicht erreichbar. Prüfe die Adresse und deine Internetverbindung.</string>
+    <string name="settings_sources_test_status">Status: <xliff:g id="status">%1$s</xliff:g></string>
+    <string name="settings_sources_test_connections">Verbindungen: <xliff:g id="used">%1$d</xliff:g> von <xliff:g id="max">%2$d</xliff:g> belegt</string>
+    <string name="settings_sources_test_connections_max">Verbindungen: bis zu <xliff:g id="max">%1$d</xliff:g> gleichzeitig</string>
+    <string name="settings_sources_test_trial">Testkonto</string>
+    <string name="settings_sources_test_expiry_none">Kein Ablaufdatum gemeldet</string>
     <string name="settings_sources_auto_refresh">⟳ <xliff:g id="mode">%1$s</xliff:g></string>
     <string name="settings_sources_default">STANDARD</string>
     <string name="settings_sources_backup">Sicherung</string>
@@ -771,8 +781,13 @@
     <string name="settings_sources_refresh_startup">Beim App-Start aktualisieren</string>
     <string name="settings_sources_refresh_6h">6 Stunden</string>
     <string name="settings_sources_refresh_12h">12 Stunden</string>
-    <string name="settings_sources_refresh_24h">24 Stunden</string>
-    <string name="settings_sources_refresh_48h">48 Stunden</string>
+    <string name="settings_sources_refresh_manual">Eigener Abstand\u2026</string>
+    <plurals name="settings_sources_refresh_days">
+        <item quantity="one">Alle <xliff:g id="count">%1$d</xliff:g> Tage</item>
+        <item quantity="other">Alle <xliff:g id="count">%1$d</xliff:g> Tage</item>
+    </plurals>
+    <string name="settings_sources_refresh_days_title">Aktualisierungsabstand</string>
+    <string name="settings_sources_refresh_days_hint">Links und rechts wählen die Anzahl der Tage, von 1 bis 99.</string>
     <string name="settings_epg_sources_title">EPG-Quellen</string>
     <string name="settings_epg_sources_empty">Noch keine EPG-Quellen. Füge einen XMLTV-Link hinzu.</string>
     <string name="settings_epg_sources_add">EPG-Quelle hinzufügen</string>

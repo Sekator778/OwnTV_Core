@@ -746,6 +746,16 @@
     <string name="settings_sources_type_xtream">Xtream · <xliff:g id="url">%1$s</xliff:g></string>
     <string name="settings_sources_type_stalker">Stalker · <xliff:g id="url">%1$s</xliff:g></string>
     <string name="settings_sources_expiry">有効期限：<xliff:g id="date">%1$s</xliff:g></string>
+    <string name="settings_sources_test_title">ソースのテスト</string>
+    <string name="settings_sources_test_ok">接続は正常です</string>
+    <string name="settings_sources_test_auth">プロバイダーがこの情報を拒否しました。ユーザー名、パスワード、MAC アドレスを確認してください。</string>
+    <string name="settings_sources_test_expired">この契約は期限切れです。</string>
+    <string name="settings_sources_test_unreachable">サーバーに接続できませんでした。アドレスとインターネット接続を確認してください。</string>
+    <string name="settings_sources_test_status">状態: <xliff:g id="status">%1$s</xliff:g></string>
+    <string name="settings_sources_test_connections">接続数: <xliff:g id="max">%2$d</xliff:g> 中 <xliff:g id="used">%1$d</xliff:g> 使用中</string>
+    <string name="settings_sources_test_connections_max">接続数: 同時に最大 <xliff:g id="max">%1$d</xliff:g></string>
+    <string name="settings_sources_test_trial">体験アカウント</string>
+    <string name="settings_sources_test_expiry_none">有効期限の報告はありません</string>
     <string name="settings_sources_auto_refresh">⟳ <xliff:g id="mode">%1$s</xliff:g></string>
     <string name="settings_sources_default">デフォルト</string>
     <string name="settings_sources_backup">バックアップ</string>
@@ -765,8 +775,12 @@
     <string name="settings_sources_refresh_startup">起動時に更新</string>
     <string name="settings_sources_refresh_6h">6時間ごと</string>
     <string name="settings_sources_refresh_12h">12時間ごと</string>
-    <string name="settings_sources_refresh_24h">24時間ごと</string>
-    <string name="settings_sources_refresh_48h">48時間ごと</string>
+    <string name="settings_sources_refresh_manual">カスタム間隔\u2026</string>
+    <plurals name="settings_sources_refresh_days">
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> 日ごと</item>
+    </plurals>
+    <string name="settings_sources_refresh_days_title">更新間隔</string>
+    <string name="settings_sources_refresh_days_hint">左右で日数を選びます（1〜99）。</string>
     <string name="settings_epg_sources_title">EPGソース</string>
     <string name="settings_epg_sources_empty">EPGソースはまだありません。XMLTVリンクを追加してください。</string>
     <string name="settings_epg_sources_add">EPGソースを追加</string>

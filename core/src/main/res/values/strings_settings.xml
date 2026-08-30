@@ -1488,6 +1488,26 @@ Choose Balanced if a channel becomes unreliable.</string>
     <string name="settings_sources_type_stalker">Stalker · <xliff:g id="url">%1$s</xliff:g></string>
     <!-- Translators: Expiry date display for a source. 'date' is the expiry date. -->
     <string name="settings_sources_expiry">Expires <xliff:g id="date">%1$s</xliff:g></string>
+    <!-- Translators: Title of the popup that reports the result of testing a saved source. -->
+    <string name="settings_sources_test_title">Source test</string>
+    <!-- Translators: Success line in the source-test popup: the server answered and accepted the account. -->
+    <string name="settings_sources_test_ok">Connection OK</string>
+    <!-- Translators: Failure line in the source-test popup: the server answered but rejected the credentials. -->
+    <string name="settings_sources_test_auth">The provider rejected these details. Check the username, password or MAC address.</string>
+    <!-- Translators: Failure line in the source-test popup: the subscription has run out. -->
+    <string name="settings_sources_test_expired">This subscription has expired.</string>
+    <!-- Translators: Failure line in the source-test popup: the server could not be contacted at all. -->
+    <string name="settings_sources_test_unreachable">Couldn’t reach the server. Check the address and your internet connection.</string>
+    <!-- Translators: Account status word reported verbatim by the provider (e.g. "Active"). "status" is that word. -->
+    <string name="settings_sources_test_status">Status: <xliff:g id="status">%1$s</xliff:g></string>
+    <!-- Translators: How many streams the account has open now vs. how many it may open. "used" and "max" are counts. -->
+    <string name="settings_sources_test_connections">Connections: <xliff:g id="used">%1$d</xliff:g> of <xliff:g id="max">%2$d</xliff:g> in use</string>
+    <!-- Translators: How many streams the account may open at once, when the provider does not say how many are in use. "max" is a count. -->
+    <string name="settings_sources_test_connections_max">Connections: up to <xliff:g id="max">%1$d</xliff:g> at once</string>
+    <!-- Translators: Marker shown when the provider reports the account is a trial line. -->
+    <string name="settings_sources_test_trial">Trial account</string>
+    <!-- Translators: Shown when the provider reports no subscription end date. -->
+    <string name="settings_sources_test_expiry_none">No expiry date reported</string>
     <!-- Translators: Auto-refresh mode display. 'mode' is the refresh mode. The circular arrow is a visual indicator. -->
     <string name="settings_sources_auto_refresh">⟳ <xliff:g id="mode">%1$s</xliff:g></string>
     <!-- Translators: Badge indicating the default source. All caps is intentional. -->
@@ -1528,10 +1548,17 @@ Resync and remove missing titles also allows removing titles the provider no lon
     <string name="settings_sources_refresh_6h">6 hours</string>
     <!-- Translators: Auto-refresh interval: every 12 hours. -->
     <string name="settings_sources_refresh_12h">12 hours</string>
-    <!-- Translators: Auto-refresh interval: every 24 hours. -->
-    <string name="settings_sources_refresh_24h">24 hours</string>
-    <!-- Translators: Auto-refresh interval: every 48 hours. -->
-    <string name="settings_sources_refresh_48h">48 hours</string>
+    <!-- Translators: Auto-refresh option that opens a picker for a number of days. The ellipsis marks that it opens a picker. -->
+    <string name="settings_sources_refresh_manual">Custom interval\u2026</string>
+    <!-- Translators: Auto-refresh interval in whole days. "count" is the number of days, 1 to 99. -->
+    <plurals name="settings_sources_refresh_days">
+        <item quantity="one">Every <xliff:g id="count">%1$d</xliff:g> day</item>
+        <item quantity="other">Every <xliff:g id="count">%1$d</xliff:g> days</item>
+    </plurals>
+    <!-- Translators: Title of the picker where the user chooses how many days between automatic refreshes. -->
+    <string name="settings_sources_refresh_days_title">Refresh interval</string>
+    <!-- Translators: Instruction under that picker. Left/right are the TV remote directions. -->
+    <string name="settings_sources_refresh_days_hint">Left and right choose how many days, from 1 to 99.</string>
 
     <!-- Translators: Screen title for the EPG Sources management screen. -->
     <string name="settings_epg_sources_title">EPG Sources</string>

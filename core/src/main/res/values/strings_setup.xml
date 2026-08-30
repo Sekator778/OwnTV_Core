@@ -260,13 +260,6 @@
     <string name="setup_testing">Testing\u2026</string>
     <!-- Translators: Button label on the source form to test the connection before saving. -->
     <string name="setup_test_connection">Test connection</string>
-    <!-- Translators: Plural success message after a Stalker connection test. "endpoint" is the server URL; "fields" is the count of profile fields returned. -->
-    <plurals name="setup_stalker_test_connected">
-        <item quantity="one">\u2713 Connected via <xliff:g id="endpoint">%1$s</xliff:g> (<xliff:g id="fields">%2$d</xliff:g> profile field)</item>
-        <item quantity="other">\u2713 Connected via <xliff:g id="endpoint">%1$s</xliff:g> (<xliff:g id="fields">%2$d</xliff:g> profile fields)</item>
-    </plurals>
-    <!-- Translators: Text shown after a successful Stalker test, indicating when the portal access expires. "date" is a localized date string. -->
-    <string name="setup_stalker_test_expires">Expires <xliff:g id="date">%1$s</xliff:g></string>
     <!-- Translators: Text-field label for an optional custom User-Agent string. -->
     <string name="setup_user_agent_optional">User-Agent (optional)</string>
     <!-- Translators: Placeholder example in the User-Agent field. "VLC/3.0.20 LibVLC/3.0.20" is a typical User-Agent. -->

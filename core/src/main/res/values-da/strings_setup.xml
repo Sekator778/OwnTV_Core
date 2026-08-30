@@ -130,11 +130,6 @@
     <string name="setup_device_model_preset">Forudindstilling for enhedsmodel (User-Agent)…</string>
     <string name="setup_testing">Tester…</string>
     <string name="setup_test_connection">Test forbindelse</string>
-    <plurals name="setup_stalker_test_connected">
-        <item quantity="one">✓ Forbundet via <xliff:g id="endpoint">%1$s</xliff:g> (<xliff:g id="fields">%2$d</xliff:g> profilfelt)</item>
-        <item quantity="other">✓ Forbundet via <xliff:g id="endpoint">%1$s</xliff:g> (<xliff:g id="fields">%2$d</xliff:g> profilfelter)</item>
-    </plurals>
-    <string name="setup_stalker_test_expires">Udløber <xliff:g id="date">%1$s</xliff:g></string>
     <string name="setup_user_agent_optional">User-Agent (valgfrit)</string>
     <string name="setup_user_agent_example">f.eks. VLC/3.0.20 LibVLC/3.0.20</string>
     <string name="setup_auto_refresh">Automatisk opdatering</string>

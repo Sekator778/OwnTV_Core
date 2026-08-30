@@ -752,6 +752,16 @@
     <string name="settings_sources_type_xtream">Xtream · <xliff:g id="url">%1$s</xliff:g></string>
     <string name="settings_sources_type_stalker">Stalker · <xliff:g id="url">%1$s</xliff:g></string>
     <string name="settings_sources_expiry">Upphör <xliff:g id="date">%1$s</xliff:g></string>
+    <string name="settings_sources_test_title">Källtest</string>
+    <string name="settings_sources_test_ok">Anslutningen fungerar</string>
+    <string name="settings_sources_test_auth">Leverantören avvisade de här uppgifterna. Kontrollera användarnamn, lösenord eller MAC-adress.</string>
+    <string name="settings_sources_test_expired">Den här prenumerationen har gått ut.</string>
+    <string name="settings_sources_test_unreachable">Det gick inte att nå servern. Kontrollera adressen och din internetanslutning.</string>
+    <string name="settings_sources_test_status">Status: <xliff:g id="status">%1$s</xliff:g></string>
+    <string name="settings_sources_test_connections">Anslutningar: <xliff:g id="used">%1$d</xliff:g> av <xliff:g id="max">%2$d</xliff:g> används</string>
+    <string name="settings_sources_test_connections_max">Anslutningar: upp till <xliff:g id="max">%1$d</xliff:g> samtidigt</string>
+    <string name="settings_sources_test_trial">Testkonto</string>
+    <string name="settings_sources_test_expiry_none">Inget utgångsdatum angivet</string>
     <string name="settings_sources_auto_refresh">⟳ <xliff:g id="mode">%1$s</xliff:g></string>
     <string name="settings_sources_default">STANDARD</string>
     <string name="settings_sources_backup">Säkerhetskopia</string>
@@ -771,8 +781,13 @@
     <string name="settings_sources_refresh_startup">Uppdatera vid start</string>
     <string name="settings_sources_refresh_6h">6 timmar</string>
     <string name="settings_sources_refresh_12h">12 timmar</string>
-    <string name="settings_sources_refresh_24h">24 timmar</string>
-    <string name="settings_sources_refresh_48h">48 timmar</string>
+    <string name="settings_sources_refresh_manual">Eget intervall\u2026</string>
+    <plurals name="settings_sources_refresh_days">
+        <item quantity="one">Var <xliff:g id="count">%1$d</xliff:g> dag</item>
+        <item quantity="other">Var <xliff:g id="count">%1$d</xliff:g> dag</item>
+    </plurals>
+    <string name="settings_sources_refresh_days_title">Uppdateringsintervall</string>
+    <string name="settings_sources_refresh_days_hint">Vänster och höger väljer antal dagar, från 1 till 99.</string>
     <string name="settings_epg_sources_title">EPG-källor</string>
     <string name="settings_epg_sources_empty">Det finns inga EPG-källor ännu. Lägg till en XMLTV-länk.</string>
     <string name="settings_epg_sources_add">Lägg till EPG-källa</string>

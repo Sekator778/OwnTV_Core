@@ -142,15 +142,6 @@
     <string name="setup_device_model_preset">إعداد مسبق لطراز الجهاز (User-Agent)…</string>
     <string name="setup_testing">جارٍ الاختبار…</string>
     <string name="setup_test_connection">اختبار الاتصال</string>
-    <plurals name="setup_stalker_test_connected">
-        <item quantity="zero">✓ تم الاتصال عبر <xliff:g id="endpoint">%1$s</xliff:g> (<xliff:g id="fields">%2$d</xliff:g> من حقول الملف الشخصي)</item>
-        <item quantity="one">✓ تم الاتصال عبر <xliff:g id="endpoint">%1$s</xliff:g> (<xliff:g id="fields">%2$d</xliff:g> حقل للملف الشخصي)</item>
-        <item quantity="two">✓ تم الاتصال عبر <xliff:g id="endpoint">%1$s</xliff:g> (<xliff:g id="fields">%2$d</xliff:g> حقلا ملف شخصي)</item>
-        <item quantity="few">✓ تم الاتصال عبر <xliff:g id="endpoint">%1$s</xliff:g> (<xliff:g id="fields">%2$d</xliff:g> حقول للملف الشخصي)</item>
-        <item quantity="many">✓ تم الاتصال عبر <xliff:g id="endpoint">%1$s</xliff:g> (<xliff:g id="fields">%2$d</xliff:g> حقلًا للملف الشخصي)</item>
-        <item quantity="other">✓ تم الاتصال عبر <xliff:g id="endpoint">%1$s</xliff:g> (<xliff:g id="fields">%2$d</xliff:g> من حقول الملف الشخصي)</item>
-    </plurals>
-    <string name="setup_stalker_test_expires">تنتهي الصلاحية في <xliff:g id="date">%1$s</xliff:g></string>
     <string name="setup_user_agent_optional">User-Agent (اختياري)</string>
     <string name="setup_user_agent_example">مثلاً: VLC/3.0.20 LibVLC/3.0.20</string>
     <string name="setup_auto_refresh">التحديث التلقائي</string>

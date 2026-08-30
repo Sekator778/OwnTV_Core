@@ -245,7 +245,7 @@
 1	technical	core/src/main/java/tv/own/owntv/core/companion/CompanionController.kt	owntv-remote-bg
 1	technical	core/src/main/java/tv/own/owntv/core/companion/CompanionController.kt	owntv-remote-restore
 1	file-path	core/src/main/java/tv/own/owntv/core/companion/CompanionController.kt	remote-backup-export
-3	empty	core/src/main/java/tv/own/owntv/core/companion/CompanionHtml.kt	\0
+4	empty	core/src/main/java/tv/own/owntv/core/companion/CompanionHtml.kt	\0
 1	technical	core/src/main/java/tv/own/owntv/core/companion/CompanionHtml.kt	"
 1	technical	core/src/main/java/tv/own/owntv/core/companion/CompanionHtml.kt	%1$d
 1	technical	core/src/main/java/tv/own/owntv/core/companion/CompanionHtml.kt	&
@@ -265,12 +265,13 @@
 1	technical	core/src/main/java/tv/own/owntv/core/companion/CompanionHtml.kt	<div class="card"><h1>${c.downloadHeading.h()}</h1> <p>${c.downloadDescription.h()}</p> <a class="go" href="/backup.own?pin=$pin" download="owntv-backup.own" style="display:block;text-align:center;text-decoration:none">${c.downloadBackup.h()}</a> </div>
 1	technical	core/src/main/java/tv/own/owntv/core/companion/CompanionHtml.kt	<div class="card"><h1>${c.savedHeading.h()}</h1> <p>${c.savedBackupBody.h()}</p><p><a href="/?pin=$pin">${c.savedBackupLink.h()}</a></p> </div>
 1	technical	core/src/main/java/tv/own/owntv/core/companion/CompanionHtml.kt	<div class="card"><h1>${c.savedHeading.h()}</h1> <p>${c.savedImageBody.h()}</p><p><a href="/?pin=$pin">${c.savedImageLink.h()}</a></p> </div>
-1	technical	core/src/main/java/tv/own/owntv/core/companion/CompanionHtml.kt	<label>${c.autoRefresh.h()} <select name="autoRefresh"> <option value="OFF" selected>${c.off.h()}</option> <option value="STARTUP">${c.refreshStartup.h()}</option> <option value="HOURS_6">${c.refresh6.h()}</option> <option value="HOURS_12">${c.refresh12.h()}</option> <option value="HOURS_24">${c.refresh24.h()}</option> <option value="HOURS_48">${c.refresh48.h()}</option> </select></label>
+1	technical	core/src/main/java/tv/own/owntv/core/companion/CompanionHtml.kt	<label>${c.autoRefresh.h()} <select name="autoRefresh"> <option value="OFF" selected>${c.off.h()}</option> <option value="STARTUP">${c.refreshStartup.h()}</option> <option value="HOURS_6">${c.refresh6.h()}</option> <option value="HOURS_12">${c.refresh12.h()}</option> ${c.refreshDays.entries.joinToString("\\n ") { (days, label) ->
 1	technical	core/src/main/java/tv/own/owntv/core/companion/CompanionHtml.kt	<label>${label.h()} <select name="$name"> ${option("now", c.now)}${option("later", c.later)}${option("off", c.off)} </select></label>
 1	technical	core/src/main/java/tv/own/owntv/core/companion/CompanionHtml.kt	<option value="$value"${if (value == selected) " selected" else ""}>${text.h()}</option>
 1	technical	core/src/main/java/tv/own/owntv/core/companion/CompanionHtml.kt	<p class="err">${error.h()}</p>
 1	technical	core/src/main/java/tv/own/owntv/core/companion/CompanionHtml.kt	<svg viewBox="0 0 24 24" fill="none"><path d="M8 5v14l11-7z" fill="currentColor"/></svg>
 1	technical	core/src/main/java/tv/own/owntv/core/companion/CompanionHtml.kt	>
+1	protocol	core/src/main/java/tv/own/owntv/core/companion/CompanionHtml.kt	MANUAL:$days
 1	technical	core/src/main/java/tv/own/owntv/core/companion/CompanionHtml.kt	__STATUS__
 1	technical	core/src/main/java/tv/own/owntv/core/companion/CompanionHtml.kt	application/json
 1	locale	core/src/main/java/tv/own/owntv/core/companion/CompanionHtml.kt	en
@@ -286,6 +287,7 @@
 2	technical	core/src/main/java/tv/own/owntv/core/companion/CompanionHtml.kt	syncMovies
 2	technical	core/src/main/java/tv/own/owntv/core/companion/CompanionHtml.kt	syncSeries
 1	technical	core/src/main/java/tv/own/owntv/core/companion/CompanionHtml.kt	text/plain
+1	technical	core/src/main/java/tv/own/owntv/core/companion/CompanionHtml.kt	}} </select></label>
 2	empty	core/src/main/java/tv/own/owntv/core/companion/CompanionHttpProtocol.kt	\0
 1	protocol	core/src/main/java/tv/own/owntv/core/companion/CompanionHttpProtocol.kt	/background
 1	protocol	core/src/main/java/tv/own/owntv/core/companion/CompanionHttpProtocol.kt	/backup
@@ -1838,11 +1840,15 @@
 1	protocol	core/src/main/java/tv/own/owntv/core/parser/XtreamClient.kt	&category_id=$it
 1	protocol	core/src/main/java/tv/own/owntv/core/parser/XtreamClient.kt	&series_id=$seriesId
 1	protocol	core/src/main/java/tv/own/owntv/core/parser/XtreamClient.kt	&stream_id=$streamId&limit=$limit
+1	protocol	core/src/main/java/tv/own/owntv/core/parser/XtreamClient.kt	0
+1	protocol	core/src/main/java/tv/own/owntv/core/parser/XtreamClient.kt	1
 1	protocol	core/src/main/java/tv/own/owntv/core/parser/XtreamClient.kt	Stream truncated after $count items label=$label — partial list kept
 1	protocol	core/src/main/java/tv/own/owntv/core/parser/XtreamClient.kt	UTC
 6	protocol	core/src/main/java/tv/own/owntv/core/parser/XtreamClient.kt	UTF-8
 1	protocol	core/src/main/java/tv/own/owntv/core/parser/XtreamClient.kt	XtreamClient
+1	json	core/src/main/java/tv/own/owntv/core/parser/XtreamClient.kt	active_cons
 2	protocol	core/src/main/java/tv/own/owntv/core/parser/XtreamClient.kt	added
+1	json	core/src/main/java/tv/own/owntv/core/parser/XtreamClient.kt	auth
 4	protocol	core/src/main/java/tv/own/owntv/core/parser/XtreamClient.kt	category_id
 1	protocol	core/src/main/java/tv/own/owntv/core/parser/XtreamClient.kt	category_name
 2	protocol	core/src/main/java/tv/own/owntv/core/parser/XtreamClient.kt	container_extension
@@ -1863,6 +1869,7 @@
 1	protocol	core/src/main/java/tv/own/owntv/core/parser/XtreamClient.kt	get_vod_categories
 2	protocol	core/src/main/java/tv/own/owntv/core/parser/XtreamClient.kt	get_vod_streams
 1	protocol	core/src/main/java/tv/own/owntv/core/parser/XtreamClient.kt	id
+1	json	core/src/main/java/tv/own/owntv/core/parser/XtreamClient.kt	is_trial
 1	protocol	core/src/main/java/tv/own/owntv/core/parser/XtreamClient.kt	last_modified
 1	technical	core/src/main/java/tv/own/owntv/core/parser/XtreamClient.kt	max_connections
 2	protocol	core/src/main/java/tv/own/owntv/core/parser/XtreamClient.kt	mp4
@@ -1878,6 +1885,7 @@
 1	protocol	core/src/main/java/tv/own/owntv/core/parser/XtreamClient.kt	season
 1	protocol	core/src/main/java/tv/own/owntv/core/parser/XtreamClient.kt	series_id
 1	protocol	core/src/main/java/tv/own/owntv/core/parser/XtreamClient.kt	start_timestamp
+1	json	core/src/main/java/tv/own/owntv/core/parser/XtreamClient.kt	status
 1	protocol	core/src/main/java/tv/own/owntv/core/parser/XtreamClient.kt	stop_timestamp
 1	protocol	core/src/main/java/tv/own/owntv/core/parser/XtreamClient.kt	streamArray end count=$count label=$label totalMs=${SystemClock.elapsedRealtime() - startedAt}
 1	protocol	core/src/main/java/tv/own/owntv/core/parser/XtreamClient.kt	streamArray non-array label=$label totalMs=${SystemClock.elapsedRealtime() - startedAt}
@@ -1998,15 +2006,28 @@
 1	log	core/src/main/java/tv/own/owntv/core/repository/SourceRepository.kt	userData export sourceId=${source.id} rows=${it.length()} ${it.typeCounts()} ms=${SystemClock.elapsedRealtime() - snapshotStartedAt}
 1	log	core/src/main/java/tv/own/owntv/core/repository/SourceRepository.kt	userData relink failed sourceId=${source.id} ms=${SystemClock.elapsedRealtime() - relinkStartedAt}
 1	log	core/src/main/java/tv/own/owntv/core/repository/SourceRepository.kt	userData relink sourceId=${source.id} rows=${snapshot?.length() ?: 0} purge=$purge ms=${SystemClock.elapsedRealtime() - relinkStartedAt}
+1	protocol	core/src/main/java/tv/own/owntv/core/repository/SourceTester.kt	#EXTM3U
+1	protocol	core/src/main/java/tv/own/owntv/core/repository/SourceTester.kt	Expired
+1	log	core/src/main/java/tv/own/owntv/core/repository/SourceTester.kt	SourceTester
+1	protocol	core/src/main/java/tv/own/owntv/core/repository/SourceTester.kt	http
+1	json	core/src/main/java/tv/own/owntv/core/repository/SourceTester.kt	max_connections
+1	json	core/src/main/java/tv/own/owntv/core/repository/SourceTester.kt	max_online
+1	json	core/src/main/java/tv/own/owntv/core/repository/SourceTester.kt	num_of_devices
+1	json	core/src/main/java/tv/own/owntv/core/repository/SourceTester.kt	status
+1	log	core/src/main/java/tv/own/owntv/core/repository/SourceTester.kt	test sourceId=${source.id} type=${source.type} -> ${result::class.simpleName}
 1	protocol	core/src/main/java/tv/own/owntv/core/settings/RemoteShortcuts.kt	$keyCode:${press.name}
 1	protocol	core/src/main/java/tv/own/owntv/core/settings/RemoteShortcuts.kt	${it.keyCode}$SEPARATOR${it.press.name}$SEPARATOR${it.action.name}
-31	empty	core/src/main/java/tv/own/owntv/core/settings/SettingsRepository.kt	\0
+32	empty	core/src/main/java/tv/own/owntv/core/settings/SettingsRepository.kt	\0
+1	protocol	core/src/main/java/tv/own/owntv/core/settings/SettingsRepository.kt	${mode.name}$SEPARATOR$manualDays
 3	preference-key	core/src/main/java/tv/own/owntv/core/settings/SettingsRepository.kt	,
 1	preference-key	core/src/main/java/tv/own/owntv/core/settings/SettingsRepository.kt	ALL
 1	preference-key	core/src/main/java/tv/own/owntv/core/settings/SettingsRepository.kt	CUSTOM:
+1	protocol	core/src/main/java/tv/own/owntv/core/settings/SettingsRepository.kt	DAYS_7
 1	preference-key	core/src/main/java/tv/own/owntv/core/settings/SettingsRepository.kt	FAV
 1	technical	core/src/main/java/tv/own/owntv/core/settings/SettingsRepository.kt	FIT
 1	preference-key	core/src/main/java/tv/own/owntv/core/settings/SettingsRepository.kt	HIST
+1	protocol	core/src/main/java/tv/own/owntv/core/settings/SettingsRepository.kt	HOURS_24
+1	protocol	core/src/main/java/tv/own/owntv/core/settings/SettingsRepository.kt	HOURS_48
 1	regex	core/src/main/java/tv/own/owntv/core/settings/SettingsRepository.kt	^[0-9a-fA-F]{16}:[0-9a-fA-F]{64}$
 1	preference-key	core/src/main/java/tv/own/owntv/core/settings/SettingsRepository.kt	accent_color
 1	preference-key	core/src/main/java/tv/own/owntv/core/settings/SettingsRepository.kt	accent_custom

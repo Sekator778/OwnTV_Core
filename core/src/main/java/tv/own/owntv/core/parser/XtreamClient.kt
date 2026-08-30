@@ -387,6 +387,15 @@ class XtreamClient(private val http: HttpClient) {
         /** `user_info.max_connections` — simultaneous streams the account may open; 0 when the panel
          *  omits it or reports nonsense. `1` is the one that changes playback (F30). */
         val maxConnections: Int = 0,
+        /** `user_info.active_cons` — streams open right now; -1 when the panel omits it. */
+        val activeConnections: Int = -1,
+        /** `user_info.status` verbatim ("Active", "Expired", "Banned", …); null when omitted. Panels
+         *  invent their own words here, so it is shown as-is rather than mapped to an enum. */
+        val status: String? = null,
+        /** `user_info.auth` — the panel says 0 when it rejected these credentials. */
+        val authOk: Boolean = true,
+        /** `user_info.is_trial` — "1" on a trial line. */
+        val trial: Boolean = false,
     )
 
     /**
@@ -397,78 +406,120 @@ class XtreamClient(private val http: HttpClient) {
      * - [XtAccountDetails.hlsSupported]: true only if `"m3u8"` is present in `allowed_output_formats`;
      *   defaults to false when omitted, unlisted, or on network/parse failure.
      */
-    suspend fun fetchAccountDetails(s: SourceEntity): XtAccountDetails? {
+    suspend fun fetchAccountDetails(s: SourceEntity): XtAccountDetails? = try {
+        fetchAccountStatus(s)
+    } catch (e: Exception) {
+        Log.w(TAG, "fetchAccountDetails failed for source ${s.id}", e)
+        null
+    }
+
+    /**
+     * The same call as [fetchAccountDetails], but **propagating** the failure instead of returning null.
+     * "Test source" has to tell "the host never answered" apart from "the host said no", and a null
+     * cannot carry that difference.
+     */
+    suspend fun fetchAccountStatus(s: SourceEntity): XtAccountDetails {
         val u = URLEncoder.encode(s.username.orEmpty(), "UTF-8")
         val p = URLEncoder.encode(s.password.orEmpty(), "UTF-8")
-        return try {
-            http.get("${base(s)}/player_api.php?username=$u&password=$p", s.userAgent) { input ->
-                var expSec: Long? = null
-                var hlsSupported = false
-                var maxConnections = 0
-                JsonReader(java.io.InputStreamReader(input, Charsets.UTF_8)).use { r ->
-                    r.isLenient = true
-                    if (r.peek() != JsonToken.BEGIN_OBJECT) return@use
-                    r.beginObject()
-                    while (r.hasNext()) {
-                        if (r.nextName() == "user_info" && r.peek() == JsonToken.BEGIN_OBJECT) {
-                            r.beginObject()
-                            while (r.hasNext()) {
-                                when (r.nextName()) {
-                                    "exp_date" -> {
-                                        expSec = when (r.peek()) {
-                                            JsonToken.STRING -> r.nextString().toLongOrNull()
-                                            JsonToken.NUMBER -> r.nextLong()
-                                            else -> { r.skipValue(); null }
-                                        }
+        return http.get("${base(s)}/player_api.php?username=$u&password=$p", s.userAgent) { input ->
+            var expSec: Long? = null
+            var hlsSupported = false
+            var maxConnections = 0
+            var activeConnections = -1
+            var status: String? = null
+            var authOk = true
+            var trial = false
+            JsonReader(java.io.InputStreamReader(input, Charsets.UTF_8)).use { r ->
+                r.isLenient = true
+                if (r.peek() != JsonToken.BEGIN_OBJECT) return@use
+                r.beginObject()
+                while (r.hasNext()) {
+                    if (r.nextName() == "user_info" && r.peek() == JsonToken.BEGIN_OBJECT) {
+                        r.beginObject()
+                        while (r.hasNext()) {
+                            when (r.nextName()) {
+                                "exp_date" -> {
+                                    expSec = when (r.peek()) {
+                                        JsonToken.STRING -> r.nextString().toLongOrNull()
+                                        JsonToken.NUMBER -> r.nextLong()
+                                        else -> { r.skipValue(); null }
                                     }
-                                    // Panels send this as a string ("1") about as often as a number.
-                                    "max_connections" -> {
-                                        maxConnections = when (r.peek()) {
-                                            JsonToken.STRING -> r.nextString().trim().toIntOrNull() ?: 0
-                                            JsonToken.NUMBER -> r.nextInt()
-                                            else -> { r.skipValue(); 0 }
-                                        }.coerceAtLeast(0)
+                                }
+                                // Panels send this as a string ("1") about as often as a number.
+                                "max_connections" -> {
+                                    maxConnections = when (r.peek()) {
+                                        JsonToken.STRING -> r.nextString().trim().toIntOrNull() ?: 0
+                                        JsonToken.NUMBER -> r.nextInt()
+                                        else -> { r.skipValue(); 0 }
+                                    }.coerceAtLeast(0)
+                                }
+                                "active_cons" -> {
+                                    activeConnections = when (r.peek()) {
+                                        JsonToken.STRING -> r.nextString().trim().toIntOrNull() ?: -1
+                                        JsonToken.NUMBER -> r.nextInt()
+                                        else -> { r.skipValue(); -1 }
+                                    }.coerceAtLeast(-1)
+                                }
+                                "status" -> {
+                                    status = if (r.peek() == JsonToken.STRING) {
+                                        r.nextString().trim().takeIf { it.isNotEmpty() }
+                                    } else { r.skipValue(); null }
+                                }
+                                // Panels send auth/is_trial as a number or a string, interchangeably.
+                                "auth" -> {
+                                    authOk = when (r.peek()) {
+                                        JsonToken.STRING -> r.nextString().trim() != "0"
+                                        JsonToken.NUMBER -> r.nextInt() != 0
+                                        else -> { r.skipValue(); true }
                                     }
-                                    "allowed_output_formats", "user_output_formats" -> {
-                                        when (r.peek()) {
-                                            JsonToken.BEGIN_ARRAY -> {
-                                                r.beginArray()
-                                                while (r.hasNext()) {
-                                                    val fmt = r.nextStringOrNull()
-                                                    if (fmt?.equals("m3u8", ignoreCase = true) == true) {
-                                                        hlsSupported = true
-                                                    }
-                                                }
-                                                r.endArray()
-                                            }
-                                            JsonToken.STRING -> {
-                                                val str = r.nextString()
-                                                if (str.contains("m3u8", ignoreCase = true)) {
+                                }
+                                "is_trial" -> {
+                                    trial = when (r.peek()) {
+                                        JsonToken.STRING -> r.nextString().trim() == "1"
+                                        JsonToken.NUMBER -> r.nextInt() == 1
+                                        else -> { r.skipValue(); false }
+                                    }
+                                }
+                                "allowed_output_formats", "user_output_formats" -> {
+                                    when (r.peek()) {
+                                        JsonToken.BEGIN_ARRAY -> {
+                                            r.beginArray()
+                                            while (r.hasNext()) {
+                                                val fmt = r.nextStringOrNull()
+                                                if (fmt?.equals("m3u8", ignoreCase = true) == true) {
                                                     hlsSupported = true
                                                 }
                                             }
-                                            else -> r.skipValue()
+                                            r.endArray()
                                         }
+                                        JsonToken.STRING -> {
+                                            val str = r.nextString()
+                                            if (str.contains("m3u8", ignoreCase = true)) {
+                                                hlsSupported = true
+                                            }
+                                        }
+                                        else -> r.skipValue()
                                     }
-                                    else -> r.skipValue()
                                 }
+                                else -> r.skipValue()
                             }
-                            r.endObject()
-                        } else {
-                            r.skipValue()
                         }
+                        r.endObject()
+                    } else {
+                        r.skipValue()
                     }
-                    r.endObject()
                 }
-                XtAccountDetails(
-                    expiryMs = expSec?.takeIf { it > 0 }?.times(1000),
-                    hlsSupported = hlsSupported,
-                    maxConnections = maxConnections,
-                )
+                r.endObject()
             }
-        } catch (e: Exception) {
-            Log.w(TAG, "fetchAccountDetails failed for source ${s.id}", e)
-            null
+            XtAccountDetails(
+                expiryMs = expSec?.takeIf { it > 0 }?.times(1000),
+                hlsSupported = hlsSupported,
+                maxConnections = maxConnections,
+                activeConnections = activeConnections,
+                status = status,
+                authOk = authOk,
+                trial = trial,
+            )
         }
     }
 

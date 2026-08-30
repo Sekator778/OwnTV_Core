@@ -776,6 +776,16 @@
     <string name="settings_sources_type_xtream">Xtream · <xliff:g id="url">%1$s</xliff:g></string>
     <string name="settings_sources_type_stalker">Stalker · <xliff:g id="url">%1$s</xliff:g></string>
     <string name="settings_sources_expiry">تنتهي الصلاحية في <xliff:g id="date">%1$s</xliff:g></string>
+    <string name="settings_sources_test_title">اختبار المصدر</string>
+    <string name="settings_sources_test_ok">الاتصال سليم</string>
+    <string name="settings_sources_test_auth">رفض المزوّد هذه البيانات. تحقق من اسم المستخدم أو كلمة المرور أو عنوان MAC.</string>
+    <string name="settings_sources_test_expired">انتهت صلاحية هذا الاشتراك.</string>
+    <string name="settings_sources_test_unreachable">تعذر الوصول إلى الخادم. تحقق من العنوان ومن اتصالك بالإنترنت.</string>
+    <string name="settings_sources_test_status">الحالة: <xliff:g id="status">%1$s</xliff:g></string>
+    <string name="settings_sources_test_connections">الاتصالات: <xliff:g id="used">%1$d</xliff:g> من <xliff:g id="max">%2$d</xliff:g> قيد الاستخدام</string>
+    <string name="settings_sources_test_connections_max">الاتصالات: حتى <xliff:g id="max">%1$d</xliff:g> في وقت واحد</string>
+    <string name="settings_sources_test_trial">حساب تجريبي</string>
+    <string name="settings_sources_test_expiry_none">لم يُبلَّغ عن تاريخ انتهاء</string>
     <string name="settings_sources_auto_refresh">⟳ <xliff:g id="mode">%1$s</xliff:g></string>
     <string name="settings_sources_default">افتراضي</string>
     <string name="settings_sources_backup">نسخة احتياطية</string>
@@ -795,8 +805,17 @@
     <string name="settings_sources_refresh_startup">التحديث عند بدء التشغيل</string>
     <string name="settings_sources_refresh_6h">6 ساعات</string>
     <string name="settings_sources_refresh_12h">12 ساعة</string>
-    <string name="settings_sources_refresh_24h">24 ساعة</string>
-    <string name="settings_sources_refresh_48h">48 ساعة</string>
+    <string name="settings_sources_refresh_manual">فاصل مخصص\u2026</string>
+    <plurals name="settings_sources_refresh_days">
+        <item quantity="zero">كل <xliff:g id="count">%1$d</xliff:g> يوم</item>
+        <item quantity="one">كل <xliff:g id="count">%1$d</xliff:g> يوم</item>
+        <item quantity="two">كل <xliff:g id="count">%1$d</xliff:g> يومين</item>
+        <item quantity="few">كل <xliff:g id="count">%1$d</xliff:g> أيام</item>
+        <item quantity="many">كل <xliff:g id="count">%1$d</xliff:g> يومًا</item>
+        <item quantity="other">كل <xliff:g id="count">%1$d</xliff:g> يوم</item>
+    </plurals>
+    <string name="settings_sources_refresh_days_title">فاصل التحديث</string>
+    <string name="settings_sources_refresh_days_hint">يمين ويسار يختاران عدد الأيام، من 1 إلى 99.</string>
     <string name="settings_epg_sources_title">مصادر دليل البرامج الإلكتروني</string>
     <string name="settings_epg_sources_empty">لا توجد مصادر لدليل البرامج الإلكتروني بعد. أضف رابط XMLTV.</string>
     <string name="settings_epg_sources_add">إضافة مصدر لدليل البرامج الإلكتروني</string>

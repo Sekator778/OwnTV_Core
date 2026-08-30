@@ -127,10 +127,6 @@
     <string name="setup_device_model_preset">기기 모델 사전 설정(User-Agent)…</string>
     <string name="setup_testing">테스트 중…</string>
     <string name="setup_test_connection">연결 테스트</string>
-    <plurals name="setup_stalker_test_connected">
-        <item quantity="other">✓ <xliff:g id="endpoint">%1$s</xliff:g>을(를) 통해 연결됨(프로필 필드 <xliff:g id="fields">%2$d</xliff:g>개)</item>
-    </plurals>
-    <string name="setup_stalker_test_expires">만료일: <xliff:g id="date">%1$s</xliff:g></string>
     <string name="setup_user_agent_optional">User-Agent(선택 사항)</string>
     <string name="setup_user_agent_example">예: VLC/3.0.20 LibVLC/3.0.20</string>
     <string name="setup_auto_refresh">자동 새로 고침</string>

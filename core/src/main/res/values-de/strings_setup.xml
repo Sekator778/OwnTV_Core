@@ -130,11 +130,6 @@
     <string name="setup_device_model_preset">Gerätemodell-Voreinstellung (User-Agent)…</string>
     <string name="setup_testing">Wird getestet…</string>
     <string name="setup_test_connection">Verbindung testen</string>
-    <plurals name="setup_stalker_test_connected">
-        <item quantity="one">✓ Verbunden über <xliff:g id="endpoint">%1$s</xliff:g> (<xliff:g id="fields">%2$d</xliff:g> Profilfeld)</item>
-        <item quantity="other">✓ Verbunden über <xliff:g id="endpoint">%1$s</xliff:g> (<xliff:g id="fields">%2$d</xliff:g> Profilfelder)</item>
-    </plurals>
-    <string name="setup_stalker_test_expires">Läuft am <xliff:g id="date">%1$s</xliff:g> ab</string>
     <string name="setup_user_agent_optional">User-Agent (optional)</string>
     <string name="setup_user_agent_example">z. B. VLC/3.0.20 LibVLC/3.0.20</string>
     <string name="setup_auto_refresh">Automatische Aktualisierung</string>

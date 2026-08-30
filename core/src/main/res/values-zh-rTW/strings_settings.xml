@@ -746,6 +746,16 @@
     <string name="settings_sources_type_xtream">Xtream · <xliff:g id="url">%1$s</xliff:g></string>
     <string name="settings_sources_type_stalker">Stalker · <xliff:g id="url">%1$s</xliff:g></string>
     <string name="settings_sources_expiry">到期日：<xliff:g id="date">%1$s</xliff:g></string>
+    <string name="settings_sources_test_title">來源測試</string>
+    <string name="settings_sources_test_ok">連線正常</string>
+    <string name="settings_sources_test_auth">業者拒絕了這些資訊。請檢查使用者名稱、密碼或 MAC 位址。</string>
+    <string name="settings_sources_test_expired">此訂閱已過期。</string>
+    <string name="settings_sources_test_unreachable">無法連線至伺服器。請檢查位址與網路連線。</string>
+    <string name="settings_sources_test_status">狀態：<xliff:g id="status">%1$s</xliff:g></string>
+    <string name="settings_sources_test_connections">連線：<xliff:g id="max">%2$d</xliff:g> 個中已使用 <xliff:g id="used">%1$d</xliff:g> 個</string>
+    <string name="settings_sources_test_connections_max">連線：最多可同時使用 <xliff:g id="max">%1$d</xliff:g> 個</string>
+    <string name="settings_sources_test_trial">試用帳號</string>
+    <string name="settings_sources_test_expiry_none">未提供到期日</string>
     <string name="settings_sources_auto_refresh">⟳ <xliff:g id="mode">%1$s</xliff:g></string>
     <string name="settings_sources_default">預設</string>
     <string name="settings_sources_backup">備份</string>
@@ -765,8 +775,12 @@
     <string name="settings_sources_refresh_startup">啟動時更新</string>
     <string name="settings_sources_refresh_6h">6 小時</string>
     <string name="settings_sources_refresh_12h">12 小時</string>
-    <string name="settings_sources_refresh_24h">24 小時</string>
-    <string name="settings_sources_refresh_48h">48 小時</string>
+    <string name="settings_sources_refresh_manual">自訂間隔\u2026</string>
+    <plurals name="settings_sources_refresh_days">
+        <item quantity="other">每 <xliff:g id="count">%1$d</xliff:g> 天</item>
+    </plurals>
+    <string name="settings_sources_refresh_days_title">重新整理間隔</string>
+    <string name="settings_sources_refresh_days_hint">用左右鍵選擇天數，1 到 99。</string>
     <string name="settings_epg_sources_title">電子節目表來源</string>
     <string name="settings_epg_sources_empty">目前沒有電子節目表來源。請新增 XMLTV 連結。</string>
     <string name="settings_epg_sources_add">新增電子節目表來源</string>
