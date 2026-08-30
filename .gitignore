@@ -18,6 +18,7 @@ local.properties
 .codegraph/
 .zcode/
 AGENT_HANDOVER.md
+CLAUDE.md
 
 # Signing keys & secrets — NEVER commit these. A library has no keystore, but the rule costs
 # nothing and prevents an accident.
@@ -41,4 +42,4 @@ future_work/
 # JVM crash dumps from a Gradle daemon (never worth committing)
 hs_err_pid*.log
 replay_pid*.log
-CLAUDE.md
+

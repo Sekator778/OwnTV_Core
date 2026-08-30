@@ -18,8 +18,8 @@ class SupportedLocalesTest {
     @Test
     fun `catalogue has source override established translations and catalogue-only backlog`() {
         assertEquals(44, SupportedLocales.all.size)
-        assertEquals(24, SupportedLocales.all.count { it.tier == 1 })
-        assertEquals(19, SupportedLocales.all.count { it.tier == 2 })
+        assertEquals(25, SupportedLocales.all.count { it.tier == 1 })
+        assertEquals(18, SupportedLocales.all.count { it.tier == 2 })
     }
 
     @Test
@@ -33,7 +33,7 @@ class SupportedLocalesTest {
     @Test
     fun `catalogue-only locales are unshipped invisible and zero coverage`() {
         val backlog = SupportedLocales.all.filter { it.tier == 2 }
-        assertEquals(19, backlog.size)
+        assertEquals(18, backlog.size)
         backlog.forEach {
             assertFalse("${it.id} must not be packaged", it.packaged)
             assertFalse("${it.id} must not be picker-visible", it.pickerVisible)
@@ -120,7 +120,7 @@ class SupportedLocalesTest {
     @Test
     fun `pickerRows excludes non-packaged and non-visible locales`() {
         val rows = SupportedLocales.pickerRows
-        assertEquals(24, rows.size)
+        assertEquals(25, rows.size)
         assertFalse(rows.any { it.id == "en-GB" })
         assertFalse(rows.any { it.tier == 2 })
         rows.forEach {
