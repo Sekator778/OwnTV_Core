@@ -243,8 +243,33 @@ behaviour from core, change core and rebuild the app against it. A workaround in
 mobile app will hit again.
 
 Publishing is by tag: push `core-<version>`, matching `extra["coreVersion"]`, and CI publishes both
-modules to GitHub Packages. The consuming app then bumps its own pin — `owntvCore` in
-`OwnTV/gradle/libs.versions.toml`.
+modules to GitHub Packages.
+
+### The pin bump is automated — do not do it by hand
+
+`.github/workflows/bump-consumers.yml` runs after every successful publish and opens a pull request
+on each consuming app. Never edit an app's `owntvCore` manually just because a version was published;
+let the PR do it, so both files below always move together.
+
+The PR changes exactly two things, and there is nothing else to merge because the apps hold no core
+code:
+
+1. **`owntvCore`** in the app's `gradle/libs.versions.toml`.
+2. **`tools/i18n/locales.json`**, copied from here. This file is *deliberately duplicated* into every
+   app: Gradle reads `packaged` from the **app's** copy at configure time to build `localeFilters`,
+   so core's copy never reaches it. Left to a human this step is silently skipped, and a newly
+   packaged language is stripped out of the APK with every check green.
+
+Adding the mobile app later is one line — uncomment it in the workflow's `consumer` matrix.
+
+**It needs `CONSUMER_BUMP_TOKEN`**, a PAT with `repo` scope on the consumer repositories, stored as
+an Actions secret here. The built-in `GITHUB_TOKEN` cannot write to another repository, and pull
+requests opened with it do not trigger the target repo's workflows — the PR would sit there with no
+checks. If the token expires the bump job fails loudly with that message; the publish itself is
+unaffected, and the job can be re-run on its own via `workflow_dispatch` with a version input.
+
+Nothing is merged automatically, by design. The maintainer builds against core's *source* locally, so
+he has already been running the change; the PR is what makes CI and the released APK agree with him.
 
 ## Workflow rules
 
