@@ -26,6 +26,9 @@
   <a href="https://github.com/ahXN00/OwnTV_Core/actions/workflows/i18n.yml">
     <img alt="i18n" src="https://github.com/ahXN00/OwnTV_Core/actions/workflows/i18n.yml/badge.svg">
   </a>
+  <a href="https://github.com/ahXN00/OwnTV_Core/actions/workflows/publish.yml">
+    <img alt="Publish core" src="https://github.com/ahXN00/OwnTV_Core/actions/workflows/publish.yml/badge.svg">
+  </a>
 </p>
 
 ---
@@ -131,8 +134,8 @@ real data — installing a test APK wipes the catalog, playlists, profiles and h
 Core publishes to **GitHub Packages** as `tv.own.owntv:core` and `tv.own.owntv:player-core`:
 
 ```kotlin
-implementation("tv.own.owntv:core:1.0.1")
-implementation("tv.own.owntv:player-core:1.0.1")
+implementation("tv.own.owntv:core:1.0.4")
+implementation("tv.own.owntv:player-core:1.0.4")
 ```
 
 GitHub's Maven registry asks who you are even for public packages, so add the repository with
@@ -199,6 +202,12 @@ python tools/i18n/check_text_overflow.py
 
 Core versions are **independent of the TV app's `v4.x` releases** and must never be confused with
 them. Tags are prefixed — `core-1.0.0` — and pushing one publishes both modules from CI.
+
+Every published version also gets a [**GitHub Release**](https://github.com/ahXN00/OwnTV_Core/releases),
+and the order is deliberate: CI runs the unit tests, pushes both artifacts to GitHub Packages, and
+only then publishes the release. So a release exists only for a version that actually built and
+shipped — and it is the release, not the tag, that opens the pull request moving each app onto the
+new version. A tag whose tests fail stops there, with nothing downstream moved.
 
 ## 🤝 Contributing
 
