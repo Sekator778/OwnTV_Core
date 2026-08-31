@@ -105,7 +105,9 @@ class SourceTester(
                 String(buf, 0, read, Charsets.UTF_8)
             }
             // Some providers answer an expired line with an HTML error page instead of a status code.
-            if (head.trimStart('﻿', ' ', '\n', '\r', '\t').startsWith("#EXTM3U", ignoreCase = true)) {
+            // U+FEFF is the byte-order mark, written as an escape: a literal one in the source is
+            // both invisible to read and a lint error (ByteOrderMark).
+            if (head.trimStart('\uFEFF', ' ', '\n', '\r', '\t').startsWith("#EXTM3U", ignoreCase = true)) {
                 SourceTestResult.Ok()
             } else {
                 SourceTestResult.AuthFailed
