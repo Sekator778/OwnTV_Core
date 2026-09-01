@@ -96,7 +96,14 @@ dependencies {
 
     // Playback — libmpv (FFmpeg) plus the Media3/ExoPlayer path used for VOD, image subtitles and
     // the Live/hero preview panes. Same set :app carried before the split.
-    implementation(libs.libmpv)
+    //
+    // `api`, not `implementation`: OwnTVPlayer's supertype is MPVLib.EventObserver, so a consumer
+    // that merely names the player type needs libmpv on its compile classpath. Hiding it here made
+    // the module unusable until the app redeclared the same dependency by hand — which the TV app
+    // happens to do for historical reasons, so nobody noticed until the mobile app was built. This
+    // also pins both apps to ONE libmpv version; two hosts each declaring their own could package
+    // two builds of the same native library.
+    api(libs.libmpv)
     implementation(libs.androidx.media3.exoplayer)
     implementation(libs.androidx.media3.exoplayer.hls)
     implementation(libs.androidx.media3.exoplayer.dash)

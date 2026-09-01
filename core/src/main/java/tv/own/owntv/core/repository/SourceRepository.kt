@@ -93,12 +93,19 @@ class SourceRepository(
 
     suspend fun updateSource(source: SourceEntity) = sourceDao.update(source)
 
+    /**
+     * [onProgress] is deliberately **last**: Kotlin binds a trailing lambda to the final parameter,
+     * so while `forcePrune` sat there `sync(source) { … }` aimed the progress callback at a Boolean
+     * and failed with *"'Boolean' was expected"*, which points at nothing useful. Every existing
+     * caller already passed it by name, so moving it broke none of them and the natural spelling now
+     * works too. If a parameter is ever added after this one, put it before [onProgress].
+     */
     suspend fun sync(
         source: SourceEntity,
-        onProgress: (ImportStage) -> Unit,
         contentTypes: SyncContentTypes = SyncContentTypes(),
         /** User-requested clean resync: allows this run to remove titles the provider no longer lists. */
         forcePrune: Boolean = false,
+        onProgress: (ImportStage) -> Unit,
     ): SyncResult {
         val startedAt = SystemClock.elapsedRealtime()
         Log.i(TAG, "sync wrapper start sourceId=${source.id} type=${source.type} contentTypes=$contentTypes")

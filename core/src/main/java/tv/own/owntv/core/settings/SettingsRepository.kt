@@ -20,8 +20,10 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
+import tv.own.owntv.core.CoreBuildInfo
 import tv.own.owntv.core.i18n.LocaleStore
 import tv.own.owntv.core.model.HomeConfig
 import tv.own.owntv.core.player.SurroundMode
@@ -1664,8 +1666,17 @@ class SettingsRepository(private val context: Context, private val localeStore: 
         }
     }
 
-    /** Mirror continue-watching rows into Android TV home surfaces. */
-    val androidTvHomeEnabled: Flow<Boolean> = prefsFlow { it[Keys.ANDROID_TV_HOME] ?: true }
+    /**
+     * Mirror continue-watching rows into Android TV home surfaces.
+     *
+     * Every publish path in `TvHomeRepository` reads this one flow, so it is also where a host that
+     * has no business on a TV home screen is stopped: a false [CoreBuildInfo.tvHome] pins it off and
+     * the stored preference is never consulted. Without that the phone app published Watch Next rows
+     * after every sync — into a content provider that does not exist and permissions it explicitly
+     * removes — and only a `runCatching` in the sync worker kept it quiet.
+     */
+    val androidTvHomeEnabled: Flow<Boolean> =
+        if (!CoreBuildInfo.tvHome) flowOf(false) else prefsFlow { it[Keys.ANDROID_TV_HOME] ?: true }
 
     suspend fun setAndroidTvHomeEnabled(enabled: Boolean) {
         context.dataStore.edit { it[Keys.ANDROID_TV_HOME] = enabled }

@@ -44,4 +44,21 @@ object CoreBuildInfo {
 
     /** The host app's `BuildConfig.DIAGNOSTIC_BUILD` — starts the live diagnostics log switched on. */
     var diagnosticBuild: Boolean = false
+
+    /**
+     * Whether this host integrates with the Android TV home screen — the Watch Next row and the
+     * Recent Live preview channel. True for the TV app, which is what it was written for; false for
+     * the phone/tablet app, which has no `LEANBACK_LAUNCHER` entry, so a row it published would be
+     * a row nothing could open.
+     *
+     * A host fact and not a device check: core deliberately does not probe `FEATURE_LEANBACK`,
+     * because the question is not "is this a TV?" but "does this app belong on a TV home screen?".
+     * The mobile app answers no even when it is sideloaded onto a TV.
+     *
+     * Defaults to **true** so the TV app needs no change at all, and so nothing here can regress an
+     * app that already ships this feature. It is read through
+     * [tv.own.owntv.core.settings.SettingsRepository.androidTvHomeEnabled], which is the single gate
+     * every publish path already passes through.
+     */
+    var tvHome: Boolean = true
 }
