@@ -5,6 +5,22 @@ app `v4.x` release, and the two must not be confused. Tags here are prefixed `co
 
 ## core-1.0.5 — unreleased
 
+### 🌍 EPG auto-match works outside the Latin alphabet
+
+- **`EpgMatcher.normalizeForEpg` no longer throws away non-Latin names.** Its cleanup class was
+  `[^a-z0-9 ]`, so a Cyrillic, Greek or CJK channel name reduced to an empty string, and
+  `bestEpgMatch` returns null on an empty target — auto-match could never pair those channels with a
+  guide entry, leaving the guide stuck behind "channel ids don't match your channels' EPG ids". The
+  class now keeps letters and digits of any script.
+- **Names are NFKC-normalised first**, so decorative compatibility spellings still fold away: `ᴴᴰ`
+  becomes `HD` and is dropped as noise, and halfwidth katakana returns to its normal form. Composing
+  rather than decomposing matters — NFKD would leave combining marks that the cleanup class turns
+  into spaces, splitting `Чайка` into two tokens and degrading `ﾊﾟ` to `ハ`.
+- **The channel-number guard reads digits of any script.** `DIGIT_RUN` was `\d+`, which is ASCII-only
+  in Java, so once non-Latin digits survived normalisation `قناة ٢` and `قناة ٣` scored high enough to
+  auto-apply onto each other. It now matches `\p{N}+` and compares digits by numeric value, so `MTV ٢`
+  and `MTV 2` are recognised as the same channel while `٢` and `٣` stay apart.
+
 ### 🧪 A playlist can be tested
 
 - **New `SourceTester`**, a read-only probe that answers "is this playlist usable?" for all three

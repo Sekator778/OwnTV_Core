@@ -24,6 +24,66 @@ class EpgMatcherTest {
     }
 
     @Test
+    fun normalize_keepsNonLatinScripts() {
+        // Stripping non-Latin letters leaves an empty string, and bestEpgMatch bails out on an empty
+        // target — so every channel in these scripts silently failed to match any guide entry.
+        assertEquals("кинопремьера", EpgMatcher.normalizeForEpg("КИНОПРЕМЬЕРА HD"))
+        assertEquals("первый канал", EpgMatcher.normalizeForEpg("Первый канал"))
+        assertEquals("ут 1", EpgMatcher.normalizeForEpg("УТ-1 HD"))
+        assertEquals("ερτ 1", EpgMatcher.normalizeForEpg("ΕΡΤ 1"))
+        assertEquals("中央电视台", EpgMatcher.normalizeForEpg("中央电视台 4K"))
+    }
+
+    @Test
+    fun normalize_keepsWordsWhole_whenDiacriticsSitMidWord() {
+        // A mid-word mark must not split the word in two: compatibility folding has to recompose,
+        // or "Чайка" becomes two tokens and stops matching itself.
+        assertEquals("чайка", EpgMatcher.normalizeForEpg("Чайка"))
+        assertEquals("ёж тв", EpgMatcher.normalizeForEpg("Ёж ТВ"))
+        assertEquals("télé", EpgMatcher.normalizeForEpg("Télé"))
+        // Halfwidth katakana must keep its voiced sound: パ (pa) must not degrade to ハ (ha).
+        assertEquals("スカパー", EpgMatcher.normalizeForEpg("ｽｶﾊﾟｰ"))
+    }
+
+    @Test
+    fun normalize_foldsDecorativeQualityTags() {
+        // "ᴴᴰ" is a modifier-letter spelling of HD and must still be dropped as noise.
+        assertEquals("cnn", EpgMatcher.normalizeForEpg("(US) CNN ᴴᴰ"))
+        assertEquals("", EpgMatcher.normalizeForEpg("HD"))
+    }
+
+    @Test
+    fun score_differentChannelNumbersNeverMatch_inAnyDigitScript() {
+        // Keeping \p{N} admits Arabic-Indic digits, so the digit guard has to understand them too —
+        // otherwise "channel 2" and "channel 3" look identical and auto-apply onto each other.
+        val a = EpgMatcher.normalizeForEpg("قناة ٢")
+        val b = EpgMatcher.normalizeForEpg("قناة ٣")
+        assertTrue("different numbers must stay below auto-apply",
+            EpgMatcher.scoreNormalized(a, b) < EpgMatcher.AUTO_THRESHOLD)
+        // ...and the same number written in two scripts must still read as the same number.
+        assertTrue("٢ and 2 are the same channel number",
+            EpgMatcher.scoreNormalized(EpgMatcher.normalizeForEpg("MTV ٢"),
+                                       EpgMatcher.normalizeForEpg("MTV 2")) >= EpgMatcher.AUTO_THRESHOLD)
+    }
+
+    @Test
+    fun bestMatch_findsCyrillicChannelByName() {
+        val candidates = listOf(
+            EpgMatcher.Candidate("5770", "СТС"),
+            EpgMatcher.Candidate("209", "КИНОПРЕМЬЕРА"),
+            EpgMatcher.Candidate("101", "Discovery Channel"),
+        )
+        val result = EpgMatcher.bestEpgMatch("КИНОПРЕМЬЕРА HD", candidates)
+        assertEquals("209", result?.epgChannelId)
+        assertTrue("score should auto-apply", (result?.score ?: 0.0) >= EpgMatcher.AUTO_THRESHOLD)
+    }
+
+    @Test
+    fun bestMatch_returnsNullWhenNameIsOnlyNoise() {
+        assertNull(EpgMatcher.bestEpgMatch("HD", listOf(EpgMatcher.Candidate("1", "Discovery"))))
+    }
+
+    @Test
     fun score_tokenOverlapMatchesReorderedWords() {
         val a = EpgMatcher.normalizeForEpg("MTV France")
         val b = EpgMatcher.normalizeForEpg("FR| MTV")

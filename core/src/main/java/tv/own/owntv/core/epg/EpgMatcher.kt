@@ -64,7 +64,10 @@ object EpgMatcher {
 
     private val BRACKETS = Regex("[\\[(\\{][^\\])}]*[\\])}]")
     private val SEPARATORS = Regex("[._\\-:|/+]")
-    private val NON_ALNUM = Regex("[^a-z0-9 ]")
+    // Letters and digits of ANY script, not just ASCII: an a-z0-9 class erases Cyrillic, Greek and
+    // CJK names entirely, and bestEpgMatch bails out on the resulting empty target — so channels in
+    // those scripts could never match a guide entry.
+    private val NON_ALNUM = Regex("[^\\p{L}\\p{N} ]")
     private val SPACES = Regex("\\s+")
 
     /**
@@ -95,7 +98,11 @@ object EpgMatcher {
     }
 
     private fun normalizeUncached(raw: String): String {
-        var s = raw.lowercase()
+        // NFKC first, so decorative compatibility spellings fold to plain letters: "ᴴᴰ" becomes "HD"
+        // and is dropped as NOISE below, and halfwidth katakana returns to its normal form.
+        // Compose (NFKC), not decompose (NFKD): decomposing would leave combining marks that
+        // NON_ALNUM turns into spaces, splitting "Чайка" into two tokens and degrading "ﾊﾟ" to "ハ".
+        var s = java.text.Normalizer.normalize(raw, java.text.Normalizer.Form.NFKC).lowercase()
         s = s.replace(BRACKETS, " ")
         s = s.replace(SEPARATORS, " ")
         s = s.replace(NON_ALNUM, " ")
@@ -112,7 +119,9 @@ object EpgMatcher {
 
     // ---- Combined similarity: Jaro-Winkler OR token overlap, guarded by channel numbers ----
 
-    private val DIGIT_RUN = Regex("\\d+")
+    // \p{N}, not \d: NON_ALNUM keeps digits of every script, so the guard below has to see them too.
+    // Java's \d is ASCII-only, which would let "قناة ٢" and "قناة ٣" look like the same channel.
+    private val DIGIT_RUN = Regex("\\p{N}+")
 
     /** Different channel numbers ("MTV 2" vs "MTV 3") can never even reach review. */
     private const val DIGIT_MISMATCH_CAP = 0.60
@@ -148,9 +157,24 @@ object EpgMatcher {
         return 2.0 * inter / (ta.size + tb.size)
     }
 
-    /** Sorted digit runs with leading zeros dropped, so "MTV 02" and "mtv2" both yield ["2"]. */
+    /**
+     * Sorted digit runs with leading zeros dropped, so "MTV 02" and "mtv2" both yield ["2"].
+     * Digits are read by numeric value rather than by character, so a run written in another script
+     * compares equal to its ASCII spelling — "MTV ٢" and "MTV 2" are the same channel.
+     */
     private fun digitRuns(s: String): List<String> =
-        DIGIT_RUN.findAll(s).map { it.value.trimStart('0').ifEmpty { "0" } }.toList().sorted()
+        DIGIT_RUN.findAll(s).map { run ->
+            val digits = run.value
+            // Fast path: almost every run is already ASCII, and this sits in the scoring loop —
+            // two calls per candidate per channel, millions of times over a full catalogue.
+            val canonical = if (digits.all { it in '0'..'9' }) digits else buildString(digits.length) {
+                for (ch in digits) {
+                    val value = Character.digit(ch, 10)
+                    append(if (value >= 0) Character.forDigit(value, 10) else ch)
+                }
+            }
+            canonical.trimStart('0').ifEmpty { "0" }
+        }.toList().sorted()
 
     /**
      * Jaro–Winkler similarity (0..1) — tolerant of typos/transpositions and biased toward common
