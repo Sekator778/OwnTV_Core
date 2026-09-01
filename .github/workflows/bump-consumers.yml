@@ -67,8 +67,8 @@ jobs:
           # Private until the mobile app's first release, so CONSUMER_BUMP_TOKEN has to grant access
           # to it explicitly — a fine-grained PAT lists repositories one by one, and adding this line
           # without adding the repo to the token fails on `gh pr list` with a 404 that reads exactly
-          # like a typo. There is no automerge workflow on the mobile repo yet, so its PR waits for a
-          # human; that is deliberate while the app is still being built.
+          # like a typo. It carries its own `automerge-core-bump.yml` since Plan 3 Phase 5, so its
+          # pull request merges itself once green, exactly like the TV app's.
           - ahXN00/OwnTV_Mobile
 
     steps:

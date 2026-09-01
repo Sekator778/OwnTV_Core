@@ -3,7 +3,35 @@
 Core is versioned independently of the apps. A core version number never lines up with an OwnTV TV
 app `v4.x` release, and the two must not be confused. Tags here are prefixed `core-`.
 
-## core-1.0.5 — unreleased
+## core-1.0.6 — unreleased
+
+### 📱 A non-TV app can consume core
+
+Building the mobile app's harness against core surfaced four things that only ever worked because the
+TV app was the only caller. All four are additive — the TV app's behaviour is unchanged, its release
+build and core's unit tests are green, and it has been device-tested.
+
+- **`player-core` exposes libmpv as `api`, not `implementation`.** `OwnTVPlayer`'s supertype is
+  `MPVLib.EventObserver`, so a consumer could not compile against the published artifact without
+  libmpv on its compile classpath. The TV app never noticed because it declares libmpv itself. Both
+  apps are now pinned to one libmpv version, which is what we want anyway.
+- **New `CoreBuildInfo.tvHome`, defaulting to `true`, gates `SettingsRepository.androidTvHomeEnabled`.**
+  Core does no TV detection at all, so on a phone the sync worker published Watch Next entries to a
+  content provider that is not there — silent only because the call site wraps it in `runCatching`.
+  This is a host fact, not a device check: the question is whether the app belongs on a TV home
+  screen, not whether the hardware is a TV. Every publish path and both TV-app readers already go
+  through that one flow.
+- **`SourceRepository.sync()` takes `onProgress` last.** Kotlin binds a trailing lambda to the final
+  parameter, so `sync(source) { … }` aimed the progress callback at `forcePrune` and failed with
+  "'Boolean' was expected". All four existing callers already passed it by name, so nothing moved.
+
+### 🤖 Release plumbing
+
+- **`ahXN00/OwnTV_Mobile` joins the pin-bump consumer matrix**, so it gets the same "Pin core x.y.z"
+  pull request the TV app gets on every release. It is private until the app's first release, so
+  `CONSUMER_BUMP_TOKEN` must grant access to it explicitly.
+
+## core-1.0.5 — 2026-08-31
 
 ### 🧪 A playlist can be tested
 
