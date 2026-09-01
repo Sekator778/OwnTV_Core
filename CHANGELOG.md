@@ -5,6 +5,20 @@ app `v4.x` release, and the two must not be confused. Tags here are prefixed `co
 
 ## core-1.0.5 — unreleased
 
+### ⚡ EPG auto-match finishes on TV hardware
+
+- **`EpgMatcher.bestEpgMatchBulk` scans a whole catalogue across all cores**, mirroring the existing
+  `rankForPickerParallel`. Auto-match grows as channels × candidates — 1,786 channels against a
+  1,907-channel guide is ~3.4M scorings — and the single-threaded loop ran for over half an hour of
+  CPU time on a 2020 Android TV without finishing, leaving the guide behind its "channel ids don't
+  match" banner the whole time. Rows are independent, so results and their order are unchanged.
+- **`Prepared` now carries precomputed digit runs**, and `bestEpgMatchPrepared` computes the
+  target's once per channel instead of once per comparison. The digit-mismatch guard re-ran the same
+  regex on both sides of every pair, which dominated the scan's allocation. This speeds up the
+  single-threaded path too, so the picker benefits without any caller change.
+- Measured on a 1,786 × 1,907 catalogue: sequential 3,336 ms → 1,570 ms from the precomputation
+  alone, and 373 ms with the parallel scan — about 9× end to end, with identical results.
+
 ### 🌍 EPG auto-match works outside the Latin alphabet
 
 - **`EpgMatcher.normalizeForEpg` no longer throws away non-Latin names.** Its cleanup class was

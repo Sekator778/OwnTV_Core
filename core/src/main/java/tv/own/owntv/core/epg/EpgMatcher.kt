@@ -135,12 +135,20 @@ object EpgMatcher {
      * "France MTV"), then capped when the embedded channel numbers disagree — string similarity
      * alone happily matches "Sky Sports 2" to "Sky Sports 3", which is always wrong.
      */
-    fun scoreNormalized(a: String, b: String): Double {
+    fun scoreNormalized(a: String, b: String): Double =
+        scoreNormalized(a, b, digitRuns(a), digitRuns(b))
+
+    /**
+     * [scoreNormalized] with both digit-run lists supplied by the caller.
+     *
+     * A bulk scan compares one name against every candidate, so recomputing each side's digit runs
+     * inside the loop re-runs the same regex millions of times over a catalogue — it dominated the
+     * scan's allocation. Callers that already know the runs (see [Prepared]) pass them in.
+     */
+    internal fun scoreNormalized(a: String, b: String, da: List<String>, db: List<String>): Double {
         if (a.isEmpty() || b.isEmpty()) return 0.0
         if (a == b) return 1.0
         var score = maxOf(jaroWinkler(a, b), tokenDice(a, b))
-        val da = digitRuns(a)
-        val db = digitRuns(b)
         if (da != db) {
             val cap = if (da.isNotEmpty() && db.isNotEmpty()) DIGIT_MISMATCH_CAP else DIGIT_MISSING_CAP
             score = minOf(score, cap)
@@ -225,15 +233,27 @@ object EpgMatcher {
     /** A guide channel to match against — its stable id plus optional human display name. */
     data class Candidate(val epgChannelId: String, val displayName: String?)
 
-    /** A [Candidate] with its names pre-normalized, so a bulk scan normalizes each candidate once. */
-    data class Prepared(val epgChannelId: String, val displayName: String?, val normName: String, val normId: String)
+    /**
+     * A [Candidate] with its names pre-normalized, so a bulk scan normalizes each candidate once.
+     * The digit runs are precomputed for the same reason — they are compared on every scoring call.
+     */
+    data class Prepared(
+        val epgChannelId: String,
+        val displayName: String?,
+        val normName: String,
+        val normId: String,
+        internal val normNameDigits: List<String> = digitRuns(normName),
+        internal val normIdDigits: List<String> = digitRuns(normId),
+    )
 
     /** The chosen guide channel for a source channel, with the confidence that picked it. */
     data class Result(val epgChannelId: String, val displayName: String?, val score: Double)
 
     /** Pre-normalize a candidate list once before scanning many channels against it. */
     fun prepare(candidates: List<Candidate>): List<Prepared> = candidates.map {
-        Prepared(it.epgChannelId, it.displayName, it.displayName?.let(::normalizeForEpg) ?: "", normalizeForEpg(it.epgChannelId))
+        val normName = it.displayName?.let(::normalizeForEpg) ?: ""
+        val normId = normalizeForEpg(it.epgChannelId)
+        Prepared(it.epgChannelId, it.displayName, normName, normId, digitRuns(normName), digitRuns(normId))
     }
 
     /**
@@ -254,10 +274,11 @@ object EpgMatcher {
     ): Result? {
         val target = normalizeForEpg(channelName)
         if (target.isEmpty()) return null
+        val targetDigits = digitRuns(target)
         var best: Result? = null
         for (c in candidates) {
-            val byName = scoreNormalized(target, c.normName)
-            val byId = scoreNormalized(target, c.normId)
+            val byName = scoreNormalized(target, c.normName, targetDigits, c.normNameDigits)
+            val byId = scoreNormalized(target, c.normId, targetDigits, c.normIdDigits)
             val score = maxOf(byName, byId)
             if (score >= minScore && (best == null || score > best.score)) {
                 best = Result(c.epgChannelId, c.displayName, score)
@@ -265,6 +286,44 @@ object EpgMatcher {
             }
         }
         return best
+    }
+
+    /**
+     * [bestEpgMatchPrepared] for a whole catalogue at once, scored across all cores.
+     *
+     * Auto-matching scans every unmatched channel against every guide candidate, so the work grows
+     * as channels × candidates: a 1,786-channel lineup against a 1,907-channel guide is ~3.4M
+     * scorings. On desktop-class hardware that is seconds; on a 2020 Android TV (armeabi-v7a) the
+     * single-threaded loop ran for half an hour of CPU time without finishing, leaving the guide
+     * empty behind its "channel ids don't match" banner the whole time.
+     *
+     * The rows are independent, so splitting them changes nothing but wall clock — the same
+     * candidate wins for each name, and results come back in the caller's order. This mirrors
+     * [rankForPickerParallel], which already exists for the same reason on the picker path.
+     *
+     * Returns one entry per name, `null` where nothing cleared [minScore]. Below
+     * [PARALLEL_MIN_ITEMS] names the coroutine overhead outweighs the win, so it stays sequential.
+     */
+    suspend fun bestEpgMatchBulk(
+        channelNames: List<String>,
+        candidates: List<Prepared>,
+        minScore: Double = REVIEW_THRESHOLD,
+    ): List<Result?> {
+        if (channelNames.isEmpty() || candidates.isEmpty()) return List(channelNames.size) { null }
+        if (channelNames.size < PARALLEL_MIN_ITEMS) {
+            return channelNames.map { bestEpgMatchPrepared(it, candidates, minScore) }
+        }
+        val workers = kotlin.math.max(2, Runtime.getRuntime().availableProcessors())
+        val chunkSize = (channelNames.size + workers - 1) / workers
+        return coroutineScope {
+            channelNames.chunked(chunkSize)
+                .map { chunk ->
+                    async(Dispatchers.Default) {
+                        chunk.map { bestEpgMatchPrepared(it, candidates, minScore) }
+                    }
+                }
+                .flatMap { it.await() }
+        }
     }
 
     /**
