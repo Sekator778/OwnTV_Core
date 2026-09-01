@@ -3,7 +3,7 @@
 Core is versioned independently of the apps. A core version number never lines up with an OwnTV TV
 app `v4.x` release, and the two must not be confused. Tags here are prefixed `core-`.
 
-## core-1.0.6 — unreleased
+## core-1.0.6 — 2026-09-01
 
 ### 📱 A non-TV app can consume core
 
