@@ -3,6 +3,34 @@
 Core is versioned independently of the apps. A core version number never lines up with an OwnTV TV
 app `v4.x` release, and the two must not be confused. Tags here are prefixed `core-`.
 
+## core-1.0.7 — 2026-09-01
+
+### 🎨 The colour values live here now
+
+- **New `core/theme/Palette.kt`** — the accent presets, the neutral ladders and the custom-accent
+  derivation (`parseAccentHex`, `accentRolesFromSeed`) moved out of the TV app, so both apps read one
+  set of hex codes instead of drifting copies. They are plain ARGB longs, not Compose `Color`: core
+  carries the Compose runtime only and must not gain `compose-ui`, so consumers wrap them at the
+  edge. The TV app does exactly that, with every public symbol and every rendered value unchanged.
+
+### 🧭 The main-menu sections live here now
+
+- **New `core/nav/MainSection.kt`** — the sections a user can navigate to, and `dynamicVisible()`,
+  the rule that hides a section when no source has that kind of content.
+- **New `core/nav/NavVisibility.kt`, registered in `DataModule`** — the whole computation, not just
+  the rule: the static hidden-sections setting, the content-capability flow over the channel, movie
+  and series counts, and the combination of the two. A consumer asks for a set of visible sections
+  rather than assembling one. This deleted a second, independent copy of the capability flow that had
+  grown inside the TV app's settings screen; both call sites now go through the one implementation.
+- The TV app is rebuilt on it with no behaviour change — same flows, same defaults, same
+  `distinctUntilChanged` — and its tests and release build are green.
+
+### 🌍 Strings
+
+- **Three new strings, translated into all 24 packaged locales:** `common_nav_library` and
+  `common_nav_more` for the mobile app's bottom bar, and `common_cast` for its cast button.
+  `content_media_cast` was deliberately not reused — it means the cast of a film.
+
 ## core-1.0.6 — 2026-09-01
 
 ### 📱 A non-TV app can consume core
