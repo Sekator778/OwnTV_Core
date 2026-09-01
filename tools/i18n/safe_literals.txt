@@ -2690,6 +2690,7 @@
 1	log	core/src/main/java/tv/own/owntv/core/sync/work/TrendingRefreshWorker.kt	sourceId=$sourceId catalog sync finished; building Now Trending force=$force
 1	protocol	core/src/main/java/tv/own/owntv/core/sync/work/TrendingRefreshWorker.kt	trending-refresh
 1	protocol	core/src/main/java/tv/own/owntv/core/sync/work/TrendingRefreshWorker.kt	trending-refresh-source-$sourceId
+1	technical	core/src/main/java/tv/own/owntv/core/theme/Palette.kt	#
 1	empty	core/src/main/java/tv/own/owntv/core/trending/TrendingMatcher.kt	\0
 1	sql	core/src/main/java/tv/own/owntv/core/trending/TrendingMatcher.kt	$it*
 1	technical	core/src/main/java/tv/own/owntv/core/trending/TrendingMatcher.kt	1080p FHD
