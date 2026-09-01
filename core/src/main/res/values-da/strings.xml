@@ -34,6 +34,9 @@
     <string name="common_nav_series">Serier</string>
     <string name="common_nav_downloads">Downloads</string>
     <string name="common_nav_guide">Programguide</string>
+    <string name="common_nav_library">Bibliotek</string>
+    <string name="common_nav_more">Mere</string>
+    <string name="common_cast">Cast</string>
     <string name="common_nav_settings">Indstillinger</string>
     <string name="shell_no_source">Ingen kilde</string>
     <string name="shell_now_playing">Afspilles nu</string>

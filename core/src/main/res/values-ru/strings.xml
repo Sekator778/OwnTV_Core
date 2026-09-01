@@ -34,6 +34,9 @@
     <string name="common_nav_series">Сериалы</string>
     <string name="common_nav_downloads">Загрузки</string>
     <string name="common_nav_guide">Программа передач</string>
+    <string name="common_nav_library">Библиотека</string>
+    <string name="common_nav_more">Ещё</string>
+    <string name="common_cast">Транслировать</string>
     <string name="common_nav_settings">Настройки</string>
     <string name="shell_no_source">Нет источника</string>
     <string name="shell_now_playing">Сейчас играет</string>

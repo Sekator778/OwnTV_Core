@@ -34,6 +34,9 @@
     <string name="common_nav_series">Sorozatok</string>
     <string name="common_nav_downloads">Letöltések</string>
     <string name="common_nav_guide">Műsorújság</string>
+    <string name="common_nav_library">Könyvtár</string>
+    <string name="common_nav_more">Továbbiak</string>
+    <string name="common_cast">Átküldés</string>
     <string name="common_nav_settings">Beállítások</string>
     <string name="shell_no_source">Nincs forrás</string>
     <string name="shell_now_playing">Most játszott</string>

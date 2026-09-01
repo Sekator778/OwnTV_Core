@@ -34,6 +34,9 @@
     <string name="common_nav_series">সিরিজ</string>
     <string name="common_nav_downloads">ডাউনলোড</string>
     <string name="common_nav_guide">অনুষ্ঠান নির্দেশিকা</string>
+    <string name="common_nav_library">লাইব্রেরি</string>
+    <string name="common_nav_more">আরও</string>
+    <string name="common_cast">কাস্ট</string>
     <string name="common_nav_settings">সেটিংস</string>
     <string name="shell_no_source">কোনো উৎস নেই</string>
     <string name="shell_now_playing">এখন চলছে</string>

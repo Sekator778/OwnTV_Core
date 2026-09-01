@@ -34,6 +34,9 @@
     <string name="common_nav_series">Séries</string>
     <string name="common_nav_downloads">Transferências</string>
     <string name="common_nav_guide">Guia</string>
+    <string name="common_nav_library">Biblioteca</string>
+    <string name="common_nav_more">Mais</string>
+    <string name="common_cast">Transmitir</string>
     <string name="common_nav_settings">Definições</string>
     <string name="shell_no_source">Sem origem</string>
     <string name="shell_now_playing">A reproduzir agora</string>

@@ -34,6 +34,9 @@
     <string name="common_nav_series">സീരീസ്</string>
     <string name="common_nav_downloads">ഡൗൺലോഡുകൾ</string>
     <string name="common_nav_guide">പരിപാടികളുടെ ഗൈഡ്</string>
+    <string name="common_nav_library">ലൈബ്രറി</string>
+    <string name="common_nav_more">കൂടുതൽ</string>
+    <string name="common_cast">കാസ്റ്റ് ചെയ്യുക</string>
     <string name="common_nav_settings">ക്രമീകരണങ്ങൾ</string>
     <string name="shell_no_source">ഉറവിടമില്ല</string>
     <string name="shell_now_playing">ഇപ്പോൾ പ്ലേ ചെയ്യുന്നു</string>

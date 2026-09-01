@@ -139,6 +139,8 @@ val dataModule = module {
     single { UserDataResolver(androidContext(), get(), get(), get(), get(), get(), get(), get(), get(), get(), get(), get()) }
     // sourceDao, syncManager, userDataResolver, channelDao, movieDao, seriesDao, categoryDao
     single { SourceRepository(get(), get(), get(), get(), get(), get(), get()) }
+    // settings, sourceRepository, channelDao, movieDao, seriesDao
+    single { tv.own.owntv.core.nav.NavVisibility(get(), get(), get(), get(), get()) }
     single {
         SyncManager(
             context = androidContext(),

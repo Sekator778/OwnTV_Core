@@ -34,6 +34,9 @@
     <string name="common_nav_series">مسلسلات</string>
     <string name="common_nav_downloads">التنزيلات</string>
     <string name="common_nav_guide">دليل البرامج</string>
+    <string name="common_nav_library">المكتبة</string>
+    <string name="common_nav_more">المزيد</string>
+    <string name="common_cast">البث</string>
     <string name="common_nav_settings">الإعدادات</string>
     <string name="shell_no_source">لا يوجد مصدر</string>
     <string name="shell_now_playing">يُشغَّل الآن</string>

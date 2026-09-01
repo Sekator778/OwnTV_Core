@@ -34,6 +34,9 @@
     <string name="common_nav_series">시리즈</string>
     <string name="common_nav_downloads">다운로드</string>
     <string name="common_nav_guide">편성표</string>
+    <string name="common_nav_library">라이브러리</string>
+    <string name="common_nav_more">더보기</string>
+    <string name="common_cast">전송</string>
     <string name="common_nav_settings">설정</string>
     <string name="shell_no_source">소스 없음</string>
     <string name="shell_now_playing">재생 중</string>

@@ -34,6 +34,9 @@
     <string name="common_nav_series">Series</string>
     <string name="common_nav_downloads">Downloads</string>
     <string name="common_nav_guide">Gids</string>
+    <string name="common_nav_library">Bibliotheek</string>
+    <string name="common_nav_more">Meer</string>
+    <string name="common_cast">Casten</string>
     <string name="common_nav_settings">Instellingen</string>
     <string name="shell_no_source">Geen bron</string>
     <string name="shell_now_playing">Speelt nu</string>

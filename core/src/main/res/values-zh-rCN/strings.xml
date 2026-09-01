@@ -34,6 +34,9 @@
     <string name="common_nav_series">剧集</string>
     <string name="common_nav_downloads">下载内容</string>
     <string name="common_nav_guide">节目指南</string>
+    <string name="common_nav_library">媒体库</string>
+    <string name="common_nav_more">更多</string>
+    <string name="common_cast">投屏</string>
     <string name="common_nav_settings">设置</string>
     <string name="shell_no_source">未配置源</string>
     <string name="shell_now_playing">正在播放</string>

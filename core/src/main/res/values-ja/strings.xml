@@ -34,6 +34,9 @@
     <string name="common_nav_series">シリーズ</string>
     <string name="common_nav_downloads">ダウンロード</string>
     <string name="common_nav_guide">番組表</string>
+    <string name="common_nav_library">ライブラリ</string>
+    <string name="common_nav_more">その他</string>
+    <string name="common_cast">キャスト</string>
     <string name="common_nav_settings">設定</string>
     <string name="shell_no_source">ソースがありません</string>
     <string name="shell_now_playing">再生中</string>
