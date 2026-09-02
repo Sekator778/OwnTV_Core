@@ -1524,6 +1524,20 @@
 1	preference-key	core/src/main/java/tv/own/owntv/core/epg/EpgSourceStore.kt	sources
 2	json	core/src/main/java/tv/own/owntv/core/epg/EpgSourceStore.kt	ua
 2	json	core/src/main/java/tv/own/owntv/core/epg/EpgSourceStore.kt	url
+1	protocol	core/src/main/java/tv/own/owntv/core/home/HomeFeed.kt	${snapshot.mediaType.name}:${snapshot.tmdbId}
+1	protocol	core/src/main/java/tv/own/owntv/core/home/HomeFeed.kt	1080p FHD
+1	protocol	core/src/main/java/tv/own/owntv/core/home/HomeFeed.kt	4K
+1	protocol	core/src/main/java/tv/own/owntv/core/home/HomeFeed.kt	4K UHD
+1	protocol	core/src/main/java/tv/own/owntv/core/home/HomeFeed.kt	720p HD
+1	protocol	core/src/main/java/tv/own/owntv/core/home/HomeFeed.kt	8K
+2	locale	core/src/main/java/tv/own/owntv/core/home/HomeFeed.kt	EN
+1	protocol	core/src/main/java/tv/own/owntv/core/home/HomeFeed.kt	FHD
+1	protocol	core/src/main/java/tv/own/owntv/core/home/HomeFeed.kt	HD
+1	protocol	core/src/main/java/tv/own/owntv/core/home/HomeFeed.kt	SD
+1	locale	core/src/main/java/tv/own/owntv/core/home/HomeFeed.kt	en
+1	technical	core/src/main/java/tv/own/owntv/core/home/HomeFeed.kt	episode:${episode.id}
+1	technical	core/src/main/java/tv/own/owntv/core/home/HomeFeed.kt	live:${channel.id}
+1	technical	core/src/main/java/tv/own/owntv/core/home/HomeFeed.kt	movie:${movie.id}
 1	empty	core/src/main/java/tv/own/owntv/core/i18n/AppLocale.kt	\0
 1	empty	core/src/main/java/tv/own/owntv/core/i18n/LocaleStore.kt	\0
 1	technical	core/src/main/java/tv/own/owntv/core/i18n/LocaleStore.kt	Failed to persist application locale
@@ -2111,6 +2125,8 @@
 1	preference-key	core/src/main/java/tv/own/owntv/core/settings/SettingsRepository.kt	glass_highlight
 1	preference-key	core/src/main/java/tv/own/owntv/core/settings/SettingsRepository.kt	glass_preset
 1	preference-key	core/src/main/java/tv/own/owntv/core/settings/SettingsRepository.kt	glass_scope
+1	preference-key	core/src/main/java/tv/own/owntv/core/settings/SettingsRepository.kt	guide_density_pct
+1	preference-key	core/src/main/java/tv/own/owntv/core/settings/SettingsRepository.kt	guide_view
 1	preference-key	core/src/main/java/tv/own/owntv/core/settings/SettingsRepository.kt	guide_width_channels
 1	preference-key	core/src/main/java/tv/own/owntv/core/settings/SettingsRepository.kt	guide_width_epg
 1	preference-key	core/src/main/java/tv/own/owntv/core/settings/SettingsRepository.kt	guide_width_on
@@ -2221,11 +2237,23 @@
 1	preference-key	core/src/main/java/tv/own/owntv/core/settings/SettingsRepository.kt	ui_zoom_percent
 1	preference-key	core/src/main/java/tv/own/owntv/core/settings/SettingsRepository.kt	update_check_on_start
 1	preference-key	core/src/main/java/tv/own/owntv/core/settings/SettingsRepository.kt	vod_engine
+1	preference-key	core/src/main/java/tv/own/owntv/core/settings/SettingsRepository.kt	vod_grid_columns
 1	preference-key	core/src/main/java/tv/own/owntv/core/settings/SettingsRepository.kt	vod_prefer_exo
 1	preference-key	core/src/main/java/tv/own/owntv/core/settings/SettingsRepository.kt	vod_view_mode
 1	preference-key	core/src/main/java/tv/own/owntv/core/settings/SettingsRepository.kt	weather_enabled
 1	preference-key	core/src/main/java/tv/own/owntv/core/settings/SettingsRepository.kt	weather_fahrenheit
 1	preference-key	core/src/main/java/tv/own/owntv/core/settings/SettingsRepository.kt	weather_location
+1	empty	core/src/main/java/tv/own/owntv/core/setup/SetupText.kt	\0
+1	protocol	core/src/main/java/tv/own/owntv/core/setup/SetupText.kt	Mozilla/5.0 (QtEmbedded; U; Linux; C) AppleWebKit/533.3 (KHTML, like Gecko) MAG250 stbapp ver: 2 rev: 250 Safari/533.3
+1	protocol	core/src/main/java/tv/own/owntv/core/setup/SetupText.kt	Mozilla/5.0 (QtEmbedded; U; Linux; C) AppleWebKit/533.3 (KHTML, like Gecko) MAG254 stbapp ver: 2 rev: 250 Safari/533.3
+1	protocol	core/src/main/java/tv/own/owntv/core/setup/SetupText.kt	Mozilla/5.0 (QtEmbedded; U; Linux; C) AppleWebKit/533.3 (KHTML, like Gecko) MAG270 stbapp ver: 2 rev: 250 Safari/533.3
+1	protocol	core/src/main/java/tv/own/owntv/core/setup/SetupText.kt	Mozilla/5.0 (QtEmbedded; U; Linux; C) AppleWebKit/601.1 (KHTML, like Gecko) MAG420 stbapp ver: 4 rev: 2721 Safari/601.1
+10	empty	core/src/main/java/tv/own/owntv/core/setup/SourceImporter.kt	\0
+1	file-path	core/src/main/java/tv/own/owntv/core/setup/SourceImporter.kt	/
+1	technical	core/src/main/java/tv/own/owntv/core/setup/SourceImporter.kt	add_remainder
+1	url	core/src/main/java/tv/own/owntv/core/setup/SourceImporter.kt	content://
+1	url	core/src/main/java/tv/own/owntv/core/setup/SourceImporter.kt	file://
+1	technical	core/src/main/java/tv/own/owntv/core/setup/SourceImporter.kt	fresh_add
 2	technical	core/src/main/java/tv/own/owntv/core/stalker/StalkerAuthManager.kt	?
 1	log	core/src/main/java/tv/own/owntv/core/stalker/StalkerAuthManager.kt	StalkerAuth
 1	log	core/src/main/java/tv/own/owntv/core/stalker/StalkerAuthManager.kt	auth expired sourceId=${creds.sourceId} (${e.message}) — re-handshaking once

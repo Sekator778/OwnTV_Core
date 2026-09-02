@@ -338,7 +338,10 @@ class SettingsRepository(private val context: Context, private val localeStore: 
         val LAST_LIVE_CATEGORY = stringPreferencesKey("last_live_category")
         val RECENT_SEARCHES = stringPreferencesKey("recent_searches")
         val LAST_LIVE_CHANNEL = androidx.datastore.preferences.core.longPreferencesKey("last_live_channel")
+        val VOD_GRID_COLUMNS = intPreferencesKey("vod_grid_columns")
         val VOD_VIEW_MODE = stringPreferencesKey("vod_view_mode")
+        val GUIDE_VIEW = stringPreferencesKey("guide_view")
+        val GUIDE_DENSITY_PCT = intPreferencesKey("guide_density_pct")
         val EPISODE_VIEW_MODE = stringPreferencesKey("episode_view_mode")
         // Global proxy (Approach 1 — one app-wide HTTP proxy). HTTP only; no per-source override yet.
         val PROXY_ENABLED = booleanPreferencesKey("proxy_enabled")
@@ -873,6 +876,27 @@ class SettingsRepository(private val context: Context, private val localeStore: 
     /** The TV Guide's own ordering. LIVE_TV mirrors the Live TV sort; CATCHUP floats archive channels up. */
     enum class GuideSort { ALPHA, PROVIDER, LIVE_TV, CATCHUP, FAVORITES }
 
+    /**
+     * How the guide is drawn on a touch screen: the time grid, the "on now" list, or one channel's
+     * schedule down the page. Unset means "decide from the screen" — a two-dimensional grid is
+     * unusable on a portrait phone and the natural choice on a tablet, so a device that has never
+     * been told otherwise picks per orientation rather than being locked to one answer.
+     */
+    enum class GuideView { GRID, ON_NOW, TIMELINE }
+    val guideView: Flow<GuideView?> = prefsFlow { prefs ->
+        prefs[Keys.GUIDE_VIEW]?.let { runCatching { GuideView.valueOf(it) }.getOrNull() }
+    }
+    suspend fun setGuideView(view: GuideView) {
+        context.dataStore.edit { it[Keys.GUIDE_VIEW] = view.name }
+    }
+
+    /** Guide row height, as a percentage of the standard one. The phone's answer to the TV app's
+     *  Guide Column Widths, which has no meaning where the channel column is a fixed strip. */
+    val guideDensityPct: Flow<Int> = prefsFlow { it[Keys.GUIDE_DENSITY_PCT] ?: 100 }
+    suspend fun setGuideDensityPct(pct: Int) {
+        context.dataStore.edit { it[Keys.GUIDE_DENSITY_PCT] = pct.coerceIn(70, 130) }
+    }
+
     /** How Movies & Series browse: the poster wall, or a compact list (more titles at once). */
     enum class VodViewMode { GRID, LIST }
     val vodViewMode: Flow<VodViewMode> = prefsFlow { prefs ->
@@ -880,6 +904,18 @@ class SettingsRepository(private val context: Context, private val localeStore: 
     }
     suspend fun setVodViewMode(mode: VodViewMode) {
         context.dataStore.edit { it[Keys.VOD_VIEW_MODE] = mode.name }
+    }
+
+    /**
+     * How many posters a row of the Movies/Series grid holds. 0 means "decide from the screen", which
+     * is what a device that has never been pinched reports — a phone in portrait, the same phone in
+     * landscape and a tablet all want a different number, and one stored count cannot serve all three.
+     * A pinch stores the user's answer for the width they pinched at.
+     */
+    val vodGridColumns: Flow<Int> = prefsFlow { it[Keys.VOD_GRID_COLUMNS] ?: 0 }
+
+    suspend fun setVodGridColumns(columns: Int) {
+        context.dataStore.edit { it[Keys.VOD_GRID_COLUMNS] = columns.coerceIn(0, 12) }
     }
 
     /**
@@ -2000,7 +2036,7 @@ class SettingsRepository(private val context: Context, private val localeStore: 
         Keys.LIVE_ENGINE, Keys.VOD_ENGINE,
         Keys.MAIN_FONT_FAMILY, Keys.POPUP_FONT_FAMILY,
         Keys.PREF_AUDIO_LANG, Keys.PREF_SUB_LANG, Keys.SUB_SEARCH_LANGS, Keys.SORT_LIVE, Keys.SORT_GUIDE, Keys.SORT_MOVIES,
-        Keys.SORT_SERIES, Keys.RESUME_MODE, Keys.CATCHUP_TZ, Keys.CATCHUP_PLAYER, Keys.ANIMATION_LEVEL, Keys.VOD_VIEW_MODE,
+        Keys.SORT_SERIES, Keys.RESUME_MODE, Keys.CATCHUP_TZ, Keys.CATCHUP_PLAYER, Keys.ANIMATION_LEVEL, Keys.VOD_VIEW_MODE, Keys.GUIDE_VIEW,
         Keys.EPISODE_VIEW_MODE,
         Keys.WEATHER_LOCATION, Keys.RECENT_SEARCHES,
         // Global proxy — non-secret fields only. The proxy password (Keys.PROXY_PASS) is NEVER part of
@@ -2049,7 +2085,7 @@ class SettingsRepository(private val context: Context, private val localeStore: 
         Keys.PANEL_W_MOVIES_CAT, Keys.PANEL_W_MOVIES_LIST, Keys.PANEL_W_MOVIES_PREVIEW,
             Keys.PANEL_W_SERIES_CAT, Keys.PANEL_W_SERIES_LIST, Keys.PANEL_W_SERIES_PREVIEW,
         Keys.GUIDE_WIDTH_CHANNELS, Keys.GUIDE_WIDTH_EPG,
-        Keys.POPUP_FONT_SIZE_PCT, Keys.POPUP_SIZE_PCT)
+        Keys.POPUP_FONT_SIZE_PCT, Keys.POPUP_SIZE_PCT, Keys.VOD_GRID_COLUMNS, Keys.GUIDE_DENSITY_PCT)
     private val backupBoolKeys = listOf(
         Keys.LIVE_PREVIEW, Keys.LIVE_PREVIEW_AUDIO, Keys.HERO_PREVIEW, Keys.HDR_ENABLED, Keys.AUTO_FRAME_RATE, Keys.AUTO_FRAME_RATE_PROMPTED, Keys.ANDROID_TV_HOME, Keys.HW_DECODING,
         Keys.VOD_PREFER_EXO, Keys.MEASURED_STREAM_STATS, Keys.DETAILED_DIAGNOSTICS, Keys.DIRECT_TUNE, Keys.EXTERNAL_PLAYER,

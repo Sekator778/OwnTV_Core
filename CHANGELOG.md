@@ -3,6 +3,45 @@
 Core is versioned independently of the apps. A core version number never lines up with an OwnTV TV
 app `v4.x` release, and the two must not be confused. Tags here are prefixed `core-`.
 
+## core-1.0.12 — 2026-09-02
+
+### 🧱 The parts a second app needs, taken out of the TV app
+
+Everything here already existed and worked — inside `OwnTV`'s view models, where a phone could not
+reach it. It moved so that two apps share one implementation instead of drifting apart, and the TV
+app was rewired onto every piece of it in the same change. Nothing behaves differently on a
+television.
+
+- **`core/setup/SourceImporter.kt`** — the whole "add a playlist" state machine: validating an Xtream,
+  M3U or Stalker source, writing it, syncing it, reporting progress, and undoing it when the sync
+  fails. A `factory`, not a `single`, because each run of a wizard owns its own state.
+  **`core/setup/SetupText.kt`** and **`core/sync/SyncCountsText.kt`** carry the wording that goes with
+  it, so a failure reads the same on both devices.
+- **`core/content/VodQueries.kt`** — the Movies and Series catalogue queries a paged grid needs, with
+  the sort, category and hidden-item rules applied once rather than per app.
+- **`core/live/GuideReader.kt`** — the heaviest query in the suite, in one place. `window()` reads a
+  span of guide in id-keyset pages, so a large lineup cannot overflow a cursor window; `row()` serves
+  a single shifted channel; **`slice()`** answers a whole rail in one query *per shift group* rather
+  than per channel; `onNow()` is built on `slice()`; `description()` fetches the synopsis the list
+  queries deliberately drop.
+- **`core/home/HomeFeed.kt`** — everything Home shows, for one profile, at one moment. `HomeFeedReader`
+  runs the fifteen dependent reads (overlapped, since WAL serves concurrent readers) and applies the
+  rules that are the *app's* rather than any one screen's: which playlists count, what a kids profile
+  may not see, what the user hid, how trending titles are de-duplicated across playlists, and which
+  items may be the hero. A television and a phone lay Home out completely differently and must still
+  agree, item for item, on what is in it.
+
+### ⚙️ Three settings keys for a touch screen
+
+All three are backed up and restored with the rest, and all three default to "decide from the screen"
+rather than to a fixed answer, because a phone in portrait, the same phone in landscape and a tablet
+do not want the same one.
+
+- **`guideView`** — grid, "on now" list, or one channel's schedule down the page.
+- **`guideDensityPct`** — the guide's time scale, 70–130%.
+- **`vodGridColumns`** — how many posters a row of the catalogue grid holds, stored when the user
+  pinches.
+
 ## core-1.0.11 — 2026-09-02
 
 ### 🖼️ Cached TMDB posters can fill the grid tiles a provider left blank
