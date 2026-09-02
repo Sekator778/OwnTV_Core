@@ -3,6 +3,40 @@
 Core is versioned independently of the apps. A core version number never lines up with an OwnTV TV
 app `v4.x` release, and the two must not be confused. Tags here are prefixed `core-`.
 
+## core-1.0.8 — 2026-09-02
+
+### 🗂️ The content menus and the Live TV queries live here now
+
+- **New `core/menu/ContentMenus.kt`** — `ContentMenu`, `MenuAction` and `applyMenuOrder()`, the
+  user's own arrangement of the long-press actions. It was only ever in the TV app, so a second app
+  would have shown a different menu in a different order from the same setting.
+- **New `core/live/`** — `LiveKey`, `LiveQueries`, `LiveEpgReader` and `EpgNowNext`, moved out of the
+  TV app whole. The TV app is rewired onto them and its own copies are deleted; its tests and release
+  build are green.
+
+### ▶️ The player pieces both apps need
+
+- **New `core/live/LiveTimeshift.kt` and `core/live/CatchupJumps.kt`, with their tests** — the maths
+  behind rewinding a live channel into the provider's archive and jumping between catch-up
+  programmes, moved out of the TV app so the phone rewinds live television by the same rules the
+  television does.
+- **`PlayerFailureReason.messageRes`** — a failure reason now knows its own translated wording, so
+  the two apps explain a broken stream identically instead of each writing its own sentence.
+- **`StreamInfoLabel.titleRes` and `StreamInfoValue.displayText(Resources)`** — the stream
+  information table renders itself from `Resources` rather than from Compose, so a consumer that is
+  not the TV app can show it without copying the labels.
+- **`OwnTVPlayer.active`** — `hasActiveStream` as a flow, for UI that has to appear and disappear
+  with the stream rather than ask about it. The mobile app's docked mini player cannot poll a getter.
+- **`OwnTVPlayer.detachSurface(surface)`** — detaches only while that surface is still the one being
+  rendered into. A view handing the picture to another view is torn down *after* its replacement has
+  attached, so an unconditional detach at that moment blanks the view that just took over. The
+  existing no-argument `detachSurface()` is untouched and is what the TV app still calls.
+
+### 🌍 Strings
+
+- **Three new strings, translated into all 24 packaged locales:** `player_tool_brightness`,
+  `player_skip_back` and `player_skip_forward`, for the mobile player's controls.
+
 ## core-1.0.7 — 2026-09-01
 
 ### 🎨 The colour values live here now
