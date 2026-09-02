@@ -347,6 +347,46 @@ class MetadataRepository(
         episodesByCacheKey(tvId, episodes, cfg.resolvedLanguage)
     }
 
+    /**
+     * Poster URLs already held in the cache for a page of movies, keyed by LOCAL movie id. Cache-only:
+     * no network, no search, no negative-cache write — a title nothing is known about is simply absent.
+     *
+     * Providers ship plenty of items with no artwork at all, and those tiles show a placeholder even
+     * after the detail pane has resolved and cached a TMDB poster for the very same title. This is what
+     * lets the grid reuse that. It is a lookup, not a resolve, so it never costs TMDB quota.
+     */
+    suspend fun cachedMoviePosters(movies: List<MovieEntity>): Map<Long, String> =
+        cachedPosters(movies.map { it.id to movieLocalKey(it) }, tv = false)
+
+    /** Series counterpart to [cachedMoviePosters], against the `tv` cache keys. */
+    suspend fun cachedSeriesPosters(
+        series: List<tv.own.owntv.core.database.entity.SeriesEntity>,
+    ): Map<Long, String> = cachedPosters(series.map { it.id to seriesLocalKey(it) }, tv = true)
+
+    private suspend fun cachedPosters(
+        items: List<Pair<Long, String>>,
+        tv: Boolean,
+    ): Map<Long, String> = withContext(Dispatchers.IO) {
+        val cfg = settings.metadataConfig() // read once; each call is a DataStore round trip
+        if (!cfg.enabled || items.isEmpty()) return@withContext emptyMap()
+        val pid = settings.activeProfileIdNow()
+        val allowsAdult = profileAllowsAdultMetadata(profileDao.getById(pid)?.isKids)
+        // Several local rows can share one TMDB id — the same film listed once per quality by the same
+        // provider, which is exactly the case that makes a run of blank tiles — so ids are a list.
+        val matchKeyToIds = items.groupBy({ maturityMatchKey(it.second, allowsAdult) }, { it.first })
+        val cacheKeyToIds = dao.getMatches(matchKeyToIds.keys.toList())
+            .mapNotNull { m -> m.tmdbId?.let { id -> m.localKey to (if (tv) tvCacheKey(id, cfg.resolvedLanguage) else cacheKey(id, cfg.resolvedLanguage)) } }
+            .groupBy({ it.second }, { it.first })
+            .mapValues { (_, localKeys) -> localKeys.flatMap { matchKeyToIds[it].orEmpty() } }
+        if (cacheKeyToIds.isEmpty()) return@withContext emptyMap()
+        dao.getCaches(cacheKeyToIds.keys.toList())
+            .flatMap { row ->
+                val url = MetadataImages.poster(row.posterPath) ?: return@flatMap emptyList()
+                cacheKeyToIds[row.key].orEmpty().map { it to url }
+            }
+            .toMap()
+    }
+
     /** One batched query for a season's rows, mapped back onto the local episode ids the UI keys by. */
     private suspend fun episodesByCacheKey(
         tvId: Int,

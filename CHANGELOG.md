@@ -3,6 +3,26 @@
 Core is versioned independently of the apps. A core version number never lines up with an OwnTV TV
 app `v4.x` release, and the two must not be confused. Tags here are prefixed `core-`.
 
+## core-1.0.11 — 2026-09-02
+
+### 🖼️ Cached TMDB posters can fill the grid tiles a provider left blank
+
+Providers ship plenty of movies and shows with no artwork at all. Their tiles show a placeholder even
+once a detail pane has resolved and cached a TMDB poster for the very same title, which is most
+visible under "Date added" — a freshly imported batch lands at the front of the list together.
+
+- **`MetadataRepository.cachedMoviePosters` / `cachedSeriesPosters`** return the poster URLs already
+  held in the cache for a page of items, keyed by local id. Cache-only by design: no network, no
+  search, no negative-cache write, so a consumer may call it on every scroll without touching TMDB
+  quota. A title nothing is known about is simply absent from the result.
+- **One local TMDB id can cover several rows.** The same film listed once per quality by one provider
+  shares a match, so all of its rows get the poster from a single cached row — which is exactly the
+  case that produces a run of blank tiles.
+- **`MetadataDao.getMatches`** batches the `metadata_match` read the same way `getCaches` already
+  batches the detail rows: one query per page of tiles rather than one per tile.
+
+No schema change, no migration, and nothing existing behaves differently.
+
 ## core-1.0.10 — 2026-09-02
 
 ### 📱 `PlaybackSession` can behave like a phone as well as a television

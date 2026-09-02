@@ -16,6 +16,13 @@ interface MetadataDao {
     @Query("SELECT * FROM metadata_match WHERE localKey = :localKey LIMIT 1")
     suspend fun getMatch(localKey: String): MetadataMatchEntity?
 
+    /**
+     * Batch read — one query for a whole page of grid tiles instead of one per tile. Same reason as
+     * [getCaches]: the poster fallback needs every visible item at once, not N suspend round trips.
+     */
+    @Query("SELECT * FROM metadata_match WHERE localKey IN (:keys)")
+    suspend fun getMatches(keys: List<String>): List<MetadataMatchEntity>
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun upsertMatch(match: MetadataMatchEntity)
 
