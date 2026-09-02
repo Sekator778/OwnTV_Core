@@ -3,6 +3,38 @@
 Core is versioned independently of the apps. A core version number never lines up with an OwnTV TV
 app `v4.x` release, and the two must not be confused. Tags here are prefixed `core-`.
 
+## core-1.0.9 — 2026-09-02
+
+### ⚡ EPG auto-match finishes on TV hardware
+
+- **`EpgMatcher.bestEpgMatchBulk` scans a whole catalogue across all cores**, mirroring the existing
+  `rankForPickerParallel`. Auto-match grows as channels × candidates — 1,786 channels against a
+  1,907-channel guide is ~3.4M scorings — and the single-threaded loop ran for over half an hour of
+  CPU time on a 2020 Android TV without finishing, leaving the guide behind its "channel ids don't
+  match" banner the whole time. Rows are independent, so results and their order are unchanged.
+- **`Prepared` now carries precomputed digit runs**, and `bestEpgMatchPrepared` computes the
+  target's once per channel instead of once per comparison. The digit-mismatch guard re-ran the same
+  regex on both sides of every pair, which dominated the scan's allocation. This speeds up the
+  single-threaded path too, so the picker benefits without any caller change.
+- Measured on a 1,786 × 1,907 catalogue: sequential 3,336 ms → 1,570 ms from the precomputation
+  alone, and 373 ms with the parallel scan — about 9× end to end, with identical results.
+
+### 🌍 EPG auto-match works outside the Latin alphabet
+
+- **`EpgMatcher.normalizeForEpg` no longer throws away non-Latin names.** Its cleanup class was
+  `[^a-z0-9 ]`, so a Cyrillic, Greek or CJK channel name reduced to an empty string, and
+  `bestEpgMatch` returns null on an empty target — auto-match could never pair those channels with a
+  guide entry, leaving the guide stuck behind "channel ids don't match your channels' EPG ids". The
+  class now keeps letters and digits of any script.
+- **Names are NFKC-normalised first**, so decorative compatibility spellings still fold away: `ᴴᴰ`
+  becomes `HD` and is dropped as noise, and halfwidth katakana returns to its normal form. Composing
+  rather than decomposing matters — NFKD would leave combining marks that the cleanup class turns
+  into spaces, splitting `Чайка` into two tokens and degrading `ﾊﾟ` to `ハ`.
+- **The channel-number guard reads digits of any script.** `DIGIT_RUN` was `\d+`, which is ASCII-only
+  in Java, so once non-Latin digits survived normalisation `قناة ٢` and `قناة ٣` scored high enough to
+  auto-apply onto each other. It now matches `\p{N}+` and compares digits by numeric value, so `MTV ٢`
+  and `MTV 2` are recognised as the same channel while `٢` and `٣` stay apart.
+
 ## core-1.0.8 — 2026-09-02
 
 ### 🗂️ The content menus and the Live TV queries live here now
@@ -94,36 +126,6 @@ build and core's unit tests are green, and it has been device-tested.
   `CONSUMER_BUMP_TOKEN` must grant access to it explicitly.
 
 ## core-1.0.5 — 2026-08-31
-
-### ⚡ EPG auto-match finishes on TV hardware
-
-- **`EpgMatcher.bestEpgMatchBulk` scans a whole catalogue across all cores**, mirroring the existing
-  `rankForPickerParallel`. Auto-match grows as channels × candidates — 1,786 channels against a
-  1,907-channel guide is ~3.4M scorings — and the single-threaded loop ran for over half an hour of
-  CPU time on a 2020 Android TV without finishing, leaving the guide behind its "channel ids don't
-  match" banner the whole time. Rows are independent, so results and their order are unchanged.
-- **`Prepared` now carries precomputed digit runs**, and `bestEpgMatchPrepared` computes the
-  target's once per channel instead of once per comparison. The digit-mismatch guard re-ran the same
-  regex on both sides of every pair, which dominated the scan's allocation. This speeds up the
-  single-threaded path too, so the picker benefits without any caller change.
-- Measured on a 1,786 × 1,907 catalogue: sequential 3,336 ms → 1,570 ms from the precomputation
-  alone, and 373 ms with the parallel scan — about 9× end to end, with identical results.
-
-### 🌍 EPG auto-match works outside the Latin alphabet
-
-- **`EpgMatcher.normalizeForEpg` no longer throws away non-Latin names.** Its cleanup class was
-  `[^a-z0-9 ]`, so a Cyrillic, Greek or CJK channel name reduced to an empty string, and
-  `bestEpgMatch` returns null on an empty target — auto-match could never pair those channels with a
-  guide entry, leaving the guide stuck behind "channel ids don't match your channels' EPG ids". The
-  class now keeps letters and digits of any script.
-- **Names are NFKC-normalised first**, so decorative compatibility spellings still fold away: `ᴴᴰ`
-  becomes `HD` and is dropped as noise, and halfwidth katakana returns to its normal form. Composing
-  rather than decomposing matters — NFKD would leave combining marks that the cleanup class turns
-  into spaces, splitting `Чайка` into two tokens and degrading `ﾊﾟ` to `ハ`.
-- **The channel-number guard reads digits of any script.** `DIGIT_RUN` was `\d+`, which is ASCII-only
-  in Java, so once non-Latin digits survived normalisation `قناة ٢` and `قناة ٣` scored high enough to
-  auto-apply onto each other. It now matches `\p{N}+` and compares digits by numeric value, so `MTV ٢`
-  and `MTV 2` are recognised as the same channel while `٢` and `٣` stay apart.
 
 ### 🧪 A playlist can be tested
 
