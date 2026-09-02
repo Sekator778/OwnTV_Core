@@ -40,9 +40,13 @@ jobs:
         with:
           python-version: '3.12'
 
+      # Full history, not --depth=1: a shallow fetch brings only the base branch's tip, so
+      # `git merge-base` below cannot reach the branch point of any PR that is not cut from that
+      # exact commit. It exits non-zero with no output, and `set -euo pipefail` kills the step
+      # before the ratchet ever runs — a red check that says nothing about the PR's contents.
       - name: Fetch base branch
         if: ${{ github.event_name == 'pull_request' }}
-        run: git fetch --no-tags --depth=1 origin "${GITHUB_BASE_REF}"
+        run: git fetch --no-tags origin "${GITHUB_BASE_REF}"
 
       - name: Hardcoded-literal ratchet
         env:
