@@ -3,6 +3,36 @@
 Core is versioned independently of the apps. A core version number never lines up with an OwnTV TV
 app `v4.x` release, and the two must not be confused. Tags here are prefixed `core-`.
 
+## core-1.0.10 — 2026-09-02
+
+### 📱 `PlaybackSession` can behave like a phone as well as a television
+
+All of this is additive and keyed off a new constructor parameter whose default is the television's
+existing behaviour, so the TV app is unchanged. It exists because the mobile app needs a media session
+that pauses for a phone call, and a television must not.
+
+- **`FocusPolicy`, `DUCK` or `PAUSE`.** On `DUCK` — the default, and what the TV app gets — a transient
+  loss of audio focus lowers the volume as before. On `PAUSE` it pauses playback and resumes it when
+  focus comes back, which is the only sane behaviour on a device that receives calls. Ducking a live
+  stream costs a quiet moment; pausing one costs the live edge, which is why the television never does.
+- **`setWillPauseWhenDucked` follows the policy.** Under `PAUSE` the platform is told not to duck us
+  behind our back, so it delivers `AUDIOFOCUS_LOSS_TRANSIENT` — the event that pauses — instead of
+  attenuating us silently and never calling back. `AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK` also pauses
+  under `PAUSE`, as a backstop for dialers and OEM builds that hand out `CAN_DUCK` regardless.
+- **`pauseWhenOutputDisconnects`.** Opt-in `ACTION_AUDIO_BECOMING_NOISY` handling: unplugging
+  headphones pauses, and deliberately does **not** arm a resume, so plugging them back in cannot blast
+  a film out of a pocket. Off by default.
+- **A `token` accessor** for the session, so a consumer can hang a `Notification.MediaStyle` on the
+  session this class already publishes rather than building a second, disagreeing one.
+
+### 🐛 Audio focus was thrown away on every pause
+
+- **`publish()` no longer abandons audio focus for a pause that is owed a resume.** It abandoned the
+  focus request whenever the state went non-playing — including the session's own `onPause` — and that
+  request is the thing whose `AUDIOFOCUS_GAIN` drives the resume. Anything the session paused could
+  therefore never restart itself. Latent for the TV app, since its `DUCK` policy never pauses for
+  focus in the first place, and fatal for the phone's.
+
 ## core-1.0.9 — 2026-09-02
 
 ### ⚡ EPG auto-match finishes on TV hardware
