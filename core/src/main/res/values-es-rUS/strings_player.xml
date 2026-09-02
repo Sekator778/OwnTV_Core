@@ -23,6 +23,12 @@
     <string name="player_live_scrub_at"><xliff:g id="time">%1$s</xliff:g> · <xliff:g id="programme">%2$s</xliff:g></string>
     <!-- Translators: Label under the volume button on the player control bar, shown when it has focus. Keep this very short (14 characters maximum) — it sits inside the button on the remote-driven player bar. -->
     <string name="player_tool_volume">Volumen</string>
+    <!-- Translators: Label under the brightness button on the phone player's control bar, and the label on the slider a vertical swipe on the left of the picture shows. Keep this very short (14 characters maximum) — it sits inside a small button. -->
+    <string name="player_tool_brightness">Brillo</string>
+    <!-- Translators: Spoken label for the phone player's skip-backwards button, which jumps back by the user's own seek step. Keep this very short (16 characters maximum). -->
+    <string name="player_skip_back">Retroceder</string>
+    <!-- Translators: Spoken label for the phone player's skip-forwards button, which jumps forward by the user's own seek step. Keep this very short (16 characters maximum). -->
+    <string name="player_skip_forward">Avanzar</string>
     <!-- Translators: Label under the audio-track button on the player control bar, shown when it has focus. Keep this very short (14 characters maximum) — it sits inside the button on the remote-driven player bar. -->
     <string name="player_tool_audio">Audio</string>
     <!-- Translators: Label under the subtitles button on the player control bar, shown when it has focus. Keep this very short (14 characters maximum) — it sits inside the button on the remote-driven player bar. -->

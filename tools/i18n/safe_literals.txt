@@ -1554,6 +1554,39 @@
 1	technical	core/src/main/java/tv/own/owntv/core/launcher/LauncherRecommendationPlanner.kt	episode:${show.sourceId}:${show.remoteId ?: show.name}:${episode.remoteId ?: "${episode.seasonNumber}-${episode.episodeNumber}"}
 1	technical	core/src/main/java/tv/own/owntv/core/launcher/LauncherRecommendationPlanner.kt	live:${channel.sourceId}:${channel.remoteId ?: channel.name}
 1	technical	core/src/main/java/tv/own/owntv/core/launcher/LauncherRecommendationPlanner.kt	movie:${movie.sourceId}:${movie.remoteId ?: movie.name}
+1	log	core/src/main/java/tv/own/owntv/core/live/LiveEpgReader.kt	OwnTVHome
+1	log	core/src/main/java/tv/own/owntv/core/live/LiveEpgReader.kt	OwnTVPerf
+1	log	core/src/main/java/tv/own/owntv/core/live/LiveEpgReader.kt	Stalker catch-up resolve failed channelId=${ch.id}
+1	log	core/src/main/java/tv/own/owntv/core/live/LiveEpgReader.kt	Stalker rewind resolve failed channelId=${ch.id}
+1	log	core/src/main/java/tv/own/owntv/core/live/LiveEpgReader.kt	epg_picker scanned=${all.size} ranked=${ranked.size}
+1	log	core/src/main/java/tv/own/owntv/core/live/LiveEpgReader.kt	queryMs=${fetchedAt - startedAt} rankMs=${done - fetchedAt} totalMs=${done - startedAt}
+1	uri	core/src/main/java/tv/own/owntv/core/live/LiveEpgReader.kt	ts
+2	preference-key	core/src/main/java/tv/own/owntv/core/live/LiveKey.kt	ALL
+2	preference-key	core/src/main/java/tv/own/owntv/core/live/LiveKey.kt	CATCHUP
+2	preference-key	core/src/main/java/tv/own/owntv/core/live/LiveKey.kt	CUSTOM:
+1	preference-key	core/src/main/java/tv/own/owntv/core/live/LiveKey.kt	CUSTOM:$id
+2	preference-key	core/src/main/java/tv/own/owntv/core/live/LiveKey.kt	FAV
+2	preference-key	core/src/main/java/tv/own/owntv/core/live/LiveKey.kt	FOLDER:
+1	preference-key	core/src/main/java/tv/own/owntv/core/live/LiveKey.kt	FOLDER:$id
+2	preference-key	core/src/main/java/tv/own/owntv/core/live/LiveKey.kt	HIST
+1	empty	core/src/main/java/tv/own/owntv/core/live/LiveQueries.kt	\0
+1	preference-key	core/src/main/java/tv/own/owntv/core/menu/ContentMenus.kt	catchup
+2	preference-key	core/src/main/java/tv/own/owntv/core/menu/ContentMenus.kt	delete_subtitles
+3	preference-key	core/src/main/java/tv/own/owntv/core/menu/ContentMenus.kt	download
+1	preference-key	core/src/main/java/tv/own/owntv/core/menu/ContentMenus.kt	epg_offset
+3	preference-key	core/src/main/java/tv/own/owntv/core/menu/ContentMenus.kt	favourite
+3	preference-key	core/src/main/java/tv/own/owntv/core/menu/ContentMenus.kt	hide
+2	preference-key	core/src/main/java/tv/own/owntv/core/menu/ContentMenus.kt	mark_watched
+1	preference-key	core/src/main/java/tv/own/owntv/core/menu/ContentMenus.kt	match_epg
+3	preference-key	core/src/main/java/tv/own/owntv/core/menu/ContentMenus.kt	move
+3	preference-key	core/src/main/java/tv/own/owntv/core/menu/ContentMenus.kt	move_to_category
+3	preference-key	core/src/main/java/tv/own/owntv/core/menu/ContentMenus.kt	play_external
+2	preference-key	core/src/main/java/tv/own/owntv/core/menu/ContentMenus.kt	play_trailer
+3	preference-key	core/src/main/java/tv/own/owntv/core/menu/ContentMenus.kt	refetch_tmdb
+3	preference-key	core/src/main/java/tv/own/owntv/core/menu/ContentMenus.kt	remove_history
+1	preference-key	core/src/main/java/tv/own/owntv/core/menu/ContentMenus.kt	rename
+2	preference-key	core/src/main/java/tv/own/owntv/core/menu/ContentMenus.kt	set_tmdb_name
+3	preference-key	core/src/main/java/tv/own/owntv/core/menu/ContentMenus.kt	tmdb_details
 3	url	core/src/main/java/tv/own/owntv/core/metadata/MetadataImages.kt	${TmdbProvider.IMAGE_BASE}/$size${it.ensureLeadingSlash()}
 1	url	core/src/main/java/tv/own/owntv/core/metadata/MetadataImages.kt	/
 1	url	core/src/main/java/tv/own/owntv/core/metadata/MetadataImages.kt	/$this
@@ -3455,7 +3488,7 @@
 1	technical	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	demuxerLavfO="$demuxerOptions" streamLavfO="${streamLavfOptionsFor(url, isLiveContent, effectiveHls)}"
 1	log	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	demuxerLavfO="$trimmedOptions"
 2	technical	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	desync
-1	technical	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	detachSurface
+2	technical	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	detachSurface
 1	technical	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	direct decoder never engaged on archive
 1	log	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	direct failed after retries
 1	log	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	direct failed — retries exhausted, showing error
@@ -3825,6 +3858,9 @@
 1	technical	player-core/src/main/java/tv/own/owntv/player/ResolutionLabel.kt	480p
 1	technical	player-core/src/main/java/tv/own/owntv/player/ResolutionLabel.kt	4K
 1	technical	player-core/src/main/java/tv/own/owntv/player/ResolutionLabel.kt	720p
+1	technical	player-core/src/main/java/tv/own/owntv/player/StreamInfo.kt	$width×$height
+1	technical	player-core/src/main/java/tv/own/owntv/player/StreamInfo.kt	5.1
+1	technical	player-core/src/main/java/tv/own/owntv/player/StreamInfo.kt	7.1
 1	technical	player-core/src/main/java/tv/own/owntv/player/SubtitleFonts.kt	Dancing Script
 1	technical	player-core/src/main/java/tv/own/owntv/player/SubtitleFonts.kt	Lora
 1	technical	player-core/src/main/java/tv/own/owntv/player/SubtitleFonts.kt	Playfair Display

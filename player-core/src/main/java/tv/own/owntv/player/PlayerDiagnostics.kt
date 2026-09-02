@@ -1,6 +1,7 @@
 package tv.own.owntv.player
 
 import android.os.SystemClock
+import androidx.annotation.StringRes
 import java.io.BufferedReader
 import java.io.InputStreamReader
 import java.util.concurrent.ConcurrentLinkedDeque
@@ -191,31 +192,35 @@ data class ProviderBackOff(val httpCode: Int, val message: String?, val secondsL
 /** A playback failure broken into semantic reason, technical media details, and raw engine text. */
 data class ErrorInfo(val reason: PlayerFailureReason?, val spec: MediaSpec?, val raw: String?)
 
-/** Semantic playback failures; wording belongs to the presentation layer. */
-enum class PlayerFailureReason {
-    DECODER_BUSY,
-    DECODER_TRANSIENT,
-    UNSUPPORTED_VIDEO,
-    DECODER_MEMORY,
-    DRM,
-    HTTP_509,
-    HTTP_403,
-    HTTP_401,
-    HTTP_404,
-    HTTP_400,
-    SSL,
-    FORMAT,
-    NETWORK,
-    AUDIO,
-    SOFTWARE_FALLBACK,
-    COPY_MODE_FALLBACK,
-    ARCHIVE_SOFTWARE_FALLBACK,
-    STEREO_FALLBACK,
-    ONE_SESSION_PROVIDER,
-    MPV_HANDOFF,
-    LIVE_FALLBACK,
-    LIVE_NO_FALLBACK,
-    STREAM_REPORT,
+/**
+ * Semantic playback failures. [messageRes] is the translated sentence for each; rendering it — which
+ * needs a Context or a Composable — stays with the presentation layer, but the mapping is here so the
+ * TV and mobile apps cannot drift into two different explanations of the same failure.
+ */
+enum class PlayerFailureReason(@StringRes val messageRes: Int) {
+    DECODER_BUSY(R.string.player_reason_decoder_busy),
+    DECODER_TRANSIENT(R.string.player_reason_decoder_transient),
+    UNSUPPORTED_VIDEO(R.string.player_reason_unsupported_video),
+    DECODER_MEMORY(R.string.player_reason_decoder_memory),
+    DRM(R.string.player_reason_drm),
+    HTTP_509(R.string.player_reason_http_509),
+    HTTP_403(R.string.player_reason_http_403),
+    HTTP_401(R.string.player_reason_http_401),
+    HTTP_404(R.string.player_reason_http_404),
+    HTTP_400(R.string.player_reason_http_400),
+    SSL(R.string.player_reason_ssl),
+    FORMAT(R.string.player_reason_format),
+    NETWORK(R.string.player_reason_network),
+    AUDIO(R.string.player_reason_audio),
+    SOFTWARE_FALLBACK(R.string.player_reason_software_fallback),
+    COPY_MODE_FALLBACK(R.string.player_reason_copy_mode_fallback),
+    ARCHIVE_SOFTWARE_FALLBACK(R.string.player_reason_archive_software_fallback),
+    STEREO_FALLBACK(R.string.player_reason_stereo_fallback),
+    ONE_SESSION_PROVIDER(R.string.player_reason_one_session_provider),
+    MPV_HANDOFF(R.string.player_reason_mpv_handoff),
+    LIVE_FALLBACK(R.string.player_reason_live_fallback),
+    LIVE_NO_FALLBACK(R.string.player_reason_live_no_fallback),
+    STREAM_REPORT(R.string.player_reason_stream_report),
 }
 
 /** Maps cryptic playback-failure strings to semantic state. Comparison needles stay English because

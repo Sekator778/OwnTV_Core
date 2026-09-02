@@ -454,7 +454,14 @@ class OwnTVPlayer(
      * ([PlaybackErrorLog] keeps a fixed number of the newest entries).
      */
     private var oneTimeInitDone = false
-    private var currentUrl: String? = null
+    private var currentUrlField: String? = null
+    /** Every assignment also refreshes [active] — see [hasActiveStream], whose value this mirrors. */
+    private var currentUrl: String?
+        get() = currentUrlField
+        set(value) {
+            currentUrlField = value
+            refreshActive()
+        }
     /** P6 — stable engine-pin key of the loaded item (see [MediaMeta.contentKey]); null = key on the URL. */
     private var currentContentKey: String? = null
     private var currentSeasonNumber: Int? = null
@@ -494,7 +501,13 @@ class OwnTVPlayer(
     // mpv's android video output needs a surface at loadfile time, or it deselects video (audio-only).
     // So when no surface is attached yet we defer the load until attachSurface().
     private var surfaceAttached = false
-    private var pendingUrl: String? = null
+    private var pendingUrlField: String? = null
+    private var pendingUrl: String?
+        get() = pendingUrlField
+        set(value) {
+            pendingUrlField = value
+            refreshActive()
+        }
     private var hdrHint = true
     private var playerBudget: PlayerBudget? = null
 
@@ -3316,6 +3329,19 @@ class OwnTVPlayer(
     /** True while mpv owns a stream (loaded or loading) — i.e. while it may still hold a provider session. */
     val hasActiveStream: Boolean get() = currentUrl != null || pendingUrl != null
 
+    private val _active = MutableStateFlow(false)
+
+    /**
+     * [hasActiveStream] as a flow, for UI that has to appear and disappear with the stream rather than
+     * ask about it — the mobile app's docked mini player, which is on screen exactly while something is
+     * playing and cannot poll a getter.
+     */
+    val active: StateFlow<Boolean> = _active.asStateFlow()
+
+    private fun refreshActive() {
+        _active.value = currentUrlField != null || pendingUrlField != null
+    }
+
     /**
      * [stop], then wait until mpv has really finished tearing the stream down.
      *
@@ -3512,6 +3538,20 @@ class OwnTVPlayer(
         surfaceW = width; surfaceH = height // remembered for the freeze-frame PixelCopy at handoff time
         if (exoActive) return // ExoPlayer scales to the surface itself; nothing to tell mpv
         if (initialized) mpvAsync { setPropertyString("android-surface-size", "${width}x$height") }
+    }
+
+    /**
+     * Detach [surface], but only while it is still the one being rendered into.
+     *
+     * A view handing the picture over to another view — the phone's channel screen going full
+     * screen, or the full screen player docking into the mini player — is torn down *after* its
+     * replacement has attached, so an unconditional detach at that moment blanks the view that just
+     * took over. The TV app has one player view and calls the plain [detachSurface].
+     */
+    fun detachSurface(surface: Surface) {
+        assertMainThread("detachSurface")
+        if (attachedSurface !== surface) return
+        detachSurface()
     }
 
     fun detachSurface() {
