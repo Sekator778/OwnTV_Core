@@ -1209,4 +1209,24 @@
     <string name="settings_guide_width_help">• Kanallisten og EPG-tidslinjen deler én rad, så summen må være 100%%.\n• En bredere kanalliste viser mindre av tidslinjen om gangen; programlengder og tidsskala endres ikke.\n• Begge kolonnene er minst 10%% brede.\n• Tilbakestill setter kanallisten til 10%% og EPG-tidslinjen til 90%%.\n• Når tilpasning slås av, gjenopprettes standardoppsettet uten at verdiene slettes.</string>
     <string name="settings_guide_width_channels">Kanalliste</string>
     <string name="settings_guide_width_epg">EPG-tidslinje</string>
+    <string name="settings_selection_highlight">Merking av valg</string>
+    <string name="settings_selection_highlight_description">Farge og tykkelse på rammen rundt det valgte elementet</string>
+    <string name="settings_nav_bar_customization">Tilpasning av navigasjonslinjen</string>
+    <string name="settings_nav_bar_description">Tilpass fanene til spillelisten din, eller skjul dem du ikke bruker</string>
+    <string name="settings_playback_mobile">Mobil</string>
+    <string name="settings_background_playback">Avspilling i bakgrunnen</string>
+    <string name="settings_background_playback_description">Fortsett å spille lyden når du forlater appen</string>
+    <string name="settings_pip">Bilde-i-bilde</string>
+    <string name="settings_pip_description">Krymp videoen til et flytende vindu når du forlater appen</string>
+    <string name="settings_data_saver">Datasparing</string>
+    <string name="settings_data_saver_description">Ikke strøm over mobildata</string>
+    <string name="settings_gesture_sensitivity">Følsomhet for bevegelser</string>
+    <string name="settings_gesture_sensitivity_description">Hvor langt du sveiper for å endre volum, lysstyrke eller posisjon</string>
+    <string name="settings_downloads_wifi_only">Last ned bare over Wi-Fi</string>
+    <string name="settings_downloads_wifi_only_description">Vent på Wi-Fi i stedet for å bruke mobildata</string>
+    <string name="settings_search_keywords_background_playback">bakgrunn lyd audio forlate app fortsette tjeneste</string>
+    <string name="settings_search_keywords_pip">bilde i bilde flytende vindu overlegg lite</string>
+    <string name="settings_search_keywords_data_saver">datasparing mobildata forbruk roaming spare</string>
+    <string name="settings_search_keywords_gestures">bevegelse sveip folsomhet trykk dra</string>
+    <string name="settings_search_keywords_wifi_only">wifi bare nedlasting mobildata nettverk</string>
 </resources>

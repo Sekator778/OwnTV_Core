@@ -1187,4 +1187,24 @@
     <string name="settings_guide_width_help">• 频道列表和 EPG 时间轴共用一行，因此总计必须为 100%%。\n• 加宽频道列表后，一次显示的时间轴范围会减少；节目时长和时间比例保持不变。\n• 两列的宽度都不会低于 10%%。\n• 重置会将频道列表设为 10%%，EPG 时间轴设为 90%%。\n• 关闭自定义会恢复标准布局，但不会丢失已保存的值。</string>
     <string name="settings_guide_width_channels">频道列表</string>
     <string name="settings_guide_width_epg">EPG 时间轴</string>
+    <string name="settings_selection_highlight">选中高亮</string>
+    <string name="settings_selection_highlight_description">选中项目周围边框的颜色和粗细</string>
+    <string name="settings_nav_bar_customization">自定义导航栏</string>
+    <string name="settings_nav_bar_description">让标签页适配你的播放列表，或隐藏不用的标签</string>
+    <string name="settings_playback_mobile">手机</string>
+    <string name="settings_background_playback">后台播放</string>
+    <string name="settings_background_playback_description">离开应用后继续播放声音</string>
+    <string name="settings_pip">画中画</string>
+    <string name="settings_pip_description">离开应用时把视频缩小为悬浮窗</string>
+    <string name="settings_data_saver">流量节省</string>
+    <string name="settings_data_saver_description">不使用移动数据播放</string>
+    <string name="settings_gesture_sensitivity">手势灵敏度</string>
+    <string name="settings_gesture_sensitivity_description">滑动多远才会改变音量、亮度或进度</string>
+    <string name="settings_downloads_wifi_only">仅在 Wi-Fi 下下载</string>
+    <string name="settings_downloads_wifi_only_description">等待 Wi-Fi，而不使用移动数据</string>
+    <string name="settings_search_keywords_background_playback">后台 声音 音频 离开 应用 继续 服务</string>
+    <string name="settings_search_keywords_pip">画中画 悬浮窗 小窗 覆盖</string>
+    <string name="settings_search_keywords_data_saver">流量 节省 移动数据 蜂窝 漫游</string>
+    <string name="settings_search_keywords_gestures">手势 滑动 灵敏度 触摸 拖动</string>
+    <string name="settings_search_keywords_wifi_only">wifi 仅 下载 移动数据 网络</string>
 </resources>

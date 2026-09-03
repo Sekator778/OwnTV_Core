@@ -1187,4 +1187,24 @@
     <string name="settings_guide_width_help">• 채널 목록과 EPG 타임라인은 한 행을 공유하므로 합계가 100%%여야 합니다.\n• 채널 목록을 넓히면 한 번에 보이는 타임라인이 줄어들며, 프로그램 길이와 시간 눈금은 바뀌지 않습니다.\n• 두 열은 모두 최소 10%%를 유지합니다.\n• 재설정하면 채널 목록은 10%%, EPG 타임라인은 90%%로 돌아갑니다.\n• 사용자 지정을 끄면 저장한 값을 잃지 않고 표준 가이드 레이아웃으로 돌아갑니다.</string>
     <string name="settings_guide_width_channels">채널 목록</string>
     <string name="settings_guide_width_epg">EPG 타임라인</string>
+    <string name="settings_selection_highlight">선택 강조</string>
+    <string name="settings_selection_highlight_description">선택한 항목 주위 테두리의 색과 두께</string>
+    <string name="settings_nav_bar_customization">탐색 바 사용자 설정</string>
+    <string name="settings_nav_bar_description">탭을 재생목록에 맞추거나 쓰지 않는 탭을 숨깁니다</string>
+    <string name="settings_playback_mobile">모바일</string>
+    <string name="settings_background_playback">백그라운드 재생</string>
+    <string name="settings_background_playback_description">앱을 나가도 소리를 계속 재생합니다</string>
+    <string name="settings_pip">화면 속 화면</string>
+    <string name="settings_pip_description">앱을 나갈 때 영상을 떠 있는 작은 창으로 줄입니다</string>
+    <string name="settings_data_saver">데이터 절약</string>
+    <string name="settings_data_saver_description">모바일 데이터로는 재생하지 않습니다</string>
+    <string name="settings_gesture_sensitivity">제스처 민감도</string>
+    <string name="settings_gesture_sensitivity_description">음량, 밝기, 재생 위치를 바꾸는 데 필요한 스와이프 거리</string>
+    <string name="settings_downloads_wifi_only">Wi-Fi에서만 다운로드</string>
+    <string name="settings_downloads_wifi_only_description">모바일 데이터 대신 Wi-Fi를 기다립니다</string>
+    <string name="settings_search_keywords_background_playback">백그라운드 소리 오디오 앱 계속 서비스</string>
+    <string name="settings_search_keywords_pip">화면 속 화면 떠 있는 창 작은 창 오버레이</string>
+    <string name="settings_search_keywords_data_saver">데이터 절약 모바일 데이터 로밍 사용량</string>
+    <string name="settings_search_keywords_gestures">제스처 스와이프 민감도 터치 드래그</string>
+    <string name="settings_search_keywords_wifi_only">wifi 만 다운로드 모바일 데이터 네트워크</string>
 </resources>

@@ -5,6 +5,8 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -42,7 +44,16 @@ class DownloadManager(
     init {
         // Anything left QUEUED — or RUNNING when the process was killed — is picked up again.
         engine.markQueued()
-        DownloadWorker.kick(context)
+        scope.launch { DownloadWorker.kick(context, settings.downloadsWifiOnlyNow()) }
+        // Turning "Wi-Fi only" on has to reach a transfer that is already running on mobile data, and
+        // the queue's own work is KEEP — it would keep the constraint it was enqueued with. So the
+        // switch replaces the work instead: the running row stays RUNNING, and the replacement worker
+        // resumes it from the partial file once the network it is now waiting for arrives.
+        scope.launch {
+            settings.downloadsWifiOnly.drop(1).distinctUntilChanged().collect { wifiOnly ->
+                DownloadWorker.kick(context, wifiOnly, replace = true)
+            }
+        }
     }
 
     fun observe(profileId: Long): Flow<List<DownloadEntity>> = downloadDao.observeForProfile(profileId)
@@ -132,6 +143,6 @@ class DownloadManager(
 
     private fun kick() {
         engine.markQueued()
-        DownloadWorker.kick(context)
+        scope.launch { DownloadWorker.kick(context, settings.downloadsWifiOnlyNow()) }
     }
 }

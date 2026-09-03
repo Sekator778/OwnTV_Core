@@ -1186,4 +1186,24 @@ Az Újraszinkronizálás és a hiányzó címek eltávolítása azt is lehetőv�
     <string name="settings_glass_full_transparency_description">Kikapcsolja az automatikus olvashatósági alsó határt a lehető legtisztább üvegért.</string>
     <string name="settings_glass_depth_title">Mélység és árnyékok</string>
     <string name="settings_glass_depth_description">Bekapcsolja a fókuszkövető megvilágítást, a finom parallaxist és a mélységi mozgást.</string>
+    <string name="settings_selection_highlight">Kijelölés kiemelése</string>
+    <string name="settings_selection_highlight_description">A kijelölt elem körüli keret színe és vastagsága</string>
+    <string name="settings_nav_bar_customization">Navigációs sáv testreszabása</string>
+    <string name="settings_nav_bar_description">Igazítsd a füleket a lejátszási listádhoz, vagy rejtsd el, amit nem használsz</string>
+    <string name="settings_playback_mobile">Mobil</string>
+    <string name="settings_background_playback">Lejátszás a háttérben</string>
+    <string name="settings_background_playback_description">A hang akkor is szóljon, ha kilépsz az alkalmazásból</string>
+    <string name="settings_pip">Kép a képben</string>
+    <string name="settings_pip_description">A videó lebegő ablakká zsugorodik, ha kilépsz az alkalmazásból</string>
+    <string name="settings_data_saver">Adatforgalom-csökkentés</string>
+    <string name="settings_data_saver_description">Ne játssz le mobiladaton</string>
+    <string name="settings_gesture_sensitivity">Mozdulatok érzékenysége</string>
+    <string name="settings_gesture_sensitivity_description">Mekkorát kell húznod a hangerő, a fényerő vagy a pozíció módosításához</string>
+    <string name="settings_downloads_wifi_only">Letöltés csak Wi-Fin</string>
+    <string name="settings_downloads_wifi_only_description">Várj a Wi-Fire mobiladat helyett</string>
+    <string name="settings_search_keywords_background_playback">hatter hang audio kilepes alkalmazas folytatas szolgaltatas</string>
+    <string name="settings_search_keywords_pip">kep a kepben lebego ablak atfedes kicsi</string>
+    <string name="settings_search_keywords_data_saver">adatforgalom mobiladat csokkentes roaming sporolas</string>
+    <string name="settings_search_keywords_gestures">mozdulat huzas erzekenyseg erintes csuszas</string>
+    <string name="settings_search_keywords_wifi_only">wifi csak letoltes mobiladat halozat</string>
 </resources>

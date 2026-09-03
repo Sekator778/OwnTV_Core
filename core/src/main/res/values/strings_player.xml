@@ -501,4 +501,6 @@
     <string name="player_frame_rate_prompt_title">This channel may judder</string>
     <string name="player_frame_rate_prompt_description">It plays at <xliff:g id="fps">%1$d</xliff:g> fps while your TV is running at <xliff:g id="current_hz">%2$d</xliff:g> Hz, which can’t show those frames evenly — motion looks slightly jerky.\n\nAuto frame rate switches the TV to <xliff:g id="target_hz">%3$d</xliff:g> Hz while you watch and puts it back afterwards. Some TVs blank for a moment when the rate changes; you can turn it off again in Settings → Video Player.</string>
     <string name="player_frame_rate_turn_on">Turn on</string>
+    <!-- Translators: Shown instead of the picture when the user has turned the data saver on and the phone is on mobile data. -->
+    <string name="player_error_data_saver">Data saver is on, so streaming over mobile data is off. Connect to Wi-Fi, or turn Data saver off in Settings.</string>
 </resources>

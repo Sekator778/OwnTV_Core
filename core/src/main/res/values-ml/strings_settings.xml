@@ -1209,4 +1209,24 @@
     <string name="settings_guide_width_help">• ചാനൽ ലിസ്റ്റും EPG ടൈംലൈനും ഒരേ വരി പങ്കിടുന്നതിനാൽ ആകെ 100%% ആയിരിക്കണം.\n• ചാനൽ ലിസ്റ്റ് വീതിയാക്കുമ്പോൾ ടൈംലൈനിന്റെ കുറവ് ഭാഗം മാത്രമേ ഒരേസമയം കാണൂ; പ്രോഗ്രാം ദൈർഘ്യവും സമയ സ്കെയിലും മാറില്ല.\n• രണ്ട് കോളങ്ങളും കുറഞ്ഞത് 10%% ആയി തുടരും.\n• റീസെറ്റ് ചാനൽ ലിസ്റ്റ് 10%% ആയും EPG ടൈംലൈൻ 90%% ആയും മാറ്റും.\n• ഇഷ്ടാനുസൃതമാക്കൽ ഓഫാക്കിയാൽ മൂല്യങ്ങൾ നഷ്ടപ്പെടാതെ സാധാരണ ലേഔട്ട് തിരികെ വരും.</string>
     <string name="settings_guide_width_channels">ചാനൽ ലിസ്റ്റ്</string>
     <string name="settings_guide_width_epg">EPG ടൈംലൈൻ</string>
+    <string name="settings_selection_highlight">തിരഞ്ഞെടുപ്പിന്റെ ഹൈലൈറ്റ്</string>
+    <string name="settings_selection_highlight_description">തിരഞ്ഞെടുത്ത ഇനത്തിനു ചുറ്റുമുള്ള അതിരിന്റെ നിറവും കനവും</string>
+    <string name="settings_nav_bar_customization">നാവിഗേഷൻ ബാർ ഇഷ്ടാനുസൃതമാക്കൽ</string>
+    <string name="settings_nav_bar_description">ടാബുകൾ നിങ്ങളുടെ പ്ലേലിസ്റ്റിനൊപ്പം ചേർക്കുക, അല്ലെങ്കിൽ ഉപയോഗിക്കാത്തവ മറയ്ക്കുക</string>
+    <string name="settings_playback_mobile">മൊബൈൽ</string>
+    <string name="settings_background_playback">പശ്ചാത്തലത്തിൽ പ്ലേ ചെയ്യൽ</string>
+    <string name="settings_background_playback_description">ആപ്പിൽ നിന്ന് പുറത്തുപോയാലും ശബ്ദം തുടരും</string>
+    <string name="settings_pip">പിക്ചർ-ഇൻ-പിക്ചർ</string>
+    <string name="settings_pip_description">ആപ്പിൽ നിന്ന് പുറത്തുപോകുമ്പോൾ വീഡിയോ ഒരു ചെറിയ ഒഴുകുന്ന വിൻഡോയാക്കുക</string>
+    <string name="settings_data_saver">ഡാറ്റ ലാഭം</string>
+    <string name="settings_data_saver_description">മൊബൈൽ ഡാറ്റയിൽ സ്ട്രീം ചെയ്യരുത്</string>
+    <string name="settings_gesture_sensitivity">ജെസ്ചർ സംവേദനക്ഷമത</string>
+    <string name="settings_gesture_sensitivity_description">ശബ്ദം, തെളിച്ചം അല്ലെങ്കിൽ സ്ഥാനം മാറ്റാൻ എത്ര ദൂരം സ്വൈപ്പ് ചെയ്യണം</string>
+    <string name="settings_downloads_wifi_only">Wi-Fi-യിൽ മാത്രം ഡൗൺലോഡ്</string>
+    <string name="settings_downloads_wifi_only_description">മൊബൈൽ ഡാറ്റയ്ക്ക് പകരം Wi-Fi-ക്കായി കാത്തിരിക്കുക</string>
+    <string name="settings_search_keywords_background_playback">പശ്ചാത്തലം ശബ്ദം ഓഡിയോ ആപ്പ് തുടരുക സേവനം</string>
+    <string name="settings_search_keywords_pip">പിക്ചർ ഇൻ പിക്ചർ ഒഴുകുന്ന വിൻഡോ ചെറിയ</string>
+    <string name="settings_search_keywords_data_saver">ഡാറ്റ ലാഭം മൊബൈൽ ഡാറ്റ റോമിംഗ് ഉപയോഗം</string>
+    <string name="settings_search_keywords_gestures">ജെസ്ചർ സ്വൈപ്പ് സംവേദനക്ഷമത സ്പർശം വലിക്കൽ</string>
+    <string name="settings_search_keywords_wifi_only">wifi മാത്രം ഡൗൺലോഡ് മൊബൈൽ ഡാറ്റ നെറ്റ്‌വർക്ക്</string>
 </resources>

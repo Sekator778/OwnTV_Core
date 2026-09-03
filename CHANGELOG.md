@@ -3,6 +3,51 @@
 Core is versioned independently of the apps. A core version number never lines up with an OwnTV TV
 app `v4.x` release, and the two must not be confused. Tags here are prefixed `core-`.
 
+## core-1.0.13 — 2026-09-03
+
+### 🔎 One search, and the storage a phone is allowed to write to
+
+- **`core/content/SearchReader.kt`** — the search the TV app ran from its view model, moved out whole:
+  channels, movies and series in one call, honouring hidden categories and hidden items, plus a
+  `curated()` for the empty field (continue watching, unwatched favourites, channels). The TV app was
+  rewired onto it in the same change and searches exactly as before. `ftsQuery()` sanitising a user's
+  typing into an FTS expression now lives with the query instead of being written twice.
+- **`StorageAccess.appRoots(context)`** — the volumes an app can write to with **no permission at
+  all**: its own folder on internal storage, and one on every mounted SD card or USB stick. It is what
+  a phone offers in place of `storageRoots()`, which needs All-files access a phone should not ask
+  for. Additive; `storageRoots()` and `defaultRoot()` are untouched, so the TV app keeps its folder
+  picker.
+
+### 📱 The settings a touch device has and a television does not
+
+All five are new keys with defaults that leave the TV app exactly as it was, and all five are carried
+by backup and restore.
+
+- **`backgroundPlayback`** (default on), **`pipEnabled`** (default on), **`dataSaver`** (default off),
+  **`gestureSensitivityPct`** (default 100, clamped 50–200) and **`downloadsWifiOnly`**
+  (default off), with `downloadsWifiOnlyNow()` and `dataSaverNow()` for the callers that need one
+  read rather than a flow.
+- **They travel in a backup.** `gestureSensitivityPct` joins the backed-up integer keys and the four
+  switches join the boolean ones, so a phone's settings restore onto a phone.
+
+### 📶 Downloads can be held back to Wi-Fi
+
+- **`ConnectivityObserver.isMeteredNow()`** — a one-shot metered check, treating "unknown" as
+  unmetered so a missing answer never blocks playback.
+- **`DownloadWorker.kick(context, wifiOnly, replace)`** — the queue's work request now takes
+  `NetworkType.UNMETERED` instead of `CONNECTED` when the setting is on, and can `REPLACE` an
+  enqueued run instead of keeping it. Both parameters default to the old behaviour.
+- **`DownloadManager` follows the switch while a transfer is running.** It kicks with the stored
+  setting, and watches it: turning Wi-Fi-only on mid-download re-enqueues with the stricter
+  constraint, so the change reaches a transfer already in flight rather than only the next one.
+
+### 🌍 Strings
+
+21 new base strings in `strings_settings.xml` and `strings_player.xml` — the mobile settings groups
+above, the selection-highlight and navigation-bar labels, the data-saver playback message, and five
+search-keyword entries so the new settings are findable — translated into all 26 packaged languages
+in the same change.
+
 ## core-1.0.12 — 2026-09-02
 
 ### 🧱 The parts a second app needs, taken out of the TV app

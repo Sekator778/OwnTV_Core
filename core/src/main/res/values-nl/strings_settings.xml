@@ -1209,4 +1209,24 @@
     <string name="settings_guide_width_help">• De zenderlijst en EPG-tijdlijn delen één rij en moeten daarom samen 100%% zijn.\n• Een bredere zenderlijst toont minder van de tijdlijn; programmaduur en tijdschaal blijven gelijk.\n• Beide kolommen blijven minimaal 10%% breed.\n• Herstellen zet de zenderlijst op 10%% en de EPG-tijdlijn op 90%%.\n• Aanpassing uitschakelen herstelt de standaardindeling zonder je waarden te verwijderen.</string>
     <string name="settings_guide_width_channels">Zenderlijst</string>
     <string name="settings_guide_width_epg">EPG-tijdlijn</string>
+    <string name="settings_selection_highlight">Selectiemarkering</string>
+    <string name="settings_selection_highlight_description">Kleur en dikte van de rand rond het geselecteerde item</string>
+    <string name="settings_nav_bar_customization">Navigatiebalk aanpassen</string>
+    <string name="settings_nav_bar_description">Pas de tabbladen aan je afspeellijst aan of verberg wat je niet gebruikt</string>
+    <string name="settings_playback_mobile">Mobiel</string>
+    <string name="settings_background_playback">Afspelen op de achtergrond</string>
+    <string name="settings_background_playback_description">Geluid door laten spelen als je de app verlaat</string>
+    <string name="settings_pip">Beeld-in-beeld</string>
+    <string name="settings_pip_description">De video verkleinen tot een zwevend venster als je de app verlaat</string>
+    <string name="settings_data_saver">Databesparing</string>
+    <string name="settings_data_saver_description">Niet streamen via mobiele data</string>
+    <string name="settings_gesture_sensitivity">Gevoeligheid van gebaren</string>
+    <string name="settings_gesture_sensitivity_description">Hoe ver je veegt om volume, helderheid of positie te wijzigen</string>
+    <string name="settings_downloads_wifi_only">Alleen downloaden via wifi</string>
+    <string name="settings_downloads_wifi_only_description">Wachten op wifi in plaats van mobiele data gebruiken</string>
+    <string name="settings_search_keywords_background_playback">achtergrond audio geluid app verlaten doorspelen service</string>
+    <string name="settings_search_keywords_pip">beeld in beeld zwevend venster overlay klein</string>
+    <string name="settings_search_keywords_data_saver">databesparing mobiele data verbruik roaming besparen</string>
+    <string name="settings_search_keywords_gestures">gebaar vegen gevoeligheid aanraken slepen</string>
+    <string name="settings_search_keywords_wifi_only">wifi alleen download mobiele data netwerk</string>
 </resources>

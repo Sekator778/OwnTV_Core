@@ -1187,4 +1187,24 @@
     <string name="settings_guide_width_help">• 頻道清單和 EPG 時間軸共用一列，因此總計必須為 100%%。\n• 加寬頻道清單後，一次顯示的時間軸範圍會減少；節目長度和時間比例維持不變。\n• 兩欄寬度都不會低於 10%%。\n• 重設會將頻道清單設為 10%%，EPG 時間軸設為 90%%。\n• 關閉自訂會恢復標準版面配置，但不會遺失已儲存的值。</string>
     <string name="settings_guide_width_channels">頻道清單</string>
     <string name="settings_guide_width_epg">EPG 時間軸</string>
+    <string name="settings_selection_highlight">選取高亮</string>
+    <string name="settings_selection_highlight_description">選取項目周圍框線的顏色與粗細</string>
+    <string name="settings_nav_bar_customization">自訂導覽列</string>
+    <string name="settings_nav_bar_description">讓分頁配合你的播放清單，或隱藏不用的分頁</string>
+    <string name="settings_playback_mobile">手機</string>
+    <string name="settings_background_playback">背景播放</string>
+    <string name="settings_background_playback_description">離開應用程式後繼續播放聲音</string>
+    <string name="settings_pip">子母畫面</string>
+    <string name="settings_pip_description">離開應用程式時把影片縮成浮動視窗</string>
+    <string name="settings_data_saver">數據節省</string>
+    <string name="settings_data_saver_description">不使用行動數據播放</string>
+    <string name="settings_gesture_sensitivity">手勢靈敏度</string>
+    <string name="settings_gesture_sensitivity_description">要滑多遠才會改變音量、亮度或進度</string>
+    <string name="settings_downloads_wifi_only">僅在 Wi-Fi 下下載</string>
+    <string name="settings_downloads_wifi_only_description">等待 Wi-Fi，而不使用行動數據</string>
+    <string name="settings_search_keywords_background_playback">背景 聲音 音訊 離開 應用程式 繼續 服務</string>
+    <string name="settings_search_keywords_pip">子母畫面 浮動視窗 小視窗 覆蓋</string>
+    <string name="settings_search_keywords_data_saver">數據 節省 行動數據 漫遊 用量</string>
+    <string name="settings_search_keywords_gestures">手勢 滑動 靈敏度 觸控 拖曳</string>
+    <string name="settings_search_keywords_wifi_only">wifi 僅 下載 行動數據 網路</string>
 </resources>

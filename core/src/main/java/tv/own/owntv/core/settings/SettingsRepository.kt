@@ -343,6 +343,14 @@ class SettingsRepository(private val context: Context, private val localeStore: 
         val GUIDE_VIEW = stringPreferencesKey("guide_view")
         val GUIDE_DENSITY_PCT = intPreferencesKey("guide_density_pct")
         val EPISODE_VIEW_MODE = stringPreferencesKey("episode_view_mode")
+        // Touch-host settings. A television has no home button to shrink a video into, no metered
+        // connection to save, and no swipe to calibrate — so all four default to the behaviour the TV
+        // app already has, and only the phone app ever shows a row for them.
+        val BACKGROUND_PLAYBACK = booleanPreferencesKey("background_playback")
+        val PIP_ENABLED = booleanPreferencesKey("pip_enabled")
+        val DATA_SAVER = booleanPreferencesKey("data_saver")
+        val GESTURE_SENSITIVITY_PCT = intPreferencesKey("gesture_sensitivity_pct")
+        val DOWNLOADS_WIFI_ONLY = booleanPreferencesKey("downloads_wifi_only")
         // Global proxy (Approach 1 — one app-wide HTTP proxy). HTTP only; no per-source override yet.
         val PROXY_ENABLED = booleanPreferencesKey("proxy_enabled")
         val PROXY_HOST = stringPreferencesKey("proxy_host")
@@ -929,6 +937,43 @@ class SettingsRepository(private val context: Context, private val localeStore: 
     suspend fun setEpisodeViewMode(mode: VodViewMode) {
         context.dataStore.edit { it[Keys.EPISODE_VIEW_MODE] = mode.name }
     }
+
+    /** Keep the sound going after the app is left. On by default — it is why the service exists. */
+    val backgroundPlayback: Flow<Boolean> = prefsFlow { it[Keys.BACKGROUND_PLAYBACK] ?: true }
+    suspend fun setBackgroundPlayback(enabled: Boolean) {
+        context.dataStore.edit { it[Keys.BACKGROUND_PLAYBACK] = enabled }
+    }
+
+    /** Shrink the video into a floating window on home. On by default. */
+    val pipEnabled: Flow<Boolean> = prefsFlow { it[Keys.PIP_ENABLED] ?: true }
+    suspend fun setPipEnabled(enabled: Boolean) {
+        context.dataStore.edit { it[Keys.PIP_ENABLED] = enabled }
+    }
+
+    /**
+     * Refuse to stream over a metered connection. Off by default: a user who has not asked for it
+     * must never find their film blocked on a network that was working a moment ago.
+     */
+    val dataSaver: Flow<Boolean> = prefsFlow { it[Keys.DATA_SAVER] ?: false }
+    suspend fun setDataSaver(enabled: Boolean) {
+        context.dataStore.edit { it[Keys.DATA_SAVER] = enabled }
+    }
+
+    /** How far a swipe travels before it has moved a slider, as a percentage of the default. */
+    val gestureSensitivityPct: Flow<Int> = prefsFlow { it[Keys.GESTURE_SENSITIVITY_PCT] ?: 100 }
+    suspend fun setGestureSensitivityPct(pct: Int) {
+        context.dataStore.edit { it[Keys.GESTURE_SENSITIVITY_PCT] = pct.coerceIn(50, 200) }
+    }
+
+    /** Hold downloads until Wi-Fi. Off by default, for the same reason the data saver is. */
+    val downloadsWifiOnly: Flow<Boolean> = prefsFlow { it[Keys.DOWNLOADS_WIFI_ONLY] ?: false }
+    suspend fun setDownloadsWifiOnly(enabled: Boolean) {
+        context.dataStore.edit { it[Keys.DOWNLOADS_WIFI_ONLY] = enabled }
+    }
+
+    /** Read once, for a caller that has to answer before it can start — the queue and the player. */
+    suspend fun downloadsWifiOnlyNow(): Boolean = downloadsWifiOnly.first()
+    suspend fun dataSaverNow(): Boolean = dataSaver.first()
 
     val sortGuide: Flow<GuideSort> = prefsFlow { prefs ->
         prefs[Keys.SORT_GUIDE]?.let { runCatching { GuideSort.valueOf(it) }.getOrNull() } ?: GuideSort.LIVE_TV
@@ -2085,7 +2130,8 @@ class SettingsRepository(private val context: Context, private val localeStore: 
         Keys.PANEL_W_MOVIES_CAT, Keys.PANEL_W_MOVIES_LIST, Keys.PANEL_W_MOVIES_PREVIEW,
             Keys.PANEL_W_SERIES_CAT, Keys.PANEL_W_SERIES_LIST, Keys.PANEL_W_SERIES_PREVIEW,
         Keys.GUIDE_WIDTH_CHANNELS, Keys.GUIDE_WIDTH_EPG,
-        Keys.POPUP_FONT_SIZE_PCT, Keys.POPUP_SIZE_PCT, Keys.VOD_GRID_COLUMNS, Keys.GUIDE_DENSITY_PCT)
+        Keys.POPUP_FONT_SIZE_PCT, Keys.POPUP_SIZE_PCT, Keys.VOD_GRID_COLUMNS, Keys.GUIDE_DENSITY_PCT,
+        Keys.GESTURE_SENSITIVITY_PCT)
     private val backupBoolKeys = listOf(
         Keys.LIVE_PREVIEW, Keys.LIVE_PREVIEW_AUDIO, Keys.HERO_PREVIEW, Keys.HDR_ENABLED, Keys.AUTO_FRAME_RATE, Keys.AUTO_FRAME_RATE_PROMPTED, Keys.ANDROID_TV_HOME, Keys.HW_DECODING,
         Keys.VOD_PREFER_EXO, Keys.MEASURED_STREAM_STATS, Keys.DETAILED_DIAGNOSTICS, Keys.DIRECT_TUNE, Keys.EXTERNAL_PLAYER,
@@ -2098,6 +2144,9 @@ class SettingsRepository(private val context: Context, private val localeStore: 
             Keys.PANEL_W_LIVE_ON, Keys.PANEL_W_MOVIES_ON, Keys.PANEL_W_SERIES_ON, Keys.GUIDE_WIDTH_ON,
         Keys.AMBIENT_GLOW_ENABLED, Keys.AMBIENT_GLOW_PULSE,
         Keys.GLASS_ALLOW_FULL_TRANSPARENCY, Keys.GLASS_DEPTH_EFFECTS,
+        // Touch-host settings. They travel even though a television has no row for them: a phone
+        // restored from a phone must keep them, and a television simply ignores what it never reads.
+        Keys.BACKGROUND_PLAYBACK, Keys.PIP_ENABLED, Keys.DATA_SAVER, Keys.DOWNLOADS_WIFI_ONLY,
     )
     private val backupFloatKeys = listOf(Keys.SUB_SCALE, Keys.SUB_SCALE_MPV, Keys.SUB_SCALE_EXO)
 

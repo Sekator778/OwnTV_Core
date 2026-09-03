@@ -36,6 +36,17 @@ class ConnectivityObserver(private val context: Context) {
         return manager.getNetworkCapabilities(network)?.hasInternet() == true
     }
 
+    /**
+     * Whether the network carrying traffic right now costs the user money — what the data saver acts
+     * on. Unknown counts as unmetered: a wrong "yes" blocks playback on a connection that was working
+     * a moment ago, which is the one outcome a saver setting must never produce by accident.
+     */
+    fun isMeteredNow(): Boolean {
+        val manager = cm ?: return false
+        val caps = manager.getNetworkCapabilities(manager.activeNetwork ?: return false) ?: return false
+        return !caps.hasCapability(NetworkCapabilities.NET_CAPABILITY_NOT_METERED)
+    }
+
     private fun NetworkCapabilities.hasInternet(): Boolean =
         hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET) &&
             hasCapability(NetworkCapabilities.NET_CAPABILITY_VALIDATED)

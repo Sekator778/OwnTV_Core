@@ -1209,4 +1209,24 @@
     <string name="settings_guide_width_help">• Kanallistan och EPG-tidslinjen delar en rad, så summan måste vara 100%%.\n• En bredare kanallista visar mindre av tidslinjen åt gången; programlängder och tidsskala ändras inte.\n• Båda kolumnerna är minst 10%% breda.\n• Återställ sätter kanallistan till 10%% och EPG-tidslinjen till 90%%.\n• Om anpassning stängs av återställs standardlayouten utan att dina värden tas bort.</string>
     <string name="settings_guide_width_channels">Kanallista</string>
     <string name="settings_guide_width_epg">EPG-tidslinje</string>
+    <string name="settings_selection_highlight">Markering av val</string>
+    <string name="settings_selection_highlight_description">Färg och tjocklek på ramen runt det valda objektet</string>
+    <string name="settings_nav_bar_customization">Anpassa navigeringsfältet</string>
+    <string name="settings_nav_bar_description">Anpassa flikarna till din spellista eller dölj dem du inte använder</string>
+    <string name="settings_playback_mobile">Mobil</string>
+    <string name="settings_background_playback">Uppspelning i bakgrunden</string>
+    <string name="settings_background_playback_description">Fortsätt spela ljudet när du lämnar appen</string>
+    <string name="settings_pip">Bild-i-bild</string>
+    <string name="settings_pip_description">Krymp videon till ett flytande fönster när du lämnar appen</string>
+    <string name="settings_data_saver">Databesparing</string>
+    <string name="settings_data_saver_description">Strömma inte över mobildata</string>
+    <string name="settings_gesture_sensitivity">Känslighet för gester</string>
+    <string name="settings_gesture_sensitivity_description">Hur långt du sveper för att ändra volym, ljusstyrka eller position</string>
+    <string name="settings_downloads_wifi_only">Ladda ner endast via Wi-Fi</string>
+    <string name="settings_downloads_wifi_only_description">Vänta på Wi-Fi i stället för att använda mobildata</string>
+    <string name="settings_search_keywords_background_playback">bakgrund ljud audio lamna appen fortsatt tjanst</string>
+    <string name="settings_search_keywords_pip">bild i bild flytande fonster overlay liten</string>
+    <string name="settings_search_keywords_data_saver">databesparing mobildata surf roaming spara</string>
+    <string name="settings_search_keywords_gestures">gest svep kanslighet peka dra</string>
+    <string name="settings_search_keywords_wifi_only">wifi endast nedladdning mobildata natverk</string>
 </resources>

@@ -1231,4 +1231,24 @@
     <string name="settings_guide_width_help">• A lista de canais e a linha do tempo EPG compartilham uma linha, por isso o total deve ser 100%%.\n• Ampliar a lista de canais mostra menos da linha do tempo; a duração dos programas e a escala de tempo não mudam.\n• As duas colunas permanecem com pelo menos 10%%.\n• Redefinir coloca a lista de canais em 10%% e a linha do tempo EPG em 90%%.\n• Desativar a personalização restaura o layout padrão sem apagar seus valores.</string>
     <string name="settings_guide_width_channels">Lista de canais</string>
     <string name="settings_guide_width_epg">Linha do tempo EPG</string>
+    <string name="settings_selection_highlight">Destaque da seleção</string>
+    <string name="settings_selection_highlight_description">Cor e espessura da borda em volta do item selecionado</string>
+    <string name="settings_nav_bar_customization">Personalização da barra de navegação</string>
+    <string name="settings_nav_bar_description">Adapte as abas à sua playlist ou esconda as que não usa</string>
+    <string name="settings_playback_mobile">Celular</string>
+    <string name="settings_background_playback">Reprodução em segundo plano</string>
+    <string name="settings_background_playback_description">Manter o som depois de sair do aplicativo</string>
+    <string name="settings_pip">Picture-in-picture</string>
+    <string name="settings_pip_description">Reduzir o vídeo a uma janela flutuante ao sair do aplicativo</string>
+    <string name="settings_data_saver">Economia de dados</string>
+    <string name="settings_data_saver_description">Não transmitir usando dados móveis</string>
+    <string name="settings_gesture_sensitivity">Sensibilidade dos gestos</string>
+    <string name="settings_gesture_sensitivity_description">O quanto você desliza para mudar volume, brilho ou posição</string>
+    <string name="settings_downloads_wifi_only">Baixar somente no Wi-Fi</string>
+    <string name="settings_downloads_wifi_only_description">Esperar o Wi-Fi em vez de usar dados móveis</string>
+    <string name="settings_search_keywords_background_playback">segundo plano audio som sair aplicativo continuar servico</string>
+    <string name="settings_search_keywords_pip">picture in picture janela flutuante sobreposta pequena</string>
+    <string name="settings_search_keywords_data_saver">economia dados moveis celular limitado roaming trafego</string>
+    <string name="settings_search_keywords_gestures">gesto deslizar sensibilidade toque arrastar</string>
+    <string name="settings_search_keywords_wifi_only">wifi somente download dados moveis rede</string>
 </resources>

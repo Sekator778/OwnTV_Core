@@ -1297,4 +1297,24 @@
     <string name="settings_guide_width_help">• تتشارك قائمة القنوات والخط الزمني لـ EPG صفًا واحدًا، لذلك يجب أن يكون المجموع 100%%.\n• يعرض توسيع قائمة القنوات جزءًا أقل من الخط الزمني؛ وتبقى مدد البرامج ومقياس الوقت بلا تغيير.\n• يبقى عرض كل عمود 10%% على الأقل.\n• تعيد إعادة الضبط قائمة القنوات إلى 10%% والخط الزمني إلى 90%%.\n• يؤدي إيقاف التخصيص إلى استعادة التخطيط القياسي دون فقدان قيمك.</string>
     <string name="settings_guide_width_channels">قائمة القنوات</string>
     <string name="settings_guide_width_epg">الخط الزمني لـ EPG</string>
+    <string name="settings_selection_highlight">إبراز التحديد</string>
+    <string name="settings_selection_highlight_description">لون وسُمك الإطار حول العنصر المحدد</string>
+    <string name="settings_nav_bar_customization">تخصيص شريط التنقل</string>
+    <string name="settings_nav_bar_description">اضبط علامات التبويب على قائمتك أو أخفِ ما لا تستخدمه</string>
+    <string name="settings_playback_mobile">الهاتف</string>
+    <string name="settings_background_playback">التشغيل في الخلفية</string>
+    <string name="settings_background_playback_description">إبقاء الصوت يعمل بعد الخروج من التطبيق</string>
+    <string name="settings_pip">صورة داخل صورة</string>
+    <string name="settings_pip_description">تصغير الفيديو إلى نافذة عائمة عند الخروج من التطبيق</string>
+    <string name="settings_data_saver">توفير البيانات</string>
+    <string name="settings_data_saver_description">عدم البث عبر بيانات الهاتف</string>
+    <string name="settings_gesture_sensitivity">حساسية الإيماءات</string>
+    <string name="settings_gesture_sensitivity_description">مسافة السحب اللازمة لتغيير الصوت أو السطوع أو الموضع</string>
+    <string name="settings_downloads_wifi_only">التنزيل عبر Wi-Fi فقط</string>
+    <string name="settings_downloads_wifi_only_description">انتظار Wi-Fi بدلاً من استخدام بيانات الهاتف</string>
+    <string name="settings_search_keywords_background_playback">الخلفية صوت خروج التطبيق استمرار خدمة</string>
+    <string name="settings_search_keywords_pip">صورة داخل صورة نافذة عائمة صغيرة</string>
+    <string name="settings_search_keywords_data_saver">توفير البيانات بيانات الهاتف التجوال استهلاك</string>
+    <string name="settings_search_keywords_gestures">إيماءة سحب حساسية لمس تمرير</string>
+    <string name="settings_search_keywords_wifi_only">wifi فقط تنزيل بيانات الهاتف شبكة</string>
 </resources>

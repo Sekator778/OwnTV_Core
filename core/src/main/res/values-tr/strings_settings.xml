@@ -1209,4 +1209,24 @@
     <string name="settings_guide_width_help">• Kanal listesi ve EPG zaman çizelgesi aynı satırı paylaşır; toplamları 100%% olmalıdır.\n• Kanal listesini genişletmek zaman çizelgesinin daha azını gösterir; program süreleri ve zaman ölçeği değişmez.\n• Her iki sütun da en az 10%% genişliğinde kalır.\n• Sıfırla, kanal listesini 10%% ve EPG zaman çizelgesini 90%% yapar.\n• Özelleştirmeyi kapatmak, değerlerinizi silmeden standart düzeni geri yükler.</string>
     <string name="settings_guide_width_channels">Kanal listesi</string>
     <string name="settings_guide_width_epg">EPG zaman çizelgesi</string>
+    <string name="settings_selection_highlight">Seçim vurgusu</string>
+    <string name="settings_selection_highlight_description">Seçili öğenin çevresindeki çerçevenin rengi ve kalınlığı</string>
+    <string name="settings_nav_bar_customization">Gezinme çubuğunu özelleştirme</string>
+    <string name="settings_nav_bar_description">Sekmeleri oynatma listene göre ayarla veya kullanmadıklarını gizle</string>
+    <string name="settings_playback_mobile">Mobil</string>
+    <string name="settings_background_playback">Arka planda oynatma</string>
+    <string name="settings_background_playback_description">Uygulamadan çıktığında ses çalmaya devam etsin</string>
+    <string name="settings_pip">Pencere içinde pencere</string>
+    <string name="settings_pip_description">Uygulamadan çıktığında videoyu küçük bir pencereye küçült</string>
+    <string name="settings_data_saver">Veri tasarrufu</string>
+    <string name="settings_data_saver_description">Mobil veriyle yayın açma</string>
+    <string name="settings_gesture_sensitivity">Hareket hassasiyeti</string>
+    <string name="settings_gesture_sensitivity_description">Ses, parlaklık veya konumu değiştirmek için ne kadar kaydırman gerektiği</string>
+    <string name="settings_downloads_wifi_only">Yalnızca Wi-Fi ile indir</string>
+    <string name="settings_downloads_wifi_only_description">Mobil veri kullanmak yerine Wi-Fi bekle</string>
+    <string name="settings_search_keywords_background_playback">arka plan ses audio uygulamadan cikma devam servis</string>
+    <string name="settings_search_keywords_pip">pencere icinde pencere yuzen kucuk kaplama</string>
+    <string name="settings_search_keywords_data_saver">veri tasarrufu mobil veri kota dolasim</string>
+    <string name="settings_search_keywords_gestures">hareket kaydirma hassasiyet dokunma surukleme</string>
+    <string name="settings_search_keywords_wifi_only">wifi yalnizca indirme mobil veri ag</string>
 </resources>

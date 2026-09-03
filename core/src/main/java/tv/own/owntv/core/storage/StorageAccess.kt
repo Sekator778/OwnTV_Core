@@ -80,6 +80,28 @@ object StorageAccess {
         return roots.values.toList()
     }
 
+    /**
+     * The volumes this app can write to with no permission at all: its own folder on internal
+     * storage, and one on each SD card or USB stick that is mounted.
+     *
+     * This is what a phone offers instead of [storageRoots]: there is no All-files access to ask for
+     * there, so the choice a user makes is *which volume*, not which folder. The first entry is
+     * always internal storage and equals [defaultRoot].
+     */
+    fun appRoots(context: Context): List<StorageRoot> {
+        val internal = context.getExternalFilesDir(null)?.absolutePath
+        return context.getExternalFilesDirs(null).filterNotNull().map { dir ->
+            val removable = dir.absolutePath != internal
+            StorageRoot(
+                kind = if (removable) RootKind.REMOVABLE else RootKind.INTERNAL,
+                file = File(dir, "OwnTV").apply { mkdirs() },
+                // …/<volume>/Android/data/<pkg>/files — four levels up is the volume itself.
+                volumeName = dir.parentFile?.parentFile?.parentFile?.parentFile?.name
+                    ?.takeIf { removable && it.isNotBlank() },
+            )
+        }
+    }
+
     /** Strips characters that are illegal in file/folder names. */
     fun sanitize(name: String): String =
         name.replace(Regex("[\\\\/:*?\"<>|]"), " ").trim().ifBlank { "untitled" }.take(120)

@@ -55,4 +55,6 @@ Resync and remove missing titles also allows removing titles the provider no lon
     <string name="settings_glass_full_transparency_description">Disables the automatic readability floor for the clearest possible glass.</string>
     <string name="settings_glass_depth_title">Depth &amp; shadows</string>
     <string name="settings_glass_depth_description">Enables focus-travel lighting, subtle parallax and depth movement.</string>
+    <string name="settings_selection_highlight_description">Colour and thickness of the ring around the selected item</string>
+    <string name="settings_nav_bar_customization">Navigation bar customisation</string>
 </resources>

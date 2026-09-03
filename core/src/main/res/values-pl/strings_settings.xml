@@ -1253,4 +1253,24 @@
     <string name="settings_guide_width_help">• Lista kanałów i oś czasu EPG dzielą jeden wiersz, więc ich suma musi wynosić 100%%.\n• Poszerzenie listy kanałów pokazuje mniejszy fragment osi czasu; długości programów i skala czasu pozostają bez zmian.\n• Obie kolumny mają co najmniej 10%% szerokości.\n• Reset ustawia listę kanałów na 10%%, a oś czasu EPG na 90%%.\n• Wyłączenie dostosowania przywraca standardowy układ bez utraty zapisanych wartości.</string>
     <string name="settings_guide_width_channels">Lista kanałów</string>
     <string name="settings_guide_width_epg">Oś czasu EPG</string>
+    <string name="settings_selection_highlight">Podświetlenie zaznaczenia</string>
+    <string name="settings_selection_highlight_description">Kolor i grubość ramki wokół zaznaczonego elementu</string>
+    <string name="settings_nav_bar_customization">Dostosowanie paska nawigacji</string>
+    <string name="settings_nav_bar_description">Dopasuj karty do swojej playlisty lub ukryj te, których nie używasz</string>
+    <string name="settings_playback_mobile">Telefon</string>
+    <string name="settings_background_playback">Odtwarzanie w tle</string>
+    <string name="settings_background_playback_description">Nie przerywaj dźwięku po wyjściu z aplikacji</string>
+    <string name="settings_pip">Obraz w obrazie</string>
+    <string name="settings_pip_description">Zmniejsz wideo do pływającego okna po wyjściu z aplikacji</string>
+    <string name="settings_data_saver">Oszczędzanie danych</string>
+    <string name="settings_data_saver_description">Nie odtwarzaj przez dane komórkowe</string>
+    <string name="settings_gesture_sensitivity">Czułość gestów</string>
+    <string name="settings_gesture_sensitivity_description">Jak daleko przesuwasz palcem, aby zmienić głośność, jasność lub pozycję</string>
+    <string name="settings_downloads_wifi_only">Pobieraj tylko przez Wi-Fi</string>
+    <string name="settings_downloads_wifi_only_description">Poczekaj na Wi-Fi zamiast używać danych komórkowych</string>
+    <string name="settings_search_keywords_background_playback">tlo dzwiek audio wyjscie aplikacja kontynuuj usluga</string>
+    <string name="settings_search_keywords_pip">obraz w obrazie plywajace okno nakladka male</string>
+    <string name="settings_search_keywords_data_saver">oszczedzanie danych komorkowe transfer roaming</string>
+    <string name="settings_search_keywords_gestures">gest przesuniecie czulosc dotyk przeciaganie</string>
+    <string name="settings_search_keywords_wifi_only">wifi tylko pobieranie dane komorkowe siec</string>
 </resources>

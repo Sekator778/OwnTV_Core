@@ -1231,4 +1231,24 @@
     <string name="settings_guide_width_help">• La liste des chaînes et la chronologie EPG partagent une ligne et doivent donc totaliser 100%%.\n• Élargir la liste des chaînes affiche une portion plus petite de la chronologie ; la durée des programmes et l’échelle de temps ne changent pas.\n• Chaque colonne reste large d’au moins 10%%.\n• Réinitialiser règle la liste des chaînes sur 10%% et la chronologie EPG sur 90%%.\n• Désactiver la personnalisation restaure la disposition standard sans effacer vos valeurs.</string>
     <string name="settings_guide_width_channels">Liste des chaînes</string>
     <string name="settings_guide_width_epg">Chronologie EPG</string>
+    <string name="settings_selection_highlight">Mise en évidence de la sélection</string>
+    <string name="settings_selection_highlight_description">Couleur et épaisseur du contour autour de l’élément sélectionné</string>
+    <string name="settings_nav_bar_customization">Personnalisation de la barre de navigation</string>
+    <string name="settings_nav_bar_description">Adapter les onglets à votre playlist, ou masquer ceux que vous n’utilisez pas</string>
+    <string name="settings_playback_mobile">Mobile</string>
+    <string name="settings_background_playback">Lecture en arrière-plan</string>
+    <string name="settings_background_playback_description">Garder le son quand vous quittez l’application</string>
+    <string name="settings_pip">Picture-in-picture</string>
+    <string name="settings_pip_description">Réduire la vidéo dans une fenêtre flottante quand vous quittez l’application</string>
+    <string name="settings_data_saver">Économiseur de données</string>
+    <string name="settings_data_saver_description">Ne pas diffuser via les données mobiles</string>
+    <string name="settings_gesture_sensitivity">Sensibilité des gestes</string>
+    <string name="settings_gesture_sensitivity_description">Distance de glissement pour changer le volume, la luminosité ou la position</string>
+    <string name="settings_downloads_wifi_only">Télécharger en Wi-Fi uniquement</string>
+    <string name="settings_downloads_wifi_only_description">Attendre le Wi-Fi au lieu d’utiliser les données mobiles</string>
+    <string name="settings_search_keywords_background_playback">arriere plan audio son quitter application continuer service</string>
+    <string name="settings_search_keywords_pip">picture in picture fenetre flottante incrustation petit</string>
+    <string name="settings_search_keywords_data_saver">economiseur donnees mobiles cellulaire itinerance trafic</string>
+    <string name="settings_search_keywords_gestures">geste glisser sensibilite toucher balayage</string>
+    <string name="settings_search_keywords_wifi_only">wifi uniquement telechargement donnees mobiles reseau</string>
 </resources>

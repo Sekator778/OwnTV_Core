@@ -1231,4 +1231,24 @@
     <string name="settings_guide_width_help">• L’elenco canali e la sequenza temporale EPG condividono una riga, quindi il totale deve essere 100%%.\n• Allargando l’elenco canali si vede meno della sequenza temporale; durata dei programmi e scala temporale non cambiano.\n• Entrambe le colonne restano almeno al 10%%.\n• Ripristina imposta l’elenco canali al 10%% e la sequenza temporale EPG al 90%%.\n• Disattivando la personalizzazione viene ripristinato il layout standard senza perdere i valori.</string>
     <string name="settings_guide_width_channels">Elenco canali</string>
     <string name="settings_guide_width_epg">Sequenza temporale EPG</string>
+    <string name="settings_selection_highlight">Evidenziazione della selezione</string>
+    <string name="settings_selection_highlight_description">Colore e spessore del bordo attorno all’elemento selezionato</string>
+    <string name="settings_nav_bar_customization">Personalizzazione della barra di navigazione</string>
+    <string name="settings_nav_bar_description">Adatta le schede alla tua playlist o nascondi quelle che non usi</string>
+    <string name="settings_playback_mobile">Mobile</string>
+    <string name="settings_background_playback">Riproduzione in background</string>
+    <string name="settings_background_playback_description">Continua l’audio quando esci dall’app</string>
+    <string name="settings_pip">Picture-in-picture</string>
+    <string name="settings_pip_description">Riduci il video in una finestra mobile quando esci dall’app</string>
+    <string name="settings_data_saver">Risparmio dati</string>
+    <string name="settings_data_saver_description">Non riprodurre in streaming con la rete mobile</string>
+    <string name="settings_gesture_sensitivity">Sensibilità dei gesti</string>
+    <string name="settings_gesture_sensitivity_description">Quanto devi scorrere per cambiare volume, luminosità o posizione</string>
+    <string name="settings_downloads_wifi_only">Scarica solo con Wi-Fi</string>
+    <string name="settings_downloads_wifi_only_description">Attendi il Wi-Fi invece di usare la rete mobile</string>
+    <string name="settings_search_keywords_background_playback">background audio suono esci app continua servizio</string>
+    <string name="settings_search_keywords_pip">picture in picture finestra mobile sovrapposta piccola</string>
+    <string name="settings_search_keywords_data_saver">risparmio dati rete mobile cellulare consumo roaming</string>
+    <string name="settings_search_keywords_gestures">gesto scorrere sensibilita tocco trascina</string>
+    <string name="settings_search_keywords_wifi_only">wifi solo download rete mobile dati</string>
 </resources>

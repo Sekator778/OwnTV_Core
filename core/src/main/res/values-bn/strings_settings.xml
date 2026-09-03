@@ -1209,4 +1209,24 @@
     <string name="settings_guide_width_help">• চ্যানেল তালিকা ও EPG টাইমলাইন একই সারি ভাগ করে, তাই মোট অবশ্যই 100%% হতে হবে।\n• চ্যানেল তালিকা চওড়া করলে একবারে টাইমলাইনের কম অংশ দেখা যাবে; অনুষ্ঠানের দৈর্ঘ্য ও সময়ের স্কেল বদলাবে না।\n• উভয় কলাম কমপক্ষে 10%% থাকবে।\n• রিসেট করলে চ্যানেল তালিকা 10%% এবং EPG টাইমলাইন 90%% হবে।\n• কাস্টমাইজেশন বন্ধ করলে আপনার মান না হারিয়ে সাধারণ গাইড বিন্যাস ফিরে আসবে।</string>
     <string name="settings_guide_width_channels">চ্যানেল তালিকা</string>
     <string name="settings_guide_width_epg">EPG টাইমলাইন</string>
+    <string name="settings_selection_highlight">নির্বাচনের হাইলাইট</string>
+    <string name="settings_selection_highlight_description">নির্বাচিত আইটেমের চারপাশের সীমানার রং ও পুরুত্ব</string>
+    <string name="settings_nav_bar_customization">নেভিগেশন বার নিজের মতো সাজান</string>
+    <string name="settings_nav_bar_description">ট্যাবগুলো আপনার প্লেলিস্ট অনুযায়ী সাজান, বা যেগুলো লাগে না সেগুলো লুকান</string>
+    <string name="settings_playback_mobile">মোবাইল</string>
+    <string name="settings_background_playback">ব্যাকগ্রাউন্ডে চালানো</string>
+    <string name="settings_background_playback_description">অ্যাপ থেকে বেরিয়ে গেলেও শব্দ চলতে থাকবে</string>
+    <string name="settings_pip">পিকচার-ইন-পিকচার</string>
+    <string name="settings_pip_description">অ্যাপ থেকে বেরোলে ভিডিওকে ছোট ভাসমান জানালায় নামিয়ে আনুন</string>
+    <string name="settings_data_saver">ডেটা সাশ্রয়</string>
+    <string name="settings_data_saver_description">মোবাইল ডেটায় স্ট্রিম করবেন না</string>
+    <string name="settings_gesture_sensitivity">অঙ্গভঙ্গির সংবেদনশীলতা</string>
+    <string name="settings_gesture_sensitivity_description">শব্দ, উজ্জ্বলতা বা অবস্থান বদলাতে কতটা সোয়াইপ করতে হবে</string>
+    <string name="settings_downloads_wifi_only">শুধু Wi-Fi-তে ডাউনলোড</string>
+    <string name="settings_downloads_wifi_only_description">মোবাইল ডেটার বদলে Wi-Fi-র জন্য অপেক্ষা করুন</string>
+    <string name="settings_search_keywords_background_playback">ব্যাকগ্রাউন্ড শব্দ অডিও অ্যাপ চলতে সেবা</string>
+    <string name="settings_search_keywords_pip">পিকচার ইন পিকচার ভাসমান জানালা ছোট উইন্ডো</string>
+    <string name="settings_search_keywords_data_saver">ডেটা সাশ্রয় মোবাইল ডেটা রোমিং খরচ</string>
+    <string name="settings_search_keywords_gestures">অঙ্গভঙ্গি সোয়াইপ সংবেদনশীলতা স্পর্শ টানা</string>
+    <string name="settings_search_keywords_wifi_only">wifi শুধু ডাউনলোড মোবাইল ডেটা নেটওয়ার্ক</string>
 </resources>

@@ -1187,4 +1187,24 @@
     <string name="settings_guide_width_help">• チャンネル一覧とEPGタイムラインは1行を共有するため、合計は100%%にする必要があります。\n• チャンネル一覧を広げると一度に見えるタイムラインは少なくなりますが、番組の長さと時間スケールは変わりません。\n• 両方の列は10%%以上に保たれます。\n• リセットするとチャンネル一覧が10%%、EPGタイムラインが90%%に戻ります。\n• カスタマイズをオフにすると、値を失わずに標準レイアウトへ戻ります。</string>
     <string name="settings_guide_width_channels">チャンネル一覧</string>
     <string name="settings_guide_width_epg">EPGタイムライン</string>
+    <string name="settings_selection_highlight">選択のハイライト</string>
+    <string name="settings_selection_highlight_description">選択中の項目を囲む枠の色と太さ</string>
+    <string name="settings_nav_bar_customization">ナビゲーションバーのカスタマイズ</string>
+    <string name="settings_nav_bar_description">タブをプレイリストに合わせる、または使わないタブを隠します</string>
+    <string name="settings_playback_mobile">モバイル</string>
+    <string name="settings_background_playback">バックグラウンド再生</string>
+    <string name="settings_background_playback_description">アプリを離れても音声を再生し続けます</string>
+    <string name="settings_pip">ピクチャー イン ピクチャー</string>
+    <string name="settings_pip_description">アプリを離れたときに映像を小さな浮動ウィンドウにします</string>
+    <string name="settings_data_saver">データセーバー</string>
+    <string name="settings_data_saver_description">モバイルデータでは再生しません</string>
+    <string name="settings_gesture_sensitivity">ジェスチャーの感度</string>
+    <string name="settings_gesture_sensitivity_description">音量・明るさ・再生位置を変えるのに必要なスワイプの長さ</string>
+    <string name="settings_downloads_wifi_only">Wi-Fi のときだけダウンロード</string>
+    <string name="settings_downloads_wifi_only_description">モバイルデータを使わず Wi-Fi を待ちます</string>
+    <string name="settings_search_keywords_background_playback">バックグラウンド 音声 オーディオ アプリ 継続 サービス</string>
+    <string name="settings_search_keywords_pip">ピクチャーインピクチャー 浮動ウィンドウ 小窓 オーバーレイ</string>
+    <string name="settings_search_keywords_data_saver">データセーバー モバイルデータ 通信量 ローミング 節約</string>
+    <string name="settings_search_keywords_gestures">ジェスチャー スワイプ 感度 タッチ ドラッグ</string>
+    <string name="settings_search_keywords_wifi_only">wifi のみ ダウンロード モバイルデータ ネットワーク</string>
 </resources>

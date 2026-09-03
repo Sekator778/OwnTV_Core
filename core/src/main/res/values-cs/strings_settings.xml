@@ -1253,4 +1253,24 @@
     <string name="settings_guide_width_help">• Seznam kanálů a časová osa EPG sdílejí jeden řádek, takže součet musí být 100%%.\n• Rozšířením seznamu kanálů uvidíte menší část časové osy; délky pořadů ani časové měřítko se nezmění.\n• Oba sloupce zůstávají široké alespoň 10%%.\n• Obnovení nastaví seznam kanálů na 10%% a časovou osu EPG na 90%%.\n• Vypnutí přizpůsobení obnoví standardní rozvržení bez ztráty vašich hodnot.</string>
     <string name="settings_guide_width_channels">Seznam kanálů</string>
     <string name="settings_guide_width_epg">Časová osa EPG</string>
+    <string name="settings_selection_highlight">Zvýraznění výběru</string>
+    <string name="settings_selection_highlight_description">Barva a tloušťka rámečku kolem vybrané položky</string>
+    <string name="settings_nav_bar_customization">Přizpůsobení navigačního panelu</string>
+    <string name="settings_nav_bar_description">Přizpůsob karty svému playlistu nebo skryj ty, které nepoužíváš</string>
+    <string name="settings_playback_mobile">Mobil</string>
+    <string name="settings_background_playback">Přehrávání na pozadí</string>
+    <string name="settings_background_playback_description">Nechat zvuk hrát i po odchodu z aplikace</string>
+    <string name="settings_pip">Obraz v obraze</string>
+    <string name="settings_pip_description">Při odchodu z aplikace zmenšit video do plovoucího okna</string>
+    <string name="settings_data_saver">Spořič dat</string>
+    <string name="settings_data_saver_description">Nepřehrávat přes mobilní data</string>
+    <string name="settings_gesture_sensitivity">Citlivost gest</string>
+    <string name="settings_gesture_sensitivity_description">Jak daleko musíš přejet, aby se změnila hlasitost, jas nebo pozice</string>
+    <string name="settings_downloads_wifi_only">Stahovat jen přes Wi-Fi</string>
+    <string name="settings_downloads_wifi_only_description">Počkat na Wi-Fi místo použití mobilních dat</string>
+    <string name="settings_search_keywords_background_playback">pozadi zvuk audio odchod aplikace pokracovat sluzba</string>
+    <string name="settings_search_keywords_pip">obraz v obraze plovouci okno prekryti male</string>
+    <string name="settings_search_keywords_data_saver">sporic dat mobilni data spotreba roaming setrit</string>
+    <string name="settings_search_keywords_gestures">gesto prejeti citlivost dotyk tazeni</string>
+    <string name="settings_search_keywords_wifi_only">wifi pouze stahovani mobilni data sit</string>
 </resources>

@@ -299,4 +299,5 @@
     <string name="player_reason_live_no_fallback">Odtwarzanie na żywo nie powiodło się – nie pozostał żaden wariant zapasowy</string>
     <string name="player_provider_retry_after">HTTP <xliff:g id="code">%1$d</xliff:g>: <xliff:g id="reason">%2$s</xliff:g> Ponowna próba za <xliff:g id="seconds">%3$d</xliff:g> s.</string>
     <string name="player_provider_busy">Dostawca jest zajęty.</string>
+    <string name="player_error_data_saver">Oszczędzanie danych jest włączone, więc odtwarzanie przez dane komórkowe jest wyłączone. Połącz się z Wi-Fi lub wyłącz oszczędzanie danych w ustawieniach.</string>
 </resources>

@@ -1209,4 +1209,24 @@
     <string name="settings_guide_width_help">• चैनल सूची और EPG टाइमलाइन एक पंक्ति साझा करते हैं, इसलिए कुल 100%% होना चाहिए।\n• चैनल सूची चौड़ी करने पर टाइमलाइन का कम हिस्सा दिखता है; कार्यक्रम की अवधि और समय पैमाना नहीं बदलते।\n• दोनों कॉलम कम से कम 10%% रहते हैं।\n• रीसेट चैनल सूची को 10%% और EPG टाइमलाइन को 90%% पर लौटाता है।\n• अनुकूलन बंद करने पर आपके मान खोए बिना मानक गाइड लेआउट लौट आता है।</string>
     <string name="settings_guide_width_channels">चैनल सूची</string>
     <string name="settings_guide_width_epg">EPG टाइमलाइन</string>
+    <string name="settings_selection_highlight">चयन की हाइलाइट</string>
+    <string name="settings_selection_highlight_description">चुने हुए आइटम के चारों ओर के किनारे का रंग और मोटाई</string>
+    <string name="settings_nav_bar_customization">नेविगेशन बार को अपने हिसाब से बदलें</string>
+    <string name="settings_nav_bar_description">टैब को अपनी प्लेलिस्ट के अनुसार रखें, या जो काम के नहीं उन्हें छिपाएँ</string>
+    <string name="settings_playback_mobile">मोबाइल</string>
+    <string name="settings_background_playback">बैकग्राउंड में चलाना</string>
+    <string name="settings_background_playback_description">ऐप से बाहर जाने के बाद भी आवाज़ चलती रहे</string>
+    <string name="settings_pip">पिक्चर-इन-पिक्चर</string>
+    <string name="settings_pip_description">ऐप से बाहर जाने पर वीडियो को छोटी तैरती खिड़की में बदलें</string>
+    <string name="settings_data_saver">डेटा बचत</string>
+    <string name="settings_data_saver_description">मोबाइल डेटा पर स्ट्रीम न करें</string>
+    <string name="settings_gesture_sensitivity">जेस्चर की संवेदनशीलता</string>
+    <string name="settings_gesture_sensitivity_description">आवाज़, चमक या स्थिति बदलने के लिए कितना स्वाइप करना पड़े</string>
+    <string name="settings_downloads_wifi_only">सिर्फ़ Wi-Fi पर डाउनलोड करें</string>
+    <string name="settings_downloads_wifi_only_description">मोबाइल डेटा के बजाय Wi-Fi का इंतज़ार करें</string>
+    <string name="settings_search_keywords_background_playback">बैकग्राउंड आवाज़ ऑडियो ऐप जारी सेवा</string>
+    <string name="settings_search_keywords_pip">पिक्चर इन पिक्चर तैरती खिड़की छोटी विंडो</string>
+    <string name="settings_search_keywords_data_saver">डेटा बचत मोबाइल डेटा रोमिंग खपत</string>
+    <string name="settings_search_keywords_gestures">जेस्चर स्वाइप संवेदनशीलता स्पर्श खींचना</string>
+    <string name="settings_search_keywords_wifi_only">wifi सिर्फ डाउनलोड मोबाइल डेटा नेटवर्क</string>
 </resources>

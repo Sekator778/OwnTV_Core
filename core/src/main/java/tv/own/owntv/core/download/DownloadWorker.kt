@@ -47,18 +47,27 @@ class DownloadWorker(
         /**
          * Make sure the queue is being drained. KEEP, not REPLACE: if a worker is already running,
          * it will pick up the newly queued row itself when it finishes the current one.
+         *
+         * [wifiOnly] is the user's "download over Wi-Fi only" choice, enforced by WorkManager itself
+         * rather than by a check here: an UNMETERED constraint also *stops* a running transfer the
+         * moment the phone falls off Wi-Fi, which a check at start could never do.
          */
-        fun kick(context: Context) {
+        fun kick(context: Context, wifiOnly: Boolean = false, replace: Boolean = false) {
             val request = OneTimeWorkRequestBuilder<DownloadWorker>()
                 .setConstraints(
                     Constraints.Builder()
-                        .setRequiredNetworkType(NetworkType.CONNECTED)
+                        .setRequiredNetworkType(
+                            if (wifiOnly) NetworkType.UNMETERED else NetworkType.CONNECTED,
+                        )
                         .build(),
                 )
                 .addTag(WORK_NAME)
                 .build()
-            WorkManager.getInstance(context)
-                .enqueueUniqueWork(WORK_NAME, ExistingWorkPolicy.KEEP, request)
+            WorkManager.getInstance(context).enqueueUniqueWork(
+                WORK_NAME,
+                if (replace) ExistingWorkPolicy.REPLACE else ExistingWorkPolicy.KEEP,
+                request,
+            )
         }
     }
 }

@@ -1253,4 +1253,24 @@
     <string name="settings_guide_width_help">• Список каналов и шкала EPG занимают одну строку, поэтому их сумма должна быть 100%%.\n• При расширении списка каналов видно меньше шкалы; длительность передач и масштаб времени не меняются.\n• Оба столбца остаются не уже 10%%.\n• Сброс устанавливает 10%% для списка каналов и 90%% для шкалы EPG.\n• Отключение настройки возвращает стандартный вид без потери сохранённых значений.</string>
     <string name="settings_guide_width_channels">Список каналов</string>
     <string name="settings_guide_width_epg">Шкала EPG</string>
+    <string name="settings_selection_highlight">Подсветка выбора</string>
+    <string name="settings_selection_highlight_description">Цвет и толщина рамки вокруг выбранного элемента</string>
+    <string name="settings_nav_bar_customization">Настройка панели навигации</string>
+    <string name="settings_nav_bar_description">Подстройте вкладки под свой плейлист или скройте ненужные</string>
+    <string name="settings_playback_mobile">Телефон</string>
+    <string name="settings_background_playback">Воспроизведение в фоне</string>
+    <string name="settings_background_playback_description">Не выключать звук после выхода из приложения</string>
+    <string name="settings_pip">Картинка в картинке</string>
+    <string name="settings_pip_description">Уменьшать видео в плавающее окно при выходе из приложения</string>
+    <string name="settings_data_saver">Экономия трафика</string>
+    <string name="settings_data_saver_description">Не воспроизводить через мобильный интернет</string>
+    <string name="settings_gesture_sensitivity">Чувствительность жестов</string>
+    <string name="settings_gesture_sensitivity_description">Насколько далеко нужно провести пальцем, чтобы изменить громкость, яркость или позицию</string>
+    <string name="settings_downloads_wifi_only">Загружать только по Wi-Fi</string>
+    <string name="settings_downloads_wifi_only_description">Дождаться Wi-Fi вместо мобильного интернета</string>
+    <string name="settings_search_keywords_background_playback">фон звук аудио выход приложение продолжить служба</string>
+    <string name="settings_search_keywords_pip">картинка в картинке плавающее окно поверх маленькое</string>
+    <string name="settings_search_keywords_data_saver">экономия трафика мобильный интернет роуминг лимит</string>
+    <string name="settings_search_keywords_gestures">жест свайп чувствительность касание перетаскивание</string>
+    <string name="settings_search_keywords_wifi_only">wifi только загрузка мобильный интернет сеть</string>
 </resources>

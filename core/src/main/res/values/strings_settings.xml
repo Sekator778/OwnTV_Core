@@ -2170,4 +2170,33 @@ Resync and remove missing titles also allows removing titles the provider no lon
     <string name="settings_glass_full_transparency_description">Disables the automatic readability floor for the clearest possible glass.</string>
     <string name="settings_glass_depth_title">Depth &amp; shadows</string>
     <string name="settings_glass_depth_description">Enables focus-travel lighting, subtle parallax and depth movement.</string>
+    <!-- Translators: Settings row. The touch equivalent of "Focus highlight": the ring drawn around the item the user has selected. -->
+    <string name="settings_selection_highlight">Selection highlight</string>
+    <string name="settings_selection_highlight_description">Color and thickness of the ring around the selected item</string>
+    <!-- Translators: Settings row. Which tabs appear in the phone's bottom navigation bar. -->
+    <string name="settings_nav_bar_customization">Navigation bar customization</string>
+    <string name="settings_nav_bar_description">Adapt the tabs to your playlist, or hide the ones you do not use</string>
+    <!-- Translators: Heading for the group of player settings that only exist on a phone or tablet. -->
+    <string name="settings_playback_mobile">Mobile</string>
+    <!-- Translators: Settings row. Whether audio keeps playing once the user leaves the app. -->
+    <string name="settings_background_playback">Background playback</string>
+    <string name="settings_background_playback_description">Keep the sound playing after you leave the app</string>
+    <!-- Translators: Settings row. Android's floating-window mode. Keep the platform's own name for it in your language. -->
+    <string name="settings_pip">Picture-in-Picture</string>
+    <string name="settings_pip_description">Shrink the video into a floating window when you leave the app</string>
+    <!-- Translators: Settings row. Refuse to stream over a metered (mobile data) connection. -->
+    <string name="settings_data_saver">Data saver</string>
+    <string name="settings_data_saver_description">Do not stream over mobile data</string>
+    <!-- Translators: Settings row. How far a swipe must travel to change volume, brightness or position. -->
+    <string name="settings_gesture_sensitivity">Gesture sensitivity</string>
+    <string name="settings_gesture_sensitivity_description">How far you swipe to change volume, brightness or position</string>
+    <!-- Translators: Settings row. Hold downloads until the phone is on Wi-Fi. -->
+    <string name="settings_downloads_wifi_only">Download over Wi-Fi only</string>
+    <string name="settings_downloads_wifi_only_description">Wait for Wi-Fi instead of using mobile data</string>
+    <!-- Translators: Settings search keywords, space separated, never shown to the user. Add words people would type in your language. -->
+    <string name="settings_search_keywords_background_playback">background audio sound leave app continue service</string>
+    <string name="settings_search_keywords_pip">picture in picture floating window overlay small popup</string>
+    <string name="settings_search_keywords_data_saver">data saver mobile cellular metered roaming traffic save</string>
+    <string name="settings_search_keywords_gestures">gesture swipe sensitivity touch drag slide</string>
+    <string name="settings_search_keywords_wifi_only">wifi only download metered mobile data network</string>
 </resources>
