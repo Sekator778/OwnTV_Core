@@ -679,6 +679,8 @@
     <string name="settings_glass_surface_topbar">മുകളിലെ ബാർ</string>
     <string name="settings_glass_surface_cards">കാർഡുകൾ</string>
     <string name="settings_glass_surface_miniplayer">മിനി പ്ലെയർ</string>
+    <string name="settings_glass_surface_player_controls">പ്ലേയർ നിയന്ത്രണങ്ങൾ</string>
+    <string name="settings_glass_surface_toasts">സ്ക്രീൻ സന്ദേശങ്ങൾ</string>
     <string name="settings_browsing_last_category">അവസാനം കണ്ട വിഭാഗം ഓർക്കുക</string>
     <string name="settings_browsing_last_category_description">എല്ലാം എന്നതിൽ നിന്നല്ല, നിങ്ങൾ വിട്ട വിഭാഗത്തിൽ നിന്ന് ഈ ഭാഗം വീണ്ടും തുറക്കുക.</string>
     <string name="settings_browsing_last_item">അവസാന ഇനം ഓർക്കുക</string>

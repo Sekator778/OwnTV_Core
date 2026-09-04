@@ -675,6 +675,8 @@
     <string name="settings_glass_surface_topbar">상단 표시줄</string>
     <string name="settings_glass_surface_cards">카드</string>
     <string name="settings_glass_surface_miniplayer">미니 플레이어</string>
+    <string name="settings_glass_surface_player_controls">플레이어 컨트롤</string>
+    <string name="settings_glass_surface_toasts">화면 메시지</string>
     <string name="settings_browsing_last_category">마지막 카테고리 기억</string>
     <string name="settings_browsing_last_category_description">전체가 아닌 마지막으로 나간 카테고리에서 섹션을 다시 엽니다.</string>
     <string name="settings_browsing_last_item">마지막 항목 기억</string>

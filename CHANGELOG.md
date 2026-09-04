@@ -3,6 +3,23 @@
 Core is versioned independently of the apps. A core version number never lines up with an OwnTV TV
 app `v4.x` release, and the two must not be confused. Tags here are prefixed `core-`.
 
+## core-1.0.17 — 2026-09-05
+
+Additive. The TV app was rebuilt and verified against it (Rule 5).
+
+### 🪟 Two more surfaces the glass can be scoped to
+
+`GlassSurface` gained **`PLAYER_CONTROLS`** and **`TOASTS`**, so an app can let the user decide
+whether the controls drawn over a video, and the messages that flash over it, are frosted like the
+rest of the interface. Both are **appended** to the enum, never inserted: the stored scope is a
+bitmask over the ordinals, so an existing installation keeps exactly the surfaces it had.
+
+- New strings, in the base locale and all 24 translated locales:
+  `settings_glass_surface_player_controls` and `settings_glass_surface_toasts`.
+- The television reads neither today — its ten-foot HUD has no caller for them — and its own settings
+  screen deliberately leaves both out rather than showing a switch that does nothing. The mobile app
+  is the first consumer.
+
 ## core-1.0.16 — 2026-09-04
 
 Additive. The TV app was rebuilt and verified against it (Rule 5).

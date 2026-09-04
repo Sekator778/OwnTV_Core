@@ -695,6 +695,8 @@
     <string name="settings_glass_surface_topbar">الشريط العلوي</string>
     <string name="settings_glass_surface_cards">البطاقات</string>
     <string name="settings_glass_surface_miniplayer">المشغّل المصغّر</string>
+    <string name="settings_glass_surface_player_controls">عناصر تحكم المشغّل</string>
+    <string name="settings_glass_surface_toasts">الرسائل على الشاشة</string>
     <string name="settings_browsing_last_category">تذكّر آخر فئة</string>
     <string name="settings_browsing_last_category_description">أعد فتح القسم على الفئة التي غادرتها، وليس على «الكل».</string>
     <string name="settings_browsing_last_item">تذكّر آخر عنصر</string>

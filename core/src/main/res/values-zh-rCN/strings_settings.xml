@@ -675,6 +675,8 @@
     <string name="settings_glass_surface_topbar">顶部栏</string>
     <string name="settings_glass_surface_cards">卡片</string>
     <string name="settings_glass_surface_miniplayer">迷你播放器</string>
+    <string name="settings_glass_surface_player_controls">播放器控件</string>
+    <string name="settings_glass_surface_toasts">屏幕消息</string>
     <string name="settings_browsing_last_category">记住上次浏览的分类</string>
     <string name="settings_browsing_last_category_description">重新打开此内容板块时，显示您离开时所在的分类，而不是“全部”。</string>
     <string name="settings_browsing_last_item">记住上次浏览的项目</string>

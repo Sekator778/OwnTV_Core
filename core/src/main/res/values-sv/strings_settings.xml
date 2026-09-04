@@ -679,6 +679,8 @@
     <string name="settings_glass_surface_topbar">Övre fält</string>
     <string name="settings_glass_surface_cards">Kort</string>
     <string name="settings_glass_surface_miniplayer">Minispelare</string>
+    <string name="settings_glass_surface_player_controls">Spelarkontroller</string>
+    <string name="settings_glass_surface_toasts">Skärmmeddelanden</string>
     <string name="settings_browsing_last_category">Kom ihåg senaste kategorin</string>
     <string name="settings_browsing_last_category_description">Öppna avsnittet igen i den kategori du lämnade i stället för Alla.</string>
     <string name="settings_browsing_last_item">Kom ihåg senaste objektet</string>

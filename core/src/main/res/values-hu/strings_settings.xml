@@ -709,6 +709,8 @@ Válaszd a Kiegyensúlyozott beállítást, ha egy csatorna megbízhatatlanná v
     <string name="settings_glass_surface_topbar">Felső sáv</string>
     <string name="settings_glass_surface_cards">Kártyák</string>
     <string name="settings_glass_surface_miniplayer">Mini lejátszó</string>
+    <string name="settings_glass_surface_player_controls">Lejátszóvezérlők</string>
+    <string name="settings_glass_surface_toasts">Képernyőüzenetek</string>
     <string name="settings_browsing_last_category">Utolsó kategória megjegyzése</string>
     <string name="settings_browsing_last_category_description">A szakasz azon a kategórián nyíljon meg, ahol elhagytad, ne az Összesen.</string>
     <string name="settings_browsing_last_item">Utolsó elem megjegyzése</string>

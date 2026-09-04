@@ -679,6 +679,8 @@
     <string name="settings_glass_surface_topbar">Obere Leiste</string>
     <string name="settings_glass_surface_cards">Karten</string>
     <string name="settings_glass_surface_miniplayer">Mini-Player</string>
+    <string name="settings_glass_surface_player_controls">Player-Steuerung</string>
+    <string name="settings_glass_surface_toasts">Bildschirmmeldungen</string>
     <string name="settings_browsing_last_category">Letzte Kategorie merken</string>
     <string name="settings_browsing_last_category_description">Den Bereich wieder mit der zuletzt geöffneten Kategorie statt mit „Alle“ öffnen.</string>
     <string name="settings_browsing_last_item">Letztes Element merken</string>

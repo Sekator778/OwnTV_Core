@@ -675,6 +675,8 @@
     <string name="settings_glass_surface_topbar">頂端列</string>
     <string name="settings_glass_surface_cards">卡片</string>
     <string name="settings_glass_surface_miniplayer">迷你播放器</string>
+    <string name="settings_glass_surface_player_controls">播放器控制項</string>
+    <string name="settings_glass_surface_toasts">螢幕訊息</string>
     <string name="settings_browsing_last_category">記住上次的分類</string>
     <string name="settings_browsing_last_category_description">重新開啟區段時回到您離開時的分類，而非「全部」。</string>
     <string name="settings_browsing_last_item">記住上次的項目</string>

@@ -687,6 +687,8 @@
     <string name="settings_glass_surface_topbar">Horní lišta</string>
     <string name="settings_glass_surface_cards">Karty</string>
     <string name="settings_glass_surface_miniplayer">Minipřehrávač</string>
+    <string name="settings_glass_surface_player_controls">Ovládání přehrávače</string>
+    <string name="settings_glass_surface_toasts">Zprávy na obrazovce</string>
     <string name="settings_browsing_last_category">Pamatovat si poslední kategorii</string>
     <string name="settings_browsing_last_category_description">Sekci znovu otevřít v kategorii, kterou jste opustili, nikoli v kategorii Vše.</string>
     <string name="settings_browsing_last_item">Pamatovat si poslední položku</string>

@@ -679,6 +679,8 @@
     <string name="settings_glass_surface_topbar">ওপরের বার</string>
     <string name="settings_glass_surface_cards">কার্ড</string>
     <string name="settings_glass_surface_miniplayer">মিনি-প্লেয়ার</string>
+    <string name="settings_glass_surface_player_controls">প্লেয়ার নিয়ন্ত্রণ</string>
+    <string name="settings_glass_surface_toasts">স্ক্রিনের বার্তা</string>
     <string name="settings_browsing_last_category">সর্বশেষ বিভাগ মনে রাখুন</string>
     <string name="settings_browsing_last_category_description">সব বিভাগে নয়, যে বিভাগে ছেড়েছিলেন সেখানেই আবার খুলুন।</string>
     <string name="settings_browsing_last_item">সর্বশেষ আইটেম মনে রাখুন</string>

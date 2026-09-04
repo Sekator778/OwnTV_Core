@@ -687,6 +687,8 @@
     <string name="settings_glass_surface_topbar">Верхняя панель</string>
     <string name="settings_glass_surface_cards">Карточки</string>
     <string name="settings_glass_surface_miniplayer">Мини-плеер</string>
+    <string name="settings_glass_surface_player_controls">Элементы управления плеером</string>
+    <string name="settings_glass_surface_toasts">Сообщения на экране</string>
     <string name="settings_browsing_last_category">Запоминать последнюю категорию</string>
     <string name="settings_browsing_last_category_description">Снова открывать раздел с той категорией, которую вы покинули, а не со «Все».</string>
     <string name="settings_browsing_last_item">Запоминать последний элемент</string>

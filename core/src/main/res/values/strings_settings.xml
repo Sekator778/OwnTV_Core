@@ -1347,6 +1347,10 @@ Choose Balanced if a channel becomes unreliable.</string>
     <string name="settings_glass_surface_cards">Cards</string>
     <!-- Translators: Glass surface toggle label for the mini player. -->
     <string name="settings_glass_surface_miniplayer">Mini player</string>
+    <!-- Translators: Glass surface toggle label for the player controls. -->
+    <string name="settings_glass_surface_player_controls">Player controls</string>
+    <!-- Translators: Glass surface toggle label for on-screen messages (toasts). -->
+    <string name="settings_glass_surface_toasts">On-screen messages</string>
     <!-- Translators: Toggle label to remember the last viewed category. -->
     <string name="settings_browsing_last_category">Remember last category</string>
     <!-- Translators: Description of the remember-last-category setting. -->

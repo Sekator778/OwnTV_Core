@@ -675,6 +675,8 @@
     <string name="settings_glass_surface_topbar">トップバー</string>
     <string name="settings_glass_surface_cards">カード</string>
     <string name="settings_glass_surface_miniplayer">ミニプレーヤー</string>
+    <string name="settings_glass_surface_player_controls">プレーヤーの操作</string>
+    <string name="settings_glass_surface_toasts">画面メッセージ</string>
     <string name="settings_browsing_last_category">最後のカテゴリを記憶</string>
     <string name="settings_browsing_last_category_description">セクションを再度開いたとき、「すべて」ではなく最後に表示していたカテゴリを開きます。</string>
     <string name="settings_browsing_last_item">最後の項目を記憶</string>

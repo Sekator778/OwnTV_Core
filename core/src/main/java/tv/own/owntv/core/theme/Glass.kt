@@ -30,6 +30,14 @@ enum class GlassSurface {
 
     /** The docked (non-fullscreen) mini-player bar. */
     MINI_PLAYER,
+
+    /** The fullscreen player's own chrome: the transport dock, the top row, the tool buttons. */
+    PLAYER_CONTROLS,
+
+    /** The brief messages that appear over the picture — volume, speed, "buffering", errors. */
+    TOASTS,
+    // Appended, never inserted: the persisted scope is a bitmask over these ordinals, so moving a
+    // value would silently re-point every existing user's settings at a different surface.
 }
 
 /** User-facing material tuning. CUSTOM resolves to the separately persisted alpha/frost values. */

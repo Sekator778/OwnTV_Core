@@ -679,6 +679,8 @@
     <string name="settings_glass_surface_topbar">Üst çubuk</string>
     <string name="settings_glass_surface_cards">Kartlar</string>
     <string name="settings_glass_surface_miniplayer">Mini oynatıcı</string>
+    <string name="settings_glass_surface_player_controls">Oynatıcı denetimleri</string>
+    <string name="settings_glass_surface_toasts">Ekran mesajları</string>
     <string name="settings_browsing_last_category">Son kategoriyi hatırla</string>
     <string name="settings_browsing_last_category_description">Bölümü Tümü yerine bıraktığınız kategoride yeniden açın.</string>
     <string name="settings_browsing_last_item">Son öğeyi hatırla</string>

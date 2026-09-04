@@ -687,6 +687,8 @@
     <string name="settings_glass_surface_topbar">Górny pasek</string>
     <string name="settings_glass_surface_cards">Karty</string>
     <string name="settings_glass_surface_miniplayer">Miniodtwarzacz</string>
+    <string name="settings_glass_surface_player_controls">Sterowanie odtwarzaczem</string>
+    <string name="settings_glass_surface_toasts">Komunikaty na ekranie</string>
     <string name="settings_browsing_last_category">Zapamiętuj ostatnią kategorię</string>
     <string name="settings_browsing_last_category_description">Po ponownym otwarciu sekcji wracaj do opuszczonej kategorii zamiast do kategorii Wszystkie.</string>
     <string name="settings_browsing_last_item">Zapamiętuj ostatni element</string>

@@ -683,6 +683,8 @@
     <string name="settings_glass_surface_topbar">Barra superior</string>
     <string name="settings_glass_surface_cards">Tarjetas</string>
     <string name="settings_glass_surface_miniplayer">Minirreproductor</string>
+    <string name="settings_glass_surface_player_controls">Controles del reproductor</string>
+    <string name="settings_glass_surface_toasts">Mensajes en pantalla</string>
     <string name="settings_browsing_last_category">Recordar la última categoría</string>
     <string name="settings_browsing_last_category_description">Vuelve a abrir la sección en la categoría que dejaste, no en Todo.</string>
     <string name="settings_browsing_last_item">Recordar el último elemento</string>

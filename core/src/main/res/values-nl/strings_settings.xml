@@ -679,6 +679,8 @@
     <string name="settings_glass_surface_topbar">Bovenbalk</string>
     <string name="settings_glass_surface_cards">Kaarten</string>
     <string name="settings_glass_surface_miniplayer">Minispeler</string>
+    <string name="settings_glass_surface_player_controls">Spelerbediening</string>
+    <string name="settings_glass_surface_toasts">Schermberichten</string>
     <string name="settings_browsing_last_category">Laatste categorie onthouden</string>
     <string name="settings_browsing_last_category_description">Open het onderdeel opnieuw in de categorie die u hebt verlaten, niet in Alles.</string>
     <string name="settings_browsing_last_item">Laatste item onthouden</string>

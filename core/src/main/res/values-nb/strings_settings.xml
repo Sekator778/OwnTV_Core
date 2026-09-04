@@ -679,6 +679,8 @@
     <string name="settings_glass_surface_topbar">Topplinje</string>
     <string name="settings_glass_surface_cards">Kort</string>
     <string name="settings_glass_surface_miniplayer">Miniavspiller</string>
+    <string name="settings_glass_surface_player_controls">Avspillerkontroller</string>
+    <string name="settings_glass_surface_toasts">Skjermmeldinger</string>
     <string name="settings_browsing_last_category">Husk siste kategori</string>
     <string name="settings_browsing_last_category_description">Åpne delen igjen i kategorien du forlot, ikke Alle.</string>
     <string name="settings_browsing_last_item">Husk siste element</string>

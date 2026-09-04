@@ -679,6 +679,8 @@
     <string name="settings_glass_surface_topbar">ऊपरी बार</string>
     <string name="settings_glass_surface_cards">कार्ड</string>
     <string name="settings_glass_surface_miniplayer">मिनी-प्लेयर</string>
+    <string name="settings_glass_surface_player_controls">प्लेयर नियंत्रण</string>
+    <string name="settings_glass_surface_toasts">स्क्रीन संदेश</string>
     <string name="settings_browsing_last_category">पिछली श्रेणी याद रखें</string>
     <string name="settings_browsing_last_category_description">अनुभाग को सभी के बजाय उसी श्रेणी पर दोबारा खोलें जहाँ आपने उसे छोड़ा था।</string>
     <string name="settings_browsing_last_item">पिछला आइटम याद रखें</string>

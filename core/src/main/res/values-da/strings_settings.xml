@@ -679,6 +679,8 @@
     <string name="settings_glass_surface_topbar">Topbjælke</string>
     <string name="settings_glass_surface_cards">Kort</string>
     <string name="settings_glass_surface_miniplayer">Miniafspiller</string>
+    <string name="settings_glass_surface_player_controls">Afspillerbetjening</string>
+    <string name="settings_glass_surface_toasts">Skærmbeskeder</string>
     <string name="settings_browsing_last_category">Husk seneste kategori</string>
     <string name="settings_browsing_last_category_description">Åbn sektionen igen i den kategori, du forlod, og ikke i Alle.</string>
     <string name="settings_browsing_last_item">Husk seneste element</string>
