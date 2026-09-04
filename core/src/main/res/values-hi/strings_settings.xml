@@ -705,6 +705,15 @@
     <string name="settings_customize_range_hide_start">दायरा चुनना शुरू हो गया है। दायरा चुनने के लिए अंतिम आइटम पर दिखाएँ/छिपाएँ दबाएँ।</string>
     <string name="settings_customize_range_rename_start">नाम बदलने का दायरा शुरू हो गया है। दायरा चुनने के लिए अंतिम आइटम पर नाम बदलें दबाएँ।</string>
     <string name="settings_customize_range_move_start">स्थानांतरण का दायरा शुरू हो गया है। पूरा दायरा ले जाने के लिए अंतिम आइटम पर ⤒ ↑ ↓ ⤓ दबाएँ।</string>
+    <string name="settings_customize_span_hide">छिपाने या दिखाने के लिए दायरा चुनें</string>
+    <string name="settings_customize_span_move">ले जाने के लिए दायरा चुनें</string>
+    <string name="settings_customize_move_top">सबसे ऊपर ले जाएँ</string>
+    <string name="settings_customize_move_bottom">सबसे नीचे ले जाएँ</string>
+    <string name="settings_customize_custom_category">कस्टम</string>
+    <string name="settings_customize_span_rename">नाम बदलने के लिए दायरा चुनें</string>
+    <string name="settings_customize_range_hide_start_touch">दायरा चयन शुरू हुआ. आखिरी आइटम पर टैप करें, फिर छिपाएँ या दिखाएँ चुनें.</string>
+    <string name="settings_customize_range_move_start_touch">दायरा ले जाना शुरू हुआ. आखिरी आइटम पर टैप करें, फिर तीरों से पूरा ब्लॉक ले जाएँ.</string>
+    <string name="settings_customize_range_rename_start_touch">दायरे का नाम बदलना शुरू हुआ. बीच की सभी चीज़ों का नाम बदलने के लिए आखिरी आइटम पर टैप करें.</string>
     <plurals name="settings_customize_range_selected">
         <item quantity="one"><xliff:g id="count">%1$d</xliff:g> श्रेणी चुनी गई। इसे ले जाने के लिए ⤒ ↑ ↓ ⤓ दबाते रहें।</item>
         <item quantity="other"><xliff:g id="count">%1$d</xliff:g> श्रेणियाँ चुनी गईं। इन्हें एक साथ ले जाने के लिए ⤒ ↑ ↓ ⤓ दबाते रहें।</item>
@@ -1188,6 +1197,7 @@
     <string name="settings_row_menu_move_down">नीचे ले जाएँ</string>
     <string name="settings_quick_empty_title">अभी कुछ भी पिन नहीं है</string>
     <string name="settings_quick_empty_hint">किसी भी सेटिंग पर OK दबाए रखें और “त्वरित में पिन करें” चुनें।</string>
+    <string name="settings_quick_empty_hint_touch">किसी भी सेटिंग को देर तक दबाएँ और “त्वरित में पिन करें” चुनें।</string>
     <string name="settings_results_title">परिणाम</string>
     <string name="settings_results_summary">हर मिलान, चाहे वह कहीं भी हो — रास्ते के साथ</string>
     <plurals name="settings_setting_count">

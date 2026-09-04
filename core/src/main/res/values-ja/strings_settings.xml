@@ -701,6 +701,15 @@
     <string name="settings_customize_range_hide_start">範囲選択を開始しました。終点の項目で「表示する」または「非表示にする」を押すと、範囲が選択されます。</string>
     <string name="settings_customize_range_rename_start">名前変更の範囲選択を開始しました。終点の項目で「名前を変更」を押すと、範囲が選択されます。</string>
     <string name="settings_customize_range_move_start">移動の範囲選択を開始しました。終点の項目で⤒ ↑ ↓ ⤓を押すと、範囲全体が移動します。</string>
+    <string name="settings_customize_span_hide">範囲を選択して非表示または表示</string>
+    <string name="settings_customize_span_move">範囲を選択して移動</string>
+    <string name="settings_customize_move_top">先頭に移動</string>
+    <string name="settings_customize_move_bottom">末尾に移動</string>
+    <string name="settings_customize_custom_category">カスタム</string>
+    <string name="settings_customize_span_rename">範囲を選択して名前を変更</string>
+    <string name="settings_customize_range_hide_start_touch">範囲選択を開始しました。最後の項目をタップして、非表示または表示を選択してください。</string>
+    <string name="settings_customize_range_move_start_touch">移動範囲を開始しました。最後の項目をタップし、矢印でブロック全体を移動します。</string>
+    <string name="settings_customize_range_rename_start_touch">名前の変更範囲を開始しました。最後の項目をタップすると、その間のすべての名前を変更できます。</string>
     <plurals name="settings_customize_range_selected">
         <item quantity="other"><xliff:g id="count">%1$d</xliff:g>個のカテゴリを選択しました。まとめて移動するには、⤒ ↑ ↓ ⤓を押してください。</item>
     </plurals>
@@ -1169,6 +1178,7 @@
     <string name="settings_row_menu_move_down">下へ移動</string>
     <string name="settings_quick_empty_title">まだ何も固定されていません</string>
     <string name="settings_quick_empty_hint">設定を OK 長押しして「クイックに固定」を選びます。</string>
+    <string name="settings_quick_empty_hint_touch">設定を長押しして「クイックに固定」を選びます。</string>
     <string name="settings_results_title">検索結果</string>
     <string name="settings_results_summary">どこにある項目も、その場所ごと表示します</string>
     <plurals name="settings_setting_count">

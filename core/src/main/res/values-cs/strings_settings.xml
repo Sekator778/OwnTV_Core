@@ -713,6 +713,15 @@
     <string name="settings_customize_range_hide_start">Výběr rozsahu byl zahájen. Stisknutím možnosti Zobrazit/Skrýt u koncové položky vyberte rozsah.</string>
     <string name="settings_customize_range_rename_start">Výběr rozsahu pro přejmenování byl zahájen. Stisknutím možnosti Přejmenovat u koncové položky vyberte rozsah.</string>
     <string name="settings_customize_range_move_start">Výběr rozsahu pro přesunutí byl zahájen. Stisknutím ⤒ ↑ ↓ ⤓ u koncové položky přesuňte celý rozsah.</string>
+    <string name="settings_customize_span_hide">Vybrat rozsah ke skrytí nebo zobrazení</string>
+    <string name="settings_customize_span_move">Vybrat rozsah k přesunutí</string>
+    <string name="settings_customize_move_top">Přesunout nahoru</string>
+    <string name="settings_customize_move_bottom">Přesunout dolů</string>
+    <string name="settings_customize_custom_category">Vlastní</string>
+    <string name="settings_customize_span_rename">Vybrat rozsah k přejmenování</string>
+    <string name="settings_customize_range_hide_start_touch">Výběr rozsahu zahájen. Klepněte na poslední položku a zvolte Skrýt nebo Zobrazit.</string>
+    <string name="settings_customize_range_move_start_touch">Přesun rozsahu zahájen. Klepněte na poslední položku a šipkami přesuňte celý blok.</string>
+    <string name="settings_customize_range_rename_start_touch">Přejmenování rozsahu zahájeno. Klepnutím na poslední položku přejmenujete vše mezi nimi.</string>
     <plurals name="settings_customize_range_selected">
         <item quantity="one">Vybrána <xliff:g id="count">%1$d</xliff:g> kategorie. Opakovaným stisknutím ⤒ ↑ ↓ ⤓ ji přesunete.</item>
         <item quantity="few">Vybrány <xliff:g id="count">%1$d</xliff:g> kategorie. Opakovaným stisknutím ⤒ ↑ ↓ ⤓ je přesunete společně.</item>
@@ -1226,6 +1235,7 @@
     <string name="settings_row_menu_move_down">Posunout dolů</string>
     <string name="settings_quick_empty_title">Zatím nic připnuto</string>
     <string name="settings_quick_empty_hint">Podržte OK na libovolném nastavení a zvolte „Připnout do Rychlé“.</string>
+    <string name="settings_quick_empty_hint_touch">Podržte libovolné nastavení a zvolte „Připnout do Rychlé“.</string>
     <string name="settings_results_title">Výsledky</string>
     <string name="settings_results_summary">Každá shoda, ať leží kdekoli — i s cestou k ní</string>
     <plurals name="settings_setting_count">

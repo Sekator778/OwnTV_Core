@@ -232,6 +232,7 @@
     <string name="settings_row_menu_move_down">Mozgatás lefelé</string>
     <string name="settings_quick_empty_title">Még nincs kitűzve semmi</string>
     <string name="settings_quick_empty_hint">Tartsd lenyomva az OK-t bármelyik beállításon, és válaszd a „Kitűzés a Gyors közé” lehetőséget.</string>
+    <string name="settings_quick_empty_hint_touch">Tartsd nyomva bármelyik beállítást, és válaszd a „Kitűzés a Gyors közé” lehetőséget.</string>
     <string name="settings_results_title">Találatok</string>
     <string name="settings_results_summary">Minden találat, bárhol is legyen — az útvonalával együtt</string>
     <plurals name="settings_setting_count">
@@ -734,6 +735,15 @@ Válaszd a Kiegyensúlyozott beállítást, ha egy csatorna megbízhatatlanná v
     <string name="settings_customize_range_hide_start">Tartománykijelölés elindítva. Nyomd meg a Megjelenítés/Elrejtés gombot a záró elemen a tartomány kijelöléséhez.</string>
     <string name="settings_customize_range_rename_start">Átnevezési tartomány elindítva. Nyomd meg az Átnevezés gombot a záró elemen a tartomány kijelöléséhez.</string>
     <string name="settings_customize_range_move_start">Mozgatási tartomány elindítva. Nyomd meg a ⤒ ↑ ↓ ⤓ gombot a záró elemen az egész tartomány mozgatásához.</string>
+    <string name="settings_customize_span_hide">Tartomány kijelölése elrejtéshez vagy megjelenítéshez</string>
+    <string name="settings_customize_span_move">Tartomány kijelölése áthelyezéshez</string>
+    <string name="settings_customize_move_top">Áthelyezés legfelülre</string>
+    <string name="settings_customize_move_bottom">Áthelyezés legalulra</string>
+    <string name="settings_customize_custom_category">Egyéni</string>
+    <string name="settings_customize_span_rename">Tartomány kijelölése átnevezéshez</string>
+    <string name="settings_customize_range_hide_start_touch">Tartománykijelölés elindult. Koppintson az utolsó elemre, majd válassza az Elrejtés vagy a Megjelenítés lehetőséget.</string>
+    <string name="settings_customize_range_move_start_touch">Tartomány áthelyezése elindult. Koppintson az utolsó elemre, majd a nyilakkal helyezze át az egész blokkot.</string>
+    <string name="settings_customize_range_rename_start_touch">Tartomány átnevezése elindult. Koppintson az utolsó elemre az összes közbeeső elem átnevezéséhez.</string>
     <plurals name="settings_customize_range_selected">
         <item quantity="one"><xliff:g id="count">%1$d</xliff:g> kategória kijelölve. Nyomd tovább a ⤒ ↑ ↓ ⤓ gombokat a mozgatásához.</item>
         <item quantity="other"><xliff:g id="count">%1$d</xliff:g> kategória kijelölve. Nyomd tovább a ⤒ ↑ ↓ ⤓ gombokat az együttes mozgatásukhoz.</item>

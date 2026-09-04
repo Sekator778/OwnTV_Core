@@ -701,6 +701,15 @@
     <string name="settings_customize_range_hide_start">범위 선택이 시작되었습니다. 범위의 마지막 항목에서 표시/숨기기를 눌러 범위를 선택하세요.</string>
     <string name="settings_customize_range_rename_start">이름 변경 범위가 시작되었습니다. 범위의 마지막 항목에서 이름 변경을 눌러 범위를 선택하세요.</string>
     <string name="settings_customize_range_move_start">이동 범위가 시작되었습니다. 범위의 마지막 항목에서 ⤒ ↑ ↓ ⤓을 눌러 전체 범위를 이동하세요.</string>
+    <string name="settings_customize_span_hide">숨기거나 표시할 범위 선택</string>
+    <string name="settings_customize_span_move">이동할 범위 선택</string>
+    <string name="settings_customize_move_top">맨 위로 이동</string>
+    <string name="settings_customize_move_bottom">맨 아래로 이동</string>
+    <string name="settings_customize_custom_category">사용자 지정</string>
+    <string name="settings_customize_span_rename">이름을 바꿀 범위 선택</string>
+    <string name="settings_customize_range_hide_start_touch">범위 선택을 시작했습니다. 마지막 항목을 탭한 후 숨기기 또는 표시를 선택하세요.</string>
+    <string name="settings_customize_range_move_start_touch">이동 범위를 시작했습니다. 마지막 항목을 탭한 후 화살표로 블록 전체를 이동하세요.</string>
+    <string name="settings_customize_range_rename_start_touch">이름 바꾸기 범위를 시작했습니다. 마지막 항목을 탭하면 그 사이의 모든 항목 이름이 바뀝니다.</string>
     <plurals name="settings_customize_range_selected">
         <item quantity="other">카테고리 <xliff:g id="count">%1$d</xliff:g>개를 선택했습니다. 함께 이동하려면 ⤒ ↑ ↓ ⤓을 계속 누르세요.</item>
     </plurals>
@@ -1169,6 +1178,7 @@
     <string name="settings_row_menu_move_down">아래로 이동</string>
     <string name="settings_quick_empty_title">아직 고정된 항목이 없습니다</string>
     <string name="settings_quick_empty_hint">설정에서 OK를 길게 누른 뒤 “빠른 설정에 고정”을 선택하세요.</string>
+    <string name="settings_quick_empty_hint_touch">설정을 길게 누른 뒤 “빠른 설정에 고정”을 선택하세요.</string>
     <string name="settings_results_title">검색 결과</string>
     <string name="settings_results_summary">어디에 있든 모든 일치 항목 — 경로까지 함께</string>
     <plurals name="settings_setting_count">

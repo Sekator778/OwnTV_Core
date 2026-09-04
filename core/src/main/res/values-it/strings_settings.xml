@@ -709,6 +709,15 @@
     <string name="settings_customize_range_hide_start">Selezione dell\'intervallo avviata. Premi Mostra/Nascondi sull\'elemento finale per selezionare l\'intervallo.</string>
     <string name="settings_customize_range_rename_start">Intervallo da rinominare avviato. Premi Rinomina sull\'elemento finale per selezionare l\'intervallo.</string>
     <string name="settings_customize_range_move_start">Intervallo da spostare avviato. Premi ⤒ ↑ ↓ ⤓ sull\'elemento finale per spostare l\'intero intervallo.</string>
+    <string name="settings_customize_span_hide">Seleziona intervallo da nascondere o mostrare</string>
+    <string name="settings_customize_span_move">Seleziona intervallo da spostare</string>
+    <string name="settings_customize_move_top">Sposta in cima</string>
+    <string name="settings_customize_move_bottom">Sposta in fondo</string>
+    <string name="settings_customize_custom_category">Personalizzata</string>
+    <string name="settings_customize_span_rename">Seleziona intervallo da rinominare</string>
+    <string name="settings_customize_range_hide_start_touch">Selezione intervallo avviata. Tocca l\'ultimo elemento, poi scegli Nascondi o Mostra.</string>
+    <string name="settings_customize_range_move_start_touch">Spostamento intervallo avviato. Tocca l\'ultimo elemento, poi usa le frecce per spostare l\'intero blocco.</string>
+    <string name="settings_customize_range_rename_start_touch">Rinomina intervallo avviata. Tocca l\'ultimo elemento per rinominare tutto ciò che sta in mezzo.</string>
     <plurals name="settings_customize_range_selected">
         <item quantity="one"><xliff:g id="count">%1$d</xliff:g> categoria selezionata. Continua a premere ⤒ ↑ ↓ ⤓ per spostarla.</item>
         <item quantity="many"><xliff:g id="count">%1$d</xliff:g> categorie selezionate. Continua a premere ⤒ ↑ ↓ ⤓ per spostarle insieme.</item>
@@ -1207,6 +1216,7 @@
     <string name="settings_row_menu_move_down">Sposta giù</string>
     <string name="settings_quick_empty_title">Non hai ancora aggiunto nulla</string>
     <string name="settings_quick_empty_hint">Tieni premuto OK su un’impostazione e scegli “Aggiungi a Rapide”.</string>
+    <string name="settings_quick_empty_hint_touch">Tieni premuta un’impostazione e scegli “Aggiungi a Rapide”.</string>
     <string name="settings_results_title">Risultati</string>
     <string name="settings_results_summary">Ogni corrispondenza, ovunque si trovi — con il suo percorso</string>
     <plurals name="settings_setting_count">

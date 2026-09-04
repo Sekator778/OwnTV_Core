@@ -705,6 +705,15 @@
     <string name="settings_customize_range_hide_start">പരിധി തിരഞ്ഞെടുക്കൽ ആരംഭിച്ചു. പരിധി തിരഞ്ഞെടുക്കാൻ അവസാന ഇനത്തിൽ കാണിക്കുക/മറയ്ക്കുക അമർത്തുക.</string>
     <string name="settings_customize_range_rename_start">പേര് മാറ്റാനുള്ള പരിധി ആരംഭിച്ചു. പരിധി തിരഞ്ഞെടുക്കാൻ അവസാന ഇനത്തിൽ പേര് മാറ്റുക അമർത്തുക.</string>
     <string name="settings_customize_range_move_start">നീക്കാനുള്ള പരിധി ആരംഭിച്ചു. മുഴുവൻ പരിധിയും നീക്കാൻ അവസാന ഇനത്തിൽ ⤒ ↑ ↓ ⤓ അമർത്തുക.</string>
+    <string name="settings_customize_span_hide">മറയ്ക്കാനോ കാണിക്കാനോ ഉള്ള ശ്രേണി തിരഞ്ഞെടുക്കുക</string>
+    <string name="settings_customize_span_move">നീക്കാനുള്ള ശ്രേണി തിരഞ്ഞെടുക്കുക</string>
+    <string name="settings_customize_move_top">ഏറ്റവും മുകളിലേക്ക് നീക്കുക</string>
+    <string name="settings_customize_move_bottom">ഏറ്റവും താഴേക്ക് നീക്കുക</string>
+    <string name="settings_customize_custom_category">ഇഷ്ടാനുസൃതം</string>
+    <string name="settings_customize_span_rename">പേരുമാറ്റാനുള്ള ശ്രേണി തിരഞ്ഞെടുക്കുക</string>
+    <string name="settings_customize_range_hide_start_touch">ശ്രേണി തിരഞ്ഞെടുക്കൽ ആരംഭിച്ചു. അവസാന ഇനത്തിൽ ടാപ്പ് ചെയ്ത ശേഷം മറയ്ക്കുക അല്ലെങ്കിൽ കാണിക്കുക തിരഞ്ഞെടുക്കുക.</string>
+    <string name="settings_customize_range_move_start_touch">ശ്രേണി നീക്കൽ ആരംഭിച്ചു. അവസാന ഇനത്തിൽ ടാപ്പ് ചെയ്ത ശേഷം അമ്പടയാളങ്ങൾ ഉപയോഗിച്ച് മുഴുവൻ ബ്ലോക്കും നീക്കുക.</string>
+    <string name="settings_customize_range_rename_start_touch">ശ്രേണി പേരുമാറ്റം ആരംഭിച്ചു. ഇടയിലുള്ളതെല്ലാം പേരുമാറ്റാൻ അവസാന ഇനത്തിൽ ടാപ്പ് ചെയ്യുക.</string>
     <plurals name="settings_customize_range_selected">
         <item quantity="one"><xliff:g id="count">%1$d</xliff:g> വിഭാഗം തിരഞ്ഞെടുത്തു. അത് നീക്കാൻ ⤒ ↑ ↓ ⤓ അമർത്തിക്കൊണ്ടിരിക്കുക.</item>
         <item quantity="other"><xliff:g id="count">%1$d</xliff:g> വിഭാഗങ്ങൾ തിരഞ്ഞെടുത്തു. അവ ഒരുമിച്ച് നീക്കാൻ ⤒ ↑ ↓ ⤓ അമർത്തിക്കൊണ്ടിരിക്കുക.</item>
@@ -1188,6 +1197,7 @@
     <string name="settings_row_menu_move_down">താഴേക്ക് നീക്കുക</string>
     <string name="settings_quick_empty_title">ഇതുവരെ ഒന്നും പിൻ ചെയ്തിട്ടില്ല</string>
     <string name="settings_quick_empty_hint">ഏതെങ്കിലും ക്രമീകരണത്തിൽ OK അമർത്തിപ്പിടിച്ച് “പെട്ടെന്ന് എന്നതിൽ പിൻ ചെയ്യുക” തിരഞ്ഞെടുക്കുക.</string>
+    <string name="settings_quick_empty_hint_touch">ഏതെങ്കിലും ക്രമീകരണം അമർത്തിപ്പിടിച്ച് “പെട്ടെന്ന് എന്നതിൽ പിൻ ചെയ്യുക” തിരഞ്ഞെടുക്കുക.</string>
     <string name="settings_results_title">ഫലങ്ങൾ</string>
     <string name="settings_results_summary">എവിടെയായാലും എല്ലാ പൊരുത്തങ്ങളും — വഴിയോടു കൂടി</string>
     <plurals name="settings_setting_count">

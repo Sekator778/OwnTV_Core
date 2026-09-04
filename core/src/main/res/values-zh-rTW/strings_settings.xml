@@ -701,6 +701,15 @@
     <string name="settings_customize_range_hide_start">已開始範圍選取。請在範圍最後一個項目上按「顯示／隱藏」，以選取整個範圍。</string>
     <string name="settings_customize_range_rename_start">已開始重新命名範圍。請在範圍最後一個項目上按「重新命名」，以選取整個範圍。</string>
     <string name="settings_customize_range_move_start">已開始移動範圍。請在範圍最後一個項目上按 ⤒ ↑ ↓ ⤓，以移動整個範圍。</string>
+    <string name="settings_customize_span_hide">選取範圍以隱藏或顯示</string>
+    <string name="settings_customize_span_move">選取範圍以移動</string>
+    <string name="settings_customize_move_top">移到頂端</string>
+    <string name="settings_customize_move_bottom">移到底部</string>
+    <string name="settings_customize_custom_category">自訂</string>
+    <string name="settings_customize_span_rename">選取範圍以重新命名</string>
+    <string name="settings_customize_range_hide_start_touch">已開始選取範圍。輕觸最後一個項目，然後選擇隱藏或顯示。</string>
+    <string name="settings_customize_range_move_start_touch">已開始移動範圍。輕觸最後一個項目，然後使用箭頭移動整個區塊。</string>
+    <string name="settings_customize_range_rename_start_touch">已開始重新命名範圍。輕觸最後一個項目，即可重新命名之間的所有項目。</string>
     <plurals name="settings_customize_range_selected">
         <item quantity="other">已選取 <xliff:g id="count">%1$d</xliff:g> 個分類。繼續按 ⤒ ↑ ↓ ⤓ 即可一起移動。</item>
     </plurals>
@@ -1169,6 +1178,7 @@
     <string name="settings_row_menu_move_down">下移</string>
     <string name="settings_quick_empty_title">尚未釘選任何設定</string>
     <string name="settings_quick_empty_hint">在任一設定上長按 OK，然後選擇「釘選至快捷」。</string>
+    <string name="settings_quick_empty_hint_touch">長按任一設定，然後選擇「釘選至快捷」。</string>
     <string name="settings_results_title">搜尋結果</string>
     <string name="settings_results_summary">無論藏在哪裡的相符項目，都帶著它的路徑</string>
     <plurals name="settings_setting_count">

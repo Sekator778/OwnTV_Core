@@ -705,6 +705,15 @@
     <string name="settings_customize_range_hide_start">Områdevalget er startet. Trykk på Vis/Skjul på det siste elementet for å velge området.</string>
     <string name="settings_customize_range_rename_start">Området for navneendring er startet. Trykk på Gi nytt navn på det siste elementet for å velge området.</string>
     <string name="settings_customize_range_move_start">Flytteområdet er startet. Trykk på ⤒ ↑ ↓ ⤓ på det siste elementet for å flytte hele området.</string>
+    <string name="settings_customize_span_hide">Velg område som skal skjules eller vises</string>
+    <string name="settings_customize_span_move">Velg område som skal flyttes</string>
+    <string name="settings_customize_move_top">Flytt øverst</string>
+    <string name="settings_customize_move_bottom">Flytt nederst</string>
+    <string name="settings_customize_custom_category">Egendefinert</string>
+    <string name="settings_customize_span_rename">Velg område som skal få nytt navn</string>
+    <string name="settings_customize_range_hide_start_touch">Områdevalg startet. Trykk på det siste elementet, og velg Skjul eller Vis.</string>
+    <string name="settings_customize_range_move_start_touch">Flytting av område startet. Trykk på det siste elementet, og bruk pilene for å flytte hele blokken.</string>
+    <string name="settings_customize_range_rename_start_touch">Navnebytte for område startet. Trykk på det siste elementet for å gi nytt navn til alt imellom.</string>
     <plurals name="settings_customize_range_selected">
         <item quantity="one"><xliff:g id="count">%1$d</xliff:g> kategori valgt. Fortsett å trykke på ⤒ ↑ ↓ ⤓ for å flytte den.</item>
         <item quantity="other"><xliff:g id="count">%1$d</xliff:g> kategorier valgt. Fortsett å trykke på ⤒ ↑ ↓ ⤓ for å flytte dem sammen.</item>
@@ -1188,6 +1197,7 @@
     <string name="settings_row_menu_move_down">Flytt ned</string>
     <string name="settings_quick_empty_title">Ingenting festet ennå</string>
     <string name="settings_quick_empty_hint">Hold inne OK på en innstilling og velg «Fest til Hurtig».</string>
+    <string name="settings_quick_empty_hint_touch">Trykk og hold på en innstilling og velg «Fest til Hurtig».</string>
     <string name="settings_results_title">Resultater</string>
     <string name="settings_results_summary">Alle treff, uansett hvor de ligger — med stien</string>
     <plurals name="settings_setting_count">

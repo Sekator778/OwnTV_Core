@@ -405,6 +405,7 @@
 1	empty	core/src/main/java/tv/own/owntv/core/content/SearchReader.kt	\0
 1	sql	core/src/main/java/tv/own/owntv/core/content/SearchReader.kt	$it*
 1	regex	core/src/main/java/tv/own/owntv/core/content/SearchReader.kt	\\s+
+1	empty	core/src/main/java/tv/own/owntv/core/customize/BulkRenameSession.kt	\0
 1	technical	core/src/main/java/tv/own/owntv/core/customize/CustomizationStore.kt	${c.sourceId}:${c.remoteId ?: c.name}
 1	technical	core/src/main/java/tv/own/owntv/core/customize/CustomizationStore.kt	${ch.sourceId}:${ch.remoteId ?: ch.name}
 1	technical	core/src/main/java/tv/own/owntv/core/customize/CustomizationStore.kt	${m.sourceId}:${m.remoteId ?: m.name}
@@ -2377,6 +2378,16 @@
 1	protocol	core/src/main/java/tv/own/owntv/core/stalker/StalkerClient.kt	xmltv_id
 1	protocol	core/src/main/java/tv/own/owntv/core/stalker/StalkerClient.kt	year
 1	protocol	core/src/main/java/tv/own/owntv/core/stalker/StalkerClient.kt	yyyy-MM-dd HH:mm:ss
+1	json	core/src/main/java/tv/own/owntv/core/stalker/StalkerExpiry.kt	0
+1	json	core/src/main/java/tv/own/owntv/core/stalker/StalkerExpiry.kt	0000
+1	regex	core/src/main/java/tv/own/owntv/core/stalker/StalkerExpiry.kt	\\d{4}|\\d{1,2}[./-]\\d{1,2}
+1	json	core/src/main/java/tv/own/owntv/core/stalker/StalkerExpiry.kt	end_date
+1	json	core/src/main/java/tv/own/owntv/core/stalker/StalkerExpiry.kt	exp_date
+1	json	core/src/main/java/tv/own/owntv/core/stalker/StalkerExpiry.kt	expire_billing_date
+1	json	core/src/main/java/tv/own/owntv/core/stalker/StalkerExpiry.kt	expire_date
+1	json	core/src/main/java/tv/own/owntv/core/stalker/StalkerExpiry.kt	null
+1	json	core/src/main/java/tv/own/owntv/core/stalker/StalkerExpiry.kt	phone
+1	json	core/src/main/java/tv/own/owntv/core/stalker/StalkerExpiry.kt	tariff_expired_date
 2	protocol	core/src/main/java/tv/own/owntv/core/stalker/StreamUrlResolver.kt	Stalker source ${source.id} has no valid MAC
 1	protocol	core/src/main/java/tv/own/owntv/core/stalker/StreamUrlResolver.kt	auto /media/${channelRemoteId}_${startS}_${durationS}.mpg
 1	protocol	core/src/main/java/tv/own/owntv/core/stalker/StreamUrlResolver.kt	itv

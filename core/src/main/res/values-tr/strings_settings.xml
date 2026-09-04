@@ -705,6 +705,15 @@
     <string name="settings_customize_range_hide_start">Aralık seçimi başladı. Aralığı seçmek için son öğede Göster/Gizle düğmesine basın.</string>
     <string name="settings_customize_range_rename_start">Yeniden adlandırma aralığı başladı. Aralığı seçmek için son öğede Yeniden adlandır düğmesine basın.</string>
     <string name="settings_customize_range_move_start">Taşıma aralığı başladı. Tüm aralığı taşımak için son öğede ⤒ ↑ ↓ ⤓ düğmelerinden birine basın.</string>
+    <string name="settings_customize_span_hide">Gizlemek veya göstermek için aralık seç</string>
+    <string name="settings_customize_span_move">Taşımak için aralık seç</string>
+    <string name="settings_customize_move_top">En üste taşı</string>
+    <string name="settings_customize_move_bottom">En alta taşı</string>
+    <string name="settings_customize_custom_category">Özel</string>
+    <string name="settings_customize_span_rename">Yeniden adlandırmak için aralık seç</string>
+    <string name="settings_customize_range_hide_start_touch">Aralık seçimi başladı. Son öğeye dokunun, ardından Gizle veya Göster’i seçin.</string>
+    <string name="settings_customize_range_move_start_touch">Taşıma aralığı başladı. Son öğeye dokunun, ardından okları kullanarak tüm bloğu taşıyın.</string>
+    <string name="settings_customize_range_rename_start_touch">Yeniden adlandırma aralığı başladı. Aradaki her şeyi yeniden adlandırmak için son öğeye dokunun.</string>
     <plurals name="settings_customize_range_selected">
         <item quantity="one"><xliff:g id="count">%1$d</xliff:g> kategori seçildi. Taşımak için ⤒ ↑ ↓ ⤓ düğmelerinden birine basmaya devam edin.</item>
         <item quantity="other"><xliff:g id="count">%1$d</xliff:g> kategori seçildi. Birlikte taşımak için ⤒ ↑ ↓ ⤓ düğmelerinden birine basmaya devam edin.</item>
@@ -1188,6 +1197,7 @@
     <string name="settings_row_menu_move_down">Aşağı taşı</string>
     <string name="settings_quick_empty_title">Henüz hiçbir şey sabitlenmedi</string>
     <string name="settings_quick_empty_hint">Herhangi bir ayarda OK tuşunu basılı tutun ve “Hızlı’ya sabitle” seçeneğini seçin.</string>
+    <string name="settings_quick_empty_hint_touch">Herhangi bir ayara uzun basın ve “Hızlı’ya sabitle” seçeneğini seçin.</string>
     <string name="settings_results_title">Sonuçlar</string>
     <string name="settings_results_summary">Nerede olursa olsun her eşleşme — yoluyla birlikte</string>
     <plurals name="settings_setting_count">

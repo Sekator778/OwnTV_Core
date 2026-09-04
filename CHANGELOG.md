@@ -3,6 +3,51 @@
 Core is versioned independently of the apps. A core version number never lines up with an OwnTV TV
 app `v4.x` release, and the two must not be confused. Tags here are prefixed `core-`.
 
+## core-1.0.14 — 2026-09-04
+
+Everything here is additive. The TV app was rebuilt and verified against all of it (Rule 5), and
+nothing it already did changed meaning.
+
+### ✂️ Span selection and bulk rename, shared instead of duplicated
+
+- **`core/customize/SpanSelector.kt`** — the span model the TV app's Customize screen has always had,
+  lifted out of its view model with no UI in it: `SpanSelector<T>` (start, extend, clear, the ordered
+  low/high pair), `MoveKind` (`UP`, `DOWN`, `TOP`, `BOTTOM`) and `moveBlock(list, lo, hi, kind)`,
+  which moves a whole contiguous block and returns `null` when the move would fall off the end.
+- **`core/customize/BulkRenameSession.kt`** — the bulk-rename engine: the rule set, the preview rows
+  (`BulkPreviewRow`), per-row accept and decline, the guards against emptying a name or colliding
+  with another, and the originals kept so a rename can be undone. The TV app was rewired onto both
+  files in the same change and behaves exactly as before.
+- Both were moved because the mobile app now has the same two features on touch. The Customize view
+  models did **not** move: core has no lifecycle dependency and Paging is `implementation` there, so
+  hosting app-level view models would have widened core's dependency surface for nothing.
+
+### 📺 A Stalker portal's expiry date, read in one place
+
+- **`core/stalker/StalkerExpiry.kt`** — `stalkerExpiryOf(fields)`, pulling a subscription end date
+  out of a portal's `account_info` / `get_profile` map. It tries the five real keys in turn, then
+  falls back to `phone`, which some portals stuff the date into, and only when the value actually
+  looks like a date. Placeholder values (`0000-00-00`, `null`, `0`, empty) are ignored, and the date
+  is returned verbatim, because portals write it in their own format and re-parsing invents wrong
+  dates. The TV app had a private copy of this and now calls core's.
+
+### 🌍 Strings
+
+Ten new base strings in `strings_settings.xml`, translated into all packaged languages in the same
+change:
+
+- **`settings_quick_empty_hint_touch`** — the Quick group's empty hint, worded for a phone. The
+  existing `settings_quick_empty_hint` says "Hold OK on any setting", which is a remote control's
+  select button; the mobile app says "Long-press" instead. Additive — the TV app still reads the
+  original.
+- **Six touch wordings for span selection** — `settings_customize_span_hide`, `_span_move`,
+  `_span_rename` and the three matching prompts `settings_customize_range_hide_start_touch`,
+  `_range_move_start_touch` and `_range_rename_start_touch`, which say "Tap the last item" where the
+  television's own say "press".
+- **`settings_customize_move_top`** and **`settings_customize_move_bottom`** — the two jump actions.
+- **`settings_customize_custom_category`** — "Custom", the label under a folder the user made
+  themselves. This is a fix as well as an addition: the TV app hardcodes it in English.
+
 ## core-1.0.13 — 2026-09-03
 
 ### 🔎 One search, and the storage a phone is allowed to write to

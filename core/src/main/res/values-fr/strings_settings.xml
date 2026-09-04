@@ -709,6 +709,15 @@
     <string name="settings_customize_range_hide_start">Sélection de plage démarrée. Appuyez sur Afficher/Masquer sur le dernier élément pour sélectionner la plage.</string>
     <string name="settings_customize_range_rename_start">Plage de renommage démarrée. Appuyez sur Renommer sur le dernier élément pour sélectionner la plage.</string>
     <string name="settings_customize_range_move_start">Plage de déplacement démarrée. Appuyez sur ⤒ ↑ ↓ ⤓ sur le dernier élément pour déplacer toute la plage.</string>
+    <string name="settings_customize_span_hide">Sélectionner une plage à masquer ou afficher</string>
+    <string name="settings_customize_span_move">Sélectionner une plage à déplacer</string>
+    <string name="settings_customize_move_top">Déplacer tout en haut</string>
+    <string name="settings_customize_move_bottom">Déplacer tout en bas</string>
+    <string name="settings_customize_custom_category">Personnalisée</string>
+    <string name="settings_customize_span_rename">Sélectionner une plage à renommer</string>
+    <string name="settings_customize_range_hide_start_touch">Sélection de plage démarrée. Touchez le dernier élément, puis choisissez Masquer ou Afficher.</string>
+    <string name="settings_customize_range_move_start_touch">Déplacement de plage démarré. Touchez le dernier élément, puis utilisez les flèches pour déplacer tout le bloc.</string>
+    <string name="settings_customize_range_rename_start_touch">Renommage de plage démarré. Touchez le dernier élément pour renommer tout ce qui se trouve entre les deux.</string>
     <plurals name="settings_customize_range_selected">
         <item quantity="one"><xliff:g id="count">%1$d</xliff:g> catégorie sélectionnée. Continuez à appuyer sur ⤒ ↑ ↓ ⤓ pour la déplacer.</item>
         <item quantity="many"><xliff:g id="count">%1$d</xliff:g> catégories sélectionnées. Continuez à appuyer sur ⤒ ↑ ↓ ⤓ pour les déplacer ensemble.</item>
@@ -1207,6 +1216,7 @@
     <string name="settings_row_menu_move_down">Descendre</string>
     <string name="settings_quick_empty_title">Rien d’épinglé pour l’instant</string>
     <string name="settings_quick_empty_hint">Maintenez OK sur un réglage et choisissez « Épingler à Rapide ».</string>
+    <string name="settings_quick_empty_hint_touch">Appuyez longuement sur un réglage et choisissez « Épingler à Rapide ».</string>
     <string name="settings_results_title">Résultats</string>
     <string name="settings_results_summary">Chaque résultat, où qu’il soit — avec son chemin</string>
     <plurals name="settings_setting_count">

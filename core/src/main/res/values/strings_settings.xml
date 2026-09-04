@@ -431,6 +431,8 @@
     <string name="settings_quick_empty_title">Nothing pinned yet</string>
     <!-- Translators: Hint under "Nothing pinned yet". OK is the remote's select button. -->
     <string name="settings_quick_empty_hint">Hold OK on any setting and choose “Pin to Quick”.</string>
+    <!-- Translators: The same hint on a phone or tablet, where there is no OK button. -->
+    <string name="settings_quick_empty_hint_touch">Long-press any setting and choose “Pin to Quick”.</string>
     <!-- Translators: Heading shown over settings search results. -->
     <string name="settings_results_title">Results</string>
     <!-- Translators: One line under the settings search results heading. -->
@@ -1400,6 +1402,24 @@ Choose Balanced if a channel becomes unreliable.</string>
     <string name="settings_customize_range_rename_start">Rename span started. Press Rename on the end item to select the span.</string>
     <!-- Translators: Instructional text when a span-selection for move has started. -->
     <string name="settings_customize_range_move_start">Move span started. Press ⤒ ↑ ↓ ⤓ on the end item to move the whole span.</string>
+    <!-- Translators: Long-press menu entry on a phone that starts a span selection for hiding or showing. -->
+    <string name="settings_customize_span_hide">Select span to hide or show</string>
+    <!-- Translators: Long-press menu entry on a phone that starts a span selection for moving. -->
+    <string name="settings_customize_span_move">Select span to move</string>
+    <!-- Translators: Long-press menu action that jumps a folder or item to the very top of its list. -->
+    <string name="settings_customize_move_top">Move to top</string>
+    <!-- Translators: Long-press menu action that jumps a folder or item to the very bottom of its list. -->
+    <string name="settings_customize_move_bottom">Move to bottom</string>
+    <!-- Translators: Shown under a folder's name when the folder is one the user created themselves, rather than one a provider supplied. -->
+    <string name="settings_customize_custom_category">Custom</string>
+    <!-- Translators: Long-press menu entry on a phone that starts a span selection for renaming. -->
+    <string name="settings_customize_span_rename">Select span to rename</string>
+    <!-- Translators: The hide span prompt on a phone or tablet, where items are tapped instead of pressed with a remote. -->
+    <string name="settings_customize_range_hide_start_touch">Span selection started. Tap the last item, then choose Hide or Show.</string>
+    <!-- Translators: The move span prompt on a phone or tablet, where items are tapped instead of pressed with a remote. -->
+    <string name="settings_customize_range_move_start_touch">Move span started. Tap the last item, then use the arrows to move the whole block.</string>
+    <!-- Translators: The rename span prompt on a phone or tablet, where items are tapped instead of pressed with a remote. -->
+    <string name="settings_customize_range_rename_start_touch">Rename span started. Tap the last item to rename everything in between.</string>
     <!-- Translators: Plural text showing how many categories are selected for moving. 'count' is the number. -->
     <plurals name="settings_customize_range_selected">
         <item quantity="one"><xliff:g id="count">%1$d</xliff:g> category selected. Keep pressing ⤒ ↑ ↓ ⤓ to move it.</item>

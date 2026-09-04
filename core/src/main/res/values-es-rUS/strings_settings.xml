@@ -709,6 +709,15 @@
     <string name="settings_customize_range_hide_start">Se inició la selección de un intervalo. Presiona Mostrar/Ocultar en el elemento final para seleccionar el intervalo.</string>
     <string name="settings_customize_range_rename_start">Se inició el cambio de nombre de un intervalo. Presiona Cambiar nombre en el elemento final para seleccionar el intervalo.</string>
     <string name="settings_customize_range_move_start">Se inició el movimiento de un intervalo. Presiona ⤒ ↑ ↓ ⤓ en el elemento final para mover todo el intervalo.</string>
+    <string name="settings_customize_span_hide">Seleccionar rango para ocultar o mostrar</string>
+    <string name="settings_customize_span_move">Seleccionar rango para mover</string>
+    <string name="settings_customize_move_top">Mover al principio</string>
+    <string name="settings_customize_move_bottom">Mover al final</string>
+    <string name="settings_customize_custom_category">Personalizada</string>
+    <string name="settings_customize_span_rename">Seleccionar rango para cambiar el nombre</string>
+    <string name="settings_customize_range_hide_start_touch">Selección de rango iniciada. Toca el último elemento y elige Ocultar o Mostrar.</string>
+    <string name="settings_customize_range_move_start_touch">Movimiento de rango iniciado. Toca el último elemento y usa las flechas para mover todo el bloque.</string>
+    <string name="settings_customize_range_rename_start_touch">Cambio de nombre por rango iniciado. Toca el último elemento para cambiar el nombre de todo lo que hay en medio.</string>
     <plurals name="settings_customize_range_selected">
         <item quantity="one"><xliff:g id="count">%1$d</xliff:g> categoría seleccionada. Sigue presionando ⤒ ↑ ↓ ⤓ para moverla.</item>
         <item quantity="many"><xliff:g id="count">%1$d</xliff:g> categorías seleccionadas. Sigue presionando ⤒ ↑ ↓ ⤓ para moverlas juntas.</item>
@@ -1207,6 +1216,7 @@
     <string name="settings_row_menu_move_down">Bajar</string>
     <string name="settings_quick_empty_title">Aún no hay nada fijado</string>
     <string name="settings_quick_empty_hint">Mantén presionado OK en cualquier ajuste y elige “Fijar en Rápido”.</string>
+    <string name="settings_quick_empty_hint_touch">Mantén presionado cualquier ajuste y elige “Fijar en Rápido”.</string>
     <string name="settings_results_title">Resultados</string>
     <string name="settings_results_summary">Cada coincidencia, esté donde esté — con su ruta</string>
     <plurals name="settings_setting_count">

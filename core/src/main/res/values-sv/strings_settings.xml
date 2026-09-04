@@ -705,6 +705,15 @@
     <string name="settings_customize_range_hide_start">Intervallmarkeringen har startats. Tryck på Visa/Dölj på det sista objektet för att markera intervallet.</string>
     <string name="settings_customize_range_rename_start">Namnbytesintervallet har startats. Tryck på Byt namn på det sista objektet för att markera intervallet.</string>
     <string name="settings_customize_range_move_start">Flyttintervallet har startats. Tryck på ⤒ ↑ ↓ ⤓ på det sista objektet för att flytta hela intervallet.</string>
+    <string name="settings_customize_span_hide">Välj intervall att dölja eller visa</string>
+    <string name="settings_customize_span_move">Välj intervall att flytta</string>
+    <string name="settings_customize_move_top">Flytta överst</string>
+    <string name="settings_customize_move_bottom">Flytta underst</string>
+    <string name="settings_customize_custom_category">Anpassad</string>
+    <string name="settings_customize_span_rename">Välj intervall att byta namn på</string>
+    <string name="settings_customize_range_hide_start_touch">Intervallval startat. Tryck på det sista objektet och välj Dölj eller Visa.</string>
+    <string name="settings_customize_range_move_start_touch">Flytt av intervall startat. Tryck på det sista objektet och använd pilarna för att flytta hela blocket.</string>
+    <string name="settings_customize_range_rename_start_touch">Namnbyte för intervall startat. Tryck på det sista objektet för att byta namn på allt däremellan.</string>
     <plurals name="settings_customize_range_selected">
         <item quantity="one"><xliff:g id="count">%1$d</xliff:g> kategori markerad. Fortsätt trycka på ⤒ ↑ ↓ ⤓ för att flytta den.</item>
         <item quantity="other"><xliff:g id="count">%1$d</xliff:g> kategorier markerade. Fortsätt trycka på ⤒ ↑ ↓ ⤓ för att flytta dem tillsammans.</item>
@@ -1188,6 +1197,7 @@
     <string name="settings_row_menu_move_down">Flytta ned</string>
     <string name="settings_quick_empty_title">Inget är fäst ännu</string>
     <string name="settings_quick_empty_hint">Håll in OK på en inställning och välj ”Fäst i Snabbval”.</string>
+    <string name="settings_quick_empty_hint_touch">Håll in en inställning och välj ”Fäst i Snabbval”.</string>
     <string name="settings_results_title">Resultat</string>
     <string name="settings_results_summary">Varje träff, var den än ligger — med sin sökväg</string>
     <plurals name="settings_setting_count">

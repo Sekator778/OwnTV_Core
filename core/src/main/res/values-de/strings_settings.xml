@@ -705,6 +705,15 @@
     <string name="settings_customize_range_hide_start">Bereichsauswahl gestartet. Drücke beim letzten Element auf „Anzeigen/Ausblenden“, um den Bereich auszuwählen.</string>
     <string name="settings_customize_range_rename_start">Bereich zum Umbenennen gestartet. Drücke beim letzten Element auf „Umbenennen“, um den Bereich auszuwählen.</string>
     <string name="settings_customize_range_move_start">Bereich zum Verschieben gestartet. Drücke beim letzten Element auf ⤒ ↑ ↓ ⤓, um den gesamten Bereich zu verschieben.</string>
+    <string name="settings_customize_span_hide">Bereich zum Aus- oder Einblenden auswählen</string>
+    <string name="settings_customize_span_move">Bereich zum Verschieben auswählen</string>
+    <string name="settings_customize_move_top">Nach ganz oben verschieben</string>
+    <string name="settings_customize_move_bottom">Nach ganz unten verschieben</string>
+    <string name="settings_customize_custom_category">Benutzerdefiniert</string>
+    <string name="settings_customize_span_rename">Bereich zum Umbenennen auswählen</string>
+    <string name="settings_customize_range_hide_start_touch">Bereichsauswahl gestartet. Tippe auf das letzte Element und wähle Ausblenden oder Einblenden.</string>
+    <string name="settings_customize_range_move_start_touch">Verschiebebereich gestartet. Tippe auf das letzte Element und verschiebe den gesamten Block mit den Pfeilen.</string>
+    <string name="settings_customize_range_rename_start_touch">Umbenennungsbereich gestartet. Tippe auf das letzte Element, um alles dazwischen umzubenennen.</string>
     <plurals name="settings_customize_range_selected">
         <item quantity="one"><xliff:g id="count">%1$d</xliff:g> Kategorie ausgewählt. Drücke weiter auf ⤒ ↑ ↓ ⤓, um sie zu verschieben.</item>
         <item quantity="other"><xliff:g id="count">%1$d</xliff:g> Kategorien ausgewählt. Drücke weiter auf ⤒ ↑ ↓ ⤓, um sie gemeinsam zu verschieben.</item>
@@ -1188,6 +1197,7 @@
     <string name="settings_row_menu_move_down">Nach unten</string>
     <string name="settings_quick_empty_title">Noch nichts angeheftet</string>
     <string name="settings_quick_empty_hint">Halte OK auf einer Einstellung gedrückt und wähle „An Schnellzugriff anheften“.</string>
+    <string name="settings_quick_empty_hint_touch">Halte eine Einstellung gedrückt und wähle „An Schnellzugriff anheften“.</string>
     <string name="settings_results_title">Ergebnisse</string>
     <string name="settings_results_summary">Jeder Treffer, wo er auch liegt — mit seinem Pfad</string>
     <plurals name="settings_setting_count">

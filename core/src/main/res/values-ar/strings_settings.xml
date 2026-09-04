@@ -721,6 +721,15 @@
     <string name="settings_customize_range_hide_start">بدأ تحديد النطاق. اضغط على «إظهار/إخفاء» عند العنصر الأخير لتحديد النطاق.</string>
     <string name="settings_customize_range_rename_start">بدأ نطاق إعادة التسمية. اضغط على «إعادة التسمية» عند العنصر الأخير لتحديد النطاق.</string>
     <string name="settings_customize_range_move_start">بدأ نطاق النقل. اضغط على ⤒ ↑ ↓ ⤓ عند العنصر الأخير لنقل النطاق بالكامل.</string>
+    <string name="settings_customize_span_hide">تحديد نطاق للإخفاء أو الإظهار</string>
+    <string name="settings_customize_span_move">تحديد نطاق للنقل</string>
+    <string name="settings_customize_move_top">نقل إلى الأعلى</string>
+    <string name="settings_customize_move_bottom">نقل إلى الأسفل</string>
+    <string name="settings_customize_custom_category">مخصص</string>
+    <string name="settings_customize_span_rename">تحديد نطاق لإعادة التسمية</string>
+    <string name="settings_customize_range_hide_start_touch">بدأ تحديد النطاق. انقر على العنصر الأخير، ثم اختر إخفاء أو إظهار.</string>
+    <string name="settings_customize_range_move_start_touch">بدأ نطاق النقل. انقر على العنصر الأخير، ثم استخدم الأسهم لنقل الكتلة بأكملها.</string>
+    <string name="settings_customize_range_rename_start_touch">بدأ نطاق إعادة التسمية. انقر على العنصر الأخير لإعادة تسمية كل ما بينهما.</string>
     <plurals name="settings_customize_range_selected">
         <item quantity="zero">تم تحديد <xliff:g id="count">%1$d</xliff:g> فئة. واصل الضغط على ⤒ ↑ ↓ ⤓ لنقلها معًا.</item>
         <item quantity="one">تم تحديد <xliff:g id="count">%1$d</xliff:g> فئة. واصل الضغط على ⤒ ↑ ↓ ⤓ لنقلها.</item>
@@ -1264,6 +1273,7 @@
     <string name="settings_row_menu_move_down">نقل لأسفل</string>
     <string name="settings_quick_empty_title">لا شيء مثبت بعد</string>
     <string name="settings_quick_empty_hint">اضغط مطولاً على زر OK فوق أي إعداد واختر “تثبيت في سريع”.</string>
+    <string name="settings_quick_empty_hint_touch">اضغط مطولاً على أي إعداد واختر “تثبيت في سريع”.</string>
     <string name="settings_results_title">النتائج</string>
     <string name="settings_results_summary">كل تطابق أينما كان — مع مساره</string>
     <plurals name="settings_setting_count">

@@ -705,6 +705,15 @@
     <string name="settings_customize_range_hide_start">Valg af område startet. Tryk på Vis/Skjul på det sidste element for at vælge området.</string>
     <string name="settings_customize_range_rename_start">Omdøbningsområde startet. Tryk på Omdøb på det sidste element for at vælge området.</string>
     <string name="settings_customize_range_move_start">Flytteområde startet. Tryk på ⤒ ↑ ↓ ⤓ på det sidste element for at flytte hele området.</string>
+    <string name="settings_customize_span_hide">Vælg område, der skal skjules eller vises</string>
+    <string name="settings_customize_span_move">Vælg område, der skal flyttes</string>
+    <string name="settings_customize_move_top">Flyt øverst</string>
+    <string name="settings_customize_move_bottom">Flyt nederst</string>
+    <string name="settings_customize_custom_category">Brugerdefineret</string>
+    <string name="settings_customize_span_rename">Vælg område, der skal omdøbes</string>
+    <string name="settings_customize_range_hide_start_touch">Områdevalg startet. Tryk på det sidste element, og vælg Skjul eller Vis.</string>
+    <string name="settings_customize_range_move_start_touch">Flytning af område startet. Tryk på det sidste element, og brug pilene til at flytte hele blokken.</string>
+    <string name="settings_customize_range_rename_start_touch">Omdøbning af område startet. Tryk på det sidste element for at omdøbe alt derimellem.</string>
     <plurals name="settings_customize_range_selected">
         <item quantity="one"><xliff:g id="count">%1$d</xliff:g> kategori valgt. Bliv ved med at trykke på ⤒ ↑ ↓ ⤓ for at flytte den.</item>
         <item quantity="other"><xliff:g id="count">%1$d</xliff:g> kategorier valgt. Bliv ved med at trykke på ⤒ ↑ ↓ ⤓ for at flytte dem samlet.</item>
@@ -1188,6 +1197,7 @@
     <string name="settings_row_menu_move_down">Flyt ned</string>
     <string name="settings_quick_empty_title">Intet fastgjort endnu</string>
     <string name="settings_quick_empty_hint">Hold OK nede på en indstilling, og vælg “Fastgør til Hurtig”.</string>
+    <string name="settings_quick_empty_hint_touch">Hold en indstilling nede, og vælg “Fastgør til Hurtig”.</string>
     <string name="settings_results_title">Resultater</string>
     <string name="settings_results_summary">Alle træffere, uanset hvor de ligger — stien følger med</string>
     <plurals name="settings_setting_count">

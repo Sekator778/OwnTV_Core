@@ -705,6 +705,15 @@
     <string name="settings_customize_range_hide_start">পরিসর নির্বাচন শুরু হয়েছে। পরিসরটি নির্বাচন করতে শেষ আইটেমে দেখান/লুকান চাপুন।</string>
     <string name="settings_customize_range_rename_start">নাম পরিবর্তনের পরিসর শুরু হয়েছে। পরিসরটি নির্বাচন করতে শেষ আইটেমে নাম পরিবর্তন চাপুন।</string>
     <string name="settings_customize_range_move_start">সরানোর পরিসর শুরু হয়েছে। পুরো পরিসরটি সরাতে শেষ আইটেমে ⤒ ↑ ↓ ⤓ চাপুন।</string>
+    <string name="settings_customize_span_hide">লুকাতে বা দেখাতে পরিসর নির্বাচন করুন</string>
+    <string name="settings_customize_span_move">সরাতে পরিসর নির্বাচন করুন</string>
+    <string name="settings_customize_move_top">সবার উপরে সরান</string>
+    <string name="settings_customize_move_bottom">সবার নিচে সরান</string>
+    <string name="settings_customize_custom_category">কাস্টম</string>
+    <string name="settings_customize_span_rename">নাম পরিবর্তনের জন্য পরিসর নির্বাচন করুন</string>
+    <string name="settings_customize_range_hide_start_touch">পরিসর নির্বাচন শুরু হয়েছে। শেষ আইটেমে ট্যাপ করুন, তারপর লুকান বা দেখান বেছে নিন।</string>
+    <string name="settings_customize_range_move_start_touch">পরিসর সরানো শুরু হয়েছে। শেষ আইটেমে ট্যাপ করুন, তারপর তীর দিয়ে পুরো ব্লকটি সরান।</string>
+    <string name="settings_customize_range_rename_start_touch">পরিসরের নাম পরিবর্তন শুরু হয়েছে। মাঝের সবকিছুর নাম পরিবর্তন করতে শেষ আইটেমে ট্যাপ করুন।</string>
     <plurals name="settings_customize_range_selected">
         <item quantity="one"><xliff:g id="count">%1$d</xliff:g>টি বিভাগ নির্বাচিত। এটি সরাতে ⤒ ↑ ↓ ⤓ চাপতে থাকুন।</item>
         <item quantity="other"><xliff:g id="count">%1$d</xliff:g>টি বিভাগ নির্বাচিত। এগুলো একসঙ্গে সরাতে ⤒ ↑ ↓ ⤓ চাপতে থাকুন।</item>
@@ -1188,6 +1197,7 @@
     <string name="settings_row_menu_move_down">নিচে সরান</string>
     <string name="settings_quick_empty_title">এখনও কিছু পিন করা হয়নি</string>
     <string name="settings_quick_empty_hint">যেকোনো সেটিংসের উপর OK চেপে ধরে “দ্রুততে পিন করুন” বেছে নিন।</string>
+    <string name="settings_quick_empty_hint_touch">যেকোনো সেটিংস দীর্ঘক্ষণ চেপে ধরে “দ্রুততে পিন করুন” বেছে নিন।</string>
     <string name="settings_results_title">ফলাফল</string>
     <string name="settings_results_summary">যেখানেই থাকুক প্রতিটি মিল — পথসহ</string>
     <plurals name="settings_setting_count">

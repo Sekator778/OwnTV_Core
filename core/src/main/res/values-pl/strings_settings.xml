@@ -713,6 +713,15 @@
     <string name="settings_customize_range_hide_start">Rozpoczęto wybieranie zakresu. Naciśnij Pokaż/Ukryj na elemencie końcowym, aby wybrać zakres.</string>
     <string name="settings_customize_range_rename_start">Rozpoczęto wybieranie zakresu do zmiany nazwy. Naciśnij Zmień nazwę na elemencie końcowym, aby wybrać zakres.</string>
     <string name="settings_customize_range_move_start">Rozpoczęto wybieranie zakresu do przeniesienia. Naciśnij ⤒ ↑ ↓ ⤓ na elemencie końcowym, aby przenieść cały zakres.</string>
+    <string name="settings_customize_span_hide">Wybierz zakres do ukrycia lub pokazania</string>
+    <string name="settings_customize_span_move">Wybierz zakres do przeniesienia</string>
+    <string name="settings_customize_move_top">Przenieś na górę</string>
+    <string name="settings_customize_move_bottom">Przenieś na dół</string>
+    <string name="settings_customize_custom_category">Własna</string>
+    <string name="settings_customize_span_rename">Wybierz zakres do zmiany nazwy</string>
+    <string name="settings_customize_range_hide_start_touch">Rozpoczęto wybór zakresu. Dotknij ostatniego elementu, a następnie wybierz Ukryj lub Pokaż.</string>
+    <string name="settings_customize_range_move_start_touch">Rozpoczęto przenoszenie zakresu. Dotknij ostatniego elementu, a następnie użyj strzałek, aby przenieść cały blok.</string>
+    <string name="settings_customize_range_rename_start_touch">Rozpoczęto zmianę nazw zakresu. Dotknij ostatniego elementu, aby zmienić nazwy wszystkich elementów pomiędzy.</string>
     <plurals name="settings_customize_range_selected">
         <item quantity="one">Wybrano <xliff:g id="count">%1$d</xliff:g> kategorię. Naciskaj ⤒ ↑ ↓ ⤓, aby ją przenosić.</item>
         <item quantity="few">Wybrano <xliff:g id="count">%1$d</xliff:g> kategorie. Naciskaj ⤒ ↑ ↓ ⤓, aby przenosić je razem.</item>
@@ -1226,6 +1235,7 @@
     <string name="settings_row_menu_move_down">Przenieś w dół</string>
     <string name="settings_quick_empty_title">Nic jeszcze nie przypięto</string>
     <string name="settings_quick_empty_hint">Przytrzymaj OK na dowolnym ustawieniu i wybierz „Przypnij do Szybkie”.</string>
+    <string name="settings_quick_empty_hint_touch">Przytrzymaj dowolne ustawienie i wybierz „Przypnij do Szybkie”.</string>
     <string name="settings_results_title">Wyniki</string>
     <string name="settings_results_summary">Każde trafienie, gdziekolwiek leży — razem ze ścieżką</string>
     <plurals name="settings_setting_count">

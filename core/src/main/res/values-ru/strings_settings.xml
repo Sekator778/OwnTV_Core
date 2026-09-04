@@ -713,6 +713,15 @@
     <string name="settings_customize_range_hide_start">Начат выбор диапазона. Нажмите «Показать» или «Скрыть» на конечном элементе, чтобы выбрать диапазон.</string>
     <string name="settings_customize_range_rename_start">Начат выбор диапазона для переименования. Нажмите «Переименовать» на конечном элементе, чтобы выбрать диапазон.</string>
     <string name="settings_customize_range_move_start">Начат выбор диапазона для перемещения. Нажмите ⤒ ↑ ↓ ⤓ на конечном элементе, чтобы переместить весь диапазон.</string>
+    <string name="settings_customize_span_hide">Выбрать диапазон, чтобы скрыть или показать</string>
+    <string name="settings_customize_span_move">Выбрать диапазон для перемещения</string>
+    <string name="settings_customize_move_top">Переместить наверх</string>
+    <string name="settings_customize_move_bottom">Переместить вниз</string>
+    <string name="settings_customize_custom_category">Своя</string>
+    <string name="settings_customize_span_rename">Выбрать диапазон для переименования</string>
+    <string name="settings_customize_range_hide_start_touch">Выбор диапазона начат. Коснитесь последнего элемента и выберите «Скрыть» или «Показать».</string>
+    <string name="settings_customize_range_move_start_touch">Перемещение диапазона начато. Коснитесь последнего элемента, затем стрелками переместите весь блок.</string>
+    <string name="settings_customize_range_rename_start_touch">Переименование диапазона начато. Коснитесь последнего элемента, чтобы переименовать всё между ними.</string>
     <plurals name="settings_customize_range_selected">
         <item quantity="one">Выбрана <xliff:g id="count">%1$d</xliff:g> категория. Продолжайте нажимать ⤒ ↑ ↓ ⤓, чтобы перемещать её.</item>
         <item quantity="few">Выбраны <xliff:g id="count">%1$d</xliff:g> категории. Продолжайте нажимать ⤒ ↑ ↓ ⤓, чтобы перемещать их вместе.</item>
@@ -1226,6 +1235,7 @@
     <string name="settings_row_menu_move_down">Переместить вниз</string>
     <string name="settings_quick_empty_title">Пока ничего не закреплено</string>
     <string name="settings_quick_empty_hint">Удерживайте OK на любой настройке и выберите «Закрепить в Быстрые».</string>
+    <string name="settings_quick_empty_hint_touch">Удерживайте любую настройку и выберите «Закрепить в Быстрые».</string>
     <string name="settings_results_title">Результаты</string>
     <string name="settings_results_summary">Все совпадения, где бы они ни были, — вместе с путём</string>
     <plurals name="settings_setting_count">
