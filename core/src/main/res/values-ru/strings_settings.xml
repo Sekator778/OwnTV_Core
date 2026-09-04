@@ -129,6 +129,8 @@
     <string name="settings_show_weather_description">Отображать текущую погоду на верхней панели.</string>
     <string name="settings_custom_location">Другое местоположение</string>
     <string name="settings_custom_location_description">Заменить город, используемый для погоды. Оставьте поле пустым для автоматического определения или введите город (например, Москва) либо координаты «широта,долгота» (например, 55.75,37.62). Это полезно при использовании VPN, когда автоматически определяется город сервера.</string>
+    <string name="settings_use_device_location">Использовать местоположение устройства</string>
+    <string name="settings_use_device_location_description">Погода следует за телефоном. Отключите, чтобы указать город вручную.</string>
     <string name="settings_temperature_unit">Единица температуры</string>
     <string name="settings_temperature_description">Показывать температуру в градусах Цельсия или Фаренгейта.</string>
     <string name="settings_auto">Авто</string>
@@ -410,6 +412,7 @@
     <string name="settings_search_keywords_backup">экспорт импорт профили источники</string>
     <string name="settings_search_keywords_history">недавно просмотренные продолжить удалить</string>
     <string name="settings_search_keywords_theme">светлая тёмная система</string>
+    <string name="settings_search_keywords_glass">стекло прозрачность размытие иней полупрозрачный фон обои</string>
     <string name="settings_search_keywords_accent">оттенок палитра HEX готовый цвет</string>
     <string name="settings_search_keywords_focus">фокус рамка граница выделение курсор контур</string>
     <string name="settings_search_keywords_zoom">масштаб интерфейс размер</string>
@@ -1198,6 +1201,8 @@
     <string name="settings_glass_preset_opaque">Непрозрачный</string>
     <string name="settings_glass_preset_ultra_clear_description">Максимум деталей фона с лёгким размытием.</string>
     <string name="settings_glass_preset_opaque_description">Максимальная плотность панелей с самым сильным размытием.</string>
+    <string name="settings_glass_preset_aurora">Аврора</string>
+    <string name="settings_glass_preset_aurora_description">Тонкое стекло с самым плотным матированием — сделано для телефона.</string>
     <string name="settings_glass_highlight_title">Яркость блика</string>
     <string name="settings_glass_highlight_description">Настройте свет и контур стекла в фокусе.</string>
     <string name="settings_glass_live_preview">Предпросмотр</string>

@@ -129,6 +129,8 @@
     <string name="settings_show_weather_description">상단 표시줄에 현재 날씨를 표시합니다.</string>
     <string name="settings_custom_location">사용자 지정 위치</string>
     <string name="settings_custom_location_description">날씨에 사용할 도시를 직접 지정합니다. 자동으로 감지하려면 비워 두고, 도시(예: London) 또는 \"위도,경도\"(예: 51.5,-0.12)를 입력할 수도 있습니다. 자동 감지 시 서버가 있는 도시로 확인되는 VPN 환경에서 유용합니다.</string>
+    <string name="settings_use_device_location">이 기기의 위치 사용</string>
+    <string name="settings_use_device_location_description">날씨가 휴대전화의 위치를 따릅니다. 끄면 도시를 직접 입력할 수 있습니다.</string>
     <string name="settings_temperature_unit">온도 단위</string>
     <string name="settings_temperature_description">온도를 섭씨 또는 화씨로 표시합니다.</string>
     <string name="settings_auto">자동</string>
@@ -404,6 +406,7 @@
     <string name="settings_search_keywords_backup">내보내기 가져오기 프로필 소스</string>
     <string name="settings_search_keywords_history">최근 시청 항목 계속 시청 삭제</string>
     <string name="settings_search_keywords_theme">밝게 어둡게 시스템</string>
+    <string name="settings_search_keywords_glass">유리 투명도 흐림 서리 반투명 배경 배경화면</string>
     <string name="settings_search_keywords_accent">색조 팔레트 16진수 프리셋</string>
     <string name="settings_search_keywords_focus">포커스 테두리 경계 선택 커서 윤곽</string>
     <string name="settings_search_keywords_zoom">배율 인터페이스 크기</string>
@@ -1141,6 +1144,8 @@
     <string name="settings_glass_preset_opaque">불투명</string>
     <string name="settings_glass_preset_ultra_clear_description">가벼운 흐림으로 배경화면의 디테일을 최대한 표시합니다.</string>
     <string name="settings_glass_preset_opaque_description">가장 강한 흐림으로 패널 밀도를 최대로 높입니다.</string>
+    <string name="settings_glass_preset_aurora">오로라</string>
+    <string name="settings_glass_preset_aurora_description">가장 강한 서리를 입힌 얇은 유리 — 휴대전화를 위해 만들었습니다.</string>
     <string name="settings_glass_highlight_title">하이라이트 강도</string>
     <string name="settings_glass_highlight_description">포커스된 유리의 빛과 테두리를 조절합니다.</string>
     <string name="settings_glass_live_preview">실시간 미리보기</string>

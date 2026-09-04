@@ -132,6 +132,8 @@
     <string name="settings_show_weather_description">A jelenlegi időjárás megjelenítése a felső sávban.</string>
     <string name="settings_custom_location">Egyéni helyszín</string>
     <string name="settings_custom_location_description">Felülírja az időjáráshoz használt várost. Hagyd üresen az automatikus felismeréshez, vagy adj meg egy várost (pl. Budapest) vagy „szél,hossz” értéket (pl. 47.5,19.05). Hasznos VPN esetén, ahol az automatikus felismerés a kiszolgáló városát adja.</string>
+    <string name="settings_use_device_location">Az eszköz helyének használata</string>
+    <string name="settings_use_device_location_description">Az időjárás a telefon helyét követi. Kapcsolja ki, ha saját várost szeretne megadni.</string>
     <string name="settings_temperature_unit">Hőmérséklet mértékegysége</string>
     <string name="settings_temperature_description">A hőmérséklet megjelenítése Celsiusban vagy Fahrenheitben.</string>
     <string name="settings_auto">Automatikus</string>
@@ -458,6 +460,7 @@
     <string name="settings_search_keywords_backup">exportálás importálás profilok források</string>
     <string name="settings_search_keywords_history">nemrég nézett folytatás eltávolítás</string>
     <string name="settings_search_keywords_theme">világos sötét rendszer</string>
+    <string name="settings_search_keywords_glass">üveg átlátszóság elmosás dér áttetsző háttér háttérkép</string>
     <string name="settings_search_keywords_accent">színezés paletta hexa előbeállítás</string>
     <string name="settings_search_keywords_focus">fókusz keret szegély kijelölés kurzor körvonal</string>
     <string name="settings_search_keywords_zoom">méretezés felület méret</string>
@@ -1170,6 +1173,8 @@ Az Újraszinkronizálás és a hiányzó címek eltávolítása azt is lehetőv�
     <string name="settings_glass_preset_opaque">Átlátszatlan</string>
     <string name="settings_glass_preset_ultra_clear_description">Maximális háttérkép-részletesség enyhe mattítással.</string>
     <string name="settings_glass_preset_opaque_description">Maximális paneltömörség a legerősebb mattítással.</string>
+    <string name="settings_glass_preset_aurora">Aurora</string>
+    <string name="settings_glass_preset_aurora_description">Vékony üveg a legerősebb dérrel – telefonra tervezve.</string>
     <string name="settings_glass_highlight_title">Kiemelés erőssége</string>
     <string name="settings_glass_highlight_description">A fókuszált üveg fényének és peremének beállítása.</string>
     <string name="settings_glass_live_preview">Élő előnézet</string>

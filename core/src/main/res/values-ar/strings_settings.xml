@@ -129,6 +129,8 @@
     <string name="settings_show_weather_description">عرض حالة الطقس الحالية في الشريط العلوي.</string>
     <string name="settings_custom_location">موقع مخصص</string>
     <string name="settings_custom_location_description">تجاوز المدينة المستخدمة للطقس. اترك الحقل فارغًا للكشف التلقائي، أو أدخل مدينة (مثل لندن) أو \"lat,lon\" (مثل 51.5,-0.12). يفيد ذلك عند استخدام VPN، حيث قد يحدد الكشف التلقائي مدينة الخادم.</string>
+    <string name="settings_use_device_location">استخدام موقع هذا الجهاز</string>
+    <string name="settings_use_device_location_description">يتبع الطقس مكان الهاتف. أوقف التشغيل لإدخال مدينة بنفسك.</string>
     <string name="settings_temperature_unit">وحدة درجة الحرارة</string>
     <string name="settings_temperature_description">عرض درجة الحرارة بالدرجة المئوية أو الفهرنهايت.</string>
     <string name="settings_auto">تلقائي</string>
@@ -414,6 +416,7 @@
     <string name="settings_search_keywords_backup">تصدير استيراد ملفات شخصية مصادر</string>
     <string name="settings_search_keywords_history">شوهد مؤخرًا متابعة إزالة</string>
     <string name="settings_search_keywords_theme">فاتح داكن نظام</string>
+    <string name="settings_search_keywords_glass">زجاج شفافية ضبابية صقيع شفاف خلفية</string>
     <string name="settings_search_keywords_accent">تلوين لوحة ألوان سداسي عشري إعداد مسبق</string>
     <string name="settings_search_keywords_focus">تركيز إطار حدود تحديد مؤشر مخطط</string>
     <string name="settings_search_keywords_zoom">مقياس واجهة حجم</string>
@@ -1236,6 +1239,8 @@
     <string name="settings_glass_preset_opaque">معتم</string>
     <string name="settings_glass_preset_ultra_clear_description">أقصى تفاصيل للخلفية مع تمويه خفيف.</string>
     <string name="settings_glass_preset_opaque_description">أقصى كثافة للألواح مع أقوى تمويه.</string>
+    <string name="settings_glass_preset_aurora">أورورا</string>
+    <string name="settings_glass_preset_aurora_description">زجاج رقيق بأقوى تأثير صقيع — مصمم للهاتف.</string>
     <string name="settings_glass_highlight_title">قوة الإضاءة</string>
     <string name="settings_glass_highlight_description">اضبط إضاءة الزجاج وحدوده عند التركيز.</string>
     <string name="settings_glass_live_preview">معاينة مباشرة</string>

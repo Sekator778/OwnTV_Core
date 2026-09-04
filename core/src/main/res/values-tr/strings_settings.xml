@@ -129,6 +129,8 @@
     <string name="settings_show_weather_description">Güncel hava durumunu üst çubukta gösterin.</string>
     <string name="settings_custom_location">Özel konum</string>
     <string name="settings_custom_location_description">Hava durumu için kullanılan şehri değiştirin. Otomatik algılama için boş bırakın veya bir şehir (ör. Londra) ya da “enlem,boylam” (ör. 51.5,-0.12) girin. Otomatik algılamanın sunucunun şehrini bulduğu VPN bağlantılarında kullanışlıdır.</string>
+    <string name="settings_use_device_location">Bu cihazın konumunu kullan</string>
+    <string name="settings_use_device_location_description">Hava durumu telefonun bulunduğu yeri izler. Şehri kendiniz girmek için kapatın.</string>
     <string name="settings_temperature_unit">Sıcaklık birimi</string>
     <string name="settings_temperature_description">Sıcaklığı Celsius veya Fahrenheit cinsinden gösterin.</string>
     <string name="settings_auto">Otomatik</string>
@@ -406,6 +408,7 @@
     <string name="settings_search_keywords_backup">dışa aktarma içe aktarma profiller kaynaklar</string>
     <string name="settings_search_keywords_history">son izlenenler devam et kaldır</string>
     <string name="settings_search_keywords_theme">açık koyu sistem</string>
+    <string name="settings_search_keywords_glass">cam saydamlık bulanıklık buzlu yarı saydam arka plan duvar kağıdı</string>
     <string name="settings_search_keywords_accent">renk tonu palet onaltılık hazır ayar</string>
     <string name="settings_search_keywords_focus">odak çerçeve kenarlık seçim imleç dış hat</string>
     <string name="settings_search_keywords_zoom">ölçek arayüz boyut</string>
@@ -1160,6 +1163,8 @@
     <string name="settings_glass_preset_opaque">Opak</string>
     <string name="settings_glass_preset_ultra_clear_description">Hafif bulanıklıkla en yüksek duvar kâğıdı ayrıntısı.</string>
     <string name="settings_glass_preset_opaque_description">En güçlü bulanıklıkla en yüksek panel yoğunluğu.</string>
+    <string name="settings_glass_preset_aurora">Aurora</string>
+    <string name="settings_glass_preset_aurora_description">En yoğun buzlanmaya sahip ince cam — telefon için tasarlandı.</string>
     <string name="settings_glass_highlight_title">Vurgu gücü</string>
     <string name="settings_glass_highlight_description">Odaktaki camın ışığını ve kenarını ayarlayın.</string>
     <string name="settings_glass_live_preview">Canlı önizleme</string>

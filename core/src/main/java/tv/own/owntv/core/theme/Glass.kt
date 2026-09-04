@@ -39,6 +39,15 @@ enum class GlassPreset(val alpha: Float?, val blurStrength: Float?) {
     BALANCED(alpha = 0.56f, blurStrength = 0.78f),
     TINTED(alpha = 0.74f, blurStrength = 0.88f),
     OPAQUE(alpha = 0.92f, blurStrength = 1.00f),
+
+    /**
+     * The phone's signature material: thinner than Balanced so the wallpaper reads through, and
+     * frosted almost to the top so it stays legible anyway. It only looks like itself where there is
+     * real backdrop blur to spend — API 31+ — which is why it is the mobile default and not the
+     * shared one. On the television it renders as a slightly clearer Balanced, which is correct: a
+     * new value never changes what an existing one means.
+     */
+    AURORA(alpha = 0.46f, blurStrength = 0.94f),
     CUSTOM(alpha = null, blurStrength = null);
 
     fun resolveAlpha(custom: Float): Float = (alpha ?: custom).coerceIn(0f, 1f)

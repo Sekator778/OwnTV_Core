@@ -253,6 +253,9 @@
     <string name="settings_custom_location">Custom location</string>
     <!-- Translators: Description of the custom location setting. Explains auto-detect vs manual city/coordinates. -->
     <string name="settings_custom_location_description">Override the city used for weather. Leave blank to auto-detect, or enter a city (e.g. London) or &quot;lat,lon&quot; (e.g. 51.5,-0.12). Useful on a VPN, where auto-detect resolves to the server\'s city.</string>
+    <!-- Translators: Toggle that lets the weather follow the phone's own location instead of a typed-in city. -->
+    <string name="settings_use_device_location">Use this device\'s location</string>
+    <string name="settings_use_device_location_description">Weather follows where the phone is. Turn off to enter a city yourself.</string>
     <!-- Translators: Setting label for the temperature unit (Celsius/Fahrenheit). -->
     <string name="settings_temperature_unit">Temperature unit</string>
     <!-- Translators: Description of the temperature unit setting. -->
@@ -864,6 +867,8 @@
     <string name="settings_search_keywords_history">recently watched continue remove</string>
     <!-- Translators: Hidden keyword bag for the Theme settings. Translate as individual search terms. -->
     <string name="settings_search_keywords_theme">light dark system</string>
+    <!-- Translators: Search keywords for the Glass Effect screen. Space-separated single words, not a sentence; they are matched against what the user types into settings search. -->
+    <string name="settings_search_keywords_glass">glass transparency blur frost translucent background wallpaper</string>
     <!-- Translators: Hidden keyword bag for the Accent color settings. Translate as individual search terms. -->
     <string name="settings_search_keywords_accent">tint palette hex preset</string>
     <!-- Translators: Hidden keyword bag for the Focus highlight settings. Translate as individual search terms. -->
@@ -2164,6 +2169,9 @@ Resync and remove missing titles also allows removing titles the provider no lon
     <string name="settings_glass_preset_opaque">Opaque</string>
     <string name="settings_glass_preset_ultra_clear_description">Maximum wallpaper detail with light frost.</string>
     <string name="settings_glass_preset_opaque_description">Maximum panel density with the strongest frost.</string>
+    <!-- Translators: Name of the phone's signature Glass Effect preset. A product name: keep it as "Aurora", transliterating only where the script requires it. -->
+    <string name="settings_glass_preset_aurora">Aurora</string>
+    <string name="settings_glass_preset_aurora_description">Thin glass with the heaviest frost — made for a phone.</string>
     <string name="settings_glass_highlight_title">Highlight strength</string>
     <string name="settings_glass_highlight_description">Adjust the focused glass light and rim.</string>
     <string name="settings_glass_live_preview">Live preview</string>

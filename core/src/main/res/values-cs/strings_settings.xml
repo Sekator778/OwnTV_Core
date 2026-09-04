@@ -129,6 +129,8 @@
     <string name="settings_show_weather_description">Zobrazit aktuální počasí v horní liště.</string>
     <string name="settings_custom_location">Vlastní poloha</string>
     <string name="settings_custom_location_description">Nahradit město používané pro počasí. Chcete-li použít automatické zjištění, ponechte pole prázdné. Jinak zadejte město (např. Praha) nebo souřadnice „zeměpisná šířka,délka“ (např. 50.08,14.43). To se hodí při používání VPN, kdy automatické zjištění určí město serveru.</string>
+    <string name="settings_use_device_location">Použít polohu tohoto zařízení</string>
+    <string name="settings_use_device_location_description">Počasí se řídí polohou telefonu. Vypněte, chcete-li město zadat sami.</string>
     <string name="settings_temperature_unit">Jednotka teploty</string>
     <string name="settings_temperature_description">Zobrazovat teplotu ve stupních Celsia nebo Fahrenheita.</string>
     <string name="settings_auto">Automaticky</string>
@@ -410,6 +412,7 @@
     <string name="settings_search_keywords_backup">export import profily zdroje</string>
     <string name="settings_search_keywords_history">nedávno sledované pokračovat odebrat</string>
     <string name="settings_search_keywords_theme">světlý tmavý systém</string>
+    <string name="settings_search_keywords_glass">sklo průhlednost rozostření mráz průsvitné pozadí tapeta</string>
     <string name="settings_search_keywords_accent">odstín paleta hex předvolba</string>
     <string name="settings_search_keywords_focus">zaměření rámeček okraj výběr kurzor obrys</string>
     <string name="settings_search_keywords_zoom">měřítko rozhraní velikost</string>
@@ -1198,6 +1201,8 @@
     <string name="settings_glass_preset_opaque">Neprůhledné</string>
     <string name="settings_glass_preset_ultra_clear_description">Maximum detailů tapety s lehkým rozostřením.</string>
     <string name="settings_glass_preset_opaque_description">Nejvyšší hutnost panelu s nejsilnějším rozostřením.</string>
+    <string name="settings_glass_preset_aurora">Aurora</string>
+    <string name="settings_glass_preset_aurora_description">Tenké sklo s nejsilnějším mrazem – vytvořeno pro telefon.</string>
     <string name="settings_glass_highlight_title">Síla zvýraznění</string>
     <string name="settings_glass_highlight_description">Upravte světlo a okraj skla při zaměření.</string>
     <string name="settings_glass_live_preview">Živý náhled</string>

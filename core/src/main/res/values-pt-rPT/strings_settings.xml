@@ -129,6 +129,8 @@
     <string name="settings_show_weather_description">Apresentar as condições meteorológicas atuais na barra superior.</string>
     <string name="settings_custom_location">Localização personalizada</string>
     <string name="settings_custom_location_description">Substitua a cidade utilizada para a meteorologia. Deixe em branco para detetar automaticamente ou introduza uma cidade (por exemplo, Londres) ou \"lat,lon\" (por exemplo, 51.5,-0.12). É útil ao utilizar uma VPN, caso em que a deteção automática identifica a cidade do servidor.</string>
+    <string name="settings_use_device_location">Usar a localização deste dispositivo</string>
+    <string name="settings_use_device_location_description">O tempo segue onde o telemóvel está. Desative para introduzir uma cidade.</string>
     <string name="settings_temperature_unit">Unidade de temperatura</string>
     <string name="settings_temperature_description">Mostrar a temperatura em graus Celsius ou Fahrenheit.</string>
     <string name="settings_auto">Automático</string>
@@ -408,6 +410,7 @@
     <string name="settings_search_keywords_backup">exportar importar perfis origens</string>
     <string name="settings_search_keywords_history">vistos recentemente continuar remover</string>
     <string name="settings_search_keywords_theme">claro escuro sistema</string>
+    <string name="settings_search_keywords_glass">vidro transparência desfoque gelo translúcido fundo</string>
     <string name="settings_search_keywords_accent">tonalidade paleta hexadecimal predefinição</string>
     <string name="settings_search_keywords_focus">foco contorno borda seleção cursor</string>
     <string name="settings_search_keywords_zoom">escala interface tamanho</string>
@@ -1179,6 +1182,8 @@
     <string name="settings_glass_preset_opaque">Opaco</string>
     <string name="settings_glass_preset_ultra_clear_description">Máximo detalhe do fundo com desfocagem ligeira.</string>
     <string name="settings_glass_preset_opaque_description">Máxima densidade do painel com a desfocagem mais intensa.</string>
+    <string name="settings_glass_preset_aurora">Aurora</string>
+    <string name="settings_glass_preset_aurora_description">Vidro fino com o fosco mais intenso: feito para o telemóvel.</string>
     <string name="settings_glass_highlight_title">Intensidade do brilho</string>
     <string name="settings_glass_highlight_description">Ajuste a luz e o contorno do vidro em foco.</string>
     <string name="settings_glass_live_preview">Pré-visualização em direto</string>

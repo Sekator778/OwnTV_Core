@@ -129,6 +129,8 @@
     <string name="settings_show_weather_description">Vis det aktuelle vejr på toplinjen.</string>
     <string name="settings_custom_location">Brugerdefineret placering</string>
     <string name="settings_custom_location_description">Tilsidesæt den by, der bruges til vejret. Lad feltet stå tomt for automatisk registrering, eller angiv en by (f.eks. London) eller \"breddegrad,længdegrad\" (f.eks. 51.5,-0.12). Dette er nyttigt med en VPN, hvor automatisk registrering finder serverens by.</string>
+    <string name="settings_use_device_location">Brug denne enheds placering</string>
+    <string name="settings_use_device_location_description">Vejret følger telefonens placering. Slå fra for selv at indtaste en by.</string>
     <string name="settings_temperature_unit">Temperaturenhed</string>
     <string name="settings_temperature_description">Vis temperaturen i Celsius eller Fahrenheit.</string>
     <string name="settings_auto">Automatisk</string>
@@ -406,6 +408,7 @@
     <string name="settings_search_keywords_backup">eksportér importér profiler kilder</string>
     <string name="settings_search_keywords_history">senest set fortsæt fjern</string>
     <string name="settings_search_keywords_theme">lyst mørkt system</string>
+    <string name="settings_search_keywords_glass">glas gennemsigtighed sløring frost gennemskinnelig baggrund tapet</string>
     <string name="settings_search_keywords_accent">farvetone palet hex forudindstilling</string>
     <string name="settings_search_keywords_focus">fokus ramme kant markering markør omrids</string>
     <string name="settings_search_keywords_zoom">skaler brugerflade størrelse</string>
@@ -1160,6 +1163,8 @@
     <string name="settings_glass_preset_opaque">Uigennemsigtig</string>
     <string name="settings_glass_preset_ultra_clear_description">Maksimale detaljer i baggrunden med let sløring.</string>
     <string name="settings_glass_preset_opaque_description">Maksimal paneltæthed med den kraftigste sløring.</string>
+    <string name="settings_glass_preset_aurora">Aurora</string>
+    <string name="settings_glass_preset_aurora_description">Tyndt glas med den kraftigste frost – lavet til en telefon.</string>
     <string name="settings_glass_highlight_title">Fremhævningsstyrke</string>
     <string name="settings_glass_highlight_description">Juster lyset og kanten på glas i fokus.</string>
     <string name="settings_glass_live_preview">Direkte forhåndsvisning</string>

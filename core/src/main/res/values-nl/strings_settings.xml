@@ -129,6 +129,8 @@
     <string name="settings_show_weather_description">Toon het huidige weer in de bovenbalk.</string>
     <string name="settings_custom_location">Aangepaste locatie</string>
     <string name="settings_custom_location_description">Overschrijf de plaats die voor het weer wordt gebruikt. Laat dit leeg voor automatische detectie, of voer een plaats (bijv. Londen) of ‘lat,lon’ (bijv. 51.5,-0.12) in. Dit is handig bij een VPN, waarbij automatische detectie de plaats van de server oplevert.</string>
+    <string name="settings_use_device_location">Locatie van dit apparaat gebruiken</string>
+    <string name="settings_use_device_location_description">Het weer volgt waar de telefoon is. Zet dit uit om zelf een stad in te voeren.</string>
     <string name="settings_temperature_unit">Temperatuureenheid</string>
     <string name="settings_temperature_description">Toon de temperatuur in Celsius of Fahrenheit.</string>
     <string name="settings_auto">Automatisch</string>
@@ -406,6 +408,7 @@
     <string name="settings_search_keywords_backup">exporteren importeren profielen bronnen</string>
     <string name="settings_search_keywords_history">onlangs bekeken doorgaan verwijderen</string>
     <string name="settings_search_keywords_theme">licht donker systeem</string>
+    <string name="settings_search_keywords_glass">glas transparantie vervaging matglas doorschijnend achtergrond</string>
     <string name="settings_search_keywords_accent">tint palet hex voorinstelling</string>
     <string name="settings_search_keywords_focus">focus rand kader selectie cursor omtrek</string>
     <string name="settings_search_keywords_zoom">schalen interface grootte</string>
@@ -1160,6 +1163,8 @@
     <string name="settings_glass_preset_opaque">Ondoorzichtig</string>
     <string name="settings_glass_preset_ultra_clear_description">Maximale achtergronddetails met lichte vervaging.</string>
     <string name="settings_glass_preset_opaque_description">Maximale paneeldichtheid met de sterkste vervaging.</string>
+    <string name="settings_glass_preset_aurora">Aurora</string>
+    <string name="settings_glass_preset_aurora_description">Dun glas met de zwaarste matte laag — gemaakt voor een telefoon.</string>
     <string name="settings_glass_highlight_title">Sterkte van lichtaccent</string>
     <string name="settings_glass_highlight_description">Pas het licht en de rand van het geselecteerde glas aan.</string>
     <string name="settings_glass_live_preview">Livevoorbeeld</string>

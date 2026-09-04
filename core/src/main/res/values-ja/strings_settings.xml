@@ -129,6 +129,8 @@
     <string name="settings_show_weather_description">現在の天気をトップバーに表示します。</string>
     <string name="settings_custom_location">カスタム地点</string>
     <string name="settings_custom_location_description">天気に使用する都市を上書きします。自動検出する場合は空欄にするか、都市名（例：London）または「緯度,経度」（例：51.5,-0.12）を入力してください。自動検出でサーバーの都市が使用されるVPN環境で便利です。</string>
+    <string name="settings_use_device_location">この端末の位置情報を使用</string>
+    <string name="settings_use_device_location_description">天気は端末のある場所に従います。オフにすると都市を自分で入力できます。</string>
     <string name="settings_temperature_unit">温度単位</string>
     <string name="settings_temperature_description">温度を摂氏または華氏で表示します。</string>
     <string name="settings_auto">自動</string>
@@ -404,6 +406,7 @@
     <string name="settings_search_keywords_backup">エクスポート インポート プロフィール ソース</string>
     <string name="settings_search_keywords_history">最近視聴したコンテンツ 視聴を続ける 削除</string>
     <string name="settings_search_keywords_theme">ライト ダーク システム</string>
+    <string name="settings_search_keywords_glass">ガラス 透明度 ぼかし すりガラス 半透明 背景 壁紙</string>
     <string name="settings_search_keywords_accent">色調 パレット 16進数 プリセット</string>
     <string name="settings_search_keywords_focus">フォーカス 枠 境界線 選択 カーソル 輪郭</string>
     <string name="settings_search_keywords_zoom">拡大縮小 インターフェース サイズ</string>
@@ -1141,6 +1144,8 @@
     <string name="settings_glass_preset_opaque">不透明</string>
     <string name="settings_glass_preset_ultra_clear_description">軽いぼかしで壁紙の細部を最大限に表示します。</string>
     <string name="settings_glass_preset_opaque_description">最も強いぼかしでパネルの密度を最大にします。</string>
+    <string name="settings_glass_preset_aurora">オーロラ</string>
+    <string name="settings_glass_preset_aurora_description">薄いガラスに最も強いすりガラス効果 — スマートフォンのために。</string>
     <string name="settings_glass_highlight_title">ハイライトの強さ</string>
     <string name="settings_glass_highlight_description">フォーカスしたガラスの光と縁を調整します。</string>
     <string name="settings_glass_live_preview">ライブプレビュー</string>

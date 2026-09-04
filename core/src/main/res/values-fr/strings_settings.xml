@@ -129,6 +129,8 @@
     <string name="settings_show_weather_description">Afficher la météo actuelle dans la barre supérieure.</string>
     <string name="settings_custom_location">Lieu personnalisé</string>
     <string name="settings_custom_location_description">Remplacez la ville utilisée pour la météo. Laissez ce champ vide pour la détecter automatiquement, ou saisissez une ville (par ex. Londres) ou « lat,lon » (par ex. 51.5,-0.12). Utile avec un VPN, lorsque la détection automatique indique la ville du serveur.</string>
+    <string name="settings_use_device_location">Utiliser la position de cet appareil</string>
+    <string name="settings_use_device_location_description">La météo suit l\'endroit où se trouve le téléphone. Désactivez pour saisir une ville vous-même.</string>
     <string name="settings_temperature_unit">Unité de température</string>
     <string name="settings_temperature_description">Afficher la température en degrés Celsius ou Fahrenheit.</string>
     <string name="settings_auto">Auto</string>
@@ -408,6 +410,7 @@
     <string name="settings_search_keywords_backup">exportation importation profils sources</string>
     <string name="settings_search_keywords_history">vus récemment continuer supprimer</string>
     <string name="settings_search_keywords_theme">clair sombre système</string>
+    <string name="settings_search_keywords_glass">verre transparence flou givre translucide arrière-plan fond</string>
     <string name="settings_search_keywords_accent">teinte palette hexadécimal préréglage</string>
     <string name="settings_search_keywords_focus">focus cadre bordure sélection curseur contour</string>
     <string name="settings_search_keywords_zoom">échelle interface taille</string>
@@ -1179,6 +1182,8 @@
     <string name="settings_glass_preset_opaque">Opaque</string>
     <string name="settings_glass_preset_ultra_clear_description">Détails maximum du fond avec un flou léger.</string>
     <string name="settings_glass_preset_opaque_description">Densité maximale des panneaux avec le flou le plus intense.</string>
+    <string name="settings_glass_preset_aurora">Aurora</string>
+    <string name="settings_glass_preset_aurora_description">Verre fin avec le givre le plus dense — conçu pour un téléphone.</string>
     <string name="settings_glass_highlight_title">Intensité du reflet</string>
     <string name="settings_glass_highlight_description">Ajustez la lumière et le contour du verre sélectionné.</string>
     <string name="settings_glass_live_preview">Aperçu en direct</string>

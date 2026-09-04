@@ -129,6 +129,8 @@
     <string name="settings_show_weather_description">Muestra el clima actual en la barra superior.</string>
     <string name="settings_custom_location">Ubicación personalizada</string>
     <string name="settings_custom_location_description">Reemplaza la ciudad usada para el clima. Déjalo en blanco para detectarla automáticamente o ingresa una ciudad (p. ej., Londres) o \"lat,lon\" (p. ej., 51.5,-0.12). Resulta útil con una VPN, ya que la detección automática obtiene la ciudad del servidor.</string>
+    <string name="settings_use_device_location">Usar la ubicación de este dispositivo</string>
+    <string name="settings_use_device_location_description">El clima sigue la ubicación del teléfono. Desactiva esta opción para escribir tú la ciudad.</string>
     <string name="settings_temperature_unit">Unidad de temperatura</string>
     <string name="settings_temperature_description">Muestra la temperatura en grados Celsius o Fahrenheit.</string>
     <string name="settings_auto">Automático</string>
@@ -408,6 +410,7 @@
     <string name="settings_search_keywords_backup">exportar importar perfiles fuentes</string>
     <string name="settings_search_keywords_history">vistos recientemente continuar eliminar</string>
     <string name="settings_search_keywords_theme">claro oscuro sistema</string>
+    <string name="settings_search_keywords_glass">vidrio transparencia desenfoque escarcha translúcido fondo</string>
     <string name="settings_search_keywords_accent">tinte paleta hexadecimal preestablecido</string>
     <string name="settings_search_keywords_focus">foco borde marco selección cursor contorno</string>
     <string name="settings_search_keywords_zoom">escala interfaz tamaño</string>
@@ -1179,6 +1182,8 @@
     <string name="settings_glass_preset_opaque">Opaco</string>
     <string name="settings_glass_preset_ultra_clear_description">Máximo detalle del fondo con desenfoque ligero.</string>
     <string name="settings_glass_preset_opaque_description">Máxima densidad del panel con el desenfoque más intenso.</string>
+    <string name="settings_glass_preset_aurora">Aurora</string>
+    <string name="settings_glass_preset_aurora_description">Vidrio fino con la escarcha más intensa: pensado para el teléfono.</string>
     <string name="settings_glass_highlight_title">Intensidad del brillo</string>
     <string name="settings_glass_highlight_description">Ajusta la luz y el borde del cristal enfocado.</string>
     <string name="settings_glass_live_preview">Vista previa en vivo</string>

@@ -129,6 +129,8 @@
     <string name="settings_show_weather_description">在頂端列顯示目前天氣。</string>
     <string name="settings_custom_location">自訂位置</string>
     <string name="settings_custom_location_description">覆寫天氣所使用的城市。留空可自動偵測，或輸入城市（例如 London）或「lat,lon」（例如 51.5,-0.12）。使用 VPN 時特別實用，因為自動偵測可能會判定為伺服器所在的城市。</string>
+    <string name="settings_use_device_location">使用此裝置的位置</string>
+    <string name="settings_use_device_location_description">天氣會跟隨手機所在的位置。關閉後可自行輸入城市。</string>
     <string name="settings_temperature_unit">溫度單位</string>
     <string name="settings_temperature_description">以攝氏或華氏顯示溫度。</string>
     <string name="settings_auto">自動</string>
@@ -404,6 +406,7 @@
     <string name="settings_search_keywords_backup">匯出 匯入 使用者檔案 來源</string>
     <string name="settings_search_keywords_history">最近觀看 繼續觀看 移除</string>
     <string name="settings_search_keywords_theme">淺色 深色 系統</string>
+    <string name="settings_search_keywords_glass">玻璃 透明度 模糊 霧面 半透明 背景 桌布</string>
     <string name="settings_search_keywords_accent">色調 調色盤 十六進位 預設色彩</string>
     <string name="settings_search_keywords_focus">焦點 外框 邊框 選取 游標 輪廓</string>
     <string name="settings_search_keywords_zoom">縮放 介面 大小</string>
@@ -1141,6 +1144,8 @@
     <string name="settings_glass_preset_opaque">不透明</string>
     <string name="settings_glass_preset_ultra_clear_description">以輕微霧化顯示最多桌布細節。</string>
     <string name="settings_glass_preset_opaque_description">以最強霧化呈現最高面板密度。</string>
+    <string name="settings_glass_preset_aurora">極光</string>
+    <string name="settings_glass_preset_aurora_description">最薄的玻璃、最強的霧面——專為手機打造。</string>
     <string name="settings_glass_highlight_title">高光強度</string>
     <string name="settings_glass_highlight_description">調整聚焦玻璃的光線與邊緣。</string>
     <string name="settings_glass_live_preview">即時預覽</string>

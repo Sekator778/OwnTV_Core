@@ -129,6 +129,8 @@
     <string name="settings_show_weather_description">നിലവിലെ കാലാവസ്ഥ മുകളിലെ ബാറിൽ കാണിക്കുക.</string>
     <string name="settings_custom_location">ഇഷ്ടാനുസൃത സ്ഥലം</string>
     <string name="settings_custom_location_description">കാലാവസ്ഥയ്ക്കായി ഉപയോഗിക്കുന്ന നഗരം മാറ്റിനൽകുക. സ്വയം കണ്ടെത്താൻ ശൂന്യമായി വിടുക, അല്ലെങ്കിൽ ഒരു നഗരമോ (ഉദാ. London) \"lat,lon\" രൂപത്തിലുള്ള കോർഡിനേറ്റുകളോ (ഉദാ. 51.5,-0.12) നൽകുക. സ്വയം കണ്ടെത്തുമ്പോൾ സെർവറിന്റെ നഗരം ലഭിക്കുന്ന VPN ഉപയോഗത്തിൽ ഇത് പ്രയോജനകരമാണ്.</string>
+    <string name="settings_use_device_location">ഈ ഉപകരണത്തിന്റെ ലൊക്കേഷൻ ഉപയോഗിക്കുക</string>
+    <string name="settings_use_device_location_description">കാലാവസ്ഥ ഫോണിന്റെ സ്ഥാനം പിന്തുടരും. സ്വയം നഗരം നൽകാൻ ഓഫാക്കുക.</string>
     <string name="settings_temperature_unit">താപനില യൂണിറ്റ്</string>
     <string name="settings_temperature_description">താപനില സെൽഷ്യസിലോ ഫാരൻഹീറ്റിലോ കാണിക്കുക.</string>
     <string name="settings_auto">സ്വയം</string>
@@ -406,6 +408,7 @@
     <string name="settings_search_keywords_backup">എക്‌സ്‌പോർട്ട് ഇമ്പോർട്ട് പ്രൊഫൈലുകൾ ഉറവിടങ്ങൾ</string>
     <string name="settings_search_keywords_history">അടുത്തിടെ കണ്ടവ തുടരുക നീക്കംചെയ്യുക</string>
     <string name="settings_search_keywords_theme">ലൈറ്റ് ഡാർക്ക് സിസ്റ്റം</string>
+    <string name="settings_search_keywords_glass">ഗ്ലാസ് സുതാര്യത ബ്ലർ ഫ്രോസ്റ്റ് അർധസുതാര്യം പശ്ചാത്തലം വാൾപേപ്പർ</string>
     <string name="settings_search_keywords_accent">നിറം പാലറ്റ് ഹെക്സ് പ്രീസെറ്റ്</string>
     <string name="settings_search_keywords_focus">ഫോക്കസ് ബോർഡർ അതിർ തിരഞ്ഞെടുപ്പ് കഴ്‌സർ രൂപരേഖ</string>
     <string name="settings_search_keywords_zoom">സ്കെയിൽ ഇന്റർഫേസ് വലുപ്പം</string>
@@ -1160,6 +1163,8 @@
     <string name="settings_glass_preset_opaque">അതാര്യം</string>
     <string name="settings_glass_preset_ultra_clear_description">നേരിയ മങ്ങലോടെ വാൾപേപ്പറിന്റെ പരമാവധി വിശദാംശങ്ങൾ.</string>
     <string name="settings_glass_preset_opaque_description">ഏറ്റവും ശക്തമായ മങ്ങലോടെ പരമാവധി പാനൽ സാന്ദ്രത.</string>
+    <string name="settings_glass_preset_aurora">ഓറോറ</string>
+    <string name="settings_glass_preset_aurora_description">ഏറ്റവും കട്ടിയുള്ള മഞ്ഞുപാളിയുള്ള നേർത്ത ഗ്ലാസ് — ഫോണിനായി ഒരുക്കിയത്.</string>
     <string name="settings_glass_highlight_title">ഹൈലൈറ്റ് ശക്തി</string>
     <string name="settings_glass_highlight_description">ഫോക്കസ് ചെയ്ത ഗ്ലാസിന്റെ വെളിച്ചവും അരികും ക്രമീകരിക്കുക.</string>
     <string name="settings_glass_live_preview">തത്സമയ പ്രിവ്യൂ</string>

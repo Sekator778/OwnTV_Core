@@ -3,6 +3,23 @@
 Core is versioned independently of the apps. A core version number never lines up with an OwnTV TV
 app `v4.x` release, and the two must not be confused. Tags here are prefixed `core-`.
 
+## core-1.0.15 — 2026-09-04
+
+Additive. The TV app was rebuilt and verified against it (Rule 5).
+
+### 🪟 One more glass preset
+
+- **`GlassPreset.AURORA`** — the mobile app's signature material, added between `OPAQUE` and `CUSTOM`
+  so no existing ordinal moves and no stored scope or preset is disturbed. Alpha 0.46, blur strength
+  0.94. It is the phone's default look, where it renders as real backdrop blur with a lit edge; on the
+  television, which has no backdrop blur, it simply reads as a slightly clearer Balanced. Both apps
+  offer it, and the TV app's two exhaustive `when` blocks over the enum were extended for it.
+
+### 🌍 Strings
+
+- **`settings_search_keywords_glass`** — search keywords for the Glass Effect settings page, in the
+  base locale and all 24 translations.
+
 ## core-1.0.14 — 2026-09-04
 
 Everything here is additive. The TV app was rebuilt and verified against all of it (Rule 5), and

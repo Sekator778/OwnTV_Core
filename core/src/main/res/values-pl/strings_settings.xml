@@ -129,6 +129,8 @@
     <string name="settings_show_weather_description">Wyświetlaj aktualną pogodę na górnym pasku.</string>
     <string name="settings_custom_location">Własna lokalizacja</string>
     <string name="settings_custom_location_description">Zastąp miasto używane do wyświetlania pogody. Pozostaw puste, aby wykryć je automatycznie, albo wpisz miasto (np. Warszawa) lub „szer.,dł.” (np. 51.5,-0.12). Jest to przydatne podczas korzystania z VPN, gdy automatyczne wykrywanie wskazuje miasto serwera.</string>
+    <string name="settings_use_device_location">Użyj lokalizacji tego urządzenia</string>
+    <string name="settings_use_device_location_description">Pogoda podąża za telefonem. Wyłącz, aby samodzielnie wpisać miasto.</string>
     <string name="settings_temperature_unit">Jednostka temperatury</string>
     <string name="settings_temperature_description">Wyświetlaj temperaturę w stopniach Celsjusza lub Fahrenheita.</string>
     <string name="settings_auto">Automatycznie</string>
@@ -410,6 +412,7 @@
     <string name="settings_search_keywords_backup">eksport import profili źródła</string>
     <string name="settings_search_keywords_history">ostatnio oglądane kontynuuj usuń</string>
     <string name="settings_search_keywords_theme">jasny ciemny systemowy</string>
+    <string name="settings_search_keywords_glass">szkło przezroczystość rozmycie szron półprzezroczyste tło tapeta</string>
     <string name="settings_search_keywords_accent">odcień paleta hex ustawienie wstępne</string>
     <string name="settings_search_keywords_focus">fokus ramka obramowanie zaznaczenie kursor kontur</string>
     <string name="settings_search_keywords_zoom">skala interfejs rozmiar</string>
@@ -1198,6 +1201,8 @@
     <string name="settings_glass_preset_opaque">Nieprzezroczyste</string>
     <string name="settings_glass_preset_ultra_clear_description">Maksimum szczegółów tapety z lekkim rozmyciem.</string>
     <string name="settings_glass_preset_opaque_description">Maksymalna gęstość panelu z najsilniejszym rozmyciem.</string>
+    <string name="settings_glass_preset_aurora">Aurora</string>
+    <string name="settings_glass_preset_aurora_description">Cienkie szkło z najmocniejszym szronem – stworzone dla telefonu.</string>
     <string name="settings_glass_highlight_title">Siła podświetlenia</string>
     <string name="settings_glass_highlight_description">Dostosuj światło i obramowanie szkła z fokusem.</string>
     <string name="settings_glass_live_preview">Podgląd na żywo</string>

@@ -129,6 +129,8 @@
     <string name="settings_show_weather_description">শীর্ষ বারে বর্তমান আবহাওয়া দেখান।</string>
     <string name="settings_custom_location">নিজস্ব অবস্থান</string>
     <string name="settings_custom_location_description">আবহাওয়ার জন্য ব্যবহৃত শহর বদলে দিন। স্বয়ংক্রিয়ভাবে শনাক্ত করতে ফাঁকা রাখুন, অথবা একটি শহর (যেমন London) বা \"lat,lon\" (যেমন 51.5,-0.12) লিখুন। VPN ব্যবহার করলে এটি উপযোগী, কারণ তখন স্বয়ংক্রিয় শনাক্তকরণ সার্ভারের শহর দেখায়।</string>
+    <string name="settings_use_device_location">এই ডিভাইসের অবস্থান ব্যবহার করুন</string>
+    <string name="settings_use_device_location_description">আবহাওয়া ফোনের অবস্থান অনুসরণ করে। নিজে শহর লিখতে বন্ধ করুন।</string>
     <string name="settings_temperature_unit">তাপমাত্রার একক</string>
     <string name="settings_temperature_description">তাপমাত্রা সেলসিয়াস বা ফারেনহাইটে দেখান।</string>
     <string name="settings_auto">স্বয়ংক্রিয়</string>
@@ -406,6 +408,7 @@
     <string name="settings_search_keywords_backup">এক্সপোর্ট ইমপোর্ট প্রোফাইল উৎস</string>
     <string name="settings_search_keywords_history">সম্প্রতি-দেখা চালিয়ে-যান অপসারণ</string>
     <string name="settings_search_keywords_theme">হালকা গাঢ় সিস্টেম</string>
+    <string name="settings_search_keywords_glass">গ্লাস স্বচ্ছতা ব্লার ফ্রস্ট স্বচ্ছ পটভূমি ওয়ালপেপার</string>
     <string name="settings_search_keywords_accent">আভা প্যালেট হেক্স প্রিসেট</string>
     <string name="settings_search_keywords_focus">ফোকাস রিং বর্ডার নির্বাচন কার্সার আউটলাইন</string>
     <string name="settings_search_keywords_zoom">স্কেল ইন্টারফেস আকার</string>
@@ -1160,6 +1163,8 @@
     <string name="settings_glass_preset_opaque">অস্বচ্ছ</string>
     <string name="settings_glass_preset_ultra_clear_description">হালকা ফ্রস্টে ওয়ালপেপারের সর্বাধিক বিস্তারিত।</string>
     <string name="settings_glass_preset_opaque_description">সবচেয়ে শক্তিশালী ফ্রস্টে সর্বাধিক প্যানেল ঘনত্ব।</string>
+    <string name="settings_glass_preset_aurora">অরোরা</string>
+    <string name="settings_glass_preset_aurora_description">সবচেয়ে ঘন তুষারাবরণসহ পাতলা কাচ — ফোনের জন্য তৈরি।</string>
     <string name="settings_glass_highlight_title">হাইলাইটের শক্তি</string>
     <string name="settings_glass_highlight_description">ফোকাস করা কাচের আলো ও প্রান্ত সামঞ্জস্য করুন।</string>
     <string name="settings_glass_live_preview">লাইভ প্রিভিউ</string>

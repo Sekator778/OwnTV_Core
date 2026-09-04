@@ -129,6 +129,8 @@
     <string name="settings_show_weather_description">在顶部栏中显示当前天气。</string>
     <string name="settings_custom_location">自定义位置</string>
     <string name="settings_custom_location_description">覆盖用于显示天气的城市。留空可自动检测，也可输入城市（例如 London）或“纬度,经度”（例如 51.5,-0.12）。使用 VPN 时，此功能很有用，因为自动检测会定位到服务器所在城市。</string>
+    <string name="settings_use_device_location">使用此设备的位置</string>
+    <string name="settings_use_device_location_description">天气跟随手机所在的位置。关闭后可自行输入城市。</string>
     <string name="settings_temperature_unit">温度单位</string>
     <string name="settings_temperature_description">以摄氏度或华氏度显示温度。</string>
     <string name="settings_auto">自动</string>
@@ -404,6 +406,7 @@
     <string name="settings_search_keywords_backup">导出 导入 用户档案 源</string>
     <string name="settings_search_keywords_history">最近观看 继续观看 移除</string>
     <string name="settings_search_keywords_theme">浅色 深色 系统</string>
+    <string name="settings_search_keywords_glass">玻璃 透明度 模糊 磨砂 半透明 背景 壁纸</string>
     <string name="settings_search_keywords_accent">着色 调色板 十六进制 预设</string>
     <string name="settings_search_keywords_focus">焦点 边框 边界 选中 光标 轮廓</string>
     <string name="settings_search_keywords_zoom">缩放 界面 大小</string>
@@ -1141,6 +1144,8 @@
     <string name="settings_glass_preset_opaque">不透明</string>
     <string name="settings_glass_preset_ultra_clear_description">以轻微磨砂显示最多壁纸细节。</string>
     <string name="settings_glass_preset_opaque_description">以最强磨砂实现最高面板密度。</string>
+    <string name="settings_glass_preset_aurora">极光</string>
+    <string name="settings_glass_preset_aurora_description">最薄的玻璃，最强的磨砂——专为手机打造。</string>
     <string name="settings_glass_highlight_title">高光强度</string>
     <string name="settings_glass_highlight_description">调整聚焦玻璃的光线和边缘。</string>
     <string name="settings_glass_live_preview">实时预览</string>

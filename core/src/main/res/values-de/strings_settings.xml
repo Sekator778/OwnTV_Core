@@ -129,6 +129,8 @@
     <string name="settings_show_weather_description">Das aktuelle Wetter in der oberen Leiste anzeigen.</string>
     <string name="settings_custom_location">Benutzerdefinierter Standort</string>
     <string name="settings_custom_location_description">Überschreiben Sie die für das Wetter verwendete Stadt. Lassen Sie das Feld für die automatische Erkennung leer oder geben Sie eine Stadt (z. B. London) oder „Breitengrad,Längengrad“ (z. B. 51.5,-0.12) ein. Dies ist bei einem VPN nützlich, bei dem die automatische Erkennung die Stadt des Servers ermittelt.</string>
+    <string name="settings_use_device_location">Standort dieses Geräts verwenden</string>
+    <string name="settings_use_device_location_description">Das Wetter richtet sich danach, wo das Telefon ist. Zum Ausschalten eine Stadt selbst eingeben.</string>
     <string name="settings_temperature_unit">Temperatureinheit</string>
     <string name="settings_temperature_description">Die Temperatur in Celsius oder Fahrenheit anzeigen.</string>
     <string name="settings_auto">Automatisch</string>
@@ -406,6 +408,7 @@
     <string name="settings_search_keywords_backup">exportieren importieren Profile Quellen</string>
     <string name="settings_search_keywords_history">zuletzt angesehen fortsetzen entfernen</string>
     <string name="settings_search_keywords_theme">hell dunkel System</string>
+    <string name="settings_search_keywords_glass">Glas Transparenz Unschärfe Frost transluzent Hintergrund Hintergrundbild</string>
     <string name="settings_search_keywords_accent">Farbton Palette Hex Voreinstellung</string>
     <string name="settings_search_keywords_focus">Fokus Rahmen Rand Auswahl Cursor Umriss</string>
     <string name="settings_search_keywords_zoom">skalieren Oberfläche Größe</string>
@@ -1160,6 +1163,8 @@
     <string name="settings_glass_preset_opaque">Undurchsichtig</string>
     <string name="settings_glass_preset_ultra_clear_description">Maximale Hintergrunddetails mit leichtem Milchglaseffekt.</string>
     <string name="settings_glass_preset_opaque_description">Maximale Paneldichte mit stärkstem Milchglaseffekt.</string>
+    <string name="settings_glass_preset_aurora">Aurora</string>
+    <string name="settings_glass_preset_aurora_description">Dünnes Glas mit der stärksten Mattierung – für das Telefon gemacht.</string>
     <string name="settings_glass_highlight_title">Leuchtstärke</string>
     <string name="settings_glass_highlight_description">Licht und Rand des fokussierten Glases anpassen.</string>
     <string name="settings_glass_live_preview">Live-Vorschau</string>
