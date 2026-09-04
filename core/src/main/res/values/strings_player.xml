@@ -503,4 +503,16 @@
     <string name="player_frame_rate_turn_on">Turn on</string>
     <!-- Translators: Shown instead of the picture when the user has turned the data saver on and the phone is on mobile data. -->
     <string name="player_error_data_saver">Data saver is on, so streaming over mobile data is off. Connect to Wi-Fi, or turn Data saver off in Settings.</string>
+    <!-- Translators: Chip on the sound-only player screen. The middle dot separates two short facts. -->
+    <string name="player_audio_only_video_off">Video off · saving data</string>
+    <!-- Translators: Button on the sound-only player screen. Brings the picture back. -->
+    <string name="player_audio_only_show_video">Video</string>
+    <!-- Translators: Button on the sound-only player screen. Stops playback after a chosen time so the user can fall asleep to it. -->
+    <string name="player_sleep_timer">Sleep timer</string>
+    <!-- Translators: Sleep-timer option. Stop when the programme currently on air ends. -->
+    <string name="player_sleep_timer_end_of_programme">End of programme</string>
+    <!-- Translators: Sleep-timer status. The placeholder is an already-formatted duration, for example 30 min. -->
+    <string name="player_sleep_timer_remaining">Stops in <xliff:g id="time">%1$s</xliff:g></string>
+    <!-- Translators: Action on the floating mini-player. Return to the full-screen player. -->
+    <string name="player_pip_expand">Expand</string>
 </resources>

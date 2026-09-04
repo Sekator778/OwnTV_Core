@@ -293,4 +293,10 @@
     <string name="player_provider_retry_after">HTTP <xliff:g id="code">%1$d</xliff:g> : <xliff:g id="reason">%2$s</xliff:g> Nouvelle tentative dans <xliff:g id="seconds">%3$d</xliff:g> s.</string>
     <string name="player_provider_busy">Le fournisseur est occupé.</string>
     <string name="player_error_data_saver">L’économiseur de données est activé, la diffusion via les données mobiles est donc désactivée. Connectez-vous au Wi-Fi ou désactivez l’économiseur de données dans les réglages.</string>
+    <string name="player_audio_only_video_off">Vidéo désactivée · économie de données</string>
+    <string name="player_audio_only_show_video">Vidéo</string>
+    <string name="player_sleep_timer">Minuteur de veille</string>
+    <string name="player_sleep_timer_end_of_programme">Fin de l’émission</string>
+    <string name="player_sleep_timer_remaining">S’arrête dans <xliff:g id="time">%1$s</xliff:g></string>
+    <string name="player_pip_expand">Agrandir</string>
 </resources>

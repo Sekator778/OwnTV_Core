@@ -300,4 +300,10 @@
     <string name="player_provider_retry_after">HTTP <xliff:g id="code">%1$d</xliff:g>: <xliff:g id="reason">%2$s</xliff:g> Повторная попытка через <xliff:g id="seconds">%3$d</xliff:g> с.</string>
     <string name="player_provider_busy">Провайдер занят.</string>
     <string name="player_error_data_saver">Экономия трафика включена, поэтому воспроизведение через мобильный интернет отключено. Подключитесь к Wi-Fi или выключите экономию трафика в настройках.</string>
+    <string name="player_audio_only_video_off">Видео выключено · экономия трафика</string>
+    <string name="player_audio_only_show_video">Видео</string>
+    <string name="player_sleep_timer">Таймер сна</string>
+    <string name="player_sleep_timer_end_of_programme">Конец передачи</string>
+    <string name="player_sleep_timer_remaining">Остановится через <xliff:g id="time">%1$s</xliff:g></string>
+    <string name="player_pip_expand">Развернуть</string>
 </resources>

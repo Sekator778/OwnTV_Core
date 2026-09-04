@@ -286,4 +286,10 @@
     <string name="player_provider_retry_after">HTTP <xliff:g id="code">%1$d</xliff:g>: <xliff:g id="reason">%2$s</xliff:g> <xliff:g id="seconds">%3$d</xliff:g> सेकंड में फिर से प्रयास किया जाएगा।</string>
     <string name="player_provider_busy">प्रदाता व्यस्त है।</string>
     <string name="player_error_data_saver">डेटा बचत चालू है, इसलिए मोबाइल डेटा पर स्ट्रीमिंग बंद है। Wi-Fi से जुड़ें या सेटिंग में डेटा बचत बंद करें।</string>
+    <string name="player_audio_only_video_off">वीडियो बंद · डेटा की बचत</string>
+    <string name="player_audio_only_show_video">वीडियो</string>
+    <string name="player_sleep_timer">स्लीप टाइमर</string>
+    <string name="player_sleep_timer_end_of_programme">कार्यक्रम का अंत</string>
+    <string name="player_sleep_timer_remaining"><xliff:g id="time">%1$s</xliff:g> में रुकेगा</string>
+    <string name="player_pip_expand">बड़ा करें</string>
 </resources>

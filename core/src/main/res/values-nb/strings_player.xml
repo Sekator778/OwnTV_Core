@@ -286,4 +286,10 @@
     <string name="player_provider_retry_after">HTTP <xliff:g id="code">%1$d</xliff:g>: <xliff:g id="reason">%2$s</xliff:g> Prøver på nytt om <xliff:g id="seconds">%3$d</xliff:g> s.</string>
     <string name="player_provider_busy">Leverandøren er opptatt.</string>
     <string name="player_error_data_saver">Datasparing er på, så strømming over mobildata er av. Koble til Wi-Fi, eller slå av datasparing i innstillingene.</string>
+    <string name="player_audio_only_video_off">Video av · sparer data</string>
+    <string name="player_audio_only_show_video">Video</string>
+    <string name="player_sleep_timer">Sovetimer</string>
+    <string name="player_sleep_timer_end_of_programme">Slutten av programmet</string>
+    <string name="player_sleep_timer_remaining">Stopper om <xliff:g id="time">%1$s</xliff:g></string>
+    <string name="player_pip_expand">Forstørr</string>
 </resources>

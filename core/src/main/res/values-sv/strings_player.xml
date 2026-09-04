@@ -286,4 +286,10 @@
     <string name="player_provider_retry_after">HTTP <xliff:g id="code">%1$d</xliff:g>: <xliff:g id="reason">%2$s</xliff:g> Försöker igen om <xliff:g id="seconds">%3$d</xliff:g> s.</string>
     <string name="player_provider_busy">Leverantören är upptagen.</string>
     <string name="player_error_data_saver">Databesparing är på, så strömning över mobildata är av. Anslut till Wi-Fi eller stäng av databesparing i inställningarna.</string>
+    <string name="player_audio_only_video_off">Video av · sparar data</string>
+    <string name="player_audio_only_show_video">Video</string>
+    <string name="player_sleep_timer">Insomningstimer</string>
+    <string name="player_sleep_timer_end_of_programme">Programmets slut</string>
+    <string name="player_sleep_timer_remaining">Stoppar om <xliff:g id="time">%1$s</xliff:g></string>
+    <string name="player_pip_expand">Förstora</string>
 </resources>

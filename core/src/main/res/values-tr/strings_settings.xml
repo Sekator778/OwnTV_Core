@@ -1244,4 +1244,23 @@
     <string name="settings_search_keywords_data_saver">veri tasarrufu mobil veri kota dolasim</string>
     <string name="settings_search_keywords_gestures">hareket kaydirma hassasiyet dokunma surukleme</string>
     <string name="settings_search_keywords_wifi_only">wifi yalnizca indirme mobil veri ag</string>
+    <string name="settings_mini_player_style">Mini oynatıcı stili</string>
+    <string name="settings_mini_player_style_description">Gezinirken oynatmanın sizi nasıl izlediği</string>
+    <string name="settings_mini_player_style_floating">Yüzen pencere</string>
+    <string name="settings_mini_player_style_docked">Sabit çubuk</string>
+    <string name="settings_pip_on_back">Geri tuşunda pencere içinde pencere</string>
+    <string name="settings_pip_on_back_description">Geri tuşuna basınca da yüzen pencereye küçült</string>
+    <string name="settings_pip_size">Pencere boyutu</string>
+    <string name="settings_pip_size_description">Yüzen pencerenin başlangıç boyutu. Boyutunu parmakla değiştirin.</string>
+    <string name="settings_pip_size_small">Küçük</string>
+    <string name="settings_pip_size_medium">Orta</string>
+    <string name="settings_pip_size_large">Büyük</string>
+    <string name="settings_pip_snap">Kenarlara yapış</string>
+    <string name="settings_pip_snap_description">Pencereyi bırakın, en yakın kenara oturur</string>
+    <string name="settings_audio_on_screen_off">Ekran kapanınca yalnızca ses</string>
+    <string name="settings_audio_on_screen_off_description">Kimsenin görmediği videoyu çözmeyi bırakır, pil tasarrufu sağlar</string>
+    <string name="settings_audio_on_mobile_data">Mobil veride yalnızca ses</string>
+    <string name="settings_audio_on_mobile_data_description">Wi-Fi yoksa görüntüsüz başla</string>
+    <string name="settings_audio_per_channel">Kanal başına yalnızca sesi hatırla</string>
+    <string name="settings_audio_per_channel_description">Görüntüsüz izlenen kanal bir dahaki sefere öyle açılır</string>
 </resources>

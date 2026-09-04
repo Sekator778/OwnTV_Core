@@ -1266,4 +1266,23 @@
     <string name="settings_search_keywords_data_saver">risparmio dati rete mobile cellulare consumo roaming</string>
     <string name="settings_search_keywords_gestures">gesto scorrere sensibilita tocco trascina</string>
     <string name="settings_search_keywords_wifi_only">wifi solo download rete mobile dati</string>
+    <string name="settings_mini_player_style">Stile del mini-player</string>
+    <string name="settings_mini_player_style_description">Come la riproduzione ti segue mentre esplori</string>
+    <string name="settings_mini_player_style_floating">Finestra mobile</string>
+    <string name="settings_mini_player_style_docked">Barra fissa</string>
+    <string name="settings_pip_on_back">Picture-in-picture con Indietro</string>
+    <string name="settings_pip_on_back_description">Passa alla finestra mobile anche quando premi Indietro</string>
+    <string name="settings_pip_size">Dimensione della finestra</string>
+    <string name="settings_pip_size_description">Con quale dimensione si apre la finestra mobile. Pizzica per cambiarla.</string>
+    <string name="settings_pip_size_small">Piccola</string>
+    <string name="settings_pip_size_medium">Media</string>
+    <string name="settings_pip_size_large">Grande</string>
+    <string name="settings_pip_snap">Aggancia ai bordi</string>
+    <string name="settings_pip_snap_description">Lascia la finestra e si sistema contro il bordo più vicino</string>
+    <string name="settings_audio_on_screen_off">Solo audio quando lo schermo si spegne</string>
+    <string name="settings_audio_on_screen_off_description">Smetti di decodificare un video che nessuno vede e risparmia batteria</string>
+    <string name="settings_audio_on_mobile_data">Solo audio con dati mobili</string>
+    <string name="settings_audio_on_mobile_data_description">Avvia senza immagine quando non c’è il Wi-Fi</string>
+    <string name="settings_audio_per_channel">Ricorda solo audio per canale</string>
+    <string name="settings_audio_per_channel_description">Un canale guardato senza immagine si aprirà così la prossima volta</string>
 </resources>

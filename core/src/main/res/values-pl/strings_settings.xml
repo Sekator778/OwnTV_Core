@@ -1288,4 +1288,23 @@
     <string name="settings_search_keywords_data_saver">oszczedzanie danych komorkowe transfer roaming</string>
     <string name="settings_search_keywords_gestures">gest przesuniecie czulosc dotyk przeciaganie</string>
     <string name="settings_search_keywords_wifi_only">wifi tylko pobieranie dane komorkowe siec</string>
+    <string name="settings_mini_player_style">Styl miniodtwarzacza</string>
+    <string name="settings_mini_player_style_description">Jak odtwarzanie towarzyszy ci podczas przeglądania</string>
+    <string name="settings_mini_player_style_floating">Pływające okno</string>
+    <string name="settings_mini_player_style_docked">Przypięty pasek</string>
+    <string name="settings_pip_on_back">Obraz w obrazie przy Wstecz</string>
+    <string name="settings_pip_on_back_description">Przechodź do pływającego okna także po naciśnięciu Wstecz</string>
+    <string name="settings_pip_size">Rozmiar okna</string>
+    <string name="settings_pip_size_description">Jak duże jest pływające okno na starcie. Rozsuń palcami, aby zmienić.</string>
+    <string name="settings_pip_size_small">Małe</string>
+    <string name="settings_pip_size_medium">Średnie</string>
+    <string name="settings_pip_size_large">Duże</string>
+    <string name="settings_pip_snap">Przyciągaj do krawędzi</string>
+    <string name="settings_pip_snap_description">Puść okno, a przylgnie do najbliższej krawędzi</string>
+    <string name="settings_audio_on_screen_off">Tylko dźwięk po wyłączeniu ekranu</string>
+    <string name="settings_audio_on_screen_off_description">Przestaje dekodować obraz, którego nikt nie widzi, i oszczędza baterię</string>
+    <string name="settings_audio_on_mobile_data">Tylko dźwięk na danych mobilnych</string>
+    <string name="settings_audio_on_mobile_data_description">Zaczynaj bez obrazu, gdy nie ma Wi-Fi</string>
+    <string name="settings_audio_per_channel">Pamiętaj tylko dźwięk dla kanału</string>
+    <string name="settings_audio_per_channel_description">Kanał oglądany bez obrazu otworzy się tak następnym razem</string>
 </resources>

@@ -286,4 +286,10 @@
     <string name="player_provider_retry_after">HTTP <xliff:g id="code">%1$d</xliff:g>: <xliff:g id="reason">%2$s</xliff:g> Erneuter Versuch in <xliff:g id="seconds">%3$d</xliff:g> s.</string>
     <string name="player_provider_busy">Der Anbieter ist ausgelastet.</string>
     <string name="player_error_data_saver">Der Datensparmodus ist an, deshalb ist Streaming über mobile Daten aus. Verbinde dich mit WLAN oder schalte den Datensparmodus in den Einstellungen aus.</string>
+    <string name="player_audio_only_video_off">Video aus · spart Daten</string>
+    <string name="player_audio_only_show_video">Video</string>
+    <string name="player_sleep_timer">Sleep-Timer</string>
+    <string name="player_sleep_timer_end_of_programme">Ende der Sendung</string>
+    <string name="player_sleep_timer_remaining">Stoppt in <xliff:g id="time">%1$s</xliff:g></string>
+    <string name="player_pip_expand">Vergrößern</string>
 </resources>

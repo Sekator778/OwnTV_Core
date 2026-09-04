@@ -1244,4 +1244,23 @@
     <string name="settings_search_keywords_data_saver">ഡാറ്റ ലാഭം മൊബൈൽ ഡാറ്റ റോമിംഗ് ഉപയോഗം</string>
     <string name="settings_search_keywords_gestures">ജെസ്ചർ സ്വൈപ്പ് സംവേദനക്ഷമത സ്പർശം വലിക്കൽ</string>
     <string name="settings_search_keywords_wifi_only">wifi മാത്രം ഡൗൺലോഡ് മൊബൈൽ ഡാറ്റ നെറ്റ്‌വർക്ക്</string>
+    <string name="settings_mini_player_style">മിനി-പ്ലേയർ ശൈലി</string>
+    <string name="settings_mini_player_style_description">ബ്രൗസ് ചെയ്യുമ്പോൾ പ്ലേബാക്ക് എങ്ങനെ കൂടെ വരും</string>
+    <string name="settings_mini_player_style_floating">ഒഴുകുന്ന വിൻഡോ</string>
+    <string name="settings_mini_player_style_docked">ഉറപ്പിച്ച ബാർ</string>
+    <string name="settings_pip_on_back">ബാക്ക് അമർത്തുമ്പോൾ പിക്ചർ-ഇൻ-പിക്ചർ</string>
+    <string name="settings_pip_on_back_description">ബാക്ക് അമർത്തുമ്പോഴും ഒഴുകുന്ന വിൻഡോയിലേക്ക് ചുരുങ്ങും</string>
+    <string name="settings_pip_size">വിൻഡോയുടെ വലുപ്പം</string>
+    <string name="settings_pip_size_description">ഒഴുകുന്ന വിൻഡോ എത്ര വലുതായി തുടങ്ങും. വലുപ്പം മാറ്റാൻ പിഞ്ച് ചെയ്യുക.</string>
+    <string name="settings_pip_size_small">ചെറുത്</string>
+    <string name="settings_pip_size_medium">ഇടത്തരം</string>
+    <string name="settings_pip_size_large">വലുത്</string>
+    <string name="settings_pip_snap">അറ്റങ്ങളിൽ ഒട്ടിക്കുക</string>
+    <string name="settings_pip_snap_description">വിൻഡോ വിട്ടാൽ അത് ഏറ്റവും അടുത്ത അറ്റത്ത് ഒതുങ്ങും</string>
+    <string name="settings_audio_on_screen_off">സ്ക്രീൻ ഓഫാകുമ്പോൾ ശബ്ദം മാത്രം</string>
+    <string name="settings_audio_on_screen_off_description">ആരും കാണാത്ത വീഡിയോ ഡീകോഡ് ചെയ്യുന്നത് നിർത്തി ബാറ്ററി ലാഭിക്കുന്നു</string>
+    <string name="settings_audio_on_mobile_data">മൊബൈൽ ഡാറ്റയിൽ ശബ്ദം മാത്രം</string>
+    <string name="settings_audio_on_mobile_data_description">Wi-Fi ഇല്ലാത്തപ്പോൾ ചിത്രമില്ലാതെ തുടങ്ങുക</string>
+    <string name="settings_audio_per_channel">ചാനൽ തിരിച്ച് ശബ്ദം മാത്രം ഓർക്കുക</string>
+    <string name="settings_audio_per_channel_description">ചിത്രമില്ലാതെ കണ്ട ചാനൽ അടുത്ത തവണയും അങ്ങനെ തുറക്കും</string>
 </resources>

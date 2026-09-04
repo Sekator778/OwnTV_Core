@@ -286,4 +286,10 @@
     <string name="player_provider_retry_after">HTTP <xliff:g id="code">%1$d</xliff:g>: <xliff:g id="reason">%2$s</xliff:g> <xliff:g id="seconds">%3$d</xliff:g> സെക്കൻഡിനുശേഷം വീണ്ടും ശ്രമിക്കുന്നു.</string>
     <string name="player_provider_busy">ദാതാവ് തിരക്കിലാണ്.</string>
     <string name="player_error_data_saver">ഡാറ്റ ലാഭം ഓണാണ്, അതിനാൽ മൊബൈൽ ഡാറ്റയിൽ സ്ട്രീമിംഗ് ഓഫാണ്. Wi-Fi-യിൽ ബന്ധിപ്പിക്കുക, അല്ലെങ്കിൽ ക്രമീകരണങ്ങളിൽ ഡാറ്റ ലാഭം ഓഫാക്കുക.</string>
+    <string name="player_audio_only_video_off">വീഡിയോ ഓഫ് · ഡാറ്റ ലാഭിക്കുന്നു</string>
+    <string name="player_audio_only_show_video">വീഡിയോ</string>
+    <string name="player_sleep_timer">സ്ലീപ്പ് ടൈമർ</string>
+    <string name="player_sleep_timer_end_of_programme">പരിപാടിയുടെ അവസാനം</string>
+    <string name="player_sleep_timer_remaining"><xliff:g id="time">%1$s</xliff:g> കഴിഞ്ഞ് നിൽക്കും</string>
+    <string name="player_pip_expand">വലുതാക്കുക</string>
 </resources>

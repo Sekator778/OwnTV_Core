@@ -1266,4 +1266,23 @@
     <string name="settings_search_keywords_data_saver">ahorro datos moviles celular medido roaming trafico</string>
     <string name="settings_search_keywords_gestures">gesto deslizar sensibilidad tocar arrastrar</string>
     <string name="settings_search_keywords_wifi_only">wifi solo descarga datos moviles red</string>
+    <string name="settings_mini_player_style">Estilo del minirreproductor</string>
+    <string name="settings_mini_player_style_description">Cómo te sigue la reproducción mientras navegas</string>
+    <string name="settings_mini_player_style_floating">Ventana flotante</string>
+    <string name="settings_mini_player_style_docked">Barra fija</string>
+    <string name="settings_pip_on_back">Imagen en imagen al volver</string>
+    <string name="settings_pip_on_back_description">Pasar también a la ventana flotante al pulsar Atrás</string>
+    <string name="settings_pip_size">Tamaño de la ventana</string>
+    <string name="settings_pip_size_description">Con qué tamaño se abre la ventana flotante. Pellizca para cambiarlo.</string>
+    <string name="settings_pip_size_small">Pequeña</string>
+    <string name="settings_pip_size_medium">Mediana</string>
+    <string name="settings_pip_size_large">Grande</string>
+    <string name="settings_pip_snap">Ajustar a los bordes</string>
+    <string name="settings_pip_snap_description">Suelta la ventana y se acomoda contra el borde más cercano</string>
+    <string name="settings_audio_on_screen_off">Solo sonido al apagarse la pantalla</string>
+    <string name="settings_audio_on_screen_off_description">Deja de decodificar vídeo que nadie ve y ahorra batería</string>
+    <string name="settings_audio_on_mobile_data">Solo sonido con datos móviles</string>
+    <string name="settings_audio_on_mobile_data_description">Empezar sin imagen cuando no hay Wi-Fi</string>
+    <string name="settings_audio_per_channel">Recordar solo sonido por canal</string>
+    <string name="settings_audio_per_channel_description">Un canal visto sin imagen se abrirá así la próxima vez</string>
 </resources>

@@ -1244,4 +1244,23 @@
     <string name="settings_search_keywords_data_saver">डेटा बचत मोबाइल डेटा रोमिंग खपत</string>
     <string name="settings_search_keywords_gestures">जेस्चर स्वाइप संवेदनशीलता स्पर्श खींचना</string>
     <string name="settings_search_keywords_wifi_only">wifi सिर्फ डाउनलोड मोबाइल डेटा नेटवर्क</string>
+    <string name="settings_mini_player_style">मिनी-प्लेयर की शैली</string>
+    <string name="settings_mini_player_style_description">ब्राउज़ करते समय प्लेबैक आपके साथ कैसे चले</string>
+    <string name="settings_mini_player_style_floating">तैरती विंडो</string>
+    <string name="settings_mini_player_style_docked">जुड़ी पट्टी</string>
+    <string name="settings_pip_on_back">बैक दबाने पर पिक्चर-इन-पिक्चर</string>
+    <string name="settings_pip_on_back_description">बैक दबाने पर भी तैरती विंडो में सिमट जाएँ</string>
+    <string name="settings_pip_size">विंडो का आकार</string>
+    <string name="settings_pip_size_description">तैरती विंडो कितनी बड़ी शुरू हो। आकार बदलने के लिए पिंच करें।</string>
+    <string name="settings_pip_size_small">छोटी</string>
+    <string name="settings_pip_size_medium">मध्यम</string>
+    <string name="settings_pip_size_large">बड़ी</string>
+    <string name="settings_pip_snap">किनारों से चिपकाएँ</string>
+    <string name="settings_pip_snap_description">विंडो छोड़ें और वह सबसे नज़दीकी किनारे पर टिक जाएगी</string>
+    <string name="settings_audio_on_screen_off">स्क्रीन बंद होने पर केवल आवाज़</string>
+    <string name="settings_audio_on_screen_off_description">जो वीडियो कोई नहीं देख रहा उसका डिकोड करना बंद करें और बैटरी बचाएँ</string>
+    <string name="settings_audio_on_mobile_data">मोबाइल डेटा पर केवल आवाज़</string>
+    <string name="settings_audio_on_mobile_data_description">Wi-Fi न होने पर बिना तस्वीर शुरू करें</string>
+    <string name="settings_audio_per_channel">हर चैनल के लिए केवल आवाज़ याद रखें</string>
+    <string name="settings_audio_per_channel_description">बिना तस्वीर देखा गया चैनल अगली बार वैसे ही खुलेगा</string>
 </resources>

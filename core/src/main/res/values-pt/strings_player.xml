@@ -293,4 +293,10 @@
     <string name="player_provider_retry_after">HTTP <xliff:g id="code">%1$d</xliff:g>: <xliff:g id="reason">%2$s</xliff:g> Tentando novamente em <xliff:g id="seconds">%3$d</xliff:g> s.</string>
     <string name="player_provider_busy">O provedor está ocupado.</string>
     <string name="player_error_data_saver">A economia de dados está ligada, então a transmissão por dados móveis está desligada. Conecte-se ao Wi-Fi ou desligue a economia de dados nas configurações.</string>
+    <string name="player_audio_only_video_off">Vídeo desligado · economizando dados</string>
+    <string name="player_audio_only_show_video">Vídeo</string>
+    <string name="player_sleep_timer">Timer de desligamento</string>
+    <string name="player_sleep_timer_end_of_programme">Fim do programa</string>
+    <string name="player_sleep_timer_remaining">Para em <xliff:g id="time">%1$s</xliff:g></string>
+    <string name="player_pip_expand">Ampliar</string>
 </resources>

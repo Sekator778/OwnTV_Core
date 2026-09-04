@@ -1288,4 +1288,23 @@
     <string name="settings_search_keywords_data_saver">sporic dat mobilni data spotreba roaming setrit</string>
     <string name="settings_search_keywords_gestures">gesto prejeti citlivost dotyk tazeni</string>
     <string name="settings_search_keywords_wifi_only">wifi pouze stahovani mobilni data sit</string>
+    <string name="settings_mini_player_style">Styl minipřehrávače</string>
+    <string name="settings_mini_player_style_description">Jak vás přehrávání provází při prohlížení</string>
+    <string name="settings_mini_player_style_floating">Plovoucí okno</string>
+    <string name="settings_mini_player_style_docked">Ukotvená lišta</string>
+    <string name="settings_pip_on_back">Obraz v obraze při Zpět</string>
+    <string name="settings_pip_on_back_description">Přejít do plovoucího okna i po stisknutí Zpět</string>
+    <string name="settings_pip_size">Velikost okna</string>
+    <string name="settings_pip_size_description">Jak velké plovoucí okno začíná. Velikost změníte prsty.</string>
+    <string name="settings_pip_size_small">Malé</string>
+    <string name="settings_pip_size_medium">Střední</string>
+    <string name="settings_pip_size_large">Velké</string>
+    <string name="settings_pip_snap">Přichytávat k okrajům</string>
+    <string name="settings_pip_snap_description">Pusťte okno a přilne k nejbližšímu okraji</string>
+    <string name="settings_audio_on_screen_off">Jen zvuk po zhasnutí obrazovky</string>
+    <string name="settings_audio_on_screen_off_description">Přestane dekódovat obraz, který nikdo nevidí, a šetří baterii</string>
+    <string name="settings_audio_on_mobile_data">Jen zvuk na mobilních datech</string>
+    <string name="settings_audio_on_mobile_data_description">Začít bez obrazu, když není Wi-Fi</string>
+    <string name="settings_audio_per_channel">Pamatovat jen zvuk u kanálu</string>
+    <string name="settings_audio_per_channel_description">Kanál sledovaný bez obrazu se příště otevře stejně</string>
 </resources>

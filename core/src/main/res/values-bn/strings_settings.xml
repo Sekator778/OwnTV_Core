@@ -1244,4 +1244,23 @@
     <string name="settings_search_keywords_data_saver">ডেটা সাশ্রয় মোবাইল ডেটা রোমিং খরচ</string>
     <string name="settings_search_keywords_gestures">অঙ্গভঙ্গি সোয়াইপ সংবেদনশীলতা স্পর্শ টানা</string>
     <string name="settings_search_keywords_wifi_only">wifi শুধু ডাউনলোড মোবাইল ডেটা নেটওয়ার্ক</string>
+    <string name="settings_mini_player_style">মিনি-প্লেয়ারের ধরন</string>
+    <string name="settings_mini_player_style_description">ব্রাউজ করার সময় প্লেব্যাক কীভাবে আপনার সঙ্গে থাকবে</string>
+    <string name="settings_mini_player_style_floating">ভাসমান উইন্ডো</string>
+    <string name="settings_mini_player_style_docked">আটকানো বার</string>
+    <string name="settings_pip_on_back">ব্যাক চাপলে পিকচার-ইন-পিকচার</string>
+    <string name="settings_pip_on_back_description">ব্যাক চাপলেও ভাসমান উইন্ডোতে ছোট হয়ে যাবে</string>
+    <string name="settings_pip_size">উইন্ডোর আকার</string>
+    <string name="settings_pip_size_description">ভাসমান উইন্ডো কত বড় হয়ে শুরু হবে। আকার বদলাতে পিঞ্চ করুন।</string>
+    <string name="settings_pip_size_small">ছোট</string>
+    <string name="settings_pip_size_medium">মাঝারি</string>
+    <string name="settings_pip_size_large">বড়</string>
+    <string name="settings_pip_snap">প্রান্তে আটকে যাক</string>
+    <string name="settings_pip_snap_description">উইন্ডো ছেড়ে দিলে সেটি সবচেয়ে কাছের প্রান্তে বসে যাবে</string>
+    <string name="settings_audio_on_screen_off">স্ক্রিন বন্ধ হলে শুধু শব্দ</string>
+    <string name="settings_audio_on_screen_off_description">কেউ দেখছে না এমন ভিডিও ডিকোড করা বন্ধ করে ব্যাটারি বাঁচায়</string>
+    <string name="settings_audio_on_mobile_data">মোবাইল ডেটায় শুধু শব্দ</string>
+    <string name="settings_audio_on_mobile_data_description">Wi-Fi না থাকলে ছবি ছাড়াই শুরু হবে</string>
+    <string name="settings_audio_per_channel">চ্যানেল অনুযায়ী শুধু শব্দ মনে রাখুন</string>
+    <string name="settings_audio_per_channel_description">ছবি ছাড়া দেখা চ্যানেল পরের বারও সেভাবেই খুলবে</string>
 </resources>

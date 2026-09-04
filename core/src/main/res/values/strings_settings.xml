@@ -2227,4 +2227,33 @@ Resync and remove missing titles also allows removing titles the provider no lon
     <string name="settings_search_keywords_data_saver">data saver mobile cellular metered roaming traffic save</string>
     <string name="settings_search_keywords_gestures">gesture swipe sensitivity touch drag slide</string>
     <string name="settings_search_keywords_wifi_only">wifi only download metered mobile data network</string>
+    <!-- Translators: Settings row. What keeps playing while the user browses: a window they can drag, a bar docked above the tabs, or nothing. -->
+    <string name="settings_mini_player_style">Mini-player style</string>
+    <string name="settings_mini_player_style_description">How playback follows you while you browse</string>
+    <!-- Translators: Option for the row above. A small video window the user drags around the screen. -->
+    <string name="settings_mini_player_style_floating">Floating window</string>
+    <!-- Translators: Option for the row above. A fixed bar just above the navigation tabs. -->
+    <string name="settings_mini_player_style_docked">Docked bar</string>
+    <!-- Translators: Settings row. Also enter the floating window when the user presses the Back button, not only when they leave the app. Keep the platform name for Picture-in-Picture in your language. -->
+    <string name="settings_pip_on_back">Picture-in-Picture on Back</string>
+    <string name="settings_pip_on_back_description">Also shrink into the floating window when you press Back</string>
+    <!-- Translators: Settings row. The starting size of the floating video window. -->
+    <string name="settings_pip_size">Window size</string>
+    <string name="settings_pip_size_description">How large the floating window starts. Pinch it to resize.</string>
+    <!-- Translators: Three size options for the row above. -->
+    <string name="settings_pip_size_small">Small</string>
+    <string name="settings_pip_size_medium">Medium</string>
+    <string name="settings_pip_size_large">Large</string>
+    <!-- Translators: Settings row. The floating window jumps to the nearest screen edge when released. -->
+    <string name="settings_pip_snap">Snap to edges</string>
+    <string name="settings_pip_snap_description">Let go of the window and it settles against the nearest edge</string>
+    <!-- Translators: Settings row. Drop the video and keep the sound once the phone screen switches off, to save battery. -->
+    <string name="settings_audio_on_screen_off">Sound only when the screen turns off</string>
+    <string name="settings_audio_on_screen_off_description">Stop decoding video nobody can see, and save battery</string>
+    <!-- Translators: Settings row. Begin playback without a picture while the phone is on mobile data. -->
+    <string name="settings_audio_on_mobile_data">Sound only on mobile data</string>
+    <string name="settings_audio_on_mobile_data_description">Start without a picture when there is no Wi-Fi</string>
+    <!-- Translators: Settings row. The app remembers, for each channel, whether the user watched it without a picture. -->
+    <string name="settings_audio_per_channel">Remember sound only per channel</string>
+    <string name="settings_audio_per_channel_description">A channel watched without a picture opens that way next time</string>
 </resources>

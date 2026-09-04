@@ -1244,4 +1244,23 @@
     <string name="settings_search_keywords_data_saver">databesparing mobiele data verbruik roaming besparen</string>
     <string name="settings_search_keywords_gestures">gebaar vegen gevoeligheid aanraken slepen</string>
     <string name="settings_search_keywords_wifi_only">wifi alleen download mobiele data netwerk</string>
+    <string name="settings_mini_player_style">Stijl van de mini-speler</string>
+    <string name="settings_mini_player_style_description">Hoe het spelen met je meegaat terwijl je rondkijkt</string>
+    <string name="settings_mini_player_style_floating">Zwevend venster</string>
+    <string name="settings_mini_player_style_docked">Vaste balk</string>
+    <string name="settings_pip_on_back">Picture-in-picture bij Terug</string>
+    <string name="settings_pip_on_back_description">Ook naar het zwevende venster gaan als je op Terug drukt</string>
+    <string name="settings_pip_size">Venstergrootte</string>
+    <string name="settings_pip_size_description">Hoe groot het zwevende venster begint. Knijp om het te veranderen.</string>
+    <string name="settings_pip_size_small">Klein</string>
+    <string name="settings_pip_size_medium">Middel</string>
+    <string name="settings_pip_size_large">Groot</string>
+    <string name="settings_pip_snap">Aan de randen kleven</string>
+    <string name="settings_pip_snap_description">Laat het venster los en het schuift tegen de dichtstbijzijnde rand</string>
+    <string name="settings_audio_on_screen_off">Alleen geluid als het scherm uitgaat</string>
+    <string name="settings_audio_on_screen_off_description">Stop met het decoderen van beeld dat niemand ziet en spaar de accu</string>
+    <string name="settings_audio_on_mobile_data">Alleen geluid op mobiele data</string>
+    <string name="settings_audio_on_mobile_data_description">Zonder beeld beginnen als er geen wifi is</string>
+    <string name="settings_audio_per_channel">Alleen geluid per kanaal onthouden</string>
+    <string name="settings_audio_per_channel_description">Een kanaal dat je zonder beeld keek, opent de volgende keer zo</string>
 </resources>

@@ -1244,4 +1244,23 @@
     <string name="settings_search_keywords_data_saver">datensparmodus mobil mobile daten volumen roaming sparen</string>
     <string name="settings_search_keywords_gestures">geste wischen empfindlichkeit berührung ziehen</string>
     <string name="settings_search_keywords_wifi_only">wlan nur herunterladen mobile daten netzwerk</string>
+    <string name="settings_mini_player_style">Mini-Player-Stil</string>
+    <string name="settings_mini_player_style_description">Wie die Wiedergabe dir beim Stöbern folgt</string>
+    <string name="settings_mini_player_style_floating">Schwebendes Fenster</string>
+    <string name="settings_mini_player_style_docked">Angedockte Leiste</string>
+    <string name="settings_pip_on_back">Bild-in-Bild bei Zurück</string>
+    <string name="settings_pip_on_back_description">Auch beim Drücken von Zurück ins schwebende Fenster wechseln</string>
+    <string name="settings_pip_size">Fenstergröße</string>
+    <string name="settings_pip_size_description">Wie groß das schwebende Fenster startet. Zum Ändern aufziehen.</string>
+    <string name="settings_pip_size_small">Klein</string>
+    <string name="settings_pip_size_medium">Mittel</string>
+    <string name="settings_pip_size_large">Groß</string>
+    <string name="settings_pip_snap">An Rändern einrasten</string>
+    <string name="settings_pip_snap_description">Lass das Fenster los und es rastet am nächsten Rand ein</string>
+    <string name="settings_audio_on_screen_off">Nur Ton, wenn der Bildschirm ausgeht</string>
+    <string name="settings_audio_on_screen_off_description">Kein Video mehr dekodieren, das niemand sieht, und Akku sparen</string>
+    <string name="settings_audio_on_mobile_data">Nur Ton bei mobilen Daten</string>
+    <string name="settings_audio_on_mobile_data_description">Ohne Bild starten, wenn kein WLAN da ist</string>
+    <string name="settings_audio_per_channel">Nur Ton pro Kanal merken</string>
+    <string name="settings_audio_per_channel_description">Ein ohne Bild geschauter Kanal öffnet sich das nächste Mal genauso</string>
 </resources>

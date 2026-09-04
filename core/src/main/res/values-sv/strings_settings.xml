@@ -1244,4 +1244,23 @@
     <string name="settings_search_keywords_data_saver">databesparing mobildata surf roaming spara</string>
     <string name="settings_search_keywords_gestures">gest svep kanslighet peka dra</string>
     <string name="settings_search_keywords_wifi_only">wifi endast nedladdning mobildata natverk</string>
+    <string name="settings_mini_player_style">Stil på minispelaren</string>
+    <string name="settings_mini_player_style_description">Hur uppspelningen följer med när du bläddrar</string>
+    <string name="settings_mini_player_style_floating">Flytande fönster</string>
+    <string name="settings_mini_player_style_docked">Fast list</string>
+    <string name="settings_pip_on_back">Bild-i-bild med Bakåt</string>
+    <string name="settings_pip_on_back_description">Krymp till det flytande fönstret även när du trycker Bakåt</string>
+    <string name="settings_pip_size">Fönsterstorlek</string>
+    <string name="settings_pip_size_description">Hur stort det flytande fönstret börjar. Nyp för att ändra.</string>
+    <string name="settings_pip_size_small">Litet</string>
+    <string name="settings_pip_size_medium">Mellan</string>
+    <string name="settings_pip_size_large">Stort</string>
+    <string name="settings_pip_snap">Fäst vid kanterna</string>
+    <string name="settings_pip_snap_description">Släpp fönstret och det lägger sig mot närmaste kant</string>
+    <string name="settings_audio_on_screen_off">Bara ljud när skärmen släcks</string>
+    <string name="settings_audio_on_screen_off_description">Slutar avkoda video som ingen ser och sparar batteri</string>
+    <string name="settings_audio_on_mobile_data">Bara ljud på mobildata</string>
+    <string name="settings_audio_on_mobile_data_description">Börja utan bild när det inte finns wifi</string>
+    <string name="settings_audio_per_channel">Kom ihåg bara ljud per kanal</string>
+    <string name="settings_audio_per_channel_description">En kanal du sett utan bild öppnas så nästa gång</string>
 </resources>

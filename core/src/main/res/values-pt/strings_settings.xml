@@ -1266,4 +1266,23 @@
     <string name="settings_search_keywords_data_saver">economia dados moveis celular limitado roaming trafego</string>
     <string name="settings_search_keywords_gestures">gesto deslizar sensibilidade toque arrastar</string>
     <string name="settings_search_keywords_wifi_only">wifi somente download dados moveis rede</string>
+    <string name="settings_mini_player_style">Estilo do mini player</string>
+    <string name="settings_mini_player_style_description">Como a reprodução te acompanha enquanto você navega</string>
+    <string name="settings_mini_player_style_floating">Janela flutuante</string>
+    <string name="settings_mini_player_style_docked">Barra fixa</string>
+    <string name="settings_pip_on_back">Picture-in-picture ao voltar</string>
+    <string name="settings_pip_on_back_description">Também reduzir para a janela flutuante ao tocar em Voltar</string>
+    <string name="settings_pip_size">Tamanho da janela</string>
+    <string name="settings_pip_size_description">Com que tamanho a janela flutuante começa. Pince para redimensionar.</string>
+    <string name="settings_pip_size_small">Pequena</string>
+    <string name="settings_pip_size_medium">Média</string>
+    <string name="settings_pip_size_large">Grande</string>
+    <string name="settings_pip_snap">Encaixar nas bordas</string>
+    <string name="settings_pip_snap_description">Solte a janela e ela se encaixa na borda mais próxima</string>
+    <string name="settings_audio_on_screen_off">Só som quando a tela apagar</string>
+    <string name="settings_audio_on_screen_off_description">Pare de decodificar vídeo que ninguém vê e economize bateria</string>
+    <string name="settings_audio_on_mobile_data">Só som nos dados móveis</string>
+    <string name="settings_audio_on_mobile_data_description">Começar sem imagem quando não houver Wi-Fi</string>
+    <string name="settings_audio_per_channel">Lembrar só som por canal</string>
+    <string name="settings_audio_per_channel_description">Um canal assistido sem imagem abre assim na próxima vez</string>
 </resources>

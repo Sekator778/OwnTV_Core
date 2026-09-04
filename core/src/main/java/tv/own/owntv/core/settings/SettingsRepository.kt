@@ -351,6 +351,16 @@ class SettingsRepository(private val context: Context, private val localeStore: 
         val DATA_SAVER = booleanPreferencesKey("data_saver")
         val GESTURE_SENSITIVITY_PCT = intPreferencesKey("gesture_sensitivity_pct")
         val DOWNLOADS_WIFI_ONLY = booleanPreferencesKey("downloads_wifi_only")
+        // The mobility layer, all of it touch-host only: a window that floats over another app, a
+        // screen that switches itself off, and a data plan that gets billed. A television has none of
+        // the three, so every default below is what a TV does today — nothing.
+        val MINI_PLAYER_STYLE = stringPreferencesKey("mini_player_style")
+        val PIP_ON_BACK = booleanPreferencesKey("pip_on_back")
+        val PIP_SIZE = stringPreferencesKey("pip_size")
+        val PIP_SNAP = booleanPreferencesKey("pip_snap")
+        val AUDIO_ON_SCREEN_OFF = booleanPreferencesKey("audio_on_screen_off")
+        val AUDIO_ON_MOBILE_DATA = booleanPreferencesKey("audio_on_mobile_data")
+        val AUDIO_PER_CHANNEL = booleanPreferencesKey("audio_per_channel")
         // Global proxy (Approach 1 — one app-wide HTTP proxy). HTTP only; no per-source override yet.
         val PROXY_ENABLED = booleanPreferencesKey("proxy_enabled")
         val PROXY_HOST = stringPreferencesKey("proxy_host")
@@ -974,6 +984,75 @@ class SettingsRepository(private val context: Context, private val localeStore: 
     /** Read once, for a caller that has to answer before it can start — the queue and the player. */
     suspend fun downloadsWifiOnlyNow(): Boolean = downloadsWifiOnly.first()
     suspend fun dataSaverNow(): Boolean = dataSaver.first()
+
+    // --- The mobility layer (touch hosts only) ---------------------------------------------------
+
+    /** What keeps playing while the user browses: a window they drag, a bar docked above the tabs, or
+     *  nothing at all. */
+    enum class MiniPlayerStyle { FLOATING, DOCKED, OFF }
+
+    val miniPlayerStyle: Flow<MiniPlayerStyle> = prefsFlow { prefs ->
+        prefs[Keys.MINI_PLAYER_STYLE]?.let { runCatching { MiniPlayerStyle.valueOf(it) }.getOrNull() }
+            ?: MiniPlayerStyle.FLOATING
+    }
+    suspend fun setMiniPlayerStyle(style: MiniPlayerStyle) {
+        context.dataStore.edit { it[Keys.MINI_PLAYER_STYLE] = style.name }
+    }
+
+    /**
+     * Shrink into the little window on Back as well as on Home. Off by default, and deliberately:
+     * Back means "leave this screen" far more often than it means "keep watching", and a user who has
+     * not asked for it must not have to dismiss a window every time they close the player.
+     */
+    val pipOnBack: Flow<Boolean> = prefsFlow { it[Keys.PIP_ON_BACK] ?: false }
+    suspend fun setPipOnBack(enabled: Boolean) {
+        context.dataStore.edit { it[Keys.PIP_ON_BACK] = enabled }
+    }
+
+    /** How big the floating window starts. The user pinches it from there. */
+    enum class PipSize { SMALL, MEDIUM, LARGE }
+
+    val pipSize: Flow<PipSize> = prefsFlow { prefs ->
+        prefs[Keys.PIP_SIZE]?.let { runCatching { PipSize.valueOf(it) }.getOrNull() } ?: PipSize.MEDIUM
+    }
+    suspend fun setPipSize(size: PipSize) {
+        context.dataStore.edit { it[Keys.PIP_SIZE] = size.name }
+    }
+
+    /** Let go of the floating window and it settles against the nearest edge. On by default — a window
+     *  left mid-screen covers what the user is browsing. */
+    val pipSnap: Flow<Boolean> = prefsFlow { it[Keys.PIP_SNAP] ?: true }
+    suspend fun setPipSnap(enabled: Boolean) {
+        context.dataStore.edit { it[Keys.PIP_SNAP] = enabled }
+    }
+
+    /**
+     * Drop the video decoder and keep the sound when the screen goes off. On by default, because it is
+     * the single biggest saving this app can make on a phone battery, and turning it off only means
+     * decoding frames nobody can see.
+     */
+    val audioOnScreenOff: Flow<Boolean> = prefsFlow { it[Keys.AUDIO_ON_SCREEN_OFF] ?: true }
+    suspend fun setAudioOnScreenOff(enabled: Boolean) {
+        context.dataStore.edit { it[Keys.AUDIO_ON_SCREEN_OFF] = enabled }
+    }
+
+    /** Start in sound-only when there is no Wi-Fi. Off by default: it changes what the user gets from
+     *  a tap, and that is only ever their own choice. */
+    val audioOnMobileData: Flow<Boolean> = prefsFlow { it[Keys.AUDIO_ON_MOBILE_DATA] ?: false }
+    suspend fun setAudioOnMobileData(enabled: Boolean) {
+        context.dataStore.edit { it[Keys.AUDIO_ON_MOBILE_DATA] = enabled }
+    }
+
+    /** Remember sound-only per channel, so a radio station opens without a picture next time and a
+     *  television channel does not. On by default — the whole point is not having to ask twice. */
+    val audioPerChannel: Flow<Boolean> = prefsFlow { it[Keys.AUDIO_PER_CHANNEL] ?: true }
+    suspend fun setAudioPerChannel(enabled: Boolean) {
+        context.dataStore.edit { it[Keys.AUDIO_PER_CHANNEL] = enabled }
+    }
+
+    /** Both read once, on the path that starts a stream and cannot wait on a flow. */
+    suspend fun audioOnMobileDataNow(): Boolean = audioOnMobileData.first()
+    suspend fun audioPerChannelNow(): Boolean = audioPerChannel.first()
 
     val sortGuide: Flow<GuideSort> = prefsFlow { prefs ->
         prefs[Keys.SORT_GUIDE]?.let { runCatching { GuideSort.valueOf(it) }.getOrNull() } ?: GuideSort.LIVE_TV
@@ -2116,6 +2195,9 @@ class SettingsRepository(private val context: Context, private val localeStore: 
         // Surround mode (Auto/Stereo only/Surround). The legacy boolean is in backupBoolKeys and stays
         // in sync, but the string is what is read first, so it has to travel too.
         Keys.SURROUND_MODE,
+        // The mobility layer's two choices. Same reasoning as the touch-host booleans below: a phone
+        // restored from a phone keeps them, a television never reads them.
+        Keys.MINI_PLAYER_STYLE, Keys.PIP_SIZE,
         // Settings personalization: Quick pins (including their order) and the independently arranged
         // action order for each of the four long-press content menus.
         Keys.QUICK_PINNED,
@@ -2147,6 +2229,8 @@ class SettingsRepository(private val context: Context, private val localeStore: 
         // Touch-host settings. They travel even though a television has no row for them: a phone
         // restored from a phone must keep them, and a television simply ignores what it never reads.
         Keys.BACKGROUND_PLAYBACK, Keys.PIP_ENABLED, Keys.DATA_SAVER, Keys.DOWNLOADS_WIFI_ONLY,
+        Keys.PIP_ON_BACK, Keys.PIP_SNAP, Keys.AUDIO_ON_SCREEN_OFF, Keys.AUDIO_ON_MOBILE_DATA,
+        Keys.AUDIO_PER_CHANNEL,
     )
     private val backupFloatKeys = listOf(Keys.SUB_SCALE, Keys.SUB_SCALE_MPV, Keys.SUB_SCALE_EXO)
 

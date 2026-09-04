@@ -1288,4 +1288,23 @@
     <string name="settings_search_keywords_data_saver">экономия трафика мобильный интернет роуминг лимит</string>
     <string name="settings_search_keywords_gestures">жест свайп чувствительность касание перетаскивание</string>
     <string name="settings_search_keywords_wifi_only">wifi только загрузка мобильный интернет сеть</string>
+    <string name="settings_mini_player_style">Стиль мини-плеера</string>
+    <string name="settings_mini_player_style_description">Как воспроизведение следует за вами при просмотре списков</string>
+    <string name="settings_mini_player_style_floating">Плавающее окно</string>
+    <string name="settings_mini_player_style_docked">Закреплённая панель</string>
+    <string name="settings_pip_on_back">Картинка в картинке по кнопке Назад</string>
+    <string name="settings_pip_on_back_description">Сворачивать в плавающее окно и при нажатии Назад</string>
+    <string name="settings_pip_size">Размер окна</string>
+    <string name="settings_pip_size_description">С каким размером открывается плавающее окно. Меняйте его щипком.</string>
+    <string name="settings_pip_size_small">Маленькое</string>
+    <string name="settings_pip_size_medium">Среднее</string>
+    <string name="settings_pip_size_large">Большое</string>
+    <string name="settings_pip_snap">Прилипать к краям</string>
+    <string name="settings_pip_snap_description">Отпустите окно, и оно встанет у ближайшего края</string>
+    <string name="settings_audio_on_screen_off">Только звук при выключении экрана</string>
+    <string name="settings_audio_on_screen_off_description">Перестаёт декодировать видео, которого никто не видит, и экономит батарею</string>
+    <string name="settings_audio_on_mobile_data">Только звук на мобильном интернете</string>
+    <string name="settings_audio_on_mobile_data_description">Начинать без изображения, когда нет Wi-Fi</string>
+    <string name="settings_audio_per_channel">Запоминать только звук для канала</string>
+    <string name="settings_audio_per_channel_description">Канал, который вы смотрели без изображения, в следующий раз откроется так же</string>
 </resources>

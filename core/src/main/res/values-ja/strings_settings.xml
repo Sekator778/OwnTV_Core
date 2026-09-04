@@ -1222,4 +1222,23 @@
     <string name="settings_search_keywords_data_saver">データセーバー モバイルデータ 通信量 ローミング 節約</string>
     <string name="settings_search_keywords_gestures">ジェスチャー スワイプ 感度 タッチ ドラッグ</string>
     <string name="settings_search_keywords_wifi_only">wifi のみ ダウンロード モバイルデータ ネットワーク</string>
+    <string name="settings_mini_player_style">ミニプレーヤーの表示</string>
+    <string name="settings_mini_player_style_description">一覧を見ている間、再生をどう続けるか</string>
+    <string name="settings_mini_player_style_floating">フローティングウィンドウ</string>
+    <string name="settings_mini_player_style_docked">固定バー</string>
+    <string name="settings_pip_on_back">戻るでピクチャーインピクチャー</string>
+    <string name="settings_pip_on_back_description">戻るを押したときもフローティングウィンドウに縮小する</string>
+    <string name="settings_pip_size">ウィンドウのサイズ</string>
+    <string name="settings_pip_size_description">フローティングウィンドウの初期サイズ。ピンチで変えられます。</string>
+    <string name="settings_pip_size_small">小</string>
+    <string name="settings_pip_size_medium">中</string>
+    <string name="settings_pip_size_large">大</string>
+    <string name="settings_pip_snap">端に吸着</string>
+    <string name="settings_pip_snap_description">ウィンドウを離すと、いちばん近い端に寄せられます</string>
+    <string name="settings_audio_on_screen_off">画面が消えたら音声のみ</string>
+    <string name="settings_audio_on_screen_off_description">誰も見ていない映像のデコードをやめ、電池を節約します</string>
+    <string name="settings_audio_on_mobile_data">モバイルデータでは音声のみ</string>
+    <string name="settings_audio_on_mobile_data_description">Wi-Fi がないときは映像なしで開始する</string>
+    <string name="settings_audio_per_channel">チャンネルごとに音声のみを記憶</string>
+    <string name="settings_audio_per_channel_description">映像なしで見たチャンネルは次回も同じように開きます</string>
 </resources>

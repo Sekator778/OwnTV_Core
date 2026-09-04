@@ -286,4 +286,10 @@
     <string name="player_provider_retry_after">HTTP <xliff:g id="code">%1$d</xliff:g>: <xliff:g id="reason">%2$s</xliff:g> <xliff:g id="seconds">%3$d</xliff:g> sn. içinde yeniden denenecek.</string>
     <string name="player_provider_busy">Sağlayıcı meşgul.</string>
     <string name="player_error_data_saver">Veri tasarrufu açık, bu yüzden mobil veriyle yayın kapalı. Wi-Fi ağına bağlan ya da ayarlardan veri tasarrufunu kapat.</string>
+    <string name="player_audio_only_video_off">Görüntü kapalı · veri tasarrufu</string>
+    <string name="player_audio_only_show_video">Görüntü</string>
+    <string name="player_sleep_timer">Uyku zamanlayıcısı</string>
+    <string name="player_sleep_timer_end_of_programme">Programın sonu</string>
+    <string name="player_sleep_timer_remaining"><xliff:g id="time">%1$s</xliff:g> sonra duracak</string>
+    <string name="player_pip_expand">Büyüt</string>
 </resources>

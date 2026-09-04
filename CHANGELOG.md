@@ -3,6 +3,43 @@
 Core is versioned independently of the apps. A core version number never lines up with an OwnTV TV
 app `v4.x` release, and the two must not be confused. Tags here are prefixed `core-`.
 
+## core-1.0.16 — 2026-09-04
+
+Additive. The TV app was rebuilt and verified against it (Rule 5).
+
+### 📱 Settings for a player you can carry around
+
+Seven new stored settings, all with the current behaviour as their default, so nothing an existing
+installation does changes. The television reads none of them today; they exist because the phone's
+mini player, picture-in-picture window and sound-only mode need somewhere to keep their choices, and
+settings storage is core's.
+
+- **`miniPlayerStyle`** — `FLOATING`, `DOCKED` or `OFF` (default `FLOATING`).
+- **`pipOnBack`** (default off) — whether Back drops the player into a picture-in-picture window
+  instead of leaving it.
+- **`pipSize`** — `SMALL`, `MEDIUM` or `LARGE` (default `MEDIUM`).
+- **`pipSnap`** (default on) — whether a dragged window springs back to the nearest edge.
+- **`audioOnScreenOff`** (default on) — keep the sound when the screen goes off.
+- **`audioOnMobileData`** (default off) — start without a picture on a metered connection.
+- **`audioPerChannel`** (default on) — remember, per channel, that it was watched without a picture.
+
+All seven are in backup and restore: the two enums under `backupStringKeys`, the five switches under
+`backupBoolKeys`.
+
+### 🎵 Which channels were watched without a picture
+
+- **`AudioOnlyStore`** — a small per-item store, built like `ForceMpvStore` and keyed the same way by
+  `enginePinKey(sourceId, mediaType, remoteId)`, so the memory survives a re-sync even where the
+  stream URL is a single-use token. Registered in `DataModule`.
+
+### 🌍 Strings
+
+- **25 new strings, in all 25 packaged locales** — 19 for the settings above, 6 for the player: the
+  sound-only screen's "video off" chip and its way back to the picture, the sleep timer with its
+  end-of-programme option and its remaining-time label, and the expand action for the
+  picture-in-picture window. `values-en-rGB` is deliberately untouched; none of the 25 is spelled
+  differently in British English.
+
 ## core-1.0.15 — 2026-09-04
 
 Additive. The TV app was rebuilt and verified against it (Rule 5).

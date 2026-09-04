@@ -300,4 +300,10 @@
     <string name="player_provider_retry_after">HTTP <xliff:g id="code">%1$d</xliff:g>: <xliff:g id="reason">%2$s</xliff:g> Opakování za <xliff:g id="seconds">%3$d</xliff:g> s.</string>
     <string name="player_provider_busy">Poskytovatel je zaneprázdněn.</string>
     <string name="player_error_data_saver">Spořič dat je zapnutý, takže přehrávání přes mobilní data je vypnuté. Připoj se k Wi-Fi nebo spořič dat v nastavení vypni.</string>
+    <string name="player_audio_only_video_off">Obraz vypnutý · šetří data</string>
+    <string name="player_audio_only_show_video">Obraz</string>
+    <string name="player_sleep_timer">Časovač vypnutí</string>
+    <string name="player_sleep_timer_end_of_programme">Konec pořadu</string>
+    <string name="player_sleep_timer_remaining">Zastaví se za <xliff:g id="time">%1$s</xliff:g></string>
+    <string name="player_pip_expand">Zvětšit</string>
 </resources>

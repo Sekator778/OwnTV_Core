@@ -1332,4 +1332,23 @@
     <string name="settings_search_keywords_data_saver">توفير البيانات بيانات الهاتف التجوال استهلاك</string>
     <string name="settings_search_keywords_gestures">إيماءة سحب حساسية لمس تمرير</string>
     <string name="settings_search_keywords_wifi_only">wifi فقط تنزيل بيانات الهاتف شبكة</string>
+    <string name="settings_mini_player_style">نمط المشغّل المصغّر</string>
+    <string name="settings_mini_player_style_description">كيف يتابعك التشغيل أثناء التنقل</string>
+    <string name="settings_mini_player_style_floating">نافذة عائمة</string>
+    <string name="settings_mini_player_style_docked">شريط مثبّت</string>
+    <string name="settings_pip_on_back">صورة داخل صورة عند الرجوع</string>
+    <string name="settings_pip_on_back_description">الانتقال إلى النافذة العائمة عند الضغط على زر الرجوع أيضًا</string>
+    <string name="settings_pip_size">حجم النافذة</string>
+    <string name="settings_pip_size_description">الحجم الذي تبدأ به النافذة العائمة. اقرص لتغييره.</string>
+    <string name="settings_pip_size_small">صغير</string>
+    <string name="settings_pip_size_medium">متوسط</string>
+    <string name="settings_pip_size_large">كبير</string>
+    <string name="settings_pip_snap">الالتصاق بالحواف</string>
+    <string name="settings_pip_snap_description">اترك النافذة فتستقر عند أقرب حافة</string>
+    <string name="settings_audio_on_screen_off">الصوت فقط عند إطفاء الشاشة</string>
+    <string name="settings_audio_on_screen_off_description">يتوقف فك ترميز فيديو لا يراه أحد، ويوفّر البطارية</string>
+    <string name="settings_audio_on_mobile_data">الصوت فقط على بيانات الجوال</string>
+    <string name="settings_audio_on_mobile_data_description">ابدأ بدون صورة عند عدم توفر Wi-Fi</string>
+    <string name="settings_audio_per_channel">تذكّر الصوت فقط لكل قناة</string>
+    <string name="settings_audio_per_channel_description">القناة التي شاهدتها بدون صورة تُفتح كذلك في المرة القادمة</string>
 </resources>

@@ -286,4 +286,10 @@
     <string name="player_provider_retry_after">HTTP <xliff:g id="code">%1$d</xliff:g>: <xliff:g id="reason">%2$s</xliff:g> Prøver igen om <xliff:g id="seconds">%3$d</xliff:g> s.</string>
     <string name="player_provider_busy">Udbyderen er optaget.</string>
     <string name="player_error_data_saver">Databesparelse er slået til, så streaming over mobildata er slået fra. Opret forbindelse til Wi-Fi, eller slå databesparelse fra i indstillingerne.</string>
+    <string name="player_audio_only_video_off">Video slået fra · sparer data</string>
+    <string name="player_audio_only_show_video">Video</string>
+    <string name="player_sleep_timer">Sleep-timer</string>
+    <string name="player_sleep_timer_end_of_programme">Programmets slutning</string>
+    <string name="player_sleep_timer_remaining">Stopper om <xliff:g id="time">%1$s</xliff:g></string>
+    <string name="player_pip_expand">Forstør</string>
 </resources>

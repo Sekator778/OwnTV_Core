@@ -1221,4 +1221,23 @@ Az Újraszinkronizálás és a hiányzó címek eltávolítása azt is lehetőv�
     <string name="settings_search_keywords_data_saver">adatforgalom mobiladat csokkentes roaming sporolas</string>
     <string name="settings_search_keywords_gestures">mozdulat huzas erzekenyseg erintes csuszas</string>
     <string name="settings_search_keywords_wifi_only">wifi csak letoltes mobiladat halozat</string>
+    <string name="settings_mini_player_style">Minilejátszó stílusa</string>
+    <string name="settings_mini_player_style_description">Hogyan követ a lejátszás, amíg böngészel</string>
+    <string name="settings_mini_player_style_floating">Lebegő ablak</string>
+    <string name="settings_mini_player_style_docked">Rögzített sáv</string>
+    <string name="settings_pip_on_back">Kép a képben a Vissza gombra</string>
+    <string name="settings_pip_on_back_description">A Vissza gomb is a lebegő ablakba kicsinyítsen</string>
+    <string name="settings_pip_size">Ablak mérete</string>
+    <string name="settings_pip_size_description">Milyen nagy a lebegő ablak induláskor. Csippentéssel átméretezhető.</string>
+    <string name="settings_pip_size_small">Kicsi</string>
+    <string name="settings_pip_size_medium">Közepes</string>
+    <string name="settings_pip_size_large">Nagy</string>
+    <string name="settings_pip_snap">Illesztés a szélekhez</string>
+    <string name="settings_pip_snap_description">Engedd el az ablakot, és a legközelebbi szélhez simul</string>
+    <string name="settings_audio_on_screen_off">Csak hang, ha kikapcsol a kijelző</string>
+    <string name="settings_audio_on_screen_off_description">Ne dekódolja a képet, amit senki sem lát, és kímélje az akkumulátort</string>
+    <string name="settings_audio_on_mobile_data">Csak hang mobiladaton</string>
+    <string name="settings_audio_on_mobile_data_description">Kép nélkül induljon, ha nincs Wi-Fi</string>
+    <string name="settings_audio_per_channel">Csak hang megjegyzése csatornánként</string>
+    <string name="settings_audio_per_channel_description">A kép nélkül nézett csatorna legközelebb is úgy nyílik meg</string>
 </resources>

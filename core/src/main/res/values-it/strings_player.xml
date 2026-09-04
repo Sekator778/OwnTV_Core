@@ -293,4 +293,10 @@
     <string name="player_provider_retry_after">HTTP <xliff:g id="code">%1$d</xliff:g>: <xliff:g id="reason">%2$s</xliff:g> Nuovo tentativo tra <xliff:g id="seconds">%3$d</xliff:g> s.</string>
     <string name="player_provider_busy">Il fornitore è occupato.</string>
     <string name="player_error_data_saver">Il risparmio dati è attivo, quindi lo streaming con la rete mobile è disattivato. Collegati al Wi-Fi o disattiva il risparmio dati nelle impostazioni.</string>
+    <string name="player_audio_only_video_off">Video spento · risparmio dati</string>
+    <string name="player_audio_only_show_video">Video</string>
+    <string name="player_sleep_timer">Timer di spegnimento</string>
+    <string name="player_sleep_timer_end_of_programme">Fine del programma</string>
+    <string name="player_sleep_timer_remaining">Si ferma tra <xliff:g id="time">%1$s</xliff:g></string>
+    <string name="player_pip_expand">Ingrandisci</string>
 </resources>

@@ -279,4 +279,10 @@
     <string name="player_provider_retry_after">HTTP <xliff:g id="code">%1$d</xliff:g>: <xliff:g id="reason">%2$s</xliff:g> <xliff:g id="seconds">%3$d</xliff:g>秒後に再試行します。</string>
     <string name="player_provider_busy">プロバイダーが混み合っています。</string>
     <string name="player_error_data_saver">データセーバーがオンのため、モバイルデータでの再生は行いません。Wi-Fi に接続するか、設定でデータセーバーをオフにしてください。</string>
+    <string name="player_audio_only_video_off">映像オフ · データ節約中</string>
+    <string name="player_audio_only_show_video">映像</string>
+    <string name="player_sleep_timer">スリープタイマー</string>
+    <string name="player_sleep_timer_end_of_programme">番組の終わり</string>
+    <string name="player_sleep_timer_remaining"><xliff:g id="time">%1$s</xliff:g>後に停止</string>
+    <string name="player_pip_expand">拡大</string>
 </resources>

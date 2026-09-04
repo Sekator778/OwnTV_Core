@@ -1222,4 +1222,23 @@
     <string name="settings_search_keywords_data_saver">流量 节省 移动数据 蜂窝 漫游</string>
     <string name="settings_search_keywords_gestures">手势 滑动 灵敏度 触摸 拖动</string>
     <string name="settings_search_keywords_wifi_only">wifi 仅 下载 移动数据 网络</string>
+    <string name="settings_mini_player_style">小窗播放器样式</string>
+    <string name="settings_mini_player_style_description">浏览列表时播放如何跟随你</string>
+    <string name="settings_mini_player_style_floating">悬浮窗</string>
+    <string name="settings_mini_player_style_docked">停靠栏</string>
+    <string name="settings_pip_on_back">按返回键进入画中画</string>
+    <string name="settings_pip_on_back_description">按返回键时也缩为悬浮窗</string>
+    <string name="settings_pip_size">窗口大小</string>
+    <string name="settings_pip_size_description">悬浮窗的初始大小。双指捏合可调整。</string>
+    <string name="settings_pip_size_small">小</string>
+    <string name="settings_pip_size_medium">中</string>
+    <string name="settings_pip_size_large">大</string>
+    <string name="settings_pip_snap">吸附到边缘</string>
+    <string name="settings_pip_snap_description">松开窗口，它会靠到最近的边缘</string>
+    <string name="settings_audio_on_screen_off">息屏后仅播声音</string>
+    <string name="settings_audio_on_screen_off_description">不再解码没人看的画面，省电</string>
+    <string name="settings_audio_on_mobile_data">移动数据下仅播声音</string>
+    <string name="settings_audio_on_mobile_data_description">没有 Wi-Fi 时不带画面开始播放</string>
+    <string name="settings_audio_per_channel">按频道记住仅播声音</string>
+    <string name="settings_audio_per_channel_description">不带画面看过的频道，下次也这样打开</string>
 </resources>

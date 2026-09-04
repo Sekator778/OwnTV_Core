@@ -1222,4 +1222,23 @@
     <string name="settings_search_keywords_data_saver">數據 節省 行動數據 漫遊 用量</string>
     <string name="settings_search_keywords_gestures">手勢 滑動 靈敏度 觸控 拖曳</string>
     <string name="settings_search_keywords_wifi_only">wifi 僅 下載 行動數據 網路</string>
+    <string name="settings_mini_player_style">小視窗播放器樣式</string>
+    <string name="settings_mini_player_style_description">瀏覽清單時播放如何跟著你</string>
+    <string name="settings_mini_player_style_floating">浮動視窗</string>
+    <string name="settings_mini_player_style_docked">停駐列</string>
+    <string name="settings_pip_on_back">按返回鍵進入子母畫面</string>
+    <string name="settings_pip_on_back_description">按返回鍵時也縮成浮動視窗</string>
+    <string name="settings_pip_size">視窗大小</string>
+    <string name="settings_pip_size_description">浮動視窗的起始大小。可用雙指縮放調整。</string>
+    <string name="settings_pip_size_small">小</string>
+    <string name="settings_pip_size_medium">中</string>
+    <string name="settings_pip_size_large">大</string>
+    <string name="settings_pip_snap">吸附至邊緣</string>
+    <string name="settings_pip_snap_description">放開視窗，它會靠到最近的邊緣</string>
+    <string name="settings_audio_on_screen_off">螢幕關閉後只播聲音</string>
+    <string name="settings_audio_on_screen_off_description">不再解碼沒人看的畫面，省電</string>
+    <string name="settings_audio_on_mobile_data">行動數據下只播聲音</string>
+    <string name="settings_audio_on_mobile_data_description">沒有 Wi-Fi 時不帶畫面開始播放</string>
+    <string name="settings_audio_per_channel">依頻道記住只播聲音</string>
+    <string name="settings_audio_per_channel_description">不帶畫面看過的頻道，下次也這樣開啟</string>
 </resources>
