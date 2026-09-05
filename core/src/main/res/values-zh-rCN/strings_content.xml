@@ -296,7 +296,7 @@
     <string name="content_epg_match_button">自动匹配电子节目指南（EPG）</string>
     <string name="content_epg_channel_score">→ <xliff:g id="name">%1$s</xliff:g> · <xliff:g id="percent">%2$d</xliff:g>%%</string>
     <string name="content_epg_channel_number"><xliff:g id="number">%1$s</xliff:g>  <xliff:g id="name">%2$s</xliff:g></string>
-    <string name="content_epg_bits_separator"> · </string>
+    <string name="content_epg_bits_separator">" · "</string>
     <string name="content_epg_now">现在 · <xliff:g id="time">%1$s</xliff:g></string>
     <string name="content_epg_watch_start">从头观看</string>
     <string name="content_epg_watch_channel">观看频道</string>

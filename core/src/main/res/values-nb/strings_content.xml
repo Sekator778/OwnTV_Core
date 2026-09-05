@@ -310,7 +310,7 @@
     <string name="content_epg_match_button">Match EPG automatisk</string>
     <string name="content_epg_channel_score">→ <xliff:g id="name">%1$s</xliff:g> · <xliff:g id="percent">%2$d</xliff:g>%%</string>
     <string name="content_epg_channel_number"><xliff:g id="number">%1$s</xliff:g>  <xliff:g id="name">%2$s</xliff:g></string>
-    <string name="content_epg_bits_separator"> · </string>
+    <string name="content_epg_bits_separator">" · "</string>
     <string name="content_epg_now">NÅ · <xliff:g id="time">%1$s</xliff:g></string>
     <string name="content_epg_watch_start">Se fra starten</string>
     <string name="content_epg_watch_channel">Se på kanalen</string>

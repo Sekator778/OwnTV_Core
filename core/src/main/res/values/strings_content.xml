@@ -566,7 +566,7 @@
     <!-- Translators: Channel number and name display in the EPG. "number" is the channel number, "name" is the channel name. -->
     <string name="content_epg_channel_number"><xliff:g id="number">%1$s</xliff:g>  <xliff:g id="name">%2$s</xliff:g></string>
     <!-- Translators: Visible middle-dot separator between EPG metadata segments. -->
-    <string name="content_epg_bits_separator"> \u00b7 </string>
+    <string name="content_epg_bits_separator">" \u00b7 "</string>
     <!-- Translators: Label on the EPG timeline for the current time slot with the time. "time" is the current time. All caps is intentional. -->
     <string name="content_epg_now">NOW \u00b7 <xliff:g id="time">%1$s</xliff:g></string>
     <!-- Translators: Context-menu option in the EPG to watch a programme from the start (catch-up). -->

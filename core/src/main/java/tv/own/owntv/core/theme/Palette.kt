@@ -11,6 +11,11 @@ package tv.own.owntv.core.theme
  * Dark uses a near-black background (#040e0b) so the panel colours pop against the deep dark
  * surface while keeping a subtle green undertone. NEUTRAL and the secondary/tertiary roles are
  * theme-only; the `primary` roles are seeded per [AccentColor] (default teal).
+ *
+ * The three `*RailPanel` / `*ContentPanel` / `*PreviewPanel` values are not part of the M3 ladder:
+ * they are the shell's per-region colour identity, keeping the navigation, the content and the
+ * detail pane distinct in both themes instead of collapsing into the greyer generic elevation
+ * steps. Both apps draw those same three regions, so they belong here rather than in either one.
  */
 object OwnTVPalette {
 
@@ -25,6 +30,9 @@ object OwnTVPalette {
     const val DarkSurfaceContainer = 0xFF1B211FL
     const val DarkSurfaceContainerHigh = 0xFF252B29L
     const val DarkSurfaceContainerHighest = 0xFF303634L
+    const val DarkRailPanel = 0xFF111C18L
+    const val DarkContentPanel = 0xFF0A1512L
+    const val DarkPreviewPanel = 0xFF15201DL
     const val DarkOnSurface = 0xFFDEE4E1L
     const val DarkOnSurfaceVariant = 0xFFBFC9C4L
     const val DarkOutline = 0xFF89938FL
@@ -47,6 +55,9 @@ object OwnTVPalette {
     const val LightSurfaceContainer = 0xFFE9EFECL
     const val LightSurfaceContainerHigh = 0xFFE3EAE6L
     const val LightSurfaceContainerHighest = 0xFFDEE4E1L
+    const val LightRailPanel = 0xFFE6EEE9L
+    const val LightContentPanel = 0xFFF2F7F4L
+    const val LightPreviewPanel = 0xFFDEE9E3L
     const val LightOnSurface = 0xFF171D1BL
     const val LightOnSurfaceVariant = 0xFF3F4945L
     const val LightOutline = 0xFF6F7975L

@@ -3,6 +3,25 @@
 Core is versioned independently of the apps. A core version number never lines up with an OwnTV TV
 app `v4.x` release, and the two must not be confused. Tags here are prefixed `core-`.
 
+## core-1.0.18 — 2026-09-05
+
+Additive. The TV app was rebuilt and verified against it (Rule 5).
+
+### 🎨 The shell's three region colours moved here
+
+`OwnTVPalette` gained `DarkRailPanel` / `DarkContentPanel` / `DarkPreviewPanel` and their three light
+counterparts. They are deliberately not part of the M3 ladder: they are the colour identity of the
+navigation, the content area and the detail pane, which both apps draw and which the generic
+elevation steps flatten into the same grey. The television's `RoundedPanel` now reads them from here
+instead of holding its own copies, so the two apps cannot drift apart.
+
+### 🐛 The EPG separator lost its spaces
+
+`content_epg_bits_separator` is a middle dot padded with a space on each side, and the padding was
+being stripped by the resource parser — so an EPG line read `20:00·Drama·HD` instead of
+`20:00 · Drama · HD`. The value is now quoted in the base locale and all 24 translations, which is
+how a resource string keeps leading and trailing whitespace.
+
 ## core-1.0.17 — 2026-09-05
 
 Additive. The TV app was rebuilt and verified against it (Rule 5).
