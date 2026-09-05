@@ -3,6 +3,24 @@
 Core is versioned independently of the apps. A core version number never lines up with an OwnTV TV
 app `v4.x` release, and the two must not be confused. Tags here are prefixed `core-`.
 
+## core-1.0.20 — 2026-09-06
+
+Additive. Nothing existing changed meaning, so the TV app keeps its current behaviour.
+
+### 🌍 One new string, in all 25 packaged locales
+
+- **`settings_about_description_full_mobile`** — the About page's description on the phone. The
+  television's own line names the remote and the ten-foot screen; a phone needs the same sentence
+  without them, and both live here because this repo owns every user-visible string.
+
+### 🔎 `TrendingAvailability` — why the Now Trending row is, or is not, on Home
+
+The row can be empty for six different reasons and only one of them is a fault: metadata turned off,
+a provider with no films or shows, a sync that has not run yet, too few matches to fill a row. The
+new shared classifier turns that state into one answer, so the TV app and the phone say the same
+sentence about the same data instead of each guessing separately. Nothing calls it in the TV app yet,
+so nothing there changes.
+
 ## core-1.0.19 — 2026-09-05
 
 Strings only, all additive. The TV app was rebuilt and verified against it (Rule 5).

@@ -2781,6 +2781,7 @@
 1	protocol	core/src/main/java/tv/own/owntv/core/sync/work/TrendingRefreshWorker.kt	trending-refresh
 1	protocol	core/src/main/java/tv/own/owntv/core/sync/work/TrendingRefreshWorker.kt	trending-refresh-source-$sourceId
 1	technical	core/src/main/java/tv/own/owntv/core/theme/Palette.kt	#
+1	protocol	core/src/main/java/tv/own/owntv/core/trending/TrendingAvailability.kt	no VOD content
 1	empty	core/src/main/java/tv/own/owntv/core/trending/TrendingMatcher.kt	\0
 1	sql	core/src/main/java/tv/own/owntv/core/trending/TrendingMatcher.kt	$it*
 1	technical	core/src/main/java/tv/own/owntv/core/trending/TrendingMatcher.kt	1080p FHD

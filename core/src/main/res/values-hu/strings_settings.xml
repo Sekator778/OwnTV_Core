@@ -384,6 +384,7 @@
     <string name="settings_use_color">Ezt a színt használom</string>
     <string name="settings_about_version"><xliff:g id="version">%1$s</xliff:g> verzió</string>
     <string name="settings_about_description_full">A saját IPTV-lejátszód Android TV-hez — ingyenes, nyílt forráskódú, kizárólag lejátszó alkalmazás. Nem kínál csatornákat vagy tartalmat; a saját, legálisan elérhető forrásaidat hozod.</string>
+    <string name="settings_about_description_full_mobile">A saját IPTV-lejátszód Android-hez — ingyenes, nyílt forráskódú, kizárólag lejátszó alkalmazás. Nem kínál csatornákat vagy tartalmat; a saját, legálisan elérhető forrásaidat hozod.</string>
     <string name="settings_about_license">© 2026 OwnTV · GPLv3 licenc</string>
     <string name="settings_join_telegram">Csatlakozz hozzánk a Telegramon</string>
     <string name="settings_telegram_qr">A Telegram-csoport QR-kódja</string>
