@@ -208,6 +208,9 @@ val dataModule = module {
             java.io.File(androidContext().filesDir, "subtitles"),
         )
     }
+    // profileDao, sourceDao, settings, launcherIntegration, openSubtitlesAccounts — creating,
+    // editing, switching and deleting a profile, shared by both apps' profile gates.
+    single { tv.own.owntv.core.profile.ProfileManager(get(), get(), get(), get(), get()) }
     // context, okHttpClient — in-app updates from GitHub Releases
     single { UpdateManager(androidContext(), get()) }
     single { CatalogSyncScheduler(androidContext()) }

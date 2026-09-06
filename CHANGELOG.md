@@ -3,6 +3,32 @@
 Core is versioned independently of the apps. A core version number never lines up with an OwnTV TV
 app `v4.x` release, and the two must not be confused. Tags here are prefixed `core-`.
 
+## core-1.0.22 — 2026-09-06
+
+Additive. Nothing existing changed meaning, so the TV app keeps its current behaviour. No new
+strings, no database version change.
+
+### 👤 `ProfileManager` — one implementation of what a profile is
+
+Creating, editing, switching and deleting a profile now lives here instead of in each app's shell. A
+profile spans more than its own row: the sources linked to it, its OpenSubtitles login, its "start on
+this channel" target and the app-wide active id. Two shells doing that by hand against one shared
+database would drift, and deleting a profile has to erase all of it.
+
+Bound in `dataModule` as a singleton, so either app injects it.
+
+### 🔒 `profileGateRequired` and `shellMayCompose` — the launch decision, decided once
+
+Whether the profile chooser must be shown, and whether the app proper may be composed yet, are two
+security-relevant rules that were written separately in each app. They are now one pair of pure
+functions here, with the television's existing behaviour as their behaviour: a single unlocked
+profile enters immediately; a chooser, a PIN, an unanswered database or an unlock bound to a
+different profile does not. The TV app's own function keeps its name and signature and delegates, so
+its tests are unchanged.
+
+`PROFILE_AVATAR_COUNT` moves here too — both shells number the avatars the same, so a profile made on
+the phone shows the same picture on the television.
+
 ## core-1.0.21 — 2026-09-06
 
 Additive. Nothing existing changed meaning, so the TV app keeps its current behaviour.
