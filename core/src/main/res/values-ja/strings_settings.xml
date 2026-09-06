@@ -1170,6 +1170,8 @@
     <string name="settings_glass_full_transparency_short_description">最も透明なガラスにするため、自動の読みやすさ制限を無効にします。</string>
     <string name="settings_glass_depth_effects_short">奥行きと影</string>
     <string name="settings_glass_depth_effects_short_description">フォーカス移動ライト、控えめな視差、奥行きの動きを有効にします。</string>
+    <string name="settings_glass_shine_short">スイープ光沢</string>
+    <string name="settings_glass_shine_short_description">パネルが表示されるとき、光の帯が横切ります。</string>
     <string name="settings_glass_reset_balanced">リセット: バランス</string>
     <string name="settings_glass_full_transparency_title">完全な透明度を許可</string>
     <string name="settings_glass_full_transparency_description">最も透明なガラスにするため、自動の読みやすさ制限を無効にします。</string>

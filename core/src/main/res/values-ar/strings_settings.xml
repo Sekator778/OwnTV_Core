@@ -1265,6 +1265,8 @@
     <string name="settings_glass_full_transparency_short_description">يعطّل الحد التلقائي للوضوح للحصول على أكثر زجاج شفافية.</string>
     <string name="settings_glass_depth_effects_short">العمق والظلال</string>
     <string name="settings_glass_depth_effects_short_description">يفعّل إضاءة انتقال التركيز والمنظور الخفيف وحركة العمق.</string>
+    <string name="settings_glass_shine_short">لمعة العبور</string>
+    <string name="settings_glass_shine_short_description">شريط من الضوء يمر عبر اللوحة عند ظهورها.</string>
     <string name="settings_glass_reset_balanced">إعادة الضبط: متوازن</string>
     <string name="settings_glass_full_transparency_title">السماح بالشفافية الكاملة</string>
     <string name="settings_glass_full_transparency_description">يعطّل الحد التلقائي للوضوح للحصول على أكثر زجاج شفافية.</string>

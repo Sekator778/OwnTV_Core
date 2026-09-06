@@ -1208,6 +1208,8 @@
     <string name="settings_glass_full_transparency_short_description">Disattiva il limite automatico di leggibilità per un vetro più trasparente possibile.</string>
     <string name="settings_glass_depth_effects_short">Profondità e ombre</string>
     <string name="settings_glass_depth_effects_short_description">Attiva la luce che segue il focus, la parallasse delicata e il movimento di profondità.</string>
+    <string name="settings_glass_shine_short">Riflesso scorrevole</string>
+    <string name="settings_glass_shine_short_description">Una banda di luce attraversa il pannello quando compare.</string>
     <string name="settings_glass_reset_balanced">Reimposta: Bilanciato</string>
     <string name="settings_glass_full_transparency_title">Consenti trasparenza completa</string>
     <string name="settings_glass_full_transparency_description">Disattiva il limite automatico di leggibilità per un vetro più trasparente possibile.</string>

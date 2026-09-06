@@ -1189,6 +1189,8 @@
     <string name="settings_glass_full_transparency_short_description">Mümkün olan en şeffaf cam için otomatik okunabilirlik sınırını kapatır.</string>
     <string name="settings_glass_depth_effects_short">Derinlik ve gölgeler</string>
     <string name="settings_glass_depth_effects_short_description">Odak geçişi ışığını, hafif paralaksı ve derinlik hareketini açar.</string>
+    <string name="settings_glass_shine_short">Kayan parıltı</string>
+    <string name="settings_glass_shine_short_description">Panel göründüğünde üzerinden bir ışık şeridi geçer.</string>
     <string name="settings_glass_reset_balanced">Sıfırla: Dengeli</string>
     <string name="settings_glass_full_transparency_title">Tam şeffaflığa izin ver</string>
     <string name="settings_glass_full_transparency_description">Mümkün olan en şeffaf cam için otomatik okunabilirlik sınırını kapatır.</string>

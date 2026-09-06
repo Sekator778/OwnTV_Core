@@ -1208,6 +1208,8 @@
     <string name="settings_glass_full_transparency_short_description">Desactiva el límite automático de legibilidad para obtener el cristal más claro.</string>
     <string name="settings_glass_depth_effects_short">Profundidad y sombras</string>
     <string name="settings_glass_depth_effects_short_description">Activa la luz de recorrido del foco, el paralaje sutil y el movimiento de profundidad.</string>
+    <string name="settings_glass_shine_short">Destello deslizante</string>
+    <string name="settings_glass_shine_short_description">Una banda de luz recorre el panel cuando aparece.</string>
     <string name="settings_glass_reset_balanced">Restablecer: Equilibrado</string>
     <string name="settings_glass_full_transparency_title">Permitir transparencia total</string>
     <string name="settings_glass_full_transparency_description">Desactiva el límite automático de legibilidad para obtener el cristal más claro.</string>

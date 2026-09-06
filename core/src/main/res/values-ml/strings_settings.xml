@@ -1189,6 +1189,8 @@
     <string name="settings_glass_full_transparency_short_description">ഏറ്റവും സുതാര്യമായ ഗ്ലാസിനായി സ്വയമേവയുള്ള വായനാക്ഷമത പരിധി ഓഫാക്കുന്നു.</string>
     <string name="settings_glass_depth_effects_short">ആഴവും നിഴലുകളും</string>
     <string name="settings_glass_depth_effects_short_description">ഫോക്കസ് സഞ്ചാര വെളിച്ചം, സൂക്ഷ്മ പാരലാക്സ്, ആഴ ചലനം എന്നിവ പ്രവർത്തനക്ഷമമാക്കുന്നു.</string>
+    <string name="settings_glass_shine_short">പ്രകാശ സഞ്ചാരം</string>
+    <string name="settings_glass_shine_short_description">പാനൽ പ്രത്യക്ഷപ്പെടുമ്പോൾ ഒരു പ്രകാശരേഖ അതിലൂടെ കടന്നുപോകുന്നു.</string>
     <string name="settings_glass_reset_balanced">പുനഃസജ്ജമാക്കുക: സമതുലിതം</string>
     <string name="settings_glass_full_transparency_title">പൂർണ്ണ സുതാര്യത അനുവദിക്കുക</string>
     <string name="settings_glass_full_transparency_description">ഏറ്റവും സുതാര്യമായ ഗ്ലാസിനായി സ്വയമേവയുള്ള വായനാക്ഷമത പരിധി ഓഫാക്കുന്നു.</string>

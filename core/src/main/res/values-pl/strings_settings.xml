@@ -1227,6 +1227,8 @@
     <string name="settings_glass_full_transparency_short_description">Wyłącza automatyczny próg czytelności, zapewniając najczystsze szkło.</string>
     <string name="settings_glass_depth_effects_short">Głębia i cienie</string>
     <string name="settings_glass_depth_effects_short_description">Włącza światło podążające za fokusem, subtelną paralaksę i ruch głębi.</string>
+    <string name="settings_glass_shine_short">Przesuwny blask</string>
+    <string name="settings_glass_shine_short_description">Pasmo światła przesuwa się po panelu, gdy ten się pojawia.</string>
     <string name="settings_glass_reset_balanced">Resetuj: Zrównoważone</string>
     <string name="settings_glass_full_transparency_title">Zezwól na pełną przezroczystość</string>
     <string name="settings_glass_full_transparency_description">Wyłącza automatyczny próg czytelności, zapewniając najczystsze szkło.</string>

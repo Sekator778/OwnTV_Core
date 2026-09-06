@@ -1170,6 +1170,8 @@
     <string name="settings_glass_full_transparency_short_description">关闭自动可读性下限，以获得最通透的玻璃效果。</string>
     <string name="settings_glass_depth_effects_short">深度与阴影</string>
     <string name="settings_glass_depth_effects_short_description">启用焦点移动光效、轻微视差和深度运动。</string>
+    <string name="settings_glass_shine_short">掠光</string>
+    <string name="settings_glass_shine_short_description">面板出现时，一道光带扫过面板。</string>
     <string name="settings_glass_reset_balanced">重置: 平衡</string>
     <string name="settings_glass_full_transparency_title">允许完全透明</string>
     <string name="settings_glass_full_transparency_description">关闭自动可读性下限，以获得最通透的玻璃效果。</string>

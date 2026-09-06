@@ -1189,6 +1189,8 @@
     <string name="settings_glass_full_transparency_short_description">सबसे स्पष्ट ग्लास के लिए स्वचालित पठनीयता सीमा बंद करता है।</string>
     <string name="settings_glass_depth_effects_short">गहराई और छाया</string>
     <string name="settings_glass_depth_effects_short_description">फ़ोकस-यात्रा प्रकाश, हल्का पैरालैक्स और गहराई की गति चालू करता है।</string>
+    <string name="settings_glass_shine_short">चमक की लहर</string>
+    <string name="settings_glass_shine_short_description">पैनल दिखाई देते समय उस पर प्रकाश की एक पट्टी गुज़रती है।</string>
     <string name="settings_glass_reset_balanced">रीसेट करें: संतुलित</string>
     <string name="settings_glass_full_transparency_title">पूरी पारदर्शिता की अनुमति दें</string>
     <string name="settings_glass_full_transparency_description">सबसे स्पष्ट ग्लास के लिए स्वचालित पठनीयता सीमा बंद करता है।</string>

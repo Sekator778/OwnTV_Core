@@ -1208,6 +1208,8 @@
     <string name="settings_glass_full_transparency_short_description">Désactive le seuil automatique de lisibilité pour un verre aussi clair que possible.</string>
     <string name="settings_glass_depth_effects_short">Profondeur et ombres</string>
     <string name="settings_glass_depth_effects_short_description">Active la lumière suivant le focus, la parallaxe subtile et le mouvement de profondeur.</string>
+    <string name="settings_glass_shine_short">Reflet glissant</string>
+    <string name="settings_glass_shine_short_description">Une bande de lumière traverse le panneau lors de son apparition.</string>
     <string name="settings_glass_reset_balanced">Réinitialiser: Équilibré</string>
     <string name="settings_glass_full_transparency_title">Autoriser la transparence totale</string>
     <string name="settings_glass_full_transparency_description">Désactive le seuil automatique de lisibilité pour un verre aussi clair que possible.</string>

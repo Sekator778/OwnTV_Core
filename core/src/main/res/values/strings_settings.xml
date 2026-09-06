@@ -2198,6 +2198,9 @@ Resync and remove missing titles also allows removing titles the provider no lon
     <string name="settings_glass_full_transparency_short_description">Allow completely clear surfaces.</string>
     <string name="settings_glass_depth_effects_short">Depth effects</string>
     <string name="settings_glass_depth_effects_short_description">Use lift, shadow, and focus motion.</string>
+    <!-- Translators: Setting that turns off the light that sweeps across a glass panel when it appears. -->
+    <string name="settings_glass_shine_short">Shine sweep</string>
+    <string name="settings_glass_shine_short_description">A band of light sweeps across a panel as it appears.</string>
     <string name="settings_glass_reset_balanced">Reset to Balanced</string>
     <string name="settings_glass_full_transparency_title">Allow full transparency</string>
     <string name="settings_glass_full_transparency_description">Disables the automatic readability floor for the clearest possible glass.</string>

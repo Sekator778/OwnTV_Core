@@ -3,6 +3,21 @@
 Core is versioned independently of the apps. A core version number never lines up with an OwnTV TV
 app `v4.x` release, and the two must not be confused. Tags here are prefixed `core-`.
 
+## core-1.0.24 — 2026-09-06
+
+One new setting and the two strings that label it. Additive throughout: the setting defaults to the
+behaviour the TV app already has, so nothing changes for a television.
+
+### ✨ The glass arrival shine is now a setting
+
+`GlassConfig` gains `glint`, stored as `glass_glint` and carried in a backup like every other glass
+switch. It decides whether a glass pane arrives with a band of light travelling across it. It
+defaults to `true`, which is exactly what both apps did before, and only the mobile app offers a row
+for it — the television has no screen for it and is unaffected.
+
+Two strings come with it, `settings_glass_shine_short` and its description, translated into all 25
+packaged locales.
+
 ## core-1.0.23 — 2026-09-06
 
 Documentation only. No code, no strings, no database change, no behaviour difference in either app —

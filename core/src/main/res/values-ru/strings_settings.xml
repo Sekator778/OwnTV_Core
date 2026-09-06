@@ -1227,6 +1227,8 @@
     <string name="settings_glass_full_transparency_short_description">Отключает автоматический порог читаемости для максимально прозрачного стекла.</string>
     <string name="settings_glass_depth_effects_short">Глубина и тени</string>
     <string name="settings_glass_depth_effects_short_description">Включает свет при перемещении фокуса, лёгкий параллакс и движение глубины.</string>
+    <string name="settings_glass_shine_short">Скользящий блик</string>
+    <string name="settings_glass_shine_short_description">Полоса света проходит по панели при её появлении.</string>
     <string name="settings_glass_reset_balanced">Сбросить: Сбалансированное</string>
     <string name="settings_glass_full_transparency_title">Разрешить полную прозрачность</string>
     <string name="settings_glass_full_transparency_description">Отключает автоматический порог читаемости для максимально прозрачного стекла.</string>

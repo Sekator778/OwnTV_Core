@@ -1189,6 +1189,8 @@
     <string name="settings_glass_full_transparency_short_description">Deaktiviert die automatische Lesbarkeitsgrenze für maximal klares Glas.</string>
     <string name="settings_glass_depth_effects_short">Tiefe und Schatten</string>
     <string name="settings_glass_depth_effects_short_description">Aktiviert Fokuslicht, dezente Parallaxe und Tiefenbewegung.</string>
+    <string name="settings_glass_shine_short">Lichtstreifen</string>
+    <string name="settings_glass_shine_short_description">Ein Lichtband streift über ein Panel, wenn es erscheint.</string>
     <string name="settings_glass_reset_balanced">Zurücksetzen: Ausgewogen</string>
     <string name="settings_glass_full_transparency_title">Volle Transparenz erlauben</string>
     <string name="settings_glass_full_transparency_description">Deaktiviert die automatische Lesbarkeitsgrenze für maximal klares Glas.</string>

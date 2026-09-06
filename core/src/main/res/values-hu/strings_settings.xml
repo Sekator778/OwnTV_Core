@@ -1199,6 +1199,8 @@ Az Újraszinkronizálás és a hiányzó címek eltávolítása azt is lehetőv�
     <string name="settings_glass_full_transparency_short_description">Teljesen tiszta felületek engedélyezése.</string>
     <string name="settings_glass_depth_effects_short">Mélységhatások</string>
     <string name="settings_glass_depth_effects_short_description">Kiemelkedés, árnyék és fókuszmozgás használata.</string>
+    <string name="settings_glass_shine_short">Fénycsík</string>
+    <string name="settings_glass_shine_short_description">Egy fénysáv suhan át a panelen, amikor megjelenik.</string>
     <string name="settings_glass_reset_balanced">Visszaállítás Kiegyensúlyozottra</string>
     <string name="settings_glass_full_transparency_title">Teljes átlátszóság engedélyezése</string>
     <string name="settings_glass_full_transparency_description">Kikapcsolja az automatikus olvashatósági alsó határt a lehető legtisztább üvegért.</string>

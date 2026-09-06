@@ -1189,6 +1189,8 @@
     <string name="settings_glass_full_transparency_short_description">Schakelt de automatische leesbaarheidsgrens uit voor het helderst mogelijke glas.</string>
     <string name="settings_glass_depth_effects_short">Diepte en schaduwen</string>
     <string name="settings_glass_depth_effects_short_description">Schakelt focuslicht, subtiele parallax en dieptebeweging in.</string>
+    <string name="settings_glass_shine_short">Lichtveeg</string>
+    <string name="settings_glass_shine_short_description">Een lichtband strijkt over een paneel wanneer het verschijnt.</string>
     <string name="settings_glass_reset_balanced">Opnieuw instellen: Gebalanceerd</string>
     <string name="settings_glass_full_transparency_title">Volledige transparantie toestaan</string>
     <string name="settings_glass_full_transparency_description">Schakelt de automatische leesbaarheidsgrens uit voor het helderst mogelijke glas.</string>

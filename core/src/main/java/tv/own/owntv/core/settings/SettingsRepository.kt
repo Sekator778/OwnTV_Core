@@ -452,6 +452,7 @@ class SettingsRepository(private val context: Context, private val localeStore: 
         val GLASS_HIGHLIGHT = intPreferencesKey("glass_highlight")
         val GLASS_ALLOW_FULL_TRANSPARENCY = booleanPreferencesKey("glass_allow_full_transparency")
         val GLASS_DEPTH_EFFECTS = booleanPreferencesKey("glass_depth_effects")
+        val GLASS_GLINT = booleanPreferencesKey("glass_glint")
         val GLASS_PRESET = stringPreferencesKey("glass_preset")
     }
 
@@ -2041,6 +2042,7 @@ class SettingsRepository(private val context: Context, private val localeStore: 
         val highlightPct = p[Keys.GLASS_HIGHLIGHT] ?: GLASS_HIGHLIGHT_DEFAULT_PCT
         val allowFullTransparency = p[Keys.GLASS_ALLOW_FULL_TRANSPARENCY] ?: false
         val depthEffects = p[Keys.GLASS_DEPTH_EFFECTS] ?: true
+        val glint = p[Keys.GLASS_GLINT] ?: true
         val preset = tv.own.owntv.core.theme.GlassPreset.fromStored(
             name = p[Keys.GLASS_PRESET],
             customAlpha = alphaPct / 100f,
@@ -2054,6 +2056,7 @@ class SettingsRepository(private val context: Context, private val localeStore: 
             highlightStrength = highlightPct / 100f,
             allowFullTransparency = allowFullTransparency,
             depthEffects = depthEffects,
+            glint = glint,
         )
     }
 
@@ -2101,6 +2104,11 @@ class SettingsRepository(private val context: Context, private val localeStore: 
 
     suspend fun setGlassDepthEffects(enabled: Boolean) {
         context.dataStore.edit { it[Keys.GLASS_DEPTH_EFFECTS] = enabled }
+    }
+
+    /** The sweep of light a glass pane arrives with. */
+    suspend fun setGlassGlint(enabled: Boolean) {
+        context.dataStore.edit { it[Keys.GLASS_GLINT] = enabled }
     }
 
     /** Avatar for the current (placeholder) profile until real profiles arrive in the wizard. */
@@ -2225,7 +2233,7 @@ class SettingsRepository(private val context: Context, private val localeStore: 
         Keys.SUB_STYLE_ENABLED, Keys.SUB_SEARCH_FILTER, Keys.DEINTERLACE,
             Keys.PANEL_W_LIVE_ON, Keys.PANEL_W_MOVIES_ON, Keys.PANEL_W_SERIES_ON, Keys.GUIDE_WIDTH_ON,
         Keys.AMBIENT_GLOW_ENABLED, Keys.AMBIENT_GLOW_PULSE,
-        Keys.GLASS_ALLOW_FULL_TRANSPARENCY, Keys.GLASS_DEPTH_EFFECTS,
+        Keys.GLASS_ALLOW_FULL_TRANSPARENCY, Keys.GLASS_DEPTH_EFFECTS, Keys.GLASS_GLINT,
         // Touch-host settings. They travel even though a television has no row for them: a phone
         // restored from a phone must keep them, and a television simply ignores what it never reads.
         Keys.BACKGROUND_PLAYBACK, Keys.PIP_ENABLED, Keys.DATA_SAVER, Keys.DOWNLOADS_WIFI_ONLY,

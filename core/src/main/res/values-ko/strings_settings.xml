@@ -1170,6 +1170,8 @@
     <string name="settings_glass_full_transparency_short_description">가장 투명한 유리를 위해 자동 가독성 제한을 끕니다.</string>
     <string name="settings_glass_depth_effects_short">깊이와 그림자</string>
     <string name="settings_glass_depth_effects_short_description">포커스 이동 조명, 은은한 시차 및 깊이 움직임을 켭니다.</string>
+    <string name="settings_glass_shine_short">빛 스침</string>
+    <string name="settings_glass_shine_short_description">패널이 나타날 때 빛의 띄가 가로질러 지나갑니다.</string>
     <string name="settings_glass_reset_balanced">초기화: 균형</string>
     <string name="settings_glass_full_transparency_title">완전한 투명도 허용</string>
     <string name="settings_glass_full_transparency_description">가장 투명한 유리를 위해 자동 가독성 제한을 끕니다.</string>

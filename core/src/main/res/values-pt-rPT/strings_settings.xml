@@ -1208,6 +1208,8 @@
     <string name="settings_glass_full_transparency_short_description">Desativa o limite automático de legibilidade para obter o vidro mais transparente.</string>
     <string name="settings_glass_depth_effects_short">Profundidade e sombras</string>
     <string name="settings_glass_depth_effects_short_description">Ativa a luz que acompanha o foco, a paralaxe subtil e o movimento de profundidade.</string>
+    <string name="settings_glass_shine_short">Brilho deslizante</string>
+    <string name="settings_glass_shine_short_description">Uma faixa de luz atravessa o painel quando este aparece.</string>
     <string name="settings_glass_reset_balanced">Repor: Equilibrado</string>
     <string name="settings_glass_full_transparency_title">Permitir transparência total</string>
     <string name="settings_glass_full_transparency_description">Desativa o limite automático de legibilidade para obter o vidro mais transparente.</string>

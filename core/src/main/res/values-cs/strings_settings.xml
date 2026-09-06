@@ -1227,6 +1227,8 @@
     <string name="settings_glass_full_transparency_short_description">Vypne automatickou hranici čitelnosti pro nejčistší možné sklo.</string>
     <string name="settings_glass_depth_effects_short">Hloubka a stíny</string>
     <string name="settings_glass_depth_effects_short_description">Zapne světlo sledující zaměření, jemnou paralaxu a pohyb hloubky.</string>
+    <string name="settings_glass_shine_short">Přelet světla</string>
+    <string name="settings_glass_shine_short_description">Při zobrazení panelu jím přejede pruh světla.</string>
     <string name="settings_glass_reset_balanced">Obnovit výchozí: Vyvážené</string>
     <string name="settings_glass_full_transparency_title">Povolit plnou průhlednost</string>
     <string name="settings_glass_full_transparency_description">Vypne automatickou hranici čitelnosti pro nejčistší možné sklo.</string>

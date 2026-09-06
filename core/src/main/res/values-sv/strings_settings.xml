@@ -1189,6 +1189,8 @@
     <string name="settings_glass_full_transparency_short_description">Stänger av den automatiska läsbarhetsgränsen för klarast möjliga glas.</string>
     <string name="settings_glass_depth_effects_short">Djup och skuggor</string>
     <string name="settings_glass_depth_effects_short_description">Aktiverar fokusljus, subtil parallax och djuprörelse.</string>
+    <string name="settings_glass_shine_short">Ljusstråk</string>
+    <string name="settings_glass_shine_short_description">Ett ljusband sveper över panelen när den visas.</string>
     <string name="settings_glass_reset_balanced">Återställ: Balanserad</string>
     <string name="settings_glass_full_transparency_title">Tillåt full genomskinlighet</string>
     <string name="settings_glass_full_transparency_description">Stänger av den automatiska läsbarhetsgränsen för klarast möjliga glas.</string>

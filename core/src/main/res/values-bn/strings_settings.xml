@@ -1189,6 +1189,8 @@
     <string name="settings_glass_full_transparency_short_description">সবচেয়ে স্বচ্ছ কাচের জন্য স্বয়ংক্রিয় পাঠযোগ্যতার সীমা বন্ধ করে।</string>
     <string name="settings_glass_depth_effects_short">গভীরতা ও ছায়া</string>
     <string name="settings_glass_depth_effects_short_description">ফোকাস-ভ্রমণ আলো, সূক্ষ্ম প্যারালাক্স ও গভীরতার গতি চালু করে।</string>
+    <string name="settings_glass_shine_short">আলোর ঝলক</string>
+    <string name="settings_glass_shine_short_description">প্যানেল দেখা দেওয়ার সময় তার উপর দিয়ে একটি আলোর রেখা চলে যায়।</string>
     <string name="settings_glass_reset_balanced">রিসেট করুন: ভারসাম্যপূর্ণ</string>
     <string name="settings_glass_full_transparency_title">সম্পূর্ণ স্বচ্ছতার অনুমতি দিন</string>
     <string name="settings_glass_full_transparency_description">সবচেয়ে স্বচ্ছ কাচের জন্য স্বয়ংক্রিয় পাঠযোগ্যতার সীমা বন্ধ করে।</string>

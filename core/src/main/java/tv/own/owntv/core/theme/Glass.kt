@@ -96,6 +96,8 @@ data class GlassConfig(
     val allowFullTransparency: Boolean = false,
     /** Enables focus-travel light, parallax and depth transforms. */
     val depthEffects: Boolean = true,
+    /** Enables the band of light that sweeps across a glass pane as it arrives. */
+    val glint: Boolean = true,
     /** Runtime-only environment flag supplied by MainActivity; it is not persisted in the bitmask. */
     val hasBackdrop: Boolean = false,
 ) {
@@ -125,6 +127,7 @@ data class GlassConfig(
             highlightStrength: Float = DEFAULT_HIGHLIGHT_STRENGTH,
             allowFullTransparency: Boolean = false,
             depthEffects: Boolean = true,
+            glint: Boolean = true,
         ): GlassConfig {
             val scope = GlassSurface.entries.filter { (bits shr it.ordinal) and 1 == 1 }.toSet()
             return GlassConfig(
@@ -135,6 +138,7 @@ data class GlassConfig(
                 highlightStrength = highlightStrength.coerceIn(0f, 1f),
                 allowFullTransparency = allowFullTransparency,
                 depthEffects = depthEffects,
+                glint = glint,
             )
         }
     }

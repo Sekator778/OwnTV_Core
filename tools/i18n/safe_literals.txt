@@ -2136,6 +2136,7 @@
 1	preference-key	core/src/main/java/tv/own/owntv/core/settings/SettingsRepository.kt	glass_alpha
 1	preference-key	core/src/main/java/tv/own/owntv/core/settings/SettingsRepository.kt	glass_blur
 1	preference-key	core/src/main/java/tv/own/owntv/core/settings/SettingsRepository.kt	glass_depth_effects
+1	preference-key	core/src/main/java/tv/own/owntv/core/settings/SettingsRepository.kt	glass_glint
 1	preference-key	core/src/main/java/tv/own/owntv/core/settings/SettingsRepository.kt	glass_highlight
 1	preference-key	core/src/main/java/tv/own/owntv/core/settings/SettingsRepository.kt	glass_preset
 1	preference-key	core/src/main/java/tv/own/owntv/core/settings/SettingsRepository.kt	glass_scope
