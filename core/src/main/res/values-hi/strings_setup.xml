@@ -257,4 +257,7 @@
     <string name="setup_stalker_device_id_optional">डिवाइस ID (वैकल्पिक)</string>
     <string name="setup_stalker_device_id2_optional">डिवाइस ID2 (वैकल्पिक)</string>
     <string name="setup_stalker_signature_optional">हस्ताक्षर (वैकल्पिक)</string>
+    <string name="companion_error_pair_failed">इस डिवाइस के साथ पेयर नहीं हो सका।</string>
+    <string name="local_sync_browser_title">OwnTV लोकल सिंक</string>
+    <string name="local_sync_browser_body">यह पता आपके दूसरे डिवाइस के OwnTV ऐप के लिए है। वहाँ लोकल सिंक खोलें और सूची में से यह डिवाइस चुनें।</string>
 </resources>

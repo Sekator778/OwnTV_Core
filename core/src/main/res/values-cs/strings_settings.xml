@@ -1313,4 +1313,69 @@
     <string name="settings_audio_on_mobile_data_description">Začít bez obrazu, když není Wi-Fi</string>
     <string name="settings_audio_per_channel">Pamatovat jen zvuk u kanálu</string>
     <string name="settings_audio_per_channel_description">Kanál sledovaný bez obrazu se příště otevře stejně</string>
+    <string name="local_sync_title">Místní synchronizace</string>
+    <string name="local_sync_description">Sdílejte svá data s druhým zařízením přes Wi-Fi</string>
+    <string name="local_sync_search_keywords">synchronizace wifi síť párování zařízení sdílení</string>
+    <string name="local_sync_host_hint">Na druhém zařízení také zapněte Režim synchronizace, klepněte na Připojit a vyberte toto.</string>
+    <string name="local_sync_qr_description">QR kód s adresou tohoto zařízení</string>
+    <string name="local_sync_pin_is">PIN: <xliff:g id="pin">%1$s</xliff:g></string>
+    <string name="local_sync_add_device">Najít zařízení</string>
+    <string name="local_sync_add_device_description">Prohledejte síť, naskenujte kód nebo zadejte adresu</string>
+    <string name="local_sync_paired_devices">Spárovaná zařízení</string>
+    <string name="local_sync_device_address">Na adrese <xliff:g id="address">%1$s</xliff:g></string>
+    <string name="local_sync_working">Pracuji…</string>
+    <string name="local_sync_find_hint">Obě zařízení musí být na stejné Wi-Fi a na druhém musí být zapnutý Režim synchronizace.</string>
+    <string name="local_sync_searching">Prohledávání sítě…</string>
+    <string name="local_sync_found">Nalezeno ve vaší síti</string>
+    <string name="local_sync_scan_qr">Naskenovat kód</string>
+    <string name="local_sync_scan_qr_description">Namiřte fotoaparát na kód na druhém zařízení</string>
+    <string name="local_sync_camera_denied">I bez fotoaparátu můžete zařízení vybrat ze seznamu nebo zadat jeho adresu.</string>
+    <string name="local_sync_manual_address">Nebo zadejte adresu</string>
+    <string name="local_sync_manual_address_label">Adresa</string>
+    <string name="local_sync_enter_pin">Zadejte PIN</string>
+    <string name="local_sync_enter_pin_description">Zadejte šest číslic zobrazených na druhém zařízení. Stačí to udělat jednou.</string>
+    <string name="local_sync_pin_label">PIN</string>
+    <string name="local_sync_pair">Spárovat</string>
+    <string name="local_sync_send_to">Odeslat do <xliff:g id="device">%1$s</xliff:g></string>
+    <string name="local_sync_send_description">Vaše data putují tam. Zde se nic nemění.</string>
+    <string name="local_sync_receive_from">Přijmout z <xliff:g id="device">%1$s</xliff:g></string>
+    <string name="local_sync_receive_description">Jeho data přijdou sem. Tam se nic nemění.</string>
+    <string name="local_sync_merge_with">Sloučit s <xliff:g id="device">%1$s</xliff:g></string>
+    <string name="local_sync_merge_description">Obě zařízení nakonec budou mít vše</string>
+    <string name="local_sync_unpair">Zapomenout toto zařízení</string>
+    <string name="local_sync_unpair_description">Příště budete PIN potřebovat znovu</string>
+    <string name="local_sync_what_to_send">Co odeslat</string>
+    <string name="local_sync_what_to_receive">Co přijmout</string>
+    <string name="local_sync_what_to_merge">Co sloučit</string>
+    <string name="local_sync_sections_hint">Totéž, co obsahuje záloha. Odškrtněte, co chcete vynechat.</string>
+    <string name="local_sync_everything">Vše</string>
+    <string name="local_sync_password_hint">Heslo chrání odeslaná data a vezme s sebou přihlášení k vašim playlistům. Necháte-li je prázdné, přihlášení se prostě vynechají.</string>
+    <string name="local_sync_confirm_title">Co se změní</string>
+    <string name="local_sync_confirm_hint">Zatím se nic nezměnilo. Toto by použití provedlo na tomto zařízení.</string>
+    <string name="local_sync_nothing_to_change">Obě zařízení už mají totéž. Není co použít.</string>
+    <string name="local_sync_merge_note">Vaše vlastní data se poté odešlou zpět, takže obě zařízení skončí stejná.</string>
+    <string name="local_sync_change_profiles">Nové profily: <xliff:g id="count">%1$d</xliff:g></string>
+    <string name="local_sync_change_sources">Nové playlisty: <xliff:g id="count">%1$d</xliff:g></string>
+    <string name="local_sync_change_favorites">Nové oblíbené: <xliff:g id="count">%1$d</xliff:g></string>
+    <string name="local_sync_change_history">Nové položky historie: <xliff:g id="count">%1$d</xliff:g></string>
+    <string name="local_sync_change_resume">Nové pozice přehrávání: <xliff:g id="count">%1$d</xliff:g></string>
+    <string name="local_sync_change_reorder">Změny pořadí: <xliff:g id="count">%1$d</xliff:g></string>
+    <string name="local_sync_change_settings">Odlišná nastavení: <xliff:g id="count">%1$d</xliff:g></string>
+    <string name="local_sync_change_deletions">Položky k odebrání: <xliff:g id="count">%1$d</xliff:g></string>
+    <string name="local_sync_change_customize">Přenesou se i vaše úpravy</string>
+    <string name="local_sync_apply">Použít</string>
+    <string name="local_sync_done">Synchronizace dokončena</string>
+    <string name="local_sync_received_items">Přijaté položky: <xliff:g id="count">%1$d</xliff:g></string>
+    <string name="local_sync_sent">Vaše data byla odeslána</string>
+    <string name="local_sync_failed">Synchronizace selhala</string>
+    <string name="local_sync_error_unreachable">Toto zařízení se nepodařilo kontaktovat. Otevřete na něm OwnTV → Nastavení → Data → Místní synchronizace a zapněte Režim synchronizace. Obě zařízení musí být na stejné Wi-Fi.</string>
+    <string name="local_sync_error_unauthorized">Druhé zařízení odmítlo spojení. PIN může být špatný, nebo si toto zařízení už nepamatuje.</string>
+    <string name="local_sync_error_bad_payload">Přijatá data se nepodařilo přečíst. Pokud jste použili heslo, ověřte, že je na obou zařízeních stejné.</string>
+    <string name="local_sync_error_unknown">Něco se pokazilo. Zkuste to znovu.</string>
+    <string name="local_sync_mode">Režim synchronizace</string>
+    <string name="local_sync_mode_description">Umožní ostatním zařízením najít toto. Zůstane zapnutý, dokud je tato obrazovka otevřená.</string>
+    <string name="local_sync_mode_pill">Režim synchronizace zapnut</string>
+    <string name="local_sync_connect">Připojit</string>
+    <string name="local_sync_connect_description">Najděte jiné zařízení se zapnutým režimem synchronizace</string>
+    <string name="local_sync_last_synced">Naposledy synchronizováno: <xliff:g id="when">%1$s</xliff:g></string>
 </resources>

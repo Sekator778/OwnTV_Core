@@ -125,6 +125,22 @@ val dataModule = module {
     single { tv.own.owntv.core.player.VodEngineStore(androidContext()) }
     // Remote (companion) add-source LAN server — one shared instance for Setup + Settings.
     single { tv.own.owntv.core.companion.CompanionController(androidContext(), get()) }
+    // Local sync between two OwnTV devices on the same Wi-Fi (Plan 4 Phase 12). The payload is a
+    // backup container, the listener is the companion server, and the merge is the restore path —
+    // what is new here is the client, the pairing and the discovery.
+    single { tv.own.owntv.core.sync.local.PairedDeviceStore(androidContext()) }
+    single { tv.own.owntv.core.sync.local.LocalSyncClient() }
+    single { tv.own.owntv.core.sync.local.LocalSyncDiscovery(androidContext()) }
+    single {
+        tv.own.owntv.core.sync.local.LocalSyncManager(
+            context = androidContext(),
+            companion = get(),
+            backups = get(),
+            paired = get(),
+            client = get(),
+            discovery = get(),
+        )
+    }
     single { BulkInsertHelper(get()) }
     single {
         tv.own.owntv.core.sync.ImportFinalizer(
@@ -137,8 +153,11 @@ val dataModule = module {
         )
     }
     // context, channelDao, movieDao, seriesDao, profileDao, favoriteDao, historyDao, progressDao,
-    // contentOrderDao, customCategoryDao, seriesSortOrderDao, db
-    single { UserDataResolver(androidContext(), get(), get(), get(), get(), get(), get(), get(), get(), get(), get(), get()) }
+    // contentOrderDao, customCategoryDao, seriesSortOrderDao, tombstoneDao, db
+    single { UserDataResolver(androidContext(), get(), get(), get(), get(), get(), get(), get(), get(), get(), get(), get(), get()) }
+    // The one place a user deletion is written: it records the tombstone local sync needs and does
+    // the delete in the same transaction. db, favoriteDao, historyDao, progressDao, customCategoryDao, userData
+    single { tv.own.owntv.core.backup.UserDataWriter(get(), get(), get(), get(), get(), get()) }
     // sourceDao, syncManager, userDataResolver, channelDao, movieDao, seriesDao, categoryDao
     single { SourceRepository(get(), get(), get(), get(), get(), get(), get()) }
     // settings, sourceRepository, channelDao, movieDao, seriesDao

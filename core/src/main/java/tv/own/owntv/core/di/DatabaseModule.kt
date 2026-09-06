@@ -68,6 +68,7 @@ val databaseModule = module {
     single { get<OwnTVDatabase>().playbackPrefsDao() }
     single { get<OwnTVDatabase>().customCategoryDao() }
     single { get<OwnTVDatabase>().seriesSortOrderDao() }
+    single { get<OwnTVDatabase>().tombstoneDao() }
     single { get<OwnTVDatabase>().tvProviderProgramDao() }
     single { get<OwnTVDatabase>().downloadDao() }
     single { get<OwnTVDatabase>().epgDao() }

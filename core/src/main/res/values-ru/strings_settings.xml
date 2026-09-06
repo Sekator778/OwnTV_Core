@@ -1313,4 +1313,69 @@
     <string name="settings_audio_on_mobile_data_description">Начинать без изображения, когда нет Wi-Fi</string>
     <string name="settings_audio_per_channel">Запоминать только звук для канала</string>
     <string name="settings_audio_per_channel_description">Канал, который вы смотрели без изображения, в следующий раз откроется так же</string>
+    <string name="local_sync_title">Локальная синхронизация</string>
+    <string name="local_sync_description">Обменивайтесь данными с другим устройством по Wi-Fi</string>
+    <string name="local_sync_search_keywords">синхронизация wifi сеть сопряжение устройства обмен</string>
+    <string name="local_sync_host_hint">На другом устройстве тоже включите режим синхронизации, нажмите «Подключиться» и выберите это устройство.</string>
+    <string name="local_sync_qr_description">QR-код с адресом этого устройства</string>
+    <string name="local_sync_pin_is">PIN-код: <xliff:g id="pin">%1$s</xliff:g></string>
+    <string name="local_sync_add_device">Найти устройство</string>
+    <string name="local_sync_add_device_description">Найдите в сети, отсканируйте код или введите адрес</string>
+    <string name="local_sync_paired_devices">Сопряжённые устройства</string>
+    <string name="local_sync_device_address">По адресу <xliff:g id="address">%1$s</xliff:g></string>
+    <string name="local_sync_working">Выполняется…</string>
+    <string name="local_sync_find_hint">Оба устройства должны быть в одной сети Wi-Fi, а на другом должен быть включён режим синхронизации.</string>
+    <string name="local_sync_searching">Поиск в сети…</string>
+    <string name="local_sync_found">Найдено в вашей сети</string>
+    <string name="local_sync_scan_qr">Отсканировать код</string>
+    <string name="local_sync_scan_qr_description">Наведите камеру на код на другом устройстве</string>
+    <string name="local_sync_camera_denied">Без камеры можно выбрать устройство из списка или ввести его адрес.</string>
+    <string name="local_sync_manual_address">Или введите адрес</string>
+    <string name="local_sync_manual_address_label">Адрес</string>
+    <string name="local_sync_enter_pin">Введите PIN-код</string>
+    <string name="local_sync_enter_pin_description">Введите шесть цифр, показанных на другом устройстве. Это нужно сделать только один раз.</string>
+    <string name="local_sync_pin_label">PIN-код</string>
+    <string name="local_sync_pair">Сопрячь</string>
+    <string name="local_sync_send_to">Отправить на <xliff:g id="device">%1$s</xliff:g></string>
+    <string name="local_sync_send_description">Ваши данные уходят туда. Здесь ничего не меняется.</string>
+    <string name="local_sync_receive_from">Получить с <xliff:g id="device">%1$s</xliff:g></string>
+    <string name="local_sync_receive_description">Его данные приходят сюда. Там ничего не меняется.</string>
+    <string name="local_sync_merge_with">Объединить с <xliff:g id="device">%1$s</xliff:g></string>
+    <string name="local_sync_merge_description">В итоге на обоих устройствах будет всё</string>
+    <string name="local_sync_unpair">Забыть это устройство</string>
+    <string name="local_sync_unpair_description">В следующий раз PIN-код понадобится снова</string>
+    <string name="local_sync_what_to_send">Что отправить</string>
+    <string name="local_sync_what_to_receive">Что получить</string>
+    <string name="local_sync_what_to_merge">Что объединить</string>
+    <string name="local_sync_sections_hint">То же, что и в резервной копии. Снимите отметки с того, что не нужно.</string>
+    <string name="local_sync_everything">Всё</string>
+    <string name="local_sync_password_hint">Пароль защищает отправляемое и переносит логины ваших плейлистов. Оставьте поле пустым — эти логины просто не будут включены.</string>
+    <string name="local_sync_confirm_title">Что изменится</string>
+    <string name="local_sync_confirm_hint">Пока ничего не изменено. Вот что произойдёт на этом устройстве после применения.</string>
+    <string name="local_sync_nothing_to_change">На обоих устройствах уже одно и то же. Применять нечего.</string>
+    <string name="local_sync_merge_note">Затем ваши данные отправляются обратно, и оба устройства становятся одинаковыми.</string>
+    <string name="local_sync_change_profiles">Новые профили: <xliff:g id="count">%1$d</xliff:g></string>
+    <string name="local_sync_change_sources">Новые плейлисты: <xliff:g id="count">%1$d</xliff:g></string>
+    <string name="local_sync_change_favorites">Новое в избранном: <xliff:g id="count">%1$d</xliff:g></string>
+    <string name="local_sync_change_history">Новые записи истории: <xliff:g id="count">%1$d</xliff:g></string>
+    <string name="local_sync_change_resume">Новые точки возобновления: <xliff:g id="count">%1$d</xliff:g></string>
+    <string name="local_sync_change_reorder">Изменения порядка: <xliff:g id="count">%1$d</xliff:g></string>
+    <string name="local_sync_change_settings">Отличающиеся настройки: <xliff:g id="count">%1$d</xliff:g></string>
+    <string name="local_sync_change_deletions">Элементы к удалению: <xliff:g id="count">%1$d</xliff:g></string>
+    <string name="local_sync_change_customize">Ваши настройки оформления тоже переносятся</string>
+    <string name="local_sync_apply">Применить</string>
+    <string name="local_sync_done">Синхронизация завершена</string>
+    <string name="local_sync_received_items">Полученные элементы: <xliff:g id="count">%1$d</xliff:g></string>
+    <string name="local_sync_sent">Ваши данные отправлены</string>
+    <string name="local_sync_failed">Синхронизация не удалась</string>
+    <string name="local_sync_error_unreachable">Не удалось связаться с этим устройством. Откройте на нём OwnTV → Настройки → Данные → Локальная синхронизация и включите режим синхронизации. Оба устройства должны быть в одной сети Wi-Fi.</string>
+    <string name="local_sync_error_unauthorized">Другое устройство отказало. Возможно, PIN-код неверен или это устройство было забыто.</string>
+    <string name="local_sync_error_bad_payload">Не удалось прочитать полученные данные. Если вы использовали пароль, проверьте, что он одинаков на обоих устройствах.</string>
+    <string name="local_sync_error_unknown">Что-то пошло не так. Попробуйте ещё раз.</string>
+    <string name="local_sync_mode">Режим синхронизации</string>
+    <string name="local_sync_mode_description">Позволяет другим вашим устройствам найти это. Работает, пока открыт этот экран.</string>
+    <string name="local_sync_mode_pill">Режим синхронизации включён</string>
+    <string name="local_sync_connect">Подключиться</string>
+    <string name="local_sync_connect_description">Найдите другое устройство с включённым режимом синхронизации</string>
+    <string name="local_sync_last_synced">Последняя синхронизация: <xliff:g id="when">%1$s</xliff:g></string>
 </resources>

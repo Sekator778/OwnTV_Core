@@ -254,4 +254,7 @@
     <string name="setup_stalker_device_id_optional">デバイスID（任意）</string>
     <string name="setup_stalker_device_id2_optional">デバイスID2（任意）</string>
     <string name="setup_stalker_signature_optional">署名（任意）</string>
+    <string name="companion_error_pair_failed">この端末とペアリングできませんでした。</string>
+    <string name="local_sync_browser_title">OwnTV ローカル同期</string>
+    <string name="local_sync_browser_body">このアドレスは、もう一方の端末の OwnTV アプリ用です。そちらでローカル同期を開き、一覧からこの端末を選んでください。</string>
 </resources>

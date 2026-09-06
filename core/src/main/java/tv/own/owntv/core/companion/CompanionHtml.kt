@@ -509,6 +509,21 @@ internal object CompanionHtml {
         """.trimIndent())
     }
 
+    /**
+     * The only page local sync serves. There is nothing for a browser to do here — the other OwnTV
+     * app is the client — but the address is discoverable and shown on screen, so someone will type
+     * it in, and a blank page or a 404 would look like the feature is broken.
+     */
+    fun localSyncPage(context: Context): String = page(
+        context,
+        context.getString(R.string.local_sync_browser_title),
+        """
+            <div class="card"><h1>${context.getString(R.string.local_sync_browser_title).h()}</h1>
+              <p>${context.getString(R.string.local_sync_browser_body).h()}</p>
+            </div>
+        """.trimIndent(),
+    )
+
     fun backupSentPage(context: Context, pin: String): String {
         val c = Copy(context)
         return page(context, c.savedTitle, """

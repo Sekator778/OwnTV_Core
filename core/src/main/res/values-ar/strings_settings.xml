@@ -1357,4 +1357,69 @@
     <string name="settings_audio_on_mobile_data_description">ابدأ بدون صورة عند عدم توفر Wi-Fi</string>
     <string name="settings_audio_per_channel">تذكّر الصوت فقط لكل قناة</string>
     <string name="settings_audio_per_channel_description">القناة التي شاهدتها بدون صورة تُفتح كذلك في المرة القادمة</string>
+    <string name="local_sync_title">المزامنة المحلية</string>
+    <string name="local_sync_description">شارك بياناتك مع جهازك الآخر عبر الواي فاي</string>
+    <string name="local_sync_search_keywords">مزامنة واي فاي شبكة اقتران أجهزة مشاركة</string>
+    <string name="local_sync_host_hint">على جهازك الآخر، فعّل وضع المزامنة أيضًا، ثم اضغط على اتصال واختر هذا الجهاز.</string>
+    <string name="local_sync_qr_description">رمز QR يحتوي على عنوان هذا الجهاز</string>
+    <string name="local_sync_pin_is">رمز PIN: <xliff:g id="pin">%1$s</xliff:g></string>
+    <string name="local_sync_add_device">البحث عن جهاز</string>
+    <string name="local_sync_add_device_description">ابحث في الشبكة أو امسح رمزًا أو اكتب عنوانًا</string>
+    <string name="local_sync_paired_devices">الأجهزة المقترنة</string>
+    <string name="local_sync_device_address">على <xliff:g id="address">%1$s</xliff:g></string>
+    <string name="local_sync_working">جارٍ العمل…</string>
+    <string name="local_sync_find_hint">يجب أن يكون الجهازان على نفس شبكة الواي فاي، وأن يكون وضع المزامنة مفعّلاً على الجهاز الآخر.</string>
+    <string name="local_sync_searching">جارٍ البحث في الشبكة…</string>
+    <string name="local_sync_found">عُثر عليها في شبكتك</string>
+    <string name="local_sync_scan_qr">مسح الرمز</string>
+    <string name="local_sync_scan_qr_description">وجّه الكاميرا نحو الرمز على جهازك الآخر</string>
+    <string name="local_sync_camera_denied">بدون الكاميرا لا يزال بإمكانك اختيار الجهاز من القائمة أو كتابة عنوانه.</string>
+    <string name="local_sync_manual_address">أو اكتب العنوان</string>
+    <string name="local_sync_manual_address_label">العنوان</string>
+    <string name="local_sync_enter_pin">أدخل رمز PIN</string>
+    <string name="local_sync_enter_pin_description">اكتب الأرقام الستة الظاهرة على جهازك الآخر. تحتاج إلى ذلك مرة واحدة فقط.</string>
+    <string name="local_sync_pin_label">رمز PIN</string>
+    <string name="local_sync_pair">اقتران</string>
+    <string name="local_sync_send_to">الإرسال إلى <xliff:g id="device">%1$s</xliff:g></string>
+    <string name="local_sync_send_description">تنتقل بياناتك إلى هناك. لا يتغير أي شيء هنا.</string>
+    <string name="local_sync_receive_from">الاستلام من <xliff:g id="device">%1$s</xliff:g></string>
+    <string name="local_sync_receive_description">تأتي بياناته إلى هنا. لا يتغير أي شيء هناك.</string>
+    <string name="local_sync_merge_with">الدمج مع <xliff:g id="device">%1$s</xliff:g></string>
+    <string name="local_sync_merge_description">ينتهي الجهازان بكل شيء</string>
+    <string name="local_sync_unpair">نسيان هذا الجهاز</string>
+    <string name="local_sync_unpair_description">ستحتاج إلى رمز PIN مرة أخرى في المرة القادمة</string>
+    <string name="local_sync_what_to_send">ما الذي سيتم إرساله</string>
+    <string name="local_sync_what_to_receive">ما الذي سيتم استلامه</string>
+    <string name="local_sync_what_to_merge">ما الذي سيتم دمجه</string>
+    <string name="local_sync_sections_hint">نفس الأشياء التي تحتويها النسخة الاحتياطية. أزل تحديد أي شيء تفضل استبعاده.</string>
+    <string name="local_sync_everything">كل شيء</string>
+    <string name="local_sync_password_hint">كلمة المرور تحمي ما يتم إرساله وتنقل بيانات دخول قوائم التشغيل معه. اتركها فارغة وسيتم استبعاد بيانات الدخول ببساطة.</string>
+    <string name="local_sync_confirm_title">ما الذي سيتغير</string>
+    <string name="local_sync_confirm_hint">لم يتغير شيء بعد. هذا ما سيحدث على هذا الجهاز عند التطبيق.</string>
+    <string name="local_sync_nothing_to_change">يحتوي الجهازان بالفعل على الشيء نفسه. لا يوجد ما يمكن تطبيقه.</string>
+    <string name="local_sync_merge_note">تُرسل بياناتك بعد ذلك في الاتجاه المعاكس، فينتهي الجهازان متطابقين.</string>
+    <string name="local_sync_change_profiles">ملفات تعريف جديدة: <xliff:g id="count">%1$d</xliff:g></string>
+    <string name="local_sync_change_sources">قوائم تشغيل جديدة: <xliff:g id="count">%1$d</xliff:g></string>
+    <string name="local_sync_change_favorites">مفضلات جديدة: <xliff:g id="count">%1$d</xliff:g></string>
+    <string name="local_sync_change_history">إدخالات سجل جديدة: <xliff:g id="count">%1$d</xliff:g></string>
+    <string name="local_sync_change_resume">مواضع استئناف جديدة: <xliff:g id="count">%1$d</xliff:g></string>
+    <string name="local_sync_change_reorder">تغييرات الترتيب: <xliff:g id="count">%1$d</xliff:g></string>
+    <string name="local_sync_change_settings">إعدادات مختلفة: <xliff:g id="count">%1$d</xliff:g></string>
+    <string name="local_sync_change_deletions">عناصر ستُزال: <xliff:g id="count">%1$d</xliff:g></string>
+    <string name="local_sync_change_customize">تنتقل تخصيصاتك أيضًا</string>
+    <string name="local_sync_apply">تطبيق</string>
+    <string name="local_sync_done">انتهت المزامنة</string>
+    <string name="local_sync_received_items">عناصر مستلمة: <xliff:g id="count">%1$d</xliff:g></string>
+    <string name="local_sync_sent">تم إرسال بياناتك</string>
+    <string name="local_sync_failed">فشلت المزامنة</string>
+    <string name="local_sync_error_unreachable">تعذّر الوصول إلى هذا الجهاز. افتح عليه OwnTV ← الإعدادات ← البيانات ← المزامنة المحلية وفعّل وضع المزامنة. يجب أن يكون الجهازان على نفس شبكة الواي فاي.</string>
+    <string name="local_sync_error_unauthorized">رفض الجهاز الآخر الاتصال. قد يكون رمز PIN خاطئًا أو ربما نسي هذا الجهاز.</string>
+    <string name="local_sync_error_bad_payload">تعذّرت قراءة ما وصل. إذا استخدمت كلمة مرور، فتأكد من أنها نفسها على الجهازين.</string>
+    <string name="local_sync_error_unknown">حدث خطأ ما. حاول مرة أخرى.</string>
+    <string name="local_sync_mode">وضع المزامنة</string>
+    <string name="local_sync_mode_description">يتيح لأجهزتك الأخرى العثور على هذا الجهاز. يبقى مفعّلاً ما دامت هذه الشاشة مفتوحة.</string>
+    <string name="local_sync_mode_pill">وضع المزامنة مفعّل</string>
+    <string name="local_sync_connect">اتصال</string>
+    <string name="local_sync_connect_description">ابحث عن جهاز آخر مفعّل عليه وضع المزامنة</string>
+    <string name="local_sync_last_synced">آخر مزامنة: <xliff:g id="when">%1$s</xliff:g></string>
 </resources>

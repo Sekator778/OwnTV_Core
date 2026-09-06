@@ -1269,4 +1269,69 @@
     <string name="settings_audio_on_mobile_data_description">Wi-Fi न होने पर बिना तस्वीर शुरू करें</string>
     <string name="settings_audio_per_channel">हर चैनल के लिए केवल आवाज़ याद रखें</string>
     <string name="settings_audio_per_channel_description">बिना तस्वीर देखा गया चैनल अगली बार वैसे ही खुलेगा</string>
+    <string name="local_sync_title">लोकल सिंक</string>
+    <string name="local_sync_description">वाई-फ़ाई से अपने दूसरे डिवाइस के साथ डेटा साझा करें</string>
+    <string name="local_sync_search_keywords">सिंक वाईफ़ाई नेटवर्क पेयर डिवाइस साझा</string>
+    <string name="local_sync_host_hint">अपने दूसरे डिवाइस पर भी सिंक मोड चालू करें, फिर कनेक्ट पर टैप करके इसे चुनें।</string>
+    <string name="local_sync_qr_description">इस डिवाइस के पते वाला क्यूआर कोड</string>
+    <string name="local_sync_pin_is">पिन: <xliff:g id="pin">%1$s</xliff:g></string>
+    <string name="local_sync_add_device">डिवाइस ढूँढें</string>
+    <string name="local_sync_add_device_description">नेटवर्क खोजें, कोड स्कैन करें या पता टाइप करें</string>
+    <string name="local_sync_paired_devices">पेयर किए गए डिवाइस</string>
+    <string name="local_sync_device_address"><xliff:g id="address">%1$s</xliff:g> पर</string>
+    <string name="local_sync_working">काम चल रहा है…</string>
+    <string name="local_sync_find_hint">दोनों डिवाइस एक ही वाई-फ़ाई पर होने चाहिए, और दूसरे पर सिंक मोड चालू होना चाहिए।</string>
+    <string name="local_sync_searching">नेटवर्क खोजा जा रहा है…</string>
+    <string name="local_sync_found">आपके नेटवर्क पर मिले</string>
+    <string name="local_sync_scan_qr">कोड स्कैन करें</string>
+    <string name="local_sync_scan_qr_description">कैमरे को अपने दूसरे डिवाइस के कोड पर रखें</string>
+    <string name="local_sync_camera_denied">कैमरे के बिना भी आप सूची से डिवाइस चुन सकते हैं या उसका पता टाइप कर सकते हैं।</string>
+    <string name="local_sync_manual_address">या पता टाइप करें</string>
+    <string name="local_sync_manual_address_label">पता</string>
+    <string name="local_sync_enter_pin">पिन दर्ज करें</string>
+    <string name="local_sync_enter_pin_description">अपने दूसरे डिवाइस पर दिख रहे छह अंक टाइप करें। यह सिर्फ़ एक बार करना होता है।</string>
+    <string name="local_sync_pin_label">पिन</string>
+    <string name="local_sync_pair">पेयर करें</string>
+    <string name="local_sync_send_to"><xliff:g id="device">%1$s</xliff:g> पर भेजें</string>
+    <string name="local_sync_send_description">आपका डेटा वहाँ जाता है। यहाँ कुछ नहीं बदलता।</string>
+    <string name="local_sync_receive_from"><xliff:g id="device">%1$s</xliff:g> से प्राप्त करें</string>
+    <string name="local_sync_receive_description">उसका डेटा यहाँ आता है। वहाँ कुछ नहीं बदलता।</string>
+    <string name="local_sync_merge_with"><xliff:g id="device">%1$s</xliff:g> के साथ मर्ज करें</string>
+    <string name="local_sync_merge_description">दोनों डिवाइस पर सब कुछ आ जाता है</string>
+    <string name="local_sync_unpair">यह डिवाइस भूल जाएँ</string>
+    <string name="local_sync_unpair_description">अगली बार फिर से पिन की ज़रूरत होगी</string>
+    <string name="local_sync_what_to_send">क्या भेजना है</string>
+    <string name="local_sync_what_to_receive">क्या प्राप्त करना है</string>
+    <string name="local_sync_what_to_merge">क्या मर्ज करना है</string>
+    <string name="local_sync_sections_hint">वही चीज़ें जो बैकअप में होती हैं। जो नहीं चाहिए उसका सही का निशान हटा दें।</string>
+    <string name="local_sync_everything">सब कुछ</string>
+    <string name="local_sync_password_hint">पासवर्ड भेजी जाने वाली चीज़ों की सुरक्षा करता है और आपकी प्लेलिस्ट लॉगिन भी साथ ले जाता है। खाली छोड़ने पर वे लॉगिन शामिल नहीं होते।</string>
+    <string name="local_sync_confirm_title">क्या बदलेगा</string>
+    <string name="local_sync_confirm_hint">अभी कुछ नहीं बदला है। लागू करने पर इस डिवाइस पर यह होगा।</string>
+    <string name="local_sync_nothing_to_change">दोनों डिवाइस पर पहले से एक जैसा डेटा है। लागू करने के लिए कुछ नहीं है।</string>
+    <string name="local_sync_merge_note">इसके बाद आपका अपना डेटा वापस भेजा जाता है, ताकि दोनों डिवाइस एक जैसे हो जाएँ।</string>
+    <string name="local_sync_change_profiles">नई प्रोफ़ाइलें: <xliff:g id="count">%1$d</xliff:g></string>
+    <string name="local_sync_change_sources">नई प्लेलिस्ट: <xliff:g id="count">%1$d</xliff:g></string>
+    <string name="local_sync_change_favorites">नए पसंदीदा: <xliff:g id="count">%1$d</xliff:g></string>
+    <string name="local_sync_change_history">नई हिस्ट्री प्रविष्टियाँ: <xliff:g id="count">%1$d</xliff:g></string>
+    <string name="local_sync_change_resume">नई रिज़्यूम पोज़िशन: <xliff:g id="count">%1$d</xliff:g></string>
+    <string name="local_sync_change_reorder">क्रम बदलाव: <xliff:g id="count">%1$d</xliff:g></string>
+    <string name="local_sync_change_settings">अलग सेटिंग्स: <xliff:g id="count">%1$d</xliff:g></string>
+    <string name="local_sync_change_deletions">हटाए जाने वाले आइटम: <xliff:g id="count">%1$d</xliff:g></string>
+    <string name="local_sync_change_customize">आपके कस्टमाइज़ेशन भी साथ आते हैं</string>
+    <string name="local_sync_apply">लागू करें</string>
+    <string name="local_sync_done">सिंक पूरा हुआ</string>
+    <string name="local_sync_received_items">प्राप्त आइटम: <xliff:g id="count">%1$d</xliff:g></string>
+    <string name="local_sync_sent">आपका डेटा भेज दिया गया</string>
+    <string name="local_sync_failed">सिंक विफल</string>
+    <string name="local_sync_error_unreachable">इस डिवाइस तक नहीं पहुँचा जा सका। उस पर OwnTV → सेटिंग्स → डेटा → लोकल सिंक खोलें और सिंक मोड चालू करें। दोनों डिवाइस एक ही वाई-फ़ाई पर होने चाहिए।</string>
+    <string name="local_sync_error_unauthorized">दूसरे डिवाइस ने मना कर दिया। पिन ग़लत हो सकता है, या उसने इस डिवाइस को भुला दिया है।</string>
+    <string name="local_sync_error_bad_payload">जो आया उसे पढ़ा नहीं जा सका। अगर आपने पासवर्ड लगाया है, तो देखें कि वह दोनों डिवाइस पर एक जैसा है।</string>
+    <string name="local_sync_error_unknown">कुछ ग़लत हो गया। दोबारा कोशिश करें।</string>
+    <string name="local_sync_mode">सिंक मोड</string>
+    <string name="local_sync_mode_description">आपके दूसरे डिवाइस इसे ढूँढ सकें, इसकी अनुमति देता है। यह स्क्रीन खुली रहने तक चालू रहता है।</string>
+    <string name="local_sync_mode_pill">सिंक मोड चालू</string>
+    <string name="local_sync_connect">कनेक्ट करें</string>
+    <string name="local_sync_connect_description">ऐसा दूसरा डिवाइस ढूँढें जिस पर सिंक मोड चालू है</string>
+    <string name="local_sync_last_synced">पिछला सिंक: <xliff:g id="when">%1$s</xliff:g></string>
 </resources>

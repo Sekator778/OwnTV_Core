@@ -442,6 +442,12 @@
     <string name="companion_error_unauthorized">Unauthorized. Check the PIN and try again.</string>
     <!-- Translators: HTTP 404 error text on the companion web page. -->
     <string name="companion_error_not_found">Not found.</string>
+    <!-- Translators: Error returned to the other device when pairing for local sync could not be completed. -->
+    <string name="companion_error_pair_failed">Could not pair with this device.</string>
+    <!-- Translators: Title of the page shown if someone opens the local sync address in a web browser. -->
+    <string name="local_sync_browser_title">OwnTV local sync</string>
+    <!-- Translators: Body of the page shown if someone opens the local sync address in a web browser. Local sync talks to the OwnTV app on the other device, not to a browser. -->
+    <string name="local_sync_browser_body">This address is for the OwnTV app on your other device. Open Local sync there and pick this device from the list.</string>
     <!-- Translators: Error text on the companion download page when no backup is available on the TV. -->
     <string name="companion_error_no_backup">No backup is available.</string>
     <!-- Translators: Error text on the companion download page when the backup file is too large to transfer. -->

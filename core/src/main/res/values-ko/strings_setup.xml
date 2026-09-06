@@ -254,4 +254,7 @@
     <string name="setup_stalker_device_id_optional">기기 ID(선택 사항)</string>
     <string name="setup_stalker_device_id2_optional">기기 ID2(선택 사항)</string>
     <string name="setup_stalker_signature_optional">서명(선택 사항)</string>
+    <string name="companion_error_pair_failed">이 기기와 페어링할 수 없습니다.</string>
+    <string name="local_sync_browser_title">OwnTV 로컬 동기화</string>
+    <string name="local_sync_browser_body">이 주소는 다른 기기의 OwnTV 앱을 위한 것입니다. 그쪽에서 로컬 동기화를 열고 목록에서 이 기기를 선택하세요.</string>
 </resources>

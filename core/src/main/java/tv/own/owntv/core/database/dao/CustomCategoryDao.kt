@@ -63,6 +63,10 @@ interface CustomCategoryDao {
         )
     }
 
+    /** Does this row already exist? The dry run before a sync counts what is genuinely new. */
+    @Query("SELECT EXISTS(SELECT 1 FROM custom_category_members WHERE profileId = :profileId AND mediaType = :type AND contextKey = :contextKey AND itemId = :itemId)")
+    suspend fun exists(profileId: Long, type: MediaType, contextKey: String, itemId: Long): Boolean
+
     /** Removes ONE membership row — "Move to…" away from a custom-category origin without keeping it. */
     @Query("DELETE FROM custom_category_members WHERE profileId = :profileId AND mediaType = :type AND contextKey = :contextKey AND itemId = :itemId")
     suspend fun deleteItem(profileId: Long, type: MediaType, contextKey: String, itemId: Long)

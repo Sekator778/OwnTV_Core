@@ -7,4 +7,7 @@
     <string name="setup_watching_during_import">You can start watching while the rest of the catalogue loads.</string>
     <string name="setup_vod_movie_catalog">VOD movie catalogue</string>
     <string name="setup_tv_series_catalog">TV series catalogue</string>
+    <string name="companion_error_pair_failed">Could not pair with this device.</string>
+    <string name="local_sync_browser_title">OwnTV local sync</string>
+    <string name="local_sync_browser_body">This address is for the OwnTV app on your other device. Open Local sync there and pick this device from the list.</string>
 </resources>

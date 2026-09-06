@@ -1269,4 +1269,69 @@
     <string name="settings_audio_on_mobile_data_description">Start uten bilde når det ikke er Wi-Fi</string>
     <string name="settings_audio_per_channel">Husk bare lyd per kanal</string>
     <string name="settings_audio_per_channel_description">En kanal du så uten bilde, åpnes slik neste gang</string>
+    <string name="local_sync_title">Lokal synkronisering</string>
+    <string name="local_sync_description">Del dataene dine med den andre enheten over Wi-Fi</string>
+    <string name="local_sync_search_keywords">synkronisering wifi nettverk par enheter del</string>
+    <string name="local_sync_host_hint">Slå også på Synkroniseringsmodus på den andre enheten, trykk Koble til og velg denne.</string>
+    <string name="local_sync_qr_description">QR-kode med adressen til denne enheten</string>
+    <string name="local_sync_pin_is">PIN: <xliff:g id="pin">%1$s</xliff:g></string>
+    <string name="local_sync_add_device">Finn en enhet</string>
+    <string name="local_sync_add_device_description">Søk på nettverket, skann en kode eller skriv inn en adresse</string>
+    <string name="local_sync_paired_devices">Parede enheter</string>
+    <string name="local_sync_device_address">På <xliff:g id="address">%1$s</xliff:g></string>
+    <string name="local_sync_working">Jobber…</string>
+    <string name="local_sync_find_hint">Begge enhetene må være på samme Wi-Fi, og den andre må ha Synkroniseringsmodus på.</string>
+    <string name="local_sync_searching">Søker på nettverket…</string>
+    <string name="local_sync_found">Funnet på nettverket ditt</string>
+    <string name="local_sync_scan_qr">Skann koden</string>
+    <string name="local_sync_scan_qr_description">Rett kameraet mot koden på den andre enheten</string>
+    <string name="local_sync_camera_denied">Uten kameraet kan du fortsatt velge enheten fra listen eller skrive inn adressen.</string>
+    <string name="local_sync_manual_address">Eller skriv inn adressen</string>
+    <string name="local_sync_manual_address_label">Adresse</string>
+    <string name="local_sync_enter_pin">Skriv inn PIN</string>
+    <string name="local_sync_enter_pin_description">Skriv inn de seks sifrene som vises på den andre enheten. Dette trengs bare én gang.</string>
+    <string name="local_sync_pin_label">PIN</string>
+    <string name="local_sync_pair">Par</string>
+    <string name="local_sync_send_to">Send til <xliff:g id="device">%1$s</xliff:g></string>
+    <string name="local_sync_send_description">Dataene dine sendes dit. Ingenting endres her.</string>
+    <string name="local_sync_receive_from">Motta fra <xliff:g id="device">%1$s</xliff:g></string>
+    <string name="local_sync_receive_description">Dataene derfra kommer hit. Ingenting endres der.</string>
+    <string name="local_sync_merge_with">Slå sammen med <xliff:g id="device">%1$s</xliff:g></string>
+    <string name="local_sync_merge_description">Begge enhetene ender opp med alt</string>
+    <string name="local_sync_unpair">Glem denne enheten</string>
+    <string name="local_sync_unpair_description">Du trenger PIN-koden igjen neste gang</string>
+    <string name="local_sync_what_to_send">Hva som sendes</string>
+    <string name="local_sync_what_to_receive">Hva som mottas</string>
+    <string name="local_sync_what_to_merge">Hva som slås sammen</string>
+    <string name="local_sync_sections_hint">Det samme som en sikkerhetskopi inneholder. Fjern haken ved det du heller vil utelate.</string>
+    <string name="local_sync_everything">Alt</string>
+    <string name="local_sync_password_hint">Et passord beskytter det som sendes og tar med playlisteinnloggingene dine. La det stå tomt, så utelates disse innloggingene.</string>
+    <string name="local_sync_confirm_title">Hva som endres</string>
+    <string name="local_sync_confirm_hint">Ingenting er endret ennå. Dette er hva bruk vil gjøre på denne enheten.</string>
+    <string name="local_sync_nothing_to_change">Begge enhetene har allerede det samme. Det er ingenting å bruke.</string>
+    <string name="local_sync_merge_note">Dine egne data sendes tilbake etterpå, slik at begge enhetene blir like.</string>
+    <string name="local_sync_change_profiles">Nye profiler: <xliff:g id="count">%1$d</xliff:g></string>
+    <string name="local_sync_change_sources">Nye spillelister: <xliff:g id="count">%1$d</xliff:g></string>
+    <string name="local_sync_change_favorites">Nye favoritter: <xliff:g id="count">%1$d</xliff:g></string>
+    <string name="local_sync_change_history">Nye historikkoppføringer: <xliff:g id="count">%1$d</xliff:g></string>
+    <string name="local_sync_change_resume">Nye fortsettelsespunkter: <xliff:g id="count">%1$d</xliff:g></string>
+    <string name="local_sync_change_reorder">Endringer i rekkefølgen: <xliff:g id="count">%1$d</xliff:g></string>
+    <string name="local_sync_change_settings">Innstillinger som er forskjellige: <xliff:g id="count">%1$d</xliff:g></string>
+    <string name="local_sync_change_deletions">Elementer som fjernes: <xliff:g id="count">%1$d</xliff:g></string>
+    <string name="local_sync_change_customize">Tilpasningene dine følger også med</string>
+    <string name="local_sync_apply">Bruk</string>
+    <string name="local_sync_done">Synkronisering fullført</string>
+    <string name="local_sync_received_items">Mottatte elementer: <xliff:g id="count">%1$d</xliff:g></string>
+    <string name="local_sync_sent">Dataene dine ble sendt</string>
+    <string name="local_sync_failed">Synkroniseringen mislyktes</string>
+    <string name="local_sync_error_unreachable">Enheten kunne ikke nås. Åpne OwnTV → Innstillinger → Data → Lokal synkronisering på den og slå på Synkroniseringsmodus. Begge enhetene må være på samme Wi-Fi.</string>
+    <string name="local_sync_error_unauthorized">Den andre enheten avviste. PIN-koden kan være feil, eller den kan ha glemt denne enheten.</string>
+    <string name="local_sync_error_bad_payload">Det som kom, kunne ikke leses. Hvis du brukte et passord, sjekk at det er likt på begge enhetene.</string>
+    <string name="local_sync_error_unknown">Noe gikk galt. Prøv igjen.</string>
+    <string name="local_sync_mode">Synkroniseringsmodus</string>
+    <string name="local_sync_mode_description">Lar de andre enhetene dine finne denne. Er på så lenge denne skjermen er åpen.</string>
+    <string name="local_sync_mode_pill">Synkroniseringsmodus på</string>
+    <string name="local_sync_connect">Koble til</string>
+    <string name="local_sync_connect_description">Finn en annen enhet med Synkroniseringsmodus på</string>
+    <string name="local_sync_last_synced">Sist synkronisert: <xliff:g id="when">%1$s</xliff:g></string>
 </resources>

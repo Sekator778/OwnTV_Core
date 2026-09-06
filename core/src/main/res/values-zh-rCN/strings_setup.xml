@@ -254,4 +254,7 @@
     <string name="setup_stalker_device_id_optional">设备 ID（可选）</string>
     <string name="setup_stalker_device_id2_optional">设备 ID2（可选）</string>
     <string name="setup_stalker_signature_optional">签名（可选）</string>
+    <string name="companion_error_pair_failed">无法与此设备配对。</string>
+    <string name="local_sync_browser_title">OwnTV 本地同步</string>
+    <string name="local_sync_browser_body">此地址供你另一台设备上的 OwnTV 应用使用。请在那里打开“本地同步”，并从列表中选择本机。</string>
 </resources>

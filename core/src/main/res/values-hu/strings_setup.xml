@@ -257,4 +257,7 @@
     <string name="setup_hls_provider_does_not_advertise">A szolgáltatód nem hirdet HLS-támogatást.</string>
     <string name="setup_hide_new_categories">Új kategóriák alapból rejtve</string>
     <string name="setup_hide_new_categories_description">Profilszintű: a jövőbeli szinkronizálásokkor megjelenő kategóriák kezdetben rejtve lesznek. A Testreszabás alatt bármikor megjelenítheted őket.</string>
+    <string name="companion_error_pair_failed">Nem sikerült párosítani ezzel az eszközzel.</string>
+    <string name="local_sync_browser_title">OwnTV helyi szinkronizálás</string>
+    <string name="local_sync_browser_body">Ez a cím a másik eszközén futó OwnTV alkalmazásnak szól. Nyissa meg ott a Helyi szinkronizálást, és válassza ki ezt az eszközt a listából.</string>
 </resources>

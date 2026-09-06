@@ -82,6 +82,32 @@ class CompanionController(context: Context, localeStore: LocaleStore) {
     /** Starts the companion server in backup-download mode, serving [file] for the remote device to download. */
     fun startForBackupDownload(port: Int, file: File) = startInternal(port, CompanionMode.BACKUP_DOWNLOAD, file)
 
+    /**
+     * Starts the companion server for local sync between two OwnTV devices.
+     *
+     * The only mode that both receives and serves in one session, because a merge does both: an
+     * uploaded container arrives on [backups] exactly as it does in backup-restore mode, and [file]
+     * — this device's own export, prepared by the caller — is what the other device downloads.
+     *
+     * [info] answers "who are you", [onPair] mints a lasting secret for a device that presented the
+     * right PIN, and [secrets] are the ones already issued, each accepted in place of the PIN so only
+     * the first sync between two devices asks the user for anything.
+     */
+    fun startForLocalSync(
+        port: Int,
+        file: File?,
+        info: () -> String,
+        onPair: (name: String, address: String) -> String?,
+        secrets: () -> Set<String>,
+    ) = startInternal(
+        port = port,
+        mode = CompanionMode.LOCAL_SYNC,
+        downloadFile = file,
+        syncInfo = info,
+        onPair = onPair,
+        pairedSecrets = secrets,
+    )
+
     /** Starts the companion server in image-upload mode: the remote device sends a background image, emitted on [images]. */
     fun startForImageUpload(port: Int) = startInternal(port, CompanionMode.IMAGE_UPLOAD)
 
@@ -90,7 +116,14 @@ class CompanionController(context: Context, localeStore: LocaleStore) {
     fun startForTmdbConfig(port: Int) = startInternal(port, CompanionMode.TMDB_CONFIG)
     fun startForOpenSubtitlesConfig(port: Int) = startInternal(port, CompanionMode.OPEN_SUBTITLES_CONFIG)
 
-    private fun startInternal(port: Int, mode: CompanionMode, downloadFile: File? = null) {
+    private fun startInternal(
+        port: Int,
+        mode: CompanionMode,
+        downloadFile: File? = null,
+        syncInfo: () -> String = { "{}" },
+        onPair: (name: String, address: String) -> String? = { _, _ -> null },
+        pairedSecrets: () -> Set<String> = { emptySet() },
+    ) {
         if (port !in 1..65535) {
             _state.value = CompanionServerState.Failed(CompanionFailure.InvalidPort)
             return
@@ -124,6 +157,9 @@ class CompanionController(context: Context, localeStore: LocaleStore) {
                     }
                 },
                 downloadFile = downloadFile,
+                syncInfo = syncInfo,
+                onPair = onPair,
+                pairedSecrets = pairedSecrets,
                 onLocked = {
                     // The server has already stopped itself; just reflect it on the TV so the user
                     // knows why the link went away and that restarting gives them a new PIN.

@@ -1269,4 +1269,69 @@
     <string name="settings_audio_on_mobile_data_description">Zonder beeld beginnen als er geen wifi is</string>
     <string name="settings_audio_per_channel">Alleen geluid per kanaal onthouden</string>
     <string name="settings_audio_per_channel_description">Een kanaal dat je zonder beeld keek, opent de volgende keer zo</string>
+    <string name="local_sync_title">Lokaal synchroniseren</string>
+    <string name="local_sync_description">Deel je gegevens met je andere apparaat via wifi</string>
+    <string name="local_sync_search_keywords">synchroniseren wifi netwerk koppelen apparaten delen</string>
+    <string name="local_sync_host_hint">Zet op je andere apparaat ook Synchronisatiemodus aan, tik op Verbinden en kies dit apparaat.</string>
+    <string name="local_sync_qr_description">QR-code met het adres van dit apparaat</string>
+    <string name="local_sync_pin_is">Pincode: <xliff:g id="pin">%1$s</xliff:g></string>
+    <string name="local_sync_add_device">Een apparaat zoeken</string>
+    <string name="local_sync_add_device_description">Zoek op het netwerk, scan een code of typ een adres</string>
+    <string name="local_sync_paired_devices">Gekoppelde apparaten</string>
+    <string name="local_sync_device_address">Op <xliff:g id="address">%1$s</xliff:g></string>
+    <string name="local_sync_working">Bezig…</string>
+    <string name="local_sync_find_hint">Beide apparaten moeten op hetzelfde wifinetwerk zitten en op het andere moet Synchronisatiemodus aan staan.</string>
+    <string name="local_sync_searching">Netwerk doorzoeken…</string>
+    <string name="local_sync_found">Gevonden op je netwerk</string>
+    <string name="local_sync_scan_qr">Code scannen</string>
+    <string name="local_sync_scan_qr_description">Richt de camera op de code op je andere apparaat</string>
+    <string name="local_sync_camera_denied">Zonder camera kun je het apparaat nog steeds uit de lijst kiezen of het adres intypen.</string>
+    <string name="local_sync_manual_address">Of typ het adres</string>
+    <string name="local_sync_manual_address_label">Adres</string>
+    <string name="local_sync_enter_pin">Voer de pincode in</string>
+    <string name="local_sync_enter_pin_description">Typ de zes cijfers die op je andere apparaat staan. Dit hoef je maar één keer te doen.</string>
+    <string name="local_sync_pin_label">Pincode</string>
+    <string name="local_sync_pair">Koppelen</string>
+    <string name="local_sync_send_to">Sturen naar <xliff:g id="device">%1$s</xliff:g></string>
+    <string name="local_sync_send_description">Je gegevens gaan daarheen. Hier verandert niets.</string>
+    <string name="local_sync_receive_from">Ontvangen van <xliff:g id="device">%1$s</xliff:g></string>
+    <string name="local_sync_receive_description">De gegevens komen hierheen. Daar verandert niets.</string>
+    <string name="local_sync_merge_with">Samenvoegen met <xliff:g id="device">%1$s</xliff:g></string>
+    <string name="local_sync_merge_description">Beide apparaten hebben straks alles</string>
+    <string name="local_sync_unpair">Dit apparaat vergeten</string>
+    <string name="local_sync_unpair_description">De volgende keer heb je de pincode weer nodig</string>
+    <string name="local_sync_what_to_send">Wat je verstuurt</string>
+    <string name="local_sync_what_to_receive">Wat je ontvangt</string>
+    <string name="local_sync_what_to_merge">Wat je samenvoegt</string>
+    <string name="local_sync_sections_hint">Dezelfde onderdelen als in een back-up. Vink uit wat je liever weglaat.</string>
+    <string name="local_sync_everything">Alles</string>
+    <string name="local_sync_password_hint">Een wachtwoord beschermt wat je verstuurt en neemt je playlistlogins mee. Laat het leeg en die logins blijven weg.</string>
+    <string name="local_sync_confirm_title">Wat er verandert</string>
+    <string name="local_sync_confirm_hint">Er is nog niets gewijzigd. Dit is wat toepassen op dit apparaat zou doen.</string>
+    <string name="local_sync_nothing_to_change">Beide apparaten hebben al hetzelfde. Er valt niets toe te passen.</string>
+    <string name="local_sync_merge_note">Daarna gaan je eigen gegevens terug, zodat beide apparaten gelijk zijn.</string>
+    <string name="local_sync_change_profiles">Nieuwe profielen: <xliff:g id="count">%1$d</xliff:g></string>
+    <string name="local_sync_change_sources">Nieuwe playlists: <xliff:g id="count">%1$d</xliff:g></string>
+    <string name="local_sync_change_favorites">Nieuwe favorieten: <xliff:g id="count">%1$d</xliff:g></string>
+    <string name="local_sync_change_history">Nieuwe items in de geschiedenis: <xliff:g id="count">%1$d</xliff:g></string>
+    <string name="local_sync_change_resume">Nieuwe hervatposities: <xliff:g id="count">%1$d</xliff:g></string>
+    <string name="local_sync_change_reorder">Wijzigingen in de volgorde: <xliff:g id="count">%1$d</xliff:g></string>
+    <string name="local_sync_change_settings">Instellingen die verschillen: <xliff:g id="count">%1$d</xliff:g></string>
+    <string name="local_sync_change_deletions">Te verwijderen items: <xliff:g id="count">%1$d</xliff:g></string>
+    <string name="local_sync_change_customize">Je aanpassingen komen ook mee</string>
+    <string name="local_sync_apply">Toepassen</string>
+    <string name="local_sync_done">Synchroniseren voltooid</string>
+    <string name="local_sync_received_items">Ontvangen items: <xliff:g id="count">%1$d</xliff:g></string>
+    <string name="local_sync_sent">Je gegevens zijn verstuurd</string>
+    <string name="local_sync_failed">Synchroniseren mislukt</string>
+    <string name="local_sync_error_unreachable">Dit apparaat was niet bereikbaar. Open daarop OwnTV → Instellingen → Gegevens → Lokaal synchroniseren en zet Synchronisatiemodus aan. Beide apparaten moeten op hetzelfde wifinetwerk zitten.</string>
+    <string name="local_sync_error_unauthorized">Het andere apparaat weigerde. De pincode klopt mogelijk niet, of het is dit apparaat vergeten.</string>
+    <string name="local_sync_error_bad_payload">Wat binnenkwam kon niet worden gelezen. Als je een wachtwoord gebruikte, controleer of het op beide apparaten hetzelfde is.</string>
+    <string name="local_sync_error_unknown">Er is iets misgegaan. Probeer het opnieuw.</string>
+    <string name="local_sync_mode">Synchronisatiemodus</string>
+    <string name="local_sync_mode_description">Laat je andere apparaten dit apparaat vinden. Blijft aan zolang dit scherm open is.</string>
+    <string name="local_sync_mode_pill">Synchronisatiemodus aan</string>
+    <string name="local_sync_connect">Verbinden</string>
+    <string name="local_sync_connect_description">Zoek een ander apparaat waarop Synchronisatiemodus aan staat</string>
+    <string name="local_sync_last_synced">Laatst gesynchroniseerd: <xliff:g id="when">%1$s</xliff:g></string>
 </resources>

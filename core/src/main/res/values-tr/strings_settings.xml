@@ -1269,4 +1269,69 @@
     <string name="settings_audio_on_mobile_data_description">Wi-Fi yoksa görüntüsüz başla</string>
     <string name="settings_audio_per_channel">Kanal başına yalnızca sesi hatırla</string>
     <string name="settings_audio_per_channel_description">Görüntüsüz izlenen kanal bir dahaki sefere öyle açılır</string>
+    <string name="local_sync_title">Yerel eşitleme</string>
+    <string name="local_sync_description">Verilerinizi Wi-Fi üzerinden diğer cihazınızla paylaşın</string>
+    <string name="local_sync_search_keywords">eşitleme wifi ağ eşleştirme cihazlar paylaşım</string>
+    <string name="local_sync_host_hint">Diğer cihazınızda da Eşitleme modunu açın, Bağlan\'a dokunun ve bu cihazı seçin.</string>
+    <string name="local_sync_qr_description">Bu cihazın adresini içeren QR kodu</string>
+    <string name="local_sync_pin_is">PIN: <xliff:g id="pin">%1$s</xliff:g></string>
+    <string name="local_sync_add_device">Cihaz bul</string>
+    <string name="local_sync_add_device_description">Ağda arayın, kod tarayın veya adres yazın</string>
+    <string name="local_sync_paired_devices">Eşleştirilmiş cihazlar</string>
+    <string name="local_sync_device_address"><xliff:g id="address">%1$s</xliff:g> adresinde</string>
+    <string name="local_sync_working">Çalışıyor…</string>
+    <string name="local_sync_find_hint">Her iki cihaz da aynı Wi-Fi ağında olmalı ve diğerinde Eşitleme modu açık olmalıdır.</string>
+    <string name="local_sync_searching">Ağ aranıyor…</string>
+    <string name="local_sync_found">Ağınızda bulundu</string>
+    <string name="local_sync_scan_qr">Kodu tara</string>
+    <string name="local_sync_scan_qr_description">Kamerayı diğer cihazınızdaki koda doğrultun</string>
+    <string name="local_sync_camera_denied">Kamera olmadan da cihazı listeden seçebilir veya adresini yazabilirsiniz.</string>
+    <string name="local_sync_manual_address">Ya da adresi yazın</string>
+    <string name="local_sync_manual_address_label">Adres</string>
+    <string name="local_sync_enter_pin">PIN\'i girin</string>
+    <string name="local_sync_enter_pin_description">Diğer cihazınızda görünen altı haneyi yazın. Bunu yalnızca bir kez yapmanız gerekir.</string>
+    <string name="local_sync_pin_label">PIN</string>
+    <string name="local_sync_pair">Eşleştir</string>
+    <string name="local_sync_send_to"><xliff:g id="device">%1$s</xliff:g> cihazına gönder</string>
+    <string name="local_sync_send_description">Verileriniz oraya gider. Burada hiçbir şey değişmez.</string>
+    <string name="local_sync_receive_from"><xliff:g id="device">%1$s</xliff:g> cihazından al</string>
+    <string name="local_sync_receive_description">Onun verileri buraya gelir. Orada hiçbir şey değişmez.</string>
+    <string name="local_sync_merge_with"><xliff:g id="device">%1$s</xliff:g> ile birleştir</string>
+    <string name="local_sync_merge_description">Her iki cihazda da her şey olur</string>
+    <string name="local_sync_unpair">Bu cihazı unut</string>
+    <string name="local_sync_unpair_description">Bir dahaki sefere PIN yeniden gerekecek</string>
+    <string name="local_sync_what_to_send">Ne gönderilecek</string>
+    <string name="local_sync_what_to_receive">Ne alınacak</string>
+    <string name="local_sync_what_to_merge">Ne birleştirilecek</string>
+    <string name="local_sync_sections_hint">Bir yedeğin içerdiği şeylerin aynısı. Dahil etmek istemediklerinizin işaretini kaldırın.</string>
+    <string name="local_sync_everything">Her şey</string>
+    <string name="local_sync_password_hint">Parola, gönderilenleri korur ve oynatma listesi girişlerinizi de yanında taşır. Boş bırakırsanız bu girişler dahil edilmez.</string>
+    <string name="local_sync_confirm_title">Ne değişecek</string>
+    <string name="local_sync_confirm_hint">Henüz hiçbir şey değişmedi. Uygulamak bu cihazda şunları yapar.</string>
+    <string name="local_sync_nothing_to_change">Her iki cihazda da zaten aynı şey var. Uygulanacak bir şey yok.</string>
+    <string name="local_sync_merge_note">Ardından kendi verileriniz geri gönderilir, böylece iki cihaz da aynı olur.</string>
+    <string name="local_sync_change_profiles">Yeni profiller: <xliff:g id="count">%1$d</xliff:g></string>
+    <string name="local_sync_change_sources">Yeni oynatma listeleri: <xliff:g id="count">%1$d</xliff:g></string>
+    <string name="local_sync_change_favorites">Yeni favoriler: <xliff:g id="count">%1$d</xliff:g></string>
+    <string name="local_sync_change_history">Yeni geçmiş kayıtları: <xliff:g id="count">%1$d</xliff:g></string>
+    <string name="local_sync_change_resume">Yeni kaldığı yerler: <xliff:g id="count">%1$d</xliff:g></string>
+    <string name="local_sync_change_reorder">Sıralama değişiklikleri: <xliff:g id="count">%1$d</xliff:g></string>
+    <string name="local_sync_change_settings">Farklı ayarlar: <xliff:g id="count">%1$d</xliff:g></string>
+    <string name="local_sync_change_deletions">Kaldırılacak öğeler: <xliff:g id="count">%1$d</xliff:g></string>
+    <string name="local_sync_change_customize">Kişiselleştirmeleriniz de gelir</string>
+    <string name="local_sync_apply">Uygula</string>
+    <string name="local_sync_done">Eşitleme tamamlandı</string>
+    <string name="local_sync_received_items">Alınan öğeler: <xliff:g id="count">%1$d</xliff:g></string>
+    <string name="local_sync_sent">Verileriniz gönderildi</string>
+    <string name="local_sync_failed">Eşitleme başarısız oldu</string>
+    <string name="local_sync_error_unreachable">Bu cihaza ulaşılamadı. O cihazda OwnTV → Ayarlar → Veriler → Yerel eşitleme yolunu açıp Eşitleme modunu açın. Her iki cihaz da aynı Wi-Fi ağında olmalıdır.</string>
+    <string name="local_sync_error_unauthorized">Diğer cihaz reddetti. PIN yanlış olabilir ya da bu cihazı unutmuş olabilir.</string>
+    <string name="local_sync_error_bad_payload">Gelen veri okunamadı. Parola kullandıysanız her iki cihazda da aynı olduğunu kontrol edin.</string>
+    <string name="local_sync_error_unknown">Bir şeyler ters gitti. Tekrar deneyin.</string>
+    <string name="local_sync_mode">Eşitleme modu</string>
+    <string name="local_sync_mode_description">Diğer cihazlarınızın bu cihazı bulmasını sağlar. Bu ekran açık kaldığı sürece açık kalır.</string>
+    <string name="local_sync_mode_pill">Eşitleme modu açık</string>
+    <string name="local_sync_connect">Bağlan</string>
+    <string name="local_sync_connect_description">Eşitleme modu açık olan başka bir cihaz bulun</string>
+    <string name="local_sync_last_synced">Son eşitleme: <xliff:g id="when">%1$s</xliff:g></string>
 </resources>

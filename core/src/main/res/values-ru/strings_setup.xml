@@ -263,4 +263,7 @@
     <string name="setup_stalker_device_id_optional">Идентификатор устройства (необязательно)</string>
     <string name="setup_stalker_device_id2_optional">Идентификатор устройства 2 (необязательно)</string>
     <string name="setup_stalker_signature_optional">Подпись (необязательно)</string>
+    <string name="companion_error_pair_failed">Не удалось выполнить сопряжение с этим устройством.</string>
+    <string name="local_sync_browser_title">Локальная синхронизация OwnTV</string>
+    <string name="local_sync_browser_body">Этот адрес предназначен для приложения OwnTV на другом устройстве. Откройте там локальную синхронизацию и выберите это устройство из списка.</string>
 </resources>

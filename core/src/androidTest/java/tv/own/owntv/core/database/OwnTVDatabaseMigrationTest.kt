@@ -140,6 +140,11 @@ class OwnTVDatabaseMigrationTest {
             assertColumnValue(sqlite, "sources", "liveLatencyCustomSecs", 10, -1L)
             // v35: the per-item remembered A/V-sync offset, nullable = "no per-item choice".
             assertColumnExists(sqlite, "playback_prefs", "audioDelayMs")
+            // v36: the deleted-user-data markers local sync merges on. New and empty — an upgrade
+            // must not invent deletions.
+            assertTableExists(sqlite, "user_data_tombstones")
+            assertIndexExists(sqlite, "index_user_data_tombstones_profileId_kind_identity")
+            assertCount(sqlite, "user_data_tombstones", 0)
             assertIndexExists(sqlite, "index_movies_sourceId_rating_name")
             // v20: direct-tune index on (sourceId, number).
             assertIndexExists(sqlite, "index_channels_sourceId_number")

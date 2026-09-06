@@ -17,8 +17,24 @@ interface FavoriteDao {
     @Query("DELETE FROM favorites WHERE profileId = :profileId AND mediaType = :type AND itemId = :itemId")
     suspend fun remove(profileId: Long, type: MediaType, itemId: Long)
 
+    /**
+     * Deletes the row only when it is older than [at] — the local-sync merge rule for an
+     * incoming deletion. A row the user re-created after the other device deleted it is newer,
+     * and survives. Returns the number of rows removed, so the sync summary can count it.
+     */
+    @Query("DELETE FROM favorites WHERE profileId = :profileId AND mediaType = :type AND itemId = :itemId AND addedAt <= :at")
+    suspend fun removeIfOlderThan(profileId: Long, type: MediaType, itemId: Long, at: Long): Int
+
     @Query("SELECT EXISTS(SELECT 1 FROM favorites WHERE profileId = :profileId AND mediaType = :type AND itemId = :itemId)")
     fun isFavorite(profileId: Long, type: MediaType, itemId: Long): Flow<Boolean>
+
+    /** When it was favorited — the dry run compares it against an incoming deletion. */
+    @Query("SELECT addedAt FROM favorites WHERE profileId = :profileId AND mediaType = :type AND itemId = :itemId")
+    suspend fun addedAt(profileId: Long, type: MediaType, itemId: Long): Long?
+
+    /** Does this row already exist? The dry run before a sync counts what is genuinely new. */
+    @Query("SELECT EXISTS(SELECT 1 FROM favorites WHERE profileId = :profileId AND mediaType = :type AND itemId = :itemId)")
+    suspend fun exists(profileId: Long, type: MediaType, itemId: Long): Boolean
 
     @Query("SELECT COUNT(*) FROM favorites WHERE profileId = :profileId AND mediaType = :type")
     fun count(profileId: Long, type: MediaType): Flow<Int>

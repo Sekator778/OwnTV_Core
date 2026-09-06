@@ -2266,4 +2266,135 @@ Resync and remove missing titles also allows removing titles the provider no lon
     <!-- Translators: Settings row. The app remembers, for each channel, whether the user watched it without a picture. -->
     <string name="settings_audio_per_channel">Remember sound only per channel</string>
     <string name="settings_audio_per_channel_description">A channel watched without a picture opens that way next time</string>
+    <!-- Local sync: two OwnTV devices on the same Wi-Fi exchanging their data directly. -->
+    <!-- Translators: Title of the Local sync settings screen, and its row on the Data settings page. -->
+    <string name="local_sync_title">Local sync</string>
+    <!-- Translators: One-line summary of Local sync, under its row on the settings page. -->
+    <string name="local_sync_description">Share your data with your other device over Wi-Fi</string>
+    <!-- Translators: Hidden search keywords for the Local sync screen. Words a user might type to find it. -->
+    <string name="local_sync_search_keywords">sync wifi network pair devices share</string>
+    <!-- Translators: Explanation under the PIN and QR code while this device is waiting to be connected to. -->
+    <string name="local_sync_host_hint">On your other device, turn Sync mode on too, then tap Connect and pick this one.</string>
+    <!-- Translators: Accessibility description of the QR code image. -->
+    <string name="local_sync_qr_description">QR code with this device\'s address</string>
+    <!-- Translators: The pairing code shown on screen. %1$s is a six-digit number. -->
+    <string name="local_sync_pin_is">PIN: <xliff:g id="pin">%1$s</xliff:g></string>
+    <!-- Translators: Button that starts looking for another device to pair with. -->
+    <string name="local_sync_add_device">Find a device</string>
+    <!-- Translators: Description under the "Find a device" button. -->
+    <string name="local_sync_add_device_description">Search the network, scan a code, or type an address</string>
+    <!-- Translators: Section heading above the list of devices already paired. -->
+    <string name="local_sync_paired_devices">Paired devices</string>
+    <!-- Translators: Subtitle of a paired device row. %1$s is an address such as 192.168.1.20. -->
+    <string name="local_sync_device_address">At <xliff:g id="address">%1$s</xliff:g></string>
+    <!-- Translators: Shown while a transfer is in progress. -->
+    <string name="local_sync_working">Working…</string>
+    <!-- Translators: Explanation at the top of the "Find a device" sheet. -->
+    <string name="local_sync_find_hint">Both devices must be on the same Wi-Fi, and the other one must have Sync mode on.</string>
+    <!-- Translators: Shown while no device has answered on the network yet. -->
+    <string name="local_sync_searching">Searching the network…</string>
+    <!-- Translators: Heading above the list of devices found on the network. -->
+    <string name="local_sync_found">Found on your network</string>
+    <!-- Translators: Button that opens the camera to read the other device\'s QR code. -->
+    <string name="local_sync_scan_qr">Scan the code</string>
+    <!-- Translators: Description under the scan button, and instruction while the camera is open. -->
+    <string name="local_sync_scan_qr_description">Point the camera at the code on your other device</string>
+    <!-- Translators: Shown instead of the camera when permission to use it was refused. -->
+    <string name="local_sync_camera_denied">Without the camera you can still pick the device from the list, or type its address.</string>
+    <!-- Translators: Heading above the field for typing the other device\'s address by hand. -->
+    <string name="local_sync_manual_address">Or type the address</string>
+    <!-- Translators: Label of the address field. -->
+    <string name="local_sync_manual_address_label">Address</string>
+    <!-- Translators: Title of the sheet asking for the PIN shown on the other device. -->
+    <string name="local_sync_enter_pin">Enter the PIN</string>
+    <!-- Translators: Explanation under the PIN field. The PIN is only needed the first time. -->
+    <string name="local_sync_enter_pin_description">Type the six digits shown on your other device. You only need to do this once.</string>
+    <!-- Translators: Label of the PIN field. -->
+    <string name="local_sync_pin_label">PIN</string>
+    <!-- Translators: Button that completes pairing with the other device. -->
+    <string name="local_sync_pair">Pair</string>
+    <!-- Translators: Direction. %1$s is the other device\'s name. This device\'s data goes there. -->
+    <string name="local_sync_send_to">Send to <xliff:g id="device">%1$s</xliff:g></string>
+    <!-- Translators: Description of the Send direction. -->
+    <string name="local_sync_send_description">Your data goes there. Nothing here changes.</string>
+    <!-- Translators: Direction. %1$s is the other device\'s name. Its data comes here. -->
+    <string name="local_sync_receive_from">Receive from <xliff:g id="device">%1$s</xliff:g></string>
+    <!-- Translators: Description of the Receive direction. -->
+    <string name="local_sync_receive_description">Its data comes here. Nothing there changes.</string>
+    <!-- Translators: Direction. %1$s is the other device\'s name. Both devices end up with everything. -->
+    <string name="local_sync_merge_with">Merge with <xliff:g id="device">%1$s</xliff:g></string>
+    <!-- Translators: Description of the Merge direction. -->
+    <string name="local_sync_merge_description">Both devices end up with everything</string>
+    <!-- Translators: Button that forgets a paired device. -->
+    <string name="local_sync_unpair">Forget this device</string>
+    <!-- Translators: Description under the "Forget this device" button. -->
+    <string name="local_sync_unpair_description">You will need the PIN again next time</string>
+    <!-- Translators: Title of the sheet where the user picks what to send. -->
+    <string name="local_sync_what_to_send">What to send</string>
+    <!-- Translators: Title of the sheet where the user picks what to receive. -->
+    <string name="local_sync_what_to_receive">What to receive</string>
+    <!-- Translators: Title of the sheet where the user picks what to merge. -->
+    <string name="local_sync_what_to_merge">What to merge</string>
+    <!-- Translators: Explanation above the tick list of what a sync includes. -->
+    <string name="local_sync_sections_hint">The same things a backup holds. Untick anything you would rather leave out.</string>
+    <!-- Translators: Tick box that selects every part at once. -->
+    <string name="local_sync_everything">Everything</string>
+    <!-- Translators: Explanation of the optional password on a sync. Without one, playlist passwords are left out. -->
+    <string name="local_sync_password_hint">A password protects what is sent and carries your playlist logins with it. Leave it empty and those logins are simply left out.</string>
+    <!-- Translators: Title of the sheet showing what a sync would change before it happens. -->
+    <string name="local_sync_confirm_title">What will change</string>
+    <!-- Translators: Explanation above the list of counted changes. -->
+    <string name="local_sync_confirm_hint">Nothing has been changed yet. This is what applying it would do on this device.</string>
+    <!-- Translators: Shown when the other device holds nothing this one does not already have. -->
+    <string name="local_sync_nothing_to_change">Both devices already hold the same thing. There is nothing to apply.</string>
+    <!-- Translators: Note shown for the Merge direction, explaining that this device\'s data goes back afterwards. -->
+    <string name="local_sync_merge_note">Your own data is sent back afterwards, so both devices end up the same.</string>
+    <!-- Translators: One counted change: how many profiles this device does not have yet. %1$d is a number. -->
+    <string name="local_sync_change_profiles">New profiles: <xliff:g id="count">%1$d</xliff:g></string>
+    <!-- Translators: One counted change: how many playlists this device does not have yet. %1$d is a number. -->
+    <string name="local_sync_change_sources">New playlists: <xliff:g id="count">%1$d</xliff:g></string>
+    <!-- Translators: One counted change: how many favorites would be added. %1$d is a number. -->
+    <string name="local_sync_change_favorites">New favorites: <xliff:g id="count">%1$d</xliff:g></string>
+    <!-- Translators: One counted change: how many watch history entries would be added. %1$d is a number. -->
+    <string name="local_sync_change_history">New history entries: <xliff:g id="count">%1$d</xliff:g></string>
+    <!-- Translators: One counted change: how many saved playback positions would be added. %1$d is a number. -->
+    <string name="local_sync_change_resume">New resume positions: <xliff:g id="count">%1$d</xliff:g></string>
+    <!-- Translators: One counted change: how many manually ordered items would change. %1$d is a number. -->
+    <string name="local_sync_change_reorder">Ordering changes: <xliff:g id="count">%1$d</xliff:g></string>
+    <!-- Translators: One counted change: how many settings hold a different value. %1$d is a number. -->
+    <string name="local_sync_change_settings">Settings that differ: <xliff:g id="count">%1$d</xliff:g></string>
+    <!-- Translators: One counted change: items this device would LOSE, because the other device deleted them. %1$d is a number. -->
+    <string name="local_sync_change_deletions">Items to remove: <xliff:g id="count">%1$d</xliff:g></string>
+    <!-- Translators: Shown when the incoming data includes customizations, which are not counted individually. -->
+    <string name="local_sync_change_customize">Your customizations come across too</string>
+    <!-- Translators: Button that applies the sync after the user has seen what will change. -->
+    <string name="local_sync_apply">Apply</string>
+    <!-- Translators: Title of the sheet shown when a sync has finished. -->
+    <string name="local_sync_done">Sync finished</string>
+    <!-- Translators: Result line: how many items arrived. %1$d is a number. -->
+    <string name="local_sync_received_items">Items received: <xliff:g id="count">%1$d</xliff:g></string>
+    <!-- Translators: Result line shown when this device\'s data was sent to the other one. -->
+    <string name="local_sync_sent">Your data was sent</string>
+    <!-- Translators: Title of the sheet shown when a sync failed. -->
+    <string name="local_sync_failed">Sync failed</string>
+    <!-- Translators: Failure reason: the other device did not answer. -->
+    <string name="local_sync_error_unreachable">This device could not be reached. On it, open OwnTV → Settings → Data → Local sync and turn Sync mode on. Both devices must be on the same Wi-Fi.</string>
+    <!-- Translators: Failure reason: wrong PIN, or the pairing was removed on the other device. -->
+    <string name="local_sync_error_unauthorized">The other device refused. The PIN may be wrong, or it may have forgotten this device.</string>
+    <!-- Translators: Failure reason: what arrived could not be read. -->
+    <string name="local_sync_error_bad_payload">What arrived could not be read. If you used a password, check it is the same on both devices.</string>
+    <!-- Translators: Failure reason: anything else. -->
+    <string name="local_sync_error_unknown">Something went wrong. Try again.</string>
+    <!-- Translators: Switch. While it is on, this device is visible to your other devices and accepts a sync. -->
+    <string name="local_sync_mode">Sync mode</string>
+    <!-- Translators: Description under the Sync mode switch. -->
+    <string name="local_sync_mode_description">Lets your other devices find this one. Stays on while this screen is open.</string>
+    <!-- Translators: Small status badge at the top of the screen while Sync mode is on. -->
+    <string name="local_sync_mode_pill">Sync mode on</string>
+    <!-- Translators: Button that goes looking for another device to pair with. -->
+    <string name="local_sync_connect">Connect</string>
+    <!-- Translators: Description under the Connect button. -->
+    <string name="local_sync_connect_description">Find another device that has Sync mode on</string>
+    <!-- Translators: Subtitle of a paired device row. %1$s is a relative time such as “2 hours ago”. -->
+    <string name="local_sync_last_synced">Last synced: <xliff:g id="when">%1$s</xliff:g></string>
 </resources>

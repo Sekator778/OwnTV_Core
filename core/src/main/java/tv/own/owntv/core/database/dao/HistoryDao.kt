@@ -18,6 +18,14 @@ interface HistoryDao {
     @Query("DELETE FROM watch_history WHERE profileId = :profileId AND mediaType = :type AND itemId = :itemId")
     suspend fun remove(profileId: Long, type: MediaType, itemId: Long)
 
+    /**
+     * Deletes the row only when it is older than [at] — the local-sync merge rule for an
+     * incoming deletion. A row the user re-created after the other device deleted it is newer,
+     * and survives. Returns the number of rows removed, so the sync summary can count it.
+     */
+    @Query("DELETE FROM watch_history WHERE profileId = :profileId AND mediaType = :type AND itemId = :itemId AND watchedAt <= :at")
+    suspend fun removeIfOlderThan(profileId: Long, type: MediaType, itemId: Long, at: Long): Int
+
     /** The episode rows belonging to one series — removed alongside the show's own row, so the
      *  top-bar Continue chip stops offering a show the user just removed from history. */
     @Query(
@@ -33,12 +41,34 @@ interface HistoryDao {
     @Query("DELETE FROM watch_history WHERE profileId = :profileId AND mediaType = :type")
     suspend fun clearType(profileId: Long, type: MediaType)
 
+    /** When it was last watched — the dry run compares it against an incoming deletion. */
+    @Query("SELECT watchedAt FROM watch_history WHERE profileId = :profileId AND mediaType = :type AND itemId = :itemId")
+    suspend fun watchedAt(profileId: Long, type: MediaType, itemId: Long): Long?
+
+    /** Does this row already exist? The dry run before a sync counts what is genuinely new. */
+    @Query("SELECT EXISTS(SELECT 1 FROM watch_history WHERE profileId = :profileId AND mediaType = :type AND itemId = :itemId)")
+    suspend fun exists(profileId: Long, type: MediaType, itemId: Long): Boolean
+
     @Query("SELECT COUNT(*) FROM watch_history WHERE profileId = :profileId AND mediaType = :type")
     fun count(profileId: Long, type: MediaType): Flow<Int>
 
     /** The single most-recently-watched item (any type) — drives the top-bar Continue chip. */
     @Query("SELECT * FROM watch_history WHERE profileId = :profileId ORDER BY watchedAt DESC LIMIT 1")
     fun observeMostRecent(profileId: Long): Flow<WatchHistoryEntity?>
+
+    /** One profile's history rows, so a "clear" can record each deletion before it happens. */
+    @Query("SELECT * FROM watch_history WHERE profileId = :profileId")
+    suspend fun getForProfile(profileId: Long): List<WatchHistoryEntity>
+
+    @Query("SELECT * FROM watch_history WHERE profileId = :profileId AND mediaType = :type")
+    suspend fun getForProfileType(profileId: Long, type: MediaType): List<WatchHistoryEntity>
+
+    /** The episodes of one series that are in history — the ids whose removal has to be recorded. */
+    @Query(
+        "SELECT itemId FROM watch_history WHERE profileId = :profileId AND mediaType = 'EPISODE' " +
+            "AND itemId IN (SELECT id FROM episodes WHERE seriesId = :seriesId)",
+    )
+    suspend fun episodeIdsInHistory(profileId: Long, seriesId: Long): List<Long>
 
     /** Everything, for Backup & Restore. */
     @Query("SELECT * FROM watch_history")

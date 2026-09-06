@@ -3,6 +3,91 @@
 Core is versioned independently of the apps. A core version number never lines up with an OwnTV TV
 app `v4.x` release, and the two must not be confused. Tags here are prefixed `core-`.
 
+## core-1.0.26 — 2026-09-06
+
+Local sync: two OwnTV devices on the same Wi-Fi exchanging their data directly, with no account, no
+cloud and no server of ours. Core carries all of it except the two screens — the transport, the
+pairing, the merge rule and the deletions — so the television and the phone run one implementation
+rather than two.
+
+**One database version, `35 → 36`.** It adds an empty table and changes nothing that exists.
+
+### 🔄 Local sync (`core/sync/local/`)
+
+Deliberately thin, because most of it already existed. The payload **is** a backup container, so
+`BackupManager` writes and reads it unchanged. Applying it **is** a restore, which has merged rather
+than overwritten since 2026-07-18. The listener **is** the companion HTTP server the Remote flow
+uses, with one mode appended. What is genuinely new:
+
+- `LocalSyncClient` — the client half the companion server never had, because until now the thing at
+  the other end was always a browser. It speaks the endpoints that already exist: `/sync/hello`,
+  `/sync/pair`, `GET /backup.own`, `POST /backup`. Deliberately `HttpURLConnection` rather than the
+  app's OkHttp, so a plain-HTTP call to the local network cannot inherit the proxy, interceptors,
+  cookie jar or user-agent an IPTV provider's client is configured with.
+- `PairedDeviceStore` — the paired devices and their secrets, on disk. DataStore rather than Room: a
+  pairing is a credential, not user content, and has no business in a backup carried to a third
+  device.
+- `LocalSyncDiscovery` — Android NSD (`_owntv._tcp`), advertise and browse. A convenience and never
+  the only way in: mDNS is blocked by AP isolation, by some routers outright, and across VLANs, so
+  the screens always also offer the address and a QR code.
+- `LocalSyncManager` — the orchestrator, with `SyncDirection.SEND` / `RECEIVE` / `MERGE` named
+  explicitly. There is no bare "sync" whose direction a user has to infer.
+
+`CompanionMode.LOCAL_SYNC` is **appended** to the enum (the ordinal is a stored bitmask elsewhere).
+It is the only mode with no web page behind it, the only one that both accepts an upload and serves
+a download in one session — a merge does both — and the only one where a stored pairing secret is
+accepted in place of the six-digit PIN. A secret can never mint another secret: pairing requires the
+PIN, so one leaked pairing cannot widen itself into a second device nobody approved.
+
+### 🪦 Deletions that survive a merge (database v36)
+
+`user_data_tombstones` — the table without which local sync quietly reinstates every favourite,
+history entry and resume position the user has ever deleted. A merge cannot tell an absent row from
+one the other device has not heard about yet, so an absence has to become a fact with a time on it.
+
+- Keyed on the same stable content identity a backup exports — source, provider id, name, or show
+  plus season/episode — never the volatile `itemId`, so a deletion survives both the other device's
+  different ids and the clear-then-insert of a re-sync here.
+- The merge rule is newest-wins, in both directions: an incoming record older than a deletion is
+  dropped, and an incoming deletion older than a local row leaves it alone. A favourite re-added
+  after the other device removed it survives.
+- Applying a deletion records it locally too, so it carries on to a third device instead of stopping
+  at the second.
+- Bounded to the 20 000 newest, because "Clear watch history" writes one per row.
+
+`UserDataWriter` is the one place a user deletion is now written: it records the marker and performs
+the delete in a single transaction, so the two cannot come apart. **Only user actions go through
+it** — the orphan purges after a re-sync and the profile cascade still call the DAOs directly and
+deliberately, because turning "the playlist was refreshed" into "delete this everywhere" would lose
+real data.
+
+### 👁️ A dry run before anything is applied
+
+`BackupManager.previewImport` counts what an import would change without changing anything: new
+profiles, playlists, favourites, history, resume positions and ordering, settings that differ, and
+the rows this device would **lose** because the other one deleted them more recently. Every lookup
+mirrors what the import does, so the numbers are the ones the apply will produce.
+
+The one outcome worth engineering against is somebody tapping the wrong direction and finding out
+afterwards.
+
+### 🌍 Strings
+
+Sixty-one new keys in all 25 packaged locales — the whole Local sync feature on both apps, plus the
+page the companion server serves if somebody opens the sync address in a browser. The counted lines
+of the summary are written as a label and a number ("New favourites: 3") rather than a number inside
+a sentence, which is correct in every language without a plural rule per locale.
+
+### 🧪 Tests
+
+`UserDataTombstoneTest` — instrumentation, because the merge rule is expressed in DAO queries and a
+real transaction. It pins the cases the owner will actually perform: unfavourite here and it stays
+gone there, re-favourite here and it survives, and a deletion still matches after a re-sync has
+changed every content id. Each of them fails silently rather than loudly if the rule is wrong, which
+is exactly the kind of bug nobody reports and everybody stops trusting.
+
+The migration test asserts v36 arrives empty: an upgrade must not invent deletions.
+
 ## core-1.0.25 — 2026-09-06
 
 Core's share of the mobile app's casting phase. Additive throughout: every new member has a default

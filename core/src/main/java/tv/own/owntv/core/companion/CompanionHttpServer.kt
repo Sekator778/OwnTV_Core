@@ -88,6 +88,16 @@ class CompanionHttpServer(
     @Volatile private var downloadFile: File? = null
 
     /**
+     * Local sync only (see [CompanionMode.LOCAL_SYNC]). [syncInfo] answers `/sync/hello`, [onPair]
+     * mints and stores a secret for a device that just typed the right PIN, and [pairedSecrets] are
+     * the secrets already issued — any one of them is accepted in place of the PIN, which is what
+     * makes the second sync one tap instead of a fresh six digits.
+     */
+    @Volatile private var syncInfo: () -> String = { "{}" }
+    @Volatile private var onPair: (name: String, address: String) -> String? = { _, _ -> null }
+    @Volatile private var pairedSecrets: () -> Set<String> = { emptySet() }
+
+    /**
      * Bind [port] and start accepting. [pin] gates the pages and POST endpoints. [fontBytes], when
      * provided, is served at `/lora.ttf`. [mode] selects the served page (add-source form or backup
      * upload); [onPayload] receives an add-source submission, [onBackup] the raw JSON of an uploaded
@@ -105,6 +115,9 @@ class CompanionHttpServer(
         onTmdbKey: (String) -> Unit = {},
         onServiceConfig: (CompanionServiceConfig) -> Unit = {},
         downloadFile: File? = null,
+        syncInfo: () -> String = { "{}" },
+        onPair: (name: String, address: String) -> String? = { _, _ -> null },
+        pairedSecrets: () -> Set<String> = { emptySet() },
         onLocked: () -> Unit = {},
     ): List<String> {
         stop()
@@ -119,6 +132,9 @@ class CompanionHttpServer(
         this.onTmdbKey = onTmdbKey
         this.onServiceConfig = onServiceConfig
         this.downloadFile = downloadFile
+        this.syncInfo = syncInfo
+        this.onPair = onPair
+        this.pairedSecrets = pairedSecrets
         val socket = ServerSocket()
         socket.reuseAddress = true
         socket.bind(InetSocketAddress(port))
@@ -136,6 +152,9 @@ class CompanionHttpServer(
         onImage = { _, _ -> }
         onLocked = {}
         downloadFile = null
+        syncInfo = { "{}" }
+        onPair = { _, _ -> null }
+        pairedSecrets = { emptySet() }
         runCatching { serverSocket?.close() }
         serverSocket = null
     }
@@ -178,7 +197,7 @@ class CompanionHttpServer(
     private suspend fun handleClient(client: Socket) {
         client.use { socket ->
             // Backup/image uploads can be several MB over Wi-Fi; give them more headroom than a tiny form post.
-            socket.soTimeout = if (mode == CompanionMode.BACKUP_RESTORE || mode == CompanionMode.IMAGE_UPLOAD) 30_000 else 10_000
+            socket.soTimeout = if (mode == CompanionMode.BACKUP_RESTORE || mode == CompanionMode.IMAGE_UPLOAD || mode == CompanionMode.LOCAL_SYNC) 30_000 else 10_000
             val input = BufferedInputStream(socket.getInputStream())
             // Resolve one locale context for the whole request. This keeps every error and page in a
             // single effective locale even if the user changes the app language while a request is
@@ -239,12 +258,43 @@ class CompanionHttpServer(
                 return sendHtml(socket, 200, CompanionHtml.pinPage(pageContext, pinMismatchMessage(pageContext)))
             }
 
+            // --- local sync (LOCAL_SYNC mode) — no web page: the other OwnTV app talks here directly.
+
+            // Who is this? Answered to a device holding the PIN or an already-issued pairing secret,
+            // so a phone can show "Living Room TV" before anyone commits to anything.
+            if (method == "GET" && path == "/sync/hello") {
+                if (mode != CompanionMode.LOCAL_SYNC) return sendText(socket, 404, localized(R.string.companion_error_not_found))
+                if (!requireSyncAuth(queryPin.ifBlank { headers["x-companion-pin"].orEmpty() })) {
+                    return sendText(socket, 401, localized(R.string.companion_error_unauthorized))
+                }
+                return sendJson(socket, 200, syncInfo())
+            }
+
+            // Pairing. The PIN and only the PIN: a secret cannot mint another secret, so one leaked
+            // pairing can never widen itself into a second device the user never approved.
+            if (method == "POST" && path == "/sync/pair") {
+                if (mode != CompanionMode.LOCAL_SYNC) return sendText(socket, 404, localized(R.string.companion_error_not_found))
+                if (!requirePin(queryPin.ifBlank { headers["x-companion-pin"].orEmpty() })) {
+                    return sendText(socket, 401, localized(R.string.companion_error_unauthorized))
+                }
+                val body = CompanionHttpProtocol.readBody(input, headers, CompanionHttpProtocol.maxBodyBytes(path))
+                    ?: return sendText(socket, 413, localized(R.string.companion_error_body_too_large))
+                val name = CompanionHttpProtocol.parseQuery(body)["name"].orEmpty().take(64)
+                // The address is the socket's, not something the caller claims: a host has to be
+                // able to reach back later, and a device that lies about where it is would only be
+                // making itself unreachable.
+                val remoteAddress = socket.inetAddress?.hostAddress.orEmpty()
+                val secret = onPair(name, remoteAddress)
+                    ?: return sendText(socket, 500, localized(R.string.companion_error_pair_failed))
+                return sendJson(socket, 200, org.json.JSONObject().put("secret", secret).toString())
+            }
+
             // Backup download (BACKUP_DOWNLOAD mode) — PIN required, streams the exported container.
             // `/backup.json` stays routed here: the old path costs nothing to keep and a remote browser that
             // bookmarked it still works. What it serves is whatever export produced — a `.own` file.
             if (method == "GET" && (path == "/backup.own" || path == "/backup.json")) {
                 val headerPin = headers["x-companion-pin"].orEmpty()
-                if (!requirePin(queryPin.ifBlank { headerPin })) return sendText(socket, 401, localized(R.string.companion_error_unauthorized))
+                if (!requireSyncAuth(queryPin.ifBlank { headerPin })) return sendText(socket, 401, localized(R.string.companion_error_unauthorized))
                 val file = downloadFile
                 val bytes = file?.takeIf { it.exists() }?.let { runCatching { it.readBytes() }.getOrNull() }
                     ?: return sendText(socket, 404, localized(R.string.companion_error_no_backup))
@@ -254,7 +304,7 @@ class CompanionHttpServer(
             // Backup upload (BACKUP_RESTORE mode) — PIN required, JSON body is the backup file.
             if (method == "POST" && path == "/backup") {
                 val headerPin = headers["x-companion-pin"].orEmpty()
-                if (!requirePin(queryPin.ifBlank { headerPin })) return sendText(socket, 401, localized(R.string.companion_error_unauthorized))
+                if (!requireSyncAuth(queryPin.ifBlank { headerPin })) return sendText(socket, 401, localized(R.string.companion_error_unauthorized))
                 val body = CompanionHttpProtocol.readBody(input, headers, CompanionHttpProtocol.maxBodyBytes(path))
                     ?: return sendText(socket, 413, localized(R.string.companion_error_backup_too_large))
                 if (body.isBlank()) return sendText(socket, 400, localized(R.string.companion_error_empty_backup))
@@ -361,6 +411,24 @@ class CompanionHttpServer(
         return false
     }
 
+    /**
+     * [requirePin], widened for local sync: a paired device's stored secret is accepted in place of
+     * the six digits, so only the FIRST sync between two devices asks the user for anything.
+     *
+     * The secret is 256 random bits against the PIN's million, and it is only ever issued to a caller
+     * that already typed the PIN — so this widens who may connect, never how easily. Outside
+     * [CompanionMode.LOCAL_SYNC] it is exactly [requirePin], because no other mode issues secrets.
+     */
+    private suspend fun requireSyncAuth(candidate: String): Boolean {
+        if (mode == CompanionMode.LOCAL_SYNC && candidate.isNotBlank() &&
+            pairedSecrets().any { CompanionHttpProtocol.pinEquals(candidate, it) }
+        ) {
+            pinAccepted()
+            return true
+        }
+        return requirePin(candidate)
+    }
+
     /** A correct PIN clears the strike count — the limit is on *consecutive* failures. */
     private fun pinAccepted() {
         failedPins.set(0)
@@ -393,6 +461,9 @@ class CompanionHttpServer(
         CompanionMode.TMDB_KEY -> CompanionHtml.tmdbKeyPage(context, pin)
         CompanionMode.TMDB_CONFIG -> CompanionHtml.serviceConfigPage(context, pin, openSubtitles = false)
         CompanionMode.OPEN_SUBTITLES_CONFIG -> CompanionHtml.serviceConfigPage(context, pin, openSubtitles = true)
+        // Local sync has no browser side. Someone who opens the address in a browser and types the
+        // PIN gets told so rather than a blank page.
+        CompanionMode.LOCAL_SYNC -> CompanionHtml.localSyncPage(context)
     }
 
     /**
@@ -413,6 +484,9 @@ class CompanionHttpServer(
         }.getOrNull() ?: return null
         return if (bytes.isEmpty()) null else bytes to ext
     }
+
+    private fun sendJson(socket: Socket, code: Int, body: String) =
+        sendBytes(socket, code, "application/json; charset=utf-8", body.toByteArray(StandardCharsets.UTF_8))
 
     private fun sendHtml(socket: Socket, code: Int, body: String) =
         sendBytes(socket, code, "text/html; charset=utf-8", body.toByteArray(StandardCharsets.UTF_8))

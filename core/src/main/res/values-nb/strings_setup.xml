@@ -257,4 +257,7 @@
     <string name="setup_stalker_device_id_optional">Enhets-ID (valgfritt)</string>
     <string name="setup_stalker_device_id2_optional">Enhets-ID2 (valgfritt)</string>
     <string name="setup_stalker_signature_optional">Signatur (valgfritt)</string>
+    <string name="companion_error_pair_failed">Kunne ikke pare med denne enheten.</string>
+    <string name="local_sync_browser_title">OwnTV lokal synkronisering</string>
+    <string name="local_sync_browser_body">Denne adressen er for OwnTV-appen på den andre enheten. Åpne Lokal synkronisering der og velg denne enheten fra listen.</string>
 </resources>

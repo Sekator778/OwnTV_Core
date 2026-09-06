@@ -35,6 +35,10 @@ interface ContentOrderDao {
     }
 
     /** Everything, for Backup & Restore / re-sync snapshotting. */
+    /** Does this row already exist? The dry run before a sync counts what is genuinely new. */
+    @Query("SELECT EXISTS(SELECT 1 FROM content_order WHERE profileId = :profileId AND mediaType = :type AND contextKey = :contextKey AND itemId = :itemId)")
+    suspend fun exists(profileId: Long, type: MediaType, contextKey: String, itemId: Long): Boolean
+
     @Query("SELECT * FROM content_order")
     suspend fun getAllOnce(): List<ContentOrderEntity>
 

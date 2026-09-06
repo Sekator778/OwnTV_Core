@@ -7,21 +7,10 @@
 1	core/src/main/java/tv/own/owntv/core/backup/BackupManager.kt	$mapped:${contextKey.substringAfter(':')}
 3	core/src/main/java/tv/own/owntv/core/backup/BackupManager.kt	ctx
 3	core/src/main/java/tv/own/owntv/core/backup/BackupManager.kt	d
-2	core/src/main/java/tv/own/owntv/core/backup/BackupManager.kt	member
 1	core/src/main/java/tv/own/owntv/core/backup/BackupManager.kt	movedFrom
 4	core/src/main/java/tv/own/owntv/core/backup/BackupManager.kt	opensub_api_key_enc
-1	core/src/main/java/tv/own/owntv/core/backup/BackupManager.kt	settings
-1	core/src/main/java/tv/own/owntv/core/backup/BackupManager.kt	sort
-3	core/src/main/java/tv/own/owntv/core/backup/UserDataResolver.kt	ctx
-2	core/src/main/java/tv/own/owntv/core/backup/UserDataResolver.kt	kind
-8	core/src/main/java/tv/own/owntv/core/backup/UserDataResolver.kt	member
-1	core/src/main/java/tv/own/owntv/core/backup/UserDataResolver.kt	name
 1	core/src/main/java/tv/own/owntv/core/backup/UserDataResolver.kt	oid
-2	core/src/main/java/tv/own/owntv/core/backup/UserDataResolver.kt	p
 3	core/src/main/java/tv/own/owntv/core/backup/UserDataResolver.kt	pos
-1	core/src/main/java/tv/own/owntv/core/backup/UserDataResolver.kt	rid
-1	core/src/main/java/tv/own/owntv/core/backup/UserDataResolver.kt	src
-1	core/src/main/java/tv/own/owntv/core/backup/UserDataResolver.kt	t
 1	core/src/main/java/tv/own/owntv/core/catalog/ProviderCatalogMetadata.kt	2.0 Audio
 1	core/src/main/java/tv/own/owntv/core/catalog/ProviderCatalogMetadata.kt	5.1 Audio
 1	core/src/main/java/tv/own/owntv/core/catalog/ProviderCatalogMetadata.kt	7.1 Audio
@@ -48,14 +37,12 @@
 2	core/src/main/java/tv/own/owntv/core/companion/CompanionHttpServer.kt	\0
 1	core/src/main/java/tv/own/owntv/core/companion/CompanionHttpServer.kt	/serviceconfig
 1	core/src/main/java/tv/own/owntv/core/companion/CompanionHttpServer.kt	/tmdbkey
-2	core/src/main/java/tv/own/owntv/core/companion/CompanionHttpServer.kt	POST
 1	core/src/main/java/tv/own/owntv/core/companion/CompanionHttpServer.kt	^[A-Za-z0-9._-]{8,256}$
 1	core/src/main/java/tv/own/owntv/core/companion/CompanionHttpServer.kt	apiKey
 1	core/src/main/java/tv/own/owntv/core/companion/CompanionHttpServer.kt	https
 1	core/src/main/java/tv/own/owntv/core/companion/CompanionHttpServer.kt	password
 1	core/src/main/java/tv/own/owntv/core/companion/CompanionHttpServer.kt	serverUrl
 1	core/src/main/java/tv/own/owntv/core/companion/CompanionHttpServer.kt	username
-2	core/src/main/java/tv/own/owntv/core/companion/CompanionHttpServer.kt	x-companion-pin
 2	core/src/main/java/tv/own/owntv/core/companion/CompanionMode.kt	\0
 2	core/src/main/java/tv/own/owntv/core/companion/CompanionPayload.kt	\0
 1	core/src/main/java/tv/own/owntv/core/customize/CustomizationStore.kt	${CustomizeKeys.CUSTOM_PREFIX}${UUID.randomUUID()}
@@ -89,7 +76,6 @@
 1	core/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	CREATE TABLE IF NOT EXISTS `custom_category_members` (
 1	core/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	CREATE UNIQUE INDEX IF NOT EXISTS `index_custom_category_members_profileId_mediaType_contextKey_itemId` ON `custom_category_members` (`profileId`, `mediaType`, `contextKey`, `itemId`)
 1	core/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	`contextKey` TEXT NOT NULL,
-1	core/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
 1	core/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	`itemId` INTEGER NOT NULL,
 1	core/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	`mediaType` TEXT NOT NULL,
 1	core/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	`position` INTEGER NOT NULL,

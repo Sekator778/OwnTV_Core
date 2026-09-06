@@ -1291,4 +1291,69 @@
     <string name="settings_audio_on_mobile_data_description">Começar sem imagem quando não houver Wi-Fi</string>
     <string name="settings_audio_per_channel">Lembrar só som por canal</string>
     <string name="settings_audio_per_channel_description">Um canal assistido sem imagem abre assim na próxima vez</string>
+    <string name="local_sync_title">Sincronização local</string>
+    <string name="local_sync_description">Compartilhe seus dados com o outro dispositivo por Wi-Fi</string>
+    <string name="local_sync_search_keywords">sincronizar wifi rede parear dispositivos compartilhar</string>
+    <string name="local_sync_host_hint">No outro dispositivo, ligue o Modo de sincronização também, toque em Conectar e escolha este.</string>
+    <string name="local_sync_qr_description">Código QR com o endereço deste dispositivo</string>
+    <string name="local_sync_pin_is">PIN: <xliff:g id="pin">%1$s</xliff:g></string>
+    <string name="local_sync_add_device">Encontrar um dispositivo</string>
+    <string name="local_sync_add_device_description">Procure na rede, escaneie um código ou digite um endereço</string>
+    <string name="local_sync_paired_devices">Dispositivos pareados</string>
+    <string name="local_sync_device_address">Em <xliff:g id="address">%1$s</xliff:g></string>
+    <string name="local_sync_working">Trabalhando…</string>
+    <string name="local_sync_find_hint">Os dois dispositivos precisam estar no mesmo Wi-Fi, e o outro precisa estar com o Modo de sincronização ligado.</string>
+    <string name="local_sync_searching">Procurando na rede…</string>
+    <string name="local_sync_found">Encontrados na sua rede</string>
+    <string name="local_sync_scan_qr">Escanear o código</string>
+    <string name="local_sync_scan_qr_description">Aponte a câmera para o código no outro dispositivo</string>
+    <string name="local_sync_camera_denied">Sem a câmera você ainda pode escolher o dispositivo na lista ou digitar o endereço dele.</string>
+    <string name="local_sync_manual_address">Ou digite o endereço</string>
+    <string name="local_sync_manual_address_label">Endereço</string>
+    <string name="local_sync_enter_pin">Digite o PIN</string>
+    <string name="local_sync_enter_pin_description">Digite os seis dígitos exibidos no outro dispositivo. Você só precisa fazer isso uma vez.</string>
+    <string name="local_sync_pin_label">PIN</string>
+    <string name="local_sync_pair">Parear</string>
+    <string name="local_sync_send_to">Enviar para <xliff:g id="device">%1$s</xliff:g></string>
+    <string name="local_sync_send_description">Seus dados vão para lá. Nada muda aqui.</string>
+    <string name="local_sync_receive_from">Receber de <xliff:g id="device">%1$s</xliff:g></string>
+    <string name="local_sync_receive_description">Os dados dele vêm para cá. Nada muda lá.</string>
+    <string name="local_sync_merge_with">Mesclar com <xliff:g id="device">%1$s</xliff:g></string>
+    <string name="local_sync_merge_description">Os dois dispositivos ficam com tudo</string>
+    <string name="local_sync_unpair">Esquecer este dispositivo</string>
+    <string name="local_sync_unpair_description">Você precisará do PIN de novo na próxima vez</string>
+    <string name="local_sync_what_to_send">O que enviar</string>
+    <string name="local_sync_what_to_receive">O que receber</string>
+    <string name="local_sync_what_to_merge">O que mesclar</string>
+    <string name="local_sync_sections_hint">As mesmas coisas que um backup guarda. Desmarque o que preferir deixar de fora.</string>
+    <string name="local_sync_everything">Tudo</string>
+    <string name="local_sync_password_hint">Uma senha protege o que é enviado e leva junto os logins das suas listas. Deixe em branco e esses logins simplesmente ficam de fora.</string>
+    <string name="local_sync_confirm_title">O que vai mudar</string>
+    <string name="local_sync_confirm_hint">Nada foi alterado ainda. É isto que aplicar faria neste dispositivo.</string>
+    <string name="local_sync_nothing_to_change">Os dois dispositivos já têm o mesmo. Não há nada para aplicar.</string>
+    <string name="local_sync_merge_note">Seus próprios dados são enviados de volta em seguida, para que os dois fiquem iguais.</string>
+    <string name="local_sync_change_profiles">Perfis novos: <xliff:g id="count">%1$d</xliff:g></string>
+    <string name="local_sync_change_sources">Listas novas: <xliff:g id="count">%1$d</xliff:g></string>
+    <string name="local_sync_change_favorites">Favoritos novos: <xliff:g id="count">%1$d</xliff:g></string>
+    <string name="local_sync_change_history">Itens novos no histórico: <xliff:g id="count">%1$d</xliff:g></string>
+    <string name="local_sync_change_resume">Pontos de retomada novos: <xliff:g id="count">%1$d</xliff:g></string>
+    <string name="local_sync_change_reorder">Mudanças de ordem: <xliff:g id="count">%1$d</xliff:g></string>
+    <string name="local_sync_change_settings">Configurações diferentes: <xliff:g id="count">%1$d</xliff:g></string>
+    <string name="local_sync_change_deletions">Itens a remover: <xliff:g id="count">%1$d</xliff:g></string>
+    <string name="local_sync_change_customize">Suas personalizações também vêm junto</string>
+    <string name="local_sync_apply">Aplicar</string>
+    <string name="local_sync_done">Sincronização concluída</string>
+    <string name="local_sync_received_items">Itens recebidos: <xliff:g id="count">%1$d</xliff:g></string>
+    <string name="local_sync_sent">Seus dados foram enviados</string>
+    <string name="local_sync_failed">Falha na sincronização</string>
+    <string name="local_sync_error_unreachable">Não foi possível alcançar este dispositivo. Nele, abra OwnTV → Configurações → Dados → Sincronização local e ligue o Modo de sincronização. Os dois precisam estar no mesmo Wi-Fi.</string>
+    <string name="local_sync_error_unauthorized">O outro dispositivo recusou. O PIN pode estar errado, ou ele pode ter esquecido este dispositivo.</string>
+    <string name="local_sync_error_bad_payload">Não foi possível ler o que chegou. Se você usou uma senha, verifique se ela é a mesma nos dois dispositivos.</string>
+    <string name="local_sync_error_unknown">Algo deu errado. Tente novamente.</string>
+    <string name="local_sync_mode">Modo de sincronização</string>
+    <string name="local_sync_mode_description">Permite que seus outros dispositivos encontrem este. Fica ligado enquanto esta tela estiver aberta.</string>
+    <string name="local_sync_mode_pill">Modo de sincronização ligado</string>
+    <string name="local_sync_connect">Conectar</string>
+    <string name="local_sync_connect_description">Encontre outro dispositivo com o Modo de sincronização ligado</string>
+    <string name="local_sync_last_synced">Última sincronização: <xliff:g id="when">%1$s</xliff:g></string>
 </resources>

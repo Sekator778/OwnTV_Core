@@ -260,4 +260,7 @@
     <string name="setup_stalker_device_id_optional">ID dispositivo (facoltativo)</string>
     <string name="setup_stalker_device_id2_optional">ID dispositivo 2 (facoltativo)</string>
     <string name="setup_stalker_signature_optional">Firma (facoltativa)</string>
+    <string name="companion_error_pair_failed">Impossibile abbinare questo dispositivo.</string>
+    <string name="local_sync_browser_title">Sincronizzazione locale OwnTV</string>
+    <string name="local_sync_browser_body">Questo indirizzo è per l\'app OwnTV sull\'altro dispositivo. Apri lì Sincronizzazione locale e scegli questo dispositivo dall\'elenco.</string>
 </resources>

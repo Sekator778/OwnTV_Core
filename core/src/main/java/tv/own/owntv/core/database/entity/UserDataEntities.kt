@@ -183,6 +183,45 @@ data class CustomCategoryMemberEntity(
     val position: Int,
 )
 
+/**
+ * A user data row the user deleted, remembered so the deletion survives a sync (v36).
+ *
+ * Local sync merges — it never clobbers — so without this a favorite removed on the phone simply
+ * looks *absent* there and *present* on the TV, and the next merge helpfully puts it back. A
+ * tombstone makes the absence deliberate: "this was deleted at this moment", which the merge can
+ * compare against the other device's timestamp the same way it compares two live rows.
+ *
+ * [identity] is NOT the volatile `itemId`. It is the same stable content key
+ * [tv.own.owntv.core.backup.UserDataResolver] exports into a backup — source id, provider remote id
+ * and name (or show + season/episode) as a canonically-ordered JSON object — because the row being
+ * deleted has to be recognisable on a device whose ids are entirely different, and across the
+ * clear-then-insert of a re-sync on this one.
+ *
+ * Only genuine user deletions are recorded. Housekeeping deletes — the orphan purges after a
+ * re-sync, a profile cascade — must never write one: that would turn "your playlist was refreshed"
+ * into "delete this on every other device too".
+ */
+@Entity(
+    tableName = "user_data_tombstones",
+    foreignKeys = [
+        ForeignKey(entity = ProfileEntity::class, parentColumns = ["id"], childColumns = ["profileId"], onDelete = ForeignKey.CASCADE),
+    ],
+    indices = [
+        Index("profileId"),
+        Index(value = ["profileId", "kind", "identity"], unique = true),
+        Index("deletedAt"),
+    ],
+)
+data class UserDataTombstoneEntity(
+    @PrimaryKey(autoGenerate = true) val id: Long = 0,
+    val profileId: Long,
+    /** Which list the row was deleted from: `fav`, `his`, `prog` or `member` — UserDataResolver's kinds. */
+    val kind: String,
+    /** Canonical stable content key JSON; see [tv.own.owntv.core.backup.UserDataResolver.canonicalIdentity]. */
+    val identity: String,
+    val deletedAt: Long = System.currentTimeMillis(),
+)
+
 @Entity(
     tableName = "downloads",
     foreignKeys = [

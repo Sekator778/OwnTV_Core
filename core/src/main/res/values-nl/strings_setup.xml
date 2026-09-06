@@ -257,4 +257,7 @@
     <string name="setup_stalker_device_id_optional">Apparaat-ID (optioneel)</string>
     <string name="setup_stalker_device_id2_optional">Apparaat-ID2 (optioneel)</string>
     <string name="setup_stalker_signature_optional">Handtekening (optioneel)</string>
+    <string name="companion_error_pair_failed">Kon niet koppelen met dit apparaat.</string>
+    <string name="local_sync_browser_title">OwnTV lokaal synchroniseren</string>
+    <string name="local_sync_browser_body">Dit adres is bedoeld voor de OwnTV-app op je andere apparaat. Open daar Lokaal synchroniseren en kies dit apparaat uit de lijst.</string>
 </resources>

@@ -257,4 +257,7 @@
     <string name="setup_stalker_device_id_optional">Cihaz Kimliği (isteğe bağlı)</string>
     <string name="setup_stalker_device_id2_optional">Cihaz Kimliği 2 (isteğe bağlı)</string>
     <string name="setup_stalker_signature_optional">İmza (isteğe bağlı)</string>
+    <string name="companion_error_pair_failed">Bu cihazla eşleştirilemedi.</string>
+    <string name="local_sync_browser_title">OwnTV yerel eşitleme</string>
+    <string name="local_sync_browser_body">Bu adres, diğer cihazınızdaki OwnTV uygulaması içindir. Orada Yerel eşitlemeyi açın ve listeden bu cihazı seçin.</string>
 </resources>

@@ -61,6 +61,7 @@ class UserDataResolverRelinkTest {
             contentOrderDao = db.contentOrderDao(),
             customCategoryDao = db.customCategoryDao(),
             seriesSortOrderDao = db.seriesSortOrderDao(),
+            tombstoneDao = db.tombstoneDao(),
             db = db,
         )
         profileId = db.profileDao().insert(ProfileEntity(name = "Primary", avatarColor = 0x112233))

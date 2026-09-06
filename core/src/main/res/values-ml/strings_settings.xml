@@ -1269,4 +1269,69 @@
     <string name="settings_audio_on_mobile_data_description">Wi-Fi ഇല്ലാത്തപ്പോൾ ചിത്രമില്ലാതെ തുടങ്ങുക</string>
     <string name="settings_audio_per_channel">ചാനൽ തിരിച്ച് ശബ്ദം മാത്രം ഓർക്കുക</string>
     <string name="settings_audio_per_channel_description">ചിത്രമില്ലാതെ കണ്ട ചാനൽ അടുത്ത തവണയും അങ്ങനെ തുറക്കും</string>
+    <string name="local_sync_title">ലോക്കൽ സമന്വയം</string>
+    <string name="local_sync_description">വൈ-ഫൈ വഴി നിങ്ങളുടെ മറ്റ് ഉപകരണവുമായി ഡാറ്റ പങ്കിടുക</string>
+    <string name="local_sync_search_keywords">സമന്വയം വൈഫൈ നെറ്റ്‌വർക്ക് പെയർ ഉപകരണങ്ങൾ പങ്കിടൽ</string>
+    <string name="local_sync_host_hint">നിങ്ങളുടെ മറ്റ് ഉപകരണത്തിലും സമന്വയ മോഡ് ഓണാക്കി, കണക്റ്റ് ചെയ്യുക അമർത്തി ഇത് തിരഞ്ഞെടുക്കുക.</string>
+    <string name="local_sync_qr_description">ഈ ഉപകരണത്തിന്റെ വിലാസമുള്ള QR കോഡ്</string>
+    <string name="local_sync_pin_is">പിൻ: <xliff:g id="pin">%1$s</xliff:g></string>
+    <string name="local_sync_add_device">ഒരു ഉപകരണം കണ്ടെത്തുക</string>
+    <string name="local_sync_add_device_description">നെറ്റ്‌വർക്കിൽ തിരയുക, കോഡ് സ്കാൻ ചെയ്യുക, അല്ലെങ്കിൽ വിലാസം ടൈപ്പ് ചെയ്യുക</string>
+    <string name="local_sync_paired_devices">ജോടിയാക്കിയ ഉപകരണങ്ങൾ</string>
+    <string name="local_sync_device_address"><xliff:g id="address">%1$s</xliff:g> എന്നതിൽ</string>
+    <string name="local_sync_working">പ്രവർത്തിക്കുന്നു…</string>
+    <string name="local_sync_find_hint">രണ്ട് ഉപകരണങ്ങളും ഒരേ വൈ-ഫൈയിൽ ആയിരിക്കണം, മറ്റേതിൽ സമന്വയ മോഡ് ഓണായിരിക്കണം.</string>
+    <string name="local_sync_searching">നെറ്റ്‌വർക്കിൽ തിരയുന്നു…</string>
+    <string name="local_sync_found">നിങ്ങളുടെ നെറ്റ്‌വർക്കിൽ കണ്ടെത്തി</string>
+    <string name="local_sync_scan_qr">കോഡ് സ്കാൻ ചെയ്യുക</string>
+    <string name="local_sync_scan_qr_description">നിങ്ങളുടെ മറ്റ് ഉപകരണത്തിലെ കോഡിലേക്ക് ക്യാമറ ചൂണ്ടുക</string>
+    <string name="local_sync_camera_denied">ക്യാമറ ഇല്ലാതെയും പട്ടികയിൽ നിന്ന് ഉപകരണം തിരഞ്ഞെടുക്കാം അല്ലെങ്കിൽ വിലാസം ടൈപ്പ് ചെയ്യാം.</string>
+    <string name="local_sync_manual_address">അല്ലെങ്കിൽ വിലാസം ടൈപ്പ് ചെയ്യുക</string>
+    <string name="local_sync_manual_address_label">വിലാസം</string>
+    <string name="local_sync_enter_pin">പിൻ നൽകുക</string>
+    <string name="local_sync_enter_pin_description">നിങ്ങളുടെ മറ്റ് ഉപകരണത്തിൽ കാണിക്കുന്ന ആറ് അക്കങ്ങൾ ടൈപ്പ് ചെയ്യുക. ഇത് ഒരിക്കൽ മാത്രം മതി.</string>
+    <string name="local_sync_pin_label">പിൻ</string>
+    <string name="local_sync_pair">ജോടിയാക്കുക</string>
+    <string name="local_sync_send_to"><xliff:g id="device">%1$s</xliff:g> എന്നതിലേക്ക് അയയ്ക്കുക</string>
+    <string name="local_sync_send_description">നിങ്ങളുടെ ഡാറ്റ അങ്ങോട്ട് പോകുന്നു. ഇവിടെ ഒന്നും മാറുന്നില്ല.</string>
+    <string name="local_sync_receive_from"><xliff:g id="device">%1$s</xliff:g> എന്നതിൽ നിന്ന് സ്വീകരിക്കുക</string>
+    <string name="local_sync_receive_description">അതിന്റെ ഡാറ്റ ഇവിടേക്ക് വരുന്നു. അവിടെ ഒന്നും മാറുന്നില്ല.</string>
+    <string name="local_sync_merge_with"><xliff:g id="device">%1$s</xliff:g> എന്നതുമായി ലയിപ്പിക്കുക</string>
+    <string name="local_sync_merge_description">രണ്ട് ഉപകരണങ്ങളിലും എല്ലാം ഉണ്ടാകും</string>
+    <string name="local_sync_unpair">ഈ ഉപകരണം മറക്കുക</string>
+    <string name="local_sync_unpair_description">അടുത്ത തവണ വീണ്ടും പിൻ ആവശ്യമായി വരും</string>
+    <string name="local_sync_what_to_send">എന്ത് അയയ്ക്കണം</string>
+    <string name="local_sync_what_to_receive">എന്ത് സ്വീകരിക്കണം</string>
+    <string name="local_sync_what_to_merge">എന്ത് ലയിപ്പിക്കണം</string>
+    <string name="local_sync_sections_hint">ഒരു ബാക്കപ്പിൽ ഉള്ള അതേ കാര്യങ്ങൾ. ഒഴിവാക്കാൻ ആഗ്രഹിക്കുന്നവയുടെ ടിക്ക് നീക്കുക.</string>
+    <string name="local_sync_everything">എല്ലാം</string>
+    <string name="local_sync_password_hint">ഒരു പാസ്‌വേഡ് അയയ്ക്കുന്നത് സംരക്ഷിക്കുകയും നിങ്ങളുടെ പ്ലേലിസ്റ്റ് ലോഗിനുകൾ കൂടെ കൊണ്ടുപോകുകയും ചെയ്യുന്നു. ശൂന്യമാക്കിയാൽ ആ ലോഗിനുകൾ ഒഴിവാക്കപ്പെടും.</string>
+    <string name="local_sync_confirm_title">എന്ത് മാറും</string>
+    <string name="local_sync_confirm_hint">ഇതുവരെ ഒന്നും മാറിയിട്ടില്ല. പ്രയോഗിച്ചാൽ ഈ ഉപകരണത്തിൽ ഇതാണ് സംഭവിക്കുക.</string>
+    <string name="local_sync_nothing_to_change">രണ്ട് ഉപകരണങ്ങളിലും ഇതിനകം ഒരേ കാര്യമാണുള്ളത്. പ്രയോഗിക്കാൻ ഒന്നുമില്ല.</string>
+    <string name="local_sync_merge_note">തുടർന്ന് നിങ്ങളുടെ സ്വന്തം ഡാറ്റ തിരികെ അയയ്ക്കപ്പെടും, അതിനാൽ രണ്ട് ഉപകരണങ്ങളും ഒരുപോലെയാകും.</string>
+    <string name="local_sync_change_profiles">പുതിയ പ്രൊഫൈലുകൾ: <xliff:g id="count">%1$d</xliff:g></string>
+    <string name="local_sync_change_sources">പുതിയ പ്ലേലിസ്റ്റുകൾ: <xliff:g id="count">%1$d</xliff:g></string>
+    <string name="local_sync_change_favorites">പുതിയ പ്രിയങ്ങൾ: <xliff:g id="count">%1$d</xliff:g></string>
+    <string name="local_sync_change_history">പുതിയ ചരിത്ര ഇനങ്ങൾ: <xliff:g id="count">%1$d</xliff:g></string>
+    <string name="local_sync_change_resume">പുതിയ തുടർച്ചാ സ്ഥാനങ്ങൾ: <xliff:g id="count">%1$d</xliff:g></string>
+    <string name="local_sync_change_reorder">ക്രമ മാറ്റങ്ങൾ: <xliff:g id="count">%1$d</xliff:g></string>
+    <string name="local_sync_change_settings">വ്യത്യസ്ത ക്രമീകരണങ്ങൾ: <xliff:g id="count">%1$d</xliff:g></string>
+    <string name="local_sync_change_deletions">നീക്കംചെയ്യേണ്ട ഇനങ്ങൾ: <xliff:g id="count">%1$d</xliff:g></string>
+    <string name="local_sync_change_customize">നിങ്ങളുടെ ഇഷ്ടാനുസൃതമാക്കലുകളും കൂടെ വരും</string>
+    <string name="local_sync_apply">പ്രയോഗിക്കുക</string>
+    <string name="local_sync_done">സമന്വയം പൂർത്തിയായി</string>
+    <string name="local_sync_received_items">ലഭിച്ച ഇനങ്ങൾ: <xliff:g id="count">%1$d</xliff:g></string>
+    <string name="local_sync_sent">നിങ്ങളുടെ ഡാറ്റ അയച്ചു</string>
+    <string name="local_sync_failed">സമന്വയം പരാജയപ്പെട്ടു</string>
+    <string name="local_sync_error_unreachable">ഈ ഉപകരണത്തിലേക്ക് എത്താനായില്ല. അതിൽ OwnTV → ക്രമീകരണങ്ങൾ → ഡാറ്റ → ലോക്കൽ സമന്വയം തുറന്ന് സമന്വയ മോഡ് ഓണാക്കുക. രണ്ട് ഉപകരണങ്ങളും ഒരേ വൈ-ഫൈയിൽ ആയിരിക്കണം.</string>
+    <string name="local_sync_error_unauthorized">മറ്റേ ഉപകരണം നിരസിച്ചു. പിൻ തെറ്റായിരിക്കാം, അല്ലെങ്കിൽ അത് ഈ ഉപകരണം മറന്നിരിക്കാം.</string>
+    <string name="local_sync_error_bad_payload">വന്നത് വായിക്കാൻ കഴിഞ്ഞില്ല. പാസ്‌വേഡ് ഉപയോഗിച്ചെങ്കിൽ, രണ്ട് ഉപകരണങ്ങളിലും ഒന്നുതന്നെയാണോ എന്ന് പരിശോധിക്കുക.</string>
+    <string name="local_sync_error_unknown">എന്തോ കുഴപ്പം സംഭവിച്ചു. വീണ്ടും ശ്രമിക്കുക.</string>
+    <string name="local_sync_mode">സമന്വയ മോഡ്</string>
+    <string name="local_sync_mode_description">നിങ്ങളുടെ മറ്റ് ഉപകരണങ്ങൾക്ക് ഇത് കണ്ടെത്താൻ അനുവദിക്കുന്നു. ഈ സ്ക്രീൻ തുറന്നിരിക്കുമ്പോൾ ഓണായിരിക്കും.</string>
+    <string name="local_sync_mode_pill">സമന്വയ മോഡ് ഓണാണ്</string>
+    <string name="local_sync_connect">കണക്റ്റ് ചെയ്യുക</string>
+    <string name="local_sync_connect_description">സമന്വയ മോഡ് ഓണായ മറ്റൊരു ഉപകരണം കണ്ടെത്തുക</string>
+    <string name="local_sync_last_synced">അവസാന സമന്വയം: <xliff:g id="when">%1$s</xliff:g></string>
 </resources>

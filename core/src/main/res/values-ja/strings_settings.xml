@@ -1247,4 +1247,69 @@
     <string name="settings_audio_on_mobile_data_description">Wi-Fi がないときは映像なしで開始する</string>
     <string name="settings_audio_per_channel">チャンネルごとに音声のみを記憶</string>
     <string name="settings_audio_per_channel_description">映像なしで見たチャンネルは次回も同じように開きます</string>
+    <string name="local_sync_title">ローカル同期</string>
+    <string name="local_sync_description">Wi-Fi 経由でもう一方の端末とデータを共有します</string>
+    <string name="local_sync_search_keywords">同期 wifi ネットワーク ペアリング 端末 共有</string>
+    <string name="local_sync_host_hint">もう一方の端末でも同期モードをオンにし、「接続」をタップしてこの端末を選んでください。</string>
+    <string name="local_sync_qr_description">この端末のアドレスを含む QR コード</string>
+    <string name="local_sync_pin_is">PIN: <xliff:g id="pin">%1$s</xliff:g></string>
+    <string name="local_sync_add_device">端末を探す</string>
+    <string name="local_sync_add_device_description">ネットワークを検索、コードを読み取り、またはアドレスを入力</string>
+    <string name="local_sync_paired_devices">ペアリング済みの端末</string>
+    <string name="local_sync_device_address"><xliff:g id="address">%1$s</xliff:g> にあります</string>
+    <string name="local_sync_working">処理中…</string>
+    <string name="local_sync_find_hint">両方の端末が同じ Wi-Fi に接続し、もう一方で同期モードをオンにしておく必要があります。</string>
+    <string name="local_sync_searching">ネットワークを検索中…</string>
+    <string name="local_sync_found">ネットワーク内で見つかりました</string>
+    <string name="local_sync_scan_qr">コードを読み取る</string>
+    <string name="local_sync_scan_qr_description">もう一方の端末に表示されたコードにカメラを向けてください</string>
+    <string name="local_sync_camera_denied">カメラがなくても、一覧から端末を選ぶか、アドレスを入力できます。</string>
+    <string name="local_sync_manual_address">またはアドレスを入力</string>
+    <string name="local_sync_manual_address_label">アドレス</string>
+    <string name="local_sync_enter_pin">PIN を入力</string>
+    <string name="local_sync_enter_pin_description">もう一方の端末に表示された 6 桁を入力してください。必要なのは最初の一度だけです。</string>
+    <string name="local_sync_pin_label">PIN</string>
+    <string name="local_sync_pair">ペアリング</string>
+    <string name="local_sync_send_to"><xliff:g id="device">%1$s</xliff:g> に送る</string>
+    <string name="local_sync_send_description">データはあちらに送られます。この端末は変わりません。</string>
+    <string name="local_sync_receive_from"><xliff:g id="device">%1$s</xliff:g> から受け取る</string>
+    <string name="local_sync_receive_description">あちらのデータがこの端末に入ります。あちらは変わりません。</string>
+    <string name="local_sync_merge_with"><xliff:g id="device">%1$s</xliff:g> と統合する</string>
+    <string name="local_sync_merge_description">両方の端末がすべてを持つ状態になります</string>
+    <string name="local_sync_unpair">この端末を削除</string>
+    <string name="local_sync_unpair_description">次回はもう一度 PIN が必要になります</string>
+    <string name="local_sync_what_to_send">送る内容</string>
+    <string name="local_sync_what_to_receive">受け取る内容</string>
+    <string name="local_sync_what_to_merge">統合する内容</string>
+    <string name="local_sync_sections_hint">バックアップに入るものと同じです。含めたくない項目はチェックを外してください。</string>
+    <string name="local_sync_everything">すべて</string>
+    <string name="local_sync_password_hint">パスワードを設定すると送信内容が保護され、プレイリストのログイン情報も一緒に送られます。空欄にすると、そのログイン情報は含まれません。</string>
+    <string name="local_sync_confirm_title">変更される内容</string>
+    <string name="local_sync_confirm_hint">まだ何も変更されていません。適用するとこの端末では次のようになります。</string>
+    <string name="local_sync_nothing_to_change">両方の端末はすでに同じ内容です。適用するものはありません。</string>
+    <string name="local_sync_merge_note">そのあとこの端末のデータが返送され、両方が同じ状態になります。</string>
+    <string name="local_sync_change_profiles">新しいプロフィール: <xliff:g id="count">%1$d</xliff:g></string>
+    <string name="local_sync_change_sources">新しいプレイリスト: <xliff:g id="count">%1$d</xliff:g></string>
+    <string name="local_sync_change_favorites">新しいお気に入り: <xliff:g id="count">%1$d</xliff:g></string>
+    <string name="local_sync_change_history">新しい視聴履歴: <xliff:g id="count">%1$d</xliff:g></string>
+    <string name="local_sync_change_resume">新しい再開位置: <xliff:g id="count">%1$d</xliff:g></string>
+    <string name="local_sync_change_reorder">並び順の変更: <xliff:g id="count">%1$d</xliff:g></string>
+    <string name="local_sync_change_settings">異なる設定: <xliff:g id="count">%1$d</xliff:g></string>
+    <string name="local_sync_change_deletions">削除される項目: <xliff:g id="count">%1$d</xliff:g></string>
+    <string name="local_sync_change_customize">カスタマイズ内容も一緒に移ります</string>
+    <string name="local_sync_apply">適用</string>
+    <string name="local_sync_done">同期が完了しました</string>
+    <string name="local_sync_received_items">受け取った項目: <xliff:g id="count">%1$d</xliff:g></string>
+    <string name="local_sync_sent">データを送信しました</string>
+    <string name="local_sync_failed">同期に失敗しました</string>
+    <string name="local_sync_error_unreachable">その端末に接続できませんでした。その端末で OwnTV → 設定 → データ → ローカル同期 を開き、同期モードをオンにしてください。両方が同じ Wi-Fi に接続している必要があります。</string>
+    <string name="local_sync_error_unauthorized">もう一方の端末に拒否されました。PIN が違うか、この端末を削除した可能性があります。</string>
+    <string name="local_sync_error_bad_payload">受け取った内容を読み取れませんでした。パスワードを使った場合は、両方の端末で同じか確認してください。</string>
+    <string name="local_sync_error_unknown">問題が発生しました。もう一度お試しください。</string>
+    <string name="local_sync_mode">同期モード</string>
+    <string name="local_sync_mode_description">ほかの端末からこの端末を見つけられるようにします。この画面を開いている間だけ有効です。</string>
+    <string name="local_sync_mode_pill">同期モード オン</string>
+    <string name="local_sync_connect">接続</string>
+    <string name="local_sync_connect_description">同期モードがオンのほかの端末を探します</string>
+    <string name="local_sync_last_synced">最終同期: <xliff:g id="when">%1$s</xliff:g></string>
 </resources>

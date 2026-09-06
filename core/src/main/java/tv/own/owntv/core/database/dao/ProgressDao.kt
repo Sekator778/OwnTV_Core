@@ -24,6 +24,14 @@ interface ProgressDao {
     @Query("DELETE FROM playback_progress WHERE profileId = :profileId AND mediaType = :type AND itemId = :itemId")
     suspend fun clear(profileId: Long, type: MediaType, itemId: Long)
 
+    /**
+     * Deletes the row only when it is older than [at] — the local-sync merge rule for an
+     * incoming deletion. A row the user re-created after the other device deleted it is newer,
+     * and survives. Returns the number of rows removed, so the sync summary can count it.
+     */
+    @Query("DELETE FROM playback_progress WHERE profileId = :profileId AND mediaType = :type AND itemId = :itemId AND updatedAt <= :at")
+    suspend fun removeIfOlderThan(profileId: Long, type: MediaType, itemId: Long, at: Long): Int
+
     /** Every episode resume position for one series. "Remove from history" on a show has to run this
      *  too: Home's Continue watching row is built from EPISODE progress rows, not from history, so
      *  clearing the show's history row alone left the episode sitting on the home screen. */
@@ -40,6 +48,20 @@ interface ProgressDao {
     /** Wipe resume positions for one media type (MOVIE / EPISODE) for a profile. */
     @Query("DELETE FROM playback_progress WHERE profileId = :profileId AND mediaType = :type")
     suspend fun clearProfileType(profileId: Long, type: MediaType)
+
+    /** One profile's resume positions, so a "clear" can record each deletion before it happens. */
+    @Query("SELECT * FROM playback_progress WHERE profileId = :profileId")
+    suspend fun getForProfile(profileId: Long): List<PlaybackProgressEntity>
+
+    @Query("SELECT * FROM playback_progress WHERE profileId = :profileId AND mediaType = :type")
+    suspend fun getForProfileType(profileId: Long, type: MediaType): List<PlaybackProgressEntity>
+
+    /** The episodes of one series that have a resume position — the ids whose removal is recorded. */
+    @Query(
+        "SELECT itemId FROM playback_progress WHERE profileId = :profileId AND mediaType = 'EPISODE' " +
+            "AND itemId IN (SELECT id FROM episodes WHERE seriesId = :seriesId)",
+    )
+    suspend fun episodeIdsWithProgress(profileId: Long, seriesId: Long): List<Long>
 
     /** Everything, for Backup & Restore. */
     @Query("SELECT * FROM playback_progress")

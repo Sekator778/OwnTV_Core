@@ -1269,4 +1269,69 @@
     <string name="settings_audio_on_mobile_data_description">Wi-Fi না থাকলে ছবি ছাড়াই শুরু হবে</string>
     <string name="settings_audio_per_channel">চ্যানেল অনুযায়ী শুধু শব্দ মনে রাখুন</string>
     <string name="settings_audio_per_channel_description">ছবি ছাড়া দেখা চ্যানেল পরের বারও সেভাবেই খুলবে</string>
+    <string name="local_sync_title">লোকাল সিঙ্ক</string>
+    <string name="local_sync_description">ওয়াই-ফাইয়ের মাধ্যমে আপনার অন্য ডিভাইসের সঙ্গে ডেটা শেয়ার করুন</string>
+    <string name="local_sync_search_keywords">সিঙ্ক ওয়াইফাই নেটওয়ার্ক পেয়ার ডিভাইস শেয়ার</string>
+    <string name="local_sync_host_hint">আপনার অন্য ডিভাইসেও সিঙ্ক মোড চালু করুন, তারপর সংযোগ করুন-এ ট্যাপ করে এটি বেছে নিন।</string>
+    <string name="local_sync_qr_description">এই ডিভাইসের ঠিকানাসহ QR কোড</string>
+    <string name="local_sync_pin_is">পিন: <xliff:g id="pin">%1$s</xliff:g></string>
+    <string name="local_sync_add_device">ডিভাইস খুঁজুন</string>
+    <string name="local_sync_add_device_description">নেটওয়ার্কে খুঁজুন, কোড স্ক্যান করুন বা ঠিকানা লিখুন</string>
+    <string name="local_sync_paired_devices">পেয়ার করা ডিভাইস</string>
+    <string name="local_sync_device_address"><xliff:g id="address">%1$s</xliff:g>-এ</string>
+    <string name="local_sync_working">চলছে…</string>
+    <string name="local_sync_find_hint">দুটি ডিভাইসই একই ওয়াই-ফাইতে থাকতে হবে, এবং অন্যটিতে সিঙ্ক মোড চালু থাকতে হবে।</string>
+    <string name="local_sync_searching">নেটওয়ার্ক খোঁজা হচ্ছে…</string>
+    <string name="local_sync_found">আপনার নেটওয়ার্কে পাওয়া গেছে</string>
+    <string name="local_sync_scan_qr">কোড স্ক্যান করুন</string>
+    <string name="local_sync_scan_qr_description">আপনার অন্য ডিভাইসের কোডের দিকে ক্যামেরা তাক করুন</string>
+    <string name="local_sync_camera_denied">ক্যামেরা ছাড়াও আপনি তালিকা থেকে ডিভাইস বেছে নিতে বা তার ঠিকানা লিখতে পারেন।</string>
+    <string name="local_sync_manual_address">অথবা ঠিকানা লিখুন</string>
+    <string name="local_sync_manual_address_label">ঠিকানা</string>
+    <string name="local_sync_enter_pin">পিন লিখুন</string>
+    <string name="local_sync_enter_pin_description">আপনার অন্য ডিভাইসে দেখানো ছয়টি সংখ্যা লিখুন। এটি একবারই করতে হয়।</string>
+    <string name="local_sync_pin_label">পিন</string>
+    <string name="local_sync_pair">পেয়ার করুন</string>
+    <string name="local_sync_send_to"><xliff:g id="device">%1$s</xliff:g>-এ পাঠান</string>
+    <string name="local_sync_send_description">আপনার ডেটা সেখানে যায়। এখানে কিছুই বদলায় না।</string>
+    <string name="local_sync_receive_from"><xliff:g id="device">%1$s</xliff:g> থেকে নিন</string>
+    <string name="local_sync_receive_description">তার ডেটা এখানে আসে। সেখানে কিছুই বদলায় না।</string>
+    <string name="local_sync_merge_with"><xliff:g id="device">%1$s</xliff:g>-এর সঙ্গে মার্জ করুন</string>
+    <string name="local_sync_merge_description">দুটি ডিভাইসেই সবকিছু থাকবে</string>
+    <string name="local_sync_unpair">এই ডিভাইস ভুলে যান</string>
+    <string name="local_sync_unpair_description">পরের বার আবার পিন লাগবে</string>
+    <string name="local_sync_what_to_send">কী পাঠাবেন</string>
+    <string name="local_sync_what_to_receive">কী নেবেন</string>
+    <string name="local_sync_what_to_merge">কী মার্জ করবেন</string>
+    <string name="local_sync_sections_hint">ব্যাকআপে যা থাকে ঠিক সেগুলোই। যা বাদ দিতে চান তার টিক তুলে দিন।</string>
+    <string name="local_sync_everything">সবকিছু</string>
+    <string name="local_sync_password_hint">পাসওয়ার্ড যা পাঠানো হয় তা সুরক্ষিত রাখে এবং আপনার প্লেলিস্ট লগইনও সঙ্গে নিয়ে যায়। ফাঁকা রাখলে সেই লগইনগুলো বাদ পড়ে।</string>
+    <string name="local_sync_confirm_title">কী বদলাবে</string>
+    <string name="local_sync_confirm_hint">এখনো কিছু বদলায়নি। প্রয়োগ করলে এই ডিভাইসে যা হবে তা এখানে।</string>
+    <string name="local_sync_nothing_to_change">দুটি ডিভাইসে ইতিমধ্যেই একই জিনিস আছে। প্রয়োগ করার কিছু নেই।</string>
+    <string name="local_sync_merge_note">এরপর আপনার নিজের ডেটা ফেরত পাঠানো হয়, ফলে দুটি ডিভাইসই এক হয়ে যায়।</string>
+    <string name="local_sync_change_profiles">নতুন প্রোফাইল: <xliff:g id="count">%1$d</xliff:g></string>
+    <string name="local_sync_change_sources">নতুন প্লেলিস্ট: <xliff:g id="count">%1$d</xliff:g></string>
+    <string name="local_sync_change_favorites">নতুন প্রিয়: <xliff:g id="count">%1$d</xliff:g></string>
+    <string name="local_sync_change_history">নতুন হিস্টরি এন্ট্রি: <xliff:g id="count">%1$d</xliff:g></string>
+    <string name="local_sync_change_resume">নতুন রিজিউম অবস্থান: <xliff:g id="count">%1$d</xliff:g></string>
+    <string name="local_sync_change_reorder">ক্রম পরিবর্তন: <xliff:g id="count">%1$d</xliff:g></string>
+    <string name="local_sync_change_settings">আলাদা সেটিং: <xliff:g id="count">%1$d</xliff:g></string>
+    <string name="local_sync_change_deletions">সরানো হবে এমন আইটেম: <xliff:g id="count">%1$d</xliff:g></string>
+    <string name="local_sync_change_customize">আপনার কাস্টমাইজেশনগুলোও সঙ্গে আসে</string>
+    <string name="local_sync_apply">প্রয়োগ করুন</string>
+    <string name="local_sync_done">সিঙ্ক সম্পন্ন</string>
+    <string name="local_sync_received_items">পাওয়া আইটেম: <xliff:g id="count">%1$d</xliff:g></string>
+    <string name="local_sync_sent">আপনার ডেটা পাঠানো হয়েছে</string>
+    <string name="local_sync_failed">সিঙ্ক ব্যর্থ</string>
+    <string name="local_sync_error_unreachable">এই ডিভাইসে পৌঁছানো যায়নি। সেটিতে OwnTV → সেটিংস → ডেটা → লোকাল সিঙ্ক খুলে সিঙ্ক মোড চালু করুন। দুটি ডিভাইসই একই ওয়াই-ফাইতে থাকতে হবে।</string>
+    <string name="local_sync_error_unauthorized">অন্য ডিভাইসটি প্রত্যাখ্যান করেছে। পিন ভুল হতে পারে, বা সেটি এই ডিভাইসটি ভুলে গেছে।</string>
+    <string name="local_sync_error_bad_payload">যা এসেছে তা পড়া যায়নি। পাসওয়ার্ড ব্যবহার করে থাকলে দেখুন সেটি দুটি ডিভাইসেই এক কিনা।</string>
+    <string name="local_sync_error_unknown">কিছু ভুল হয়েছে। আবার চেষ্টা করুন।</string>
+    <string name="local_sync_mode">সিঙ্ক মোড</string>
+    <string name="local_sync_mode_description">আপনার অন্য ডিভাইসগুলো যেন এটি খুঁজে পায়। এই স্ক্রিন খোলা থাকা পর্যন্ত চালু থাকে।</string>
+    <string name="local_sync_mode_pill">সিঙ্ক মোড চালু</string>
+    <string name="local_sync_connect">সংযোগ করুন</string>
+    <string name="local_sync_connect_description">সিঙ্ক মোড চালু আছে এমন অন্য ডিভাইস খুঁজুন</string>
+    <string name="local_sync_last_synced">শেষ সিঙ্ক: <xliff:g id="when">%1$s</xliff:g></string>
 </resources>

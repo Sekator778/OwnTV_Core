@@ -263,4 +263,7 @@
     <string name="setup_stalker_device_id_optional">ID zařízení (volitelné)</string>
     <string name="setup_stalker_device_id2_optional">ID2 zařízení (volitelné)</string>
     <string name="setup_stalker_signature_optional">Podpis (volitelné)</string>
+    <string name="companion_error_pair_failed">S tímto zařízením se nepodařilo spárovat.</string>
+    <string name="local_sync_browser_title">Místní synchronizace OwnTV</string>
+    <string name="local_sync_browser_body">Tato adresa je určená pro aplikaci OwnTV na druhém zařízení. Otevřete tam Místní synchronizaci a vyberte ze seznamu toto zařízení.</string>
 </resources>

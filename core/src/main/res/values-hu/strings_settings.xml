@@ -1246,4 +1246,69 @@ Az Újraszinkronizálás és a hiányzó címek eltávolítása azt is lehetőv�
     <string name="settings_audio_on_mobile_data_description">Kép nélkül induljon, ha nincs Wi-Fi</string>
     <string name="settings_audio_per_channel">Csak hang megjegyzése csatornánként</string>
     <string name="settings_audio_per_channel_description">A kép nélkül nézett csatorna legközelebb is úgy nyílik meg</string>
+    <string name="local_sync_title">Helyi szinkronizálás</string>
+    <string name="local_sync_description">Ossza meg adatait a másik eszközével Wi-Fin keresztül</string>
+    <string name="local_sync_search_keywords">szinkronizálás wifi hálózat párosítás eszközök megosztás</string>
+    <string name="local_sync_host_hint">A másik eszközén is kapcsolja be a Szinkronizálási módot, koppintson a Csatlakozás gombra, és válassza ki ezt.</string>
+    <string name="local_sync_qr_description">QR-kód az eszköz címével</string>
+    <string name="local_sync_pin_is">PIN: <xliff:g id="pin">%1$s</xliff:g></string>
+    <string name="local_sync_add_device">Eszköz keresése</string>
+    <string name="local_sync_add_device_description">Keresés a hálózaton, kód beolvasása vagy cím beírása</string>
+    <string name="local_sync_paired_devices">Párosított eszközök</string>
+    <string name="local_sync_device_address">Itt: <xliff:g id="address">%1$s</xliff:g></string>
+    <string name="local_sync_working">Folyamatban…</string>
+    <string name="local_sync_find_hint">Mindkét eszköznek ugyanazon a Wi-Fi-n kell lennie, és a másikon be kell kapcsolni a Szinkronizálási módot.</string>
+    <string name="local_sync_searching">Keresés a hálózaton…</string>
+    <string name="local_sync_found">Megtalálva a hálózaton</string>
+    <string name="local_sync_scan_qr">Kód beolvasása</string>
+    <string name="local_sync_scan_qr_description">Irányítsa a kamerát a másik eszközön látható kódra</string>
+    <string name="local_sync_camera_denied">Kamera nélkül is kiválaszthatja az eszközt a listából, vagy beírhatja a címét.</string>
+    <string name="local_sync_manual_address">Vagy írja be a címet</string>
+    <string name="local_sync_manual_address_label">Cím</string>
+    <string name="local_sync_enter_pin">Adja meg a PIN-t</string>
+    <string name="local_sync_enter_pin_description">Írja be a másik eszközön látható hat számjegyet. Ezt csak egyszer kell megtennie.</string>
+    <string name="local_sync_pin_label">PIN</string>
+    <string name="local_sync_pair">Párosítás</string>
+    <string name="local_sync_send_to">Küldés ide: <xliff:g id="device">%1$s</xliff:g></string>
+    <string name="local_sync_send_description">Az adatai oda kerülnek. Itt semmi sem változik.</string>
+    <string name="local_sync_receive_from">Fogadás innen: <xliff:g id="device">%1$s</xliff:g></string>
+    <string name="local_sync_receive_description">Az ő adatai ide kerülnek. Ott semmi sem változik.</string>
+    <string name="local_sync_merge_with">Egyesítés ezzel: <xliff:g id="device">%1$s</xliff:g></string>
+    <string name="local_sync_merge_description">Mindkét eszközön minden meglesz</string>
+    <string name="local_sync_unpair">Eszköz elfelejtése</string>
+    <string name="local_sync_unpair_description">Legközelebb újra szükség lesz a PIN-re</string>
+    <string name="local_sync_what_to_send">Mit küldjön</string>
+    <string name="local_sync_what_to_receive">Mit fogadjon</string>
+    <string name="local_sync_what_to_merge">Mit egyesítsen</string>
+    <string name="local_sync_sections_hint">Ugyanaz, amit egy biztonsági mentés tartalmaz. Vegye ki a pipát arról, amit kihagyna.</string>
+    <string name="local_sync_everything">Minden</string>
+    <string name="local_sync_password_hint">A jelszó védi az elküldött adatokat, és magával viszi a lejátszási listák bejelentkezési adatait is. Ha üresen hagyja, azok egyszerűen kimaradnak.</string>
+    <string name="local_sync_confirm_title">Mi fog megváltozni</string>
+    <string name="local_sync_confirm_hint">Még semmi sem változott. Az alkalmazás ezt tenné ezen az eszközön.</string>
+    <string name="local_sync_nothing_to_change">Mindkét eszközön már ugyanaz található. Nincs mit alkalmazni.</string>
+    <string name="local_sync_merge_note">Ezután a saját adatai visszaküldésre kerülnek, így mindkét eszköz azonos lesz.</string>
+    <string name="local_sync_change_profiles">Új profilok: <xliff:g id="count">%1$d</xliff:g></string>
+    <string name="local_sync_change_sources">Új lejátszási listák: <xliff:g id="count">%1$d</xliff:g></string>
+    <string name="local_sync_change_favorites">Új kedvencek: <xliff:g id="count">%1$d</xliff:g></string>
+    <string name="local_sync_change_history">Új előzménybejegyzések: <xliff:g id="count">%1$d</xliff:g></string>
+    <string name="local_sync_change_resume">Új folytatási pontok: <xliff:g id="count">%1$d</xliff:g></string>
+    <string name="local_sync_change_reorder">Sorrendváltozások: <xliff:g id="count">%1$d</xliff:g></string>
+    <string name="local_sync_change_settings">Eltérő beállítások: <xliff:g id="count">%1$d</xliff:g></string>
+    <string name="local_sync_change_deletions">Eltávolítandó elemek: <xliff:g id="count">%1$d</xliff:g></string>
+    <string name="local_sync_change_customize">A testreszabásai is átkerülnek</string>
+    <string name="local_sync_apply">Alkalmaz</string>
+    <string name="local_sync_done">A szinkronizálás befejeződött</string>
+    <string name="local_sync_received_items">Fogadott elemek: <xliff:g id="count">%1$d</xliff:g></string>
+    <string name="local_sync_sent">Az adatai elküldve</string>
+    <string name="local_sync_failed">A szinkronizálás sikertelen</string>
+    <string name="local_sync_error_unreachable">Ez az eszköz nem érhető el. Nyissa meg rajta az OwnTV → Beállítások → Adatok → Helyi szinkronizálás menüpontot, és kapcsolja be a Szinkronizálási módot. Mindkét eszköznek ugyanazon a Wi-Fi-n kell lennie.</string>
+    <string name="local_sync_error_unauthorized">A másik eszköz elutasította. Lehet, hogy a PIN hibás, vagy elfelejtette ezt az eszközt.</string>
+    <string name="local_sync_error_bad_payload">A beérkezett adatokat nem sikerült beolvasni. Ha jelszót használt, ellenőrizze, hogy mindkét eszközön ugyanaz-e.</string>
+    <string name="local_sync_error_unknown">Valami hiba történt. Próbálja újra.</string>
+    <string name="local_sync_mode">Szinkronizálási mód</string>
+    <string name="local_sync_mode_description">Lehetővé teszi, hogy a többi eszköze megtalálja ezt. Amíg ez a képernyő nyitva van, bekapcsolva marad.</string>
+    <string name="local_sync_mode_pill">Szinkronizálási mód bekapcsolva</string>
+    <string name="local_sync_connect">Csatlakozás</string>
+    <string name="local_sync_connect_description">Keressen másik eszközt, amelyen a Szinkronizálási mód be van kapcsolva</string>
+    <string name="local_sync_last_synced">Utolsó szinkronizálás: <xliff:g id="when">%1$s</xliff:g></string>
 </resources>

@@ -1247,4 +1247,69 @@
     <string name="settings_audio_on_mobile_data_description">沒有 Wi-Fi 時不帶畫面開始播放</string>
     <string name="settings_audio_per_channel">依頻道記住只播聲音</string>
     <string name="settings_audio_per_channel_description">不帶畫面看過的頻道，下次也這樣開啟</string>
+    <string name="local_sync_title">本機同步</string>
+    <string name="local_sync_description">透過 Wi-Fi 與你的另一部裝置分享資料</string>
+    <string name="local_sync_search_keywords">同步 wifi 網路 配對 裝置 分享</string>
+    <string name="local_sync_host_hint">在另一部裝置上同樣開啟同步模式，然後點選「連線」並選擇本機。</string>
+    <string name="local_sync_qr_description">包含本機位址的 QR 碼</string>
+    <string name="local_sync_pin_is">PIN 碼：<xliff:g id="pin">%1$s</xliff:g></string>
+    <string name="local_sync_add_device">尋找裝置</string>
+    <string name="local_sync_add_device_description">搜尋網路、掃描代碼或輸入位址</string>
+    <string name="local_sync_paired_devices">已配對的裝置</string>
+    <string name="local_sync_device_address">位於 <xliff:g id="address">%1$s</xliff:g></string>
+    <string name="local_sync_working">處理中…</string>
+    <string name="local_sync_find_hint">兩部裝置必須連線同一個 Wi-Fi，且另一部需開啟同步模式。</string>
+    <string name="local_sync_searching">正在搜尋網路…</string>
+    <string name="local_sync_found">在你的網路中找到</string>
+    <string name="local_sync_scan_qr">掃描代碼</string>
+    <string name="local_sync_scan_qr_description">將相機對準另一部裝置上的代碼</string>
+    <string name="local_sync_camera_denied">沒有相機也可以從清單中選擇裝置，或輸入它的位址。</string>
+    <string name="local_sync_manual_address">或輸入位址</string>
+    <string name="local_sync_manual_address_label">位址</string>
+    <string name="local_sync_enter_pin">輸入 PIN 碼</string>
+    <string name="local_sync_enter_pin_description">輸入另一部裝置上顯示的六位數字。只需操作一次。</string>
+    <string name="local_sync_pin_label">PIN 碼</string>
+    <string name="local_sync_pair">配對</string>
+    <string name="local_sync_send_to">傳送至 <xliff:g id="device">%1$s</xliff:g></string>
+    <string name="local_sync_send_description">你的資料會傳過去。本機不會改變。</string>
+    <string name="local_sync_receive_from">從 <xliff:g id="device">%1$s</xliff:g> 接收</string>
+    <string name="local_sync_receive_description">它的資料會傳到本機。那部裝置不會改變。</string>
+    <string name="local_sync_merge_with">與 <xliff:g id="device">%1$s</xliff:g> 合併</string>
+    <string name="local_sync_merge_description">兩部裝置最後都會擁有全部內容</string>
+    <string name="local_sync_unpair">忘記此裝置</string>
+    <string name="local_sync_unpair_description">下次需要重新輸入 PIN 碼</string>
+    <string name="local_sync_what_to_send">要傳送的內容</string>
+    <string name="local_sync_what_to_receive">要接收的內容</string>
+    <string name="local_sync_what_to_merge">要合併的內容</string>
+    <string name="local_sync_sections_hint">與備份包含的內容相同。不想包含的項目可以取消勾選。</string>
+    <string name="local_sync_everything">全部</string>
+    <string name="local_sync_password_hint">密碼會保護傳送的內容，並一併帶上播放清單的登入資訊。留空則不會包含這些登入資訊。</string>
+    <string name="local_sync_confirm_title">將會發生的變更</string>
+    <string name="local_sync_confirm_hint">目前尚未做任何變更。這是套用之後本機會發生的變化。</string>
+    <string name="local_sync_nothing_to_change">兩部裝置的內容已經相同，沒有需要套用的變更。</string>
+    <string name="local_sync_merge_note">隨後你的資料會回傳，讓兩部裝置最終一致。</string>
+    <string name="local_sync_change_profiles">新使用者: <xliff:g id="count">%1$d</xliff:g></string>
+    <string name="local_sync_change_sources">新播放清單: <xliff:g id="count">%1$d</xliff:g></string>
+    <string name="local_sync_change_favorites">新收藏: <xliff:g id="count">%1$d</xliff:g></string>
+    <string name="local_sync_change_history">新觀看紀錄: <xliff:g id="count">%1$d</xliff:g></string>
+    <string name="local_sync_change_resume">新的續播位置: <xliff:g id="count">%1$d</xliff:g></string>
+    <string name="local_sync_change_reorder">排序變更: <xliff:g id="count">%1$d</xliff:g></string>
+    <string name="local_sync_change_settings">不同的設定: <xliff:g id="count">%1$d</xliff:g></string>
+    <string name="local_sync_change_deletions">將移除的項目: <xliff:g id="count">%1$d</xliff:g></string>
+    <string name="local_sync_change_customize">你的個人化設定也會一併同步</string>
+    <string name="local_sync_apply">套用</string>
+    <string name="local_sync_done">同步完成</string>
+    <string name="local_sync_received_items">已接收的項目: <xliff:g id="count">%1$d</xliff:g></string>
+    <string name="local_sync_sent">你的資料已傳送</string>
+    <string name="local_sync_failed">同步失敗</string>
+    <string name="local_sync_error_unreachable">無法連線到該裝置。請在那部裝置上開啟 OwnTV → 設定 → 資料 → 本機同步，並開啟同步模式。兩部裝置必須連線同一個 Wi-Fi。</string>
+    <string name="local_sync_error_unauthorized">另一部裝置拒絕了連線。可能是 PIN 碼不對，或它已忘記本機。</string>
+    <string name="local_sync_error_bad_payload">無法讀取收到的內容。如果使用了密碼，請確認兩部裝置上的密碼相同。</string>
+    <string name="local_sync_error_unknown">發生問題，請再試一次。</string>
+    <string name="local_sync_mode">同步模式</string>
+    <string name="local_sync_mode_description">讓你的其他裝置能找到本機。此畫面開啟期間保持開啟。</string>
+    <string name="local_sync_mode_pill">同步模式已開啟</string>
+    <string name="local_sync_connect">連線</string>
+    <string name="local_sync_connect_description">尋找另一部已開啟同步模式的裝置</string>
+    <string name="local_sync_last_synced">上次同步：<xliff:g id="when">%1$s</xliff:g></string>
 </resources>

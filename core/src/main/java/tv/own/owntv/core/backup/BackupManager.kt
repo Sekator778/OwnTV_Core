@@ -100,7 +100,7 @@ class BackupManager(
             val seal: ((String) -> JSONObject)? = key?.let { k -> { plain -> BackupCrypto.encrypt(k, plain) } }
 
             val root = JSONObject().apply {
-                put("version", 20) // v20: playbackPrefs carry the per-item A/V-sync offset. v19: sources carry the per-playlist Live TV engine and Live latency overrides. v18: per-profile specific-channel startup targets. v17: startupModes/customizePins moved SOURCES→SETTINGS (readers accept both); PIN hashes and legacy URL-shaped player keys are encrypted-only; sources carry preferHls/livePrerollSecs/hlsSupported; source-keyed blocks scoped to the ticked profiles' sources. v16: optional Stalker serial/device IDs/signature. v15: custom category membership (issue #87) rides userData as kind "member"; customCategories blobs pass through unremapped. v14: .own container (wallpaper rides along). v13: sources.syncLive/Movies/Series. v12: per-profile OpenSubtitles login (encrypted-only). v11: profile-scoped export. v10: sources.mac. v9: custom TMDB names, encrypted TMDB key
+                put("version", 21) // v21: "tombstones" — the user data the user DELETED, so a merge (restore or local sync) does not reinstate it. Older readers ignore the block and behave exactly as they do today. v20: playbackPrefs carry the per-item A/V-sync offset. v19: sources carry the per-playlist Live TV engine and Live latency overrides. v18: per-profile specific-channel startup targets. v17: startupModes/customizePins moved SOURCES→SETTINGS (readers accept both); PIN hashes and legacy URL-shaped player keys are encrypted-only; sources carry preferHls/livePrerollSecs/hlsSupported; source-keyed blocks scoped to the ticked profiles' sources. v16: optional Stalker serial/device IDs/signature. v15: custom category membership (issue #87) rides userData as kind "member"; customCategories blobs pass through unremapped. v14: .own container (wallpaper rides along). v13: sources.syncLive/Movies/Series. v12: per-profile OpenSubtitles login (encrypted-only). v11: profile-scoped export. v10: sources.mac. v9: custom TMDB names, encrypted TMDB key
                 put("sections", JSONArray().apply { sections.forEach { put(it.name) } })
                 if (salt != null) put("crypto", BackupCrypto.cryptoBlock(salt))
                 // Ticked profiles always ride (backup is profile-based); restore needs SOURCES to apply them.
@@ -152,6 +152,12 @@ class BackupManager(
                         if (e.optLong("p", -1) in pids) filtered.put(e)
                     }
                     put("userData", filtered)
+                    // The deletions that go with them (v21). A file carrying only the surviving rows
+                    // is indistinguishable from one written before the user removed anything, so a
+                    // merge — which is what both restore and local sync are — silently reinstates
+                    // every favorite and history entry they have ever deleted.
+                    userData.exportTombstones(kinds.intersect(UserDataResolver.TOMBSTONE_KINDS), pids)
+                        .takeIf { it.length() > 0 }?.let { put("tombstones", it) }
                 }
                 if (Section.SETTINGS in sections) {
                     val s = settings.exportSettings() // non-secret keys, incl. proxy host/port/user/enabled
@@ -497,6 +503,137 @@ class BackupManager(
     }
 
     /**
+     * What [import] would change, counted without changing anything.
+     *
+     * Local sync exists to move a household's data between two devices that both have real data on
+     * them, and the one outcome that must never happen is someone tapping the wrong direction and
+     * finding out afterwards. So the counts here are per section and phrased as *change*, not as
+     * volume: how many rows would appear that are not here now, and how many would be removed.
+     *
+     * Reads only. Every lookup mirrors what [import] does — profiles matched by name, sources by
+     * type/URL/username — so the numbers are the same ones the apply will produce, minus anything
+     * that lands after a sync of the catalogue (a favorite whose channel this device has not
+     * downloaded yet counts as new, and heals into place later exactly as a restore's does).
+     */
+    data class Preview(
+        val newProfiles: Int = 0,
+        val newSources: Int = 0,
+        val newFavorites: Int = 0,
+        val newHistory: Int = 0,
+        val newResume: Int = 0,
+        val newReorder: Int = 0,
+        val changedSettings: Int = 0,
+        val hasCustomizations: Boolean = false,
+        /** Rows this device would LOSE, because the other device deleted them more recently. */
+        val deletions: Int = 0,
+    ) {
+        val isEmpty: Boolean
+            get() = newProfiles == 0 && newSources == 0 && newFavorites == 0 && newHistory == 0 &&
+                newResume == 0 && newReorder == 0 && changedSettings == 0 && !hasCustomizations && deletions == 0
+    }
+
+    suspend fun previewImport(
+        file: File,
+        sections: Set<Section> = Section.entries.toSet(),
+        backupPassword: String? = null,
+    ): Result<Preview> = withContext(Dispatchers.IO) {
+        runCatching {
+            val (root, _) = readBackup(file, backupPassword)
+            // Secrets stay sealed: a preview never needs to read a password, so it never derives a key.
+            val noSecrets: (Any?) -> String? = { v -> (v as? String)?.takeIf { it.isNotEmpty() } }
+
+            val deviceProfiles = profileDao.getAllOnce()
+            val knownProfileNames = deviceProfiles.map { profileMatchKey(it.name) }.toSet()
+            val profileIdByFileId = HashMap<Long, Long>()
+            var newProfiles = 0
+            val fileProfiles = root.optJSONArray("profiles") ?: JSONArray()
+            for (i in 0 until fileProfiles.length()) {
+                val incoming = profileFrom(fileProfiles.getJSONObject(i), noSecrets)
+                val existing = deviceProfiles.firstOrNull { profileMatchKey(it.name) == profileMatchKey(incoming.name) }
+                if (existing != null) profileIdByFileId[incoming.id] = existing.id else newProfiles++
+            }
+
+            var newSources = 0
+            val sourceIdByFileId = HashMap<Long, Long>()
+            if (Section.SOURCES in sections) {
+                val candidates = sourceDao.getAllOnce().toMutableList()
+                val fileSources = root.optJSONArray("sources") ?: JSONArray()
+                for (i in 0 until fileSources.length()) {
+                    val incoming = sourceFrom(fileSources.getJSONObject(i), noSecrets) ?: continue
+                    val existing = matchSourceForRestore(candidates, incoming)
+                    if (existing == null) {
+                        newSources++
+                    } else {
+                        candidates.remove(existing)
+                        sourceIdByFileId[incoming.id] = existing.id
+                    }
+                }
+            } else {
+                // Not restoring sources, but the user-data counts still need the id mapping to look
+                // anything up — so build it without counting anything as new.
+                val candidates = sourceDao.getAllOnce().toMutableList()
+                val fileSources = root.optJSONArray("sources") ?: JSONArray()
+                for (i in 0 until fileSources.length()) {
+                    val incoming = sourceFrom(fileSources.getJSONObject(i), noSecrets) ?: continue
+                    matchSourceForRestore(candidates, incoming)?.let {
+                        candidates.remove(it)
+                        sourceIdByFileId[incoming.id] = it.id
+                    }
+                }
+            }
+
+            val kinds = kindsFor(sections)
+            val counts = HashMap<String, Int>()
+            var deletions = 0
+            if (kinds.isNotEmpty()) {
+                root.optJSONArray("userData")?.let { arr ->
+                    for (i in 0 until arr.length()) {
+                        val e = arr.getJSONObject(i)
+                        val kind = e.optString("kind")
+                        if (kind !in kinds) continue
+                        val pid = profileIdByFileId[e.optLong("p", -1)] ?: continue
+                        sourceIdByFileId[e.optLong("src", -1)]?.let { e.put("src", it) }
+                        if (!userData.wouldAdd(pid, kind, e)) continue
+                        counts[kind] = (counts[kind] ?: 0) + 1
+                    }
+                }
+                root.optJSONArray("tombstones")?.let { arr ->
+                    for (i in 0 until arr.length()) {
+                        val e = arr.getJSONObject(i)
+                        if (e.optString("kind") !in kinds) continue
+                        val pid = profileIdByFileId[e.optLong("p", -1)] ?: continue
+                        sourceIdByFileId[e.optLong("src", -1)]?.let { e.put("src", it) }
+                        if (userData.wouldRemove(pid, e)) deletions++
+                    }
+                }
+            }
+
+            var changedSettings = 0
+            if (Section.SETTINGS in sections) {
+                root.optJSONObject("settings")?.let { incoming ->
+                    val mine = settings.exportSettings()
+                    incoming.keys().forEach { k ->
+                        if (!mine.has(k) || mine.get(k).toString() != incoming.get(k).toString()) changedSettings++
+                    }
+                }
+            }
+
+            Preview(
+                newProfiles = newProfiles,
+                newSources = newSources,
+                newFavorites = counts["fav"] ?: 0,
+                newHistory = counts["his"] ?: 0,
+                newResume = counts["prog"] ?: 0,
+                newReorder = (counts["order"] ?: 0) + (counts["sort"] ?: 0) + (counts["member"] ?: 0),
+                changedSettings = changedSettings,
+                hasCustomizations = Section.CUSTOMIZE in sections &&
+                    root.optJSONObject("customizations")?.keys()?.hasNext() == true,
+                deletions = deletions,
+            )
+        }
+    }
+
+    /**
      * Applies the chosen [sections] of the file (only those it actually contains) as a MERGE — a
      * restore never deletes anything that already exists on the device (owner decision, 2026-07-18):
      *
@@ -783,7 +920,9 @@ class BackupManager(
             // records whose profile has no home on this device are skipped.
             val kinds = kindsFor(sections)
             if (kinds.isNotEmpty()) {
-                root.optJSONArray("userData")?.let { arr ->
+                // Both the surviving rows and the deletions are records of the same shape and need the
+                // same treatment, so they share one pass.
+                fun remapUserData(arr: JSONArray): JSONArray {
                     val filtered = JSONArray()
                     for (i in 0 until arr.length()) {
                         val e = arr.getJSONObject(i)
@@ -801,6 +940,13 @@ class BackupManager(
                         }
                         filtered.put(e)
                     }
+                    return filtered
+                }
+                // Deletions FIRST (v21): they remove any local row older than the deletion, and they
+                // are recorded here, so the very next step cannot re-insert what this one removed.
+                root.optJSONArray("tombstones")?.let { userData.applyTombstones(remapUserData(it)) }
+                root.optJSONArray("userData")?.let { arr ->
+                    val filtered = remapUserData(arr)
                     userData.importAll(filtered)
                     count += filtered.length()
                 }
