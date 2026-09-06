@@ -106,6 +106,11 @@ Coroutines 1.11.0 · WorkManager · DataStore · Paging 3 · KSP 2.3.11 · minSd
 **A change here affects both.** Nothing is released from here until the TV app has been rebuilt
 against it. There is no such thing as a change that only affects one app.
 
+Both apps are updated automatically. Publishing a release here opens a pull request on each of them
+that moves its `owntvCore` pin and refreshes its copy of `tools/i18n/locales.json`, and each app
+merges that pull request itself once it has confirmed the two files agree with this repository. No
+app pins a core version by hand.
+
 ## 🛠️ Building
 
 Requires **JDK 21** and an Android SDK. Put the SDK path in `local.properties`:

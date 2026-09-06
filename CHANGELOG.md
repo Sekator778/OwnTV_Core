@@ -3,6 +3,32 @@
 Core is versioned independently of the apps. A core version number never lines up with an OwnTV TV
 app `v4.x` release, and the two must not be confused. Tags here are prefixed `core-`.
 
+## core-1.0.23 — 2026-09-06
+
+Documentation only. No code, no strings, no database change, no behaviour difference in either app —
+`:core` and `:player-core` are identical to `core-1.0.22`.
+
+### 📄 The README says how the apps get this
+
+"Who depends on this" now states that publishing a release here opens a pin-bump pull request on both
+apps, that it moves `owntvCore` and refreshes the app's copy of `tools/i18n/locales.json`, and that
+each app merges it itself. That was true for some time and written down only in the apps.
+
+### 🔁 Why this version exists at all
+
+Both apps have just changed what they run on a `bump/core-*` pull request. The unit tests, lint and
+the whole i18n suite now step aside — they only ever re-examined app Kotlin identical to `main` —
+and one seconds-long `verify-pin` job runs instead: the pin must be this repository's newest
+published release, the branch name must agree with the pin, and the app's `locales.json` must be
+byte-identical to the copy here at that tag. That last check is the one with teeth, because a stale
+locale catalogue strips a language out of the APK with every build green.
+
+Nothing in that lives here, but it can only be proved by a real release travelling down the path.
+This is that release. Two consequences do belong on this side: a consumer's build is **no longer
+exercised by the bump pull request**, so a core change that compiles from source but not from the
+published AAR now surfaces on the app's next ordinary push; and `verify-pin` compares against
+`releases/latest`, so **a release published out of version order would fail every consumer's bump**.
+
 ## core-1.0.22 — 2026-09-06
 
 Additive. Nothing existing changed meaning, so the TV app keeps its current behaviour. No new
