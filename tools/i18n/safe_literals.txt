@@ -1757,6 +1757,7 @@
 3	json	core/src/main/java/tv/own/owntv/core/model/HomeRow.kt	hidden
 2	json	core/src/main/java/tv/own/owntv/core/model/HomeRow.kt	order
 2	preference-key	core/src/main/java/tv/own/owntv/core/model/HomeRow.kt	recentLiveMode
+2	json	core/src/main/java/tv/own/owntv/core/model/HomeRow.kt	trendingStyle
 1	log	core/src/main/java/tv/own/owntv/core/network/DnsConfig.kt	DoH lookup failed for $hostname, falling back to system DNS
 1	log	core/src/main/java/tv/own/owntv/core/network/DnsConfig.kt	DoH lookup returned no addresses for $hostname, falling back to system DNS
 1	log	core/src/main/java/tv/own/owntv/core/network/DnsConfig.kt	UDP DNS lookup failed for $hostname via $server:$port, falling back to system DNS

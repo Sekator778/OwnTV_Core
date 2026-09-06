@@ -3,6 +3,26 @@
 Core is versioned independently of the apps. A core version number never lines up with an OwnTV TV
 app `v4.x` release, and the two must not be confused. Tags here are prefixed `core-`.
 
+## core-1.0.21 — 2026-09-06
+
+Additive. Nothing existing changed meaning, so the TV app keeps its current behaviour.
+
+### 🎛️ `HomeConfig.trendingStyle` — Now Trending in two shapes
+
+The Now Trending row can now be drawn either as the full hero card (artwork, badges, reasons) or as a
+plain strip of posters, and the choice is stored per profile alongside the rest of the Home
+configuration. `HomeTrendingStyle.HERO` is the default and is what every existing config and every
+existing backup reads as, so nobody who never opens the setting sees a change.
+
+The value lives in the Home config JSON blob, which is written with defaults and read with fallbacks
+— no database version change and no migration.
+
+### 🌍 Three new strings, in all 25 packaged locales
+
+- **`home_trending_style`** — the settings row that chooses the layout.
+- **`home_trending_style_hero`** — the detailed card.
+- **`home_trending_style_posters`** — posters only.
+
 ## core-1.0.20 — 2026-09-06
 
 Additive. Nothing existing changed meaning, so the TV app keeps its current behaviour.

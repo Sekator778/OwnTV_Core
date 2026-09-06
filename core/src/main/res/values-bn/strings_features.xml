@@ -136,6 +136,9 @@
     <string name="recovery_reset">অ্যাপের ডেটা রিসেট করুন (শেষ উপায়)</string>
     <string name="home_row_now_trending">এখন ট্রেন্ডিং</string>
     <string name="home_row_trending_description">TMDB ট্রেন্ডিং শিরোনাম আপনার প্রদানকারীর ক্যাটালগের সিনেমা বা সিরিজের সঙ্গে মিললেই কেবল ৪–১০টি আইটেম দেখায়।</string>
+    <string name="home_trending_style">ট্রেন্ডিং লেআউট</string>
+    <string name="home_trending_style_hero">বিস্তারিত কার্ড</string>
+    <string name="home_trending_style_posters">শুধু পোস্টার</string>
     <string name="settings_trending_status_off">এখন ট্রেন্ডিং বন্ধ আছে।</string>
     <string name="settings_trending_status_building">প্রোভাইডার সিঙ্কের পর এখন ট্রেন্ডিং প্রস্তুত করা হচ্ছে।</string>
     <string name="settings_trending_status_metadata_disabled">এখন ট্রেন্ডিংয়ের জন্য TMDB মেটাডেটা প্রয়োজন। শুধু TMDB অথবা প্রোভাইডার + TMDB বেছে নিন।</string>

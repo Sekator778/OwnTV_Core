@@ -136,6 +136,9 @@
     <string name="recovery_reset">App-Daten zurücksetzen (letzter Ausweg)</string>
     <string name="home_row_now_trending">Aktuell im Trend</string>
     <string name="home_row_trending_description">Zeigt nur 4–10 Einträge, wenn TMDB-Trendtitel mit Filmen oder Serien im Katalog deines Anbieters übereinstimmen.</string>
+    <string name="home_trending_style">Layout für Trends</string>
+    <string name="home_trending_style_hero">Detailkarte</string>
+    <string name="home_trending_style_posters">Nur Poster</string>
     <string name="settings_trending_status_off">„Aktuell im Trend“ ist deaktiviert.</string>
     <string name="settings_trending_status_building">„Aktuell im Trend“ wird nach der Synchronisierung mit dem Anbieter vorbereitet.</string>
     <string name="settings_trending_status_metadata_disabled">„Aktuell im Trend“ benötigt TMDB-Metadaten. Wähle „Nur TMDB“ oder „Anbieter + TMDB“.</string>

@@ -170,6 +170,12 @@
     <!-- Translators: Home row description in Settings for the hero row. -->
     <string name="home_row_hero_description">The large preview row at the top</string>
     <string name="home_row_trending_description">Shows 4–10 items only when TMDB trending titles match movies or series in your provider catalog.</string>
+    <!-- Translators: Settings row that chooses how the Now Trending row is drawn. -->
+    <string name="home_trending_style">Trending layout</string>
+    <!-- Translators: Now Trending layout option: the large card with artwork, badges and reasons. -->
+    <string name="home_trending_style_hero">Detailed card</string>
+    <!-- Translators: Now Trending layout option: a plain row of posters with titles. -->
+    <string name="home_trending_style_posters">Posters only</string>
     <string name="settings_trending_status_off">Now Trending is turned off.</string>
     <string name="settings_trending_status_building">Now Trending is being prepared after provider sync.</string>
     <string name="settings_trending_status_metadata_disabled">Now Trending needs TMDB metadata. Choose TMDB only or Provider + TMDB.</string>

@@ -136,6 +136,9 @@
     <string name="recovery_reset">Uygulama verilerini sıfırla (son çare)</string>
     <string name="home_row_now_trending">Şu Anda Popüler</string>
     <string name="home_row_trending_description">Yalnızca TMDB trend başlıkları sağlayıcı kataloğunuzdaki film veya dizilerle eşleştiğinde 4–10 öğe gösterir.</string>
+    <string name="home_trending_style">Trend düzeni</string>
+    <string name="home_trending_style_hero">Ayrıntılı kart</string>
+    <string name="home_trending_style_posters">Yalnızca posterler</string>
     <string name="settings_trending_status_off">Şu Anda Popüler kapalı.</string>
     <string name="settings_trending_status_building">Şu Anda Popüler, sağlayıcı eşitlemesinden sonra hazırlanıyor.</string>
     <string name="settings_trending_status_metadata_disabled">Şu Anda Popüler için TMDB meta verisi gereklidir. Yalnızca TMDB veya Sağlayıcı + TMDB seçeneğini belirleyin.</string>

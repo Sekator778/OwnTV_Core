@@ -136,6 +136,9 @@
     <string name="recovery_reset">Alkalmazásadatok visszaállítása (végső megoldás)</string>
     <string name="home_row_now_trending">Most felkapott</string>
     <string name="home_row_trending_description">Csak 4–10 elemet mutat, ha a TMDB felkapott címei egyeznek a szolgáltatód katalógusában lévő filmekkel vagy sorozatokkal.</string>
+    <string name="home_trending_style">Népszerűek elrendezése</string>
+    <string name="home_trending_style_hero">Részletes kártya</string>
+    <string name="home_trending_style_posters">Csak plakátok</string>
     <string name="settings_trending_status_off">A „Most felkapott” ki van kapcsolva.</string>
     <string name="settings_trending_status_building">A „Most felkapott” a szolgáltatóval való szinkronizálás után készül el.</string>
     <string name="settings_trending_status_metadata_disabled">A „Most felkapott” TMDB-metaadatokat igényel. Válaszd a „Csak TMDB” vagy a „Szolgáltató + TMDB” lehetőséget.</string>

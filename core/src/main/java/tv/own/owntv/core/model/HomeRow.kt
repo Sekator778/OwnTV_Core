@@ -26,6 +26,15 @@ enum class HomeLiveRowMode {
     }
 }
 
+/**
+ * How the Trending row is drawn: the full card with the artwork, badges and reasons, or the plain
+ * strip of posters. [HERO] is the default, so nothing changes for anyone who never opens the setting.
+ */
+enum class HomeTrendingStyle {
+    HERO,
+    POSTERS,
+}
+
 enum class HeroKind {
     LIVE, MOVIES, SERIES,
 }
@@ -39,6 +48,7 @@ data class HomeConfig(
     val heroIncludeSeries: Boolean = true,
     val recentLiveMode: HomeLiveRowMode = HomeLiveRowMode.CARDS,
     val favoriteLiveMode: HomeLiveRowMode = HomeLiveRowMode.ON_NOW,
+    val trendingStyle: HomeTrendingStyle = HomeTrendingStyle.HERO,
 ) {
     val visibleOrder: List<HomeRow>
         get() = buildList {
@@ -59,6 +69,7 @@ data class HomeConfig(
         put("heroSeries", heroIncludeSeries)
         put("recentLiveMode", recentLiveMode.name)
         put("favoriteLiveMode", favoriteLiveMode.name)
+        put("trendingStyle", trendingStyle.name)
     }
 
     companion object {
@@ -76,6 +87,10 @@ data class HomeConfig(
                 heroIncludeSeries = readBool(obj, "heroSeries", "heroIncludeSeries", default = true),
                 recentLiveMode = readLiveMode(obj, "recentLiveMode", HomeLiveRowMode.CARDS),
                 favoriteLiveMode = readLiveMode(obj, "favoriteLiveMode", HomeLiveRowMode.ON_NOW),
+                // Absent in every config written before the setting existed, and in every backup
+                // taken then — those all read as the hero, which is what they were showing.
+                trendingStyle = runCatching { HomeTrendingStyle.valueOf(obj.optString("trendingStyle")) }
+                    .getOrDefault(HomeTrendingStyle.HERO),
             )
         }
 
