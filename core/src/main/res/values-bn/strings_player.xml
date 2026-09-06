@@ -293,4 +293,6 @@
     <string name="player_sleep_timer_end_of_programme">অনুষ্ঠানের শেষ</string>
     <string name="player_sleep_timer_remaining"><xliff:g id="time">%1$s</xliff:g> পরে থামবে</string>
     <string name="player_pip_expand">বড় করুন</string>
+    <string name="player_error_cast_unsupported">আপনি যে ডিভাইসে কাস্ট করছেন সেটি এই স্ট্রিমটি চালাতে পারছে না। অনেক লাইভ চ্যানেল এমন একটি ফরম্যাট ব্যবহার করে যা এটি সমর্থন করে না — এর বদলে আপনার ফোনে চালান।</string>
+    <string name="player_cast_playing_on"><xliff:g id="device">%1$s</xliff:g>-এ চলছে</string>
 </resources>

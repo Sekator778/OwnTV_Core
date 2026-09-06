@@ -307,4 +307,6 @@
     <string name="player_sleep_timer_end_of_programme">Koniec audycji</string>
     <string name="player_sleep_timer_remaining">Zatrzyma się za <xliff:g id="time">%1$s</xliff:g></string>
     <string name="player_pip_expand">Powiększ</string>
+    <string name="player_error_cast_unsupported">Urządzenie, na które przesyłasz, nie może odtworzyć tego strumienia. Wiele kanałów na żywo używa formatu, którego nie obsługuje — odtwórz go na telefonie.</string>
+    <string name="player_cast_playing_on">Odtwarzanie na <xliff:g id="device">%1$s</xliff:g></string>
 </resources>

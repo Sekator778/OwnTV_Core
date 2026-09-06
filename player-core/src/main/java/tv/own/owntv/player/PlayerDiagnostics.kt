@@ -125,6 +125,12 @@ sealed interface PlaybackFailure {
     data class HardwareDisabled(val resolution: String) : PlaybackFailure
     data class HardwareFormat(val resolution: String, val codec: String) : PlaybackFailure
     data class StreamUnavailable(val customUserAgentHint: Boolean) : PlaybackFailure
+    /**
+     * A Cast receiver refused the stream. The receiver decodes it itself — no engine of ours is
+     * involved — so a container it does not support (raw MPEG-TS, most of all) or a provider that
+     * insists on its own request headers simply cannot be cast, and nothing on this side changes it.
+     */
+    data object CastUnsupported : PlaybackFailure
     /** Fixed mpv diagnostics produced by OwnTV, not provider text; resolve at the UI boundary. */
     data object MpvOpenDecode : PlaybackFailure
     data object MpvStreamNeverStarted : PlaybackFailure
@@ -173,6 +179,7 @@ fun PlaybackFailure.describe(resolve: (Int, List<Any>) -> String): String {
             R.string.player_error_stream_unavailable,
             if (customUserAgentHint) str(R.string.player_error_custom_user_agent) else "",
         )
+        PlaybackFailure.CastUnsupported -> str(R.string.player_error_cast_unsupported)
         PlaybackFailure.MpvOpenDecode -> str(R.string.player_error_mpv_open_decode)
         PlaybackFailure.MpvStreamNeverStarted -> str(R.string.player_error_mpv_stream_never_started)
         is PlaybackFailure.Raw -> message

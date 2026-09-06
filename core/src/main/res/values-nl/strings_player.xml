@@ -293,4 +293,6 @@
     <string name="player_sleep_timer_end_of_programme">Einde van het programma</string>
     <string name="player_sleep_timer_remaining">Stopt over <xliff:g id="time">%1$s</xliff:g></string>
     <string name="player_pip_expand">Vergroten</string>
+    <string name="player_error_cast_unsupported">Het apparaat waarnaar je cast, kan deze stream niet afspelen. Veel livekanalen gebruiken een indeling die het niet ondersteunt — speel de stream in plaats daarvan af op je telefoon.</string>
+    <string name="player_cast_playing_on">Speelt af op <xliff:g id="device">%1$s</xliff:g></string>
 </resources>

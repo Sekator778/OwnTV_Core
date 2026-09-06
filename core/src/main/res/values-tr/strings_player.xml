@@ -293,4 +293,6 @@
     <string name="player_sleep_timer_end_of_programme">Programın sonu</string>
     <string name="player_sleep_timer_remaining"><xliff:g id="time">%1$s</xliff:g> sonra duracak</string>
     <string name="player_pip_expand">Büyüt</string>
+    <string name="player_error_cast_unsupported">Yayınladığınız cihaz bu akışı oynatamıyor. Birçok canlı kanal, bu cihazın desteklemediği bir biçim kullanıyor; bunun yerine telefonunuzda oynatın.</string>
+    <string name="player_cast_playing_on"><xliff:g id="device">%1$s</xliff:g> cihazında oynatılıyor</string>
 </resources>

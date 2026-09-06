@@ -300,4 +300,6 @@
     <string name="player_sleep_timer_end_of_programme">Fim do programa</string>
     <string name="player_sleep_timer_remaining">Para em <xliff:g id="time">%1$s</xliff:g></string>
     <string name="player_pip_expand">Ampliar</string>
+    <string name="player_error_cast_unsupported">O dispositivo para o qual você está transmitindo não consegue reproduzir esta transmissão. Muitos canais ao vivo usam um formato que ele não suporta — reproduza no celular.</string>
+    <string name="player_cast_playing_on">Reproduzindo em <xliff:g id="device">%1$s</xliff:g></string>
 </resources>

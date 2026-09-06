@@ -3,6 +3,30 @@
 Core is versioned independently of the apps. A core version number never lines up with an OwnTV TV
 app `v4.x` release, and the two must not be confused. Tags here are prefixed `core-`.
 
+## core-1.0.25 — 2026-09-06
+
+Core's share of the mobile app's casting phase. Additive throughout: every new member has a default
+that is exactly what the TV app does today, so a television is unaffected. No database change, no
+migration.
+
+### 📡 A player failure for a receiver that cannot play the stream
+
+`PlaybackFailure.CastUnsupported`, with its wording in `describe()` and its string
+`player_error_cast_unsupported` in all 25 packaged locales. A Chromecast decodes the stream itself
+and cannot decode everything an IPTV playlist holds; this is how a sender says so in the user's
+language instead of showing a dead screen.
+
+`player_cast_playing_on` — "Playing on <device>" — comes with it, for the notification and the cast
+screen.
+
+### 🔈 An engine can now say the sound is not coming out of this device
+
+`PlaybackEngine.playsLocally`, defaulting to `true`. `PlaybackSession` skips its audio-focus request
+and its headphone-unplug receiver when an attached engine returns `false`. Without it, unplugging
+headphones or taking a call on the phone would pause a film playing on a Chromecast in another room,
+and the app would duck every other app on the device for sound it was not making. Nothing in the TV
+app returns `false`.
+
 ## core-1.0.24 — 2026-09-06
 
 One new setting and the two strings that label it. Additive throughout: the setting defaults to the

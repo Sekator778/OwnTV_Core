@@ -37,6 +37,16 @@ interface PlaybackEngine {
     val currentMeta: StateFlow<MediaMeta>
     val isLiveContent: Boolean
 
+    /**
+     * Whether the sound comes out of THIS device.
+     *
+     * True for every decoder that runs here, which is why it defaults to true. False only for an
+     * engine that has handed the stream to something else — a Chromecast — where the phone's audio
+     * focus and its headphone-unplug rule would be acting on sound it is not making. Pulling the
+     * headphones out should not pause a film playing in another room.
+     */
+    val playsLocally: Boolean get() = true
+
     /** True while the engine decodes audio only (video output stopped to save power) — Audio Mode. */
     val audioOnly: StateFlow<Boolean> get() = FALSE_FLOW
 

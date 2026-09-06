@@ -293,4 +293,6 @@
     <string name="player_sleep_timer_end_of_programme">Ende der Sendung</string>
     <string name="player_sleep_timer_remaining">Stoppt in <xliff:g id="time">%1$s</xliff:g></string>
     <string name="player_pip_expand">Vergrößern</string>
+    <string name="player_error_cast_unsupported">Das Gerät, auf das du überträgst, kann diesen Stream nicht abspielen. Viele Live-Kanäle nutzen ein Format, das es nicht unterstützt – spiele ihn stattdessen auf dem Telefon ab.</string>
+    <string name="player_cast_playing_on">Wird auf <xliff:g id="device">%1$s</xliff:g> abgespielt</string>
 </resources>

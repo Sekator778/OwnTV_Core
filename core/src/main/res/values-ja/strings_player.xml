@@ -286,4 +286,6 @@
     <string name="player_sleep_timer_end_of_programme">番組の終わり</string>
     <string name="player_sleep_timer_remaining"><xliff:g id="time">%1$s</xliff:g>後に停止</string>
     <string name="player_pip_expand">拡大</string>
+    <string name="player_error_cast_unsupported">キャストしているデバイスではこのストリームを再生できません。多くのライブチャンネルは、この機器が対応していない形式を使っています。スマートフォンで再生してください。</string>
+    <string name="player_cast_playing_on"><xliff:g id="device">%1$s</xliff:g> で再生中</string>
 </resources>

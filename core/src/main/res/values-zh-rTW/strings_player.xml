@@ -286,4 +286,6 @@
     <string name="player_sleep_timer_end_of_programme">節目結束時</string>
     <string name="player_sleep_timer_remaining">將在 <xliff:g id="time">%1$s</xliff:g> 後停止</string>
     <string name="player_pip_expand">放大</string>
+    <string name="player_error_cast_unsupported">投放的裝置無法播放這個串流。許多直播頻道使用它不支援的格式，請改在手機上播放。</string>
+    <string name="player_cast_playing_on">正在<xliff:g id="device">%1$s</xliff:g>上播放</string>
 </resources>

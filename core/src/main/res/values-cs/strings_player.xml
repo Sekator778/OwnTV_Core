@@ -307,4 +307,6 @@
     <string name="player_sleep_timer_end_of_programme">Konec pořadu</string>
     <string name="player_sleep_timer_remaining">Zastaví se za <xliff:g id="time">%1$s</xliff:g></string>
     <string name="player_pip_expand">Zvětšit</string>
+    <string name="player_error_cast_unsupported">Zařízení, do kterého odesíláte, tento stream nepřehraje. Mnoho živých kanálů používá formát, který nepodporuje – přehrajte jej raději v telefonu.</string>
+    <string name="player_cast_playing_on">Přehrává se na <xliff:g id="device">%1$s</xliff:g></string>
 </resources>

@@ -276,4 +276,6 @@
     <string name="player_sleep_timer_end_of_programme">A műsor vége</string>
     <string name="player_sleep_timer_remaining">Leáll <xliff:g id="time">%1$s</xliff:g> múlva</string>
     <string name="player_pip_expand">Nagyítás</string>
+    <string name="player_error_cast_unsupported">Az az eszköz, amelyre átküldöd, nem tudja lejátszani ezt az adást. Sok élő csatorna olyan formátumot használ, amelyet nem támogat – játszd le inkább a telefonon.</string>
+    <string name="player_cast_playing_on">Lejátszás itt: <xliff:g id="device">%1$s</xliff:g></string>
 </resources>

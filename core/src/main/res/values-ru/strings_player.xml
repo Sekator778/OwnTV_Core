@@ -307,4 +307,6 @@
     <string name="player_sleep_timer_end_of_programme">Конец передачи</string>
     <string name="player_sleep_timer_remaining">Остановится через <xliff:g id="time">%1$s</xliff:g></string>
     <string name="player_pip_expand">Развернуть</string>
+    <string name="player_error_cast_unsupported">Устройство, на которое вы транслируете, не может воспроизвести этот поток. Многие каналы используют формат, который оно не поддерживает, — включите его на телефоне.</string>
+    <string name="player_cast_playing_on">Воспроизводится на <xliff:g id="device">%1$s</xliff:g></string>
 </resources>

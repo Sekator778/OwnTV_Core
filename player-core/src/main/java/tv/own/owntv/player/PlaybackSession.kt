@@ -294,7 +294,9 @@ class PlaybackSession(
     private var noisyRegistered = false
 
     private fun registerNoisy() {
-        if (!pauseWhenOutputDisconnects || noisyRegistered) return
+        // Same reason as in requestFocus: this device's headphone jack has nothing to do with a
+        // stream playing on a television.
+        if (!pauseWhenOutputDisconnects || noisyRegistered || engine?.playsLocally == false) return
         noisyRegistered = runCatching {
             ContextCompat.registerReceiver(
                 context,
@@ -329,6 +331,9 @@ class PlaybackSession(
 
     private fun requestFocus() {
         if (hasFocus) return
+        // An engine playing somewhere else is making no sound here, so there is nothing to hold focus
+        // for — and holding it would duck or lock out every other app on this device for nothing.
+        if (engine?.playsLocally == false) return
         val granted = runCatching { audioManager.requestAudioFocus(focusRequest) }
             .getOrDefault(AudioManager.AUDIOFOCUS_REQUEST_FAILED) == AudioManager.AUDIOFOCUS_REQUEST_GRANTED
         // A refusal is not a reason to refuse to play: some TV builds deny focus to background-capable
