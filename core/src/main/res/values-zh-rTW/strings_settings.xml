@@ -240,7 +240,6 @@
     <string name="settings_backup_restore">備份與還原</string>
     <string name="settings_backup_restore_description">匯出或還原使用者檔案與來源</string>
     <string name="settings_clear_history">清除觀看記錄</string>
-    <string name="settings_clear_history_description">移除此使用者檔案的最近觀看和繼續觀看列</string>
     <string name="settings_appearance_group">外觀</string>
     <string name="settings_theme">主題</string>
     <string name="settings_theme_description">淺色、深色或依照系統</string>
@@ -388,7 +387,6 @@
     <!-- Translators: Video player settings: one-line summary under the "Diagnostics" section name. -->
     <string name="settings_vp_section_diagnostics_summary">詳細播放器記錄</string>
     <string name="settings_group_summary_network">用於串流連線的 Proxy 和 DNS</string>
-    <string name="settings_group_summary_data">備份、下載和觀看紀錄</string>
     <string name="settings_group_summary_app">語言、啟動、更新和應用程式資訊</string>
     <string name="settings_group_quick">快捷</string>
     <string name="settings_group_summary_quick">最常用的開關</string>
@@ -403,9 +401,6 @@
     <string name="settings_search_keywords_browsing">記住 位置 捲動 分類 上一個項目 直播 電影 影集 重設 頂端</string>
     <string name="settings_search_keywords_home">列 主打內容 重新排序 篩選</string>
     <string name="settings_search_keywords_metadata">海報 劇情簡介 演員 評分</string>
-    <string name="settings_search_keywords_download">儲存空間 路徑 目錄</string>
-    <string name="settings_search_keywords_backup">匯出 匯入 使用者檔案 來源</string>
-    <string name="settings_search_keywords_history">最近觀看 繼續觀看 移除</string>
     <string name="settings_search_keywords_theme">淺色 深色 系統</string>
     <string name="settings_search_keywords_glass">玻璃 透明度 模糊 霧面 半透明 背景 桌布</string>
     <string name="settings_search_keywords_accent">色調 調色盤 十六進位 預設色彩</string>
@@ -425,13 +420,11 @@
     <string name="settings_search_keywords_video">解碼器 字幕 同步</string>
     <string name="settings_search_keywords_subtitle_appearance">字幕 大小 色彩 顏色 位置 透明度 背景 不透明度</string>
     <string name="settings_search_keywords_latency">直播 緩衝處理 延遲 低延遲 秒 接近直播最新進度</string>
-    <string name="settings_search_keywords_errors">錯誤 當機 失敗 診斷 回報</string>
     <string name="settings_search_keywords_proxy">HTTP 流量 路由</string>
     <string name="settings_search_keywords_dns">網域 查詢 解析器 DoH DNS-over-HTTPS</string>
     <string name="settings_search_keywords_startup">啟動 開啟 起始頁</string>
     <string name="settings_search_keywords_updates">GitHub 發行版本 版本</string>
     <string name="settings_search_keywords_update_auto">自動 更新 新版本</string>
-    <string name="settings_search_keywords_about">版本 授權條款 專案 資訊</string>
     <string name="settings_language_default">預設（英文）</string>
     <string name="settings_language_device">裝置語言</string>
     <string name="settings_language_arabic">阿拉伯文</string>
@@ -1227,7 +1220,6 @@
     <string name="settings_search_keywords_pip">子母畫面 浮動視窗 小視窗 覆蓋</string>
     <string name="settings_search_keywords_data_saver">數據 節省 行動數據 漫遊 用量</string>
     <string name="settings_search_keywords_gestures">手勢 滑動 靈敏度 觸控 拖曳</string>
-    <string name="settings_search_keywords_wifi_only">wifi 僅 下載 行動數據 網路</string>
     <string name="settings_mini_player_style">小視窗播放器樣式</string>
     <string name="settings_mini_player_style_description">瀏覽清單時播放如何跟著你</string>
     <string name="settings_mini_player_style_floating">浮動視窗</string>
@@ -1249,7 +1241,6 @@
     <string name="settings_audio_per_channel_description">不帶畫面看過的頻道，下次也這樣開啟</string>
     <string name="local_sync_title">本機同步</string>
     <string name="local_sync_description">透過 Wi-Fi 與你的另一部裝置分享資料</string>
-    <string name="local_sync_search_keywords">同步 wifi 網路 配對 裝置 分享</string>
     <string name="local_sync_host_hint">在另一部裝置上同樣開啟同步模式，然後點選「連線」並選擇本機。</string>
     <string name="local_sync_qr_description">包含本機位址的 QR 碼</string>
     <string name="local_sync_pin_is">PIN 碼：<xliff:g id="pin">%1$s</xliff:g></string>

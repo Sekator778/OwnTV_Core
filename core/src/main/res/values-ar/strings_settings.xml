@@ -245,7 +245,6 @@
     <string name="settings_backup_restore">النسخ الاحتياطي والاستعادة</string>
     <string name="settings_backup_restore_description">تصدير الملفات الشخصية والمصادر أو استعادتها</string>
     <string name="settings_clear_history">مسح سجل المشاهدة</string>
-    <string name="settings_clear_history_description">إزالة صفوف ما شوهد مؤخرًا والمتابعة لهذا الملف الشخصي</string>
     <string name="settings_appearance_group">المظهر</string>
     <string name="settings_theme">السمة</string>
     <string name="settings_theme_description">فاتحة أو داكنة أو تتبع النظام</string>
@@ -398,7 +397,6 @@
     <!-- Translators: Video player settings: one-line summary under the "Diagnostics" section name. -->
     <string name="settings_vp_section_diagnostics_summary">سجلات مفصّلة للمشغّل</string>
     <string name="settings_group_summary_network">الوكيل وDNS لاتصالات البث</string>
-    <string name="settings_group_summary_data">النسخ الاحتياطي والتنزيلات وسجل المشاهدة</string>
     <string name="settings_group_summary_app">اللغة وبدء التشغيل والتحديثات ومعلومات التطبيق</string>
     <string name="settings_group_quick">سريع</string>
     <string name="settings_group_summary_quick">المفاتيح التي تستخدمها أكثر</string>
@@ -413,9 +411,6 @@
     <string name="settings_search_keywords_browsing">تذكّر موضع تمرير فئة آخر عنصر مباشر أفلام مسلسلات إعادة ضبط أعلى</string>
     <string name="settings_search_keywords_home">صفوف بارز إعادة ترتيب تصفية</string>
     <string name="settings_search_keywords_metadata">ملصقات ملخصات طاقم تمثيل تقييمات</string>
-    <string name="settings_search_keywords_download">تخزين مسار دليل</string>
-    <string name="settings_search_keywords_backup">تصدير استيراد ملفات شخصية مصادر</string>
-    <string name="settings_search_keywords_history">شوهد مؤخرًا متابعة إزالة</string>
     <string name="settings_search_keywords_theme">فاتح داكن نظام</string>
     <string name="settings_search_keywords_glass">زجاج شفافية ضبابية صقيع شفاف خلفية</string>
     <string name="settings_search_keywords_accent">تلوين لوحة ألوان سداسي عشري إعداد مسبق</string>
@@ -435,13 +430,11 @@
     <string name="settings_search_keywords_video">وحدة فك الترميز ترجمة مزامنة</string>
     <string name="settings_search_keywords_subtitle_appearance">ترجمة حجم لون موضع شفافية خلفية عتامة</string>
     <string name="settings_search_keywords_latency">مباشر مخزن مؤقت زمن استجابة تأخير منخفض ثوانٍ قرب حافة البث المباشر</string>
-    <string name="settings_search_keywords_errors">خطأ تعطل فشل تشخيصات تقرير</string>
     <string name="settings_search_keywords_proxy">http حركة بيانات توجيه</string>
     <string name="settings_search_keywords_dns">نطاق بحث محلل doh DNS-over-HTTPS</string>
     <string name="settings_search_keywords_startup">تشغيل فتح واجهة بدء</string>
     <string name="settings_search_keywords_updates">GitHub إصدار تحديث</string>
     <string name="settings_search_keywords_update_auto">تلقائي تحديث إصدار جديد</string>
-    <string name="settings_search_keywords_about">إصدار ترخيص مشروع معلومات</string>
     <string name="settings_language_default">الافتراضية (الإنجليزية)</string>
     <string name="settings_language_device">لغة الجهاز</string>
     <string name="settings_language_arabic">العربية</string>
@@ -1337,7 +1330,6 @@
     <string name="settings_search_keywords_pip">صورة داخل صورة نافذة عائمة صغيرة</string>
     <string name="settings_search_keywords_data_saver">توفير البيانات بيانات الهاتف التجوال استهلاك</string>
     <string name="settings_search_keywords_gestures">إيماءة سحب حساسية لمس تمرير</string>
-    <string name="settings_search_keywords_wifi_only">wifi فقط تنزيل بيانات الهاتف شبكة</string>
     <string name="settings_mini_player_style">نمط المشغّل المصغّر</string>
     <string name="settings_mini_player_style_description">كيف يتابعك التشغيل أثناء التنقل</string>
     <string name="settings_mini_player_style_floating">نافذة عائمة</string>
@@ -1359,7 +1351,6 @@
     <string name="settings_audio_per_channel_description">القناة التي شاهدتها بدون صورة تُفتح كذلك في المرة القادمة</string>
     <string name="local_sync_title">المزامنة المحلية</string>
     <string name="local_sync_description">شارك بياناتك مع جهازك الآخر عبر الواي فاي</string>
-    <string name="local_sync_search_keywords">مزامنة واي فاي شبكة اقتران أجهزة مشاركة</string>
     <string name="local_sync_host_hint">على جهازك الآخر، فعّل وضع المزامنة أيضًا، ثم اضغط على اتصال واختر هذا الجهاز.</string>
     <string name="local_sync_qr_description">رمز QR يحتوي على عنوان هذا الجهاز</string>
     <string name="local_sync_pin_is">رمز PIN: <xliff:g id="pin">%1$s</xliff:g></string>

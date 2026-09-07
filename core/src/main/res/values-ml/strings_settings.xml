@@ -241,7 +241,6 @@
     <string name="settings_backup_restore">ബാക്കപ്പും പുനഃസ്ഥാപിക്കലും</string>
     <string name="settings_backup_restore_description">പ്രൊഫൈലുകളും ഉറവിടങ്ങളും എക്‌സ്‌പോർട്ട് ചെയ്യുക അല്ലെങ്കിൽ പുനഃസ്ഥാപിക്കുക</string>
     <string name="settings_clear_history">കണ്ടവയുടെ ചരിത്രം മായ്ക്കുക</string>
-    <string name="settings_clear_history_description">ഈ പ്രൊഫൈലിന്റെ അടുത്തിടെ കണ്ടവയും കണ്ടുകൊണ്ടിരിക്കുക നിരകളും നീക്കം ചെയ്യുക</string>
     <string name="settings_appearance_group">രൂപഭാവം</string>
     <string name="settings_theme">തീം</string>
     <string name="settings_theme_description">ലൈറ്റ്, ഡാർക്ക്, അല്ലെങ്കിൽ സിസ്റ്റത്തെ പിന്തുടരുക</string>
@@ -390,7 +389,6 @@
     <!-- Translators: Video player settings: one-line summary under the "Diagnostics" section name. -->
     <string name="settings_vp_section_diagnostics_summary">വിശദമായ പ്ലേയർ ലോഗുകൾ</string>
     <string name="settings_group_summary_network">സ്ട്രീം കണക്ഷനുകൾക്കുള്ള പ്രോക്സിയും DNS-ഉം</string>
-    <string name="settings_group_summary_data">ബാക്കപ്പ്, ഡൗൺലോഡുകൾ, കണ്ട ചരിത്രം</string>
     <string name="settings_group_summary_app">ഭാഷ, ആരംഭം, അപ്ഡേറ്റുകൾ, ആപ്പ് വിവരം</string>
     <string name="settings_group_quick">പെട്ടെന്ന്</string>
     <string name="settings_group_summary_quick">നിങ്ങൾ ഏറ്റവും കൂടുതൽ ഉപയോഗിക്കുന്ന ടോഗിളുകൾ</string>
@@ -405,9 +403,6 @@
     <string name="settings_search_keywords_browsing">ഓർക്കുക സ്ഥാനം സ്ക്രോൾ വിഭാഗം അവസാനം ഇനം തത്സമയം സിനിമകൾ സീരീസ് പുനഃസജ്ജമാക്കുക മുകളിൽ</string>
     <string name="settings_search_keywords_home">നിരകൾ പ്രധാനം പുനഃക്രമീകരിക്കുക ഫിൽട്ടർ</string>
     <string name="settings_search_keywords_metadata">പോസ്റ്ററുകൾ കഥാസംഗ്രഹങ്ങൾ അഭിനേതാക്കൾ റേറ്റിംഗുകൾ</string>
-    <string name="settings_search_keywords_download">സംഭരണം പാത ഡയറക്ടറി</string>
-    <string name="settings_search_keywords_backup">എക്‌സ്‌പോർട്ട് ഇമ്പോർട്ട് പ്രൊഫൈലുകൾ ഉറവിടങ്ങൾ</string>
-    <string name="settings_search_keywords_history">അടുത്തിടെ കണ്ടവ തുടരുക നീക്കംചെയ്യുക</string>
     <string name="settings_search_keywords_theme">ലൈറ്റ് ഡാർക്ക് സിസ്റ്റം</string>
     <string name="settings_search_keywords_glass">ഗ്ലാസ് സുതാര്യത ബ്ലർ ഫ്രോസ്റ്റ് അർധസുതാര്യം പശ്ചാത്തലം വാൾപേപ്പർ</string>
     <string name="settings_search_keywords_accent">നിറം പാലറ്റ് ഹെക്സ് പ്രീസെറ്റ്</string>
@@ -427,13 +422,11 @@
     <string name="settings_search_keywords_video">ഡീകോഡർ സബ്‌ടൈറ്റിലുകൾ സമന്വയിപ്പിക്കൽ</string>
     <string name="settings_search_keywords_subtitle_appearance">സബ്‌ടൈറ്റിൽ വലുപ്പം നിറം വർണം സ്ഥാനം സുതാര്യത പശ്ചാത്തലം അതാര്യത</string>
     <string name="settings_search_keywords_latency">തത്സമയം ബഫർ കാലതാമസം വൈകൽ കുറഞ്ഞ കാലതാമസം സെക്കൻഡുകൾ ലൈവ് എഡ്ജിന് സമീപം</string>
-    <string name="settings_search_keywords_errors">പിശക് ക്രാഷ് പരാജയം ഡയഗ്നോസ്റ്റിക്സ് റിപ്പോർട്ട്</string>
     <string name="settings_search_keywords_proxy">HTTP ട്രാഫിക് റൂട്ട്</string>
     <string name="settings_search_keywords_dns">ഡൊമെയ്ൻ തിരയൽ റിസോൾവർ doh DNS-over-HTTPS</string>
     <string name="settings_search_keywords_startup">ആരംഭിക്കുക തുറക്കുക പ്രവേശനം</string>
     <string name="settings_search_keywords_updates">GitHub റിലീസ് പതിപ്പ്</string>
     <string name="settings_search_keywords_update_auto">സ്വയം അപ്‌ഡേറ്റ് പുതിയ പതിപ്പ്</string>
-    <string name="settings_search_keywords_about">പതിപ്പ് ലൈസൻസ് പ്രോജക്റ്റ് വിവരങ്ങൾ</string>
     <string name="settings_language_default">ഡിഫോൾട്ട് (ഇംഗ്ലീഷ്)</string>
     <string name="settings_language_device">ഉപകരണത്തിന്റെ ഭാഷ</string>
     <string name="settings_language_arabic">അറബിക്</string>
@@ -1249,7 +1242,6 @@
     <string name="settings_search_keywords_pip">പിക്ചർ ഇൻ പിക്ചർ ഒഴുകുന്ന വിൻഡോ ചെറിയ</string>
     <string name="settings_search_keywords_data_saver">ഡാറ്റ ലാഭം മൊബൈൽ ഡാറ്റ റോമിംഗ് ഉപയോഗം</string>
     <string name="settings_search_keywords_gestures">ജെസ്ചർ സ്വൈപ്പ് സംവേദനക്ഷമത സ്പർശം വലിക്കൽ</string>
-    <string name="settings_search_keywords_wifi_only">wifi മാത്രം ഡൗൺലോഡ് മൊബൈൽ ഡാറ്റ നെറ്റ്‌വർക്ക്</string>
     <string name="settings_mini_player_style">മിനി-പ്ലേയർ ശൈലി</string>
     <string name="settings_mini_player_style_description">ബ്രൗസ് ചെയ്യുമ്പോൾ പ്ലേബാക്ക് എങ്ങനെ കൂടെ വരും</string>
     <string name="settings_mini_player_style_floating">ഒഴുകുന്ന വിൻഡോ</string>
@@ -1271,7 +1263,6 @@
     <string name="settings_audio_per_channel_description">ചിത്രമില്ലാതെ കണ്ട ചാനൽ അടുത്ത തവണയും അങ്ങനെ തുറക്കും</string>
     <string name="local_sync_title">ലോക്കൽ സമന്വയം</string>
     <string name="local_sync_description">വൈ-ഫൈ വഴി നിങ്ങളുടെ മറ്റ് ഉപകരണവുമായി ഡാറ്റ പങ്കിടുക</string>
-    <string name="local_sync_search_keywords">സമന്വയം വൈഫൈ നെറ്റ്‌വർക്ക് പെയർ ഉപകരണങ്ങൾ പങ്കിടൽ</string>
     <string name="local_sync_host_hint">നിങ്ങളുടെ മറ്റ് ഉപകരണത്തിലും സമന്വയ മോഡ് ഓണാക്കി, കണക്റ്റ് ചെയ്യുക അമർത്തി ഇത് തിരഞ്ഞെടുക്കുക.</string>
     <string name="local_sync_qr_description">ഈ ഉപകരണത്തിന്റെ വിലാസമുള്ള QR കോഡ്</string>
     <string name="local_sync_pin_is">പിൻ: <xliff:g id="pin">%1$s</xliff:g></string>

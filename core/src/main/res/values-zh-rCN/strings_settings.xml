@@ -240,7 +240,6 @@
     <string name="settings_backup_restore">备份和恢复</string>
     <string name="settings_backup_restore_description">导出或恢复用户档案和源</string>
     <string name="settings_clear_history">清除观看记录</string>
-    <string name="settings_clear_history_description">移除此用户档案的最近观看和继续观看内容行</string>
     <string name="settings_appearance_group">外观</string>
     <string name="settings_theme">主题</string>
     <string name="settings_theme_description">浅色、深色或跟随系统</string>
@@ -388,7 +387,6 @@
     <!-- Translators: Video player settings: one-line summary under the "Diagnostics" section name. -->
     <string name="settings_vp_section_diagnostics_summary">详细播放器日志</string>
     <string name="settings_group_summary_network">用于串流连接的代理和 DNS</string>
-    <string name="settings_group_summary_data">备份、下载和观看记录</string>
     <string name="settings_group_summary_app">语言、启动、更新和应用信息</string>
     <string name="settings_group_quick">快捷</string>
     <string name="settings_group_summary_quick">最常用的开关</string>
@@ -403,9 +401,6 @@
     <string name="settings_search_keywords_browsing">记住 位置 滚动 分类 上次 项目 直播 电影 剧集 重置 顶部</string>
     <string name="settings_search_keywords_home">内容行 焦点内容 重新排序 筛选</string>
     <string name="settings_search_keywords_metadata">海报 剧情简介 演职人员 评分</string>
-    <string name="settings_search_keywords_download">存储 路径 目录</string>
-    <string name="settings_search_keywords_backup">导出 导入 用户档案 源</string>
-    <string name="settings_search_keywords_history">最近观看 继续观看 移除</string>
     <string name="settings_search_keywords_theme">浅色 深色 系统</string>
     <string name="settings_search_keywords_glass">玻璃 透明度 模糊 磨砂 半透明 背景 壁纸</string>
     <string name="settings_search_keywords_accent">着色 调色板 十六进制 预设</string>
@@ -425,13 +420,11 @@
     <string name="settings_search_keywords_video">解码器 字幕 同步</string>
     <string name="settings_search_keywords_subtitle_appearance">字幕 大小 颜色 色彩 位置 透明度 背景 不透明度</string>
     <string name="settings_search_keywords_latency">直播 缓冲 延迟 低延迟 秒 接近直播最新位置</string>
-    <string name="settings_search_keywords_errors">错误 崩溃 失败 诊断 报告</string>
     <string name="settings_search_keywords_proxy">http 流量 路由</string>
     <string name="settings_search_keywords_dns">域名 查询 解析器 doh dns-over-https</string>
     <string name="settings_search_keywords_startup">启动 打开 起始页</string>
     <string name="settings_search_keywords_updates">github 发布 版本</string>
     <string name="settings_search_keywords_update_auto">自动 更新 新版本</string>
-    <string name="settings_search_keywords_about">版本 许可证 项目 信息</string>
     <string name="settings_language_default">默认（英语）</string>
     <string name="settings_language_device">设备语言</string>
     <string name="settings_language_arabic">阿拉伯语</string>
@@ -1227,7 +1220,6 @@
     <string name="settings_search_keywords_pip">画中画 悬浮窗 小窗 覆盖</string>
     <string name="settings_search_keywords_data_saver">流量 节省 移动数据 蜂窝 漫游</string>
     <string name="settings_search_keywords_gestures">手势 滑动 灵敏度 触摸 拖动</string>
-    <string name="settings_search_keywords_wifi_only">wifi 仅 下载 移动数据 网络</string>
     <string name="settings_mini_player_style">小窗播放器样式</string>
     <string name="settings_mini_player_style_description">浏览列表时播放如何跟随你</string>
     <string name="settings_mini_player_style_floating">悬浮窗</string>
@@ -1249,7 +1241,6 @@
     <string name="settings_audio_per_channel_description">不带画面看过的频道，下次也这样打开</string>
     <string name="local_sync_title">本地同步</string>
     <string name="local_sync_description">通过 Wi-Fi 与你的另一台设备共享数据</string>
-    <string name="local_sync_search_keywords">同步 wifi 网络 配对 设备 共享</string>
     <string name="local_sync_host_hint">在另一台设备上同样开启同步模式，然后点按“连接”并选择本机。</string>
     <string name="local_sync_qr_description">包含本机地址的二维码</string>
     <string name="local_sync_pin_is">PIN 码：<xliff:g id="pin">%1$s</xliff:g></string>

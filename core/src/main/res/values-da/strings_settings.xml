@@ -241,7 +241,6 @@
     <string name="settings_backup_restore">Sikkerhedskopi og gendannelse</string>
     <string name="settings_backup_restore_description">Eksportér eller gendan profiler og kilder</string>
     <string name="settings_clear_history">Ryd afspilningshistorik</string>
-    <string name="settings_clear_history_description">Fjern denne profils rækker for senest set og fortsat afspilning</string>
     <string name="settings_appearance_group">Udseende</string>
     <string name="settings_theme">Tema</string>
     <string name="settings_theme_description">Lyst, mørkt eller følg systemet</string>
@@ -390,7 +389,6 @@
     <!-- Translators: Video player settings: one-line summary under the "Diagnostics" section name. -->
     <string name="settings_vp_section_diagnostics_summary">Detaljerede afspillerlogfiler</string>
     <string name="settings_group_summary_network">Proxy og DNS til streamforbindelser</string>
-    <string name="settings_group_summary_data">Sikkerhedskopi, downloads og seerhistorik</string>
     <string name="settings_group_summary_app">Sprog, opstart, opdateringer og appinfo</string>
     <string name="settings_group_quick">Hurtig</string>
     <string name="settings_group_summary_quick">De kontakter du bruger mest</string>
@@ -405,9 +403,6 @@
     <string name="settings_search_keywords_browsing">husk placering rul kategori seneste element live film serier nulstil top</string>
     <string name="settings_search_keywords_home">rækker hero omarranger filtrer</string>
     <string name="settings_search_keywords_metadata">plakater handlingsbeskrivelser medvirkende bedømmelser</string>
-    <string name="settings_search_keywords_download">lager sti mappe</string>
-    <string name="settings_search_keywords_backup">eksportér importér profiler kilder</string>
-    <string name="settings_search_keywords_history">senest set fortsæt fjern</string>
     <string name="settings_search_keywords_theme">lyst mørkt system</string>
     <string name="settings_search_keywords_glass">glas gennemsigtighed sløring frost gennemskinnelig baggrund tapet</string>
     <string name="settings_search_keywords_accent">farvetone palet hex forudindstilling</string>
@@ -427,13 +422,11 @@
     <string name="settings_search_keywords_video">dekoder undertekster synkronisering</string>
     <string name="settings_search_keywords_subtitle_appearance">undertekst størrelse farve kulør placering gennemsigtighed baggrund opacitet</string>
     <string name="settings_search_keywords_latency">live buffer forsinkelse lav forsinkelse sekunder tæt på livepunkt</string>
-    <string name="settings_search_keywords_errors">fejl nedbrud svigt diagnostik rapport</string>
     <string name="settings_search_keywords_proxy">http trafik rute</string>
     <string name="settings_search_keywords_dns">domæne opslag resolver doh dns-over-https</string>
     <string name="settings_search_keywords_startup">start åbn landingsside</string>
     <string name="settings_search_keywords_updates">github udgivelse version</string>
     <string name="settings_search_keywords_update_auto">automatisk opdatering ny version</string>
-    <string name="settings_search_keywords_about">version licens projekt oplysninger</string>
     <string name="settings_language_default">Standard (engelsk)</string>
     <string name="settings_language_device">Enhedens sprog</string>
     <string name="settings_language_arabic">Arabisk</string>
@@ -1249,7 +1242,6 @@
     <string name="settings_search_keywords_pip">billede i billede svaevende vindue overlay lille</string>
     <string name="settings_search_keywords_data_saver">databesparelse mobildata forbrug roaming spar</string>
     <string name="settings_search_keywords_gestures">bevaegelse stryg folsomhed berore traek</string>
-    <string name="settings_search_keywords_wifi_only">wifi kun download mobildata netvaerk</string>
     <string name="settings_mini_player_style">Stil for mini-afspilleren</string>
     <string name="settings_mini_player_style_description">Hvordan afspilningen følger dig, mens du kigger rundt</string>
     <string name="settings_mini_player_style_floating">Flydende vindue</string>
@@ -1271,7 +1263,6 @@
     <string name="settings_audio_per_channel_description">En kanal set uden billede åbner sådan næste gang</string>
     <string name="local_sync_title">Lokal synkronisering</string>
     <string name="local_sync_description">Del dine data med din anden enhed over Wi-Fi</string>
-    <string name="local_sync_search_keywords">synkronisering wifi netværk par enheder del</string>
     <string name="local_sync_host_hint">Slå også Synkroniseringstilstand til på din anden enhed, tryk på Forbind, og vælg denne.</string>
     <string name="local_sync_qr_description">QR-kode med denne enheds adresse</string>
     <string name="local_sync_pin_is">PIN: <xliff:g id="pin">%1$s</xliff:g></string>

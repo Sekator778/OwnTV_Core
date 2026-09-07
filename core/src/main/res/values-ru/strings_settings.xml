@@ -243,7 +243,6 @@
     <string name="settings_backup_restore">Резервная копия и восстановление</string>
     <string name="settings_backup_restore_description">Экспорт или восстановление профилей и источников</string>
     <string name="settings_clear_history">Очистить историю просмотров</string>
-    <string name="settings_clear_history_description">Удаление рядов недавно просмотренного и продолжения просмотра для этого профиля</string>
     <string name="settings_appearance_group">Внешний вид</string>
     <string name="settings_theme">Тема</string>
     <string name="settings_theme_description">Светлая, тёмная или как в системе</string>
@@ -394,7 +393,6 @@
     <!-- Translators: Video player settings: one-line summary under the "Diagnostics" section name. -->
     <string name="settings_vp_section_diagnostics_summary">Подробные журналы плеера</string>
     <string name="settings_group_summary_network">Прокси и DNS для подключения к потокам</string>
-    <string name="settings_group_summary_data">Резервные копии, загрузки и история просмотра</string>
     <string name="settings_group_summary_app">Язык, запуск, обновления и сведения о приложении</string>
     <string name="settings_group_quick">Быстрые</string>
     <string name="settings_group_summary_quick">Переключатели, которые нужны чаще всего</string>
@@ -409,9 +407,6 @@
     <string name="settings_search_keywords_browsing">запомнить позиция прокрутка категория последний элемент прямой эфир фильмы сериалы сброс начало</string>
     <string name="settings_search_keywords_home">ряды главный порядок фильтр</string>
     <string name="settings_search_keywords_metadata">постеры описания актёры рейтинги</string>
-    <string name="settings_search_keywords_download">хранилище путь каталог</string>
-    <string name="settings_search_keywords_backup">экспорт импорт профили источники</string>
-    <string name="settings_search_keywords_history">недавно просмотренные продолжить удалить</string>
     <string name="settings_search_keywords_theme">светлая тёмная система</string>
     <string name="settings_search_keywords_glass">стекло прозрачность размытие иней полупрозрачный фон обои</string>
     <string name="settings_search_keywords_accent">оттенок палитра HEX готовый цвет</string>
@@ -431,13 +426,11 @@
     <string name="settings_search_keywords_video">декодер субтитры синхронизация</string>
     <string name="settings_search_keywords_subtitle_appearance">субтитры размер цвет положение прозрачность фон непрозрачность</string>
     <string name="settings_search_keywords_latency">прямой эфир буфер задержка низкая задержка секунды текущая позиция эфира</string>
-    <string name="settings_search_keywords_errors">ошибка сбой неисправность диагностика отчёт</string>
     <string name="settings_search_keywords_proxy">HTTP трафик маршрут</string>
     <string name="settings_search_keywords_dns">домен поиск резолвер DoH DNS-over-HTTPS</string>
     <string name="settings_search_keywords_startup">запуск открыть начальный экран</string>
     <string name="settings_search_keywords_updates">GitHub выпуск версия</string>
     <string name="settings_search_keywords_update_auto">автоматически обновление новая версия</string>
-    <string name="settings_search_keywords_about">версия лицензия проект сведения</string>
     <string name="settings_language_default">По умолчанию (английский)</string>
     <string name="settings_language_device">Язык устройства</string>
     <string name="settings_language_arabic">Арабский</string>
@@ -1293,7 +1286,6 @@
     <string name="settings_search_keywords_pip">картинка в картинке плавающее окно поверх маленькое</string>
     <string name="settings_search_keywords_data_saver">экономия трафика мобильный интернет роуминг лимит</string>
     <string name="settings_search_keywords_gestures">жест свайп чувствительность касание перетаскивание</string>
-    <string name="settings_search_keywords_wifi_only">wifi только загрузка мобильный интернет сеть</string>
     <string name="settings_mini_player_style">Стиль мини-плеера</string>
     <string name="settings_mini_player_style_description">Как воспроизведение следует за вами при просмотре списков</string>
     <string name="settings_mini_player_style_floating">Плавающее окно</string>
@@ -1315,7 +1307,6 @@
     <string name="settings_audio_per_channel_description">Канал, который вы смотрели без изображения, в следующий раз откроется так же</string>
     <string name="local_sync_title">Локальная синхронизация</string>
     <string name="local_sync_description">Обменивайтесь данными с другим устройством по Wi-Fi</string>
-    <string name="local_sync_search_keywords">синхронизация wifi сеть сопряжение устройства обмен</string>
     <string name="local_sync_host_hint">На другом устройстве тоже включите режим синхронизации, нажмите «Подключиться» и выберите это устройство.</string>
     <string name="local_sync_qr_description">QR-код с адресом этого устройства</string>
     <string name="local_sync_pin_is">PIN-код: <xliff:g id="pin">%1$s</xliff:g></string>

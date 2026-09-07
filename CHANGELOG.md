@@ -3,6 +3,50 @@
 Core is versioned independently of the apps. A core version number never lines up with an OwnTV TV
 app `v4.x` release, and the two must not be confused. Tags here are prefixed `core-`.
 
+## core-1.0.27 — 2026-09-07
+
+The core share of **Plan Z — the More hub**, which gives both apps one place for everything that is
+neither content nor a preference. Core's part is deliberately tiny: one additive enum value, and the
+removal of nine strings the apps stopped displaying.
+
+**No database change.** No migration, no schema JSON, no new query — Plan Z is built entirely on
+queries that already existed (`pagingFavorites`, `pagingHistory`, `countFavorites`, `countHistory`).
+
+### ⋯ `MainSection.MORE` (`core/nav/MainSection.kt`)
+
+- **A new nav destination, appended after `SETTINGS`**, reusing `common_nav_more` — already
+  translated in all 24 packaged locales, so it cost nothing to name.
+- **Outside `browseOrder`, and `isBrowse` is false for it**, exactly as `SETTINGS` is. That is what
+  makes it un-hidable for free: the Nav menu settings page only ever offers the browse items, so
+  nobody can hide their way out of their own settings.
+- **Additive, so no existing behaviour changes.** The one cost is the documented one: a new enum
+  value breaks every exhaustive `when` on `MainSection`. Five broke, all in the TV app, and all were
+  mechanical. Consumers on an older branch will see *"'when' expression must be exhaustive"* until
+  they handle the new value — expected, not a bug.
+
+### 🗑️ Nine dead strings removed, in the base locale and all 24 translations
+
+Each one confirmed at zero references across core, the TV app and the mobile app before deletion:
+
+`settings_group_summary_data` · `settings_search_keywords_backup` · `local_sync_search_keywords` ·
+`settings_search_keywords_history` · `settings_search_keywords_errors` ·
+`settings_search_keywords_about` · `settings_search_keywords_download` ·
+`settings_search_keywords_wifi_only` · `settings_clear_history_description`
+
+They described rows that left Settings: Backup, Local sync, Clear history, the error log, About, the
+download folder and Wi-Fi-only. A search entry for something that is no longer in Settings is a lie
+about where it lives, so the entries went — and with nothing left referencing the keywords, the
+strings went too. 226 lines across 26 locale files.
+
+**`settings_group_data` was deliberately kept.** The plan expected it dead; it is not. The
+television's new More screen uses it as the heading over Favourites, History, Backup and Local sync
+— the group did not disappear, it moved. The whole profile family
+(`settings_profile_group`, `settings_group_summary_profile`, `settings_search_keywords_profiles`) is
+kept too: the television still has Settings → Profiles, which is its only door to renaming a
+profile, setting a PIN, turning on kids mode or deleting one.
+
+**Validators:** `validate_strings.py` reports `i18n validation OK` at 100% on every packaged locale.
+
 ## core-1.0.26 — 2026-09-06
 
 Local sync: two OwnTV devices on the same Wi-Fi exchanging their data directly, with no account, no

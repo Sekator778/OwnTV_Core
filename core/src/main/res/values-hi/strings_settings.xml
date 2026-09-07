@@ -241,7 +241,6 @@
     <string name="settings_backup_restore">बैकअप और रीस्टोर</string>
     <string name="settings_backup_restore_description">प्रोफ़ाइलें और स्रोत एक्सपोर्ट या रीस्टोर करें</string>
     <string name="settings_clear_history">देखने का इतिहास मिटाएँ</string>
-    <string name="settings_clear_history_description">इस प्रोफ़ाइल की हाल में देखी गई और जारी रखने वाली पंक्तियाँ हटाएँ</string>
     <string name="settings_appearance_group">दिखावट</string>
     <string name="settings_theme">थीम</string>
     <string name="settings_theme_description">हल्की, गहरी या सिस्टम के अनुसार</string>
@@ -390,7 +389,6 @@
     <!-- Translators: Video player settings: one-line summary under the "Diagnostics" section name. -->
     <string name="settings_vp_section_diagnostics_summary">विस्तृत प्लेयर लॉग</string>
     <string name="settings_group_summary_network">स्ट्रीम कनेक्शन के लिए प्रॉक्सी और DNS</string>
-    <string name="settings_group_summary_data">बैकअप, डाउनलोड और देखने का इतिहास</string>
     <string name="settings_group_summary_app">भाषा, स्टार्टअप, अपडेट और ऐप जानकारी</string>
     <string name="settings_group_quick">त्वरित</string>
     <string name="settings_group_summary_quick">वे टॉगल जिन्हें आप सबसे ज़्यादा इस्तेमाल करते हैं</string>
@@ -405,9 +403,6 @@
     <string name="settings_search_keywords_browsing">याद रखें स्थिति स्क्रॉल श्रेणी पिछला आइटम लाइव फ़िल्में सीरीज़ रीसेट शीर्ष</string>
     <string name="settings_search_keywords_home">पंक्तियाँ मुख्य क्रम बदलें फ़िल्टर</string>
     <string name="settings_search_keywords_metadata">पोस्टर कथानक कलाकार रेटिंग</string>
-    <string name="settings_search_keywords_download">स्टोरेज पथ डायरेक्टरी</string>
-    <string name="settings_search_keywords_backup">एक्सपोर्ट इंपोर्ट प्रोफ़ाइलें स्रोत</string>
-    <string name="settings_search_keywords_history">हाल में देखे गए जारी रखें हटाएँ</string>
     <string name="settings_search_keywords_theme">हल्की गहरी सिस्टम</string>
     <string name="settings_search_keywords_glass">ग्लास पारदर्शिता धुंधलापन फ्रॉस्ट पारभासी पृष्ठभूमि वॉलपेपर</string>
     <string name="settings_search_keywords_accent">टिंट पैलेट हेक्स प्रीसेट</string>
@@ -427,13 +422,11 @@
     <string name="settings_search_keywords_video">डिकोडर सबटाइटल सिंक</string>
     <string name="settings_search_keywords_subtitle_appearance">सबटाइटल आकार रंग कलर स्थिति पारदर्शिता पृष्ठभूमि अपारदर्शिता</string>
     <string name="settings_search_keywords_latency">लाइव बफ़र विलंबता देरी कम विलंबता सेकंड लाइव बिंदु के पास</string>
-    <string name="settings_search_keywords_errors">त्रुटि क्रैश विफलता डायग्नोस्टिक्स रिपोर्ट</string>
     <string name="settings_search_keywords_proxy">HTTP ट्रैफ़िक रूट</string>
     <string name="settings_search_keywords_dns">डोमेन खोज रिज़ॉल्वर DoH DNS-over-HTTPS</string>
     <string name="settings_search_keywords_startup">लॉन्च खोलें आरंभ पेज</string>
     <string name="settings_search_keywords_updates">GitHub रिलीज़ संस्करण</string>
     <string name="settings_search_keywords_update_auto">अपने-आप अपडेट नया संस्करण</string>
-    <string name="settings_search_keywords_about">संस्करण लाइसेंस प्रोजेक्ट जानकारी</string>
     <string name="settings_language_default">डिफ़ॉल्ट (अंग्रेज़ी)</string>
     <string name="settings_language_device">डिवाइस की भाषा</string>
     <string name="settings_language_arabic">अरबी</string>
@@ -1249,7 +1242,6 @@
     <string name="settings_search_keywords_pip">पिक्चर इन पिक्चर तैरती खिड़की छोटी विंडो</string>
     <string name="settings_search_keywords_data_saver">डेटा बचत मोबाइल डेटा रोमिंग खपत</string>
     <string name="settings_search_keywords_gestures">जेस्चर स्वाइप संवेदनशीलता स्पर्श खींचना</string>
-    <string name="settings_search_keywords_wifi_only">wifi सिर्फ डाउनलोड मोबाइल डेटा नेटवर्क</string>
     <string name="settings_mini_player_style">मिनी-प्लेयर की शैली</string>
     <string name="settings_mini_player_style_description">ब्राउज़ करते समय प्लेबैक आपके साथ कैसे चले</string>
     <string name="settings_mini_player_style_floating">तैरती विंडो</string>
@@ -1271,7 +1263,6 @@
     <string name="settings_audio_per_channel_description">बिना तस्वीर देखा गया चैनल अगली बार वैसे ही खुलेगा</string>
     <string name="local_sync_title">लोकल सिंक</string>
     <string name="local_sync_description">वाई-फ़ाई से अपने दूसरे डिवाइस के साथ डेटा साझा करें</string>
-    <string name="local_sync_search_keywords">सिंक वाईफ़ाई नेटवर्क पेयर डिवाइस साझा</string>
     <string name="local_sync_host_hint">अपने दूसरे डिवाइस पर भी सिंक मोड चालू करें, फिर कनेक्ट पर टैप करके इसे चुनें।</string>
     <string name="local_sync_qr_description">इस डिवाइस के पते वाला क्यूआर कोड</string>
     <string name="local_sync_pin_is">पिन: <xliff:g id="pin">%1$s</xliff:g></string>

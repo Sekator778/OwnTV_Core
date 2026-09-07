@@ -241,7 +241,6 @@
     <string name="settings_backup_restore">ব্যাকআপ ও পুনরুদ্ধার</string>
     <string name="settings_backup_restore_description">প্রোফাইল ও উৎসগুলো এক্সপোর্ট বা পুনরুদ্ধার করুন</string>
     <string name="settings_clear_history">দেখার ইতিহাস মুছুন</string>
-    <string name="settings_clear_history_description">এই প্রোফাইলের সম্প্রতি দেখা ও দেখা চালিয়ে যাওয়ার সারিগুলো সরান</string>
     <string name="settings_appearance_group">চেহারা</string>
     <string name="settings_theme">থিম</string>
     <string name="settings_theme_description">হালকা, গাঢ় অথবা সিস্টেম অনুসরণ করুন</string>
@@ -390,7 +389,6 @@
     <!-- Translators: Video player settings: one-line summary under the "Diagnostics" section name. -->
     <string name="settings_vp_section_diagnostics_summary">বিস্তারিত প্লেয়ার লগ</string>
     <string name="settings_group_summary_network">স্ট্রিম সংযোগের জন্য প্রক্সি ও DNS</string>
-    <string name="settings_group_summary_data">ব্যাকআপ, ডাউনলোড এবং দেখার ইতিহাস</string>
     <string name="settings_group_summary_app">ভাষা, চালু হওয়া, আপডেট ও অ্যাপের তথ্য</string>
     <string name="settings_group_quick">দ্রুত</string>
     <string name="settings_group_summary_quick">যে সুইচগুলো আপনি সবচেয়ে বেশি ব্যবহার করেন</string>
@@ -405,9 +403,6 @@
     <string name="settings_search_keywords_browsing">মনে-রাখুন অবস্থান স্ক্রল বিভাগ সর্বশেষ আইটেম লাইভ সিনেমা সিরিজ রিসেট শীর্ষ</string>
     <string name="settings_search_keywords_home">সারি হিরো পুনর্বিন্যাস ফিল্টার</string>
     <string name="settings_search_keywords_metadata">পোস্টার কাহিনি অভিনয়শিল্পী রেটিং</string>
-    <string name="settings_search_keywords_download">স্টোরেজ পথ ডিরেক্টরি</string>
-    <string name="settings_search_keywords_backup">এক্সপোর্ট ইমপোর্ট প্রোফাইল উৎস</string>
-    <string name="settings_search_keywords_history">সম্প্রতি-দেখা চালিয়ে-যান অপসারণ</string>
     <string name="settings_search_keywords_theme">হালকা গাঢ় সিস্টেম</string>
     <string name="settings_search_keywords_glass">গ্লাস স্বচ্ছতা ব্লার ফ্রস্ট স্বচ্ছ পটভূমি ওয়ালপেপার</string>
     <string name="settings_search_keywords_accent">আভা প্যালেট হেক্স প্রিসেট</string>
@@ -427,13 +422,11 @@
     <string name="settings_search_keywords_video">ডিকোডার সাবটাইটেল সিঙ্ক</string>
     <string name="settings_search_keywords_subtitle_appearance">সাবটাইটেল আকার রং বর্ণ অবস্থান স্বচ্ছতা পটভূমি অস্বচ্ছতা</string>
     <string name="settings_search_keywords_latency">লাইভ বাফার বিলম্ব দেরি কম-বিলম্ব সেকেন্ড লাইভ-প্রান্তের-কাছে</string>
-    <string name="settings_search_keywords_errors">ত্রুটি ক্র্যাশ ব্যর্থতা সমস্যা-নির্ণয় প্রতিবেদন</string>
     <string name="settings_search_keywords_proxy">http ট্রাফিক রুট</string>
     <string name="settings_search_keywords_dns">ডোমেইন অনুসন্ধান রিজলভার doh dns-over-https</string>
     <string name="settings_search_keywords_startup">চালু খোলা শুরুপৃষ্ঠা</string>
     <string name="settings_search_keywords_updates">github রিলিজ সংস্করণ</string>
     <string name="settings_search_keywords_update_auto">স্বয়ংক্রিয় আপডেট নতুন সংস্করণ</string>
-    <string name="settings_search_keywords_about">সংস্করণ লাইসেন্স প্রকল্প তথ্য</string>
     <string name="settings_language_default">ডিফল্ট (ইংরেজি)</string>
     <string name="settings_language_device">ডিভাইসের ভাষা</string>
     <string name="settings_language_arabic">আরবি</string>
@@ -1249,7 +1242,6 @@
     <string name="settings_search_keywords_pip">পিকচার ইন পিকচার ভাসমান জানালা ছোট উইন্ডো</string>
     <string name="settings_search_keywords_data_saver">ডেটা সাশ্রয় মোবাইল ডেটা রোমিং খরচ</string>
     <string name="settings_search_keywords_gestures">অঙ্গভঙ্গি সোয়াইপ সংবেদনশীলতা স্পর্শ টানা</string>
-    <string name="settings_search_keywords_wifi_only">wifi শুধু ডাউনলোড মোবাইল ডেটা নেটওয়ার্ক</string>
     <string name="settings_mini_player_style">মিনি-প্লেয়ারের ধরন</string>
     <string name="settings_mini_player_style_description">ব্রাউজ করার সময় প্লেব্যাক কীভাবে আপনার সঙ্গে থাকবে</string>
     <string name="settings_mini_player_style_floating">ভাসমান উইন্ডো</string>
@@ -1271,7 +1263,6 @@
     <string name="settings_audio_per_channel_description">ছবি ছাড়া দেখা চ্যানেল পরের বারও সেভাবেই খুলবে</string>
     <string name="local_sync_title">লোকাল সিঙ্ক</string>
     <string name="local_sync_description">ওয়াই-ফাইয়ের মাধ্যমে আপনার অন্য ডিভাইসের সঙ্গে ডেটা শেয়ার করুন</string>
-    <string name="local_sync_search_keywords">সিঙ্ক ওয়াইফাই নেটওয়ার্ক পেয়ার ডিভাইস শেয়ার</string>
     <string name="local_sync_host_hint">আপনার অন্য ডিভাইসেও সিঙ্ক মোড চালু করুন, তারপর সংযোগ করুন-এ ট্যাপ করে এটি বেছে নিন।</string>
     <string name="local_sync_qr_description">এই ডিভাইসের ঠিকানাসহ QR কোড</string>
     <string name="local_sync_pin_is">পিন: <xliff:g id="pin">%1$s</xliff:g></string>

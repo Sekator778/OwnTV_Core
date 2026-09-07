@@ -59,7 +59,6 @@ Resync and remove missing titles also allows removing titles the provider no lon
     <string name="settings_nav_bar_customization">Navigation bar customisation</string>
     <string name="local_sync_title">Local sync</string>
     <string name="local_sync_description">Share your data with your other device over Wi-Fi</string>
-    <string name="local_sync_search_keywords">sync wifi network pair devices share</string>
     <string name="local_sync_host_hint">On your other device, turn Sync mode on too, then tap Connect and pick this one.</string>
     <string name="local_sync_qr_description">QR code with this device\'s address</string>
     <string name="local_sync_pin_is">PIN: <xliff:g id="pin">%1$s</xliff:g></string>

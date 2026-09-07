@@ -241,7 +241,6 @@
     <string name="settings_backup_restore">Yedekleme ve Geri Yükleme</string>
     <string name="settings_backup_restore_description">Profilleri ve kaynakları dışa aktarın veya geri yükleyin</string>
     <string name="settings_clear_history">İzleme geçmişini temizle</string>
-    <string name="settings_clear_history_description">Bu profilin son izlenenler ve devam et satırlarını kaldırın</string>
     <string name="settings_appearance_group">Görünüm</string>
     <string name="settings_theme">Tema</string>
     <string name="settings_theme_description">Açık, koyu veya sistemi izle</string>
@@ -390,7 +389,6 @@
     <!-- Translators: Video player settings: one-line summary under the "Diagnostics" section name. -->
     <string name="settings_vp_section_diagnostics_summary">Ayrıntılı oynatıcı günlükleri</string>
     <string name="settings_group_summary_network">Yayın bağlantıları için proxy ve DNS</string>
-    <string name="settings_group_summary_data">Yedekleme, indirmeler ve izleme geçmişi</string>
     <string name="settings_group_summary_app">Dil, açılış, güncellemeler ve uygulama bilgisi</string>
     <string name="settings_group_quick">Hızlı</string>
     <string name="settings_group_summary_quick">En sık kullandığınız anahtarlar</string>
@@ -405,9 +403,6 @@
     <string name="settings_search_keywords_browsing">hatırla konum kaydır kategori son öge canlı filmler diziler sıfırla başa</string>
     <string name="settings_search_keywords_home">satırlar öne çıkan yeniden sırala filtrele</string>
     <string name="settings_search_keywords_metadata">afişler özetler oyuncu kadrosu puanlar</string>
-    <string name="settings_search_keywords_download">depolama yol dizin</string>
-    <string name="settings_search_keywords_backup">dışa aktarma içe aktarma profiller kaynaklar</string>
-    <string name="settings_search_keywords_history">son izlenenler devam et kaldır</string>
     <string name="settings_search_keywords_theme">açık koyu sistem</string>
     <string name="settings_search_keywords_glass">cam saydamlık bulanıklık buzlu yarı saydam arka plan duvar kağıdı</string>
     <string name="settings_search_keywords_accent">renk tonu palet onaltılık hazır ayar</string>
@@ -427,13 +422,11 @@
     <string name="settings_search_keywords_video">kod çözücü altyazılar eşitleme</string>
     <string name="settings_search_keywords_subtitle_appearance">altyazı boyutu renk konum saydamlık arka plan opaklık</string>
     <string name="settings_search_keywords_latency">canlı arabellek gecikme düşük saniye yayın noktası yakın</string>
-    <string name="settings_search_keywords_errors">hata çökme başarısızlık tanılama bildir</string>
     <string name="settings_search_keywords_proxy">http trafik yönlendirme</string>
     <string name="settings_search_keywords_dns">alan adı arama çözümleyici doh dns-over-https</string>
     <string name="settings_search_keywords_startup">başlat aç giriş</string>
     <string name="settings_search_keywords_updates">github sürüm</string>
     <string name="settings_search_keywords_update_auto">otomatik güncelleme yeni sürüm</string>
-    <string name="settings_search_keywords_about">sürüm lisans proje bilgi</string>
     <string name="settings_language_default">Varsayılan (İngilizce)</string>
     <string name="settings_language_device">Cihaz dili</string>
     <string name="settings_language_arabic">Arapça</string>
@@ -1249,7 +1242,6 @@
     <string name="settings_search_keywords_pip">pencere icinde pencere yuzen kucuk kaplama</string>
     <string name="settings_search_keywords_data_saver">veri tasarrufu mobil veri kota dolasim</string>
     <string name="settings_search_keywords_gestures">hareket kaydirma hassasiyet dokunma surukleme</string>
-    <string name="settings_search_keywords_wifi_only">wifi yalnizca indirme mobil veri ag</string>
     <string name="settings_mini_player_style">Mini oynatıcı stili</string>
     <string name="settings_mini_player_style_description">Gezinirken oynatmanın sizi nasıl izlediği</string>
     <string name="settings_mini_player_style_floating">Yüzen pencere</string>
@@ -1271,7 +1263,6 @@
     <string name="settings_audio_per_channel_description">Görüntüsüz izlenen kanal bir dahaki sefere öyle açılır</string>
     <string name="local_sync_title">Yerel eşitleme</string>
     <string name="local_sync_description">Verilerinizi Wi-Fi üzerinden diğer cihazınızla paylaşın</string>
-    <string name="local_sync_search_keywords">eşitleme wifi ağ eşleştirme cihazlar paylaşım</string>
     <string name="local_sync_host_hint">Diğer cihazınızda da Eşitleme modunu açın, Bağlan\'a dokunun ve bu cihazı seçin.</string>
     <string name="local_sync_qr_description">Bu cihazın adresini içeren QR kodu</string>
     <string name="local_sync_pin_is">PIN: <xliff:g id="pin">%1$s</xliff:g></string>

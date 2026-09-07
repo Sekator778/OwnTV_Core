@@ -240,7 +240,6 @@
     <string name="settings_backup_restore">백업 및 복원</string>
     <string name="settings_backup_restore_description">프로필과 소스 내보내기 또는 복원</string>
     <string name="settings_clear_history">시청 기록 삭제</string>
-    <string name="settings_clear_history_description">이 프로필의 최근 시청 항목 및 계속 시청하기 행 삭제</string>
     <string name="settings_appearance_group">화면 스타일</string>
     <string name="settings_theme">테마</string>
     <string name="settings_theme_description">밝게, 어둡게 또는 시스템 설정 따르기</string>
@@ -388,7 +387,6 @@
     <!-- Translators: Video player settings: one-line summary under the "Diagnostics" section name. -->
     <string name="settings_vp_section_diagnostics_summary">상세 재생 로그</string>
     <string name="settings_group_summary_network">스트림 연결용 프록시와 DNS</string>
-    <string name="settings_group_summary_data">백업, 다운로드, 시청 기록</string>
     <string name="settings_group_summary_app">언어, 시작, 업데이트, 앱 정보</string>
     <string name="settings_group_quick">빠른 설정</string>
     <string name="settings_group_summary_quick">가장 자주 쓰는 전환 항목</string>
@@ -403,9 +401,6 @@
     <string name="settings_search_keywords_browsing">기억 위치 스크롤 카테고리 마지막 항목 실시간 영화 시리즈 초기화 맨 위</string>
     <string name="settings_search_keywords_home">행 히어로 순서 변경 필터</string>
     <string name="settings_search_keywords_metadata">포스터 줄거리 출연진 평점</string>
-    <string name="settings_search_keywords_download">저장공간 경로 디렉터리</string>
-    <string name="settings_search_keywords_backup">내보내기 가져오기 프로필 소스</string>
-    <string name="settings_search_keywords_history">최근 시청 항목 계속 시청 삭제</string>
     <string name="settings_search_keywords_theme">밝게 어둡게 시스템</string>
     <string name="settings_search_keywords_glass">유리 투명도 흐림 서리 반투명 배경 배경화면</string>
     <string name="settings_search_keywords_accent">색조 팔레트 16진수 프리셋</string>
@@ -425,13 +420,11 @@
     <string name="settings_search_keywords_video">디코더 자막 동기화</string>
     <string name="settings_search_keywords_subtitle_appearance">자막 크기 색상 위치 투명도 배경 불투명도</string>
     <string name="settings_search_keywords_latency">실시간 버퍼 지연 시간 지연 저지연 초 실시간 지점</string>
-    <string name="settings_search_keywords_errors">오류 충돌 실패 진단 신고</string>
     <string name="settings_search_keywords_proxy">HTTP 트래픽 경로</string>
     <string name="settings_search_keywords_dns">도메인 조회 리졸버 DoH DNS-over-HTTPS</string>
     <string name="settings_search_keywords_startup">실행 열기 시작 화면</string>
     <string name="settings_search_keywords_updates">GitHub 릴리스 버전</string>
     <string name="settings_search_keywords_update_auto">자동 업데이트 새 버전</string>
-    <string name="settings_search_keywords_about">버전 라이선스 프로젝트 정보</string>
     <string name="settings_language_default">기본값(영어)</string>
     <string name="settings_language_device">기기 언어</string>
     <string name="settings_language_arabic">아랍어</string>
@@ -1227,7 +1220,6 @@
     <string name="settings_search_keywords_pip">화면 속 화면 떠 있는 창 작은 창 오버레이</string>
     <string name="settings_search_keywords_data_saver">데이터 절약 모바일 데이터 로밍 사용량</string>
     <string name="settings_search_keywords_gestures">제스처 스와이프 민감도 터치 드래그</string>
-    <string name="settings_search_keywords_wifi_only">wifi 만 다운로드 모바일 데이터 네트워크</string>
     <string name="settings_mini_player_style">미니 플레이어 스타일</string>
     <string name="settings_mini_player_style_description">목록을 둘러볼 때 재생이 따라오는 방식</string>
     <string name="settings_mini_player_style_floating">떠 있는 창</string>
@@ -1249,7 +1241,6 @@
     <string name="settings_audio_per_channel_description">화면 없이 본 채널은 다음에도 그렇게 열립니다</string>
     <string name="local_sync_title">로컬 동기화</string>
     <string name="local_sync_description">Wi‑Fi로 다른 기기와 데이터를 공유합니다</string>
-    <string name="local_sync_search_keywords">동기화 와이파이 네트워크 페어링 기기 공유</string>
     <string name="local_sync_host_hint">다른 기기에서도 동기화 모드를 켜고 연결을 누른 뒤 이 기기를 선택하세요.</string>
     <string name="local_sync_qr_description">이 기기의 주소가 담긴 QR 코드</string>
     <string name="local_sync_pin_is">PIN: <xliff:g id="pin">%1$s</xliff:g></string>

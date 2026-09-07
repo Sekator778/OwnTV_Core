@@ -241,7 +241,6 @@
     <string name="settings_backup_restore">Säkerhetskopia och återställning</string>
     <string name="settings_backup_restore_description">Exportera eller återställ profiler och källor</string>
     <string name="settings_clear_history">Rensa visningshistorik</string>
-    <string name="settings_clear_history_description">Ta bort den här profilens rader för nyligen tittat på och fortsatt tittande</string>
     <string name="settings_appearance_group">Utseende</string>
     <string name="settings_theme">Tema</string>
     <string name="settings_theme_description">Ljust, mörkt eller följ systemet</string>
@@ -390,7 +389,6 @@
     <!-- Translators: Video player settings: one-line summary under the "Diagnostics" section name. -->
     <string name="settings_vp_section_diagnostics_summary">Detaljerade spelarloggar</string>
     <string name="settings_group_summary_network">Proxy och DNS för strömanslutningar</string>
-    <string name="settings_group_summary_data">Säkerhetskopior, nedladdningar och visningshistorik</string>
     <string name="settings_group_summary_app">Språk, start, uppdateringar och appinfo</string>
     <string name="settings_group_quick">Snabbval</string>
     <string name="settings_group_summary_quick">Reglagen du använder mest</string>
@@ -405,9 +403,6 @@
     <string name="settings_search_keywords_browsing">kom ihåg position rulla kategori senaste objekt live filmer serier återställ början</string>
     <string name="settings_search_keywords_home">rader huvudrad ändra ordning filtrera</string>
     <string name="settings_search_keywords_metadata">omslagsbilder handlingar skådespelare betyg</string>
-    <string name="settings_search_keywords_download">lagring sökväg katalog</string>
-    <string name="settings_search_keywords_backup">export import profiler källor</string>
-    <string name="settings_search_keywords_history">nyligen tittat på fortsätt ta bort</string>
     <string name="settings_search_keywords_theme">ljust mörkt system</string>
     <string name="settings_search_keywords_glass">glas transparens oskärpa frost genomskinlig bakgrund bakgrundsbild</string>
     <string name="settings_search_keywords_accent">färgton palett hex förval</string>
@@ -427,13 +422,11 @@
     <string name="settings_search_keywords_video">avkodare undertexter synkronisering</string>
     <string name="settings_search_keywords_subtitle_appearance">undertext storlek färg kulör position transparens bakgrund opacitet</string>
     <string name="settings_search_keywords_latency">live buffert fördröjning låg fördröjning sekunder nära livepunkten</string>
-    <string name="settings_search_keywords_errors">fel krasch misslyckande diagnostik rapport</string>
     <string name="settings_search_keywords_proxy">http trafik dirigering</string>
     <string name="settings_search_keywords_dns">domän uppslagning resolver doh dns-over-https</string>
     <string name="settings_search_keywords_startup">starta öppna startsida</string>
     <string name="settings_search_keywords_updates">github utgåva version</string>
     <string name="settings_search_keywords_update_auto">automatisk uppdatering ny version</string>
-    <string name="settings_search_keywords_about">version licens projekt information</string>
     <string name="settings_language_default">Standard (engelska)</string>
     <string name="settings_language_device">Enhetens språk</string>
     <string name="settings_language_arabic">Arabiska</string>
@@ -1249,7 +1242,6 @@
     <string name="settings_search_keywords_pip">bild i bild flytande fonster overlay liten</string>
     <string name="settings_search_keywords_data_saver">databesparing mobildata surf roaming spara</string>
     <string name="settings_search_keywords_gestures">gest svep kanslighet peka dra</string>
-    <string name="settings_search_keywords_wifi_only">wifi endast nedladdning mobildata natverk</string>
     <string name="settings_mini_player_style">Stil på minispelaren</string>
     <string name="settings_mini_player_style_description">Hur uppspelningen följer med när du bläddrar</string>
     <string name="settings_mini_player_style_floating">Flytande fönster</string>
@@ -1271,7 +1263,6 @@
     <string name="settings_audio_per_channel_description">En kanal du sett utan bild öppnas så nästa gång</string>
     <string name="local_sync_title">Lokal synkronisering</string>
     <string name="local_sync_description">Dela dina data med din andra enhet via Wi-Fi</string>
-    <string name="local_sync_search_keywords">synkronisering wifi nätverk parkoppling enheter dela</string>
     <string name="local_sync_host_hint">Slå på Synkroniseringsläge även på din andra enhet, tryck på Anslut och välj den här.</string>
     <string name="local_sync_qr_description">QR-kod med den här enhetens adress</string>
     <string name="local_sync_pin_is">PIN-kod: <xliff:g id="pin">%1$s</xliff:g></string>

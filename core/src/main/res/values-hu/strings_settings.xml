@@ -280,7 +280,6 @@
     <string name="settings_backup_restore">Mentés és visszaállítás</string>
     <string name="settings_backup_restore_description">Profilok és források exportálása vagy visszaállítása</string>
     <string name="settings_clear_history">Megtekintési előzmények törlése</string>
-    <string name="settings_clear_history_description">Ennek a profilnak a nemrég nézett és folytatás sorainak törlése</string>
     <string name="settings_appearance_group">Megjelenés</string>
     <string name="settings_theme">Téma</string>
     <string name="settings_theme_description">Világos, sötét vagy a rendszert követő</string>
@@ -442,7 +441,6 @@
     <string name="settings_vp_section_episodes_summary">Automatikus lejátszás és mini lejátszó</string>
     <string name="settings_vp_section_diagnostics_summary">Részletes lejátszónaplók</string>
     <string name="settings_group_summary_network">Proxy és DNS az adatfolyam-kapcsolatokhoz</string>
-    <string name="settings_group_summary_data">Mentés, letöltések és megtekintési előzmények</string>
     <string name="settings_group_summary_app">Nyelv, indulás, frissítések és alkalmazásinformációk</string>
     <string name="settings_group_quick">Gyors</string>
     <string name="settings_group_summary_quick">A leggyakrabban használt kapcsolóid</string>
@@ -457,9 +455,6 @@
     <string name="settings_search_keywords_browsing">megjegyzés pozíció görgetés kategória utolsó elem élő filmek sorozatok visszaállítás eleje</string>
     <string name="settings_search_keywords_home">sorok kiemelt átrendezés szűrés</string>
     <string name="settings_search_keywords_metadata">poszterek tartalomleírás szereplők értékelések</string>
-    <string name="settings_search_keywords_download">tárhely útvonal könyvtár</string>
-    <string name="settings_search_keywords_backup">exportálás importálás profilok források</string>
-    <string name="settings_search_keywords_history">nemrég nézett folytatás eltávolítás</string>
     <string name="settings_search_keywords_theme">világos sötét rendszer</string>
     <string name="settings_search_keywords_glass">üveg átlátszóság elmosás dér áttetsző háttér háttérkép</string>
     <string name="settings_search_keywords_accent">színezés paletta hexa előbeállítás</string>
@@ -479,13 +474,11 @@
     <string name="settings_search_keywords_video">dekóder feliratok szinkron</string>
     <string name="settings_search_keywords_subtitle_appearance">felirat méret szín pozíció átlátszóság háttér átlátszatlanság</string>
     <string name="settings_search_keywords_latency">élő puffer késleltetés csúszás alacsony késleltetés másodperc élő adás széle</string>
-    <string name="settings_search_keywords_errors">hiba összeomlás meghibásodás diagnosztika bejelentés</string>
     <string name="settings_search_keywords_proxy">http forgalom útvonal</string>
     <string name="settings_search_keywords_dns">domain névfeloldás feloldó doh dns-over-https</string>
     <string name="settings_search_keywords_startup">indítás megnyitás nyitóképernyő</string>
     <string name="settings_search_keywords_updates">github kiadás verzió</string>
     <string name="settings_search_keywords_update_auto">automatikus frissítés új verzió</string>
-    <string name="settings_search_keywords_about">verzió licenc projekt információ</string>
     <string name="settings_language_default">Alapértelmezett (angol)</string>
     <string name="settings_language_device">Eszköz nyelve</string>
     <string name="settings_language_arabic">Arab</string>
@@ -1226,7 +1219,6 @@ Az Újraszinkronizálás és a hiányzó címek eltávolítása azt is lehetőv�
     <string name="settings_search_keywords_pip">kep a kepben lebego ablak atfedes kicsi</string>
     <string name="settings_search_keywords_data_saver">adatforgalom mobiladat csokkentes roaming sporolas</string>
     <string name="settings_search_keywords_gestures">mozdulat huzas erzekenyseg erintes csuszas</string>
-    <string name="settings_search_keywords_wifi_only">wifi csak letoltes mobiladat halozat</string>
     <string name="settings_mini_player_style">Minilejátszó stílusa</string>
     <string name="settings_mini_player_style_description">Hogyan követ a lejátszás, amíg böngészel</string>
     <string name="settings_mini_player_style_floating">Lebegő ablak</string>
@@ -1248,7 +1240,6 @@ Az Újraszinkronizálás és a hiányzó címek eltávolítása azt is lehetőv�
     <string name="settings_audio_per_channel_description">A kép nélkül nézett csatorna legközelebb is úgy nyílik meg</string>
     <string name="local_sync_title">Helyi szinkronizálás</string>
     <string name="local_sync_description">Ossza meg adatait a másik eszközével Wi-Fin keresztül</string>
-    <string name="local_sync_search_keywords">szinkronizálás wifi hálózat párosítás eszközök megosztás</string>
     <string name="local_sync_host_hint">A másik eszközén is kapcsolja be a Szinkronizálási módot, koppintson a Csatlakozás gombra, és válassza ki ezt.</string>
     <string name="local_sync_qr_description">QR-kód az eszköz címével</string>
     <string name="local_sync_pin_is">PIN: <xliff:g id="pin">%1$s</xliff:g></string>

@@ -242,7 +242,6 @@
     <string name="settings_backup_restore">Sauvegarde et restauration</string>
     <string name="settings_backup_restore_description">Exporter ou restaurer les profils et les sources</string>
     <string name="settings_clear_history">Effacer l’historique de visionnage</string>
-    <string name="settings_clear_history_description">Supprimer les rangées Vus récemment et Continuer de ce profil</string>
     <string name="settings_appearance_group">Apparence</string>
     <string name="settings_theme">Thème</string>
     <string name="settings_theme_description">Clair, sombre ou selon le système</string>
@@ -392,7 +391,6 @@
     <!-- Translators: Video player settings: one-line summary under the "Diagnostics" section name. -->
     <string name="settings_vp_section_diagnostics_summary">Journaux détaillés du lecteur</string>
     <string name="settings_group_summary_network">Proxy et DNS pour les connexions aux flux</string>
-    <string name="settings_group_summary_data">Sauvegardes, téléchargements et historique</string>
     <string name="settings_group_summary_app">Langue, démarrage, mises à jour et infos de l’appli</string>
     <string name="settings_group_quick">Rapide</string>
     <string name="settings_group_summary_quick">Les réglages que vous utilisez le plus</string>
@@ -407,9 +405,6 @@
     <string name="settings_search_keywords_browsing">mémoriser position défilement catégorie dernier élément direct films séries réinitialiser haut</string>
     <string name="settings_search_keywords_home">rangées principale réorganiser filtrer</string>
     <string name="settings_search_keywords_metadata">affiches synopsis distribution notes</string>
-    <string name="settings_search_keywords_download">stockage chemin répertoire</string>
-    <string name="settings_search_keywords_backup">exportation importation profils sources</string>
-    <string name="settings_search_keywords_history">vus récemment continuer supprimer</string>
     <string name="settings_search_keywords_theme">clair sombre système</string>
     <string name="settings_search_keywords_glass">verre transparence flou givre translucide arrière-plan fond</string>
     <string name="settings_search_keywords_accent">teinte palette hexadécimal préréglage</string>
@@ -429,13 +424,11 @@
     <string name="settings_search_keywords_video">décodeur sous-titres synchronisation</string>
     <string name="settings_search_keywords_subtitle_appearance">sous-titre taille couleur position transparence arrière-plan opacité</string>
     <string name="settings_search_keywords_latency">direct tampon latence délai faible latence secondes point du direct</string>
-    <string name="settings_search_keywords_errors">erreur plantage échec diagnostic signaler</string>
     <string name="settings_search_keywords_proxy">http trafic routage</string>
     <string name="settings_search_keywords_dns">domaine recherche résolveur doh DNS-over-HTTPS</string>
     <string name="settings_search_keywords_startup">lancement ouvrir accueil</string>
     <string name="settings_search_keywords_updates">github publication version</string>
     <string name="settings_search_keywords_update_auto">automatique mise à jour nouvelle version</string>
-    <string name="settings_search_keywords_about">version licence projet informations</string>
     <string name="settings_language_default">Par défaut (anglais)</string>
     <string name="settings_language_device">Langue de l’appareil</string>
     <string name="settings_language_arabic">Arabe</string>
@@ -1271,7 +1264,6 @@
     <string name="settings_search_keywords_pip">picture in picture fenetre flottante incrustation petit</string>
     <string name="settings_search_keywords_data_saver">economiseur donnees mobiles cellulaire itinerance trafic</string>
     <string name="settings_search_keywords_gestures">geste glisser sensibilite toucher balayage</string>
-    <string name="settings_search_keywords_wifi_only">wifi uniquement telechargement donnees mobiles reseau</string>
     <string name="settings_mini_player_style">Style du mini-lecteur</string>
     <string name="settings_mini_player_style_description">Comment la lecture vous suit pendant que vous naviguez</string>
     <string name="settings_mini_player_style_floating">Fenêtre flottante</string>
@@ -1293,7 +1285,6 @@
     <string name="settings_audio_per_channel_description">Une chaîne regardée sans image s’ouvrira ainsi la prochaine fois</string>
     <string name="local_sync_title">Synchronisation locale</string>
     <string name="local_sync_description">Partagez vos données avec votre autre appareil via le Wi-Fi</string>
-    <string name="local_sync_search_keywords">synchronisation wifi réseau appairage appareils partage</string>
     <string name="local_sync_host_hint">Sur votre autre appareil, activez aussi le mode synchronisation, appuyez sur Se connecter et choisissez celui-ci.</string>
     <string name="local_sync_qr_description">Code QR contenant l\'adresse de cet appareil</string>
     <string name="local_sync_pin_is">Code PIN : <xliff:g id="pin">%1$s</xliff:g></string>

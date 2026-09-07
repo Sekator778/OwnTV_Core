@@ -241,7 +241,6 @@
     <string name="settings_backup_restore">Back-up en herstellen</string>
     <string name="settings_backup_restore_description">Exporteer of herstel profielen en bronnen</string>
     <string name="settings_clear_history">Kijkgeschiedenis wissen</string>
-    <string name="settings_clear_history_description">Verwijder de rijen Onlangs bekeken en Verder kijken van dit profiel</string>
     <string name="settings_appearance_group">Weergave</string>
     <string name="settings_theme">Thema</string>
     <string name="settings_theme_description">Licht, donker of het systeem volgen</string>
@@ -390,7 +389,6 @@
     <!-- Translators: Video player settings: one-line summary under the "Diagnostics" section name. -->
     <string name="settings_vp_section_diagnostics_summary">Uitgebreide spelerlogboeken</string>
     <string name="settings_group_summary_network">Proxy en DNS voor streamverbindingen</string>
-    <string name="settings_group_summary_data">Back-up, downloads en kijkgeschiedenis</string>
     <string name="settings_group_summary_app">Taal, opstarten, updates en app-informatie</string>
     <string name="settings_group_quick">Snel</string>
     <string name="settings_group_summary_quick">De schakelaars die je het vaakst gebruikt</string>
@@ -405,9 +403,6 @@
     <string name="settings_search_keywords_browsing">onthouden positie scrollen categorie laatste item live films series reset bovenaan</string>
     <string name="settings_search_keywords_home">rijen prominent herschikken filteren</string>
     <string name="settings_search_keywords_metadata">posters samenvattingen cast beoordelingen</string>
-    <string name="settings_search_keywords_download">opslag pad map</string>
-    <string name="settings_search_keywords_backup">exporteren importeren profielen bronnen</string>
-    <string name="settings_search_keywords_history">onlangs bekeken doorgaan verwijderen</string>
     <string name="settings_search_keywords_theme">licht donker systeem</string>
     <string name="settings_search_keywords_glass">glas transparantie vervaging matglas doorschijnend achtergrond</string>
     <string name="settings_search_keywords_accent">tint palet hex voorinstelling</string>
@@ -427,13 +422,11 @@
     <string name="settings_search_keywords_video">decoder ondertiteling synchronisatie</string>
     <string name="settings_search_keywords_subtitle_appearance">ondertiteling grootte kleur positie transparantie achtergrond dekking</string>
     <string name="settings_search_keywords_latency">live buffer vertraging lage vertraging seconden dicht bij livepunt</string>
-    <string name="settings_search_keywords_errors">fout crash storing diagnostiek melden</string>
     <string name="settings_search_keywords_proxy">http verkeer route</string>
     <string name="settings_search_keywords_dns">domein opzoeken resolver doh dns-over-https</string>
     <string name="settings_search_keywords_startup">starten openen beginpagina</string>
     <string name="settings_search_keywords_updates">github release versie</string>
     <string name="settings_search_keywords_update_auto">automatisch update nieuwe versie</string>
-    <string name="settings_search_keywords_about">versie licentie project informatie</string>
     <string name="settings_language_default">Standaard (Engels)</string>
     <string name="settings_language_device">Taal van apparaat</string>
     <string name="settings_language_arabic">Arabisch</string>
@@ -1249,7 +1242,6 @@
     <string name="settings_search_keywords_pip">beeld in beeld zwevend venster overlay klein</string>
     <string name="settings_search_keywords_data_saver">databesparing mobiele data verbruik roaming besparen</string>
     <string name="settings_search_keywords_gestures">gebaar vegen gevoeligheid aanraken slepen</string>
-    <string name="settings_search_keywords_wifi_only">wifi alleen download mobiele data netwerk</string>
     <string name="settings_mini_player_style">Stijl van de mini-speler</string>
     <string name="settings_mini_player_style_description">Hoe het spelen met je meegaat terwijl je rondkijkt</string>
     <string name="settings_mini_player_style_floating">Zwevend venster</string>
@@ -1271,7 +1263,6 @@
     <string name="settings_audio_per_channel_description">Een kanaal dat je zonder beeld keek, opent de volgende keer zo</string>
     <string name="local_sync_title">Lokaal synchroniseren</string>
     <string name="local_sync_description">Deel je gegevens met je andere apparaat via wifi</string>
-    <string name="local_sync_search_keywords">synchroniseren wifi netwerk koppelen apparaten delen</string>
     <string name="local_sync_host_hint">Zet op je andere apparaat ook Synchronisatiemodus aan, tik op Verbinden en kies dit apparaat.</string>
     <string name="local_sync_qr_description">QR-code met het adres van dit apparaat</string>
     <string name="local_sync_pin_is">Pincode: <xliff:g id="pin">%1$s</xliff:g></string>

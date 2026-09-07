@@ -519,7 +519,6 @@
     <!-- Translators: Settings navigation label to clear watch history. -->
     <string name="settings_clear_history">Clear watch history</string>
     <!-- Translators: Description of the clear-history action. -->
-    <string name="settings_clear_history_description">Remove this profile\'s recently-watched &amp; continue rows</string>
     <!-- Translators: Settings navigation group label for Appearance settings. -->
     <string name="settings_appearance_group">Appearance</string>
     <!-- Translators: Settings navigation label for the Theme setting. -->
@@ -831,7 +830,6 @@
     <!-- Translators: Settings sheet summary line under the "Network" group heading. -->
     <string name="settings_group_summary_network">Proxy and DNS for stream connections</string>
     <!-- Translators: Settings sheet summary line under the "Data" group heading. -->
-    <string name="settings_group_summary_data">Backup, downloads and watch history</string>
     <!-- Translators: Settings sheet summary line under the "App" group heading. -->
     <string name="settings_group_summary_app">Language, startup, updates and app info</string>
     <!-- Translators: Settings spine group holding the most-used toggles, pinned above the nine real groups. -->
@@ -861,11 +859,8 @@
     <!-- Translators: Hidden keyword bag for the Metadata (TMDB) settings. Translate as individual search terms. -->
     <string name="settings_search_keywords_metadata">posters plots cast ratings</string>
     <!-- Translators: Hidden keyword bag for the Download folder settings. Translate as individual search terms. -->
-    <string name="settings_search_keywords_download">storage path directory</string>
     <!-- Translators: Hidden keyword bag for the Backup & Restore settings. Translate as individual search terms. -->
-    <string name="settings_search_keywords_backup">export import profiles sources</string>
     <!-- Translators: Hidden keyword bag for the Clear watch history settings. Translate as individual search terms. -->
-    <string name="settings_search_keywords_history">recently watched continue remove</string>
     <!-- Translators: Hidden keyword bag for the Theme settings. Translate as individual search terms. -->
     <string name="settings_search_keywords_theme">light dark system</string>
     <!-- Translators: Search keywords for the Glass Effect screen. Space-separated single words, not a sentence; they are matched against what the user types into settings search. -->
@@ -905,7 +900,6 @@
     <!-- Translators: Hidden keyword bag for the Live latency settings. Translate as individual search terms. -->
     <string name="settings_search_keywords_latency">live buffer latency delay low latency seconds close to live edge</string>
     <!-- Translators: Hidden keyword bag for the Playback error log settings. Translate as individual search terms. -->
-    <string name="settings_search_keywords_errors">error crash failure diagnostics report</string>
     <!-- Translators: Hidden keyword bag for the HTTP Proxy settings. Translate as individual search terms. -->
     <string name="settings_search_keywords_proxy">http traffic route</string>
     <!-- Translators: Hidden keyword bag for DNS settings. 'DNS' and 'DNS-over-HTTPS' are technical terms. -->
@@ -917,7 +911,6 @@
     <!-- Translators: Hidden keyword bag for the auto-update check settings. Translate as individual search terms. -->
     <string name="settings_search_keywords_update_auto">auto update new version</string>
     <!-- Translators: Hidden keyword bag for the About settings. Translate as individual search terms. -->
-    <string name="settings_search_keywords_about">version license project info</string>
     <!-- Translators: Language option to use the default (English) language. -->
     <string name="settings_language_default">Default (English)</string>
     <!-- Translators: Language option to follow the device language. -->
@@ -2236,7 +2229,6 @@ Resync and remove missing titles also allows removing titles the provider no lon
     <string name="settings_search_keywords_pip">picture in picture floating window overlay small popup</string>
     <string name="settings_search_keywords_data_saver">data saver mobile cellular metered roaming traffic save</string>
     <string name="settings_search_keywords_gestures">gesture swipe sensitivity touch drag slide</string>
-    <string name="settings_search_keywords_wifi_only">wifi only download metered mobile data network</string>
     <!-- Translators: Settings row. What keeps playing while the user browses: a window they can drag, a bar docked above the tabs, or nothing. -->
     <string name="settings_mini_player_style">Mini-player style</string>
     <string name="settings_mini_player_style_description">How playback follows you while you browse</string>
@@ -2272,7 +2264,6 @@ Resync and remove missing titles also allows removing titles the provider no lon
     <!-- Translators: One-line summary of Local sync, under its row on the settings page. -->
     <string name="local_sync_description">Share your data with your other device over Wi-Fi</string>
     <!-- Translators: Hidden search keywords for the Local sync screen. Words a user might type to find it. -->
-    <string name="local_sync_search_keywords">sync wifi network pair devices share</string>
     <!-- Translators: Explanation under the PIN and QR code while this device is waiting to be connected to. -->
     <string name="local_sync_host_hint">On your other device, turn Sync mode on too, then tap Connect and pick this one.</string>
     <!-- Translators: Accessibility description of the QR code image. -->
